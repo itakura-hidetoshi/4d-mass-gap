@@ -26,6 +26,7 @@
 - [x] Add Phase 3 proof-hardening plan and Lean tracking modules
 - [x] Add OperatorAPI theorem-surface layer
 - [x] Tighten OperatorAPI work-unit execution readiness
+- [x] Add R1 theorem-surface layer
 - [ ] Restore deferred imports in dependency-closed groups
 - [ ] Add Mathlib only when theorem-level concrete modules require it
 - [ ] Replace status-only surfaces by import-closed theorem surfaces
@@ -42,4 +43,4 @@
 
 ## Current priority
 
-The next technical priority is to run CI after the OperatorAPI readiness tightening, then begin the same theorem-surface pattern for R1.
+The next technical priority is to run CI after the R1 theorem-surface commit, then tighten `MGAP4D/R1/Concrete/ClosureTargetsStatus.lean` against the new R1 surface.
