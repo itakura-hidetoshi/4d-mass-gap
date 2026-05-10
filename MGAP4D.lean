@@ -9,5 +9,7 @@ import MGAP4D.Plaquette
 import MGAP4D.Constructive
 import MGAP4D.Audit
 import MGAP4D.Release
+import MGAP4D.Global.FinalAssembly
+import MGAP4D.Map
 import MGAP4D.Gap3320
 import MGAP4D.FinalSpine
