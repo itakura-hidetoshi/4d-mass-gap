@@ -24,6 +24,7 @@ import MGAP4D.MathlibAdoptionGate.R7AtomExactRequest
 import MGAP4D.MathlibAdoptionGate.RequestRegistry
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
+import MGAP4D.R1.Theorem
 import MGAP4D.R1.TheoremSurface
 import MGAP4D.R2.Concrete
 import MGAP4D.R2.TheoremSurface
