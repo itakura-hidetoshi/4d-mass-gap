@@ -12,6 +12,7 @@ import MGAP4D.Release
 import MGAP4D.Migration
 import MGAP4D.Archive
 import MGAP4D.ProofHardening
+import MGAP4D.DependencyMap
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.TheoremSurface
