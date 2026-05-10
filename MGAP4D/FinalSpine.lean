@@ -1,4 +1,5 @@
 import MGAP4D.Gap3320
+import MGAP4D.Constructive.FinalTheorem
 
 namespace MGAP4D
 
@@ -17,5 +18,15 @@ The intended workflow is:
 /-- CI-visible top-level theorem confirming that the migration spine compiles. -/
 theorem final_spine_compiles : True := by
   trivial
+
+/-- The current migration-level final theorem packet has normalized gap `33/20`. -/
+theorem final_spine_gap3320 :
+    Constructive.finalTheoremPacket3320.massGap.value = 33 / 20 := by
+  rfl
+
+/-- The current migration-level final theorem packet carries a positive plaquette witness. -/
+theorem final_spine_plaquette_positive :
+    Constructive.finalTheoremPacket3320.plaquette.observableWitness.positiveMass = true := by
+  rfl
 
 end MGAP4D
