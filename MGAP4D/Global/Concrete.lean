@@ -9,3 +9,4 @@ import MGAP4D.Global.Concrete.WorkUnitR3UnboundedKernelAuditStatus
 import MGAP4D.Global.Concrete.WorkUnitR4LowerBoundAuditStatus
 import MGAP4D.Global.Concrete.WorkUnitR7AtomExactGapAuditStatus
 import MGAP4D.Global.Concrete.WorkUnitGlobalFinalAuditStatus
+import MGAP4D.Global.Concrete.SummarySurface
