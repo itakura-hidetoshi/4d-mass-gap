@@ -5,3 +5,4 @@ import MGAP4D.R1.Concrete.ProjectionStatus
 import MGAP4D.R1.Concrete.ClosureTargetsStatus
 import MGAP4D.R1.Concrete.Pass2Bundle
 import MGAP4D.R1.Concrete.HilbertTheoremCandidate
+import MGAP4D.R1.Concrete.HilbertCandidateBundle
