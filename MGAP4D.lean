@@ -11,6 +11,7 @@ import MGAP4D.Audit
 import MGAP4D.Release
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
+import MGAP4D.R2.Concrete
 import MGAP4D.Global.FinalAssembly
 import MGAP4D.Map
 import MGAP4D.Gap3320
