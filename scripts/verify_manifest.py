@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Verify MGAP4D release manifest metadata.
+"""Verify archived MGAP4D release manifest metadata.
 
-This script checks that FILE_MANIFEST.json records the expected v1.6 package
-hash and top-level package contents. It intentionally avoids depending on the
-large Zenodo zip being present in the GitHub repository.
+The active GitHub project is Lean-native. Historical Zenodo provenance is kept
+under docs/archive/zenodo/ and checked there.
 """
 
 from __future__ import annotations
@@ -33,9 +32,9 @@ def fail(message: str) -> None:
 
 
 def main() -> None:
-    manifest_path = Path("FILE_MANIFEST.json")
+    manifest_path = Path("docs/archive/zenodo/FILE_MANIFEST.json")
     if not manifest_path.exists():
-        fail("FILE_MANIFEST.json not found")
+        fail("archived Zenodo FILE_MANIFEST.json not found")
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
@@ -68,7 +67,7 @@ def main() -> None:
         if actual != expected:
             fail(f"audit_summary.{key} expected {expected}, got {actual}")
 
-    print("manifest verification passed")
+    print("archived manifest verification passed")
 
 
 if __name__ == "__main__":
