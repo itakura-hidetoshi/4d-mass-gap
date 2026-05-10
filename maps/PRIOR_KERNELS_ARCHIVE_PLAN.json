@@ -1,0 +1,24 @@
+{
+  "batch": "010",
+  "name": "prior_kernels_archive_layout",
+  "active_root": "MGAP4D.lean",
+  "archive_root": "docs/archive/prior_kernels",
+  "lean_archive_modules": [
+    "MGAP4D/Archive.lean",
+    "MGAP4D/Archive/PriorKernels.lean"
+  ],
+  "classes": {
+    "pending": "preserved but not yet reviewed",
+    "reviewed": "CI-checked and eligible for small active migration",
+    "superseded": "retained for lineage only"
+  },
+  "initial_pending_groups": [
+    "v1_0_final prior Lean project archive",
+    "v0_9 manifest family",
+    "earlier R1-R7 scaffold variants",
+    "earlier Global final assembly variants",
+    "map and declaration index material"
+  ],
+  "active_import_allowed_by_default": false,
+  "migration_rule": "move prior kernels into active source only after CI and review"
+}
