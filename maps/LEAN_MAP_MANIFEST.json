@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-05-09T00:00:00+09:00",
+  "purpose": "Add reusable Lean maps and indexes",
+  "added_files": [
+    "MGAP4D/Map.lean",
+    "maps/LEAN_FILE_MAP.json",
+    "maps/LEAN_DECLARATION_INDEX.json",
+    "maps/LEAN_DECLARATION_INDEX.csv",
+    "maps/LEAN_IMPORT_GRAPH.json",
+    "maps/MGAP4D_ROUTE_MAP.json",
+    "maps/LEAN_REUSE_MAP.md"
+  ],
+  "active_root": "MGAP4D.lean",
+  "note": "These maps are read-only navigation aids for Lean reuse and migration."
+}
