@@ -12,6 +12,11 @@ import MGAP4D.Release
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R2.Concrete
+import MGAP4D.R3.Concrete
+import MGAP4D.R4.Concrete
+import MGAP4D.R5.Concrete
+import MGAP4D.R6.Concrete
+import MGAP4D.R7.Concrete
 import MGAP4D.Global.FinalAssembly
 import MGAP4D.Map
 import MGAP4D.Gap3320
