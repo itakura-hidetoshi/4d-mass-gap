@@ -22,6 +22,7 @@ import MGAP4D.R3.TheoremSurface
 import MGAP4D.R4.Concrete
 import MGAP4D.R4.TheoremSurface
 import MGAP4D.R5.Concrete
+import MGAP4D.R5.TheoremSurface
 import MGAP4D.R6.Concrete
 import MGAP4D.R7.Concrete
 import MGAP4D.Global.FinalAssembly
