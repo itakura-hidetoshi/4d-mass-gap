@@ -1,5 +1,6 @@
 import MGAP4D.R2.Concrete.SpectrumUnionStatus
 import MGAP4D.R2.TheoremSurface
+import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
 namespace R2
@@ -37,6 +38,19 @@ def ExportSurfaceReady.ready (S : ExportSurfaceReady) : Prop :=
 theorem export_surface_ready_pack
     (S : ExportSurfaceReady) :
     S.ready ↔ S.statusReady ∧ S.r2SurfaceReady ∧ S.gateActive := by
+  rfl
+
+structure ExportReplacementReady where
+  exportSurfaceReady : Prop
+  replacementGateReady : Prop
+  statusPreserved : Prop
+
+def ExportReplacementReady.ready (S : ExportReplacementReady) : Prop :=
+  S.exportSurfaceReady ∧ S.replacementGateReady ∧ S.statusPreserved
+
+theorem export_replacement_ready_pack
+    (S : ExportReplacementReady) :
+    S.ready ↔ S.exportSurfaceReady ∧ S.replacementGateReady ∧ S.statusPreserved := by
   rfl
 
 end Concrete
