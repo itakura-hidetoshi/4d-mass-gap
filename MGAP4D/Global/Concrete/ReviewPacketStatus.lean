@@ -1,3 +1,5 @@
+import MGAP4D.Global.TheoremSurface
+
 namespace MGAP4D
 namespace Global
 namespace Concrete
@@ -17,6 +19,19 @@ theorem review_packet_status_pack
     S.ready ↔
       S.README_present ∧ S.release_notes_present ∧
       S.final_review_checklist_present ∧ S.review_gate_active := by
+  rfl
+
+structure ReviewPacketSurfaceReady where
+  packetStatusReady : Prop
+  globalReviewSurfaceReady : Prop
+  publicGateActive : Prop
+
+def ReviewPacketSurfaceReady.ready (S : ReviewPacketSurfaceReady) : Prop :=
+  S.packetStatusReady ∧ S.globalReviewSurfaceReady ∧ S.publicGateActive
+
+theorem review_packet_surface_ready_pack
+    (S : ReviewPacketSurfaceReady) :
+    S.ready ↔ S.packetStatusReady ∧ S.globalReviewSurfaceReady ∧ S.publicGateActive := by
   rfl
 
 end Concrete
