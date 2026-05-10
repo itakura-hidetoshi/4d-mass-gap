@@ -9,6 +9,7 @@ import MGAP4D.Plaquette
 import MGAP4D.Constructive
 import MGAP4D.Audit
 import MGAP4D.Release
+import MGAP4D.Migration
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R2.Concrete
