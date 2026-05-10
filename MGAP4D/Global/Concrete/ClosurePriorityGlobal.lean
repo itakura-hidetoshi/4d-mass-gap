@@ -1,3 +1,6 @@
+import MGAP4D.DependencyMap
+import MGAP4D.ProofHardening
+
 namespace MGAP4D
 namespace Global
 namespace Concrete
@@ -21,6 +24,20 @@ theorem closure_priority_global_pack
     C.ready ↔ C.r1_ell_first ∧ C.r1_projection_second ∧ C.r2_reducing_third ∧
       C.r4_lower_bound_fourth ∧ C.r3_kernel_fifth ∧ C.r7_exact_gap_sixth ∧
       C.global_audit_terminal := by
+  rfl
+
+structure ClosurePriorityRouteReady where
+  priorityReady : Prop
+  dependencyMapReady : Prop
+  hardeningPlanReady : Prop
+  gateActive : Prop
+
+def ClosurePriorityRouteReady.ready (S : ClosurePriorityRouteReady) : Prop :=
+  S.priorityReady ∧ S.dependencyMapReady ∧ S.hardeningPlanReady ∧ S.gateActive
+
+theorem closure_priority_route_ready_pack
+    (S : ClosurePriorityRouteReady) :
+    S.ready ↔ S.priorityReady ∧ S.dependencyMapReady ∧ S.hardeningPlanReady ∧ S.gateActive := by
   rfl
 
 end Concrete
