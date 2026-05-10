@@ -6,6 +6,7 @@ import MGAP4D.R4.Basic
 import MGAP4D.R5.Basic
 import MGAP4D.R6.Basic
 import MGAP4D.R7.Basic
+import MGAP4D.Global.TheoremSurface
 
 namespace MGAP4D
 namespace Global
@@ -71,6 +72,19 @@ structure PublicClaimBoundary where
 def PublicClaimBoundary.ready (B : PublicClaimBoundary) : Prop :=
   B.internal_proof_kernel_closed ∧ B.independent_Lean_replay_required ∧
   B.external_peer_review_required ∧ B.public_Clay_claim_gated ∧ B.append_only ∧ B.overwrite_forbidden
+
+structure FinalAssemblySurfaceReady where
+  ledgerReady : Prop
+  globalSurfaceReady : Prop
+  boundaryReady : Prop
+
+def FinalAssemblySurfaceReady.ready (S : FinalAssemblySurfaceReady) : Prop :=
+  S.ledgerReady ∧ S.globalSurfaceReady ∧ S.boundaryReady
+
+theorem final_assembly_surface_ready_pack
+    (S : FinalAssemblySurfaceReady) :
+    S.ready ↔ S.ledgerReady ∧ S.globalSurfaceReady ∧ S.boundaryReady := by
+  rfl
 
 end Global
 end MGAP4D
