@@ -9,6 +9,7 @@ import MGAP4D.Global.Concrete.WorkUnitR3UnboundedKernelAuditStatus
 import MGAP4D.Global.Concrete.WorkUnitR4LowerBoundAuditStatus
 import MGAP4D.Global.Concrete.WorkUnitR7AtomExactGapAuditStatus
 import MGAP4D.Global.Concrete.WorkUnitGlobalFinalAuditStatus
+import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
 namespace Global
@@ -47,6 +48,19 @@ def WorkUnitAuditSummarySurface.ready (S : WorkUnitAuditSummarySurface) : Prop :
 theorem work_unit_audit_summary_surface_pack
     (S : WorkUnitAuditSummarySurface) :
     S.ready ↔ S.r1EllReady ∧ S.r1ProjectionReady ∧ S.r2Ready ∧ S.r3Ready ∧ S.r4Ready ∧ S.r7Ready := by
+  rfl
+
+structure GlobalConcreteSummaryReplacementReady where
+  summaryReady : Prop
+  replacementGateReady : Prop
+  statusPreserved : Prop
+
+def GlobalConcreteSummaryReplacementReady.ready (S : GlobalConcreteSummaryReplacementReady) : Prop :=
+  S.summaryReady ∧ S.replacementGateReady ∧ S.statusPreserved
+
+theorem global_concrete_summary_replacement_ready_pack
+    (S : GlobalConcreteSummaryReplacementReady) :
+    S.ready ↔ S.summaryReady ∧ S.replacementGateReady ∧ S.statusPreserved := by
   rfl
 
 end Concrete
