@@ -1,2 +1,23 @@
-# cache and other artifacts produced by Lean's Lake build tool
+# Lean / Lake build artifacts
 .lake/
+
+# Lean server and editor cache
+.lean/
+*.olean
+*.ilean
+*.c
+*.c.o
+
+# OS/editor noise
+.DS_Store
+.vscode/
+.idea/
+
+# Python cache for audit scripts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local temporary files
+*.tmp
+*.log
