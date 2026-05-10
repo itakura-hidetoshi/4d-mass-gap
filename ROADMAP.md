@@ -25,6 +25,7 @@
 
 - [x] Add Phase 3 proof-hardening plan and Lean tracking modules
 - [x] Add OperatorAPI theorem-surface layer
+- [x] Tighten OperatorAPI work-unit execution readiness
 - [ ] Restore deferred imports in dependency-closed groups
 - [ ] Add Mathlib only when theorem-level concrete modules require it
 - [ ] Replace status-only surfaces by import-closed theorem surfaces
@@ -41,4 +42,4 @@
 
 ## Current priority
 
-The next technical priority is to run CI after the OperatorAPI theorem-surface commit, then use that surface to tighten `OperatorAPI/WorkUnitChainExecutionReady.lean`.
+The next technical priority is to run CI after the OperatorAPI readiness tightening, then begin the same theorem-surface pattern for R1.
