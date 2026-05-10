@@ -1,0 +1,25 @@
+# Phase 3: R4 Export Replacement Pass 1
+
+This step applies the first status-to-theorem replacement checkpoint to the R4 export layer.
+
+## Target
+
+```text
+MGAP4D/R4/Concrete/ExportStatus.lean
+```
+
+## Goal
+
+R4 export already connects status readiness to the R4 theorem surface. This pass connects that readiness to the general replacement checkpoint:
+
+```text
+MGAP4D.ReplacementCheckpoint
+```
+
+## Scope
+
+This pass does not remove the status surface. It preserves the existing status record and adds a replacement-ready wrapper.
+
+## Next step
+
+After CI is green, proceed to R3 export replacement pass 1.
