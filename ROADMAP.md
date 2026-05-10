@@ -19,7 +19,7 @@
 - [x] Batch 007: R2/Concrete files
 - [x] Batch 008: R3/R4/R5/R6/R7 Concrete files
 - [x] Batch 009: Deferred import restoration plan and Mathlib policy
-- [ ] Batch 010: Archive prior kernels under a reviewed layout
+- [x] Batch 010: Archive prior kernels under a reviewed layout
 
 ## Phase 3: Proof hardening
 
@@ -39,4 +39,4 @@
 
 ## Current priority
 
-The next technical priority is Batch 010: archive prior kernels under a reviewed layout, then begin restoring deferred imports in small dependency-closed groups.
+The next technical priority is to run CI after Batch 010, then begin Phase 3 by restoring deferred imports in small dependency-closed groups.
