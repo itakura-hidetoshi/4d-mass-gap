@@ -1,4 +1,4 @@
-name: Lean CI
+name: Lean CI Direct Elan
 
 on:
   push:
@@ -28,12 +28,20 @@ jobs:
         run: python3 scripts/audit_lean_forbidden_tokens.py
 
   build:
-    name: Build Lean project
+    name: Build Lean project via direct elan
     runs-on: ubuntu-latest
     needs: audit
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Confirm direct elan workflow
+        shell: bash
+        run: |
+          echo "USING_DIRECT_ELAN_WORKFLOW=1"
+          pwd
+          ls -la
+          test -f lean-toolchain
 
       - name: Install elan and Lean toolchain
         shell: bash
@@ -56,7 +64,7 @@ jobs:
           lake update
           test -f lake-manifest.json
 
-      - name: Build Lean project
+      - name: Build Lean project with lake build
         shell: bash
         run: |
           set -euxo pipefail
