@@ -1,0 +1,55 @@
+{
+  "generated_at_utc": "2026-05-10T05:57:38.006183+00:00",
+  "stage": "dependency_summary",
+  "work_unit_order": [
+    "WU-R1-ELL-CLM",
+    "WU-R1-PROJECTION",
+    "WU-R2-REDUCING-SPECTRUM",
+    "WU-R4-LOWER-BOUND",
+    "WU-R3-UNBOUNDED-KERNEL",
+    "WU-R7-ATOM-EXACT-GAP",
+    "WU-GLOBAL-FINAL-AUDIT"
+  ],
+  "critical_edges": [
+    {
+      "from": "WU-R1-ELL-CLM",
+      "to": "WU-R1-PROJECTION",
+      "reason": "ell_CLM enables kernel/projection"
+    },
+    {
+      "from": "WU-R1-PROJECTION",
+      "to": "WU-R2-REDUCING-SPECTRUM",
+      "reason": "P_vac/P_exc imported by R2"
+    },
+    {
+      "from": "WU-R2-REDUCING-SPECTRUM",
+      "to": "WU-R4-LOWER-BOUND",
+      "reason": "H_exc self-adjoint is R4 input"
+    },
+    {
+      "from": "WU-R4-LOWER-BOUND",
+      "to": "WU-R3-UNBOUNDED-KERNEL",
+      "reason": "K_exc nonnegative"
+    },
+    {
+      "from": "WU-R4-LOWER-BOUND",
+      "to": "WU-R5-FINAL-SURFACE",
+      "reason": "spectrum subset"
+    },
+    {
+      "from": "WU-R3-UNBOUNDED-KERNEL",
+      "to": "WU-R7-ATOM-EXACT-GAP",
+      "reason": "K_exc psi = 0"
+    },
+    {
+      "from": "WU-R7-ATOM-EXACT-GAP",
+      "to": "WU-GLOBAL-FINAL-AUDIT",
+      "reason": "m_exc = 33/20"
+    }
+  ],
+  "terminal_gate": {
+    "mathematical_gate": "requires all theorem replacements",
+    "audit_gate": "requires clean build and independent replay",
+    "public_gate": "review gated"
+  }
+}
