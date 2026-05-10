@@ -26,12 +26,18 @@
 - [x] Add Phase 3 proof-hardening plan and Lean tracking modules
 - [x] Add OperatorAPI theorem-surface layer
 - [x] Tighten OperatorAPI work-unit execution readiness
-- [x] Add R1 theorem-surface layer
-- [ ] Restore deferred imports in dependency-closed groups
+- [x] Add R1--R7 theorem-surface layers
+- [x] Tighten R1--R7 concrete export/status exits against theorem surfaces
+- [x] Add Global theorem-surface layer
+- [x] Connect Global final assembly to Global theorem surface
+- [x] Add theorem dependency map as checked Lean structures
+- [x] Add local replay script for declaration counts
+- [x] Restore internal deferred imports for Global/Concrete audit/status groups
+- [x] Add Global/Concrete import root and summary surface
+- [x] Connect FinalAssembly to Global/Concrete summary surface
+- [x] Add Phase 3 theorem-surface and Global/Concrete checkpoint
 - [ ] Add Mathlib only when theorem-level concrete modules require it
 - [ ] Replace status-only surfaces by import-closed theorem surfaces
-- [ ] Add theorem dependency map as checked Lean structures
-- [ ] Add local replay script for declaration counts
 - [ ] Add independent CI matrix for stable Lean versions when feasible
 
 ## Phase 4: Release hygiene
@@ -43,4 +49,4 @@
 
 ## Current priority
 
-The next technical priority is to run CI after the R1 theorem-surface commit, then tighten `MGAP4D/R1/Concrete/ClosureTargetsStatus.lean` against the new R1 surface.
+Run CI after the Phase 3 checkpoint update. If green, the next technical step is preparing the first status-to-theorem replacement checkpoint before Mathlib adoption.
