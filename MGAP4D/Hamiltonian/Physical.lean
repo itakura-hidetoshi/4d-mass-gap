@@ -8,7 +8,6 @@ namespace Hamiltonian
 structure PhysicalGapRecord where
   hamiltonian : HamiltonianLabel
   witness : Spectral.GapWitness
-  deriving Repr
 
 def physicalGap3320Record : PhysicalGapRecord :=
   { hamiltonian := Hphys,
