@@ -1,0 +1,21 @@
+{
+  "bundle": "MGAP4D_v1_6_R1_R7_plus_v1_0_final",
+  "created": "2026-05-09T00:00:00+09:00",
+  "base": {
+    "filename": "MGAP4D_v1_6_lean_skeleton_R1_R7.zip",
+    "sha256": "9428daed76dfa356fb9905dc0544866a1e95a9fc861f54aadc1caa8e16656e35",
+    "file_count": 12,
+    "size_bytes": 16128
+  },
+  "added": {
+    "filename": "MGAP4D_v1_0_final_Lean.zip",
+    "sha256": "73e31d31e86cb76fb3a8f0d10177fe997463380162ddcb3c32357c007cdd9d96",
+    "file_count": 504,
+    "size_bytes": 1046005
+  },
+  "rules": {
+    "overwrite": "forbidden",
+    "strategy": "append-only archive of prior final Lean project",
+    "active_root": "MGAP4D/ and MGAP4D.lean remain v1.6 R1-R7 skeleton"
+  }
+}
