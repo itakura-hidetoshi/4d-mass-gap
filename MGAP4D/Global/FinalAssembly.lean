@@ -7,6 +7,7 @@ import MGAP4D.R5.Basic
 import MGAP4D.R6.Basic
 import MGAP4D.R7.Basic
 import MGAP4D.Global.TheoremSurface
+import MGAP4D.Global.Concrete.SummarySurface
 
 namespace MGAP4D
 namespace Global
@@ -84,6 +85,20 @@ def FinalAssemblySurfaceReady.ready (S : FinalAssemblySurfaceReady) : Prop :=
 theorem final_assembly_surface_ready_pack
     (S : FinalAssemblySurfaceReady) :
     S.ready ↔ S.ledgerReady ∧ S.globalSurfaceReady ∧ S.boundaryReady := by
+  rfl
+
+structure FinalAssemblyConcreteReady where
+  ledgerReady : Prop
+  globalSurfaceReady : Prop
+  concreteSummaryReady : Prop
+  boundaryReady : Prop
+
+def FinalAssemblyConcreteReady.ready (S : FinalAssemblyConcreteReady) : Prop :=
+  S.ledgerReady ∧ S.globalSurfaceReady ∧ S.concreteSummaryReady ∧ S.boundaryReady
+
+theorem final_assembly_concrete_ready_pack
+    (S : FinalAssemblyConcreteReady) :
+    S.ready ↔ S.ledgerReady ∧ S.globalSurfaceReady ∧ S.concreteSummaryReady ∧ S.boundaryReady := by
   rfl
 
 end Global
