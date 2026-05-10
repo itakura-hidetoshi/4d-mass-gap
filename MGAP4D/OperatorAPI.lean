@@ -8,3 +8,4 @@ import MGAP4D.OperatorAPI.ClosureWorkUnitExecutionStatus
 import MGAP4D.OperatorAPI.WorkUnitChainExecutionReady
 import MGAP4D.OperatorAPI.TheoremSurface
 import MGAP4D.OperatorAPI.ReplacementReady
+import MGAP4D.OperatorAPI.Pass2Bundle
