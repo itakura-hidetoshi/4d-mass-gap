@@ -6,5 +6,6 @@ import MGAP4D.Spectral
 import MGAP4D.Hamiltonian
 import MGAP4D.OSPositivity
 import MGAP4D.Plaquette
+import MGAP4D.Constructive
 import MGAP4D.Gap3320
 import MGAP4D.FinalSpine
