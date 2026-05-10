@@ -1,5 +1,6 @@
 import MGAP4D.R1.Concrete.ProjectionStatus
 import MGAP4D.R1.TheoremSurface
+import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
 namespace R1
@@ -37,6 +38,19 @@ def ClosureTargetsSurfaceReady.ready (S : ClosureTargetsSurfaceReady) : Prop :=
 theorem closure_targets_surface_ready_pack
     (S : ClosureTargetsSurfaceReady) :
     S.ready ↔ S.statusReady ∧ S.r1SurfaceReady ∧ S.gateActive := by
+  rfl
+
+structure ClosureTargetsReplacementReady where
+  closureSurfaceReady : Prop
+  replacementGateReady : Prop
+  statusPreserved : Prop
+
+def ClosureTargetsReplacementReady.ready (S : ClosureTargetsReplacementReady) : Prop :=
+  S.closureSurfaceReady ∧ S.replacementGateReady ∧ S.statusPreserved
+
+theorem closure_targets_replacement_ready_pack
+    (S : ClosureTargetsReplacementReady) :
+    S.ready ↔ S.closureSurfaceReady ∧ S.replacementGateReady ∧ S.statusPreserved := by
   rfl
 
 end Concrete
