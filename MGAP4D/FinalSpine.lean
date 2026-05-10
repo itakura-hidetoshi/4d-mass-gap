@@ -1,5 +1,6 @@
 import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
+import MGAP4D.Release.V16
 
 namespace MGAP4D
 
@@ -27,6 +28,11 @@ theorem final_spine_gap3320 :
 /-- The current migration-level final theorem packet carries a positive plaquette witness. -/
 theorem final_spine_plaquette_positive :
     Constructive.finalTheoremPacket3320.plaquette.observableWitness.positiveMass = true := by
+  rfl
+
+/-- The v1.6 release packet is wired to the `33/20` final theorem packet. -/
+theorem final_spine_v16_release_gap3320 :
+    Release.v16ReleasePacket.finalPacket.massGap.value = 33 / 20 := by
   rfl
 
 end MGAP4D
