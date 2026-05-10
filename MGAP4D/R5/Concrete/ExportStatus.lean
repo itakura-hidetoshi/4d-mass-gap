@@ -1,4 +1,5 @@
 import MGAP4D.R5.Concrete.InfimumStatus
+import MGAP4D.R5.TheoremSurface
 
 namespace MGAP4D
 namespace R5
@@ -17,6 +18,19 @@ def ExportStatus.ready (S : ExportStatus) : Prop :=
 theorem export_status_pack
     (S : ExportStatus) :
     S.ready ↔ S.spectrumReady ∧ S.bottomReady ∧ S.exportToR6Ready ∧ S.exportToGlobalReady ∧ S.reviewGateActive := by
+  rfl
+
+structure ExportSurfaceReady where
+  statusReady : Prop
+  r5SurfaceReady : Prop
+  gateActive : Prop
+
+def ExportSurfaceReady.ready (S : ExportSurfaceReady) : Prop :=
+  S.statusReady ∧ S.r5SurfaceReady ∧ S.gateActive
+
+theorem export_surface_ready_pack
+    (S : ExportSurfaceReady) :
+    S.ready ↔ S.statusReady ∧ S.r5SurfaceReady ∧ S.gateActive := by
   rfl
 
 end Concrete
