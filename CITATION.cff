@@ -1,11 +1,12 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it using the metadata from this file."
-title: "MGAP4D v1.6: 4D Mass Gap Lean Proof Architecture"
-version: "v1.6"
+message: "If you use this repository, please cite it using the metadata from this file."
+title: "MGAP4D: Lean 4 Proof Architecture for a Normalized 4D Mass Gap Theorem"
+version: "v1.6-dev"
 authors:
   - family-names: "Itakura"
     given-names: "Hidetoshi"
 license: "CC-BY-4.0"
+repository-code: "https://github.com/itakura-hidetoshi/4d-mass-gap"
 keywords:
   - Lean
   - Lean 4
