@@ -1,0 +1,30 @@
+{
+  "release": "MGAP4D v1.6",
+  "package": "MGAP4D_v1_6_Zenodo_release_package.zip",
+  "package_sha256": "afc2c81f3f9b20a2bf92e93fb9417ab53f0a7e46a6769eb68be8d14407c69ab0",
+  "top_level_files": [
+    "MGAP4D_v1_6_final_review_packet_with_hash_manifest.zip",
+    "MGAP4D_v1_6_expanded_source_snapshot.zip",
+    "zenodo_metadata.json",
+    "CITATION.cff",
+    "LICENSE",
+    "README_ZENODO.md",
+    "RELEASE_SUMMARY.md",
+    "ZENODO_UPLOAD_CHECKLIST.md",
+    "FILE_MANIFEST.json"
+  ],
+  "audit_summary": {
+    "lean_files": 12308,
+    "declarations": 52137,
+    "sorry": 0,
+    "admit": 0,
+    "axiom": 0,
+    "constant": 0
+  },
+  "github_migration_status": {
+    "metadata_layer": "started",
+    "lean_scaffold": "started",
+    "expanded_source_snapshot": "pending",
+    "final_review_packet": "pending"
+  }
+}
