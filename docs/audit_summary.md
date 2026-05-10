@@ -1,16 +1,23 @@
-# MGAP4D v1.6 Audit Summary
+# Archived Audit Summary
 
-This document records the public audit summary for the MGAP4D v1.6 Zenodo release package.
+This document records historical audit counts from the MGAP4D v1.6 package lineage.
 
-## Release package
+The active GitHub repository is checked by:
+
+```bash
+python3 scripts/verify_manifest.py
+python3 scripts/audit_lean_forbidden_tokens.py
+lake update
+lake build
+```
+
+## Historical package record
 
 - Package: `MGAP4D_v1_6_Zenodo_release_package.zip`
 - SHA256: `afc2c81f3f9b20a2bf92e93fb9417ab53f0a7e46a6769eb68be8d14407c69ab0`
 - Version: `v1.6`
-- Upload type: `Software`
-- License: `CC-BY-4.0`
 
-## Lean audit counts
+## Historical Lean audit counts
 
 | Metric | Count |
 |---|---:|
@@ -21,16 +28,15 @@ This document records the public audit summary for the MGAP4D v1.6 Zenodo releas
 | `axiom` | 0 |
 | `constant` | 0 |
 
-## Interpretation
+## GitHub-native interpretation
 
-The above counts are the release-level audit values for the Zenodo package. The GitHub mirror is being populated incrementally, so this repository will temporarily contain fewer Lean files than the full v1.6 release package until source migration is complete.
+The active GitHub repository may contain fewer files during migration. The current source of truth for buildability is GitHub Actions, not the historical package count.
 
-## Migration invariant
+## Invariant
 
 The migration should preserve:
 
-1. append-only release metadata;
-2. explicit package hash recording;
-3. CI-checkable Lean batches;
-4. no hidden replacement of release claims;
-5. reproducible audit scripts before final tagging.
+1. buildable Lean batches;
+2. no active `sorry`, `admit`, `axiom`, or `constant` tokens;
+3. explicit documentation of any deferred import;
+4. review-gated public theorem claims.
