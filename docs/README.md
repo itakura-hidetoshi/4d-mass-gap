@@ -1,45 +1,54 @@
-# MGAP4D v1.6 Work Unit Chain Final Execution Bundle
+# MGAP4D Documentation
 
-Generated: `2026-05-10T05:55:35.480554+00:00`
+This directory contains project documentation for the GitHub-native MGAP4D Lean 4 repository.
 
-## Purpose
-
-This bundle organizes the MGAP4D proof-replacement frontier into executable work units.
-
-The current package is not claiming that every analytic/operator theorem has already been replaced by final external-library proof terms. Instead, it provides:
-
-- a clean Lean archive with `sorry/admit/axiom/constant = 0`
-- a dependency DAG
-- work-unit manifests
-- final audit gates
-- review-ready closure order
-
-## Terminal chain
-
-1. `WU-R1-ELL-CLM`
-2. `WU-R1-PROJECTION`
-3. `WU-R2-REDUCING-SPECTRUM`
-4. `WU-R4-LOWER-BOUND`
-5. `WU-R3-UNBOUNDED-KERNEL`
-6. `WU-R7-ATOM-EXACT-GAP`
-7. `WU-GLOBAL-FINAL-AUDIT`
-
-## Mathematical target
-
-The final intended MGAP4D internal normalized theorem is:
+The active source tree is:
 
 ```text
-m_gap = 33/20
-∃ ψ*, H_exc ψ* = (33/20) ψ*
-33/20 ∈ σ_p(H_exc)
+MGAP4D/
+MGAP4D.lean
 ```
 
-## Review boundary
+The documentation here is organized around development, migration, dependency review, and audit checkpoints.
 
-The public claim gate remains closed until:
+## Main documents
 
-- all work-unit proof replacements are completed
-- exact API bindings are verified
-- clean build and import graph audit pass
-- independent replay audit passes
-- residual map is empty or explicitly scoped
+- `../README.md` — project overview and build instructions
+- `../ROADMAP.md` — GitHub-native migration roadmap
+- `../CONTRIBUTING.md` — contribution and migration rules
+- `source_tree_plan.md` — source-tree migration plan
+- `expanded_source_snapshot_inventory.md` — imported snapshot inventory
+- `batch004_global_concrete_status_only.md` — deferred-import strategy for Global/Concrete status files
+- `migration_checkpoint_lean_ci_green.md` — first CI-green migration checkpoint
+
+## Dependency and review docs
+
+- `DEPENDENCY_SUMMARY.md` — work-unit dependency chain
+- `FINAL_REVIEW_CHECKLIST.md` — review checklist
+- `audit_summary.md` — archived audit summary
+- `release_integrity.md` — archived package integrity notes
+
+## Archive
+
+Historical release provenance lives under:
+
+```text
+docs/archive/
+```
+
+Archive material is kept for traceability. It does not control the active GitHub source layout.
+
+## Development rule
+
+Every active source migration batch should keep these checks green:
+
+```bash
+python3 scripts/verify_manifest.py
+python3 scripts/audit_lean_forbidden_tokens.py
+lake update
+lake build
+```
+
+## Current focus
+
+The next development focus is migrating `OperatorAPI` interfaces and then restoring deferred imports in `MGAP4D/Global/Concrete`.
