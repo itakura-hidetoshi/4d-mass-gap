@@ -3,6 +3,8 @@ name: Lean CI
 on:
   push:
     branches: [main]
+    branches:
+      - main
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -11,6 +13,7 @@ jobs:
   build:
     name: Build Lean project
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,3 +23,13 @@ jobs:
         with:
           use-github-cache: true
           build: true
+      - name: Install Lean toolchain
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Download dependencies
+        run: lake update
+
+      - name: Build
+        run: lake build
