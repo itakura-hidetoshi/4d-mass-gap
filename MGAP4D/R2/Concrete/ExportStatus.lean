@@ -1,4 +1,5 @@
 import MGAP4D.R2.Concrete.SpectrumUnionStatus
+import MGAP4D.R2.TheoremSurface
 
 namespace MGAP4D
 namespace R2
@@ -23,6 +24,19 @@ theorem export_status_pack
     S.ready ↔ S.reducingSubspaceReady ∧ S.selfAdjointRestrictionReady ∧
       S.excitedHamiltonianReady ∧ S.spectrumUnionReady ∧
       S.exportToR3Ready ∧ S.exportToR4Ready ∧ S.exportToR5Ready := by
+  rfl
+
+structure ExportSurfaceReady where
+  statusReady : Prop
+  r2SurfaceReady : Prop
+  gateActive : Prop
+
+def ExportSurfaceReady.ready (S : ExportSurfaceReady) : Prop :=
+  S.statusReady ∧ S.r2SurfaceReady ∧ S.gateActive
+
+theorem export_surface_ready_pack
+    (S : ExportSurfaceReady) :
+    S.ready ↔ S.statusReady ∧ S.r2SurfaceReady ∧ S.gateActive := by
   rfl
 
 end Concrete
