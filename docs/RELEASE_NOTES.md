@@ -1,37 +1,60 @@
-# Release Notes: MGAP4D v1.6 Work Unit Chain Final Execution Bundle
+# Development Notes
 
-Generated: `2026-05-10T05:55:35.480554+00:00`
+This file records GitHub-native development notes for the MGAP4D Lean 4 repository.
 
-## Added in this release
+## Current repository status
 
-- Work unit terminal chain index
-- Work unit final audit surface
-- Execution-ready ordering surface
-- Machine-readable JSON and Markdown maps
-- Source hygiene audit totals
+- Lean 4 Lake project initialized
+- GitHub Actions uses direct `elan`
+- Active root: `MGAP4D.lean`
+- Active source tree: `MGAP4D/`
+- Migration is batch-based and CI-checked
 
-## Audit status
+## Completed migration batches
 
-```text
-sorry: 0
-admit: 0
-axiom: 0
-constant: 0
+- Batch 001: active R1--R7 root files, `Global.FinalAssembly`, and `Map`
+- Batch 002: lightweight docs and maps
+- Batch 003: snapshot root manifests and merge notes
+- Batch 004: `Global/Concrete` status-only files with deferred imports
+
+## Current checks
+
+The CI workflow runs:
+
+```bash
+python3 scripts/verify_manifest.py
+python3 scripts/audit_lean_forbidden_tokens.py
+lake update
+lake build
 ```
 
-## Key files
+## Current theorem spine
 
-- `MGAP4D/Global/Concrete/WorkUnitChainFinalIndex.lean`
-- `MGAP4D/Global/Concrete/WorkUnitChainFinalAudit.lean`
-- `MGAP4D/OperatorAPI/WorkUnitChainExecutionReady.lean`
-- `maps/WORK_UNIT_CHAIN_FINAL_EXECUTION_BUNDLE.json`
-- `audit/WORK_UNIT_CHAIN_FINAL_EXECUTION_BUNDLE.md`
+The active theorem spine connects:
 
-## Remaining actual proof replacements
+```text
+Foundation
+Certificates
+Spectral
+Hamiltonian
+OSPositivity
+Plaquette
+Constructive
+Audit
+Release
+Global.FinalAssembly
+FinalSpine
+```
 
-- R1: CLM/kernel/projection proofs
-- R2: reducing/self-adjoint restriction/direct-sum spectrum proofs
-- R4: analytic estimates and form-to-operator bridge
-- R3: unbounded zero-form-kernel route
-- R7: atom persistence and point-spectrum exact gap
-- Global: independent replay and public review gate
+## Remaining development work
+
+- Migrate `OperatorAPI` interfaces
+- Migrate `R1/Concrete` and `R2/Concrete`
+- Restore deferred imports in `Global/Concrete`
+- Migrate remaining R3--R7 concrete files
+- Add reviewed source maps for larger archive material
+- Keep CI green after each batch
+
+## Review boundary
+
+Public theorem-level claims remain review-gated pending independent replay and external audit.
