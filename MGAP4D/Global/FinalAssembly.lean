@@ -8,6 +8,7 @@ import MGAP4D.R6.Basic
 import MGAP4D.R7.Basic
 import MGAP4D.Global.TheoremSurface
 import MGAP4D.Global.Concrete.SummarySurface
+import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
 namespace Global
@@ -99,6 +100,20 @@ def FinalAssemblyConcreteReady.ready (S : FinalAssemblyConcreteReady) : Prop :=
 theorem final_assembly_concrete_ready_pack
     (S : FinalAssemblyConcreteReady) :
     S.ready ↔ S.ledgerReady ∧ S.globalSurfaceReady ∧ S.concreteSummaryReady ∧ S.boundaryReady := by
+  rfl
+
+structure FinalAssemblyReplacementReady where
+  finalConcreteReady : Prop
+  replacementGateReady : Prop
+  statusPreserved : Prop
+  publicBoundaryHeld : Prop
+
+def FinalAssemblyReplacementReady.ready (S : FinalAssemblyReplacementReady) : Prop :=
+  S.finalConcreteReady ∧ S.replacementGateReady ∧ S.statusPreserved ∧ S.publicBoundaryHeld
+
+theorem final_assembly_replacement_ready_pack
+    (S : FinalAssemblyReplacementReady) :
+    S.ready ↔ S.finalConcreteReady ∧ S.replacementGateReady ∧ S.statusPreserved ∧ S.publicBoundaryHeld := by
   rfl
 
 end Global
