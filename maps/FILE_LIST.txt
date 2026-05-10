@@ -1,0 +1,56 @@
+MERGE_MANIFEST.json
+MGAP4D/Global/FinalAssembly.lean
+MGAP4D/R1/Basic.lean
+MGAP4D/R2/Basic.lean
+MGAP4D/R3/Basic.lean
+MGAP4D/R4/Basic.lean
+MGAP4D/R5/Basic.lean
+MGAP4D/R6/Basic.lean
+MGAP4D/R7/Basic.lean
+MGAP4D.lean
+README.md
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_chi.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_iota.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_kappa.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_lambda.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_mu.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_nu.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_omega.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_phi.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_pi.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_psi.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_rho.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_sigma.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_tau.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_theta.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_upsilon.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_xi.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MANIFEST_v0_9_zeta.json
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/All.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/Global/FinalAssembly.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/Global/SpectrumDecompositionFinal.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R1/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R2/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R3/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R4/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R5/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R6/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/AtomPersistenceF1.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/AtomPersistenceF2.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/AtomPersistenceF3.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/AtomPersistenceF4.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/AtomPersistenceF5.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/Basic.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/ExactGap.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/FinalClosure.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/JointAtom.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/SaturationSubspace.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D/R7/UnconditionalActivation.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/MGAP4D.lean
+archive/v1_0_final/MGAP4D_v1_0_final_Lean/README.md
+
+# NOTE
+# The original snapshot FILE_LIST.txt is longer. This GitHub Batch 003 imports the active root
+# and leading archive entries as a lightweight index. The complete all-prior list is kept in the
+# Zenodo expanded source snapshot and should be migrated later as FILE_LIST_ALL_PRIOR_LEAN.txt
+# only after confirming repository size and review strategy.
