@@ -35,18 +35,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Lean
-        uses: leanprover/lean-action@v1
-        with:
-          auto-config: false
-          build: false
-          test: false
-          lint: false
-          use-github-cache: false
-          use-mathlib-cache: false
+      - name: Install elan and Lean toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Show Lean and Lake versions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lean --version
+          lake --version
 
       - name: Generate Lake manifest
-        run: lake update
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lake update
+          test -f lake-manifest.json
 
       - name: Build Lean project
-        run: lake build
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lake build
