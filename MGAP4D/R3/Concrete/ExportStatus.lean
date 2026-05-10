@@ -1,4 +1,5 @@
 import MGAP4D.R3.Concrete.ZeroFormKernelStatus
+import MGAP4D.R3.TheoremSurface
 
 namespace MGAP4D
 namespace R3
@@ -16,6 +17,19 @@ def ExportStatus.ready (S : ExportStatus) : Prop :=
 theorem export_status_pack
     (S : ExportStatus) :
     S.ready ↔ S.shiftedOperatorReady ∧ S.zeroFormKernelReady ∧ S.exportToR7Ready ∧ S.reviewGateActive := by
+  rfl
+
+structure ExportSurfaceReady where
+  statusReady : Prop
+  r3SurfaceReady : Prop
+  gateActive : Prop
+
+def ExportSurfaceReady.ready (S : ExportSurfaceReady) : Prop :=
+  S.statusReady ∧ S.r3SurfaceReady ∧ S.gateActive
+
+theorem export_surface_ready_pack
+    (S : ExportSurfaceReady) :
+    S.ready ↔ S.statusReady ∧ S.r3SurfaceReady ∧ S.gateActive := by
   rfl
 
 end Concrete
