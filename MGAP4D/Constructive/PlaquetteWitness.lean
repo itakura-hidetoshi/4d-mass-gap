@@ -8,7 +8,6 @@ namespace Constructive
 structure PlaquetteGapWitness where
   observableWitness : Plaquette.SpectralMassWitness
   gapRecord : MassGapRecord
-  deriving Repr, DecidableEq
 
 /-- Symbolic witness for positive mass of `A_{p,g}` at `33/20`. -/
 def plaquetteGap3320Witness : PlaquetteGapWitness :=
