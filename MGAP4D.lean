@@ -34,6 +34,7 @@ import MGAP4D.R7.TheoremSurface
 import MGAP4D.Global.Concrete
 import MGAP4D.Global.TheoremSurface
 import MGAP4D.Global.FinalAssembly
+import MGAP4D.Global.FinalAssemblyPass2Bundle
 import MGAP4D.Map
 import MGAP4D.Gap3320
 import MGAP4D.FinalSpine
