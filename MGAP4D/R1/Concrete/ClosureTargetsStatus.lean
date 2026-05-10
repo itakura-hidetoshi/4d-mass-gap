@@ -1,4 +1,5 @@
 import MGAP4D.R1.Concrete.ProjectionStatus
+import MGAP4D.R1.TheoremSurface
 
 namespace MGAP4D
 namespace R1
@@ -23,6 +24,19 @@ theorem closure_targets_status_pack
     S.ready ↔ S.ellCLMTargetRecorded ∧ S.kernelIffTargetRecorded ∧ S.closedKernelTargetRecorded ∧
       S.vacuumLineClosedTargetRecorded ∧ S.orthogonalDecompositionTargetRecorded ∧
       S.projectionPairTargetRecorded ∧ S.exportTargetRecorded := by
+  rfl
+
+structure ClosureTargetsSurfaceReady where
+  statusReady : Prop
+  r1SurfaceReady : Prop
+  gateActive : Prop
+
+def ClosureTargetsSurfaceReady.ready (S : ClosureTargetsSurfaceReady) : Prop :=
+  S.statusReady ∧ S.r1SurfaceReady ∧ S.gateActive
+
+theorem closure_targets_surface_ready_pack
+    (S : ClosureTargetsSurfaceReady) :
+    S.ready ↔ S.statusReady ∧ S.r1SurfaceReady ∧ S.gateActive := by
   rfl
 
 end Concrete
