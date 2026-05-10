@@ -14,15 +14,17 @@
 - [x] Batch 002: lightweight docs and maps
 - [x] Batch 003: snapshot root manifests
 - [x] Batch 004: Global/Concrete status-only files
-- [ ] Batch 005: OperatorAPI interfaces
-- [ ] Batch 006: R1/Concrete files
-- [ ] Batch 007: R2/Concrete files
-- [ ] Batch 008: R3/R4/R5/R6/R7 Concrete files
-- [ ] Batch 009: Restore deferred imports
+- [x] Batch 005: OperatorAPI interfaces
+- [x] Batch 006: R1/Concrete files
+- [x] Batch 007: R2/Concrete files
+- [x] Batch 008: R3/R4/R5/R6/R7 Concrete files
+- [x] Batch 009: Deferred import restoration plan and Mathlib policy
 - [ ] Batch 010: Archive prior kernels under a reviewed layout
 
 ## Phase 3: Proof hardening
 
+- [ ] Restore deferred imports in dependency-closed groups
+- [ ] Add Mathlib only when theorem-level concrete modules require it
 - [ ] Replace status-only surfaces by import-closed theorem surfaces
 - [ ] Add theorem dependency map as checked Lean structures
 - [ ] Add local replay script for declaration counts
@@ -30,11 +32,11 @@
 
 ## Phase 4: Release hygiene
 
-- [ ] Move release provenance into `docs/archive/`
-- [ ] Keep root README GitHub-native
+- [x] Move release provenance into `docs/archive/`
+- [x] Keep root README GitHub-native
 - [ ] Add version tags only after CI green and source tree review
 - [ ] Add external audit notes without changing active proof semantics
 
 ## Current priority
 
-The next technical priority is to migrate `OperatorAPI` as a stable interface layer, then restore deferred imports in `Global/Concrete`.
+The next technical priority is Batch 010: archive prior kernels under a reviewed layout, then begin restoring deferred imports in small dependency-closed groups.
