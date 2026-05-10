@@ -10,7 +10,6 @@ structure EigenvectorWitness where
   normOne : Bool
   eigenvalue : Rat
   gapRecord : MassGapRecord
-  deriving Repr, DecidableEq
 
 /-- Symbolic witness for `psi_*` with eigenvalue `33/20`. -/
 def psiStarWitness : EigenvectorWitness :=
