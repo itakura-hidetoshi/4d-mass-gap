@@ -1,0 +1,30 @@
+{
+  "title": "MGAP4D v1.6: 4D Mass Gap Lean Proof Architecture",
+  "version": "v1.6",
+  "upload_type": "software",
+  "license": "CC-BY-4.0",
+  "creators": [
+    {
+      "name": "Itakura, Hidetoshi"
+    }
+  ],
+  "description": "Zenodo-oriented software release package for the MGAP4D v1.6 4D mass gap Lean proof architecture.",
+  "keywords": [
+    "Lean",
+    "Lean 4",
+    "formal verification",
+    "4D mass gap",
+    "Yang-Mills",
+    "spectral gap",
+    "MGAP4D"
+  ],
+  "package_sha256": "afc2c81f3f9b20a2bf92e93fb9417ab53f0a7e46a6769eb68be8d14407c69ab0",
+  "audit_summary": {
+    "lean_files": 12308,
+    "declarations": 52137,
+    "sorry": 0,
+    "admit": 0,
+    "axiom": 0,
+    "constant": 0
+  }
+}
