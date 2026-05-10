@@ -24,6 +24,7 @@
 ## Phase 3: Proof hardening
 
 - [x] Add Phase 3 proof-hardening plan and Lean tracking modules
+- [x] Add OperatorAPI theorem-surface layer
 - [ ] Restore deferred imports in dependency-closed groups
 - [ ] Add Mathlib only when theorem-level concrete modules require it
 - [ ] Replace status-only surfaces by import-closed theorem surfaces
@@ -40,4 +41,4 @@
 
 ## Current priority
 
-The next technical priority is to run CI after the Phase 3 entry commit, then start hardening `OperatorAPI` from status interfaces toward theorem surfaces in small CI-checked steps.
+The next technical priority is to run CI after the OperatorAPI theorem-surface commit, then use that surface to tighten `OperatorAPI/WorkUnitChainExecutionReady.lean`.
