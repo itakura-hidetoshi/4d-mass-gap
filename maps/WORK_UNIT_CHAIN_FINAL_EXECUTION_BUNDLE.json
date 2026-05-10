@@ -1,0 +1,57 @@
+{
+  "generated_at_utc": "2026-05-10T05:53:23.407965+00:00",
+  "stage": "work_unit_chain_final_execution_bundle",
+  "chain": [
+    {
+      "order": 1,
+      "id": "WU-R1-ELL-CLM",
+      "output": "ell_CLM"
+    },
+    {
+      "order": 2,
+      "id": "WU-R1-PROJECTION",
+      "input": "ell_CLM",
+      "output": "P_vac/P_exc export to R2"
+    },
+    {
+      "order": 3,
+      "id": "WU-R2-REDUCING-SPECTRUM",
+      "input": "P_vac/P_exc",
+      "output": "H_exc self-adjoint, spectrum union"
+    },
+    {
+      "order": 4,
+      "id": "WU-R4-LOWER-BOUND",
+      "input": "H_exc self-adjoint",
+      "output": "H_exc ≥ 33/20 I, spectrum subset, K_exc ≥ 0"
+    },
+    {
+      "order": 5,
+      "id": "WU-R3-UNBOUNDED-KERNEL",
+      "input": "K_exc ≥ 0 and qK(ψ)=0",
+      "output": "K_exc ψ=0"
+    },
+    {
+      "order": 6,
+      "id": "WU-R7-ATOM-EXACT-GAP",
+      "input": "K_exc ψ=0 and atom persistence",
+      "output": "m_exc=33/20"
+    },
+    {
+      "order": 7,
+      "id": "WU-GLOBAL-FINAL-AUDIT",
+      "input": "R5/R6 interval + R7 exact gap",
+      "output": "final gate review packet"
+    }
+  ],
+  "audit_rule": "run source hygiene and dependency audit after each batch",
+  "gate_rule": "public claim gate remains review-gated after terminal batch",
+  "audit_totals": {
+    "lean_files": 12306,
+    "sorry": 0,
+    "admit": 0,
+    "axiom": 0,
+    "constant": 0,
+    "declarations": 52125
+  }
+}
