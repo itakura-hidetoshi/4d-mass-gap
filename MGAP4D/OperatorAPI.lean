@@ -6,3 +6,4 @@ import MGAP4D.OperatorAPI.Phase1Targets
 import MGAP4D.OperatorAPI.PhaseSelectionStatus
 import MGAP4D.OperatorAPI.ClosureWorkUnitExecutionStatus
 import MGAP4D.OperatorAPI.WorkUnitChainExecutionReady
+import MGAP4D.OperatorAPI.TheoremSurface
