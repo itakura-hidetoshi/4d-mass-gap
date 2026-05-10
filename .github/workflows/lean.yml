@@ -1,37 +1,29 @@
 name: Lean CI
 
 on:
-
   push:
-
-    branches: [main]
-
+    branches: ["main"]
   pull_request:
-
-    branches: [main]
-
+    branches: ["main"]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-
   build:
-
     name: Build Lean project
-
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Checkout repository
-
         uses: actions/checkout@v4
 
-      - name: Set up Lean
-
+      - name: Build Lean project
         uses: leanprover/lean-action@v1
-
         with:
-
-          use-github-cache: true
-
+          auto-config: false
           build: true
+          test: false
+          lint: false
+          use-github-cache: false
+          use-mathlib-cache: false
