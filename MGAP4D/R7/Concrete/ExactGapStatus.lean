@@ -1,5 +1,6 @@
 import MGAP4D.R7.Concrete.AtomPersistenceStatus
 import MGAP4D.R7.TheoremSurface
+import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
 namespace R7
@@ -31,6 +32,19 @@ def ExactGapSurfaceReady.ready (S : ExactGapSurfaceReady) : Prop :=
 theorem exact_gap_surface_ready_pack
     (S : ExactGapSurfaceReady) :
     S.ready ↔ S.statusReady ∧ S.r7SurfaceReady ∧ S.gateActive := by
+  rfl
+
+structure ExactGapReplacementReady where
+  exactSurfaceReady : Prop
+  replacementGateReady : Prop
+  statusPreserved : Prop
+
+def ExactGapReplacementReady.ready (S : ExactGapReplacementReady) : Prop :=
+  S.exactSurfaceReady ∧ S.replacementGateReady ∧ S.statusPreserved
+
+theorem exact_gap_replacement_ready_pack
+    (S : ExactGapReplacementReady) :
+    S.ready ↔ S.exactSurfaceReady ∧ S.replacementGateReady ∧ S.statusPreserved := by
   rfl
 
 end Concrete
