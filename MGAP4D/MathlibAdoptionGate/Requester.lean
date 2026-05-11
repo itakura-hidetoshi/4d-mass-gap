@@ -6,6 +6,7 @@ namespace MathlibAdoptionGate
 inductive MathlibRequester where
   | r1Hilbert
   | r2Restriction
+  | r3ZeroKernel
   | r4LowerBound
   | r5Spectrum
   | r6Interval
@@ -22,6 +23,7 @@ structure MathlibRequest where
 def firstEligibleRequesters : List MathlibRequester := [
   MathlibRequester.r1Hilbert,
   MathlibRequester.r2Restriction,
+  MathlibRequester.r3ZeroKernel,
   MathlibRequester.r4LowerBound,
   MathlibRequester.r5Spectrum,
   MathlibRequester.r6Interval,
