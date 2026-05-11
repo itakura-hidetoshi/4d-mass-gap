@@ -28,6 +28,7 @@ import MGAP4D.MathlibAdoptionGate.DryRunChecklist
 import MGAP4D.MathlibAdoptionGate.DryRunResultLedger
 import MGAP4D.MathlibAdoptionGate.DryRunExecutionNote
 import MGAP4D.MathlibAdoptionGate.DryRunReviewGatePR1
+import MGAP4D.MathlibAdoptionGate.DryRunCloseOrPromoteGatePR1
 import MGAP4D.PreMathlibClosure
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
