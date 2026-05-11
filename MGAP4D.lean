@@ -46,6 +46,7 @@ import MGAP4D.R4.Concrete.LowerBoundProofObligationMap
 import MGAP4D.R4.Theorem
 import MGAP4D.R4.TheoremSurface
 import MGAP4D.R5.Concrete
+import MGAP4D.R5.Theorem
 import MGAP4D.R5.TheoremSurface
 import MGAP4D.R6.Concrete
 import MGAP4D.R6.TheoremSurface
