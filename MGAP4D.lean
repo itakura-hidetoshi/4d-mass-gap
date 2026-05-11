@@ -36,6 +36,7 @@ import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
 import MGAP4D.R1.TheoremSurface
 import MGAP4D.R2.Concrete
+import MGAP4D.R2.Theorem
 import MGAP4D.R2.TheoremSurface
 import MGAP4D.R3.Concrete
 import MGAP4D.R3.TheoremSurface
