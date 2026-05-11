@@ -52,6 +52,7 @@ import MGAP4D.R6.Concrete
 import MGAP4D.R6.Theorem
 import MGAP4D.R6.TheoremSurface
 import MGAP4D.R7.Concrete
+import MGAP4D.R7.Theorem
 import MGAP4D.R7.TheoremSurface
 import MGAP4D.Global.Concrete
 import MGAP4D.Global.TheoremSurface
