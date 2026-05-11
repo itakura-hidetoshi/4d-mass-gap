@@ -36,17 +36,38 @@
 - [x] Add Global/Concrete import root and summary surface
 - [x] Connect FinalAssembly to Global/Concrete summary surface
 - [x] Add Phase 3 theorem-surface and Global/Concrete checkpoint
-- [ ] Add Mathlib only when theorem-level concrete modules require it
-- [ ] Replace status-only surfaces by import-closed theorem surfaces
-- [ ] Add independent CI matrix for stable Lean versions when feasible
+- [x] Add first status-to-theorem replacement checkpoint
+- [x] Complete replacement pass 1
+- [x] Add replacement pass 2 plan
+- [x] Complete replacement pass 2 bundle consolidation
+- [x] Add replacement pass 2 closure checkpoint
+- [x] Add Mathlib adoption gate
+- [x] Add scoped Mathlib request records for R1/R2/R4/R5/R6/R7
+- [x] Add Mathlib request registry
+- [x] Add R1 Hilbert concrete theorem candidate
+- [x] Add R1 Hilbert theorem checklist and proof-obligation map
+- [x] Add R1 Hilbert theorem skeleton and milestone
+- [x] Add Mathlib dry-run branch plan, checklist, execution note, and result ledger
+- [x] Add pre-Mathlib closure checkpoint
+- [ ] Run CI after pre-Mathlib closure and README/ROADMAP sync
+- [ ] Create optional Mathlib dry-run branch for R1 Hilbert only
+- [ ] Record dry-run result before any merge decision
+- [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
 
 - [x] Move release provenance into `docs/archive/`
 - [x] Keep root README GitHub-native
+- [x] Keep public theorem claims review-gated
 - [ ] Add version tags only after CI green and source tree review
 - [ ] Add external audit notes without changing active proof semantics
 
 ## Current priority
 
-Run CI after the Phase 3 checkpoint update. If green, the next technical step is preparing the first status-to-theorem replacement checkpoint before Mathlib adoption.
+Run CI after the pre-Mathlib closure update. If green, the next technical step is an optional dry-run branch:
+
+```text
+feature/mathlib-r1-hilbert-dry-run
+```
+
+The dry-run branch may test Mathlib for the R1 Hilbert path, but `main` remains pre-Mathlib until the dry-run result is recorded, reviewed, and gated.
