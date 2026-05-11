@@ -24,6 +24,7 @@ import MGAP4D.MathlibAdoptionGate.R7AtomExactRequest
 import MGAP4D.MathlibAdoptionGate.RequestRegistry
 import MGAP4D.MathlibAdoptionGate.DryRunBranchPlan
 import MGAP4D.MathlibAdoptionGate.DryRunGate
+import MGAP4D.MathlibAdoptionGate.DryRunChecklist
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
