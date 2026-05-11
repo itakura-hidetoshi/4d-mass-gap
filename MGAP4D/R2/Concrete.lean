@@ -6,3 +6,4 @@ import MGAP4D.R2.Concrete.ExportStatus
 import MGAP4D.R2.Concrete.RestrictionTheoremCandidate
 import MGAP4D.R2.Concrete.RestrictionCandidateBundle
 import MGAP4D.R2.Concrete.RestrictionTheoremChecklist
+import MGAP4D.R2.Concrete.RestrictionProofObligationMap
