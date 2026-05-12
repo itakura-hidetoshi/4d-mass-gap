@@ -5,3 +5,4 @@ import MGAP4D.R7.Theorem.AtomExactClosureCandidate
 import MGAP4D.R7.Theorem.AtomExactHardeningPass
 import MGAP4D.R7.Theorem.AtomExactTighteningSegmentSelection
 import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass1
+import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass2
