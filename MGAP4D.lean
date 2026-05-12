@@ -54,6 +54,7 @@ import MGAP4D.R4.Concrete.LowerBoundTheoremChecklist
 import MGAP4D.R4.Concrete.LowerBoundProofObligationMap
 import MGAP4D.R4.Theorem
 import MGAP4D.R4.Theorem.LowerBoundClosureCandidate
+import MGAP4D.R4.Theorem.LowerBoundHardeningPass
 import MGAP4D.R4.TheoremSurface
 import MGAP4D.R5.Concrete
 import MGAP4D.R5.Theorem
