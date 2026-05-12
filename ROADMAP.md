@@ -42,16 +42,25 @@
 - [x] Complete replacement pass 2 bundle consolidation
 - [x] Add replacement pass 2 closure checkpoint
 - [x] Add Mathlib adoption gate
-- [x] Add scoped Mathlib request records for R1/R2/R4/R5/R6/R7
-- [x] Add Mathlib request registry
-- [x] Add R1 Hilbert concrete theorem candidate
-- [x] Add R1 Hilbert theorem checklist and proof-obligation map
-- [x] Add R1 Hilbert theorem skeleton and milestone
+- [x] Add scoped Mathlib request records for R1/R2/R3/R4/R5/R6/R7
+- [x] Add Mathlib request registry with R3 included
+- [x] Add R1 Hilbert concrete theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add R2 restriction concrete theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Correct R3 omission and add R3 requester/request/registry entry
+- [x] Add R3 shifted / zero-form theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add R4 lower-bound theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add R5 spectrum / infimum theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add R6 interval-exclusion theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add R7 atom / exact-gap theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add Phase3CandidateClosure for R1--R7 milestone coverage
 - [x] Add Mathlib dry-run branch plan, checklist, execution note, and result ledger
 - [x] Add pre-Mathlib closure checkpoint
-- [ ] Run CI after pre-Mathlib closure and README/ROADMAP sync
-- [ ] Create optional Mathlib dry-run branch for R1 Hilbert only
-- [ ] Record dry-run result before any merge decision
+- [x] Create R1 Mathlib dry-run draft PR
+- [x] Record successful R1 dry-run result
+- [x] Keep R1 dry-run PR as draft pending later review
+- [ ] Run CI after R1--R7 candidate closure and README/ROADMAP sync
+- [ ] Record CI result after R3 correction and Phase3CandidateClosure
+- [ ] Decide next scoped dry-run path only after CI is green
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
@@ -64,10 +73,21 @@
 
 ## Current priority
 
-Run CI after the pre-Mathlib closure update. If green, the next technical step is an optional dry-run branch:
+Run CI after the R1--R7 candidate-closure update.
+
+The current pre-Mathlib closure now includes:
 
 ```text
-feature/mathlib-r1-hilbert-dry-run
+R1 Hilbert
+R2 restriction
+R3 shifted / zero-form route
+R4 lower bound
+R5 spectrum / infimum
+R6 interval exclusion
+R7 atom / exact value
+Phase3CandidateClosure
 ```
 
-The dry-run branch may test Mathlib for the R1 Hilbert path, but `main` remains pre-Mathlib until the dry-run result is recorded, reviewed, and gated.
+The earlier R3 omission has been corrected. The next technical step is not a wider Mathlib merge; it is CI confirmation of the corrected pre-Mathlib main branch.
+
+Mathlib may still be tested only through scoped dry-run branches. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
