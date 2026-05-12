@@ -33,6 +33,7 @@ import MGAP4D.MathlibAdoptionGate.DryRunKeepDraftPR1
 import MGAP4D.PreMathlibClosure
 import MGAP4D.Phase3CandidateClosure
 import MGAP4D.Phase3CIConfirmationClosure
+import MGAP4D.PostMathlibHoldTheoremHardening
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
