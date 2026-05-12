@@ -103,7 +103,14 @@
 - [x] Add PR #7 review / decision / hold-draft gate modules
 - [x] Wire PR #7 gate modules through `MGAP4D.MathlibAdoptionGate`
 - [x] Observe post-PR7-gate-wiring main CI green
-- [ ] Select R7 atom / exact-gap as the next scoped Mathlib dry-run path after review
+- [x] Select R7 atom / exact-gap as the next scoped Mathlib dry-run path
+- [x] Open R7 Mathlib dry-run draft PR #8
+- [x] Observe R7 dry-run CI green
+- [x] Record R7 dry-run result in ledger and PR comment
+- [x] Add PR #8 review / decision / hold gate modules
+- [x] Wire PR #8 gate modules through `MGAP4D.MathlibAdoptionGate`
+- [ ] Observe post-PR8-gate-wiring main CI green
+- [ ] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
@@ -116,7 +123,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, R6 scoped Mathlib dry-run, and the PR #3--#7 gate wiring chain have been observed through CI.
+The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, R6 scoped Mathlib dry-run, R7 scoped Mathlib dry-run, and the PR #3--#8 gate wiring chain have been recorded.
 
 Observed PR CI:
 
@@ -296,7 +303,22 @@ Generate Lake manifest: success
 lake build: success
 ```
 
-PR #3, PR #4, PR #5, PR #6, and PR #7 gate modules are wired through:
+Observed R7 scoped Mathlib dry-run CI:
+
+```text
+PR: #8
+Workflow: Lean Direct Elan CI
+Run ID: 25725331515
+Run number: 612
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+PR status: open draft, unmerged
+```
+
+PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules are wired through:
 
 ```text
 MGAP4D.MathlibAdoptionGate
@@ -321,7 +343,8 @@ R3 dry-run PR #4 result recorded
 R4 dry-run PR #5 result recorded
 R5 dry-run PR #6 result recorded
 R6 dry-run PR #7 result recorded
-PR #3--#7 gate chains wired through MathlibAdoptionGate
+R7 dry-run PR #8 result recorded
+PR #3--#8 gate chains wired through MathlibAdoptionGate
 post-PR3-gate-wiring CI green
 post-PR5-gate-wiring CI green
 post-PR6-gate-wiring CI green
@@ -330,4 +353,4 @@ post-PR7-gate-wiring CI green
 
 The earlier R3 omission has been corrected.
 
-Next priority: select the R7 atom / exact-gap scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: observe post-PR8-gate-wiring main CI green, then review the complete R1--R7 scoped Mathlib dry-run series. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
