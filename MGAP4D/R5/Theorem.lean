@@ -4,3 +4,4 @@ import MGAP4D.R5.Theorem.SpectrumMilestone
 import MGAP4D.R5.Theorem.SpectrumInfimumClosureCandidate
 import MGAP4D.R5.Theorem.SpectrumInfimumHardeningPass
 import MGAP4D.R5.Theorem.SpectrumInfimumTighteningSegmentSelection
+import MGAP4D.R5.Theorem.SpectrumInfimumProofObligationTighteningPass1
