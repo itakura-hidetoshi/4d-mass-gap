@@ -33,6 +33,7 @@ MGAP4D/ReplacementPass2Closure
 MGAP4D/MathlibAdoptionGate
 MGAP4D/PreMathlibClosure
 MGAP4D/Phase3CandidateClosure
+MGAP4D/Phase3CIConfirmationClosure
 MGAP4D/R1--R7
 MGAP4D/Global
 MGAP4D/FinalSpine
@@ -40,7 +41,7 @@ MGAP4D/FinalSpine
 
 ## Phase 3 status
 
-The current `main` branch is closed at a **pre-Mathlib Phase 3 candidate-closure checkpoint**.
+The current `main` branch is closed at a **pre-Mathlib Phase 3 candidate-closure and CI-confirmation checkpoint**.
 
 The active proof-hardening route is:
 
@@ -53,6 +54,7 @@ TheoremSurface
   -> MathlibRequestRegistry
   -> R1/R2/R3/R4/R5/R6/R7 theorem-candidate milestones
   -> Phase3CandidateClosure
+  -> Phase3CIConfirmationClosure
   -> DryRunBranchPlan
   -> DryRunChecklist
   -> DryRunResultLedger
@@ -97,6 +99,41 @@ Theorem skeleton bundle
 Theorem milestone
 ```
 
+## CI confirmation
+
+The R1--R7 candidate closure and request-import cleanup have been observed through both PR CI and manual main workflow CI.
+
+```text
+PR #2 observation CI:
+Lean Direct Elan CI
+Run ID: 25712798053
+Run number: 547
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+PR #2 status: closed unmerged
+```
+
+```text
+Manual main workflow_dispatch CI:
+Lean Direct Elan CI
+Run ID: 25713735152
+Build job ID: 75499172664
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+```
+
+```text
+Post-Phase3CIConfirmationClosure manual main workflow_dispatch CI:
+Lean Direct Elan CI
+Run ID: 25714521362
+Build job ID: 75501432120
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+```
+
 ## Mathlib dry-run policy
 
 Mathlib adoption may be tested only through a dry-run branch, for example:
@@ -115,7 +152,9 @@ docs/phase3_mathlib_adoption_gate.md
 docs/phase3_mathlib_request_registry.md
 docs/phase3_r1_hilbert_theorem_milestone_checkpoint.md
 docs/phase3_r3_theorem_milestone_checkpoint.md
+docs/phase3_candidate_closure_ci_status_ledger.md
 MGAP4D/Phase3CandidateClosure.lean
+MGAP4D/Phase3CIConfirmationClosure.lean
 docs/phase3_mathlib_adoption_dry_run_branch_plan.md
 docs/phase3_mathlib_dry_run_branch_checklist.md
 docs/phase3_mathlib_dry_run_result_ledger.md
@@ -185,9 +224,11 @@ Earlier Zenodo-oriented metadata is retained as archival/release provenance. It 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
 - Source migration: active, batch-based
-- Phase 3: pre-Mathlib candidate-closure checkpoint reached
+- Phase 3: pre-Mathlib candidate-closure and CI-confirmation checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3 omission: corrected and tracked in `Phase3CandidateClosure`
+- CI confirmation: tracked in `Phase3CIConfirmationClosure`
+- PR #2 observation PR: closed unmerged
 - Mathlib on main: not yet introduced
 - Dry-run branch policy: recorded
 - Public final theorem claim: review-gated pending independent replay and external audit
