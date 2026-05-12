@@ -37,6 +37,7 @@ import MGAP4D.PostMathlibHoldTheoremHardening
 import MGAP4D.R3R7RouteSpecificHardening
 import MGAP4D.R3R7ClosureCandidateSeriesReview
 import MGAP4D.R3R7TheoremRouteQueue
+import MGAP4D.R3R7HardeningPassSeriesReview
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
