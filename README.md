@@ -32,6 +32,7 @@ MGAP4D/ReplacementPass2
 MGAP4D/ReplacementPass2Closure
 MGAP4D/MathlibAdoptionGate
 MGAP4D/PreMathlibClosure
+MGAP4D/Phase3CandidateClosure
 MGAP4D/R1--R7
 MGAP4D/Global
 MGAP4D/FinalSpine
@@ -39,7 +40,7 @@ MGAP4D/FinalSpine
 
 ## Phase 3 status
 
-The current `main` branch is closed at a **pre-Mathlib Phase 3 checkpoint**.
+The current `main` branch is closed at a **pre-Mathlib Phase 3 candidate-closure checkpoint**.
 
 The active proof-hardening route is:
 
@@ -50,7 +51,8 @@ TheoremSurface
   -> Pass2Closure
   -> MathlibAdoptionGate
   -> MathlibRequestRegistry
-  -> R1 Hilbert theorem milestone
+  -> R1/R2/R3/R4/R5/R6/R7 theorem-candidate milestones
+  -> Phase3CandidateClosure
   -> DryRunBranchPlan
   -> DryRunChecklist
   -> DryRunResultLedger
@@ -62,8 +64,37 @@ Important invariant:
 ```text
 Mathlib is not yet introduced on main.
 lakefile.lean is not modified for Mathlib.
-No active Lean module imports Mathlib.
+No active main-branch Lean module imports Mathlib.
 Public theorem claims remain review-gated.
+```
+
+## R1--R7 theorem-candidate coverage
+
+Phase 3 candidate preparation now covers the full R1--R7 spine:
+
+```text
+R1 Hilbert path
+R2 self-adjoint restriction path
+R3 shifted-operator / zero-form route
+R4 lower-bound path
+R5 spectrum / infimum path
+R6 interval-exclusion path
+R7 atom / exact-gap path
+```
+
+R3 is explicitly recorded after the prior omission in the candidate path:
+
+```text
+Mathlib requester
+Mathlib request
+request registry entry
+Concrete theorem candidate
+Concrete candidate bundle
+Concrete theorem checklist
+Concrete proof-obligation map
+Theorem skeleton
+Theorem skeleton bundle
+Theorem milestone
 ```
 
 ## Mathlib dry-run policy
@@ -74,15 +105,17 @@ Mathlib adoption may be tested only through a dry-run branch, for example:
 feature/mathlib-r1-hilbert-dry-run
 ```
 
-The dry-run branch may test scoped Mathlib imports for the R1 Hilbert path, but `main` remains pre-Mathlib unless the dry-run result is recorded, reviewed, and gated.
+The dry-run branch may test scoped Mathlib imports for one reviewed path at a time, but `main` remains pre-Mathlib unless the dry-run result is recorded, reviewed, and gated.
 
-Relevant documents:
+Relevant documents and modules:
 
 ```text
 docs/phase3_pre_mathlib_closure_checkpoint.md
 docs/phase3_mathlib_adoption_gate.md
 docs/phase3_mathlib_request_registry.md
 docs/phase3_r1_hilbert_theorem_milestone_checkpoint.md
+docs/phase3_r3_theorem_milestone_checkpoint.md
+MGAP4D/Phase3CandidateClosure.lean
 docs/phase3_mathlib_adoption_dry_run_branch_plan.md
 docs/phase3_mathlib_dry_run_branch_checklist.md
 docs/phase3_mathlib_dry_run_result_ledger.md
@@ -152,7 +185,9 @@ Earlier Zenodo-oriented metadata is retained as archival/release provenance. It 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
 - Source migration: active, batch-based
-- Phase 3: pre-Mathlib closure checkpoint reached
+- Phase 3: pre-Mathlib candidate-closure checkpoint reached
+- R1--R7 theorem-candidate milestones: recorded
+- R3 omission: corrected and tracked in `Phase3CandidateClosure`
 - Mathlib on main: not yet introduced
 - Dry-run branch policy: recorded
 - Public final theorem claim: review-gated pending independent replay and external audit
