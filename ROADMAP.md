@@ -121,7 +121,7 @@
 - [x] Record Mathlib main-adoption hold decision document
 - [x] Add Mathlib main-adoption hold decision Lean gate
 - [x] Wire Mathlib main-adoption hold decision through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-main-adoption-hold-decision main CI green
+- [x] Observe post-main-adoption-hold-decision main CI green
 - [ ] Continue theorem-route hardening while main remains pre-Mathlib
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
@@ -135,7 +135,7 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`. A Mathlib main-adoption hold decision document and Lean gate have been added and wired. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`. A Mathlib main-adoption hold decision document and Lean gate have been added, wired, and observed green through CI. Main remains pre-Mathlib.
 
 Observed R1--R7 dry-run series:
 
@@ -154,9 +154,24 @@ Observed review/guard chain:
 ```text
 post-series-review CI: green
 post-main-adoption-review-gate CI: green
+post-main-adoption-hold-decision CI: green
 main-adoption decision: hold_main_adoption
 main remains pre-Mathlib
 Mathlib on main: not introduced
 ```
 
-Next priority: observe post-main-adoption-hold-decision main CI green, then continue theorem-route hardening while preserving the pre-Mathlib invariant.
+Observed post-main-adoption-hold-decision main CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25726729556
+Build job ID: 75541313277
+Commit: 41cd25290448a78324277d824bc55abd6ea871ce
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
+
+Next priority: continue theorem-route hardening while preserving the pre-Mathlib invariant.
