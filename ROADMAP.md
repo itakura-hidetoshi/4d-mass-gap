@@ -63,9 +63,13 @@
 - [x] Open Phase 3 candidate-closure observation draft PR
 - [x] Observe PR CI green for Phase 3 candidate closure
 - [x] Record PR CI success in ledger and PR comment
+- [x] Close Phase 3 observation PR unmerged after recording
 - [x] Observe manual main workflow_dispatch CI green
 - [x] Record manual main CI success in ledger
-- [ ] Decide next scoped dry-run path only after review
+- [x] Add Phase3CIConfirmationClosure
+- [x] Observe post-Phase3CIConfirmationClosure manual main workflow_dispatch CI green
+- [x] Record post-confirmation CI success in ledger
+- [ ] Select the next scoped Mathlib dry-run path after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
@@ -78,7 +82,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update and request import cleanup have now been observed through both a draft PR CI run and a manual main workflow_dispatch run.
+The R1--R7 candidate-closure update, R3 correction, request import cleanup, and Phase3CIConfirmationClosure have been observed through CI.
 
 Observed PR CI:
 
@@ -90,14 +94,26 @@ Run number: 547
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
+PR status: closed unmerged
 ```
 
-Observed manual main workflow_dispatch CI:
+Observed manual main workflow_dispatch CI before `Phase3CIConfirmationClosure`:
 
 ```text
 Workflow: Lean Direct Elan CI
 Run ID: 25713735152
 Build job ID: 75499172664
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+```
+
+Observed manual main workflow_dispatch CI after `Phase3CIConfirmationClosure`:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25714521362
+Build job ID: 75501432120
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -114,8 +130,9 @@ R5 spectrum / infimum
 R6 interval exclusion
 R7 atom / exact value
 Phase3CandidateClosure
+Phase3CIConfirmationClosure
 ```
 
 The earlier R3 omission has been corrected.
 
-Mathlib may still be tested only through scoped dry-run branches. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: select the next scoped Mathlib dry-run path. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
