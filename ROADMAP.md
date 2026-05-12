@@ -75,7 +75,7 @@
 - [x] Record R2 dry-run result in ledger and PR comment
 - [x] Add PR #3 review / decision / keep-draft gate modules
 - [x] Wire PR #3 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-PR3-gate-wiring main CI green
+- [x] Observe post-PR3-gate-wiring main CI green
 - [ ] Select R3 shifted / zero-form as the next scoped Mathlib dry-run path after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -89,7 +89,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update, R3 correction, request import cleanup, and Phase3CIConfirmationClosure have been observed through CI.
+The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, and PR #3 gate wiring have been observed through CI.
 
 Observed PR CI:
 
@@ -153,7 +153,21 @@ lake build: success
 PR status: open draft, unmerged
 ```
 
-PR #3 gate modules are now wired through:
+Observed post-PR3-gate-wiring main CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25716946364
+Build job ID: 75508927249
+Commit: 5493a286cc1071e79e0928d6253260981580f171
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
+
+PR #3 gate modules are wired through:
 
 ```text
 MGAP4D.MathlibAdoptionGate
@@ -175,8 +189,9 @@ Phase3CandidateClosure
 Phase3CIConfirmationClosure
 R2 dry-run PR #3 result recorded
 PR #3 gate chain wired through MathlibAdoptionGate
+post-PR3-gate-wiring CI green
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: observe post-PR3-gate-wiring main CI green, then select the R3 shifted / zero-form scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: select the R3 shifted / zero-form scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
