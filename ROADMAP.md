@@ -95,7 +95,7 @@
 - [x] Record R5 dry-run result in ledger and PR comment
 - [x] Add PR #6 review / decision / hold-draft gate modules
 - [x] Wire PR #6 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-PR6-gate-wiring main CI green
+- [x] Observe post-PR6-gate-wiring main CI green
 - [ ] Select R6 interval-exclusion as the next scoped Mathlib dry-run path after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -109,7 +109,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, and the PR #3--#6 gate wiring chain have been recorded.
+The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, and the PR #3--#6 gate wiring chain have been observed through CI.
 
 Observed PR CI:
 
@@ -246,6 +246,20 @@ lake build: success
 PR status: open draft, unmerged
 ```
 
+Observed post-PR6-gate-wiring main CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25721990812
+Build job ID: 75525210458
+Commit: 615d3a5a2363b6319cf3e082b997d0b344c60e9d
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
+
 PR #3, PR #4, PR #5, and PR #6 gate modules are wired through:
 
 ```text
@@ -273,8 +287,9 @@ R5 dry-run PR #6 result recorded
 PR #3--#6 gate chains wired through MathlibAdoptionGate
 post-PR3-gate-wiring CI green
 post-PR5-gate-wiring CI green
+post-PR6-gate-wiring CI green
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: observe post-PR6-gate-wiring main CI green, then select the R6 interval-exclusion scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: select the R6 interval-exclusion scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
