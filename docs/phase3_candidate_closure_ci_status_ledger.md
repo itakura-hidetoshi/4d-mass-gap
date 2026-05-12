@@ -27,6 +27,28 @@ It is recorded only as:
 CI status: not observed / not confirmed
 ```
 
+## Trigger note observation
+
+A non-semantic documentation note was added to try to trigger a main push CI observation.
+
+```text
+trigger commit: eda28516f6dc7e9d4d87de630cdba3540ba345f4
+file: docs/phase3_candidate_closure_ci_trigger_note.md
+```
+
+Observed immediately after that trigger commit:
+
+```text
+fetch_commit_workflow_runs -> []
+get_commit_combined_status -> statuses: []
+```
+
+This is also not recorded as CI green. It remains:
+
+```text
+CI status: not observed / not confirmed
+```
+
 ## Current source-side state
 
 The main branch now records:
@@ -44,4 +66,4 @@ lakefile.lean still not changed for Mathlib
 
 Run or observe the GitHub Actions workflow `Lean Direct Elan CI` on main, then update this ledger with the actual result.
 
-If the workflow does not appear automatically, use the existing `workflow_dispatch` trigger or make a small non-semantic documentation commit to trigger the push workflow.
+If the workflow does not appear automatically, use the existing `workflow_dispatch` trigger from the GitHub Actions UI.
