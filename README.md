@@ -48,7 +48,7 @@ MGAP4D/FinalSpine
 
 ## Phase 3 status
 
-The current `main` branch is closed at a **R5 proof-obligation tightening closure checkpoint** after the R5 spectrum / infimum proof-obligation tightening pass series was observed green through CI.
+The current `main` branch is closed at a **R6 proof-obligation tightening closure checkpoint** after the R6 interval-exclusion proof-obligation tightening pass series was observed green through CI.
 
 The active proof-hardening route is:
 
@@ -74,11 +74,12 @@ TheoremSurface
   -> PostHardeningPassTighteningSegmentSelection
   -> R3 proof-obligation tightening closure
   -> R4 proof-obligation tightening closure
-  -> R5 proof-obligation tightening pass 1
-  -> R5 proof-obligation tightening pass 2
-  -> R5 proof-obligation tightening pass 3
-  -> R5 proof-obligation tightening series review
   -> R5 proof-obligation tightening closure
+  -> R6 proof-obligation tightening pass 1
+  -> R6 proof-obligation tightening pass 2
+  -> R6 proof-obligation tightening pass 3
+  -> R6 proof-obligation tightening series review
+  -> R6 proof-obligation tightening closure
 ```
 
 Important invariant:
@@ -88,8 +89,8 @@ Mathlib is not yet introduced on main.
 lakefile.lean is not modified for Mathlib.
 No active main-branch Lean module imports Mathlib.
 Public theorem claims remain review-gated.
-R5 theorem completion is not claimed.
-R6--R7 theorem completions are not unlocked.
+R6 theorem completion is not claimed.
+R7 theorem completion is not unlocked.
 Final gap theorem release is not unlocked.
 ```
 
@@ -127,7 +128,7 @@ R4 proof-obligation tightening series review: CI green
 R4 proof-obligation tightening closure: CI green
 ```
 
-R5 proof-obligation tightening is now closed at the review-surface level:
+R5 proof-obligation tightening is closed at the review-surface level:
 
 ```text
 R5 proof-obligation tightening pass 1: CI green
@@ -135,6 +136,16 @@ R5 proof-obligation tightening pass 2: CI green
 R5 proof-obligation tightening pass 3: CI green
 R5 proof-obligation tightening series review: CI green
 R5 proof-obligation tightening closure: CI green
+```
+
+R6 proof-obligation tightening is now closed at the review-surface level:
+
+```text
+R6 proof-obligation tightening pass 1: CI green
+R6 proof-obligation tightening pass 2: CI green
+R6 proof-obligation tightening pass 3: CI green
+R6 proof-obligation tightening series review: CI green
+R6 proof-obligation tightening closure: CI green
 ```
 
 Earlier R3--R7 pass-level hardening surfaces remain green:
@@ -154,11 +165,11 @@ Post-hardening-pass closure: CI green
 The latest closure CI recorded in the repository is:
 
 ```text
-R5 proof-obligation tightening closure main CI:
+R6 proof-obligation tightening closure main CI:
 Lean Direct Elan CI
-Run ID: 25763620280
-Build job ID: 75670816582
-Commit: c0c775d44c933b82da2f8421a19fc73fcdde1182
+Run ID: 25765783577
+Build job ID: 75677847409
+Commit: ad9b2f619a07b5347d40cfdaa09de56c31cae639
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -182,6 +193,7 @@ Post-hardening-pass closure: CI green
 R3 proof-obligation tightening closure: CI green
 R4 proof-obligation tightening closure: CI green
 R5 proof-obligation tightening closure: CI green
+R6 proof-obligation tightening closure: CI green
 ```
 
 ## Mathlib dry-run policy
@@ -204,6 +216,7 @@ docs/phase3_post_hardening_pass_closure_ci.md
 docs/phase3_r3_proof_obligation_tightening_closure_ci.md
 docs/phase3_r4_proof_obligation_tightening_closure_ci.md
 docs/phase3_r5_proof_obligation_tightening_closure_ci.md
+docs/phase3_r6_proof_obligation_tightening_closure_ci.md
 MGAP4D/Phase3CandidateClosure.lean
 MGAP4D/Phase3CIConfirmationClosure.lean
 MGAP4D/PostMathlibHoldTheoremHardening.lean
@@ -212,6 +225,7 @@ MGAP4D/PostHardeningPassClosure.lean
 MGAP4D/R3/Theorem/R3ProofObligationTighteningClosure.lean
 MGAP4D/R4/Theorem/LowerBoundProofObligationTighteningClosure.lean
 MGAP4D/R5/Theorem/SpectrumInfimumProofObligationTighteningClosure.lean
+MGAP4D/R6/Theorem/IntervalExclusionProofObligationTighteningClosure.lean
 ```
 
 ## Build
@@ -277,13 +291,14 @@ Earlier Zenodo-oriented metadata is retained as archival/release provenance. It 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
 - Source migration: active, batch-based
-- Phase 3: R5 proof-obligation tightening closure checkpoint reached
+- Phase 3: R6 proof-obligation tightening closure checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - Post-hardening-pass closure: CI green
 - R3 proof-obligation tightening closure: CI green
 - R4 proof-obligation tightening closure: CI green
 - R5 proof-obligation tightening closure: CI green
+- R6 proof-obligation tightening closure: CI green
 - Mathlib on main: not introduced
 - Dry-run branch policy: recorded
 - Main-adoption decision: hold_main_adoption
