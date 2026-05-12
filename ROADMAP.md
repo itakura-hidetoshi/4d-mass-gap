@@ -112,7 +112,7 @@
 - [x] Add complete R1--R7 dry-run series review document
 - [x] Add complete R1--R7 dry-run series review gate
 - [x] Wire complete R1--R7 dry-run series review through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-series-review main CI green
+- [x] Observe post-series-review main CI green
 - [ ] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -126,7 +126,7 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. The post-series-review main CI is green. Main remains pre-Mathlib.
 
 Observed PR CI:
 
@@ -321,6 +321,20 @@ lake build: success
 PR status: open draft, unmerged
 ```
 
+Observed post-series-review main CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25725854893
+Build job ID: 75538322838
+Commit: 8b4fd3410331835390dcba97c42d576a9be846a1
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
+
 PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules, plus the complete R1--R7 series review gate, are wired through:
 
 ```text
@@ -354,8 +368,9 @@ post-PR3-gate-wiring CI green
 post-PR5-gate-wiring CI green
 post-PR6-gate-wiring CI green
 post-PR7-gate-wiring CI green
+post-series-review CI green
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: observe post-series-review main CI green, then review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
+Next priority: review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
