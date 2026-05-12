@@ -2,32 +2,30 @@
 
 This ledger records the current CI/status observation after the R1--R7 candidate closure and request-import cleanup.
 
-## Checked commit
+## Main commit observation
+
+Checked commit:
 
 ```text
 268a065dfe242189eaf354af29aea0659969f6c2
 ```
 
-## Checked items
+Checked items:
 
 ```text
 fetch_commit_workflow_runs -> []
 get_commit_combined_status -> statuses: []
 ```
 
-## Interpretation
-
-No workflow run or combined status was returned for the checked commit through the available GitHub API calls.
-
-This is not recorded as CI green.
-
-It is recorded only as:
+Interpretation:
 
 ```text
 CI status: not observed / not confirmed
 ```
 
-## Trigger note observation
+This was not recorded as CI green.
+
+## Main trigger note observation
 
 A non-semantic documentation note was added to try to trigger a main push CI observation.
 
@@ -43,11 +41,51 @@ fetch_commit_workflow_runs -> []
 get_commit_combined_status -> statuses: []
 ```
 
-This is also not recorded as CI green. It remains:
+Interpretation:
 
 ```text
 CI status: not observed / not confirmed
 ```
+
+This was also not recorded as CI green.
+
+## PR CI observation
+
+A draft PR was opened to observe the pull_request workflow without changing main source semantics.
+
+```text
+PR: #2
+Title: ci: observe Phase 3 candidate closure
+Branch: ci/phase3-candidate-closure-observation
+Head commit: 26d2e344178b3b6a6eaa382f05174ca7adfb5e34
+Workflow: Lean Direct Elan CI
+Run ID: 25712798053
+Run number: 547
+```
+
+Observed workflow result:
+
+```text
+status: completed
+conclusion: success
+```
+
+Observed jobs:
+
+```text
+Audit metadata and Lean source -> success
+Build Lean project via direct elan -> success
+```
+
+Interpretation:
+
+```text
+PR CI status: green for the observation branch head
+```
+
+This confirms that the pull_request workflow can build the R1--R7 candidate-closure state plus the PR-only non-semantic note.
+
+It does not mean Mathlib has been added to main.
 
 ## Current source-side state
 
@@ -64,6 +102,6 @@ lakefile.lean still not changed for Mathlib
 
 ## Required next action
 
-Run or observe the GitHub Actions workflow `Lean Direct Elan CI` on main, then update this ledger with the actual result.
+Keep PR #2 as a draft observation PR or close it after recording. Do not merge it unless a non-semantic CI observation note is desired on main.
 
-If the workflow does not appear automatically, use the existing `workflow_dispatch` trigger from the GitHub Actions UI.
+Main remains pre-Mathlib.
