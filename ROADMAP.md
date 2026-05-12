@@ -102,7 +102,7 @@
 - [x] Record R6 dry-run result in ledger and PR comment
 - [x] Add PR #7 review / decision / hold-draft gate modules
 - [x] Wire PR #7 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-PR7-gate-wiring main CI green
+- [x] Observe post-PR7-gate-wiring main CI green
 - [ ] Select R7 atom / exact-gap as the next scoped Mathlib dry-run path after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -116,7 +116,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, R6 scoped Mathlib dry-run, and the PR #3--#7 gate wiring chain have been recorded.
+The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, R6 scoped Mathlib dry-run, and the PR #3--#7 gate wiring chain have been observed through CI.
 
 Observed PR CI:
 
@@ -282,6 +282,20 @@ lake build: success
 PR status: open draft, unmerged
 ```
 
+Observed post-PR7-gate-wiring main CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25725021818
+Build job ID: 75535499660
+Commit: 26d7b357158668a674ca9b32440776ba0ad5cd49
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
+
 PR #3, PR #4, PR #5, PR #6, and PR #7 gate modules are wired through:
 
 ```text
@@ -311,8 +325,9 @@ PR #3--#7 gate chains wired through MathlibAdoptionGate
 post-PR3-gate-wiring CI green
 post-PR5-gate-wiring CI green
 post-PR6-gate-wiring CI green
+post-PR7-gate-wiring CI green
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: observe post-PR7-gate-wiring main CI green, then select the R7 atom / exact-gap scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: select the R7 atom / exact-gap scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
