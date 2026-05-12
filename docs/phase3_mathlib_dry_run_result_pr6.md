@@ -1,11 +1,11 @@
 # Phase 3: Mathlib Dry-Run Result PR #6
 
-This document records the result surface for the fifth scoped Mathlib dry-run branch.
+This document records the result of the fifth scoped Mathlib dry-run branch.
 
 ## Pull request
 
 ```text
-PR: pending
+PR #6: Dry run Mathlib adoption for R5 spectrum / infimum path
 branch: feature/mathlib-r5-spectrum-infimum-dry-run
 base: main
 ```
@@ -35,14 +35,19 @@ Mathlib.Topology.Algebra.Module.Basic
 ## CI result
 
 ```text
-pending
+Lean Direct Elan CI #593
+Run ID: 25721657671
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
 ```
 
 ## Interpretation
 
-This branch is a scoped dry-run for the R5 spectrum / infimum path.
+The dry-run succeeded for the R5 spectrum / infimum Mathlib sibling module.
 
-The dry-run does not claim completion of the spectrum or infimum theorem. It only tests whether the scoped Mathlib dependency and R5 sibling module can build on the dry-run branch while the theorem route remains review-gated.
+This result does not claim completion of the spectrum or infimum theorem. It means the scoped Mathlib dependency and R5 sibling module are buildable on the dry-run branch while the theorem route remains review-gated.
 
 ## Main branch invariant
 
@@ -57,4 +62,4 @@ public theorem claims remain review-gated
 
 ## Next step
 
-Open the draft PR, observe CI, then update this ledger with the CI result before any merge decision.
+Create a review note and decide whether to keep the PR as draft, close it as a successful dry-run, or prepare a gated merge proposal.
