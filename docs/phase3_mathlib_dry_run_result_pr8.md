@@ -1,11 +1,11 @@
 # Phase 3: Mathlib Dry-Run Result PR #8
 
-This document records the result surface for the seventh scoped Mathlib dry-run branch.
+This document records the result of the seventh scoped Mathlib dry-run branch.
 
 ## Pull request
 
 ```text
-PR: pending
+PR #8: Dry run Mathlib adoption for R7 atom / exact-gap path
 branch: feature/mathlib-r7-atom-exact-dry-run
 base: main
 ```
@@ -35,14 +35,19 @@ Mathlib.Topology.Algebra.Module.Basic
 ## CI result
 
 ```text
-pending
+Lean Direct Elan CI #612
+Run ID: 25725331515
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
 ```
 
 ## Interpretation
 
-This branch is a scoped dry-run for the R7 atom / exact-gap path.
+The dry-run succeeded for the R7 atom / exact-gap Mathlib sibling module.
 
-The dry-run does not claim completion of the atom, exact-gap, or final value theorem. It only tests whether the scoped Mathlib dependency and R7 sibling module can build on the dry-run branch while the theorem route remains review-gated.
+This result does not claim completion of the atom, exact-gap, or final value theorem. It means the scoped Mathlib dependency and R7 sibling module are buildable on the dry-run branch while the theorem route remains review-gated.
 
 ## Main branch invariant
 
@@ -57,4 +62,4 @@ public theorem claims remain review-gated
 
 ## Next step
 
-Open the draft PR, observe CI, then update this ledger with the CI result before any merge decision.
+Create a review note and decide whether to keep the PR as draft, close it as a successful dry-run, or prepare a gated merge proposal.
