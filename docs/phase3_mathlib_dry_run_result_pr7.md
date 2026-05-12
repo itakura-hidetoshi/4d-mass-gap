@@ -1,11 +1,11 @@
 # Phase 3: Mathlib Dry-Run Result PR #7
 
-This document records the result surface for the sixth scoped Mathlib dry-run branch.
+This document records the result of the sixth scoped Mathlib dry-run branch.
 
 ## Pull request
 
 ```text
-PR: pending
+PR #7: Dry run Mathlib adoption for R6 interval-exclusion path
 branch: feature/mathlib-r6-interval-exclusion-dry-run
 base: main
 ```
@@ -35,14 +35,19 @@ Mathlib.Topology.Algebra.Module.Basic
 ## CI result
 
 ```text
-pending
+Lean Direct Elan CI #603
+Run ID: 25724608074
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
 ```
 
 ## Interpretation
 
-This branch is a scoped dry-run for the R6 interval-exclusion path.
+The dry-run succeeded for the R6 interval-exclusion Mathlib sibling module.
 
-The dry-run does not claim completion of the interval-exclusion theorem. It only tests whether the scoped Mathlib dependency and R6 sibling module can build on the dry-run branch while the theorem route remains review-gated.
+This result does not claim completion of the interval-exclusion theorem. It means the scoped Mathlib dependency and R6 sibling module are buildable on the dry-run branch while the theorem route remains review-gated.
 
 ## Main branch invariant
 
@@ -57,4 +62,4 @@ public theorem claims remain review-gated
 
 ## Next step
 
-Open the draft PR, observe CI, then update this ledger with the CI result before any merge decision.
+Create a review note and decide whether to keep the PR as draft, close it as a successful dry-run, or prepare a gated merge proposal.
