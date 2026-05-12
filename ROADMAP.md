@@ -63,7 +63,8 @@
 - [x] Open Phase 3 candidate-closure observation draft PR
 - [x] Observe PR CI green for Phase 3 candidate closure
 - [x] Record PR CI success in ledger and PR comment
-- [ ] Observe main push CI directly or keep PR CI as the recorded confirmation surface
+- [x] Observe manual main workflow_dispatch CI green
+- [x] Record manual main CI success in ledger
 - [ ] Decide next scoped dry-run path only after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -77,7 +78,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update and request import cleanup have been observed through a draft PR CI run.
+The R1--R7 candidate-closure update and request import cleanup have now been observed through both a draft PR CI run and a manual main workflow_dispatch run.
 
 Observed PR CI:
 
@@ -91,7 +92,16 @@ Audit metadata and Lean source: success
 Build Lean project via direct elan: success
 ```
 
-Main push CI remained unobserved through the available API calls, so the recorded green surface is the PR CI observation branch, not a direct main push status.
+Observed manual main workflow_dispatch CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25713735152
+Build job ID: 75499172664
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+```
 
 The current pre-Mathlib closure includes:
 
