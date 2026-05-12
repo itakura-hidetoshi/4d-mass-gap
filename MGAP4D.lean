@@ -58,6 +58,7 @@ import MGAP4D.R5.Theorem.SpectrumInfimumClosureCandidate
 import MGAP4D.R5.TheoremSurface
 import MGAP4D.R6.Concrete
 import MGAP4D.R6.Theorem
+import MGAP4D.R6.Theorem.IntervalExclusionClosureCandidate
 import MGAP4D.R6.TheoremSurface
 import MGAP4D.R7.Concrete
 import MGAP4D.R7.Theorem
