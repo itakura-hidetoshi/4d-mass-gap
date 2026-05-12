@@ -113,6 +113,10 @@
 - [x] Add complete R1--R7 dry-run series review gate
 - [x] Wire complete R1--R7 dry-run series review through `MGAP4D.MathlibAdoptionGate`
 - [x] Observe post-series-review main CI green
+- [x] Add Mathlib main-adoption review gate document
+- [x] Add Mathlib main-adoption review Lean gate
+- [x] Wire Mathlib main-adoption review gate through `MGAP4D.MathlibAdoptionGate`
+- [ ] Observe post-main-adoption-review-gate main CI green
 - [ ] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -126,7 +130,7 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. The post-series-review main CI is green. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. The post-series-review main CI is green. A separate Mathlib main-adoption review gate has been added and wired. Main remains pre-Mathlib.
 
 Observed PR CI:
 
@@ -335,13 +339,13 @@ Generate Lake manifest: success
 lake build: success
 ```
 
-PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules, plus the complete R1--R7 series review gate, are wired through:
+PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules, the complete R1--R7 series review gate, and the Mathlib main-adoption review gate are wired through:
 
 ```text
 MGAP4D.MathlibAdoptionGate
 ```
 
-This keeps the top-level `MGAP4D.lean` import surface stable while routing the dry-run gate chains through an already-imported root.
+This keeps the top-level `MGAP4D.lean` import surface stable while routing the dry-run gate chains and review gates through an already-imported root.
 
 The current pre-Mathlib closure includes:
 
@@ -357,6 +361,8 @@ Phase3CandidateClosure
 Phase3CIConfirmationClosure
 R1--R7 dry-run series review document
 R1--R7 dry-run series review Lean gate
+Mathlib main-adoption review document
+Mathlib main-adoption review Lean gate
 R2 dry-run PR #3 result recorded
 R3 dry-run PR #4 result recorded
 R4 dry-run PR #5 result recorded
@@ -373,4 +379,4 @@ post-series-review CI green
 
 The earlier R3 omission has been corrected.
 
-Next priority: review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
+Next priority: observe post-main-adoption-review-gate main CI green, then review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
