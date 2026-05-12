@@ -184,7 +184,20 @@
 - [x] Add R4 proof-obligation tightening closure checkpoint
 - [x] Observe R4 proof-obligation tightening closure main CI green
 - [x] Record R4 proof-obligation tightening closure CI success in ledger
-- [ ] Select R5 spectrum / infimum proof-obligation tightening segment
+- [x] Select R5 spectrum / infimum proof-obligation tightening segment
+- [x] Observe R5 proof-obligation tightening segment selection main CI green
+- [x] Add R5 proof-obligation tightening pass 1
+- [x] Observe R5 proof-obligation tightening pass 1 main CI green
+- [x] Add R5 proof-obligation tightening pass 2
+- [x] Observe R5 proof-obligation tightening pass 2 main CI green
+- [x] Add R5 proof-obligation tightening pass 3
+- [x] Observe R5 proof-obligation tightening pass 3 main CI green
+- [x] Add R5 proof-obligation tightening series review checkpoint
+- [x] Observe R5 proof-obligation tightening series review main CI green
+- [x] Add R5 proof-obligation tightening closure checkpoint
+- [x] Observe R5 proof-obligation tightening closure main CI green
+- [x] Record R5 proof-obligation tightening closure CI success in ledger
+- [ ] Select R6 interval-exclusion proof-obligation tightening segment
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -199,15 +212,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, R3 proof-obligation tightening closure, and R4 proof-obligation tightening closure. All of those checkpoints have been observed green on `main`.
+The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, R3 proof-obligation tightening closure, R4 proof-obligation tightening closure, and R5 proof-obligation tightening closure. All of those checkpoints have been observed green on `main`.
 
 Observed current closure CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25739658687
-Build job ID: 75586218837
-Commit: ac9647bb036f9420f1f45a2c4243a4f8c310cd34
+Run ID: 25763620280
+Build job ID: 75670816582
+Commit: c0c775d44c933b82da2f8421a19fc73fcdde1182
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -221,11 +234,11 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-R4 proof-obligation tightening closure: CI green
-R4 theorem completion: not claimed
-R5--R7 theorem completions: not unlocked
+R5 proof-obligation tightening closure: CI green
+R5 theorem completion: not claimed
+R6--R7 theorem completions: not unlocked
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: select R5 spectrum / infimum proof-obligation tightening segment while preserving the pre-Mathlib invariant.
+Next priority: select R6 interval-exclusion proof-obligation tightening segment while preserving the pre-Mathlib invariant.
