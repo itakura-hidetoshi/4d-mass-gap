@@ -60,9 +60,11 @@
 - [x] Record successful R1 dry-run result
 - [x] Keep R1 dry-run PR as draft pending later review
 - [x] Record current CI status observation as not confirmed
-- [ ] Run or observe CI after R1--R7 candidate closure and request import cleanup
-- [ ] Record confirmed CI result after Phase3CandidateClosure
-- [ ] Decide next scoped dry-run path only after CI is green
+- [x] Open Phase 3 candidate-closure observation draft PR
+- [x] Observe PR CI green for Phase 3 candidate closure
+- [x] Record PR CI success in ledger and PR comment
+- [ ] Observe main push CI directly or keep PR CI as the recorded confirmation surface
+- [ ] Decide next scoped dry-run path only after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
@@ -75,9 +77,23 @@
 
 ## Current priority
 
-Run or observe CI after the R1--R7 candidate-closure update and request import cleanup.
+The R1--R7 candidate-closure update and request import cleanup have been observed through a draft PR CI run.
 
-The current pre-Mathlib closure now includes:
+Observed PR CI:
+
+```text
+PR: #2
+Workflow: Lean Direct Elan CI
+Run ID: 25712798053
+Run number: 547
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+```
+
+Main push CI remained unobserved through the available API calls, so the recorded green surface is the PR CI observation branch, not a direct main push status.
+
+The current pre-Mathlib closure includes:
 
 ```text
 R1 Hilbert
@@ -90,6 +106,6 @@ R7 atom / exact value
 Phase3CandidateClosure
 ```
 
-The earlier R3 omission has been corrected. A CI/status observation ledger has been added, but the latest checked commit returned no workflow runs and no combined statuses through the available API calls. That is recorded as not confirmed, not as green.
+The earlier R3 omission has been corrected.
 
 Mathlib may still be tested only through scoped dry-run branches. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
