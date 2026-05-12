@@ -34,6 +34,12 @@ MGAP4D/MathlibAdoptionGate
 MGAP4D/PreMathlibClosure
 MGAP4D/Phase3CandidateClosure
 MGAP4D/Phase3CIConfirmationClosure
+MGAP4D/PostMathlibHoldTheoremHardening
+MGAP4D/R3R7RouteSpecificHardening
+MGAP4D/R3R7ClosureCandidateSeriesReview
+MGAP4D/R3R7TheoremRouteQueue
+MGAP4D/R3R7HardeningPassSeriesReview
+MGAP4D/PostHardeningPassClosure
 MGAP4D/R1--R7
 MGAP4D/Global
 MGAP4D/FinalSpine
@@ -41,7 +47,7 @@ MGAP4D/FinalSpine
 
 ## Phase 3 status
 
-The current `main` branch is closed at a **pre-Mathlib Phase 3 candidate-closure and CI-confirmation checkpoint**.
+The current `main` branch is closed at a **post-hardening-pass closure checkpoint** after the R3--R7 theorem-route hardening pass series was observed green through CI.
 
 The active proof-hardening route is:
 
@@ -55,10 +61,15 @@ TheoremSurface
   -> R1/R2/R3/R4/R5/R6/R7 theorem-candidate milestones
   -> Phase3CandidateClosure
   -> Phase3CIConfirmationClosure
-  -> DryRunBranchPlan
-  -> DryRunChecklist
-  -> DryRunResultLedger
   -> PreMathlibClosure
+  -> R1--R7 scoped Mathlib dry-run series
+  -> Mathlib main-adoption hold decision
+  -> PostMathlibHoldTheoremHardening
+  -> R3--R7 route-specific closure-candidate checkpoints
+  -> R3--R7 theorem-route queue
+  -> R3--R7 theorem-route hardening passes
+  -> R3--R7 hardening pass series review
+  -> PostHardeningPassClosure
 ```
 
 Important invariant:
@@ -68,11 +79,13 @@ Mathlib is not yet introduced on main.
 lakefile.lean is not modified for Mathlib.
 No active main-branch Lean module imports Mathlib.
 Public theorem claims remain review-gated.
+R3--R7 theorem completions are not claimed.
+Final gap theorem release is not unlocked.
 ```
 
 ## R1--R7 theorem-candidate coverage
 
-Phase 3 candidate preparation now covers the full R1--R7 spine:
+Phase 3 candidate preparation covers the full R1--R7 spine:
 
 ```text
 R1 Hilbert path
@@ -84,65 +97,54 @@ R6 interval-exclusion path
 R7 atom / exact-gap path
 ```
 
-R3 is explicitly recorded after the prior omission in the candidate path:
+R3--R7 now have pass-level hardening surfaces on `main`:
 
 ```text
-Mathlib requester
-Mathlib request
-request registry entry
-Concrete theorem candidate
-Concrete candidate bundle
-Concrete theorem checklist
-Concrete proof-obligation map
-Theorem skeleton
-Theorem skeleton bundle
-Theorem milestone
+R3 shifted / zero-form hardening pass: CI green
+R4 lower-bound hardening pass: CI green
+R5 spectrum / infimum hardening pass: CI green
+R6 interval-exclusion hardening pass: CI green
+R7 atom / exact-gap hardening pass: CI green
+R3--R7 hardening pass series review: CI green
+Post-hardening-pass closure: CI green
 ```
 
 ## CI confirmation
 
-The R1--R7 candidate closure and request-import cleanup have been observed through both PR CI and manual main workflow CI.
+The latest closure CI recorded in the repository is:
 
 ```text
-PR #2 observation CI:
+Post-hardening-pass closure main CI:
 Lean Direct Elan CI
-Run ID: 25712798053
-Run number: 547
+Run ID: 25732402911
+Build job ID: 75560700359
+Commit: e2a797bc00e244bb5369791167caec206113967f
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
-PR #2 status: closed unmerged
+Generate Lake manifest: success
+lake build: success
 ```
 
-```text
-Manual main workflow_dispatch CI:
-Lean Direct Elan CI
-Run ID: 25713735152
-Build job ID: 75499172664
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-```
+Earlier confirmed checkpoints include:
 
 ```text
-Post-Phase3CIConfirmationClosure manual main workflow_dispatch CI:
-Lean Direct Elan CI
-Run ID: 25714521362
-Build job ID: 75501432120
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
+PR #2 observation CI: success, closed unmerged
+Manual main workflow_dispatch CI before confirmation closure: success
+Post-Phase3CIConfirmationClosure manual main workflow_dispatch CI: success
+R1--R7 scoped Mathlib dry-run series: success
+Mathlib main-adoption hold decision: CI green
+Post-Mathlib-hold theorem-route hardening: CI green
+R3--R7 closure-candidate series review: CI green
+R3--R7 theorem-route queue: CI green
+R3--R7 hardening pass series review: CI green
 ```
 
 ## Mathlib dry-run policy
 
-Mathlib adoption may be tested only through a dry-run branch, for example:
+Mathlib adoption may be tested only through scoped dry-run branches.
 
-```text
-feature/mathlib-r1-hilbert-dry-run
-```
-
-The dry-run branch may test scoped Mathlib imports for one reviewed path at a time, but `main` remains pre-Mathlib unless the dry-run result is recorded, reviewed, and gated.
+Dry-run success is accepted as contact-surface buildability only. It is not theorem completion and not permission to introduce Mathlib into `main`.
 
 Relevant documents and modules:
 
@@ -150,15 +152,16 @@ Relevant documents and modules:
 docs/phase3_pre_mathlib_closure_checkpoint.md
 docs/phase3_mathlib_adoption_gate.md
 docs/phase3_mathlib_request_registry.md
-docs/phase3_r1_hilbert_theorem_milestone_checkpoint.md
-docs/phase3_r3_theorem_milestone_checkpoint.md
-docs/phase3_candidate_closure_ci_status_ledger.md
+docs/phase3_mathlib_dry_run_result_ledger.md
+docs/phase3_mathlib_main_adoption_hold_decision.md
+docs/phase3_post_mathlib_hold_theorem_route_hardening_ci.md
+docs/phase3_r3_r7_hardening_pass_series_review_ci.md
+docs/phase3_post_hardening_pass_closure_ci.md
 MGAP4D/Phase3CandidateClosure.lean
 MGAP4D/Phase3CIConfirmationClosure.lean
-docs/phase3_mathlib_adoption_dry_run_branch_plan.md
-docs/phase3_mathlib_dry_run_branch_checklist.md
-docs/phase3_mathlib_dry_run_result_ledger.md
-docs/phase3_mathlib_dry_run_execution_note.md
+MGAP4D/PostMathlibHoldTheoremHardening.lean
+MGAP4D/R3R7HardeningPassSeriesReview.lean
+MGAP4D/PostHardeningPassClosure.lean
 ```
 
 ## Build
@@ -224,11 +227,11 @@ Earlier Zenodo-oriented metadata is retained as archival/release provenance. It 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
 - Source migration: active, batch-based
-- Phase 3: pre-Mathlib candidate-closure and CI-confirmation checkpoint reached
+- Phase 3: post-hardening-pass closure checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
-- R3 omission: corrected and tracked in `Phase3CandidateClosure`
-- CI confirmation: tracked in `Phase3CIConfirmationClosure`
-- PR #2 observation PR: closed unmerged
-- Mathlib on main: not yet introduced
+- R3--R7 hardening pass series: CI green
+- Post-hardening-pass closure: CI green
+- Mathlib on main: not introduced
 - Dry-run branch policy: recorded
+- Main-adoption decision: hold_main_adoption
 - Public final theorem claim: review-gated pending independent replay and external audit
