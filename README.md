@@ -40,6 +40,7 @@ MGAP4D/R3R7ClosureCandidateSeriesReview
 MGAP4D/R3R7TheoremRouteQueue
 MGAP4D/R3R7HardeningPassSeriesReview
 MGAP4D/PostHardeningPassClosure
+MGAP4D/PostHardeningPassTighteningSegmentSelection
 MGAP4D/R1--R7
 MGAP4D/Global
 MGAP4D/FinalSpine
@@ -47,7 +48,7 @@ MGAP4D/FinalSpine
 
 ## Phase 3 status
 
-The current `main` branch is closed at a **post-hardening-pass closure checkpoint** after the R3--R7 theorem-route hardening pass series was observed green through CI.
+The current `main` branch is closed at a **R3 proof-obligation tightening closure checkpoint** after the R3 proof-obligation tightening pass series was observed green through CI.
 
 The active proof-hardening route is:
 
@@ -70,6 +71,12 @@ TheoremSurface
   -> R3--R7 theorem-route hardening passes
   -> R3--R7 hardening pass series review
   -> PostHardeningPassClosure
+  -> PostHardeningPassTighteningSegmentSelection
+  -> R3 proof-obligation tightening pass 1
+  -> R3 proof-obligation tightening pass 2
+  -> R3 proof-obligation tightening pass 3
+  -> R3 proof-obligation tightening series review
+  -> R3ProofObligationTighteningClosure
 ```
 
 Important invariant:
@@ -79,7 +86,8 @@ Mathlib is not yet introduced on main.
 lakefile.lean is not modified for Mathlib.
 No active main-branch Lean module imports Mathlib.
 Public theorem claims remain review-gated.
-R3--R7 theorem completions are not claimed.
+R3 theorem completion is not claimed.
+R4--R7 theorem completions are not unlocked.
 Final gap theorem release is not unlocked.
 ```
 
@@ -97,7 +105,17 @@ R6 interval-exclusion path
 R7 atom / exact-gap path
 ```
 
-R3--R7 now have pass-level hardening surfaces on `main`:
+R3 proof-obligation tightening is now closed at the review-surface level:
+
+```text
+R3 proof-obligation tightening pass 1: CI green
+R3 proof-obligation tightening pass 2: CI green
+R3 proof-obligation tightening pass 3: CI green
+R3 proof-obligation tightening series review: CI green
+R3 proof-obligation tightening closure: CI green
+```
+
+Earlier R3--R7 pass-level hardening surfaces remain green:
 
 ```text
 R3 shifted / zero-form hardening pass: CI green
@@ -114,11 +132,11 @@ Post-hardening-pass closure: CI green
 The latest closure CI recorded in the repository is:
 
 ```text
-Post-hardening-pass closure main CI:
+R3 proof-obligation tightening closure main CI:
 Lean Direct Elan CI
-Run ID: 25732402911
-Build job ID: 75560700359
-Commit: e2a797bc00e244bb5369791167caec206113967f
+Run ID: 25736017614
+Build job ID: 75573165695
+Commit: 4feb495c1a51fa6a65c19d8f4bcb9af1b30da79b
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -138,6 +156,9 @@ Post-Mathlib-hold theorem-route hardening: CI green
 R3--R7 closure-candidate series review: CI green
 R3--R7 theorem-route queue: CI green
 R3--R7 hardening pass series review: CI green
+Post-hardening-pass closure: CI green
+R3 proof-obligation tightening segment selection: CI green
+R3 proof-obligation tightening series review: CI green
 ```
 
 ## Mathlib dry-run policy
@@ -157,11 +178,13 @@ docs/phase3_mathlib_main_adoption_hold_decision.md
 docs/phase3_post_mathlib_hold_theorem_route_hardening_ci.md
 docs/phase3_r3_r7_hardening_pass_series_review_ci.md
 docs/phase3_post_hardening_pass_closure_ci.md
+docs/phase3_r3_proof_obligation_tightening_closure_ci.md
 MGAP4D/Phase3CandidateClosure.lean
 MGAP4D/Phase3CIConfirmationClosure.lean
 MGAP4D/PostMathlibHoldTheoremHardening.lean
 MGAP4D/R3R7HardeningPassSeriesReview.lean
 MGAP4D/PostHardeningPassClosure.lean
+MGAP4D/R3/Theorem/R3ProofObligationTighteningClosure.lean
 ```
 
 ## Build
@@ -227,10 +250,11 @@ Earlier Zenodo-oriented metadata is retained as archival/release provenance. It 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
 - Source migration: active, batch-based
-- Phase 3: post-hardening-pass closure checkpoint reached
+- Phase 3: R3 proof-obligation tightening closure checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - Post-hardening-pass closure: CI green
+- R3 proof-obligation tightening closure: CI green
 - Mathlib on main: not introduced
 - Dry-run branch policy: recorded
 - Main-adoption decision: hold_main_adoption
