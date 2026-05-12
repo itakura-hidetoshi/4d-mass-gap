@@ -87,6 +87,47 @@ This confirms that the pull_request workflow can build the R1--R7 candidate-clos
 
 It does not mean Mathlib has been added to main.
 
+## Manual main workflow_dispatch CI observation
+
+A manual workflow run URL was provided and verified:
+
+```text
+Run URL: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/25713735152/job/75499172664
+Run ID: 25713735152
+Build job ID: 75499172664
+Workflow: Lean Direct Elan CI
+```
+
+Observed run jobs:
+
+```text
+Audit metadata and Lean source -> completed / success
+Build Lean project via direct elan -> completed / success
+```
+
+Observed build job steps:
+
+```text
+Set up job -> success
+Checkout repository -> success
+Confirm direct elan workflow -> success
+Install elan and Lean toolchain -> success
+Show Lean and Lake versions -> success
+Generate Lake manifest -> success
+Build Lean project with lake build -> success
+Complete job -> success
+```
+
+Interpretation:
+
+```text
+main workflow_dispatch CI status: green
+```
+
+This confirms that the manually executed main workflow successfully completed audit and build.
+
+It does not mean Mathlib has been added to main.
+
 ## Current source-side state
 
 The main branch now records:
