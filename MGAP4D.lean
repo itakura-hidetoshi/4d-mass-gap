@@ -88,6 +88,7 @@ import MGAP4D.R6.Theorem.IntervalExclusionHardeningPass
 import MGAP4D.R6.Theorem.IntervalExclusionTighteningSegmentSelection
 import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningPass1
 import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningPass2
+import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningPass3
 import MGAP4D.R6.TheoremSurface
 import MGAP4D.R7.Concrete
 import MGAP4D.R7.Theorem
