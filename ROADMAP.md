@@ -116,7 +116,7 @@
 - [x] Add Mathlib main-adoption review gate document
 - [x] Add Mathlib main-adoption review Lean gate
 - [x] Wire Mathlib main-adoption review gate through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-main-adoption-review-gate main CI green
+- [x] Observe post-main-adoption-review-gate main CI green
 - [ ] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -130,7 +130,7 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. The post-series-review main CI is green. A separate Mathlib main-adoption review gate has been added and wired. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. The post-series-review main CI is green. A separate Mathlib main-adoption review gate has been added, wired, and observed green through CI. Main remains pre-Mathlib.
 
 Observed PR CI:
 
@@ -339,6 +339,20 @@ Generate Lake manifest: success
 lake build: success
 ```
 
+Observed post-main-adoption-review-gate main CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25726312188
+Build job ID: 75539903697
+Commit: 7dba7e22134963d775964f0dd270119a409595fc
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
+
 PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules, the complete R1--R7 series review gate, and the Mathlib main-adoption review gate are wired through:
 
 ```text
@@ -375,8 +389,9 @@ post-PR5-gate-wiring CI green
 post-PR6-gate-wiring CI green
 post-PR7-gate-wiring CI green
 post-series-review CI green
+post-main-adoption-review-gate CI green
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: observe post-main-adoption-review-gate main CI green, then review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
+Next priority: review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
