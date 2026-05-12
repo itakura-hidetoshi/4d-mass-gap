@@ -1,11 +1,11 @@
-# Phase 3: Mathlib Dry-Run Result PR #2
+# Phase 3: Mathlib Dry-Run Result PR #3
 
-This document records the result surface for the second scoped Mathlib dry-run branch.
+This document records the result of the second scoped Mathlib dry-run branch.
 
 ## Pull request
 
 ```text
-PR: pending
+PR #3: Dry run Mathlib adoption for R2 self-adjoint restriction path
 branch: feature/mathlib-r2-restriction-dry-run
 base: main
 ```
@@ -35,14 +35,19 @@ Mathlib.Topology.Algebra.Module.Basic
 ## CI result
 
 ```text
-pending
+Lean Direct Elan CI #564
+Run ID: 25716432314
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
 ```
 
 ## Interpretation
 
-This branch is a scoped dry-run for the R2 self-adjoint restriction path.
+The dry-run succeeded for the R2 self-adjoint restriction Mathlib sibling module.
 
-The dry-run does not imply automatic merge. It only tests whether the scoped Mathlib dependency and R2 restriction sibling module can build on the dry-run branch.
+This result does not imply automatic merge. It means the scoped Mathlib dependency and R2 restriction sibling module are buildable on the dry-run branch.
 
 ## Main branch invariant
 
@@ -56,4 +61,4 @@ public theorem claims remain review-gated
 
 ## Next step
 
-Open the draft PR, observe CI, then update this ledger with the CI result before any merge decision.
+Create a review note and decide whether to keep the PR as draft, close it as a successful dry-run, or prepare a gated merge proposal.
