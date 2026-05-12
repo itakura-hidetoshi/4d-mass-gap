@@ -3,3 +3,4 @@ import MGAP4D.R6.Theorem.IntervalSkeletonBundle
 import MGAP4D.R6.Theorem.IntervalMilestone
 import MGAP4D.R6.Theorem.IntervalExclusionClosureCandidate
 import MGAP4D.R6.Theorem.IntervalExclusionHardeningPass
+import MGAP4D.R6.Theorem.IntervalExclusionTighteningSegmentSelection
