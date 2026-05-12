@@ -53,13 +53,15 @@
 - [x] Add R6 interval-exclusion theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
 - [x] Add R7 atom / exact-gap theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
 - [x] Add Phase3CandidateClosure for R1--R7 milestone coverage
+- [x] Add Mathlib request import cleanup for acyclic request files
 - [x] Add Mathlib dry-run branch plan, checklist, execution note, and result ledger
 - [x] Add pre-Mathlib closure checkpoint
 - [x] Create R1 Mathlib dry-run draft PR
 - [x] Record successful R1 dry-run result
 - [x] Keep R1 dry-run PR as draft pending later review
-- [ ] Run CI after R1--R7 candidate closure and README/ROADMAP sync
-- [ ] Record CI result after R3 correction and Phase3CandidateClosure
+- [x] Record current CI status observation as not confirmed
+- [ ] Run or observe CI after R1--R7 candidate closure and request import cleanup
+- [ ] Record confirmed CI result after Phase3CandidateClosure
 - [ ] Decide next scoped dry-run path only after CI is green
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -73,7 +75,7 @@
 
 ## Current priority
 
-Run CI after the R1--R7 candidate-closure update.
+Run or observe CI after the R1--R7 candidate-closure update and request import cleanup.
 
 The current pre-Mathlib closure now includes:
 
@@ -88,6 +90,6 @@ R7 atom / exact value
 Phase3CandidateClosure
 ```
 
-The earlier R3 omission has been corrected. The next technical step is not a wider Mathlib merge; it is CI confirmation of the corrected pre-Mathlib main branch.
+The earlier R3 omission has been corrected. A CI/status observation ledger has been added, but the latest checked commit returned no workflow runs and no combined statuses through the available API calls. That is recorded as not confirmed, not as green.
 
 Mathlib may still be tested only through scoped dry-run branches. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
