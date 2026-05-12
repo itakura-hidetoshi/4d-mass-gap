@@ -39,6 +39,7 @@ import MGAP4D.R2.Concrete
 import MGAP4D.R2.Theorem
 import MGAP4D.R2.TheoremSurface
 import MGAP4D.R3.Concrete
+import MGAP4D.R3.Theorem
 import MGAP4D.R3.TheoremSurface
 import MGAP4D.R4.Concrete
 import MGAP4D.R4.Concrete.LowerBoundTheoremChecklist
