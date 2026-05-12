@@ -2,3 +2,4 @@ import MGAP4D.R4.Theorem.LowerBoundSkeleton
 import MGAP4D.R4.Theorem.LowerBoundSkeletonBundle
 import MGAP4D.R4.Theorem.LowerBoundMilestone
 import MGAP4D.R4.Theorem.LowerBoundClosureCandidate
+import MGAP4D.R4.Theorem.LowerBoundHardeningPass
