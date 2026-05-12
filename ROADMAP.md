@@ -126,8 +126,39 @@
 - [x] Add post-Mathlib-hold theorem-route hardening document
 - [x] Add post-Mathlib-hold theorem-route hardening Lean checkpoint
 - [x] Wire post-Mathlib-hold theorem-route hardening through top-level root
-- [ ] Observe post-Mathlib-hold theorem-route hardening main CI green
-- [ ] Add R3--R7 route-specific hardening checkpoints
+- [x] Observe post-Mathlib-hold theorem-route hardening main CI green
+- [x] Add R3--R7 route-specific hardening checkpoints
+- [x] Observe R3--R7 route-specific hardening main CI green
+- [x] Add R3 shifted / zero-form closure-candidate checkpoint
+- [x] Observe R3 closure-candidate main CI green
+- [x] Add R4 lower-bound closure-candidate checkpoint
+- [x] Observe R4 closure-candidate main CI green
+- [x] Add R5 spectrum / infimum closure-candidate checkpoint
+- [x] Observe R5 closure-candidate main CI green
+- [x] Add R6 interval-exclusion closure-candidate checkpoint
+- [x] Observe R6 closure-candidate main CI green
+- [x] Add R7 atom / exact-gap closure-candidate checkpoint
+- [x] Observe R7 closure-candidate main CI green
+- [x] Add R3--R7 closure-candidate series review checkpoint
+- [x] Observe R3--R7 closure-candidate series review main CI green
+- [x] Add R3--R7 theorem-route queue checkpoint
+- [x] Observe R3--R7 theorem-route queue main CI green
+- [x] Add R3 shifted / zero-form theorem-route hardening pass
+- [x] Observe R3 hardening pass main CI green
+- [x] Add R4 lower-bound theorem-route hardening pass
+- [x] Observe R4 hardening pass main CI green
+- [x] Add R5 spectrum / infimum theorem-route hardening pass
+- [x] Observe R5 hardening pass main CI green
+- [x] Add R6 interval-exclusion theorem-route hardening pass
+- [x] Observe R6 hardening pass main CI green
+- [x] Add R7 atom / exact-gap theorem-route hardening pass
+- [x] Observe R7 hardening pass main CI green
+- [x] Add R3--R7 hardening pass series review checkpoint
+- [x] Observe R3--R7 hardening pass series review main CI green
+- [x] Add post-hardening-pass closure checkpoint
+- [x] Observe post-hardening-pass closure main CI green
+- [x] Record post-hardening-pass closure CI success in ledger
+- [ ] Select the next proof-obligation tightening segment after post-hardening-pass closure
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -140,38 +171,17 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`. A post-Mathlib-hold theorem-route hardening checkpoint has been added and wired through the top-level root. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-Observed R1--R7 dry-run series:
+The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, and post-hardening-pass closure. All of those checkpoints have been observed green on `main`.
 
-```text
-R1 Hilbert dry-run: success
-R2 restriction dry-run: success
-R3 shifted / zero-form dry-run: success
-R4 lower-bound dry-run: success
-R5 spectrum / infimum dry-run: success
-R6 interval-exclusion dry-run: success
-R7 atom / exact-gap dry-run: success
-```
-
-Observed review/guard chain:
-
-```text
-post-series-review CI: green
-post-main-adoption-review-gate CI: green
-post-main-adoption-hold-decision CI: green
-main-adoption decision: hold_main_adoption
-main remains pre-Mathlib
-Mathlib on main: not introduced
-```
-
-Observed post-main-adoption-hold-decision main CI:
+Observed current closure CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25726729556
-Build job ID: 75541313277
-Commit: 41cd25290448a78324277d824bc55abd6ea871ce
+Run ID: 25732402911
+Build job ID: 75560700359
+Commit: e2a797bc00e244bb5369791167caec206113967f
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -179,4 +189,17 @@ Generate Lake manifest: success
 lake build: success
 ```
 
-Next priority: observe post-Mathlib-hold theorem-route hardening main CI green, then add R3--R7 route-specific hardening checkpoints while preserving the pre-Mathlib invariant.
+Current invariant:
+
+```text
+main remains pre-Mathlib
+Mathlib on main: not introduced
+main-adoption decision: hold_main_adoption
+R3--R7 hardening pass series: CI green
+post-hardening-pass closure: CI green
+R3--R7 theorem completions: not claimed
+final gap theorem release: not unlocked
+public theorem boundary: held
+```
+
+Next priority: select the next proof-obligation tightening segment after post-hardening-pass closure while preserving the pre-Mathlib invariant.
