@@ -54,6 +54,7 @@ import MGAP4D.R3.Theorem.R3HardeningPass
 import MGAP4D.R3.Theorem.R3ProofObligationTighteningPass1
 import MGAP4D.R3.Theorem.R3ProofObligationTighteningPass2
 import MGAP4D.R3.Theorem.R3ProofObligationTighteningPass3
+import MGAP4D.R3.Theorem.R3ProofObligationTighteningSeriesReview
 import MGAP4D.R3.TheoremSurface
 import MGAP4D.R4.Concrete
 import MGAP4D.R4.Concrete.LowerBoundTheoremChecklist
