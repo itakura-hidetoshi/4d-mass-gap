@@ -89,7 +89,14 @@
 - [x] Add PR #5 review / decision / hold-draft gate modules
 - [x] Wire PR #5 gate modules through `MGAP4D.MathlibAdoptionGate`
 - [x] Observe post-PR5-gate-wiring main CI green
-- [ ] Select R5 spectrum / infimum as the next scoped Mathlib dry-run path after review
+- [x] Select R5 spectrum / infimum as the next scoped Mathlib dry-run path
+- [x] Open R5 Mathlib dry-run draft PR #6
+- [x] Observe R5 dry-run CI green
+- [x] Record R5 dry-run result in ledger and PR comment
+- [x] Add PR #6 review / decision / hold-draft gate modules
+- [x] Wire PR #6 gate modules through `MGAP4D.MathlibAdoptionGate`
+- [ ] Observe post-PR6-gate-wiring main CI green
+- [ ] Select R6 interval-exclusion as the next scoped Mathlib dry-run path after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
@@ -102,7 +109,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, and the PR #3--#5 gate wiring chain have been observed through CI.
+The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, and the PR #3--#6 gate wiring chain have been recorded.
 
 Observed PR CI:
 
@@ -224,7 +231,22 @@ Generate Lake manifest: success
 lake build: success
 ```
 
-PR #3, PR #4, and PR #5 gate modules are wired through:
+Observed R5 scoped Mathlib dry-run CI:
+
+```text
+PR: #6
+Workflow: Lean Direct Elan CI
+Run ID: 25721657671
+Run number: 593
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+PR status: open draft, unmerged
+```
+
+PR #3, PR #4, PR #5, and PR #6 gate modules are wired through:
 
 ```text
 MGAP4D.MathlibAdoptionGate
@@ -247,11 +269,12 @@ Phase3CIConfirmationClosure
 R2 dry-run PR #3 result recorded
 R3 dry-run PR #4 result recorded
 R4 dry-run PR #5 result recorded
-PR #3--#5 gate chains wired through MathlibAdoptionGate
+R5 dry-run PR #6 result recorded
+PR #3--#6 gate chains wired through MathlibAdoptionGate
 post-PR3-gate-wiring CI green
 post-PR5-gate-wiring CI green
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: select the R5 spectrum / infimum scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: observe post-PR6-gate-wiring main CI green, then select the R6 interval-exclusion scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
