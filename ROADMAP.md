@@ -69,7 +69,13 @@
 - [x] Add Phase3CIConfirmationClosure
 - [x] Observe post-Phase3CIConfirmationClosure manual main workflow_dispatch CI green
 - [x] Record post-confirmation CI success in ledger
-- [ ] Select the next scoped Mathlib dry-run path after review
+- [x] Select R2 self-adjoint restriction as the next scoped Mathlib dry-run path
+- [x] Open R2 Mathlib dry-run draft PR #3
+- [x] Observe R2 dry-run CI green
+- [x] Record R2 dry-run result in ledger and PR comment
+- [x] Add PR #3 review / decision / keep-draft gate modules
+- [ ] Wire PR #3 gate modules into `MGAP4D.lean` after source-tree check
+- [ ] Select R3 shifted / zero-form as the next scoped Mathlib dry-run path after review
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
 ## Phase 4: Release hygiene
@@ -119,6 +125,21 @@ Audit metadata and Lean source: success
 Build Lean project via direct elan: success
 ```
 
+Observed R2 scoped Mathlib dry-run CI:
+
+```text
+PR: #3
+Workflow: Lean Direct Elan CI
+Run ID: 25716432314
+Run number: 564
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+PR status: open draft, unmerged
+```
+
 The current pre-Mathlib closure includes:
 
 ```text
@@ -131,8 +152,9 @@ R6 interval exclusion
 R7 atom / exact value
 Phase3CandidateClosure
 Phase3CIConfirmationClosure
+R2 dry-run PR #3 result recorded
 ```
 
 The earlier R3 omission has been corrected.
 
-Next priority: select the next scoped Mathlib dry-run path. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: keep PR #3 as a successful dry-run draft unless a separate review gate decides otherwise, then select the R3 shifted / zero-form scoped Mathlib dry-run path after review. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
