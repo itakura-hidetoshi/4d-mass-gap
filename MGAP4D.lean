@@ -31,6 +31,7 @@ import MGAP4D.MathlibAdoptionGate.DryRunReviewGatePR1
 import MGAP4D.MathlibAdoptionGate.DryRunCloseOrPromoteGatePR1
 import MGAP4D.MathlibAdoptionGate.DryRunKeepDraftPR1
 import MGAP4D.PreMathlibClosure
+import MGAP4D.Phase3CandidateClosure
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
