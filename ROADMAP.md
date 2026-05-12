@@ -109,7 +109,10 @@
 - [x] Record R7 dry-run result in ledger and PR comment
 - [x] Add PR #8 review / decision / hold gate modules
 - [x] Wire PR #8 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [ ] Observe post-PR8-gate-wiring main CI green
+- [x] Add complete R1--R7 dry-run series review document
+- [x] Add complete R1--R7 dry-run series review gate
+- [x] Wire complete R1--R7 dry-run series review through `MGAP4D.MathlibAdoptionGate`
+- [ ] Observe post-series-review main CI green
 - [ ] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
 - [ ] Add Mathlib to main only after scoped dry-run success and review gate
 
@@ -123,7 +126,7 @@
 
 ## Current priority
 
-The R1--R7 candidate-closure update, R3 correction, request import cleanup, Phase3CIConfirmationClosure, R2 scoped Mathlib dry-run, R3 scoped Mathlib dry-run, R4 scoped Mathlib dry-run, R5 scoped Mathlib dry-run, R6 scoped Mathlib dry-run, R7 scoped Mathlib dry-run, and the PR #3--#8 gate wiring chain have been recorded.
+The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. Main remains pre-Mathlib.
 
 Observed PR CI:
 
@@ -318,7 +321,7 @@ lake build: success
 PR status: open draft, unmerged
 ```
 
-PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules are wired through:
+PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules, plus the complete R1--R7 series review gate, are wired through:
 
 ```text
 MGAP4D.MathlibAdoptionGate
@@ -338,6 +341,8 @@ R6 interval exclusion
 R7 atom / exact value
 Phase3CandidateClosure
 Phase3CIConfirmationClosure
+R1--R7 dry-run series review document
+R1--R7 dry-run series review Lean gate
 R2 dry-run PR #3 result recorded
 R3 dry-run PR #4 result recorded
 R4 dry-run PR #5 result recorded
@@ -353,4 +358,4 @@ post-PR7-gate-wiring CI green
 
 The earlier R3 omission has been corrected.
 
-Next priority: observe post-PR8-gate-wiring main CI green, then review the complete R1--R7 scoped Mathlib dry-run series. Main remains pre-Mathlib until a dry-run result is recorded, reviewed, and gated.
+Next priority: observe post-series-review main CI green, then review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
