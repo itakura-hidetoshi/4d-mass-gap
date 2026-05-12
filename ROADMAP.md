@@ -117,8 +117,13 @@
 - [x] Add Mathlib main-adoption review Lean gate
 - [x] Wire Mathlib main-adoption review gate through `MGAP4D.MathlibAdoptionGate`
 - [x] Observe post-main-adoption-review-gate main CI green
-- [ ] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
-- [ ] Add Mathlib to main only after scoped dry-run success and review gate
+- [x] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
+- [x] Record Mathlib main-adoption hold decision document
+- [x] Add Mathlib main-adoption hold decision Lean gate
+- [x] Wire Mathlib main-adoption hold decision through `MGAP4D.MathlibAdoptionGate`
+- [ ] Observe post-main-adoption-hold-decision main CI green
+- [ ] Continue theorem-route hardening while main remains pre-Mathlib
+- [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
 
@@ -130,268 +135,28 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has now been recorded end-to-end, including a series review document and a Lean series review gate. The post-series-review main CI is green. A separate Mathlib main-adoption review gate has been added, wired, and observed green through CI. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`. A Mathlib main-adoption hold decision document and Lean gate have been added and wired. Main remains pre-Mathlib.
 
-Observed PR CI:
-
-```text
-PR: #2
-Workflow: Lean Direct Elan CI
-Run ID: 25712798053
-Run number: 547
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-PR status: closed unmerged
-```
-
-Observed manual main workflow_dispatch CI before `Phase3CIConfirmationClosure`:
+Observed R1--R7 dry-run series:
 
 ```text
-Workflow: Lean Direct Elan CI
-Run ID: 25713735152
-Build job ID: 75499172664
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
+R1 Hilbert dry-run: success
+R2 restriction dry-run: success
+R3 shifted / zero-form dry-run: success
+R4 lower-bound dry-run: success
+R5 spectrum / infimum dry-run: success
+R6 interval-exclusion dry-run: success
+R7 atom / exact-gap dry-run: success
 ```
 
-Observed manual main workflow_dispatch CI after `Phase3CIConfirmationClosure`:
+Observed review/guard chain:
 
 ```text
-Workflow: Lean Direct Elan CI
-Run ID: 25714521362
-Build job ID: 75501432120
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
+post-series-review CI: green
+post-main-adoption-review-gate CI: green
+main-adoption decision: hold_main_adoption
+main remains pre-Mathlib
+Mathlib on main: not introduced
 ```
 
-Observed post-R2-dry-run ROADMAP main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25716720759
-Build job ID: 75508226598
-Commit: 3c1d70882e78cd3248de5b08a1dc573df54b2fb0
-Result: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Observed R2 scoped Mathlib dry-run CI:
-
-```text
-PR: #3
-Workflow: Lean Direct Elan CI
-Run ID: 25716432314
-Run number: 564
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-PR status: open draft, unmerged
-```
-
-Observed post-PR3-gate-wiring main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25716946364
-Build job ID: 75508927249
-Commit: 5493a286cc1071e79e0928d6253260981580f171
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Observed R3 scoped Mathlib dry-run CI:
-
-```text
-PR: #4
-Workflow: Lean Direct Elan CI
-Run ID: 25717540604
-Run number: 576
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-PR status: open draft, unmerged
-```
-
-Observed R4 scoped Mathlib dry-run CI:
-
-```text
-PR: #5
-Workflow: Lean Direct Elan CI
-Run ID: 25718054398
-Run number: 584
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-PR status: open draft, unmerged
-```
-
-Observed post-PR5-gate-wiring main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25718680754
-Build job ID: 75514344799
-Commit: b7e5e77d0bfcc97fb5bbe30b34621da23fa3f1b3
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Observed R5 scoped Mathlib dry-run CI:
-
-```text
-PR: #6
-Workflow: Lean Direct Elan CI
-Run ID: 25721657671
-Run number: 593
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-PR status: open draft, unmerged
-```
-
-Observed post-PR6-gate-wiring main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25721990812
-Build job ID: 75525210458
-Commit: 615d3a5a2363b6319cf3e082b997d0b344c60e9d
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Observed R6 scoped Mathlib dry-run CI:
-
-```text
-PR: #7
-Workflow: Lean Direct Elan CI
-Run ID: 25724608074
-Run number: 603
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-PR status: open draft, unmerged
-```
-
-Observed post-PR7-gate-wiring main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25725021818
-Build job ID: 75535499660
-Commit: 26d7b357158668a674ca9b32440776ba0ad5cd49
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Observed R7 scoped Mathlib dry-run CI:
-
-```text
-PR: #8
-Workflow: Lean Direct Elan CI
-Run ID: 25725331515
-Run number: 612
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-PR status: open draft, unmerged
-```
-
-Observed post-series-review main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25725854893
-Build job ID: 75538322838
-Commit: 8b4fd3410331835390dcba97c42d576a9be846a1
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Observed post-main-adoption-review-gate main CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25726312188
-Build job ID: 75539903697
-Commit: 7dba7e22134963d775964f0dd270119a409595fc
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-PR #3, PR #4, PR #5, PR #6, PR #7, and PR #8 gate modules, the complete R1--R7 series review gate, and the Mathlib main-adoption review gate are wired through:
-
-```text
-MGAP4D.MathlibAdoptionGate
-```
-
-This keeps the top-level `MGAP4D.lean` import surface stable while routing the dry-run gate chains and review gates through an already-imported root.
-
-The current pre-Mathlib closure includes:
-
-```text
-R1 Hilbert
-R2 restriction
-R3 shifted / zero-form route
-R4 lower bound
-R5 spectrum / infimum
-R6 interval exclusion
-R7 atom / exact value
-Phase3CandidateClosure
-Phase3CIConfirmationClosure
-R1--R7 dry-run series review document
-R1--R7 dry-run series review Lean gate
-Mathlib main-adoption review document
-Mathlib main-adoption review Lean gate
-R2 dry-run PR #3 result recorded
-R3 dry-run PR #4 result recorded
-R4 dry-run PR #5 result recorded
-R5 dry-run PR #6 result recorded
-R6 dry-run PR #7 result recorded
-R7 dry-run PR #8 result recorded
-PR #3--#8 gate chains wired through MathlibAdoptionGate
-post-PR3-gate-wiring CI green
-post-PR5-gate-wiring CI green
-post-PR6-gate-wiring CI green
-post-PR7-gate-wiring CI green
-post-series-review CI green
-post-main-adoption-review-gate CI green
-```
-
-The earlier R3 omission has been corrected.
-
-Next priority: review the complete R1--R7 scoped Mathlib dry-run series before any Mathlib main adoption decision.
+Next priority: observe post-main-adoption-hold-decision main CI green, then continue theorem-route hardening while preserving the pre-Mathlib invariant.
