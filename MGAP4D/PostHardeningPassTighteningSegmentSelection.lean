@@ -1,0 +1,40 @@
+import MGAP4D.PostHardeningPassClosure
+import MGAP4D.R3.Theorem.R3HardeningPass
+
+namespace MGAP4D
+
+inductive TighteningSegment where
+  | r3ShiftedZeroFormObligation
+  | r4LowerBoundObligation
+  | r5SpectrumInfimumObligation
+  | r6IntervalExclusionObligation
+  | r7AtomExactObligation
+  deriving Repr, DecidableEq
+
+structure PostHardeningPassTighteningSegmentSelection where
+  mainPreMathlib : Prop
+  mathlibMainAdoptionHeld : Prop
+  postHardeningPassClosureGreen : Prop
+  selectedSegment : TighteningSegment
+  selectedIsR3First : selectedSegment = TighteningSegment.r3ShiftedZeroFormObligation
+  tighteningOnly : Prop
+  theoremCompletionNotClaimed : Prop
+  finalGapReleaseNotUnlocked : Prop
+  publicBoundaryHeld : Prop
+
+def PostHardeningPassTighteningSegmentSelection.ready
+    (S : PostHardeningPassTighteningSegmentSelection) : Prop :=
+  S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
+  S.postHardeningPassClosureGreen ∧ S.selectedIsR3First ∧
+  S.tighteningOnly ∧ S.theoremCompletionNotClaimed ∧
+  S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld
+
+theorem post_hardening_pass_tightening_segment_selection_pack
+    (S : PostHardeningPassTighteningSegmentSelection) :
+    S.ready ↔ S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
+      S.postHardeningPassClosureGreen ∧ S.selectedIsR3First ∧
+      S.tighteningOnly ∧ S.theoremCompletionNotClaimed ∧
+      S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld := by
+  rfl
+
+end MGAP4D
