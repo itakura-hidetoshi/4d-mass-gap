@@ -128,6 +128,47 @@ This confirms that the manually executed main workflow successfully completed au
 
 It does not mean Mathlib has been added to main.
 
+## Post Phase3CIConfirmationClosure manual main CI observation
+
+A second manual workflow run URL was provided after adding and wiring `Phase3CIConfirmationClosure`:
+
+```text
+Run URL: https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/25714521362/job/75501432120
+Run ID: 25714521362
+Build job ID: 75501432120
+Workflow: Lean Direct Elan CI
+```
+
+Observed run jobs:
+
+```text
+Audit metadata and Lean source -> completed / success
+Build Lean project via direct elan -> completed / success
+```
+
+Observed build job steps:
+
+```text
+Set up job -> success
+Checkout repository -> success
+Confirm direct elan workflow -> success
+Install elan and Lean toolchain -> success
+Show Lean and Lake versions -> success
+Generate Lake manifest -> success
+Build Lean project with lake build -> success
+Complete job -> success
+```
+
+Interpretation:
+
+```text
+post-Phase3CIConfirmationClosure main workflow_dispatch CI status: green
+```
+
+This confirms that the main workflow successfully completed after `Phase3CIConfirmationClosure` was added and wired.
+
+It does not mean Mathlib has been added to main.
+
 ## Current source-side state
 
 The main branch now records:
@@ -136,6 +177,7 @@ The main branch now records:
 R1--R7 theorem-candidate milestones
 R3 omission corrected
 Phase3CandidateClosure imported by MGAP4D.lean
+Phase3CIConfirmationClosure imported by MGAP4D.lean
 MathlibAdoptionGate request files using Requester direct import
 Mathlib still not added to main
 lakefile.lean still not changed for Mathlib
@@ -143,6 +185,6 @@ lakefile.lean still not changed for Mathlib
 
 ## Required next action
 
-Keep PR #2 as a draft observation PR or close it after recording. Do not merge it unless a non-semantic CI observation note is desired on main.
+PR #2 has been closed unmerged as an observation-only PR.
 
 Main remains pre-Mathlib.
