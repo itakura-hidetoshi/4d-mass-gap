@@ -122,7 +122,12 @@
 - [x] Add Mathlib main-adoption hold decision Lean gate
 - [x] Wire Mathlib main-adoption hold decision through `MGAP4D.MathlibAdoptionGate`
 - [x] Observe post-main-adoption-hold-decision main CI green
-- [ ] Continue theorem-route hardening while main remains pre-Mathlib
+- [x] Continue theorem-route hardening while main remains pre-Mathlib
+- [x] Add post-Mathlib-hold theorem-route hardening document
+- [x] Add post-Mathlib-hold theorem-route hardening Lean checkpoint
+- [x] Wire post-Mathlib-hold theorem-route hardening through top-level root
+- [ ] Observe post-Mathlib-hold theorem-route hardening main CI green
+- [ ] Add R3--R7 route-specific hardening checkpoints
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -135,7 +140,7 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`. A Mathlib main-adoption hold decision document and Lean gate have been added, wired, and observed green through CI. Main remains pre-Mathlib.
+The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`. A post-Mathlib-hold theorem-route hardening checkpoint has been added and wired through the top-level root. Main remains pre-Mathlib.
 
 Observed R1--R7 dry-run series:
 
@@ -174,4 +179,4 @@ Generate Lake manifest: success
 lake build: success
 ```
 
-Next priority: continue theorem-route hardening while preserving the pre-Mathlib invariant.
+Next priority: observe post-Mathlib-hold theorem-route hardening main CI green, then add R3--R7 route-specific hardening checkpoints while preserving the pre-Mathlib invariant.
