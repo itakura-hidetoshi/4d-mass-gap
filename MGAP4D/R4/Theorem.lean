@@ -4,3 +4,4 @@ import MGAP4D.R4.Theorem.LowerBoundMilestone
 import MGAP4D.R4.Theorem.LowerBoundClosureCandidate
 import MGAP4D.R4.Theorem.LowerBoundHardeningPass
 import MGAP4D.R4.Theorem.LowerBoundTighteningSegmentSelection
+import MGAP4D.R4.Theorem.LowerBoundProofObligationTighteningPass1
