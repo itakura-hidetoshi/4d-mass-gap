@@ -1,5 +1,6 @@
 import MGAP4D.PostHardeningPassClosure
 import MGAP4D.R3.Theorem.R3HardeningPass
+import MGAP4D.PostProofObligationTighteningClosure
 
 namespace MGAP4D
 
