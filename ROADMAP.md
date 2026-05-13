@@ -44,18 +44,8 @@
 - [x] Add Mathlib adoption gate
 - [x] Add scoped Mathlib request records for R1/R2/R3/R4/R5/R6/R7
 - [x] Add Mathlib request registry with R3 included
-- [x] Add R1 Hilbert concrete theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
-- [x] Add R2 restriction concrete theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
-- [x] Correct R3 omission and add R3 requester/request/registry entry
-- [x] Add R3 shifted / zero-form theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
-- [x] Add R4 lower-bound theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
-- [x] Add R5 spectrum / infimum theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
-- [x] Add R6 interval-exclusion theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
-- [x] Add R7 atom / exact-gap theorem candidate, checklist, proof-obligation map, skeleton, bundle, and milestone
+- [x] Add R1--R7 theorem candidates, checklists, proof-obligation maps, skeletons, bundles, and milestones
 - [x] Add Phase3CandidateClosure for R1--R7 milestone coverage
-- [x] Add Mathlib request import cleanup for acyclic request files
-- [x] Add Mathlib dry-run branch plan, checklist, execution note, and result ledger
-- [x] Add pre-Mathlib closure checkpoint
 - [x] Complete R1--R7 scoped Mathlib dry-run series and hold main adoption
 - [x] Continue theorem-route hardening while main remains pre-Mathlib
 - [x] Add post-Mathlib-hold theorem-route hardening checkpoint
@@ -65,68 +55,25 @@
 - [x] Add R3--R7 theorem-route hardening passes
 - [x] Add R3--R7 hardening pass series review checkpoint
 - [x] Add post-hardening-pass closure checkpoint
-- [x] Select R3 shifted / zero-form proof-obligation tightening segment
-- [x] Add R3 proof-obligation tightening pass 1
-- [x] Observe R3 proof-obligation tightening pass 1 main CI green
-- [x] Add R3 proof-obligation tightening pass 2
-- [x] Observe R3 proof-obligation tightening pass 2 main CI green
-- [x] Add R3 proof-obligation tightening pass 3
-- [x] Observe R3 proof-obligation tightening pass 3 main CI green
-- [x] Add R3 proof-obligation tightening series review checkpoint
-- [x] Observe R3 proof-obligation tightening series review main CI green
-- [x] Add R3 proof-obligation tightening closure checkpoint
+- [x] Add R3 proof-obligation tightening sequence and closure
 - [x] Observe R3 proof-obligation tightening closure main CI green
 - [x] Record R3 proof-obligation tightening closure CI success in ledger
-- [x] Select R4 lower-bound proof-obligation tightening segment
-- [x] Add R4 proof-obligation tightening pass 1
-- [x] Observe R4 proof-obligation tightening pass 1 main CI green
-- [x] Add R4 proof-obligation tightening pass 2
-- [x] Observe R4 proof-obligation tightening pass 2 main CI green
-- [x] Add R4 proof-obligation tightening pass 3
-- [x] Observe R4 proof-obligation tightening pass 3 main CI green
-- [x] Add R4 proof-obligation tightening series review checkpoint
-- [x] Observe R4 proof-obligation tightening series review main CI green
-- [x] Add R4 proof-obligation tightening closure checkpoint
+- [x] Add R4 proof-obligation tightening sequence and closure
 - [x] Observe R4 proof-obligation tightening closure main CI green
 - [x] Record R4 proof-obligation tightening closure CI success in ledger
-- [x] Select R5 spectrum / infimum proof-obligation tightening segment
-- [x] Add R5 proof-obligation tightening pass 1
-- [x] Observe R5 proof-obligation tightening pass 1 main CI green
-- [x] Add R5 proof-obligation tightening pass 2
-- [x] Observe R5 proof-obligation tightening pass 2 main CI green
-- [x] Add R5 proof-obligation tightening pass 3
-- [x] Observe R5 proof-obligation tightening pass 3 main CI green
-- [x] Add R5 proof-obligation tightening series review checkpoint
-- [x] Observe R5 proof-obligation tightening series review main CI green
-- [x] Add R5 proof-obligation tightening closure checkpoint
+- [x] Add R5 proof-obligation tightening sequence and closure
 - [x] Observe R5 proof-obligation tightening closure main CI green
 - [x] Record R5 proof-obligation tightening closure CI success in ledger
-- [x] Select R6 interval-exclusion proof-obligation tightening segment
-- [x] Add R6 proof-obligation tightening pass 1
-- [x] Observe R6 proof-obligation tightening pass 1 main CI green
-- [x] Add R6 proof-obligation tightening pass 2
-- [x] Observe R6 proof-obligation tightening pass 2 main CI green
-- [x] Add R6 proof-obligation tightening pass 3
-- [x] Observe R6 proof-obligation tightening pass 3 main CI green
-- [x] Add R6 proof-obligation tightening series review checkpoint
-- [x] Observe R6 proof-obligation tightening series review main CI green
-- [x] Add R6 proof-obligation tightening closure checkpoint
+- [x] Add R6 proof-obligation tightening sequence and closure
 - [x] Observe R6 proof-obligation tightening closure main CI green
 - [x] Record R6 proof-obligation tightening closure CI success in ledger
-- [x] Select R7 atom / exact-gap proof-obligation tightening segment
-- [x] Observe R7 proof-obligation tightening segment selection main CI green
-- [x] Add R7 proof-obligation tightening pass 1
-- [x] Observe R7 proof-obligation tightening pass 1 main CI green
-- [x] Add R7 proof-obligation tightening pass 2
-- [x] Observe R7 proof-obligation tightening pass 2 main CI green
-- [x] Add R7 proof-obligation tightening pass 3
-- [x] Observe R7 proof-obligation tightening pass 3 main CI green
-- [x] Add R7 proof-obligation tightening series review checkpoint
-- [x] Observe R7 proof-obligation tightening series review main CI green
-- [x] Add R7 proof-obligation tightening closure checkpoint
+- [x] Add R7 proof-obligation tightening sequence and closure
 - [x] Observe R7 proof-obligation tightening closure main CI green
 - [x] Record R7 proof-obligation tightening closure CI success in ledger
-- [ ] Add R3--R7 proof-obligation tightening closure series review checkpoint
+- [x] Add R3--R7 proof-obligation tightening closure series review checkpoint
+- [x] Observe R3--R7 proof-obligation tightening closure series review main CI green
+- [x] Record R3--R7 proof-obligation tightening closure series review CI success in ledger
+- [ ] Add post-proof-obligation-tightening closure checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -141,15 +88,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, and R3/R4/R5/R6/R7 proof-obligation tightening closures. All of those closure checkpoints have been observed green on `main`.
+The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, and R3/R4/R5/R6/R7 proof-obligation tightening closures. The R3--R7 proof-obligation tightening closure series review has also been observed green on `main`.
 
-Observed current closure CI:
+Observed current closure-series CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25777833754
-Build job ID: 75714049832
-Commit: 0cd1419ace5c1c1266b79a3c012514f3f7ff6ebf
+Run ID: 25778376405
+Build job ID: 75715649304
+Commit: c950ecb02b75530573530a5ef6f20d0baf787c40
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -163,10 +110,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-R3--R7 proof-obligation tightening closures: CI green
-R7 theorem completion: not claimed
+R3--R7 proof-obligation tightening closure series review: CI green
+R3--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add the R3--R7 proof-obligation tightening closure series review while preserving the pre-Mathlib invariant.
+Next priority: add the post-proof-obligation-tightening closure checkpoint while preserving the pre-Mathlib invariant.
