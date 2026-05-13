@@ -14,13 +14,31 @@ main-adoption decision remains hold_main_adoption
 
 ## Protocol meaning
 
-This checkpoint turns replay preparation into an ordered independent replay protocol.
+This checkpoint turns replay preparation into an ordered independent replay protocol for the full R1--R7 route surface.
+
+It is carried by the global Phase3ReleaseGate root and by the top-level MGAP4D root.
 
 It does not claim theorem completion for R1, R2, R3, R4, R5, R6, or R7.
 
 It does not unlock the final gap theorem release.
 
 It does not introduce Mathlib on main.
+
+## Global replay scope
+
+```text
+R1 replay surface included
+R2 replay surface included
+R3 replay surface included
+R4 replay surface included
+R5 replay surface included
+R6 replay surface included
+R7 replay surface included
+R1--R7 replay surface included
+protocol is global
+Phase3ReleaseGate carries the protocol
+top-level MGAP4D root carries the protocol
+```
 
 ## Ordered replay protocol
 
@@ -61,4 +79,4 @@ main remains pre-Mathlib
 
 ## Next action
 
-Create a Lean-side independent replay protocol checkpoint and wire it through the existing import path.
+Keep the Lean-side independent replay protocol as a global R1--R7 checkpoint routed through the global Phase3ReleaseGate root.
