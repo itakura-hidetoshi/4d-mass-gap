@@ -132,6 +132,9 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 - [x] Prepare version-tag readiness notes without creating a tag
 - [x] Observe version-tag readiness notes main CI green
 - [x] Record version-tag readiness notes CI success in ledger
+- [x] Prepare version-tag source-tree review refresh without creating a tag
+- [ ] Observe version-tag source-tree review refresh main CI green
+- [ ] Record version-tag source-tree review refresh CI success in ledger
 - [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
@@ -139,7 +142,7 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have also been observed CI green as a documentation-only surface; and KuuOS now references this repository as the canonical Lean proof repository.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have also been observed CI green as a documentation-only surface; and a version-tag source-tree review refresh has now been prepared without creating a tag.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -152,6 +155,7 @@ docs/external_audit_note_appendix_template.md: append-only external audit note t
 docs/external_audit_note_appendix_template_ci.md: bounded CI ledger for the template update
 docs/version_tag_readiness_notes.md: documentation-only version-tag readiness notes; no tag created
 docs/version_tag_readiness_notes_ci.md: bounded CI ledger for the readiness note update
+docs/version_tag_source_tree_review_refresh.md: documentation-only source-tree review refresh; no tag created
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
@@ -186,10 +190,11 @@ spectral gap formalization: CI green
 spectral gap formalization gate: included in Phase3ReleaseGate
 external audit note appendix template: CI green documentation-only surface
 version-tag readiness notes: CI green documentation-only surface; no tag created
+version-tag source-tree review refresh: documentation-only surface; no tag created
 KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: keep the KuuOS reference bridge synchronized while preserving this repository as the canonical proof source.
+Next priority: observe the version-tag source-tree review refresh through CI, then record the result in a bounded ledger entry if the workflow is green.
