@@ -90,7 +90,8 @@
 - [x] Correct independent replay protocol to explicit R1--R7 global scope
 - [x] Add independent replay protocol global scope correction checkpoint
 - [x] Wire independent replay protocol global scope correction through Phase3ReleaseGate
-- [ ] Observe independent replay protocol global scope correction main CI green
+- [x] Observe independent replay protocol global scope correction main CI green
+- [x] Record independent replay protocol global scope correction CI success in ledger
 - [ ] Add external audit note gate checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
@@ -106,7 +107,21 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-IndependentReplayProtocol has been corrected to explicit R1--R7 global scope and wired through Phase3ReleaseGate. It is not R2-local; the R2 theorem root remains route-local only.
+IndependentReplayProtocol has been corrected to explicit R1--R7 global scope and observed green on `main`. It is not R2-local; the R2 theorem root remains route-local only.
+
+Observed current independent replay protocol correction CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25803102231
+Build job ID: 75798339656
+Commit: ab535c2eb5c5befae833d991ed61b82a880c432a
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
 
 Current invariant:
 
@@ -114,10 +129,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-independent replay protocol: R1--R7 global scope corrected
+independent replay protocol: R1--R7 global scope corrected and CI green
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: confirm independent replay protocol global scope correction CI while preserving the pre-Mathlib and review-gated invariants.
+Next priority: add external audit note gate checkpoint while preserving the pre-Mathlib and review-gated invariants.
