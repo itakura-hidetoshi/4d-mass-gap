@@ -6,6 +6,7 @@ import MGAP4D.IndependentReplayProtocol
 import MGAP4D.IndependentReplayProtocolGlobalScopeCorrection
 import MGAP4D.SourceTreeReviewGate
 import MGAP4D.SourceTreeReviewGateFinalSync
+import MGAP4D.ExternalAuditNoteGate
 
 namespace MGAP4D
 
@@ -18,6 +19,7 @@ structure Phase3ReleaseGateRoot where
   independentReplayProtocolGlobalScopeCorrectionVisible : Prop
   sourceTreeReviewGateVisible : Prop
   sourceTreeReviewGateFinalSyncVisible : Prop
+  externalAuditNoteGateVisible : Prop
   globalGateRootNotR2Local : Prop
   mainPreMathlib : Prop
   mathlibMainAdoptionHeld : Prop
@@ -31,7 +33,8 @@ def Phase3ReleaseGateRoot.ready
   G.finalReleaseGatePreparationRefreshVisible ∧ G.independentReplayGatePreparationVisible ∧
   G.independentReplayProtocolVisible ∧ G.independentReplayProtocolGlobalScopeCorrectionVisible ∧
   G.sourceTreeReviewGateVisible ∧ G.sourceTreeReviewGateFinalSyncVisible ∧
-  G.globalGateRootNotR2Local ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
+  G.externalAuditNoteGateVisible ∧ G.globalGateRootNotR2Local ∧
+  G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
   G.theoremCompletionsNotClaimed ∧ G.finalGapReleaseNotUnlocked ∧ G.publicBoundaryHeld
 
 theorem phase3_release_gate_root_pack
@@ -40,7 +43,8 @@ theorem phase3_release_gate_root_pack
       G.finalReleaseGatePreparationRefreshVisible ∧ G.independentReplayGatePreparationVisible ∧
       G.independentReplayProtocolVisible ∧ G.independentReplayProtocolGlobalScopeCorrectionVisible ∧
       G.sourceTreeReviewGateVisible ∧ G.sourceTreeReviewGateFinalSyncVisible ∧
-      G.globalGateRootNotR2Local ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
+      G.externalAuditNoteGateVisible ∧ G.globalGateRootNotR2Local ∧
+      G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
       G.theoremCompletionsNotClaimed ∧ G.finalGapReleaseNotUnlocked ∧ G.publicBoundaryHeld := by
   rfl
 
