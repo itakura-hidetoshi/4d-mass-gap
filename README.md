@@ -10,11 +10,11 @@ The repository is organized as a GitHub-native Lean project. The active source t
 MGAP4D.lean
 ```
 
-The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, and the global Phase 3 release/replay/source-tree/external-audit gate root.
+The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, spectral gap formalization checkpoint, and the global Phase 3 release/replay/source-tree/external-audit gate root.
 
 ## Phase 3 status
 
-The current `main` branch has reached an **entrypoint naming convention final sync CI green checkpoint** through the global Phase3ReleaseGate root.
+The current `main` branch has reached a **spectral gap formalization CI green checkpoint** through the global Phase3ReleaseGate root.
 
 The proof-hardening route has advanced through:
 
@@ -50,6 +50,7 @@ TheoremSurface
   -> ExternalAuditNoteGate
   -> EntrypointNamingConvention
   -> EntrypointNamingConventionFinalSync
+  -> SpectralGapFormalizationGate
   -> Phase3ReleaseGate
 ```
 
@@ -63,6 +64,48 @@ Mathlib main-adoption decision remains hold_main_adoption
 R1--R7 theorem completions are not claimed
 Final gap theorem release is not unlocked
 Public theorem boundary remains review-gated
+Spectral gap formalization is a structural checkpoint, not final theorem release
+```
+
+## Spectral gap formalization checkpoint
+
+The current spectral checkpoint records a pre-Mathlib, route-neutral formalization surface for the normalized spectral gap value.
+
+```text
+MGAP4D/Spectral.lean: spectral module entrypoint
+MGAP4D/Spectral/GapFormalization.lean: structural spectral gap formalization checkpoint
+MGAP4D/SpectralGapFormalizationGate.lean: Phase 3 spectral gap formalization gate
+MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate including the spectral checkpoint
+```
+
+The checkpoint includes:
+
+```text
+SpectralSector.vacuum
+SpectralSector.orthogonal
+SpectralGapFormalization
+SpectralGapFormalization.ready
+spectralGap3320Formalization
+spectral_gap_formalization_pack
+spectral_gap_3320_formalization_value
+SpectralGapFormalizationGate
+spectral_gap_formalization_gate_pack
+```
+
+Current formalized normalized value surface:
+
+```text
+normalizedGapValue.value = 33 / 20
+```
+
+Boundary condition:
+
+```text
+The spectral checkpoint makes the 33/20 normalized value and witness surface visible inside Lean.
+It does not claim R1--R7 theorem completion.
+It does not unlock the final gap theorem release.
+It does not introduce Mathlib on main.
+It preserves the public theorem boundary for independent replay and external audit.
 ```
 
 ## R1--R7 proof-obligation tightening and global gate status
@@ -85,16 +128,17 @@ Global Phase3ReleaseGate root: CI green
 Source-tree review gate final sync: CI green
 External audit note gate: CI green
 Entrypoint naming convention final sync: CI green
+Spectral gap formalization: CI green
 ```
 
 ## Latest CI confirmation
 
 ```text
-Entrypoint naming convention final sync main CI
+Spectral gap formalization main CI
 Workflow: Lean Direct Elan CI
-Run ID: 25827165067
-Build job ID: 75883153113
-Commit: 88773fa4dd4090af2e2327e1d83d43dbc659b7f8
+Run ID: 25828960043
+Build job ID: 75889136130
+Commit: df99969343482d3030f6b6006edb082030dd1e87
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -102,11 +146,27 @@ Generate Lake manifest: success
 lake build: success
 ```
 
+CI ledger:
+
+```text
+docs/spectral_gap_formalization_ci.md
+```
+
+CI ledger commit:
+
+```text
+acde03b389fabc7dec3c240a732f599d95fb1f42
+record spectral gap formalization CI
+```
+
 ## Entrypoint and global gate structure
 
 ```text
 MGAP4D.lean: global top-level Lean root
 MGAP4D/Phase3ReleaseGate.lean: global Phase 3 release/replay/source-tree/external-audit gate root
+MGAP4D/Spectral.lean: spectral module entrypoint
+MGAP4D/Spectral/GapFormalization.lean: spectral gap formalization checkpoint
+MGAP4D/SpectralGapFormalizationGate.lean: spectral gap formalization gate included by Phase3ReleaseGate
 MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
 IndependentReplayProtocol: R1--R7 global replay protocol
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
@@ -125,9 +185,13 @@ docs/phase3_mathlib_main_adoption_hold_decision.md
 docs/phase3_entrypoint_naming_convention.md
 docs/phase3_entrypoint_naming_convention_final_sync.md
 docs/entrypoint_naming_convention_final_sync_ci.md
+docs/spectral_gap_formalization_ci.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
 MGAP4D/EntrypointNamingConventionFinalSync.lean
+MGAP4D/Spectral.lean
+MGAP4D/Spectral/GapFormalization.lean
+MGAP4D/SpectralGapFormalizationGate.lean
 ```
 
 ## Build
@@ -174,7 +238,10 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: entrypoint naming convention final sync CI green checkpoint reached
+- Phase 3: spectral gap formalization CI green checkpoint reached
+- Spectral module entrypoint: present
+- Spectral gap formalization checkpoint: CI green
+- Spectral gap formalization gate: included in Phase3ReleaseGate
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
@@ -185,4 +252,5 @@ scripts/                 Local and CI audit scripts
 - Entrypoint naming convention final sync: CI green
 - Mathlib on main: not introduced
 - Main-adoption decision: hold_main_adoption
+- Final release: not opened
 - Public final theorem claim: review-gated pending independent replay and external audit
