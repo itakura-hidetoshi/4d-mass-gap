@@ -10,11 +10,11 @@ The repository is organized as a GitHub-native Lean project. The active source t
 MGAP4D.lean
 ```
 
-The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, and the global Phase 3 release/replay/source-tree gate root.
+The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, and the global Phase 3 release/replay/source-tree/external-audit gate root.
 
 ## Phase 3 status
 
-The current `main` branch has reached an **independent replay protocol global R1--R7 scope correction CI green checkpoint** through the global Phase3ReleaseGate root.
+The current `main` branch has reached an **external audit note gate CI green checkpoint** through the global Phase3ReleaseGate root.
 
 The proof-hardening route has advanced through:
 
@@ -47,6 +47,7 @@ TheoremSurface
   -> IndependentReplayProtocolGlobalScopeCorrection
   -> SourceTreeReviewGate
   -> SourceTreeReviewGateFinalSync
+  -> ExternalAuditNoteGate
   -> Phase3ReleaseGate
 ```
 
@@ -80,16 +81,17 @@ Independent replay protocol: CI green
 Independent replay protocol global R1--R7 scope correction: CI green
 Global Phase3ReleaseGate root: CI green
 Source-tree review gate final sync: CI green
+External audit note gate: CI green
 ```
 
 ## Latest CI confirmation
 
 ```text
-Independent replay protocol global scope correction main CI
+External audit note gate main CI
 Workflow: Lean Direct Elan CI
-Run ID: 25803102231
-Build job ID: 75798339656
-Commit: ab535c2eb5c5befae833d991ed61b82a880c432a
+Run ID: 25804390678
+Build job ID: 75802965286
+Commit: 1ef4f2c51eb637c1d99c86535c415318ae69bfb5
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -103,7 +105,8 @@ lake build: success
 R2 root: R2 restriction theorem route only
 IndependentReplayProtocol: R1--R7 global replay protocol
 IndependentReplayProtocolGlobalScopeCorrection: confirms replay is not R2-local
-Phase3ReleaseGate: R1--R7 global release/replay/source-tree gate
+ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
+Phase3ReleaseGate: R1--R7 global release/replay/source-tree/external-audit gate
 MGAP4D.lean: top-level root directly imports Phase3ReleaseGate
 SourceTreeReviewGateFinalSync: confirms source-tree review is not R2-local
 ```
@@ -118,11 +121,10 @@ Relevant documents and modules include:
 
 ```text
 docs/phase3_mathlib_main_adoption_hold_decision.md
-docs/phase3_independent_replay_protocol_global_scope_correction.md
-docs/independent_replay_protocol_global_scope_correction_ci.md
+docs/phase3_external_audit_note_gate.md
+docs/external_audit_note_gate_ci.md
 MGAP4D/Phase3ReleaseGate.lean
-MGAP4D/IndependentReplayProtocol.lean
-MGAP4D/IndependentReplayProtocolGlobalScopeCorrection.lean
+MGAP4D/ExternalAuditNoteGate.lean
 ```
 
 ## Build
@@ -169,13 +171,14 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: independent replay protocol global R1--R7 scope correction CI green checkpoint reached
+- Phase 3: external audit note gate CI green checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
 - Post-R1--R7 proof-obligation tightening closure: CI green
 - Final theorem release gate preparation refresh: CI green
 - Independent replay protocol: R1--R7 global scope corrected and CI green
+- External audit note gate: CI green
 - Global Phase3ReleaseGate root: CI green
 - Source-tree review gate final sync: CI green
 - Mathlib on main: not introduced
