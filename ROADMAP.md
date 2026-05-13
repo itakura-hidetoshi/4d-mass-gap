@@ -84,7 +84,10 @@
 - [x] Move release/replay/source-tree gates to global Phase3ReleaseGate root
 - [x] Observe global Phase3ReleaseGate root main CI green
 - [x] Record global Phase3ReleaseGate root CI success in ledger
-- [ ] Observe source-tree review gate main CI green after global root sync
+- [x] Add source-tree review gate final sync checkpoint
+- [x] Observe source-tree review gate final sync main CI green
+- [x] Record source-tree review gate final sync CI success in ledger
+- [ ] Add external audit note gate checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -99,15 +102,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The global Phase3ReleaseGate root has been observed green on `main`. Release, replay, and source-tree gate surfaces are now top-level global surfaces, not R2-local surfaces.
+The source-tree review gate final sync has been observed green on `main`. Release, replay, and source-tree gate surfaces are top-level global surfaces, not R2-local surfaces.
 
-Observed current global gate CI:
+Observed current source-tree final sync CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25800415696
-Build job ID: 75788642271
-Commit: 746408d2a4b507be16e8bf4fa16780aa12f700ba
+Run ID: 25801352087
+Build job ID: 75792032948
+Commit: a3afb24049e10e364e4aeec8e05b4ee7439c7881
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -121,10 +124,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-global Phase3ReleaseGate root: CI green
+source-tree review gate final sync: CI green
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: confirm source-tree review gate CI after global root sync while preserving the pre-Mathlib and review-gated invariants.
+Next priority: add external audit note gate checkpoint while preserving the pre-Mathlib and review-gated invariants.
