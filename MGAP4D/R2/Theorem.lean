@@ -6,3 +6,4 @@ import MGAP4D.R2.Theorem.RestrictionProofObligationTighteningPass1
 import MGAP4D.R2.Theorem.RestrictionProofObligationTighteningPass2
 import MGAP4D.R2.Theorem.RestrictionProofObligationTighteningPass3
 import MGAP4D.R2.Theorem.RestrictionProofObligationTighteningSeriesReview
+import MGAP4D.R2.Theorem.RestrictionProofObligationTighteningClosure
