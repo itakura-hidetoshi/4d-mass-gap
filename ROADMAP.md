@@ -98,7 +98,9 @@
 - [x] Add entrypoint naming convention checkpoint
 - [x] Wire entrypoint naming convention through Phase3ReleaseGate
 - [x] Rename ambiguous R2 theorem root wording to R2 entrypoint wording
-- [ ] Observe entrypoint naming convention main CI green
+- [x] Add entrypoint naming convention final sync checkpoint
+- [x] Observe entrypoint naming convention final sync main CI green
+- [x] Record entrypoint naming convention final sync CI success in ledger
 - [ ] Add external audit note appendix template
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
@@ -114,7 +116,29 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-Entrypoint naming is now fixed as follows: `MGAP4D.lean` is the global top-level Lean root, `MGAP4D/Phase3ReleaseGate.lean` is the global Phase 3 gate root, and `MGAP4D/R2/Theorem.lean` is the R2 restriction route entrypoint.
+Entrypoint naming convention final sync has been observed green on `main`.
+
+Canonical naming is now fixed as follows:
+
+```text
+MGAP4D.lean: global top-level Lean root
+MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate root
+MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
+```
+
+Observed current entrypoint naming convention final sync CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25827165067
+Build job ID: 75883153113
+Commit: 88773fa4dd4090af2e2327e1d83d43dbc659b7f8
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
+```
 
 Current invariant:
 
@@ -122,10 +146,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-R2 entrypoint wording: adopted
+entrypoint naming convention final sync: CI green
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: confirm entrypoint naming convention CI while preserving the pre-Mathlib and review-gated invariants.
+Next priority: add external audit note appendix template while preserving the pre-Mathlib and review-gated invariants.
