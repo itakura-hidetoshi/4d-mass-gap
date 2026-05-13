@@ -14,7 +14,7 @@ The root imports the Phase 3 proof-hardening architecture, including the R1--R7 
 
 ## Phase 3 status
 
-The current `main` branch has reached a **global Phase3ReleaseGate root checkpoint**.
+The current `main` branch has reached a **source-tree review gate final sync checkpoint** through the global Phase3ReleaseGate root.
 
 The proof-hardening route has advanced through:
 
@@ -45,6 +45,7 @@ TheoremSurface
   -> IndependentReplayGatePreparation
   -> IndependentReplayProtocol
   -> SourceTreeReviewGate
+  -> SourceTreeReviewGateFinalSync
   -> Phase3ReleaseGate
 ```
 
@@ -76,16 +77,17 @@ Final theorem release gate preparation refresh: CI green
 Independent replay gate preparation: CI green
 Independent replay protocol: CI green
 Global Phase3ReleaseGate root: CI green
+Source-tree review gate final sync: CI green
 ```
 
 ## Latest CI confirmation
 
 ```text
-Global Phase3ReleaseGate root main CI
+Source-tree review gate final sync main CI
 Workflow: Lean Direct Elan CI
-Run ID: 25800415696
-Build job ID: 75788642271
-Commit: 746408d2a4b507be16e8bf4fa16780aa12f700ba
+Run ID: 25801352087
+Build job ID: 75792032948
+Commit: a3afb24049e10e364e4aeec8e05b4ee7439c7881
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -99,6 +101,7 @@ lake build: success
 R2 root: R2 restriction theorem route only
 Phase3ReleaseGate: R1--R7 global release/replay/source-tree gate
 MGAP4D.lean: top-level root directly imports Phase3ReleaseGate
+SourceTreeReviewGateFinalSync: confirms source-tree review is not R2-local
 ```
 
 ## Mathlib dry-run policy
@@ -111,8 +114,9 @@ Relevant documents and modules include:
 
 ```text
 docs/phase3_mathlib_main_adoption_hold_decision.md
-docs/global_phase3_release_gate_root_ci.md
+docs/source_tree_review_gate_final_sync_ci.md
 MGAP4D/Phase3ReleaseGate.lean
+MGAP4D/SourceTreeReviewGateFinalSync.lean
 ```
 
 ## Build
@@ -159,7 +163,7 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: global Phase3ReleaseGate root checkpoint reached
+- Phase 3: source-tree review gate final sync checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
@@ -167,6 +171,7 @@ scripts/                 Local and CI audit scripts
 - Final theorem release gate preparation refresh: CI green
 - Independent replay protocol: CI green
 - Global Phase3ReleaseGate root: CI green
+- Source-tree review gate final sync: CI green
 - Mathlib on main: not introduced
 - Main-adoption decision: hold_main_adoption
 - Public final theorem claim: review-gated pending independent replay and external audit
