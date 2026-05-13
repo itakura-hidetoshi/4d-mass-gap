@@ -145,19 +145,19 @@ Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
 External audit note appendix template: CI green
 Version tag readiness notes: CI green, documentation-only, tag not created
-Version-tag source-tree review refresh: documentation-only, tag not created
+Version-tag source-tree review refresh: CI green, documentation-only, tag not created
 KuuOS reference bridge: present
 ```
 
 ## Latest CI confirmation
 
 ```text
-Version tag readiness notes CI
+Version-tag source-tree review refresh CI
 Workflow: Lean Direct Elan CI
-Run ID: 25831588949
-Audit job ID: 75897520855
-Build job ID: 75897534901
-Commit: 7f56509b1a027850fbf7ab79badfdfe80731563b
+Run ID: 25832092292
+Audit job ID: 75899087446
+Build job ID: 75899102953
+Commit: d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -168,6 +168,7 @@ lake build: success
 CI ledger:
 
 ```text
+docs/version_tag_source_tree_review_refresh_ci.md
 docs/version_tag_readiness_notes_ci.md
 docs/external_audit_note_appendix_template_ci.md
 docs/spectral_gap_formalization_ci.md
@@ -176,8 +177,8 @@ docs/spectral_gap_formalization_ci.md
 Recent CI ledger commit:
 
 ```text
-283c7143aad0fa4f3fc5f914c16bc5adfd365b82
-record version tag readiness notes CI
+76470a6bb1e3714e3dcb6ef8146dd7e20a29528c
+record version-tag source-tree review refresh CI
 ```
 
 ## Entrypoint and global gate structure
@@ -216,6 +217,7 @@ docs/external_audit_note_appendix_template_ci.md
 docs/version_tag_readiness_notes.md
 docs/version_tag_readiness_notes_ci.md
 docs/version_tag_source_tree_review_refresh.md
+docs/version_tag_source_tree_review_refresh_ci.md
 docs/kuuos_reference_bridge.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
@@ -276,7 +278,7 @@ scripts/                 Local and CI audit scripts
 - KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 - External audit note appendix template: CI green documentation-only surface
 - Version tag readiness notes: CI green documentation-only surface; no tag created
-- Version-tag source-tree review refresh: present as documentation-only surface; no tag created
+- Version-tag source-tree review refresh: CI green documentation-only surface; no tag created
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
