@@ -25,29 +25,15 @@
 
 - [x] Add Phase 3 proof-hardening plan and Lean tracking modules
 - [x] Add OperatorAPI theorem-surface layer
-- [x] Tighten OperatorAPI work-unit execution readiness
 - [x] Add R1--R7 theorem-surface layers
-- [x] Tighten R1--R7 concrete export/status exits against theorem surfaces
 - [x] Add Global theorem-surface layer
-- [x] Connect Global final assembly to Global theorem surface
 - [x] Add theorem dependency map as checked Lean structures
-- [x] Add local replay script for declaration counts
-- [x] Restore internal deferred imports for Global/Concrete audit/status groups
-- [x] Add Global/Concrete import root and summary surface
-- [x] Connect FinalAssembly to Global/Concrete summary surface
-- [x] Add Phase 3 theorem-surface and Global/Concrete checkpoint
-- [x] Add first status-to-theorem replacement checkpoint
-- [x] Complete replacement pass 1
-- [x] Add replacement pass 2 plan
-- [x] Complete replacement pass 2 bundle consolidation
-- [x] Add replacement pass 2 closure checkpoint
-- [x] Add Mathlib adoption gate
-- [x] Add scoped Mathlib request records for R1/R2/R3/R4/R5/R6/R7
-- [x] Add Mathlib request registry with R3 included
+- [x] Complete replacement pass 1 and pass 2 closure
+- [x] Add Mathlib adoption gate and request registry
 - [x] Add R1--R7 theorem candidates, checklists, proof-obligation maps, skeletons, bundles, and milestones
-- [x] Add Phase3CandidateClosure for R1--R7 milestone coverage
-- [x] Complete R1--R7 scoped Mathlib dry-run series and hold main adoption
-- [x] Continue theorem-route hardening while main remains pre-Mathlib
+- [x] Add Phase3CandidateClosure and Phase3CIConfirmationClosure
+- [x] Complete R1--R7 scoped Mathlib dry-run series
+- [x] Record Mathlib main-adoption decision: hold_main_adoption
 - [x] Add post-Mathlib-hold theorem-route hardening checkpoint
 - [x] Add R3--R7 route-specific hardening checkpoints
 - [x] Add R3--R7 closure-candidate series review checkpoint
@@ -73,7 +59,10 @@
 - [x] Add R3--R7 proof-obligation tightening closure series review checkpoint
 - [x] Observe R3--R7 proof-obligation tightening closure series review main CI green
 - [x] Record R3--R7 proof-obligation tightening closure series review CI success in ledger
-- [ ] Add post-proof-obligation-tightening closure checkpoint
+- [x] Add post-proof-obligation-tightening closure checkpoint
+- [x] Observe post-proof-obligation-tightening closure main CI green
+- [x] Record post-proof-obligation-tightening closure CI success in ledger
+- [ ] Add final theorem release gate preparation checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -88,15 +77,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, and R3/R4/R5/R6/R7 proof-obligation tightening closures. The R3--R7 proof-obligation tightening closure series review has also been observed green on `main`.
+The proof-obligation-tightening stage has closed at the review-surface level and has been observed green on `main`.
 
-Observed current closure-series CI:
+Observed current closure CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25778376405
-Build job ID: 75715649304
-Commit: c950ecb02b75530573530a5ef6f20d0baf787c40
+Run ID: 25780731720
+Build job ID: 75722560830
+Commit: e74aaf1b12287012c5d5549ef9e946aa017d8cea
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -110,10 +99,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-R3--R7 proof-obligation tightening closure series review: CI green
+post-proof-obligation-tightening closure: CI green
 R3--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add the post-proof-obligation-tightening closure checkpoint while preserving the pre-Mathlib invariant.
+Next priority: add final theorem release gate preparation while preserving the pre-Mathlib and review-gated invariants.
