@@ -101,6 +101,11 @@
 - [x] Add entrypoint naming convention final sync checkpoint
 - [x] Observe entrypoint naming convention final sync main CI green
 - [x] Record entrypoint naming convention final sync CI success in ledger
+- [x] Add spectral module entrypoint
+- [x] Add spectral gap formalization checkpoint
+- [x] Wire spectral gap formalization gate through Phase3ReleaseGate
+- [x] Observe spectral gap formalization main CI green
+- [x] Record spectral gap formalization CI success in ledger
 - [ ] Add external audit note appendix template
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
@@ -114,30 +119,35 @@
 
 ## Current priority
 
-The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`.
 
-Entrypoint naming convention final sync has been observed green on `main`.
-
-Canonical naming is now fixed as follows:
+This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
 ```text
-MGAP4D.lean: global top-level Lean root
-MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate root
-MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
+MGAP4D/Spectral.lean: spectral module entrypoint
+MGAP4D/Spectral/GapFormalization.lean: spectral gap formalization checkpoint
+MGAP4D/SpectralGapFormalizationGate.lean: Phase 3 spectral gap formalization gate
+MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate including the spectral checkpoint
 ```
 
-Observed current entrypoint naming convention final sync CI:
+Observed spectral gap formalization CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25827165067
-Build job ID: 75883153113
-Commit: 88773fa4dd4090af2e2327e1d83d43dbc659b7f8
+Run ID: 25828960043
+Build job ID: 75889136130
+Commit: df99969343482d3030f6b6006edb082030dd1e87
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
 Generate Lake manifest: success
 lake build: success
+```
+
+Current spectral value surface:
+
+```text
+normalizedGapValue.value = 33 / 20
 ```
 
 Current invariant:
@@ -146,7 +156,8 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-entrypoint naming convention final sync: CI green
+spectral gap formalization: CI green
+spectral gap formalization gate: included in Phase3ReleaseGate
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
