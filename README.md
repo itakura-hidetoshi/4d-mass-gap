@@ -130,18 +130,18 @@ External audit note gate: CI green
 Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
 External audit note appendix template: CI green
-Version tag readiness notes: documentation-only, tag not created
+Version tag readiness notes: CI green, documentation-only, tag not created
 ```
 
 ## Latest CI confirmation
 
 ```text
-External audit note appendix template CI
+Version tag readiness notes CI
 Workflow: Lean Direct Elan CI
-Run ID: 25830545961
-Audit job ID: 75894216378
-Build job ID: 75894235517
-Commit: ea4627cee4883b5654164d521384086c792ea9bc
+Run ID: 25831588949
+Audit job ID: 75897520855
+Build job ID: 75897534901
+Commit: 7f56509b1a027850fbf7ab79badfdfe80731563b
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -152,6 +152,7 @@ lake build: success
 CI ledger:
 
 ```text
+docs/version_tag_readiness_notes_ci.md
 docs/external_audit_note_appendix_template_ci.md
 docs/spectral_gap_formalization_ci.md
 ```
@@ -159,8 +160,8 @@ docs/spectral_gap_formalization_ci.md
 Recent CI ledger commit:
 
 ```text
-683d5da4326f0940dac04bfb71b34b817d0fc644
-record external audit appendix template CI
+283c7143aad0fa4f3fc5f914c16bc5adfd365b82
+record version tag readiness notes CI
 ```
 
 ## Entrypoint and global gate structure
@@ -195,6 +196,7 @@ docs/spectral_gap_formalization_ci.md
 docs/external_audit_note_appendix_template.md
 docs/external_audit_note_appendix_template_ci.md
 docs/version_tag_readiness_notes.md
+docs/version_tag_readiness_notes_ci.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
 MGAP4D/EntrypointNamingConventionFinalSync.lean
@@ -252,7 +254,7 @@ scripts/                 Local and CI audit scripts
 - Spectral gap formalization checkpoint: CI green
 - Spectral gap formalization gate: included in Phase3ReleaseGate
 - External audit note appendix template: CI green documentation-only surface
-- Version tag readiness notes: present as documentation-only surface; no tag created
+- Version tag readiness notes: CI green documentation-only surface; no tag created
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
