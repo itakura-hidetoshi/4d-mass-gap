@@ -6,3 +6,4 @@ import MGAP4D.R1.Theorem.HilbertProofObligationTighteningPass1
 import MGAP4D.R1.Theorem.HilbertProofObligationTighteningPass2
 import MGAP4D.R1.Theorem.HilbertProofObligationTighteningPass3
 import MGAP4D.R1.Theorem.HilbertProofObligationTighteningSeriesReview
+import MGAP4D.R1.Theorem.HilbertProofObligationTighteningClosure
