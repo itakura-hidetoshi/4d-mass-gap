@@ -99,15 +99,15 @@ Generate Lake manifest: success
 lake build: success
 ```
 
-## Global gate structure
+## Entrypoint and global gate structure
 
 ```text
-R2 root: R2 restriction theorem route only
+MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
+MGAP4D.lean: global top-level Lean root
+MGAP4D/Phase3ReleaseGate.lean: global R1--R7 release/replay/source-tree/external-audit gate
 IndependentReplayProtocol: R1--R7 global replay protocol
 IndependentReplayProtocolGlobalScopeCorrection: confirms replay is not R2-local
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
-Phase3ReleaseGate: R1--R7 global release/replay/source-tree/external-audit gate
-MGAP4D.lean: top-level root directly imports Phase3ReleaseGate
 SourceTreeReviewGateFinalSync: confirms source-tree review is not R2-local
 ```
 
