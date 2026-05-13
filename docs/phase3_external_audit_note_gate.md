@@ -7,8 +7,9 @@ This document records the external audit note gate checkpoint after the independ
 ```text
 IndependentReplayProtocol: R1--R7 global scope corrected and CI green
 README / ROADMAP global scope correction sync: CI green
-Phase3ReleaseGate carries the global replay protocol
-R2 theorem root remains route-local only
+MGAP4D/Phase3ReleaseGate.lean carries the global replay protocol
+MGAP4D/R2/Theorem.lean is the R2 restriction route entrypoint
+MGAP4D.lean is the global top-level Lean root
 main remains pre-Mathlib
 Mathlib on main remains not introduced
 main-adoption decision remains hold_main_adoption
