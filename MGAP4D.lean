@@ -40,6 +40,7 @@ import MGAP4D.R3R7TheoremRouteQueue
 import MGAP4D.R3R7HardeningPassSeriesReview
 import MGAP4D.PostHardeningPassClosure
 import MGAP4D.PostHardeningPassTighteningSegmentSelection
+import MGAP4D.R3R7ProofObligationTighteningClosureSeriesReview
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
