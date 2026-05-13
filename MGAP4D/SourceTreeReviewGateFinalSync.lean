@@ -6,7 +6,9 @@ structure SourceTreeReviewGateFinalSync where
   globalPhase3ReleaseGateRootGreen : Prop
   readmeRoadmapGlobalGateSyncGreen : Prop
   sourceTreeReviewGateIncludedInGlobalRoot : Prop
-  r2TheoremRootRouteLocalOnly : Prop
+  r2EntrypointOnly : Prop
+  globalTopLevelRootIsMGAP4DLean : Prop
+  globalGateRootIsPhase3ReleaseGate : Prop
   phase3ReleaseGateIsGlobal : Prop
   topLevelRootImportsPhase3ReleaseGate : Prop
   sourceTreeReviewGateNotR2Local : Prop
@@ -19,7 +21,8 @@ structure SourceTreeReviewGateFinalSync where
 def SourceTreeReviewGateFinalSync.ready
     (S : SourceTreeReviewGateFinalSync) : Prop :=
   S.globalPhase3ReleaseGateRootGreen ∧ S.readmeRoadmapGlobalGateSyncGreen ∧
-  S.sourceTreeReviewGateIncludedInGlobalRoot ∧ S.r2TheoremRootRouteLocalOnly ∧
+  S.sourceTreeReviewGateIncludedInGlobalRoot ∧ S.r2EntrypointOnly ∧
+  S.globalTopLevelRootIsMGAP4DLean ∧ S.globalGateRootIsPhase3ReleaseGate ∧
   S.phase3ReleaseGateIsGlobal ∧ S.topLevelRootImportsPhase3ReleaseGate ∧
   S.sourceTreeReviewGateNotR2Local ∧ S.mainPreMathlib ∧
   S.mathlibMainAdoptionHeld ∧ S.theoremCompletionsNotClaimed ∧
@@ -28,7 +31,8 @@ def SourceTreeReviewGateFinalSync.ready
 theorem source_tree_review_gate_final_sync_pack
     (S : SourceTreeReviewGateFinalSync) :
     S.ready ↔ S.globalPhase3ReleaseGateRootGreen ∧ S.readmeRoadmapGlobalGateSyncGreen ∧
-      S.sourceTreeReviewGateIncludedInGlobalRoot ∧ S.r2TheoremRootRouteLocalOnly ∧
+      S.sourceTreeReviewGateIncludedInGlobalRoot ∧ S.r2EntrypointOnly ∧
+      S.globalTopLevelRootIsMGAP4DLean ∧ S.globalGateRootIsPhase3ReleaseGate ∧
       S.phase3ReleaseGateIsGlobal ∧ S.topLevelRootImportsPhase3ReleaseGate ∧
       S.sourceTreeReviewGateNotR2Local ∧ S.mainPreMathlib ∧
       S.mathlibMainAdoptionHeld ∧ S.theoremCompletionsNotClaimed ∧
