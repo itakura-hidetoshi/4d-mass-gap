@@ -129,17 +129,18 @@ Source-tree review gate final sync: CI green
 External audit note gate: CI green
 Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
-External audit note appendix template: documentation-only surface
+External audit note appendix template: CI green
 ```
 
 ## Latest CI confirmation
 
 ```text
-Spectral gap formalization main CI
+External audit note appendix template CI
 Workflow: Lean Direct Elan CI
-Run ID: 25828960043
-Build job ID: 75889136130
-Commit: df99969343482d3030f6b6006edb082030dd1e87
+Run ID: 25830545961
+Audit job ID: 75894216378
+Build job ID: 75894235517
+Commit: ea4627cee4883b5654164d521384086c792ea9bc
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -150,14 +151,15 @@ lake build: success
 CI ledger:
 
 ```text
+docs/external_audit_note_appendix_template_ci.md
 docs/spectral_gap_formalization_ci.md
 ```
 
-CI ledger commit:
+Recent CI ledger commit:
 
 ```text
-acde03b389fabc7dec3c240a732f599d95fb1f42
-record spectral gap formalization CI
+683d5da4326f0940dac04bfb71b34b817d0fc644
+record external audit appendix template CI
 ```
 
 ## Entrypoint and global gate structure
@@ -189,6 +191,7 @@ docs/phase3_entrypoint_naming_convention_final_sync.md
 docs/entrypoint_naming_convention_final_sync_ci.md
 docs/spectral_gap_formalization_ci.md
 docs/external_audit_note_appendix_template.md
+docs/external_audit_note_appendix_template_ci.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
 MGAP4D/EntrypointNamingConventionFinalSync.lean
@@ -245,7 +248,7 @@ scripts/                 Local and CI audit scripts
 - Spectral module entrypoint: present
 - Spectral gap formalization checkpoint: CI green
 - Spectral gap formalization gate: included in Phase3ReleaseGate
-- External audit note appendix template: present as documentation-only surface
+- External audit note appendix template: CI green documentation-only surface
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
