@@ -59,10 +59,17 @@
 - [x] Add R3--R7 proof-obligation tightening closure series review checkpoint
 - [x] Observe R3--R7 proof-obligation tightening closure series review main CI green
 - [x] Record R3--R7 proof-obligation tightening closure series review CI success in ledger
-- [x] Add post-proof-obligation-tightening closure checkpoint
-- [x] Observe post-proof-obligation-tightening closure main CI green
-- [x] Record post-proof-obligation-tightening closure CI success in ledger
-- [ ] Add final theorem release gate preparation checkpoint
+- [x] Add R1--R2 proof-obligation tightening bridge
+- [x] Observe R1--R2 proof-obligation tightening bridge main CI green
+- [x] Add R1 proof-obligation tightening sequence and closure
+- [x] Observe R1 proof-obligation tightening closure main CI green
+- [x] Add R2 proof-obligation tightening sequence and closure
+- [x] Observe R2 proof-obligation tightening closure main CI green
+- [x] Add R1--R7 proof-obligation tightening closure series review checkpoint
+- [x] Observe R1--R7 proof-obligation tightening closure series review main CI green
+- [x] Record R1--R7 proof-obligation tightening closure series review CI success in ledger
+- [ ] Add post-R1--R7 proof-obligation tightening closure checkpoint
+- [ ] Add final theorem release gate preparation refresh checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -77,15 +84,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The proof-obligation-tightening stage has closed at the review-surface level and has been observed green on `main`.
+The R1--R7 proof-obligation tightening closure series has closed at the review-surface level and has been observed green on `main`.
 
 Observed current closure CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25780731720
-Build job ID: 75722560830
-Commit: e74aaf1b12287012c5d5549ef9e946aa017d8cea
+Run ID: 25795455406
+Build job ID: 75771516946
+Commit: bc3230cea5408f1c2827bcc6800525f1edc2361f
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -99,10 +106,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-post-proof-obligation-tightening closure: CI green
-R3--R7 theorem completions: not claimed
+R1--R7 proof-obligation tightening closure series review: CI green
+R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add final theorem release gate preparation while preserving the pre-Mathlib and review-gated invariants.
+Next priority: add post-R1--R7 proof-obligation tightening closure checkpoint while preserving the pre-Mathlib and review-gated invariants.
