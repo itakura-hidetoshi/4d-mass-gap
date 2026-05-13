@@ -87,6 +87,10 @@
 - [x] Add source-tree review gate final sync checkpoint
 - [x] Observe source-tree review gate final sync main CI green
 - [x] Record source-tree review gate final sync CI success in ledger
+- [x] Correct independent replay protocol to explicit R1--R7 global scope
+- [x] Add independent replay protocol global scope correction checkpoint
+- [x] Wire independent replay protocol global scope correction through Phase3ReleaseGate
+- [ ] Observe independent replay protocol global scope correction main CI green
 - [ ] Add external audit note gate checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
@@ -102,21 +106,7 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The source-tree review gate final sync has been observed green on `main`. Release, replay, and source-tree gate surfaces are top-level global surfaces, not R2-local surfaces.
-
-Observed current source-tree final sync CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25801352087
-Build job ID: 75792032948
-Commit: a3afb24049e10e364e4aeec8e05b4ee7439c7881
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
+IndependentReplayProtocol has been corrected to explicit R1--R7 global scope and wired through Phase3ReleaseGate. It is not R2-local; the R2 theorem root remains route-local only.
 
 Current invariant:
 
@@ -124,10 +114,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-source-tree review gate final sync: CI green
+independent replay protocol: R1--R7 global scope corrected
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add external audit note gate checkpoint while preserving the pre-Mathlib and review-gated invariants.
+Next priority: confirm independent replay protocol global scope correction CI while preserving the pre-Mathlib and review-gated invariants.
