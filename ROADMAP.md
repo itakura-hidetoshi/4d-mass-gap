@@ -56,110 +56,16 @@
 - [x] Add Mathlib request import cleanup for acyclic request files
 - [x] Add Mathlib dry-run branch plan, checklist, execution note, and result ledger
 - [x] Add pre-Mathlib closure checkpoint
-- [x] Create R1 Mathlib dry-run draft PR
-- [x] Record successful R1 dry-run result
-- [x] Keep R1 dry-run PR as draft pending later review
-- [x] Record current CI status observation as not confirmed
-- [x] Open Phase 3 candidate-closure observation draft PR
-- [x] Observe PR CI green for Phase 3 candidate closure
-- [x] Record PR CI success in ledger and PR comment
-- [x] Close Phase 3 observation PR unmerged after recording
-- [x] Observe manual main workflow_dispatch CI green
-- [x] Record manual main CI success in ledger
-- [x] Add Phase3CIConfirmationClosure
-- [x] Observe post-Phase3CIConfirmationClosure manual main workflow_dispatch CI green
-- [x] Record post-confirmation CI success in ledger
-- [x] Select R2 self-adjoint restriction as the next scoped Mathlib dry-run path
-- [x] Open R2 Mathlib dry-run draft PR #3
-- [x] Observe R2 dry-run CI green
-- [x] Record R2 dry-run result in ledger and PR comment
-- [x] Add PR #3 review / decision / keep-draft gate modules
-- [x] Wire PR #3 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-PR3-gate-wiring main CI green
-- [x] Select R3 shifted / zero-form as the next scoped Mathlib dry-run path
-- [x] Open R3 Mathlib dry-run draft PR #4
-- [x] Observe R3 dry-run CI green
-- [x] Record R3 dry-run result in ledger and PR comment
-- [x] Add PR #4 review / decision / hold-draft gate modules
-- [x] Wire PR #4 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [x] Select R4 lower-bound as the next scoped Mathlib dry-run path
-- [x] Open R4 Mathlib dry-run draft PR #5
-- [x] Observe R4 dry-run CI green
-- [x] Record R4 dry-run result in ledger and PR comment
-- [x] Add PR #5 review / decision / hold-draft gate modules
-- [x] Wire PR #5 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-PR5-gate-wiring main CI green
-- [x] Select R5 spectrum / infimum as the next scoped Mathlib dry-run path
-- [x] Open R5 Mathlib dry-run draft PR #6
-- [x] Observe R5 dry-run CI green
-- [x] Record R5 dry-run result in ledger and PR comment
-- [x] Add PR #6 review / decision / hold-draft gate modules
-- [x] Wire PR #6 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-PR6-gate-wiring main CI green
-- [x] Select R6 interval-exclusion as the next scoped Mathlib dry-run path
-- [x] Open R6 Mathlib dry-run draft PR #7
-- [x] Observe R6 dry-run CI green
-- [x] Record R6 dry-run result in ledger and PR comment
-- [x] Add PR #7 review / decision / hold-draft gate modules
-- [x] Wire PR #7 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-PR7-gate-wiring main CI green
-- [x] Select R7 atom / exact-gap as the next scoped Mathlib dry-run path
-- [x] Open R7 Mathlib dry-run draft PR #8
-- [x] Observe R7 dry-run CI green
-- [x] Record R7 dry-run result in ledger and PR comment
-- [x] Add PR #8 review / decision / hold gate modules
-- [x] Wire PR #8 gate modules through `MGAP4D.MathlibAdoptionGate`
-- [x] Add complete R1--R7 dry-run series review document
-- [x] Add complete R1--R7 dry-run series review gate
-- [x] Wire complete R1--R7 dry-run series review through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-series-review main CI green
-- [x] Add Mathlib main-adoption review gate document
-- [x] Add Mathlib main-adoption review Lean gate
-- [x] Wire Mathlib main-adoption review gate through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-main-adoption-review-gate main CI green
-- [x] Review complete R1--R7 dry-run series before any Mathlib main adoption decision
-- [x] Record Mathlib main-adoption hold decision document
-- [x] Add Mathlib main-adoption hold decision Lean gate
-- [x] Wire Mathlib main-adoption hold decision through `MGAP4D.MathlibAdoptionGate`
-- [x] Observe post-main-adoption-hold-decision main CI green
+- [x] Complete R1--R7 scoped Mathlib dry-run series and hold main adoption
 - [x] Continue theorem-route hardening while main remains pre-Mathlib
-- [x] Add post-Mathlib-hold theorem-route hardening document
-- [x] Add post-Mathlib-hold theorem-route hardening Lean checkpoint
-- [x] Wire post-Mathlib-hold theorem-route hardening through top-level root
-- [x] Observe post-Mathlib-hold theorem-route hardening main CI green
+- [x] Add post-Mathlib-hold theorem-route hardening checkpoint
 - [x] Add R3--R7 route-specific hardening checkpoints
-- [x] Observe R3--R7 route-specific hardening main CI green
-- [x] Add R3 shifted / zero-form closure-candidate checkpoint
-- [x] Observe R3 closure-candidate main CI green
-- [x] Add R4 lower-bound closure-candidate checkpoint
-- [x] Observe R4 closure-candidate main CI green
-- [x] Add R5 spectrum / infimum closure-candidate checkpoint
-- [x] Observe R5 closure-candidate main CI green
-- [x] Add R6 interval-exclusion closure-candidate checkpoint
-- [x] Observe R6 closure-candidate main CI green
-- [x] Add R7 atom / exact-gap closure-candidate checkpoint
-- [x] Observe R7 closure-candidate main CI green
 - [x] Add R3--R7 closure-candidate series review checkpoint
-- [x] Observe R3--R7 closure-candidate series review main CI green
 - [x] Add R3--R7 theorem-route queue checkpoint
-- [x] Observe R3--R7 theorem-route queue main CI green
-- [x] Add R3 shifted / zero-form theorem-route hardening pass
-- [x] Observe R3 hardening pass main CI green
-- [x] Add R4 lower-bound theorem-route hardening pass
-- [x] Observe R4 hardening pass main CI green
-- [x] Add R5 spectrum / infimum theorem-route hardening pass
-- [x] Observe R5 hardening pass main CI green
-- [x] Add R6 interval-exclusion theorem-route hardening pass
-- [x] Observe R6 hardening pass main CI green
-- [x] Add R7 atom / exact-gap theorem-route hardening pass
-- [x] Observe R7 hardening pass main CI green
+- [x] Add R3--R7 theorem-route hardening passes
 - [x] Add R3--R7 hardening pass series review checkpoint
-- [x] Observe R3--R7 hardening pass series review main CI green
 - [x] Add post-hardening-pass closure checkpoint
-- [x] Observe post-hardening-pass closure main CI green
-- [x] Record post-hardening-pass closure CI success in ledger
-- [x] Select R3 shifted / zero-form proof-obligation tightening segment after post-hardening-pass closure
-- [x] Observe tightening segment selection main CI green
+- [x] Select R3 shifted / zero-form proof-obligation tightening segment
 - [x] Add R3 proof-obligation tightening pass 1
 - [x] Observe R3 proof-obligation tightening pass 1 main CI green
 - [x] Add R3 proof-obligation tightening pass 2
@@ -172,7 +78,6 @@
 - [x] Observe R3 proof-obligation tightening closure main CI green
 - [x] Record R3 proof-obligation tightening closure CI success in ledger
 - [x] Select R4 lower-bound proof-obligation tightening segment
-- [x] Observe R4 proof-obligation tightening segment selection main CI green
 - [x] Add R4 proof-obligation tightening pass 1
 - [x] Observe R4 proof-obligation tightening pass 1 main CI green
 - [x] Add R4 proof-obligation tightening pass 2
@@ -185,7 +90,6 @@
 - [x] Observe R4 proof-obligation tightening closure main CI green
 - [x] Record R4 proof-obligation tightening closure CI success in ledger
 - [x] Select R5 spectrum / infimum proof-obligation tightening segment
-- [x] Observe R5 proof-obligation tightening segment selection main CI green
 - [x] Add R5 proof-obligation tightening pass 1
 - [x] Observe R5 proof-obligation tightening pass 1 main CI green
 - [x] Add R5 proof-obligation tightening pass 2
@@ -198,7 +102,6 @@
 - [x] Observe R5 proof-obligation tightening closure main CI green
 - [x] Record R5 proof-obligation tightening closure CI success in ledger
 - [x] Select R6 interval-exclusion proof-obligation tightening segment
-- [x] Observe R6 proof-obligation tightening segment selection main CI green
 - [x] Add R6 proof-obligation tightening pass 1
 - [x] Observe R6 proof-obligation tightening pass 1 main CI green
 - [x] Add R6 proof-obligation tightening pass 2
@@ -210,7 +113,20 @@
 - [x] Add R6 proof-obligation tightening closure checkpoint
 - [x] Observe R6 proof-obligation tightening closure main CI green
 - [x] Record R6 proof-obligation tightening closure CI success in ledger
-- [ ] Select R7 atom / exact-gap proof-obligation tightening segment
+- [x] Select R7 atom / exact-gap proof-obligation tightening segment
+- [x] Observe R7 proof-obligation tightening segment selection main CI green
+- [x] Add R7 proof-obligation tightening pass 1
+- [x] Observe R7 proof-obligation tightening pass 1 main CI green
+- [x] Add R7 proof-obligation tightening pass 2
+- [x] Observe R7 proof-obligation tightening pass 2 main CI green
+- [x] Add R7 proof-obligation tightening pass 3
+- [x] Observe R7 proof-obligation tightening pass 3 main CI green
+- [x] Add R7 proof-obligation tightening series review checkpoint
+- [x] Observe R7 proof-obligation tightening series review main CI green
+- [x] Add R7 proof-obligation tightening closure checkpoint
+- [x] Observe R7 proof-obligation tightening closure main CI green
+- [x] Record R7 proof-obligation tightening closure CI success in ledger
+- [ ] Add R3--R7 proof-obligation tightening closure series review checkpoint
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -225,15 +141,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, R3 proof-obligation tightening closure, R4 proof-obligation tightening closure, R5 proof-obligation tightening closure, and R6 proof-obligation tightening closure. All of those checkpoints have been observed green on `main`.
+The post-Mathlib-hold theorem-route path has advanced through R3--R7 route-specific closure candidates, the theorem-route queue, R3--R7 hardening passes, R3--R7 hardening pass series review, post-hardening-pass closure, and R3/R4/R5/R6/R7 proof-obligation tightening closures. All of those closure checkpoints have been observed green on `main`.
 
 Observed current closure CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25765783577
-Build job ID: 75677847409
-Commit: ad9b2f619a07b5347d40cfdaa09de56c31cae639
+Run ID: 25777833754
+Build job ID: 75714049832
+Commit: 0cd1419ace5c1c1266b79a3c012514f3f7ff6ebf
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -247,11 +163,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-R6 proof-obligation tightening closure: CI green
-R6 theorem completion: not claimed
-R7 theorem completion: not unlocked
+R3--R7 proof-obligation tightening closures: CI green
+R7 theorem completion: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: select R7 atom / exact-gap proof-obligation tightening segment while preserving the pre-Mathlib invariant.
+Next priority: add the R3--R7 proof-obligation tightening closure series review while preserving the pre-Mathlib invariant.
