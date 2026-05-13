@@ -130,6 +130,7 @@ External audit note gate: CI green
 Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
 External audit note appendix template: CI green
+Version tag readiness notes: documentation-only, tag not created
 ```
 
 ## Latest CI confirmation
@@ -174,6 +175,7 @@ MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
 IndependentReplayProtocol: R1--R7 global replay protocol
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
 docs/external_audit_note_appendix_template.md: append-only external audit note template
+docs/version_tag_readiness_notes.md: documentation-only version-tag readiness surface, no tag created
 ```
 
 ## Mathlib dry-run policy
@@ -192,6 +194,7 @@ docs/entrypoint_naming_convention_final_sync_ci.md
 docs/spectral_gap_formalization_ci.md
 docs/external_audit_note_appendix_template.md
 docs/external_audit_note_appendix_template_ci.md
+docs/version_tag_readiness_notes.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
 MGAP4D/EntrypointNamingConventionFinalSync.lean
@@ -249,6 +252,7 @@ scripts/                 Local and CI audit scripts
 - Spectral gap formalization checkpoint: CI green
 - Spectral gap formalization gate: included in Phase3ReleaseGate
 - External audit note appendix template: CI green documentation-only surface
+- Version tag readiness notes: present as documentation-only surface; no tag created
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
