@@ -9,6 +9,7 @@ import MGAP4D.SourceTreeReviewGateFinalSync
 import MGAP4D.ExternalAuditNoteGate
 import MGAP4D.EntrypointNamingConvention
 import MGAP4D.EntrypointNamingConventionFinalSync
+import MGAP4D.SpectralGapFormalizationGate
 
 namespace MGAP4D
 
@@ -24,6 +25,7 @@ structure Phase3ReleaseGateRoot where
   externalAuditNoteGateVisible : Prop
   entrypointNamingConventionVisible : Prop
   entrypointNamingConventionFinalSyncVisible : Prop
+  spectralGapFormalizationGateVisible : Prop
   globalGateRootNotR2Local : Prop
   mainPreMathlib : Prop
   mathlibMainAdoptionHeld : Prop
@@ -38,8 +40,8 @@ def Phase3ReleaseGateRoot.ready
   G.independentReplayProtocolVisible ∧ G.independentReplayProtocolGlobalScopeCorrectionVisible ∧
   G.sourceTreeReviewGateVisible ∧ G.sourceTreeReviewGateFinalSyncVisible ∧
   G.externalAuditNoteGateVisible ∧ G.entrypointNamingConventionVisible ∧
-  G.entrypointNamingConventionFinalSyncVisible ∧ G.globalGateRootNotR2Local ∧
-  G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
+  G.entrypointNamingConventionFinalSyncVisible ∧ G.spectralGapFormalizationGateVisible ∧
+  G.globalGateRootNotR2Local ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
   G.theoremCompletionsNotClaimed ∧ G.finalGapReleaseNotUnlocked ∧ G.publicBoundaryHeld
 
 theorem phase3_release_gate_root_pack
@@ -49,8 +51,8 @@ theorem phase3_release_gate_root_pack
       G.independentReplayProtocolVisible ∧ G.independentReplayProtocolGlobalScopeCorrectionVisible ∧
       G.sourceTreeReviewGateVisible ∧ G.sourceTreeReviewGateFinalSyncVisible ∧
       G.externalAuditNoteGateVisible ∧ G.entrypointNamingConventionVisible ∧
-      G.entrypointNamingConventionFinalSyncVisible ∧ G.globalGateRootNotR2Local ∧
-      G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
+      G.entrypointNamingConventionFinalSyncVisible ∧ G.spectralGapFormalizationGateVisible ∧
+      G.globalGateRootNotR2Local ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
       G.theoremCompletionsNotClaimed ∧ G.finalGapReleaseNotUnlocked ∧ G.publicBoundaryHeld := by
   rfl
 
