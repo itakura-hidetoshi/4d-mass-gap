@@ -4,6 +4,20 @@ MGAP4D is a Lean 4 repository for developing and checking the proof architecture
 
 The repository is organized as a GitHub-native Lean project. The active source tree, CI, documentation, theorem-surface checkpoints, and migration history live directly in this repository.
 
+## Repository role
+
+This repository is the canonical Lean proof repository for the 4D mass gap proof architecture.
+
+KuuOS references this repository as a physics-facing bridge and public-core governance surface:
+
+```text
+Canonical proof repo: itakura-hidetoshi/4d-mass-gap
+KuuOS reference repo: itakura-hidetoshi/KuuOS
+Reference bridge: docs/kuuos_reference_bridge.md
+```
+
+KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open final theorem release.
+
 ## Current active Lean root
 
 ```text
@@ -131,6 +145,7 @@ Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
 External audit note appendix template: CI green
 Version tag readiness notes: CI green, documentation-only, tag not created
+KuuOS reference bridge: present
 ```
 
 ## Latest CI confirmation
@@ -177,6 +192,7 @@ IndependentReplayProtocol: R1--R7 global replay protocol
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
 docs/external_audit_note_appendix_template.md: append-only external audit note template
 docs/version_tag_readiness_notes.md: documentation-only version-tag readiness surface, no tag created
+docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
 ## Mathlib dry-run policy
@@ -197,6 +213,7 @@ docs/external_audit_note_appendix_template.md
 docs/external_audit_note_appendix_template_ci.md
 docs/version_tag_readiness_notes.md
 docs/version_tag_readiness_notes_ci.md
+docs/kuuos_reference_bridge.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
 MGAP4D/EntrypointNamingConventionFinalSync.lean
@@ -253,6 +270,7 @@ scripts/                 Local and CI audit scripts
 - Spectral module entrypoint: present
 - Spectral gap formalization checkpoint: CI green
 - Spectral gap formalization gate: included in Phase3ReleaseGate
+- KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 - External audit note appendix template: CI green documentation-only surface
 - Version tag readiness notes: CI green documentation-only surface; no tag created
 - R1--R7 theorem-candidate milestones: recorded
