@@ -10,11 +10,11 @@ The repository is organized as a GitHub-native Lean project. The active source t
 MGAP4D.lean
 ```
 
-The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, and the R1--R7 proof-obligation tightening closure series review path.
+The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, the post-R1--R7 proof-obligation tightening closure, and the final theorem release gate preparation refresh path.
 
 ## Phase 3 status
 
-The current `main` branch has reached an **R1--R7 proof-obligation tightening closure series review checkpoint**.
+The current `main` branch has reached a **final theorem release gate preparation refresh checkpoint**.
 
 The proof-hardening route has advanced through:
 
@@ -40,6 +40,8 @@ TheoremSurface
   -> R1 Hilbert proof-obligation tightening closure
   -> R2 restriction proof-obligation tightening closure
   -> R1--R7 proof-obligation tightening closure series review
+  -> PostR1R7ProofObligationTighteningClosure
+  -> FinalTheoremReleaseGatePreparationRefresh
 ```
 
 Important invariant:
@@ -54,7 +56,7 @@ Final gap theorem release is not unlocked
 Public theorem boundary remains review-gated
 ```
 
-## R1--R7 proof-obligation tightening status
+## R1--R7 proof-obligation tightening and release-gate preparation status
 
 ```text
 R1 Hilbert proof-obligation tightening closure: CI green
@@ -65,16 +67,18 @@ R5 proof-obligation tightening closure: CI green
 R6 proof-obligation tightening closure: CI green
 R7 proof-obligation tightening closure: CI green
 R1--R7 proof-obligation tightening closure series review: CI green
+Post-R1--R7 proof-obligation tightening closure: CI green
+Final theorem release gate preparation refresh: CI green
 ```
 
 ## Latest CI confirmation
 
 ```text
-R1--R7 proof-obligation tightening closure series review main CI
+Final theorem release gate preparation refresh main CI
 Workflow: Lean Direct Elan CI
-Run ID: 25795455406
-Build job ID: 75771516946
-Commit: bc3230cea5408f1c2827bcc6800525f1edc2361f
+Run ID: 25798122853
+Build job ID: 75780579780
+Commit: 8033a312e3a817062b2912a33c675338df7d70d1
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -92,9 +96,9 @@ Relevant documents and modules include:
 
 ```text
 docs/phase3_mathlib_main_adoption_hold_decision.md
-docs/phase3_r1_r7_proof_obligation_tightening_closure_series_review.md
-docs/r1_r7_closure_series_review_ci.md
-MGAP4D/R1R7ProofObligationTighteningClosureSeriesReview.lean
+docs/phase3_final_theorem_release_gate_preparation_refresh.md
+docs/final_release_gate_preparation_refresh_ci.md
+MGAP4D/FinalTheoremReleaseGatePreparationRefresh.lean
 ```
 
 ## Build
@@ -141,11 +145,12 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: R1--R7 proof-obligation tightening closure series review checkpoint reached
+- Phase 3: final theorem release gate preparation refresh checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
-- R1--R7 proof-obligation tightening closure series review: CI green
+- Post-R1--R7 proof-obligation tightening closure: CI green
+- Final theorem release gate preparation refresh: CI green
 - Mathlib on main: not introduced
 - Main-adoption decision: hold_main_adoption
 - Public final theorem claim: review-gated pending independent replay and external audit
