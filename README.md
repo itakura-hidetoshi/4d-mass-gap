@@ -146,6 +146,7 @@ Spectral gap formalization: CI green
 External audit note appendix template: CI green
 Version tag readiness notes: CI green, documentation-only, tag not created
 Version-tag source-tree review refresh: CI green, documentation-only, tag not created
+Tag candidate receipt: prepared, documentation-only, tag not created
 KuuOS reference bridge: present
 ```
 
@@ -174,11 +175,13 @@ docs/external_audit_note_appendix_template_ci.md
 docs/spectral_gap_formalization_ci.md
 ```
 
-Recent CI ledger commit:
+Tag candidate receipt:
 
 ```text
-76470a6bb1e3714e3dcb6ef8146dd7e20a29528c
-record version-tag source-tree review refresh CI
+docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md
+Tag candidate: phase3-pre-release-hygiene-ci-green
+Target commit: d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b
+Tag created: no
 ```
 
 ## Entrypoint and global gate structure
@@ -195,6 +198,7 @@ ExternalAuditNoteGate: external notes are review surfaces, not theorem completio
 docs/external_audit_note_appendix_template.md: append-only external audit note template
 docs/version_tag_readiness_notes.md: documentation-only version-tag readiness surface, no tag created
 docs/version_tag_source_tree_review_refresh.md: documentation-only source-tree review refresh for tag readiness, no tag created
+docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md: documentation-only tag-candidate receipt, no tag created
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
@@ -218,6 +222,7 @@ docs/version_tag_readiness_notes.md
 docs/version_tag_readiness_notes_ci.md
 docs/version_tag_source_tree_review_refresh.md
 docs/version_tag_source_tree_review_refresh_ci.md
+docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md
 docs/kuuos_reference_bridge.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
@@ -279,6 +284,7 @@ scripts/                 Local and CI audit scripts
 - External audit note appendix template: CI green documentation-only surface
 - Version tag readiness notes: CI green documentation-only surface; no tag created
 - Version-tag source-tree review refresh: CI green documentation-only surface; no tag created
+- Tag candidate receipt: prepared as documentation-only surface; no tag created
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
