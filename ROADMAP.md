@@ -92,7 +92,10 @@
 - [x] Wire independent replay protocol global scope correction through Phase3ReleaseGate
 - [x] Observe independent replay protocol global scope correction main CI green
 - [x] Record independent replay protocol global scope correction CI success in ledger
-- [ ] Add external audit note gate checkpoint
+- [x] Add external audit note gate checkpoint
+- [x] Observe external audit note gate main CI green
+- [x] Record external audit note gate CI success in ledger
+- [ ] Add external audit note appendix template
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -107,15 +110,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-IndependentReplayProtocol has been corrected to explicit R1--R7 global scope and observed green on `main`. It is not R2-local; the R2 theorem root remains route-local only.
+ExternalAuditNoteGate has been observed green on `main`. External audit notes are review surfaces only: they do not claim theorem completion, do not unlock final release, and do not introduce Mathlib on main.
 
-Observed current independent replay protocol correction CI:
+Observed current external audit note gate CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25803102231
-Build job ID: 75798339656
-Commit: ab535c2eb5c5befae833d991ed61b82a880c432a
+Run ID: 25804390678
+Build job ID: 75802965286
+Commit: 1ef4f2c51eb637c1d99c86535c415318ae69bfb5
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -129,10 +132,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-independent replay protocol: R1--R7 global scope corrected and CI green
+external audit note gate: CI green
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add external audit note gate checkpoint while preserving the pre-Mathlib and review-gated invariants.
+Next priority: add external audit note appendix template while preserving the pre-Mathlib and review-gated invariants.
