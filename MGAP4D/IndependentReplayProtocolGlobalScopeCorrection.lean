@@ -12,9 +12,11 @@ structure IndependentReplayProtocolGlobalScopeCorrection where
   r7ReplaySurfaceIncluded : Prop
   r1r7ReplaySurfaceIncluded : Prop
   protocolCarriedByPhase3ReleaseGate : Prop
-  protocolCarriedByTopLevelRoot : Prop
+  protocolCarriedByTopLevelMGAP4DRoot : Prop
   protocolNotR2Local : Prop
-  r2TheoremRootRouteLocalOnly : Prop
+  r2EntrypointOnly : Prop
+  globalTopLevelRootIsMGAP4DLean : Prop
+  globalGateRootIsPhase3ReleaseGate : Prop
   theoremCompletionsNotClaimed : Prop
   finalGapReleaseNotUnlocked : Prop
   mainPreMathlib : Prop
@@ -27,8 +29,9 @@ def IndependentReplayProtocolGlobalScopeCorrection.ready
   C.r3ReplaySurfaceIncluded ∧ C.r4ReplaySurfaceIncluded ∧
   C.r5ReplaySurfaceIncluded ∧ C.r6ReplaySurfaceIncluded ∧
   C.r7ReplaySurfaceIncluded ∧ C.r1r7ReplaySurfaceIncluded ∧
-  C.protocolCarriedByPhase3ReleaseGate ∧ C.protocolCarriedByTopLevelRoot ∧
-  C.protocolNotR2Local ∧ C.r2TheoremRootRouteLocalOnly ∧
+  C.protocolCarriedByPhase3ReleaseGate ∧ C.protocolCarriedByTopLevelMGAP4DRoot ∧
+  C.protocolNotR2Local ∧ C.r2EntrypointOnly ∧
+  C.globalTopLevelRootIsMGAP4DLean ∧ C.globalGateRootIsPhase3ReleaseGate ∧
   C.theoremCompletionsNotClaimed ∧ C.finalGapReleaseNotUnlocked ∧
   C.mainPreMathlib ∧ C.mathlibMainAdoptionHeld ∧ C.publicBoundaryHeld
 
@@ -38,8 +41,9 @@ theorem independent_replay_protocol_global_scope_correction_pack
       C.r3ReplaySurfaceIncluded ∧ C.r4ReplaySurfaceIncluded ∧
       C.r5ReplaySurfaceIncluded ∧ C.r6ReplaySurfaceIncluded ∧
       C.r7ReplaySurfaceIncluded ∧ C.r1r7ReplaySurfaceIncluded ∧
-      C.protocolCarriedByPhase3ReleaseGate ∧ C.protocolCarriedByTopLevelRoot ∧
-      C.protocolNotR2Local ∧ C.r2TheoremRootRouteLocalOnly ∧
+      C.protocolCarriedByPhase3ReleaseGate ∧ C.protocolCarriedByTopLevelMGAP4DRoot ∧
+      C.protocolNotR2Local ∧ C.r2EntrypointOnly ∧
+      C.globalTopLevelRootIsMGAP4DLean ∧ C.globalGateRootIsPhase3ReleaseGate ∧
       C.theoremCompletionsNotClaimed ∧ C.finalGapReleaseNotUnlocked ∧
       C.mainPreMathlib ∧ C.mathlibMainAdoptionHeld ∧ C.publicBoundaryHeld := by
   rfl
