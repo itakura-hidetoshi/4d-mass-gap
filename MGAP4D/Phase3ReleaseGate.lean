@@ -3,6 +3,7 @@ import MGAP4D.PostR1R7ProofObligationTighteningClosure
 import MGAP4D.FinalTheoremReleaseGatePreparationRefresh
 import MGAP4D.IndependentReplayGatePreparation
 import MGAP4D.IndependentReplayProtocol
+import MGAP4D.IndependentReplayProtocolGlobalScopeCorrection
 import MGAP4D.SourceTreeReviewGate
 import MGAP4D.SourceTreeReviewGateFinalSync
 
@@ -14,6 +15,7 @@ structure Phase3ReleaseGateRoot where
   finalReleaseGatePreparationRefreshVisible : Prop
   independentReplayGatePreparationVisible : Prop
   independentReplayProtocolVisible : Prop
+  independentReplayProtocolGlobalScopeCorrectionVisible : Prop
   sourceTreeReviewGateVisible : Prop
   sourceTreeReviewGateFinalSyncVisible : Prop
   globalGateRootNotR2Local : Prop
@@ -27,18 +29,18 @@ def Phase3ReleaseGateRoot.ready
     (G : Phase3ReleaseGateRoot) : Prop :=
   G.r1r7ClosureSeriesReviewVisible ∧ G.postR1R7ClosureVisible ∧
   G.finalReleaseGatePreparationRefreshVisible ∧ G.independentReplayGatePreparationVisible ∧
-  G.independentReplayProtocolVisible ∧ G.sourceTreeReviewGateVisible ∧
-  G.sourceTreeReviewGateFinalSyncVisible ∧ G.globalGateRootNotR2Local ∧
-  G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
+  G.independentReplayProtocolVisible ∧ G.independentReplayProtocolGlobalScopeCorrectionVisible ∧
+  G.sourceTreeReviewGateVisible ∧ G.sourceTreeReviewGateFinalSyncVisible ∧
+  G.globalGateRootNotR2Local ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
   G.theoremCompletionsNotClaimed ∧ G.finalGapReleaseNotUnlocked ∧ G.publicBoundaryHeld
 
 theorem phase3_release_gate_root_pack
     (G : Phase3ReleaseGateRoot) :
     G.ready ↔ G.r1r7ClosureSeriesReviewVisible ∧ G.postR1R7ClosureVisible ∧
       G.finalReleaseGatePreparationRefreshVisible ∧ G.independentReplayGatePreparationVisible ∧
-      G.independentReplayProtocolVisible ∧ G.sourceTreeReviewGateVisible ∧
-      G.sourceTreeReviewGateFinalSyncVisible ∧ G.globalGateRootNotR2Local ∧
-      G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
+      G.independentReplayProtocolVisible ∧ G.independentReplayProtocolGlobalScopeCorrectionVisible ∧
+      G.sourceTreeReviewGateVisible ∧ G.sourceTreeReviewGateFinalSyncVisible ∧
+      G.globalGateRootNotR2Local ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld ∧
       G.theoremCompletionsNotClaimed ∧ G.finalGapReleaseNotUnlocked ∧ G.publicBoundaryHeld := by
   rfl
 
