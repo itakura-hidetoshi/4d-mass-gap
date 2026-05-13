@@ -14,7 +14,7 @@ The root imports the Phase 3 proof-hardening architecture, including the R1--R7 
 
 ## Phase 3 status
 
-The current `main` branch has reached an **independent replay protocol global R1--R7 scope correction checkpoint** through the global Phase3ReleaseGate root.
+The current `main` branch has reached an **independent replay protocol global R1--R7 scope correction CI green checkpoint** through the global Phase3ReleaseGate root.
 
 The proof-hardening route has advanced through:
 
@@ -77,7 +77,7 @@ Post-R1--R7 proof-obligation tightening closure: CI green
 Final theorem release gate preparation refresh: CI green
 Independent replay gate preparation: CI green
 Independent replay protocol: CI green
-Independent replay protocol global R1--R7 scope correction: pending CI
+Independent replay protocol global R1--R7 scope correction: CI green
 Global Phase3ReleaseGate root: CI green
 Source-tree review gate final sync: CI green
 ```
@@ -85,11 +85,11 @@ Source-tree review gate final sync: CI green
 ## Latest CI confirmation
 
 ```text
-Source-tree review gate final sync main CI
+Independent replay protocol global scope correction main CI
 Workflow: Lean Direct Elan CI
-Run ID: 25801352087
-Build job ID: 75792032948
-Commit: a3afb24049e10e364e4aeec8e05b4ee7439c7881
+Run ID: 25803102231
+Build job ID: 75798339656
+Commit: ab535c2eb5c5befae833d991ed61b82a880c432a
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -119,6 +119,7 @@ Relevant documents and modules include:
 ```text
 docs/phase3_mathlib_main_adoption_hold_decision.md
 docs/phase3_independent_replay_protocol_global_scope_correction.md
+docs/independent_replay_protocol_global_scope_correction_ci.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/IndependentReplayProtocol.lean
 MGAP4D/IndependentReplayProtocolGlobalScopeCorrection.lean
@@ -168,13 +169,13 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: independent replay protocol global R1--R7 scope correction checkpoint reached
+- Phase 3: independent replay protocol global R1--R7 scope correction CI green checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
 - Post-R1--R7 proof-obligation tightening closure: CI green
 - Final theorem release gate preparation refresh: CI green
-- Independent replay protocol: R1--R7 global scope corrected
+- Independent replay protocol: R1--R7 global scope corrected and CI green
 - Global Phase3ReleaseGate root: CI green
 - Source-tree review gate final sync: CI green
 - Mathlib on main: not introduced
