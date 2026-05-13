@@ -10,3 +10,4 @@ import MGAP4D.R2.Theorem.RestrictionProofObligationTighteningClosure
 import MGAP4D.R1R7ProofObligationTighteningClosureSeriesReview
 import MGAP4D.PostR1R7ProofObligationTighteningClosure
 import MGAP4D.FinalTheoremReleaseGatePreparationRefresh
+import MGAP4D.IndependentReplayGatePreparation
