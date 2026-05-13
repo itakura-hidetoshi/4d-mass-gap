@@ -106,7 +106,7 @@
 - [x] Wire spectral gap formalization gate through Phase3ReleaseGate
 - [x] Observe spectral gap formalization main CI green
 - [x] Record spectral gap formalization CI success in ledger
-- [ ] Add external audit note appendix template
+- [x] Add external audit note appendix template
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -115,11 +115,12 @@
 - [x] Keep root README GitHub-native
 - [x] Keep public theorem claims review-gated
 - [ ] Add version tags only after CI green and source tree review
+- [x] Add external audit note template without changing active proof semantics
 - [ ] Add external audit notes without changing active proof semantics
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main`.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main` and now has a bounded external audit note appendix template.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -128,6 +129,7 @@ MGAP4D/Spectral.lean: spectral module entrypoint
 MGAP4D/Spectral/GapFormalization.lean: spectral gap formalization checkpoint
 MGAP4D/SpectralGapFormalizationGate.lean: Phase 3 spectral gap formalization gate
 MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate including the spectral checkpoint
+docs/external_audit_note_appendix_template.md: append-only external audit note template
 ```
 
 Observed spectral gap formalization CI:
@@ -158,9 +160,10 @@ Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
 spectral gap formalization: CI green
 spectral gap formalization gate: included in Phase3ReleaseGate
+external audit note appendix template: documentation-only surface
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add external audit note appendix template while preserving the pre-Mathlib and review-gated invariants.
+Next priority: observe the documentation-only template update through CI, then record the result in a bounded ledger entry if the workflow is green.
