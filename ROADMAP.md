@@ -74,7 +74,17 @@
 - [x] Add final theorem release gate preparation refresh checkpoint
 - [x] Observe final theorem release gate preparation refresh main CI green
 - [x] Record final theorem release gate preparation refresh CI success in ledger
-- [ ] Add independent replay gate preparation checkpoint
+- [x] Add independent replay gate preparation checkpoint
+- [x] Observe independent replay gate preparation main CI green
+- [x] Record independent replay gate preparation CI success in ledger
+- [x] Add independent replay protocol checkpoint
+- [x] Observe independent replay protocol main CI green
+- [x] Record independent replay protocol CI success in ledger
+- [x] Add source-tree review gate checkpoint
+- [x] Move release/replay/source-tree gates to global Phase3ReleaseGate root
+- [x] Observe global Phase3ReleaseGate root main CI green
+- [x] Record global Phase3ReleaseGate root CI success in ledger
+- [ ] Observe source-tree review gate main CI green after global root sync
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -89,15 +99,15 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-The final theorem release gate preparation refresh has been observed green on `main`, using the full R1--R7 proof-obligation tightening closure as its source state.
+The global Phase3ReleaseGate root has been observed green on `main`. Release, replay, and source-tree gate surfaces are now top-level global surfaces, not R2-local surfaces.
 
-Observed current release-gate preparation refresh CI:
+Observed current global gate CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25798122853
-Build job ID: 75780579780
-Commit: 8033a312e3a817062b2912a33c675338df7d70d1
+Run ID: 25800415696
+Build job ID: 75788642271
+Commit: 746408d2a4b507be16e8bf4fa16780aa12f700ba
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -111,10 +121,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-final theorem release gate preparation refresh: CI green
+global Phase3ReleaseGate root: CI green
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add independent replay gate preparation checkpoint while preserving the pre-Mathlib and review-gated invariants.
+Next priority: confirm source-tree review gate CI after global root sync while preserving the pre-Mathlib and review-gated invariants.
