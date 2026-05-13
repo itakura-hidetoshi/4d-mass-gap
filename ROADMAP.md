@@ -1,5 +1,17 @@
 # MGAP4D GitHub Roadmap
 
+## Repository role
+
+This repository is the canonical Lean proof repository for the 4D mass gap proof architecture.
+
+```text
+Canonical proof repo: itakura-hidetoshi/4d-mass-gap
+KuuOS reference repo: itakura-hidetoshi/KuuOS
+Reference bridge: docs/kuuos_reference_bridge.md
+```
+
+KuuOS references this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open final theorem release.
+
 ## Phase 1: GitHub-native project setup
 
 - [x] Initialize Lean 4 Lake project
@@ -109,6 +121,7 @@
 - [x] Add external audit note appendix template
 - [x] Observe external audit note appendix template main CI green
 - [x] Record external audit note appendix template CI success in ledger
+- [x] Add KuuOS reference bridge
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -126,7 +139,7 @@
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; and version-tag readiness notes have also been observed CI green as a documentation-only surface.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have also been observed CI green as a documentation-only surface; and KuuOS now references this repository as the canonical Lean proof repository.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -139,6 +152,7 @@ docs/external_audit_note_appendix_template.md: append-only external audit note t
 docs/external_audit_note_appendix_template_ci.md: bounded CI ledger for the template update
 docs/version_tag_readiness_notes.md: documentation-only version-tag readiness notes; no tag created
 docs/version_tag_readiness_notes_ci.md: bounded CI ledger for the readiness note update
+docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
 Observed version-tag readiness notes CI:
@@ -172,9 +186,10 @@ spectral gap formalization: CI green
 spectral gap formalization gate: included in Phase3ReleaseGate
 external audit note appendix template: CI green documentation-only surface
 version-tag readiness notes: CI green documentation-only surface; no tag created
+KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: prepare a source-tree review refresh for version-tag readiness, then consider a tag only after the reviewed commit has CI green and without opening final theorem release.
+Next priority: keep the KuuOS reference bridge synchronized while preserving this repository as the canonical proof source.
