@@ -7,8 +7,8 @@ This document records the final sync checkpoint for the source-tree review gate 
 ```text
 global Phase3ReleaseGate root: CI green
 README / ROADMAP global gate sync: CI green
-source-tree review gate: included in global Phase3ReleaseGate root
-R2 theorem root: route-local only
+source-tree review gate: included in MGAP4D/Phase3ReleaseGate.lean
+MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
 main remains pre-Mathlib
 Mathlib on main remains not introduced
 main-adoption decision remains hold_main_adoption
@@ -27,9 +27,9 @@ It does not introduce Mathlib on main.
 ## Confirmed structure
 
 ```text
-R2 root: R2 restriction theorem route only
-Phase3ReleaseGate: R1--R7 global release/replay/source-tree gate
-MGAP4D.lean: top-level root directly imports Phase3ReleaseGate
+MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
+MGAP4D/Phase3ReleaseGate.lean: R1--R7 global release/replay/source-tree gate
+MGAP4D.lean: global top-level Lean root directly imports Phase3ReleaseGate
 ```
 
 ## Non-release invariant
