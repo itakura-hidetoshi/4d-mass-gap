@@ -95,6 +95,10 @@
 - [x] Add external audit note gate checkpoint
 - [x] Observe external audit note gate main CI green
 - [x] Record external audit note gate CI success in ledger
+- [x] Add entrypoint naming convention checkpoint
+- [x] Wire entrypoint naming convention through Phase3ReleaseGate
+- [x] Rename ambiguous R2 theorem root wording to R2 entrypoint wording
+- [ ] Observe entrypoint naming convention main CI green
 - [ ] Add external audit note appendix template
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
@@ -110,21 +114,7 @@
 
 The R1--R7 scoped Mathlib dry-run series has been reviewed. The decision is `hold_main_adoption`: dry-run success is accepted as Mathlib contact-surface buildability, not as theorem completion and not as permission to introduce Mathlib into `main`.
 
-ExternalAuditNoteGate has been observed green on `main`. External audit notes are review surfaces only: they do not claim theorem completion, do not unlock final release, and do not introduce Mathlib on main.
-
-Observed current external audit note gate CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25804390678
-Build job ID: 75802965286
-Commit: 1ef4f2c51eb637c1d99c86535c415318ae69bfb5
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
+Entrypoint naming is now fixed as follows: `MGAP4D.lean` is the global top-level Lean root, `MGAP4D/Phase3ReleaseGate.lean` is the global Phase 3 gate root, and `MGAP4D/R2/Theorem.lean` is the R2 restriction route entrypoint.
 
 Current invariant:
 
@@ -132,10 +122,10 @@ Current invariant:
 main remains pre-Mathlib
 Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
-external audit note gate: CI green
+R2 entrypoint wording: adopted
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: add external audit note appendix template while preserving the pre-Mathlib and review-gated invariants.
+Next priority: confirm entrypoint naming convention CI while preserving the pre-Mathlib and review-gated invariants.
