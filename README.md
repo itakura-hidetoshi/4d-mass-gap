@@ -145,6 +145,7 @@ Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
 External audit note appendix template: CI green
 Version tag readiness notes: CI green, documentation-only, tag not created
+Version-tag source-tree review refresh: documentation-only, tag not created
 KuuOS reference bridge: present
 ```
 
@@ -192,6 +193,7 @@ IndependentReplayProtocol: R1--R7 global replay protocol
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
 docs/external_audit_note_appendix_template.md: append-only external audit note template
 docs/version_tag_readiness_notes.md: documentation-only version-tag readiness surface, no tag created
+docs/version_tag_source_tree_review_refresh.md: documentation-only source-tree review refresh for tag readiness, no tag created
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
@@ -213,6 +215,7 @@ docs/external_audit_note_appendix_template.md
 docs/external_audit_note_appendix_template_ci.md
 docs/version_tag_readiness_notes.md
 docs/version_tag_readiness_notes_ci.md
+docs/version_tag_source_tree_review_refresh.md
 docs/kuuos_reference_bridge.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
@@ -273,6 +276,7 @@ scripts/                 Local and CI audit scripts
 - KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 - External audit note appendix template: CI green documentation-only surface
 - Version tag readiness notes: CI green documentation-only surface; no tag created
+- Version-tag source-tree review refresh: present as documentation-only surface; no tag created
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
