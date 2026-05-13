@@ -129,6 +129,7 @@ Source-tree review gate final sync: CI green
 External audit note gate: CI green
 Entrypoint naming convention final sync: CI green
 Spectral gap formalization: CI green
+External audit note appendix template: documentation-only surface
 ```
 
 ## Latest CI confirmation
@@ -170,6 +171,7 @@ MGAP4D/SpectralGapFormalizationGate.lean: spectral gap formalization gate includ
 MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
 IndependentReplayProtocol: R1--R7 global replay protocol
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
+docs/external_audit_note_appendix_template.md: append-only external audit note template
 ```
 
 ## Mathlib dry-run policy
@@ -186,6 +188,7 @@ docs/phase3_entrypoint_naming_convention.md
 docs/phase3_entrypoint_naming_convention_final_sync.md
 docs/entrypoint_naming_convention_final_sync_ci.md
 docs/spectral_gap_formalization_ci.md
+docs/external_audit_note_appendix_template.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
 MGAP4D/EntrypointNamingConventionFinalSync.lean
@@ -242,6 +245,7 @@ scripts/                 Local and CI audit scripts
 - Spectral module entrypoint: present
 - Spectral gap formalization checkpoint: CI green
 - Spectral gap formalization gate: included in Phase3ReleaseGate
+- External audit note appendix template: present as documentation-only surface
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
