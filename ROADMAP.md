@@ -116,6 +116,7 @@
 - [x] Move release provenance into `docs/archive/`
 - [x] Keep root README GitHub-native
 - [x] Keep public theorem claims review-gated
+- [x] Prepare version-tag readiness notes without creating a tag
 - [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
@@ -123,7 +124,7 @@
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main` and the bounded external audit note appendix template has also been observed CI green.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; and version-tag readiness notes now exist as a documentation-only surface.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -134,6 +135,7 @@ MGAP4D/SpectralGapFormalizationGate.lean: Phase 3 spectral gap formalization gat
 MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate including the spectral checkpoint
 docs/external_audit_note_appendix_template.md: append-only external audit note template
 docs/external_audit_note_appendix_template_ci.md: bounded CI ledger for the template update
+docs/version_tag_readiness_notes.md: documentation-only version-tag readiness notes; no tag created
 ```
 
 Observed external audit note appendix template CI:
@@ -166,9 +168,10 @@ main-adoption decision: hold_main_adoption
 spectral gap formalization: CI green
 spectral gap formalization gate: included in Phase3ReleaseGate
 external audit note appendix template: CI green documentation-only surface
+version-tag readiness notes: documentation-only surface; no tag created
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: prepare version-tag readiness notes only after CI green and source-tree review, without opening final theorem release.
+Next priority: observe the version-tag readiness note update through CI, then record the result in a bounded ledger entry if the workflow is green.
