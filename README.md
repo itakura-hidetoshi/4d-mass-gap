@@ -14,7 +14,7 @@ The root imports the Phase 3 proof-hardening architecture, including the R1--R7 
 
 ## Phase 3 status
 
-The current `main` branch has reached an **external audit note gate CI green checkpoint** through the global Phase3ReleaseGate root.
+The current `main` branch has reached an **entrypoint naming convention final sync CI green checkpoint** through the global Phase3ReleaseGate root.
 
 The proof-hardening route has advanced through:
 
@@ -48,6 +48,8 @@ TheoremSurface
   -> SourceTreeReviewGate
   -> SourceTreeReviewGateFinalSync
   -> ExternalAuditNoteGate
+  -> EntrypointNamingConvention
+  -> EntrypointNamingConventionFinalSync
   -> Phase3ReleaseGate
 ```
 
@@ -82,16 +84,17 @@ Independent replay protocol global R1--R7 scope correction: CI green
 Global Phase3ReleaseGate root: CI green
 Source-tree review gate final sync: CI green
 External audit note gate: CI green
+Entrypoint naming convention final sync: CI green
 ```
 
 ## Latest CI confirmation
 
 ```text
-External audit note gate main CI
+Entrypoint naming convention final sync main CI
 Workflow: Lean Direct Elan CI
-Run ID: 25804390678
-Build job ID: 75802965286
-Commit: 1ef4f2c51eb637c1d99c86535c415318ae69bfb5
+Run ID: 25827165067
+Build job ID: 75883153113
+Commit: 88773fa4dd4090af2e2327e1d83d43dbc659b7f8
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -102,13 +105,11 @@ lake build: success
 ## Entrypoint and global gate structure
 
 ```text
-MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
 MGAP4D.lean: global top-level Lean root
-MGAP4D/Phase3ReleaseGate.lean: global R1--R7 release/replay/source-tree/external-audit gate
+MGAP4D/Phase3ReleaseGate.lean: global Phase 3 release/replay/source-tree/external-audit gate root
+MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
 IndependentReplayProtocol: R1--R7 global replay protocol
-IndependentReplayProtocolGlobalScopeCorrection: confirms replay is not R2-local
 ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
-SourceTreeReviewGateFinalSync: confirms source-tree review is not R2-local
 ```
 
 ## Mathlib dry-run policy
@@ -121,10 +122,12 @@ Relevant documents and modules include:
 
 ```text
 docs/phase3_mathlib_main_adoption_hold_decision.md
-docs/phase3_external_audit_note_gate.md
-docs/external_audit_note_gate_ci.md
+docs/phase3_entrypoint_naming_convention.md
+docs/phase3_entrypoint_naming_convention_final_sync.md
+docs/entrypoint_naming_convention_final_sync_ci.md
 MGAP4D/Phase3ReleaseGate.lean
-MGAP4D/ExternalAuditNoteGate.lean
+MGAP4D/EntrypointNamingConvention.lean
+MGAP4D/EntrypointNamingConventionFinalSync.lean
 ```
 
 ## Build
@@ -171,7 +174,7 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: external audit note gate CI green checkpoint reached
+- Phase 3: entrypoint naming convention final sync CI green checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
@@ -179,8 +182,7 @@ scripts/                 Local and CI audit scripts
 - Final theorem release gate preparation refresh: CI green
 - Independent replay protocol: R1--R7 global scope corrected and CI green
 - External audit note gate: CI green
-- Global Phase3ReleaseGate root: CI green
-- Source-tree review gate final sync: CI green
+- Entrypoint naming convention final sync: CI green
 - Mathlib on main: not introduced
 - Main-adoption decision: hold_main_adoption
 - Public final theorem claim: review-gated pending independent replay and external audit
