@@ -14,7 +14,7 @@ The root imports the Phase 3 proof-hardening architecture, including the R1--R7 
 
 ## Phase 3 status
 
-The current `main` branch has reached a **source-tree review gate final sync checkpoint** through the global Phase3ReleaseGate root.
+The current `main` branch has reached an **independent replay protocol global R1--R7 scope correction checkpoint** through the global Phase3ReleaseGate root.
 
 The proof-hardening route has advanced through:
 
@@ -44,6 +44,7 @@ TheoremSurface
   -> FinalTheoremReleaseGatePreparationRefresh
   -> IndependentReplayGatePreparation
   -> IndependentReplayProtocol
+  -> IndependentReplayProtocolGlobalScopeCorrection
   -> SourceTreeReviewGate
   -> SourceTreeReviewGateFinalSync
   -> Phase3ReleaseGate
@@ -76,6 +77,7 @@ Post-R1--R7 proof-obligation tightening closure: CI green
 Final theorem release gate preparation refresh: CI green
 Independent replay gate preparation: CI green
 Independent replay protocol: CI green
+Independent replay protocol global R1--R7 scope correction: pending CI
 Global Phase3ReleaseGate root: CI green
 Source-tree review gate final sync: CI green
 ```
@@ -99,6 +101,8 @@ lake build: success
 
 ```text
 R2 root: R2 restriction theorem route only
+IndependentReplayProtocol: R1--R7 global replay protocol
+IndependentReplayProtocolGlobalScopeCorrection: confirms replay is not R2-local
 Phase3ReleaseGate: R1--R7 global release/replay/source-tree gate
 MGAP4D.lean: top-level root directly imports Phase3ReleaseGate
 SourceTreeReviewGateFinalSync: confirms source-tree review is not R2-local
@@ -114,9 +118,10 @@ Relevant documents and modules include:
 
 ```text
 docs/phase3_mathlib_main_adoption_hold_decision.md
-docs/source_tree_review_gate_final_sync_ci.md
+docs/phase3_independent_replay_protocol_global_scope_correction.md
 MGAP4D/Phase3ReleaseGate.lean
-MGAP4D/SourceTreeReviewGateFinalSync.lean
+MGAP4D/IndependentReplayProtocol.lean
+MGAP4D/IndependentReplayProtocolGlobalScopeCorrection.lean
 ```
 
 ## Build
@@ -163,13 +168,13 @@ scripts/                 Local and CI audit scripts
 
 - GitHub-native Lean project: active
 - CI: direct `elan` workflow
-- Phase 3: source-tree review gate final sync checkpoint reached
+- Phase 3: independent replay protocol global R1--R7 scope correction checkpoint reached
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
 - Post-R1--R7 proof-obligation tightening closure: CI green
 - Final theorem release gate preparation refresh: CI green
-- Independent replay protocol: CI green
+- Independent replay protocol: R1--R7 global scope corrected
 - Global Phase3ReleaseGate root: CI green
 - Source-tree review gate final sync: CI green
 - Mathlib on main: not introduced
