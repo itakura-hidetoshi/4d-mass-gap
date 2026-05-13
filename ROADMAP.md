@@ -107,6 +107,8 @@
 - [x] Observe spectral gap formalization main CI green
 - [x] Record spectral gap formalization CI success in ledger
 - [x] Add external audit note appendix template
+- [x] Observe external audit note appendix template main CI green
+- [x] Record external audit note appendix template CI success in ledger
 - [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene
@@ -116,11 +118,12 @@
 - [x] Keep public theorem claims review-gated
 - [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
+- [x] Record external audit note template CI without changing active proof semantics
 - [ ] Add external audit notes without changing active proof semantics
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main` and now has a bounded external audit note appendix template.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main` and the bounded external audit note appendix template has also been observed CI green.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -130,15 +133,17 @@ MGAP4D/Spectral/GapFormalization.lean: spectral gap formalization checkpoint
 MGAP4D/SpectralGapFormalizationGate.lean: Phase 3 spectral gap formalization gate
 MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate including the spectral checkpoint
 docs/external_audit_note_appendix_template.md: append-only external audit note template
+docs/external_audit_note_appendix_template_ci.md: bounded CI ledger for the template update
 ```
 
-Observed spectral gap formalization CI:
+Observed external audit note appendix template CI:
 
 ```text
 Workflow: Lean Direct Elan CI
-Run ID: 25828960043
-Build job ID: 75889136130
-Commit: df99969343482d3030f6b6006edb082030dd1e87
+Run ID: 25830545961
+Audit job ID: 75894216378
+Build job ID: 75894235517
+Commit: ea4627cee4883b5654164d521384086c792ea9bc
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -160,10 +165,10 @@ Mathlib on main: not introduced
 main-adoption decision: hold_main_adoption
 spectral gap formalization: CI green
 spectral gap formalization gate: included in Phase3ReleaseGate
-external audit note appendix template: documentation-only surface
+external audit note appendix template: CI green documentation-only surface
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: observe the documentation-only template update through CI, then record the result in a bounded ledger entry if the workflow is green.
+Next priority: prepare version-tag readiness notes only after CI green and source-tree review, without opening final theorem release.
