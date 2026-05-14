@@ -124,3 +124,4 @@ import MGAP4D.Release.PublicBoundaryTheorem
 import MGAP4D.ExactGapAuditClosure
 import MGAP4D.ExactGapReleaseReadiness
 import MGAP4D.ExactGapResidualMap
+import MGAP4D.ExactGapResidualResolutionPlan
