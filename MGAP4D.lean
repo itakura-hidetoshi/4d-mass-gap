@@ -4,6 +4,7 @@ import MGAP4D.Axioms
 import MGAP4D.Certificates
 import MGAP4D.Spectral
 import MGAP4D.Spectral.GapInfimumDefinition
+import MGAP4D.Spectral.LowerBoundProofBody
 import MGAP4D.Hamiltonian
 import MGAP4D.Hamiltonian.OperatorBody
 import MGAP4D.OSPositivity
