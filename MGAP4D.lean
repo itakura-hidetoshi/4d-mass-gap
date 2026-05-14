@@ -29,6 +29,7 @@ import MGAP4D.MathlibAnalytic.Basic
 import MGAP4D.MathlibAnalytic.ExactGapReal
 import MGAP4D.MathlibAnalytic.GapInfimumReal
 import MGAP4D.MathlibAnalytic.RayleighLowerBoundReal
+import MGAP4D.MathlibAnalytic.RayleighAttainmentReal
 import MGAP4D.MathlibAdoptionGate.R5SpectrumRequest
 import MGAP4D.MathlibAdoptionGate.R6IntervalRequest
 import MGAP4D.MathlibAdoptionGate.R7AtomExactRequest
