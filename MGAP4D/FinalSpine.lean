@@ -1,6 +1,7 @@
 import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Release.V16
+import MGAP4D.SpectralFinalReleaseHold
 
 namespace MGAP4D
 
@@ -34,5 +35,15 @@ theorem final_spine_plaquette_positive :
 theorem final_spine_v16_release_gap3320 :
     Release.v16ReleasePacket.finalPacket.massGap.value = 33 / 20 := by
   rfl
+
+/-- The spectral release-readiness chain is visible, but final release remains held. -/
+theorem final_spine_spectral_final_release_held :
+    spectral3320FinalReleaseHold.finalReleaseHeld := by
+  exact spectral3320_final_release_is_held
+
+/-- The spectral final-release hold preserves the public theorem boundary. -/
+theorem final_spine_spectral_public_boundary_held :
+    spectral3320FinalReleaseHold.publicBoundaryHeld := by
+  exact spectral3320_final_release_public_boundary_held
 
 end MGAP4D
