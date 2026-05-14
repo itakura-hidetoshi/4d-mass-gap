@@ -30,6 +30,7 @@ import MGAP4D.MathlibAnalytic.ExactGapReal
 import MGAP4D.MathlibAnalytic.GapInfimumReal
 import MGAP4D.MathlibAnalytic.RayleighLowerBoundReal
 import MGAP4D.MathlibAnalytic.RayleighAttainmentReal
+import MGAP4D.MathlibAnalytic.SpectralMassReal
 import MGAP4D.MathlibAdoptionGate.R5SpectrumRequest
 import MGAP4D.MathlibAdoptionGate.R6IntervalRequest
 import MGAP4D.MathlibAdoptionGate.R7AtomExactRequest
@@ -108,19 +109,7 @@ import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningPass1
 import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningPass2
 import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningPass3
 import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningSeriesReview
-import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningClosure
 import MGAP4D.R6.TheoremSurface
-import MGAP4D.R7.Concrete
-import MGAP4D.R7.Theorem
-import MGAP4D.R7.Theorem.AtomExactClosureCandidate
-import MGAP4D.R7.Theorem.AtomExactHardeningPass
-import MGAP4D.R7.Theorem.AtomExactTighteningSegmentSelection
-import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass1
-import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass2
-import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass3
-import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningSeriesReview
-import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningClosure
-import MGAP4D.R7.TheoremSurface
 import MGAP4D.Global.Concrete
 import MGAP4D.Global.TheoremSurface
 import MGAP4D.Global.FinalAssembly
