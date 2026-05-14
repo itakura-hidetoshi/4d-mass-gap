@@ -150,6 +150,7 @@ Tag candidate receipt: CI green, documentation-only, tag not created
 Manual tag creation receipt: CI green, documentation-only, tag not created by tool
 Tag creation script: present, no tag created by this commit
 Tag creation script usage note: CI green, documentation-only, tag not created
+Tag creation tracking issue: open (#9), documentation-only
 Post-tag verification receipt template: present, template only
 KuuOS reference bridge: present
 ```
@@ -201,6 +202,15 @@ Tag created by connected tool: no
 Branch substitute created: no
 ```
 
+Tag creation tracking issue:
+
+```text
+Issue: #9
+Title: Create phase3 pre-release hygiene tag and post-tag verification receipt
+URL: https://github.com/itakura-hidetoshi/4d-mass-gap/issues/9
+Tracking receipt: docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md
+```
+
 Tag creation and post-tag verification surfaces:
 
 ```text
@@ -208,11 +218,11 @@ scripts/create_phase3_pre_release_hygiene_tag.sh
 docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md
 ```
 
-Recent CI ledger commit:
+Recent tracking commit:
 
 ```text
-6e7460e2aa225cb22262bbcb18f1af82425feee0
-record phase3 tag creation script usage CI
+4945e152484a582fa3eab1c945b24dffe96167f1
+record phase3 tag creation tracking issue
 ```
 
 ## Entrypoint and global gate structure
@@ -234,6 +244,7 @@ docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md: manual tag creation receipt, no tag created by tool
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for manual tag creation receipt, no tag created
 docs/tag_creation_script_usage_phase3_pre_release_hygiene.md: tag creation script usage note, no tag created
+docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md: tag creation tracking issue receipt, no tag created
 scripts/create_phase3_pre_release_hygiene_tag.sh: bounded tag creation script
 docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md: post-tag verification template
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
@@ -265,6 +276,7 @@ docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md
 docs/tag_creation_script_usage_phase3_pre_release_hygiene.md
 docs/tag_creation_script_usage_phase3_pre_release_hygiene_ci.md
+docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md
 docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md
 docs/kuuos_reference_bridge.md
 MGAP4D/Phase3ReleaseGate.lean
@@ -331,6 +343,7 @@ scripts/                 Local and CI audit scripts
 - Manual tag creation receipt: CI green documentation-only surface; tag not created by connected tool
 - Tag creation script: present; tag not created by this commit
 - Tag creation script usage note: CI green documentation-only surface; no tag created
+- Tag creation tracking issue: open (#9); no tag created by connected tool
 - Post-tag verification template: present; template only
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
