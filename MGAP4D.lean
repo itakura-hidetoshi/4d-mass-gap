@@ -118,3 +118,4 @@ import MGAP4D.Gap3320
 import MGAP4D.R1R7TheoremObligationCompletion
 import MGAP4D.FinalSpine
 import MGAP4D.R1R7TheoremObligationFinalSpineBridge
+import MGAP4D.SharpGapFinalSpineBridge
