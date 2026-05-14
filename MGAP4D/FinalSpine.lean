@@ -1,5 +1,6 @@
 import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
+import MGAP4D.Constructive.ObservableSpectralWeightClosure
 import MGAP4D.Release.V16
 import MGAP4D.SpectralFinalReleaseHold
 import MGAP4D.SpectralPublicBoundaryLock
@@ -67,5 +68,37 @@ theorem final_spine_spectral_pre_release_checkpoint_ready :
 theorem final_spine_spectral_pre_release_checkpoint_boundary_locked :
     spectral3320PreReleaseCheckpoint.publicBoundaryLocked := by
   exact spectral3320_pre_release_checkpoint_boundary_locked
+
+/-- The observable spectral-weight closure is ready at the final spine. -/
+theorem final_spine_observable_spectral_weight_closure_ready :
+    Constructive.observableSpectralWeight3320Closure.ready := by
+  exact Constructive.observable_spectral_weight_3320_closure_ready
+
+/-- The final spine sees the `A_pg` observable used by the spectral-weight closure. -/
+theorem final_spine_observable_spectral_weight_Apg :
+    Constructive.observableSpectralWeight3320Closure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg := by
+  exact Constructive.observable_spectral_weight_3320_closure_observable_is_Apg
+
+/-- The final spine sees the positive observable spectral weight at `33/20`. -/
+theorem final_spine_observable_spectral_weight_positive :
+    Constructive.observableSpectralWeight3320Closure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true := by
+  exact Constructive.observable_spectral_weight_3320_closure_positive_mass
+
+/-- The final spine sees the observable spectral-weight value `33/20`. -/
+theorem final_spine_observable_spectral_weight_value :
+    Constructive.observableSpectralWeight3320Closure.bridge.finalBridge.spectralWeight.value = 33 / 20 := by
+  exact Constructive.observable_spectral_weight_3320_closure_weight_value
+
+/-- The final spine sees that the observable spectral-weight witness is orthogonal, not vacuum. -/
+theorem final_spine_observable_spectral_weight_witness_orthogonal :
+    Constructive.observableSpectralWeight3320Closure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector =
+      Spectral.SpectralSector.orthogonal := by
+  exact Constructive.observable_spectral_weight_3320_closure_witness_orthogonal
+
+/-- The final spine sees that the observable spectral-weight witness is not vacuum. -/
+theorem final_spine_observable_spectral_weight_witness_not_vacuum :
+    Constructive.observableSpectralWeight3320Closure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠
+      Spectral.SpectralSector.vacuum := by
+  exact Constructive.observable_spectral_weight_3320_closure_witness_not_vacuum
 
 end MGAP4D
