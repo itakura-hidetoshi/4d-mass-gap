@@ -4,6 +4,7 @@ import MGAP4D.Constructive.ObservableSpectralWeightClosure
 import MGAP4D.PhysicalWitnessClosure
 import MGAP4D.PhysicalWitnessPreReleaseBridge
 import MGAP4D.PhysicalWitnessReleaseHold
+import MGAP4D.PhysicalWitnessAuditCheckpoint
 import MGAP4D.Release.V16
 import MGAP4D.SpectralFinalReleaseHold
 import MGAP4D.SpectralPublicBoundaryLock
@@ -170,5 +171,20 @@ theorem final_spine_physical_witness_release_is_held :
 theorem final_spine_physical_witness_release_public_boundary_locked :
     physicalWitness3320ReleaseHold.publicBoundaryLocked := by
   exact physical_witness_3320_release_public_boundary_locked
+
+/-- The physical witness audit checkpoint is ready at the final spine. -/
+theorem final_spine_physical_witness_audit_checkpoint_ready :
+    physicalWitness3320AuditCheckpoint.ready := by
+  exact physical_witness_3320_audit_checkpoint_ready
+
+/-- The final spine sees that the physical witness audit checkpoint keeps release held. -/
+theorem final_spine_physical_witness_audit_checkpoint_release_held :
+    physicalWitness3320AuditCheckpoint.finalReleaseHeld := by
+  exact physical_witness_3320_audit_checkpoint_release_held
+
+/-- The final spine sees that the physical witness audit checkpoint keeps the public boundary locked. -/
+theorem final_spine_physical_witness_audit_checkpoint_public_boundary_locked :
+    physicalWitness3320AuditCheckpoint.publicBoundaryLocked := by
+  exact physical_witness_3320_audit_checkpoint_public_boundary_locked
 
 end MGAP4D
