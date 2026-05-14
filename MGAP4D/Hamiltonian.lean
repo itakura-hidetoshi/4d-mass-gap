@@ -1,3 +1,4 @@
 import MGAP4D.Hamiltonian.Basic
 import MGAP4D.Hamiltonian.Physical
 import MGAP4D.Hamiltonian.Normalization
+import MGAP4D.Hamiltonian.SpectralNormalizationBridge
