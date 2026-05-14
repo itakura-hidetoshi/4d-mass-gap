@@ -1,6 +1,7 @@
 import MGAP4D.Spectral.GapFormalization
 import MGAP4D.Spectral.PositiveGap
 import MGAP4D.Spectral.SectorBoundary
+import MGAP4D.Spectral.LowerBound
 
 namespace MGAP4D
 
@@ -11,6 +12,7 @@ structure SpectralGapFormalizationGate where
   vacuumSectorBoundaryVisible : Prop
   orthogonalSectorBoundaryVisible : Prop
   positiveLowerBoundSurfaceVisible : Prop
+  lowerBoundCertificateVisible : Prop
   positiveGapCertificateVisible : Prop
   normalized3320SurfaceVisible : Prop
   witnessSurfaceVisible : Prop
@@ -25,8 +27,8 @@ def SpectralGapFormalizationGate.ready
   G.spectralModuleEntrypointVisible ∧ G.spectralGapFormalizationVisible ∧
   G.sectorBoundaryCertificateVisible ∧ G.vacuumSectorBoundaryVisible ∧
   G.orthogonalSectorBoundaryVisible ∧ G.positiveLowerBoundSurfaceVisible ∧
-  G.positiveGapCertificateVisible ∧ G.normalized3320SurfaceVisible ∧
-  G.witnessSurfaceVisible ∧ G.r1r7GlobalScopeVisible ∧
+  G.lowerBoundCertificateVisible ∧ G.positiveGapCertificateVisible ∧
+  G.normalized3320SurfaceVisible ∧ G.witnessSurfaceVisible ∧ G.r1r7GlobalScopeVisible ∧
   G.nonTheoremCompletionBoundaryVisible ∧ G.finalGapReleaseNotUnlocked ∧
   G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld
 
@@ -35,10 +37,10 @@ theorem spectral_gap_formalization_gate_pack
     G.ready ↔ G.spectralModuleEntrypointVisible ∧ G.spectralGapFormalizationVisible ∧
       G.sectorBoundaryCertificateVisible ∧ G.vacuumSectorBoundaryVisible ∧
       G.orthogonalSectorBoundaryVisible ∧ G.positiveLowerBoundSurfaceVisible ∧
-      G.positiveGapCertificateVisible ∧ G.normalized3320SurfaceVisible ∧
-      G.witnessSurfaceVisible ∧ G.r1r7GlobalScopeVisible ∧
-      G.nonTheoremCompletionBoundaryVisible ∧ G.finalGapReleaseNotUnlocked ∧
-      G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld := by
+      G.lowerBoundCertificateVisible ∧ G.positiveGapCertificateVisible ∧
+      G.normalized3320SurfaceVisible ∧ G.witnessSurfaceVisible ∧
+      G.r1r7GlobalScopeVisible ∧ G.nonTheoremCompletionBoundaryVisible ∧
+      G.finalGapReleaseNotUnlocked ∧ G.mainPreMathlib ∧ G.mathlibMainAdoptionHeld := by
   rfl
 
 theorem spectral_gap_formalization_gate_sees_sector_boundary_certificate
@@ -47,10 +49,16 @@ theorem spectral_gap_formalization_gate_sees_sector_boundary_certificate
   intro h
   exact h.2.2.1
 
+theorem spectral_gap_formalization_gate_sees_lower_bound_certificate
+    (G : SpectralGapFormalizationGate) :
+    G.ready → G.lowerBoundCertificateVisible := by
+  intro h
+  exact h.2.2.2.2.2.2.1
+
 theorem spectral_gap_formalization_gate_sees_positive_certificate
     (G : SpectralGapFormalizationGate) :
     G.ready → G.positiveGapCertificateVisible := by
   intro h
-  exact h.2.2.2.2.2.2.1
+  exact h.2.2.2.2.2.2.2.1
 
 end MGAP4D
