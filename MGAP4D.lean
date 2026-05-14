@@ -7,6 +7,7 @@ import MGAP4D.Spectral.GapInfimumDefinition
 import MGAP4D.Spectral.LowerBoundProofBody
 import MGAP4D.Hamiltonian
 import MGAP4D.Hamiltonian.OperatorBody
+import MGAP4D.Hamiltonian.EigenvectorConstruction
 import MGAP4D.OSPositivity
 import MGAP4D.Plaquette
 import MGAP4D.Constructive
