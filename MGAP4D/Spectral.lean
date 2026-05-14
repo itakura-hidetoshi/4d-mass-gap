@@ -7,3 +7,4 @@ import MGAP4D.Spectral.SectorSeparation
 import MGAP4D.Spectral.LowerBound
 import MGAP4D.Spectral.CoreCertificate
 import MGAP4D.Spectral.SectorSeparationCoreBridge
+import MGAP4D.Spectral.SharpGapSandwich
