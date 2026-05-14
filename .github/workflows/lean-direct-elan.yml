@@ -44,11 +44,22 @@ jobs:
           pwd
           ls -la
           test -f lean-toolchain
+      - name: Cache elan and Lake build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake
+          key: ${{ runner.os }}-lean-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lean-
       - name: Install elan and Lean toolchain
         shell: bash
         run: |
           set -euxo pipefail
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          if ! command -v elan >/dev/null 2>&1; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Show Lean and Lake versions
         shell: bash
@@ -62,6 +73,11 @@ jobs:
           set -euxo pipefail
           lake update
           test -f lake-manifest.json
+      - name: Pull Mathlib cache when available
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lake exe cache get || true
       - name: Build Lean project with lake build
         shell: bash
         run: |
