@@ -10,3 +10,4 @@ import MGAP4D.Spectral.SectorSeparationCoreBridge
 import MGAP4D.Spectral.SharpGapSandwich
 import MGAP4D.Spectral.ExactGapTheorem
 import MGAP4D.Spectral.GapInfimumDefinition
+import MGAP4D.Spectral.LowerBoundProofBody
