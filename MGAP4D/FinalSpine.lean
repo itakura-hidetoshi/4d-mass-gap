@@ -2,6 +2,7 @@ import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Release.V16
 import MGAP4D.SpectralFinalReleaseHold
+import MGAP4D.SpectralPublicBoundaryLock
 
 namespace MGAP4D
 
@@ -45,5 +46,15 @@ theorem final_spine_spectral_final_release_held :
 theorem final_spine_spectral_public_boundary_held :
     spectral3320FinalReleaseHold.publicBoundaryHeld := by
   exact spectral3320_final_release_public_boundary_held
+
+/-- The spectral public boundary remains locked after the hold layer. -/
+theorem final_spine_spectral_public_boundary_locked :
+    spectral3320PublicBoundaryLock.publicBoundaryLocked := by
+  exact spectral3320_public_boundary_is_locked
+
+/-- The spectral public boundary lock is itself ready. -/
+theorem final_spine_spectral_public_boundary_lock_ready :
+    spectral3320PublicBoundaryLock.ready := by
+  exact spectral3320_public_boundary_lock_ready
 
 end MGAP4D
