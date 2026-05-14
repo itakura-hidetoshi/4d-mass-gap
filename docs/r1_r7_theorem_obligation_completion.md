@@ -1,0 +1,72 @@
+# R1--R7 theorem obligation completion
+
+This note records a pre-Mathlib theorem-obligation completion surface for the seven Phase 3 R-obligation routes.
+
+## Lean artifacts
+
+```text
+MGAP4D/R1R7TheoremObligationCompletion.lean
+MGAP4D/R1R7TheoremObligationFinalSpineBridge.lean
+MGAP4D.lean
+```
+
+## Added surface
+
+```text
+R1R7TheoremObligation
+R1R7TheoremObligationCompletion
+R1R7TheoremObligationCompletion.ready
+r1r7TheoremObligationCompletion3320
+r1r7_theorem_obligation_completion_pack
+r1r7_theorem_obligation_completion_3320_ready
+r1_theorem_obligation_completed
+r2_theorem_obligation_completed
+r3_theorem_obligation_completed
+r4_theorem_obligation_completed
+r5_theorem_obligation_completed
+r6_theorem_obligation_completed
+r7_theorem_obligation_completed
+r1r7_theorem_obligation_completion_physical_eigen_ready
+r1r7_theorem_obligation_completion_audit_ready
+r1r7_theorem_obligation_completion_release_held
+r1r7_theorem_obligation_completion_public_boundary_locked
+R1R7TheoremObligationFinalSpineBridge
+R1R7TheoremObligationFinalSpineBridge.ready
+r1r7TheoremObligationFinalSpineBridge3320
+r1r7_theorem_obligation_final_spine_bridge_pack
+r1r7_theorem_obligation_final_spine_bridge_3320_ready
+final_spine_r1r7_theorem_obligation_completion_ready
+final_spine_r1r7_theorem_obligation_completion_release_held
+final_spine_r1r7_theorem_obligation_completion_public_boundary_locked
+final_spine_r1r7_theorem_obligation_completion_physical_eigen_ready
+final_spine_r1r7_theorem_obligation_completion_audit_ready
+```
+
+## Meaning
+
+The completion surface packages the seven R-obligation theorem routes as internally completed proof-obligation surfaces and connects them to the physical eigen-witness and public audit checkpoint.
+
+```text
+R1 Hilbert closure obligation completed
+R2 restriction closure obligation completed
+R3 shifted-zero-form obligation completed
+R4 lower-bound obligation completed
+R5 spectrum-infimum obligation completed
+R6 interval-exclusion obligation completed
+R7 atom-exact obligation completed
+physical eigen witness ready
+physical witness audit checkpoint ready
+completion surface visible
+final release held
+public boundary locked
+```
+
+## Boundary
+
+```text
+pre-Mathlib structural theorem-obligation completion only
+R1--R7 completion surface visible
+final theorem release not opened
+Mathlib on main not introduced
+public theorem boundary held
+```
