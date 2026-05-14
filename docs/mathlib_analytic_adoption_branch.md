@@ -20,6 +20,7 @@ Preserve public theorem boundary.
 lakefile.lean: add require mathlib from git
 MGAP4D/MathlibAnalytic/Basic.lean: minimal import Mathlib surface
 MGAP4D.lean: import MGAP4D.MathlibAnalytic.Basic on adoption branch only
+.github/workflows/lean-direct-elan.yml: enable branch CI
 ```
 
 ## Added Lean surface
@@ -32,6 +33,13 @@ MathlibAnalytic.mathlib_import_surface_ready
 MathlibAnalytic.exactGapValueReal
 MathlibAnalytic.exactGapValueReal_pos
 MathlibAnalytic.exactGapValueReal_eq
+```
+
+## CI trigger note
+
+```text
+This update intentionally touches the adoption branch after enabling branch CI.
+It should trigger the Lean Direct Elan CI on mathlib-adoption/exact-gap-analytic.
 ```
 
 ## Boundary
