@@ -1,6 +1,7 @@
 import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Constructive.ObservableSpectralWeightClosure
+import MGAP4D.Hamiltonian.EigenWitness3320
 import MGAP4D.PhysicalWitnessClosure
 import MGAP4D.PhysicalWitnessPreReleaseBridge
 import MGAP4D.PhysicalWitnessReleaseHold
@@ -186,5 +187,35 @@ theorem final_spine_physical_witness_audit_checkpoint_release_held :
 theorem final_spine_physical_witness_audit_checkpoint_public_boundary_locked :
     physicalWitness3320AuditCheckpoint.publicBoundaryLocked := by
   exact physical_witness_3320_audit_checkpoint_public_boundary_locked
+
+/-- The physical eigen-witness `psi_*` certificate is ready at the final spine. -/
+theorem final_spine_physical_eigen_witness_3320_ready :
+    Hamiltonian.physicalEigenWitness3320.ready := by
+  exact Hamiltonian.physical_eigen_witness_3320_ready
+
+/-- The final spine sees that the physical eigen-witness is attached to `H_phys`. -/
+theorem final_spine_physical_eigen_witness_Hphys :
+    Hamiltonian.physicalEigenWitness3320.hamiltonian = Hamiltonian.Hphys := by
+  exact Hamiltonian.physical_eigen_witness_3320_hamiltonian_is_Hphys
+
+/-- The final spine sees that `psi_*` is normalized. -/
+theorem final_spine_physical_eigen_witness_norm_one :
+    Hamiltonian.physicalEigenWitness3320.eigenWitness.normOne = true := by
+  exact Hamiltonian.physical_eigen_witness_3320_norm_one
+
+/-- The final spine sees that `psi_*` has eigenvalue `33/20`. -/
+theorem final_spine_physical_eigen_witness_eigenvalue :
+    Hamiltonian.physicalEigenWitness3320.eigenWitness.eigenvalue = 33 / 20 := by
+  exact Hamiltonian.physical_eigen_witness_3320_eigenvalue
+
+/-- The final spine sees that the physical eigen-witness is orthogonal, not vacuum. -/
+theorem final_spine_physical_eigen_witness_orthogonal :
+    Hamiltonian.physicalEigenWitness3320.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal := by
+  exact Hamiltonian.physical_eigen_witness_3320_orthogonal
+
+/-- The final spine sees that the physical eigen-witness is not vacuum. -/
+theorem final_spine_physical_eigen_witness_not_vacuum :
+    Hamiltonian.physicalEigenWitness3320.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum := by
+  exact Hamiltonian.physical_eigen_witness_3320_not_vacuum
 
 end MGAP4D
