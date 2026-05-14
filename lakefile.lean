@@ -6,7 +6,7 @@ package «MGAP4D» where
   moreLeanArgs := #["-DautoImplicit=false"]
 
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "master"
+  "https://github.com/leanprover-community/mathlib4.git" @ "v4.30.0-rc2"
 
 lean_lib «MGAP4D» where
   roots := #[`MGAP4D]
