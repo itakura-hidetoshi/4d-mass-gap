@@ -143,8 +143,9 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 - [x] Record manual tag creation receipt CI success in ledger
 - [x] Add bounded tag creation script without creating a tag
 - [x] Add post-tag verification receipt template
-- [ ] Observe tag creation script and post-tag verification template main CI green
-- [ ] Record tag creation script and post-tag verification template CI success in ledger
+- [x] Add tag creation script usage note without creating a tag
+- [x] Observe tag creation script usage note main CI green
+- [x] Record tag creation script usage note CI success in ledger
 - [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
@@ -152,7 +153,7 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have been observed CI green; the version-tag source-tree review refresh has been observed CI green; the bounded tag-candidate receipt has been observed CI green; the manual tag creation receipt has been observed CI green; and a bounded tag creation script plus post-tag verification receipt template have been added without creating a tag.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have been observed CI green; the version-tag source-tree review refresh has been observed CI green; the bounded tag-candidate receipt has been observed CI green; the manual tag creation receipt has been observed CI green; and the tag creation script usage note has also been observed CI green without creating a tag.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -173,7 +174,24 @@ docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md: manual 
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for the manual tag creation receipt
 scripts/create_phase3_pre_release_hygiene_tag.sh: bounded tag creation script
 docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md: post-tag verification receipt template
+docs/tag_creation_script_usage_phase3_pre_release_hygiene.md: tag creation script usage note
+docs/tag_creation_script_usage_phase3_pre_release_hygiene_ci.md: bounded CI ledger for the usage note
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
+```
+
+Observed tag creation script usage note CI:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25840334487
+Audit job ID: 75924127830
+Build job ID: 75924137370
+Commit: 8843365e96743b1319e0995a089bd80edf659204
+Result: success
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+Generate Lake manifest: success
+lake build: success
 ```
 
 Tag candidate receipt:
@@ -205,6 +223,7 @@ version-tag source-tree review refresh: CI green documentation-only surface; no 
 tag-candidate receipt: CI green documentation-only surface; no tag created
 manual tag creation receipt: CI green documentation-only surface; no tag created by connected tool
 tag creation script: present; no tag created by this commit
+tag creation script usage note: CI green documentation-only surface; no tag created
 post-tag verification template: present; template only
 KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 R1--R7 theorem completions: not claimed
@@ -212,4 +231,4 @@ final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: observe the tag creation script and post-tag verification template through CI, then record the result in a bounded ledger entry if the workflow is green.
+Next priority: create the prepared bounded tag manually or with a GitHub surface that supports tag refs; after creation, add a post-tag verification receipt confirming the tag resolves to d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b.
