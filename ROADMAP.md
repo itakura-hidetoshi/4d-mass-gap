@@ -150,6 +150,9 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 - [x] Record tag creation tracking issue receipt
 - [x] Observe tag creation tracking issue receipt main CI green
 - [x] Record tag creation tracking issue receipt CI success in ledger
+- [x] Add post-tag verification automation plan without creating a tag
+- [ ] Observe post-tag verification automation plan main CI green
+- [ ] Record post-tag verification automation plan CI success in ledger
 - [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
@@ -157,7 +160,7 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have been observed CI green; the version-tag source-tree review refresh has been observed CI green; the bounded tag-candidate receipt has been observed CI green; the manual tag creation receipt has been observed CI green; the tag creation script usage note has been observed CI green; and tag creation tracking issue receipt has also been observed CI green without creating a tag.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have been observed CI green; the version-tag source-tree review refresh has been observed CI green; the bounded tag-candidate receipt has been observed CI green; the manual tag creation receipt has been observed CI green; the tag creation script usage note has been observed CI green; tag creation tracking issue receipt has been observed CI green; and a post-tag verification automation plan has now been prepared without creating a tag.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -178,6 +181,7 @@ docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md: manual 
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for the manual tag creation receipt
 scripts/create_phase3_pre_release_hygiene_tag.sh: bounded tag creation script
 docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md: post-tag verification receipt template
+docs/post_tag_verification_automation_plan_phase3_pre_release_hygiene.md: post-tag verification automation plan
 docs/tag_creation_script_usage_phase3_pre_release_hygiene.md: tag creation script usage note
 docs/tag_creation_script_usage_phase3_pre_release_hygiene_ci.md: bounded CI ledger for the usage note
 docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md: tag creation tracking issue receipt
@@ -185,43 +189,11 @@ docs/tag_creation_tracking_issue_phase3_pre_release_hygiene_ci.md: bounded CI le
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
-Observed tag creation tracking issue receipt CI:
+Post-tag verification expected result:
 
 ```text
-Workflow: Lean Direct Elan CI
-Run ID: 25841794108
-Audit job ID: 75928479755
-Build job ID: 75928495031
-Commit: b524567402455a5f6197fd047f3062b27ffe6b38
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-Tag creation tracking issue:
-
-```text
-Issue: #9
-Title: Create phase3 pre-release hygiene tag and post-tag verification receipt
-URL: https://github.com/itakura-hidetoshi/4d-mass-gap/issues/9
-Status at creation: open
-```
-
-Tag candidate receipt:
-
-```text
-Tag candidate: phase3-pre-release-hygiene-ci-green
-Target commit: d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b
-Tag created: no
-```
-
-Manual tag command recorded:
-
-```bash
-git tag -a phase3-pre-release-hygiene-ci-green d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b -m "Phase 3 pre-release hygiene CI green"
-git push origin phase3-pre-release-hygiene-ci-green
+Tag: phase3-pre-release-hygiene-ci-green
+Expected target commit: d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b
 ```
 
 Current invariant:
@@ -241,10 +213,11 @@ tag creation script: present; no tag created by this commit
 tag creation script usage note: CI green documentation-only surface; no tag created
 tag creation tracking issue: CI green documentation-only surface; open (#9); no tag created by connected tool
 post-tag verification template: present; template only
+post-tag verification automation plan: prepared documentation-only surface; no tag created
 KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: create the prepared bounded tag manually or with a GitHub surface that supports tag refs; after creation, add a post-tag verification receipt confirming the tag resolves to d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b.
+Next priority: observe the post-tag verification automation plan through CI, then record the result in a bounded ledger entry if the workflow is green.
