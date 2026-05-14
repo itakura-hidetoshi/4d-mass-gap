@@ -4,3 +4,4 @@ import MGAP4D.Constructive.PlaquetteWitness
 import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Constructive.ObservableSpectralWeightBridge
 import MGAP4D.Constructive.ObservableSpectralWeightPreReleaseBridge
+import MGAP4D.Constructive.ObservableSpectralWeightClosure
