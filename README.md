@@ -147,19 +147,19 @@ External audit note appendix template: CI green
 Version tag readiness notes: CI green, documentation-only, tag not created
 Version-tag source-tree review refresh: CI green, documentation-only, tag not created
 Tag candidate receipt: CI green, documentation-only, tag not created
-Manual tag creation receipt: prepared, tag not created by tool
+Manual tag creation receipt: CI green, documentation-only, tag not created by tool
 KuuOS reference bridge: present
 ```
 
 ## Latest CI confirmation
 
 ```text
-Tag candidate receipt CI
+Manual tag creation receipt CI
 Workflow: Lean Direct Elan CI
-Run ID: 25832461393
-Audit job ID: 75900261493
-Build job ID: 75900277013
-Commit: 395fda752f3c6d9011be3a740a9f97c404bd3740
+Run ID: 25839102834
+Audit job ID: 75920359384
+Build job ID: 75920372371
+Commit: 85b110237d25e48904071b8846f0298bf964949c
 Result: success
 Audit metadata and Lean source: success
 Build Lean project via direct elan: success
@@ -170,6 +170,7 @@ lake build: success
 CI ledger:
 
 ```text
+docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md
 docs/version_tag_source_tree_review_refresh_ci.md
 docs/version_tag_readiness_notes_ci.md
@@ -195,11 +196,11 @@ Tag created by this receipt: no
 Branch substitute created: no
 ```
 
-Recent documentation commit:
+Recent CI ledger commit:
 
 ```text
-d001ce391bb234bd20ffd1fa488e370305d9288c
-add manual tag creation receipt for phase3 pre-release hygiene
+68ca02f4863de5eeefe9eea4c13949e7afe3adbb
+record manual tag creation receipt CI
 ```
 
 ## Entrypoint and global gate structure
@@ -219,6 +220,7 @@ docs/version_tag_source_tree_review_refresh.md: documentation-only source-tree r
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md: documentation-only tag-candidate receipt, no tag created
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for tag-candidate receipt, no tag created
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md: manual tag creation receipt, no tag created by tool
+docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for manual tag creation receipt, no tag created
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
 ```
 
@@ -245,6 +247,7 @@ docs/version_tag_source_tree_review_refresh_ci.md
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md
 docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md
+docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md
 docs/kuuos_reference_bridge.md
 MGAP4D/Phase3ReleaseGate.lean
 MGAP4D/EntrypointNamingConvention.lean
@@ -307,7 +310,7 @@ scripts/                 Local and CI audit scripts
 - Version tag readiness notes: CI green documentation-only surface; no tag created
 - Version-tag source-tree review refresh: CI green documentation-only surface; no tag created
 - Tag candidate receipt: CI green documentation-only surface; no tag created
-- Manual tag creation receipt: prepared; tag not created by connected tool
+- Manual tag creation receipt: CI green documentation-only surface; tag not created by connected tool
 - R1--R7 theorem-candidate milestones: recorded
 - R3--R7 hardening pass series: CI green
 - R1--R7 proof-obligation tightening closures: CI green
