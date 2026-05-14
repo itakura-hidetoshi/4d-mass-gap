@@ -5,3 +5,4 @@ import MGAP4D.Hamiltonian.SpectralNormalizationBridge
 import MGAP4D.Hamiltonian.NormalizationPreReleaseBridge
 import MGAP4D.Hamiltonian.EigenWitness3320
 import MGAP4D.Hamiltonian.OperatorBody
+import MGAP4D.Hamiltonian.EigenvectorConstruction
