@@ -45,6 +45,7 @@ import MGAP4D.Phase3ReleaseGate
 import MGAP4D.SpectralCoreReleaseBridge
 import MGAP4D.SpectralPhase3Spine
 import MGAP4D.SpectralReplayReadiness
+import MGAP4D.SpectralReleaseReadinessClosure
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
