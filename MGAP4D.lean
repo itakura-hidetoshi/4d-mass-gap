@@ -42,6 +42,7 @@ import MGAP4D.PostHardeningPassClosure
 import MGAP4D.PostHardeningPassTighteningSegmentSelection
 import MGAP4D.R3R7ProofObligationTighteningClosureSeriesReview
 import MGAP4D.Phase3ReleaseGate
+import MGAP4D.SpectralCoreReleaseBridge
 import MGAP4D.OperatorAPI
 import MGAP4D.R1.Concrete
 import MGAP4D.R1.Theorem
