@@ -3,6 +3,7 @@ import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Release.V16
 import MGAP4D.SpectralFinalReleaseHold
 import MGAP4D.SpectralPublicBoundaryLock
+import MGAP4D.SpectralPreReleaseCheckpoint
 
 namespace MGAP4D
 
@@ -56,5 +57,15 @@ theorem final_spine_spectral_public_boundary_locked :
 theorem final_spine_spectral_public_boundary_lock_ready :
     spectral3320PublicBoundaryLock.ready := by
   exact spectral3320_public_boundary_lock_ready
+
+/-- The spectral pre-release checkpoint is ready for review and replay. -/
+theorem final_spine_spectral_pre_release_checkpoint_ready :
+    spectral3320PreReleaseCheckpoint.ready := by
+  exact spectral3320_pre_release_checkpoint_ready
+
+/-- The spectral pre-release checkpoint keeps the public boundary locked. -/
+theorem final_spine_spectral_pre_release_checkpoint_boundary_locked :
+    spectral3320PreReleaseCheckpoint.publicBoundaryLocked := by
+  exact spectral3320_pre_release_checkpoint_boundary_locked
 
 end MGAP4D
