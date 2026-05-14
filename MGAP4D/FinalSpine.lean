@@ -1,6 +1,7 @@
 import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Constructive.ObservableSpectralWeightClosure
+import MGAP4D.PhysicalWitnessClosure
 import MGAP4D.Release.V16
 import MGAP4D.SpectralFinalReleaseHold
 import MGAP4D.SpectralPublicBoundaryLock
@@ -100,5 +101,37 @@ theorem final_spine_observable_spectral_weight_witness_not_vacuum :
     Constructive.observableSpectralWeight3320Closure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠
       Spectral.SpectralSector.vacuum := by
   exact Constructive.observable_spectral_weight_3320_closure_witness_not_vacuum
+
+/-- The aggregate physical witness closure is ready at the final spine. -/
+theorem final_spine_physical_witness_closure_ready :
+    physicalWitness3320Closure.ready := by
+  exact physical_witness_3320_closure_ready
+
+/-- The final spine sees the physical normalized gap value `33/20`. -/
+theorem final_spine_physical_witness_normalized_gap_value :
+    physicalWitness3320Closure.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value = 33 / 20 := by
+  exact physical_witness_3320_normalized_gap_value
+
+/-- The final spine sees the physical witness observable `A_pg`. -/
+theorem final_spine_physical_witness_observable_Apg :
+    physicalWitness3320Closure.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg := by
+  exact physical_witness_3320_observable_is_Apg
+
+/-- The final spine sees positive observable mass in the physical witness closure. -/
+theorem final_spine_physical_witness_positive_mass :
+    physicalWitness3320Closure.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true := by
+  exact physical_witness_3320_positive_mass
+
+/-- The final spine sees that the physical witness is orthogonal, not vacuum. -/
+theorem final_spine_physical_witness_orthogonal :
+    physicalWitness3320Closure.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector =
+      Spectral.SpectralSector.orthogonal := by
+  exact physical_witness_3320_witness_orthogonal
+
+/-- The final spine sees that the physical witness is not vacuum. -/
+theorem final_spine_physical_witness_not_vacuum :
+    physicalWitness3320Closure.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠
+      Spectral.SpectralSector.vacuum := by
+  exact physical_witness_3320_witness_not_vacuum
 
 end MGAP4D
