@@ -24,6 +24,7 @@ import MGAP4D.ReplacementPass2
 import MGAP4D.ReplacementPass2Closure
 import MGAP4D.MathlibAdoptionGate
 import MGAP4D.ExactGapMathlibAdoptionBridge
+import MGAP4D.ExactGapResidualResolutionClosure
 import MGAP4D.MathlibAdoptionGate.R5SpectrumRequest
 import MGAP4D.MathlibAdoptionGate.R6IntervalRequest
 import MGAP4D.MathlibAdoptionGate.R7AtomExactRequest
