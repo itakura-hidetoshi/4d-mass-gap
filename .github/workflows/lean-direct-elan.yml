@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - mathlib-adoption/exact-gap-analytic
   pull_request:
     branches:
       - main
