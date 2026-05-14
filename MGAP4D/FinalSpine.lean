@@ -2,6 +2,7 @@ import MGAP4D.Gap3320
 import MGAP4D.Constructive.FinalTheorem
 import MGAP4D.Constructive.ObservableSpectralWeightClosure
 import MGAP4D.PhysicalWitnessClosure
+import MGAP4D.PhysicalWitnessPreReleaseBridge
 import MGAP4D.Release.V16
 import MGAP4D.SpectralFinalReleaseHold
 import MGAP4D.SpectralPublicBoundaryLock
@@ -133,5 +134,25 @@ theorem final_spine_physical_witness_not_vacuum :
     physicalWitness3320Closure.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠
       Spectral.SpectralSector.vacuum := by
   exact physical_witness_3320_witness_not_vacuum
+
+/-- The physical witness pre-release bridge is ready at the final spine. -/
+theorem final_spine_physical_witness_pre_release_bridge_ready :
+    physicalWitness3320PreReleaseBridge.ready := by
+  exact physical_witness_3320_pre_release_bridge_ready
+
+/-- The final spine sees the physical witness/pre-release shared physical value. -/
+theorem final_spine_physical_witness_pre_release_physical_value :
+    physicalWitness3320PreReleaseBridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value = 33 / 20 := by
+  exact physical_witness_3320_pre_release_bridge_physical_value
+
+/-- The final spine sees the physical witness/pre-release shared observable value. -/
+theorem final_spine_physical_witness_pre_release_observable_value :
+    physicalWitness3320PreReleaseBridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value = 33 / 20 := by
+  exact physical_witness_3320_pre_release_bridge_observable_value
+
+/-- The final spine sees that the physical witness pre-release bridge keeps the public boundary locked. -/
+theorem final_spine_physical_witness_pre_release_public_boundary_locked :
+    physicalWitness3320PreReleaseBridge.checkpoint.publicBoundaryLocked := by
+  exact physical_witness_3320_pre_release_bridge_public_boundary_locked
 
 end MGAP4D
