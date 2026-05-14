@@ -138,6 +138,9 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 - [x] Prepare bounded tag-candidate receipt without creating a tag
 - [x] Observe bounded tag-candidate receipt main CI green
 - [x] Record bounded tag-candidate receipt CI success in ledger
+- [x] Prepare manual tag creation receipt without creating a tag
+- [ ] Observe manual tag creation receipt main CI green
+- [ ] Record manual tag creation receipt CI success in ledger
 - [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
@@ -145,7 +148,7 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 
 ## Current priority
 
-The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have been observed CI green; the version-tag source-tree review refresh has been observed CI green; and the bounded tag-candidate receipt has also been observed CI green without creating a tag.
+The repository has reached a **spectral gap formalization CI green checkpoint** on `main`; the bounded external audit note appendix template has been observed CI green; version-tag readiness notes have been observed CI green; the version-tag source-tree review refresh has been observed CI green; the bounded tag-candidate receipt has been observed CI green; and a manual tag creation receipt has now been prepared without creating a tag.
 
 This checkpoint makes the normalized spectral value and witness surface visible inside Lean while preserving the review-gated theorem boundary:
 
@@ -162,22 +165,8 @@ docs/version_tag_source_tree_review_refresh.md: documentation-only source-tree r
 docs/version_tag_source_tree_review_refresh_ci.md: bounded CI ledger for the source-tree review refresh
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md: bounded tag-candidate receipt; no tag created
 docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for the tag-candidate receipt
+docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md: manual tag creation receipt; tag not created by connected tool
 docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
-```
-
-Observed tag-candidate receipt CI:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25832461393
-Audit job ID: 75900261493
-Build job ID: 75900277013
-Commit: 395fda752f3c6d9011be3a740a9f97c404bd3740
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
 ```
 
 Tag candidate receipt:
@@ -186,6 +175,13 @@ Tag candidate receipt:
 Tag candidate: phase3-pre-release-hygiene-ci-green
 Target commit: d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b
 Tag created: no
+```
+
+Manual tag command recorded:
+
+```bash
+git tag -a phase3-pre-release-hygiene-ci-green d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b -m "Phase 3 pre-release hygiene CI green"
+git push origin phase3-pre-release-hygiene-ci-green
 ```
 
 Current invariant:
@@ -200,10 +196,11 @@ external audit note appendix template: CI green documentation-only surface
 version-tag readiness notes: CI green documentation-only surface; no tag created
 version-tag source-tree review refresh: CI green documentation-only surface; no tag created
 tag-candidate receipt: CI green documentation-only surface; no tag created
+manual tag creation receipt: prepared documentation-only surface; no tag created by connected tool
 KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
 R1--R7 theorem completions: not claimed
 final gap theorem release: not unlocked
 public theorem boundary: held
 ```
 
-Next priority: create the prepared bounded tag only if the tag target remains exactly d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b and the theorem boundary is preserved.
+Next priority: observe the manual tag creation receipt through CI, then record the result in a bounded ledger entry if the workflow is green.
