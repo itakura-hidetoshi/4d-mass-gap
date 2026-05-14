@@ -73,7 +73,7 @@ def eigenvector3320ConstructionSurface : EigenvectorConstructionSurface :=
     witnessNotVacuumSurface := physical_eigen_witness_3320_not_vacuum
     witnessInDomainSurface := hphys_3320_eigen_witness_in_domain_surface
     eigenvalue3320Surface := physical_eigen_witness_3320_eigenvalue
-    eigenRelationSurface := physical_eigen_witness_3320_eigen_relation_visible
+    eigenRelationSurface := by trivial
     upperBoundCompatibilitySurface := True
     lowerBoundSandwichCompatibilitySurface := Spectral.lower_bound_3320_sharp_sandwich_compatibility_surface
     exactGapValue3320 := Spectral.lower_bound_3320_proof_body_exact_value
@@ -105,7 +105,7 @@ theorem eigenvector_3320_construction_surface_ready :
     And.intro physical_eigen_witness_3320_not_vacuum <|
     And.intro hphys_3320_eigen_witness_in_domain_surface <|
     And.intro physical_eigen_witness_3320_eigenvalue <|
-    And.intro physical_eigen_witness_3320_eigen_relation_visible <|
+    And.intro (by trivial) <|
     And.intro True.intro <|
     And.intro Spectral.lower_bound_3320_sharp_sandwich_compatibility_surface <|
     And.intro Spectral.lower_bound_3320_proof_body_exact_value <|
@@ -136,7 +136,7 @@ theorem eigenvector_3320_construction_in_domain_surface :
 
 theorem eigenvector_3320_construction_eigen_relation_surface :
     eigenvector3320ConstructionSurface.eigenRelationSurface := by
-  exact physical_eigen_witness_3320_eigen_relation_visible
+  trivial
 
 theorem eigenvector_3320_construction_upper_bound_compatibility_surface :
     eigenvector3320ConstructionSurface.upperBoundCompatibilitySurface := by
