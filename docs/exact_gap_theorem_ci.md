@@ -1,0 +1,52 @@
+# Exact gap theorem CI
+
+Run ID: 25861995886
+Audit job ID: 75994007920
+Build job ID: 75994022507
+Commit: 67535ad6f4ca1ba62f1d186a641218c4c5a5ead8
+Result: success
+
+Status: CI green.
+
+Confirmed jobs:
+
+```text
+Audit metadata and Lean source: success
+Build Lean project via direct elan: success
+```
+
+Build job confirmed steps:
+
+```text
+Checkout repository: success
+Show Lean and Lake versions: success
+Generate Lake manifest: success
+Build Lean project with lake build: success
+```
+
+Observed toolchain:
+
+```text
+Lean: 4.30.0-rc2
+Lake: 5.0.0-src+3dc1a08
+```
+
+Artifacts checked by this CI:
+
+```text
+MGAP4D/Spectral/ExactGapTheorem.lean
+MGAP4D/Spectral.lean
+MGAP4D/ExactGapFinalSpineBridge.lean
+MGAP4D.lean
+docs/exact_gap_theorem.md
+```
+
+Boundary:
+
+```text
+pre-Mathlib structural exact-gap theorem surface only
+exact-gap theorem surface visible
+final theorem release not opened
+Mathlib on main not introduced
+public theorem boundary held
+```
