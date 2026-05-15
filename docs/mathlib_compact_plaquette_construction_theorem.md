@@ -1,0 +1,62 @@
+# Mathlib compact plaquette construction theorem body
+
+Branch: main
+
+This note records the sixth post-interface theorem-body step: abstract compactly supported smeared centered plaquette construction.
+
+## Lean artifacts
+
+```text
+MGAP4D/MathlibAnalytic/CompactPlaquetteConstructionTheorem.lean
+MGAP4D/MathlibAnalytic.lean
+```
+
+## Added theorem body
+
+```text
+MathlibAnalytic.CompactPlaquetteConstructionTheoremData
+MathlibAnalytic.CompactPlaquetteConstructionTheoremData.ready
+MathlibAnalytic.compact_plaquette_constructed_compact_support
+MathlibAnalytic.compact_plaquette_constructed_centered
+MathlibAnalytic.compact_plaquette_constructed_smeared
+MathlibAnalytic.compact_plaquette_chosen_observable_def
+MathlibAnalytic.compact_plaquette_compatible_with_observable_atom_choice
+MathlibAnalytic.compact_plaquette_construction_certificate
+MathlibAnalytic.PrototypePlaquette
+MathlibAnalytic.prototypePlaquette
+MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData
+MathlibAnalytic.singleton_compact_plaquette_construction_theorem_data_ready
+MathlibAnalytic.singleton_compact_plaquette_constructed_compact_support
+MathlibAnalytic.singleton_compact_plaquette_constructed_centered
+MathlibAnalytic.singleton_compact_plaquette_constructed_smeared
+MathlibAnalytic.singleton_compact_plaquette_chosen_observable_def
+MathlibAnalytic.CompactPlaquetteConstructionTheoremReviewSurface
+MathlibAnalytic.CompactPlaquetteConstructionTheoremReviewSurface.ready
+MathlibAnalytic.compactPlaquetteConstructionTheoremReviewSurface
+MathlibAnalytic.compact_plaquette_construction_theorem_review_surface_ready
+MathlibAnalytic.compact_plaquette_construction_theorem_review_surface_final_release_held
+```
+
+## Meaning
+
+```text
+observable atom theorem body is linked to compact plaquette construction body
+plaquette carrier is explicit
+construction map from plaquette to observable is explicit
+chosen plaquette is explicit
+constructed observable has compact support
+constructed observable is centered
+constructed observable is smeared
+chosen observable is definitionally constructed from the chosen plaquette
+compact plaquette construction body is closed at abstract theorem-body level
+```
+
+## Boundary
+
+```text
+abstract compact plaquette construction theorem body only
+not yet concrete lattice-gauge plaquette construction
+not yet concrete operator-measure compatibility theorem
+not final theorem release
+public theorem boundary held
+```
