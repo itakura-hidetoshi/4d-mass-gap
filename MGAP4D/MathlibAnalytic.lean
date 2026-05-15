@@ -12,3 +12,4 @@ import MGAP4D.MathlibAnalytic.SpectralTheoremInterface
 import MGAP4D.MathlibAnalytic.PVMInterface
 import MGAP4D.MathlibAnalytic.ObservableAtomInterface
 import MGAP4D.MathlibAnalytic.ExactGapFullInterfaceClosure
+import MGAP4D.MathlibAnalytic.ExactGapPostInterfaceResidualMap
