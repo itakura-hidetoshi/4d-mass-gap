@@ -1,0 +1,32 @@
+name: Bridge Coherence CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  bridge-coherence:
+    name: Check bridge coherence
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check Lean forbidden tokens
+        run: python3 scripts/audit_lean_forbidden_tokens.py
+      - name: Check major theorem non-placeholder surface
+        run: python3 scripts/audit_major_theorem_nonplaceholder.py
+      - name: Check analytic bridge coherence
+        run: python3 scripts/audit_bridge_coherence.py
+      - name: Summarize Lean replay surface
+        run: python3 scripts/replay_summary.py
