@@ -16,3 +16,4 @@ import MGAP4D.MathlibAnalytic.ExactGapPostInterfaceResidualMap
 import MGAP4D.MathlibAnalytic.HilbertRayleighQuotientTheorem
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysTheorem
 import MGAP4D.MathlibAnalytic.SpectralTheoremTheorem
+import MGAP4D.MathlibAnalytic.PVMTheoremTheorem
