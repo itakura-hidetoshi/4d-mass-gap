@@ -19,3 +19,4 @@ import MGAP4D.MathlibAnalytic.SpectralTheoremTheorem
 import MGAP4D.MathlibAnalytic.PVMTheoremTheorem
 import MGAP4D.MathlibAnalytic.ObservableAtomTheoremTheorem
 import MGAP4D.MathlibAnalytic.CompactPlaquetteConstructionTheorem
+import MGAP4D.MathlibAnalytic.OperatorMeasureCompatibilityTheorem
