@@ -41,3 +41,4 @@ import MGAP4D.MathlibAnalytic.ContinuumSpectralTheoremSkeleton
 import MGAP4D.MathlibAnalytic.FinalTheoremReleaseSkeleton
 import MGAP4D.MathlibAnalytic.FinalTheoremReleaseClosure
 import MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndex
+import MGAP4D.MathlibAnalytic.FinalTheoremReleaseBundleManifest
