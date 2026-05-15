@@ -1,12 +1,12 @@
 # MGAP4D
 
-MGAP4D is a Lean 4 repository for developing and checking the proof architecture of a normalized 4D mass gap theorem.
+MGAP4D is a Lean 4 repository for developing, checking, and auditing the proof architecture of a normalized 4D mass gap theorem.
 
-The repository is organized as a GitHub-native Lean project. The active source tree, CI, documentation, theorem-surface checkpoints, and migration history live directly in this repository.
+This repository is GitHub-native: the active Lean source tree, CI, documentation, theorem-surface checkpoints, bridge audits, and boundary ledgers live directly in this repository.
 
 ## Repository role
 
-This repository is the canonical Lean proof repository for the 4D mass gap proof architecture.
+This repository is the canonical Lean proof repository for the MGAP4D normalized 4D mass gap proof architecture.
 
 KuuOS references this repository as a physics-facing bridge and public-core governance surface:
 
@@ -16,7 +16,286 @@ KuuOS reference repo: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open final theorem release.
+KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open final public theorem release.
+
+## Current theorem claim and boundary
+
+### Internal normalized theorem-body claim
+
+Inside the MGAP4D Lean proof architecture, the current theorem-body surface records the normalized exact spectral gap value
+
+```text
+exactGapValueReal = 33 / 20
+```
+
+The current repository state treats `33/20` as coming from the theorem-body closure, not from a packaging artifact, documentation artifact, CI ledger, manifest-only wrapper, or prototype-only release wrapper.
+
+This is recorded by:
+
+```text
+MGAP4D/MathlibAnalytic/ExactGapTheoremBodyClosure.lean
+MGAP4D/MathlibAnalytic/ExactValueTheoremBodyOrigin.lean
+docs/mathlib_exact_value_theorem_body_origin.md
+docs/mathlib_exact_value_theorem_body_origin_ci.md
+```
+
+The theorem-body origin chain explicitly carries:
+
+```text
+Hilbert Rayleigh quotient body
+self-adjoint H_phys body
+spectral theorem body
+PVM body
+observable atom body
+compact plaquette construction body
+operator-measure compatibility body
+observable spectral weight positivity
+PVM mass compatibility
+```
+
+### Physical Hamiltonian normalization
+
+The physical Hamiltonian normalization is read through an explicit reference energy scale `E0`:
+
+```text
+H_norm = H_phys / E0
+normalizedGap = physicalGap / E0
+physicalGap = E0 * normalizedGap
+```
+
+In MGAP4D internal normalized units:
+
+```text
+E0 = 1
+normalizedGap = exactGapValueReal = 33/20
+physicalGap = exactGapValueReal = 33/20
+```
+
+For dimensional interpretation:
+
+```text
+physicalGap_dimensional = E0 * (33/20)
+```
+
+This means `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
+
+Relevant files:
+
+```text
+MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
+docs/mathlib_physical_hamiltonian_normalization_bridge.md
+docs/mathlib_physical_hamiltonian_normalization_bridge_ci.md
+```
+
+### Public boundary
+
+The repository currently claims an internal, normalized, proof-architecture theorem-body surface with CI and bridge-audit support.
+
+It does **not** claim:
+
+```text
+external mathematical consensus
+independent peer-review completion
+Clay-style public final theorem acceptance
+a dimensional physical mass gap without choosing E0
+that CI ledgers replace mathematical proof review
+that bridge-coherence audit replaces Lean kernel checking
+```
+
+The public final theorem boundary remains review-gated pending independent replay and external audit.
+
+## Current active Lean roots
+
+```text
+MGAP4D.lean
+MGAP4D/MathlibAnalytic.lean
+```
+
+`MGAP4D.lean` is the top-level Lean import root.
+
+`MGAP4D/MathlibAnalytic.lean` is the internal analytic theorem-surface root. The name `MathlibAnalytic` records the analytic adoption/bridge layer; it does not by itself mean that `main` imports upstream Mathlib directly.
+
+## Main analytic chain
+
+The current analytic bridge chain is:
+
+```text
+Concrete Hilbert realization
+  -> Concrete H_phys / unbounded-operator realization
+  -> Physical unbounded-operator skeleton
+  -> Concrete Yang-Mills Hamiltonian skeleton
+  -> Spectral realization skeleton
+  -> Continuum spectral theorem skeleton
+  -> Final theorem release skeleton
+  -> Final theorem release closure
+  -> Final theorem release chain index
+  -> Final theorem release bundle manifest
+  -> Concrete residual closure
+  -> Physical Hamiltonian normalization bridge
+  -> Exact value theorem-body origin certificate
+```
+
+Key source files:
+
+```text
+MGAP4D/MathlibAnalytic/ConcreteHilbertRealizationTheorem.lean
+MGAP4D/MathlibAnalytic/ConcreteHPhysRealizationTheorem.lean
+MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean
+MGAP4D/MathlibAnalytic/ConcreteYangMillsHamiltonianSkeleton.lean
+MGAP4D/MathlibAnalytic/SpectralRealizationSkeleton.lean
+MGAP4D/MathlibAnalytic/ContinuumSpectralTheoremSkeleton.lean
+MGAP4D/MathlibAnalytic/FinalTheoremReleaseSkeleton.lean
+MGAP4D/MathlibAnalytic/FinalTheoremReleaseClosure.lean
+MGAP4D/MathlibAnalytic/FinalTheoremReleaseChainIndex.lean
+MGAP4D/MathlibAnalytic/FinalTheoremReleaseBundleManifest.lean
+MGAP4D/MathlibAnalytic/ConcreteResidualClosure.lean
+MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
+MGAP4D/MathlibAnalytic/ExactValueTheoremBodyOrigin.lean
+```
+
+## Concrete residuals now closed as internal surfaces
+
+The following residual surfaces are closed inside the current internal Lean architecture:
+
+```text
+concrete Hilbert realization
+concrete H_phys / unbounded-operator realization
+spectral measure / PVM exact-atom realization
+compact lattice-gauge plaquette observable construction
+operator-measure realization and compatibility
+physical Hamiltonian normalization bridge
+exact-value theorem-body origin certificate
+```
+
+Relevant CI/documentation ledgers:
+
+```text
+docs/mathlib_concrete_residual_closure.md
+docs/mathlib_concrete_residual_closure_ci.md
+docs/mathlib_physical_hamiltonian_normalization_bridge.md
+docs/mathlib_physical_hamiltonian_normalization_bridge_ci.md
+docs/mathlib_exact_value_theorem_body_origin.md
+docs/mathlib_exact_value_theorem_body_origin_ci.md
+```
+
+Boundary for these closures:
+
+```text
+internal concrete residual closure only
+theorem-body origin certificate only
+normalization bridge only
+external consensus is not claimed
+public theorem boundary is held
+```
+
+## CI and audit status
+
+### Lean Direct Elan CI
+
+Recent direct Lean CI confirmation:
+
+```text
+Workflow: Lean Direct Elan CI
+Run ID: 25945521468
+Audit job ID: 76272692295
+Build job ID: 76272703776
+Commit checked out by CI: f4837cc92af776036e7c15f4f1ab117cc1b11e77
+Result: success
+```
+
+Confirmed:
+
+```text
+Verify release manifest: success
+Audit Lean forbidden tokens: success
+Audit major theorem non-placeholder surface: success
+Summarize Lean replay surface: success
+Build Lean project via direct elan: success
+lake build: success
+```
+
+Forbidden-token audit:
+
+```text
+Lean files scanned: 447
+sorry: 0
+admit: 0
+axiom: 0
+constant: 0
+```
+
+Major theorem non-placeholder audit:
+
+```text
+Major theorem specs audited: 12
+Major theorem non-placeholder audit passed
+```
+
+### Bridge Coherence CI
+
+Dedicated bridge coherence confirmation:
+
+```text
+Workflow: Bridge Coherence CI
+Run ID: 25946061297
+Job ID: 76274304501
+Job name: Check bridge coherence
+Commit checked out by CI: fc02308553be06dcb7843f509ccf41bf71cc5e35
+Result: success
+```
+
+Confirmed:
+
+```text
+Check Lean forbidden tokens: success
+Check major theorem non-placeholder surface: success
+Check analytic bridge coherence: success
+Summarize Lean replay surface: success
+```
+
+Bridge coherence audit:
+
+```text
+Bridge files audited: 7
+Ordered import edges audited: 4
+Bridge anchors audited: Hilbert, H_phys, Yang-Mills, spectral/PVM, continuum, normalization
+Value anchors audited: exact_value_eq_3320 / exactGapValueReal
+Boundary anchors audited: publicBoundaryHeld and open-boundary markers
+Bridge coherence audit passed
+```
+
+Relevant ledgers:
+
+```text
+docs/mathlib_major_theorem_nonplaceholder_audit.md
+docs/mathlib_major_theorem_nonplaceholder_audit_ci.md
+docs/mathlib_bridge_coherence_audit.md
+docs/mathlib_bridge_coherence_ci.md
+```
+
+## What the audits mean
+
+The current automated audits check that:
+
+```text
+major theorem surfaces do not use sorry/admit/axiom/constant
+major theorem surfaces are not trivial True-only statements
+33/20 theorem-body origin is checked as a non-placeholder statement
+operator-measure/PVM compatibility is checked as a non-placeholder statement
+Hamiltonian normalization bridge is checked as a non-placeholder statement
+Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge order is mechanically audited
+exact value preservation anchors are mechanically audited
+public boundary markers are mechanically audited
+```
+
+The audits are syntactic/contract checks plus Lean build confirmation. They complement, but do not replace:
+
+```text
+Lean kernel checking through lake build
+theorem-body proof review
+independent replay
+external mathematical peer review
+```
 
 ## Citation and Zenodo record
 
@@ -34,276 +313,7 @@ Repository citation metadata: CITATION.cff
 Repository receipt: docs/zenodo_record_20181046.md
 ```
 
-This Zenodo record is a proof-architecture and external-audit preparation report. It does not open final theorem release; the public theorem boundary remains review-gated.
-
-## Current active Lean root
-
-```text
-MGAP4D.lean
-```
-
-The root imports the Phase 3 proof-hardening architecture, including the R1--R7 theorem-candidate surfaces, scoped Mathlib dry-run gates, post-Mathlib-hold theorem-route hardening, R1--R7 proof-obligation tightening closures, spectral gap formalization checkpoint, and the global Phase 3 release/replay/source-tree/external-audit gate root.
-
-## Phase 3 status
-
-The current `main` branch has reached a **spectral gap formalization CI green checkpoint** through the global Phase3ReleaseGate root.
-
-The proof-hardening route has advanced through:
-
-```text
-TheoremSurface
-  -> Replacement pass 1
-  -> Replacement pass 2
-  -> MathlibAdoptionGate
-  -> R1--R7 theorem-candidate milestones
-  -> Phase3CandidateClosure
-  -> Phase3CIConfirmationClosure
-  -> PreMathlibClosure
-  -> R1--R7 scoped Mathlib dry-run series
-  -> Mathlib main-adoption hold decision
-  -> PostMathlibHoldTheoremHardening
-  -> R3--R7 route-specific hardening
-  -> R3--R7 theorem-route queue
-  -> R3--R7 hardening pass series review
-  -> PostHardeningPassClosure
-  -> R3--R7 proof-obligation tightening closures
-  -> R3--R7 proof-obligation tightening closure series review
-  -> R1/R2 proof-obligation tightening bridge
-  -> R1 Hilbert proof-obligation tightening closure
-  -> R2 restriction proof-obligation tightening closure
-  -> R1--R7 proof-obligation tightening closure series review
-  -> PostR1R7ProofObligationTighteningClosure
-  -> FinalTheoremReleaseGatePreparationRefresh
-  -> IndependentReplayGatePreparation
-  -> IndependentReplayProtocol
-  -> IndependentReplayProtocolGlobalScopeCorrection
-  -> SourceTreeReviewGate
-  -> SourceTreeReviewGateFinalSync
-  -> ExternalAuditNoteGate
-  -> EntrypointNamingConvention
-  -> EntrypointNamingConventionFinalSync
-  -> SpectralGapFormalizationGate
-  -> Phase3ReleaseGate
-```
-
-Important invariant:
-
-```text
-main remains pre-Mathlib
-lakefile.lean is not modified for Mathlib
-No active main-branch Lean module imports Mathlib
-Mathlib main-adoption decision remains hold_main_adoption
-R1--R7 theorem completions are not claimed
-Final gap theorem release is not unlocked
-Public theorem boundary remains review-gated
-Spectral gap formalization is a structural checkpoint, not final theorem release
-```
-
-## Spectral gap formalization checkpoint
-
-The current spectral checkpoint records a pre-Mathlib, route-neutral formalization surface for the normalized spectral gap value.
-
-```text
-MGAP4D/Spectral.lean: spectral module entrypoint
-MGAP4D/Spectral/GapFormalization.lean: structural spectral gap formalization checkpoint
-MGAP4D/SpectralGapFormalizationGate.lean: Phase 3 spectral gap formalization gate
-MGAP4D/Phase3ReleaseGate.lean: global Phase 3 gate including the spectral checkpoint
-```
-
-The checkpoint includes:
-
-```text
-SpectralSector.vacuum
-SpectralSector.orthogonal
-SpectralGapFormalization
-SpectralGapFormalization.ready
-spectralGap3320Formalization
-spectral_gap_formalization_pack
-spectral_gap_3320_formalization_value
-SpectralGapFormalizationGate
-spectral_gap_formalization_gate_pack
-```
-
-Current formalized normalized value surface:
-
-```text
-normalizedGapValue.value = 33 / 20
-```
-
-Boundary condition:
-
-```text
-The spectral checkpoint makes the 33/20 normalized value and witness surface visible inside Lean.
-It does not claim R1--R7 theorem completion.
-It does not unlock the final gap theorem release.
-It does not introduce Mathlib on main.
-It preserves the public theorem boundary for independent replay and external audit.
-```
-
-## R1--R7 proof-obligation tightening and global gate status
-
-```text
-R1 Hilbert proof-obligation tightening closure: CI green
-R2 restriction proof-obligation tightening closure: CI green
-R3 proof-obligation tightening closure: CI green
-R4 proof-obligation tightening closure: CI green
-R5 proof-obligation tightening closure: CI green
-R6 proof-obligation tightening closure: CI green
-R7 proof-obligation tightening closure: CI green
-R1--R7 proof-obligation tightening closure series review: CI green
-Post-R1--R7 proof-obligation tightening closure: CI green
-Final theorem release gate preparation refresh: CI green
-Independent replay gate preparation: CI green
-Independent replay protocol: CI green
-Independent replay protocol global R1--R7 scope correction: CI green
-Global Phase3ReleaseGate root: CI green
-Source-tree review gate final sync: CI green
-External audit note gate: CI green
-Entrypoint naming convention final sync: CI green
-Spectral gap formalization: CI green
-External audit note appendix template: CI green
-Version tag readiness notes: CI green, documentation-only, tag not created
-Version-tag source-tree review refresh: CI green, documentation-only, tag not created
-Tag candidate receipt: CI green, documentation-only, tag not created
-Manual tag creation receipt: CI green, documentation-only, tag not created by tool
-Tag creation script: present, no tag created by this commit
-Tag creation script usage note: CI green, documentation-only, tag not created
-Tag creation tracking issue: open (#9), documentation-only
-Post-tag verification receipt template: present, template only
-KuuOS reference bridge: present
-```
-
-## Latest CI confirmation
-
-```text
-Tag creation script usage CI
-Workflow: Lean Direct Elan CI
-Run ID: 25840334487
-Audit job ID: 75924127830
-Build job ID: 75924137370
-Commit: 8843365e96743b1319e0995a089bd80edf659204
-Result: success
-Audit metadata and Lean source: success
-Build Lean project via direct elan: success
-Generate Lake manifest: success
-lake build: success
-```
-
-CI ledger:
-
-```text
-docs/tag_creation_script_usage_phase3_pre_release_hygiene_ci.md
-docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md
-docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md
-docs/version_tag_source_tree_review_refresh_ci.md
-docs/version_tag_readiness_notes_ci.md
-docs/external_audit_note_appendix_template_ci.md
-docs/spectral_gap_formalization_ci.md
-```
-
-Tag candidate receipt:
-
-```text
-docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md
-Tag candidate: phase3-pre-release-hygiene-ci-green
-Target commit: d80c73f4daaf2e95ab193b6ae63d6f20b86e8e1b
-Tag created: no
-```
-
-Manual tag creation receipt and usage note:
-
-```text
-docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md
-docs/tag_creation_script_usage_phase3_pre_release_hygiene.md
-Candidate ref check: no commit found for phase3-pre-release-hygiene-ci-green
-Tag created by connected tool: no
-Branch substitute created: no
-```
-
-Tag creation tracking issue:
-
-```text
-Issue: #9
-Title: Create phase3 pre-release hygiene tag and post-tag verification receipt
-URL: https://github.com/itakura-hidetoshi/4d-mass-gap/issues/9
-Tracking receipt: docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md
-```
-
-Tag creation and post-tag verification surfaces:
-
-```text
-scripts/create_phase3_pre_release_hygiene_tag.sh
-docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md
-```
-
-Recent tracking commit:
-
-```text
-4945e152484a582fa3eab1c945b24dffe96167f1
-record phase3 tag creation tracking issue
-```
-
-## Entrypoint and global gate structure
-
-```text
-MGAP4D.lean: global top-level Lean root
-MGAP4D/Phase3ReleaseGate.lean: global Phase 3 release/replay/source-tree/external-audit gate root
-MGAP4D/Spectral.lean: spectral module entrypoint
-MGAP4D/Spectral/GapFormalization.lean: spectral gap formalization checkpoint
-MGAP4D/SpectralGapFormalizationGate.lean: spectral gap formalization gate included by Phase3ReleaseGate
-MGAP4D/R2/Theorem.lean: R2 restriction route entrypoint
-IndependentReplayProtocol: R1--R7 global replay protocol
-ExternalAuditNoteGate: external notes are review surfaces, not theorem completion or release authority
-docs/external_audit_note_appendix_template.md: append-only external audit note template
-docs/version_tag_readiness_notes.md: documentation-only version-tag readiness surface, no tag created
-docs/version_tag_source_tree_review_refresh.md: documentation-only source-tree review refresh for tag readiness, no tag created
-docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md: documentation-only tag-candidate receipt, no tag created
-docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for tag-candidate receipt, no tag created
-docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md: manual tag creation receipt, no tag created by tool
-docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md: bounded CI ledger for manual tag creation receipt, no tag created
-docs/tag_creation_script_usage_phase3_pre_release_hygiene.md: tag creation script usage note, no tag created
-docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md: tag creation tracking issue receipt, no tag created
-scripts/create_phase3_pre_release_hygiene_tag.sh: bounded tag creation script
-docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md: post-tag verification template
-docs/kuuos_reference_bridge.md: reference bridge from KuuOS to this canonical proof repository
-```
-
-## Mathlib dry-run policy
-
-Mathlib adoption may be tested only through scoped dry-run branches.
-
-Dry-run success is accepted as contact-surface buildability only. It is not theorem completion and not permission to introduce Mathlib into `main`.
-
-Relevant documents and modules include:
-
-```text
-docs/phase3_mathlib_main_adoption_hold_decision.md
-docs/phase3_entrypoint_naming_convention.md
-docs/phase3_entrypoint_naming_convention_final_sync.md
-docs/entrypoint_naming_convention_final_sync_ci.md
-docs/spectral_gap_formalization_ci.md
-docs/external_audit_note_appendix_template.md
-docs/external_audit_note_appendix_template_ci.md
-docs/version_tag_readiness_notes.md
-docs/version_tag_readiness_notes_ci.md
-docs/version_tag_source_tree_review_refresh.md
-docs/version_tag_source_tree_review_refresh_ci.md
-docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green.md
-docs/tag_candidate_receipt_phase3_pre_release_hygiene_ci_green_ci.md
-docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green.md
-docs/tag_creation_manual_receipt_phase3_pre_release_hygiene_ci_green_ci.md
-docs/tag_creation_script_usage_phase3_pre_release_hygiene.md
-docs/tag_creation_script_usage_phase3_pre_release_hygiene_ci.md
-docs/tag_creation_tracking_issue_phase3_pre_release_hygiene.md
-docs/post_tag_verification_receipt_phase3_pre_release_hygiene_ci_green_template.md
-docs/kuuos_reference_bridge.md
-MGAP4D/Phase3ReleaseGate.lean
-MGAP4D/EntrypointNamingConvention.lean
-MGAP4D/EntrypointNamingConventionFinalSync.lean
-MGAP4D/Spectral.lean
-MGAP4D/Spectral/GapFormalization.lean
-MGAP4D/SpectralGapFormalizationGate.lean
-```
+This Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.
 
 ## Build
 
@@ -312,26 +322,27 @@ lake update
 lake build
 ```
 
-For the full local audit sequence:
+For the local audit sequence:
 
 ```bash
 bash scripts/check.sh
 ```
 
-The check script runs:
-
-```bash
-python3 scripts/verify_manifest.py
-python3 scripts/audit_lean_forbidden_tokens.py
-python3 scripts/replay_summary.py
-lake update
-lake build
-```
-
-GitHub Actions uses:
+Core audit scripts:
 
 ```text
-Lean Direct Elan CI
+scripts/verify_manifest.py
+scripts/audit_lean_forbidden_tokens.py
+scripts/audit_major_theorem_nonplaceholder.py
+scripts/audit_bridge_coherence.py
+scripts/replay_summary.py
+```
+
+GitHub Actions workflows:
+
+```text
+.github/workflows/lean-direct-elan.yml
+.github/workflows/bridge-coherence-ci.yml
 ```
 
 ## Repository layout
@@ -345,33 +356,19 @@ scripts/                 Local and CI audit scripts
 .github/workflows/       GitHub Actions CI
 ```
 
-## Status
+## Status summary
 
-- GitHub-native Lean project: active
-- CI: direct `elan` workflow
-- Phase 3: spectral gap formalization CI green checkpoint reached
-- Spectral module entrypoint: present
-- Spectral gap formalization checkpoint: CI green
-- Spectral gap formalization gate: included in Phase3ReleaseGate
-- KuuOS reference bridge: present; KuuOS references this repository as canonical proof repo
-- External audit note appendix template: CI green documentation-only surface
-- Version tag readiness notes: CI green documentation-only surface; no tag created
-- Version-tag source-tree review refresh: CI green documentation-only surface; no tag created
-- Tag candidate receipt: CI green documentation-only surface; no tag created
-- Manual tag creation receipt: CI green documentation-only surface; tag not created by connected tool
-- Tag creation script: present; tag not created by this commit
-- Tag creation script usage note: CI green documentation-only surface; no tag created
-- Tag creation tracking issue: open (#9); no tag created by connected tool
-- Post-tag verification template: present; template only
-- R1--R7 theorem-candidate milestones: recorded
-- R3--R7 hardening pass series: CI green
-- R1--R7 proof-obligation tightening closures: CI green
-- Post-R1--R7 proof-obligation tightening closure: CI green
-- Final theorem release gate preparation refresh: CI green
-- Independent replay protocol: R1--R7 global scope corrected and CI green
-- External audit note gate: CI green
-- Entrypoint naming convention final sync: CI green
-- Mathlib on main: not introduced
-- Main-adoption decision: hold_main_adoption
-- Final release: not opened
-- Public final theorem claim: review-gated pending independent replay and external audit
+```text
+GitHub-native Lean project: active
+Lean Direct Elan CI: green
+Bridge Coherence CI: green
+Forbidden Lean tokens: 0 sorry / 0 admit / 0 axiom / 0 constant
+Major theorem non-placeholder audit: green
+Bridge coherence audit: green
+Physical Hamiltonian normalization bridge: CI green
+Exact value theorem-body origin: CI green
+Concrete residual closure: CI green
+Dimensionless normalized exact value surface: 33/20
+External consensus: not claimed
+Public final theorem claim: review-gated pending independent replay and external audit
+```
