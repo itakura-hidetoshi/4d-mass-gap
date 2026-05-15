@@ -30,3 +30,4 @@ import MGAP4D.MathlibAnalytic.HilbertLinearIndependenceFromExcitations
 import MGAP4D.MathlibAnalytic.HilbertCountableBasisSkeleton
 import MGAP4D.MathlibAnalytic.HilbertFiniteSpanDensitySkeleton
 import MGAP4D.MathlibAnalytic.HilbertNormTopologySkeleton
+import MGAP4D.MathlibAnalytic.HilbertCauchyCompletionSkeleton
