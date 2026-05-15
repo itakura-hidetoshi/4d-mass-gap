@@ -14,3 +14,4 @@ import MGAP4D.MathlibAnalytic.ObservableAtomInterface
 import MGAP4D.MathlibAnalytic.ExactGapFullInterfaceClosure
 import MGAP4D.MathlibAnalytic.ExactGapPostInterfaceResidualMap
 import MGAP4D.MathlibAnalytic.HilbertRayleighQuotientTheorem
+import MGAP4D.MathlibAnalytic.SelfAdjointHPhysTheorem
