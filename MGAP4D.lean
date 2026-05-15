@@ -140,3 +140,4 @@ import MGAP4D.ExactGapReleaseReadiness
 import MGAP4D.ExactGapResidualMap
 import MGAP4D.ExactGapResidualResolutionPlan
 import MGAP4D.ExactGapStructuralSurfaceRealization
+import MGAP4D.MathlibAnalytic.ExactValueTheoremBodyOrigin
