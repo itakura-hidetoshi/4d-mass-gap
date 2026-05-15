@@ -18,6 +18,24 @@ Reference bridge: docs/kuuos_reference_bridge.md
 
 KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open final theorem release.
 
+## Citation and Zenodo record
+
+A DOI-backed technical report for the Phase 3 spectral gap formalization checkpoint is archived on Zenodo:
+
+```text
+Hidetoshi Itakura, A Lean 4 Proof Architecture for a Normalized 4D Mass Gap Theorem: Phase 3 Spectral Gap Formalization and External-Audit Boundary, Zenodo, 2026. DOI: 10.5281/zenodo.20181046.
+```
+
+```text
+Zenodo record: 20181046
+DOI: 10.5281/zenodo.20181046
+URL: https://zenodo.org/records/20181046
+Repository citation metadata: CITATION.cff
+Repository receipt: docs/zenodo_record_20181046.md
+```
+
+This Zenodo record is a proof-architecture and external-audit preparation report. It does not open final theorem release; the public theorem boundary remains review-gated.
+
 ## Current active Lean root
 
 ```text
