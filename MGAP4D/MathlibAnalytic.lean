@@ -23,3 +23,4 @@ import MGAP4D.MathlibAnalytic.OperatorMeasureCompatibilityTheorem
 import MGAP4D.MathlibAnalytic.ExactGapTheoremBodyClosure
 import MGAP4D.MathlibAnalytic.ExactGapPostTheoremBodyConcreteResidualMap
 import MGAP4D.MathlibAnalytic.ConcreteHilbertRealizationTheorem
+import MGAP4D.MathlibAnalytic.ConcreteHPhysRealizationTheorem
