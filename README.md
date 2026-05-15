@@ -324,27 +324,22 @@ lake update
 lake build
 ```
 
-Current minimal local check script:
+Full local check script:
 
 ```bash
 bash scripts/check.sh
 ```
 
-At present, `scripts/check.sh` runs:
+`bash scripts/check.sh` now runs:
 
 ```bash
 python3 scripts/verify_manifest.py
 python3 scripts/audit_lean_forbidden_tokens.py
+python3 scripts/audit_major_theorem_nonplaceholder.py
+python3 scripts/audit_bridge_coherence.py
 python3 scripts/replay_summary.py
 lake update
 lake build
-```
-
-Additional audit scripts used by CI and available for manual local execution:
-
-```bash
-python3 scripts/audit_major_theorem_nonplaceholder.py
-python3 scripts/audit_bridge_coherence.py
 ```
 
 GitHub Actions workflows:
