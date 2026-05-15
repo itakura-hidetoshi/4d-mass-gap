@@ -22,7 +22,7 @@ KuuOS reference documents do not replace this repository as the canonical Lean p
 
 ### Internal normalized theorem-body claim
 
-Inside the MGAP4D Lean proof architecture, the current theorem-body surface records the normalized exact spectral gap value
+Inside the MGAP4D Lean proof architecture, the current theorem-body surface records the normalized exact spectral gap value:
 
 ```text
 exactGapValueReal = 33 / 20
@@ -77,7 +77,7 @@ For dimensional interpretation:
 physicalGap_dimensional = E0 * (33/20)
 ```
 
-This means `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
+Thus `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
 
 Relevant files:
 
@@ -315,27 +315,36 @@ Repository receipt: docs/zenodo_record_20181046.md
 
 This Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.
 
-## Build
+## Build and local checks
+
+Lean build:
 
 ```bash
 lake update
 lake build
 ```
 
-For the local audit sequence:
+Current minimal local check script:
 
 ```bash
 bash scripts/check.sh
 ```
 
-Core audit scripts:
+At present, `scripts/check.sh` runs:
 
-```text
-scripts/verify_manifest.py
-scripts/audit_lean_forbidden_tokens.py
-scripts/audit_major_theorem_nonplaceholder.py
-scripts/audit_bridge_coherence.py
-scripts/replay_summary.py
+```bash
+python3 scripts/verify_manifest.py
+python3 scripts/audit_lean_forbidden_tokens.py
+python3 scripts/replay_summary.py
+lake update
+lake build
+```
+
+Additional audit scripts used by CI and available for manual local execution:
+
+```bash
+python3 scripts/audit_major_theorem_nonplaceholder.py
+python3 scripts/audit_bridge_coherence.py
 ```
 
 GitHub Actions workflows:
