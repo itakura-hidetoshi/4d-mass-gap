@@ -9,3 +9,4 @@ import MGAP4D.MathlibAnalytic.ExactGapAnalyticAdoptionReviewClosure
 import MGAP4D.MathlibAnalytic.HilbertRayleighInterface
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysInterface
 import MGAP4D.MathlibAnalytic.SpectralTheoremInterface
+import MGAP4D.MathlibAnalytic.PVMInterface
