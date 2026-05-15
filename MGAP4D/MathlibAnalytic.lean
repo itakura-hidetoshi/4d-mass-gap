@@ -20,3 +20,4 @@ import MGAP4D.MathlibAnalytic.PVMTheoremTheorem
 import MGAP4D.MathlibAnalytic.ObservableAtomTheoremTheorem
 import MGAP4D.MathlibAnalytic.CompactPlaquetteConstructionTheorem
 import MGAP4D.MathlibAnalytic.OperatorMeasureCompatibilityTheorem
+import MGAP4D.MathlibAnalytic.ExactGapTheoremBodyClosure
