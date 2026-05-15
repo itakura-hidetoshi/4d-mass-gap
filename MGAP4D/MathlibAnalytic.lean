@@ -34,3 +34,4 @@ import MGAP4D.MathlibAnalytic.HilbertCauchyCompletionSkeleton
 import MGAP4D.MathlibAnalytic.HilbertCompleteNormedSpaceSkeleton
 import MGAP4D.MathlibAnalytic.HilbertInnerProductSkeleton
 import MGAP4D.MathlibAnalytic.HilbertSpaceInstanceSkeleton
+import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
