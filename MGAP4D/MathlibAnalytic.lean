@@ -36,3 +36,4 @@ import MGAP4D.MathlibAnalytic.HilbertInnerProductSkeleton
 import MGAP4D.MathlibAnalytic.HilbertSpaceInstanceSkeleton
 import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
 import MGAP4D.MathlibAnalytic.ConcreteYangMillsHamiltonianSkeleton
+import MGAP4D.MathlibAnalytic.SpectralRealizationSkeleton
