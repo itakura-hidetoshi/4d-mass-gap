@@ -1,0 +1,58 @@
+# Mathlib operator-measure compatibility theorem body
+
+Branch: main
+
+This note records the seventh post-interface theorem-body step: abstract operator-measure compatibility.
+
+## Lean artifacts
+
+```text
+MGAP4D/MathlibAnalytic/OperatorMeasureCompatibilityTheorem.lean
+MGAP4D/MathlibAnalytic.lean
+```
+
+## Added theorem body
+
+```text
+MathlibAnalytic.OperatorMeasureCompatibilityTheoremData
+MathlibAnalytic.OperatorMeasureCompatibilityTheoremData.ready
+MathlibAnalytic.operator_measure_compatibility_exact_value_in_atom
+MathlibAnalytic.operator_measure_compatibility_compact_support
+MathlibAnalytic.operator_measure_compatibility_centered
+MathlibAnalytic.operator_measure_compatibility_smeared
+MathlibAnalytic.operator_measure_compatibility_positive_weight
+MathlibAnalytic.operator_measure_compatibility_nonzero_weight
+MathlibAnalytic.operator_measure_compatibility_weight_equals_pvm_mass
+MathlibAnalytic.operator_measure_compatibility_certificate
+MathlibAnalytic.singletonOperatorMeasureCompatibilityTheoremData
+MathlibAnalytic.singleton_operator_measure_compatibility_theorem_data_ready
+MathlibAnalytic.singleton_operator_measure_compatibility_positive_weight
+MathlibAnalytic.singleton_operator_measure_compatibility_nonzero_weight
+MathlibAnalytic.singleton_operator_measure_compatibility_weight_equals_pvm_mass
+MathlibAnalytic.OperatorMeasureCompatibilityTheoremReviewSurface
+MathlibAnalytic.OperatorMeasureCompatibilityTheoremReviewSurface.ready
+MathlibAnalytic.operatorMeasureCompatibilityTheoremReviewSurface
+MathlibAnalytic.operator_measure_compatibility_theorem_review_surface_ready
+MathlibAnalytic.operator_measure_compatibility_theorem_review_surface_final_release_held
+```
+
+## Meaning
+
+```text
+compact plaquette construction body is linked to operator-measure compatibility body
+constructed observable is explicit
+exact atom is explicit
+constructed observable remains compact-supported, centered, and smeared
+constructed observable has positive nonzero spectral weight at exact atom
+observable spectral weight equals PVM exact atom mass
+operator-measure compatibility body is closed at abstract theorem-body level
+```
+
+## Boundary
+
+```text
+abstract operator-measure compatibility theorem body only
+not yet concrete operator-measure realization
+not final theorem release
+public theorem boundary held
+```
