@@ -1,0 +1,57 @@
+# Mathlib infinite-dimensional Hilbert necessity from PNP-style noncollapse
+
+Branch: main
+
+This note records the P≠NP-style noncollapse bridge for infinite-dimensional physical Hilbert necessity.
+
+## Lean artifacts
+
+```text
+MGAP4D/MathlibAnalytic/InfiniteDimensionalHilbertNecessityFromPNP.lean
+MGAP4D/MathlibAnalytic.lean
+```
+
+## Added bridge
+
+```text
+MathlibAnalytic.InfiniteDimensionalHilbertNecessityFromPNPData
+MathlibAnalytic.InfiniteDimensionalHilbertNecessityFromPNPData.ready
+MathlibAnalytic.pnp_hilbert_necessity_distinguishable_excitations
+MathlibAnalytic.pnp_hilbert_necessity_noncollapse_certificate
+MathlibAnalytic.pnp_hilbert_necessity_finite_collapse_blocked
+MathlibAnalytic.pnp_hilbert_necessity_one_point_not_final
+MathlibAnalytic.pnp_hilbert_necessity_completion_necessary
+MathlibAnalytic.PrototypeFiniteCollapseModel
+MathlibAnalytic.PrototypePNPExcitationState
+MathlibAnalytic.prototypeInfiniteDimensionalHilbertNecessityFromPNPData
+MathlibAnalytic.prototype_pnp_hilbert_necessity_ready
+MathlibAnalytic.prototype_pnp_hilbert_necessity_distinguishable_excitations
+MathlibAnalytic.prototype_pnp_hilbert_necessity_completion_necessary
+MathlibAnalytic.InfiniteDimensionalHilbertNecessityFromPNPReviewSurface
+MathlibAnalytic.InfiniteDimensionalHilbertNecessityFromPNPReviewSurface.ready
+MathlibAnalytic.infiniteDimensionalHilbertNecessityFromPNPReviewSurface
+MathlibAnalytic.infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready
+MathlibAnalytic.infinite_dimensional_hilbert_necessity_from_pnp_final_release_held
+```
+
+## Meaning
+
+```text
+concrete H_phys realization is linked to PNP-style noncollapse bridge
+finite collapse model is explicit
+Nat-indexed distinguishable excitation family is explicit
+finite certificate collapse is blocked
+one-point model is not the final physical Hilbert realization
+Hilbert completion remains necessary
+infinite-dimensional necessity is established as a bridge
+```
+
+## Boundary
+
+```text
+necessity bridge only
+not yet full infinite-dimensional physical Hilbert construction
+not yet full unbounded physical operator construction
+not final theorem release
+public theorem boundary held
+```
