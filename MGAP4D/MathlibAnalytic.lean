@@ -17,3 +17,4 @@ import MGAP4D.MathlibAnalytic.HilbertRayleighQuotientTheorem
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysTheorem
 import MGAP4D.MathlibAnalytic.SpectralTheoremTheorem
 import MGAP4D.MathlibAnalytic.PVMTheoremTheorem
+import MGAP4D.MathlibAnalytic.ObservableAtomTheoremTheorem
