@@ -45,7 +45,7 @@ MAJOR_THEOREMS: tuple[TheoremAuditSpec, ...] = (
     TheoremAuditSpec(
         path="MGAP4D/MathlibAnalytic/ExactGapTheoremBodyClosure.lean",
         name="exact_gap_theorem_body_closure_positive",
-        required_any=("exactGapValueReal_pos", "0 < exactGapValueReal"),
+        required_any=("exactGapValueReal_pos", "0 < exactGapValueReal", "exactValue_positive"),
         required_all=("exactGapTheoremBodyClosure",),
     ),
     TheoremAuditSpec(
