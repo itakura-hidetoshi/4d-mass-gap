@@ -6,3 +6,4 @@ import MGAP4D.MathlibAnalytic.RayleighAttainmentReal
 import MGAP4D.MathlibAnalytic.SpectralMassReal
 import MGAP4D.MathlibAnalytic.ExactGapAnalyticRealClosure
 import MGAP4D.MathlibAnalytic.ExactGapAnalyticAdoptionReviewClosure
+import MGAP4D.MathlibAnalytic.HilbertRayleighInterface
