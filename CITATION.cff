@@ -6,6 +6,8 @@ authors:
   - family-names: "Itakura"
     given-names: "Hidetoshi"
 license: "CC-BY-4.0"
+doi: "10.5281/zenodo.20181046"
+url: "https://zenodo.org/records/20181046"
 repository-code: "https://github.com/itakura-hidetoshi/4d-mass-gap"
 keywords:
   - Lean
@@ -15,3 +17,14 @@ keywords:
   - Yang-Mills
   - spectral gap
   - MGAP4D
+  - normalized mass gap
+  - external audit
+preferred-citation:
+  type: report
+  title: "A Lean 4 Proof Architecture for a Normalized 4D Mass Gap Theorem: Phase 3 Spectral Gap Formalization and External-Audit Boundary"
+  authors:
+    - family-names: "Itakura"
+      given-names: "Hidetoshi"
+  year: 2026
+  doi: "10.5281/zenodo.20181046"
+  url: "https://zenodo.org/records/20181046"
