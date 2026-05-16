@@ -44,5 +44,7 @@ jobs:
         run: python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
       - name: Check four-lane residual closure
         run: python3 scripts/audit_four_lane_residual_closure.py
+      - name: Check internal review residual closure gate
+        run: python3 scripts/audit_internal_review_residual_closure_gate.py
       - name: Summarize Lean replay surface
         run: python3 scripts/replay_summary.py
