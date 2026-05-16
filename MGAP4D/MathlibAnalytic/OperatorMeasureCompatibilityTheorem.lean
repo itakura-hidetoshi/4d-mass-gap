@@ -3,11 +3,11 @@ import MGAP4D.MathlibAnalytic.CompactPlaquetteConstructionTheorem
 namespace MGAP4D
 namespace MathlibAnalytic
 
-universe u
+noncomputable section
 
 /-- Abstract theorem body for operator-measure compatibility.
 
-This is the seventh post-interface theorem-body step.  It links the compact
+This is the seventh post-interface theorem-body step. It links the compact
 plaquette construction body to the observable atom body and PVM body by making
 explicit that the observable spectral weight of the constructed observable on
 the exact atom agrees with the PVM exact-atom mass. -/
@@ -36,10 +36,17 @@ structure OperatorMeasureCompatibilityTheoremData where
 /-- Ready predicate for the abstract operator-measure compatibility theorem body. -/
 def OperatorMeasureCompatibilityTheoremData.ready
     (D : OperatorMeasureCompatibilityTheoremData) : Prop :=
-  D.constructionDataReady ∧ D.observableAtomDataReady ∧ D.constructedObservable_def ∧
-  D.exactAtom_def ∧ D.exact_value_in_atom ∧ D.constructed_compactSupport ∧
-  D.constructed_centered ∧ D.constructed_smeared ∧ D.positive_weight ∧
-  D.nonzero_weight ∧ D.weight_equals_pvm_mass ∧ D.exact_value_eq_3320 ∧
+  D.constructionData.ready ∧ D.observableAtomData.ready ∧
+  D.constructedObservable = D.observableAtomData.chosenObservable ∧
+  D.exactAtom = D.observableAtomData.atom ∧ exactGapValueReal ∈ D.exactAtom ∧
+  D.observableAtomData.compactSupport D.constructedObservable ∧
+  D.observableAtomData.centered D.constructedObservable ∧
+  D.observableAtomData.smeared D.constructedObservable ∧
+  0 < D.observableAtomData.spectralWeight D.constructedObservable D.exactAtom ∧
+  D.observableAtomData.spectralWeight D.constructedObservable D.exactAtom ≠ 0 ∧
+  D.observableAtomData.spectralWeight D.constructedObservable D.exactAtom =
+    D.observableAtomData.pvmData.projectionMass D.observableAtomData.pvmData.exactAtom ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.operatorMeasureCompatibilityCertificate ∧ D.concreteOperatorMeasureRealizationStillOpen
 
 /-- Exact value belongs to the compatibility atom. -/
@@ -135,13 +142,15 @@ theorem singleton_operator_measure_compatibility_positive_weight :
     0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
       singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
       singletonOperatorMeasureCompatibilityTheoremData.exactAtom := by
-  exact exactGapSpectralMassReal_pos
+  exact operator_measure_compatibility_positive_weight
+    singletonOperatorMeasureCompatibilityTheoremData
 
 theorem singleton_operator_measure_compatibility_nonzero_weight :
     singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
       singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
       singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 := by
-  exact exactGapSpectralMassReal_ne_zero
+  exact operator_measure_compatibility_nonzero_weight
+    singletonOperatorMeasureCompatibilityTheoremData
 
 theorem singleton_operator_measure_compatibility_weight_equals_pvm_mass :
     singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
@@ -149,7 +158,8 @@ theorem singleton_operator_measure_compatibility_weight_equals_pvm_mass :
       singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom := by
-  rfl
+  exact operator_measure_compatibility_weight_equals_pvm_mass
+    singletonOperatorMeasureCompatibilityTheoremData
 
 /-- Review surface closing the abstract operator-measure compatibility theorem
 body after compact plaquette construction. -/
@@ -174,8 +184,19 @@ structure OperatorMeasureCompatibilityTheoremReviewSurface where
 
 def OperatorMeasureCompatibilityTheoremReviewSurface.ready
     (S : OperatorMeasureCompatibilityTheoremReviewSurface) : Prop :=
-  S.compactPlaquetteConstructionReady ∧ S.compatibilityDataReady ∧
-  S.positiveWeight ∧ S.nonzeroWeight ∧ S.weightEqualsPVMMass ∧
+  compactPlaquetteConstructionTheoremReviewSurface.ready ∧
+  singletonOperatorMeasureCompatibilityTheoremData.ready ∧
+  0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom ∧
   S.operatorMeasureCompatibilityBodyClosed ∧ S.concreteOperatorMeasureRealizationStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
@@ -206,6 +227,8 @@ theorem operator_measure_compatibility_theorem_review_surface_final_release_held
     OperatorMeasureCompatibilityTheoremReviewSurface.finalReleaseHeld
       operatorMeasureCompatibilityTheoremReviewSurface := by
   trivial
+
+end
 
 end MathlibAnalytic
 end MGAP4D
