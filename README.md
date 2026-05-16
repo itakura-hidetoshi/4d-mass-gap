@@ -264,6 +264,32 @@ Boundary anchors audited: publicBoundaryHeld and open-boundary markers
 Bridge coherence audit passed
 ```
 
+### Full Local Check CI
+
+The repository also defines a CI workflow that mirrors the external-review one-command replay:
+
+```text
+Workflow: Full Local Check CI
+Workflow file: .github/workflows/full-local-check.yml
+Main job: Run scripts/check.sh
+```
+
+This workflow installs / exposes the pinned Lean toolchain, prints Lean and Lake versions, and then runs:
+
+```bash
+bash scripts/check.sh
+```
+
+This is intended to make the external reviewer command and the CI replay path identical.
+
+Relevant workflows:
+
+```text
+.github/workflows/lean-direct-elan.yml
+.github/workflows/bridge-coherence-ci.yml
+.github/workflows/full-local-check.yml
+```
+
 Relevant ledgers:
 
 ```text
@@ -417,6 +443,7 @@ GitHub Actions workflows:
 ```text
 .github/workflows/lean-direct-elan.yml
 .github/workflows/bridge-coherence-ci.yml
+.github/workflows/full-local-check.yml
 ```
 
 ## Repository layout
@@ -436,6 +463,7 @@ scripts/                 Local and CI audit scripts
 GitHub-native Lean project: active
 Lean Direct Elan CI: green
 Bridge Coherence CI: green
+Full Local Check CI: configured
 Forbidden Lean tokens: 0 sorry / 0 admit / 0 axiom / 0 constant
 Major theorem non-placeholder audit: green
 Bridge coherence audit: green
