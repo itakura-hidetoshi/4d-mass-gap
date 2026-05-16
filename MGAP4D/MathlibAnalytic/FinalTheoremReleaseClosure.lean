@@ -75,28 +75,85 @@ theorem final_theorem_release_closure_public_boundary_held
     D.publicBoundaryHeld := by
   exact D.publicBoundaryHeld_proof
 
+/-- Closure exact-gap statement is inherited from the final release skeleton. -/
+theorem final_theorem_release_closure_exact_gap_statement_witness :
+    prototypeFinalTheoremReleaseSkeletonData.exactGapStatement := by
+  exact final_theorem_release_exact_gap_statement prototypeFinalTheoremReleaseSkeletonData
+
+/-- Closure spectral atom is inherited from the final release skeleton. -/
+theorem final_theorem_release_closure_spectral_atom_witness :
+    prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact := by
+  exact final_theorem_release_spectral_atom_at_exact prototypeFinalTheoremReleaseSkeletonData
+
+/-- Closure positive observable mass is inherited from the final release skeleton. -/
+theorem final_theorem_release_closure_positive_mass_witness :
+    prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact := by
+  exact final_theorem_release_positive_observable_mass prototypeFinalTheoremReleaseSkeletonData
+
+/-- Closure observable witness is inherited from the final release review surface. -/
+theorem final_theorem_release_closure_observable_witness_witness :
+    finalTheoremReleaseSkeletonReviewSurface.observableWitnessPresent := by
+  exact finalTheoremReleaseSkeletonReviewSurface.observableWitnessPresent_proof
+
+/-- Closure continuum certificate is inherited from the final release skeleton. -/
+theorem final_theorem_release_closure_continuum_certificate_witness :
+    prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent := by
+  exact final_theorem_release_continuum_certificate prototypeFinalTheoremReleaseSkeletonData
+
+/-- Closure theorem body is inherited from the final release review surface. -/
+theorem final_theorem_release_closure_theorem_body_closed_witness :
+    finalTheoremReleaseSkeletonReviewSurface.theoremBodyClosed := by
+  exact finalTheoremReleaseSkeletonReviewSurface.theoremBodyClosed_proof
+
+/-- Release-chain closure is witnessed by the final release review surface readiness. -/
+theorem final_theorem_release_closure_release_chain_closed_witness :
+    finalTheoremReleaseSkeletonReviewSurface.ready := by
+  exact final_theorem_release_skeleton_review_surface_ready
+
+/-- External consensus is explicitly not claimed by the final release review surface. -/
+theorem final_theorem_release_closure_external_consensus_not_claimed_witness :
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed := by
+  exact finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed_proof
+
+/-- Public theorem boundary is held by the final release review surface. -/
+theorem final_theorem_release_closure_public_boundary_held_witness :
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
+  exact finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld_proof
+
 /-- Prototype final theorem release closure packet. -/
 noncomputable def prototypeFinalTheoremReleaseClosureData : FinalTheoremReleaseClosureData :=
   { finalReleaseReady := final_theorem_release_skeleton_review_surface_ready
     exactValueEq3320 := exactGapValueReal_eq
-    exactGapStatementPresent := True
-    exactGapStatementPresent_proof := True.intro
-    spectralAtomPresent := True
-    spectralAtomPresent_proof := True.intro
-    positiveObservableMassPresent := True
-    positiveObservableMassPresent_proof := True.intro
-    observableWitnessPresent := True
-    observableWitnessPresent_proof := True.intro
-    continuumCertificatePresent := True
-    continuumCertificatePresent_proof := True.intro
-    theoremBodyClosed := True
-    theoremBodyClosed_proof := True.intro
-    releaseChainClosed := True
-    releaseChainClosed_proof := True.intro
-    externalConsensusNotClaimed := True
-    externalConsensusNotClaimed_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    exactGapStatementPresent := prototypeFinalTheoremReleaseSkeletonData.exactGapStatement
+    exactGapStatementPresent_proof :=
+      final_theorem_release_closure_exact_gap_statement_witness
+    spectralAtomPresent := prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact
+    spectralAtomPresent_proof :=
+      final_theorem_release_closure_spectral_atom_witness
+    positiveObservableMassPresent :=
+      prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact
+    positiveObservableMassPresent_proof :=
+      final_theorem_release_closure_positive_mass_witness
+    observableWitnessPresent := finalTheoremReleaseSkeletonReviewSurface.observableWitnessPresent
+    observableWitnessPresent_proof :=
+      final_theorem_release_closure_observable_witness_witness
+    continuumCertificatePresent :=
+      prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent
+    continuumCertificatePresent_proof :=
+      final_theorem_release_closure_continuum_certificate_witness
+    theoremBodyClosed := finalTheoremReleaseSkeletonReviewSurface.theoremBodyClosed
+    theoremBodyClosed_proof :=
+      final_theorem_release_closure_theorem_body_closed_witness
+    releaseChainClosed := finalTheoremReleaseSkeletonReviewSurface.ready
+    releaseChainClosed_proof :=
+      final_theorem_release_closure_release_chain_closed_witness
+    externalConsensusNotClaimed :=
+      finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+    externalConsensusNotClaimed_proof :=
+      final_theorem_release_closure_external_consensus_not_claimed_witness
+    publicBoundaryHeld := finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof :=
+      final_theorem_release_closure_public_boundary_held_witness }
 
 theorem prototype_final_theorem_release_closure_ready :
     prototypeFinalTheoremReleaseClosureData.ready := by
