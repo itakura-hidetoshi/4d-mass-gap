@@ -37,7 +37,8 @@ def exactGapAtomReal : Set ℝ := Set.singleton exactGapValueReal
 
 theorem exactGapValueReal_mem_exactGapAtomReal :
     exactGapValueReal ∈ exactGapAtomReal := by
-  simp [exactGapAtomReal]
+  change exactGapValueReal ∈ Set.singleton exactGapValueReal
+  exact Set.mem_singleton exactGapValueReal
 
 /-- Prototype PVM mass.  It assigns the already-certified positive real mass to
 all sets.  This is only an interface witness, not a countably-additive theorem. -/
