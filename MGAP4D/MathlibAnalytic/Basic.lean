@@ -23,7 +23,7 @@ theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
 
 /-- A concrete Mathlib-backed real number witness used to confirm that the branch
 can access Mathlib's analytic number hierarchy. -/
-def exactGapValueReal : ℝ := (33 : ℝ) / 20
+noncomputable def exactGapValueReal : ℝ := (33 : ℝ) / 20
 
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   norm_num [exactGapValueReal]
