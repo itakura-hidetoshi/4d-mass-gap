@@ -32,5 +32,7 @@ jobs:
         run: python3 scripts/audit_infinite_dimensional_target_layer.py
       - name: Check infinite-dimensional residual filling bridge
         run: python3 scripts/audit_infinite_dimensional_residual_filling.py
+      - name: Check hard physical residual hardening map
+        run: python3 scripts/audit_hard_physical_residual_hardening_map.py
       - name: Summarize Lean replay surface
         run: python3 scripts/replay_summary.py
