@@ -24,6 +24,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Audit external audit readiness gate
         run: python3 scripts/audit_external_audit_readiness_gate.py
+      - name: Audit external audit readiness gate field classification
+        run: python3 scripts/audit_external_audit_readiness_gate_field_classification.py
       - name: Install elan and Lean toolchain
         shell: bash
         run: |
