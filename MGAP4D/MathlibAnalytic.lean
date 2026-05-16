@@ -48,3 +48,4 @@ import MGAP4D.MathlibAnalytic.InfiniteDimensionalYangMillsRealizationTargets
 import MGAP4D.MathlibAnalytic.InfiniteDimensionalResidualFillingBridge
 import MGAP4D.MathlibAnalytic.HardPhysicalResidualHardeningMap
 import MGAP4D.MathlibAnalytic.HilbertConstructionLaneHardening
+import MGAP4D.MathlibAnalytic.SelfAdjointHPhysLaneHardening
