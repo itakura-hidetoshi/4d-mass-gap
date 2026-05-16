@@ -24,7 +24,7 @@ structure ExactGapPostInterfaceResidualMap where
 /-- Ready predicate for the post-interface residual map. -/
 def ExactGapPostInterfaceResidualMap.ready
     (R : ExactGapPostInterfaceResidualMap) : Prop :=
-  R.fullInterfaceClosureReady ∧ R.rHilbertRayleighOpen ∧
+  exactGapFullInterfaceClosure.ready ∧ R.rHilbertRayleighOpen ∧
   R.rSelfAdjointHPhysOpen ∧ R.rSpectralTheoremOpen ∧ R.rPVMOpen ∧
   R.rObservableAtomOpen ∧ R.rCompactPlaquetteConstructionOpen ∧
   R.rOperatorMeasureCompatibilityOpen ∧ R.allOpenResidualsVisible ∧
