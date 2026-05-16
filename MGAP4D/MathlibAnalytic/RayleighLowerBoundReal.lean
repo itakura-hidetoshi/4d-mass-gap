@@ -32,7 +32,7 @@ structure RayleighLowerBoundRealSurface where
   positive : 0 < value
   analyticReplacementBranchOnly : Prop
 
-def rayleighLowerBoundRealSurface : RayleighLowerBoundRealSurface :=
+noncomputable def rayleighLowerBoundRealSurface : RayleighLowerBoundRealSurface :=
   { value := exactGapValueReal
     admissible := RayleighEnergyAdmissible
     value_eq_3320 := exactGapValueReal_eq
@@ -43,7 +43,10 @@ def rayleighLowerBoundRealSurface : RayleighLowerBoundRealSurface :=
 
 def RayleighLowerBoundRealSurface.ready
     (S : RayleighLowerBoundRealSurface) : Prop :=
-  S.value_eq_3320 ∧ S.lower_bound ∧ S.attained ∧ S.positive ∧
+  S.value = (33 : ℝ) / 20 ∧
+  (∀ energy, S.admissible energy → S.value ≤ energy) ∧
+  S.admissible S.value ∧
+  0 < S.value ∧
   S.analyticReplacementBranchOnly
 
 theorem rayleigh_lower_bound_real_surface_ready :
