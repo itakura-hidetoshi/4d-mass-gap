@@ -3,8 +3,6 @@ import MGAP4D.MathlibAnalytic.HilbertRayleighInterface
 namespace MGAP4D
 namespace MathlibAnalytic
 
-universe u
-
 /-- Abstract operator interface for the next `H_phys` layer.
 
 This is not yet the full unbounded self-adjoint-operator theorem.  It records
@@ -13,7 +11,7 @@ there is a carrier, an inner pairing, an operator `H_phys`, a symmetry witness,
 a Rayleigh interface, and compatibility between the operator energy and the
 Rayleigh-energy map. -/
 structure SelfAdjointHPhysInterface where
-  state : Type u
+  state : Type
   inner : state → state → ℝ
   H_phys : state → state
   rayleigh : HilbertRayleighInterface
@@ -31,14 +29,19 @@ structure SelfAdjointHPhysInterface where
 
 /-- Ready predicate for the operator-facing `H_phys` interface. -/
 def SelfAdjointHPhysInterface.ready (I : SelfAdjointHPhysInterface) : Prop :=
-  I.symmetric ∧ I.witness_rayleigh_admissible ∧ I.witness_energy_eq_exact ∧
-  I.lower_bound ∧ I.exact_value_eq_3320 ∧ I.exact_value_positive ∧
+  (∀ ψ φ, I.inner (I.H_phys ψ) φ = I.inner ψ (I.H_phys φ)) ∧
+  I.rayleigh.admissible (I.state_to_rayleigh I.witness) ∧
+  I.rayleigh.rayleighEnergy (I.state_to_rayleigh I.witness) = exactGapValueReal ∧
+  (∀ ψ, I.rayleigh.admissible (I.state_to_rayleigh ψ) →
+    exactGapValueReal ≤ I.rayleigh.rayleighEnergy (I.state_to_rayleigh ψ)) ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < exactGapValueReal ∧
   I.fullSelfAdjointTheoremStillOpen
 
 /-- Singleton operator prototype.  This is a compilation-safe bridge from the
 Rayleigh interface to an operator-shaped surface, while keeping the true
 self-adjoint theorem open. -/
-def singletonSelfAdjointHPhysInterface : SelfAdjointHPhysInterface :=
+noncomputable def singletonSelfAdjointHPhysInterface : SelfAdjointHPhysInterface :=
   { state := PUnit
     inner := fun _ _ => 1
     H_phys := fun ψ => ψ
@@ -46,12 +49,12 @@ def singletonSelfAdjointHPhysInterface : SelfAdjointHPhysInterface :=
     state_to_rayleigh := fun _ => PUnit.unit
     witness := PUnit.unit
     symmetric := by
-      intro ψ φ
+      intro _ _
       rfl
     witness_rayleigh_admissible := True.intro
     witness_energy_eq_exact := rfl
     lower_bound := by
-      intro ψ hψ
+      intro _ _
       exact le_rfl
     exact_value_eq_3320 := exactGapValueReal_eq
     exact_value_positive := exactGapValueReal_pos
@@ -59,10 +62,10 @@ def singletonSelfAdjointHPhysInterface : SelfAdjointHPhysInterface :=
 
 theorem singleton_self_adjoint_hphys_interface_ready :
     singletonSelfAdjointHPhysInterface.ready := by
-  exact And.intro (by intro ψ φ; rfl) <|
+  exact And.intro (by intro _ _; rfl) <|
     And.intro True.intro <|
     And.intro rfl <|
-    And.intro (by intro ψ hψ; exact le_rfl) <|
+    And.intro (by intro _ _; exact le_rfl) <|
     And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos True.intro
 
@@ -71,7 +74,7 @@ theorem singleton_self_adjoint_hphys_interface_symmetric :
         (singletonSelfAdjointHPhysInterface.H_phys ψ) φ =
       singletonSelfAdjointHPhysInterface.inner ψ
         (singletonSelfAdjointHPhysInterface.H_phys φ) := by
-  intro ψ φ
+  intro _ _
   rfl
 
 theorem singleton_self_adjoint_hphys_interface_witness_attains :
@@ -82,7 +85,7 @@ theorem singleton_self_adjoint_hphys_interface_witness_attains :
 
 theorem singleton_self_adjoint_hphys_interface_lower_bound
     (ψ : singletonSelfAdjointHPhysInterface.state)
-    (hψ : singletonSelfAdjointHPhysInterface.rayleigh.admissible
+    (_hψ : singletonSelfAdjointHPhysInterface.rayleigh.admissible
       (singletonSelfAdjointHPhysInterface.state_to_rayleigh ψ)) :
     exactGapValueReal ≤
       singletonSelfAdjointHPhysInterface.rayleigh.rayleighEnergy
@@ -113,11 +116,23 @@ structure SelfAdjointHPhysReviewSurface where
 
 def SelfAdjointHPhysReviewSurface.ready
     (S : SelfAdjointHPhysReviewSurface) : Prop :=
-  S.hilbertRayleighReady ∧ S.hphysInterfaceReady ∧ S.symmetryReady ∧
-  S.witnessAttains ∧ S.lowerBoundCompatible ∧
+  hilbertRayleighInterfaceReviewSurface.ready ∧
+  singletonSelfAdjointHPhysInterface.ready ∧
+  (∀ ψ φ, singletonSelfAdjointHPhysInterface.inner
+      (singletonSelfAdjointHPhysInterface.H_phys ψ) φ =
+    singletonSelfAdjointHPhysInterface.inner ψ
+      (singletonSelfAdjointHPhysInterface.H_phys φ)) ∧
+  singletonSelfAdjointHPhysInterface.rayleigh.rayleighEnergy
+    (singletonSelfAdjointHPhysInterface.state_to_rayleigh
+      singletonSelfAdjointHPhysInterface.witness) = exactGapValueReal ∧
+  (∀ ψ, singletonSelfAdjointHPhysInterface.rayleigh.admissible
+      (singletonSelfAdjointHPhysInterface.state_to_rayleigh ψ) →
+    exactGapValueReal ≤
+      singletonSelfAdjointHPhysInterface.rayleigh.rayleighEnergy
+        (singletonSelfAdjointHPhysInterface.state_to_rayleigh ψ)) ∧
   S.fullSelfAdjointTheoremStillOpen ∧ S.mainMathlibBacked ∧ S.finalReleaseHeld
 
-def selfAdjointHPhysReviewSurface : SelfAdjointHPhysReviewSurface :=
+noncomputable def selfAdjointHPhysReviewSurface : SelfAdjointHPhysReviewSurface :=
   { hilbertRayleighReady := hilbert_rayleigh_interface_review_surface_ready
     hphysInterfaceReady := singleton_self_adjoint_hphys_interface_ready
     symmetryReady := singleton_self_adjoint_hphys_interface_symmetric
