@@ -70,10 +70,10 @@ def InfiniteDimensionalYangMillsRealizationTarget.ready
   T.exact_atom_witness ∧
   T.plaquette_nonzero_weight_witness ∧
   T.vacuum_orthogonal_nonempty_witness ∧
-  T.normalized_gap_eq_exact ∧
-  T.exact_value_eq_3320 ∧
-  T.reference_scale_positive ∧
-  T.physical_gap_reconstruction ∧
+  T.normalizedGapCandidate = exactGapValueReal ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < T.referenceScale ∧
+  T.referenceScale * T.normalizedGapCandidate = T.referenceScale * exactGapValueReal ∧
   T.publicBoundaryHeld ∧
   T.finalReleaseHeld
 
@@ -161,7 +161,8 @@ structure InfiniteDimensionalYangMillsTargetReviewSurface where
 
 def InfiniteDimensionalYangMillsTargetReviewSurface.ready
     (S : InfiniteDimensionalYangMillsTargetReviewSurface) : Prop :=
-  S.normalizationBridgeReady ∧
+  PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
+    physicalHamiltonianNormalizationBridgeReviewSurface ∧
   S.targetLayerInstalled ∧
   S.requiresInfiniteDimensionalHilbert ∧
   S.requiresSelfAdjointHPhys ∧
@@ -170,11 +171,11 @@ def InfiniteDimensionalYangMillsTargetReviewSurface.ready
   S.requiresSpectralTheorem ∧
   S.requiresPlaquettePositiveWeight ∧
   S.requiresVacuumOrthogonalNonempty ∧
-  S.normalizedExactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   S.publicBoundaryHeld ∧
   S.finalReleaseHeld
 
-def infiniteDimensionalYangMillsTargetReviewSurface :
+noncomputable def infiniteDimensionalYangMillsTargetReviewSurface :
     InfiniteDimensionalYangMillsTargetReviewSurface :=
   { normalizationBridgeReady := physical_hamiltonian_normalization_bridge_review_surface_ready
     targetLayerInstalled := True
@@ -191,7 +192,7 @@ def infiniteDimensionalYangMillsTargetReviewSurface :
 
 theorem infinite_dimensional_yang_mills_target_review_surface_ready :
     infiniteDimensionalYangMillsTargetReviewSurface.ready := by
-  exact And.intro physical_hamiltonian_normalization_bridge_review_surface_ready <|
+  exact And.intro infiniteDimensionalYangMillsTargetReviewSurface.normalizationBridgeReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -200,7 +201,7 @@ theorem infinite_dimensional_yang_mills_target_review_surface_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+    And.intro infiniteDimensionalYangMillsTargetReviewSurface.normalizedExactValuePreserved <|
     And.intro True.intro True.intro
 
 end MathlibAnalytic
