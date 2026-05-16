@@ -28,6 +28,9 @@ python3 scripts/audit_hilbert_construction_lane_hardening.py
 echo "[check] audit self-adjoint HPhys lane hardening"
 python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
 
+echo "[check] audit continuum Yang-Mills lane hardening"
+python3 scripts/audit_continuum_yang_mills_lane_hardening.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
