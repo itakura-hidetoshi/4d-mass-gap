@@ -135,16 +135,16 @@ def hilbertInnerProductSkeletonReviewSurface : HilbertInnerProductSkeletonReview
       ∀ x y,
         prototypeHilbertInnerProductSkeletonData.inner x y =
           prototypeHilbertInnerProductSkeletonData.inner y x
-    innerSymmetric_proof := by intro x y; rfl
+    innerSymmetric_proof := prototypeHilbertInnerProductSkeletonData.inner_symm
     innerNonnegative :=
       ∀ x, 0 ≤ prototypeHilbertInnerProductSkeletonData.inner x x
-    innerNonnegative_proof := by intro x; norm_num
+    innerNonnegative_proof := prototypeHilbertInnerProductSkeletonData.inner_nonneg
     normSqCompat :=
       ∀ x,
         prototypeHilbertInnerProductSkeletonData.norm x *
           prototypeHilbertInnerProductSkeletonData.norm x =
           prototypeHilbertInnerProductSkeletonData.inner x x
-    normSqCompat_proof := by intro x; norm_num
+    normSqCompat_proof := prototypeHilbertInnerProductSkeletonData.norm_sq_compat
     innerProductSkeletonEstablished := True
     innerProductSkeletonEstablished_proof := True.intro
     hilbertSpaceInstanceStillOpen := True
