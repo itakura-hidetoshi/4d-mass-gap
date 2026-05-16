@@ -14,7 +14,7 @@ structure ProjectionValuedMeasureInterface where
   projectionMass : Set ℝ → ℝ
   spectralReady : spectral.ready
   exactAtom : Set ℝ
-  exactAtom_def : exactAtom = {λ : ℝ | λ = exactGapValueReal}
+  exactAtom_def : exactAtom = Set.singleton exactGapValueReal
   exact_value_in_atom : exactGapValueReal ∈ exactAtom
   exact_atom_mass_positive : 0 < projectionMass exactAtom
   exact_atom_mass_nonzero : projectionMass exactAtom ≠ 0
@@ -24,16 +24,20 @@ structure ProjectionValuedMeasureInterface where
 /-- Ready predicate for the abstract PVM interface. -/
 def ProjectionValuedMeasureInterface.ready
     (P : ProjectionValuedMeasureInterface) : Prop :=
-  P.spectralReady ∧ P.exactAtom_def ∧ P.exact_value_in_atom ∧
-  P.exact_atom_mass_positive ∧ P.exact_atom_mass_nonzero ∧
-  P.exact_value_eq_3320 ∧ P.fullPVMTheoremStillOpen
+  P.spectral.ready ∧
+  P.exactAtom = Set.singleton exactGapValueReal ∧
+  exactGapValueReal ∈ P.exactAtom ∧
+  0 < P.projectionMass P.exactAtom ∧
+  P.projectionMass P.exactAtom ≠ 0 ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  P.fullPVMTheoremStillOpen
 
 /-- Singleton exact-gap atom used by the prototype PVM interface. -/
-def exactGapAtomReal : Set ℝ := {λ : ℝ | λ = exactGapValueReal}
+def exactGapAtomReal : Set ℝ := Set.singleton exactGapValueReal
 
 theorem exactGapValueReal_mem_exactGapAtomReal :
     exactGapValueReal ∈ exactGapAtomReal := by
-  rfl
+  simp [exactGapAtomReal]
 
 /-- Prototype PVM mass.  It assigns the already-certified positive real mass to
 all sets.  This is only an interface witness, not a countably-additive theorem. -/
@@ -48,7 +52,7 @@ theorem prototypeProjectionMassReal_exact_atom_ne_zero :
   exact exactGapSpectralMassReal_ne_zero
 
 /-- Singleton PVM interface prototype. -/
-def singletonPVMInterface : ProjectionValuedMeasureInterface :=
+noncomputable def singletonPVMInterface : ProjectionValuedMeasureInterface :=
   { spectral := singletonSpectralTheoremInterface
     projectionMass := prototypeProjectionMassReal
     spectralReady := singleton_spectral_theorem_interface_ready
@@ -94,11 +98,15 @@ structure PVMReviewSurface where
   finalReleaseHeld : Prop
 
 def PVMReviewSurface.ready (S : PVMReviewSurface) : Prop :=
-  S.spectralReviewReady ∧ S.pvmInterfaceReady ∧ S.exactValueInAtom ∧
-  S.exactAtomMassPositive ∧ S.exactAtomMassNonzero ∧ S.exactValue_eq_3320 ∧
+  spectralTheoremReviewSurface.ready ∧
+  singletonPVMInterface.ready ∧
+  exactGapValueReal ∈ singletonPVMInterface.exactAtom ∧
+  0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∧
+  singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0 ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   S.fullPVMTheoremStillOpen ∧ S.mainMathlibBacked ∧ S.finalReleaseHeld
 
-def pvmReviewSurface : PVMReviewSurface :=
+noncomputable def pvmReviewSurface : PVMReviewSurface :=
   { spectralReviewReady := spectral_theorem_review_surface_ready
     pvmInterfaceReady := singleton_pvm_interface_ready
     exactValueInAtom := singleton_pvm_interface_exact_value_in_atom
