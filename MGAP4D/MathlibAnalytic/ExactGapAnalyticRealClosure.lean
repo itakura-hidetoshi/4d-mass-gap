@@ -38,11 +38,11 @@ structure ExactGapAnalyticRealClosure where
 
 def ExactGapAnalyticRealClosure.ready
     (C : ExactGapAnalyticRealClosure) : Prop :=
-  C.exactValueReady ∧
-  C.gapInfimumReady ∧
-  C.rayleighLowerBoundReady ∧
-  C.rayleighAttainmentReady ∧
-  C.spectralMassReady ∧
+  exactGapRealSurface.ready ∧
+  gapInfimumRealSurface.ready ∧
+  rayleighLowerBoundRealSurface.ready ∧
+  rayleighAttainmentRealSurface.ready ∧
+  spectralMassRealSurface.ready ∧
   C.exactValue = (33 : ℝ) / 20 ∧
   0 < C.exactValue ∧
   1 < C.exactValue ∧
@@ -88,7 +88,7 @@ theorem exact_gap_analytic_real_closure_ready :
     And.intro spectral_mass_real_surface_ready <|
     And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos <|
-    And.intro (by norm_num [exactGapValueReal]) <|
+    And.intro exactGapAnalyticRealClosure.exactValue_above_one <|
     And.intro rayleigh_energy_admissible_lower_bound <|
     And.intro exact_gap_value_attains_rayleigh <|
     And.intro positive_spectral_mass_at_exact_gap_prototype <|
@@ -109,8 +109,7 @@ theorem exact_gap_analytic_real_closure_positive :
 
 theorem exact_gap_analytic_real_closure_above_one :
     1 < exactGapAnalyticRealClosure.exactValue := by
-  change 1 < exactGapValueReal
-  norm_num [exactGapValueReal]
+  exact exactGapAnalyticRealClosure.exactValue_above_one
 
 theorem exact_gap_analytic_real_closure_lower_bound :
     ∀ energy, RayleighEnergyAdmissible energy →
