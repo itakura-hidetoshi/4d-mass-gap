@@ -36,14 +36,19 @@ structure SpectralRealizationSkeletonData where
   spectralRealizationSkeletonVisible : Prop
   spectralRealizationSkeletonVisible_proof : spectralRealizationSkeletonVisible
   continuumSpectralTheoremStillOpen : Prop
+  continuumSpectralTheoremStillOpen_proof : continuumSpectralTheoremStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
+/-- Ready predicate for the spectral realization skeleton. -/
 def SpectralRealizationSkeletonData.ready
     (D : SpectralRealizationSkeletonData) : Prop :=
-  D.concreteYMReady ∧ D.exactAtomPresent ∧ D.spectralProjectionAtExact ∧
+  concreteYangMillsHamiltonianSkeletonReviewSurface.ready ∧
+  D.exactAtomPresent ∧ D.spectralProjectionAtExact ∧
   D.observableAtomWitness ∧ D.positiveMassAtExact ∧ D.rayleighExactWitness ∧
-  D.exact_value_eq_3320 ∧ D.spectralRealizationSkeletonVisible ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧ D.spectralRealizationSkeletonVisible ∧
   D.continuumSpectralTheoremStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
 /-- Exact spectral atom surface is present. -/
@@ -77,7 +82,8 @@ theorem spectral_realization_rayleigh_exact_witness
   exact D.rayleighExactWitness_proof
 
 /-- Prototype spectral realization skeleton over singleton carrier and observable. -/
-def prototypeSpectralRealizationSkeletonData : SpectralRealizationSkeletonData :=
+noncomputable def prototypeSpectralRealizationSkeletonData :
+    SpectralRealizationSkeletonData.{0, 0} :=
   { concreteYMReady := concrete_ym_hamiltonian_skeleton_review_surface_ready
     state := PUnit
     observable := PUnit
@@ -99,65 +105,88 @@ def prototypeSpectralRealizationSkeletonData : SpectralRealizationSkeletonData :
     spectralRealizationSkeletonVisible := True
     spectralRealizationSkeletonVisible_proof := True.intro
     continuumSpectralTheoremStillOpen := True
+    continuumSpectralTheoremStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_spectral_realization_skeleton_ready :
     prototypeSpectralRealizationSkeletonData.ready := by
-  exact And.intro concrete_ym_hamiltonian_skeleton_review_surface_ready <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeSpectralRealizationSkeletonData.concreteYMReady <|
+    And.intro prototypeSpectralRealizationSkeletonData.exactAtomPresent_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.spectralProjectionAtExact_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.observableAtomWitness_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.positiveMassAtExact_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.rayleighExactWitness_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.exact_value_eq_3320 <|
+    And.intro prototypeSpectralRealizationSkeletonData.spectralRealizationSkeletonVisible_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.continuumSpectralTheoremStillOpen_proof <|
+    And.intro prototypeSpectralRealizationSkeletonData.finalReleaseHeld_proof
+      prototypeSpectralRealizationSkeletonData.publicBoundaryHeld_proof
 
 /-- Review surface for the spectral realization skeleton. -/
 structure SpectralRealizationSkeletonReviewSurface where
   concreteYMReady : concreteYangMillsHamiltonianSkeletonReviewSurface.ready
   spectralReady : prototypeSpectralRealizationSkeletonData.ready
-  exactAtomPresent : prototypeSpectralRealizationSkeletonData.exactAtomPresent
-  observableAtomWitness : prototypeSpectralRealizationSkeletonData.observableAtomWitness
-  positiveMassAtExact : prototypeSpectralRealizationSkeletonData.positiveMassAtExact
-  rayleighExactWitness : prototypeSpectralRealizationSkeletonData.rayleighExactWitness
+  exactAtomPresent : Prop
+  exactAtomPresent_proof : exactAtomPresent
+  observableAtomWitness : Prop
+  observableAtomWitness_proof : observableAtomWitness
+  positiveMassAtExact : Prop
+  positiveMassAtExact_proof : positiveMassAtExact
+  rayleighExactWitness : Prop
+  rayleighExactWitness_proof : rayleighExactWitness
   spectralRealizationSkeletonEstablished : Prop
+  spectralRealizationSkeletonEstablished_proof : spectralRealizationSkeletonEstablished
   continuumSpectralTheoremStillOpen : Prop
+  continuumSpectralTheoremStillOpen_proof : continuumSpectralTheoremStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def SpectralRealizationSkeletonReviewSurface.ready
     (S : SpectralRealizationSkeletonReviewSurface) : Prop :=
-  S.concreteYMReady ∧ S.spectralReady ∧ S.exactAtomPresent ∧
+  concreteYangMillsHamiltonianSkeletonReviewSurface.ready ∧
+  prototypeSpectralRealizationSkeletonData.ready ∧ S.exactAtomPresent ∧
   S.observableAtomWitness ∧ S.positiveMassAtExact ∧ S.rayleighExactWitness ∧
   S.spectralRealizationSkeletonEstablished ∧ S.continuumSpectralTheoremStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
-def spectralRealizationSkeletonReviewSurface : SpectralRealizationSkeletonReviewSurface :=
+noncomputable def spectralRealizationSkeletonReviewSurface :
+    SpectralRealizationSkeletonReviewSurface :=
   { concreteYMReady := concrete_ym_hamiltonian_skeleton_review_surface_ready
     spectralReady := prototype_spectral_realization_skeleton_ready
-    exactAtomPresent := True.intro
-    observableAtomWitness := True.intro
-    positiveMassAtExact := True.intro
-    rayleighExactWitness := True.intro
+    exactAtomPresent := prototypeSpectralRealizationSkeletonData.exactAtomPresent
+    exactAtomPresent_proof := prototypeSpectralRealizationSkeletonData.exactAtomPresent_proof
+    observableAtomWitness := prototypeSpectralRealizationSkeletonData.observableAtomWitness
+    observableAtomWitness_proof := prototypeSpectralRealizationSkeletonData.observableAtomWitness_proof
+    positiveMassAtExact := prototypeSpectralRealizationSkeletonData.positiveMassAtExact
+    positiveMassAtExact_proof := prototypeSpectralRealizationSkeletonData.positiveMassAtExact_proof
+    rayleighExactWitness := prototypeSpectralRealizationSkeletonData.rayleighExactWitness
+    rayleighExactWitness_proof := prototypeSpectralRealizationSkeletonData.rayleighExactWitness_proof
     spectralRealizationSkeletonEstablished := True
+    spectralRealizationSkeletonEstablished_proof := True.intro
     continuumSpectralTheoremStillOpen := True
+    continuumSpectralTheoremStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem spectral_realization_skeleton_review_surface_ready :
     spectralRealizationSkeletonReviewSurface.ready := by
-  exact And.intro concrete_ym_hamiltonian_skeleton_review_surface_ready <|
-    And.intro prototype_spectral_realization_skeleton_ready <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro spectralRealizationSkeletonReviewSurface.concreteYMReady <|
+    And.intro spectralRealizationSkeletonReviewSurface.spectralReady <|
+    And.intro spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.observableAtomWitness_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.rayleighExactWitness_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.spectralRealizationSkeletonEstablished_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.finalReleaseHeld_proof
+      spectralRealizationSkeletonReviewSurface.publicBoundaryHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
