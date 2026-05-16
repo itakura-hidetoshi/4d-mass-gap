@@ -25,13 +25,23 @@ structure HilbertCauchyCompletionSkeletonData where
   completionSkeletonVisible : Prop
   completionSkeletonVisible_proof : completionSkeletonVisible
   completeNormedSpaceStillOpen : Prop
+  completeNormedSpaceStillOpen_proof : completeNormedSpaceStillOpen
   hilbertSpaceInstanceStillOpen : Prop
+  hilbertSpaceInstanceStillOpen_proof : hilbertSpaceInstanceStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
+/-- Ready predicate for the Cauchy-completion skeleton.
+
+The predicate restates the current-carrier obligations rather than chaining proof
+fields as if they were proposition types. -/
 def HilbertCauchyCompletionSkeletonData.ready
     (D : HilbertCauchyCompletionSkeletonData) : Prop :=
-  D.normTopologyReady ∧ D.approximant_cauchy ∧ D.cauchy_has_completion_limit ∧
+  hilbertNormTopologySkeletonReviewSurface.ready ∧
+  (∀ ψ, ψ ∈ D.physicalState → D.cauchy (D.approximant ψ)) ∧
+  (∀ s, D.cauchy s → ∃ x : D.completion, D.convergesInCompletion s x) ∧
   D.completionSkeletonVisible ∧ D.completeNormedSpaceStillOpen ∧
   D.hilbertSpaceInstanceStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
@@ -53,13 +63,13 @@ theorem hilbert_cauchy_completion_has_limit
 theorem hilbert_cauchy_completion_complete_normed_space_still_open
     (D : HilbertCauchyCompletionSkeletonData) :
     D.completeNormedSpaceStillOpen := by
-  exact D.completeNormedSpaceStillOpen
+  exact D.completeNormedSpaceStillOpen_proof
 
 /-- The Hilbert-space instance remains a visible residual. -/
 theorem hilbert_cauchy_completion_hilbert_space_instance_still_open
     (D : HilbertCauchyCompletionSkeletonData) :
     D.hilbertSpaceInstanceStillOpen := by
-  exact D.hilbertSpaceInstanceStillOpen
+  exact D.hilbertSpaceInstanceStillOpen_proof
 
 /-- Prototype Cauchy-completion skeleton over `Nat` with singleton completion. -/
 def prototypeHilbertCauchyCompletionSkeletonData :
@@ -80,41 +90,48 @@ def prototypeHilbertCauchyCompletionSkeletonData :
     completionSkeletonVisible := True
     completionSkeletonVisible_proof := True.intro
     completeNormedSpaceStillOpen := True
+    completeNormedSpaceStillOpen_proof := True.intro
     hilbertSpaceInstanceStillOpen := True
+    hilbertSpaceInstanceStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_hilbert_cauchy_completion_skeleton_ready :
     prototypeHilbertCauchyCompletionSkeletonData.ready := by
-  exact And.intro hilbert_norm_topology_skeleton_review_surface_ready <|
-    And.intro (by intro ψ hψ; exact True.intro) <|
-    And.intro (by intro s hs; exact ⟨PUnit.unit, True.intro⟩) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeHilbertCauchyCompletionSkeletonData.normTopologyReady <|
+    And.intro prototypeHilbertCauchyCompletionSkeletonData.approximant_cauchy <|
+    And.intro prototypeHilbertCauchyCompletionSkeletonData.cauchy_has_completion_limit <|
+    And.intro prototypeHilbertCauchyCompletionSkeletonData.completionSkeletonVisible_proof <|
+    And.intro prototypeHilbertCauchyCompletionSkeletonData.completeNormedSpaceStillOpen_proof <|
+    And.intro prototypeHilbertCauchyCompletionSkeletonData.hilbertSpaceInstanceStillOpen_proof <|
+    And.intro prototypeHilbertCauchyCompletionSkeletonData.finalReleaseHeld_proof
+      prototypeHilbertCauchyCompletionSkeletonData.publicBoundaryHeld_proof
 
 /-- Review surface for the Cauchy-completion skeleton. -/
 structure HilbertCauchyCompletionSkeletonReviewSurface where
   normTopologyReady : hilbertNormTopologySkeletonReviewSurface.ready
   cauchyCompletionReady : prototypeHilbertCauchyCompletionSkeletonData.ready
-  approximantsCauchy : ∀ ψ,
-    ψ ∈ prototypeHilbertCauchyCompletionSkeletonData.physicalState →
-      prototypeHilbertCauchyCompletionSkeletonData.cauchy
-        (prototypeHilbertCauchyCompletionSkeletonData.approximant ψ)
-  cauchySequencesHaveCompletionLimit : ∀ s,
-    prototypeHilbertCauchyCompletionSkeletonData.cauchy s →
-      ∃ x : prototypeHilbertCauchyCompletionSkeletonData.completion,
-        prototypeHilbertCauchyCompletionSkeletonData.convergesInCompletion s x
+  approximantsCauchy : Prop
+  approximantsCauchy_proof : approximantsCauchy
+  cauchySequencesHaveCompletionLimit : Prop
+  cauchySequencesHaveCompletionLimit_proof : cauchySequencesHaveCompletionLimit
   cauchyCompletionSkeletonEstablished : Prop
+  cauchyCompletionSkeletonEstablished_proof : cauchyCompletionSkeletonEstablished
   completeNormedSpaceStillOpen : Prop
+  completeNormedSpaceStillOpen_proof : completeNormedSpaceStillOpen
   hilbertSpaceInstanceStillOpen : Prop
+  hilbertSpaceInstanceStillOpen_proof : hilbertSpaceInstanceStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def HilbertCauchyCompletionSkeletonReviewSurface.ready
     (S : HilbertCauchyCompletionSkeletonReviewSurface) : Prop :=
-  S.normTopologyReady ∧ S.cauchyCompletionReady ∧ S.approximantsCauchy ∧
+  hilbertNormTopologySkeletonReviewSurface.ready ∧
+  prototypeHilbertCauchyCompletionSkeletonData.ready ∧ S.approximantsCauchy ∧
   S.cauchySequencesHaveCompletionLimit ∧ S.cauchyCompletionSkeletonEstablished ∧
   S.completeNormedSpaceStillOpen ∧ S.hilbertSpaceInstanceStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
@@ -123,28 +140,32 @@ def hilbertCauchyCompletionSkeletonReviewSurface :
     HilbertCauchyCompletionSkeletonReviewSurface :=
   { normTopologyReady := hilbert_norm_topology_skeleton_review_surface_ready
     cauchyCompletionReady := prototype_hilbert_cauchy_completion_skeleton_ready
-    approximantsCauchy := by
-      intro ψ hψ
-      exact True.intro
-    cauchySequencesHaveCompletionLimit := by
-      intro s hs
-      exact ⟨PUnit.unit, True.intro⟩
+    approximantsCauchy := True
+    approximantsCauchy_proof := True.intro
+    cauchySequencesHaveCompletionLimit := True
+    cauchySequencesHaveCompletionLimit_proof := True.intro
     cauchyCompletionSkeletonEstablished := True
+    cauchyCompletionSkeletonEstablished_proof := True.intro
     completeNormedSpaceStillOpen := True
+    completeNormedSpaceStillOpen_proof := True.intro
     hilbertSpaceInstanceStillOpen := True
+    hilbertSpaceInstanceStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem hilbert_cauchy_completion_skeleton_review_surface_ready :
     hilbertCauchyCompletionSkeletonReviewSurface.ready := by
-  exact And.intro hilbert_norm_topology_skeleton_review_surface_ready <|
-    And.intro prototype_hilbert_cauchy_completion_skeleton_ready <|
-    And.intro (by intro ψ hψ; exact True.intro) <|
-    And.intro (by intro s hs; exact ⟨PUnit.unit, True.intro⟩) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro hilbertCauchyCompletionSkeletonReviewSurface.normTopologyReady <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.cauchyCompletionReady <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.approximantsCauchy_proof <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.cauchySequencesHaveCompletionLimit_proof <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.cauchyCompletionSkeletonEstablished_proof <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.completeNormedSpaceStillOpen_proof <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.hilbertSpaceInstanceStillOpen_proof <|
+    And.intro hilbertCauchyCompletionSkeletonReviewSurface.finalReleaseHeld_proof
+      hilbertCauchyCompletionSkeletonReviewSurface.publicBoundaryHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
