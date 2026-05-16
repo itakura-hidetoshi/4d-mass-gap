@@ -315,6 +315,26 @@ Repository receipt: docs/zenodo_record_20181046.md
 
 This Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.
 
+## Independent replay
+
+External reviewers can reproduce the repository-level replay using:
+
+```text
+INDEPENDENT_REPLAY.md
+```
+
+The independent replay guide covers:
+
+```text
+fresh clone replay
+pinned Lean toolchain confirmation
+scripts/check.sh one-command replay
+manual step-by-step audit replay
+GitHub Actions parity
+failure interpretation
+review boundary
+```
+
 ## Build and local checks
 
 Lean build:
