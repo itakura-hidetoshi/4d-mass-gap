@@ -16,7 +16,7 @@ structure SpectralTheoremInterface where
   spectralMass : ℝ → ℝ
   hphysReady : hphys.ready
   exact_value_in_support : exactGapValueReal ∈ spectralSupport
-  support_lower_bound : ∀ λ, λ ∈ spectralSupport → exactGapValueReal ≤ λ
+  support_lower_bound : ∀ lam : ℝ, lam ∈ spectralSupport → exactGapValueReal ≤ lam
   positive_mass_at_exact : 0 < spectralMass exactGapValueReal
   nonzero_mass_at_exact : spectralMass exactGapValueReal ≠ 0
   exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
@@ -25,13 +25,18 @@ structure SpectralTheoremInterface where
 
 /-- Ready predicate for the spectral-theorem integration interface. -/
 def SpectralTheoremInterface.ready (S : SpectralTheoremInterface) : Prop :=
-  S.hphysReady ∧ S.exact_value_in_support ∧ S.support_lower_bound ∧
-  S.positive_mass_at_exact ∧ S.nonzero_mass_at_exact ∧ S.exact_value_eq_3320 ∧
-  S.fullSpectralTheoremStillOpen ∧ S.fullPVMTheoremStillOpen
+  S.hphys.ready ∧
+  exactGapValueReal ∈ S.spectralSupport ∧
+  (∀ lam : ℝ, lam ∈ S.spectralSupport → exactGapValueReal ≤ lam) ∧
+  0 < S.spectralMass exactGapValueReal ∧
+  S.spectralMass exactGapValueReal ≠ 0 ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  S.fullSpectralTheoremStillOpen ∧
+  S.fullPVMTheoremStillOpen
 
 /-- Singleton spectral theorem prototype.  The support is the already-certified
 exact-gap upper ray and the mass is the positive real prototype. -/
-def singletonSpectralTheoremInterface : SpectralTheoremInterface :=
+noncomputable def singletonSpectralTheoremInterface : SpectralTheoremInterface :=
   { hphys := singletonSelfAdjointHPhysInterface
     spectralSupport := exactGapEnergyRay
     spectralMass := fun _ => exactGapSpectralMassReal
@@ -59,8 +64,8 @@ theorem singleton_spectral_theorem_interface_exact_in_support :
   exact exactGapValueReal_mem_energyRay
 
 theorem singleton_spectral_theorem_interface_support_lower_bound :
-    ∀ λ, λ ∈ singletonSpectralTheoremInterface.spectralSupport →
-      exactGapValueReal ≤ λ := by
+    ∀ lam : ℝ, lam ∈ singletonSpectralTheoremInterface.spectralSupport →
+      exactGapValueReal ≤ lam := by
   exact exactGapEnergyRay_lower_bound
 
 theorem singleton_spectral_theorem_interface_positive_mass :
@@ -77,8 +82,8 @@ structure SpectralTheoremReviewSurface where
   hphysReviewReady : selfAdjointHPhysReviewSurface.ready
   spectralInterfaceReady : singletonSpectralTheoremInterface.ready
   exactInSupport : exactGapValueReal ∈ singletonSpectralTheoremInterface.spectralSupport
-  supportLowerBound : ∀ λ, λ ∈ singletonSpectralTheoremInterface.spectralSupport →
-    exactGapValueReal ≤ λ
+  supportLowerBound : ∀ lam : ℝ, lam ∈ singletonSpectralTheoremInterface.spectralSupport →
+    exactGapValueReal ≤ lam
   positiveMass : 0 < singletonSpectralTheoremInterface.spectralMass exactGapValueReal
   nonzeroMass : singletonSpectralTheoremInterface.spectralMass exactGapValueReal ≠ 0
   fullSpectralTheoremStillOpen : Prop
@@ -87,12 +92,17 @@ structure SpectralTheoremReviewSurface where
   finalReleaseHeld : Prop
 
 def SpectralTheoremReviewSurface.ready (S : SpectralTheoremReviewSurface) : Prop :=
-  S.hphysReviewReady ∧ S.spectralInterfaceReady ∧ S.exactInSupport ∧
-  S.supportLowerBound ∧ S.positiveMass ∧ S.nonzeroMass ∧
+  selfAdjointHPhysReviewSurface.ready ∧
+  singletonSpectralTheoremInterface.ready ∧
+  exactGapValueReal ∈ singletonSpectralTheoremInterface.spectralSupport ∧
+  (∀ lam : ℝ, lam ∈ singletonSpectralTheoremInterface.spectralSupport →
+    exactGapValueReal ≤ lam) ∧
+  0 < singletonSpectralTheoremInterface.spectralMass exactGapValueReal ∧
+  singletonSpectralTheoremInterface.spectralMass exactGapValueReal ≠ 0 ∧
   S.fullSpectralTheoremStillOpen ∧ S.fullPVMTheoremStillOpen ∧
   S.mainMathlibBacked ∧ S.finalReleaseHeld
 
-def spectralTheoremReviewSurface : SpectralTheoremReviewSurface :=
+noncomputable def spectralTheoremReviewSurface : SpectralTheoremReviewSurface :=
   { hphysReviewReady := self_adjoint_hphys_review_surface_ready
     spectralInterfaceReady := singleton_spectral_theorem_interface_ready
     exactInSupport := singleton_spectral_theorem_interface_exact_in_support
