@@ -19,6 +19,9 @@ python3 scripts/audit_infinite_dimensional_target_layer.py
 echo "[check] audit infinite-dimensional residual filling bridge"
 python3 scripts/audit_infinite_dimensional_residual_filling.py
 
+echo "[check] audit hard physical residual hardening map"
+python3 scripts/audit_hard_physical_residual_hardening_map.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
