@@ -119,7 +119,7 @@ structure FinalTheoremReleaseBundleManifestReviewSurface where
   publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
 def FinalTheoremReleaseBundleManifestReviewSurface.ready
-    (S : FinalTheoremReleaseBundleManifestReviewSurface) : Prop :=
+    (_S : FinalTheoremReleaseBundleManifestReviewSurface) : Prop :=
   finalTheoremReleaseChainIndexReady ∧
   prototypeFinalTheoremReleaseBundleManifestData.ready ∧
   exactGapValueReal = (33 : ℝ) / 20 ∧
