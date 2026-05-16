@@ -57,7 +57,7 @@ structure SpectralMassRealSurface where
   compatible_with_attainment : RayleighAttainsExactGap value
   analyticReplacementBranchOnly : Prop
 
-def spectralMassRealSurface : SpectralMassRealSurface :=
+noncomputable def spectralMassRealSurface : SpectralMassRealSurface :=
   { value := exactGapValueReal
     mass := exactGapSpectralMassReal
     value_eq_3320 := exactGapValueReal_eq
@@ -68,8 +68,11 @@ def spectralMassRealSurface : SpectralMassRealSurface :=
     analyticReplacementBranchOnly := True }
 
 def SpectralMassRealSurface.ready (S : SpectralMassRealSurface) : Prop :=
-  S.value_eq_3320 ∧ S.positive_mass ∧ S.nonzero_mass ∧
-  S.exists_positive_mass ∧ S.compatible_with_attainment ∧
+  S.value = (33 : ℝ) / 20 ∧
+  0 < S.mass ∧
+  S.mass ≠ 0 ∧
+  (∃ value mass : ℝ, PositiveSpectralMassAtExactGap value mass) ∧
+  RayleighAttainsExactGap S.value ∧
   S.analyticReplacementBranchOnly
 
 theorem spectral_mass_real_surface_ready : spectralMassRealSurface.ready := by
