@@ -1,6 +1,6 @@
 # External audit readiness gate CI
 
-This ledger records the first observed green CI run for the external audit readiness gate after the MathlibAnalytic hardening chain reached the final gate target.
+This ledger records the observed green CI run for the external audit readiness gate after the MathlibAnalytic hardening chain reached the final gate target and the Lean-side warning cleanup was reflected on `main`.
 
 This file is documentation-only. It does not create a tag. It does not open final theorem release. It does not claim independent external audit completion. It records reproducible CI evidence for the current repository checkpoint.
 
@@ -9,18 +9,19 @@ This file is documentation-only. It does not create a tag. It does not open fina
 ```text
 Repository: itakura-hidetoshi/4d-mass-gap
 Branch: main
-Commit: 82195da8315d6b166ebdef24b3314be9ca969650
-Workflow run ID: 25961050604
-Job ID: 76316305600
+Commit: 7041b000c4c8f30a2d99d5429504d00cffb88bcb
+Workflow run ID: 25961418682
+Job ID: 76317232199
 Job name: Run scripts/check.sh
 Result: success
-Observed timestamp: 2026-05-16T11:48:15Z
+Observed timestamp: 2026-05-16T12:07:06Z
 ```
 
 ## Environment
 
 ```text
 Runner image: ubuntu-24.04
+Runner image version: 20260513.135.3
 Lean: 4.30.0-rc2
 Lake: 5.0.0-src+3dc1a08
 Toolchain commit: 3dc1a088b6d2d8eafe25a7cd7ec7b58d731bd7cc
@@ -60,7 +61,7 @@ Lean replay summary lean_files: 457
 Lean replay summary imports: 1191
 Lean replay summary declaration_like_lines: 2602
 Lean replay summary namespace_lines: 938
-Lean replay summary total_lines: 27208
+Lean replay summary total_lines: 27203
 Build completed successfully: 8368 jobs
 Final lake build: 0 jobs, success
 ```
@@ -73,23 +74,24 @@ MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 
 The final gate target built successfully as job item `[8368/8368]` in the external audit readiness gate build stage.
 
-## Remaining non-fatal warnings
+## Warning status
 
 ```text
-MGAP4D/MathlibAnalytic/ExactGapReal.lean:22:6
-  warning: 'change 1 < exactGapValueReal' tactic does nothing
-
-MGAP4D/MathlibAnalytic/HilbertLinearIndependenceFromExcitations.lean:101:6
-  warning: Try this: intro k i j hij hval
-
-MGAP4D/MathlibAnalytic/FinalTheoremReleaseBundleManifest.lean:122:5
-  warning: unused variable `S`
-
-GitHub Actions runner warning:
-  Node.js 20 is deprecated. actions/cache@v4 and actions/checkout@v4 were forced to run on Node.js 24.
+Lean-side warnings in the external audit readiness gate build: none observed in this green run.
 ```
 
-These warnings are non-fatal for this checkpoint. They should be cleared in a hygiene-only follow-up patch before a stronger release tag is considered.
+Remaining non-fatal runner warnings are external to the Lean proof surface:
+
+```text
+GitHub Actions cache/checkout Node compatibility warning:
+  Node.js 20 is deprecated. actions/cache@v4 and actions/checkout@v4 were forced to run on Node.js 24.
+
+GitHub Actions cache runtime deprecation warnings:
+  punycode module deprecation warning
+  url.parse() deprecation warning
+```
+
+These runner warnings are non-fatal for this checkpoint and do not affect the Lean theorem surface, forbidden-token audit, bridge coherence audit, or final external-audit-readiness build.
 
 ## Boundary
 
