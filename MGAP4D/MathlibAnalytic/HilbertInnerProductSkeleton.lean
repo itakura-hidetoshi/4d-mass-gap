@@ -26,14 +26,25 @@ structure HilbertInnerProductSkeletonData where
   innerProductSkeletonVisible : Prop
   innerProductSkeletonVisible_proof : innerProductSkeletonVisible
   hilbertSpaceInstanceStillOpen : Prop
+  hilbertSpaceInstanceStillOpen_proof : hilbertSpaceInstanceStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
+/-- Ready predicate for the inner-product skeleton.
+
+The predicate restates obligations as propositions instead of passing proof
+fields to `And`, avoiding proof-as-type mismatches. -/
 def HilbertInnerProductSkeletonData.ready
     (D : HilbertInnerProductSkeletonData) : Prop :=
-  D.completeNormedSpaceReady ∧ D.inner_symm ∧ D.inner_nonneg ∧
-  D.inner_zero_left ∧ D.norm_sq_compat ∧ D.innerProductSkeletonVisible ∧
-  D.hilbertSpaceInstanceStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
+  hilbertCompleteNormedSpaceSkeletonReviewSurface.ready ∧
+  (∀ x y, D.inner x y = D.inner y x) ∧
+  (∀ x, 0 ≤ D.inner x x) ∧
+  (∀ x, D.inner D.zero x = 0) ∧
+  (∀ x, D.norm x * D.norm x = D.inner x x) ∧
+  D.innerProductSkeletonVisible ∧ D.hilbertSpaceInstanceStillOpen ∧
+  D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
 /-- Inner product is symmetric on the skeleton carrier. -/
 theorem hilbert_inner_product_symmetric
@@ -57,10 +68,10 @@ theorem hilbert_inner_product_norm_sq_compat
 theorem hilbert_inner_product_space_instance_still_open
     (D : HilbertInnerProductSkeletonData) :
     D.hilbertSpaceInstanceStillOpen := by
-  exact D.hilbertSpaceInstanceStillOpen
+  exact D.hilbertSpaceInstanceStillOpen_proof
 
 /-- Prototype inner-product skeleton over a singleton carrier. -/
-def prototypeHilbertInnerProductSkeletonData : HilbertInnerProductSkeletonData :=
+def prototypeHilbertInnerProductSkeletonData : HilbertInnerProductSkeletonData.{0} :=
   { completeNormedSpaceReady := hilbert_complete_normed_space_skeleton_review_surface_ready
     carrier := PUnit
     zero := PUnit.unit
@@ -73,65 +84,87 @@ def prototypeHilbertInnerProductSkeletonData : HilbertInnerProductSkeletonData :
     innerProductSkeletonVisible := True
     innerProductSkeletonVisible_proof := True.intro
     hilbertSpaceInstanceStillOpen := True
+    hilbertSpaceInstanceStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_hilbert_inner_product_skeleton_ready :
     prototypeHilbertInnerProductSkeletonData.ready := by
-  exact And.intro hilbert_complete_normed_space_skeleton_review_surface_ready <|
-    And.intro (by intro x y; rfl) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro (by intro x; rfl) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeHilbertInnerProductSkeletonData.completeNormedSpaceReady <|
+    And.intro prototypeHilbertInnerProductSkeletonData.inner_symm <|
+    And.intro prototypeHilbertInnerProductSkeletonData.inner_nonneg <|
+    And.intro prototypeHilbertInnerProductSkeletonData.inner_zero_left <|
+    And.intro prototypeHilbertInnerProductSkeletonData.norm_sq_compat <|
+    And.intro prototypeHilbertInnerProductSkeletonData.innerProductSkeletonVisible_proof <|
+    And.intro prototypeHilbertInnerProductSkeletonData.hilbertSpaceInstanceStillOpen_proof <|
+    And.intro prototypeHilbertInnerProductSkeletonData.finalReleaseHeld_proof
+      prototypeHilbertInnerProductSkeletonData.publicBoundaryHeld_proof
 
 /-- Review surface for the Hilbert inner-product skeleton. -/
 structure HilbertInnerProductSkeletonReviewSurface where
   completeNormedSpaceReady : hilbertCompleteNormedSpaceSkeletonReviewSurface.ready
   innerProductReady : prototypeHilbertInnerProductSkeletonData.ready
-  innerSymmetric : ∀ x y,
-    prototypeHilbertInnerProductSkeletonData.inner x y =
-      prototypeHilbertInnerProductSkeletonData.inner y x
-  innerNonnegative : ∀ x,
-    0 ≤ prototypeHilbertInnerProductSkeletonData.inner x x
-  normSqCompat : ∀ x,
-    prototypeHilbertInnerProductSkeletonData.norm x *
-      prototypeHilbertInnerProductSkeletonData.norm x =
-      prototypeHilbertInnerProductSkeletonData.inner x x
+  innerSymmetric : Prop
+  innerSymmetric_proof : innerSymmetric
+  innerNonnegative : Prop
+  innerNonnegative_proof : innerNonnegative
+  normSqCompat : Prop
+  normSqCompat_proof : normSqCompat
   innerProductSkeletonEstablished : Prop
+  innerProductSkeletonEstablished_proof : innerProductSkeletonEstablished
   hilbertSpaceInstanceStillOpen : Prop
+  hilbertSpaceInstanceStillOpen_proof : hilbertSpaceInstanceStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def HilbertInnerProductSkeletonReviewSurface.ready
     (S : HilbertInnerProductSkeletonReviewSurface) : Prop :=
-  S.completeNormedSpaceReady ∧ S.innerProductReady ∧ S.innerSymmetric ∧
+  hilbertCompleteNormedSpaceSkeletonReviewSurface.ready ∧
+  prototypeHilbertInnerProductSkeletonData.ready ∧ S.innerSymmetric ∧
   S.innerNonnegative ∧ S.normSqCompat ∧ S.innerProductSkeletonEstablished ∧
   S.hilbertSpaceInstanceStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
 def hilbertInnerProductSkeletonReviewSurface : HilbertInnerProductSkeletonReviewSurface :=
   { completeNormedSpaceReady := hilbert_complete_normed_space_skeleton_review_surface_ready
     innerProductReady := prototype_hilbert_inner_product_skeleton_ready
-    innerSymmetric := by intro x y; rfl
-    innerNonnegative := by intro x; norm_num
-    normSqCompat := by intro x; norm_num
+    innerSymmetric :=
+      ∀ x y,
+        prototypeHilbertInnerProductSkeletonData.inner x y =
+          prototypeHilbertInnerProductSkeletonData.inner y x
+    innerSymmetric_proof := by intro x y; rfl
+    innerNonnegative :=
+      ∀ x, 0 ≤ prototypeHilbertInnerProductSkeletonData.inner x x
+    innerNonnegative_proof := by intro x; norm_num
+    normSqCompat :=
+      ∀ x,
+        prototypeHilbertInnerProductSkeletonData.norm x *
+          prototypeHilbertInnerProductSkeletonData.norm x =
+          prototypeHilbertInnerProductSkeletonData.inner x x
+    normSqCompat_proof := by intro x; norm_num
     innerProductSkeletonEstablished := True
+    innerProductSkeletonEstablished_proof := True.intro
     hilbertSpaceInstanceStillOpen := True
+    hilbertSpaceInstanceStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem hilbert_inner_product_skeleton_review_surface_ready :
     hilbertInnerProductSkeletonReviewSurface.ready := by
-  exact And.intro hilbert_complete_normed_space_skeleton_review_surface_ready <|
-    And.intro prototype_hilbert_inner_product_skeleton_ready <|
-    And.intro (by intro x y; rfl) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro hilbertInnerProductSkeletonReviewSurface.completeNormedSpaceReady <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.innerProductReady <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.innerSymmetric_proof <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.innerNonnegative_proof <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.normSqCompat_proof <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.innerProductSkeletonEstablished_proof <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.hilbertSpaceInstanceStillOpen_proof <|
+    And.intro hilbertInnerProductSkeletonReviewSurface.finalReleaseHeld_proof
+      hilbertInnerProductSkeletonReviewSurface.publicBoundaryHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
