@@ -3,11 +3,13 @@ import MGAP4D.MathlibAnalytic.SpectralTheoremTheorem
 namespace MGAP4D
 namespace MathlibAnalytic
 
+noncomputable section
+
 /-- Abstract theorem body for the projection-valued-measure layer.
 
-This is the fourth post-interface theorem-body step.  It does not yet prove a
+This is the fourth post-interface theorem-body step. It does not yet prove a
 concrete countably-additive projection-valued measure for an unbounded
-self-adjoint operator.  It makes explicit the set-indexed projection mass,
+self-adjoint operator. It makes explicit the set-indexed projection mass,
 exact atom, positive/nonzero exact-atom mass, and compatibility with the
 abstract spectral theorem body. -/
 structure PVMTheoremTheoremData where
@@ -28,42 +30,51 @@ structure PVMTheoremTheoremData where
 
 /-- Ready predicate for the abstract PVM theorem body. -/
 def PVMTheoremTheoremData.ready (D : PVMTheoremTheoremData) : Prop :=
-  D.spectralDataReady ∧ D.exactAtom_def ∧ D.exact_value_in_atom ∧
-  D.exact_atom_mass_positive ∧ D.exact_atom_mass_nonzero ∧
-  D.compatible_with_spectral_mass ∧ D.exact_value_eq_3320 ∧
+  D.spectralData.ready ∧
+  D.exactAtom = exactGapAtomReal ∧
+  exactGapValueReal ∈ D.exactAtom ∧
+  0 < D.projectionMass D.exactAtom ∧
+  D.projectionMass D.exactAtom ≠ 0 ∧
+  D.projectionMass D.exactAtom = D.spectralData.spectralMass exactGapValueReal ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.pvmCertificate ∧ D.concreteCountableAdditivityStillOpen ∧
   D.concreteProjectionOperatorStillOpen
 
 /-- The exact value belongs to the exact atom. -/
 theorem pvm_theorem_exact_value_in_atom
-    (D : PVMTheoremTheoremData) :
+    (D : PVMTheoremTheoremData) (hD : D.ready) :
     exactGapValueReal ∈ D.exactAtom := by
-  exact D.exact_value_in_atom
+  rcases hD with ⟨_, _, hIn, _, _, _, _, _, _, _⟩
+  exact hIn
 
 /-- The projection mass of the exact atom is positive. -/
 theorem pvm_theorem_exact_atom_mass_positive
-    (D : PVMTheoremTheoremData) :
+    (D : PVMTheoremTheoremData) (hD : D.ready) :
     0 < D.projectionMass D.exactAtom := by
-  exact D.exact_atom_mass_positive
+  rcases hD with ⟨_, _, _, hPos, _, _, _, _, _, _⟩
+  exact hPos
 
 /-- The projection mass of the exact atom is nonzero. -/
 theorem pvm_theorem_exact_atom_mass_nonzero
-    (D : PVMTheoremTheoremData) :
+    (D : PVMTheoremTheoremData) (hD : D.ready) :
     D.projectionMass D.exactAtom ≠ 0 := by
-  exact D.exact_atom_mass_nonzero
+  rcases hD with ⟨_, _, _, _, hNe, _, _, _, _, _⟩
+  exact hNe
 
 /-- The exact-atom projection mass is compatible with the spectral mass at the
 exact value. -/
 theorem pvm_theorem_compatible_with_spectral_mass
-    (D : PVMTheoremTheoremData) :
+    (D : PVMTheoremTheoremData) (hD : D.ready) :
     D.projectionMass D.exactAtom = D.spectralData.spectralMass exactGapValueReal := by
-  exact D.compatible_with_spectral_mass
+  rcases hD with ⟨_, _, _, _, _, hCompat, _, _, _, _⟩
+  exact hCompat
 
 /-- The PVM certificate surface is present. -/
 theorem pvm_theorem_certificate
-    (D : PVMTheoremTheoremData) :
+    (D : PVMTheoremTheoremData) (hD : D.ready) :
     D.pvmCertificate := by
-  exact D.pvmCertificate_proof
+  rcases hD with ⟨_, _, _, _, _, _, _, hCert, _, _⟩
+  exact hCert
 
 /-- Singleton theorem-body realization for the PVM layer. -/
 def singletonPVMTheoremTheoremData : PVMTheoremTheoremData :=
@@ -96,23 +107,27 @@ theorem singleton_pvm_theorem_theorem_data_ready :
 
 theorem singleton_pvm_theorem_exact_value_in_atom :
     exactGapValueReal ∈ singletonPVMTheoremTheoremData.exactAtom := by
-  exact exactGapValueReal_mem_exactGapAtomReal
+  exact pvm_theorem_exact_value_in_atom
+    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
 
 theorem singleton_pvm_theorem_exact_atom_mass_positive :
     0 < singletonPVMTheoremTheoremData.projectionMass
       singletonPVMTheoremTheoremData.exactAtom := by
-  exact prototypeProjectionMassReal_exact_atom_pos
+  exact pvm_theorem_exact_atom_mass_positive
+    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
 
 theorem singleton_pvm_theorem_exact_atom_mass_nonzero :
     singletonPVMTheoremTheoremData.projectionMass
       singletonPVMTheoremTheoremData.exactAtom ≠ 0 := by
-  exact prototypeProjectionMassReal_exact_atom_ne_zero
+  exact pvm_theorem_exact_atom_mass_nonzero
+    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
 
 theorem singleton_pvm_theorem_compatible_with_spectral_mass :
     singletonPVMTheoremTheoremData.projectionMass
       singletonPVMTheoremTheoremData.exactAtom =
     singletonPVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal := by
-  rfl
+  exact pvm_theorem_compatible_with_spectral_mass
+    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
 
 /-- Review surface closing the abstract PVM theorem body after the spectral
 integration theorem body. -/
@@ -135,8 +150,15 @@ structure PVMTheoremTheoremReviewSurface where
 
 def PVMTheoremTheoremReviewSurface.ready
     (S : PVMTheoremTheoremReviewSurface) : Prop :=
-  S.spectralTheoremBodyReady ∧ S.pvmTheoremDataReady ∧ S.exactValueInAtom ∧
-  S.exactAtomMassPositive ∧ S.exactAtomMassNonzero ∧ S.compatibleWithSpectralMass ∧
+  spectralTheoremTheoremReviewSurface.ready ∧ singletonPVMTheoremTheoremData.ready ∧
+  exactGapValueReal ∈ singletonPVMTheoremTheoremData.exactAtom ∧
+  0 < singletonPVMTheoremTheoremData.projectionMass
+      singletonPVMTheoremTheoremData.exactAtom ∧
+  singletonPVMTheoremTheoremData.projectionMass
+      singletonPVMTheoremTheoremData.exactAtom ≠ 0 ∧
+  singletonPVMTheoremTheoremData.projectionMass
+      singletonPVMTheoremTheoremData.exactAtom =
+      singletonPVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal ∧
   S.pvmTheoremBodyClosed ∧ S.concreteCountableAdditivityStillOpen ∧
   S.concreteProjectionOperatorStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
@@ -169,6 +191,8 @@ theorem pvm_theorem_theorem_review_surface_ready :
 theorem pvm_theorem_theorem_review_surface_final_release_held :
     pvmTheoremTheoremReviewSurface.finalReleaseHeld := by
   trivial
+
+end
 
 end MathlibAnalytic
 end MGAP4D
