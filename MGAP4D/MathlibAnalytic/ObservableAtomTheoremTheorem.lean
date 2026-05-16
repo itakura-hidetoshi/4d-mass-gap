@@ -85,8 +85,8 @@ theorem observable_atom_theorem_compatible_with_pvm_mass
 theorem observable_atom_theorem_compact_support
     (D : ObservableAtomTheoremTheoremData) (hD : D.ready) :
     D.compactSupport D.chosenObservable := by
-  rcases hD with ⟨hCompact, _⟩
-  exact hCompact.2.1
+  rcases hD with ⟨_, hCompact, _⟩
+  exact hCompact
 
 /-- Centered witness for the chosen observable. -/
 theorem observable_atom_theorem_centered
@@ -184,17 +184,23 @@ theorem singleton_observable_atom_theorem_compatible_with_pvm_mass :
 theorem singleton_observable_atom_theorem_compact_support :
     singletonObservableAtomTheoremTheoremData.compactSupport
       singletonObservableAtomTheoremTheoremData.chosenObservable := by
-  trivial
+  exact observable_atom_theorem_compact_support
+    singletonObservableAtomTheoremTheoremData
+    singleton_observable_atom_theorem_theorem_data_ready
 
 theorem singleton_observable_atom_theorem_centered :
     singletonObservableAtomTheoremTheoremData.centered
       singletonObservableAtomTheoremTheoremData.chosenObservable := by
-  trivial
+  exact observable_atom_theorem_centered
+    singletonObservableAtomTheoremTheoremData
+    singleton_observable_atom_theorem_theorem_data_ready
 
 theorem singleton_observable_atom_theorem_smeared :
     singletonObservableAtomTheoremTheoremData.smeared
       singletonObservableAtomTheoremTheoremData.chosenObservable := by
-  trivial
+  exact observable_atom_theorem_smeared
+    singletonObservableAtomTheoremTheoremData
+    singleton_observable_atom_theorem_theorem_data_ready
 
 /-- Review surface closing the abstract observable atom theorem body after the
 PVM theorem body. -/
