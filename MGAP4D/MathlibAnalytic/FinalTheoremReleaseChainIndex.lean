@@ -39,12 +39,22 @@ structure FinalTheoremReleaseChainIndexData where
 /-- Ready predicate for the final theorem release chain index. -/
 def FinalTheoremReleaseChainIndexData.ready
     (D : FinalTheoremReleaseChainIndexData) : Prop :=
-  D.finiteLinearIndependenceReady ∧ D.countableBasisReady ∧
-  D.finiteSpanDensityReady ∧ D.normTopologyReady ∧ D.cauchyCompletionReady ∧
-  D.completeNormedSpaceReady ∧ D.innerProductReady ∧ D.hilbertInstanceReady ∧
-  D.physicalOperatorReady ∧ D.concreteYMReady ∧ D.spectralReady ∧
-  D.continuumReady ∧ D.finalReleaseReady ∧ D.finalClosureReady ∧
-  D.exactValueEq3320 ∧ D.chainIndexVisible ∧ D.releaseChainClosed ∧
+  hilbertLinearIndependenceFromExcitationsReviewSurface.ready ∧
+  hilbertCountableBasisSkeletonReviewSurface.ready ∧
+  hilbertFiniteSpanDensitySkeletonReviewSurface.ready ∧
+  hilbertNormTopologySkeletonReviewSurface.ready ∧
+  hilbertCauchyCompletionSkeletonReviewSurface.ready ∧
+  hilbertCompleteNormedSpaceSkeletonReviewSurface.ready ∧
+  hilbertInnerProductSkeletonReviewSurface.ready ∧
+  hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
+  physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
+  concreteYangMillsHamiltonianSkeletonReviewSurface.ready ∧
+  spectralRealizationSkeletonReviewSurface.ready ∧
+  continuumSpectralTheoremSkeletonReviewSurface.ready ∧
+  finalTheoremReleaseSkeletonReviewSurface.ready ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  D.chainIndexVisible ∧ D.releaseChainClosed ∧
   D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
 
 /-- The exact value is preserved by the indexed chain. -/
@@ -78,7 +88,8 @@ theorem final_theorem_release_chain_index_public_boundary_held
   exact D.publicBoundaryHeld_proof
 
 /-- Prototype final theorem release chain index. -/
-def prototypeFinalTheoremReleaseChainIndexData : FinalTheoremReleaseChainIndexData :=
+noncomputable def prototypeFinalTheoremReleaseChainIndexData :
+    FinalTheoremReleaseChainIndexData :=
   { finiteLinearIndependenceReady := hilbert_linear_independence_from_excitations_review_surface_ready
     countableBasisReady := hilbert_countable_basis_skeleton_review_surface_ready
     finiteSpanDensityReady := hilbert_finite_span_density_skeleton_review_surface_ready
@@ -105,24 +116,25 @@ def prototypeFinalTheoremReleaseChainIndexData : FinalTheoremReleaseChainIndexDa
 
 theorem prototype_final_theorem_release_chain_index_ready :
     prototypeFinalTheoremReleaseChainIndexData.ready := by
-  exact And.intro hilbert_linear_independence_from_excitations_review_surface_ready <|
-    And.intro hilbert_countable_basis_skeleton_review_surface_ready <|
-    And.intro hilbert_finite_span_density_skeleton_review_surface_ready <|
-    And.intro hilbert_norm_topology_skeleton_review_surface_ready <|
-    And.intro hilbert_cauchy_completion_skeleton_review_surface_ready <|
-    And.intro hilbert_complete_normed_space_skeleton_review_surface_ready <|
-    And.intro hilbert_inner_product_skeleton_review_surface_ready <|
-    And.intro hilbert_space_instance_skeleton_review_surface_ready <|
-    And.intro physical_unbounded_operator_skeleton_review_surface_ready <|
-    And.intro concrete_ym_hamiltonian_skeleton_review_surface_ready <|
-    And.intro spectral_realization_skeleton_review_surface_ready <|
-    And.intro continuum_spectral_theorem_skeleton_review_surface_ready <|
-    And.intro final_theorem_release_skeleton_review_surface_ready <|
-    And.intro final_theorem_release_closure_review_surface_ready <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeFinalTheoremReleaseChainIndexData.finiteLinearIndependenceReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.countableBasisReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.finiteSpanDensityReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.normTopologyReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.cauchyCompletionReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.completeNormedSpaceReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.innerProductReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.hilbertInstanceReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.physicalOperatorReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.concreteYMReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.spectralReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.continuumReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.finalReleaseReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.finalClosureReady <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.exactValueEq3320 <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.chainIndexVisible_proof <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.releaseChainClosed_proof <|
+    And.intro prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed_proof
+      prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld_proof
 
 /-- Public review surface for the final theorem release chain index. -/
 def finalTheoremReleaseChainIndexReady : Prop :=
