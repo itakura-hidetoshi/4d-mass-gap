@@ -29,9 +29,9 @@ structure InternalReviewResidualClosureGateData where
 /-- Ready predicate for the internal review residual closure gate. -/
 def InternalReviewResidualClosureGateData.ready
     (D : InternalReviewResidualClosureGateData) : Prop :=
-  D.fourLaneClosureReady ∧
-  D.exactValueOriginReady ∧
-  D.finalReleaseClosureReady ∧
+  fourLaneResidualClosureData.ready ∧
+  exactValueTheoremBodyOriginReviewSurface.ready ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
   D.repositoryInternalResidualClosed ∧
   D.noReviewLevelResidualLeft ∧
   D.exactTheoremBodyOriginPreserved ∧
@@ -41,7 +41,7 @@ def InternalReviewResidualClosureGateData.ready
   D.externalReviewBoundaryVisible ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld ∧
-  D.exactValuePreserved
+  exactGapValueReal = (33 : ℝ) / 20
 
 /-- Repository-internal review residual is closed at the gate level. -/
 theorem internal_review_residual_gate_repository_residual_closed
@@ -108,10 +108,9 @@ theorem internal_review_residual_gate_final_release_held
 
 /-- Exact normalized value is preserved by the closure gate. -/
 theorem internal_review_residual_gate_exact_value_preserved
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, h⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- Installed internal review residual closure gate. -/
 def internalReviewResidualClosureGateData : InternalReviewResidualClosureGateData :=
@@ -132,9 +131,9 @@ def internalReviewResidualClosureGateData : InternalReviewResidualClosureGateDat
 /-- The installed internal review residual closure gate is ready. -/
 theorem internal_review_residual_closure_gate_ready :
     internalReviewResidualClosureGateData.ready := by
-  exact And.intro four_lane_residual_closure_ready <|
-    And.intro exact_value_theorem_body_origin_review_surface_ready <|
-    And.intro final_theorem_release_closure_review_surface_ready <|
+  exact And.intro internalReviewResidualClosureGateData.fourLaneClosureReady <|
+    And.intro internalReviewResidualClosureGateData.exactValueOriginReady <|
+    And.intro internalReviewResidualClosureGateData.finalReleaseClosureReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -143,7 +142,7 @@ theorem internal_review_residual_closure_gate_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro True.intro exactGapValueReal_eq
+    And.intro True.intro internalReviewResidualClosureGateData.exactValuePreserved
 
 end MathlibAnalytic
 end MGAP4D
