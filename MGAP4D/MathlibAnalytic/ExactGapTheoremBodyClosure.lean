@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.OperatorMeasureCompatibilityTheorem
 namespace MGAP4D
 namespace MathlibAnalytic
 
+noncomputable section
+
 /-- Full abstract theorem-body closure for the exact-gap chain.
 
 This closes the CI-green abstract theorem-body layer after the full interface
@@ -57,18 +59,26 @@ structure ExactGapTheoremBodyClosure where
 /-- Ready predicate for the exact-gap theorem-body closure. -/
 def ExactGapTheoremBodyClosure.ready
     (C : ExactGapTheoremBodyClosure) : Prop :=
-  C.rayleighQuotientBodyReady ∧
-  C.selfAdjointHPhysBodyReady ∧
-  C.spectralTheoremBodyReady ∧
-  C.pvmTheoremBodyReady ∧
-  C.observableAtomBodyReady ∧
-  C.compactPlaquetteBodyReady ∧
-  C.operatorMeasureCompatibilityBodyReady ∧
-  C.exactValue_eq_3320 ∧
-  C.exactValue_positive ∧
-  C.observableWeightPositive ∧
-  C.observableWeightNonzero ∧
-  C.observableWeightEqualsPVMMass ∧
+  hilbertRayleighQuotientReviewSurface.ready ∧
+  selfAdjointHPhysTheoremReviewSurface.ready ∧
+  spectralTheoremTheoremReviewSurface.ready ∧
+  pvmTheoremTheoremReviewSurface.ready ∧
+  observableAtomTheoremTheoremReviewSurface.ready ∧
+  compactPlaquetteConstructionTheoremReviewSurface.ready ∧
+  operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < exactGapValueReal ∧
+  0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom ∧
   C.allAbstractTheoremBodiesClosed ∧
   C.concreteHilbertRealizationStillOpen ∧
   C.concreteUnboundedOperatorStillOpen ∧
@@ -127,24 +137,32 @@ theorem exact_gap_theorem_body_closure_ready :
     And.intro True.intro True.intro
 
 theorem exact_gap_theorem_body_closure_value :
-    exactGapTheoremBodyClosure.exactValue_eq_3320 := by
-  exact exactGapValueReal_eq
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact exactGapTheoremBodyClosure.exactValue_eq_3320
 
 theorem exact_gap_theorem_body_closure_positive :
-    exactGapTheoremBodyClosure.exactValue_positive := by
-  exact exactGapValueReal_pos
+    0 < exactGapValueReal := by
+  exact exactGapTheoremBodyClosure.exactValue_positive
 
 theorem exact_gap_theorem_body_closure_weight_positive :
-    exactGapTheoremBodyClosure.observableWeightPositive := by
-  exact singleton_operator_measure_compatibility_positive_weight
+    0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom := by
+  exact exactGapTheoremBodyClosure.observableWeightPositive
 
 theorem exact_gap_theorem_body_closure_weight_nonzero :
-    exactGapTheoremBodyClosure.observableWeightNonzero := by
-  exact singleton_operator_measure_compatibility_nonzero_weight
+    singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 := by
+  exact exactGapTheoremBodyClosure.observableWeightNonzero
 
 theorem exact_gap_theorem_body_closure_weight_equals_pvm_mass :
-    exactGapTheoremBodyClosure.observableWeightEqualsPVMMass := by
-  exact singleton_operator_measure_compatibility_weight_equals_pvm_mass
+    singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom := by
+  exact exactGapTheoremBodyClosure.observableWeightEqualsPVMMass
 
 theorem exact_gap_theorem_body_closure_final_release_held :
     exactGapTheoremBodyClosure.finalReleaseHeld := by
@@ -153,6 +171,8 @@ theorem exact_gap_theorem_body_closure_final_release_held :
 theorem exact_gap_theorem_body_closure_public_boundary_held :
     exactGapTheoremBodyClosure.publicBoundaryHeld := by
   trivial
+
+end
 
 end MathlibAnalytic
 end MGAP4D
