@@ -30,15 +30,21 @@ structure ArbitrarilyLargeHilbertExcitationFamilyData where
   boundedFiniteCollapseBlocked : Prop
   boundedFiniteCollapseBlocked_proof : boundedFiniteCollapseBlocked
   fullLinearIndependenceStillOpen : Prop
+  fullLinearIndependenceStillOpen_proof : fullLinearIndependenceStillOpen
   finalReleaseHeld : Prop
   publicBoundaryHeld : Prop
 
 /-- Ready predicate for arbitrarily-large excitation families. -/
 def ArbitrarilyLargeHilbertExcitationFamilyData.ready
     (D : ArbitrarilyLargeHilbertExcitationFamilyData) : Prop :=
-  D.pnpBridgeReady ∧ D.pairwise_distinguishable ∧ D.finite_family_def ∧
-  D.finite_family_pairwise_distinguishable ∧ D.arbitrarilyLargeFamilyVisible ∧
-  D.boundedFiniteCollapseBlocked ∧ D.fullLinearIndependenceStillOpen ∧
+  infiniteDimensionalHilbertNecessityFromPNPReviewSurface.ready ∧
+  (∀ n m : Nat, n ≠ m → D.distinguishable (D.excitation n) (D.excitation m)) ∧
+  (∀ k i, D.finite_family k i = D.excitation i.val) ∧
+  (∀ k (i j : Fin k), i ≠ j →
+    D.distinguishable (D.finite_family k i) (D.finite_family k j)) ∧
+  D.arbitrarilyLargeFamilyVisible ∧
+  D.boundedFiniteCollapseBlocked ∧
+  D.fullLinearIndependenceStillOpen ∧
   D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
 /-- Extract a finite distinguishable family of any requested size. -/
@@ -58,12 +64,12 @@ theorem arbitrarily_large_hilbert_excitation_bounded_collapse_blocked
 theorem arbitrarily_large_hilbert_excitation_linear_independence_still_open
     (D : ArbitrarilyLargeHilbertExcitationFamilyData) :
     D.fullLinearIndependenceStillOpen := by
-  exact D.fullLinearIndependenceStillOpen
+  exact D.fullLinearIndependenceStillOpen_proof
 
 /-- Prototype arbitrarily-large excitation family, using `Nat` as the candidate
 state family and inequality as distinguishability. -/
-def prototypeArbitrarilyLargeHilbertExcitationFamilyData :
-    ArbitrarilyLargeHilbertExcitationFamilyData :=
+noncomputable def prototypeArbitrarilyLargeHilbertExcitationFamilyData :
+    ArbitrarilyLargeHilbertExcitationFamilyData.{0} :=
   { pnpBridgeReady := infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready
     state := Nat
     excitation := fun n => n
@@ -85,6 +91,7 @@ def prototypeArbitrarilyLargeHilbertExcitationFamilyData :
     boundedFiniteCollapseBlocked := True
     boundedFiniteCollapseBlocked_proof := True.intro
     fullLinearIndependenceStillOpen := True
+    fullLinearIndependenceStillOpen_proof := True.intro
     finalReleaseHeld := True
     publicBoundaryHeld := True }
 
@@ -129,16 +136,22 @@ structure ArbitrarilyLargeHilbertExcitationFamilyReviewSurface where
 
 def ArbitrarilyLargeHilbertExcitationFamilyReviewSurface.ready
     (S : ArbitrarilyLargeHilbertExcitationFamilyReviewSurface) : Prop :=
-  S.pnpBridgeReady ∧ S.largeFamilyReady ∧ S.pairwiseFiniteFamily ∧
-  S.boundedFiniteCollapseBlocked ∧ S.arbitrarilyLargeFamilyEstablished ∧
+  infiniteDimensionalHilbertNecessityFromPNPReviewSurface.ready ∧
+  prototypeArbitrarilyLargeHilbertExcitationFamilyData.ready ∧
+  (∀ k (i j : Fin k), i ≠ j →
+    prototypeArbitrarilyLargeHilbertExcitationFamilyData.distinguishable
+      (prototypeArbitrarilyLargeHilbertExcitationFamilyData.finite_family k i)
+      (prototypeArbitrarilyLargeHilbertExcitationFamilyData.finite_family k j)) ∧
+  prototypeArbitrarilyLargeHilbertExcitationFamilyData.boundedFiniteCollapseBlocked ∧
+  S.arbitrarilyLargeFamilyEstablished ∧
   S.fullLinearIndependenceStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
-def arbitrarilyLargeHilbertExcitationFamilyReviewSurface :
+noncomputable def arbitrarilyLargeHilbertExcitationFamilyReviewSurface :
     ArbitrarilyLargeHilbertExcitationFamilyReviewSurface :=
   { pnpBridgeReady := infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready
     largeFamilyReady := prototype_arbitrarily_large_hilbert_excitation_family_ready
     pairwiseFiniteFamily := prototype_arbitrarily_large_hilbert_excitation_family_pairwise
-    boundedFiniteCollapseBlocked := True.intro
+    boundedFiniteCollapseBlocked := prototypeArbitrarilyLargeHilbertExcitationFamilyData.boundedFiniteCollapseBlocked_proof
     arbitrarilyLargeFamilyEstablished := True
     fullLinearIndependenceStillOpen := True
     finalReleaseHeld := True
@@ -149,7 +162,7 @@ theorem arbitrarily_large_hilbert_excitation_family_review_surface_ready :
   exact And.intro infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready <|
     And.intro prototype_arbitrarily_large_hilbert_excitation_family_ready <|
     And.intro prototype_arbitrarily_large_hilbert_excitation_family_pairwise <|
-    And.intro True.intro <|
+    And.intro prototypeArbitrarilyLargeHilbertExcitationFamilyData.boundedFiniteCollapseBlocked_proof <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro True.intro
