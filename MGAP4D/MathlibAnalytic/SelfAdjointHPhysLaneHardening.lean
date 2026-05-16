@@ -36,11 +36,11 @@ structure SelfAdjointHPhysLaneHardeningData where
 /-- Ready predicate for the self-adjoint `H_phys` hardening lane. -/
 def SelfAdjointHPhysLaneHardeningData.ready
     (D : SelfAdjointHPhysLaneHardeningData) : Prop :=
-  D.hilbertConstructionLaneReady ∧
-  D.hphysInterfaceReady ∧
-  D.hphysTheoremBodyReady ∧
-  D.physicalOperatorSkeletonReady ∧
-  D.concreteHPhysBridgeReady ∧
+  hilbertConstructionLaneHardeningData.ready ∧
+  selfAdjointHPhysReviewSurface.ready ∧
+  selfAdjointHPhysTheoremReviewSurface.ready ∧
+  physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
+  concreteHPhysRealizationTheoremReviewSurface.ready ∧
   D.interfaceHardened ∧
   D.theoremBodyHardened ∧
   D.domainClosureHardened ∧
@@ -50,7 +50,7 @@ def SelfAdjointHPhysLaneHardeningData.ready
   D.physicalOperatorSkeletonHardened ∧
   D.concreteHPhysBridgeHardened ∧
   D.hardPhysicalBoundaryVisible ∧
-  D.exactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -120,10 +120,9 @@ theorem self_adjoint_hphys_hard_boundary_visible
 
 /-- Exact normalized value is preserved by self-adjoint lane hardening. -/
 theorem self_adjoint_hphys_exact_value_preserved
-    (D : SelfAdjointHPhysLaneHardeningData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : SelfAdjointHPhysLaneHardeningData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- Installed self-adjoint `H_phys` hardening lane. -/
 def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
@@ -149,11 +148,11 @@ def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
 /-- The installed self-adjoint `H_phys` hardening lane is ready. -/
 theorem self_adjoint_hphys_lane_hardening_ready :
     selfAdjointHPhysLaneHardeningData.ready := by
-  exact And.intro hilbert_construction_lane_hardening_ready <|
-    And.intro self_adjoint_hphys_review_surface_ready <|
-    And.intro self_adjoint_hphys_theorem_review_surface_ready <|
-    And.intro physical_unbounded_operator_skeleton_review_surface_ready <|
-    And.intro concrete_hphys_realization_theorem_review_surface_ready <|
+  exact And.intro selfAdjointHPhysLaneHardeningData.hilbertConstructionLaneReady <|
+    And.intro selfAdjointHPhysLaneHardeningData.hphysInterfaceReady <|
+    And.intro selfAdjointHPhysLaneHardeningData.hphysTheoremBodyReady <|
+    And.intro selfAdjointHPhysLaneHardeningData.physicalOperatorSkeletonReady <|
+    And.intro selfAdjointHPhysLaneHardeningData.concreteHPhysBridgeReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -163,7 +162,7 @@ theorem self_adjoint_hphys_lane_hardening_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+    And.intro selfAdjointHPhysLaneHardeningData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
