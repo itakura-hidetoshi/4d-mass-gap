@@ -2,46 +2,11 @@
 
 This document gives a minimal independent replay procedure for the MGAP4D Lean 4 repository.
 
-It is intended for external reviewers who want to reproduce the repository-level audit and Lean build without relying on local, unpublished state.
-
 ## Scope
 
-This guide checks the public repository state only.
+This guide checks the public repository state only. It confirms the repository audit chain, lane hardening chain, four-lane residual closure, internal review residual closure gate, external audit readiness gate, replay summary, Lake manifest generation, and Lean build.
 
-It confirms:
-
-```text
-release manifest consistency
-Lean forbidden-token audit
-major theorem non-placeholder audit
-analytic bridge-coherence audit
-infinite-dimensional Yang-Mills target-layer audit
-infinite-dimensional residual-filling bridge audit
-hard physical residual hardening-map audit
-Hilbert construction lane hardening audit
-self-adjoint HPhys lane hardening audit
-continuum Yang-Mills lane hardening audit
-plaquette spectral weight lane hardening audit
-four-lane residual closure audit
-internal review residual closure gate audit
-Lean replay summary generation
-Lake manifest generation
-Lean build via lake build
-```
-
-It does not by itself establish:
-
-```text
-external mathematical consensus
-peer-review completion
-Clay-style final theorem acceptance
-a dimensional physical mass gap without choosing the reference scale E0
-that syntactic audit scripts replace Lean kernel checking
-that Lean CI replaces expert mathematical review
-that the target / residual-filling / hardening-map / lane-hardening / four-lane closure / internal review gate layers by themselves complete the continuum proof
-```
-
-The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, residual-filling, hardening-map, all four lane hardenings, four-lane residual closure, internal review closure gate, and replay support.
+It does not claim external mathematical consensus, peer-review completion, Clay-style public final theorem acceptance, or a dimensional physical mass gap without an external reference scale `E0`.
 
 ## Fresh clone replay
 
@@ -82,12 +47,14 @@ This executes, in order:
 [check] audit plaquette spectral weight lane hardening
 [check] audit four-lane residual closure
 [check] audit internal review residual closure gate
+[check] audit external audit readiness gate
 [check] replay summary
 [check] lake update
+[check] lean external audit readiness gate
 [check] lake build
 ```
 
-## Manual step-by-step replay
+## Manual replay
 
 ```bash
 python3 scripts/verify_manifest.py
@@ -103,127 +70,59 @@ python3 scripts/audit_continuum_yang_mills_lane_hardening.py
 python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
 python3 scripts/audit_four_lane_residual_closure.py
 python3 scripts/audit_internal_review_residual_closure_gate.py
+python3 scripts/audit_external_audit_readiness_gate.py
 python3 scripts/replay_summary.py
 lake update
+lake env lean MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 lake build
 ```
 
-## Audit stages
+## Residual closure chain
 
 ```text
-verify_manifest.py: archived manifest consistency
-audit_lean_forbidden_tokens.py: sorry/admit/axiom/constant audit
-audit_major_theorem_nonplaceholder.py: load-bearing theorem surface audit
-audit_bridge_coherence.py: bridge import/anchor/boundary audit
-audit_infinite_dimensional_target_layer.py: target-obligation layer audit
-audit_infinite_dimensional_residual_filling.py: residual-filling bridge audit
-audit_hard_physical_residual_hardening_map.py: four-lane hard residual map audit
-audit_hilbert_construction_lane_hardening.py: Hilbert construction lane audit
-audit_self_adjoint_hphys_lane_hardening.py: self-adjoint HPhys lane audit
-audit_continuum_yang_mills_lane_hardening.py: continuum Yang-Mills lane audit
-audit_plaquette_spectral_weight_lane_hardening.py: plaquette spectral weight lane audit
-audit_four_lane_residual_closure.py: all-four-lane closure audit
-audit_internal_review_residual_closure_gate.py: release-facing internal review closure gate audit
-replay_summary.py: replay summary generation
-lake build: Lean kernel build gate
+InfiniteDimensionalYangMillsRealizationTargets
+  -> InfiniteDimensionalResidualFillingBridge
+  -> HardPhysicalResidualHardeningMap
+      -> HilbertConstructionLaneHardening
+      -> SelfAdjointHPhysLaneHardening
+      -> ContinuumYangMillsLaneHardening
+      -> PlaquetteSpectralWeightLaneHardening
+  -> FourLaneResidualClosure
+  -> InternalReviewResidualClosureGate
+  -> ExternalAuditReadinessGate
 ```
 
-## Hardened lanes currently audited
+## External audit readiness anchors
 
 ```text
-Hilbert construction lane:
-  countableBasisHardened
-  finiteSpanDensityHardened
-  normTopologyHardened
-  cauchyCompletionHardened
-  completeNormedSpaceHardened
-  innerProductHardened
-  hilbertInstanceHardened
-
-Self-adjoint HPhys lane:
-  interfaceHardened
-  theoremBodyHardened
-  domainClosureHardened
-  symmetryOnDomainHardened
-  selfAdjointCertificateHardened
-  rayleighCompatibilityHardened
-  physicalOperatorSkeletonHardened
-  concreteHPhysBridgeHardened
-
-Continuum Yang-Mills lane:
-  concreteYMHardened
-  hphysBuiltFromYMHardened
-  plaquetteCenteredHardened
-  normalizationBridgeHardened
-  spectralRealizationHardened
-  exactAtomHardened
-  continuumSpectralTheoremHardened
-  continuumLimitBoundaryVisible
-
-Plaquette spectral weight lane:
-  compactSupportHardened
-  centeredHardened
-  smearedHardened
-  plaquetteConstructionHardened
-  observableAtomHardened
-  positiveWeightHardened
-  nonzeroWeightHardened
-  weightEqualsPVMMassHardened
-  operatorMeasureCompatibilityHardened
-  exactBodyWeightClosureHardened
-
-Four-lane residual closure:
-  hilbertLaneClosed
-  selfAdjointLaneClosed
-  continuumYMLaneClosed
-  plaquetteWeightLaneClosed
-  allFourLanesClosed
-  noReviewLevelResidualLeft
-
-Internal review residual closure gate:
-  repositoryInternalResidualClosed
-  noReviewLevelResidualLeft
-  exactTheoremBodyOriginPreserved
-  notPackagingArtifactPreserved
-  notCILedgerArtifactPreserved
-  finalReleaseClosureLinked
-  externalReviewBoundaryVisible
-  publicBoundaryHeld
-  finalReleaseHeld
+repositoryInternalResidualClosed
+noReviewLevelResidualLeft
+independentReplayVisible
+auditScriptRouteVisible
+ciRouteVisible
+externalAuditReady
+externalConsensusNotClaimed
+publicBoundaryHeld
+finalReleaseHeld
+exactValuePreserved
 ```
 
 ## GitHub Actions parity
 
-The main CI workflow is:
-
-```text
-.github/workflows/lean-direct-elan.yml
-```
-
-The audit job runs the same audit families, including all four hard physical residual lanes, the four-lane residual closure, and the internal review residual closure gate.
-
-The one-command local replay path is mirrored by:
+The main replay path is mirrored by:
 
 ```text
 .github/workflows/full-local-check.yml
 ```
 
+The external audit readiness gate also has a dedicated workflow:
+
+```text
+.github/workflows/external-audit-readiness-ci.yml
+```
+
 ## Review boundary
 
-A successful independent replay means:
+A successful independent replay means the repository builds with the pinned Lean toolchain, declared audit scripts pass, lane-hardening and closure gates pass, the external audit readiness gate passes, and the replay summary is reproducible.
 
-```text
-the repository builds with the pinned Lean toolchain
-the declared audit scripts pass
-the theorem-surface, bridge-surface, target-layer, residual-filling, hardening-map, lane-hardening, four-lane closure, and internal review gate checks pass
-the replay summary is reproducible
-```
-
-It does not mean:
-
-```text
-external consensus has been obtained
-all analytic residuals have been accepted by the mathematical community
-CI output alone is a substitute for proof review
-the target / residual-filling / hardening-map / lane-hardening / four-lane closure / internal review gate layers alone complete the physical continuum proof
-```
+It does not mean external consensus has been obtained or that the gate layers alone complete the physical continuum proof.
