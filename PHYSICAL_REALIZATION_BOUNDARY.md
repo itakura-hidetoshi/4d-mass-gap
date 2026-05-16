@@ -199,6 +199,57 @@ publicBoundaryHeld
 
 Thus the normalized value `33/20` is a dimensionless internal theorem-body surface unless an external reference scale `E0` is supplied.
 
+### Infinite-dimensional Yang--Mills realization target
+
+Source:
+
+```text
+MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
+```
+
+This layer is the next evolution step beyond skeleton-only closure. It does not claim that the full physical continuum proof is completed. Instead, it makes the missing analytic requirements first-class Lean objects.
+
+It introduces a target structure:
+
+```text
+InfiniteDimensionalYangMillsRealizationTarget
+```
+
+and a review surface:
+
+```text
+InfiniteDimensionalYangMillsTargetReviewSurface
+```
+
+The target layer requires explicit witnesses for:
+
+```text
+infinite-dimensional Hilbert realization
+separable Hilbert witness
+dense core
+domain density
+symmetric H_phys
+self-adjoint H_phys
+gauge-invariant sector
+Yang-Mills energy witness
+continuum limit
+OS positivity
+spectral theorem
+exact atom
+positive plaquette spectral weight
+nonempty vacuum-orthogonal sector
+normalization preservation
+```
+
+Boundary markers include:
+
+```text
+publicBoundaryHeld
+finalReleaseHeld
+```
+
+Thus this layer is a proof-obligation map from skeleton closure toward physical realization. It strengthens the repository by making the analytic gap visible and auditable, but it does not by itself discharge the full continuum Yang--Mills proof.
+
 ## Correct reading of `PUnit` / singleton surfaces
 
 The `PUnit` and singleton constructions are used as Lean-native contract witnesses for the current review surfaces.
@@ -229,30 +280,60 @@ closed internal review surface
 open / held physical public boundary
 ```
 
+## Correct reading of the infinite-dimensional target layer
+
+The target layer should be read as:
+
+```text
+an analytic proof-obligation surface
+a promotion checklist for physical realization
+a typed target for future theorem hardening
+an audit surface for the nontrivial continuum proof gap
+```
+
+It should not be read as:
+
+```text
+a completed infinite-dimensional Yang-Mills Hamiltonian construction
+a completed self-adjointness proof
+a completed continuum spectral theorem
+a completed nonzero plaquette spectral-weight proof
+a completed Clay-style final theorem claim
+```
+
+This is the intended evolution: the prior weakness is no longer hidden in prose; it is now named, imported, and audited as an explicit target layer.
+
 ## Why this boundary is useful
 
-This design has three review advantages:
+This design has four review advantages:
 
 1. The repository remains buildable under Lean.
 2. The theorem and bridge surfaces remain mechanically auditable.
 3. The unresolved physical continuum boundary remains visible instead of being hidden by prose.
+4. The next analytic obligations are now named and tracked as Lean-facing target surfaces.
 
 This is why boundary markers such as `publicBoundaryHeld`, `finalReleaseHeld`, and `continuumSpectralTheoremStillOpen` are part of the Lean-facing review surface.
 
 ## Review rule
 
-When reviewing this repository, read any singleton / prototype / skeleton construction together with its boundary markers.
+When reviewing this repository, read any singleton / prototype / skeleton / target construction together with its boundary markers.
 
 A correct review statement is:
 
 ```text
-The current repository provides an internal normalized theorem-body / proof-architecture surface with explicit replay, bridge audit, and boundary markers.
+The current repository provides an internal normalized theorem-body / proof-architecture surface with explicit replay, bridge audit, target obligations, and boundary markers.
 ```
 
 An incorrect review statement is:
 
 ```text
 The repository claims that a one-point PUnit model is the final physical Yang-Mills Hilbert space.
+```
+
+Another incorrect review statement is:
+
+```text
+The infinite-dimensional target layer by itself completes the full continuum Yang-Mills proof.
 ```
 
 ## Relation to other review documents
@@ -267,6 +348,6 @@ THEOREM_INDEX.md
 
 `INDEPENDENT_REPLAY.md` explains how to replay the repository.
 
-`THEOREM_INDEX.md` lists the theorem surfaces and bridge surfaces to inspect.
+`THEOREM_INDEX.md` lists the theorem surfaces, bridge surfaces, and target surfaces to inspect.
 
 This document explains how to interpret the physical-realization boundary while reading those surfaces.
