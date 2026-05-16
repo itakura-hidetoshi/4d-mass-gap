@@ -365,6 +365,16 @@ PHYSICAL_REALIZATION_BOUNDARY.md
 
 That guide clarifies that these surfaces are contract witnesses and review surfaces, not a claim that the final continuum Yang-Mills Hilbert space or spectral measure has been replaced by a one-point model.
 
+## External review checklist
+
+External reviewers can follow the end-to-end review checklist:
+
+```text
+EXTERNAL_REVIEW_CHECKLIST.md
+```
+
+The checklist bundles the replay guide, theorem index, physical-realization boundary, normalization reading, source/document comparison, and final review notes into one ordered path.
+
 ## Build and local checks
 
 Lean build:
@@ -422,6 +432,7 @@ Bridge coherence audit: green
 Independent replay guide: INDEPENDENT_REPLAY.md
 Theorem index: THEOREM_INDEX.md
 Physical realization boundary: PHYSICAL_REALIZATION_BOUNDARY.md
+External review checklist: EXTERNAL_REVIEW_CHECKLIST.md
 Physical Hamiltonian normalization bridge: CI green
 Exact value theorem-body origin: CI green
 Concrete residual closure: CI green
