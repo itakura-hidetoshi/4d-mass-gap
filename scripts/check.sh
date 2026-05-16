@@ -40,11 +40,17 @@ python3 scripts/audit_four_lane_residual_closure.py
 echo "[check] audit internal review residual closure gate"
 python3 scripts/audit_internal_review_residual_closure_gate.py
 
+echo "[check] audit external audit readiness gate"
+python3 scripts/audit_external_audit_readiness_gate.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
 echo "[check] lake update"
 lake update
+
+echo "[check] lean external audit readiness gate"
+lake env lean MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 
 echo "[check] lake build"
 lake build
