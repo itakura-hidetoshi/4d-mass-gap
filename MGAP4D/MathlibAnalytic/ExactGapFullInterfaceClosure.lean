@@ -3,19 +3,6 @@ import MGAP4D.MathlibAnalytic.ObservableAtomInterface
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Full Mathlib analytic interface closure for the exact-gap chain.
-
-This bundles the currently CI-green post-Mathlib interface chain:
-
-* real-order exact-gap analytic closure,
-* Hilbert/Rayleigh interface,
-* operator-shaped `H_phys` interface,
-* spectral theorem integration interface,
-* PVM-shaped exact atom interface,
-* observable atom / positive spectral-weight interface.
-
-It is still an interface closure, not the final theorem release.  The remaining
-full theorem bodies are kept visible as open boundaries. -/
 structure ExactGapFullInterfaceClosure where
   realAnalyticReady : exactGapAnalyticRealClosure.ready
   hilbertRayleighReady : hilbertRayleighInterfaceReviewSurface.ready
@@ -46,20 +33,36 @@ structure ExactGapFullInterfaceClosure where
   finalReleaseHeld : Prop
   publicBoundaryHeld : Prop
 
-/-- Ready predicate for the full interface closure. -/
-def ExactGapFullInterfaceClosure.ready
-    (C : ExactGapFullInterfaceClosure) : Prop :=
-  C.realAnalyticReady ∧ C.hilbertRayleighReady ∧ C.hphysReady ∧
-  C.spectralReady ∧ C.pvmReady ∧ C.observableAtomReady ∧
-  C.exactValue_eq_3320 ∧ C.exactValue_positive ∧ C.exactValue_above_one ∧
-  C.observableAtomPositiveWeight ∧ C.observableAtomNonzeroWeight ∧
-  C.observableAtomCompatibleWithPVM ∧ C.allMathlibInterfacesClosed ∧
-  C.fullHilbertRayleighStillOpen ∧ C.fullSelfAdjointHPhysStillOpen ∧
-  C.fullSpectralTheoremStillOpen ∧ C.fullPVMStillOpen ∧
-  C.fullObservableAtomStillOpen ∧ C.finalReleaseHeld ∧ C.publicBoundaryHeld
+theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
+  norm_num [exactGapValueReal]
 
-/-- The current exact-gap full interface closure. -/
-def exactGapFullInterfaceClosure : ExactGapFullInterfaceClosure :=
+def ExactGapFullInterfaceClosure.ready (C : ExactGapFullInterfaceClosure) : Prop :=
+  exactGapAnalyticRealClosure.ready ∧
+  hilbertRayleighInterfaceReviewSurface.ready ∧
+  selfAdjointHPhysReviewSurface.ready ∧
+  spectralTheoremReviewSurface.ready ∧
+  pvmReviewSurface.ready ∧
+  observableAtomReviewSurface.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < exactGapValueReal ∧
+  1 < exactGapValueReal ∧
+  0 < singletonObservableAtomInterface.spectralWeight
+    singletonObservableAtomInterface.chosenObservable
+    singletonObservableAtomInterface.atom ∧
+  singletonObservableAtomInterface.spectralWeight
+    singletonObservableAtomInterface.chosenObservable
+    singletonObservableAtomInterface.atom ≠ 0 ∧
+  singletonObservableAtomInterface.spectralWeight
+    singletonObservableAtomInterface.chosenObservable
+    singletonObservableAtomInterface.atom =
+    singletonObservableAtomInterface.pvm.projectionMass
+      singletonObservableAtomInterface.pvm.exactAtom ∧
+  C.allMathlibInterfacesClosed ∧ C.fullHilbertRayleighStillOpen ∧
+  C.fullSelfAdjointHPhysStillOpen ∧ C.fullSpectralTheoremStillOpen ∧
+  C.fullPVMStillOpen ∧ C.fullObservableAtomStillOpen ∧
+  C.finalReleaseHeld ∧ C.publicBoundaryHeld
+
+noncomputable def exactGapFullInterfaceClosure : ExactGapFullInterfaceClosure :=
   { realAnalyticReady := exact_gap_analytic_real_closure_ready
     hilbertRayleighReady := hilbert_rayleigh_interface_review_surface_ready
     hphysReady := self_adjoint_hphys_review_surface_ready
@@ -68,8 +71,7 @@ def exactGapFullInterfaceClosure : ExactGapFullInterfaceClosure :=
     observableAtomReady := observable_atom_review_surface_ready
     exactValue_eq_3320 := exactGapValueReal_eq
     exactValue_positive := exactGapValueReal_pos
-    exactValue_above_one := by
-      norm_num [exactGapValueReal]
+    exactValue_above_one := exactGapValueReal_above_one
     observableAtomPositiveWeight := singleton_observable_atom_interface_positive_weight
     observableAtomNonzeroWeight := singleton_observable_atom_interface_nonzero_weight
     observableAtomCompatibleWithPVM := singleton_observable_atom_interface_compatible_with_pvm
@@ -92,7 +94,7 @@ theorem exact_gap_full_interface_closure_ready :
     And.intro observable_atom_review_surface_ready <|
     And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos <|
-    And.intro (by norm_num [exactGapValueReal]) <|
+    And.intro exactGapValueReal_above_one <|
     And.intro singleton_observable_atom_interface_positive_weight <|
     And.intro singleton_observable_atom_interface_nonzero_weight <|
     And.intro singleton_observable_atom_interface_compatible_with_pvm <|
@@ -105,19 +107,23 @@ theorem exact_gap_full_interface_closure_ready :
     And.intro True.intro True.intro
 
 theorem exact_gap_full_interface_closure_value :
-    exactGapFullInterfaceClosure.exactValue_eq_3320 := by
+    exactGapValueReal = (33 : ℝ) / 20 := by
   exact exactGapValueReal_eq
 
 theorem exact_gap_full_interface_closure_positive :
-    exactGapFullInterfaceClosure.exactValue_positive := by
+    0 < exactGapValueReal := by
   exact exactGapValueReal_pos
 
 theorem exact_gap_full_interface_closure_observable_positive_weight :
-    exactGapFullInterfaceClosure.observableAtomPositiveWeight := by
+    0 < singletonObservableAtomInterface.spectralWeight
+      singletonObservableAtomInterface.chosenObservable
+      singletonObservableAtomInterface.atom := by
   exact singleton_observable_atom_interface_positive_weight
 
 theorem exact_gap_full_interface_closure_observable_nonzero_weight :
-    exactGapFullInterfaceClosure.observableAtomNonzeroWeight := by
+    singletonObservableAtomInterface.spectralWeight
+      singletonObservableAtomInterface.chosenObservable
+      singletonObservableAtomInterface.atom ≠ 0 := by
   exact singleton_observable_atom_interface_nonzero_weight
 
 theorem exact_gap_full_interface_closure_final_release_held :
