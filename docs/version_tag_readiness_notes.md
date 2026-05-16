@@ -62,11 +62,12 @@ MathlibAnalytic external audit readiness gate CI:
 
 ```text
 Workflow: Run scripts/check.sh
-Run ID: 25961050604
-Job ID: 76316305600
-Commit: 82195da8315d6b166ebdef24b3314be9ca969650
+Run ID: 25961418682
+Job ID: 76317232199
+Commit: 7041b000c4c8f30a2d99d5429504d00cffb88bcb
 Result: success
 Ledger: docs/external_audit_readiness_gate_ci.md
+Lean-side warnings in gate build: none observed
 ```
 
 ## Tag readiness criteria
