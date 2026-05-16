@@ -40,11 +40,11 @@ structure PlaquetteSpectralWeightLaneHardeningData where
 /-- Ready predicate for the plaquette spectral-weight hardening lane. -/
 def PlaquetteSpectralWeightLaneHardeningData.ready
     (D : PlaquetteSpectralWeightLaneHardeningData) : Prop :=
-  D.continuumYMLaneReady ∧
-  D.observableAtomReady ∧
-  D.compactPlaquetteReady ∧
-  D.operatorMeasureReady ∧
-  D.exactBodyClosureReady ∧
+  continuumYangMillsLaneHardeningData.ready ∧
+  observableAtomTheoremTheoremReviewSurface.ready ∧
+  compactPlaquetteConstructionTheoremReviewSurface.ready ∧
+  operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
+  exactGapTheoremBodyClosure.ready ∧
   D.compactSupportHardened ∧
   D.centeredHardened ∧
   D.smearedHardened ∧
@@ -58,7 +58,7 @@ def PlaquetteSpectralWeightLaneHardeningData.ready
   D.concretePlaquetteBoundaryVisible ∧
   D.concreteOperatorMeasureBoundaryVisible ∧
   D.hardPhysicalBoundaryVisible ∧
-  D.exactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -149,10 +149,9 @@ theorem plaquette_weight_operator_measure_boundary_visible
 
 /-- Exact normalized value is preserved by the plaquette spectral-weight lane. -/
 theorem plaquette_weight_exact_value_preserved
-    (D : PlaquetteSpectralWeightLaneHardeningData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : PlaquetteSpectralWeightLaneHardeningData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- Installed plaquette spectral-weight hardening lane. -/
 def plaquetteSpectralWeightLaneHardeningData : PlaquetteSpectralWeightLaneHardeningData :=
@@ -182,11 +181,11 @@ def plaquetteSpectralWeightLaneHardeningData : PlaquetteSpectralWeightLaneHarden
 /-- The installed plaquette spectral-weight hardening lane is ready. -/
 theorem plaquette_spectral_weight_lane_hardening_ready :
     plaquetteSpectralWeightLaneHardeningData.ready := by
-  exact And.intro continuum_yang_mills_lane_hardening_ready <|
-    And.intro observable_atom_theorem_theorem_review_surface_ready <|
-    And.intro compact_plaquette_construction_theorem_review_surface_ready <|
-    And.intro operator_measure_compatibility_theorem_review_surface_ready <|
-    And.intro exact_gap_theorem_body_closure_ready <|
+  exact And.intro plaquetteSpectralWeightLaneHardeningData.continuumYMLaneReady <|
+    And.intro plaquetteSpectralWeightLaneHardeningData.observableAtomReady <|
+    And.intro plaquetteSpectralWeightLaneHardeningData.compactPlaquetteReady <|
+    And.intro plaquetteSpectralWeightLaneHardeningData.operatorMeasureReady <|
+    And.intro plaquetteSpectralWeightLaneHardeningData.exactBodyClosureReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -200,7 +199,7 @@ theorem plaquette_spectral_weight_lane_hardening_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+    And.intro plaquetteSpectralWeightLaneHardeningData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
