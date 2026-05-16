@@ -115,6 +115,52 @@ documentation-route
 boundary-governance
 ```
 
+## CI checkpoint ledger
+
+This checkpoint records the CI evidence for the witness-alias hardening patch before merge.
+
+```text
+PR: #14 Add external readiness witness aliases
+Head commit: f2552d966973c0fa8ed6d2aab4903a3103d843ea
+Merge commit: 1d7d55bc32096942b15c39f4725b8111e609aed4
+
+Lean Direct Elan CI:
+  Run ID: 25964521763
+  Run number: 1907
+  Result: success
+
+Bridge Coherence CI:
+  Run ID: 25964521761
+  Run number: 215
+  Result: success
+
+External Audit Readiness CI:
+  Run ID: 25964521766
+  Run number: 93
+  Result: success
+
+Full Local Check CI:
+  Run ID: 25964521762
+  Run number: 191
+  Result: success
+
+Explicit full-check job reviewed:
+  Run ID: 25964651676
+  Job ID: 76325884534
+  Job name: Run scripts/check.sh
+  Result: success
+```
+
+Interpretation:
+
+```text
+The witness aliases are CI-green on the PR head.
+The full local script route is green on the reviewed job.
+The merge commit records the same patch through squash merge.
+This ledger does not claim external mathematical consensus.
+This ledger does not open final theorem release.
+```
+
 ## Status
 
 ```text
