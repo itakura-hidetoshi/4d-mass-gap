@@ -28,11 +28,13 @@ Current boundary:
 internal normalized theorem-body claim: present
 physical Hamiltonian normalization bridge: present
 concrete residual closure: present
-exact value theorem-body origin certificate: present
+infinite-dimensional residual filling bridge: present
+four-lane residual closure: present
+internal review residual closure gate: present
+external audit readiness gate: present
 major theorem non-placeholder audit: green
 bridge coherence audit: green
-Lean Direct Elan CI: green
-Bridge Coherence CI: green
+external-audit-readiness CI: green
 external mathematical consensus: not claimed
 public final theorem claim: review-gated
 ```
@@ -45,6 +47,25 @@ normalizedGap = physicalGap / E0
 physicalGap = E0 * normalizedGap
 internal units: E0 = 1, normalizedGap = 33/20
 dimensional reading: physicalGap_dimensional = E0 * (33/20)
+```
+
+## Dependency lane status
+
+The current Lake project uses a pinned MathlibAnalytic lane:
+
+```text
+Lean: 4.30.0-rc2
+mathlib4: v4.30.0-rc2
+roots: MGAP4D, MGAP4D.MathlibAnalytic
+```
+
+This supersedes older pre-Mathlib checkpoint language. The current boundary is not “Mathlib absent”; it is:
+
+```text
+MathlibAnalytic lane: adopted and pinned
+Final theorem release: still locked / review-gated
+External consensus: not claimed
+Independent replay and external audit: still required
 ```
 
 ## Phase 1: GitHub-native project setup
@@ -80,7 +101,7 @@ dimensional reading: physicalGap_dimensional = E0 * (33/20)
 - [x] Add R1--R7 theorem candidates, checklists, proof-obligation maps, skeletons, bundles, and milestones
 - [x] Add Phase3CandidateClosure and Phase3CIConfirmationClosure
 - [x] Complete R1--R7 scoped Mathlib dry-run series
-- [x] Record Mathlib main-adoption decision: hold_main_adoption
+- [x] Record earlier Mathlib main-adoption decision: hold_main_adoption
 - [x] Add post-Mathlib-hold theorem-route hardening checkpoint
 - [x] Add R3--R7 route-specific hardening checkpoints
 - [x] Add R3--R7 closure-candidate series review checkpoint
@@ -109,7 +130,6 @@ dimensional reading: physicalGap_dimensional = E0 * (33/20)
 - [x] Record spectral gap formalization CI success in ledger
 - [x] Add external audit note appendix template
 - [x] Add KuuOS reference bridge
-- [ ] Add Mathlib to main only after a separate explicit adoption proposal and review gate
 
 ## Phase 4: Release hygiene and external-audit surfaces
 
@@ -126,9 +146,10 @@ dimensional reading: physicalGap_dimensional = E0 * (33/20)
 - [x] Open tag creation tracking issue without creating a tag
 - [x] Record tag creation tracking issue receipt
 - [x] Add post-tag verification automation plan without creating a tag
-- [ ] Add version tags only after CI green and source tree review
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
+- [x] Record external audit readiness gate CI without changing active proof semantics
+- [ ] Add version tags only after a fresh source-tree review and CI green confirmation for the target commit
 - [ ] Add external audit notes without changing active proof semantics
 
 ## Phase 5: Analytic theorem-body and concrete residual closure
@@ -176,17 +197,6 @@ compact lattice-gauge plaquette observable construction
 operator-measure realization and compatibility
 ```
 
-Key ledgers:
-
-```text
-docs/mathlib_concrete_residual_closure.md
-docs/mathlib_concrete_residual_closure_ci.md
-docs/mathlib_final_theorem_release_bundle_manifest.md
-docs/mathlib_final_theorem_release_bundle_manifest_ci.md
-docs/mathlib_final_theorem_release_chain_index.md
-docs/mathlib_final_theorem_release_chain_index_ci.md
-```
-
 ## Phase 6: Physical Hamiltonian normalization and exact-value origin
 
 - [x] Add physical Hamiltonian normalization bridge
@@ -222,19 +232,10 @@ observable spectral weight positivity is carried from theorem body
 PVM mass compatibility is carried from theorem body
 ```
 
-Key ledgers:
-
-```text
-docs/mathlib_physical_hamiltonian_normalization_bridge.md
-docs/mathlib_physical_hamiltonian_normalization_bridge_ci.md
-docs/mathlib_exact_value_theorem_body_origin.md
-docs/mathlib_exact_value_theorem_body_origin_ci.md
-```
-
 ## Phase 7: Audit hardening
 
 - [x] Add major theorem non-placeholder audit script
-- [x] Wire major theorem non-placeholder audit into Lean Direct Elan CI
+- [x] Wire major theorem non-placeholder audit into CI
 - [x] Fix positivity anchor for theorem-body closure audit
 - [x] Observe major theorem non-placeholder audit CI green
 - [x] Record major theorem non-placeholder audit CI in ledger
@@ -243,6 +244,9 @@ docs/mathlib_exact_value_theorem_body_origin_ci.md
 - [x] Trigger Bridge Coherence CI
 - [x] Observe Bridge Coherence CI green
 - [x] Record Bridge Coherence CI in ledger
+- [x] Wire expanded audit chain into `scripts/check.sh`
+- [x] Observe external-audit-readiness gate CI green
+- [x] Record latest external-audit-readiness CI ledger
 
 Audit invariants:
 
@@ -255,29 +259,53 @@ Hamiltonian normalization bridge is checked as a non-placeholder statement
 Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge order is mechanically audited
 exact value preservation anchors are mechanically audited
 public boundary markers are mechanically audited
+external audit readiness is mechanically gated
 ```
 
-Latest audit ledgers:
+## Phase 8: External audit readiness hardening chain
+
+- [x] Add infinite-dimensional Yang-Mills realization target layer
+- [x] Add infinite-dimensional residual filling bridge
+- [x] Add hard physical residual hardening map
+- [x] Add Hilbert construction lane hardening
+- [x] Add self-adjoint HPhys lane hardening
+- [x] Add continuum Yang-Mills lane hardening
+- [x] Add plaquette spectral weight lane hardening
+- [x] Add four-lane residual closure
+- [x] Add internal review residual closure gate
+- [x] Add external audit readiness gate
+- [x] Build `MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate` in CI
+- [x] Observe Lean-side warning cleanup in green CI run
+- [x] Sync README and ROADMAP to latest external-audit-readiness checkpoint
+- [ ] Add a fresh source-tree review receipt for the latest external-audit-readiness checkpoint
+- [ ] Add independent replay notes for the full MathlibAnalytic external-audit-readiness chain
+
+Current external-audit-readiness checkpoint:
 
 ```text
-docs/mathlib_major_theorem_nonplaceholder_audit.md
-docs/mathlib_major_theorem_nonplaceholder_audit_ci.md
-docs/mathlib_bridge_coherence_audit.md
-docs/mathlib_bridge_coherence_ci.md
+Workflow: Run scripts/check.sh
+Run ID: 25961418682
+Job ID: 76317232199
+Commit checked out by CI: 7041b000c4c8f30a2d99d5429504d00cffb88bcb
+Result: success
+Lean files scanned: 457
+sorry/admit/axiom/constant: 0/0/0/0
+Major theorem specs audited: 12
+Bridge files audited: 8
+Ordered import edges audited: 5
+Build completed successfully: 8368 jobs
+Final lake build: success, 0 jobs
+Lean-side warnings in gate build: none observed
 ```
 
 ## Current priority
 
-The repository has advanced from the earlier spectral checkpoint into an internal analytic theorem-body status:
-
 ```text
-internal normalized theorem-body surface: present
-exact value theorem-body origin: CI green
-physical Hamiltonian normalization bridge: CI green
-concrete residual closure: CI green
-major theorem non-placeholder audit: CI green
-Bridge Coherence CI: green
-Lean Direct Elan CI: green
+1. Keep README, ROADMAP, source-tree review notes, and CI ledgers synchronized with main.
+2. Add a fresh source-tree review receipt for the latest external-audit-readiness checkpoint.
+3. Prepare independent replay instructions for the full MathlibAnalytic external-audit-readiness chain.
+4. Add external audit notes without changing active proof semantics.
+5. Add version tags only after source-tree review and CI green confirmation for the exact target commit.
 ```
 
 Current main-branch invariant:
@@ -287,19 +315,12 @@ Dimensionless normalized exact value surface: 33/20
 33/20 theorem-body origin: recorded
 physical dimensional reading: requires E0
 concrete Hilbert / H_phys / PVM / plaquette / operator-measure residuals: internally closed
+infinite-dimensional target and residual-filling surfaces: recorded
+four-lane residual closure: recorded
+external audit readiness gate: CI green at recorded checkpoint
 Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge: mechanically audited
 sorry/admit/axiom/constant: 0 in audited Lean source
 major theorem placeholder audit: green
 external consensus: not claimed
 public final theorem claim: review-gated
-```
-
-Next priorities:
-
-```text
-1. Keep README, ROADMAP, and CI ledgers synchronized with main.
-2. Extend local scripts/check.sh to include audit_major_theorem_nonplaceholder.py and audit_bridge_coherence.py if desired.
-3. Prepare independent replay instructions for the current analytic theorem-body chain.
-4. Add external audit notes without changing active proof semantics.
-5. Add version tags only after source-tree review and CI green confirmation.
 ```
