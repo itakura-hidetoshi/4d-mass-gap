@@ -25,6 +25,9 @@ python3 scripts/audit_hard_physical_residual_hardening_map.py
 echo "[check] audit Hilbert construction lane hardening"
 python3 scripts/audit_hilbert_construction_lane_hardening.py
 
+echo "[check] audit self-adjoint HPhys lane hardening"
+python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
