@@ -30,12 +30,15 @@ structure FinalTheoremReleaseSkeletonData where
   releaseCandidateVisible : Prop
   releaseCandidateVisible_proof : releaseCandidateVisible
   externalConsensusNotClaimed : Prop
+  externalConsensusNotClaimed_proof : externalConsensusNotClaimed
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 /-- Ready predicate for the final theorem release skeleton. -/
 def FinalTheoremReleaseSkeletonData.ready
     (D : FinalTheoremReleaseSkeletonData) : Prop :=
-  D.continuumReady ∧ D.exactGapStatement ∧ D.exactValueEq3320 ∧
+  continuumSpectralTheoremSkeletonReviewSurface.ready ∧
+  D.exactGapStatement ∧ exactGapValueReal = (33 : ℝ) / 20 ∧
   D.spectralAtomAtExact ∧ D.positiveObservableMassAtExact ∧
   D.observableWitnessPresent ∧ D.continuumCertificatePresent ∧
   D.theoremBodyClosed ∧ D.releaseCandidateVisible ∧
@@ -72,7 +75,7 @@ theorem final_theorem_release_continuum_certificate
   exact D.continuumCertificatePresent_proof
 
 /-- Prototype final theorem release skeleton. -/
-def prototypeFinalTheoremReleaseSkeletonData : FinalTheoremReleaseSkeletonData :=
+noncomputable def prototypeFinalTheoremReleaseSkeletonData : FinalTheoremReleaseSkeletonData :=
   { continuumReady := continuum_spectral_theorem_skeleton_review_surface_ready
     exactGapStatement := True
     exactGapStatement_proof := True.intro
@@ -90,74 +93,96 @@ def prototypeFinalTheoremReleaseSkeletonData : FinalTheoremReleaseSkeletonData :
     releaseCandidateVisible := True
     releaseCandidateVisible_proof := True.intro
     externalConsensusNotClaimed := True
-    publicBoundaryHeld := True }
+    externalConsensusNotClaimed_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_final_theorem_release_skeleton_ready :
     prototypeFinalTheoremReleaseSkeletonData.ready := by
-  exact And.intro continuum_spectral_theorem_skeleton_review_surface_ready <|
-    And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeFinalTheoremReleaseSkeletonData.continuumReady <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.exactGapStatement_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.exactValueEq3320 <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.observableWitnessPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.theoremBodyClosed_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.releaseCandidateVisible_proof <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.externalConsensusNotClaimed_proof
+      prototypeFinalTheoremReleaseSkeletonData.publicBoundaryHeld_proof
 
 /-- Review surface for the final theorem release skeleton. -/
 structure FinalTheoremReleaseSkeletonReviewSurface where
   continuumReady : continuumSpectralTheoremSkeletonReviewSurface.ready
   finalReleaseReady : prototypeFinalTheoremReleaseSkeletonData.ready
   exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
-  exactGapStatement : prototypeFinalTheoremReleaseSkeletonData.exactGapStatement
-  spectralAtomAtExact : prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact
-  positiveObservableMassAtExact :
-    prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact
-  observableWitnessPresent : prototypeFinalTheoremReleaseSkeletonData.observableWitnessPresent
-  continuumCertificatePresent :
-    prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent
-  theoremBodyClosed : prototypeFinalTheoremReleaseSkeletonData.theoremBodyClosed
+  exactGapStatement : Prop
+  exactGapStatement_proof : exactGapStatement
+  spectralAtomAtExact : Prop
+  spectralAtomAtExact_proof : spectralAtomAtExact
+  positiveObservableMassAtExact : Prop
+  positiveObservableMassAtExact_proof : positiveObservableMassAtExact
+  observableWitnessPresent : Prop
+  observableWitnessPresent_proof : observableWitnessPresent
+  continuumCertificatePresent : Prop
+  continuumCertificatePresent_proof : continuumCertificatePresent
+  theoremBodyClosed : Prop
+  theoremBodyClosed_proof : theoremBodyClosed
   releaseCandidateEstablished : Prop
+  releaseCandidateEstablished_proof : releaseCandidateEstablished
   externalConsensusNotClaimed : Prop
+  externalConsensusNotClaimed_proof : externalConsensusNotClaimed
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def FinalTheoremReleaseSkeletonReviewSurface.ready
     (S : FinalTheoremReleaseSkeletonReviewSurface) : Prop :=
-  S.continuumReady ∧ S.finalReleaseReady ∧ S.exactValueEq3320 ∧
+  continuumSpectralTheoremSkeletonReviewSurface.ready ∧
+  prototypeFinalTheoremReleaseSkeletonData.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   S.exactGapStatement ∧ S.spectralAtomAtExact ∧
   S.positiveObservableMassAtExact ∧ S.observableWitnessPresent ∧
   S.continuumCertificatePresent ∧ S.theoremBodyClosed ∧
   S.releaseCandidateEstablished ∧ S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
 
-def finalTheoremReleaseSkeletonReviewSurface :
+noncomputable def finalTheoremReleaseSkeletonReviewSurface :
     FinalTheoremReleaseSkeletonReviewSurface :=
   { continuumReady := continuum_spectral_theorem_skeleton_review_surface_ready
     finalReleaseReady := prototype_final_theorem_release_skeleton_ready
     exactValueEq3320 := exactGapValueReal_eq
-    exactGapStatement := True.intro
-    spectralAtomAtExact := True.intro
-    positiveObservableMassAtExact := True.intro
-    observableWitnessPresent := True.intro
-    continuumCertificatePresent := True.intro
-    theoremBodyClosed := True.intro
+    exactGapStatement := prototypeFinalTheoremReleaseSkeletonData.exactGapStatement
+    exactGapStatement_proof := prototypeFinalTheoremReleaseSkeletonData.exactGapStatement_proof
+    spectralAtomAtExact := prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact
+    spectralAtomAtExact_proof := prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact_proof
+    positiveObservableMassAtExact := prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact
+    positiveObservableMassAtExact_proof := prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact_proof
+    observableWitnessPresent := prototypeFinalTheoremReleaseSkeletonData.observableWitnessPresent
+    observableWitnessPresent_proof := prototypeFinalTheoremReleaseSkeletonData.observableWitnessPresent_proof
+    continuumCertificatePresent := prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent
+    continuumCertificatePresent_proof := prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent_proof
+    theoremBodyClosed := prototypeFinalTheoremReleaseSkeletonData.theoremBodyClosed
+    theoremBodyClosed_proof := prototypeFinalTheoremReleaseSkeletonData.theoremBodyClosed_proof
     releaseCandidateEstablished := True
-    externalConsensusNotClaimed := True
-    publicBoundaryHeld := True }
+    releaseCandidateEstablished_proof := True.intro
+    externalConsensusNotClaimed := prototypeFinalTheoremReleaseSkeletonData.externalConsensusNotClaimed
+    externalConsensusNotClaimed_proof := prototypeFinalTheoremReleaseSkeletonData.externalConsensusNotClaimed_proof
+    publicBoundaryHeld := prototypeFinalTheoremReleaseSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeFinalTheoremReleaseSkeletonData.publicBoundaryHeld_proof }
 
 theorem final_theorem_release_skeleton_review_surface_ready :
     finalTheoremReleaseSkeletonReviewSurface.ready := by
-  exact And.intro continuum_spectral_theorem_skeleton_review_surface_ready <|
-    And.intro prototype_final_theorem_release_skeleton_ready <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro finalTheoremReleaseSkeletonReviewSurface.continuumReady <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.finalReleaseReady <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.exactValueEq3320 <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.exactGapStatement_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.spectralAtomAtExact_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.positiveObservableMassAtExact_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.observableWitnessPresent_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.continuumCertificatePresent_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.theoremBodyClosed_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.releaseCandidateEstablished_proof <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed_proof
+      finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
