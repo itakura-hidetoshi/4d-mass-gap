@@ -26,12 +26,22 @@ public theorem boundary. -/
 structure ExactValueTheoremBodyOriginData where
   theoremBodyReady : exactGapTheoremBodyClosure.ready
   normalizationReady : physicalHamiltonianNormalizationBridgeReviewSurface.ready
-  exactValueFromTheoremBody : exactGapTheoremBodyClosure.exactValue_eq_3320
-  exactValuePositiveFromTheoremBody : exactGapTheoremBodyClosure.exactValue_positive
-  observableWeightPositiveFromTheoremBody : exactGapTheoremBodyClosure.observableWeightPositive
-  observableWeightNonzeroFromTheoremBody : exactGapTheoremBodyClosure.observableWeightNonzero
+  exactValueFromTheoremBody : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePositiveFromTheoremBody : 0 < exactGapValueReal
+  observableWeightPositiveFromTheoremBody :
+    0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom
+  observableWeightNonzeroFromTheoremBody :
+    singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0
   observableWeightEqualsPVMMassFromTheoremBody :
-    exactGapTheoremBodyClosure.observableWeightEqualsPVMMass
+    singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
   theoremBodyOriginVisible : Prop
   theoremBodyOriginVisible_proof : theoremBodyOriginVisible
   notPackagingArtifact : Prop
@@ -50,11 +60,23 @@ structure ExactValueTheoremBodyOriginData where
 /-- Ready predicate for the theorem-body origin certificate. -/
 def ExactValueTheoremBodyOriginData.ready
     (D : ExactValueTheoremBodyOriginData) : Prop :=
-  D.theoremBodyReady ∧ D.normalizationReady ∧ D.exactValueFromTheoremBody ∧
-  D.exactValuePositiveFromTheoremBody ∧ D.observableWeightPositiveFromTheoremBody ∧
-  D.observableWeightNonzeroFromTheoremBody ∧
-  D.observableWeightEqualsPVMMassFromTheoremBody ∧ D.theoremBodyOriginVisible ∧
-  D.notPackagingArtifact ∧ D.notDocumentationArtifact ∧ D.notCILedgerArtifact ∧
+  exactGapTheoremBodyClosure.ready ∧
+  physicalHamiltonianNormalizationBridgeReviewSurface.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < exactGapValueReal ∧
+  0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom ∧
+  D.theoremBodyOriginVisible ∧ D.notPackagingArtifact ∧
+  D.notDocumentationArtifact ∧ D.notCILedgerArtifact ∧
   D.notManifestOnlyArtifact ∧ D.theoremBodyUnchanged ∧ D.publicBoundaryHeld
 
 /-- The exact value `33/20` is obtained from the theorem-body closure. -/
@@ -72,7 +94,9 @@ theorem exact_value_origin_positive_from_theorem_body
 /-- The observable spectral weight is positive from the theorem-body closure. -/
 theorem exact_value_origin_weight_positive_from_theorem_body
     (D : ExactValueTheoremBodyOriginData) :
-    exactGapTheoremBodyClosure.observableWeightPositive := by
+    0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom := by
   exact D.observableWeightPositiveFromTheoremBody
 
 /-- The value is explicitly not treated as a packaging artifact. -/
@@ -88,15 +112,15 @@ theorem exact_value_origin_not_ci_ledger_artifact
   exact D.notCILedgerArtifact_proof
 
 /-- Prototype theorem-body origin certificate. -/
-def prototypeExactValueTheoremBodyOriginData : ExactValueTheoremBodyOriginData :=
+noncomputable def prototypeExactValueTheoremBodyOriginData : ExactValueTheoremBodyOriginData :=
   { theoremBodyReady := exact_gap_theorem_body_closure_ready
     normalizationReady := physical_hamiltonian_normalization_bridge_review_surface_ready
-    exactValueFromTheoremBody := exact_gap_theorem_body_closure_value
-    exactValuePositiveFromTheoremBody := exact_gap_theorem_body_closure_positive
-    observableWeightPositiveFromTheoremBody := exact_gap_theorem_body_closure_weight_positive
-    observableWeightNonzeroFromTheoremBody := exact_gap_theorem_body_closure_weight_nonzero
+    exactValueFromTheoremBody := exactGapTheoremBodyClosure.exactValue_eq_3320
+    exactValuePositiveFromTheoremBody := exactGapTheoremBodyClosure.exactValue_positive
+    observableWeightPositiveFromTheoremBody := exactGapTheoremBodyClosure.observableWeightPositive
+    observableWeightNonzeroFromTheoremBody := exactGapTheoremBodyClosure.observableWeightNonzero
     observableWeightEqualsPVMMassFromTheoremBody :=
-      exact_gap_theorem_body_closure_weight_equals_pvm_mass
+      exactGapTheoremBodyClosure.observableWeightEqualsPVMMass
     theoremBodyOriginVisible := True
     theoremBodyOriginVisible_proof := True.intro
     notPackagingArtifact := True
@@ -114,19 +138,20 @@ def prototypeExactValueTheoremBodyOriginData : ExactValueTheoremBodyOriginData :
 
 theorem prototype_exact_value_theorem_body_origin_ready :
     prototypeExactValueTheoremBodyOriginData.ready := by
-  exact And.intro exact_gap_theorem_body_closure_ready <|
-    And.intro physical_hamiltonian_normalization_bridge_review_surface_ready <|
-    And.intro exact_gap_theorem_body_closure_value <|
-    And.intro exact_gap_theorem_body_closure_positive <|
-    And.intro exact_gap_theorem_body_closure_weight_positive <|
-    And.intro exact_gap_theorem_body_closure_weight_nonzero <|
-    And.intro exact_gap_theorem_body_closure_weight_equals_pvm_mass <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeExactValueTheoremBodyOriginData.theoremBodyReady <|
+    And.intro prototypeExactValueTheoremBodyOriginData.normalizationReady <|
+    And.intro prototypeExactValueTheoremBodyOriginData.exactValueFromTheoremBody <|
+    And.intro prototypeExactValueTheoremBodyOriginData.exactValuePositiveFromTheoremBody <|
+    And.intro prototypeExactValueTheoremBodyOriginData.observableWeightPositiveFromTheoremBody <|
+    And.intro prototypeExactValueTheoremBodyOriginData.observableWeightNonzeroFromTheoremBody <|
+    And.intro prototypeExactValueTheoremBodyOriginData.observableWeightEqualsPVMMassFromTheoremBody <|
+    And.intro prototypeExactValueTheoremBodyOriginData.theoremBodyOriginVisible_proof <|
+    And.intro prototypeExactValueTheoremBodyOriginData.notPackagingArtifact_proof <|
+    And.intro prototypeExactValueTheoremBodyOriginData.notDocumentationArtifact_proof <|
+    And.intro prototypeExactValueTheoremBodyOriginData.notCILedgerArtifact_proof <|
+    And.intro prototypeExactValueTheoremBodyOriginData.notManifestOnlyArtifact_proof <|
+    And.intro prototypeExactValueTheoremBodyOriginData.theoremBodyUnchanged_proof
+      prototypeExactValueTheoremBodyOriginData.publicBoundaryHeld_proof
 
 /-- Review surface for theorem-body origin of the exact value. -/
 structure ExactValueTheoremBodyOriginReviewSurface where
@@ -134,10 +159,20 @@ structure ExactValueTheoremBodyOriginReviewSurface where
   originReady : prototypeExactValueTheoremBodyOriginData.ready
   exactValueEq3320FromTheoremBody : exactGapValueReal = (33 : ℝ) / 20
   exactValuePositiveFromTheoremBody : 0 < exactGapValueReal
-  observableWeightPositiveFromTheoremBody : exactGapTheoremBodyClosure.observableWeightPositive
-  observableWeightNonzeroFromTheoremBody : exactGapTheoremBodyClosure.observableWeightNonzero
+  observableWeightPositiveFromTheoremBody :
+    0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom
+  observableWeightNonzeroFromTheoremBody :
+    singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0
   observableWeightEqualsPVMMassFromTheoremBody :
-    exactGapTheoremBodyClosure.observableWeightEqualsPVMMass
+    singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
   notPackagingArtifact : Prop
   notDocumentationArtifact : Prop
   notCILedgerArtifact : Prop
@@ -147,22 +182,33 @@ structure ExactValueTheoremBodyOriginReviewSurface where
 
 def ExactValueTheoremBodyOriginReviewSurface.ready
     (S : ExactValueTheoremBodyOriginReviewSurface) : Prop :=
-  S.theoremBodyReady ∧ S.originReady ∧ S.exactValueEq3320FromTheoremBody ∧
-  S.exactValuePositiveFromTheoremBody ∧ S.observableWeightPositiveFromTheoremBody ∧
-  S.observableWeightNonzeroFromTheoremBody ∧
-  S.observableWeightEqualsPVMMassFromTheoremBody ∧ S.notPackagingArtifact ∧
-  S.notDocumentationArtifact ∧ S.notCILedgerArtifact ∧ S.notManifestOnlyArtifact ∧
-  S.theoremBodyUnchanged ∧ S.publicBoundaryHeld
+  exactGapTheoremBodyClosure.ready ∧
+  prototypeExactValueTheoremBodyOriginData.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < exactGapValueReal ∧
+  0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom ∧
+  S.notPackagingArtifact ∧ S.notDocumentationArtifact ∧ S.notCILedgerArtifact ∧
+  S.notManifestOnlyArtifact ∧ S.theoremBodyUnchanged ∧ S.publicBoundaryHeld
 
-def exactValueTheoremBodyOriginReviewSurface : ExactValueTheoremBodyOriginReviewSurface :=
+noncomputable def exactValueTheoremBodyOriginReviewSurface : ExactValueTheoremBodyOriginReviewSurface :=
   { theoremBodyReady := exact_gap_theorem_body_closure_ready
     originReady := prototype_exact_value_theorem_body_origin_ready
-    exactValueEq3320FromTheoremBody := exact_gap_theorem_body_closure_value
-    exactValuePositiveFromTheoremBody := exact_gap_theorem_body_closure_positive
-    observableWeightPositiveFromTheoremBody := exact_gap_theorem_body_closure_weight_positive
-    observableWeightNonzeroFromTheoremBody := exact_gap_theorem_body_closure_weight_nonzero
+    exactValueEq3320FromTheoremBody := exactGapTheoremBodyClosure.exactValue_eq_3320
+    exactValuePositiveFromTheoremBody := exactGapTheoremBodyClosure.exactValue_positive
+    observableWeightPositiveFromTheoremBody := exactGapTheoremBodyClosure.observableWeightPositive
+    observableWeightNonzeroFromTheoremBody := exactGapTheoremBodyClosure.observableWeightNonzero
     observableWeightEqualsPVMMassFromTheoremBody :=
-      exact_gap_theorem_body_closure_weight_equals_pvm_mass
+      exactGapTheoremBodyClosure.observableWeightEqualsPVMMass
     notPackagingArtifact := True
     notDocumentationArtifact := True
     notCILedgerArtifact := True
@@ -172,13 +218,13 @@ def exactValueTheoremBodyOriginReviewSurface : ExactValueTheoremBodyOriginReview
 
 theorem exact_value_theorem_body_origin_review_surface_ready :
     exactValueTheoremBodyOriginReviewSurface.ready := by
-  exact And.intro exact_gap_theorem_body_closure_ready <|
-    And.intro prototype_exact_value_theorem_body_origin_ready <|
-    And.intro exact_gap_theorem_body_closure_value <|
-    And.intro exact_gap_theorem_body_closure_positive <|
-    And.intro exact_gap_theorem_body_closure_weight_positive <|
-    And.intro exact_gap_theorem_body_closure_weight_nonzero <|
-    And.intro exact_gap_theorem_body_closure_weight_equals_pvm_mass <|
+  exact And.intro exactValueTheoremBodyOriginReviewSurface.theoremBodyReady <|
+    And.intro exactValueTheoremBodyOriginReviewSurface.originReady <|
+    And.intro exactValueTheoremBodyOriginReviewSurface.exactValueEq3320FromTheoremBody <|
+    And.intro exactValueTheoremBodyOriginReviewSurface.exactValuePositiveFromTheoremBody <|
+    And.intro exactValueTheoremBodyOriginReviewSurface.observableWeightPositiveFromTheoremBody <|
+    And.intro exactValueTheoremBodyOriginReviewSurface.observableWeightNonzeroFromTheoremBody <|
+    And.intro exactValueTheoremBodyOriginReviewSurface.observableWeightEqualsPVMMassFromTheoremBody <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
