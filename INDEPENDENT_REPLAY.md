@@ -21,6 +21,7 @@ hard physical residual hardening-map audit
 Hilbert construction lane hardening audit
 self-adjoint HPhys lane hardening audit
 continuum Yang-Mills lane hardening audit
+plaquette spectral weight lane hardening audit
 Lean replay summary generation
 Lake manifest generation
 Lean build via lake build
@@ -38,7 +39,7 @@ that Lean CI replaces expert mathematical review
 that the target / residual-filling / hardening-map / lane-hardening layers by themselves complete the continuum proof
 ```
 
-The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, residual-filling, hardening-map, Hilbert-lane hardening, self-adjoint HPhys lane hardening, continuum Yang-Mills lane hardening, and replay support.
+The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, residual-filling, hardening-map, Hilbert-lane hardening, self-adjoint HPhys lane hardening, continuum Yang-Mills lane hardening, plaquette spectral weight lane hardening, and replay support.
 
 ## Fresh clone replay
 
@@ -76,6 +77,7 @@ This executes, in order:
 [check] audit Hilbert construction lane hardening
 [check] audit self-adjoint HPhys lane hardening
 [check] audit continuum Yang-Mills lane hardening
+[check] audit plaquette spectral weight lane hardening
 [check] replay summary
 [check] lake update
 [check] lake build
@@ -94,6 +96,7 @@ python3 scripts/audit_hard_physical_residual_hardening_map.py
 python3 scripts/audit_hilbert_construction_lane_hardening.py
 python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
 python3 scripts/audit_continuum_yang_mills_lane_hardening.py
+python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
 python3 scripts/replay_summary.py
 lake update
 lake build
@@ -112,6 +115,7 @@ audit_hard_physical_residual_hardening_map.py: four-lane hard residual map audit
 audit_hilbert_construction_lane_hardening.py: Hilbert construction lane audit
 audit_self_adjoint_hphys_lane_hardening.py: self-adjoint HPhys lane audit
 audit_continuum_yang_mills_lane_hardening.py: continuum Yang-Mills lane audit
+audit_plaquette_spectral_weight_lane_hardening.py: plaquette spectral weight lane audit
 replay_summary.py: replay summary generation
 lake build: Lean kernel build gate
 ```
@@ -147,6 +151,18 @@ Continuum Yang-Mills lane:
   exactAtomHardened
   continuumSpectralTheoremHardened
   continuumLimitBoundaryVisible
+
+Plaquette spectral weight lane:
+  compactSupportHardened
+  centeredHardened
+  smearedHardened
+  plaquetteConstructionHardened
+  observableAtomHardened
+  positiveWeightHardened
+  nonzeroWeightHardened
+  weightEqualsPVMMassHardened
+  operatorMeasureCompatibilityHardened
+  exactBodyWeightClosureHardened
 ```
 
 ## GitHub Actions parity
@@ -157,7 +173,7 @@ The main CI workflow is:
 .github/workflows/lean-direct-elan.yml
 ```
 
-The audit job runs the same audit families, including Hilbert construction, self-adjoint HPhys, and continuum Yang-Mills lane hardening.
+The audit job runs the same audit families, including all four hard physical residual lanes.
 
 The one-command local replay path is mirrored by:
 
