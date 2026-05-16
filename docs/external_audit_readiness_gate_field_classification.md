@@ -26,9 +26,9 @@ boundary-governance
 
 | Field | Current Lean type / witness | Witness class | Source / interpretation | Hardening target |
 |---|---|---|---|---|
-| `internalGateReady` | `internalReviewResidualClosureGateData.ready` | theorem-derived | Internal review closure gate readiness imported from `InternalReviewResidualClosureGate` | Keep theorem-derived; expose upstream theorem name in docs and audit anchors. |
-| `bundleManifestReady` | `finalTheoremReleaseBundleManifestReviewSurface.ready` | theorem-derived / documentation-route | Bundle manifest review surface readiness imported from `FinalTheoremReleaseBundleManifest` | Keep as manifest-level witness; document that it is bundle-surface readiness, not external acceptance. |
-| `chainIndexReady` | `finalTheoremReleaseChainIndexReady` | theorem-derived / documentation-route | Release chain index readiness imported with the bundle manifest surface | Keep as chain-index witness; expose exact origin theorem. |
+| `internalGateReady` | `internalReviewResidualClosureGateData.ready`, witnessed by `external_audit_readiness_internal_gate_ready_witness` | theorem-derived | Internal review closure gate readiness imported from `InternalReviewResidualClosureGate` | Keep theorem-derived; alias now exposes upstream theorem route. |
+| `bundleManifestReady` | `finalTheoremReleaseBundleManifestReviewSurface.ready`, witnessed by `external_audit_readiness_bundle_manifest_ready_witness` | theorem-derived / documentation-route | Bundle manifest review surface readiness imported from `FinalTheoremReleaseBundleManifest` | Keep as manifest-level witness; document that it is bundle-surface readiness, not external acceptance. |
+| `chainIndexReady` | `finalTheoremReleaseChainIndexReady`, witnessed by `external_audit_readiness_chain_index_ready_witness` | theorem-derived / documentation-route | Release chain index readiness imported with the bundle manifest surface | Keep as chain-index witness; alias now exposes exact origin route. |
 | `repositoryInternalResidualClosed` | `True` | boundary-governance | Repository-level statement that the internal residual-closure route has been completed for the current checkpoint | Rename or document as `repositoryInternalResidualClosureCheckpointHeld`. |
 | `noReviewLevelResidualLeft` | `True` | boundary-governance | Review-level residuals are not being silently reopened at this checkpoint | Rename or document as `noKnownReviewLevelResidualLeftAtCheckpoint`. |
 | `independentReplayVisible` | `True` | documentation-route | Independent replay route is documented and visible | Rename or document as `independentReplayRouteDocumented`. |
@@ -38,7 +38,18 @@ boundary-governance
 | `externalConsensusNotClaimed` | `True` | boundary-governance | Explicitly blocks upgrade from internal CI readiness to external mathematical consensus | Rename or document as `externalConsensusBoundaryHeld`. |
 | `publicBoundaryHeld` | `True` | boundary-governance | Public boundary remains held; no final public theorem release is opened by this gate | Keep or rename as `publicReleaseBoundaryHeld`. |
 | `finalReleaseHeld` | `True` | boundary-governance | Final theorem release remains locked/review-gated | Keep or rename as `finalTheoremReleaseBoundaryHeld`. |
-| `exactValuePreserved` | `exactGapValueReal = (33 : ℝ) / 20` witnessed by `exactGapValueReal_eq` | theorem-derived | Exact normalized value surface is preserved through the gate | Keep theorem-derived; make audit anchor check for `exactGapValueReal_eq`. |
+| `exactValuePreserved` | `exactGapValueReal = (33 : ℝ) / 20`, witnessed by `external_audit_readiness_exact_value_preserved_witness` | theorem-derived | Exact normalized value surface is preserved through the gate | Keep theorem-derived; alias now exposes the exact-value theorem route. |
+
+## Current Lean witness aliases
+
+```text
+external_audit_readiness_internal_gate_ready_witness
+external_audit_readiness_bundle_manifest_ready_witness
+external_audit_readiness_chain_index_ready_witness
+external_audit_readiness_exact_value_preserved_witness
+```
+
+These aliases are compatibility-preserving. They do not remove, rename, or reinterpret any `ExternalAuditReadinessGateData` field.
 
 ## Reviewer-facing interpretation
 
@@ -108,7 +119,7 @@ boundary-governance
 
 ```text
 Status: prepared
-Semantic effect: documentation-only
+Semantic effect: documentation-only plus compatibility-preserving witness aliases
 Lean semantics changed: no
 External consensus claimed: no
 Final theorem release opened: no
