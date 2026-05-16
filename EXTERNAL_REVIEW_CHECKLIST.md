@@ -9,6 +9,7 @@ README.md
 INDEPENDENT_REPLAY.md
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/infinite_dimensional_yang_mills_target_layer.md
 ```
 
 It does not replace Lean kernel checking, source inspection, or independent mathematical review.
@@ -19,7 +20,7 @@ Before starting, record that the current repository claim is:
 
 ```text
 internal normalized theorem-body / proof-architecture surface
-with replay, audit, and bridge-coherence support
+with replay, audit, bridge-coherence support, and explicit infinite-dimensional Yang-Mills target obligations
 ```
 
 It is not a claim of:
@@ -29,6 +30,7 @@ external mathematical consensus
 peer-review completion
 Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
+a completed infinite-dimensional continuum Yang-Mills proof solely from the target layer
 ```
 
 Reviewer checkpoint:
@@ -37,6 +39,7 @@ Reviewer checkpoint:
 [ ] I understand the public final theorem boundary is review-gated.
 [ ] I understand CI/audit scripts do not replace mathematical review.
 [ ] I understand the normalized value 33/20 is dimensionless unless E0 is supplied.
+[ ] I understand the infinite-dimensional target layer is a proof-obligation surface, not final theorem acceptance.
 ```
 
 ## 1. Fresh clone
@@ -96,6 +99,7 @@ Expected stages:
 [check] audit Lean forbidden tokens
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
+[check] audit infinite-dimensional Yang-Mills target layer
 [check] replay summary
 [check] lake update
 [check] lake build
@@ -109,6 +113,7 @@ Reviewer checkpoint:
 [ ] Forbidden-token audit passes.
 [ ] Major theorem non-placeholder audit passes.
 [ ] Bridge-coherence audit passes.
+[ ] Infinite-dimensional target-layer audit passes.
 [ ] Replay summary is generated.
 [ ] `lake build` succeeds.
 ```
@@ -122,6 +127,7 @@ python3 scripts/verify_manifest.py
 python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
 python3 scripts/audit_bridge_coherence.py
+python3 scripts/audit_infinite_dimensional_target_layer.py
 python3 scripts/replay_summary.py
 lake update
 lake build
@@ -165,16 +171,17 @@ Reviewer checkpoint:
 [ ] `exact_value_origin_not_ci_ledger_artifact` inspected.
 ```
 
-## 6. Inspect bridge surfaces
+## 6. Inspect bridge and target surfaces
 
 Use:
 
 ```text
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/infinite_dimensional_yang_mills_target_layer.md
 ```
 
-Inspect the 7 bridge surfaces audited by:
+Inspect the 8 bridge / target surfaces audited by:
 
 ```bash
 python3 scripts/audit_bridge_coherence.py
@@ -190,14 +197,16 @@ Reviewer checkpoint:
 [ ] `SpectralRealizationSkeleton.lean` inspected with boundary markers.
 [ ] `ContinuumSpectralTheoremSkeleton.lean` inspected with boundary markers.
 [ ] `PhysicalHamiltonianNormalizationBridge.lean` inspected with boundary markers.
+[ ] `InfiniteDimensionalYangMillsRealizationTargets.lean` inspected as target-obligation layer.
 ```
 
-## 7. Interpret singleton / prototype / skeleton surfaces correctly
+## 7. Interpret singleton / prototype / skeleton / target surfaces correctly
 
 Read:
 
 ```text
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/infinite_dimensional_yang_mills_target_layer.md
 ```
 
 Reviewer checkpoint:
@@ -207,6 +216,7 @@ Reviewer checkpoint:
 [ ] I have not interpreted prototype spectral mass as the final physical spectral measure.
 [ ] I have checked the relevant `publicBoundaryHeld` / `finalReleaseHeld` markers.
 [ ] I have distinguished contract witnesses from physical continuum realization targets.
+[ ] I have interpreted the infinite-dimensional target layer as proof obligations, not as completed continuum proof.
 ```
 
 ## 8. Check normalization and dimensional reading
@@ -255,6 +265,8 @@ docs/mathlib_exact_value_theorem_body_origin.md
 docs/mathlib_exact_value_theorem_body_origin_ci.md
 docs/mathlib_concrete_residual_closure.md
 docs/mathlib_concrete_residual_closure_ci.md
+docs/infinite_dimensional_yang_mills_target_layer.md
+docs/full_local_check_ci.md
 ```
 
 Reviewer checkpoint:
@@ -272,6 +284,7 @@ A successful checklist pass means:
 the repository can be independently replayed
 the declared theorem surfaces are present
 the declared bridge surfaces are present
+the infinite-dimensional target obligations are present
 the audit scripts pass
 the Lean build passes
 public-boundary markers are visible
@@ -283,6 +296,7 @@ It does not mean:
 external consensus has been obtained
 all analytic residuals have been accepted by the mathematical community
 Clay-style final theorem status has been reached
+the target layer alone completes the physical continuum proof
 ```
 
 Final reviewer checkpoint:
@@ -292,5 +306,6 @@ Final reviewer checkpoint:
 [ ] Commit SHA recorded.
 [ ] Lean / Lake versions recorded.
 [ ] Any failures or concerns recorded with file names and theorem names.
+[ ] Infinite-dimensional target-layer interpretation preserved.
 [ ] Public-boundary interpretation preserved.
 ```
