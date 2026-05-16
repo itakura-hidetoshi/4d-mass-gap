@@ -1,0 +1,155 @@
+# Infinite-Dimensional Yang--Mills Target Layer
+
+This document records the evolution from skeleton / contract closure toward explicit analytic proof obligations for a physical continuum Yang--Mills realization.
+
+## Purpose
+
+The previous public weakness was clear:
+
+```text
+many Lean files closed proof structure, bridge boundaries, and audit surfaces,
+but did not yet provide a full analytic infinite-dimensional Yang--Mills Hamiltonian realization.
+```
+
+The new target layer does not hide this weakness. It turns it into a first-class Lean-facing target surface.
+
+## Lean source
+
+```text
+MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
+```
+
+The file is imported by:
+
+```text
+MGAP4D/MathlibAnalytic.lean
+```
+
+and is audited by:
+
+```text
+scripts/audit_bridge_coherence.py
+```
+
+## Core objects
+
+```text
+InfiniteDimensionalYangMillsRealizationTarget
+InfiniteDimensionalYangMillsRealizationTarget.ready
+InfiniteDimensionalYangMillsTargetReviewSurface
+infinite_dimensional_yang_mills_target_review_surface_ready
+```
+
+## Target obligations
+
+The target layer requires explicit witnesses for:
+
+```text
+infinite-dimensional Hilbert realization
+separable Hilbert witness
+dense core
+domain density
+symmetric H_phys
+self-adjoint H_phys
+gauge-invariant sector
+Yang-Mills energy witness
+continuum limit
+OS positivity
+spectral theorem
+exact atom
+positive plaquette spectral weight
+nonempty vacuum-orthogonal sector
+normalization preservation
+public boundary held
+final release held
+```
+
+## Theorem surfaces
+
+The layer exposes theorem surfaces that make selected obligations extractable from the readiness predicate:
+
+```text
+infinite_dimensional_target_requires_infinite_dimension
+infinite_dimensional_target_requires_self_adjoint_hphys
+infinite_dimensional_target_requires_continuum_limit
+infinite_dimensional_target_requires_plaquette_weight
+infinite_dimensional_target_normalized_gap_eq_exact
+infinite_dimensional_target_exact_value_eq_3320
+infinite_dimensional_target_public_boundary_held
+infinite_dimensional_target_final_release_held
+```
+
+## Audit integration
+
+The bridge-coherence audit now checks this layer for anchors including:
+
+```text
+InfiniteDimensionalYangMillsRealizationTarget
+infinite_dimensional_witness
+separable_hilbert_witness
+dense_core_witness
+domain_density_witness
+hphys_self_adjoint_witness
+gauge_invariance_witness
+yang_mills_energy_witness
+continuum_limit_witness
+spectral_theorem_witness
+plaquette_nonzero_weight_witness
+vacuum_orthogonal_nonempty_witness
+normalized_gap_eq_exact
+exact_value_eq_3320
+publicBoundaryHeld
+finalReleaseHeld
+```
+
+This means the target layer is not merely documentation. It is part of the mechanical bridge-coherence audit path.
+
+## Boundary
+
+This layer is a proof-obligation target, not a completed public final theorem.
+
+It does not claim:
+
+```text
+completed infinite-dimensional Hilbert construction
+completed self-adjoint Yang-Mills Hamiltonian construction
+completed continuum limit proof
+completed continuum spectral theorem
+completed nonzero plaquette spectral-weight theorem
+external mathematical consensus
+Clay-style public final theorem acceptance
+```
+
+It does claim that these requirements are now explicitly named, imported, and audited as the next analytic hardening surface.
+
+## Correct interpretation
+
+Correct:
+
+```text
+The repository has evolved from structure-only closure toward a typed analytic target surface that records the exact obligations needed for physical realization.
+```
+
+Incorrect:
+
+```text
+The target layer by itself completes the physical continuum Yang-Mills proof.
+```
+
+## Review use
+
+External reviewers should use this layer to identify the next mathematical proof targets:
+
+```text
+1. infinite-dimensional Hilbert construction
+2. dense domain / core construction
+3. self-adjointness of H_phys
+4. gauge-invariant physical sector
+5. continuum limit
+6. spectral theorem / exact atom
+7. nonzero plaquette spectral weight
+8. vacuum-orthogonal nonempty sector
+9. normalization preservation
+```
+
+Each item should eventually be hardened from target witness into concrete theorem body.
