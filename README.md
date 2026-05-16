@@ -2,13 +2,11 @@
 
 MGAP4D is a Lean 4 repository for developing, checking, and auditing the proof architecture of a normalized 4D mass gap theorem.
 
-This repository is GitHub-native: the active Lean source tree, CI, documentation, theorem-surface checkpoints, bridge audits, and boundary ledgers live directly in this repository.
+The repository is GitHub-native: Lean source, CI, audit scripts, replay guides, theorem-surface maps, bridge audits, target-obligation layers, and public-boundary ledgers live directly in this repository.
 
 ## Repository role
 
 This repository is the canonical Lean proof repository for the MGAP4D normalized 4D mass gap proof architecture.
-
-KuuOS references this repository as a physics-facing bridge and public-core governance surface:
 
 ```text
 Canonical proof repo: itakura-hidetoshi/4d-mass-gap
@@ -20,40 +18,13 @@ KuuOS reference documents do not replace this repository as the canonical Lean p
 
 ## Current theorem claim and boundary
 
-### Internal normalized theorem-body claim
-
 Inside the MGAP4D Lean proof architecture, the current theorem-body surface records the normalized exact spectral gap value:
 
 ```text
 exactGapValueReal = 33 / 20
 ```
 
-The current repository state treats `33/20` as coming from the theorem-body closure, not from a packaging artifact, documentation artifact, CI ledger, manifest-only wrapper, or prototype-only release wrapper.
-
-This is recorded by:
-
-```text
-MGAP4D/MathlibAnalytic/ExactGapTheoremBodyClosure.lean
-MGAP4D/MathlibAnalytic/ExactValueTheoremBodyOrigin.lean
-docs/mathlib_exact_value_theorem_body_origin.md
-docs/mathlib_exact_value_theorem_body_origin_ci.md
-```
-
-The theorem-body origin chain explicitly carries:
-
-```text
-Hilbert Rayleigh quotient body
-self-adjoint H_phys body
-spectral theorem body
-PVM body
-observable atom body
-compact plaquette construction body
-operator-measure compatibility body
-observable spectral weight positivity
-PVM mass compatibility
-```
-
-### Physical Hamiltonian normalization
+The repository treats `33/20` as an internal normalized theorem-body value, not as a packaging artifact, CI artifact, manifest-only artifact, or prototype-only release wrapper.
 
 The physical Hamiltonian normalization is read through an explicit reference energy scale `E0`:
 
@@ -68,7 +39,6 @@ In MGAP4D internal normalized units:
 ```text
 E0 = 1
 normalizedGap = exactGapValueReal = 33/20
-physicalGap = exactGapValueReal = 33/20
 ```
 
 For dimensional interpretation:
@@ -79,17 +49,7 @@ physicalGap_dimensional = E0 * (33/20)
 
 Thus `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
 
-Relevant files:
-
-```text
-MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
-docs/mathlib_physical_hamiltonian_normalization_bridge.md
-docs/mathlib_physical_hamiltonian_normalization_bridge_ci.md
-```
-
-### Public boundary
-
-The repository currently claims an internal, normalized, proof-architecture theorem-body surface with CI and bridge-audit support.
+The repository currently claims an internal normalized proof-architecture theorem-body surface with CI, bridge-audit, and target-obligation support.
 
 It does **not** claim:
 
@@ -100,38 +60,37 @@ Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
 that CI ledgers replace mathematical proof review
 that bridge-coherence audit replaces Lean kernel checking
+that the infinite-dimensional target layer alone completes the continuum proof
 ```
 
 The public final theorem boundary remains review-gated pending independent replay and external audit.
 
-## Current active Lean roots
+## Active Lean roots
 
 ```text
 MGAP4D.lean
 MGAP4D/MathlibAnalytic.lean
 ```
 
-`MGAP4D.lean` is the top-level Lean import root.
+`MGAP4D/MathlibAnalytic.lean` now imports the infinite-dimensional Yang--Mills target-obligation layer:
 
-`MGAP4D/MathlibAnalytic.lean` is the internal analytic theorem-surface root. The name `MathlibAnalytic` records the analytic adoption/bridge layer; it does not by itself mean that `main` imports upstream Mathlib directly.
+```text
+MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
+```
 
 ## Main analytic chain
-
-The current analytic bridge chain is:
 
 ```text
 Concrete Hilbert realization
   -> Concrete H_phys / unbounded-operator realization
   -> Physical unbounded-operator skeleton
   -> Concrete Yang-Mills Hamiltonian skeleton
-  -> Spectral realization skeleton
+  -> Spectral/PVM realization skeleton
   -> Continuum spectral theorem skeleton
-  -> Final theorem release skeleton
-  -> Final theorem release closure
-  -> Final theorem release chain index
-  -> Final theorem release bundle manifest
+  -> Final theorem release skeleton / closure
   -> Concrete residual closure
   -> Physical Hamiltonian normalization bridge
+  -> Infinite-dimensional Yang-Mills realization target
   -> Exact value theorem-body origin certificate
 ```
 
@@ -146,143 +105,88 @@ MGAP4D/MathlibAnalytic/SpectralRealizationSkeleton.lean
 MGAP4D/MathlibAnalytic/ContinuumSpectralTheoremSkeleton.lean
 MGAP4D/MathlibAnalytic/FinalTheoremReleaseSkeleton.lean
 MGAP4D/MathlibAnalytic/FinalTheoremReleaseClosure.lean
-MGAP4D/MathlibAnalytic/FinalTheoremReleaseChainIndex.lean
-MGAP4D/MathlibAnalytic/FinalTheoremReleaseBundleManifest.lean
 MGAP4D/MathlibAnalytic/ConcreteResidualClosure.lean
 MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
+MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
 MGAP4D/MathlibAnalytic/ExactValueTheoremBodyOrigin.lean
 ```
 
-## Concrete residuals now closed as internal surfaces
+## Evolution beyond the prior weakness
 
-The following residual surfaces are closed inside the current internal Lean architecture:
-
-```text
-concrete Hilbert realization
-concrete H_phys / unbounded-operator realization
-spectral measure / PVM exact-atom realization
-compact lattice-gauge plaquette observable construction
-operator-measure realization and compatibility
-physical Hamiltonian normalization bridge
-exact-value theorem-body origin certificate
-```
-
-Relevant CI/documentation ledgers:
+A prior weakness was explicit:
 
 ```text
-docs/mathlib_concrete_residual_closure.md
-docs/mathlib_concrete_residual_closure_ci.md
-docs/mathlib_physical_hamiltonian_normalization_bridge.md
-docs/mathlib_physical_hamiltonian_normalization_bridge_ci.md
-docs/mathlib_exact_value_theorem_body_origin.md
-docs/mathlib_exact_value_theorem_body_origin_ci.md
+many Lean files closed proof structure, bridge boundaries, and audit surfaces,
+but did not yet provide a full analytic infinite-dimensional Yang-Mills Hamiltonian realization.
 ```
 
-Boundary for these closures:
+The current evolution does not hide that weakness. It turns it into a first-class Lean target layer:
 
 ```text
-internal concrete residual closure only
-theorem-body origin certificate only
-normalization bridge only
-external consensus is not claimed
-public theorem boundary is held
+InfiniteDimensionalYangMillsRealizationTarget
+InfiniteDimensionalYangMillsRealizationTarget.ready
+InfiniteDimensionalYangMillsTargetReviewSurface
+infinite_dimensional_yang_mills_target_review_surface_ready
 ```
+
+The target layer requires explicit witnesses for:
+
+```text
+infinite-dimensional Hilbert realization
+separable Hilbert witness
+dense core
+domain density
+symmetric H_phys
+self-adjoint H_phys
+gauge-invariant sector
+Yang-Mills energy witness
+continuum limit
+OS positivity
+spectral theorem
+exact atom
+positive plaquette spectral weight
+nonempty vacuum-orthogonal sector
+normalization preservation
+public boundary held
+final release held
+```
+
+This is a typed analytic proof-obligation surface. It is not a completed public final continuum proof.
 
 ## CI and audit status
 
-### Lean Direct Elan CI
-
-Recent direct Lean CI confirmation:
-
-```text
-Workflow: Lean Direct Elan CI
-Run ID: 25945521468
-Audit job ID: 76272692295
-Build job ID: 76272703776
-Commit checked out by CI: f4837cc92af776036e7c15f4f1ab117cc1b11e77
-Result: success
-```
-
-Confirmed:
-
-```text
-Verify release manifest: success
-Audit Lean forbidden tokens: success
-Audit major theorem non-placeholder surface: success
-Summarize Lean replay surface: success
-Build Lean project via direct elan: success
-lake build: success
-```
-
-Forbidden-token audit:
-
-```text
-Lean files scanned: 447
-sorry: 0
-admit: 0
-axiom: 0
-constant: 0
-```
-
-Major theorem non-placeholder audit:
-
-```text
-Major theorem specs audited: 12
-Major theorem non-placeholder audit passed
-```
-
-### Bridge Coherence CI
-
-Dedicated bridge coherence confirmation:
-
-```text
-Workflow: Bridge Coherence CI
-Run ID: 25946061297
-Job ID: 76274304501
-Job name: Check bridge coherence
-Commit checked out by CI: fc02308553be06dcb7843f509ccf41bf71cc5e35
-Result: success
-```
-
-Confirmed:
-
-```text
-Check Lean forbidden tokens: success
-Check major theorem non-placeholder surface: success
-Check analytic bridge coherence: success
-Summarize Lean replay surface: success
-```
-
-Bridge coherence audit:
-
-```text
-Bridge files audited: 7
-Ordered import edges audited: 4
-Bridge anchors audited: Hilbert, H_phys, Yang-Mills, spectral/PVM, continuum, normalization
-Value anchors audited: exact_value_eq_3320 / exactGapValueReal
-Boundary anchors audited: publicBoundaryHeld and open-boundary markers
-Bridge coherence audit passed
-```
-
-### Full Local Check CI
-
-The repository also defines a CI workflow that mirrors the external-review one-command replay:
-
-```text
-Workflow: Full Local Check CI
-Workflow file: .github/workflows/full-local-check.yml
-Main job: Run scripts/check.sh
-```
-
-This workflow installs / exposes the pinned Lean toolchain, prints Lean and Lake versions, and then runs:
+### Core local replay
 
 ```bash
 bash scripts/check.sh
 ```
 
-This is intended to make the external reviewer command and the CI replay path identical.
+The local replay path now runs:
 
-Relevant workflows:
+```text
+[check] verify manifest
+[check] audit Lean forbidden tokens
+[check] audit major theorem non-placeholder surfaces
+[check] audit analytic bridge coherence
+[check] audit infinite-dimensional Yang-Mills target layer
+[check] replay summary
+[check] lake update
+[check] lake build
+```
+
+### Audit scripts
+
+```text
+scripts/verify_manifest.py
+scripts/audit_lean_forbidden_tokens.py
+scripts/audit_major_theorem_nonplaceholder.py
+scripts/audit_bridge_coherence.py
+scripts/audit_infinite_dimensional_target_layer.py
+scripts/replay_summary.py
+scripts/check.sh
+```
+
+### GitHub Actions workflows
 
 ```text
 .github/workflows/lean-direct-elan.yml
@@ -290,37 +194,100 @@ Relevant workflows:
 .github/workflows/full-local-check.yml
 ```
 
-Relevant ledgers:
+`Full Local Check CI` mirrors the external-review one-command replay by running:
 
-```text
-docs/mathlib_major_theorem_nonplaceholder_audit.md
-docs/mathlib_major_theorem_nonplaceholder_audit_ci.md
-docs/mathlib_bridge_coherence_audit.md
-docs/mathlib_bridge_coherence_ci.md
+```bash
+bash scripts/check.sh
 ```
 
-## What the audits mean
-
-The current automated audits check that:
+A confirmed Full Local Check CI run has already succeeded:
 
 ```text
-major theorem surfaces do not use sorry/admit/axiom/constant
-major theorem surfaces are not trivial True-only statements
-33/20 theorem-body origin is checked as a non-placeholder statement
-operator-measure/PVM compatibility is checked as a non-placeholder statement
-Hamiltonian normalization bridge is checked as a non-placeholder statement
-Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge order is mechanically audited
-exact value preservation anchors are mechanically audited
-public boundary markers are mechanically audited
+Workflow: Full Local Check CI
+Run ID: 25948605211
+Job ID: 76281846717
+Job name: Run scripts/check.sh
+Commit checked out by CI: bd3111714d81b6e51615a7b912fec33c0a69d3bc
+Result: success
 ```
 
-The audits are syntactic/contract checks plus Lean build confirmation. They complement, but do not replace:
+That run confirmed:
 
 ```text
-Lean kernel checking through lake build
-theorem-body proof review
-independent replay
-external mathematical peer review
+Lean files scanned: 447
+sorry: 0
+admit: 0
+axiom: 0
+constant: 0
+Major theorem specs audited: 12
+Bridge files audited: 7 at that checkpoint
+Ordered import edges audited: 4 at that checkpoint
+lake build: Build completed successfully
+```
+
+After the new target layer, the bridge-coherence audit has been extended to cover 8 bridge / target files and 5 ordered import edges.
+
+## External review entry points
+
+Start here:
+
+```text
+EXTERNAL_AUDIT_PACKET.md
+```
+
+Then use:
+
+```text
+EXTERNAL_REVIEW_CHECKLIST.md
+INDEPENDENT_REPLAY.md
+THEOREM_INDEX.md
+PHYSICAL_REALIZATION_BOUNDARY.md
+docs/infinite_dimensional_yang_mills_target_layer.md
+docs/full_local_check_ci.md
+```
+
+## Review meaning
+
+A successful replay means:
+
+```text
+the repository builds with the pinned Lean toolchain
+the declared audit scripts pass
+the theorem-surface, bridge-surface, and target-layer checks pass
+the replay summary is reproducible
+```
+
+It does not mean:
+
+```text
+external consensus has been obtained
+all analytic residuals have been accepted by the mathematical community
+CI output alone is a substitute for proof review
+the target layer alone completes the physical continuum proof
+```
+
+## Build
+
+```bash
+lake update
+lake build
+```
+
+or full local replay:
+
+```bash
+bash scripts/check.sh
+```
+
+## Repository layout
+
+```text
+MGAP4D/                  Active Lean source tree
+MGAP4D.lean              Top-level Lean import root
+docs/                    GitHub-native documentation and checkpoint ledger
+maps/                    Lightweight source and dependency maps
+scripts/                 Local and CI audit scripts
+.github/workflows/       GitHub Actions CI
 ```
 
 ## Citation and Zenodo record
@@ -340,142 +307,3 @@ Repository receipt: docs/zenodo_record_20181046.md
 ```
 
 This Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.
-
-## External audit packet
-
-External reviewers can start from the top-level audit packet:
-
-```text
-EXTERNAL_AUDIT_PACKET.md
-```
-
-The packet gives an ordered route through README, the review checklist, independent replay, theorem index, physical-realization boundary, and documentation ledgers.
-
-## Independent replay
-
-External reviewers can reproduce the repository-level replay using:
-
-```text
-INDEPENDENT_REPLAY.md
-```
-
-The independent replay guide covers:
-
-```text
-fresh clone replay
-pinned Lean toolchain confirmation
-scripts/check.sh one-command replay
-manual step-by-step audit replay
-GitHub Actions parity
-failure interpretation
-review boundary
-```
-
-## Theorem index
-
-External reviewers can inspect the named theorem and bridge surfaces using:
-
-```text
-THEOREM_INDEX.md
-```
-
-The theorem index covers:
-
-```text
-active Lean roots
-12 major theorem surfaces audited for non-placeholder statements
-7 analytic / physical bridge surfaces audited for coherence
-ordered bridge chain
-normalization surface
-audit script roles
-residual boundary
-```
-
-## Physical realization boundary
-
-External reviewers should read the physical-realization boundary before interpreting singleton, `PUnit`, prototype, or skeleton surfaces physically:
-
-```text
-PHYSICAL_REALIZATION_BOUNDARY.md
-```
-
-That guide clarifies that these surfaces are contract witnesses and review surfaces, not a claim that the final continuum Yang-Mills Hilbert space or spectral measure has been replaced by a one-point model.
-
-## External review checklist
-
-External reviewers can follow the end-to-end review checklist:
-
-```text
-EXTERNAL_REVIEW_CHECKLIST.md
-```
-
-The checklist bundles the replay guide, theorem index, physical-realization boundary, normalization reading, source/document comparison, and final review notes into one ordered path.
-
-## Build and local checks
-
-Lean build:
-
-```bash
-lake update
-lake build
-```
-
-Full local check script:
-
-```bash
-bash scripts/check.sh
-```
-
-`bash scripts/check.sh` now runs:
-
-```bash
-python3 scripts/verify_manifest.py
-python3 scripts/audit_lean_forbidden_tokens.py
-python3 scripts/audit_major_theorem_nonplaceholder.py
-python3 scripts/audit_bridge_coherence.py
-python3 scripts/replay_summary.py
-lake update
-lake build
-```
-
-GitHub Actions workflows:
-
-```text
-.github/workflows/lean-direct-elan.yml
-.github/workflows/bridge-coherence-ci.yml
-.github/workflows/full-local-check.yml
-```
-
-## Repository layout
-
-```text
-MGAP4D/                  Active Lean source tree
-MGAP4D.lean              Top-level Lean import root
-docs/                    GitHub-native documentation and checkpoint ledger
-maps/                    Lightweight source and dependency maps
-scripts/                 Local and CI audit scripts
-.github/workflows/       GitHub Actions CI
-```
-
-## Status summary
-
-```text
-GitHub-native Lean project: active
-Lean Direct Elan CI: green
-Bridge Coherence CI: green
-Full Local Check CI: configured
-Forbidden Lean tokens: 0 sorry / 0 admit / 0 axiom / 0 constant
-Major theorem non-placeholder audit: green
-Bridge coherence audit: green
-External audit packet: EXTERNAL_AUDIT_PACKET.md
-Independent replay guide: INDEPENDENT_REPLAY.md
-Theorem index: THEOREM_INDEX.md
-Physical realization boundary: PHYSICAL_REALIZATION_BOUNDARY.md
-External review checklist: EXTERNAL_REVIEW_CHECKLIST.md
-Physical Hamiltonian normalization bridge: CI green
-Exact value theorem-body origin: CI green
-Concrete residual closure: CI green
-Dimensionless normalized exact value surface: 33/20
-External consensus: not claimed
-Public final theorem claim: review-gated pending independent replay and external audit
-```
