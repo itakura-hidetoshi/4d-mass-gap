@@ -19,7 +19,6 @@ noncomputable def exactGapRealSurface : ExactGapRealSurface :=
     value_eq_3320 := exactGapValueReal_eq
     positive := exactGapValueReal_pos
     above_one := by
-      change 1 < exactGapValueReal
       norm_num [exactGapValueReal]
     analyticReplacementBranchOnly := True }
 
@@ -30,7 +29,6 @@ theorem exact_gap_real_surface_ready : exactGapRealSurface.ready := by
   exact And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos <|
     And.intro (by
-      change 1 < exactGapValueReal
       norm_num [exactGapValueReal]) True.intro
 
 theorem exact_gap_real_surface_value :
@@ -43,7 +41,6 @@ theorem exact_gap_real_surface_positive :
 
 theorem exact_gap_real_surface_above_one :
     1 < exactGapRealSurface.value := by
-  change 1 < exactGapValueReal
   norm_num [exactGapValueReal]
 
 end MathlibAnalytic
