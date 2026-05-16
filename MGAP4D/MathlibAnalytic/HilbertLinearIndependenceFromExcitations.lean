@@ -33,15 +33,26 @@ structure HilbertLinearIndependenceFromExcitationsData where
   finiteDimensionalCollapseBlocked : Prop
   finiteDimensionalCollapseBlocked_proof : finiteDimensionalCollapseBlocked
   fullHilbertBasisStillOpen : Prop
+  fullHilbertBasisStillOpen_proof : fullHilbertBasisStillOpen
   fullHilbertCompletionStillOpen : Prop
+  fullHilbertCompletionStillOpen_proof : fullHilbertCompletionStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
-/-- Ready predicate for the finite linear-independence surface. -/
+/-- Ready predicate for the finite linear-independence surface.
+
+Important Lean discipline: this predicate mentions propositions, not the proof
+fields themselves.  The proof fields are used below as witnesses of the
+corresponding propositions. -/
 def HilbertLinearIndependenceFromExcitationsData.ready
     (D : HilbertLinearIndependenceFromExcitationsData) : Prop :=
-  D.largeExcitationFamilyReady ∧ D.finiteVectorFamily_def ∧
-  D.pairwise_distinguishable ∧ D.finite_linearly_independent ∧
+  arbitrarilyLargeHilbertExcitationFamilyReviewSurface.ready ∧
+  (∀ k (i : Fin k), D.finiteVectorFamily k i = D.vector i.val) ∧
+  (∀ k (i j : Fin k), i ≠ j →
+    D.distinguishable (D.finiteVectorFamily k i) (D.finiteVectorFamily k j)) ∧
+  (∀ k, D.linearIndependent k (D.finiteVectorFamily k)) ∧
   D.finiteIndependenceVisible ∧ D.finiteDimensionalCollapseBlocked ∧
   D.fullHilbertBasisStillOpen ∧ D.fullHilbertCompletionStillOpen ∧
   D.finalReleaseHeld ∧ D.publicBoundaryHeld
@@ -69,7 +80,7 @@ theorem hilbert_excitation_finite_dimensional_collapse_blocked
 theorem hilbert_excitation_full_basis_still_open
     (D : HilbertLinearIndependenceFromExcitationsData) :
     D.fullHilbertBasisStillOpen := by
-  exact D.fullHilbertBasisStillOpen
+  exact D.fullHilbertBasisStillOpen_proof
 
 /-- Prototype finite linear-independence surface.
 
@@ -88,7 +99,6 @@ def prototypeHilbertLinearIndependenceFromExcitationsData :
     distinguishable := fun a b => a ≠ b
     pairwise_distinguishable := by
       intro k i j hij
-      dsimp
       intro hval
       exact hij (Fin.ext hval)
     linearIndependent := fun k family => ∀ i j : Fin k, family i = family j → i = j
@@ -100,27 +110,26 @@ def prototypeHilbertLinearIndependenceFromExcitationsData :
     finiteDimensionalCollapseBlocked := True
     finiteDimensionalCollapseBlocked_proof := True.intro
     fullHilbertBasisStillOpen := True
+    fullHilbertBasisStillOpen_proof := True.intro
     fullHilbertCompletionStillOpen := True
+    fullHilbertCompletionStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_hilbert_linear_independence_from_excitations_ready :
     prototypeHilbertLinearIndependenceFromExcitationsData.ready := by
-  exact And.intro arbitrarily_large_hilbert_excitation_family_review_surface_ready <|
-    And.intro (by intro k i; rfl) <|
-    And.intro (by
-      intro k i j hij
-      dsimp
-      intro hval
-      exact hij (Fin.ext hval)) <|
-    And.intro (by
-      intro k i j h
-      exact Fin.ext h) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeHilbertLinearIndependenceFromExcitationsData.largeExcitationFamilyReady <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.finiteVectorFamily_def <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.pairwise_distinguishable <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.finite_linearly_independent <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.finiteIndependenceVisible_proof <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.finiteDimensionalCollapseBlocked_proof <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.fullHilbertBasisStillOpen_proof <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.fullHilbertCompletionStillOpen_proof <|
+    And.intro prototypeHilbertLinearIndependenceFromExcitationsData.finalReleaseHeld_proof
+      prototypeHilbertLinearIndependenceFromExcitationsData.publicBoundaryHeld_proof
 
 theorem prototype_hilbert_excitation_finite_linearly_independent
     (k : Nat) :
@@ -138,15 +147,24 @@ structure HilbertLinearIndependenceFromExcitationsReviewSurface where
   finiteDimensionalCollapseBlocked :
     prototypeHilbertLinearIndependenceFromExcitationsData.finiteDimensionalCollapseBlocked
   finiteIndependenceEstablished : Prop
+  finiteIndependenceEstablished_proof : finiteIndependenceEstablished
   fullHilbertBasisStillOpen : Prop
+  fullHilbertBasisStillOpen_proof : fullHilbertBasisStillOpen
   fullHilbertCompletionStillOpen : Prop
+  fullHilbertCompletionStillOpen_proof : fullHilbertCompletionStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def HilbertLinearIndependenceFromExcitationsReviewSurface.ready
     (S : HilbertLinearIndependenceFromExcitationsReviewSurface) : Prop :=
-  S.largeExcitationFamilyReady ∧ S.finiteIndependenceReady ∧
-  S.finiteLinearlyIndependent ∧ S.finiteDimensionalCollapseBlocked ∧
+  arbitrarilyLargeHilbertExcitationFamilyReviewSurface.ready ∧
+  prototypeHilbertLinearIndependenceFromExcitationsData.ready ∧
+  (∀ k,
+    prototypeHilbertLinearIndependenceFromExcitationsData.linearIndependent k
+      (prototypeHilbertLinearIndependenceFromExcitationsData.finiteVectorFamily k)) ∧
+  prototypeHilbertLinearIndependenceFromExcitationsData.finiteDimensionalCollapseBlocked ∧
   S.finiteIndependenceEstablished ∧ S.fullHilbertBasisStillOpen ∧
   S.fullHilbertCompletionStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
@@ -157,26 +175,32 @@ def hilbertLinearIndependenceFromExcitationsReviewSurface :
     finiteLinearlyIndependent := prototype_hilbert_excitation_finite_linearly_independent
     finiteDimensionalCollapseBlocked := True.intro
     finiteIndependenceEstablished := True
+    finiteIndependenceEstablished_proof := True.intro
     fullHilbertBasisStillOpen := True
+    fullHilbertBasisStillOpen_proof := True.intro
     fullHilbertCompletionStillOpen := True
+    fullHilbertCompletionStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem hilbert_linear_independence_from_excitations_review_surface_ready :
     hilbertLinearIndependenceFromExcitationsReviewSurface.ready := by
-  exact And.intro arbitrarily_large_hilbert_excitation_family_review_surface_ready <|
-    And.intro prototype_hilbert_linear_independence_from_excitations_ready <|
-    And.intro prototype_hilbert_excitation_finite_linearly_independent <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.largeExcitationFamilyReady <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.finiteIndependenceReady <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.finiteLinearlyIndependent <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.finiteDimensionalCollapseBlocked <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.finiteIndependenceEstablished_proof <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertBasisStillOpen_proof <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertCompletionStillOpen_proof <|
+    And.intro hilbertLinearIndependenceFromExcitationsReviewSurface.finalReleaseHeld_proof
+      hilbertLinearIndependenceFromExcitationsReviewSurface.publicBoundaryHeld_proof
 
 theorem hilbert_linear_independence_from_excitations_final_release_held :
     HilbertLinearIndependenceFromExcitationsReviewSurface.finalReleaseHeld
       hilbertLinearIndependenceFromExcitationsReviewSurface := by
-  trivial
+  exact hilbertLinearIndependenceFromExcitationsReviewSurface.finalReleaseHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
