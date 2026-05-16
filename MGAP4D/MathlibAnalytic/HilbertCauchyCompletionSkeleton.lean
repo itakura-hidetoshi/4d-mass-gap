@@ -73,7 +73,7 @@ theorem hilbert_cauchy_completion_hilbert_space_instance_still_open
 
 /-- Prototype Cauchy-completion skeleton over `Nat` with singleton completion. -/
 def prototypeHilbertCauchyCompletionSkeletonData :
-    HilbertCauchyCompletionSkeletonData :=
+    HilbertCauchyCompletionSkeletonData.{0, 0} :=
   { normTopologyReady := hilbert_norm_topology_skeleton_review_surface_ready
     state := Nat
     completion := PUnit
