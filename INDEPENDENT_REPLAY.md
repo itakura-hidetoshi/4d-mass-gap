@@ -15,6 +15,7 @@ release manifest consistency
 Lean forbidden-token audit
 major theorem non-placeholder audit
 analytic bridge-coherence audit
+infinite-dimensional Yang-Mills target-layer audit
 Lean replay summary generation
 Lake manifest generation
 Lean build via lake build
@@ -29,9 +30,10 @@ Clay-style final theorem acceptance
 a dimensional physical mass gap without choosing the reference scale E0
 that syntactic audit scripts replace Lean kernel checking
 that Lean CI replaces expert mathematical review
+that the infinite-dimensional target layer by itself completes the continuum proof
 ```
 
-The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit and replay support.
+The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, and replay support.
 
 ## Required tools
 
@@ -96,6 +98,7 @@ This executes, in order:
 [check] audit Lean forbidden tokens
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
+[check] audit infinite-dimensional Yang-Mills target layer
 [check] replay summary
 [check] lake update
 [check] lake build
@@ -112,6 +115,7 @@ python3 scripts/verify_manifest.py
 python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
 python3 scripts/audit_bridge_coherence.py
+python3 scripts/audit_infinite_dimensional_target_layer.py
 python3 scripts/replay_summary.py
 lake update
 lake build
@@ -188,11 +192,38 @@ Expected result:
 Bridge coherence audit passed
 ```
 
-This checks declared bridge files for expected import edges, ready surfaces, preservation anchors, positivity anchors, and public-boundary anchors across the analytic / physical theorem chain.
+This checks declared bridge files for expected import edges, ready surfaces, preservation anchors, positivity anchors, infinite-dimensional target obligations, and public-boundary anchors across the analytic / physical theorem chain.
 
 It is a syntactic / contract audit. It does not replace Lean kernel checking or external mathematical review.
 
-### 5. Replay summary
+### 5. Infinite-dimensional Yang-Mills target-layer audit
+
+```bash
+python3 scripts/audit_infinite_dimensional_target_layer.py
+```
+
+Expected result:
+
+```text
+Infinite-dimensional target layer audit passed
+```
+
+This checks that the repository's evolution beyond skeleton-only closure is represented as an explicit Lean target surface with named analytic obligations, root import, documentation ledger, and public-boundary markers.
+
+It verifies anchors such as:
+
+```text
+InfiniteDimensionalYangMillsRealizationTarget
+infinite_dimensional_witness
+hphys_self_adjoint_witness
+continuum_limit_witness
+plaquette_nonzero_weight_witness
+vacuum_orthogonal_nonempty_witness
+publicBoundaryHeld
+finalReleaseHeld
+```
+
+### 6. Replay summary
 
 ```bash
 python3 scripts/replay_summary.py
@@ -207,7 +238,7 @@ wrote maps/REPLAY_SUMMARY_CURRENT.json
 
 This summarizes the Lean replay surface, including Lean files, imports, declaration-like lines, namespace lines, and total lines.
 
-### 6. Lake manifest and build
+### 7. Lake manifest and build
 
 ```bash
 lake update
@@ -237,6 +268,7 @@ Verify release manifest
 Audit Lean forbidden tokens
 Audit major theorem non-placeholder surface
 Audit analytic bridge coherence
+Audit infinite-dimensional Yang-Mills target layer
 Summarize Lean replay surface
 ```
 
@@ -251,7 +283,13 @@ Pull Mathlib cache when available
 Build Lean project with lake build
 ```
 
-Thus the local `scripts/check.sh` path and the GitHub Actions audit/build path intentionally cover the same core replay surfaces.
+The one-command local replay path is mirrored by:
+
+```text
+.github/workflows/full-local-check.yml
+```
+
+Thus the local `scripts/check.sh` path and the GitHub Actions audit/build paths intentionally cover the same core replay surfaces.
 
 ## Interpreting failures
 
@@ -269,7 +307,11 @@ A load-bearing theorem surface may be missing, may have become a placeholder, or
 
 ### Failure in `audit_bridge_coherence.py`
 
-The analytic / physical bridge chain may have lost an expected import edge, ready surface, preservation anchor, positivity anchor, or public-boundary anchor. Inspect the reported file and anchor.
+The analytic / physical bridge chain may have lost an expected import edge, ready surface, preservation anchor, positivity anchor, infinite-dimensional target anchor, or public-boundary anchor. Inspect the reported file and anchor.
+
+### Failure in `audit_infinite_dimensional_target_layer.py`
+
+The infinite-dimensional target layer may be missing, may not be imported by the analytic root, may lack required analytic-obligation anchors, or may be missing its documentation ledger.
 
 ### Failure in `lake update`
 
@@ -286,7 +328,7 @@ A successful independent replay means:
 ```text
 the repository builds with the pinned Lean toolchain
 the declared audit scripts pass
-the theorem-surface and bridge-surface checks pass
+the theorem-surface, bridge-surface, and target-layer checks pass
 the replay summary is reproducible
 ```
 
@@ -296,6 +338,7 @@ It does not mean:
 external consensus has been obtained
 all analytic residuals have been accepted by the mathematical community
 CI output alone is a substitute for proof review
+the target layer alone completes the physical continuum proof
 ```
 
-For external assessment, reviewers should combine this replay with direct inspection of the named theorem statements, bridge files, documentation ledgers, and mathematical arguments.
+For external assessment, reviewers should combine this replay with direct inspection of the named theorem statements, bridge files, target layer, documentation ledgers, and mathematical arguments.
