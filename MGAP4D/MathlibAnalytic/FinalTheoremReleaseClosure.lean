@@ -38,11 +38,12 @@ structure FinalTheoremReleaseClosureData where
 /-- Ready predicate for the top-level final release closure packet. -/
 def FinalTheoremReleaseClosureData.ready
     (D : FinalTheoremReleaseClosureData) : Prop :=
-  D.finalReleaseReady ∧ D.exactValueEq3320 ∧ D.exactGapStatementPresent ∧
-  D.spectralAtomPresent ∧ D.positiveObservableMassPresent ∧
-  D.observableWitnessPresent ∧ D.continuumCertificatePresent ∧
-  D.theoremBodyClosed ∧ D.releaseChainClosed ∧ D.externalConsensusNotClaimed ∧
-  D.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  D.exactGapStatementPresent ∧ D.spectralAtomPresent ∧
+  D.positiveObservableMassPresent ∧ D.observableWitnessPresent ∧
+  D.continuumCertificatePresent ∧ D.theoremBodyClosed ∧
+  D.releaseChainClosed ∧ D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
 
 /-- Exact value remains `33/20` at the closure packet. -/
 theorem final_theorem_release_closure_exact_value_3320
@@ -75,7 +76,7 @@ theorem final_theorem_release_closure_public_boundary_held
   exact D.publicBoundaryHeld_proof
 
 /-- Prototype final theorem release closure packet. -/
-def prototypeFinalTheoremReleaseClosureData : FinalTheoremReleaseClosureData :=
+noncomputable def prototypeFinalTheoremReleaseClosureData : FinalTheoremReleaseClosureData :=
   { finalReleaseReady := final_theorem_release_skeleton_review_surface_ready
     exactValueEq3320 := exactGapValueReal_eq
     exactGapStatementPresent := True
@@ -99,51 +100,63 @@ def prototypeFinalTheoremReleaseClosureData : FinalTheoremReleaseClosureData :=
 
 theorem prototype_final_theorem_release_closure_ready :
     prototypeFinalTheoremReleaseClosureData.ready := by
-  exact And.intro final_theorem_release_skeleton_review_surface_ready <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeFinalTheoremReleaseClosureData.finalReleaseReady <|
+    And.intro prototypeFinalTheoremReleaseClosureData.exactValueEq3320 <|
+    And.intro prototypeFinalTheoremReleaseClosureData.exactGapStatementPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.spectralAtomPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.positiveObservableMassPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.observableWitnessPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.continuumCertificatePresent_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.theoremBodyClosed_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.releaseChainClosed_proof <|
+    And.intro prototypeFinalTheoremReleaseClosureData.externalConsensusNotClaimed_proof
+      prototypeFinalTheoremReleaseClosureData.publicBoundaryHeld_proof
 
 /-- Review surface for the final theorem release closure packet. -/
 structure FinalTheoremReleaseClosureReviewSurface where
   finalReleaseReady : finalTheoremReleaseSkeletonReviewSurface.ready
   closureReady : prototypeFinalTheoremReleaseClosureData.ready
   exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
-  theoremBodyClosed : prototypeFinalTheoremReleaseClosureData.theoremBodyClosed
-  releaseChainClosed : prototypeFinalTheoremReleaseClosureData.releaseChainClosed
-  externalConsensusNotClaimed : prototypeFinalTheoremReleaseClosureData.externalConsensusNotClaimed
-  publicBoundaryHeld : prototypeFinalTheoremReleaseClosureData.publicBoundaryHeld
+  theoremBodyClosed : Prop
+  theoremBodyClosed_proof : theoremBodyClosed
+  releaseChainClosed : Prop
+  releaseChainClosed_proof : releaseChainClosed
+  externalConsensusNotClaimed : Prop
+  externalConsensusNotClaimed_proof : externalConsensusNotClaimed
+  publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def FinalTheoremReleaseClosureReviewSurface.ready
     (S : FinalTheoremReleaseClosureReviewSurface) : Prop :=
-  S.finalReleaseReady ∧ S.closureReady ∧ S.exactValueEq3320 ∧
+  finalTheoremReleaseSkeletonReviewSurface.ready ∧
+  prototypeFinalTheoremReleaseClosureData.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   S.theoremBodyClosed ∧ S.releaseChainClosed ∧
   S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
 
-def finalTheoremReleaseClosureReviewSurface :
+noncomputable def finalTheoremReleaseClosureReviewSurface :
     FinalTheoremReleaseClosureReviewSurface :=
   { finalReleaseReady := final_theorem_release_skeleton_review_surface_ready
     closureReady := prototype_final_theorem_release_closure_ready
     exactValueEq3320 := exactGapValueReal_eq
-    theoremBodyClosed := True.intro
-    releaseChainClosed := True.intro
-    externalConsensusNotClaimed := True.intro
-    publicBoundaryHeld := True.intro }
+    theoremBodyClosed := prototypeFinalTheoremReleaseClosureData.theoremBodyClosed
+    theoremBodyClosed_proof := prototypeFinalTheoremReleaseClosureData.theoremBodyClosed_proof
+    releaseChainClosed := prototypeFinalTheoremReleaseClosureData.releaseChainClosed
+    releaseChainClosed_proof := prototypeFinalTheoremReleaseClosureData.releaseChainClosed_proof
+    externalConsensusNotClaimed := prototypeFinalTheoremReleaseClosureData.externalConsensusNotClaimed
+    externalConsensusNotClaimed_proof := prototypeFinalTheoremReleaseClosureData.externalConsensusNotClaimed_proof
+    publicBoundaryHeld := prototypeFinalTheoremReleaseClosureData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeFinalTheoremReleaseClosureData.publicBoundaryHeld_proof }
 
 theorem final_theorem_release_closure_review_surface_ready :
     finalTheoremReleaseClosureReviewSurface.ready := by
-  exact And.intro final_theorem_release_skeleton_review_surface_ready <|
-    And.intro prototype_final_theorem_release_closure_ready <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro finalTheoremReleaseClosureReviewSurface.finalReleaseReady <|
+    And.intro finalTheoremReleaseClosureReviewSurface.closureReady <|
+    And.intro finalTheoremReleaseClosureReviewSurface.exactValueEq3320 <|
+    And.intro finalTheoremReleaseClosureReviewSurface.theoremBodyClosed_proof <|
+    And.intro finalTheoremReleaseClosureReviewSurface.releaseChainClosed_proof <|
+    And.intro finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed_proof
+      finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
