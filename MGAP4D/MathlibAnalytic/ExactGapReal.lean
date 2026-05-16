@@ -14,7 +14,7 @@ structure ExactGapRealSurface where
   above_one : 1 < value
   analyticReplacementBranchOnly : Prop
 
-def exactGapRealSurface : ExactGapRealSurface :=
+noncomputable def exactGapRealSurface : ExactGapRealSurface :=
   { value := exactGapValueReal
     value_eq_3320 := exactGapValueReal_eq
     positive := exactGapValueReal_pos
@@ -23,7 +23,7 @@ def exactGapRealSurface : ExactGapRealSurface :=
     analyticReplacementBranchOnly := True }
 
 def ExactGapRealSurface.ready (S : ExactGapRealSurface) : Prop :=
-  S.value_eq_3320 ∧ S.positive ∧ S.above_one ∧ S.analyticReplacementBranchOnly
+  S.value = (33 : ℝ) / 20 ∧ 0 < S.value ∧ 1 < S.value ∧ S.analyticReplacementBranchOnly
 
 theorem exact_gap_real_surface_ready : exactGapRealSurface.ready := by
   exact And.intro exactGapValueReal_eq <|
