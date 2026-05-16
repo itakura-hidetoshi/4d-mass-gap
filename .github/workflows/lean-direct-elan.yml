@@ -39,6 +39,8 @@ jobs:
         run: python3 scripts/audit_hard_physical_residual_hardening_map.py
       - name: Audit Hilbert construction lane hardening
         run: python3 scripts/audit_hilbert_construction_lane_hardening.py
+      - name: Audit self-adjoint HPhys lane hardening
+        run: python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
       - name: Summarize Lean replay surface
         run: python3 scripts/replay_summary.py
 
