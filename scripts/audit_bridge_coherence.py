@@ -2,13 +2,14 @@
 """Audit bridge coherence for the analytic/physical theorem chain.
 
 This guard checks the declared bridge from concrete Hilbert realization through
-physical/Yang--Mills Hamiltonian, spectral/PVM realization, and continuum
-spectral theorem surfaces.
+physical/Yang--Mills Hamiltonian, spectral/PVM realization, continuum spectral
+theorem surfaces, normalization, and the infinite-dimensional Yang--Mills target
+obligation layer.
 
-It is a syntactic/contract audit: Lean's kernel remains `lake build`.  This
+It is a syntactic/contract audit: Lean's kernel remains `lake build`. This
 script ensures the named bridge files expose the expected import edges, ready
-surfaces, value preservation anchors, positivity anchors, and public-boundary
-anchors.
+surfaces, value preservation anchors, positivity anchors, physical target
+obligations, and public-boundary anchors.
 """
 
 from __future__ import annotations
@@ -171,6 +172,31 @@ BRIDGE_FILES: tuple[BridgeFileSpec, ...] = (
         ),
         required_boundary=("theoremBodyUnchanged", "publicBoundaryHeld"),
     ),
+    BridgeFileSpec(
+        path="MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean",
+        required_imports=("import MGAP4D.MathlibAnalytic.PhysicalHamiltonianNormalizationBridge",),
+        required_anchors=(
+            "InfiniteDimensionalYangMillsRealizationTarget",
+            "infinite_dimensional_witness",
+            "separable_hilbert_witness",
+            "dense_core_witness",
+            "domain_density_witness",
+            "hphys_self_adjoint_witness",
+            "gauge_invariance_witness",
+            "yang_mills_energy_witness",
+            "continuum_limit_witness",
+            "spectral_theorem_witness",
+            "plaquette_nonzero_weight_witness",
+            "vacuum_orthogonal_nonempty_witness",
+            "normalized_gap_eq_exact",
+            "exact_value_eq_3320",
+        ),
+        required_ready=(
+            "InfiniteDimensionalYangMillsRealizationTarget.ready",
+            "infinite_dimensional_yang_mills_target_review_surface_ready",
+        ),
+        required_boundary=("publicBoundaryHeld", "finalReleaseHeld"),
+    ),
 )
 
 ORDERED_IMPORT_EDGES: tuple[tuple[str, str], ...] = (
@@ -190,6 +216,10 @@ ORDERED_IMPORT_EDGES: tuple[tuple[str, str], ...] = (
         "MGAP4D/MathlibAnalytic/ContinuumSpectralTheoremSkeleton.lean",
         "import MGAP4D.MathlibAnalytic.SpectralRealizationSkeleton",
     ),
+    (
+        "MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean",
+        "import MGAP4D.MathlibAnalytic.PhysicalHamiltonianNormalizationBridge",
+    ),
 )
 
 TOP_LEVEL_ANCHORS: tuple[tuple[str, tuple[str, ...]], ...] = (
@@ -204,6 +234,7 @@ TOP_LEVEL_ANCHORS: tuple[tuple[str, tuple[str, ...]], ...] = (
         (
             "import MGAP4D.MathlibAnalytic.PhysicalHamiltonianNormalizationBridge",
             "import MGAP4D.MathlibAnalytic.ConcreteResidualClosure",
+            "import MGAP4D.MathlibAnalytic.InfiniteDimensionalYangMillsRealizationTargets",
         ),
     ),
 )
@@ -305,9 +336,9 @@ def main() -> None:
     print(f"Bridge files audited: {len(BRIDGE_FILES)}")
     print(f"Ordered import edges audited: {len(ORDERED_IMPORT_EDGES)}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
-    print("Bridge anchors audited: Hilbert, H_phys, Yang-Mills, spectral/PVM, continuum, normalization")
+    print("Bridge anchors audited: Hilbert, H_phys, Yang-Mills, spectral/PVM, continuum, normalization, infinite-dimensional target")
     print("Value anchors audited: exact_value_eq_3320 / exactGapValueReal")
-    print("Boundary anchors audited: publicBoundaryHeld and open-boundary markers")
+    print("Boundary anchors audited: publicBoundaryHeld, finalReleaseHeld, and open-boundary markers")
 
     if failures:
         print("Bridge coherence audit failed:", file=sys.stderr)
