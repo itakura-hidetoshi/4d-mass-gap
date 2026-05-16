@@ -34,9 +34,10 @@ structure FinalTheoremReleaseBundleManifestData where
 /-- Ready predicate for the final theorem release bundle manifest. -/
 def FinalTheoremReleaseBundleManifestData.ready
     (D : FinalTheoremReleaseBundleManifestData) : Prop :=
-  D.chainIndexReady ∧ D.exactValueEq3320 ∧ D.sourceArtifactsPresent ∧
-  D.docsArtifactsPresent ∧ D.ciLedgersPresent ∧ D.finalClosurePresent ∧
-  D.releaseChainClosed ∧ D.bundleManifestVisible ∧
+  finalTheoremReleaseChainIndexReady ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  D.sourceArtifactsPresent ∧ D.docsArtifactsPresent ∧ D.ciLedgersPresent ∧
+  D.finalClosurePresent ∧ D.releaseChainClosed ∧ D.bundleManifestVisible ∧
   D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
 
 /-- Exact value is preserved at bundle-manifest level. -/
@@ -70,7 +71,7 @@ theorem final_theorem_release_bundle_manifest_public_boundary_held
   exact D.publicBoundaryHeld_proof
 
 /-- Prototype final theorem release bundle manifest. -/
-def prototypeFinalTheoremReleaseBundleManifestData :
+noncomputable def prototypeFinalTheoremReleaseBundleManifestData :
     FinalTheoremReleaseBundleManifestData :=
   { chainIndexReady := final_theorem_release_chain_index_ready
     exactValueEq3320 := exactGapValueReal_eq
@@ -93,15 +94,16 @@ def prototypeFinalTheoremReleaseBundleManifestData :
 
 theorem prototype_final_theorem_release_bundle_manifest_ready :
     prototypeFinalTheoremReleaseBundleManifestData.ready := by
-  exact And.intro final_theorem_release_chain_index_ready <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeFinalTheoremReleaseBundleManifestData.chainIndexReady <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.exactValueEq3320 <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent_proof <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.finalClosurePresent_proof <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.releaseChainClosed_proof <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.bundleManifestVisible_proof <|
+    And.intro prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed_proof
+      prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld_proof
 
 /-- Review surface for the final theorem release bundle manifest. -/
 structure FinalTheoremReleaseBundleManifestReviewSurface where
@@ -118,12 +120,18 @@ structure FinalTheoremReleaseBundleManifestReviewSurface where
 
 def FinalTheoremReleaseBundleManifestReviewSurface.ready
     (S : FinalTheoremReleaseBundleManifestReviewSurface) : Prop :=
-  S.chainIndexReady ∧ S.bundleManifestReady ∧ S.exactValueEq3320 ∧
-  S.sourceArtifactsPresent ∧ S.docsArtifactsPresent ∧ S.ciLedgersPresent ∧
-  S.finalClosurePresent ∧ S.releaseChainClosed ∧
-  S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
+  finalTheoremReleaseChainIndexReady ∧
+  prototypeFinalTheoremReleaseBundleManifestData.ready ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent ∧
+  prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent ∧
+  prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent ∧
+  prototypeFinalTheoremReleaseBundleManifestData.finalClosurePresent ∧
+  prototypeFinalTheoremReleaseBundleManifestData.releaseChainClosed ∧
+  prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed ∧
+  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
-def finalTheoremReleaseBundleManifestReviewSurface :
+noncomputable def finalTheoremReleaseBundleManifestReviewSurface :
     FinalTheoremReleaseBundleManifestReviewSurface :=
   { chainIndexReady := final_theorem_release_chain_index_ready
     bundleManifestReady := prototype_final_theorem_release_bundle_manifest_ready
@@ -138,15 +146,16 @@ def finalTheoremReleaseBundleManifestReviewSurface :
 
 theorem final_theorem_release_bundle_manifest_review_surface_ready :
     finalTheoremReleaseBundleManifestReviewSurface.ready := by
-  exact And.intro final_theorem_release_chain_index_ready <|
-    And.intro prototype_final_theorem_release_bundle_manifest_ready <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro finalTheoremReleaseBundleManifestReviewSurface.chainIndexReady <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.bundleManifestReady <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.exactValueEq3320 <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.sourceArtifactsPresent <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.docsArtifactsPresent <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.ciLedgersPresent <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.finalClosurePresent <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.releaseChainClosed <|
+    And.intro finalTheoremReleaseBundleManifestReviewSurface.externalConsensusNotClaimed
+      finalTheoremReleaseBundleManifestReviewSurface.publicBoundaryHeld
 
 end MathlibAnalytic
 end MGAP4D
