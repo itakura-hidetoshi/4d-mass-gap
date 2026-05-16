@@ -29,9 +29,10 @@ Reviewers should read and execute in this order:
 | 2 | `EXTERNAL_REVIEW_CHECKLIST.md` | Follow the ordered review checklist. |
 | 3 | `INDEPENDENT_REPLAY.md` | Reproduce the repository-level replay from a fresh clone. |
 | 4 | `bash scripts/check.sh` | Run the complete local replay path. |
-| 5 | `THEOREM_INDEX.md` | Inspect the 12 major theorem surfaces and 7 bridge surfaces. |
-| 6 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Interpret `PUnit`, singleton, prototype, and skeleton surfaces correctly. |
-| 7 | `docs/` ledgers | Compare source statements with audit and CI documentation ledgers. |
+| 5 | `.github/workflows/full-local-check.yml` | Confirm that the same one-command replay path is mirrored in GitHub Actions. |
+| 6 | `THEOREM_INDEX.md` | Inspect the 12 major theorem surfaces and 7 bridge surfaces. |
+| 7 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Interpret `PUnit`, singleton, prototype, and skeleton surfaces correctly. |
+| 8 | `docs/` ledgers | Compare source statements with audit and CI documentation ledgers. |
 
 ## One-command replay
 
@@ -54,6 +55,34 @@ Expected high-level stages:
 [check] lake update
 [check] lake build
 ```
+
+## CI parity for the one-command replay
+
+The one-command local replay path is mirrored in GitHub Actions by:
+
+```text
+.github/workflows/full-local-check.yml
+```
+
+Workflow name:
+
+```text
+Full Local Check CI
+```
+
+Main job:
+
+```text
+Run scripts/check.sh
+```
+
+This workflow installs / exposes the pinned Lean toolchain, prints Lean and Lake versions, and then runs:
+
+```bash
+bash scripts/check.sh
+```
+
+This gives reviewers a CI-level check of the same command that `INDEPENDENT_REPLAY.md` asks them to run locally.
 
 ## Manual replay path
 
@@ -209,6 +238,7 @@ the repository can be replayed from a fresh clone
 the pinned Lean toolchain is visible
 the audit scripts pass
 the Lean build passes
+the full local check CI mirrors the reviewer command
 the major theorem surfaces are present
 the bridge surfaces are present
 boundary markers are visible
@@ -232,6 +262,7 @@ Date reviewed:
 Lean version:
 Lake version:
 scripts/check.sh result:
+Full Local Check CI result:
 lake build result:
 Major theorem audit result:
 Bridge coherence audit result:
