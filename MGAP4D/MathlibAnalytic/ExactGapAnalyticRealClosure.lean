@@ -38,15 +38,26 @@ structure ExactGapAnalyticRealClosure where
 
 def ExactGapAnalyticRealClosure.ready
     (C : ExactGapAnalyticRealClosure) : Prop :=
-  C.exactValueReady ∧ C.gapInfimumReady ∧ C.rayleighLowerBoundReady ∧
-  C.rayleighAttainmentReady ∧ C.spectralMassReady ∧
-  C.exactValue_eq_3320 ∧ C.exactValue_pos ∧ C.exactValue_above_one ∧
-  C.gapInfimumLowerBound ∧ C.gapInfimumAttained ∧ C.positiveSpectralMass ∧
-  C.spectralMassNonzero ∧ C.allRealAnalyticSurfacesClosed ∧
-  C.analyticReplacementBranchOnly ∧ C.notFullHilbertRayleighYet ∧
-  C.notFullPVMYet ∧ C.mainBoundaryPreserved ∧ C.finalReleaseHeld
+  C.exactValueReady ∧
+  C.gapInfimumReady ∧
+  C.rayleighLowerBoundReady ∧
+  C.rayleighAttainmentReady ∧
+  C.spectralMassReady ∧
+  C.exactValue = (33 : ℝ) / 20 ∧
+  0 < C.exactValue ∧
+  1 < C.exactValue ∧
+  (∀ energy, RayleighEnergyAdmissible energy → C.exactValue ≤ energy) ∧
+  RayleighAttainsExactGap C.exactValue ∧
+  PositiveSpectralMassAtExactGap C.exactValue exactGapSpectralMassReal ∧
+  exactGapSpectralMassReal ≠ 0 ∧
+  C.allRealAnalyticSurfacesClosed ∧
+  C.analyticReplacementBranchOnly ∧
+  C.notFullHilbertRayleighYet ∧
+  C.notFullPVMYet ∧
+  C.mainBoundaryPreserved ∧
+  C.finalReleaseHeld
 
-def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
+noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
   { exactValueReady := exact_gap_real_surface_ready
     gapInfimumReady := gap_infimum_real_surface_ready
     rayleighLowerBoundReady := rayleigh_lower_bound_real_surface_ready
@@ -98,7 +109,8 @@ theorem exact_gap_analytic_real_closure_positive :
 
 theorem exact_gap_analytic_real_closure_above_one :
     1 < exactGapAnalyticRealClosure.exactValue := by
-  norm_num [exactGapAnalyticRealClosure, exactGapValueReal]
+  change 1 < exactGapValueReal
+  norm_num [exactGapValueReal]
 
 theorem exact_gap_analytic_real_closure_lower_bound :
     ∀ energy, RayleighEnergyAdmissible energy →
