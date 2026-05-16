@@ -28,5 +28,7 @@ jobs:
         run: python3 scripts/audit_major_theorem_nonplaceholder.py
       - name: Check analytic bridge coherence
         run: python3 scripts/audit_bridge_coherence.py
+      - name: Check infinite-dimensional Yang-Mills target layer
+        run: python3 scripts/audit_infinite_dimensional_target_layer.py
       - name: Summarize Lean replay surface
         run: python3 scripts/replay_summary.py
