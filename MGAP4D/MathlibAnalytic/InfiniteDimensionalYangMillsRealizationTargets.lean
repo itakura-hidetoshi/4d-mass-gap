@@ -9,7 +9,7 @@ universe u v w
 infinite-dimensional Yang--Mills realization.
 
 This layer is intentionally a target/obligation surface, not a final public
-release surface.  It records the analytic objects that must be supplied before
+release surface. It records the analytic objects that must be supplied before
 the current structural bridge can be promoted to a physical continuum
 realization. -/
 structure InfiniteDimensionalYangMillsRealizationTarget where
@@ -51,7 +51,7 @@ structure InfiniteDimensionalYangMillsRealizationTarget where
 
 /-- Readiness predicate for the infinite-dimensional Yang--Mills target surface.
 
-Every item here is a positive obligation.  This predicate deliberately keeps the
+Every item here is a positive obligation. This predicate deliberately keeps the
 public boundary held, because target readiness records what must be reviewed; it
 does not by itself create public final theorem release. -/
 def InfiniteDimensionalYangMillsRealizationTarget.ready
@@ -82,56 +82,64 @@ theorem infinite_dimensional_target_requires_infinite_dimension
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.infinite_dimensional_witness := by
-  exact hT.1
+  rcases hT with ⟨h, _⟩
+  exact h
 
 /-- Self-adjoint physical Hamiltonian witness is a first-class obligation. -/
 theorem infinite_dimensional_target_requires_self_adjoint_hphys
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.hphys_self_adjoint_witness := by
-  exact hT.2.2.2.2.2.1
+  rcases hT with ⟨_, _, _, _, _, h, _⟩
+  exact h
 
 /-- Continuum-limit witness is a first-class obligation. -/
 theorem infinite_dimensional_target_requires_continuum_limit
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.continuum_limit_witness := by
-  exact hT.2.2.2.2.2.2.2.2.1
+  rcases hT with ⟨_, _, _, _, _, _, _, _, h, _⟩
+  exact h
 
 /-- Positive plaquette spectral weight is a first-class obligation. -/
 theorem infinite_dimensional_target_requires_plaquette_weight
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.plaquette_nonzero_weight_witness := by
-  exact hT.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
 
 /-- The target keeps the exact normalized value tied to the theorem-body value. -/
 theorem infinite_dimensional_target_normalized_gap_eq_exact
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.normalizedGapCandidate = exactGapValueReal := by
-  exact hT.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
 
 /-- The target keeps the internal exact value surface at 33/20. -/
 theorem infinite_dimensional_target_exact_value_eq_3320
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     exactGapValueReal = (33 : ℝ) / 20 := by
-  exact hT.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
 
 /-- The target does not open the public final theorem boundary by itself. -/
 theorem infinite_dimensional_target_public_boundary_held
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.publicBoundaryHeld := by
-  exact hT.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
 
 /-- The target does not open final release by itself. -/
 theorem infinite_dimensional_target_final_release_held
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
     T.finalReleaseHeld := by
-  exact hT.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2
+  rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h⟩
+  exact h
 
 /-- Review surface recording that the analytic target layer has been installed.
 The installation is a strengthened obligation map, not a completed physical
