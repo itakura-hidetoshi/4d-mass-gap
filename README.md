@@ -155,19 +155,21 @@ The replay path currently runs:
 [check] audit four-lane residual closure
 [check] audit internal review residual closure gate
 [check] audit external audit readiness gate
+[check] audit external audit readiness gate field classification
+[check] audit external audit readiness replay certificate
 [check] replay summary
 [check] lake update
 [check] build external audit readiness gate
 [check] lake build
 ```
 
-Confirmed external-audit-readiness CI checkpoint:
+Confirmed external-audit-readiness replay-certificate CI checkpoint:
 
 ```text
 Workflow: Run scripts/check.sh
-Run ID: 25961418682
-Job ID: 76317232199
-Commit checked out by CI: 7041b000c4c8f30a2d99d5429504d00cffb88bcb
+Run ID: 25974054664
+Job ID: 76351001321
+Commit checked out by CI: 0eee78c9dcc2345bf440a88801b16a8088538fac
 Result: success
 Lean-side warnings in gate build: none observed
 ```
@@ -183,10 +185,12 @@ constant: 0
 Major theorem specs audited: 12
 Bridge files audited: 8
 Ordered import edges audited: 5
+External audit readiness gate field-classification audit: passed
+External audit readiness replay certificate audit: passed
 Lean replay summary imports: 1191
-Lean replay summary declaration_like_lines: 2602
+Lean replay summary declaration_like_lines: 2663
 Lean replay summary namespace_lines: 938
-Lean replay summary total_lines: 27203
+Lean replay summary total_lines: 27611
 Build completed successfully: 8368 jobs
 Final lake build: 0 jobs, success
 ```
@@ -222,6 +226,8 @@ docs/plaquette_spectral_weight_lane_hardening.md
 docs/four_lane_residual_closure.md
 docs/internal_review_residual_closure_gate.md
 docs/external_audit_readiness_gate.md
+docs/external_audit_readiness_gate_field_classification.md
+docs/external_audit_readiness_replay_certificate.md
 docs/external_audit_readiness_gate_ci.md
 ```
 
@@ -232,7 +238,7 @@ A successful replay means:
 ```text
 the repository builds with the pinned Lean toolchain and pinned mathlib version
 the declared audit scripts pass
-the theorem-surface, bridge-surface, target-layer, residual-hardening, and final readiness-gate checks pass
+the theorem-surface, bridge-surface, target-layer, residual-hardening, final readiness-gate, field-classification, and replay-certificate checks pass
 the replay summary is reproducible
 ```
 
