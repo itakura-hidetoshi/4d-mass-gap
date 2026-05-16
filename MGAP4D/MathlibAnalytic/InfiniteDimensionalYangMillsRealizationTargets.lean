@@ -145,7 +145,8 @@ theorem infinite_dimensional_target_final_release_held
 The installation is a strengthened obligation map, not a completed physical
 realization. -/
 structure InfiniteDimensionalYangMillsTargetReviewSurface where
-  normalizationBridgeReady : physicalHamiltonianNormalizationBridge.ready
+  normalizationBridgeReady : PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
+    physicalHamiltonianNormalizationBridgeReviewSurface
   targetLayerInstalled : Prop
   requiresInfiniteDimensionalHilbert : Prop
   requiresSelfAdjointHPhys : Prop
