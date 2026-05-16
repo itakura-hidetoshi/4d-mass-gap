@@ -315,6 +315,16 @@ Repository receipt: docs/zenodo_record_20181046.md
 
 This Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.
 
+## External audit packet
+
+External reviewers can start from the top-level audit packet:
+
+```text
+EXTERNAL_AUDIT_PACKET.md
+```
+
+The packet gives an ordered route through README, the review checklist, independent replay, theorem index, physical-realization boundary, and documentation ledgers.
+
 ## Independent replay
 
 External reviewers can reproduce the repository-level replay using:
@@ -429,6 +439,7 @@ Bridge Coherence CI: green
 Forbidden Lean tokens: 0 sorry / 0 admit / 0 axiom / 0 constant
 Major theorem non-placeholder audit: green
 Bridge coherence audit: green
+External audit packet: EXTERNAL_AUDIT_PACKET.md
 Independent replay guide: INDEPENDENT_REPLAY.md
 Theorem index: THEOREM_INDEX.md
 Physical realization boundary: PHYSICAL_REALIZATION_BOUNDARY.md
