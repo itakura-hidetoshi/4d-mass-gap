@@ -50,7 +50,7 @@ This executes, in order:
 [check] audit external audit readiness gate
 [check] replay summary
 [check] lake update
-[check] lean external audit readiness gate
+[check] build external audit readiness gate
 [check] lake build
 ```
 
@@ -73,7 +73,7 @@ python3 scripts/audit_internal_review_residual_closure_gate.py
 python3 scripts/audit_external_audit_readiness_gate.py
 python3 scripts/replay_summary.py
 lake update
-lake env lean MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
+lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build
 ```
 
