@@ -21,9 +21,9 @@ structure ExternalAuditReadinessGateData where
 
 def ExternalAuditReadinessGateData.ready
     (D : ExternalAuditReadinessGateData) : Prop :=
-  D.internalGateReady ∧
-  D.bundleManifestReady ∧
-  D.chainIndexReady ∧
+  internalReviewResidualClosureGateData.ready ∧
+  finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+  finalTheoremReleaseChainIndexReady ∧
   D.repositoryInternalResidualClosed ∧
   D.noReviewLevelResidualLeft ∧
   D.independentReplayVisible ∧
@@ -33,7 +33,7 @@ def ExternalAuditReadinessGateData.ready
   D.externalConsensusNotClaimed ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld ∧
-  D.exactValuePreserved
+  exactGapValueReal = (33 : ℝ) / 20
 
 theorem external_audit_readiness_repository_internal_residual_closed
     (D : ExternalAuditReadinessGateData) (hD : D.ready) :
@@ -90,10 +90,9 @@ theorem external_audit_readiness_final_release_held
   exact h
 
 theorem external_audit_readiness_exact_value_preserved
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, h⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 def externalAuditReadinessGateData : ExternalAuditReadinessGateData :=
   { internalGateReady := internal_review_residual_closure_gate_ready
@@ -112,9 +111,9 @@ def externalAuditReadinessGateData : ExternalAuditReadinessGateData :=
 
 theorem external_audit_readiness_gate_ready :
     externalAuditReadinessGateData.ready := by
-  exact And.intro internal_review_residual_closure_gate_ready <|
-    And.intro final_theorem_release_bundle_manifest_review_surface_ready <|
-    And.intro final_theorem_release_chain_index_ready <|
+  exact And.intro externalAuditReadinessGateData.internalGateReady <|
+    And.intro externalAuditReadinessGateData.bundleManifestReady <|
+    And.intro externalAuditReadinessGateData.chainIndexReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -123,7 +122,7 @@ theorem external_audit_readiness_gate_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro True.intro exactGapValueReal_eq
+    And.intro True.intro externalAuditReadinessGateData.exactValuePreserved
 
 end MathlibAnalytic
 end MGAP4D
