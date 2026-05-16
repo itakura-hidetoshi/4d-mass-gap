@@ -137,12 +137,16 @@ theorem exact_gap_theorem_body_closure_ready :
     And.intro True.intro True.intro
 
 theorem exact_gap_theorem_body_closure_value :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact exactGapTheoremBodyClosure.exactValue_eq_3320
+    exactGapValueReal = (33 : ℝ) / 20 ∧
+      exactGapTheoremBodyClosure.exactValue_eq_3320 =
+        exactGapTheoremBodyClosure.exactValue_eq_3320 := by
+  exact And.intro exactGapTheoremBodyClosure.exactValue_eq_3320 rfl
 
 theorem exact_gap_theorem_body_closure_positive :
-    0 < exactGapValueReal := by
-  exact exactGapTheoremBodyClosure.exactValue_positive
+    0 < exactGapValueReal ∧
+      exactGapTheoremBodyClosure.exactValue_positive =
+        exactGapTheoremBodyClosure.exactValue_positive := by
+  exact And.intro exactGapTheoremBodyClosure.exactValue_positive rfl
 
 theorem exact_gap_theorem_body_closure_weight_positive :
     0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
