@@ -335,6 +335,26 @@ failure interpretation
 review boundary
 ```
 
+## Theorem index
+
+External reviewers can inspect the named theorem and bridge surfaces using:
+
+```text
+THEOREM_INDEX.md
+```
+
+The theorem index covers:
+
+```text
+active Lean roots
+12 major theorem surfaces audited for non-placeholder statements
+7 analytic / physical bridge surfaces audited for coherence
+ordered bridge chain
+normalization surface
+audit script roles
+residual boundary
+```
+
 ## Build and local checks
 
 Lean build:
@@ -389,6 +409,8 @@ Bridge Coherence CI: green
 Forbidden Lean tokens: 0 sorry / 0 admit / 0 axiom / 0 constant
 Major theorem non-placeholder audit: green
 Bridge coherence audit: green
+Independent replay guide: INDEPENDENT_REPLAY.md
+Theorem index: THEOREM_INDEX.md
 Physical Hamiltonian normalization bridge: CI green
 Exact value theorem-body origin: CI green
 Concrete residual closure: CI green
