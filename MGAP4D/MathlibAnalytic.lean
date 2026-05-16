@@ -50,3 +50,4 @@ import MGAP4D.MathlibAnalytic.HardPhysicalResidualHardeningMap
 import MGAP4D.MathlibAnalytic.HilbertConstructionLaneHardening
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysLaneHardening
 import MGAP4D.MathlibAnalytic.ContinuumYangMillsLaneHardening
+import MGAP4D.MathlibAnalytic.PlaquetteSpectralWeightLaneHardening
