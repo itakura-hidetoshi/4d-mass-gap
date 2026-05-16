@@ -74,28 +74,75 @@ theorem final_theorem_release_continuum_certificate
     D.continuumCertificatePresent := by
   exact D.continuumCertificatePresent_proof
 
+/-- Final exact-gap statement is inherited from the continuum skeleton readiness. -/
+theorem final_theorem_release_exact_gap_statement_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.ready := by
+  exact continuum_spectral_theorem_skeleton_review_surface_ready
+
+/-- Final spectral atom is inherited from the continuum spectral bridge. -/
+theorem final_theorem_release_spectral_atom_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.exactAtomPreserved := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.exactAtomPreserved_proof
+
+/-- Final positive observable mass is inherited from the continuum spectral bridge. -/
+theorem final_theorem_release_positive_mass_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.positiveMassPreserved := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.positiveMassPreserved_proof
+
+/-- Final observable witness is inherited from the continuum spectral bridge. -/
+theorem final_theorem_release_observable_witness_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.observableWitnessPreserved := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.observableWitnessPreserved_proof
+
+/-- Final continuum certificate is inherited from the continuum theorem certificate. -/
+theorem final_theorem_release_continuum_certificate_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.theoremCertificate := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.theoremCertificate_proof
+
+/-- Final theorem body closure is witnessed by the continuum skeleton readiness. -/
+theorem final_theorem_release_theorem_body_closed_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.ready := by
+  exact continuum_spectral_theorem_skeleton_review_surface_ready
+
+/-- Final release candidate visibility is witnessed by the established continuum skeleton. -/
+theorem final_theorem_release_candidate_visible_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.continuumSpectralTheoremSkeletonEstablished := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.continuumSpectralTheoremSkeletonEstablished_proof
+
+/-- External consensus is explicitly not claimed at the held continuum boundary. -/
+theorem final_theorem_release_external_consensus_not_claimed_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.finalTheoremReleaseStillHeld := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.finalTheoremReleaseStillHeld_proof
+
+/-- Public theorem boundary is held at the continuum skeleton. -/
+theorem final_theorem_release_public_boundary_held_witness :
+    continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld := by
+  exact continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld_proof
+
 /-- Prototype final theorem release skeleton. -/
 noncomputable def prototypeFinalTheoremReleaseSkeletonData : FinalTheoremReleaseSkeletonData :=
   { continuumReady := continuum_spectral_theorem_skeleton_review_surface_ready
-    exactGapStatement := True
-    exactGapStatement_proof := True.intro
+    exactGapStatement := continuumSpectralTheoremSkeletonReviewSurface.ready
+    exactGapStatement_proof := final_theorem_release_exact_gap_statement_witness
     exactValueEq3320 := exactGapValueReal_eq
-    spectralAtomAtExact := True
-    spectralAtomAtExact_proof := True.intro
-    positiveObservableMassAtExact := True
-    positiveObservableMassAtExact_proof := True.intro
-    observableWitnessPresent := True
-    observableWitnessPresent_proof := True.intro
-    continuumCertificatePresent := True
-    continuumCertificatePresent_proof := True.intro
-    theoremBodyClosed := True
-    theoremBodyClosed_proof := True.intro
-    releaseCandidateVisible := True
-    releaseCandidateVisible_proof := True.intro
-    externalConsensusNotClaimed := True
-    externalConsensusNotClaimed_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    spectralAtomAtExact := continuumSpectralTheoremSkeletonReviewSurface.exactAtomPreserved
+    spectralAtomAtExact_proof := final_theorem_release_spectral_atom_witness
+    positiveObservableMassAtExact := continuumSpectralTheoremSkeletonReviewSurface.positiveMassPreserved
+    positiveObservableMassAtExact_proof := final_theorem_release_positive_mass_witness
+    observableWitnessPresent := continuumSpectralTheoremSkeletonReviewSurface.observableWitnessPreserved
+    observableWitnessPresent_proof := final_theorem_release_observable_witness_witness
+    continuumCertificatePresent := continuumSpectralTheoremSkeletonReviewSurface.theoremCertificate
+    continuumCertificatePresent_proof := final_theorem_release_continuum_certificate_witness
+    theoremBodyClosed := continuumSpectralTheoremSkeletonReviewSurface.ready
+    theoremBodyClosed_proof := final_theorem_release_theorem_body_closed_witness
+    releaseCandidateVisible :=
+      continuumSpectralTheoremSkeletonReviewSurface.continuumSpectralTheoremSkeletonEstablished
+    releaseCandidateVisible_proof := final_theorem_release_candidate_visible_witness
+    externalConsensusNotClaimed :=
+      continuumSpectralTheoremSkeletonReviewSurface.finalTheoremReleaseStillHeld
+    externalConsensusNotClaimed_proof := final_theorem_release_external_consensus_not_claimed_witness
+    publicBoundaryHeld := continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := final_theorem_release_public_boundary_held_witness }
 
 theorem prototype_final_theorem_release_skeleton_ready :
     prototypeFinalTheoremReleaseSkeletonData.ready := by
@@ -162,8 +209,8 @@ noncomputable def finalTheoremReleaseSkeletonReviewSurface :
     continuumCertificatePresent_proof := prototypeFinalTheoremReleaseSkeletonData.continuumCertificatePresent_proof
     theoremBodyClosed := prototypeFinalTheoremReleaseSkeletonData.theoremBodyClosed
     theoremBodyClosed_proof := prototypeFinalTheoremReleaseSkeletonData.theoremBodyClosed_proof
-    releaseCandidateEstablished := True
-    releaseCandidateEstablished_proof := True.intro
+    releaseCandidateEstablished := prototypeFinalTheoremReleaseSkeletonData.releaseCandidateVisible
+    releaseCandidateEstablished_proof := prototypeFinalTheoremReleaseSkeletonData.releaseCandidateVisible_proof
     externalConsensusNotClaimed := prototypeFinalTheoremReleaseSkeletonData.externalConsensusNotClaimed
     externalConsensusNotClaimed_proof := prototypeFinalTheoremReleaseSkeletonData.externalConsensusNotClaimed_proof
     publicBoundaryHeld := prototypeFinalTheoremReleaseSkeletonData.publicBoundaryHeld
