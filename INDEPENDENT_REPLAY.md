@@ -16,6 +16,8 @@ Lean forbidden-token audit
 major theorem non-placeholder audit
 analytic bridge-coherence audit
 infinite-dimensional Yang-Mills target-layer audit
+infinite-dimensional residual-filling bridge audit
+hard physical residual hardening-map audit
 Lean replay summary generation
 Lake manifest generation
 Lean build via lake build
@@ -30,10 +32,10 @@ Clay-style final theorem acceptance
 a dimensional physical mass gap without choosing the reference scale E0
 that syntactic audit scripts replace Lean kernel checking
 that Lean CI replaces expert mathematical review
-that the infinite-dimensional target layer by itself completes the continuum proof
+that the target / residual-filling / hardening-map layers by themselves complete the continuum proof
 ```
 
-The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, and replay support.
+The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, residual-filling, hardening-map, and replay support.
 
 ## Required tools
 
@@ -99,6 +101,8 @@ This executes, in order:
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
 [check] audit infinite-dimensional Yang-Mills target layer
+[check] audit infinite-dimensional residual filling bridge
+[check] audit hard physical residual hardening map
 [check] replay summary
 [check] lake update
 [check] lake build
@@ -116,6 +120,8 @@ python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
 python3 scripts/audit_bridge_coherence.py
 python3 scripts/audit_infinite_dimensional_target_layer.py
+python3 scripts/audit_infinite_dimensional_residual_filling.py
+python3 scripts/audit_hard_physical_residual_hardening_map.py
 python3 scripts/replay_summary.py
 lake update
 lake build
@@ -168,17 +174,7 @@ Expected result:
 Major theorem non-placeholder audit passed
 ```
 
-This is a syntactic theorem-surface audit. It checks that named load-bearing theorem statements are present and are not merely trivial `True` placeholders. It also checks for domain-specific anchors such as:
-
-```text
-33/20
-positivity
-spectralWeight
-PVM mass compatibility
-normalization equations
-```
-
-This audit complements Lean kernel checking. It does not replace `lake build`.
+This is a syntactic theorem-surface audit. It checks that named load-bearing theorem statements are present and are not merely trivial `True` placeholders.
 
 ### 4. Analytic bridge-coherence audit
 
@@ -194,8 +190,6 @@ Bridge coherence audit passed
 
 This checks declared bridge files for expected import edges, ready surfaces, preservation anchors, positivity anchors, infinite-dimensional target obligations, and public-boundary anchors across the analytic / physical theorem chain.
 
-It is a syntactic / contract audit. It does not replace Lean kernel checking or external mathematical review.
-
 ### 5. Infinite-dimensional Yang-Mills target-layer audit
 
 ```bash
@@ -210,20 +204,42 @@ Infinite-dimensional target layer audit passed
 
 This checks that the repository's evolution beyond skeleton-only closure is represented as an explicit Lean target surface with named analytic obligations, root import, documentation ledger, and public-boundary markers.
 
-It verifies anchors such as:
+### 6. Infinite-dimensional residual-filling bridge audit
 
-```text
-InfiniteDimensionalYangMillsRealizationTarget
-infinite_dimensional_witness
-hphys_self_adjoint_witness
-continuum_limit_witness
-plaquette_nonzero_weight_witness
-vacuum_orthogonal_nonempty_witness
-publicBoundaryHeld
-finalReleaseHeld
+```bash
+python3 scripts/audit_infinite_dimensional_residual_filling.py
 ```
 
-### 6. Replay summary
+Expected result:
+
+```text
+Infinite-dimensional residual filling audit passed
+```
+
+This checks that immediately bridgeable residuals are connected through an imported Lean review surface, while hard physical residuals remain visible.
+
+### 7. Hard physical residual hardening-map audit
+
+```bash
+python3 scripts/audit_hard_physical_residual_hardening_map.py
+```
+
+Expected result:
+
+```text
+Hard physical residual hardening map audit passed
+```
+
+This checks that the remaining hard physical residual is split into visible hardening lanes:
+
+```text
+hilbertConstructionLane
+selfAdjointHPhysLane
+continuumYangMillsLane
+plaquetteSpectralWeightLane
+```
+
+### 8. Replay summary
 
 ```bash
 python3 scripts/replay_summary.py
@@ -236,9 +252,9 @@ Lean replay summary
 wrote maps/REPLAY_SUMMARY_CURRENT.json
 ```
 
-This summarizes the Lean replay surface, including Lean files, imports, declaration-like lines, namespace lines, and total lines.
+This summarizes the Lean replay surface.
 
-### 7. Lake manifest and build
+### 9. Lake manifest and build
 
 ```bash
 lake update
@@ -269,6 +285,8 @@ Audit Lean forbidden tokens
 Audit major theorem non-placeholder surface
 Audit analytic bridge coherence
 Audit infinite-dimensional Yang-Mills target layer
+Audit infinite-dimensional residual filling bridge
+Audit hard physical residual hardening map
 Summarize Lean replay surface
 ```
 
@@ -313,6 +331,14 @@ The analytic / physical bridge chain may have lost an expected import edge, read
 
 The infinite-dimensional target layer may be missing, may not be imported by the analytic root, may lack required analytic-obligation anchors, or may be missing its documentation ledger.
 
+### Failure in `audit_infinite_dimensional_residual_filling.py`
+
+The residual-filling bridge may be missing, may not be imported by the analytic root, may lack required filled-surface anchors, or may be missing its documentation ledger.
+
+### Failure in `audit_hard_physical_residual_hardening_map.py`
+
+The hard residual hardening map may be missing, may not be imported by the analytic root, may hide one of the four hardening lanes, or may be missing its documentation ledger.
+
 ### Failure in `lake update`
 
 The pinned toolchain or dependency manifest may not resolve. Confirm `lean-toolchain`, `lakefile.lean`, network availability, and Lake / elan installation.
@@ -328,7 +354,7 @@ A successful independent replay means:
 ```text
 the repository builds with the pinned Lean toolchain
 the declared audit scripts pass
-the theorem-surface, bridge-surface, and target-layer checks pass
+the theorem-surface, bridge-surface, target-layer, residual-filling, and hardening-map checks pass
 the replay summary is reproducible
 ```
 
@@ -338,7 +364,7 @@ It does not mean:
 external consensus has been obtained
 all analytic residuals have been accepted by the mathematical community
 CI output alone is a substitute for proof review
-the target layer alone completes the physical continuum proof
+the target / residual-filling / hardening-map layers alone complete the physical continuum proof
 ```
 
-For external assessment, reviewers should combine this replay with direct inspection of the named theorem statements, bridge files, target layer, documentation ledgers, and mathematical arguments.
+For external assessment, reviewers should combine this replay with direct inspection of the named theorem statements, bridge files, target layer, residual filling bridge, hardening map, documentation ledgers, and mathematical arguments.
