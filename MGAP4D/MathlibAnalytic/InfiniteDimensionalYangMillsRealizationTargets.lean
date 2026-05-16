@@ -19,7 +19,7 @@ structure InfiniteDimensionalYangMillsRealizationTarget where
   zeroVector : hilbertCarrier
   gaugeInvariantSubspace : hilbertCarrier → Prop
   physicalDomain : hilbertCarrier → Prop
-  hPhysAction : physicalDomain → hilbertCarrier
+  hPhysAction : {ψ : hilbertCarrier // physicalDomain ψ} → hilbertCarrier
   innerPairing : hilbertCarrier → hilbertCarrier → ℝ
   normSq : hilbertCarrier → ℝ
   continuumParameter : Type u
