@@ -13,6 +13,7 @@ Active Lean root: MGAP4D.lean
 Current phase: Phase 3 proof-hardening / release hygiene
 Spectral gap formalization: CI green
 External audit note appendix template: CI green documentation-only surface
+MathlibAnalytic external audit readiness gate: CI green
 ```
 
 ## Current Lean-visible spectral surface
@@ -55,6 +56,17 @@ Build job ID: 75894235517
 Commit: ea4627cee4883b5654164d521384086c792ea9bc
 Result: success
 Ledger: docs/external_audit_note_appendix_template_ci.md
+```
+
+MathlibAnalytic external audit readiness gate CI:
+
+```text
+Workflow: Run scripts/check.sh
+Run ID: 25961050604
+Job ID: 76316305600
+Commit: 82195da8315d6b166ebdef24b3314be9ca969650
+Result: success
+Ledger: docs/external_audit_readiness_gate_ci.md
 ```
 
 ## Tag readiness criteria
@@ -104,6 +116,7 @@ The following are naming candidates only. No tag is created by this note.
 phase3-spectral-gap-formalization-ci-green
 phase3-external-audit-template-ci-green
 phase3-pre-release-hygiene-ci-green
+phase3-mathlibanalytic-external-audit-readiness-ci-green
 ```
 
 ## Required pre-tag action
