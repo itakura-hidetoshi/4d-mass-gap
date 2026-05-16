@@ -35,6 +35,26 @@ def ExternalAuditReadinessGateData.ready
   D.finalReleaseHeld ∧
   exactGapValueReal = (33 : ℝ) / 20
 
+/-- Named theorem-derived witness alias for the upstream internal-review gate. -/
+theorem external_audit_readiness_internal_gate_ready_witness :
+    internalReviewResidualClosureGateData.ready := by
+  exact internal_review_residual_closure_gate_ready
+
+/-- Named theorem-derived witness alias for the bundle-manifest readiness surface. -/
+theorem external_audit_readiness_bundle_manifest_ready_witness :
+    finalTheoremReleaseBundleManifestReviewSurface.ready := by
+  exact final_theorem_release_bundle_manifest_review_surface_ready
+
+/-- Named theorem-derived witness alias for the final theorem release chain index. -/
+theorem external_audit_readiness_chain_index_ready_witness :
+    finalTheoremReleaseChainIndexReady := by
+  exact final_theorem_release_chain_index_ready
+
+/-- Named theorem-derived witness alias preserving the exact normalized value. -/
+theorem external_audit_readiness_exact_value_preserved_witness :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact exactGapValueReal_eq
+
 theorem external_audit_readiness_repository_internal_residual_closed
     (D : ExternalAuditReadinessGateData) (hD : D.ready) :
     D.repositoryInternalResidualClosed := by
@@ -95,9 +115,9 @@ theorem external_audit_readiness_exact_value_preserved
   exact D.exactValuePreserved
 
 def externalAuditReadinessGateData : ExternalAuditReadinessGateData :=
-  { internalGateReady := internal_review_residual_closure_gate_ready
-    bundleManifestReady := final_theorem_release_bundle_manifest_review_surface_ready
-    chainIndexReady := final_theorem_release_chain_index_ready
+  { internalGateReady := external_audit_readiness_internal_gate_ready_witness
+    bundleManifestReady := external_audit_readiness_bundle_manifest_ready_witness
+    chainIndexReady := external_audit_readiness_chain_index_ready_witness
     repositoryInternalResidualClosed := True
     noReviewLevelResidualLeft := True
     independentReplayVisible := True
@@ -107,7 +127,7 @@ def externalAuditReadinessGateData : ExternalAuditReadinessGateData :=
     externalConsensusNotClaimed := True
     publicBoundaryHeld := True
     finalReleaseHeld := True
-    exactValuePreserved := exactGapValueReal_eq }
+    exactValuePreserved := external_audit_readiness_exact_value_preserved_witness }
 
 theorem external_audit_readiness_gate_ready :
     externalAuditReadinessGateData.ready := by
