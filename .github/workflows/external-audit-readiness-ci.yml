@@ -1,0 +1,50 @@
+name: External Audit Readiness CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  external-audit-readiness:
+    name: Check external audit readiness gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Audit external audit readiness gate
+        run: python3 scripts/audit_external_audit_readiness_gate.py
+      - name: Install elan and Lean toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if ! command -v elan >/dev/null 2>&1; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Show Lean and Lake versions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lean --version
+          lake --version
+      - name: Generate Lake manifest
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lake update
+      - name: Check external audit readiness gate with Lean
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lake env lean MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
