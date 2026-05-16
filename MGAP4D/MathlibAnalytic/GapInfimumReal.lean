@@ -8,7 +8,7 @@ namespace MathlibAnalytic
 The carrier is the closed upper ray `[33/20, +∞)`.  This is not yet the full
 Hilbert-space Rayleigh quotient theorem, but it replaces the purely structural
 pre-Mathlib infimum marker by an actual `Set ℝ` lower-bound/attainment surface. -/
-def exactGapEnergyRay : Set ℝ := Set.Ici exactGapValueReal
+noncomputable def exactGapEnergyRay : Set ℝ := Set.Ici (exactGapValueReal : ℝ)
 
 /-- The exact gap value belongs to the analytic energy ray. -/
 theorem exactGapValueReal_mem_energyRay : exactGapValueReal ∈ exactGapEnergyRay := by
@@ -30,7 +30,7 @@ structure GapInfimumRealSurface where
   positive : 0 < value
   analyticReplacementBranchOnly : Prop
 
-def gapInfimumRealSurface : GapInfimumRealSurface :=
+noncomputable def gapInfimumRealSurface : GapInfimumRealSurface :=
   { value := exactGapValueReal
     carrier := exactGapEnergyRay
     value_eq_3320 := exactGapValueReal_eq
@@ -40,7 +40,10 @@ def gapInfimumRealSurface : GapInfimumRealSurface :=
     analyticReplacementBranchOnly := True }
 
 def GapInfimumRealSurface.ready (S : GapInfimumRealSurface) : Prop :=
-  S.value_eq_3320 ∧ S.lower_bound ∧ S.attained ∧ S.positive ∧
+  S.value = (33 : ℝ) / 20 ∧
+  (∀ x ∈ S.carrier, S.value ≤ x) ∧
+  S.value ∈ S.carrier ∧
+  0 < S.value ∧
   S.analyticReplacementBranchOnly
 
 theorem gap_infimum_real_surface_ready : gapInfimumRealSurface.ready := by
