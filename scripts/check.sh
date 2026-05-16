@@ -34,6 +34,9 @@ python3 scripts/audit_continuum_yang_mills_lane_hardening.py
 echo "[check] audit plaquette spectral weight lane hardening"
 python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
 
+echo "[check] audit four-lane residual closure"
+python3 scripts/audit_four_lane_residual_closure.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
