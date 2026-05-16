@@ -42,11 +42,16 @@ structure PhysicalHamiltonianNormalizationBridgeData where
 /-- Ready predicate for the physical Hamiltonian normalization bridge. -/
 def PhysicalHamiltonianNormalizationBridgeData.ready
     (D : PhysicalHamiltonianNormalizationBridgeData) : Prop :=
-  D.concreteResidualClosureReady ∧ D.scale_positive ∧ D.normalized_gap_def ∧
-  D.physical_gap_reconstruction ∧ D.internal_reference_scale_eq_one ∧
-  D.normalized_gap_eq_exact ∧ D.physical_gap_eq_exact_in_internal_units ∧
-  D.exact_value_eq_3320 ∧ D.standardInterpretationVisible ∧
-  D.dimensionalReadingVisible ∧ D.theoremBodyUnchanged ∧ D.publicBoundaryHeld
+  concreteResidualClosureReviewSurface.ready ∧
+  0 < D.referenceEnergyScale ∧
+  D.normalizedGap = D.physicalGap / D.referenceEnergyScale ∧
+  D.physicalGap = D.referenceEnergyScale * D.normalizedGap ∧
+  D.referenceEnergyScale = 1 ∧
+  D.normalizedGap = exactGapValueReal ∧
+  D.physicalGap = exactGapValueReal ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  D.standardInterpretationVisible ∧ D.dimensionalReadingVisible ∧
+  D.theoremBodyUnchanged ∧ D.publicBoundaryHeld
 
 /-- The reference energy scale is positive. -/
 theorem physical_hamiltonian_normalization_scale_positive
@@ -80,15 +85,15 @@ theorem physical_hamiltonian_normalized_gap_eq_3320
   exact D.exact_value_eq_3320
 
 /-- Prototype normalization bridge in MGAP4D internal normalized units. -/
-def prototypePhysicalHamiltonianNormalizationBridgeData :
+noncomputable def prototypePhysicalHamiltonianNormalizationBridgeData :
     PhysicalHamiltonianNormalizationBridgeData :=
   { concreteResidualClosureReady := concrete_residual_closure_review_surface_ready
     referenceEnergyScale := 1
     physicalGap := exactGapValueReal
     normalizedGap := exactGapValueReal
     scale_positive := by norm_num
-    normalized_gap_def := by norm_num [exactGapValueReal]
-    physical_gap_reconstruction := by norm_num [exactGapValueReal]
+    normalized_gap_def := by simp
+    physical_gap_reconstruction := by simp
     internal_reference_scale_eq_one := rfl
     normalized_gap_eq_exact := rfl
     physical_gap_eq_exact_in_internal_units := rfl
@@ -104,17 +109,18 @@ def prototypePhysicalHamiltonianNormalizationBridgeData :
 
 theorem prototype_physical_hamiltonian_normalization_bridge_ready :
     prototypePhysicalHamiltonianNormalizationBridgeData.ready := by
-  exact And.intro concrete_residual_closure_review_surface_ready <|
-    And.intro (by norm_num) <|
-    And.intro (by norm_num [exactGapValueReal]) <|
-    And.intro (by norm_num [exactGapValueReal]) <|
-    And.intro rfl <|
-    And.intro rfl <|
-    And.intro rfl <|
-    And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypePhysicalHamiltonianNormalizationBridgeData.concreteResidualClosureReady <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.scale_positive <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.normalized_gap_def <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.physical_gap_reconstruction <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.internal_reference_scale_eq_one <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.normalized_gap_eq_exact <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.physical_gap_eq_exact_in_internal_units <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.exact_value_eq_3320 <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.standardInterpretationVisible_proof <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.dimensionalReadingVisible_proof <|
+    And.intro prototypePhysicalHamiltonianNormalizationBridgeData.theoremBodyUnchanged_proof
+      prototypePhysicalHamiltonianNormalizationBridgeData.publicBoundaryHeld_proof
 
 /-- Review surface for the physical Hamiltonian normalization bridge. -/
 structure PhysicalHamiltonianNormalizationBridgeReviewSurface where
@@ -138,20 +144,30 @@ structure PhysicalHamiltonianNormalizationBridgeReviewSurface where
 
 def PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
     (S : PhysicalHamiltonianNormalizationBridgeReviewSurface) : Prop :=
-  S.concreteResidualClosureReady ∧ S.normalizationBridgeReady ∧ S.scalePositive ∧
-  S.normalizedGapDef ∧ S.physicalGapReconstruction ∧ S.internalReferenceScaleEqOne ∧
-  S.normalizedGapEq3320 ∧ S.standardInterpretationVisible ∧
-  S.dimensionalReadingVisible ∧ S.theoremBodyUnchanged ∧ S.publicBoundaryHeld
+  concreteResidualClosureReviewSurface.ready ∧
+  prototypePhysicalHamiltonianNormalizationBridgeData.ready ∧
+  0 < prototypePhysicalHamiltonianNormalizationBridgeData.referenceEnergyScale ∧
+  prototypePhysicalHamiltonianNormalizationBridgeData.normalizedGap =
+    prototypePhysicalHamiltonianNormalizationBridgeData.physicalGap /
+      prototypePhysicalHamiltonianNormalizationBridgeData.referenceEnergyScale ∧
+  prototypePhysicalHamiltonianNormalizationBridgeData.physicalGap =
+    prototypePhysicalHamiltonianNormalizationBridgeData.referenceEnergyScale *
+      prototypePhysicalHamiltonianNormalizationBridgeData.normalizedGap ∧
+  prototypePhysicalHamiltonianNormalizationBridgeData.referenceEnergyScale = 1 ∧
+  prototypePhysicalHamiltonianNormalizationBridgeData.normalizedGap = (33 : ℝ) / 20 ∧
+  S.standardInterpretationVisible ∧ S.dimensionalReadingVisible ∧
+  S.theoremBodyUnchanged ∧ S.publicBoundaryHeld
 
-def physicalHamiltonianNormalizationBridgeReviewSurface :
+noncomputable def physicalHamiltonianNormalizationBridgeReviewSurface :
     PhysicalHamiltonianNormalizationBridgeReviewSurface :=
   { concreteResidualClosureReady := concrete_residual_closure_review_surface_ready
     normalizationBridgeReady := prototype_physical_hamiltonian_normalization_bridge_ready
-    scalePositive := by norm_num
-    normalizedGapDef := by norm_num [exactGapValueReal]
-    physicalGapReconstruction := by norm_num [exactGapValueReal]
-    internalReferenceScaleEqOne := rfl
-    normalizedGapEq3320 := exactGapValueReal_eq
+    scalePositive := prototypePhysicalHamiltonianNormalizationBridgeData.scale_positive
+    normalizedGapDef := prototypePhysicalHamiltonianNormalizationBridgeData.normalized_gap_def
+    physicalGapReconstruction := prototypePhysicalHamiltonianNormalizationBridgeData.physical_gap_reconstruction
+    internalReferenceScaleEqOne := prototypePhysicalHamiltonianNormalizationBridgeData.internal_reference_scale_eq_one
+    normalizedGapEq3320 := physical_hamiltonian_normalized_gap_eq_3320
+      prototypePhysicalHamiltonianNormalizationBridgeData
     standardInterpretationVisible := True
     dimensionalReadingVisible := True
     theoremBodyUnchanged := True
@@ -159,13 +175,13 @@ def physicalHamiltonianNormalizationBridgeReviewSurface :
 
 theorem physical_hamiltonian_normalization_bridge_review_surface_ready :
     physicalHamiltonianNormalizationBridgeReviewSurface.ready := by
-  exact And.intro concrete_residual_closure_review_surface_ready <|
-    And.intro prototype_physical_hamiltonian_normalization_bridge_ready <|
-    And.intro (by norm_num) <|
-    And.intro (by norm_num [exactGapValueReal]) <|
-    And.intro (by norm_num [exactGapValueReal]) <|
-    And.intro rfl <|
-    And.intro exactGapValueReal_eq <|
+  exact And.intro physicalHamiltonianNormalizationBridgeReviewSurface.concreteResidualClosureReady <|
+    And.intro physicalHamiltonianNormalizationBridgeReviewSurface.normalizationBridgeReady <|
+    And.intro physicalHamiltonianNormalizationBridgeReviewSurface.scalePositive <|
+    And.intro physicalHamiltonianNormalizationBridgeReviewSurface.normalizedGapDef <|
+    And.intro physicalHamiltonianNormalizationBridgeReviewSurface.physicalGapReconstruction <|
+    And.intro physicalHamiltonianNormalizationBridgeReviewSurface.internalReferenceScaleEqOne <|
+    And.intro physicalHamiltonianNormalizationBridgeReviewSurface.normalizedGapEq3320 <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro True.intro
