@@ -36,13 +36,14 @@ structure HardPhysicalResidualHardeningMapData where
 /-- Ready predicate for the hard residual hardening map. -/
 def HardPhysicalResidualHardeningMapData.ready
     (D : HardPhysicalResidualHardeningMapData) : Prop :=
-  D.residualFillingReady ∧
+  InfiniteDimensionalResidualFillingBridgeData.ready
+    infiniteDimensionalResidualFillingBridgeData ∧
   D.hilbertConstructionLane ∧
   D.selfAdjointHPhysLane ∧
   D.continuumYangMillsLane ∧
   D.plaquetteSpectralWeightLane ∧
   D.noLaneHidden ∧
-  D.exactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -84,10 +85,9 @@ theorem hard_residual_no_lane_hidden
 
 /-- Exact normalized value is preserved while the hard residual lanes are tracked. -/
 theorem hard_residual_exact_value_preserved
-    (D : HardPhysicalResidualHardeningMapData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, h, _⟩
-  exact h
+    (D : HardPhysicalResidualHardeningMapData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- Hardening map is review-level only. -/
 theorem hard_residual_review_level_only
@@ -132,13 +132,13 @@ def hardPhysicalResidualHardeningMapData :
 /-- The installed hard residual hardening map is ready. -/
 theorem hard_physical_residual_hardening_map_ready :
     hardPhysicalResidualHardeningMapData.ready := by
-  exact And.intro infinite_dimensional_residual_filling_bridge_ready <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+  exact And.intro hardPhysicalResidualHardeningMapData.residualFillingReady <|
+    And.intro hardPhysicalResidualHardeningMapData.hilbertConstructionLaneVisible <|
+    And.intro hardPhysicalResidualHardeningMapData.selfAdjointHPhysLaneVisible <|
+    And.intro hardPhysicalResidualHardeningMapData.continuumYangMillsLaneVisible <|
+    And.intro hardPhysicalResidualHardeningMapData.plaquetteSpectralWeightLaneVisible <|
+    And.intro hardPhysicalResidualHardeningMapData.noLaneHidden_proof <|
+    And.intro hardPhysicalResidualHardeningMapData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
