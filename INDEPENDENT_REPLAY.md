@@ -22,6 +22,7 @@ Hilbert construction lane hardening audit
 self-adjoint HPhys lane hardening audit
 continuum Yang-Mills lane hardening audit
 plaquette spectral weight lane hardening audit
+four-lane residual closure audit
 Lean replay summary generation
 Lake manifest generation
 Lean build via lake build
@@ -36,10 +37,10 @@ Clay-style final theorem acceptance
 a dimensional physical mass gap without choosing the reference scale E0
 that syntactic audit scripts replace Lean kernel checking
 that Lean CI replaces expert mathematical review
-that the target / residual-filling / hardening-map / lane-hardening layers by themselves complete the continuum proof
+that the target / residual-filling / hardening-map / lane-hardening / four-lane closure layers by themselves complete the continuum proof
 ```
 
-The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, residual-filling, hardening-map, Hilbert-lane hardening, self-adjoint HPhys lane hardening, continuum Yang-Mills lane hardening, plaquette spectral weight lane hardening, and replay support.
+The current public boundary is an internal normalized theorem-body / proof-architecture surface with explicit audit, target-obligation, residual-filling, hardening-map, all four lane hardenings, four-lane residual closure, and replay support.
 
 ## Fresh clone replay
 
@@ -78,6 +79,7 @@ This executes, in order:
 [check] audit self-adjoint HPhys lane hardening
 [check] audit continuum Yang-Mills lane hardening
 [check] audit plaquette spectral weight lane hardening
+[check] audit four-lane residual closure
 [check] replay summary
 [check] lake update
 [check] lake build
@@ -97,6 +99,7 @@ python3 scripts/audit_hilbert_construction_lane_hardening.py
 python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
 python3 scripts/audit_continuum_yang_mills_lane_hardening.py
 python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
+python3 scripts/audit_four_lane_residual_closure.py
 python3 scripts/replay_summary.py
 lake update
 lake build
@@ -116,6 +119,7 @@ audit_hilbert_construction_lane_hardening.py: Hilbert construction lane audit
 audit_self_adjoint_hphys_lane_hardening.py: self-adjoint HPhys lane audit
 audit_continuum_yang_mills_lane_hardening.py: continuum Yang-Mills lane audit
 audit_plaquette_spectral_weight_lane_hardening.py: plaquette spectral weight lane audit
+audit_four_lane_residual_closure.py: all-four-lane closure audit
 replay_summary.py: replay summary generation
 lake build: Lean kernel build gate
 ```
@@ -163,6 +167,14 @@ Plaquette spectral weight lane:
   weightEqualsPVMMassHardened
   operatorMeasureCompatibilityHardened
   exactBodyWeightClosureHardened
+
+Four-lane residual closure:
+  hilbertLaneClosed
+  selfAdjointLaneClosed
+  continuumYMLaneClosed
+  plaquetteWeightLaneClosed
+  allFourLanesClosed
+  noReviewLevelResidualLeft
 ```
 
 ## GitHub Actions parity
@@ -173,7 +185,7 @@ The main CI workflow is:
 .github/workflows/lean-direct-elan.yml
 ```
 
-The audit job runs the same audit families, including all four hard physical residual lanes.
+The audit job runs the same audit families, including all four hard physical residual lanes and the four-lane residual closure.
 
 The one-command local replay path is mirrored by:
 
@@ -188,7 +200,7 @@ A successful independent replay means:
 ```text
 the repository builds with the pinned Lean toolchain
 the declared audit scripts pass
-the theorem-surface, bridge-surface, target-layer, residual-filling, hardening-map, and lane-hardening checks pass
+the theorem-surface, bridge-surface, target-layer, residual-filling, hardening-map, lane-hardening, and four-lane closure checks pass
 the replay summary is reproducible
 ```
 
@@ -198,5 +210,5 @@ It does not mean:
 external consensus has been obtained
 all analytic residuals have been accepted by the mathematical community
 CI output alone is a substitute for proof review
-the target / residual-filling / hardening-map / lane-hardening layers alone complete the physical continuum proof
+the target / residual-filling / hardening-map / lane-hardening / four-lane closure layers alone complete the physical continuum proof
 ```
