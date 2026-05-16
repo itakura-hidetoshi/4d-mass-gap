@@ -30,7 +30,7 @@ The strongest Lean kernel gate remains:
 lake build
 ```
 
-For the physical-realization boundary of `PUnit`, singleton, prototype, and skeleton surfaces, see:
+For the physical-realization boundary of `PUnit`, singleton, prototype, skeleton, and infinite-dimensional target surfaces, see:
 
 ```text
 PHYSICAL_REALIZATION_BOUNDARY.md
@@ -41,7 +41,7 @@ PHYSICAL_REALIZATION_BOUNDARY.md
 | Root | Role |
 |---|---|
 | `MGAP4D.lean` | Top-level Lean import root. |
-| `MGAP4D/MathlibAnalytic.lean` | Internal analytic theorem-surface root. |
+| `MGAP4D/MathlibAnalytic.lean` | Internal analytic theorem-surface root, now importing the infinite-dimensional Yang--Mills target layer. |
 
 ## Major theorem surfaces audited for non-placeholder statements
 
@@ -76,7 +76,7 @@ These bridge surfaces are checked by:
 python3 scripts/audit_bridge_coherence.py
 ```
 
-The bridge audit verifies expected import edges, ready surfaces, value anchors, positivity anchors, and public-boundary anchors.
+The bridge audit verifies expected import edges, ready surfaces, value anchors, positivity anchors, public-boundary anchors, and the new infinite-dimensional Yang--Mills target obligations.
 
 | Order | File | Bridge role | Boundary marker class |
 |---:|---|---|---|
@@ -87,6 +87,44 @@ The bridge audit verifies expected import edges, ready surfaces, value anchors, 
 | 5 | `MGAP4D/MathlibAnalytic/SpectralRealizationSkeleton.lean` | Spectral/PVM realization skeleton surface. | `continuumSpectralTheoremStillOpen`, `publicBoundaryHeld`. |
 | 6 | `MGAP4D/MathlibAnalytic/ContinuumSpectralTheoremSkeleton.lean` | Continuum spectral theorem skeleton surface. | `finalTheoremReleaseStillHeld`, `publicBoundaryHeld`. |
 | 7 | `MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean` | Physical Hamiltonian normalization bridge surface. | `theoremBodyUnchanged`, `publicBoundaryHeld`. |
+| 8 | `MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean` | Infinite-dimensional Yang--Mills physical realization target / proof-obligation layer. | `publicBoundaryHeld`, `finalReleaseHeld`. |
+
+## Infinite-dimensional Yang--Mills target layer
+
+The target layer is the direct evolution of the previous weakness: instead of hiding the gap between skeletons and full physical analysis, it makes that gap first-class in Lean.
+
+It introduces:
+
+```text
+InfiniteDimensionalYangMillsRealizationTarget
+InfiniteDimensionalYangMillsRealizationTarget.ready
+InfiniteDimensionalYangMillsTargetReviewSurface
+infinite_dimensional_yang_mills_target_review_surface_ready
+```
+
+The layer requires explicit witnesses for:
+
+```text
+infinite-dimensional Hilbert realization
+separable Hilbert witness
+dense core
+domain density
+symmetric H_phys
+self-adjoint H_phys
+gauge-invariant sector
+Yang-Mills energy witness
+continuum limit
+OS positivity
+spectral theorem
+exact atom
+positive plaquette spectral weight
+nonempty vacuum-orthogonal sector
+normalization preservation
+public boundary held
+final release held
+```
+
+This layer is not a completed physical continuum proof. It is an auditable proof-obligation surface that states what must be supplied before promotion beyond skeleton / contract witnesses.
 
 ## Ordered bridge chain
 
@@ -102,6 +140,7 @@ Concrete Hilbert realization
   -> Final theorem release skeleton / closure
   -> Concrete residual closure
   -> Physical Hamiltonian normalization bridge
+  -> Infinite-dimensional Yang-Mills realization target
   -> Exact value theorem-body origin certificate
 ```
 
@@ -112,6 +151,7 @@ ConcreteHPhysRealizationTheorem imports ConcreteHilbertRealizationTheorem
 ConcreteYangMillsHamiltonianSkeleton imports PhysicalUnboundedOperatorSkeleton
 SpectralRealizationSkeleton imports ConcreteYangMillsHamiltonianSkeleton
 ContinuumSpectralTheoremSkeleton imports SpectralRealizationSkeleton
+InfiniteDimensionalYangMillsRealizationTargets imports PhysicalHamiltonianNormalizationBridge
 ```
 
 ## Normalization surface
@@ -145,7 +185,7 @@ physicalGap_dimensional = E0 * (33/20)
 | `scripts/verify_manifest.py` | Checks archived manifest consistency. |
 | `scripts/audit_lean_forbidden_tokens.py` | Checks for forbidden Lean tokens outside comments / strings. |
 | `scripts/audit_major_theorem_nonplaceholder.py` | Checks named load-bearing theorem surfaces for non-placeholder statements and required anchors. |
-| `scripts/audit_bridge_coherence.py` | Checks bridge import edges, ready surfaces, preservation anchors, positivity anchors, and public-boundary anchors. |
+| `scripts/audit_bridge_coherence.py` | Checks bridge import edges, ready surfaces, preservation anchors, positivity anchors, infinite-dimensional target obligations, and public-boundary anchors. |
 | `scripts/replay_summary.py` | Generates a lightweight replay summary. |
 | `scripts/check.sh` | Runs the local full replay path. |
 
@@ -155,8 +195,8 @@ Recommended external review order:
 
 1. Run `bash scripts/check.sh`.
 2. Inspect the 12 major theorem surfaces listed above.
-3. Inspect the 7 bridge files listed above.
-4. Read `PHYSICAL_REALIZATION_BOUNDARY.md` before interpreting singleton / prototype / skeleton surfaces physically.
+3. Inspect the 8 bridge / target files listed above.
+4. Read `PHYSICAL_REALIZATION_BOUNDARY.md` before interpreting singleton / prototype / skeleton / target surfaces physically.
 5. Compare source statements with the corresponding documentation ledgers in `docs/`.
 6. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 7. Treat CI and audit success as replay support, not as a substitute for mathematical review.
@@ -168,10 +208,11 @@ The index intentionally preserves the distinction between:
 ```text
 internal proof-architecture theorem-body closure
 contract / bridge / skeleton surfaces
+infinite-dimensional physical target obligations
 Lean kernel build success
 external mathematical consensus
 ```
 
-A successful replay of this index means that the repository's declared theorem and bridge surfaces are present, auditable, and buildable in the pinned Lean environment.
+A successful replay of this index means that the repository's declared theorem, bridge, and target surfaces are present, auditable, and buildable in the pinned Lean environment.
 
 It does not by itself discharge independent mathematical review of the full physical continuum Yang-Mills mass gap problem.
