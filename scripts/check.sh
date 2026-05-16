@@ -16,6 +16,9 @@ python3 scripts/audit_bridge_coherence.py
 echo "[check] audit infinite-dimensional Yang-Mills target layer"
 python3 scripts/audit_infinite_dimensional_target_layer.py
 
+echo "[check] audit infinite-dimensional residual filling bridge"
+python3 scripts/audit_infinite_dimensional_residual_filling.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
