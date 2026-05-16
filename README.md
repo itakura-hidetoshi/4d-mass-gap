@@ -355,6 +355,16 @@ audit script roles
 residual boundary
 ```
 
+## Physical realization boundary
+
+External reviewers should read the physical-realization boundary before interpreting singleton, `PUnit`, prototype, or skeleton surfaces physically:
+
+```text
+PHYSICAL_REALIZATION_BOUNDARY.md
+```
+
+That guide clarifies that these surfaces are contract witnesses and review surfaces, not a claim that the final continuum Yang-Mills Hilbert space or spectral measure has been replaced by a one-point model.
+
 ## Build and local checks
 
 Lean build:
@@ -411,6 +421,7 @@ Major theorem non-placeholder audit: green
 Bridge coherence audit: green
 Independent replay guide: INDEPENDENT_REPLAY.md
 Theorem index: THEOREM_INDEX.md
+Physical realization boundary: PHYSICAL_REALIZATION_BOUNDARY.md
 Physical Hamiltonian normalization bridge: CI green
 Exact value theorem-body origin: CI green
 Concrete residual closure: CI green
