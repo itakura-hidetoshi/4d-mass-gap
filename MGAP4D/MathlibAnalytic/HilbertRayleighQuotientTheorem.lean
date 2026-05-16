@@ -3,11 +3,13 @@ import MGAP4D.MathlibAnalytic.ExactGapPostInterfaceResidualMap
 namespace MGAP4D
 namespace MathlibAnalytic
 
+noncomputable section
+
 universe u
 
 /-- Abstract Rayleigh-quotient data for the Hilbert theorem body.
 
-This is the first theorem-body step beyond the interface layer.  It makes the
+This is the first theorem-body step beyond the interface layer. It makes the
 Rayleigh quotient explicit as numerator divided by norm squared, keeps a
 positive-norm admissibility condition, and records the lower-bound theorem body
 for all admissible states. -/
@@ -29,9 +31,12 @@ structure HilbertRayleighQuotientData where
 
 /-- Ready predicate for the abstract Rayleigh-quotient theorem body. -/
 def HilbertRayleighQuotientData.ready (D : HilbertRayleighQuotientData) : Prop :=
-  D.witness_admissible ∧ D.witness_normSq_pos ∧ D.normSq_pos_of_admissible ∧
-  D.quotient_def ∧ D.witness_quotient_eq_exact ∧ D.quotient_lower_bound ∧
-  D.exact_value_eq_3320 ∧ D.exact_value_positive
+  D.admissible D.witness ∧ 0 < D.normSq D.witness ∧
+  (∀ ψ, D.admissible ψ → 0 < D.normSq ψ) ∧
+  (∀ ψ, D.quotient ψ = D.numerator ψ / D.normSq ψ) ∧
+  D.quotient D.witness = exactGapValueReal ∧
+  (∀ ψ, D.admissible ψ → exactGapValueReal ≤ D.quotient ψ) ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧ 0 < exactGapValueReal
 
 /-- The Rayleigh quotient associated to the data. -/
 def HilbertRayleighQuotientData.rayleighQuotient
@@ -50,28 +55,31 @@ theorem hilbert_rayleigh_quotient_lower_bound
     (D : HilbertRayleighQuotientData) (hD : D.ready)
     (ψ : D.state) (hψ : D.admissible ψ) :
     exactGapValueReal ≤ D.quotient ψ := by
-  exact hD.2.2.2.2.2.1 ψ hψ
+  rcases hD with ⟨_, _, _, _, _, hLower, _, _⟩
+  exact hLower ψ hψ
 
 /-- Abstract exact-gap attainment for the Rayleigh quotient witness. -/
 theorem hilbert_rayleigh_quotient_witness_attains
     (D : HilbertRayleighQuotientData) (hD : D.ready) :
     D.quotient D.witness = exactGapValueReal := by
-  exact hD.2.2.2.2.1
+  rcases hD with ⟨_, _, _, _, hWitness, _, _, _⟩
+  exact hWitness
 
 /-- Abstract positivity of the admissible denominator. -/
 theorem hilbert_rayleigh_quotient_normSq_pos
     (D : HilbertRayleighQuotientData) (hD : D.ready)
     (ψ : D.state) (hψ : D.admissible ψ) :
     0 < D.normSq ψ := by
-  exact hD.2.2.1 ψ hψ
+  rcases hD with ⟨_, _, hNorm, _, _, _, _, _⟩
+  exact hNorm ψ hψ
 
 /-- Singleton data realizing the exact-gap Rayleigh quotient theorem body.
 
 The quotient is explicitly `33/20`, the denominator is `1`, and the lower-bound
-body is discharged by reflexivity.  This closes the theorem-body skeleton while
+body is discharged by reflexivity. This closes the theorem-body skeleton while
 keeping the concrete infinite-dimensional Hilbert realization as a separate
 residual. -/
-def singletonHilbertRayleighQuotientData : HilbertRayleighQuotientData :=
+def singletonHilbertRayleighQuotientData : HilbertRayleighQuotientData.{0} :=
   { state := PUnit
     numerator := fun _ => exactGapValueReal
     normSq := fun _ => 1
@@ -85,7 +93,7 @@ def singletonHilbertRayleighQuotientData : HilbertRayleighQuotientData :=
     quotient := fun _ => exactGapValueReal
     quotient_def := by
       intro ψ
-      norm_num
+      simp
     witness_quotient_eq_exact := rfl
     quotient_lower_bound := by
       intro ψ hψ
@@ -95,12 +103,12 @@ def singletonHilbertRayleighQuotientData : HilbertRayleighQuotientData :=
 
 theorem singleton_hilbert_rayleigh_quotient_data_ready :
     singletonHilbertRayleighQuotientData.ready := by
-  exact And.intro True.intro <|
-    And.intro (by norm_num) <|
-    And.intro (by intro ψ hψ; norm_num) <|
-    And.intro (by intro ψ; norm_num) <|
-    And.intro rfl <|
-    And.intro (by intro ψ hψ; exact le_rfl) <|
+  exact And.intro singletonHilbertRayleighQuotientData.witness_admissible <|
+    And.intro singletonHilbertRayleighQuotientData.witness_normSq_pos <|
+    And.intro singletonHilbertRayleighQuotientData.normSq_pos_of_admissible <|
+    And.intro singletonHilbertRayleighQuotientData.quotient_def <|
+    And.intro singletonHilbertRayleighQuotientData.witness_quotient_eq_exact <|
+    And.intro singletonHilbertRayleighQuotientData.quotient_lower_bound <|
     And.intro exactGapValueReal_eq exactGapValueReal_pos
 
 theorem singleton_hilbert_rayleigh_quotient_lower_bound
@@ -123,8 +131,9 @@ post-interface residual map. -/
 structure HilbertRayleighQuotientReviewSurface where
   postInterfaceResidualMapReady : exactGapPostInterfaceResidualMap.ready
   quotientDataReady : singletonHilbertRayleighQuotientData.ready
-  quotientLowerBound : ∀ ψ, singletonHilbertRayleighQuotientData.admissible ψ →
-    exactGapValueReal ≤ singletonHilbertRayleighQuotientData.quotient ψ
+  quotientLowerBound : ∀ ψ : singletonHilbertRayleighQuotientData.state,
+    singletonHilbertRayleighQuotientData.admissible ψ →
+      exactGapValueReal ≤ singletonHilbertRayleighQuotientData.quotient ψ
   witnessAttains : singletonHilbertRayleighQuotientData.quotient
     singletonHilbertRayleighQuotientData.witness = exactGapValueReal
   exactValue_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
@@ -135,8 +144,14 @@ structure HilbertRayleighQuotientReviewSurface where
 
 def HilbertRayleighQuotientReviewSurface.ready
     (S : HilbertRayleighQuotientReviewSurface) : Prop :=
-  S.postInterfaceResidualMapReady ∧ S.quotientDataReady ∧ S.quotientLowerBound ∧
-  S.witnessAttains ∧ S.exactValue_eq_3320 ∧ S.quotientTheoremBodyClosed ∧
+  exactGapPostInterfaceResidualMap.ready ∧
+  singletonHilbertRayleighQuotientData.ready ∧
+  (∀ ψ : singletonHilbertRayleighQuotientData.state,
+    singletonHilbertRayleighQuotientData.admissible ψ →
+      exactGapValueReal ≤ singletonHilbertRayleighQuotientData.quotient ψ) ∧
+  singletonHilbertRayleighQuotientData.quotient
+    singletonHilbertRayleighQuotientData.witness = exactGapValueReal ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧ S.quotientTheoremBodyClosed ∧
   S.concreteHilbertRealizationStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
 def hilbertRayleighQuotientReviewSurface : HilbertRayleighQuotientReviewSurface :=
@@ -164,6 +179,8 @@ theorem hilbert_rayleigh_quotient_review_surface_ready :
 theorem hilbert_rayleigh_quotient_review_surface_final_release_held :
     hilbertRayleighQuotientReviewSurface.finalReleaseHeld := by
   trivial
+
+end
 
 end MathlibAnalytic
 end MGAP4D
