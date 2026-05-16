@@ -49,7 +49,7 @@ physicalGap_dimensional = E0 * (33/20)
 
 Thus `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
 
-The repository currently claims an internal normalized proof-architecture theorem-body surface with CI, bridge-audit, and target-obligation support.
+The repository currently claims an internal normalized proof-architecture theorem-body surface with CI, bridge-audit, target-obligation, residual-hardening, and external-audit-readiness support.
 
 It does **not** claim:
 
@@ -60,108 +60,85 @@ Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
 that CI ledgers replace mathematical proof review
 that bridge-coherence audit replaces Lean kernel checking
-that the infinite-dimensional target layer alone completes the continuum proof
+that the external-audit-readiness gate replaces independent replay
 ```
 
 The public final theorem boundary remains review-gated pending independent replay and external audit.
 
-## Active Lean roots
+## Active Lean roots and dependency lane
 
 ```text
 MGAP4D.lean
 MGAP4D/MathlibAnalytic.lean
 ```
 
-`MGAP4D/MathlibAnalytic.lean` now imports the infinite-dimensional Yang--Mills target-obligation layer:
+The current Lake project pins Lean/mathlib through:
 
 ```text
-MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
+leanprover/lean4:v4.30.0-rc2
+mathlib4 @ v4.30.0-rc2
 ```
 
-## Main analytic chain
+The `MathlibAnalytic` root is a scoped analytic lane. It does not by itself open public final theorem release.
+
+## Main analytic hardening chain
 
 ```text
-Concrete Hilbert realization
-  -> Concrete H_phys / unbounded-operator realization
-  -> Physical unbounded-operator skeleton
-  -> Concrete Yang-Mills Hamiltonian skeleton
-  -> Spectral/PVM realization skeleton
-  -> Continuum spectral theorem skeleton
-  -> Final theorem release skeleton / closure
-  -> Concrete residual closure
-  -> Physical Hamiltonian normalization bridge
-  -> Infinite-dimensional Yang-Mills realization target
-  -> Exact value theorem-body origin certificate
+Exact normalized value / real positivity
+  -> gap infimum / Rayleigh lower bound / Rayleigh attainment
+  -> spectral mass / exact gap analytic closure
+  -> Hilbert, H_phys, spectral theorem, PVM, observable interfaces
+  -> theorem-body surfaces for Hilbert, H_phys, spectral theorem, PVM, observable atom
+  -> compact plaquette and operator-measure compatibility
+  -> exact gap theorem-body closure
+  -> concrete Hilbert and H_phys realization
+  -> infinite-dimensional Hilbert necessity and excitation-family support
+  -> Hilbert countable basis / density / topology / completion / inner-product / instance skeletons
+  -> physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons
+  -> spectral realization and continuum spectral theorem skeletons
+  -> final theorem release skeleton / closure / chain index / bundle manifest
+  -> concrete residual closure
+  -> physical Hamiltonian normalization bridge
+  -> infinite-dimensional Yang-Mills realization targets
+  -> infinite-dimensional residual filling bridge
+  -> hard physical residual hardening map
+  -> Hilbert construction lane hardening
+  -> self-adjoint H_phys lane hardening
+  -> continuum Yang-Mills lane hardening
+  -> plaquette spectral weight lane hardening
+  -> four-lane residual closure
+  -> internal review residual closure gate
+  -> external audit readiness gate
 ```
 
-Key source files:
+Representative source files:
 
 ```text
-MGAP4D/MathlibAnalytic/ConcreteHilbertRealizationTheorem.lean
-MGAP4D/MathlibAnalytic/ConcreteHPhysRealizationTheorem.lean
-MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean
-MGAP4D/MathlibAnalytic/ConcreteYangMillsHamiltonianSkeleton.lean
-MGAP4D/MathlibAnalytic/SpectralRealizationSkeleton.lean
-MGAP4D/MathlibAnalytic/ContinuumSpectralTheoremSkeleton.lean
-MGAP4D/MathlibAnalytic/FinalTheoremReleaseSkeleton.lean
-MGAP4D/MathlibAnalytic/FinalTheoremReleaseClosure.lean
+MGAP4D/MathlibAnalytic/ExactGapReal.lean
+MGAP4D/MathlibAnalytic/ExactGapTheoremBodyClosure.lean
 MGAP4D/MathlibAnalytic/ConcreteResidualClosure.lean
 MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
-MGAP4D/MathlibAnalytic/ExactValueTheoremBodyOrigin.lean
+MGAP4D/MathlibAnalytic/InfiniteDimensionalResidualFillingBridge.lean
+MGAP4D/MathlibAnalytic/HardPhysicalResidualHardeningMap.lean
+MGAP4D/MathlibAnalytic/HilbertConstructionLaneHardening.lean
+MGAP4D/MathlibAnalytic/SelfAdjointHPhysLaneHardening.lean
+MGAP4D/MathlibAnalytic/ContinuumYangMillsLaneHardening.lean
+MGAP4D/MathlibAnalytic/PlaquetteSpectralWeightLaneHardening.lean
+MGAP4D/MathlibAnalytic/FourLaneResidualClosure.lean
+MGAP4D/MathlibAnalytic/InternalReviewResidualClosureGate.lean
+MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 ```
-
-## Evolution beyond the prior weakness
-
-A prior weakness was explicit:
-
-```text
-many Lean files closed proof structure, bridge boundaries, and audit surfaces,
-but did not yet provide a full analytic infinite-dimensional Yang-Mills Hamiltonian realization.
-```
-
-The current evolution does not hide that weakness. It turns it into a first-class Lean target layer:
-
-```text
-InfiniteDimensionalYangMillsRealizationTarget
-InfiniteDimensionalYangMillsRealizationTarget.ready
-InfiniteDimensionalYangMillsTargetReviewSurface
-infinite_dimensional_yang_mills_target_review_surface_ready
-```
-
-The target layer requires explicit witnesses for:
-
-```text
-infinite-dimensional Hilbert realization
-separable Hilbert witness
-dense core
-domain density
-symmetric H_phys
-self-adjoint H_phys
-gauge-invariant sector
-Yang-Mills energy witness
-continuum limit
-OS positivity
-spectral theorem
-exact atom
-positive plaquette spectral weight
-nonempty vacuum-orthogonal sector
-normalization preservation
-public boundary held
-final release held
-```
-
-This is a typed analytic proof-obligation surface. It is not a completed public final continuum proof.
 
 ## CI and audit status
 
-### Core local replay
+Full local replay is:
 
 ```bash
 bash scripts/check.sh
 ```
 
-The local replay path now runs:
+The replay path currently runs:
 
 ```text
 [check] verify manifest
@@ -169,63 +146,56 @@ The local replay path now runs:
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
 [check] audit infinite-dimensional Yang-Mills target layer
+[check] audit infinite-dimensional residual filling bridge
+[check] audit hard physical residual hardening map
+[check] audit Hilbert construction lane hardening
+[check] audit self-adjoint HPhys lane hardening
+[check] audit continuum Yang-Mills lane hardening
+[check] audit plaquette spectral weight lane hardening
+[check] audit four-lane residual closure
+[check] audit internal review residual closure gate
+[check] audit external audit readiness gate
 [check] replay summary
 [check] lake update
+[check] build external audit readiness gate
 [check] lake build
 ```
 
-### Audit scripts
+Confirmed external-audit-readiness CI checkpoint:
 
 ```text
-scripts/verify_manifest.py
-scripts/audit_lean_forbidden_tokens.py
-scripts/audit_major_theorem_nonplaceholder.py
-scripts/audit_bridge_coherence.py
-scripts/audit_infinite_dimensional_target_layer.py
-scripts/replay_summary.py
-scripts/check.sh
-```
-
-### GitHub Actions workflows
-
-```text
-.github/workflows/lean-direct-elan.yml
-.github/workflows/bridge-coherence-ci.yml
-.github/workflows/full-local-check.yml
-```
-
-`Full Local Check CI` mirrors the external-review one-command replay by running:
-
-```bash
-bash scripts/check.sh
-```
-
-A confirmed Full Local Check CI run has already succeeded:
-
-```text
-Workflow: Full Local Check CI
-Run ID: 25948605211
-Job ID: 76281846717
-Job name: Run scripts/check.sh
-Commit checked out by CI: bd3111714d81b6e51615a7b912fec33c0a69d3bc
+Workflow: Run scripts/check.sh
+Run ID: 25961418682
+Job ID: 76317232199
+Commit checked out by CI: 7041b000c4c8f30a2d99d5429504d00cffb88bcb
 Result: success
+Lean-side warnings in gate build: none observed
 ```
 
 That run confirmed:
 
 ```text
-Lean files scanned: 447
+Lean files scanned: 457
 sorry: 0
 admit: 0
 axiom: 0
 constant: 0
 Major theorem specs audited: 12
-Bridge files audited: 7 at that checkpoint
-Ordered import edges audited: 4 at that checkpoint
-lake build: Build completed successfully
+Bridge files audited: 8
+Ordered import edges audited: 5
+Lean replay summary imports: 1191
+Lean replay summary declaration_like_lines: 2602
+Lean replay summary namespace_lines: 938
+Lean replay summary total_lines: 27203
+Build completed successfully: 8368 jobs
+Final lake build: 0 jobs, success
 ```
 
-After the new target layer, the bridge-coherence audit has been extended to cover 8 bridge / target files and 5 ordered import edges.
+Current CI ledger:
+
+```text
+docs/external_audit_readiness_gate_ci.md
+```
 
 ## External review entry points
 
@@ -243,7 +213,16 @@ INDEPENDENT_REPLAY.md
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
 docs/infinite_dimensional_yang_mills_target_layer.md
-docs/full_local_check_ci.md
+docs/infinite_dimensional_residual_filling_bridge.md
+docs/hard_physical_residual_hardening_map.md
+docs/hilbert_construction_lane_hardening.md
+docs/self_adjoint_hphys_lane_hardening.md
+docs/continuum_yang_mills_lane_hardening.md
+docs/plaquette_spectral_weight_lane_hardening.md
+docs/four_lane_residual_closure.md
+docs/internal_review_residual_closure_gate.md
+docs/external_audit_readiness_gate.md
+docs/external_audit_readiness_gate_ci.md
 ```
 
 ## Review meaning
@@ -251,9 +230,9 @@ docs/full_local_check_ci.md
 A successful replay means:
 
 ```text
-the repository builds with the pinned Lean toolchain
+the repository builds with the pinned Lean toolchain and pinned mathlib version
 the declared audit scripts pass
-the theorem-surface, bridge-surface, and target-layer checks pass
+the theorem-surface, bridge-surface, target-layer, residual-hardening, and final readiness-gate checks pass
 the replay summary is reproducible
 ```
 
@@ -263,7 +242,7 @@ It does not mean:
 external consensus has been obtained
 all analytic residuals have been accepted by the mathematical community
 CI output alone is a substitute for proof review
-the target layer alone completes the physical continuum proof
+the external-audit-readiness gate is a substitute for independent replay or external audit
 ```
 
 ## Build
