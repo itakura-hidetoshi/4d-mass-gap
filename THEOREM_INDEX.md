@@ -30,6 +30,12 @@ The strongest Lean kernel gate remains:
 lake build
 ```
 
+For the physical-realization boundary of `PUnit`, singleton, prototype, and skeleton surfaces, see:
+
+```text
+PHYSICAL_REALIZATION_BOUNDARY.md
+```
+
 ## Active Lean roots
 
 | Root | Role |
@@ -150,9 +156,10 @@ Recommended external review order:
 1. Run `bash scripts/check.sh`.
 2. Inspect the 12 major theorem surfaces listed above.
 3. Inspect the 7 bridge files listed above.
-4. Compare source statements with the corresponding documentation ledgers in `docs/`.
-5. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
-6. Treat CI and audit success as replay support, not as a substitute for mathematical review.
+4. Read `PHYSICAL_REALIZATION_BOUNDARY.md` before interpreting singleton / prototype / skeleton surfaces physically.
+5. Compare source statements with the corresponding documentation ledgers in `docs/`.
+6. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+7. Treat CI and audit success as replay support, not as a substitute for mathematical review.
 
 ## Residual boundary
 
