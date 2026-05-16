@@ -26,22 +26,21 @@ def ExactGapRealSurface.ready (S : ExactGapRealSurface) : Prop :=
   S.value = (33 : ℝ) / 20 ∧ 0 < S.value ∧ 1 < S.value ∧ S.analyticReplacementBranchOnly
 
 theorem exact_gap_real_surface_ready : exactGapRealSurface.ready := by
-  exact And.intro exactGapValueReal_eq <|
-    And.intro exactGapValueReal_pos <|
-    And.intro (by
-      norm_num [exactGapValueReal]) True.intro
+  exact And.intro exactGapRealSurface.value_eq_3320 <|
+    And.intro exactGapRealSurface.positive <|
+    And.intro exactGapRealSurface.above_one True.intro
 
 theorem exact_gap_real_surface_value :
     exactGapRealSurface.value = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_eq
+  exact exactGapRealSurface.value_eq_3320
 
 theorem exact_gap_real_surface_positive :
     0 < exactGapRealSurface.value := by
-  exact exactGapValueReal_pos
+  exact exactGapRealSurface.positive
 
 theorem exact_gap_real_surface_above_one :
     1 < exactGapRealSurface.value := by
-  norm_num [exactGapValueReal]
+  exact exactGapRealSurface.above_one
 
 end MathlibAnalytic
 end MGAP4D
