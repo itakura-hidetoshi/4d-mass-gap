@@ -35,14 +35,28 @@ structure HilbertSpaceInstanceSkeletonData where
   hilbertSpaceInstanceSkeletonVisible : Prop
   hilbertSpaceInstanceSkeletonVisible_proof : hilbertSpaceInstanceSkeletonVisible
   physicalUnboundedOperatorStillOpen : Prop
+  physicalUnboundedOperatorStillOpen_proof : physicalUnboundedOperatorStillOpen
   spectralRealizationStillOpen : Prop
+  spectralRealizationStillOpen_proof : spectralRealizationStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
+/-- Ready predicate for the Hilbert-space instance skeleton.
+
+The predicate restates proposition-level obligations rather than passing proof
+fields to `And`, avoiding proof-as-type and universe-metavariable failures. -/
 def HilbertSpaceInstanceSkeletonData.ready
     (D : HilbertSpaceInstanceSkeletonData) : Prop :=
-  D.innerProductReady ∧ D.add_comm ∧ D.add_zero ∧ D.add_left_neg ∧
-  D.inner_symm ∧ D.inner_nonneg ∧ D.norm_sq_compat ∧ D.cauchy_has_limit ∧
+  hilbertInnerProductSkeletonReviewSurface.ready ∧
+  (∀ x y, D.add x y = D.add y x) ∧
+  (∀ x, D.add x D.zero = x) ∧
+  (∀ x, D.add (D.neg x) x = D.zero) ∧
+  (∀ x y, D.inner x y = D.inner y x) ∧
+  (∀ x, 0 ≤ D.inner x x) ∧
+  (∀ x, D.norm x * D.norm x = D.inner x x) ∧
+  (∀ s, D.cauchy s → ∃ x : D.carrier, D.convergesTo s x) ∧
   D.hilbertSpaceInstanceSkeletonVisible ∧ D.physicalUnboundedOperatorStillOpen ∧
   D.spectralRealizationStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
@@ -75,10 +89,10 @@ theorem hilbert_space_instance_norm_sq_compat
 theorem hilbert_space_instance_physical_unbounded_operator_still_open
     (D : HilbertSpaceInstanceSkeletonData) :
     D.physicalUnboundedOperatorStillOpen := by
-  exact D.physicalUnboundedOperatorStillOpen
+  exact D.physicalUnboundedOperatorStillOpen_proof
 
 /-- Prototype Hilbert-space instance skeleton over a singleton carrier. -/
-def prototypeHilbertSpaceInstanceSkeletonData : HilbertSpaceInstanceSkeletonData :=
+def prototypeHilbertSpaceInstanceSkeletonData : HilbertSpaceInstanceSkeletonData.{0} :=
   { innerProductReady := hilbert_inner_product_skeleton_review_surface_ready
     carrier := PUnit
     zero := PUnit.unit
@@ -101,49 +115,55 @@ def prototypeHilbertSpaceInstanceSkeletonData : HilbertSpaceInstanceSkeletonData
     hilbertSpaceInstanceSkeletonVisible := True
     hilbertSpaceInstanceSkeletonVisible_proof := True.intro
     physicalUnboundedOperatorStillOpen := True
+    physicalUnboundedOperatorStillOpen_proof := True.intro
     spectralRealizationStillOpen := True
+    spectralRealizationStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_hilbert_space_instance_skeleton_ready :
     prototypeHilbertSpaceInstanceSkeletonData.ready := by
-  exact And.intro hilbert_inner_product_skeleton_review_surface_ready <|
-    And.intro (by intro x y; cases x; cases y; rfl) <|
-    And.intro (by intro x; cases x; rfl) <|
-    And.intro (by intro x; cases x; rfl) <|
-    And.intro (by intro x y; rfl) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro (by intro s hs; exact ⟨PUnit.unit, True.intro⟩) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeHilbertSpaceInstanceSkeletonData.innerProductReady <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.add_comm <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.add_zero <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.add_left_neg <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.inner_symm <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.inner_nonneg <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.norm_sq_compat <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.cauchy_has_limit <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.hilbertSpaceInstanceSkeletonVisible_proof <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.physicalUnboundedOperatorStillOpen_proof <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.spectralRealizationStillOpen_proof <|
+    And.intro prototypeHilbertSpaceInstanceSkeletonData.finalReleaseHeld_proof
+      prototypeHilbertSpaceInstanceSkeletonData.publicBoundaryHeld_proof
 
 /-- Review surface for the Hilbert-space instance skeleton. -/
 structure HilbertSpaceInstanceSkeletonReviewSurface where
   innerProductReady : hilbertInnerProductSkeletonReviewSurface.ready
   hilbertInstanceReady : prototypeHilbertSpaceInstanceSkeletonData.ready
-  cauchyHasLimit : ∀ s,
-    prototypeHilbertSpaceInstanceSkeletonData.cauchy s →
-      ∃ x : prototypeHilbertSpaceInstanceSkeletonData.carrier,
-        prototypeHilbertSpaceInstanceSkeletonData.convergesTo s x
-  innerSymmetric : ∀ x y,
-    prototypeHilbertSpaceInstanceSkeletonData.inner x y =
-      prototypeHilbertSpaceInstanceSkeletonData.inner y x
-  normSqCompat : ∀ x,
-    prototypeHilbertSpaceInstanceSkeletonData.norm x *
-      prototypeHilbertSpaceInstanceSkeletonData.norm x =
-      prototypeHilbertSpaceInstanceSkeletonData.inner x x
+  cauchyHasLimit : Prop
+  cauchyHasLimit_proof : cauchyHasLimit
+  innerSymmetric : Prop
+  innerSymmetric_proof : innerSymmetric
+  normSqCompat : Prop
+  normSqCompat_proof : normSqCompat
   hilbertSpaceInstanceSkeletonEstablished : Prop
+  hilbertSpaceInstanceSkeletonEstablished_proof : hilbertSpaceInstanceSkeletonEstablished
   physicalUnboundedOperatorStillOpen : Prop
+  physicalUnboundedOperatorStillOpen_proof : physicalUnboundedOperatorStillOpen
   spectralRealizationStillOpen : Prop
+  spectralRealizationStillOpen_proof : spectralRealizationStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def HilbertSpaceInstanceSkeletonReviewSurface.ready
     (S : HilbertSpaceInstanceSkeletonReviewSurface) : Prop :=
-  S.innerProductReady ∧ S.hilbertInstanceReady ∧ S.cauchyHasLimit ∧
+  hilbertInnerProductSkeletonReviewSurface.ready ∧
+  prototypeHilbertSpaceInstanceSkeletonData.ready ∧ S.cauchyHasLimit ∧
   S.innerSymmetric ∧ S.normSqCompat ∧ S.hilbertSpaceInstanceSkeletonEstablished ∧
   S.physicalUnboundedOperatorStillOpen ∧ S.spectralRealizationStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
@@ -151,28 +171,46 @@ def HilbertSpaceInstanceSkeletonReviewSurface.ready
 def hilbertSpaceInstanceSkeletonReviewSurface : HilbertSpaceInstanceSkeletonReviewSurface :=
   { innerProductReady := hilbert_inner_product_skeleton_review_surface_ready
     hilbertInstanceReady := prototype_hilbert_space_instance_skeleton_ready
-    cauchyHasLimit := by
-      intro s hs
-      exact ⟨PUnit.unit, True.intro⟩
-    innerSymmetric := by intro x y; rfl
-    normSqCompat := by intro x; norm_num
+    cauchyHasLimit :=
+      ∀ s,
+        prototypeHilbertSpaceInstanceSkeletonData.cauchy s →
+          ∃ x : prototypeHilbertSpaceInstanceSkeletonData.carrier,
+            prototypeHilbertSpaceInstanceSkeletonData.convergesTo s x
+    cauchyHasLimit_proof := prototypeHilbertSpaceInstanceSkeletonData.cauchy_has_limit
+    innerSymmetric :=
+      ∀ x y,
+        prototypeHilbertSpaceInstanceSkeletonData.inner x y =
+          prototypeHilbertSpaceInstanceSkeletonData.inner y x
+    innerSymmetric_proof := prototypeHilbertSpaceInstanceSkeletonData.inner_symm
+    normSqCompat :=
+      ∀ x,
+        prototypeHilbertSpaceInstanceSkeletonData.norm x *
+          prototypeHilbertSpaceInstanceSkeletonData.norm x =
+          prototypeHilbertSpaceInstanceSkeletonData.inner x x
+    normSqCompat_proof := prototypeHilbertSpaceInstanceSkeletonData.norm_sq_compat
     hilbertSpaceInstanceSkeletonEstablished := True
+    hilbertSpaceInstanceSkeletonEstablished_proof := True.intro
     physicalUnboundedOperatorStillOpen := True
+    physicalUnboundedOperatorStillOpen_proof := True.intro
     spectralRealizationStillOpen := True
+    spectralRealizationStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem hilbert_space_instance_skeleton_review_surface_ready :
     hilbertSpaceInstanceSkeletonReviewSurface.ready := by
-  exact And.intro hilbert_inner_product_skeleton_review_surface_ready <|
-    And.intro prototype_hilbert_space_instance_skeleton_ready <|
-    And.intro (by intro s hs; exact ⟨PUnit.unit, True.intro⟩) <|
-    And.intro (by intro x y; rfl) <|
-    And.intro (by intro x; norm_num) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro hilbertSpaceInstanceSkeletonReviewSurface.innerProductReady <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.hilbertInstanceReady <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.cauchyHasLimit_proof <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.innerSymmetric_proof <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.normSqCompat_proof <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.hilbertSpaceInstanceSkeletonEstablished_proof <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.physicalUnboundedOperatorStillOpen_proof <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.spectralRealizationStillOpen_proof <|
+    And.intro hilbertSpaceInstanceSkeletonReviewSurface.finalReleaseHeld_proof
+      hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
