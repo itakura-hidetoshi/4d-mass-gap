@@ -52,3 +52,4 @@ import MGAP4D.MathlibAnalytic.SelfAdjointHPhysLaneHardening
 import MGAP4D.MathlibAnalytic.ContinuumYangMillsLaneHardening
 import MGAP4D.MathlibAnalytic.PlaquetteSpectralWeightLaneHardening
 import MGAP4D.MathlibAnalytic.FourLaneResidualClosure
+import MGAP4D.MathlibAnalytic.InternalReviewResidualClosureGate
