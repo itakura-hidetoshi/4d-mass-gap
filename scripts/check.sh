@@ -49,8 +49,8 @@ python3 scripts/replay_summary.py
 echo "[check] lake update"
 lake update
 
-echo "[check] lean external audit readiness gate"
-lake env lean MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
+echo "[check] build external audit readiness gate"
+lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 
 echo "[check] lake build"
 lake build
