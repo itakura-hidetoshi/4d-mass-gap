@@ -37,6 +37,9 @@ python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
 echo "[check] audit four-lane residual closure"
 python3 scripts/audit_four_lane_residual_closure.py
 
+echo "[check] audit internal review residual closure gate"
+python3 scripts/audit_internal_review_residual_closure_gate.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
