@@ -25,7 +25,7 @@ structure ExactGapPostTheoremBodyConcreteResidualMap where
 /-- Ready predicate for the concrete residual map. -/
 def ExactGapPostTheoremBodyConcreteResidualMap.ready
     (R : ExactGapPostTheoremBodyConcreteResidualMap) : Prop :=
-  R.theoremBodyClosureReady ∧
+  exactGapTheoremBodyClosure.ready ∧
   R.cHilbertRealizationOpen ∧
   R.cUnboundedHPhysRealizationOpen ∧
   R.cSpectralMeasureRealizationOpen ∧
