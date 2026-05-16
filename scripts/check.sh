@@ -46,6 +46,9 @@ python3 scripts/audit_external_audit_readiness_gate.py
 echo "[check] audit external audit readiness gate field classification"
 python3 scripts/audit_external_audit_readiness_gate_field_classification.py
 
+echo "[check] audit external audit readiness replay certificate"
+python3 scripts/audit_external_audit_readiness_replay_certificate.py
+
 echo "[check] replay summary"
 python3 scripts/replay_summary.py
 
