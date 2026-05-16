@@ -152,7 +152,7 @@ structure ConcreteResidualClosureReviewSurface where
   publicBoundaryHeld_proof : publicBoundaryHeld
 
 def ConcreteResidualClosureReviewSurface.ready
-    (_S : ConcreteResidualClosureReviewSurface) : Prop :=
+    (S : ConcreteResidualClosureReviewSurface) : Prop :=
   finalTheoremReleaseBundleManifestReviewSurface.ready ∧
   prototypeConcreteResidualClosureData.ready ∧
   concreteHilbertRealizationTheoremReviewSurface.ready ∧
@@ -161,9 +161,7 @@ def ConcreteResidualClosureReviewSurface.ready
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
   exactGapValueReal = (33 : ℝ) / 20 ∧
-  concreteResidualClosureReviewSurface.concreteResidualsClosed ∧
-  concreteResidualClosureReviewSurface.externalConsensusNotClaimed ∧
-  concreteResidualClosureReviewSurface.publicBoundaryHeld
+  S.concreteResidualsClosed ∧ S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
 
 noncomputable def concreteResidualClosureReviewSurface : ConcreteResidualClosureReviewSurface :=
   { bundleManifestReady := final_theorem_release_bundle_manifest_review_surface_ready
