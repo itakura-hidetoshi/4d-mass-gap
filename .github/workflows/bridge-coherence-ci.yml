@@ -34,5 +34,7 @@ jobs:
         run: python3 scripts/audit_infinite_dimensional_residual_filling.py
       - name: Check hard physical residual hardening map
         run: python3 scripts/audit_hard_physical_residual_hardening_map.py
+      - name: Check Hilbert construction lane hardening
+        run: python3 scripts/audit_hilbert_construction_lane_hardening.py
       - name: Summarize Lean replay surface
         run: python3 scripts/replay_summary.py
