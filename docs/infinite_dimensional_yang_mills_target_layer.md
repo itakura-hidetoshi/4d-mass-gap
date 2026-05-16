@@ -1,4 +1,4 @@
-# Infinite-Dimensional Yang--Mills Target Layer
+# Infinite-dimensional Yang--Mills Target Layer
 
 This document records the evolution from skeleton / contract closure toward explicit analytic proof obligations for a physical continuum Yang--Mills realization.
 
@@ -29,6 +29,7 @@ and is audited by:
 
 ```text
 scripts/audit_bridge_coherence.py
+scripts/audit_infinite_dimensional_target_layer.py
 ```
 
 ## Core objects
@@ -102,7 +103,7 @@ publicBoundaryHeld
 finalReleaseHeld
 ```
 
-This means the target layer is not merely documentation. It is part of the mechanical bridge-coherence audit path.
+The dedicated target-layer audit also checks this file, the root import, and the documentation anchor. This means the target layer is not merely documentation. It is part of the mechanical audit path.
 
 ## Boundary
 
