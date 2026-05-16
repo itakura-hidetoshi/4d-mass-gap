@@ -49,14 +49,14 @@ structure InfiniteDimensionalHilbertNecessityFromPNPData where
 /-- Ready predicate for the P≠NP-style Hilbert necessity bridge. -/
 def InfiniteDimensionalHilbertNecessityFromPNPData.ready
     (D : InfiniteDimensionalHilbertNecessityFromPNPData) : Prop :=
-  D.concreteHPhysReady ∧
-  D.excitation_distinguishable ∧
+  concreteHPhysRealizationTheoremReviewSurface.ready ∧
+  (∀ n m : Nat, n ≠ m → D.distinguishable (D.excitation n) (D.excitation m)) ∧
   D.noncollapseCertificate ∧
   D.finiteCertificateCollapseBlocked ∧
   D.infiniteDistinguishableFamilyVisible ∧
   D.onePointModelNotFinalPhysicalHilbert ∧
   D.hilbertCompletionNecessary ∧
-  D.exact_value_eq_3320 ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.finalReleaseHeld ∧
   D.publicBoundaryHeld
 
@@ -103,8 +103,8 @@ def PrototypePNPExcitationState := Nat
 
 /-- Singleton/`Nat` prototype realization of the P≠NP-style Hilbert necessity
 bridge. -/
-def prototypeInfiniteDimensionalHilbertNecessityFromPNPData :
-    InfiniteDimensionalHilbertNecessityFromPNPData :=
+noncomputable def prototypeInfiniteDimensionalHilbertNecessityFromPNPData :
+    InfiniteDimensionalHilbertNecessityFromPNPData.{0, 0} :=
   { concreteHPhysReady := concrete_hphys_realization_theorem_review_surface_ready
     finiteCollapseModel := PrototypeFiniteCollapseModel
     candidateState := PrototypePNPExcitationState
@@ -132,11 +132,11 @@ theorem prototype_pnp_hilbert_necessity_ready :
     prototypeInfiniteDimensionalHilbertNecessityFromPNPData.ready := by
   exact And.intro concrete_hphys_realization_theorem_review_surface_ready <|
     And.intro (by intro n m h; exact h) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.noncollapseCertificate_proof <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.finiteCertificateCollapseBlocked_proof <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.infiniteDistinguishableFamilyVisible_proof <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.onePointModelNotFinalPhysicalHilbert_proof <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary_proof <|
     And.intro exactGapValueReal_eq <|
     And.intro True.intro True.intro
 
@@ -145,11 +145,11 @@ theorem prototype_pnp_hilbert_necessity_distinguishable_excitations
     prototypeInfiniteDimensionalHilbertNecessityFromPNPData.distinguishable
       (prototypeInfiniteDimensionalHilbertNecessityFromPNPData.excitation n)
       (prototypeInfiniteDimensionalHilbertNecessityFromPNPData.excitation m) := by
-  exact h
+  exact prototypeInfiniteDimensionalHilbertNecessityFromPNPData.excitation_distinguishable n m h
 
 theorem prototype_pnp_hilbert_necessity_completion_necessary :
     prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary := by
-  trivial
+  exact prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary_proof
 
 /-- Review surface for the P≠NP-style infinite-dimensional Hilbert necessity
 bridge. -/
@@ -173,20 +173,28 @@ structure InfiniteDimensionalHilbertNecessityFromPNPReviewSurface where
 
 def InfiniteDimensionalHilbertNecessityFromPNPReviewSurface.ready
     (S : InfiniteDimensionalHilbertNecessityFromPNPReviewSurface) : Prop :=
-  S.concreteHPhysReady ∧ S.bridgeReady ∧ S.distinguishableExcitations ∧
-  S.finiteCertificateCollapseBlocked ∧ S.onePointModelNotFinalPhysicalHilbert ∧
-  S.hilbertCompletionNecessary ∧ S.infiniteDimensionalNecessityEstablished ∧
-  S.fullInfiniteDimensionalConstructionStillOpen ∧ S.finalReleaseHeld ∧
+  concreteHPhysRealizationTheoremReviewSurface.ready ∧
+  prototypeInfiniteDimensionalHilbertNecessityFromPNPData.ready ∧
+  (∀ n m : Nat, n ≠ m →
+    prototypeInfiniteDimensionalHilbertNecessityFromPNPData.distinguishable
+      (prototypeInfiniteDimensionalHilbertNecessityFromPNPData.excitation n)
+      (prototypeInfiniteDimensionalHilbertNecessityFromPNPData.excitation m)) ∧
+  prototypeInfiniteDimensionalHilbertNecessityFromPNPData.finiteCertificateCollapseBlocked ∧
+  prototypeInfiniteDimensionalHilbertNecessityFromPNPData.onePointModelNotFinalPhysicalHilbert ∧
+  prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary ∧
+  S.infiniteDimensionalNecessityEstablished ∧
+  S.fullInfiniteDimensionalConstructionStillOpen ∧
+  S.finalReleaseHeld ∧
   S.publicBoundaryHeld
 
-def infiniteDimensionalHilbertNecessityFromPNPReviewSurface :
+noncomputable def infiniteDimensionalHilbertNecessityFromPNPReviewSurface :
     InfiniteDimensionalHilbertNecessityFromPNPReviewSurface :=
   { concreteHPhysReady := concrete_hphys_realization_theorem_review_surface_ready
     bridgeReady := prototype_pnp_hilbert_necessity_ready
     distinguishableExcitations := prototype_pnp_hilbert_necessity_distinguishable_excitations
-    finiteCertificateCollapseBlocked := True.intro
-    onePointModelNotFinalPhysicalHilbert := True.intro
-    hilbertCompletionNecessary := True.intro
+    finiteCertificateCollapseBlocked := prototypeInfiniteDimensionalHilbertNecessityFromPNPData.finiteCertificateCollapseBlocked_proof
+    onePointModelNotFinalPhysicalHilbert := prototypeInfiniteDimensionalHilbertNecessityFromPNPData.onePointModelNotFinalPhysicalHilbert_proof
+    hilbertCompletionNecessary := prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary_proof
     infiniteDimensionalNecessityEstablished := True
     fullInfiniteDimensionalConstructionStillOpen := True
     finalReleaseHeld := True
@@ -197,9 +205,9 @@ theorem infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready :
   exact And.intro concrete_hphys_realization_theorem_review_surface_ready <|
     And.intro prototype_pnp_hilbert_necessity_ready <|
     And.intro prototype_pnp_hilbert_necessity_distinguishable_excitations <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.finiteCertificateCollapseBlocked_proof <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.onePointModelNotFinalPhysicalHilbert_proof <|
+    And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary_proof <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro True.intro
