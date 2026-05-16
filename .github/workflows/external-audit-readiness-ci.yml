@@ -43,8 +43,8 @@ jobs:
         run: |
           set -euxo pipefail
           lake update
-      - name: Check external audit readiness gate with Lean
+      - name: Build external audit readiness gate
         shell: bash
         run: |
           set -euxo pipefail
-          lake env lean MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
+          lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
