@@ -41,14 +41,14 @@ structure HilbertConstructionLaneHardeningData where
 /-- Ready predicate for the Hilbert-construction hardening lane. -/
 def HilbertConstructionLaneHardeningData.ready
     (D : HilbertConstructionLaneHardeningData) : Prop :=
-  D.hardResidualMapReady ∧
-  D.countableBasisReady ∧
-  D.finiteSpanDensityReady ∧
-  D.normTopologyReady ∧
-  D.cauchyCompletionReady ∧
-  D.completeNormedSpaceReady ∧
-  D.innerProductReady ∧
-  D.hilbertInstanceReady ∧
+  hardPhysicalResidualHardeningMapData.ready ∧
+  hilbertCountableBasisSkeletonReviewSurface.ready ∧
+  hilbertFiniteSpanDensitySkeletonReviewSurface.ready ∧
+  hilbertNormTopologySkeletonReviewSurface.ready ∧
+  hilbertCauchyCompletionSkeletonReviewSurface.ready ∧
+  hilbertCompleteNormedSpaceSkeletonReviewSurface.ready ∧
+  hilbertInnerProductSkeletonReviewSurface.ready ∧
+  hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
   D.countableBasisHardened ∧
   D.finiteSpanDensityHardened ∧
   D.normTopologyHardened ∧
@@ -57,7 +57,7 @@ def HilbertConstructionLaneHardeningData.ready
   D.innerProductHardened ∧
   D.hilbertInstanceHardened ∧
   D.hardPhysicalBoundaryVisible ∧
-  D.exactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -120,10 +120,9 @@ theorem hilbert_construction_hard_boundary_visible
 
 /-- Exact normalized value is preserved by the Hilbert-construction lane hardening. -/
 theorem hilbert_construction_exact_value_preserved
-    (D : HilbertConstructionLaneHardeningData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : HilbertConstructionLaneHardeningData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- The Hilbert-construction lane hardening remains review-level only. -/
 theorem hilbert_construction_review_level_only
@@ -158,14 +157,14 @@ def hilbertConstructionLaneHardeningData : HilbertConstructionLaneHardeningData 
 /-- The installed Hilbert-construction hardening lane is ready. -/
 theorem hilbert_construction_lane_hardening_ready :
     hilbertConstructionLaneHardeningData.ready := by
-  exact And.intro hard_physical_residual_hardening_map_ready <|
-    And.intro hilbert_countable_basis_skeleton_review_surface_ready <|
-    And.intro hilbert_finite_span_density_skeleton_review_surface_ready <|
-    And.intro hilbert_norm_topology_skeleton_review_surface_ready <|
-    And.intro hilbert_cauchy_completion_skeleton_review_surface_ready <|
-    And.intro hilbert_complete_normed_space_skeleton_review_surface_ready <|
-    And.intro hilbert_inner_product_skeleton_review_surface_ready <|
-    And.intro hilbert_space_instance_skeleton_review_surface_ready <|
+  exact And.intro hilbertConstructionLaneHardeningData.hardResidualMapReady <|
+    And.intro hilbertConstructionLaneHardeningData.countableBasisReady <|
+    And.intro hilbertConstructionLaneHardeningData.finiteSpanDensityReady <|
+    And.intro hilbertConstructionLaneHardeningData.normTopologyReady <|
+    And.intro hilbertConstructionLaneHardeningData.cauchyCompletionReady <|
+    And.intro hilbertConstructionLaneHardeningData.completeNormedSpaceReady <|
+    And.intro hilbertConstructionLaneHardeningData.innerProductReady <|
+    And.intro hilbertConstructionLaneHardeningData.hilbertInstanceReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -174,7 +173,7 @@ theorem hilbert_construction_lane_hardening_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+    And.intro hilbertConstructionLaneHardeningData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
