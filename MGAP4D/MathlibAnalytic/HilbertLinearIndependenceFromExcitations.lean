@@ -98,8 +98,7 @@ def prototypeHilbertLinearIndependenceFromExcitationsData :
       rfl
     distinguishable := fun a b => a ≠ b
     pairwise_distinguishable := by
-      intro k i j hij
-      intro hval
+      intro k i j hij hval
       exact hij (Fin.ext hval)
     linearIndependent := fun k family => ∀ i j : Fin k, family i = family j → i = j
     finite_linearly_independent := by
