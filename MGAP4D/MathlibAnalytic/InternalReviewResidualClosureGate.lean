@@ -64,15 +64,35 @@ theorem internal_review_residual_gate_exact_origin_preserved_witness :
     exactValueTheoremBodyOriginReviewSurface.ready := by
   exact exact_value_theorem_body_origin_review_surface_ready
 
+/-- Named theorem-derived witness that the exact value is not reduced to a packaging artifact. -/
+theorem internal_review_residual_gate_not_packaging_artifact_preserved_witness :
+    exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact := by
+  exact exact_value_origin_not_packaging_artifact_witness
+
+/-- Named theorem-derived witness that the exact value is not reduced to a CI-ledger artifact. -/
+theorem internal_review_residual_gate_not_ci_ledger_artifact_preserved_witness :
+    exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact := by
+  exact exact_value_origin_not_ci_ledger_artifact_witness
+
 /-- Named theorem-derived witness linking the final release closure surface. -/
 theorem internal_review_residual_gate_final_release_closure_linked_witness :
     finalTheoremReleaseClosureReviewSurface.ready := by
   exact final_theorem_release_closure_review_surface_ready
 
+/-- Named theorem-derived witness that the external-review boundary remains visible. -/
+theorem internal_review_residual_gate_external_review_boundary_visible_witness :
+    finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed := by
+  exact finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed_proof
+
 /-- Named theorem-derived witness that the public theorem boundary remains held. -/
 theorem internal_review_residual_gate_public_boundary_held_witness :
     finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld := by
   exact finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld_proof
+
+/-- Named theorem-derived witness that final release remains held at the theorem-body boundary. -/
+theorem internal_review_residual_gate_final_release_held_witness :
+    exactGapTheoremBodyClosure.finalReleaseHeld := by
+  exact exact_gap_theorem_body_closure_final_release_held
 
 /-- Repository-internal review residual is closed at the gate level. -/
 theorem internal_review_residual_gate_repository_residual_closed
@@ -157,16 +177,16 @@ def internalReviewResidualClosureGateData : InternalReviewResidualClosureGateDat
     exactTheoremBodyOriginPreserved := exactValueTheoremBodyOriginReviewSurface.ready
     exactTheoremBodyOriginPreserved_proof :=
       internal_review_residual_gate_exact_origin_preserved_witness
-    notPackagingArtifactPreserved := True
-    notCILedgerArtifactPreserved := True
+    notPackagingArtifactPreserved := exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact
+    notCILedgerArtifactPreserved := exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact
     finalReleaseClosureLinked := finalTheoremReleaseClosureReviewSurface.ready
     finalReleaseClosureLinked_proof :=
       internal_review_residual_gate_final_release_closure_linked_witness
-    externalReviewBoundaryVisible := True
+    externalReviewBoundaryVisible := finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
     publicBoundaryHeld := finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof :=
       internal_review_residual_gate_public_boundary_held_witness
-    finalReleaseHeld := True
+    finalReleaseHeld := exactGapTheoremBodyClosure.finalReleaseHeld
     exactValuePreserved := exactGapValueReal_eq }
 
 /-- The installed internal review residual closure gate is ready. -/
@@ -178,12 +198,13 @@ theorem internal_review_residual_closure_gate_ready :
     And.intro internalReviewResidualClosureGateData.repositoryInternalResidualClosed_proof <|
     And.intro internalReviewResidualClosureGateData.noReviewLevelResidualLeft_proof <|
     And.intro internalReviewResidualClosureGateData.exactTheoremBodyOriginPreserved_proof <|
-    And.intro True.intro <|
-    And.intro True.intro <|
+    And.intro internal_review_residual_gate_not_packaging_artifact_preserved_witness <|
+    And.intro internal_review_residual_gate_not_ci_ledger_artifact_preserved_witness <|
     And.intro internalReviewResidualClosureGateData.finalReleaseClosureLinked_proof <|
-    And.intro True.intro <|
+    And.intro internal_review_residual_gate_external_review_boundary_visible_witness <|
     And.intro internalReviewResidualClosureGateData.publicBoundaryHeld_proof <|
-    And.intro True.intro internalReviewResidualClosureGateData.exactValuePreserved
+    And.intro internal_review_residual_gate_final_release_held_witness
+      internalReviewResidualClosureGateData.exactValuePreserved
 
 end MathlibAnalytic
 end MGAP4D
