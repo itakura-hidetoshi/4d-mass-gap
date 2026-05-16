@@ -46,3 +46,4 @@ import MGAP4D.MathlibAnalytic.ConcreteResidualClosure
 import MGAP4D.MathlibAnalytic.PhysicalHamiltonianNormalizationBridge
 import MGAP4D.MathlibAnalytic.InfiniteDimensionalYangMillsRealizationTargets
 import MGAP4D.MathlibAnalytic.InfiniteDimensionalResidualFillingBridge
+import MGAP4D.MathlibAnalytic.HardPhysicalResidualHardeningMap
