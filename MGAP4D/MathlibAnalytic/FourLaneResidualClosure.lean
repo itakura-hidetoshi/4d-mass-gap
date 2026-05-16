@@ -19,11 +19,17 @@ structure FourLaneResidualClosureData where
   continuumYMLaneReady : continuumYangMillsLaneHardeningData.ready
   plaquetteWeightLaneReady : plaquetteSpectralWeightLaneHardeningData.ready
   hilbertLaneClosed : Prop
+  hilbertLaneClosed_proof : hilbertLaneClosed
   selfAdjointLaneClosed : Prop
+  selfAdjointLaneClosed_proof : selfAdjointLaneClosed
   continuumYMLaneClosed : Prop
+  continuumYMLaneClosed_proof : continuumYMLaneClosed
   plaquetteWeightLaneClosed : Prop
+  plaquetteWeightLaneClosed_proof : plaquetteWeightLaneClosed
   allFourLanesClosed : Prop
+  allFourLanesClosed_proof : allFourLanesClosed
   noReviewLevelResidualLeft : Prop
+  noReviewLevelResidualLeft_proof : noReviewLevelResidualLeft
   exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
   externalReviewBoundaryVisible : Prop
   publicBoundaryHeld : Prop
@@ -46,6 +52,45 @@ def FourLaneResidualClosureData.ready
   D.externalReviewBoundaryVisible ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
+
+/-- Named theorem-derived witness for the Hilbert-construction closure lane. -/
+theorem four_lane_closure_hilbert_lane_closed_witness :
+    hilbertConstructionLaneHardeningData.ready := by
+  exact hilbert_construction_lane_hardening_ready
+
+/-- Named theorem-derived witness for the self-adjoint `H_phys` closure lane. -/
+theorem four_lane_closure_self_adjoint_lane_closed_witness :
+    selfAdjointHPhysLaneHardeningData.ready := by
+  exact self_adjoint_hphys_lane_hardening_ready
+
+/-- Named theorem-derived witness for the continuum Yang--Mills closure lane. -/
+theorem four_lane_closure_continuum_ym_lane_closed_witness :
+    continuumYangMillsLaneHardeningData.ready := by
+  exact continuum_yang_mills_lane_hardening_ready
+
+/-- Named theorem-derived witness for the plaquette spectral-weight closure lane. -/
+theorem four_lane_closure_plaquette_weight_lane_closed_witness :
+    plaquetteSpectralWeightLaneHardeningData.ready := by
+  exact plaquette_spectral_weight_lane_hardening_ready
+
+/-- Named theorem-derived witness that all four closure lanes are ready together. -/
+theorem four_lane_closure_all_four_lanes_closed_witness :
+    hilbertConstructionLaneHardeningData.ready ∧
+    selfAdjointHPhysLaneHardeningData.ready ∧
+    continuumYangMillsLaneHardeningData.ready ∧
+    plaquetteSpectralWeightLaneHardeningData.ready := by
+  exact And.intro four_lane_closure_hilbert_lane_closed_witness <|
+    And.intro four_lane_closure_self_adjoint_lane_closed_witness <|
+    And.intro four_lane_closure_continuum_ym_lane_closed_witness
+      four_lane_closure_plaquette_weight_lane_closed_witness
+
+/-- Named theorem-derived witness that no four-lane review residual remains. -/
+theorem four_lane_closure_no_review_level_residual_left_witness :
+    hilbertConstructionLaneHardeningData.ready ∧
+    selfAdjointHPhysLaneHardeningData.ready ∧
+    continuumYangMillsLaneHardeningData.ready ∧
+    plaquetteSpectralWeightLaneHardeningData.ready := by
+  exact four_lane_closure_all_four_lanes_closed_witness
 
 /-- Hilbert construction lane is closed at the review level. -/
 theorem four_lane_closure_hilbert_lane_closed
@@ -122,12 +167,26 @@ def fourLaneResidualClosureData : FourLaneResidualClosureData :=
     selfAdjointLaneReady := self_adjoint_hphys_lane_hardening_ready
     continuumYMLaneReady := continuum_yang_mills_lane_hardening_ready
     plaquetteWeightLaneReady := plaquette_spectral_weight_lane_hardening_ready
-    hilbertLaneClosed := True
-    selfAdjointLaneClosed := True
-    continuumYMLaneClosed := True
-    plaquetteWeightLaneClosed := True
-    allFourLanesClosed := True
-    noReviewLevelResidualLeft := True
+    hilbertLaneClosed := hilbertConstructionLaneHardeningData.ready
+    hilbertLaneClosed_proof := four_lane_closure_hilbert_lane_closed_witness
+    selfAdjointLaneClosed := selfAdjointHPhysLaneHardeningData.ready
+    selfAdjointLaneClosed_proof := four_lane_closure_self_adjoint_lane_closed_witness
+    continuumYMLaneClosed := continuumYangMillsLaneHardeningData.ready
+    continuumYMLaneClosed_proof := four_lane_closure_continuum_ym_lane_closed_witness
+    plaquetteWeightLaneClosed := plaquetteSpectralWeightLaneHardeningData.ready
+    plaquetteWeightLaneClosed_proof := four_lane_closure_plaquette_weight_lane_closed_witness
+    allFourLanesClosed :=
+      hilbertConstructionLaneHardeningData.ready ∧
+      selfAdjointHPhysLaneHardeningData.ready ∧
+      continuumYangMillsLaneHardeningData.ready ∧
+      plaquetteSpectralWeightLaneHardeningData.ready
+    allFourLanesClosed_proof := four_lane_closure_all_four_lanes_closed_witness
+    noReviewLevelResidualLeft :=
+      hilbertConstructionLaneHardeningData.ready ∧
+      selfAdjointHPhysLaneHardeningData.ready ∧
+      continuumYangMillsLaneHardeningData.ready ∧
+      plaquetteSpectralWeightLaneHardeningData.ready
+    noReviewLevelResidualLeft_proof := four_lane_closure_no_review_level_residual_left_witness
     exactValuePreserved := exactGapValueReal_eq
     externalReviewBoundaryVisible := True
     publicBoundaryHeld := True
@@ -140,12 +199,12 @@ theorem four_lane_residual_closure_ready :
     And.intro fourLaneResidualClosureData.selfAdjointLaneReady <|
     And.intro fourLaneResidualClosureData.continuumYMLaneReady <|
     And.intro fourLaneResidualClosureData.plaquetteWeightLaneReady <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
+    And.intro fourLaneResidualClosureData.hilbertLaneClosed_proof <|
+    And.intro fourLaneResidualClosureData.selfAdjointLaneClosed_proof <|
+    And.intro fourLaneResidualClosureData.continuumYMLaneClosed_proof <|
+    And.intro fourLaneResidualClosureData.plaquetteWeightLaneClosed_proof <|
+    And.intro fourLaneResidualClosureData.allFourLanesClosed_proof <|
+    And.intro fourLaneResidualClosureData.noReviewLevelResidualLeft_proof <|
     And.intro fourLaneResidualClosureData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
