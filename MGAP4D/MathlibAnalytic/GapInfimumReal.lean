@@ -12,13 +12,13 @@ noncomputable def exactGapEnergyRay : Set ℝ := Set.Ici (exactGapValueReal : �
 
 /-- The exact gap value belongs to the analytic energy ray. -/
 theorem exactGapValueReal_mem_energyRay : exactGapValueReal ∈ exactGapEnergyRay := by
-  exact le_rfl
+  simp [exactGapEnergyRay]
 
 /-- Every element of the analytic energy ray is bounded below by the exact gap value. -/
 theorem exactGapEnergyRay_lower_bound :
     ∀ x ∈ exactGapEnergyRay, exactGapValueReal ≤ x := by
   intro x hx
-  exact hx
+  simpa [exactGapEnergyRay] using hx
 
 /-- The exact gap value is an attained lower bound of the analytic energy ray. -/
 structure GapInfimumRealSurface where
