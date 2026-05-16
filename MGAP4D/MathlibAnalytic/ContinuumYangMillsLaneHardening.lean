@@ -37,11 +37,11 @@ structure ContinuumYangMillsLaneHardeningData where
 /-- Ready predicate for the continuum Yang--Mills hardening lane. -/
 def ContinuumYangMillsLaneHardeningData.ready
     (D : ContinuumYangMillsLaneHardeningData) : Prop :=
-  D.selfAdjointLaneReady ∧
-  D.concreteYMSkeletonReady ∧
-  D.spectralSkeletonReady ∧
-  D.continuumSpectralReady ∧
-  D.normalizationBridgeReady ∧
+  selfAdjointHPhysLaneHardeningData.ready ∧
+  concreteYangMillsHamiltonianSkeletonReviewSurface.ready ∧
+  spectralRealizationSkeletonReviewSurface.ready ∧
+  continuumSpectralTheoremSkeletonReviewSurface.ready ∧
+  physicalHamiltonianNormalizationBridgeReviewSurface.ready ∧
   D.concreteYMHardened ∧
   D.hphysBuiltFromYMHardened ∧
   D.plaquetteCenteredHardened ∧
@@ -51,7 +51,7 @@ def ContinuumYangMillsLaneHardeningData.ready
   D.continuumSpectralTheoremHardened ∧
   D.continuumLimitBoundaryVisible ∧
   D.hardPhysicalBoundaryVisible ∧
-  D.exactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -121,10 +121,9 @@ theorem continuum_ym_hard_physical_boundary_visible
 
 /-- Exact normalized value is preserved by the continuum Yang--Mills lane. -/
 theorem continuum_ym_exact_value_preserved
-    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- Installed continuum Yang--Mills hardening lane. -/
 def continuumYangMillsLaneHardeningData : ContinuumYangMillsLaneHardeningData :=
@@ -150,11 +149,11 @@ def continuumYangMillsLaneHardeningData : ContinuumYangMillsLaneHardeningData :=
 /-- The installed continuum Yang--Mills hardening lane is ready. -/
 theorem continuum_yang_mills_lane_hardening_ready :
     continuumYangMillsLaneHardeningData.ready := by
-  exact And.intro self_adjoint_hphys_lane_hardening_ready <|
-    And.intro concrete_ym_hamiltonian_skeleton_review_surface_ready <|
-    And.intro spectral_realization_skeleton_review_surface_ready <|
-    And.intro continuum_spectral_theorem_skeleton_review_surface_ready <|
-    And.intro physical_hamiltonian_normalization_bridge_review_surface_ready <|
+  exact And.intro continuumYangMillsLaneHardeningData.selfAdjointLaneReady <|
+    And.intro continuumYangMillsLaneHardeningData.concreteYMSkeletonReady <|
+    And.intro continuumYangMillsLaneHardeningData.spectralSkeletonReady <|
+    And.intro continuumYangMillsLaneHardeningData.continuumSpectralReady <|
+    And.intro continuumYangMillsLaneHardeningData.normalizationBridgeReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -164,7 +163,7 @@ theorem continuum_yang_mills_lane_hardening_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+    And.intro continuumYangMillsLaneHardeningData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
