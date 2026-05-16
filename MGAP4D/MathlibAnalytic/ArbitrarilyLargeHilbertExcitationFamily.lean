@@ -100,11 +100,7 @@ theorem prototype_arbitrarily_large_hilbert_excitation_family_ready :
   exact And.intro infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready <|
     And.intro (by intro n m h; exact h) <|
     And.intro (by intro k i; rfl) <|
-    And.intro (by
-      intro k i j hij
-      dsimp
-      intro hval
-      exact hij (Fin.ext hval)) <|
+    And.intro prototypeArbitrarilyLargeHilbertExcitationFamilyData.finite_family_pairwise_distinguishable <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
