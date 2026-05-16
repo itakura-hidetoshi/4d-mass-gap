@@ -39,7 +39,7 @@ structure RayleighAttainmentRealSurface where
   positive : 0 < value
   analyticReplacementBranchOnly : Prop
 
-def rayleighAttainmentRealSurface : RayleighAttainmentRealSurface :=
+noncomputable def rayleighAttainmentRealSurface : RayleighAttainmentRealSurface :=
   { value := exactGapValueReal
     witnessEnergy := exactGapValueReal
     value_eq_3320 := exactGapValueReal_eq
@@ -52,8 +52,12 @@ def rayleighAttainmentRealSurface : RayleighAttainmentRealSurface :=
 
 def RayleighAttainmentRealSurface.ready
     (S : RayleighAttainmentRealSurface) : Prop :=
-  S.value_eq_3320 ∧ S.witness_admissible ∧ S.witness_attains_value ∧
-  S.lower_bound ∧ S.exists_attainment ∧ S.positive ∧
+  S.value = (33 : ℝ) / 20 ∧
+  RayleighEnergyAdmissible S.witnessEnergy ∧
+  S.witnessEnergy = S.value ∧
+  (∀ energy, RayleighEnergyAdmissible energy → S.value ≤ energy) ∧
+  (∃ energy : ℝ, RayleighAttainsExactGap energy) ∧
+  0 < S.value ∧
   S.analyticReplacementBranchOnly
 
 theorem rayleigh_attainment_real_surface_ready :
