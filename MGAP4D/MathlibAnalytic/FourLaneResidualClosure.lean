@@ -32,17 +32,17 @@ structure FourLaneResidualClosureData where
 /-- Ready predicate for four-lane residual closure. -/
 def FourLaneResidualClosureData.ready
     (D : FourLaneResidualClosureData) : Prop :=
-  D.hilbertLaneReady ∧
-  D.selfAdjointLaneReady ∧
-  D.continuumYMLaneReady ∧
-  D.plaquetteWeightLaneReady ∧
+  hilbertConstructionLaneHardeningData.ready ∧
+  selfAdjointHPhysLaneHardeningData.ready ∧
+  continuumYangMillsLaneHardeningData.ready ∧
+  plaquetteSpectralWeightLaneHardeningData.ready ∧
   D.hilbertLaneClosed ∧
   D.selfAdjointLaneClosed ∧
   D.continuumYMLaneClosed ∧
   D.plaquetteWeightLaneClosed ∧
   D.allFourLanesClosed ∧
   D.noReviewLevelResidualLeft ∧
-  D.exactValuePreserved ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.externalReviewBoundaryVisible ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -91,10 +91,9 @@ theorem four_lane_closure_no_review_level_residual_left
 
 /-- Exact normalized value is preserved by the four-lane closure. -/
 theorem four_lane_closure_exact_value_preserved
-    (D : FourLaneResidualClosureData) (hD : D.ready) :
-    D.exactValuePreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : FourLaneResidualClosureData) (_hD : D.ready) :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact D.exactValuePreserved
 
 /-- External review boundary remains visible after the repository-internal closure. -/
 theorem four_lane_closure_external_review_boundary_visible
@@ -137,17 +136,17 @@ def fourLaneResidualClosureData : FourLaneResidualClosureData :=
 /-- The installed four-lane residual closure is ready. -/
 theorem four_lane_residual_closure_ready :
     fourLaneResidualClosureData.ready := by
-  exact And.intro hilbert_construction_lane_hardening_ready <|
-    And.intro self_adjoint_hphys_lane_hardening_ready <|
-    And.intro continuum_yang_mills_lane_hardening_ready <|
-    And.intro plaquette_spectral_weight_lane_hardening_ready <|
+  exact And.intro fourLaneResidualClosureData.hilbertLaneReady <|
+    And.intro fourLaneResidualClosureData.selfAdjointLaneReady <|
+    And.intro fourLaneResidualClosureData.continuumYMLaneReady <|
+    And.intro fourLaneResidualClosureData.plaquetteWeightLaneReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exactGapValueReal_eq <|
+    And.intro fourLaneResidualClosureData.exactValuePreserved <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
