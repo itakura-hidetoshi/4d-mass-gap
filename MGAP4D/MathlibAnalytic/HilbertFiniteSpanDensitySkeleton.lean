@@ -27,16 +27,26 @@ structure HilbertFiniteSpanDensitySkeletonData where
   finiteSpanDensityVisible : Prop
   finiteSpanDensityVisible_proof : finiteSpanDensityVisible
   normTopologyStillOpen : Prop
+  normTopologyStillOpen_proof : normTopologyStillOpen
   cauchyCompletionStillOpen : Prop
+  cauchyCompletionStillOpen_proof : cauchyCompletionStillOpen
   hilbertCompletionStillOpen : Prop
+  hilbertCompletionStillOpen_proof : hilbertCompletionStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
-/-- Ready predicate for finite-span density skeleton. -/
+/-- Ready predicate for finite-span density skeleton.
+
+The predicate restates proposition-level obligations and separates them from the
+stored proof witnesses. -/
 def HilbertFiniteSpanDensitySkeletonData.ready
     (D : HilbertFiniteSpanDensitySkeletonData) : Prop :=
-  D.countableBasisReady ∧ D.physical_states_approximable ∧
-  D.basis_in_finite_span ∧ D.monotone_finite_span ∧
+  hilbertCountableBasisSkeletonReviewSurface.ready ∧
+  (∀ ψ, ψ ∈ D.physicalState → D.approximableByFiniteSpan ψ) ∧
+  (∀ n, D.basisVector n ∈ D.finiteSpan (n + 1)) ∧
+  (∀ n m, n ≤ m → D.finiteSpan n ⊆ D.finiteSpan m) ∧
   D.finiteSpanDensityVisible ∧ D.normTopologyStillOpen ∧
   D.cauchyCompletionStillOpen ∧ D.hilbertCompletionStillOpen ∧
   D.finalReleaseHeld ∧ D.publicBoundaryHeld
@@ -65,13 +75,13 @@ theorem hilbert_finite_span_monotone
 theorem hilbert_finite_span_norm_topology_still_open
     (D : HilbertFiniteSpanDensitySkeletonData) :
     D.normTopologyStillOpen := by
-  exact D.normTopologyStillOpen
+  exact D.normTopologyStillOpen_proof
 
 /-- Hilbert completion remains a visible residual after finite-span density. -/
 theorem hilbert_finite_span_completion_still_open
     (D : HilbertFiniteSpanDensitySkeletonData) :
     D.hilbertCompletionStillOpen := by
-  exact D.hilbertCompletionStillOpen
+  exact D.hilbertCompletionStillOpen_proof
 
 /-- Prototype finite-span density skeleton.
 
@@ -98,28 +108,32 @@ def prototypeHilbertFiniteSpanDensitySkeletonData :
     finiteSpanDensityVisible := True
     finiteSpanDensityVisible_proof := True.intro
     normTopologyStillOpen := True
+    normTopologyStillOpen_proof := True.intro
     cauchyCompletionStillOpen := True
+    cauchyCompletionStillOpen_proof := True.intro
     hilbertCompletionStillOpen := True
+    hilbertCompletionStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem prototype_hilbert_finite_span_density_skeleton_ready :
     prototypeHilbertFiniteSpanDensitySkeletonData.ready := by
-  exact And.intro hilbert_countable_basis_skeleton_review_surface_ready <|
-    And.intro (by intro ψ hψ; exact True.intro) <|
-    And.intro (by intro n; dsimp; exact Nat.lt_succ_self n) <|
-    And.intro (by
-      intro n m hnm x hx
-      exact Nat.lt_of_lt_of_le hx hnm) <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro prototypeHilbertFiniteSpanDensitySkeletonData.countableBasisReady <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.physical_states_approximable <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.basis_in_finite_span <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.monotone_finite_span <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.finiteSpanDensityVisible_proof <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.normTopologyStillOpen_proof <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.cauchyCompletionStillOpen_proof <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.hilbertCompletionStillOpen_proof <|
+    And.intro prototypeHilbertFiniteSpanDensitySkeletonData.finalReleaseHeld_proof
+      prototypeHilbertFiniteSpanDensitySkeletonData.publicBoundaryHeld_proof
 
 theorem prototype_hilbert_finite_span_physical_states_approximable
     (ψ : prototypeHilbertFiniteSpanDensitySkeletonData.state)
-    (hψ : ψ ∈ prototypeHilbertFiniteSpanDensitySkeletonData.physicalState) :
+    (_hψ : ψ ∈ prototypeHilbertFiniteSpanDensitySkeletonData.physicalState) :
     prototypeHilbertFiniteSpanDensitySkeletonData.approximableByFiniteSpan ψ := by
   exact True.intro
 
@@ -131,18 +145,28 @@ structure HilbertFiniteSpanDensitySkeletonReviewSurface where
     ψ ∈ prototypeHilbertFiniteSpanDensitySkeletonData.physicalState →
       prototypeHilbertFiniteSpanDensitySkeletonData.approximableByFiniteSpan ψ
   finiteSpanDensityEstablished : Prop
+  finiteSpanDensityEstablished_proof : finiteSpanDensityEstablished
   normTopologyStillOpen : Prop
+  normTopologyStillOpen_proof : normTopologyStillOpen
   cauchyCompletionStillOpen : Prop
+  cauchyCompletionStillOpen_proof : cauchyCompletionStillOpen
   hilbertCompletionStillOpen : Prop
+  hilbertCompletionStillOpen_proof : hilbertCompletionStillOpen
   finalReleaseHeld : Prop
+  finalReleaseHeld_proof : finalReleaseHeld
   publicBoundaryHeld : Prop
+  publicBoundaryHeld_proof : publicBoundaryHeld
 
 def HilbertFiniteSpanDensitySkeletonReviewSurface.ready
     (S : HilbertFiniteSpanDensitySkeletonReviewSurface) : Prop :=
-  S.countableBasisReady ∧ S.finiteSpanDensityReady ∧
-  S.physicalStatesApproximable ∧ S.finiteSpanDensityEstablished ∧
-  S.normTopologyStillOpen ∧ S.cauchyCompletionStillOpen ∧
-  S.hilbertCompletionStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
+  hilbertCountableBasisSkeletonReviewSurface.ready ∧
+  prototypeHilbertFiniteSpanDensitySkeletonData.ready ∧
+  (∀ ψ,
+    ψ ∈ prototypeHilbertFiniteSpanDensitySkeletonData.physicalState →
+      prototypeHilbertFiniteSpanDensitySkeletonData.approximableByFiniteSpan ψ) ∧
+  S.finiteSpanDensityEstablished ∧ S.normTopologyStillOpen ∧
+  S.cauchyCompletionStillOpen ∧ S.hilbertCompletionStillOpen ∧
+  S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
 def hilbertFiniteSpanDensitySkeletonReviewSurface :
     HilbertFiniteSpanDensitySkeletonReviewSurface :=
@@ -150,27 +174,34 @@ def hilbertFiniteSpanDensitySkeletonReviewSurface :
     finiteSpanDensityReady := prototype_hilbert_finite_span_density_skeleton_ready
     physicalStatesApproximable := prototype_hilbert_finite_span_physical_states_approximable
     finiteSpanDensityEstablished := True
+    finiteSpanDensityEstablished_proof := True.intro
     normTopologyStillOpen := True
+    normTopologyStillOpen_proof := True.intro
     cauchyCompletionStillOpen := True
+    cauchyCompletionStillOpen_proof := True.intro
     hilbertCompletionStillOpen := True
+    hilbertCompletionStillOpen_proof := True.intro
     finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    finalReleaseHeld_proof := True.intro
+    publicBoundaryHeld := True
+    publicBoundaryHeld_proof := True.intro }
 
 theorem hilbert_finite_span_density_skeleton_review_surface_ready :
     hilbertFiniteSpanDensitySkeletonReviewSurface.ready := by
-  exact And.intro hilbert_countable_basis_skeleton_review_surface_ready <|
-    And.intro prototype_hilbert_finite_span_density_skeleton_ready <|
-    And.intro prototype_hilbert_finite_span_physical_states_approximable <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  exact And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.countableBasisReady <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.finiteSpanDensityReady <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.physicalStatesApproximable <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.finiteSpanDensityEstablished_proof <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.normTopologyStillOpen_proof <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.cauchyCompletionStillOpen_proof <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.hilbertCompletionStillOpen_proof <|
+    And.intro hilbertFiniteSpanDensitySkeletonReviewSurface.finalReleaseHeld_proof
+      hilbertFiniteSpanDensitySkeletonReviewSurface.publicBoundaryHeld_proof
 
 theorem hilbert_finite_span_density_skeleton_final_release_held :
     HilbertFiniteSpanDensitySkeletonReviewSurface.finalReleaseHeld
       hilbertFiniteSpanDensitySkeletonReviewSurface := by
-  trivial
+  exact hilbertFiniteSpanDensitySkeletonReviewSurface.finalReleaseHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
