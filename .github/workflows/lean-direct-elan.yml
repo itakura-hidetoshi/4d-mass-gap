@@ -45,6 +45,8 @@ jobs:
         run: python3 scripts/audit_continuum_yang_mills_lane_hardening.py
       - name: Audit plaquette spectral weight lane hardening
         run: python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
+      - name: Audit four-lane residual closure
+        run: python3 scripts/audit_four_lane_residual_closure.py
       - name: Summarize Lean replay surface
         run: python3 scripts/replay_summary.py
 
