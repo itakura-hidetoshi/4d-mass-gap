@@ -1,0 +1,54 @@
+name: Full Local Check CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - mathlib-adoption/exact-gap-analytic
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  full-local-check:
+    name: Run scripts/check.sh
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Cache elan and Lake build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake
+          key: ${{ runner.os }}-full-check-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-full-check-
+            ${{ runner.os }}-lean-
+      - name: Install elan and Lean toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if ! command -v elan >/dev/null 2>&1; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Show Lean and Lake versions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lean --version
+          lake --version
+      - name: Run full local check script
+        shell: bash
+        run: |
+          set -euxo pipefail
+          bash scripts/check.sh
