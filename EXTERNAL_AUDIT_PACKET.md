@@ -4,7 +4,7 @@ This packet is the top-level navigation surface for external audit and independe
 
 ## Boundary statement
 
-The current repository state is an internal normalized theorem-body / proof-architecture surface with explicit replay, theorem-surface audit, bridge-coherence audit, target-obligation layers, review-level residual filling, hard residual hardening lanes, continuum-Hamiltonian theorem surfaces, release-adoption surfaces, complete-derivation surfaces, and public-boundary markers.
+The current repository state is an internal normalized theorem-body / proof-architecture surface with explicit replay, theorem-surface audit, bridge-coherence audit, target-obligation layers, review-level residual filling, hard residual hardening lanes, complete infinite-dimensional Hilbert construction, continuum-Hamiltonian theorem surfaces, release-adoption surfaces, complete-derivation surfaces, and public-boundary markers.
 
 It does not claim:
 
@@ -22,6 +22,11 @@ that target / residual-filling / hardening-map / release-surface layers alone re
 
 ```text
 physical 4D Yang-Mills continuum Hamiltonian lane
+  -> complete infinite-dimensional Hilbert construction
+  -> Hilbert-to-physical unbounded-operator bridge
+  -> self-adjoint H_phys lane hardening
+  -> continuum Yang-Mills lane hardening
+  -> plaquette spectral weight lane hardening
   -> continuum Hamiltonian mass-gap witness hardening
   -> positive exact normalized mass-gap theorem
   -> release adoption
@@ -52,9 +57,10 @@ The route remains an internal normalized Lean theorem surface with external-audi
 | 8 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Physical interpretation boundary. |
 | 9 | `docs/infinite_dimensional_yang_mills_target_layer.md` | Target-obligation layer ledger. |
 | 10 | `docs/infinite_dimensional_residual_filling_bridge.md` | Review-level residual filling ledger. |
-| 11 | `docs/hard_physical_residual_hardening_map.md` | Four-lane hard residual hardening ledger. |
-| 12 | `docs/continuum_hamiltonian_mass_gap_witness_hardening.md` | Continuum-Hamiltonian witness-hardening ledger. |
-| 13 | `docs/external_audit_readiness_gate.md` | Final external audit readiness gate ledger. |
+| 11 | `docs/hard_physical_residual_hardening_map.md` | Hard residual hardening ledger. |
+| 12 | `docs/complete_infinite_dimensional_hilbert_construction.md` | Active complete Hilbert construction ledger. |
+| 13 | `docs/continuum_hamiltonian_mass_gap_witness_hardening.md` | Continuum-Hamiltonian witness-hardening ledger. |
+| 14 | `docs/external_audit_readiness_gate.md` | Final external audit readiness gate ledger. |
 
 ## One-command replay
 
@@ -74,7 +80,7 @@ Expected stages:
 [check] audit infinite-dimensional Yang-Mills target layer
 [check] audit infinite-dimensional residual filling bridge
 [check] audit hard physical residual hardening map
-[check] audit Hilbert construction lane hardening
+[check] audit complete infinite-dimensional Hilbert construction
 [check] audit self-adjoint HPhys lane hardening
 [check] audit continuum Yang-Mills lane hardening
 [check] audit plaquette spectral weight lane hardening
@@ -102,7 +108,7 @@ python3 scripts/audit_bridge_coherence.py
 python3 scripts/audit_infinite_dimensional_target_layer.py
 python3 scripts/audit_infinite_dimensional_residual_filling.py
 python3 scripts/audit_hard_physical_residual_hardening_map.py
-python3 scripts/audit_hilbert_construction_lane_hardening.py
+python3 scripts/audit_complete_infinite_dimensional_hilbert_construction.py
 python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
 python3 scripts/audit_continuum_yang_mills_lane_hardening.py
 python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
@@ -130,7 +136,8 @@ lake build
 | `scripts/audit_bridge_coherence.py` | Checks analytic / physical bridge anchors and boundary markers. |
 | `scripts/audit_infinite_dimensional_target_layer.py` | Checks the infinite-dimensional Yang--Mills target-obligation layer. |
 | `scripts/audit_infinite_dimensional_residual_filling.py` | Checks review-level residual filling bridge. |
-| `scripts/audit_hard_physical_residual_hardening_map.py` | Checks four visible hard residual hardening lanes. |
+| `scripts/audit_hard_physical_residual_hardening_map.py` | Checks visible hard residual hardening lanes. |
+| `scripts/audit_complete_infinite_dimensional_hilbert_construction.py` | Checks the complete infinite-dimensional Hilbert construction lane. |
 | `scripts/audit_continuum_hamiltonian_mass_gap_witness_hardening.py` | Checks continuum-Hamiltonian witness hardening anchors. |
 | `scripts/audit_external_audit_readiness_gate.py` | Checks external audit readiness gate anchors. |
 | `scripts/audit_external_audit_readiness_gate_field_classification.py` | Checks internal/external witness-field classification. |
@@ -150,6 +157,8 @@ The analytic root imports the external audit readiness gate, which reaches the c
 ## Continuum-Hamiltonian release modules
 
 ```text
+MGAP4D/MathlibAnalytic/CompleteInfiniteDimensionalHilbertConstruction.lean
+MGAP4D/MathlibAnalytic/HilbertToPhysicalUnboundedOperatorBridge.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessHardening.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapReleaseAdoption.lean
@@ -162,13 +171,11 @@ MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 
 ```text
 Pull request: #44
-Head commit: a032caed7121bc14df3bf286e723cd90a76fd2cb
-CI merge ref: 8a4761d7ff9ea9b1f3b9c2c0b2a3ca338dacb178
+Head commit: 511f63477081bec49a5291cb77a2769b3d154c01
 Workflow: Full Local Check CI
-Workflow run ID: 25988968639
-Job ID: 76391524347
+Workflow run ID: 25991097002
 Result: success
-Observed timestamp: 2026-05-17T11:05:17Z
+Observed timestamp: 2026-05-17
 ```
 
 Checkpoint replay summary:
@@ -179,10 +186,10 @@ sorry/admit/axiom/constant: 0/0/0/0
 Major theorem specs audited: 12
 Bridge files audited: 8
 Ordered import edges audited: 5
-Continuum Hamiltonian exact mass-gap derivation build: 8368 jobs, success
-Continuum Hamiltonian release-chain addendum build: 8369 jobs, success
-External audit readiness gate build: 8376 jobs, success
-Final lake build: 0 jobs, success
+Continuum Hamiltonian exact mass-gap derivation build: success
+Continuum Hamiltonian release-chain addendum build: success
+External audit readiness gate build: success
+Final lake build: success
 ```
 
 ## Physical normalization boundary
@@ -212,6 +219,7 @@ the Lean build passes
 the target layer is present
 the residual filling bridge is present
 the hard residual lanes are visible
+the complete infinite-dimensional Hilbert construction is present
 the continuum-Hamiltonian theorem and complete release surfaces build
 the external audit readiness gate builds
 public boundary markers are visible
@@ -238,11 +246,6 @@ Lean version:
 Lake version:
 scripts/check.sh result:
 lake build result:
-Continuum Hamiltonian theorem surface result:
-Continuum Hamiltonian complete derivation result:
-External audit readiness gate result:
-Physical boundary interpretation preserved: yes/no
-Normalization boundary preserved: yes/no
-External consensus claim avoided: yes/no
-Reviewer notes:
+Boundary notes:
+Reviewer:
 ```
