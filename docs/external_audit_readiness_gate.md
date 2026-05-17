@@ -46,6 +46,26 @@ external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass
 external_audit_readiness_complete_spectral_mass_gap_boundary_held
 ```
 
+PVM / observable spectral atom public audit projection anchors:
+
+```text
+externalAuditReadinessPVMSpectralAtomPublicAuditProjection
+external_audit_readiness_pvm_spectral_atom_public_audit_projection
+external_audit_readiness_pvm_spectral_atom_value_eq_3320
+external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass
+external_audit_readiness_pvm_spectral_atom_boundary_held
+```
+
+PVM / observable spectral atom public audit meaning:
+
+```text
+observable spectral atom = 33/20
+PVM spectral mass > 0
+PVM spectral mass != 0
+publicBoundaryHeld
+finalReleaseHeld
+```
+
 Spectral route meaning:
 
 ```text
@@ -53,6 +73,7 @@ Yang--Mills continuum Hamiltonian
   -> spectral infimum = 33/20
   -> spectral attainment = 33/20
   -> observable spectral atom = 33/20 with positive nonzero spectral mass
+  -> PVM / observable spectral atom public audit projection
   -> exactGapValueReal = 33/20
 ```
 
@@ -61,5 +82,6 @@ Meaning:
 ```text
 repository-internal residual closure is external-audit ready;
 complete continuum-Hamiltonian and spectral-derivation routes are visible for replay;
+PVM / observable spectral atom positive mass is visible as a public-audit projection;
 external consensus and public final release remain separate boundaries.
 ```

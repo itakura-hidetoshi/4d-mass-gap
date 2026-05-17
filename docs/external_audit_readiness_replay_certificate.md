@@ -167,6 +167,28 @@ external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass
 external_audit_readiness_complete_spectral_mass_gap_boundary_held
 ```
 
+## PVM / observable spectral atom replay receipt
+
+The PVM / observable spectral atom route is now exposed as a public-audit projection:
+
+```text
+externalAuditReadinessPVMSpectralAtomPublicAuditProjection
+external_audit_readiness_pvm_spectral_atom_public_audit_projection
+external_audit_readiness_pvm_spectral_atom_value_eq_3320
+external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass
+external_audit_readiness_pvm_spectral_atom_boundary_held
+```
+
+The PVM / observable spectral atom replay receipt records:
+
+```text
+observable spectral atom = 33/20
+PVM spectral mass > 0
+PVM spectral mass != 0
+publicBoundaryHeld
+finalReleaseHeld
+```
+
 The replay meaning is:
 
 ```text
@@ -178,6 +200,7 @@ Yang--Mills continuum Hamiltonian
   -> spectral attainment = 33/20
   -> observable spectral atom = 33/20
   -> positive nonzero spectral mass
+  -> PVM / observable spectral atom public audit projection
   -> exactGapValueReal = 33/20
   -> external-audit-visible spectral addendum
 ```
@@ -199,12 +222,13 @@ The current spectral replay addendum was established after the following PR chai
 PR #49: Derive 33/20 from Yang-Mills Hamiltonian spectral analysis
 PR #50: Adopt spectral 33/20 route in complete Hamiltonian release surface
 PR #51: Expose spectral 33/20 route at external audit gate
+PR #52: Add spectral 33/20 replay certificate route
 ```
 
 Latest spectral external-audit merge commit:
 
 ```text
-ef75fa9795f5cfaa20733bc5cfcb62f37cfb80b7
+acfeb8b26a184ee84287c2f5ad5a3139ed74c9e8
 ```
 
 ## Boundary interpretation
@@ -218,6 +242,7 @@ external-audit-readiness gate built successfully
 forbidden Lean tokens were absent in the scanned Lean files
 exact normalized value surface was preserved through the gate
 spectral infimum / attainment / observable-atom replay route is externally visible
+PVM / observable spectral atom positive mass is public-audit-visible
 ```
 
 This certificate does not mean:
@@ -247,6 +272,8 @@ A reviewer can independently replay the current route by checking:
 10. scripts/audit_external_audit_readiness_replay_certificate.py passes.
 11. lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320 completes.
 12. lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption completes.
+13. external_audit_readiness_pvm_spectral_atom_public_audit_projection is present.
+14. external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass is present.
 ```
 
 ## Status
@@ -259,4 +286,5 @@ External consensus claimed: no
 External audit completed: no
 Final theorem release opened: no
 Spectral replay addendum visible: yes
+PVM spectral atom public audit projection visible: yes
 ```
