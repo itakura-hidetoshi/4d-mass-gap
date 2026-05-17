@@ -58,5 +58,8 @@ lake update
 echo "[check] build external audit readiness gate"
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 
+echo "[check] build external audit theorem witness index"
+lake build MGAP4D.MathlibAnalytic.ExternalAuditTheoremWitnessIndex
+
 echo "[check] lake build"
 lake build
