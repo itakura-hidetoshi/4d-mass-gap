@@ -189,40 +189,26 @@ def plaquetteSpectralWeightLaneHardeningData : PlaquetteSpectralWeightLaneHarden
     exactBodyWeightClosureHardened := exactGapTheoremBodyClosure.ready
     concretePlaquetteBoundaryVisible :=
       compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
-        compactPlaquetteConstructionTheoremReviewSurface
     concreteOperatorMeasureBoundaryVisible :=
       operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
-        operatorMeasureCompatibilityTheoremReviewSurface
     hardPhysicalBoundaryVisible :=
-      compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
-        compactPlaquetteConstructionTheoremReviewSurface ∧
+      compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen ∧
       operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
-        operatorMeasureCompatibilityTheoremReviewSurface
     exactValuePreserved := exactGapValueReal_eq
     reviewLevelOnly :=
-      observableAtomTheoremTheoremReviewSurface.concretePlaquetteConstructionStillOpen
-        observableAtomTheoremTheoremReviewSurface ∧
-      observableAtomTheoremTheoremReviewSurface.concreteOperatorMeasureCompatibilityStillOpen
-        observableAtomTheoremTheoremReviewSurface ∧
-      compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
-        compactPlaquetteConstructionTheoremReviewSurface ∧
+      observableAtomTheoremTheoremReviewSurface.concretePlaquetteConstructionStillOpen ∧
+      observableAtomTheoremTheoremReviewSurface.concreteOperatorMeasureCompatibilityStillOpen ∧
+      compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen ∧
       operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
-        operatorMeasureCompatibilityTheoremReviewSurface
     publicBoundaryHeld :=
-      observableAtomTheoremTheoremReviewSurface.publicBoundaryHeld
-        observableAtomTheoremTheoremReviewSurface ∧
-      compactPlaquetteConstructionTheoremReviewSurface.publicBoundaryHeld
-        compactPlaquetteConstructionTheoremReviewSurface ∧
-      operatorMeasureCompatibilityTheoremReviewSurface.publicBoundaryHeld
-        operatorMeasureCompatibilityTheoremReviewSurface ∧
+      observableAtomTheoremTheoremReviewSurface.publicBoundaryHeld ∧
+      compactPlaquetteConstructionTheoremReviewSurface.publicBoundaryHeld ∧
+      operatorMeasureCompatibilityTheoremReviewSurface.publicBoundaryHeld ∧
       exactGapTheoremBodyClosure.publicBoundaryHeld
     finalReleaseHeld :=
-      observableAtomTheoremTheoremReviewSurface.finalReleaseHeld
-        observableAtomTheoremTheoremReviewSurface ∧
-      compactPlaquetteConstructionTheoremReviewSurface.finalReleaseHeld
-        compactPlaquetteConstructionTheoremReviewSurface ∧
-      operatorMeasureCompatibilityTheoremReviewSurface.finalReleaseHeld
-        operatorMeasureCompatibilityTheoremReviewSurface ∧
+      observableAtomTheoremTheoremReviewSurface.finalReleaseHeld ∧
+      compactPlaquetteConstructionTheoremReviewSurface.finalReleaseHeld ∧
+      operatorMeasureCompatibilityTheoremReviewSurface.finalReleaseHeld ∧
       exactGapTheoremBodyClosure.finalReleaseHeld }
 
 /-- The installed plaquette spectral-weight hardening lane is ready. -/
