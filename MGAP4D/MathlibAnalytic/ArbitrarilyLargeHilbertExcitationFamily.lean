@@ -97,28 +97,23 @@ noncomputable def prototypeArbitrarilyLargeHilbertExcitationFamilyData :
     arbitrarilyLargeFamilyVisible :=
       infiniteDimensionalHilbertNecessityFromPNPReviewSurface.ready ∧
       infiniteDimensionalHilbertNecessityFromPNPReviewSurface.infiniteDimensionalNecessityEstablished
-        infiniteDimensionalHilbertNecessityFromPNPReviewSurface
     arbitrarilyLargeFamilyVisible_proof :=
       And.intro infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready
         infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready.2.2.2.2.2.2.1
     boundedFiniteCollapseBlocked :=
-      infiniteDimensionalHilbertNecessityFromPNPReviewSurface.finiteCertificateCollapseBlocked
-        infiniteDimensionalHilbertNecessityFromPNPReviewSurface
+      prototypeInfiniteDimensionalHilbertNecessityFromPNPData.finiteCertificateCollapseBlocked
     boundedFiniteCollapseBlocked_proof :=
       infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready.2.2.2.1
     fullLinearIndependenceStillOpen :=
       infiniteDimensionalHilbertNecessityFromPNPReviewSurface.fullInfiniteDimensionalConstructionStillOpen
-        infiniteDimensionalHilbertNecessityFromPNPReviewSurface
     fullLinearIndependenceStillOpen_proof :=
       infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready.2.2.2.2.2.2.2.1
     finalReleaseHeld :=
       infiniteDimensionalHilbertNecessityFromPNPReviewSurface.finalReleaseHeld
-        infiniteDimensionalHilbertNecessityFromPNPReviewSurface
     finalReleaseHeld_proof :=
       infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready.2.2.2.2.2.2.2.2.1
     publicBoundaryHeld :=
       infiniteDimensionalHilbertNecessityFromPNPReviewSurface.publicBoundaryHeld
-        infiniteDimensionalHilbertNecessityFromPNPReviewSurface
     publicBoundaryHeld_proof :=
       infinite_dimensional_hilbert_necessity_from_pnp_review_surface_ready.2.2.2.2.2.2.2.2.2 }
 
