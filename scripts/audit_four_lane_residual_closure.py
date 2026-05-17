@@ -18,11 +18,12 @@ REQUIRED_TARGET_ANCHORS = (
     "FourLaneResidualClosureData.ready",
     "fourLaneResidualClosureData",
     "four_lane_residual_closure_ready",
-    "hilbertLaneReady",
+    "completeHilbertLaneReady",
+    "completeInfiniteDimensionalHilbertConstructionLaneData.ready",
     "selfAdjointLaneReady",
     "continuumYMLaneReady",
     "plaquetteWeightLaneReady",
-    "hilbertLaneClosed",
+    "completeHilbertLaneClosed",
     "selfAdjointLaneClosed",
     "continuumYMLaneClosed",
     "plaquetteWeightLaneClosed",
@@ -34,7 +35,7 @@ REQUIRED_TARGET_ANCHORS = (
 )
 
 REQUIRED_THEOREM_ANCHORS = (
-    "four_lane_closure_hilbert_lane_closed",
+    "four_lane_closure_complete_hilbert_lane_closed",
     "four_lane_closure_self_adjoint_lane_closed",
     "four_lane_closure_continuum_ym_lane_closed",
     "four_lane_closure_plaquette_weight_lane_closed",
@@ -52,11 +53,23 @@ REQUIRED_ROOT_ANCHORS = (
 
 REQUIRED_DOC_ANCHORS = (
     "Four-Lane Residual Closure",
+    "completeHilbertLaneReady",
+    "completeHilbertLaneClosed",
+    "completeInfiniteDimensionalHilbertConstructionLaneData.ready",
     "allFourLanesClosed",
     "noReviewLevelResidualLeft",
     "externalReviewBoundaryVisible",
     "publicBoundaryHeld",
     "finalReleaseHeld",
+)
+
+FORBIDDEN_STALE_ANCHORS = (
+    "HilbertConstructionLaneHardening",
+    "hilbertConstructionLaneHardeningData",
+    "hilbert_construction_lane_hardening_ready",
+    "hilbertLaneReady",
+    "hilbertLaneClosed",
+    "four_lane_closure_hilbert_lane_closed",
 )
 
 
@@ -92,11 +105,22 @@ def cleaned_lean_source(path: Path) -> str:
     return STRING_RE.sub('""', strip_lean_comments(path.read_text(encoding="utf-8")))
 
 
+def source_for(path: Path, *, clean_lean: bool) -> str:
+    return cleaned_lean_source(path) if clean_lean else path.read_text(encoding="utf-8")
+
+
 def require(path: Path, anchors: tuple[str, ...], label: str, *, clean_lean: bool) -> list[str]:
     if not path.exists():
         return [f"missing {label} file: {path}"]
-    source = cleaned_lean_source(path) if clean_lean else path.read_text(encoding="utf-8")
+    source = source_for(path, clean_lean=clean_lean)
     return [f"missing {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor not in source]
+
+
+def forbid(path: Path, anchors: tuple[str, ...], label: str, *, clean_lean: bool) -> list[str]:
+    if not path.exists():
+        return []
+    source = source_for(path, clean_lean=clean_lean)
+    return [f"forbidden stale {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor in source]
 
 
 def audit_forbidden_tokens(path: Path) -> list[str]:
@@ -117,12 +141,14 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "four-lane closure theorem", clean_lean=True))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_ANCHORS, "root import", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "four-lane closure documentation", clean_lean=False))
+    failures.extend(forbid(TARGET_PATH, FORBIDDEN_STALE_ANCHORS, "old Hilbert lane", clean_lean=True))
 
     print("Four-lane residual closure audit")
     print(f"Four-lane closure anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"Four-lane closure theorem anchors audited: {len(REQUIRED_THEOREM_ANCHORS)}")
     print("Root import audited: MGAP4D/MathlibAnalytic.lean")
     print("Documentation audited: docs/four_lane_residual_closure.md")
+    print("Forbidden stale Hilbert lane anchors audited")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
 
     if failures:
