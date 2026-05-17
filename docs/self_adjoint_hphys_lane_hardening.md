@@ -12,6 +12,15 @@ Audit script:
 scripts/audit_self_adjoint_hphys_lane_hardening.py
 ```
 
+Upstream Hilbert construction anchor:
+
+```text
+completeHilbertConstructionLaneReady
+completeInfiniteDimensionalHilbertConstructionLaneData.ready
+```
+
+The self-adjoint HPhys lane now depends on the renamed complete infinite-dimensional Hilbert construction lane, not on the former hardening-oriented Hilbert lane name.
+
 Hardened surfaces:
 
 ```text
