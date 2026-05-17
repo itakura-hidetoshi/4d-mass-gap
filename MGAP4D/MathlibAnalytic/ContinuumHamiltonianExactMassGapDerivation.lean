@@ -23,8 +23,8 @@ def physicalContinuumHamiltonianToExactPositiveMassGap : Prop :=
   continuumHamiltonianMassGapWitnessData.hphysFromContinuumYMReady ∧
   continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
   continuumHamiltonianMassGapWitnessData.normalizationToExactGapReady ∧
-  continuumHamiltonianMassGapWitnessData.positiveGapWitness ∧
-  continuumHamiltonianMassGapWitnessData.exactGapValuePreserved ∧
+  0 < exactGapValueReal ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
   continuumHamiltonianMassGapWitnessData.compactCenteredPlaquetteWeightReady ∧
   continuumHamiltonianMassGapWitnessData.spectralMassObservableReady ∧
   continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
