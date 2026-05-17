@@ -114,14 +114,17 @@ physical unbounded-operator skeleton. -/
 def hilbertToPhysicalUnboundedOperatorBridgeData :
     HilbertToPhysicalUnboundedOperatorBridgeData :=
   { hilbertLaneReady := hilbert_construction_lane_hardening_ready
-    hilbertInstanceHardened := hilbertConstructionLaneHardeningData.hilbertInstanceHardened
+    hilbertInstanceHardened :=
+      hilbert_construction_hilbert_instance_hardened
+        hilbertConstructionLaneHardeningData hilbert_construction_lane_hardening_ready
     exactValuePreserved := hilbertConstructionLaneHardeningData.exactValuePreserved
     physicalOperatorReady := physical_unbounded_operator_skeleton_review_surface_ready
-    domainPreserved := physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved
-    symmetricOnDomain := physicalUnboundedOperatorSkeletonReviewSurface.symmetricOnDomain
-    selfAdjointCertificate := physicalUnboundedOperatorSkeletonReviewSurface.selfAdjointCertificate
-    rayleighLowerBound := physicalUnboundedOperatorSkeletonReviewSurface.rayleighLowerBound
-    distinguishedAttainsExact := physicalUnboundedOperatorSkeletonReviewSurface.distinguishedAttainsExact
+    domainPreserved := physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved_proof
+    symmetricOnDomain := physicalUnboundedOperatorSkeletonReviewSurface.symmetricOnDomain_proof
+    selfAdjointCertificate := physicalUnboundedOperatorSkeletonReviewSurface.selfAdjointCertificate_proof
+    rayleighLowerBound := physicalUnboundedOperatorSkeletonReviewSurface.rayleighLowerBound_proof
+    distinguishedAttainsExact :=
+      physicalUnboundedOperatorSkeletonReviewSurface.distinguishedAttainsExact_proof
     bridgeEstablished :=
       hilbertConstructionLaneHardeningData.ready ∧
       physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
@@ -131,11 +134,11 @@ def hilbertToPhysicalUnboundedOperatorBridgeData :
         And.intro physical_unbounded_operator_skeleton_review_surface_ready
           hilbertConstructionLaneHardeningData.exactValuePreserved
     concreteYangMillsHamiltonianStillOpen :=
-      physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen
+      physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen_proof
     spectralRealizationStillOpen :=
-      physicalUnboundedOperatorSkeletonReviewSurface.spectralRealizationStillOpen
-    publicBoundaryHeld := physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld
-    finalReleaseHeld := physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld }
+      physicalUnboundedOperatorSkeletonReviewSurface.spectralRealizationStillOpen_proof
+    publicBoundaryHeld := physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof
+    finalReleaseHeld := physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld_proof }
 
 /-- The installed Hilbert-to-physical unbounded-operator bridge is ready. -/
 theorem hilbert_to_physical_unbounded_operator_bridge_ready :
@@ -144,16 +147,16 @@ theorem hilbert_to_physical_unbounded_operator_bridge_ready :
     And.intro hilbertToPhysicalUnboundedOperatorBridgeData.hilbertInstanceHardened <|
     And.intro hilbertToPhysicalUnboundedOperatorBridgeData.exactValuePreserved <|
     And.intro hilbertToPhysicalUnboundedOperatorBridgeData.physicalOperatorReady <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.symmetricOnDomain_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.selfAdjointCertificate_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.rayleighLowerBound_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.distinguishedAttainsExact_proof <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.domainPreserved <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.symmetricOnDomain <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.selfAdjointCertificate <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.rayleighLowerBound <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.distinguishedAttainsExact <|
     And.intro hilbertToPhysicalUnboundedOperatorBridgeData.bridgeEstablished_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.spectralRealizationStillOpen_proof <|
-    And.intro physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof
-      physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld_proof
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.concreteYangMillsHamiltonianStillOpen <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.spectralRealizationStillOpen <|
+    And.intro hilbertToPhysicalUnboundedOperatorBridgeData.publicBoundaryHeld
+      hilbertToPhysicalUnboundedOperatorBridgeData.finalReleaseHeld
 
 end MathlibAnalytic
 end MGAP4D
