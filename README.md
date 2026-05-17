@@ -2,7 +2,7 @@
 
 MGAP4D is a Lean 4 repository for developing, checking, and auditing the proof architecture of a normalized 4D mass gap theorem.
 
-The repository is GitHub-native: Lean source, CI, audit scripts, replay guides, theorem-surface maps, bridge audits, target-obligation layers, continuum-Hamiltonian release surfaces, and public-boundary ledgers live directly in this repository.
+The repository is GitHub-native: Lean source, CI, audit scripts, replay guides, theorem-surface maps, bridge audits, target-obligation layers, physical-Hamiltonian normalization surfaces, continuum-Hamiltonian release surfaces, and public-boundary ledgers live directly in this repository.
 
 ## Repository role
 
@@ -26,12 +26,15 @@ exactGapValueReal = 33 / 20
 
 The repository treats `33/20` as an internal normalized theorem-body value, not as a packaging artifact, CI artifact, manifest-only artifact, or prototype-only release wrapper.
 
-The physical Hamiltonian normalization is read through an explicit reference energy scale `E0`:
+The physical Hamiltonian normalization is now recorded at both scalar-gap and operator-scale levels:
 
 ```text
-H_norm = H_phys / E0
+H_norm = E0^{-1} * H_phys
+H_phys = E0 * H_norm
 normalizedGap = physicalGap / E0
 physicalGap = E0 * normalizedGap
+Delta_norm = 33/20
+Delta_phys(E0) = E0 * (33/20)
 ```
 
 In MGAP4D internal normalized units:
@@ -39,17 +42,12 @@ In MGAP4D internal normalized units:
 ```text
 E0 = 1
 normalizedGap = exactGapValueReal = 33/20
-```
-
-For dimensional interpretation:
-
-```text
-physicalGap_dimensional = E0 * (33/20)
+Delta_phys(1) = 33/20
 ```
 
 Thus `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
 
-The repository currently records an internal normalized proof-architecture theorem surface with CI, bridge-audit, target-obligation, residual-hardening, continuum-Hamiltonian theorem/release-adoption, complete-derivation, complete-release-adoption, and external-audit-readiness support.
+The repository currently records an internal normalized proof-architecture theorem surface with CI, bridge-audit, target-obligation, residual-hardening, operator-level Hamiltonian normalization, continuum-Hamiltonian theorem/release-adoption, complete-derivation, complete-release-adoption, and external-audit-readiness support.
 
 It does **not** claim:
 
@@ -99,6 +97,7 @@ Exact normalized value / real positivity
   -> final theorem release skeleton / closure / chain index / bundle manifest
   -> concrete residual closure
   -> physical Hamiltonian normalization bridge
+  -> physical Hamiltonian operator normalization
   -> infinite-dimensional Yang-Mills realization targets
   -> infinite-dimensional residual filling bridge
   -> hard physical residual hardening map
@@ -125,6 +124,7 @@ MGAP4D/MathlibAnalytic/ExactGapReal.lean
 MGAP4D/MathlibAnalytic/ExactGapTheoremBodyClosure.lean
 MGAP4D/MathlibAnalytic/ConcreteResidualClosure.lean
 MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
+MGAP4D/MathlibAnalytic/PhysicalHamiltonianOperatorNormalization.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalResidualFillingBridge.lean
 MGAP4D/MathlibAnalytic/HardPhysicalResidualHardeningMap.lean
@@ -159,6 +159,7 @@ The replay path currently runs:
 [check] audit Lean forbidden tokens
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
+[check] audit physical Hamiltonian operator normalization
 [check] audit infinite-dimensional Yang-Mills target layer
 [check] audit infinite-dimensional residual filling bridge
 [check] audit hard physical residual hardening map
@@ -174,40 +175,30 @@ The replay path currently runs:
 [check] audit external audit readiness replay certificate
 [check] replay summary
 [check] lake update
+[check] build physical Hamiltonian operator normalization
 [check] build continuum Hamiltonian exact mass-gap derivation
 [check] build continuum Hamiltonian release-chain addendum
 [check] build external audit readiness gate
 [check] lake build
 ```
 
-Confirmed complete continuum-Hamiltonian / external-audit-readiness CI checkpoint:
+Confirmed operator-normalization CI checkpoint before merge:
 
 ```text
 Workflow: Full Local Check CI / Run scripts/check.sh
-Workflow run ID: 25991097002
-Head commit: 511f63477081bec49a5291cb77a2769b3d154c01
+Workflow run ID: 25992161524
+Head commit: a212a163fe98067dee2a3704022d1e9271172554
 Result: success
 Observed timestamp: 2026-05-17
-Lean-side warnings in theorem / release / external audit readiness gate build: none observed
 ```
 
-That run confirmed:
+That same head commit had:
 
 ```text
-Lean files scanned: 472
-sorry: 0
-admit: 0
-axiom: 0
-constant: 0
-Major theorem specs audited: 12
-Bridge files audited: 8
-Ordered import edges audited: 5
-External audit readiness gate field-classification audit: passed
-External audit readiness replay certificate audit: passed
-Continuum Hamiltonian exact mass-gap derivation build: success
-Continuum Hamiltonian release-chain addendum build: success
-External audit readiness gate build: success
-Final lake build: success
+Bridge Coherence CI: success
+Lean Direct Elan CI: success
+External Audit Readiness CI: success
+Full Local Check CI: success
 ```
 
 Current CI and release-surface ledgers:
@@ -215,6 +206,7 @@ Current CI and release-surface ledgers:
 ```text
 docs/external_audit_readiness_gate_ci.md
 docs/continuum_hamiltonian_complete_release_surface.md
+docs/physical_hamiltonian_operator_normalization.md
 ```
 
 ## External review entry points
@@ -232,6 +224,7 @@ EXTERNAL_REVIEW_CHECKLIST.md
 INDEPENDENT_REPLAY.md
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/physical_hamiltonian_operator_normalization.md
 docs/continuum_hamiltonian_complete_release_surface.md
 docs/infinite_dimensional_yang_mills_target_layer.md
 docs/infinite_dimensional_residual_filling_bridge.md
@@ -256,57 +249,14 @@ A successful replay means:
 ```text
 the repository builds with the pinned Lean toolchain and pinned mathlib version
 the declared audit scripts pass
-the theorem-surface, bridge-surface, target-layer, residual-hardening, continuum-Hamiltonian theorem/release, final readiness-gate, field-classification, and replay-certificate checks pass
+the theorem-surface, bridge-surface, target-layer, residual-hardening, physical-Hamiltonian normalization, continuum-Hamiltonian theorem/release, final readiness-gate, field-classification, and replay-certificate checks pass
 the replay summary is reproducible
 ```
 
-It does not mean:
+A successful replay does not by itself mean:
 
 ```text
-external consensus has been obtained
-all analytic residuals have been accepted by the mathematical community
-CI output alone is a substitute for proof review
-the external-audit-readiness gate is a substitute for independent replay or external audit
+external mathematical consensus
+independent peer-review acceptance
+public final theorem acceptance
 ```
-
-## Build
-
-```bash
-lake update
-lake build
-```
-
-or full local replay:
-
-```bash
-bash scripts/check.sh
-```
-
-## Repository layout
-
-```text
-MGAP4D/                  Active Lean source tree
-MGAP4D.lean              Top-level Lean import root
-docs/                    GitHub-native documentation and checkpoint ledger
-maps/                    Lightweight source and dependency maps
-scripts/                 Local and CI audit scripts
-.github/workflows/       GitHub Actions CI
-```
-
-## Citation and Zenodo record
-
-A DOI-backed technical report for the Phase 3 spectral gap formalization checkpoint is archived on Zenodo:
-
-```text
-Hidetoshi Itakura, A Lean 4 Proof Architecture for a Normalized 4D Mass Gap Theorem: Phase 3 Spectral Gap Formalization and External-Audit Boundary, Zenodo, 2026. DOI: 10.5281/zenodo.20181046.
-```
-
-```text
-Zenodo record: 20181046
-DOI: 10.5281/zenodo.20181046
-URL: https://zenodo.org/records/20181046
-Repository citation metadata: CITATION.cff
-Repository receipt: docs/zenodo_record_20181046.md
-```
-
-This Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.

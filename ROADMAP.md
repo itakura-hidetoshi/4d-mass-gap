@@ -27,6 +27,7 @@ Current boundary:
 ```text
 internal normalized theorem-body claim: present
 physical Hamiltonian normalization bridge: present
+physical Hamiltonian operator normalization: present
 concrete residual closure: present
 infinite-dimensional residual filling bridge: present
 complete infinite-dimensional Hilbert construction: present
@@ -45,6 +46,7 @@ internal review residual closure gate: present
 external audit readiness gate: present
 major theorem non-placeholder audit: green
 bridge coherence audit: green
+physical Hamiltonian operator normalization audit: green
 external mathematical consensus: not claimed
 public final theorem claim: review-gated
 ```
@@ -52,11 +54,13 @@ public final theorem claim: review-gated
 The dimensional reading remains scale-dependent:
 
 ```text
-H_norm = H_phys / E0
+H_norm = E0^{-1} * H_phys
+H_phys = E0 * H_norm
 normalizedGap = physicalGap / E0
 physicalGap = E0 * normalizedGap
-internal units: E0 = 1, normalizedGap = 33/20
-dimensional reading: physicalGap_dimensional = E0 * (33/20)
+Delta_norm = 33/20
+Delta_phys(E0) = E0 * (33/20)
+internal units: E0 = 1, Delta_phys(1) = 33/20
 ```
 
 ## Dependency lane status
@@ -172,6 +176,8 @@ operator-measure realization and compatibility
 ## Phase 6: Physical Hamiltonian normalization and exact-value origin
 
 - [x] Add physical Hamiltonian normalization bridge
+- [x] Add physical Hamiltonian operator normalization surface
+- [x] Add physical Hamiltonian operator normalization audit
 - [x] Add exact value theorem-body origin certificate
 - [x] Align README theorem claim and boundary with internal theorem-body status
 - [x] Sync README with current main status
@@ -181,11 +187,15 @@ Normalization invariant:
 
 ```text
 reference energy scale E0 is explicit and positive
+operator-level normalization is explicit: H_norm = E0^{-1} * H_phys
+operator-level reconstruction is explicit: H_phys = E0 * H_norm
 normalizedGap = physicalGap / E0
 physicalGap = E0 * normalizedGap
+Delta_norm = 33/20
+Delta_phys(E0) = E0 * 33/20
 internal normalized units set E0 = 1
 dimensionless exact gap is 33/20
-dimensional physical gap reads as E0 * 33/20
+internal dimensional reading is Delta_phys(1) = 33/20
 ```
 
 Exact-value origin invariant:
@@ -198,6 +208,8 @@ Exact-value origin invariant:
 33/20 is not treated as manifest-only artifact
 observable spectral weight positivity is carried from theorem body
 PVM mass compatibility is carried from theorem body
+operator normalization does not change theorem body
+operator normalization does not change public release boundary
 ```
 
 ## Phase 7: Audit hardening
@@ -207,6 +219,7 @@ PVM mass compatibility is carried from theorem body
 - [x] Add bridge coherence audit script
 - [x] Add dedicated Bridge Coherence CI workflow
 - [x] Wire expanded audit chain into `scripts/check.sh`
+- [x] Add physical Hamiltonian operator normalization audit
 - [x] Add external audit readiness field-classification audit
 - [x] Add external audit readiness replay-certificate audit
 
@@ -218,6 +231,7 @@ major theorem surfaces are not trivial True-only statements
 33/20 theorem-body origin is checked as a non-placeholder statement
 operator-measure/PVM compatibility is checked as a non-placeholder statement
 Hamiltonian normalization bridge is checked as a non-placeholder statement
+Hamiltonian operator normalization is checked as a non-placeholder statement
 complete Hilbert -> physical unbounded operator -> H_phys -> Yang-Mills -> spectral/PVM -> continuum route is mechanically audited
 exact value preservation anchors are mechanically audited
 public boundary markers are mechanically audited
@@ -249,7 +263,20 @@ external audit readiness is mechanically gated
 - [x] Sync README, ROADMAP, independent replay, external audit packet, external review checklist, theorem index, and source-tree receipt to complete Hilbert route
 - [ ] Add version tags only after fresh source-tree review and CI green confirmation for the exact target commit
 
-Current external-audit-readiness checkpoint:
+Current operator-normalization checkpoint:
+
+```text
+Workflow: Full Local Check CI / Run scripts/check.sh
+Run ID: 25992161524
+Head commit: a212a163fe98067dee2a3704022d1e9271172554
+Result: success
+Bridge Coherence CI: success
+Lean Direct Elan CI: success
+External Audit Readiness CI: success
+Full Local Check CI: success
+```
+
+Current complete-Hilbert / external-audit-readiness checkpoint:
 
 ```text
 Workflow: Full Local Check CI / Run scripts/check.sh
@@ -270,9 +297,9 @@ Final lake build: success
 ## Current priority
 
 ```text
-1. Wait for fresh CI on the latest documentation head.
-2. Confirm scripts/check.sh is green on that exact head or merge ref.
-3. Confirm external audit readiness CI is green on that exact head or merge ref.
+1. Confirm source-tree docs are synchronized after operator-level normalization.
+2. Confirm scripts/check.sh is green on the documentation-sync head.
+3. Confirm external audit readiness CI is green on the documentation-sync head.
 4. Record the exact latest head / merge ref in the CI ledger if it differs from the previous green checkpoint.
 5. Add external audit notes without changing active proof semantics.
 6. Add version tags only after source-tree review and CI green confirmation for the exact target commit.
@@ -284,6 +311,10 @@ Current branch invariant:
 Dimensionless normalized exact value surface: 33/20
 33/20 theorem-body origin: recorded
 physical dimensional reading: requires E0
+operator-level Hamiltonian normalization: H_norm = E0^{-1} * H_phys
+operator-level Hamiltonian reconstruction: H_phys = E0 * H_norm
+Delta_phys(E0) = E0 * 33/20
+internal units: E0 = 1, Delta_phys(1) = 33/20
 concrete Hilbert / H_phys / PVM / plaquette / operator-measure residuals: internally closed
 infinite-dimensional target and residual-filling surfaces: recorded
 complete infinite-dimensional Hilbert construction: recorded
