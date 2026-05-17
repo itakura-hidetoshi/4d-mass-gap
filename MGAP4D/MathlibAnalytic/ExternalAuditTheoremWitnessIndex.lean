@@ -43,7 +43,7 @@ structure ExternalAuditTheoremWitnessIndexData where
 /-- Ready predicate for the external-audit theorem witness index. -/
 def ExternalAuditTheoremWitnessIndexData.ready
     (D : ExternalAuditTheoremWitnessIndexData) : Prop :=
-  externalAuditReadinessGateData.ready externalAuditReadinessGateData ∧
+  externalAuditReadinessGateData.ready ∧
   (finalTheoremReleaseBundleManifestReviewSurface.ready ∧
       continuumHamiltonianMassGapWitnessData.ready ∧
       0 < exactGapValueReal ∧
