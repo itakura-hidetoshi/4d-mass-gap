@@ -81,14 +81,20 @@ def prototypeHilbertInnerProductSkeletonData : HilbertInnerProductSkeletonData.{
     inner_nonneg := by intro x; norm_num
     inner_zero_left := by intro x; rfl
     norm_sq_compat := by intro x; norm_num
-    innerProductSkeletonVisible := True
-    innerProductSkeletonVisible_proof := True.intro
-    hilbertSpaceInstanceStillOpen := True
-    hilbertSpaceInstanceStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    innerProductSkeletonVisible :=
+      hilbertCompleteNormedSpaceSkeletonReviewSurface.ready ∧
+      hilbertCompleteNormedSpaceSkeletonReviewSurface.completeNormedSpaceSkeletonEstablished
+    innerProductSkeletonVisible_proof :=
+      And.intro hilbert_complete_normed_space_skeleton_review_surface_ready
+        hilbertCompleteNormedSpaceSkeletonReviewSurface.completeNormedSpaceSkeletonEstablished_proof
+    hilbertSpaceInstanceStillOpen :=
+      hilbertCompleteNormedSpaceSkeletonReviewSurface.hilbertSpaceInstanceStillOpen
+    hilbertSpaceInstanceStillOpen_proof :=
+      hilbertCompleteNormedSpaceSkeletonReviewSurface.hilbertSpaceInstanceStillOpen_proof
+    finalReleaseHeld := hilbertCompleteNormedSpaceSkeletonReviewSurface.finalReleaseHeld
+    finalReleaseHeld_proof := hilbertCompleteNormedSpaceSkeletonReviewSurface.finalReleaseHeld_proof
+    publicBoundaryHeld := hilbertCompleteNormedSpaceSkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := hilbertCompleteNormedSpaceSkeletonReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_hilbert_inner_product_skeleton_ready :
     prototypeHilbertInnerProductSkeletonData.ready := by
@@ -145,14 +151,14 @@ def hilbertInnerProductSkeletonReviewSurface : HilbertInnerProductSkeletonReview
           prototypeHilbertInnerProductSkeletonData.norm x =
           prototypeHilbertInnerProductSkeletonData.inner x x
     normSqCompat_proof := prototypeHilbertInnerProductSkeletonData.norm_sq_compat
-    innerProductSkeletonEstablished := True
-    innerProductSkeletonEstablished_proof := True.intro
-    hilbertSpaceInstanceStillOpen := True
-    hilbertSpaceInstanceStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    innerProductSkeletonEstablished := prototypeHilbertInnerProductSkeletonData.ready
+    innerProductSkeletonEstablished_proof := prototype_hilbert_inner_product_skeleton_ready
+    hilbertSpaceInstanceStillOpen := prototypeHilbertInnerProductSkeletonData.hilbertSpaceInstanceStillOpen
+    hilbertSpaceInstanceStillOpen_proof := prototypeHilbertInnerProductSkeletonData.hilbertSpaceInstanceStillOpen_proof
+    finalReleaseHeld := prototypeHilbertInnerProductSkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := prototypeHilbertInnerProductSkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := prototypeHilbertInnerProductSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeHilbertInnerProductSkeletonData.publicBoundaryHeld_proof }
 
 theorem hilbert_inner_product_skeleton_review_surface_ready :
     hilbertInnerProductSkeletonReviewSurface.ready := by
