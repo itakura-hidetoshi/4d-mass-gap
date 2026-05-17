@@ -30,6 +30,8 @@ REQUIRED_TARGET_ANCHORS = (
     "publicBoundaryHeld",
     "finalReleaseHeld",
     "exactValuePreserved",
+    "externalAuditReadinessCompleteMassGapAddendumReady",
+    "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
 )
 
 REQUIRED_THEOREM_ANCHORS = (
@@ -43,6 +45,24 @@ REQUIRED_THEOREM_ANCHORS = (
     "external_audit_readiness_public_boundary_held",
     "external_audit_readiness_final_release_held",
     "external_audit_readiness_exact_value_preserved",
+    "external_audit_readiness_complete_mass_gap_addendum_ready",
+    "external_audit_readiness_complete_mass_gap_exact_positive",
+    "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
+    "external_audit_readiness_complete_spectral_mass_gap_exact_value",
+    "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
+    "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
+)
+
+REQUIRED_SPECTRAL_ANCHORS = (
+    "continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady",
+    "continuum_hamiltonian_complete_spectral_mass_gap_release_adoption_ready",
+    "continuum_hamiltonian_complete_spectral_release_adoption_exact_mass_gap",
+    "continuum_hamiltonian_complete_spectral_release_adoption_positive_nonzero_mass",
+    "continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved",
+    "yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld",
+    "yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld",
+    "0 < spectralMassRealSurface.mass",
+    "spectralMassRealSurface.mass ≠ 0",
 )
 
 REQUIRED_DOC_ANCHORS = (
@@ -56,6 +76,16 @@ REQUIRED_DOC_ANCHORS = (
     "externalConsensusNotClaimed",
     "publicBoundaryHeld",
     "finalReleaseHeld",
+    "externalAuditReadinessCompleteMassGapAddendumReady",
+    "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
+    "continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady",
+    "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
+    "external_audit_readiness_complete_spectral_mass_gap_exact_value",
+    "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
+    "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
+    "spectral infimum",
+    "spectral attainment",
+    "observable spectral atom",
 )
 
 
@@ -114,11 +144,13 @@ def main() -> None:
     failures.extend(audit_forbidden_tokens(TARGET_PATH))
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "external audit readiness theorem", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_SPECTRAL_ANCHORS, "external audit readiness spectral addendum", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "external audit readiness documentation", clean_lean=False))
 
     print("External audit readiness gate audit")
     print(f"External audit readiness anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"External audit readiness theorem anchors audited: {len(REQUIRED_THEOREM_ANCHORS)}")
+    print(f"External audit spectral addendum anchors audited: {len(REQUIRED_SPECTRAL_ANCHORS)}")
     print("Documentation audited: docs/external_audit_readiness_gate.md")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
 
