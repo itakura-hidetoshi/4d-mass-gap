@@ -120,32 +120,42 @@ theorem yang_mills_hamiltonian_spectral_derivation_3320_ready :
 theorem yang_mills_hamiltonian_spectral_infimum_eq_3320 :
     yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
       (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, hInfimum, _⟩
+  exact hInfimum
 
 /-- The Yang--Mills Hamiltonian spectral attainment side gives `33/20`. -/
 theorem yang_mills_hamiltonian_spectral_attainment_eq_3320 :
     yangMillsHamiltonianSpectralDerivation3320.attainedSpectralValue =
       (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, hAttainment, _⟩
+  exact hAttainment
 
 /-- The observable spectral atom is located at `33/20`. -/
 theorem yang_mills_hamiltonian_observable_atom_eq_3320 :
     yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
       (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, hAtom, _⟩
+  exact hAtom
 
 /-- The Yang--Mills Hamiltonian spectral analysis derives the normalized
 Hamiltonian spectral value `33/20`. -/
 theorem yang_mills_hamiltonian_spectral_analysis_derives_3320 :
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
       (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, hDerived, _⟩
+  exact hDerived
 
 /-- The exact normalized gap is identified with the spectral-analysis value. -/
 theorem yang_mills_hamiltonian_exact_gap_eq_spectral_value :
     exactGapValueReal =
       yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, hExact, _⟩
+  exact hExact
 
 /-- The full spectral derivation gives the theorem-body exact value `33/20`. -/
 theorem yang_mills_hamiltonian_spectral_derivation_exact_gap_value :
@@ -156,22 +166,30 @@ theorem yang_mills_hamiltonian_spectral_derivation_exact_gap_value :
 /-- The observable spectral mass used in the derivation is strictly positive. -/
 theorem yang_mills_hamiltonian_spectral_derivation_positive_mass :
     0 < spectralMassRealSurface.mass := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, hPositive, _⟩
+  exact hPositive
 
 /-- The observable spectral mass used in the derivation is nonzero. -/
 theorem yang_mills_hamiltonian_spectral_derivation_nonzero_mass :
     spectralMassRealSurface.mass ≠ 0 := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, hNonzero, _⟩
+  exact hNonzero
 
 /-- The spectral derivation preserves the public-boundary marker. -/
 theorem yang_mills_hamiltonian_spectral_derivation_public_boundary_held :
     yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPublic, _⟩
+  exact hPublic
 
 /-- The spectral derivation preserves the final-release boundary marker. -/
 theorem yang_mills_hamiltonian_spectral_derivation_final_release_held :
     yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
-  exact yang_mills_hamiltonian_spectral_derivation_3320_ready.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hFinal⟩
+  exact hFinal
 
 end MathlibAnalytic
 end MGAP4D
