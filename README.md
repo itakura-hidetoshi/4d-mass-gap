@@ -2,7 +2,7 @@
 
 MGAP4D is a Lean 4 repository for developing, checking, and auditing the proof architecture of a normalized 4D mass gap theorem.
 
-The repository is GitHub-native: Lean source, CI, audit scripts, replay guides, theorem-surface maps, bridge audits, target-obligation layers, and public-boundary ledgers live directly in this repository.
+The repository is GitHub-native: Lean source, CI, audit scripts, replay guides, theorem-surface maps, bridge audits, target-obligation layers, continuum-Hamiltonian release surfaces, and public-boundary ledgers live directly in this repository.
 
 ## Repository role
 
@@ -49,7 +49,7 @@ physicalGap_dimensional = E0 * (33/20)
 
 Thus `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical gap requires an external reference scale `E0`.
 
-The repository currently claims an internal normalized proof-architecture theorem-body surface with CI, bridge-audit, target-obligation, residual-hardening, and external-audit-readiness support.
+The repository currently records an internal normalized proof-architecture theorem surface with CI, bridge-audit, target-obligation, residual-hardening, continuum-Hamiltonian theorem/release-adoption, complete-derivation, complete-release-adoption, and external-audit-readiness support.
 
 It does **not** claim:
 
@@ -103,9 +103,16 @@ Exact normalized value / real positivity
   -> infinite-dimensional residual filling bridge
   -> hard physical residual hardening map
   -> Hilbert construction lane hardening
+  -> Hilbert-to-physical unbounded-operator bridge
+  -> self-adjoint H_phys bridge adoption
   -> self-adjoint H_phys lane hardening
   -> continuum Yang-Mills lane hardening
   -> plaquette spectral weight lane hardening
+  -> continuum Hamiltonian mass-gap witness hardening
+  -> continuum Hamiltonian mass-gap theorem
+  -> continuum Hamiltonian mass-gap release adoption
+  -> continuum Hamiltonian complete mass-gap derivation
+  -> continuum Hamiltonian complete mass-gap release adoption
   -> four-lane residual closure
   -> internal review residual closure gate
   -> external audit readiness gate
@@ -122,9 +129,16 @@ MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalResidualFillingBridge.lean
 MGAP4D/MathlibAnalytic/HardPhysicalResidualHardeningMap.lean
 MGAP4D/MathlibAnalytic/HilbertConstructionLaneHardening.lean
+MGAP4D/MathlibAnalytic/HilbertToPhysicalUnboundedOperatorBridge.lean
+MGAP4D/MathlibAnalytic/SelfAdjointHPhysBridgeAdoption.lean
 MGAP4D/MathlibAnalytic/SelfAdjointHPhysLaneHardening.lean
 MGAP4D/MathlibAnalytic/ContinuumYangMillsLaneHardening.lean
 MGAP4D/MathlibAnalytic/PlaquetteSpectralWeightLaneHardening.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessHardening.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapReleaseAdoption.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapReleaseAdoption.lean
 MGAP4D/MathlibAnalytic/FourLaneResidualClosure.lean
 MGAP4D/MathlibAnalytic/InternalReviewResidualClosureGate.lean
 MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
@@ -152,6 +166,7 @@ The replay path currently runs:
 [check] audit self-adjoint HPhys lane hardening
 [check] audit continuum Yang-Mills lane hardening
 [check] audit plaquette spectral weight lane hardening
+[check] audit continuum Hamiltonian witness hardening
 [check] audit four-lane residual closure
 [check] audit internal review residual closure gate
 [check] audit external audit readiness gate
@@ -159,25 +174,29 @@ The replay path currently runs:
 [check] audit external audit readiness replay certificate
 [check] replay summary
 [check] lake update
+[check] build continuum Hamiltonian exact mass-gap derivation
+[check] build continuum Hamiltonian release-chain addendum
 [check] build external audit readiness gate
 [check] lake build
 ```
 
-Confirmed external-audit-readiness replay-certificate CI checkpoint:
+Confirmed complete continuum-Hamiltonian / external-audit-readiness CI checkpoint:
 
 ```text
-Workflow: Run scripts/check.sh
-Run ID: 25974054664
-Job ID: 76351001321
-Commit checked out by CI: 0eee78c9dcc2345bf440a88801b16a8088538fac
+Workflow: Full Local Check CI / Run scripts/check.sh
+Workflow run ID: 25988968639
+Job ID: 76391524347
+Head commit: a032caed7121bc14df3bf286e723cd90a76fd2cb
+CI merge ref: 8a4761d7ff9ea9b1f3b9c2c0b2a3ca338dacb178
 Result: success
-Lean-side warnings in gate build: none observed
+Observed timestamp: 2026-05-17T11:05:17Z
+Lean-side warnings in theorem / release / external audit readiness gate build: none observed
 ```
 
 That run confirmed:
 
 ```text
-Lean files scanned: 457
+Lean files scanned: 472
 sorry: 0
 admit: 0
 axiom: 0
@@ -187,18 +206,21 @@ Bridge files audited: 8
 Ordered import edges audited: 5
 External audit readiness gate field-classification audit: passed
 External audit readiness replay certificate audit: passed
-Lean replay summary imports: 1191
-Lean replay summary declaration_like_lines: 2663
-Lean replay summary namespace_lines: 938
-Lean replay summary total_lines: 27611
-Build completed successfully: 8368 jobs
+Lean replay summary imports: 1233
+Lean replay summary declaration_like_lines: 2786
+Lean replay summary namespace_lines: 968
+Lean replay summary total_lines: 29422
+Continuum Hamiltonian exact mass-gap derivation build: 8368 jobs, success
+Continuum Hamiltonian release-chain addendum build: 8369 jobs, success
+External audit readiness gate build: 8376 jobs, success
 Final lake build: 0 jobs, success
 ```
 
-Current CI ledger:
+Current CI and release-surface ledgers:
 
 ```text
 docs/external_audit_readiness_gate_ci.md
+docs/continuum_hamiltonian_complete_release_surface.md
 ```
 
 ## External review entry points
@@ -216,6 +238,7 @@ EXTERNAL_REVIEW_CHECKLIST.md
 INDEPENDENT_REPLAY.md
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/continuum_hamiltonian_complete_release_surface.md
 docs/infinite_dimensional_yang_mills_target_layer.md
 docs/infinite_dimensional_residual_filling_bridge.md
 docs/hard_physical_residual_hardening_map.md
@@ -223,6 +246,7 @@ docs/hilbert_construction_lane_hardening.md
 docs/self_adjoint_hphys_lane_hardening.md
 docs/continuum_yang_mills_lane_hardening.md
 docs/plaquette_spectral_weight_lane_hardening.md
+docs/continuum_hamiltonian_mass_gap_witness_hardening.md
 docs/four_lane_residual_closure.md
 docs/internal_review_residual_closure_gate.md
 docs/external_audit_readiness_gate.md
@@ -238,7 +262,7 @@ A successful replay means:
 ```text
 the repository builds with the pinned Lean toolchain and pinned mathlib version
 the declared audit scripts pass
-the theorem-surface, bridge-surface, target-layer, residual-hardening, final readiness-gate, field-classification, and replay-certificate checks pass
+the theorem-surface, bridge-surface, target-layer, residual-hardening, continuum-Hamiltonian theorem/release, final readiness-gate, field-classification, and replay-certificate checks pass
 the replay summary is reproducible
 ```
 
