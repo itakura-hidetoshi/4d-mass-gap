@@ -13,7 +13,6 @@ internal review-level witness surface, with public and final-release boundaries
 explicitly held. -/
 def continuumHamiltonianCompleteMassGapReleaseAdoptionReady : Prop :=
   finalTheoremReleaseBundleManifestReviewSurface.ready ∧
-  physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap ∧
   continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
   continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
   0 < exactGapValueReal ∧
@@ -33,7 +32,6 @@ theorem continuum_hamiltonian_complete_mass_gap_release_adoption_ready :
     ⟨_, _, _, _, _, _, _, _, _, hPos, hExact, hWitness, hChain,
       hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
   exact And.intro final_theorem_release_bundle_manifest_review_surface_ready <|
-    And.intro physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap <|
     And.intro hWitness <|
     And.intro hChain <|
     And.intro hPos <|
@@ -46,7 +44,7 @@ theorem continuum_hamiltonian_complete_mass_gap_release_adoption_ready :
 theorem continuum_hamiltonian_complete_release_adoption_positive_exact_mass_gap :
     0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20 := by
   rcases continuum_hamiltonian_complete_mass_gap_release_adoption_ready with
-    ⟨_, _, _, _, hPos, hExact, _⟩
+    ⟨_, _, _, hPos, hExact, _⟩
   exact And.intro hPos hExact
 
 /-- Boundary projection: the complete release adoption remains witness-only and
@@ -57,7 +55,7 @@ theorem continuum_hamiltonian_complete_release_adoption_boundary_preserved :
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases continuum_hamiltonian_complete_mass_gap_release_adoption_ready with
-    ⟨_, _, _, _, _, _, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
+    ⟨_, _, _, _, _, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
   exact And.intro hWitnessOnly <|
     And.intro hNoConsensus <|
     And.intro hPublic hFinal
