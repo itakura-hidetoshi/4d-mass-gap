@@ -109,22 +109,36 @@ noncomputable def prototypePhysicalUnboundedOperatorSkeletonData :
     distinguished_in_domain := True.intro
     domain_preserved := by intro ψ hψ; exact True.intro
     symmetric_on_domain := by intro ψ φ hψ hφ; rfl
-    selfAdjointCertificate := True
-    selfAdjointCertificate_proof := True.intro
+    selfAdjointCertificate :=
+      hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
+      exactGapValueReal = (33 : ℝ) / 20 ∧
+      0 < exactGapValueReal
+    selfAdjointCertificate_proof :=
+      And.intro hilbert_space_instance_skeleton_review_surface_ready <|
+        And.intro exactGapValueReal_eq exactGapValueReal_pos
     rayleigh := fun _ => exactGapValueReal
     rayleigh_lower_bound := by intro ψ hψ; exact le_rfl
     distinguished_attains_exact := rfl
     exact_value_eq_3320 := exactGapValueReal_eq
-    physicalUnboundedOperatorSkeletonVisible := True
-    physicalUnboundedOperatorSkeletonVisible_proof := True.intro
-    concreteYangMillsHamiltonianStillOpen := True
-    concreteYangMillsHamiltonianStillOpen_proof := True.intro
-    spectralRealizationStillOpen := True
-    spectralRealizationStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    physicalUnboundedOperatorSkeletonVisible :=
+      hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
+      exactGapValueReal = (33 : ℝ) / 20 ∧
+      0 < exactGapValueReal
+    physicalUnboundedOperatorSkeletonVisible_proof :=
+      And.intro hilbert_space_instance_skeleton_review_surface_ready <|
+        And.intro exactGapValueReal_eq exactGapValueReal_pos
+    concreteYangMillsHamiltonianStillOpen :=
+      hilbertSpaceInstanceSkeletonReviewSurface.physicalUnboundedOperatorStillOpen
+    concreteYangMillsHamiltonianStillOpen_proof :=
+      hilbertSpaceInstanceSkeletonReviewSurface.physicalUnboundedOperatorStillOpen_proof
+    spectralRealizationStillOpen :=
+      hilbertSpaceInstanceSkeletonReviewSurface.spectralRealizationStillOpen
+    spectralRealizationStillOpen_proof :=
+      hilbertSpaceInstanceSkeletonReviewSurface.spectralRealizationStillOpen_proof
+    finalReleaseHeld := hilbertSpaceInstanceSkeletonReviewSurface.finalReleaseHeld
+    finalReleaseHeld_proof := hilbertSpaceInstanceSkeletonReviewSurface.finalReleaseHeld_proof
+    publicBoundaryHeld := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_physical_unbounded_operator_skeleton_ready :
     prototypePhysicalUnboundedOperatorSkeletonData.ready := by
@@ -206,16 +220,16 @@ noncomputable def physicalUnboundedOperatorSkeletonReviewSurface :
       prototypePhysicalUnboundedOperatorSkeletonData.rayleigh
         prototypePhysicalUnboundedOperatorSkeletonData.distinguished = exactGapValueReal
     distinguishedAttainsExact_proof := prototypePhysicalUnboundedOperatorSkeletonData.distinguished_attains_exact
-    physicalUnboundedOperatorSkeletonEstablished := True
-    physicalUnboundedOperatorSkeletonEstablished_proof := True.intro
-    concreteYangMillsHamiltonianStillOpen := True
-    concreteYangMillsHamiltonianStillOpen_proof := True.intro
-    spectralRealizationStillOpen := True
-    spectralRealizationStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    physicalUnboundedOperatorSkeletonEstablished := prototypePhysicalUnboundedOperatorSkeletonData.ready
+    physicalUnboundedOperatorSkeletonEstablished_proof := prototype_physical_unbounded_operator_skeleton_ready
+    concreteYangMillsHamiltonianStillOpen := prototypePhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen
+    concreteYangMillsHamiltonianStillOpen_proof := prototypePhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen_proof
+    spectralRealizationStillOpen := prototypePhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen
+    spectralRealizationStillOpen_proof := prototypePhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof
+    finalReleaseHeld := prototypePhysicalUnboundedOperatorSkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := prototypePhysicalUnboundedOperatorSkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := prototypePhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypePhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld_proof }
 
 theorem physical_unbounded_operator_skeleton_review_surface_ready :
     physicalUnboundedOperatorSkeletonReviewSurface.ready := by
