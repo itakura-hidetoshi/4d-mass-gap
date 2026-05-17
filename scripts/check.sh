@@ -16,6 +16,9 @@ python3 scripts/audit_bridge_coherence.py
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
+echo "[check] audit Yang-Mills Hamiltonian spectral derivation of 33/20"
+python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py
+
 echo "[check] audit infinite-dimensional Yang-Mills target layer"
 python3 scripts/audit_infinite_dimensional_target_layer.py
 
@@ -63,6 +66,9 @@ lake update
 
 echo "[check] build physical Hamiltonian operator normalization"
 lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
+
+echo "[check] build Yang-Mills Hamiltonian spectral derivation of 33/20"
+lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
 
 echo "[check] build continuum Hamiltonian exact mass-gap derivation"
 lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
