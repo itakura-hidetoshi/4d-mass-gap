@@ -4,7 +4,7 @@ This packet is the top-level navigation surface for external audit and independe
 
 ## Boundary statement
 
-The current repository state is an internal normalized theorem-body / proof-architecture surface with explicit replay, theorem-surface audit, bridge-coherence audit, target-obligation layers, review-level residual filling, hard residual hardening lanes, complete infinite-dimensional Hilbert construction, continuum-Hamiltonian theorem surfaces, release-adoption surfaces, complete-derivation surfaces, and public-boundary markers.
+The current repository state is an internal normalized theorem-body / proof-architecture surface with explicit replay, theorem-surface audit, bridge-coherence audit, target-obligation layers, physical-Hamiltonian normalization, operator-level Hamiltonian normalization, review-level residual filling, hard residual hardening lanes, complete infinite-dimensional Hilbert construction, continuum-Hamiltonian theorem surfaces, release-adoption surfaces, complete-derivation surfaces, and public-boundary markers.
 
 It does not claim:
 
@@ -15,13 +15,15 @@ Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
 that CI output replaces mathematical review
 that audit scripts replace Lean kernel checking
-that target / residual-filling / hardening-map / release-surface layers alone replace external audit
+that target / residual-filling / hardening-map / normalization / release-surface layers alone replace external audit
 ```
 
 ## Current complete route
 
 ```text
 physical 4D Yang-Mills continuum Hamiltonian lane
+  -> physical Hamiltonian scalar normalization bridge
+  -> physical Hamiltonian operator normalization
   -> complete infinite-dimensional Hilbert construction
   -> Hilbert-to-physical unbounded-operator bridge
   -> self-adjoint H_phys lane hardening
@@ -41,6 +43,16 @@ The exact normalized value is:
 exactGapValueReal = 33 / 20
 ```
 
+The physical Hamiltonian normalization is explicit:
+
+```text
+H_norm = E0^{-1} * H_phys
+H_phys = E0 * H_norm
+Delta_norm = 33/20
+Delta_phys(E0) = E0 * (33/20)
+internal units: E0 = 1, Delta_phys(1) = 33/20
+```
+
 The route remains an internal normalized Lean theorem surface with external-audit and public-release boundaries preserved.
 
 ## Primary review route
@@ -48,19 +60,20 @@ The route remains an internal normalized Lean theorem surface with external-audi
 | Step | File / command | Purpose |
 |---:|---|---|
 | 1 | `README.md` | Repository role, theorem claim, CI/audit status, and boundary. |
-| 2 | `docs/continuum_hamiltonian_complete_release_surface.md` | Focused release surface for the continuum-Hamiltonian theorem / complete derivation route. |
-| 3 | `docs/external_audit_readiness_gate_ci.md` | Current green CI checkpoint and replay evidence. |
-| 4 | `INDEPENDENT_REPLAY.md` | Fresh-clone replay procedure. |
-| 5 | `bash scripts/check.sh` | Complete local replay path. |
-| 6 | `.github/workflows/full-local-check.yml` | CI mirror of the one-command replay path. |
-| 7 | `THEOREM_INDEX.md` | Theorem / bridge / target surface map. |
-| 8 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Physical interpretation boundary. |
-| 9 | `docs/infinite_dimensional_yang_mills_target_layer.md` | Target-obligation layer ledger. |
-| 10 | `docs/infinite_dimensional_residual_filling_bridge.md` | Review-level residual filling ledger. |
-| 11 | `docs/hard_physical_residual_hardening_map.md` | Hard residual hardening ledger. |
-| 12 | `docs/complete_infinite_dimensional_hilbert_construction.md` | Active complete Hilbert construction ledger. |
-| 13 | `docs/continuum_hamiltonian_mass_gap_witness_hardening.md` | Continuum-Hamiltonian witness-hardening ledger. |
-| 14 | `docs/external_audit_readiness_gate.md` | Final external audit readiness gate ledger. |
+| 2 | `docs/physical_hamiltonian_operator_normalization.md` | Operator-level physical Hamiltonian normalization convention and dimensional reading. |
+| 3 | `docs/continuum_hamiltonian_complete_release_surface.md` | Focused release surface for the continuum-Hamiltonian theorem / complete derivation route. |
+| 4 | `docs/external_audit_readiness_gate_ci.md` | Current green CI checkpoint and replay evidence. |
+| 5 | `INDEPENDENT_REPLAY.md` | Fresh-clone replay procedure. |
+| 6 | `bash scripts/check.sh` | Complete local replay path. |
+| 7 | `.github/workflows/full-local-check.yml` | CI mirror of the one-command replay path. |
+| 8 | `THEOREM_INDEX.md` | Theorem / bridge / target surface map. |
+| 9 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Physical interpretation boundary. |
+| 10 | `docs/infinite_dimensional_yang_mills_target_layer.md` | Target-obligation layer ledger. |
+| 11 | `docs/infinite_dimensional_residual_filling_bridge.md` | Review-level residual filling ledger. |
+| 12 | `docs/hard_physical_residual_hardening_map.md` | Hard residual hardening ledger. |
+| 13 | `docs/complete_infinite_dimensional_hilbert_construction.md` | Active complete Hilbert construction ledger. |
+| 14 | `docs/continuum_hamiltonian_mass_gap_witness_hardening.md` | Continuum-Hamiltonian witness-hardening ledger. |
+| 15 | `docs/external_audit_readiness_gate.md` | Final external audit readiness gate ledger. |
 
 ## One-command replay
 
@@ -77,6 +90,7 @@ Expected stages:
 [check] audit Lean forbidden tokens
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
+[check] audit physical Hamiltonian operator normalization
 [check] audit infinite-dimensional Yang-Mills target layer
 [check] audit infinite-dimensional residual filling bridge
 [check] audit hard physical residual hardening map
@@ -92,6 +106,7 @@ Expected stages:
 [check] audit external audit readiness replay certificate
 [check] replay summary
 [check] lake update
+[check] build physical Hamiltonian operator normalization
 [check] build continuum Hamiltonian exact mass-gap derivation
 [check] build continuum Hamiltonian release-chain addendum
 [check] build external audit readiness gate
@@ -105,6 +120,7 @@ python3 scripts/verify_manifest.py
 python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
 python3 scripts/audit_bridge_coherence.py
+python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 python3 scripts/audit_infinite_dimensional_target_layer.py
 python3 scripts/audit_infinite_dimensional_residual_filling.py
 python3 scripts/audit_hard_physical_residual_hardening_map.py
@@ -120,6 +136,7 @@ python3 scripts/audit_external_audit_readiness_gate_field_classification.py
 python3 scripts/audit_external_audit_readiness_replay_certificate.py
 python3 scripts/replay_summary.py
 lake update
+lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
 lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
 lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
@@ -134,6 +151,7 @@ lake build
 | `scripts/audit_lean_forbidden_tokens.py` | Checks `sorry/admit/axiom/constant` outside comments and strings. |
 | `scripts/audit_major_theorem_nonplaceholder.py` | Checks named theorem surfaces for non-placeholder anchors. |
 | `scripts/audit_bridge_coherence.py` | Checks analytic / physical bridge anchors and boundary markers. |
+| `scripts/audit_physical_hamiltonian_operator_normalization.py` | Checks operator-level Hamiltonian normalization anchors and boundary preservation. |
 | `scripts/audit_infinite_dimensional_target_layer.py` | Checks the infinite-dimensional Yang--Mills target-obligation layer. |
 | `scripts/audit_infinite_dimensional_residual_filling.py` | Checks review-level residual filling bridge. |
 | `scripts/audit_hard_physical_residual_hardening_map.py` | Checks visible hard residual hardening lanes. |
@@ -152,11 +170,13 @@ MGAP4D.lean
 MGAP4D/MathlibAnalytic.lean
 ```
 
-The analytic root imports the external audit readiness gate, which reaches the complete continuum-Hamiltonian release surface.
+The analytic root imports the physical Hamiltonian operator normalization surface and the external audit readiness gate, which reaches the complete continuum-Hamiltonian release surface.
 
 ## Continuum-Hamiltonian release modules
 
 ```text
+MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
+MGAP4D/MathlibAnalytic/PhysicalHamiltonianOperatorNormalization.lean
 MGAP4D/MathlibAnalytic/CompleteInfiniteDimensionalHilbertConstruction.lean
 MGAP4D/MathlibAnalytic/HilbertToPhysicalUnboundedOperatorBridge.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessHardening.lean
@@ -167,13 +187,27 @@ MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapReleaseAdoption.lean
 MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 ```
 
-## CI checkpoint
+## Latest CI checkpoint
 
 ```text
-Pull request: #44
-Head commit: 511f63477081bec49a5291cb77a2769b3d154c01
+Pull request: #47
+Head commit: a41f44cda3bf1f98b454d40f5364b3731ce39243
+Merge commit: b65e6d596831f244edb31234dd5c847e32aa8419
+Bridge Coherence CI: success
+Lean Direct Elan CI: success
+Full Local Check CI: success
+External Audit Readiness CI: success
+Observed timestamp: 2026-05-17
+```
+
+## Operator-normalization CI checkpoint
+
+```text
+Pull request: #46
+Head commit: a212a163fe98067dee2a3704022d1e9271172554
+Merge commit: 62ce858efb9006c458a4370c3bac23d7a137db69
 Workflow: Full Local Check CI
-Workflow run ID: 25991097002
+Workflow run ID: 25992161524
 Result: success
 Observed timestamp: 2026-05-17
 ```
@@ -183,6 +217,8 @@ Checkpoint replay summary:
 ```text
 Lean files scanned: 472
 sorry/admit/axiom/constant: 0/0/0/0
+Physical Hamiltonian operator normalization audit: passed
+PhysicalHamiltonianOperatorNormalization build: success
 Major theorem specs audited: 12
 Bridge files audited: 8
 Ordered import edges audited: 5
@@ -198,15 +234,24 @@ The normalized theorem-body value is dimensionless:
 
 ```text
 exactGapValueReal = 33 / 20
+Delta_norm = 33/20
 ```
 
 Dimensional reading requires an external reference scale:
 
 ```text
-H_norm = H_phys / E0
+H_norm = E0^{-1} * H_phys
+H_phys = E0 * H_norm
 normalizedGap = physicalGap / E0
 physicalGap = E0 * normalizedGap
-physicalGap_dimensional = E0 * (33/20)
+Delta_phys(E0) = E0 * (33/20)
+```
+
+In internal normalized units:
+
+```text
+E0 = 1
+Delta_phys(1) = 33/20
 ```
 
 ## Successful packet review means
@@ -216,6 +261,7 @@ the repository can be replayed from a fresh clone
 the pinned Lean toolchain is visible
 the audit scripts pass
 the Lean build passes
+the operator-level Hamiltonian normalization is present and audited
 the target layer is present
 the residual filling bridge is present
 the hard residual lanes are visible
