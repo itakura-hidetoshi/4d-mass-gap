@@ -32,6 +32,7 @@ REQUIRED_TARGET_ANCHORS = (
     "exactValuePreserved",
     "externalAuditReadinessCompleteMassGapAddendumReady",
     "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
+    "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
 )
 
 REQUIRED_THEOREM_ANCHORS = (
@@ -51,6 +52,10 @@ REQUIRED_THEOREM_ANCHORS = (
     "external_audit_readiness_complete_spectral_mass_gap_exact_value",
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
+    "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
+    "external_audit_readiness_pvm_spectral_atom_boundary_held",
 )
 
 REQUIRED_SPECTRAL_ANCHORS = (
@@ -61,8 +66,11 @@ REQUIRED_SPECTRAL_ANCHORS = (
     "continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved",
     "yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld",
     "yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld",
+    "yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue",
     "0 < spectralMassRealSurface.mass",
     "spectralMassRealSurface.mass ≠ 0",
+    "observable spectral atom",
+    "PVM",
 )
 
 REQUIRED_DOC_ANCHORS = (
@@ -78,14 +86,20 @@ REQUIRED_DOC_ANCHORS = (
     "finalReleaseHeld",
     "externalAuditReadinessCompleteMassGapAddendumReady",
     "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
+    "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
     "continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady",
     "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
     "external_audit_readiness_complete_spectral_mass_gap_exact_value",
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
+    "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
+    "external_audit_readiness_pvm_spectral_atom_boundary_held",
     "spectral infimum",
     "spectral attainment",
     "observable spectral atom",
+    "PVM spectral mass > 0",
 )
 
 
