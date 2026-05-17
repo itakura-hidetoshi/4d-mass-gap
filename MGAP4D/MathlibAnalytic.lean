@@ -56,3 +56,5 @@ import MGAP4D.MathlibAnalytic.ContinuumHamiltonianMassGapTheorem
 import MGAP4D.MathlibAnalytic.ContinuumHamiltonianMassGapReleaseAdoption
 import MGAP4D.MathlibAnalytic.FourLaneResidualClosure
 import MGAP4D.MathlibAnalytic.InternalReviewResidualClosureGate
+import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
+import MGAP4D.MathlibAnalytic.ExternalAuditTheoremWitnessIndex
