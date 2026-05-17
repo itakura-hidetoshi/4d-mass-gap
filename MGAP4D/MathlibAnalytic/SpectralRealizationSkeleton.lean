@@ -110,17 +110,14 @@ noncomputable def prototypeSpectralRealizationSkeletonData :
       exact And.intro exactGapValueReal_eq (And.intro exactGapValueReal_pos (by norm_num))
     continuumSpectralTheoremStillOpen :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.spectralRealizationStillOpen
-        concreteYangMillsHamiltonianSkeletonReviewSurface
     continuumSpectralTheoremStillOpen_proof :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.spectralRealizationStillOpen_proof
     finalReleaseHeld :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.finalReleaseHeld
-        concreteYangMillsHamiltonianSkeletonReviewSurface
     finalReleaseHeld_proof :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.finalReleaseHeld_proof
     publicBoundaryHeld :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.publicBoundaryHeld
-        concreteYangMillsHamiltonianSkeletonReviewSurface
     publicBoundaryHeld_proof :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.publicBoundaryHeld_proof }
 
