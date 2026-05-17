@@ -173,6 +173,10 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
 /-- The installed continuum Hamiltonian mass-gap witness chain is ready. -/
 theorem continuum_hamiltonian_mass_gap_witness_ready :
     continuumHamiltonianMassGapWitnessData.ready := by
+  rcases continuum_yang_mills_lane_hardening_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hYMReview, hYMPublic, hYMFinal⟩
+  rcases plaquette_spectral_weight_lane_hardening_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPQReview, hPQPublic, hPQFinal⟩
   exact And.intro continuumHamiltonianMassGapWitnessData.continuumYMLaneReady <|
     And.intro continuumHamiltonianMassGapWitnessData.plaquetteWeightLaneReady <|
     And.intro
@@ -193,29 +197,42 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
     And.intro continuumHamiltonianMassGapWitnessData.positiveGapWitness <|
     And.intro continuumHamiltonianMassGapWitnessData.exactGapValuePreserved <|
     And.intro
-      (And.intro plaquetteSpectralWeightLaneHardeningData.compactSupportHardened <|
-        And.intro plaquetteSpectralWeightLaneHardeningData.centeredHardened
-          plaquetteSpectralWeightLaneHardeningData.smearedHardened) <|
+      (And.intro
+        (plaquette_weight_compact_support_hardened
+          plaquetteSpectralWeightLaneHardeningData
+          plaquette_spectral_weight_lane_hardening_ready) <|
+        And.intro
+          (plaquette_weight_centered_hardened
+            plaquetteSpectralWeightLaneHardeningData
+            plaquette_spectral_weight_lane_hardening_ready)
+          (plaquette_weight_smeared_hardened
+            plaquetteSpectralWeightLaneHardeningData
+            plaquette_spectral_weight_lane_hardening_ready)) <|
     And.intro
-      (And.intro plaquetteSpectralWeightLaneHardeningData.observableAtomHardened <|
-        And.intro plaquetteSpectralWeightLaneHardeningData.positiveWeightHardened
-          plaquetteSpectralWeightLaneHardeningData.nonzeroWeightHardened) <|
+      (And.intro
+        (plaquette_weight_observable_atom_hardened
+          plaquetteSpectralWeightLaneHardeningData
+          plaquette_spectral_weight_lane_hardening_ready) <|
+        And.intro
+          (plaquette_weight_positive_weight_hardened
+            plaquetteSpectralWeightLaneHardeningData
+            plaquette_spectral_weight_lane_hardening_ready)
+          (plaquette_weight_nonzero_weight_hardened
+            plaquetteSpectralWeightLaneHardeningData
+            plaquette_spectral_weight_lane_hardening_ready)) <|
     And.intro
       (And.intro exactGapValueReal_pos exactGapValueReal_eq) <|
     And.intro
       (And.intro continuum_yang_mills_lane_hardening_ready
         plaquette_spectral_weight_lane_hardening_ready) <|
     And.intro
-      (And.intro continuumYangMillsLaneHardeningData.reviewLevelOnly
-        plaquetteSpectralWeightLaneHardeningData.reviewLevelOnly) <|
+      (And.intro hYMReview hPQReview) <|
     And.intro
       (final_theorem_release_chain_index_external_consensus_not_claimed
         prototypeFinalTheoremReleaseChainIndexData) <|
     And.intro
-      (And.intro continuumYangMillsLaneHardeningData.publicBoundaryHeld
-        plaquetteSpectralWeightLaneHardeningData.publicBoundaryHeld) <|
-    And.intro continuumYangMillsLaneHardeningData.finalReleaseHeld
-      plaquetteSpectralWeightLaneHardeningData.finalReleaseHeld
+      (And.intro hYMPublic hPQPublic) <|
+    And.intro hYMFinal hPQFinal
 
 end MathlibAnalytic
 end MGAP4D
