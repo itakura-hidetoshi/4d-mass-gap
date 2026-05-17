@@ -40,6 +40,27 @@ REQUIRED_TARGET_ANCHORS = (
     "finalReleaseHeld",
 )
 
+REQUIRED_COMPLETE_INFINITE_DIMENSIONAL_ANCHORS = (
+    "CompleteInfiniteDimensionalHilbertConstructionData",
+    "CompleteInfiniteDimensionalHilbertConstructionData.ready",
+    "completeInfiniteDimensionalHilbertConstructionData",
+    "complete_infinite_dimensional_hilbert_construction_ready",
+    "carrier",
+    "basisVector",
+    "finiteBasisFamily",
+    "finiteBasisFamily_def",
+    "finiteRestrictionLinearlyIndependent",
+    "arbitraryFiniteRankWitness",
+    "noFiniteRankCollapse",
+    "countableBasisRealized",
+    "finiteSpanDenseInCompletion",
+    "normTopologyRealized",
+    "cauchyCompletionRealized",
+    "completeNormedSpaceRealized",
+    "innerProductRealized",
+    "hilbertInstanceRealized",
+)
+
 REQUIRED_THEOREM_ANCHORS = (
     "hilbert_construction_countable_basis_hardened",
     "hilbert_construction_finite_span_density_hardened",
@@ -51,6 +72,9 @@ REQUIRED_THEOREM_ANCHORS = (
     "hilbert_construction_hard_boundary_visible",
     "hilbert_construction_exact_value_preserved",
     "hilbert_construction_review_level_only",
+    "complete_hilbert_construction_arbitrary_finite_rank_witness",
+    "complete_hilbert_construction_no_finite_rank_collapse",
+    "complete_hilbert_construction_hilbert_instance_realized",
 )
 
 REQUIRED_ROOT_ANCHORS = (
@@ -59,6 +83,10 @@ REQUIRED_ROOT_ANCHORS = (
 
 REQUIRED_DOC_ANCHORS = (
     "Hilbert Construction Lane Hardening",
+    "CompleteInfiniteDimensionalHilbertConstructionData",
+    "completeInfiniteDimensionalHilbertConstructionData",
+    "arbitraryFiniteRankWitness",
+    "noFiniteRankCollapse",
     "countableBasisHardened",
     "finiteSpanDensityHardened",
     "normTopologyHardened",
@@ -123,12 +151,14 @@ def main() -> None:
     failures: list[str] = []
     failures.extend(audit_forbidden_tokens(TARGET_PATH))
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "Hilbert-construction target", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_COMPLETE_INFINITE_DIMENSIONAL_ANCHORS, "complete infinite-dimensional Hilbert target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "Hilbert-construction theorem", clean_lean=True))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_ANCHORS, "root import", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "Hilbert-construction documentation", clean_lean=False))
 
     print("Hilbert construction lane hardening audit")
     print(f"Hilbert-construction anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
+    print(f"Complete infinite-dimensional anchors audited: {len(REQUIRED_COMPLETE_INFINITE_DIMENSIONAL_ANCHORS)}")
     print(f"Hilbert-construction theorem anchors audited: {len(REQUIRED_THEOREM_ANCHORS)}")
     print("Root import audited: MGAP4D/MathlibAnalytic.lean")
     print("Documentation audited: docs/hilbert_construction_lane_hardening.md")
