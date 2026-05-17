@@ -6,10 +6,14 @@ It complements:
 
 ```text
 README.md
+EXTERNAL_AUDIT_PACKET.md
 INDEPENDENT_REPLAY.md
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
 docs/infinite_dimensional_yang_mills_target_layer.md
+docs/complete_infinite_dimensional_hilbert_construction.md
+docs/continuum_hamiltonian_complete_release_surface.md
+docs/external_audit_readiness_gate_ci.md
 ```
 
 It does not replace Lean kernel checking, source inspection, or independent mathematical review.
@@ -20,7 +24,9 @@ Before starting, record that the current repository claim is:
 
 ```text
 internal normalized theorem-body / proof-architecture surface
-with replay, audit, bridge-coherence support, and explicit infinite-dimensional Yang-Mills target obligations
+with replay, audit, bridge-coherence support, explicit infinite-dimensional Yang-Mills target obligations,
+complete infinite-dimensional Hilbert construction, downstream hardening lanes,
+continuum-Hamiltonian theorem/release surfaces, and external-audit readiness gates
 ```
 
 It is not a claim of:
@@ -30,7 +36,7 @@ external mathematical consensus
 peer-review completion
 Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
-a completed infinite-dimensional continuum Yang-Mills proof solely from the target layer
+a completed public-final continuum Yang-Mills proof solely from CI or audit ledgers
 ```
 
 Reviewer checkpoint:
@@ -39,7 +45,7 @@ Reviewer checkpoint:
 [ ] I understand the public final theorem boundary is review-gated.
 [ ] I understand CI/audit scripts do not replace mathematical review.
 [ ] I understand the normalized value 33/20 is dimensionless unless E0 is supplied.
-[ ] I understand the infinite-dimensional target layer is a proof-obligation surface, not final theorem acceptance.
+[ ] I understand the complete Hilbert construction and continuum-Hamiltonian surfaces are repository-internal Lean surfaces pending external audit.
 ```
 
 ## 1. Fresh clone
@@ -100,8 +106,23 @@ Expected stages:
 [check] audit major theorem non-placeholder surfaces
 [check] audit analytic bridge coherence
 [check] audit infinite-dimensional Yang-Mills target layer
+[check] audit infinite-dimensional residual filling bridge
+[check] audit hard physical residual hardening map
+[check] audit complete infinite-dimensional Hilbert construction
+[check] audit self-adjoint HPhys lane hardening
+[check] audit continuum Yang-Mills lane hardening
+[check] audit plaquette spectral weight lane hardening
+[check] audit continuum Hamiltonian witness hardening
+[check] audit four-lane residual closure
+[check] audit internal review residual closure gate
+[check] audit external audit readiness gate
+[check] audit external audit readiness gate field classification
+[check] audit external audit readiness replay certificate
 [check] replay summary
 [check] lake update
+[check] build continuum Hamiltonian exact mass-gap derivation
+[check] build continuum Hamiltonian release-chain addendum
+[check] build external audit readiness gate
 [check] lake build
 ```
 
@@ -114,8 +135,10 @@ Reviewer checkpoint:
 [ ] Major theorem non-placeholder audit passes.
 [ ] Bridge-coherence audit passes.
 [ ] Infinite-dimensional target-layer audit passes.
-[ ] Replay summary is generated.
-[ ] `lake build` succeeds.
+[ ] Complete infinite-dimensional Hilbert construction audit passes.
+[ ] Continuum-Hamiltonian exact mass-gap derivation build succeeds.
+[ ] External audit readiness gate build succeeds.
+[ ] Final `lake build` succeeds.
 ```
 
 ## 4. Manual replay, if needed
@@ -128,8 +151,23 @@ python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
 python3 scripts/audit_bridge_coherence.py
 python3 scripts/audit_infinite_dimensional_target_layer.py
+python3 scripts/audit_infinite_dimensional_residual_filling.py
+python3 scripts/audit_hard_physical_residual_hardening_map.py
+python3 scripts/audit_complete_infinite_dimensional_hilbert_construction.py
+python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
+python3 scripts/audit_continuum_yang_mills_lane_hardening.py
+python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
+python3 scripts/audit_continuum_hamiltonian_mass_gap_witness_hardening.py
+python3 scripts/audit_four_lane_residual_closure.py
+python3 scripts/audit_internal_review_residual_closure_gate.py
+python3 scripts/audit_external_audit_readiness_gate.py
+python3 scripts/audit_external_audit_readiness_gate_field_classification.py
+python3 scripts/audit_external_audit_readiness_replay_certificate.py
 python3 scripts/replay_summary.py
 lake update
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
+lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build
 ```
 
@@ -171,7 +209,7 @@ Reviewer checkpoint:
 [ ] `exact_value_origin_not_ci_ledger_artifact` inspected.
 ```
 
-## 6. Inspect bridge and target surfaces
+## 6. Inspect bridge, target, and complete Hilbert surfaces
 
 Use:
 
@@ -179,12 +217,9 @@ Use:
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
 docs/infinite_dimensional_yang_mills_target_layer.md
-```
-
-Inspect the 8 bridge / target surfaces audited by:
-
-```bash
-python3 scripts/audit_bridge_coherence.py
+docs/infinite_dimensional_residual_filling_bridge.md
+docs/hard_physical_residual_hardening_map.md
+docs/complete_infinite_dimensional_hilbert_construction.md
 ```
 
 Reviewer checkpoint:
@@ -198,15 +233,40 @@ Reviewer checkpoint:
 [ ] `ContinuumSpectralTheoremSkeleton.lean` inspected with boundary markers.
 [ ] `PhysicalHamiltonianNormalizationBridge.lean` inspected with boundary markers.
 [ ] `InfiniteDimensionalYangMillsRealizationTargets.lean` inspected as target-obligation layer.
+[ ] `CompleteInfiniteDimensionalHilbertConstruction.lean` inspected as the active complete Hilbert construction lane.
+[ ] `HilbertToPhysicalUnboundedOperatorBridge.lean` inspected as the bridge from complete Hilbert lane to physical unbounded operator lane.
 ```
 
-## 7. Interpret singleton / prototype / skeleton / target surfaces correctly
+## 7. Inspect continuum-Hamiltonian route
+
+Use:
+
+```text
+docs/continuum_hamiltonian_mass_gap_witness_hardening.md
+docs/continuum_hamiltonian_complete_release_surface.md
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitness.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+```
+
+Reviewer checkpoint:
+
+```text
+[ ] Continuum-Hamiltonian witness surface inspected.
+[ ] Exact normalized mass-gap derivation surface inspected.
+[ ] Complete mass-gap derivation surface inspected.
+[ ] Release-adoption and public-boundary markers inspected.
+```
+
+## 8. Interpret singleton / prototype / skeleton / target surfaces correctly
 
 Read:
 
 ```text
 PHYSICAL_REALIZATION_BOUNDARY.md
 docs/infinite_dimensional_yang_mills_target_layer.md
+docs/complete_infinite_dimensional_hilbert_construction.md
 ```
 
 Reviewer checkpoint:
@@ -216,10 +276,10 @@ Reviewer checkpoint:
 [ ] I have not interpreted prototype spectral mass as the final physical spectral measure.
 [ ] I have checked the relevant `publicBoundaryHeld` / `finalReleaseHeld` markers.
 [ ] I have distinguished contract witnesses from physical continuum realization targets.
-[ ] I have interpreted the infinite-dimensional target layer as proof obligations, not as completed continuum proof.
+[ ] I have interpreted the infinite-dimensional target layer and complete Hilbert construction as repository-internal Lean surfaces pending external audit.
 ```
 
-## 8. Check normalization and dimensional reading
+## 9. Check normalization and dimensional reading
 
 Inspect:
 
@@ -250,7 +310,7 @@ Reviewer checkpoint:
 [ ] I have not treated `33/20` alone as a dimensionful physical mass.
 ```
 
-## 9. Compare source files with documentation ledgers
+## 10. Compare source files with documentation ledgers
 
 Relevant ledgers include:
 
@@ -266,6 +326,14 @@ docs/mathlib_exact_value_theorem_body_origin_ci.md
 docs/mathlib_concrete_residual_closure.md
 docs/mathlib_concrete_residual_closure_ci.md
 docs/infinite_dimensional_yang_mills_target_layer.md
+docs/infinite_dimensional_residual_filling_bridge.md
+docs/hard_physical_residual_hardening_map.md
+docs/complete_infinite_dimensional_hilbert_construction.md
+docs/four_lane_residual_closure.md
+docs/internal_review_residual_closure_gate.md
+docs/external_audit_readiness_gate.md
+docs/external_audit_readiness_gate_field_classification.md
+docs/external_audit_readiness_replay_certificate.md
 docs/full_local_check_ci.md
 ```
 
@@ -276,7 +344,7 @@ Reviewer checkpoint:
 [ ] CI ledgers are treated as evidence of replay, not as substitutes for proof review.
 ```
 
-## 10. Final external-review notes
+## 11. Final external-review notes
 
 A successful checklist pass means:
 
@@ -285,6 +353,8 @@ the repository can be independently replayed
 the declared theorem surfaces are present
 the declared bridge surfaces are present
 the infinite-dimensional target obligations are present
+the complete infinite-dimensional Hilbert construction is present
+the continuum-Hamiltonian theorem and complete release surfaces are present
 the audit scripts pass
 the Lean build passes
 public-boundary markers are visible
@@ -296,7 +366,7 @@ It does not mean:
 external consensus has been obtained
 all analytic residuals have been accepted by the mathematical community
 Clay-style final theorem status has been reached
-the target layer alone completes the physical continuum proof
+the target / construction / gate layers alone complete external public proof acceptance
 ```
 
 Final reviewer checkpoint:
@@ -307,5 +377,6 @@ Final reviewer checkpoint:
 [ ] Lean / Lake versions recorded.
 [ ] Any failures or concerns recorded with file names and theorem names.
 [ ] Infinite-dimensional target-layer interpretation preserved.
+[ ] Complete Hilbert construction interpretation preserved.
 [ ] Public-boundary interpretation preserved.
 ```
