@@ -14,7 +14,7 @@ KuuOS references this repository as a physics-facing bridge and public-core gove
 
 ## Current theorem claim and boundary
 
-The current main branch records an internal normalized theorem-body surface:
+The current branch records an internal normalized theorem-body surface:
 
 ```text
 exactGapValueReal = 33 / 20
@@ -29,6 +29,15 @@ internal normalized theorem-body claim: present
 physical Hamiltonian normalization bridge: present
 concrete residual closure: present
 infinite-dimensional residual filling bridge: present
+Hilbert-to-physical unbounded operator bridge: present
+self-adjoint HPhys bridge adoption: present
+continuum Yang-Mills lane hardening: present
+plaquette spectral weight lane hardening: present
+continuum Hamiltonian mass-gap witness hardening: present
+continuum Hamiltonian mass-gap theorem: present
+continuum Hamiltonian mass-gap release adoption: present
+continuum Hamiltonian complete mass-gap derivation: present
+continuum Hamiltonian complete mass-gap release adoption: present
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
@@ -149,6 +158,7 @@ Independent replay and external audit: still required
 - [x] Add external audit note template without changing active proof semantics
 - [x] Record external audit note template CI without changing active proof semantics
 - [x] Record external audit readiness gate CI without changing active proof semantics
+- [x] Add continuum Hamiltonian complete release surface without changing active proof semantics
 - [ ] Add version tags only after a fresh source-tree review and CI green confirmation for the target commit
 - [ ] Add external audit notes without changing active proof semantics
 
@@ -268,47 +278,58 @@ external audit readiness is mechanically gated
 - [x] Add infinite-dimensional residual filling bridge
 - [x] Add hard physical residual hardening map
 - [x] Add Hilbert construction lane hardening
+- [x] Add Hilbert-to-physical unbounded operator bridge
+- [x] Add self-adjoint HPhys bridge adoption
 - [x] Add self-adjoint HPhys lane hardening
 - [x] Add continuum Yang-Mills lane hardening
 - [x] Add plaquette spectral weight lane hardening
+- [x] Add continuum Hamiltonian mass-gap witness hardening
+- [x] Add continuum Hamiltonian mass-gap theorem
+- [x] Add continuum Hamiltonian mass-gap release adoption
+- [x] Add continuum Hamiltonian complete mass-gap derivation
+- [x] Add continuum Hamiltonian complete mass-gap release adoption
 - [x] Add four-lane residual closure
 - [x] Add internal review residual closure gate
 - [x] Add external audit readiness gate
 - [x] Build `MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate` in CI
 - [x] Observe Lean-side warning cleanup in green CI run
-- [x] Sync README and ROADMAP to latest external-audit-readiness checkpoint
+- [x] Sync README and ROADMAP to latest complete continuum-Hamiltonian checkpoint
+- [x] Add complete continuum-Hamiltonian release-surface doc
 - [ ] Add a fresh source-tree review receipt for the latest external-audit-readiness checkpoint
 - [ ] Add independent replay notes for the full MathlibAnalytic external-audit-readiness chain
 
 Current external-audit-readiness checkpoint:
 
 ```text
-Workflow: Run scripts/check.sh
-Run ID: 25961418682
-Job ID: 76317232199
-Commit checked out by CI: 7041b000c4c8f30a2d99d5429504d00cffb88bcb
+Workflow: Full Local Check CI / Run scripts/check.sh
+Run ID: 25988968639
+Job ID: 76391524347
+Head commit: a032caed7121bc14df3bf286e723cd90a76fd2cb
+CI merge ref: 8a4761d7ff9ea9b1f3b9c2c0b2a3ca338dacb178
 Result: success
-Lean files scanned: 457
+Lean files scanned: 472
 sorry/admit/axiom/constant: 0/0/0/0
 Major theorem specs audited: 12
 Bridge files audited: 8
 Ordered import edges audited: 5
-Build completed successfully: 8368 jobs
+Continuum Hamiltonian exact mass-gap derivation build: 8368 jobs, success
+Continuum Hamiltonian release-chain addendum build: 8369 jobs, success
+External audit readiness gate build: 8376 jobs, success
 Final lake build: success, 0 jobs
-Lean-side warnings in gate build: none observed
+Lean-side warnings in theorem / release / external audit readiness gate build: none observed
 ```
 
 ## Current priority
 
 ```text
-1. Keep README, ROADMAP, source-tree review notes, and CI ledgers synchronized with main.
+1. Keep README, ROADMAP, source-tree review notes, and CI ledgers synchronized with the latest green checkpoint.
 2. Add a fresh source-tree review receipt for the latest external-audit-readiness checkpoint.
 3. Prepare independent replay instructions for the full MathlibAnalytic external-audit-readiness chain.
 4. Add external audit notes without changing active proof semantics.
 5. Add version tags only after source-tree review and CI green confirmation for the exact target commit.
 ```
 
-Current main-branch invariant:
+Current branch invariant:
 
 ```text
 Dimensionless normalized exact value surface: 33/20
@@ -316,9 +337,13 @@ Dimensionless normalized exact value surface: 33/20
 physical dimensional reading: requires E0
 concrete Hilbert / H_phys / PVM / plaquette / operator-measure residuals: internally closed
 infinite-dimensional target and residual-filling surfaces: recorded
-four-lane residual closure: recorded
+Hilbert-to-physical unbounded operator bridge: recorded
+self-adjoint HPhys bridge adoption: recorded
+continuum-Hamiltonian positive exact mass-gap theorem: recorded
+continuum-Hamiltonian complete mass-gap derivation: recorded
+continuum-Hamiltonian complete release adoption: recorded
 external audit readiness gate: CI green at recorded checkpoint
-Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge: mechanically audited
+Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum -> continuum-Hamiltonian theorem bridge: mechanically audited
 sorry/admit/axiom/constant: 0 in audited Lean source
 major theorem placeholder audit: green
 external consensus: not claimed

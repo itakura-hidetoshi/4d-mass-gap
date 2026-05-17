@@ -41,9 +41,9 @@ theorem continuum_hamiltonian_derives_positive_exact_mass_gap :
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases continuum_hamiltonian_mass_gap_witness_ready with
-    ⟨hReady, _, _, _, _, _, hPos, hExact, _, _, _, hChain, hWitnessOnly,
+    ⟨_, _, _, _, _, _, hPos, hExact, _, _, _, hChain, hWitnessOnly,
       hNoConsensus, hPublic, hFinal⟩
-  exact And.intro hReady <|
+  exact And.intro continuum_hamiltonian_installed_witness_ready_from_hardened_bundle <|
     And.intro hPos <|
     And.intro hExact <|
     And.intro hChain <|

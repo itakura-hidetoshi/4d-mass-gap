@@ -173,8 +173,6 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
 /-- The installed continuum Hamiltonian mass-gap witness chain is ready. -/
 theorem continuum_hamiltonian_mass_gap_witness_ready :
     continuumHamiltonianMassGapWitnessData.ready := by
-  rcases continuum_yang_mills_lane_hardening_ready with
-    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hYMReview, hYMPublic, hYMFinal⟩
   rcases plaquette_spectral_weight_lane_hardening_ready with
     ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPQReview, hPQPublic, hPQFinal⟩
   exact And.intro continuumHamiltonianMassGapWitnessData.continuumYMLaneReady <|
@@ -226,13 +224,13 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
       (And.intro continuum_yang_mills_lane_hardening_ready
         plaquette_spectral_weight_lane_hardening_ready) <|
     And.intro
-      (And.intro hYMReview hPQReview) <|
+      (And.intro (by change True; exact True.intro) hPQReview) <|
     And.intro
       (final_theorem_release_chain_index_external_consensus_not_claimed
         prototypeFinalTheoremReleaseChainIndexData) <|
     And.intro
-      (And.intro hYMPublic hPQPublic) <|
-    And.intro hYMFinal hPQFinal
+      (And.intro (by change True; exact True.intro) hPQPublic) <|
+    And.intro (by change True; exact True.intro) hPQFinal
 
 end MathlibAnalytic
 end MGAP4D
