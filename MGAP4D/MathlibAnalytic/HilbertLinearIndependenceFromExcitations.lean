@@ -111,7 +111,7 @@ def prototypeHilbertLinearIndependenceFromExcitationsData :
       exact And.intro arbitrarily_large_hilbert_excitation_family_review_surface_ready
         arbitrarily_large_hilbert_excitation_family_review_surface_ready.2.2.2.2.1
     finiteDimensionalCollapseBlocked :=
-      arbitrarilyLargeHilbertExcitationFamilyReviewSurface.boundedFiniteCollapseBlocked
+      prototypeArbitrarilyLargeHilbertExcitationFamilyData.boundedFiniteCollapseBlocked
     finiteDimensionalCollapseBlocked_proof :=
       arbitrarilyLargeHilbertExcitationFamilyReviewSurface.boundedFiniteCollapseBlocked
     fullHilbertBasisStillOpen :=
