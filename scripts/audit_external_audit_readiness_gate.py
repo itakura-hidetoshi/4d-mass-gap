@@ -67,9 +67,9 @@ REQUIRED_SPECTRAL_ANCHORS = (
     "yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld",
     "yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld",
     "yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue",
+    "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
     "0 < spectralMassRealSurface.mass",
     "spectralMassRealSurface.mass ≠ 0",
-    "observable spectral atom",
     "PVM",
 )
 
