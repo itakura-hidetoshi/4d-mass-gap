@@ -295,5 +295,57 @@ theorem external_audit_readiness_complete_spectral_mass_gap_boundary_held :
     ⟨_, _, _, _, _, hPublic, hFinal⟩
   exact And.intro hPublic hFinal
 
+/-- Public-audit projection of the PVM/observable spectral atom route.
+
+This names the observable atom at `33/20` together with its positive nonzero
+spectral mass as a public-audit-visible, boundary-preserving surface. -/
+def externalAuditReadinessPVMSpectralAtomPublicAuditProjection : Prop :=
+  externalAuditReadinessCompleteSpectralMassGapAddendumReady ∧
+  yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
+    (33 : ℝ) / 20 ∧
+  0 < spectralMassRealSurface.mass ∧
+  spectralMassRealSurface.mass ≠ 0 ∧
+  yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+  yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
+
+/-- The PVM/observable spectral atom at `33/20` is public-audit-visible with
+positive nonzero mass, without opening the public/final-release boundaries. -/
+theorem external_audit_readiness_pvm_spectral_atom_public_audit_projection :
+    externalAuditReadinessPVMSpectralAtomPublicAuditProjection := by
+  unfold externalAuditReadinessPVMSpectralAtomPublicAuditProjection
+  rcases external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass with
+    ⟨hMassPos, hMassNonzero⟩
+  rcases external_audit_readiness_complete_spectral_mass_gap_boundary_held with
+    ⟨hPublic, hFinal⟩
+  exact And.intro external_audit_readiness_complete_spectral_mass_gap_addendum_ready <|
+    And.intro yang_mills_hamiltonian_observable_atom_eq_3320 <|
+    And.intro hMassPos <|
+    And.intro hMassNonzero <|
+    And.intro hPublic hFinal
+
+/-- Exact observable atom value exposed by the public-audit PVM projection. -/
+theorem external_audit_readiness_pvm_spectral_atom_value_eq_3320 :
+    yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
+      (33 : ℝ) / 20 := by
+  rcases external_audit_readiness_pvm_spectral_atom_public_audit_projection with
+    ⟨_, hAtom, _⟩
+  exact hAtom
+
+/-- Positive nonzero PVM/observable spectral mass exposed by public audit. -/
+theorem external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass :
+    0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
+  rcases external_audit_readiness_pvm_spectral_atom_public_audit_projection with
+    ⟨_, _, hMassPos, hMassNonzero, _⟩
+  exact And.intro hMassPos hMassNonzero
+
+/-- Public and final-release boundaries remain held for the PVM/observable atom
+public-audit projection. -/
+theorem external_audit_readiness_pvm_spectral_atom_boundary_held :
+    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+      yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
+  rcases external_audit_readiness_pvm_spectral_atom_public_audit_projection with
+    ⟨_, _, _, _, hPublic, hFinal⟩
+  exact And.intro hPublic hFinal
+
 end MathlibAnalytic
 end MGAP4D
