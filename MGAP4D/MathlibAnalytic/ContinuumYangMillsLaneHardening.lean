@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysLaneHardening
+import MGAP4D.MathlibAnalytic.SelfAdjointHPhysBridgeAdoption
 import MGAP4D.MathlibAnalytic.ConcreteYangMillsHamiltonianSkeleton
 import MGAP4D.MathlibAnalytic.SpectralRealizationSkeleton
 import MGAP4D.MathlibAnalytic.ContinuumSpectralTheoremSkeleton
