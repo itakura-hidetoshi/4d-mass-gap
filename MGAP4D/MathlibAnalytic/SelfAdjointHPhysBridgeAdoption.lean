@@ -135,7 +135,7 @@ def selfAdjointHPhysBridgeAdoptionData : SelfAdjointHPhysBridgeAdoptionData :=
 
 /-- The installed self-adjoint `H_phys` bridge-adoption surface is ready. -/
 theorem self_adjoint_hphys_bridge_adoption_ready :
-    selfAdjointHPhysBridgeAdoptionData.ready selfAdjointHPhysBridgeAdoptionData := by
+    SelfAdjointHPhysBridgeAdoptionData.ready selfAdjointHPhysBridgeAdoptionData := by
   exact And.intro selfAdjointHPhysBridgeAdoptionData.hilbertToPhysicalBridgeReady <|
     And.intro selfAdjointHPhysBridgeAdoptionData.selfAdjointLaneReady <|
     And.intro selfAdjointHPhysBridgeAdoptionData.bridgeOperatorReady <|
