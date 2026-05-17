@@ -30,7 +30,7 @@ The strongest Lean kernel gate remains:
 lake build
 ```
 
-For the physical-realization boundary of `PUnit`, singleton, prototype, skeleton, and infinite-dimensional target surfaces, see:
+For the physical-realization boundary of `PUnit`, singleton, prototype, skeleton, target, construction, and release-adoption surfaces, see:
 
 ```text
 PHYSICAL_REALIZATION_BOUNDARY.md
@@ -41,7 +41,7 @@ PHYSICAL_REALIZATION_BOUNDARY.md
 | Root | Role |
 |---|---|
 | `MGAP4D.lean` | Top-level Lean import root. |
-| `MGAP4D/MathlibAnalytic.lean` | Internal analytic theorem-surface root, now importing the infinite-dimensional Yang--Mills target layer. |
+| `MGAP4D/MathlibAnalytic.lean` | Internal analytic theorem-surface root, importing the complete Hilbert / continuum-Hamiltonian / external-audit readiness route. |
 
 ## Major theorem surfaces audited for non-placeholder statements
 
@@ -76,7 +76,7 @@ These bridge surfaces are checked by:
 python3 scripts/audit_bridge_coherence.py
 ```
 
-The bridge audit verifies expected import edges, ready surfaces, value anchors, positivity anchors, public-boundary anchors, and the new infinite-dimensional Yang--Mills target obligations.
+The bridge audit verifies expected import edges, ready surfaces, value anchors, positivity anchors, public-boundary anchors, and infinite-dimensional Yang--Mills target obligations.
 
 | Order | File | Bridge role | Boundary marker class |
 |---:|---|---|---|
@@ -88,6 +88,51 @@ The bridge audit verifies expected import edges, ready surfaces, value anchors, 
 | 6 | `MGAP4D/MathlibAnalytic/ContinuumSpectralTheoremSkeleton.lean` | Continuum spectral theorem skeleton surface. | `finalTheoremReleaseStillHeld`, `publicBoundaryHeld`. |
 | 7 | `MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean` | Physical Hamiltonian normalization bridge surface. | `theoremBodyUnchanged`, `publicBoundaryHeld`. |
 | 8 | `MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean` | Infinite-dimensional Yang--Mills physical realization target / proof-obligation layer. | `publicBoundaryHeld`, `finalReleaseHeld`. |
+
+## Complete Hilbert and continuum-Hamiltonian route
+
+The active hardening route now uses the complete Hilbert lane, not the former `HilbertConstructionLaneHardening` name:
+
+```text
+HardPhysicalResidualHardeningMap
+  -> CompleteInfiniteDimensionalHilbertConstruction
+  -> HilbertToPhysicalUnboundedOperatorBridge
+  -> SelfAdjointHPhysBridgeAdoption
+  -> SelfAdjointHPhysLaneHardening
+  -> ContinuumYangMillsLaneHardening
+  -> PlaquetteSpectralWeightLaneHardening
+  -> ContinuumHamiltonianMassGapWitness
+  -> ContinuumHamiltonianExactMassGapDerivation
+  -> ContinuumHamiltonianMassGapWitnessHardening
+  -> ContinuumHamiltonianMassGapTheorem
+  -> ContinuumHamiltonianMassGapReleaseAdoption
+  -> ContinuumHamiltonianCompleteMassGapDerivation
+  -> ContinuumHamiltonianCompleteMassGapReleaseAdoption
+  -> FourLaneResidualClosure
+  -> InternalReviewResidualClosureGate
+  -> ExternalAuditReadinessGate
+```
+
+Important source files:
+
+```text
+MGAP4D/MathlibAnalytic/CompleteInfiniteDimensionalHilbertConstruction.lean
+MGAP4D/MathlibAnalytic/HilbertToPhysicalUnboundedOperatorBridge.lean
+MGAP4D/MathlibAnalytic/SelfAdjointHPhysBridgeAdoption.lean
+MGAP4D/MathlibAnalytic/SelfAdjointHPhysLaneHardening.lean
+MGAP4D/MathlibAnalytic/ContinuumYangMillsLaneHardening.lean
+MGAP4D/MathlibAnalytic/PlaquetteSpectralWeightLaneHardening.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitness.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessHardening.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapReleaseAdoption.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapReleaseAdoption.lean
+MGAP4D/MathlibAnalytic/FourLaneResidualClosure.lean
+MGAP4D/MathlibAnalytic/InternalReviewResidualClosureGate.lean
+MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
+```
 
 ## Infinite-dimensional Yang--Mills target layer
 
@@ -124,35 +169,7 @@ public boundary held
 final release held
 ```
 
-This layer is not a completed physical continuum proof. It is an auditable proof-obligation surface that states what must be supplied before promotion beyond skeleton / contract witnesses.
-
-## Ordered bridge chain
-
-The expected review chain is:
-
-```text
-Concrete Hilbert realization
-  -> Concrete H_phys / unbounded-operator realization
-  -> Physical unbounded-operator skeleton
-  -> Concrete Yang-Mills Hamiltonian skeleton
-  -> Spectral/PVM realization skeleton
-  -> Continuum spectral theorem skeleton
-  -> Final theorem release skeleton / closure
-  -> Concrete residual closure
-  -> Physical Hamiltonian normalization bridge
-  -> Infinite-dimensional Yang-Mills realization target
-  -> Exact value theorem-body origin certificate
-```
-
-The bridge-coherence audit currently checks ordered import edges including:
-
-```text
-ConcreteHPhysRealizationTheorem imports ConcreteHilbertRealizationTheorem
-ConcreteYangMillsHamiltonianSkeleton imports PhysicalUnboundedOperatorSkeleton
-SpectralRealizationSkeleton imports ConcreteYangMillsHamiltonianSkeleton
-ContinuumSpectralTheoremSkeleton imports SpectralRealizationSkeleton
-InfiniteDimensionalYangMillsRealizationTargets imports PhysicalHamiltonianNormalizationBridge
-```
+This layer is not a completed public-final physical continuum proof. It is an auditable proof-obligation surface that states what must be supplied before promotion beyond skeleton / contract witnesses.
 
 ## Normalization surface
 
@@ -186,6 +203,19 @@ physicalGap_dimensional = E0 * (33/20)
 | `scripts/audit_lean_forbidden_tokens.py` | Checks for forbidden Lean tokens outside comments / strings. |
 | `scripts/audit_major_theorem_nonplaceholder.py` | Checks named load-bearing theorem surfaces for non-placeholder statements and required anchors. |
 | `scripts/audit_bridge_coherence.py` | Checks bridge import edges, ready surfaces, preservation anchors, positivity anchors, infinite-dimensional target obligations, and public-boundary anchors. |
+| `scripts/audit_infinite_dimensional_target_layer.py` | Checks infinite-dimensional Yang--Mills target-layer anchors. |
+| `scripts/audit_infinite_dimensional_residual_filling.py` | Checks residual-filling bridge anchors. |
+| `scripts/audit_hard_physical_residual_hardening_map.py` | Checks hard residual hardening map anchors. |
+| `scripts/audit_complete_infinite_dimensional_hilbert_construction.py` | Checks the active complete Hilbert construction lane. |
+| `scripts/audit_self_adjoint_hphys_lane_hardening.py` | Checks self-adjoint H_phys hardening anchors. |
+| `scripts/audit_continuum_yang_mills_lane_hardening.py` | Checks continuum Yang--Mills hardening anchors. |
+| `scripts/audit_plaquette_spectral_weight_lane_hardening.py` | Checks plaquette spectral-weight hardening anchors. |
+| `scripts/audit_continuum_hamiltonian_mass_gap_witness_hardening.py` | Checks continuum-Hamiltonian witness hardening anchors. |
+| `scripts/audit_four_lane_residual_closure.py` | Checks four-lane residual closure anchors. |
+| `scripts/audit_internal_review_residual_closure_gate.py` | Checks internal review residual closure gate anchors. |
+| `scripts/audit_external_audit_readiness_gate.py` | Checks external audit readiness gate anchors. |
+| `scripts/audit_external_audit_readiness_gate_field_classification.py` | Checks witness field classification. |
+| `scripts/audit_external_audit_readiness_replay_certificate.py` | Checks replay certificate anchors. |
 | `scripts/replay_summary.py` | Generates a lightweight replay summary. |
 | `scripts/check.sh` | Runs the local full replay path. |
 
@@ -196,10 +226,11 @@ Recommended external review order:
 1. Run `bash scripts/check.sh`.
 2. Inspect the 12 major theorem surfaces listed above.
 3. Inspect the 8 bridge / target files listed above.
-4. Read `PHYSICAL_REALIZATION_BOUNDARY.md` before interpreting singleton / prototype / skeleton / target surfaces physically.
-5. Compare source statements with the corresponding documentation ledgers in `docs/`.
-6. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
-7. Treat CI and audit success as replay support, not as a substitute for mathematical review.
+4. Inspect the complete Hilbert and continuum-Hamiltonian route files listed above.
+5. Read `PHYSICAL_REALIZATION_BOUNDARY.md` before interpreting singleton / prototype / skeleton / target / construction surfaces physically.
+6. Compare source statements with the corresponding documentation ledgers in `docs/`.
+7. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+8. Treat CI and audit success as replay support, not as a substitute for mathematical review.
 
 ## Residual boundary
 
@@ -207,12 +238,12 @@ The index intentionally preserves the distinction between:
 
 ```text
 internal proof-architecture theorem-body closure
-contract / bridge / skeleton surfaces
+contract / bridge / skeleton / construction surfaces
 infinite-dimensional physical target obligations
 Lean kernel build success
 external mathematical consensus
 ```
 
-A successful replay of this index means that the repository's declared theorem, bridge, and target surfaces are present, auditable, and buildable in the pinned Lean environment.
+A successful replay of this index means that the repository's declared theorem, bridge, target, construction, continuum-Hamiltonian, and external-readiness surfaces are present, auditable, and buildable in the pinned Lean environment.
 
 It does not by itself discharge independent mathematical review of the full physical continuum Yang-Mills mass gap problem.
