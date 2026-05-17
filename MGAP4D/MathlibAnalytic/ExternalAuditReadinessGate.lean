@@ -242,5 +242,58 @@ theorem external_audit_readiness_complete_mass_gap_exact_positive :
     ⟨_, _, hPos, hExact, _⟩
   exact And.intro hPos hExact
 
+/-- Append-only external-audit projection of the complete spectral `33/20`
+Yang--Mills Hamiltonian route.
+
+This records external-audit visibility of the spectral infimum / spectral
+attainment / positive observable-atom path without widening public or final
+release boundaries. -/
+def externalAuditReadinessCompleteSpectralMassGapAddendumReady : Prop :=
+  externalAuditReadinessGateData.ready ∧
+  continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  0 < spectralMassRealSurface.mass ∧
+  spectralMassRealSurface.mass ≠ 0 ∧
+  yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+  yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
+
+/-- The complete spectral route is externally-audit-visible while preserving
+exact value, positive nonzero observable spectral mass, and boundary markers. -/
+theorem external_audit_readiness_complete_spectral_mass_gap_addendum_ready :
+    externalAuditReadinessCompleteSpectralMassGapAddendumReady := by
+  unfold externalAuditReadinessCompleteSpectralMassGapAddendumReady
+  rcases continuum_hamiltonian_complete_spectral_release_adoption_positive_nonzero_mass with
+    ⟨hMassPos, hMassNonzero⟩
+  rcases continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved with
+    ⟨hPublic, hFinal⟩
+  exact And.intro external_audit_readiness_gate_ready <|
+    And.intro continuum_hamiltonian_complete_spectral_mass_gap_release_adoption_ready <|
+    And.intro continuum_hamiltonian_complete_spectral_release_adoption_exact_mass_gap <|
+    And.intro hMassPos <|
+    And.intro hMassNonzero <|
+    And.intro hPublic hFinal
+
+/-- Spectral exact-value projection from the external-audit complete addendum. -/
+theorem external_audit_readiness_complete_spectral_mass_gap_exact_value :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  rcases external_audit_readiness_complete_spectral_mass_gap_addendum_ready with
+    ⟨_, _, hExact, _⟩
+  exact hExact
+
+/-- Spectral observable-mass projection from the external-audit complete addendum. -/
+theorem external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass :
+    0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
+  rcases external_audit_readiness_complete_spectral_mass_gap_addendum_ready with
+    ⟨_, _, _, hMassPos, hMassNonzero, _⟩
+  exact And.intro hMassPos hMassNonzero
+
+/-- Boundary projection from the external-audit complete spectral addendum. -/
+theorem external_audit_readiness_complete_spectral_mass_gap_boundary_held :
+    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+      yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
+  rcases external_audit_readiness_complete_spectral_mass_gap_addendum_ready with
+    ⟨_, _, _, _, _, hPublic, hFinal⟩
+  exact And.intro hPublic hFinal
+
 end MathlibAnalytic
 end MGAP4D
