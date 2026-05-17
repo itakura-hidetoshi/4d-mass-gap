@@ -96,21 +96,29 @@ noncomputable def prototypeContinuumSpectralTheoremSkeletonData :
     continuumWitness := PUnit.unit
     plaquetteObservable := PUnit.unit
     continuumWitness_eq_limit := rfl
-    continuumSpectralTheoremCertificate := True
-    continuumSpectralTheoremCertificate_proof := True.intro
-    exactAtomPreserved := True
-    exactAtomPreserved_proof := True.intro
-    positiveMassPreserved := True
-    positiveMassPreserved_proof := True.intro
-    observableWitnessPreserved := True
-    observableWitnessPreserved_proof := True.intro
+    continuumSpectralTheoremCertificate :=
+      spectralRealizationSkeletonReviewSurface.ready ∧
+      exactGapValueReal = (33 : ℝ) / 20
+    continuumSpectralTheoremCertificate_proof :=
+      And.intro spectral_realization_skeleton_review_surface_ready exactGapValueReal_eq
+    exactAtomPreserved := prototypeSpectralRealizationSkeletonData.exactAtomPresent
+    exactAtomPreserved_proof := prototypeSpectralRealizationSkeletonData.exactAtomPresent_proof
+    positiveMassPreserved := prototypeSpectralRealizationSkeletonData.positiveMassAtExact
+    positiveMassPreserved_proof := prototypeSpectralRealizationSkeletonData.positiveMassAtExact_proof
+    observableWitnessPreserved := prototypeSpectralRealizationSkeletonData.observableAtomWitness
+    observableWitnessPreserved_proof := prototypeSpectralRealizationSkeletonData.observableAtomWitness_proof
     exact_value_eq_3320 := exactGapValueReal_eq
-    continuumSpectralTheoremSkeletonVisible := True
-    continuumSpectralTheoremSkeletonVisible_proof := True.intro
-    finalTheoremReleaseStillHeld := True
-    finalTheoremReleaseStillHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    continuumSpectralTheoremSkeletonVisible :=
+      spectralRealizationSkeletonReviewSurface.ready ∧
+      exactGapValueReal = (33 : ℝ) / 20 ∧
+      0 < exactGapValueReal
+    continuumSpectralTheoremSkeletonVisible_proof :=
+      And.intro spectral_realization_skeleton_review_surface_ready
+        (And.intro exactGapValueReal_eq exactGapValueReal_pos)
+    finalTheoremReleaseStillHeld := spectralRealizationSkeletonReviewSurface.finalReleaseHeld
+    finalTheoremReleaseStillHeld_proof := spectralRealizationSkeletonReviewSurface.finalReleaseHeld_proof
+    publicBoundaryHeld := spectralRealizationSkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := spectralRealizationSkeletonReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_continuum_spectral_theorem_skeleton_ready :
     prototypeContinuumSpectralTheoremSkeletonData.ready := by
@@ -164,12 +172,12 @@ noncomputable def continuumSpectralTheoremSkeletonReviewSurface :
     positiveMassPreserved_proof := prototypeContinuumSpectralTheoremSkeletonData.positiveMassPreserved_proof
     observableWitnessPreserved := prototypeContinuumSpectralTheoremSkeletonData.observableWitnessPreserved
     observableWitnessPreserved_proof := prototypeContinuumSpectralTheoremSkeletonData.observableWitnessPreserved_proof
-    continuumSpectralTheoremSkeletonEstablished := True
-    continuumSpectralTheoremSkeletonEstablished_proof := True.intro
-    finalTheoremReleaseStillHeld := True
-    finalTheoremReleaseStillHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    continuumSpectralTheoremSkeletonEstablished := prototypeContinuumSpectralTheoremSkeletonData.ready
+    continuumSpectralTheoremSkeletonEstablished_proof := prototype_continuum_spectral_theorem_skeleton_ready
+    finalTheoremReleaseStillHeld := prototypeContinuumSpectralTheoremSkeletonData.finalTheoremReleaseStillHeld
+    finalTheoremReleaseStillHeld_proof := prototypeContinuumSpectralTheoremSkeletonData.finalTheoremReleaseStillHeld_proof
+    publicBoundaryHeld := prototypeContinuumSpectralTheoremSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeContinuumSpectralTheoremSkeletonData.publicBoundaryHeld_proof }
 
 theorem continuum_spectral_theorem_skeleton_review_surface_ready :
     continuumSpectralTheoremSkeletonReviewSurface.ready := by
