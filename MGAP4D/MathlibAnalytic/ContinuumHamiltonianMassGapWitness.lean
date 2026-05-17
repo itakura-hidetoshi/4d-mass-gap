@@ -126,6 +126,34 @@ theorem continuum_hamiltonian_to_mass_gap_chain_ready
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
+/-- The witness surface is explicitly theorem-witness-only. -/
+theorem continuum_hamiltonian_theorem_witness_only
+    (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
+    D.theoremWitnessOnly := by
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
+
+/-- The witness surface does not claim external mathematical consensus. -/
+theorem continuum_hamiltonian_no_external_consensus_claim
+    (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
+    D.noExternalConsensusClaim := by
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
+
+/-- The public theorem-release boundary is held by the witness surface. -/
+theorem continuum_hamiltonian_public_boundary_held
+    (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
+    D.publicBoundaryHeld := by
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
+  exact h
+
+/-- The final-release boundary is held by the witness surface. -/
+theorem continuum_hamiltonian_final_release_held
+    (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
+    D.finalReleaseHeld := by
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h⟩
+  exact h
+
 /-- The installed continuum Hamiltonian mass-gap witness surface. -/
 def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessData :=
   { continuumYMLaneReady := continuum_yang_mills_lane_hardening_ready
