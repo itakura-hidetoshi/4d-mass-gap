@@ -112,16 +112,26 @@ def prototypeHilbertSpaceInstanceSkeletonData : HilbertSpaceInstanceSkeletonData
     cauchy_has_limit := by
       intro s hs
       exact ⟨PUnit.unit, True.intro⟩
-    hilbertSpaceInstanceSkeletonVisible := True
-    hilbertSpaceInstanceSkeletonVisible_proof := True.intro
-    physicalUnboundedOperatorStillOpen := True
-    physicalUnboundedOperatorStillOpen_proof := True.intro
-    spectralRealizationStillOpen := True
-    spectralRealizationStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    hilbertSpaceInstanceSkeletonVisible :=
+      hilbertInnerProductSkeletonReviewSurface.ready ∧
+      hilbertInnerProductSkeletonReviewSurface.innerProductSkeletonEstablished
+    hilbertSpaceInstanceSkeletonVisible_proof :=
+      And.intro hilbert_inner_product_skeleton_review_surface_ready
+        hilbertInnerProductSkeletonReviewSurface.innerProductSkeletonEstablished_proof
+    physicalUnboundedOperatorStillOpen :=
+      hilbertInnerProductSkeletonReviewSurface.hilbertSpaceInstanceStillOpen
+    physicalUnboundedOperatorStillOpen_proof :=
+      hilbertInnerProductSkeletonReviewSurface.hilbertSpaceInstanceStillOpen_proof
+    spectralRealizationStillOpen :=
+      hilbertInnerProductSkeletonReviewSurface.hilbertSpaceInstanceStillOpen ∧
+      hilbertInnerProductSkeletonReviewSurface.innerProductSkeletonEstablished
+    spectralRealizationStillOpen_proof :=
+      And.intro hilbertInnerProductSkeletonReviewSurface.hilbertSpaceInstanceStillOpen_proof
+        hilbertInnerProductSkeletonReviewSurface.innerProductSkeletonEstablished_proof
+    finalReleaseHeld := hilbertInnerProductSkeletonReviewSurface.finalReleaseHeld
+    finalReleaseHeld_proof := hilbertInnerProductSkeletonReviewSurface.finalReleaseHeld_proof
+    publicBoundaryHeld := hilbertInnerProductSkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := hilbertInnerProductSkeletonReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_hilbert_space_instance_skeleton_ready :
     prototypeHilbertSpaceInstanceSkeletonData.ready := by
@@ -188,16 +198,16 @@ def hilbertSpaceInstanceSkeletonReviewSurface : HilbertSpaceInstanceSkeletonRevi
           prototypeHilbertSpaceInstanceSkeletonData.norm x =
           prototypeHilbertSpaceInstanceSkeletonData.inner x x
     normSqCompat_proof := prototypeHilbertSpaceInstanceSkeletonData.norm_sq_compat
-    hilbertSpaceInstanceSkeletonEstablished := True
-    hilbertSpaceInstanceSkeletonEstablished_proof := True.intro
-    physicalUnboundedOperatorStillOpen := True
-    physicalUnboundedOperatorStillOpen_proof := True.intro
-    spectralRealizationStillOpen := True
-    spectralRealizationStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    hilbertSpaceInstanceSkeletonEstablished := prototypeHilbertSpaceInstanceSkeletonData.ready
+    hilbertSpaceInstanceSkeletonEstablished_proof := prototype_hilbert_space_instance_skeleton_ready
+    physicalUnboundedOperatorStillOpen := prototypeHilbertSpaceInstanceSkeletonData.physicalUnboundedOperatorStillOpen
+    physicalUnboundedOperatorStillOpen_proof := prototypeHilbertSpaceInstanceSkeletonData.physicalUnboundedOperatorStillOpen_proof
+    spectralRealizationStillOpen := prototypeHilbertSpaceInstanceSkeletonData.spectralRealizationStillOpen
+    spectralRealizationStillOpen_proof := prototypeHilbertSpaceInstanceSkeletonData.spectralRealizationStillOpen_proof
+    finalReleaseHeld := prototypeHilbertSpaceInstanceSkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := prototypeHilbertSpaceInstanceSkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := prototypeHilbertSpaceInstanceSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeHilbertSpaceInstanceSkeletonData.publicBoundaryHeld_proof }
 
 theorem hilbert_space_instance_skeleton_review_surface_ready :
     hilbertSpaceInstanceSkeletonReviewSurface.ready := by
