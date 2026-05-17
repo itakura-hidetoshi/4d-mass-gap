@@ -58,6 +58,12 @@ python3 scripts/replay_summary.py
 echo "[check] lake update"
 lake update
 
+echo "[check] build continuum Hamiltonian exact mass-gap derivation"
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
+
+echo "[check] build continuum Hamiltonian release-chain addendum"
+lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+
 echo "[check] build external audit readiness gate"
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 
