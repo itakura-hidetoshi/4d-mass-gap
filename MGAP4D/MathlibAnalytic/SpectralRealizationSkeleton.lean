@@ -93,10 +93,10 @@ noncomputable def prototypeSpectralRealizationSkeletonData :
     plaquetteObservable := PUnit.unit
     exactAtomPresent := exactGapValueReal = (33 : ℝ) / 20 ∧ 0 < exactGapValueReal
     exactAtomPresent_proof := And.intro exactGapValueReal_eq exactGapValueReal_pos
-    spectralProjectionAtExact := PUnit.unit = PUnit.unit
+    spectralProjectionAtExact := exactGapValueReal = exactGapValueReal
     spectralProjectionAtExact_proof := rfl
-    observableAtomWitness := PUnit.unit = PUnit.unit
-    observableAtomWitness_proof := rfl
+    observableAtomWitness := exactGapValueReal = (33 : ℝ) / 20
+    observableAtomWitness_proof := exactGapValueReal_eq
     positiveMassAtExact := 0 < (1 : ℝ)
     positiveMassAtExact_proof := by norm_num
     rayleighExactWitness := exactGapValueReal = exactGapValueReal
