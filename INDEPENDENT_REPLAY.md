@@ -4,7 +4,7 @@ This document gives a minimal independent replay procedure for the MGAP4D Lean 4
 
 ## Scope
 
-This guide checks the public repository state only. It confirms the repository audit chain, lane hardening chain, four-lane residual closure, internal review residual closure gate, external audit readiness gate, replay summary, Lake manifest generation, and Lean build.
+This guide checks the public repository state only. It confirms the repository audit chain, complete infinite-dimensional Hilbert construction lane, downstream lane hardening chain, four-lane residual closure, internal review residual closure gate, external audit readiness gate, replay summary, Lake manifest generation, and Lean build.
 
 It does not claim external mathematical consensus, peer-review completion, Clay-style public final theorem acceptance, or a dimensional physical mass gap without an external reference scale `E0`.
 
@@ -41,15 +41,20 @@ This executes, in order:
 [check] audit infinite-dimensional Yang-Mills target layer
 [check] audit infinite-dimensional residual filling bridge
 [check] audit hard physical residual hardening map
-[check] audit Hilbert construction lane hardening
+[check] audit complete infinite-dimensional Hilbert construction
 [check] audit self-adjoint HPhys lane hardening
 [check] audit continuum Yang-Mills lane hardening
 [check] audit plaquette spectral weight lane hardening
+[check] audit continuum Hamiltonian witness hardening
 [check] audit four-lane residual closure
 [check] audit internal review residual closure gate
 [check] audit external audit readiness gate
+[check] audit external audit readiness gate field classification
+[check] audit external audit readiness replay certificate
 [check] replay summary
 [check] lake update
+[check] build continuum Hamiltonian exact mass-gap derivation
+[check] build continuum Hamiltonian release-chain addendum
 [check] build external audit readiness gate
 [check] lake build
 ```
@@ -64,15 +69,20 @@ python3 scripts/audit_bridge_coherence.py
 python3 scripts/audit_infinite_dimensional_target_layer.py
 python3 scripts/audit_infinite_dimensional_residual_filling.py
 python3 scripts/audit_hard_physical_residual_hardening_map.py
-python3 scripts/audit_hilbert_construction_lane_hardening.py
+python3 scripts/audit_complete_infinite_dimensional_hilbert_construction.py
 python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
 python3 scripts/audit_continuum_yang_mills_lane_hardening.py
 python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
+python3 scripts/audit_continuum_hamiltonian_mass_gap_witness_hardening.py
 python3 scripts/audit_four_lane_residual_closure.py
 python3 scripts/audit_internal_review_residual_closure_gate.py
 python3 scripts/audit_external_audit_readiness_gate.py
+python3 scripts/audit_external_audit_readiness_gate_field_classification.py
+python3 scripts/audit_external_audit_readiness_replay_certificate.py
 python3 scripts/replay_summary.py
 lake update
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
+lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build
 ```
@@ -83,14 +93,19 @@ lake build
 InfiniteDimensionalYangMillsRealizationTargets
   -> InfiniteDimensionalResidualFillingBridge
   -> HardPhysicalResidualHardeningMap
-      -> HilbertConstructionLaneHardening
+      -> CompleteInfiniteDimensionalHilbertConstruction
+      -> HilbertToPhysicalUnboundedOperatorBridge
       -> SelfAdjointHPhysLaneHardening
       -> ContinuumYangMillsLaneHardening
       -> PlaquetteSpectralWeightLaneHardening
+  -> ContinuumHamiltonianMassGapWitness
+  -> ContinuumHamiltonianExactMassGapDerivation
   -> FourLaneResidualClosure
   -> InternalReviewResidualClosureGate
   -> ExternalAuditReadinessGate
 ```
+
+The former `HilbertConstructionLaneHardening` route has been superseded as the active Hilbert lane by `CompleteInfiniteDimensionalHilbertConstruction`.
 
 ## External audit readiness anchors
 

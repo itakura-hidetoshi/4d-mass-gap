@@ -12,10 +12,18 @@ Audit script:
 scripts/audit_four_lane_residual_closure.py
 ```
 
+Complete Hilbert lane anchor:
+
+```text
+completeHilbertLaneReady
+completeHilbertLaneClosed
+completeInfiniteDimensionalHilbertConstructionLaneData.ready
+```
+
 Closed lanes:
 
 ```text
-hilbertLaneClosed
+completeHilbertLaneClosed
 selfAdjointLaneClosed
 continuumYMLaneClosed
 plaquetteWeightLaneClosed
@@ -36,6 +44,8 @@ Meaning:
 
 ```text
 repository-internal review-level residual closure is complete;
+the former HilbertConstructionLaneHardening name is no longer the closure root;
+the complete infinite-dimensional Hilbert construction is the active Hilbert lane;
 external review boundary remains visible.
 ```
 
@@ -62,7 +72,7 @@ Audit analytic bridge coherence: success
 Audit infinite-dimensional Yang-Mills target layer: success
 Audit infinite-dimensional residual filling bridge: success
 Audit hard physical residual hardening map: success
-Audit Hilbert construction lane hardening: success
+Audit complete infinite-dimensional Hilbert construction: success
 Audit self-adjoint HPhys lane hardening: success
 Audit continuum Yang-Mills lane hardening: success
 Audit plaquette spectral weight lane hardening: success

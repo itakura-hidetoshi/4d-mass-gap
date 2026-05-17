@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.HilbertConstructionLaneHardening
+import MGAP4D.MathlibAnalytic.CompleteInfiniteDimensionalHilbertConstruction
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysInterface
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysTheorem
 import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
@@ -10,11 +10,11 @@ namespace MathlibAnalytic
 /-- Hardening surface for the self-adjoint `H_phys` lane.
 
 This refines `selfAdjointHPhysLane` into an ordered review-level chain:
-operator interface, theorem body, physical unbounded-operator skeleton, and
-concrete `H_phys` bridge. It remains review-level and preserves the public
-boundary. -/
+complete infinite-dimensional Hilbert construction, operator interface, theorem
+body, physical unbounded-operator skeleton, and concrete `H_phys` bridge. It
+remains review-level and preserves the public boundary. -/
 structure SelfAdjointHPhysLaneHardeningData where
-  hilbertConstructionLaneReady : hilbertConstructionLaneHardeningData.ready
+  completeHilbertConstructionLaneReady : completeInfiniteDimensionalHilbertConstructionLaneData.ready
   hphysInterfaceReady : selfAdjointHPhysReviewSurface.ready
   hphysTheoremBodyReady : selfAdjointHPhysTheoremReviewSurface.ready
   physicalOperatorSkeletonReady : physicalUnboundedOperatorSkeletonReviewSurface.ready
@@ -36,7 +36,7 @@ structure SelfAdjointHPhysLaneHardeningData where
 /-- Ready predicate for the self-adjoint `H_phys` hardening lane. -/
 def SelfAdjointHPhysLaneHardeningData.ready
     (D : SelfAdjointHPhysLaneHardeningData) : Prop :=
-  hilbertConstructionLaneHardeningData.ready ∧
+  completeInfiniteDimensionalHilbertConstructionLaneData.ready ∧
   selfAdjointHPhysReviewSurface.ready ∧
   selfAdjointHPhysTheoremReviewSurface.ready ∧
   physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
@@ -126,7 +126,7 @@ theorem self_adjoint_hphys_exact_value_preserved
 
 /-- Installed self-adjoint `H_phys` hardening lane. -/
 def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
-  { hilbertConstructionLaneReady := hilbert_construction_lane_hardening_ready
+  { completeHilbertConstructionLaneReady := complete_infinite_dimensional_hilbert_construction_lane_ready
     hphysInterfaceReady := self_adjoint_hphys_review_surface_ready
     hphysTheoremBodyReady := self_adjoint_hphys_theorem_review_surface_ready
     physicalOperatorSkeletonReady := physical_unbounded_operator_skeleton_review_surface_ready
@@ -188,7 +188,7 @@ theorem self_adjoint_hphys_lane_hardening_ready :
     ⟨_, _, _, _, _, _, _, _, _, _, hPhysicalFinal, hPhysicalPublic⟩
   rcases concrete_hphys_realization_theorem_review_surface_ready with
     ⟨_, _, _, _, _, _, _, _, hConcreteFinal, hConcretePublic⟩
-  exact And.intro selfAdjointHPhysLaneHardeningData.hilbertConstructionLaneReady <|
+  exact And.intro selfAdjointHPhysLaneHardeningData.completeHilbertConstructionLaneReady <|
     And.intro selfAdjointHPhysLaneHardeningData.hphysInterfaceReady <|
     And.intro selfAdjointHPhysLaneHardeningData.hphysTheoremBodyReady <|
     And.intro selfAdjointHPhysLaneHardeningData.physicalOperatorSkeletonReady <|

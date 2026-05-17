@@ -18,7 +18,8 @@ REQUIRED_TARGET_ANCHORS = (
     "SelfAdjointHPhysLaneHardeningData.ready",
     "selfAdjointHPhysLaneHardeningData",
     "self_adjoint_hphys_lane_hardening_ready",
-    "hilbertConstructionLaneReady",
+    "completeHilbertConstructionLaneReady",
+    "completeInfiniteDimensionalHilbertConstructionLaneData.ready",
     "hphysInterfaceReady",
     "hphysTheoremBodyReady",
     "physicalOperatorSkeletonReady",
@@ -57,6 +58,8 @@ REQUIRED_ROOT_ANCHORS = (
 
 REQUIRED_DOC_ANCHORS = (
     "Self-adjoint HPhys Lane Hardening",
+    "completeHilbertConstructionLaneReady",
+    "completeInfiniteDimensionalHilbertConstructionLaneData.ready",
     "interfaceHardened",
     "theoremBodyHardened",
     "domainClosureHardened",
@@ -65,6 +68,13 @@ REQUIRED_DOC_ANCHORS = (
     "rayleighCompatibilityHardened",
     "physicalOperatorSkeletonHardened",
     "concreteHPhysBridgeHardened",
+)
+
+FORBIDDEN_STALE_ANCHORS = (
+    "hilbertConstructionLaneReady",
+    "hilbertConstructionLaneHardeningData",
+    "hilbert_construction_lane_hardening_ready",
+    "HilbertConstructionLaneHardening",
 )
 
 
@@ -100,11 +110,22 @@ def cleaned_lean_source(path: Path) -> str:
     return STRING_RE.sub('""', strip_lean_comments(path.read_text(encoding="utf-8")))
 
 
+def source_for(path: Path, *, clean_lean: bool) -> str:
+    return cleaned_lean_source(path) if clean_lean else path.read_text(encoding="utf-8")
+
+
 def require(path: Path, anchors: tuple[str, ...], label: str, *, clean_lean: bool) -> list[str]:
     if not path.exists():
         return [f"missing {label} file: {path}"]
-    source = cleaned_lean_source(path) if clean_lean else path.read_text(encoding="utf-8")
+    source = source_for(path, clean_lean=clean_lean)
     return [f"missing {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor not in source]
+
+
+def forbid(path: Path, anchors: tuple[str, ...], label: str, *, clean_lean: bool) -> list[str]:
+    if not path.exists():
+        return []
+    source = source_for(path, clean_lean=clean_lean)
+    return [f"forbidden stale {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor in source]
 
 
 def audit_forbidden_tokens(path: Path) -> list[str]:
@@ -125,12 +146,14 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "self-adjoint HPhys theorem", clean_lean=True))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_ANCHORS, "root import", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "self-adjoint HPhys documentation", clean_lean=False))
+    failures.extend(forbid(TARGET_PATH, FORBIDDEN_STALE_ANCHORS, "old Hilbert construction lane", clean_lean=True))
 
     print("Self-adjoint HPhys lane hardening audit")
     print(f"Self-adjoint HPhys anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"Self-adjoint HPhys theorem anchors audited: {len(REQUIRED_THEOREM_ANCHORS)}")
     print("Root import audited: MGAP4D/MathlibAnalytic.lean")
     print("Documentation audited: docs/self_adjoint_hphys_lane_hardening.md")
+    print("Forbidden stale Hilbert lane anchors audited")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
 
     if failures:
