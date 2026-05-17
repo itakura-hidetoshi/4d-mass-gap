@@ -1,20 +1,20 @@
-import MGAP4D.MathlibAnalytic.HilbertConstructionLaneHardening
+import MGAP4D.MathlibAnalytic.CompleteInfiniteDimensionalHilbertConstruction
 import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Bridge surface from the hardened Hilbert construction lane to the physical
-unbounded-operator skeleton.
+/-- Bridge surface from the complete infinite-dimensional Hilbert construction
+lane to the physical unbounded-operator skeleton.
 
 This is additive: it does not claim a new concrete Yang--Mills Hamiltonian or a
-closed spectral realization.  It records that the upstream Hilbert construction
-lane and the downstream physical unbounded-operator skeleton are simultaneously
-available, with the exact normalized value and the public/final boundary flags
-preserved. -/
+closed spectral realization.  It records that the upstream complete Hilbert
+construction lane and the downstream physical unbounded-operator skeleton are
+simultaneously available, with the exact normalized value and the public/final
+boundary flags preserved. -/
 structure HilbertToPhysicalUnboundedOperatorBridgeData where
-  hilbertLaneReady : hilbertConstructionLaneHardeningData.ready
-  hilbertInstanceHardened : hilbertConstructionLaneHardeningData.hilbertInstanceHardened
+  hilbertLaneReady : completeInfiniteDimensionalHilbertConstructionLaneData.ready
+  hilbertInstanceHardened : completeInfiniteDimensionalHilbertConstructionLaneData.hilbertInstanceHardened
   exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
   physicalOperatorReady : physicalUnboundedOperatorSkeletonReviewSurface.ready
   domainPreserved : physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved
@@ -32,8 +32,8 @@ structure HilbertToPhysicalUnboundedOperatorBridgeData where
 /-- Ready predicate for the Hilbert-to-physical unbounded-operator bridge. -/
 def HilbertToPhysicalUnboundedOperatorBridgeData.ready
     (D : HilbertToPhysicalUnboundedOperatorBridgeData) : Prop :=
-  hilbertConstructionLaneHardeningData.ready ∧
-  hilbertConstructionLaneHardeningData.hilbertInstanceHardened ∧
+  completeInfiniteDimensionalHilbertConstructionLaneData.ready ∧
+  completeInfiniteDimensionalHilbertConstructionLaneData.hilbertInstanceHardened ∧
   exactGapValueReal = (33 : ℝ) / 20 ∧
   physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
   physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved ∧
@@ -50,7 +50,7 @@ def HilbertToPhysicalUnboundedOperatorBridgeData.ready
 /-- The bridge preserves the upstream hardened Hilbert-instance witness. -/
 theorem hilbert_to_physical_bridge_hilbert_instance_hardened
     (D : HilbertToPhysicalUnboundedOperatorBridgeData) (_hD : D.ready) :
-    hilbertConstructionLaneHardeningData.hilbertInstanceHardened := by
+    completeInfiniteDimensionalHilbertConstructionLaneData.hilbertInstanceHardened := by
   exact D.hilbertInstanceHardened
 
 /-- The bridge exposes the downstream physical unbounded-operator readiness. -/
@@ -109,15 +109,16 @@ theorem hilbert_to_physical_bridge_spectral_realization_still_open
     physicalUnboundedOperatorSkeletonReviewSurface.spectralRealizationStillOpen := by
   exact D.spectralRealizationStillOpen
 
-/-- Installed bridge from the hardened Hilbert construction lane to the
-physical unbounded-operator skeleton. -/
+/-- Installed bridge from the complete infinite-dimensional Hilbert construction
+lane to the physical unbounded-operator skeleton. -/
 def hilbertToPhysicalUnboundedOperatorBridgeData :
     HilbertToPhysicalUnboundedOperatorBridgeData :=
-  { hilbertLaneReady := hilbert_construction_lane_hardening_ready
+  { hilbertLaneReady := complete_infinite_dimensional_hilbert_construction_lane_ready
     hilbertInstanceHardened :=
-      hilbert_construction_hilbert_instance_hardened
-        hilbertConstructionLaneHardeningData hilbert_construction_lane_hardening_ready
-    exactValuePreserved := hilbertConstructionLaneHardeningData.exactValuePreserved
+      complete_hilbert_construction_hilbert_instance_hardened
+        completeInfiniteDimensionalHilbertConstructionLaneData
+        complete_infinite_dimensional_hilbert_construction_lane_ready
+    exactValuePreserved := completeInfiniteDimensionalHilbertConstructionLaneData.exactValuePreserved
     physicalOperatorReady := physical_unbounded_operator_skeleton_review_surface_ready
     domainPreserved := physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved_proof
     symmetricOnDomain := physicalUnboundedOperatorSkeletonReviewSurface.symmetricOnDomain_proof
@@ -126,13 +127,13 @@ def hilbertToPhysicalUnboundedOperatorBridgeData :
     distinguishedAttainsExact :=
       physicalUnboundedOperatorSkeletonReviewSurface.distinguishedAttainsExact_proof
     bridgeEstablished :=
-      hilbertConstructionLaneHardeningData.ready ∧
+      completeInfiniteDimensionalHilbertConstructionLaneData.ready ∧
       physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
       exactGapValueReal = (33 : ℝ) / 20
     bridgeEstablished_proof :=
-      And.intro hilbert_construction_lane_hardening_ready <|
+      And.intro complete_infinite_dimensional_hilbert_construction_lane_ready <|
         And.intro physical_unbounded_operator_skeleton_review_surface_ready
-          hilbertConstructionLaneHardeningData.exactValuePreserved
+          completeInfiniteDimensionalHilbertConstructionLaneData.exactValuePreserved
     concreteYangMillsHamiltonianStillOpen :=
       physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen_proof
     spectralRealizationStillOpen :=
