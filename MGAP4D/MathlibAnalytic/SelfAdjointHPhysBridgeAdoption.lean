@@ -82,20 +82,36 @@ theorem self_adjoint_hphys_bridge_adoption_exact_value
     exactGapValueReal = (33 : ℝ) / 20 := by
   exact D.exactValuePreserved
 
+private theorem selfAdjointHPhysLanePublicBoundaryHeld_proof :
+    selfAdjointHPhysLaneHardeningData.publicBoundaryHeld := by
+  rcases self_adjoint_hphys_lane_hardening_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPublic, _⟩
+  exact hPublic
+
+private theorem selfAdjointHPhysLaneFinalReleaseHeld_proof :
+    selfAdjointHPhysLaneHardeningData.finalReleaseHeld := by
+  rcases self_adjoint_hphys_lane_hardening_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hFinal⟩
+  exact hFinal
+
 /-- Installed bridge-adoption surface for self-adjoint `H_phys`. -/
 def selfAdjointHPhysBridgeAdoptionData : SelfAdjointHPhysBridgeAdoptionData :=
   { hilbertToPhysicalBridgeReady := hilbert_to_physical_unbounded_operator_bridge_ready
     selfAdjointLaneReady := self_adjoint_hphys_lane_hardening_ready
     bridgeOperatorReady := hilbertToPhysicalUnboundedOperatorBridgeData.physicalOperatorReady
     laneOperatorReady := selfAdjointHPhysLaneHardeningData.physicalOperatorSkeletonReady
-    lanePhysicalOperatorHardened := selfAdjointHPhysLaneHardeningData.physicalOperatorSkeletonHardened
+    lanePhysicalOperatorHardened :=
+      self_adjoint_hphys_physical_operator_skeleton_hardened
+        selfAdjointHPhysLaneHardeningData self_adjoint_hphys_lane_hardening_ready
     bridgeSelfAdjointCertificate :=
       hilbertToPhysicalUnboundedOperatorBridgeData.selfAdjointCertificate
     bridgeRayleighLowerBound := hilbertToPhysicalUnboundedOperatorBridgeData.rayleighLowerBound
     laneSelfAdjointCertificateHardened :=
-      selfAdjointHPhysLaneHardeningData.selfAdjointCertificateHardened
+      self_adjoint_hphys_certificate_hardened
+        selfAdjointHPhysLaneHardeningData self_adjoint_hphys_lane_hardening_ready
     laneRayleighCompatibilityHardened :=
-      selfAdjointHPhysLaneHardeningData.rayleighCompatibilityHardened
+      self_adjoint_hphys_rayleigh_compatibility_hardened
+        selfAdjointHPhysLaneHardeningData self_adjoint_hphys_lane_hardening_ready
     exactValuePreserved := selfAdjointHPhysLaneHardeningData.exactValuePreserved
     bridgeAdoptedByLane :=
       hilbertToPhysicalUnboundedOperatorBridgeData.ready ∧
@@ -105,16 +121,17 @@ def selfAdjointHPhysBridgeAdoptionData : SelfAdjointHPhysBridgeAdoptionData :=
     bridgeAdoptedByLane_proof :=
       And.intro hilbert_to_physical_unbounded_operator_bridge_ready <|
         And.intro self_adjoint_hphys_lane_hardening_ready <|
-          And.intro hilbertToPhysicalUnboundedOperatorBridgeData.physicalOperatorReady
-            selfAdjointHPhysLaneHardeningData.physicalOperatorSkeletonHardened
+          And.intro hilbertToPhysicalUnboundedOperatorBridgeData.physicalOperatorReady <|
+            self_adjoint_hphys_physical_operator_skeleton_hardened
+              selfAdjointHPhysLaneHardeningData self_adjoint_hphys_lane_hardening_ready
     downstreamConcreteHPhysBridgeReady :=
       selfAdjointHPhysLaneHardeningData.concreteHPhysBridgeReady
     concreteYangMillsHamiltonianStillOpen :=
       hilbertToPhysicalUnboundedOperatorBridgeData.concreteYangMillsHamiltonianStillOpen
     spectralRealizationStillOpen :=
       hilbertToPhysicalUnboundedOperatorBridgeData.spectralRealizationStillOpen
-    publicBoundaryHeld := selfAdjointHPhysLaneHardeningData.publicBoundaryHeld
-    finalReleaseHeld := selfAdjointHPhysLaneHardeningData.finalReleaseHeld }
+    publicBoundaryHeld := selfAdjointHPhysLanePublicBoundaryHeld_proof
+    finalReleaseHeld := selfAdjointHPhysLaneFinalReleaseHeld_proof }
 
 /-- The installed self-adjoint `H_phys` bridge-adoption surface is ready. -/
 theorem self_adjoint_hphys_bridge_adoption_ready :
