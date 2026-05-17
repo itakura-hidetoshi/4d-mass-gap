@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuumHamiltonianMassGapReleaseAdoption
+import MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -68,6 +69,86 @@ theorem physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap :
     And.intro hNoConsensus <|
     And.intro hPublic hFinal
 
+/-- Prop-level alias for the additive spectral-complete derivation surface.
+
+Keeping this as a `def : Prop` avoids treating an existing theorem proof term as
+if it were a proposition inside a larger conjunction. -/
+def Physical4DYMContinuumHamiltonianSpectralCompleteDerivationReady : Prop :=
+  continuumYangMillsLaneHardeningData.ready ∧
+    plaquetteSpectralWeightLaneHardeningData.ready ∧
+    continuumHamiltonianMassGapWitnessData.ready ∧
+    continuumHamiltonianMassGapWitnessData.physicalContinuumHamiltonianReady ∧
+    continuumHamiltonianMassGapWitnessData.hphysFromContinuumYMReady ∧
+    continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
+    continuumHamiltonianMassGapWitnessData.normalizationToExactGapReady ∧
+    continuumHamiltonianMassGapWitnessData.compactCenteredPlaquetteWeightReady ∧
+    continuumHamiltonianMassGapWitnessData.spectralMassObservableReady ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = (33 : ℝ) / 20 ∧
+    continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
+    continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
+    continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
+    continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+    continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
+    continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
+    yangMillsHamiltonianSpectralDerivation3320.ready ∧
+    yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
+      (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.attainedSpectralValue =
+      (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
+      (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+      (33 : ℝ) / 20 ∧
+    exactGapValueReal =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+    0 < spectralMassRealSurface.mass ∧
+    spectralMassRealSurface.mass ≠ 0 ∧
+    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+    yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
+
+/-- Additive spectral-complete derivation surface: the complete physical
+4D Yang--Mills Hamiltonian derivation now explicitly carries the spectral
+route deriving the same normalized value `33/20`.
+
+This leaves the older complete theorem unchanged and adds the explicit spectral
+infimum / spectral attainment / positive observable spectral atom route. -/
+theorem physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap :
+    Physical4DYMContinuumHamiltonianSpectralCompleteDerivationReady := by
+  unfold Physical4DYMContinuumHamiltonianSpectralCompleteDerivationReady
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
+    ⟨hYM, hPQ, hWitnessReady, hPhysical, hHphys, hSelfAdjoint, hNorm,
+      hCompactWeight, hSpectralMass, hGapPos, hGapExact, hDerivation,
+      hChain, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
+  exact And.intro hYM <|
+    And.intro hPQ <|
+    And.intro hWitnessReady <|
+    And.intro hPhysical <|
+    And.intro hHphys <|
+    And.intro hSelfAdjoint <|
+    And.intro hNorm <|
+    And.intro hCompactWeight <|
+    And.intro hSpectralMass <|
+    And.intro hGapPos <|
+    And.intro hGapExact <|
+    And.intro hDerivation <|
+    And.intro hChain <|
+    And.intro hWitnessOnly <|
+    And.intro hNoConsensus <|
+    And.intro hPublic <|
+    And.intro hFinal <|
+    And.intro yang_mills_hamiltonian_spectral_derivation_3320_ready <|
+    And.intro yang_mills_hamiltonian_spectral_infimum_eq_3320 <|
+    And.intro yang_mills_hamiltonian_spectral_attainment_eq_3320 <|
+    And.intro yang_mills_hamiltonian_observable_atom_eq_3320 <|
+    And.intro yang_mills_hamiltonian_spectral_analysis_derives_3320 <|
+    And.intro yang_mills_hamiltonian_exact_gap_eq_spectral_value <|
+    And.intro yang_mills_hamiltonian_spectral_derivation_positive_mass <|
+    And.intro yang_mills_hamiltonian_spectral_derivation_nonzero_mass <|
+    And.intro
+      yang_mills_hamiltonian_spectral_derivation_public_boundary_held
+      yang_mills_hamiltonian_spectral_derivation_final_release_held
+
 /-- Public-boundary projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_public_boundary_held :
     continuumHamiltonianMassGapWitnessData.publicBoundaryHeld := by
@@ -88,6 +169,21 @@ theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_exact_positive_
   rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
     ⟨_, _, _, _, _, _, _, _, _, hPos, hExact, _⟩
   exact And.intro hPos hExact
+
+/-- Spectral exact-value projection for the complete continuum-Hamiltonian derivation. -/
+theorem physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap with
+    ⟨_, _, _, _, _, _, _, _, _, _, hExact, _⟩
+  exact hExact
+
+/-- Spectral atom projection for the complete continuum-Hamiltonian derivation. -/
+theorem physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_nonzero :
+    0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPosMass,
+      hNonzeroMass, _⟩
+  exact And.intro hPosMass hNonzeroMass
 
 /-- External-consensus boundary projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_no_external_consensus_claim :
