@@ -40,13 +40,16 @@ theorem continuum_hamiltonian_derives_positive_exact_mass_gap :
       continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
-  exact And.intro continuum_hamiltonian_mass_gap_witness_ready <|
-    And.intro continuum_hamiltonian_derives_positive_mass_gap <|
-    And.intro continuum_hamiltonian_derives_exact_mass_gap_value <|
-    And.intro continuum_hamiltonian_derives_mass_gap_chain <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+  rcases continuum_hamiltonian_mass_gap_witness_ready with
+    ⟨hReady, _, _, _, _, _, hPos, hExact, _, _, _, hChain, hWitnessOnly,
+      hNoConsensus, hPublic, hFinal⟩
+  exact And.intro hReady <|
+    And.intro hPos <|
+    And.intro hExact <|
+    And.intro hChain <|
+    And.intro hWitnessOnly <|
+    And.intro hNoConsensus <|
+    And.intro hPublic hFinal
 
 /-- The exact positive mass-gap theorem preserves the public-boundary closure. -/
 theorem continuum_hamiltonian_mass_gap_theorem_public_boundary_held :
