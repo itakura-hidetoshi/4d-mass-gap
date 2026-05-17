@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.InternalReviewResidualClosureGate
 import MGAP4D.MathlibAnalytic.FinalTheoremReleaseBundleManifest
+import MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -204,6 +205,42 @@ theorem external_audit_readiness_gate_ready :
     And.intro external_audit_readiness_public_boundary_held_witness <|
     And.intro external_audit_readiness_final_release_held_witness
       externalAuditReadinessGateData.exactValuePreserved
+
+/-- Append-only external-audit projection of the complete continuum-Hamiltonian
+mass-gap release adoption surface.  This does not claim external consensus; it
+only records that the complete adoption is visible at the external-audit gate. -/
+def externalAuditReadinessCompleteMassGapAddendumReady : Prop :=
+  externalAuditReadinessGateData.ready ∧
+  continuumHamiltonianCompleteMassGapReleaseAdoptionReady ∧
+  0 < exactGapValueReal ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
+  continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+  continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
+  continuumHamiltonianMassGapWitnessData.finalReleaseHeld
+
+/-- The complete release adoption is externally-audit-visible while preserving
+witness-only status, no external-consensus claim, and the public/final-release
+boundaries. -/
+theorem external_audit_readiness_complete_mass_gap_addendum_ready :
+    externalAuditReadinessCompleteMassGapAddendumReady := by
+  unfold externalAuditReadinessCompleteMassGapAddendumReady
+  rcases continuum_hamiltonian_complete_mass_gap_release_adoption_ready with
+    ⟨_, _, _, hPos, hExact, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
+  exact And.intro external_audit_readiness_gate_ready <|
+    And.intro continuum_hamiltonian_complete_mass_gap_release_adoption_ready <|
+    And.intro hPos <|
+    And.intro hExact <|
+    And.intro hWitnessOnly <|
+    And.intro hNoConsensus <|
+    And.intro hPublic hFinal
+
+/-- Exact-positive projection from the external-audit complete addendum. -/
+theorem external_audit_readiness_complete_mass_gap_exact_positive :
+    0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20 := by
+  rcases external_audit_readiness_complete_mass_gap_addendum_ready with
+    ⟨_, _, hPos, hExact, _⟩
+  exact And.intro hPos hExact
 
 end MathlibAnalytic
 end MGAP4D
