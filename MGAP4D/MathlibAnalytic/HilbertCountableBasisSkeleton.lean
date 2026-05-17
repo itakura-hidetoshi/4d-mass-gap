@@ -92,18 +92,28 @@ def prototypeHilbertCountableBasisSkeletonData : HilbertCountableBasisSkeletonDa
     finite_restrictions_linearly_independent := by
       intro k i j h
       exact Fin.ext h
-    countableBasisSkeletonVisible := True
-    countableBasisSkeletonVisible_proof := True.intro
-    finiteSpanDensityStillOpen := True
-    finiteSpanDensityStillOpen_proof := True.intro
-    normTopologyStillOpen := True
-    normTopologyStillOpen_proof := True.intro
-    hilbertCompletionStillOpen := True
-    hilbertCompletionStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    countableBasisSkeletonVisible :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.ready ∧
+      hilbertLinearIndependenceFromExcitationsReviewSurface.finiteIndependenceEstablished
+    countableBasisSkeletonVisible_proof :=
+      And.intro hilbert_linear_independence_from_excitations_review_surface_ready
+        hilbertLinearIndependenceFromExcitationsReviewSurface.finiteIndependenceEstablished_proof
+    finiteSpanDensityStillOpen :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertBasisStillOpen
+    finiteSpanDensityStillOpen_proof :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertBasisStillOpen_proof
+    normTopologyStillOpen :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertCompletionStillOpen
+    normTopologyStillOpen_proof :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertCompletionStillOpen_proof
+    hilbertCompletionStillOpen :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertCompletionStillOpen
+    hilbertCompletionStillOpen_proof :=
+      hilbertLinearIndependenceFromExcitationsReviewSurface.fullHilbertCompletionStillOpen_proof
+    finalReleaseHeld := hilbertLinearIndependenceFromExcitationsReviewSurface.finalReleaseHeld
+    finalReleaseHeld_proof := hilbertLinearIndependenceFromExcitationsReviewSurface.finalReleaseHeld_proof
+    publicBoundaryHeld := hilbertLinearIndependenceFromExcitationsReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := hilbertLinearIndependenceFromExcitationsReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_hilbert_countable_basis_skeleton_ready :
     prototypeHilbertCountableBasisSkeletonData.ready := by
@@ -158,18 +168,18 @@ def hilbertCountableBasisSkeletonReviewSurface : HilbertCountableBasisSkeletonRe
   { finiteIndependenceReady := hilbert_linear_independence_from_excitations_review_surface_ready
     countableBasisSkeletonReady := prototype_hilbert_countable_basis_skeleton_ready
     finiteRestrictionIndependent := prototype_hilbert_countable_basis_finite_restriction_linearly_independent
-    countableBasisSkeletonEstablished := True
-    countableBasisSkeletonEstablished_proof := True.intro
-    finiteSpanDensityStillOpen := True
-    finiteSpanDensityStillOpen_proof := True.intro
-    normTopologyStillOpen := True
-    normTopologyStillOpen_proof := True.intro
-    hilbertCompletionStillOpen := True
-    hilbertCompletionStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    countableBasisSkeletonEstablished := prototypeHilbertCountableBasisSkeletonData.ready
+    countableBasisSkeletonEstablished_proof := prototype_hilbert_countable_basis_skeleton_ready
+    finiteSpanDensityStillOpen := prototypeHilbertCountableBasisSkeletonData.finiteSpanDensityStillOpen
+    finiteSpanDensityStillOpen_proof := prototypeHilbertCountableBasisSkeletonData.finiteSpanDensityStillOpen_proof
+    normTopologyStillOpen := prototypeHilbertCountableBasisSkeletonData.normTopologyStillOpen
+    normTopologyStillOpen_proof := prototypeHilbertCountableBasisSkeletonData.normTopologyStillOpen_proof
+    hilbertCompletionStillOpen := prototypeHilbertCountableBasisSkeletonData.hilbertCompletionStillOpen
+    hilbertCompletionStillOpen_proof := prototypeHilbertCountableBasisSkeletonData.hilbertCompletionStillOpen_proof
+    finalReleaseHeld := prototypeHilbertCountableBasisSkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := prototypeHilbertCountableBasisSkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := prototypeHilbertCountableBasisSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeHilbertCountableBasisSkeletonData.publicBoundaryHeld_proof }
 
 theorem hilbert_countable_basis_skeleton_review_surface_ready :
     hilbertCountableBasisSkeletonReviewSurface.ready := by
