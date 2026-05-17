@@ -29,11 +29,13 @@ internal normalized theorem-body claim: present
 physical Hamiltonian normalization bridge: present
 concrete residual closure: present
 infinite-dimensional residual filling bridge: present
+complete infinite-dimensional Hilbert construction: present
 Hilbert-to-physical unbounded operator bridge: present
 self-adjoint HPhys bridge adoption: present
 continuum Yang-Mills lane hardening: present
 plaquette spectral weight lane hardening: present
-continuum Hamiltonian mass-gap witness hardening: present
+continuum Hamiltonian mass-gap witness: present
+continuum Hamiltonian exact mass-gap derivation: present
 continuum Hamiltonian mass-gap theorem: present
 continuum Hamiltonian mass-gap release adoption: present
 continuum Hamiltonian complete mass-gap derivation: present
@@ -43,7 +45,6 @@ internal review residual closure gate: present
 external audit readiness gate: present
 major theorem non-placeholder audit: green
 bridge coherence audit: green
-external-audit-readiness CI: green
 external mathematical consensus: not claimed
 public final theorem claim: review-gated
 ```
@@ -110,34 +111,9 @@ Independent replay and external audit: still required
 - [x] Add R1--R7 theorem candidates, checklists, proof-obligation maps, skeletons, bundles, and milestones
 - [x] Add Phase3CandidateClosure and Phase3CIConfirmationClosure
 - [x] Complete R1--R7 scoped Mathlib dry-run series
-- [x] Record earlier Mathlib main-adoption decision: hold_main_adoption
-- [x] Add post-Mathlib-hold theorem-route hardening checkpoint
-- [x] Add R3--R7 route-specific hardening checkpoints
-- [x] Add R3--R7 closure-candidate series review checkpoint
-- [x] Add R3--R7 theorem-route queue checkpoint
-- [x] Add R3--R7 theorem-route hardening passes
-- [x] Add R3--R7 hardening pass series review checkpoint
-- [x] Add post-hardening-pass closure checkpoint
-- [x] Add R1--R7 proof-obligation tightening closures
-- [x] Observe R1--R7 proof-obligation tightening closure series review main CI green
-- [x] Record R1--R7 proof-obligation tightening closure series review CI success in ledger
-- [x] Add post-R1--R7 proof-obligation tightening closure checkpoint
-- [x] Observe post-R1--R7 proof-obligation tightening closure main CI green
-- [x] Add final theorem release gate preparation refresh checkpoint
-- [x] Observe final theorem release gate preparation refresh main CI green
-- [x] Add independent replay gate preparation checkpoint
-- [x] Add independent replay protocol checkpoint
-- [x] Correct independent replay protocol to explicit R1--R7 global scope
-- [x] Move release/replay/source-tree gates to global Phase3ReleaseGate root
-- [x] Add source-tree review gate final sync checkpoint
-- [x] Add external audit note gate checkpoint
-- [x] Add entrypoint naming convention final sync checkpoint
-- [x] Add spectral module entrypoint
-- [x] Add spectral gap formalization checkpoint
+- [x] Add spectral module entrypoint and spectral gap formalization checkpoint
 - [x] Wire spectral gap formalization gate through Phase3ReleaseGate
-- [x] Observe spectral gap formalization main CI green
-- [x] Record spectral gap formalization CI success in ledger
-- [x] Add external audit note appendix template
+- [x] Observe spectral gap formalization CI green
 - [x] Add KuuOS reference bridge
 
 ## Phase 4: Release hygiene and external-audit surfaces
@@ -145,21 +121,11 @@ Independent replay and external audit: still required
 - [x] Move release provenance into `docs/archive/`
 - [x] Keep root README GitHub-native
 - [x] Keep public theorem claims review-gated
-- [x] Prepare version-tag readiness notes without creating a tag
-- [x] Prepare version-tag source-tree review refresh without creating a tag
-- [x] Prepare bounded tag-candidate receipt without creating a tag
-- [x] Prepare manual tag creation receipt without creating a tag
-- [x] Add bounded tag creation script without creating a tag
-- [x] Add post-tag verification receipt template
-- [x] Add tag creation script usage note without creating a tag
-- [x] Open tag creation tracking issue without creating a tag
-- [x] Record tag creation tracking issue receipt
-- [x] Add post-tag verification automation plan without creating a tag
+- [x] Prepare tag-readiness notes without creating a tag
 - [x] Add external audit note template without changing active proof semantics
-- [x] Record external audit note template CI without changing active proof semantics
 - [x] Record external audit readiness gate CI without changing active proof semantics
 - [x] Add continuum Hamiltonian complete release surface without changing active proof semantics
-- [ ] Add version tags only after a fresh source-tree review and CI green confirmation for the target commit
+- [ ] Add version tags only after fresh source-tree review and CI green confirmation for the target commit
 - [ ] Add external audit notes without changing active proof semantics
 
 ## Phase 5: Analytic theorem-body and concrete residual closure
@@ -189,13 +155,9 @@ Independent replay and external audit: still required
 - [x] Add concrete Yang-Mills Hamiltonian skeleton
 - [x] Add spectral realization skeleton
 - [x] Add continuum spectral theorem skeleton
-- [x] Add final theorem release skeleton
-- [x] Add final theorem release closure packet
-- [x] Add final theorem release chain index
-- [x] Add final theorem release bundle manifest
+- [x] Add final theorem release skeleton / closure / chain index / bundle manifest
 - [x] Add concrete residual closure
 - [x] Observe concrete residual closure CI green
-- [x] Record concrete residual closure CI in ledger
 
 Concrete residual surfaces closed internally:
 
@@ -210,11 +172,7 @@ operator-measure realization and compatibility
 ## Phase 6: Physical Hamiltonian normalization and exact-value origin
 
 - [x] Add physical Hamiltonian normalization bridge
-- [x] Observe physical Hamiltonian normalization bridge CI green
-- [x] Record physical Hamiltonian normalization bridge CI in ledger
 - [x] Add exact value theorem-body origin certificate
-- [x] Observe exact value theorem-body origin CI green
-- [x] Record exact value theorem-body origin CI in ledger
 - [x] Align README theorem claim and boundary with internal theorem-body status
 - [x] Sync README with current main status
 - [x] Sync ROADMAP with current theorem-body status
@@ -246,17 +204,11 @@ PVM mass compatibility is carried from theorem body
 
 - [x] Add major theorem non-placeholder audit script
 - [x] Wire major theorem non-placeholder audit into CI
-- [x] Fix positivity anchor for theorem-body closure audit
-- [x] Observe major theorem non-placeholder audit CI green
-- [x] Record major theorem non-placeholder audit CI in ledger
 - [x] Add bridge coherence audit script
 - [x] Add dedicated Bridge Coherence CI workflow
-- [x] Trigger Bridge Coherence CI
-- [x] Observe Bridge Coherence CI green
-- [x] Record Bridge Coherence CI in ledger
 - [x] Wire expanded audit chain into `scripts/check.sh`
-- [x] Observe external-audit-readiness gate CI green
-- [x] Record latest external-audit-readiness CI ledger
+- [x] Add external audit readiness field-classification audit
+- [x] Add external audit readiness replay-certificate audit
 
 Audit invariants:
 
@@ -266,7 +218,7 @@ major theorem surfaces are not trivial True-only statements
 33/20 theorem-body origin is checked as a non-placeholder statement
 operator-measure/PVM compatibility is checked as a non-placeholder statement
 Hamiltonian normalization bridge is checked as a non-placeholder statement
-Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge order is mechanically audited
+complete Hilbert -> physical unbounded operator -> H_phys -> Yang-Mills -> spectral/PVM -> continuum route is mechanically audited
 exact value preservation anchors are mechanically audited
 public boundary markers are mechanically audited
 external audit readiness is mechanically gated
@@ -277,12 +229,14 @@ external audit readiness is mechanically gated
 - [x] Add infinite-dimensional Yang-Mills realization target layer
 - [x] Add infinite-dimensional residual filling bridge
 - [x] Add hard physical residual hardening map
-- [x] Add Hilbert construction lane hardening
+- [x] Replace the former Hilbert construction lane hardening route with `CompleteInfiniteDimensionalHilbertConstruction`
 - [x] Add Hilbert-to-physical unbounded operator bridge
 - [x] Add self-adjoint HPhys bridge adoption
 - [x] Add self-adjoint HPhys lane hardening
 - [x] Add continuum Yang-Mills lane hardening
 - [x] Add plaquette spectral weight lane hardening
+- [x] Add continuum Hamiltonian mass-gap witness
+- [x] Add continuum Hamiltonian exact mass-gap derivation
 - [x] Add continuum Hamiltonian mass-gap witness hardening
 - [x] Add continuum Hamiltonian mass-gap theorem
 - [x] Add continuum Hamiltonian mass-gap release adoption
@@ -292,41 +246,36 @@ external audit readiness is mechanically gated
 - [x] Add internal review residual closure gate
 - [x] Add external audit readiness gate
 - [x] Build `MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate` in CI
-- [x] Observe Lean-side warning cleanup in green CI run
-- [x] Sync README and ROADMAP to latest complete continuum-Hamiltonian checkpoint
-- [x] Add complete continuum-Hamiltonian release-surface doc
-- [ ] Add a fresh source-tree review receipt for the latest external-audit-readiness checkpoint
-- [ ] Add independent replay notes for the full MathlibAnalytic external-audit-readiness chain
+- [x] Sync README, ROADMAP, independent replay, external audit packet, external review checklist, theorem index, and source-tree receipt to complete Hilbert route
+- [ ] Add version tags only after fresh source-tree review and CI green confirmation for the exact target commit
 
 Current external-audit-readiness checkpoint:
 
 ```text
 Workflow: Full Local Check CI / Run scripts/check.sh
-Run ID: 25988968639
-Job ID: 76391524347
-Head commit: a032caed7121bc14df3bf286e723cd90a76fd2cb
-CI merge ref: 8a4761d7ff9ea9b1f3b9c2c0b2a3ca338dacb178
+Run ID: 25991097002
+Head commit: 511f63477081bec49a5291cb77a2769b3d154c01
 Result: success
 Lean files scanned: 472
 sorry/admit/axiom/constant: 0/0/0/0
 Major theorem specs audited: 12
 Bridge files audited: 8
 Ordered import edges audited: 5
-Continuum Hamiltonian exact mass-gap derivation build: 8368 jobs, success
-Continuum Hamiltonian release-chain addendum build: 8369 jobs, success
-External audit readiness gate build: 8376 jobs, success
-Final lake build: success, 0 jobs
-Lean-side warnings in theorem / release / external audit readiness gate build: none observed
+Continuum Hamiltonian exact mass-gap derivation build: success
+Continuum Hamiltonian release-chain addendum build: success
+External audit readiness gate build: success
+Final lake build: success
 ```
 
 ## Current priority
 
 ```text
-1. Keep README, ROADMAP, source-tree review notes, and CI ledgers synchronized with the latest green checkpoint.
-2. Add a fresh source-tree review receipt for the latest external-audit-readiness checkpoint.
-3. Prepare independent replay instructions for the full MathlibAnalytic external-audit-readiness chain.
-4. Add external audit notes without changing active proof semantics.
-5. Add version tags only after source-tree review and CI green confirmation for the exact target commit.
+1. Wait for fresh CI on the latest documentation head.
+2. Confirm scripts/check.sh is green on that exact head or merge ref.
+3. Confirm external audit readiness CI is green on that exact head or merge ref.
+4. Record the exact latest head / merge ref in the CI ledger if it differs from the previous green checkpoint.
+5. Add external audit notes without changing active proof semantics.
+6. Add version tags only after source-tree review and CI green confirmation for the exact target commit.
 ```
 
 Current branch invariant:
@@ -337,13 +286,14 @@ Dimensionless normalized exact value surface: 33/20
 physical dimensional reading: requires E0
 concrete Hilbert / H_phys / PVM / plaquette / operator-measure residuals: internally closed
 infinite-dimensional target and residual-filling surfaces: recorded
+complete infinite-dimensional Hilbert construction: recorded
 Hilbert-to-physical unbounded operator bridge: recorded
 self-adjoint HPhys bridge adoption: recorded
 continuum-Hamiltonian positive exact mass-gap theorem: recorded
 continuum-Hamiltonian complete mass-gap derivation: recorded
 continuum-Hamiltonian complete release adoption: recorded
-external audit readiness gate: CI green at recorded checkpoint
-Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum -> continuum-Hamiltonian theorem bridge: mechanically audited
+external audit readiness gate: recorded
+complete Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum -> continuum-Hamiltonian theorem bridge: mechanically audited
 sorry/admit/axiom/constant: 0 in audited Lean source
 major theorem placeholder audit: green
 external consensus: not claimed
