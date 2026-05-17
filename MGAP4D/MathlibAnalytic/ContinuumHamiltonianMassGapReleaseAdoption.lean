@@ -19,7 +19,9 @@ theorem continuum_hamiltonian_mass_gap_release_adoption_ready :
     And.intro continuum_hamiltonian_derives_positive_mass_gap <|
     And.intro continuum_hamiltonian_derives_exact_mass_gap_value <|
     And.intro continuum_hamiltonian_derives_mass_gap_chain <|
-    And.intro True.intro True.intro
+    And.intro
+      continuum_hamiltonian_mass_gap_theorem_public_boundary_held
+      continuum_hamiltonian_mass_gap_theorem_final_release_held
 
 /-- The adopted theorem surface exposes the exact positive gap statement. -/
 theorem continuum_hamiltonian_release_adoption_positive_exact_mass_gap :
