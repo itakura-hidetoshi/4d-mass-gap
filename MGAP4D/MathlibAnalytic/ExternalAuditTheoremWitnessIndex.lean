@@ -64,10 +64,22 @@ def externalAuditTheoremWitnessIndexData : ExternalAuditTheoremWitnessIndexData 
     releaseAdoptionReady := continuum_hamiltonian_mass_gap_release_adoption_ready
     positiveExactMassGapReady := continuum_hamiltonian_release_adoption_positive_exact_mass_gap
     continuumHamiltonianChainReady := continuum_hamiltonian_derives_mass_gap_chain
-    theoremWitnessOnly := True.intro
-    externalConsensusNotClaimed := True.intro
-    publicBoundaryHeld := True.intro
-    finalReleaseHeld := True.intro }
+    theoremWitnessOnly :=
+      continuum_hamiltonian_theorem_witness_only
+        continuumHamiltonianMassGapWitnessData
+        continuum_hamiltonian_mass_gap_witness_ready
+    externalConsensusNotClaimed :=
+      continuum_hamiltonian_no_external_consensus_claim
+        continuumHamiltonianMassGapWitnessData
+        continuum_hamiltonian_mass_gap_witness_ready
+    publicBoundaryHeld :=
+      continuum_hamiltonian_public_boundary_held
+        continuumHamiltonianMassGapWitnessData
+        continuum_hamiltonian_mass_gap_witness_ready
+    finalReleaseHeld :=
+      continuum_hamiltonian_final_release_held
+        continuumHamiltonianMassGapWitnessData
+        continuum_hamiltonian_mass_gap_witness_ready }
 
 /-- The installed external-audit theorem witness index is ready. -/
 theorem external_audit_theorem_witness_index_ready :
