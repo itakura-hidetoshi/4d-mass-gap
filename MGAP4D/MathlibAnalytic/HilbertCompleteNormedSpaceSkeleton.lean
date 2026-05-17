@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.HilbertCauchyCompletionSkeleton
+import MGAP4D.MathlibAnalytic.HilbertCauchyCompletionSurfaceTheorems
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -71,7 +71,7 @@ theorem hilbert_complete_normed_space_inner_product_still_open
 /-- Prototype complete normed-space skeleton over a singleton carrier. -/
 def prototypeHilbertCompleteNormedSpaceSkeletonData :
     HilbertCompleteNormedSpaceSkeletonData.{0} :=
-  { cauchyCompletionReady := hilbert_cauchy_completion_skeleton_review_surface_ready
+  { cauchyCompletionReady := hilbert_cauchy_completion_surface_ready
     carrier := PUnit
     zero := PUnit.unit
     add := fun _ _ => PUnit.unit
@@ -90,20 +90,20 @@ def prototypeHilbertCompleteNormedSpaceSkeletonData :
       hilbertCauchyCompletionSkeletonReviewSurface.ready ∧
       hilbertCauchyCompletionSkeletonReviewSurface.cauchyCompletionSkeletonEstablished
     completeNormedSpaceSkeletonVisible_proof :=
-      And.intro hilbert_cauchy_completion_skeleton_review_surface_ready
-        hilbertCauchyCompletionSkeletonReviewSurface.cauchyCompletionSkeletonEstablished_proof
+      And.intro hilbert_cauchy_completion_surface_ready
+        hilbert_cauchy_completion_surface_established
     hilbertInnerProductStillOpen :=
       hilbertCauchyCompletionSkeletonReviewSurface.completeNormedSpaceStillOpen
     hilbertInnerProductStillOpen_proof :=
-      hilbertCauchyCompletionSkeletonReviewSurface.completeNormedSpaceStillOpen_proof
+      hilbert_cauchy_completion_surface_complete_normed_space_still_open
     hilbertSpaceInstanceStillOpen :=
       hilbertCauchyCompletionSkeletonReviewSurface.hilbertSpaceInstanceStillOpen
     hilbertSpaceInstanceStillOpen_proof :=
-      hilbertCauchyCompletionSkeletonReviewSurface.hilbertSpaceInstanceStillOpen_proof
+      hilbert_cauchy_completion_surface_hilbert_space_instance_still_open
     finalReleaseHeld := hilbertCauchyCompletionSkeletonReviewSurface.finalReleaseHeld
-    finalReleaseHeld_proof := hilbertCauchyCompletionSkeletonReviewSurface.finalReleaseHeld_proof
+    finalReleaseHeld_proof := hilbert_cauchy_completion_surface_final_release_held
     publicBoundaryHeld := hilbertCauchyCompletionSkeletonReviewSurface.publicBoundaryHeld
-    publicBoundaryHeld_proof := hilbertCauchyCompletionSkeletonReviewSurface.publicBoundaryHeld_proof }
+    publicBoundaryHeld_proof := hilbert_cauchy_completion_surface_public_boundary_held }
 
 theorem prototype_hilbert_complete_normed_space_skeleton_ready :
     prototypeHilbertCompleteNormedSpaceSkeletonData.ready := by
@@ -143,7 +143,7 @@ def HilbertCompleteNormedSpaceSkeletonReviewSurface.ready
 
 def hilbertCompleteNormedSpaceSkeletonReviewSurface :
     HilbertCompleteNormedSpaceSkeletonReviewSurface :=
-  { cauchyCompletionReady := hilbert_cauchy_completion_skeleton_review_surface_ready
+  { cauchyCompletionReady := hilbert_cauchy_completion_surface_ready
     completeNormedSpaceReady := prototype_hilbert_complete_normed_space_skeleton_ready
     cauchyHasLimit :=
       ∀ s,
