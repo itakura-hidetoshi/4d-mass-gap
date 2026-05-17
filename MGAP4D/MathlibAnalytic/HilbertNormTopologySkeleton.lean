@@ -75,20 +75,28 @@ def prototypeHilbertNormTopologySkeletonData : HilbertNormTopologySkeletonData :
     physicalState := Set.univ
     approximantInFiniteSpan := by
       intro ψ n
-      exact Set.mem_univ (n)
+      exact Set.mem_univ n
     norm_zero := rfl
     distance_self_zero := by intro ψ; rfl
     approximant_converges := by intro ψ hψ; exact True.intro
-    normTopologyVisible := True
-    normTopologyVisible_proof := True.intro
-    cauchyCompletionStillOpen := True
-    cauchyCompletionStillOpen_proof := True.intro
-    hilbertCompletionStillOpen := True
-    hilbertCompletionStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    normTopologyVisible :=
+      hilbertFiniteSpanDensitySkeletonReviewSurface.ready ∧
+      hilbertFiniteSpanDensitySkeletonReviewSurface.finiteSpanDensityEstablished
+    normTopologyVisible_proof :=
+      And.intro hilbert_finite_span_density_skeleton_review_surface_ready
+        hilbertFiniteSpanDensitySkeletonReviewSurface.finiteSpanDensityEstablished_proof
+    cauchyCompletionStillOpen :=
+      hilbertFiniteSpanDensitySkeletonReviewSurface.normTopologyStillOpen
+    cauchyCompletionStillOpen_proof :=
+      hilbertFiniteSpanDensitySkeletonReviewSurface.normTopologyStillOpen_proof
+    hilbertCompletionStillOpen :=
+      hilbertFiniteSpanDensitySkeletonReviewSurface.hilbertCompletionStillOpen
+    hilbertCompletionStillOpen_proof :=
+      hilbertFiniteSpanDensitySkeletonReviewSurface.hilbertCompletionStillOpen_proof
+    finalReleaseHeld := hilbertFiniteSpanDensitySkeletonReviewSurface.finalReleaseHeld
+    finalReleaseHeld_proof := hilbertFiniteSpanDensitySkeletonReviewSurface.finalReleaseHeld_proof
+    publicBoundaryHeld := hilbertFiniteSpanDensitySkeletonReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := hilbertFiniteSpanDensitySkeletonReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_hilbert_norm_topology_skeleton_ready :
     prototypeHilbertNormTopologySkeletonData.ready := by
@@ -106,6 +114,10 @@ theorem prototype_hilbert_norm_topology_skeleton_ready :
 structure HilbertNormTopologySkeletonReviewSurface where
   finiteSpanDensityReady : hilbertFiniteSpanDensitySkeletonReviewSurface.ready
   normTopologyReady : prototypeHilbertNormTopologySkeletonData.ready
+  approximantsInFiniteSpan : Prop
+  approximantsInFiniteSpan_proof : approximantsInFiniteSpan
+  approximantsConverge : Prop
+  approximantsConverge_proof : approximantsConverge
   normTopologyEstablished : Prop
   normTopologyEstablished_proof : normTopologyEstablished
   cauchyCompletionStillOpen : Prop
@@ -120,28 +132,42 @@ structure HilbertNormTopologySkeletonReviewSurface where
 def HilbertNormTopologySkeletonReviewSurface.ready
     (S : HilbertNormTopologySkeletonReviewSurface) : Prop :=
   hilbertFiniteSpanDensitySkeletonReviewSurface.ready ∧
-  prototypeHilbertNormTopologySkeletonData.ready ∧ S.normTopologyEstablished ∧
+  prototypeHilbertNormTopologySkeletonData.ready ∧ S.approximantsInFiniteSpan ∧
+  S.approximantsConverge ∧ S.normTopologyEstablished ∧
   S.cauchyCompletionStillOpen ∧ S.hilbertCompletionStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
 def hilbertNormTopologySkeletonReviewSurface : HilbertNormTopologySkeletonReviewSurface :=
   { finiteSpanDensityReady := hilbert_finite_span_density_skeleton_review_surface_ready
     normTopologyReady := prototype_hilbert_norm_topology_skeleton_ready
-    normTopologyEstablished := True
-    normTopologyEstablished_proof := True.intro
-    cauchyCompletionStillOpen := True
-    cauchyCompletionStillOpen_proof := True.intro
-    hilbertCompletionStillOpen := True
-    hilbertCompletionStillOpen_proof := True.intro
-    finalReleaseHeld := True
-    finalReleaseHeld_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    approximantsInFiniteSpan :=
+      ∀ ψ n,
+        prototypeHilbertNormTopologySkeletonData.approximant ψ n ∈
+          prototypeHilbertNormTopologySkeletonData.finiteSpan (n + 1)
+    approximantsInFiniteSpan_proof := prototypeHilbertNormTopologySkeletonData.approximantInFiniteSpan
+    approximantsConverge :=
+      ∀ ψ,
+        ψ ∈ prototypeHilbertNormTopologySkeletonData.physicalState →
+          prototypeHilbertNormTopologySkeletonData.convergenceTo
+            (prototypeHilbertNormTopologySkeletonData.approximant ψ) ψ
+    approximantsConverge_proof := prototypeHilbertNormTopologySkeletonData.approximant_converges
+    normTopologyEstablished := prototypeHilbertNormTopologySkeletonData.ready
+    normTopologyEstablished_proof := prototype_hilbert_norm_topology_skeleton_ready
+    cauchyCompletionStillOpen := prototypeHilbertNormTopologySkeletonData.cauchyCompletionStillOpen
+    cauchyCompletionStillOpen_proof := prototypeHilbertNormTopologySkeletonData.cauchyCompletionStillOpen_proof
+    hilbertCompletionStillOpen := prototypeHilbertNormTopologySkeletonData.hilbertCompletionStillOpen
+    hilbertCompletionStillOpen_proof := prototypeHilbertNormTopologySkeletonData.hilbertCompletionStillOpen_proof
+    finalReleaseHeld := prototypeHilbertNormTopologySkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := prototypeHilbertNormTopologySkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := prototypeHilbertNormTopologySkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeHilbertNormTopologySkeletonData.publicBoundaryHeld_proof }
 
 theorem hilbert_norm_topology_skeleton_review_surface_ready :
     hilbertNormTopologySkeletonReviewSurface.ready := by
   exact And.intro hilbertNormTopologySkeletonReviewSurface.finiteSpanDensityReady <|
     And.intro hilbertNormTopologySkeletonReviewSurface.normTopologyReady <|
+    And.intro hilbertNormTopologySkeletonReviewSurface.approximantsInFiniteSpan_proof <|
+    And.intro hilbertNormTopologySkeletonReviewSurface.approximantsConverge_proof <|
     And.intro hilbertNormTopologySkeletonReviewSurface.normTopologyEstablished_proof <|
     And.intro hilbertNormTopologySkeletonReviewSurface.cauchyCompletionStillOpen_proof <|
     And.intro hilbertNormTopologySkeletonReviewSurface.hilbertCompletionStillOpen_proof <|
