@@ -107,57 +107,66 @@ theorem continuum_ym_hphys_bridge_rayleigh_lower_bound
 
 /-- Concrete Yang--Mills skeleton is hardened. -/
 theorem continuum_ym_concrete_skeleton_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.concreteYMHardened := by
-  exact D.concreteYMHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, hConcrete, _⟩
+  exact hConcrete
 
 /-- `H_phys` built from Yang--Mills surface is hardened. -/
 theorem continuum_ym_hphys_built_from_ym_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.hphysBuiltFromYMHardened := by
-  exact D.hphysBuiltFromYMHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, hHPhys, _⟩
+  exact hHPhys
 
 /-- Plaquette centering surface is hardened. -/
 theorem continuum_ym_plaquette_centered_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.plaquetteCenteredHardened := by
-  exact D.plaquetteCenteredHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, hPlaquette, _⟩
+  exact hPlaquette
 
 /-- Normalization bridge is hardened within the continuum Yang--Mills lane. -/
 theorem continuum_ym_normalization_bridge_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.normalizationBridgeHardened := by
-  exact D.normalizationBridgeHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, hNorm, _⟩
+  exact hNorm
 
 /-- Spectral realization skeleton is hardened. -/
 theorem continuum_ym_spectral_realization_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.spectralRealizationHardened := by
-  exact D.spectralRealizationHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, hSpectral, _⟩
+  exact hSpectral
 
 /-- Exact spectral atom surface is hardened. -/
 theorem continuum_ym_exact_atom_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.exactAtomHardened := by
-  exact D.exactAtomHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hAtom, _⟩
+  exact hAtom
 
 /-- Continuum spectral theorem skeleton is hardened. -/
 theorem continuum_ym_continuum_spectral_theorem_hardened
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.continuumSpectralTheoremHardened := by
-  exact D.continuumSpectralTheoremHardened
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hContinuum, _⟩
+  exact hContinuum
 
 /-- Continuum-limit boundary remains visible. -/
 theorem continuum_ym_continuum_limit_boundary_visible
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.continuumLimitBoundaryVisible := by
-  exact D.continuumLimitBoundaryVisible
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hLimit, _⟩
+  exact hLimit
 
 /-- Hard physical boundary remains visible after continuum Yang--Mills hardening. -/
 theorem continuum_ym_hard_physical_boundary_visible
-    (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
+    (D : ContinuumYangMillsLaneHardeningData) (hD : D.ready) :
     D.hardPhysicalBoundaryVisible := by
-  exact D.hardPhysicalBoundaryVisible
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hBoundary, _⟩
+  exact hBoundary
 
 /-- Exact normalized value is preserved by the continuum Yang--Mills lane. -/
 theorem continuum_ym_exact_value_preserved
