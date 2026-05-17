@@ -62,7 +62,9 @@ MGAP4D internal normalization. -/
 theorem physical_continuum_hamiltonian_exact_gap_33_over_20 :
     physicalContinuumHamiltonianExactGap33Over20 := by
   unfold physicalContinuumHamiltonianExactGap33Over20
-  exact continuumHamiltonianMassGapWitnessData.massGapDerivationWitness
+  rcases continuum_hamiltonian_mass_gap_witness_ready with
+    ⟨_, _, _, _, _, _, hPos, hExact, _⟩
+  exact And.intro hPos hExact
 
 /-- The continuum Hamiltonian mass-gap witness is theorem-derived from the
 upstream continuum Yang--Mills and plaquette spectral-weight hardening lanes. -/
