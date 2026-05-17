@@ -71,24 +71,30 @@ theorem physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap :
 /-- Public-boundary projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_public_boundary_held :
     continuumHamiltonianMassGapWitnessData.publicBoundaryHeld := by
-  exact physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPublic, _⟩
+  exact hPublic
 
 /-- Final-release-boundary projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_final_release_held :
     continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
-  exact physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hFinal⟩
+  exact hFinal
 
 /-- Exact positive gap projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_exact_positive_gap :
     0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20 := by
-  exact And.intro
-    physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap.2.2.2.2.2.2.2.2.2.1
-    physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap.2.2.2.2.2.2.2.2.2.2.1
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
+    ⟨_, _, _, _, _, _, _, _, _, hPos, hExact, _⟩
+  exact And.intro hPos hExact
 
 /-- External-consensus boundary projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_no_external_consensus_claim :
     continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim := by
-  exact physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
+  rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, hNoConsensus, _⟩
+  exact hNoConsensus
 
 end MathlibAnalytic
 end MGAP4D
