@@ -13,6 +13,9 @@ python3 scripts/audit_major_theorem_nonplaceholder.py
 echo "[check] audit analytic bridge coherence"
 python3 scripts/audit_bridge_coherence.py
 
+echo "[check] audit physical Hamiltonian operator normalization"
+python3 scripts/audit_physical_hamiltonian_operator_normalization.py
+
 echo "[check] audit infinite-dimensional Yang-Mills target layer"
 python3 scripts/audit_infinite_dimensional_target_layer.py
 
@@ -57,6 +60,9 @@ python3 scripts/replay_summary.py
 
 echo "[check] lake update"
 lake update
+
+echo "[check] build physical Hamiltonian operator normalization"
+lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
 
 echo "[check] build continuum Hamiltonian exact mass-gap derivation"
 lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
