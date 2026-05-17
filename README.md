@@ -102,7 +102,7 @@ Exact normalized value / real positivity
   -> infinite-dimensional Yang-Mills realization targets
   -> infinite-dimensional residual filling bridge
   -> hard physical residual hardening map
-  -> Hilbert construction lane hardening
+  -> complete infinite-dimensional Hilbert construction
   -> Hilbert-to-physical unbounded-operator bridge
   -> self-adjoint H_phys bridge adoption
   -> self-adjoint H_phys lane hardening
@@ -128,7 +128,7 @@ MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalResidualFillingBridge.lean
 MGAP4D/MathlibAnalytic/HardPhysicalResidualHardeningMap.lean
-MGAP4D/MathlibAnalytic/HilbertConstructionLaneHardening.lean
+MGAP4D/MathlibAnalytic/CompleteInfiniteDimensionalHilbertConstruction.lean
 MGAP4D/MathlibAnalytic/HilbertToPhysicalUnboundedOperatorBridge.lean
 MGAP4D/MathlibAnalytic/SelfAdjointHPhysBridgeAdoption.lean
 MGAP4D/MathlibAnalytic/SelfAdjointHPhysLaneHardening.lean
@@ -162,7 +162,7 @@ The replay path currently runs:
 [check] audit infinite-dimensional Yang-Mills target layer
 [check] audit infinite-dimensional residual filling bridge
 [check] audit hard physical residual hardening map
-[check] audit Hilbert construction lane hardening
+[check] audit complete infinite-dimensional Hilbert construction
 [check] audit self-adjoint HPhys lane hardening
 [check] audit continuum Yang-Mills lane hardening
 [check] audit plaquette spectral weight lane hardening
@@ -184,12 +184,10 @@ Confirmed complete continuum-Hamiltonian / external-audit-readiness CI checkpoin
 
 ```text
 Workflow: Full Local Check CI / Run scripts/check.sh
-Workflow run ID: 25988968639
-Job ID: 76391524347
-Head commit: a032caed7121bc14df3bf286e723cd90a76fd2cb
-CI merge ref: 8a4761d7ff9ea9b1f3b9c2c0b2a3ca338dacb178
+Workflow run ID: 25991097002
+Head commit: 511f63477081bec49a5291cb77a2769b3d154c01
 Result: success
-Observed timestamp: 2026-05-17T11:05:17Z
+Observed timestamp: 2026-05-17
 Lean-side warnings in theorem / release / external audit readiness gate build: none observed
 ```
 
@@ -206,14 +204,10 @@ Bridge files audited: 8
 Ordered import edges audited: 5
 External audit readiness gate field-classification audit: passed
 External audit readiness replay certificate audit: passed
-Lean replay summary imports: 1233
-Lean replay summary declaration_like_lines: 2786
-Lean replay summary namespace_lines: 968
-Lean replay summary total_lines: 29422
-Continuum Hamiltonian exact mass-gap derivation build: 8368 jobs, success
-Continuum Hamiltonian release-chain addendum build: 8369 jobs, success
-External audit readiness gate build: 8376 jobs, success
-Final lake build: 0 jobs, success
+Continuum Hamiltonian exact mass-gap derivation build: success
+Continuum Hamiltonian release-chain addendum build: success
+External audit readiness gate build: success
+Final lake build: success
 ```
 
 Current CI and release-surface ledgers:
@@ -242,7 +236,7 @@ docs/continuum_hamiltonian_complete_release_surface.md
 docs/infinite_dimensional_yang_mills_target_layer.md
 docs/infinite_dimensional_residual_filling_bridge.md
 docs/hard_physical_residual_hardening_map.md
-docs/hilbert_construction_lane_hardening.md
+docs/complete_infinite_dimensional_hilbert_construction.md
 docs/self_adjoint_hphys_lane_hardening.md
 docs/continuum_yang_mills_lane_hardening.md
 docs/plaquette_spectral_weight_lane_hardening.md
