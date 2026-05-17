@@ -131,40 +131,85 @@ def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
     hphysTheoremBodyReady := self_adjoint_hphys_theorem_review_surface_ready
     physicalOperatorSkeletonReady := physical_unbounded_operator_skeleton_review_surface_ready
     concreteHPhysBridgeReady := concrete_hphys_realization_theorem_review_surface_ready
-    interfaceHardened := True
-    theoremBodyHardened := True
-    domainClosureHardened := True
-    symmetryOnDomainHardened := True
-    selfAdjointCertificateHardened := True
-    rayleighCompatibilityHardened := True
-    physicalOperatorSkeletonHardened := True
-    concreteHPhysBridgeHardened := True
-    hardPhysicalBoundaryVisible := True
+    interfaceHardened := selfAdjointHPhysReviewSurface.ready
+    theoremBodyHardened := selfAdjointHPhysTheoremReviewSurface.ready
+    domainClosureHardened :=
+      ∀ ψ : singletonSelfAdjointHPhysTheoremData.state,
+        singletonSelfAdjointHPhysTheoremData.domain ψ →
+          singletonSelfAdjointHPhysTheoremData.domain
+            (singletonSelfAdjointHPhysTheoremData.H_phys ψ)
+    symmetryOnDomainHardened :=
+      ∀ ψ φ : singletonSelfAdjointHPhysTheoremData.state,
+        singletonSelfAdjointHPhysTheoremData.domain ψ →
+        singletonSelfAdjointHPhysTheoremData.domain φ →
+          singletonSelfAdjointHPhysTheoremData.inner
+            (singletonSelfAdjointHPhysTheoremData.H_phys ψ) φ =
+          singletonSelfAdjointHPhysTheoremData.inner ψ
+            (singletonSelfAdjointHPhysTheoremData.H_phys φ)
+    selfAdjointCertificateHardened :=
+      singletonSelfAdjointHPhysTheoremData.selfAdjointCertificate
+    rayleighCompatibilityHardened :=
+      (∀ ψ : singletonSelfAdjointHPhysTheoremData.state,
+        singletonSelfAdjointHPhysTheoremData.domain ψ →
+          exactGapValueReal ≤
+            singletonSelfAdjointHPhysTheoremData.rayleighData.quotient
+              (singletonSelfAdjointHPhysTheoremData.state_to_rayleigh ψ)) ∧
+      singletonSelfAdjointHPhysTheoremData.rayleighData.quotient
+        (singletonSelfAdjointHPhysTheoremData.state_to_rayleigh
+          singletonSelfAdjointHPhysTheoremData.witness) = exactGapValueReal
+    physicalOperatorSkeletonHardened :=
+      physicalUnboundedOperatorSkeletonReviewSurface.ready
+    concreteHPhysBridgeHardened :=
+      concreteHPhysRealizationTheoremReviewSurface.ready
+    hardPhysicalBoundaryVisible :=
+      physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld ∧
+      concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
     exactValuePreserved := exactGapValueReal_eq
-    reviewLevelOnly := True
-    publicBoundaryHeld := True
-    finalReleaseHeld := True }
+    reviewLevelOnly :=
+      selfAdjointHPhysReviewSurface.fullSelfAdjointTheoremStillOpen ∧
+      selfAdjointHPhysTheoremReviewSurface.concreteUnboundedRealizationStillOpen
+    publicBoundaryHeld :=
+      physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld ∧
+      concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
+    finalReleaseHeld :=
+      selfAdjointHPhysReviewSurface.finalReleaseHeld ∧
+      selfAdjointHPhysTheoremReviewSurface.finalReleaseHeld ∧
+      physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld ∧
+      concreteHPhysRealizationTheoremReviewSurface.finalReleaseHeld }
 
 /-- The installed self-adjoint `H_phys` hardening lane is ready. -/
 theorem self_adjoint_hphys_lane_hardening_ready :
     selfAdjointHPhysLaneHardeningData.ready := by
+  rcases self_adjoint_hphys_review_surface_ready with
+    ⟨_, _, _, _, _, hInterfaceOpen, _, hInterfaceFinal⟩
+  rcases self_adjoint_hphys_theorem_review_surface_ready with
+    ⟨_, _, _, _, _, _, hTheoremOpen, hTheoremFinal, _⟩
+  rcases physical_unbounded_operator_skeleton_review_surface_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, hPhysicalFinal, hPhysicalPublic⟩
+  rcases concrete_hphys_realization_theorem_review_surface_ready with
+    ⟨_, _, _, _, _, _, _, _, hConcreteFinal, hConcretePublic⟩
   exact And.intro selfAdjointHPhysLaneHardeningData.hilbertConstructionLaneReady <|
     And.intro selfAdjointHPhysLaneHardeningData.hphysInterfaceReady <|
     And.intro selfAdjointHPhysLaneHardeningData.hphysTheoremBodyReady <|
     And.intro selfAdjointHPhysLaneHardeningData.physicalOperatorSkeletonReady <|
     And.intro selfAdjointHPhysLaneHardeningData.concreteHPhysBridgeReady <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
+    And.intro self_adjoint_hphys_review_surface_ready <|
+    And.intro self_adjoint_hphys_theorem_review_surface_ready <|
+    And.intro singletonSelfAdjointHPhysTheoremData.domain_closed_under_H <|
+    And.intro singleton_self_adjoint_hphys_symmetric_on_domain <|
+    And.intro singletonSelfAdjointHPhysTheoremData.selfAdjointCertificate_proof <|
+    And.intro
+      (And.intro singleton_self_adjoint_hphys_rayleigh_lower_bound
+        singleton_self_adjoint_hphys_witness_rayleigh_attains) <|
+    And.intro physical_unbounded_operator_skeleton_review_surface_ready <|
+    And.intro concrete_hphys_realization_theorem_review_surface_ready <|
+    And.intro (And.intro hPhysicalPublic hConcretePublic) <|
     And.intro selfAdjointHPhysLaneHardeningData.exactValuePreserved <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro (And.intro hInterfaceOpen hTheoremOpen) <|
+    And.intro (And.intro hPhysicalPublic hConcretePublic) <|
+    And.intro hInterfaceFinal <|
+      And.intro hTheoremFinal <|
+        And.intro hPhysicalFinal hConcreteFinal
 
 end MathlibAnalytic
 end MGAP4D
