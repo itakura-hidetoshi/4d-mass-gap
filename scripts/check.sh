@@ -70,6 +70,9 @@ lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
 echo "[check] build Yang-Mills Hamiltonian spectral derivation of 33/20"
 lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
 
+echo "[check] build complete Hamiltonian spectral release adoption"
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+
 echo "[check] build continuum Hamiltonian exact mass-gap derivation"
 lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
 

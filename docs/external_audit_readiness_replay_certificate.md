@@ -119,6 +119,94 @@ external_audit_readiness_exact_value_preserved_witness
 external_audit_readiness_exact_value_preserved
 ```
 
+## Spectral 33/20 replay addendum
+
+The spectral route is now exposed through the complete Hamiltonian derivation,
+release-adoption surface, and external-audit gate.
+
+Core spectral theorem surface:
+
+```text
+MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
+yang_mills_hamiltonian_spectral_infimum_eq_3320
+yang_mills_hamiltonian_spectral_attainment_eq_3320
+yang_mills_hamiltonian_observable_atom_eq_3320
+yang_mills_hamiltonian_spectral_analysis_derives_3320
+yang_mills_hamiltonian_exact_gap_eq_spectral_value
+yang_mills_hamiltonian_spectral_derivation_exact_gap_value
+yang_mills_hamiltonian_spectral_derivation_positive_mass
+yang_mills_hamiltonian_spectral_derivation_nonzero_mass
+```
+
+Complete Hamiltonian spectral replay surface:
+
+```text
+Physical4DYMContinuumHamiltonianSpectralCompleteDerivationReady
+physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_nonzero
+```
+
+Complete spectral release-adoption replay surface:
+
+```text
+continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady
+continuum_hamiltonian_complete_spectral_mass_gap_release_adoption_ready
+continuum_hamiltonian_complete_spectral_release_adoption_exact_mass_gap
+continuum_hamiltonian_complete_spectral_release_adoption_positive_nonzero_mass
+continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved
+```
+
+External-audit spectral replay surface:
+
+```text
+externalAuditReadinessCompleteSpectralMassGapAddendumReady
+external_audit_readiness_complete_spectral_mass_gap_addendum_ready
+external_audit_readiness_complete_spectral_mass_gap_exact_value
+external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass
+external_audit_readiness_complete_spectral_mass_gap_boundary_held
+```
+
+The replay meaning is:
+
+```text
+Yang--Mills continuum Hamiltonian
+  -> self-adjoint / spectral chain
+  -> Rayleigh lower bound
+  -> Rayleigh attainment
+  -> spectral infimum = 33/20
+  -> spectral attainment = 33/20
+  -> observable spectral atom = 33/20
+  -> positive nonzero spectral mass
+  -> exactGapValueReal = 33/20
+  -> external-audit-visible spectral addendum
+```
+
+The spectral replay route is checked by:
+
+```text
+python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py
+python3 scripts/audit_external_audit_readiness_gate.py
+python3 scripts/audit_external_audit_readiness_replay_certificate.py
+lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
+```
+
+The current spectral replay addendum was established after the following PR chain:
+
+```text
+PR #49: Derive 33/20 from Yang-Mills Hamiltonian spectral analysis
+PR #50: Adopt spectral 33/20 route in complete Hamiltonian release surface
+PR #51: Expose spectral 33/20 route at external audit gate
+```
+
+Latest spectral external-audit merge commit:
+
+```text
+ef75fa9795f5cfaa20733bc5cfcb62f37cfb80b7
+```
+
 ## Boundary interpretation
 
 This certificate means:
@@ -129,6 +217,7 @@ repository-internal audit scripts passed
 external-audit-readiness gate built successfully
 forbidden Lean tokens were absent in the scanned Lean files
 exact normalized value surface was preserved through the gate
+spectral infimum / attainment / observable-atom replay route is externally visible
 ```
 
 This certificate does not mean:
@@ -154,6 +243,10 @@ A reviewer can independently replay the current route by checking:
 6. scripts/audit_lean_forbidden_tokens.py reports sorry/admit/axiom/constant all zero.
 7. scripts/audit_external_audit_readiness_gate.py passes.
 8. scripts/audit_external_audit_readiness_gate_field_classification.py passes.
+9. scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py passes.
+10. scripts/audit_external_audit_readiness_replay_certificate.py passes.
+11. lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320 completes.
+12. lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption completes.
 ```
 
 ## Status
@@ -165,4 +258,5 @@ Lean semantics changed: no
 External consensus claimed: no
 External audit completed: no
 Final theorem release opened: no
+Spectral replay addendum visible: yes
 ```
