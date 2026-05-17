@@ -174,7 +174,7 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
 theorem continuum_hamiltonian_mass_gap_witness_ready :
     continuumHamiltonianMassGapWitnessData.ready := by
   rcases continuum_yang_mills_lane_hardening_ready with
-    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hYMReview, hYMPublic, hYMFinal⟩
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hYMReview, hYMPublic, hYMFinal⟩
   rcases plaquette_spectral_weight_lane_hardening_ready with
     ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hPQReview, hPQPublic, hPQFinal⟩
   exact And.intro continuumHamiltonianMassGapWitnessData.continuumYMLaneReady <|
