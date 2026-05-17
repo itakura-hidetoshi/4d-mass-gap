@@ -37,6 +37,12 @@ python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
 echo "[check] audit continuum Hamiltonian witness hardening"
 python3 scripts/audit_continuum_hamiltonian_mass_gap_witness_hardening.py
 
+echo "[check] build continuum Hamiltonian exact mass-gap derivation"
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
+
+echo "[check] build continuum Hamiltonian release-chain addendum"
+lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+
 echo "[check] audit four-lane residual closure"
 python3 scripts/audit_four_lane_residual_closure.py
 
