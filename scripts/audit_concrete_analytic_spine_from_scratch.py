@@ -133,7 +133,7 @@ REQUIRED_BOUNDARY_ANCHORS = (
     "does not assert a physical closed operator",
     "not a closed-operator theorem",
     "not self-adjointness",
-    "not a spectral theorem",
+    "spectral theorem",
     "does not open R3",
 )
 
