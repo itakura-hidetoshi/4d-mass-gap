@@ -6,8 +6,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- A graph-sequence law surface records that every graph point of a concrete
-sequence lies in a chosen carrier.  It is a sequence-level carrier law only, not
-a closed-operator theorem, not a convergence theorem, and not an R3 promotion. -/
+sequence lies in a chosen carrier.  It is a sequence-level carrier law only, not a closed-operator theorem, not a convergence theorem, and not an R3 promotion. -/
 structure ConcreteGraphSequenceLawSurface (T : ConcreteDenseDomainOperator) where
   graphSequence : ConcreteGraphSequence T
   sequenceLawCarrier : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
@@ -24,8 +23,8 @@ theorem concrete_identity_graph_sequence_point_mem_diagonal_carrier (n : ℕ) :
     concreteIdentityDenseDomainOperator, concreteIdentityGraphDiagonalCarrier]
 
 /-- The identity operator has a concrete graph-sequence diagonal-law surface.
-This strengthens the R2 graph-sequence bookkeeping surface without asserting
-closedness, self-adjointness, a spectral theorem, a PVM, or any `33/20` atom. -/
+This does not assert closedness, self-adjointness, a spectral theorem, a PVM,
+or any `33/20` atom. -/
 def concreteIdentityGraphSequenceLawSurface :
     ConcreteGraphSequenceLawSurface concreteIdentityDenseDomainOperator :=
   { graphSequence := concreteIdentityGraphSequence
