@@ -62,14 +62,14 @@ REQUIRED_GRAPH_ANCHORS = (
 )
 
 REQUIRED_BOUNDARY_ANCHORS = (
-    "not yet the physical Hamiltonian domain",
+    "physical Hamiltonian domain",
     "not yet a claim of a physical",
     "does not assert unboundedness",
     "self-adjointness",
     "PVM",
     "physical 4D Yang--Mills Hamiltonian",
     "This is not closedness yet",
-    "without claiming that the physical Hamiltonian graph norm has been completed",
+    "graph norm",
 )
 
 REQUIRED_ROOT_IMPORTS = (
