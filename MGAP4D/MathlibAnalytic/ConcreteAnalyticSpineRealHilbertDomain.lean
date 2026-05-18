@@ -103,6 +103,52 @@ theorem concrete_identity_dense_domain_operator_graphNorm_eq
   unfold ConcreteDenseDomainOperator.graphNorm
   simp [concreteIdentityDenseDomainOperator, two_mul]
 
+/-- A graph-limit witness records a point in the ambient product space that is
+intended to represent a future graph limit.  This is a witness object only; it
+does not assert closedness. -/
+structure ConcreteGraphLimitWitness (T : ConcreteDenseDomainOperator) where
+  limitPoint : ConcreteRealHilbertSpace × ConcreteRealHilbertSpace
+  approximatedByGraph : Prop
+
+/-- A closable-surface witness separates the existence of a candidate graph
+closure from an actual closed operator theorem. -/
+structure ConcreteClosableWitness (T : ConcreteDenseDomainOperator) where
+  graphSurfaceNonempty : T.graph.Nonempty
+  graphLimitWitness : ConcreteGraphLimitWitness T
+  closureCandidate : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
+  graphSubsetClosureCandidate : T.graph ⊆ closureCandidate
+  closureCandidateNonempty : closureCandidate.Nonempty
+
+/-- The identity operator has a trivial graph-limit witness at `(0,0)`.  This is
+not a proof that a physical Hamiltonian is closed or closable. -/
+def concreteIdentityGraphLimitWitness :
+    ConcreteGraphLimitWitness concreteIdentityDenseDomainOperator :=
+  { limitPoint := (0, 0)
+    approximatedByGraph := (concreteIdentityDenseDomainOperator.graph).Nonempty }
+
+/-- The identity operator has a minimal closable-surface witness with the graph
+itself as closure candidate. -/
+def concreteIdentityClosableWitness :
+    ConcreteClosableWitness concreteIdentityDenseDomainOperator :=
+  { graphSurfaceNonempty := concrete_identity_dense_domain_operator_graph_nonempty
+    graphLimitWitness := concreteIdentityGraphLimitWitness
+    closureCandidate := concreteIdentityDenseDomainOperator.graph
+    graphSubsetClosureCandidate := by
+      intro p hp
+      exact hp
+    closureCandidateNonempty := concrete_identity_dense_domain_operator_graph_nonempty }
+
+/-- The identity closable witness has a nonempty closure candidate. -/
+theorem concrete_identity_closable_witness_closure_candidate_nonempty :
+    concreteIdentityClosableWitness.closureCandidate.Nonempty := by
+  exact concreteIdentityClosableWitness.closureCandidateNonempty
+
+/-- The identity graph is contained in its closure candidate. -/
+theorem concrete_identity_graph_subset_closure_candidate :
+    concreteIdentityDenseDomainOperator.graph ⊆
+      concreteIdentityClosableWitness.closureCandidate := by
+  exact concreteIdentityClosableWitness.graphSubsetClosureCandidate
+
 /-- The concrete analytic spine has discharged the minimal R1 Mathlib-native
 Hilbert-space typeclass surface. -/
 def concreteAnalyticSpineR1Ready : Prop :=
@@ -125,6 +171,15 @@ def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
   (concreteIdentityDenseDomainOperator.graph).Nonempty ∧
   (∀ x : concreteIdentityDenseDomainOperator.domain,
     0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
+
+/-- Boundary marker for the first closable surface.  This is still not a closed
+operator theorem and still not self-adjointness; it only records a graph closure
+candidate and inclusion witness. -/
+def concreteAnalyticSpineR2ClosableSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphSurfaceReady ∧
+  concreteIdentityClosableWitness.closureCandidate.Nonempty ∧
+  concreteIdentityDenseDomainOperator.graph ⊆
+    concreteIdentityClosableWitness.closureCandidate
 
 /-- R1 readiness for the from-scratch concrete analytic spine. -/
 theorem concrete_analytic_spine_r1_ready : concreteAnalyticSpineR1Ready := by
@@ -152,16 +207,26 @@ theorem concrete_analytic_spine_r2_graph_surface_ready :
       fun x => concrete_dense_domain_operator_graphNorm_nonneg
         concreteIdentityDenseDomainOperator x
 
+/-- R2 closable-surface readiness for the from-scratch concrete analytic spine.
+This is a witness surface only; it does not assert a physical closed operator,
+self-adjointness, spectral theorem, PVM, or the 33/20 atom. -/
+theorem concrete_analytic_spine_r2_closable_surface_ready :
+    concreteAnalyticSpineR2ClosableSurfaceReady := by
+  unfold concreteAnalyticSpineR2ClosableSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_surface_ready <|
+    And.intro concrete_identity_closable_witness_closure_candidate_nonempty
+      concrete_identity_graph_subset_closure_candidate
+
 /-- Boundary marker: the from-scratch concrete spine has not yet discharged the
 physical nonbounded Hamiltonian, self-adjointness, PVM, plaquette observable,
 non-definitional `33/20` emergence, or positive spectral-weight derivation. -/
 def concreteAnalyticSpineHardResidualBoundaryHeld : Prop :=
-  concreteAnalyticSpineR2GraphSurfaceReady
+  concreteAnalyticSpineR2ClosableSurfaceReady
 
 /-- Boundary theorem for the from-scratch concrete analytic spine. -/
 theorem concrete_analytic_spine_hard_residual_boundary_held :
     concreteAnalyticSpineHardResidualBoundaryHeld := by
-  exact concrete_analytic_spine_r2_graph_surface_ready
+  exact concrete_analytic_spine_r2_closable_surface_ready
 
 end
 
