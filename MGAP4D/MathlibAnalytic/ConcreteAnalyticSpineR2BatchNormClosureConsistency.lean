@@ -8,7 +8,7 @@ noncomputable section
 /-- A graph-norm zero/bounded/Cauchy/convergent bundle collects the existing toy
 real-valued graph-norm sequence surfaces.  It is only norm-sequence bookkeeping,
 not graph-norm completion, not Cauchy completion, not a closed-operator theorem,
-not self-adjointness, and not an R3 promotion. -/
+not self-adjointness, not a spectral theorem, and not an R3 promotion. -/
 structure ConcreteGraphNormZeroCauchyConvergentBundle
     (T : ConcreteDenseDomainOperator) where
   graphNormSequenceLawSurface : ConcreteGraphNormSequenceLawSurface T
@@ -34,7 +34,7 @@ theorem concrete_identity_graph_norm_zero_cauchy_convergent_bundle_boundary :
 
 /-- A graph point / norm limit consistency surface records that the graph points
 are fixed at the toy graph limit point while the graph-norm values converge to
-zero.  It is only limit bookkeeping, not graph closure or graph-norm completion. -/
+zero.  It is only limit bookkeeping, not graph closure or graph-norm completion, not a spectral theorem. -/
 structure ConcreteGraphPointNormLimitConsistencySurface
     (T : ConcreteDenseDomainOperator) where
   graphPointLimitSequenceSurface : ConcreteGraphPointLimitSequenceSurface T
@@ -56,7 +56,7 @@ theorem concrete_identity_graph_point_norm_limit_consistency_boundary :
 
 /-- A diagonal/candidate/norm bundle records compatibility between the diagonal
 carrier, closure-candidate carrier, graph points, graph limit point, and zero
-norm limit surfaces.  It is only bookkeeping, not a graph closure theorem. -/
+norm limit surfaces.  It is only bookkeeping, not a graph closure theorem, not a spectral theorem. -/
 structure ConcreteDiagonalCandidateNormConsistencyBundle
     (T : ConcreteDenseDomainOperator) where
   carrierCompatibilitySurface :
@@ -89,7 +89,7 @@ theorem concrete_identity_diagonal_candidate_norm_consistency_bundle_boundary :
 
 /-- Batched R2 norm/closure consistency readiness for the from-scratch concrete
 analytic spine.  It remains below graph closure, not graph-norm completion, not
-Cauchy completion, not a closed-operator theorem, not self-adjointness, spectral
+Cauchy completion, not a closed-operator theorem, not self-adjointness, not a spectral
 theorem, PVM, and any non-definitional `33/20` emergence. -/
 def concreteAnalyticSpineR2BatchNormClosureConsistencySurfaceReady : Prop :=
   concreteAnalyticSpineR2BatchCarrierCompatibilitySurfaceReady ∧
