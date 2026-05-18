@@ -34,18 +34,27 @@ REQUIRED_TARGET_ANCHORS = (
     "concrete_dense_domain_operator_graphNorm_nonneg",
     "concrete_identity_dense_domain_operator_graphNorm_eq",
     "ConcreteGraphLimitWitness",
+    "ConcreteGraphSequence",
+    "ConcreteGraphSequence.graphPoint",
+    "ConcreteGraphNormCauchySurface",
+    "ConcreteGraphConvergenceSurface",
     "ConcreteClosableWitness",
     "concreteIdentityGraphLimitWitness",
+    "concreteIdentityGraphSequence",
+    "concreteIdentityGraphNormCauchySurface",
+    "concreteIdentityGraphConvergenceSurface",
     "concreteIdentityClosableWitness",
     "concrete_identity_closable_witness_closure_candidate_nonempty",
     "concrete_identity_graph_subset_closure_candidate",
     "concreteAnalyticSpineR1Ready",
     "concreteAnalyticSpineR2DomainSurfaceReady",
     "concreteAnalyticSpineR2GraphSurfaceReady",
+    "concreteAnalyticSpineR2GraphSequenceSurfaceReady",
     "concreteAnalyticSpineR2ClosableSurfaceReady",
     "concrete_analytic_spine_r1_ready",
     "concrete_analytic_spine_r2_domain_surface_ready",
     "concrete_analytic_spine_r2_graph_surface_ready",
+    "concrete_analytic_spine_r2_graph_sequence_surface_ready",
     "concrete_analytic_spine_r2_closable_surface_ready",
     "concreteAnalyticSpineHardResidualBoundaryHeld",
     "concrete_analytic_spine_hard_residual_boundary_held",
@@ -69,6 +78,17 @@ REQUIRED_GRAPH_ANCHORS = (
     "concreteIdentityDenseDomainOperator.graphNorm x = 2 * ‖(x.1 : ConcreteRealHilbertSpace)‖",
 )
 
+REQUIRED_GRAPH_SEQUENCE_ANCHORS = (
+    "seq : ℕ → T.domain",
+    "ConcreteGraphSequence.graphPoint",
+    "graphSequence : ConcreteGraphSequence T",
+    "graphNormCauchy : Prop",
+    "candidateLimit : ConcreteGraphLimitWitness T",
+    "graphPointConverges : Prop",
+    "concreteIdentityGraphNormCauchySurface.graphNormCauchy",
+    "concreteIdentityGraphConvergenceSurface.graphPointConverges",
+)
+
 REQUIRED_CLOSABLE_SURFACE_ANCHORS = (
     "limitPoint : ConcreteRealHilbertSpace × ConcreteRealHilbertSpace",
     "approximatedByGraph : Prop",
@@ -90,6 +110,7 @@ REQUIRED_BOUNDARY_ANCHORS = (
     "graph norm",
     "This is still not a closed",
     "does not assert a physical closed operator",
+    "not a closed-operator theorem",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -172,6 +193,7 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "concrete analytic spine target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_MATHLIB_TYPECLASS_ANCHORS, "Mathlib typeclass", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_ANCHORS, "graph surface", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_SEQUENCE_ANCHORS, "graph sequence surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_CLOSABLE_SURFACE_ANCHORS, "closable surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_BOUNDARY_ANCHORS, "boundary", clean_lean=False))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_IMPORTS, "root import", clean_lean=False))
@@ -181,6 +203,7 @@ def main() -> None:
     print(f"Target anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"Mathlib typeclass anchors audited: {len(REQUIRED_MATHLIB_TYPECLASS_ANCHORS)}")
     print(f"Graph surface anchors audited: {len(REQUIRED_GRAPH_ANCHORS)}")
+    print(f"Graph sequence anchors audited: {len(REQUIRED_GRAPH_SEQUENCE_ANCHORS)}")
     print(f"Closable surface anchors audited: {len(REQUIRED_CLOSABLE_SURFACE_ANCHORS)}")
     print(f"Boundary anchors audited: {len(REQUIRED_BOUNDARY_ANCHORS)}")
     print(f"Root imports audited: {len(REQUIRED_ROOT_IMPORTS)}")
