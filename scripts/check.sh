@@ -42,6 +42,7 @@ declare -a AUDITS=(
   "audit concrete analytic spine R2 checkpoint packet|python3 scripts/audit_concrete_analytic_spine_r2_checkpoint_packet.py"
   "audit concrete analytic spine operator lane|python3 scripts/audit_concrete_analytic_spine_operator_lane.py"
   "audit concrete analytic spine operator lane checkpoint|python3 scripts/audit_concrete_analytic_spine_operator_lane_checkpoint.py"
+  "audit concrete analytic spine l2 real sequence|python3 scripts/audit_concrete_analytic_spine_l2_real_sequence.py"
   "audit physical Hamiltonian operator normalization|python3 scripts/audit_physical_hamiltonian_operator_normalization.py"
   "audit Yang-Mills Hamiltonian spectral derivation of 33/20|python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py"
   "audit infinite-dimensional Yang-Mills target layer|python3 scripts/audit_infinite_dimensional_target_layer.py"
@@ -92,6 +93,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2CheckpointPacket
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineOperatorLane
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineOperatorLaneCheckpoint
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2RealSequence
   MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
   MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
