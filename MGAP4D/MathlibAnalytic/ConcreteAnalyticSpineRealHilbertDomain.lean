@@ -65,6 +65,53 @@ theorem concrete_identity_dense_domain_operator_dense :
     Dense concreteIdentityDenseDomainOperator.domain := by
   exact concreteIdentityDenseDomainOperator.domain_dense
 
+/-- The graph of a concrete dense-domain operator as a subset of the product
+Hilbert model.  This is the first explicit object needed before discussing
+closedness or graph norms. -/
+def ConcreteDenseDomainOperator.graph (T : ConcreteDenseDomainOperator) :
+    Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace) :=
+  {p | ∃ x : T.domain, p = (x.1, T.op x)}
+
+/-- The graph of the initial identity domain operator is nonempty. -/
+theorem concrete_identity_dense_domain_operator_graph_nonempty :
+    (concreteIdentityDenseDomainOperator.graph).Nonempty := by
+  refine ⟨(0, 0), ?_⟩
+  refine ⟨⟨0, ?_⟩, ?_⟩
+  · simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]
+  · simp [ConcreteDenseDomainOperator.graph, concreteIdentityDenseDomainOperator]
+
+/-- A graph-norm-like quantity for a domain operator.
+
+For now this is a concrete numerical surface `‖x‖ + ‖T x‖`, sufficient to
+carry the future graph-norm closure route without claiming that the physical
+Hamiltonian graph norm has been completed. -/
+def ConcreteDenseDomainOperator.graphNorm (T : ConcreteDenseDomainOperator)
+    (x : T.domain) : ℝ :=
+  ‖(x.1 : ConcreteRealHilbertSpace)‖ + ‖T.op x‖
+
+/-- The graph-norm-like quantity is nonnegative. -/
+theorem concrete_dense_domain_operator_graphNorm_nonneg
+    (T : ConcreteDenseDomainOperator) (x : T.domain) :
+    0 ≤ T.graphNorm x := by
+  unfold ConcreteDenseDomainOperator.graphNorm
+  exact add_nonneg (norm_nonneg _) (norm_nonneg _)
+
+/-- The initial identity domain operator has graph norm `2 * ‖x‖`. -/
+theorem concrete_identity_dense_domain_operator_graphNorm_eq
+    (x : concreteIdentityDenseDomainOperator.domain) :
+    concreteIdentityDenseDomainOperator.graphNorm x = 2 * ‖(x.1 : ConcreteRealHilbertSpace)‖ := by
+  unfold ConcreteDenseDomainOperator.graphNorm
+  simp [concreteIdentityDenseDomainOperator, two_mul]
+
+/-- Boundary marker for the first graph surface.  This is not closedness yet;
+it only certifies that a concrete graph and graph-norm-like quantity are now
+present as first-class objects. -/
+def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
+  concreteAnalyticSpineR2DomainSurfaceReady ∧
+  (concreteIdentityDenseDomainOperator.graph).Nonempty ∧
+  (∀ x : concreteIdentityDenseDomainOperator.domain,
+    0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
+
 /-- The concrete analytic spine has discharged the minimal R1 Mathlib-native
 Hilbert-space typeclass surface. -/
 def concreteAnalyticSpineR1Ready : Prop :=
@@ -96,16 +143,25 @@ theorem concrete_analytic_spine_r2_domain_surface_ready :
     And.intro concrete_identity_dense_domain_operator_dense
       concrete_identity_dense_domain_operator_domain
 
+/-- R2 graph surface readiness for the from-scratch concrete analytic spine. -/
+theorem concrete_analytic_spine_r2_graph_surface_ready :
+    concreteAnalyticSpineR2GraphSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_domain_surface_ready <|
+    And.intro concrete_identity_dense_domain_operator_graph_nonempty <|
+      fun x => concrete_dense_domain_operator_graphNorm_nonneg
+        concreteIdentityDenseDomainOperator x
+
 /-- Boundary marker: the from-scratch concrete spine has not yet discharged the
 physical nonbounded Hamiltonian, self-adjointness, PVM, plaquette observable,
 non-definitional `33/20` emergence, or positive spectral-weight derivation. -/
 def concreteAnalyticSpineHardResidualBoundaryHeld : Prop :=
-  concreteAnalyticSpineR2DomainSurfaceReady
+  concreteAnalyticSpineR2GraphSurfaceReady
 
 /-- Boundary theorem for the from-scratch concrete analytic spine. -/
 theorem concrete_analytic_spine_hard_residual_boundary_held :
     concreteAnalyticSpineHardResidualBoundaryHeld := by
-  exact concrete_analytic_spine_r2_domain_surface_ready
+  exact concrete_analytic_spine_r2_graph_surface_ready
 
 end
 
