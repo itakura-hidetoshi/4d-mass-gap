@@ -279,6 +279,14 @@ def concreteIdentityGraphClosureOperationSurface :
       concrete_identity_graph_closure_operation_candidate_compatible
     operationBoundaryNotClosureProof := True }
 
+/-- The graph-closure operation surface exposes the compatibility proof carried
+by its bundled witness. -/
+theorem concrete_identity_graph_closure_operation_surface_candidate_compatible :
+    concreteIdentityClosableWitness.closureCandidate ⊆
+      concreteIdentityGraphClosureCandidate.carrier := by
+  simpa [concreteIdentityGraphClosureOperationSurface] using
+    concreteIdentityGraphClosureOperationSurface.candidateCompatibleWithClosable
+
 /-- The graph-closure operation surface keeps the closure-proof boundary closed. -/
 theorem concrete_identity_graph_closure_operation_boundary :
     concreteIdentityGraphClosureOperationSurface.operationBoundaryNotClosureProof := by
@@ -352,7 +360,8 @@ compatibility between the closable-surface candidate and the graph-closure
 candidate, while explicitly remaining below closed-operator status. -/
 def concreteAnalyticSpineR2GraphClosureOperationSurfaceReady : Prop :=
   concreteAnalyticSpineR2GraphClosureSurfaceReady ∧
-  concreteIdentityGraphClosureOperationSurface.candidateCompatibleWithClosable ∧
+  (concreteIdentityClosableWitness.closureCandidate ⊆
+    concreteIdentityGraphClosureCandidate.carrier) ∧
   concreteIdentityGraphClosureOperationSurface.operationBoundaryNotClosureProof
 
 /-- R1 readiness for the from-scratch concrete analytic spine. -/
@@ -418,11 +427,10 @@ closed physical operator, self-adjointness, spectral theorem, PVM, or the
 theorem concrete_analytic_spine_r2_graph_closure_operation_surface_ready :
     concreteAnalyticSpineR2GraphClosureOperationSurfaceReady := by
   unfold concreteAnalyticSpineR2GraphClosureOperationSurfaceReady
-  constructor
-  · exact concrete_analytic_spine_r2_graph_closure_surface_ready
-  · constructor
-    · exact concrete_identity_graph_closure_operation_candidate_compatible
-    · exact concrete_identity_graph_closure_operation_boundary
+  exact And.intro concrete_analytic_spine_r2_graph_closure_surface_ready <|
+    And.intro
+      concrete_identity_graph_closure_operation_surface_candidate_compatible
+      concrete_identity_graph_closure_operation_boundary
 
 /-- Boundary marker: the from-scratch concrete spine has not yet discharged the
 physical nonbounded Hamiltonian, self-adjointness, PVM, plaquette observable,
