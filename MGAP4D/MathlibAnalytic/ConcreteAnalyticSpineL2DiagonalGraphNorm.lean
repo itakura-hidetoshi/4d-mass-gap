@@ -10,8 +10,8 @@ exactly the square-summability witness for the weighted sequence. -/
 def concreteL2DiagonalActionL2 (x : ConcreteL2DiagonalDomainCarrier) :
     ConcreteL2RealSequence :=
   ⟨concreteL2DiagonalRawAction x, by
-    dsimp [concreteL2DiagonalRawAction, ConcreteL2DiagonalDomain] at x ⊢
-    simpa [pow_two, mul_assoc, mul_left_comm, mul_comm] using x.2⟩
+    simpa [concreteL2DiagonalRawAction, ConcreteL2DiagonalDomain, pow_two,
+      mul_assoc, mul_left_comm, mul_comm] using x.2⟩
 
 /-- The `l2`-valued diagonal action sends the zero domain point to the zero
 carrier point extensionally. -/
@@ -20,6 +20,17 @@ theorem concrete_l2_diagonal_action_l2_zero_ext (n : ℕ) :
       concreteL2RealZero.1 n := by
   simp [concreteL2DiagonalActionL2, concreteL2DiagonalRawAction,
     concreteL2DiagonalDomainZero, concreteL2RealZero]
+
+/-- Pair equality for the zero point in the `l2` graph carrier. -/
+theorem concrete_l2_diagonal_zero_graph_l2_pair_eq :
+    (concreteL2RealZero, concreteL2RealZero) =
+      (concreteL2DiagonalDomainZero.1,
+        concreteL2DiagonalActionL2 concreteL2DiagonalDomainZero) := by
+  apply Prod.ext
+  · rfl
+  · apply Subtype.ext
+    funext n
+    exact (concrete_l2_diagonal_action_l2_zero_ext n).symm
 
 /-- Graph carrier with both coordinates in the concrete `l2` carrier. -/
 def ConcreteL2DiagonalGraphL2Carrier :
@@ -32,17 +43,13 @@ theorem concrete_l2_diagonal_graph_l2_carrier_nonempty :
     ConcreteL2DiagonalGraphL2Carrier.Nonempty := by
   refine ⟨(concreteL2RealZero, concreteL2RealZero), ?_⟩
   refine ⟨concreteL2DiagonalDomainZero, ?_⟩
-  ext n
-  · rfl
-  · exact concrete_l2_diagonal_action_l2_zero_ext n
+  exact concrete_l2_diagonal_zero_graph_l2_pair_eq
 
 /-- Zero graph point membership in the `l2` graph carrier. -/
 theorem concrete_l2_diagonal_zero_graph_l2_point_mem :
     (concreteL2RealZero, concreteL2RealZero) ∈ ConcreteL2DiagonalGraphL2Carrier := by
   refine ⟨concreteL2DiagonalDomainZero, ?_⟩
-  ext n
-  · rfl
-  · exact concrete_l2_diagonal_action_l2_zero_ext n
+  exact concrete_l2_diagonal_zero_graph_l2_pair_eq
 
 /-- A graph-norm skeleton for the concrete `l2` diagonal action.  This records
 carrier-level graph data only; it is not graph-norm completion, not graph
