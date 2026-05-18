@@ -110,11 +110,39 @@ structure ConcreteGraphLimitWitness (T : ConcreteDenseDomainOperator) where
   limitPoint : ConcreteRealHilbertSpace × ConcreteRealHilbertSpace
   approximatedByGraph : Prop
 
+/-- A graph sequence is an explicit sequence in the domain whose graph points
+can later be used in graph-closure and closability arguments. -/
+structure ConcreteGraphSequence (T : ConcreteDenseDomainOperator) where
+  seq : ℕ → T.domain
+
+/-- The graph point associated with a graph sequence. -/
+def ConcreteGraphSequence.graphPoint {T : ConcreteDenseDomainOperator}
+    (s : ConcreteGraphSequence T) (n : ℕ) :
+    ConcreteRealHilbertSpace × ConcreteRealHilbertSpace :=
+  ((s.seq n).1, T.op (s.seq n))
+
+/-- A Cauchy-on-graph-norm surface.  This is intentionally a Prop field: it is
+the future place where real Cauchy estimates will be installed, not a claim that
+we already have the physical Hamiltonian graph-norm completion. -/
+structure ConcreteGraphNormCauchySurface (T : ConcreteDenseDomainOperator) where
+  graphSequence : ConcreteGraphSequence T
+  graphNormCauchy : Prop
+
+/-- A graph convergence surface connecting a graph sequence to a candidate
+limit.  This is still a surface object, not a closed-operator theorem. -/
+structure ConcreteGraphConvergenceSurface (T : ConcreteDenseDomainOperator) where
+  graphSequence : ConcreteGraphSequence T
+  candidateLimit : ConcreteGraphLimitWitness T
+  graphPointConverges : Prop
+
 /-- A closable-surface witness separates the existence of a candidate graph
 closure from an actual closed operator theorem. -/
 structure ConcreteClosableWitness (T : ConcreteDenseDomainOperator) where
   graphSurfaceNonempty : T.graph.Nonempty
   graphLimitWitness : ConcreteGraphLimitWitness T
+  graphSequence : ConcreteGraphSequence T
+  graphNormCauchySurface : ConcreteGraphNormCauchySurface T
+  graphConvergenceSurface : ConcreteGraphConvergenceSurface T
   closureCandidate : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
   graphSubsetClosureCandidate : T.graph ⊆ closureCandidate
   closureCandidateNonempty : closureCandidate.Nonempty
@@ -126,12 +154,35 @@ def concreteIdentityGraphLimitWitness :
   { limitPoint := (0, 0)
     approximatedByGraph := (concreteIdentityDenseDomainOperator.graph).Nonempty }
 
+/-- The identity graph sequence constantly uses the zero domain point. -/
+def concreteIdentityGraphSequence :
+    ConcreteGraphSequence concreteIdentityDenseDomainOperator :=
+  { seq := fun _ => ⟨0, by simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]⟩ }
+
+/-- The identity graph sequence has a placeholder Cauchy-on-graph-norm surface.
+This does not assert a completed physical graph-norm theorem. -/
+def concreteIdentityGraphNormCauchySurface :
+    ConcreteGraphNormCauchySurface concreteIdentityDenseDomainOperator :=
+  { graphSequence := concreteIdentityGraphSequence
+    graphNormCauchy := True }
+
+/-- The identity graph sequence has a placeholder convergence surface toward
+`(0,0)`. -/
+def concreteIdentityGraphConvergenceSurface :
+    ConcreteGraphConvergenceSurface concreteIdentityDenseDomainOperator :=
+  { graphSequence := concreteIdentityGraphSequence
+    candidateLimit := concreteIdentityGraphLimitWitness
+    graphPointConverges := True }
+
 /-- The identity operator has a minimal closable-surface witness with the graph
 itself as closure candidate. -/
 def concreteIdentityClosableWitness :
     ConcreteClosableWitness concreteIdentityDenseDomainOperator :=
   { graphSurfaceNonempty := concrete_identity_dense_domain_operator_graph_nonempty
     graphLimitWitness := concreteIdentityGraphLimitWitness
+    graphSequence := concreteIdentityGraphSequence
+    graphNormCauchySurface := concreteIdentityGraphNormCauchySurface
+    graphConvergenceSurface := concreteIdentityGraphConvergenceSurface
     closureCandidate := concreteIdentityDenseDomainOperator.graph
     graphSubsetClosureCandidate := by
       intro p hp
@@ -172,11 +223,19 @@ def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
   (∀ x : concreteIdentityDenseDomainOperator.domain,
     0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
 
+/-- Boundary marker for graph sequence readiness.  This is still not a closed
+operator theorem; it only records a graph sequence, a graph-norm Cauchy surface,
+and a graph convergence surface. -/
+def concreteAnalyticSpineR2GraphSequenceSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphSurfaceReady ∧
+  concreteIdentityGraphNormCauchySurface.graphNormCauchy ∧
+  concreteIdentityGraphConvergenceSurface.graphPointConverges
+
 /-- Boundary marker for the first closable surface.  This is still not a closed
 operator theorem and still not self-adjointness; it only records a graph closure
 candidate and inclusion witness. -/
 def concreteAnalyticSpineR2ClosableSurfaceReady : Prop :=
-  concreteAnalyticSpineR2GraphSurfaceReady ∧
+  concreteAnalyticSpineR2GraphSequenceSurfaceReady ∧
   concreteIdentityClosableWitness.closureCandidate.Nonempty ∧
   concreteIdentityDenseDomainOperator.graph ⊆
     concreteIdentityClosableWitness.closureCandidate
@@ -207,13 +266,21 @@ theorem concrete_analytic_spine_r2_graph_surface_ready :
       fun x => concrete_dense_domain_operator_graphNorm_nonneg
         concreteIdentityDenseDomainOperator x
 
+/-- R2 graph-sequence surface readiness for the from-scratch concrete analytic
+spine. -/
+theorem concrete_analytic_spine_r2_graph_sequence_surface_ready :
+    concreteAnalyticSpineR2GraphSequenceSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphSequenceSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_surface_ready <|
+    And.intro trivial trivial
+
 /-- R2 closable-surface readiness for the from-scratch concrete analytic spine.
 This is a witness surface only; it does not assert a physical closed operator,
 self-adjointness, spectral theorem, PVM, or the 33/20 atom. -/
 theorem concrete_analytic_spine_r2_closable_surface_ready :
     concreteAnalyticSpineR2ClosableSurfaceReady := by
   unfold concreteAnalyticSpineR2ClosableSurfaceReady
-  exact And.intro concrete_analytic_spine_r2_graph_surface_ready <|
+  exact And.intro concrete_analytic_spine_r2_graph_sequence_surface_ready <|
     And.intro concrete_identity_closable_witness_closure_candidate_nonempty
       concrete_identity_graph_subset_closure_candidate
 
