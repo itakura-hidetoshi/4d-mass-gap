@@ -25,7 +25,11 @@ theorem concrete_l2_diagonal_graph_carrier_nonempty :
 /-- The zero graph point lies in the l2 diagonal graph carrier. -/
 theorem concrete_l2_diagonal_zero_graph_point_mem :
     (concreteL2RealZero, fun _ : ℕ => 0) ∈ ConcreteL2DiagonalGraphCarrier := by
-  exact concrete_l2_diagonal_graph_carrier_nonempty.some_mem
+  refine ⟨concreteL2DiagonalDomainZero, ?_⟩
+  ext n
+  · rfl
+  · simp [concreteL2DiagonalRawAction, concreteL2DiagonalDomainZero,
+      concreteL2RealZero]
 
 /-- A graph surface for the l2 diagonal raw action.  This is R2 graph data only:
 not a graph closure theorem, not a closed-operator theorem, and not
