@@ -40,6 +40,9 @@ python3 scripts/audit_concrete_analytic_spine_graph_point_limit_sequence.py
 echo "[check] audit concrete analytic spine graph point limit carrier"
 python3 scripts/audit_concrete_analytic_spine_graph_point_limit_carrier.py
 
+echo "[check] audit concrete analytic spine graph limit carrier compatibility"
+python3 scripts/audit_concrete_analytic_spine_graph_limit_carrier_compatibility.py
+
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
@@ -114,6 +117,9 @@ lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphPointLimitSequence
 
 echo "[check] build concrete analytic spine graph point limit carrier"
 lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphPointLimitCarrier
+
+echo "[check] build concrete analytic spine graph limit carrier compatibility"
+lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphLimitCarrierCompatibility
 
 echo "[check] build physical Hamiltonian operator normalization"
 lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
