@@ -165,6 +165,18 @@ structure ConcreteClosedGraphWitness (T : ConcreteDenseDomainOperator) where
   candidateContainsLimit : graphLimitWitness.limitPoint ∈ closureCandidate.carrier
   boundaryNotClosedOperatorTheorem : Prop
 
+/-- A graph-closure operation surface bundles the closable witness, closure
+candidate, and closed-graph witness surface.  It records compatibility between
+the closable-surface carrier and the graph-closure carrier, but it is not a
+closure operation theorem and not a proof that the operator is closed. -/
+structure ConcreteGraphClosureOperationSurface (T : ConcreteDenseDomainOperator) where
+  closableWitness : ConcreteClosableWitness T
+  graphClosureCandidate : ConcreteGraphClosureCandidate T
+  closedGraphWitness : ConcreteClosedGraphWitness T
+  candidateCompatibleWithClosable :
+    closableWitness.closureCandidate ⊆ graphClosureCandidate.carrier
+  operationBoundaryNotClosureProof : Prop
+
 /-- The identity operator has a trivial graph-limit witness at `(0,0)`.  This is
 not a proof that a physical Hamiltonian is closed or closable. -/
 def concreteIdentityGraphLimitWitness :
@@ -248,6 +260,30 @@ def concreteIdentityClosedGraphWitness :
     candidateContainsLimit := concrete_identity_graph_limit_point_mem_closure_candidate
     boundaryNotClosedOperatorTheorem := True }
 
+/-- The identity closable-surface candidate is compatible with the graph-closure
+candidate.  This is an inclusion surface only, not a closure theorem. -/
+theorem concrete_identity_graph_closure_operation_candidate_compatible :
+    concreteIdentityClosableWitness.closureCandidate ⊆
+      concreteIdentityGraphClosureCandidate.carrier := by
+  intro p hp
+  exact hp
+
+/-- The identity operator has a first graph-closure operation surface.  This is
+still a bookkeeping surface and not a mathematical promotion to closedness. -/
+def concreteIdentityGraphClosureOperationSurface :
+    ConcreteGraphClosureOperationSurface concreteIdentityDenseDomainOperator :=
+  { closableWitness := concreteIdentityClosableWitness
+    graphClosureCandidate := concreteIdentityGraphClosureCandidate
+    closedGraphWitness := concreteIdentityClosedGraphWitness
+    candidateCompatibleWithClosable :=
+      concrete_identity_graph_closure_operation_candidate_compatible
+    operationBoundaryNotClosureProof := True }
+
+/-- The graph-closure operation surface keeps the closure-proof boundary closed. -/
+theorem concrete_identity_graph_closure_operation_boundary :
+    concreteIdentityGraphClosureOperationSurface.operationBoundaryNotClosureProof := by
+  trivial
+
 /-- The identity closable witness has a nonempty closure candidate. -/
 theorem concrete_identity_closable_witness_closure_candidate_nonempty :
     concreteIdentityClosableWitness.closureCandidate.Nonempty := by
@@ -311,6 +347,14 @@ def concreteAnalyticSpineR2GraphClosureSurfaceReady : Prop :=
     concreteIdentityGraphClosureCandidate.carrier ∧
   concreteIdentityClosedGraphWitness.boundaryNotClosedOperatorTheorem
 
+/-- Boundary marker for the first graph-closure operation surface.  It records
+compatibility between the closable-surface candidate and the graph-closure
+candidate, while explicitly remaining below closed-operator status. -/
+def concreteAnalyticSpineR2GraphClosureOperationSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphClosureSurfaceReady ∧
+  concreteIdentityGraphClosureOperationSurface.candidateCompatibleWithClosable ∧
+  concreteIdentityGraphClosureOperationSurface.operationBoundaryNotClosureProof
+
 /-- R1 readiness for the from-scratch concrete analytic spine. -/
 theorem concrete_analytic_spine_r1_ready : concreteAnalyticSpineR1Ready := by
   unfold concreteAnalyticSpineR1Ready
@@ -367,16 +411,28 @@ theorem concrete_analytic_spine_r2_graph_closure_surface_ready :
       And.intro concrete_identity_graph_closure_candidate_contains_graph <|
         And.intro concrete_identity_graph_limit_point_mem_closure_candidate trivial
 
+/-- R2 graph-closure operation-surface readiness for the from-scratch concrete
+analytic spine.  This still does not assert a closure operation theorem, a
+closed physical operator, self-adjointness, spectral theorem, PVM, or the
+33/20 atom. -/
+theorem concrete_analytic_spine_r2_graph_closure_operation_surface_ready :
+    concreteAnalyticSpineR2GraphClosureOperationSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphClosureOperationSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_closure_surface_ready <|
+    And.intro
+      concreteIdentityGraphClosureOperationSurface.candidateCompatibleWithClosable
+      concrete_identity_graph_closure_operation_boundary
+
 /-- Boundary marker: the from-scratch concrete spine has not yet discharged the
 physical nonbounded Hamiltonian, self-adjointness, PVM, plaquette observable,
 non-definitional `33/20` emergence, or positive spectral-weight derivation. -/
 def concreteAnalyticSpineHardResidualBoundaryHeld : Prop :=
-  concreteAnalyticSpineR2GraphClosureSurfaceReady
+  concreteAnalyticSpineR2GraphClosureOperationSurfaceReady
 
 /-- Boundary theorem for the from-scratch concrete analytic spine. -/
 theorem concrete_analytic_spine_hard_residual_boundary_held :
     concreteAnalyticSpineHardResidualBoundaryHeld := by
-  exact concrete_analytic_spine_r2_graph_closure_surface_ready
+  exact concrete_analytic_spine_r2_graph_closure_operation_surface_ready
 
 end
 
