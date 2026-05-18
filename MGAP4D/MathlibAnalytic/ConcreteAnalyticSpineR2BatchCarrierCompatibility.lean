@@ -17,9 +17,7 @@ theorem concrete_identity_graph_closure_candidate_subset_diagonal_carrier :
 
 /-- A closure-candidate diagonal-compatibility surface records that a chosen
 closure-candidate carrier is contained in a diagonal law carrier.  It is only a
-carrier-compatibility bookkeeping surface, not a graph closure theorem, not
-graph-norm completion, not Cauchy completion, not a closed-operator theorem, not
-self-adjointness, and not an R3 promotion. -/
+carrier-compatibility bookkeeping surface, not a graph closure theorem, not graph-norm completion, not Cauchy completion, not a closed-operator theorem, not self-adjointness, and not an R3 promotion. -/
 structure ConcreteGraphClosureCandidateDiagonalCompatibilitySurface
     (T : ConcreteDenseDomainOperator) where
   closureCandidate : ConcreteGraphClosureCandidate T
@@ -45,7 +43,7 @@ theorem concrete_identity_graph_closure_candidate_diagonal_compatibility_boundar
 
 /-- A sequence diagonal/candidate compatibility surface records that each graph
 sequence point lies both in a diagonal law carrier and in a graph-closure
-candidate carrier.  It is only a bookkeeping surface, not a graph closure theorem. -/
+candidate carrier.  It is only a bookkeeping surface, not a graph closure theorem, not graph-norm completion, not Cauchy completion, not a closed-operator theorem, not self-adjointness, and not an R3 promotion. -/
 structure ConcreteGraphSequenceDiagonalCandidateCompatibilitySurface
     (T : ConcreteDenseDomainOperator) where
   graphSequence : ConcreteGraphSequence T
@@ -78,7 +76,7 @@ theorem concrete_identity_graph_sequence_diagonal_candidate_compatibility_bounda
 
 /-- A limit diagonal/candidate compatibility surface records that a graph-limit
 point lies both in a diagonal law carrier and in a graph-closure candidate
-carrier.  It is only a bookkeeping surface, not a graph closure theorem. -/
+carrier.  It is only a bookkeeping surface, not a graph closure theorem, not graph-norm completion, not Cauchy completion, not a closed-operator theorem, not self-adjointness, and not an R3 promotion. -/
 structure ConcreteGraphLimitDiagonalCandidateCompatibilitySurface
     (T : ConcreteDenseDomainOperator) where
   graphLimitWitness : ConcreteGraphLimitWitness T
@@ -110,8 +108,8 @@ theorem concrete_identity_graph_limit_diagonal_candidate_compatibility_boundary 
 
 /-- A batched carrier-compatibility surface bundles closure-candidate subset,
 sequence-point, and limit-point compatibility with the diagonal law carrier.
-This is still below graph closure, graph-norm completion, Cauchy completion,
-closed-operator status, self-adjointness, spectral theorem, PVM, and any
+This is still below graph closure, not graph-norm completion, Cauchy completion,
+closed-operator status, not self-adjointness, spectral theorem, PVM, and any
 non-definitional `33/20` emergence. -/
 def concreteAnalyticSpineR2BatchCarrierCompatibilitySurfaceReady : Prop :=
   concreteAnalyticSpineR2BatchClosureBridgeSurfaceReady ∧
