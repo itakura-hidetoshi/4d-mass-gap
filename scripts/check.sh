@@ -31,6 +31,9 @@ python3 scripts/audit_concrete_analytic_spine_graph_norm_bounded_sequence.py
 echo "[check] audit concrete analytic spine graph norm Cauchy sequence"
 python3 scripts/audit_concrete_analytic_spine_graph_norm_cauchy_sequence.py
 
+echo "[check] audit concrete analytic spine graph norm convergent sequence"
+python3 scripts/audit_concrete_analytic_spine_graph_norm_convergent_sequence.py
+
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
@@ -96,6 +99,9 @@ lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormBoundedSequence
 
 echo "[check] build concrete analytic spine graph norm Cauchy sequence"
 lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormCauchySequence
+
+echo "[check] build concrete analytic spine graph norm convergent sequence"
+lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormConvergentSequence
 
 echo "[check] build physical Hamiltonian operator normalization"
 lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
