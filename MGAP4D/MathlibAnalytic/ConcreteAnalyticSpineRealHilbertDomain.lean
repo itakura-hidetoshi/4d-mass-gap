@@ -1,0 +1,509 @@
+import MGAP4D.MathlibAnalytic.Basic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+/-- The from-scratch concrete analytic spine begins with a Mathlib-native real
+Hilbert model.
+
+This is deliberately minimal: it establishes the typeclass surface using
+Mathlib's standard real Hilbert structure before any physical 4D Yang--Mills
+Hamiltonian is claimed. -/
+abbrev ConcreteRealHilbertSpace : Type := ℝ
+
+/-- The real model has Mathlib's normed additive commutative group structure. -/
+theorem concrete_real_hilbert_space_normed_add_comm_group :
+    Nonempty (NormedAddCommGroup ConcreteRealHilbertSpace) := by
+  exact ⟨inferInstance⟩
+
+/-- The real model has Mathlib's real inner-product-space structure. -/
+theorem concrete_real_hilbert_space_inner_product_space :
+    Nonempty (InnerProductSpace ℝ ConcreteRealHilbertSpace) := by
+  exact ⟨inferInstance⟩
+
+/-- The real model is complete in Mathlib's topology. -/
+theorem concrete_real_hilbert_space_complete :
+    CompleteSpace ConcreteRealHilbertSpace := by
+  infer_instance
+
+/-- The first dense domain is the full real Hilbert model.  This is not yet the
+physical Hamiltonian domain; it is the clean Mathlib-native base domain used to
+start the concrete spine. -/
+def concreteRealDenseDomain : Set ConcreteRealHilbertSpace := Set.univ
+
+/-- The base domain is dense. -/
+theorem concrete_real_dense_domain_dense : Dense concreteRealDenseDomain := by
+  simp [concreteRealDenseDomain]
+
+/-- A domain-restricted operator skeleton over the concrete dense domain.
+
+This is a domain-aware operator surface, not yet a claim of a physical
+unbounded Yang--Mills Hamiltonian. -/
+structure ConcreteDenseDomainOperator where
+  domain : Set ConcreteRealHilbertSpace
+  domain_dense : Dense domain
+  op : domain → ConcreteRealHilbertSpace
+
+/-- The identity domain operator is the initial concrete object of the spine.
+It witnesses that the repository can carry a genuine Mathlib dense-domain
+operator object before replacing the operator with the physical Hamiltonian. -/
+def concreteIdentityDenseDomainOperator : ConcreteDenseDomainOperator :=
+  { domain := concreteRealDenseDomain
+    domain_dense := concrete_real_dense_domain_dense
+    op := fun x => x.1 }
+
+/-- The starting dense-domain operator has the full real Hilbert domain. -/
+theorem concrete_identity_dense_domain_operator_domain :
+    concreteIdentityDenseDomainOperator.domain = concreteRealDenseDomain := by
+  rfl
+
+/-- The starting dense-domain operator has a dense domain. -/
+theorem concrete_identity_dense_domain_operator_dense :
+    Dense concreteIdentityDenseDomainOperator.domain := by
+  exact concreteIdentityDenseDomainOperator.domain_dense
+
+/-- The graph of a concrete dense-domain operator as a subset of the product
+Hilbert model.  This is the first explicit object needed before discussing
+closedness or graph norms. -/
+def ConcreteDenseDomainOperator.graph (T : ConcreteDenseDomainOperator) :
+    Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace) :=
+  {p | ∃ x : T.domain, p = (x.1, T.op x)}
+
+/-- The graph of the initial identity domain operator is nonempty. -/
+theorem concrete_identity_dense_domain_operator_graph_nonempty :
+    (concreteIdentityDenseDomainOperator.graph).Nonempty := by
+  refine ⟨(0, 0), ?_⟩
+  refine ⟨⟨0, ?_⟩, ?_⟩
+  · simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]
+  · simp [concreteIdentityDenseDomainOperator]
+
+/-- The diagonal carrier used by the identity-graph law surface.  This is a
+concrete carrier for the toy identity operator only; it is not a closed graph of
+a physical Hamiltonian. -/
+def concreteIdentityGraphDiagonalCarrier :
+    Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace) :=
+  {p | p.2 = p.1}
+
+/-- The identity graph is contained in the diagonal carrier. -/
+theorem concrete_identity_graph_subset_diagonal_carrier :
+    concreteIdentityDenseDomainOperator.graph ⊆ concreteIdentityGraphDiagonalCarrier := by
+  intro p hp
+  rcases hp with ⟨x, rfl⟩
+  simp [concreteIdentityDenseDomainOperator, concreteIdentityGraphDiagonalCarrier]
+
+/-- The diagonal carrier is nonempty. -/
+theorem concrete_identity_graph_diagonal_carrier_nonempty :
+    concreteIdentityGraphDiagonalCarrier.Nonempty := by
+  refine ⟨(0, 0), ?_⟩
+  simp [concreteIdentityGraphDiagonalCarrier]
+
+/-- A graph-law surface records a concrete carrier law for an operator graph.
+It is a carrier-level law only, not a closed-operator theorem. -/
+structure ConcreteGraphLawSurface (T : ConcreteDenseDomainOperator) where
+  graphLawCarrier : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
+  graphSubsetLawCarrier : T.graph ⊆ graphLawCarrier
+  graphLawCarrierNonempty : graphLawCarrier.Nonempty
+  lawBoundaryNotClosedOperatorTheorem : Prop
+
+/-- The identity operator has a concrete diagonal graph-law surface. -/
+def concreteIdentityGraphLawSurface :
+    ConcreteGraphLawSurface concreteIdentityDenseDomainOperator :=
+  { graphLawCarrier := concreteIdentityGraphDiagonalCarrier
+    graphSubsetLawCarrier := concrete_identity_graph_subset_diagonal_carrier
+    graphLawCarrierNonempty := concrete_identity_graph_diagonal_carrier_nonempty
+    lawBoundaryNotClosedOperatorTheorem := True }
+
+/-- The identity graph-law surface keeps the closed-operator boundary closed. -/
+theorem concrete_identity_graph_law_boundary :
+    concreteIdentityGraphLawSurface.lawBoundaryNotClosedOperatorTheorem := by
+  trivial
+
+/-- A graph-norm-like quantity for a domain operator.
+
+For now this is a concrete numerical surface `‖x‖ + ‖T x‖`, sufficient to
+carry the future graph-norm closure route without claiming that the physical
+Hamiltonian graph norm has been completed. -/
+def ConcreteDenseDomainOperator.graphNorm (T : ConcreteDenseDomainOperator)
+    (x : T.domain) : ℝ :=
+  ‖(x.1 : ConcreteRealHilbertSpace)‖ + ‖T.op x‖
+
+/-- The graph-norm-like quantity is nonnegative. -/
+theorem concrete_dense_domain_operator_graphNorm_nonneg
+    (T : ConcreteDenseDomainOperator) (x : T.domain) :
+    0 ≤ T.graphNorm x := by
+  unfold ConcreteDenseDomainOperator.graphNorm
+  exact add_nonneg (norm_nonneg _) (norm_nonneg _)
+
+/-- The initial identity domain operator has graph norm `2 * ‖x‖`. -/
+theorem concrete_identity_dense_domain_operator_graphNorm_eq
+    (x : concreteIdentityDenseDomainOperator.domain) :
+    concreteIdentityDenseDomainOperator.graphNorm x = 2 * ‖(x.1 : ConcreteRealHilbertSpace)‖ := by
+  unfold ConcreteDenseDomainOperator.graphNorm
+  simp [concreteIdentityDenseDomainOperator, two_mul]
+
+/-- A graph-limit witness records a point in the ambient product space that is
+intended to represent a future graph limit.  This is a witness object only; it
+does not assert closedness. -/
+structure ConcreteGraphLimitWitness (T : ConcreteDenseDomainOperator) where
+  limitPoint : ConcreteRealHilbertSpace × ConcreteRealHilbertSpace
+  approximatedByGraph : Prop
+
+/-- A graph sequence is an explicit sequence in the domain whose graph points
+can later be used in graph-closure and closability arguments. -/
+structure ConcreteGraphSequence (T : ConcreteDenseDomainOperator) where
+  seq : ℕ → T.domain
+
+/-- The graph point associated with a graph sequence. -/
+def ConcreteGraphSequence.graphPoint {T : ConcreteDenseDomainOperator}
+    (s : ConcreteGraphSequence T) (n : ℕ) :
+    ConcreteRealHilbertSpace × ConcreteRealHilbertSpace :=
+  ((s.seq n).1, T.op (s.seq n))
+
+/-- A Cauchy-on-graph-norm surface.  This is intentionally a Prop field: it is
+the future place where real Cauchy estimates will be installed, not a claim that
+we already have the physical Hamiltonian graph-norm completion. -/
+structure ConcreteGraphNormCauchySurface (T : ConcreteDenseDomainOperator) where
+  graphSequence : ConcreteGraphSequence T
+  graphNormCauchy : Prop
+
+/-- A graph convergence surface connecting a graph sequence to a candidate
+limit.  This is still a surface object, not a closed-operator theorem. -/
+structure ConcreteGraphConvergenceSurface (T : ConcreteDenseDomainOperator) where
+  graphSequence : ConcreteGraphSequence T
+  candidateLimit : ConcreteGraphLimitWitness T
+  graphPointConverges : Prop
+
+/-- A closable-surface witness separates the existence of a candidate graph
+closure from an actual closed operator theorem. -/
+structure ConcreteClosableWitness (T : ConcreteDenseDomainOperator) where
+  graphSurfaceNonempty : T.graph.Nonempty
+  graphLimitWitness : ConcreteGraphLimitWitness T
+  graphSequence : ConcreteGraphSequence T
+  graphNormCauchySurface : ConcreteGraphNormCauchySurface T
+  graphConvergenceSurface : ConcreteGraphConvergenceSurface T
+  closureCandidate : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
+  graphSubsetClosureCandidate : T.graph ⊆ closureCandidate
+  closureCandidateNonempty : closureCandidate.Nonempty
+
+/-- A graph closure candidate packages the carrier that will later be compared
+with the genuine topological closure of a graph.  At this stage it is only a
+carrier surface with inclusion evidence; it is not a closed-operator theorem. -/
+structure ConcreteGraphClosureCandidate (T : ConcreteDenseDomainOperator) where
+  carrier : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
+  containsGraph : T.graph ⊆ carrier
+  carrierNonempty : carrier.Nonempty
+
+/-- A closed-graph witness surface records that a graph limit point lies in the
+chosen closure candidate.  The final field deliberately preserves the boundary:
+this is still not a closed-operator theorem, not self-adjointness, and not a
+spectral theorem. -/
+structure ConcreteClosedGraphWitness (T : ConcreteDenseDomainOperator) where
+  closureCandidate : ConcreteGraphClosureCandidate T
+  graphLimitWitness : ConcreteGraphLimitWitness T
+  candidateContainsLimit : graphLimitWitness.limitPoint ∈ closureCandidate.carrier
+  boundaryNotClosedOperatorTheorem : Prop
+
+/-- A graph-closure operation surface bundles the closable witness, closure
+candidate, and closed-graph witness surface.  It records compatibility between
+the closable-surface carrier and the graph-closure carrier, but it is not a
+closure operation theorem and not a proof that the operator is closed. -/
+structure ConcreteGraphClosureOperationSurface (T : ConcreteDenseDomainOperator) where
+  closableWitness : ConcreteClosableWitness T
+  graphClosureCandidate : ConcreteGraphClosureCandidate T
+  closedGraphWitness : ConcreteClosedGraphWitness T
+  candidateCompatibleWithClosable :
+    closableWitness.closureCandidate ⊆ graphClosureCandidate.carrier
+  operationBoundaryNotClosureProof : Prop
+
+/-- The identity operator has a trivial graph-limit witness at `(0,0)`.  This is
+not a proof that a physical Hamiltonian is closed or closable. -/
+def concreteIdentityGraphLimitWitness :
+    ConcreteGraphLimitWitness concreteIdentityDenseDomainOperator :=
+  { limitPoint := (0, 0)
+    approximatedByGraph := (concreteIdentityDenseDomainOperator.graph).Nonempty }
+
+/-- The identity graph sequence constantly uses the zero domain point. -/
+def concreteIdentityGraphSequence :
+    ConcreteGraphSequence concreteIdentityDenseDomainOperator :=
+  { seq := fun _ => ⟨0, by simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]⟩ }
+
+/-- The identity graph sequence has a placeholder Cauchy-on-graph-norm surface.
+This does not assert a completed physical graph-norm theorem. -/
+def concreteIdentityGraphNormCauchySurface :
+    ConcreteGraphNormCauchySurface concreteIdentityDenseDomainOperator :=
+  { graphSequence := concreteIdentityGraphSequence
+    graphNormCauchy := True }
+
+/-- The identity graph sequence has a placeholder convergence surface toward
+`(0,0)`. -/
+def concreteIdentityGraphConvergenceSurface :
+    ConcreteGraphConvergenceSurface concreteIdentityDenseDomainOperator :=
+  { graphSequence := concreteIdentityGraphSequence
+    candidateLimit := concreteIdentityGraphLimitWitness
+    graphPointConverges := True }
+
+/-- The identity operator has a minimal closable-surface witness with the graph
+itself as closure candidate. -/
+def concreteIdentityClosableWitness :
+    ConcreteClosableWitness concreteIdentityDenseDomainOperator :=
+  { graphSurfaceNonempty := concrete_identity_dense_domain_operator_graph_nonempty
+    graphLimitWitness := concreteIdentityGraphLimitWitness
+    graphSequence := concreteIdentityGraphSequence
+    graphNormCauchySurface := concreteIdentityGraphNormCauchySurface
+    graphConvergenceSurface := concreteIdentityGraphConvergenceSurface
+    closureCandidate := concreteIdentityDenseDomainOperator.graph
+    graphSubsetClosureCandidate := by
+      intro p hp
+      exact hp
+    closureCandidateNonempty := concrete_identity_dense_domain_operator_graph_nonempty }
+
+/-- The identity graph itself is the first graph-closure candidate.  It is a
+candidate carrier only, not a closedness theorem for a physical Hamiltonian. -/
+def concreteIdentityGraphClosureCandidate :
+    ConcreteGraphClosureCandidate concreteIdentityDenseDomainOperator :=
+  { carrier := concreteIdentityDenseDomainOperator.graph
+    containsGraph := by
+      intro p hp
+      exact hp
+    carrierNonempty := concrete_identity_dense_domain_operator_graph_nonempty }
+
+/-- The identity graph-closure candidate is nonempty. -/
+theorem concrete_identity_graph_closure_candidate_nonempty :
+    concreteIdentityGraphClosureCandidate.carrier.Nonempty := by
+  exact concreteIdentityGraphClosureCandidate.carrierNonempty
+
+/-- The identity graph is contained in its graph-closure candidate. -/
+theorem concrete_identity_graph_closure_candidate_contains_graph :
+    concreteIdentityDenseDomainOperator.graph ⊆
+      concreteIdentityGraphClosureCandidate.carrier := by
+  exact concreteIdentityGraphClosureCandidate.containsGraph
+
+/-- The trivial graph-limit point `(0,0)` lies in the identity graph-closure
+candidate.  This remains a toy surface and not a physical closed-operator
+result. -/
+theorem concrete_identity_graph_limit_point_mem_closure_candidate :
+    concreteIdentityGraphLimitWitness.limitPoint ∈
+      concreteIdentityGraphClosureCandidate.carrier := by
+  change (0, 0) ∈ concreteIdentityDenseDomainOperator.graph
+  refine ⟨⟨0, ?_⟩, ?_⟩
+  · simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]
+  · simp [concreteIdentityDenseDomainOperator]
+
+/-- The identity operator has a first closed-graph witness surface.  This keeps
+the closure-candidate boundary explicit and does not promote the object to R3. -/
+def concreteIdentityClosedGraphWitness :
+    ConcreteClosedGraphWitness concreteIdentityDenseDomainOperator :=
+  { closureCandidate := concreteIdentityGraphClosureCandidate
+    graphLimitWitness := concreteIdentityGraphLimitWitness
+    candidateContainsLimit := concrete_identity_graph_limit_point_mem_closure_candidate
+    boundaryNotClosedOperatorTheorem := True }
+
+/-- The identity closable-surface candidate is compatible with the graph-closure
+candidate.  This is an inclusion surface only, not a closure theorem. -/
+theorem concrete_identity_graph_closure_operation_candidate_compatible :
+    concreteIdentityClosableWitness.closureCandidate ⊆
+      concreteIdentityGraphClosureCandidate.carrier := by
+  intro p hp
+  exact hp
+
+/-- The identity operator has a first graph-closure operation surface.  This is
+still a bookkeeping surface and not a mathematical promotion to closedness. -/
+def concreteIdentityGraphClosureOperationSurface :
+    ConcreteGraphClosureOperationSurface concreteIdentityDenseDomainOperator :=
+  { closableWitness := concreteIdentityClosableWitness
+    graphClosureCandidate := concreteIdentityGraphClosureCandidate
+    closedGraphWitness := concreteIdentityClosedGraphWitness
+    candidateCompatibleWithClosable :=
+      concrete_identity_graph_closure_operation_candidate_compatible
+    operationBoundaryNotClosureProof := True }
+
+/-- The graph-closure operation surface exposes the compatibility proof carried
+by its bundled witness. -/
+theorem concrete_identity_graph_closure_operation_surface_candidate_compatible :
+    concreteIdentityClosableWitness.closureCandidate ⊆
+      concreteIdentityGraphClosureCandidate.carrier := by
+  simpa [concreteIdentityGraphClosureOperationSurface] using
+    concreteIdentityGraphClosureOperationSurface.candidateCompatibleWithClosable
+
+/-- The graph-closure operation surface keeps the closure-proof boundary closed. -/
+theorem concrete_identity_graph_closure_operation_boundary :
+    concreteIdentityGraphClosureOperationSurface.operationBoundaryNotClosureProof := by
+  trivial
+
+/-- The identity closable witness has a nonempty closure candidate. -/
+theorem concrete_identity_closable_witness_closure_candidate_nonempty :
+    concreteIdentityClosableWitness.closureCandidate.Nonempty := by
+  exact concreteIdentityClosableWitness.closureCandidateNonempty
+
+/-- The identity graph is contained in its closure candidate. -/
+theorem concrete_identity_graph_subset_closure_candidate :
+    concreteIdentityDenseDomainOperator.graph ⊆
+      concreteIdentityClosableWitness.closureCandidate := by
+  exact concreteIdentityClosableWitness.graphSubsetClosureCandidate
+
+/-- The concrete analytic spine has discharged the minimal R1 Mathlib-native
+Hilbert-space typeclass surface. -/
+def concreteAnalyticSpineR1Ready : Prop :=
+  Nonempty (NormedAddCommGroup ConcreteRealHilbertSpace) ∧
+  Nonempty (InnerProductSpace ℝ ConcreteRealHilbertSpace) ∧
+  CompleteSpace ConcreteRealHilbertSpace
+
+/-- The concrete analytic spine has discharged the minimal R2 dense-domain
+operator type surface, without claiming the physical unbounded Hamiltonian. -/
+def concreteAnalyticSpineR2DomainSurfaceReady : Prop :=
+  concreteAnalyticSpineR1Ready ∧
+  Dense concreteIdentityDenseDomainOperator.domain ∧
+  concreteIdentityDenseDomainOperator.domain = concreteRealDenseDomain
+
+/-- Boundary marker for the first graph surface.  This is not closedness yet;
+it only certifies that a concrete graph and graph-norm-like quantity are now
+present as first-class objects. -/
+def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
+  concreteAnalyticSpineR2DomainSurfaceReady ∧
+  (concreteIdentityDenseDomainOperator.graph).Nonempty ∧
+  (∀ x : concreteIdentityDenseDomainOperator.domain,
+    0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
+
+/-- Boundary marker for the first graph-law surface.  This adds the concrete
+identity-graph diagonal law while remaining below closed-operator status. -/
+def concreteAnalyticSpineR2GraphLawSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphSurfaceReady ∧
+  concreteIdentityGraphLawSurface.graphLawCarrier.Nonempty ∧
+  concreteIdentityDenseDomainOperator.graph ⊆
+    concreteIdentityGraphLawSurface.graphLawCarrier ∧
+  concreteIdentityGraphLawSurface.lawBoundaryNotClosedOperatorTheorem
+
+/-- Boundary marker for graph sequence readiness.  This is still not a closed
+operator theorem; it only records a graph sequence, a graph-norm Cauchy surface,
+and a graph convergence surface. -/
+def concreteAnalyticSpineR2GraphSequenceSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphLawSurfaceReady ∧
+  concreteIdentityGraphNormCauchySurface.graphNormCauchy ∧
+  concreteIdentityGraphConvergenceSurface.graphPointConverges
+
+/-- Boundary marker for the first closable surface.  This is still not a closed
+operator theorem and still not self-adjointness; it only records a graph closure
+candidate and inclusion witness. -/
+def concreteAnalyticSpineR2ClosableSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphSequenceSurfaceReady ∧
+  concreteIdentityClosableWitness.closureCandidate.Nonempty ∧
+  concreteIdentityDenseDomainOperator.graph ⊆
+    concreteIdentityClosableWitness.closureCandidate
+
+/-- Boundary marker for the first graph-closure surface.  This records a named
+closure candidate plus membership of the toy limit point in that candidate.  It
+is not a closed-operator theorem and does not open R3. -/
+def concreteAnalyticSpineR2GraphClosureSurfaceReady : Prop :=
+  concreteAnalyticSpineR2ClosableSurfaceReady ∧
+  concreteIdentityGraphClosureCandidate.carrier.Nonempty ∧
+  concreteIdentityDenseDomainOperator.graph ⊆
+    concreteIdentityGraphClosureCandidate.carrier ∧
+  concreteIdentityGraphLimitWitness.limitPoint ∈
+    concreteIdentityGraphClosureCandidate.carrier ∧
+  concreteIdentityClosedGraphWitness.boundaryNotClosedOperatorTheorem
+
+/-- Boundary marker for the first graph-closure operation surface.  It records
+compatibility between the closable-surface candidate and the graph-closure
+candidate, while explicitly remaining below closed-operator status. -/
+def concreteAnalyticSpineR2GraphClosureOperationSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphClosureSurfaceReady ∧
+  (concreteIdentityClosableWitness.closureCandidate ⊆
+    concreteIdentityGraphClosureCandidate.carrier) ∧
+  concreteIdentityGraphClosureOperationSurface.operationBoundaryNotClosureProof
+
+/-- R1 readiness for the from-scratch concrete analytic spine. -/
+theorem concrete_analytic_spine_r1_ready : concreteAnalyticSpineR1Ready := by
+  unfold concreteAnalyticSpineR1Ready
+  exact And.intro concrete_real_hilbert_space_normed_add_comm_group <|
+    And.intro concrete_real_hilbert_space_inner_product_space
+      concrete_real_hilbert_space_complete
+
+/-- R2 dense-domain surface readiness for the from-scratch concrete analytic
+spine.  This theorem intentionally does not assert unboundedness,
+self-adjointness, a PVM, or the physical 4D Yang--Mills Hamiltonian. -/
+theorem concrete_analytic_spine_r2_domain_surface_ready :
+    concreteAnalyticSpineR2DomainSurfaceReady := by
+  unfold concreteAnalyticSpineR2DomainSurfaceReady
+  exact And.intro concrete_analytic_spine_r1_ready <|
+    And.intro concrete_identity_dense_domain_operator_dense
+      concrete_identity_dense_domain_operator_domain
+
+/-- R2 graph surface readiness for the from-scratch concrete analytic spine. -/
+theorem concrete_analytic_spine_r2_graph_surface_ready :
+    concreteAnalyticSpineR2GraphSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_domain_surface_ready <|
+    And.intro concrete_identity_dense_domain_operator_graph_nonempty <|
+      fun x => concrete_dense_domain_operator_graphNorm_nonneg
+        concreteIdentityDenseDomainOperator x
+
+/-- R2 graph-law surface readiness for the from-scratch concrete analytic spine.
+This records the concrete diagonal law for the identity graph, not a physical
+closed-operator theorem. -/
+theorem concrete_analytic_spine_r2_graph_law_surface_ready :
+    concreteAnalyticSpineR2GraphLawSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphLawSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_surface_ready <|
+    And.intro concreteIdentityGraphLawSurface.graphLawCarrierNonempty <|
+      And.intro concreteIdentityGraphLawSurface.graphSubsetLawCarrier
+        concrete_identity_graph_law_boundary
+
+/-- R2 graph-sequence surface readiness for the from-scratch concrete analytic
+spine. -/
+theorem concrete_analytic_spine_r2_graph_sequence_surface_ready :
+    concreteAnalyticSpineR2GraphSequenceSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphSequenceSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_law_surface_ready <|
+    And.intro trivial trivial
+
+/-- R2 closable-surface readiness for the from-scratch concrete analytic spine.
+This is a witness surface only; it does not assert a physical closed operator,
+self-adjointness, spectral theorem, PVM, or the 33/20 atom. -/
+theorem concrete_analytic_spine_r2_closable_surface_ready :
+    concreteAnalyticSpineR2ClosableSurfaceReady := by
+  unfold concreteAnalyticSpineR2ClosableSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_sequence_surface_ready <|
+    And.intro concrete_identity_closable_witness_closure_candidate_nonempty
+      concrete_identity_graph_subset_closure_candidate
+
+/-- R2 graph-closure surface readiness for the from-scratch concrete analytic
+spine.  This still does not assert a physical closed operator, self-adjointness,
+spectral theorem, PVM, non-definitional 33/20 emergence, or positive spectral
+weight. -/
+theorem concrete_analytic_spine_r2_graph_closure_surface_ready :
+    concreteAnalyticSpineR2GraphClosureSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphClosureSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_closable_surface_ready <|
+    And.intro concrete_identity_graph_closure_candidate_nonempty <|
+      And.intro concrete_identity_graph_closure_candidate_contains_graph <|
+        And.intro concrete_identity_graph_limit_point_mem_closure_candidate trivial
+
+/-- R2 graph-closure operation-surface readiness for the from-scratch concrete
+analytic spine.  This still does not assert a closure operation theorem, a
+closed physical operator, self-adjointness, spectral theorem, PVM, or the
+33/20 atom. -/
+theorem concrete_analytic_spine_r2_graph_closure_operation_surface_ready :
+    concreteAnalyticSpineR2GraphClosureOperationSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphClosureOperationSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_closure_surface_ready <|
+    And.intro
+      concrete_identity_graph_closure_operation_surface_candidate_compatible
+      concrete_identity_graph_closure_operation_boundary
+
+/-- Boundary marker: the from-scratch concrete spine has not yet discharged the
+physical nonbounded Hamiltonian, self-adjointness, PVM, plaquette observable,
+non-definitional `33/20` emergence, or positive spectral-weight derivation. -/
+def concreteAnalyticSpineHardResidualBoundaryHeld : Prop :=
+  concreteAnalyticSpineR2GraphClosureOperationSurfaceReady
+
+/-- Boundary theorem for the from-scratch concrete analytic spine. -/
+theorem concrete_analytic_spine_hard_residual_boundary_held :
+    concreteAnalyticSpineHardResidualBoundaryHeld := by
+  exact concrete_analytic_spine_r2_graph_closure_operation_surface_ready
+
+end
+
+end MathlibAnalytic
+end MGAP4D
