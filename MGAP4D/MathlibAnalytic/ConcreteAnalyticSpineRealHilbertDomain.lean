@@ -418,10 +418,11 @@ closed physical operator, self-adjointness, spectral theorem, PVM, or the
 theorem concrete_analytic_spine_r2_graph_closure_operation_surface_ready :
     concreteAnalyticSpineR2GraphClosureOperationSurfaceReady := by
   unfold concreteAnalyticSpineR2GraphClosureOperationSurfaceReady
-  exact And.intro concrete_analytic_spine_r2_graph_closure_surface_ready <|
-    And.intro
-      concreteIdentityGraphClosureOperationSurface.candidateCompatibleWithClosable
-      concrete_identity_graph_closure_operation_boundary
+  constructor
+  · exact concrete_analytic_spine_r2_graph_closure_surface_ready
+  · constructor
+    · exact concrete_identity_graph_closure_operation_candidate_compatible
+    · exact concrete_identity_graph_closure_operation_boundary
 
 /-- Boundary marker: the from-scratch concrete spine has not yet discharged the
 physical nonbounded Hamiltonian, self-adjointness, PVM, plaquette observable,
