@@ -19,6 +19,9 @@ python3 scripts/audit_hard_physical_residual_ledger.py
 echo "[check] audit concrete analytic spine from scratch"
 python3 scripts/audit_concrete_analytic_spine_from_scratch.py
 
+echo "[check] audit concrete analytic spine graph sequence law"
+python3 scripts/audit_concrete_analytic_spine_graph_sequence_law.py
+
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
@@ -72,6 +75,9 @@ lake update
 
 echo "[check] build concrete analytic spine from scratch"
 lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineRealHilbertDomain
+
+echo "[check] build concrete analytic spine graph sequence law"
+lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphSequenceLaw
 
 echo "[check] build physical Hamiltonian operator normalization"
 lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
