@@ -103,15 +103,6 @@ theorem concrete_identity_dense_domain_operator_graphNorm_eq
   unfold ConcreteDenseDomainOperator.graphNorm
   simp [concreteIdentityDenseDomainOperator, two_mul]
 
-/-- Boundary marker for the first graph surface.  This is not closedness yet;
-it only certifies that a concrete graph and graph-norm-like quantity are now
-present as first-class objects. -/
-def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
-  concreteAnalyticSpineR2DomainSurfaceReady ∧
-  (concreteIdentityDenseDomainOperator.graph).Nonempty ∧
-  (∀ x : concreteIdentityDenseDomainOperator.domain,
-    0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
-
 /-- The concrete analytic spine has discharged the minimal R1 Mathlib-native
 Hilbert-space typeclass surface. -/
 def concreteAnalyticSpineR1Ready : Prop :=
@@ -125,6 +116,15 @@ def concreteAnalyticSpineR2DomainSurfaceReady : Prop :=
   concreteAnalyticSpineR1Ready ∧
   Dense concreteIdentityDenseDomainOperator.domain ∧
   concreteIdentityDenseDomainOperator.domain = concreteRealDenseDomain
+
+/-- Boundary marker for the first graph surface.  This is not closedness yet;
+it only certifies that a concrete graph and graph-norm-like quantity are now
+present as first-class objects. -/
+def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
+  concreteAnalyticSpineR2DomainSurfaceReady ∧
+  (concreteIdentityDenseDomainOperator.graph).Nonempty ∧
+  (∀ x : concreteIdentityDenseDomainOperator.domain,
+    0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
 
 /-- R1 readiness for the from-scratch concrete analytic spine. -/
 theorem concrete_analytic_spine_r1_ready : concreteAnalyticSpineR1Ready := by
