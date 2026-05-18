@@ -13,6 +13,9 @@ python3 scripts/audit_major_theorem_nonplaceholder.py
 echo "[check] audit analytic bridge coherence"
 python3 scripts/audit_bridge_coherence.py
 
+echo "[check] audit hard physical residual ledger"
+python3 scripts/audit_hard_physical_residual_ledger.py
+
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
