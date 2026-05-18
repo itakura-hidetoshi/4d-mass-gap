@@ -28,10 +28,17 @@ REQUIRED_TARGET_ANCHORS = (
     "concreteIdentityDenseDomainOperator",
     "concrete_identity_dense_domain_operator_domain",
     "concrete_identity_dense_domain_operator_dense",
+    "ConcreteDenseDomainOperator.graph",
+    "concrete_identity_dense_domain_operator_graph_nonempty",
+    "ConcreteDenseDomainOperator.graphNorm",
+    "concrete_dense_domain_operator_graphNorm_nonneg",
+    "concrete_identity_dense_domain_operator_graphNorm_eq",
     "concreteAnalyticSpineR1Ready",
     "concreteAnalyticSpineR2DomainSurfaceReady",
+    "concreteAnalyticSpineR2GraphSurfaceReady",
     "concrete_analytic_spine_r1_ready",
     "concrete_analytic_spine_r2_domain_surface_ready",
+    "concrete_analytic_spine_r2_graph_surface_ready",
     "concreteAnalyticSpineHardResidualBoundaryHeld",
     "concrete_analytic_spine_hard_residual_boundary_held",
 )
@@ -45,6 +52,15 @@ REQUIRED_MATHLIB_TYPECLASS_ANCHORS = (
     "Set.univ",
 )
 
+REQUIRED_GRAPH_ANCHORS = (
+    "Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)",
+    "(concreteIdentityDenseDomainOperator.graph).Nonempty",
+    "T.graphNorm x",
+    "0 ≤ T.graphNorm x",
+    "0 ≤ concreteIdentityDenseDomainOperator.graphNorm x",
+    "concreteIdentityDenseDomainOperator.graphNorm x = 2 * ‖(x.1 : ConcreteRealHilbertSpace)‖",
+)
+
 REQUIRED_BOUNDARY_ANCHORS = (
     "not yet the physical Hamiltonian domain",
     "not yet a claim of a physical",
@@ -52,6 +68,8 @@ REQUIRED_BOUNDARY_ANCHORS = (
     "self-adjointness",
     "PVM",
     "physical 4D Yang--Mills Hamiltonian",
+    "This is not closedness yet",
+    "without claiming that the physical Hamiltonian graph norm has been completed",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -64,6 +82,8 @@ FORBIDDEN_PREMATURE_CLAIMS = (
     "NondefinitionalSpectralAtom3320Ready",
     "PositiveSpectralWeightDerivation3320Ready",
     "fully concrete physical 4D Yang--Mills Hamiltonian completed",
+    "concreteAnalyticSpineClosedOperatorReady",
+    "concreteAnalyticSpineSelfAdjointReady",
 )
 
 
@@ -129,6 +149,7 @@ def main() -> None:
     failures.extend(audit_forbidden_tokens(TARGET_PATH))
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "concrete analytic spine target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_MATHLIB_TYPECLASS_ANCHORS, "Mathlib typeclass", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_ANCHORS, "graph surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_BOUNDARY_ANCHORS, "boundary", clean_lean=False))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_IMPORTS, "root import", clean_lean=False))
     failures.extend(forbid(TARGET_PATH, FORBIDDEN_PREMATURE_CLAIMS, "premature closure", clean_lean=False))
@@ -136,6 +157,7 @@ def main() -> None:
     print("Concrete analytic spine from scratch audit")
     print(f"Target anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"Mathlib typeclass anchors audited: {len(REQUIRED_MATHLIB_TYPECLASS_ANCHORS)}")
+    print(f"Graph surface anchors audited: {len(REQUIRED_GRAPH_ANCHORS)}")
     print(f"Boundary anchors audited: {len(REQUIRED_BOUNDARY_ANCHORS)}")
     print(f"Root imports audited: {len(REQUIRED_ROOT_IMPORTS)}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
