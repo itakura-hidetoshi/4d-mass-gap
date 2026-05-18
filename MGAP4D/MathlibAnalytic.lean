@@ -71,3 +71,4 @@ import MGAP4D.MathlibAnalytic.InternalReviewResidualClosureGate
 import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineRealHilbertDomain
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphSequenceLaw
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormSequenceLaw
