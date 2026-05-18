@@ -8,8 +8,7 @@ noncomputable section
 /-- A bundled R2 graph-sequence closure-law surface collects the existing toy
 sequence law, graph-norm law, graph-point limit law, and sequence-to-closure
 candidate membership law.  It is only a bookkeeping bundle, not a graph closure
-theorem, not graph-norm completion, not Cauchy completion, not a closed-operator
-theorem, not self-adjointness, and not an R3 promotion. -/
+theorem, not graph-norm completion, not Cauchy completion, not a closed-operator theorem, not self-adjointness, and not an R3 promotion. -/
 structure ConcreteGraphSequenceClosureLawBundle
     (T : ConcreteDenseDomainOperator) where
   graphSequenceLawSurface : ConcreteGraphSequenceLawSurface T
@@ -95,8 +94,7 @@ theorem concrete_identity_graph_norm_zero_limit_compatibility_boundary :
 /-- A toy closure pre-surface bundles the current identity graph carrier,
 sequence-to-candidate membership, limit membership, and graph-norm zero-limit
 compatibility.  It is a pre-closure bookkeeping surface only.  It is not a graph
-closure theorem, not graph-norm completion, not Cauchy completion, not a
-closed-operator theorem, not self-adjointness, not a spectral theorem, not a PVM,
+closure theorem, not graph-norm completion, not Cauchy completion, not a closed-operator theorem, not self-adjointness, not a spectral theorem, not a PVM,
 and not a `33/20` emergence theorem. -/
 structure ConcreteGraphToyClosurePreSurface
     (T : ConcreteDenseDomainOperator) where
@@ -127,8 +125,7 @@ theorem concrete_identity_graph_toy_closure_pre_boundary :
 /-- Batched R2 closure-bridge readiness for the from-scratch concrete analytic
 spine.  This single readiness surface records several compatible bookkeeping
 facts while remaining below graph closure, graph-norm completion, Cauchy
-completion, closed-operator status, self-adjointness, spectral theorem, PVM, and
-any non-definitional `33/20` emergence. -/
+completion, not a closed-operator theorem, self-adjointness, spectral theorem, PVM, and any non-definitional `33/20` emergence. -/
 def concreteAnalyticSpineR2BatchClosureBridgeSurfaceReady : Prop :=
   concreteAnalyticSpineR2GraphSequenceClosureCandidateSurfaceReady ∧
   concreteIdentityGraphSequenceClosureLawBundle.bundleBoundaryNotClosureTheorem ∧
