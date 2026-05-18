@@ -39,11 +39,18 @@ REQUIRED_TARGET_ANCHORS = (
     "ConcreteGraphNormCauchySurface",
     "ConcreteGraphConvergenceSurface",
     "ConcreteClosableWitness",
+    "ConcreteGraphClosureCandidate",
+    "ConcreteClosedGraphWitness",
     "concreteIdentityGraphLimitWitness",
     "concreteIdentityGraphSequence",
     "concreteIdentityGraphNormCauchySurface",
     "concreteIdentityGraphConvergenceSurface",
     "concreteIdentityClosableWitness",
+    "concreteIdentityGraphClosureCandidate",
+    "concrete_identity_graph_closure_candidate_nonempty",
+    "concrete_identity_graph_closure_candidate_contains_graph",
+    "concrete_identity_graph_limit_point_mem_closure_candidate",
+    "concreteIdentityClosedGraphWitness",
     "concrete_identity_closable_witness_closure_candidate_nonempty",
     "concrete_identity_graph_subset_closure_candidate",
     "concreteAnalyticSpineR1Ready",
@@ -51,11 +58,13 @@ REQUIRED_TARGET_ANCHORS = (
     "concreteAnalyticSpineR2GraphSurfaceReady",
     "concreteAnalyticSpineR2GraphSequenceSurfaceReady",
     "concreteAnalyticSpineR2ClosableSurfaceReady",
+    "concreteAnalyticSpineR2GraphClosureSurfaceReady",
     "concrete_analytic_spine_r1_ready",
     "concrete_analytic_spine_r2_domain_surface_ready",
     "concrete_analytic_spine_r2_graph_surface_ready",
     "concrete_analytic_spine_r2_graph_sequence_surface_ready",
     "concrete_analytic_spine_r2_closable_surface_ready",
+    "concrete_analytic_spine_r2_graph_closure_surface_ready",
     "concreteAnalyticSpineHardResidualBoundaryHeld",
     "concrete_analytic_spine_hard_residual_boundary_held",
 )
@@ -99,6 +108,18 @@ REQUIRED_CLOSABLE_SURFACE_ANCHORS = (
     "concreteIdentityDenseDomainOperator.graph ⊆",
 )
 
+REQUIRED_GRAPH_CLOSURE_SURFACE_ANCHORS = (
+    "carrier : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)",
+    "containsGraph : T.graph ⊆ carrier",
+    "carrierNonempty : carrier.Nonempty",
+    "candidateContainsLimit : graphLimitWitness.limitPoint ∈ closureCandidate.carrier",
+    "boundaryNotClosedOperatorTheorem : Prop",
+    "concreteIdentityGraphClosureCandidate.carrier.Nonempty",
+    "concreteIdentityDenseDomainOperator.graph ⊆\n    concreteIdentityGraphClosureCandidate.carrier",
+    "concreteIdentityGraphLimitWitness.limitPoint ∈\n    concreteIdentityGraphClosureCandidate.carrier",
+    "concreteIdentityClosedGraphWitness.boundaryNotClosedOperatorTheorem",
+)
+
 REQUIRED_BOUNDARY_ANCHORS = (
     "physical Hamiltonian domain",
     "not yet a claim of a physical",
@@ -111,6 +132,9 @@ REQUIRED_BOUNDARY_ANCHORS = (
     "This is still not a closed",
     "does not assert a physical closed operator",
     "not a closed-operator theorem",
+    "not self-adjointness",
+    "not a spectral theorem",
+    "does not open R3",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -195,6 +219,7 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_ANCHORS, "graph surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_SEQUENCE_ANCHORS, "graph sequence surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_CLOSABLE_SURFACE_ANCHORS, "closable surface", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_CLOSURE_SURFACE_ANCHORS, "graph closure surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_BOUNDARY_ANCHORS, "boundary", clean_lean=False))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_IMPORTS, "root import", clean_lean=False))
     failures.extend(forbid(TARGET_PATH, FORBIDDEN_PREMATURE_CLAIMS, "premature closure", clean_lean=False))
@@ -205,6 +230,7 @@ def main() -> None:
     print(f"Graph surface anchors audited: {len(REQUIRED_GRAPH_ANCHORS)}")
     print(f"Graph sequence anchors audited: {len(REQUIRED_GRAPH_SEQUENCE_ANCHORS)}")
     print(f"Closable surface anchors audited: {len(REQUIRED_CLOSABLE_SURFACE_ANCHORS)}")
+    print(f"Graph closure surface anchors audited: {len(REQUIRED_GRAPH_CLOSURE_SURFACE_ANCHORS)}")
     print(f"Boundary anchors audited: {len(REQUIRED_BOUNDARY_ANCHORS)}")
     print(f"Root imports audited: {len(REQUIRED_ROOT_IMPORTS)}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
