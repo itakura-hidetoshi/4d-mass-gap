@@ -7,8 +7,7 @@ noncomputable section
 
 /-- A graph-norm sequence law surface records graph-norm information along a
 concrete graph sequence.  It is a sequence-level graph-norm bookkeeping surface
-only, not a graph-norm completion theorem, not a closed-operator theorem, not
-self-adjointness, and not an R3 promotion. -/
+only, not a graph-norm completion theorem, not a closed-operator theorem, not self-adjointness, and not an R3 promotion. -/
 structure ConcreteGraphNormSequenceLawSurface (T : ConcreteDenseDomainOperator) where
   graphSequence : ConcreteGraphSequence T
   graphNormValue : ℕ → ℝ
@@ -41,8 +40,8 @@ theorem concrete_identity_graph_norm_sequence_value_nonnegative :
   exact le_rfl
 
 /-- The identity graph sequence has a graph-norm sequence law surface.  This does
-not assert graph-norm completion, closedness, self-adjointness, a spectral
-theorem, a PVM, or any `33/20` atom. -/
+not assert graph-norm completion, closedness, self-adjointness, a spectral theorem, a PVM,
+or any `33/20` atom, and it does not assert graph-norm completion as a theorem. -/
 def concreteIdentityGraphNormSequenceLawSurface :
     ConcreteGraphNormSequenceLawSurface concreteIdentityDenseDomainOperator :=
   { graphSequence := concreteIdentityGraphSequence
@@ -77,8 +76,7 @@ theorem concrete_analytic_spine_r2_graph_norm_sequence_law_surface_ready :
 
 /-- Boundary marker: the graph-norm sequence law has not discharged graph-norm
 completion, the physical nonbounded Hamiltonian, closedness, self-adjointness,
-PVM, plaquette observable, non-definitional `33/20` emergence, or positive
-spectral-weight derivation. -/
+spectral theorem, PVM, plaquette observable, non-definitional `33/20` emergence, or positive spectral-weight derivation. -/
 def concreteAnalyticSpineR2GraphNormSequenceLawHardResidualBoundaryHeld : Prop :=
   concreteAnalyticSpineR2GraphNormSequenceLawSurfaceReady
 
