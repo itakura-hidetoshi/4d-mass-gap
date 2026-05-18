@@ -12,9 +12,11 @@ fi
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$' || true)"
 changed_scripts="$(printf '%s\n' "${changed_files}" | grep '^scripts/.*\.(py|sh)$' || true)"
+non_root_changed_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -v '^MGAP4D/MathlibAnalytic\.lean$' || true)"
 
 printf '[fast] base: %s\n' "${BASE}"
 printf '[fast] changed Lean files:\n%s\n' "${changed_lean_files:-<none>}"
+printf '[fast] changed non-root Lean files:\n%s\n' "${non_root_changed_lean_files:-<none>}"
 printf '[fast] changed scripts:\n%s\n' "${changed_scripts:-<none>}"
 
 run_audit_if_present() {
@@ -61,18 +63,35 @@ if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperato
   run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane.py
 fi
 
-# Avoid lake update in PR fast checks.  Use the existing manifest/cache path.
+# The repository may not commit lake-manifest.json.  In that case, generate it
+# once for the PR fast check, then use the mathlib cache path.  Avoid running
+# lake update when the manifest is already present.
+if [ ! -f lake-manifest.json ]; then
+  echo "[fast] lake manifest missing; run lake update once"
+  lake update
+else
+  echo "[fast] lake manifest present; skip lake update"
+fi
+
 echo "[fast] lake exe cache get"
 lake exe cache get || true
 
-if printf '%s\n' "${changed_lean_files}" | grep -q '^MGAP4D/MathlibAnalytic\.lean$'; then
-  echo "[fast] root import changed; build root module"
-  lake build MGAP4D.MathlibAnalytic
+if [ -z "${changed_lean_files}" ]; then
+  echo "[fast] no Lean files changed"
   exit 0
 fi
 
-if [ -z "${changed_lean_files}" ]; then
-  echo "[fast] no Lean files changed"
+# Building the root import module on every PR defeats the fast lane, because the
+# root intentionally imports the whole analytic surface.  When root and leaf
+# modules both changed, build only the changed leaf modules; root-level full
+# integration remains covered by Full Local Check on main/manual runs.
+if [ -z "${non_root_changed_lean_files}" ]; then
+  if printf '%s\n' "${changed_lean_files}" | grep -q '^MGAP4D/MathlibAnalytic\.lean$'; then
+    echo "[fast] only root import changed; build root module"
+    lake build MGAP4D.MathlibAnalytic
+  else
+    echo "[fast] no non-root Lean files changed"
+  fi
   exit 0
 fi
 
@@ -82,4 +101,4 @@ while IFS= read -r file; do
   target="${target//\//.}"
   echo "[fast] lake build ${target}"
   lake build "${target}"
-done <<< "${changed_lean_files}"
+done <<< "${non_root_changed_lean_files}"
