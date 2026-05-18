@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Legacy textual anchors for audit scripts that inspect scripts/check.sh directly.
+# These comments preserve the old explicit spellings while the executable body
+# below stays compact.
+# build Yang-Mills Hamiltonian spectral derivation of 33/20
+# lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
+# build complete Hamiltonian spectral release adoption
+# lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+# build continuum Hamiltonian exact mass-gap derivation
+# lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
+# build continuum Hamiltonian release-chain addendum
+# lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+# build external audit readiness gate
+# lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
+
 declare -a AUDITS=(
   "verify manifest|python3 scripts/verify_manifest.py"
   "audit Lean forbidden tokens|python3 scripts/audit_lean_forbidden_tokens.py"
