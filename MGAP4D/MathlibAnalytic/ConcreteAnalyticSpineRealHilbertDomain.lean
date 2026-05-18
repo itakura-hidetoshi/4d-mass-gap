@@ -35,8 +35,7 @@ def concreteRealDenseDomain : Set ConcreteRealHilbertSpace := Set.univ
 
 /-- The base domain is dense. -/
 theorem concrete_real_dense_domain_dense : Dense concreteRealDenseDomain := by
-  simpa [concreteRealDenseDomain] using
-    (dense_univ : Dense (Set.univ : Set ConcreteRealHilbertSpace))
+  simp [concreteRealDenseDomain]
 
 /-- A domain-restricted operator skeleton over the concrete dense domain.
 
@@ -78,7 +77,48 @@ theorem concrete_identity_dense_domain_operator_graph_nonempty :
   refine ⟨(0, 0), ?_⟩
   refine ⟨⟨0, ?_⟩, ?_⟩
   · simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]
-  · simp [ConcreteDenseDomainOperator.graph, concreteIdentityDenseDomainOperator]
+  · simp [concreteIdentityDenseDomainOperator]
+
+/-- The diagonal carrier used by the identity-graph law surface.  This is a
+concrete carrier for the toy identity operator only; it is not a closed graph of
+a physical Hamiltonian. -/
+def concreteIdentityGraphDiagonalCarrier :
+    Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace) :=
+  {p | p.2 = p.1}
+
+/-- The identity graph is contained in the diagonal carrier. -/
+theorem concrete_identity_graph_subset_diagonal_carrier :
+    concreteIdentityDenseDomainOperator.graph ⊆ concreteIdentityGraphDiagonalCarrier := by
+  intro p hp
+  rcases hp with ⟨x, rfl⟩
+  simp [concreteIdentityDenseDomainOperator, concreteIdentityGraphDiagonalCarrier]
+
+/-- The diagonal carrier is nonempty. -/
+theorem concrete_identity_graph_diagonal_carrier_nonempty :
+    concreteIdentityGraphDiagonalCarrier.Nonempty := by
+  refine ⟨(0, 0), ?_⟩
+  simp [concreteIdentityGraphDiagonalCarrier]
+
+/-- A graph-law surface records a concrete carrier law for an operator graph.
+It is a carrier-level law only, not a closed-operator theorem. -/
+structure ConcreteGraphLawSurface (T : ConcreteDenseDomainOperator) where
+  graphLawCarrier : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)
+  graphSubsetLawCarrier : T.graph ⊆ graphLawCarrier
+  graphLawCarrierNonempty : graphLawCarrier.Nonempty
+  lawBoundaryNotClosedOperatorTheorem : Prop
+
+/-- The identity operator has a concrete diagonal graph-law surface. -/
+def concreteIdentityGraphLawSurface :
+    ConcreteGraphLawSurface concreteIdentityDenseDomainOperator :=
+  { graphLawCarrier := concreteIdentityGraphDiagonalCarrier
+    graphSubsetLawCarrier := concrete_identity_graph_subset_diagonal_carrier
+    graphLawCarrierNonempty := concrete_identity_graph_diagonal_carrier_nonempty
+    lawBoundaryNotClosedOperatorTheorem := True }
+
+/-- The identity graph-law surface keeps the closed-operator boundary closed. -/
+theorem concrete_identity_graph_law_boundary :
+    concreteIdentityGraphLawSurface.lawBoundaryNotClosedOperatorTheorem := by
+  trivial
 
 /-- A graph-norm-like quantity for a domain operator.
 
@@ -249,7 +289,7 @@ theorem concrete_identity_graph_limit_point_mem_closure_candidate :
   change (0, 0) ∈ concreteIdentityDenseDomainOperator.graph
   refine ⟨⟨0, ?_⟩, ?_⟩
   · simp [concreteIdentityDenseDomainOperator, concreteRealDenseDomain]
-  · simp [ConcreteDenseDomainOperator.graph, concreteIdentityDenseDomainOperator]
+  · simp [concreteIdentityDenseDomainOperator]
 
 /-- The identity operator has a first closed-graph witness surface.  This keeps
 the closure-candidate boundary explicit and does not promote the object to R3. -/
@@ -326,11 +366,20 @@ def concreteAnalyticSpineR2GraphSurfaceReady : Prop :=
   (∀ x : concreteIdentityDenseDomainOperator.domain,
     0 ≤ concreteIdentityDenseDomainOperator.graphNorm x)
 
+/-- Boundary marker for the first graph-law surface.  This adds the concrete
+identity-graph diagonal law while remaining below closed-operator status. -/
+def concreteAnalyticSpineR2GraphLawSurfaceReady : Prop :=
+  concreteAnalyticSpineR2GraphSurfaceReady ∧
+  concreteIdentityGraphLawSurface.graphLawCarrier.Nonempty ∧
+  concreteIdentityDenseDomainOperator.graph ⊆
+    concreteIdentityGraphLawSurface.graphLawCarrier ∧
+  concreteIdentityGraphLawSurface.lawBoundaryNotClosedOperatorTheorem
+
 /-- Boundary marker for graph sequence readiness.  This is still not a closed
 operator theorem; it only records a graph sequence, a graph-norm Cauchy surface,
 and a graph convergence surface. -/
 def concreteAnalyticSpineR2GraphSequenceSurfaceReady : Prop :=
-  concreteAnalyticSpineR2GraphSurfaceReady ∧
+  concreteAnalyticSpineR2GraphLawSurfaceReady ∧
   concreteIdentityGraphNormCauchySurface.graphNormCauchy ∧
   concreteIdentityGraphConvergenceSurface.graphPointConverges
 
@@ -390,12 +439,23 @@ theorem concrete_analytic_spine_r2_graph_surface_ready :
       fun x => concrete_dense_domain_operator_graphNorm_nonneg
         concreteIdentityDenseDomainOperator x
 
+/-- R2 graph-law surface readiness for the from-scratch concrete analytic spine.
+This records the concrete diagonal law for the identity graph, not a physical
+closed-operator theorem. -/
+theorem concrete_analytic_spine_r2_graph_law_surface_ready :
+    concreteAnalyticSpineR2GraphLawSurfaceReady := by
+  unfold concreteAnalyticSpineR2GraphLawSurfaceReady
+  exact And.intro concrete_analytic_spine_r2_graph_surface_ready <|
+    And.intro concreteIdentityGraphLawSurface.graphLawCarrierNonempty <|
+      And.intro concreteIdentityGraphLawSurface.graphSubsetLawCarrier
+        concrete_identity_graph_law_boundary
+
 /-- R2 graph-sequence surface readiness for the from-scratch concrete analytic
 spine. -/
 theorem concrete_analytic_spine_r2_graph_sequence_surface_ready :
     concreteAnalyticSpineR2GraphSequenceSurfaceReady := by
   unfold concreteAnalyticSpineR2GraphSequenceSurfaceReady
-  exact And.intro concrete_analytic_spine_r2_graph_surface_ready <|
+  exact And.intro concrete_analytic_spine_r2_graph_law_surface_ready <|
     And.intro trivial trivial
 
 /-- R2 closable-surface readiness for the from-scratch concrete analytic spine.
