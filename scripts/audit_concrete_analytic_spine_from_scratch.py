@@ -30,6 +30,12 @@ REQUIRED_TARGET_ANCHORS = (
     "concrete_identity_dense_domain_operator_dense",
     "ConcreteDenseDomainOperator.graph",
     "concrete_identity_dense_domain_operator_graph_nonempty",
+    "concreteIdentityGraphDiagonalCarrier",
+    "concrete_identity_graph_subset_diagonal_carrier",
+    "concrete_identity_graph_diagonal_carrier_nonempty",
+    "ConcreteGraphLawSurface",
+    "concreteIdentityGraphLawSurface",
+    "concrete_identity_graph_law_boundary",
     "ConcreteDenseDomainOperator.graphNorm",
     "concrete_dense_domain_operator_graphNorm_nonneg",
     "concrete_identity_dense_domain_operator_graphNorm_eq",
@@ -54,12 +60,14 @@ REQUIRED_TARGET_ANCHORS = (
     "concreteIdentityClosedGraphWitness",
     "concrete_identity_graph_closure_operation_candidate_compatible",
     "concreteIdentityGraphClosureOperationSurface",
+    "concrete_identity_graph_closure_operation_surface_candidate_compatible",
     "concrete_identity_graph_closure_operation_boundary",
     "concrete_identity_closable_witness_closure_candidate_nonempty",
     "concrete_identity_graph_subset_closure_candidate",
     "concreteAnalyticSpineR1Ready",
     "concreteAnalyticSpineR2DomainSurfaceReady",
     "concreteAnalyticSpineR2GraphSurfaceReady",
+    "concreteAnalyticSpineR2GraphLawSurfaceReady",
     "concreteAnalyticSpineR2GraphSequenceSurfaceReady",
     "concreteAnalyticSpineR2ClosableSurfaceReady",
     "concreteAnalyticSpineR2GraphClosureSurfaceReady",
@@ -67,6 +75,7 @@ REQUIRED_TARGET_ANCHORS = (
     "concrete_analytic_spine_r1_ready",
     "concrete_analytic_spine_r2_domain_surface_ready",
     "concrete_analytic_spine_r2_graph_surface_ready",
+    "concrete_analytic_spine_r2_graph_law_surface_ready",
     "concrete_analytic_spine_r2_graph_sequence_surface_ready",
     "concrete_analytic_spine_r2_closable_surface_ready",
     "concrete_analytic_spine_r2_graph_closure_surface_ready",
@@ -91,6 +100,17 @@ REQUIRED_GRAPH_ANCHORS = (
     "0 ≤ T.graphNorm x",
     "0 ≤ concreteIdentityDenseDomainOperator.graphNorm x",
     "concreteIdentityDenseDomainOperator.graphNorm x = 2 * ‖(x.1 : ConcreteRealHilbertSpace)‖",
+)
+
+REQUIRED_GRAPH_LAW_SURFACE_ANCHORS = (
+    "{p | p.2 = p.1}",
+    "graphLawCarrier : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)",
+    "graphSubsetLawCarrier : T.graph ⊆ graphLawCarrier",
+    "graphLawCarrierNonempty : graphLawCarrier.Nonempty",
+    "lawBoundaryNotClosedOperatorTheorem : Prop",
+    "concreteIdentityGraphLawSurface.graphLawCarrier.Nonempty",
+    "concreteIdentityDenseDomainOperator.graph ⊆\n    concreteIdentityGraphLawSurface.graphLawCarrier",
+    "concreteIdentityGraphLawSurface.lawBoundaryNotClosedOperatorTheorem",
 )
 
 REQUIRED_GRAPH_SEQUENCE_ANCHORS = (
@@ -155,6 +175,8 @@ REQUIRED_BOUNDARY_ANCHORS = (
     "closure operation theorem",
     "not a mathematical promotion to closedness",
     "below closed-operator status",
+    "not a closed graph of",
+    "identity-graph diagonal law",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -237,6 +259,7 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "concrete analytic spine target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_MATHLIB_TYPECLASS_ANCHORS, "Mathlib typeclass", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_ANCHORS, "graph surface", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_LAW_SURFACE_ANCHORS, "graph law surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_SEQUENCE_ANCHORS, "graph sequence surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_CLOSABLE_SURFACE_ANCHORS, "closable surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_CLOSURE_SURFACE_ANCHORS, "graph closure surface", clean_lean=True))
@@ -249,6 +272,7 @@ def main() -> None:
     print(f"Target anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"Mathlib typeclass anchors audited: {len(REQUIRED_MATHLIB_TYPECLASS_ANCHORS)}")
     print(f"Graph surface anchors audited: {len(REQUIRED_GRAPH_ANCHORS)}")
+    print(f"Graph law surface anchors audited: {len(REQUIRED_GRAPH_LAW_SURFACE_ANCHORS)}")
     print(f"Graph sequence anchors audited: {len(REQUIRED_GRAPH_SEQUENCE_ANCHORS)}")
     print(f"Closable surface anchors audited: {len(REQUIRED_CLOSABLE_SURFACE_ANCHORS)}")
     print(f"Graph closure surface anchors audited: {len(REQUIRED_GRAPH_CLOSURE_SURFACE_ANCHORS)}")
