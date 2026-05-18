@@ -34,6 +34,7 @@ declare -a AUDITS=(
   "audit concrete analytic spine R2 batch closure bridge|python3 scripts/audit_concrete_analytic_spine_r2_batch_closure_bridge.py"
   "audit concrete analytic spine R2 batch carrier compatibility|python3 scripts/audit_concrete_analytic_spine_r2_batch_carrier_compatibility.py"
   "audit concrete analytic spine R2 batch norm closure consistency|python3 scripts/audit_concrete_analytic_spine_r2_batch_norm_closure_consistency.py"
+  "audit concrete analytic spine R2 batch readiness index|python3 scripts/audit_concrete_analytic_spine_r2_batch_readiness_index.py"
   "audit physical Hamiltonian operator normalization|python3 scripts/audit_physical_hamiltonian_operator_normalization.py"
   "audit Yang-Mills Hamiltonian spectral derivation of 33/20|python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py"
   "audit infinite-dimensional Yang-Mills target layer|python3 scripts/audit_infinite_dimensional_target_layer.py"
@@ -76,6 +77,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2BatchClosureBridge
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2BatchCarrierCompatibility
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2BatchNormClosureConsistency
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2BatchReadinessIndex
   MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
   MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
