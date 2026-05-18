@@ -33,12 +33,20 @@ REQUIRED_TARGET_ANCHORS = (
     "ConcreteDenseDomainOperator.graphNorm",
     "concrete_dense_domain_operator_graphNorm_nonneg",
     "concrete_identity_dense_domain_operator_graphNorm_eq",
+    "ConcreteGraphLimitWitness",
+    "ConcreteClosableWitness",
+    "concreteIdentityGraphLimitWitness",
+    "concreteIdentityClosableWitness",
+    "concrete_identity_closable_witness_closure_candidate_nonempty",
+    "concrete_identity_graph_subset_closure_candidate",
     "concreteAnalyticSpineR1Ready",
     "concreteAnalyticSpineR2DomainSurfaceReady",
     "concreteAnalyticSpineR2GraphSurfaceReady",
+    "concreteAnalyticSpineR2ClosableSurfaceReady",
     "concrete_analytic_spine_r1_ready",
     "concrete_analytic_spine_r2_domain_surface_ready",
     "concrete_analytic_spine_r2_graph_surface_ready",
+    "concrete_analytic_spine_r2_closable_surface_ready",
     "concreteAnalyticSpineHardResidualBoundaryHeld",
     "concrete_analytic_spine_hard_residual_boundary_held",
 )
@@ -61,6 +69,16 @@ REQUIRED_GRAPH_ANCHORS = (
     "concreteIdentityDenseDomainOperator.graphNorm x = 2 * ‖(x.1 : ConcreteRealHilbertSpace)‖",
 )
 
+REQUIRED_CLOSABLE_SURFACE_ANCHORS = (
+    "limitPoint : ConcreteRealHilbertSpace × ConcreteRealHilbertSpace",
+    "approximatedByGraph : Prop",
+    "closureCandidate : Set (ConcreteRealHilbertSpace × ConcreteRealHilbertSpace)",
+    "graphSubsetClosureCandidate : T.graph ⊆ closureCandidate",
+    "closureCandidateNonempty : closureCandidate.Nonempty",
+    "concreteIdentityClosableWitness.closureCandidate.Nonempty",
+    "concreteIdentityDenseDomainOperator.graph ⊆",
+)
+
 REQUIRED_BOUNDARY_ANCHORS = (
     "physical Hamiltonian domain",
     "not yet a claim of a physical",
@@ -70,6 +88,8 @@ REQUIRED_BOUNDARY_ANCHORS = (
     "physical 4D Yang--Mills Hamiltonian",
     "This is not closedness yet",
     "graph norm",
+    "This is still not a closed",
+    "does not assert a physical closed operator",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -84,6 +104,8 @@ FORBIDDEN_PREMATURE_CLAIMS = (
     "fully concrete physical 4D Yang--Mills Hamiltonian completed",
     "concreteAnalyticSpineClosedOperatorReady",
     "concreteAnalyticSpineSelfAdjointReady",
+    "ConcreteClosedOperatorWitness",
+    "ConcreteSelfAdjointWitness",
 )
 
 
@@ -150,6 +172,7 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "concrete analytic spine target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_MATHLIB_TYPECLASS_ANCHORS, "Mathlib typeclass", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_GRAPH_ANCHORS, "graph surface", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_CLOSABLE_SURFACE_ANCHORS, "closable surface", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_BOUNDARY_ANCHORS, "boundary", clean_lean=False))
     failures.extend(require(ROOT_PATH, REQUIRED_ROOT_IMPORTS, "root import", clean_lean=False))
     failures.extend(forbid(TARGET_PATH, FORBIDDEN_PREMATURE_CLAIMS, "premature closure", clean_lean=False))
@@ -158,6 +181,7 @@ def main() -> None:
     print(f"Target anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"Mathlib typeclass anchors audited: {len(REQUIRED_MATHLIB_TYPECLASS_ANCHORS)}")
     print(f"Graph surface anchors audited: {len(REQUIRED_GRAPH_ANCHORS)}")
+    print(f"Closable surface anchors audited: {len(REQUIRED_CLOSABLE_SURFACE_ANCHORS)}")
     print(f"Boundary anchors audited: {len(REQUIRED_BOUNDARY_ANCHORS)}")
     print(f"Root imports audited: {len(REQUIRED_ROOT_IMPORTS)}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
