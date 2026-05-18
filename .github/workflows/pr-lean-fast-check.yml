@@ -1,0 +1,51 @@
+name: PR Lean Fast Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  pr-lean-fast-check:
+    name: Changed Lean fast check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache elan and Lake build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake
+          key: ${{ runner.os }}-lean-fast-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-
+            ${{ runner.os }}-lean-
+      - name: Install elan and Lean toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if ! command -v elan >/dev/null 2>&1; then
+            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Show Lean and Lake versions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lean --version
+          lake --version
+      - name: Run changed Lean fast check
+        shell: bash
+        run: |
+          set -euxo pipefail
+          bash scripts/check_changed_lean.sh origin/main
