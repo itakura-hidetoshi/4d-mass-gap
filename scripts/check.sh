@@ -16,6 +16,9 @@ python3 scripts/audit_bridge_coherence.py
 echo "[check] audit hard physical residual ledger"
 python3 scripts/audit_hard_physical_residual_ledger.py
 
+echo "[check] audit concrete analytic spine from scratch"
+python3 scripts/audit_concrete_analytic_spine_from_scratch.py
+
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
@@ -66,6 +69,9 @@ python3 scripts/replay_summary.py
 
 echo "[check] lake update"
 lake update
+
+echo "[check] build concrete analytic spine from scratch"
+lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineRealHilbertDomain
 
 echo "[check] build physical Hamiltonian operator normalization"
 lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
