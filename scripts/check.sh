@@ -25,6 +25,9 @@ python3 scripts/audit_concrete_analytic_spine_graph_sequence_law.py
 echo "[check] audit concrete analytic spine graph norm sequence law"
 python3 scripts/audit_concrete_analytic_spine_graph_norm_sequence_law.py
 
+echo "[check] audit concrete analytic spine graph norm bounded sequence"
+python3 scripts/audit_concrete_analytic_spine_graph_norm_bounded_sequence.py
+
 echo "[check] audit physical Hamiltonian operator normalization"
 python3 scripts/audit_physical_hamiltonian_operator_normalization.py
 
@@ -84,6 +87,9 @@ lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphSequenceLaw
 
 echo "[check] build concrete analytic spine graph norm sequence law"
 lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormSequenceLaw
+
+echo "[check] build concrete analytic spine graph norm bounded sequence"
+lake build MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormBoundedSequence
 
 echo "[check] build physical Hamiltonian operator normalization"
 lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
