@@ -45,6 +45,7 @@ declare -a AUDITS=(
   "audit concrete analytic spine l2 real sequence|python3 scripts/audit_concrete_analytic_spine_l2_real_sequence.py"
   "audit concrete analytic spine l2 diagonal graph|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_graph.py"
   "audit concrete analytic spine l2 diagonal graph norm|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_graph_norm.py"
+  "audit concrete analytic spine l2 finite support core|python3 scripts/audit_concrete_analytic_spine_l2_finite_support_core.py"
   "audit physical Hamiltonian operator normalization|python3 scripts/audit_physical_hamiltonian_operator_normalization.py"
   "audit Yang-Mills Hamiltonian spectral derivation of 33/20|python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py"
   "audit infinite-dimensional Yang-Mills target layer|python3 scripts/audit_infinite_dimensional_target_layer.py"
@@ -98,6 +99,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2RealSequence
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalGraph
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalGraphNorm
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2FiniteSupportCore
   MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
   MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
