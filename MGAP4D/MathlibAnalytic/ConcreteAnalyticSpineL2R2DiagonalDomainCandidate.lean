@@ -30,7 +30,7 @@ theorem concrete_l2_r2_diagonal_domain_candidate_zero :
   unfold ConcreteL2R2DiagonalDomainCandidate concreteL2R2WeightedCoordinate
   refine (summable_zero : Summable (fun _ : ℕ => (0 : ℝ))).congr ?_
   intro n
-  simp [concreteL2R1HilbertZero, lp.coeFn_zero]
+  simp [concreteL2R1HilbertZero, Pi.zero_apply]
 
 /-- The raw diagonal action associated with the candidate domain.  Membership in
 `ConcreteL2R2DiagonalDomainCandidate` is not required for merely writing the
