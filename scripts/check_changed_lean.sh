@@ -27,7 +27,8 @@ run_audit_if_present() {
   fi
 }
 
-# Always keep the hard safety gates.
+# Always keep the hard safety gates.  These are Python/text audits and do not
+# require Lake setup.
 echo "[fast] audit Lean forbidden tokens"
 python3 scripts/audit_lean_forbidden_tokens.py
 
@@ -75,6 +76,11 @@ if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperato
   run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane.py
 fi
 
+if [ -z "${changed_lean_files}" ]; then
+  echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lake build"
+  exit 0
+fi
+
 lakefile_requires_mathlib() {
   [ -f lakefile.lean ] && grep -q 'require[[:space:]]\+mathlib' lakefile.lean
 }
@@ -119,11 +125,6 @@ ensure_lake_manifest
 
 echo "[fast] lake exe cache get"
 lake exe cache get || true
-
-if [ -z "${changed_lean_files}" ]; then
-  echo "[fast] no Lean files changed"
-  exit 0
-fi
 
 # Building the root import module on every PR defeats the fast lane, because the
 # root intentionally imports the whole analytic surface.  When root and leaf
