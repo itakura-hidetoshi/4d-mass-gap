@@ -45,12 +45,10 @@ theorem concrete_l2_r1_hilbert_has_norm_one_witness :
 from the finite-support computation lane.  Operator and spectral obligations are
 kept outside this R1 unit. -/
 structure ConcreteL2R1HilbertCarrierClosureSurface where
-  carrier : Type
-  carrierIsMathlibCompletedL2 : carrier = ConcreteL2R1HilbertCarrier
-  zero : carrier
-  hasNormedAddCommGroup : Nonempty (NormedAddCommGroup carrier)
-  hasInnerProductSpace : Nonempty (InnerProductSpace ℝ carrier)
-  hasCompleteSpace : Nonempty (CompleteSpace carrier)
+  zero : ConcreteL2R1HilbertCarrier
+  hasNormedAddCommGroup : Nonempty (NormedAddCommGroup ConcreteL2R1HilbertCarrier)
+  hasInnerProductSpace : Nonempty (InnerProductSpace ℝ ConcreteL2R1HilbertCarrier)
+  hasCompleteSpace : Nonempty (CompleteSpace ConcreteL2R1HilbertCarrier)
   hasNormOneWitness : ∃ u : ConcreteL2R1HilbertCarrier, ‖u‖ = 1
   coordinateTransportReady : concreteAnalyticSpineL2MathlibCoordinateTransportSurfaceReady
   boundaryNotR2Operator : Prop
@@ -60,9 +58,7 @@ structure ConcreteL2R1HilbertCarrierClosureSurface where
 /-- Concrete R1 Hilbert-carrier closure surface. -/
 def concreteL2R1HilbertCarrierClosureSurface :
     ConcreteL2R1HilbertCarrierClosureSurface :=
-  { carrier := ConcreteL2R1HilbertCarrier
-    carrierIsMathlibCompletedL2 := rfl
-    zero := concreteL2R1HilbertZero
+  { zero := concreteL2R1HilbertZero
     hasNormedAddCommGroup := concrete_l2_r1_hilbert_has_normed_add_comm_group
     hasInnerProductSpace := concrete_l2_r1_hilbert_has_inner_product_space
     hasCompleteSpace := concrete_l2_r1_hilbert_has_complete_space
