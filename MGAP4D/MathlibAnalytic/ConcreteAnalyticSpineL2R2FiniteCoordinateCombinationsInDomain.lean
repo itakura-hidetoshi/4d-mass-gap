@@ -29,32 +29,13 @@ theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
       (E := fun _ : ℕ => ℝ) (p := (2 : ℝ≥0∞))
       (fun k => a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)) s
   rw [hcoe]
-  change
-    (s.sum (fun k =>
-      ⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)))) n = 0
-  induction s using Finset.induction_on generalizing n with
-  | empty =>
-      simp
-  | insert k s hk ih =>
-      have hnk : n ≠ k := by
-        intro h
-        exact hn (by simp [h])
-      have hns : n ∉ s := by
-        intro hs
-        exact hn (by simp [hs])
-      have hunit :
-          (⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)) : ℕ → ℝ) n = 0 := by
-        simp [lp.coeFn_smul, concrete_l2_mathlib_unit_apply_ne hnk]
-      have htail :
-          (s.sum (fun x =>
-            ⇑(a x • (concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier)))) n = 0 := by
-        exact ih hns
-      rw [Finset.sum_insert hk]
-      change
-        (⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)) : ℕ → ℝ) n +
-          (s.sum (fun x =>
-            ⇑(a x • (concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier)))) n = 0
-      simp [hunit, htail]
+  rw [Finset.sum_apply]
+  refine Finset.sum_eq_zero ?_
+  intro k hk
+  have hnk : n ≠ k := by
+    intro h
+    exact hn (by simpa [h] using hk)
+  simp [lp.coeFn_smul, concrete_l2_mathlib_unit_apply_ne hnk]
 
 /-- The weighted-square sequence of a finite coordinate combination has finite
 support.  This is the finite-support bridge used to avoid any premature density
