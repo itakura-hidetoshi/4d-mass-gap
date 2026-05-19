@@ -10,7 +10,7 @@ def concreteL2UnitSingletonSquaredMass (k : ℕ) : ℝ :=
 
 theorem concrete_l2_unit_singleton_squared_mass_eq_one (k : ℕ) :
     concreteL2UnitSingletonSquaredMass k = 1 := by
-  simp [concreteL2UnitSingletonSquaredMass]
+  simp [concreteL2UnitSingletonSquaredMass, concreteL2Unit, concreteL2UnitRaw]
 
 theorem concrete_l2_unit_squared_mass_zero_off_singleton
     (k : ℕ) (s : Finset ℕ) (hks : k ∉ s) :
