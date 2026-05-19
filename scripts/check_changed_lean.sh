@@ -140,23 +140,45 @@ if [ -z "${non_root_changed_lean_files}" ]; then
   exit 0
 fi
 
-# Build all changed leaf modules in a single Lake invocation.  This lets Lake
-# share dependency work across targets and avoids replaying the same lower
-# modules once per changed file.
+# Build only maximal changed modules.  If changed module A imports changed
+# module B, then building A already builds B, so B is removed from the explicit
+# target set.  This keeps the PR lane small while preserving local coverage of
+# the changed import frontier.
+declare -A changed_target_set=()
+declare -A imported_by_changed=()
 targets=()
+
 while IFS= read -r file; do
   [ -z "${file}" ] && continue
   target="${file%.lean}"
   target="${target//\//.}"
+  changed_target_set["${target}"]=1
   targets+=("${target}")
 done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
 
-if [ "${#targets[@]}" -eq 0 ]; then
-  echo "[fast] no build targets derived"
-  exit 0
+while IFS= read -r file; do
+  [ -z "${file}" ] && continue
+  while IFS= read -r imported; do
+    [ -z "${imported}" ] && continue
+    if [ -n "${changed_target_set[${imported}]+x}" ]; then
+      imported_by_changed["${imported}"]=1
+    fi
+  done <<< "$(grep -E '^import[[:space:]]+MGAP4D\.' "${file}" 2>/dev/null | awk '{print $2}' || true)"
+done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+maximal_targets=()
+for target in "${targets[@]}"; do
+  if [ -z "${imported_by_changed[${target}]+x}" ]; then
+    maximal_targets+=("${target}")
+  fi
+done
+
+if [ "${#maximal_targets[@]}" -eq 0 ]; then
+  echo "[fast] maximal target reduction was empty; fall back to all changed targets"
+  maximal_targets=("${targets[@]}")
 fi
 
-printf '[fast] lake build changed targets:'
-printf ' %s' "${targets[@]}"
+printf '[fast] lake build maximal changed targets:'
+printf ' %s' "${maximal_targets[@]}"
 printf '\n'
-lake build "${targets[@]}"
+lake build "${maximal_targets[@]}"
