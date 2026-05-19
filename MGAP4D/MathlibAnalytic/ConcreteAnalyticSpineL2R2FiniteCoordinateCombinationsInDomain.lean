@@ -20,9 +20,18 @@ theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
     concreteL2R2FiniteCoordinateCombination s a n = 0 := by
   classical
   unfold concreteL2R2FiniteCoordinateCombination
+  have hcoe :
+      ⇑(s.sum (fun k =>
+        a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier))) =
+        s.sum (fun k =>
+          ⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier))) := by
+    exact lp.coeFn_sum
+      (E := fun _ : ℕ => ℝ) (p := (2 : ℝ≥0∞))
+      (fun k => a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)) s
+  rw [hcoe]
   change
     (s.sum (fun k =>
-      a k • ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ))) n = 0
+      ⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)))) n = 0
   induction s using Finset.induction_on generalizing n with
   | empty =>
       simp
@@ -34,17 +43,17 @@ theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
         intro hs
         exact hn (by simp [hs])
       have hunit :
-          (a k • ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ)) n = 0 := by
-        simp [concrete_l2_mathlib_unit_apply_ne hnk]
+          (⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)) : ℕ → ℝ) n = 0 := by
+        simp [lp.coeFn_smul, concrete_l2_mathlib_unit_apply_ne hnk]
       have htail :
           (s.sum (fun x =>
-            a x • ((concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier) : ℕ → ℝ))) n = 0 := by
+            ⇑(a x • (concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier)))) n = 0 := by
         exact ih hns
       rw [Finset.sum_insert hk]
       change
-        (a k • ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ)) n +
+        (⇑(a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)) : ℕ → ℝ) n +
           (s.sum (fun x =>
-            a x • ((concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier) : ℕ → ℝ))) n = 0
+            ⇑(a x • (concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier)))) n = 0
       simp [hunit, htail]
 
 /-- The weighted-square sequence of a finite coordinate combination has finite
