@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: pr-lean-fast-check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
