@@ -23,6 +23,13 @@ this candidate layer. -/
 def ConcreteL2R2DiagonalDomainCandidate (x : ConcreteL2R1HilbertCarrier) : Prop :=
   Summable fun n : ℕ => (concreteL2R2WeightedCoordinate x n) ^ 2
 
+/-- The zero vector belongs to the R2 diagonal-domain candidate.  This keeps the
+candidate mathematically nonempty without yet claiming density. -/
+theorem concrete_l2_r2_diagonal_domain_candidate_zero :
+    ConcreteL2R2DiagonalDomainCandidate concreteL2R1HilbertZero := by
+  simpa [ConcreteL2R2DiagonalDomainCandidate, concreteL2R2WeightedCoordinate,
+    concreteL2R1HilbertZero] using (summable_zero : Summable (fun _ : ℕ => (0 : ℝ)))
+
 /-- The raw diagonal action associated with the candidate domain.  Membership in
 `ConcreteL2R2DiagonalDomainCandidate` is not required for merely writing the
 coordinate formula; later layers will package it with domain membership. -/
@@ -36,6 +43,7 @@ structure ConcreteL2R2DiagonalDomainCandidateSurface where
   diagonalWeight : ℕ → ℝ
   weightedCoordinate : ConcreteL2R1HilbertCarrier → ℕ → ℝ
   domainCandidate : ConcreteL2R1HilbertCarrier → Prop
+  zeroInDomainCandidate : domainCandidate concreteL2R1HilbertZero
   rawAction : ConcreteL2R1HilbertCarrier → ℕ → ℝ
   boundaryNotDenseDomainTheorem : Prop
   boundaryNotClosedOperatorTheorem : Prop
@@ -51,6 +59,7 @@ def concreteL2R2DiagonalDomainCandidateSurface :
     diagonalWeight := concreteL2R2DiagonalWeight
     weightedCoordinate := concreteL2R2WeightedCoordinate
     domainCandidate := ConcreteL2R2DiagonalDomainCandidate
+    zeroInDomainCandidate := concrete_l2_r2_diagonal_domain_candidate_zero
     rawAction := concreteL2R2DiagonalRawAction
     boundaryNotDenseDomainTheorem := True
     boundaryNotClosedOperatorTheorem := True
@@ -61,6 +70,7 @@ def concreteL2R2DiagonalDomainCandidateSurface :
 /-- R2 diagonal-domain candidate readiness. -/
 def concreteAnalyticSpineL2R2DiagonalDomainCandidateSurfaceReady : Prop :=
   concreteAnalyticSpineL2R1HilbertCarrierClosureSurfaceReady ∧
+  ConcreteL2R2DiagonalDomainCandidate concreteL2R1HilbertZero ∧
   concreteL2R2DiagonalDomainCandidateSurface.boundaryNotDenseDomainTheorem ∧
   concreteL2R2DiagonalDomainCandidateSurface.boundaryNotClosedOperatorTheorem ∧
   concreteL2R2DiagonalDomainCandidateSurface.boundaryNotSelfAdjointness ∧
@@ -73,8 +83,9 @@ theorem concrete_analytic_spine_l2_r2_diagonal_domain_candidate_surface_ready :
   unfold concreteAnalyticSpineL2R2DiagonalDomainCandidateSurfaceReady
   exact And.intro
     concrete_analytic_spine_l2_r1_hilbert_carrier_closure_surface_ready <|
-      And.intro trivial <| And.intro trivial <| And.intro trivial <|
-        And.intro trivial trivial
+      And.intro concrete_l2_r2_diagonal_domain_candidate_zero <|
+        And.intro trivial <| And.intro trivial <| And.intro trivial <|
+          And.intro trivial trivial
 
 /-- Boundary marker for the R2 diagonal-domain candidate surface. -/
 def concreteAnalyticSpineL2R2DiagonalDomainCandidateHardResidualBoundaryHeld : Prop :=
