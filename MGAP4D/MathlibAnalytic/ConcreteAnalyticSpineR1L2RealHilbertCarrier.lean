@@ -26,18 +26,18 @@ def concreteR1L2RealHilbertUnit (k : ℕ) : ConcreteR1L2RealHilbertCarrier :=
   lp.single 2 k (1 : ℝ)
 
 /-- The R1 carrier has Mathlib's normed additive group structure. -/
-theorem concrete_r1_l2_real_hilbert_normed_add_comm_group :
+def concrete_r1_l2_real_hilbert_normed_add_comm_group :
     NormedAddCommGroup ConcreteR1L2RealHilbertCarrier := by
   infer_instance
 
 /-- The R1 carrier has Mathlib's real inner-product structure. -/
-theorem concrete_r1_l2_real_hilbert_inner_product_space :
+def concrete_r1_l2_real_hilbert_inner_product_space :
     InnerProductSpace ℝ ConcreteR1L2RealHilbertCarrier := by
   infer_instance
 
 /-- The R1 carrier is complete; hence this is a genuine Mathlib-backed Hilbert
 carrier, not only a raw sequence subtype. -/
-theorem concrete_r1_l2_real_hilbert_complete_space :
+def concrete_r1_l2_real_hilbert_complete_space :
     CompleteSpace ConcreteR1L2RealHilbertCarrier := by
   infer_instance
 
@@ -63,12 +63,12 @@ theorem concrete_r1_l2_real_hilbert_unit_norm_eq_one (k : ℕ) :
 
 /-- R1 surface: a closeable carrier-only PR unit for the concrete analytic spine. -/
 structure ConcreteR1L2RealHilbertCarrierSurface where
-  carrier : Type
-  zero : carrier
-  unit : ℕ → carrier
-  normedAddCommGroupWitness : NormedAddCommGroup carrier
-  innerProductSpaceWitness : InnerProductSpace ℝ carrier
-  completeSpaceWitness : CompleteSpace carrier
+  carrierIsMathlibL2 : Prop
+  zero : ConcreteR1L2RealHilbertCarrier
+  unit : ℕ → ConcreteR1L2RealHilbertCarrier
+  normedAddCommGroupWitness : NormedAddCommGroup ConcreteR1L2RealHilbertCarrier
+  innerProductSpaceWitness : InnerProductSpace ℝ ConcreteR1L2RealHilbertCarrier
+  completeSpaceWitness : CompleteSpace ConcreteR1L2RealHilbertCarrier
   zeroNormLaw : ‖zero‖ = 0
   unitNormOneLaw : ∀ k : ℕ, ‖unit k‖ = 1
   boundaryNotDenseDomain : Prop
@@ -84,7 +84,7 @@ structure ConcreteR1L2RealHilbertCarrierSurface where
 /-- Concrete R1 carrier surface. -/
 def concreteR1L2RealHilbertCarrierSurface :
     ConcreteR1L2RealHilbertCarrierSurface :=
-  { carrier := ConcreteR1L2RealHilbertCarrier
+  { carrierIsMathlibL2 := ConcreteR1L2RealHilbertCarrier = lp (fun _ : ℕ => ℝ) 2
     zero := concreteR1L2RealHilbertZero
     unit := concreteR1L2RealHilbertUnit
     normedAddCommGroupWitness := concrete_r1_l2_real_hilbert_normed_add_comm_group
