@@ -30,7 +30,7 @@ theorem concreteL2UnitFiniteSupport (k : ℕ) :
     ConcreteL2RealFiniteSupport (concreteL2Unit k) := by
   classical
   unfold ConcreteL2RealFiniteSupport concreteL2Unit concreteL2UnitRaw
-  simpa using (Set.finite_singleton k)
+  simp
 
 /-- The concrete unit vector has finite support. -/
 def concreteL2UnitFiniteSupportWitness (k : ℕ) :
