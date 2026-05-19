@@ -48,6 +48,7 @@ declare -a AUDITS=(
   "audit concrete analytic spine l2 finite support core|python3 scripts/audit_concrete_analytic_spine_l2_finite_support_core.py"
   "audit concrete analytic spine l2 diagonal weight probe|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_weight_probe.py"
   "audit concrete analytic spine l2 diagonal threshold|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_weight_threshold.py"
+  "audit concrete analytic spine l2 unboundedness obstruction|python3 scripts/audit_concrete_analytic_spine_l2_unboundedness_obstruction.py"
   "audit physical Hamiltonian operator normalization|python3 scripts/audit_physical_hamiltonian_operator_normalization.py"
   "audit Yang-Mills Hamiltonian spectral derivation of 33/20|python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py"
   "audit infinite-dimensional Yang-Mills target layer|python3 scripts/audit_infinite_dimensional_target_layer.py"
@@ -104,6 +105,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2FiniteSupportCore
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalWeightProbe
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalWeightThreshold
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2UnboundednessObstruction
   MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
   MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
