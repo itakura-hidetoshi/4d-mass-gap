@@ -28,7 +28,7 @@ theorem concrete_l2_unit_to_mathlib_coordinate_transport_self (k : ℕ) :
 /-- Off-coordinate transport. -/
 theorem concrete_l2_unit_to_mathlib_coordinate_transport_off (k n : ℕ) (h : n ≠ k) :
     (concreteL2Unit k).1 n = concreteL2MathlibUnit k n := by
-  exact concrete_l2_unit_to_mathlib_coordinate_transport k n
+  simp [concrete_l2_unit_coordinate_off k n h, concrete_l2_mathlib_unit_apply_ne h]
 
 /-- Transported local unit norm theorem: the local unit has a Mathlib-side norm-one
 witness after coordinate transport to `lp.single`.  The norm itself is still the
