@@ -27,9 +27,10 @@ def ConcreteL2R2DiagonalDomainCandidate (x : ConcreteL2R1HilbertCarrier) : Prop 
 candidate mathematically nonempty without yet claiming density. -/
 theorem concrete_l2_r2_diagonal_domain_candidate_zero :
     ConcreteL2R2DiagonalDomainCandidate concreteL2R1HilbertZero := by
-  simpa [ConcreteL2R2DiagonalDomainCandidate, concreteL2R2WeightedCoordinate,
-    concreteL2R1HilbertZero, lp.coeFn_zero, Pi.zero_apply] using
-      (summable_zero : Summable (fun _ : ℕ => (0 : ℝ)))
+  unfold ConcreteL2R2DiagonalDomainCandidate concreteL2R2WeightedCoordinate
+  refine (summable_zero : Summable (fun _ : ℕ => (0 : ℝ))).congr ?_
+  intro n
+  simp [concreteL2R1HilbertZero, lp.coeFn_zero]
 
 /-- The raw diagonal action associated with the candidate domain.  Membership in
 `ConcreteL2R2DiagonalDomainCandidate` is not required for merely writing the
