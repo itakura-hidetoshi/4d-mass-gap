@@ -38,6 +38,9 @@ echo "[fast] audit analytic bridge coherence"
 python3 scripts/audit_bridge_coherence.py
 
 # Run targeted audits for changed concrete analytic spine files when available.
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2HilbertNormOneTarget\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_hilbert_norm_one_target.py
+fi
 if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2R2ProgressIndex\.lean'; then
   run_audit_if_present scripts/audit_concrete_analytic_spine_l2_r2_progress_index.py
 fi
