@@ -82,7 +82,7 @@ handoff. -/
 theorem concrete_l2_r2_finite_coordinate_submodule_domain_inclusion_adapter_ready :
     concreteL2R2FiniteCoordinateSubmoduleDomainInclusionAdapter := by
   exact And.intro
-    (fun c x hx => concrete_l2_r2_diagonal_domain_candidate_smul c hx) <|
+    (fun c {x} hx => concrete_l2_r2_diagonal_domain_candidate_smul c hx) <|
       And.intro
         concrete_l2_r2_finite_coordinate_submodule_subset_diagonal_domain_candidate_of_add_closure
         concrete_l2_r2_diagonal_domain_candidate_dense_target_ready_of_add_closure
@@ -116,7 +116,7 @@ def concreteL2R2FiniteCoordinateSubmoduleDomainInclusionSurface :
   { denseHandoffReady :=
       concrete_analytic_spine_l2_r2_dense_diagonal_domain_candidate_handoff_surface_ready
     scalarClosureReady :=
-      fun c x hx => concrete_l2_r2_diagonal_domain_candidate_smul c hx
+      fun c {x} hx => concrete_l2_r2_diagonal_domain_candidate_smul c hx
     additiveClosureTarget := concreteL2R2DiagonalDomainCandidateAddClosureTarget
     conditionalSubmoduleInclusion :=
       concrete_l2_r2_finite_coordinate_submodule_subset_diagonal_domain_candidate_of_add_closure
