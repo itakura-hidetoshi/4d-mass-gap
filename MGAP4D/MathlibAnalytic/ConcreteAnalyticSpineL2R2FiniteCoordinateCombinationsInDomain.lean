@@ -12,7 +12,7 @@ This packages the algebraic span of the coordinate units without yet claiming
 that this span is dense in the graph norm or that it is an operator core. -/
 def concreteL2R2FiniteCoordinateCombination (s : Finset ℕ) (a : ℕ → ℝ) :
     ConcreteL2R1HilbertCarrier :=
-  ∑ k in s, a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier)
+  s.sum (fun k => a k • (concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier))
 
 /-- A finite coordinate combination vanishes outside its finite index set. -/
 theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
