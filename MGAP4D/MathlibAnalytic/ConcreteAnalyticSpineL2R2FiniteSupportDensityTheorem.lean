@@ -17,6 +17,15 @@ def concreteL2R2CanonicalHilbertBasis :
   HilbertBasis.ofRepr
     (LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier)
 
+/-- The inverse of the reflexive linear isometry equivalence is pointwise the
+identity.  This local lemma keeps the R2b basis computation stable under the
+Lean 4.30 / Mathlib CI simplifier. -/
+theorem concrete_l2_r2_linear_isometry_equiv_refl_symm_apply
+    (x : ConcreteL2R1HilbertCarrier) :
+    (LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier).symm x = x := by
+  simpa using
+    ((LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier).apply_symm_apply x)
+
 /-- The explicit canonical Mathlib Hilbert basis of the completed real `ℓ²(ℕ)`
 carrier is exactly the concrete coordinate-unit family already used by the R2
 finite seed lane.  This keeps the R2b density proof Mathlib-native: no
@@ -26,7 +35,9 @@ theorem concrete_l2_r2_canonical_hilbert_basis_eq_mathlib_unit
     (concreteL2R2CanonicalHilbertBasis n) =
       (concreteL2MathlibUnit n : ConcreteL2R1HilbertCarrier) := by
   rw [← HilbertBasis.repr_symm_single concreteL2R2CanonicalHilbertBasis n]
-  simp [concreteL2R2CanonicalHilbertBasis, concreteL2MathlibUnit]
+  simpa [concreteL2R2CanonicalHilbertBasis, concreteL2MathlibUnit]
+    using concrete_l2_r2_linear_isometry_equiv_refl_symm_apply
+      (lp.single 2 n (1 : ℝ) : ConcreteL2R1HilbertCarrier)
 
 /-- The range of the explicit canonical Mathlib Hilbert basis is the
 coordinate-unit set used to define the R2 finite-coordinate submodule. -/
