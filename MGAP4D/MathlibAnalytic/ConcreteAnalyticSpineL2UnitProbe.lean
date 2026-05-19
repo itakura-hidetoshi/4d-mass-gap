@@ -9,52 +9,46 @@ noncomputable section
 def concreteL2UnitRaw (k : ℕ) : ℕ → ℝ :=
   fun n => if n = k then 1 else 0
 
-/-- Unit raw vector has finite support. -/
-def concreteL2UnitFiniteSupport (k : ℕ) : ConcreteL2RealFiniteSupport ⟨concreteL2UnitRaw k, by
-    classical
-    -- finite support gives square summability by reducing to the singleton support
-    have hzero : ∀ n : ℕ, n ∉ ({k} : Finset ℕ) → (concreteL2UnitRaw k n) ^ 2 = 0 := by
-      intro n hn
-      simp [concreteL2UnitRaw, Finset.mem_singleton] at hn ⊢
-      exact hn
-    exact summable_of_ne_finset_zero hzero⟩ :=
-  by
-    exact ⟨{k}, by
-      intro n hn
-      simp [concreteL2UnitRaw, Finset.mem_singleton] at hn ⊢
-      exact hn⟩
+/-- The raw coordinate unit vector is square-summable by finite support. -/
+theorem concrete_l2_unit_raw_square_summable (k : ℕ) :
+    Summable fun n : ℕ => (concreteL2UnitRaw k n) ^ 2 := by
+  classical
+  have hzero : ∀ n : ℕ, n ∉ ({k} : Finset ℕ) →
+      (concreteL2UnitRaw k n) ^ 2 = 0 := by
+    intro n hn
+    have hne : n ≠ k := by
+      simpa [Finset.mem_singleton] using hn
+    simp [concreteL2UnitRaw, hne]
+  exact summable_of_ne_finset_zero hzero
 
 /-- The concrete `l2` unit vector at index `k`. -/
 def concreteL2Unit (k : ℕ) : ConcreteL2RealSequence :=
-  ⟨concreteL2UnitRaw k, by
-    classical
-    have hzero : ∀ n : ℕ, n ∉ ({k} : Finset ℕ) → (concreteL2UnitRaw k n) ^ 2 = 0 := by
-      intro n hn
-      simp [concreteL2UnitRaw, Finset.mem_singleton] at hn ⊢
-      exact hn
-    exact summable_of_ne_finset_zero hzero⟩
+  ⟨concreteL2UnitRaw k, concrete_l2_unit_raw_square_summable k⟩
+
+/-- Unit raw vector has finite support. -/
+theorem concreteL2UnitFiniteSupport (k : ℕ) :
+    ConcreteL2RealFiniteSupport (concreteL2Unit k) := by
+  classical
+  unfold ConcreteL2RealFiniteSupport concreteL2Unit concreteL2UnitRaw
+  simpa using (Set.finite_singleton k)
 
 /-- The concrete unit vector has finite support. -/
 def concreteL2UnitFiniteSupportWitness (k : ℕ) :
-    ConcreteL2RealFiniteSupport (concreteL2Unit k) := by
-  exact ⟨{k}, by
-    intro n hn
-    simp [concreteL2Unit, concreteL2UnitRaw, Finset.mem_singleton] at hn ⊢
-    exact hn⟩
+    ConcreteL2RealFiniteSupport (concreteL2Unit k) :=
+  concreteL2UnitFiniteSupport k
 
 /-- The concrete unit vector belongs to the diagonal domain. -/
 def concreteL2UnitDiagonalDomain (k : ℕ) : ConcreteL2DiagonalDomainCarrier :=
   ⟨concreteL2Unit k, by
     classical
     have hzero : ∀ n : ℕ, n ∉ ({k} : Finset ℕ) →
-        concreteL2DiagonalWeight n *
-          (concreteL2DiagonalWeight n *
-            ((concreteL2Unit k).1 n * (concreteL2Unit k).1 n)) = 0 := by
+        (concreteL2DiagonalWeight n)^2 * ((concreteL2Unit k).1 n)^2 = 0 := by
       intro n hn
-      simp [concreteL2Unit, concreteL2UnitRaw, Finset.mem_singleton] at hn ⊢
-      exact hn
-    simpa [ConcreteL2DiagonalDomain, pow_two, mul_assoc, mul_left_comm, mul_comm]
-      using summable_of_ne_finset_zero hzero⟩
+      have hne : n ≠ k := by
+        simpa [Finset.mem_singleton] using hn
+      simp [concreteL2Unit, concreteL2UnitRaw, hne]
+    unfold ConcreteL2DiagonalDomain
+    exact summable_of_ne_finset_zero hzero⟩
 
 /-- The unit vector at index `k` is in the finite-support diagonal core. -/
 def concreteL2UnitFiniteSupportCore (k : ℕ) :
