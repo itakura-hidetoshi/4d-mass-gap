@@ -32,14 +32,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Cache elan and Lake build artifacts
+      - name: Cache elan, Lake build artifacts, and generated manifest
         uses: actions/cache@v4
         with:
           path: |
             ~/.elan
             .lake
-          key: ${{ runner.os }}-lean-fast-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
+            ${{ runner.os }}-lean-fast-v2-
             ${{ runner.os }}-lean-fast-
             ${{ runner.os }}-lean-
       - name: Install elan and Lean toolchain
