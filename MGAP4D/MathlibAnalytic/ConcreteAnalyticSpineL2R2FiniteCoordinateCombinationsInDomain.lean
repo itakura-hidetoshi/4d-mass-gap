@@ -19,14 +19,18 @@ theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
     (s : Finset ℕ) (a : ℕ → ℝ) {n : ℕ} (hn : n ∉ s) :
     concreteL2R2FiniteCoordinateCombination s a n = 0 := by
   classical
-  unfold concreteL2R2FiniteCoordinateCombination
-  rw [Finset.sum_apply]
-  refine Finset.sum_eq_zero ?_
-  intro k hk
-  have hnk : n ≠ k := by
-    intro h
-    exact hn (by simpa [h] using hk)
-  simp [concrete_l2_mathlib_unit_apply_ne hnk]
+  induction s using Finset.induction_on generalizing n with
+  | empty =>
+      simp [concreteL2R2FiniteCoordinateCombination]
+  | insert k s hk ih =>
+      have hnk : n ≠ k := by
+        intro h
+        exact hn (by simp [h])
+      have hns : n ∉ s := by
+        intro hs
+        exact hn (by simp [hs])
+      simp [concreteL2R2FiniteCoordinateCombination, Finset.sum_insert, hk,
+        concrete_l2_mathlib_unit_apply_ne hnk, ih hns]
 
 /-- The weighted-square sequence of a finite coordinate combination has finite
 support.  This is the finite-support bridge used to avoid any premature density
