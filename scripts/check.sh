@@ -40,6 +40,17 @@ declare -a AUDITS=(
   "audit concrete analytic spine R2 final local index|python3 scripts/audit_concrete_analytic_spine_r2_final_local_index.py"
   "audit concrete analytic spine R2 local closure summary|python3 scripts/audit_concrete_analytic_spine_r2_local_closure_summary.py"
   "audit concrete analytic spine R2 checkpoint packet|python3 scripts/audit_concrete_analytic_spine_r2_checkpoint_packet.py"
+  "audit concrete analytic spine operator lane|python3 scripts/audit_concrete_analytic_spine_operator_lane.py"
+  "audit concrete analytic spine operator lane checkpoint|python3 scripts/audit_concrete_analytic_spine_operator_lane_checkpoint.py"
+  "audit concrete analytic spine l2 real sequence|python3 scripts/audit_concrete_analytic_spine_l2_real_sequence.py"
+  "audit concrete analytic spine l2 diagonal graph|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_graph.py"
+  "audit concrete analytic spine l2 diagonal graph norm|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_graph_norm.py"
+  "audit concrete analytic spine l2 finite support core|python3 scripts/audit_concrete_analytic_spine_l2_finite_support_core.py"
+  "audit concrete analytic spine l2 diagonal weight probe|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_weight_probe.py"
+  "audit concrete analytic spine l2 diagonal threshold|python3 scripts/audit_concrete_analytic_spine_l2_diagonal_weight_threshold.py"
+  "audit concrete analytic spine l2 unboundedness obstruction|python3 scripts/audit_concrete_analytic_spine_l2_unboundedness_obstruction.py"
+  "audit concrete analytic spine l2 obstruction index|python3 scripts/audit_concrete_analytic_spine_l2_obstruction_index.py"
+  "audit concrete analytic spine l2 R2 progress index|python3 scripts/audit_concrete_analytic_spine_l2_r2_progress_index.py"
   "audit physical Hamiltonian operator normalization|python3 scripts/audit_physical_hamiltonian_operator_normalization.py"
   "audit Yang-Mills Hamiltonian spectral derivation of 33/20|python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py"
   "audit infinite-dimensional Yang-Mills target layer|python3 scripts/audit_infinite_dimensional_target_layer.py"
@@ -88,6 +99,17 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2FinalLocalIndex
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2LocalClosureSummary
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR2CheckpointPacket
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineOperatorLane
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineOperatorLaneCheckpoint
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2RealSequence
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalGraph
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalGraphNorm
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2FiniteSupportCore
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalWeightProbe
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2DiagonalWeightThreshold
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2UnboundednessObstruction
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2ObstructionIndex
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ProgressIndex
   MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
   MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption

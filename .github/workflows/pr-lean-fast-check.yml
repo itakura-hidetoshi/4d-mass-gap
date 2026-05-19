@@ -1,11 +1,9 @@
-name: Full Local Check CI
+name: PR Lean Fast Check
 
 on:
-  workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - main
-      - mathlib-adoption/exact-gap-analytic
 
 permissions:
   contents: read
@@ -14,21 +12,23 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-  full-local-check:
-    name: Run scripts/check.sh
+  pr-lean-fast-check:
+    name: Changed Lean fast check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Cache elan and Lake build artifacts
         uses: actions/cache@v4
         with:
           path: |
             ~/.elan
             .lake
-          key: ${{ runner.os }}-full-check-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          key: ${{ runner.os }}-lean-fast-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
           restore-keys: |
-            ${{ runner.os }}-full-check-
+            ${{ runner.os }}-lean-fast-
             ${{ runner.os }}-lean-
       - name: Install elan and Lean toolchain
         shell: bash
@@ -44,8 +44,8 @@ jobs:
           set -euxo pipefail
           lean --version
           lake --version
-      - name: Run full local check script
+      - name: Run changed Lean fast check
         shell: bash
         run: |
           set -euxo pipefail
-          bash scripts/check.sh
+          bash scripts/check_changed_lean.sh origin/main
