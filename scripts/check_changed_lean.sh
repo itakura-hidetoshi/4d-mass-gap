@@ -27,7 +27,8 @@ run_audit_if_present() {
   fi
 }
 
-# Always keep the hard safety gates.
+# Always keep the hard safety gates.  These are Python/text audits and do not
+# require Lake setup.
 echo "[fast] audit Lean forbidden tokens"
 python3 scripts/audit_lean_forbidden_tokens.py
 
@@ -75,6 +76,11 @@ if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperato
   run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane.py
 fi
 
+if [ -z "${changed_lean_files}" ]; then
+  echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lake build"
+  exit 0
+fi
+
 lakefile_requires_mathlib() {
   [ -f lakefile.lean ] && grep -q 'require[[:space:]]\+mathlib' lakefile.lean
 }
@@ -120,15 +126,10 @@ ensure_lake_manifest
 echo "[fast] lake exe cache get"
 lake exe cache get || true
 
-if [ -z "${changed_lean_files}" ]; then
-  echo "[fast] no Lean files changed"
-  exit 0
-fi
-
 # Building the root import module on every PR defeats the fast lane, because the
 # root intentionally imports the whole analytic surface.  When root and leaf
 # modules both changed, build only the changed leaf modules; root-level full
-# integration remains covered by Full Local Check on main/manual runs.
+# integration remains covered by main/manual full checks.
 if [ -z "${non_root_changed_lean_files}" ]; then
   if printf '%s\n' "${changed_lean_files}" | grep -q '^MGAP4D/MathlibAnalytic\.lean$'; then
     echo "[fast] only root import changed; build root module"
@@ -139,10 +140,45 @@ if [ -z "${non_root_changed_lean_files}" ]; then
   exit 0
 fi
 
+# Build only maximal changed modules.  If changed module A imports changed
+# module B, then building A already builds B, so B is removed from the explicit
+# target set.  This keeps the PR lane small while preserving local coverage of
+# the changed import frontier.
+declare -A changed_target_set=()
+declare -A imported_by_changed=()
+targets=()
+
 while IFS= read -r file; do
   [ -z "${file}" ] && continue
   target="${file%.lean}"
   target="${target//\//.}"
-  echo "[fast] lake build ${target}"
-  lake build "${target}"
-done <<< "${non_root_changed_lean_files}"
+  changed_target_set["${target}"]=1
+  targets+=("${target}")
+done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+while IFS= read -r file; do
+  [ -z "${file}" ] && continue
+  while IFS= read -r imported; do
+    [ -z "${imported}" ] && continue
+    if [ -n "${changed_target_set[${imported}]+x}" ]; then
+      imported_by_changed["${imported}"]=1
+    fi
+  done <<< "$(grep -E '^import[[:space:]]+MGAP4D\.' "${file}" 2>/dev/null | awk '{print $2}' || true)"
+done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+maximal_targets=()
+for target in "${targets[@]}"; do
+  if [ -z "${imported_by_changed[${target}]+x}" ]; then
+    maximal_targets+=("${target}")
+  fi
+done
+
+if [ "${#maximal_targets[@]}" -eq 0 ]; then
+  echo "[fast] maximal target reduction was empty; fall back to all changed targets"
+  maximal_targets=("${targets[@]}")
+fi
+
+printf '[fast] lake build maximal changed targets:'
+printf ' %s' "${maximal_targets[@]}"
+printf '\n'
+lake build "${maximal_targets[@]}"

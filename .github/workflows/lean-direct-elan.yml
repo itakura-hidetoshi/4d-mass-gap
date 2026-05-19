@@ -6,9 +6,10 @@ on:
     branches:
       - main
       - mathlib-adoption/exact-gap-analytic
-  pull_request:
-    branches:
-      - main
+
+concurrency:
+  group: lean-direct-elan-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -75,6 +76,7 @@ jobs:
           key: ${{ runner.os }}-lean-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-
+            ${{ runner.os }}-lean-fast-
       - name: Install elan and Lean toolchain
         shell: bash
         run: |
@@ -89,11 +91,15 @@ jobs:
           set -euxo pipefail
           lean --version
           lake --version
-      - name: Generate Lake manifest
+      - name: Generate Lake manifest when needed
         shell: bash
         run: |
           set -euxo pipefail
-          lake update
+          if [ ! -s lake-manifest.json ] || ! grep -q 'mathlib' lake-manifest.json; then
+            lake update
+          else
+            echo "lake-manifest.json already contains mathlib; skipping lake update"
+          fi
           test -f lake-manifest.json
       - name: Pull Mathlib cache when available
         shell: bash

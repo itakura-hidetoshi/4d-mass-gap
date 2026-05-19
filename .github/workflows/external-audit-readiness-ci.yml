@@ -5,9 +5,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+
+concurrency:
+  group: external-audit-readiness-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -22,6 +23,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Cache elan and Lake build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake
+          key: ${{ runner.os }}-external-audit-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-external-audit-
+            ${{ runner.os }}-lean-fast-
+            ${{ runner.os }}-lean-
       - name: Audit external audit readiness gate
         run: python3 scripts/audit_external_audit_readiness_gate.py
       - name: Audit external audit readiness gate field classification
@@ -40,11 +52,20 @@ jobs:
           set -euxo pipefail
           lean --version
           lake --version
-      - name: Generate Lake manifest
+      - name: Generate Lake manifest when needed
         shell: bash
         run: |
           set -euxo pipefail
-          lake update
+          if [ ! -s lake-manifest.json ] || ! grep -q 'mathlib' lake-manifest.json; then
+            lake update
+          else
+            echo "lake-manifest.json already contains mathlib; skipping lake update"
+          fi
+      - name: Hydrate Mathlib cache
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lake exe cache get
       - name: Build external audit readiness gate
         shell: bash
         run: |
