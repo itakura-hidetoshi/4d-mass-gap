@@ -7,27 +7,38 @@ open scoped ENNReal lp
 
 noncomputable section
 
-/-- The default Mathlib Hilbert basis of the completed real `ℓ²(ℕ)` carrier is
-exactly the concrete coordinate-unit family already used by the R2 finite seed
-lane.  This keeps the R2b density proof Mathlib-native: no hand-rolled finite
-support completion argument is introduced here. -/
-theorem concrete_l2_r2_default_hilbert_basis_eq_mathlib_unit
-    (n : ℕ) :
-    ((default : HilbertBasis ℕ ℝ ConcreteL2R1HilbertCarrier) n) =
-      (concreteL2MathlibUnit n : ConcreteL2R1HilbertCarrier) := by
-  simp [concreteL2MathlibUnit]
+/-- The canonical Mathlib Hilbert basis of the completed real `ℓ²(ℕ)` carrier,
+constructed explicitly from the reflexive linear isometry equivalence.  We avoid
+using `default` here because type-class search does not synthesize the
+`Inhabited (HilbertBasis ...)` instance through the local carrier abbreviation in
+CI. -/
+def concreteL2R2CanonicalHilbertBasis :
+    HilbertBasis ℕ ℝ ConcreteL2R1HilbertCarrier :=
+  HilbertBasis.ofRepr
+    (LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier)
 
-/-- The range of the default Mathlib Hilbert basis is the coordinate-unit set
-used to define the R2 finite-coordinate submodule. -/
-theorem concrete_l2_r2_default_hilbert_basis_range_eq_coordinate_unit_set :
-    Set.range (default : HilbertBasis ℕ ℝ ConcreteL2R1HilbertCarrier) =
+/-- The explicit canonical Mathlib Hilbert basis of the completed real `ℓ²(ℕ)`
+carrier is exactly the concrete coordinate-unit family already used by the R2
+finite seed lane.  This keeps the R2b density proof Mathlib-native: no
+hand-rolled finite support completion argument is introduced here. -/
+theorem concrete_l2_r2_canonical_hilbert_basis_eq_mathlib_unit
+    (n : ℕ) :
+    (concreteL2R2CanonicalHilbertBasis n) =
+      (concreteL2MathlibUnit n : ConcreteL2R1HilbertCarrier) := by
+  rw [← HilbertBasis.repr_symm_single concreteL2R2CanonicalHilbertBasis n]
+  simp [concreteL2R2CanonicalHilbertBasis, concreteL2MathlibUnit]
+
+/-- The range of the explicit canonical Mathlib Hilbert basis is the
+coordinate-unit set used to define the R2 finite-coordinate submodule. -/
+theorem concrete_l2_r2_canonical_hilbert_basis_range_eq_coordinate_unit_set :
+    Set.range concreteL2R2CanonicalHilbertBasis =
       concreteL2R2CoordinateUnitSet := by
   ext x
   constructor
   · rintro ⟨n, rfl⟩
-    exact ⟨n, (concrete_l2_r2_default_hilbert_basis_eq_mathlib_unit n).symm⟩
+    exact ⟨n, (concrete_l2_r2_canonical_hilbert_basis_eq_mathlib_unit n).symm⟩
   · rintro ⟨n, rfl⟩
-    exact ⟨n, concrete_l2_r2_default_hilbert_basis_eq_mathlib_unit n⟩
+    exact ⟨n, concrete_l2_r2_canonical_hilbert_basis_eq_mathlib_unit n⟩
 
 /-- R2b core theorem: the Mathlib-native span of the coordinate units is dense in
 the completed real `ℓ²(ℕ)` carrier.  This proves finite-support density in the
@@ -38,13 +49,14 @@ theorem concrete_l2_r2_finite_coordinate_submodule_topologicalClosure_eq_top :
     concreteL2R2FiniteCoordinateSubmodule.topologicalClosure =
       (⊤ : Submodule ℝ ConcreteL2R1HilbertCarrier) := by
   classical
-  let b : HilbertBasis ℕ ℝ ConcreteL2R1HilbertCarrier := default
+  let b : HilbertBasis ℕ ℝ ConcreteL2R1HilbertCarrier :=
+    concreteL2R2CanonicalHilbertBasis
   have hb_dense :
       (Submodule.span ℝ (Set.range b)).topologicalClosure =
         (⊤ : Submodule ℝ ConcreteL2R1HilbertCarrier) := by
-    simpa using (HilbertBasis.dense_span b)
+    exact HilbertBasis.dense_span b
   have hRange : Set.range b = concreteL2R2CoordinateUnitSet := by
-    simpa [b] using concrete_l2_r2_default_hilbert_basis_range_eq_coordinate_unit_set
+    simpa [b] using concrete_l2_r2_canonical_hilbert_basis_range_eq_coordinate_unit_set
   simpa [concreteL2R2FiniteCoordinateSubmodule, hRange] using hb_dense
 
 /-- Set-level closure form of the R2b carrier-density theorem. -/
