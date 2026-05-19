@@ -11,7 +11,7 @@ fi
 
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$' || true)"
-changed_scripts="$(printf '%s\n' "${changed_files}" | grep '^scripts/.*\.(py|sh)$' || true)"
+changed_scripts="$(printf '%s\n' "${changed_files}" | grep -E '^scripts/.*\.(py|sh)$' || true)"
 non_root_changed_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -v '^MGAP4D/MathlibAnalytic\.lean$' || true)"
 
 printf '[fast] base: %s\n' "${BASE}"
@@ -63,15 +63,31 @@ if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperato
   run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane.py
 fi
 
-# The repository may not commit lake-manifest.json.  In that case, generate it
-# once for the PR fast check, then use the mathlib cache path.  Avoid running
-# lake update when the manifest is already present.
-if [ ! -f lake-manifest.json ]; then
-  echo "[fast] lake manifest missing; run lake update once"
-  lake update
-else
-  echo "[fast] lake manifest present; skip lake update"
-fi
+lakefile_requires_mathlib() {
+  [ -f lakefile.lean ] && grep -q 'require[[:space:]]\+mathlib' lakefile.lean
+}
+
+lake_manifest_has_mathlib() {
+  [ -f lake-manifest.json ] && grep -Eq '"name"[[:space:]]*:[[:space:]]*"mathlib"|mathlib4\.git|leanprover-community/mathlib4' lake-manifest.json
+}
+
+ensure_lake_manifest() {
+  if [ ! -f lake-manifest.json ]; then
+    echo "[fast] lake manifest missing; run lake update once"
+    lake update
+    return
+  fi
+
+  if lakefile_requires_mathlib && ! lake_manifest_has_mathlib; then
+    echo "[fast] lake manifest present but stale for mathlib; run lake update"
+    lake update
+    return
+  fi
+
+  echo "[fast] lake manifest present and dependency-compatible; skip lake update"
+}
+
+ensure_lake_manifest
 
 echo "[fast] lake exe cache get"
 lake exe cache get || true
