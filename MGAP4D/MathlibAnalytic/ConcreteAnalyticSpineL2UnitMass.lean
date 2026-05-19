@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2UnitNormalization
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open scoped BigOperators
+
 noncomputable section
 
 /-- Finite-support squared mass of the concrete unit probe over its singleton
