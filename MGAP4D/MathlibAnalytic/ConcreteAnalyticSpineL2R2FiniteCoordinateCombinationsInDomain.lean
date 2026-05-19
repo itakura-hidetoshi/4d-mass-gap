@@ -19,10 +19,13 @@ theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
     (s : Finset ℕ) (a : ℕ → ℝ) {n : ℕ} (hn : n ∉ s) :
     concreteL2R2FiniteCoordinateCombination s a n = 0 := by
   classical
+  unfold concreteL2R2FiniteCoordinateCombination
+  change
+    (s.sum (fun k =>
+      a k • ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ))) n = 0
   induction s using Finset.induction_on generalizing n with
   | empty =>
-      change (0 : ℝ) = 0
-      rfl
+      simp
   | insert k s hk ih =>
       have hnk : n ≠ k := by
         intro h
@@ -30,16 +33,19 @@ theorem concrete_l2_r2_finite_coordinate_combination_apply_of_not_mem
       have hns : n ∉ s := by
         intro hs
         exact hn (by simp [hs])
-      have hsum :
-          ((s.sum (fun x =>
-            a x • (concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier)) :
-              ConcreteL2R1HilbertCarrier) : ℕ → ℝ) n = 0 := by
-        simpa [concreteL2R2FiniteCoordinateCombination] using ih hns
       have hunit :
-          ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ) n = 0 := by
-        exact concrete_l2_mathlib_unit_apply_ne hnk
-      simp [concreteL2R2FiniteCoordinateCombination, Finset.sum_insert, hk,
-        Pi.add_apply, Pi.smul_apply, hunit, hsum]
+          (a k • ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ)) n = 0 := by
+        simp [concrete_l2_mathlib_unit_apply_ne hnk]
+      have htail :
+          (s.sum (fun x =>
+            a x • ((concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier) : ℕ → ℝ))) n = 0 := by
+        exact ih hns
+      rw [Finset.sum_insert hk]
+      change
+        (a k • ((concreteL2MathlibUnit k : ConcreteL2R1HilbertCarrier) : ℕ → ℝ)) n +
+          (s.sum (fun x =>
+            a x • ((concreteL2MathlibUnit x : ConcreteL2R1HilbertCarrier) : ℕ → ℝ))) n = 0
+      simp [hunit, htail]
 
 /-- The weighted-square sequence of a finite coordinate combination has finite
 support.  This is the finite-support bridge used to avoid any premature density
