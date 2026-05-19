@@ -102,6 +102,24 @@ theorem concrete_analytic_spine_l2_real_sequence_surface_ready :
     concreteAnalyticSpineL2RealSequenceSurfaceReady := by
   exact And.intro True.intro (And.intro concrete_l2_real_zero_finite_support True.intro)
 
+/-- Compatibility alias for the original carrier-surface audit anchor. -/
+def concreteAnalyticSpineL2RealCarrierSurfaceReady : Prop :=
+  concreteAnalyticSpineL2RealSequenceSurfaceReady
+
+/-- Compatibility theorem for the original carrier-surface audit anchor. -/
+theorem concrete_analytic_spine_l2_real_carrier_surface_ready :
+    concreteAnalyticSpineL2RealCarrierSurfaceReady := by
+  exact concrete_analytic_spine_l2_real_sequence_surface_ready
+
+/-- Boundary marker for the concrete `l2` real carrier lane. -/
+def concreteAnalyticSpineL2RealHardResidualBoundaryHeld : Prop :=
+  concreteAnalyticSpineL2RealCarrierSurfaceReady
+
+/-- Boundary theorem for the concrete `l2` real carrier lane. -/
+theorem concrete_analytic_spine_l2_real_hard_residual_boundary_held :
+    concreteAnalyticSpineL2RealHardResidualBoundaryHeld := by
+  exact concrete_analytic_spine_l2_real_carrier_surface_ready
+
 end
 
 end MathlibAnalytic
