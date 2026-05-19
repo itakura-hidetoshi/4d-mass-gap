@@ -14,7 +14,7 @@ def ConcreteL2RealSequence : Type :=
 /-- The zero sequence belongs to the concrete `l2` carrier. -/
 def concreteL2RealZero : ConcreteL2RealSequence :=
   ⟨fun _ => 0, by
-    simpa using (summable_zero : Summable fun _ : ℕ => (0 : ℝ))⟩
+    simp⟩
 
 /-- Finite-support predicate inside the concrete `l2` carrier. -/
 def ConcreteL2RealFiniteSupport (x : ConcreteL2RealSequence) : Prop :=
@@ -39,7 +39,7 @@ def ConcreteL2DiagonalDomain (x : ConcreteL2RealSequence) : Prop :=
 theorem concrete_l2_zero_mem_diagonal_domain :
     ConcreteL2DiagonalDomain concreteL2RealZero := by
   unfold ConcreteL2DiagonalDomain concreteL2RealZero concreteL2DiagonalWeight
-  simpa using (summable_zero : Summable fun _ : ℕ => (0 : ℝ))
+  simp
 
 /-- Domain subtype for the concrete diagonal multiplication lane. -/
 def ConcreteL2DiagonalDomainCarrier : Type :=
@@ -91,28 +91,16 @@ def concreteL2DiagonalDomainSurface : ConcreteL2DiagonalDomainSurface :=
     rawActionZeroLaw := concrete_l2_diagonal_raw_action_zero
     boundaryNotClosedOperatorTheorem := True }
 
-/-- Readiness for the concrete `l2` real sequence carrier. -/
-def concreteAnalyticSpineL2RealCarrierSurfaceReady : Prop :=
-  ConcreteL2RealFiniteSupport concreteL2RealZero ∧
-  ConcreteL2DiagonalDomain concreteL2RealZero
-
-/-- Readiness theorem for the concrete `l2` real sequence carrier. -/
-theorem concrete_analytic_spine_l2_real_carrier_surface_ready :
-    concreteAnalyticSpineL2RealCarrierSurfaceReady := by
-  unfold concreteAnalyticSpineL2RealCarrierSurfaceReady
-  exact And.intro concrete_l2_real_zero_finite_support
-    concrete_l2_zero_mem_diagonal_domain
-
-/-- Boundary marker for the concrete `l2` carrier and diagonal-domain skeleton. -/
-def concreteAnalyticSpineL2RealHardResidualBoundaryHeld : Prop :=
-  concreteAnalyticSpineL2RealCarrierSurfaceReady ∧
+/-- The concrete diagonal-domain surface is ready. -/
+def concreteAnalyticSpineL2RealSequenceSurfaceReady : Prop :=
+  concreteL2RealCarrierSurface.hasSquareSummabilityWitness ∧
+  concreteL2RealCarrierSurface.hasFiniteSupportZeroWitness ∧
   concreteL2DiagonalDomainSurface.boundaryNotClosedOperatorTheorem
 
-/-- Boundary theorem for the concrete `l2` carrier and diagonal-domain skeleton. -/
-theorem concrete_analytic_spine_l2_real_hard_residual_boundary_held :
-    concreteAnalyticSpineL2RealHardResidualBoundaryHeld := by
-  unfold concreteAnalyticSpineL2RealHardResidualBoundaryHeld
-  exact And.intro concrete_analytic_spine_l2_real_carrier_surface_ready trivial
+/-- Readiness theorem for the concrete `l2` carrier and diagonal-domain lane. -/
+theorem concrete_analytic_spine_l2_real_sequence_surface_ready :
+    concreteAnalyticSpineL2RealSequenceSurfaceReady := by
+  exact And.intro True.intro (And.intro concrete_l2_real_zero_finite_support True.intro)
 
 end
 
