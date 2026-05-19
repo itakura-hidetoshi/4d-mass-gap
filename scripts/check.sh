@@ -22,6 +22,7 @@ declare -a AUDITS=(
   "audit analytic bridge coherence|python3 scripts/audit_bridge_coherence.py"
   "audit hard physical residual ledger|python3 scripts/audit_hard_physical_residual_ledger.py"
   "audit concrete analytic spine from scratch|python3 scripts/audit_concrete_analytic_spine_from_scratch.py"
+  "audit concrete analytic spine R1 l2 real Hilbert carrier|python3 scripts/audit_concrete_analytic_spine_r1_l2_real_hilbert_carrier.py"
   "audit concrete analytic spine graph sequence law|python3 scripts/audit_concrete_analytic_spine_graph_sequence_law.py"
   "audit concrete analytic spine graph norm sequence law|python3 scripts/audit_concrete_analytic_spine_graph_norm_sequence_law.py"
   "audit concrete analytic spine graph norm bounded sequence|python3 scripts/audit_concrete_analytic_spine_graph_norm_bounded_sequence.py"
@@ -70,6 +71,7 @@ lake update
 
 declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineRealHilbertDomain
+  MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineR1L2RealHilbertCarrier
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphSequenceLaw
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormSequenceLaw
   MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineGraphNormBoundedSequence
