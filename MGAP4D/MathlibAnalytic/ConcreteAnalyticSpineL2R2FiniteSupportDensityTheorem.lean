@@ -24,7 +24,7 @@ theorem concrete_l2_r2_linear_isometry_equiv_refl_symm_apply
     (x : ConcreteL2R1HilbertCarrier) :
     (LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier).symm x = x := by
   simpa using
-    ((LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier).apply_symm_apply x)
+    ((LinearIsometryEquiv.refl ℝ ConcreteL2R1HilbertCarrier).symm_apply_apply x)
 
 /-- The explicit canonical Mathlib Hilbert basis of the completed real `ℓ²(ℕ)`
 carrier is exactly the concrete coordinate-unit family already used by the R2
