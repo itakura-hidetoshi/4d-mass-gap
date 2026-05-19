@@ -128,7 +128,7 @@ fi
 # Building the root import module on every PR defeats the fast lane, because the
 # root intentionally imports the whole analytic surface.  When root and leaf
 # modules both changed, build only the changed leaf modules; root-level full
-# integration remains covered by Full Local Check on main/manual runs.
+# integration remains covered by main/manual full checks.
 if [ -z "${non_root_changed_lean_files}" ]; then
   if printf '%s\n' "${changed_lean_files}" | grep -q '^MGAP4D/MathlibAnalytic\.lean$'; then
     echo "[fast] only root import changed; build root module"
@@ -139,10 +139,23 @@ if [ -z "${non_root_changed_lean_files}" ]; then
   exit 0
 fi
 
+# Build all changed leaf modules in a single Lake invocation.  This lets Lake
+# share dependency work across targets and avoids replaying the same lower
+# modules once per changed file.
+targets=()
 while IFS= read -r file; do
   [ -z "${file}" ] && continue
   target="${file%.lean}"
   target="${target//\//.}"
-  echo "[fast] lake build ${target}"
-  lake build "${target}"
-done <<< "${non_root_changed_lean_files}"
+  targets+=("${target}")
+done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+if [ "${#targets[@]}" -eq 0 ]; then
+  echo "[fast] no build targets derived"
+  exit 0
+fi
+
+printf '[fast] lake build changed targets:'
+printf ' %s' "${targets[@]}"
+printf '\n'
+lake build "${targets[@]}"
