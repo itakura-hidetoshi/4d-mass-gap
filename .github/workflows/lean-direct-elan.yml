@@ -9,6 +9,29 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - ".github/workflows/lean-direct-elan.yml"
+      - "lean-toolchain"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+      - "scripts/verify_manifest.py"
+      - "scripts/audit_lean_forbidden_tokens.py"
+      - "scripts/audit_major_theorem_nonplaceholder.py"
+      - "scripts/audit_bridge_coherence.py"
+      - "scripts/audit_infinite_dimensional_target_layer.py"
+      - "scripts/audit_infinite_dimensional_residual_filling.py"
+      - "scripts/audit_hard_physical_residual_hardening_map.py"
+      - "scripts/audit_complete_infinite_dimensional_hilbert_construction.py"
+      - "scripts/audit_self_adjoint_hphys_lane_hardening.py"
+      - "scripts/audit_continuum_yang_mills_lane_hardening.py"
+      - "scripts/audit_plaquette_spectral_weight_lane_hardening.py"
+      - "scripts/audit_four_lane_residual_closure.py"
+      - "scripts/audit_internal_review_residual_closure_gate.py"
+      - "scripts/replay_summary.py"
+
+concurrency:
+  group: lean-direct-elan-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -75,6 +98,7 @@ jobs:
           key: ${{ runner.os }}-lean-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-
+            ${{ runner.os }}-lean-fast-
       - name: Install elan and Lean toolchain
         shell: bash
         run: |
@@ -89,11 +113,15 @@ jobs:
           set -euxo pipefail
           lean --version
           lake --version
-      - name: Generate Lake manifest
+      - name: Generate Lake manifest when needed
         shell: bash
         run: |
           set -euxo pipefail
-          lake update
+          if [ ! -s lake-manifest.json ] || ! grep -q 'mathlib' lake-manifest.json; then
+            lake update
+          else
+            echo "lake-manifest.json already contains mathlib; skipping lake update"
+          fi
           test -f lake-manifest.json
       - name: Pull Mathlib cache when available
         shell: bash
