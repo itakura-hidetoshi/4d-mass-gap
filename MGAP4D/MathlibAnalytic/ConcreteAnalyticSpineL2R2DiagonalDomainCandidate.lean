@@ -17,6 +17,14 @@ not yet a closed/self-adjoint operator. -/
 def concreteL2R2WeightedCoordinate (x : ConcreteL2R1HilbertCarrier) (n : ℕ) : ℝ :=
   concreteL2R2DiagonalWeight n * x n
 
+/-- The R1 zero vector has zero coordinates in Mathlib's `lp` carrier. -/
+theorem concrete_l2_r1_hilbert_zero_apply (n : ℕ) :
+    concreteL2R1HilbertZero n = 0 := by
+  rw [concreteL2R1HilbertZero]
+  have h : ⇑(0 : ConcreteL2R1HilbertCarrier) = (0 : ℕ → ℝ) := by
+    simpa using (lp.coeFn_zero (E := fun _ : ℕ => ℝ) (p := (2 : ℝ≥0∞)))
+  exact congrFun h n
+
 /-- R2 diagonal-domain candidate: vectors whose weighted coordinate square is
 summable.  Density and closed-operator results are deliberately not claimed in
 this candidate layer. -/
@@ -30,7 +38,7 @@ theorem concrete_l2_r2_diagonal_domain_candidate_zero :
   unfold ConcreteL2R2DiagonalDomainCandidate concreteL2R2WeightedCoordinate
   refine (summable_zero : Summable (fun _ : ℕ => (0 : ℝ))).congr ?_
   intro n
-  simp [concreteL2R1HilbertZero, Pi.zero_apply]
+  simp [concrete_l2_r1_hilbert_zero_apply]
 
 /-- The raw diagonal action associated with the candidate domain.  Membership in
 `ConcreteL2R2DiagonalDomainCandidate` is not required for merely writing the
