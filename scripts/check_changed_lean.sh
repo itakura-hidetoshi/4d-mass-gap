@@ -71,6 +71,10 @@ lake_manifest_has_mathlib() {
   [ -f lake-manifest.json ] && grep -Eq '"name"[[:space:]]*:[[:space:]]*"mathlib"|mathlib4\.git|leanprover-community/mathlib4' lake-manifest.json
 }
 
+lake_manifest_empty_packages() {
+  [ -f lake-manifest.json ] && grep -Eq '"packages"[[:space:]]*:[[:space:]]*\[[[:space:]]*\]' lake-manifest.json
+}
+
 ensure_lake_manifest() {
   if [ ! -f lake-manifest.json ]; then
     echo "[fast] lake manifest missing; run lake update once"
@@ -78,8 +82,20 @@ ensure_lake_manifest() {
     return
   fi
 
+  if lakefile_requires_mathlib && lake_manifest_empty_packages; then
+    echo "[fast] lake manifest has empty package list but lakefile requires mathlib; run lake update"
+    lake update
+    return
+  fi
+
   if lakefile_requires_mathlib && ! lake_manifest_has_mathlib; then
-    echo "[fast] lake manifest present but stale for mathlib; run lake update"
+    echo "[fast] lake manifest missing mathlib dependency; run lake update"
+    lake update
+    return
+  fi
+
+  if ! lake env true >/dev/null 2>&1; then
+    echo "[fast] lake env failed; run lake update"
     lake update
     return
   fi
