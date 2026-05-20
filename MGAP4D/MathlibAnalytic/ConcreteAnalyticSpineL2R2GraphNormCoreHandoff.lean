@@ -15,11 +15,12 @@ def concreteL2R2MathlibCandidateToConcreteGraphNormBridgeTarget : Prop :=
   concreteAnalyticSpineL2R2DiagonalDomainAdditiveClosureSurfaceReady ∧
   concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady
 
-/-- Graph-norm core target for the diagonal-domain candidate.  This is a target
-surface only: it records the desired future statement that the finite-support
-core is graph-norm dense in the diagonal-domain graph. -/
+/-- Graph-norm core target blocker for the diagonal-domain candidate.  This is a
+placeholder target surface only: it records that the future graph-norm core
+statement has not yet been proved.  A later R2g layer must replace this blocker
+with a real graph-norm density theorem, not silently promote carrier density. -/
 def concreteL2R2GraphNormCoreTarget : Prop :=
-  Prop
+  False
 
 /-- The extra proof obligation needed before R2 can promote from carrier-density
 of the diagonal-domain candidate to a graph-norm core theorem.  It must connect
