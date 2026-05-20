@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedInnerProduct
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedFiniteSumAlgebra
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -7,10 +7,6 @@ open scoped ENNReal lp
 
 noncomputable section
 
-/-- Quadratic expansion for the bounded finite-prefix quadratic functional.
-This is the finite-prefix parallelogram-facing identity
-`Q(x+y) = Q(x) + 2⟪x,y⟫ + Q(y)`, proved directly by `Finset` algebra and
-`ring_nf`. -/
 theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion
     (N : ℕ) (x y : ConcreteL2GraphPairPrefixEnergyBoundedElement) :
     concreteL2GraphPairPrefixEnergyBoundedQuadraticFunctional N
@@ -24,12 +20,15 @@ theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion
   unfold concreteL2GraphPairPrefixEnergyBoundedInnerProduct
   simp [concreteL2GraphPairPrefixEnergyBoundedAdd, concreteL2GraphPairAdd,
     concreteL2GraphPairFst, concreteL2GraphPairSnd, concreteL2RealAdd,
-    Finset.sum_add_distrib, Finset.sum_mul]
-  ring_nf
+    Finset.sum_add_distrib]
+  rw [concrete_l2_graph_pair_prefix_sum_mixed_sq_expansion N
+    (fun n => (concreteL2GraphPairFst x.1).1 n)
+    (fun n => (concreteL2GraphPairFst y.1).1 n)]
+  rw [concrete_l2_graph_pair_prefix_sum_mixed_sq_expansion N
+    (fun n => (concreteL2GraphPairSnd x.1).1 n)
+    (fun n => (concreteL2GraphPairSnd y.1).1 n)]
+  ring
 
-/-- Polarization form of the bounded finite-prefix quadratic expansion.  This
-keeps the Cauchy--Schwarz/Minkowski bridge in a form that can be reused by the
-next layer without reopening the coordinate algebra. -/
 theorem concrete_l2_graph_pair_prefix_energy_bounded_polarization_from_add
     (N : ℕ) (x y : ConcreteL2GraphPairPrefixEnergyBoundedElement) :
     (2 : ℝ) * concreteL2GraphPairPrefixEnergyBoundedInnerProduct N x y =
@@ -42,8 +41,6 @@ theorem concrete_l2_graph_pair_prefix_energy_bounded_polarization_from_add
   rw [h]
   ring
 
-/-- The quadratic expansion is symmetric in the cross term, by symmetry of the
-finite-prefix inner-product candidate. -/
 theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion_symm_cross
     (N : ℕ) (x y : ConcreteL2GraphPairPrefixEnergyBoundedElement) :
     concreteL2GraphPairPrefixEnergyBoundedQuadraticFunctional N
@@ -54,10 +51,6 @@ theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion_sym
   rw [concrete_l2_graph_pair_prefix_energy_bounded_inner_symm N y x]
   exact concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion N x y
 
-/-- R2ai bounded finite-prefix quadratic expansion surface.  It closes the
-coordinate expansion layer and prepares the Cauchy--Schwarz/Minkowski layer,
-without yet asserting Cauchy--Schwarz, triangle inequality, or any seminorm
-instance. -/
 structure ConcreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface where
   r2ahReady : concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedInnerProductReady
   quadraticAddExpansion : ∀ (N : ℕ)
@@ -93,7 +86,6 @@ structure ConcreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface wher
   boundaryNotPVMConstruction : Prop
   boundaryNotPositiveSpectralWeight : Prop
 
-/-- Concrete R2ai bounded finite-prefix quadratic expansion surface. -/
 def concreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface :
     ConcreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface :=
   { r2ahReady :=
@@ -116,7 +108,6 @@ def concreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface :
     boundaryNotPVMConstruction := True
     boundaryNotPositiveSpectralWeight := True }
 
-/-- R2ai readiness. -/
 def concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionReady : Prop :=
   concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedInnerProductReady ∧
   (∀ (N : ℕ) (x y : ConcreteL2GraphPairPrefixEnergyBoundedElement),
@@ -149,27 +140,19 @@ def concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionReady
   concreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface.boundaryNotPVMConstruction ∧
   concreteL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionSurface.boundaryNotPositiveSpectralWeight
 
-/-- Readiness theorem for R2ai. -/
 theorem concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_bounded_quadratic_expansion_ready :
     concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionReady := by
-  exact And.intro
-    concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_bounded_inner_product_ready <|
-      And.intro
-        concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion <|
-        And.intro
-          concrete_l2_graph_pair_prefix_energy_bounded_polarization_from_add <|
-          And.intro
-            concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion_symm_cross <|
-            And.intro trivial <| And.intro trivial <| And.intro trivial <|
-              And.intro trivial <| And.intro trivial <| And.intro trivial <|
-                And.intro trivial <| And.intro trivial <| And.intro trivial <|
-                  And.intro trivial trivial
+  exact ⟨
+    concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_bounded_inner_product_ready,
+    concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion,
+    concrete_l2_graph_pair_prefix_energy_bounded_polarization_from_add,
+    concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion_symm_cross,
+    trivial, trivial, trivial, trivial, trivial, trivial, trivial, trivial,
+    trivial, trivial, trivial⟩
 
-/-- Boundary marker for R2ai. -/
 def concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionHardResidualBoundaryHeld : Prop :=
   concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionReady
 
-/-- Boundary theorem for R2ai. -/
 theorem concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_bounded_quadratic_expansion_hard_residual_boundary_held :
     concreteAnalyticSpineL2R2GraphPairEnergyPrefixBoundedQuadraticExpansionHardResidualBoundaryHeld := by
   exact concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_bounded_quadratic_expansion_ready
