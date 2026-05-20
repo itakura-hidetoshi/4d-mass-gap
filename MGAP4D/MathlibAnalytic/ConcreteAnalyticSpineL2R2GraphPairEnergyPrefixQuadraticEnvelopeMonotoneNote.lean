@@ -1,0 +1,20 @@
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphPairEnergyPrefixQuadraticEnvelopeMonotone
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped ENNReal lp
+
+noncomputable section
+
+def concreteAnalyticSpineL2R2GraphPairEnergyPrefixQuadraticEnvelopeMonotoneNoteReady : Prop :=
+  concreteAnalyticSpineL2R2GraphPairEnergyPrefixQuadraticEnvelopeMonotoneSurfaceReady
+
+theorem concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_quadratic_envelope_monotone_note_ready :
+    concreteAnalyticSpineL2R2GraphPairEnergyPrefixQuadraticEnvelopeMonotoneNoteReady := by
+  exact concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_quadratic_envelope_monotone_surface_ready
+
+end
+
+end MathlibAnalytic
+end MGAP4D
