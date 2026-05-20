@@ -95,25 +95,24 @@ explicit fst/snd transport data, preparing the next graph-norm topology layer
 without proving graph-norm density or closedness. -/
 structure ConcreteL2R2GraphPairTransportScaffold where
   r2gReady : concreteAnalyticSpineL2R2GraphNormAPIReconnaissanceSurfaceReady
-  pairSpace : Type
-  diagonalGraphCarrier : Set pairSpace
-  finiteSupportCoreGraphCarrier : Set pairSpace
+  diagonalGraphCarrier : Set ConcreteL2GraphPairSpace
+  finiteSupportCoreGraphCarrier : Set ConcreteL2GraphPairSpace
   finiteSupportCoreGraphSubsetDiagonalGraph :
     finiteSupportCoreGraphCarrier ⊆ diagonalGraphCarrier
   diagonalGraphFstDomainWitness :
-    ∀ {p : pairSpace}, p ∈ diagonalGraphCarrier →
+    ∀ {p : ConcreteL2GraphPairSpace}, p ∈ diagonalGraphCarrier →
       ∃ x : ConcreteL2DiagonalDomainCarrier,
         concreteL2GraphPairFst p = x.1
   diagonalGraphSndActionWitness :
-    ∀ {p : pairSpace}, p ∈ diagonalGraphCarrier →
+    ∀ {p : ConcreteL2GraphPairSpace}, p ∈ diagonalGraphCarrier →
       ∃ x : ConcreteL2DiagonalDomainCarrier,
         concreteL2GraphPairSnd p = concreteL2DiagonalActionL2 x
   finiteSupportCoreGraphFstDomainWitness :
-    ∀ {p : pairSpace}, p ∈ finiteSupportCoreGraphCarrier →
+    ∀ {p : ConcreteL2GraphPairSpace}, p ∈ finiteSupportCoreGraphCarrier →
       ∃ x : ConcreteL2DiagonalDomainCarrier,
         concreteL2GraphPairFst p = x.1
   finiteSupportCoreGraphSndActionWitness :
-    ∀ {p : pairSpace}, p ∈ finiteSupportCoreGraphCarrier →
+    ∀ {p : ConcreteL2GraphPairSpace}, p ∈ finiteSupportCoreGraphCarrier →
       ∃ x : ConcreteL2DiagonalDomainCarrier,
         concreteL2GraphPairSnd p = concreteL2DiagonalActionL2 x
   zeroPairFstLaw :
@@ -135,7 +134,6 @@ def concreteL2R2GraphPairTransportScaffold :
     ConcreteL2R2GraphPairTransportScaffold :=
   { r2gReady :=
       concrete_analytic_spine_l2_r2_graph_norm_api_reconnaissance_surface_ready
-    pairSpace := ConcreteL2GraphPairSpace
     diagonalGraphCarrier := ConcreteL2DiagonalGraphL2Carrier
     finiteSupportCoreGraphCarrier := ConcreteL2FiniteSupportCoreGraphCarrier
     finiteSupportCoreGraphSubsetDiagonalGraph :=
