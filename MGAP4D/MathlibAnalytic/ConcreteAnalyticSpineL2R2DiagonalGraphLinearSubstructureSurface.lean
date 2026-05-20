@@ -55,14 +55,11 @@ def concreteL2R2DiagonalGraphLinearSubstructureSurface :
     zeroMem := concrete_l2_diagonal_graph_l2_pair_zero_mem
     addClosure := fun hp hq => concrete_l2_diagonal_graph_l2_add_mem hp hq
     smulClosure := fun c {p} hp => concrete_l2_diagonal_graph_l2_smul_mem c hp
-    explicitZero := fun hcarrier => by
-      simpa [hcarrier] using concrete_l2_diagonal_graph_l2_pair_zero_mem
-    explicitAddClosure := fun hcarrier => by
-      subst hcarrier
-      exact fun hp hq => concrete_l2_diagonal_graph_l2_add_mem hp hq
-    explicitSmulClosure := fun hcarrier => by
-      subst hcarrier
-      exact fun c {p} hp => concrete_l2_diagonal_graph_l2_smul_mem c hp
+    explicitZero := fun _ => concrete_l2_diagonal_graph_l2_pair_zero_mem
+    explicitAddClosure := fun _ hp hq =>
+      concrete_l2_diagonal_graph_l2_add_mem hp hq
+    explicitSmulClosure := fun _ c {p} hp =>
+      concrete_l2_diagonal_graph_l2_smul_mem c hp
     boundaryNotMathlibSubmoduleInstance := True
     boundaryNotGraphNormDensityTheorem := True
     boundaryNotGraphNormCoreTheorem := True
