@@ -44,8 +44,20 @@ theorem concrete_l2_graph_pair_energy_add_le
   have hsnd := concrete_l2_r2_sq_add_le_two_sq_add_two_sq
     ((concreteL2GraphPairSnd p).1 n) ((concreteL2GraphPairSnd q).1 n)
   have hsum := add_le_add hfst hsnd
+  have hright :
+      (2 : ℝ) * ((concreteL2GraphPairFst p).1 n ^ 2) +
+          ((2 : ℝ) * ((concreteL2GraphPairFst q).1 n ^ 2) +
+            ((2 : ℝ) * ((concreteL2GraphPairSnd p).1 n ^ 2) +
+              (2 : ℝ) * ((concreteL2GraphPairSnd q).1 n ^ 2))) =
+        (2 : ℝ) *
+            (((concreteL2GraphPairFst p).1 n ^ 2) +
+              ((concreteL2GraphPairSnd p).1 n ^ 2)) +
+          (2 : ℝ) *
+            (((concreteL2GraphPairFst q).1 n ^ 2) +
+              ((concreteL2GraphPairSnd q).1 n ^ 2)) := by
+    ring
   simpa [concreteL2GraphPairFst, concreteL2GraphPairSnd, concreteL2RealAdd,
-    two_smul, add_assoc, add_left_comm, add_comm] using hsum
+    two_smul] using hsum.trans_eq hright
 
 /-- Summability of the add-energy upper bound. -/
 theorem concrete_l2_graph_pair_energy_add_bound_summable
