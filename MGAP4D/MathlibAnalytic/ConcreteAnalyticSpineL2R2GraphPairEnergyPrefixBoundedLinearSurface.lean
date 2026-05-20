@@ -114,8 +114,8 @@ theorem concrete_analytic_spine_l2_r2_graph_pair_energy_prefix_bounded_linear_su
           (fun hp hq =>
             concrete_l2_graph_pair_prefix_energy_bounded_add_mem hp hq) <|
           And.intro
-            (fun c hp =>
-              concrete_l2_graph_pair_prefix_energy_bounded_smul_mem c hp) <|
+            (fun c {p} hp =>
+              concrete_l2_graph_pair_prefix_energy_bounded_smul_mem c (p := p) hp) <|
             And.intro
               ⟨concreteL2GraphPairPrefixEnergyBoundedAdd⟩
               ⟨concreteL2GraphPairPrefixEnergyBoundedSmul⟩
