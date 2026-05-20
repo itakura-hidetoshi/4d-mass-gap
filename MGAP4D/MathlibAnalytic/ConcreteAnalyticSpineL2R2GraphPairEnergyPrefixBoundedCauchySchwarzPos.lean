@@ -30,7 +30,6 @@ theorem concrete_l2_graph_pair_prefix_energy_bounded_cauchy_schwarz_of_quadratic
           (2 : ℝ) * ((-Ixy / Qx) * Ixy) + Qy =
         Qy - Ixy ^ 2 / Qx := by
     field_simp [ne_of_gt hQx']
-    ring
   have hnonneg : 0 ≤ Qy - Ixy ^ 2 / Qx := by
     rwa [hpoly_simplified] at hpoly
   have hmul_nonneg : 0 ≤ Qx * (Qy - Ixy ^ 2 / Qx) := by
