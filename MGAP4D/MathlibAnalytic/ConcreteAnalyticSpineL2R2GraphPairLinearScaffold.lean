@@ -157,8 +157,8 @@ def concreteL2R2GraphPairLinearScaffold :
 /-- R2i graph-pair linear scaffold readiness. -/
 def concreteAnalyticSpineL2R2GraphPairLinearScaffoldReady : Prop :=
   concreteAnalyticSpineL2R2GraphPairTransportScaffoldReady ∧
-  (∀ x y : ConcreteL2RealSequence, ConcreteL2RealSequence) ∧
-  (∀ c : ℝ, ∀ x : ConcreteL2RealSequence, ConcreteL2RealSequence) ∧
+  Nonempty (ConcreteL2RealSequence → ConcreteL2RealSequence → ConcreteL2RealSequence) ∧
+  Nonempty (ℝ → ConcreteL2RealSequence → ConcreteL2RealSequence) ∧
   concreteL2R2GraphPairLinearScaffold.boundaryNotDiagonalGraphAddClosure ∧
   concreteL2R2GraphPairLinearScaffold.boundaryNotDiagonalGraphSmulClosure ∧
   concreteL2R2GraphPairLinearScaffold.boundaryNotGraphNormDensityTheorem ∧
@@ -175,8 +175,8 @@ theorem concrete_analytic_spine_l2_r2_graph_pair_linear_scaffold_ready :
   unfold concreteAnalyticSpineL2R2GraphPairLinearScaffoldReady
   exact And.intro
     concrete_analytic_spine_l2_r2_graph_pair_transport_scaffold_ready <|
-      And.intro (fun _ _ => concreteL2RealZero) <|
-        And.intro (fun _ _ => concreteL2RealZero) <|
+      And.intro ⟨concreteL2RealAdd⟩ <|
+        And.intro ⟨concreteL2RealSmul⟩ <|
           And.intro trivial <| And.intro trivial <| And.intro trivial <|
             And.intro trivial <| And.intro trivial <| And.intro trivial <|
               And.intro trivial <| And.intro trivial trivial
