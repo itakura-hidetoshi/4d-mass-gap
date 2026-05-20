@@ -10,7 +10,7 @@ noncomputable section
 /-- Quadratic expansion for the bounded finite-prefix quadratic functional.
 This is the finite-prefix parallelogram-facing identity
 `Q(x+y) = Q(x) + 2⟪x,y⟫ + Q(y)`, proved directly by `Finset` algebra and
-`ring`. -/
+`ring_nf`. -/
 theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion
     (N : ℕ) (x y : ConcreteL2GraphPairPrefixEnergyBoundedElement) :
     concreteL2GraphPairPrefixEnergyBoundedQuadraticFunctional N
@@ -24,8 +24,8 @@ theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion
   unfold concreteL2GraphPairPrefixEnergyBoundedInnerProduct
   simp [concreteL2GraphPairPrefixEnergyBoundedAdd, concreteL2GraphPairAdd,
     concreteL2GraphPairFst, concreteL2GraphPairSnd, concreteL2RealAdd,
-    Finset.sum_add_distrib, Finset.mul_sum]
-  ring
+    Finset.sum_add_distrib]
+  ring_nf
 
 /-- Polarization form of the bounded finite-prefix quadratic expansion.  This
 keeps the Cauchy--Schwarz/Minkowski bridge in a form that can be reused by the
