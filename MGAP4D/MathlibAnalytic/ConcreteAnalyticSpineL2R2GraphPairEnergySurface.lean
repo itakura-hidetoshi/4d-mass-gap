@@ -45,10 +45,10 @@ theorem concrete_l2_graph_pair_energy_add_le
     ((concreteL2GraphPairSnd p).1 n) ((concreteL2GraphPairSnd q).1 n)
   have hsum := add_le_add hfst hsnd
   have hright :
-      (2 : ℝ) * ((concreteL2GraphPairFst p).1 n ^ 2) +
-          ((2 : ℝ) * ((concreteL2GraphPairFst q).1 n ^ 2) +
-            ((2 : ℝ) * ((concreteL2GraphPairSnd p).1 n ^ 2) +
-              (2 : ℝ) * ((concreteL2GraphPairSnd q).1 n ^ 2))) =
+      ((2 : ℝ) * ((concreteL2GraphPairFst p).1 n ^ 2) +
+          (2 : ℝ) * ((concreteL2GraphPairFst q).1 n ^ 2)) +
+        ((2 : ℝ) * ((concreteL2GraphPairSnd p).1 n ^ 2) +
+          (2 : ℝ) * ((concreteL2GraphPairSnd q).1 n ^ 2)) =
         (2 : ℝ) *
             (((concreteL2GraphPairFst p).1 n ^ 2) +
               ((concreteL2GraphPairSnd p).1 n ^ 2)) +
