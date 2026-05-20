@@ -160,3 +160,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixDegenerateInner
 import MGAP4D.MathlibAnalytic.R2MPrefixCauchySchwarz
 import MGAP4D.MathlibAnalytic.R2MPrefixMinkowskiSquare
 import MGAP4D.MathlibAnalytic.R2MPrefixTriangleInequality
+import MGAP4D.MathlibAnalytic.R2MPrefixBoundedSeminormSurface
