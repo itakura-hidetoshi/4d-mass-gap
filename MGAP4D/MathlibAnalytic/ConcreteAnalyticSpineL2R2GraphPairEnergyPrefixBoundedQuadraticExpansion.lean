@@ -24,7 +24,7 @@ theorem concrete_l2_graph_pair_prefix_energy_bounded_quadratic_add_expansion
   unfold concreteL2GraphPairPrefixEnergyBoundedInnerProduct
   simp [concreteL2GraphPairPrefixEnergyBoundedAdd, concreteL2GraphPairAdd,
     concreteL2GraphPairFst, concreteL2GraphPairSnd, concreteL2RealAdd,
-    Finset.sum_add_distrib]
+    Finset.sum_add_distrib, Finset.sum_mul]
   ring_nf
 
 /-- Polarization form of the bounded finite-prefix quadratic expansion.  This
