@@ -3,14 +3,14 @@ import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphPairEnergySurface
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped ENNReal lp BigOperators
+open scoped ENNReal lp
 
 noncomputable section
 
 /-- Finite prefix of the concrete graph-pair square-energy series.  This is a
 finite pre-graph-norm bookkeeping surface, not a graph-norm topology. -/
 def concreteL2GraphPairEnergyPrefix (N : ℕ) (p : ConcreteL2GraphPairSpace) : ℝ :=
-  ∑ n in Finset.range N, concreteL2GraphPairEnergyTerm p n
+  (Finset.range N).sum (fun n => concreteL2GraphPairEnergyTerm p n)
 
 /-- The finite graph-pair energy prefix is nonnegative. -/
 theorem concrete_l2_graph_pair_energy_prefix_nonneg
@@ -24,8 +24,7 @@ theorem concrete_l2_graph_pair_energy_prefix_nonneg
 theorem concrete_l2_graph_pair_energy_prefix_zero
     (N : ℕ) :
     concreteL2GraphPairEnergyPrefix N concreteL2GraphPairZero = 0 := by
-  simp [concreteL2GraphPairEnergyPrefix,
-    concrete_l2_graph_pair_energy_zero_ext]
+  simp [concreteL2GraphPairEnergyPrefix]
 
 /-- Finite-prefix add-energy estimate for concrete graph pairs.  The right side
 is intentionally kept as a finite sum of pointwise upper bounds; no graph-norm
@@ -33,9 +32,9 @@ triangle inequality is claimed here. -/
 theorem concrete_l2_graph_pair_energy_prefix_add_le_sum_bound
     (N : ℕ) (p q : ConcreteL2GraphPairSpace) :
     concreteL2GraphPairEnergyPrefix N (concreteL2GraphPairAdd p q) ≤
-      ∑ n in Finset.range N,
+      (Finset.range N).sum (fun n =>
         ((2 : ℝ) • concreteL2GraphPairEnergyTerm p n +
-          (2 : ℝ) • concreteL2GraphPairEnergyTerm q n) := by
+          (2 : ℝ) • concreteL2GraphPairEnergyTerm q n)) := by
   unfold concreteL2GraphPairEnergyPrefix
   exact Finset.sum_le_sum fun n _hn =>
     concrete_l2_graph_pair_energy_add_le p q n
@@ -45,7 +44,7 @@ law.  This is a finite prefix law, not yet a completed graph-norm law. -/
 theorem concrete_l2_graph_pair_energy_prefix_smul_eq_sum
     (N : ℕ) (c : ℝ) (p : ConcreteL2GraphPairSpace) :
     concreteL2GraphPairEnergyPrefix N (concreteL2GraphPairSmul c p) =
-      ∑ n in Finset.range N, (c ^ 2) • concreteL2GraphPairEnergyTerm p n := by
+      (Finset.range N).sum (fun n => (c ^ 2) • concreteL2GraphPairEnergyTerm p n) := by
   unfold concreteL2GraphPairEnergyPrefix
   exact Finset.sum_congr rfl fun n _hn =>
     concrete_l2_graph_pair_energy_smul_eq c p n
@@ -58,12 +57,12 @@ structure ConcreteL2R2GraphPairEnergyPrefixSurface where
   prefixZero : ∀ N : ℕ, energyPrefix N concreteL2GraphPairZero = 0
   prefixAddBound : ∀ (N : ℕ) (p q : ConcreteL2GraphPairSpace),
     energyPrefix N (concreteL2GraphPairAdd p q) ≤
-      ∑ n in Finset.range N,
+      (Finset.range N).sum (fun n =>
         ((2 : ℝ) • concreteL2GraphPairEnergyTerm p n +
-          (2 : ℝ) • concreteL2GraphPairEnergyTerm q n)
+          (2 : ℝ) • concreteL2GraphPairEnergyTerm q n))
   prefixSmulLaw : ∀ (N : ℕ) (c : ℝ) (p : ConcreteL2GraphPairSpace),
     energyPrefix N (concreteL2GraphPairSmul c p) =
-      ∑ n in Finset.range N, (c ^ 2) • concreteL2GraphPairEnergyTerm p n
+      (Finset.range N).sum (fun n => (c ^ 2) • concreteL2GraphPairEnergyTerm p n)
   boundaryNotGraphNormTopology : Prop
   boundaryNotGraphNormTriangleInequality : Prop
   boundaryNotGraphNormCoreTheorem : Prop
@@ -100,12 +99,12 @@ def concreteAnalyticSpineL2R2GraphPairEnergyPrefixSurfaceReady : Prop :=
     concreteL2GraphPairEnergyPrefix N concreteL2GraphPairZero = 0) ∧
   (∀ (N : ℕ) (p q : ConcreteL2GraphPairSpace),
     concreteL2GraphPairEnergyPrefix N (concreteL2GraphPairAdd p q) ≤
-      ∑ n in Finset.range N,
+      (Finset.range N).sum (fun n =>
         ((2 : ℝ) • concreteL2GraphPairEnergyTerm p n +
-          (2 : ℝ) • concreteL2GraphPairEnergyTerm q n)) ∧
+          (2 : ℝ) • concreteL2GraphPairEnergyTerm q n))) ∧
   (∀ (N : ℕ) (c : ℝ) (p : ConcreteL2GraphPairSpace),
     concreteL2GraphPairEnergyPrefix N (concreteL2GraphPairSmul c p) =
-      ∑ n in Finset.range N, (c ^ 2) • concreteL2GraphPairEnergyTerm p n) ∧
+      (Finset.range N).sum (fun n => (c ^ 2) • concreteL2GraphPairEnergyTerm p n)) ∧
   concreteL2R2GraphPairEnergyPrefixSurface.boundaryNotGraphNormTopology ∧
   concreteL2R2GraphPairEnergyPrefixSurface.boundaryNotGraphNormTriangleInequality ∧
   concreteL2R2GraphPairEnergyPrefixSurface.boundaryNotGraphNormCoreTheorem ∧
