@@ -24,7 +24,9 @@ theorem concrete_l2_graph_pair_energy_prefix_nonneg
 theorem concrete_l2_graph_pair_energy_prefix_zero
     (N : ℕ) :
     concreteL2GraphPairEnergyPrefix N concreteL2GraphPairZero = 0 := by
-  simp [concreteL2GraphPairEnergyPrefix]
+  unfold concreteL2GraphPairEnergyPrefix
+  exact Finset.sum_eq_zero fun n _hn =>
+    concrete_l2_graph_pair_energy_zero_ext n
 
 /-- Finite-prefix add-energy estimate for concrete graph pairs.  The right side
 is intentionally kept as a finite sum of pointwise upper bounds; no graph-norm
