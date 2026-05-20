@@ -150,7 +150,7 @@ def concreteL2R2DiagonalGraphLinearClosureSurface :
     diagonalDomainSmulClosure := concrete_l2_diagonal_domain_smul_mem
     diagonalGraphAddClosure := fun hp hq =>
       concrete_l2_diagonal_graph_l2_add_mem hp hq
-    diagonalGraphSmulClosure := fun c hp =>
+    diagonalGraphSmulClosure := fun c {p} hp =>
       concrete_l2_diagonal_graph_l2_smul_mem c hp
     boundaryNotGraphNormDensityTheorem := True
     boundaryNotGraphNormCoreTheorem := True
@@ -191,7 +191,7 @@ theorem concrete_analytic_spine_l2_r2_diagonal_graph_linear_closure_surface_read
       And.intro concrete_l2_diagonal_domain_add_mem <|
         And.intro concrete_l2_diagonal_domain_smul_mem <|
           And.intro (fun hp hq => concrete_l2_diagonal_graph_l2_add_mem hp hq) <|
-            And.intro (fun c hp => concrete_l2_diagonal_graph_l2_smul_mem c hp) <|
+            And.intro (fun c {p} hp => concrete_l2_diagonal_graph_l2_smul_mem c hp) <|
               And.intro trivial <| And.intro trivial <| And.intro trivial <|
                 And.intro trivial <| And.intro trivial <| And.intro trivial trivial
 
