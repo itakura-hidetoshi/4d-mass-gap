@@ -18,7 +18,11 @@ theorem concrete_l2_r2_weighted_coordinate_add
     concreteL2R2WeightedCoordinate (x + y) n =
       concreteL2R2WeightedCoordinate x n +
         concreteL2R2WeightedCoordinate y n := by
-  simp [concreteL2R2WeightedCoordinate, lp.coeFn_add, mul_add]
+  simp only [concreteL2R2WeightedCoordinate]
+  change concreteL2R2DiagonalWeight n * (x n + y n) =
+    concreteL2R2DiagonalWeight n * x n +
+      concreteL2R2DiagonalWeight n * y n
+  ring
 
 /-- R2e core theorem: the R2 diagonal-domain candidate is additively closed.
 This closes the remaining target introduced in R2d using the standard comparison
