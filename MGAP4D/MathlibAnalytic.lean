@@ -158,3 +158,5 @@ import MGAP4D.MathlibAnalytic.R2MPrefixDegenerateKernel
 import MGAP4D.MathlibAnalytic.R2MPrefixDegenerateCoordinates
 import MGAP4D.MathlibAnalytic.R2MPrefixDegenerateInner
 import MGAP4D.MathlibAnalytic.R2MPrefixCauchySchwarz
+import MGAP4D.MathlibAnalytic.R2MPrefixMinkowskiSquare
+import MGAP4D.MathlibAnalytic.R2MPrefixTriangleInequality
