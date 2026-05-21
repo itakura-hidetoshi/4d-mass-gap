@@ -187,3 +187,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSubSeminormMetricAPI
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormedAddCommGroupSurface
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientScalarAlgebraSurface
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientModuleSurface
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientModuleZeroLaws
