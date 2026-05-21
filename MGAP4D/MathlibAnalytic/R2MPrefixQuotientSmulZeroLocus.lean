@@ -64,7 +64,8 @@ theorem r2m_prefix_quotient_smul_zero_locus_ready :
   exact ⟨
     r2m_prefix_quotient_smul_seminorm_law_closed,
     r2m_prefix_quotient_smul_eq_zero_class_iff,
-    fun N hc q => r2m_prefix_quotient_smul_eq_zero_class_iff_of_ne_zero N hc q⟩
+    fun N {c} hc q =>
+      r2m_prefix_quotient_smul_eq_zero_class_iff_of_ne_zero N (c := c) hc q⟩
 
 /-- Boundary marker: scalar zero-locus is closed; additive quotient structure is
 still held as the next algebraic layer. -/
