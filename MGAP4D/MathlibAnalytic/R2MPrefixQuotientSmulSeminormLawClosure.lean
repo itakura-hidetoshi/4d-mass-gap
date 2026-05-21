@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSmulSeminormLaw
 import MGAP4D.MathlibAnalytic.R2MPrefixConcreteZeroCompatibility
+import MGAP4D.MathlibAnalytic.R2MPrefixConcreteAddAlgebra
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -88,6 +89,7 @@ def r2mPrefixQuotientSmulSeminormLawClosed : Prop :=
   r2mPrefixQuotientSmulSeminormLawBoundaryHeld ∧
   r2mPrefixQuotientSmulSeminormLawObligation ∧
   r2mPrefixSmulZeroPseudoDistanceCompatibilityObligation ∧
+  r2mPrefixConcreteAddAlgebraReady ∧
   (∀ (N : ℕ) (c : ℝ),
     r2mPrefixQuotientSmul N c (r2mPrefixQuotientZeroClass N) =
       r2mPrefixQuotientZeroClass N) ∧
@@ -104,6 +106,7 @@ theorem r2m_prefix_quotient_smul_seminorm_law_closed :
     r2m_prefix_quotient_smul_seminorm_law_boundary_held,
     r2m_prefix_quotient_seminorm_smul_abs_closed,
     r2m_prefix_smul_zero_pseudo_distance_compatibility,
+    r2m_prefix_concrete_add_algebra_ready,
     r2m_prefix_quotient_smul_zero_class_closed,
     r2m_prefix_quotient_zero_smul_eq_zero_class_closed,
     r2m_prefix_quotient_smul_eq_zero_class_iff_closed⟩
