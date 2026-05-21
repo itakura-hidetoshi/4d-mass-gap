@@ -172,3 +172,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormDistanceBridge
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientAddWellDefined
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSmulWellDefined
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSmulOperation
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSmulSeminormLaw
