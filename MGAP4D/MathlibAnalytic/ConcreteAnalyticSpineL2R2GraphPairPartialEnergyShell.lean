@@ -28,7 +28,8 @@ shell. -/
 theorem concrete_l2_graph_pair_partial_energy_one_eq
     (p : ConcreteL2GraphPairSpace) :
     concreteL2GraphPairPartialEnergy p 1 = concreteL2GraphPairEnergyTerm p 0 := by
-  simpa using concrete_l2_graph_pair_partial_energy_succ_eq p 0
+  rw [concrete_l2_graph_pair_partial_energy_succ_eq]
+  simp [concrete_l2_graph_pair_partial_energy_zero_cutoff]
 
 /-- The successor shell is nonnegative. -/
 theorem concrete_l2_graph_pair_partial_energy_shell_nonneg
