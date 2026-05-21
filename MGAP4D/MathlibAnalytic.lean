@@ -184,3 +184,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSubLaws
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientDistanceSubBridge
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSubSeminormAPI
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSubSeminormMetricAPI
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormedAddCommGroupSurface
