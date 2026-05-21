@@ -45,8 +45,11 @@ theorem r2m_prefix_quotient_zero_centered_metric_tube_controlled_to_norm_tube_co
   rw [r2m_prefix_quotient_dist_eq_norm_sub_typeclass N (u n - u M) 0] at hdist
   simpa using hdist
 
-/-- The paired zero-centered tube is equivalent to having both its metric and
-norm projections. -/
+/-- The paired zero-centered tube is equivalent to either one of the two
+projections, but we expose it as `metric ∧ norm` so downstream code can consume
+both views.  In the reverse direction, a single norm reference point is chosen
+and the metric estimate is reconstructed at that same point; this preserves the
+center `u M`. -/
 theorem r2m_prefix_quotient_zero_centered_tube_controlled_iff_metric_and_norm
     (N : ℕ) (u : ℕ → R2MPrefixZeroDistanceQuotient N) :
     r2mPrefixQuotientZeroCenteredTubeControlled N u ↔
@@ -67,14 +70,14 @@ theorem r2m_prefix_quotient_zero_centered_tube_controlled_iff_metric_and_norm
       exact (hM n hn).2
   · intro h
     intro ε hε
-    rcases h.1 ε hε with ⟨M₁, hM₁⟩
-    rcases h.2 ε hε with ⟨M₂, hM₂⟩
-    let M := max M₁ M₂
+    rcases h.2 ε hε with ⟨M, hM⟩
     refine ⟨M, ?_⟩
     intro n hn
-    have hM₁le : M₁ ≤ n := le_trans (le_max_left M₁ M₂) hn
-    have hM₂le : M₂ ≤ n := le_trans (le_max_right M₁ M₂) hn
-    exact ⟨hM₁ n hM₁le, hM₂ n hM₂le⟩
+    have hnorm : ‖u n - u M‖ ≤ ε := hM n hn
+    have hdist : dist (u n - u M) 0 ≤ ε := by
+      rw [r2m_prefix_quotient_dist_eq_norm_sub_typeclass N (u n - u M) 0]
+      simpa using hnorm
+    exact ⟨hdist, hnorm⟩
 
 /-- Metric-tail control gives the norm-only zero-centered tube. -/
 theorem r2m_prefix_quotient_metric_tail_controlled_to_zero_centered_norm_tube_controlled
