@@ -176,3 +176,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSmulSeminormLaw
 import MGAP4D.MathlibAnalytic.R2MPrefixConcreteZeroCompatibility
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSmulSeminormLawClosure
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientAddCompatibility
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientAddOperation
