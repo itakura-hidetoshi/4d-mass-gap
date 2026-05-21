@@ -69,7 +69,6 @@ def r2mPrefixQuotientDistance
           (fun _ _ hyy' =>
             r2m_prefix_pseudo_distance_eq_of_zero_distance_right N hyy'))
       (fun _ _ hxx' => by
-        funext r
         refine Quotient.inductionOn' r ?_
         intro y
         exact r2m_prefix_pseudo_distance_eq_of_zero_distance_left N hxx')
