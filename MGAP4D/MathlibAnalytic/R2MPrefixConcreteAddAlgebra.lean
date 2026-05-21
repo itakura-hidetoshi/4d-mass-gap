@@ -40,7 +40,6 @@ theorem concrete_l2_real_add_neg_eq_zero
   apply Subtype.ext
   funext n
   simp [concreteL2RealAdd, concreteL2RealSmul, concreteL2RealZero]
-  ring
 
 /-- Concrete graph-pair addition is commutative. -/
 theorem concrete_l2_graph_pair_add_comm
