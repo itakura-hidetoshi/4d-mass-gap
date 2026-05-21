@@ -32,6 +32,7 @@ theorem r2m_prefix_quotient_sub_mk
       Quotient.mk (r2mPrefixZeroDistanceSetoid N)
         (concreteL2GraphPairPrefixEnergyBoundedSub x y) := by
   unfold r2mPrefixQuotientSub
+  unfold r2mPrefixQuotientNeg
   unfold concreteL2GraphPairPrefixEnergyBoundedSub
   unfold concreteL2GraphPairPrefixEnergyBoundedNeg
   rw [r2m_prefix_quotient_smul_mk]
