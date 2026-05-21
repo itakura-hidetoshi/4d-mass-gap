@@ -190,3 +190,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientModuleSurface
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientModuleZeroLaws
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientModuleInstanceCandidate
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientTypeclassOperations
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientAddCommGroupCandidate
