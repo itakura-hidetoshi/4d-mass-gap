@@ -19,6 +19,7 @@ theorem r2m_prefix_quotient_norm_add_le_typeclass
   rw [r2m_prefix_quotient_add_mk]
   repeat rw [r2m_prefix_quotient_norm_typeclass_def]
   repeat rw [r2m_prefix_quotient_seminorm_mk]
+  repeat rw [r2m_prefix_pseudo_distance_zero_right_eq_seminorm]
   exact r2m_prefix_triangle_inequality N x y
 
 /-- The installed quotient norm is invariant under negation. -/
