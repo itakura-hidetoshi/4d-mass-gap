@@ -11,29 +11,33 @@ def r2mPrefixZeroDistanceRel
     (x y : ConcreteL2GraphPairPrefixEnergyBoundedElement) : Prop :=
   r2mPrefixPseudoDistance N x y = 0
 
-/-- Reflexivity of the zero-distance relation. -/
+/-- Reflexivity of the zero-distance relation.  Stated in the same binder style
+as `Equivalence.refl`, avoiding deprecated `Reflexive` aliases. -/
 theorem r2m_prefix_zero_distance_refl
-    (N : ℕ) :
-    Reflexive (r2mPrefixZeroDistanceRel N) := by
-  intro x
+    (N : ℕ) (x : ConcreteL2GraphPairPrefixEnergyBoundedElement) :
+    r2mPrefixZeroDistanceRel N x x := by
   unfold r2mPrefixZeroDistanceRel
   exact r2m_prefix_pseudo_distance_self N x
 
-/-- Symmetry of the zero-distance relation. -/
+/-- Symmetry of the zero-distance relation.  Stated with explicit implicit
+arguments so it can be used directly as the `Equivalence.symm` field. -/
 theorem r2m_prefix_zero_distance_symm
-    (N : ℕ) :
-    Symmetric (r2mPrefixZeroDistanceRel N) := by
-  intro x y hxy
+    (N : ℕ)
+    {x y : ConcreteL2GraphPairPrefixEnergyBoundedElement}
+    (hxy : r2mPrefixZeroDistanceRel N x y) :
+    r2mPrefixZeroDistanceRel N y x := by
   unfold r2mPrefixZeroDistanceRel at hxy ⊢
   rw [← r2m_prefix_pseudo_distance_symm N x y]
   exact hxy
 
 /-- Transitivity of the zero-distance relation, from pseudo-distance triangle
-and nonnegativity. -/
+and nonnegativity.  Stated in the same binder style as `Equivalence.trans`. -/
 theorem r2m_prefix_zero_distance_trans
-    (N : ℕ) :
-    Transitive (r2mPrefixZeroDistanceRel N) := by
-  intro x y z hxy hyz
+    (N : ℕ)
+    {x y z : ConcreteL2GraphPairPrefixEnergyBoundedElement}
+    (hxy : r2mPrefixZeroDistanceRel N x y)
+    (hyz : r2mPrefixZeroDistanceRel N y z) :
+    r2mPrefixZeroDistanceRel N x z := by
   unfold r2mPrefixZeroDistanceRel at hxy hyz ⊢
   have htri := r2m_prefix_pseudo_distance_triangle N x y z
   have hnonneg := r2m_prefix_pseudo_distance_nonneg N x z
@@ -45,10 +49,13 @@ theorem r2m_prefix_zero_distance_trans
 theorem r2m_prefix_zero_distance_equivalence
     (N : ℕ) :
     Equivalence (r2mPrefixZeroDistanceRel N) := by
-  exact ⟨
-    r2m_prefix_zero_distance_refl N,
-    r2m_prefix_zero_distance_symm N,
-    r2m_prefix_zero_distance_trans N⟩
+  refine ⟨?refl, ?symm, ?trans⟩
+  · intro x
+    exact r2m_prefix_zero_distance_refl N x
+  · intro x y hxy
+    exact r2m_prefix_zero_distance_symm N hxy
+  · intro x y z hxy hyz
+    exact r2m_prefix_zero_distance_trans N hxy hyz
 
 /-- Mathlib `Setoid` associated to the finite-prefix zero-distance relation. -/
 def r2mPrefixZeroDistanceSetoid
