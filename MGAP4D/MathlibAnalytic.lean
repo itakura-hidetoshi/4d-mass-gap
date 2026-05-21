@@ -165,3 +165,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixKernelDistance
 import MGAP4D.MathlibAnalytic.R2MPrefixPseudoMetric
 import MGAP4D.MathlibAnalytic.R2MPrefixZeroDistanceQuotient
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSeminormTransport
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientSeparation
