@@ -45,7 +45,7 @@ theorem r2m_prefix_quotient_sub_zero
   have hneg0 : r2mPrefixQuotientNeg N (r2mPrefixQuotientZeroClass N) =
       r2mPrefixQuotientZeroClass N := by
     unfold r2mPrefixQuotientNeg
-    exact r2m_prefix_quotient_zero_smul N (-1 : ℝ)
+    exact r2m_prefix_quotient_smul_zero_class_closed N (-1 : ℝ)
   rw [hneg0]
   exact r2m_prefix_quotient_add_zero N q
 
