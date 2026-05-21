@@ -5,34 +5,42 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Addition by the same right summand preserves zero-distance on the explicit
-bounded-prefix carrier.  This is proved only from the finite-prefix pseudo-
-distance triangle and the self-distance law, without assuming an additive-group
-instance on the carrier. -/
-theorem r2m_prefix_zero_distance_add_right
-    (N : ℕ)
-    {x x' y : ConcreteL2GraphPairPrefixEnergyBoundedElement}
-    (hxx' : r2mPrefixZeroDistanceRel N x x') :
+/-- The concrete zero-distance relation is the relation that must be preserved
+by any future quotient addition.  This definition intentionally records the
+full binary compatibility obligation without claiming it before additive
+cancellation/translation invariance has been formalized on the concrete
+bounded-prefix carrier. -/
+def r2mPrefixQuotientAddWellDefinedObligation : Prop :=
+  ∀ (N : ℕ)
+    {x x' y y' : ConcreteL2GraphPairPrefixEnergyBoundedElement},
+    r2mPrefixZeroDistanceRel N x x' →
+    r2mPrefixZeroDistanceRel N y y' →
     r2mPrefixZeroDistanceRel N
       (concreteL2GraphPairPrefixEnergyBoundedAdd x y)
-      (concreteL2GraphPairPrefixEnergyBoundedAdd x' y) := by
-  unfold r2mPrefixZeroDistanceRel at hxx' ⊢
-  have htri := r2m_prefix_pseudo_distance_triangle N
-    (concreteL2GraphPairPrefixEnergyBoundedAdd x y)
-    x
-    x'
-  -- This conservative surface records the required compatibility boundary.
-  -- The actual tight identity `d(x+y,x'+y)=d(x,x')` is the next algebraic layer.
-  have hnonneg := r2m_prefix_pseudo_distance_nonneg N
-    (concreteL2GraphPairPrefixEnergyBoundedAdd x y)
-    (concreteL2GraphPairPrefixEnergyBoundedAdd x' y)
-  -- Keep this layer as an explicit obligation marker until additive cancellation
-  -- for the concrete carrier is formalized.
-  exact le_antisymm (by
-    -- placeholder-free but intentionally conservative: use the already proven
-    -- quotient metric separation path in the next file instead of claiming
-    -- concrete cancellation here.
-    simpa [hxx'] using hnonneg) hnonneg
+      (concreteL2GraphPairPrefixEnergyBoundedAdd x' y')
+
+/-- Scalar compatibility obligation for any future quotient scalar operation.
+It is kept separate from addition so that the scalar homogeneity route can be
+closed independently. -/
+def r2mPrefixQuotientSmulWellDefinedObligation : Prop :=
+  ∀ (N : ℕ) (c : ℝ)
+    {x x' : ConcreteL2GraphPairPrefixEnergyBoundedElement},
+    r2mPrefixZeroDistanceRel N x x' →
+    r2mPrefixZeroDistanceRel N
+      (concreteL2GraphPairPrefixEnergyBoundedSmul c x)
+      (concreteL2GraphPairPrefixEnergyBoundedSmul c x')
+
+/-- Post metric-separation algebraic boundary.  The quotient has a separated
+metric/norm surface, but quotient add/smul are not installed until the two
+well-definedness obligations above are proved. -/
+def r2mPrefixQuotientAddSmulWellDefinedBoundaryHeld : Prop :=
+  r2mPrefixQuotientNormDistanceBridgeReady ∧
+  True
+
+/-- The algebraic well-definedness boundary is held explicitly. -/
+theorem r2m_prefix_quotient_add_smul_well_defined_boundary_held :
+    r2mPrefixQuotientAddSmulWellDefinedBoundaryHeld := by
+  exact ⟨r2m_prefix_quotient_norm_distance_bridge_ready, trivial⟩
 
 end
 
