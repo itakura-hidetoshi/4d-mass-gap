@@ -37,8 +37,8 @@ theorem r2m_prefix_quotient_norm_le_reference_norm_add_of_dist_le_typeclass
     (N : ℕ) (q r : R2MPrefixZeroDistanceQuotient N) (ε : ℝ)
     (hqr : dist q r ≤ ε) :
     ‖q‖ ≤ ‖r‖ + ε := by
-  exact le_trans (r2m_prefix_quotient_norm_le_norm_add_dist_typeclass N q r)
-    (add_le_add_left hqr ‖r‖)
+  refine le_trans (r2m_prefix_quotient_norm_le_norm_add_dist_typeclass N q r) ?_
+  simpa [add_comm, add_left_comm, add_assoc] using add_le_add_left hqr ‖r‖
 
 /-- Sequence form of the reference upper norm estimate. -/
 theorem r2m_prefix_quotient_norm_seq_le_reference_norm_add_of_dist_le_typeclass
@@ -51,11 +51,11 @@ theorem r2m_prefix_quotient_norm_seq_le_reference_norm_add_of_dist_le_typeclass
 
 /-- Tail-to-reference norm control: if every tail point stays within `ε` of a
 reference tail point, their norms are uniformly controlled by the reference
-norm plus `ε`. -/
+orm plus `ε`. -/
 theorem r2m_prefix_quotient_norm_tail_le_reference_norm_add_of_dist_tail_typeclass
     (N : ℕ) (u : ℕ → R2MPrefixZeroDistanceQuotient N)
     (M k : ℕ) (ε : ℝ)
-    (hk : M ≤ k)
+    (_hk : M ≤ k)
     (h : ∀ n : ℕ, M ≤ n → dist (u n) (u k) ≤ ε) :
     ∀ n : ℕ, M ≤ n → ‖u n‖ ≤ ‖u k‖ + ε := by
   intro n hn
