@@ -21,7 +21,7 @@ theorem r2m_prefix_quotient_metric_tail_controlled_to_norm_eventually_bounded
     r2mPrefixQuotientNormEventuallyBounded N u := by
   rcases h 1 zero_lt_one with ⟨M, hM⟩
   refine ⟨M, ‖u M‖ + 1, ?_, ?_⟩
-  · exact add_nonneg (norm_nonneg (u M)) zero_le_one
+  · exact add_nonneg (r2m_prefix_quotient_norm_nonneg N (u M)) zero_le_one
   · intro n hn
     exact (r2m_prefix_quotient_norm_seq_mem_reference_tube_of_dist_le_typeclass N
       u n M 1 (hM n M hn le_rfl)).2
