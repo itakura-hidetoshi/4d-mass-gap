@@ -5,71 +5,51 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Absolute homogeneity of the transported quotient seminorm under the
-well-defined quotient scalar operation.  The proof reduces by quotient induction
-to the already-proved finite-prefix bounded seminorm absolute homogeneity. -/
-theorem r2m_prefix_quotient_seminorm_smul_abs
-    (N : ℕ) (c : ℝ) (q : R2MPrefixZeroDistanceQuotient N) :
+/-- The scalar seminorm law obligation for the quotient.  This is intentionally
+kept as an explicit boundary until the concrete carrier proves the missing
+zero/subtraction compatibility needed to rewrite
+`d_N(c • x, 0)` as `d_N(c • x, c • 0)`. -/
+def r2mPrefixQuotientSmulSeminormLawObligation : Prop :=
+  ∀ (N : ℕ) (c : ℝ) (q : R2MPrefixZeroDistanceQuotient N),
     r2mPrefixQuotientSeminorm N (r2mPrefixQuotientSmul N c q) =
-      |c| * r2mPrefixQuotientSeminorm N q := by
-  refine Quotient.inductionOn' q ?_
-  intro x
-  rw [r2m_prefix_quotient_smul_mk]
-  rw [r2m_prefix_quotient_seminorm_mk]
-  rw [r2m_prefix_quotient_seminorm_mk]
-  exact concrete_l2_graph_pair_prefix_energy_bounded_seminorm_candidate_smul_abs N c x
+      |c| * r2mPrefixQuotientSeminorm N q
 
-/-- The quotient scalar operation preserves the zero class. -/
-theorem r2m_prefix_quotient_smul_zero_class
-    (N : ℕ) (c : ℝ) :
-    r2mPrefixQuotientSmul N c (r2mPrefixQuotientZeroClass N) =
-      r2mPrefixQuotientZeroClass N := by
-  apply (r2m_prefix_quotient_seminorm_eq_zero_iff N
-    (r2mPrefixQuotientSmul N c (r2mPrefixQuotientZeroClass N))).mp
-  rw [r2m_prefix_quotient_seminorm_smul_abs]
-  rw [r2m_prefix_quotient_seminorm_zero_class']
-  ring
+/-- The concrete bridge still needed before proving the quotient scalar seminorm
+law.  It says that the pseudo-distance from a scaled point to the zero carrier
+agrees with the pseudo-distance from that scaled point to the scaled zero
+carrier.  Once this is closed, the existing square-level scalar law for
+`sub (c • x) (c • y)` can be used with `y = 0`. -/
+def r2mPrefixSmulZeroPseudoDistanceCompatibilityObligation : Prop :=
+  ∀ (N : ℕ) (c : ℝ) (x : ConcreteL2GraphPairPrefixEnergyBoundedElement),
+    r2mPrefixPseudoDistance N
+        (concreteL2GraphPairPrefixEnergyBoundedSmul c x)
+        concreteL2GraphPairPrefixEnergyBoundedZero =
+      r2mPrefixPseudoDistance N
+        (concreteL2GraphPairPrefixEnergyBoundedSmul c x)
+        (concreteL2GraphPairPrefixEnergyBoundedSmul c
+          concreteL2GraphPairPrefixEnergyBoundedZero)
 
-/-- Scalar multiplication by zero sends every quotient point to the zero class,
-proved through the separated quotient seminorm. -/
-theorem r2m_prefix_quotient_zero_smul_eq_zero_class
-    (N : ℕ) (q : R2MPrefixZeroDistanceQuotient N) :
-    r2mPrefixQuotientSmul N 0 q = r2mPrefixQuotientZeroClass N := by
-  apply (r2m_prefix_quotient_seminorm_eq_zero_iff N
-    (r2mPrefixQuotientSmul N 0 q)).mp
-  rw [r2m_prefix_quotient_seminorm_smul_abs]
-  simp
-
-/-- Readiness package for quotient scalar seminorm laws. -/
-def r2mPrefixQuotientSmulSeminormLawReady : Prop :=
+/-- A conservative post-scalar-operation boundary: quotient scalar multiplication
+is installed and well-defined, while its full seminorm law is recorded as the
+next explicit proof obligation. -/
+def r2mPrefixQuotientSmulSeminormLawBoundaryHeld : Prop :=
   r2mPrefixQuotientSmulOperationReady ∧
-  (∀ (N : ℕ) (c : ℝ) (q : R2MPrefixZeroDistanceQuotient N),
-    r2mPrefixQuotientSeminorm N (r2mPrefixQuotientSmul N c q) =
-      |c| * r2mPrefixQuotientSeminorm N q) ∧
-  (∀ (N : ℕ) (c : ℝ),
-    r2mPrefixQuotientSmul N c (r2mPrefixQuotientZeroClass N) =
-      r2mPrefixQuotientZeroClass N) ∧
-  (∀ (N : ℕ) (q : R2MPrefixZeroDistanceQuotient N),
-    r2mPrefixQuotientSmul N 0 q = r2mPrefixQuotientZeroClass N)
+  True
 
-/-- The quotient scalar seminorm law surface is ready. -/
-theorem r2m_prefix_quotient_smul_seminorm_law_ready :
-    r2mPrefixQuotientSmulSeminormLawReady := by
-  exact ⟨
-    r2m_prefix_quotient_smul_operation_ready,
-    r2m_prefix_quotient_seminorm_smul_abs,
-    r2m_prefix_quotient_smul_zero_class,
-    r2m_prefix_quotient_zero_smul_eq_zero_class⟩
+/-- Boundary theorem for the quotient scalar seminorm law stage. -/
+theorem r2m_prefix_quotient_smul_seminorm_law_boundary_held :
+    r2mPrefixQuotientSmulSeminormLawBoundaryHeld := by
+  exact ⟨r2m_prefix_quotient_smul_operation_ready, trivial⟩
 
-/-- Boundary marker: scalar seminorm laws are closed; addition and full
-vector-space promotion remain intentionally separate. -/
+/-- Boundary marker: scalar multiplication is installed; scalar seminorm law,
+addition, and full vector-space promotion remain intentionally separate. -/
 def r2mPrefixQuotientAdditiveLawBoundaryHeld : Prop :=
-  r2mPrefixQuotientSmulSeminormLawReady ∧
+  r2mPrefixQuotientSmulSeminormLawBoundaryHeld ∧
   True
 
 theorem r2m_prefix_quotient_additive_law_boundary_held :
     r2mPrefixQuotientAdditiveLawBoundaryHeld := by
-  exact ⟨r2m_prefix_quotient_smul_seminorm_law_ready, trivial⟩
+  exact ⟨r2m_prefix_quotient_smul_seminorm_law_boundary_held, trivial⟩
 
 end
 
