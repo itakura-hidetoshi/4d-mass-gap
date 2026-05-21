@@ -27,7 +27,7 @@ theorem r2m_prefix_quotient_mk_eq_zero_class_of_pseudo_distance_zero
       r2mPrefixQuotientZeroClass N := by
   unfold r2mPrefixQuotientZeroClass
   apply Quotient.sound
-  unfold r2mPrefixZeroDistanceRel
+  change r2mPrefixPseudoDistance N x concreteL2GraphPairPrefixEnergyBoundedZero = 0
   exact hx
 
 /-- Definiteness after quotienting: the transported quotient seminorm candidate
