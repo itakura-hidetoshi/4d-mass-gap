@@ -6,8 +6,8 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- A local convergence packet at half tolerance reconstructs the metric Cauchy
-estimate on the tail by the triangle inequality through the same reference
-point `u M`. -/
+estimate on the tail by the quotient triangle theorem through the same
+reference point `u M`. -/
 theorem r2m_prefix_quotient_local_convergence_packet_half_to_metric_tail_at
     (N : ℕ) (u : ℕ → R2MPrefixZeroDistanceQuotient N) (ε : ℝ) (M : ℕ)
     (h : r2mPrefixQuotientLocalConvergencePacket N u (ε / 2) M) :
@@ -17,15 +17,18 @@ theorem r2m_prefix_quotient_local_convergence_packet_half_to_metric_tail_at
   have hnM : dist (u n) (u M) ≤ ε / 2 := (hM n hn).1
   have hmM : dist (u m) (u M) ≤ ε / 2 := (hM m hm).1
   have hMm : dist (u M) (u m) ≤ ε / 2 := by
-    simpa [dist_comm] using hmM
+    have hcomm : dist (u M) (u m) = dist (u m) (u M) :=
+      r2m_prefix_quotient_dist_comm_typeclass N (u M) (u m)
+    rw [hcomm]
+    exact hmM
   calc
     dist (u n) (u m) ≤ dist (u n) (u M) + dist (u M) (u m) :=
-      dist_triangle (u n) (u M) (u m)
+      r2m_prefix_quotient_dist_triangle_typeclass N (u n) (u M) (u m)
     _ ≤ ε / 2 + ε / 2 := add_le_add hnM hMm
     _ = ε := by ring
 
 /-- Local convergence control reconstructs the usual metric Cauchy-tail control:
-choose a half-tolerance local packet and then use the triangle inequality. -/
+choose a half-tolerance local packet and then use the triangle theorem. -/
 theorem r2m_prefix_quotient_local_convergence_controlled_to_metric_tail_controlled
     (N : ℕ) (u : ℕ → R2MPrefixZeroDistanceQuotient N)
     (h : r2mPrefixQuotientLocalConvergenceControlled N u) :
@@ -37,7 +40,8 @@ theorem r2m_prefix_quotient_local_convergence_controlled_to_metric_tail_controll
 
 /-- Metric-tail control and local convergence control are equivalent.  The
 forward direction is the fixed-reference witness construction; the reverse
-direction is the triangle inequality through the chosen local reference point. -/
+direction is the quotient triangle theorem through the chosen local reference
+point. -/
 theorem r2m_prefix_quotient_metric_tail_controlled_iff_local_convergence_controlled
     (N : ℕ) (u : ℕ → R2MPrefixZeroDistanceQuotient N) :
     r2mPrefixQuotientMetricTailControlled N u ↔
@@ -73,7 +77,7 @@ def r2mPrefixQuotientCompletionLocalConvergenceCauchyBridgeReady : Prop :=
     r2mPrefixQuotientMetricTailControlled N u ↔
     r2mPrefixQuotientLocalConvergenceControlled N u) ∧
   (∀ (N : ℕ) (u : ℕ → R2MPrefixZeroDistanceQuotient N)
-      (h : r2mPrefixQuotientMetricTailControlled N u) (ε : ℝ),
+      (_h : r2mPrefixQuotientMetricTailControlled N u) (ε : ℝ),
     0 < ε → ∃ M : ℕ,
       r2mPrefixQuotientLocalConvergencePacket N u (ε / 2) M ∧
       (∀ n m : ℕ, M ≤ n → M ≤ m → dist (u n) (u m) ≤ ε))
