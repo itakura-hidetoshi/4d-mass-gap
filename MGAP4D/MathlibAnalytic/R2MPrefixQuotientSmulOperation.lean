@@ -34,7 +34,7 @@ theorem r2m_prefix_quotient_smul_mk
 each finite prefix and scalar. -/
 def r2mPrefixQuotientSmulOperationReady : Prop :=
   r2mPrefixQuotientSmulWellDefinedReady ∧
-  (∀ (N : ℕ) (c : ℝ),
+  (∀ (N : ℕ) (_c : ℝ),
     Nonempty (R2MPrefixZeroDistanceQuotient N →
       R2MPrefixZeroDistanceQuotient N)) ∧
   (∀ (N : ℕ) (c : ℝ)
