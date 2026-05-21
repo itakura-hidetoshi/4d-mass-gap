@@ -73,6 +73,17 @@ theorem r2m_prefix_quotient_add_assoc
   rw [r2m_prefix_quotient_add_mk]
   rw [concrete_l2_graph_pair_prefix_energy_bounded_add_assoc]
 
+/-- Concrete cancellation against scalar `-1` in the bounded-prefix carrier. -/
+theorem concrete_l2_graph_pair_prefix_energy_bounded_add_smul_neg_one_eq_zero
+    (x : ConcreteL2GraphPairPrefixEnergyBoundedElement) :
+    concreteL2GraphPairPrefixEnergyBoundedAdd x
+        (concreteL2GraphPairPrefixEnergyBoundedSmul (-1 : ℝ) x) =
+      concreteL2GraphPairPrefixEnergyBoundedZero := by
+  change concreteL2GraphPairPrefixEnergyBoundedAdd x
+        (concreteL2GraphPairPrefixEnergyBoundedNeg x) =
+      concreteL2GraphPairPrefixEnergyBoundedZero
+  exact concrete_l2_graph_pair_prefix_energy_bounded_add_neg_eq_zero x
+
 /-- Additive inverse law for quotient negation. -/
 theorem r2m_prefix_quotient_add_neg
     (N : ℕ) (q : R2MPrefixZeroDistanceQuotient N) :
@@ -84,7 +95,7 @@ theorem r2m_prefix_quotient_add_neg
   unfold r2mPrefixQuotientZeroClass
   rw [r2m_prefix_quotient_smul_mk]
   rw [r2m_prefix_quotient_add_mk]
-  rw [concrete_l2_graph_pair_prefix_energy_bounded_add_neg_eq_zero]
+  rw [concrete_l2_graph_pair_prefix_energy_bounded_add_smul_neg_one_eq_zero]
 
 /-- Quotient additive-law readiness package. -/
 def r2mPrefixQuotientAddLawsReady : Prop :=
