@@ -35,7 +35,7 @@ def r2mPrefixQuotientSeminorm
     Quotient.liftOn' q
       (fun x : ConcreteL2GraphPairPrefixEnergyBoundedElement =>
         r2mPrefixPseudoDistance N x concreteL2GraphPairPrefixEnergyBoundedZero)
-      (fun x y hxy =>
+      (fun _ _ hxy =>
         r2m_prefix_pseudo_distance_basepoint_eq_of_zero_distance N hxy)
 
 /-- Evaluation of the quotient seminorm candidate on a concrete representative. -/
