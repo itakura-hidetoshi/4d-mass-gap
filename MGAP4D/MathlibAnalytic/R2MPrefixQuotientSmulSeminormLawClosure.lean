@@ -41,6 +41,48 @@ theorem r2m_prefix_quotient_zero_smul_eq_zero_class_closed
   rw [r2m_prefix_quotient_seminorm_smul_abs_closed]
   simp
 
+/-- Zero locus of quotient scalar multiplication.  After quotient separation and
+absolute homogeneity, `c • q` is the zero class exactly when either the scalar is
+zero or the quotient point is the zero class. -/
+theorem r2m_prefix_quotient_smul_eq_zero_class_iff_closed
+    (N : ℕ) (c : ℝ) (q : R2MPrefixZeroDistanceQuotient N) :
+    r2mPrefixQuotientSmul N c q = r2mPrefixQuotientZeroClass N ↔
+      c = 0 ∨ q = r2mPrefixQuotientZeroClass N := by
+  constructor
+  · intro hzero
+    have hnorm :
+        r2mPrefixQuotientSeminorm N (r2mPrefixQuotientSmul N c q) = 0 := by
+      exact (r2m_prefix_quotient_seminorm_eq_zero_iff N
+        (r2mPrefixQuotientSmul N c q)).mpr hzero
+    rw [r2m_prefix_quotient_seminorm_smul_abs_closed] at hnorm
+    rcases mul_eq_zero.mp hnorm with hcabs | hqnorm
+    · left
+      exact abs_eq_zero.mp hcabs
+    · right
+      exact (r2m_prefix_quotient_seminorm_eq_zero_iff N q).mp hqnorm
+  · intro h
+    rcases h with hc | hq
+    · rw [hc]
+      exact r2m_prefix_quotient_zero_smul_eq_zero_class_closed N q
+    · rw [hq]
+      exact r2m_prefix_quotient_smul_zero_class_closed N c
+
+/-- If the scalar is nonzero, quotient scalar multiplication has zero value only
+at the zero class. -/
+theorem r2m_prefix_quotient_smul_eq_zero_class_iff_of_ne_zero_closed
+    (N : ℕ) {c : ℝ} (hc : c ≠ 0)
+    (q : R2MPrefixZeroDistanceQuotient N) :
+    r2mPrefixQuotientSmul N c q = r2mPrefixQuotientZeroClass N ↔
+      q = r2mPrefixQuotientZeroClass N := by
+  rw [r2m_prefix_quotient_smul_eq_zero_class_iff_closed]
+  constructor
+  · intro h
+    rcases h with hc0 | hq
+    · exact False.elim (hc hc0)
+    · exact hq
+  · intro hq
+    exact Or.inr hq
+
 /-- The scalar seminorm law obligation is now discharged. -/
 def r2mPrefixQuotientSmulSeminormLawClosed : Prop :=
   r2mPrefixQuotientSmulSeminormLawBoundaryHeld ∧
@@ -50,7 +92,10 @@ def r2mPrefixQuotientSmulSeminormLawClosed : Prop :=
     r2mPrefixQuotientSmul N c (r2mPrefixQuotientZeroClass N) =
       r2mPrefixQuotientZeroClass N) ∧
   (∀ (N : ℕ) (q : R2MPrefixZeroDistanceQuotient N),
-    r2mPrefixQuotientSmul N 0 q = r2mPrefixQuotientZeroClass N)
+    r2mPrefixQuotientSmul N 0 q = r2mPrefixQuotientZeroClass N) ∧
+  (∀ (N : ℕ) (c : ℝ) (q : R2MPrefixZeroDistanceQuotient N),
+    r2mPrefixQuotientSmul N c q = r2mPrefixQuotientZeroClass N ↔
+      c = 0 ∨ q = r2mPrefixQuotientZeroClass N)
 
 /-- The quotient scalar seminorm law surface is closed. -/
 theorem r2m_prefix_quotient_smul_seminorm_law_closed :
@@ -60,7 +105,8 @@ theorem r2m_prefix_quotient_smul_seminorm_law_closed :
     r2m_prefix_quotient_seminorm_smul_abs_closed,
     r2m_prefix_smul_zero_pseudo_distance_compatibility,
     r2m_prefix_quotient_smul_zero_class_closed,
-    r2m_prefix_quotient_zero_smul_eq_zero_class_closed⟩
+    r2m_prefix_quotient_zero_smul_eq_zero_class_closed,
+    r2m_prefix_quotient_smul_eq_zero_class_iff_closed⟩
 
 /-- Boundary marker: scalar seminorm laws are now closed; quotient addition and
 full vector-space/typeclass promotion remain intentionally separate. -/
