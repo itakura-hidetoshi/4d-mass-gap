@@ -197,3 +197,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormDistTypeclass
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientMetricSpaceCandidate
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientReverseTriangle
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormDistanceControl
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormCauchyControl
