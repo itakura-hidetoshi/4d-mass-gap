@@ -194,3 +194,4 @@ import MGAP4D.MathlibAnalytic.R2MPrefixQuotientAddCommGroupCandidate
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientAddCommGroupInstance
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientModuleInstance
 import MGAP4D.MathlibAnalytic.R2MPrefixQuotientNormDistTypeclass
+import MGAP4D.MathlibAnalytic.R2MPrefixQuotientMetricSpaceCandidate
