@@ -69,9 +69,9 @@ theorem concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_inverse_un
 
 /-- Adapter predicate for the two-unit synthesis range `LinearEquiv` layer. -/
 def concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquivAdapter : Prop :=
-  ∀ {k n : ℕ}, k ≠ n →
-    Function.Injective (concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv (k := k) (n := n)) ∧
-    Function.Surjective (concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv (k := k) (n := n))
+  ∀ {k n : ℕ} (hkn : k ≠ n),
+    Function.Injective (concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn) ∧
+    Function.Surjective (concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn)
 
 /-- Adapter theorem for the two-unit synthesis range `LinearEquiv` layer. -/
 theorem concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_adapter_ready :
