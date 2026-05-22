@@ -11,7 +11,7 @@ noncomputable section
 an interval-like finite energy without invoking any infinite tail limit. -/
 def concreteL2GraphPairBlockEnergy
     (p : ConcreteL2GraphPairSpace) (M K : ℕ) : ℝ :=
-  ∑ n in Finset.range K, concreteL2GraphPairEnergyTerm p (M + n)
+  Finset.sum (Finset.range K) (fun n => concreteL2GraphPairEnergyTerm p (M + n))
 
 /-- Every finite block energy is nonnegative. -/
 theorem concrete_l2_graph_pair_block_energy_nonneg
@@ -59,21 +59,25 @@ theorem concrete_l2_graph_pair_block_energy_add_le
         (2 : ℝ) • concreteL2GraphPairBlockEnergy q M K := by
   unfold concreteL2GraphPairBlockEnergy
   have hsum :
-      (∑ n in Finset.range K,
-        concreteL2GraphPairEnergyTerm (concreteL2GraphPairAdd p q) (M + n)) ≤
-        ∑ n in Finset.range K,
-          ((2 : ℝ) • concreteL2GraphPairEnergyTerm p (M + n) +
-            (2 : ℝ) • concreteL2GraphPairEnergyTerm q (M + n)) := by
+      Finset.sum (Finset.range K)
+          (fun n => concreteL2GraphPairEnergyTerm (concreteL2GraphPairAdd p q) (M + n)) ≤
+        Finset.sum (Finset.range K)
+          (fun n =>
+            (2 : ℝ) • concreteL2GraphPairEnergyTerm p (M + n) +
+              (2 : ℝ) • concreteL2GraphPairEnergyTerm q (M + n)) := by
     exact Finset.sum_le_sum fun n _ =>
       concrete_l2_graph_pair_shell_add_le p q (M + n)
   have hsplit :
-      (∑ n in Finset.range K,
-          ((2 : ℝ) • concreteL2GraphPairEnergyTerm p (M + n) +
-            (2 : ℝ) • concreteL2GraphPairEnergyTerm q (M + n))) =
-        (2 : ℝ) • (∑ n in Finset.range K,
-          concreteL2GraphPairEnergyTerm p (M + n)) +
-          (2 : ℝ) • (∑ n in Finset.range K,
-            concreteL2GraphPairEnergyTerm q (M + n)) := by
+      Finset.sum (Finset.range K)
+          (fun n =>
+            (2 : ℝ) • concreteL2GraphPairEnergyTerm p (M + n) +
+              (2 : ℝ) • concreteL2GraphPairEnergyTerm q (M + n)) =
+        (2 : ℝ) •
+            Finset.sum (Finset.range K)
+              (fun n => concreteL2GraphPairEnergyTerm p (M + n)) +
+          (2 : ℝ) •
+            Finset.sum (Finset.range K)
+              (fun n => concreteL2GraphPairEnergyTerm q (M + n)) := by
     simp [Finset.sum_add_distrib, Finset.smul_sum]
   exact hsum.trans_eq hsplit
 
@@ -84,14 +88,15 @@ theorem concrete_l2_graph_pair_block_energy_smul_eq
       (c ^ 2) • concreteL2GraphPairBlockEnergy p M K := by
   unfold concreteL2GraphPairBlockEnergy
   calc
-    (∑ n in Finset.range K,
-        concreteL2GraphPairEnergyTerm (concreteL2GraphPairSmul c p) (M + n)) =
-        ∑ n in Finset.range K,
-          (c ^ 2) • concreteL2GraphPairEnergyTerm p (M + n) := by
+    Finset.sum (Finset.range K)
+        (fun n => concreteL2GraphPairEnergyTerm (concreteL2GraphPairSmul c p) (M + n)) =
+        Finset.sum (Finset.range K)
+          (fun n => (c ^ 2) • concreteL2GraphPairEnergyTerm p (M + n)) := by
       exact Finset.sum_congr rfl fun n _ =>
         concrete_l2_graph_pair_shell_smul_eq c p (M + n)
-    _ = (c ^ 2) • (∑ n in Finset.range K,
-        concreteL2GraphPairEnergyTerm p (M + n)) := by
+    _ = (c ^ 2) •
+          Finset.sum (Finset.range K)
+            (fun n => concreteL2GraphPairEnergyTerm p (M + n)) := by
       exact (Finset.smul_sum
         (s := Finset.range K)
         (f := fun n : ℕ => concreteL2GraphPairEnergyTerm p (M + n))
