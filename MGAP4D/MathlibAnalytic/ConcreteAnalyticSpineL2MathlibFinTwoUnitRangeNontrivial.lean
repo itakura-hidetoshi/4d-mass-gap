@@ -15,7 +15,9 @@ theorem concrete_l2_mathlib_fin_two_unit_first_range_vector_ne_zero
   have hval := congrArg
     (fun v : concreteL2MathlibFinTwoUnitSynthesisRange k n =>
       (v : lp (fun _ : ℕ => ℝ) 2)) hzero
-  simpa [concreteL2MathlibFinTwoUnitFirstRangeVector] using hval
+  have hunit : concreteL2MathlibUnit k = 0 := by
+    simpa [concreteL2MathlibFinTwoUnitFirstRangeVector] using hval
+  exact concrete_l2_mathlib_unit_ne_zero k hunit
 
 /-- The second distinguished range vector is nonzero. -/
 theorem concrete_l2_mathlib_fin_two_unit_second_range_vector_ne_zero
@@ -25,7 +27,9 @@ theorem concrete_l2_mathlib_fin_two_unit_second_range_vector_ne_zero
   have hval := congrArg
     (fun v : concreteL2MathlibFinTwoUnitSynthesisRange k n =>
       (v : lp (fun _ : ℕ => ℝ) 2)) hzero
-  simpa [concreteL2MathlibFinTwoUnitSecondRangeVector] using hval
+  have hunit : concreteL2MathlibUnit n = 0 := by
+    simpa [concreteL2MathlibFinTwoUnitSecondRangeVector] using hval
+  exact concrete_l2_mathlib_unit_ne_zero n hunit
 
 /-- The two distinguished range vectors are distinct when the selected indices
 are distinct. -/
