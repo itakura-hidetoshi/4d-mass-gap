@@ -7,90 +7,71 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- A direct `Nontrivial` instance for the two-unit synthesis range when the
-selected indices are distinct.
+/-- A local `Nontrivial` theorem for the two-unit synthesis range.
 
-This is intentionally packaged as a theorem rather than a global instance, so it
-cannot unexpectedly affect typeclass search downstream. -/
+Even when the two selected indices coincide, the range contains the nonzero
+coordinate unit.  This is intentionally packaged as a theorem rather than a
+global instance, so it cannot unexpectedly affect typeclass search downstream. -/
 theorem concrete_l2_mathlib_fin_two_unit_range_nontrivial
-    {k n : ℕ} (hkn : k ≠ n) :
+    (k n : ℕ) :
     Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n) := by
-  refine ⟨⟨
-    concreteL2MathlibFinTwoUnitFirstRangeVector k n,
-    concreteL2MathlibFinTwoUnitSecondRangeVector k n,
-    ?_⟩⟩
-  exact concrete_l2_mathlib_fin_two_unit_range_vectors_ne hkn
+  refine ⟨⟨0, concreteL2MathlibFinTwoUnitFirstRangeVector k n, ?_⟩⟩
+  intro hzero
+  exact concrete_l2_mathlib_fin_two_unit_first_range_vector_ne_zero k n hzero.symm
 
-/-- A direct `Nontrivial` instance from positive distance of the two distinguished
+/-- A direct `Nontrivial` theorem from positive distance of the two distinguished
 range vectors. -/
 theorem concrete_l2_mathlib_fin_two_unit_range_nontrivial_of_dist_pos
     {k n : ℕ}
-    (hpos : 0 < dist (concreteL2MathlibFinTwoUnitFirstRangeVector k n)
+    (_hpos : 0 < dist (concreteL2MathlibFinTwoUnitFirstRangeVector k n)
       (concreteL2MathlibFinTwoUnitSecondRangeVector k n)) :
     Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n) := by
-  exact concrete_l2_mathlib_fin_two_unit_range_nontrivial
-    ((concrete_l2_mathlib_fin_two_unit_range_vectors_dist_pos_iff).mp hpos)
+  exact concrete_l2_mathlib_fin_two_unit_range_nontrivial k n
 
 /-- The distinguished range-vector inequality gives a `Nontrivial` witness. -/
 theorem concrete_l2_mathlib_fin_two_unit_range_nontrivial_of_vectors_ne
     {k n : ℕ}
-    (hne : concreteL2MathlibFinTwoUnitFirstRangeVector k n ≠
+    (_hne : concreteL2MathlibFinTwoUnitFirstRangeVector k n ≠
       concreteL2MathlibFinTwoUnitSecondRangeVector k n) :
     Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n) := by
-  refine ⟨⟨
-    concreteL2MathlibFinTwoUnitFirstRangeVector k n,
-    concreteL2MathlibFinTwoUnitSecondRangeVector k n,
-    hne⟩⟩
+  exact concrete_l2_mathlib_fin_two_unit_range_nontrivial k n
 
-/-- The two-unit range is nontrivial iff the selected indices are distinct. -/
-theorem concrete_l2_mathlib_fin_two_unit_range_nontrivial_iff
-    {k n : ℕ} :
-    Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n) ↔ k ≠ n := by
-  constructor
-  · intro hnon hkn
-    have hsub : Subsingleton (concreteL2MathlibFinTwoUnitSynthesisRange k n) := by
-      subst hkn
-      infer_instance
-    exact not_subsingleton_iff_nontrivial.mpr hnon hsub
-  · intro hkn
-    exact concrete_l2_mathlib_fin_two_unit_range_nontrivial hkn
+/-- The two-unit range is always nontrivial. -/
+theorem concrete_l2_mathlib_fin_two_unit_range_nontrivial_all
+    (k n : ℕ) :
+    Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n) :=
+  concrete_l2_mathlib_fin_two_unit_range_nontrivial k n
 
-/-- The two-unit range is subsingleton iff the selected indices are equal. -/
-theorem concrete_l2_mathlib_fin_two_unit_range_subsingleton_iff
-    {k n : ℕ} :
-    Subsingleton (concreteL2MathlibFinTwoUnitSynthesisRange k n) ↔ k = n := by
-  constructor
-  · intro hsub
-    by_contra hkn
-    exact concrete_l2_mathlib_fin_two_unit_range_not_subsingleton hkn hsub
-  · intro hkn
-    subst hkn
-    infer_instance
+/-- If the selected indices are distinct, the range is not subsingleton. -/
+theorem concrete_l2_mathlib_fin_two_unit_range_not_subsingleton_of_ne
+    {k n : ℕ} (hkn : k ≠ n) :
+    ¬ Subsingleton (concreteL2MathlibFinTwoUnitSynthesisRange k n) :=
+  concrete_l2_mathlib_fin_two_unit_range_not_subsingleton hkn
 
 /-- Adapter predicate for the local `Nontrivial` surface of the two-unit synthesis
 range. -/
 def concreteL2MathlibFinTwoUnitRangeNontrivialInstanceAdapter : Prop :=
-  (∀ {k n : ℕ}, k ≠ n →
+  (∀ k n : ℕ,
     Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n)) ∧
-  (∀ {k n : ℕ},
-    (Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n) ↔ k ≠ n)) ∧
-  (∀ {k n : ℕ},
-    (Subsingleton (concreteL2MathlibFinTwoUnitSynthesisRange k n) ↔ k = n))
+  (∀ {k n : ℕ}, k ≠ n →
+    ¬ Subsingleton (concreteL2MathlibFinTwoUnitSynthesisRange k n)) ∧
+  (∀ {k n : ℕ}, k ≠ n →
+    Nontrivial (concreteL2MathlibFinTwoUnitSynthesisRange k n))
 
 /-- Adapter theorem for the local `Nontrivial` surface of the two-unit synthesis
 range. -/
 theorem concrete_l2_mathlib_fin_two_unit_range_nontrivial_instance_adapter_ready :
     concreteL2MathlibFinTwoUnitRangeNontrivialInstanceAdapter := by
   exact ⟨
-    by intro k n hkn; exact concrete_l2_mathlib_fin_two_unit_range_nontrivial hkn,
-    by intro k n; exact concrete_l2_mathlib_fin_two_unit_range_nontrivial_iff,
-    by intro k n; exact concrete_l2_mathlib_fin_two_unit_range_subsingleton_iff⟩
+    by intro k n; exact concrete_l2_mathlib_fin_two_unit_range_nontrivial k n,
+    by intro k n hkn; exact concrete_l2_mathlib_fin_two_unit_range_not_subsingleton_of_ne hkn,
+    by intro k n _hkn; exact concrete_l2_mathlib_fin_two_unit_range_nontrivial k n⟩
 
 /-- Surface for local nontriviality of the two-unit synthesis range.
 
-The theorem supplies `Nontrivial range(T)` from `k ≠ n` without installing a global
-instance.  This keeps typeclass effects local while preserving the geometric
-meaning of the two distinguished range vectors. -/
+The theorem supplies `Nontrivial range(T)` for all `k,n` without installing a
+global instance.  For `k ≠ n`, it also preserves the stronger not-subsingleton
+witness from the two distinguished range vectors. -/
 structure ConcreteL2MathlibFinTwoUnitRangeNontrivialInstanceSurface where
   rangeGeometryReady : concreteAnalyticSpineL2MathlibFinTwoUnitRangeGeometrySurfaceReady
   rangeNontrivialInstanceAdapter : concreteL2MathlibFinTwoUnitRangeNontrivialInstanceAdapter
