@@ -20,12 +20,10 @@ def concreteL2MathlibFinTwoUnitSynthesisRangeMap (k n : ℕ) :
       concrete_l2_mathlib_fin_two_unit_synthesis_mem_range k n c⟩
   map_add' := by
     intro c d
-    ext
-    exact map_add (concreteL2MathlibFinTwoUnitSynthesisLinearMap k n) c d
+    exact Subtype.ext (map_add (concreteL2MathlibFinTwoUnitSynthesisLinearMap k n) c d)
   map_smul' := by
     intro a c
-    ext
-    exact map_smul (concreteL2MathlibFinTwoUnitSynthesisLinearMap k n) a c
+    exact Subtype.ext (map_smul (concreteL2MathlibFinTwoUnitSynthesisLinearMap k n) a c)
 
 /-- The range-restricted synthesis map has the original synthesis vector as its
 underlying value. -/
@@ -53,8 +51,7 @@ theorem concrete_l2_mathlib_fin_two_unit_synthesis_range_map_surjective
   intro v
   rcases v.property with ⟨c, hc⟩
   refine ⟨c, ?_⟩
-  ext
-  exact hc
+  exact Subtype.ext hc
 
 /-- The range-restricted synthesis map is bijective when the two selected indices
 are distinct. -/
