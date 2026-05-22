@@ -65,7 +65,7 @@ theorem concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_inverse_un
     {v : concreteL2MathlibFinTwoUnitSynthesisRange k n} {c : Fin 2 → ℝ}
     (hc : concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c = v) :
     c = (concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn).symm v := by
-  exact Eq.symm ((concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn).symm_apply_eq.mpr hc)
+  exact Eq.symm ((concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn).symm_apply_eq.mpr hc.symm)
 
 /-- Adapter predicate for the two-unit synthesis range `LinearEquiv` layer. -/
 def concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquivAdapter : Prop :=
