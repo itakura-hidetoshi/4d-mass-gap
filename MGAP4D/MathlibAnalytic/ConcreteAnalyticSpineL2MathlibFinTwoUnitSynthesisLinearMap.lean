@@ -23,7 +23,7 @@ def concreteL2MathlibFinTwoUnitSynthesisLinearMap (k n : ℕ) :
   map_smul' := by
     intro a c
     unfold concreteL2MathlibFinTwoUnitSynthesis
-    simp [Pi.smul_apply, Finset.smul_sum, smul_smul]
+    simp [Pi.smul_apply, smul_smul]
 
 /-- The linear map agrees definitionally with the named synthesis function. -/
 theorem concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply
