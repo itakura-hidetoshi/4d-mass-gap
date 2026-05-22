@@ -85,13 +85,13 @@ theorem concrete_l2_mathlib_fin_two_unit_range_certificate_two_vector_export
 
 /-- Adapter predicate for range-certificate exports. -/
 def concreteL2MathlibFinTwoUnitRangeCertificateExportsAdapter : Prop :=
-  (∀ {k n : ℕ} (hkn : k ≠ n),
+  (∀ {k n : ℕ} (_hkn : k ≠ n),
     Function.Bijective (concreteL2MathlibFinTwoUnitSynthesisRangeMap k n)) ∧
   (∀ {k n : ℕ} (hkn : k ≠ n),
     concreteL2MathlibFinTwoUnitRangeCoordinates hkn
         (concreteL2MathlibFinTwoUnitFirstRangeVector k n) =
       (fun i : Fin 2 => if i = 0 then (1 : ℝ) else 0)) ∧
-  (∀ {k n : ℕ} (hkn : k ≠ n),
+  (∀ {k n : ℕ} (_hkn : k ≠ n),
     ‖concreteL2MathlibFinTwoUnitFirstRangeVector k n‖ = 1 ∧
     ‖concreteL2MathlibFinTwoUnitSecondRangeVector k n‖ = 1 ∧
     dist (concreteL2MathlibFinTwoUnitFirstRangeVector k n)
