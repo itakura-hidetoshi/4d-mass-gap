@@ -19,17 +19,20 @@ theorem concrete_l2_mathlib_fin_two_unit_range_decomposition_val
     (v : lp (fun _ : ℕ => ℝ) 2) =
       concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v • concreteL2MathlibUnit k +
         concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v • concreteL2MathlibUnit n := by
-  have hsynth := congrArg
-    (fun w : concreteL2MathlibFinTwoUnitSynthesisRange k n =>
-      (w : lp (fun _ : ℕ => ℝ) 2))
-    (concrete_l2_mathlib_fin_two_unit_range_coordinates_synthesize hkn v)
-  rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val] at hsynth
-  rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum] at hsynth
-  rw [concrete_l2_mathlib_fin_two_unit_sum_eq_explicit] at hsynth
-  rw [concreteL2MathlibFinTwoUnitRangeFirstCoordinate,
-    concreteL2MathlibFinTwoUnitRangeSecondCoordinate]
-  rw [concreteL2MathlibFinTwoUnitFamily] at hsynth
-  exact hsynth.symm
+  have hsynth := concrete_l2_mathlib_fin_two_unit_range_coordinates_synthesize_val hkn v
+  have hsum :
+      ((concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn
+          (concreteL2MathlibFinTwoUnitRangeCoordinates hkn v)) :
+          lp (fun _ : ℕ => ℝ) 2) =
+        concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v • concreteL2MathlibUnit k +
+          concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v • concreteL2MathlibUnit n := by
+    rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
+    rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
+    rw [concrete_l2_mathlib_fin_two_unit_sum_eq_explicit]
+    simp [concreteL2MathlibFinTwoUnitFamily,
+      concreteL2MathlibFinTwoUnitRangeFirstCoordinate,
+      concreteL2MathlibFinTwoUnitRangeSecondCoordinate]
+  exact hsynth.symm.trans hsum
 
 /-- Short alias for the first reconstructed coefficient in the two-unit range. -/
 def concreteL2MathlibFinTwoUnitRangeDecompositionLeftCoeff
@@ -62,23 +65,17 @@ theorem concrete_l2_mathlib_fin_two_unit_range_decomposition_left_unique
     (hv : (v : lp (fun _ : ℕ => ℝ) 2) =
       a • concreteL2MathlibUnit k + b • concreteL2MathlibUnit n) :
     a = concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v := by
-  have hdec := concrete_l2_mathlib_fin_two_unit_range_decomposition_val hkn v
-  have hlin :
-      (a - concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v) • concreteL2MathlibUnit k +
-        (b - concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v) • concreteL2MathlibUnit n = 0 := by
-    rw [← sub_eq_zero]
-    calc
-      a • concreteL2MathlibUnit k + b • concreteL2MathlibUnit n -
-          (concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v • concreteL2MathlibUnit k +
-            concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v • concreteL2MathlibUnit n)
-        = (a - concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v) • concreteL2MathlibUnit k +
-            (b - concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v) • concreteL2MathlibUnit n := by
-          module
-      _ = 0 := by
-          rw [← hv, ← hdec]
-          simp
-  have hcoeff := concrete_l2_mathlib_two_unit_linear_independent_coefficients hkn hlin
-  exact sub_eq_zero.mp hcoeff.1
+  let c : Fin 2 → ℝ := fun i => if i = 0 then a else b
+  have hc : concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c = v := by
+    apply Subtype.ext
+    rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
+    rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
+    rw [concrete_l2_mathlib_fin_two_unit_sum_eq_explicit]
+    simpa [c, concreteL2MathlibFinTwoUnitFamily] using hv.symm
+  have hcoords : c = concreteL2MathlibFinTwoUnitRangeCoordinates hkn v :=
+    concrete_l2_mathlib_fin_two_unit_range_coordinates_unique hkn hc
+  have h0 := congrArg (fun f : Fin 2 → ℝ => f 0) hcoords
+  simpa [c, concreteL2MathlibFinTwoUnitRangeFirstCoordinate] using h0
 
 /-- If a range vector is represented by a two-term coordinate-unit combination,
 then the right scalar is its reconstructed second coordinate. -/
@@ -88,23 +85,17 @@ theorem concrete_l2_mathlib_fin_two_unit_range_decomposition_right_unique
     (hv : (v : lp (fun _ : ℕ => ℝ) 2) =
       a • concreteL2MathlibUnit k + b • concreteL2MathlibUnit n) :
     b = concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v := by
-  have hdec := concrete_l2_mathlib_fin_two_unit_range_decomposition_val hkn v
-  have hlin :
-      (a - concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v) • concreteL2MathlibUnit k +
-        (b - concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v) • concreteL2MathlibUnit n = 0 := by
-    rw [← sub_eq_zero]
-    calc
-      a • concreteL2MathlibUnit k + b • concreteL2MathlibUnit n -
-          (concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v • concreteL2MathlibUnit k +
-            concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v • concreteL2MathlibUnit n)
-        = (a - concreteL2MathlibFinTwoUnitRangeFirstCoordinate hkn v) • concreteL2MathlibUnit k +
-            (b - concreteL2MathlibFinTwoUnitRangeSecondCoordinate hkn v) • concreteL2MathlibUnit n := by
-          module
-      _ = 0 := by
-          rw [← hv, ← hdec]
-          simp
-  have hcoeff := concrete_l2_mathlib_two_unit_linear_independent_coefficients hkn hlin
-  exact sub_eq_zero.mp hcoeff.2
+  let c : Fin 2 → ℝ := fun i => if i = 0 then a else b
+  have hc : concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c = v := by
+    apply Subtype.ext
+    rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
+    rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
+    rw [concrete_l2_mathlib_fin_two_unit_sum_eq_explicit]
+    simpa [c, concreteL2MathlibFinTwoUnitFamily] using hv.symm
+  have hcoords : c = concreteL2MathlibFinTwoUnitRangeCoordinates hkn v :=
+    concrete_l2_mathlib_fin_two_unit_range_coordinates_unique hkn hc
+  have h1 := congrArg (fun f : Fin 2 → ℝ => f 1) hcoords
+  simpa [c, concreteL2MathlibFinTwoUnitRangeSecondCoordinate] using h1
 
 /-- Adapter predicate for two-unit range decomposition and coefficient uniqueness. -/
 def concreteL2MathlibFinTwoUnitRangeDecompositionAdapter : Prop :=
