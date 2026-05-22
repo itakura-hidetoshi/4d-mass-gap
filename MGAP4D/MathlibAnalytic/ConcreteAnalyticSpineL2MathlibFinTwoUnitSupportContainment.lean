@@ -40,7 +40,13 @@ theorem concrete_l2_mathlib_fin_two_unit_explicit_supported_on_two
     concrete_l2_mathlib_unit_apply_ne (k := k) (n := j) hjk
   have hn0 : concreteL2MathlibUnit n j = 0 :=
     concrete_l2_mathlib_unit_apply_ne (k := n) (n := j) hjn
-  simpa [Pi.add_apply, Pi.smul_apply, hk0, hn0]
+  have hleft : (c 0 • concreteL2MathlibUnit k : lp (fun _ : ℕ => ℝ) 2) j = 0 := by
+    simpa [hk0]
+  have hright : (c 1 • concreteL2MathlibUnit n : lp (fun _ : ℕ => ℝ) 2) j = 0 := by
+    simpa [hn0]
+  change (c 0 • concreteL2MathlibUnit k : lp (fun _ : ℕ => ℝ) 2) j +
+      (c 1 • concreteL2MathlibUnit n : lp (fun _ : ℕ => ℝ) 2) j = 0
+  simp [hleft, hright]
 
 /-- The named two-unit synthesis vector is supported on the two selected indices. -/
 theorem concrete_l2_mathlib_fin_two_unit_synthesis_supported_on_two
