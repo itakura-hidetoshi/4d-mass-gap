@@ -15,8 +15,8 @@ theorem concrete_l2_graph_pair_partial_energy_mono
     concreteL2GraphPairPartialEnergy p M ≤ concreteL2GraphPairPartialEnergy p N := by
   induction hMN with
   | refl => rfl
-  | step n _ ih =>
-      exact le_trans ih (concrete_l2_graph_pair_partial_energy_le_succ_from_shell p n)
+  | step h ih =>
+      exact le_trans ih (concrete_l2_graph_pair_partial_energy_le_succ_from_shell p _)
 
 /-- Monotone partial-energy sequence, packaged as an order-theoretic `Monotone`
 statement. -/
