@@ -52,28 +52,34 @@ indices are pairwise distinct. -/
 theorem concrete_l2_mathlib_fin_three_unit_family_injective
     {a b c : ℕ} (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
     Function.Injective (concreteL2MathlibFinThreeUnitFamily a b c) := by
+  have hpairs :=
+    concrete_l2_mathlib_fin_three_unit_family_pairwise_distinct_entries
+      (a := a) (b := b) (c := c) hab hac hbc
+  have h01 :
+      concreteL2MathlibFinThreeUnitFamily a b c 0 ≠
+        concreteL2MathlibFinThreeUnitFamily a b c 1 := hpairs.1
+  have h02 :
+      concreteL2MathlibFinThreeUnitFamily a b c 0 ≠
+        concreteL2MathlibFinThreeUnitFamily a b c 2 := hpairs.2.1
+  have h12 :
+      concreteL2MathlibFinThreeUnitFamily a b c 1 ≠
+        concreteL2MathlibFinThreeUnitFamily a b c 2 := hpairs.2.2
   intro i j hij
   fin_cases i <;> fin_cases j
   · rfl
   · exfalso
-    exact (by simpa [concreteL2MathlibFinThreeUnitFamily] using
-      concrete_l2_mathlib_unit_ne_of_ne hab) hij
+    exact h01 hij
   · exfalso
-    exact (by simpa [concreteL2MathlibFinThreeUnitFamily] using
-      concrete_l2_mathlib_unit_ne_of_ne hac) hij
+    exact h02 hij
   · exfalso
-    exact (by simpa [concreteL2MathlibFinThreeUnitFamily] using
-      concrete_l2_mathlib_unit_ne_of_ne hab.symm) hij
+    exact h01 hij.symm
   · rfl
   · exfalso
-    exact (by simpa [concreteL2MathlibFinThreeUnitFamily] using
-      concrete_l2_mathlib_unit_ne_of_ne hbc) hij
+    exact h12 hij
   · exfalso
-    exact (by simpa [concreteL2MathlibFinThreeUnitFamily] using
-      concrete_l2_mathlib_unit_ne_of_ne hac.symm) hij
+    exact h02 hij.symm
   · exfalso
-    exact (by simpa [concreteL2MathlibFinThreeUnitFamily] using
-      concrete_l2_mathlib_unit_ne_of_ne hbc.symm) hij
+    exact h12 hij.symm
   · rfl
 
 /-- Each entry of the three-element coordinate-unit family is nonzero. -/
@@ -126,9 +132,6 @@ claim three-unit linear independence, general finite-family linear independence,
 a basis theorem, dense span, finite-support-domain equivalence, or any operator
 or spectral theorem. -/
 structure ConcreteL2MathlibFinThreeUnitFamilySurface where
-  twoUnitUltimateFacadeReady :
-    ∀ {k n : ℕ}, k ≠ n →
-      concreteL2MathlibFinTwoUnitRangeCoordinateUltimateSurfaceReady k n
   finThreeFamilyAdapter : concreteL2MathlibFinThreeUnitFamilyAdapter
   boundaryNotThreeUnitLinearIndependence : Prop
   boundaryNotGeneralFiniteFamilyLinearIndependence : Prop
@@ -143,10 +146,7 @@ structure ConcreteL2MathlibFinThreeUnitFamilySurface where
 /-- Concrete `Fin 3` coordinate-unit family surface. -/
 def concreteL2MathlibFinThreeUnitFamilySurface :
     ConcreteL2MathlibFinThreeUnitFamilySurface :=
-  { twoUnitUltimateFacadeReady := by
-      intro k n hkn
-      exact concrete_l2_mathlib_fin_two_unit_range_coordinate_ultimate_surface_ready hkn
-    finThreeFamilyAdapter := concrete_l2_mathlib_fin_three_unit_family_adapter_ready
+  { finThreeFamilyAdapter := concrete_l2_mathlib_fin_three_unit_family_adapter_ready
     boundaryNotThreeUnitLinearIndependence := True
     boundaryNotGeneralFiniteFamilyLinearIndependence := True
     boundaryNotBasisTheorem := True
