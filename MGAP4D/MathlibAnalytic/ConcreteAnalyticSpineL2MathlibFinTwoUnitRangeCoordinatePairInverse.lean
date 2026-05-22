@@ -32,10 +32,15 @@ theorem concrete_l2_mathlib_fin_two_unit_range_coordinate_pair_linear_map_inject
     {k n : ℕ} (hkn : k ≠ n) :
     Function.Injective (concreteL2MathlibFinTwoUnitRangeCoordinatePairLinearMap hkn) := by
   intro v w hvw
-  have hv := concrete_l2_mathlib_fin_two_unit_range_coordinate_pair_right_inverse hkn v
-  have hw := concrete_l2_mathlib_fin_two_unit_range_coordinate_pair_right_inverse hkn w
-  rw [hvw] at hv
-  exact hv.trans hw.symm
+  calc
+    v = concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn
+        (concreteL2MathlibFinTwoUnitRangeCoordinatePairLinearMap hkn v) := by
+      exact (concrete_l2_mathlib_fin_two_unit_range_coordinate_pair_right_inverse hkn v).symm
+    _ = concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn
+        (concreteL2MathlibFinTwoUnitRangeCoordinatePairLinearMap hkn w) := by
+      rw [hvw]
+    _ = w := by
+      exact concrete_l2_mathlib_fin_two_unit_range_coordinate_pair_right_inverse hkn w
 
 /-- The coordinate-pair linear map is surjective onto the two-coordinate
 coefficient space. -/
