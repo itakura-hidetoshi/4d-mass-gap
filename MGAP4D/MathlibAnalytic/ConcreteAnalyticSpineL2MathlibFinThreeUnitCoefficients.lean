@@ -26,24 +26,54 @@ theorem concrete_l2_mathlib_fin_three_unit_coefficients_zero
         r 1 • concreteL2MathlibUnit b +
           r 2 • concreteL2MathlibUnit c = 0 := by
     simpa [concreteL2MathlibFinThreeUnitFamily] using hlin
-  have ha_fun := congrArg (fun x : lp (fun _ : ℕ => ℝ) 2 => x a) hlin'
+  have ha_fun :
+      (r 0 • concreteL2MathlibUnit a +
+        r 1 • concreteL2MathlibUnit b +
+          r 2 • concreteL2MathlibUnit c) a =
+        (0 : lp (fun _ : ℕ => ℝ) 2) a := by
+    exact congrArg (fun x : lp (fun _ : ℕ => ℝ) 2 => x a) hlin'
+  have ha_coord :
+      r 0 * concreteL2MathlibUnit a a +
+        (r 1 * concreteL2MathlibUnit b a +
+          r 2 * concreteL2MathlibUnit c a) = 0 := by
+    simpa using ha_fun
   have ha : r 0 = 0 := by
-    simpa [concrete_l2_mathlib_unit_apply_self,
-      concrete_l2_mathlib_unit_apply_of_ne hab.symm,
-      concrete_l2_mathlib_unit_apply_of_ne hac.symm,
-      add_assoc] using ha_fun
-  have hb_fun := congrArg (fun x : lp (fun _ : ℕ => ℝ) 2 => x b) hlin'
+    rw [concrete_l2_mathlib_unit_apply_self a,
+      concrete_l2_mathlib_unit_apply_ne (k := b) (n := a) hab,
+      concrete_l2_mathlib_unit_apply_ne (k := c) (n := a) hac] at ha_coord
+    simpa using ha_coord
+  have hb_fun :
+      (r 0 • concreteL2MathlibUnit a +
+        r 1 • concreteL2MathlibUnit b +
+          r 2 • concreteL2MathlibUnit c) b =
+        (0 : lp (fun _ : ℕ => ℝ) 2) b := by
+    exact congrArg (fun x : lp (fun _ : ℕ => ℝ) 2 => x b) hlin'
+  have hb_coord :
+      r 0 * concreteL2MathlibUnit a b +
+        (r 1 * concreteL2MathlibUnit b b +
+          r 2 * concreteL2MathlibUnit c b) = 0 := by
+    simpa using hb_fun
   have hb : r 1 = 0 := by
-    simpa [concrete_l2_mathlib_unit_apply_self,
-      concrete_l2_mathlib_unit_apply_of_ne hab,
-      concrete_l2_mathlib_unit_apply_of_ne hbc.symm,
-      add_assoc] using hb_fun
-  have hc_fun := congrArg (fun x : lp (fun _ : ℕ => ℝ) 2 => x c) hlin'
+    rw [concrete_l2_mathlib_unit_apply_ne (k := a) (n := b) hab.symm,
+      concrete_l2_mathlib_unit_apply_self b,
+      concrete_l2_mathlib_unit_apply_ne (k := c) (n := b) hbc] at hb_coord
+    simpa using hb_coord
+  have hc_fun :
+      (r 0 • concreteL2MathlibUnit a +
+        r 1 • concreteL2MathlibUnit b +
+          r 2 • concreteL2MathlibUnit c) c =
+        (0 : lp (fun _ : ℕ => ℝ) 2) c := by
+    exact congrArg (fun x : lp (fun _ : ℕ => ℝ) 2 => x c) hlin'
+  have hc_coord :
+      r 0 * concreteL2MathlibUnit a c +
+        (r 1 * concreteL2MathlibUnit b c +
+          r 2 * concreteL2MathlibUnit c c) = 0 := by
+    simpa using hc_fun
   have hc : r 2 = 0 := by
-    simpa [concrete_l2_mathlib_unit_apply_self,
-      concrete_l2_mathlib_unit_apply_of_ne hac,
-      concrete_l2_mathlib_unit_apply_of_ne hbc,
-      add_assoc] using hc_fun
+    rw [concrete_l2_mathlib_unit_apply_ne (k := a) (n := c) hac.symm,
+      concrete_l2_mathlib_unit_apply_ne (k := b) (n := c) hbc.symm,
+      concrete_l2_mathlib_unit_apply_self c] at hc_coord
+    simpa using hc_coord
   intro i
   fin_cases i
   · exact ha
