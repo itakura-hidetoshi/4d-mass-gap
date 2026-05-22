@@ -1,6 +1,13 @@
 name: PR Lean Fast Check
 
 on:
+  workflow_dispatch:
+    inputs:
+      base_ref:
+        description: "Base ref passed to scripts/check_changed_lean.sh"
+        required: false
+        default: "origin/main"
+        type: string
   pull_request:
     branches:
       - main
@@ -23,6 +30,7 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event.inputs.base_ref || 'origin/main' }}
 
 jobs:
   pr-lean-fast-check:
@@ -63,4 +71,5 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          bash scripts/check_changed_lean.sh origin/main
+          echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
