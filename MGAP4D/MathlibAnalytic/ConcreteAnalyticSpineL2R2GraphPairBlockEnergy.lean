@@ -78,7 +78,7 @@ theorem concrete_l2_graph_pair_block_energy_add_le
           (2 : ℝ) •
             Finset.sum (Finset.range K)
               (fun n => concreteL2GraphPairEnergyTerm q (M + n)) := by
-    simp [Finset.sum_add_distrib, Finset.smul_sum]
+    simp [Finset.sum_add_distrib, smul_eq_mul, Finset.mul_sum]
   exact hsum.trans_eq hsplit
 
 /-- Finite block scalar-energy law. -/
@@ -97,10 +97,7 @@ theorem concrete_l2_graph_pair_block_energy_smul_eq
     _ = (c ^ 2) •
           Finset.sum (Finset.range K)
             (fun n => concreteL2GraphPairEnergyTerm p (M + n)) := by
-      exact (Finset.smul_sum
-        (s := Finset.range K)
-        (f := fun n : ℕ => concreteL2GraphPairEnergyTerm p (M + n))
-        (a := c ^ 2)).symm
+      simp [smul_eq_mul, Finset.mul_sum]
 
 /-- R2o graph-pair block-energy surface.  This is a finite interval-energy layer:
 it prepares later tail/Cauchy arguments while still refusing every infinite
