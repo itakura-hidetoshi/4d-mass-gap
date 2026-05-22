@@ -45,11 +45,16 @@ theorem concrete_l2_mathlib_fin_two_unit_first_range_coordinates
   have hc :
       concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c =
         concreteL2MathlibFinTwoUnitFirstRangeVector k n := by
-    apply Subtype.ext
-    rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
-    rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
-    rw [Fin.sum_univ_two]
-    simp [c, concreteL2MathlibFinTwoUnitFamily]
+    have hsynth :
+        ((concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c :
+            concreteL2MathlibFinTwoUnitSynthesisRange k n) :
+            lp (fun _ : ℕ => ℝ) 2) = concreteL2MathlibUnit k := by
+      rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
+      rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
+      rw [Fin.sum_univ_two]
+      simp [c, concreteL2MathlibFinTwoUnitFamily]
+    exact Subtype.ext
+      (hsynth.trans (concrete_l2_mathlib_fin_two_unit_first_range_vector_val k n).symm)
   have huniq :
       c = concreteL2MathlibFinTwoUnitRangeCoordinates hkn
         (concreteL2MathlibFinTwoUnitFirstRangeVector k n) :=
@@ -66,11 +71,16 @@ theorem concrete_l2_mathlib_fin_two_unit_second_range_coordinates
   have hc :
       concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c =
         concreteL2MathlibFinTwoUnitSecondRangeVector k n := by
-    apply Subtype.ext
-    rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
-    rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
-    rw [Fin.sum_univ_two]
-    simp [c, concreteL2MathlibFinTwoUnitFamily]
+    have hsynth :
+        ((concreteL2MathlibFinTwoUnitSynthesisRangeLinearEquiv hkn c :
+            concreteL2MathlibFinTwoUnitSynthesisRange k n) :
+            lp (fun _ : ℕ => ℝ) 2) = concreteL2MathlibUnit n := by
+      rw [concrete_l2_mathlib_fin_two_unit_synthesis_range_linear_equiv_apply_val]
+      rw [concrete_l2_mathlib_fin_two_unit_synthesis_linear_map_apply_eq_sum]
+      rw [Fin.sum_univ_two]
+      simp [c, concreteL2MathlibFinTwoUnitFamily]
+    exact Subtype.ext
+      (hsynth.trans (concrete_l2_mathlib_fin_two_unit_second_range_vector_val k n).symm)
   have huniq :
       c = concreteL2MathlibFinTwoUnitRangeCoordinates hkn
         (concreteL2MathlibFinTwoUnitSecondRangeVector k n) :=
