@@ -32,7 +32,7 @@ theorem concrete_l2_graph_pair_block_energy_le_later_partial_energy
       concreteL2GraphPairPartialEnergy p (M + K) := by
   rw [concrete_l2_graph_pair_partial_energy_add_block_energy]
   have hnonneg : 0 ≤ concreteL2GraphPairPartialEnergy p M :=
-    concrete_l2_graph_pair_partial_energy_nonneg_from_mono p M
+    concrete_l2_graph_pair_partial_energy_nonneg p M
   simpa [add_comm, add_left_comm, add_assoc] using
     (le_add_of_nonneg_left hnonneg :
       concreteL2GraphPairBlockEnergy p M K ≤
