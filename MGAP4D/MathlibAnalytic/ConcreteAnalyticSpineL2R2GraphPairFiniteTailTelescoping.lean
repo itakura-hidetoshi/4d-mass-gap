@@ -19,7 +19,7 @@ theorem concrete_l2_graph_pair_partial_energy_add_block_energy
   | zero =>
       simp [concrete_l2_graph_pair_block_energy_zero_width]
   | succ K ih =>
-      rw [Nat.add_assoc]
+      rw [Nat.add_succ]
       rw [concrete_l2_graph_pair_partial_energy_succ_eq]
       rw [ih]
       rw [concrete_l2_graph_pair_block_energy_succ_eq]
