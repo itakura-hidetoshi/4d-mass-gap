@@ -67,16 +67,16 @@ theorem concrete_l2_mathlib_fin_two_unit_zero_first_range_dist_eq_one
     (k n : ℕ) :
     dist (concreteL2MathlibFinTwoUnitZeroRangeVector k n)
         (concreteL2MathlibFinTwoUnitFirstRangeVector k n) = 1 := by
-  rw [dist_zero_left]
-  exact concrete_l2_mathlib_fin_two_unit_first_range_vector_norm_eq_one k n
+  simpa [concreteL2MathlibFinTwoUnitZeroRangeVector, dist_zero_left]
+    using concrete_l2_mathlib_fin_two_unit_first_range_vector_norm_eq_one k n
 
 /-- The distance from zero to the second distinguished range vector is one. -/
 theorem concrete_l2_mathlib_fin_two_unit_zero_second_range_dist_eq_one
     (k n : ℕ) :
     dist (concreteL2MathlibFinTwoUnitZeroRangeVector k n)
         (concreteL2MathlibFinTwoUnitSecondRangeVector k n) = 1 := by
-  rw [dist_zero_left]
-  exact concrete_l2_mathlib_fin_two_unit_second_range_vector_norm_eq_one k n
+  simpa [concreteL2MathlibFinTwoUnitZeroRangeVector, dist_zero_left]
+    using concrete_l2_mathlib_fin_two_unit_second_range_vector_norm_eq_one k n
 
 /-- Adapter predicate for the metric three-point witness surface of the two-unit
 synthesis range. -/
