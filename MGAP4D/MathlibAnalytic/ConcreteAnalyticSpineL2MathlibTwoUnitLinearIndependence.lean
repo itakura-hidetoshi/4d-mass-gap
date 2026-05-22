@@ -23,20 +23,26 @@ theorem concrete_l2_mathlib_two_unit_linear_independent_coefficients
       (a • concreteL2MathlibUnit k + b • concreteL2MathlibUnit n) k =
         (0 : lp (fun _ : ℕ => ℝ) 2) k := by
     exact congrArg (fun f : lp (fun _ : ℕ => ℝ) 2 => f k) hlin
+  have hkcoord' :
+      a * concreteL2MathlibUnit k k + b * concreteL2MathlibUnit n k = 0 := by
+    simpa using hkcoord
   have hacoord : a = 0 := by
-    simpa [Pi.add_apply, Pi.smul_apply, Pi.zero_apply,
-      concrete_l2_mathlib_unit_apply_self,
-      concrete_l2_mathlib_unit_apply_ne (k := n) (n := k) hkn] using hkcoord
+    rw [concrete_l2_mathlib_unit_apply_self k,
+      concrete_l2_mathlib_unit_apply_ne (k := n) (n := k) hkn] at hkcoord'
+    simpa using hkcoord'
   have hncoord :
       (a • concreteL2MathlibUnit k + b • concreteL2MathlibUnit n) n =
         (0 : lp (fun _ : ℕ => ℝ) 2) n := by
     exact congrArg (fun f : lp (fun _ : ℕ => ℝ) 2 => f n) hlin
+  have hncoord' :
+      a * concreteL2MathlibUnit k n + b * concreteL2MathlibUnit n n = 0 := by
+    simpa using hncoord
   have hbcoord : b = 0 := by
     have hnk : n ≠ k := by
       exact hkn.symm
-    simpa [Pi.add_apply, Pi.smul_apply, Pi.zero_apply,
-      concrete_l2_mathlib_unit_apply_self,
-      concrete_l2_mathlib_unit_apply_ne (k := k) (n := n) hnk] using hncoord
+    rw [concrete_l2_mathlib_unit_apply_ne (k := k) (n := n) hnk,
+      concrete_l2_mathlib_unit_apply_self n] at hncoord'
+    simpa using hncoord'
   exact ⟨hacoord, hbcoord⟩
 
 /-- If a two-term linear combination of distinct coordinate units vanishes, its
