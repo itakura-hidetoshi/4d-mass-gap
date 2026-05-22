@@ -62,7 +62,7 @@ theorem concrete_l2_graph_pair_partial_energy_add_le
           (2 : ℝ) •
             Finset.sum (Finset.range N)
               (fun n => concreteL2GraphPairEnergyTerm q n) := by
-    simp [Finset.sum_add_distrib, Finset.smul_sum]
+    simp [Finset.sum_add_distrib, smul_eq_mul, Finset.mul_sum]
   exact hsum.trans_eq hsplit
 
 /-- Finite scalar-energy law: the cut-off energy scales by `c^2`. -/
@@ -79,10 +79,7 @@ theorem concrete_l2_graph_pair_partial_energy_smul_eq
       exact Finset.sum_congr rfl fun n _ => concrete_l2_graph_pair_energy_smul_eq c p n
     _ = (c ^ 2) •
           Finset.sum (Finset.range N) (fun n => concreteL2GraphPairEnergyTerm p n) := by
-      exact (Finset.smul_sum
-        (s := Finset.range N)
-        (f := fun n : ℕ => concreteL2GraphPairEnergyTerm p n)
-        (a := c ^ 2)).symm
+      simp [smul_eq_mul, Finset.mul_sum]
 
 /-- R2m graph-pair partial-energy surface.  This layer converts the pointwise
 energy estimates into Mathlib finite-sum estimates.  It is intentionally still a
