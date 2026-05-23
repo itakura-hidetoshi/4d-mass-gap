@@ -38,8 +38,18 @@ theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
       exact hφ h
     · intro h
       rw [h]
-  simp [concreteL2MathlibFinNSynthesis, concreteL2MathlibFinNUnitFamily,
-    concreteL2MathlibUnit, hiff]
+  calc
+    concreteL2MathlibFinNSynthesis m φ c (φ i)
+        = (∑ j : Fin m, (c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2)) (φ i) := by
+          rfl
+    _ = (∑ j : Fin m, ((c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2) : ℕ → ℝ)) (φ i) := by
+          have hsum := lp.coeFn_sum
+            (E := fun _ : ℕ => ℝ) (p := (2 : ℝ≥0∞))
+            (f := fun j : Fin m => (c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2))
+            (s := Finset.univ)
+          exact congrFun hsum (φ i)
+    _ = c i := by
+          simp [concreteL2MathlibUnit, Pi.smul_apply, hiff]
 
 /-- Coordinate recovery for the general `Fin m` synthesis function under an
 injective selected-index map. -/
