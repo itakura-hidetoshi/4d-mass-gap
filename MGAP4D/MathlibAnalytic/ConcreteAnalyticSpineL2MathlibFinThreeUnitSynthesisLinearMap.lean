@@ -23,9 +23,7 @@ def concreteL2MathlibFinThreeUnitSynthesisLinearMap (a b c : ℕ) :
   map_smul' := by
     intro t r
     unfold concreteL2MathlibFinThreeUnitSynthesis
-    simpa [Pi.smul_apply, smul_smul] using
-      (Finset.smul_sum (s := Finset.univ)
-        (f := fun i : Fin 3 => r i • concreteL2MathlibFinThreeUnitFamily a b c i))
+    simp [Pi.smul_apply, Finset.smul_sum, smul_smul]
 
 /-- The linear map agrees definitionally with the named synthesis function. -/
 theorem concrete_l2_mathlib_fin_three_unit_synthesis_linear_map_apply
