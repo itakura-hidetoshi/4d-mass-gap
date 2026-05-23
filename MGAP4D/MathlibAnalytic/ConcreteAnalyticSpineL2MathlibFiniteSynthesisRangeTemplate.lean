@@ -12,13 +12,13 @@ Mathlib `ℓ²(ℕ, ℝ)` carrier.
 
 The coefficient type `ι` is intentionally left abstract.  Later leaves can
 specialize it to `Fin m` and instantiate `T` by a coordinate-unit synthesis map. -/
-def concreteL2MathlibFiniteSynthesisRange (ι : Type*)
+def concreteL2MathlibFiniteSynthesisRange (ι : Type)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) :
     Submodule ℝ (lp (fun _ : ℕ => ℝ) 2) :=
   LinearMap.range T
 
 /-- The synthesis map with codomain restricted to its own range. -/
-def concreteL2MathlibFiniteSynthesisRangeMap (ι : Type*)
+def concreteL2MathlibFiniteSynthesisRangeMap (ι : Type)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) :
     (ι → ℝ) →ₗ[ℝ] concreteL2MathlibFiniteSynthesisRange ι T where
   toFun c := ⟨T c, ⟨c, rfl⟩⟩
@@ -32,7 +32,7 @@ def concreteL2MathlibFiniteSynthesisRangeMap (ι : Type*)
 /-- The range-restricted synthesis map has the original synthesis vector as its
 underlying value. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_apply_val
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) (c : ι → ℝ) :
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) (c : ι → ℝ) :
     (concreteL2MathlibFiniteSynthesisRangeMap ι T c : lp (fun _ : ℕ => ℝ) 2) =
       T c := by
   rfl
@@ -40,14 +40,14 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_apply_val
 /-- Membership in the generic synthesis range is exactly existence of a
 coefficient vector whose synthesis gives the target vector. -/
 theorem concrete_l2_mathlib_finite_synthesis_mem_range_iff
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (v : lp (fun _ : ℕ => ℝ) 2) :
     v ∈ concreteL2MathlibFiniteSynthesisRange ι T ↔ ∃ c : ι → ℝ, T c = v := by
   rfl
 
 /-- The range-restricted synthesis map is always surjective onto the named range. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_surjective
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) :
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) :
     Function.Surjective (concreteL2MathlibFiniteSynthesisRangeMap ι T) := by
   intro v
   rcases v.property with ⟨c, hc⟩
@@ -56,7 +56,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_surjective
 /-- If the original synthesis map is injective, then the range-restricted map is
 injective. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_injective_of_injective
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hT : Function.Injective T) :
     Function.Injective (concreteL2MathlibFiniteSynthesisRangeMap ι T) := by
   intro c d hcd
@@ -67,7 +67,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_injective_of_injective
 /-- If the kernel of the original synthesis map is bottom, then the
 range-restricted map is injective. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_injective_of_ker_eq_bot
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥) :
     Function.Injective (concreteL2MathlibFiniteSynthesisRangeMap ι T) := by
   have hT : Function.Injective T := by
@@ -78,7 +78,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_injective_of_ker_eq_bot
 /-- If the kernel of the original synthesis map is bottom, then the
 range-restricted synthesis map is bijective. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_ker_eq_bot
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥) :
     Function.Bijective (concreteL2MathlibFiniteSynthesisRangeMap ι T) :=
   ⟨
@@ -87,7 +87,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_ker_eq_bot
 
 /-- Generic linear equivalence between a coefficient space and the range of an
 injective synthesis map. -/
-def concreteL2MathlibFiniteSynthesisRangeLinearEquiv (ι : Type*)
+def concreteL2MathlibFiniteSynthesisRangeLinearEquiv (ι : Type)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥) :
     (ι → ℝ) ≃ₗ[ℝ] concreteL2MathlibFiniteSynthesisRange ι T :=
@@ -98,14 +98,14 @@ def concreteL2MathlibFiniteSynthesisRangeLinearEquiv (ι : Type*)
 /-- The forward map of the generic range equivalence is the range-restricted
 synthesis map. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_linear_equiv_apply
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥) (c : ι → ℝ) :
     concreteL2MathlibFiniteSynthesisRangeLinearEquiv ι T hker c =
       concreteL2MathlibFiniteSynthesisRangeMap ι T c := by
   rfl
 
 /-- Generic coordinate reconstruction on the range of an injective synthesis map. -/
-def concreteL2MathlibFiniteSynthesisRangeCoordinates (ι : Type*)
+def concreteL2MathlibFiniteSynthesisRangeCoordinates (ι : Type)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥)
     (v : concreteL2MathlibFiniteSynthesisRange ι T) : ι → ℝ :=
@@ -113,7 +113,7 @@ def concreteL2MathlibFiniteSynthesisRangeCoordinates (ι : Type*)
 
 /-- Re-synthesizing the reconstructed coordinates gives back the range vector. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥)
     (v : concreteL2MathlibFiniteSynthesisRange ι T) :
     concreteL2MathlibFiniteSynthesisRangeLinearEquiv ι T hker
@@ -124,7 +124,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize
 /-- Any coefficient vector synthesizing to a range vector equals the reconstructed
 coordinate vector. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_unique
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥)
     {v : concreteL2MathlibFiniteSynthesisRange ι T} {c : ι → ℝ}
     (hc : concreteL2MathlibFiniteSynthesisRangeLinearEquiv ι T hker c = v) :
@@ -134,12 +134,12 @@ theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_unique
 /-- Generic template adapter: kernel-bottom synthesis maps give bijective range
 maps and coordinate reconstruction. -/
 def concreteL2MathlibFiniteSynthesisRangeTemplateAdapter : Prop :=
-  ∀ (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2),
-    LinearMap.ker T = ⊥ →
+  ∀ (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (hker : LinearMap.ker T = ⊥),
       Function.Bijective (concreteL2MathlibFiniteSynthesisRangeMap ι T) ∧
       ∀ v : concreteL2MathlibFiniteSynthesisRange ι T,
-        concreteL2MathlibFiniteSynthesisRangeLinearEquiv ι T ‹LinearMap.ker T = ⊥›
-          (concreteL2MathlibFiniteSynthesisRangeCoordinates ι T ‹LinearMap.ker T = ⊥› v) = v
+        concreteL2MathlibFiniteSynthesisRangeLinearEquiv ι T hker
+          (concreteL2MathlibFiniteSynthesisRangeCoordinates ι T hker v) = v
 
 /-- Adapter theorem for the generic finite synthesis range template. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_template_adapter_ready :
