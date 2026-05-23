@@ -29,7 +29,7 @@ selected coefficient. -/
 theorem concrete_l2_mathlib_fin_n_pi_single_sum_apply_selected_coordinate
     {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
     (c : Fin m → ℝ) (i : Fin m) :
-    (∑ x : Fin m, c x * Pi.single (φ x) (1 : ℝ) (φ i)) = c i := by
+    (∑ x : Fin m, c x * ((@Pi.single ℕ (fun _ : ℕ => ℝ) _ (φ x) (1 : ℝ)) (φ i))) = c i := by
   classical
   rw [Finset.sum_eq_single i]
   · simp
@@ -58,7 +58,7 @@ theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
             (f := fun j : Fin m => (c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2))
             (s := Finset.univ)
           exact congrFun hsum (φ i)
-    _ = ∑ j : Fin m, c j * Pi.single (φ j) (1 : ℝ) (φ i) := by
+    _ = ∑ j : Fin m, c j * ((@Pi.single ℕ (fun _ : ℕ => ℝ) _ (φ j) (1 : ℝ)) (φ i)) := by
           simp [concreteL2MathlibUnit, Pi.smul_apply]
     _ = c i := by
           exact concrete_l2_mathlib_fin_n_pi_single_sum_apply_selected_coordinate hφ c i
