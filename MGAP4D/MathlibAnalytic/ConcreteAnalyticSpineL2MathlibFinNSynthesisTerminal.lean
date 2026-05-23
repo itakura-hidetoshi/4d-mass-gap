@@ -14,7 +14,7 @@ linear map has bottom kernel, is injective, has a bijective range-restricted map
 and every vector in the range decomposes as the finite sum of its recovered
 coordinates times the selected coordinate units. -/
 def concreteL2MathlibFinNSynthesisTerminalAdapter : Prop :=
-  ∀ {m : ℕ} {φ : Fin m → ℕ}, Function.Injective φ →
+  ∀ {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ),
     LinearMap.ker (concreteL2MathlibFinNSynthesisLinearMap m φ) = ⊥ ∧
     Function.Injective (concreteL2MathlibFinNSynthesisLinearMap m φ) ∧
     Function.Bijective
@@ -24,7 +24,7 @@ def concreteL2MathlibFinNSynthesisTerminalAdapter : Prop :=
       (concreteL2MathlibFinNSynthesisLinearMap m φ),
       (v : lp (fun _ : ℕ => ℝ) 2) =
         ∑ i : Fin m,
-          concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective ‹Function.Injective φ› v i •
+          concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v i •
             concreteL2MathlibUnit (φ i))
 
 /-- Terminal adapter theorem for the general `Fin m` coordinate-unit synthesis
