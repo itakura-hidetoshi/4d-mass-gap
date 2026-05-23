@@ -31,7 +31,7 @@ theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
   calc
     (∑ j : Fin m, c j • concreteL2MathlibUnit (φ j)) (φ i)
         = ∑ j : Fin m, (c j • concreteL2MathlibUnit (φ j)) (φ i) := by
-          rw [Finset.sum_apply]
+          exact Finset.sum_apply
     _ = ∑ j : Fin m, c j * concreteL2MathlibUnit (φ j) (φ i) := by
           simp [Pi.smul_apply]
     _ = c i := by
