@@ -7,10 +7,7 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Off-diagonal coordinate evaluation vanishes for an injective selected-index map.
-
-This local separation fact is already available without proving the full `lp`
-finite-sum coordinate-recovery theorem. -/
+/-- Off-diagonal coordinate evaluation vanishes for an injective selected-index map. -/
 theorem concrete_l2_mathlib_fin_n_unit_family_apply_off_of_injective
     {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
     {i j : Fin m} (hji : j ≠ i) :
@@ -27,47 +24,125 @@ theorem concrete_l2_mathlib_fin_n_unit_family_apply_self
   unfold concreteL2MathlibFinNUnitFamily
   exact concrete_l2_mathlib_unit_apply_self (φ i)
 
-/-- Boundary predicate for the full `Fin m` coordinate-recovery theorem.
+/-- Evaluating the general `Fin m` coordinate-unit synthesis at the selected
+coordinate `φ i` recovers the coefficient `c i`, provided `φ` is injective. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
+    (c : Fin m → ℝ) (i : Fin m) :
+    concreteL2MathlibFinNSynthesis m φ c (φ i) = c i := by
+  classical
+  have hiff : ∀ j : Fin m, φ i = φ j ↔ i = j := by
+    intro j
+    constructor
+    · intro h
+      exact hφ h
+    · intro h
+      rw [h]
+  simp [concreteL2MathlibFinNSynthesis, concreteL2MathlibFinNUnitFamily,
+    concreteL2MathlibUnit, hiff]
 
-The remaining hard point is pushing evaluation through a finite sum in the
-Mathlib `lp` carrier and then applying the diagonal/off-diagonal laws above. -/
-def concreteL2MathlibFinNSynthesisCoordinateRecoveryBoundary : Prop :=
-  ∀ {m : ℕ} {φ : Fin m → ℕ}, Function.Injective φ → Prop
+/-- Coordinate recovery for the general `Fin m` synthesis function under an
+injective selected-index map. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_coordinate_recovery_of_injective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
+    concreteL2MathlibFinNSynthesisCoordinateRecovery m φ := by
+  intro c i
+  exact concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate hφ c i
 
-/-- Boundary witness for the full `Fin m` coordinate-recovery theorem. -/
-theorem concrete_l2_mathlib_fin_n_synthesis_coordinate_recovery_boundary_held :
-    concreteL2MathlibFinNSynthesisCoordinateRecoveryBoundary := by
-  intro m φ _hφ
-  exact True
+/-- Coordinate recovery for the general `Fin m` synthesis linear map under an
+injective selected-index map. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
+    concreteL2MathlibFinNSynthesisLinearMapCoordinateRecovery m φ := by
+  intro c i
+  change concreteL2MathlibFinNSynthesis m φ c (φ i) = c i
+  exact concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate hφ c i
 
-/-- Adapter predicate for the scoped coordinate-recovery layer.
+/-- Injective selected indices give a bottom kernel for the general `Fin m`
+coordinate-unit synthesis linear map. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_ker_eq_bot_of_injective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
+    LinearMap.ker (concreteL2MathlibFinNSynthesisLinearMap m φ) = ⊥ := by
+  exact concrete_l2_mathlib_fin_n_synthesis_ker_eq_bot_of_coordinate_recovery m φ
+    (concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective hφ)
 
-This layer proves only the local diagonal/off-diagonal coordinate-unit facts and
-keeps the full synthesis coordinate-recovery theorem as a subsequent proof
-obligation. -/
+/-- Injective selected indices make the general `Fin m` coordinate-unit synthesis
+linear map injective. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_of_injective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
+    Function.Injective (concreteL2MathlibFinNSynthesisLinearMap m φ) := by
+  rw [← LinearMap.ker_eq_bot]
+  exact concrete_l2_mathlib_fin_n_synthesis_ker_eq_bot_of_injective hφ
+
+/-- Injective selected indices make the range-restricted general `Fin m`
+synthesis map bijective. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_range_map_bijective_of_injective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
+    Function.Bijective
+      (concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
+        (concreteL2MathlibFinNSynthesisLinearMap m φ)) := by
+  exact concrete_l2_mathlib_fin_n_synthesis_range_map_bijective_of_coordinate_recovery m φ
+    (concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective hφ)
+
+/-- Injective selected indices give a linear equivalence from the coefficient
+space to the synthesis range. -/
+def concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
+    (Fin m → ℝ) ≃ₗ[ℝ]
+      concreteL2MathlibFiniteSynthesisRange (Fin m)
+        (concreteL2MathlibFinNSynthesisLinearMap m φ) :=
+  concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery
+    (Fin m) φ (concreteL2MathlibFinNSynthesisLinearMap m φ)
+    (concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective hφ)
+
+/-- Injective selected indices give coordinate reconstruction on the general
+`Fin m` synthesis range. -/
+def concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
+    (v : concreteL2MathlibFiniteSynthesisRange (Fin m)
+      (concreteL2MathlibFinNSynthesisLinearMap m φ)) : Fin m → ℝ :=
+  concreteL2MathlibFiniteSynthesisRangeCoordinatesOfCoordinateRecovery
+    (Fin m) φ (concreteL2MathlibFinNSynthesisLinearMap m φ)
+    (concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective hφ) v
+
+/-- Re-synthesizing the coordinates reconstructed under injective selected indices
+gives back the range vector. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_coordinates_synthesize_of_injective
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
+    (v : concreteL2MathlibFiniteSynthesisRange (Fin m)
+      (concreteL2MathlibFinNSynthesisLinearMap m φ)) :
+    concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective hφ
+        (concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v) = v := by
+  unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective
+  unfold concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective
+  exact concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize_of_coordinate_recovery
+    (Fin m) φ (concreteL2MathlibFinNSynthesisLinearMap m φ)
+    (concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective hφ) v
+
+/-- Adapter predicate for the general `Fin m` synthesis coordinate-recovery layer. -/
 def concreteL2MathlibFinNSynthesisCoordinateRecoveryAdapter : Prop :=
-  (∀ {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
-    {i j : Fin m}, j ≠ i → concreteL2MathlibFinNUnitFamily m φ j (φ i) = 0) ∧
-  (∀ {m : ℕ} {φ : Fin m → ℕ} (i : Fin m),
-    concreteL2MathlibFinNUnitFamily m φ i (φ i) = 1) ∧
-  concreteL2MathlibFinNSynthesisCoordinateRecoveryBoundary
+  ∀ {m : ℕ} {φ : Fin m → ℕ}, Function.Injective φ →
+    concreteL2MathlibFinNSynthesisLinearMapCoordinateRecovery m φ ∧
+    LinearMap.ker (concreteL2MathlibFinNSynthesisLinearMap m φ) = ⊥ ∧
+    Function.Injective (concreteL2MathlibFinNSynthesisLinearMap m φ) ∧
+    Function.Bijective
+      (concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
+        (concreteL2MathlibFinNSynthesisLinearMap m φ))
 
-/-- Adapter theorem for the scoped coordinate-recovery layer. -/
+/-- Adapter theorem for the general `Fin m` synthesis coordinate-recovery layer. -/
 theorem concrete_l2_mathlib_fin_n_synthesis_coordinate_recovery_adapter_ready :
     concreteL2MathlibFinNSynthesisCoordinateRecoveryAdapter := by
+  intro m φ hφ
   exact ⟨
-    by intro m φ hφ i j hji; exact concrete_l2_mathlib_fin_n_unit_family_apply_off_of_injective hφ hji,
-    by intro m φ i; exact concrete_l2_mathlib_fin_n_unit_family_apply_self i,
-    concrete_l2_mathlib_fin_n_synthesis_coordinate_recovery_boundary_held⟩
+    concrete_l2_mathlib_fin_n_synthesis_linear_map_coordinate_recovery_of_injective hφ,
+    concrete_l2_mathlib_fin_n_synthesis_ker_eq_bot_of_injective hφ,
+    concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_of_injective hφ,
+    concrete_l2_mathlib_fin_n_synthesis_range_map_bijective_of_injective hφ⟩
 
-/-- Surface for the scoped `Fin m` coordinate-recovery layer. -/
+/-- Surface for coordinate recovery of general `Fin m` coordinate-unit synthesis. -/
 structure ConcreteL2MathlibFinNSynthesisCoordinateRecoverySurface where
   finNSynthesisSkeletonReady : concreteAnalyticSpineL2MathlibFinNSynthesisSkeletonSurfaceReady
   coordinateRecoveryAdapter : concreteL2MathlibFinNSynthesisCoordinateRecoveryAdapter
-  boundaryFullLpFiniteSumEvaluationNotYetClaimed : Prop
-  boundaryNotKerEqBotFromInjectiveYet : Prop
-  boundaryNotRangeEquivFromInjectiveYet : Prop
-  boundaryNotRangeDecompositionFromInjectiveYet : Prop
   boundaryNotBasisTheorem : Prop
   boundaryNotDenseSpanTheorem : Prop
   boundaryNotFiniteSupportDomainEquivalence : Prop
@@ -77,17 +152,14 @@ structure ConcreteL2MathlibFinNSynthesisCoordinateRecoverySurface where
   boundaryNotSpectralAtomTheorem : Prop
   boundaryNotPositiveSpectralWeightTheorem : Prop
 
-/-- Concrete scoped coordinate-recovery surface for general `Fin m` synthesis. -/
+/-- Concrete coordinate-recovery surface for general `Fin m` coordinate-unit
+synthesis. -/
 def concreteL2MathlibFinNSynthesisCoordinateRecoverySurface :
     ConcreteL2MathlibFinNSynthesisCoordinateRecoverySurface :=
   { finNSynthesisSkeletonReady :=
       concrete_analytic_spine_l2_mathlib_fin_n_synthesis_skeleton_surface_ready
     coordinateRecoveryAdapter :=
       concrete_l2_mathlib_fin_n_synthesis_coordinate_recovery_adapter_ready
-    boundaryFullLpFiniteSumEvaluationNotYetClaimed := True
-    boundaryNotKerEqBotFromInjectiveYet := True
-    boundaryNotRangeEquivFromInjectiveYet := True
-    boundaryNotRangeDecompositionFromInjectiveYet := True
     boundaryNotBasisTheorem := True
     boundaryNotDenseSpanTheorem := True
     boundaryNotFiniteSupportDomainEquivalence := True
@@ -97,14 +169,11 @@ def concreteL2MathlibFinNSynthesisCoordinateRecoverySurface :
     boundaryNotSpectralAtomTheorem := True
     boundaryNotPositiveSpectralWeightTheorem := True }
 
-/-- Readiness predicate for the scoped coordinate-recovery surface. -/
+/-- Readiness predicate for the coordinate-recovery surface of general `Fin m`
+coordinate-unit synthesis. -/
 def concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoverySurfaceReady : Prop :=
   concreteAnalyticSpineL2MathlibFinNSynthesisSkeletonSurfaceReady ∧
   concreteL2MathlibFinNSynthesisCoordinateRecoveryAdapter ∧
-  concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryFullLpFiniteSumEvaluationNotYetClaimed ∧
-  concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotKerEqBotFromInjectiveYet ∧
-  concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotRangeEquivFromInjectiveYet ∧
-  concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotRangeDecompositionFromInjectiveYet ∧
   concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotBasisTheorem ∧
   concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotDenseSpanTheorem ∧
   concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotFiniteSupportDomainEquivalence ∧
@@ -114,7 +183,8 @@ def concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoverySurfaceReady : 
   concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotSpectralAtomTheorem ∧
   concreteL2MathlibFinNSynthesisCoordinateRecoverySurface.boundaryNotPositiveSpectralWeightTheorem
 
-/-- Readiness theorem for the scoped coordinate-recovery surface. -/
+/-- Readiness theorem for the coordinate-recovery surface of general `Fin m`
+coordinate-unit synthesis. -/
 theorem concrete_analytic_spine_l2_mathlib_fin_n_synthesis_coordinate_recovery_surface_ready :
     concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoverySurfaceReady := by
   unfold concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoverySurfaceReady
@@ -123,14 +193,15 @@ theorem concrete_analytic_spine_l2_mathlib_fin_n_synthesis_coordinate_recovery_s
       And.intro concrete_l2_mathlib_fin_n_synthesis_coordinate_recovery_adapter_ready <|
         And.intro trivial <| And.intro trivial <| And.intro trivial <|
           And.intro trivial <| And.intro trivial <| And.intro trivial <|
-            And.intro trivial <| And.intro trivial <| And.intro trivial <|
-              And.intro trivial <| And.intro trivial trivial
+            And.intro trivial trivial
 
-/-- Hard-residual boundary marker for the scoped coordinate-recovery surface. -/
+/-- Hard-residual boundary marker for the coordinate-recovery surface of general
+`Fin m` coordinate-unit synthesis. -/
 def concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoveryHardResidualBoundaryHeld : Prop :=
   concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoverySurfaceReady
 
-/-- Hard-residual boundary theorem for the scoped coordinate-recovery surface. -/
+/-- Hard-residual boundary theorem for the coordinate-recovery surface of general
+`Fin m` coordinate-unit synthesis. -/
 theorem concrete_analytic_spine_l2_mathlib_fin_n_synthesis_coordinate_recovery_hard_residual_boundary_held :
     concreteAnalyticSpineL2MathlibFinNSynthesisCoordinateRecoveryHardResidualBoundaryHeld := by
   exact concrete_analytic_spine_l2_mathlib_fin_n_synthesis_coordinate_recovery_surface_ready
