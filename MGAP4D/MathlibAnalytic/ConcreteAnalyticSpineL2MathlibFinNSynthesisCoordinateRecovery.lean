@@ -24,20 +24,21 @@ theorem concrete_l2_mathlib_fin_n_unit_family_apply_self
   unfold concreteL2MathlibFinNUnitFamily
   exact concrete_l2_mathlib_unit_apply_self (φ i)
 
-/-- Evaluating the `Pi.single` finite sum at the selected coordinate recovers the
+/-- Evaluating the finite sum of selected coordinate units at `φ i` recovers the
 selected coefficient. -/
-theorem concrete_l2_mathlib_fin_n_pi_single_sum_apply_selected_coordinate
+theorem concrete_l2_mathlib_fin_n_unit_sum_apply_selected_coordinate
     {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
     (c : Fin m → ℝ) (i : Fin m) :
-    (∑ x : Fin m, c x * ((@Pi.single ℕ (fun _ : ℕ => ℝ) _ (φ x) (1 : ℝ)) (φ i))) = c i := by
+    (∑ x : Fin m, c x * concreteL2MathlibUnit (φ x) (φ i)) = c i := by
   classical
   rw [Finset.sum_eq_single i]
-  · simp
+  · simp [concrete_l2_mathlib_unit_apply_self]
   · intro j _hj hji
-    have hne : φ j ≠ φ i := by
-      intro h
-      exact hji (hφ h)
-    simp [Pi.single_eq_of_ne hne]
+    have hoff : concreteL2MathlibUnit (φ j) (φ i) = 0 := by
+      apply concrete_l2_mathlib_unit_apply_ne
+      intro hcoord
+      exact hji (hφ hcoord.symm)
+    simp [hoff]
   · intro hi
     exact False.elim (hi (Finset.mem_univ i))
 
@@ -58,10 +59,10 @@ theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
             (f := fun j : Fin m => (c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2))
             (s := Finset.univ)
           exact congrFun hsum (φ i)
-    _ = ∑ j : Fin m, c j * ((@Pi.single ℕ (fun _ : ℕ => ℝ) _ (φ j) (1 : ℝ)) (φ i)) := by
-          simp [concreteL2MathlibUnit, Pi.smul_apply]
+    _ = ∑ j : Fin m, c j * concreteL2MathlibUnit (φ j) (φ i) := by
+          simp [Pi.smul_apply]
     _ = c i := by
-          exact concrete_l2_mathlib_fin_n_pi_single_sum_apply_selected_coordinate hφ c i
+          exact concrete_l2_mathlib_fin_n_unit_sum_apply_selected_coordinate hφ c i
 
 /-- Coordinate recovery for the general `Fin m` synthesis function under an
 injective selected-index map. -/
