@@ -17,6 +17,7 @@ theorem concrete_l2_mathlib_fin_n_synthesis_range_equiv_apply_val_of_injective
       ∑ i : Fin m, c i • concreteL2MathlibUnit (φ i) := by
   unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective
   unfold concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery
+  unfold concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial
   rw [concrete_l2_mathlib_finite_synthesis_range_linear_equiv_apply]
   rw [concrete_l2_mathlib_finite_synthesis_range_map_apply_val]
   rw [concrete_l2_mathlib_fin_n_synthesis_linear_map_apply]
