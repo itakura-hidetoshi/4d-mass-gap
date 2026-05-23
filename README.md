@@ -1,8 +1,8 @@
 # MGAP4D
 
-**MGAP4D** is a GitHub-native Lean 4 repository for developing, checking, replaying, and externally auditing the proof architecture of a normalized four-dimensional mass gap theorem.
+**MGAP4D** is the canonical Lean 4 repository for the MGAP4D normalized four-dimensional mass gap line.
 
-This repository is the canonical Lean proof repository for the MGAP4D line. KuuOS may reference this repository as a physics-facing bridge and public-core governance surface, but KuuOS reference documents do not replace this repository as the canonical Lean source and do not independently open public final theorem release.
+This repository is designed as a GitHub-native proof-architecture and replay surface: Lean source, Lake configuration, CI workflows, audit scripts, theorem-surface ledgers, physical-normalization boundaries, external-review packets, and replay instructions live in one source tree.
 
 ```text
 Canonical proof repo: itakura-hidetoshi/4d-mass-gap
@@ -10,20 +10,22 @@ KuuOS reference repo: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-## Current status
+KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean source and do not independently open public final theorem release.
 
-The current repository state records an **internal normalized theorem-body / proof-architecture surface** with explicit replay, theorem-surface audit, bridge-coherence audit, physical-Hamiltonian normalization, continuum-Hamiltonian release surfaces, complete-derivation surfaces, and external-audit-readiness support.
+## Current status, May 2026
 
-Inside the MGAP4D Lean proof architecture, the normalized exact spectral gap value is recorded as:
+The current `main` branch records an **internal normalized theorem-body / proof-architecture surface** for a normalized 4D mass gap route, together with replay, theorem-surface audits, bridge-coherence audits, physical-Hamiltonian normalization, continuum-Hamiltonian derivation surfaces, finite-carrier Mathlib seed ladders, and an external-audit-readiness gate.
+
+The internal normalized value recorded by the Lean theorem-body route is:
 
 ```text
 exactGapValueReal = 33 / 20
 Delta_norm = 33/20
 ```
 
-The repository treats `33/20` as an internal normalized theorem-body value, not as a documentation artifact, CI artifact, manifest-only artifact, packaging artifact, or prototype-only release wrapper.
+This repository treats `33/20` as an internal normalized theorem-body value. It is not treated as a documentation artifact, CI artifact, manifest-only artifact, packaging artifact, or prototype-only wrapper.
 
-The current physical-Hamiltonian reading is explicitly scale-normalized:
+The dimensional physical interpretation is explicitly scale-normalized:
 
 ```text
 H_norm = E0^{-1} * H_phys
@@ -43,7 +45,7 @@ E0 = 1
 Delta_phys(1) = 33/20
 ```
 
-Thus `33/20` is the dimensionless spectral gap of the normalized physical Hamiltonian. A dimensional physical mass gap requires an external reference scale `E0`.
+Thus `33/20` is the dimensionless spectral gap value of the normalized physical-Hamiltonian surface. A dimensional physical mass gap requires an external reference scale `E0`.
 
 ## Public boundary
 
@@ -55,12 +57,18 @@ exact normalized value surface: 33/20
 physical Hamiltonian scalar normalization: present
 physical Hamiltonian operator normalization: present
 complete infinite-dimensional Hilbert construction lane: present
-continuum-Hamiltonian theorem / release-adoption surfaces: present
-complete continuum-Hamiltonian derivation surfaces: present
+Hilbert-to-physical unbounded-operator bridge: present
+self-adjoint H_phys lane hardening: present
+continuum Yang-Mills lane hardening: present
+plaquette spectral-weight lane hardening: present
+continuum-Hamiltonian theorem and release-adoption surfaces: present
+continuum-Hamiltonian complete derivation surfaces: present
+finite-carrier Mathlib seed ladder over Fin 2 / Fin 3: present
+general Fin n / basis / dense-span / operator / spectral boundary: held
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
-full local replay path: present
+one-command local replay path: present
 ```
 
 It does **not** claim:
@@ -73,11 +81,21 @@ a dimensional physical mass gap without choosing E0
 that CI output replaces mathematical proof review
 that audit scripts replace Lean kernel checking
 that an external-audit-readiness gate replaces independent replay
+that finite-carrier seed ladders imply the general Fin n / basis / dense-span / spectral theorem chain
 ```
 
 The public final theorem boundary remains **review-gated** pending independent replay and external audit.
 
-## Active Lean roots and pinned dependency lane
+Recommended public wording:
+
+```text
+MGAP4D provides a Lean 4 proof architecture and replayable audit surface
+for an internal normalized 4D mass gap theorem-body route with normalized value 33/20.
+The repository is prepared for independent replay and external review.
+Public final theorem acceptance is not claimed.
+```
+
+## Active Lean roots and dependency lane
 
 ```text
 MGAP4D.lean
@@ -93,9 +111,30 @@ mathlib: v4.30.0-rc2
 
 The `MathlibAnalytic` root is a scoped analytic lane. It does not by itself open public final theorem release.
 
-## Main hardening route
+## One-command replay
 
-The current route can be read as:
+From a fresh clone:
+
+```bash
+git clone https://github.com/itakura-hidetoshi/4d-mass-gap.git
+cd 4d-mass-gap
+bash scripts/check.sh
+```
+
+Manual Lean build:
+
+```bash
+lake update
+lake build
+```
+
+A successful replay means that the pinned Lean/Lake/mathlib environment builds, the declared audit scripts pass, the replay summary is reproducible, and the theorem-surface / bridge-surface / physical-normalization / continuum-Hamiltonian / external-readiness checks pass.
+
+A successful replay does **not** by itself mean external mathematical consensus, independent peer-review acceptance, or public final theorem acceptance.
+
+## Current proof-architecture route
+
+The current internal route can be read as:
 
 ```text
 Exact normalized value / real positivity
@@ -121,6 +160,7 @@ Exact normalized value / real positivity
   -> continuum Hamiltonian mass-gap release adoption
   -> continuum Hamiltonian complete mass-gap derivation
   -> continuum Hamiltonian complete mass-gap release adoption
+  -> finite-carrier Mathlib seed ladder summary
   -> four-lane residual closure
   -> internal review residual closure gate
   -> external audit readiness gate
@@ -148,28 +188,10 @@ MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapReleaseAdoption.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapReleaseAdoption.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibFiniteCarrierLadderSummary.lean
 MGAP4D/MathlibAnalytic/FourLaneResidualClosure.lean
 MGAP4D/MathlibAnalytic/InternalReviewResidualClosureGate.lean
 MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
-```
-
-## One-command replay
-
-From a fresh clone:
-
-```bash
-git clone https://github.com/itakura-hidetoshi/4d-mass-gap.git
-cd 4d-mass-gap
-bash scripts/check.sh
-```
-
-The full replay path is expected to run the manifest check, forbidden-token audit, major theorem non-placeholder audit, analytic bridge-coherence audit, physical-Hamiltonian operator-normalization audit, target-layer audits, residual-hardening audits, complete Hilbert construction audit, continuum-Hamiltonian hardening audits, four-lane residual closure audit, internal review gate audit, external audit readiness audits, replay summary, selected Lean builds, and final `lake build`.
-
-Manual Lean build:
-
-```bash
-lake update
-lake build
 ```
 
 ## Audit scripts
@@ -199,7 +221,7 @@ lake build
 
 ## External review entry points
 
-Recommended external review order:
+Recommended order for an external reviewer:
 
 1. `EXTERNAL_AUDIT_PACKET.md`
 2. `INDEPENDENT_REPLAY.md`
@@ -217,7 +239,7 @@ Recommended external review order:
 14. `docs/four_lane_residual_closure.md`
 15. `docs/internal_review_residual_closure_gate.md`
 
-The strongest executable replay command is:
+The strongest executable replay gate is:
 
 ```bash
 bash scripts/check.sh
@@ -227,27 +249,6 @@ The strongest Lean kernel gate is:
 
 ```bash
 lake build
-```
-
-## What successful replay means
-
-A successful replay means:
-
-```text
-the repository builds with the pinned Lean toolchain and pinned mathlib version
-the declared audit scripts pass
-the theorem-surface, bridge-surface, target-layer, residual-hardening,
-physical-Hamiltonian normalization, continuum-Hamiltonian theorem/release,
-final readiness-gate, field-classification, and replay-certificate checks pass
-the replay summary is reproducible
-```
-
-A successful replay does **not** by itself mean:
-
-```text
-external mathematical consensus
-independent peer-review acceptance
-public final theorem acceptance
 ```
 
 ## Repository layout
@@ -280,7 +281,7 @@ The DOI-backed Zenodo record is a proof-architecture and external-audit preparat
 
 ## Contribution and review policy
 
-External contributions are most useful when they preserve the public boundary and improve replayability, source clarity, theorem-surface inspection, bridge-audit precision, Lean kernel checking, or independent mathematical review.
+External contributions are most useful when they improve replayability, Lean kernel checking, mathematical clarity, theorem-surface inspection, bridge-audit precision, physical-normalization review, documentation consistency, or independent mathematical review.
 
 Preferred contribution types:
 
