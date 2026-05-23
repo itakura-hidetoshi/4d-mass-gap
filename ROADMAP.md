@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-This roadmap summarizes the current MGAP4D development state and the next review-gated steps for the canonical Lean proof repository:
+This roadmap tracks the current state and next review-gated steps of the canonical MGAP4D Lean proof repository.
 
 ```text
 Canonical proof repo: itakura-hidetoshi/4d-mass-gap
@@ -8,9 +8,9 @@ KuuOS reference repo: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference this repository as a physics-facing bridge and public-core governance surface, but KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open public final theorem release.
+KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open public final theorem release.
 
-## Current status snapshot
+## Current status snapshot, May 2026
 
 The main branch has advanced beyond the earlier spectral checkpoint into an internal normalized theorem-body / continuum-Hamiltonian / external-audit-readiness surface.
 
@@ -39,8 +39,14 @@ internal normalized theorem-body surface: present
 physical Hamiltonian scalar normalization: present
 physical Hamiltonian operator normalization: present
 complete infinite-dimensional Hilbert construction lane: present
+Hilbert-to-physical unbounded-operator bridge: present
+self-adjoint H_phys lane hardening: present
+continuum Yang-Mills lane hardening: present
+plaquette spectral-weight lane hardening: present
 continuum-Hamiltonian theorem and release surfaces: present
 continuum-Hamiltonian complete derivation surfaces: present
+finite-carrier Mathlib seed ladder over Fin 2 / Fin 3: present
+general Fin n / basis / dense-span / operator / spectral boundary: held
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
@@ -48,77 +54,64 @@ external mathematical consensus: not claimed
 public final theorem claim: review-gated
 ```
 
-## Phase 1 — GitHub-native project setup
+Review principle:
+
+```text
+external-audit readiness is not external audit
+replay success is not mathematical consensus
+CI success is not proof review
+documentation is not theorem body
+```
+
+## Phase A — GitHub-native Lean repository foundation
 
 Status: **complete**
 
 - [x] Initialize Lean 4 Lake project.
-- [x] Add GitHub Actions using direct `elan`.
-- [x] Add audit scripts.
-- [x] Add active Lean scaffold.
-- [x] Establish `MGAP4D.lean` as top-level import root.
-- [x] Establish `MGAP4D/MathlibAnalytic.lean` as analytic theorem-surface root.
+- [x] Pin Lean / mathlib lane.
+- [x] Establish `MGAP4D.lean` as the top-level import root.
+- [x] Establish `MGAP4D/MathlibAnalytic.lean` as the analytic theorem-surface root.
+- [x] Add GitHub Actions workflows.
+- [x] Add local replay script at `scripts/check.sh`.
+- [x] Keep Lean source, docs, ledgers, audit scripts, and CI in one GitHub-native tree.
 
-## Phase 2 — Source migration and repository layout
+## Phase B — Source migration and structural proof surfaces
 
 Status: **complete**
 
 - [x] Migrate active R1--R7 root files.
-- [x] Add lightweight docs and maps.
-- [x] Add snapshot root manifests.
-- [x] Add Global / Concrete status-only files.
 - [x] Add OperatorAPI interfaces.
 - [x] Add R1 / R2 / R3--R7 concrete files.
-- [x] Archive prior kernels under a reviewed layout.
-- [x] Keep the repository GitHub-native: Lean source, docs, ledgers, audit scripts, and CI live in one source tree.
-
-## Phase 3 — Proof hardening and spectral checkpoint
-
-Status: **complete**
-
-- [x] Add theorem-surface layers for OperatorAPI, R1--R7, and Global routes.
+- [x] Add Global / Concrete status-only files.
 - [x] Add theorem dependency map as checked Lean structures.
-- [x] Complete replacement passes and closure checkpoints.
-- [x] Add Mathlib adoption gate and request registry.
-- [x] Complete scoped Mathlib dry-run series.
-- [x] Record the main-adoption policy as review-gated.
+- [x] Add lightweight docs and maps.
+- [x] Archive prior kernels under a reviewed layout.
 - [x] Add source-tree review gate.
-- [x] Add independent replay preparation.
+
+## Phase C — Spectral checkpoint and exact normalized value
+
+Status: **complete as internal theorem-body surface**
+
 - [x] Add spectral module entrypoint.
 - [x] Add spectral gap formalization checkpoint.
-- [x] Wire spectral formalization into the release-gate root.
-- [x] Add KuuOS reference bridge.
+- [x] Add exact gap analytic real closure.
+- [x] Add Hilbert Rayleigh quotient theorem surface.
+- [x] Add gap infimum / lower-bound / attainment surfaces.
+- [x] Record exact normalized theorem-body value `33/20`.
+- [x] Preserve the distinction between internal normalized value and public final theorem acceptance.
 
 Boundary retained:
 
 ```text
 spectral checkpoint: complete internally
+normalized value surface: 33/20
 public final theorem release: not opened
-Mathlib main adoption: explicit proposal / review-gate only
 ```
 
-## Phase 4 — Release hygiene and external-audit surfaces
+## Phase D — Analytic theorem-body and concrete residual closure
 
-Status: **mostly complete; tag/release remains review-gated**
+Status: **complete as internal proof-architecture surfaces**
 
-- [x] Move release provenance into `docs/archive/`.
-- [x] Keep root README as the GitHub-native entry point.
-- [x] Keep public theorem claims review-gated.
-- [x] Prepare version-tag readiness notes without creating a tag.
-- [x] Prepare source-tree review refresh without creating a tag.
-- [x] Add bounded tag creation script without creating a tag.
-- [x] Add post-tag verification receipt template.
-- [x] Add tag creation tracking issue receipt.
-- [x] Add external audit note template without changing active proof semantics.
-- [ ] Create a version tag only after CI green confirmation, source-tree review, and boundary review.
-- [ ] Add external audit notes without changing active proof semantics.
-
-## Phase 5 — Analytic theorem-body and concrete residual closure
-
-Status: **complete as internal theorem-body / proof-architecture surfaces**
-
-- [x] Add exact gap analytic real closure.
-- [x] Add Hilbert Rayleigh quotient theorem surface.
 - [x] Add self-adjoint `H_phys` theorem surface.
 - [x] Add spectral theorem theorem surface.
 - [x] Add PVM theorem surface.
@@ -133,7 +126,6 @@ Status: **complete as internal theorem-body / proof-architecture surfaces**
 - [x] Add spectral realization and continuum spectral theorem skeletons.
 - [x] Add final theorem release skeleton / closure / chain index / bundle manifest.
 - [x] Add concrete residual closure.
-- [x] Record concrete residual closure CI in the ledger.
 
 Internally closed residual surfaces:
 
@@ -145,23 +137,11 @@ compact lattice-gauge plaquette observable construction
 operator-measure realization and compatibility
 ```
 
-Key ledgers:
-
-```text
-docs/mathlib_concrete_residual_closure.md
-docs/mathlib_concrete_residual_closure_ci.md
-docs/mathlib_final_theorem_release_bundle_manifest.md
-docs/mathlib_final_theorem_release_bundle_manifest_ci.md
-docs/mathlib_final_theorem_release_chain_index.md
-docs/mathlib_final_theorem_release_chain_index_ci.md
-```
-
-## Phase 6 — Physical Hamiltonian normalization
+## Phase E — Physical Hamiltonian normalization
 
 Status: **complete as scalar and operator normalization surfaces**
 
 - [x] Add physical Hamiltonian scalar normalization bridge.
-- [x] Record physical Hamiltonian scalar normalization CI.
 - [x] Add physical Hamiltonian operator normalization surface.
 - [x] Record operator-normalization CI checkpoint.
 - [x] Keep dimensional physical interpretation explicitly dependent on `E0`.
@@ -180,18 +160,17 @@ dimensionless exact gap is 33/20
 dimensional physical gap reads as E0 * 33/20
 ```
 
-## Phase 7 — Exact-value origin and audit hardening
+## Phase F — Exact-value origin and audit hardening
 
 Status: **complete as internal audit surface**
 
 - [x] Add exact value theorem-body origin certificate.
-- [x] Record exact value theorem-body origin CI.
 - [x] Add major theorem non-placeholder audit script.
 - [x] Wire major theorem non-placeholder audit into CI.
 - [x] Add bridge coherence audit script.
 - [x] Add dedicated Bridge Coherence CI workflow.
-- [x] Record bridge coherence CI in the ledger.
-- [x] Ensure public-boundary markers remain visible.
+- [x] Check bridge order from Hilbert to physical Hamiltonian to Yang-Mills to spectral/PVM to continuum surfaces.
+- [x] Keep public-boundary markers visible.
 
 Audit invariants:
 
@@ -201,23 +180,12 @@ major theorem surfaces are not trivial True-only statements
 33/20 theorem-body origin is checked as a non-placeholder statement
 operator-measure/PVM compatibility is checked as a non-placeholder statement
 Hamiltonian normalization bridge is checked as a non-placeholder statement
-Hilbert -> H_phys -> Yang-Mills -> spectral/PVM -> continuum bridge order is mechanically audited
+bridge order is mechanically audited
 exact value preservation anchors are mechanically audited
 public boundary markers are mechanically audited
 ```
 
-Key ledgers:
-
-```text
-docs/mathlib_major_theorem_nonplaceholder_audit.md
-docs/mathlib_major_theorem_nonplaceholder_audit_ci.md
-docs/mathlib_bridge_coherence_audit.md
-docs/mathlib_bridge_coherence_ci.md
-docs/mathlib_exact_value_theorem_body_origin.md
-docs/mathlib_exact_value_theorem_body_origin_ci.md
-```
-
-## Phase 8 — Continuum-Hamiltonian route and external audit readiness
+## Phase G — Continuum-Hamiltonian route and external audit readiness
 
 Status: **complete as internal readiness gate; external audit still pending**
 
@@ -235,6 +203,8 @@ Status: **complete as internal readiness gate; external audit still pending**
 - [x] Add continuum Hamiltonian mass-gap release adoption.
 - [x] Add continuum Hamiltonian complete mass-gap derivation.
 - [x] Add continuum Hamiltonian complete mass-gap release adoption.
+- [x] Add finite-carrier Mathlib seed ladder over completed `Fin 2` and `Fin 3` surfaces.
+- [x] Preserve the boundary before general `Fin n`, basis, dense span, operator, and spectral claims.
 - [x] Add four-lane residual closure.
 - [x] Add internal review residual closure gate.
 - [x] Add external audit readiness gate.
@@ -272,7 +242,7 @@ Current replay path includes:
 [check] lake build
 ```
 
-## Phase 9 — Independent replay and external review
+## Phase H — Independent replay and external mathematical review
 
 Status: **active priority**
 
@@ -283,19 +253,12 @@ Status: **active priority**
 - [ ] Ask at least one external reviewer to run `bash scripts/check.sh`.
 - [ ] Ask at least one reviewer to inspect the major theorem surfaces in `THEOREM_INDEX.md`.
 - [ ] Ask at least one reviewer to inspect the physical normalization boundary.
+- [ ] Ask at least one reviewer to inspect the continuum-Hamiltonian complete derivation surface.
+- [ ] Ask at least one reviewer to inspect the finite-carrier ladder boundary before `Fin n` generalization.
 - [ ] Collect review notes as append-only external audit notes.
 - [ ] Do not convert review success into public final theorem release automatically.
 
-Review principle:
-
-```text
-external-audit readiness is not external audit
-replay success is not mathematical consensus
-CI success is not proof review
-documentation is not theorem body
-```
-
-## Phase 10 — Version tag, Zenodo synchronization, and release packet
+## Phase I — Version tag, Zenodo synchronization, and audit release packet
 
 Status: **pending**
 
@@ -309,7 +272,7 @@ Status: **pending**
 - [ ] Update Zenodo archive only after the tag and post-tag replay receipt are stable.
 - [ ] Keep the Zenodo description clear that the record is a proof-architecture and external-audit preparation artifact unless and until independent consensus changes the boundary.
 
-## Phase 11 — Public communication boundary
+## Phase J — Public communication boundary
 
 Status: **active governance rule**
 
@@ -341,6 +304,7 @@ dimensional physical gap fixed without E0
 CI output equals mathematical proof review
 audit scripts replace Lean kernel checking
 external-audit-readiness gate equals external audit
+finite-carrier seeds imply the full general finite-family / spectral theorem chain
 ```
 
 ## Current priorities
@@ -349,6 +313,8 @@ external-audit-readiness gate equals external audit
 2. Make fresh-clone replay the primary external entry point.
 3. Preserve the `33/20` normalized theorem-body origin while keeping the public boundary explicit.
 4. Collect independent replay receipts.
-5. Prepare an audit-oriented version tag only after source-tree review and CI green confirmation.
-6. Synchronize Zenodo only after the tag and replay receipt are stable.
-7. Continue mathematical hardening without weakening the external-audit boundary.
+5. Harden the continuum-Hamiltonian derivation surface without weakening the external-audit boundary.
+6. Advance the finite-carrier ladder from `Fin 2` / `Fin 3` seeds toward a separately reviewed general `Fin n` route.
+7. Prepare an audit-oriented version tag only after source-tree review and CI green confirmation.
+8. Synchronize Zenodo only after the tag and replay receipt are stable.
+9. Continue mathematical hardening while separating proof architecture, replay readiness, and external consensus.
