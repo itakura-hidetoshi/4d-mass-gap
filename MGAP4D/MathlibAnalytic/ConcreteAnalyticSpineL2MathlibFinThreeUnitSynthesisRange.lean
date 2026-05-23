@@ -1,0 +1,180 @@
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2MathlibFinThreeUnitSynthesisLinearMap
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- The range of the three-unit synthesis linear map. -/
+def concreteL2MathlibFinThreeUnitSynthesisRange (a b c : ℕ) :
+    Submodule ℝ (lp (fun _ : ℕ => ℝ) 2) :=
+  LinearMap.range (concreteL2MathlibFinThreeUnitSynthesisLinearMap a b c)
+
+/-- Every synthesized vector lies in the range of the three-unit synthesis linear map. -/
+theorem concrete_l2_mathlib_fin_three_unit_synthesis_mem_range
+    (a b c : ℕ) (r : Fin 3 → ℝ) :
+    concreteL2MathlibFinThreeUnitSynthesisLinearMap a b c r ∈
+      concreteL2MathlibFinThreeUnitSynthesisRange a b c := by
+  exact ⟨r, rfl⟩
+
+/-- Membership in the three-unit synthesis range is exactly existence of a
+`Fin 3` coefficient function whose synthesis gives the vector. -/
+theorem concrete_l2_mathlib_fin_three_unit_mem_range_iff
+    (a b c : ℕ) (v : lp (fun _ : ℕ => ℝ) 2) :
+    v ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ↔
+      ∃ r : Fin 3 → ℝ,
+        concreteL2MathlibFinThreeUnitSynthesisLinearMap a b c r = v := by
+  rfl
+
+/-- The first coordinate unit is in the three-unit synthesis range. -/
+theorem concrete_l2_mathlib_fin_three_unit_first_mem_range
+    (a b c : ℕ) :
+    concreteL2MathlibUnit a ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c := by
+  refine ⟨fun i : Fin 3 => if i = 0 then (1 : ℝ) else 0, ?_⟩
+  rw [concrete_l2_mathlib_fin_three_unit_synthesis_linear_map_apply_eq_sum]
+  rw [Fin.sum_univ_three]
+  simp [concreteL2MathlibFinThreeUnitFamily]
+
+/-- The second coordinate unit is in the three-unit synthesis range. -/
+theorem concrete_l2_mathlib_fin_three_unit_second_mem_range
+    (a b c : ℕ) :
+    concreteL2MathlibUnit b ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c := by
+  refine ⟨fun i : Fin 3 => if i = 1 then (1 : ℝ) else 0, ?_⟩
+  rw [concrete_l2_mathlib_fin_three_unit_synthesis_linear_map_apply_eq_sum]
+  rw [Fin.sum_univ_three]
+  simp [concreteL2MathlibFinThreeUnitFamily]
+
+/-- The third coordinate unit is in the three-unit synthesis range. -/
+theorem concrete_l2_mathlib_fin_three_unit_third_mem_range
+    (a b c : ℕ) :
+    concreteL2MathlibUnit c ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c := by
+  refine ⟨fun i : Fin 3 => if i = 2 then (1 : ℝ) else 0, ?_⟩
+  rw [concrete_l2_mathlib_fin_three_unit_synthesis_linear_map_apply_eq_sum]
+  rw [Fin.sum_univ_three]
+  simp [concreteL2MathlibFinThreeUnitFamily]
+
+/-- The range contains a nonzero vector: the first selected coordinate unit. -/
+theorem concrete_l2_mathlib_fin_three_unit_range_nontrivial_witness
+    (a b c : ℕ) :
+    ∃ v : lp (fun _ : ℕ => ℝ) 2,
+      v ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧ v ≠ 0 := by
+  exact ⟨
+    concreteL2MathlibUnit a,
+    concrete_l2_mathlib_fin_three_unit_first_mem_range a b c,
+    concrete_l2_mathlib_unit_ne_zero a⟩
+
+/-- Pairwise distinct selected coordinate units give three pairwise distinct
+vectors in the synthesis range. -/
+theorem concrete_l2_mathlib_fin_three_unit_range_contains_distinct_units
+    {a b c : ℕ} (hab : a ≠ b) (hac : a ≠ c) (hbc : b ≠ c) :
+    ∃ u v w : lp (fun _ : ℕ => ℝ) 2,
+      u ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧
+      v ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧
+      w ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧
+      u ≠ v ∧ u ≠ w ∧ v ≠ w := by
+  exact ⟨
+    concreteL2MathlibUnit a,
+    concreteL2MathlibUnit b,
+    concreteL2MathlibUnit c,
+    concrete_l2_mathlib_fin_three_unit_first_mem_range a b c,
+    concrete_l2_mathlib_fin_three_unit_second_mem_range a b c,
+    concrete_l2_mathlib_fin_three_unit_third_mem_range a b c,
+    concrete_l2_mathlib_unit_ne_of_ne hab,
+    concrete_l2_mathlib_unit_ne_of_ne hac,
+    concrete_l2_mathlib_unit_ne_of_ne hbc⟩
+
+/-- Adapter predicate for the three-unit synthesis range layer. -/
+def concreteL2MathlibFinThreeUnitSynthesisRangeAdapter : Prop :=
+  (∀ a b c : ℕ, ∃ v : lp (fun _ : ℕ => ℝ) 2,
+    v ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧ v ≠ 0) ∧
+  (∀ {a b c : ℕ}, a ≠ b → a ≠ c → b ≠ c →
+    ∃ u v w : lp (fun _ : ℕ => ℝ) 2,
+      u ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧
+      v ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧
+      w ∈ concreteL2MathlibFinThreeUnitSynthesisRange a b c ∧
+      u ≠ v ∧ u ≠ w ∧ v ≠ w)
+
+/-- Adapter theorem for the three-unit synthesis range layer. -/
+theorem concrete_l2_mathlib_fin_three_unit_synthesis_range_adapter_ready :
+    concreteL2MathlibFinThreeUnitSynthesisRangeAdapter := by
+  exact ⟨
+    by intro a b c; exact concrete_l2_mathlib_fin_three_unit_range_nontrivial_witness a b c,
+    by intro a b c hab hac hbc; exact concrete_l2_mathlib_fin_three_unit_range_contains_distinct_units hab hac hbc⟩
+
+/-- Surface for the range of the `Fin 3` coordinate-unit synthesis linear map.
+
+This layer names the three-coordinate candidate submodule generated by the three
+selected coordinate units and proves the basic range witnesses needed before any
+future range equivalence or coordinate reconstruction layer. -/
+structure ConcreteL2MathlibFinThreeUnitSynthesisRangeSurface where
+  synthesisLinearMapReady : concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisLinearMapSurfaceReady
+  rangeAdapter : concreteL2MathlibFinThreeUnitSynthesisRangeAdapter
+  boundaryNotRangeEquivTheorem : Prop
+  boundaryNotFiniteDimensionalTheorem : Prop
+  boundaryNotGeneralFiniteFamilyLinearIndependence : Prop
+  boundaryNotBasisTheorem : Prop
+  boundaryNotDenseSpanTheorem : Prop
+  boundaryNotFiniteSupportDomainEquivalence : Prop
+  boundaryNotUnboundedOperatorDomainTheorem : Prop
+  boundaryNotSelfAdjointness : Prop
+  boundaryNotPVMConstruction : Prop
+  boundaryNotSpectralAtomTheorem : Prop
+
+/-- Concrete range surface for the three-unit synthesis linear map. -/
+def concreteL2MathlibFinThreeUnitSynthesisRangeSurface :
+    ConcreteL2MathlibFinThreeUnitSynthesisRangeSurface :=
+  { synthesisLinearMapReady :=
+      concrete_analytic_spine_l2_mathlib_fin_three_unit_synthesis_linear_map_surface_ready
+    rangeAdapter := concrete_l2_mathlib_fin_three_unit_synthesis_range_adapter_ready
+    boundaryNotRangeEquivTheorem := True
+    boundaryNotFiniteDimensionalTheorem := True
+    boundaryNotGeneralFiniteFamilyLinearIndependence := True
+    boundaryNotBasisTheorem := True
+    boundaryNotDenseSpanTheorem := True
+    boundaryNotFiniteSupportDomainEquivalence := True
+    boundaryNotUnboundedOperatorDomainTheorem := True
+    boundaryNotSelfAdjointness := True
+    boundaryNotPVMConstruction := True
+    boundaryNotSpectralAtomTheorem := True }
+
+/-- Readiness for the three-unit synthesis range surface. -/
+def concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisRangeSurfaceReady : Prop :=
+  concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisLinearMapSurfaceReady ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeAdapter ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotRangeEquivTheorem ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotFiniteDimensionalTheorem ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotGeneralFiniteFamilyLinearIndependence ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotBasisTheorem ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotDenseSpanTheorem ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotFiniteSupportDomainEquivalence ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotUnboundedOperatorDomainTheorem ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotSelfAdjointness ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotPVMConstruction ∧
+  concreteL2MathlibFinThreeUnitSynthesisRangeSurface.boundaryNotSpectralAtomTheorem
+
+/-- Readiness theorem for the three-unit synthesis range surface. -/
+theorem concrete_analytic_spine_l2_mathlib_fin_three_unit_synthesis_range_surface_ready :
+    concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisRangeSurfaceReady := by
+  unfold concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisRangeSurfaceReady
+  exact And.intro
+    concrete_analytic_spine_l2_mathlib_fin_three_unit_synthesis_linear_map_surface_ready <|
+      And.intro concrete_l2_mathlib_fin_three_unit_synthesis_range_adapter_ready <|
+        And.intro trivial <| And.intro trivial <| And.intro trivial <|
+          And.intro trivial <| And.intro trivial <| And.intro trivial <|
+            And.intro trivial <| And.intro trivial <| And.intro trivial trivial
+
+/-- Boundary marker for the three-unit synthesis range surface. -/
+def concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisRangeHardResidualBoundaryHeld : Prop :=
+  concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisRangeSurfaceReady
+
+/-- Boundary theorem for the three-unit synthesis range surface. -/
+theorem concrete_analytic_spine_l2_mathlib_fin_three_unit_synthesis_range_hard_residual_boundary_held :
+    concreteAnalyticSpineL2MathlibFinThreeUnitSynthesisRangeHardResidualBoundaryHeld := by
+  exact concrete_analytic_spine_l2_mathlib_fin_three_unit_synthesis_range_surface_ready
+
+end
+
+end MathlibAnalytic
+end MGAP4D
