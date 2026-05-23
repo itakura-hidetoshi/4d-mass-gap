@@ -24,6 +24,23 @@ theorem concrete_l2_mathlib_fin_n_unit_family_apply_self
   unfold concreteL2MathlibFinNUnitFamily
   exact concrete_l2_mathlib_unit_apply_self (φ i)
 
+/-- Evaluating the `Pi.single` finite sum at the selected coordinate recovers the
+selected coefficient. -/
+theorem concrete_l2_mathlib_fin_n_pi_single_sum_apply_selected_coordinate
+    {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
+    (c : Fin m → ℝ) (i : Fin m) :
+    (∑ x : Fin m, c x * Pi.single (φ x) (1 : ℝ) (φ i)) = c i := by
+  classical
+  rw [Finset.sum_eq_single i]
+  · simp
+  · intro j _hj hji
+    have hne : φ j ≠ φ i := by
+      intro h
+      exact hji (hφ h)
+    simp [Pi.single_eq_of_ne hne]
+  · intro hi
+    exact False.elim (hi (Finset.mem_univ i))
+
 /-- Evaluating the general `Fin m` coordinate-unit synthesis at the selected
 coordinate `φ i` recovers the coefficient `c i`, provided `φ` is injective. -/
 theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
@@ -31,13 +48,6 @@ theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
     (c : Fin m → ℝ) (i : Fin m) :
     concreteL2MathlibFinNSynthesis m φ c (φ i) = c i := by
   classical
-  have hiff : ∀ j : Fin m, φ i = φ j ↔ i = j := by
-    intro j
-    constructor
-    · intro h
-      exact hφ h
-    · intro h
-      rw [h]
   calc
     concreteL2MathlibFinNSynthesis m φ c (φ i)
         = (∑ j : Fin m, (c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2)) (φ i) := by
@@ -48,8 +58,10 @@ theorem concrete_l2_mathlib_fin_n_synthesis_apply_selected_coordinate
             (f := fun j : Fin m => (c j • concreteL2MathlibUnit (φ j) : lp (fun _ : ℕ => ℝ) 2))
             (s := Finset.univ)
           exact congrFun hsum (φ i)
+    _ = ∑ j : Fin m, c j * Pi.single (φ j) (1 : ℝ) (φ i) := by
+          simp [concreteL2MathlibUnit, Pi.smul_apply]
     _ = c i := by
-          simp [concreteL2MathlibUnit, Pi.smul_apply, hiff]
+          exact concrete_l2_mathlib_fin_n_pi_single_sum_apply_selected_coordinate hφ c i
 
 /-- Coordinate recovery for the general `Fin m` synthesis function under an
 injective selected-index map. -/
