@@ -12,14 +12,14 @@ linear map.
 
 This is the abstract hypothesis that later coordinate-unit synthesis maps must
 prove from coordinate separation / finite support arguments. -/
-def concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial (ι : Type*)
+def concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial (ι : Type)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) : Prop :=
   ∀ c : ι → ℝ, T c = 0 → ∀ i : ι, c i = 0
 
 /-- If the zero fiber is coefficient-trivial, then the synthesis map has bottom
 kernel. -/
 theorem concrete_l2_mathlib_finite_synthesis_ker_eq_bot_of_zero_fiber_coeff_trivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T) :
     LinearMap.ker T = ⊥ := by
   ext c
@@ -37,7 +37,7 @@ theorem concrete_l2_mathlib_finite_synthesis_ker_eq_bot_of_zero_fiber_coeff_triv
 
 /-- Conversely, a bottom kernel gives coefficient-trivial zero fiber. -/
 theorem concrete_l2_mathlib_finite_synthesis_zero_fiber_coeff_trivial_of_ker_eq_bot
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hker : LinearMap.ker T = ⊥) :
     concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T := by
   intro c hc i
@@ -51,7 +51,7 @@ theorem concrete_l2_mathlib_finite_synthesis_zero_fiber_coeff_trivial_of_ker_eq_
 /-- Kernel-bottom is equivalent to coefficient-trivial zero fiber for synthesis
 maps from function coefficient spaces. -/
 theorem concrete_l2_mathlib_finite_synthesis_ker_eq_bot_iff_zero_fiber_coeff_trivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) :
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) :
     LinearMap.ker T = ⊥ ↔ concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T := by
   constructor
   · intro hker
@@ -62,7 +62,7 @@ theorem concrete_l2_mathlib_finite_synthesis_ker_eq_bot_iff_zero_fiber_coeff_tri
 /-- Zero-fiber coefficient triviality gives injectivity of the original synthesis
 map. -/
 theorem concrete_l2_mathlib_finite_synthesis_injective_of_zero_fiber_coeff_trivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T) :
     Function.Injective T := by
   rw [← LinearMap.ker_eq_bot]
@@ -71,7 +71,7 @@ theorem concrete_l2_mathlib_finite_synthesis_injective_of_zero_fiber_coeff_trivi
 /-- Zero-fiber coefficient triviality gives bijectivity of the range-restricted
 synthesis map. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_zero_fiber_coeff_trivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T) :
     Function.Bijective (concreteL2MathlibFiniteSynthesisRangeMap ι T) := by
   exact concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_ker_eq_bot ι T
@@ -79,7 +79,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_zero_fiber_c
 
 /-- Zero-fiber coefficient triviality gives the generic range linear equivalence. -/
 def concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T) :
     (ι → ℝ) ≃ₗ[ℝ] concreteL2MathlibFiniteSynthesisRange ι T :=
   concreteL2MathlibFiniteSynthesisRangeLinearEquiv ι T
@@ -88,7 +88,7 @@ def concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial
 /-- Zero-fiber coefficient triviality gives generic coordinate reconstruction on
 the range. -/
 def concreteL2MathlibFiniteSynthesisRangeCoordinatesOfZeroFiberCoeffTrivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T)
     (v : concreteL2MathlibFiniteSynthesisRange ι T) : ι → ℝ :=
   concreteL2MathlibFiniteSynthesisRangeCoordinates ι T
@@ -97,7 +97,7 @@ def concreteL2MathlibFiniteSynthesisRangeCoordinatesOfZeroFiberCoeffTrivial
 /-- Re-synthesizing the coordinates reconstructed under zero-fiber coefficient
 triviality gives back the range vector. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize_of_zero_fiber_coeff_trivial
-    (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T)
     (v : concreteL2MathlibFiniteSynthesisRange ι T) :
     concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial ι T hzero
@@ -109,14 +109,14 @@ theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize_of_zer
 
 /-- Adapter predicate for the finite synthesis kernel template. -/
 def concreteL2MathlibFiniteSynthesisKernelTemplateAdapter : Prop :=
-  ∀ (ι : Type*) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2),
-    concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T →
+  ∀ (ι : Type) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (hzero : concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T),
       LinearMap.ker T = ⊥ ∧
       Function.Injective T ∧
       Function.Bijective (concreteL2MathlibFiniteSynthesisRangeMap ι T) ∧
       ∀ v : concreteL2MathlibFiniteSynthesisRange ι T,
-        concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial ι T ‹concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T›
-          (concreteL2MathlibFiniteSynthesisRangeCoordinatesOfZeroFiberCoeffTrivial ι T ‹concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T› v) = v
+        concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial ι T hzero
+          (concreteL2MathlibFiniteSynthesisRangeCoordinatesOfZeroFiberCoeffTrivial ι T hzero v) = v
 
 /-- Adapter theorem for the finite synthesis kernel template. -/
 theorem concrete_l2_mathlib_finite_synthesis_kernel_template_adapter_ready :
