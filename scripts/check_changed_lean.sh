@@ -123,8 +123,12 @@ ensure_lake_manifest() {
 
 ensure_lake_manifest
 
-echo "[fast] lake exe cache get"
-lake exe cache get || true
+if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
+  echo "[fast] mathlib cache present; skip lake exe cache get"
+else
+  echo "[fast] mathlib cache missing; lake exe cache get"
+  lake exe cache get || true
+fi
 
 # Building the root import module on every PR defeats the fast lane, because the
 # root intentionally imports the whole analytic surface.  When root and leaf
@@ -142,8 +146,8 @@ fi
 
 # Build only maximal changed modules.  If changed module A imports changed
 # module B, then building A already builds B, so B is removed from the explicit
-# target set.  This keeps the PR lane small while preserving local coverage of
-# the changed import frontier.
+target set.  This keeps the PR lane small while preserving local coverage of
+the changed import frontier.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
 targets=()
