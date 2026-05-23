@@ -14,18 +14,21 @@ This summary intentionally does not generalize to all finite families.  It recor
 that the existing `Fin 2` and `Fin 3` carrier chains are both available as stable
 Mathlib import surfaces before a later, separate `Fin n` generalization attempt. -/
 def concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummaryReady : Prop :=
-  (∀ {k n : ℕ}, k ≠ n →
-    concreteAnalyticSpineL2MathlibFinTwoUnitRangeCoordinateUltimateSurfaceReady k n) ∧
+  concreteAnalyticSpineL2MathlibFinTwoUnitRangeCoordinateUltimateFacadeSurfaceReady ∧
   concreteAnalyticSpineL2MathlibFinThreeUnitRangeFinalFacadeReady
 
 /-- Ladder-level readiness theorem for the completed finite carrier seeds. -/
 theorem concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_summary_ready :
     concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummaryReady := by
   exact ⟨
-    by
-      intro k n hkn
-      exact concrete_analytic_spine_l2_mathlib_fin_two_unit_range_coordinate_ultimate_surface_ready hkn,
+    concrete_analytic_spine_l2_mathlib_fin_two_unit_range_coordinate_ultimate_facade_surface_ready,
     concrete_analytic_spine_l2_mathlib_fin_three_unit_range_final_facade_ready⟩
+
+/-- Compact statement that the `Fin 2` ultimate coordinate façade adapter is
+available at the ladder level. -/
+theorem concrete_l2_mathlib_finite_carrier_ladder_fin_two_adapter_ready :
+    concreteL2MathlibFinTwoUnitRangeCoordinateUltimateFacadeAdapter := by
+  exact concrete_l2_mathlib_fin_two_unit_range_coordinate_ultimate_facade_adapter_ready
 
 /-- Compact statement that the `Fin 3` public summary adapter is available at the
 ladder level. -/
@@ -52,6 +55,8 @@ no unbounded operator, no self-adjointness, no PVM, no spectral atom, and no
 positive spectral-weight theorem are claimed here. -/
 structure ConcreteL2MathlibFiniteCarrierLadderSummarySurface where
   finiteCarrierLadderReady : concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummaryReady
+  finTwoAdapterReady : concreteL2MathlibFinTwoUnitRangeCoordinateUltimateFacadeAdapter
+  finThreeAdapterReady : concreteL2MathlibFinThreeUnitRangePublicSummaryAdapter
   generalFinBoundaryHeld : concreteAnalyticSpineL2MathlibFiniteCarrierLadderGeneralFinBoundaryHeld
   boundaryNotGeneralFiniteFamilyLinearIndependence : Prop
   boundaryNotBasisTheorem : Prop
@@ -68,6 +73,10 @@ def concreteL2MathlibFiniteCarrierLadderSummarySurface :
     ConcreteL2MathlibFiniteCarrierLadderSummarySurface :=
   { finiteCarrierLadderReady :=
       concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_summary_ready
+    finTwoAdapterReady :=
+      concrete_l2_mathlib_finite_carrier_ladder_fin_two_adapter_ready
+    finThreeAdapterReady :=
+      concrete_l2_mathlib_finite_carrier_ladder_fin_three_adapter_ready
     generalFinBoundaryHeld :=
       concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_general_fin_boundary_held
     boundaryNotGeneralFiniteFamilyLinearIndependence := True
@@ -83,6 +92,8 @@ def concreteL2MathlibFiniteCarrierLadderSummarySurface :
 /-- Final readiness predicate for the finite-carrier ladder summary surface. -/
 def concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummarySurfaceReady : Prop :=
   concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummaryReady ∧
+  concreteL2MathlibFinTwoUnitRangeCoordinateUltimateFacadeAdapter ∧
+  concreteL2MathlibFinThreeUnitRangePublicSummaryAdapter ∧
   concreteAnalyticSpineL2MathlibFiniteCarrierLadderGeneralFinBoundaryHeld ∧
   concreteL2MathlibFiniteCarrierLadderSummarySurface.boundaryNotGeneralFiniteFamilyLinearIndependence ∧
   concreteL2MathlibFiniteCarrierLadderSummarySurface.boundaryNotBasisTheorem ∧
@@ -100,11 +111,13 @@ theorem concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_summary_surface
   unfold concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummarySurfaceReady
   exact And.intro
     concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_summary_ready <|
-      And.intro
-        concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_general_fin_boundary_held <|
-        And.intro trivial <| And.intro trivial <| And.intro trivial <|
-          And.intro trivial <| And.intro trivial <| And.intro trivial <|
-            And.intro trivial <| And.intro trivial trivial
+      And.intro concrete_l2_mathlib_finite_carrier_ladder_fin_two_adapter_ready <|
+        And.intro concrete_l2_mathlib_finite_carrier_ladder_fin_three_adapter_ready <|
+          And.intro
+            concrete_analytic_spine_l2_mathlib_finite_carrier_ladder_general_fin_boundary_held <|
+            And.intro trivial <| And.intro trivial <| And.intro trivial <|
+              And.intro trivial <| And.intro trivial <| And.intro trivial <|
+                And.intro trivial <| And.intro trivial trivial
 
 /-- Hard-residual boundary marker for the finite-carrier ladder summary. -/
 def concreteAnalyticSpineL2MathlibFiniteCarrierLadderSummaryHardResidualBoundaryHeld : Prop :=
