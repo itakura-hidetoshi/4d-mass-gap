@@ -130,15 +130,15 @@ theorem concrete_l2_mathlib_fin_n_synthesis_range_decompose_coefficients_unique
 
 /-- Adapter predicate for the general `Fin m` range decomposition layer. -/
 def concreteL2MathlibFinNSynthesisRangeDecompositionAdapter : Prop :=
-  ∀ {m : ℕ} {φ : Fin m → ℕ}, Function.Injective φ →
+  ∀ {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ),
     (∀ v : concreteL2MathlibFiniteSynthesisRange (Fin m)
       (concreteL2MathlibFinNSynthesisLinearMap m φ),
       (v : lp (fun _ : ℕ => ℝ) 2) =
         ∑ i : Fin m,
-          concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective ‹Function.Injective φ› v i •
+          concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v i •
             concreteL2MathlibUnit (φ i)) ∧
     (∀ i : Fin m,
-      concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective ‹Function.Injective φ›
+      concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ
           (concreteL2MathlibFinNSelectedRangeVector φ i) =
         (fun j : Fin m => if j = i then (1 : ℝ) else 0))
 
