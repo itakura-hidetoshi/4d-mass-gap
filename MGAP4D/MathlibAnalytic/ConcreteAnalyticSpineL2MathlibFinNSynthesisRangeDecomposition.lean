@@ -39,11 +39,13 @@ theorem concrete_l2_mathlib_fin_n_selected_range_vector_synthesized_by_standard_
         (fun j : Fin m => if j = i then (1 : ℝ) else 0) =
       concreteL2MathlibFinNSelectedRangeVector φ i := by
   apply Subtype.ext
-  unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective
-  rw [concrete_l2_mathlib_finite_synthesis_range_linear_equiv_apply]
-  rw [concrete_l2_mathlib_finite_synthesis_range_map_apply_val]
-  rw [concrete_l2_mathlib_fin_n_synthesis_linear_map_apply]
-  unfold concreteL2MathlibFinNSynthesis concreteL2MathlibFinNUnitFamily
+  simp [concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective,
+    concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery,
+    concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial,
+    concreteL2MathlibFiniteSynthesisRangeLinearEquiv,
+    concreteL2MathlibFiniteSynthesisRangeMap,
+    concreteL2MathlibFinNSynthesisLinearMap,
+    concreteL2MathlibFinNSynthesis, concreteL2MathlibFinNUnitFamily]
   classical
   rw [Finset.sum_eq_single i]
   · simp
@@ -59,13 +61,13 @@ theorem concrete_l2_mathlib_fin_n_selected_range_coordinates_eq_standard
     concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ
         (concreteL2MathlibFinNSelectedRangeVector φ i) =
       (fun j : Fin m => if j = i then (1 : ℝ) else 0) := by
-  unfold concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective
-  unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective at *
-  exact Eq.symm <|
-    concrete_l2_mathlib_finite_synthesis_range_coordinates_unique
-      (Fin m) (concreteL2MathlibFinNSynthesisLinearMap m φ)
-      (concrete_l2_mathlib_fin_n_synthesis_ker_eq_bot_of_injective hφ)
-      (concrete_l2_mathlib_fin_n_selected_range_vector_synthesized_by_standard_coeff hφ i)
+  let E := concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective hφ
+  have hE : E (fun j : Fin m => if j = i then (1 : ℝ) else 0) =
+      concreteL2MathlibFinNSelectedRangeVector φ i :=
+    concrete_l2_mathlib_fin_n_selected_range_vector_synthesized_by_standard_coeff hφ i
+  change E.symm (concreteL2MathlibFinNSelectedRangeVector φ i) =
+    (fun j : Fin m => if j = i then (1 : ℝ) else 0)
+  exact Eq.symm ((LinearEquiv.symm_apply_eq E).mpr hE.symm)
 
 /-- Every vector in the general `Fin m` synthesis range decomposes as the finite
 linear combination of selected coordinate units with its recovered coordinates. -/
@@ -78,16 +80,18 @@ theorem concrete_l2_mathlib_fin_n_synthesis_range_decompose_val
         concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v i •
           concreteL2MathlibUnit (φ i) := by
   have hsynth := concrete_l2_mathlib_fin_n_synthesis_coordinates_synthesize_of_injective hφ v
-  apply congrArg (fun w : concreteL2MathlibFiniteSynthesisRange (Fin m)
+  have hval := congrArg (fun w : concreteL2MathlibFiniteSynthesisRange (Fin m)
       (concreteL2MathlibFinNSynthesisLinearMap m φ) =>
-      (w : lp (fun _ : ℕ => ℝ) 2)) at hsynth
-  unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective at hsynth
-  unfold concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective at hsynth
-  rw [concrete_l2_mathlib_finite_synthesis_range_linear_equiv_apply] at hsynth
-  rw [concrete_l2_mathlib_finite_synthesis_range_map_apply_val] at hsynth
-  rw [concrete_l2_mathlib_fin_n_synthesis_linear_map_apply] at hsynth
-  unfold concreteL2MathlibFinNSynthesis concreteL2MathlibFinNUnitFamily at hsynth
-  simpa using hsynth.symm
+      (w : lp (fun _ : ℕ => ℝ) 2)) hsynth
+  simp [concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective,
+    concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective,
+    concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery,
+    concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial,
+    concreteL2MathlibFiniteSynthesisRangeLinearEquiv,
+    concreteL2MathlibFiniteSynthesisRangeMap,
+    concreteL2MathlibFinNSynthesisLinearMap,
+    concreteL2MathlibFinNSynthesis, concreteL2MathlibFinNUnitFamily] at hval
+  exact hval.symm
 
 /-- Range-subtype form of the general `Fin m` coordinate decomposition. -/
 theorem concrete_l2_mathlib_fin_n_synthesis_range_decompose_subtype
@@ -110,20 +114,19 @@ theorem concrete_l2_mathlib_fin_n_synthesis_range_decompose_coefficients_unique
     (hc : (v : lp (fun _ : ℕ => ℝ) 2) =
       ∑ i : Fin m, c i • concreteL2MathlibUnit (φ i)) :
     c = concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v := by
-  have hsynth :
-      concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective hφ c = v := by
+  let E := concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective hφ
+  have hsynth : E c = v := by
     apply Subtype.ext
-    unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective
-    rw [concrete_l2_mathlib_finite_synthesis_range_linear_equiv_apply]
-    rw [concrete_l2_mathlib_finite_synthesis_range_map_apply_val]
-    rw [concrete_l2_mathlib_fin_n_synthesis_linear_map_apply]
-    unfold concreteL2MathlibFinNSynthesis concreteL2MathlibFinNUnitFamily
-    simpa using hc.symm
-  unfold concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective
-  unfold concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective at hsynth
-  exact concrete_l2_mathlib_finite_synthesis_range_coordinates_unique
-    (Fin m) (concreteL2MathlibFinNSynthesisLinearMap m φ)
-    (concrete_l2_mathlib_fin_n_synthesis_ker_eq_bot_of_injective hφ) hsynth
+    simp [E, concreteL2MathlibFinNSynthesisRangeLinearEquivOfInjective,
+      concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery,
+      concreteL2MathlibFiniteSynthesisRangeLinearEquivOfZeroFiberCoeffTrivial,
+      concreteL2MathlibFiniteSynthesisRangeLinearEquiv,
+      concreteL2MathlibFiniteSynthesisRangeMap,
+      concreteL2MathlibFinNSynthesisLinearMap,
+      concreteL2MathlibFinNSynthesis, concreteL2MathlibFinNUnitFamily]
+    exact hc.symm
+  change c = E.symm v
+  exact Eq.symm ((LinearEquiv.symm_apply_eq E).mpr hsynth.symm)
 
 /-- Adapter predicate for the general `Fin m` range decomposition layer. -/
 def concreteL2MathlibFinNSynthesisRangeDecompositionAdapter : Prop :=
