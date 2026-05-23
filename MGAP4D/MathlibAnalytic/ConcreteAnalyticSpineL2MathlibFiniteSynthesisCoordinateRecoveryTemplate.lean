@@ -15,13 +15,13 @@ For a synthesis map `T : (ι → ℝ) →ₗ ℓ²(ℕ, ℝ)`, a coordinate sele
 
 Later coordinate-unit synthesis leaves should prove this law from the facts
 `e_(φ i) (φ i) = 1` and `e_(φ j) (φ i) = 0` for `j ≠ i`. -/
-def concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw (ι : Type*)
+def concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw (ι : Type)
     (φ : ι → ℕ) (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2) : Prop :=
   ∀ c : ι → ℝ, ∀ i : ι, T c (φ i) = c i
 
 /-- A coordinate-recovery law implies coefficient-triviality of the zero fiber. -/
 theorem concrete_l2_mathlib_finite_synthesis_zero_fiber_coeff_trivial_of_coordinate_recovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T) :
     concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T := by
@@ -34,7 +34,7 @@ theorem concrete_l2_mathlib_finite_synthesis_zero_fiber_coeff_trivial_of_coordin
 
 /-- A coordinate-recovery law implies bottom kernel. -/
 theorem concrete_l2_mathlib_finite_synthesis_ker_eq_bot_of_coordinate_recovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T) :
     LinearMap.ker T = ⊥ := by
@@ -43,7 +43,7 @@ theorem concrete_l2_mathlib_finite_synthesis_ker_eq_bot_of_coordinate_recovery
 
 /-- A coordinate-recovery law implies injectivity of the synthesis map. -/
 theorem concrete_l2_mathlib_finite_synthesis_injective_of_coordinate_recovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T) :
     Function.Injective T := by
@@ -53,7 +53,7 @@ theorem concrete_l2_mathlib_finite_synthesis_injective_of_coordinate_recovery
 /-- A coordinate-recovery law implies bijectivity of the range-restricted
 synthesis map. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_coordinate_recovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T) :
     Function.Bijective (concreteL2MathlibFiniteSynthesisRangeMap ι T) := by
@@ -62,7 +62,7 @@ theorem concrete_l2_mathlib_finite_synthesis_range_map_bijective_of_coordinate_r
 
 /-- Coordinate recovery gives the generic range linear equivalence. -/
 def concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T) :
     (ι → ℝ) ≃ₗ[ℝ] concreteL2MathlibFiniteSynthesisRange ι T :=
@@ -71,7 +71,7 @@ def concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery
 
 /-- Coordinate recovery gives generic coordinate reconstruction on the range. -/
 def concreteL2MathlibFiniteSynthesisRangeCoordinatesOfCoordinateRecovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T)
     (v : concreteL2MathlibFiniteSynthesisRange ι T) : ι → ℝ :=
@@ -81,7 +81,7 @@ def concreteL2MathlibFiniteSynthesisRangeCoordinatesOfCoordinateRecovery
 /-- Re-synthesizing the coordinates reconstructed under coordinate recovery gives
 back the range vector. -/
 theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize_of_coordinate_recovery
-    (ι : Type*) (φ : ι → ℕ)
+    (ι : Type) (φ : ι → ℕ)
     (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
     (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T)
     (v : concreteL2MathlibFiniteSynthesisRange ι T) :
@@ -94,16 +94,16 @@ theorem concrete_l2_mathlib_finite_synthesis_range_coordinates_synthesize_of_coo
 
 /-- Adapter predicate for the coordinate-recovery template. -/
 def concreteL2MathlibFiniteSynthesisCoordinateRecoveryTemplateAdapter : Prop :=
-  ∀ (ι : Type*) (φ : ι → ℕ)
-    (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2),
-    concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T →
+  ∀ (ι : Type) (φ : ι → ℕ)
+    (T : (ι → ℝ) →ₗ[ℝ] lp (fun _ : ℕ => ℝ) 2)
+    (hrecover : concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T),
       concreteL2MathlibFiniteSynthesisZeroFiberCoeffTrivial ι T ∧
       LinearMap.ker T = ⊥ ∧
       Function.Injective T ∧
       Function.Bijective (concreteL2MathlibFiniteSynthesisRangeMap ι T) ∧
       ∀ v : concreteL2MathlibFiniteSynthesisRange ι T,
-        concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery ι φ T ‹concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T›
-          (concreteL2MathlibFiniteSynthesisRangeCoordinatesOfCoordinateRecovery ι φ T ‹concreteL2MathlibFiniteSynthesisCoordinateRecoveryLaw ι φ T› v) = v
+        concreteL2MathlibFiniteSynthesisRangeLinearEquivOfCoordinateRecovery ι φ T hrecover
+          (concreteL2MathlibFiniteSynthesisRangeCoordinatesOfCoordinateRecovery ι φ T hrecover v) = v
 
 /-- Adapter theorem for the coordinate-recovery template. -/
 theorem concrete_l2_mathlib_finite_synthesis_coordinate_recovery_template_adapter_ready :
