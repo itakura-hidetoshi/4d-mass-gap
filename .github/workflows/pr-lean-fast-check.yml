@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - main
+      - mathlib-l2-finite-synthesis-range-template
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
       - "lean-toolchain"
@@ -30,7 +31,7 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event.inputs.base_ref || 'origin/main' }}
+  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.inputs.base_ref || 'origin/main' }}
 
 jobs:
   pr-lean-fast-check:
