@@ -8,11 +8,11 @@ KuuOS reference repo: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open public final theorem release.
+KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean proof repository, and they do not independently open public final theorem release.
 
-## Current status snapshot, May 2026
+## Current status snapshot, 2026-05-25
 
-The main branch has advanced beyond the earlier spectral checkpoint into an internal normalized theorem-body / continuum-Hamiltonian / external-audit-readiness surface.
+The `main` branch has advanced beyond the earlier spectral checkpoint into an internal normalized theorem-body / continuum-Hamiltonian / external-audit-readiness surface, and now also contains the Mathlib `ℓ²(ℕ, ℝ)` finite-synthesis carrier API gate plus the R2 dense-domain and graph-submodule frontier lane.
 
 Current theorem-body value:
 
@@ -46,7 +46,15 @@ plaquette spectral-weight lane hardening: present
 continuum-Hamiltonian theorem and release surfaces: present
 continuum-Hamiltonian complete derivation surfaces: present
 finite-carrier Mathlib seed ladder over Fin 2 / Fin 3: present
-general Fin n / basis / dense-span / operator / spectral boundary: held
+general Fin n finite-synthesis carrier API gate: present
+finite-carrier spectral audit boundary: present
+R2 dense-domain release: present
+R2 graph-norm core handoff: present
+R2 graph-pair transport and explicit linear closure: present
+R2 graph-submodule frontier and ambient-law checklist: present
+R2 graph-energy pre-surface and finite-prefix terminal: present
+R2 graph-norm topology target frontier: present
+completed graph-energy / graph-norm candidate / topology construction: active frontier, not final theorem release
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
@@ -61,6 +69,7 @@ external-audit readiness is not external audit
 replay success is not mathematical consensus
 CI success is not proof review
 documentation is not theorem body
+frontier PR success is not downstream spectral closure
 ```
 
 ## Phase A — GitHub-native Lean repository foundation
@@ -204,7 +213,13 @@ Status: **complete as internal readiness gate; external audit still pending**
 - [x] Add continuum Hamiltonian complete mass-gap derivation.
 - [x] Add continuum Hamiltonian complete mass-gap release adoption.
 - [x] Add finite-carrier Mathlib seed ladder over completed `Fin 2` and `Fin 3` surfaces.
-- [x] Preserve the boundary before general `Fin n`, basis, dense span, operator, and spectral claims.
+- [x] Add general `Fin n` finite-synthesis carrier templates and API gate.
+- [x] Add finite-carrier spectral audit boundary and checklist.
+- [x] Add R2 dense-domain release and graph-norm core handoff.
+- [x] Add R2 graph-pair transport, explicit graph-pair linear operations, and diagonal-graph closure surfaces.
+- [x] Add R2 graph-submodule frontier, explicit linear-closed graph surface, ambient linear-structure frontier, and ambient-law checklist.
+- [x] Add R2 graph-energy pre-surface, finite energy-prefix surface, finite prefix laws, and graph-norm topology target frontier.
+- [x] Preserve the boundary before graph-norm topology, graph-norm density, graph-norm core, closed-operator, self-adjointness, PVM, spectral atom, and positive spectral weight claims.
 - [x] Add four-lane residual closure.
 - [x] Add internal review residual closure gate.
 - [x] Add external audit readiness gate.
@@ -242,7 +257,59 @@ Current replay path includes:
 [check] lake build
 ```
 
-## Phase H — Independent replay and external mathematical review
+## Phase H — R2 graph-norm topology and operator bridge hardening
+
+Status: **active frontier**
+
+The current active frontier is no longer only a finite-carrier seed ladder. It is the R2 graph-norm construction lane, starting from the merged R2 dense-domain / graph-submodule / graph-energy-prefix surfaces.
+
+Already available on `main`:
+
+- [x] General `Fin n` synthesis carrier API gate over selected coordinate maps.
+- [x] Finite-carrier spectral audit boundary.
+- [x] R2 dense-domain release.
+- [x] R2 graph-norm core handoff surface.
+- [x] R2 graph-pair transport and diagonal graph membership witness extraction.
+- [x] Explicit graph-pair zero/add/smul operations and compatibility laws.
+- [x] Diagonal graph zero/add/smul closure under explicit operations.
+- [x] R2 graph-submodule frontier surface.
+- [x] Explicit linear-closed graph surface.
+- [x] Ambient linear-structure frontier and law checklist.
+- [x] Graph-energy pre-surface.
+- [x] Finite graph-energy prefix surface and terminal prefix laws.
+- [x] Graph-norm topology target frontier.
+
+Active / next R2 obligations:
+
+- [ ] Merge the clean completed graph-energy / graph-norm-candidate frontier PR after CI review.
+- [ ] Complete `completed graph energy = ∑' n, energyTerm(p,n)` surface on main.
+- [ ] Complete graph-norm candidate `sqrt(completed graph energy)` surface on main.
+- [ ] Close candidate nonnegativity, zero law, square law, and absolute homogeneity surfaces on main.
+- [ ] Close completed-energy add bound and sqrt-form candidate add-bound on main.
+- [ ] Prove the exact graph-norm triangle inequality.
+- [ ] Define graph-norm distance candidate and prove self-zero, symmetry, and triangle laws.
+- [ ] Construct a named `PseudoMetricSpace` / topology surface without prematurely installing a global instance.
+- [ ] Separate topology construction from graph-norm density.
+- [ ] Prove graph-norm density / graph-norm core theorem only after the topology surface is stable.
+- [ ] Build mathlib `Submodule` packaging for the diagonal graph only after the ambient typeclass law bridge is stable.
+- [ ] Route from graph-norm core to the closed-operator theorem as a separate reviewed phase.
+- [ ] Route from closed operator to self-adjointness as a separate reviewed phase.
+- [ ] Route from self-adjointness to PVM / spectral atom / positive spectral weight as a separate reviewed phase.
+
+Boundary retained:
+
+```text
+completed graph-energy frontier is not graph-norm density
+graph-norm topology is not graph-norm core
+graph-norm core is not closed operator
+closed operator is not self-adjointness
+self-adjointness is not PVM construction
+PVM construction is not spectral atom theorem
+spectral atom theorem is not positive spectral weight theorem
+frontier PR success is not public final theorem acceptance
+```
+
+## Phase I — Independent replay and external mathematical review
 
 Status: **active priority**
 
@@ -254,25 +321,26 @@ Status: **active priority**
 - [ ] Ask at least one reviewer to inspect the major theorem surfaces in `THEOREM_INDEX.md`.
 - [ ] Ask at least one reviewer to inspect the physical normalization boundary.
 - [ ] Ask at least one reviewer to inspect the continuum-Hamiltonian complete derivation surface.
-- [ ] Ask at least one reviewer to inspect the finite-carrier ladder boundary before `Fin n` generalization.
+- [ ] Ask at least one reviewer to inspect the finite-carrier / R2 graph-norm frontier boundary.
 - [ ] Collect review notes as append-only external audit notes.
 - [ ] Do not convert review success into public final theorem release automatically.
 
-## Phase I — Version tag, Zenodo synchronization, and audit release packet
+## Phase J — Version tag, Zenodo synchronization, and audit release packet
 
 Status: **pending**
 
-- [ ] Choose an audit-oriented version name, for example `v1.0-audit` or `v1.6-audit`.
+- [ ] Choose an audit-oriented version name, for example `v1.0-audit`, `v1.6-audit`, or a later `v1.7-r2-audit` once the R2 graph-norm frontier stabilizes.
 - [ ] Confirm CI green on the exact commit to be tagged.
 - [ ] Confirm `bash scripts/check.sh` from a fresh clone.
 - [ ] Confirm `lake build` from a fresh clone.
 - [ ] Confirm README / ROADMAP / THEOREM_INDEX / EXTERNAL_AUDIT_PACKET consistency.
+- [ ] Confirm that the R2 frontier wording does not imply downstream closed-operator or spectral claims.
 - [ ] Create tag only after source-tree review.
 - [ ] Generate post-tag verification receipt.
 - [ ] Update Zenodo archive only after the tag and post-tag replay receipt are stable.
 - [ ] Keep the Zenodo description clear that the record is a proof-architecture and external-audit preparation artifact unless and until independent consensus changes the boundary.
 
-## Phase J — Public communication boundary
+## Phase K — Public communication boundary
 
 Status: **active governance rule**
 
@@ -282,6 +350,7 @@ All public-facing descriptions should preserve the following distinction:
 internal normalized Lean theorem-body surface
 proof-architecture closure
 audit and replay readiness
+R2 graph-norm frontier hardening
 external mathematical consensus
 public final theorem acceptance
 ```
@@ -305,6 +374,10 @@ CI output equals mathematical proof review
 audit scripts replace Lean kernel checking
 external-audit-readiness gate equals external audit
 finite-carrier seeds imply the full general finite-family / spectral theorem chain
+R2 graph-submodule frontier equals graph-norm topology
+R2 graph-norm topology equals graph-norm core
+R2 graph-norm core equals closed-operator theorem
+closed operator equals self-adjointness / PVM / spectral atom / positive spectral weight
 ```
 
 ## Current priorities
@@ -312,9 +385,11 @@ finite-carrier seeds imply the full general finite-family / spectral theorem cha
 1. Keep `README.md`, `ROADMAP.md`, `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, and CI ledgers synchronized with `main`.
 2. Make fresh-clone replay the primary external entry point.
 3. Preserve the `33/20` normalized theorem-body origin while keeping the public boundary explicit.
-4. Collect independent replay receipts.
-5. Harden the continuum-Hamiltonian derivation surface without weakening the external-audit boundary.
-6. Advance the finite-carrier ladder from `Fin 2` / `Fin 3` seeds toward a separately reviewed general `Fin n` route.
-7. Prepare an audit-oriented version tag only after source-tree review and CI green confirmation.
-8. Synchronize Zenodo only after the tag and replay receipt are stable.
-9. Continue mathematical hardening while separating proof architecture, replay readiness, and external consensus.
+4. Finish the R2 completed graph-energy / graph-norm-candidate frontier cleanly, without promoting downstream claims.
+5. Close graph-norm triangle and pseudo-metric/topology construction as separately reviewable PRs.
+6. Keep graph-norm density / core theorem separate from topology construction.
+7. Collect independent replay receipts.
+8. Harden the continuum-Hamiltonian derivation surface without weakening the external-audit boundary.
+9. Prepare an audit-oriented version tag only after source-tree review and CI green confirmation.
+10. Synchronize Zenodo only after the tag and replay receipt are stable.
+11. Continue mathematical hardening while separating proof architecture, replay readiness, frontier closure, and external consensus.
