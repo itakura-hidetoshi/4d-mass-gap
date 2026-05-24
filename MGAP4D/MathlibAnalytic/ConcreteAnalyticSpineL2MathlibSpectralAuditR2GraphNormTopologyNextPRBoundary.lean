@@ -15,6 +15,8 @@ The parent branch reaches the graph-norm topology frontier: finite prefix
 bookkeeping is terminalized, and the next targets are graph-energy completion,
 graph-norm candidate, triangle inequality, topology, density, and core.  This
 leaf starts the next lane without defining a graph norm yet.
+
+This is the synchronization boundary for the graph-norm topology stack.
 -/
 def concreteL2MathlibSpectralAuditR2GraphNormTopologyNextPRBoundary : Prop :=
   concreteAnalyticSpineL2MathlibSpectralAuditR2GraphNormTopologyFrontierSurfaceReady
