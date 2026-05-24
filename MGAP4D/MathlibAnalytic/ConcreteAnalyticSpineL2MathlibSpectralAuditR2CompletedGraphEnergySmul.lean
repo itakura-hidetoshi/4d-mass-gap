@@ -25,8 +25,8 @@ theorem concrete_l2_completed_graph_energy_smul
           funext n
           exact concrete_l2_mathlib_spectral_audit_r2_graph_energy_smul_law c p n
     _ = (c ^ 2) * (∑' n : ℕ, concreteL2GraphPairEnergyTerm p n) := by
-          rw [tsum_const_smul]
-          rfl
+          simpa [smul_eq_mul] using
+            (tsum_mul_left (c ^ 2) (fun n : ℕ => concreteL2GraphPairEnergyTerm p n))
 
 /-- Completed graph-energy scalar law package. -/
 def concreteL2MathlibSpectralAuditR2CompletedGraphEnergySmulLaw : Prop :=
