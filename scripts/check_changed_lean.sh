@@ -134,8 +134,12 @@ ensure_lake_manifest() {
 
 ensure_lake_manifest
 
-echo "[fast] lake exe cache get"
-lake exe cache get || true
+if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
+  echo "[fast] mathlib cache present; skip lake exe cache get"
+else
+  echo "[fast] mathlib cache missing; lake exe cache get"
+  lake exe cache get || true
+fi
 
 # Building the root import module on every PR defeats the fast lane, because the
 # root intentionally imports the whole analytic surface. When root and leaf
