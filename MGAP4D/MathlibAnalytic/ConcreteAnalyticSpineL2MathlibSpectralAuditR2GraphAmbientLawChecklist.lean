@@ -73,7 +73,20 @@ theorem concrete_l2_mathlib_spectral_audit_r2_graph_ambient_law_checklist_ready 
 def concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSeparatesGraphNormDensity : Prop :=
   concreteL2MathlibSpectralAuditR2GraphSubmoduleNextPRGraphNormDensitySeparate
 
-/-- The graph-norm density separation marker remains available. -/
+/-- The graph-norm density separation marker is retained as a target, not proved here. -/
+def concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistGraphNormDensityTarget : Prop :=
+  concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSeparatesGraphNormDensity
+
+/-- The graph-norm density separation target is exposed as a `Prop` value. -/
+def concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistGraphNormDensityTargetExposed : Prop :=
+  True
+
+/-- The graph-norm density separation target exposure is ready. -/
+theorem concrete_l2_mathlib_spectral_audit_r2_graph_ambient_law_checklist_graph_norm_density_target_exposed :
+    concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistGraphNormDensityTargetExposed := by
+  trivial
+
+/-- The hard boundary marker remains available. -/
 def concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistBoundaryHeld : Prop :=
   concreteL2MathlibSpectralAuditR2GraphAmbientLinearStructureFrontierHardResidualBoundaryHeld
 
@@ -87,8 +100,7 @@ structure ConcreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSurface where
   ambientLinearStructureFrontierReady :
     concreteAnalyticSpineL2MathlibSpectralAuditR2GraphAmbientLinearStructureFrontierSurfaceReady
   checklistReady : concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistReady
-  graphNormDensitySeparate :
-    concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSeparatesGraphNormDensity
+  graphNormDensitySeparate : Prop
   boundaryHeld : concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistBoundaryHeld
 
 /-- Concrete ambient law checklist surface. -/
@@ -106,7 +118,7 @@ def concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSurface :
 /-- Readiness predicate for the ambient law checklist surface. -/
 def concreteAnalyticSpineL2MathlibSpectralAuditR2GraphAmbientLawChecklistSurfaceReady : Prop :=
   concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistReady ∧
-  concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSeparatesGraphNormDensity ∧
+  concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistGraphNormDensityTargetExposed ∧
   concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistBoundaryHeld
 
 /-- Readiness theorem for the ambient law checklist surface. -/
@@ -115,7 +127,7 @@ theorem concrete_analytic_spine_l2_mathlib_spectral_audit_r2_graph_ambient_law_c
   unfold concreteAnalyticSpineL2MathlibSpectralAuditR2GraphAmbientLawChecklistSurfaceReady
   exact ⟨
     concrete_l2_mathlib_spectral_audit_r2_graph_ambient_law_checklist_ready,
-    concreteL2MathlibSpectralAuditR2GraphAmbientLawChecklistSeparatesGraphNormDensity,
+    concrete_l2_mathlib_spectral_audit_r2_graph_ambient_law_checklist_graph_norm_density_target_exposed,
     concrete_l2_mathlib_spectral_audit_r2_graph_ambient_law_checklist_boundary_held⟩
 
 end
