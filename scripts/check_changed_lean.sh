@@ -3,11 +3,22 @@ set -euo pipefail
 
 BASE="${1:-origin/main}"
 
-if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
-  git fetch origin main --depth=200 || true
-else
-  git fetch origin main || true
-fi
+fetch_base_ref() {
+  local base="$1"
+  local remote_branch="main"
+
+  if [[ "${base}" == origin/* ]]; then
+    remote_branch="${base#origin/}"
+  fi
+
+  if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
+    git fetch origin "${remote_branch}" --depth=200 || git fetch origin main --depth=200 || true
+  else
+    git fetch origin "${remote_branch}" || git fetch origin main || true
+  fi
+}
+
+fetch_base_ref "${BASE}"
 
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$' || true)"
@@ -27,7 +38,7 @@ run_audit_if_present() {
   fi
 }
 
-# Always keep the hard safety gates.  These are Python/text audits and do not
+# Always keep the hard safety gates. These are Python/text audits and do not
 # require Lake setup.
 echo "[fast] audit Lean forbidden tokens"
 python3 scripts/audit_lean_forbidden_tokens.py
@@ -127,7 +138,7 @@ echo "[fast] lake exe cache get"
 lake exe cache get || true
 
 # Building the root import module on every PR defeats the fast lane, because the
-# root intentionally imports the whole analytic surface.  When root and leaf
+# root intentionally imports the whole analytic surface. When root and leaf
 # modules both changed, build only the changed leaf modules; root-level full
 # integration remains covered by main/manual full checks.
 if [ -z "${non_root_changed_lean_files}" ]; then
@@ -140,9 +151,9 @@ if [ -z "${non_root_changed_lean_files}" ]; then
   exit 0
 fi
 
-# Build only maximal changed modules.  If changed module A imports changed
+# Build only maximal changed modules. If changed module A imports changed
 # module B, then building A already builds B, so B is removed from the explicit
-# target set.  This keeps the PR lane small while preserving local coverage of
+# target set. This keeps the PR lane small while preserving local coverage of
 # the changed import frontier.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
