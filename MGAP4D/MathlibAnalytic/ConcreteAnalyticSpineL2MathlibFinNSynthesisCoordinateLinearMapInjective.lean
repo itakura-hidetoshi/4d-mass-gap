@@ -8,8 +8,8 @@ open scoped BigOperators ENNReal lp
 noncomputable section
 
 /-- The concrete `Fin m` synthesis linear map is injective under an injective
-selected-index map. -/
-theorem concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_of_injective
+selected-index map, derived from the kernel-zero surface. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_from_kernel_zero
     {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ) :
     Function.Injective (concreteL2MathlibFinNSynthesisLinearMap m φ) := by
   exact LinearMap.ker_eq_bot.1
@@ -23,7 +23,7 @@ theorem concrete_l2_mathlib_fin_n_synthesis_linear_map_apply_eq_iff
       concreteL2MathlibFinNSynthesisLinearMap m φ d ↔ c = d := by
   constructor
   · intro h
-    exact concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_of_injective hφ h
+    exact concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_from_kernel_zero hφ h
   · intro hcd
     rw [hcd]
 
@@ -51,7 +51,7 @@ def concreteL2MathlibFinNSynthesisCoordinateLinearMapInjectiveAdapter : Prop :=
 theorem concrete_l2_mathlib_fin_n_synthesis_coordinate_linear_map_injective_adapter_ready :
     concreteL2MathlibFinNSynthesisCoordinateLinearMapInjectiveAdapter := by
   intro m φ hφ
-  exact concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_of_injective hφ
+  exact concrete_l2_mathlib_fin_n_synthesis_linear_map_injective_from_kernel_zero hφ
 
 /-- Surface for the synthesis linear-map injectivity layer. -/
 structure ConcreteL2MathlibFinNSynthesisCoordinateLinearMapInjectiveSurface where
