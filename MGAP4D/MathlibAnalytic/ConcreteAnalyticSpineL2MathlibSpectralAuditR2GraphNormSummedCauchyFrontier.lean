@@ -3,7 +3,7 @@ import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2MathlibSpectralAuditR2Graph
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped ENNReal lp
+open scoped BigOperators ENNReal lp
 
 noncomputable section
 
