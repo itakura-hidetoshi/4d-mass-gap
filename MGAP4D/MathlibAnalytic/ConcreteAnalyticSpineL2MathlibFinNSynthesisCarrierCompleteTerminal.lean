@@ -74,6 +74,23 @@ theorem concrete_analytic_spine_l2_mathlib_fin_n_synthesis_carrier_complete_term
           And.intro trivial <| And.intro trivial <| And.intro trivial <|
             And.intro trivial <| And.intro trivial trivial
 
+/-- One-import alias: the completed finite synthesis carrier has a ready
+linear-equivalence surface. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_terminal_linear_equiv_complete_ready :
+    concreteAnalyticSpineL2MathlibFinNSynthesisLinearEquivCompleteSurfaceReady := by
+  exact concrete_analytic_spine_l2_mathlib_fin_n_synthesis_linear_equiv_complete_surface_ready
+
+/-- One-import alias: the completed finite synthesis carrier has a ready terminal
+surface. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_terminal_surface_ready :
+    concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalSurfaceReady := by
+  exact concrete_analytic_spine_l2_mathlib_fin_n_synthesis_carrier_complete_terminal_surface_ready
+
+/-- One-import alias for the terminal range-local boundary flag. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_terminal_boundary_range_local_only :
+    concreteL2MathlibFinNSynthesisCarrierCompleteTerminalSurface.boundaryRangeLocalOnly := by
+  trivial
+
 /-- Hard-residual boundary marker for the completed finite synthesis carrier terminal. -/
 def concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalHardResidualBoundaryHeld : Prop :=
   concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalSurfaceReady
@@ -82,6 +99,12 @@ def concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalHardResidu
 theorem concrete_analytic_spine_l2_mathlib_fin_n_synthesis_carrier_complete_terminal_hard_residual_boundary_held :
     concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalHardResidualBoundaryHeld := by
   exact concrete_analytic_spine_l2_mathlib_fin_n_synthesis_carrier_complete_terminal_surface_ready
+
+/-- One-import alias for the hard-residual boundary theorem of the completed
+finite synthesis carrier. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_terminal_hard_residual_boundary_held :
+    concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalHardResidualBoundaryHeld := by
+  exact concrete_analytic_spine_l2_mathlib_fin_n_synthesis_carrier_complete_terminal_hard_residual_boundary_held
 
 end
 
