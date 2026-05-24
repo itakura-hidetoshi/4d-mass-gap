@@ -2,7 +2,7 @@
 
 **MGAP4D** is the canonical Lean 4 repository for the MGAP4D normalized four-dimensional mass gap line.
 
-This repository is designed as a GitHub-native proof-architecture and replay surface: Lean source, Lake configuration, CI workflows, audit scripts, theorem-surface ledgers, physical-normalization boundaries, external-review packets, and replay instructions live in one source tree.
+This repository is a GitHub-native proof-architecture, replay, and audit surface. Lean source, Lake configuration, CI workflows, audit scripts, theorem-surface ledgers, physical-normalization boundaries, external-review packets, and replay instructions are kept in one source tree.
 
 ```text
 Canonical proof repo: itakura-hidetoshi/4d-mass-gap
@@ -10,11 +10,11 @@ KuuOS reference repo: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean source and do not independently open public final theorem release.
+KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean source, and they do not independently open public final theorem release.
 
-## Current status, May 2026
+## Current status, 2026-05-25
 
-The current `main` branch records an **internal normalized theorem-body / proof-architecture surface** for a normalized 4D mass gap route, together with replay, theorem-surface audits, bridge-coherence audits, physical-Hamiltonian normalization, continuum-Hamiltonian derivation surfaces, finite-carrier Mathlib seed ladders, and an external-audit-readiness gate.
+The current `main` branch records an **internal normalized theorem-body / proof-architecture surface** for a normalized 4D mass gap route, plus replay, theorem-surface audits, bridge-coherence audits, physical-Hamiltonian normalization, continuum-Hamiltonian derivation surfaces, finite-carrier Mathlib synthesis surfaces, R2 graph-submodule frontier surfaces, and an external-audit-readiness gate.
 
 The internal normalized value recorded by the Lean theorem-body route is:
 
@@ -64,7 +64,12 @@ plaquette spectral-weight lane hardening: present
 continuum-Hamiltonian theorem and release-adoption surfaces: present
 continuum-Hamiltonian complete derivation surfaces: present
 finite-carrier Mathlib seed ladder over Fin 2 / Fin 3: present
-general Fin n / basis / dense-span / operator / spectral boundary: held
+general Fin n finite-synthesis carrier API gate: present
+R2 dense-domain release and graph-pair transport: present
+R2 explicit diagonal-graph zero/add/smul closure: present
+R2 graph-submodule frontier and ambient-law checklist: present
+R2 graph-energy pre-surface and finite-prefix terminal: present
+R2 graph-norm topology target frontier: present
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
@@ -81,7 +86,10 @@ a dimensional physical mass gap without choosing E0
 that CI output replaces mathematical proof review
 that audit scripts replace Lean kernel checking
 that an external-audit-readiness gate replaces independent replay
-that finite-carrier seed ladders imply the general Fin n / basis / dense-span / spectral theorem chain
+that finite-carrier seed ladders imply the full general Fin n / basis / dense-span / spectral theorem chain
+that the R2 graph frontier is already a mathlib Submodule instance
+that the R2 graph-norm topology, density, or core theorem is already closed
+that the current R2 frontier proves closed-operator, self-adjointness, PVM, spectral atom, or positive spectral weight results
 ```
 
 The public final theorem boundary remains **review-gated** pending independent replay and external audit.
@@ -161,6 +169,14 @@ Exact normalized value / real positivity
   -> continuum Hamiltonian complete mass-gap derivation
   -> continuum Hamiltonian complete mass-gap release adoption
   -> finite-carrier Mathlib seed ladder summary
+  -> general Fin n finite-synthesis carrier API gate
+  -> finite-carrier spectral audit boundary
+  -> R2 dense-domain release
+  -> R2 graph-norm core handoff
+  -> R2 graph-pair transport and explicit linear closure
+  -> R2 graph-submodule frontier / ambient-law checklist
+  -> R2 graph-energy pre-surface / finite-prefix terminal
+  -> R2 graph-norm topology target frontier
   -> four-lane residual closure
   -> internal review residual closure gate
   -> external audit readiness gate
@@ -175,24 +191,48 @@ MGAP4D/MathlibAnalytic/ConcreteResidualClosure.lean
 MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean
 MGAP4D/MathlibAnalytic/PhysicalHamiltonianOperatorNormalization.lean
 MGAP4D/MathlibAnalytic/InfiniteDimensionalYangMillsRealizationTargets.lean
-MGAP4D/MathlibAnalytic/InfiniteDimensionalResidualFillingBridge.lean
 MGAP4D/MathlibAnalytic/HardPhysicalResidualHardeningMap.lean
 MGAP4D/MathlibAnalytic/CompleteInfiniteDimensionalHilbertConstruction.lean
 MGAP4D/MathlibAnalytic/HilbertToPhysicalUnboundedOperatorBridge.lean
-MGAP4D/MathlibAnalytic/SelfAdjointHPhysBridgeAdoption.lean
 MGAP4D/MathlibAnalytic/SelfAdjointHPhysLaneHardening.lean
-MGAP4D/MathlibAnalytic/ContinuumYangMillsLaneHardening.lean
-MGAP4D/MathlibAnalytic/PlaquetteSpectralWeightLaneHardening.lean
-MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessHardening.lean
-MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
-MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapReleaseAdoption.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
-MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapReleaseAdoption.lean
 MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibFiniteCarrierLadderSummary.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteAPIGate.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibFiniteCarrierSpectralAuditBoundary.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibSpectralAuditR2DenseDomainRelease.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibSpectralAuditR2GraphSubmoduleFrontier.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibSpectralAuditR2GraphEnergyPrefixTerminal.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2MathlibSpectralAuditR2GraphNormTopologyFrontier.lean
 MGAP4D/MathlibAnalytic/FourLaneResidualClosure.lean
 MGAP4D/MathlibAnalytic/InternalReviewResidualClosureGate.lean
 MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 ```
+
+## Current open frontier
+
+The active next frontier is the R2 graph-norm construction lane after the merged R2 graph-submodule frontier.
+
+Current downstream obligations include:
+
+```text
+completed graph energy
+sqrt graph-norm candidate
+graph-norm candidate square law
+absolute homogeneity
+completed-energy add bound
+sqrt-form add bound
+triangle inequality
+distance candidate
+named pseudo-metric / topology construction
+graph-norm density
+graph-norm core theorem
+mathlib Submodule packaging for the diagonal graph
+closed unbounded-operator bridge
+self-adjointness bridge
+PVM / spectral atom / positive spectral weight bridge
+```
+
+These obligations are intentionally separated. Passing CI for an intermediate frontier does not promote the downstream spectral claims.
 
 ## Audit scripts
 
@@ -292,6 +332,7 @@ audit-script improvements
 theorem-surface review notes
 bridge-coherence review notes
 physical-normalization boundary review
+R2 graph-norm frontier review
 documentation corrections
 external audit notes
 ```
