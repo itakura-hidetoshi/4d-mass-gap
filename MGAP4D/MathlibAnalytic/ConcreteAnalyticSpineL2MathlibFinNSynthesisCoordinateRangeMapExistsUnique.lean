@@ -22,34 +22,34 @@ theorem concrete_l2_mathlib_fin_n_synthesis_exists_unique_coefficients_for_range
   intro d hd
   exact (concrete_l2_mathlib_fin_n_synthesis_range_map_apply_eq_iff hφ d c).1 (hd.trans hc.symm)
 
-/-- The unique coefficient function for a range vector is its recovered
-coordinate function. -/
-theorem concrete_l2_mathlib_fin_n_synthesis_unique_range_map_coefficients_eq_coordinates
+/-- Any two coefficient functions that map to the same range vector are equal. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_range_map_coefficients_unique
     {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
-    (v : concreteL2MathlibFiniteSynthesisRange (Fin m)
-      (concreteL2MathlibFinNSynthesisLinearMap m φ))
-    {c : Fin m → ℝ}
+    {v : concreteL2MathlibFiniteSynthesisRange (Fin m)
+      (concreteL2MathlibFinNSynthesisLinearMap m φ)}
+    {c d : Fin m → ℝ}
     (hc : concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
-        (concreteL2MathlibFinNSynthesisLinearMap m φ) c = v) :
-    c = concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v := by
-  have hcoord :
-      concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ
-        (concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
-          (concreteL2MathlibFinNSynthesisLinearMap m φ) c) = c := by
-    exact concrete_l2_mathlib_fin_n_synthesis_coordinates_of_range_map hφ c
-  rw [hc] at hcoord
-  exact hcoord.symm
+        (concreteL2MathlibFinNSynthesisLinearMap m φ) c = v)
+    (hd : concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
+        (concreteL2MathlibFinNSynthesisLinearMap m φ) d = v) :
+    c = d := by
+  exact (concrete_l2_mathlib_fin_n_synthesis_range_map_apply_eq_iff hφ c d).1
+    (hc.trans hd.symm)
 
-/-- The recovered coordinate function maps back to the original range vector
-under the range-restricted synthesis map. -/
-theorem concrete_l2_mathlib_fin_n_synthesis_range_map_coordinates_eq_self
+/-- Pointwise form of uniqueness for coefficients mapping to a range vector. -/
+theorem concrete_l2_mathlib_fin_n_synthesis_range_map_coefficients_unique_apply
     {m : ℕ} {φ : Fin m → ℕ} (hφ : Function.Injective φ)
-    (v : concreteL2MathlibFiniteSynthesisRange (Fin m)
-      (concreteL2MathlibFinNSynthesisLinearMap m φ)) :
-    concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
-        (concreteL2MathlibFinNSynthesisLinearMap m φ)
-        (concreteL2MathlibFinNSynthesisRangeCoordinatesOfInjective hφ v) = v := by
-  exact concrete_l2_mathlib_fin_n_synthesis_range_coordinates_synthesize_of_injective hφ v
+    {v : concreteL2MathlibFiniteSynthesisRange (Fin m)
+      (concreteL2MathlibFinNSynthesisLinearMap m φ)}
+    {c d : Fin m → ℝ}
+    (hc : concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
+        (concreteL2MathlibFinNSynthesisLinearMap m φ) c = v)
+    (hd : concreteL2MathlibFiniteSynthesisRangeMap (Fin m)
+        (concreteL2MathlibFinNSynthesisLinearMap m φ) d = v)
+    (i : Fin m) :
+    c i = d i := by
+  exact congrFun
+    (concrete_l2_mathlib_fin_n_synthesis_range_map_coefficients_unique hφ hc hd) i
 
 /-- Adapter predicate for the range-map unique-coefficients layer. -/
 def concreteL2MathlibFinNSynthesisCoordinateRangeMapExistsUniqueAdapter : Prop :=
