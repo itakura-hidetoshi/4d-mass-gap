@@ -50,8 +50,8 @@ def concreteL2MathlibFinNSynthesisCarrierCompleteImportSmokeSurface :
 /-- Readiness predicate for the completed finite synthesis carrier import-smoke surface. -/
 def concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteImportSmokeSurfaceReady : Prop :=
   concreteL2MathlibFinNSynthesisCarrierCompleteImportSmokeAdapter ∧
-  concreteL2MathlibFinNSynthesisCarrierCompleteImportSmokeSurface.rangeLocalOnly ∧
-  concreteL2MathlibFinNSynthesisCarrierCompleteImportSmokeSurface.hardBoundaryHeld
+  concreteL2MathlibFinNSynthesisCarrierCompleteTerminalSurface.boundaryRangeLocalOnly ∧
+  concreteAnalyticSpineL2MathlibFinNSynthesisCarrierCompleteTerminalHardResidualBoundaryHeld
 
 /-- Readiness theorem for the completed finite synthesis carrier import-smoke surface. -/
 theorem concrete_analytic_spine_l2_mathlib_fin_n_synthesis_carrier_complete_import_smoke_surface_ready :
