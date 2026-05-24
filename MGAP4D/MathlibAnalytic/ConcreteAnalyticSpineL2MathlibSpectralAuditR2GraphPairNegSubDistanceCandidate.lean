@@ -35,11 +35,9 @@ theorem concrete_l2_graph_pair_sub_self
   · apply Subtype.ext
     funext n
     simp [concreteL2RealAdd, concreteL2RealSmul, concreteL2RealZero]
-    ring
   · apply Subtype.ext
     funext n
     simp [concreteL2RealAdd, concreteL2RealSmul, concreteL2RealZero]
-    ring
 
 /-- Graph-norm distance candidate induced by explicit graph-pair subtraction. -/
 def concreteL2GraphNormDistanceCandidate
