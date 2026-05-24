@@ -13,6 +13,7 @@ on:
       - main
       - mathlib-l2-finite-synthesis-range-template
       - mathlib-l2-r2-graph-submodule-frontier
+      - mathlib-l2-r2-graph-norm-topology-frontier
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
       - "lean-toolchain"
