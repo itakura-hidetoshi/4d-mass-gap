@@ -26,11 +26,12 @@ theorem concrete_l2_mathlib_spectral_audit_r2_graph_norm_summed_cauchy_frontier_
 /-- Finite-prefix Cauchy target for energy square roots. -/
 def concreteL2MathlibSpectralAuditR2FinitePrefixSqrtEnergyCauchyTarget : Prop :=
   ∀ (p q : ConcreteL2GraphPairSpace) (s : Finset ℕ),
-    (∑ n in s,
-      Real.sqrt (concreteL2GraphPairEnergyTerm p n) *
-        Real.sqrt (concreteL2GraphPairEnergyTerm q n)) ≤
-      Real.sqrt (∑ n in s, concreteL2GraphPairEnergyTerm p n) *
-        Real.sqrt (∑ n in s, concreteL2GraphPairEnergyTerm q n)
+    Finset.sum s
+        (fun n : ℕ =>
+          Real.sqrt (concreteL2GraphPairEnergyTerm p n) *
+            Real.sqrt (concreteL2GraphPairEnergyTerm q n)) ≤
+      Real.sqrt (Finset.sum s (fun n : ℕ => concreteL2GraphPairEnergyTerm p n)) *
+        Real.sqrt (Finset.sum s (fun n : ℕ => concreteL2GraphPairEnergyTerm q n))
 
 /-- Infinite summed Cauchy target for energy square roots. -/
 def concreteL2MathlibSpectralAuditR2SummedSqrtEnergyCauchyTarget : Prop :=
