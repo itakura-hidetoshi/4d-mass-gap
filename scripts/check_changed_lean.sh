@@ -3,11 +3,22 @@ set -euo pipefail
 
 BASE="${1:-origin/main}"
 
-if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
-  git fetch origin main --depth=200 || true
-else
-  git fetch origin main || true
-fi
+fetch_base_ref() {
+  local base="$1"
+  local remote_branch="main"
+
+  if [[ "${base}" == origin/* ]]; then
+    remote_branch="${base#origin/}"
+  fi
+
+  if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
+    git fetch origin "${remote_branch}" --depth=200 || git fetch origin main --depth=200 || true
+  else
+    git fetch origin "${remote_branch}" || git fetch origin main || true
+  fi
+}
+
+fetch_base_ref "${BASE}"
 
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$' || true)"
@@ -143,7 +154,7 @@ fi
 # Build only maximal changed modules.  If changed module A imports changed
 # module B, then building A already builds B, so B is removed from the explicit
 # target set.  This keeps the PR lane small while preserving local coverage of
-# the changed import frontier.
+the changed import frontier.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
 targets=()
