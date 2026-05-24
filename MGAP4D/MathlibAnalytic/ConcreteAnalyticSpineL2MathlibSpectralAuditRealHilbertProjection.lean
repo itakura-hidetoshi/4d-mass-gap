@@ -16,8 +16,7 @@ Hilbert-space side of the checklist surface and does not discharge any of the
 operator-theoretic spectral obligations.
 -/
 def concreteL2MathlibSpectralAuditRealHilbertProjection : Prop :=
-  concreteL2MathlibSpectralAuditChecklist.hasRealHilbertSpace
-    concreteL2MathlibSpectralAuditChecklist
+  (concreteL2MathlibSpectralAuditChecklist).hasRealHilbertSpace
 
 /-- The real-Hilbert-space projection is available from the canonical checklist. -/
 theorem concrete_l2_mathlib_spectral_audit_real_hilbert_projection_ready :
