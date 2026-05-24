@@ -9,13 +9,6 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Nonnegativity of completed graph energy. -/
-theorem concrete_l2_completed_graph_energy_nonneg
-    (p : ConcreteL2GraphPairSpace) :
-    0 ≤ concreteL2CompletedGraphEnergy p := by
-  unfold concreteL2CompletedGraphEnergy
-  exact tsum_nonneg (fun n : ℕ => concrete_l2_graph_pair_energy_term_nonneg p n)
-
 /--
 Exact completed-energy expansion for addition of graph pairs.
 
