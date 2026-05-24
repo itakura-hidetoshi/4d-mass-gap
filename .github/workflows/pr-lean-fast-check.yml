@@ -51,7 +51,6 @@ jobs:
           key: ${{ runner.os }}-lean-fast-v3-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-fast-v3-
-            ${{ runner.os }}-lean-fast-v2-
             ${{ runner.os }}-lean-fast-
             ${{ runner.os }}-lean-
       - name: Install elan and Lean toolchain
