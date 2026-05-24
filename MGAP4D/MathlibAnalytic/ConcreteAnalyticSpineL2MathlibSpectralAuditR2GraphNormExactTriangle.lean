@@ -58,11 +58,17 @@ theorem concrete_l2_graph_norm_candidate_triangle
   have hq_sqrt :
       concreteL2GraphNormCandidate q = Real.sqrt (concreteL2CompletedGraphEnergy q) :=
     concrete_l2_graph_norm_candidate_eq_sqrt_completed_energy q
-  have hsq_le : a ^ 2 ≤ b ^ 2 := by
+  have hright :
+      (Real.sqrt (concreteL2CompletedGraphEnergy p) +
+          Real.sqrt (concreteL2CompletedGraphEnergy q)) ^ 2 = b ^ 2 := by
     dsimp [b]
-    rw [hsq_a]
-    convert hM using 1
     rw [hp_sqrt, hq_sqrt]
+  have hsq_le : a ^ 2 ≤ b ^ 2 := by
+    calc
+      a ^ 2 = concreteL2CompletedGraphEnergy (concreteL2GraphPairAdd p q) := hsq_a
+      _ ≤ (Real.sqrt (concreteL2CompletedGraphEnergy p) +
+            Real.sqrt (concreteL2CompletedGraphEnergy q)) ^ 2 := hM
+      _ = b ^ 2 := hright
   nlinarith
 
 /-- Package: exact triangle inequality for the graph-norm candidate. -/
