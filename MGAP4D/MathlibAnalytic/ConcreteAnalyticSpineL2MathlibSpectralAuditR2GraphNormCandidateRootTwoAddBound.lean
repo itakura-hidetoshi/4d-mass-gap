@@ -31,7 +31,6 @@ theorem concrete_l2_graph_norm_candidate_add_le_root_two_sum
     dsimp [b]
     exact concrete_l2_graph_norm_candidate_nonneg q
   have hsum_nonneg : 0 ≤ a + b := add_nonneg ha hb
-  have hsqrt2_nonneg : 0 ≤ Real.sqrt (2 : ℝ) := Real.sqrt_nonneg 2
   have hB_nonneg :
       0 ≤ (2 : ℝ) * a ^ 2 + (2 : ℝ) * b ^ 2 := by
     nlinarith [sq_nonneg a, sq_nonneg b]
@@ -55,7 +54,6 @@ theorem concrete_l2_graph_norm_candidate_add_le_root_two_sum
     · rw [Real.sqrt_sq_eq_abs]
       rw [abs_of_nonneg hsum_nonneg]
     · norm_num
-    · exact sq_nonneg (a + b)
   exact le_trans hcoarse (le_trans hsqrt_le (le_of_eq hroot_expand))
 
 /-- Root-two additive bound package for the graph-norm candidate. -/
