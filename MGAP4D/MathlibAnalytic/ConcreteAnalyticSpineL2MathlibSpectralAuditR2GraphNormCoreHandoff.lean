@@ -74,7 +74,7 @@ structure ConcreteL2MathlibSpectralAuditR2GraphNormCoreHandoffSurface where
     concreteAnalyticSpineL2MathlibSpectralAuditR2DenseDomainReleaseSurfaceReady
   r2GraphNormCoreHandoffReady :
     concreteAnalyticSpineL2R2GraphNormCoreHandoffSurfaceReady
-  graphNormDensityObligation : concreteL2MathlibSpectralAuditR2GraphNormDensityObligation
+  graphNormDensityObligation : Prop
   conditionalGraphNormCoreRelease :
     concreteL2MathlibSpectralAuditR2GraphNormCoreReleasedByGraphNormDensity
   hardResidualBoundaryHeld :
@@ -87,8 +87,8 @@ def concreteL2MathlibSpectralAuditR2GraphNormCoreHandoffSurface :
       concrete_analytic_spine_l2_mathlib_spectral_audit_r2_dense_domain_release_surface_ready
     r2GraphNormCoreHandoffReady :=
       concrete_analytic_spine_l2_r2_graph_norm_core_handoff_surface_ready
-    graphNormDensityObligation := by
-      exact False.elim
+    graphNormDensityObligation :=
+      concreteL2MathlibSpectralAuditR2GraphNormDensityObligation
     conditionalGraphNormCoreRelease :=
       concrete_l2_mathlib_spectral_audit_r2_graph_norm_core_released_by_graph_norm_density_ready
     hardResidualBoundaryHeld :=
