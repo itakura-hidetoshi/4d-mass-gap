@@ -49,7 +49,7 @@ theorem concrete_l2_completed_graph_energy_add_le
         ∑' n : ℕ,
           ((2 : ℝ) * concreteL2GraphPairEnergyTerm p n +
             (2 : ℝ) * concreteL2GraphPairEnergyTerm q n) := by
-    exact hleft.tsum_le_tsum hright hpoint
+    exact hleft.tsum_le_tsum hpoint hright
   have hsplit :
       (∑' n : ℕ,
           ((2 : ℝ) * concreteL2GraphPairEnergyTerm p n +
