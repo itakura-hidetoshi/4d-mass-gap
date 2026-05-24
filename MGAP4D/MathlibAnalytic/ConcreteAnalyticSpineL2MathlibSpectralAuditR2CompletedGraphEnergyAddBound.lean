@@ -49,7 +49,7 @@ theorem concrete_l2_completed_graph_energy_add_le
         ∑' n : ℕ,
           ((2 : ℝ) * concreteL2GraphPairEnergyTerm p n +
             (2 : ℝ) * concreteL2GraphPairEnergyTerm q n) := by
-    exact tsum_le_tsum hpoint hleft hright
+    exact hleft.tsum_le_tsum hright hpoint
   have hsplit :
       (∑' n : ℕ,
           ((2 : ℝ) * concreteL2GraphPairEnergyTerm p n +
@@ -62,7 +62,7 @@ theorem concrete_l2_completed_graph_energy_add_le
             (2 : ℝ) * concreteL2GraphPairEnergyTerm q n))
           = (∑' n : ℕ, (2 : ℝ) * concreteL2GraphPairEnergyTerm p n) +
               (∑' n : ℕ, (2 : ℝ) * concreteL2GraphPairEnergyTerm q n) := by
-              exact tsum_add hp2 hq2
+              exact hp2.tsum_add hq2
       _ = (2 : ℝ) * (∑' n : ℕ, concreteL2GraphPairEnergyTerm p n) +
             (2 : ℝ) * (∑' n : ℕ, concreteL2GraphPairEnergyTerm q n) := by
               rw [
