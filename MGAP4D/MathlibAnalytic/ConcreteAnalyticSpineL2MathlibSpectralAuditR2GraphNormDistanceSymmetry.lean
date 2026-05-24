@@ -18,11 +18,9 @@ theorem concrete_l2_graph_pair_sub_eq_neg_sub_rev
   · apply Subtype.ext
     funext n
     simp [concreteL2RealAdd, concreteL2RealSmul]
-    ring
   · apply Subtype.ext
     funext n
     simp [concreteL2RealAdd, concreteL2RealSmul]
-    ring
 
 /-- Symmetry of the graph-norm distance candidate. -/
 theorem concrete_l2_graph_norm_distance_candidate_symm
