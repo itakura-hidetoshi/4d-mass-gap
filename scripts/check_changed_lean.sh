@@ -175,7 +175,7 @@ fi
 # Build only maximal changed modules. If changed module A imports changed
 # module B, then building A already builds B, so B is removed from the explicit
 # target set. This keeps the PR lane small while preserving local coverage of
-the changed import frontier.
+# the changed import frontier.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
 targets=()
