@@ -40,12 +40,13 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || format('origin/{0}', github.base_ref || 'main') }}
-  LAKE_CACHE_KEY: ${{ runner.os }}-lean-fast-lake-v4-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
 
 jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-latest
+    env:
+      LAKE_CACHE_KEY: ${{ runner.os }}-lean-fast-lake-v4-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
