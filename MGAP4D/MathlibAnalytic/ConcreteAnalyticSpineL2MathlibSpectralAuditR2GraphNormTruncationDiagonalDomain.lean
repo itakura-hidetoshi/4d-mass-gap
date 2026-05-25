@@ -37,7 +37,7 @@ theorem concrete_l2_raw_truncation_weighted_summable
   exact summable_of_hasFiniteSupport
     (concrete_l2_raw_truncation_weighted_has_finite_support x N)
 
-/-- Raw truncations lie in the diagonal domain. -/
+/-- Raw truncations lie in the diagonal domain for the canonical summability witness. -/
 theorem concrete_l2_raw_truncation_mem_diagonal_domain
     (x : ConcreteL2RealSequence) (N : ℕ) :
     ConcreteL2DiagonalDomain
@@ -46,11 +46,20 @@ theorem concrete_l2_raw_truncation_mem_diagonal_domain
   unfold ConcreteL2DiagonalDomain
   exact concrete_l2_raw_truncation_weighted_summable x N
 
+/-- Raw truncations lie in the diagonal domain for any square-summability witness. -/
+theorem concrete_l2_raw_truncation_mem_diagonal_domain_of_summability_witness
+    (x : ConcreteL2RealSequence) (N : ℕ)
+    (hsumm : Summable fun n : ℕ => (concreteL2RawTruncation x N n) ^ 2) :
+    ConcreteL2DiagonalDomain
+      (⟨concreteL2RawTruncation x N, hsumm⟩ : ConcreteL2RealSequence) := by
+  unfold ConcreteL2DiagonalDomain
+  exact concrete_l2_raw_truncation_weighted_summable x N
+
 /-- The raw truncation diagonal-domain target is ready. -/
 theorem concrete_l2_raw_truncation_diagonal_domain_target_ready :
     concreteL2RawTruncationDiagonalDomainTarget := by
-  intro x N
-  exact concrete_l2_raw_truncation_mem_diagonal_domain x.1 N
+  intro x N hsumm
+  exact concrete_l2_raw_truncation_mem_diagonal_domain_of_summability_witness x.1 N hsumm
 
 /-- Surface for the raw truncation diagonal-domain theorem. -/
 structure ConcreteL2MathlibSpectralAuditR2GraphNormTruncationDiagonalDomainSurface where
