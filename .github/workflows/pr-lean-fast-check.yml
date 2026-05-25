@@ -97,8 +97,18 @@ jobs:
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
           bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
+      - name: Check Lake cache is saveable
+        id: lake-cache-ready
+        shell: bash
+        run: |
+          if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Save Lake build cache from main only
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true'
         uses: actions/cache/save@v4
         with:
           path: |
