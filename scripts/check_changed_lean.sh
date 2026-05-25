@@ -9,16 +9,39 @@ fetch_base_ref() {
 
   if [[ "${base}" == origin/* ]]; then
     remote_branch="${base#origin/}"
+    if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
+      git fetch origin "${remote_branch}" --depth=200 || git fetch origin main --depth=200 || true
+    else
+      git fetch origin "${remote_branch}" || git fetch origin main || true
+    fi
+    return
+  fi
+
+  if [[ "${base}" =~ ^[0-9a-fA-F]{40}$ ]]; then
+    if git cat-file -e "${base}^{commit}" 2>/dev/null; then
+      return
+    fi
+    if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
+      git fetch --deepen=200 origin main || true
+    else
+      git fetch origin main || true
+    fi
+    return
   fi
 
   if git rev-parse --is-shallow-repository >/dev/null 2>&1; then
-    git fetch origin "${remote_branch}" --depth=200 || git fetch origin main --depth=200 || true
+    git fetch origin main --depth=200 || true
   else
-    git fetch origin "${remote_branch}" || git fetch origin main || true
+    git fetch origin main || true
   fi
 }
 
 fetch_base_ref "${BASE}"
+
+if ! git diff --name-only "${BASE}"...HEAD >/dev/null 2>&1; then
+  echo "[fast] base ${BASE} is unavailable for triple-dot diff; falling back to HEAD^"
+  BASE="HEAD^"
+fi
 
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$' || true)"
@@ -123,13 +146,7 @@ ensure_lake_manifest() {
     return
   fi
 
-  if ! lake env true >/dev/null 2>&1; then
-    echo "[fast] lake env failed; run lake update"
-    lake update
-    return
-  fi
-
-  echo "[fast] lake manifest present and dependency-compatible; skip lake update"
+  echo "[fast] lake manifest present and JSON-compatible; skip lake update"
 }
 
 ensure_lake_manifest
