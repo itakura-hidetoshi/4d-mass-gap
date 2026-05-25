@@ -12,9 +12,9 @@ noncomputable section
 A graph-norm finite-support approximation sequence implies graph-norm closure
 membership for the corresponding canonical diagonal graph pair.
 
-This uses mathlib's `mem_closure_of_tendsto`; the graph-norm topology is still
-supplied explicitly through the target definition, so no global topology or
-pseudo-metric instance is installed.
+This uses mathlib's `mem_closure_of_tendsto`; the graph-norm topology is supplied
+only as a local instance inside the proof, so no global topology or pseudo-metric
+instance is installed.
 -/
 theorem concrete_l2_mathlib_spectral_audit_r2_graph_norm_sequence_to_closure_for_domain_point
     {x : ConcreteL2DiagonalDomainCarrier}
@@ -22,6 +22,7 @@ theorem concrete_l2_mathlib_spectral_audit_r2_graph_norm_sequence_to_closure_for
     (x.1, concreteL2DiagonalActionL2 x) ∈
       concreteL2MathlibSpectralAuditR2GraphNormFiniteSupportClosureTarget := by
   rcases hxseq with ⟨u, hu_mem, hu_tendsto⟩
+  letI : TopologicalSpace ConcreteL2GraphPairSpace := concreteL2GraphNormTopology
   unfold concreteL2MathlibSpectralAuditR2GraphNormFiniteSupportClosureTarget
   exact mem_closure_of_tendsto hu_tendsto (Filter.Eventually.of_forall hu_mem)
 
