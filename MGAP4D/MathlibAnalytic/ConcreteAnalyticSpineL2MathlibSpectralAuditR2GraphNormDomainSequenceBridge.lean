@@ -12,7 +12,7 @@ Canonical graph-pair sequence induced by a sequence of diagonal-domain points.
 -/
 def concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence
     (v : ℕ → ConcreteL2DiagonalDomainCarrier) : ℕ → ConcreteL2GraphPairSpace :=
-  fun n => (v n).1, concreteL2DiagonalActionL2 (v n)
+  fun n => ((v n).1, concreteL2DiagonalActionL2 (v n))
 
 /--
 A domain-sequence approximation target for one diagonal-domain point.
