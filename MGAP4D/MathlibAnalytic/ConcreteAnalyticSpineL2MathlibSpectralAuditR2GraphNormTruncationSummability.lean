@@ -15,8 +15,7 @@ theorem concrete_l2_raw_truncation_sq_support_subset_support
     (x : ConcreteL2RealSequence) (N : ℕ) :
     ({n : ℕ | (concreteL2RawTruncation x N n) ^ 2 ≠ 0} : Set ℕ) ⊆
       ({n : ℕ | concreteL2RawTruncation x N n ≠ 0} : Set ℕ) := by
-  intro n hn
-  by_contra hzero
+  intro n hn hzero
   exact hn (by rw [hzero, zero_pow two_ne_zero])
 
 /-- The squared raw truncation has finite support. -/
