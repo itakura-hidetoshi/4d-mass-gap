@@ -50,7 +50,7 @@ theorem concrete_l2_raw_truncation_mem_diagonal_domain
 theorem concrete_l2_raw_truncation_diagonal_domain_target_ready :
     concreteL2RawTruncationDiagonalDomainTarget := by
   intro x N
-  exact concrete_l2_raw_truncation_mem_diagonal_domain x N
+  exact concrete_l2_raw_truncation_mem_diagonal_domain x.1 N
 
 /-- Surface for the raw truncation diagonal-domain theorem. -/
 structure ConcreteL2MathlibSpectralAuditR2GraphNormTruncationDiagonalDomainSurface where
