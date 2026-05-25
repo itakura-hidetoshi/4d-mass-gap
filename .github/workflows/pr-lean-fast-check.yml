@@ -45,8 +45,6 @@ jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-latest
-    env:
-      LAKE_CACHE_KEY: ${{ runner.os }}-lean-fast-lake-v4-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -68,7 +66,7 @@ jobs:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ env.LAKE_CACHE_KEY }}
+          key: ${{ runner.os }}-lean-fast-lake-v4-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lean-fast-lake-v4-
             ${{ runner.os }}-lean-fast-v3-
@@ -97,7 +95,6 @@ jobs:
         run: |
           set -euxo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          echo "[fast] LAKE_CACHE_KEY=${LAKE_CACHE_KEY}"
           bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
       - name: Save Lake build cache from main only
@@ -107,4 +104,4 @@ jobs:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ env.LAKE_CACHE_KEY }}
+          key: ${{ runner.os }}-lean-fast-lake-v4-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
