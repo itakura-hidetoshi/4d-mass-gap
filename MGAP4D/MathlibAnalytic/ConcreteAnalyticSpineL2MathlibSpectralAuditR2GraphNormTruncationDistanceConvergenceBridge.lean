@@ -33,11 +33,11 @@ theorem concrete_l2_raw_truncation_canonical_graph_convergence_of_distance_epsil
     concreteL2RawTruncationCanonicalGraphConvergenceTarget := by
   intro x
   letI : PseudoMetricSpace ConcreteL2GraphPairSpace := concreteL2GraphNormPseudoMetricSpace
-  rw [Metric.tendsto_nhds]
-  intro ε hεpos
-  filter_upwards [hε x ε hεpos] with N hN
-  rw [concrete_l2_graph_norm_pseudo_metric_space_dist_eq]
-  exact hN
+  exact (Metric.tendsto_nhds).2 (by
+    intro ε hεpos
+    filter_upwards [hε x ε hεpos] with N hN
+    rw [concrete_l2_graph_norm_pseudo_metric_space_dist_eq]
+    exact hN)
 
 /--
 The metric ε-form also implies the full remaining convergence-only frontier.
