@@ -17,8 +17,11 @@ theorem concrete_l2_raw_truncation_support_subset_range
       (Finset.range N : Set ℕ) := by
   intro n hn
   by_contra hnot
+  have hnlt : ¬ n < N := by
+    intro hlt
+    exact hnot (Finset.mem_range.mpr hlt)
   have hzero : concreteL2RawTruncation x N n = 0 := by
-    exact concrete_l2_raw_truncation_eq_zero_of_not_lt x N n hnot
+    exact concrete_l2_raw_truncation_eq_zero_of_not_lt x N n hnlt
   exact hn hzero
 
 /-- Raw truncations have finite support. -/
