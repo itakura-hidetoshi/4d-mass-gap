@@ -21,19 +21,17 @@ theorem concrete_l2_prefix_plus_tail_eq_completed_target
   have hsFinite : s.Finite := by
     simp [s]
   have htailIndicator :
-      (Set.Ici N).indicator f =
+      sᶜ.indicator f =
         (fun n : Nat => concreteL2TargetGraphEnergyTailIte x N n) := by
     funext n
     by_cases hn : n < N
-    · have hnot : ¬ N <= n := Nat.not_le_of_gt hn
-      simp [f, concreteL2TargetGraphEnergyTailIte, Set.indicator, Set.mem_Ici, hn, hnot]
-    · have hle : N <= n := Nat.le_of_not_lt hn
-      simp [f, concreteL2TargetGraphEnergyTailIte, Set.indicator, Set.mem_Ici, hn, hle]
+    · simp [s, f, concreteL2TargetGraphEnergyTailIte, Set.indicator, hn]
+    · simp [s, f, concreteL2TargetGraphEnergyTailIte, Set.indicator, hn]
   have hs : Summable (f ∘ (Subtype.val : s -> Nat)) := by
     exact hsFinite.summable f
   have hsc : Summable (f ∘ (Subtype.val : {n : Nat // n ∈ sᶜ} -> Nat)) := by
     rw [summable_subtype_iff_indicator]
-    simpa [s, htailIndicator]
+    simpa [htailIndicator]
       using concrete_l2_target_graph_energy_tail_ite_summable x N
   have hsplit := Summable.tsum_add_tsum_compl (s := s) hs hsc
   have hprefix :
