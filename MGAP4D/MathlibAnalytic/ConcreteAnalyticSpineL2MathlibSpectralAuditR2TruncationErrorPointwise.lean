@@ -100,7 +100,6 @@ theorem concrete_l2_raw_truncation_graph_error_energy_eq_target_of_not_lt
     concrete_l2_raw_truncation_graph_error_fst_eq_neg_of_not_lt x N n hn,
     concrete_l2_raw_truncation_graph_error_snd_eq_neg_of_not_lt x N n hn]
   simp [concreteL2GraphPairFst, concreteL2GraphPairSnd]
-  ring_nf
 
 /-- Surface for the pointwise truncation graph-error laws. -/
 structure ConcreteL2MathlibSpectralAuditR2TruncationErrorPointwiseSurface where
