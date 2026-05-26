@@ -19,10 +19,10 @@ theorem concrete_l2_prefix_plus_tail_eq_completed_target
     fun n : Nat => concreteL2GraphPairEnergyTerm (x.1, concreteL2DiagonalActionL2 x) n
   let s : Set Nat := (Finset.range N : Set Nat)
   have hsFinite : s.Finite := by
-    simpa [s] using (Finset.range N).finite_toSet
+    simp [s]
   have hs : Summable (f ∘ (Subtype.val : s -> Nat)) := by
     exact hsFinite.summable f
-  have hsc : Summable (f ∘ (Subtype.val : sᶜ -> Nat)) := by
+  have hsc : Summable (f ∘ (Subtype.val : {n : Nat // n ∈ sᶜ} -> Nat)) := by
     rw [summable_subtype_iff_indicator]
     simpa [s, f, concreteL2TargetGraphEnergyTailIte, Set.indicator]
       using concrete_l2_target_graph_energy_tail_ite_summable x N
@@ -32,7 +32,7 @@ theorem concrete_l2_prefix_plus_tail_eq_completed_target
         Finset.sum (Finset.range N) (fun n : Nat => f n) := by
     simpa [s] using Finset.tsum_subtype (Finset.range N) f
   have htail :
-      (tsum fun n : sᶜ => f n.1) =
+      (tsum fun n : {n : Nat // n ∈ sᶜ} => f n.1) =
         tsum (fun n : Nat => concreteL2TargetGraphEnergyTailIte x N n) := by
     rw [tsum_subtype]
     apply tsum_congr
