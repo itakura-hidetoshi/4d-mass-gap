@@ -20,11 +20,20 @@ theorem concrete_l2_prefix_plus_tail_eq_completed_target
   let s : Set Nat := (Finset.range N : Set Nat)
   have hsFinite : s.Finite := by
     simp [s]
+  have htailIndicator :
+      (Set.Ici N).indicator f =
+        (fun n : Nat => concreteL2TargetGraphEnergyTailIte x N n) := by
+    funext n
+    by_cases hn : n < N
+    · have hnot : ¬ N <= n := Nat.not_le_of_gt hn
+      simp [f, concreteL2TargetGraphEnergyTailIte, Set.indicator, Set.mem_Ici, hn, hnot]
+    · have hle : N <= n := Nat.le_of_not_lt hn
+      simp [f, concreteL2TargetGraphEnergyTailIte, Set.indicator, Set.mem_Ici, hn, hle]
   have hs : Summable (f ∘ (Subtype.val : s -> Nat)) := by
     exact hsFinite.summable f
   have hsc : Summable (f ∘ (Subtype.val : {n : Nat // n ∈ sᶜ} -> Nat)) := by
     rw [summable_subtype_iff_indicator]
-    simpa [s, f, concreteL2TargetGraphEnergyTailIte, Set.indicator]
+    simpa [s, htailIndicator]
       using concrete_l2_target_graph_energy_tail_ite_summable x N
   have hsplit := Summable.tsum_add_tsum_compl (s := s) hs hsc
   have hprefix :
@@ -35,12 +44,9 @@ theorem concrete_l2_prefix_plus_tail_eq_completed_target
       (tsum fun n : {n : Nat // n ∈ sᶜ} => f n.1) =
         tsum (fun n : Nat => concreteL2TargetGraphEnergyTailIte x N n) := by
     rw [tsum_subtype]
-    apply tsum_congr
-    intro n
-    by_cases hn : n < N
-    · simp [s, f, concreteL2TargetGraphEnergyTailIte, Set.indicator, hn]
-    · simp [s, f, concreteL2TargetGraphEnergyTailIte, Set.indicator, hn]
-  simpa [concreteL2CompletedGraphEnergy, f, hprefix, htail] using hsplit
+    rw [htailIndicator]
+  rw [hprefix, htail] at hsplit
+  simpa [concreteL2CompletedGraphEnergy, f] using hsplit
 
 /-- Prefix plus outside-cutoff tail is bounded by the completed target energy. -/
 theorem concrete_l2_prefix_plus_tail_le_completed_target :
