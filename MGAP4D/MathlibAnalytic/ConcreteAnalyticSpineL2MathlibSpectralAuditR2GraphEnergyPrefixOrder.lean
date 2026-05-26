@@ -26,13 +26,6 @@ theorem concrete_l2_graph_energy_range_prefix_le_completed
       concreteL2CompletedGraphEnergy p := by
   exact concrete_l2_graph_energy_prefix_le_completed p (Finset.range N)
 
-/-- Completed graph energy is nonnegative. -/
-theorem concrete_l2_completed_graph_energy_nonneg
-    (p : ConcreteL2GraphPairSpace) :
-    0 ≤ concreteL2CompletedGraphEnergy p := by
-  have hprefix := concrete_l2_graph_energy_prefix_le_completed p ∅
-  simpa using hprefix
-
 /-- Range-prefix deficit is nonnegative. -/
 theorem concrete_l2_graph_energy_range_prefix_deficit_nonneg
     (p : ConcreteL2GraphPairSpace) (N : ℕ) :
