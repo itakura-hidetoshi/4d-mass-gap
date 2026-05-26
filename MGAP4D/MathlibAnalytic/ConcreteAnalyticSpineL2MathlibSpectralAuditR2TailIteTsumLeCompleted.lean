@@ -24,9 +24,9 @@ theorem concrete_l2_target_tail_ite_tsum_le_completed_target
       concreteL2CompletedGraphEnergy (x.1, concreteL2DiagonalActionL2 x) := by
   unfold concreteL2CompletedGraphEnergy
   exact Summable.tsum_le_tsum
+    (fun n : ℕ => concrete_l2_target_graph_energy_tail_ite_le_target x N n)
     (concrete_l2_target_graph_energy_tail_ite_summable x N)
     (concrete_l2_completed_graph_energy_summable (x.1, concreteL2DiagonalActionL2 x))
-    (fun n : ℕ => concrete_l2_target_graph_energy_tail_ite_le_target x N n)
 
 /--
 The completed raw truncation graph-error energy is bounded by the completed
