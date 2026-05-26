@@ -21,64 +21,60 @@ def concreteL2RawTruncationGraphErrorSnd
 theorem concrete_l2_raw_truncation_graph_error_fst_eq_zero_of_lt
     (x : ConcreteL2DiagonalDomainCarrier) (N n : ℕ) (hn : n < N) :
     concreteL2RawTruncationGraphErrorFst x N n = 0 := by
-  unfold concreteL2RawTruncationGraphErrorFst
-  unfold concreteL2RawTruncationGraphError
-  unfold concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence
-  unfold concreteL2RawTruncationDomainSequence
-  unfold concreteL2RawTruncationDomainPoint
-  unfold concreteL2GraphPairSub concreteL2GraphPairNeg concreteL2GraphPairAdd
-  unfold concreteL2GraphPairSmul concreteL2GraphPairFst
-  unfold concreteL2RealAdd concreteL2RealSmul
-  rw [concrete_l2_raw_truncation_eq_of_lt x.1 N n hn]
-  ring
+  simp [concreteL2RawTruncationGraphErrorFst,
+    concreteL2RawTruncationGraphError,
+    concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence,
+    concreteL2RawTruncationDomainSequence,
+    concreteL2RawTruncationDomainPoint,
+    concreteL2GraphPairSub, concreteL2GraphPairNeg, concreteL2GraphPairAdd,
+    concreteL2GraphPairSmul, concreteL2GraphPairFst,
+    concreteL2RealAdd, concreteL2RealSmul,
+    concrete_l2_raw_truncation_eq_of_lt x.1 N n hn]
 
 /-- Inside the cutoff, the second coordinate of the truncation graph error is zero. -/
 theorem concrete_l2_raw_truncation_graph_error_snd_eq_zero_of_lt
     (x : ConcreteL2DiagonalDomainCarrier) (N n : ℕ) (hn : n < N) :
     concreteL2RawTruncationGraphErrorSnd x N n = 0 := by
-  unfold concreteL2RawTruncationGraphErrorSnd
-  unfold concreteL2RawTruncationGraphError
-  unfold concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence
-  unfold concreteL2RawTruncationDomainSequence
-  unfold concreteL2RawTruncationDomainPoint
-  unfold concreteL2GraphPairSub concreteL2GraphPairNeg concreteL2GraphPairAdd
-  unfold concreteL2GraphPairSmul concreteL2GraphPairSnd
-  unfold concreteL2RealAdd concreteL2RealSmul
-  unfold concreteL2DiagonalActionL2 concreteL2DiagonalRawAction
-  rw [concrete_l2_raw_truncation_eq_of_lt x.1 N n hn]
-  ring
+  simp [concreteL2RawTruncationGraphErrorSnd,
+    concreteL2RawTruncationGraphError,
+    concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence,
+    concreteL2RawTruncationDomainSequence,
+    concreteL2RawTruncationDomainPoint,
+    concreteL2GraphPairSub, concreteL2GraphPairNeg, concreteL2GraphPairAdd,
+    concreteL2GraphPairSmul, concreteL2GraphPairSnd,
+    concreteL2RealAdd, concreteL2RealSmul,
+    concreteL2DiagonalActionL2, concreteL2DiagonalRawAction,
+    concrete_l2_raw_truncation_eq_of_lt x.1 N n hn]
 
 /-- Outside the cutoff, the first coordinate of the truncation graph error is `-x`. -/
 theorem concrete_l2_raw_truncation_graph_error_fst_eq_neg_of_not_lt
     (x : ConcreteL2DiagonalDomainCarrier) (N n : ℕ) (hn : ¬ n < N) :
     concreteL2RawTruncationGraphErrorFst x N n = - x.1.1 n := by
-  unfold concreteL2RawTruncationGraphErrorFst
-  unfold concreteL2RawTruncationGraphError
-  unfold concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence
-  unfold concreteL2RawTruncationDomainSequence
-  unfold concreteL2RawTruncationDomainPoint
-  unfold concreteL2GraphPairSub concreteL2GraphPairNeg concreteL2GraphPairAdd
-  unfold concreteL2GraphPairSmul concreteL2GraphPairFst
-  unfold concreteL2RealAdd concreteL2RealSmul
-  rw [concrete_l2_raw_truncation_eq_zero_of_not_lt x.1 N n hn]
-  ring
+  simp [concreteL2RawTruncationGraphErrorFst,
+    concreteL2RawTruncationGraphError,
+    concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence,
+    concreteL2RawTruncationDomainSequence,
+    concreteL2RawTruncationDomainPoint,
+    concreteL2GraphPairSub, concreteL2GraphPairNeg, concreteL2GraphPairAdd,
+    concreteL2GraphPairSmul, concreteL2GraphPairFst,
+    concreteL2RealAdd, concreteL2RealSmul,
+    concrete_l2_raw_truncation_eq_zero_of_not_lt x.1 N n hn]
 
 /-- Outside the cutoff, the second coordinate of the truncation graph error is `-A x`. -/
 theorem concrete_l2_raw_truncation_graph_error_snd_eq_neg_of_not_lt
     (x : ConcreteL2DiagonalDomainCarrier) (N n : ℕ) (hn : ¬ n < N) :
     concreteL2RawTruncationGraphErrorSnd x N n =
       - (concreteL2DiagonalActionL2 x).1 n := by
-  unfold concreteL2RawTruncationGraphErrorSnd
-  unfold concreteL2RawTruncationGraphError
-  unfold concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence
-  unfold concreteL2RawTruncationDomainSequence
-  unfold concreteL2RawTruncationDomainPoint
-  unfold concreteL2GraphPairSub concreteL2GraphPairNeg concreteL2GraphPairAdd
-  unfold concreteL2GraphPairSmul concreteL2GraphPairSnd
-  unfold concreteL2RealAdd concreteL2RealSmul
-  unfold concreteL2DiagonalActionL2 concreteL2DiagonalRawAction
-  rw [concrete_l2_raw_truncation_eq_zero_of_not_lt x.1 N n hn]
-  ring
+  simp [concreteL2RawTruncationGraphErrorSnd,
+    concreteL2RawTruncationGraphError,
+    concreteL2MathlibSpectralAuditR2GraphNormCanonicalGraphSequence,
+    concreteL2RawTruncationDomainSequence,
+    concreteL2RawTruncationDomainPoint,
+    concreteL2GraphPairSub, concreteL2GraphPairNeg, concreteL2GraphPairAdd,
+    concreteL2GraphPairSmul, concreteL2GraphPairSnd,
+    concreteL2RealAdd, concreteL2RealSmul,
+    concreteL2DiagonalActionL2, concreteL2DiagonalRawAction,
+    concrete_l2_raw_truncation_eq_zero_of_not_lt x.1 N n hn]
 
 /-- Inside the cutoff, the truncation graph-error energy term is zero. -/
 theorem concrete_l2_raw_truncation_graph_error_energy_eq_zero_of_lt
@@ -103,7 +99,8 @@ theorem concrete_l2_raw_truncation_graph_error_energy_eq_target_of_not_lt
     ← concreteL2RawTruncationGraphErrorSnd,
     concrete_l2_raw_truncation_graph_error_fst_eq_neg_of_not_lt x N n hn,
     concrete_l2_raw_truncation_graph_error_snd_eq_neg_of_not_lt x N n hn]
-  ring
+  simp [concreteL2GraphPairFst, concreteL2GraphPairSnd]
+  ring_nf
 
 /-- Surface for the pointwise truncation graph-error laws. -/
 structure ConcreteL2MathlibSpectralAuditR2TruncationErrorPointwiseSurface where
