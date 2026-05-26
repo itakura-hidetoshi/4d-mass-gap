@@ -1,0 +1,63 @@
+# R2 Current Route
+
+This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added.
+
+## Lean import entry
+
+Use the narrow route import rather than the full `MGAP4D.MathlibAnalytic` umbrella:
+
+```lean
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CurrentRoute
+```
+
+The main theorem entry is:
+
+```lean
+concrete_l2_r2_current_route_ready
+```
+
+The boundary-preservation theorem is:
+
+```lean
+concrete_l2_r2_current_route_boundary_preserved
+```
+
+## Current route chain
+
+```text
+graph-norm finite-support density closed
+  -> R2 analytic lane final precondition index ready
+  -> R2 analytic lane release surface ready
+  -> R2 top-level route index ready
+  -> R2 current route umbrella ready
+```
+
+## Closed / ready surfaces
+
+```text
+concrete_l2_mathlib_spectral_audit_r2_graph_norm_finite_support_density_closed
+concrete_analytic_spine_l2_r2_analytic_lane_final_precondition_index_ready
+concrete_analytic_spine_l2_r2_analytic_lane_release_surface_ready
+concrete_analytic_spine_l2_r2_top_level_route_index_ready
+concrete_l2_r2_current_route_ready
+```
+
+## Boundary preserved
+
+The current route umbrella is import-only. It does not claim:
+
+```text
+closed operator theorem
+self-adjointness theorem
+spectral theorem
+PVM construction
+exact atom 33/20 derivation
+positive spectral weight
+physical Yang-Mills Hamiltonian
+```
+
+## Why this is not imported through the full root umbrella
+
+A direct import into `MGAP4D/MathlibAnalytic.lean` was tested in PR #150 and closed in favor of this narrower route entry. The top-level route index itself had already passed Lean fast check in PR #149, and the narrow current-route umbrella passed Lean fast check in PR #151.
+
+This keeps the full analytic umbrella stable while still exposing the R2 route state through a single dedicated import.
