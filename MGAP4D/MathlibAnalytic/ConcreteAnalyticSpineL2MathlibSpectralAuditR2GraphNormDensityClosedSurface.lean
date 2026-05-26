@@ -28,6 +28,11 @@ theorem concrete_l2_mathlib_spectral_audit_r2_graph_norm_density_closed_packet_r
     concrete_l2_prefix_plus_tail_le_completed_target,
     concrete_l2_mathlib_spectral_audit_r2_graph_norm_finite_support_density_closed⟩
 
+/-- Stable alias for downstream graph-norm core handoff imports. -/
+theorem concrete_l2_mathlib_spectral_audit_r2_graph_norm_density_closed_packet_alias :
+    concreteL2MathlibSpectralAuditR2GraphNormDensityClosedPacket := by
+  exact concrete_l2_mathlib_spectral_audit_r2_graph_norm_density_closed_packet_ready
+
 /-- Surface recording that graph-norm finite-support density is closed while
 operator/spectral promotions remain separate downstream lanes. -/
 structure ConcreteL2MathlibSpectralAuditR2GraphNormDensityClosedSurface where
