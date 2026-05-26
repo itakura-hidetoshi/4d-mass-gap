@@ -36,8 +36,8 @@ theorem concrete_l2_completed_graph_energy_prefix_deficit_eventually_small
         concreteL2CompletedGraphEnergy p -
           Finset.sum (Finset.range N)
             (fun n : ℕ => concreteL2GraphPairEnergyTerm p n) := by
-    rw [abs_of_nonpos]
-    exact sub_nonpos.mpr hle
+    rw [abs_of_nonpos (sub_nonpos.mpr hle)]
+    ring
   simpa [habs] using hN
 
 /--
