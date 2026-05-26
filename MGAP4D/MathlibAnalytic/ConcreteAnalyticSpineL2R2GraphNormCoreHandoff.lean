@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DiagonalDomainAdditiveClosure
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2FiniteSupportCore
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2MathlibSpectralAuditR2GraphNormDensityClosedSurface
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2MathlibSpectralAuditR2PrefixPlusTailProof
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -16,22 +16,17 @@ def concreteL2R2MathlibCandidateToConcreteGraphNormBridgeTarget : Prop :=
   concreteAnalyticSpineL2R2DiagonalDomainAdditiveClosureSurfaceReady ∧
   concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady
 
-/-- Graph-norm core target for the diagonal-domain candidate.
-
-This was formerly the explicit `False` blocker for the R2f graph-norm lane.
-It is now overwritten by the closed Mathlib graph-norm finite-support density
-theorem established in the R2 spectral audit lane. -/
+/-- Graph-norm core target for the diagonal-domain candidate. -/
 def concreteL2R2GraphNormCoreTarget : Prop :=
-  concreteL2MathlibSpectralAuditR2GraphNormFiniteSupportDensityClosed
+  concreteL2MathlibSpectralAuditR2GraphNormFiniteSupportDensityPreciseTarget
 
 /-- The graph-norm core target is now ready. -/
 theorem concrete_l2_r2_graph_norm_core_target_ready :
     concreteL2R2GraphNormCoreTarget := by
-  exact concrete_l2_mathlib_spectral_audit_r2_graph_norm_finite_support_density_closed
+  exact concrete_l2_precise_density_from_prefix_plus_tail_proof
 
 /-- The extra proof obligation needed before R2 can promote from carrier-density
-of the diagonal-domain candidate to a graph-norm core theorem.  It is now the
-closed graph-norm core target itself. -/
+of the diagonal-domain candidate to a graph-norm core theorem. -/
 def concreteL2R2FiniteSupportGraphNormDensityObligation : Prop :=
   concreteL2R2GraphNormCoreTarget
 
@@ -70,9 +65,7 @@ theorem concrete_l2_r2_graph_norm_core_handoff_adapter_ready :
 
 /-- R2f graph-norm core handoff surface.  This post-R2e surface now records that
 the graph-norm core target is closed while still preserving the old field layout
-for downstream compatibility.  The legacy `boundaryNotGraphNormCoreTheorem` field
-is retained only as an API boundary marker; the actual target is now closed by
-`concrete_l2_r2_graph_norm_core_target_ready`. -/
+for downstream compatibility. -/
 structure ConcreteL2R2GraphNormCoreHandoffSurface where
   r2eReady : concreteAnalyticSpineL2R2DiagonalDomainAdditiveClosureSurfaceReady
   oldFiniteSupportCoreReady : concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady
