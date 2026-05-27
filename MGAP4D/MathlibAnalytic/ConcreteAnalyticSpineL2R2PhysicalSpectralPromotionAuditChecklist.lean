@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphNormCoreRelease
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
 
 namespace MGAP4D
@@ -23,10 +23,10 @@ construction, an exact `33/20` atom, positive spectral weight, or the physical
 Yang--Mills Hamiltonian.
 
 The Hilbert-space, densely-defined-operator, finite-support-core, graph-norm
-finite-support density, and graph-norm core release surfaces are now connected to
-concrete Mathlib-facing route entries.  This still does not claim closedness,
-nontrivial unboundedness, essential/self-adjointness, or any spectral/physical
-promotion. -/
+finite-support density, graph-norm core release, and graph-closedness readiness
+surfaces are now connected to concrete Mathlib-facing route entries.  This still
+does not claim graph closedness, closedness, nontrivial unboundedness,
+essential/self-adjointness, or any spectral/physical promotion. -/
 structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   residualZeroAuditSurfaceReady : concreteAnalyticSpineL2R2ResidualZeroAuditSurfaceReady
   concreteRealHilbertSpaceReady : concreteL2R2ConcreteRealHilbertSpaceReady
@@ -34,11 +34,13 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   graphNormFiniteSupportDensityReady : concreteL2R2GraphNormFiniteSupportDensityReady
   graphNormCoreReleaseReady : concreteL2R2GraphNormCoreReleaseReady
+  graphClosednessReadinessPromotionReady : concreteL2R2GraphClosednessReadinessPromotionReady
   selfAdjointnessProofReady : Prop
   pvmSpectralMeasureConstructionReady : Prop
   compactCenteredPlaquetteObservableReady : Prop
   exactAtomThirtyThreeTwentiethNonDefinitionalDerivationReady : Prop
   positiveSpectralWeightNontrivialDerivationReady : Prop
+  boundaryNotGraphClosednessTheorem : Prop
   boundaryNotClosedOperatorTheorem : Prop
   boundaryNotEssentialSelfAdjointness : Prop
   boundaryNotSelfAdjointnessTheorem : Prop
@@ -51,10 +53,11 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
 /-- Concrete audit checklist instance for the R2 physical spectral promotion gate.
 
 This value discharges the Hilbert-space, densely-defined-operator,
-finite-support-core, graph-norm finite-support density, and graph-norm core
-release surfaces by concrete Mathlib-facing route entries.  The remaining
-promotion checks stay as audit placeholders.  No closed-operator,
-self-adjointness, spectral, or physical claim is promoted here. -/
+finite-support-core, graph-norm finite-support density, graph-norm core release,
+and graph-closedness readiness promotion surfaces by concrete Mathlib-facing
+route entries.  The remaining promotion checks stay as audit placeholders.  No
+closed-operator, self-adjointness, spectral, or physical claim is promoted here.
+-/
 def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     ConcreteL2R2PhysicalSpectralPromotionAuditChecklist :=
   { residualZeroAuditSurfaceReady :=
@@ -69,11 +72,14 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
       concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready
     graphNormCoreReleaseReady :=
       concrete_analytic_spine_l2_r2_graph_norm_core_release_ready
+    graphClosednessReadinessPromotionReady :=
+      concrete_analytic_spine_l2_r2_graph_closedness_readiness_promotion_ready
     selfAdjointnessProofReady := True
     pvmSpectralMeasureConstructionReady := True
     compactCenteredPlaquetteObservableReady := True
     exactAtomThirtyThreeTwentiethNonDefinitionalDerivationReady := True
     positiveSpectralWeightNontrivialDerivationReady := True
+    boundaryNotGraphClosednessTheorem := True
     boundaryNotClosedOperatorTheorem := True
     boundaryNotEssentialSelfAdjointness := True
     boundaryNotSelfAdjointnessTheorem := True
@@ -91,11 +97,13 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2GraphNormFiniteSupportDensityReady ∧
   concreteL2R2GraphNormCoreReleaseReady ∧
+  concreteL2R2GraphClosednessReadinessPromotionReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.selfAdjointnessProofReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.pvmSpectralMeasureConstructionReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.compactCenteredPlaquetteObservableReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.exactAtomThirtyThreeTwentiethNonDefinitionalDerivationReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.positiveSpectralWeightNontrivialDerivationReady ∧
+  concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotGraphClosednessTheorem ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotClosedOperatorTheorem ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotEssentialSelfAdjointness ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotSelfAdjointnessTheorem ∧
@@ -108,11 +116,12 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
 /-- The R2 physical spectral promotion audit checklist is ready.
 
 This theorem discharges the Hilbert-space, densely-defined-operator,
-finite-support-core, graph-norm finite-support density, and graph-norm core
-release surfaces by concrete Mathlib-facing entries.  It does not assert
-closedness, essential/self-adjointness, a spectral theorem, PVM construction,
-the exact `33/20` atom, positive spectral weight, or the physical Yang--Mills
-Hamiltonian. -/
+finite-support-core, graph-norm finite-support density, graph-norm core release,
+and graph-closedness readiness promotion surfaces by concrete Mathlib-facing
+entries.  It does not assert graph closedness, closedness,
+essential/self-adjointness, a spectral theorem, PVM construction, the exact
+`33/20` atom, positive spectral weight, or the physical Yang--Mills Hamiltonian.
+-/
 theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready :
     concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady := by
   exact ⟨
@@ -122,6 +131,8 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_finite_support_core_ready,
     concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready,
     concrete_analytic_spine_l2_r2_graph_norm_core_release_ready,
+    concrete_analytic_spine_l2_r2_graph_closedness_readiness_promotion_ready,
+    trivial,
     trivial,
     trivial,
     trivial,
