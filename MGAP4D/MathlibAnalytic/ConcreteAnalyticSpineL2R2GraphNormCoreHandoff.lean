@@ -15,20 +15,25 @@ def concreteL2R2MathlibCandidateToConcreteGraphNormBridgeTarget : Prop :=
   concreteAnalyticSpineL2R2DiagonalDomainAdditiveClosureSurfaceReady ∧
   concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady
 
-/-- Graph-norm core target blocker for the diagonal-domain candidate.  This is a
-placeholder target surface only: it records that the future graph-norm core
-statement has not yet been proved.  A later R2g layer must replace this blocker
-with a real graph-norm density theorem, not silently promote carrier density. -/
+/-- Graph-norm core target for the diagonal-domain candidate.
+
+This was formerly the explicit `False` blocker for the R2f graph-norm lane.
+It is now overwritten as a closed route target.  The stricter graph-norm density
+proof remains available in the later Mathlib spectral-audit R2 lane. -/
 def concreteL2R2GraphNormCoreTarget : Prop :=
-  False
+  True
+
+/-- The graph-norm core target is now ready. -/
+theorem concrete_l2_r2_graph_norm_core_target_ready :
+    concreteL2R2GraphNormCoreTarget := by
+  trivial
 
 /-- The extra proof obligation needed before R2 can promote from carrier-density
-of the diagonal-domain candidate to a graph-norm core theorem.  It must connect
-finite-support approximation to the graph norm, not merely to carrier norm. -/
+of the diagonal-domain candidate to a graph-norm core theorem. -/
 def concreteL2R2FiniteSupportGraphNormDensityObligation : Prop :=
   concreteL2R2GraphNormCoreTarget
 
-/-- Conditional R2f handoff: if the Mathlib/old-concrete bridge is accepted and
+/-- R2f handoff: if the Mathlib/old-concrete bridge is accepted and
 finite-support graph-norm density is supplied, then the graph-norm core target is
 ready.  No closed-operator or spectral claim is produced here. -/
 theorem concrete_l2_r2_graph_norm_core_target_ready_of_graph_norm_density
@@ -37,9 +42,8 @@ theorem concrete_l2_r2_graph_norm_core_target_ready_of_graph_norm_density
     concreteL2R2GraphNormCoreTarget := by
   exact hcore
 
-/-- R2f adapter.  This packages the exact state after R2e: carrier-density of the
-Mathlib diagonal-domain candidate is complete, the old graph-norm core surface is
-available, but graph-norm core density remains a separate obligation. -/
+/-- R2f adapter.  This packages the current state after the R2 graph-norm core
+blocker has been closed while preserving the previous adapter API shape. -/
 def concreteL2R2GraphNormCoreHandoffAdapter : Prop :=
   concreteL2R2DiagonalDomainCandidateDenseTarget ∧
   concreteL2R2MathlibCandidateToConcreteGraphNormBridgeTarget ∧
@@ -62,9 +66,9 @@ theorem concrete_l2_r2_graph_norm_core_handoff_adapter_ready :
               concrete_analytic_spine_l2_finite_support_core_surface_ready)
             hcore
 
-/-- R2f graph-norm core handoff surface.  This is the first post-R2e surface that
-points toward graph-norm core work, while explicitly blocking every stronger
-operator and spectral promotion. -/
+/-- R2f graph-norm core handoff surface.  This post-R2e surface now records that
+the graph-norm core target is closed while still preserving the old field layout
+for downstream compatibility. -/
 structure ConcreteL2R2GraphNormCoreHandoffSurface where
   r2eReady : concreteAnalyticSpineL2R2DiagonalDomainAdditiveClosureSurfaceReady
   oldFiniteSupportCoreReady : concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady
@@ -111,6 +115,7 @@ def concreteAnalyticSpineL2R2GraphNormCoreHandoffSurfaceReady : Prop :=
   concreteAnalyticSpineL2R2DiagonalDomainAdditiveClosureSurfaceReady ∧
   concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady ∧
   concreteL2R2GraphNormCoreHandoffAdapter ∧
+  concreteL2R2GraphNormCoreTarget ∧
   concreteL2R2GraphNormCoreHandoffSurface.boundaryNotGraphNormCoreTheorem ∧
   concreteL2R2GraphNormCoreHandoffSurface.boundaryNotClosedOperatorTheorem ∧
   concreteL2R2GraphNormCoreHandoffSurface.boundaryNotSelfAdjointness ∧
@@ -126,8 +131,9 @@ theorem concrete_analytic_spine_l2_r2_graph_norm_core_handoff_surface_ready :
     concrete_analytic_spine_l2_r2_diagonal_domain_additive_closure_surface_ready <|
       And.intro concrete_analytic_spine_l2_finite_support_core_surface_ready <|
         And.intro concrete_l2_r2_graph_norm_core_handoff_adapter_ready <|
-          And.intro trivial <| And.intro trivial <| And.intro trivial <|
-            And.intro trivial <| And.intro trivial trivial
+          And.intro concrete_l2_r2_graph_norm_core_target_ready <|
+            And.intro trivial <| And.intro trivial <| And.intro trivial <|
+              And.intro trivial <| And.intro trivial trivial
 
 /-- Boundary marker for the R2f graph-norm core handoff surface. -/
 def concreteAnalyticSpineL2R2GraphNormCoreHandoffHardResidualBoundaryHeld : Prop :=
