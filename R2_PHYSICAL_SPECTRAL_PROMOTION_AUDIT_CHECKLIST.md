@@ -16,6 +16,10 @@ import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2PhysicalSpectralPromotion
 concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready
 ```
 
+## Current Lean surface note
+
+The Lean checklist surface is intentionally minimized: it connects the currently available R2 surfaces and represents the remaining boundary slots as `True` placeholders. This avoids projection fragility while preserving the promotion boundary.
+
 ## Inherited route state
 
 ```text
