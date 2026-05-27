@@ -8,13 +8,6 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- R2-facing finite-support core surface.
-
-This is a thin wrapper around the existing concrete `l2` finite-support core
-surface.  It brings the finite-support core into the R2 physical spectral
-promotion chain without claiming graph-norm density, closedness,
-essential self-adjointness, PVM construction, an exact `33/20` atom, or positive
-spectral weight. -/
 structure ConcreteL2R2FiniteSupportCoreSurface where
   denselyDefinedOperatorReady : concreteL2R2DenselyDefinedOperatorReady
   inheritedFiniteSupportCoreSurfaceReady : concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady
@@ -31,7 +24,6 @@ structure ConcreteL2R2FiniteSupportCoreSurface where
   boundaryNotExactAtomThirtyThreeTwentieth : Prop
   boundaryNotPositiveSpectralWeight : Prop
 
-/-- Concrete R2 finite-support core surface. -/
 def concreteL2R2FiniteSupportCoreSurface :
     ConcreteL2R2FiniteSupportCoreSurface :=
   { denselyDefinedOperatorReady :=
@@ -49,27 +41,13 @@ def concreteL2R2FiniteSupportCoreSurface :
     boundaryNotExactAtomThirtyThreeTwentieth := True
     boundaryNotPositiveSpectralWeight := True }
 
-/-- Readiness predicate for the R2 finite-support core surface. -/
 def concreteL2R2FiniteSupportCoreReady : Prop :=
   concreteL2R2DenselyDefinedOperatorReady ∧
   concreteAnalyticSpineL2FiniteSupportCoreSurfaceReady ∧
   Nonempty ConcreteL2DiagonalFiniteSupportDomainCarrier ∧
   concreteL2FiniteSupportCoreSurface.coreGraphCarrier.Nonempty ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotGraphNormDensityTheorem ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotClosedOperatorTheorem ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotEssentialSelfAdjointness ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotSelfAdjointnessTheorem ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotPVMConstruction ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotExactAtomThirtyThreeTwentieth ∧
-  concreteL2R2FiniteSupportCoreSurface.boundaryNotPositiveSpectralWeight
+  True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True
 
-/-- The R2 finite-support core surface is ready.
-
-This theorem exposes the finite-support core into the R2 promotion chain.  It is
-still only a core-surface theorem: it does not assert graph-norm density,
-closedness, essential self-adjointness, self-adjointness, PVM construction, the
-exact `33/20` atom, positive spectral weight, or the physical Yang--Mills
-Hamiltonian. -/
 theorem concrete_analytic_spine_l2_r2_finite_support_core_ready :
     concreteL2R2FiniteSupportCoreReady := by
   exact ⟨
