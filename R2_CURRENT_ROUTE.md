@@ -1,6 +1,6 @@
 # R2 Current Route
 
-This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added.
+This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added and the legacy R2f graph-norm core blocker was closed.
 
 ## Lean import entry
 
@@ -16,6 +16,12 @@ The main theorem entry is:
 concrete_l2_r2_current_route_ready
 ```
 
+The R2f graph-norm core blocker closure theorem is:
+
+```lean
+concrete_l2_r2_current_route_graph_norm_core_blocker_closed
+```
+
 The boundary-preservation theorem is:
 
 ```lean
@@ -26,6 +32,7 @@ concrete_l2_r2_current_route_boundary_preserved
 
 ```text
 graph-norm finite-support density closed
+  -> R2f graph-norm core blocker closed
   -> R2 analytic lane final precondition index ready
   -> R2 analytic lane release surface ready
   -> R2 top-level route index ready
@@ -35,6 +42,8 @@ graph-norm finite-support density closed
 ## Closed / ready surfaces
 
 ```text
+concrete_l2_r2_graph_norm_core_target_ready
+concrete_l2_r2_current_route_graph_norm_core_blocker_closed
 concrete_l2_mathlib_spectral_audit_r2_graph_norm_finite_support_density_closed
 concrete_analytic_spine_l2_r2_analytic_lane_final_precondition_index_ready
 concrete_analytic_spine_l2_r2_analytic_lane_release_surface_ready

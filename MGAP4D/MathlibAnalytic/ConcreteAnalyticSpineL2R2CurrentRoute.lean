@@ -19,6 +19,15 @@ theorem concrete_l2_r2_current_route_ready :
     concreteL2R2CurrentRouteReady := by
   exact concrete_analytic_spine_l2_r2_top_level_route_index_ready
 
+/-- The R2f graph-norm core blocker is closed in the current route. -/
+def concreteL2R2CurrentRouteGraphNormCoreBlockerClosed : Prop :=
+  concreteL2R2GraphNormCoreTarget
+
+/-- The current route exposes the closed R2f graph-norm core target. -/
+theorem concrete_l2_r2_current_route_graph_norm_core_blocker_closed :
+    concreteL2R2CurrentRouteGraphNormCoreBlockerClosed := by
+  exact concrete_l2_r2_graph_norm_core_target_ready
+
 /-- Boundary marker: this current route umbrella is import-only and does not
 promote to closed operator, self-adjointness, spectral theorem, PVM, exact atom,
 positive spectral weight, or physical Hamiltonian claims. -/
