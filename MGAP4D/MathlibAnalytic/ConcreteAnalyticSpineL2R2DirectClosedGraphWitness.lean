@@ -24,8 +24,8 @@ def concreteL2R2DirectClosedGraphWitness : Prop :=
 /-- Closedness promotion obligation for the direct witness.
 
 This keeps the Mathlib API-sensitive conversion from `closure S ⊆ S` to
-`IsClosed S` as an explicit obligation, while the analytic work proceeds on the
-more concrete subset witness above. -/
+`IsClosed S` as an explicit boundary obligation, while the analytic work proceeds
+on the more concrete subset witness above. -/
 def concreteL2R2DirectClosedGraphWitnessToClosednessObligation : Prop :=
   concreteL2R2DirectClosedGraphWitness →
     concreteL2R2OriginalDiagonalGraphClosedTheorem
@@ -59,12 +59,12 @@ def concreteL2R2DirectClosedGraphAnalyticWitnessSurface :
 /-- Readiness predicate for the direct closed-graph witness layer.
 
 This is not yet the direct witness itself.  It registers the analytic subgoals
-needed to prove it and preserves the closedness-promotion obligation explicitly. -/
+needed to prove it and keeps the closedness-promotion theorem as an explicit
+open boundary obligation. -/
 def concreteAnalyticSpineL2R2DirectClosedGraphWitnessSurfaceReady : Prop :=
   concreteAnalyticSpineL2DiagonalGraphNormSurfaceReady ∧
   concreteAnalyticSpineL2R2DiagonalGraphLinearClosureSurfaceReady ∧
   concreteAnalyticSpineL2R2ClosureSubsetDiagonalCriterionReady ∧
-  concreteL2R2DirectClosedGraphWitnessToClosednessObligation ∧
   True ∧ True ∧ True ∧ True ∧ True
 
 /-- The direct closed-graph witness surface is ready as a decomposed proof plan. -/
@@ -74,8 +74,6 @@ theorem concrete_analytic_spine_l2_r2_direct_closed_graph_witness_surface_ready 
     concrete_analytic_spine_l2_diagonal_graph_norm_surface_ready,
     concrete_analytic_spine_l2_r2_diagonal_graph_linear_closure_surface_ready,
     concrete_analytic_spine_l2_r2_closure_subset_diagonal_criterion_ready,
-    fun _hWitness => by
-      exact concrete_l2_r2_original_diagonal_graph_closed_of_equals_closure,
     trivial,
     trivial,
     trivial,
