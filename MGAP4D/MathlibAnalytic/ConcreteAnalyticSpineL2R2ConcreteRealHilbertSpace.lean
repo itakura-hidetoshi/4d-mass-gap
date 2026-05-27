@@ -1,5 +1,4 @@
 import Mathlib.Analysis.InnerProductSpace.PiL2
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist
 
 namespace MGAP4D
 namespace MathlibAnalytic
