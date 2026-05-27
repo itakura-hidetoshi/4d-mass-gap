@@ -1,13 +1,19 @@
 # R2 Current Route
 
-This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added and the legacy R2f graph-norm core blocker was closed.
+This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added, the legacy R2f graph-norm core blocker was closed, and the residual-zero audit surface was added.
 
-## Lean import entry
+## Lean import entries
 
 Use the narrow route import rather than the full `MGAP4D.MathlibAnalytic` umbrella:
 
 ```lean
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CurrentRoute
+```
+
+For the residual-zero audit surface, use:
+
+```lean
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
 ```
 
 The main theorem entry is:
@@ -20,6 +26,12 @@ The R2f graph-norm core blocker closure theorem is:
 
 ```lean
 concrete_l2_r2_current_route_graph_norm_core_blocker_closed
+```
+
+The residual-zero audit theorem is:
+
+```lean
+concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready
 ```
 
 The boundary-preservation theorem is:
@@ -37,6 +49,7 @@ graph-norm finite-support density closed
   -> R2 analytic lane release surface ready
   -> R2 top-level route index ready
   -> R2 current route umbrella ready
+  -> R2 residual-zero audit surface ready
 ```
 
 ## Closed / ready surfaces
@@ -49,11 +62,12 @@ concrete_analytic_spine_l2_r2_analytic_lane_final_precondition_index_ready
 concrete_analytic_spine_l2_r2_analytic_lane_release_surface_ready
 concrete_analytic_spine_l2_r2_top_level_route_index_ready
 concrete_l2_r2_current_route_ready
+concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready
 ```
 
 ## Boundary preserved
 
-The current route umbrella is import-only. It does not claim:
+The current route umbrella and residual-zero audit surface are import / audit surfaces only. They do not claim:
 
 ```text
 closed operator theorem
@@ -69,4 +83,4 @@ physical Yang-Mills Hamiltonian
 
 A direct import into `MGAP4D/MathlibAnalytic.lean` was tested in PR #150 and closed in favor of this narrower route entry. The top-level route index itself had already passed Lean fast check in PR #149, and the narrow current-route umbrella passed Lean fast check in PR #151.
 
-This keeps the full analytic umbrella stable while still exposing the R2 route state through a single dedicated import.
+This keeps the full analytic umbrella stable while still exposing the R2 route state through dedicated route imports.
