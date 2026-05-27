@@ -1,5 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphClosureClosedTheorem
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ClosedOperatorTheorem
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -20,10 +19,9 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   graphClosednessReadinessPromotionReady : concreteL2R2GraphClosednessReadinessPromotionReady
   graphClosednessObligationPromotionReady : concreteL2R2GraphClosednessObligationPromotionReady
   graphClosureClosedTheoremReady : concreteL2R2GraphClosureClosedTheoremReady
+  closedOperatorTheoremReady : concreteAnalyticSpineL2R2ClosedOperatorTheoremReady
   boundaryNotDiagonalGraphEqualsClosure : Prop
-  boundaryNotGraphClosednessTheorem : Prop
-  boundaryNotClosureUniquenessTheorem : Prop
-  boundaryNotClosedOperatorTheorem : Prop
+  boundaryNotOriginalDiagonalOperatorClosed : Prop
   boundaryNotEssentialSelfAdjointness : Prop
   boundaryNotSelfAdjointnessTheorem : Prop
   boundaryNotSpectralTheorem : Prop
@@ -42,10 +40,9 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     graphClosednessReadinessPromotionReady := concrete_analytic_spine_l2_r2_graph_closedness_readiness_promotion_ready
     graphClosednessObligationPromotionReady := concrete_analytic_spine_l2_r2_graph_closedness_obligation_promotion_ready
     graphClosureClosedTheoremReady := concrete_analytic_spine_l2_r2_graph_closure_closed_theorem_ready
+    closedOperatorTheoremReady := concrete_analytic_spine_l2_r2_closed_operator_theorem_ready
     boundaryNotDiagonalGraphEqualsClosure := True
-    boundaryNotGraphClosednessTheorem := True
-    boundaryNotClosureUniquenessTheorem := True
-    boundaryNotClosedOperatorTheorem := True
+    boundaryNotOriginalDiagonalOperatorClosed := True
     boundaryNotEssentialSelfAdjointness := True
     boundaryNotSelfAdjointnessTheorem := True
     boundaryNotSpectralTheorem := True
@@ -63,7 +60,8 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2GraphClosednessReadinessPromotionReady ∧
   concreteL2R2GraphClosednessObligationPromotionReady ∧
   concreteL2R2GraphClosureClosedTheoremReady ∧
-  True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True
+  concreteAnalyticSpineL2R2ClosedOperatorTheoremReady ∧
+  True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True
 
 theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready :
     concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady := by
@@ -77,7 +75,7 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_graph_closedness_readiness_promotion_ready,
     concrete_analytic_spine_l2_r2_graph_closedness_obligation_promotion_ready,
     concrete_analytic_spine_l2_r2_graph_closure_closed_theorem_ready,
-    trivial,
+    concrete_analytic_spine_l2_r2_closed_operator_theorem_ready,
     trivial,
     trivial,
     trivial,
