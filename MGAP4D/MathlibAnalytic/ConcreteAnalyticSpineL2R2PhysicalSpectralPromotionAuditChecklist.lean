@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenselyDefinedOperator
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2FiniteSupportCore
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
 
 namespace MGAP4D
@@ -17,24 +17,27 @@ abbrev concreteL2R2SpectralPromotionTarget : Rat := (33 : Rat) / 20
 /-- Mathlib-facing audit checklist for promoting the concrete `l2` R2 route
 from residual-zero audit readiness to physical spectral claims.
 
-The checklist is intentionally an audit gate.  It records the seven surfaces
-that must be supplied before any downstream theorem may claim self-adjointness,
-PVM construction, an exact `33/20` atom, positive spectral weight, or the
-physical Yang--Mills Hamiltonian.
+The checklist is intentionally an audit gate.  It records the surfaces that must
+be supplied before any downstream theorem may claim self-adjointness, PVM
+construction, an exact `33/20` atom, positive spectral weight, or the physical
+Yang--Mills Hamiltonian.
 
 The first item is backed by the Mathlib-grounded concrete real Hilbert-space
 surface.  The second item is backed by a Mathlib-facing densely-defined operator
-surface.  The operator surface supplies an explicit dense domain and linear map;
-it still does not claim nontrivial unboundedness. -/
+surface.  The finite-support core is also exposed as the next R2 bridge toward
+graph-norm density and closure.  It still does not claim graph-norm density,
+nontrivial unboundedness, or self-adjointness. -/
 structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   residualZeroAuditSurfaceReady : concreteAnalyticSpineL2R2ResidualZeroAuditSurfaceReady
   concreteRealHilbertSpaceReady : concreteL2R2ConcreteRealHilbertSpaceReady
   denselyDefinedUnboundedOperatorReady : concreteL2R2DenselyDefinedOperatorReady
+  finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   selfAdjointnessProofReady : Prop
   pvmSpectralMeasureConstructionReady : Prop
   compactCenteredPlaquetteObservableReady : Prop
   exactAtomThirtyThreeTwentiethNonDefinitionalDerivationReady : Prop
   positiveSpectralWeightNontrivialDerivationReady : Prop
+  boundaryNotGraphNormDensityTheorem : Prop
   boundaryNotClosedOperatorTheorem : Prop
   boundaryNotSelfAdjointnessTheorem : Prop
   boundaryNotSpectralTheorem : Prop
@@ -45,10 +48,10 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
 
 /-- Concrete audit checklist instance for the R2 physical spectral promotion gate.
 
-This value discharges the first two promotion items by concrete Mathlib surfaces
-and deliberately keeps the remaining five promotion checks as audit placeholders.
-It inherits the residual-zero audit surface and preserves the existing boundary:
-no self-adjointness/spectral/physical claim is promoted here. -/
+This value discharges the Hilbert-space, densely-defined-operator, and
+finite-support-core surfaces by concrete Mathlib-facing route entries.  The
+remaining promotion checks stay as audit placeholders.  No self-adjointness,
+spectral, or physical claim is promoted here. -/
 def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     ConcreteL2R2PhysicalSpectralPromotionAuditChecklist :=
   { residualZeroAuditSurfaceReady :=
@@ -57,11 +60,14 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
       concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready
     denselyDefinedUnboundedOperatorReady :=
       concrete_analytic_spine_l2_r2_densely_defined_operator_ready
+    finiteSupportCoreReady :=
+      concrete_analytic_spine_l2_r2_finite_support_core_ready
     selfAdjointnessProofReady := True
     pvmSpectralMeasureConstructionReady := True
     compactCenteredPlaquetteObservableReady := True
     exactAtomThirtyThreeTwentiethNonDefinitionalDerivationReady := True
     positiveSpectralWeightNontrivialDerivationReady := True
+    boundaryNotGraphNormDensityTheorem := True
     boundaryNotClosedOperatorTheorem := True
     boundaryNotSelfAdjointnessTheorem := True
     boundaryNotSpectralTheorem := True
@@ -75,11 +81,13 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteAnalyticSpineL2R2ResidualZeroAuditSurfaceReady ∧
   concreteL2R2ConcreteRealHilbertSpaceReady ∧
   concreteL2R2DenselyDefinedOperatorReady ∧
+  concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.selfAdjointnessProofReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.pvmSpectralMeasureConstructionReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.compactCenteredPlaquetteObservableReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.exactAtomThirtyThreeTwentiethNonDefinitionalDerivationReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.positiveSpectralWeightNontrivialDerivationReady ∧
+  concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotGraphNormDensityTheorem ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotClosedOperatorTheorem ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotSelfAdjointnessTheorem ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.boundaryNotSpectralTheorem ∧
@@ -90,16 +98,19 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
 
 /-- The R2 physical spectral promotion audit checklist is ready.
 
-This theorem discharges the first two checklist items by concrete Mathlib
-surfaces.  It does not assert closedness, self-adjointness, a spectral theorem,
-PVM construction, the exact `33/20` atom, positive spectral weight, or the
-physical Yang--Mills Hamiltonian. -/
+This theorem discharges the Hilbert-space, densely-defined-operator, and
+finite-support-core surfaces by concrete Mathlib-facing entries.  It does not
+assert graph-norm density, closedness, self-adjointness, a spectral theorem, PVM
+construction, the exact `33/20` atom, positive spectral weight, or the physical
+Yang--Mills Hamiltonian. -/
 theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready :
     concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady := by
   exact ⟨
     concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready,
     concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready,
     concrete_analytic_spine_l2_r2_densely_defined_operator_ready,
+    concrete_analytic_spine_l2_r2_finite_support_core_ready,
+    trivial,
     trivial,
     trivial,
     trivial,
