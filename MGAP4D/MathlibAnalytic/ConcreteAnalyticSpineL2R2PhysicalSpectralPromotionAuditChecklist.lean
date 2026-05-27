@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphNormFiniteSupportDensity
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2GraphNormCoreRelease
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
 
 namespace MGAP4D
@@ -22,16 +22,18 @@ be supplied before any downstream theorem may claim self-adjointness, PVM
 construction, an exact `33/20` atom, positive spectral weight, or the physical
 Yang--Mills Hamiltonian.
 
-The Hilbert-space, densely-defined-operator, finite-support-core, and graph-norm
-finite-support density surfaces are now all connected to concrete Mathlib-facing
-route entries.  This still does not claim closedness, nontrivial unboundedness,
-essential/self-adjointness, or any spectral/physical promotion. -/
+The Hilbert-space, densely-defined-operator, finite-support-core, graph-norm
+finite-support density, and graph-norm core release surfaces are now connected to
+concrete Mathlib-facing route entries.  This still does not claim closedness,
+nontrivial unboundedness, essential/self-adjointness, or any spectral/physical
+promotion. -/
 structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   residualZeroAuditSurfaceReady : concreteAnalyticSpineL2R2ResidualZeroAuditSurfaceReady
   concreteRealHilbertSpaceReady : concreteL2R2ConcreteRealHilbertSpaceReady
   denselyDefinedUnboundedOperatorReady : concreteL2R2DenselyDefinedOperatorReady
   finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   graphNormFiniteSupportDensityReady : concreteL2R2GraphNormFiniteSupportDensityReady
+  graphNormCoreReleaseReady : concreteL2R2GraphNormCoreReleaseReady
   selfAdjointnessProofReady : Prop
   pvmSpectralMeasureConstructionReady : Prop
   compactCenteredPlaquetteObservableReady : Prop
@@ -49,10 +51,10 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
 /-- Concrete audit checklist instance for the R2 physical spectral promotion gate.
 
 This value discharges the Hilbert-space, densely-defined-operator,
-finite-support-core, and graph-norm finite-support density surfaces by concrete
-Mathlib-facing route entries.  The remaining promotion checks stay as audit
-placeholders.  No closed-operator, self-adjointness, spectral, or physical claim
-is promoted here. -/
+finite-support-core, graph-norm finite-support density, and graph-norm core
+release surfaces by concrete Mathlib-facing route entries.  The remaining
+promotion checks stay as audit placeholders.  No closed-operator,
+self-adjointness, spectral, or physical claim is promoted here. -/
 def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     ConcreteL2R2PhysicalSpectralPromotionAuditChecklist :=
   { residualZeroAuditSurfaceReady :=
@@ -65,6 +67,8 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
       concrete_analytic_spine_l2_r2_finite_support_core_ready
     graphNormFiniteSupportDensityReady :=
       concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready
+    graphNormCoreReleaseReady :=
+      concrete_analytic_spine_l2_r2_graph_norm_core_release_ready
     selfAdjointnessProofReady := True
     pvmSpectralMeasureConstructionReady := True
     compactCenteredPlaquetteObservableReady := True
@@ -86,6 +90,7 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2DenselyDefinedOperatorReady ∧
   concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2GraphNormFiniteSupportDensityReady ∧
+  concreteL2R2GraphNormCoreReleaseReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.selfAdjointnessProofReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.pvmSpectralMeasureConstructionReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.compactCenteredPlaquetteObservableReady ∧
@@ -103,10 +108,11 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
 /-- The R2 physical spectral promotion audit checklist is ready.
 
 This theorem discharges the Hilbert-space, densely-defined-operator,
-finite-support-core, and graph-norm finite-support density surfaces by concrete
-Mathlib-facing entries.  It does not assert closedness, essential/self-adjointness,
-a spectral theorem, PVM construction, the exact `33/20` atom, positive spectral
-weight, or the physical Yang--Mills Hamiltonian. -/
+finite-support-core, graph-norm finite-support density, and graph-norm core
+release surfaces by concrete Mathlib-facing entries.  It does not assert
+closedness, essential/self-adjointness, a spectral theorem, PVM construction,
+the exact `33/20` atom, positive spectral weight, or the physical Yang--Mills
+Hamiltonian. -/
 theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready :
     concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady := by
   exact ⟨
@@ -115,6 +121,7 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_densely_defined_operator_ready,
     concrete_analytic_spine_l2_r2_finite_support_core_ready,
     concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready,
+    concrete_analytic_spine_l2_r2_graph_norm_core_release_ready,
     trivial,
     trivial,
     trivial,
