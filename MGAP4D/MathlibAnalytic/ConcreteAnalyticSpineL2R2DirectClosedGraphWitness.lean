@@ -5,7 +5,7 @@ import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ClosureSubsetDiagonalCrit
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped ENNReal lp
+open scoped ENNReal
 
 noncomputable section
 
@@ -23,13 +23,17 @@ def concreteL2R2DirectClosedGraphWitness : Prop :=
 
 /-- Direct closed-graph witness implies closedness of the original diagonal graph.
 
-This is a purely topological conversion: `closure S ⊆ S` implies `IsClosed S`. -/
+This is a purely topological conversion: `closure S ⊆ S` implies `IsClosed S`.
+The topology is supplied explicitly so the theorem uses the graph-norm topology,
+not any ambient default topology. -/
 theorem concrete_l2_r2_original_diagonal_graph_closed_of_direct_witness
     (hWitness : concreteL2R2DirectClosedGraphWitness) :
     concreteL2R2OriginalDiagonalGraphClosedTheorem := by
   unfold concreteL2R2OriginalDiagonalGraphClosedTheorem
   unfold concreteL2R2DirectClosedGraphWitness at hWitness
-  exact isClosed_iff_closure_subset.mp hWitness
+  exact
+    (@isClosed_iff_closure_subset ConcreteL2GraphPairSpace concreteL2GraphNormTopology
+      ConcreteL2DiagonalGraphL2Carrier).2 hWitness
 
 /-- The remaining analytic decomposition required for the direct closed graph
 witness.
