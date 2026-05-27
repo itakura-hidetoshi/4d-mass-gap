@@ -2,7 +2,7 @@
 
 This document records the promotion checklist for moving from the current R2 residual-zero audit surface to any future physical spectral claim.
 
-The current state remains an audit/checklist surface only. It does not claim the closed operator theorem, self-adjointness theorem, spectral theorem, PVM construction, exact atom `33/20` derivation, positive spectral weight, or the physical Yang--Mills Hamiltonian.
+The current state remains an audit/checklist surface only. It now includes the closure-generated closed-operator theorem. It does not claim the original diagonal operator closed theorem, self-adjointness theorem, spectral theorem, PVM construction, exact atom `33/20` derivation, positive spectral weight, or the physical Yang--Mills Hamiltonian.
 
 ## Lean import entry
 
@@ -10,9 +10,10 @@ The current state remains an audit/checklist surface only. It does not claim the
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist
 ```
 
-## Theorem entry
+## Theorem entries
 
 ```lean
+concrete_analytic_spine_l2_r2_closed_operator_theorem_ready
 concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready
 ```
 
@@ -30,12 +31,13 @@ graph-norm finite-support density closed
   -> R2 top-level route index ready
   -> R2 current route umbrella ready
   -> R2 residual-zero audit surface ready
-  -> R2 physical spectral promotion audit checklist ready
   -> R2 graph-norm finite-support density ready
   -> R2 graph-norm core release ready
   -> R2 graph-closedness readiness promotion ready
   -> R2 graph-closedness obligation promotion ready
   -> R2 graph-norm closure carrier closed theorem ready
+  -> R2 closure-generated closed-operator theorem ready
+  -> R2 physical spectral promotion audit checklist ready
 ```
 
 ## Promotion checklist
@@ -65,19 +67,17 @@ graph-norm finite-support density closed
 
 [x] Graph-norm closure carrier is closed
     Supplied by: concrete_analytic_spine_l2_r2_graph_closure_closed_theorem_ready
-    Boundary: this is the closedness of the closure carrier, not yet diagonal graph closedness.
+    Boundary: this is the closedness of the closure carrier, not yet diagonal graph equality.
+
+[x] Closure-generated closed operator theorem
+    Supplied by: concrete_analytic_spine_l2_r2_closed_operator_theorem_ready
+    Boundary: this is the closed operator theorem for the closure-generated operator graph, not yet the original diagonal operator.
 
 [ ] Diagonal graph equals closure
-    Required before promoting diagonal graph closedness.
+    Required before promoting the original diagonal operator closed theorem.
 
-[ ] Graph-closedness theorem
-    Required before promoting the closed-operator theorem.
-
-[ ] Closure-uniqueness theorem
-    Required before promoting the closed-operator theorem.
-
-[ ] Closed operator theorem
-    Required before self-adjointness or spectral theorem promotion.
+[ ] Original diagonal operator closed theorem
+    Required before self-adjointness or spectral theorem promotion for the original operator.
 
 [ ] Nontrivial unboundedness theorem
     Required to distinguish the concrete route from the full-domain bounded zero-operator surface.
@@ -104,8 +104,7 @@ This checklist does not promote any of the following surfaces:
 
 ```text
 diagonal graph equals closure
-diagonal graph closedness
-closed operator theorem
+original diagonal operator closed theorem
 self-adjointness theorem
 spectral theorem
 PVM construction
@@ -116,4 +115,4 @@ physical Yang-Mills Hamiltonian
 
 ## Next Lean target
 
-The next non-documentation Lean target is the diagonal-graph-equals-closure bridge. Once that bridge is available, graph-norm closure carrier closedness can be transported to diagonal graph closedness, which is the natural predecessor of the closed-operator theorem.
+The next non-documentation Lean target is the diagonal-graph-equals-closure bridge. Once that bridge is available, graph-norm closure-generated closedness can be transported to the original diagonal graph, which is the natural predecessor of the original diagonal operator closed theorem.
