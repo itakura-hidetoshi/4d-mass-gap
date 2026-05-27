@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ConcreteRealHilbertSpace
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
 
 namespace MGAP4D
@@ -21,12 +22,12 @@ that must be supplied before any downstream theorem may claim self-adjointness,
 PVM construction, an exact `33/20` atom, positive spectral weight, or the
 physical Yang--Mills Hamiltonian.
 
-Each checklist item is a `Prop` field so that later PRs can replace the current
-placeholder `True` witness by a genuine Mathlib theorem without changing the
-public route name. -/
+The first item is now backed by the Mathlib-grounded concrete real Hilbert-space
+surface `concreteL2R2ConcreteRealHilbertSpaceReady`; later PRs should replace
+the remaining placeholder `True` witnesses one by one. -/
 structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   residualZeroAuditSurfaceReady : concreteAnalyticSpineL2R2ResidualZeroAuditSurfaceReady
-  concreteRealHilbertSpaceReady : Prop
+  concreteRealHilbertSpaceReady : concreteL2R2ConcreteRealHilbertSpaceReady
   denselyDefinedUnboundedOperatorReady : Prop
   selfAdjointnessProofReady : Prop
   pvmSpectralMeasureConstructionReady : Prop
@@ -43,14 +44,16 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
 
 /-- Concrete audit checklist instance for the R2 physical spectral promotion gate.
 
-This value deliberately keeps all seven promotion checks as audit placeholders.
-It inherits the residual-zero audit surface and preserves the existing boundary:
-no operator/spectral/physical claim is promoted here. -/
+This value discharges the first promotion item by a concrete Mathlib real
+Hilbert space and deliberately keeps the remaining six promotion checks as audit
+placeholders.  It inherits the residual-zero audit surface and preserves the
+existing boundary: no operator/spectral/physical claim is promoted here. -/
 def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     ConcreteL2R2PhysicalSpectralPromotionAuditChecklist :=
   { residualZeroAuditSurfaceReady :=
       concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready
-    concreteRealHilbertSpaceReady := True
+    concreteRealHilbertSpaceReady :=
+      concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready
     denselyDefinedUnboundedOperatorReady := True
     selfAdjointnessProofReady := True
     pvmSpectralMeasureConstructionReady := True
@@ -68,7 +71,7 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
 /-- Readiness predicate for the R2 physical spectral promotion audit checklist. -/
 def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop :=
   concreteAnalyticSpineL2R2ResidualZeroAuditSurfaceReady ∧
-  concreteL2R2PhysicalSpectralPromotionAuditChecklist.concreteRealHilbertSpaceReady ∧
+  concreteL2R2ConcreteRealHilbertSpaceReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.denselyDefinedUnboundedOperatorReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.selfAdjointnessProofReady ∧
   concreteL2R2PhysicalSpectralPromotionAuditChecklist.pvmSpectralMeasureConstructionReady ∧
@@ -85,14 +88,15 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
 
 /-- The R2 physical spectral promotion audit checklist is ready.
 
-This theorem is an audit-gate theorem only.  It does not assert closedness,
-self-adjointness, a spectral theorem, PVM construction, the exact `33/20` atom,
-positive spectral weight, or the physical Yang--Mills Hamiltonian. -/
+This theorem discharges the first checklist item by the concrete Mathlib real
+Hilbert space.  It does not assert closedness, self-adjointness, a spectral
+theorem, PVM construction, the exact `33/20` atom, positive spectral weight, or
+the physical Yang--Mills Hamiltonian. -/
 theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready :
     concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady := by
   exact ⟨
     concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready,
-    trivial,
+    concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready,
     trivial,
     trivial,
     trivial,
