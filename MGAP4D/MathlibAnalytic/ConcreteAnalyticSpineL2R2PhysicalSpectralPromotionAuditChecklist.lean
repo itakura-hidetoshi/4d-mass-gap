@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ClosedOperatorTheorem
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundedness
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -15,8 +15,8 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   concreteRealHilbertSpaceReady : concreteL2R2ConcreteRealHilbertSpaceReady
   denselyDefinedUnboundedOperatorReady : concreteL2R2DenselyDefinedOperatorReady
   diagonalOperatorEvidenceReady : concreteAnalyticSpineL2R2DiagonalOperatorEvidenceReady
-  completedHilbertOperatorNormUnboundednessReady :
-    concreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundednessReady
+  selfAdjointnessConcretePreconditionsReady :
+    concreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditionsReady
   finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   graphNormFiniteSupportDensityReady : concreteL2R2GraphNormFiniteSupportDensityReady
   graphNormCoreReleaseReady : concreteL2R2GraphNormCoreReleaseReady
@@ -24,8 +24,10 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   graphClosednessObligationPromotionReady : concreteL2R2GraphClosednessObligationPromotionReady
   graphClosureClosedTheoremReady : concreteL2R2GraphClosureClosedTheoremReady
   closedOperatorTheoremReady : concreteAnalyticSpineL2R2ClosedOperatorTheoremReady
-  boundaryNotOriginalDiagonalOperatorClosed : Prop
-  boundaryNotEssentialSelfAdjointness : Prop
+  boundaryNotSymmetryTheorem : Prop
+  boundaryNotAdjointDomainAgreementTheorem : Prop
+  boundaryNotResolventOrDeficiencyTheorem : Prop
+  boundaryNotEssentialSelfAdjointnessTheorem : Prop
   boundaryNotSelfAdjointnessTheorem : Prop
   boundaryNotSpectralTheorem : Prop
   boundaryNotPVMConstruction : Prop
@@ -38,8 +40,8 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     concreteRealHilbertSpaceReady := concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready
     denselyDefinedUnboundedOperatorReady := concrete_analytic_spine_l2_r2_densely_defined_operator_ready
     diagonalOperatorEvidenceReady := concrete_analytic_spine_l2_r2_diagonal_operator_evidence_ready
-    completedHilbertOperatorNormUnboundednessReady :=
-      concrete_analytic_spine_l2_r2_completed_hilbert_operator_norm_unboundedness_ready
+    selfAdjointnessConcretePreconditionsReady :=
+      concrete_analytic_spine_l2_r2_self_adjointness_concrete_preconditions_ready
     finiteSupportCoreReady := concrete_analytic_spine_l2_r2_finite_support_core_ready
     graphNormFiniteSupportDensityReady := concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready
     graphNormCoreReleaseReady := concrete_analytic_spine_l2_r2_graph_norm_core_release_ready
@@ -47,8 +49,10 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     graphClosednessObligationPromotionReady := concrete_analytic_spine_l2_r2_graph_closedness_obligation_promotion_ready
     graphClosureClosedTheoremReady := concrete_analytic_spine_l2_r2_graph_closure_closed_theorem_ready
     closedOperatorTheoremReady := concrete_analytic_spine_l2_r2_closed_operator_theorem_ready
-    boundaryNotOriginalDiagonalOperatorClosed := True
-    boundaryNotEssentialSelfAdjointness := True
+    boundaryNotSymmetryTheorem := True
+    boundaryNotAdjointDomainAgreementTheorem := True
+    boundaryNotResolventOrDeficiencyTheorem := True
+    boundaryNotEssentialSelfAdjointnessTheorem := True
     boundaryNotSelfAdjointnessTheorem := True
     boundaryNotSpectralTheorem := True
     boundaryNotPVMConstruction := True
@@ -60,7 +64,7 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2ConcreteRealHilbertSpaceReady ∧
   concreteL2R2DenselyDefinedOperatorReady ∧
   concreteAnalyticSpineL2R2DiagonalOperatorEvidenceReady ∧
-  concreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundednessReady ∧
+  concreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditionsReady ∧
   concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2GraphNormFiniteSupportDensityReady ∧
   concreteL2R2GraphNormCoreReleaseReady ∧
@@ -68,7 +72,7 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2GraphClosednessObligationPromotionReady ∧
   concreteL2R2GraphClosureClosedTheoremReady ∧
   concreteAnalyticSpineL2R2ClosedOperatorTheoremReady ∧
-  True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True
+  True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True ∧ True
 
 theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklist_ready :
     concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady := by
@@ -77,7 +81,7 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready,
     concrete_analytic_spine_l2_r2_densely_defined_operator_ready,
     concrete_analytic_spine_l2_r2_diagonal_operator_evidence_ready,
-    concrete_analytic_spine_l2_r2_completed_hilbert_operator_norm_unboundedness_ready,
+    concrete_analytic_spine_l2_r2_self_adjointness_concrete_preconditions_ready,
     concrete_analytic_spine_l2_r2_finite_support_core_ready,
     concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready,
     concrete_analytic_spine_l2_r2_graph_norm_core_release_ready,
@@ -85,6 +89,8 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_graph_closedness_obligation_promotion_ready,
     concrete_analytic_spine_l2_r2_graph_closure_closed_theorem_ready,
     concrete_analytic_spine_l2_r2_closed_operator_theorem_ready,
+    trivial,
+    trivial,
     trivial,
     trivial,
     trivial,
