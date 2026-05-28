@@ -27,11 +27,20 @@ theorem concrete_l2_r2_completed_obstruction_unit_output_norm_eq_weight
     ‖concreteL2R2CompletedObstructionUnitOutputProbe k‖ =
       concreteL2DiagonalWeight
         (concreteL2DiagonalUnboundednessObstructionSurface.witness k) := by
-  simp [concreteL2R2CompletedObstructionUnitOutputProbe,
-    concrete_l2_mathlib_unit_norm_eq_one,
-    abs_of_nonneg
-      (le_of_lt (concrete_l2_diagonal_weight_pos
-        (concreteL2DiagonalUnboundednessObstructionSurface.witness k)))]
+  let j := concreteL2DiagonalUnboundednessObstructionSurface.witness k
+  let w : ℝ := concreteL2DiagonalWeight j
+  have hw_nonneg : 0 ≤ w := by
+    exact le_of_lt (concrete_l2_diagonal_weight_pos j)
+  change ‖w • concreteL2MathlibUnit j‖ = w
+  calc
+    ‖w • concreteL2MathlibUnit j‖ = ‖w‖ * ‖concreteL2MathlibUnit j‖ := by
+      rw [norm_smul]
+    _ = ‖w‖ * 1 := by
+      rw [concrete_l2_mathlib_unit_norm_eq_one]
+    _ = ‖w‖ := by
+      ring
+    _ = w := by
+      exact Real.norm_of_nonneg hw_nonneg
 
 /-- The completed Hilbert norm of the obstruction output probe exceeds the
 requested threshold. -/
