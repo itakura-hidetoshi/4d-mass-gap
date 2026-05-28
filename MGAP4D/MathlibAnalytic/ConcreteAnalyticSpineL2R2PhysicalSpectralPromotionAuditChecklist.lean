@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ClosedOperatorTheorem
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedDiagonalSingleValuedness
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedDiagonalPartialOperatorValue
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -33,6 +33,8 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
     concreteAnalyticSpineL2R2CompletedDiagonalOperatorDefinitionReady
   completedDiagonalSingleValuednessReady :
     concreteAnalyticSpineL2R2CompletedDiagonalSingleValuednessReady
+  completedDiagonalPartialOperatorValueReady :
+    concreteAnalyticSpineL2R2CompletedDiagonalPartialOperatorValueReady
   finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   graphNormFiniteSupportDensityReady : concreteL2R2GraphNormFiniteSupportDensityReady
   graphNormCoreReleaseReady : concreteL2R2GraphNormCoreReleaseReady
@@ -75,6 +77,8 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
       concrete_analytic_spine_l2_r2_completed_diagonal_operator_definition_ready
     completedDiagonalSingleValuednessReady :=
       concrete_analytic_spine_l2_r2_completed_diagonal_single_valuedness_ready
+    completedDiagonalPartialOperatorValueReady :=
+      concrete_analytic_spine_l2_r2_completed_diagonal_partial_operator_value_ready
     finiteSupportCoreReady := concrete_analytic_spine_l2_r2_finite_support_core_ready
     graphNormFiniteSupportDensityReady := concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready
     graphNormCoreReleaseReady := concrete_analytic_spine_l2_r2_graph_norm_core_release_ready
@@ -107,6 +111,7 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteAnalyticSpineL2R2CompletedDiagonalGraphCarrierReady ∧
   concreteAnalyticSpineL2R2CompletedDiagonalOperatorDefinitionReady ∧
   concreteAnalyticSpineL2R2CompletedDiagonalSingleValuednessReady ∧
+  concreteAnalyticSpineL2R2CompletedDiagonalPartialOperatorValueReady ∧
   concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2GraphNormFiniteSupportDensityReady ∧
   concreteL2R2GraphNormCoreReleaseReady ∧
@@ -132,6 +137,7 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_completed_diagonal_graph_carrier_ready,
     concrete_analytic_spine_l2_r2_completed_diagonal_operator_definition_ready,
     concrete_analytic_spine_l2_r2_completed_diagonal_single_valuedness_ready,
+    concrete_analytic_spine_l2_r2_completed_diagonal_partial_operator_value_ready,
     concrete_analytic_spine_l2_r2_finite_support_core_ready,
     concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready,
     concrete_analytic_spine_l2_r2_graph_norm_core_release_ready,
