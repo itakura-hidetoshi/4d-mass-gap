@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ClosedOperatorTheorem
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedDiagonalPartialOperatorValue
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedDiagonalUnboundedOperatorSurface
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -15,26 +15,8 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   concreteRealHilbertSpaceReady : concreteL2R2ConcreteRealHilbertSpaceReady
   denselyDefinedUnboundedOperatorReady : concreteL2R2DenselyDefinedOperatorReady
   diagonalOperatorEvidenceReady : concreteAnalyticSpineL2R2DiagonalOperatorEvidenceReady
-  unitProbeUnboundednessCertificateReady :
-    concreteAnalyticSpineL2R2UnitProbeUnboundednessCertificateReady
-  unitProbeActionMassLowerBoundReady :
-    concreteAnalyticSpineL2R2UnitProbeActionMassLowerBoundReady
-  completedUnitProbeOutputNormLowerBoundReady :
-    concreteAnalyticSpineL2R2CompletedUnitProbeOutputNormLowerBoundReady
-  completedUnitVectorGrowthCertificateReady :
-    concreteAnalyticSpineL2R2CompletedUnitVectorGrowthCertificateReady
-  completedUnitEigenpairGrowthCertificateReady :
-    concreteAnalyticSpineL2R2CompletedUnitEigenpairGrowthCertificateReady
-  completedDiagonalEigenpairGraphSurfaceReady :
-    concreteAnalyticSpineL2R2CompletedDiagonalEigenpairGraphSurfaceReady
-  completedDiagonalGraphCarrierReady :
-    concreteAnalyticSpineL2R2CompletedDiagonalGraphCarrierReady
-  completedDiagonalOperatorDefinitionReady :
-    concreteAnalyticSpineL2R2CompletedDiagonalOperatorDefinitionReady
-  completedDiagonalSingleValuednessReady :
-    concreteAnalyticSpineL2R2CompletedDiagonalSingleValuednessReady
-  completedDiagonalPartialOperatorValueReady :
-    concreteAnalyticSpineL2R2CompletedDiagonalPartialOperatorValueReady
+  completedDiagonalUnboundedOperatorSurfaceReady :
+    concreteL2R2CompletedDiagonalUnboundedOperatorSurfaceReady
   finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   graphNormFiniteSupportDensityReady : concreteL2R2GraphNormFiniteSupportDensityReady
   graphNormCoreReleaseReady : concreteL2R2GraphNormCoreReleaseReady
@@ -59,26 +41,8 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     concreteRealHilbertSpaceReady := concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready
     denselyDefinedUnboundedOperatorReady := concrete_analytic_spine_l2_r2_densely_defined_operator_ready
     diagonalOperatorEvidenceReady := concrete_analytic_spine_l2_r2_diagonal_operator_evidence_ready
-    unitProbeUnboundednessCertificateReady :=
-      concrete_analytic_spine_l2_r2_unit_probe_unboundedness_certificate_ready
-    unitProbeActionMassLowerBoundReady :=
-      concrete_analytic_spine_l2_r2_unit_probe_action_mass_lower_bound_ready
-    completedUnitProbeOutputNormLowerBoundReady :=
-      concrete_analytic_spine_l2_r2_completed_unit_probe_output_norm_lower_bound_ready
-    completedUnitVectorGrowthCertificateReady :=
-      concrete_analytic_spine_l2_r2_completed_unit_vector_growth_certificate_ready
-    completedUnitEigenpairGrowthCertificateReady :=
-      concrete_analytic_spine_l2_r2_completed_unit_eigenpair_growth_certificate_ready
-    completedDiagonalEigenpairGraphSurfaceReady :=
-      concrete_analytic_spine_l2_r2_completed_diagonal_eigenpair_graph_surface_ready
-    completedDiagonalGraphCarrierReady :=
-      concrete_analytic_spine_l2_r2_completed_diagonal_graph_carrier_ready
-    completedDiagonalOperatorDefinitionReady :=
-      concrete_analytic_spine_l2_r2_completed_diagonal_operator_definition_ready
-    completedDiagonalSingleValuednessReady :=
-      concrete_analytic_spine_l2_r2_completed_diagonal_single_valuedness_ready
-    completedDiagonalPartialOperatorValueReady :=
-      concrete_analytic_spine_l2_r2_completed_diagonal_partial_operator_value_ready
+    completedDiagonalUnboundedOperatorSurfaceReady :=
+      concrete_analytic_spine_l2_r2_completed_diagonal_unbounded_operator_surface_ready
     finiteSupportCoreReady := concrete_analytic_spine_l2_r2_finite_support_core_ready
     graphNormFiniteSupportDensityReady := concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready
     graphNormCoreReleaseReady := concrete_analytic_spine_l2_r2_graph_norm_core_release_ready
@@ -102,16 +66,7 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2ConcreteRealHilbertSpaceReady ∧
   concreteL2R2DenselyDefinedOperatorReady ∧
   concreteAnalyticSpineL2R2DiagonalOperatorEvidenceReady ∧
-  concreteAnalyticSpineL2R2UnitProbeUnboundednessCertificateReady ∧
-  concreteAnalyticSpineL2R2UnitProbeActionMassLowerBoundReady ∧
-  concreteAnalyticSpineL2R2CompletedUnitProbeOutputNormLowerBoundReady ∧
-  concreteAnalyticSpineL2R2CompletedUnitVectorGrowthCertificateReady ∧
-  concreteAnalyticSpineL2R2CompletedUnitEigenpairGrowthCertificateReady ∧
-  concreteAnalyticSpineL2R2CompletedDiagonalEigenpairGraphSurfaceReady ∧
-  concreteAnalyticSpineL2R2CompletedDiagonalGraphCarrierReady ∧
-  concreteAnalyticSpineL2R2CompletedDiagonalOperatorDefinitionReady ∧
-  concreteAnalyticSpineL2R2CompletedDiagonalSingleValuednessReady ∧
-  concreteAnalyticSpineL2R2CompletedDiagonalPartialOperatorValueReady ∧
+  concreteL2R2CompletedDiagonalUnboundedOperatorSurfaceReady ∧
   concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2GraphNormFiniteSupportDensityReady ∧
   concreteL2R2GraphNormCoreReleaseReady ∧
@@ -128,16 +83,7 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_concrete_real_hilbert_space_ready,
     concrete_analytic_spine_l2_r2_densely_defined_operator_ready,
     concrete_analytic_spine_l2_r2_diagonal_operator_evidence_ready,
-    concrete_analytic_spine_l2_r2_unit_probe_unboundedness_certificate_ready,
-    concrete_analytic_spine_l2_r2_unit_probe_action_mass_lower_bound_ready,
-    concrete_analytic_spine_l2_r2_completed_unit_probe_output_norm_lower_bound_ready,
-    concrete_analytic_spine_l2_r2_completed_unit_vector_growth_certificate_ready,
-    concrete_analytic_spine_l2_r2_completed_unit_eigenpair_growth_certificate_ready,
-    concrete_analytic_spine_l2_r2_completed_diagonal_eigenpair_graph_surface_ready,
-    concrete_analytic_spine_l2_r2_completed_diagonal_graph_carrier_ready,
-    concrete_analytic_spine_l2_r2_completed_diagonal_operator_definition_ready,
-    concrete_analytic_spine_l2_r2_completed_diagonal_single_valuedness_ready,
-    concrete_analytic_spine_l2_r2_completed_diagonal_partial_operator_value_ready,
+    concrete_analytic_spine_l2_r2_completed_diagonal_unbounded_operator_surface_ready,
     concrete_analytic_spine_l2_r2_finite_support_core_ready,
     concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready,
     concrete_analytic_spine_l2_r2_graph_norm_core_release_ready,
