@@ -25,9 +25,16 @@ theorem concrete_l2_r2_completed_diagonal_coordinate_graph_condition_closed
 completed `l2 × l2` carrier. -/
 theorem concrete_l2_r2_completed_diagonal_graph_isClosed :
     IsClosed concreteL2R2CompletedDiagonalGraphCarrier := by
-  simpa [concreteL2R2CompletedDiagonalGraphCarrier] using
-    (isClosed_iInter fun n : ℕ =>
-      concrete_l2_r2_completed_diagonal_coordinate_graph_condition_closed n)
+  let S : ℕ → Set ((lp (fun _ : ℕ => ℝ) 2) × (lp (fun _ : ℕ => ℝ) 2)) :=
+    fun n => {p | p.2 n = concreteL2DiagonalWeight n * p.1 n}
+  have hclosed : IsClosed (⋂ n : ℕ, S n) := by
+    exact isClosed_iInter fun n : ℕ =>
+      concrete_l2_r2_completed_diagonal_coordinate_graph_condition_closed n
+  have hset : concreteL2R2CompletedDiagonalGraphCarrier = ⋂ n : ℕ, S n := by
+    ext p
+    simp [concreteL2R2CompletedDiagonalGraphCarrier, S]
+  rw [hset]
+  exact hclosed
 
 /-- The sequential-to-closed bridge is now discharged by the direct closed-set
 proof.  The premise is retained to match the bridge API, but the proof no longer
