@@ -27,8 +27,10 @@ theorem concrete_l2_r2_completed_hilbert_operator_norm_unboundedness :
   rintro ⟨K, hK⟩
   obtain ⟨x, y, hxdom, hgraph, hxnorm, hgt⟩ :=
     concrete_l2_r2_completed_diagonal_graph_defined_operator_growth_certificate (K + 1)
+  have hgraph' : (x, y) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+    simpa [concreteL2R2CompletedDiagonalGraphDefinedOperator] using hgraph
   have hle : ‖y‖ ≤ (K : ℝ) := by
-    exact hK x y hxdom hgraph hxnorm
+    exact hK x y hxdom hgraph' hxnorm
   have hKlt : (K : ℝ) < ((K + 1 : ℕ) : ℝ) := by
     exact_mod_cast Nat.lt_succ_self K
   exact (not_lt_of_ge hle) (lt_trans hKlt hgt)
