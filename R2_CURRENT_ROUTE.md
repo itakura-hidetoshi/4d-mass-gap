@@ -1,6 +1,6 @@
 # R2 Current Route
 
-This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added, the legacy R2f graph-norm core blocker was closed, and the residual-zero audit surface was added.
+This document records the current concrete `l2` R2 analytic route state after the narrow Lean umbrella was added, the legacy R2f graph-norm core blocker was closed, the residual-zero audit surface was added, and the completed diagonal unbounded-operator surface was consolidated.
 
 ## Lean import entries
 
@@ -14,6 +14,12 @@ For the residual-zero audit surface, use:
 
 ```lean
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface
+```
+
+For the consolidated completed diagonal unbounded-operator surface, use:
+
+```lean
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedDiagonalUnboundedOperatorSurface
 ```
 
 The main theorem entry is:
@@ -34,6 +40,12 @@ The residual-zero audit theorem is:
 concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready
 ```
 
+The consolidated completed diagonal unbounded-operator theorem is:
+
+```lean
+concrete_analytic_spine_l2_r2_completed_diagonal_unbounded_operator_surface_ready
+```
+
 The boundary-preservation theorem is:
 
 ```lean
@@ -50,6 +62,7 @@ graph-norm finite-support density closed
   -> R2 top-level route index ready
   -> R2 current route umbrella ready
   -> R2 residual-zero audit surface ready
+  -> completed diagonal unbounded-operator surface ready
 ```
 
 ## Closed / ready surfaces
@@ -63,14 +76,38 @@ concrete_analytic_spine_l2_r2_analytic_lane_release_surface_ready
 concrete_analytic_spine_l2_r2_top_level_route_index_ready
 concrete_l2_r2_current_route_ready
 concrete_analytic_spine_l2_r2_residual_zero_audit_surface_ready
+concrete_analytic_spine_l2_r2_completed_diagonal_unbounded_operator_surface_ready
 ```
+
+## Consolidated completed diagonal unbounded-operator surface
+
+The consolidated surface packages the first non-placeholder operator-side route for item 2:
+
+```text
+completed diagonal graph carrier
++ graph-defined completed diagonal operator domain
++ completed diagonal single-valuedness theorem
++ chosen partial operator value
++ unit-domain growth certificate
+```
+
+Its unit-domain growth certificate has the form:
+
+```text
+for every threshold k,
+there exists a domain point x with norm one such that
+k < norm of the chosen completed diagonal partial-operator value at x.
+```
+
+This is stronger than a documentation-only placeholder and weaker than the completed closed-operator / self-adjoint spectral route.
 
 ## Boundary preserved
 
-The current route umbrella and residual-zero audit surface are import / audit surfaces only. They do not claim:
+The current route umbrella, residual-zero audit surface, and consolidated completed diagonal unbounded-operator surface do not claim:
 
 ```text
-closed operator theorem
+completed diagonal closed graph theorem
+completed Hilbert operator-norm theorem
 self-adjointness theorem
 spectral theorem
 PVM construction
