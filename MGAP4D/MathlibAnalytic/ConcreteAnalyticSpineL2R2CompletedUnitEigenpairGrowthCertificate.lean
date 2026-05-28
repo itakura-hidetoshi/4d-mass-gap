@@ -30,19 +30,19 @@ theorem concrete_l2_r2_completed_obstruction_eigenvalue_gt_threshold
 /-- Completed unit eigenpair growth certificate.
 
 For every threshold `k`, there are completed `l2` vectors `x` and `y` and a real
-scalar `λ` such that `‖x‖ = 1`, `y = λ • x`, `k < λ`, and `k < ‖y‖`.
+scalar `lam` such that `‖x‖ = 1`, `y = lam • x`, `k < lam`, and `k < ‖y‖`.
 This is still a unit-eigenpair growth certificate, not yet a globally defined
 completed operator-norm theorem. -/
 def concreteL2R2CompletedUnitEigenpairGrowthCertificate : Prop :=
   ∀ k : ℕ,
     ∃ x y : lp (fun _ : ℕ => ℝ) 2,
-      ∃ λ : ℝ,
+      ∃ lam : ℝ,
         x = concreteL2R2CompletedObstructionUnitInputProbe k ∧
         y = concreteL2R2CompletedObstructionUnitOutputProbe k ∧
-        λ = concreteL2R2CompletedObstructionEigenvalue k ∧
+        lam = concreteL2R2CompletedObstructionEigenvalue k ∧
         ‖x‖ = 1 ∧
-        y = λ • x ∧
-        (k : ℝ) < λ ∧
+        y = lam • x ∧
+        (k : ℝ) < lam ∧
         (k : ℝ) < ‖y‖
 
 /-- The completed unit eigenpair growth certificate is ready. -/
