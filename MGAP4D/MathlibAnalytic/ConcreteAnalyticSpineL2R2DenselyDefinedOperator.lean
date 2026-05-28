@@ -32,7 +32,8 @@ def concreteL2R2FullDomainZeroDenselyDefinedOperator :
   { domain := ⊤
     operator := 0
     denseDomain := by
-      simp
+      simpa using
+        (dense_univ : Dense (Set.univ : Set ConcreteL2R2RealHilbertSpace))
     boundaryNotUnboundednessTheorem := True
     boundaryNotClosedOperatorTheorem := True
     boundaryNotSelfAdjointnessTheorem := True
