@@ -20,13 +20,16 @@ theorem concrete_l2_r2_coordinate_evaluation_continuous
   intro x ε hε
   refine ⟨ε, hε, ?_⟩
   intro y hy
+  have hsub : (y - x) n = y n - x n := rfl
   calc
     dist ((fun z : lp (fun _ : ℕ => ℝ) 2 => z n) y)
         ((fun z : lp (fun _ : ℕ => ℝ) 2 => z n) x)
-        = ‖(y - x) n‖ := by
+        = ‖y n - x n‖ := by
           simp [dist_eq_norm]
+    _ = ‖(y - x) n‖ := by
+          rw [hsub]
     _ ≤ ‖y - x‖ := by
-          exact lp.norm_apply_le_norm (y - x) n
+          exact lp.norm_apply_le_norm (by norm_num : (2 : ℝ≥0∞) ≠ 0) (y - x) n
     _ = dist y x := by
           simp [dist_eq_norm]
     _ < ε := hy
