@@ -11,8 +11,8 @@ noncomputable section
 finite-sum core behind the later Hilbert-inner-product symmetry statement. -/
 theorem concrete_l2_r2_diagonal_weight_finite_coordinate_symmetry
     (s : Finset ℕ) (x z : ℕ → ℝ) :
-    (∑ n in s, (concreteL2DiagonalWeight n * x n) * z n) =
-      ∑ n in s, x n * (concreteL2DiagonalWeight n * z n) := by
+    Finset.sum s (fun n => (concreteL2DiagonalWeight n * x n) * z n) =
+      Finset.sum s (fun n => x n * (concreteL2DiagonalWeight n * z n)) := by
   refine Finset.sum_congr rfl ?_
   intro n _hn
   ring
@@ -24,7 +24,8 @@ theorem concrete_l2_r2_completed_diagonal_graph_finite_coordinate_symmetry
     {x Tx z Tz : lp (fun _ : ℕ => ℝ) 2}
     (hxgraph : (x, Tx) ∈ concreteL2R2CompletedDiagonalGraphCarrier)
     (hzgraph : (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphCarrier) :
-    (∑ n in s, (Tx n) * (z n)) = ∑ n in s, (x n) * (Tz n) := by
+    Finset.sum s (fun n => (Tx n) * (z n)) =
+      Finset.sum s (fun n => (x n) * (Tz n)) := by
   refine Finset.sum_congr rfl ?_
   intro n _hn
   have hx : Tx n = concreteL2DiagonalWeight n * x n := hxgraph n
@@ -42,7 +43,8 @@ theorem concrete_l2_r2_completed_diagonal_operator_finite_coordinate_symmetry
     {x Tx z Tz : lp (fun _ : ℕ => ℝ) 2}
     (hxgraph : (x, Tx) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier)
     (hzgraph : (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) :
-    (∑ n in s, (Tx n) * (z n)) = ∑ n in s, (x n) * (Tz n) := by
+    Finset.sum s (fun n => (Tx n) * (z n)) =
+      Finset.sum s (fun n => (x n) * (Tz n)) := by
   apply concrete_l2_r2_completed_diagonal_graph_finite_coordinate_symmetry s
   · simpa [concreteL2R2CompletedDiagonalGraphDefinedOperator] using hxgraph
   · simpa [concreteL2R2CompletedDiagonalGraphDefinedOperator] using hzgraph
@@ -51,12 +53,13 @@ theorem concrete_l2_r2_completed_diagonal_operator_finite_coordinate_symmetry
 def concreteAnalyticSpineL2R2DiagonalFiniteCoordinateSymmetryReady : Prop :=
   concreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditionsReady ∧
   (∀ s : Finset ℕ, ∀ x z : ℕ → ℝ,
-    (∑ n in s, (concreteL2DiagonalWeight n * x n) * z n) =
-      ∑ n in s, x n * (concreteL2DiagonalWeight n * z n)) ∧
+    Finset.sum s (fun n => (concreteL2DiagonalWeight n * x n) * z n) =
+      Finset.sum s (fun n => x n * (concreteL2DiagonalWeight n * z n))) ∧
   (∀ s : Finset ℕ, ∀ x Tx z Tz : lp (fun _ : ℕ => ℝ) 2,
     (x, Tx) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
     (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
-    (∑ n in s, (Tx n) * (z n)) = ∑ n in s, (x n) * (Tz n)) ∧
+    Finset.sum s (fun n => (Tx n) * (z n)) =
+      Finset.sum s (fun n => (x n) * (Tz n))) ∧
   True
 
 /-- The finite-coordinate symmetry layer is ready. -/
