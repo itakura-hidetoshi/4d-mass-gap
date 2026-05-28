@@ -4,6 +4,7 @@ import Mathlib.Topology.Separation.Hausdorff
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Filter Topology
 open scoped ENNReal lp
 
 noncomputable section
