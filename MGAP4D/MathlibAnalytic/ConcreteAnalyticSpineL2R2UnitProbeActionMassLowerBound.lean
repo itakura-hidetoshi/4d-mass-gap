@@ -12,6 +12,21 @@ def concreteL2R2ObstructionActionSingletonSquaredMass (k : ℕ) : ℝ :=
     (fun n : ℕ =>
       (concreteL2DiagonalRawAction (concreteL2ObstructionUnitDomain k) n) ^ 2)
 
+/-- Finite-support squared mass of the diagonal action on the obstruction-selected
+unit probe, using the singleton support selected by the obstruction witness.
+
+This is the finite-support action-mass object that will later be compared with
+the completed Hilbert norm once that bridge is available. -/
+def concreteL2R2ObstructionActionFiniteSupportSquaredMass (k : ℕ) : ℝ :=
+  concreteL2R2ObstructionActionSingletonSquaredMass k
+
+/-- The finite-support action mass is the singleton action mass at this layer. -/
+theorem concrete_l2_r2_obstruction_action_finite_support_squared_mass_eq_singleton
+    (k : ℕ) :
+    concreteL2R2ObstructionActionFiniteSupportSquaredMass k =
+      concreteL2R2ObstructionActionSingletonSquaredMass k := by
+  rfl
+
 /-- The singleton action mass is exactly the square of the selected action
 coordinate. -/
 theorem concrete_l2_r2_obstruction_action_singleton_squared_mass_eq_selected_square
@@ -40,28 +55,49 @@ theorem concrete_l2_r2_obstruction_action_singleton_squared_mass_gt_threshold_sq
   rw [concrete_l2_r2_obstruction_action_singleton_squared_mass_eq_selected_square]
   exact concrete_l2_r2_obstruction_action_selected_square_gt_threshold_square k
 
-/-- Public predicate for the finite-support action-mass lower-bound certificate. -/
+/-- The finite-support squared mass of the action on the obstruction unit exceeds
+the threshold square. -/
+theorem concrete_l2_r2_obstruction_action_finite_support_squared_mass_gt_threshold_square
+    (k : ℕ) :
+    (k : ℝ) ^ 2 < concreteL2R2ObstructionActionFiniteSupportSquaredMass k := by
+  rw [concrete_l2_r2_obstruction_action_finite_support_squared_mass_eq_singleton]
+  exact concrete_l2_r2_obstruction_action_singleton_squared_mass_gt_threshold_square k
+
+/-- Public predicate for the singleton action-mass lower-bound certificate. -/
 def concreteL2R2UnitProbeActionMassLowerBoundCertificate : Prop :=
   ∀ k : ℕ,
     (k : ℝ) ^ 2 < concreteL2R2ObstructionActionSingletonSquaredMass k
 
-/-- The finite-support action-mass lower-bound certificate is ready. -/
+/-- Public predicate for the finite-support action-mass lower-bound certificate. -/
+def concreteL2R2UnitProbeFiniteSupportActionMassLowerBoundCertificate : Prop :=
+  ∀ k : ℕ,
+    (k : ℝ) ^ 2 < concreteL2R2ObstructionActionFiniteSupportSquaredMass k
+
+/-- The singleton action-mass lower-bound certificate is ready. -/
 theorem concrete_l2_r2_unit_probe_action_mass_lower_bound_certificate :
     concreteL2R2UnitProbeActionMassLowerBoundCertificate := by
   intro k
   exact concrete_l2_r2_obstruction_action_singleton_squared_mass_gt_threshold_square k
 
+/-- The finite-support action-mass lower-bound certificate is ready. -/
+theorem concrete_l2_r2_unit_probe_finite_support_action_mass_lower_bound_certificate :
+    concreteL2R2UnitProbeFiniteSupportActionMassLowerBoundCertificate := by
+  intro k
+  exact concrete_l2_r2_obstruction_action_finite_support_squared_mass_gt_threshold_square k
+
 /-- Public theorem-entry predicate for the action-mass lower-bound layer. -/
 def concreteAnalyticSpineL2R2UnitProbeActionMassLowerBoundReady : Prop :=
   concreteAnalyticSpineL2R2UnitProbeUnboundednessCertificateReady ∧
-  concreteL2R2UnitProbeActionMassLowerBoundCertificate
+  concreteL2R2UnitProbeActionMassLowerBoundCertificate ∧
+  concreteL2R2UnitProbeFiniteSupportActionMassLowerBoundCertificate
 
 /-- The R2 unit-probe action-mass lower-bound layer is ready. -/
 theorem concrete_analytic_spine_l2_r2_unit_probe_action_mass_lower_bound_ready :
     concreteAnalyticSpineL2R2UnitProbeActionMassLowerBoundReady := by
   exact ⟨
     concrete_analytic_spine_l2_r2_unit_probe_unboundedness_certificate_ready,
-    concrete_l2_r2_unit_probe_action_mass_lower_bound_certificate⟩
+    concrete_l2_r2_unit_probe_action_mass_lower_bound_certificate,
+    concrete_l2_r2_unit_probe_finite_support_action_mass_lower_bound_certificate⟩
 
 end
 
