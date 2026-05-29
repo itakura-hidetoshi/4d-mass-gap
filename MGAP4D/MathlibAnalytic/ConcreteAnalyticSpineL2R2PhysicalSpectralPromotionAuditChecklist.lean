@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ClosedOperatorTheorem
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DiagonalFiniteCoordinateSymmetry
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -17,6 +18,8 @@ structure ConcreteL2R2PhysicalSpectralPromotionAuditChecklist where
   diagonalOperatorEvidenceReady : concreteAnalyticSpineL2R2DiagonalOperatorEvidenceReady
   selfAdjointnessConcretePreconditionsReady :
     concreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditionsReady
+  diagonalFiniteCoordinateSymmetryReady :
+    concreteAnalyticSpineL2R2DiagonalFiniteCoordinateSymmetryReady
   finiteSupportCoreReady : concreteL2R2FiniteSupportCoreReady
   graphNormFiniteSupportDensityReady : concreteL2R2GraphNormFiniteSupportDensityReady
   graphNormCoreReleaseReady : concreteL2R2GraphNormCoreReleaseReady
@@ -42,6 +45,8 @@ def concreteL2R2PhysicalSpectralPromotionAuditChecklist :
     diagonalOperatorEvidenceReady := concrete_analytic_spine_l2_r2_diagonal_operator_evidence_ready
     selfAdjointnessConcretePreconditionsReady :=
       concrete_analytic_spine_l2_r2_self_adjointness_concrete_preconditions_ready
+    diagonalFiniteCoordinateSymmetryReady :=
+      concrete_analytic_spine_l2_r2_diagonal_finite_coordinate_symmetry_ready
     finiteSupportCoreReady := concrete_analytic_spine_l2_r2_finite_support_core_ready
     graphNormFiniteSupportDensityReady := concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready
     graphNormCoreReleaseReady := concrete_analytic_spine_l2_r2_graph_norm_core_release_ready
@@ -65,6 +70,7 @@ def concreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklistReady : Prop
   concreteL2R2DenselyDefinedOperatorReady ∧
   concreteAnalyticSpineL2R2DiagonalOperatorEvidenceReady ∧
   concreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditionsReady ∧
+  concreteAnalyticSpineL2R2DiagonalFiniteCoordinateSymmetryReady ∧
   concreteL2R2FiniteSupportCoreReady ∧
   concreteL2R2GraphNormFiniteSupportDensityReady ∧
   concreteL2R2GraphNormCoreReleaseReady ∧
@@ -82,6 +88,7 @@ theorem concrete_analytic_spine_l2_r2_physical_spectral_promotion_audit_checklis
     concrete_analytic_spine_l2_r2_densely_defined_operator_ready,
     concrete_analytic_spine_l2_r2_diagonal_operator_evidence_ready,
     concrete_analytic_spine_l2_r2_self_adjointness_concrete_preconditions_ready,
+    concrete_analytic_spine_l2_r2_diagonal_finite_coordinate_symmetry_ready,
     concrete_analytic_spine_l2_r2_finite_support_core_ready,
     concrete_analytic_spine_l2_r2_graph_norm_finite_support_density_ready,
     concrete_analytic_spine_l2_r2_graph_norm_core_release_ready,
