@@ -3,18 +3,20 @@
 This roadmap tracks the current state and next review-gated steps of the canonical MGAP4D Lean proof repository.
 
 ```text
-Canonical proof repo: itakura-hidetoshi/4d-mass-gap
-KuuOS reference repo: itakura-hidetoshi/KuuOS
+Canonical proof repository: itakura-hidetoshi/4d-mass-gap
+KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference this repository as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open public final theorem release.
+KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface. KuuOS reference documents do not replace this repository as the canonical Lean proof repository and do not independently open public final theorem release.
 
-## Current status snapshot, May 2026
+---
+
+## Status snapshot as of 2026-05-31
 
 The main branch has advanced beyond the earlier spectral checkpoint into an internal normalized theorem-body / continuum-Hamiltonian / external-audit-readiness surface.
 
-Current theorem-body value:
+Current normalized theorem-body value:
 
 ```text
 exactGapValueReal = 33 / 20
@@ -50,6 +52,7 @@ general Fin n / basis / dense-span / operator / spectral boundary: held
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
+fresh-clone replay path: present
 external mathematical consensus: not claimed
 public final theorem claim: review-gated
 ```
@@ -63,6 +66,8 @@ CI success is not proof review
 documentation is not theorem body
 ```
 
+---
+
 ## Phase A — GitHub-native Lean repository foundation
 
 Status: **complete**
@@ -75,18 +80,20 @@ Status: **complete**
 - [x] Add local replay script at `scripts/check.sh`.
 - [x] Keep Lean source, docs, ledgers, audit scripts, and CI in one GitHub-native tree.
 
+---
+
 ## Phase B — Source migration and structural proof surfaces
 
 Status: **complete**
 
-- [x] Migrate active R1--R7 root files.
+- [x] Migrate active proof-architecture source files.
 - [x] Add OperatorAPI interfaces.
-- [x] Add R1 / R2 / R3--R7 concrete files.
-- [x] Add Global / Concrete status-only files.
-- [x] Add theorem dependency map as checked Lean structures.
-- [x] Add lightweight docs and maps.
+- [x] Add theorem dependency maps as checked Lean structures.
+- [x] Add lightweight docs and review maps.
 - [x] Archive prior kernels under a reviewed layout.
 - [x] Add source-tree review gate.
+
+---
 
 ## Phase C — Spectral checkpoint and exact normalized value
 
@@ -103,10 +110,12 @@ Status: **complete as internal theorem-body surface**
 Boundary retained:
 
 ```text
-spectral checkpoint: complete internally
+spectral checkpoint: internally complete
 normalized value surface: 33/20
 public final theorem release: not opened
 ```
+
+---
 
 ## Phase D — Analytic theorem-body and concrete residual closure
 
@@ -137,6 +146,8 @@ compact lattice-gauge plaquette observable construction
 operator-measure realization and compatibility
 ```
 
+---
+
 ## Phase E — Physical Hamiltonian normalization
 
 Status: **complete as scalar and operator normalization surfaces**
@@ -160,6 +171,8 @@ dimensionless exact gap is 33/20
 dimensional physical gap reads as E0 * 33/20
 ```
 
+---
+
 ## Phase F — Exact-value origin and audit hardening
 
 Status: **complete as internal audit surface**
@@ -168,7 +181,7 @@ Status: **complete as internal audit surface**
 - [x] Add major theorem non-placeholder audit script.
 - [x] Wire major theorem non-placeholder audit into CI.
 - [x] Add bridge coherence audit script.
-- [x] Add dedicated Bridge Coherence CI workflow.
+- [x] Add dedicated bridge-coherence CI workflow.
 - [x] Check bridge order from Hilbert to physical Hamiltonian to Yang-Mills to spectral/PVM to continuum surfaces.
 - [x] Keep public-boundary markers visible.
 
@@ -185,7 +198,9 @@ exact value preservation anchors are mechanically audited
 public boundary markers are mechanically audited
 ```
 
-## Phase G — Continuum-Hamiltonian route and external audit readiness
+---
+
+## Phase G — Continuum-Hamiltonian route and external-audit readiness
 
 Status: **complete as internal readiness gate; external audit still pending**
 
@@ -242,27 +257,67 @@ Current replay path includes:
 [check] lake build
 ```
 
+---
+
 ## Phase H — Independent replay and external mathematical review
 
 Status: **active priority**
 
-- [ ] Run a fresh-clone independent replay on a second local machine.
-- [ ] Record OS, CPU architecture, Lean version, Lake version, commit SHA, and full command transcript.
-- [ ] Add a compact `docs/independent_replay_latest.md` receipt.
-- [ ] Keep `INDEPENDENT_REPLAY.md` short, current, and command-first.
+Purpose: move from internal readiness to externally reproducible review without prematurely converting review success into public final theorem release.
+
+- [ ] Run a fresh-clone replay on at least one second local machine.
+- [ ] Record OS, CPU architecture, Lean version, Lake version, commit SHA, and complete command transcript.
+- [ ] Add `docs/independent_replay_latest.md` as a compact append-only replay receipt.
+- [ ] Keep `INDEPENDENT_REPLAY.md` command-first and current.
 - [ ] Ask at least one external reviewer to run `bash scripts/check.sh`.
-- [ ] Ask at least one reviewer to inspect the major theorem surfaces in `THEOREM_INDEX.md`.
+- [ ] Ask at least one reviewer to inspect `THEOREM_INDEX.md`.
 - [ ] Ask at least one reviewer to inspect the physical normalization boundary.
 - [ ] Ask at least one reviewer to inspect the continuum-Hamiltonian complete derivation surface.
-- [ ] Ask at least one reviewer to inspect the finite-carrier ladder boundary before `Fin n` generalization.
+- [ ] Ask at least one reviewer to inspect the finite-carrier ladder boundary before general `Fin n` promotion.
 - [ ] Collect review notes as append-only external audit notes.
-- [ ] Do not convert review success into public final theorem release automatically.
+- [ ] Preserve the rule: review success does not automatically open public final theorem release.
 
-## Phase I — Version tag, Zenodo synchronization, and audit release packet
+Exit gate:
+
+```text
+fresh-clone replay receipt present
+external reviewer transcript present
+major theorem-surface review notes present
+normalization boundary review notes present
+public-boundary wording unchanged
+```
+
+---
+
+## Phase I — General finite-carrier ladder hardening
+
+Status: **active but boundary-held**
+
+Purpose: extend the completed `Fin 2` / `Fin 3` Mathlib seed ladder toward a separately reviewed general `Fin n` route.
+
+- [ ] Separate seed examples from general theorem claims.
+- [ ] Specify the general `Fin n` target theorem family.
+- [ ] Track basis, dense-span, operator, and spectral requirements separately.
+- [ ] Add review surfaces before promotion.
+- [ ] Add audit hooks that prevent `Fin 2` / `Fin 3` examples from being read as a full general finite-family theorem.
+- [ ] Keep public boundary markers visible until the general route is independently reviewed.
+
+Exit gate:
+
+```text
+general Fin n route stated
+basis / dense-span / operator / spectral obligations separated
+seed-to-general promotion blocker visible
+audit script prevents accidental overclaim
+```
+
+---
+
+## Phase J — Audit-oriented version tag and Zenodo synchronization
 
 Status: **pending**
 
-- [ ] Choose an audit-oriented version name, for example `v1.0-audit` or `v1.6-audit`.
+- [ ] Choose an audit-oriented version name, for example `v1.6-audit`.
 - [ ] Confirm CI green on the exact commit to be tagged.
 - [ ] Confirm `bash scripts/check.sh` from a fresh clone.
 - [ ] Confirm `lake build` from a fresh clone.
@@ -270,9 +325,22 @@ Status: **pending**
 - [ ] Create tag only after source-tree review.
 - [ ] Generate post-tag verification receipt.
 - [ ] Update Zenodo archive only after the tag and post-tag replay receipt are stable.
-- [ ] Keep the Zenodo description clear that the record is a proof-architecture and external-audit preparation artifact unless and until independent consensus changes the boundary.
+- [ ] Keep Zenodo wording clear: proof-architecture and external-audit preparation artifact unless independent consensus changes the boundary.
 
-## Phase J — Public communication boundary
+Exit gate:
+
+```text
+tagged commit selected
+CI green
+fresh-clone replay receipt attached
+post-tag verification receipt attached
+Zenodo metadata synchronized
+public final theorem boundary preserved
+```
+
+---
+
+## Phase K — Public communication boundary
 
 Status: **active governance rule**
 
@@ -282,11 +350,12 @@ All public-facing descriptions should preserve the following distinction:
 internal normalized Lean theorem-body surface
 proof-architecture closure
 audit and replay readiness
+independent replay
 external mathematical consensus
 public final theorem acceptance
 ```
 
-Recommended wording:
+Use:
 
 ```text
 MGAP4D currently provides a Lean 4 proof architecture and replayable audit surface
@@ -307,9 +376,11 @@ external-audit-readiness gate equals external audit
 finite-carrier seeds imply the full general finite-family / spectral theorem chain
 ```
 
+---
+
 ## Current priorities
 
-1. Keep `README.md`, `ROADMAP.md`, `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, and CI ledgers synchronized with `main`.
+1. Keep `README.md`, `ROADMAP.md`, `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, `PHYSICAL_REALIZATION_BOUNDARY.md`, and CI ledgers synchronized with `main`.
 2. Make fresh-clone replay the primary external entry point.
 3. Preserve the `33/20` normalized theorem-body origin while keeping the public boundary explicit.
 4. Collect independent replay receipts.
@@ -318,3 +389,21 @@ finite-carrier seeds imply the full general finite-family / spectral theorem cha
 7. Prepare an audit-oriented version tag only after source-tree review and CI green confirmation.
 8. Synchronize Zenodo only after the tag and replay receipt are stable.
 9. Continue mathematical hardening while separating proof architecture, replay readiness, and external consensus.
+
+---
+
+## Stop condition
+
+Do not expand the roadmap by adding new phases merely to make the project look larger.
+
+The next public-facing movement should be narrow:
+
+```text
+fresh-clone replay
+external theorem-surface review
+finite-carrier generalization boundary
+audit tag
+Zenodo synchronization
+```
+
+Everything else remains secondary unless it directly supports these gates.
