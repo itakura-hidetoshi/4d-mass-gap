@@ -199,6 +199,27 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation
   exact concrete_l2_r2_formal_adjoint_candidate_coordinate_equation
     (concrete_l2_r2_formal_adjoint_operator_value_mem y hy) n
 
+/-- Reverse graph containment: every formal-adjoint graph candidate point satisfies
+exactly the completed diagonal graph-carrier coordinate equation. -/
+theorem concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph :
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆
+      concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  intro p hp
+  rcases p with ⟨y, w⟩
+  change ∀ n : ℕ, w n = concreteL2DiagonalWeight n * y n
+  intro n
+  exact concrete_l2_r2_formal_adjoint_candidate_coordinate_equation hp n
+
+/-- Graph-level equality between the completed diagonal graph carrier and the
+formal adjoint graph candidate.  This is still graph-level equality and is not a
+Mathlib `adjoint` or `IsSelfAdjoint` promotion. -/
+theorem concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate :
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  exact Set.Subset.antisymm
+    concrete_l2_r2_completed_diagonal_graph_subset_formal_adjoint_candidate
+    concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph
+
 /-- Public theorem-entry predicate for the formal adjoint operator-value surface. -/
 def concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady : Prop :=
   concreteAnalyticSpineL2R2AdjointGraphCandidateStructureSurfaceReady ∧
@@ -215,7 +236,9 @@ def concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady : Prop :=
     (hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
     (n : ℕ),
     concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy n =
-      concreteL2DiagonalWeight n * y n)
+      concreteL2DiagonalWeight n * y n) ∧
+  concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate
 
 /-- The formal adjoint operator-value surface is ready. -/
 theorem concrete_analytic_spine_l2_r2_formal_adjoint_operator_value_surface_ready :
@@ -225,7 +248,8 @@ theorem concrete_analytic_spine_l2_r2_formal_adjoint_operator_value_surface_read
     concrete_l2_r2_formal_adjoint_domain_zero,
     (by intro y₁ y₂ hy₁ hy₂; exact concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂),
     (by intro c y hy; exact concrete_l2_r2_formal_adjoint_domain_smul c hy),
-    (by intro y hy n; exact concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation hy n)⟩
+    (by intro y hy n; exact concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation hy n),
+    concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate⟩
 
 end
 
