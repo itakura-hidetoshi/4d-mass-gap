@@ -32,11 +32,20 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_satisfies_diagonal_coordina
   intro n
   exact concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation hy n
 
+/-- A formal-adjoint graph witness is already a point of the completed diagonal
+graph carrier.  This is the reverse-containment step obtained from coordinate
+extraction, not a Mathlib `adjoint` promotion. -/
+theorem concrete_l2_r2_formal_adjoint_witness_mem_completed_diagonal_graph
+    {y w : lp (fun _ : ℕ => ℝ) 2}
+    (hw : (y, w) ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) :
+    (y, w) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  exact concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph hw
+
 /-- Reverse-containment coordinate extraction packet.
 
-This does not yet claim reverse containment as set membership in the original
-graph carrier.  It records the exact coordinate equation that any formal-adjoint
-candidate witness must satisfy. -/
+This packet now includes the theorem-level bridge from the coordinate equation to
+reverse graph containment.  It still does not identify the graph-level construction
+with Mathlib's `adjoint` or promote graph equality to Mathlib `IsSelfAdjoint`. -/
 structure ConcreteL2R2ReverseContainmentCoordinateExtractionPacket where
   mathlibOperatorTypeObligationReady :
     concreteAnalyticSpineL2R2MathlibOperatorTypeObligationPacketReady
@@ -49,8 +58,12 @@ structure ConcreteL2R2ReverseContainmentCoordinateExtractionPacket where
       (hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) →
       concreteL2R2FormalAdjointWitnessSatisfiesDiagonalCoordinateEquation y
         (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)
-  boundaryNotReverseContainmentTheorem : Prop
-  boundaryNotDomainAgreementTheorem : Prop
+  reverseGraphContainmentFromCoordinateExtraction :
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆
+      concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier
+  graphLevelAdjointEquality :
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate
   boundaryNotMathlibAdjointPromotion : Prop
   boundaryNotMathlibIsSelfAdjointPromotion : Prop
 
@@ -65,8 +78,10 @@ def concreteL2R2ReverseContainmentCoordinateExtractionPacket :
     formalAdjointOperatorValueCoordinateExtraction := by
       intro y hy
       exact concrete_l2_r2_formal_adjoint_operator_value_satisfies_diagonal_coordinate_equation hy
-    boundaryNotReverseContainmentTheorem := True
-    boundaryNotDomainAgreementTheorem := True
+    reverseGraphContainmentFromCoordinateExtraction :=
+      concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph
+    graphLevelAdjointEquality :=
+      concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate
     boundaryNotMathlibAdjointPromotion := True
     boundaryNotMathlibIsSelfAdjointPromotion := True }
 
@@ -80,7 +95,11 @@ def concreteAnalyticSpineL2R2ReverseContainmentCoordinateExtractionPacketReady :
     (hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) →
     concreteL2R2FormalAdjointWitnessSatisfiesDiagonalCoordinateEquation y
       (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) ∧
-  True ∧ True ∧ True ∧ True
+  concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ∧
+  concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
+  True ∧ True
 
 /-- The reverse-containment coordinate extraction packet is ready. -/
 theorem concrete_analytic_spine_l2_r2_reverse_containment_coordinate_extraction_packet_ready :
@@ -93,8 +112,8 @@ theorem concrete_analytic_spine_l2_r2_reverse_containment_coordinate_extraction_
     (by
       intro y hy
       exact concrete_l2_r2_formal_adjoint_operator_value_satisfies_diagonal_coordinate_equation hy),
-    trivial,
-    trivial,
+    concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph,
+    concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate,
     trivial,
     trivial⟩
 
