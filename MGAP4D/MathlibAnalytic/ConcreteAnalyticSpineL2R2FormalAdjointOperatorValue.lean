@@ -265,16 +265,22 @@ def concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady : Prop :=
 /-- The formal adjoint operator value and coordinate-extraction surface is ready. -/
 theorem concrete_analytic_spine_l2_r2_formal_adjoint_operator_value_surface_ready :
     concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady := by
-  exact ⟨
+  refine ⟨
     concrete_analytic_spine_l2_r2_adjoint_graph_candidate_structure_surface_ready,
     concrete_l2_r2_formal_adjoint_domain_zero,
-    fun hy₁ hy₂ => concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂,
-    fun c hy => concrete_l2_r2_formal_adjoint_domain_smul c hy,
-    fun y hy n => concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation y hy n,
+    ?_,
+    ?_,
+    ?_,
     concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph,
     concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate,
     trivial,
     trivial⟩
+  · intro y₁ y₂ hy₁ hy₂
+    exact concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂
+  · intro c y hy
+    exact concrete_l2_r2_formal_adjoint_domain_smul c hy
+  · intro y hy n
+    exact concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation y hy n
 
 end
 
