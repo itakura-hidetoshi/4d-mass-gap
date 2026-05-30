@@ -130,10 +130,14 @@ def concreteL2R2FormalAdjointGraphCandidateLinear : Prop :=
 space. -/
 theorem concrete_l2_r2_formal_adjoint_graph_candidate_linear :
     concreteL2R2FormalAdjointGraphCandidateLinear := by
-  exact ⟨
+  refine ⟨
     concrete_l2_r2_formal_adjoint_graph_candidate_zero,
-    fun hp hq => concrete_l2_r2_formal_adjoint_graph_candidate_add hp hq,
-    fun c hp => concrete_l2_r2_formal_adjoint_graph_candidate_smul c hp⟩
+    ?_,
+    ?_⟩
+  · intro p q hp hq
+    exact concrete_l2_r2_formal_adjoint_graph_candidate_add (p := p) (q := q) hp hq
+  · intro c p hp
+    exact concrete_l2_r2_formal_adjoint_graph_candidate_smul c (p := p) hp
 
 /-- Closed-model presentation of the formal adjoint candidate as an intersection
 of closed test hyperplanes indexed by graph points. -/
@@ -201,8 +205,9 @@ def concreteL2R2AdjointGraphCandidateStructureSurface :
     ConcreteL2R2AdjointGraphCandidateStructureSurface :=
   { adjointContainmentSurfaceReady :=
       concrete_analytic_spine_l2_r2_adjoint_containment_surface_ready
-    formalAdjointSingleValued :=
-      fun hw₁ hw₂ => concrete_l2_r2_formal_adjoint_graph_candidate_single_valued hw₁ hw₂
+    formalAdjointSingleValued := by
+      intro y w₁ w₂ hw₁ hw₂
+      exact concrete_l2_r2_formal_adjoint_graph_candidate_single_valued hw₁ hw₂
     formalAdjointLinear :=
       concrete_l2_r2_formal_adjoint_graph_candidate_linear
     formalAdjointClosed :=
@@ -225,14 +230,16 @@ def concreteAnalyticSpineL2R2AdjointGraphCandidateStructureSurfaceReady : Prop :
 /-- The formal adjoint graph candidate structure surface is ready. -/
 theorem concrete_analytic_spine_l2_r2_adjoint_graph_candidate_structure_surface_ready :
     concreteAnalyticSpineL2R2AdjointGraphCandidateStructureSurfaceReady := by
-  exact ⟨
+  refine ⟨
     concrete_analytic_spine_l2_r2_adjoint_containment_surface_ready,
-    fun hw₁ hw₂ => concrete_l2_r2_formal_adjoint_graph_candidate_single_valued hw₁ hw₂,
+    ?_,
     concrete_l2_r2_formal_adjoint_graph_candidate_linear,
     concrete_l2_r2_formal_adjoint_graph_candidate_isClosed,
     trivial,
     trivial,
     trivial⟩
+  intro y w₁ w₂ hw₁ hw₂
+  exact concrete_l2_r2_formal_adjoint_graph_candidate_single_valued hw₁ hw₂
 
 end
 
