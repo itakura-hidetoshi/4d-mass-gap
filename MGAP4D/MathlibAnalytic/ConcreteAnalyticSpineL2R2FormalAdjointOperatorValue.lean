@@ -59,8 +59,14 @@ theorem concrete_l2_r2_formal_adjoint_domain_add
     concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
       concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂,
     ?_⟩
-  have h₁ := concrete_l2_r2_formal_adjoint_operator_value_mem y₁ hy₁
-  have h₂ := concrete_l2_r2_formal_adjoint_operator_value_mem y₂ hy₂
+  have h₁ :
+      (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y₁ hy₁
+  have h₂ :
+      (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y₂ hy₂
   simpa using concrete_l2_r2_formal_adjoint_graph_candidate_add
     (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
     (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
@@ -72,7 +78,10 @@ theorem concrete_l2_r2_formal_adjoint_domain_smul
     (hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) :
     c • y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate := by
   refine ⟨c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy, ?_⟩
-  have h := concrete_l2_r2_formal_adjoint_operator_value_mem y hy
+  have h :
+      (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y hy
   simpa using concrete_l2_r2_formal_adjoint_graph_candidate_smul c
     (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h
 
@@ -87,8 +96,14 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_add
         (concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂) =
       concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
         concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂ := by
-  have h₁ := concrete_l2_r2_formal_adjoint_operator_value_mem y₁ hy₁
-  have h₂ := concrete_l2_r2_formal_adjoint_operator_value_mem y₂ hy₂
+  have h₁ :
+      (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y₁ hy₁
+  have h₂ :
+      (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y₂ hy₂
   have hwsum :
       (y₁ + y₂,
         concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
@@ -111,7 +126,10 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_smul
         (c • y)
         (concrete_l2_r2_formal_adjoint_domain_smul c hy) =
       c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy := by
-  have h := concrete_l2_r2_formal_adjoint_operator_value_mem y hy
+  have h :
+      (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y hy
   have hwsmul :
       (c • y, c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
