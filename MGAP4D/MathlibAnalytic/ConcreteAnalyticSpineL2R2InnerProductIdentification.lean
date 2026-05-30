@@ -7,10 +7,30 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
+/-- In the one-dimensional real Hilbert space, Mathlib's real inner product is
+ordinary multiplication.  The proof avoids relying on a fragile simp-normal form:
+write both real numbers as scalar multiples of `1`, use real-linearity of the
+inner product on both sides, and evaluate `inner ℝ 1 1` by the norm-square
+identity. -/
+theorem concrete_l2_r2_real_inner_eq_mul (a b : ℝ) :
+    inner ℝ a b = a * b := by
+  have h11 : inner ℝ (1 : ℝ) (1 : ℝ) = 1 := by
+    simpa using (inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (1 : ℝ))
+  calc
+    inner ℝ a b = inner ℝ (a • (1 : ℝ)) (b • (1 : ℝ)) := by simp
+    _ = a * inner ℝ (1 : ℝ) (b • (1 : ℝ)) := by
+      rw [real_inner_smul_left]
+    _ = a * (b * inner ℝ (1 : ℝ) (1 : ℝ)) := by
+      rw [real_inner_smul_right]
+    _ = a * b := by
+      rw [h11]
+      ring
+
 /-- The concrete coordinate `tsum` pairing is exactly Mathlib's real Hilbert
 inner product on the `lp (fun _ : ℕ => ℝ) 2` carrier.  Mathlib's `lp.inner_eq_tsum`
-reduces the Hilbert-sum inner product to the coordinate inner products, and the
-coordinate inner product on `ℝ` reduces to multiplication. -/
+reduces the Hilbert-sum inner product to the coordinate inner products; the
+preceding scalar lemma identifies each real coordinate inner product with
+ordinary multiplication. -/
 theorem concrete_l2_r2_inner_eq_coordinate_tsum_pairing
     (u v : lp (fun _ : ℕ => ℝ) 2) :
     inner ℝ u v = concreteL2R2CoordinateTsumPairing u v := by
@@ -18,7 +38,7 @@ theorem concrete_l2_r2_inner_eq_coordinate_tsum_pairing
   unfold concreteL2R2CoordinateTsumPairing
   apply tsum_congr
   intro n
-  simp
+  exact concrete_l2_r2_real_inner_eq_mul (u n) (v n)
 
 /-- The completed diagonal graph is symmetric for Mathlib's real Hilbert inner
 product.  This is the actual inner-product symmetry layer obtained by combining
