@@ -52,22 +52,23 @@ theorem concrete_l2_r2_closed_operator_api_type_obligation_ready :
 
 def concreteL2R2AdjointApiTypeObligation : Prop :=
   concreteAnalyticSpineL2R2FormalAdjointMathlibBoundarySurfaceReady ∧
-  ∃ A : Set ((lp (fun _ : ℕ => ℝ) 2) × (lp (fun _ : ℕ => ℝ) 2)),
-    A = concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
-    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier = A ∧
-    concreteL2R2FormalAdjointBoundaryNotMathlibAdjointIdentifier ∧
-    concreteL2R2FormalAdjointBoundaryNotMathlibIsSelfAdjointTheorem
+  concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ⊆
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
+  concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ∧
+  concreteL2R2FormalAdjointGraphLevelEqualityAvailable ∧
+  concreteL2R2FormalAdjointBoundaryNotMathlibAdjointIdentifier ∧
+  concreteL2R2FormalAdjointBoundaryNotMathlibIsSelfAdjointTheorem
 
 theorem concrete_l2_r2_adjoint_api_type_obligation_ready :
     concreteL2R2AdjointApiTypeObligation := by
-  refine ⟨
+  exact ⟨
     concrete_analytic_spine_l2_r2_formal_adjoint_mathlib_boundary_surface_ready,
-    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate,
-    rfl,
-    ?_,
+    concrete_l2_r2_completed_diagonal_graph_subset_formal_adjoint_candidate,
+    concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph,
+    concrete_l2_r2_formal_adjoint_graph_level_equality_available,
     concrete_l2_r2_formal_adjoint_boundary_not_mathlib_adjoint_identifier,
     concrete_l2_r2_formal_adjoint_boundary_not_mathlib_isSelfAdjoint_theorem⟩
-  exact concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate
 
 def concreteL2R2MathlibOperatorTypeNoBridgeClaim : Prop :=
   True
