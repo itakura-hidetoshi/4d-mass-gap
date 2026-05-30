@@ -31,13 +31,24 @@ theorem concrete_l2_r2_formal_adjoint_boundary_not_mathlib_isSelfAdjoint_theorem
     concreteL2R2FormalAdjointBoundaryNotMathlibIsSelfAdjointTheorem := by
   trivial
 
+/-- The graph-level adjoint-domain equality is available in the internal carrier
+encoding. -/
+def concreteL2R2FormalAdjointGraphLevelEqualityAvailable : Prop :=
+  concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate
+
+/-- The graph-level adjoint-domain equality follows from adjoint containment plus
+coordinate-extraction reverse containment. -/
+theorem concrete_l2_r2_formal_adjoint_graph_level_equality_available :
+    concreteL2R2FormalAdjointGraphLevelEqualityAvailable := by
+  exact concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate
+
 /-- Addendum surface recording exactly what is available at this stage: the
-formal adjoint operator-value surface is ready, the graph-level equality is
-available, and the Mathlib `adjoint` / `IsSelfAdjoint` boundary remains held. -/
+formal adjoint operator-value surface is ready, graph-level equality is available,
+and the Mathlib `adjoint` / `IsSelfAdjoint` boundary remains held. -/
 def concreteAnalyticSpineL2R2FormalAdjointMathlibBoundarySurfaceReady : Prop :=
   concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady ∧
-  concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
-    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
+  concreteL2R2FormalAdjointGraphLevelEqualityAvailable ∧
   concreteL2R2FormalAdjointBoundaryNotMathlibAdjointIdentifier ∧
   concreteL2R2FormalAdjointBoundaryNotMathlibIsSelfAdjointTheorem
 
@@ -46,7 +57,7 @@ theorem concrete_analytic_spine_l2_r2_formal_adjoint_mathlib_boundary_surface_re
     concreteAnalyticSpineL2R2FormalAdjointMathlibBoundarySurfaceReady := by
   exact ⟨
     concrete_analytic_spine_l2_r2_formal_adjoint_operator_value_surface_ready,
-    concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate,
+    concrete_l2_r2_formal_adjoint_graph_level_equality_available,
     concrete_l2_r2_formal_adjoint_boundary_not_mathlib_adjoint_identifier,
     concrete_l2_r2_formal_adjoint_boundary_not_mathlib_isSelfAdjoint_theorem⟩
 
