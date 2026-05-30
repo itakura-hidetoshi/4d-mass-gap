@@ -75,10 +75,16 @@ theorem concrete_l2_r2_formal_adjoint_domain_add
               concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z =
           inner ℝ (y₁ + y₂) Tz
   intro z Tz hzgraph
-  exact (concrete_l2_r2_formal_adjoint_graph_candidate_add
-    (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
-    (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
-    h₁ h₂) (z := z) (Tz := Tz) hzgraph
+  have hsum :
+      (y₁ + y₂,
+        concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+          concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    simpa using (concrete_l2_r2_formal_adjoint_graph_candidate_add
+      (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
+      (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
+      h₁ h₂)
+  exact hsum hzgraph
 
 /-- The formal adjoint domain candidate is closed under scalar multiplication. -/
 theorem concrete_l2_r2_formal_adjoint_domain_smul
@@ -96,9 +102,12 @@ theorem concrete_l2_r2_formal_adjoint_domain_smul
         inner ℝ (c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z =
           inner ℝ (c • y) Tz
   intro z Tz hzgraph
-  exact (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
-    (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
-    (z := z) (Tz := Tz) hzgraph
+  have hsmul :
+      (c • y, c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    simpa using (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
+      (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
+  exact hsmul hzgraph
 
 /-- Additivity of the chosen formal adjoint operator value, expressed with the
 canonical domain proof for the sum. -/
@@ -124,18 +133,10 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_add
         concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
           concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
-    change
-      ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
-        (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
-          inner ℝ
-              (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
-                concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z =
-            inner ℝ (y₁ + y₂) Tz
-    intro z Tz hzgraph
-    exact (concrete_l2_r2_formal_adjoint_graph_candidate_add
+    simpa using (concrete_l2_r2_formal_adjoint_graph_candidate_add
       (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
       (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
-      h₁ h₂) (z := z) (Tz := Tz) hzgraph
+      h₁ h₂)
   exact (concrete_l2_r2_formal_adjoint_operator_value_unique
     (hy := concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂)
     (hw := hwsum)).symm
@@ -156,15 +157,8 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_smul
   have hwsmul :
       (c • y, c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
-    change
-      ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
-        (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
-          inner ℝ (c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z =
-            inner ℝ (c • y) Tz
-    intro z Tz hzgraph
-    exact (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
+    simpa using (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
       (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
-      (z := z) (Tz := Tz) hzgraph
   exact (concrete_l2_r2_formal_adjoint_operator_value_unique
     (hy := concrete_l2_r2_formal_adjoint_domain_smul c hy)
     (hw := hwsmul)).symm
