@@ -78,7 +78,7 @@ theorem concrete_l2_r2_formal_adjoint_domain_add
   exact (concrete_l2_r2_formal_adjoint_graph_candidate_add
     (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
     (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
-    h₁ h₂) hzgraph
+    h₁ h₂) (z := z) (Tz := Tz) hzgraph
 
 /-- The formal adjoint domain candidate is closed under scalar multiplication. -/
 theorem concrete_l2_r2_formal_adjoint_domain_smul
@@ -97,7 +97,8 @@ theorem concrete_l2_r2_formal_adjoint_domain_smul
           inner ℝ (c • y) Tz
   intro z Tz hzgraph
   exact (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
-    (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h) hzgraph
+    (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
+    (z := z) (Tz := Tz) hzgraph
 
 /-- Additivity of the chosen formal adjoint operator value, expressed with the
 canonical domain proof for the sum. -/
@@ -134,7 +135,7 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_add
     exact (concrete_l2_r2_formal_adjoint_graph_candidate_add
       (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
       (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
-      h₁ h₂) hzgraph
+      h₁ h₂) (z := z) (Tz := Tz) hzgraph
   exact (concrete_l2_r2_formal_adjoint_operator_value_unique
     (hy := concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂)
     (hw := hwsum)).symm
@@ -162,7 +163,8 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_smul
             inner ℝ (c • y) Tz
     intro z Tz hzgraph
     exact (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
-      (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h) hzgraph
+      (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
+      (z := z) (Tz := Tz) hzgraph
   exact (concrete_l2_r2_formal_adjoint_operator_value_unique
     (hy := concrete_l2_r2_formal_adjoint_domain_smul c hy)
     (hw := hwsmul)).symm
