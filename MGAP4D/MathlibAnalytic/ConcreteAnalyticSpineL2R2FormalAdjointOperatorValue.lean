@@ -67,11 +67,33 @@ theorem concrete_l2_r2_formal_adjoint_domain_add
       (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
     exact concrete_l2_r2_formal_adjoint_operator_value_mem y₂ hy₂
-  simpa using
-    (concrete_l2_r2_formal_adjoint_graph_candidate_add
-      (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
-      (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
-      h₁ h₂)
+  show
+    ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
+      (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
+        inner ℝ
+            (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+              concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z =
+          inner ℝ (y₁ + y₂) Tz
+  intro z Tz hzgraph
+  have h₁z :
+      inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁) z =
+        inner ℝ y₁ Tz := by
+    exact h₁ (z := z) (Tz := Tz) hzgraph
+  have h₂z :
+      inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z =
+        inner ℝ y₂ Tz := by
+    exact h₂ (z := z) (Tz := Tz) hzgraph
+  calc
+    inner ℝ
+        (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+          concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z
+        = inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁) z +
+          inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z := by
+            rw [inner_add_left]
+    _ = inner ℝ y₁ Tz + inner ℝ y₂ Tz := by
+          rw [h₁z, h₂z]
+    _ = inner ℝ (y₁ + y₂) Tz := by
+          rw [inner_add_left]
 
 /-- The formal adjoint domain candidate is closed under scalar multiplication. -/
 theorem concrete_l2_r2_formal_adjoint_domain_smul
@@ -83,9 +105,24 @@ theorem concrete_l2_r2_formal_adjoint_domain_smul
       (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
     exact concrete_l2_r2_formal_adjoint_operator_value_mem y hy
-  simpa using
-    (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
-      (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
+  show
+    ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
+      (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
+        inner ℝ (c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z =
+          inner ℝ (c • y) Tz
+  intro z Tz hzgraph
+  have hz :
+      inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z =
+        inner ℝ y Tz := by
+    exact h (z := z) (Tz := Tz) hzgraph
+  calc
+    inner ℝ (c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z
+        = c * inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z := by
+            rw [real_inner_smul_left]
+    _ = c * inner ℝ y Tz := by
+          rw [hz]
+    _ = inner ℝ (c • y) Tz := by
+          rw [real_inner_smul_left]
 
 /-- Additivity of the chosen formal adjoint operator value, expressed with the
 canonical domain proof for the sum. -/
@@ -111,11 +148,33 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_add
         concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
           concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
-    simpa using
-      (concrete_l2_r2_formal_adjoint_graph_candidate_add
-        (p := (y₁, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁))
-        (q := (y₂, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂))
-        h₁ h₂)
+    show
+      ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
+        (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
+          inner ℝ
+              (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+                concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z =
+            inner ℝ (y₁ + y₂) Tz
+    intro z Tz hzgraph
+    have h₁z :
+        inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁) z =
+          inner ℝ y₁ Tz := by
+      exact h₁ (z := z) (Tz := Tz) hzgraph
+    have h₂z :
+        inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z =
+          inner ℝ y₂ Tz := by
+      exact h₂ (z := z) (Tz := Tz) hzgraph
+    calc
+      inner ℝ
+          (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+            concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z
+          = inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁) z +
+            inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) z := by
+              rw [inner_add_left]
+      _ = inner ℝ y₁ Tz + inner ℝ y₂ Tz := by
+            rw [h₁z, h₂z]
+      _ = inner ℝ (y₁ + y₂) Tz := by
+            rw [inner_add_left]
   exact (concrete_l2_r2_formal_adjoint_operator_value_unique
     (hy := concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂)
     (hw := hwsum)).symm
@@ -136,9 +195,24 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_smul
   have hwsmul :
       (c • y, c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
-    simpa using
-      (concrete_l2_r2_formal_adjoint_graph_candidate_smul c
-        (p := (y, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy)) h)
+    show
+      ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
+        (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
+          inner ℝ (c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z =
+            inner ℝ (c • y) Tz
+    intro z Tz hzgraph
+    have hz :
+        inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z =
+          inner ℝ y Tz := by
+      exact h (z := z) (Tz := Tz) hzgraph
+    calc
+      inner ℝ (c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z
+          = c * inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) z := by
+              rw [real_inner_smul_left]
+      _ = c * inner ℝ y Tz := by
+            rw [hz]
+      _ = inner ℝ (c • y) Tz := by
+            rw [real_inner_smul_left]
   exact (concrete_l2_r2_formal_adjoint_operator_value_unique
     (hy := concrete_l2_r2_formal_adjoint_domain_smul c hy)
     (hw := hwsmul)).symm
