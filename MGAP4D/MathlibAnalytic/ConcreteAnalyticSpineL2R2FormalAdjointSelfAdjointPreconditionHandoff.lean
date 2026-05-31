@@ -59,12 +59,28 @@ theorem concrete_l2_r2_formal_adjoint_graph_candidate_pointwise_agrees_completed
   intro p
   exact concrete_l2_r2_formal_adjoint_candidate_mem_iff_completed_diagonal_graph p
 
+/-- Domain carrier agreement for the formal-adjoint `Submodule` presentation. -/
+theorem concrete_l2_r2_formal_adjoint_submodule_domain_agrees_candidate :
+    ((concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule :
+        Set (lp (fun _ : ℕ => ℝ) 2)) =
+      concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) := by
+  exact concrete_l2_r2_formal_adjoint_domain_submodule_carrier_eq
+
+/-- Coordinate-value agreement for the formal-adjoint `LinearMap` presentation. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_coordinate_value_agrees_diagonal :
+    ∀ (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) (n : ℕ),
+      concreteL2R2CompletedDiagonalFormalAdjointLinearMap y n =
+        concreteL2DiagonalWeight n * y.1 n := by
+  intro y n
+  exact concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation y n
+
 /-- Formal-adjoint self-adjointness precondition handoff.
 
 This handoff still does not assert Mathlib `adjoint`, `IsSelfAdjoint`, spectral
 measure, PVM, or positive spectral weight.  It records the proved ingredients
-available before that promotion: closed graph transfer, graph equivalence, and
-symmetry transported to the formal-adjoint `LinearMap` graph presentation. -/
+available before that promotion: closed graph transfer, graph equivalence,
+symmetry, pointwise graph agreement, domain agreement, and coordinate-value
+agreement for the formal-adjoint `LinearMap` graph presentation. -/
 def concreteL2R2FormalAdjointSelfAdjointnessPreconditionHandoff : Prop :=
   concreteAnalyticSpineL2R2SelfAdjointnessPreconditionPacketReady ∧
   concreteL2R2FormalAdjointClosedOperatorHandoff ∧
@@ -84,7 +100,12 @@ def concreteL2R2FormalAdjointSelfAdjointnessPreconditionHandoff : Prop :=
   (∀ p : ConcreteL2R2PairSpace,
     p ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ↔
       p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
-  True ∧ True
+  ((concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule :
+      Set (lp (fun _ : ℕ => ℝ) 2)) =
+    concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) ∧
+  (∀ (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) (n : ℕ),
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMap y n =
+      concreteL2DiagonalWeight n * y.1 n)
 
 /-- The formal-adjoint self-adjointness precondition handoff is ready. -/
 theorem concrete_l2_r2_formal_adjoint_self_adjointness_precondition_handoff_ready :
@@ -98,8 +119,8 @@ theorem concrete_l2_r2_formal_adjoint_self_adjointness_precondition_handoff_read
     concrete_l2_r2_formal_adjoint_graph_candidate_symmetric,
     concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal,
     concrete_l2_r2_formal_adjoint_graph_candidate_pointwise_agrees_completed_diagonal,
-    trivial,
-    trivial⟩
+    concrete_l2_r2_formal_adjoint_submodule_domain_agrees_candidate,
+    concrete_l2_r2_formal_adjoint_linear_map_coordinate_value_agrees_diagonal⟩
 
 /-- Public readiness predicate for the formal-adjoint self-adjointness precondition
 handoff. -/
