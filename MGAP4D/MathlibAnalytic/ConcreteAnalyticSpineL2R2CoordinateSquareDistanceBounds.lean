@@ -57,7 +57,7 @@ theorem concrete_l2_r2_graph_pair_sub_fst_coordinate
       q.1.1 n - p.1.1 n := by
   simp [concreteL2GraphPairSub, concreteL2GraphPairNeg, concreteL2GraphPairAdd,
     concreteL2GraphPairSmul, concreteL2RealAdd, concreteL2RealSmul,
-    concreteL2GraphPairFst]
+    concreteL2GraphPairFst, sub_eq_add_neg]
 
 /-- The second coordinate of the explicit graph-pair subtraction is the pointwise
 second-coordinate difference. -/
@@ -67,7 +67,7 @@ theorem concrete_l2_r2_graph_pair_sub_snd_coordinate
       q.2.1 n - p.2.1 n := by
   simp [concreteL2GraphPairSub, concreteL2GraphPairNeg, concreteL2GraphPairAdd,
     concreteL2GraphPairSmul, concreteL2RealAdd, concreteL2RealSmul,
-    concreteL2GraphPairSnd]
+    concreteL2GraphPairSnd, sub_eq_add_neg]
 
 /-- First-coordinate square-distance domination by completed graph energy. -/
 theorem concrete_l2_r2_fst_coordinate_square_distance_bound
