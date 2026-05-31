@@ -25,22 +25,17 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_completed_diagona
   rw [concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph]
 
 /-- Elementwise graph equivalence between the formal-adjoint graph candidate and
-the completed diagonal graph carrier. -/
+the completed diagonal graph carrier.
+
+The proof uses the already established graph equality directly.  This avoids the
+Lean 4.30 elaboration issue where candidate membership unfolds to its testing
+function and then does not synthesize back into `p ∈ Candidate` through an
+intermediate iff. -/
 theorem concrete_l2_r2_formal_adjoint_candidate_mem_iff_completed_diagonal_graph
     (p : ConcreteL2R2PairSpace) :
     p ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ↔
       p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
-  constructor
-  · intro hp
-    have hlinear : p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph :=
-      (concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_candidate p).2 hp
-    exact (concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_completed_diagonal_graph p).1
-      hlinear
-  · intro hp
-    have hlinear : p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph :=
-      (concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_completed_diagonal_graph p).2 hp
-    exact (concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_candidate p).1
-      hlinear
+  rw [← concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate]
 
 /-- The Mathlib-facing formal-adjoint `LinearMap` graph is a closed graph and is
 extensionally the same graph as the completed diagonal operator graph. -/
