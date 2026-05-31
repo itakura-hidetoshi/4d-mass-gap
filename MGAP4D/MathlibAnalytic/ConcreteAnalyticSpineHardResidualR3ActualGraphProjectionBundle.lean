@@ -21,11 +21,20 @@ def concreteAnalyticSpineHardResidualR3ActualGraphProjectionBundle
   (G = concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
   concreteL2R4FormalGraphSelfAdjointness
 
+/-- Projection from actual graph to the canonical formal slot graph. -/
+theorem concrete_analytic_spine_hard_residual_r3_actual_graph_eq_canonical_formal
+    (G : ConcreteL2R2PairSpace → Prop)
+    (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G) :
+    G = concreteAnalyticSpineHardResidualR3CanonicalFormalAdjointGraphSlot.mathlibAdjointGraph := by
+  unfold concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal at hG
+  exact hG
+
 /-- Projection from actual graph to the formal adjoint linear-map graph. -/
 theorem concrete_analytic_spine_hard_residual_r3_actual_graph_eq_formal_linear_map
     (G : ConcreteL2R2PairSpace → Prop)
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G) :
     G = concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph := by
+  change concreteAnalyticSpineHardResidualR3AbstractMathlibAdjointGraphIdentification G
   exact concrete_analytic_spine_hard_residual_r3_actual_graph_identifies_formal_linear_map G hG
 
 /-- Projection from actual graph to the formal adjoint candidate graph. -/
@@ -50,7 +59,7 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_projection_bundle_
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G) :
     concreteAnalyticSpineHardResidualR3ActualGraphProjectionBundle G hG := by
   exact ⟨
-    hG,
+    concrete_analytic_spine_hard_residual_r3_actual_graph_eq_canonical_formal G hG,
     concrete_analytic_spine_hard_residual_r3_actual_graph_eq_formal_linear_map G hG,
     concrete_analytic_spine_hard_residual_r3_actual_graph_eq_candidate G hG,
     concrete_analytic_spine_hard_residual_r3_actual_graph_eq_completed_graph G hG,
