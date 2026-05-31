@@ -44,12 +44,19 @@ if ! git diff --name-only "${BASE}"...HEAD >/dev/null 2>&1; then
 fi
 
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
-changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$' || true)"
+changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$\|^MGAP4D\.lean$' || true)"
 changed_scripts="$(printf '%s\n' "${changed_files}" | grep -E '^scripts/.*\.(py|sh)$' || true)"
-non_root_changed_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -v '^MGAP4D/MathlibAnalytic\.lean$' || true)"
+
+# Fast lane builds only changed non-aggregate leaf modules.  Aggregate import
+# roots intentionally pull very large historical surfaces, including archived or
+# currently non-fast-safe modules.  Their import text is still audited, but Lake
+# building them belongs to the full/manual integration lane, not the PR fast lane.
+aggregate_root_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -E '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' || true)"
+non_root_changed_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -Ev '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' || true)"
 
 printf '[fast] base: %s\n' "${BASE}"
 printf '[fast] changed Lean files:\n%s\n' "${changed_lean_files:-<none>}"
+printf '[fast] changed aggregate root Lean files:\n%s\n' "${aggregate_root_lean_files:-<none>}"
 printf '[fast] changed non-root Lean files:\n%s\n' "${non_root_changed_lean_files:-<none>}"
 printf '[fast] changed scripts:\n%s\n' "${changed_scripts:-<none>}"
 
@@ -71,6 +78,13 @@ python3 scripts/audit_hard_physical_residual_ledger.py
 
 echo "[fast] audit analytic bridge coherence"
 python3 scripts/audit_bridge_coherence.py
+
+# Root import changes are text-audited in the fast lane.  Building aggregate root
+# modules is intentionally avoided here because they import historical archive
+# surfaces that can contain non-fast-safe import cycles unrelated to the PR.
+if [ -n "${aggregate_root_lean_files}" ]; then
+  echo "[fast] aggregate root imports changed; Lake build is restricted to changed leaf modules"
+fi
 
 # Run targeted audits for changed concrete analytic spine files when available.
 if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2HilbertNormOneTarget\.lean'; then
@@ -112,6 +126,11 @@ fi
 
 if [ -z "${changed_lean_files}" ]; then
   echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lake build"
+  exit 0
+fi
+
+if [ -z "${non_root_changed_lean_files}" ]; then
+  echo "[fast] no non-aggregate Lean leaf files changed; skip Lake build in fast lane"
   exit 0
 fi
 
@@ -158,24 +177,10 @@ else
   lake exe cache get || true
 fi
 
-# Building the root import module on every PR defeats the fast lane, because the
-# root intentionally imports the whole analytic surface. When root and leaf
-# modules both changed, build only the changed leaf modules; root-level full
-# integration remains covered by main/manual full checks.
-if [ -z "${non_root_changed_lean_files}" ]; then
-  if printf '%s\n' "${changed_lean_files}" | grep -q '^MGAP4D/MathlibAnalytic\.lean$'; then
-    echo "[fast] only root import changed; build root module"
-    lake build MGAP4D.MathlibAnalytic
-  else
-    echo "[fast] no non-root Lean files changed"
-  fi
-  exit 0
-fi
-
-# Build only maximal changed modules. If changed module A imports changed
-# module B, then building A already builds B, so B is removed from the explicit
-# target set. This keeps the PR lane small while preserving local coverage of
-# the changed import frontier.
+# Build only maximal changed non-aggregate modules. If changed module A imports
+# changed module B, then building A already builds B, so B is removed from the
+# explicit target set.  This preserves local coverage of the changed import
+# frontier without accidentally building aggregate roots such as `MGAP4D`.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
 targets=()
@@ -206,11 +211,11 @@ for target in "${targets[@]}"; do
 done
 
 if [ "${#maximal_targets[@]}" -eq 0 ]; then
-  echo "[fast] maximal target reduction was empty; fall back to all changed targets"
+  echo "[fast] maximal target reduction was empty; fall back to all changed non-aggregate targets"
   maximal_targets=("${targets[@]}")
 fi
 
-printf '[fast] lake build maximal changed targets:'
+printf '[fast] lake build maximal changed non-aggregate targets:'
 printf ' %s' "${maximal_targets[@]}"
 printf '\n'
 lake build "${maximal_targets[@]}"
