@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2FormalAdjointOperatorValue
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2CompletedDiagonalIsClosedGraph
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -189,6 +190,40 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_gra
   rw [concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
   exact concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate.symm
 
+/-- Closedness of the Mathlib `LinearMap` graph presentation, transported from
+the already proved closedness of the completed diagonal graph carrier. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed :
+    IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph := by
+  rw [concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph]
+  exact concrete_l2_r2_completed_diagonal_graph_isClosed
+
+/-- Closedness of the formal-adjoint graph candidate, transported through the
+Mathlib `LinearMap` graph presentation. -/
+theorem concrete_l2_r2_formal_adjoint_graph_candidate_isClosed :
+    IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  rw [← concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
+  exact concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed
+
+/-- Closedness of the graph presentation and the carrier equalities needed for the
+next closed-operator handoff. -/
+def concreteL2R2FormalAdjointLinearMapClosedGraphTransfer : Prop :=
+  IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ∧
+  IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
+  concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
+  concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier
+
+/-- The closed-graph transfer from the completed diagonal carrier to the
+formal-adjoint `LinearMap` graph is complete. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_closed_graph_transfer_ready :
+    concreteL2R2FormalAdjointLinearMapClosedGraphTransfer := by
+  exact ⟨
+    concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed,
+    concrete_l2_r2_formal_adjoint_graph_candidate_isClosed,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph⟩
+
 /-- Type obligation closed by the Mathlib `Submodule` and `LinearMap` packaging
 of the formal-adjoint graph-level operator value. -/
 def concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation : Prop :=
@@ -204,7 +239,8 @@ def concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation : Prop :=
   concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
     concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
   concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
-    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ∧
+  concreteL2R2FormalAdjointLinearMapClosedGraphTransfer
 
 /-- The formal-adjoint domain/value pair is now packaged as a Mathlib
 `Submodule` plus `LinearMap`. -/
@@ -215,7 +251,8 @@ theorem concrete_l2_r2_formal_adjoint_submodule_linear_map_type_obligation_ready
     concrete_l2_r2_formal_adjoint_linear_map_graph_mem,
     concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation,
     concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate,
-    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph⟩
+    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph,
+    concrete_l2_r2_formal_adjoint_linear_map_closed_graph_transfer_ready⟩
 
 /-- Readiness surface for the Mathlib-facing formal-adjoint submodule/linear-map
 promotion.
