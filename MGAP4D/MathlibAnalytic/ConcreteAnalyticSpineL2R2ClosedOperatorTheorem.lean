@@ -24,7 +24,7 @@ Mathematically, this is the closed-graph statement supplied by Mathlib's
 `isClosed_closure`: the graph obtained as the graph-norm closure of the
 finite-support core graph is closed.
 
-This is the final closed-operator theorem for the closure-generated operator
+This is the final closed-graph theorem for the closure-generated operator
 surface.  It does not identify the original diagonal graph with this closure and
 therefore does not yet promote the original diagonal operator itself. -/
 def concreteL2R2ClosedOperatorTheorem : Prop :=
@@ -41,38 +41,32 @@ theorem concrete_l2_r2_closed_operator_theorem :
   unfold ConcreteL2R2ClosureGeneratedOperatorGraph
   exact concrete_l2_r2_graph_norm_closure_carrier_closed
 
-/-- Closed-operator theorem with its audit context.
+/-- Closed-graph theorem with its audit context.
 
-The closed graph theorem is paired with the closed-operator theorem obligation
-packet and the R2 residual-zero theorem. -/
+The promoted theorem is paired only with existing proof-bearing audit inputs:
+the closed-operator obligation packet and the R2 residual-zero theorem. -/
 def concreteL2R2ClosedOperatorTheoremWithAudit : Prop :=
   concreteL2R2ClosedOperatorTheorem ∧
   concreteAnalyticSpineL2R2ClosedOperatorTheoremObligationPacketReady ∧
-  concreteL2R2ResidualZeroAtGraphNormCoreLayer ∧
-  True
+  concreteL2R2ResidualZeroAtGraphNormCoreLayer
 
-/-- The audited R2 closure-generated closed-operator theorem is ready. -/
+/-- The audited R2 closure-generated closed-graph theorem is ready. -/
 theorem concrete_l2_r2_closed_operator_theorem_with_audit :
     concreteL2R2ClosedOperatorTheoremWithAudit := by
   exact ⟨
     concrete_l2_r2_closed_operator_theorem,
     concrete_analytic_spine_l2_r2_closed_operator_theorem_obligation_packet_ready,
-    concrete_l2_r2_residual_zero_at_graph_norm_core_layer,
-    trivial⟩
+    concrete_l2_r2_residual_zero_at_graph_norm_core_layer⟩
 
-/-- Public theorem-entry predicate for the R2 closed-operator theorem surface. -/
+/-- Public theorem-entry predicate for the R2 closure-generated closed-graph
+surface. -/
 def concreteAnalyticSpineL2R2ClosedOperatorTheoremReady : Prop :=
-  concreteL2R2ClosedOperatorTheoremWithAudit ∧
-  True ∧ True ∧ True
+  concreteL2R2ClosedOperatorTheoremWithAudit
 
-/-- The R2 closure-generated closed-operator theorem surface is ready. -/
+/-- The R2 closure-generated closed-graph theorem surface is ready. -/
 theorem concrete_analytic_spine_l2_r2_closed_operator_theorem_ready :
     concreteAnalyticSpineL2R2ClosedOperatorTheoremReady := by
-  exact ⟨
-    concrete_l2_r2_closed_operator_theorem_with_audit,
-    trivial,
-    trivial,
-    trivial⟩
+  exact concrete_l2_r2_closed_operator_theorem_with_audit
 
 end
 
