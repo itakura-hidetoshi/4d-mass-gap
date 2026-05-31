@@ -122,9 +122,11 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_graph_mem
         inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointLinearMap y) z =
           inner ℝ y.1 Tz
   intro z Tz hzgraph
-  exact
-    (concrete_l2_r2_formal_adjoint_operator_value_mem y.1 y.2)
-      (z := z) (Tz := Tz) hzgraph
+  have hmem :
+      (y.1, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y.1 y.2) ∈
+        concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    exact concrete_l2_r2_formal_adjoint_operator_value_mem y.1 y.2
+  exact hmem (z := z) (Tz := Tz) hzgraph
 
 /-- Coordinate equation for the Mathlib `LinearMap` version of the formal-adjoint
 operator value. -/
