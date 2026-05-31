@@ -126,7 +126,7 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_graph_mem
       (y.1, concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y.1 y.2) ∈
         concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
     exact concrete_l2_r2_formal_adjoint_operator_value_mem y.1 y.2
-  exact hmem (z := z) (Tz := Tz) hzgraph
+  exact hmem hzgraph
 
 /-- Coordinate equation for the Mathlib `LinearMap` version of the formal-adjoint
 operator value. -/
@@ -169,7 +169,8 @@ theorem concrete_l2_r2_formal_adjoint_candidate_subset_linear_map_graph :
     change w = concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy
     exact concrete_l2_r2_formal_adjoint_operator_value_unique (hy := hy) (hw := hp)
   refine ⟨yd, ?_⟩
-  simp [yd, hw]
+  change (y, w) = (y, concreteL2R2CompletedDiagonalFormalAdjointLinearMap yd)
+  rw [hw]
 
 /-- The Mathlib `LinearMap` graph presentation is exactly the formal-adjoint graph
 candidate. -/
