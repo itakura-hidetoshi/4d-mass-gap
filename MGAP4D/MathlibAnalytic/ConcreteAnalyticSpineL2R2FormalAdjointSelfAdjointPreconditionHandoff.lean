@@ -41,6 +41,24 @@ theorem concrete_l2_r2_formal_adjoint_graph_candidate_symmetric :
       (z, Tz)).1 hzgraph
   exact concrete_l2_r2_completed_diagonal_graph_symmetric hxdiag hzdiag
 
+/-- Pointwise agreement between the formal-adjoint `LinearMap` graph and the
+completed diagonal graph carrier. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal :
+    ∀ p : ConcreteL2R2PairSpace,
+      p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ↔
+        p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  intro p
+  exact concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_completed_diagonal_graph p
+
+/-- Pointwise agreement between the formal-adjoint graph candidate and the
+completed diagonal graph carrier. -/
+theorem concrete_l2_r2_formal_adjoint_graph_candidate_pointwise_agrees_completed_diagonal :
+    ∀ p : ConcreteL2R2PairSpace,
+      p ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ↔
+        p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  intro p
+  exact concrete_l2_r2_formal_adjoint_candidate_mem_iff_completed_diagonal_graph p
+
 /-- Formal-adjoint self-adjointness precondition handoff.
 
 This handoff still does not assert Mathlib `adjoint`, `IsSelfAdjoint`, spectral
@@ -60,7 +78,13 @@ def concreteL2R2FormalAdjointSelfAdjointnessPreconditionHandoff : Prop :=
     (x, Tx) ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate →
     (z, Tz) ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate →
     inner ℝ Tx z = inner ℝ x Tz) ∧
-  True ∧ True ∧ True ∧ True
+  (∀ p : ConcreteL2R2PairSpace,
+    p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ↔
+      p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
+  (∀ p : ConcreteL2R2PairSpace,
+    p ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ↔
+      p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
+  True ∧ True
 
 /-- The formal-adjoint self-adjointness precondition handoff is ready. -/
 theorem concrete_l2_r2_formal_adjoint_self_adjointness_precondition_handoff_ready :
@@ -72,8 +96,8 @@ theorem concrete_l2_r2_formal_adjoint_self_adjointness_precondition_handoff_read
     concrete_l2_r2_formal_adjoint_linear_map_closed_graph_transfer_ready,
     concrete_l2_r2_formal_adjoint_linear_map_graph_symmetric,
     concrete_l2_r2_formal_adjoint_graph_candidate_symmetric,
-    trivial,
-    trivial,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal,
+    concrete_l2_r2_formal_adjoint_graph_candidate_pointwise_agrees_completed_diagonal,
     trivial,
     trivial⟩
 
