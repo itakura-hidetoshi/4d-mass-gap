@@ -37,17 +37,8 @@ theorem concrete_analytic_spine_hard_residual_r3_mathlib_adjoint_graph_contract_
     concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal,
     ?_⟩
   intro p
-  constructor
-  · intro hp
-    have hpcarrier :
-        p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier :=
-      (concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal p).mp hp
-    exact (concrete_l2_r2_completed_diagonal_formal_adjoint_graph_mem_iff_handoff p).mp hpcarrier
-  · intro hp
-    have hpcarrier :
-        p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier :=
-      (concrete_l2_r2_completed_diagonal_formal_adjoint_graph_mem_iff_handoff p).mpr hp
-    exact (concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal p).mpr hpcarrier
+  rw [← concrete_l2_r2_completed_diagonal_formal_adjoint_graph_agreement_handoff]
+  exact concrete_l2_r2_formal_adjoint_linear_map_graph_pointwise_agrees_completed_diagonal p
 
 /-- Carrier-level equality between the formal adjoint linear-map graph and the
 formal adjoint graph candidate, expressed as a set equality for downstream
