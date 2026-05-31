@@ -14,8 +14,7 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_canonical_
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG)
     (p : ConcreteL2R2PairSpace) :
-    p ∈ G ↔
-      p ∈ concreteAnalyticSpineHardResidualR3CanonicalFormalAdjointGraphSlot.mathlibAdjointGraph := by
+    G p ↔ concreteAnalyticSpineHardResidualR3CanonicalFormalAdjointGraphSlot.mathlibAdjointGraph p := by
   rcases h with ⟨_, _, hcanonical, _, _, _, _, _⟩
   rw [hcanonical]
 
@@ -26,7 +25,7 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_formal_lin
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG)
     (p : ConcreteL2R2PairSpace) :
-    p ∈ G ↔ p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph := by
+    G p ↔ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph p := by
   rcases h with ⟨_, _, _, hlinear, _, _, _, _⟩
   rw [hlinear]
 
@@ -37,7 +36,7 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_candidate
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG)
     (p : ConcreteL2R2PairSpace) :
-    p ∈ G ↔ p ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    G p ↔ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate p := by
   rcases h with ⟨_, _, _, _, hcandidate, _, _, _⟩
   rw [hcandidate]
 
@@ -48,7 +47,7 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_completed_
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG)
     (p : ConcreteL2R2PairSpace) :
-    p ∈ G ↔ p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+    G p ↔ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier p := by
   rcases h with ⟨_, _, _, _, _, hcompleted, _, _⟩
   rw [hcompleted]
 
@@ -57,7 +56,8 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_subset_completed_g
     (G : ConcreteL2R2PairSpace → Prop)
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG) :
-    G ⊆ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+    ∀ p : ConcreteL2R2PairSpace,
+      G p → concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier p := by
   intro p hp
   exact (concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_completed_graph
     G hG h p).mp hp
@@ -67,7 +67,8 @@ theorem concrete_analytic_spine_hard_residual_r3_completed_graph_subset_actual_g
     (G : ConcreteL2R2PairSpace → Prop)
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG) :
-    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ⊆ G := by
+    ∀ p : ConcreteL2R2PairSpace,
+      concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier p → G p := by
   intro p hp
   exact (concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_completed_graph
     G hG h p).mpr hp
@@ -77,7 +78,8 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_subset_candidate
     (G : ConcreteL2R2PairSpace → Prop)
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG) :
-    G ⊆ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+    ∀ p : ConcreteL2R2PairSpace,
+      G p → concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate p := by
   intro p hp
   exact (concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_candidate
     G hG h p).mp hp
@@ -87,7 +89,8 @@ theorem concrete_analytic_spine_hard_residual_r3_candidate_subset_actual_graph
     (G : ConcreteL2R2PairSpace → Prop)
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G)
     (h : concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG) :
-    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆ G := by
+    ∀ p : ConcreteL2R2PairSpace,
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate p → G p := by
   intro p hp
   exact (concrete_analytic_spine_hard_residual_r3_actual_graph_mem_iff_candidate
     G hG h p).mpr hp
@@ -98,15 +101,19 @@ def concreteAnalyticSpineHardResidualR3ActualGraphMembershipTransportPackage
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G) : Prop :=
   concreteAnalyticSpineHardResidualR3ActualGraphFinalEliminatorPackage G hG ∧
   (∀ p : ConcreteL2R2PairSpace,
-    p ∈ G ↔ p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph) ∧
+    G p ↔ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph p) ∧
   (∀ p : ConcreteL2R2PairSpace,
-    p ∈ G ↔ p ∈ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
+    G p ↔ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate p) ∧
   (∀ p : ConcreteL2R2PairSpace,
-    p ∈ G ↔ p ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
-  (G ⊆ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
-  (concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ⊆ G) ∧
-  (G ⊆ concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
-  (concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆ G)
+    G p ↔ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier p) ∧
+  (∀ p : ConcreteL2R2PairSpace,
+    G p → concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier p) ∧
+  (∀ p : ConcreteL2R2PairSpace,
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier p → G p) ∧
+  (∀ p : ConcreteL2R2PairSpace,
+    G p → concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate p) ∧
+  (∀ p : ConcreteL2R2PairSpace,
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate p → G p)
 
 /-- The membership transport package is ready from the final eliminator package. -/
 theorem concrete_analytic_spine_hard_residual_r3_actual_graph_membership_transport_package_ready
