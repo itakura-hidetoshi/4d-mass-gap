@@ -9,11 +9,7 @@ open scoped BigOperators ENNReal lp
 noncomputable section
 
 /-- The formal-adjoint domain candidate promoted from a carrier-level `Set` to a
-Mathlib `Submodule` of the concrete real `l2` Hilbert space.
-
-This is still before any use of Mathlib's `adjoint` or `IsSelfAdjoint` API: it is
-only the clean algebraic typing of the already constructed graph-level formal
-adjoint domain. -/
+Mathlib `Submodule` of the concrete real `l2` Hilbert space. -/
 def concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule :
     Submodule ℝ (lp (fun _ : ℕ => ℝ) 2) where
   carrier := concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate
@@ -34,12 +30,7 @@ theorem concrete_l2_r2_formal_adjoint_domain_submodule_carrier_eq :
   rfl
 
 /-- The chosen formal-adjoint value is independent of the particular proof that
-its input belongs to the formal-adjoint domain candidate.
-
-This is the small proof-irrelevance bridge needed to package the chosen graph
-value into a Mathlib `LinearMap`.  The proof uses the already established
-single-valuedness of the formal-adjoint graph candidate, not proof irrelevance as
-an axiom. -/
+its input belongs to the formal-adjoint domain candidate. -/
 theorem concrete_l2_r2_formal_adjoint_operator_value_proof_irrel
     (y : lp (fun _ : ℕ => ℝ) 2)
     (hy hy' : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) :
@@ -88,9 +79,7 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_smul_of_domain
     _ = c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy := by
           exact concrete_l2_r2_formal_adjoint_operator_value_smul c hy
 
-/-- The chosen formal-adjoint operator value promoted to a Mathlib `LinearMap`
-from the formal-adjoint domain submodule into the ambient real `l2` Hilbert
-space. -/
+/-- The chosen formal-adjoint operator value promoted to a Mathlib `LinearMap`. -/
 def concreteL2R2CompletedDiagonalFormalAdjointLinearMap :
     concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule →ₗ[ℝ]
       lp (fun _ : ℕ => ℝ) 2 where
@@ -198,8 +187,10 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed :
   exact concrete_l2_r2_completed_diagonal_graph_isClosed
 
 /-- Closedness of the formal-adjoint graph candidate, transported through the
-Mathlib `LinearMap` graph presentation. -/
-theorem concrete_l2_r2_formal_adjoint_graph_candidate_isClosed :
+Mathlib `LinearMap` graph presentation.  The base name without the suffix is
+already used by `ConcreteAnalyticSpineL2R2AdjointGraphCandidateStructure`, so
+this proof keeps the transport route explicit in its name. -/
+theorem concrete_l2_r2_formal_adjoint_graph_candidate_via_linear_map_graph_isClosed :
     IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
   rw [← concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
   exact concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed
@@ -270,7 +261,7 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_closed_graph_transfer_ready :
     concreteL2R2FormalAdjointLinearMapClosedGraphTransfer := by
   exact ⟨
     concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed,
-    concrete_l2_r2_formal_adjoint_graph_candidate_isClosed,
+    concrete_l2_r2_formal_adjoint_graph_candidate_via_linear_map_graph_isClosed,
     concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate,
     concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph,
     concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_candidate,
@@ -308,10 +299,7 @@ theorem concrete_l2_r2_formal_adjoint_submodule_linear_map_type_obligation_ready
     concrete_l2_r2_formal_adjoint_linear_map_closed_graph_transfer_ready⟩
 
 /-- Readiness surface for the Mathlib-facing formal-adjoint submodule/linear-map
-promotion.
-
-This deliberately remains below Mathlib `adjoint`, `IsSelfAdjoint`, spectral
-measure, PVM, and positive spectral weight. -/
+promotion. -/
 def concreteAnalyticSpineL2R2FormalAdjointSubmoduleLinearMapReady : Prop :=
   concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady ∧
   concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation ∧
