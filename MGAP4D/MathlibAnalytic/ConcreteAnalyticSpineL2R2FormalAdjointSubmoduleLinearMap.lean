@@ -116,8 +116,15 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_graph_mem
     (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) :
     (y.1, concreteL2R2CompletedDiagonalFormalAdjointLinearMap y) ∈
       concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
-  simpa [concreteL2R2CompletedDiagonalFormalAdjointLinearMap] using
-    concrete_l2_r2_formal_adjoint_operator_value_mem y.1 y.2
+  show
+    ∀ {z Tz : lp (fun _ : ℕ => ℝ) 2},
+      (z, Tz) ∈ concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier →
+        inner ℝ (concreteL2R2CompletedDiagonalFormalAdjointLinearMap y) z =
+          inner ℝ y.1 Tz
+  intro z Tz hzgraph
+  exact
+    (concrete_l2_r2_formal_adjoint_operator_value_mem y.1 y.2)
+      (z := z) (Tz := Tz) hzgraph
 
 /-- Coordinate equation for the Mathlib `LinearMap` version of the formal-adjoint
 operator value. -/
@@ -125,8 +132,10 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation
     (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) (n : ℕ) :
     concreteL2R2CompletedDiagonalFormalAdjointLinearMap y n =
       concreteL2DiagonalWeight n * y.1 n := by
-  simpa [concreteL2R2CompletedDiagonalFormalAdjointLinearMap] using
-    concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation y.2 n
+  change
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y.1 y.2 n =
+      concreteL2DiagonalWeight n * y.1 n
+  exact concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation y.2 n
 
 /-- Type obligation closed by the Mathlib `Submodule` and `LinearMap` packaging
 of the formal-adjoint graph-level operator value. -/
