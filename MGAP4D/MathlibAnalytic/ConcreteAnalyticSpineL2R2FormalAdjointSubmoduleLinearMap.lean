@@ -97,16 +97,18 @@ def concreteL2R2CompletedDiagonalFormalAdjointLinearMap :
     concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y.1 y.2
   map_add' := by
     intro y₁ y₂
-    exact concrete_l2_r2_formal_adjoint_operator_value_add_of_domain
-      (hy₁ := y₁.2) (hy₂ := y₂.2)
-      (hysum := (y₁ + y₂ :
-        concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule).2)
+    simpa using
+      (concrete_l2_r2_formal_adjoint_operator_value_add_of_domain
+        (hy₁ := y₁.2) (hy₂ := y₂.2)
+        (hysum := (y₁ + y₂ :
+          concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule).2))
   map_smul' := by
     intro c y
-    exact concrete_l2_r2_formal_adjoint_operator_value_smul_of_domain c
-      (hy := y.2)
-      (hcsmul := (c • y :
-        concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule).2)
+    simpa using
+      (concrete_l2_r2_formal_adjoint_operator_value_smul_of_domain c
+        (hy := y.2)
+        (hcsmul := (c • y :
+          concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule).2))
 
 /-- Every point of the formal-adjoint domain submodule is mapped to a value whose
 pair lies in the formal-adjoint graph candidate. -/
