@@ -91,6 +91,69 @@ theorem concrete_analytic_spine_hard_residual_r3_concrete_self_adjoint_theorem_p
     concrete_analytic_spine_hard_residual_r3_has_formal_graph_self_adjointness,
     concrete_l2_r2_closed_operator_boundary_not_self_adjointness⟩
 
+/-- Elimination: the pre-input surface exposes the carrier/candidate graph equality. -/
+theorem concrete_analytic_spine_hard_residual_r3_preinput_carrier_eq_candidate
+    (h : concreteAnalyticSpineHardResidualR3ConcreteSelfAdjointTheoremPreInput) :
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  rcases h with ⟨_, hgraph, _, _⟩
+  exact hgraph.1
+
+/-- Elimination: the pre-input surface exposes the linear-map/candidate graph equality. -/
+theorem concrete_analytic_spine_hard_residual_r3_preinput_linear_map_eq_candidate
+    (h : concreteAnalyticSpineHardResidualR3ConcreteSelfAdjointTheoremPreInput) :
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  rcases h with ⟨_, hgraph, _, _⟩
+  exact hgraph.2.1
+
+/-- Elimination: the pre-input surface exposes the linear-map/completed-graph equality. -/
+theorem concrete_analytic_spine_hard_residual_r3_preinput_linear_map_eq_completed_graph
+    (h : concreteAnalyticSpineHardResidualR3ConcreteSelfAdjointTheoremPreInput) :
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+      concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  rcases h with ⟨_, hgraph, _, _⟩
+  exact hgraph.2.2
+
+/-- Elimination: the pre-input surface exposes the formal graph self-adjointness fact. -/
+theorem concrete_analytic_spine_hard_residual_r3_preinput_formal_graph_self_adjointness
+    (h : concreteAnalyticSpineHardResidualR3ConcreteSelfAdjointTheoremPreInput) :
+    concreteL2R4FormalGraphSelfAdjointness := by
+  rcases h with ⟨_, _, hformal, _⟩
+  exact hformal
+
+/-- Elimination: the pre-input surface still carries the non-promotion boundary. -/
+theorem concrete_analytic_spine_hard_residual_r3_preinput_boundary_not_self_adjointness
+    (h : concreteAnalyticSpineHardResidualR3ConcreteSelfAdjointTheoremPreInput) :
+    concreteL2R2ClosedOperatorBoundaryNotSelfAdjointness := by
+  rcases h with ⟨_, _, _, hboundary⟩
+  exact hboundary
+
+/-- Closed theorem-input package: the ready pre-input surface can be consumed
+without re-opening any of the graph-equality proofs. -/
+def concreteAnalyticSpineHardResidualR3SelfAdjointTheoremInputsClosed : Prop :=
+  concreteAnalyticSpineHardResidualR3ConcreteSelfAdjointTheoremPreInput ∧
+  (concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
+  (concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
+  (concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
+  concreteL2R4FormalGraphSelfAdjointness ∧
+  concreteL2R2ClosedOperatorBoundaryNotSelfAdjointness
+
+/-- The closed theorem-input package is ready. -/
+theorem concrete_analytic_spine_hard_residual_r3_self_adjoint_theorem_inputs_closed_ready :
+    concreteAnalyticSpineHardResidualR3SelfAdjointTheoremInputsClosed := by
+  let h := concrete_analytic_spine_hard_residual_r3_concrete_self_adjoint_theorem_preinput_ready
+  exact ⟨
+    h,
+    concrete_analytic_spine_hard_residual_r3_preinput_carrier_eq_candidate h,
+    concrete_analytic_spine_hard_residual_r3_preinput_linear_map_eq_candidate h,
+    concrete_analytic_spine_hard_residual_r3_preinput_linear_map_eq_completed_graph h,
+    concrete_analytic_spine_hard_residual_r3_preinput_formal_graph_self_adjointness h,
+    concrete_analytic_spine_hard_residual_r3_preinput_boundary_not_self_adjointness h⟩
+
 end
 
 end MathlibAnalytic
