@@ -204,6 +204,50 @@ theorem concrete_l2_r2_formal_adjoint_graph_candidate_isClosed :
   rw [← concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
   exact concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed
 
+/-- Closedness is invariant between the Mathlib `LinearMap` graph and the
+formal-adjoint graph candidate. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_candidate :
+    IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ↔
+      IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  constructor
+  · intro hclosed
+    rw [← concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
+    exact hclosed
+  · intro hclosed
+    rw [concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
+    exact hclosed
+
+/-- Closedness is invariant between the Mathlib `LinearMap` graph and the
+completed diagonal graph carrier. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_completed_diagonal_graph :
+    IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ↔
+      IsClosed concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  constructor
+  · intro hclosed
+    rw [← concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph]
+    exact hclosed
+  · intro hclosed
+    rw [concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph]
+    exact hclosed
+
+/-- Closedness is invariant between the formal-adjoint graph candidate and the
+completed diagonal graph carrier. -/
+theorem concrete_l2_r2_formal_adjoint_graph_candidate_isClosed_iff_completed_diagonal_graph :
+    IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ↔
+      IsClosed concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  constructor
+  · intro hclosed
+    have hlinear : IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph :=
+      concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_candidate.2 hclosed
+    exact concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_completed_diagonal_graph.1
+      hlinear
+  · intro hclosed
+    have hlinear : IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph :=
+      concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_completed_diagonal_graph.2
+        hclosed
+    exact concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_candidate.1
+      hlinear
+
 /-- Closedness of the graph presentation and the carrier equalities needed for the
 next closed-operator handoff. -/
 def concreteL2R2FormalAdjointLinearMapClosedGraphTransfer : Prop :=
@@ -212,7 +256,13 @@ def concreteL2R2FormalAdjointLinearMapClosedGraphTransfer : Prop :=
   concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
     concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
   concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
-    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier ∧
+  (IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ↔
+    IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
+  (IsClosed concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ↔
+    IsClosed concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier) ∧
+  (IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ↔
+    IsClosed concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier)
 
 /-- The closed-graph transfer from the completed diagonal carrier to the
 formal-adjoint `LinearMap` graph is complete. -/
@@ -222,7 +272,10 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_closed_graph_transfer_ready :
     concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed,
     concrete_l2_r2_formal_adjoint_graph_candidate_isClosed,
     concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate,
-    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph⟩
+    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_candidate,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_isClosed_iff_completed_diagonal_graph,
+    concrete_l2_r2_formal_adjoint_graph_candidate_isClosed_iff_completed_diagonal_graph⟩
 
 /-- Type obligation closed by the Mathlib `Submodule` and `LinearMap` packaging
 of the formal-adjoint graph-level operator value. -/
