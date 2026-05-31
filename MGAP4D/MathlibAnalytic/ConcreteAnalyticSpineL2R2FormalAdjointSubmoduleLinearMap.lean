@@ -303,7 +303,23 @@ promotion. -/
 def concreteAnalyticSpineL2R2FormalAdjointSubmoduleLinearMapReady : Prop :=
   concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady ∧
   concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation ∧
-  True ∧ True ∧ True ∧ True
+  (∀ (y : lp (fun _ : ℕ => ℝ) 2)
+      (hy hy' : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate),
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy =
+      concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy') ∧
+  (∀ {y₁ y₂ : lp (fun _ : ℕ => ℝ) 2}
+      (hy₁ : y₁ ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
+      (hy₂ : y₂ ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
+      (hysum : y₁ + y₂ ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate),
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue (y₁ + y₂) hysum =
+      concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+        concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂) ∧
+  (∀ (c : ℝ) {y : lp (fun _ : ℕ => ℝ) 2}
+      (hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
+      (hcsmul : c • y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate),
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue (c • y) hcsmul =
+      c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy) ∧
+  IsClosed concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate
 
 /-- The Mathlib-facing formal-adjoint submodule/linear-map surface is ready. -/
 theorem concrete_analytic_spine_l2_r2_formal_adjoint_submodule_linear_map_ready :
@@ -311,10 +327,10 @@ theorem concrete_analytic_spine_l2_r2_formal_adjoint_submodule_linear_map_ready 
   exact ⟨
     concrete_analytic_spine_l2_r2_formal_adjoint_operator_value_surface_ready,
     concrete_l2_r2_formal_adjoint_submodule_linear_map_type_obligation_ready,
-    trivial,
-    trivial,
-    trivial,
-    trivial⟩
+    concrete_l2_r2_formal_adjoint_operator_value_proof_irrel,
+    concrete_l2_r2_formal_adjoint_operator_value_add_of_domain,
+    concrete_l2_r2_formal_adjoint_operator_value_smul_of_domain,
+    concrete_l2_r2_formal_adjoint_graph_candidate_via_linear_map_graph_isClosed⟩
 
 end
 
