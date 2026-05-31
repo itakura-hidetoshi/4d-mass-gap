@@ -52,6 +52,7 @@ theorem concrete_analytic_spine_hard_residual_r3_actual_graph_slot_eq_formal_lin
     (hG : concreteAnalyticSpineHardResidualR3ActualMathlibGraphIdentifiesCanonicalFormal G) :
     (concreteAnalyticSpineHardResidualR3ActualMathlibGraphSlot G hG).mathlibAdjointGraph =
       concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph := by
+  change G = concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph
   exact concrete_analytic_spine_hard_residual_r3_actual_graph_identifies_formal_linear_map G hG
 
 /-- The actual graph slot yields the slot-level promotion package. -/
