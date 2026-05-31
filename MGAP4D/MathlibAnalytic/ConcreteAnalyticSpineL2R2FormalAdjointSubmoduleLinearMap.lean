@@ -139,6 +139,55 @@ theorem concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation
       concreteL2DiagonalWeight n * y.1 n
   exact concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation y.2 n
 
+/-- The graph induced by the Mathlib `LinearMap` presentation of the formal
+adjoint value. -/
+def concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph :
+    Set ConcreteL2R2PairSpace :=
+  {p | ∃ y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule,
+    p = (y.1, concreteL2R2CompletedDiagonalFormalAdjointLinearMap y)}
+
+/-- The Mathlib `LinearMap` graph is contained in the formal-adjoint graph
+candidate. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_subset_candidate :
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph ⊆
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  intro p hp
+  rcases hp with ⟨y, rfl⟩
+  exact concrete_l2_r2_formal_adjoint_linear_map_graph_mem y
+
+/-- The formal-adjoint graph candidate is contained in the graph induced by the
+Mathlib `LinearMap` presentation. -/
+theorem concrete_l2_r2_formal_adjoint_candidate_subset_linear_map_graph :
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆
+      concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph := by
+  intro p hp
+  rcases p with ⟨y, w⟩
+  have hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate := by
+    exact ⟨w, hp⟩
+  let yd : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule := ⟨y, hy⟩
+  have hw : w = concreteL2R2CompletedDiagonalFormalAdjointLinearMap yd := by
+    change w = concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy
+    exact concrete_l2_r2_formal_adjoint_operator_value_unique (hy := hy) (hw := hp)
+  refine ⟨yd, ?_⟩
+  simp [yd, hw]
+
+/-- The Mathlib `LinearMap` graph presentation is exactly the formal-adjoint graph
+candidate. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate :
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  exact Set.Subset.antisymm
+    concrete_l2_r2_formal_adjoint_linear_map_graph_subset_candidate
+    concrete_l2_r2_formal_adjoint_candidate_subset_linear_map_graph
+
+/-- The Mathlib `LinearMap` graph presentation also recovers the completed
+diagonal graph carrier, using the already proved graph-level equality. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph :
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+      concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier := by
+  rw [concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate]
+  exact concrete_l2_r2_completed_diagonal_graph_eq_formal_adjoint_candidate.symm
+
 /-- Type obligation closed by the Mathlib `Submodule` and `LinearMap` packaging
 of the formal-adjoint graph-level operator value. -/
 def concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation : Prop :=
@@ -150,7 +199,11 @@ def concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation : Prop :=
       concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
   (∀ (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) (n : ℕ),
     concreteL2R2CompletedDiagonalFormalAdjointLinearMap y n =
-      concreteL2DiagonalWeight n * y.1 n)
+      concreteL2DiagonalWeight n * y.1 n) ∧
+  concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+    concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ∧
+  concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph =
+    concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier
 
 /-- The formal-adjoint domain/value pair is now packaged as a Mathlib
 `Submodule` plus `LinearMap`. -/
@@ -159,7 +212,9 @@ theorem concrete_l2_r2_formal_adjoint_submodule_linear_map_type_obligation_ready
   exact ⟨
     concrete_l2_r2_formal_adjoint_domain_submodule_carrier_eq,
     concrete_l2_r2_formal_adjoint_linear_map_graph_mem,
-    concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation⟩
+    concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_candidate,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph⟩
 
 /-- Readiness surface for the Mathlib-facing formal-adjoint submodule/linear-map
 promotion.
