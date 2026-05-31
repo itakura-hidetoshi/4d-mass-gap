@@ -12,7 +12,7 @@ noncomputable section
 The field `mathlibAdjointGraph` is intentionally abstract here.  The next real
 implementation step is to instantiate it with the actual Mathlib graph predicate
 for the completed diagonal operator, then prove `identifiesFormalAdjointGraph`.
-- /
+-/
 structure ConcreteAnalyticSpineHardResidualR3MathlibAdjointGraphSlot where
   mathlibAdjointGraph : ConcreteL2R2PairSpace → Prop
   identifiesFormalAdjointGraph :
