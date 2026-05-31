@@ -1,6 +1,6 @@
 # MGAP4D
 
-**MGAP4D** is the canonical Lean 4 repository for the normalized four-dimensional mass gap proof architecture maintained by Hidetoshi Itakura.
+**MGAP4D** is the canonical Lean 4 repository for Hidetoshi Itakura's normalized four-dimensional mass-gap proof architecture.
 
 This repository is not a general physics essay and not a KuuOS documentation mirror. It is the GitHub-native replay surface for the MGAP4D line: Lean source, Lake configuration, theorem-surface maps, audit scripts, physical-normalization ledgers, external-review packets, and independent replay instructions are kept in one source tree.
 
@@ -14,9 +14,9 @@ KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance
 
 ---
 
-## Status as of 2026-05-31
+## Status as of 2026-06-01
 
-The current `main` branch records an **internal normalized Lean theorem-body / proof-architecture surface** for a normalized 4D mass gap route.
+The current `main` branch records an **internal normalized Lean theorem-body / proof-architecture surface** for a normalized 4D mass-gap route.
 
 The active route includes:
 
@@ -33,6 +33,9 @@ plaquette spectral-weight lane hardening
 continuum-Hamiltonian theorem surfaces
 continuum-Hamiltonian complete derivation surfaces
 finite-carrier Mathlib seed ladder over Fin 2 / Fin 3
+concrete l2 R2 graph-norm core closure
+concrete l2 R2 residual-zero audit surface
+formal-adjoint graph / operator-value surface for the concrete l2 R2 diagonal model
 four-lane residual closure
 internal review residual closure gate
 external audit readiness gate
@@ -54,7 +57,7 @@ Recommended public wording:
 
 ```text
 MGAP4D provides a Lean 4 proof architecture and replayable audit surface
-for an internal normalized 4D mass gap theorem-body route with normalized value 33/20.
+for an internal normalized 4D mass-gap theorem-body route with normalized value 33/20.
 The repository is prepared for independent replay and external review.
 Public final theorem acceptance is not claimed.
 ```
@@ -79,6 +82,10 @@ continuum-Hamiltonian theorem and release-adoption surfaces: present
 continuum-Hamiltonian complete derivation surfaces: present
 finite-carrier Mathlib seed ladder over Fin 2 / Fin 3: present
 general Fin n / basis / dense-span / operator / spectral boundary: held
+concrete l2 R2 graph-norm core blocker: closed at the current route layer
+concrete l2 R2 residual-zero audit surface: present
+formal-adjoint graph equality for the concrete l2 R2 diagonal model: present
+formal-adjoint operator-value coordinate equation: present
 four-lane residual closure: present
 internal review residual closure gate: present
 external audit readiness gate: present
@@ -96,6 +103,9 @@ that CI success replaces mathematical proof review
 that audit scripts replace Lean kernel checking
 that external-audit readiness equals external audit
 that finite-carrier Fin 2 / Fin 3 seeds imply the full general Fin n / basis / dense-span / operator / spectral theorem chain
+that the concrete l2 R2 residual-zero audit surface is already a closed-operator theorem
+that the concrete l2 R2 formal-adjoint graph equality is already a Mathlib IsSelfAdjoint theorem
+that the concrete l2 R2 route already gives PVM construction, exact atom 33/20, positive spectral weight, or a physical Yang-Mills Hamiltonian
 ```
 
 Review principle:
@@ -105,6 +115,8 @@ Lean kernel checking is necessary but not identical with external mathematical c
 Replay success is evidence, not peer review.
 External-audit readiness is a gate, not the external audit itself.
 Documentation must never be treated as a substitute for theorem bodies.
+Graph-level formal-adjoint equality must not be silently promoted to Mathlib self-adjointness.
+Residual-zero audit surfaces must not be silently promoted to spectral/PVM/physical claims.
 ```
 
 ---
@@ -205,6 +217,9 @@ Exact normalized value / real positivity
   -> continuum Hamiltonian complete mass-gap derivation
   -> continuum Hamiltonian complete mass-gap release adoption
   -> finite-carrier Mathlib seed ladder summary
+  -> concrete l2 R2 graph-norm core route
+  -> concrete l2 R2 residual-zero audit surface
+  -> concrete l2 R2 formal-adjoint graph / operator-value surface
   -> four-lane residual closure
   -> internal review residual closure gate
   -> external audit readiness gate
@@ -225,12 +240,52 @@ MGAP4D/MathlibAnalytic/PlaquetteSpectralWeightLaneHardening.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessHardening.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2CurrentRoute.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2FormalAdjointOperatorValue.lean
 MGAP4D/MathlibAnalytic/FourLaneResidualClosure.lean
 MGAP4D/MathlibAnalytic/InternalReviewResidualClosureGate.lean
 MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean
 ```
 
 For a full theorem-surface map, start with `THEOREM_INDEX.md`.
+
+---
+
+## Concrete l2 R2 route boundary
+
+The concrete `l2` R2 route currently records a graph-norm core closure and a residual-zero audit surface. This is a useful local analytic hardening layer, but it remains boundary-held.
+
+Current local status:
+
+```text
+R2 current route umbrella: ready
+old R2f graph-norm core blocker: closed
+R2 residual-zero audit surface: ready at the graph-norm core layer
+formal-adjoint graph candidate: structured
+formal-adjoint operator value: defined from a single-valued graph candidate
+formal-adjoint coordinate equation: present
+formal-adjoint graph equality with completed diagonal graph carrier: present
+```
+
+Still boundary-held:
+
+```text
+closed operator theorem
+Mathlib IsSelfAdjoint theorem
+spectral theorem promotion
+PVM construction
+exact atom 33/20 derivation from the concrete R2 route
+positive spectral weight
+physical Yang-Mills Hamiltonian promotion
+```
+
+The important distinction is:
+
+```text
+formal adjoint graph equality != Mathlib IsSelfAdjoint promotion
+residual-zero audit surface != spectral/PVM/physical-Hamiltonian release
+```
 
 ---
 
@@ -245,8 +300,10 @@ Recommended external review order:
 5. Inspect the major theorem surfaces in `THEOREM_INDEX.md`.
 6. Inspect the physical normalization boundary in `PHYSICAL_REALIZATION_BOUNDARY.md`.
 7. Inspect the continuum-Hamiltonian complete release surface in `docs/continuum_hamiltonian_complete_release_surface.md`.
-8. Inspect the external-audit readiness gate documents in `docs/`.
-9. Record review notes append-only.
+8. Inspect the concrete `l2` R2 current route and residual-zero audit surface.
+9. Inspect the formal-adjoint graph / operator-value surface without promoting it to Mathlib self-adjointness.
+10. Inspect the external-audit readiness gate documents in `docs/`.
+11. Record review notes append-only.
 
 Important commands and files:
 
@@ -258,6 +315,9 @@ Important commands and files:
 | `EXTERNAL_AUDIT_PACKET.md` | Top-level external review packet. |
 | `INDEPENDENT_REPLAY.md` | Fresh-clone replay procedure. |
 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Boundary for physical interpretation. |
+| `docs/R2_CURRENT_ROUTE.md` | Human-facing concrete `l2` R2 route boundary. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2ResidualZeroAuditSurface.lean` | Current R2 residual-zero audit surface. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2FormalAdjointOperatorValue.lean` | Current formal-adjoint graph / operator-value surface. |
 | `docs/external_audit_readiness_gate.md` | External-audit readiness ledger. |
 | `docs/external_audit_readiness_replay_certificate.md` | Replay certificate ledger. |
 
@@ -323,6 +383,8 @@ theorem-surface inspection
 bridge-coherence review
 physical-normalization review
 continuum-Hamiltonian review
+concrete l2 R2 route review
+formal-adjoint graph/operator review
 finite-carrier ladder review
 audit-script precision
 documentation consistency
