@@ -1,0 +1,175 @@
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2FormalAdjointOperatorValue
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- The formal-adjoint domain candidate promoted from a carrier-level `Set` to a
+Mathlib `Submodule` of the concrete real `l2` Hilbert space.
+
+This is still before any use of Mathlib's `adjoint` or `IsSelfAdjoint` API: it is
+only the clean algebraic typing of the already constructed graph-level formal
+adjoint domain. -/
+def concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule :
+    Submodule ℝ (lp (fun _ : ℕ => ℝ) 2) where
+  carrier := concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate
+  zero_mem' := concrete_l2_r2_formal_adjoint_domain_zero
+  add_mem' := by
+    intro x y hx hy
+    exact concrete_l2_r2_formal_adjoint_domain_add hx hy
+  smul_mem' := by
+    intro c x hx
+    exact concrete_l2_r2_formal_adjoint_domain_smul c hx
+
+/-- The `Submodule` carrier is definitionally the formal-adjoint domain
+candidate. -/
+theorem concrete_l2_r2_formal_adjoint_domain_submodule_carrier_eq :
+    ((concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule :
+        Set (lp (fun _ : ℕ => ℝ) 2)) =
+      concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) := by
+  rfl
+
+/-- The chosen formal-adjoint value is independent of the particular proof that
+its input belongs to the formal-adjoint domain candidate.
+
+This is the small proof-irrelevance bridge needed to package the chosen graph
+value into a Mathlib `LinearMap`.  The proof uses the already established
+single-valuedness of the formal-adjoint graph candidate, not proof irrelevance as
+an axiom. -/
+theorem concrete_l2_r2_formal_adjoint_operator_value_proof_irrel
+    (y : lp (fun _ : ℕ => ℝ) 2)
+    (hy hy' : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) :
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy =
+      concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy' := by
+  exact concrete_l2_r2_formal_adjoint_graph_candidate_single_valued
+    (concrete_l2_r2_formal_adjoint_operator_value_mem y hy)
+    (concrete_l2_r2_formal_adjoint_operator_value_mem y hy')
+
+/-- Additivity of the chosen formal-adjoint operator value for any supplied proof
+that the sum lies in the formal-adjoint domain candidate. -/
+theorem concrete_l2_r2_formal_adjoint_operator_value_add_of_domain
+    {y₁ y₂ : lp (fun _ : ℕ => ℝ) 2}
+    (hy₁ : y₁ ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
+    (hy₂ : y₂ ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
+    (hysum : y₁ + y₂ ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) :
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue (y₁ + y₂) hysum =
+      concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+        concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂ := by
+  calc
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue (y₁ + y₂) hysum
+        = concreteL2R2CompletedDiagonalFormalAdjointOperatorValue
+            (y₁ + y₂) (concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂) := by
+            exact concrete_l2_r2_formal_adjoint_operator_value_proof_irrel
+              (y₁ + y₂) hysum
+              (concrete_l2_r2_formal_adjoint_domain_add hy₁ hy₂)
+    _ = concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₁ hy₁ +
+        concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y₂ hy₂ := by
+          exact concrete_l2_r2_formal_adjoint_operator_value_add hy₁ hy₂
+
+/-- Homogeneity of the chosen formal-adjoint operator value for any supplied
+proof that the scalar multiple lies in the formal-adjoint domain candidate. -/
+theorem concrete_l2_r2_formal_adjoint_operator_value_smul_of_domain
+    (c : ℝ) {y : lp (fun _ : ℕ => ℝ) 2}
+    (hy : y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate)
+    (hcsmul : c • y ∈ concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) :
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue (c • y) hcsmul =
+      c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy := by
+  calc
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue (c • y) hcsmul
+        = concreteL2R2CompletedDiagonalFormalAdjointOperatorValue
+            (c • y) (concrete_l2_r2_formal_adjoint_domain_smul c hy) := by
+            exact concrete_l2_r2_formal_adjoint_operator_value_proof_irrel
+              (c • y) hcsmul
+              (concrete_l2_r2_formal_adjoint_domain_smul c hy)
+    _ = c • concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y hy := by
+          exact concrete_l2_r2_formal_adjoint_operator_value_smul c hy
+
+/-- The chosen formal-adjoint operator value promoted to a Mathlib `LinearMap`
+from the formal-adjoint domain submodule into the ambient real `l2` Hilbert
+space. -/
+def concreteL2R2CompletedDiagonalFormalAdjointLinearMap :
+    concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule →ₗ[ℝ]
+      lp (fun _ : ℕ => ℝ) 2 where
+  toFun y :=
+    concreteL2R2CompletedDiagonalFormalAdjointOperatorValue y.1 y.2
+  map_add' := by
+    intro y₁ y₂
+    exact concrete_l2_r2_formal_adjoint_operator_value_add_of_domain
+      (hy₁ := y₁.2) (hy₂ := y₂.2)
+      (hysum := (y₁ + y₂ :
+        concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule).2)
+  map_smul' := by
+    intro c y
+    exact concrete_l2_r2_formal_adjoint_operator_value_smul_of_domain c
+      (hy := y.2)
+      (hcsmul := (c • y :
+        concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule).2)
+
+/-- Every point of the formal-adjoint domain submodule is mapped to a value whose
+pair lies in the formal-adjoint graph candidate. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_graph_mem
+    (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) :
+    (y.1, concreteL2R2CompletedDiagonalFormalAdjointLinearMap y) ∈
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate := by
+  simpa [concreteL2R2CompletedDiagonalFormalAdjointLinearMap] using
+    concrete_l2_r2_formal_adjoint_operator_value_mem y.1 y.2
+
+/-- Coordinate equation for the Mathlib `LinearMap` version of the formal-adjoint
+operator value. -/
+theorem concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation
+    (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) (n : ℕ) :
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMap y n =
+      concreteL2DiagonalWeight n * y.1 n := by
+  simpa [concreteL2R2CompletedDiagonalFormalAdjointLinearMap] using
+    concrete_l2_r2_formal_adjoint_operator_value_coordinate_equation y.2 n
+
+/-- Type obligation closed by the Mathlib `Submodule` and `LinearMap` packaging
+of the formal-adjoint graph-level operator value. -/
+def concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation : Prop :=
+  ((concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule :
+      Set (lp (fun _ : ℕ => ℝ) 2)) =
+    concreteL2R2CompletedDiagonalFormalAdjointDomainCandidate) ∧
+  (∀ y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule,
+    (y.1, concreteL2R2CompletedDiagonalFormalAdjointLinearMap y) ∈
+      concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate) ∧
+  (∀ (y : concreteL2R2CompletedDiagonalFormalAdjointDomainSubmodule) (n : ℕ),
+    concreteL2R2CompletedDiagonalFormalAdjointLinearMap y n =
+      concreteL2DiagonalWeight n * y.1 n)
+
+/-- The formal-adjoint domain/value pair is now packaged as a Mathlib
+`Submodule` plus `LinearMap`. -/
+theorem concrete_l2_r2_formal_adjoint_submodule_linear_map_type_obligation_ready :
+    concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation := by
+  exact ⟨
+    concrete_l2_r2_formal_adjoint_domain_submodule_carrier_eq,
+    concrete_l2_r2_formal_adjoint_linear_map_graph_mem,
+    concrete_l2_r2_formal_adjoint_linear_map_coordinate_equation⟩
+
+/-- Readiness surface for the Mathlib-facing formal-adjoint submodule/linear-map
+promotion.
+
+This deliberately remains below Mathlib `adjoint`, `IsSelfAdjoint`, spectral
+measure, PVM, and positive spectral weight. -/
+def concreteAnalyticSpineL2R2FormalAdjointSubmoduleLinearMapReady : Prop :=
+  concreteAnalyticSpineL2R2FormalAdjointOperatorValueSurfaceReady ∧
+  concreteL2R2FormalAdjointSubmoduleLinearMapTypeObligation ∧
+  True ∧ True ∧ True ∧ True
+
+/-- The Mathlib-facing formal-adjoint submodule/linear-map surface is ready. -/
+theorem concrete_analytic_spine_l2_r2_formal_adjoint_submodule_linear_map_ready :
+    concreteAnalyticSpineL2R2FormalAdjointSubmoduleLinearMapReady := by
+  exact ⟨
+    concrete_analytic_spine_l2_r2_formal_adjoint_operator_value_surface_ready,
+    concrete_l2_r2_formal_adjoint_submodule_linear_map_type_obligation_ready,
+    trivial,
+    trivial,
+    trivial,
+    trivial⟩
+
+end
+
+end MathlibAnalytic
+end MGAP4D
