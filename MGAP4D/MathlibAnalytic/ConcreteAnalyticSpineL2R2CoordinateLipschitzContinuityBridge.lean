@@ -8,26 +8,53 @@ open scoped ENNReal
 
 noncomputable section
 
+/-- Continuity obligation for the first-coordinate evaluation of a graph pair at
+coordinate `n`, with respect to the explicit graph-norm topology. -/
+def concreteL2R2GraphPairFstCoordinateContinuous (n : ℕ) : Prop :=
+  @Continuous ConcreteL2GraphPairSpace ℝ concreteL2GraphNormTopology _
+    (fun p : ConcreteL2GraphPairSpace => p.1.1 n)
+
+/-- Lipschitz-type obligation for the first-coordinate evaluation at coordinate
+`n`, measured by the explicit graph-norm distance candidate. -/
+def concreteL2R2GraphPairFstCoordinateLipschitz (n : ℕ) : Prop :=
+  ∀ p q : ConcreteL2GraphPairSpace,
+    dist (q.1.1 n) (p.1.1 n) ≤ concreteL2GraphNormDistanceCandidate q p
+
 /-- Lipschitz-type obligation for the second-coordinate evaluation at coordinate
 `n`, measured by the explicit graph-norm distance candidate. -/
 def concreteL2R2GraphPairSndCoordinateLipschitz (n : ℕ) : Prop :=
   ∀ p q : ConcreteL2GraphPairSpace,
     dist (q.2.1 n) (p.2.1 n) ≤ concreteL2GraphNormDistanceCandidate q p
 
-/-- Lipschitz-type obligation for the weighted first-coordinate evaluation at
-coordinate `n`, measured by the explicit graph-norm distance candidate. -/
-def concreteL2R2GraphPairWeightedFstCoordinateLipschitz (n : ℕ) : Prop :=
-  ∀ p q : ConcreteL2GraphPairSpace,
-    dist (concreteL2DiagonalWeight n * q.1.1 n)
-      (concreteL2DiagonalWeight n * p.1.1 n) ≤
-        concreteL2GraphNormDistanceCandidate q p
-
-/-- All coordinate Lipschitz obligations for the two maps defining the diagonal
-relation. -/
+/-- All coordinate Lipschitz obligations for the two raw coordinate maps.  The
+weighted first-coordinate continuity used by the diagonal relation is obtained
+afterwards by multiplying the first-coordinate map by the fixed scalar
+`concreteL2DiagonalWeight n`. -/
 def concreteL2R2AllCoordinateRelationLipschitz : Prop :=
   ∀ n : ℕ,
     concreteL2R2GraphPairSndCoordinateLipschitz n ∧
-      concreteL2R2GraphPairWeightedFstCoordinateLipschitz n
+      concreteL2R2GraphPairFstCoordinateLipschitz n
+
+/-- A first-coordinate graph-norm Lipschitz estimate implies graph-norm
+continuity of the first-coordinate evaluation. -/
+theorem concrete_l2_r2_fst_coordinate_continuous_of_lipschitz
+    (n : ℕ)
+    (hLip : concreteL2R2GraphPairFstCoordinateLipschitz n) :
+    concreteL2R2GraphPairFstCoordinateContinuous n := by
+  unfold concreteL2R2GraphPairFstCoordinateContinuous
+  unfold concreteL2R2GraphPairFstCoordinateLipschitz at hLip
+  letI : PseudoMetricSpace ConcreteL2GraphPairSpace := concreteL2GraphNormPseudoMetricSpace
+  change Continuous fun p : ConcreteL2GraphPairSpace => p.1.1 n
+  rw [Metric.continuous_iff]
+  intro p ε hε
+  refine ⟨ε, hε, ?_⟩
+  intro q hq
+  calc
+    dist ((fun r : ConcreteL2GraphPairSpace => r.1.1 n) q)
+        ((fun r : ConcreteL2GraphPairSpace => r.1.1 n) p)
+        ≤ concreteL2GraphNormDistanceCandidate q p := hLip p q
+    _ = dist q p := by rfl
+    _ < ε := hq
 
 /-- A second-coordinate graph-norm Lipschitz estimate implies graph-norm
 continuity of the second-coordinate evaluation. -/
@@ -50,37 +77,35 @@ theorem concrete_l2_r2_snd_coordinate_continuous_of_lipschitz
     _ = dist q p := by rfl
     _ < ε := hq
 
-/-- A weighted first-coordinate graph-norm Lipschitz estimate implies graph-norm
-continuity of the weighted first-coordinate evaluation. -/
-theorem concrete_l2_r2_weighted_fst_coordinate_continuous_of_lipschitz
+/-- First-coordinate continuity implies weighted first-coordinate continuity by
+fixed scalar multiplication. -/
+theorem concrete_l2_r2_weighted_fst_coordinate_continuous_of_fst_coordinate_continuous
     (n : ℕ)
-    (hLip : concreteL2R2GraphPairWeightedFstCoordinateLipschitz n) :
+    (hfst : concreteL2R2GraphPairFstCoordinateContinuous n) :
     concreteL2R2GraphPairWeightedFstCoordinateContinuous n := by
   unfold concreteL2R2GraphPairWeightedFstCoordinateContinuous
-  unfold concreteL2R2GraphPairWeightedFstCoordinateLipschitz at hLip
-  letI : PseudoMetricSpace ConcreteL2GraphPairSpace := concreteL2GraphNormPseudoMetricSpace
+  unfold concreteL2R2GraphPairFstCoordinateContinuous at hfst
+  letI : TopologicalSpace ConcreteL2GraphPairSpace := concreteL2GraphNormTopology
   change Continuous fun p : ConcreteL2GraphPairSpace =>
     concreteL2DiagonalWeight n * p.1.1 n
-  rw [Metric.continuous_iff]
-  intro p ε hε
-  refine ⟨ε, hε, ?_⟩
-  intro q hq
-  calc
-    dist ((fun r : ConcreteL2GraphPairSpace => concreteL2DiagonalWeight n * r.1.1 n) q)
-        ((fun r : ConcreteL2GraphPairSpace => concreteL2DiagonalWeight n * r.1.1 n) p)
-        ≤ concreteL2GraphNormDistanceCandidate q p := hLip p q
-    _ = dist q p := by rfl
-    _ < ε := hq
+  change Continuous (fun p : ConcreteL2GraphPairSpace => p.1.1 n) at hfst
+  have hconst : Continuous fun _p : ConcreteL2GraphPairSpace =>
+      concreteL2DiagonalWeight n := continuous_const
+  simpa using hconst.mul hfst
 
 /-- All coordinate Lipschitz obligations imply all coordinate continuity
-obligations. -/
+obligations for the relation maps. -/
 theorem concrete_l2_r2_all_coordinate_continuity_of_all_coordinate_lipschitz
     (hLip : concreteL2R2AllCoordinateRelationLipschitz) :
     concreteL2R2AllCoordinateRelationContinuity := by
   intro n
+  have hsnd : concreteL2R2GraphPairSndCoordinateContinuous n :=
+    concrete_l2_r2_snd_coordinate_continuous_of_lipschitz n (hLip n).1
+  have hfst : concreteL2R2GraphPairFstCoordinateContinuous n :=
+    concrete_l2_r2_fst_coordinate_continuous_of_lipschitz n (hLip n).2
   exact ⟨
-    concrete_l2_r2_snd_coordinate_continuous_of_lipschitz n (hLip n).1,
-    concrete_l2_r2_weighted_fst_coordinate_continuous_of_lipschitz n (hLip n).2⟩
+    hsnd,
+    concrete_l2_r2_weighted_fst_coordinate_continuous_of_fst_coordinate_continuous n hfst⟩
 
 /-- All coordinate Lipschitz obligations promote to coordinate relation set
 closedness. -/
