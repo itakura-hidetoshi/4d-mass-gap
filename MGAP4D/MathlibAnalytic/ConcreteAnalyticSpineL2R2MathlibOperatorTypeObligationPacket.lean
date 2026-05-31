@@ -70,12 +70,26 @@ theorem concrete_l2_r2_adjoint_api_type_obligation_ready :
     concrete_l2_r2_formal_adjoint_boundary_not_mathlib_adjoint_identifier,
     concrete_l2_r2_formal_adjoint_boundary_not_mathlib_isSelfAdjoint_theorem⟩
 
+/-- Boundary claim for the Mathlib operator type packet: the concrete graph and
+formal-adjoint agreement data are packaged, but the packet still does not claim a
+Mathlib `adjoint` bridge or an `IsSelfAdjoint` theorem.
+
+This is proof-bearing rather than vacuous: it keeps the formal-adjoint containment
+agreement, the Mathlib boundary surface, and both explicit boundary witnesses in
+one packet-level guard. -/
 def concreteL2R2MathlibOperatorTypeNoBridgeClaim : Prop :=
-  True
+  concreteL2R2FormalAdjointContainmentAgreementHandoff ∧
+  concreteAnalyticSpineL2R2FormalAdjointMathlibBoundarySurfaceReady ∧
+  concreteL2R2FormalAdjointBoundaryNotMathlibAdjointIdentifier ∧
+  concreteL2R2FormalAdjointBoundaryNotMathlibIsSelfAdjointTheorem
 
 theorem concrete_l2_r2_mathlib_operator_type_no_bridge_claim :
     concreteL2R2MathlibOperatorTypeNoBridgeClaim := by
-  trivial
+  exact ⟨
+    concrete_l2_r2_formal_adjoint_containment_agreement_handoff_ready,
+    concrete_analytic_spine_l2_r2_formal_adjoint_mathlib_boundary_surface_ready,
+    concrete_l2_r2_formal_adjoint_boundary_not_mathlib_adjoint_identifier,
+    concrete_l2_r2_formal_adjoint_boundary_not_mathlib_isSelfAdjoint_theorem⟩
 
 structure ConcreteL2R2MathlibOperatorTypeObligationPacket where
   formalAdjointBoundaryReady :
