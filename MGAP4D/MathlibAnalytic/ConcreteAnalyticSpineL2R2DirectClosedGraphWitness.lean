@@ -58,7 +58,7 @@ theorem concrete_l2_r2_diagonal_graph_mem_of_pointwise_relation
   · rfl
   · apply Subtype.ext
     funext n
-    exact (hrel n).symm
+    exact hrel n
 
 /-- Closedness promotion theorem for the direct witness.
 
