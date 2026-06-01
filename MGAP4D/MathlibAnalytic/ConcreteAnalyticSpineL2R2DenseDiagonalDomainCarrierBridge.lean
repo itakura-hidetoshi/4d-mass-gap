@@ -18,23 +18,22 @@ theorem concrete_l2_r2_diagonal_domain_candidate_submodule_mem_candidate
   rw [concrete_l2_r2_diagonal_domain_candidate_submodule_carrier_eq] at hx
   exact hx
 
-/-- The promoted dense submodule can be viewed as the domain-candidate carrier
-used by the diagonal action formula. -/
-def concreteL2R2DenseDiagonalDomainCarrier : Type :=
+/-- The promoted dense submodule can be viewed transparently as the
+domain-candidate carrier used by the diagonal action formula. -/
+abbrev concreteL2R2DenseDiagonalDomainCarrier : Type :=
   concreteL2R2DiagonalDomainCandidateSubmodule
 
 /-- Forget a dense-domain carrier point to the R1 Hilbert carrier. -/
 def concreteL2R2DenseDiagonalDomainCarrierVal
     (x : concreteL2R2DenseDiagonalDomainCarrier) : ConcreteL2R1HilbertCarrier :=
-  ((x : concreteL2R2DiagonalDomainCandidateSubmodule) : ConcreteL2R1HilbertCarrier)
+  (x : ConcreteL2R1HilbertCarrier)
 
 /-- Domain-candidate proof carried by every dense-domain carrier point. -/
 theorem concrete_l2_r2_dense_diagonal_domain_carrier_mem_candidate
     (x : concreteL2R2DenseDiagonalDomainCarrier) :
     ConcreteL2R2DiagonalDomainCandidate (concreteL2R2DenseDiagonalDomainCarrierVal x) := by
   unfold concreteL2R2DenseDiagonalDomainCarrierVal
-  exact concrete_l2_r2_diagonal_domain_candidate_submodule_mem_candidate
-    (x : concreteL2R2DiagonalDomainCandidateSubmodule)
+  exact concrete_l2_r2_diagonal_domain_candidate_submodule_mem_candidate x
 
 /-- Raw diagonal action on the promoted dense-domain carrier, still as a raw
 coordinate formula.  The next layer will package this as an `lp`-valued action
