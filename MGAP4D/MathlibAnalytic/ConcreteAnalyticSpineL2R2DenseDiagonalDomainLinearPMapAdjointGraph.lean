@@ -18,6 +18,15 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_eq_graph_
   exact LinearPMap.adjoint_graph_eq_graph_adjoint
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain
 
+/-- Reconstructing a `LinearPMap` from the graph-adjoint submodule gives the actual
+Mathlib adjoint of the dense-domain diagonal `LinearPMap`. -/
+theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_adjoint_toLinearPMap_eq_actual_adjoint :
+    concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint.toLinearPMap =
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap := by
+  exact LinearPMap.graph_adjoint_toLinearPMap_eq_adjoint
+    (T := concreteL2R2DenseDiagonalDomainLinearPMap)
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain
+
 /-- The actual Mathlib adjoint of the dense-domain diagonal `LinearPMap` is closed. -/
 theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_isClosed :
     LinearPMap.IsClosed (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap) := by
@@ -26,9 +35,10 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_isClosed :
 
 /-- Actual adjoint graph surface for the dense-domain diagonal `LinearPMap`.
 
-This layer invokes Mathlib's actual adjoint graph theorem and adjoint closedness.
-It still does not claim `T† = T`; the remaining theorem is the graph-adjoint
-fixed-point statement `T.graph.adjoint = T.graph`. -/
+This layer invokes Mathlib's actual adjoint graph theorem, graph-adjoint
+reconstruction, and adjoint closedness. It still does not claim `T† = T`; the
+remaining theorem is the graph-adjoint fixed-point statement
+`T.graph.adjoint = T.graph`. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurface where
   formalAdjointSurfaceReady :
     concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceReady
@@ -37,6 +47,9 @@ structure ConcreteL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurface where
   actualAdjointGraphEqGraphAdjoint :
     (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph =
       concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint
+  graphAdjointToLinearPMapEqActualAdjoint :
+    concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint.toLinearPMap =
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap
   actualAdjointClosed :
     LinearPMap.IsClosed (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap)
   originalClosed :
@@ -61,6 +74,8 @@ def concreteL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurface :
       concrete_analytic_spine_l2_r2_formal_adjoint_self_adjointness_precondition_handoff_ready
     actualAdjointGraphEqGraphAdjoint :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_eq_graph_adjoint
+    graphAdjointToLinearPMapEqActualAdjoint :=
+      concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_adjoint_toLinearPMap_eq_actual_adjoint
     actualAdjointClosed :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_isClosed
     originalClosed :=
@@ -78,6 +93,8 @@ def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurfaceRea
   concreteAnalyticSpineL2R2FormalAdjointSelfAdjointnessPreconditionHandoffReady ∧
   (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph =
     concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint ∧
+  concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint.toLinearPMap =
+    LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap ∧
   LinearPMap.IsClosed (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap) ∧
   LinearPMap.IsClosed concreteL2R2DenseDiagonalDomainLinearPMap ∧
   ((concreteL2R2DenseDiagonalDomainLinearPMap.graph :
@@ -96,6 +113,7 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_
     concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_formal_adjoint_surface_ready,
     concrete_analytic_spine_l2_r2_formal_adjoint_self_adjointness_precondition_handoff_ready,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_eq_graph_adjoint,
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_adjoint_toLinearPMap_eq_actual_adjoint,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_isClosed,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isClosed,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_eq_completed_graph_carrier,
@@ -103,9 +121,10 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_
     trivial,
     trivial⟩
 
-/-- Boundary marker: the actual adjoint graph theorem and adjoint closedness are
-now available for the dense-domain diagonal `LinearPMap`.  The remaining boundary
-is the graph-adjoint fixed-point theorem needed for `T† = T`. -/
+/-- Boundary marker: the actual adjoint graph theorem, graph-adjoint reconstruction,
+and adjoint closedness are now available for the dense-domain diagonal
+`LinearPMap`.  The remaining boundary is the graph-adjoint fixed-point theorem
+needed for `T† = T`. -/
 def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraphBoundaryHeld : Prop :=
   concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurfaceReady
 
