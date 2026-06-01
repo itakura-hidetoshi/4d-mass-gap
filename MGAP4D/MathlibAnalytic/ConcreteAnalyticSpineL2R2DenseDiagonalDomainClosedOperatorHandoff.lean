@@ -32,8 +32,8 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_map_graph_mem_iff_formal_adj
     p ∈ concreteL2R2DenseDiagonalDomainLinearMapGraphCarrier ↔
       p ∈ concreteL2R2CompletedDiagonalFormalAdjointLinearMapGraph := by
   rw [concrete_l2_r2_dense_diagonal_domain_linear_map_graph_eq_completed_graph_carrier]
-  rw [← concrete_l2_r2_formal_adjoint_linear_map_graph_eq_completed_diagonal_graph]
-  rw [concrete_l2_r2_completed_diagonal_operator_graphCarrier_eq]
+  rw [← concrete_l2_r2_completed_diagonal_operator_graphCarrier_eq]
+  exact (concrete_l2_r2_formal_adjoint_linear_map_graph_mem_iff_completed_diagonal_graph p).symm
 
 /-- Closed-operator-style graph equivalence for the new dense-domain bundled
 linear map. -/
