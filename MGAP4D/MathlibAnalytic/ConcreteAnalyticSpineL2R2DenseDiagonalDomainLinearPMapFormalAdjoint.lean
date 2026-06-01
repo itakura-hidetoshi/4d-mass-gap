@@ -43,7 +43,7 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self :
 its domain is dense, it is contained in its actual Mathlib adjoint. -/
 theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_adjoint :
     concreteL2R2DenseDiagonalDomainLinearPMap ≤
-      concreteL2R2DenseDiagonalDomainLinearPMap† := by
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap := by
   exact LinearPMap.IsFormalAdjoint.le_adjoint
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self
@@ -60,7 +60,7 @@ structure ConcreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface where
       concreteL2R2DenseDiagonalDomainLinearPMap
   leActualAdjoint :
     concreteL2R2DenseDiagonalDomainLinearPMap ≤
-      concreteL2R2DenseDiagonalDomainLinearPMap†
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap
   boundaryNotReverseAdjointInclusion : Prop
   boundaryNotSelfAdjointness : Prop
 
@@ -85,7 +85,7 @@ def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceRe
   concreteL2R2DenseDiagonalDomainLinearPMap.IsFormalAdjoint
     concreteL2R2DenseDiagonalDomainLinearPMap ∧
   concreteL2R2DenseDiagonalDomainLinearPMap ≤
-    concreteL2R2DenseDiagonalDomainLinearPMap† ∧
+    LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap ∧
   concreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface.boundaryNotReverseAdjointInclusion ∧
   concreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface.boundaryNotSelfAdjointness
 
