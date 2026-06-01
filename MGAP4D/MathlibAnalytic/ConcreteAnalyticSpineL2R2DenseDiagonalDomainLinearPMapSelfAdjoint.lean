@@ -82,8 +82,8 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self 
 `IsSelfAdjoint` sense. -/
 theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint :
     IsSelfAdjoint concreteL2R2DenseDiagonalDomainLinearPMap := by
-  rw [LinearPMap.isSelfAdjoint_def]
-  exact concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self
+  exact LinearPMap.isSelfAdjoint_def.mpr
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self
 
 /-- Self-adjointness surface for the dense-domain diagonal `LinearPMap`. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapSelfAdjointSurface where
