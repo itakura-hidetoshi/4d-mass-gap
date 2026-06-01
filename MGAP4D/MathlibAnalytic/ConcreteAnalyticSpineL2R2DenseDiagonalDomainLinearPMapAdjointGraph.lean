@@ -13,14 +13,14 @@ noncomputable section
 This is the Mathlib theorem `LinearPMap.adjoint_graph_eq_graph_adjoint`, specialized
 to the concrete dense diagonal domain. -/
 theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_eq_graph_adjoint :
-    (concreteL2R2DenseDiagonalDomainLinearPMap†).graph =
+    (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph =
       concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint := by
   exact LinearPMap.adjoint_graph_eq_graph_adjoint
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain
 
 /-- The actual Mathlib adjoint of the dense-domain diagonal `LinearPMap` is closed. -/
 theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_isClosed :
-    LinearPMap.IsClosed (concreteL2R2DenseDiagonalDomainLinearPMap†) := by
+    LinearPMap.IsClosed (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap) := by
   exact LinearPMap.adjoint_isClosed
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain
 
@@ -35,10 +35,10 @@ structure ConcreteL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurface where
   formalSelfAdjointPreconditionReady :
     concreteAnalyticSpineL2R2FormalAdjointSelfAdjointnessPreconditionHandoffReady
   actualAdjointGraphEqGraphAdjoint :
-    (concreteL2R2DenseDiagonalDomainLinearPMap†).graph =
+    (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph =
       concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint
   actualAdjointClosed :
-    LinearPMap.IsClosed (concreteL2R2DenseDiagonalDomainLinearPMap†)
+    LinearPMap.IsClosed (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap)
   originalClosed :
     LinearPMap.IsClosed concreteL2R2DenseDiagonalDomainLinearPMap
   originalGraphEqCompletedGraph :
@@ -76,9 +76,9 @@ def concreteL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurface :
 def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurfaceReady : Prop :=
   concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceReady ∧
   concreteAnalyticSpineL2R2FormalAdjointSelfAdjointnessPreconditionHandoffReady ∧
-  (concreteL2R2DenseDiagonalDomainLinearPMap†).graph =
+  (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph =
     concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint ∧
-  LinearPMap.IsClosed (concreteL2R2DenseDiagonalDomainLinearPMap†) ∧
+  LinearPMap.IsClosed (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap) ∧
   LinearPMap.IsClosed concreteL2R2DenseDiagonalDomainLinearPMap ∧
   ((concreteL2R2DenseDiagonalDomainLinearPMap.graph :
       Set (ConcreteL2R1HilbertCarrier × ConcreteL2R1HilbertCarrier)) =
