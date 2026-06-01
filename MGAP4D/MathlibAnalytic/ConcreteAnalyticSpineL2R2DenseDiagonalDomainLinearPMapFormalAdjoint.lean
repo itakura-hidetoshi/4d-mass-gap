@@ -50,6 +50,12 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint :
     (hT := concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain)
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self
 
+/-- Backwards-compatible name for the forward actual adjoint inclusion. -/
+theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_adjoint :
+    concreteL2R2DenseDiagonalDomainLinearPMap ≤
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap := by
+  exact concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint
+
 /-- Actual formal-adjoint surface for the dense-domain diagonal `LinearPMap`.
 This is the first genuine Mathlib adjoint theorem layer: it proves the
 `LinearPMap.IsFormalAdjoint` predicate and the inclusion into the actual adjoint.
