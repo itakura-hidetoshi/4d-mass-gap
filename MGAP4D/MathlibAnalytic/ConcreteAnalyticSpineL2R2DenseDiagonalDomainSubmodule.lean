@@ -35,8 +35,8 @@ theorem concrete_l2_r2_diagonal_domain_candidate_submodule_carrier_eq :
 carrier. -/
 theorem concrete_l2_r2_diagonal_domain_candidate_submodule_dense :
     Dense ((concreteL2R2DiagonalDomainCandidateSubmodule : Set ConcreteL2R1HilbertCarrier)) := by
-  change closure concreteL2R2DiagonalDomainCandidateSet =
-    (Set.univ : Set ConcreteL2R1HilbertCarrier)
+  rw [dense_iff_closure_eq]
+  rw [concrete_l2_r2_diagonal_domain_candidate_submodule_carrier_eq]
   exact concrete_l2_r2_diagonal_domain_candidate_closure_eq_univ
 
 /-- Concrete dense domain-submodule surface.
