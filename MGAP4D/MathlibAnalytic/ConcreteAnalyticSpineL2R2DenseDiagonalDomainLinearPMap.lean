@@ -40,17 +40,18 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_eq_dense_graph_ca
   ext p
   constructor
   · intro hp
-    rw [LinearPMap.mem_graph_iff] at hp
-    rcases hp with ⟨x, hx1, hx2⟩
+    rcases
+      (LinearPMap.mem_graph_iff concreteL2R2DenseDiagonalDomainLinearPMap).1 hp with
+      ⟨x, hx1, hx2⟩
     refine ⟨(x : concreteL2R2DenseDiagonalDomainCarrier), ?_, ?_⟩
     · exact hx1.symm
     · simpa [concreteL2R2DenseDiagonalDomainLinearPMap] using hx2.symm
   · intro hp
     rcases hp with ⟨x, hp1, hp2⟩
-    rw [LinearPMap.mem_graph_iff]
-    refine ⟨x, ?_, ?_⟩
-    · exact hp1.symm
-    · simpa [concreteL2R2DenseDiagonalDomainLinearPMap] using hp2.symm
+    exact
+      (LinearPMap.mem_graph_iff concreteL2R2DenseDiagonalDomainLinearPMap).2
+        ⟨x, hp1.symm, by
+          simpa [concreteL2R2DenseDiagonalDomainLinearPMap] using hp2.symm⟩
 
 /-- The graph of the dense-domain `LinearPMap` is exactly the completed diagonal
 graph carrier. -/
