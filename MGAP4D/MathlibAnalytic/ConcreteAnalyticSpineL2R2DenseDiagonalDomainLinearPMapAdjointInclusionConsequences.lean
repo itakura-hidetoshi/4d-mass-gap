@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjoint
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraph
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -40,17 +40,30 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_actual_adjoint
   exact LinearPMap.le_graph_of_le
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint
 
+/-- Rewriting the forward actual-adjoint graph inclusion along Mathlib's adjoint
+ graph theorem yields the formal graph-adjoint inclusion `T.graph ≤ T.graph.adjoint`. -/
+theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_graph_adjoint :
+    concreteL2R2DenseDiagonalDomainLinearPMap.graph ≤
+      concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint := by
+  rw [← concrete_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_eq_graph_adjoint]
+  exact concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_actual_adjoint_graph
+
 /-- Surface collecting the safe consequences of the forward actual adjoint
 inclusion.  The reverse inclusion remains deliberately outside this layer. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurface where
   formalAdjointSurfaceReady :
     concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceReady
+  actualAdjointGraphReady :
+    concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurfaceReady
   domainInclusion :
     concreteL2R2DenseDiagonalDomainLinearPMap.domain ≤
       (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).domain
   graphInclusion :
     concreteL2R2DenseDiagonalDomainLinearPMap.graph ≤
       (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph
+  graphAdjointInclusion :
+    concreteL2R2DenseDiagonalDomainLinearPMap.graph ≤
+      concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint
   boundaryNotReverseAdjointInclusion : Prop
   boundaryNotSelfAdjointness : Prop
 
@@ -60,20 +73,27 @@ def concreteL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurface
     ConcreteL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurface :=
   { formalAdjointSurfaceReady :=
       concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_formal_adjoint_surface_ready
+    actualAdjointGraphReady :=
+      concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_surface_ready
     domainInclusion :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_domain_le_actual_adjoint_domain
     graphInclusion :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_actual_adjoint_graph
+    graphAdjointInclusion :=
+      concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_graph_adjoint
     boundaryNotReverseAdjointInclusion := True
     boundaryNotSelfAdjointness := True }
 
 /-- Readiness predicate for the forward actual adjoint inclusion consequences. -/
 def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurfaceReady : Prop :=
   concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceReady ∧
+  concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointGraphSurfaceReady ∧
   concreteL2R2DenseDiagonalDomainLinearPMap.domain ≤
     (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).domain ∧
   concreteL2R2DenseDiagonalDomainLinearPMap.graph ≤
     (LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap).graph ∧
+  concreteL2R2DenseDiagonalDomainLinearPMap.graph ≤
+    concreteL2R2DenseDiagonalDomainLinearPMap.graph.adjoint ∧
   concreteL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurface.boundaryNotReverseAdjointInclusion ∧
   concreteL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurface.boundaryNotSelfAdjointness
 
@@ -82,14 +102,16 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_
     concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurfaceReady := by
   exact ⟨
     concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_formal_adjoint_surface_ready,
+    concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_adjoint_graph_surface_ready,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_domain_le_actual_adjoint_domain,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_actual_adjoint_graph,
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_le_graph_adjoint,
     trivial,
     trivial⟩
 
 /-- Boundary marker: the forward actual adjoint inclusion is available together
-with its domain and graph consequences.  The reverse inclusion and actual
-self-adjointness are still held. -/
+with its domain, graph, and graph-adjoint consequences.  The reverse inclusion
+and actual self-adjointness are still held. -/
 def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesBoundaryHeld : Prop :=
   concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapAdjointInclusionConsequencesSurfaceReady
 
