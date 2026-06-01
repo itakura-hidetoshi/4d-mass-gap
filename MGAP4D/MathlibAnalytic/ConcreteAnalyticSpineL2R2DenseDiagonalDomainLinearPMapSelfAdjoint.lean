@@ -23,6 +23,9 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_adjoint_subset_fo
     exact hzgraph
   have hzTgraph :
       (z, Tz) ∈ concreteL2R2DenseDiagonalDomainLinearPMap.graph := by
+    show (z, Tz) ∈
+      ((concreteL2R2DenseDiagonalDomainLinearPMap.graph :
+        Set ConcreteL2R2PairSpace))
     rw [concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_eq_completed_graph_carrier]
     exact hzcompleted
   have hadj :=
@@ -53,6 +56,9 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_adjoint_le_graph 
       (p : ConcreteL2R2PairSpace) ∈ concreteL2R2CompletedDiagonalGraphCarrier := by
     rw [← concrete_l2_r2_completed_diagonal_operator_graphCarrier_eq]
     exact hcarrier
+  show p ∈
+    ((concreteL2R2DenseDiagonalDomainLinearPMap.graph :
+      Set ConcreteL2R2PairSpace))
   rw [concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_eq_completed_graph_carrier]
   exact hcompleted
 
