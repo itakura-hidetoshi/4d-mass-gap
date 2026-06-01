@@ -39,19 +39,30 @@ theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self :
     (concrete_l2_r2_dense_diagonal_domain_linear_pmap_pair_mem_completed_operator_graph x)
     (concrete_l2_r2_dense_diagonal_domain_linear_pmap_pair_mem_completed_operator_graph y)
 
-/-- Actual formal-adjoint surface for the dense-domain diagonal `LinearPMap`.
+/-- Since the dense-domain diagonal `LinearPMap` is a formal adjoint of itself and
+its domain is dense, it is contained in its actual Mathlib adjoint. -/
+theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint :
+    concreteL2R2DenseDiagonalDomainLinearPMap ≤
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap := by
+  exact LinearPMap.IsFormalAdjoint.le_adjoint
+    (T := concreteL2R2DenseDiagonalDomainLinearPMap)
+    (S := concreteL2R2DenseDiagonalDomainLinearPMap)
+    (hT := concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain)
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self
 
-This layer proves only the genuine Mathlib `LinearPMap.IsFormalAdjoint` predicate.
-The inclusion into the actual adjoint is intentionally left as a separate boundary,
-so that parser/API issues around the adjoint notation and `le_adjoint` cannot block
-this formal-adjoint witness layer. -/
+/-- Actual formal-adjoint surface for the dense-domain diagonal `LinearPMap`.
+This is the first genuine Mathlib adjoint theorem layer: it proves the
+`LinearPMap.IsFormalAdjoint` predicate and the inclusion into the actual adjoint.
+It still stops before the reverse inclusion and hence before `IsSelfAdjoint`. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface where
   linearPMapReady : concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSurfaceReady
   innerProductIdentificationReady : concreteAnalyticSpineL2R2InnerProductIdentificationReady
   isFormalAdjointSelf :
     concreteL2R2DenseDiagonalDomainLinearPMap.IsFormalAdjoint
       concreteL2R2DenseDiagonalDomainLinearPMap
-  boundaryActualAdjointInclusionHeld : Prop
+  leActualAdjoint :
+    concreteL2R2DenseDiagonalDomainLinearPMap ≤
+      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap
   boundaryNotReverseAdjointInclusion : Prop
   boundaryNotSelfAdjointness : Prop
 
@@ -64,7 +75,8 @@ def concreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface :
       concrete_analytic_spine_l2_r2_inner_product_identification_ready
     isFormalAdjointSelf :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self
-    boundaryActualAdjointInclusionHeld := True
+    leActualAdjoint :=
+      concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint
     boundaryNotReverseAdjointInclusion := True
     boundaryNotSelfAdjointness := True }
 
@@ -74,7 +86,8 @@ def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceRe
   concreteAnalyticSpineL2R2InnerProductIdentificationReady ∧
   concreteL2R2DenseDiagonalDomainLinearPMap.IsFormalAdjoint
     concreteL2R2DenseDiagonalDomainLinearPMap ∧
-  concreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface.boundaryActualAdjointInclusionHeld ∧
+  concreteL2R2DenseDiagonalDomainLinearPMap ≤
+    LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap ∧
   concreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface.boundaryNotReverseAdjointInclusion ∧
   concreteL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurface.boundaryNotSelfAdjointness
 
@@ -85,13 +98,13 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_formal_a
     concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_surface_ready,
     concrete_analytic_spine_l2_r2_inner_product_identification_ready,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self,
-    trivial,
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint,
     trivial,
     trivial⟩
 
 /-- Boundary marker: the dense-domain diagonal `LinearPMap` is now a Mathlib
-formal adjoint of itself.  The remaining boundary is the actual adjoint inclusion
-and then the reverse inclusion, equivalently actual self-adjointness. -/
+formal adjoint of itself and is contained in its actual adjoint.  The remaining
+boundary is the reverse inclusion, equivalently actual self-adjointness. -/
 def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointBoundaryHeld : Prop :=
   concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceReady
 
