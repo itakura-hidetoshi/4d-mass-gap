@@ -7,24 +7,10 @@ open scoped Topology ENNReal lp
 
 noncomputable section
 
-/-- The dense-domain diagonal `LinearPMap` is contained in its actual Mathlib
-adjoint.
-
-This uses Mathlib's `LinearPMap.IsFormalAdjoint.le_adjoint` with the dense-domain
-hypothesis supplied by name, and avoids the localized postfix `†` notation so the
-target remains parser-stable. -/
-theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_le_actual_adjoint :
-    concreteL2R2DenseDiagonalDomainLinearPMap ≤
-      LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap := by
-  exact LinearPMap.IsFormalAdjoint.le_adjoint
-    (T := concreteL2R2DenseDiagonalDomainLinearPMap)
-    (S := concreteL2R2DenseDiagonalDomainLinearPMap)
-    (hT := concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain)
-    concrete_l2_r2_dense_diagonal_domain_linear_pmap_isFormalAdjoint_self
-
 /-- Actual adjoint inclusion surface for the dense-domain diagonal `LinearPMap`.
-This is the genuine Mathlib inclusion `T ≤ T.adjoint`.  The reverse inclusion is
-kept as the remaining boundary. -/
+This layer reuses the forward actual adjoint inclusion already established in
+`ConcreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjoint`.  The
+reverse inclusion is kept as the remaining boundary. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapAdjointInclusionSurface where
   formalAdjointReady :
     concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapFormalAdjointSurfaceReady
