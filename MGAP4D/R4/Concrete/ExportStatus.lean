@@ -1,5 +1,4 @@
 import MGAP4D.R4.Concrete.OperatorBridgeStatus
-import MGAP4D.R4.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
