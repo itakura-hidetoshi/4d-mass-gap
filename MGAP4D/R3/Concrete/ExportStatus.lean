@@ -1,5 +1,4 @@
 import MGAP4D.R3.Concrete.ZeroFormKernelStatus
-import MGAP4D.R3.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
