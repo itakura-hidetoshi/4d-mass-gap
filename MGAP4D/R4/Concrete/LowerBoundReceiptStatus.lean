@@ -1,4 +1,4 @@
-import MGAP4D.R2.Concrete
+import MGAP4D.R2.Concrete.ExcitedHamiltonianStatus
 
 namespace MGAP4D
 namespace R4
