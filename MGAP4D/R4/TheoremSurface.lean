@@ -14,3 +14,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMProjectionValuednessPromotionSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMCountableAdditivityPromotionSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMSpectralCompatibilityPromotionSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMConcreteCandidatePromotionSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMStageCompletion
