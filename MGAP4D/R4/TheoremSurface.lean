@@ -8,3 +8,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMProjectionShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMCountableAdditivityShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMSpectralCompatibilityShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMStructuralShellCompletion
+import MGAP4D.R4.Theorem.SpectralMeasurePVMFullAxiomsObligationSurface
