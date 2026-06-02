@@ -23,6 +23,7 @@ structure SpectralMeasurePVMOperatorValuedTargetSpec where
   projectionOrthogonalityForDisjointSets : Prop
   countableAdditivityInOperatorTopology : Prop
   spectralResolutionForSelfAdjointOperator : Prop
+  functionalCalculusBridgeRequired : Prop
   shellCandidateTransportMap : Prop
   transportPreservesExistingShellReceipts : Prop
   noCollapseFromShellProofOnly : Prop
@@ -43,6 +44,7 @@ def spectralMeasurePVMOperatorValuedTargetSpec :
     projectionOrthogonalityForDisjointSets := True
     countableAdditivityInOperatorTopology := True
     spectralResolutionForSelfAdjointOperator := True
+    functionalCalculusBridgeRequired := True
     shellCandidateTransportMap := True
     transportPreservesExistingShellReceipts := True
     noCollapseFromShellProofOnly := True }
@@ -59,6 +61,7 @@ def SpectralMeasurePVMOperatorValuedTargetSpecReady : Prop :=
   spectralMeasurePVMOperatorValuedTargetSpec.projectionOrthogonalityForDisjointSets ∧
   spectralMeasurePVMOperatorValuedTargetSpec.countableAdditivityInOperatorTopology ∧
   spectralMeasurePVMOperatorValuedTargetSpec.spectralResolutionForSelfAdjointOperator ∧
+  spectralMeasurePVMOperatorValuedTargetSpec.functionalCalculusBridgeRequired ∧
   spectralMeasurePVMOperatorValuedTargetSpec.shellCandidateTransportMap ∧
   spectralMeasurePVMOperatorValuedTargetSpec.transportPreservesExistingShellReceipts ∧
   spectralMeasurePVMOperatorValuedTargetSpec.noCollapseFromShellProofOnly
@@ -68,6 +71,7 @@ theorem spectral_measure_pvm_operator_valued_target_spec_ready :
     SpectralMeasurePVMOperatorValuedTargetSpecReady := by
   exact ⟨
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready,
+    trivial,
     trivial,
     trivial,
     trivial,
