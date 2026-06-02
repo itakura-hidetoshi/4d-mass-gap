@@ -1,5 +1,4 @@
 import MGAP4D.R6.Concrete.GapIntervalStatus
-import MGAP4D.R6.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
