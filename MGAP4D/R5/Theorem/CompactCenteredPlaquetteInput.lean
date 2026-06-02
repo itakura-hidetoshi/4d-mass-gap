@@ -1,6 +1,5 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMInput
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapCompactPlaquetteInputHandoff
-import MGAP4D.R5.TheoremSurface.ExportSurface
 
 namespace MGAP4D
 namespace R5
