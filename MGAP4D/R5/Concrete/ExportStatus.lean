@@ -1,5 +1,4 @@
 import MGAP4D.R5.Concrete.InfimumStatus
-import MGAP4D.R5.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
