@@ -1,5 +1,4 @@
 import MGAP4D.R2.Concrete.SpectrumUnionStatus
-import MGAP4D.R2.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
