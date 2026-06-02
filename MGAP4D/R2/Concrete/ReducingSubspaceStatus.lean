@@ -1,4 +1,4 @@
-import MGAP4D.R1.Concrete
+import MGAP4D.R1.Concrete.ProjectionStatus
 
 namespace MGAP4D
 namespace R2
