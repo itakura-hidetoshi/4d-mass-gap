@@ -1,5 +1,4 @@
 import MGAP4D.R7.Concrete.AtomPersistenceStatus
-import MGAP4D.R7.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
