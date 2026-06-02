@@ -16,3 +16,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMSpectralCompatibilityPromotionSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMConcreteCandidatePromotionSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMStageCompletion
 import MGAP4D.R4.Theorem.SpectralMeasurePVMActualizationGapSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedTargetSpec
