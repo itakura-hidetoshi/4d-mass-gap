@@ -16,7 +16,7 @@ spectral-compatibility shell.  It is intentionally not the full spectral theorem
 or a true operator-valued PVM construction. -/
 def SpectralMeasurePVMStructuralShellCompleted : Prop :=
   SpectralMeasurePVMInputReady ∧
-  SpectralMeasurePVMCandidateConstruction.ready ∧
+  spectralMeasurePVMCandidateConstruction.ready ∧
   SpectralMeasurePVMObligationMapReady ∧
   spectralMeasurePVMTargetAPI.ready ∧
   SpectralMeasurePVMTargetAPICoverageReady ∧
