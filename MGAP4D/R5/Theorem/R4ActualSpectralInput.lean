@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R4ActualSelfAdjointnessTheorem
+import MGAP4D.R4.Theorem.SelfAdjointInputBridge
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoff
 import MGAP4D.R5.Theorem.SpectrumMilestone
 import MGAP4D.R5.TheoremSurface.ExportSurface
@@ -13,12 +13,13 @@ noncomputable section
 
 /-- R5 actual spectral-input theorem packet.
 
-This is the additive R5 bridge after R4 was upgraded from a precondition packet to
-an actual Mathlib self-adjointness theorem.  It does not claim the full spectral
-theorem/PVM construction.  It records that R5 now has an actual self-adjoint
-`LinearPMap` input and a spectral-measure input handoff. -/
+R4 owns the exact lower-bound/operator-order layer.  The self-adjointness result
+is therefore treated as an R4 input bridge, not as R4 itself.  This R5 packet
+starts after that bridge: it records that the spectral lane has an actual
+self-adjoint `LinearPMap` input and a spectral-measure input handoff, while the
+full spectral theorem/PVM construction remains downstream. -/
 def R5ActualSpectralInputTheoremPacket : Prop :=
-  MathlibAnalytic.concreteAnalyticSpineL2R4ActualSelfAdjointnessTheoremReady ∧
+  R4.Theorem.SelfAdjointInputBridgeReady ∧
   MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffReady ∧
   IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
   LinearPMap.adjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap =
@@ -33,9 +34,9 @@ def R5ActualSpectralInputTheoremPacket : Prop :=
 theorem r5_actual_spectral_input_theorem_packet_ready :
     R5ActualSpectralInputTheoremPacket := by
   exact ⟨
-    MathlibAnalytic.concrete_analytic_spine_l2_r4_actual_self_adjointness_theorem_ready,
+    R4.Theorem.self_adjoint_input_bridge_ready,
     MathlibAnalytic.concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_measure_input_handoff_ready,
-    MathlibAnalytic.concrete_l2_r4_dense_diagonal_linear_pmap_isSelfAdjoint,
+    R4.Theorem.r4_self_adjoint_input_supplied,
     MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self,
     MathlibAnalytic.spectral_realization_skeleton_review_surface_ready,
     MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof,
@@ -67,7 +68,7 @@ theorem r5_actual_spectral_input_boundary_ready :
     MathlibAnalytic.spectralRealizationSkeletonReviewSurface.finalReleaseHeld_proof,
     MathlibAnalytic.spectralRealizationSkeletonReviewSurface.publicBoundaryHeld_proof⟩
 
-/-- Public R5 readiness after actual R4 self-adjointness. -/
+/-- Public R5 readiness after the R4 self-adjoint input bridge. -/
 def R5ActualSpectralInputReady : Prop :=
   R5ActualSpectralInputTheoremPacket ∧ R5ActualSpectralInputBoundary
 
@@ -81,7 +82,7 @@ theorem r5_actual_spectral_input_ready :
 /-- Short alias: R5 has acquired an actual Mathlib self-adjoint operator input. -/
 theorem r5_actual_self_adjoint_operator_input_ready :
     IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap := by
-  exact MathlibAnalytic.concrete_l2_r4_dense_diagonal_linear_pmap_isSelfAdjoint
+  exact R4.Theorem.r4_self_adjoint_input_supplied
 
 end
 
