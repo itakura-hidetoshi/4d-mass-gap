@@ -1,6 +1,3 @@
-import MGAP4D.R4.TheoremSurface.LowerBoundSurface
-import MGAP4D.R4.TheoremSurface.BridgeSurface
-import MGAP4D.R4.TheoremSurface.ExportSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMInput
 import MGAP4D.R4.Theorem.SpectralMeasurePVMCandidateConstruction
 import MGAP4D.R4.Theorem.SpectralMeasurePVMObligationMap
@@ -10,3 +7,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMNormalizationShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMProjectionShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMCountableAdditivityShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMSpectralCompatibilityShell
+import MGAP4D.R4.Theorem.SpectralMeasurePVMStructuralShellCompletion
