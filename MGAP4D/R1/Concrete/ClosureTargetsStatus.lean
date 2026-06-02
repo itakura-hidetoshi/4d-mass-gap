@@ -1,5 +1,4 @@
 import MGAP4D.R1.Concrete.ProjectionStatus
-import MGAP4D.R1.TheoremSurface
 import MGAP4D.ReplacementCheckpoint
 
 namespace MGAP4D
