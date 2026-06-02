@@ -10,3 +10,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMSpectralCompatibilityShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMStructuralShellCompletion
 import MGAP4D.R4.Theorem.SpectralMeasurePVMFullAxiomsObligationSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMNormalizationPromotionSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMProjectionValuednessPromotionSurface
