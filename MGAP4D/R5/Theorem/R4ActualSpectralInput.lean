@@ -20,8 +20,8 @@ theorem/PVM construction.  It records that R5 now has an actual self-adjoint
 def R5ActualSpectralInputTheoremPacket : Prop :=
   MathlibAnalytic.concreteAnalyticSpineL2R4ActualSelfAdjointnessTheoremReady ∧
   MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffReady ∧
-  MathlibAnalytic.IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
-  MathlibAnalytic.LinearPMap.adjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap =
+  IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
+  LinearPMap.adjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap =
     MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
   MathlibAnalytic.spectralRealizationSkeletonReviewSurface.ready ∧
   MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent ∧
@@ -80,7 +80,7 @@ theorem r5_actual_spectral_input_ready :
 
 /-- Short alias: R5 has acquired an actual Mathlib self-adjoint operator input. -/
 theorem r5_actual_self_adjoint_operator_input_ready :
-    MathlibAnalytic.IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap := by
+    IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap := by
   exact MathlibAnalytic.concrete_l2_r4_dense_diagonal_linear_pmap_isSelfAdjoint
 
 end
