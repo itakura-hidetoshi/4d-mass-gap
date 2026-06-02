@@ -1,4 +1,4 @@
-import MGAP4D.R4.Concrete
+import MGAP4D.R4.Concrete.ExportStatus
 
 namespace MGAP4D
 namespace R5
