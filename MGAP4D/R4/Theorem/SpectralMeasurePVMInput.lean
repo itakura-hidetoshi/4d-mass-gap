@@ -1,5 +1,4 @@
 import MGAP4D.R3.Theorem.SelfAdjointClosureBridge
-import MGAP4D.R4.TheoremSurface.ExportSurface
 
 namespace MGAP4D
 namespace R4
