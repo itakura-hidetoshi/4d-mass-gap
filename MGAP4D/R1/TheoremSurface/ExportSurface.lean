@@ -1,5 +1,4 @@
 import MGAP4D.R1.TheoremSurface.ProjectionSurface
-import MGAP4D.R1.Concrete.ClosureTargetsStatus
 
 namespace MGAP4D
 namespace R1
@@ -28,7 +27,7 @@ structure R1TheoremSurface where
 
 def R1TheoremSurface.ready (S : R1TheoremSurface) : Prop :=
   S.hilbert.ready ∧ S.excited.ready ∧ S.innerFunctional.ready ∧
-  S.projection.ready ∧ S.export.ready
+   S.projection.ready ∧ S.export.ready
 
 theorem r1_theorem_surface_pack
     (S : R1TheoremSurface) :
