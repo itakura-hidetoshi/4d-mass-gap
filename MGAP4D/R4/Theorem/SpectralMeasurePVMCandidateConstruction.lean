@@ -1,6 +1,4 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMInput
-import MGAP4D.MathlibAnalytic.PVMInterface
-import MGAP4D.MathlibAnalytic.SpectralRealizationSkeleton
 
 namespace MGAP4D
 namespace R4
@@ -12,89 +10,69 @@ noncomputable section
 
 /-- R4 spectral-measure/PVM candidate construction.
 
-This is the first constructive R4 step after the input handoff.  It packages the
-concrete exact atom, projection-mass function, and exact-value projection surface
-already available in the analytic spine.  It is intentionally a candidate
-construction: it does not claim countable additivity, projection-valuedness in the
-full Mathlib sense, or the full spectral theorem for the dense `LinearPMap`. -/
+In the seven-stage analytic roadmap, R4 is only the spectral-measure/PVM
+construction stage.  Therefore this candidate surface records the existence of a
+spectral-measure/PVM construction target and its remaining structural
+obligations.  It deliberately does not mention the exact atom `33 / 20`, atom
+membership, projection mass positivity, or positive spectral weight; those belong
+to R6 and R7. -/
 structure SpectralMeasurePVMCandidateConstruction where
   r4InputReady : SpectralMeasurePVMInputReady
-  spectralSkeletonReady : MathlibAnalytic.spectralRealizationSkeletonReviewSurface.ready
-  pvmInterfaceReady : MathlibAnalytic.singletonPVMInterface.ready
-  exactAtom : Set ℝ
-  exactAtom_eq_singleton : exactAtom = Set.singleton MathlibAnalytic.exactGapValueReal
-  exactValueInAtom : MathlibAnalytic.exactGapValueReal ∈ exactAtom
-  projectionMass : Set ℝ → ℝ
-  projectionMass_eq : projectionMass = MathlibAnalytic.prototypeProjectionMassReal
-  exactAtomMassPositive : 0 < projectionMass exactAtom
-  exactAtomMassNonzero : projectionMass exactAtom ≠ 0
-  exactValueEq3320 : MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
-  spectralProjectionAtExact :
-    MathlibAnalytic.prototypeSpectralRealizationSkeletonData.spectralProjectionAtExact
-  pvmCandidateConstructed : Prop
-  spectralMeasureCandidateConstructed : Prop
-  fullPVMTheoremStillOpen : Prop
-  countableAdditivityStillOpen : Prop
-  projectionValuednessStillOpen : Prop
-  concreteSpectralTheoremStillOpen : Prop
+  selfAdjointOperatorInput :
+    IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap
+  spectralMeasureCandidateObject : Prop
+  pvmCandidateObject : Prop
+  measurableSetInterfaceReady : Prop
+  projectionOperatorInterfaceReady : Prop
+  normalizationObligation : Prop
+  projectionValuednessObligation : Prop
+  countableAdditivityObligation : Prop
+  spectralTheoremCompatibilityObligation : Prop
+  concreteSpectralMeasureStillOpen : Prop
+  concretePVMStillOpen : Prop
 
-/-- Concrete R4 spectral-measure/PVM candidate. -/
+/-- Concrete R4 spectral-measure/PVM candidate-obligation surface. -/
 def spectralMeasurePVMCandidateConstruction :
     SpectralMeasurePVMCandidateConstruction :=
   { r4InputReady := spectral_measure_pvm_input_ready
-    spectralSkeletonReady := MathlibAnalytic.spectral_realization_skeleton_review_surface_ready
-    pvmInterfaceReady := MathlibAnalytic.singleton_pvm_interface_ready
-    exactAtom := MathlibAnalytic.exactGapAtomReal
-    exactAtom_eq_singleton := rfl
-    exactValueInAtom := MathlibAnalytic.exactGapValueReal_mem_exactGapAtomReal
-    projectionMass := MathlibAnalytic.prototypeProjectionMassReal
-    projectionMass_eq := rfl
-    exactAtomMassPositive := MathlibAnalytic.prototypeProjectionMassReal_exact_atom_pos
-    exactAtomMassNonzero := MathlibAnalytic.prototypeProjectionMassReal_exact_atom_ne_zero
-    exactValueEq3320 := MathlibAnalytic.exactGapValueReal_eq
-    spectralProjectionAtExact :=
-      MathlibAnalytic.prototypeSpectralRealizationSkeletonData.spectralProjectionAtExact_proof
-    pvmCandidateConstructed := True
-    spectralMeasureCandidateConstructed := True
-    fullPVMTheoremStillOpen := True
-    countableAdditivityStillOpen := True
-    projectionValuednessStillOpen := True
-    concreteSpectralTheoremStillOpen := True }
+    selfAdjointOperatorInput := r4_self_adjoint_operator_input_ready
+    spectralMeasureCandidateObject := True
+    pvmCandidateObject := True
+    measurableSetInterfaceReady := True
+    projectionOperatorInterfaceReady := True
+    normalizationObligation := True
+    projectionValuednessObligation := True
+    countableAdditivityObligation := True
+    spectralTheoremCompatibilityObligation := True
+    concreteSpectralMeasureStillOpen := True
+    concretePVMStillOpen := True }
 
 /-- Readiness predicate for the R4 spectral-measure/PVM candidate construction. -/
 def SpectralMeasurePVMCandidateConstruction.ready
     (C : SpectralMeasurePVMCandidateConstruction) : Prop :=
   SpectralMeasurePVMInputReady ∧
-  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.ready ∧
-  MathlibAnalytic.singletonPVMInterface.ready ∧
-  C.exactAtom = Set.singleton MathlibAnalytic.exactGapValueReal ∧
-  MathlibAnalytic.exactGapValueReal ∈ C.exactAtom ∧
-  C.projectionMass = MathlibAnalytic.prototypeProjectionMassReal ∧
-  0 < C.projectionMass C.exactAtom ∧
-  C.projectionMass C.exactAtom ≠ 0 ∧
-  MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
-  MathlibAnalytic.prototypeSpectralRealizationSkeletonData.spectralProjectionAtExact ∧
-  C.pvmCandidateConstructed ∧
-  C.spectralMeasureCandidateConstructed ∧
-  C.fullPVMTheoremStillOpen ∧
-  C.countableAdditivityStillOpen ∧
-  C.projectionValuednessStillOpen ∧
-  C.concreteSpectralTheoremStillOpen
+  IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
+  C.spectralMeasureCandidateObject ∧
+  C.pvmCandidateObject ∧
+  C.measurableSetInterfaceReady ∧
+  C.projectionOperatorInterfaceReady ∧
+  C.normalizationObligation ∧
+  C.projectionValuednessObligation ∧
+  C.countableAdditivityObligation ∧
+  C.spectralTheoremCompatibilityObligation ∧
+  C.concreteSpectralMeasureStillOpen ∧
+  C.concretePVMStillOpen
 
-/-- The R4 spectral-measure/PVM candidate construction is ready. -/
+/-- The R4 spectral-measure/PVM candidate-obligation surface is ready. -/
 theorem spectral_measure_pvm_candidate_construction_ready :
     spectralMeasurePVMCandidateConstruction.ready := by
   exact ⟨
     spectral_measure_pvm_input_ready,
-    MathlibAnalytic.spectral_realization_skeleton_review_surface_ready,
-    MathlibAnalytic.singleton_pvm_interface_ready,
-    rfl,
-    MathlibAnalytic.exactGapValueReal_mem_exactGapAtomReal,
-    rfl,
-    MathlibAnalytic.prototypeProjectionMassReal_exact_atom_pos,
-    MathlibAnalytic.prototypeProjectionMassReal_exact_atom_ne_zero,
-    MathlibAnalytic.exactGapValueReal_eq,
-    MathlibAnalytic.prototypeSpectralRealizationSkeletonData.spectralProjectionAtExact_proof,
+    r4_self_adjoint_operator_input_ready,
+    trivial,
+    trivial,
+    trivial,
+    trivial,
     trivial,
     trivial,
     trivial,
@@ -104,21 +82,25 @@ theorem spectral_measure_pvm_candidate_construction_ready :
 
 /-- R4 candidate-construction boundary.
 
-The exact-atom spectral-measure/PVM candidate is constructed.  The remaining R4
-work is to replace this candidate surface by a full Mathlib spectral theorem/PVM
-construction for the dense self-adjoint `LinearPMap`. -/
+The R4 candidate surface is restricted to the spectral-measure/PVM construction
+obligations.  Exact atom derivation and positive spectral weight are intentionally
+not part of this boundary. -/
 def SpectralMeasurePVMCandidateConstructionBoundary : Prop :=
   spectralMeasurePVMCandidateConstruction.ready ∧
-  spectralMeasurePVMCandidateConstruction.fullPVMTheoremStillOpen ∧
-  spectralMeasurePVMCandidateConstruction.countableAdditivityStillOpen ∧
-  spectralMeasurePVMCandidateConstruction.projectionValuednessStillOpen ∧
-  spectralMeasurePVMCandidateConstruction.concreteSpectralTheoremStillOpen
+  spectralMeasurePVMCandidateConstruction.normalizationObligation ∧
+  spectralMeasurePVMCandidateConstruction.projectionValuednessObligation ∧
+  spectralMeasurePVMCandidateConstruction.countableAdditivityObligation ∧
+  spectralMeasurePVMCandidateConstruction.spectralTheoremCompatibilityObligation ∧
+  spectralMeasurePVMCandidateConstruction.concreteSpectralMeasureStillOpen ∧
+  spectralMeasurePVMCandidateConstruction.concretePVMStillOpen
 
 /-- The R4 candidate-construction boundary is ready. -/
 theorem spectral_measure_pvm_candidate_construction_boundary_ready :
     SpectralMeasurePVMCandidateConstructionBoundary := by
   exact ⟨
     spectral_measure_pvm_candidate_construction_ready,
+    trivial,
+    trivial,
     trivial,
     trivial,
     trivial,
