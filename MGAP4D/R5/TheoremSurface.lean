@@ -1,4 +1,4 @@
 import MGAP4D.R5.TheoremSurface.SpectrumSetSurface
 import MGAP4D.R5.TheoremSurface.InfimumSurface
 import MGAP4D.R5.TheoremSurface.ExportSurface
-import MGAP4D.R5.Theorem.ActualSpectralInputFromR4Bridge
+import MGAP4D.R5.Theorem.CompactCenteredPlaquetteInput
