@@ -3,4 +3,3 @@ import MGAP4D.R4.TheoremSurface.BridgeSurface
 import MGAP4D.R4.TheoremSurface.ExportSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMInput
 import MGAP4D.R4.Theorem.SpectralMeasurePVMCandidateConstruction
-import MGAP4D.R4.Theorem.SpectralMeasurePVMCandidateLaws
