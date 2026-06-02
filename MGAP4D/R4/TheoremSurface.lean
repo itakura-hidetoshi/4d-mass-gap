@@ -5,3 +5,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMInput
 import MGAP4D.R4.Theorem.SpectralMeasurePVMCandidateConstruction
 import MGAP4D.R4.Theorem.SpectralMeasurePVMObligationMap
 import MGAP4D.R4.Theorem.SpectralMeasurePVMTargetAPI
+import MGAP4D.R4.Theorem.SpectralMeasurePVMTargetAPICoverage
