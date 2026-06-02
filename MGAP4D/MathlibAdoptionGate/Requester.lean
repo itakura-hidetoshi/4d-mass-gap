@@ -17,8 +17,8 @@ structure MathlibRequest where
   requester : MathlibRequester
   requestedImportGroup : String
   reason : String
-  scoped : Bool
-  deriving Repr, DecidableEq
+  isScoped : Bool
+deriving Repr, DecidableEq
 
 def firstEligibleRequesters : List MathlibRequester := [
   MathlibRequester.r1Hilbert,
