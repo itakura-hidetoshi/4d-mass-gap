@@ -8,3 +8,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMTargetAPI
 import MGAP4D.R4.Theorem.SpectralMeasurePVMTargetAPICoverage
 import MGAP4D.R4.Theorem.SpectralMeasurePVMNormalizationShell
 import MGAP4D.R4.Theorem.SpectralMeasurePVMProjectionShell
+import MGAP4D.R4.Theorem.SpectralMeasurePVMCountableAdditivityShell
