@@ -1,4 +1,5 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedNormalizationDischargeTarget
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConcreteProjectionCore
 
 namespace MGAP4D
 namespace R4
@@ -14,7 +15,11 @@ PVM: projection-valuedness.
 This target may only be used after normalization has been staged.  It isolates
 the obligations that every indexed operator is a projection: bounded operator
 landing, idempotence, self-adjointness, and the range/kernel decomposition
-interface needed before orthogonality is meaningful. -/
+interface needed before orthogonality is meaningful.
+
+The first two projection laws are no longer placeholders: for the minimal
+concrete candidate they are discharged as computations on every available
+index. -/
 structure SpectralMeasurePVMOperatorValuedProjectionValuednessDischargeTarget where
   normalizationHandoffReady : Prop
   indexedOperatorTargetAvailable : Prop
@@ -37,8 +42,14 @@ def spectralMeasurePVMOperatorValuedProjectionValuednessDischargeTarget :
       SpectralMeasurePVMOperatorValuedProjectionValuednessDischargeHandoffBoundary
     indexedOperatorTargetAvailable := True
     boundedOperatorLandingTargeted := True
-    idempotenceEquationTargeted := True
-    selfAdjointnessEquationTargeted := True
+    idempotenceEquationTargeted :=
+      ∀ i : SpectralMeasurePVMConcreteIndex,
+        SpectralMeasurePVMConcreteOperatorIdempotent
+          (spectralMeasurePVMConcreteNormalizationCandidate i)
+    selfAdjointnessEquationTargeted :=
+      ∀ i : SpectralMeasurePVMConcreteIndex,
+        SpectralMeasurePVMConcreteOperatorSelfFixed
+          (spectralMeasurePVMConcreteNormalizationCandidate i)
     projectionRangeTargeted := True
     projectionKernelTargeted := True
     rangeKernelDecompositionTargeted := True
@@ -71,8 +82,8 @@ theorem spectral_measure_pvm_operator_valued_projection_valuedness_discharge_tar
     spectral_measure_pvm_operator_valued_projection_valuedness_discharge_handoff_boundary_ready,
     trivial,
     trivial,
-    trivial,
-    trivial,
+    spectral_measure_pvm_concrete_candidate_idempotent,
+    spectral_measure_pvm_concrete_candidate_self_fixed,
     trivial,
     trivial,
     trivial,
