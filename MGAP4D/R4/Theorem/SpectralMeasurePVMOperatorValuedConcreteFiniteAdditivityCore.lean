@@ -18,7 +18,9 @@ def SpectralMeasurePVMConcreteIndexUnion :
 /-- Minimal addition table for the two distinguished concrete bounded-operator
 targets.  The `identity + identity` branch is defined only to totalize the table;
 it is never used by the disjoint finite-additivity law because `(whole, whole)`
-is not disjoint. -/
+is not disjoint.  It is intentionally sent to `zero` so that the non-disjoint
+branch cannot be closed by `rfl`; the proof must pass through the disjointness
+hypothesis. -/
 def spectralMeasurePVMConcreteOperatorAdd :
     SpectralMeasurePVMConcreteBoundedOperator →
       SpectralMeasurePVMConcreteBoundedOperator →
@@ -29,7 +31,7 @@ def spectralMeasurePVMConcreteOperatorAdd :
       SpectralMeasurePVMConcreteBoundedOperator.identity
   | SpectralMeasurePVMConcreteBoundedOperator.identity,
       SpectralMeasurePVMConcreteBoundedOperator.identity =>
-      SpectralMeasurePVMConcreteBoundedOperator.identity
+      SpectralMeasurePVMConcreteBoundedOperator.zero
 
 /-- Binary finite additivity for the minimal concrete candidate over disjoint
 concrete indices. -/
