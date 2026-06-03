@@ -1,4 +1,5 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedCountableAdditivityDischargeTarget
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConcreteSpectralCompatibilityCore
 
 namespace MGAP4D
 namespace R4
@@ -14,7 +15,12 @@ PVM: compatibility with a self-adjoint spectral resolution.
 This target may only be used after countable additivity has been staged.  It
 isolates the bridge from a sigma-additive projection-valued measure candidate to
 a spectral resolution for the intended self-adjoint operator.  Functional
-calculus remains a later discharge target. -/
+calculus remains a later discharge target.
+
+At the current two-index concrete stage, the spectral operator is the identity
+constructor, the spectral projection family is the already-defined concrete PVM
+candidate, and compatibility is closed by computation on the zero/identity
+operator table. -/
 structure SpectralMeasurePVMOperatorValuedSpectralCompatibilityDischargeTarget where
   countableAdditivityHandoffReady : Prop
   selfAdjointOperatorTargetAvailable : Prop
@@ -35,16 +41,26 @@ def spectralMeasurePVMOperatorValuedSpectralCompatibilityDischargeTarget :
     SpectralMeasurePVMOperatorValuedSpectralCompatibilityDischargeTarget :=
   { countableAdditivityHandoffReady :=
       SpectralMeasurePVMOperatorValuedSpectralCompatibilityDischargeHandoffBoundary
-    selfAdjointOperatorTargetAvailable := True
-    spectralProjectionFamilyTargeted := True
-    spectralResolutionEquationTargeted := True
-    supportCompatibilityTargeted := True
-    commutingProjectionFamilyTargeted := True
-    operatorIntegralInterfaceTargeted := True
-    identityFunctionRecoveryTargeted := True
-    spectralCompatibilityFeedsFunctionalCalculus := True
-    noFunctionalCalculusUseBeforeSpectralCompatibility := True
-    dischargeReceiptRequired := True
+    selfAdjointOperatorTargetAvailable :=
+      SpectralMeasurePVMConcreteSelfAdjointOperatorTarget
+    spectralProjectionFamilyTargeted :=
+      SpectralMeasurePVMConcreteSpectralProjectionFamilyTarget
+    spectralResolutionEquationTargeted :=
+      SpectralMeasurePVMConcreteSpectralResolutionEquationTarget
+    supportCompatibilityTargeted :=
+      SpectralMeasurePVMConcreteSupportCompatibilityTarget
+    commutingProjectionFamilyTargeted :=
+      SpectralMeasurePVMConcreteCommutingProjectionFamilyTarget
+    operatorIntegralInterfaceTargeted :=
+      SpectralMeasurePVMConcreteOperatorIntegralInterfaceTarget
+    identityFunctionRecoveryTargeted :=
+      SpectralMeasurePVMConcreteIdentityFunctionRecoveryTarget
+    spectralCompatibilityFeedsFunctionalCalculus :=
+      SpectralMeasurePVMConcreteSpectralCompatibilityFeedsFunctionalCalculusTarget
+    noFunctionalCalculusUseBeforeSpectralCompatibility :=
+      SpectralMeasurePVMConcreteNoFunctionalCalculusUseBeforeSpectralCompatibilityTarget
+    dischargeReceiptRequired :=
+      SpectralMeasurePVMConcreteSpectralCompatibilityDischargeReceiptTarget
     fullAxiomsRemainOpen := SpectralMeasurePVMFullAxiomsStillOpen
     noShellCollapsePreserved := SpectralMeasurePVMNoShellToFullCollapseBoundary }
 
@@ -69,16 +85,16 @@ theorem spectral_measure_pvm_operator_valued_spectral_compatibility_discharge_ta
     SpectralMeasurePVMOperatorValuedSpectralCompatibilityDischargeTargetReady := by
   exact ⟨
     spectral_measure_pvm_operator_valued_spectral_compatibility_discharge_handoff_boundary_ready,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
+    spectral_measure_pvm_concrete_self_adjoint_operator_target_ready,
+    spectral_measure_pvm_concrete_spectral_projection_family_target_ready,
+    spectral_measure_pvm_concrete_spectral_resolution_equation_target_ready,
+    spectral_measure_pvm_concrete_support_compatibility_target_ready,
+    spectral_measure_pvm_concrete_commuting_projection_family_target_ready,
+    spectral_measure_pvm_concrete_operator_integral_interface_target_ready,
+    spectral_measure_pvm_concrete_identity_function_recovery_target_ready,
+    spectral_measure_pvm_concrete_spectral_compatibility_feeds_functional_calculus_target_ready,
+    spectral_measure_pvm_concrete_no_functional_calculus_use_before_spectral_compatibility_target_ready,
+    spectral_measure_pvm_concrete_spectral_compatibility_discharge_receipt_target_ready,
     spectral_measure_pvm_full_axioms_still_open,
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
