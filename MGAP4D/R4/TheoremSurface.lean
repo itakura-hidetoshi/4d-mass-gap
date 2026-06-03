@@ -18,3 +18,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMStageCompletion
 import MGAP4D.R4.Theorem.SpectralMeasurePVMActualizationGapSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedTargetSpec
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedProofObligationMap
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConstructionInterface
