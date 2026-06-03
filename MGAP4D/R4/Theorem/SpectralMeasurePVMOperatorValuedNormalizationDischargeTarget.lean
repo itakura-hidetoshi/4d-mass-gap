@@ -1,4 +1,4 @@
-import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedDischargeDependencyGraph
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConcreteNormalizationCore
 
 namespace MGAP4D
 namespace R4
@@ -14,7 +14,10 @@ PVM: normalization.
 This file does not claim a genuine PVM.  It isolates the first law to be closed:
 the operator-valued candidate must send the whole spectral space to the identity
 operator, and the empty set to the zero operator, before projection-valuedness
-is allowed to feed later orthogonality/additivity stages. -/
+is allowed to feed later orthogonality/additivity stages.
+
+Unlike the earlier staging shell, the two core equations are now genuine
+computational equalities for the minimal concrete normalization candidate. -/
 structure SpectralMeasurePVMOperatorValuedNormalizationDischargeTarget where
   dependencyGraphReady : Prop
   totalSpaceIndexAvailable : Prop
@@ -38,8 +41,14 @@ def spectralMeasurePVMOperatorValuedNormalizationDischargeTarget :
     identityOperatorTargetAvailable := True
     emptySetIndexAvailable := True
     zeroOperatorTargetAvailable := True
-    normalizationEquationTargeted := True
-    emptySetEquationTargeted := True
+    normalizationEquationTargeted :=
+      spectralMeasurePVMConcreteNormalizationCandidate
+          SpectralMeasurePVMConcreteIndex.whole =
+        SpectralMeasurePVMConcreteBoundedOperator.identity
+    emptySetEquationTargeted :=
+      spectralMeasurePVMConcreteNormalizationCandidate
+          SpectralMeasurePVMConcreteIndex.empty =
+        SpectralMeasurePVMConcreteBoundedOperator.zero
     normalizationFeedsProjectionValuedness := True
     noProjectionUseBeforeNormalization := True
     dischargeReceiptRequired := True
@@ -70,8 +79,8 @@ theorem spectral_measure_pvm_operator_valued_normalization_discharge_target_read
     trivial,
     trivial,
     trivial,
-    trivial,
-    trivial,
+    spectral_measure_pvm_concrete_normalization_whole_identity,
+    spectral_measure_pvm_concrete_normalization_empty_zero,
     trivial,
     trivial,
     trivial,
