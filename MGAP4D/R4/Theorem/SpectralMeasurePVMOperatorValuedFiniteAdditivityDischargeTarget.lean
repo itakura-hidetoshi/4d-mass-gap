@@ -1,4 +1,5 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedOrthogonalityDischargeTarget
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConcreteFiniteAdditivityCore
 
 namespace MGAP4D
 namespace R4
@@ -13,7 +14,11 @@ PVM: finite additivity over finite disjoint families.
 
 This target may only be used after disjoint-set orthogonality has been staged.
 It isolates the finite union equation and finite orthogonal projection-sum
-interface before countable additivity is allowed to use limits. -/
+interface before countable additivity is allowed to use limits.
+
+At the current two-index concrete stage, the finite interfaces are discharged by
+the binary disjoint union law.  A later finite-family layer can replace these
+aliases by a genuine `Finset` formulation. -/
 structure SpectralMeasurePVMOperatorValuedFiniteAdditivityDischargeTarget where
   orthogonalityHandoffReady : Prop
   finiteDisjointFamilyAvailable : Prop
@@ -36,11 +41,16 @@ def spectralMeasurePVMOperatorValuedFiniteAdditivityDischargeTarget :
       SpectralMeasurePVMOperatorValuedFiniteAdditivityDischargeHandoffBoundary
     finiteDisjointFamilyAvailable := True
     finiteUnionIndexAvailable := True
-    binaryAdditivityEquationTargeted := True
-    finiteAdditivityEquationTargeted := True
-    finiteOrthogonalProjectionSumTargeted := True
-    finiteSumProjectionTargeted := True
-    finitePartialSumCoherenceTargeted := True
+    binaryAdditivityEquationTargeted :=
+      SpectralMeasurePVMConcreteBinaryFiniteAdditivityTarget
+    finiteAdditivityEquationTargeted :=
+      SpectralMeasurePVMConcreteFiniteAdditivityTarget
+    finiteOrthogonalProjectionSumTargeted :=
+      SpectralMeasurePVMConcreteFiniteOrthogonalProjectionSumTarget
+    finiteSumProjectionTargeted :=
+      SpectralMeasurePVMConcreteFiniteSumProjectionTarget
+    finitePartialSumCoherenceTargeted :=
+      SpectralMeasurePVMConcreteFinitePartialSumCoherenceTarget
     finiteAdditivityFeedsCountableAdditivity := True
     noCountableAdditivityUseBeforeFiniteAdditivity := True
     dischargeReceiptRequired := True
@@ -70,11 +80,11 @@ theorem spectral_measure_pvm_operator_valued_finite_additivity_discharge_target_
     spectral_measure_pvm_operator_valued_finite_additivity_discharge_handoff_boundary_ready,
     trivial,
     trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
+    spectral_measure_pvm_concrete_binary_finite_additivity,
+    spectral_measure_pvm_concrete_binary_finite_additivity,
+    spectral_measure_pvm_concrete_binary_finite_additivity,
+    spectral_measure_pvm_concrete_binary_finite_additivity,
+    spectral_measure_pvm_concrete_binary_finite_additivity,
     trivial,
     trivial,
     trivial,
