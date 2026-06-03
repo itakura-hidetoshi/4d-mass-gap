@@ -20,3 +20,4 @@ import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedTargetSpec
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedProofObligationMap
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConstructionInterface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedImplementationCheckpoint
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedCarrierIndexTargetPass
