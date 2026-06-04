@@ -33,23 +33,25 @@ def SpectralMeasurePVMOperatorValuedSpectralIntegralUpgradeObligation : Prop :=
   SpectralMeasurePVMFullAxiomsStillOpen ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
-/-- Remaining compatibility obligation tying the exact `33/20` atom / positive
-mass input to a genuine spectral projection and not only to the staged review
-surface. -/
-def SpectralMeasurePVMOperatorValuedAtom3320CompatibilityObligation : Prop :=
-  MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
-  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent ∧
-  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact ∧
-  SpectralMeasurePVMFullAxiomsStillOpen ∧
-  SpectralMeasurePVMNoShellToFullCollapseBoundary
+/-- Marker that the exact `33/20` atom derivation is deliberately not consumed in
+R4.  The planned order puts that derivation after the compact centered plaquette
+observable, so R4 only prepares the PVM/spectral-measure surface. -/
+def SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage : Prop :=
+  SpectralMeasurePVMFullAxiomsStillOpen
+
+/-- Marker that positive spectral weight is deliberately not consumed in R4.  It
+belongs to the later nontrivial spectral-weight derivation after the exact atom
+has been derived in the intended sequence. -/
+def SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage : Prop :=
+  SpectralMeasurePVMFullAxiomsStillOpen
 
 /-- Aggregate obligation bridge for turning the current R4 concrete receipt plus
 actual mathlib self-adjoint input into a future genuine PVM construction.
 
-This bridge advances R4 by making the exact remaining proof obligations explicit:
-projection lift, Borel set-algebra lift, operator-topology sigma-additivity,
-spectral-integral upgrade, and exact-atom compatibility.  It still does not close
-the genuine PVM theorem. -/
+This bridge advances R4 by making the exact remaining R4 proof obligations
+explicit: projection lift, Borel set-algebra lift, operator-topology
+sigma-additivity, and spectral-integral upgrade.  It intentionally does not use
+the later `33/20` atom or positive spectral-weight inputs. -/
 structure SpectralMeasurePVMOperatorValuedGenuinePVMObligationBridge where
   mathlibHandoffBoundaryHeld :
     SpectralMeasurePVMOperatorValuedMathlibHandoffBoundaryHeld
@@ -57,8 +59,6 @@ structure SpectralMeasurePVMOperatorValuedGenuinePVMObligationBridge where
     IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap
   r4ConcreteReceiptBindsAllTargets :
     SpectralMeasurePVMConcreteReceiptBindsAllDischargeTargets
-  exactValueEq3320 :
-    MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
   hilbertProjectionLiftObligation :
     SpectralMeasurePVMOperatorValuedHilbertProjectionLiftObligation
   borelSetAlgebraLiftObligation :
@@ -67,8 +67,10 @@ structure SpectralMeasurePVMOperatorValuedGenuinePVMObligationBridge where
     SpectralMeasurePVMOperatorValuedSigmaAdditivityTopologyObligation
   spectralIntegralUpgradeObligation :
     SpectralMeasurePVMOperatorValuedSpectralIntegralUpgradeObligation
-  atom3320CompatibilityObligation :
-    SpectralMeasurePVMOperatorValuedAtom3320CompatibilityObligation
+  atom3320DerivationDeferredToLaterStage :
+    SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage
+  positiveSpectralWeightDeferredToLaterStage :
+    SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage
   concreteSpectralMeasureStillOpen :
     MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen
   concretePVMStillOpen :
@@ -108,15 +110,15 @@ theorem spectral_measure_pvm_operator_valued_spectral_integral_upgrade_obligatio
     spectral_measure_pvm_full_axioms_still_open,
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
-/-- The exact-atom compatibility obligation is ready as an explicit open boundary. -/
-theorem spectral_measure_pvm_operator_valued_atom_3320_compatibility_obligation_ready :
-    SpectralMeasurePVMOperatorValuedAtom3320CompatibilityObligation := by
-  exact ⟨
-    MathlibAnalytic.exactGapValueReal_eq,
-    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof,
-    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof,
-    spectral_measure_pvm_full_axioms_still_open,
-    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+/-- The exact-atom derivation remains deferred to the later stage. -/
+theorem spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready :
+    SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage := by
+  exact spectral_measure_pvm_full_axioms_still_open
+
+/-- The positive spectral-weight derivation remains deferred to the later stage. -/
+theorem spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready :
+    SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage := by
+  exact spectral_measure_pvm_full_axioms_still_open
 
 /-- Canonical genuine-PVM obligation bridge packet. -/
 def spectralMeasurePVMOperatorValuedGenuinePVMObligationBridge :
@@ -127,8 +129,6 @@ def spectralMeasurePVMOperatorValuedGenuinePVMObligationBridge :
       MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint
     r4ConcreteReceiptBindsAllTargets :=
       spectral_measure_pvm_concrete_receipt_binds_all_discharge_targets_ready
-    exactValueEq3320 :=
-      MathlibAnalytic.exactGapValueReal_eq
     hilbertProjectionLiftObligation :=
       spectral_measure_pvm_operator_valued_hilbert_projection_lift_obligation_ready
     borelSetAlgebraLiftObligation :=
@@ -137,8 +137,10 @@ def spectralMeasurePVMOperatorValuedGenuinePVMObligationBridge :
       spectral_measure_pvm_operator_valued_sigma_additivity_topology_obligation_ready
     spectralIntegralUpgradeObligation :=
       spectral_measure_pvm_operator_valued_spectral_integral_upgrade_obligation_ready
-    atom3320CompatibilityObligation :=
-      spectral_measure_pvm_operator_valued_atom_3320_compatibility_obligation_ready
+    atom3320DerivationDeferredToLaterStage :=
+      spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready
+    positiveSpectralWeightDeferredToLaterStage :=
+      spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready
     concreteSpectralMeasureStillOpen :=
       trivial
     concretePVMStillOpen :=
@@ -155,12 +157,12 @@ def SpectralMeasurePVMOperatorValuedGenuinePVMObligationBridgeReady : Prop :=
   SpectralMeasurePVMOperatorValuedMathlibHandoffBoundaryHeld ∧
   IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
   SpectralMeasurePVMConcreteReceiptBindsAllDischargeTargets ∧
-  MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
   SpectralMeasurePVMOperatorValuedHilbertProjectionLiftObligation ∧
   SpectralMeasurePVMOperatorValuedBorelSetAlgebraLiftObligation ∧
   SpectralMeasurePVMOperatorValuedSigmaAdditivityTopologyObligation ∧
   SpectralMeasurePVMOperatorValuedSpectralIntegralUpgradeObligation ∧
-  SpectralMeasurePVMOperatorValuedAtom3320CompatibilityObligation ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
   MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen ∧
   MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen ∧
   MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.continuumSpectralTheoremStillOpen ∧
@@ -174,12 +176,12 @@ theorem spectral_measure_pvm_operator_valued_genuine_pvm_obligation_bridge_ready
     spectral_measure_pvm_operator_valued_mathlib_handoff_boundary_held,
     MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint,
     spectral_measure_pvm_concrete_receipt_binds_all_discharge_targets_ready,
-    MathlibAnalytic.exactGapValueReal_eq,
     spectral_measure_pvm_operator_valued_hilbert_projection_lift_obligation_ready,
     spectral_measure_pvm_operator_valued_borel_set_algebra_lift_obligation_ready,
     spectral_measure_pvm_operator_valued_sigma_additivity_topology_obligation_ready,
     spectral_measure_pvm_operator_valued_spectral_integral_upgrade_obligation_ready,
-    spectral_measure_pvm_operator_valued_atom_3320_compatibility_obligation_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
     trivial,
     trivial,
     MathlibAnalytic.spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof,
