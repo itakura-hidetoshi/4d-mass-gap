@@ -1,4 +1,5 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFunctionalCalculusDischargeTarget
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedConcreteFinalReceiptCore
 
 namespace MGAP4D
 namespace R4
@@ -13,7 +14,12 @@ noncomputable section
 This is deliberately a non-closure certificate: all staged discharge targets
 have a route to a final receipt, but the genuine PVM theorem is not asserted
 here.  The surface keeps the final receipt as a future theorem-producing layer
-and preserves the open-boundary markers. -/
+and preserves the open-boundary markers.
+
+At the current two-index concrete stage, this target binds the concrete receipts
+for normalization, projection-valuedness, orthogonality, finite additivity,
+countable additivity, spectral compatibility, and functional calculus, while
+keeping the genuine Hilbert-space PVM theorem explicitly future. -/
 structure SpectralMeasurePVMOperatorValuedFinalReceiptTarget where
   finalReceiptHandoffReady : Prop
   finalPVMReceiptInterfaceAvailable : Prop
@@ -35,17 +41,28 @@ def spectralMeasurePVMOperatorValuedFinalReceiptTarget :
     SpectralMeasurePVMOperatorValuedFinalReceiptTarget :=
   { finalReceiptHandoffReady :=
       SpectralMeasurePVMOperatorValuedFinalReceiptHandoffBoundary
-    finalPVMReceiptInterfaceAvailable := True
-    normalizationReceiptRequired := True
-    projectionValuednessReceiptRequired := True
-    orthogonalityReceiptRequired := True
-    finiteAdditivityReceiptRequired := True
-    countableAdditivityReceiptRequired := True
-    spectralCompatibilityReceiptRequired := True
-    functionalCalculusReceiptRequired := True
-    receiptMustBindAllDischargeTargets := True
-    genuinePVMTheoremStillFuture := SpectralMeasurePVMFullAxiomsStillOpen
-    finalReceiptNotClaimed := SpectralMeasurePVMFullAxiomsStillOpen
+    finalPVMReceiptInterfaceAvailable :=
+      SpectralMeasurePVMConcreteFinalPVMReceiptInterfaceTarget
+    normalizationReceiptRequired :=
+      SpectralMeasurePVMConcreteNormalizationReceiptTarget
+    projectionValuednessReceiptRequired :=
+      SpectralMeasurePVMConcreteProjectionValuednessReceiptTarget
+    orthogonalityReceiptRequired :=
+      SpectralMeasurePVMConcreteOrthogonalityReceiptTarget
+    finiteAdditivityReceiptRequired :=
+      SpectralMeasurePVMConcreteFiniteAdditivityReceiptTarget
+    countableAdditivityReceiptRequired :=
+      SpectralMeasurePVMConcreteCountableAdditivityReceiptTarget
+    spectralCompatibilityReceiptRequired :=
+      SpectralMeasurePVMConcreteSpectralCompatibilityReceiptTarget
+    functionalCalculusReceiptRequired :=
+      SpectralMeasurePVMConcreteFunctionalCalculusReceiptTarget
+    receiptMustBindAllDischargeTargets :=
+      SpectralMeasurePVMConcreteReceiptBindsAllDischargeTargets
+    genuinePVMTheoremStillFuture :=
+      SpectralMeasurePVMConcreteGenuinePVMTheoremStillFutureTarget
+    finalReceiptNotClaimed :=
+      SpectralMeasurePVMConcreteFinalReceiptNotClaimedTarget
     fullAxiomsRemainOpen := SpectralMeasurePVMFullAxiomsStillOpen
     noShellCollapsePreserved := SpectralMeasurePVMNoShellToFullCollapseBoundary }
 
@@ -71,17 +88,17 @@ theorem spectral_measure_pvm_operator_valued_final_receipt_target_ready :
     SpectralMeasurePVMOperatorValuedFinalReceiptTargetReady := by
   exact ⟨
     spectral_measure_pvm_operator_valued_final_receipt_handoff_boundary_ready,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    trivial,
-    spectral_measure_pvm_full_axioms_still_open,
-    spectral_measure_pvm_full_axioms_still_open,
+    spectral_measure_pvm_concrete_final_pvm_receipt_interface_target_ready,
+    spectral_measure_pvm_concrete_normalization_receipt_target_ready,
+    spectral_measure_pvm_concrete_projection_valuedness_receipt_target_ready,
+    spectral_measure_pvm_concrete_orthogonality_receipt_target_ready,
+    spectral_measure_pvm_concrete_finite_additivity_receipt_target_ready,
+    spectral_measure_pvm_concrete_countable_additivity_receipt_target_ready,
+    spectral_measure_pvm_concrete_spectral_compatibility_receipt_target_ready,
+    spectral_measure_pvm_concrete_functional_calculus_receipt_target_ready,
+    spectral_measure_pvm_concrete_receipt_binds_all_discharge_targets_ready,
+    spectral_measure_pvm_concrete_genuine_pvm_theorem_still_future_target_ready,
+    spectral_measure_pvm_concrete_final_receipt_not_claimed_target_ready,
     spectral_measure_pvm_full_axioms_still_open,
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
@@ -92,6 +109,7 @@ def SpectralMeasurePVMOperatorValuedFinalNonClosureCertificate : Prop :=
   SpectralMeasurePVMOperatorValuedFinalReceiptTargetReady ∧
   SpectralMeasurePVMOperatorValuedFinalReceiptHandoffBoundary ∧
   SpectralMeasurePVMOperatorValuedDependencyGraphFinalPacket ∧
+  SpectralMeasurePVMOperatorValuedConcreteFinalReceiptCoreReady ∧
   SpectralMeasurePVMFullAxiomsStillOpen ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
@@ -102,6 +120,7 @@ theorem spectral_measure_pvm_operator_valued_final_nonclosure_certificate_ready 
     spectral_measure_pvm_operator_valued_final_receipt_target_ready,
     spectral_measure_pvm_operator_valued_final_receipt_handoff_boundary_ready,
     spectral_measure_pvm_operator_valued_dependency_graph_final_packet_ready,
+    spectral_measure_pvm_operator_valued_concrete_final_receipt_core_ready,
     spectral_measure_pvm_full_axioms_still_open,
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
