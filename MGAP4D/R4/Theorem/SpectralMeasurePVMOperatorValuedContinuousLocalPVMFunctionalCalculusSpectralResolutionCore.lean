@@ -98,7 +98,7 @@ resolution. -/
 def SpectralMeasurePVMContinuousFunctionalCalculusSpectralResolutionExistenceTarget : Prop :=
   ∀ s : SpectralMeasurePVMSpectralSetSlot,
     ∀ x : MathlibAnalytic.ConcreteL2R1HilbertCarrier,
-      SpectralMeasurePVMContinuousFunctionalCalculusSpectralResolutionPacket s x
+      Nonempty (SpectralMeasurePVMContinuousFunctionalCalculusSpectralResolutionPacket s x)
 
 /-- Canonical packet uniqueness target for the R4-local functional-calculus spectral
 resolution. -/
@@ -115,7 +115,7 @@ def SpectralMeasurePVMContinuousFunctionalCalculusSpectralResolutionUniquenessTa
 theorem spectral_measure_pvm_continuous_functional_calculus_spectral_resolution_existence_target_ready :
     SpectralMeasurePVMContinuousFunctionalCalculusSpectralResolutionExistenceTarget := by
   intro s x
-  exact spectralMeasurePVMContinuousFunctionalCalculusCanonicalSpectralResolutionPacket s x
+  exact ⟨spectralMeasurePVMContinuousFunctionalCalculusCanonicalSpectralResolutionPacket s x⟩
 
 /-- The canonical packet uniqueness target is ready. -/
 theorem spectral_measure_pvm_continuous_functional_calculus_spectral_resolution_uniqueness_target_ready :
