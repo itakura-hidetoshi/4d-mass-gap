@@ -31,8 +31,8 @@ theorem spectral_measure_pvm_spectral_set_slot_subset_antisymm
     (hts : SpectralMeasurePVMSpectralSetSlotSubset t s) :
     s = t := by
   cases s <;> cases t <;> try rfl
-  exact False.elim hst
-  exact False.elim hts
+  · exact False.elim hts
+  · exact False.elim hst
 
 /-- Transitivity of the two-slot order. -/
 theorem spectral_measure_pvm_spectral_set_slot_subset_trans
@@ -41,8 +41,6 @@ theorem spectral_measure_pvm_spectral_set_slot_subset_trans
     (hst : SpectralMeasurePVMSpectralSetSlotSubset s t) :
     SpectralMeasurePVMSpectralSetSlotSubset r t := by
   cases r <;> cases s <;> cases t <;> try trivial
-  exact False.elim hrs
-  exact False.elim hst
 
 /-- Complement is antitone on the two-slot order. -/
 theorem spectral_measure_pvm_spectral_set_slot_subset_complement_antitone
@@ -52,7 +50,6 @@ theorem spectral_measure_pvm_spectral_set_slot_subset_complement_antitone
       (spectralMeasurePVMSpectralSetSlotComplement t)
       (spectralMeasurePVMSpectralSetSlotComplement s) := by
   cases s <;> cases t <;> try trivial
-  exact False.elim hst
 
 /-- If `s ⊆ t`, then `s ∪ t = t`. -/
 theorem spectral_measure_pvm_spectral_set_slot_subset_union_right
