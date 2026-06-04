@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
@@ -21,6 +22,8 @@ DECL_RE = re.compile(
     r"([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
 IMPORT_RE = re.compile(r"^\s*import\s+([A-Za-z0-9_'.]+)\s*$")
+NAMESPACE_RE = re.compile(r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)\s*$")
+END_RE = re.compile(r"^\s*end(?:\s+([A-Za-z_][A-Za-z0-9_'.]*))?\s*$")
 LOCAL_IMPORT_RE = re.compile(r"^MGAP4D(?:\.|$)")
 
 IMPOSSIBLE_ID_ID_ID_RE = re.compile(
@@ -34,6 +37,14 @@ TRY_RFL_FALSE_ELIM_RE = re.compile(
     r"try\s+rfl\s*\n\s*exact\s+False\.elim\b",
     re.MULTILINE,
 )
+
+
+@dataclass(frozen=True)
+class Decl:
+    fq_name: str
+    short_name: str
+    path: Path
+    line: int
 
 
 def rel(path: Path) -> str:
@@ -53,6 +64,10 @@ def fail(errors: list[str], path: Path, line: int | None, message: str) -> None:
 def strip_line_comment(line: str) -> str:
     # Good enough for structural preflight; Lean strings are not interpreted here.
     return line.split("--", 1)[0]
+
+
+def is_probably_comment_line(raw: str) -> bool:
+    return raw.startswith("/-") or raw.startswith("-/") or raw.startswith("*")
 
 
 def check_block_comments(path: Path, text: str, errors: list[str]) -> None:
@@ -80,12 +95,26 @@ def check_block_comments(path: Path, text: str, errors: list[str]) -> None:
 
 def check_imports(path: Path, lines: list[str], errors: list[str]) -> None:
     seen_non_import_command = False
+    in_block_comment = 0
     for idx, line in enumerate(lines, start=1):
-        raw = strip_line_comment(line).strip()
+        raw_line = strip_line_comment(line)
+        opens = raw_line.count("/-")
+        closes = raw_line.count("-/")
+        raw = raw_line.strip()
+
+        if in_block_comment > 0:
+            in_block_comment += opens - closes
+            if in_block_comment < 0:
+                in_block_comment = 0
+            continue
         if not raw:
             continue
-        if raw.startswith("/-") or raw.startswith("*/"):
+        if is_probably_comment_line(raw):
+            in_block_comment += opens - closes
+            if in_block_comment < 0:
+                in_block_comment = 0
             continue
+
         m = IMPORT_RE.match(raw)
         if m:
             if seen_non_import_command:
@@ -127,10 +156,10 @@ def check_declaration_headers(path: Path, lines: list[str], errors: list[str]) -
         m = DECL_RE.match(raw)
         if not m:
             continue
-        window = "\n".join(strip_line_comment(x) for x in lines[idx - 1 : min(len(lines), idx + 8)])
+        window = "\n".join(strip_line_comment(x) for x in lines[idx - 1 : min(len(lines), idx + 30)])
         if ":= by" in window or ":=" in window or " where" in window:
             continue
-        fail(errors, path, idx, "declaration header has no nearby `:=` or `where` in the next 8 lines")
+        fail(errors, path, idx, "declaration header has no nearby `:=` or `where` in the next 30 lines")
 
 
 def check_known_hazard_patterns(path: Path, text: str, errors: list[str], warnings: list[str]) -> None:
@@ -149,52 +178,84 @@ def check_known_hazard_patterns(path: Path, text: str, errors: list[str], warnin
         )
 
 
-def collect_existing_declarations(changed: set[Path]) -> dict[str, list[Path]]:
-    existing: dict[str, list[Path]] = {}
-    for path in ROOT.glob("MGAP4D/**/*.lean"):
+def extract_declarations(path: Path, lines: list[str]) -> list[Decl]:
+    namespace_stack: list[str] = []
+    declarations: list[Decl] = []
+    for idx, line in enumerate(lines, start=1):
+        raw = strip_line_comment(line).strip()
+        if not raw or is_probably_comment_line(raw):
+            continue
+        ns = NAMESPACE_RE.match(raw)
+        if ns:
+            namespace_stack.extend(part for part in ns.group(1).split(".") if part)
+            continue
+        end = END_RE.match(raw)
+        if end and namespace_stack:
+            named = end.group(1)
+            if named:
+                parts = [part for part in named.split(".") if part]
+                if parts == namespace_stack[-len(parts) :]:
+                    del namespace_stack[-len(parts) :]
+                else:
+                    namespace_stack.pop()
+            else:
+                namespace_stack.pop()
+            continue
+        decl = DECL_RE.match(raw)
+        if decl:
+            short = decl.group(1)
+            if "." in short:
+                fq = short
+            else:
+                fq = ".".join(namespace_stack + [short]) if namespace_stack else short
+            declarations.append(Decl(fq_name=fq, short_name=short, path=path, line=idx))
+    return declarations
+
+
+def collect_existing_declarations(changed: set[Path]) -> dict[str, list[Decl]]:
+    existing: dict[str, list[Decl]] = {}
+    paths = list(ROOT.glob("MGAP4D/**/*.lean"))
+    root_file = ROOT / "MGAP4D.lean"
+    if root_file.exists():
+        paths.append(root_file)
+    for path in paths:
         if path in changed:
             continue
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
         except UnicodeDecodeError:
             continue
-        for line in lines:
-            m = DECL_RE.match(strip_line_comment(line))
-            if m:
-                existing.setdefault(m.group(1), []).append(path)
-    root_file = ROOT / "MGAP4D.lean"
-    if root_file.exists() and root_file not in changed:
-        for line in root_file.read_text(encoding="utf-8").splitlines():
-            m = DECL_RE.match(strip_line_comment(line))
-            if m:
-                existing.setdefault(m.group(1), []).append(root_file)
+        for decl in extract_declarations(path, lines):
+            existing.setdefault(decl.fq_name, []).append(decl)
     return existing
 
 
 def check_declaration_reuse(
     path: Path,
     lines: list[str],
-    existing: dict[str, list[Path]],
-    seen_changed: dict[str, Path],
+    existing: dict[str, list[Decl]],
+    seen_changed: dict[str, Decl],
     errors: list[str],
 ) -> None:
-    for idx, line in enumerate(lines, start=1):
-        m = DECL_RE.match(strip_line_comment(line))
-        if not m:
-            continue
-        name = m.group(1)
-        if name in existing:
-            locations = ", ".join(rel(p) for p in existing[name][:3])
-            fail(errors, path, idx, f"declaration name already exists in repository: `{name}` at {locations}")
-        if name in seen_changed and seen_changed[name] != path:
-            fail(errors, path, idx, f"declaration name duplicated across changed files: `{name}` also in {rel(seen_changed[name])}")
-        seen_changed[name] = path
+    for decl in extract_declarations(path, lines):
+        if decl.fq_name in existing:
+            locations = ", ".join(f"{rel(d.path)}:{d.line}" for d in existing[decl.fq_name][:3])
+            fail(errors, path, decl.line, f"fully-qualified declaration already exists: `{decl.fq_name}` at {locations}")
+        if decl.fq_name in seen_changed and seen_changed[decl.fq_name].path != path:
+            previous = seen_changed[decl.fq_name]
+            fail(
+                errors,
+                path,
+                decl.line,
+                f"fully-qualified declaration duplicated across changed files: `{decl.fq_name}` also in {rel(previous.path)}:{previous.line}",
+            )
+        seen_changed[decl.fq_name] = decl
 
 
 def audit_file(
     path: Path,
-    existing: dict[str, list[Path]],
-    seen_changed: dict[str, Path],
+    existing: dict[str, list[Decl]],
+    seen_changed: dict[str, Decl],
     errors: list[str],
     warnings: list[str],
 ) -> None:
@@ -238,7 +299,7 @@ def main(argv: list[str]) -> int:
     existing = collect_existing_declarations(changed_set)
     errors: list[str] = []
     warnings: list[str] = []
-    seen_changed: dict[str, Path] = {}
+    seen_changed: dict[str, Decl] = {}
 
     for path in changed:
         audit_file(path, existing, seen_changed, errors, warnings)
