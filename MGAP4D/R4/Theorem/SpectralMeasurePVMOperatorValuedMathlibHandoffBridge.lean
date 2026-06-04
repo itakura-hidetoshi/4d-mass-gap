@@ -16,7 +16,11 @@ This is not a genuine spectral-measure construction.  It records the first point
 where the actual self-adjoint `LinearPMap` handoff from `MathlibAnalytic` and the
 R4 concrete operator-valued PVM receipt chain are jointly available, while the
 concrete spectral measure, concrete PVM, and continuum spectral theorem remain
-explicit downstream obligations. -/
+explicit downstream obligations.
+
+Crucially, this R4 bridge does not consume the later `33/20` atom or positive
+spectral-weight inputs.  Those belong downstream after the compact centered
+plaquette observable and the non-definitional exact-atom derivation are built. -/
 structure SpectralMeasurePVMOperatorValuedMathlibHandoffBridge where
   analyticSpectralMeasureInputHandoffReady :
     MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffReady
@@ -30,16 +34,16 @@ structure SpectralMeasurePVMOperatorValuedMathlibHandoffBridge where
     SpectralMeasurePVMOperatorValuedConcreteFinalReceiptCoreReady
   actualSelfAdjointInputAvailable :
     IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap
-  exactAtomInputAvailable :
-    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent
-  positiveMassInputAvailable :
-    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact
   concreteSpectralMeasureStillOpen :
     MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen
   concretePVMStillOpen :
     MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen
   continuumSpectralTheoremStillOpen :
     MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.continuumSpectralTheoremStillOpen
+  laterAtom3320DerivationNotConsumed :
+    SpectralMeasurePVMFullAxiomsStillOpen
+  laterPositiveSpectralWeightNotConsumed :
+    SpectralMeasurePVMFullAxiomsStillOpen
   genuinePVMTheoremStillFuture :
     SpectralMeasurePVMConcreteGenuinePVMTheoremStillFutureTarget
   noShellCollapsePreserved :
@@ -61,16 +65,16 @@ def spectralMeasurePVMOperatorValuedMathlibHandoffBridge :
       spectral_measure_pvm_operator_valued_concrete_final_receipt_core_ready
     actualSelfAdjointInputAvailable :=
       MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint
-    exactAtomInputAvailable :=
-      MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof
-    positiveMassInputAvailable :=
-      MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof
     concreteSpectralMeasureStillOpen :=
       trivial
     concretePVMStillOpen :=
       trivial
     continuumSpectralTheoremStillOpen :=
       MathlibAnalytic.spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof
+    laterAtom3320DerivationNotConsumed :=
+      spectral_measure_pvm_full_axioms_still_open
+    laterPositiveSpectralWeightNotConsumed :=
+      spectral_measure_pvm_full_axioms_still_open
     genuinePVMTheoremStillFuture :=
       spectral_measure_pvm_concrete_genuine_pvm_theorem_still_future_target_ready
     noShellCollapsePreserved :=
@@ -84,11 +88,11 @@ def SpectralMeasurePVMOperatorValuedMathlibHandoffBridgeReady : Prop :=
   SpectralMeasurePVMOperatorValuedFinalNonClosureCertificate ∧
   SpectralMeasurePVMOperatorValuedConcreteFinalReceiptCoreReady ∧
   IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
-  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent ∧
-  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact ∧
   MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen ∧
   MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen ∧
   MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.continuumSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMFullAxiomsStillOpen ∧
+  SpectralMeasurePVMFullAxiomsStillOpen ∧
   SpectralMeasurePVMConcreteGenuinePVMTheoremStillFutureTarget ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
@@ -102,11 +106,11 @@ theorem spectral_measure_pvm_operator_valued_mathlib_handoff_bridge_ready :
     spectral_measure_pvm_operator_valued_final_nonclosure_certificate_ready,
     spectral_measure_pvm_operator_valued_concrete_final_receipt_core_ready,
     MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint,
-    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof,
-    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof,
     trivial,
     trivial,
     MathlibAnalytic.spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof,
+    spectral_measure_pvm_full_axioms_still_open,
+    spectral_measure_pvm_full_axioms_still_open,
     spectral_measure_pvm_concrete_genuine_pvm_theorem_still_future_target_ready,
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
