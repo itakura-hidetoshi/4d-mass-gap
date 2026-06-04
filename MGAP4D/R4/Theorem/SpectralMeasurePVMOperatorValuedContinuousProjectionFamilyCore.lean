@@ -57,8 +57,8 @@ theorem spectral_measure_pvm_continuous_projection_family_disjoint_reversed_poin
     (x : MathlibAnalytic.ConcreteL2R1HilbertCarrier) :
     spectralMeasurePVMContinuousProjectionFamily j
         (spectralMeasurePVMContinuousProjectionFamily i x) = 0 := by
-  exact spectral_measure_pvm_continuous_projection_family_disjoint_pointwise_zero j i
-    (spectralMeasurePVMConcreteIndexDisjointSymm i j hij) x
+  cases i <;> cases j <;> try rfl
+  exact False.elim hij
 
 /-- Pointwise finite additivity for disjoint empty/whole continuous projections.
 This is still the two-index R4 surface, not a genuine Borel PVM. -/
