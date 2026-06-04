@@ -51,7 +51,15 @@ theorem spectral_measure_pvm_spectral_resolution_kernel_component_sub_projection
     spectralMeasurePVMContinuousFunctionalCalculus
         (spectralMeasurePVMSpectralSetSlotIndicatorFunction s)
         (spectralMeasurePVMContinuousFunctionalCalculusKernelComponent t x) = 0 := by
-  exact spectral_measure_pvm_spectral_resolution_kernel_component_mem_sub_kernel s t hst x
+  calc
+    spectralMeasurePVMContinuousFunctionalCalculus
+        (spectralMeasurePVMSpectralSetSlotIndicatorFunction s)
+        (spectralMeasurePVMContinuousFunctionalCalculusKernelComponent t x) =
+      spectralMeasurePVMSpectralSetSlotContinuousProjection s
+        (spectralMeasurePVMContinuousFunctionalCalculusKernelComponent t x) :=
+        spectral_measure_pvm_continuous_functional_calculus_slot_indicator_projection s
+          (spectralMeasurePVMContinuousFunctionalCalculusKernelComponent t x)
+    _ = 0 := spectral_measure_pvm_spectral_resolution_kernel_component_mem_sub_kernel s t hst x
 
 /-- If `s ⊆ t`, the `s`-range component of the canonical packet is absorbed by
 the `t`-range projection. -/
