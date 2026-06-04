@@ -67,8 +67,12 @@ theorem spectral_measure_pvm_continuous_local_pvm_range_inclusion_of_subset
     SpectralMeasurePVMContinuousLocalPVMRangeMember t x := by
   rcases hx with ⟨y, hy⟩
   refine ⟨spectralMeasurePVMSpectralSetSlotContinuousProjection s y, ?_⟩
-  rw [hy]
-  exact spectral_measure_pvm_spectral_set_slot_projection_subset_right_absorption_apply s t hst y
+  calc
+    spectralMeasurePVMSpectralSetSlotContinuousProjection t
+        (spectralMeasurePVMSpectralSetSlotContinuousProjection s y) =
+      spectralMeasurePVMSpectralSetSlotContinuousProjection s y :=
+        spectral_measure_pvm_spectral_set_slot_projection_subset_right_absorption_apply s t hst y
+    _ = x := hy
 
 /-- If `s ⊆ t`, then the complement range is included in the reverse direction. -/
 theorem spectral_measure_pvm_continuous_local_pvm_complement_range_inclusion_of_subset
