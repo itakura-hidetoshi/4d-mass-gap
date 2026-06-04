@@ -28,14 +28,22 @@ structure SpectralMeasurePVMOperatorValuedMathlibHandoffBridge where
     SpectralMeasurePVMOperatorValuedFinalNonClosureCertificate
   r4ConcreteFinalReceiptCoreReady :
     SpectralMeasurePVMOperatorValuedConcreteFinalReceiptCoreReady
-  actualSelfAdjointInputAvailable : Prop
-  exactAtomInputAvailable : Prop
-  positiveMassInputAvailable : Prop
-  concreteSpectralMeasureStillOpen : Prop
-  concretePVMStillOpen : Prop
-  continuumSpectralTheoremStillOpen : Prop
-  genuinePVMTheoremStillFuture : Prop
-  noShellCollapsePreserved : Prop
+  actualSelfAdjointInputAvailable :
+    IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap
+  exactAtomInputAvailable :
+    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent
+  positiveMassInputAvailable :
+    MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact
+  concreteSpectralMeasureStillOpen :
+    MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen
+  concretePVMStillOpen :
+    MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen
+  continuumSpectralTheoremStillOpen :
+    MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.continuumSpectralTheoremStillOpen
+  genuinePVMTheoremStillFuture :
+    SpectralMeasurePVMConcreteGenuinePVMTheoremStillFutureTarget
+  noShellCollapsePreserved :
+    SpectralMeasurePVMNoShellToFullCollapseBoundary
 
 /-- Canonical bridge packet from the actual mathlib spectral-measure input lane to
 R4's concrete final receipt surface. -/
@@ -52,37 +60,37 @@ def spectralMeasurePVMOperatorValuedMathlibHandoffBridge :
     r4ConcreteFinalReceiptCoreReady :=
       spectral_measure_pvm_operator_valued_concrete_final_receipt_core_ready
     actualSelfAdjointInputAvailable :=
-      MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.actualSelfAdjoint
+      MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint
     exactAtomInputAvailable :=
-      MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.exactAtomPresent
+      MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof
     positiveMassInputAvailable :=
-      MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.positiveMassAtExact
+      MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof
     concreteSpectralMeasureStillOpen :=
-      MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen
+      trivial
     concretePVMStillOpen :=
-      MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen
+      trivial
     continuumSpectralTheoremStillOpen :=
-      MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.continuumSpectralTheoremStillOpen
+      MathlibAnalytic.spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof
     genuinePVMTheoremStillFuture :=
-      SpectralMeasurePVMConcreteGenuinePVMTheoremStillFutureTarget
+      spectral_measure_pvm_concrete_genuine_pvm_theorem_still_future_target_ready
     noShellCollapsePreserved :=
-      SpectralMeasurePVMNoShellToFullCollapseBoundary }
+      spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready }
 
 /-- Readiness predicate for the mathlib handoff bridge. -/
 def SpectralMeasurePVMOperatorValuedMathlibHandoffBridgeReady : Prop :=
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.analyticSpectralMeasureInputHandoffReady ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.analyticSpectralMeasureInputBoundaryHeld ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.r4ConcreteFinalReceiptReady ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.r4FinalNonClosureCertificateReady ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.r4ConcreteFinalReceiptCoreReady ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.actualSelfAdjointInputAvailable ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.exactAtomInputAvailable ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.positiveMassInputAvailable ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.concreteSpectralMeasureStillOpen ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.concretePVMStillOpen ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.continuumSpectralTheoremStillOpen ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.genuinePVMTheoremStillFuture ∧
-  spectralMeasurePVMOperatorValuedMathlibHandoffBridge.noShellCollapsePreserved
+  MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffReady ∧
+  MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedFinalReceiptTargetReady ∧
+  SpectralMeasurePVMOperatorValuedFinalNonClosureCertificate ∧
+  SpectralMeasurePVMOperatorValuedConcreteFinalReceiptCoreReady ∧
+  IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
+  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.exactAtomPresent ∧
+  MathlibAnalytic.spectralRealizationSkeletonReviewSurface.positiveMassAtExact ∧
+  MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen ∧
+  MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen ∧
+  MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.continuumSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMConcreteGenuinePVMTheoremStillFutureTarget ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
 
 /-- The mathlib handoff bridge is ready. -/
 theorem spectral_measure_pvm_operator_valued_mathlib_handoff_bridge_ready :
