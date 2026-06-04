@@ -68,6 +68,15 @@ run_audit_if_present() {
   fi
 }
 
+# Run changed-file static Lean preflight before any global audits or Lake work.
+# This catches common syntax-shape, namespace, import, duplicate declaration,
+# and known hazardous proof-pattern issues without invoking Lean or Lake.
+if [ -n "${changed_lean_files}" ]; then
+  echo "[fast] preflight changed Lean static audit"
+  # shellcheck disable=SC2086
+  python3 scripts/audit_changed_lean_preflight.py ${changed_lean_files}
+fi
+
 # Always keep the hard safety gates. These are Python/text audits and do not
 # require Lake setup.
 echo "[fast] audit Lean forbidden tokens"
