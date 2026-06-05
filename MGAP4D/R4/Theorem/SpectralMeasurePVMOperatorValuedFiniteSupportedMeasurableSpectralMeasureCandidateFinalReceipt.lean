@@ -1,0 +1,71 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurableSpectralMeasureCandidate
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the finite supported measurable spectral-measure candidate.
+
+The candidate is now recorded as the strongest local concrete R4 spectral-measure
+surface currently available.  It remains local to the supported `{∅, univ}`
+measurable surface and does not claim a genuine Borel PVM. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateFinalReceiptReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateBridgeReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateExistenceTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateLawTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSpectralTheoremFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSpectralTheoremPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedGenuinePVMTransitionCompletionFrontier ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The finite supported measurable spectral-measure candidate final receipt is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_final_receipt_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_bridge_ready,
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_existence_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_law_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_spectral_theorem_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_spectral_theorem_public_boundary_held,
+    spectral_measure_pvm_operator_valued_genuine_pvm_transition_completion_frontier_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the finite supported measurable spectral-measure
+candidate is registered. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidatePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateBridgeReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSpectralTheoremPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteMeasurableLocalPVMPublicBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after registering the finite supported measurable
+spectral-measure candidate is held. -/
+theorem spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_public_boundary_held :
+    SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidatePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_bridge_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_spectral_theorem_public_boundary_held,
+    spectral_measure_pvm_finite_measurable_local_pvm_public_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
