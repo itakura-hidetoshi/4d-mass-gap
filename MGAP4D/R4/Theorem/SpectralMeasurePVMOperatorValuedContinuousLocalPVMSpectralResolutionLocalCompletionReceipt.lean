@@ -1,0 +1,60 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedContinuousLocalPVMSpectralResolutionCompactBooleanClosureBundle
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- R4-local spectral-resolution completion receipt.
+
+This bundles the two-slot spectral-resolution construction, uniqueness, order,
+disjoint additivity, complement duality, endpoint normalization, Boolean closure,
+complement partition, and two-slot classification into one local receipt. -/
+def SpectralMeasurePVMContinuousLocalPVMSpectralResolutionLocalCompletionReceipt : Prop :=
+  SpectralMeasurePVMOperatorValuedContinuousLocalPVMFunctionalCalculusSpectralResolutionCoreReady ∧
+  SpectralMeasurePVMOperatorValuedContinuousLocalPVMSpectralResolutionOrderCoreReady ∧
+  SpectralMeasurePVMOperatorValuedContinuousLocalPVMSpectralResolutionDisjointAdditivityCoreReady ∧
+  SpectralMeasurePVMOperatorValuedContinuousLocalPVMSpectralResolutionComplementDualityCoreReady ∧
+  SpectralMeasurePVMOperatorValuedContinuousLocalPVMSpectralResolutionNormalizationCoreReady ∧
+  SpectralMeasurePVMContinuousLocalPVMSpectralResolutionCompactBooleanClosureTarget
+
+/-- The R4-local spectral-resolution completion receipt is ready. -/
+theorem spectral_measure_pvm_continuous_local_pvm_spectral_resolution_local_completion_receipt_ready :
+    SpectralMeasurePVMContinuousLocalPVMSpectralResolutionLocalCompletionReceipt := by
+  exact ⟨
+    spectral_measure_pvm_operator_valued_continuous_local_pvm_functional_calculus_spectral_resolution_core_ready,
+    spectral_measure_pvm_operator_valued_continuous_local_pvm_spectral_resolution_order_core_ready,
+    spectral_measure_pvm_operator_valued_continuous_local_pvm_spectral_resolution_disjoint_additivity_core_ready,
+    spectral_measure_pvm_operator_valued_continuous_local_pvm_spectral_resolution_complement_duality_core_ready,
+    spectral_measure_pvm_operator_valued_continuous_local_pvm_spectral_resolution_normalization_core_ready,
+    spectral_measure_pvm_continuous_local_pvm_spectral_resolution_compact_boolean_closure_target_ready⟩
+
+/-- Boundary receipt: the local finite/two-slot completion is not a genuine Borel
+PVM construction, and it does not consume the later R5/R6/R7 obligations. -/
+def SpectralMeasurePVMContinuousLocalPVMSpectralResolutionLocalCompletionBoundary : Prop :=
+  SpectralMeasurePVMContinuousLocalPVMSpectralResolutionLocalCompletionReceipt ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The local completion boundary is ready. -/
+theorem spectral_measure_pvm_continuous_local_pvm_spectral_resolution_local_completion_boundary_ready :
+    SpectralMeasurePVMContinuousLocalPVMSpectralResolutionLocalCompletionBoundary := by
+  exact ⟨
+    spectral_measure_pvm_continuous_local_pvm_spectral_resolution_local_completion_receipt_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
