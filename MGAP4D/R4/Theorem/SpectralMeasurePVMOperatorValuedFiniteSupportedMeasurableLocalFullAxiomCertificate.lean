@@ -1,0 +1,82 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurableSpectralMeasureCandidateFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Local full-axiom certificate for the finite supported measurable R4
+spectral-measure candidate.
+
+This certificate collects the local supported `{∅, univ}` measurable-set facts
+which have been proved: measurability, endpoint normalization, projection-valued
+operator assignment, orthogonality, binary finite additivity, the two countable
+branches, and symbolic spectral-integral compatibility.  It is explicitly local
+and does not claim a genuine Borel PVM. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableLocalFullAxiomCertificateReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidateLawTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalOVMLawTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSetEndpointOperatorTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSetProjectionTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSetOrthogonalityTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSetFiniteAdditivityTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSetCountableBranchTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSpectralIntegralEndpointTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSpectralIntegralIndicatorTarget ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The local full-axiom certificate for the finite supported measurable R4
+spectral-measure candidate is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_local_full_axiom_certificate_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableLocalFullAxiomCertificateReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_law_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_ovm_law_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_set_endpoint_operator_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_set_projection_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_set_orthogonality_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_set_finite_additivity_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_set_countable_branch_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_spectral_integral_endpoint_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_spectral_integral_indicator_target_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Boundary after the local full-axiom certificate.
+
+The supported finite candidate has all local axioms packaged, but the actual
+Borel carrier, genuine operator-topology countable additivity, genuine
+self-adjoint spectral theorem realization, and genuine spectral-measure
+construction remain open. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableLocalFullAxiomCertificateFrontier : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalFullAxiomCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSpectralMeasureCandidatePublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedGenuinePVMTransitionCompletionFrontier ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The frontier after the local full-axiom certificate is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_local_full_axiom_certificate_frontier_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableLocalFullAxiomCertificateFrontier := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_full_axiom_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_spectral_measure_candidate_public_boundary_held,
+    spectral_measure_pvm_operator_valued_genuine_pvm_transition_completion_frontier_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
