@@ -44,7 +44,19 @@ theorem spectral_measure_pvm_finite_supported_measurable_to_slot_injective
     (h : spectralMeasurePVMFiniteSupportedMeasurableSetToSlot E =
       spectralMeasurePVMFiniteSupportedMeasurableSetToSlot F) :
     E = F := by
-  cases E <;> cases F <;> try rfl <;> cases h
+  cases E <;> cases F
+  · rfl
+  · have hslot :
+        SpectralMeasurePVMSpectralSetSlot.emptySet =
+          SpectralMeasurePVMSpectralSetSlot.wholeSet := by
+      simpa [spectralMeasurePVMFiniteSupportedMeasurableSetToSlot] using h
+    cases hslot
+  · have hslot :
+        SpectralMeasurePVMSpectralSetSlot.wholeSet =
+          SpectralMeasurePVMSpectralSetSlot.emptySet := by
+      simpa [spectralMeasurePVMFiniteSupportedMeasurableSetToSlot] using h
+    cases hslot
+  · rfl
 
 /-- The local operator assignment is faithful on supported measurable sets. -/
 theorem spectral_measure_pvm_finite_supported_measurable_operator_candidate_injective
