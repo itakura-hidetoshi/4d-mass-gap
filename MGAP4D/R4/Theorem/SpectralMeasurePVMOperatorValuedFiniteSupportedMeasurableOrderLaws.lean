@@ -59,7 +59,7 @@ theorem spectral_measure_pvm_finite_supported_measurable_subset_antisymm
         (SpectralMeasurePVMSpectralSetSlot.emptySet : SpectralMeasurePVMFiniteSetCarrierPoint) ∈
           spectralMeasurePVMFiniteSupportedMeasurableSetToSet
             SpectralMeasurePVMFiniteSupportedMeasurableSet.empty := by
-      exact hFE (x := SpectralMeasurePVMSpectralSetSlot.emptySet) (by
+      exact hFE (by
         simp [spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
           spectralMeasurePVMFiniteSetCarrierWhole])
     exact False.elim (by
@@ -69,7 +69,7 @@ theorem spectral_measure_pvm_finite_supported_measurable_subset_antisymm
         (SpectralMeasurePVMSpectralSetSlot.emptySet : SpectralMeasurePVMFiniteSetCarrierPoint) ∈
           spectralMeasurePVMFiniteSupportedMeasurableSetToSet
             SpectralMeasurePVMFiniteSupportedMeasurableSet.empty := by
-      exact hEF (x := SpectralMeasurePVMSpectralSetSlot.emptySet) (by
+      exact hEF (by
         simp [spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
           spectralMeasurePVMFiniteSetCarrierWhole])
     exact False.elim (by
@@ -82,24 +82,18 @@ theorem spectral_measure_pvm_finite_supported_measurable_subset_union_left
     (E F : SpectralMeasurePVMFiniteSupportedMeasurableSet) :
     SpectralMeasurePVMFiniteSupportedMeasurableSetSubset E
       (spectralMeasurePVMFiniteSupportedMeasurableSetUnion E F) := by
-  cases E <;> cases F <;> intro x hx <;>
-    simp [SpectralMeasurePVMFiniteSupportedMeasurableSetSubset,
-      spectralMeasurePVMFiniteSupportedMeasurableSetUnion,
-      spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
-      spectralMeasurePVMFiniteSetCarrierEmpty,
-      spectralMeasurePVMFiniteSetCarrierWhole] at hx ⊢
+  intro x hx
+  rw [spectral_measure_pvm_finite_supported_measurable_set_union_realizes]
+  exact Or.inl hx
 
 /-- Right union upper bound. -/
 theorem spectral_measure_pvm_finite_supported_measurable_subset_union_right
     (E F : SpectralMeasurePVMFiniteSupportedMeasurableSet) :
     SpectralMeasurePVMFiniteSupportedMeasurableSetSubset F
       (spectralMeasurePVMFiniteSupportedMeasurableSetUnion E F) := by
-  cases E <;> cases F <;> intro x hx <;>
-    simp [SpectralMeasurePVMFiniteSupportedMeasurableSetSubset,
-      spectralMeasurePVMFiniteSupportedMeasurableSetUnion,
-      spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
-      spectralMeasurePVMFiniteSetCarrierEmpty,
-      spectralMeasurePVMFiniteSetCarrierWhole] at hx ⊢
+  intro x hx
+  rw [spectral_measure_pvm_finite_supported_measurable_set_union_realizes]
+  exact Or.inr hx
 
 /-- Union is the least upper bound on supported measurable sets. -/
 theorem spectral_measure_pvm_finite_supported_measurable_union_least
@@ -108,36 +102,29 @@ theorem spectral_measure_pvm_finite_supported_measurable_union_least
     (hFG : SpectralMeasurePVMFiniteSupportedMeasurableSetSubset F G) :
     SpectralMeasurePVMFiniteSupportedMeasurableSetSubset
       (spectralMeasurePVMFiniteSupportedMeasurableSetUnion E F) G := by
-  cases E <;> cases F <;> cases G <;> intro x hx <;>
-    simp [SpectralMeasurePVMFiniteSupportedMeasurableSetSubset,
-      spectralMeasurePVMFiniteSupportedMeasurableSetUnion,
-      spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
-      spectralMeasurePVMFiniteSetCarrierEmpty,
-      spectralMeasurePVMFiniteSetCarrierWhole] at hEG hFG hx ⊢
+  intro x hx
+  rw [spectral_measure_pvm_finite_supported_measurable_set_union_realizes] at hx
+  rcases hx with hxE | hxF
+  · exact hEG hxE
+  · exact hFG hxF
 
 /-- Left intersection lower bound. -/
 theorem spectral_measure_pvm_finite_supported_measurable_inter_subset_left
     (E F : SpectralMeasurePVMFiniteSupportedMeasurableSet) :
     SpectralMeasurePVMFiniteSupportedMeasurableSetSubset
       (spectralMeasurePVMFiniteSupportedMeasurableSetInter E F) E := by
-  cases E <;> cases F <;> intro x hx <;>
-    simp [SpectralMeasurePVMFiniteSupportedMeasurableSetSubset,
-      spectralMeasurePVMFiniteSupportedMeasurableSetInter,
-      spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
-      spectralMeasurePVMFiniteSetCarrierEmpty,
-      spectralMeasurePVMFiniteSetCarrierWhole] at hx ⊢
+  intro x hx
+  rw [spectral_measure_pvm_finite_supported_measurable_set_inter_realizes] at hx
+  exact hx.1
 
 /-- Right intersection lower bound. -/
 theorem spectral_measure_pvm_finite_supported_measurable_inter_subset_right
     (E F : SpectralMeasurePVMFiniteSupportedMeasurableSet) :
     SpectralMeasurePVMFiniteSupportedMeasurableSetSubset
       (spectralMeasurePVMFiniteSupportedMeasurableSetInter E F) F := by
-  cases E <;> cases F <;> intro x hx <;>
-    simp [SpectralMeasurePVMFiniteSupportedMeasurableSetSubset,
-      spectralMeasurePVMFiniteSupportedMeasurableSetInter,
-      spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
-      spectralMeasurePVMFiniteSetCarrierEmpty,
-      spectralMeasurePVMFiniteSetCarrierWhole] at hx ⊢
+  intro x hx
+  rw [spectral_measure_pvm_finite_supported_measurable_set_inter_realizes] at hx
+  exact hx.2
 
 /-- Intersection is the greatest lower bound on supported measurable sets. -/
 theorem spectral_measure_pvm_finite_supported_measurable_inter_greatest
@@ -146,12 +133,9 @@ theorem spectral_measure_pvm_finite_supported_measurable_inter_greatest
     (hGF : SpectralMeasurePVMFiniteSupportedMeasurableSetSubset G F) :
     SpectralMeasurePVMFiniteSupportedMeasurableSetSubset G
       (spectralMeasurePVMFiniteSupportedMeasurableSetInter E F) := by
-  cases E <;> cases F <;> cases G <;> intro x hx <;>
-    simp [SpectralMeasurePVMFiniteSupportedMeasurableSetSubset,
-      spectralMeasurePVMFiniteSupportedMeasurableSetInter,
-      spectralMeasurePVMFiniteSupportedMeasurableSetToSet,
-      spectralMeasurePVMFiniteSetCarrierEmpty,
-      spectralMeasurePVMFiniteSetCarrierWhole] at hGE hGF hx ⊢
+  intro x hx
+  rw [spectral_measure_pvm_finite_supported_measurable_set_inter_realizes]
+  exact ⟨hGE hx, hGF hx⟩
 
 /-- Order/lattice law target for supported measurable sets. -/
 def SpectralMeasurePVMFiniteSupportedMeasurableOrderLawTarget : Prop :=
