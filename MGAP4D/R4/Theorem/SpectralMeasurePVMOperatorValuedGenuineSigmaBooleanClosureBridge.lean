@@ -48,7 +48,7 @@ theorem spectral_measure_pvm_sigma_boolean_closure_all_empty_closes_to_empty
     (hs : SpectralMeasurePVMConcreteAllEmptyFamily s) :
     spectralMeasurePVMFiniteLocalSigmaBooleanClosureInterface.countableUnion s =
       spectralMeasurePVMFiniteLocalSigmaBooleanClosureInterface.emptyCarrier := by
-  exact spectral_measure_pvm_concrete_countable_union_all_empty s hs
+  exact spectral_measure_pvm_concrete_countable_union_all_empty_index s hs
 
 /-- The pinned single-whole family closes to the whole carrier through the
 already-established concrete countable-additivity branch. -/
@@ -58,7 +58,7 @@ theorem spectral_measure_pvm_sigma_boolean_closure_single_whole_closes_to_whole
     (hs : SpectralMeasurePVMConcreteSingleWholeAt s k) :
     SpectralMeasurePVMConcreteCountableUnionSingleWholeAt s k =
       spectralMeasurePVMFiniteLocalSigmaBooleanClosureInterface.wholeCarrier := by
-  exact spectral_measure_pvm_concrete_countable_union_single_whole_at s k hs
+  exact spectral_measure_pvm_concrete_countable_union_single_whole_index s k hs
 
 /-- Concrete local countable closure target for the two countable branches already
 available on the finite/two-slot surface. -/
