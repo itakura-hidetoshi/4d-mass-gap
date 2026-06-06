@@ -1,4 +1,4 @@
-import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelClosurePhaseSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelMeasurableSetClosurePackage
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelProjectionValuedMapInterface
 
 namespace MGAP4D
@@ -11,7 +11,7 @@ noncomputable section
 
 /-- Surface bundle for the actual-Borel projection-map interface phase. -/
 def SpectralMeasurePVMActualBorelProjectionMapPhaseSurfaceReady : Prop :=
-  SpectralMeasurePVMActualBorelClosurePhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackagePublicBoundaryHeld ∧
   SpectralMeasurePVMActualBorelProjectionValuedMapInterfacePublicBoundaryHeld ∧
   SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen ∧
   SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
@@ -24,7 +24,7 @@ def SpectralMeasurePVMActualBorelProjectionMapPhaseSurfaceReady : Prop :=
 theorem spectral_measure_pvm_actual_borel_projection_map_phase_surface_ready :
     SpectralMeasurePVMActualBorelProjectionMapPhaseSurfaceReady := by
   exact ⟨
-    spectral_measure_pvm_actual_borel_closure_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_public_boundary_held,
     spectral_measure_pvm_actual_borel_projection_valued_map_interface_public_boundary_held,
     spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready,
     spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
