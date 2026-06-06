@@ -1,0 +1,139 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelPreSelfAdjointSpectralTheoremHandoffSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSelfAdjointSpectralTheoremReceiverPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the pre-self-adjoint spectral-theorem sigma-carrier
+handoff into the self-adjoint spectral-theorem receiver phase.
+
+This records that the actual-Borel countable-additivity boundary has been
+received by the self-adjoint spectral-theorem side.  It keeps the genuine
+self-adjoint spectral theorem and genuine spectral-measure construction markers
+open, and does not identify the symbolic integral surface with a completed R4
+spectral measure. -/
+structure SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoff where
+  pre_self_adjoint_spectral_theorem_handoff_sigma_handoff :
+    SpectralMeasurePVMActualBorelPreSelfAdjointSpectralTheoremHandoffSigmaCarrierHandoffPublicBoundaryHeld
+  self_adjoint_spectral_theorem_receiver_phase_ready :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverPhaseSurfaceReady
+  self_adjoint_spectral_theorem_receiver_boundary :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverPublicBoundaryHeld
+  self_adjoint_spectral_theorem_receiver_target :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverTarget
+  self_adjoint_spectral_theorem_receiver_bridge :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverBridgeReady
+  genuine_self_adjoint_spectral_theorem_bridge_ready :
+    SpectralMeasurePVMOperatorValuedGenuineSelfAdjointSpectralTheoremBridgeReady
+  symbolic_integral_ready :
+    SpectralMeasurePVMSelfAdjointSpectralTheoremSymbolicIntegralTarget
+  mathlib_spectral_theorem_review_ready :
+    SpectralMeasurePVMMathlibSpectralTheoremReviewSurfaceTarget
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current handoff certificate into the self-adjoint spectral-theorem
+receiver phase. -/
+def spectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoff where
+  pre_self_adjoint_spectral_theorem_handoff_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_pre_self_adjoint_spectral_theorem_handoff_sigma_carrier_handoff_public_boundary_held
+  self_adjoint_spectral_theorem_receiver_phase_ready :=
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_phase_surface_ready
+  self_adjoint_spectral_theorem_receiver_boundary :=
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_public_boundary_held
+  self_adjoint_spectral_theorem_receiver_target :=
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_target_ready
+  self_adjoint_spectral_theorem_receiver_bridge :=
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_bridge_ready
+  genuine_self_adjoint_spectral_theorem_bridge_ready :=
+    spectral_measure_pvm_operator_valued_genuine_self_adjoint_spectral_theorem_bridge_ready
+  symbolic_integral_ready :=
+    spectral_measure_pvm_self_adjoint_spectral_theorem_symbolic_integral_target_ready
+  mathlib_spectral_theorem_review_ready :=
+    spectral_measure_pvm_mathlib_spectral_theorem_review_surface_target_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the self-adjoint spectral-theorem receiver sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoff
+
+/-- The self-adjoint spectral-theorem receiver sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoff⟩
+
+/-- Target recording the self-adjoint spectral-theorem receiver sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelPreSelfAdjointSpectralTheoremHandoffSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverTarget ∧
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverBridgeReady ∧
+  SpectralMeasurePVMOperatorValuedGenuineSelfAdjointSpectralTheoremBridgeReady ∧
+  SpectralMeasurePVMSelfAdjointSpectralTheoremSymbolicIntegralTarget ∧
+  SpectralMeasurePVMMathlibSpectralTheoremReviewSurfaceTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The self-adjoint spectral-theorem receiver sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_pre_self_adjoint_spectral_theorem_handoff_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_public_boundary_held,
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_target_ready,
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_bridge_ready,
+    spectral_measure_pvm_operator_valued_genuine_self_adjoint_spectral_theorem_bridge_ready,
+    spectral_measure_pvm_self_adjoint_spectral_theorem_symbolic_integral_target_ready,
+    spectral_measure_pvm_mathlib_spectral_theorem_review_surface_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the self-adjoint spectral-theorem receiver sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the self-adjoint spectral-theorem receiver
+sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverSigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
