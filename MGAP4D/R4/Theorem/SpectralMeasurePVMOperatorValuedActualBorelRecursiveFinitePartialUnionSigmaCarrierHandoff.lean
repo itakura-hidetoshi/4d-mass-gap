@@ -1,0 +1,118 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableFamilyDisjointnessSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelRecursiveFinitePartialUnionPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the countable-family disjointness sigma-carrier
+handoff into the recursive finite-partial-union phase.
+
+This records the first non-placeholder finite-partial-union surface for the
+actual-Borel branch.  It still only concerns finite recursive unions and the
+empty-family extensional/projection-zero facts; no countable union realization
+or operator-topology limit is asserted. -/
+structure SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoff where
+  disjointness_sigma_handoff :
+    SpectralMeasurePVMActualBorelCountableFamilyDisjointnessSigmaCarrierHandoffPublicBoundaryHeld
+  recursive_finite_partial_union_phase_ready :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionPhaseSurfaceReady
+  recursive_finite_partial_union_boundary :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionPublicBoundaryHeld
+  recursive_finite_partial_union_target :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionTarget
+  recursive_finite_partial_union_bridge :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionBridgeReady
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current handoff certificate into the recursive finite-partial-union phase. -/
+def spectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoff where
+  disjointness_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_countable_family_disjointness_sigma_carrier_handoff_public_boundary_held
+  recursive_finite_partial_union_phase_ready :=
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_phase_surface_ready
+  recursive_finite_partial_union_boundary :=
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_public_boundary_held
+  recursive_finite_partial_union_target :=
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_target_ready
+  recursive_finite_partial_union_bridge :=
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_bridge_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the recursive finite-partial-union sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoff
+
+/-- The recursive finite-partial-union sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_recursive_finite_partial_union_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoff⟩
+
+/-- Target recording the recursive finite-partial-union sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelCountableFamilyDisjointnessSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionTarget ∧
+  SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionBridgeReady ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The recursive finite-partial-union sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_recursive_finite_partial_union_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_countable_family_disjointness_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_public_boundary_held,
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_target_ready,
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_bridge_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the recursive finite-partial-union sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the recursive finite-partial-union sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_recursive_finite_partial_union_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelRecursiveFinitePartialUnionSigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_recursive_finite_partial_union_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
