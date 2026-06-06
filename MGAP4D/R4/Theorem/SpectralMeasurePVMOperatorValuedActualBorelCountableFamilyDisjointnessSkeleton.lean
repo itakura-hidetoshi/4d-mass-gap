@@ -18,8 +18,9 @@ def SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint
 theorem spectral_measure_pvm_actual_borel_empty_countable_family_pairwise_disjoint :
     SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint
       spectralMeasurePVMActualBorelEmptyCountableFamily := by
-  intro i j hij
-  rfl
+  intro i j _hij
+  simp [spectralMeasurePVMActualBorelEmptyCountableFamily,
+    spectralMeasurePVMActualBorelEmptySet]
 
 /-- Disjointness skeleton target for actual-Borel countable families.
 
