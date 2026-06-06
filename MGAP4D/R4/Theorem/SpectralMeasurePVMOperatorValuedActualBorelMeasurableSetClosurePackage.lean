@@ -1,0 +1,134 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelClosurePhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- A compact package collecting the measurable-set closure laws already obtained
+for the actual-Borel carrier wrapper.
+
+This is still a carrier-side package only: it records Boolean closure, countable
+union closure, and countable intersection closure for `{s : Set ℝ // MeasurableSet s}`.
+It does not assert operator-topology countable additivity or close the genuine
+spectral-measure construction. -/
+structure SpectralMeasurePVMActualBorelMeasurableSetClosurePackage where
+  closure_phase_ready : SpectralMeasurePVMActualBorelClosurePhaseSurfaceReady
+  boolean_closure_held : SpectralMeasurePVMActualBorelSetAlgebraClosurePublicBoundaryHeld
+  countable_union_held : SpectralMeasurePVMActualBorelCountableUnionClosurePublicBoundaryHeld
+  countable_inter_held : SpectralMeasurePVMActualBorelCountableInterClosurePublicBoundaryHeld
+  set_algebra_realization_open : SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen
+  genuine_borel_carrier_open : SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current actual-Borel measurable-set closure package. -/
+def spectralMeasurePVMActualBorelMeasurableSetClosurePackage :
+    SpectralMeasurePVMActualBorelMeasurableSetClosurePackage where
+  closure_phase_ready := spectral_measure_pvm_actual_borel_closure_phase_surface_ready
+  boolean_closure_held := spectral_measure_pvm_actual_borel_set_algebra_closure_public_boundary_held
+  countable_union_held := spectral_measure_pvm_actual_borel_countable_union_closure_public_boundary_held
+  countable_inter_held := spectral_measure_pvm_actual_borel_countable_inter_closure_public_boundary_held
+  set_algebra_realization_open := spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready
+  genuine_borel_carrier_open := spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the actual-Borel measurable-set closure package. -/
+def SpectralMeasurePVMActualBorelMeasurableSetClosurePackageExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelMeasurableSetClosurePackage
+
+/-- The actual-Borel measurable-set closure package exists. -/
+theorem spectral_measure_pvm_actual_borel_measurable_set_closure_package_existence_target_ready :
+    SpectralMeasurePVMActualBorelMeasurableSetClosurePackageExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelMeasurableSetClosurePackage⟩
+
+/-- Target recording the measurable-set closure package as a reusable carrier-side
+boundary. -/
+def SpectralMeasurePVMActualBorelMeasurableSetClosurePackageTarget : Prop :=
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackageExistenceTarget ∧
+  SpectralMeasurePVMActualBorelClosurePhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelSetAlgebraClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableUnionClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableInterClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel measurable-set closure package target is ready. -/
+theorem spectral_measure_pvm_actual_borel_measurable_set_closure_package_target_ready :
+    SpectralMeasurePVMActualBorelMeasurableSetClosurePackageTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_existence_target_ready,
+    spectral_measure_pvm_actual_borel_closure_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_set_algebra_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_union_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_inter_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Bridge boundary for the actual-Borel measurable-set closure package. -/
+def SpectralMeasurePVMActualBorelMeasurableSetClosurePackageBridgeReady : Prop :=
+  SpectralMeasurePVMActualBorelClosurePhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackageTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The bridge boundary for the actual-Borel measurable-set closure package is ready. -/
+theorem spectral_measure_pvm_actual_borel_measurable_set_closure_package_bridge_ready :
+    SpectralMeasurePVMActualBorelMeasurableSetClosurePackageBridgeReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_closure_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after packaging actual-Borel measurable-set closure. -/
+def SpectralMeasurePVMActualBorelMeasurableSetClosurePackagePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackageBridgeReady ∧
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackageTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after packaging actual-Borel measurable-set closure is held. -/
+theorem spectral_measure_pvm_actual_borel_measurable_set_closure_package_public_boundary_held :
+    SpectralMeasurePVMActualBorelMeasurableSetClosurePackagePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_bridge_ready,
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
