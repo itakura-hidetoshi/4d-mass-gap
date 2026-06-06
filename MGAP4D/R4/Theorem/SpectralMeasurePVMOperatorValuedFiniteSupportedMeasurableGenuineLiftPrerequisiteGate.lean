@@ -1,0 +1,166 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurableNonPromotionFirewall
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Prerequisite row for the genuine Borel-carrier lift.
+
+The supported finite measurable local PVM certificate is available, but the
+Borel carrier obligation must still be discharged before any genuine spectral
+measure promotion can be read. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftBorelCarrierPrerequisiteReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToBorelCarrierReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableBorelCarrierObligationRowReady ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The Borel-carrier prerequisite row for genuine lift is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_borel_carrier_prerequisite_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftBorelCarrierPrerequisiteReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_borel_carrier_ready,
+    spectral_measure_pvm_finite_supported_measurable_borel_carrier_obligation_row_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Prerequisite row for the genuine spectral-integral lift. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSpectralIntegralPrerequisiteReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToActualSpectralIntegralReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableActualSpectralIntegralObligationRowReady ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The spectral-integral prerequisite row for genuine lift is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_spectral_integral_prerequisite_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSpectralIntegralPrerequisiteReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_actual_spectral_integral_ready,
+    spectral_measure_pvm_finite_supported_measurable_actual_spectral_integral_obligation_row_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Prerequisite row for genuine operator-topology countable additivity. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftOperatorTopologyCountableAdditivityPrerequisiteReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToOperatorTopologyCountableAdditivityReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableOperatorTopologyCountableAdditivityObligationRowReady ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The operator-topology countable-additivity prerequisite row for genuine lift is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_operator_topology_countable_additivity_prerequisite_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftOperatorTopologyCountableAdditivityPrerequisiteReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_operator_topology_countable_additivity_ready,
+    spectral_measure_pvm_finite_supported_measurable_operator_topology_countable_additivity_obligation_row_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Prerequisite row for the genuine self-adjoint spectral-theorem lift. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSelfAdjointSpectralTheoremPrerequisiteReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToSelfAdjointSpectralTheoremReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSelfAdjointSpectralTheoremObligationRowReady ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The self-adjoint spectral-theorem prerequisite row for genuine lift is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_self_adjoint_spectral_theorem_prerequisite_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSelfAdjointSpectralTheoremPrerequisiteReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_self_adjoint_spectral_theorem_ready,
+    spectral_measure_pvm_finite_supported_measurable_self_adjoint_spectral_theorem_obligation_row_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Prerequisite row for genuine spectral-measure construction. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSpectralMeasurePrerequisiteReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToGenuineSpectralMeasureReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineSpectralMeasureObligationRowReady ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The genuine spectral-measure construction prerequisite row is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_spectral_measure_prerequisite_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSpectralMeasurePrerequisiteReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_genuine_spectral_measure_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_spectral_measure_obligation_row_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Genuine lift prerequisite checklist.
+
+This checklist says that the local supported finite PVM surface has been
+final-receipted and guarded by a non-promotion firewall, while every genuine lift
+axis remains an explicit prerequisite rather than a derived conclusion. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftPrerequisiteChecklistReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineObligationLedgerPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftBorelCarrierPrerequisiteReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSpectralIntegralPrerequisiteReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftOperatorTopologyCountableAdditivityPrerequisiteReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSelfAdjointSpectralTheoremPrerequisiteReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftSpectralMeasurePrerequisiteReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The genuine lift prerequisite checklist is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_prerequisite_checklist_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftPrerequisiteChecklistReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_obligation_ledger_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_borel_carrier_prerequisite_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_spectral_integral_prerequisite_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_operator_topology_countable_additivity_prerequisite_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_self_adjoint_spectral_theorem_prerequisite_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_spectral_measure_prerequisite_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Gate for any future genuine spectral-measure lift from the finite-supported
+local PVM surface. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftPrerequisiteChecklistReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallReady ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The future genuine lift gate is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_prerequisite_checklist_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
