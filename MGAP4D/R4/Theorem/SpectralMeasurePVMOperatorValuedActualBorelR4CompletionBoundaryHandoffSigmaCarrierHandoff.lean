@@ -1,0 +1,139 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelGenuineSpectralMeasureConstructionReceiverSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelR4CompletionBoundaryHandoffPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the genuine spectral-measure construction receiver
+sigma-carrier layer into the visible R4 completion-boundary handoff phase.
+
+This is still a boundary certificate.  It records that the actual-Borel chain
+has reached the R4 completion-boundary surface while preserving the genuine
+spectral-measure construction open marker and the later-stage deferrals for the
+compact plaquette observable, the exact 33/20 atom, and positive spectral
+weight. -/
+structure SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoff where
+  genuine_spectral_measure_construction_receiver_sigma_handoff :
+    SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverSigmaCarrierHandoffPublicBoundaryHeld
+  r4_completion_boundary_handoff_phase_ready :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPhaseSurfaceReady
+  r4_completion_boundary_handoff_boundary :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPublicBoundaryHeld
+  r4_completion_boundary_handoff_target :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffTarget
+  r4_completion_boundary_handoff_bridge :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffBridgeReady
+  r4_completion_boundary_held :
+    SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  compact_plaquette_not_consumed :
+    SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable
+  atom_3320_deferred :
+    SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage
+  positive_spectral_weight_deferred :
+    SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current sigma-carrier handoff into the visible R4 completion-boundary
+handoff phase. -/
+def spectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoff where
+  genuine_spectral_measure_construction_receiver_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_sigma_carrier_handoff_public_boundary_held
+  r4_completion_boundary_handoff_phase_ready :=
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_phase_surface_ready
+  r4_completion_boundary_handoff_boundary :=
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_public_boundary_held
+  r4_completion_boundary_handoff_target :=
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_target_ready
+  r4_completion_boundary_handoff_bridge :=
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_bridge_ready
+  r4_completion_boundary_held :=
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  compact_plaquette_not_consumed :=
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready
+  atom_3320_deferred :=
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready
+  positive_spectral_weight_deferred :=
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the actual-Borel R4 completion-boundary sigma-carrier
+handoff. -/
+def SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoff
+
+/-- The actual-Borel R4 completion-boundary sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoff⟩
+
+/-- Target recording the actual-Borel R4 completion-boundary sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffTarget ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffBridgeReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel R4 completion-boundary sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_target_ready,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_bridge_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the actual-Borel R4 completion-boundary sigma-carrier
+handoff. -/
+def SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the actual-Borel R4 completion-boundary
+sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
