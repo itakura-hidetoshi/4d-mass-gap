@@ -12,7 +12,7 @@ noncomputable section
 def spectralMeasurePVMActualBorelEndpointUnionProjectionMap
     (s t : SpectralMeasurePVMActualBorelCarrierSet) :
     SpectralMeasurePVMActualBorelProjectionOperator :=
-  spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+  spectralMeasurePVMActualBorelEndpointSeededProjectionMap
     (spectralMeasurePVMActualBorelCarrierSetUnion s t)
 
 /-- Pointwise finite additivity for `∅ ∪ ∅`. -/
@@ -21,9 +21,9 @@ theorem spectral_measure_pvm_actual_borel_finite_additivity_empty_empty_apply
     spectralMeasurePVMActualBorelEndpointUnionProjectionMap
         spectralMeasurePVMActualBorelEmptySet
         spectralMeasurePVMActualBorelEmptySet x =
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x +
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x := by
   simp [spectralMeasurePVMActualBorelEndpointUnionProjectionMap,
     spectralMeasurePVMActualBorelEndpointSeededProjectionMap,
@@ -36,16 +36,15 @@ theorem spectral_measure_pvm_actual_borel_finite_additivity_empty_univ_apply
     spectralMeasurePVMActualBorelEndpointUnionProjectionMap
         spectralMeasurePVMActualBorelEmptySet
         spectralMeasurePVMActualBorelUnivSet x =
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x +
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelUnivSet x := by
   simp [spectralMeasurePVMActualBorelEndpointUnionProjectionMap,
     spectralMeasurePVMActualBorelEndpointSeededProjectionMap,
     spectralMeasurePVMActualBorelCarrierSetUnion,
     spectralMeasurePVMActualBorelEmptySet,
-    spectralMeasurePVMActualBorelUnivSet,
-    spectral_measure_pvm_actual_borel_univ_ne_empty_set]
+    spectralMeasurePVMActualBorelUnivSet]
 
 /-- Pointwise finite additivity for `univ ∪ ∅`. -/
 theorem spectral_measure_pvm_actual_borel_finite_additivity_univ_empty_apply
@@ -53,16 +52,15 @@ theorem spectral_measure_pvm_actual_borel_finite_additivity_univ_empty_apply
     spectralMeasurePVMActualBorelEndpointUnionProjectionMap
         spectralMeasurePVMActualBorelUnivSet
         spectralMeasurePVMActualBorelEmptySet x =
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelUnivSet x +
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x := by
   simp [spectralMeasurePVMActualBorelEndpointUnionProjectionMap,
     spectralMeasurePVMActualBorelEndpointSeededProjectionMap,
     spectralMeasurePVMActualBorelCarrierSetUnion,
     spectralMeasurePVMActualBorelEmptySet,
-    spectralMeasurePVMActualBorelUnivSet,
-    spectral_measure_pvm_actual_borel_univ_ne_empty_set]
+    spectralMeasurePVMActualBorelUnivSet]
 
 /-- Endpoint finite-additivity skeleton target for the actual-Borel projection map.
 
@@ -73,25 +71,25 @@ def SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonTarget : Prop :=
     spectralMeasurePVMActualBorelEndpointUnionProjectionMap
         spectralMeasurePVMActualBorelEmptySet
         spectralMeasurePVMActualBorelEmptySet x =
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x +
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x) ∧
   (∀ x : MathlibAnalytic.ConcreteL2R1HilbertCarrier,
     spectralMeasurePVMActualBorelEndpointUnionProjectionMap
         spectralMeasurePVMActualBorelEmptySet
         spectralMeasurePVMActualBorelUnivSet x =
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x +
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelUnivSet x) ∧
   (∀ x : MathlibAnalytic.ConcreteL2R1HilbertCarrier,
     spectralMeasurePVMActualBorelEndpointUnionProjectionMap
         spectralMeasurePVMActualBorelUnivSet
         spectralMeasurePVMActualBorelEmptySet x =
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelUnivSet x +
-      spectralMeasurePVMActualBorelEndpointSeededProjectionValuedMapInterface.map
+      spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         spectralMeasurePVMActualBorelEmptySet x)
 
 /-- The endpoint finite-additivity skeleton target is ready. -/
