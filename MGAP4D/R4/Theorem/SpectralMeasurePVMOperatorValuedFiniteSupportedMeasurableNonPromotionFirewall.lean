@@ -1,0 +1,157 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurableGenuineObligationLedger
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Firewall row: the local supported finite measurable PVM certificate does not
+promote to a genuine Borel carrier realization. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToBorelCarrierReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableBorelCarrierObligationRowReady ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The no-promotion-to-Borel-carrier firewall row is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_no_promotion_to_borel_carrier_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToBorelCarrierReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_borel_carrier_obligation_row_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Firewall row: the local supported finite measurable PVM certificate does not
+promote to an actual spectral-integral realization. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToActualSpectralIntegralReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableActualSpectralIntegralObligationRowReady ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The no-promotion-to-actual-spectral-integral firewall row is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_no_promotion_to_actual_spectral_integral_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToActualSpectralIntegralReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_actual_spectral_integral_obligation_row_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Firewall row: the local supported finite measurable PVM certificate does not
+promote to genuine operator-topology countable additivity. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToOperatorTopologyCountableAdditivityReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableOperatorTopologyCountableAdditivityObligationRowReady ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The no-promotion-to-operator-topology-countable-additivity firewall row is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_no_promotion_to_operator_topology_countable_additivity_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToOperatorTopologyCountableAdditivityReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_operator_topology_countable_additivity_obligation_row_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Firewall row: the local supported finite measurable PVM certificate does not
+promote to the genuine self-adjoint spectral theorem bridge. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToSelfAdjointSpectralTheoremReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableSelfAdjointSpectralTheoremObligationRowReady ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The no-promotion-to-self-adjoint-spectral-theorem firewall row is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_no_promotion_to_self_adjoint_spectral_theorem_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToSelfAdjointSpectralTheoremReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_self_adjoint_spectral_theorem_obligation_row_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Firewall row: the local supported finite measurable PVM certificate does not
+promote to a genuine spectral-measure construction. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToGenuineSpectralMeasureReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineSpectralMeasureObligationRowReady ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The no-promotion-to-genuine-spectral-measure firewall row is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_no_promotion_to_genuine_spectral_measure_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToGenuineSpectralMeasureReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_spectral_measure_obligation_row_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Non-promotion firewall for the supported finite measurable local PVM surface.
+
+The local symbolic PVM surface is proof-carrying, but it is not allowed to be
+read as a completed genuine Borel spectral measure, a completed spectral
+integral, a completed operator-topology countably additive measure, or the
+self-adjoint spectral theorem bridge. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineObligationLedgerPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToBorelCarrierReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToActualSpectralIntegralReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToOperatorTopologyCountableAdditivityReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToSelfAdjointSpectralTheoremReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNoPromotionToGenuineSpectralMeasureReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The non-promotion firewall is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_genuine_obligation_ledger_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_borel_carrier_ready,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_actual_spectral_integral_ready,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_operator_topology_countable_additivity_ready,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_self_adjoint_spectral_theorem_ready,
+    spectral_measure_pvm_finite_supported_measurable_no_promotion_to_genuine_spectral_measure_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the non-promotion firewall. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineObligationLedgerPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the non-promotion firewall is held. -/
+theorem spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held :
+    SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_obligation_ledger_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
