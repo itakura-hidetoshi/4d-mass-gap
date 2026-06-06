@@ -46,7 +46,9 @@ theorem spectral_measure_pvm_actual_borel_empty_family_finite_partial_projection
     spectralMeasurePVMActualBorelEndpointSeededProjectionMap
         (spectralMeasurePVMActualBorelFinitePartialUnion
           spectralMeasurePVMActualBorelEmptyCountableFamily n) x = 0 := by
-  rfl
+  simp [spectralMeasurePVMActualBorelEndpointSeededProjectionMap,
+    spectralMeasurePVMActualBorelFinitePartialUnion,
+    spectralMeasurePVMActualBorelEmptySet]
 
 /-- Countable-additivity preparation target for the actual-Borel carrier.
 
