@@ -1,0 +1,124 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelLimitObligationPacketSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableAdditivityHandoffPacketPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the limit-obligation packet sigma-carrier handoff
+into the actual-Borel countable-additivity handoff-packet phase.
+
+This is a routing layer to the genuine operator-topology countable-additivity
+bridge.  It carries the limit-obligation source, the finite-stage boundedness
+and limit-zero witnesses, and the open genuine bridge marker.  It does not
+claim that the genuine countable-additivity problem has been discharged. -/
+structure SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoff where
+  limit_obligation_packet_sigma_handoff :
+    SpectralMeasurePVMActualBorelLimitObligationPacketSigmaCarrierHandoffPublicBoundaryHeld
+  countable_additivity_handoff_packet_phase_ready :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketPhaseSurfaceReady
+  countable_additivity_handoff_packet_boundary :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketPublicBoundaryHeld
+  countable_additivity_handoff_packet_target :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketTarget
+  countable_additivity_handoff_packet_bridge :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketBridgeReady
+  genuine_operator_topology_countable_additivity_bridge_ready :
+    SpectralMeasurePVMOperatorValuedGenuineOperatorTopologyCountableAdditivityBridgeReady
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current handoff certificate into the countable-additivity handoff-packet phase. -/
+def spectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoff where
+  limit_obligation_packet_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_limit_obligation_packet_sigma_carrier_handoff_public_boundary_held
+  countable_additivity_handoff_packet_phase_ready :=
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_phase_surface_ready
+  countable_additivity_handoff_packet_boundary :=
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_public_boundary_held
+  countable_additivity_handoff_packet_target :=
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_target_ready
+  countable_additivity_handoff_packet_bridge :=
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_bridge_ready
+  genuine_operator_topology_countable_additivity_bridge_ready :=
+    spectral_measure_pvm_operator_valued_genuine_operator_topology_countable_additivity_bridge_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the countable-additivity handoff-packet sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoff
+
+/-- The countable-additivity handoff-packet sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoff⟩
+
+/-- Target recording the countable-additivity handoff-packet sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelLimitObligationPacketSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketTarget ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketBridgeReady ∧
+  SpectralMeasurePVMOperatorValuedGenuineOperatorTopologyCountableAdditivityBridgeReady ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The countable-additivity handoff-packet sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_limit_obligation_packet_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_target_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_bridge_ready,
+    spectral_measure_pvm_operator_valued_genuine_operator_topology_countable_additivity_bridge_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the countable-additivity handoff-packet sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the countable-additivity handoff-packet sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
