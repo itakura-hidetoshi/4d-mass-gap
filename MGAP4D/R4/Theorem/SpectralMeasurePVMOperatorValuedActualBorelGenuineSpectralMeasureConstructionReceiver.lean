@@ -1,0 +1,119 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelGenuineSpectralMeasureConstructionHandoff
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Receiver for the actual-Borel handoff at the genuine spectral-measure
+construction boundary.
+
+This receiver accepts the actual-Borel spectral-measure-construction handoff and
+keeps the assembled continuous spectral-measure candidate boundary visible.  It
+does not close the genuine spectral-measure construction. -/
+structure SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiver where
+  handoff : SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionHandoff
+  handoff_ready : SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionHandoffTarget
+  continuous_candidate_core_ready :
+    SpectralMeasurePVMOperatorValuedContinuousSpectralMeasureCandidateCoreReady
+  continuous_candidate_boundary_held :
+    SpectralMeasurePVMOperatorValuedContinuousSpectralMeasureCandidateBoundaryHeld
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- Empty-family receiver at the genuine spectral-measure construction boundary. -/
+def spectralMeasurePVMActualBorelEmptyGenuineSpectralMeasureConstructionReceiver :
+    SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiver where
+  handoff := spectralMeasurePVMActualBorelEmptyGenuineSpectralMeasureConstructionHandoff
+  handoff_ready :=
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_handoff_target_ready
+  continuous_candidate_core_ready :=
+    spectral_measure_pvm_operator_valued_continuous_spectral_measure_candidate_core_ready
+  continuous_candidate_boundary_held :=
+    spectral_measure_pvm_operator_valued_continuous_spectral_measure_candidate_boundary_held
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Genuine spectral-measure construction receiver existence target. -/
+def SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiver
+
+/-- The genuine spectral-measure construction receiver exists. -/
+theorem spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_existence_target_ready :
+    SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelEmptyGenuineSpectralMeasureConstructionReceiver⟩
+
+/-- Genuine spectral-measure construction receiver target. -/
+def SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverTarget : Prop :=
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverExistenceTarget ∧
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedContinuousSpectralMeasureCandidateCoreReady ∧
+  SpectralMeasurePVMOperatorValuedContinuousSpectralMeasureCandidateBoundaryHeld ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The genuine spectral-measure construction receiver target is ready. -/
+theorem spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_target_ready :
+    SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_existence_target_ready,
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_handoff_public_boundary_held,
+    spectral_measure_pvm_operator_valued_continuous_spectral_measure_candidate_core_ready,
+    spectral_measure_pvm_operator_valued_continuous_spectral_measure_candidate_boundary_held,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Actual-Borel genuine spectral-measure construction receiver bridge. -/
+def SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverBridgeReady : Prop :=
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverTarget ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel genuine spectral-measure construction receiver bridge is ready. -/
+theorem spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_bridge_ready :
+    SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverBridgeReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_target_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the actual-Borel genuine spectral-measure construction receiver. -/
+def SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverBridgeReady ∧
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverTarget ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the actual-Borel genuine spectral-measure construction receiver is held. -/
+theorem spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_public_boundary_held :
+    SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_bridge_ready,
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_target_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
