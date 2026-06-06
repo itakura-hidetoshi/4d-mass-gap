@@ -1,4 +1,3 @@
-import MGAP4D.R4.TheoremSurface
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSetWrapper
 
 namespace MGAP4D
