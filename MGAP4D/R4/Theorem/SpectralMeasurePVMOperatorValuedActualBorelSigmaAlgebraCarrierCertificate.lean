@@ -12,16 +12,17 @@ noncomputable section
 
 This is not a new `MeasurableSpace` instance.  It is a proof-carrying certificate
 that the carrier wrapper already has the closure laws expected of Borel sets:
-empty, universal set, complement, finite Boolean closure via the set-algebra
-package, and countable union closure.  Operator-topology countable additivity and
-the genuine spectral-measure theorem remain open. -/
+existence of endpoint carriers, endpoint lifting, Boolean closure via the
+set-wrapper/set-algebra package, countable union closure, and countable
+intersection closure.  Operator-topology countable additivity and the genuine
+spectral-measure theorem remain open. -/
 structure SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate where
   measurable_set_closure_package :
     SpectralMeasurePVMActualBorelMeasurableSetClosurePackage
   package_ready : SpectralMeasurePVMActualBorelMeasurableSetClosurePackageTarget
-  empty_member : SpectralMeasurePVMActualBorelEmptySetTarget
-  univ_member : SpectralMeasurePVMActualBorelUnivSetTarget
-  complement_closure : SpectralMeasurePVMActualBorelCarrierSetComplementClosureTarget
+  wrapper_existence : SpectralMeasurePVMActualBorelSetWrapperExistenceTarget
+  endpoint_lift : SpectralMeasurePVMActualBorelSetWrapperEndpointLiftTarget
+  boolean_closure : SpectralMeasurePVMActualBorelSetWrapperBooleanClosureTarget
   boolean_closure_held : SpectralMeasurePVMActualBorelSetAlgebraClosurePublicBoundaryHeld
   countable_union_closure : SpectralMeasurePVMActualBorelCountableUnionClosureTarget
   countable_inter_closure : SpectralMeasurePVMActualBorelCountableInterClosureTarget
@@ -40,9 +41,9 @@ def spectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate :
     SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate where
   measurable_set_closure_package := spectralMeasurePVMActualBorelMeasurableSetClosurePackage
   package_ready := spectral_measure_pvm_actual_borel_measurable_set_closure_package_target_ready
-  empty_member := spectral_measure_pvm_actual_borel_empty_set_target_ready
-  univ_member := spectral_measure_pvm_actual_borel_univ_set_target_ready
-  complement_closure := spectral_measure_pvm_actual_borel_carrier_set_complement_closure_target_ready
+  wrapper_existence := spectral_measure_pvm_actual_borel_set_wrapper_existence_target_ready
+  endpoint_lift := spectral_measure_pvm_actual_borel_set_wrapper_endpoint_lift_target_ready
+  boolean_closure := spectral_measure_pvm_actual_borel_set_wrapper_boolean_closure_target_ready
   boolean_closure_held := spectral_measure_pvm_actual_borel_set_algebra_closure_public_boundary_held
   countable_union_closure := spectral_measure_pvm_actual_borel_countable_union_closure_target_ready
   countable_inter_closure := spectral_measure_pvm_actual_borel_countable_inter_closure_target_ready
@@ -69,9 +70,9 @@ theorem spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_exis
 def SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateTarget : Prop :=
   SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateExistenceTarget ∧
   SpectralMeasurePVMActualBorelMeasurableSetClosurePackagePublicBoundaryHeld ∧
-  SpectralMeasurePVMActualBorelEmptySetTarget ∧
-  SpectralMeasurePVMActualBorelUnivSetTarget ∧
-  SpectralMeasurePVMActualBorelCarrierSetComplementClosureTarget ∧
+  SpectralMeasurePVMActualBorelSetWrapperExistenceTarget ∧
+  SpectralMeasurePVMActualBorelSetWrapperEndpointLiftTarget ∧
+  SpectralMeasurePVMActualBorelSetWrapperBooleanClosureTarget ∧
   SpectralMeasurePVMActualBorelSetAlgebraClosurePublicBoundaryHeld ∧
   SpectralMeasurePVMActualBorelCountableUnionClosureTarget ∧
   SpectralMeasurePVMActualBorelCountableInterClosureTarget ∧
@@ -88,9 +89,9 @@ theorem spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_targ
   exact ⟨
     spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_existence_target_ready,
     spectral_measure_pvm_actual_borel_measurable_set_closure_package_public_boundary_held,
-    spectral_measure_pvm_actual_borel_empty_set_target_ready,
-    spectral_measure_pvm_actual_borel_univ_set_target_ready,
-    spectral_measure_pvm_actual_borel_carrier_set_complement_closure_target_ready,
+    spectral_measure_pvm_actual_borel_set_wrapper_existence_target_ready,
+    spectral_measure_pvm_actual_borel_set_wrapper_endpoint_lift_target_ready,
+    spectral_measure_pvm_actual_borel_set_wrapper_boolean_closure_target_ready,
     spectral_measure_pvm_actual_borel_set_algebra_closure_public_boundary_held,
     spectral_measure_pvm_actual_borel_countable_union_closure_target_ready,
     spectral_measure_pvm_actual_borel_countable_inter_closure_target_ready,
