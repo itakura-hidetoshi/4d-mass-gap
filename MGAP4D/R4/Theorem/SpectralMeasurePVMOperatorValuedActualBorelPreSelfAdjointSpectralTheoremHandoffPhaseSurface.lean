@@ -1,0 +1,36 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelGenuineCountableAdditivityBoundaryCertificatePhaseSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelPreSelfAdjointSpectralTheoremHandoff
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Surface bundle for the actual-Borel pre-self-adjoint spectral-theorem handoff phase. -/
+def SpectralMeasurePVMActualBorelPreSelfAdjointSpectralTheoremHandoffPhaseSurfaceReady : Prop :=
+  SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificatePhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelPreSelfAdjointSpectralTheoremHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel pre-self-adjoint spectral-theorem handoff phase surface is ready. -/
+theorem spectral_measure_pvm_actual_borel_pre_self_adjoint_spectral_theorem_handoff_phase_surface_ready :
+    SpectralMeasurePVMActualBorelPreSelfAdjointSpectralTheoremHandoffPhaseSurfaceReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_pre_self_adjoint_spectral_theorem_handoff_public_boundary_held,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
