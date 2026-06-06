@@ -1,0 +1,40 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelGenuineSpectralMeasureConstructionReceiverPhaseSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelR4CompletionBoundaryHandoff
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Surface bundle for the actual-Borel R4 completion-boundary handoff phase. -/
+def SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPhaseSurfaceReady : Prop :=
+  SpectralMeasurePVMActualBorelGenuineSpectralMeasureConstructionReceiverPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel R4 completion-boundary handoff phase surface is ready. -/
+theorem spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_phase_surface_ready :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPhaseSurfaceReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_spectral_measure_construction_receiver_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
