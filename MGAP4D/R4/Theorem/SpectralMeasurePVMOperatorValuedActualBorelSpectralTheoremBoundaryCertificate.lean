@@ -1,0 +1,127 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSelfAdjointSpectralTheoremReceiver
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Boundary certificate after the actual-Borel self-adjoint spectral-theorem
+receiver.
+
+This certificate records that the self-adjoint spectral-theorem side has received
+the actual-Borel handoff and that the symbolic/mathlib review surfaces are
+available, while the genuine self-adjoint spectral theorem and genuine spectral
+measure construction remain open. -/
+structure SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificate where
+  receiver : SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiver
+  receiver_ready : SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverTarget
+  self_adjoint_bridge_ready :
+    SpectralMeasurePVMOperatorValuedGenuineSelfAdjointSpectralTheoremBridgeReady
+  symbolic_integral_ready :
+    SpectralMeasurePVMSelfAdjointSpectralTheoremSymbolicIntegralTarget
+  mathlib_review_ready : SpectralMeasurePVMMathlibSpectralTheoremReviewSurfaceTarget
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- Empty-family spectral-theorem boundary certificate. -/
+def spectralMeasurePVMActualBorelEmptySpectralTheoremBoundaryCertificate :
+    SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificate where
+  receiver := spectralMeasurePVMActualBorelEmptySelfAdjointSpectralTheoremReceiver
+  receiver_ready :=
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_target_ready
+  self_adjoint_bridge_ready :=
+    spectral_measure_pvm_operator_valued_genuine_self_adjoint_spectral_theorem_bridge_ready
+  symbolic_integral_ready :=
+    spectral_measure_pvm_self_adjoint_spectral_theorem_symbolic_integral_target_ready
+  mathlib_review_ready :=
+    spectral_measure_pvm_mathlib_spectral_theorem_review_surface_target_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Spectral-theorem boundary-certificate existence target. -/
+def SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificate
+
+/-- The spectral-theorem boundary certificate exists. -/
+theorem spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_existence_target_ready :
+    SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelEmptySpectralTheoremBoundaryCertificate⟩
+
+/-- Spectral-theorem boundary-certificate target. -/
+def SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateTarget : Prop :=
+  SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateExistenceTarget ∧
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedGenuineSelfAdjointSpectralTheoremBridgeReady ∧
+  SpectralMeasurePVMSelfAdjointSpectralTheoremSymbolicIntegralTarget ∧
+  SpectralMeasurePVMMathlibSpectralTheoremReviewSurfaceTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The spectral-theorem boundary-certificate target is ready. -/
+theorem spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_target_ready :
+    SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_existence_target_ready,
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_public_boundary_held,
+    spectral_measure_pvm_operator_valued_genuine_self_adjoint_spectral_theorem_bridge_ready,
+    spectral_measure_pvm_self_adjoint_spectral_theorem_symbolic_integral_target_ready,
+    spectral_measure_pvm_mathlib_spectral_theorem_review_surface_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Actual-Borel spectral-theorem boundary-certificate bridge. -/
+def SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateBridgeReady : Prop :=
+  SpectralMeasurePVMActualBorelSelfAdjointSpectralTheoremReceiverPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateTarget ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel spectral-theorem boundary-certificate bridge is ready. -/
+theorem spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_bridge_ready :
+    SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateBridgeReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_self_adjoint_spectral_theorem_receiver_public_boundary_held,
+    spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_target_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the actual-Borel spectral-theorem boundary certificate. -/
+def SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificatePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateBridgeReady ∧
+  SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificateTarget ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the actual-Borel spectral-theorem boundary certificate is held. -/
+theorem spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_public_boundary_held :
+    SpectralMeasurePVMActualBorelSpectralTheoremBoundaryCertificatePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_bridge_ready,
+    spectral_measure_pvm_actual_borel_spectral_theorem_boundary_certificate_target_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
