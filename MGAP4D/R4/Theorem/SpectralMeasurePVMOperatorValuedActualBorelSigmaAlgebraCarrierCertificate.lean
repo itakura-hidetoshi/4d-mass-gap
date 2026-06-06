@@ -1,0 +1,152 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelMeasurableSetClosurePackage
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Sigma-algebra style carrier certificate for the actual-Borel wrapper.
+
+This is not a new `MeasurableSpace` instance.  It is a proof-carrying certificate
+that the carrier wrapper already has the closure laws expected of Borel sets:
+empty, universal set, complement, finite Boolean closure via the set-algebra
+package, and countable union closure.  Operator-topology countable additivity and
+the genuine spectral-measure theorem remain open. -/
+structure SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate where
+  measurable_set_closure_package :
+    SpectralMeasurePVMActualBorelMeasurableSetClosurePackage
+  package_ready : SpectralMeasurePVMActualBorelMeasurableSetClosurePackageTarget
+  empty_member : SpectralMeasurePVMActualBorelEmptySetTarget
+  univ_member : SpectralMeasurePVMActualBorelUnivSetTarget
+  complement_closure : SpectralMeasurePVMActualBorelCarrierSetComplementClosureTarget
+  boolean_closure_held : SpectralMeasurePVMActualBorelSetAlgebraClosurePublicBoundaryHeld
+  countable_union_closure : SpectralMeasurePVMActualBorelCountableUnionClosureTarget
+  countable_inter_closure : SpectralMeasurePVMActualBorelCountableInterClosureTarget
+  set_algebra_realization_open : SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen
+  genuine_borel_carrier_open : SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current actual-Borel sigma-algebra style carrier certificate. -/
+def spectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate :
+    SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate where
+  measurable_set_closure_package := spectralMeasurePVMActualBorelMeasurableSetClosurePackage
+  package_ready := spectral_measure_pvm_actual_borel_measurable_set_closure_package_target_ready
+  empty_member := spectral_measure_pvm_actual_borel_empty_set_target_ready
+  univ_member := spectral_measure_pvm_actual_borel_univ_set_target_ready
+  complement_closure := spectral_measure_pvm_actual_borel_carrier_set_complement_closure_target_ready
+  boolean_closure_held := spectral_measure_pvm_actual_borel_set_algebra_closure_public_boundary_held
+  countable_union_closure := spectral_measure_pvm_actual_borel_countable_union_closure_target_ready
+  countable_inter_closure := spectral_measure_pvm_actual_borel_countable_inter_closure_target_ready
+  set_algebra_realization_open := spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready
+  genuine_borel_carrier_open := spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the actual-Borel sigma-algebra style carrier certificate. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate
+
+/-- The actual-Borel sigma-algebra style carrier certificate exists. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_existence_target_ready :
+    SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificate⟩
+
+/-- Target packaging the actual-Borel carrier as a sigma-algebra-style surface. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateTarget : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateExistenceTarget ∧
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackagePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelEmptySetTarget ∧
+  SpectralMeasurePVMActualBorelUnivSetTarget ∧
+  SpectralMeasurePVMActualBorelCarrierSetComplementClosureTarget ∧
+  SpectralMeasurePVMActualBorelSetAlgebraClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableUnionClosureTarget ∧
+  SpectralMeasurePVMActualBorelCountableInterClosureTarget ∧
+  SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel sigma-algebra style carrier certificate target is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_target_ready :
+    SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_existence_target_ready,
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_public_boundary_held,
+    spectral_measure_pvm_actual_borel_empty_set_target_ready,
+    spectral_measure_pvm_actual_borel_univ_set_target_ready,
+    spectral_measure_pvm_actual_borel_carrier_set_complement_closure_target_ready,
+    spectral_measure_pvm_actual_borel_set_algebra_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_union_closure_target_ready,
+    spectral_measure_pvm_actual_borel_countable_inter_closure_target_ready,
+    spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Bridge boundary for the actual-Borel sigma-algebra style carrier certificate. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateBridgeReady : Prop :=
+  SpectralMeasurePVMActualBorelMeasurableSetClosurePackagePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateTarget ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The bridge boundary for the actual-Borel sigma-algebra style carrier certificate is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_bridge_ready :
+    SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateBridgeReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_measurable_set_closure_package_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_target_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the actual-Borel sigma-algebra style carrier certificate. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificatePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateBridgeReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificateTarget ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the actual-Borel sigma-algebra style carrier certificate is held. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_public_boundary_held :
+    SpectralMeasurePVMActualBorelSigmaAlgebraCarrierCertificatePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_bridge_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_carrier_certificate_target_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
