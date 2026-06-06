@@ -1,0 +1,49 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoff
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Surface bundle for the actual-Borel R4 completion-boundary sigma-carrier
+handoff phase.
+
+This phase surface keeps the sigma-carrier chain local and acyclic.  It exposes
+the R4 completion-boundary handoff certificate while preserving the genuine
+spectral-measure construction open marker and the later-stage deferrals. -/
+def SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPhaseSurfaceReady : Prop :=
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel R4 completion-boundary sigma-carrier handoff phase surface
+is ready. -/
+theorem spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_phase_surface_ready :
+    SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPhaseSurfaceReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
