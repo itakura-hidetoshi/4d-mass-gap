@@ -1,0 +1,123 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableAdditivityReceiverPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the countable-additivity handoff-packet
+sigma-carrier handoff into the countable-additivity receiver phase.
+
+This receiver-side layer accepts the actual-Borel handoff packet and records
+that the genuine operator-topology countable-additivity bridge remains available
+but still open.  It is not a discharge of genuine countable additivity. -/
+structure SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoff where
+  countable_additivity_handoff_packet_sigma_handoff :
+    SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffPublicBoundaryHeld
+  countable_additivity_receiver_phase_ready :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverPhaseSurfaceReady
+  countable_additivity_receiver_boundary :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverPublicBoundaryHeld
+  countable_additivity_receiver_target :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverTarget
+  countable_additivity_receiver_bridge :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverBridgeReady
+  genuine_operator_topology_countable_additivity_bridge_ready :
+    SpectralMeasurePVMOperatorValuedGenuineOperatorTopologyCountableAdditivityBridgeReady
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current handoff certificate into the countable-additivity receiver phase. -/
+def spectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoff where
+  countable_additivity_handoff_packet_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_public_boundary_held
+  countable_additivity_receiver_phase_ready :=
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_phase_surface_ready
+  countable_additivity_receiver_boundary :=
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_public_boundary_held
+  countable_additivity_receiver_target :=
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_target_ready
+  countable_additivity_receiver_bridge :=
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_bridge_ready
+  genuine_operator_topology_countable_additivity_bridge_ready :=
+    spectral_measure_pvm_operator_valued_genuine_operator_topology_countable_additivity_bridge_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the countable-additivity receiver sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoff
+
+/-- The countable-additivity receiver sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_countable_additivity_receiver_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoff⟩
+
+/-- Target recording the countable-additivity receiver sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityHandoffPacketSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverTarget ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverBridgeReady ∧
+  SpectralMeasurePVMOperatorValuedGenuineOperatorTopologyCountableAdditivityBridgeReady ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The countable-additivity receiver sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_countable_additivity_receiver_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_handoff_packet_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_target_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_bridge_ready,
+    spectral_measure_pvm_operator_valued_genuine_operator_topology_countable_additivity_bridge_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the countable-additivity receiver sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the countable-additivity receiver sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_countable_additivity_receiver_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelCountableAdditivityReceiverSigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
