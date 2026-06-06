@@ -1,0 +1,106 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableAdditivityPreparationSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelProjectionMapExtensionalGuardPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the countable-additivity preparation sigma-carrier
+handoff into the projection-map extensional regression guard.
+
+This is the anti-regression layer for the actual-Borel branch: it records that
+future finite-partial projection facts should pass through the extensional
+zero/identity lemmas instead of relying on definitional equality of subtype
+witnesses. -/
+structure SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoff where
+  countable_preparation_sigma_handoff :
+    SpectralMeasurePVMActualBorelCountableAdditivityPreparationSigmaCarrierHandoffPublicBoundaryHeld
+  extensional_guard_phase_ready :
+    SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardPhaseSurfaceReady
+  extensional_regression_guard :
+    SpectralMeasurePVMActualBorelProjectionMapExtensionalRegressionGuard
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current handoff certificate into the projection-map extensional guard. -/
+def spectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoff where
+  countable_preparation_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_countable_additivity_preparation_sigma_carrier_handoff_public_boundary_held
+  extensional_guard_phase_ready :=
+    spectral_measure_pvm_actual_borel_projection_map_extensional_guard_phase_surface_ready
+  extensional_regression_guard :=
+    spectral_measure_pvm_actual_borel_projection_map_extensional_regression_guard_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the projection-map extensional guard sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoff
+
+/-- The projection-map extensional guard sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_projection_map_extensional_guard_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoff⟩
+
+/-- Target recording the projection-map extensional guard sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityPreparationSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelProjectionMapExtensionalRegressionGuard ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The projection-map extensional guard sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_projection_map_extensional_guard_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_projection_map_extensional_guard_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_preparation_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_projection_map_extensional_guard_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_projection_map_extensional_regression_guard_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the projection-map extensional guard sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the projection-map extensional guard sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_projection_map_extensional_guard_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelProjectionMapExtensionalGuardSigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_projection_map_extensional_guard_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
