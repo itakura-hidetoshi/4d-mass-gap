@@ -41,8 +41,11 @@ def SpectralMeasurePVMActualBorelCountableUnionEndpointTarget : Prop :=
 /-- Endpoint sanity for the constant-empty countable union. -/
 theorem spectral_measure_pvm_actual_borel_countable_union_endpoint_target_ready :
     SpectralMeasurePVMActualBorelCountableUnionEndpointTarget := by
-  simp [spectralMeasurePVMActualBorelCarrierSetIUnion,
+  dsimp [SpectralMeasurePVMActualBorelCountableUnionEndpointTarget,
+    spectralMeasurePVMActualBorelCarrierSetIUnion,
     spectralMeasurePVMActualBorelEmptySet]
+  ext x
+  simp
 
 /-- Actual-Borel countable-union closure bridge.
 
