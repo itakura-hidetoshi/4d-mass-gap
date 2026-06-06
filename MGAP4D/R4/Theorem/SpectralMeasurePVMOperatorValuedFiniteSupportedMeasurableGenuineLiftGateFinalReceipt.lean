@@ -1,0 +1,115 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurableGenuineLiftPrerequisiteGate
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the future genuine-lift gate from the local supported
+finite measurable PVM surface.
+
+The gate is a prerequisite surface, not a promotion theorem: it records the
+local proof-carrying surface, the non-promotion firewall, and all still-open
+genuine analytic prerequisites. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateFinalReceiptReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftPrerequisiteChecklistReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineObligationLedgerPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The future genuine-lift gate final receipt is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_final_receipt_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_prerequisite_checklist_ready,
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_obligation_ledger_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the genuine-lift gate final receipt.
+
+The local finite-supported PVM surface is accepted as a safe prerequisite for
+future work, but the genuine R4 spectral-measure obligations remain visible and
+open. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGatePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineObligationLedgerPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the genuine-lift gate final receipt is held. -/
+theorem spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_public_boundary_held :
+    SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGatePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_obligation_ledger_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Compact top certificate for the local-supported finite measurable PVM gate
+stage. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableGateStageTopCertificateReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGatePublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGateFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftPrerequisiteChecklistReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineObligationLedgerReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The local-supported finite measurable PVM gate-stage top certificate is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_gate_stage_top_certificate_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableGateStageTopCertificateReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_prerequisite_checklist_ready,
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_obligation_ledger_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
