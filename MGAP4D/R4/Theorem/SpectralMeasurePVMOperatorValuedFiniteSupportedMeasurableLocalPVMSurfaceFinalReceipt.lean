@@ -1,0 +1,136 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurableCountableBranchFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the supported finite measurable local PVM surface.
+
+This final receipt bundles the local two-point symbolic PVM surface: Boolean
+embedding, representation completion, orthogonality/disjointness reading, binary
+finite-additivity reading, and the explicitly supported countable-branch reading
+(all-empty and pinned single-whole).  It is not a genuine Borel spectral measure
+or a genuine operator-topology countable-additivity theorem. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfaceFinalReceiptReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableCountableBranchFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableCountableBranchPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalCountableBranchPVMReadingCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMReadingCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalOrthogonalityReadingCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableFiniteAdditivityFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableDisjointnessEquivalenceFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableBooleanEmbeddingCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalRepresentationCompletionCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalFullAxiomPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The supported finite measurable local PVM surface final receipt is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_local_pvm_surface_final_receipt_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfaceFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_countable_branch_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_countable_branch_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_local_countable_branch_pvm_reading_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_pvm_reading_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_orthogonality_reading_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_finite_additivity_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_disjointness_equivalence_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_boolean_embedding_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_representation_completion_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_full_axiom_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the supported finite measurable local PVM surface final
+receipt.
+
+The local finite-supported PVM reading surface is now final-receipted.  The
+analytic R4 obligations needed for a genuine spectral measure remain visible and
+open. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfacePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfaceFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableCountableBranchPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableFiniteAdditivityPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableDisjointnessPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableBooleanEmbeddingPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalRepresentationCompletionPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the supported finite measurable local PVM surface
+final receipt is held. -/
+theorem spectral_measure_pvm_finite_supported_measurable_local_pvm_surface_public_boundary_held :
+    SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfacePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_pvm_surface_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_countable_branch_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_finite_additivity_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_disjointness_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_boolean_embedding_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_local_representation_completion_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Top-level local-supported PVM certificate for the R4 finite-supported
+measurable branch. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfacePublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMSurfaceFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalCountableBranchPVMReadingCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableLocalPVMReadingCertificateReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableRepresentationEquivalenceTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableDisjointnessEquivalenceTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableFiniteAdditivityReadingTarget ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableCountableBranchReadingTarget ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The top-level local-supported PVM certificate is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_local_supported_pvm_top_certificate_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableLocalSupportedPVMTopCertificateReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_local_pvm_surface_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_local_pvm_surface_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_countable_branch_pvm_reading_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_local_pvm_reading_certificate_ready,
+    spectral_measure_pvm_finite_supported_measurable_representation_equivalence_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_disjointness_equivalence_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_finite_additivity_reading_target_ready,
+    spectral_measure_pvm_finite_supported_measurable_countable_branch_reading_target_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
