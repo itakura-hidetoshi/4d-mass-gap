@@ -1,0 +1,116 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelEndpointProjectionMapSigmaCarrierHandoff
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelFiniteAdditivitySkeletonPhaseSurface
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff certificate from the endpoint projection-map sigma-carrier handoff
+into the finite-additivity skeleton phase.
+
+This records only the endpoint finite-additivity skeleton for the seeded
+actual-Borel projection map.  It does not assert finite additivity for arbitrary
+Borel pairs, nor operator-topology countable additivity. -/
+structure SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoff where
+  endpoint_sigma_handoff :
+    SpectralMeasurePVMActualBorelEndpointProjectionMapSigmaCarrierHandoffPublicBoundaryHeld
+  finite_additivity_phase_ready :
+    SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonPhaseSurfaceReady
+  finite_additivity_boundary :
+    SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonPublicBoundaryHeld
+  finite_additivity_skeleton : SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonTarget
+  genuine_borel_carrier_open : SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  genuine_self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_construction_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The current handoff certificate into the finite-additivity skeleton phase. -/
+def spectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoff :
+    SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoff where
+  endpoint_sigma_handoff :=
+    spectral_measure_pvm_actual_borel_endpoint_projection_map_sigma_carrier_handoff_public_boundary_held
+  finite_additivity_phase_ready :=
+    spectral_measure_pvm_actual_borel_finite_additivity_skeleton_phase_surface_ready
+  finite_additivity_boundary :=
+    spectral_measure_pvm_actual_borel_finite_additivity_skeleton_public_boundary_held
+  finite_additivity_skeleton :=
+    spectral_measure_pvm_actual_borel_finite_additivity_skeleton_target_ready
+  genuine_borel_carrier_open := spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  genuine_self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_construction_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Existence target for the finite-additivity sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoff
+
+/-- The finite-additivity sigma-carrier handoff exists. -/
+theorem spectral_measure_pvm_actual_borel_finite_additivity_sigma_carrier_handoff_existence_target_ready :
+    SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoff⟩
+
+/-- Target recording the finite-additivity sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffTarget : Prop :=
+  SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffExistenceTarget ∧
+  SpectralMeasurePVMActualBorelEndpointProjectionMapSigmaCarrierHandoffPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonPhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelFiniteAdditivitySkeletonTarget ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The finite-additivity sigma-carrier handoff target is ready. -/
+theorem spectral_measure_pvm_actual_borel_finite_additivity_sigma_carrier_handoff_target_ready :
+    SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_finite_additivity_sigma_carrier_handoff_existence_target_ready,
+    spectral_measure_pvm_actual_borel_endpoint_projection_map_sigma_carrier_handoff_public_boundary_held,
+    spectral_measure_pvm_actual_borel_finite_additivity_skeleton_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_finite_additivity_skeleton_public_boundary_held,
+    spectral_measure_pvm_actual_borel_finite_additivity_skeleton_target_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the finite-additivity sigma-carrier handoff. -/
+def SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffTarget ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the finite-additivity sigma-carrier handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_finite_additivity_sigma_carrier_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelFiniteAdditivitySigmaCarrierHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_finite_additivity_sigma_carrier_handoff_target_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
