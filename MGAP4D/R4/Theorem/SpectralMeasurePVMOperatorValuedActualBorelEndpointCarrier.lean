@@ -1,4 +1,5 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedGenuineBorelIndexedCarrierBridge
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedGenuineSelfAdjointSpectralTheoremBridge
 
 namespace MGAP4D
 namespace R4
