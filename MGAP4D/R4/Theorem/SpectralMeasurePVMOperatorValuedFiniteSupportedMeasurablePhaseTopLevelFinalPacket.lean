@@ -1,0 +1,117 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurablePhaseBaselineEstablishedFinalPacket
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Top-level final packet for the finite-supported measurable local PVM phase.
+
+This is a top-level final packet only for the local supported finite measurable
+PVM phase.  It records the baseline-established-final local phase and preserves
+all genuine analytic R4 spectral-measure obligations as open. -/
+def SpectralMeasurePVMFiniteSupportedMeasurablePhaseTopLevelFinalPacketReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseBaselineEstablishedFinalPacketReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseBaselineEstablishedFinalPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableBaselineEstablishedFinalLocalPhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseConfirmedBaselinePacketReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseReleasePacketReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseCompletionIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseToGenuineAnalyticHandoffReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableClosedLocalPhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableOpenGenuinePhaseIndexReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The finite-supported measurable local PVM phase top-level final packet is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_phase_top_level_final_packet_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurablePhaseTopLevelFinalPacketReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_phase_baseline_established_final_packet_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_baseline_established_final_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_baseline_established_final_local_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_confirmed_baseline_packet_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_release_packet_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_completion_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_to_genuine_analytic_handoff_ready,
+    spectral_measure_pvm_finite_supported_measurable_closed_local_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_open_genuine_phase_index_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the finite-supported measurable local PVM phase top-level
+final packet.
+
+The local phase is top-level final as a finite-supported measurable baseline.
+The genuine analytic spectral-measure construction remains outside this finality
+claim. -/
+def SpectralMeasurePVMFiniteSupportedMeasurablePhaseTopLevelFinalPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseTopLevelFinalPacketReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseBaselineEstablishedFinalPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseConfirmedBaselinePublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseReleasePacketPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseCompletionIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhasePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the finite-supported measurable local PVM phase
+top-level final packet is held. -/
+theorem spectral_measure_pvm_finite_supported_measurable_phase_top_level_final_public_boundary_held :
+    SpectralMeasurePVMFiniteSupportedMeasurablePhaseTopLevelFinalPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_phase_top_level_final_packet_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_baseline_established_final_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_phase_confirmed_baseline_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_phase_release_packet_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_phase_completion_index_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_phase_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- R4 local finite-supported measurable phase closure certificate.
+
+This closure certificate is explicitly local-phase only: it closes the
+finite-supported measurable PVM baseline and hands off to the genuine analytic
+phase, while refusing shell-to-full collapse. -/
+def SpectralMeasurePVMLocalFiniteSupportedMeasurablePhaseClosureCertificateReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseTopLevelFinalPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableBaselineEstablishedFinalLocalPhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableClosedLocalPhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableOpenGenuinePhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseToGenuineAnalyticHandoffReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGatePublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The R4 local finite-supported measurable phase closure certificate is ready. -/
+theorem spectral_measure_pvm_local_finite_supported_measurable_phase_closure_certificate_ready :
+    SpectralMeasurePVMLocalFiniteSupportedMeasurablePhaseClosureCertificateReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_phase_top_level_final_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_baseline_established_final_local_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_closed_local_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_open_genuine_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_to_genuine_analytic_handoff_ready,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
