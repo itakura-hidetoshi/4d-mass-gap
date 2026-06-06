@@ -42,11 +42,14 @@ theorem spectral_measure_pvm_actual_borel_empty_recursive_finite_stage_projectio
     spectral_measure_pvm_actual_borel_empty_recursive_finite_stage_packet_projection_zero n x
   have hnext :
       spectralMeasurePVMActualBorelEndpointSeededProjectionMap
-          (spectralMeasurePVMActualBorelEmptyCountableFamily (n + 1)) x = 0 := by
+          ((spectralMeasurePVMActualBorelRecursiveFiniteStageObligationPacket
+            spectralMeasurePVMActualBorelEmptyCountableFamily).family (n + 1)) x = 0 := by
     exact
       spectral_measure_pvm_actual_borel_endpoint_seeded_projection_map_apply_eq_zero_of_underlying_empty
-        (spectralMeasurePVMActualBorelEmptyCountableFamily (n + 1))
-        (by simp [spectralMeasurePVMActualBorelEmptyCountableFamily,
+        ((spectralMeasurePVMActualBorelRecursiveFiniteStageObligationPacket
+          spectralMeasurePVMActualBorelEmptyCountableFamily).family (n + 1))
+        (by simp [spectralMeasurePVMActualBorelRecursiveFiniteStageObligationPacket,
+          spectralMeasurePVMActualBorelEmptyCountableFamily,
           spectralMeasurePVMActualBorelEmptySet])
         x
   rw [hsucc, hprev, hnext]
