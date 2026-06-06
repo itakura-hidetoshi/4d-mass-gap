@@ -1,0 +1,116 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableAdditivityReceiver
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Boundary certificate between the actual-Borel receiver and the genuine
+operator-topology countable-additivity theorem.
+
+The certificate records that the handoff has been received and the genuine
+bridge is available, while preserving the fact that genuine countable additivity
+is still open. -/
+structure SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificate where
+  receiver : SpectralMeasurePVMActualBorelCountableAdditivityReceiver
+  receiver_boundary : SpectralMeasurePVMActualBorelCountableAdditivityReceiverTarget
+  genuine_bridge_ready :
+    SpectralMeasurePVMOperatorValuedGenuineOperatorTopologyCountableAdditivityBridgeReady
+  genuine_countable_additivity_open :
+    SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+  self_adjoint_spectral_theorem_open :
+    SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen
+  genuine_spectral_measure_open :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+  no_shell_collapse : SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- Empty-family boundary certificate. -/
+def spectralMeasurePVMActualBorelEmptyGenuineCountableAdditivityBoundaryCertificate :
+    SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificate where
+  receiver := spectralMeasurePVMActualBorelEmptyCountableAdditivityReceiver
+  receiver_boundary := spectral_measure_pvm_actual_borel_countable_additivity_receiver_target_ready
+  genuine_bridge_ready :=
+    spectral_measure_pvm_operator_valued_genuine_operator_topology_countable_additivity_bridge_ready
+  genuine_countable_additivity_open :=
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready
+  self_adjoint_spectral_theorem_open :=
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready
+  genuine_spectral_measure_open :=
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready
+  no_shell_collapse := spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- Boundary-certificate existence target. -/
+def SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateExistenceTarget : Prop :=
+  Nonempty SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificate
+
+/-- The boundary certificate exists. -/
+theorem spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_existence_target_ready :
+    SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateExistenceTarget := by
+  exact ⟨spectralMeasurePVMActualBorelEmptyGenuineCountableAdditivityBoundaryCertificate⟩
+
+/-- Boundary-certificate target. -/
+def SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateTarget : Prop :=
+  SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateExistenceTarget ∧
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedGenuineOperatorTopologyCountableAdditivityBridgeReady ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The boundary-certificate target is ready. -/
+theorem spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_target_ready :
+    SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateTarget := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_existence_target_ready,
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_public_boundary_held,
+    spectral_measure_pvm_operator_valued_genuine_operator_topology_countable_additivity_bridge_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Actual-Borel genuine countable-additivity boundary-certificate bridge. -/
+def SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateBridgeReady : Prop :=
+  SpectralMeasurePVMActualBorelCountableAdditivityReceiverPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel genuine countable-additivity boundary-certificate bridge is ready. -/
+theorem spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_bridge_ready :
+    SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateBridgeReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_countable_additivity_receiver_public_boundary_held,
+    spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary after the actual-Borel genuine countable-additivity certificate. -/
+def SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificatePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateBridgeReady ∧
+  SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificateTarget ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary after the certificate is held. -/
+theorem spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_public_boundary_held :
+    SpectralMeasurePVMActualBorelGenuineCountableAdditivityBoundaryCertificatePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_bridge_ready,
+    spectral_measure_pvm_actual_borel_genuine_countable_additivity_boundary_certificate_target_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
