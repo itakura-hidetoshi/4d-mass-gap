@@ -1,0 +1,109 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSigmaCarrierHandoffChainIndexFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the actual-Borel sigma-carrier handoff root export.
+
+This is the compact root-facing endpoint for the actual-Borel sigma-carrier
+handoff spine.  It does not close the genuine spectral-measure construction;
+it exports a stable boundary-preserving route to the R4 completion-boundary
+handoff surface while preserving the later physical deferrals. -/
+def SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportFinalReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPhaseSurfaceReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel sigma-carrier handoff root-export final receipt is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_export_final_receipt_ready :
+    SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_export_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_phase_surface_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the actual-Borel sigma-carrier handoff root-export final
+receipt. -/
+def SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportFinalReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPhaseSurfaceReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the actual-Borel sigma-carrier handoff root-export
+final receipt is held. -/
+theorem spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_export_final_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportFinalReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_export_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_phase_surface_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Root-facing final export index for the actual-Borel sigma-carrier handoff
+spine.
+
+This index is the final sigma-carrier endpoint that can be safely imported by
+an aggregate surface.  It is not a genuine spectral-measure theorem; it is a
+boundary-preserving handoff endpoint toward the still-open genuine construction. -/
+def SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootFacingFinalExportIndexReady : Prop :=
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootExportReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffChainIndexReady ∧
+  SpectralMeasurePVMActualBorelR4CompletionBoundaryHandoffSigmaCarrierHandoffPhaseSurfaceReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel sigma-carrier root-facing final export index is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_facing_final_export_index_ready :
+    SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootFacingFinalExportIndexReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_export_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_export_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_chain_index_ready,
+    spectral_measure_pvm_actual_borel_r4_completion_boundary_handoff_sigma_carrier_handoff_phase_surface_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
