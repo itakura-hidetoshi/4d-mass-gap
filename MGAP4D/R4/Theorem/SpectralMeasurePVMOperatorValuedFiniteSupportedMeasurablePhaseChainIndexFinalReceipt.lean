@@ -1,0 +1,108 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedFiniteSupportedMeasurablePhaseChainIndex
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the finite-supported measurable local PVM phase chain
+index.
+
+This final receipt makes the chain index root-facing: the local phase is closed
+as a finite-supported measurable PVM phase, while the genuine analytic
+spectral-measure phase remains explicitly open and protected by the
+non-promotion firewall. -/
+def SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexFinalReceiptReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableRootFacingLocalPhaseClosureReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseFinalityPacketReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseFinalityPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableFinalLocalPhaseHandoffIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableTopLevelFinalToGenuineAnalyticHandoffReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableClosedLocalPhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableOpenGenuinePhaseIndexReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The finite-supported measurable local PVM phase chain-index final receipt is
+ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_phase_chain_index_final_receipt_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_phase_chain_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_chain_index_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_root_facing_local_phase_closure_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_finality_packet_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_finality_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_final_local_phase_handoff_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_top_level_final_to_genuine_analytic_handoff_ready,
+    spectral_measure_pvm_finite_supported_measurable_closed_local_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_open_genuine_phase_index_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the phase chain-index final receipt. -/
+def SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexFinalReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseFinalityPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableGenuineLiftGatePublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableNonPromotionFirewallPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the phase chain-index final receipt is held. -/
+theorem spectral_measure_pvm_finite_supported_measurable_phase_chain_index_final_receipt_public_boundary_held :
+    SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexFinalReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_phase_chain_index_final_receipt_ready,
+    spectral_measure_pvm_finite_supported_measurable_phase_chain_index_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_phase_finality_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_genuine_lift_gate_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_non_promotion_firewall_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Root export for the finite-supported measurable local PVM phase.
+
+This is the compact root-facing endpoint for the local phase.  It exports the
+closed-local index and the open-genuine index together, and keeps the genuine
+analytic phase as the next handoff rather than a completed result. -/
+def SpectralMeasurePVMFiniteSupportedMeasurableRootExportReady : Prop :=
+  SpectralMeasurePVMFiniteSupportedMeasurablePhaseChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableRootFacingLocalPhaseClosureReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableFinalLocalPhaseHandoffIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableTopLevelFinalToGenuineAnalyticHandoffReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableClosedLocalPhaseIndexReady ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableOpenGenuinePhaseIndexReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The finite-supported measurable local PVM phase root export is ready. -/
+theorem spectral_measure_pvm_finite_supported_measurable_root_export_ready :
+    SpectralMeasurePVMFiniteSupportedMeasurableRootExportReady := by
+  exact ⟨
+    spectral_measure_pvm_finite_supported_measurable_phase_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_root_facing_local_phase_closure_ready,
+    spectral_measure_pvm_finite_supported_measurable_final_local_phase_handoff_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_top_level_final_to_genuine_analytic_handoff_ready,
+    spectral_measure_pvm_finite_supported_measurable_closed_local_phase_index_ready,
+    spectral_measure_pvm_finite_supported_measurable_open_genuine_phase_index_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
