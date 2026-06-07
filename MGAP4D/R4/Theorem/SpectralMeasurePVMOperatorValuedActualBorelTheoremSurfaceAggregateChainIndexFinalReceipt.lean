@@ -1,0 +1,74 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelTheoremSurfaceAggregateChainIndex
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the actual-Borel theorem-surface aggregate chain index.
+
+This closes the external aggregate-route bookkeeping layer: the route remains
+outside `TheoremSurface`, records the theorem-surface aggregate final receipt,
+and preserves the still-open genuine spectral-measure construction boundary. -/
+def SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffAggregateSafeReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffAggregateSafeReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootFacingFinalExportIndexReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The final receipt for the actual-Borel theorem-surface aggregate chain index
+is ready. -/
+theorem spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_ready :
+    SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_aggregate_safe_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_aggregate_safe_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_facing_final_export_index_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the final receipt of the theorem-surface aggregate chain
+index. -/
+def SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the final receipt of the theorem-surface aggregate
+chain index is held. -/
+theorem spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_final_receipt_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
