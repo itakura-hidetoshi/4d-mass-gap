@@ -8,13 +8,12 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Concrete packet expected from the analytic nontrivial self-adjoint operator
-route.
+/-- Concrete packet expected from the analytic nontrivial self-adjoint stage.
 
 This is the next bridge below the Mathlib-output interface: the analytic side
 must provide a law-carrying actual-Borel spectral measure, a certificate that it
-comes from the concrete nontrivial self-adjoint operator via Mathlib's spectral
-theorem route, and the no-shell-to-full-collapse boundary. -/
+comes from the concrete nontrivial self-adjoint construction via Mathlib's
+spectral theorem output, and the no-shell-to-full-collapse boundary. -/
 structure SpectralMeasurePVMActualBorelConcreteNontrivialSelfAdjointPacket where
   spectral_measure : SpectralMeasurePVMActualBorelGenericLawCarryingSpectralMeasureInterface
   concrete_nontrivial_self_adjoint_operator_source : Prop
