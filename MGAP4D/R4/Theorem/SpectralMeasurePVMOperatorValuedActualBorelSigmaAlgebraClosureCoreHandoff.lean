@@ -1,0 +1,72 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSigmaAlgebraClosureCorePhaseSurface
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelTheoremSurfaceAggregateChainIndexFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Handoff from the actual-Borel sigma-algebra closure core into the external
+R4 theorem-surface aggregate route.
+
+This handoff records that the actual Borel carrier wrapper has finite Boolean,
+countable-union, and countable-intersection closure available, and that the
+existing theorem-surface aggregate chain remains intact.  It does not close the
+operator-topology countable-additivity or spectral-theorem obligations. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffReady : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCorePhaseSurfaceReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCorePhaseSurfacePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootFacingFinalExportIndexReady ∧
+  SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-Borel sigma-algebra closure core handoff is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_handoff_ready :
+    SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_phase_surface_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_phase_surface_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_facing_final_export_index_ready,
+    spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the sigma-algebra closure core handoff. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCorePhaseSurfacePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the sigma-algebra closure core handoff is held. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_handoff_public_boundary_held :
+    SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_handoff_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_phase_surface_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
