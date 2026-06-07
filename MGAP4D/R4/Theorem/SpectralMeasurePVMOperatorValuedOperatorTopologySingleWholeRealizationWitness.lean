@@ -86,6 +86,10 @@ theorem spectral_measure_pvm_operator_topology_single_whole_actual_realization_r
     (k : Nat)
     (hs : SpectralMeasurePVMConcreteSingleWholeAt s k) :
     SpectralMeasurePVMOperatorTopologySingleWholeActualRealization s k := by
+  change
+    spectralMeasurePVMConcreteNormalizationCandidate
+        (SpectralMeasurePVMConcreteFinitePartialUnion (Nat.succ k) s) =
+      SpectralMeasurePVMConcreteBoundedOperator.identity
   rw [spectral_measure_pvm_concrete_partial_union_single_whole_at_support s k hs]
   rfl
 
