@@ -1,0 +1,47 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelAnalyticSpineCandidatePacketBridge
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Certified receipt for the analytic spine candidate packet bridge. -/
+def SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeCertifiedReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeIndexReady ∧
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeProjectsToClosure ∧
+  SpectralMeasurePVMActualBorelAnalyticPacketConstructionTargetFinalReceiptReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The certified receipt for the analytic spine candidate packet bridge is ready. -/
+theorem spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_certified_receipt_ready :
+    SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeCertifiedReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_index_ready,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_projects_to_closure,
+    spectral_measure_pvm_actual_borel_analytic_packet_construction_target_final_receipt_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the certified receipt. -/
+def SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeCertifiedReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeCertifiedReceiptReady ∧
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the certified receipt is held. -/
+theorem spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_certified_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeCertifiedReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_certified_receipt_ready,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_index_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
