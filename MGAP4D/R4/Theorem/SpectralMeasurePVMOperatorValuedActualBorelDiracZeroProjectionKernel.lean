@@ -16,16 +16,19 @@ endpoint-seeded shell map, this is compatible with intersection in the PVM
 sense, pointwise. -/
 def spectralMeasurePVMActualBorelDiracZeroProjectionMap
     (s : SpectralMeasurePVMActualBorelCarrierSet) :
-    SpectralMeasurePVMActualBorelProjectionOperator :=
-  if (0 : ℝ) ∈ s.1 then
-    ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier
-  else
-    0
+    SpectralMeasurePVMActualBorelProjectionOperator := by
+  classical
+  exact
+    if (0 : ℝ) ∈ s.1 then
+      ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier
+    else
+      0
 
 /-- The Dirac-zero map sends the empty Borel set to zero. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_projection_map_empty :
     spectralMeasurePVMActualBorelDiracZeroProjectionMap
       spectralMeasurePVMActualBorelEmptySet = 0 := by
+  classical
   simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap,
     spectralMeasurePVMActualBorelEmptySet]
 
@@ -34,6 +37,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_projection_map_univ :
     spectralMeasurePVMActualBorelDiracZeroProjectionMap
       spectralMeasurePVMActualBorelUnivSet =
         ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier := by
+  classical
   simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap,
     spectralMeasurePVMActualBorelUnivSet]
 
@@ -44,6 +48,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_projection_map_zero_or_iden
     spectralMeasurePVMActualBorelDiracZeroProjectionMap s = 0 ∨
       spectralMeasurePVMActualBorelDiracZeroProjectionMap s =
         ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier := by
+  classical
   by_cases hs : (0 : ℝ) ∈ s.1
   · right
     simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap, hs]
@@ -56,6 +61,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_projection_map_pointwise_id
     (s : SpectralMeasurePVMActualBorelCarrierSet) :
     SpectralMeasurePVMActualBorelProjectionOperatorPointwiseIdempotent
       (spectralMeasurePVMActualBorelDiracZeroProjectionMap s) := by
+  classical
   intro x
   by_cases hs : (0 : ℝ) ∈ s.1
   · simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap, hs]
@@ -73,6 +79,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_projection_map_inter_pointw
         (spectralMeasurePVMActualBorelCarrierSetInter s t) x =
       spectralMeasurePVMActualBorelDiracZeroProjectionMap s
         (spectralMeasurePVMActualBorelDiracZeroProjectionMap t x) := by
+  classical
   by_cases hs : (0 : ℝ) ∈ s.1
   · by_cases ht : (0 : ℝ) ∈ t.1
     · simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap,
