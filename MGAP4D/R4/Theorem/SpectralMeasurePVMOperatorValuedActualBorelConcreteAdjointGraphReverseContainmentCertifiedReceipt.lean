@@ -1,0 +1,47 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelConcreteAdjointGraphReverseContainmentTarget
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Certified receipt for the reverse-containment target. -/
+def SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentCertifiedReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentObligationProjectionReady ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentTargetPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The certified receipt for the reverse-containment target is ready. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_certified_receipt_ready :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentCertifiedReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_obligation_projection_ready,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_target_public_boundary_held,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_final_receipt_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the certified receipt. -/
+def SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentCertifiedReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentCertifiedReceiptReady ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentTargetPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the certified receipt is held. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_certified_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentCertifiedReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_certified_receipt_ready,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_target_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
