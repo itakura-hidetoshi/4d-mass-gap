@@ -8,24 +8,32 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
+/-- The current law-carrying interface carried by the dense-diagonal PVM-sourced
+bridge. -/
+def spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface :
+    SpectralMeasurePVMActualBorelGenericLawCarryingSpectralMeasureInterface :=
+  spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface
+
+/-- The current actual-Borel set-to-projection map carried by the dense-diagonal
+PVM-sourced bridge. -/
+def spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap :
+    SpectralMeasurePVMActualBorelCarrierSet → SpectralMeasurePVMActualBorelProjectionOperator :=
+  spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface.map
+
 /-- The current dense-diagonal PVM-sourced law-carrying interface has the empty-set
 law. -/
 theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_current_empty_maps_to_zero :
-    spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface.map
+    spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap
         spectralMeasurePVMActualBorelEmptySet = 0 := by
-  exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-    |>.law_carrying_interface
-    |>.empty_maps_to_zero
+  exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface.empty_maps_to_zero
 
 /-- The current dense-diagonal PVM-sourced law-carrying interface has the univ-set
 law. -/
 theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_current_univ_maps_to_identity :
-    spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface.map
+    spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap
         spectralMeasurePVMActualBorelUnivSet =
       ContinuousLinearMap.id ℝ MGAP4D.MathlibAnalytic.ConcreteL2R1HilbertCarrier := by
-  exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-    |>.law_carrying_interface
-    |>.univ_maps_to_identity
+  exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface.univ_maps_to_identity
 
 /-- The current dense-diagonal PVM-sourced law-carrying interface has countable
 additivity on actual-Borel carrier families. -/
@@ -34,21 +42,16 @@ theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_current_cou
       SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint F →
         spectralMeasurePVMActualBorelDiracZeroConcreteTsumCandidate
             (fun n : ℕ =>
-              spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-                |>.law_carrying_interface
-                |>.map (F n)) =
-          spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-            |>.law_carrying_interface
-            |>.map (spectralMeasurePVMActualBorelCarrierSetIUnion F) := by
-  exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-    |>.law_carrying_interface
-    |>.countable_additive
+              spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap (F n)) =
+          spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap
+            (spectralMeasurePVMActualBorelCarrierSetIUnion F) := by
+  exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface.countable_additive
 
 /-- The current dense-diagonal PVM-sourced law-carrying interface closes the
 generic law-carrying residual target. -/
 theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_current_residual_closure :
     SpectralMeasurePVMActualBorelGenericLawCarryingResidualClosureTarget
-      spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface := by
+      spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface := by
   exact spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.residual_closure
 
 /-- The dense-diagonal PVM input handoff is explicitly attached to the current
@@ -60,23 +63,20 @@ theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_current_inp
 /-- Combined law-field proof packet for the current dense-diagonal PVM-sourced
 law-carrying interface. -/
 def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawFieldsProofReady : Prop :=
-  spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface.map
+  spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap
       spectralMeasurePVMActualBorelEmptySet = 0 ∧
-  spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface.map
+  spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap
       spectralMeasurePVMActualBorelUnivSet =
     ContinuousLinearMap.id ℝ MGAP4D.MathlibAnalytic.ConcreteL2R1HilbertCarrier ∧
   (∀ F : SpectralMeasurePVMActualBorelCountableFamily,
     SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint F →
       spectralMeasurePVMActualBorelDiracZeroConcreteTsumCandidate
           (fun n : ℕ =>
-            spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-              |>.law_carrying_interface
-              |>.map (F n)) =
-        spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent
-          |>.law_carrying_interface
-          |>.map (spectralMeasurePVMActualBorelCarrierSetIUnion F)) ∧
+            spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap (F n)) =
+        spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentMap
+          (spectralMeasurePVMActualBorelCarrierSetIUnion F)) ∧
   SpectralMeasurePVMActualBorelGenericLawCarryingResidualClosureTarget
-    spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedLawCarryingInterfaceCurrent.law_carrying_interface ∧
+    spectralMeasurePVMActualBorelDenseDiagonalPVMSourcedCurrentInterface ∧
   MGAP4D.MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapPVMInputHandoffReady ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
