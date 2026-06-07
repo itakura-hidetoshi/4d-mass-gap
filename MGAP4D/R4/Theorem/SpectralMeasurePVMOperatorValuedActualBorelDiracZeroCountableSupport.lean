@@ -1,5 +1,6 @@
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDiracZeroFiniteAdditivity
 import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableUnionClosure
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelCountableFamilyDisjointnessSkeleton
 
 namespace MGAP4D
 namespace R4
@@ -9,16 +10,10 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Pairwise disjointness for an actual-Borel countable family, stated after
-forgetting to `Set ℝ`. -/
-def SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet) : Prop :=
-  ∀ m n : ℕ, m ≠ n → (F m).1 ∩ (F n).1 = (∅ : Set ℝ)
-
 /-- In a pairwise-disjoint actual-Borel family, the Dirac base point `0` can
 belong to at most one member. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_pairwise_disjoint_hit_unique
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet)
+    (F : SpectralMeasurePVMActualBorelCountableFamily)
     (hdis : SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint F)
     {m n : ℕ}
     (hm : (0 : ℝ) ∈ (F m).1)
@@ -33,7 +28,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_pairwise_disjoint_hit_uniqu
 /-- The actual-Borel countable union contains the Dirac base point exactly when
 one member contains it. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_mem_zero_iff_exists
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet) :
+    (F : SpectralMeasurePVMActualBorelCountableFamily) :
     (0 : ℝ) ∈ (spectralMeasurePVMActualBorelCarrierSetIUnion F).1 ↔
       ∃ n : ℕ, (0 : ℝ) ∈ (F n).1 := by
   simp [spectralMeasurePVMActualBorelCarrierSetIUnion]
@@ -41,7 +36,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_mem_zero_iff_exists
 /-- If no member of a countable actual-Borel family contains `0`, then its
 Dirac-zero projection over the countable union is zero. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_projection_zero_of_no_hit
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet)
+    (F : SpectralMeasurePVMActualBorelCountableFamily)
     (hno : ¬ ∃ n : ℕ, (0 : ℝ) ∈ (F n).1) :
     spectralMeasurePVMActualBorelDiracZeroProjectionMap
       (spectralMeasurePVMActualBorelCarrierSetIUnion F) = 0 := by
@@ -54,7 +49,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_projection_zero_of_n
 /-- If some member of a countable actual-Borel family contains `0`, then its
 Dirac-zero projection over the countable union is the identity. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_projection_id_of_hit
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet)
+    (F : SpectralMeasurePVMActualBorelCountableFamily)
     (hhit : ∃ n : ℕ, (0 : ℝ) ∈ (F n).1) :
     spectralMeasurePVMActualBorelDiracZeroProjectionMap
       (spectralMeasurePVMActualBorelCarrierSetIUnion F) =
@@ -67,7 +62,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_projection_id_of_hit
 /-- For a pairwise-disjoint family with a hit at `k`, every other member has zero
 Dirac-zero projection. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_pairwise_disjoint_other_projection_zero
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet)
+    (F : SpectralMeasurePVMActualBorelCountableFamily)
     (hdis : SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint F)
     {k n : ℕ}
     (hk : (0 : ℝ) ∈ (F k).1)
@@ -85,7 +80,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_pairwise_disjoint_other_pro
 /-- For a pairwise-disjoint family with a hit at `k`, the countable-union
 projection agrees with the `k`-th projection. -/
 theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_projection_eq_hit_projection
-    (F : ℕ → SpectralMeasurePVMActualBorelCarrierSet)
+    (F : SpectralMeasurePVMActualBorelCountableFamily)
     (hdis : SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint F)
     {k : ℕ}
     (hk : (0 : ℝ) ∈ (F k).1) :
@@ -105,14 +100,14 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_iUnion_projection_eq_hit_pr
 /-- Countable-support law target for the Dirac-zero kernel. -/
 def SpectralMeasurePVMActualBorelDiracZeroCountableSupportLawTarget : Prop :=
   SpectralMeasurePVMActualBorelDiracZeroFiniteAdditivityLawTarget ∧
-  (∀ F : ℕ → SpectralMeasurePVMActualBorelCarrierSet,
+  (∀ F : SpectralMeasurePVMActualBorelCountableFamily,
     SpectralMeasurePVMActualBorelCountableFamilyPairwiseDisjoint F →
       ∀ k : ℕ,
         (0 : ℝ) ∈ (F k).1 →
           spectralMeasurePVMActualBorelDiracZeroProjectionMap
             (spectralMeasurePVMActualBorelCarrierSetIUnion F) =
               spectralMeasurePVMActualBorelDiracZeroProjectionMap (F k)) ∧
-  (∀ F : ℕ → SpectralMeasurePVMActualBorelCarrierSet,
+  (∀ F : SpectralMeasurePVMActualBorelCountableFamily,
     (¬ ∃ n : ℕ, (0 : ℝ) ∈ (F n).1) →
       spectralMeasurePVMActualBorelDiracZeroProjectionMap
         (spectralMeasurePVMActualBorelCarrierSetIUnion F) = 0)
@@ -140,6 +135,7 @@ operator-topology countable additivity is still left as the next residual. -/
 def SpectralMeasurePVMActualBorelDiracZeroCountableSupportBridgeReady : Prop :=
   SpectralMeasurePVMActualBorelDiracZeroFiniteAdditivityPublicBoundaryHeld ∧
   SpectralMeasurePVMActualBorelCountableUnionClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelCountableFamilyDisjointnessSkeletonPublicBoundaryHeld ∧
   SpectralMeasurePVMActualBorelDiracZeroCountableSupportLawTarget ∧
   SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
   SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
@@ -152,6 +148,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_countable_support_bridge_re
   exact ⟨
     spectral_measure_pvm_actual_borel_dirac_zero_finite_additivity_public_boundary_held,
     spectral_measure_pvm_actual_borel_countable_union_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_countable_family_disjointness_skeleton_public_boundary_held,
     spectral_measure_pvm_actual_borel_dirac_zero_countable_support_law_target_ready,
     spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
     spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
@@ -162,6 +159,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_countable_support_bridge_re
 def SpectralMeasurePVMActualBorelDiracZeroCountableSupportPublicBoundaryHeld : Prop :=
   SpectralMeasurePVMActualBorelDiracZeroCountableSupportBridgeReady ∧
   SpectralMeasurePVMActualBorelDiracZeroCountableSupportLawTarget ∧
+  SpectralMeasurePVMActualBorelCountableFamilyDisjointnessSkeletonPublicBoundaryHeld ∧
   SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
   SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
   SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
@@ -173,6 +171,7 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_countable_support_public_bo
   exact ⟨
     spectral_measure_pvm_actual_borel_dirac_zero_countable_support_bridge_ready,
     spectral_measure_pvm_actual_borel_dirac_zero_countable_support_law_target_ready,
+    spectral_measure_pvm_actual_borel_countable_family_disjointness_skeleton_public_boundary_held,
     spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
     spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
     spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
