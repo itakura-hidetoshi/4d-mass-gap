@@ -47,7 +47,7 @@ theorem spectral_measure_pvm_operator_topology_countable_additivity_conditional_
     (w : SpectralMeasurePVMOperatorTopologyCountableAdditivityRealizationWitness)
     (h : SpectralMeasurePVMOperatorTopologyCountableAdditivityConditionalBridgeReady w) :
     SpectralMeasurePVMConcreteCountableAdditivityTarget := by
-  rcases h with ⟨_, _, _, _, hcountable, _⟩
+  rcases h with ⟨_, _, _, _, hcountable, _, _, _⟩
   exact hcountable
 
 /-- The bridge exposes the operator-topology convergence target under the same
@@ -56,7 +56,7 @@ theorem spectral_measure_pvm_operator_topology_countable_additivity_conditional_
     (w : SpectralMeasurePVMOperatorTopologyCountableAdditivityRealizationWitness)
     (h : SpectralMeasurePVMOperatorTopologyCountableAdditivityConditionalBridgeReady w) :
     SpectralMeasurePVMConcreteOperatorTopologyConvergenceTarget := by
-  rcases h with ⟨_, _, _, _, _, hconv, _⟩
+  rcases h with ⟨_, _, _, _, _, hconv, _, _⟩
   exact hconv
 
 /-- The conditional bridge preserves the no-shell-collapse boundary while
