@@ -1,0 +1,47 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelConcreteAdjointGraphCandidatePacketBridge
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Certified receipt for the concrete adjoint graph candidate packet bridge. -/
+def SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeCertifiedReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeIndexReady ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeSuppliesSpineBridgeObligation ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeProjectsToClosure ∧
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeObligationProjectionReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The certified receipt for the concrete adjoint graph candidate packet bridge is ready. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_certified_receipt_ready :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeCertifiedReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_index_ready,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_supplies_spine_bridge_obligation,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_projects_to_closure,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_obligation_projection_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the certified receipt. -/
+def SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeCertifiedReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeCertifiedReceiptReady ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeIndexReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the certified receipt is held. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_certified_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeCertifiedReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_certified_receipt_ready,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_candidate_packet_bridge_index_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
