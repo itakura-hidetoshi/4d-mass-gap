@@ -43,20 +43,19 @@ theorem spectral_measure_pvm_operator_topology_all_empty_branch_limit_slot_agree
     (s : SpectralMeasurePVMConcreteCountableFamily)
     (hs : SpectralMeasurePVMConcreteAllEmptyFamily s) :
     SpectralMeasurePVMOperatorTopologyBranchLimitSlotAgreement s := by
-  have hlim :
-      spectralMeasurePVMConcreteNormalizationCandidate
-          (SpectralMeasurePVMConcreteCountableUnionAllEmpty s) =
-        SpectralMeasurePVMConcreteBoundedOperator.zero :=
-    spectral_measure_pvm_concrete_countable_all_empty_additivity s hs
-  have hseq :
-      ∀ N : Nat,
-        spectralMeasurePVMConcreteNormalizationCandidate
-            (SpectralMeasurePVMConcreteFinitePartialUnion N s) =
-          spectralMeasurePVMConcreteBoundedOperator.zero :=
-    spectral_measure_pvm_concrete_partial_sum_all_empty_zero s hs
-  refine Or.inl ⟨hs, hlim, ?_⟩
+  refine Or.inl ⟨
+    hs,
+    spectral_measure_pvm_concrete_countable_all_empty_additivity s hs,
+    ?_⟩
   intro N
-  rw [hseq N, hlim]
+  calc
+    spectralMeasurePVMConcreteNormalizationCandidate
+        (SpectralMeasurePVMConcreteFinitePartialUnion N s)
+        = SpectralMeasurePVMConcreteBoundedOperator.zero :=
+          spectral_measure_pvm_concrete_partial_sum_all_empty_zero s hs N
+    _ = spectralMeasurePVMConcreteNormalizationCandidate
+        (SpectralMeasurePVMConcreteCountableUnionAllEmpty s) :=
+          (spectral_measure_pvm_concrete_countable_all_empty_additivity s hs).symm
 
 /-- The pinned single-whole branch has exact agreement between the tail finite
 partial identity operators and the countable-union identity slot. -/
@@ -65,17 +64,20 @@ theorem spectral_measure_pvm_operator_topology_single_whole_branch_limit_slot_ag
     (k : Nat)
     (hs : SpectralMeasurePVMConcreteSingleWholeAt s k) :
     SpectralMeasurePVMOperatorTopologyBranchLimitSlotAgreement s := by
-  have hlim :
-      spectralMeasurePVMConcreteNormalizationCandidate
-          (SpectralMeasurePVMConcreteCountableUnionSingleWholeAt s k) =
-        SpectralMeasurePVMConcreteBoundedOperator.identity :=
-    spectral_measure_pvm_concrete_countable_single_whole_additivity s k hs
-  have hseq :
-      SpectralMeasurePVMOperatorTopologySingleWholeEventuallyConstantIdentitySequence s k :=
-    spectral_measure_pvm_operator_topology_single_whole_eventually_constant_identity_sequence_ready s k hs
-  refine Or.inr ⟨k, hs, hlim, ?_⟩
+  refine Or.inr ⟨
+    k,
+    hs,
+    spectral_measure_pvm_concrete_countable_single_whole_additivity s k hs,
+    ?_⟩
   intro m
-  rw [hseq m, hlim]
+  calc
+    spectralMeasurePVMConcreteNormalizationCandidate
+        (SpectralMeasurePVMConcreteFinitePartialUnion (Nat.succ k + m) s)
+        = SpectralMeasurePVMConcreteBoundedOperator.identity :=
+          spectral_measure_pvm_operator_topology_single_whole_eventually_constant_identity_sequence_ready s k hs m
+    _ = spectralMeasurePVMConcreteNormalizationCandidate
+        (SpectralMeasurePVMConcreteCountableUnionSingleWholeAt s k) :=
+          (spectral_measure_pvm_concrete_countable_single_whole_additivity s k hs).symm
 
 /-- Every realized concrete operator-topology branch has exact finite-partial to
 countable-union limit-slot agreement. -/
