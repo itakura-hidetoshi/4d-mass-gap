@@ -1,0 +1,65 @@
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2ReverseContainmentCoordinateExtraction
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelConcreteAdjointGraphReverseContainmentFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Actual graph-level reverse containment theorem used by the R4 actual-Borel
+bridge. -/
+def SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualTheorem : Prop :=
+  MGAP4D.MathlibAnalytic.concreteL2R2CompletedDiagonalFormalAdjointGraphCandidate ⊆
+    MGAP4D.MathlibAnalytic.concreteL2R2CompletedDiagonalGraphDefinedOperator.graphCarrier
+
+/-- The actual graph-level reverse containment theorem is proved by the concrete
+coordinate-extraction theorem. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_actual_theorem :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualTheorem := by
+  exact MGAP4D.MathlibAnalytic.concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph
+
+/-- Concrete witness for the reverse-containment target. -/
+def spectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualWitness :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentWitness where
+  candidate_surface_ready :=
+    MGAP4D.MathlibAnalytic.concrete_analytic_spine_l2_r2_adjoint_graph_candidate_structure_surface_ready
+  reverse_adjoint_containment :=
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualTheorem
+  reverse_adjoint_containment_certificate :=
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_actual_theorem
+  no_shell_to_full_collapse_boundary :=
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready
+
+/-- The reverse-containment witness existence obligation is now discharged by the
+actual graph-level reverse containment theorem. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_witness_exists :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentWitnessExistenceObligation := by
+  exact ⟨
+    spectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualWitness,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_target_ready
+      spectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualWitness⟩
+
+/-- Actual-proof receipt for the reverse-containment node. -/
+def SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualProofReady : Prop :=
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualTheorem ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentWitnessExistenceObligation ∧
+  SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentFinalReceiptReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The actual-proof receipt for reverse containment is ready. -/
+theorem spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_actual_proof_ready :
+    SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentActualProofReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_actual_theorem,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_witness_exists,
+    spectral_measure_pvm_actual_borel_concrete_adjoint_graph_reverse_containment_final_receipt_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
