@@ -1,0 +1,51 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelAnalyticSpineCandidatePacketBridgeFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Existence obligation for the analytic spine candidate packet bridge. -/
+def SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeExistenceObligation : Prop :=
+  ∃ B : SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridge, True
+
+/-- Projection from the final receipt to the bridge existence obligation. -/
+def SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeObligationProjectionReady : Prop :=
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeFinalReceiptPublicBoundaryHeld ∧
+  (SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeExistenceObligation →
+    SpectralMeasurePVMActualBorelPostInterfaceResidualCertificate ∧
+    SpectralMeasurePVMNoShellToFullCollapseBoundary) ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The final receipt projects the remaining work to the bridge existence obligation. -/
+theorem spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_obligation_projection_ready :
+    SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeObligationProjectionReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_projects_to_closure,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the bridge obligation projection. -/
+def SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeObligationProjectionPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeObligationProjectionReady ∧
+  SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the bridge obligation projection is held. -/
+theorem spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_obligation_projection_public_boundary_held :
+    SpectralMeasurePVMActualBorelAnalyticSpineCandidatePacketBridgeObligationProjectionPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_obligation_projection_ready,
+    spectral_measure_pvm_actual_borel_analytic_spine_candidate_packet_bridge_final_receipt_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
