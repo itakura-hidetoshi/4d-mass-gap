@@ -61,14 +61,16 @@ theorem spectral_measure_pvm_operator_topology_countable_additivity_conditional_
     (w : SpectralMeasurePVMOperatorTopologyCountableAdditivityRealizationWitness)
     (h : SpectralMeasurePVMOperatorTopologyCountableAdditivityConditionalDischargeCriterion w) :
     w.actualOperatorTopologyRealization := by
-  exact h.2.2.2.2.1
+  rcases h with ⟨_, _, _, _, hactual, _⟩
+  exact hactual
 
 /-- The criterion projects out the exact remaining slot-compatibility field. -/
 theorem spectral_measure_pvm_operator_topology_countable_additivity_conditional_discharge_extracts_limit_slot_compatibility
     (w : SpectralMeasurePVMOperatorTopologyCountableAdditivityRealizationWitness)
     (h : SpectralMeasurePVMOperatorTopologyCountableAdditivityConditionalDischargeCriterion w) :
     w.limitSlotRealizationCompatibility := by
-  exact h.2.2.2.2.2.1
+  rcases h with ⟨_, _, _, _, _, hcompat, _⟩
+  exact hcompat
 
 end
 
