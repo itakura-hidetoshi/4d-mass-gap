@@ -1,0 +1,98 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSigmaAlgebraClosureRootFacingBridgeIndex
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final receipt for the root-facing bridge index joining finite-supported,
+actual-Borel sigma-carrier, and actual-Borel sigma-algebra closure endpoints.
+
+This is an external final receipt and intentionally does not import or modify
+`TheoremSurface`.  It seals only the acyclic bridge route and keeps the genuine
+operator-topology countable-additivity, self-adjoint spectral theorem, and
+spectral-measure construction obligations open. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexFinalReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMR4RootFacingActualBorelBridgeIndexReady ∧
+  SpectralMeasurePVMR4RootFacingActualBorelBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMFiniteSupportedMeasurableRootFacingFinalExportIndexReady ∧
+  SpectralMeasurePVMActualBorelSigmaCarrierHandoffRootFacingFinalExportIndexReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The final receipt for the actual-Borel sigma-algebra closure root-facing
+bridge index is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_closure_root_facing_bridge_index_final_receipt_ready :
+    SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_root_facing_bridge_index_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_root_facing_bridge_index_public_boundary_held,
+    spectral_measure_pvm_r4_root_facing_actual_borel_bridge_index_ready,
+    spectral_measure_pvm_r4_root_facing_actual_borel_bridge_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_root_facing_final_export_index_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_root_facing_final_export_index_public_boundary_held,
+    spectral_measure_pvm_finite_supported_measurable_root_facing_final_export_index_ready,
+    spectral_measure_pvm_actual_borel_sigma_carrier_handoff_root_facing_final_export_index_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the final receipt of the actual-Borel sigma-algebra
+closure root-facing bridge index. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexFinalReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMR4RootFacingActualBorelBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the final receipt of the actual-Borel
+sigma-algebra closure root-facing bridge index is held. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_closure_root_facing_bridge_index_final_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelSigmaAlgebraClosureRootFacingBridgeIndexFinalReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_root_facing_bridge_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_root_facing_bridge_index_public_boundary_held,
+    spectral_measure_pvm_r4_root_facing_actual_borel_bridge_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_root_facing_final_export_index_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
