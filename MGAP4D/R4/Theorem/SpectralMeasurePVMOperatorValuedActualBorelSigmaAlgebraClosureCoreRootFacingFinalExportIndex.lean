@@ -1,0 +1,81 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelSigmaAlgebraClosureCoreChainIndexFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Root-facing final export index for the actual-Borel sigma-algebra closure
+core route.
+
+This is the compact external endpoint for the actual-Borel sigma-closure route:
+finite Boolean closure, countable union closure, countable intersection closure,
+and their handoff chain-index final receipt are available.  It is deliberately
+kept outside `TheoremSurface`, and it keeps the genuine analytic obligations as
+open boundaries. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexReady : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreChainIndexReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffPhaseSurfaceFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreHandoffPhaseSurfaceFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelSetAlgebraRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The root-facing final export index for the actual-Borel sigma-algebra closure
+core route is ready. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_root_facing_final_export_index_ready :
+    SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_chain_index_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_chain_index_public_boundary_held,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_handoff_phase_surface_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_handoff_phase_surface_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_set_algebra_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the actual-Borel sigma-algebra closure core root-facing
+final export index. -/
+def SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexReady ∧
+  SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the actual-Borel sigma-algebra closure core
+root-facing final export index is held. -/
+theorem spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_root_facing_final_export_index_public_boundary_held :
+    SpectralMeasurePVMActualBorelSigmaAlgebraClosureCoreRootFacingFinalExportIndexPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_root_facing_final_export_index_ready,
+    spectral_measure_pvm_actual_borel_sigma_algebra_closure_core_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
