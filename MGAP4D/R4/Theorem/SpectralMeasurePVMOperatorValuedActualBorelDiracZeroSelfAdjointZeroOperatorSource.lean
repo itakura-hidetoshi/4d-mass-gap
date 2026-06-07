@@ -28,15 +28,18 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_source_operator_zero_law :
     rfl
 
 /-- Pointwise Dirac-zero source law: the spectral projection for a Borel set is
-identity exactly when the source eigenvalue `0` belongs to the set, and zero
-otherwise. -/
+identity when the source eigenvalue `0` belongs to the set, and zero otherwise.
+
+The law is phrased as two implications rather than an `if` expression, so it
+requires no global decidability instance for membership in an arbitrary Borel
+carrier set. -/
 def SpectralMeasurePVMActualBorelDiracZeroSourceProjectionLaw : Prop :=
   ∀ s : SpectralMeasurePVMActualBorelCarrierSet,
-    spectralMeasurePVMActualBorelDiracZeroProjectionMap s =
-      if (0 : ℝ) ∈ s.1 then
-        ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier
-      else
-        0
+    ((0 : ℝ) ∈ s.1 →
+      spectralMeasurePVMActualBorelDiracZeroProjectionMap s =
+        ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier) ∧
+    ((0 : ℝ) ∉ s.1 →
+      spectralMeasurePVMActualBorelDiracZeroProjectionMap s = 0)
 
 /-- The Dirac-zero source projection law holds by definition of the Dirac-zero
 projection map. -/
@@ -44,8 +47,11 @@ theorem spectral_measure_pvm_actual_borel_dirac_zero_source_projection_law :
     SpectralMeasurePVMActualBorelDiracZeroSourceProjectionLaw := by
   classical
   intro s
-  simp [SpectralMeasurePVMActualBorelDiracZeroSourceProjectionLaw,
-    spectralMeasurePVMActualBorelDiracZeroProjectionMap]
+  constructor
+  · intro hs
+    simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap, hs]
+  · intro hs
+    simp [spectralMeasurePVMActualBorelDiracZeroProjectionMap, hs]
 
 /-- The Dirac-zero spectral measure is identified with the zero-operator source.
 
