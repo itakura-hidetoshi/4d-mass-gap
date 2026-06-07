@@ -1,0 +1,141 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalPacket
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Final chain for the top-level canonical projection-matrix chain-index route.
+
+This sits above the chain-index final packet.  It gathers the chain-index final
+packet, the matrix chain index, the matrix final chain, the matrix final packet,
+the route top-level chain index, the canonical branch-family surfaces, the
+actual-Borel aggregate surfaces, and the R4 open-boundary markers as one
+external root-facing chain. -/
+def SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady : Prop :=
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalPacketReady ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalPacketPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexReady ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalChainReady ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalChainPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalPacketReady ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalPacketPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixReady ∧
+  SpectralMeasurePVMOperatorTopologyR4ConcreteRouteTopLevelChainIndexReady ∧
+  SpectralMeasurePVMOperatorTopologyR4ConcreteRouteTopLevelChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyCanonicalBranchFamilyFinalChainReady ∧
+  SpectralMeasurePVMOperatorTopologyCanonicalBranchFamilyFullDischargeReady ∧
+  SpectralMeasurePVMOperatorTopologyCanonicalBranchFamilyPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateFinalReceiptReady ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The final chain for the top-level canonical projection-matrix chain-index
+route is ready. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_ready :
+    SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady := by
+  exact ⟨
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_packet_ready,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_packet_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_ready,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_final_chain_ready,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_final_chain_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_final_packet_ready,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_final_packet_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_ready,
+    spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_chain_index_ready,
+    spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_chain_index_public_boundary_held,
+    spectral_measure_pvm_operator_topology_canonical_branch_family_final_chain_ready,
+    spectral_measure_pvm_operator_topology_canonical_branch_family_full_discharge_ready,
+    spectral_measure_pvm_operator_topology_canonical_branch_family_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_final_receipt_ready,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the chain-index final chain. -/
+def SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalPacketPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalChainPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalPacketPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyR4ConcreteRouteTopLevelChainIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorTopologyCanonicalBranchFamilyPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the chain-index final chain is held. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_public_boundary_held :
+    SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_ready,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_packet_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_final_chain_public_boundary_held,
+    spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_final_packet_public_boundary_held,
+    spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_chain_index_public_boundary_held,
+    spectral_measure_pvm_operator_topology_canonical_branch_family_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Projection: final chain exposes the chain-index final packet. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_extracts_final_packet
+    (h : SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady) :
+    SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalPacketReady := by
+  exact h.1
+
+/-- Projection: final chain exposes the matrix chain index. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_extracts_chain_index
+    (h : SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady) :
+    SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexReady := by
+  exact h.2.2.1
+
+/-- Projection: final chain exposes the matrix final chain. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_extracts_matrix_final_chain
+    (h : SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady) :
+    SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixFinalChainReady := by
+  exact h.2.2.2.2.1
+
+/-- Projection: final chain keeps genuine spectral-measure construction open. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_keeps_genuine_construction_open
+    (h : SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady) :
+    SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen := by
+  rcases h with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hopen, _⟩
+  exact hopen
+
+/-- Projection: final chain preserves no-shell-collapse. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_preserves_no_shell_collapse
+    (h : SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainReady) :
+    SpectralMeasurePVMNoShellToFullCollapseBoundary := by
+  rcases h with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hboundary⟩
+  exact hboundary
+
+/-- Projection: public boundary preserves no-shell-collapse. -/
+theorem spectral_measure_pvm_operator_topology_top_level_canonical_projection_matrix_chain_index_final_chain_public_boundary_preserves_no_shell_collapse
+    (h : SpectralMeasurePVMOperatorTopologyTopLevelCanonicalProjectionMatrixChainIndexFinalChainPublicBoundaryHeld) :
+    SpectralMeasurePVMNoShellToFullCollapseBoundary := by
+  rcases h with ⟨_, _, _, _, _, _, _, _, _, _, _, _, hboundary⟩
+  exact hboundary
+
+end
+
+end Theorem
+end R4
+end MGAP4D
