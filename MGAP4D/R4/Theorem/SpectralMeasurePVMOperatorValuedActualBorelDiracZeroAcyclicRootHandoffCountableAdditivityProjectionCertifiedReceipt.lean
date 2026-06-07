@@ -1,0 +1,56 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjection
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Certified receipt for the countable-additivity projection from the acyclic
+root handoff.
+
+This is the terminal receipt for the extraction theorem: it certifies that the
+acyclic root handoff exports countable additivity as a law of the actual
+Dirac-zero spectral measure, with the no-shell-to-full-collapse boundary still
+visible. -/
+def SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionCertifiedReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionReady ∧
+  SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelDiracZeroSpectralMeasureCountableAdditivityLaw ∧
+  SpectralMeasurePVMActualBorelDiracZeroActualSpectralMeasureLawsTheorem ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The certified receipt for the countable-additivity projection from the
+acyclic root handoff is ready. -/
+theorem spectral_measure_pvm_actual_borel_dirac_zero_acyclic_root_handoff_countable_additivity_projection_certified_receipt_ready :
+    SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionCertifiedReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dirac_zero_acyclic_root_handoff_countable_additivity_projection_ready,
+    spectral_measure_pvm_actual_borel_dirac_zero_acyclic_root_handoff_countable_additivity_projection_public_boundary_held,
+    spectral_measure_pvm_actual_borel_dirac_zero_spectral_measure_countable_additivity_law,
+    spectral_measure_pvm_actual_borel_dirac_zero_actual_spectral_measure_laws_theorem,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the certified receipt of the countable-additivity
+projection. -/
+def SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionCertifiedReceiptPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionCertifiedReceiptReady ∧
+  SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the certified receipt of the countable-additivity
+projection is held. -/
+theorem spectral_measure_pvm_actual_borel_dirac_zero_acyclic_root_handoff_countable_additivity_projection_certified_receipt_public_boundary_held :
+    SpectralMeasurePVMActualBorelDiracZeroAcyclicRootHandoffCountableAdditivityProjectionCertifiedReceiptPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dirac_zero_acyclic_root_handoff_countable_additivity_projection_certified_receipt_ready,
+    spectral_measure_pvm_actual_borel_dirac_zero_acyclic_root_handoff_countable_additivity_projection_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
