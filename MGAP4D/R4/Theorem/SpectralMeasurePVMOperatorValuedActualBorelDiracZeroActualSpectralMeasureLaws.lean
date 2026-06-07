@@ -16,8 +16,11 @@ endpoint laws and countable additivity as fields/laws of the actual spectral
 measure, then includes the previously proved PVM laws package for the same
 underlying map. -/
 def SpectralMeasurePVMActualBorelDiracZeroActualSpectralMeasureLawsTheorem : Prop :=
-  spectralMeasurePVMActualBorelDiracZeroSpectralMeasure.empty_maps_to_zero ∧
-  spectralMeasurePVMActualBorelDiracZeroSpectralMeasure.univ_maps_to_identity ∧
+  spectralMeasurePVMActualBorelDiracZeroSpectralMeasure.map
+      spectralMeasurePVMActualBorelEmptySet = 0 ∧
+  spectralMeasurePVMActualBorelDiracZeroSpectralMeasure.map
+      spectralMeasurePVMActualBorelUnivSet =
+        ContinuousLinearMap.id ℝ MathlibAnalytic.ConcreteL2R1HilbertCarrier ∧
   SpectralMeasurePVMActualBorelDiracZeroSpectralMeasureCountableAdditivityLaw ∧
   SpectralMeasurePVMActualBorelDiracZeroPVMLawsTheorem ∧
   SpectralMeasurePVMActualBorelDiracZeroSpectralMeasureConstructionTheorem ∧
