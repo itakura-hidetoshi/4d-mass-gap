@@ -22,7 +22,7 @@ concrete adjoint graph candidate final receipt. -/
 def SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentTargetReady
     (W : SpectralMeasurePVMActualBorelConcreteAdjointGraphReverseContainmentWitness) : Prop :=
   SpectralMeasurePVMActualBorelConcreteAdjointGraphCandidatePacketBridgeFinalReceiptReady ∧
-  W.candidate_surface_ready ∧
+  MGAP4D.MathlibAnalytic.concreteAnalyticSpineL2R2AdjointGraphCandidateStructureSurfaceReady ∧
   W.reverse_adjoint_containment ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
