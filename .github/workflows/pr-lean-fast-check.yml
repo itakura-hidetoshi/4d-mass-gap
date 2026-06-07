@@ -94,8 +94,23 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          lean --version
-          lake --version
+          retry() {
+            local n=0
+            local max=5
+            local delay=10
+            until "$@"; do
+              n=$((n + 1))
+              if [ "$n" -ge "$max" ]; then
+                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
+                return 1
+              fi
+              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
+              sleep "$delay"
+              delay=$((delay * 2))
+            done
+          }
+          retry lean --version
+          retry lake --version
           echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
