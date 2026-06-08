@@ -1,5 +1,3 @@
-import MGAP4D.R1.Theorem.HilbertSkeleton
-
 namespace MGAP4D
 namespace R1
 namespace Theorem
