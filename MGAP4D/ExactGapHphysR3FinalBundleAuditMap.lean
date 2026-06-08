@@ -22,15 +22,20 @@ structure ExactGapHphysR3FinalBundleAuditMap where
     MathlibAnalytic.prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
   mapVisible : Prop
 
-/-- Readiness predicate for the audit map. -/
+/-- Readiness predicate for the audit map.
+
+The left-hand entries are the propositions witnessed by the map fields.  They are
+written as propositions rather than as field projections, because the projections
+are proof terms. -/
 def ExactGapHphysR3FinalBundleAuditMap.ready
     (M : ExactGapHphysR3FinalBundleAuditMap) : Prop :=
-  M.chainIndexReady ∧
-  M.targetsListed = rfl ∧
-  M.r3InputsClosed ∧
-  M.nonPromotionBoundary ∧
-  M.noAutoRelease ∧
-  M.publicBoundaryHeld ∧
+  ExactGapHphysR3FinalBundleAuditChainIndexReady ∧
+  exactGapHphysR3FinalBundleAuditChainTargets =
+    exactGapHphysR3FinalBundleAuditChainTargets ∧
+  MathlibAnalytic.concreteAnalyticSpineHardResidualR3SelfAdjointTheoremInputsClosed ∧
+  MathlibAnalytic.concreteL2R2ClosedOperatorBoundaryNotSelfAdjointness ∧
+  exactGap3320HphysToFinalTheoremReleaseBundleHandoff.hphysToFinal.hphysToOrigin.hphysClosure.bridge.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  MathlibAnalytic.prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld ∧
   M.mapVisible
 
 /-- Canonical audit map for the `H_phys`/R3 final-bundle audit chain. -/
@@ -53,7 +58,7 @@ theorem exact_gap_hphys_r3_final_bundle_audit_map_3320_ready :
     exactGapHphysR3FinalBundleAuditMap3320.ready := by
   exact ⟨
     exactGapHphysR3FinalBundleAuditMap3320.chainIndexReady,
-    rfl,
+    exactGapHphysR3FinalBundleAuditMap3320.targetsListed,
     exactGapHphysR3FinalBundleAuditMap3320.r3InputsClosed,
     exactGapHphysR3FinalBundleAuditMap3320.nonPromotionBoundary,
     exactGapHphysR3FinalBundleAuditMap3320.noAutoRelease,
