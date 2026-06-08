@@ -21,9 +21,12 @@ structure SpectralReleaseReadinessClosure where
   mathlibMainAdoptionHeld : Prop
   publicBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralReleaseReadinessClosure.ready
     (C : SpectralReleaseReadinessClosure) : Prop :=
-  C.readinessReady ∧ C.spectralChainCIReady ∧ C.releaseReadinessClosed ∧
+  C.readiness.ready ∧ C.spectralChainCIReady ∧ C.releaseReadinessClosed ∧
   C.independentReplayStillRequired ∧ C.sourceTreeReviewStillRequired ∧
   C.externalAuditStillRequired ∧ C.finalGapReleaseNotUnlocked ∧
   C.theoremCompletionsNotClaimed ∧ C.mainPreMathlib ∧
@@ -45,7 +48,7 @@ def spectral3320ReleaseReadinessClosure : SpectralReleaseReadinessClosure :=
 
 theorem spectral_release_readiness_closure_pack
     (C : SpectralReleaseReadinessClosure) :
-    C.ready ↔ C.readinessReady ∧ C.spectralChainCIReady ∧ C.releaseReadinessClosed ∧
+    C.ready ↔ C.readiness.ready ∧ C.spectralChainCIReady ∧ C.releaseReadinessClosed ∧
       C.independentReplayStillRequired ∧ C.sourceTreeReviewStillRequired ∧
       C.externalAuditStillRequired ∧ C.finalGapReleaseNotUnlocked ∧
       C.theoremCompletionsNotClaimed ∧ C.mainPreMathlib ∧
