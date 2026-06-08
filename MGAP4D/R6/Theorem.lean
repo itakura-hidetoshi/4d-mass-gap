@@ -11,3 +11,4 @@ import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningSeriesReview
 import MGAP4D.R6.Theorem.IntervalExclusionProofObligationTighteningClosure
 import MGAP4D.R6.Theorem.IntervalFromR5DirectProofBridge
 import MGAP4D.R6.Theorem.IntervalExclusionR5DirectProofSlotClosure
+import MGAP4D.R6.Theorem.IntervalExclusionDirectProofReviewSurface
