@@ -34,7 +34,7 @@ noncomputable def hardPhysicalResidualLedgerR1R7DischargeBridge3320 :
 
 /-- Projection: the ledger bridge is connected to the internal discharge spine. -/
 theorem hard_physical_residual_ledger_r1r7_discharge_bridge_ready :
-    hardPhysicalResidualLedgerR1R7DischargeBridge3320.dischargeReady := by
+    concreteR1R7ResidualDischarge3320.ready := by
   exact hardPhysicalResidualLedgerR1R7DischargeBridge3320.dischargeReady
 
 /-- Projection: the ledger bridge carries the exact `33/20` value. -/
