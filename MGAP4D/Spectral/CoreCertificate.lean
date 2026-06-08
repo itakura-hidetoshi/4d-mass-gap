@@ -20,12 +20,17 @@ structure SpectralCoreCertificate where
   finalGapReleaseNotUnlocked : Prop
   mainPreMathlib : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralCoreCertificate.ready
     (C : SpectralCoreCertificate) : Prop :=
-  C.formalizationReady ∧ C.lowerBoundReady ∧ C.formalizationMatchesLowerBound ∧
-  C.witnessMatchesLowerBoundWitness ∧ C.sectorBoundaryReady ∧
-  C.coreCertificateVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
-  C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib
+  C.formalization.ready ∧ C.lowerBound.ready ∧
+  C.formalization.normalizedGapValue = C.lowerBound.lowerBound ∧
+  C.formalization.witness = C.lowerBound.positiveGap.witness ∧
+  C.lowerBound.sectorBoundary.ready ∧ C.coreCertificateVisible ∧
+  C.nonTheoremCompletionBoundaryVisible ∧ C.finalGapReleaseNotUnlocked ∧
+  C.mainPreMathlib
 
 theorem spectral_gap_3320_formalization_ready :
     (spectralGap3320Formalization True True True True True True True True).ready := by
@@ -54,9 +59,10 @@ def spectral3320CoreCertificate : SpectralCoreCertificate :=
 
 theorem spectral_core_certificate_pack
     (C : SpectralCoreCertificate) :
-    C.ready ↔ C.formalizationReady ∧ C.lowerBoundReady ∧
-      C.formalizationMatchesLowerBound ∧ C.witnessMatchesLowerBoundWitness ∧
-      C.sectorBoundaryReady ∧ C.coreCertificateVisible ∧
+    C.ready ↔ C.formalization.ready ∧ C.lowerBound.ready ∧
+      C.formalization.normalizedGapValue = C.lowerBound.lowerBound ∧
+      C.formalization.witness = C.lowerBound.positiveGap.witness ∧
+      C.lowerBound.sectorBoundary.ready ∧ C.coreCertificateVisible ∧
       C.nonTheoremCompletionBoundaryVisible ∧ C.finalGapReleaseNotUnlocked ∧
       C.mainPreMathlib := by
   rfl
