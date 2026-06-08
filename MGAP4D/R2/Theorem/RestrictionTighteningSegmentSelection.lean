@@ -27,17 +27,25 @@ structure RestrictionTighteningSegmentSelection where
 def RestrictionTighteningSegmentSelection.ready
     (S : RestrictionTighteningSegmentSelection) : Prop :=
   S.r1ClosureGreen ∧ S.r1r2BridgeGreen ∧ S.restrictionSkeletonVisible ∧
-  S.selectedIsR2Restriction ∧ S.r1ClosurePreserved ∧ S.tighteningOnly ∧
-  S.mainPreMathlib ∧ S.mathlibAdoptionHeld ∧ S.r2TheoremCompletionNotClaimed ∧
+  S.selectedSegment = RestrictionTighteningSegment.r2RestrictionObligation ∧
+  S.r1ClosurePreserved ∧ S.tighteningOnly ∧ S.mainPreMathlib ∧
+  S.mathlibAdoptionHeld ∧ S.r2TheoremCompletionNotClaimed ∧
   S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld
 
 theorem restriction_tightening_segment_selection_pack
     (S : RestrictionTighteningSegmentSelection) :
     S.ready ↔ S.r1ClosureGreen ∧ S.r1r2BridgeGreen ∧ S.restrictionSkeletonVisible ∧
-      S.selectedIsR2Restriction ∧ S.r1ClosurePreserved ∧ S.tighteningOnly ∧
-      S.mainPreMathlib ∧ S.mathlibAdoptionHeld ∧ S.r2TheoremCompletionNotClaimed ∧
+      S.selectedSegment = RestrictionTighteningSegment.r2RestrictionObligation ∧
+      S.r1ClosurePreserved ∧ S.tighteningOnly ∧ S.mainPreMathlib ∧
+      S.mathlibAdoptionHeld ∧ S.r2TheoremCompletionNotClaimed ∧
       S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld := by
   rfl
+
+/-- The selected segment equality is still available from the stored certificate. -/
+theorem restriction_tightening_segment_selection_selected_eq
+    (S : RestrictionTighteningSegmentSelection) :
+    S.selectedSegment = RestrictionTighteningSegment.r2RestrictionObligation := by
+  exact S.selectedIsR2Restriction
 
 end Theorem
 end R2
