@@ -1,0 +1,67 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosure
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Residual disposition for the dense-diagonal PVM-sourced actual-Borel route.
+
+The R4 constructive residual is closed.  The remaining genuine analytic and
+physical obligations are not R4 constructive residuals; they are explicitly
+preserved as downstream theorem obligations. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedResidualDispositionLedgerReady : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosureFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedNoRemainingConstructiveResidual ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The residual disposition ledger for the dense-diagonal PVM-sourced route is ready. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_residual_disposition_ledger_ready :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedResidualDispositionLedgerReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_constructive_residual_closure_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_constructive_residual_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_no_remaining_constructive_residual,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- The R4 dense-diagonal PVM-sourced route is constructively closed while the
+non-R4 downstream theorem obligations remain visible. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedR4ConstructiveClosedDownstreamVisible : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedNoRemainingConstructiveResidual ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedResidualDispositionLedgerReady ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The R4 dense-diagonal PVM-sourced route is constructively closed with downstream
+obligations visible. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_r4_constructive_closed_downstream_visible :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedR4ConstructiveClosedDownstreamVisible := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_no_remaining_constructive_residual,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_residual_disposition_ledger_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
