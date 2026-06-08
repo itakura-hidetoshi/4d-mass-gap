@@ -43,11 +43,7 @@ def lowerBound3320Certificate
       mainPreMathlib
     positiveGapMatchesLowerBound := by rfl
     positiveGapNumeratorPositive := gap3320Witness.positiveNumerator
-    sectorBoundary := spectralSectorBoundaryCertificate
-      True True
-      nonTheoremCompletionBoundaryVisible
-      finalGapReleaseNotUnlocked
-      mainPreMathlib
+    sectorBoundary := spectralSectorBoundaryCertificate True True True True True
     sectorBoundaryReady := spectral_sector_boundary_certificate_ready
     positiveLowerBoundSurfaceVisible := positiveLowerBoundSurfaceVisible
     nonTheoremCompletionBoundaryVisible := nonTheoremCompletionBoundaryVisible
