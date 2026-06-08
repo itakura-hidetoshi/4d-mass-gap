@@ -25,13 +25,20 @@ structure ExactGapAuditClosure where
   auditClosureVisible : Prop
   theoremBoundaryHeld : exactGap.sandwich.theoremBoundaryHeld
 
+/-- Readiness re-expands proof-carrying fields to the propositions they certify,
+so the audit checklist remains a proposition-level conjunction. -/
 def ExactGapAuditClosure.ready
     (C : ExactGapAuditClosure) : Prop :=
-  C.exactGapReady ∧ C.publicBoundaryReady ∧ C.exactGapValue3320 ∧
-  C.exactGapMatchesWitness ∧ C.exactGapMatchesSandwich ∧
-  C.publicBoundaryExactGapValue3320 ∧ C.v16GapValue3320 ∧
-  C.exactGapDoesNotOpenFinalRelease ∧ C.finalReleaseHeld ∧
-  C.publicBoundaryLocked ∧ C.auditClosureVisible ∧ C.theoremBoundaryHeld
+  C.exactGap.ready ∧ C.publicBoundary.ready ∧
+  C.exactGap.exactGapValue = 33 / 20 ∧
+  C.exactGap.exactGapValue = C.exactGap.gapWitness.gap.value ∧
+  C.exactGap.exactGapValue = C.exactGap.sandwich.exactGapValue ∧
+  C.publicBoundary.exactGapBridge.exactGap.exactGapValue = 33 / 20 ∧
+  Release.v16ReleasePacket.finalPacket.massGap.value = 33 / 20 ∧
+  C.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  C.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  C.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  C.auditClosureVisible ∧ C.exactGap.sandwich.theoremBoundaryHeld
 
 def exactGap3320AuditClosure : ExactGapAuditClosure :=
   { exactGap := Spectral.exactGapTheorem3320Certificate
@@ -51,11 +58,16 @@ def exactGap3320AuditClosure : ExactGapAuditClosure :=
 
 theorem exact_gap_audit_closure_pack
     (C : ExactGapAuditClosure) :
-    C.ready ↔ C.exactGapReady ∧ C.publicBoundaryReady ∧ C.exactGapValue3320 ∧
-      C.exactGapMatchesWitness ∧ C.exactGapMatchesSandwich ∧
-      C.publicBoundaryExactGapValue3320 ∧ C.v16GapValue3320 ∧
-      C.exactGapDoesNotOpenFinalRelease ∧ C.finalReleaseHeld ∧
-      C.publicBoundaryLocked ∧ C.auditClosureVisible ∧ C.theoremBoundaryHeld := by
+    C.ready ↔ C.exactGap.ready ∧ C.publicBoundary.ready ∧
+      C.exactGap.exactGapValue = 33 / 20 ∧
+      C.exactGap.exactGapValue = C.exactGap.gapWitness.gap.value ∧
+      C.exactGap.exactGapValue = C.exactGap.sandwich.exactGapValue ∧
+      C.publicBoundary.exactGapBridge.exactGap.exactGapValue = 33 / 20 ∧
+      Release.v16ReleasePacket.finalPacket.massGap.value = 33 / 20 ∧
+      C.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+      C.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      C.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      C.auditClosureVisible ∧ C.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_3320_audit_closure_ready :
@@ -87,15 +99,15 @@ theorem exact_gap_3320_audit_closure_matches_sandwich :
   exact Spectral.exact_gap_theorem_3320_matches_sandwich
 
 theorem exact_gap_3320_audit_closure_release_held :
-    exactGap3320AuditClosure.finalReleaseHeld := by
+    exactGap3320AuditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld := by
   exact Spectral.exact_gap_theorem_3320_release_held
 
 theorem exact_gap_3320_audit_closure_public_boundary_locked :
-    exactGap3320AuditClosure.publicBoundaryLocked := by
+    exactGap3320AuditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact Spectral.exact_gap_theorem_3320_public_boundary_locked
 
 theorem exact_gap_3320_audit_closure_no_final_release_open :
-    exactGap3320AuditClosure.exactGapDoesNotOpenFinalRelease := by
+    exactGap3320AuditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease := by
   exact Release.public_boundary_theorem_3320_exact_gap_does_not_open_final_release
 
 end MGAP4D
