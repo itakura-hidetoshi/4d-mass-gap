@@ -19,9 +19,12 @@ structure SpectralCoreReleaseBridge where
   mathlibMainAdoptionHeld : Prop
   publicBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralCoreReleaseBridge.ready
     (B : SpectralCoreReleaseBridge) : Prop :=
-  B.coreCertificateReady ∧ B.phase3ReleaseGateVisible ∧
+  B.coreCertificate.ready ∧ B.phase3ReleaseGateVisible ∧
   B.spectralGapFormalizationGateVisible ∧ B.coreCertificateVisibleFromGate ∧
   B.finalGapReleaseNotUnlocked ∧ B.mainPreMathlib ∧
   B.mathlibMainAdoptionHeld ∧ B.publicBoundaryHeld
@@ -46,7 +49,7 @@ def spectral3320CoreReleaseBridge
 
 theorem spectral_core_release_bridge_pack
     (B : SpectralCoreReleaseBridge) :
-    B.ready ↔ B.coreCertificateReady ∧ B.phase3ReleaseGateVisible ∧
+    B.ready ↔ B.coreCertificate.ready ∧ B.phase3ReleaseGateVisible ∧
       B.spectralGapFormalizationGateVisible ∧ B.coreCertificateVisibleFromGate ∧
       B.finalGapReleaseNotUnlocked ∧ B.mainPreMathlib ∧
       B.mathlibMainAdoptionHeld ∧ B.publicBoundaryHeld := by
