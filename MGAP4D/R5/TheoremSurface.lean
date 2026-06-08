@@ -1,1 +1,2 @@
 import MGAP4D.R5.Theorem.CompactCenteredPlaquetteInput
+import MGAP4D.R5.Theorem.CompactCenteredPlaquetteObservableDirectProofDownstreamInputContract
