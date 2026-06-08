@@ -1,0 +1,67 @@
+import MGAP4D.R5.Theorem.CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContract
+
+namespace MGAP4D
+namespace R5
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Strengthened final export receipt for R5.
+
+This is the R5 terminal import for downstream stages.  It includes the theorem
+surface, downstream input contract, terminal receipt, and public boundary. -/
+def CompactCenteredPlaquetteObservableStrengthenedFinalExportReceiptReady : Prop :=
+  CompactCenteredPlaquetteObservableStrengthenedTheoremSurfaceReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedTheoremSurfacePublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractPublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableStrengthenedTerminalReceiptReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedTerminalReceiptPublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableStrengthenedLaterStageHandoffFinalReceiptReady ∧
+  MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The strengthened final export receipt for R5 is ready. -/
+theorem compact_centered_plaquette_observable_strengthened_final_export_receipt_ready :
+    CompactCenteredPlaquetteObservableStrengthenedFinalExportReceiptReady := by
+  exact ⟨
+    compact_centered_plaquette_observable_strengthened_theorem_surface_ready,
+    compact_centered_plaquette_observable_strengthened_theorem_surface_public_boundary_held,
+    compact_centered_plaquette_observable_strengthened_downstream_input_contract_ready,
+    compact_centered_plaquette_observable_strengthened_downstream_input_contract_public_boundary_held,
+    compact_centered_plaquette_observable_strengthened_terminal_receipt_ready,
+    compact_centered_plaquette_observable_strengthened_terminal_receipt_public_boundary_held,
+    compact_centered_plaquette_observable_strengthened_later_stage_handoff_final_receipt_ready,
+    MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the strengthened R5 final export receipt. -/
+def CompactCenteredPlaquetteObservableStrengthenedFinalExportReceiptPublicBoundaryHeld : Prop :=
+  CompactCenteredPlaquetteObservableStrengthenedFinalExportReceiptReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractPublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableStrengthenedTerminalReceiptPublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableDoesNotConsumeAtom3320Boundary ∧
+  CompactCenteredPlaquetteObservableDoesNotConsumePositiveSpectralWeightBoundary ∧
+  MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the strengthened R5 final export receipt is held. -/
+theorem compact_centered_plaquette_observable_strengthened_final_export_receipt_public_boundary_held :
+    CompactCenteredPlaquetteObservableStrengthenedFinalExportReceiptPublicBoundaryHeld := by
+  exact ⟨
+    compact_centered_plaquette_observable_strengthened_final_export_receipt_ready,
+    compact_centered_plaquette_observable_strengthened_downstream_input_contract_public_boundary_held,
+    compact_centered_plaquette_observable_strengthened_terminal_receipt_public_boundary_held,
+    compact_centered_plaquette_observable_does_not_consume_atom_3320_boundary,
+    compact_centered_plaquette_observable_does_not_consume_positive_spectral_weight_boundary,
+    MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- One-line export theorem for R6/R7. -/
+theorem compact_centered_plaquette_observable_r5_strengthened_final_export_ready :
+    CompactCenteredPlaquetteObservableStrengthenedFinalExportReceiptReady := by
+  exact compact_centered_plaquette_observable_strengthened_final_export_receipt_ready
+
+end
+
+end Theorem
+end R5
+end MGAP4D
