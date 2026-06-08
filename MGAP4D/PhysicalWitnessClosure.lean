@@ -28,12 +28,21 @@ structure PhysicalWitnessClosure where
   publicBoundaryLocked : observableClosure.bridge.preReleaseCheckpoint.publicBoundaryLocked
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PhysicalWitnessClosure.ready
     (C : PhysicalWitnessClosure) : Prop :=
-  C.hamiltonianBridgeReady ∧ C.observableClosureReady ∧
-  C.normalizedGapMatchesObservableWeight ∧ C.hphysUnitScaleOne ∧
-  C.hphysVacuumReferenceZero ∧ C.observableIsApg ∧ C.observablePositiveMass ∧
-  C.witnessSectorOrthogonal ∧ C.witnessNotVacuum ∧ C.publicBoundaryLocked ∧
+  C.hamiltonianBridge.ready ∧ C.observableClosure.ready ∧
+  C.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value =
+    C.observableClosure.bridge.finalBridge.spectralWeight.value ∧
+  C.hamiltonianBridge.hamiltonianSpectralBridge.normalization.unit.unitScale = 1 ∧
+  C.hamiltonianBridge.hamiltonianSpectralBridge.normalization.unit.vacuumEnergyReference = 0 ∧
+  C.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+  C.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+  C.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  C.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  C.observableClosure.bridge.preReleaseCheckpoint.publicBoundaryLocked ∧
   C.theoremBoundaryHeld
 
 def physicalWitness3320Closure : PhysicalWitnessClosure :=
@@ -53,10 +62,16 @@ def physicalWitness3320Closure : PhysicalWitnessClosure :=
 
 theorem physical_witness_closure_pack
     (C : PhysicalWitnessClosure) :
-    C.ready ↔ C.hamiltonianBridgeReady ∧ C.observableClosureReady ∧
-      C.normalizedGapMatchesObservableWeight ∧ C.hphysUnitScaleOne ∧
-      C.hphysVacuumReferenceZero ∧ C.observableIsApg ∧ C.observablePositiveMass ∧
-      C.witnessSectorOrthogonal ∧ C.witnessNotVacuum ∧ C.publicBoundaryLocked ∧
+    C.ready ↔ C.hamiltonianBridge.ready ∧ C.observableClosure.ready ∧
+      C.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value =
+        C.observableClosure.bridge.finalBridge.spectralWeight.value ∧
+      C.hamiltonianBridge.hamiltonianSpectralBridge.normalization.unit.unitScale = 1 ∧
+      C.hamiltonianBridge.hamiltonianSpectralBridge.normalization.unit.vacuumEnergyReference = 0 ∧
+      C.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+      C.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+      C.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      C.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      C.observableClosure.bridge.preReleaseCheckpoint.publicBoundaryLocked ∧
       C.theoremBoundaryHeld := by
   rfl
 
