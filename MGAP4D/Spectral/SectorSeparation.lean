@@ -23,10 +23,15 @@ structure SectorSeparationCertificate where
   projectionBoundaryVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SectorSeparationCertificate.ready
     (C : SectorSeparationCertificate) : Prop :=
-  C.boundaryReady ∧ C.witnessSectorIsOrthogonal ∧ C.witnessNotVacuum ∧
-  C.positiveGapReady ∧ C.witnessMatchesPositiveGap ∧ C.vacuumOrthogonalNoCollapse ∧
+  C.boundary.ready ∧ C.witnessSector = SpectralSector.orthogonal ∧
+  C.witnessSector ≠ SpectralSector.vacuum ∧ C.positiveGap.ready ∧
+  C.positiveGap.witness.gap = C.positiveGap.value ∧
+  C.boundary.vacuumSector ≠ C.boundary.orthogonalSector ∧
   C.separationVisible ∧ C.projectionBoundaryVisible ∧ C.theoremBoundaryHeld
 
 def spectralSectorSeparationCertificate : SectorSeparationCertificate :=
@@ -36,13 +41,7 @@ def spectralSectorSeparationCertificate : SectorSeparationCertificate :=
     witnessSectorIsOrthogonal := by rfl
     witnessNotVacuum := by decide
     positiveGap := positive3320GapCertificate True True True True
-    positiveGapReady := by
-      exact And.intro rfl <|
-        And.intro rfl <|
-        And.intro gap3320Witness.positiveNumerator <|
-        And.intro True.intro <|
-        And.intro True.intro <|
-        And.intro True.intro True.intro
+    positiveGapReady := positive3320_gap_certificate_ready
     witnessMatchesPositiveGap := by rfl
     vacuumOrthogonalNoCollapse := by decide
     separationVisible := True
@@ -51,8 +50,10 @@ def spectralSectorSeparationCertificate : SectorSeparationCertificate :=
 
 theorem sector_separation_certificate_pack
     (C : SectorSeparationCertificate) :
-    C.ready ↔ C.boundaryReady ∧ C.witnessSectorIsOrthogonal ∧ C.witnessNotVacuum ∧
-      C.positiveGapReady ∧ C.witnessMatchesPositiveGap ∧ C.vacuumOrthogonalNoCollapse ∧
+    C.ready ↔ C.boundary.ready ∧ C.witnessSector = SpectralSector.orthogonal ∧
+      C.witnessSector ≠ SpectralSector.vacuum ∧ C.positiveGap.ready ∧
+      C.positiveGap.witness.gap = C.positiveGap.value ∧
+      C.boundary.vacuumSector ≠ C.boundary.orthogonalSector ∧
       C.separationVisible ∧ C.projectionBoundaryVisible ∧ C.theoremBoundaryHeld := by
   rfl
 
@@ -61,7 +62,7 @@ theorem spectral_sector_separation_certificate_ready :
   exact And.intro spectral_sector_boundary_certificate_ready <|
     And.intro rfl <|
     And.intro (by decide) <|
-    And.intro spectralSectorSeparationCertificate.positiveGapReady <|
+    And.intro positive3320_gap_certificate_ready <|
     And.intro rfl <|
     And.intro (by decide) <|
     And.intro True.intro <|
