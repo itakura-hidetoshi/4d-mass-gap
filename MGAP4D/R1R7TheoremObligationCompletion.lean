@@ -58,8 +58,8 @@ def r1r7TheoremObligationCompletion3320 : R1R7TheoremObligationCompletion :=
     physicalEigenWitnessReady := Hamiltonian.physical_eigen_witness_3320_ready
     physicalWitnessAuditReady := physical_witness_3320_audit_checkpoint_ready
     completionSurfaceVisible := True
-    finalReleaseHeld := physicalWitness3320AuditCheckpoint.finalReleaseHeld
-    publicBoundaryLocked := physicalWitness3320AuditCheckpoint.publicBoundaryLocked
+    finalReleaseHeld := physicalWitness3320AuditCheckpoint.releaseHold.finalReleaseHeld
+    publicBoundaryLocked := physicalWitness3320AuditCheckpoint.releaseHold.bridge.checkpoint.publicBoundaryLocked
     theoremBoundaryHeld := True }
 
 theorem r1r7_theorem_obligation_completion_pack
