@@ -115,12 +115,16 @@ theorem r7_theorem_obligation_completed :
     r1r7TheoremObligationCompletion3320.r7AtomExactCompleted := by
   trivial
 
+/-- The physical eigen-witness readiness is exposed as its underlying
+proposition, not as the proof-carrying structure field. -/
 theorem r1r7_theorem_obligation_completion_physical_eigen_ready :
-    r1r7TheoremObligationCompletion3320.physicalEigenWitnessReady := by
+    Hamiltonian.physicalEigenWitness3320.ready := by
   exact Hamiltonian.physical_eigen_witness_3320_ready
 
+/-- The physical witness audit readiness is exposed as its underlying
+proposition, not as the proof-carrying structure field. -/
 theorem r1r7_theorem_obligation_completion_audit_ready :
-    r1r7TheoremObligationCompletion3320.physicalWitnessAuditReady := by
+    physicalWitness3320AuditCheckpoint.ready := by
   exact physical_witness_3320_audit_checkpoint_ready
 
 theorem r1r7_theorem_obligation_completion_release_held :
