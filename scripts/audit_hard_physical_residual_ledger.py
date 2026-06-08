@@ -24,6 +24,21 @@ REQUIRED_LEDGER_ANCHORS = (
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
 )
 
+REQUIRED_INTERNAL_DISCHARGE_ANCHORS = (
+    "Internal R1--R7 discharge spine v0.1",
+    "MGAP4D/ConcreteR1R7ResidualDischarge.lean",
+    "ConcreteR1R7ResidualDischarge",
+    "concreteR1R7ResidualDischarge3320",
+    "concrete_r1r7_residual_discharge_3320_ready",
+    "concrete_r1r7_residual_discharge_exact_gap_value_3320",
+    "concrete_r1r7_residual_discharge_positive_nonzero_spectral_mass",
+    "concrete_r1r7_residual_discharge_final_release_held",
+    "concrete_r1r7_residual_discharge_public_boundary_locked",
+    "internal discharge spine binding present",
+    "ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible",
+    "Hard residual ledger statuses: preserved for stronger future Mathlib/operator-theoretic replacement",
+)
+
 REQUIRED_RESIDUAL_IDS = (
     "R1. Concrete real Hilbert space on Mathlib",
     "R2. Densely defined unbounded operator",
@@ -98,6 +113,7 @@ def main() -> None:
         text = LEDGER_PATH.read_text(encoding="utf-8")
 
     failures.extend(require_all(text, REQUIRED_LEDGER_ANCHORS, "ledger"))
+    failures.extend(require_all(text, REQUIRED_INTERNAL_DISCHARGE_ANCHORS, "internal-discharge"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -106,6 +122,7 @@ def main() -> None:
 
     print("Hard physical residual ledger audit")
     print(f"Ledger anchors audited: {len(REQUIRED_LEDGER_ANCHORS)}")
+    print(f"Internal discharge anchors audited: {len(REQUIRED_INTERNAL_DISCHARGE_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
