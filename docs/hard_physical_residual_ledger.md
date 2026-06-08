@@ -31,6 +31,50 @@ external_audit_readiness_pvm_spectral_atom_boundary_held
 
 This means the route is replay-visible and audit-enforced, not that all concrete analytic constructions below have been discharged.
 
+## Internal R1--R7 discharge spine v0.1
+
+The current main branch also carries an internal Lean-side discharge/index spine for the user-facing R1--R7 residual names:
+
+```text
+MGAP4D/ConcreteR1R7ResidualDischarge.lean
+```
+
+The spine is additive to the prior theorem-obligation and public-audit layers. It binds the user-facing concrete residual names to the existing replay-visible completion and continuum spectral derivation without opening the final-release boundary:
+
+```text
+ConcreteR1R7ResidualDischarge
+concreteR1R7ResidualDischarge3320
+concrete_r1r7_residual_discharge_3320_ready
+concrete_r1r7_residual_discharge_exact_gap_value_3320
+concrete_r1r7_residual_discharge_positive_nonzero_spectral_mass
+concrete_r1r7_residual_discharge_final_release_held
+concrete_r1r7_residual_discharge_public_boundary_locked
+```
+
+The seven user-facing residual targets are now represented in that discharge spine in the same order as the required future spine:
+
+```text
+ConcreteRealHilbertSpace
+  -> DenseDomainUnboundedHamiltonian
+  -> SelfAdjointPhysicalHamiltonian
+  -> ConcretePVMSpectralMeasure
+  -> CompactCenteredPlaquetteObservable
+  -> NondefinitionalSpectralAtom3320
+  -> PositiveSpectralWeightDerivation3320
+```
+
+Interpretation:
+
+```text
+internal Lean discharge spine visible / theorem-obligation binding present / exact 33/20 and positive nonzero spectral-mass projections carried / final-release boundary held / public boundary locked
+```
+
+Boundary of this update:
+
+```text
+This update records a replay-visible internal discharge/index spine. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
+```
+
 ## Hard residuals
 
 ### R1. Concrete real Hilbert space on Mathlib
@@ -44,7 +88,7 @@ A real Hilbert space H implemented as a standard Mathlib Hilbert-space object.
 Current status:
 
 ```text
-interface / construction skeleton / replay-visible surface
+interface / construction skeleton / replay-visible surface / internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -65,7 +109,7 @@ A physical Hamiltonian H_phys defined on a dense domain D(H_phys) ⊂ H.
 Current status:
 
 ```text
-unbounded-operator skeleton / domain-preservation surface
+unbounded-operator skeleton / domain-preservation surface / internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -87,7 +131,7 @@ SelfAdjoint H_phys
 Current status:
 
 ```text
-self-adjointness certificate surface / bridge-adoption surface
+self-adjointness certificate surface / bridge-adoption surface / internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -108,7 +152,7 @@ A concrete projection-valued measure E_H associated with H_phys by the spectral 
 Current status:
 
 ```text
-PVM interface / spectral theorem replay surface
+PVM interface / spectral theorem replay surface / internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -129,7 +173,7 @@ A compactly supported smeared centered plaquette observable A_{p,g}.
 Current status:
 
 ```text
-compact plaquette construction theorem surface / observable atom interface
+compact plaquette construction theorem surface / observable atom interface / internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -151,7 +195,7 @@ Required target:
 Current status:
 
 ```text
-exact value replay-visible; spectral infimum and attainment theorem surfaces present
+exact value replay-visible; spectral infimum and attainment theorem surfaces present; internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -172,7 +216,7 @@ Required target:
 Current status:
 
 ```text
-positive nonzero spectral mass replay-visible at public audit projection
+positive nonzero spectral mass replay-visible at public audit projection; internal discharge spine binding present
 ```
 
 Required closure condition:
@@ -210,6 +254,8 @@ and
 fully concrete non-definitional analytic construction
 ```
 
+The internal R1--R7 discharge spine narrows the local Lean audit gap by adding explicit replay-visible names and projections, while the harder mathematical closure conditions remain visible until replaced by stronger Mathlib/operator-theoretic constructions.
+
 ## Current status
 
 ```text
@@ -220,4 +266,16 @@ R4: open / PVM-construction required
 R5: open / observable-construction required
 R6: open / non-definitional exact-value derivation required
 R7: open / nontrivial positive spectral-weight derivation required
+```
+
+## Current internal discharge status
+
+```text
+ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible
+R1--R7 user-facing spine names: bound to replay-visible theorem-obligation completion
+Exact 33/20 projection: carried by continuum spectral-complete derivation
+Positive spectral-mass projection: carried as positive and nonzero spectral mass
+Final-release boundary: held
+Public boundary: locked
+Hard residual ledger statuses: preserved for stronger future Mathlib/operator-theoretic replacement
 ```
