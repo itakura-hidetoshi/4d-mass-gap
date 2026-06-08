@@ -1,6 +1,3 @@
-import MGAP4D.R1.Theorem
-import MGAP4D.R2.Theorem
-
 namespace MGAP4D
 
 structure R1R2ProofObligationTighteningBridge where
