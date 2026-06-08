@@ -10,12 +10,17 @@ structure ExportSurface where
   exportToR2Surface : Prop
   reviewGateActive : Prop
 
-def ExportSurface.ready (S : ExportSurface) : Prop :=
+/-- R1-specific export-surface readiness.
+
+This intentionally avoids the shared short dot-name `ExportSurface.ready` under
+the theorem-surface namespaces. -/
+def r1_export_surface_ready (S : ExportSurface) : Prop :=
   S.projectionSurfaceReady ∧ S.closureTargetsReady ∧ S.exportToR2Surface ∧ S.reviewGateActive
 
-theorem export_surface_pack
+theorem r1_export_surface_pack
     (S : ExportSurface) :
-    S.ready ↔ S.projectionSurfaceReady ∧ S.closureTargetsReady ∧ S.exportToR2Surface ∧ S.reviewGateActive := by
+    r1_export_surface_ready S ↔
+      S.projectionSurfaceReady ∧ S.closureTargetsReady ∧ S.exportToR2Surface ∧ S.reviewGateActive := by
   rfl
 
 structure R1TheoremSurface where
@@ -27,12 +32,12 @@ structure R1TheoremSurface where
 
 def R1TheoremSurface.ready (S : R1TheoremSurface) : Prop :=
   S.hilbert.ready ∧ S.excited.ready ∧ S.innerFunctional.ready ∧
-    S.projection.ready ∧ S.exportSurface.ready
+    S.projection.ready ∧ r1_export_surface_ready S.exportSurface
 
 theorem r1_theorem_surface_pack
     (S : R1TheoremSurface) :
     S.ready ↔ S.hilbert.ready ∧ S.excited.ready ∧ S.innerFunctional.ready ∧
-      S.projection.ready ∧ S.exportSurface.ready := by
+      S.projection.ready ∧ r1_export_surface_ready S.exportSurface := by
   rfl
 
 end TheoremSurface
