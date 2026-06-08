@@ -11,10 +11,10 @@ def r5SpectrumRequest : MathlibRequest := {
   requester := MathlibRequester.r5Spectrum,
   requestedImportGroup := "Set.Basic; Order.Bounds.Basic; ConditionallyCompleteLattice.Basic; Real.Basic; Topology.Basic",
   reason := "future R5 spectrum theorem modules may require sets, infimum/lower-bound constructions, real comparisons, and spectral-bottom witnesses",
-  scoped := true
+  isScoped := true
 }
 
-theorem r5_spectrum_request_scoped : r5SpectrumRequest.scoped = true := by
+theorem r5_spectrum_request_scoped : r5SpectrumRequest.isScoped = true := by
   rfl
 
 structure R5SpectrumRequestGate where
