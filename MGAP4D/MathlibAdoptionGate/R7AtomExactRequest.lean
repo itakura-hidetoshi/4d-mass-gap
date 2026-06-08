@@ -11,10 +11,10 @@ def r7AtomExactRequest : MathlibRequest := {
   requester := MathlibRequester.r7AtomExact,
   requestedImportGroup := "LinearAlgebra.Eigenspace.Basic; InnerProductSpace.Basic; Real.Basic; Set.Basic; Order.Basic",
   reason := "future R7 atom/exact-gap theorem modules may require eigenvalue, eigenspace, point-spectrum witness, normalized vector, and exact-value comparison infrastructure",
-  scoped := true
+  isScoped := true
 }
 
-theorem r7_atom_exact_request_scoped : r7AtomExactRequest.scoped = true := by
+theorem r7_atom_exact_request_scoped : r7AtomExactRequest.isScoped = true := by
   rfl
 
 structure R7AtomExactRequestGate where
