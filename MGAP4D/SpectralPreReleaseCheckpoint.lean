@@ -20,9 +20,12 @@ structure SpectralPreReleaseCheckpoint where
   mathlibMainAdoptionHeld : Prop
   publicBoundaryLocked : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralPreReleaseCheckpoint.ready
     (C : SpectralPreReleaseCheckpoint) : Prop :=
-  C.lockReady ∧ C.checkpointVisible ∧ C.ciChainRecorded ∧
+  C.lock.ready ∧ C.checkpointVisible ∧ C.ciChainRecorded ∧
   C.replayGateOpenForReview ∧ C.sourceTreeReviewOpenForReview ∧
   C.externalAuditOpenForReview ∧ C.theoremCompletionsNotClaimed ∧
   C.mainPreMathlib ∧ C.mathlibMainAdoptionHeld ∧ C.publicBoundaryLocked
@@ -42,7 +45,7 @@ def spectral3320PreReleaseCheckpoint : SpectralPreReleaseCheckpoint :=
 
 theorem spectral_pre_release_checkpoint_pack
     (C : SpectralPreReleaseCheckpoint) :
-    C.ready ↔ C.lockReady ∧ C.checkpointVisible ∧ C.ciChainRecorded ∧
+    C.ready ↔ C.lock.ready ∧ C.checkpointVisible ∧ C.ciChainRecorded ∧
       C.replayGateOpenForReview ∧ C.sourceTreeReviewOpenForReview ∧
       C.externalAuditOpenForReview ∧ C.theoremCompletionsNotClaimed ∧
       C.mainPreMathlib ∧ C.mathlibMainAdoptionHeld ∧ C.publicBoundaryLocked := by
