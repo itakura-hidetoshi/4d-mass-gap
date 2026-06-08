@@ -112,8 +112,10 @@ theorem physical_witness_3320_release_is_held :
     physicalWitness3320ReleaseHold.finalReleaseHeld := by
   trivial
 
+/-- Public-boundary lock is exposed as the underlying checkpoint proposition,
+not as the proof-carrying structure field itself. -/
 theorem physical_witness_3320_release_public_boundary_locked :
-    physicalWitness3320ReleaseHold.publicBoundaryLocked := by
+    physicalWitness3320ReleaseHold.bridge.checkpoint.publicBoundaryLocked := by
   exact spectral3320_pre_release_checkpoint_boundary_locked
 
 end MGAP4D
