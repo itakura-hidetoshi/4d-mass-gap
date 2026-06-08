@@ -19,9 +19,12 @@ structure SpectralFinalReleaseHold where
   mathlibMainAdoptionHeld : Prop
   publicBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralFinalReleaseHold.ready
     (H : SpectralFinalReleaseHold) : Prop :=
-  H.closureReady ∧ H.releaseReadinessClosed ∧ H.finalReleaseHeld ∧
+  H.closure.ready ∧ H.releaseReadinessClosed ∧ H.finalReleaseHeld ∧
   H.theoremCompletionsNotClaimed ∧ H.independentReplayStillRequired ∧
   H.sourceTreeReviewStillRequired ∧ H.externalAuditStillRequired ∧
   H.mainPreMathlib ∧ H.mathlibMainAdoptionHeld ∧ H.publicBoundaryHeld
@@ -41,7 +44,7 @@ def spectral3320FinalReleaseHold : SpectralFinalReleaseHold :=
 
 theorem spectral_final_release_hold_pack
     (H : SpectralFinalReleaseHold) :
-    H.ready ↔ H.closureReady ∧ H.releaseReadinessClosed ∧ H.finalReleaseHeld ∧
+    H.ready ↔ H.closure.ready ∧ H.releaseReadinessClosed ∧ H.finalReleaseHeld ∧
       H.theoremCompletionsNotClaimed ∧ H.independentReplayStillRequired ∧
       H.sourceTreeReviewStillRequired ∧ H.externalAuditStillRequired ∧
       H.mainPreMathlib ∧ H.mathlibMainAdoptionHeld ∧ H.publicBoundaryHeld := by
