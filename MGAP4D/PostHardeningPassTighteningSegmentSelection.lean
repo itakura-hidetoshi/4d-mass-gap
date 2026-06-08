@@ -28,16 +28,24 @@ structure PostHardeningPassTighteningSegmentSelection where
 def PostHardeningPassTighteningSegmentSelection.ready
     (S : PostHardeningPassTighteningSegmentSelection) : Prop :=
   S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
-  S.postHardeningPassClosureGreen ∧ S.selectedIsR3First ∧
+  S.postHardeningPassClosureGreen ∧
+  S.selectedSegment = TighteningSegment.r3ShiftedZeroFormObligation ∧
   S.tighteningOnly ∧ S.theoremCompletionNotClaimed ∧
   S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld
 
 theorem post_hardening_pass_tightening_segment_selection_pack
     (S : PostHardeningPassTighteningSegmentSelection) :
     S.ready ↔ S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
-      S.postHardeningPassClosureGreen ∧ S.selectedIsR3First ∧
+      S.postHardeningPassClosureGreen ∧
+      S.selectedSegment = TighteningSegment.r3ShiftedZeroFormObligation ∧
       S.tighteningOnly ∧ S.theoremCompletionNotClaimed ∧
       S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld := by
   rfl
+
+/-- The selected segment equality is still available from the stored certificate. -/
+theorem post_hardening_pass_tightening_segment_selection_selected_eq
+    (S : PostHardeningPassTighteningSegmentSelection) :
+    S.selectedSegment = TighteningSegment.r3ShiftedZeroFormObligation := by
+  exact S.selectedIsR3First
 
 end MGAP4D
