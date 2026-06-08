@@ -11,10 +11,10 @@ def r1HilbertRequest : MathlibRequest := {
   requester := MathlibRequester.r1Hilbert,
   requestedImportGroup := "InnerProductSpace.Basic; InnerProductSpace.Projection; Topology.Algebra.Module.Basic",
   reason := "future R1 Hilbert theorem modules may require Hilbert, closed subspace, orthogonal complement, and projection infrastructure",
-  scoped := true
+  isScoped := true
 }
 
-theorem r1_hilbert_request_scoped : r1HilbertRequest.scoped = true := by
+theorem r1_hilbert_request_scoped : r1HilbertRequest.isScoped = true := by
   rfl
 
 structure R1HilbertRequestGate where
