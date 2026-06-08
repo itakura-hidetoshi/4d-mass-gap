@@ -17,17 +17,22 @@ structure SharpGapFinalSpineBridge where
   eigenWitnessValue3320 : sandwich.eigenWitness.eigenWitness.eigenvalue = 33 / 20
   eigenWitnessOrthogonal : sandwich.eigenWitness.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal
   eigenWitnessNotVacuum : sandwich.eigenWitness.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum
-  finalReleaseHeld : sandwich.finalReleaseHeld
-  publicBoundaryLocked : sandwich.publicBoundaryLocked
+  finalReleaseHeld : sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : sandwich.r1r7Completion.publicBoundaryLocked
   finalSpineBridgeVisible : Prop
   theoremBoundaryHeld : sandwich.theoremBoundaryHeld
 
+/-- Readiness re-expands proof-carrying fields to the propositions they certify. -/
 def SharpGapFinalSpineBridge.ready
     (B : SharpGapFinalSpineBridge) : Prop :=
-  B.sandwichReady ∧ B.exactGapValue3320 ∧ B.lowerBoundValue3320 ∧
-  B.eigenWitnessValue3320 ∧ B.eigenWitnessOrthogonal ∧ B.eigenWitnessNotVacuum ∧
-  B.finalReleaseHeld ∧ B.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
-  B.theoremBoundaryHeld
+  B.sandwich.ready ∧ B.sandwich.exactGapValue = 33 / 20 ∧
+  B.sandwich.lowerBound.lowerBound.value = 33 / 20 ∧
+  B.sandwich.eigenWitness.eigenWitness.eigenvalue = 33 / 20 ∧
+  B.sandwich.eigenWitness.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  B.sandwich.eigenWitness.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  B.sandwich.r1r7Completion.finalReleaseHeld ∧
+  B.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  B.finalSpineBridgeVisible ∧ B.sandwich.theoremBoundaryHeld
 
 def sharpGapFinalSpineBridge3320 : SharpGapFinalSpineBridge :=
   { sandwich := Spectral.sharpGapSandwich3320Certificate
@@ -44,10 +49,14 @@ def sharpGapFinalSpineBridge3320 : SharpGapFinalSpineBridge :=
 
 theorem sharp_gap_final_spine_bridge_pack
     (B : SharpGapFinalSpineBridge) :
-    B.ready ↔ B.sandwichReady ∧ B.exactGapValue3320 ∧ B.lowerBoundValue3320 ∧
-      B.eigenWitnessValue3320 ∧ B.eigenWitnessOrthogonal ∧ B.eigenWitnessNotVacuum ∧
-      B.finalReleaseHeld ∧ B.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
-      B.theoremBoundaryHeld := by
+    B.ready ↔ B.sandwich.ready ∧ B.sandwich.exactGapValue = 33 / 20 ∧
+      B.sandwich.lowerBound.lowerBound.value = 33 / 20 ∧
+      B.sandwich.eigenWitness.eigenWitness.eigenvalue = 33 / 20 ∧
+      B.sandwich.eigenWitness.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      B.sandwich.eigenWitness.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      B.sandwich.r1r7Completion.finalReleaseHeld ∧
+      B.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      B.finalSpineBridgeVisible ∧ B.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem sharp_gap_final_spine_bridge_3320_ready :
@@ -87,11 +96,11 @@ theorem final_spine_sharp_gap_eigen_witness_not_vacuum :
   exact Spectral.sharp_gap_sandwich_3320_eigen_witness_not_vacuum
 
 theorem final_spine_sharp_gap_release_held :
-    Spectral.sharpGapSandwich3320Certificate.finalReleaseHeld := by
+    Spectral.sharpGapSandwich3320Certificate.r1r7Completion.finalReleaseHeld := by
   exact Spectral.sharp_gap_sandwich_3320_release_held
 
 theorem final_spine_sharp_gap_public_boundary_locked :
-    Spectral.sharpGapSandwich3320Certificate.publicBoundaryLocked := by
+    Spectral.sharpGapSandwich3320Certificate.r1r7Completion.publicBoundaryLocked := by
   exact Spectral.sharp_gap_sandwich_3320_public_boundary_locked
 
 end MGAP4D
