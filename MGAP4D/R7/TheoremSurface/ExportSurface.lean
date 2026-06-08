@@ -21,14 +21,14 @@ theorem export_surface_pack
 structure R7TheoremSurface where
   atom : AtomSurface
   exactGap : ExactGapSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R7TheoremSurface.ready (S : R7TheoremSurface) : Prop :=
-  S.atom.ready ∧ S.exactGap.ready ∧ S.export.ready
+  S.atom.ready ∧ S.exactGap.ready ∧ S.exportSurface.ready
 
 theorem r7_theorem_surface_pack
     (S : R7TheoremSurface) :
-    S.ready ↔ S.atom.ready ∧ S.exactGap.ready ∧ S.export.ready := by
+    S.ready ↔ S.atom.ready ∧ S.exactGap.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
