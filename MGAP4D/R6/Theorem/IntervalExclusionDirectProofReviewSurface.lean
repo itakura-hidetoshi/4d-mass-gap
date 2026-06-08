@@ -178,17 +178,23 @@ theorem interval_exclusion_direct_proof_review_surface_atom_chosen_laws :
 /-- Boundary: R6 direct-proof review does not consume the R7 exact atom. -/
 theorem interval_exclusion_direct_proof_review_surface_does_not_consume_atom_3320 :
     MGAP4D.R5.Theorem.CompactCenteredPlaquetteObservableDoesNotConsumeAtom3320Boundary := by
-  exact interval_exclusion_direct_proof_review_surface_ready.2.2.2.2.1
+  rcases interval_exclusion_direct_proof_review_surface_ready with
+    ⟨_hslot, _hlaws, _hclosure, _hhardening, _htightening, hnoAtom, _hnoWeight, _hr4⟩
+  exact hnoAtom
 
 /-- Boundary: R6 direct-proof review does not consume positive spectral weight. -/
 theorem interval_exclusion_direct_proof_review_surface_does_not_consume_positive_weight :
     MGAP4D.R5.Theorem.CompactCenteredPlaquetteObservableDoesNotConsumePositiveSpectralWeightBoundary := by
-  exact interval_exclusion_direct_proof_review_surface_ready.2.2.2.2.2.1
+  rcases interval_exclusion_direct_proof_review_surface_ready with
+    ⟨_hslot, _hlaws, _hclosure, _hhardening, _htightening, _hnoAtom, hnoWeight, _hr4⟩
+  exact hnoWeight
 
 /-- Boundary: R6 direct-proof review preserves the R4 no-collapse boundary. -/
 theorem interval_exclusion_direct_proof_review_surface_preserves_r4_boundary :
     MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary := by
-  exact interval_exclusion_direct_proof_review_surface_ready.2.2.2.2.2.2
+  rcases interval_exclusion_direct_proof_review_surface_ready with
+    ⟨_hslot, _hlaws, _hclosure, _hhardening, _htightening, _hnoAtom, _hnoWeight, hr4⟩
+  exact hr4
 
 end
 
