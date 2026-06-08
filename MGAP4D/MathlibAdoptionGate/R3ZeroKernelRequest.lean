@@ -11,10 +11,10 @@ def r3ZeroKernelRequest : MathlibRequest := {
   requester := MathlibRequester.r3ZeroKernel,
   requestedImportGroup := "InnerProductSpace.Basic; Analysis.InnerProductSpace.Projection; LinearAlgebra.QuadraticForm; Order.Basic; Real.Basic",
   reason := "future R3 theorem modules may require shifted operators, nonnegative forms, square-root route, kernel, and domain-bridge infrastructure",
-  scoped := true
+  isScoped := true
 }
 
-theorem r3_zero_kernel_request_scoped : r3ZeroKernelRequest.scoped = true := by
+theorem r3_zero_kernel_request_scoped : r3ZeroKernelRequest.isScoped = true := by
   rfl
 
 structure R3ZeroKernelRequestGate where
