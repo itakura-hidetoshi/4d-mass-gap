@@ -1,0 +1,66 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDenseDiagonalPVMSourcedAggregateSafeExtension
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Chain index for the dense-diagonal PVM-sourced actual-Borel route.
+
+This chain records the new dense-diagonal sourced final closure and safe
+aggregate extension while preserving the existing theorem-surface aggregate
+receipt and the still-open genuine spectral-measure construction boundary. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexReady : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedFinalClosureReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedFinalClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The dense-diagonal PVM-sourced aggregate chain index is ready. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_chain_index_ready :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_safe_extension_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_safe_extension_public_boundary_held,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_final_closure_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_final_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the dense-diagonal PVM-sourced aggregate chain index. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the dense-diagonal PVM-sourced aggregate chain index
+is held. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_chain_index_public_boundary_held :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_chain_index_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_safe_extension_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
