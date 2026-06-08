@@ -13,13 +13,17 @@ structure ExportSurface where
   globalReady : Prop
   gateActive : Prop
 
-def ExportSurface.ready (S : ExportSurface) : Prop :=
+/-- R5-specific export-surface readiness.
+
+This intentionally avoids the shared short dot-name `ExportSurface.ready` under
+the theorem-surface namespaces. -/
+def r5_export_surface_ready (S : ExportSurface) : Prop :=
   S.spectrumReady ∧ S.bottomReady ∧ S.exportStatusReady ∧
   S.r6Ready ∧ S.globalReady ∧ S.gateActive
 
-theorem export_surface_pack
+theorem r5_export_surface_pack
     (S : ExportSurface) :
-    S.ready ↔ S.spectrumReady ∧ S.bottomReady ∧ S.exportStatusReady ∧
+    r5_export_surface_ready S ↔ S.spectrumReady ∧ S.bottomReady ∧ S.exportStatusReady ∧
       S.r6Ready ∧ S.globalReady ∧ S.gateActive := by
   rfl
 
@@ -29,11 +33,11 @@ structure R5TheoremSurface where
   exportSurface : ExportSurface
 
 def R5TheoremSurface.ready (S : R5TheoremSurface) : Prop :=
-  S.spectrumSet.ready ∧ S.infimum.ready ∧ S.exportSurface.ready
+  S.spectrumSet.ready ∧ S.infimum.ready ∧ r5_export_surface_ready S.exportSurface
 
 theorem r5_theorem_surface_pack
     (S : R5TheoremSurface) :
-    S.ready ↔ S.spectrumSet.ready ∧ S.infimum.ready ∧ S.exportSurface.ready := by
+    S.ready ↔ S.spectrumSet.ready ∧ S.infimum.ready ∧ r5_export_surface_ready S.exportSurface := by
   rfl
 
 end TheoremSurface
