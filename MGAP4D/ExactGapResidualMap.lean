@@ -34,19 +34,24 @@ structure ExactGapResidualMap where
   residualMathlibAdoptionBridge : Prop
   residualMapVisible : Prop
   exactGapValue3320 : releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20
-  finalReleaseHeld : releaseReadiness.finalReleaseHeld
-  publicBoundaryLocked : releaseReadiness.publicBoundaryLocked
-  noAutoRelease : releaseReadiness.exactGapDoesNotOpenFinalRelease
-  theoremBoundaryHeld : releaseReadiness.theoremBoundaryHeld
+  finalReleaseHeld : releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked
+  noAutoRelease : releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease
+  theoremBoundaryHeld : releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
+/-- Ready predicate for the residual map, with proof fields re-expanded. -/
 def ExactGapResidualMap.ready
     (M : ExactGapResidualMap) : Prop :=
-  M.releaseReadinessReady ∧ M.residualStructuralSurfaceRealization ∧
+  M.releaseReadiness.ready ∧ M.residualStructuralSurfaceRealization ∧
   M.residualHphysSelfAdjointSemiboundedDomain ∧ M.residualGapInfimumDefinition ∧
   M.residualLowerBoundProofBody ∧ M.residualEigenvectorConstruction ∧
   M.residualObservableSpectralProjection ∧ M.residualMathlibAdoptionBridge ∧
-  M.residualMapVisible ∧ M.exactGapValue3320 ∧ M.finalReleaseHeld ∧
-  M.publicBoundaryLocked ∧ M.noAutoRelease ∧ M.theoremBoundaryHeld
+  M.residualMapVisible ∧
+  M.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+  M.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  M.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  M.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  M.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
 def exactGap3320ResidualMap : ExactGapResidualMap :=
   { releaseReadiness := exactGap3320ReleaseReadiness
@@ -67,12 +72,16 @@ def exactGap3320ResidualMap : ExactGapResidualMap :=
 
 theorem exact_gap_residual_map_pack
     (M : ExactGapResidualMap) :
-    M.ready ↔ M.releaseReadinessReady ∧ M.residualStructuralSurfaceRealization ∧
+    M.ready ↔ M.releaseReadiness.ready ∧ M.residualStructuralSurfaceRealization ∧
       M.residualHphysSelfAdjointSemiboundedDomain ∧ M.residualGapInfimumDefinition ∧
       M.residualLowerBoundProofBody ∧ M.residualEigenvectorConstruction ∧
       M.residualObservableSpectralProjection ∧ M.residualMathlibAdoptionBridge ∧
-      M.residualMapVisible ∧ M.exactGapValue3320 ∧ M.finalReleaseHeld ∧
-      M.publicBoundaryLocked ∧ M.noAutoRelease ∧ M.theoremBoundaryHeld := by
+      M.residualMapVisible ∧
+      M.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+      M.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      M.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      M.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+      M.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_3320_residual_map_ready :
@@ -96,15 +105,15 @@ theorem exact_gap_3320_residual_map_value :
   exact exact_gap_3320_release_readiness_value
 
 theorem exact_gap_3320_residual_map_release_held :
-    exactGap3320ResidualMap.finalReleaseHeld := by
+    exactGap3320ResidualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld := by
   exact exact_gap_3320_release_readiness_release_held
 
 theorem exact_gap_3320_residual_map_public_boundary_locked :
-    exactGap3320ResidualMap.publicBoundaryLocked := by
+    exactGap3320ResidualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact exact_gap_3320_release_readiness_public_boundary_locked
 
 theorem exact_gap_3320_residual_map_no_auto_release :
-    exactGap3320ResidualMap.noAutoRelease := by
+    exactGap3320ResidualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease := by
   exact exact_gap_3320_release_readiness_no_auto_release
 
 theorem exact_gap_3320_residual_structural_surface_realization :
