@@ -69,10 +69,24 @@ Interpretation:
 internal Lean discharge spine visible / theorem-obligation binding present / exact 33/20 and positive nonzero spectral-mass projections carried / final-release boundary held / public boundary locked
 ```
 
+The current main branch now also carries a Lean-side bridge from this ledger entry to the internal discharge spine:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR1R7DischargeBridge.lean
+HardPhysicalResidualLedgerR1R7DischargeBridge
+hardPhysicalResidualLedgerR1R7DischargeBridge3320
+hard_physical_residual_ledger_r1r7_discharge_bridge_ready
+hard_physical_residual_ledger_r1r7_discharge_bridge_exact_gap_value_3320
+hard_physical_residual_ledger_r1r7_discharge_bridge_positive_nonzero_spectral_mass
+hard_physical_residual_ledger_r1r7_discharge_bridge_final_release_held
+hard_physical_residual_ledger_r1r7_discharge_bridge_public_boundary_locked
+hard_physical_residual_ledger_r1r7_discharge_bridge_status_preserved
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine and ledger bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -256,6 +270,8 @@ fully concrete non-definitional analytic construction
 
 The internal R1--R7 discharge spine narrows the local Lean audit gap by adding explicit replay-visible names and projections, while the harder mathematical closure conditions remain visible until replaced by stronger Mathlib/operator-theoretic constructions.
 
+The hard physical residual ledger bridge adds an explicit Lean-side audit map from this ledger to the current discharge spine, while preserving the same open hard-residual statuses.
+
 ## Current status
 
 ```text
@@ -272,6 +288,7 @@ R7: open / nontrivial positive spectral-weight derivation required
 
 ```text
 ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible
+HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible
 R1--R7 user-facing spine names: bound to replay-visible theorem-obligation completion
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
