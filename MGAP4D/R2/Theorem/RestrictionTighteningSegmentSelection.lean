@@ -1,6 +1,3 @@
-import MGAP4D.R2.Theorem.RestrictionSkeleton
-import MGAP4D.R1.Theorem.HilbertProofObligationTighteningClosure
-
 namespace MGAP4D
 namespace R2
 namespace Theorem
