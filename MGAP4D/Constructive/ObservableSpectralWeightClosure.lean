@@ -23,12 +23,21 @@ structure ObservableSpectralWeightClosure where
   publicBoundaryLocked : bridge.preReleaseCheckpoint.publicBoundaryLocked
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def ObservableSpectralWeightClosure.ready
     (C : ObservableSpectralWeightClosure) : Prop :=
-  C.bridgeReady ∧ C.observableWeightClosed ∧ C.observableIsApg ∧
-  C.observableCentered ∧ C.observableCompactSupport ∧ C.weightValueFixed3320 ∧
-  C.finalMassValueFixed3320 ∧ C.positiveMassPreserved ∧ C.witnessSectorOrthogonal ∧
-  C.witnessNotVacuum ∧ C.publicBoundaryLocked ∧ C.theoremBoundaryHeld
+  C.bridge.ready ∧ C.observableWeightClosed ∧
+  C.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+  C.bridge.finalBridge.spectralWeight.observable.centered = true ∧
+  C.bridge.finalBridge.spectralWeight.observable.smearing.compactSupport = true ∧
+  C.bridge.finalBridge.spectralWeight.value = 33 / 20 ∧
+  C.bridge.finalBridge.finalPacket.massGap.value = 33 / 20 ∧
+  C.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+  C.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  C.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  C.bridge.preReleaseCheckpoint.publicBoundaryLocked ∧ C.theoremBoundaryHeld
 
 def observableSpectralWeight3320Closure : ObservableSpectralWeightClosure :=
   { bridge := observableSpectralWeight3320PreReleaseBridge
@@ -47,10 +56,16 @@ def observableSpectralWeight3320Closure : ObservableSpectralWeightClosure :=
 
 theorem observable_spectral_weight_closure_pack
     (C : ObservableSpectralWeightClosure) :
-    C.ready ↔ C.bridgeReady ∧ C.observableWeightClosed ∧ C.observableIsApg ∧
-      C.observableCentered ∧ C.observableCompactSupport ∧ C.weightValueFixed3320 ∧
-      C.finalMassValueFixed3320 ∧ C.positiveMassPreserved ∧ C.witnessSectorOrthogonal ∧
-      C.witnessNotVacuum ∧ C.publicBoundaryLocked ∧ C.theoremBoundaryHeld := by
+    C.ready ↔ C.bridge.ready ∧ C.observableWeightClosed ∧
+      C.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+      C.bridge.finalBridge.spectralWeight.observable.centered = true ∧
+      C.bridge.finalBridge.spectralWeight.observable.smearing.compactSupport = true ∧
+      C.bridge.finalBridge.spectralWeight.value = 33 / 20 ∧
+      C.bridge.finalBridge.finalPacket.massGap.value = 33 / 20 ∧
+      C.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+      C.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      C.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      C.bridge.preReleaseCheckpoint.publicBoundaryLocked ∧ C.theoremBoundaryHeld := by
   rfl
 
 theorem observable_spectral_weight_3320_closure_ready :
