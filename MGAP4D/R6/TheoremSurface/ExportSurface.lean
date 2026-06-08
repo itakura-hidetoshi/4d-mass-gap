@@ -21,14 +21,14 @@ theorem export_surface_pack
 
 structure R6TheoremSurface where
   interval : GapIntervalSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R6TheoremSurface.ready (S : R6TheoremSurface) : Prop :=
-  S.interval.ready ∧ S.export.ready
+  S.interval.ready ∧ S.exportSurface.ready
 
 theorem r6_theorem_surface_pack
     (S : R6TheoremSurface) :
-    S.ready ↔ S.interval.ready ∧ S.export.ready := by
+    S.ready ↔ S.interval.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
