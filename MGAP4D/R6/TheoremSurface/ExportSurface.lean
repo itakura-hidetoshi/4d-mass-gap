@@ -11,12 +11,16 @@ structure ExportSurface where
   globalReady : Prop
   gateActive : Prop
 
-def ExportSurface.ready (S : ExportSurface) : Prop :=
+/-- R6-specific export-surface readiness.
+
+This intentionally avoids the shared short dot-name `ExportSurface.ready` under
+the theorem-surface namespaces. -/
+def r6_export_surface_ready (S : ExportSurface) : Prop :=
   S.intervalReady ∧ S.exportStatusReady ∧ S.globalReady ∧ S.gateActive
 
-theorem export_surface_pack
+theorem r6_export_surface_pack
     (S : ExportSurface) :
-    S.ready ↔ S.intervalReady ∧ S.exportStatusReady ∧ S.globalReady ∧ S.gateActive := by
+    r6_export_surface_ready S ↔ S.intervalReady ∧ S.exportStatusReady ∧ S.globalReady ∧ S.gateActive := by
   rfl
 
 structure R6TheoremSurface where
@@ -24,11 +28,11 @@ structure R6TheoremSurface where
   exportSurface : ExportSurface
 
 def R6TheoremSurface.ready (S : R6TheoremSurface) : Prop :=
-  S.interval.ready ∧ S.exportSurface.ready
+  S.interval.ready ∧ r6_export_surface_ready S.exportSurface
 
 theorem r6_theorem_surface_pack
     (S : R6TheoremSurface) :
-    S.ready ↔ S.interval.ready ∧ S.exportSurface.ready := by
+    S.ready ↔ S.interval.ready ∧ r6_export_surface_ready S.exportSurface := by
   rfl
 
 end TheoremSurface
