@@ -36,14 +36,22 @@ structure SharpGapSandwichCertificate where
   publicBoundaryLocked : r1r7Completion.publicBoundaryLocked
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SharpGapSandwichCertificate.ready
     (C : SharpGapSandwichCertificate) : Prop :=
-  C.lowerBoundReady ∧ C.lowerBoundValue3320 ∧ C.eigenWitnessReady ∧
-  C.eigenWitnessValue3320 ∧ C.eigenWitnessOrthogonal ∧ C.eigenWitnessNotVacuum ∧
-  C.r1r7CompletionReady ∧ C.lowerBoundRouteComplete ∧ C.spectrumInfimumRouteComplete ∧
-  C.intervalExclusionRouteComplete ∧ C.atomExactRouteComplete ∧
-  C.gapUpperBoundFromEigenWitness ∧ C.gapLowerBoundFromR1R7 ∧ C.exactGapValueIs3320 ∧
-  C.sharpGapSandwichVisible ∧ C.finalReleaseHeld ∧ C.publicBoundaryLocked ∧
+  C.lowerBound.ready ∧ C.lowerBound.lowerBound.value = 33 / 20 ∧
+  C.eigenWitness.ready ∧ C.eigenWitness.eigenWitness.eigenvalue = 33 / 20 ∧
+  C.eigenWitness.sectorSeparation.witnessSector = SpectralSector.orthogonal ∧
+  C.eigenWitness.sectorSeparation.witnessSector ≠ SpectralSector.vacuum ∧
+  C.r1r7Completion.ready ∧ C.r1r7Completion.r4LowerBoundCompleted ∧
+  C.r1r7Completion.r5SpectrumInfimumCompleted ∧
+  C.r1r7Completion.r6IntervalExclusionCompleted ∧
+  C.r1r7Completion.r7AtomExactCompleted ∧
+  C.gapUpperBoundFromEigenWitness ∧ C.gapLowerBoundFromR1R7 ∧
+  C.exactGapValue = 33 / 20 ∧ C.sharpGapSandwichVisible ∧
+  C.r1r7Completion.finalReleaseHeld ∧ C.r1r7Completion.publicBoundaryLocked ∧
   C.theoremBoundaryHeld
 
 def sharpGapSandwich3320Certificate : SharpGapSandwichCertificate :=
@@ -72,12 +80,17 @@ def sharpGapSandwich3320Certificate : SharpGapSandwichCertificate :=
 
 theorem sharp_gap_sandwich_certificate_pack
     (C : SharpGapSandwichCertificate) :
-    C.ready ↔ C.lowerBoundReady ∧ C.lowerBoundValue3320 ∧ C.eigenWitnessReady ∧
-      C.eigenWitnessValue3320 ∧ C.eigenWitnessOrthogonal ∧ C.eigenWitnessNotVacuum ∧
-      C.r1r7CompletionReady ∧ C.lowerBoundRouteComplete ∧ C.spectrumInfimumRouteComplete ∧
-      C.intervalExclusionRouteComplete ∧ C.atomExactRouteComplete ∧
-      C.gapUpperBoundFromEigenWitness ∧ C.gapLowerBoundFromR1R7 ∧ C.exactGapValueIs3320 ∧
-      C.sharpGapSandwichVisible ∧ C.finalReleaseHeld ∧ C.publicBoundaryLocked ∧
+    C.ready ↔ C.lowerBound.ready ∧ C.lowerBound.lowerBound.value = 33 / 20 ∧
+      C.eigenWitness.ready ∧ C.eigenWitness.eigenWitness.eigenvalue = 33 / 20 ∧
+      C.eigenWitness.sectorSeparation.witnessSector = SpectralSector.orthogonal ∧
+      C.eigenWitness.sectorSeparation.witnessSector ≠ SpectralSector.vacuum ∧
+      C.r1r7Completion.ready ∧ C.r1r7Completion.r4LowerBoundCompleted ∧
+      C.r1r7Completion.r5SpectrumInfimumCompleted ∧
+      C.r1r7Completion.r6IntervalExclusionCompleted ∧
+      C.r1r7Completion.r7AtomExactCompleted ∧
+      C.gapUpperBoundFromEigenWitness ∧ C.gapLowerBoundFromR1R7 ∧
+      C.exactGapValue = 33 / 20 ∧ C.sharpGapSandwichVisible ∧
+      C.r1r7Completion.finalReleaseHeld ∧ C.r1r7Completion.publicBoundaryLocked ∧
       C.theoremBoundaryHeld := by
   rfl
 
