@@ -12,18 +12,20 @@ remains held. -/
 structure R1R7TheoremObligationFinalSpineBridge where
   completion : R1R7TheoremObligationCompletion
   completionReady : completion.ready
-  physicalEigenWitnessReady : completion.physicalEigenWitnessReady
-  physicalWitnessAuditReady : completion.physicalWitnessAuditReady
+  physicalEigenWitnessReady : Hamiltonian.physicalEigenWitness3320.ready
+  physicalWitnessAuditReady : physicalWitness3320AuditCheckpoint.ready
   finalReleaseHeld : completion.finalReleaseHeld
   publicBoundaryLocked : completion.publicBoundaryLocked
   finalSpineBridgeVisible : Prop
   theoremBoundaryHeld : completion.theoremBoundaryHeld
 
+/-- Readiness re-expands proof-carrying fields to the propositions they certify. -/
 def R1R7TheoremObligationFinalSpineBridge.ready
     (B : R1R7TheoremObligationFinalSpineBridge) : Prop :=
-  B.completionReady ∧ B.physicalEigenWitnessReady ∧ B.physicalWitnessAuditReady ∧
-  B.finalReleaseHeld ∧ B.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
-  B.theoremBoundaryHeld
+  B.completion.ready ∧ Hamiltonian.physicalEigenWitness3320.ready ∧
+  physicalWitness3320AuditCheckpoint.ready ∧ B.completion.finalReleaseHeld ∧
+  B.completion.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
+  B.completion.theoremBoundaryHeld
 
 def r1r7TheoremObligationFinalSpineBridge3320 : R1R7TheoremObligationFinalSpineBridge :=
   { completion := r1r7TheoremObligationCompletion3320
@@ -37,9 +39,10 @@ def r1r7TheoremObligationFinalSpineBridge3320 : R1R7TheoremObligationFinalSpineB
 
 theorem r1r7_theorem_obligation_final_spine_bridge_pack
     (B : R1R7TheoremObligationFinalSpineBridge) :
-    B.ready ↔ B.completionReady ∧ B.physicalEigenWitnessReady ∧
-      B.physicalWitnessAuditReady ∧ B.finalReleaseHeld ∧ B.publicBoundaryLocked ∧
-      B.finalSpineBridgeVisible ∧ B.theoremBoundaryHeld := by
+    B.ready ↔ B.completion.ready ∧ Hamiltonian.physicalEigenWitness3320.ready ∧
+      physicalWitness3320AuditCheckpoint.ready ∧ B.completion.finalReleaseHeld ∧
+      B.completion.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
+      B.completion.theoremBoundaryHeld := by
   rfl
 
 theorem r1r7_theorem_obligation_final_spine_bridge_3320_ready :
@@ -63,12 +66,16 @@ theorem final_spine_r1r7_theorem_obligation_completion_public_boundary_locked :
     r1r7TheoremObligationCompletion3320.publicBoundaryLocked := by
   exact r1r7_theorem_obligation_completion_public_boundary_locked
 
+/-- The final spine exposes the physical eigen-witness readiness through its
+underlying proposition, not through the proof-carrying completion field. -/
 theorem final_spine_r1r7_theorem_obligation_completion_physical_eigen_ready :
-    r1r7TheoremObligationCompletion3320.physicalEigenWitnessReady := by
+    Hamiltonian.physicalEigenWitness3320.ready := by
   exact r1r7_theorem_obligation_completion_physical_eigen_ready
 
+/-- The final spine exposes the physical audit readiness through its underlying
+proposition, not through the proof-carrying completion field. -/
 theorem final_spine_r1r7_theorem_obligation_completion_audit_ready :
-    r1r7TheoremObligationCompletion3320.physicalWitnessAuditReady := by
+    physicalWitness3320AuditCheckpoint.ready := by
   exact r1r7_theorem_obligation_completion_audit_ready
 
 end MGAP4D
