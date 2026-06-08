@@ -28,12 +28,19 @@ structure ObservableSpectralWeightFinalBridge where
   finalBridgeVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def ObservableSpectralWeightFinalBridge.ready
     (B : ObservableSpectralWeightFinalBridge) : Prop :=
-  B.finalPacketIs3320 ∧ B.spectralWeightReady ∧ B.finalPlaquetteMatchesWeight ∧
-  B.finalGapMatchesWeightValue ∧ B.finalMassValueIs3320 ∧ B.finalEigenvalueIs3320 ∧
-  B.finalPlaquettePositive ∧ B.witnessSectorOrthogonal ∧ B.witnessNotVacuum ∧
-  B.sectorCoreBridgeReady ∧ B.finalBridgeVisible ∧ B.theoremBoundaryHeld
+  B.finalPacket = finalTheoremPacket3320 ∧ B.spectralWeight.ready ∧
+  B.finalPacket.plaquette.observableWitness = B.spectralWeight.massWitness ∧
+  B.finalPacket.plaquette.gapRecord.value = B.spectralWeight.value ∧
+  B.finalPacket.massGap.value = 33 / 20 ∧ B.finalPacket.eigenvector.eigenvalue = 33 / 20 ∧
+  B.finalPacket.plaquette.observableWitness.positiveMass = true ∧
+  B.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  B.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  B.sectorCoreBridge.ready ∧ B.finalBridgeVisible ∧ B.theoremBoundaryHeld
 
 def observableSpectralWeight3320FinalBridge : ObservableSpectralWeightFinalBridge :=
   { finalPacket := finalTheoremPacket3320
@@ -54,11 +61,14 @@ def observableSpectralWeight3320FinalBridge : ObservableSpectralWeightFinalBridg
 
 theorem observable_spectral_weight_final_bridge_pack
     (B : ObservableSpectralWeightFinalBridge) :
-    B.ready ↔ B.finalPacketIs3320 ∧ B.spectralWeightReady ∧
-      B.finalPlaquetteMatchesWeight ∧ B.finalGapMatchesWeightValue ∧
-      B.finalMassValueIs3320 ∧ B.finalEigenvalueIs3320 ∧ B.finalPlaquettePositive ∧
-      B.witnessSectorOrthogonal ∧ B.witnessNotVacuum ∧ B.sectorCoreBridgeReady ∧
-      B.finalBridgeVisible ∧ B.theoremBoundaryHeld := by
+    B.ready ↔ B.finalPacket = finalTheoremPacket3320 ∧ B.spectralWeight.ready ∧
+      B.finalPacket.plaquette.observableWitness = B.spectralWeight.massWitness ∧
+      B.finalPacket.plaquette.gapRecord.value = B.spectralWeight.value ∧
+      B.finalPacket.massGap.value = 33 / 20 ∧ B.finalPacket.eigenvector.eigenvalue = 33 / 20 ∧
+      B.finalPacket.plaquette.observableWitness.positiveMass = true ∧
+      B.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      B.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      B.sectorCoreBridge.ready ∧ B.finalBridgeVisible ∧ B.theoremBoundaryHeld := by
   rfl
 
 theorem observable_spectral_weight_3320_final_bridge_ready :
