@@ -11,12 +11,16 @@ structure ExportSurface where
   r5Ready : Prop
   gateActive : Prop
 
-def ExportSurface.ready (S : ExportSurface) : Prop :=
+/-- R4-specific export-surface readiness.
+
+This intentionally avoids the shared short dot-name `ExportSurface.ready` under
+the theorem-surface namespaces. -/
+def r4_export_surface_ready (S : ExportSurface) : Prop :=
   S.lbReady ∧ S.bridgeReady ∧ S.r3Ready ∧ S.r5Ready ∧ S.gateActive
 
-theorem export_surface_pack
+theorem r4_export_surface_pack
     (S : ExportSurface) :
-    S.ready ↔ S.lbReady ∧ S.bridgeReady ∧ S.r3Ready ∧ S.r5Ready ∧ S.gateActive := by
+    r4_export_surface_ready S ↔ S.lbReady ∧ S.bridgeReady ∧ S.r3Ready ∧ S.r5Ready ∧ S.gateActive := by
   rfl
 
 structure R4TheoremSurface where
@@ -25,11 +29,11 @@ structure R4TheoremSurface where
   exportSurface : ExportSurface
 
 def R4TheoremSurface.ready (S : R4TheoremSurface) : Prop :=
-  S.lowerBound.ready ∧ S.bridge.ready ∧ S.exportSurface.ready
+  S.lowerBound.ready ∧ S.bridge.ready ∧ r4_export_surface_ready S.exportSurface
 
 theorem r4_theorem_surface_pack
     (S : R4TheoremSurface) :
-    S.ready ↔ S.lowerBound.ready ∧ S.bridge.ready ∧ S.exportSurface.ready := by
+    S.ready ↔ S.lowerBound.ready ∧ S.bridge.ready ∧ r4_export_surface_ready S.exportSurface := by
   rfl
 
 end TheoremSurface
