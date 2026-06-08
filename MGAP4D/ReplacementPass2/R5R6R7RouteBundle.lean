@@ -4,7 +4,6 @@ import MGAP4D.R7.Concrete.ExactGapStatus
 import MGAP4D.R5.TheoremSurface
 import MGAP4D.R6.TheoremSurface
 import MGAP4D.R7.TheoremSurface
-import MGAP4D.ReplacementPass2
 
 namespace MGAP4D
 namespace ReplacementPass2
