@@ -1,0 +1,79 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDenseDiagonalPVMSourcedAggregateChainIndexFinalReceipt
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedR4RootFacingActualBorelBridgeIndex
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Root-facing safe export for the dense-diagonal PVM-sourced actual-Borel route.
+
+This export attaches the new dense-diagonal PVM-sourced closure chain to the
+existing R4 root-facing actual-Borel bridge while preserving all genuine/open
+physical-theorem boundaries recorded by that root-facing bridge. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingSafeExportReady : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMR4RootFacingActualBorelBridgeIndexReady ∧
+  SpectralMeasurePVMR4RootFacingActualBorelBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMActualSpectralIntegralRealizationStillOpen ∧
+  SpectralMeasurePVMSpectralIntegralSlotRealizationCompatibilityStillOpen ∧
+  SpectralMeasurePVMGenuineBorelCarrierRealizationStillOpen ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMOperatorValuedAtom3320DerivationDeferredToLaterStage ∧
+  SpectralMeasurePVMOperatorValuedPositiveSpectralWeightDeferredToLaterStage ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The dense-diagonal PVM-sourced root-facing safe export is ready. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_safe_export_ready :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingSafeExportReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_r4_root_facing_actual_borel_bridge_index_ready,
+    spectral_measure_pvm_r4_root_facing_actual_borel_bridge_index_public_boundary_held,
+    spectral_measure_pvm_actual_spectral_integral_realization_still_open_ready,
+    spectral_measure_pvm_spectral_integral_slot_realization_compatibility_still_open_ready,
+    spectral_measure_pvm_genuine_borel_carrier_realization_still_open_ready,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_operator_valued_atom_3320_derivation_deferred_to_later_stage_ready,
+    spectral_measure_pvm_operator_valued_positive_spectral_weight_deferred_to_later_stage_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the dense-diagonal PVM-sourced root-facing safe export. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingSafeExportPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingSafeExportReady ∧
+  SpectralMeasurePVMR4RootFacingActualBorelBridgeIndexPublicBoundaryHeld ∧
+  SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen ∧
+  SpectralMeasurePVMGenuineSelfAdjointSpectralTheoremStillOpen ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMR4DoesNotConsumeCompactPlaquetteObservable ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the dense-diagonal PVM-sourced root-facing safe export
+is held. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_safe_export_public_boundary_held :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingSafeExportPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_safe_export_ready,
+    spectral_measure_pvm_r4_root_facing_actual_borel_bridge_index_public_boundary_held,
+    spectral_measure_pvm_genuine_operator_topology_countable_additivity_still_open_ready,
+    spectral_measure_pvm_genuine_self_adjoint_spectral_theorem_still_open_ready,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_r4_does_not_consume_compact_plaquette_observable_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
