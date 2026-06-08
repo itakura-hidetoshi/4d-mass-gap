@@ -23,16 +23,24 @@ structure AtomExactTighteningSegmentSelection where
 
 def AtomExactTighteningSegmentSelection.ready
     (S : AtomExactTighteningSegmentSelection) : Prop :=
-  S.r6ClosureGreen ∧ S.r7HardeningPassVisible ∧ S.selectedIsR7 ∧
+  S.r6ClosureGreen ∧ S.r7HardeningPassVisible ∧
+  S.selectedSegment = AtomExactTighteningSegment.r7AtomExactObligation ∧
   S.tighteningOnly ∧ S.mainPreMathlib ∧ S.mathlibAdoptionHeld ∧
   S.theoremCompletionNotClaimed ∧ S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld
 
 theorem atom_exact_tightening_segment_selection_pack
     (S : AtomExactTighteningSegmentSelection) :
-    S.ready ↔ S.r6ClosureGreen ∧ S.r7HardeningPassVisible ∧ S.selectedIsR7 ∧
+    S.ready ↔ S.r6ClosureGreen ∧ S.r7HardeningPassVisible ∧
+      S.selectedSegment = AtomExactTighteningSegment.r7AtomExactObligation ∧
       S.tighteningOnly ∧ S.mainPreMathlib ∧ S.mathlibAdoptionHeld ∧
       S.theoremCompletionNotClaimed ∧ S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld := by
   rfl
+
+/-- The selected segment equality is still available from the stored certificate. -/
+theorem atom_exact_tightening_segment_selection_selected_eq
+    (S : AtomExactTighteningSegmentSelection) :
+    S.selectedSegment = AtomExactTighteningSegment.r7AtomExactObligation := by
+  exact S.selectedIsR7
 
 end Theorem
 end R7
