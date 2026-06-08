@@ -104,8 +104,10 @@ theorem physical_witness_3320_audit_checkpoint_not_vacuum :
     physicalWitness3320AuditCheckpoint.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum := by
   decide
 
+/-- Final release hold is exposed as the underlying release-hold proposition,
+not as the proof-carrying audit field itself. -/
 theorem physical_witness_3320_audit_checkpoint_release_held :
-    physicalWitness3320AuditCheckpoint.finalReleaseHeld := by
+    physicalWitness3320AuditCheckpoint.releaseHold.finalReleaseHeld := by
   exact physical_witness_3320_release_is_held
 
 /-- Public-boundary lock is exposed as the underlying release-hold checkpoint
