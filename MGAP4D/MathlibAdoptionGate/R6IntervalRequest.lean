@@ -11,10 +11,10 @@ def r6IntervalRequest : MathlibRequest := {
   requester := MathlibRequester.r6Interval,
   requestedImportGroup := "Real.Basic; Order.Interval.Set.Basic; Set.Basic; Order.Bounds.Basic; Topology.Basic",
   reason := "future R6 interval-exclusion theorem modules may require real intervals, set intersections, emptiness lemmas, and ordered comparison infrastructure",
-  scoped := true
+  isScoped := true
 }
 
-theorem r6_interval_request_scoped : r6IntervalRequest.scoped = true := by
+theorem r6_interval_request_scoped : r6IntervalRequest.isScoped = true := by
   rfl
 
 structure R6IntervalRequestGate where
