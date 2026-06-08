@@ -14,7 +14,7 @@ positive plaquette spectral-weight certificate.
 
 This closes a review slot only: it records positive mass, exact real atom value,
 atom membership, and non-vacuum orthogonal-sector placement.  It does not unlock
-final global theorem release. -/
+final global release. -/
 def AtomExactR6DirectPositiveWeightReviewSurfaceClosed : Prop :=
   AtomExactR6DirectPositiveWeightBridgeReady ∧
   MGAP4D.Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true ∧
@@ -117,85 +117,105 @@ theorem atom_exact_hardening_pass_ready_of_r6_direct_positive_weight_slot
     hfinalLocked,
     hpublic⟩
 
-/-- Build the R7 proof-obligation tightening closure with the atom-persistence,
-exact-gap, and upstream-R6 review slots supplied by the R6 direct
-positive-weight bridge.
+/-- Input bundle for the local R7 tightening closure.  The R6 direct positive
+weight bridge fills the atom-persistence, exact-gap, and upstream-R6 slots; the
+remaining gates stay explicit in this bundle. -/
+structure AtomExactR6DirectPositiveWeightClosureInputs where
+  pass1Green : Prop
+  pass2Green : Prop
+  pass3Green : Prop
+  seriesReviewGreen : Prop
+  tighteningSegmentClosed : Prop
+  eigenstateSurfaceClosedAtReviewSurface : Prop
+  globalExportClosedAtReviewSurface : Prop
+  reviewGateClosedAtReviewSurface : Prop
+  mathlibRequestBoundaryClosedAtReviewSurface : Prop
+  statusCompatibilityBoundaryClosedAtReviewSurface : Prop
+  finalAssemblyReviewSurfaceClosed : Prop
+  publicBoundaryClosedAtReviewSurface : Prop
+  threeLayerLinksClosedAtReviewSurface : Prop
+  r7TheoremRouteStillOpen : Prop
+  mainPreMathlib : Prop
+  mathlibMainAdoptionHeld : Prop
+  theoremCompletionNotClaimed : Prop
+  finalGapReleaseNotUnlocked : Prop
+  publicBoundaryHeld : Prop
+  hpass1 : pass1Green
+  hpass2 : pass2Green
+  hpass3 : pass3Green
+  hseries : seriesReviewGreen
+  htightening : tighteningSegmentClosed
+  heigenstate : eigenstateSurfaceClosedAtReviewSurface
+  hglobalExport : globalExportClosedAtReviewSurface
+  hreviewGate : reviewGateClosedAtReviewSurface
+  hmathlibRequest : mathlibRequestBoundaryClosedAtReviewSurface
+  hstatus : statusCompatibilityBoundaryClosedAtReviewSurface
+  hfinalAssembly : finalAssemblyReviewSurfaceClosed
+  hpublicReview : publicBoundaryClosedAtReviewSurface
+  hthreeLayer : threeLayerLinksClosedAtReviewSurface
+  hr7Open : r7TheoremRouteStillOpen
+  hpreMathlib : mainPreMathlib
+  hmathlibHeld : mathlibMainAdoptionHeld
+  hnotComplete : theoremCompletionNotClaimed
+  hfinalLocked : finalGapReleaseNotUnlocked
+  hpublic : publicBoundaryHeld
 
-All other review gates remain explicit parameters, so this is a local closure of
-R7's direct positive-weight slot rather than a final theorem release. -/
+/-- Package the R7 tightening closure with the local positive-weight review
+surface inserted into the three slots it actually closes. -/
+def atomExactR6DirectPositiveWeightTighteningClosurePackage
+    (I : AtomExactR6DirectPositiveWeightClosureInputs) :
+    AtomExactProofObligationTighteningClosure :=
+  { pass1Green := I.pass1Green
+    pass2Green := I.pass2Green
+    pass3Green := I.pass3Green
+    seriesReviewGreen := I.seriesReviewGreen
+    tighteningSegmentClosed := I.tighteningSegmentClosed
+    atomPersistenceClosedAtReviewSurface := AtomExactR6DirectPositiveWeightReviewSurfaceClosed
+    eigenstateSurfaceClosedAtReviewSurface := I.eigenstateSurfaceClosedAtReviewSurface
+    exactGapValueClosedAtReviewSurface := AtomExactR6DirectPositiveWeightReviewSurfaceClosed
+    globalExportClosedAtReviewSurface := I.globalExportClosedAtReviewSurface
+    reviewGateClosedAtReviewSurface := I.reviewGateClosedAtReviewSurface
+    mathlibRequestBoundaryClosedAtReviewSurface := I.mathlibRequestBoundaryClosedAtReviewSurface
+    statusCompatibilityBoundaryClosedAtReviewSurface := I.statusCompatibilityBoundaryClosedAtReviewSurface
+    upstreamR6ReviewSurfaceClosed := AtomExactR6DirectPositiveWeightReviewSurfaceClosed
+    finalAssemblyReviewSurfaceClosed := I.finalAssemblyReviewSurfaceClosed
+    publicBoundaryClosedAtReviewSurface := I.publicBoundaryClosedAtReviewSurface
+    threeLayerLinksClosedAtReviewSurface := I.threeLayerLinksClosedAtReviewSurface
+    r7TheoremRouteStillOpen := I.r7TheoremRouteStillOpen
+    mainPreMathlib := I.mainPreMathlib
+    mathlibMainAdoptionHeld := I.mathlibMainAdoptionHeld
+    theoremCompletionNotClaimed := I.theoremCompletionNotClaimed
+    finalGapReleaseNotUnlocked := I.finalGapReleaseNotUnlocked
+    publicBoundaryHeld := I.publicBoundaryHeld }
+
+/-- The local R7 tightening package is ready whenever its still-explicit gates are
+witnessed. -/
 theorem atom_exact_tightening_closure_ready_of_r6_direct_positive_weight_slot
-    {pass1Green pass2Green pass3Green seriesReviewGreen tighteningSegmentClosed
-      eigenstateSurfaceClosedAtReviewSurface globalExportClosedAtReviewSurface
-      reviewGateClosedAtReviewSurface mathlibRequestBoundaryClosedAtReviewSurface
-      statusCompatibilityBoundaryClosedAtReviewSurface finalAssemblyReviewSurfaceClosed
-      publicBoundaryClosedAtReviewSurface threeLayerLinksClosedAtReviewSurface
-      r7TheoremRouteStillOpen mainPreMathlib mathlibMainAdoptionHeld
-      theoremCompletionNotClaimed finalGapReleaseNotUnlocked publicBoundaryHeld : Prop}
-    (hpass1 : pass1Green)
-    (hpass2 : pass2Green)
-    (hpass3 : pass3Green)
-    (hseries : seriesReviewGreen)
-    (htightening : tighteningSegmentClosed)
-    (heigenstate : eigenstateSurfaceClosedAtReviewSurface)
-    (hglobalExport : globalExportClosedAtReviewSurface)
-    (hreviewGate : reviewGateClosedAtReviewSurface)
-    (hmathlibRequest : mathlibRequestBoundaryClosedAtReviewSurface)
-    (hstatus : statusCompatibilityBoundaryClosedAtReviewSurface)
-    (hfinalAssembly : finalAssemblyReviewSurfaceClosed)
-    (hpublicReview : publicBoundaryClosedAtReviewSurface)
-    (hthreeLayer : threeLayerLinksClosedAtReviewSurface)
-    (hr7Open : r7TheoremRouteStillOpen)
-    (hpreMathlib : mainPreMathlib)
-    (hmathlibHeld : mathlibMainAdoptionHeld)
-    (hnotComplete : theoremCompletionNotClaimed)
-    (hfinalLocked : finalGapReleaseNotUnlocked)
-    (hpublic : publicBoundaryHeld) :
-    (AtomExactProofObligationTighteningClosure.mk
-      pass1Green
-      pass2Green
-      pass3Green
-      seriesReviewGreen
-      tighteningSegmentClosed
-      AtomExactR6DirectPositiveWeightReviewSurfaceClosed
-      eigenstateSurfaceClosedAtReviewSurface
-      AtomExactR6DirectPositiveWeightReviewSurfaceClosed
-      globalExportClosedAtReviewSurface
-      reviewGateClosedAtReviewSurface
-      mathlibRequestBoundaryClosedAtReviewSurface
-      statusCompatibilityBoundaryClosedAtReviewSurface
-      AtomExactR6DirectPositiveWeightReviewSurfaceClosed
-      finalAssemblyReviewSurfaceClosed
-      publicBoundaryClosedAtReviewSurface
-      threeLayerLinksClosedAtReviewSurface
-      r7TheoremRouteStillOpen
-      mainPreMathlib
-      mathlibMainAdoptionHeld
-      theoremCompletionNotClaimed
-      finalGapReleaseNotUnlocked
-      publicBoundaryHeld).ready := by
+    (I : AtomExactR6DirectPositiveWeightClosureInputs) :
+    (atomExactR6DirectPositiveWeightTighteningClosurePackage I).ready := by
   exact ⟨
-    hpass1,
-    hpass2,
-    hpass3,
-    hseries,
-    htightening,
+    I.hpass1,
+    I.hpass2,
+    I.hpass3,
+    I.hseries,
+    I.htightening,
     atom_exact_r6_direct_positive_weight_review_surface_closed,
-    heigenstate,
+    I.heigenstate,
     atom_exact_r6_direct_positive_weight_review_surface_closed,
-    hglobalExport,
-    hreviewGate,
-    hmathlibRequest,
-    hstatus,
+    I.hglobalExport,
+    I.hreviewGate,
+    I.hmathlibRequest,
+    I.hstatus,
     atom_exact_r6_direct_positive_weight_review_surface_closed,
-    hfinalAssembly,
-    hpublicReview,
-    hthreeLayer,
-    hr7Open,
-    hpreMathlib,
-    hmathlibHeld,
-    hnotComplete,
-    hfinalLocked,
-    hpublic⟩
+    I.hfinalAssembly,
+    I.hpublicReview,
+    I.hthreeLayer,
+    I.hr7Open,
+    I.hpreMathlib,
+    I.hmathlibHeld,
+    I.hnotComplete,
+    I.hfinalLocked,
+    I.hpublic⟩
 
 /-- One-line export: the R7 atom-exact positive-weight review slot is now closed
 by the R6 direct exact-atom bridge. -/
