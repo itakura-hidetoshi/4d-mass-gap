@@ -24,11 +24,19 @@ structure PhysicalWitnessReleaseHold where
   theoremCompletionsNotClaimed : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PhysicalWitnessReleaseHold.ready
     (H : PhysicalWitnessReleaseHold) : Prop :=
-  H.bridgeReady ∧ H.publicBoundaryLockReady ∧ H.physicalValueVisible ∧
-  H.observableWeightVisible ∧ H.observableIsApg ∧ H.positiveObservableMass ∧
-  H.witnessSectorOrthogonal ∧ H.witnessNotVacuum ∧ H.publicBoundaryLocked ∧
+  H.bridge.ready ∧ H.publicBoundaryLock.ready ∧
+  H.bridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value = 33 / 20 ∧
+  H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value = 33 / 20 ∧
+  H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+  H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+  H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  H.bridge.checkpoint.publicBoundaryLocked ∧
   H.finalReleaseHeld ∧ H.theoremCompletionsNotClaimed ∧ H.theoremBoundaryHeld
 
 def physicalWitness3320ReleaseHold : PhysicalWitnessReleaseHold :=
@@ -49,9 +57,14 @@ def physicalWitness3320ReleaseHold : PhysicalWitnessReleaseHold :=
 
 theorem physical_witness_release_hold_pack
     (H : PhysicalWitnessReleaseHold) :
-    H.ready ↔ H.bridgeReady ∧ H.publicBoundaryLockReady ∧ H.physicalValueVisible ∧
-      H.observableWeightVisible ∧ H.observableIsApg ∧ H.positiveObservableMass ∧
-      H.witnessSectorOrthogonal ∧ H.witnessNotVacuum ∧ H.publicBoundaryLocked ∧
+    H.ready ↔ H.bridge.ready ∧ H.publicBoundaryLock.ready ∧
+      H.bridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value = 33 / 20 ∧
+      H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value = 33 / 20 ∧
+      H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+      H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+      H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      H.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      H.bridge.checkpoint.publicBoundaryLocked ∧
       H.finalReleaseHeld ∧ H.theoremCompletionsNotClaimed ∧ H.theoremBoundaryHeld := by
   rfl
 
