@@ -39,6 +39,19 @@ REQUIRED_INTERNAL_DISCHARGE_ANCHORS = (
     "Hard residual ledger statuses: preserved for stronger future Mathlib/operator-theoretic replacement",
 )
 
+REQUIRED_LEDGER_BRIDGE_ANCHORS = (
+    "MGAP4D/HardPhysicalResidualLedgerR1R7DischargeBridge.lean",
+    "HardPhysicalResidualLedgerR1R7DischargeBridge",
+    "hardPhysicalResidualLedgerR1R7DischargeBridge3320",
+    "hard_physical_residual_ledger_r1r7_discharge_bridge_ready",
+    "hard_physical_residual_ledger_r1r7_discharge_bridge_exact_gap_value_3320",
+    "hard_physical_residual_ledger_r1r7_discharge_bridge_positive_nonzero_spectral_mass",
+    "hard_physical_residual_ledger_r1r7_discharge_bridge_final_release_held",
+    "hard_physical_residual_ledger_r1r7_discharge_bridge_public_boundary_locked",
+    "hard_physical_residual_ledger_r1r7_discharge_bridge_status_preserved",
+    "HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible",
+)
+
 REQUIRED_RESIDUAL_IDS = (
     "R1. Concrete real Hilbert space on Mathlib",
     "R2. Densely defined unbounded operator",
@@ -114,6 +127,7 @@ def main() -> None:
 
     failures.extend(require_all(text, REQUIRED_LEDGER_ANCHORS, "ledger"))
     failures.extend(require_all(text, REQUIRED_INTERNAL_DISCHARGE_ANCHORS, "internal-discharge"))
+    failures.extend(require_all(text, REQUIRED_LEDGER_BRIDGE_ANCHORS, "ledger-bridge"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -123,6 +137,7 @@ def main() -> None:
     print("Hard physical residual ledger audit")
     print(f"Ledger anchors audited: {len(REQUIRED_LEDGER_ANCHORS)}")
     print(f"Internal discharge anchors audited: {len(REQUIRED_INTERNAL_DISCHARGE_ANCHORS)}")
+    print(f"Ledger bridge anchors audited: {len(REQUIRED_LEDGER_BRIDGE_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
