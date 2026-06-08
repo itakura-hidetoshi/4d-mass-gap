@@ -10,12 +10,17 @@ structure ExportSurface where
   globalReady : Prop
   gateActive : Prop
 
-def ExportSurface.ready (S : ExportSurface) : Prop :=
+/-- R7-specific export-surface readiness.
+
+This intentionally avoids the short dot-name `ExportSurface.ready`, because the
+preflight short-name audit treats that declaration as shared across the R1--R7
+surface files. -/
+def r7_export_surface_ready (S : ExportSurface) : Prop :=
   S.atomReady ∧ S.exactReady ∧ S.globalReady ∧ S.gateActive
 
-theorem export_surface_pack
+theorem r7_export_surface_pack
     (S : ExportSurface) :
-    S.ready ↔ S.atomReady ∧ S.exactReady ∧ S.globalReady ∧ S.gateActive := by
+    r7_export_surface_ready S ↔ S.atomReady ∧ S.exactReady ∧ S.globalReady ∧ S.gateActive := by
   rfl
 
 structure R7TheoremSurface where
@@ -24,11 +29,11 @@ structure R7TheoremSurface where
   exportSurface : ExportSurface
 
 def R7TheoremSurface.ready (S : R7TheoremSurface) : Prop :=
-  S.atom.ready ∧ S.exactGap.ready ∧ S.exportSurface.ready
+  S.atom.ready ∧ S.exactGap.ready ∧ r7_export_surface_ready S.exportSurface
 
 theorem r7_theorem_surface_pack
     (S : R7TheoremSurface) :
-    S.ready ↔ S.atom.ready ∧ S.exactGap.ready ∧ S.exportSurface.ready := by
+    S.ready ↔ S.atom.ready ∧ S.exactGap.ready ∧ r7_export_surface_ready S.exportSurface := by
   rfl
 
 end TheoremSurface
