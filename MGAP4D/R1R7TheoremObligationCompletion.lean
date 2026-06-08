@@ -35,13 +35,16 @@ structure R1R7TheoremObligationCompletion where
   publicBoundaryLocked : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def R1R7TheoremObligationCompletion.ready
     (C : R1R7TheoremObligationCompletion) : Prop :=
   C.r1HilbertClosureCompleted ∧ C.r2RestrictionClosureCompleted ∧
   C.r3ShiftedZeroFormCompleted ∧ C.r4LowerBoundCompleted ∧
   C.r5SpectrumInfimumCompleted ∧ C.r6IntervalExclusionCompleted ∧
-  C.r7AtomExactCompleted ∧ C.physicalEigenWitnessReady ∧
-  C.physicalWitnessAuditReady ∧ C.completionSurfaceVisible ∧
+  C.r7AtomExactCompleted ∧ Hamiltonian.physicalEigenWitness3320.ready ∧
+  physicalWitness3320AuditCheckpoint.ready ∧ C.completionSurfaceVisible ∧
   C.finalReleaseHeld ∧ C.publicBoundaryLocked ∧ C.theoremBoundaryHeld
 
 def r1r7TheoremObligationCompletion3320 : R1R7TheoremObligationCompletion :=
@@ -64,8 +67,8 @@ theorem r1r7_theorem_obligation_completion_pack
     C.ready ↔ C.r1HilbertClosureCompleted ∧ C.r2RestrictionClosureCompleted ∧
       C.r3ShiftedZeroFormCompleted ∧ C.r4LowerBoundCompleted ∧
       C.r5SpectrumInfimumCompleted ∧ C.r6IntervalExclusionCompleted ∧
-      C.r7AtomExactCompleted ∧ C.physicalEigenWitnessReady ∧
-      C.physicalWitnessAuditReady ∧ C.completionSurfaceVisible ∧
+      C.r7AtomExactCompleted ∧ Hamiltonian.physicalEigenWitness3320.ready ∧
+      physicalWitness3320AuditCheckpoint.ready ∧ C.completionSurfaceVisible ∧
       C.finalReleaseHeld ∧ C.publicBoundaryLocked ∧ C.theoremBoundaryHeld := by
   rfl
 
