@@ -26,10 +26,10 @@ structure ExactGapHphysOperatorBodyBridge where
   eigenWitnessInDomainSurface : operatorBody.eigenWitnessInDomainSurface
   eigenRelationWellTypedSurface : operatorBody.eigenRelationWellTypedSurface
   exactGapValue3320 : structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20
-  finalReleaseHeld : structuralSurface.finalReleaseHeld
-  publicBoundaryLocked : structuralSurface.publicBoundaryLocked
-  noAutoRelease : structuralSurface.noAutoRelease
-  theoremBoundaryHeld : structuralSurface.theoremBoundaryHeld
+  finalReleaseHeld : structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked
+  noAutoRelease : structuralSurface.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease
+  theoremBoundaryHeld : structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
 /-- Ready predicate for the `H_phys` operator-body bridge.
 
@@ -47,8 +47,10 @@ def ExactGapHphysOperatorBodyBridge.ready
   B.operatorBody.semiboundedBelowSurface ∧ B.operatorBody.eigenWitnessInDomainSurface ∧
   B.operatorBody.eigenRelationWellTypedSurface ∧
   B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
-  B.structuralSurface.finalReleaseHeld ∧ B.structuralSurface.publicBoundaryLocked ∧
-  B.structuralSurface.noAutoRelease ∧ B.structuralSurface.theoremBoundaryHeld
+  B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
 /-- The concrete `33/20` bridge from exact-gap structural realization to the
 `H_phys` operator-body surface. -/
@@ -84,8 +86,10 @@ theorem exact_gap_hphys_operator_body_bridge_pack
       B.operatorBody.semiboundedBelowSurface ∧ B.operatorBody.eigenWitnessInDomainSurface ∧
       B.operatorBody.eigenRelationWellTypedSurface ∧
       B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
-      B.structuralSurface.finalReleaseHeld ∧ B.structuralSurface.publicBoundaryLocked ∧
-      B.structuralSurface.noAutoRelease ∧ B.structuralSurface.theoremBoundaryHeld := by
+      B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+      B.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_3320_hphys_operator_body_bridge_ready :
@@ -113,15 +117,15 @@ theorem exact_gap_3320_hphys_operator_body_bridge_value :
   exact exactGap3320HphysOperatorBodyBridge.exactGapValue3320
 
 theorem exact_gap_3320_hphys_operator_body_bridge_release_held :
-    exactGap3320HphysOperatorBodyBridge.structuralSurface.finalReleaseHeld := by
+    exactGap3320HphysOperatorBodyBridge.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld := by
   exact exactGap3320HphysOperatorBodyBridge.finalReleaseHeld
 
 theorem exact_gap_3320_hphys_operator_body_bridge_public_boundary_locked :
-    exactGap3320HphysOperatorBodyBridge.structuralSurface.publicBoundaryLocked := by
+    exactGap3320HphysOperatorBodyBridge.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact exactGap3320HphysOperatorBodyBridge.publicBoundaryLocked
 
 theorem exact_gap_3320_hphys_operator_body_bridge_no_auto_release :
-    exactGap3320HphysOperatorBodyBridge.structuralSurface.noAutoRelease := by
+    exactGap3320HphysOperatorBodyBridge.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease := by
   exact exactGap3320HphysOperatorBodyBridge.noAutoRelease
 
 theorem exact_gap_3320_hphys_operator_body_bridge_self_adjoint_surface :
