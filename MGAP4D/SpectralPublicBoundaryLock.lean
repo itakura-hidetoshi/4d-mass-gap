@@ -18,9 +18,12 @@ structure SpectralPublicBoundaryLock where
   mainPreMathlib : Prop
   mathlibMainAdoptionHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralPublicBoundaryLock.ready
     (L : SpectralPublicBoundaryLock) : Prop :=
-  L.holdReady ∧ L.publicBoundaryLocked ∧ L.reviewGateStillRequired ∧
+  L.hold.ready ∧ L.publicBoundaryLocked ∧ L.reviewGateStillRequired ∧
   L.replayStillRequired ∧ L.sourceTreeReviewStillRequired ∧
   L.externalAuditStillRequired ∧ L.theoremCompletionsNotClaimed ∧
   L.mainPreMathlib ∧ L.mathlibMainAdoptionHeld
@@ -39,7 +42,7 @@ def spectral3320PublicBoundaryLock : SpectralPublicBoundaryLock :=
 
 theorem spectral_public_boundary_lock_pack
     (L : SpectralPublicBoundaryLock) :
-    L.ready ↔ L.holdReady ∧ L.publicBoundaryLocked ∧ L.reviewGateStillRequired ∧
+    L.ready ↔ L.hold.ready ∧ L.publicBoundaryLocked ∧ L.reviewGateStillRequired ∧
       L.replayStillRequired ∧ L.sourceTreeReviewStillRequired ∧
       L.externalAuditStillRequired ∧ L.theoremCompletionsNotClaimed ∧
       L.mainPreMathlib ∧ L.mathlibMainAdoptionHeld := by
