@@ -25,19 +25,25 @@ structure SpectrumInfimumTighteningSegmentSelection where
 def SpectrumInfimumTighteningSegmentSelection.ready
     (S : SpectrumInfimumTighteningSegmentSelection) : Prop :=
   S.r4TighteningClosureGreen ∧ S.spectrumInfimumHardeningPassVisible ∧
-  S.selectedIsR5SpectrumInfimum ∧ S.tighteningOnly ∧
-  S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
+  S.selectedSegment = SpectrumInfimumTighteningSegment.r5SpectrumInfimumObligation ∧
+  S.tighteningOnly ∧ S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
   S.theoremCompletionNotClaimed ∧ S.downstreamR6R7NotUnlocked ∧
   S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld
 
 theorem spectrum_infimum_tightening_segment_selection_pack
     (S : SpectrumInfimumTighteningSegmentSelection) :
     S.ready ↔ S.r4TighteningClosureGreen ∧ S.spectrumInfimumHardeningPassVisible ∧
-      S.selectedIsR5SpectrumInfimum ∧ S.tighteningOnly ∧
-      S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
+      S.selectedSegment = SpectrumInfimumTighteningSegment.r5SpectrumInfimumObligation ∧
+      S.tighteningOnly ∧ S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
       S.theoremCompletionNotClaimed ∧ S.downstreamR6R7NotUnlocked ∧
       S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld := by
   rfl
+
+/-- The selected segment equality is still available from the stored certificate. -/
+theorem spectrum_infimum_tightening_segment_selection_selected_eq
+    (S : SpectrumInfimumTighteningSegmentSelection) :
+    S.selectedSegment = SpectrumInfimumTighteningSegment.r5SpectrumInfimumObligation := by
+  exact S.selectedIsR5SpectrumInfimum
 
 end Theorem
 end R5
