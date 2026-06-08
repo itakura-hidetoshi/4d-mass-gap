@@ -21,11 +21,17 @@ structure SectorSeparationCoreBridge where
   bridgeVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SectorSeparationCoreBridge.ready
     (B : SectorSeparationCoreBridge) : Prop :=
-  B.coreReady ∧ B.separationReady ∧ B.separationBoundaryMatchesCore ∧
-  B.separationWitnessMatchesCore ∧ B.witnessSectorIsOrthogonal ∧ B.witnessNotVacuum ∧
-  B.vacuumOrthogonalNoCollapse ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
+  B.core.ready ∧ B.separation.ready ∧ B.separation.boundary = B.core.lowerBound.sectorBoundary ∧
+  B.separation.positiveGap.witness = B.core.formalization.witness ∧
+  B.separation.witnessSector = SpectralSector.orthogonal ∧
+  B.separation.witnessSector ≠ SpectralSector.vacuum ∧
+  B.separation.boundary.vacuumSector ≠ B.separation.boundary.orthogonalSector ∧
+  B.bridgeVisible ∧ B.theoremBoundaryHeld
 
 def spectral3320SectorSeparationCoreBridge : SectorSeparationCoreBridge :=
   { core := spectral3320CoreCertificate
@@ -42,9 +48,12 @@ def spectral3320SectorSeparationCoreBridge : SectorSeparationCoreBridge :=
 
 theorem sector_separation_core_bridge_pack
     (B : SectorSeparationCoreBridge) :
-    B.ready ↔ B.coreReady ∧ B.separationReady ∧ B.separationBoundaryMatchesCore ∧
-      B.separationWitnessMatchesCore ∧ B.witnessSectorIsOrthogonal ∧ B.witnessNotVacuum ∧
-      B.vacuumOrthogonalNoCollapse ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld := by
+    B.ready ↔ B.core.ready ∧ B.separation.ready ∧ B.separation.boundary = B.core.lowerBound.sectorBoundary ∧
+      B.separation.positiveGap.witness = B.core.formalization.witness ∧
+      B.separation.witnessSector = SpectralSector.orthogonal ∧
+      B.separation.witnessSector ≠ SpectralSector.vacuum ∧
+      B.separation.boundary.vacuumSector ≠ B.separation.boundary.orthogonalSector ∧
+      B.bridgeVisible ∧ B.theoremBoundaryHeld := by
   rfl
 
 theorem spectral3320_sector_separation_core_bridge_ready :
