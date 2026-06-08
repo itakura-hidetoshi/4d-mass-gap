@@ -29,12 +29,21 @@ structure ObservableSpectralWeightPreReleaseBridge where
   bridgeVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def ObservableSpectralWeightPreReleaseBridge.ready
     (B : ObservableSpectralWeightPreReleaseBridge) : Prop :=
-  B.finalBridgeReady ∧ B.preReleaseCheckpointReady ∧ B.finalMassMatchesCheckpoint ∧
-  B.spectralWeightValueMatchesCheckpoint ∧ B.finalPlaquettePositive ∧
-  B.observableWeightPositive ∧ B.witnessSectorOrthogonal ∧ B.witnessNotVacuum ∧
-  B.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
+  B.finalBridge.ready ∧ B.preReleaseCheckpoint.ready ∧
+  B.finalBridge.finalPacket.massGap.value =
+    B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+  B.finalBridge.spectralWeight.value =
+    B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+  B.finalBridge.finalPacket.plaquette.observableWitness.positiveMass = true ∧
+  B.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+  B.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  B.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  B.preReleaseCheckpoint.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
 
 def observableSpectralWeight3320PreReleaseBridge : ObservableSpectralWeightPreReleaseBridge :=
   { finalBridge := observableSpectralWeight3320FinalBridge
@@ -53,11 +62,16 @@ def observableSpectralWeight3320PreReleaseBridge : ObservableSpectralWeightPreRe
 
 theorem observable_spectral_weight_pre_release_bridge_pack
     (B : ObservableSpectralWeightPreReleaseBridge) :
-    B.ready ↔ B.finalBridgeReady ∧ B.preReleaseCheckpointReady ∧
-      B.finalMassMatchesCheckpoint ∧ B.spectralWeightValueMatchesCheckpoint ∧
-      B.finalPlaquettePositive ∧ B.observableWeightPositive ∧
-      B.witnessSectorOrthogonal ∧ B.witnessNotVacuum ∧ B.publicBoundaryLocked ∧
-      B.bridgeVisible ∧ B.theoremBoundaryHeld := by
+    B.ready ↔ B.finalBridge.ready ∧ B.preReleaseCheckpoint.ready ∧
+      B.finalBridge.finalPacket.massGap.value =
+        B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+      B.finalBridge.spectralWeight.value =
+        B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+      B.finalBridge.finalPacket.plaquette.observableWitness.positiveMass = true ∧
+      B.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+      B.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      B.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      B.preReleaseCheckpoint.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld := by
   rfl
 
 theorem observable_spectral_weight_3320_pre_release_bridge_ready :
