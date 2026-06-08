@@ -28,11 +28,17 @@ structure PhysicalEigenWitness3320 where
   eigenRelationVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PhysicalEigenWitness3320.ready
     (W : PhysicalEigenWitness3320) : Prop :=
-  W.hamiltonianIsHphys ∧ W.normalizationBridgeReady ∧ W.eigenWitnessIsPsiStar ∧
-  W.eigenWitnessNormOne ∧ W.eigenvalueIs3320 ∧ W.gapRecordMatchesPhysical ∧
-  W.sectorSeparationReady ∧ W.witnessSectorOrthogonal ∧ W.witnessNotVacuum ∧
+  W.hamiltonian = Hphys ∧ W.normalizationBridge.ready ∧
+  W.eigenWitness = Constructive.psiStarWitness ∧ W.eigenWitness.normOne = true ∧
+  W.eigenWitness.eigenvalue = 33 / 20 ∧
+  W.eigenWitness.gapRecord.value = W.normalizationBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value ∧
+  W.sectorSeparation.ready ∧ W.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  W.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
   W.eigenRelationVisible ∧ W.theoremBoundaryHeld
 
 def physicalEigenWitness3320 : PhysicalEigenWitness3320 :=
@@ -54,10 +60,13 @@ def physicalEigenWitness3320 : PhysicalEigenWitness3320 :=
 
 theorem physical_eigen_witness_3320_pack
     (W : PhysicalEigenWitness3320) :
-    W.ready ↔ W.hamiltonianIsHphys ∧ W.normalizationBridgeReady ∧
-      W.eigenWitnessIsPsiStar ∧ W.eigenWitnessNormOne ∧ W.eigenvalueIs3320 ∧
-      W.gapRecordMatchesPhysical ∧ W.sectorSeparationReady ∧ W.witnessSectorOrthogonal ∧
-      W.witnessNotVacuum ∧ W.eigenRelationVisible ∧ W.theoremBoundaryHeld := by
+    W.ready ↔ W.hamiltonian = Hphys ∧ W.normalizationBridge.ready ∧
+      W.eigenWitness = Constructive.psiStarWitness ∧ W.eigenWitness.normOne = true ∧
+      W.eigenWitness.eigenvalue = 33 / 20 ∧
+      W.eigenWitness.gapRecord.value = W.normalizationBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value ∧
+      W.sectorSeparation.ready ∧ W.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      W.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      W.eigenRelationVisible ∧ W.theoremBoundaryHeld := by
   rfl
 
 theorem physical_eigen_witness_3320_ready :
