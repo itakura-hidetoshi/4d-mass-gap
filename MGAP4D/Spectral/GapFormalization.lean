@@ -28,12 +28,15 @@ structure SpectralGapFormalization where
   finalGapReleaseNotUnlocked : Prop
   mainPreMathlib : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, instead of being reused as proof
+terms inside the `∧` chain. -/
 def SpectralGapFormalization.ready
     (G : SpectralGapFormalization) : Prop :=
   G.spectralValueCarrierVisible ∧ G.vacuumSectorBoundaryVisible ∧
   G.orthogonalSectorBoundaryVisible ∧ G.positiveLowerBoundSurfaceVisible ∧
-  G.normalizedGapValueIs3320 ∧ G.spectralWitnessSurfaceVisible ∧
-  G.witnessMatchesNormalizedGap ∧ G.nonTheoremCompletionBoundaryVisible ∧
+  G.normalizedGapValue.value = 33 / 20 ∧ G.spectralWitnessSurfaceVisible ∧
+  G.witness.gap = G.normalizedGapValue ∧ G.nonTheoremCompletionBoundaryVisible ∧
   G.finalGapReleaseNotUnlocked ∧ G.mainPreMathlib
 
 def spectralGap3320Formalization
@@ -62,8 +65,8 @@ theorem spectral_gap_formalization_pack
     (G : SpectralGapFormalization) :
     G.ready ↔ G.spectralValueCarrierVisible ∧ G.vacuumSectorBoundaryVisible ∧
       G.orthogonalSectorBoundaryVisible ∧ G.positiveLowerBoundSurfaceVisible ∧
-      G.normalizedGapValueIs3320 ∧ G.spectralWitnessSurfaceVisible ∧
-      G.witnessMatchesNormalizedGap ∧ G.nonTheoremCompletionBoundaryVisible ∧
+      G.normalizedGapValue.value = 33 / 20 ∧ G.spectralWitnessSurfaceVisible ∧
+      G.witness.gap = G.normalizedGapValue ∧ G.nonTheoremCompletionBoundaryVisible ∧
       G.finalGapReleaseNotUnlocked ∧ G.mainPreMathlib := by
   rfl
 
