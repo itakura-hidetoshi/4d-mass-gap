@@ -83,10 +83,25 @@ hard_physical_residual_ledger_r1r7_discharge_bridge_public_boundary_locked
 hard_physical_residual_ledger_r1r7_discharge_bridge_status_preserved
 ```
 
+The ledger bridge is also mapped into the existing `H_phys`/R3 final-bundle audit surface:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerFinalBundleAuditMap.lean
+HardPhysicalResidualLedgerFinalBundleAuditMap
+hardPhysicalResidualLedgerFinalBundleAuditMap3320
+hard_physical_residual_ledger_final_bundle_audit_map_3320_ready
+hard_physical_residual_ledger_final_bundle_audit_map_exact_gap_value_3320
+hard_physical_residual_ledger_final_bundle_audit_map_positive_nonzero_spectral_mass
+hard_physical_residual_ledger_final_bundle_audit_map_final_release_held
+hard_physical_residual_ledger_final_bundle_audit_map_public_boundary_locked
+hard_physical_residual_ledger_final_bundle_audit_map_no_auto_release
+hard_physical_residual_ledger_final_bundle_audit_map_nonpromotion_boundary
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine and ledger bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, and final-bundle-facing ledger audit map. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -272,6 +287,8 @@ The internal R1--R7 discharge spine narrows the local Lean audit gap by adding e
 
 The hard physical residual ledger bridge adds an explicit Lean-side audit map from this ledger to the current discharge spine, while preserving the same open hard-residual statuses.
 
+The hard physical residual ledger final-bundle audit map carries that ledger bridge into the `H_phys`/R3 final-bundle audit surface while preserving no-auto-release and non-promotion boundaries.
+
 ## Current status
 
 ```text
@@ -289,10 +306,13 @@ R7: open / nontrivial positive spectral-weight derivation required
 ```text
 ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible
 HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible
+HardPhysicalResidualLedgerFinalBundleAuditMap: installed / final-bundle-facing ledger audit map visible
 R1--R7 user-facing spine names: bound to replay-visible theorem-obligation completion
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
 Final-release boundary: held
 Public boundary: locked
+H_phys/R3 no-auto-release boundary: visible
+H_phys/R3 non-promotion boundary: visible
 Hard residual ledger statuses: preserved for stronger future Mathlib/operator-theoretic replacement
 ```
