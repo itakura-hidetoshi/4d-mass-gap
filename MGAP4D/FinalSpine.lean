@@ -170,7 +170,7 @@ theorem final_spine_physical_witness_release_is_held :
 
 /-- The final spine sees that the physical witness release hold keeps the public boundary locked. -/
 theorem final_spine_physical_witness_release_public_boundary_locked :
-    physicalWitness3320ReleaseHold.publicBoundaryLocked := by
+    physicalWitness3320ReleaseHold.bridge.checkpoint.publicBoundaryLocked := by
   exact physical_witness_3320_release_public_boundary_locked
 
 /-- The physical witness audit checkpoint is ready at the final spine. -/
@@ -180,12 +180,12 @@ theorem final_spine_physical_witness_audit_checkpoint_ready :
 
 /-- The final spine sees that the physical witness audit checkpoint keeps release held. -/
 theorem final_spine_physical_witness_audit_checkpoint_release_held :
-    physicalWitness3320AuditCheckpoint.finalReleaseHeld := by
+    physicalWitness3320AuditCheckpoint.releaseHold.finalReleaseHeld := by
   exact physical_witness_3320_audit_checkpoint_release_held
 
 /-- The final spine sees that the physical witness audit checkpoint keeps the public boundary locked. -/
 theorem final_spine_physical_witness_audit_checkpoint_public_boundary_locked :
-    physicalWitness3320AuditCheckpoint.publicBoundaryLocked := by
+    physicalWitness3320AuditCheckpoint.releaseHold.bridge.checkpoint.publicBoundaryLocked := by
   exact physical_witness_3320_audit_checkpoint_public_boundary_locked
 
 /-- The physical eigen-witness `psi_*` certificate is ready at the final spine. -/
@@ -217,5 +217,3 @@ theorem final_spine_physical_eigen_witness_orthogonal :
 theorem final_spine_physical_eigen_witness_not_vacuum :
     Hamiltonian.physicalEigenWitness3320.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum := by
   exact Hamiltonian.physical_eigen_witness_3320_not_vacuum
-
-end MGAP4D
