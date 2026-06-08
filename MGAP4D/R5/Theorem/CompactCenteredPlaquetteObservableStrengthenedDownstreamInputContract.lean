@@ -1,0 +1,71 @@
+import MGAP4D.R5.Theorem.CompactCenteredPlaquetteObservableStrengthenedTheoremSurface
+
+namespace MGAP4D
+namespace R5
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- R5 strengthened downstream input contract for R6/R7.
+
+Downstream stages may import this contract to consume the R5 compact centered
+smeared observable together with its identification with the observable-atom
+chosen observable, while keeping atom/weight obligations staged. -/
+def CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractReady : Prop :=
+  CompactCenteredPlaquetteObservableStrengthenedTheoremSurfaceReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedTheoremSurfacePublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableStrengthenedTerminalReceiptReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedLaterStageHandoffFinalReceiptReady ∧
+  MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.chosenObservable =
+      MGAP4D.MathlibAnalytic.singletonObservableAtomTheoremTheoremData.chosenObservable ∧
+  MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.compactSupport
+      MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.chosenObservable ∧
+  MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.centered
+      MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.chosenObservable ∧
+  MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.smeared
+      MGAP4D.MathlibAnalytic.singletonCompactPlaquetteConstructionTheoremData.chosenObservable ∧
+  CompactCenteredPlaquetteObservableDoesNotConsumeAtom3320Boundary ∧
+  CompactCenteredPlaquetteObservableDoesNotConsumePositiveSpectralWeightBoundary ∧
+  MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The R5 strengthened downstream input contract is ready. -/
+theorem compact_centered_plaquette_observable_strengthened_downstream_input_contract_ready :
+    CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractReady := by
+  exact ⟨
+    compact_centered_plaquette_observable_strengthened_theorem_surface_ready,
+    compact_centered_plaquette_observable_strengthened_theorem_surface_public_boundary_held,
+    compact_centered_plaquette_observable_strengthened_terminal_receipt_ready,
+    compact_centered_plaquette_observable_strengthened_later_stage_handoff_final_receipt_ready,
+    compact_centered_plaquette_observable_chosen_eq_observable_atom_chosen,
+    compact_centered_plaquette_observable_chosen_compact_support,
+    compact_centered_plaquette_observable_chosen_centered,
+    compact_centered_plaquette_observable_chosen_smeared,
+    compact_centered_plaquette_observable_does_not_consume_atom_3320_boundary,
+    compact_centered_plaquette_observable_does_not_consume_positive_spectral_weight_boundary,
+    MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the R5 strengthened downstream input contract. -/
+def CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractPublicBoundaryHeld : Prop :=
+  CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractReady ∧
+  CompactCenteredPlaquetteObservableStrengthenedTheoremSurfacePublicBoundaryHeld ∧
+  CompactCenteredPlaquetteObservableDoesNotConsumeAtom3320Boundary ∧
+  CompactCenteredPlaquetteObservableDoesNotConsumePositiveSpectralWeightBoundary ∧
+  MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the R5 strengthened downstream input contract is held. -/
+theorem compact_centered_plaquette_observable_strengthened_downstream_input_contract_public_boundary_held :
+    CompactCenteredPlaquetteObservableStrengthenedDownstreamInputContractPublicBoundaryHeld := by
+  exact ⟨
+    compact_centered_plaquette_observable_strengthened_downstream_input_contract_ready,
+    compact_centered_plaquette_observable_strengthened_theorem_surface_public_boundary_held,
+    compact_centered_plaquette_observable_does_not_consume_atom_3320_boundary,
+    compact_centered_plaquette_observable_does_not_consume_positive_spectral_weight_boundary,
+    MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R5
+end MGAP4D
