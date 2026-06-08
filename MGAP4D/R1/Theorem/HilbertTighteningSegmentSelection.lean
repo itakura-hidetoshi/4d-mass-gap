@@ -1,5 +1,4 @@
 import MGAP4D.R1.Theorem.HilbertSkeleton
-import MGAP4D.R1R2ProofObligationTighteningBridge
 
 namespace MGAP4D
 namespace R1
