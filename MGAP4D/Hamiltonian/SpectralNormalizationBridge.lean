@@ -22,11 +22,17 @@ structure HamiltonianSpectralNormalizationBridge where
   bridgeVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def HamiltonianSpectralNormalizationBridge.ready
     (B : HamiltonianSpectralNormalizationBridge) : Prop :=
-  B.normalizationReady ∧ B.spectralCoreReady ∧ B.normalizedGapMatchesSpectralCore ∧
-  B.recordWitnessMatchesSpectralCore ∧ B.unitScaleIsOne ∧ B.vacuumReferenceIsZero ∧
-  B.positiveNumeratorPreserved ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
+  B.normalization.ready ∧ B.spectralCore.ready ∧
+  B.normalization.normalizedGap = B.spectralCore.formalization.normalizedGapValue ∧
+  B.normalization.physicalGapRecord.witness = B.spectralCore.formalization.witness ∧
+  B.normalization.unit.unitScale = 1 ∧ B.normalization.unit.vacuumEnergyReference = 0 ∧
+  B.normalization.physicalGapRecord.witness.gap.value.num > 0 ∧
+  B.bridgeVisible ∧ B.theoremBoundaryHeld
 
 def hamiltonianSpectral3320NormalizationBridge : HamiltonianSpectralNormalizationBridge :=
   { normalization := physicalHamiltonian3320Normalization
@@ -43,9 +49,11 @@ def hamiltonianSpectral3320NormalizationBridge : HamiltonianSpectralNormalizatio
 
 theorem hamiltonian_spectral_normalization_bridge_pack
     (B : HamiltonianSpectralNormalizationBridge) :
-    B.ready ↔ B.normalizationReady ∧ B.spectralCoreReady ∧
-      B.normalizedGapMatchesSpectralCore ∧ B.recordWitnessMatchesSpectralCore ∧
-      B.unitScaleIsOne ∧ B.vacuumReferenceIsZero ∧ B.positiveNumeratorPreserved ∧
+    B.ready ↔ B.normalization.ready ∧ B.spectralCore.ready ∧
+      B.normalization.normalizedGap = B.spectralCore.formalization.normalizedGapValue ∧
+      B.normalization.physicalGapRecord.witness = B.spectralCore.formalization.witness ∧
+      B.normalization.unit.unitScale = 1 ∧ B.normalization.unit.vacuumEnergyReference = 0 ∧
+      B.normalization.physicalGapRecord.witness.gap.value.num > 0 ∧
       B.bridgeVisible ∧ B.theoremBoundaryHeld := by
   rfl
 
