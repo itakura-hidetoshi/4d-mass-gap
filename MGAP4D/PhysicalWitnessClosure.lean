@@ -122,8 +122,10 @@ theorem physical_witness_3320_witness_not_vacuum :
       Spectral.SpectralSector.vacuum := by
   decide
 
+/-- Public-boundary lock is exposed as the underlying proposition, not as the
+proof-carrying structure field itself. -/
 theorem physical_witness_3320_public_boundary_locked :
-    physicalWitness3320Closure.publicBoundaryLocked := by
-  exact spectral3320_pre_release_checkpoint_boundary_locked
+    physicalWitness3320Closure.observableClosure.bridge.preReleaseCheckpoint.publicBoundaryLocked := by
+  exact physicalWitness3320Closure.publicBoundaryLocked
 
 end MGAP4D
