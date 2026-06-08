@@ -1,0 +1,56 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDenseDiagonalPVMSourcedFinalClosureProof
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelTheoremSurfaceAggregateChainIndexFinalReceipt
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- Safe aggregate extension carrying the dense-diagonal PVM-sourced final closure
+without weakening the existing theorem-surface aggregate boundary. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionReady : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedFinalClosureReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedFinalClosurePublicBoundaryHeld ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMOperatorValuedR4CompletionBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The dense-diagonal PVM-sourced aggregate safe extension is ready. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_safe_extension_ready :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_final_closure_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_final_closure_public_boundary_held,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_operator_valued_r4_completion_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the dense-diagonal PVM-sourced aggregate safe extension. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionPublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionReady ∧
+  SpectralMeasurePVMActualBorelTheoremSurfaceAggregateChainIndexFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the dense-diagonal PVM-sourced aggregate safe extension
+is held. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_safe_extension_public_boundary_held :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedAggregateSafeExtensionPublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_aggregate_safe_extension_ready,
+    spectral_measure_pvm_actual_borel_theorem_surface_aggregate_chain_index_final_receipt_public_boundary_held,
+    spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
