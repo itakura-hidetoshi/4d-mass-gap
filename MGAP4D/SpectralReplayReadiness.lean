@@ -19,9 +19,12 @@ structure SpectralReplayReadiness where
   mathlibMainAdoptionHeld : Prop
   publicBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralReplayReadiness.ready
     (R : SpectralReplayReadiness) : Prop :=
-  R.spineReady ∧ R.independentReplaySurfaceVisible ∧
+  R.spine.ready ∧ R.independentReplaySurfaceVisible ∧
   R.sourceTreeReviewSurfaceVisible ∧ R.externalAuditBoundaryVisible ∧
   R.replayDoesNotUnlockFinalRelease ∧ R.theoremCompletionsNotClaimed ∧
   R.mainPreMathlib ∧ R.mathlibMainAdoptionHeld ∧ R.publicBoundaryHeld
@@ -40,7 +43,7 @@ def spectral3320ReplayReadiness : SpectralReplayReadiness :=
 
 theorem spectral_replay_readiness_pack
     (R : SpectralReplayReadiness) :
-    R.ready ↔ R.spineReady ∧ R.independentReplaySurfaceVisible ∧
+    R.ready ↔ R.spine.ready ∧ R.independentReplaySurfaceVisible ∧
       R.sourceTreeReviewSurfaceVisible ∧ R.externalAuditBoundaryVisible ∧
       R.replayDoesNotUnlockFinalRelease ∧ R.theoremCompletionsNotClaimed ∧
       R.mainPreMathlib ∧ R.mathlibMainAdoptionHeld ∧ R.publicBoundaryHeld := by
