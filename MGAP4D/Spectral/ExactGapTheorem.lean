@@ -88,9 +88,29 @@ theorem exact_gap_theorem_3320_lower_bound_value :
     exactGapTheorem3320Certificate.sandwich.lowerBound.lowerBound.value = 33 / 20 := by
   exact sharp_gap_sandwich_3320_lower_bound_value
 
+theorem exact_gap_theorem_3320_lower_bound_value_matches_exact :
+    exactGapTheorem3320Certificate.sandwich.lowerBound.lowerBound.value =
+      exactGapTheorem3320Certificate.exactGapValue := by
+  rfl
+
+/-- Exact-gap theorem surface preserves the lower-bound sector boundary witness. -/
+theorem exact_gap_theorem_3320_lower_bound_sector_boundary_ready :
+    exactGapTheorem3320Certificate.sandwich.lowerBound.sectorBoundary.ready := by
+  exact sharp_gap_sandwich_3320_lower_bound_sector_boundary_ready
+
+theorem exact_gap_theorem_3320_lower_bound_sector_boundary_distinct :
+    exactGapTheorem3320Certificate.sandwich.lowerBound.sectorBoundary.vacuumSector ≠
+      exactGapTheorem3320Certificate.sandwich.lowerBound.sectorBoundary.orthogonalSector := by
+  exact sharp_gap_sandwich_3320_lower_bound_sector_boundary_distinct
+
 theorem exact_gap_theorem_3320_eigen_witness_value :
     exactGapTheorem3320Certificate.sandwich.eigenWitness.eigenWitness.eigenvalue = 33 / 20 := by
   exact sharp_gap_sandwich_3320_eigenvalue
+
+theorem exact_gap_theorem_3320_eigen_witness_value_matches_exact :
+    exactGapTheorem3320Certificate.sandwich.eigenWitness.eigenWitness.eigenvalue =
+      exactGapTheorem3320Certificate.exactGapValue := by
+  rfl
 
 theorem exact_gap_theorem_3320_release_held :
     exactGapTheorem3320Certificate.finalReleaseHeld := by
