@@ -4,7 +4,6 @@ import MGAP4D.R3.Concrete.ExportStatus
 import MGAP4D.R2.TheoremSurface
 import MGAP4D.R4.TheoremSurface
 import MGAP4D.R3.TheoremSurface
-import MGAP4D.ReplacementPass2
 
 namespace MGAP4D
 namespace ReplacementPass2
