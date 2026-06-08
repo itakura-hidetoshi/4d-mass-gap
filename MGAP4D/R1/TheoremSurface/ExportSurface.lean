@@ -23,16 +23,16 @@ structure R1TheoremSurface where
   excited : ExcitedSurface
   innerFunctional : InnerFunctionalSurface
   projection : ProjectionSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R1TheoremSurface.ready (S : R1TheoremSurface) : Prop :=
   S.hilbert.ready ∧ S.excited.ready ∧ S.innerFunctional.ready ∧
-   S.projection.ready ∧ S.export.ready
+    S.projection.ready ∧ S.exportSurface.ready
 
 theorem r1_theorem_surface_pack
     (S : R1TheoremSurface) :
     S.ready ↔ S.hilbert.ready ∧ S.excited.ready ∧ S.innerFunctional.ready ∧
-      S.projection.ready ∧ S.export.ready := by
+      S.projection.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
