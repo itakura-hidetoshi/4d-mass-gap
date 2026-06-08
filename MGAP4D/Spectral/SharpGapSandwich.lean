@@ -122,8 +122,29 @@ theorem sharp_gap_sandwich_3320_lower_bound_value :
     sharpGapSandwich3320Certificate.lowerBound.lowerBound.value = 33 / 20 := by
   rfl
 
+/-- The sharp sandwich preserves the sector-boundary witness carried by the
+lower-bound route. -/
+theorem sharp_gap_sandwich_3320_lower_bound_sector_boundary_ready :
+    sharpGapSandwich3320Certificate.lowerBound.sectorBoundary.ready := by
+  exact lower_bound_3320_certificate_sector_boundary_ready
+
+theorem sharp_gap_sandwich_3320_lower_bound_sector_boundary_distinct :
+    sharpGapSandwich3320Certificate.lowerBound.sectorBoundary.vacuumSector ≠
+      sharpGapSandwich3320Certificate.lowerBound.sectorBoundary.orthogonalSector := by
+  exact lower_bound_3320_certificate_sector_boundary_distinct
+
+theorem sharp_gap_sandwich_3320_lower_bound_value_matches_exact :
+    sharpGapSandwich3320Certificate.lowerBound.lowerBound.value =
+      sharpGapSandwich3320Certificate.exactGapValue := by
+  rfl
+
 theorem sharp_gap_sandwich_3320_eigenvalue :
     sharpGapSandwich3320Certificate.eigenWitness.eigenWitness.eigenvalue = 33 / 20 := by
+  rfl
+
+theorem sharp_gap_sandwich_3320_eigenvalue_matches_exact :
+    sharpGapSandwich3320Certificate.eigenWitness.eigenWitness.eigenvalue =
+      sharpGapSandwich3320Certificate.exactGapValue := by
   rfl
 
 theorem sharp_gap_sandwich_3320_eigen_witness_orthogonal :
