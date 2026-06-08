@@ -20,10 +20,10 @@ structure ExactGapAuditClosure where
   publicBoundaryExactGapValue3320 : publicBoundary.exactGapBridge.exactGap.exactGapValue = 33 / 20
   v16GapValue3320 : Release.v16ReleasePacket.finalPacket.massGap.value = 33 / 20
   exactGapDoesNotOpenFinalRelease : publicBoundary.exactGapDoesNotOpenFinalRelease
-  finalReleaseHeld : exactGap.finalReleaseHeld
-  publicBoundaryLocked : exactGap.publicBoundaryLocked
+  finalReleaseHeld : exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : exactGap.sandwich.r1r7Completion.publicBoundaryLocked
   auditClosureVisible : Prop
-  theoremBoundaryHeld : exactGap.theoremBoundaryHeld
+  theoremBoundaryHeld : exactGap.sandwich.theoremBoundaryHeld
 
 def ExactGapAuditClosure.ready
     (C : ExactGapAuditClosure) : Prop :=
