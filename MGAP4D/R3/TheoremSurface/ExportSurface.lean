@@ -23,14 +23,14 @@ theorem export_surface_pack
 structure R3TheoremSurface where
   shifted : ShiftedSurface
   kernelRoute : KernelRouteSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R3TheoremSurface.ready (S : R3TheoremSurface) : Prop :=
-  S.shifted.ready ∧ S.kernelRoute.ready ∧ S.export.ready
+  S.shifted.ready ∧ S.kernelRoute.ready ∧ S.exportSurface.ready
 
 theorem r3_theorem_surface_pack
     (S : R3TheoremSurface) :
-    S.ready ↔ S.shifted.ready ∧ S.kernelRoute.ready ∧ S.export.ready := by
+    S.ready ↔ S.shifted.ready ∧ S.kernelRoute.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
