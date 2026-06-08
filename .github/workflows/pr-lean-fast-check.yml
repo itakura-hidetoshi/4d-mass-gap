@@ -85,8 +85,26 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          retry() {
+            local n=0
+            local max=5
+            local delay=10
+            until "$@"; do
+              n=$((n + 1))
+              if [ "$n" -ge "$max" ]; then
+                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
+                return 1
+              fi
+              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
+              sleep "$delay"
+              delay=$((delay * 2))
+            done
+          }
           if ! command -v elan >/dev/null 2>&1; then
-            curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+            retry bash -c 'curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none'
+          else
+            echo "[fast] using cached elan: $(command -v elan)"
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
