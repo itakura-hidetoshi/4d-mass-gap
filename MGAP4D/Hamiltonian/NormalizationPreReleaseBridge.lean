@@ -28,12 +28,20 @@ structure HamiltonianNormalizationPreReleaseBridge where
   bridgeVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def HamiltonianNormalizationPreReleaseBridge.ready
     (B : HamiltonianNormalizationPreReleaseBridge) : Prop :=
-  B.hamiltonianSpectralBridgeReady ∧ B.preReleaseCheckpointReady ∧
-  B.normalizedGapMatchesCheckpoint ∧ B.witnessMatchesCheckpoint ∧
-  B.unitScaleIsOne ∧ B.vacuumReferenceIsZero ∧ B.positiveNumeratorPreserved ∧
-  B.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
+  B.hamiltonianSpectralBridge.ready ∧ B.preReleaseCheckpoint.ready ∧
+  B.hamiltonianSpectralBridge.normalization.normalizedGap =
+    B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue ∧
+  B.hamiltonianSpectralBridge.normalization.physicalGapRecord.witness =
+    B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.witness ∧
+  B.hamiltonianSpectralBridge.normalization.unit.unitScale = 1 ∧
+  B.hamiltonianSpectralBridge.normalization.unit.vacuumEnergyReference = 0 ∧
+  B.hamiltonianSpectralBridge.normalization.physicalGapRecord.witness.gap.value.num > 0 ∧
+  B.preReleaseCheckpoint.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
 
 def hamiltonian3320NormalizationPreReleaseBridge : HamiltonianNormalizationPreReleaseBridge :=
   { hamiltonianSpectralBridge := hamiltonianSpectral3320NormalizationBridge
@@ -51,10 +59,15 @@ def hamiltonian3320NormalizationPreReleaseBridge : HamiltonianNormalizationPreRe
 
 theorem hamiltonian_normalization_pre_release_bridge_pack
     (B : HamiltonianNormalizationPreReleaseBridge) :
-    B.ready ↔ B.hamiltonianSpectralBridgeReady ∧ B.preReleaseCheckpointReady ∧
-      B.normalizedGapMatchesCheckpoint ∧ B.witnessMatchesCheckpoint ∧
-      B.unitScaleIsOne ∧ B.vacuumReferenceIsZero ∧ B.positiveNumeratorPreserved ∧
-      B.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld := by
+    B.ready ↔ B.hamiltonianSpectralBridge.ready ∧ B.preReleaseCheckpoint.ready ∧
+      B.hamiltonianSpectralBridge.normalization.normalizedGap =
+        B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue ∧
+      B.hamiltonianSpectralBridge.normalization.physicalGapRecord.witness =
+        B.preReleaseCheckpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.witness ∧
+      B.hamiltonianSpectralBridge.normalization.unit.unitScale = 1 ∧
+      B.hamiltonianSpectralBridge.normalization.unit.vacuumEnergyReference = 0 ∧
+      B.hamiltonianSpectralBridge.normalization.physicalGapRecord.witness.gap.value.num > 0 ∧
+      B.preReleaseCheckpoint.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld := by
   rfl
 
 theorem hamiltonian3320_normalization_pre_release_bridge_ready :
