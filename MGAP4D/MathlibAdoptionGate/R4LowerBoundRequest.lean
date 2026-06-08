@@ -11,10 +11,10 @@ def r4LowerBoundRequest : MathlibRequest := {
   requester := MathlibRequester.r4LowerBound,
   requestedImportGroup := "Rat.Basic; Real.Basic; Order.Basic; InnerProductSpace.Basic; NormedSpace.Basic",
   reason := "future R4 lower-bound theorem modules may require ordered constants, inequalities, norm estimates, and quadratic-form lower-bound infrastructure",
-  scoped := true
+  isScoped := true
 }
 
-theorem r4_lower_bound_request_scoped : r4LowerBoundRequest.scoped = true := by
+theorem r4_lower_bound_request_scoped : r4LowerBoundRequest.isScoped = true := by
   rfl
 
 structure R4LowerBoundRequestGate where
