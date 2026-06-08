@@ -1,6 +1,5 @@
 import MGAP4D.R1.Theorem
 import MGAP4D.R2.Theorem
-import MGAP4D.FinalTheoremReleaseGatePreparation
 
 namespace MGAP4D
 
