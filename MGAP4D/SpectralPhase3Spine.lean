@@ -21,9 +21,12 @@ structure SpectralPhase3Spine where
   mathlibMainAdoptionHeld : Prop
   publicBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SpectralPhase3Spine.ready
     (S : SpectralPhase3Spine) : Prop :=
-  S.bridgeReady ∧ S.normalizedValueVisible ∧ S.positiveNumeratorVisible ∧
+  S.bridge.ready ∧ S.normalizedValueVisible ∧ S.positiveNumeratorVisible ∧
   S.sectorBoundaryVisible ∧ S.lowerBoundVisible ∧ S.coreCertificateVisible ∧
   S.phase3ReleaseGateVisible ∧ S.finalGapReleaseNotUnlocked ∧
   S.theoremCompletionsNotClaimed ∧ S.mainPreMathlib ∧
@@ -46,7 +49,7 @@ def spectral3320Phase3Spine : SpectralPhase3Spine :=
 
 theorem spectral_phase3_spine_pack
     (S : SpectralPhase3Spine) :
-    S.ready ↔ S.bridgeReady ∧ S.normalizedValueVisible ∧
+    S.ready ↔ S.bridge.ready ∧ S.normalizedValueVisible ∧
       S.positiveNumeratorVisible ∧ S.sectorBoundaryVisible ∧
       S.lowerBoundVisible ∧ S.coreCertificateVisible ∧
       S.phase3ReleaseGateVisible ∧ S.finalGapReleaseNotUnlocked ∧
