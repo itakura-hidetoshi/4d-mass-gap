@@ -9,3 +9,4 @@ import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass2
 import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningPass3
 import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningSeriesReview
 import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningClosure
+import MGAP4D.R7.Theorem.AtomExactR6DirectPositiveWeightBridge
