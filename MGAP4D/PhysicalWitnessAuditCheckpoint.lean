@@ -19,7 +19,7 @@ structure PhysicalWitnessAuditCheckpoint where
   orthogonalWitnessVisible : releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal
   nonVacuumWitnessVisible : releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum
   finalReleaseHeld : releaseHold.finalReleaseHeld
-  publicBoundaryLocked : releaseHold.publicBoundaryLocked
+  publicBoundaryLocked : releaseHold.bridge.checkpoint.publicBoundaryLocked
   theoremCompletionsNotClaimed : releaseHold.theoremCompletionsNotClaimed
   theoremBoundaryHeld : releaseHold.theoremBoundaryHeld
 
@@ -35,7 +35,7 @@ def PhysicalWitnessAuditCheckpoint.ready
   C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
   C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
   C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
-  C.releaseHold.finalReleaseHeld ∧ C.releaseHold.publicBoundaryLocked ∧
+  C.releaseHold.finalReleaseHeld ∧ C.releaseHold.bridge.checkpoint.publicBoundaryLocked ∧
   C.releaseHold.theoremCompletionsNotClaimed ∧ C.releaseHold.theoremBoundaryHeld
 
 def physicalWitness3320AuditCheckpoint : PhysicalWitnessAuditCheckpoint :=
@@ -62,7 +62,7 @@ theorem physical_witness_audit_checkpoint_pack
       C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
       C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
       C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
-      C.releaseHold.finalReleaseHeld ∧ C.releaseHold.publicBoundaryLocked ∧
+      C.releaseHold.finalReleaseHeld ∧ C.releaseHold.bridge.checkpoint.publicBoundaryLocked ∧
       C.releaseHold.theoremCompletionsNotClaimed ∧ C.releaseHold.theoremBoundaryHeld := by
   rfl
 
@@ -108,8 +108,10 @@ theorem physical_witness_3320_audit_checkpoint_release_held :
     physicalWitness3320AuditCheckpoint.finalReleaseHeld := by
   exact physical_witness_3320_release_is_held
 
+/-- Public-boundary lock is exposed as the underlying release-hold checkpoint
+proposition, not as the proof-carrying audit field itself. -/
 theorem physical_witness_3320_audit_checkpoint_public_boundary_locked :
-    physicalWitness3320AuditCheckpoint.publicBoundaryLocked := by
+    physicalWitness3320AuditCheckpoint.releaseHold.bridge.checkpoint.publicBoundaryLocked := by
   exact physical_witness_3320_release_public_boundary_locked
 
 end MGAP4D
