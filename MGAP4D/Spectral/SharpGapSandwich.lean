@@ -155,12 +155,16 @@ theorem sharp_gap_sandwich_3320_eigen_witness_not_vacuum :
     sharpGapSandwich3320Certificate.eigenWitness.sectorSeparation.witnessSector ≠ SpectralSector.vacuum := by
   decide
 
+/-- Release hold is exposed as the underlying R1--R7 completion proposition,
+not as the proof-carrying sandwich field itself. -/
 theorem sharp_gap_sandwich_3320_release_held :
-    sharpGapSandwich3320Certificate.finalReleaseHeld := by
+    sharpGapSandwich3320Certificate.r1r7Completion.finalReleaseHeld := by
   exact r1r7_theorem_obligation_completion_release_held
 
+/-- Public-boundary lock is exposed as the underlying R1--R7 completion
+proposition, not as the proof-carrying sandwich field itself. -/
 theorem sharp_gap_sandwich_3320_public_boundary_locked :
-    sharpGapSandwich3320Certificate.publicBoundaryLocked := by
+    sharpGapSandwich3320Certificate.r1r7Completion.publicBoundaryLocked := by
   exact r1r7_theorem_obligation_completion_public_boundary_locked
 
 end Spectral
