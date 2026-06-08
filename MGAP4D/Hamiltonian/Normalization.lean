@@ -16,9 +16,12 @@ structure HamiltonianNormalizationUnit where
   vacuumReferenceVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def HamiltonianNormalizationUnit.ready
     (U : HamiltonianNormalizationUnit) : Prop :=
-  U.unitScaleIsOne ∧ U.vacuumReferenceIsZero ∧
+  U.unitScale = 1 ∧ U.vacuumEnergyReference = 0 ∧
   U.internalNormalizedUnitsVisible ∧ U.vacuumReferenceVisible ∧ U.theoremBoundaryHeld
 
 def physicalHamiltonianNormalizationUnit : HamiltonianNormalizationUnit :=
@@ -46,12 +49,15 @@ structure PhysicalHamiltonianNormalization where
   normalizationDoesNotChangeWitness : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PhysicalHamiltonianNormalization.ready
     (N : PhysicalHamiltonianNormalization) : Prop :=
-  N.unitReady ∧ N.hamiltonianIsHphys ∧ N.recordUsesHphys ∧
-  N.normalizedGapIs3320 ∧ N.normalizedGapMatchesRecord ∧
-  N.positiveNumeratorPreserved ∧ N.normalizationDoesNotChangeWitness ∧
-  N.theoremBoundaryHeld
+  N.unit.ready ∧ N.hamiltonian = Hphys ∧ N.physicalGapRecord.hamiltonian = Hphys ∧
+  N.normalizedGap.value = 33 / 20 ∧ N.normalizedGap = N.physicalGapRecord.witness.gap ∧
+  N.physicalGapRecord.witness.gap.value.num > 0 ∧
+  N.normalizationDoesNotChangeWitness ∧ N.theoremBoundaryHeld
 
 def physicalHamiltonian3320Normalization : PhysicalHamiltonianNormalization :=
   { unit := physicalHamiltonianNormalizationUnit
@@ -73,15 +79,15 @@ def physicalHamiltonian3320Normalization : PhysicalHamiltonianNormalization :=
 
 theorem hamiltonian_normalization_unit_pack
     (U : HamiltonianNormalizationUnit) :
-    U.ready ↔ U.unitScaleIsOne ∧ U.vacuumReferenceIsZero ∧
+    U.ready ↔ U.unitScale = 1 ∧ U.vacuumEnergyReference = 0 ∧
       U.internalNormalizedUnitsVisible ∧ U.vacuumReferenceVisible ∧ U.theoremBoundaryHeld := by
   rfl
 
 theorem physical_hamiltonian_normalization_pack
     (N : PhysicalHamiltonianNormalization) :
-    N.ready ↔ N.unitReady ∧ N.hamiltonianIsHphys ∧ N.recordUsesHphys ∧
-      N.normalizedGapIs3320 ∧ N.normalizedGapMatchesRecord ∧
-      N.positiveNumeratorPreserved ∧ N.normalizationDoesNotChangeWitness ∧
+    N.ready ↔ N.unit.ready ∧ N.hamiltonian = Hphys ∧ N.physicalGapRecord.hamiltonian = Hphys ∧
+      N.normalizedGap.value = 33 / 20 ∧ N.normalizedGap = N.physicalGapRecord.witness.gap ∧
+      N.physicalGapRecord.witness.gap.value.num > 0 ∧ N.normalizationDoesNotChangeWitness ∧
       N.theoremBoundaryHeld := by
   rfl
 
