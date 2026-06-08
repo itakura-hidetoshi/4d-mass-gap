@@ -10,24 +10,31 @@ review/replay while the public final theorem release remains held.  It separates
 structure ExactGapReleaseReadiness where
   auditClosure : ExactGapAuditClosure
   auditClosureReady : auditClosure.ready
-  exactGapSurfaceReady : auditClosure.exactGapReady
-  publicBoundarySurfaceReady : auditClosure.publicBoundaryReady
+  exactGapSurfaceReady : auditClosure.exactGap.ready
+  publicBoundarySurfaceReady : auditClosure.publicBoundary.ready
   exactGapValue3320 : auditClosure.exactGap.exactGapValue = 33 / 20
   exactGapMatchesWitness : auditClosure.exactGap.exactGapValue = auditClosure.exactGap.gapWitness.gap.value
   exactGapMatchesSandwich : auditClosure.exactGap.exactGapValue = auditClosure.exactGap.sandwich.exactGapValue
   externalAuditReadinessVisible : Prop
   reviewReplayReady : Prop
-  finalReleaseHeld : auditClosure.finalReleaseHeld
-  publicBoundaryLocked : auditClosure.publicBoundaryLocked
-  exactGapDoesNotOpenFinalRelease : auditClosure.exactGapDoesNotOpenFinalRelease
-  theoremBoundaryHeld : auditClosure.theoremBoundaryHeld
+  finalReleaseHeld : auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked
+  exactGapDoesNotOpenFinalRelease : auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease
+  theoremBoundaryHeld : auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
+/-- Readiness expands every proof-carrying field to the proposition it certifies. -/
 def ExactGapReleaseReadiness.ready
     (R : ExactGapReleaseReadiness) : Prop :=
-  R.auditClosureReady ∧ R.exactGapSurfaceReady ∧ R.publicBoundarySurfaceReady ∧
-  R.exactGapValue3320 ∧ R.exactGapMatchesWitness ∧ R.exactGapMatchesSandwich ∧
-  R.externalAuditReadinessVisible ∧ R.reviewReplayReady ∧ R.finalReleaseHeld ∧
-  R.publicBoundaryLocked ∧ R.exactGapDoesNotOpenFinalRelease ∧ R.theoremBoundaryHeld
+  R.auditClosure.ready ∧ R.auditClosure.exactGap.ready ∧
+  R.auditClosure.publicBoundary.ready ∧
+  R.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+  R.auditClosure.exactGap.exactGapValue = R.auditClosure.exactGap.gapWitness.gap.value ∧
+  R.auditClosure.exactGap.exactGapValue = R.auditClosure.exactGap.sandwich.exactGapValue ∧
+  R.externalAuditReadinessVisible ∧ R.reviewReplayReady ∧
+  R.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  R.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  R.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  R.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
 def exactGap3320ReleaseReadiness : ExactGapReleaseReadiness :=
   { auditClosure := exactGap3320AuditClosure
@@ -46,11 +53,16 @@ def exactGap3320ReleaseReadiness : ExactGapReleaseReadiness :=
 
 theorem exact_gap_release_readiness_pack
     (R : ExactGapReleaseReadiness) :
-    R.ready ↔ R.auditClosureReady ∧ R.exactGapSurfaceReady ∧
-      R.publicBoundarySurfaceReady ∧ R.exactGapValue3320 ∧ R.exactGapMatchesWitness ∧
-      R.exactGapMatchesSandwich ∧ R.externalAuditReadinessVisible ∧ R.reviewReplayReady ∧
-      R.finalReleaseHeld ∧ R.publicBoundaryLocked ∧ R.exactGapDoesNotOpenFinalRelease ∧
-      R.theoremBoundaryHeld := by
+    R.ready ↔ R.auditClosure.ready ∧ R.auditClosure.exactGap.ready ∧
+      R.auditClosure.publicBoundary.ready ∧
+      R.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+      R.auditClosure.exactGap.exactGapValue = R.auditClosure.exactGap.gapWitness.gap.value ∧
+      R.auditClosure.exactGap.exactGapValue = R.auditClosure.exactGap.sandwich.exactGapValue ∧
+      R.externalAuditReadinessVisible ∧ R.reviewReplayReady ∧
+      R.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      R.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      R.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+      R.auditClosure.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_3320_release_readiness_ready :
@@ -82,15 +94,15 @@ theorem exact_gap_3320_release_readiness_matches_sandwich :
   exact exact_gap_3320_audit_closure_matches_sandwich
 
 theorem exact_gap_3320_release_readiness_release_held :
-    exactGap3320ReleaseReadiness.finalReleaseHeld := by
+    exactGap3320ReleaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld := by
   exact exact_gap_3320_audit_closure_release_held
 
 theorem exact_gap_3320_release_readiness_public_boundary_locked :
-    exactGap3320ReleaseReadiness.publicBoundaryLocked := by
+    exactGap3320ReleaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact exact_gap_3320_audit_closure_public_boundary_locked
 
 theorem exact_gap_3320_release_readiness_no_auto_release :
-    exactGap3320ReleaseReadiness.exactGapDoesNotOpenFinalRelease := by
+    exactGap3320ReleaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease := by
   exact exact_gap_3320_audit_closure_no_final_release_open
 
 end MGAP4D
