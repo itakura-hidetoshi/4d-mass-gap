@@ -26,14 +26,14 @@ theorem export_surface_pack
 structure R5TheoremSurface where
   spectrumSet : SpectrumSetSurface
   infimum : InfimumSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R5TheoremSurface.ready (S : R5TheoremSurface) : Prop :=
-  S.spectrumSet.ready ∧ S.infimum.ready ∧ S.export.ready
+  S.spectrumSet.ready ∧ S.infimum.ready ∧ S.exportSurface.ready
 
 theorem r5_theorem_surface_pack
     (S : R5TheoremSurface) :
-    S.ready ↔ S.spectrumSet.ready ∧ S.infimum.ready ∧ S.export.ready := by
+    S.ready ↔ S.spectrumSet.ready ∧ S.infimum.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
