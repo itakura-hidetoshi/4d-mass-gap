@@ -29,25 +29,29 @@ structure ExactGapFinalSpineBridge where
     physicalWitnessBridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value =
       exactGap.exactGapValue
   physicalWitnessPreReleaseBoundaryLocked : physicalWitnessBridge.checkpoint.publicBoundaryLocked
-  finalReleaseHeld : exactGap.finalReleaseHeld
-  publicBoundaryLocked : exactGap.publicBoundaryLocked
+  finalReleaseHeld : exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : exactGap.sandwich.r1r7Completion.publicBoundaryLocked
   finalSpineBridgeVisible : Prop
-  theoremBoundaryHeld : exactGap.theoremBoundaryHeld
+  theoremBoundaryHeld : exactGap.sandwich.theoremBoundaryHeld
 
 /-- Readiness re-expands proof-carrying fields to propositions, and includes the
 physical witness bridge as part of the exact-gap final spine. -/
 def ExactGapFinalSpineBridge.ready
     (B : ExactGapFinalSpineBridge) : Prop :=
-  B.exactGap.ready ∧ B.physicalWitnessBridge.ready ∧ B.exactGapValue3320 ∧
-  B.exactGapMatchesWitness ∧ B.exactGapMatchesSandwich ∧ B.lowerBoundValue3320 ∧
-  B.eigenWitnessValue3320 ∧
+  B.exactGap.ready ∧ B.physicalWitnessBridge.ready ∧
+  B.exactGap.exactGapValue = 33 / 20 ∧
+  B.exactGap.exactGapValue = B.exactGap.gapWitness.gap.value ∧
+  B.exactGap.exactGapValue = B.exactGap.sandwich.exactGapValue ∧
+  B.exactGap.sandwich.lowerBound.lowerBound.value = 33 / 20 ∧
+  B.exactGap.sandwich.eigenWitness.eigenWitness.eigenvalue = 33 / 20 ∧
   B.physicalWitnessBridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value =
     B.exactGap.exactGapValue ∧
   B.physicalWitnessBridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value =
     B.exactGap.exactGapValue ∧
   B.physicalWitnessBridge.checkpoint.publicBoundaryLocked ∧
-  B.finalReleaseHeld ∧ B.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
-  B.theoremBoundaryHeld
+  B.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  B.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  B.finalSpineBridgeVisible ∧ B.exactGap.sandwich.theoremBoundaryHeld
 
 def exactGapFinalSpineBridge3320 : ExactGapFinalSpineBridge :=
   { exactGap := Spectral.exactGapTheorem3320Certificate
@@ -69,16 +73,20 @@ def exactGapFinalSpineBridge3320 : ExactGapFinalSpineBridge :=
 
 theorem exact_gap_final_spine_bridge_pack
     (B : ExactGapFinalSpineBridge) :
-    B.ready ↔ B.exactGap.ready ∧ B.physicalWitnessBridge.ready ∧ B.exactGapValue3320 ∧
-      B.exactGapMatchesWitness ∧ B.exactGapMatchesSandwich ∧ B.lowerBoundValue3320 ∧
-      B.eigenWitnessValue3320 ∧
+    B.ready ↔ B.exactGap.ready ∧ B.physicalWitnessBridge.ready ∧
+      B.exactGap.exactGapValue = 33 / 20 ∧
+      B.exactGap.exactGapValue = B.exactGap.gapWitness.gap.value ∧
+      B.exactGap.exactGapValue = B.exactGap.sandwich.exactGapValue ∧
+      B.exactGap.sandwich.lowerBound.lowerBound.value = 33 / 20 ∧
+      B.exactGap.sandwich.eigenWitness.eigenWitness.eigenvalue = 33 / 20 ∧
       B.physicalWitnessBridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value =
         B.exactGap.exactGapValue ∧
       B.physicalWitnessBridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value =
         B.exactGap.exactGapValue ∧
       B.physicalWitnessBridge.checkpoint.publicBoundaryLocked ∧
-      B.finalReleaseHeld ∧ B.publicBoundaryLocked ∧ B.finalSpineBridgeVisible ∧
-      B.theoremBoundaryHeld := by
+      B.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      B.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      B.finalSpineBridgeVisible ∧ B.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_final_spine_bridge_3320_ready :
@@ -139,11 +147,11 @@ theorem final_spine_exact_gap_physical_witness_pre_release_boundary_locked :
   exact physical_witness_3320_pre_release_bridge_public_boundary_locked
 
 theorem final_spine_exact_gap_release_held :
-    Spectral.exactGapTheorem3320Certificate.finalReleaseHeld := by
+    Spectral.exactGapTheorem3320Certificate.sandwich.r1r7Completion.finalReleaseHeld := by
   exact Spectral.exact_gap_theorem_3320_release_held
 
 theorem final_spine_exact_gap_public_boundary_locked :
-    Spectral.exactGapTheorem3320Certificate.publicBoundaryLocked := by
+    Spectral.exactGapTheorem3320Certificate.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact Spectral.exact_gap_theorem_3320_public_boundary_locked
 
 end MGAP4D
