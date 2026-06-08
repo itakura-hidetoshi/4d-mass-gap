@@ -43,15 +43,20 @@ structure HphysOperatorBodySurface where
   noAutoRelease : structuralSurface.noAutoRelease
   theoremBoundaryHeld : structuralSurface.theoremBoundaryHeld
 
+/-- Ready predicate for the `H_phys` operator-body surface.
+
+This expands the propositions certified by proof-carrying fields instead of
+placing the proof fields themselves in proposition position. -/
 def HphysOperatorBodySurface.ready
     (S : HphysOperatorBodySurface) : Prop :=
-  S.structuralSurfaceReady ∧ S.hamiltonianIsHphys ∧ S.physicalEigenWitnessReady ∧
+  S.structuralSurface.ready ∧ S.hamiltonian = Hphys ∧ S.physicalEigenWitness.ready ∧
   S.denseDomainSurface ∧ S.vacuumInDomainSurface ∧
   S.orthogonalSectorAdmissibleSurface ∧ S.selfAdjointSurface ∧
   S.semiboundedBelowSurface ∧ S.eigenWitnessInDomainSurface ∧
-  S.eigenRelationWellTypedSurface ∧ S.exactGapValue3320 ∧
-  S.finalReleaseHeld ∧ S.publicBoundaryLocked ∧ S.noAutoRelease ∧
-  S.theoremBoundaryHeld
+  S.eigenRelationWellTypedSurface ∧
+  S.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+  S.structuralSurface.finalReleaseHeld ∧ S.structuralSurface.publicBoundaryLocked ∧
+  S.structuralSurface.noAutoRelease ∧ S.structuralSurface.theoremBoundaryHeld
 
 def hphys3320OperatorBodySurface : HphysOperatorBodySurface :=
   { structuralSurface := exactGap3320StructuralSurfaceRealization
@@ -71,24 +76,25 @@ def hphys3320OperatorBodySurface : HphysOperatorBodySurface :=
     finalReleaseHeld := exact_gap_3320_structural_surface_release_held
     publicBoundaryLocked := exact_gap_3320_structural_surface_public_boundary_locked
     noAutoRelease := exact_gap_3320_structural_surface_no_auto_release
-    theoremBoundaryHeld := by trivial }
+    theoremBoundaryHeld := exactGap3320StructuralSurfaceRealization.theoremBoundaryHeld }
 
 theorem hphys_operator_body_surface_pack
     (S : HphysOperatorBodySurface) :
-    S.ready ↔ S.structuralSurfaceReady ∧ S.hamiltonianIsHphys ∧
-      S.physicalEigenWitnessReady ∧ S.denseDomainSurface ∧ S.vacuumInDomainSurface ∧
+    S.ready ↔ S.structuralSurface.ready ∧ S.hamiltonian = Hphys ∧
+      S.physicalEigenWitness.ready ∧ S.denseDomainSurface ∧ S.vacuumInDomainSurface ∧
       S.orthogonalSectorAdmissibleSurface ∧ S.selfAdjointSurface ∧
       S.semiboundedBelowSurface ∧ S.eigenWitnessInDomainSurface ∧
-      S.eigenRelationWellTypedSurface ∧ S.exactGapValue3320 ∧
-      S.finalReleaseHeld ∧ S.publicBoundaryLocked ∧ S.noAutoRelease ∧
-      S.theoremBoundaryHeld := by
+      S.eigenRelationWellTypedSurface ∧
+      S.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+      S.structuralSurface.finalReleaseHeld ∧ S.structuralSurface.publicBoundaryLocked ∧
+      S.structuralSurface.noAutoRelease ∧ S.structuralSurface.theoremBoundaryHeld := by
   rfl
 
 theorem hphys_3320_operator_body_surface_ready :
     hphys3320OperatorBodySurface.ready := by
-  exact And.intro exact_gap_3320_structural_surface_realization_ready <|
-    And.intro rfl <|
-    And.intro physical_eigen_witness_3320_ready <|
+  exact And.intro hphys3320OperatorBodySurface.structuralSurfaceReady <|
+    And.intro hphys3320OperatorBodySurface.hamiltonianIsHphys <|
+    And.intro hphys3320OperatorBodySurface.physicalEigenWitnessReady <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -96,10 +102,11 @@ theorem hphys_3320_operator_body_surface_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro exact_gap_3320_structural_surface_value <|
-    And.intro exact_gap_3320_structural_surface_release_held <|
-    And.intro exact_gap_3320_structural_surface_public_boundary_locked <|
-    And.intro exact_gap_3320_structural_surface_no_auto_release True.intro
+    And.intro hphys3320OperatorBodySurface.exactGapValue3320 <|
+    And.intro hphys3320OperatorBodySurface.finalReleaseHeld <|
+    And.intro hphys3320OperatorBodySurface.publicBoundaryLocked <|
+    And.intro hphys3320OperatorBodySurface.noAutoRelease
+      hphys3320OperatorBodySurface.theoremBoundaryHeld
 
 theorem hphys_3320_operator_body_is_Hphys :
     hphys3320OperatorBodySurface.hamiltonian = Hphys := by
