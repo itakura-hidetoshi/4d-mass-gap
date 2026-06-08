@@ -11,3 +11,4 @@ import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningSeriesReview
 import MGAP4D.R7.Theorem.AtomExactProofObligationTighteningClosure
 import MGAP4D.R7.Theorem.AtomExactR6DirectPositiveWeightBridge
 import MGAP4D.R7.Theorem.AtomExactR6DirectPositiveWeightSlotClosure
+import MGAP4D.R7.Theorem.AtomExactR6DirectPositiveWeightSlotProjections
