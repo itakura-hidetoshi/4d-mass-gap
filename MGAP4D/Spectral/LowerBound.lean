@@ -19,10 +19,13 @@ structure LowerBoundCertificate where
   finalGapReleaseNotUnlocked : Prop
   mainPreMathlib : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def LowerBoundCertificate.ready
     (C : LowerBoundCertificate) : Prop :=
-  C.lowerBoundIs3320 ∧ C.positiveGapMatchesLowerBound ∧
-  C.positiveGapNumeratorPositive ∧ C.sectorBoundaryReady ∧
+  C.lowerBound.value = 33 / 20 ∧ C.positiveGap.value = C.lowerBound ∧
+  C.positiveGap.witness.gap.value.num > 0 ∧ C.sectorBoundary.ready ∧
   C.positiveLowerBoundSurfaceVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
   C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib
 
@@ -53,8 +56,8 @@ def lowerBound3320Certificate
 
 theorem lower_bound_certificate_pack
     (C : LowerBoundCertificate) :
-    C.ready ↔ C.lowerBoundIs3320 ∧ C.positiveGapMatchesLowerBound ∧
-      C.positiveGapNumeratorPositive ∧ C.sectorBoundaryReady ∧
+    C.ready ↔ C.lowerBound.value = 33 / 20 ∧ C.positiveGap.value = C.lowerBound ∧
+      C.positiveGap.witness.gap.value.num > 0 ∧ C.sectorBoundary.ready ∧
       C.positiveLowerBoundSurfaceVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
       C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib := by
   rfl
