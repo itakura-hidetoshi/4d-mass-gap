@@ -18,11 +18,15 @@ structure PositiveGapCertificate where
   finalGapReleaseNotUnlocked : Prop
   mainPreMathlib : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PositiveGapCertificate.ready
     (C : PositiveGapCertificate) : Prop :=
-  C.valueIs3320 ∧ C.witnessMatchesValue ∧ C.witnessPositiveNumerator ∧
-  C.positiveLowerBoundSurfaceVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
-  C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib
+  C.value.value = 33 / 20 ∧ C.witness.gap = C.value ∧
+  C.witness.gap.value.num > 0 ∧ C.positiveLowerBoundSurfaceVisible ∧
+  C.nonTheoremCompletionBoundaryVisible ∧ C.finalGapReleaseNotUnlocked ∧
+  C.mainPreMathlib
 
 def positive3320GapCertificate
     (positiveLowerBoundSurfaceVisible : Prop)
@@ -41,10 +45,16 @@ def positive3320GapCertificate
 
 theorem positive_gap_certificate_pack
     (C : PositiveGapCertificate) :
-    C.ready ↔ C.valueIs3320 ∧ C.witnessMatchesValue ∧ C.witnessPositiveNumerator ∧
-      C.positiveLowerBoundSurfaceVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
-      C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib := by
+    C.ready ↔ C.value.value = 33 / 20 ∧ C.witness.gap = C.value ∧
+      C.witness.gap.value.num > 0 ∧ C.positiveLowerBoundSurfaceVisible ∧
+      C.nonTheoremCompletionBoundaryVisible ∧ C.finalGapReleaseNotUnlocked ∧
+      C.mainPreMathlib := by
   rfl
+
+theorem positive3320_gap_certificate_ready :
+    (positive3320GapCertificate True True True True).ready := by
+  exact ⟨rfl, rfl, gap3320Witness.positiveNumerator,
+    True.intro, True.intro, True.intro, True.intro⟩
 
 theorem positive3320_gap_certificate_value :
     (positive3320GapCertificate True True True True).value.value = 33 / 20 := by
