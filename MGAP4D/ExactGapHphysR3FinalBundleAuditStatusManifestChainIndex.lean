@@ -44,8 +44,8 @@ def ExactGapHphysR3FinalBundleAuditStatusManifestChainIndexReady : Prop :=
   exactGap3320HphysToFinalTheoremReleaseBundleHandoff.hphysToFinal.hphysToOrigin.hphysClosure.bridge.structuralSurface.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
   MathlibAnalytic.prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
-/-- The audit-status manifest chain index is ready. -/
-theorem exact_gap_hphys_r3_final_bundle_audit_status_manifest_chain_index_ready :
+/-- The audit-status manifest chain-index bundle is ready. -/
+theorem exact_gap_hphys_r3_final_bundle_audit_status_manifest_chain_index_3320_ready :
     ExactGapHphysR3FinalBundleAuditStatusManifestChainIndexReady := by
   exact ⟨
     exact_gap_hphys_r3_final_bundle_audit_status_manifest_3320_ready,
