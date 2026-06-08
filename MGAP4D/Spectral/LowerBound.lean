@@ -66,12 +66,23 @@ theorem lower_bound_3320_certificate_positive_numerator :
     (lowerBound3320Certificate True True True True).positiveGap.witness.gap.value.num > 0 := by
   exact gap3320Witness.positiveNumerator
 
+/-- The lower-bound certificate uses the closed sector-boundary witness, while
+its own visibility/release flags remain on the outer lower-bound surface. -/
+theorem lower_bound_3320_certificate_sector_boundary_ready :
+    (lowerBound3320Certificate True True True True).sectorBoundary.ready := by
+  exact spectral_sector_boundary_certificate_ready
+
+theorem lower_bound_3320_certificate_sector_boundary_distinct :
+    (lowerBound3320Certificate True True True True).sectorBoundary.vacuumSector ≠
+      (lowerBound3320Certificate True True True True).sectorBoundary.orthogonalSector := by
+  exact spectral_sector_boundary_distinct
+
 theorem lower_bound_3320_certificate_ready :
     (lowerBound3320Certificate True True True True).ready := by
   exact And.intro rfl <|
     And.intro rfl <|
     And.intro gap3320Witness.positiveNumerator <|
-    And.intro spectral_sector_boundary_certificate_ready <|
+    And.intro lower_bound_3320_certificate_sector_boundary_ready <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro True.intro
