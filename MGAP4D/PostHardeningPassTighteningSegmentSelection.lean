@@ -2,7 +2,6 @@ import MGAP4D.PostHardeningPassClosure
 import MGAP4D.R3.Theorem.R3HardeningPass
 import MGAP4D.PostProofObligationTighteningClosure
 import MGAP4D.FinalTheoremReleaseGatePreparation
-import MGAP4D.R1R2ProofObligationTighteningBridge
 
 namespace MGAP4D
 
