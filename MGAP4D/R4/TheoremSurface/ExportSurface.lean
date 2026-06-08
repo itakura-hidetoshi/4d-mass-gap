@@ -22,14 +22,14 @@ theorem export_surface_pack
 structure R4TheoremSurface where
   lowerBound : LowerBoundSurface
   bridge : BridgeSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R4TheoremSurface.ready (S : R4TheoremSurface) : Prop :=
-  S.lowerBound.ready ∧ S.bridge.ready ∧ S.export.ready
+  S.lowerBound.ready ∧ S.bridge.ready ∧ S.exportSurface.ready
 
 theorem r4_theorem_surface_pack
     (S : R4TheoremSurface) :
-    S.ready ↔ S.lowerBound.ready ∧ S.bridge.ready ∧ S.export.ready := by
+    S.ready ↔ S.lowerBound.ready ∧ S.bridge.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
