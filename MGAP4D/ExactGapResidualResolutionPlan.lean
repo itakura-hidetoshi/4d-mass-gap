@@ -37,20 +37,27 @@ structure ExactGapResidualResolutionPlan where
   conservativeOrderingVisible : Prop
   resolutionPlanVisible : Prop
   exactGapValue3320 : residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20
-  finalReleaseHeld : residualMap.finalReleaseHeld
-  publicBoundaryLocked : residualMap.publicBoundaryLocked
-  noAutoRelease : residualMap.noAutoRelease
-  theoremBoundaryHeld : residualMap.theoremBoundaryHeld
+  finalReleaseHeld : residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked
+  noAutoRelease : residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease
+  theoremBoundaryHeld : residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
+/-- Ready predicate for the residual resolution plan, with proof fields expanded. -/
 def ExactGapResidualResolutionPlan.ready
     (P : ExactGapResidualResolutionPlan) : Prop :=
-  P.residualMapReady ∧ P.structuralSurfaceRealizationPlanned ∧
-  P.hphysSelfAdjointSemiboundedDomainPlanned ∧ P.gapInfimumDefinitionPlanned ∧
-  P.lowerBoundProofBodyPlanned ∧ P.eigenvectorConstructionPlanned ∧
-  P.observableSpectralProjectionPlanned ∧ P.mathlibAdoptionBridgePlanned ∧
-  P.conservativeOrderingVisible ∧ P.resolutionPlanVisible ∧ P.exactGapValue3320 ∧
-  P.finalReleaseHeld ∧ P.publicBoundaryLocked ∧ P.noAutoRelease ∧
-  P.theoremBoundaryHeld
+  P.residualMap.ready ∧ P.residualMap.residualStructuralSurfaceRealization ∧
+  P.residualMap.residualHphysSelfAdjointSemiboundedDomain ∧
+  P.residualMap.residualGapInfimumDefinition ∧
+  P.residualMap.residualLowerBoundProofBody ∧
+  P.residualMap.residualEigenvectorConstruction ∧
+  P.residualMap.residualObservableSpectralProjection ∧
+  P.residualMap.residualMathlibAdoptionBridge ∧
+  P.conservativeOrderingVisible ∧ P.resolutionPlanVisible ∧
+  P.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+  P.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  P.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  P.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  P.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
 def exactGap3320ResidualResolutionPlan : ExactGapResidualResolutionPlan :=
   { residualMap := exactGap3320ResidualMap
@@ -72,13 +79,19 @@ def exactGap3320ResidualResolutionPlan : ExactGapResidualResolutionPlan :=
 
 theorem exact_gap_residual_resolution_plan_pack
     (P : ExactGapResidualResolutionPlan) :
-    P.ready ↔ P.residualMapReady ∧ P.structuralSurfaceRealizationPlanned ∧
-      P.hphysSelfAdjointSemiboundedDomainPlanned ∧ P.gapInfimumDefinitionPlanned ∧
-      P.lowerBoundProofBodyPlanned ∧ P.eigenvectorConstructionPlanned ∧
-      P.observableSpectralProjectionPlanned ∧ P.mathlibAdoptionBridgePlanned ∧
-      P.conservativeOrderingVisible ∧ P.resolutionPlanVisible ∧ P.exactGapValue3320 ∧
-      P.finalReleaseHeld ∧ P.publicBoundaryLocked ∧ P.noAutoRelease ∧
-      P.theoremBoundaryHeld := by
+    P.ready ↔ P.residualMap.ready ∧ P.residualMap.residualStructuralSurfaceRealization ∧
+      P.residualMap.residualHphysSelfAdjointSemiboundedDomain ∧
+      P.residualMap.residualGapInfimumDefinition ∧
+      P.residualMap.residualLowerBoundProofBody ∧
+      P.residualMap.residualEigenvectorConstruction ∧
+      P.residualMap.residualObservableSpectralProjection ∧
+      P.residualMap.residualMathlibAdoptionBridge ∧
+      P.conservativeOrderingVisible ∧ P.resolutionPlanVisible ∧
+      P.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+      P.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      P.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      P.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+      P.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_3320_residual_resolution_plan_ready :
@@ -103,23 +116,23 @@ theorem exact_gap_3320_residual_resolution_plan_value :
   exact exact_gap_3320_residual_map_value
 
 theorem exact_gap_3320_residual_resolution_plan_release_held :
-    exactGap3320ResidualResolutionPlan.finalReleaseHeld := by
+    exactGap3320ResidualResolutionPlan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld := by
   exact exact_gap_3320_residual_map_release_held
 
 theorem exact_gap_3320_residual_resolution_plan_public_boundary_locked :
-    exactGap3320ResidualResolutionPlan.publicBoundaryLocked := by
+    exactGap3320ResidualResolutionPlan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact exact_gap_3320_residual_map_public_boundary_locked
 
 theorem exact_gap_3320_residual_resolution_plan_no_auto_release :
-    exactGap3320ResidualResolutionPlan.noAutoRelease := by
+    exactGap3320ResidualResolutionPlan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease := by
   exact exact_gap_3320_residual_map_no_auto_release
 
 theorem exact_gap_3320_residual_resolution_plan_structural_first :
-    exactGap3320ResidualResolutionPlan.structuralSurfaceRealizationPlanned := by
+    exactGap3320ResidualResolutionPlan.residualMap.residualStructuralSurfaceRealization := by
   exact exact_gap_3320_residual_structural_surface_realization
 
 theorem exact_gap_3320_residual_resolution_plan_mathlib_last :
-    exactGap3320ResidualResolutionPlan.mathlibAdoptionBridgePlanned := by
+    exactGap3320ResidualResolutionPlan.residualMap.residualMathlibAdoptionBridge := by
   exact exact_gap_3320_residual_mathlib_adoption_bridge
 
 end MGAP4D
