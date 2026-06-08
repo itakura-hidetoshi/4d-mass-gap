@@ -28,16 +28,16 @@ structure R2TheoremSurface where
   restriction : RestrictionSurface
   excitedHamiltonian : ExcitedHamiltonianSurface
   spectrum : SpectrumSurface
-  export : ExportSurface
+  exportSurface : ExportSurface
 
 def R2TheoremSurface.ready (S : R2TheoremSurface) : Prop :=
   S.reducing.ready ∧ S.restriction.ready ∧ S.excitedHamiltonian.ready ∧
-  S.spectrum.ready ∧ S.export.ready
+  S.spectrum.ready ∧ S.exportSurface.ready
 
 theorem r2_theorem_surface_pack
     (S : R2TheoremSurface) :
     S.ready ↔ S.reducing.ready ∧ S.restriction.ready ∧ S.excitedHamiltonian.ready ∧
-      S.spectrum.ready ∧ S.export.ready := by
+      S.spectrum.ready ∧ S.exportSurface.ready := by
   rfl
 
 end TheoremSurface
