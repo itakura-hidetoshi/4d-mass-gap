@@ -28,11 +28,19 @@ structure PhysicalWitnessPreReleaseBridge where
   bridgeVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PhysicalWitnessPreReleaseBridge.ready
     (B : PhysicalWitnessPreReleaseBridge) : Prop :=
-  B.physicalWitnessReady ∧ B.checkpointReady ∧ B.physicalGapMatchesCheckpoint ∧
-  B.observableWeightMatchesCheckpoint ∧ B.witnessSectorOrthogonal ∧ B.witnessNotVacuum ∧
-  B.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
+  B.physicalWitness.ready ∧ B.checkpoint.ready ∧
+  B.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value =
+    B.checkpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+  B.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value =
+    B.checkpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+  B.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  B.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  B.checkpoint.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld
 
 def physicalWitness3320PreReleaseBridge : PhysicalWitnessPreReleaseBridge :=
   { physicalWitness := physicalWitness3320Closure
@@ -49,9 +57,14 @@ def physicalWitness3320PreReleaseBridge : PhysicalWitnessPreReleaseBridge :=
 
 theorem physical_witness_pre_release_bridge_pack
     (B : PhysicalWitnessPreReleaseBridge) :
-    B.ready ↔ B.physicalWitnessReady ∧ B.checkpointReady ∧ B.physicalGapMatchesCheckpoint ∧
-      B.observableWeightMatchesCheckpoint ∧ B.witnessSectorOrthogonal ∧ B.witnessNotVacuum ∧
-      B.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld := by
+    B.ready ↔ B.physicalWitness.ready ∧ B.checkpoint.ready ∧
+      B.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value =
+        B.checkpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+      B.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value =
+        B.checkpoint.lock.hold.closure.readiness.spine.bridge.coreCertificate.formalization.normalizedGapValue.value ∧
+      B.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      B.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      B.checkpoint.publicBoundaryLocked ∧ B.bridgeVisible ∧ B.theoremBoundaryHeld := by
   rfl
 
 theorem physical_witness_3320_pre_release_bridge_ready :
