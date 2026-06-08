@@ -12,12 +12,17 @@ structure ExportSurface where
   exportToR7Ready : Prop
   gateActive : Prop
 
-def ExportSurface.ready (S : ExportSurface) : Prop :=
+/-- R3-specific export-surface readiness.
+
+This intentionally avoids the shared short dot-name `ExportSurface.ready` under
+the theorem-surface namespaces. -/
+def r3_export_surface_ready (S : ExportSurface) : Prop :=
   S.shiftedReady ∧ S.kernelRouteReady ∧ S.exportStatusReady ∧ S.exportToR7Ready ∧ S.gateActive
 
-theorem export_surface_pack
+theorem r3_export_surface_pack
     (S : ExportSurface) :
-    S.ready ↔ S.shiftedReady ∧ S.kernelRouteReady ∧ S.exportStatusReady ∧ S.exportToR7Ready ∧ S.gateActive := by
+    r3_export_surface_ready S ↔
+      S.shiftedReady ∧ S.kernelRouteReady ∧ S.exportStatusReady ∧ S.exportToR7Ready ∧ S.gateActive := by
   rfl
 
 structure R3TheoremSurface where
@@ -26,11 +31,11 @@ structure R3TheoremSurface where
   exportSurface : ExportSurface
 
 def R3TheoremSurface.ready (S : R3TheoremSurface) : Prop :=
-  S.shifted.ready ∧ S.kernelRoute.ready ∧ S.exportSurface.ready
+  S.shifted.ready ∧ S.kernelRoute.ready ∧ r3_export_surface_ready S.exportSurface
 
 theorem r3_theorem_surface_pack
     (S : R3TheoremSurface) :
-    S.ready ↔ S.shifted.ready ∧ S.kernelRoute.ready ∧ S.exportSurface.ready := by
+    S.ready ↔ S.shifted.ready ∧ S.kernelRoute.ready ∧ r3_export_surface_ready S.exportSurface := by
   rfl
 
 end TheoremSurface
