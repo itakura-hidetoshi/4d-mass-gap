@@ -1,0 +1,74 @@
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDenseDiagonalPVMSourcedRootFacingFinalReceipt
+import MGAP4D.R4.Theorem.SpectralMeasurePVMOperatorValuedActualBorelDenseDiagonalPVMSourcedMathlibOutputProof
+
+namespace MGAP4D
+namespace R4
+namespace Theorem
+
+open scoped BigOperators ENNReal lp
+
+noncomputable section
+
+/-- The dense-diagonal PVM-sourced actual-Borel route has no remaining R4
+constructive residual: the single constructive obligation and the post-interface
+residual certificate are both discharged. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedNoRemainingConstructiveResidual : Prop :=
+  SpectralMeasurePVMActualBorelFullR4SingleRemainingConstructiveObligation ∧
+  SpectralMeasurePVMActualBorelPostInterfaceResidualCertificate ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedMathlibOutputProofReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The dense-diagonal PVM-sourced actual-Borel route has no remaining R4
+constructive residual. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_no_remaining_constructive_residual :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedNoRemainingConstructiveResidual := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_mathlib_output_discharges_single_obligation,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_final_closure.1,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_mathlib_output_proof_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_final_receipt_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Final receipt closing the R4 constructive residual for the dense-diagonal
+PVM-sourced actual-Borel lane. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosureFinalReceiptReady : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedNoRemainingConstructiveResidual ∧
+  SpectralMeasurePVMActualBorelFullR4SingleRemainingConstructiveObligation ∧
+  SpectralMeasurePVMActualBorelPostInterfaceResidualCertificate ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The final receipt closing the R4 constructive residual is ready. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_constructive_residual_closure_final_receipt_ready :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosureFinalReceiptReady := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_no_remaining_constructive_residual,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_mathlib_output_discharges_single_obligation,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_final_closure.1,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_final_receipt_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+/-- Public boundary for the final constructive-residual closure receipt. -/
+def SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosurePublicBoundaryHeld : Prop :=
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosureFinalReceiptReady ∧
+  SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedRootFacingFinalReceiptPublicBoundaryHeld ∧
+  SpectralMeasurePVMNoShellToFullCollapseBoundary
+
+/-- The public boundary for the final constructive-residual closure receipt is held. -/
+theorem spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_constructive_residual_closure_public_boundary_held :
+    SpectralMeasurePVMActualBorelDenseDiagonalPVMSourcedConstructiveResidualClosurePublicBoundaryHeld := by
+  exact ⟨
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_constructive_residual_closure_final_receipt_ready,
+    spectral_measure_pvm_actual_borel_dense_diagonal_pvm_sourced_root_facing_final_receipt_public_boundary_held,
+    spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
+
+end
+
+end Theorem
+end R4
+end MGAP4D
