@@ -11,10 +11,10 @@ def r2RestrictionRequest : MathlibRequest := {
   requester := MathlibRequester.r2Restriction,
   requestedImportGroup := "InnerProductSpace.Basic; NormedSpace.OperatorNorm; LinearAlgebra.LinearPMap; InnerProductSpace.Projection",
   reason := "future R2 restriction theorem modules may require operator, restriction, domain, and quadratic-form bridge infrastructure",
-  scoped := true
+  isScoped := true
 }
 
-theorem r2_restriction_request_scoped : r2RestrictionRequest.scoped = true := by
+theorem r2_restriction_request_scoped : r2RestrictionRequest.isScoped = true := by
   rfl
 
 structure R2RestrictionRequestGate where
