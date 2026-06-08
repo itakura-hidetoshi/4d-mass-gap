@@ -23,12 +23,20 @@ structure PhysicalWitnessAuditCheckpoint where
   theoremCompletionsNotClaimed : releaseHold.theoremCompletionsNotClaimed
   theoremBoundaryHeld : releaseHold.theoremBoundaryHeld
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def PhysicalWitnessAuditCheckpoint.ready
     (C : PhysicalWitnessAuditCheckpoint) : Prop :=
-  C.releaseHoldReady ∧ C.auditCheckpointVisible ∧ C.physicalValueVisible ∧
-  C.observableWeightVisible ∧ C.observableApgVisible ∧ C.positiveObservableMassVisible ∧
-  C.orthogonalWitnessVisible ∧ C.nonVacuumWitnessVisible ∧ C.finalReleaseHeld ∧
-  C.publicBoundaryLocked ∧ C.theoremCompletionsNotClaimed ∧ C.theoremBoundaryHeld
+  C.releaseHold.ready ∧ C.auditCheckpointVisible ∧
+  C.releaseHold.bridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value = 33 / 20 ∧
+  C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value = 33 / 20 ∧
+  C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+  C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+  C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  C.releaseHold.finalReleaseHeld ∧ C.releaseHold.publicBoundaryLocked ∧
+  C.releaseHold.theoremCompletionsNotClaimed ∧ C.releaseHold.theoremBoundaryHeld
 
 def physicalWitness3320AuditCheckpoint : PhysicalWitnessAuditCheckpoint :=
   { releaseHold := physicalWitness3320ReleaseHold
@@ -47,10 +55,15 @@ def physicalWitness3320AuditCheckpoint : PhysicalWitnessAuditCheckpoint :=
 
 theorem physical_witness_audit_checkpoint_pack
     (C : PhysicalWitnessAuditCheckpoint) :
-    C.ready ↔ C.releaseHoldReady ∧ C.auditCheckpointVisible ∧ C.physicalValueVisible ∧
-      C.observableWeightVisible ∧ C.observableApgVisible ∧ C.positiveObservableMassVisible ∧
-      C.orthogonalWitnessVisible ∧ C.nonVacuumWitnessVisible ∧ C.finalReleaseHeld ∧
-      C.publicBoundaryLocked ∧ C.theoremCompletionsNotClaimed ∧ C.theoremBoundaryHeld := by
+    C.ready ↔ C.releaseHold.ready ∧ C.auditCheckpointVisible ∧
+      C.releaseHold.bridge.physicalWitness.hamiltonianBridge.hamiltonianSpectralBridge.normalization.normalizedGap.value = 33 / 20 ∧
+      C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.value = 33 / 20 ∧
+      C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.observable = Plaquette.A_pg ∧
+      C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.massWitness.positiveMass = true ∧
+      C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      C.releaseHold.bridge.physicalWitness.observableClosure.bridge.finalBridge.spectralWeight.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      C.releaseHold.finalReleaseHeld ∧ C.releaseHold.publicBoundaryLocked ∧
+      C.releaseHold.theoremCompletionsNotClaimed ∧ C.releaseHold.theoremBoundaryHeld := by
   rfl
 
 theorem physical_witness_3320_audit_checkpoint_ready :
