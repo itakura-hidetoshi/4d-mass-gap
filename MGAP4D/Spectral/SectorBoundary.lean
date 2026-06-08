@@ -17,10 +17,14 @@ structure SectorBoundaryCertificate where
   finalGapReleaseNotUnlocked : Prop
   mainPreMathlib : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def SectorBoundaryCertificate.ready
     (C : SectorBoundaryCertificate) : Prop :=
-  C.vacuumIsVacuum ∧ C.orthogonalIsOrthogonal ∧
-  C.vacuumDistinctFromOrthogonal ∧ C.vacuumSectorBoundaryVisible ∧
+  C.vacuumSector = SpectralSector.vacuum ∧
+  C.orthogonalSector = SpectralSector.orthogonal ∧
+  C.vacuumSector ≠ C.orthogonalSector ∧ C.vacuumSectorBoundaryVisible ∧
   C.orthogonalSectorBoundaryVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
   C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib
 
@@ -43,8 +47,9 @@ def spectralSectorBoundaryCertificate
 
 theorem sector_boundary_certificate_pack
     (C : SectorBoundaryCertificate) :
-    C.ready ↔ C.vacuumIsVacuum ∧ C.orthogonalIsOrthogonal ∧
-      C.vacuumDistinctFromOrthogonal ∧ C.vacuumSectorBoundaryVisible ∧
+    C.ready ↔ C.vacuumSector = SpectralSector.vacuum ∧
+      C.orthogonalSector = SpectralSector.orthogonal ∧
+      C.vacuumSector ≠ C.orthogonalSector ∧ C.vacuumSectorBoundaryVisible ∧
       C.orthogonalSectorBoundaryVisible ∧ C.nonTheoremCompletionBoundaryVisible ∧
       C.finalGapReleaseNotUnlocked ∧ C.mainPreMathlib := by
   rfl
