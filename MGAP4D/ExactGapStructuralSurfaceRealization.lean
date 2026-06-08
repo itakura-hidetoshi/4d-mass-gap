@@ -37,18 +37,22 @@ structure ExactGapStructuralSurfaceRealization where
   publicBoundaryLockRealized : Prop
   noAutoReleaseRealized : Prop
   exactGapValue3320 : plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20
-  finalReleaseHeld : plan.finalReleaseHeld
-  publicBoundaryLocked : plan.publicBoundaryLocked
-  noAutoRelease : plan.noAutoRelease
-  theoremBoundaryHeld : plan.theoremBoundaryHeld
+  finalReleaseHeld : plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld
+  publicBoundaryLocked : plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked
+  noAutoRelease : plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease
+  theoremBoundaryHeld : plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
+/-- Ready predicate for the structural realization layer, with proof fields expanded. -/
 def ExactGapStructuralSurfaceRealization.ready
     (S : ExactGapStructuralSurfaceRealization) : Prop :=
-  S.planReady ∧ S.readinessPredicateRealized ∧ S.valueEqualityRealized ∧
+  S.plan.ready ∧ S.readinessPredicateRealized ∧ S.valueEqualityRealized ∧
   S.witnessMatchRealized ∧ S.sandwichMatchRealized ∧ S.bridgeVisibilityRealized ∧
   S.releaseHoldRealized ∧ S.publicBoundaryLockRealized ∧ S.noAutoReleaseRealized ∧
-  S.exactGapValue3320 ∧ S.finalReleaseHeld ∧ S.publicBoundaryLocked ∧
-  S.noAutoRelease ∧ S.theoremBoundaryHeld
+  S.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+  S.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+  S.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+  S.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+  S.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld
 
 def exactGap3320StructuralSurfaceRealization : ExactGapStructuralSurfaceRealization :=
   { plan := exactGap3320ResidualResolutionPlan
@@ -69,11 +73,14 @@ def exactGap3320StructuralSurfaceRealization : ExactGapStructuralSurfaceRealizat
 
 theorem exact_gap_structural_surface_realization_pack
     (S : ExactGapStructuralSurfaceRealization) :
-    S.ready ↔ S.planReady ∧ S.readinessPredicateRealized ∧ S.valueEqualityRealized ∧
+    S.ready ↔ S.plan.ready ∧ S.readinessPredicateRealized ∧ S.valueEqualityRealized ∧
       S.witnessMatchRealized ∧ S.sandwichMatchRealized ∧ S.bridgeVisibilityRealized ∧
       S.releaseHoldRealized ∧ S.publicBoundaryLockRealized ∧ S.noAutoReleaseRealized ∧
-      S.exactGapValue3320 ∧ S.finalReleaseHeld ∧ S.publicBoundaryLocked ∧
-      S.noAutoRelease ∧ S.theoremBoundaryHeld := by
+      S.plan.residualMap.releaseReadiness.auditClosure.exactGap.exactGapValue = 33 / 20 ∧
+      S.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld ∧
+      S.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked ∧
+      S.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease ∧
+      S.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.theoremBoundaryHeld := by
   rfl
 
 theorem exact_gap_3320_structural_surface_realization_ready :
@@ -97,15 +104,15 @@ theorem exact_gap_3320_structural_surface_value :
   exact exact_gap_3320_residual_resolution_plan_value
 
 theorem exact_gap_3320_structural_surface_release_held :
-    exactGap3320StructuralSurfaceRealization.finalReleaseHeld := by
+    exactGap3320StructuralSurfaceRealization.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.finalReleaseHeld := by
   exact exact_gap_3320_residual_resolution_plan_release_held
 
 theorem exact_gap_3320_structural_surface_public_boundary_locked :
-    exactGap3320StructuralSurfaceRealization.publicBoundaryLocked := by
+    exactGap3320StructuralSurfaceRealization.plan.residualMap.releaseReadiness.auditClosure.exactGap.sandwich.r1r7Completion.publicBoundaryLocked := by
   exact exact_gap_3320_residual_resolution_plan_public_boundary_locked
 
 theorem exact_gap_3320_structural_surface_no_auto_release :
-    exactGap3320StructuralSurfaceRealization.noAutoRelease := by
+    exactGap3320StructuralSurfaceRealization.plan.residualMap.releaseReadiness.auditClosure.publicBoundary.exactGapDoesNotOpenFinalRelease := by
   exact exact_gap_3320_residual_resolution_plan_no_auto_release
 
 theorem exact_gap_3320_structural_surface_readiness_realized :
