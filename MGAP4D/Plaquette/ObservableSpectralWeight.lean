@@ -31,13 +31,18 @@ structure ObservableSpectralWeightCertificate where
   spectralWeightVisible : Prop
   theoremBoundaryHeld : Prop
 
+/-- Readiness is a proposition-level checklist.  Proof-carrying fields are
+re-expanded to their underlying propositions, rather than being reused as proof
+terms inside the `∧` chain. -/
 def ObservableSpectralWeightCertificate.ready
     (C : ObservableSpectralWeightCertificate) : Prop :=
-  C.observableIsApg ∧ C.observableCentered ∧ C.observableCompactSupport ∧
-  C.massWitnessIsRhoApg3320 ∧ C.massWitnessObservableMatches ∧ C.valueIs3320 ∧
-  C.massWitnessValueMatches ∧ C.positiveMass ∧ C.sectorSeparationReady ∧
-  C.witnessSectorIsOrthogonal ∧ C.witnessNotVacuum ∧ C.spectralWeightVisible ∧
-  C.theoremBoundaryHeld
+  C.observable = A_pg ∧ C.observable.centered = true ∧
+  C.observable.smearing.compactSupport = true ∧ C.massWitness = rho_Apg_3320_positive ∧
+  C.massWitness.observable = C.observable ∧ C.value = 33 / 20 ∧
+  C.massWitness.value = C.value ∧ C.massWitness.positiveMass = true ∧
+  C.sectorSeparation.ready ∧ C.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+  C.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+  C.spectralWeightVisible ∧ C.theoremBoundaryHeld
 
 def observableSpectralWeight3320Certificate : ObservableSpectralWeightCertificate :=
   { observable := A_pg
@@ -60,11 +65,13 @@ def observableSpectralWeight3320Certificate : ObservableSpectralWeightCertificat
 
 theorem observable_spectral_weight_certificate_pack
     (C : ObservableSpectralWeightCertificate) :
-    C.ready ↔ C.observableIsApg ∧ C.observableCentered ∧ C.observableCompactSupport ∧
-      C.massWitnessIsRhoApg3320 ∧ C.massWitnessObservableMatches ∧ C.valueIs3320 ∧
-      C.massWitnessValueMatches ∧ C.positiveMass ∧ C.sectorSeparationReady ∧
-      C.witnessSectorIsOrthogonal ∧ C.witnessNotVacuum ∧ C.spectralWeightVisible ∧
-      C.theoremBoundaryHeld := by
+    C.ready ↔ C.observable = A_pg ∧ C.observable.centered = true ∧
+      C.observable.smearing.compactSupport = true ∧ C.massWitness = rho_Apg_3320_positive ∧
+      C.massWitness.observable = C.observable ∧ C.value = 33 / 20 ∧
+      C.massWitness.value = C.value ∧ C.massWitness.positiveMass = true ∧
+      C.sectorSeparation.ready ∧ C.sectorSeparation.witnessSector = Spectral.SpectralSector.orthogonal ∧
+      C.sectorSeparation.witnessSector ≠ Spectral.SpectralSector.vacuum ∧
+      C.spectralWeightVisible ∧ C.theoremBoundaryHeld := by
   rfl
 
 theorem observable_spectral_weight_3320_certificate_ready :
