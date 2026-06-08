@@ -25,19 +25,25 @@ structure LowerBoundTighteningSegmentSelection where
 def LowerBoundTighteningSegmentSelection.ready
     (S : LowerBoundTighteningSegmentSelection) : Prop :=
   S.r3TighteningClosureGreen ∧ S.lowerBoundHardeningPassVisible ∧
-  S.selectedIsR4LowerBound ∧ S.tighteningOnly ∧
-  S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
+  S.selectedSegment = LowerBoundTighteningSegment.r4LowerBoundObligation ∧
+  S.tighteningOnly ∧ S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
   S.theoremCompletionNotClaimed ∧ S.downstreamR5R7NotUnlocked ∧
   S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld
 
 theorem lower_bound_tightening_segment_selection_pack
     (S : LowerBoundTighteningSegmentSelection) :
     S.ready ↔ S.r3TighteningClosureGreen ∧ S.lowerBoundHardeningPassVisible ∧
-      S.selectedIsR4LowerBound ∧ S.tighteningOnly ∧
-      S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
+      S.selectedSegment = LowerBoundTighteningSegment.r4LowerBoundObligation ∧
+      S.tighteningOnly ∧ S.mainPreMathlib ∧ S.mathlibMainAdoptionHeld ∧
       S.theoremCompletionNotClaimed ∧ S.downstreamR5R7NotUnlocked ∧
       S.finalGapReleaseNotUnlocked ∧ S.publicBoundaryHeld := by
   rfl
+
+/-- The selected segment equality is still available from the stored certificate. -/
+theorem lower_bound_tightening_segment_selection_selected_eq
+    (S : LowerBoundTighteningSegmentSelection) :
+    S.selectedSegment = LowerBoundTighteningSegment.r4LowerBoundObligation := by
+  exact S.selectedIsR4LowerBound
 
 end Theorem
 end R4
