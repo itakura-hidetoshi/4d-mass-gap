@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Audit Yang--Mills Hamiltonian spectral derivation anchors.
+"""Audit Yang--Mills Hamiltonian spectral-value alignment anchors.
 
 This is a syntactic/contract audit. Lean kernel checking remains `lake build`.
-The audit ensures the spectral derivation surface is present, imported,
-documented, and boundary-preserving.
+The audit ensures the upstream spectral surface is present, imported,
+documented, boundary-preserving, and no longer advertises a pre-R6 derivation of
+`33/20`.
 """
 
 from __future__ import annotations
@@ -35,18 +36,19 @@ REQUIRED_LEAN_ANCHORS = (
     "rayleighLowerBoundReady",
     "rayleighAttainmentReady",
     "positiveSpectralMassReady",
-    "spectralInfimumValue_eq_3320",
-    "attainedSpectralValue_eq_3320",
-    "observableSpectralAtomValue_eq_3320",
-    "derivedHamiltonianSpectralValue_eq_3320",
+    "spectralInfimumValue",
+    "attainedSpectralValue",
+    "observableSpectralAtomValue",
+    "derivedHamiltonianSpectralValue",
+    "infimum_eq_derived",
+    "attainment_eq_derived",
+    "atom_eq_derived",
     "exactNormalizedGapDerivedFromSpectrum",
     "yang_mills_hamiltonian_spectral_derivation_3320_ready",
-    "yang_mills_hamiltonian_spectral_infimum_eq_3320",
-    "yang_mills_hamiltonian_spectral_attainment_eq_3320",
-    "yang_mills_hamiltonian_observable_atom_eq_3320",
-    "yang_mills_hamiltonian_spectral_analysis_derives_3320",
+    "yang_mills_hamiltonian_spectral_infimum_eq_derived",
+    "yang_mills_hamiltonian_spectral_attainment_eq_derived",
+    "yang_mills_hamiltonian_observable_atom_eq_derived",
     "yang_mills_hamiltonian_exact_gap_eq_spectral_value",
-    "yang_mills_hamiltonian_spectral_derivation_exact_gap_value",
     "yang_mills_hamiltonian_spectral_derivation_positive_mass",
     "yang_mills_hamiltonian_spectral_derivation_nonzero_mass",
     "yang_mills_hamiltonian_spectral_derivation_public_boundary_held",
@@ -57,13 +59,28 @@ REQUIRED_SPECTRAL_CHAIN_ANCHORS = (
     "rayleighLowerBoundRealSurface.ready",
     "rayleighAttainmentRealSurface.ready",
     "spectralMassRealSurface.ready",
+    "D.spectralInfimumValue = D.derivedHamiltonianSpectralValue",
+    "D.attainedSpectralValue = D.derivedHamiltonianSpectralValue",
+    "D.observableSpectralAtomValue = D.derivedHamiltonianSpectralValue",
+    "exactGapValueReal = D.derivedHamiltonianSpectralValue",
+    "0 < spectralMassRealSurface.mass",
+    "spectralMassRealSurface.mass ≠ 0",
+)
+
+FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS = (
+    "spectralInfimumValue_eq_3320",
+    "attainedSpectralValue_eq_3320",
+    "observableSpectralAtomValue_eq_3320",
+    "derivedHamiltonianSpectralValue_eq_3320",
+    "yang_mills_hamiltonian_spectral_infimum_eq_3320",
+    "yang_mills_hamiltonian_spectral_attainment_eq_3320",
+    "yang_mills_hamiltonian_observable_atom_eq_3320",
+    "yang_mills_hamiltonian_spectral_analysis_derives_3320",
+    "yang_mills_hamiltonian_spectral_derivation_exact_gap_value",
     "D.spectralInfimumValue = (33 : ℝ) / 20",
     "D.attainedSpectralValue = (33 : ℝ) / 20",
     "D.observableSpectralAtomValue = (33 : ℝ) / 20",
     "D.derivedHamiltonianSpectralValue = (33 : ℝ) / 20",
-    "exactGapValueReal = D.derivedHamiltonianSpectralValue",
-    "0 < spectralMassRealSurface.mass",
-    "spectralMassRealSurface.mass ≠ 0",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -71,20 +88,23 @@ REQUIRED_ROOT_IMPORTS = (
 )
 
 REQUIRED_DOC_ANCHORS = (
-    "Yang--Mills Hamiltonian spectral derivation of 33/20",
-    "Rayleigh lower-bound surface",
-    "Rayleigh attainment surface",
-    "positive spectral-mass observable surface",
-    "derived Hamiltonian spectral value = 33/20",
-    "yang_mills_hamiltonian_spectral_derivation_exact_gap_value",
+    "Yang--Mills Hamiltonian spectral value alignment before R6",
+    "no upstream 33/20 claim",
+    "R6 exact atom layer",
+    "spectral infimum value = derived Hamiltonian spectral value",
+    "attained spectral value = derived Hamiltonian spectral value",
+    "observable spectral atom value = derived Hamiltonian spectral value",
+    "yang_mills_hamiltonian_spectral_infimum_eq_derived",
+    "yang_mills_hamiltonian_spectral_attainment_eq_derived",
+    "yang_mills_hamiltonian_observable_atom_eq_derived",
+    "yang_mills_hamiltonian_exact_gap_eq_spectral_value",
     "yang_mills_hamiltonian_spectral_derivation_public_boundary_held",
-    "Delta_phys(E0) = E0 * (33/20)",
 )
 
 REQUIRED_CHECK_ANCHORS = (
-    "audit Yang-Mills Hamiltonian spectral derivation of 33/20",
+    "audit Yang-Mills Hamiltonian spectral value alignment before R6",
     "scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py",
-    "build Yang-Mills Hamiltonian spectral derivation of 33/20",
+    "build Yang-Mills Hamiltonian spectral value alignment before R6",
     "lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320",
 )
 
@@ -135,6 +155,12 @@ def require_all(label: str, text: str, anchors: tuple[str, ...]) -> None:
         raise AssertionError(f"{label} missing anchors: {', '.join(missing)}")
 
 
+def forbid_all(label: str, text: str, anchors: tuple[str, ...]) -> None:
+    present = [anchor for anchor in anchors if anchor in text]
+    if present:
+        raise AssertionError(f"{label} forbidden stale anchors present: {', '.join(present)}")
+
+
 def main() -> int:
     lean_text = require_file(LEAN_PATH)
     lean_without_comments = strip_lean_comments(lean_text)
@@ -147,6 +173,7 @@ def main() -> int:
     require_all("Lean imports", lean_without_comments, REQUIRED_IMPORTS)
     require_all("Lean anchors", lean_without_comments, REQUIRED_LEAN_ANCHORS)
     require_all("spectral chain anchors", lean_without_comments, REQUIRED_SPECTRAL_CHAIN_ANCHORS)
+    forbid_all("Lean upstream numeric anchors", lean_without_comments, FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS)
 
     root_text = require_file(ROOT_IMPORT_PATH)
     require_all("root import", root_text, REQUIRED_ROOT_IMPORTS)
@@ -157,13 +184,14 @@ def main() -> int:
     check_text = require_file(CHECK_PATH)
     require_all("check.sh", check_text, REQUIRED_CHECK_ANCHORS)
 
-    print("Yang-Mills Hamiltonian spectral derivation 33/20 audit")
+    print("Yang-Mills Hamiltonian spectral value alignment before R6 audit")
     print(f"Lean anchors audited: {len(REQUIRED_LEAN_ANCHORS)}")
     print(f"Spectral-chain anchors audited: {len(REQUIRED_SPECTRAL_CHAIN_ANCHORS)}")
+    print(f"Forbidden stale upstream numeric anchors audited: {len(FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS)}")
     print(f"Root import audited: {ROOT_IMPORT_PATH}")
     print(f"Documentation audited: {DOC_PATH}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
-    print("Yang-Mills Hamiltonian spectral derivation 33/20 audit passed")
+    print("Yang-Mills Hamiltonian spectral value alignment before R6 audit passed")
     return 0
 
 
