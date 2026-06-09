@@ -1,36 +1,63 @@
 # Proof placeholder inventory
 
 This document separates proof-bearing mathematical theorems from review markers,
-prototype witnesses, receipts, and readiness packets.  It is intended for
+prototype witnesses, receipts, and readiness packets. It is intended for
 external reviewers who need to know when a Lean object closes a mathematical
-obligation and when it only records a boundary, interface, or audit status.
+obligation and when it records an undischarged proof debt.
 
 ## Reading rule
 
-A Lean declaration in this repository should not be treated as a mathematical
+A Lean declaration in this repository must not be accepted as a mathematical
 replacement for an analytic theorem merely because it is a theorem, a `ready`
-anchor, or a receipt.  The review question is:
+anchor, a receipt, or a terminal-looking packet. The review question is:
 
 ```text
-Does the declaration prove the analytic property directly, or does it only
-register that a route, interface, witness slot, or boundary marker is available?
+Does the declaration prove the analytic property directly, or does it leave an
+open proof debt that must be discharged, replaced, or explicitly superseded?
 ```
+
+## Hard correction: PUnit / True / StillOpen
+
+`PUnit`, `True`, and `StillOpen` are not just weak evidence. They are
+**undischarged proof-debt markers** unless a nearby or downstream typed theorem
+explicitly replaces or supersedes them.
+
+```text
+PUnit
+  = placeholder carrier / target-API shell
+  = requires replacement by a typed mathematical object
+  = cannot close a public analytic theorem
+
+True
+  = trivial marker / visibility flag / non-promotion flag
+  = requires a separate substantive theorem field for any mathematical claim
+  = cannot discharge an analytic lemma by itself
+
+StillOpen
+  = active or historical open-obligation marker
+  = requires explicit status: active, historical, or superseded-by <theorem>
+  = cannot coexist with a final closure claim unless the supersession route is cited
+```
+
+For external review, any public route that depends essentially on these markers
+without a typed replacement theorem must be classified as **not yet discharged**.
 
 ## Placeholder classes
 
-| Class | Typical surface | Mathematical replacement strength | Reviewer action |
-|---|---|---:|---|
-| `PUnit` carrier | Interface / skeleton / target API placeholder | 0/5 | Treat as structural placeholder only. Demand replacement by a typed mathematical object before accepting theorem closure. |
-| `True` field or trivial proof | Boundary marker, non-promotion marker, visibility marker | 0/5 by itself | Accept only as an audit flag. It must never replace a substantive analytic lemma. |
-| `concrete...StillOpen` / `...StillOpen` | Historical open-boundary marker | 0/5 | Read as an explicit non-closure marker, unless superseded by a newer terminal receipt that is separately cited. |
-| `theoremWitnessOnly` | Witness slot stating a theorem-body source exists | 1/5 | Treat as provenance or pointer. Inspect the upstream theorem body before accepting the claim. |
-| `receipt` / `packet` / `manifest` | Audit ledger and review chain | 1/5 | Treat as governance/provenance evidence. It may bind review order, but does not by itself close analysis. |
-| `ready` | Readiness predicate or assembled surface | 1-3/5 | Determine payload: if all fields are substantive theorem fields, it may be strong; if it includes `True`, `PUnit`, or witness-only slots, it remains a readiness record. |
-| actual theorem over Mathlib object | e.g. equality, closedness, self-adjointness, positivity, countable additivity, PVM law | 4-5/5 | Review as a mathematical proof, subject to assumptions and definitions. |
+| Class | Typical surface | Replacement status | Reviewer action |
+|---|---|---|---|
+| `PUnit` carrier | Interface / skeleton / target API placeholder | Open proof debt | Demand replacement by a typed mathematical object before accepting theorem closure. |
+| `True` field or trivial proof | Boundary marker, non-promotion marker, visibility marker | Open proof debt for any analytic claim | Accept only as metadata. Require a separate substantive theorem for the claim. |
+| `concrete...StillOpen` / `...StillOpen` | Active or historical open-boundary marker | Open proof debt until status-resolved | Require explicit classification: active, historical, or superseded with theorem citation. |
+| `theoremWitnessOnly` | Witness slot stating a theorem-body source exists | Provenance only | Inspect the upstream theorem body before accepting the claim. |
+| `receipt` / `packet` / `manifest` | Audit ledger and review chain | Governance/provenance only | It may bind review order, but does not by itself close analysis. |
+| `ready` | Readiness predicate or assembled surface | Payload-dependent | If it includes `True`, `PUnit`, `StillOpen`, or witness-only slots, classify remaining proof debt. |
+| actual theorem over Mathlib object | Equality, closedness, self-adjointness, positivity, countable additivity, PVM law | Candidate mathematical proof | Review assumptions, definitions, and dependency chain. |
 
 ## Current high-risk tokens
 
-The following tokens should trigger review rather than automatic acceptance:
+The following tokens should trigger review and proof-debt classification rather
+than automatic acceptance:
 
 ```text
 PUnit
@@ -56,50 +83,68 @@ Manifest
 ## Current repository observations
 
 Search surfaces show `PUnit` in R4 target APIs, projection shells, and several
-Mathlib analytic skeleton/interface files.  These should be read as placeholder
-or target-API carriers unless the same file, or a downstream file, replaces them
-with a typed analytic object.
+Mathlib analytic skeleton/interface files. These are open proof-debt carriers
+until a typed analytic object replaces them in the same lane or in a cited
+downstream lane.
+
+Search surfaces show `True` in many boundary and readiness surfaces. These are
+acceptable as visibility flags only. They do not discharge analytic content
+unless paired with a separate substantive theorem field.
 
 Search surfaces show `theoremWitnessOnly` near the continuum Hamiltonian and
-Yang-Mills spectral derivation route.  These should be read as witness/provenance
-slots until the upstream theorem-body route is inspected.
+Yang-Mills spectral derivation route. These are witness/provenance slots until
+the upstream theorem-body route is inspected.
 
 Search surfaces show `StillOpen` in historical R4 and exact-gap separation
-contexts.  These identifiers are useful because they explicitly preserve a
-non-closure boundary, but their presence must be reconciled with any later
-terminal route that claims a superseding closure.
+contexts. Each occurrence must be classified as active, historical, or
+superseded. A final closure claim may cite a `StillOpen` identifier only when it
+also cites the superseding route.
 
 ## Replacement hierarchy
 
 Use this hierarchy when reviewing a claim:
 
 ```text
-Level 0: PUnit / True / StillOpen marker
+Level -1: PUnit / True / StillOpen used as theorem closure
+          => invalid as closure; proof debt remains
+Level 0: PUnit / True / StillOpen visible and classified
+         => open obligation marker
 Level 1: receipt / packet / manifest / theoremWitnessOnly
+         => provenance or review ordering only
 Level 2: ready surface that assembles mixed Level 0-1 and theorem fields
+         => readiness record with residual proof debt
 Level 3: ready surface whose fields are mostly substantive theorem anchors
+         => candidate route, still dependency-audited
 Level 4: theorem proving a typed Mathlib property for the concrete object
+         => mathematical proof candidate
 Level 5: theorem proving the final target property and linking it to the public route
+         => final-route proof candidate subject to external review
 ```
 
 ## External-review checklist
 
 For each public theorem route, record:
 
-1. Which declarations are Level 0 markers.
-2. Which declarations are Level 1 provenance or receipt objects.
-3. Which `ready` declarations are pure assembly and which contain substantive theorem payloads.
-4. Which typed Mathlib properties are actually proven.
-5. Which final claims still depend on a witness slot or terminal receipt.
-6. Whether a `StillOpen` marker is historical, active, or explicitly superseded.
+1. Which declarations contain `PUnit`, `True`, or `StillOpen`.
+2. Whether each such declaration is active, historical, or superseded.
+3. Which typed theorem replaces each placeholder marker.
+4. Which declarations are provenance-only: `receipt`, `packet`, `manifest`, or `theoremWitnessOnly`.
+5. Which `ready` declarations are pure assembly and which contain substantive theorem payloads.
+6. Which typed Mathlib properties are actually proven.
+7. Which final claims still depend on a witness slot, terminal receipt, or placeholder marker.
 
 ## Current R2 / R3 interpretation
 
 The current R2 infinite-dimensional completed `ℓ²` diagonal lane has substantive
-closedness and unboundedness surfaces.  Its R2-to-R3 and R2-to-spectral-input
+closedness and unboundedness surfaces. Its R2-to-R3 and R2-to-spectral-input
 handoffs are readiness and boundary objects, not shortcuts from R2 closedness to
 full spectral theorem, PVM construction, exact atom `33/20`, or positive spectral
 weight.
+
+If any R2/R3 route uses `PUnit`, `True`, or `StillOpen` as a mathematical closure
+of symmetry, adjoint-domain agreement, self-adjointness, spectral theorem, PVM,
+or positive spectral weight, that route remains **not discharged** until a typed
+replacement theorem is cited.
 
 ## Audit command
 
@@ -109,7 +154,6 @@ Run the companion audit script to produce a grep-style inventory:
 python3 scripts/audit_proof_placeholder_inventory.py
 ```
 
-This script is informational by default.  It should fail only when the inventory
-contract itself is broken, not merely because placeholders exist.  Placeholders
-are allowed when they are visible, classified, and not misrepresented as final
-analytic theorems.
+This script is informational by default, but its output must be treated as a
+proof-debt map. Placeholders are allowed only when they are visible, classified,
+and not represented as final analytic theorem closures.
