@@ -24,6 +24,13 @@ Current Lean anchor:
 MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean
 ```
 
+Current handoff anchors:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteLaneSpectralInputHandoff.lean
+```
+
 Human-readable note:
 
 ```text
@@ -37,6 +44,9 @@ concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready
 concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_closed_operator
 concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_unbounded
 concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_graph_promotions
+hard_physical_residual_ledger_r2_infinite_lane_r3_input_handoff_ready
+concrete_analytic_spine_l2_r2_infinite_lane_spectral_input_handoff_ready
+concrete_analytic_spine_l2_r2_infinite_lane_spectral_input_handoff_boundaries_visible
 ```
 
 Review reading:
@@ -61,7 +71,18 @@ ConcreteL2R1HilbertCarrier
   -> completed diagonal graph-defined closed operator
   -> completed Hilbert operator-norm unboundedness
   -> self-adjointness concrete preconditions
+  -> R2InfiniteLaneR3InputHandoff
+  -> R2InfiniteLaneSpectralInputHandoff
   -> R3 self-adjointness lane
+```
+
+Boundary reading:
+
+```text
+R2 gives completed diagonal closed-operator and unboundedness surfaces.
+R2-to-R3 handoff consumes the current R2 body without shortcutting downstream obligations.
+R2-to-spectral-input handoff connects the current R2 body to the actual LinearPMap self-adjoint spectral input surface.
+Full spectral theorem, PVM construction, exact atom 33/20, and positive spectral-weight construction remain separately reviewable downstream surfaces.
 ```
 
 ## Exact-gap layer separation
@@ -227,11 +248,3 @@ docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
 ```
-
-## Boundary
-
-Older open PRs that describe R2 only through old local taxonomy are historical unless explicitly rebased onto the current R2 infinite-dimensional completed `ℓ²` diagonal operator lane.
-
-Older open PRs that describe R3/R4/R5/R6/R7 as downstream or open are historical. They should not be used as the current proof frontier unless they are rebased and rewritten against the current R1--R7 receipt chain.
-
-The current chain is still a receipt / handoff / audit surface. It preserves the existing public final-release boundary and does not claim external mathematical consensus.
