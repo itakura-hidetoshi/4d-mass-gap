@@ -30,7 +30,10 @@ def ExactGapAbstractTheoremBodyLayerReady : Prop :=
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
 
-/-- Carrier layer: the normalized real carrier and its arithmetic checks. -/
+/-- Carrier layer: the normalized real carrier and its arithmetic checks.
+
+This legacy layer is isolated from the upstream spectral receipt layer; it should
+not be read as the source of the R6 exact atom value. -/
 def ExactGapCarrierLayerReady : Prop :=
   exactGapValueReal = (33 : ℝ) / 20 ∧
   0 < exactGapValueReal
@@ -57,15 +60,12 @@ def ExactGapContinuumWitnessProvenanceLayerReady : Prop :=
 This layer records the current spectral receipt: the Yang--Mills Hamiltonian
 spectral surface, the identification of the normalized carrier with the surface's
 `derivedHamiltonianSpectralValue`, and the positive/nonzero spectral-mass facts.
-It is intentionally not named as an independent construction of a spectral value
-separate from the carrier; that stronger analytic construction would need its own
-future theorem-body lane. -/
+It no longer states that this upstream receipt derives the concrete value
+`33/20`; that numeric claim is reserved for the R6 exact-atom layer. -/
 def ExactGapSpectralReceiptLayerReady : Prop :=
   yangMillsHamiltonianSpectralDerivation3320.ready ∧
   exactGapValueReal =
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
-  yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-    (33 : ℝ) / 20 ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
   ExactGapContinuumWitnessProvenanceLayerReady
@@ -123,7 +123,6 @@ theorem exact_gap_spectral_receipt_layer_ready :
     ExactGapSpectralReceiptLayerReady := by
   exact And.intro yang_mills_hamiltonian_spectral_derivation_3320_ready <|
     And.intro yang_mills_hamiltonian_exact_gap_eq_spectral_value <|
-    And.intro yang_mills_hamiltonian_spectral_analysis_derives_3320 <|
     And.intro yang_mills_hamiltonian_spectral_derivation_positive_mass <|
     And.intro yang_mills_hamiltonian_spectral_derivation_nonzero_mass
       exact_gap_continuum_witness_provenance_layer_ready
