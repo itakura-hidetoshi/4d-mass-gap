@@ -18,10 +18,20 @@ closure:
 * compact plaquette construction body,
 * operator-measure compatibility body.
 
+Layer separation note: this file historically contains both mathematical theorem
+fields and engineering/review-state markers.  The theorem-body fields above and
+the observable-weight fields below are mathematical proof-facing data.  The
+`allAbstractTheoremBodiesClosed`, `concrete...StillOpen`, `finalReleaseHeld`, and
+`publicBoundaryHeld` fields are state markers / boundary markers, not additional
+mathematical theorem bodies.  External reviewers should inspect
+`ExactGapLayerSeparation.lean` for the explicit separation between theorem-body,
+carrier, spectral receipt, and engineering-marker layers.
+
 It is still not the final public theorem release: the concrete infinite-dimensional
 Hilbert realization, concrete unbounded operator realization, concrete spectral
 measure/PVM realization, concrete lattice-gauge plaquette construction, and
-concrete operator-measure realization remain visible boundaries. -/
+concrete operator-measure realization remain visible boundaries in this older
+abstract closure record. -/
 structure ExactGapTheoremBodyClosure where
   rayleighQuotientBodyReady : hilbertRayleighQuotientReviewSurface.ready
   selfAdjointHPhysBodyReady : selfAdjointHPhysTheoremReviewSurface.ready
@@ -46,14 +56,24 @@ structure ExactGapTheoremBodyClosure where
       singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
+  /-- Review-state marker: the abstract theorem-body checklist has been closed
+  in this record.  This is not an additional mathematical theorem body. -/
   allAbstractTheoremBodiesClosed : Prop
+  /-- Review-state marker for the concrete Hilbert realization boundary. -/
   concreteHilbertRealizationStillOpen : Prop
+  /-- Review-state marker for the concrete unbounded-operator boundary. -/
   concreteUnboundedOperatorStillOpen : Prop
+  /-- Review-state marker for the concrete spectral-measure boundary. -/
   concreteSpectralMeasureStillOpen : Prop
+  /-- Review-state marker for the concrete PVM boundary. -/
   concretePVMStillOpen : Prop
+  /-- Review-state marker for the concrete lattice-gauge plaquette boundary. -/
   concreteLatticeGaugePlaquetteStillOpen : Prop
+  /-- Review-state marker for the concrete operator-measure boundary. -/
   concreteOperatorMeasureRealizationStillOpen : Prop
+  /-- Public-release boundary marker. -/
   finalReleaseHeld : Prop
+  /-- Public-audit boundary marker. -/
   publicBoundaryHeld : Prop
 
 /-- Ready predicate for the exact-gap theorem-body closure. -/
