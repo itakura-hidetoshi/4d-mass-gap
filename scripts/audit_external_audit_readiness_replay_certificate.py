@@ -28,7 +28,7 @@ REQUIRED_CERTIFICATE_ANCHORS = (
     "declaration_like_lines: 2663",
     "total_lines: 27611",
     "MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate",
-    "exactGapValueReal = (33 : ℝ) / 20",
+    "exactGapValueReal = exactGapValueReal",
     "external_audit_readiness_gate_ready",
 )
 
@@ -51,12 +51,10 @@ REQUIRED_GATE_THEOREMS = (
 
 REQUIRED_SPECTRAL_REPLAY_ANCHORS = (
     "MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320",
-    "yang_mills_hamiltonian_spectral_infimum_eq_3320",
-    "yang_mills_hamiltonian_spectral_attainment_eq_3320",
-    "yang_mills_hamiltonian_observable_atom_eq_3320",
-    "yang_mills_hamiltonian_spectral_analysis_derives_3320",
+    "yang_mills_hamiltonian_spectral_infimum_eq_derived",
+    "yang_mills_hamiltonian_spectral_attainment_eq_derived",
+    "yang_mills_hamiltonian_observable_atom_eq_derived",
     "yang_mills_hamiltonian_exact_gap_eq_spectral_value",
-    "yang_mills_hamiltonian_spectral_derivation_exact_gap_value",
     "yang_mills_hamiltonian_spectral_derivation_positive_mass",
     "yang_mills_hamiltonian_spectral_derivation_nonzero_mass",
     "Physical4DYMContinuumHamiltonianSpectralCompleteDerivationReady",
@@ -73,20 +71,21 @@ REQUIRED_SPECTRAL_REPLAY_ANCHORS = (
     "external_audit_readiness_complete_spectral_mass_gap_exact_value",
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
-    "spectral infimum = 33/20",
-    "spectral attainment = 33/20",
-    "observable spectral atom = 33/20",
+    "spectral infimum = derived Hamiltonian spectral value",
+    "spectral attainment = derived Hamiltonian spectral value",
+    "observable spectral atom = derived Hamiltonian spectral value",
     "positive nonzero spectral mass",
+    "no upstream 33/20 claim",
 )
 
 REQUIRED_PVM_REPLAY_RECEIPT_ANCHORS = (
     "PVM / observable spectral atom replay receipt",
     "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
     "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
-    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
     "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
-    "observable spectral atom = 33/20",
+    "observable spectral atom = derived Hamiltonian spectral value",
     "PVM spectral mass > 0",
     "PVM spectral mass != 0",
     "PVM / observable spectral atom public audit projection",
@@ -111,9 +110,22 @@ REQUIRED_GATE_SPECTRAL_THEOREMS = (
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
     "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
     "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
-    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
     "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
+)
+
+FORBIDDEN_STALE_REPLAY_ANCHORS = (
+    "yang_mills_hamiltonian_spectral_infimum_eq_3320",
+    "yang_mills_hamiltonian_spectral_attainment_eq_3320",
+    "yang_mills_hamiltonian_observable_atom_eq_3320",
+    "yang_mills_hamiltonian_spectral_analysis_derives_3320",
+    "yang_mills_hamiltonian_spectral_derivation_exact_gap_value",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "spectral infimum = 33/20",
+    "spectral attainment = 33/20",
+    "observable spectral atom = 33/20",
+    "exactGapValueReal = 33/20",
 )
 
 REQUIRED_BOUNDARY_PHRASES = (
@@ -122,6 +134,7 @@ REQUIRED_BOUNDARY_PHRASES = (
     "final theorem release opened",
     "future residuals impossible",
     "public theorem boundary removed",
+    "33/20 was derived upstream of R6",
     "Lean semantics changed: no",
     "External consensus claimed: no",
     "External audit completed: no",
@@ -144,6 +157,10 @@ def read(path: Path) -> str:
 
 def require_all(text: str, anchors: tuple[str, ...], label: str, path: Path) -> list[str]:
     return [f"missing {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor not in text]
+
+
+def forbid_all(text: str, anchors: tuple[str, ...], label: str, path: Path) -> list[str]:
+    return [f"forbidden stale {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor in text]
 
 
 def main() -> None:
@@ -173,10 +190,12 @@ def main() -> None:
     failures.extend(require_all(doc, REQUIRED_PVM_REPLAY_RECEIPT_ANCHORS, "pvm-replay-receipt", DOC_PATH))
     failures.extend(require_all(doc, REQUIRED_SPECTRAL_CHECK_ROUTE_ANCHORS, "spectral-check-route", DOC_PATH))
     failures.extend(require_all(doc, REQUIRED_BOUNDARY_PHRASES, "boundary", DOC_PATH))
+    failures.extend(forbid_all(doc, FORBIDDEN_STALE_REPLAY_ANCHORS, "replay-certificate", DOC_PATH))
     failures.extend(require_all(check, REQUIRED_CHECK_ROUTE_ANCHORS, "check-route", CHECK_PATH))
     failures.extend(require_all(check, REQUIRED_SPECTRAL_CHECK_ROUTE_ANCHORS, "spectral-check-route", CHECK_PATH))
     failures.extend(require_all(gate, REQUIRED_GATE_THEOREMS, "gate-theorem", GATE_PATH))
     failures.extend(require_all(gate, REQUIRED_GATE_SPECTRAL_THEOREMS, "gate-spectral-theorem", GATE_PATH))
+    failures.extend(forbid_all(gate, FORBIDDEN_STALE_REPLAY_ANCHORS, "gate", GATE_PATH))
 
     print("External audit readiness replay certificate audit")
     print(f"Certificate anchors audited: {len(REQUIRED_CERTIFICATE_ANCHORS)}")
