@@ -1,4 +1,4 @@
-import MGAP4D.HardPhysicalResidualLedgerR6ExactAtomDischargedR7PositiveWeightClosure
+import MGAP4D.HardPhysicalResidualLedgerR4GenuinePVMLawComponentsToR7PositiveWeightBridge
 
 namespace MGAP4D
 
@@ -14,6 +14,10 @@ This index bundles the proof-carrying local discharges for:
 * R6 non-definitional exact atom `33/20`;
 * R7 positive spectral-weight witness.
 
+It also keeps the R4 genuine-PVM law receipts visible at the terminal R7 layer:
+countable additivity/operator-topology convergence and the no-shell-collapse
+boundary are indexed together with the positive-weight witness.
+
 It is an index/receipt layer only: it preserves final-release hold and public
 boundary lock. -/
 structure HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex where
@@ -27,6 +31,12 @@ structure HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex where
     hardPhysicalResidualLedgerR5PlaquetteObservableDischargedR6ExactAtomClosure3320.ready
   r7PositiveWeightClosureReady :
     hardPhysicalResidualLedgerR6ExactAtomDischargedR7PositiveWeightClosure3320.ready
+  r4LawComponentsToR7BridgeReady :
+    hardPhysicalResidualLedgerR4GenuinePVMLawComponentsToR7PositiveWeightBridge3320.ready
+  r4CountableAdditivityAtTerminal :
+    R4.Theorem.SpectralMeasurePVMActualBorelDiracZeroGenuineOperatorTopologyConvergenceTheorem
+  r4NoShellBoundaryAtTerminal :
+    R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
   exactValueEq3320 : MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
   exactValueMemAtom :
     MathlibAnalytic.exactGapValueReal ∈
@@ -52,6 +62,9 @@ def HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.ready
   hardPhysicalResidualLedgerR4GenuinePVMDischargedR5PlaquetteObservableClosure3320.ready ∧
   hardPhysicalResidualLedgerR5PlaquetteObservableDischargedR6ExactAtomClosure3320.ready ∧
   hardPhysicalResidualLedgerR6ExactAtomDischargedR7PositiveWeightClosure3320.ready ∧
+  hardPhysicalResidualLedgerR4GenuinePVMLawComponentsToR7PositiveWeightBridge3320.ready ∧
+  R4.Theorem.SpectralMeasurePVMActualBorelDiracZeroGenuineOperatorTopologyConvergenceTheorem ∧
+  R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary ∧
   MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
   MathlibAnalytic.exactGapValueReal ∈
     MathlibAnalytic.singletonObservableAtomTheoremTheoremData.atom ∧
@@ -81,6 +94,12 @@ def hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320 :
       hard_physical_residual_ledger_r5_plaquette_observable_discharged_r6_exact_atom_closure_3320_ready
     r7PositiveWeightClosureReady :=
       hard_physical_residual_ledger_r6_exact_atom_discharged_r7_positive_weight_closure_3320_ready
+    r4LawComponentsToR7BridgeReady :=
+      hard_physical_residual_ledger_r4_genuine_pvm_law_components_to_r7_positive_weight_bridge_3320_ready
+    r4CountableAdditivityAtTerminal :=
+      hard_physical_residual_ledger_r7_positive_weight_carries_r4_countable_additivity
+    r4NoShellBoundaryAtTerminal :=
+      hardPhysicalResidualLedgerR4GenuinePVMLawComponentsToR7PositiveWeightBridge3320.r4NoShellBoundaryVisibleAtR7
     exactValueEq3320 :=
       hard_physical_residual_ledger_r7_positive_weight_exact_value_eq_3320
     exactValueMemAtom :=
@@ -107,6 +126,9 @@ theorem hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r5PlaquetteObservableClosureReady,
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r6ExactAtomClosureReady,
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r7PositiveWeightClosureReady,
+    hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r4LawComponentsToR7BridgeReady,
+    hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r4CountableAdditivityAtTerminal,
+    hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r4NoShellBoundaryAtTerminal,
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.exactValueEq3320,
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.exactValueMemAtom,
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.positiveMassProof,
@@ -137,5 +159,14 @@ theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_we
   exact ⟨
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.exactValueEq3320,
     hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.positiveMassProof⟩
+
+/-- Projection: terminal discharge keeps R4 genuine-PVM countable additivity and
+no-shell-collapse boundary visible. -/
+theorem hard_physical_residual_ledger_r1_r7_terminal_carries_r4_genuine_pvm_laws :
+    R4.Theorem.SpectralMeasurePVMActualBorelDiracZeroGenuineOperatorTopologyConvergenceTheorem ∧
+      R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary := by
+  exact ⟨
+    hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r4CountableAdditivityAtTerminal,
+    hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320.r4NoShellBoundaryAtTerminal⟩
 
 end MGAP4D
