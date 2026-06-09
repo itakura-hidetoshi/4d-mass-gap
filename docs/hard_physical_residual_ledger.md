@@ -51,7 +51,7 @@ concrete_r1r7_residual_discharge_final_release_held
 concrete_r1r7_residual_discharge_public_boundary_locked
 ```
 
-The seven user-facing residual targets are now represented in that discharge spine in the same order as the required future spine:
+The seven user-facing residual targets are represented in that discharge spine in the same order as the required future spine:
 
 ```text
 ConcreteRealHilbertSpace
@@ -69,7 +69,7 @@ Interpretation:
 internal Lean discharge spine visible / theorem-obligation binding present / exact 33/20 and positive nonzero spectral-mass projections carried / final-release boundary held / public boundary locked
 ```
 
-The current main branch now also carries a Lean-side bridge from this ledger entry to the internal discharge spine:
+The current main branch carries a Lean-side bridge from this ledger entry to the internal discharge spine:
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerR1R7DischargeBridge.lean
@@ -98,7 +98,7 @@ hard_physical_residual_ledger_final_bundle_audit_map_no_auto_release
 hard_physical_residual_ledger_final_bundle_audit_map_nonpromotion_boundary
 ```
 
-The final-bundle audit map now has an explicit status manifest that keeps the open residual statuses adjacent to the carried exact-value and mass witnesses:
+The final-bundle audit map has an explicit status manifest:
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifest.lean
@@ -113,7 +113,7 @@ hard_physical_residual_ledger_final_bundle_status_manifest_no_auto_release
 hard_physical_residual_ledger_final_bundle_status_manifest_nonpromotion_boundary
 ```
 
-The final-bundle status manifest is now indexed by a stable chain-index layer:
+The final-bundle status manifest is indexed by a stable chain-index layer:
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex.lean
@@ -146,17 +146,23 @@ hard_physical_residual_ledger_r1_concrete_hilbert_closure_public_boundary_locked
 hard_physical_residual_ledger_r1_concrete_hilbert_closure_downstream_obligations_visible
 ```
 
-The R2 dense-domain operator substrate is now connected to the hard residual ledger by a dedicated closure bridge:
+The R2 dense-domain unbounded-operator substrate is connected to the hard residual ledger by a dedicated closure bridge:
 
 ```text
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenseDiagonalDomainUnboundedness.lean
+MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainUnboundednessSurfaceReady
+MathlibAnalytic.concreteL2R2DenseDomainOperatorUnboundednessQuantification
+MathlibAnalytic.concrete_l2_r2_dense_domain_operator_unboundedness_quantification
 MGAP4D/HardPhysicalResidualLedgerR2DenseDomainOperatorClosure.lean
 HardPhysicalResidualLedgerR2DenseDomainOperatorClosure
 hardPhysicalResidualLedgerR2DenseDomainOperatorClosure3320
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_3320_ready
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_linear_pmap_ready
+hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_surface_ready
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_dense_domain
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_eq_completed
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_closed
+hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_ready
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_final_release_held
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_public_boundary_locked
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obligations_visible
@@ -165,7 +171,7 @@ hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obliga
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, R1 concrete Hilbert closure bridge, and R2 dense-domain operator closure bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder R2 unboundedness quantification or R3--R7 Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, R1 concrete Hilbert closure bridge, and R2 dense-domain unbounded-operator closure bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder R3--R7 Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -212,7 +218,7 @@ A physical Hamiltonian H_phys defined on a dense domain D(H_phys) ⊂ H.
 Current status:
 
 ```text
-dense-domain LinearPMap discharged / closed graph carried / unboundedness quantification still pending
+dense-domain LinearPMap discharged / closed graph carried / unit-probe unboundedness quantified
 ```
 
 Closure condition now carried by Lean:
@@ -220,7 +226,8 @@ Closure condition now carried by Lean:
 ```text
 D(H_phys) is a concrete dense subspace or dense set;
 H_phys is represented as a Mathlib LinearPMap whose graph/domain is independent of a theorem statement;
-density is derived, not asserted by naming.
+density is derived, not asserted by naming;
+unit probes have norm one and their diagonal-action norm exceeds arbitrary real thresholds.
 ```
 
 Lean anchors:
@@ -231,16 +238,14 @@ MathlibAnalytic.concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_
 MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_dense_domain
 MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_eq_completed_graph_carrier
 MathlibAnalytic.concrete_l2_r2_dense_diagonal_domain_linear_pmap_isClosed
+MathlibAnalytic.concrete_analytic_spine_l2_r2_dense_diagonal_domain_unboundedness_surface_ready
+MathlibAnalytic.concrete_l2_r2_dense_domain_operator_unboundedness_quantification
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_linear_pmap_ready
+hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_surface_ready
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_dense_domain
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_eq_completed
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_closed
-```
-
-Remaining R2 hard point:
-
-```text
-The diagonal operator still needs an explicit unboundedness quantification/witness before the user-facing DenseDomainUnboundedHamiltonian target is fully closed.
+hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_ready
 ```
 
 ### R3. Self-adjointness proof
@@ -354,15 +359,14 @@ positivity is not merely stored as a Prop field in the spectral mass surface.
 The next concrete spine should proceed in this order:
 
 ```text
-DenseDomainUnboundedHamiltonian.unboundednessQuantification
-  -> SelfAdjointPhysicalHamiltonian
+SelfAdjointPhysicalHamiltonian
   -> ConcretePVMSpectralMeasure
   -> CompactCenteredPlaquetteObservable
   -> NondefinitionalSpectralAtom3320
   -> PositiveSpectralWeightDerivation3320
 ```
 
-The former first step, `ConcreteRealHilbertSpace`, is now carried by the R1 concrete Hilbert closure bridge and remains available as the substrate for R2. The dense-domain `LinearPMap` and closed graph portion of `DenseDomainUnboundedHamiltonian` is now carried by the R2 dense-domain operator closure bridge.
+The former first step, `ConcreteRealHilbertSpace`, is carried by the R1 concrete Hilbert closure bridge. The former second step, `DenseDomainUnboundedHamiltonian`, is now carried by the R2 dense-domain unbounded-operator closure bridge.
 
 ## Audit boundary
 
@@ -390,13 +394,13 @@ The hard physical residual ledger final-bundle status-manifest chain index provi
 
 The hard physical residual ledger R1 concrete Hilbert closure bridge discharges the Mathlib substrate portion of R1 while preserving R2--R7 downstream obligations, final-release hold, and public-boundary lock.
 
-The hard physical residual ledger R2 dense-domain operator closure bridge discharges the dense-domain `LinearPMap` and closed-graph portion of R2 while preserving the unboundedness quantification, R3 self-adjointness, R4 PVM, R5 observable, R6 non-definitional atom, and R7 positive-weight obligations.
+The hard physical residual ledger R2 dense-domain unbounded-operator closure bridge discharges the dense-domain `LinearPMap`, closed-graph, and unit-probe unboundedness portion of R2 while preserving R3 self-adjointness, R4 PVM, R5 observable, R6 non-definitional atom, and R7 positive-weight obligations.
 
 ## Current status
 
 ```text
 R1: Mathlib-substrate discharged / downstream physical integration pending
-R2: dense-domain LinearPMap discharged / unboundedness quantification pending
+R2: dense-domain unbounded operator discharged / downstream self-adjointness pending
 R3: open / self-adjointness-hardening required
 R4: open / PVM-construction required
 R5: open / observable-construction required
@@ -416,7 +420,7 @@ HardPhysicalResidualLedgerR1ConcreteHilbertClosure: installed / R1 concrete Hilb
 HardPhysicalResidualLedgerR2DenseDomainOperatorClosure: installed / R2 dense-domain operator closure bridge visible
 R1 Mathlib substrate: discharged and carried into ledger bridge
 R2 dense-domain LinearPMap: discharged and carried into ledger bridge
-R2 unboundedness quantification: visible as remaining hard point
+R2 unboundedness quantification: discharged and carried into ledger bridge
 R3--R7 downstream obligations: visible
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
