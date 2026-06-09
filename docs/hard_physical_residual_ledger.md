@@ -168,10 +168,27 @@ hard_physical_residual_ledger_r2_dense_domain_operator_closure_public_boundary_l
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obligations_visible
 ```
 
+The R3 self-adjointness lane now has a dedicated input bridge that consumes the closed R2 unbounded-operator bridge:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR3SelfAdjointInputBridge.lean
+HardPhysicalResidualLedgerR3SelfAdjointInputBridge
+hardPhysicalResidualLedgerR3SelfAdjointInputBridge3320
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_3320_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_closure_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_mathlib_interface_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_promotion_target_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_formal_graph_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_unboundedness_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_final_release_held
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_public_boundary_locked
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_downstream_obligations_visible
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, R1 concrete Hilbert closure bridge, and R2 dense-domain unbounded-operator closure bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder R3--R7 Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, R1 concrete Hilbert closure bridge, R2 dense-domain unbounded-operator closure bridge, and R3 self-adjointness input bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder R3--R7 Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -259,14 +276,36 @@ SelfAdjoint H_phys
 Current status:
 
 ```text
-self-adjointness certificate surface / bridge-adoption surface / internal discharge spine binding present
+R3 input bridge installed / R2 unbounded operator consumed / formal graph self-adjointness carried / Mathlib adjoint graph theorem still pending
 ```
 
-Required closure condition:
+Closure condition now carried by Lean:
+
+```text
+R3 input now includes the closed R2 dense-domain unbounded operator, the R3 Mathlib interface packet, the self-adjointness promotion target, and formal graph-level self-adjointness.
+```
+
+Required remaining closure condition:
 
 ```text
 symmetry, closedness or essential self-adjointness, and domain equality with the adjoint are derived using Mathlib-compatible operator notions;
-self-adjointness is not a field asserted inside a record.
+self-adjointness is not a field asserted inside a record;
+the Mathlib adjoint graph theorem identifies the concrete adjoint graph with the formal adjoint graph;
+the resulting concrete self-adjointness theorem is proved before any R4 spectral/PVM promotion.
+```
+
+Lean anchors:
+
+```text
+MathlibAnalytic.concreteAnalyticSpineHardResidualR3MathlibInterfacePacketReady
+MathlibAnalytic.concreteAnalyticSpineHardResidualR3SelfAdjointPromotionTargetReady
+MathlibAnalytic.concreteAnalyticSpineL2R4FormalGraphSelfAdjointnessReady
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_3320_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_closure_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_mathlib_interface_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_promotion_target_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_formal_graph_ready
+hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_unboundedness_ready
 ```
 
 ### R4. Concrete PVM / spectral measure construction
@@ -359,14 +398,15 @@ positivity is not merely stored as a Prop field in the spectral mass surface.
 The next concrete spine should proceed in this order:
 
 ```text
-SelfAdjointPhysicalHamiltonian
+SelfAdjointPhysicalHamiltonian.mathlibAdjointGraphTheorem
+  -> SelfAdjointPhysicalHamiltonian.concreteSelfAdjointTheorem
   -> ConcretePVMSpectralMeasure
   -> CompactCenteredPlaquetteObservable
   -> NondefinitionalSpectralAtom3320
   -> PositiveSpectralWeightDerivation3320
 ```
 
-The former first step, `ConcreteRealHilbertSpace`, is carried by the R1 concrete Hilbert closure bridge. The former second step, `DenseDomainUnboundedHamiltonian`, is now carried by the R2 dense-domain unbounded-operator closure bridge.
+The former first step, `ConcreteRealHilbertSpace`, is carried by the R1 concrete Hilbert closure bridge. The former second step, `DenseDomainUnboundedHamiltonian`, is now carried by the R2 dense-domain unbounded-operator closure bridge. The R3 self-adjointness input bridge is installed, but R3 remains open until the Mathlib adjoint graph theorem and concrete self-adjointness theorem are proved.
 
 ## Audit boundary
 
@@ -396,12 +436,14 @@ The hard physical residual ledger R1 concrete Hilbert closure bridge discharges 
 
 The hard physical residual ledger R2 dense-domain unbounded-operator closure bridge discharges the dense-domain `LinearPMap`, closed-graph, and unit-probe unboundedness portion of R2 while preserving R3 self-adjointness, R4 PVM, R5 observable, R6 non-definitional atom, and R7 positive-weight obligations.
 
+The hard physical residual ledger R3 self-adjointness input bridge consumes the closed R2 unbounded operator and carries the R3 Mathlib interface, promotion target, and formal graph-level self-adjointness while preserving the missing Mathlib adjoint graph theorem and concrete self-adjointness theorem as visible obligations.
+
 ## Current status
 
 ```text
 R1: Mathlib-substrate discharged / downstream physical integration pending
 R2: dense-domain unbounded operator discharged / downstream self-adjointness pending
-R3: open / self-adjointness-hardening required
+R3: input bridge installed / Mathlib adjoint graph theorem pending
 R4: open / PVM-construction required
 R5: open / observable-construction required
 R6: open / non-definitional exact-value derivation required
@@ -418,10 +460,14 @@ HardPhysicalResidualLedgerFinalBundleStatusManifest: installed / final-bundle st
 HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex: installed / final-bundle status-manifest chain index visible
 HardPhysicalResidualLedgerR1ConcreteHilbertClosure: installed / R1 concrete Hilbert closure bridge visible
 HardPhysicalResidualLedgerR2DenseDomainOperatorClosure: installed / R2 dense-domain operator closure bridge visible
+HardPhysicalResidualLedgerR3SelfAdjointInputBridge: installed / R3 self-adjointness input bridge visible
 R1 Mathlib substrate: discharged and carried into ledger bridge
 R2 dense-domain LinearPMap: discharged and carried into ledger bridge
 R2 unboundedness quantification: discharged and carried into ledger bridge
-R3--R7 downstream obligations: visible
+R3 input bridge: installed and consumes closed R2 unbounded operator
+R3 Mathlib adjoint graph theorem: visible as remaining hard point
+R3 concrete self-adjointness theorem: visible as remaining hard point
+R4--R7 downstream obligations: visible
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
 Final-release boundary: held
