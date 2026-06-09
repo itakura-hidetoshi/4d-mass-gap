@@ -3,6 +3,17 @@ import MGAP4D.MathlibAnalytic.PVMInterface
 namespace MGAP4D
 namespace MathlibAnalytic
 
+inductive ObservableAtomBoundaryMarker where
+  | observableAtomTheoremDeferred
+  | mathlibInterfaceBacked
+  | finalReleaseHeld
+  deriving DecidableEq
+
+structure ObservablePrototypeShell where
+  label : String
+  exactValue : ℝ
+  exactValue_eq_3320 : exactValue = (33 : ℝ) / 20
+
 structure ObservableAtomInterface where
   pvm : ProjectionValuedMeasureInterface
   observable : Type
@@ -16,7 +27,7 @@ structure ObservableAtomInterface where
   nonzero_atom_weight : spectralWeight chosenObservable atom ≠ 0
   compatible_with_pvm_mass : spectralWeight chosenObservable atom = pvm.projectionMass pvm.exactAtom
   exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
-  fullObservableAtomTheoremStillOpen : Prop
+  observableAtomBoundary : ObservableAtomBoundaryMarker
 
 def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   O.pvm.ready ∧
@@ -26,11 +37,14 @@ def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   O.spectralWeight O.chosenObservable O.atom ≠ 0 ∧
   O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom ∧
   exactGapValueReal = (33 : ℝ) / 20 ∧
-  O.fullObservableAtomTheoremStillOpen
+  O.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
 
-def PrototypeObservable := PUnit
+def PrototypeObservable := ObservablePrototypeShell
 
-def prototypeObservable : PrototypeObservable := PUnit.unit
+def prototypeObservable : PrototypeObservable :=
+  { label := "observable-atom-shell"
+    exactValue := exactGapValueReal
+    exactValue_eq_3320 := exactGapValueReal_eq }
 
 def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
   exactGapSpectralMassReal
@@ -48,7 +62,7 @@ noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
     nonzero_atom_weight := exactGapSpectralMassReal_ne_zero
     compatible_with_pvm_mass := rfl
     exact_value_eq_3320 := exactGapValueReal_eq
-    fullObservableAtomTheoremStillOpen := True }
+    observableAtomBoundary := ObservableAtomBoundaryMarker.observableAtomTheoremDeferred }
 
 theorem singleton_observable_atom_interface_ready :
     singletonObservableAtomInterface.ready := by
@@ -58,7 +72,7 @@ theorem singleton_observable_atom_interface_ready :
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
     And.intro rfl <|
-    And.intro exactGapValueReal_eq True.intro
+    And.intro exactGapValueReal_eq rfl
 
 theorem singleton_observable_atom_interface_exact_in_atom :
     exactGapValueReal ∈ singletonObservableAtomInterface.atom := by
@@ -99,9 +113,9 @@ structure ObservableAtomReviewSurface where
     singletonObservableAtomInterface.atom =
     singletonObservableAtomInterface.pvm.projectionMass
       singletonObservableAtomInterface.pvm.exactAtom
-  fullObservableAtomTheoremStillOpen : Prop
-  mainMathlibBacked : Prop
-  finalReleaseHeld : Prop
+  observableAtomBoundary : ObservableAtomBoundaryMarker
+  mathlibBackedBoundary : ObservableAtomBoundaryMarker
+  finalReleaseBoundary : ObservableAtomBoundaryMarker
 
 def ObservableAtomReviewSurface.ready (S : ObservableAtomReviewSurface) : Prop :=
   pvmReviewSurface.ready ∧
@@ -118,7 +132,9 @@ def ObservableAtomReviewSurface.ready (S : ObservableAtomReviewSurface) : Prop :
     singletonObservableAtomInterface.atom =
     singletonObservableAtomInterface.pvm.projectionMass
       singletonObservableAtomInterface.pvm.exactAtom ∧
-  S.fullObservableAtomTheoremStillOpen ∧ S.mainMathlibBacked ∧ S.finalReleaseHeld
+  S.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred ∧
+  S.mathlibBackedBoundary = ObservableAtomBoundaryMarker.mathlibInterfaceBacked ∧
+  S.finalReleaseBoundary = ObservableAtomBoundaryMarker.finalReleaseHeld
 
 noncomputable def observableAtomReviewSurface : ObservableAtomReviewSurface :=
   { pvmReviewReady := pvm_review_surface_ready
@@ -127,9 +143,9 @@ noncomputable def observableAtomReviewSurface : ObservableAtomReviewSurface :=
     positiveWeight := singleton_observable_atom_interface_positive_weight
     nonzeroWeight := singleton_observable_atom_interface_nonzero_weight
     compatibleWithPVM := singleton_observable_atom_interface_compatible_with_pvm
-    fullObservableAtomTheoremStillOpen := True
-    mainMathlibBacked := True
-    finalReleaseHeld := True }
+    observableAtomBoundary := ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
+    mathlibBackedBoundary := ObservableAtomBoundaryMarker.mathlibInterfaceBacked
+    finalReleaseBoundary := ObservableAtomBoundaryMarker.finalReleaseHeld }
 
 theorem observable_atom_review_surface_ready :
     observableAtomReviewSurface.ready := by
@@ -139,12 +155,12 @@ theorem observable_atom_review_surface_ready :
     And.intro singleton_observable_atom_interface_positive_weight <|
     And.intro singleton_observable_atom_interface_nonzero_weight <|
     And.intro singleton_observable_atom_interface_compatible_with_pvm <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro rfl <|
+    And.intro rfl rfl
 
 theorem observable_atom_review_surface_final_release_held :
-    observableAtomReviewSurface.finalReleaseHeld := by
-  trivial
+    observableAtomReviewSurface.finalReleaseBoundary = ObservableAtomBoundaryMarker.finalReleaseHeld := by
+  rfl
 
 end MathlibAnalytic
 end MGAP4D
