@@ -15,4 +15,5 @@ import MGAP4D.R6.Theorem.IntervalExclusionDirectProofReviewSurface
 import MGAP4D.R6.Theorem.ExactAtom3320R5Handoff
 import MGAP4D.R6.Theorem.ExactAtom3320NonDefinitionalDerivation
 import MGAP4D.R6.Theorem.ExactAtom3320SpectralOriginFirewall
+import MGAP4D.R6.Theorem.ExactAtom3320ValueOriginQuarantine
 import MGAP4D.R6.Theorem.ExactAtom3320DirectReviewBridge
