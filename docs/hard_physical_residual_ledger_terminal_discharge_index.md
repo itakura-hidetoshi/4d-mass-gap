@@ -2,7 +2,7 @@
 
 This supplemental ledger page records the importable terminal receipt added after the local R1--R7 discharge components were connected.
 
-It is additive to `docs/hard_physical_residual_ledger.md`.  It records a proof-carrying terminal discharge chain index while preserving the public-boundary and final-release guards.
+It is additive to `docs/hard_physical_residual_ledger.md`. It records a proof-carrying terminal discharge chain index while preserving the public-boundary and final-release guards.
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
@@ -48,6 +48,18 @@ hard_physical_residual_ledger_public_audit_chain_r4_genuine_pvm_laws_visible
 hard_physical_residual_ledger_public_audit_chain_boundary_locked
 ```
 
+The public audit chain is exported through a guarded external-audit handoff:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
+HardPhysicalResidualLedgerR1R7ExternalAuditHandoff
+hardPhysicalResidualLedgerR1R7ExternalAuditHandoff3320
+hard_physical_residual_ledger_r1_r7_external_audit_handoff_3320_ready
+hard_physical_residual_ledger_external_audit_handoff_exact_3320_positive_weight
+hard_physical_residual_ledger_external_audit_handoff_r4_genuine_pvm_laws_visible
+hard_physical_residual_ledger_external_audit_handoff_boundary_locked
+```
+
 Status line for audit:
 
 ```text
@@ -60,10 +72,14 @@ R1--R7 public audit chain index: installed / indexed public receipt visible
 Public audit exact 33/20 and positive spectral-weight projection: carried
 Public audit R4 genuine-PVM law receipts: visible
 Public audit boundary: non-releasing and locked
+R1--R7 external audit handoff: installed / guarded handoff visible
+External audit handoff exact 33/20 and positive spectral-weight projection: carried
+External audit handoff R4 genuine-PVM law receipts: visible
+External audit handoff boundary: non-releasing and locked
 ```
 
 Boundary statement:
 
 ```text
-The terminal chain index, public audit surface, and public audit chain index are receipt/index layers. They do not assert external mathematical consensus and do not unlock the public final-release boundary.
+The terminal chain index, public audit surface, public audit chain index, and external-audit handoff are receipt/index layers. They preserve the existing public final-release boundary.
 ```
