@@ -35,6 +35,23 @@ def ExactGapCarrierLayerReady : Prop :=
   exactGapValueReal = (33 : ℝ) / 20 ∧
   0 < exactGapValueReal
 
+/-- Proposition extracted from the continuum-Hamiltonian witness provenance map.
+This is the proposition proved by
+`continuum_hamiltonian_witness_provenance_map_ready`; it is named separately so
+that layer separation does not confuse a theorem term with a `Prop`. -/
+def ExactGapContinuumWitnessProvenanceLayerReady : Prop :=
+  continuumHamiltonianMassGapWitnessData.physicalContinuumHamiltonianReady ∧
+    continuumHamiltonianMassGapWitnessData.hphysFromContinuumYMReady ∧
+    continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
+    continuumHamiltonianMassGapWitnessData.normalizationToExactGapReady ∧
+    continuumHamiltonianMassGapWitnessData.compactCenteredPlaquetteWeightReady ∧
+    continuumHamiltonianMassGapWitnessData.spectralMassObservableReady ∧
+    continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
+    continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
+    exactGapValueReal = (33 : ℝ) / 20 ∧
+    0 < spectralMassRealSurface.mass ∧
+    spectralMassRealSurface.mass ≠ 0
+
 /-- Spectral receipt layer.
 
 This layer records the current spectral receipt: the Yang--Mills Hamiltonian
@@ -51,7 +68,7 @@ def ExactGapSpectralReceiptLayerReady : Prop :=
     (33 : ℝ) / 20 ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
-  continuum_hamiltonian_witness_provenance_map_ready
+  ExactGapContinuumWitnessProvenanceLayerReady
 
 /-- Engineering/review-marker layer.
 
@@ -96,6 +113,11 @@ theorem exact_gap_abstract_theorem_body_layer_ready :
 theorem exact_gap_carrier_layer_ready : ExactGapCarrierLayerReady := by
   exact And.intro exactGapValueReal_eq exactGapValueReal_pos
 
+/-- The continuum witness provenance proposition is ready. -/
+theorem exact_gap_continuum_witness_provenance_layer_ready :
+    ExactGapContinuumWitnessProvenanceLayerReady := by
+  exact continuum_hamiltonian_witness_provenance_map_ready
+
 /-- The spectral receipt layer is ready. -/
 theorem exact_gap_spectral_receipt_layer_ready :
     ExactGapSpectralReceiptLayerReady := by
@@ -104,7 +126,7 @@ theorem exact_gap_spectral_receipt_layer_ready :
     And.intro yang_mills_hamiltonian_spectral_analysis_derives_3320 <|
     And.intro yang_mills_hamiltonian_spectral_derivation_positive_mass <|
     And.intro yang_mills_hamiltonian_spectral_derivation_nonzero_mass
-      continuum_hamiltonian_witness_provenance_map_ready
+      exact_gap_continuum_witness_provenance_layer_ready
 
 /-- The engineering/review-marker layer is ready. -/
 theorem exact_gap_engineering_marker_layer_ready :
