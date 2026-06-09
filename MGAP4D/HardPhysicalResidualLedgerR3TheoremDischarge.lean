@@ -39,9 +39,13 @@ structure HardPhysicalResidualLedgerR3TheoremDischarge where
   r7PositiveWeightStillDownstream :
     hardPhysicalResidualLedgerR3ClosureObligationMap3320.r7PositiveWeightStillDownstream
 
-/-- Readiness predicate for the R3 theorem-discharge packet. -/
+/-- Readiness predicate for the R3 theorem-discharge packet.
+
+The predicate is expressed in terms of the underlying proposition anchors, not the
+proof-term fields of a particular packet.  This avoids using a proof object as a
+proposition type in the final conjunction. -/
 def HardPhysicalResidualLedgerR3TheoremDischarge.ready
-    (D : HardPhysicalResidualLedgerR3TheoremDischarge) : Prop :=
+    (_D : HardPhysicalResidualLedgerR3TheoremDischarge) : Prop :=
   hardPhysicalResidualLedgerR3ToR4PreSpectralHandoff3320.ready ∧
   (∀ W : MathlibAnalytic.ConcreteAnalyticSpineHardResidualR3ActualMathlibGraphWitness,
     MathlibAnalytic.concreteAnalyticSpineHardResidualR3ActualMathlibAdjointGraphTheorem W) ∧
@@ -54,10 +58,10 @@ def HardPhysicalResidualLedgerR3TheoremDischarge.ready
   MathlibAnalytic.concreteAnalyticSpineHardResidualR3AfterConcreteSelfAdjointnessTheorem ∧
   r1r7TheoremObligationCompletion3320.finalReleaseHeld ∧
   r1r7TheoremObligationCompletion3320.publicBoundaryLocked ∧
-  D.r4ConcretePVMStillDownstream ∧
-  D.r5PlaquetteObservableStillDownstream ∧
-  D.r6NondefinitionalAtomStillDownstream ∧
-  D.r7PositiveWeightStillDownstream
+  hardPhysicalResidualLedgerR3ClosureObligationMap3320.r4ConcretePVMStillDownstream ∧
+  hardPhysicalResidualLedgerR3ClosureObligationMap3320.r5PlaquetteObservableStillDownstream ∧
+  hardPhysicalResidualLedgerR3ClosureObligationMap3320.r6NondefinitionalAtomStillDownstream ∧
+  hardPhysicalResidualLedgerR3ClosureObligationMap3320.r7PositiveWeightStillDownstream
 
 /-- Canonical theorem-discharge packet for R3. -/
 def hardPhysicalResidualLedgerR3TheoremDischarge3320 :
