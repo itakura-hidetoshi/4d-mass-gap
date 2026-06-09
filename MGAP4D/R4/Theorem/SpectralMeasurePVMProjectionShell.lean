@@ -8,26 +8,29 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Trivial projection-like shell for the current `PUnit` target.
+/-- Projection-like shell for the current typed R4 target skeleton.
 
 This is not the full operator-theoretic idempotence/self-adjointness proof for a
-projection.  It only says that every current target value is the unique skeleton
-point. -/
+projection.  It records that the target value is one of the named R4 candidate
+shells and carries the expected obligation tag. -/
 def ProjectionLikeShell
     (p : spectralMeasurePVMTargetAPI.projectionTarget) : Prop :=
-  p = PUnit.unit
+  (p.obligationTag = SpectralMeasurePVMObligationTag.projectionValuedness ∧
+    p.stageLabel = "pvm-candidate-shell") ∨
+  (p.obligationTag = SpectralMeasurePVMObligationTag.spectralTheoremCompatibility ∧
+    p.stageLabel = "spectral-measure-candidate-shell")
 
 /-- The PVM candidate value lies in the projection-like shell. -/
 theorem spectral_measure_pvm_target_api_pvm_candidate_projection_shell
     (s : Set ℝ) :
     ProjectionLikeShell (spectralMeasurePVMTargetAPI.pvmCandidate s) := by
-  rfl
+  exact Or.inl ⟨rfl, rfl⟩
 
 /-- The spectral-measure candidate value lies in the projection-like shell. -/
 theorem spectral_measure_pvm_target_api_spectral_candidate_projection_shell
     (s : Set ℝ) :
     ProjectionLikeShell (spectralMeasurePVMTargetAPI.spectralMeasureCandidate s) := by
-  rfl
+  exact Or.inr ⟨rfl, rfl⟩
 
 /-- PVM and spectral-measure candidate values are projection-like shell values. -/
 def SpectralMeasurePVMProjectionShellReady : Prop :=
@@ -53,7 +56,7 @@ theorem spectral_measure_pvm_projection_shell_ready :
 
 /-- Boundary for the R4 projection shell.
 
-The skeleton target values are projection-like in the minimal `PUnit` shell.  The
+The skeleton target values are projection-like in the typed candidate shell.  The
 full operator-theoretic projection-valuedness axiom remains registered as an R4
 obligation. -/
 def SpectralMeasurePVMProjectionShellBoundary : Prop :=
