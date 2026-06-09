@@ -19,6 +19,7 @@ declare -a AUDITS=(
   "verify manifest|python3 scripts/verify_manifest.py"
   "audit Lean forbidden tokens|python3 scripts/audit_lean_forbidden_tokens.py"
   "audit major theorem non-placeholder surfaces|python3 scripts/audit_major_theorem_nonplaceholder.py"
+  "audit proof placeholder inventory|python3 scripts/audit_proof_placeholder_inventory.py"
   "audit analytic bridge coherence|python3 scripts/audit_bridge_coherence.py"
   "audit hard physical residual ledger|python3 scripts/audit_hard_physical_residual_ledger.py"
   "audit concrete analytic spine from scratch|python3 scripts/audit_concrete_analytic_spine_from_scratch.py"
