@@ -34,16 +34,31 @@ theorem exact_atom_3320_value_origin_blocked_ready :
     exact_atom_3320_value_origin_quarantine_ready,
     exact_atom_3320_genuine_spectral_value_derivation_still_open_ready⟩
 
-/-- Future target shape for closing the numeric-origin gap. -/
-def ExactAtom3320RequiredFutureSpectralValueDischarge : Prop := True
+/-- Typed target shape for a future genuine spectral-value discharge.
 
-/-- The future spectral-value target remains open here. -/
-def ExactAtom3320RequiredFutureSpectralValueDischargeStillOpen : Prop := True
+This is intentionally a structure, not a `True` placeholder: a future closure must
+provide a concrete self-adjoint route, an actual Borel spectral-measure/PVM route,
+a nontrivial spectral atom or threshold law, a numeric calculation forcing the
+value, and only then a final identification with the public exact-gap carrier. -/
+structure ExactAtom3320RequiredFutureSpectralValueDischarge where
+  concreteSelfAdjointOperatorRoute : Prop
+  actualBorelSpectralMeasureRoute : Prop
+  nontrivialSpectralAtomOrThresholdLaw : Prop
+  numericCalculationForcesValue : Prop
+  finalIdentificationOnly : Prop
+
+/-- The future spectral-value target remains open here.  This open marker is tied
+to the two existing R6 origin boundaries, rather than to a standalone `True`. -/
+def ExactAtom3320RequiredFutureSpectralValueDischargeStillOpen : Prop :=
+  ExactAtom3320GenuineSpectralValueDerivationStillOpen ∧
+  ExactAtom3320SpectralValueDerivationStillOpenAtR6Origin
 
 /-- The future spectral-value target remains open. -/
 theorem exact_atom_3320_required_future_spectral_value_discharge_still_open_ready :
     ExactAtom3320RequiredFutureSpectralValueDischargeStillOpen := by
-  trivial
+  exact ⟨
+    exact_atom_3320_genuine_spectral_value_derivation_still_open_ready,
+    exact_atom_3320_spectral_value_derivation_still_open_at_r6_origin_ready⟩
 
 end
 
