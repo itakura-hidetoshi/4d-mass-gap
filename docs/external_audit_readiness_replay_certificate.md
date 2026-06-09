@@ -28,11 +28,13 @@ bash scripts/check.sh
 The script route includes the following final Lean build targets:
 
 ```bash
+lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
+lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build
 ```
 
-The reviewed job reported:
+The historical reviewed job reported:
 
 ```text
 Build completed successfully (8368 jobs).
@@ -64,28 +66,13 @@ total_lines: 27611
 
 ## Final gate surfaces reached by the replay
 
-The checkpoint reached these final surfaces under the standard check route:
-
 ```text
-MGAP4D.MathlibAnalytic.ExactGapReal
-MGAP4D.MathlibAnalytic.ExactGapAnalyticRealClosure
-MGAP4D.MathlibAnalytic.ExactGapFullInterfaceClosure
-MGAP4D.MathlibAnalytic.ExactGapTheoremBodyClosure
-MGAP4D.MathlibAnalytic.ExactValueTheoremBodyOrigin
-MGAP4D.MathlibAnalytic.InfiniteDimensionalResidualFillingBridge
-MGAP4D.MathlibAnalytic.HardPhysicalResidualHardeningMap
-MGAP4D.MathlibAnalytic.HilbertConstructionLaneHardening
-MGAP4D.MathlibAnalytic.SelfAdjointHPhysLaneHardening
-MGAP4D.MathlibAnalytic.ContinuumYangMillsLaneHardening
-MGAP4D.MathlibAnalytic.PlaquetteSpectralWeightLaneHardening
-MGAP4D.MathlibAnalytic.FourLaneResidualClosure
-MGAP4D.MathlibAnalytic.InternalReviewResidualClosureGate
+MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
+MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
 MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 ```
 
 ## Named readiness theorem route
-
-The final gate is exposed through named Lean theorem witnesses including:
 
 ```text
 external_audit_readiness_internal_gate_ready_witness
@@ -104,36 +91,31 @@ external_audit_readiness_exact_value_preserved_witness
 external_audit_readiness_gate_ready
 ```
 
-## Exact value preservation route
+## Abstract exact-value carrier route
 
-The exact normalized value remains exposed as:
-
-```text
-exactGapValueReal = (33 : ℝ) / 20
-```
-
-and is carried into the external-audit-readiness gate through:
+The external-audit gate now preserves the carrier abstractly:
 
 ```text
 external_audit_readiness_exact_value_preserved_witness
 external_audit_readiness_exact_value_preserved
+exactGapValueReal = exactGapValueReal
 ```
 
-## Spectral 33/20 replay addendum
+It does not assert a pre-R6 `33/20` derivation.
+
+## Spectral value alignment replay addendum
 
 The spectral route is now exposed through the complete Hamiltonian derivation,
-release-adoption surface, and external-audit gate.
+release-adoption surface, and external-audit gate as value alignment before R6.
 
 Core spectral theorem surface:
 
 ```text
 MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
-yang_mills_hamiltonian_spectral_infimum_eq_3320
-yang_mills_hamiltonian_spectral_attainment_eq_3320
-yang_mills_hamiltonian_observable_atom_eq_3320
-yang_mills_hamiltonian_spectral_analysis_derives_3320
+yang_mills_hamiltonian_spectral_infimum_eq_derived
+yang_mills_hamiltonian_spectral_attainment_eq_derived
+yang_mills_hamiltonian_observable_atom_eq_derived
 yang_mills_hamiltonian_exact_gap_eq_spectral_value
-yang_mills_hamiltonian_spectral_derivation_exact_gap_value
 yang_mills_hamiltonian_spectral_derivation_positive_mass
 yang_mills_hamiltonian_spectral_derivation_nonzero_mass
 ```
@@ -174,7 +156,7 @@ The PVM / observable spectral atom route is now exposed as a public-audit projec
 ```text
 externalAuditReadinessPVMSpectralAtomPublicAuditProjection
 external_audit_readiness_pvm_spectral_atom_public_audit_projection
-external_audit_readiness_pvm_spectral_atom_value_eq_3320
+external_audit_readiness_pvm_spectral_atom_value_eq_derived
 external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass
 external_audit_readiness_pvm_spectral_atom_boundary_held
 ```
@@ -182,7 +164,7 @@ external_audit_readiness_pvm_spectral_atom_boundary_held
 The PVM / observable spectral atom replay receipt records:
 
 ```text
-observable spectral atom = 33/20
+observable spectral atom = derived Hamiltonian spectral value
 PVM spectral mass > 0
 PVM spectral mass != 0
 publicBoundaryHeld
@@ -196,13 +178,14 @@ Yang--Mills continuum Hamiltonian
   -> self-adjoint / spectral chain
   -> Rayleigh lower bound
   -> Rayleigh attainment
-  -> spectral infimum = 33/20
-  -> spectral attainment = 33/20
-  -> observable spectral atom = 33/20
+  -> spectral infimum = derived Hamiltonian spectral value
+  -> spectral attainment = derived Hamiltonian spectral value
+  -> observable spectral atom = derived Hamiltonian spectral value
   -> positive nonzero spectral mass
   -> PVM / observable spectral atom public audit projection
-  -> exactGapValueReal = 33/20
-  -> external-audit-visible spectral addendum
+  -> exactGapValueReal = derived Hamiltonian spectral value
+  -> external-audit-visible spectral alignment addendum
+  -> no upstream 33/20 claim
 ```
 
 The spectral replay route is checked by:
@@ -216,21 +199,6 @@ lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdop
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 ```
 
-The current spectral replay addendum was established after the following PR chain:
-
-```text
-PR #49: Derive 33/20 from Yang-Mills Hamiltonian spectral analysis
-PR #50: Adopt spectral 33/20 route in complete Hamiltonian release surface
-PR #51: Expose spectral 33/20 route at external audit gate
-PR #52: Add spectral 33/20 replay certificate route
-```
-
-Latest spectral external-audit merge commit:
-
-```text
-acfeb8b26a184ee84287c2f5ad5a3139ed74c9e8
-```
-
 ## Boundary interpretation
 
 This certificate means:
@@ -240,8 +208,8 @@ repository-internal Lean replay succeeded
 repository-internal audit scripts passed
 external-audit-readiness gate built successfully
 forbidden Lean tokens were absent in the scanned Lean files
-exact normalized value surface was preserved through the gate
-spectral infimum / attainment / observable-atom replay route is externally visible
+abstract exact-value carrier was preserved through the gate
+spectral infimum / attainment / observable-atom alignment route is externally visible
 PVM / observable spectral atom positive mass is public-audit-visible
 ```
 
@@ -253,6 +221,7 @@ external mathematical consensus obtained
 final theorem release opened
 future residuals impossible
 public theorem boundary removed
+33/20 was derived upstream of R6
 ```
 
 ## Reviewer checklist
