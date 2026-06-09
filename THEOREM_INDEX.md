@@ -29,6 +29,7 @@ R1 ConcreteRealHilbertSpace
   -> R7 PositiveSpectralWeightDerivation3320
   -> YangMillsHamiltonianSpectralDerivation3320
   -> ContinuumHamiltonianCompleteMassGapDerivation
+  -> ContinuumHamiltonianMassGapWitnessProvenance
   -> R1R7TerminalDischargeChainIndex
   -> R1R7PublicAuditSurface
   -> R1R7PublicAuditChainIndex
@@ -41,6 +42,8 @@ Canonical source files:
 ```text
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean
+docs/continuum_hamiltonian_witness_provenance.md
 MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
@@ -69,6 +72,46 @@ Review interpretation:
 DenselyDefinedOperator is the R2 operator-body entry point.
 GraphClosednessReadinessPromotion is the R2 graph-readiness bridge.
 GraphClosednessObligationPromotion is the R2-to-R3 obligation bridge.
+```
+
+## Continuum Hamiltonian witness provenance
+
+The receipt slots in `ContinuumHamiltonianMassGapWitnessData` are no longer meant to be externally reviewed as opaque `Prop` fields. The provenance map gives a theorem-level route from each slot to an upstream construction, bridge, or spectral derivation theorem.
+
+Primary provenance file:
+
+```text
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean
+```
+
+Human-readable provenance note:
+
+```text
+docs/continuum_hamiltonian_witness_provenance.md
+```
+
+Primary provenance theorem anchors:
+
+```text
+continuum_hamiltonian_witness_physical_surface_provenance
+continuum_hamiltonian_witness_hphys_from_ym_provenance
+continuum_hamiltonian_witness_self_adjoint_spectral_slot_provenance
+continuum_hamiltonian_witness_normalization_slot_provenance
+continuum_hamiltonian_witness_compact_plaquette_provenance
+continuum_hamiltonian_witness_spectral_mass_observable_provenance
+continuum_hamiltonian_witness_mass_gap_derivation_slot_provenance
+continuum_hamiltonian_witness_chain_slot_provenance
+continuum_hamiltonian_witness_exact_value_derivation_provenance
+continuum_hamiltonian_witness_positive_spectral_mass_provenance
+continuum_hamiltonian_witness_provenance_map_ready
+```
+
+External-review interpretation:
+
+```text
+receipt slot exists
+  -> provenance theorem identifies its upstream theorem anchor
+  -> external reviewer inspects that upstream theorem / construction
 ```
 
 ## Exact `33/20` derivation source
@@ -209,6 +252,7 @@ scripts/audit_hard_physical_residual_ledger.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
 docs/current_proof_status.md
+docs/continuum_hamiltonian_witness_provenance.md
 ```
 
 The strongest executable check remains:
@@ -234,6 +278,7 @@ lake build
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean` | R2 graph-closedness obligation promotion surface. |
 | `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` | Exact `33/20` spectral derivation route. |
 | `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` | Complete continuum-Hamiltonian spectral derivation route. |
+| `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean` | Provenance map from witness slots to upstream theorem anchors. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` | Terminal R1--R7 hard residual discharge index. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean` | Public audit surface for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean` | Public route index for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
@@ -247,19 +292,21 @@ Recommended external review order:
 1. Run `bash scripts/check.sh`.
 2. Inspect `docs/current_proof_status.md`.
 3. Inspect `THEOREM_INDEX.md`.
-4. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
-5. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
-6. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
-7. Inspect `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean`.
-8. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean`.
-9. Inspect `docs/hard_physical_residual_ledger.md`.
-10. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
-11. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
-12. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
-13. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
-14. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
-15. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
-16. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+4. Inspect `docs/continuum_hamiltonian_witness_provenance.md`.
+5. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean`.
+6. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
+7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
+8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
+9. Inspect `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean`.
+10. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean`.
+11. Inspect `docs/hard_physical_residual_ledger.md`.
+12. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
+13. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
+14. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
+15. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
+16. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
+17. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
+18. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 
 ## Superseded route notes
 
