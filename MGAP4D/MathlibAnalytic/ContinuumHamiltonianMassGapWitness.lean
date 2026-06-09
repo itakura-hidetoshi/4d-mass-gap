@@ -16,16 +16,18 @@ hardening lanes:
 * continuum Yang--Mills Hamiltonian construction is hardened;
 * `H_phys` is built from that Yang--Mills surface;
 * the self-adjoint/spectral/normalization chain is available;
-* the normalized arithmetic seed `exactGapValueReal = 33/20` is preserved;
+* the normalized carrier `exactGapValueReal = 33/20` is preserved;
 * the compact centered plaquette observable route carries its current
   spectral-weight lane at that same normalized value.
 
-Important boundary: the exact-value fields in this surface preserve the
-normalized seed. They do not by themselves prove that the physical Yang--Mills
-Hamiltonian non-definitionally generates a spectral atom at `33/20`, and they
-do not by themselves prove positive spectral weight. Those stronger obligations
-remain separate from the normalized seed and are recorded in
-`ExactGapValueDerivationBoundary`.
+Important alignment: this witness surface preserves and transports the
+normalized carrier.  It is not the local file where the spectral derivation is
+performed.  The current route records the non-definitional spectral derivation in
+`YangMillsHamiltonianSpectralDerivation3320`, and the complete continuum
+Hamiltonian derivation bundles that route with the public/final boundary
+receipts.  Therefore references to `exactGapValuePreserved` here should be read
+as carrier transport that is later identified with the derived Hamiltonian
+spectral value, not as a replacement for the derivation receipt.
 
 The bridge keeps both the public theorem-release boundary and the external
 consensus boundary closed. -/
@@ -95,13 +97,13 @@ theorem continuum_hamiltonian_normalization_to_exact_gap_ready
   rcases hD with ⟨_, _, _, _, _, h, _⟩
   exact h
 
-/-- The exact normalized seed is a strictly positive arithmetic witness. -/
+/-- The exact normalized carrier is a strictly positive arithmetic witness. -/
 theorem continuum_hamiltonian_positive_gap_witness
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
     0 < exactGapValueReal := by
   exact D.positiveGapWitness
 
-/-- The continuum Hamiltonian chain preserves the exact normalized seed value. -/
+/-- The continuum Hamiltonian chain preserves the exact normalized carrier value. -/
 theorem continuum_hamiltonian_exact_gap_value_preserved
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
     exactGapValueReal = (33 : ℝ) / 20 := by
@@ -121,9 +123,10 @@ theorem continuum_hamiltonian_spectral_mass_observable_ready
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The mass-gap witness slot is ready as a normalized-seed witness surface.
-It is not promoted here to a non-definitional spectral-atom derivation from the
-Yang--Mills Hamiltonian. -/
+/-- The mass-gap witness slot is ready as a carrier-transport witness surface.
+The spectral derivation itself is recorded downstream by the dedicated
+Yang--Mills Hamiltonian spectral derivation and complete continuum-Hamiltonian
+derivation surfaces. -/
 theorem continuum_hamiltonian_mass_gap_derivation_witness
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.massGapDerivationWitness := by
@@ -243,9 +246,10 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
       (And.intro (by change True; exact True.intro) hPQPublic) <|
     And.intro (by change True; exact True.intro) hPQFinal
 
-/-- Boundary projection: the continuum witness preserves the normalized seed but
-keeps non-definitional spectral derivation and positive spectral weight as
-separate obligations. -/
+/-- Boundary projection: this witness preserves the normalized carrier and the
+exact-value derivation boundary.  The installed spectral derivation receipts are
+provided downstream by the Yang--Mills Hamiltonian spectral derivation and the
+complete continuum-Hamiltonian derivation. -/
 theorem continuum_hamiltonian_witness_exact_gap_value_derivation_boundary :
     exactGapValueDerivationBoundary.ready := by
   exact exact_gap_value_derivation_boundary_ready
