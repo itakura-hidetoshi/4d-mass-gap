@@ -60,14 +60,14 @@ theorem concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready :
 theorem concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_closed_operator :
     concreteL2R2CompletedDiagonalGraphDefinedOperatorClosed := by
   rcases concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready with
-    ⟨_, _, _, _, _, _, _, _, _, _, _, _, hClosed, _⟩
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, hClosed, _, _, _⟩
   exact hClosed
 
 /-- Projection: R2 includes the operator-norm unboundedness obstruction. -/
 theorem concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_unbounded :
     concreteL2R2CompletedHilbertOperatorNormUnboundedness := by
   rcases concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready with
-    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, hUnbounded, _⟩
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, hUnbounded, _, _⟩
   exact hUnbounded
 
 /-- Projection: R2 includes the graph-closedness readiness and obligation
@@ -76,7 +76,7 @@ theorem concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_graph_prom
     concreteL2R2GraphClosednessReadinessPromotionReady ∧
       concreteL2R2GraphClosednessObligationPromotionReady := by
   rcases concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready with
-    ⟨_, _, _, _, _, _, hReadiness, hObligation, _⟩
+    ⟨_, _, _, _, _, _, hReadiness, hObligation, _, _, _, _, _, _, _, _⟩
   exact ⟨hReadiness, hObligation⟩
 
 end
