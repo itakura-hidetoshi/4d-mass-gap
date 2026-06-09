@@ -111,6 +111,24 @@ The R2InfiniteLaneR3InputHandoff only hands the current R2 body to the existing 
 The R2InfiniteLaneSpectralInputHandoff connects the current R2 body to the existing actual LinearPMap self-adjoint spectral input handoff, while keeping full spectral theorem, PVM construction, and positive spectral-weight construction as separate downstream obligations.
 ```
 
+## Placeholder / witness inventory
+
+External review must distinguish mathematical theorem bodies from placeholders, witnesses, receipts, and readiness packets.
+
+Primary inventory note:
+
+```text
+docs/proof_placeholder_inventory.md
+```
+
+Inventory audit script:
+
+```text
+scripts/audit_proof_placeholder_inventory.py
+```
+
+The inventory classifies `PUnit`, `True`, `StillOpen`, `theoremWitnessOnly`, `receipt`, `ready`, `prototype`, `skeleton`, `boundary`, `packet`, and `manifest` surfaces by replacement strength. These markers do not automatically substitute for analytic theorem bodies.
+
 ## Exact `33/20` source roles
 
 The public route distinguishes the normalized carrier from the derivation route.
@@ -259,10 +277,12 @@ When this route refers to the exact value as derived, its upstream source is the
 
 ```text
 scripts/audit_hard_physical_residual_ledger.py
+scripts/audit_proof_placeholder_inventory.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
 docs/current_proof_status.md
 docs/r2_infinite_l2_diagonal_operator_lane.md
+docs/proof_placeholder_inventory.md
 docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
@@ -300,19 +320,21 @@ lake build
 ## Review order
 
 1. Run `bash scripts/check.sh`.
-2. Inspect `docs/current_proof_status.md`.
-3. Inspect `THEOREM_INDEX.md`.
-4. Inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
-5. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean`.
-6. Inspect `MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean`.
-7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteLaneSpectralInputHandoff.lean`.
-8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundedness.lean`.
-9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions.lean`.
-10. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist.lean`.
-11. Inspect `docs/exact_gap_layer_separation.md`.
-12. Inspect `MGAP4D/ConcreteR1R7ResidualDischarge.lean`.
-13. Inspect the R4/R5/R6/R7 and terminal/public/external audit files.
-14. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+2. Run `python3 scripts/audit_proof_placeholder_inventory.py`.
+3. Inspect `docs/proof_placeholder_inventory.md`.
+4. Inspect `docs/current_proof_status.md`.
+5. Inspect `THEOREM_INDEX.md`.
+6. Inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
+7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean`.
+8. Inspect `MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean`.
+9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteLaneSpectralInputHandoff.lean`.
+10. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundedness.lean`.
+11. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions.lean`.
+12. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist.lean`.
+13. Inspect `docs/exact_gap_layer_separation.md`.
+14. Inspect `MGAP4D/ConcreteR1R7ResidualDischarge.lean`.
+15. Inspect the R4/R5/R6/R7 and terminal/public/external audit files.
+16. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 
 ## Boundary
 
