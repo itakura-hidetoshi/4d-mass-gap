@@ -14,6 +14,56 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
+## R2 current main lane
+
+R2 should now be read as the infinite-dimensional completed `ℓ²` diagonal operator lane, not merely as the old local residual taxonomy.
+
+Current Lean anchor:
+
+```text
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean
+```
+
+Human-readable note:
+
+```text
+docs/r2_infinite_l2_diagonal_operator_lane.md
+```
+
+Primary theorem anchors:
+
+```text
+concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready
+concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_closed_operator
+concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_unbounded
+concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_graph_promotions
+```
+
+Review reading:
+
+```text
+old R2 taxonomy = historical local decomposition
+current R2 body = completed ℓ² diagonal closed/unbounded operator lane
+R1--R7 chain = terminal/public receipt route that consumes the current R2 body
+```
+
+Current R2 route:
+
+```text
+ConcreteL2R1HilbertCarrier
+  -> ConcreteL2R2DiagonalDomainCandidate
+  -> finite-support domain/core
+  -> graph-norm finite-support density
+  -> graph-norm core release
+  -> graph-closedness readiness promotion
+  -> graph-closedness obligation promotion
+  -> graph-closure closed theorem
+  -> completed diagonal graph-defined closed operator
+  -> completed Hilbert operator-norm unboundedness
+  -> self-adjointness concrete preconditions
+  -> R3 self-adjointness lane
+```
+
 ## Exact-gap layer separation
 
 The current route separates four layers:
@@ -89,14 +139,6 @@ MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRout
 MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
 ```
 
-The review reading is:
-
-```text
-old endpoint-stage StillOpen marker
-  -> historical local lineage marker
-  -> superseded for current public status by R4 operator-topology final packet and R1--R7 terminal receipt
-```
-
 ## Witness-slot provenance
 
 The current route distinguishes a receipt slot from the theorem anchor that generates it. External reviewers should inspect:
@@ -110,27 +152,6 @@ The summary theorem is:
 
 ```text
 continuum_hamiltonian_witness_provenance_map_ready
-```
-
-This theorem bundles explicit provenance for the non-boundary `ContinuumHamiltonianMassGapWitnessData` slots:
-
-```text
-physicalContinuumHamiltonianReady
-hphysFromContinuumYMReady
-selfAdjointSpectralChainReady
-normalizationToExactGapReady
-compactCenteredPlaquetteWeightReady
-spectralMassObservableReady
-massGapDerivationWitness
-continuumHamiltonianToMassGapChainReady
-```
-
-The intended review reading is:
-
-```text
-receipt slot exists
-  -> provenance theorem identifies upstream theorem anchor
-  -> external reviewer inspects that upstream theorem / construction
 ```
 
 ## Exact `33/20` derivation source
@@ -193,30 +214,23 @@ publicBoundaryLocked
 
 When this receipt chain is read as an exact-value derivation, its upstream source is the R1--R7 operator/spectral route above, not the local carrier definition.
 
-Primary named theorem anchors:
-
-```text
-hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready
-hard_physical_residual_ledger_r1_r7_public_audit_surface_3320_ready
-hard_physical_residual_ledger_r1_r7_public_audit_chain_index_3320_ready
-hard_physical_residual_ledger_r1_r7_external_audit_handoff_3320_ready
-hard_physical_residual_ledger_r1_r7_external_audit_receipt_chain_index_3320_ready
-```
-
 ## Audit route
 
-The current hard physical residual audit checks both the terminal discharge index and the public/external receipt chain:
+The current hard physical residual audit checks the terminal discharge index and the public/external receipt chain:
 
 ```text
 scripts/audit_hard_physical_residual_ledger.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
+docs/r2_infinite_l2_diagonal_operator_lane.md
 docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
 ```
 
 ## Boundary
+
+Older open PRs that describe R2 only through old local taxonomy are historical unless explicitly rebased onto the current R2 infinite-dimensional completed `ℓ²` diagonal operator lane.
 
 Older open PRs that describe R3/R4/R5/R6/R7 as downstream or open are historical. They should not be used as the current proof frontier unless they are rebased and rewritten against the current R1--R7 receipt chain.
 
