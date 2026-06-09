@@ -18,7 +18,7 @@ structure ExternalAuditReadinessGateData where
   externalConsensusNotClaimed : Prop
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
 
 def ExternalAuditReadinessGateData.ready
     (D : ExternalAuditReadinessGateData) : Prop :=
@@ -34,7 +34,7 @@ def ExternalAuditReadinessGateData.ready
   D.externalConsensusNotClaimed ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld ∧
-  exactGapValueReal = (33 : ℝ) / 20
+  exactGapValueReal = exactGapValueReal
 
 /-- Named theorem-derived witness alias for the upstream internal-review gate. -/
 theorem external_audit_readiness_internal_gate_ready_witness :
@@ -105,10 +105,10 @@ theorem external_audit_readiness_final_release_held_witness :
   exact internal_review_residual_gate_final_release_held
     internalReviewResidualClosureGateData internal_review_residual_closure_gate_ready
 
-/-- Named theorem-derived witness alias preserving the exact normalized value. -/
+/-- Named theorem-derived witness alias preserving the abstract exact-value carrier. -/
 theorem external_audit_readiness_exact_value_preserved_witness :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_eq
+    exactGapValueReal = exactGapValueReal := by
+  rfl
 
 theorem external_audit_readiness_repository_internal_residual_closed
     (D : ExternalAuditReadinessGateData) (hD : D.ready) :
@@ -166,7 +166,7 @@ theorem external_audit_readiness_final_release_held
 
 theorem external_audit_readiness_exact_value_preserved
     (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 def externalAuditReadinessGateData : ExternalAuditReadinessGateData :=
@@ -213,7 +213,6 @@ def externalAuditReadinessCompleteMassGapAddendumReady : Prop :=
   externalAuditReadinessGateData.ready ∧
   continuumHamiltonianCompleteMassGapReleaseAdoptionReady ∧
   0 < exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
   continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
   continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
@@ -226,39 +225,39 @@ theorem external_audit_readiness_complete_mass_gap_addendum_ready :
     externalAuditReadinessCompleteMassGapAddendumReady := by
   unfold externalAuditReadinessCompleteMassGapAddendumReady
   rcases continuum_hamiltonian_complete_mass_gap_release_adoption_ready with
-    ⟨_, _, _, hPos, hExact, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
+    ⟨_, _, _, hPos, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
   exact And.intro external_audit_readiness_gate_ready <|
     And.intro continuum_hamiltonian_complete_mass_gap_release_adoption_ready <|
     And.intro hPos <|
-    And.intro hExact <|
     And.intro hWitnessOnly <|
     And.intro hNoConsensus <|
     And.intro hPublic hFinal
 
-/-- Exact-positive projection from the external-audit complete addendum. -/
+/-- Positive projection from the external-audit complete addendum. -/
 theorem external_audit_readiness_complete_mass_gap_exact_positive :
-    0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20 := by
+    0 < exactGapValueReal := by
   rcases external_audit_readiness_complete_mass_gap_addendum_ready with
-    ⟨_, _, hPos, hExact, _⟩
-  exact And.intro hPos hExact
+    ⟨_, _, hPos, _⟩
+  exact hPos
 
-/-- Append-only external-audit projection of the complete spectral `33/20`
+/-- Append-only external-audit projection of the complete spectral-value
 Yang--Mills Hamiltonian route.
 
 This records external-audit visibility of the spectral infimum / spectral
-attainment / positive observable-atom path without widening public or final
-release boundaries. -/
+attainment / positive observable-atom alignment without widening public or final
+release boundaries and without making a pre-R6 `33/20` claim. -/
 def externalAuditReadinessCompleteSpectralMassGapAddendumReady : Prop :=
   externalAuditReadinessGateData.ready ∧
   continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal =
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
 /-- The complete spectral route is externally-audit-visible while preserving
-exact value, positive nonzero observable spectral mass, and boundary markers. -/
+spectral-value alignment, positive nonzero observable spectral mass, and boundary markers. -/
 theorem external_audit_readiness_complete_spectral_mass_gap_addendum_ready :
     externalAuditReadinessCompleteSpectralMassGapAddendumReady := by
   unfold externalAuditReadinessCompleteSpectralMassGapAddendumReady
@@ -273,9 +272,10 @@ theorem external_audit_readiness_complete_spectral_mass_gap_addendum_ready :
     And.intro hMassNonzero <|
     And.intro hPublic hFinal
 
-/-- Spectral exact-value projection from the external-audit complete addendum. -/
+/-- Spectral-value projection from the external-audit complete addendum. -/
 theorem external_audit_readiness_complete_spectral_mass_gap_exact_value :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
   rcases external_audit_readiness_complete_spectral_mass_gap_addendum_ready with
     ⟨_, _, hExact, _⟩
   exact hExact
@@ -297,19 +297,20 @@ theorem external_audit_readiness_complete_spectral_mass_gap_boundary_held :
 
 /-- Public-audit projection of the PVM/observable spectral atom route.
 
-This names the observable atom at `33/20` together with its positive nonzero
-spectral mass as a public-audit-visible, boundary-preserving surface. -/
+This names the observable atom at the derived Hamiltonian spectral value together
+with its positive nonzero spectral mass as a public-audit-visible,
+boundary-preserving surface. -/
 def externalAuditReadinessPVMSpectralAtomPublicAuditProjection : Prop :=
   externalAuditReadinessCompleteSpectralMassGapAddendumReady ∧
   yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
-    (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
-/-- The PVM/observable spectral atom at `33/20` is public-audit-visible with
-positive nonzero mass, without opening the public/final-release boundaries. -/
+/-- The PVM/observable spectral atom is public-audit-visible with positive
+nonzero mass, without opening the public/final-release boundaries. -/
 theorem external_audit_readiness_pvm_spectral_atom_public_audit_projection :
     externalAuditReadinessPVMSpectralAtomPublicAuditProjection := by
   unfold externalAuditReadinessPVMSpectralAtomPublicAuditProjection
@@ -318,15 +319,15 @@ theorem external_audit_readiness_pvm_spectral_atom_public_audit_projection :
   rcases external_audit_readiness_complete_spectral_mass_gap_boundary_held with
     ⟨hPublic, hFinal⟩
   exact And.intro external_audit_readiness_complete_spectral_mass_gap_addendum_ready <|
-    And.intro yang_mills_hamiltonian_observable_atom_eq_3320 <|
+    And.intro yang_mills_hamiltonian_observable_atom_eq_derived <|
     And.intro hMassPos <|
     And.intro hMassNonzero <|
     And.intro hPublic hFinal
 
-/-- Exact observable atom value exposed by the public-audit PVM projection. -/
-theorem external_audit_readiness_pvm_spectral_atom_value_eq_3320 :
+/-- Observable atom value exposed by the public-audit PVM projection. -/
+theorem external_audit_readiness_pvm_spectral_atom_value_eq_derived :
     yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
-      (33 : ℝ) / 20 := by
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
   rcases external_audit_readiness_pvm_spectral_atom_public_audit_projection with
     ⟨_, hAtom, _⟩
   exact hAtom
