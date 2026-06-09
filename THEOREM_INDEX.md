@@ -229,3 +229,78 @@ Primary terminal theorem anchor:
 ```text
 hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready
 ```
+
+## Public and external audit route
+
+The public/external route carries:
+
+```text
+exactGapValueReal = 33 / 20
+positive spectral weight
+R4 genuine-PVM law receipts
+finalReleaseHeld
+publicBoundaryLocked
+```
+
+When this route refers to the exact value as derived, its upstream source is the R1--R7 operator/spectral route above, not the local carrier definition in `Basic.lean`.
+
+## Audit route
+
+```text
+scripts/audit_hard_physical_residual_ledger.py
+docs/hard_physical_residual_ledger.md
+docs/hard_physical_residual_ledger_terminal_discharge_index.md
+docs/current_proof_status.md
+docs/r2_infinite_l2_diagonal_operator_lane.md
+docs/exact_gap_layer_separation.md
+docs/continuum_hamiltonian_witness_provenance.md
+docs/r4_terminal_status_supersession.md
+```
+
+Strongest executable check:
+
+```bash
+bash scripts/check.sh
+```
+
+Strongest Lean kernel gate:
+
+```bash
+lake build
+```
+
+## Active Lean roots
+
+| Root | Role |
+|---|---|
+| `MGAP4D.lean` | Top-level Lean import root. |
+| `MGAP4D/MathlibAnalytic.lean` | Mathlib analytic theorem-surface root. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean` | Current R2 infinite-dimensional completed `ℓ²` diagonal operator lane. |
+| `MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean` | Current R2 infinite lane handoff into the R3 self-adjointness input bridge. |
+| `MGAP4D/ConcreteR1R7ResidualDischarge.lean` | Current terminal derivation discharge for the R1--R7 route. |
+| `MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean` | Separation map for theorem-body, carrier, derivation, and marker layers. |
+| `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` | Spectral derivation interface into the normalized carrier. |
+| `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` | Complete continuum-Hamiltonian spectral derivation route. |
+| `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean` | Provenance map from witness slots to upstream theorem anchors. |
+| `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean` | Current R4 operator-topology final packet. |
+| `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` | Terminal R1--R7 hard residual discharge index. |
+
+## Review order
+
+1. Run `bash scripts/check.sh`.
+2. Inspect `docs/current_proof_status.md`.
+3. Inspect `THEOREM_INDEX.md`.
+4. Inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
+5. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean`.
+6. Inspect `MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean`.
+7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundedness.lean`.
+8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions.lean`.
+9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist.lean`.
+10. Inspect `docs/exact_gap_layer_separation.md`.
+11. Inspect `MGAP4D/ConcreteR1R7ResidualDischarge.lean`.
+12. Inspect the R4/R5/R6/R7 and terminal/public/external audit files.
+13. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+
+## Boundary
+
+This index is a navigation and audit surface. It preserves `finalReleaseHeld`, `publicBoundaryLocked`, and the requirement for independent mathematical review.
