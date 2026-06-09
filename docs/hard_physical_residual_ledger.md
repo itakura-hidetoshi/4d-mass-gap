@@ -128,10 +128,26 @@ hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_no_auto_r
 hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_nonpromotion_boundary
 ```
 
+The R1 concrete Hilbert substrate is now connected to the hard residual ledger by a dedicated closure bridge:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR1ConcreteHilbertClosure.lean
+HardPhysicalResidualLedgerR1ConcreteHilbertClosure
+hardPhysicalResidualLedgerR1ConcreteHilbertClosure3320
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_3320_ready
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_mathlib_ready
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_normed_add_comm_group
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_inner_product_space
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_complete_space
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_final_release_held
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_public_boundary_locked
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_downstream_obligations_visible
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, and final-bundle status-manifest chain index. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, and R1 concrete Hilbert closure bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder R2--R7 Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -147,14 +163,24 @@ A real Hilbert space H implemented as a standard Mathlib Hilbert-space object.
 Current status:
 
 ```text
-interface / construction skeleton / replay-visible surface / internal discharge spine binding present
+Mathlib concrete Hilbert substrate discharged / ledger bridge installed / downstream physical integration still pending
 ```
 
-Required closure condition:
+Closure condition now carried by Lean:
 
 ```text
 H is not merely represented by a custom Prop surface;
 H has a Mathlib-recognized NormedAddCommGroup, InnerProductSpace ℝ, CompleteSpace, and HilbertSpace-compatible structure.
+```
+
+Lean anchors:
+
+```text
+MathlibAnalytic.concreteL2R2ConcreteRealHilbertSpaceReady
+MathlibAnalytic.concrete_l2_r2_real_hilbert_space_normed_add_comm_group
+MathlibAnalytic.concrete_l2_r2_real_hilbert_space_inner_product_space
+MathlibAnalytic.concrete_l2_r2_real_hilbert_space_complete
+hard_physical_residual_ledger_r1_concrete_hilbert_closure_mathlib_ready
 ```
 
 ### R2. Densely defined unbounded operator
@@ -290,14 +316,15 @@ positivity is not merely stored as a Prop field in the spectral mass surface.
 The next concrete spine should proceed in this order:
 
 ```text
-ConcreteRealHilbertSpace
-  -> DenseDomainUnboundedHamiltonian
+DenseDomainUnboundedHamiltonian
   -> SelfAdjointPhysicalHamiltonian
   -> ConcretePVMSpectralMeasure
   -> CompactCenteredPlaquetteObservable
   -> NondefinitionalSpectralAtom3320
   -> PositiveSpectralWeightDerivation3320
 ```
+
+The former first step, `ConcreteRealHilbertSpace`, is now carried by the R1 concrete Hilbert closure bridge and remains available as the substrate for R2.
 
 ## Audit boundary
 
@@ -321,12 +348,14 @@ The hard physical residual ledger final-bundle audit map carries that ledger bri
 
 The hard physical residual ledger final-bundle status manifest records the same exact-value, positive-mass, boundary, and open-status witnesses in one status packet.
 
-The hard physical residual ledger final-bundle status-manifest chain index provides a stable importable root for the status manifest while preserving all open residual markers.
+The hard physical residual ledger final-bundle status-manifest chain index provides a stable importable root for the status manifest while preserving all downstream residual markers.
+
+The hard physical residual ledger R1 concrete Hilbert closure bridge discharges the Mathlib substrate portion of R1 while preserving R2--R7 downstream obligations, final-release hold, and public-boundary lock.
 
 ## Current status
 
 ```text
-R1: open / construction-hardening required
+R1: Mathlib-substrate discharged / downstream physical integration pending
 R2: open / domain-hardening required
 R3: open / self-adjointness-hardening required
 R4: open / PVM-construction required
@@ -343,7 +372,9 @@ HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible
 HardPhysicalResidualLedgerFinalBundleAuditMap: installed / final-bundle-facing ledger audit map visible
 HardPhysicalResidualLedgerFinalBundleStatusManifest: installed / final-bundle status manifest visible
 HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex: installed / final-bundle status-manifest chain index visible
-R1--R7 user-facing spine names: bound to replay-visible theorem-obligation completion
+HardPhysicalResidualLedgerR1ConcreteHilbertClosure: installed / R1 concrete Hilbert closure bridge visible
+R1 Mathlib substrate: discharged and carried into ledger bridge
+R2--R7 downstream obligations: visible
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
 Final-release boundary: held
