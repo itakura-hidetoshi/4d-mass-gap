@@ -53,7 +53,7 @@ REQUIRED_THEOREM_ANCHORS = (
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
     "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
-    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
     "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
 )
@@ -67,10 +67,18 @@ REQUIRED_SPECTRAL_ANCHORS = (
     "yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld",
     "yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld",
     "yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue",
+    "yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue",
     "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
     "0 < spectralMassRealSurface.mass",
     "spectralMassRealSurface.mass ≠ 0",
     "PVM",
+)
+
+FORBIDDEN_STALE_ANCHORS = (
+    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "yang_mills_hamiltonian_observable_atom_eq_3320",
+    "observableSpectralAtomValue =\n    (33 : ℝ) / 20",
+    "exactGapValueReal = (33 : ℝ) / 20",
 )
 
 REQUIRED_DOC_ANCHORS = (
@@ -93,13 +101,14 @@ REQUIRED_DOC_ANCHORS = (
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
     "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
-    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+    "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
     "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
     "spectral infimum",
     "spectral attainment",
     "observable spectral atom",
     "PVM spectral mass > 0",
+    "no upstream 33/20 claim",
 )
 
 
@@ -142,6 +151,13 @@ def require(path: Path, anchors: tuple[str, ...], label: str, *, clean_lean: boo
     return [f"missing {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor not in source]
 
 
+def forbid(path: Path, anchors: tuple[str, ...], label: str, *, clean_lean: bool) -> list[str]:
+    if not path.exists():
+        return [f"missing {label} file: {path}"]
+    source = cleaned_lean_source(path) if clean_lean else path.read_text(encoding="utf-8")
+    return [f"forbidden stale {label} anchor {anchor!r} in {path}" for anchor in anchors if anchor in source]
+
+
 def audit_forbidden_tokens(path: Path) -> list[str]:
     if not path.exists():
         return [f"missing external audit readiness gate file for forbidden-token audit: {path}"]
@@ -159,6 +175,7 @@ def main() -> None:
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "external audit readiness theorem", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_SPECTRAL_ANCHORS, "external audit readiness spectral addendum", clean_lean=True))
+    failures.extend(forbid(TARGET_PATH, FORBIDDEN_STALE_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "external audit readiness documentation", clean_lean=False))
 
     print("External audit readiness gate audit")
