@@ -48,7 +48,7 @@ hard_physical_residual_ledger_public_audit_chain_r4_genuine_pvm_laws_visible
 hard_physical_residual_ledger_public_audit_chain_boundary_locked
 ```
 
-The public audit chain is exported through a guarded external-audit handoff:
+The public audit chain is exported through a guarded external-audit handoff and receipt-chain index:
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
@@ -58,6 +58,13 @@ hard_physical_residual_ledger_r1_r7_external_audit_handoff_3320_ready
 hard_physical_residual_ledger_external_audit_handoff_exact_3320_positive_weight
 hard_physical_residual_ledger_external_audit_handoff_r4_genuine_pvm_laws_visible
 hard_physical_residual_ledger_external_audit_handoff_boundary_locked
+MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
+HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex
+hardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex3320
+hard_physical_residual_ledger_r1_r7_external_audit_receipt_chain_index_3320_ready
+hard_physical_residual_ledger_external_audit_receipt_chain_exact_3320_positive_weight
+hard_physical_residual_ledger_external_audit_receipt_chain_r4_genuine_pvm_laws_visible
+hard_physical_residual_ledger_external_audit_receipt_chain_boundary_locked
 ```
 
 Status line for audit:
@@ -76,10 +83,14 @@ R1--R7 external audit handoff: installed / guarded handoff visible
 External audit handoff exact 33/20 and positive spectral-weight projection: carried
 External audit handoff R4 genuine-PVM law receipts: visible
 External audit handoff boundary: non-releasing and locked
+R1--R7 external audit receipt chain index: installed / guarded receipt indexed
+External audit receipt chain exact 33/20 and positive spectral-weight projection: carried
+External audit receipt chain R4 genuine-PVM law receipts: visible
+External audit receipt chain boundary: non-releasing and locked
 ```
 
 Boundary statement:
 
 ```text
-The terminal chain index, public audit surface, public audit chain index, and external-audit handoff are receipt/index layers. They preserve the existing public final-release boundary.
+The terminal chain index, public audit surface, public audit chain index, external-audit handoff, and external-audit receipt chain index are receipt/index layers. They preserve the existing public final-release boundary.
 ```
