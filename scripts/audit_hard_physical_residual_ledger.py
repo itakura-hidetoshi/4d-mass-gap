@@ -32,7 +32,6 @@ ANCHOR_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "concrete_r1r7_residual_discharge_positive_nonzero_spectral_mass",
         "concrete_r1r7_residual_discharge_final_release_held",
         "concrete_r1r7_residual_discharge_public_boundary_locked",
-        "internal discharge spine binding present",
         "ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible",
     )),
     ("ledger-bridge", (
