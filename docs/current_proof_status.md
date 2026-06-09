@@ -14,6 +14,50 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
+## Exact-gap layer separation
+
+The current route separates four layers:
+
+```text
+abstract theorem-body layer
+normalized carrier layer
+spectral receipt layer
+engineering / review-marker layer
+```
+
+Current Lean separation map:
+
+```text
+MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
+```
+
+Human-readable note:
+
+```text
+docs/exact_gap_layer_separation.md
+```
+
+Primary theorem anchors:
+
+```text
+exact_gap_abstract_theorem_body_layer_ready
+exact_gap_carrier_layer_ready
+exact_gap_spectral_receipt_layer_ready
+exact_gap_engineering_marker_layer_ready
+exact_gap_layer_separation_ready
+```
+
+Review reading:
+
+```text
+Basic.lean / ExactGapReal.lean = carrier layer
+YangMillsHamiltonianSpectralDerivation3320.lean = current spectral receipt / carrier alignment layer
+ExactGapTheoremBodyClosure.lean = older mixed closure record
+ExactGapLayerSeparation.lean = current separation map
+```
+
+The current spectral receipt is not presented as an independent operator-theoretic construction of a new spectral value followed by a calculation reducing it to `33/20`. It is a carrier-aligned spectral-route receipt. A stronger independent spectral-value construction would require a distinct future theorem-body lane.
+
 ## R4 status and historical `StillOpen` markers
 
 Current canonical R4 status is terminal-visible through the R1--R7 route:
@@ -96,14 +140,14 @@ carrier role:
   MGAP4D/MathlibAnalytic/Basic.lean
   MGAP4D/MathlibAnalytic/ExactGapReal.lean
 
-derivation role:
+spectral receipt role:
   MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
   MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 ```
 
 `exactGapValueReal : ℝ := 33 / 20` remains the canonical normalized carrier. Its local `rfl` / `norm_num` checks are not the derivation source.
 
-The current derivation source is the spectral route that identifies the Hamiltonian spectral value with the same normalized carrier and carries positive spectral mass:
+The current spectral receipt identifies the Hamiltonian spectral receipt value with the same normalized carrier and carries positive spectral mass:
 
 ```text
 yang_mills_hamiltonian_spectral_derivation_3320_ready
@@ -144,7 +188,7 @@ finalReleaseHeld
 publicBoundaryLocked
 ```
 
-When this receipt chain is read as an exact-value derivation, its upstream source is the spectral derivation route above, not the local carrier definition.
+When this receipt chain is read as an exact-value derivation, its upstream source is the spectral receipt route above, not the local carrier definition.
 
 Primary named theorem anchors:
 
@@ -164,6 +208,7 @@ The current hard physical residual audit checks both the terminal discharge inde
 scripts/audit_hard_physical_residual_ledger.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
+docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
 ```
