@@ -1,299 +1,178 @@
 #!/usr/bin/env python3
-"""Audit the hard physical residual ledger.
-
-This audit keeps the repository honest about the difference between a
-CI-enforced replay-visible theorem/audit surface and a fully concrete,
-non-definitional analytic construction of the 4D Yang--Mills mass-gap route.
-"""
+"""Audit the hard physical residual ledger and terminal discharge index."""
 
 from __future__ import annotations
 
 from pathlib import Path
 import sys
 
-LEDGER_PATH = Path("docs/hard_physical_residual_ledger.md")
-TERMINAL_LEDGER_PATH = Path("docs/hard_physical_residual_ledger_terminal_discharge_index.md")
-
-REQUIRED_LEDGER_ANCHORS = (
-    "Hard Physical Residual Ledger v0.1",
-    "replay-visible audit surface",
-    "fully concrete non-definitional analytic construction",
-    "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
-    "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
-    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
-    "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
-    "external_audit_readiness_pvm_spectral_atom_boundary_held",
+LEDGER_PATHS = (
+    Path("docs/hard_physical_residual_ledger.md"),
+    Path("docs/hard_physical_residual_ledger_terminal_discharge_index.md"),
 )
 
-REQUIRED_INTERNAL_DISCHARGE_ANCHORS = (
-    "Internal R1--R7 discharge spine v0.1",
-    "MGAP4D/ConcreteR1R7ResidualDischarge.lean",
-    "ConcreteR1R7ResidualDischarge",
-    "concreteR1R7ResidualDischarge3320",
-    "concrete_r1r7_residual_discharge_3320_ready",
-    "concrete_r1r7_residual_discharge_exact_gap_value_3320",
-    "concrete_r1r7_residual_discharge_positive_nonzero_spectral_mass",
-    "concrete_r1r7_residual_discharge_final_release_held",
-    "concrete_r1r7_residual_discharge_public_boundary_locked",
-    "internal discharge spine binding present",
-    "ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible",
-    "Hard residual ledger statuses: preserved for stronger future Mathlib/operator-theoretic replacement",
+ANCHOR_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("ledger", (
+        "Hard Physical Residual Ledger v0.1",
+        "replay-visible audit surface",
+        "fully concrete non-definitional analytic construction",
+        "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
+        "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
+        "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
+        "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
+        "external_audit_readiness_pvm_spectral_atom_boundary_held",
+    )),
+    ("internal-discharge", (
+        "Internal R1--R7 discharge spine v0.1",
+        "MGAP4D/ConcreteR1R7ResidualDischarge.lean",
+        "ConcreteR1R7ResidualDischarge",
+        "concreteR1R7ResidualDischarge3320",
+        "concrete_r1r7_residual_discharge_3320_ready",
+        "concrete_r1r7_residual_discharge_exact_gap_value_3320",
+        "concrete_r1r7_residual_discharge_positive_nonzero_spectral_mass",
+        "concrete_r1r7_residual_discharge_final_release_held",
+        "concrete_r1r7_residual_discharge_public_boundary_locked",
+        "internal discharge spine binding present",
+        "ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible",
+    )),
+    ("ledger-bridge", (
+        "MGAP4D/HardPhysicalResidualLedgerR1R7DischargeBridge.lean",
+        "HardPhysicalResidualLedgerR1R7DischargeBridge",
+        "hardPhysicalResidualLedgerR1R7DischargeBridge3320",
+        "hard_physical_residual_ledger_r1r7_discharge_bridge_ready",
+        "hard_physical_residual_ledger_r1r7_discharge_bridge_exact_gap_value_3320",
+        "hard_physical_residual_ledger_r1r7_discharge_bridge_positive_nonzero_spectral_mass",
+        "hard_physical_residual_ledger_r1r7_discharge_bridge_final_release_held",
+        "hard_physical_residual_ledger_r1r7_discharge_bridge_public_boundary_locked",
+        "hard_physical_residual_ledger_r1r7_discharge_bridge_status_preserved",
+        "HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible",
+    )),
+    ("final-bundle", (
+        "MGAP4D/HardPhysicalResidualLedgerFinalBundleAuditMap.lean",
+        "HardPhysicalResidualLedgerFinalBundleAuditMap",
+        "hardPhysicalResidualLedgerFinalBundleAuditMap3320",
+        "hard_physical_residual_ledger_final_bundle_audit_map_3320_ready",
+        "hard_physical_residual_ledger_final_bundle_audit_map_no_auto_release",
+        "hard_physical_residual_ledger_final_bundle_audit_map_nonpromotion_boundary",
+        "MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifest.lean",
+        "HardPhysicalResidualLedgerFinalBundleStatusManifest",
+        "hardPhysicalResidualLedgerFinalBundleStatusManifest3320",
+        "MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex.lean",
+        "HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex",
+        "hardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex3320",
+        "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_r1_closure_ready",
+        "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_r2_closure_ready",
+    )),
+    ("r1-r3-bridges", (
+        "MGAP4D/HardPhysicalResidualLedgerR1ConcreteHilbertClosure.lean",
+        "HardPhysicalResidualLedgerR1ConcreteHilbertClosure",
+        "hard_physical_residual_ledger_r1_concrete_hilbert_closure_3320_ready",
+        "hard_physical_residual_ledger_r1_concrete_hilbert_closure_mathlib_ready",
+        "MGAP4D/HardPhysicalResidualLedgerR2DenseDomainOperatorClosure.lean",
+        "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure",
+        "hard_physical_residual_ledger_r2_dense_domain_operator_closure_3320_ready",
+        "hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_ready",
+        "MGAP4D/HardPhysicalResidualLedgerR3SelfAdjointInputBridge.lean",
+        "HardPhysicalResidualLedgerR3SelfAdjointInputBridge",
+        "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_3320_ready",
+        "R3 input bridge: installed and consumes closed R2 unbounded operator",
+    )),
+    ("terminal-discharge", (
+        "Hard Physical Residual Ledger Terminal Discharge Chain Index v0.1",
+        "MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean",
+        "HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex",
+        "hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320",
+        "hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready",
+        "hard_physical_residual_ledger_r1_r7_terminal_discharged",
+        "hard_physical_residual_ledger_r1_r7_terminal_final_release_held",
+        "hard_physical_residual_ledger_r1_r7_terminal_public_boundary_locked",
+        "hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight",
+        "R1--R7 terminal discharge chain index: installed / terminal discharge receipt visible",
+        "Terminal exact 33/20 and positive spectral-weight projection: carried",
+        "Terminal final-release boundary: held",
+        "Terminal public boundary: locked",
+    )),
+    ("residual-ids", (
+        "R1. Concrete real Hilbert space on Mathlib",
+        "R2. Densely defined unbounded operator",
+        "R3. Self-adjointness proof",
+        "R4. Concrete PVM / spectral measure construction",
+        "R5. Compact centered plaquette observable",
+        "R6. Non-definitional derivation of the exact atom 33/20",
+        "R7. Nontrivial derivation of positive spectral weight",
+    )),
+    ("closure-language", (
+        "Mathlib-recognized NormedAddCommGroup",
+        "InnerProductSpace ℝ",
+        "CompleteSpace",
+        "dense subspace or dense set",
+        "Mathlib LinearPMap",
+        "unit probes have norm one",
+        "arbitrary real thresholds",
+        "domain equality with the adjoint",
+        "Mathlib adjoint graph theorem",
+        "concrete self-adjointness theorem",
+        "projection-valued measure",
+        "countable additivity",
+        "compactly supported smeared centered plaquette observable",
+        "33/20 is not introduced by defining exactGapValueReal to be 33/20",
+        "ρ_{A_{p,g}}({33/20}) > 0",
+        "nonzero overlap / nonzero spectral projection / cyclic vector / observable localization argument",
+    )),
+    ("terminal-status", (
+        "R1: Mathlib-substrate discharged / terminal chain indexed",
+        "R2: dense-domain unbounded operator discharged / terminal chain indexed",
+        "R3: adjoint graph theorem and concrete self-adjointness discharged / terminal chain indexed",
+        "R4: genuine PVM discharged / terminal chain indexed",
+        "R5: compact centered plaquette observable discharged / terminal chain indexed",
+        "R6: non-definitional exact atom discharged / terminal chain indexed",
+        "R7: positive spectral weight discharged / terminal chain indexed",
+    )),
 )
 
-REQUIRED_LEDGER_BRIDGE_ANCHORS = (
-    "MGAP4D/HardPhysicalResidualLedgerR1R7DischargeBridge.lean",
-    "HardPhysicalResidualLedgerR1R7DischargeBridge",
-    "hardPhysicalResidualLedgerR1R7DischargeBridge3320",
-    "hard_physical_residual_ledger_r1r7_discharge_bridge_ready",
-    "hard_physical_residual_ledger_r1r7_discharge_bridge_exact_gap_value_3320",
-    "hard_physical_residual_ledger_r1r7_discharge_bridge_positive_nonzero_spectral_mass",
-    "hard_physical_residual_ledger_r1r7_discharge_bridge_final_release_held",
-    "hard_physical_residual_ledger_r1r7_discharge_bridge_public_boundary_locked",
-    "hard_physical_residual_ledger_r1r7_discharge_bridge_status_preserved",
-    "HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible",
-)
-
-REQUIRED_FINAL_BUNDLE_MAP_ANCHORS = (
-    "MGAP4D/HardPhysicalResidualLedgerFinalBundleAuditMap.lean",
-    "HardPhysicalResidualLedgerFinalBundleAuditMap",
-    "hardPhysicalResidualLedgerFinalBundleAuditMap3320",
-    "hard_physical_residual_ledger_final_bundle_audit_map_3320_ready",
-    "hard_physical_residual_ledger_final_bundle_audit_map_exact_gap_value_3320",
-    "hard_physical_residual_ledger_final_bundle_audit_map_positive_nonzero_spectral_mass",
-    "hard_physical_residual_ledger_final_bundle_audit_map_final_release_held",
-    "hard_physical_residual_ledger_final_bundle_audit_map_public_boundary_locked",
-    "hard_physical_residual_ledger_final_bundle_audit_map_no_auto_release",
-    "hard_physical_residual_ledger_final_bundle_audit_map_nonpromotion_boundary",
-    "HardPhysicalResidualLedgerFinalBundleAuditMap: installed / final-bundle-facing ledger audit map visible",
-    "H_phys/R3 no-auto-release boundary: visible",
-    "H_phys/R3 non-promotion boundary: visible",
-)
-
-REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS = (
-    "MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifest.lean",
-    "HardPhysicalResidualLedgerFinalBundleStatusManifest",
-    "hardPhysicalResidualLedgerFinalBundleStatusManifest3320",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_3320_ready",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_exact_gap_value_3320",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_positive_nonzero_spectral_mass",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_final_release_held",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_public_boundary_locked",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_no_auto_release",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_nonpromotion_boundary",
-    "HardPhysicalResidualLedgerFinalBundleStatusManifest: installed / final-bundle status manifest visible",
-)
-
-REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS = (
-    "MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex.lean",
-    "HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex",
-    "hardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex3320",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_3320_ready",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_exact_gap_value_3320",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_positive_nonzero_spectral_mass",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_final_release_held",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_public_boundary_locked",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_no_auto_release",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_nonpromotion_boundary",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_r1_closure_ready",
-    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_r2_closure_ready",
-    "HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex: installed / final-bundle status-manifest chain index visible",
-)
-
-REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS = (
-    "MGAP4D/HardPhysicalResidualLedgerR1ConcreteHilbertClosure.lean",
-    "HardPhysicalResidualLedgerR1ConcreteHilbertClosure",
-    "hardPhysicalResidualLedgerR1ConcreteHilbertClosure3320",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_3320_ready",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_mathlib_ready",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_normed_add_comm_group",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_inner_product_space",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_complete_space",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_final_release_held",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_public_boundary_locked",
-    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_downstream_obligations_visible",
-    "HardPhysicalResidualLedgerR1ConcreteHilbertClosure: installed / R1 concrete Hilbert closure bridge visible",
-    "R1 Mathlib substrate: discharged and carried into ledger bridge",
-)
-
-REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS = (
-    "MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenseDiagonalDomainUnboundedness.lean",
-    "MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainUnboundednessSurfaceReady",
-    "MathlibAnalytic.concreteL2R2DenseDomainOperatorUnboundednessQuantification",
-    "MathlibAnalytic.concrete_l2_r2_dense_domain_operator_unboundedness_quantification",
-    "MGAP4D/HardPhysicalResidualLedgerR2DenseDomainOperatorClosure.lean",
-    "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure",
-    "hardPhysicalResidualLedgerR2DenseDomainOperatorClosure3320",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_3320_ready",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_linear_pmap_ready",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_surface_ready",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_dense_domain",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_eq_completed",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_closed",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_ready",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_final_release_held",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_public_boundary_locked",
-    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obligations_visible",
-    "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure: installed / R2 dense-domain operator closure bridge visible",
-    "R2 dense-domain LinearPMap: discharged and carried into ledger bridge",
-    "R2 unboundedness quantification: discharged and carried into ledger bridge",
-)
-
-REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS = (
-    "MGAP4D/HardPhysicalResidualLedgerR3SelfAdjointInputBridge.lean",
-    "HardPhysicalResidualLedgerR3SelfAdjointInputBridge",
-    "hardPhysicalResidualLedgerR3SelfAdjointInputBridge3320",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_3320_ready",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_closure_ready",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_mathlib_interface_ready",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_promotion_target_ready",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_formal_graph_ready",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_unboundedness_ready",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_final_release_held",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_public_boundary_locked",
-    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_downstream_obligations_visible",
-    "HardPhysicalResidualLedgerR3SelfAdjointInputBridge: installed / R3 self-adjointness input bridge visible",
-    "R3 input bridge: installed and consumes closed R2 unbounded operator",
-    "R3 Mathlib adjoint graph theorem: visible as remaining hard point",
-    "R3 concrete self-adjointness theorem: visible as remaining hard point",
-    "R4--R7 downstream obligations: visible",
-)
-
-REQUIRED_R1_R7_TERMINAL_DISCHARGE_CHAIN_INDEX_ANCHORS = (
-    "Hard Physical Residual Ledger Terminal Discharge Chain Index v0.1",
-    "MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean",
-    "HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex",
-    "hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320",
-    "hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready",
-    "hard_physical_residual_ledger_r1_r7_terminal_discharged",
-    "hard_physical_residual_ledger_r1_r7_terminal_final_release_held",
-    "hard_physical_residual_ledger_r1_r7_terminal_public_boundary_locked",
-    "hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight",
-    "R1--R7 terminal discharge chain index: installed / terminal discharge receipt visible",
-    "Terminal exact 33/20 and positive spectral-weight projection: carried",
-    "Terminal final-release boundary: held",
-    "Terminal public boundary: locked",
-)
-
-REQUIRED_RESIDUAL_IDS = (
-    "R1. Concrete real Hilbert space on Mathlib",
-    "R2. Densely defined unbounded operator",
-    "R3. Self-adjointness proof",
-    "R4. Concrete PVM / spectral measure construction",
-    "R5. Compact centered plaquette observable",
-    "R6. Non-definitional derivation of the exact atom 33/20",
-    "R7. Nontrivial derivation of positive spectral weight",
-)
-
-REQUIRED_CLOSURE_PHRASES = (
-    "Mathlib-recognized NormedAddCommGroup",
-    "InnerProductSpace ℝ",
-    "CompleteSpace",
-    "dense subspace or dense set",
-    "Mathlib LinearPMap",
-    "unit probes have norm one",
-    "arbitrary real thresholds",
-    "domain equality with the adjoint",
-    "Mathlib adjoint graph theorem",
-    "concrete self-adjointness theorem",
-    "projection-valued measure",
-    "countable additivity",
-    "compactly supported smeared centered plaquette observable",
-    "33/20 is not introduced by defining exactGapValueReal to be 33/20",
-    "ρ_{A_{p,g}}({33/20}) > 0",
-    "nonzero overlap / nonzero spectral projection / cyclic vector / observable localization argument",
-)
-
-REQUIRED_SPINE_ANCHORS = (
-    "SelfAdjointPhysicalHamiltonian.mathlibAdjointGraphTheorem",
-    "SelfAdjointPhysicalHamiltonian.concreteSelfAdjointTheorem",
-    "ConcretePVMSpectralMeasure",
-    "CompactCenteredPlaquetteObservable",
-    "NondefinitionalSpectralAtom3320",
-    "PositiveSpectralWeightDerivation3320",
-)
-
-REQUIRED_STATUS_ANCHORS = (
-    "R1: Mathlib-substrate discharged / downstream physical integration pending",
-    "R2: dense-domain unbounded operator discharged / downstream self-adjointness pending",
+FORBIDDEN_PHRASES = (
+    "R1: closed",
+    "R2: closed",
+    "R3: closed",
+    "R4: closed",
+    "R5: closed",
+    "R6: closed",
+    "R7: closed",
     "R3: input bridge installed / Mathlib adjoint graph theorem pending",
     "R4: open / PVM-construction required",
     "R5: open / observable-construction required",
     "R6: open / non-definitional exact-value derivation required",
     "R7: open / nontrivial positive spectral-weight derivation required",
-)
-
-FORBIDDEN_COLLAPSE_PHRASES = (
-    "R1: closed",
-    "R1: open / construction-hardening required",
-    "R2: closed",
-    "R2: open / domain-hardening required",
-    "R2: dense-domain LinearPMap discharged / unboundedness quantification pending",
-    "R2 unboundedness quantification: visible as remaining hard point",
-    "R3: closed",
-    "R3: open / self-adjointness-hardening required",
-    "R3--R7 downstream obligations: visible",
-    "R4: closed",
-    "R5: closed",
-    "R6: closed",
-    "R7: closed",
     "external mathematical consensus obtained",
     "fully concrete analytic construction completed",
 )
 
 
-def require_all(text: str, anchors: tuple[str, ...], label: str) -> list[str]:
-    return [f"missing {label} anchor {anchor!r} in ledger text" for anchor in anchors if anchor not in text]
-
-
-def forbid_all(text: str, anchors: tuple[str, ...], label: str) -> list[str]:
-    return [f"forbidden {label} phrase {anchor!r} in ledger text" for anchor in anchors if anchor in text]
-
-
-def read_required(path: Path, failures: list[str]) -> str:
-    if not path.exists():
-        failures.append(f"missing hard physical residual ledger component: {path}")
-        return ""
-    return path.read_text(encoding="utf-8")
+def read_all() -> tuple[str, list[str]]:
+    failures: list[str] = []
+    chunks: list[str] = []
+    for path in LEDGER_PATHS:
+        if not path.exists():
+            failures.append(f"missing hard physical residual ledger component: {path}")
+        else:
+            chunks.append(path.read_text(encoding="utf-8"))
+    return "\n".join(chunks), failures
 
 
 def main() -> None:
-    failures: list[str] = []
-    ledger_text = read_required(LEDGER_PATH, failures)
-    terminal_text = read_required(TERMINAL_LEDGER_PATH, failures)
-    text = ledger_text + "\n" + terminal_text
+    text, failures = read_all()
 
-    failures.extend(require_all(text, REQUIRED_LEDGER_ANCHORS, "ledger"))
-    failures.extend(require_all(text, REQUIRED_INTERNAL_DISCHARGE_ANCHORS, "internal-discharge"))
-    failures.extend(require_all(text, REQUIRED_LEDGER_BRIDGE_ANCHORS, "ledger-bridge"))
-    failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_MAP_ANCHORS, "final-bundle-map"))
-    failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS, "final-bundle-status-manifest"))
-    failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS, "final-bundle-status-manifest-chain-index"))
-    failures.extend(require_all(text, REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS, "r1-concrete-hilbert-closure"))
-    failures.extend(require_all(text, REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS, "r2-dense-domain-operator-closure"))
-    failures.extend(require_all(text, REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS, "r3-self-adjoint-input-bridge"))
-    failures.extend(require_all(text, REQUIRED_R1_R7_TERMINAL_DISCHARGE_CHAIN_INDEX_ANCHORS, "r1-r7-terminal-discharge-chain-index"))
-    failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
-    failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
-    failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
-    failures.extend(require_all(text, REQUIRED_STATUS_ANCHORS, "status"))
-    failures.extend(forbid_all(text, FORBIDDEN_COLLAPSE_PHRASES, "premature-closure"))
+    for label, anchors in ANCHOR_GROUPS:
+        missing = [anchor for anchor in anchors if anchor not in text]
+        failures.extend(f"missing {label} anchor {anchor!r}" for anchor in missing)
+
+    forbidden = [phrase for phrase in FORBIDDEN_PHRASES if phrase in text]
+    failures.extend(f"forbidden premature-closure phrase {phrase!r}" for phrase in forbidden)
 
     print("Hard physical residual ledger audit")
-    print(f"Ledger anchors audited: {len(REQUIRED_LEDGER_ANCHORS)}")
-    print(f"Internal discharge anchors audited: {len(REQUIRED_INTERNAL_DISCHARGE_ANCHORS)}")
-    print(f"Ledger bridge anchors audited: {len(REQUIRED_LEDGER_BRIDGE_ANCHORS)}")
-    print(f"Final bundle map anchors audited: {len(REQUIRED_FINAL_BUNDLE_MAP_ANCHORS)}")
-    print(f"Final bundle status manifest anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS)}")
-    print(f"Final bundle status manifest chain index anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS)}")
-    print(f"R1 concrete Hilbert closure anchors audited: {len(REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS)}")
-    print(f"R2 dense-domain operator closure anchors audited: {len(REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS)}")
-    print(f"R3 self-adjoint input bridge anchors audited: {len(REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS)}")
-    print(f"R1-R7 terminal discharge chain index anchors audited: {len(REQUIRED_R1_R7_TERMINAL_DISCHARGE_CHAIN_INDEX_ANCHORS)}")
-    print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
-    print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
-    print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
-    print(f"Status anchors audited: {len(REQUIRED_STATUS_ANCHORS)}")
-    print(f"Forbidden premature-closure phrases audited: {len(FORBIDDEN_COLLAPSE_PHRASES)}")
+    for label, anchors in ANCHOR_GROUPS:
+        print(f"{label} anchors audited: {len(anchors)}")
+    print(f"Forbidden premature-closure phrases audited: {len(FORBIDDEN_PHRASES)}")
 
     if failures:
         print("Hard physical residual ledger audit failed:", file=sys.stderr)
