@@ -12,6 +12,7 @@ from pathlib import Path
 import sys
 
 LEDGER_PATH = Path("docs/hard_physical_residual_ledger.md")
+TERMINAL_LEDGER_PATH = Path("docs/hard_physical_residual_ledger_terminal_discharge_index.md")
 
 REQUIRED_LEDGER_ANCHORS = (
     "Hard Physical Residual Ledger v0.1",
@@ -157,6 +158,22 @@ REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS = (
     "R4--R7 downstream obligations: visible",
 )
 
+REQUIRED_R1_R7_TERMINAL_DISCHARGE_CHAIN_INDEX_ANCHORS = (
+    "Hard Physical Residual Ledger Terminal Discharge Chain Index v0.1",
+    "MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean",
+    "HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex",
+    "hardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex3320",
+    "hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready",
+    "hard_physical_residual_ledger_r1_r7_terminal_discharged",
+    "hard_physical_residual_ledger_r1_r7_terminal_final_release_held",
+    "hard_physical_residual_ledger_r1_r7_terminal_public_boundary_locked",
+    "hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight",
+    "R1--R7 terminal discharge chain index: installed / terminal discharge receipt visible",
+    "Terminal exact 33/20 and positive spectral-weight projection: carried",
+    "Terminal final-release boundary: held",
+    "Terminal public boundary: locked",
+)
+
 REQUIRED_RESIDUAL_IDS = (
     "R1. Concrete real Hilbert space on Mathlib",
     "R2. Densely defined unbounded operator",
@@ -225,20 +242,25 @@ FORBIDDEN_COLLAPSE_PHRASES = (
 
 
 def require_all(text: str, anchors: tuple[str, ...], label: str) -> list[str]:
-    return [f"missing {label} anchor {anchor!r} in {LEDGER_PATH}" for anchor in anchors if anchor not in text]
+    return [f"missing {label} anchor {anchor!r} in ledger text" for anchor in anchors if anchor not in text]
 
 
 def forbid_all(text: str, anchors: tuple[str, ...], label: str) -> list[str]:
-    return [f"forbidden {label} phrase {anchor!r} in {LEDGER_PATH}" for anchor in anchors if anchor in text]
+    return [f"forbidden {label} phrase {anchor!r} in ledger text" for anchor in anchors if anchor in text]
+
+
+def read_required(path: Path, failures: list[str]) -> str:
+    if not path.exists():
+        failures.append(f"missing hard physical residual ledger component: {path}")
+        return ""
+    return path.read_text(encoding="utf-8")
 
 
 def main() -> None:
     failures: list[str] = []
-    if not LEDGER_PATH.exists():
-        failures.append(f"missing hard physical residual ledger: {LEDGER_PATH}")
-        text = ""
-    else:
-        text = LEDGER_PATH.read_text(encoding="utf-8")
+    ledger_text = read_required(LEDGER_PATH, failures)
+    terminal_text = read_required(TERMINAL_LEDGER_PATH, failures)
+    text = ledger_text + "\n" + terminal_text
 
     failures.extend(require_all(text, REQUIRED_LEDGER_ANCHORS, "ledger"))
     failures.extend(require_all(text, REQUIRED_INTERNAL_DISCHARGE_ANCHORS, "internal-discharge"))
@@ -249,6 +271,7 @@ def main() -> None:
     failures.extend(require_all(text, REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS, "r1-concrete-hilbert-closure"))
     failures.extend(require_all(text, REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS, "r2-dense-domain-operator-closure"))
     failures.extend(require_all(text, REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS, "r3-self-adjoint-input-bridge"))
+    failures.extend(require_all(text, REQUIRED_R1_R7_TERMINAL_DISCHARGE_CHAIN_INDEX_ANCHORS, "r1-r7-terminal-discharge-chain-index"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -265,6 +288,7 @@ def main() -> None:
     print(f"R1 concrete Hilbert closure anchors audited: {len(REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS)}")
     print(f"R2 dense-domain operator closure anchors audited: {len(REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS)}")
     print(f"R3 self-adjoint input bridge anchors audited: {len(REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS)}")
+    print(f"R1-R7 terminal discharge chain index anchors audited: {len(REQUIRED_R1_R7_TERMINAL_DISCHARGE_CHAIN_INDEX_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
