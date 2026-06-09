@@ -93,6 +93,8 @@ REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS = (
     "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_public_boundary_locked",
     "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_no_auto_release",
     "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_nonpromotion_boundary",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_r1_closure_ready",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_r2_closure_ready",
     "HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex: installed / final-bundle status-manifest chain index visible",
 )
 
@@ -110,7 +112,24 @@ REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS = (
     "hard_physical_residual_ledger_r1_concrete_hilbert_closure_downstream_obligations_visible",
     "HardPhysicalResidualLedgerR1ConcreteHilbertClosure: installed / R1 concrete Hilbert closure bridge visible",
     "R1 Mathlib substrate: discharged and carried into ledger bridge",
-    "R2--R7 downstream obligations: visible",
+)
+
+REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS = (
+    "MGAP4D/HardPhysicalResidualLedgerR2DenseDomainOperatorClosure.lean",
+    "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure",
+    "hardPhysicalResidualLedgerR2DenseDomainOperatorClosure3320",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_3320_ready",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_linear_pmap_ready",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_dense_domain",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_eq_completed",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_closed",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_final_release_held",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_public_boundary_locked",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obligations_visible",
+    "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure: installed / R2 dense-domain operator closure bridge visible",
+    "R2 dense-domain LinearPMap: discharged and carried into ledger bridge",
+    "R2 unboundedness quantification: visible as remaining hard point",
+    "R3--R7 downstream obligations: visible",
 )
 
 REQUIRED_RESIDUAL_IDS = (
@@ -128,6 +147,7 @@ REQUIRED_CLOSURE_PHRASES = (
     "InnerProductSpace ℝ",
     "CompleteSpace",
     "dense subspace or dense set",
+    "Mathlib LinearPMap",
     "domain equality with the adjoint",
     "projection-valued measure",
     "countable additivity",
@@ -138,7 +158,7 @@ REQUIRED_CLOSURE_PHRASES = (
 )
 
 REQUIRED_SPINE_ANCHORS = (
-    "DenseDomainUnboundedHamiltonian",
+    "DenseDomainUnboundedHamiltonian.unboundednessQuantification",
     "SelfAdjointPhysicalHamiltonian",
     "ConcretePVMSpectralMeasure",
     "CompactCenteredPlaquetteObservable",
@@ -148,7 +168,7 @@ REQUIRED_SPINE_ANCHORS = (
 
 REQUIRED_STATUS_ANCHORS = (
     "R1: Mathlib-substrate discharged / downstream physical integration pending",
-    "R2: open / domain-hardening required",
+    "R2: dense-domain LinearPMap discharged / unboundedness quantification pending",
     "R3: open / self-adjointness-hardening required",
     "R4: open / PVM-construction required",
     "R5: open / observable-construction required",
@@ -160,6 +180,7 @@ FORBIDDEN_COLLAPSE_PHRASES = (
     "R1: closed",
     "R1: open / construction-hardening required",
     "R2: closed",
+    "R2: open / domain-hardening required",
     "R3: closed",
     "R4: closed",
     "R5: closed",
@@ -193,6 +214,7 @@ def main() -> None:
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS, "final-bundle-status-manifest"))
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS, "final-bundle-status-manifest-chain-index"))
     failures.extend(require_all(text, REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS, "r1-concrete-hilbert-closure"))
+    failures.extend(require_all(text, REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS, "r2-dense-domain-operator-closure"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -207,6 +229,7 @@ def main() -> None:
     print(f"Final bundle status manifest anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS)}")
     print(f"Final bundle status manifest chain index anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS)}")
     print(f"R1 concrete Hilbert closure anchors audited: {len(REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS)}")
+    print(f"R2 dense-domain operator closure anchors audited: {len(REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
