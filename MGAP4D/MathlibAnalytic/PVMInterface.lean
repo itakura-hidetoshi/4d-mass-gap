@@ -3,6 +3,20 @@ import MGAP4D.MathlibAnalytic.SpectralTheoremInterface
 namespace MGAP4D
 namespace MathlibAnalytic
 
+/-- Boundary marker for the abstract PVM interface.
+
+This replaces a trivial propositional marker with a named data marker. -/
+inductive PVMInterfaceBoundaryMarker where
+  | pvmTheoremDeferred
+  deriving DecidableEq
+
+/-- Boundary markers for the PVM review surface. -/
+inductive PVMReviewBoundaryMarker where
+  | fullPVMTheoremDeferred
+  | mathlibInterfaceBacked
+  | finalReleaseHeld
+  deriving DecidableEq
+
 /-- Abstract projection-valued-measure interface.
 
 This is not yet the full projection-valued-measure theorem.  It records the
@@ -19,7 +33,7 @@ structure ProjectionValuedMeasureInterface where
   exact_atom_mass_positive : 0 < projectionMass exactAtom
   exact_atom_mass_nonzero : projectionMass exactAtom ≠ 0
   exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
-  fullPVMTheoremStillOpen : Prop
+  pvmTheoremBoundary : PVMInterfaceBoundaryMarker
 
 /-- Ready predicate for the abstract PVM interface. -/
 def ProjectionValuedMeasureInterface.ready
@@ -30,7 +44,7 @@ def ProjectionValuedMeasureInterface.ready
   0 < P.projectionMass P.exactAtom ∧
   P.projectionMass P.exactAtom ≠ 0 ∧
   exactGapValueReal = (33 : ℝ) / 20 ∧
-  P.fullPVMTheoremStillOpen
+  P.pvmTheoremBoundary = PVMInterfaceBoundaryMarker.pvmTheoremDeferred
 
 /-- Singleton exact-gap atom used by the prototype PVM interface. -/
 def exactGapAtomReal : Set ℝ := Set.singleton exactGapValueReal
@@ -63,7 +77,7 @@ noncomputable def singletonPVMInterface : ProjectionValuedMeasureInterface :=
     exact_atom_mass_positive := prototypeProjectionMassReal_exact_atom_pos
     exact_atom_mass_nonzero := prototypeProjectionMassReal_exact_atom_ne_zero
     exact_value_eq_3320 := exactGapValueReal_eq
-    fullPVMTheoremStillOpen := True }
+    pvmTheoremBoundary := PVMInterfaceBoundaryMarker.pvmTheoremDeferred }
 
 theorem singleton_pvm_interface_ready : singletonPVMInterface.ready := by
   exact And.intro singleton_spectral_theorem_interface_ready <|
@@ -71,7 +85,7 @@ theorem singleton_pvm_interface_ready : singletonPVMInterface.ready := by
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro prototypeProjectionMassReal_exact_atom_pos <|
     And.intro prototypeProjectionMassReal_exact_atom_ne_zero <|
-    And.intro exactGapValueReal_eq True.intro
+    And.intro exactGapValueReal_eq rfl
 
 theorem singleton_pvm_interface_exact_value_in_atom :
     exactGapValueReal ∈ singletonPVMInterface.exactAtom := by
@@ -94,9 +108,9 @@ structure PVMReviewSurface where
   exactAtomMassPositive : 0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom
   exactAtomMassNonzero : singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0
   exactValue_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
-  fullPVMTheoremStillOpen : Prop
-  mainMathlibBacked : Prop
-  finalReleaseHeld : Prop
+  pvmTheoremBoundary : PVMReviewBoundaryMarker
+  mathlibBackedBoundary : PVMReviewBoundaryMarker
+  finalReleaseBoundary : PVMReviewBoundaryMarker
 
 def PVMReviewSurface.ready (S : PVMReviewSurface) : Prop :=
   spectralTheoremReviewSurface.ready ∧
@@ -105,7 +119,9 @@ def PVMReviewSurface.ready (S : PVMReviewSurface) : Prop :=
   0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∧
   singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0 ∧
   exactGapValueReal = (33 : ℝ) / 20 ∧
-  S.fullPVMTheoremStillOpen ∧ S.mainMathlibBacked ∧ S.finalReleaseHeld
+  S.pvmTheoremBoundary = PVMReviewBoundaryMarker.fullPVMTheoremDeferred ∧
+  S.mathlibBackedBoundary = PVMReviewBoundaryMarker.mathlibInterfaceBacked ∧
+  S.finalReleaseBoundary = PVMReviewBoundaryMarker.finalReleaseHeld
 
 noncomputable def pvmReviewSurface : PVMReviewSurface :=
   { spectralReviewReady := spectral_theorem_review_surface_ready
@@ -114,9 +130,9 @@ noncomputable def pvmReviewSurface : PVMReviewSurface :=
     exactAtomMassPositive := singleton_pvm_interface_exact_atom_mass_positive
     exactAtomMassNonzero := singleton_pvm_interface_exact_atom_mass_nonzero
     exactValue_eq_3320 := exactGapValueReal_eq
-    fullPVMTheoremStillOpen := True
-    mainMathlibBacked := True
-    finalReleaseHeld := True }
+    pvmTheoremBoundary := PVMReviewBoundaryMarker.fullPVMTheoremDeferred
+    mathlibBackedBoundary := PVMReviewBoundaryMarker.mathlibInterfaceBacked
+    finalReleaseBoundary := PVMReviewBoundaryMarker.finalReleaseHeld }
 
 theorem pvm_review_surface_ready : pvmReviewSurface.ready := by
   exact And.intro spectral_theorem_review_surface_ready <|
@@ -125,12 +141,12 @@ theorem pvm_review_surface_ready : pvmReviewSurface.ready := by
     And.intro singleton_pvm_interface_exact_atom_mass_positive <|
     And.intro singleton_pvm_interface_exact_atom_mass_nonzero <|
     And.intro exactGapValueReal_eq <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro rfl <|
+    And.intro rfl rfl
 
 theorem pvm_review_surface_final_release_held :
-    pvmReviewSurface.finalReleaseHeld := by
-  trivial
+    pvmReviewSurface.finalReleaseBoundary = PVMReviewBoundaryMarker.finalReleaseHeld := by
+  rfl
 
 end MathlibAnalytic
 end MGAP4D
