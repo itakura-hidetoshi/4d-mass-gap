@@ -14,11 +14,19 @@ KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance
 
 ---
 
-## Status as of 2026-06-07
+## Status as of 2026-06-09
 
 The current `main` branch records an **internal normalized Lean theorem-body / proof-architecture surface** for a normalized 4D mass-gap route.
 
-The active mathematical engineering front has moved from the local finite-supported measurable PVM scaffold into the **R4 actual-Borel spectral-measure/PVM phase**.
+The current mathematical engineering front has two tightly separated lanes:
+
+```text
+R4 genuine operator-valued spectral-measure/PVM obligations
+  = active analytic hardening front
+
+R5 compact centered plaquette observable direct-proof downstream contract
+  = root-integrated support lane, not atom/weight release
+```
 
 Current status, stated conservatively:
 
@@ -27,11 +35,14 @@ internal normalized theorem-body value: 33/20
 physical normalization boundary: present
 continuum-Hamiltonian proof-architecture surfaces: present
 concrete l2 R2 local analytic lane: support/boundary layer, not spectral release
-R4 finite-supported measurable local PVM phase: support/boundary layer completed
+R4 finite-supported measurable local PVM phase: completed as scaffold/boundary
 R4 actual Set ℝ endpoint carrier: present
 R4 actual Borel endpoint set algebra: present
 R4 actual Borel wrapper / closure phase surfaces: present, boundary-held
-full genuine operator-valued spectral measure: not yet claimed
+R4 genuine operator-valued spectral measure: not yet claimed
+R5 direct proof of compact/centered/smeared chosen-observable laws: present
+R5 downstream input contract: present and root-integrated through R5 theorem surface
+R7 exact atom / positive spectral weight: not yet claimed
 public final theorem acceptance: not claimed
 ```
 
@@ -42,14 +53,16 @@ exactGapValueReal = 33 / 20
 Delta_norm = 33/20
 ```
 
-`33/20` is treated as an **internal normalized theorem-body value**. It is not treated as a documentation artifact, CI artifact, manifest-only artifact, release-wrapper artifact, or prototype-only assertion.
+`33/20` is treated as an **internal normalized theorem-body value**. It is not treated as a documentation artifact, CI artifact, manifest-only artifact, release-wrapper artifact, prototype-only assertion, or downstream R5/R7 shortcut.
 
 Recommended public wording:
 
 ```text
 MGAP4D provides a Lean 4 proof architecture and replayable audit surface
 for an internal normalized 4D mass-gap theorem-body route with normalized value 33/20.
-The current active front is the R4 actual-Borel spectral-measure/PVM phase.
+The active analytic front is the R4 genuine operator-valued spectral-measure/PVM obligation layer.
+The R5 compact centered plaquette observable now has a direct-proof downstream contract,
+but exact atom/positive-weight release is still blocked.
 Public final theorem acceptance is not claimed.
 ```
 
@@ -72,6 +85,10 @@ R4 endpoint measurability for ∅ and Set.univ: present
 R4 endpoint complement / union / intersection algebra: present
 R4 actual Borel wrapper as measurable subsets of ℝ: present as phase surface
 R4 Boolean closure witnesses for the actual Borel wrapper: present as phase surface
+R5 direct review-ready decomposition: present
+R5 chosen-observable compact / centered / smeared laws: present
+R5 observable-atom chosen-observable transport: present
+R5 direct-proof downstream input contract: present
 ```
 
 It does **not** claim:
@@ -87,9 +104,11 @@ that external-audit readiness equals external audit
 that concrete l2 R2 residual-zero audit implies a closed operator theorem
 that graph-level formal-adjoint equality implies Mathlib IsSelfAdjoint promotion
 that finite-supported local PVM surfaces imply a genuine spectral measure
-that endpoint-only Borel surfaces imply arbitrary Borel spectral measure construction
+that endpoint-only Borel surfaces imply arbitrary Borel spectral-measure construction
 that actual Borel wrapper closure implies operator-topology countable additivity
-that the current R4 route already gives exact atom 33/20, positive spectral weight, or a physical Yang-Mills Hamiltonian
+that R5 compact/centered/smeared observable laws imply exact atom 33/20
+that R5 compact/centered/smeared observable laws imply positive spectral weight
+that the current route already gives a physical Yang-Mills Hamiltonian
 ```
 
 Review principle:
@@ -100,7 +119,8 @@ Replay success is evidence, not peer review.
 Documentation must never be treated as a substitute for theorem bodies.
 Local finite-supported PVM is scaffold and boundary, not final spectral measure.
 Actual Set ℝ / Borel carrier progress is real progress, but not yet operator-valued countable additivity.
-R4 PVM progress must not be promoted into R5 plaquette or R7 atom/weight claims prematurely.
+R5 direct-proof progress is real progress, but it is not R7 atom/weight release.
+R4 PVM progress and R5 observable progress must meet only through explicit theorem-body handoff.
 ```
 
 ---
@@ -137,6 +157,7 @@ Therefore `33/20` is the dimensionless spectral gap value of the normalized phys
 MGAP4D.lean
 MGAP4D/MathlibAnalytic.lean
 MGAP4D/R4/TheoremSurface.lean
+MGAP4D/R5/TheoremSurface.lean
 ```
 
 Pinned toolchain / dependency lane:
@@ -146,7 +167,9 @@ Lean:    leanprover/lean4:v4.30.0-rc2
 mathlib: v4.30.0-rc2
 ```
 
-The top-level Lake roots are `MGAP4D` and `MGAP4D.MathlibAnalytic`. R4 is imported through the MGAP4D root and is the current spectral-measure/PVM hardening front.
+The top-level Lake roots are `MGAP4D` and `MGAP4D.MathlibAnalytic`.
+
+The current R4 front is imported through the MGAP4D root as the spectral-measure/PVM hardening surface. The current R5 direct-proof downstream contract is also root-integrated through `MGAP4D/R5/TheoremSurface.lean`.
 
 ---
 
@@ -169,7 +192,7 @@ lake build
 
 A successful replay means that the pinned Lean/Lake/mathlib environment builds and that the declared audit scripts and theorem-surface checks pass.
 
-A successful replay does **not** by itself mean external mathematical consensus, peer-review completion, full PVM construction, or public final theorem acceptance.
+A successful replay does **not** by itself mean external mathematical consensus, peer-review completion, full PVM construction, exact atom/positive-weight release, or public final theorem acceptance.
 
 ---
 
@@ -193,19 +216,21 @@ Exact normalized value / real positivity
   -> actual Borel endpoint set algebra
   -> actual Borel set wrapper
   -> actual Borel set-algebra closure surface
-  -> genuine spectral-measure obligations
-  -> R5 compact centered plaquette observable / R7 atom-weight route
+  -> genuine operator-valued spectral-measure obligations
+  -> R5 compact centered plaquette observable direct proof
+  -> R5 downstream input contract
+  -> R7 exact atom / positive spectral weight route
 ```
 
 The important current transition is:
 
 ```text
-local finite-supported PVM scaffold
-  -> actual Set ℝ endpoint carrier
-  -> actual Borel endpoint set algebra
-  -> arbitrary Borel carrier wrapper
-  -> Boolean closure witnesses
-  -> operator-valued countable additivity and spectral theorem handoff
+R4 actual-Borel wrapper / closure
+  -> R4 operator-valued spectral-measure API
+  -> operator-topology countable additivity
+  -> self-adjoint spectral theorem handoff
+  -> R5 direct-proof downstream contract consumption
+  -> R7 exact atom / positive spectral weight
 ```
 
 ---
@@ -240,15 +265,52 @@ public nonpromotion boundary after each step
 Still open in R4:
 
 ```text
-arbitrary Borel API hardening beyond wrapper closure
+operator-valued spectral-measure API
 operator-topology countable additivity
 projection-valued spectral-measure construction
 self-adjoint spectral theorem handoff
 spectral integral compatibility
 exact atom 33/20 from the genuine PVM route
 positive spectral weight
-promotion into R5 compact centered plaquette observable
 physical Yang-Mills Hamiltonian promotion
+```
+
+---
+
+## R5 compact centered plaquette observable front
+
+Representative files for the current R5 direct-proof front:
+
+```text
+MGAP4D/R5/TheoremSurface.lean
+MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableReviewReadyDirectProof.lean
+MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean
+MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofDownstreamInputContract.lean
+```
+
+Current R5 completed/ready surfaces:
+
+```text
+review-ready surface is decomposed directly with rcases
+compact support / centered / smeared laws are extracted from theorem bodies
+chosen-observable equality is used by rewrite, not by documentation shortcut
+observable-atom chosen observable receives the same laws by transport
+direct-proof final export is present
+downstream input contract is present
+public boundary is held
+atom 33/20 is not consumed
+positive spectral weight is not consumed
+R4 no-shell-to-full-collapse boundary is preserved
+```
+
+Still open downstream of R5:
+
+```text
+consume R5 downstream input against a genuine R4 operator-valued PVM
+derive exact atom 33/20 through theorem bodies
+derive positive spectral weight through theorem bodies
+bridge into R7 without bypassing R4 genuine spectral-measure obligations
+preserve physical normalization boundary
 ```
 
 ---
@@ -263,7 +325,7 @@ Current local reading:
 R2 graph-norm core blocker: closed at the current route layer
 R2 residual-zero audit surface: present
 formal-adjoint graph / operator-value surface: present
-R2 residual taxonomy: active review lane
+R2 residual taxonomy: support review lane
 ```
 
 Still boundary-held:
@@ -291,10 +353,11 @@ Recommended external review order:
 5. Read `INDEPENDENT_REPLAY.md`.
 6. Inspect the physical normalization boundary in `PHYSICAL_REALIZATION_BOUNDARY.md`.
 7. Inspect the R4 spectral-measure/PVM files listed above.
-8. Verify that finite-supported local PVM is not promoted to genuine spectral measure.
-9. Verify that actual-Borel carrier/wrapper closure is not promoted to operator-valued countable additivity.
-10. Inspect the R2 local analytic lane only as a support/boundary lane.
-11. Record review notes append-only.
+8. Verify that actual-Borel carrier/wrapper closure is not promoted to operator-valued countable additivity.
+9. Inspect the R5 direct-proof files listed above.
+10. Verify that R5 compact/centered/smeared laws are not promoted to atom/weight release.
+11. Inspect the R2 local analytic lane only as a support/boundary lane.
+12. Record review notes append-only.
 
 Core commands and files:
 
@@ -307,10 +370,14 @@ Core commands and files:
 | `INDEPENDENT_REPLAY.md` | Fresh-clone replay procedure. |
 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Boundary for physical interpretation. |
 | `MGAP4D/R4/TheoremSurface.lean` | Current root-integrated R4 theorem surface. |
+| `MGAP4D/R5/TheoremSurface.lean` | Current root-integrated R5 theorem surface. |
 | `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointCarrier.lean` | Actual Set ℝ endpoint carrier. |
 | `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointSetAlgebra.lean` | Endpoint Boolean set algebra. |
 | `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelSetWrapper.lean` | Actual Borel wrapper phase surface. |
 | `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelSetAlgebraClosure.lean` | Wrapper closure phase surface. |
+| `MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableReviewReadyDirectProof.lean` | R5 direct decomposition proof. |
+| `MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean` | R5 direct-proof final export. |
+| `MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofDownstreamInputContract.lean` | R5 downstream input contract. |
 
 ---
 
@@ -355,8 +422,11 @@ fresh-clone replay
 Lean kernel checking
 theorem-surface inspection
 R4 actual-Borel carrier / wrapper review
+R4 operator-valued spectral-measure API review
 operator-topology countable-additivity review
 self-adjoint spectral theorem handoff review
+R5 direct-proof downstream contract review
+R7 exact atom / positive spectral-weight review
 physical-normalization review
 continuum-Hamiltonian review
 concrete l2 R2 support-lane review
@@ -365,4 +435,4 @@ documentation consistency
 external mathematical review
 ```
 
-Do not treat documentation, CI ledgers, local finite-supported PVM scaffolds, or audit scripts as substitutes for Lean kernel checking and mathematical proof review.
+Do not treat documentation, CI ledgers, local finite-supported PVM scaffolds, R5 direct-proof support lanes, or audit scripts as substitutes for Lean kernel checking and mathematical proof review.
