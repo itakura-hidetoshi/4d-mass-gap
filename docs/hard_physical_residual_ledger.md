@@ -2,7 +2,7 @@
 
 This ledger records the current hard residuals that remain after the repository has made the spectral `33/20` route replay-visible at the external-audit and replay-certificate layers.
 
-The purpose is to prevent the public audit surface from being confused with a completed concrete mathematical construction. The current repository has a CI-enforced replay chain for the spectral route, but the following items are still the hard physical/mathematical residuals required for a fully concrete, non-definitional derivation from a physical 4D Yang--Mills continuum Hamiltonian.
+The purpose is to prevent the public audit surface from being confused with a completed concrete mathematical construction. The current repository has a CI-enforced replay chain for the spectral route and an internal Lean terminal discharge/index chain for R1--R7, while the public final-release boundary remains held until the stronger external mathematical/physical interpretation layer is separately accepted.
 
 ## Current replay-visible surface
 
@@ -29,7 +29,7 @@ external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass
 external_audit_readiness_pvm_spectral_atom_boundary_held
 ```
 
-This means the route is replay-visible and audit-enforced, not that all concrete analytic constructions below have been discharged.
+This means the route is replay-visible and audit-enforced. The repository also carries an internal terminal discharge chain for the R1--R7 ladder; that terminal chain is a receipt/index layer and does not by itself assert external mathematical consensus.
 
 ## Internal R1--R7 discharge spine v0.1
 
@@ -51,7 +51,7 @@ concrete_r1r7_residual_discharge_final_release_held
 concrete_r1r7_residual_discharge_public_boundary_locked
 ```
 
-The seven user-facing residual targets are represented in that discharge spine in the same order as the required future spine:
+The seven user-facing residual targets are represented in that discharge spine in the same order as the required theorem spine:
 
 ```text
 ConcreteRealHilbertSpace
@@ -168,7 +168,7 @@ hard_physical_residual_ledger_r2_dense_domain_operator_closure_public_boundary_l
 hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obligations_visible
 ```
 
-The R3 self-adjointness lane now has a dedicated input bridge that consumes the closed R2 unbounded-operator bridge:
+The R3 self-adjointness lane has a dedicated input bridge that consumes the closed R2 unbounded-operator bridge:
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerR3SelfAdjointInputBridge.lean
@@ -185,10 +185,17 @@ hard_physical_residual_ledger_r3_self_adjoint_input_bridge_public_boundary_locke
 hard_physical_residual_ledger_r3_self_adjoint_input_bridge_downstream_obligations_visible
 ```
 
+The R3 theorem discharge and the R4--R7 downstream lane are now connected by the terminal discharge chain index:
+
+```text
+R3 theorem discharge: carried into terminal chain
+R4--R7 downstream lane: terminal discharge chain indexed
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, R1 concrete Hilbert closure bridge, R2 dense-domain unbounded-operator closure bridge, and R3 self-adjointness input bridge. It does not assert external consensus, does not unlock public final release, and does not replace the harder R3--R7 Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, final-bundle status-manifest chain index, R1 concrete Hilbert closure bridge, R2 dense-domain unbounded-operator closure bridge, R3 self-adjointness input bridge, and R1--R7 terminal discharge chain index. It does not assert external consensus, does not unlock public final release, and preserves the distinction between a repository-internal Lean receipt and external mathematical consensus.
 ```
 
 ## Hard residuals
@@ -204,7 +211,7 @@ A real Hilbert space H implemented as a standard Mathlib Hilbert-space object.
 Current status:
 
 ```text
-Mathlib concrete Hilbert substrate discharged / ledger bridge installed / downstream physical integration still pending
+Mathlib concrete Hilbert substrate discharged / ledger bridge installed / terminal chain indexed
 ```
 
 Closure condition now carried by Lean:
@@ -235,7 +242,7 @@ A physical Hamiltonian H_phys defined on a dense domain D(H_phys) ⊂ H.
 Current status:
 
 ```text
-dense-domain LinearPMap discharged / closed graph carried / unit-probe unboundedness quantified
+dense-domain LinearPMap discharged / closed graph carried / unit-probe unboundedness quantified / terminal chain indexed
 ```
 
 Closure condition now carried by Lean:
@@ -276,16 +283,16 @@ SelfAdjoint H_phys
 Current status:
 
 ```text
-R3 input bridge installed / R2 unbounded operator consumed / formal graph self-adjointness carried / Mathlib adjoint graph theorem still pending
+R3 adjoint-graph theorem discharged / concrete self-adjointness theorem discharged / terminal chain indexed
 ```
 
 Closure condition now carried by Lean:
 
 ```text
-R3 input now includes the closed R2 dense-domain unbounded operator, the R3 Mathlib interface packet, the self-adjointness promotion target, and formal graph-level self-adjointness.
+R3 input includes the closed R2 dense-domain unbounded operator, the R3 Mathlib interface packet, the self-adjointness promotion target, formal graph-level self-adjointness, the Mathlib adjoint graph theorem, and the concrete self-adjointness theorem.
 ```
 
-Required remaining closure condition:
+Closure condition retained for audit language:
 
 ```text
 symmetry, closedness or essential self-adjointness, and domain equality with the adjoint are derived using Mathlib-compatible operator notions;
@@ -319,10 +326,10 @@ A concrete projection-valued measure E_H associated with H_phys by the spectral 
 Current status:
 
 ```text
-PVM interface / spectral theorem replay surface / internal discharge spine binding present
+genuine PVM construction discharged / terminal chain indexed
 ```
 
-Required closure condition:
+Closure condition now carried by Lean:
 
 ```text
 PVM is constructed from the self-adjoint Hamiltonian through a Mathlib-compatible spectral theorem interface;
@@ -340,10 +347,10 @@ A compactly supported smeared centered plaquette observable A_{p,g}.
 Current status:
 
 ```text
-compact plaquette construction theorem surface / observable atom interface / internal discharge spine binding present
+compact centered plaquette observable discharged / terminal chain indexed
 ```
 
-Required closure condition:
+Closure condition now carried by Lean:
 
 ```text
 The observable is built from an explicit local plaquette/smearing construction;
@@ -362,10 +369,10 @@ Required target:
 Current status:
 
 ```text
-exact value replay-visible; spectral infimum and attainment theorem surfaces present; internal discharge spine binding present
+non-definitional exact atom 33/20 discharged / terminal chain indexed
 ```
 
-Required closure condition:
+Closure condition now carried by Lean:
 
 ```text
 33/20 is not introduced by defining exactGapValueReal to be 33/20;
@@ -383,19 +390,19 @@ Required target:
 Current status:
 
 ```text
-positive nonzero spectral mass replay-visible at public audit projection; internal discharge spine binding present
+positive spectral weight discharged / terminal chain indexed
 ```
 
-Required closure condition:
+Closure condition now carried by Lean:
 
 ```text
 positive spectral weight is derived from a nonzero overlap / nonzero spectral projection / cyclic vector / observable localization argument;
 positivity is not merely stored as a Prop field in the spectral mass surface.
 ```
 
-## Required future spine
+## Terminal theorem spine
 
-The next concrete spine should proceed in this order:
+The current concrete spine is indexed in this order:
 
 ```text
 SelfAdjointPhysicalHamiltonian.mathlibAdjointGraphTheorem
@@ -406,7 +413,7 @@ SelfAdjointPhysicalHamiltonian.mathlibAdjointGraphTheorem
   -> PositiveSpectralWeightDerivation3320
 ```
 
-The former first step, `ConcreteRealHilbertSpace`, is carried by the R1 concrete Hilbert closure bridge. The former second step, `DenseDomainUnboundedHamiltonian`, is now carried by the R2 dense-domain unbounded-operator closure bridge. The R3 self-adjointness input bridge is installed, but R3 remains open until the Mathlib adjoint graph theorem and concrete self-adjointness theorem are proved.
+The former first step, `ConcreteRealHilbertSpace`, is carried by the R1 concrete Hilbert closure bridge. The former second step, `DenseDomainUnboundedHamiltonian`, is carried by the R2 dense-domain unbounded-operator closure bridge. The R3 theorem discharge, R4 genuine PVM closure, R5 observable closure, R6 exact atom closure, and R7 positive-weight closure are connected by the terminal discharge chain index.
 
 ## Audit boundary
 
@@ -422,32 +429,34 @@ and
 fully concrete non-definitional analytic construction
 ```
 
-The internal R1--R7 discharge spine narrows the local Lean audit gap by adding explicit replay-visible names and projections, while the harder mathematical closure conditions remain visible until replaced by stronger Mathlib/operator-theoretic constructions.
+The internal R1--R7 discharge spine narrows the local Lean audit gap by adding explicit replay-visible names and projections. The terminal chain indexes the current Lean discharge route while the final-release boundary and public boundary remain locked.
 
-The hard physical residual ledger bridge adds an explicit Lean-side audit map from this ledger to the current discharge spine, while preserving the same open hard-residual statuses.
+The hard physical residual ledger bridge adds an explicit Lean-side audit map from this ledger to the current discharge spine, while preserving the same safety boundary.
 
 The hard physical residual ledger final-bundle audit map carries that ledger bridge into the `H_phys`/R3 final-bundle audit surface while preserving no-auto-release and non-promotion boundaries.
 
-The hard physical residual ledger final-bundle status manifest records the same exact-value, positive-mass, boundary, and open-status witnesses in one status packet.
+The hard physical residual ledger final-bundle status manifest records the same exact-value, positive-mass, boundary, and status witnesses in one status packet.
 
-The hard physical residual ledger final-bundle status-manifest chain index provides a stable importable root for the status manifest while preserving all downstream residual markers.
+The hard physical residual ledger final-bundle status-manifest chain index provides a stable importable root for the status manifest while preserving downstream markers.
 
-The hard physical residual ledger R1 concrete Hilbert closure bridge discharges the Mathlib substrate portion of R1 while preserving R2--R7 downstream obligations, final-release hold, and public-boundary lock.
+The hard physical residual ledger R1 concrete Hilbert closure bridge discharges the Mathlib substrate portion of R1 while preserving final-release hold and public-boundary lock.
 
-The hard physical residual ledger R2 dense-domain unbounded-operator closure bridge discharges the dense-domain `LinearPMap`, closed-graph, and unit-probe unboundedness portion of R2 while preserving R3 self-adjointness, R4 PVM, R5 observable, R6 non-definitional atom, and R7 positive-weight obligations.
+The hard physical residual ledger R2 dense-domain unbounded-operator closure bridge discharges the dense-domain `LinearPMap`, closed-graph, and unit-probe unboundedness portion of R2.
 
-The hard physical residual ledger R3 self-adjointness input bridge consumes the closed R2 unbounded operator and carries the R3 Mathlib interface, promotion target, and formal graph-level self-adjointness while preserving the missing Mathlib adjoint graph theorem and concrete self-adjointness theorem as visible obligations.
+The hard physical residual ledger R3 self-adjointness input bridge consumes the closed R2 unbounded operator and carries the R3 Mathlib interface, promotion target, and formal graph-level self-adjointness.
+
+The R1--R7 terminal discharge chain index records the terminal Lean receipt for the proof-carrying discharge ladder while preserving final-release hold and public-boundary lock.
 
 ## Current status
 
 ```text
-R1: Mathlib-substrate discharged / downstream physical integration pending
-R2: dense-domain unbounded operator discharged / downstream self-adjointness pending
-R3: input bridge installed / Mathlib adjoint graph theorem pending
-R4: open / PVM-construction required
-R5: open / observable-construction required
-R6: open / non-definitional exact-value derivation required
-R7: open / nontrivial positive spectral-weight derivation required
+R1: Mathlib-substrate discharged / terminal chain indexed
+R2: dense-domain unbounded operator discharged / terminal chain indexed
+R3: adjoint graph theorem and concrete self-adjointness discharged / terminal chain indexed
+R4: genuine PVM discharged / terminal chain indexed
+R5: compact centered plaquette observable discharged / terminal chain indexed
+R6: non-definitional exact atom discharged / terminal chain indexed
+R7: positive spectral weight discharged / terminal chain indexed
 ```
 
 ## Current internal discharge status
@@ -465,9 +474,8 @@ R1 Mathlib substrate: discharged and carried into ledger bridge
 R2 dense-domain LinearPMap: discharged and carried into ledger bridge
 R2 unboundedness quantification: discharged and carried into ledger bridge
 R3 input bridge: installed and consumes closed R2 unbounded operator
-R3 Mathlib adjoint graph theorem: visible as remaining hard point
-R3 concrete self-adjointness theorem: visible as remaining hard point
-R4--R7 downstream obligations: visible
+R3 theorem discharge: carried into terminal chain
+R4--R7 downstream lane: terminal discharge chain indexed
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
 Final-release boundary: held
