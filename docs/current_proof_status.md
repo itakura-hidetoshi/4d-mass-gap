@@ -101,7 +101,7 @@ Inventory audit script:
 scripts/audit_proof_placeholder_inventory.py
 ```
 
-The inventory classifies `PUnit`, `True`, `StillOpen`, `theoremWitnessOnly`, `receipt`, `ready`, `prototype`, `skeleton`, `boundary`, `packet`, and `manifest` surfaces by replacement strength. These markers do not automatically substitute for analytic theorem bodies.
+`PUnit`, `True`, and `StillOpen` are open proof-debt markers. They must be replaced, discharged, or explicitly superseded by typed theorem anchors before any public analytic theorem route can count as discharged. Provenance and readiness markers such as `theoremWitnessOnly`, `receipt`, `ready`, `prototype`, `skeleton`, `boundary`, `packet`, and `manifest` remain review-order evidence unless their payload is a substantive typed theorem.
 
 ## Exact-gap layer separation
 
@@ -168,7 +168,7 @@ SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
 SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
 ```
 
-These are historical local boundary markers for earlier endpoint-stage files, not the current global status of the R4 route on `main`.
+These markers must be classified as historical or explicitly superseded before they can coexist with a terminal R4 closure reading. If a `StillOpen` marker is active, the corresponding obligation remains not discharged.
 
 Current R4 status should be reviewed through:
 
