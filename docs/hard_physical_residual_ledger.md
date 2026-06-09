@@ -113,10 +113,25 @@ hard_physical_residual_ledger_final_bundle_status_manifest_no_auto_release
 hard_physical_residual_ledger_final_bundle_status_manifest_nonpromotion_boundary
 ```
 
+The final-bundle status manifest is now indexed by a stable chain-index layer:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex.lean
+HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex
+hardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex3320
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_3320_ready
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_exact_gap_value_3320
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_positive_nonzero_spectral_mass
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_final_release_held
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_public_boundary_locked
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_no_auto_release
+hard_physical_residual_ledger_final_bundle_status_manifest_chain_index_nonpromotion_boundary
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, and final-bundle status manifest. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, final-bundle status manifest, and final-bundle status-manifest chain index. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -306,6 +321,8 @@ The hard physical residual ledger final-bundle audit map carries that ledger bri
 
 The hard physical residual ledger final-bundle status manifest records the same exact-value, positive-mass, boundary, and open-status witnesses in one status packet.
 
+The hard physical residual ledger final-bundle status-manifest chain index provides a stable importable root for the status manifest while preserving all open residual markers.
+
 ## Current status
 
 ```text
@@ -325,6 +342,7 @@ ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible
 HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible
 HardPhysicalResidualLedgerFinalBundleAuditMap: installed / final-bundle-facing ledger audit map visible
 HardPhysicalResidualLedgerFinalBundleStatusManifest: installed / final-bundle status manifest visible
+HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex: installed / final-bundle status-manifest chain index visible
 R1--R7 user-facing spine names: bound to replay-visible theorem-obligation completion
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
