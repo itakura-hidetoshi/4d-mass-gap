@@ -96,6 +96,23 @@ REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS = (
     "HardPhysicalResidualLedgerFinalBundleStatusManifestChainIndex: installed / final-bundle status-manifest chain index visible",
 )
 
+REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS = (
+    "MGAP4D/HardPhysicalResidualLedgerR1ConcreteHilbertClosure.lean",
+    "HardPhysicalResidualLedgerR1ConcreteHilbertClosure",
+    "hardPhysicalResidualLedgerR1ConcreteHilbertClosure3320",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_3320_ready",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_mathlib_ready",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_normed_add_comm_group",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_inner_product_space",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_complete_space",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_final_release_held",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_public_boundary_locked",
+    "hard_physical_residual_ledger_r1_concrete_hilbert_closure_downstream_obligations_visible",
+    "HardPhysicalResidualLedgerR1ConcreteHilbertClosure: installed / R1 concrete Hilbert closure bridge visible",
+    "R1 Mathlib substrate: discharged and carried into ledger bridge",
+    "R2--R7 downstream obligations: visible",
+)
+
 REQUIRED_RESIDUAL_IDS = (
     "R1. Concrete real Hilbert space on Mathlib",
     "R2. Densely defined unbounded operator",
@@ -121,7 +138,6 @@ REQUIRED_CLOSURE_PHRASES = (
 )
 
 REQUIRED_SPINE_ANCHORS = (
-    "ConcreteRealHilbertSpace",
     "DenseDomainUnboundedHamiltonian",
     "SelfAdjointPhysicalHamiltonian",
     "ConcretePVMSpectralMeasure",
@@ -131,7 +147,7 @@ REQUIRED_SPINE_ANCHORS = (
 )
 
 REQUIRED_STATUS_ANCHORS = (
-    "R1: open / construction-hardening required",
+    "R1: Mathlib-substrate discharged / downstream physical integration pending",
     "R2: open / domain-hardening required",
     "R3: open / self-adjointness-hardening required",
     "R4: open / PVM-construction required",
@@ -142,6 +158,7 @@ REQUIRED_STATUS_ANCHORS = (
 
 FORBIDDEN_COLLAPSE_PHRASES = (
     "R1: closed",
+    "R1: open / construction-hardening required",
     "R2: closed",
     "R3: closed",
     "R4: closed",
@@ -175,6 +192,7 @@ def main() -> None:
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_MAP_ANCHORS, "final-bundle-map"))
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS, "final-bundle-status-manifest"))
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS, "final-bundle-status-manifest-chain-index"))
+    failures.extend(require_all(text, REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS, "r1-concrete-hilbert-closure"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -188,6 +206,7 @@ def main() -> None:
     print(f"Final bundle map anchors audited: {len(REQUIRED_FINAL_BUNDLE_MAP_ANCHORS)}")
     print(f"Final bundle status manifest anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS)}")
     print(f"Final bundle status manifest chain index anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS)}")
+    print(f"R1 concrete Hilbert closure anchors audited: {len(REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
