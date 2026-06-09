@@ -29,6 +29,25 @@ R7 positive spectral-weight closure readiness indexed
 internal discharge spine binding present
 ```
 
+The terminal receipt now has a public audit surface and public audit chain index:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
+HardPhysicalResidualLedgerR1R7PublicAuditSurface
+hardPhysicalResidualLedgerR1R7PublicAuditSurface3320
+hard_physical_residual_ledger_r1_r7_public_audit_surface_3320_ready
+hard_physical_residual_ledger_public_surface_exact_3320_positive_weight
+hard_physical_residual_ledger_public_surface_r4_genuine_pvm_laws_visible
+hard_physical_residual_ledger_public_surface_boundary_locked
+MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
+HardPhysicalResidualLedgerR1R7PublicAuditChainIndex
+hardPhysicalResidualLedgerR1R7PublicAuditChainIndex3320
+hard_physical_residual_ledger_r1_r7_public_audit_chain_index_3320_ready
+hard_physical_residual_ledger_public_audit_chain_exact_3320_positive_weight
+hard_physical_residual_ledger_public_audit_chain_r4_genuine_pvm_laws_visible
+hard_physical_residual_ledger_public_audit_chain_boundary_locked
+```
+
 Status line for audit:
 
 ```text
@@ -36,10 +55,15 @@ R1--R7 terminal discharge chain index: installed / terminal discharge receipt vi
 Terminal exact 33/20 and positive spectral-weight projection: carried
 Terminal final-release boundary: held
 Terminal public boundary: locked
+R1--R7 public audit surface: installed / public receipt visible
+R1--R7 public audit chain index: installed / indexed public receipt visible
+Public audit exact 33/20 and positive spectral-weight projection: carried
+Public audit R4 genuine-PVM law receipts: visible
+Public audit boundary: non-releasing and locked
 ```
 
 Boundary statement:
 
 ```text
-The terminal chain index is a receipt/index layer. It does not assert external mathematical consensus and does not unlock the public final-release boundary.
+The terminal chain index, public audit surface, and public audit chain index are receipt/index layers. They do not assert external mathematical consensus and do not unlock the public final-release boundary.
 ```
