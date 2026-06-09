@@ -6,24 +6,29 @@ It is a navigation and audit document. It does not replace Lean kernel checking,
 
 Last synchronized: 2026-06-09
 
+Current short status anchor:
+
+```text
+docs/current_proof_status.md
+```
+
 ## Current public route
 
 The current public route is the R1--R7 terminal / public / external audit receipt chain.
 
 ```text
-R1 concrete Hilbert closure
-  -> R2 dense-domain unbounded operator closure
-  -> R3 adjoint-graph theorem discharge
-  -> R3 concrete self-adjointness theorem discharge
-  -> R4 genuine PVM closure
-  -> R5 compact centered plaquette observable closure
-  -> R6 non-definitional exact atom 33/20 closure
-  -> R7 positive spectral-weight closure
-  -> terminal discharge chain index
-  -> public audit surface
-  -> public audit chain index
-  -> guarded external-audit handoff
-  -> external-audit receipt chain index
+R1 ConcreteRealHilbertSpace
+  -> R2 DenseDomainUnboundedHamiltonian
+  -> R3 SelfAdjointPhysicalHamiltonian
+  -> R4 ConcretePVMSpectralMeasure
+  -> R5 CompactCenteredPlaquetteObservable
+  -> R6 NondefinitionalSpectralAtom3320
+  -> R7 PositiveSpectralWeightDerivation3320
+  -> R1R7TerminalDischargeChainIndex
+  -> R1R7PublicAuditSurface
+  -> R1R7PublicAuditChainIndex
+  -> R1R7ExternalAuditHandoff
+  -> R1R7ExternalAuditReceiptChainIndex
 ```
 
 Canonical source files:
@@ -36,25 +41,30 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
-Current short status anchor:
+## Terminal R1--R7 receipt
+
+The terminal receipt indexes the following readiness chain:
 
 ```text
-docs/current_proof_status.md
+R1 concrete Hilbert closure readiness indexed
+R2 dense-domain unbounded operator closure readiness indexed
+R3 adjoint-graph theorem discharge readiness indexed
+R3 concrete self-adjointness theorem discharge readiness indexed
+R4 genuine PVM closure readiness indexed
+R5 compact centered plaquette observable closure readiness indexed
+R6 non-definitional exact atom 33/20 closure readiness indexed
+R7 positive spectral-weight closure readiness indexed
 ```
 
-## Primary public theorem anchors
+Primary terminal theorem anchor:
 
 ```text
 hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready
-hard_physical_residual_ledger_r1_r7_public_audit_surface_3320_ready
-hard_physical_residual_ledger_r1_r7_public_audit_chain_index_3320_ready
-hard_physical_residual_ledger_r1_r7_external_audit_handoff_3320_ready
-hard_physical_residual_ledger_r1_r7_external_audit_receipt_chain_index_3320_ready
 ```
 
-## Public audit projections
+## Public audit route
 
-The public audit chain index exposes these projections without adding release authority:
+The public audit surface and public audit chain index expose these projections without adding release authority:
 
 ```text
 exactGapValueReal = 33 / 20
@@ -64,17 +74,22 @@ finalReleaseHeld
 publicBoundaryLocked
 ```
 
-Named public audit projection theorems:
+Primary public theorem anchors:
 
 ```text
+hard_physical_residual_ledger_r1_r7_public_audit_surface_3320_ready
+hard_physical_residual_ledger_public_audit_surface_exact_3320_positive_weight
+hard_physical_residual_ledger_public_audit_surface_r4_genuine_pvm_laws_visible
+hard_physical_residual_ledger_public_audit_surface_boundary_locked
+hard_physical_residual_ledger_r1_r7_public_audit_chain_index_3320_ready
 hard_physical_residual_ledger_public_audit_chain_exact_3320_positive_weight
 hard_physical_residual_ledger_public_audit_chain_r4_genuine_pvm_laws_visible
 hard_physical_residual_ledger_public_audit_chain_boundary_locked
 ```
 
-## External-audit receipt projections
+## External-audit handoff route
 
-The guarded external-audit receipt chain carries the same proof-facing projections outward:
+The guarded external-audit handoff and external-audit receipt chain carry the same proof-facing projections outward:
 
 ```text
 exactGapValueReal = 33 / 20
@@ -85,12 +100,33 @@ publicBoundaryLocked
 receiptChainIndexed
 ```
 
-Named external receipt projection theorems:
+Primary external theorem anchors:
 
 ```text
+hard_physical_residual_ledger_r1_r7_external_audit_handoff_3320_ready
+hard_physical_residual_ledger_external_audit_handoff_exact_3320_positive_weight
+hard_physical_residual_ledger_external_audit_handoff_r4_genuine_pvm_laws_visible
+hard_physical_residual_ledger_external_audit_handoff_boundary_locked
+hard_physical_residual_ledger_r1_r7_external_audit_receipt_chain_index_3320_ready
 hard_physical_residual_ledger_external_audit_receipt_chain_exact_3320_positive_weight
 hard_physical_residual_ledger_external_audit_receipt_chain_r4_genuine_pvm_laws_visible
 hard_physical_residual_ledger_external_audit_receipt_chain_boundary_locked
+```
+
+## Exact value / positive-weight receipt
+
+The current public route exposes the exact normalized value and positive-weight receipt as:
+
+```text
+exactGapValueReal = 33 / 20
+positive spectral weight at the routed exact atom
+R4 genuine PVM law visibility
+```
+
+The exact value remains normalized. Dimensional physical reading still requires an external reference scale:
+
+```text
+physicalGap_dimensional = E0 * (33/20)
 ```
 
 ## Audit route
@@ -123,7 +159,9 @@ lake build
 | `MGAP4D.lean` | Top-level Lean import root. |
 | `MGAP4D/MathlibAnalytic.lean` | Mathlib analytic theorem-surface root. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` | Terminal R1--R7 hard residual discharge index. |
+| `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean` | Public audit surface for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean` | Public route index for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
+| `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean` | Guarded external-audit handoff surface. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean` | External-audit receipt route index. |
 
 ## Review order
