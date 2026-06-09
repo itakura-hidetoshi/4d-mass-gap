@@ -12,9 +12,8 @@ noncomputable section
 R2 dense diagonal-domain carrier. -/
 def concreteL2R2DenseDiagonalDomainUnitProbe
     (k : ℕ) : concreteL2R2DenseDiagonalDomainCarrier :=
-  ⟨concreteL2MathlibUnit k, by
-    rw [concrete_l2_r2_diagonal_domain_candidate_submodule_carrier_eq]
-    exact concrete_l2_r2_diagonal_domain_candidate_mathlib_unit k⟩
+  ⟨concreteL2MathlibUnit k,
+    concrete_l2_r2_diagonal_domain_candidate_mathlib_unit k⟩
 
 /-- The dense-domain unit probe has ambient Hilbert norm one. -/
 theorem concrete_l2_r2_dense_diagonal_domain_unit_probe_norm_eq_one
@@ -43,6 +42,12 @@ theorem concrete_l2_r2_diagonal_weight_nonneg (k : ℕ) :
   unfold concreteL2R2DiagonalWeight
   exact add_nonneg (Nat.cast_nonneg k) zero_le_one
 
+/-- The natural coordinate index is bounded by its positive diagonal weight. -/
+theorem concrete_l2_r2_nat_le_diagonal_weight (k : ℕ) :
+    (k : ℝ) ≤ concreteL2R2DiagonalWeight k := by
+  unfold concreteL2R2DiagonalWeight
+  linarith
+
 /-- The selected output coordinate is bounded above by the ambient output norm. -/
 theorem concrete_l2_r2_dense_diagonal_domain_unit_probe_action_coord_le_norm
     (k : ℕ) :
@@ -67,7 +72,7 @@ theorem concrete_l2_r2_dense_diagonal_domain_unit_probe_weight_le_action_norm
           (concreteL2R2DenseDiagonalDomainUnitProbe k) k‖ =
         concreteL2R2DiagonalWeight k := by
     rw [hcoord]
-    exact norm_of_nonneg (concrete_l2_r2_diagonal_weight_nonneg k)
+    exact Real.norm_of_nonneg (concrete_l2_r2_diagonal_weight_nonneg k)
   calc
     concreteL2R2DiagonalWeight k =
         ‖concreteL2R2DenseDiagonalDomainLinearMap
@@ -94,8 +99,7 @@ theorem concrete_l2_r2_dense_domain_operator_unboundedness_quantification :
   refine ⟨concreteL2R2DenseDiagonalDomainUnitProbe k, ?_, ?_⟩
   · exact concrete_l2_r2_dense_diagonal_domain_unit_probe_norm_eq_one k
   · have hBweight : B ≤ concreteL2R2DiagonalWeight k := by
-      unfold concreteL2R2DiagonalWeight
-      exact le_trans (le_of_lt hk) (by nlinarith [Nat.cast_nonneg k])
+      exact le_trans (le_of_lt hk) (concrete_l2_r2_nat_le_diagonal_weight k)
     exact le_trans hBweight
       (concrete_l2_r2_dense_diagonal_domain_unit_probe_weight_le_action_norm k)
 
