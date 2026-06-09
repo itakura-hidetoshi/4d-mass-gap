@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.ContinuumYangMillsLaneHardening
 import MGAP4D.MathlibAnalytic.PlaquetteSpectralWeightLaneHardening
 import MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndex
+import MGAP4D.MathlibAnalytic.ExactGapValueDerivationBoundary
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -9,15 +10,22 @@ namespace MathlibAnalytic
 Yang--Mills Hamiltonian lane to the mass-gap observable lane.
 
 This object is deliberately a theorem-witness bridge, not an external-audit
-claim.  It records the ordered implication chain already present in the
+claim. It records the ordered implication chain already present in the
 hardening lanes:
 
 * continuum Yang--Mills Hamiltonian construction is hardened;
 * `H_phys` is built from that Yang--Mills surface;
 * the self-adjoint/spectral/normalization chain is available;
-* the exact normalized value is preserved as `33/20`;
-* the compact centered plaquette observable has a positive spectral-weight
-  lane at that same exact value.
+* the normalized arithmetic seed `exactGapValueReal = 33/20` is preserved;
+* the compact centered plaquette observable route carries its current
+  spectral-weight lane at that same normalized value.
+
+Important boundary: the exact-value fields in this surface preserve the
+normalized seed. They do not by themselves prove that the physical Yang--Mills
+Hamiltonian non-definitionally generates a spectral atom at `33/20`, and they
+do not by themselves prove positive spectral weight. Those stronger obligations
+remain separate from the normalized seed and are recorded in
+`ExactGapValueDerivationBoundary`.
 
 The bridge keeps both the public theorem-release boundary and the external
 consensus boundary closed. -/
@@ -87,13 +95,13 @@ theorem continuum_hamiltonian_normalization_to_exact_gap_ready
   rcases hD with ⟨_, _, _, _, _, h, _⟩
   exact h
 
-/-- The exact normalized value is a strictly positive gap witness. -/
+/-- The exact normalized seed is a strictly positive arithmetic witness. -/
 theorem continuum_hamiltonian_positive_gap_witness
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
     0 < exactGapValueReal := by
   exact D.positiveGapWitness
 
-/-- The continuum Hamiltonian chain preserves the exact normalized value. -/
+/-- The continuum Hamiltonian chain preserves the exact normalized seed value. -/
 theorem continuum_hamiltonian_exact_gap_value_preserved
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
     exactGapValueReal = (33 : ℝ) / 20 := by
@@ -113,14 +121,17 @@ theorem continuum_hamiltonian_spectral_mass_observable_ready
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The mass-gap derivation witness from continuum Hamiltonian data is ready. -/
+/-- The mass-gap witness slot is ready as a normalized-seed witness surface.
+It is not promoted here to a non-definitional spectral-atom derivation from the
+Yang--Mills Hamiltonian. -/
 theorem continuum_hamiltonian_mass_gap_derivation_witness
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.massGapDerivationWitness := by
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The whole continuum-Hamiltonian-to-mass-gap chain is ready. -/
+/-- The whole continuum-Hamiltonian-to-mass-gap chain is ready as a witness and
+handoff surface. -/
 theorem continuum_hamiltonian_to_mass_gap_chain_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.continuumHamiltonianToMassGapChainReady := by
@@ -231,6 +242,13 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
     And.intro
       (And.intro (by change True; exact True.intro) hPQPublic) <|
     And.intro (by change True; exact True.intro) hPQFinal
+
+/-- Boundary projection: the continuum witness preserves the normalized seed but
+keeps non-definitional spectral derivation and positive spectral weight as
+separate obligations. -/
+theorem continuum_hamiltonian_witness_exact_gap_value_derivation_boundary :
+    exactGapValueDerivationBoundary.ready := by
+  exact exact_gap_value_derivation_boundary_ready
 
 end MathlibAnalytic
 end MGAP4D
