@@ -41,12 +41,12 @@ def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
 
 def PrototypeObservable := ObservablePrototypeShell
 
-def prototypeObservable : PrototypeObservable :=
+noncomputable def prototypeObservable : PrototypeObservable :=
   { label := "observable-atom-shell"
     exactValue := (33 : ℝ) / 20
     exactValue_eq_3320 := rfl }
 
-def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
+noncomputable def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
   exactGapSpectralMassReal
 
 noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
