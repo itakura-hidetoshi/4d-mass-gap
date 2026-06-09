@@ -68,6 +68,20 @@ REQUIRED_FINAL_BUNDLE_MAP_ANCHORS = (
     "H_phys/R3 non-promotion boundary: visible",
 )
 
+REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS = (
+    "MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifest.lean",
+    "HardPhysicalResidualLedgerFinalBundleStatusManifest",
+    "hardPhysicalResidualLedgerFinalBundleStatusManifest3320",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_3320_ready",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_exact_gap_value_3320",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_positive_nonzero_spectral_mass",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_final_release_held",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_public_boundary_locked",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_no_auto_release",
+    "hard_physical_residual_ledger_final_bundle_status_manifest_nonpromotion_boundary",
+    "HardPhysicalResidualLedgerFinalBundleStatusManifest: installed / final-bundle status manifest visible",
+)
+
 REQUIRED_RESIDUAL_IDS = (
     "R1. Concrete real Hilbert space on Mathlib",
     "R2. Densely defined unbounded operator",
@@ -145,6 +159,7 @@ def main() -> None:
     failures.extend(require_all(text, REQUIRED_INTERNAL_DISCHARGE_ANCHORS, "internal-discharge"))
     failures.extend(require_all(text, REQUIRED_LEDGER_BRIDGE_ANCHORS, "ledger-bridge"))
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_MAP_ANCHORS, "final-bundle-map"))
+    failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS, "final-bundle-status-manifest"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -156,6 +171,7 @@ def main() -> None:
     print(f"Internal discharge anchors audited: {len(REQUIRED_INTERNAL_DISCHARGE_ANCHORS)}")
     print(f"Ledger bridge anchors audited: {len(REQUIRED_LEDGER_BRIDGE_ANCHORS)}")
     print(f"Final bundle map anchors audited: {len(REQUIRED_FINAL_BUNDLE_MAP_ANCHORS)}")
+    print(f"Final bundle status manifest anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
