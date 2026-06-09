@@ -43,8 +43,8 @@ def PrototypeObservable := ObservablePrototypeShell
 
 def prototypeObservable : PrototypeObservable :=
   { label := "observable-atom-shell"
-    exactValue := exactGapValueReal
-    exactValue_eq_3320 := exactGapValueReal_eq }
+    exactValue := (33 : ℝ) / 20
+    exactValue_eq_3320 := rfl }
 
 def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
   exactGapSpectralMassReal
