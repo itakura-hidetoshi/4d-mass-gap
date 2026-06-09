@@ -135,7 +135,26 @@ REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS = (
     "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure: installed / R2 dense-domain operator closure bridge visible",
     "R2 dense-domain LinearPMap: discharged and carried into ledger bridge",
     "R2 unboundedness quantification: discharged and carried into ledger bridge",
-    "R3--R7 downstream obligations: visible",
+)
+
+REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS = (
+    "MGAP4D/HardPhysicalResidualLedgerR3SelfAdjointInputBridge.lean",
+    "HardPhysicalResidualLedgerR3SelfAdjointInputBridge",
+    "hardPhysicalResidualLedgerR3SelfAdjointInputBridge3320",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_3320_ready",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_closure_ready",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_mathlib_interface_ready",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_promotion_target_ready",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_formal_graph_ready",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_r2_unboundedness_ready",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_final_release_held",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_public_boundary_locked",
+    "hard_physical_residual_ledger_r3_self_adjoint_input_bridge_downstream_obligations_visible",
+    "HardPhysicalResidualLedgerR3SelfAdjointInputBridge: installed / R3 self-adjointness input bridge visible",
+    "R3 input bridge: installed and consumes closed R2 unbounded operator",
+    "R3 Mathlib adjoint graph theorem: visible as remaining hard point",
+    "R3 concrete self-adjointness theorem: visible as remaining hard point",
+    "R4--R7 downstream obligations: visible",
 )
 
 REQUIRED_RESIDUAL_IDS = (
@@ -157,6 +176,8 @@ REQUIRED_CLOSURE_PHRASES = (
     "unit probes have norm one",
     "arbitrary real thresholds",
     "domain equality with the adjoint",
+    "Mathlib adjoint graph theorem",
+    "concrete self-adjointness theorem",
     "projection-valued measure",
     "countable additivity",
     "compactly supported smeared centered plaquette observable",
@@ -166,7 +187,8 @@ REQUIRED_CLOSURE_PHRASES = (
 )
 
 REQUIRED_SPINE_ANCHORS = (
-    "SelfAdjointPhysicalHamiltonian",
+    "SelfAdjointPhysicalHamiltonian.mathlibAdjointGraphTheorem",
+    "SelfAdjointPhysicalHamiltonian.concreteSelfAdjointTheorem",
     "ConcretePVMSpectralMeasure",
     "CompactCenteredPlaquetteObservable",
     "NondefinitionalSpectralAtom3320",
@@ -176,7 +198,7 @@ REQUIRED_SPINE_ANCHORS = (
 REQUIRED_STATUS_ANCHORS = (
     "R1: Mathlib-substrate discharged / downstream physical integration pending",
     "R2: dense-domain unbounded operator discharged / downstream self-adjointness pending",
-    "R3: open / self-adjointness-hardening required",
+    "R3: input bridge installed / Mathlib adjoint graph theorem pending",
     "R4: open / PVM-construction required",
     "R5: open / observable-construction required",
     "R6: open / non-definitional exact-value derivation required",
@@ -191,6 +213,8 @@ FORBIDDEN_COLLAPSE_PHRASES = (
     "R2: dense-domain LinearPMap discharged / unboundedness quantification pending",
     "R2 unboundedness quantification: visible as remaining hard point",
     "R3: closed",
+    "R3: open / self-adjointness-hardening required",
+    "R3--R7 downstream obligations: visible",
     "R4: closed",
     "R5: closed",
     "R6: closed",
@@ -224,6 +248,7 @@ def main() -> None:
     failures.extend(require_all(text, REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS, "final-bundle-status-manifest-chain-index"))
     failures.extend(require_all(text, REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS, "r1-concrete-hilbert-closure"))
     failures.extend(require_all(text, REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS, "r2-dense-domain-operator-closure"))
+    failures.extend(require_all(text, REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS, "r3-self-adjoint-input-bridge"))
     failures.extend(require_all(text, REQUIRED_RESIDUAL_IDS, "residual-id"))
     failures.extend(require_all(text, REQUIRED_CLOSURE_PHRASES, "closure-condition"))
     failures.extend(require_all(text, REQUIRED_SPINE_ANCHORS, "future-spine"))
@@ -239,6 +264,7 @@ def main() -> None:
     print(f"Final bundle status manifest chain index anchors audited: {len(REQUIRED_FINAL_BUNDLE_STATUS_MANIFEST_CHAIN_INDEX_ANCHORS)}")
     print(f"R1 concrete Hilbert closure anchors audited: {len(REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS)}")
     print(f"R2 dense-domain operator closure anchors audited: {len(REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS)}")
+    print(f"R3 self-adjoint input bridge anchors audited: {len(REQUIRED_R3_SELF_ADJOINT_INPUT_BRIDGE_ANCHORS)}")
     print(f"Residual ids audited: {len(REQUIRED_RESIDUAL_IDS)}")
     print(f"Closure-condition anchors audited: {len(REQUIRED_CLOSURE_PHRASES)}")
     print(f"Future-spine anchors audited: {len(REQUIRED_SPINE_ANCHORS)}")
