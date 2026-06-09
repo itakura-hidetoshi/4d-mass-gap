@@ -26,6 +26,7 @@ R4 genuine PVM closure readiness indexed
 R5 compact centered plaquette observable closure readiness indexed
 R6 non-definitional exact atom 33/20 closure readiness indexed
 R7 positive spectral-weight closure readiness indexed
+internal discharge spine binding present
 ```
 
 Status line for audit:
