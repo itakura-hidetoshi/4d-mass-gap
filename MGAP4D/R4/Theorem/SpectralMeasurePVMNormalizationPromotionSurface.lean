@@ -9,28 +9,31 @@ open scoped BigOperators ENNReal lp
 noncomputable section
 
 /-- In the current R4 target-API skeleton, the PVM candidate at the universal set
-is the unique `PUnit` target.
+is the registered PVM candidate shell.
 
 This is a prototype normalization theorem for the shell API.  It is not the full
 operator identity `E(ℝ) = I`. -/
-theorem spectral_measure_pvm_target_api_pvm_candidate_univ_eq_unit :
-    spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ) = PUnit.unit := by
+theorem spectral_measure_pvm_target_api_pvm_candidate_univ_eq_shell :
+    spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ) =
+      spectralMeasurePVMTargetAPIPVMCandidate := by
   rfl
 
 /-- In the current R4 target-API skeleton, the spectral-measure candidate at the
-universal set is the unique `PUnit` target.
+universal set is the registered spectral-measure candidate shell.
 
 This is a prototype normalization theorem for the shell API.  It is not the full
 operator identity `E(ℝ) = I`. -/
-theorem spectral_measure_pvm_target_api_spectral_measure_candidate_univ_eq_unit :
-    spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ) = PUnit.unit := by
+theorem spectral_measure_pvm_target_api_spectral_measure_candidate_univ_eq_shell :
+    spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ) =
+      spectralMeasurePVMTargetAPISpectralMeasureCandidate := by
   rfl
 
 /-- The current R4 shell has a prototype normalization axiom at `Set.univ`.
 
-The target is still `PUnit`, so this records only the shell-level normalization
-prototype.  Promotion to a true projection-valued operator identity remains a
-separate full-axioms obligation. -/
+The target is typed by separate candidate shells, so this records shell-level tag
+coherence rather than equality of the PVM and spectral-measure candidates.
+Promotion to a true projection-valued operator identity remains a separate
+full-axioms obligation. -/
 def SpectralMeasurePVMNormalizationPrototypeAxiomReady : Prop :=
   SpectralMeasurePVMFullAxiomsObligationSurfaceReady ∧
   spectralMeasurePVMFullAxiomsProofTarget.normalizationTarget =
@@ -39,10 +42,14 @@ def SpectralMeasurePVMNormalizationPrototypeAxiomReady : Prop :=
     spectralMeasurePVMFullAxiomsProofTarget.normalizationTarget ∧
   spectralMeasurePVMTargetAPI.normalizationTag =
     SpectralMeasurePVMObligationTag.normalization ∧
-  spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ) = PUnit.unit ∧
-  spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ) = PUnit.unit ∧
   spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ) =
-    spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ)
+    spectralMeasurePVMTargetAPIPVMCandidate ∧
+  spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ) =
+    spectralMeasurePVMTargetAPISpectralMeasureCandidate ∧
+  (spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ)).obligationTag =
+    SpectralMeasurePVMObligationTag.projectionValuedness ∧
+  (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ)).obligationTag =
+    SpectralMeasurePVMObligationTag.spectralTheoremCompatibility
 
 /-- The R4 shell-level normalization prototype is ready. -/
 theorem spectral_measure_pvm_normalization_prototype_axiom_ready :
@@ -52,13 +59,14 @@ theorem spectral_measure_pvm_normalization_prototype_axiom_ready :
     rfl,
     rfl,
     rfl,
-    spectral_measure_pvm_target_api_pvm_candidate_univ_eq_unit,
-    spectral_measure_pvm_target_api_spectral_measure_candidate_univ_eq_unit,
-    spectral_measure_pvm_target_api_univ_candidate_maps_agree⟩
+    spectral_measure_pvm_target_api_pvm_candidate_univ_eq_shell,
+    spectral_measure_pvm_target_api_spectral_measure_candidate_univ_eq_shell,
+    (spectral_measure_pvm_target_api_univ_candidate_maps_agree).1,
+    (spectral_measure_pvm_target_api_univ_candidate_maps_agree).2⟩
 
 /-- Boundary after the normalization-promotion surface.
 
-The normalization prototype is proved for the current `PUnit` shell target, but
+The normalization prototype is proved for the current typed shell target, but
 full PVM normalization remains in the full-axioms obligation list. -/
 def SpectralMeasurePVMNormalizationPromotionBoundary : Prop :=
   SpectralMeasurePVMNormalizationPrototypeAxiomReady ∧
