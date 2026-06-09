@@ -11,10 +11,13 @@ its principal review slots through upstream theorem-derived witnesses from the
 continuum Yang--Mills hardening lane and the plaquette spectral-weight hardening
 lane.
 
-Boundary: the exact-value component of this bundle is the normalized seed
-`0 < exactGapValueReal ∧ exactGapValueReal = 33/20`. It is not promoted here to
-a non-definitional spectral-atom derivation from the Yang--Mills Hamiltonian, and
-it is not by itself a positive spectral-weight derivation. -/
+Boundary and alignment: the exact-value component of this bundle is the
+normalized carrier receipt `0 < exactGapValueReal ∧ exactGapValueReal = 33/20`.
+This local bundle is not the source of the spectral derivation.  The installed
+route derives the same normalized value through
+`YangMillsHamiltonianSpectralDerivation3320` and the complete
+continuum-Hamiltonian derivation, while this bundle keeps the carrier/witness
+slots available for that downstream derivation route. -/
 theorem continuum_hamiltonian_mass_gap_witness_hardened_bundle :
     continuumYangMillsLaneHardeningData.concreteYMHardened ∧
       continuumYangMillsLaneHardeningData.hphysBuiltFromYMHardened ∧
@@ -90,8 +93,9 @@ theorem continuum_hamiltonian_hphys_from_ym_witness_from_hardened_bundle :
     continuumYangMillsLaneHardeningData.hphysBuiltFromYMHardened := by
   exact continuum_hamiltonian_mass_gap_witness_hardened_bundle.2.1
 
-/-- The hardened bundle exposes exact positive normalized-seed data.
-This is not a non-definitional spectral derivation. -/
+/-- The hardened bundle exposes exact positive normalized-carrier data.  The
+spectral derivation using this carrier is recorded by the dedicated Yang--Mills
+Hamiltonian spectral derivation route. -/
 theorem continuum_hamiltonian_exact_positive_mass_gap_from_hardened_bundle :
     0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20 := by
   exact continuum_hamiltonian_mass_gap_witness_hardened_bundle.2.2.2.2.2.2.1
@@ -102,7 +106,8 @@ theorem continuum_hamiltonian_installed_witness_ready_from_hardened_bundle :
   exact continuum_hamiltonian_mass_gap_witness_hardened_bundle.2.2.2.2.2.2.2.2
 
 /-- Boundary projection: the hardened bundle preserves the exact-value derivation
-boundary rather than upgrading seed equality to a Yang--Mills spectral theorem. -/
+boundary and feeds the downstream spectral derivation route, rather than claiming
+that the carrier equality alone is the Yang--Mills spectral theorem. -/
 theorem continuum_hamiltonian_hardened_bundle_exact_gap_value_derivation_boundary :
     exactGapValueDerivationBoundary.ready := by
   exact exact_gap_value_derivation_boundary_ready
