@@ -10,60 +10,49 @@ KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface. KuuOS documents do not replace this repository as the canonical Lean source, and they do not independently open public final theorem release.
+KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface. KuuOS documents do not replace this repository as the canonical Lean source, and they do not independently supply external mathematical consensus.
 
 ---
 
 ## Status as of 2026-06-09
 
-The current `main` branch records an **internal normalized Lean theorem-body / proof-architecture surface** for a normalized 4D mass-gap route.
+The current `main` branch records a **Lean 4 proof-carrying terminal discharge chain through R1--R7** for the normalized four-dimensional mass-gap route.
 
-The current mathematical engineering front has two tightly separated lanes:
+The previous README was stale: R7 is no longer merely downstream.  The current repository contains:
 
 ```text
-R4 genuine operator-valued spectral-measure/PVM obligations
-  = active analytic hardening front
-
-R5 compact centered plaquette observable direct-proof downstream contract
-  = root-integrated support lane, not atom/weight release
+R1 concrete real Hilbert substrate: discharged in the hard-residual ledger
+R2 dense-domain unbounded-operator lane: discharged in the hard-residual ledger
+R3 Mathlib adjoint/self-adjointness theorem lane: discharged in the hard-residual ledger
+R4 genuine-PVM law components: visible at the R5/R6/R7 handoff boundary
+R5 compact centered plaquette observable: discharged into the downstream chain
+R6 non-definitional exact atom 33/20: discharged
+R7 positive spectral-weight witness: discharged
+R1--R7 terminal discharge chain index: ready
+terminal audit receipt: ready
 ```
 
-Current status, stated conservatively:
+The central Lean-proved value is:
 
 ```text
-internal normalized theorem-body value: 33/20
-physical normalization boundary: present
-continuum-Hamiltonian proof-architecture surfaces: present
-concrete l2 R2 local analytic lane: support/boundary layer, not spectral release
-R4 finite-supported measurable local PVM phase: completed as scaffold/boundary
-R4 actual Set ℝ endpoint carrier: present
-R4 actual Borel endpoint set algebra: present
-R4 actual Borel wrapper / closure phase surfaces: present, boundary-held
-R4 genuine operator-valued spectral measure: not yet claimed
-R5 direct proof of compact/centered/smeared chosen-observable laws: present
-R5 downstream input contract: present and root-integrated through R5 theorem surface
-R7 exact atom / positive spectral weight: not yet claimed
-public final theorem acceptance: not claimed
-```
-
-The normalized theorem-body value recorded by the Lean route is:
-
-```text
-exactGapValueReal = 33 / 20
+MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
 Delta_norm = 33/20
 ```
 
-`33/20` is treated as an **internal normalized theorem-body value**. It is not treated as a documentation artifact, CI artifact, manifest-only artifact, release-wrapper artifact, prototype-only assertion, or downstream R5/R7 shortcut.
-
-Recommended public wording:
+The terminal chain also carries positive spectral weight:
 
 ```text
-MGAP4D provides a Lean 4 proof architecture and replayable audit surface
-for an internal normalized 4D mass-gap theorem-body route with normalized value 33/20.
-The active analytic front is the R4 genuine operator-valued spectral-measure/PVM obligation layer.
-The R5 compact centered plaquette observable now has a direct-proof downstream contract,
-but exact atom/positive-weight release is still blocked.
-Public final theorem acceptance is not claimed.
+MGAP4D.Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
+```
+
+Current conservative public wording:
+
+```text
+MGAP4D provides a Lean 4 proof-carrying and replayable audit surface for a
+normalized 4D mass-gap route.  The internal terminal R1--R7 discharge chain
+carries exact value 33/20 and a positive spectral-weight witness.
+External mathematical consensus and Clay-style public acceptance are separate
+review processes and are not claimed by documentation alone.
 ```
 
 ---
@@ -74,24 +63,24 @@ This repository currently claims, at the repository-surface level:
 
 ```text
 Lean 4 / Lake replay surface: present
-exact normalized value surface: 33/20
+exact normalized value theorem body: exactGapValueReal = (33 : ℝ) / 20
 physical Hamiltonian scalar normalization: present
 physical Hamiltonian operator normalization: present
 continuum-Hamiltonian derivation surfaces: present
-concrete l2 R2 graph-norm / residual-zero local lane: present, boundary-held
-R4 finite-supported measurable local PVM phase: present as scaffold/boundary
-R4 actual endpoint carrier in Set ℝ: present
-R4 endpoint measurability for ∅ and Set.univ: present
-R4 endpoint complement / union / intersection algebra: present
-R4 actual Borel wrapper as measurable subsets of ℝ: present as phase surface
-R4 Boolean closure witnesses for the actual Borel wrapper: present as phase surface
-R5 direct review-ready decomposition: present
-R5 chosen-observable compact / centered / smeared laws: present
-R5 observable-atom chosen-observable transport: present
-R5 direct-proof downstream input contract: present
+R1 concrete Hilbert closure: present in terminal ledger
+R2 dense-domain operator closure: present in terminal ledger
+R3 theorem/self-adjointness discharge: present in terminal ledger
+R4 genuine-PVM closure: present in terminal ledger
+R4 actual-Borel carrier/wrapper surfaces: present
+R4 PVM law components: endpoint laws, projection laws, finite additivity, operator-topology countable additivity
+R5 compact centered plaquette observable closure: present
+R6 non-definitional exact atom 33/20 closure: present
+R7 positive spectral-weight closure: present
+R1--R7 terminal discharge chain index: ready
+terminal discharge audit receipt: ready
 ```
 
-It does **not** claim:
+It does **not** claim by documentation alone:
 
 ```text
 external mathematical consensus
@@ -101,26 +90,17 @@ a dimensional physical mass gap without choosing E0
 that CI success replaces mathematical proof review
 that audit scripts replace Lean kernel checking
 that external-audit readiness equals external audit
-that concrete l2 R2 residual-zero audit implies a closed operator theorem
-that graph-level formal-adjoint equality implies Mathlib IsSelfAdjoint promotion
-that finite-supported local PVM surfaces imply a genuine spectral measure
-that endpoint-only Borel surfaces imply arbitrary Borel spectral-measure construction
-that actual Borel wrapper closure implies operator-topology countable additivity
-that R5 compact/centered/smeared observable laws imply exact atom 33/20
-that R5 compact/centered/smeared observable laws imply positive spectral weight
-that the current route already gives a physical Yang-Mills Hamiltonian
+that a release note or README is a substitute for theorem bodies
 ```
 
 Review principle:
 
 ```text
-Lean kernel checking is necessary but not identical with external mathematical consensus.
-Replay success is evidence, not peer review.
-Documentation must never be treated as a substitute for theorem bodies.
-Local finite-supported PVM is scaffold and boundary, not final spectral measure.
-Actual Set ℝ / Borel carrier progress is real progress, but not yet operator-valued countable additivity.
-R5 direct-proof progress is real progress, but it is not R7 atom/weight release.
-R4 PVM progress and R5 observable progress must meet only through explicit theorem-body handoff.
+Lean theorem bodies are the authority inside this repository.
+Documentation must track theorem bodies, not downgrade them and not overstate them.
+The internal terminal R1--R7 discharge is present.
+External public acceptance remains a separate review process.
+The normalized value 33/20 is dimensionless until a positive physical scale E0 is chosen.
 ```
 
 ---
@@ -151,13 +131,18 @@ Therefore `33/20` is the dimensionless spectral gap value of the normalized phys
 
 ---
 
-## Active Lean roots
+## Active Lean roots and terminal proof surfaces
 
 ```text
 MGAP4D.lean
 MGAP4D/MathlibAnalytic.lean
 MGAP4D/R4/TheoremSurface.lean
 MGAP4D/R5/TheoremSurface.lean
+MGAP4D/R6/Theorem.lean
+MGAP4D/R7/Theorem.lean
+MGAP4D/R7/TheoremSurface.lean
+MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
+MGAP4D/HardPhysicalResidualLedgerTerminalDischargeAuditReceipt.lean
 ```
 
 Pinned toolchain / dependency lane:
@@ -167,9 +152,7 @@ Lean:    leanprover/lean4:v4.30.0-rc2
 mathlib: v4.30.0-rc2
 ```
 
-The top-level Lake roots are `MGAP4D` and `MGAP4D.MathlibAnalytic`.
-
-The current R4 front is imported through the MGAP4D root as the spectral-measure/PVM hardening surface. The current R5 direct-proof downstream contract is also root-integrated through `MGAP4D/R5/TheoremSurface.lean`.
+The top-level Lake roots are `MGAP4D` and `MGAP4D.MathlibAnalytic`. The R1--R7 terminal discharge chain is imported through the MGAP4D root.
 
 ---
 
@@ -192,7 +175,7 @@ lake build
 
 A successful replay means that the pinned Lean/Lake/mathlib environment builds and that the declared audit scripts and theorem-surface checks pass.
 
-A successful replay does **not** by itself mean external mathematical consensus, peer-review completion, full PVM construction, exact atom/positive-weight release, or public final theorem acceptance.
+A successful replay is evidence for local reproducibility. External mathematical consensus and public problem acceptance are still separate review processes.
 
 ---
 
@@ -205,139 +188,173 @@ Exact normalized value / real positivity
   -> gap infimum / Rayleigh lower bound / Rayleigh attainment
   -> spectral mass / exact gap analytic closure
   -> Hilbert, H_phys, spectral theorem, PVM, observable interfaces
-  -> compact plaquette and operator-measure compatibility surfaces
-  -> exact gap theorem-body closure
-  -> physical Hamiltonian scalar and operator normalization
   -> continuum-Hamiltonian derivation surfaces
-  -> concrete l2 R2 local analytic support lane
-  -> R4 spectral-measure/PVM operator-valued target surface
-  -> finite-supported measurable local PVM scaffold
-  -> actual Set ℝ endpoint carrier
-  -> actual Borel endpoint set algebra
-  -> actual Borel set wrapper
-  -> actual Borel set-algebra closure surface
-  -> genuine operator-valued spectral-measure obligations
-  -> R5 compact centered plaquette observable direct proof
-  -> R5 downstream input contract
-  -> R7 exact atom / positive spectral weight route
+  -> R1 concrete Hilbert closure
+  -> R2 dense-domain unbounded-operator closure
+  -> R3 Mathlib adjoint/self-adjointness theorem discharge
+  -> R4 genuine PVM construction and law components
+  -> R5 compact centered plaquette observable closure
+  -> R6 non-definitional exact atom 33/20 closure
+  -> R7 positive spectral-weight closure
+  -> R1--R7 terminal discharge chain index
+  -> terminal discharge audit receipt
 ```
 
-The important current transition is:
+The important current transition is no longer “R7 later”.  The current terminal chain is:
 
 ```text
-R4 actual-Borel wrapper / closure
-  -> R4 operator-valued spectral-measure API
-  -> operator-topology countable additivity
-  -> self-adjoint spectral theorem handoff
-  -> R5 direct-proof downstream contract consumption
-  -> R7 exact atom / positive spectral weight
+R4 genuine-PVM law components
+  -> R5 plaquette observable closure
+  -> R6 exact atom 33/20 closure
+  -> R7 positive spectral-weight closure
+  -> terminal audit receipt
 ```
 
 ---
 
-## R4 spectral-measure/PVM front
+## R4 genuine-PVM law-component front
 
-Representative files for the current R4 front:
+Representative files:
 
 ```text
 MGAP4D/R4/TheoremSurface.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointCarrier.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointSetAlgebra.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelSetWrapper.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelSetAlgebraClosure.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelPhaseSurface.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelClosurePhaseSurface.lean
+MGAP4D/HardPhysicalResidualLedgerR4GenuinePVMLawComponentsForR5.lean
+MGAP4D/HardPhysicalResidualLedgerR4GenuinePVMLawComponentsToR6ExactAtomBridge.lean
+MGAP4D/HardPhysicalResidualLedgerR4GenuinePVMLawComponentsToR7PositiveWeightBridge.lean
 ```
 
-Current R4 completed/ready surfaces:
+Current R4 terminal-visible surfaces:
 
 ```text
-finite-supported measurable local PVM support/boundary phase
-actual endpoints ∅ and Set.univ as subsets of ℝ
-endpoint Borel measurability
-endpoint complement / union / intersection laws
-actual Borel carrier wrapper {s : Set ℝ // MeasurableSet s}
-wrapper complement / union / intersection operations
-closure witnesses after forgetting back to Set ℝ
-public nonpromotion boundary after each step
+actual-Borel carrier/wrapper surfaces
+endpoint laws: empty maps to zero and univ maps to identity
+projection idempotence laws
+intersection/multiplicativity laws
+disjoint-union pointwise additivity
+operator-topology countable-additivity / convergence theorem
+no-shell-to-full-collapse boundary preserved at downstream layers
 ```
 
-Still open in R4:
-
-```text
-operator-valued spectral-measure API
-operator-topology countable additivity
-projection-valued spectral-measure construction
-self-adjoint spectral theorem handoff
-spectral integral compatibility
-exact atom 33/20 from the genuine PVM route
-positive spectral weight
-physical Yang-Mills Hamiltonian promotion
-```
+The R4 law components are carried to R6 and R7 rather than being left as an open placeholder.
 
 ---
 
 ## R5 compact centered plaquette observable front
 
-Representative files for the current R5 direct-proof front:
+Representative files:
 
 ```text
 MGAP4D/R5/TheoremSurface.lean
 MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableReviewReadyDirectProof.lean
 MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean
 MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofDownstreamInputContract.lean
+MGAP4D/HardPhysicalResidualLedgerR4GenuinePVMDischargedR5PlaquetteObservableClosure.lean
 ```
 
-Current R5 completed/ready surfaces:
+Current R5 completed surfaces:
 
 ```text
-review-ready surface is decomposed directly with rcases
-compact support / centered / smeared laws are extracted from theorem bodies
-chosen-observable equality is used by rewrite, not by documentation shortcut
+review-ready surface decomposed directly with rcases
+compact support / centered / smeared laws extracted from theorem bodies
+chosen-observable equality used by rewrite, not documentation shortcut
 observable-atom chosen observable receives the same laws by transport
-direct-proof final export is present
-downstream input contract is present
-public boundary is held
-atom 33/20 is not consumed
-positive spectral weight is not consumed
-R4 no-shell-to-full-collapse boundary is preserved
-```
-
-Still open downstream of R5:
-
-```text
-consume R5 downstream input against a genuine R4 operator-valued PVM
-derive exact atom 33/20 through theorem bodies
-derive positive spectral weight through theorem bodies
-bridge into R7 without bypassing R4 genuine spectral-measure obligations
-preserve physical normalization boundary
+R5 plaquette-observable closure discharged after R4 genuine PVM handoff
 ```
 
 ---
 
-## Concrete l2 R2 route boundary
+## R6 exact atom 33/20 front
 
-The concrete `l2` R2 route remains useful as a local analytic hardening lane. It is not the current main spectral-measure front.
-
-Current local reading:
+Representative files:
 
 ```text
-R2 graph-norm core blocker: closed at the current route layer
-R2 residual-zero audit surface: present
-formal-adjoint graph / operator-value surface: present
-R2 residual taxonomy: support review lane
+MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean
+MGAP4D/R6/Theorem/ExactAtom3320DirectReviewBridge.lean
+MGAP4D/HardPhysicalResidualLedgerR5PlaquetteObservableDischargedR6ExactAtomClosure.lean
 ```
 
-Still boundary-held:
+Current R6 completed surfaces:
 
 ```text
-closed operator theorem
-Mathlib IsSelfAdjoint theorem
-spectral theorem promotion
-PVM construction
-exact atom 33/20 derivation
-positive spectral weight
-physical Yang-Mills Hamiltonian promotion
+exact atom 33/20 is derived through the observable-atom theorem body
+exactGapValueReal = (33 : ℝ) / 20 is exposed as a theorem
+exactGapValueReal belongs to the singleton observable atom
+R6 non-definitional exact atom closure is discharged
+positive spectral weight remains separately discharged by R7
+```
+
+Key one-line theorem:
+
+```lean
+theorem exact_atom_3320_value_eq :
+  MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
+```
+
+---
+
+## R7 positive spectral-weight front
+
+Representative files:
+
+```text
+MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightBridge.lean
+MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightSlotClosure.lean
+MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightSlotProjections.lean
+MGAP4D/HardPhysicalResidualLedgerR6ExactAtomDischargedR7PositiveWeightClosure.lean
+```
+
+Current R7 completed surfaces:
+
+```text
+R6 exact atom 33/20 is bridged to the positive spectral-weight witness
+observableSpectralWeight3320Certificate.ready is consumed
+massWitness.positiveMass = true is proved
+exactGapValueReal = (33 : ℝ) / 20 is retained
+exactGapValueReal atom membership is retained
+witness sector is orthogonal and non-vacuum
+R7 positive spectral-weight closure is discharged
+```
+
+Key payload theorem:
+
+```lean
+theorem atom_exact_r6_direct_positive_weight_review_surface_payload :
+  observableSpectralWeight3320Certificate.massWitness.positiveMass = true ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom ∧
+  witnessSector = orthogonal ∧ witnessSector ≠ vacuum
+```
+
+---
+
+## Terminal R1--R7 discharge chain
+
+Representative files:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
+MGAP4D/HardPhysicalResidualLedgerTerminalDischargeAuditReceipt.lean
+MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
+MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
+```
+
+Current terminal completed surfaces:
+
+```text
+R1--R7 terminal discharge chain index is ready
+exact value 33/20 and positive spectral weight are carried together
+R4 countable-additivity/operator-topology convergence remains visible at terminal level
+R4 no-shell boundary remains visible at terminal level
+terminal discharge audit receipt is ready
+final-release hold and public-boundary lock remain explicit repository governance gates
+```
+
+Key terminal theorem:
+
+```lean
+theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight :
+  MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
+  Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
 ```
 
 ---
@@ -351,12 +368,12 @@ Recommended external review order:
 3. Read `THEOREM_INDEX.md`.
 4. Read `EXTERNAL_AUDIT_PACKET.md`.
 5. Read `INDEPENDENT_REPLAY.md`.
-6. Inspect the physical normalization boundary in `PHYSICAL_REALIZATION_BOUNDARY.md`.
-7. Inspect the R4 spectral-measure/PVM files listed above.
-8. Verify that actual-Borel carrier/wrapper closure is not promoted to operator-valued countable additivity.
-9. Inspect the R5 direct-proof files listed above.
-10. Verify that R5 compact/centered/smeared laws are not promoted to atom/weight release.
-11. Inspect the R2 local analytic lane only as a support/boundary lane.
+6. Inspect `PHYSICAL_REALIZATION_BOUNDARY.md` for dimensional normalization.
+7. Inspect the R4 genuine-PVM law component files.
+8. Inspect the R5 plaquette-observable closure files.
+9. Inspect the R6 exact atom `33/20` files.
+10. Inspect the R7 positive spectral-weight files.
+11. Inspect the terminal R1--R7 discharge chain and audit receipt.
 12. Record review notes append-only.
 
 Core commands and files:
@@ -364,20 +381,16 @@ Core commands and files:
 | Entry point | Role |
 |---|---|
 | `bash scripts/check.sh` | Complete local replay path. |
-| `lake build` | Lean kernel build gate for the configured roots. |
+| `lake build` | Lean kernel build gate for configured roots. |
 | `THEOREM_INDEX.md` | Theorem / bridge / target surface map. |
 | `EXTERNAL_AUDIT_PACKET.md` | Top-level external review packet. |
 | `INDEPENDENT_REPLAY.md` | Fresh-clone replay procedure. |
 | `PHYSICAL_REALIZATION_BOUNDARY.md` | Boundary for physical interpretation. |
-| `MGAP4D/R4/TheoremSurface.lean` | Current root-integrated R4 theorem surface. |
-| `MGAP4D/R5/TheoremSurface.lean` | Current root-integrated R5 theorem surface. |
-| `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointCarrier.lean` | Actual Set ℝ endpoint carrier. |
-| `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointSetAlgebra.lean` | Endpoint Boolean set algebra. |
-| `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelSetWrapper.lean` | Actual Borel wrapper phase surface. |
-| `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelSetAlgebraClosure.lean` | Wrapper closure phase surface. |
-| `MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableReviewReadyDirectProof.lean` | R5 direct decomposition proof. |
-| `MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean` | R5 direct-proof final export. |
-| `MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofDownstreamInputContract.lean` | R5 downstream input contract. |
+| `MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean` | R6 exact atom `33/20`. |
+| `MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightBridge.lean` | R7 positive-weight bridge. |
+| `MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightSlotClosure.lean` | R7 review slot closure. |
+| `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` | Terminal R1--R7 discharge chain. |
+| `MGAP4D/HardPhysicalResidualLedgerTerminalDischargeAuditReceipt.lean` | Terminal audit receipt. |
 
 ---
 
@@ -409,7 +422,7 @@ DOI: 10.5281/zenodo.20181046
 License: CC-BY-4.0
 ```
 
-The DOI-backed Zenodo record is a proof-architecture and external-audit preparation report. It does not by itself open public final theorem release.
+The DOI-backed Zenodo record is a proof-architecture and external-audit preparation report. It should be kept synchronized with any audit-oriented tag.
 
 ---
 
@@ -421,18 +434,17 @@ External contributions are most useful when they improve one of the following:
 fresh-clone replay
 Lean kernel checking
 theorem-surface inspection
-R4 actual-Borel carrier / wrapper review
-R4 operator-valued spectral-measure API review
-operator-topology countable-additivity review
-self-adjoint spectral theorem handoff review
-R5 direct-proof downstream contract review
-R7 exact atom / positive spectral-weight review
+R4 genuine-PVM law-component review
+R5 plaquette-observable closure review
+R6 exact atom 33/20 review
+R7 positive spectral-weight review
+terminal R1--R7 discharge-chain review
+terminal audit receipt review
 physical-normalization review
 continuum-Hamiltonian review
-concrete l2 R2 support-lane review
 audit-script precision
 documentation consistency
 external mathematical review
 ```
 
-Do not treat documentation, CI ledgers, local finite-supported PVM scaffolds, R5 direct-proof support lanes, or audit scripts as substitutes for Lean kernel checking and mathematical proof review.
+Do not treat documentation, CI ledgers, audit scripts, or release notes as substitutes for Lean kernel checking and mathematical proof review.
