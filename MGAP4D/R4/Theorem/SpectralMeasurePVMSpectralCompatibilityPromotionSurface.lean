@@ -9,12 +9,14 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Candidate-map agreement for all measurable-set placeholders in the current
+/-- Candidate-map tag coherence for all measurable-set placeholders in the current
 R4 shell API.  This is shell coherence, not a spectral-resolution theorem. -/
 theorem spectral_measure_pvm_target_api_all_candidates_spectrally_compatible :
     ∀ s : Set ℝ,
-      spectralMeasurePVMTargetAPI.pvmCandidate s =
-        spectralMeasurePVMTargetAPI.spectralMeasureCandidate s := by
+      (spectralMeasurePVMTargetAPI.pvmCandidate s).obligationTag =
+          SpectralMeasurePVMObligationTag.projectionValuedness ∧
+        (spectralMeasurePVMTargetAPI.spectralMeasureCandidate s).obligationTag =
+          SpectralMeasurePVMObligationTag.spectralTheoremCompatibility := by
   intro s
   exact spectral_measure_pvm_target_api_candidate_maps_agree s
 
@@ -33,8 +35,10 @@ def SpectralMeasurePVMSpectralCompatibilityPrototypeReady : Prop :=
     SpectralMeasurePVMObligationTag.spectralTheoremCompatibility ∧
   IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap ∧
   (∀ s : Set ℝ,
-    spectralMeasurePVMTargetAPI.pvmCandidate s =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate s) ∧
+    (spectralMeasurePVMTargetAPI.pvmCandidate s).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate s).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility) ∧
   SpectralMeasurePVMSpectralCompatibilityShellReady
 
 /-- The R4 shell-level spectral-compatibility prototype is ready. -/
