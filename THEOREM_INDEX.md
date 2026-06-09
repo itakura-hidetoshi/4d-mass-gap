@@ -28,7 +28,8 @@ R1 ConcreteRealHilbertSpace
   -> R5 CompactCenteredPlaquetteObservable
   -> R6 NondefinitionalSpectralAtom3320
   -> R7 PositiveSpectralWeightDerivation3320
-  -> YangMillsHamiltonianSpectralDerivation3320
+  -> ExactGapLayerSeparation
+  -> YangMillsHamiltonianSpectralReceipt3320
   -> ContinuumHamiltonianCompleteMassGapDerivation
   -> ContinuumHamiltonianMassGapWitnessProvenance
   -> R1R7TerminalDischargeChainIndex
@@ -43,6 +44,8 @@ Canonical source files:
 ```text
 MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean
 docs/r4_terminal_status_supersession.md
+MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
+docs/exact_gap_layer_separation.md
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean
@@ -76,6 +79,57 @@ DenselyDefinedOperator is the R2 operator-body entry point.
 GraphClosednessReadinessPromotion is the R2 graph-readiness bridge.
 GraphClosednessObligationPromotion is the R2-to-R3 obligation bridge.
 ```
+
+## Exact-gap layer separation
+
+The exact-gap route separates four review layers:
+
+```text
+abstract theorem-body layer
+normalized carrier layer
+spectral receipt layer
+engineering / review-marker layer
+```
+
+Primary Lean map:
+
+```text
+MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
+```
+
+Human-readable note:
+
+```text
+docs/exact_gap_layer_separation.md
+```
+
+Primary theorem anchors:
+
+```text
+exact_gap_abstract_theorem_body_layer_ready
+exact_gap_carrier_layer_ready
+exact_gap_spectral_receipt_layer_ready
+exact_gap_engineering_marker_layer_ready
+exact_gap_layer_separation_ready
+```
+
+External-review interpretation:
+
+```text
+Basic.lean / ExactGapReal.lean
+  -> normalized carrier layer
+
+YangMillsHamiltonianSpectralDerivation3320.lean
+  -> current spectral receipt / carrier alignment layer
+
+ExactGapTheoremBodyClosure.lean
+  -> older mixed closure record
+
+ExactGapLayerSeparation.lean
+  -> current separation map
+```
+
+The current spectral receipt is not presented as an independent operator-theoretic construction of a new spectral value followed by a calculation reducing it to `33/20`. It is the current carrier-aligned spectral-route receipt. A stronger independent spectral-value construction would require a distinct future theorem-body lane.
 
 ## R4 terminal status and historical endpoint-stage markers
 
@@ -116,7 +170,7 @@ old endpoint-stage StillOpen marker
 
 ## Continuum Hamiltonian witness provenance
 
-The receipt slots in `ContinuumHamiltonianMassGapWitnessData` are no longer meant to be externally reviewed as opaque `Prop` fields. The provenance map gives a theorem-level route from each slot to an upstream construction, bridge, or spectral derivation theorem.
+The receipt slots in `ContinuumHamiltonianMassGapWitnessData` are no longer meant to be externally reviewed as opaque `Prop` fields. The provenance map gives a theorem-level route from each slot to an upstream construction, bridge, or spectral receipt theorem.
 
 Primary provenance file:
 
@@ -154,9 +208,9 @@ receipt slot exists
   -> external reviewer inspects that upstream theorem / construction
 ```
 
-## Exact `33/20` derivation source
+## Exact `33/20` source roles
 
-The public route distinguishes the normalized carrier from the derivation receipt.
+The public route distinguishes the normalized carrier from the spectral receipt.
 
 Carrier files:
 
@@ -167,16 +221,16 @@ MGAP4D/MathlibAnalytic/ExactGapReal.lean
 
 These files define and expose the normalized real carrier `exactGapValueReal = 33/20`. Their local `rfl` / `norm_num` proofs are carrier checks.
 
-Derivation files:
+Spectral receipt files:
 
 ```text
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 ```
 
-These files are the current source for the claim that the Hamiltonian/spectral route derives the same normalized value. Public/external receipt layers should cite these derivation receipts when the intended meaning is "derived from the Yang--Mills Hamiltonian spectral route".
+These files are the current spectral receipt route. They identify the installed spectral-route value with the normalized carrier and carry positive/nonzero spectral mass. They should not be read as an independent operator-theoretic construction of a spectral value separate from `exactGapValueReal`.
 
-Primary derivation theorem anchors:
+Primary receipt theorem anchors:
 
 ```text
 yang_mills_hamiltonian_spectral_derivation_3320_ready
@@ -226,7 +280,7 @@ finalReleaseHeld
 publicBoundaryLocked
 ```
 
-When the public audit route refers to the exact value as a derived value, the intended upstream source is the spectral derivation route above, not the local carrier definition in `Basic.lean`.
+When the public audit route refers to the exact value as a spectral result, the intended upstream source is the spectral receipt route above, not the local carrier definition in `Basic.lean`.
 
 Primary public theorem anchors:
 
@@ -292,6 +346,7 @@ scripts/audit_hard_physical_residual_ledger.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
 docs/current_proof_status.md
+docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
 ```
@@ -318,8 +373,9 @@ lake build
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean` | R2 graph-closedness readiness promotion surface. |
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean` | R2 graph-closedness obligation promotion surface. |
 | `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean` | Current R4 operator-topology final packet and supersession anchor. |
-| `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` | Exact `33/20` spectral derivation route. |
-| `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` | Complete continuum-Hamiltonian spectral derivation route. |
+| `MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean` | Separation map for theorem-body, carrier, spectral receipt, and marker layers. |
+| `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` | Current `33/20` spectral receipt / carrier alignment route. |
+| `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` | Complete continuum-Hamiltonian spectral receipt route. |
 | `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean` | Provenance map from witness slots to upstream theorem anchors. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` | Terminal R1--R7 hard residual discharge index. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean` | Public audit surface for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
@@ -334,23 +390,25 @@ Recommended external review order:
 1. Run `bash scripts/check.sh`.
 2. Inspect `docs/current_proof_status.md`.
 3. Inspect `THEOREM_INDEX.md`.
-4. Inspect `docs/r4_terminal_status_supersession.md`.
-5. Inspect `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean`.
-6. Inspect `docs/continuum_hamiltonian_witness_provenance.md`.
-7. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean`.
-8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
-9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
-10. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
-11. Inspect `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean`.
-12. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean`.
-13. Inspect `docs/hard_physical_residual_ledger.md`.
-14. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
-15. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
-16. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
-17. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
-18. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
-19. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
-20. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+4. Inspect `docs/exact_gap_layer_separation.md`.
+5. Inspect `MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean`.
+6. Inspect `docs/r4_terminal_status_supersession.md`.
+7. Inspect `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean`.
+8. Inspect `docs/continuum_hamiltonian_witness_provenance.md`.
+9. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean`.
+10. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
+11. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
+12. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
+13. Inspect `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean`.
+14. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean`.
+15. Inspect `docs/hard_physical_residual_ledger.md`.
+16. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
+17. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
+18. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
+19. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
+20. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
+21. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
+22. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 
 ## Superseded route notes
 
