@@ -16,6 +16,7 @@ R1 ConcreteRealHilbertSpace
   -> R2 GraphClosednessObligationPromotion
   -> R2 DenseDomainUnboundedHamiltonian
   -> R2InfiniteLaneR3InputHandoff
+  -> R2InfiniteLaneSpectralInputHandoff
   -> R3 SelfAdjointPhysicalHamiltonian
   -> R4 ConcretePVMSpectralMeasure
   -> R4 OperatorTopologyConcreteRouteTopLevelFinalPacket
@@ -50,6 +51,12 @@ R2-to-R3 handoff anchor:
 MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean
 ```
 
+R2-to-spectral-input handoff anchor:
+
+```text
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteLaneSpectralInputHandoff.lean
+```
+
 Human-readable note:
 
 ```text
@@ -64,6 +71,8 @@ concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_closed_operator
 concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_unbounded
 concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_graph_promotions
 hard_physical_residual_ledger_r2_infinite_lane_r3_input_handoff_ready
+concrete_analytic_spine_l2_r2_infinite_lane_spectral_input_handoff_ready
+concrete_analytic_spine_l2_r2_infinite_lane_spectral_input_handoff_boundaries_visible
 ```
 
 Current R2 route:
@@ -81,6 +90,7 @@ ConcreteL2R1HilbertCarrier
   -> completed Hilbert operator-norm unboundedness
   -> self-adjointness concrete preconditions
   -> R2InfiniteLaneR3InputHandoff
+  -> R2InfiniteLaneSpectralInputHandoff
   -> R3 self-adjointness lane
 ```
 
@@ -98,6 +108,7 @@ Important R2 boundary:
 R2 now gives completed diagonal closed-operator and unboundedness surfaces.
 R2 does not by itself assert full symmetry, adjoint-domain agreement, self-adjointness, spectral theorem, PVM, exact atom 33/20, or positive spectral weight.
 The R2InfiniteLaneR3InputHandoff only hands the current R2 body to the existing R3 input bridge and keeps downstream obligations visible.
+The R2InfiniteLaneSpectralInputHandoff connects the current R2 body to the existing actual LinearPMap self-adjoint spectral input handoff, while keeping full spectral theorem, PVM construction, and positive spectral-weight construction as separate downstream obligations.
 ```
 
 ## Exact `33/20` source roles
@@ -277,6 +288,7 @@ lake build
 | `MGAP4D/MathlibAnalytic.lean` | Mathlib analytic theorem-surface root. |
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean` | Current R2 infinite-dimensional completed `ℓ²` diagonal operator lane. |
 | `MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean` | Current R2 infinite lane handoff into the R3 self-adjointness input bridge. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteLaneSpectralInputHandoff.lean` | Current R2 infinite lane handoff into the actual LinearPMap self-adjoint spectral input surface. |
 | `MGAP4D/ConcreteR1R7ResidualDischarge.lean` | Current terminal derivation discharge for the R1--R7 route. |
 | `MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean` | Separation map for theorem-body, carrier, derivation, and marker layers. |
 | `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` | Spectral derivation interface into the normalized carrier. |
@@ -293,13 +305,14 @@ lake build
 4. Inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
 5. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean`.
 6. Inspect `MGAP4D/HardPhysicalResidualLedgerR2InfiniteLaneR3InputHandoff.lean`.
-7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundedness.lean`.
-8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions.lean`.
-9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist.lean`.
-10. Inspect `docs/exact_gap_layer_separation.md`.
-11. Inspect `MGAP4D/ConcreteR1R7ResidualDischarge.lean`.
-12. Inspect the R4/R5/R6/R7 and terminal/public/external audit files.
-13. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteLaneSpectralInputHandoff.lean`.
+8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2CompletedHilbertOperatorNormUnboundedness.lean`.
+9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2SelfAdjointnessConcretePreconditions.lean`.
+10. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2PhysicalSpectralPromotionAuditChecklist.lean`.
+11. Inspect `docs/exact_gap_layer_separation.md`.
+12. Inspect `MGAP4D/ConcreteR1R7ResidualDischarge.lean`.
+13. Inspect the R4/R5/R6/R7 and terminal/public/external audit files.
+14. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 
 ## Boundary
 
