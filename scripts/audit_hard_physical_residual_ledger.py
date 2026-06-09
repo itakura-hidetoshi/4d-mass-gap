@@ -115,20 +115,26 @@ REQUIRED_R1_CONCRETE_HILBERT_CLOSURE_ANCHORS = (
 )
 
 REQUIRED_R2_DENSE_DOMAIN_OPERATOR_CLOSURE_ANCHORS = (
+    "MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenseDiagonalDomainUnboundedness.lean",
+    "MathlibAnalytic.concreteAnalyticSpineL2R2DenseDiagonalDomainUnboundednessSurfaceReady",
+    "MathlibAnalytic.concreteL2R2DenseDomainOperatorUnboundednessQuantification",
+    "MathlibAnalytic.concrete_l2_r2_dense_domain_operator_unboundedness_quantification",
     "MGAP4D/HardPhysicalResidualLedgerR2DenseDomainOperatorClosure.lean",
     "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure",
     "hardPhysicalResidualLedgerR2DenseDomainOperatorClosure3320",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_3320_ready",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_linear_pmap_ready",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_surface_ready",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_dense_domain",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_eq_completed",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_graph_closed",
+    "hard_physical_residual_ledger_r2_dense_domain_operator_closure_unboundedness_ready",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_final_release_held",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_public_boundary_locked",
     "hard_physical_residual_ledger_r2_dense_domain_operator_closure_downstream_obligations_visible",
     "HardPhysicalResidualLedgerR2DenseDomainOperatorClosure: installed / R2 dense-domain operator closure bridge visible",
     "R2 dense-domain LinearPMap: discharged and carried into ledger bridge",
-    "R2 unboundedness quantification: visible as remaining hard point",
+    "R2 unboundedness quantification: discharged and carried into ledger bridge",
     "R3--R7 downstream obligations: visible",
 )
 
@@ -148,6 +154,8 @@ REQUIRED_CLOSURE_PHRASES = (
     "CompleteSpace",
     "dense subspace or dense set",
     "Mathlib LinearPMap",
+    "unit probes have norm one",
+    "arbitrary real thresholds",
     "domain equality with the adjoint",
     "projection-valued measure",
     "countable additivity",
@@ -158,7 +166,6 @@ REQUIRED_CLOSURE_PHRASES = (
 )
 
 REQUIRED_SPINE_ANCHORS = (
-    "DenseDomainUnboundedHamiltonian.unboundednessQuantification",
     "SelfAdjointPhysicalHamiltonian",
     "ConcretePVMSpectralMeasure",
     "CompactCenteredPlaquetteObservable",
@@ -168,7 +175,7 @@ REQUIRED_SPINE_ANCHORS = (
 
 REQUIRED_STATUS_ANCHORS = (
     "R1: Mathlib-substrate discharged / downstream physical integration pending",
-    "R2: dense-domain LinearPMap discharged / unboundedness quantification pending",
+    "R2: dense-domain unbounded operator discharged / downstream self-adjointness pending",
     "R3: open / self-adjointness-hardening required",
     "R4: open / PVM-construction required",
     "R5: open / observable-construction required",
@@ -181,6 +188,8 @@ FORBIDDEN_COLLAPSE_PHRASES = (
     "R1: open / construction-hardening required",
     "R2: closed",
     "R2: open / domain-hardening required",
+    "R2: dense-domain LinearPMap discharged / unboundedness quantification pending",
+    "R2 unboundedness quantification: visible as remaining hard point",
     "R3: closed",
     "R4: closed",
     "R5: closed",
