@@ -21,13 +21,21 @@ def MathlibImportSurface.ready (S : MathlibImportSurface) : Prop :=
 theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
   exact And.intro True.intro <| And.intro True.intro True.intro
 
-/-- A concrete Mathlib-backed real number witness used to confirm that the branch
-can access Mathlib's analytic number hierarchy. -/
+/-- A concrete Mathlib-backed normalized real seed.
+
+This value is intentionally only the current normalized arithmetic seed used by
+legacy and receipt surfaces.  The equality proof below is definitional (`rfl`),
+and the positivity proof is arithmetic (`norm_num`).  Therefore these facts must
+not be read as a non-definitional derivation of `33/20` from the physical
+Yang--Mills Hamiltonian spectrum, nor as a proof of positive spectral weight.
+Those obligations are tracked separately by the exact-value derivation boundary. -/
 noncomputable def exactGapValueReal : ℝ := (33 : ℝ) / 20
 
+/-- Arithmetic positivity of the normalized seed. -/
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   norm_num [exactGapValueReal]
 
+/-- Definitional equality of the normalized seed. -/
 theorem exactGapValueReal_eq : exactGapValueReal = (33 : ℝ) / 20 := by
   rfl
 
