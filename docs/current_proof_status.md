@@ -14,6 +14,42 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
+## Witness-slot provenance
+
+The current route distinguishes a receipt slot from the theorem anchor that generates it. External reviewers should inspect:
+
+```text
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean
+docs/continuum_hamiltonian_witness_provenance.md
+```
+
+The summary theorem is:
+
+```text
+continuum_hamiltonian_witness_provenance_map_ready
+```
+
+This theorem bundles explicit provenance for the non-boundary `ContinuumHamiltonianMassGapWitnessData` slots:
+
+```text
+physicalContinuumHamiltonianReady
+hphysFromContinuumYMReady
+selfAdjointSpectralChainReady
+normalizationToExactGapReady
+compactCenteredPlaquetteWeightReady
+spectralMassObservableReady
+massGapDerivationWitness
+continuumHamiltonianToMassGapChainReady
+```
+
+The intended review reading is:
+
+```text
+receipt slot exists
+  -> provenance theorem identifies upstream theorem anchor
+  -> external reviewer inspects that upstream theorem / construction
+```
+
 ## Exact `33/20` derivation source
 
 The repository now distinguishes two roles:
@@ -91,6 +127,7 @@ The current hard physical residual audit checks both the terminal discharge inde
 scripts/audit_hard_physical_residual_ledger.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
+docs/continuum_hamiltonian_witness_provenance.md
 ```
 
 ## Boundary
