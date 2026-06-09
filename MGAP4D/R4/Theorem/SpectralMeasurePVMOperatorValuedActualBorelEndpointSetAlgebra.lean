@@ -138,9 +138,18 @@ theorem spectral_measure_pvm_actual_borel_endpoint_set_algebra_target_ready :
 
 /-- Actual Borel endpoint set-algebra bridge.
 
-This advances from mere endpoint carrier realization to actual endpoint Boolean
-set algebra inside `Set ℝ`.  Arbitrary Borel-set realization and genuine
-operator-topology countable additivity remain open. -/
+This local bridge advances from endpoint carrier realization to endpoint Boolean
+set algebra inside `Set ℝ`.  The historical `StillOpen` markers below are kept
+as append-only boundary witnesses for this older local endpoint stage: at the
+moment this file was introduced, arbitrary Borel realization and genuine
+operator-topology countable additivity had not yet been promoted here.
+
+They should not be read as the current global R4 status on `main`.  The current
+public route is the later R4 concrete operator-topology terminal chain, in
+particular `SpectralMeasurePVMOperatorTopologyR4ConcreteRouteTopLevelFinalPacketReady`,
+which exposes the concrete-route final index, operator-topology convergence, and
+genuine operator-topology countable-additivity bridge while preserving the
+no-shell-to-full-collapse boundary. -/
 def SpectralMeasurePVMActualBorelEndpointSetAlgebraBridgeReady : Prop :=
   SpectralMeasurePVMActualBorelEndpointCarrierPublicBoundaryHeld ∧
   SpectralMeasurePVMActualBorelEndpointSetAlgebraTarget ∧
@@ -151,7 +160,10 @@ def SpectralMeasurePVMActualBorelEndpointSetAlgebraBridgeReady : Prop :=
   SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
-/-- The actual Borel endpoint set-algebra bridge is ready. -/
+/-- The actual Borel endpoint set-algebra bridge is ready as a historical local
+endpoint-stage boundary object.  For the current global R4 status, use the
+operator-topology R4 concrete route top-level final packet and the R1--R7
+terminal discharge chain. -/
 theorem spectral_measure_pvm_actual_borel_endpoint_set_algebra_bridge_ready :
     SpectralMeasurePVMActualBorelEndpointSetAlgebraBridgeReady := by
   exact ⟨
@@ -164,7 +176,12 @@ theorem spectral_measure_pvm_actual_borel_endpoint_set_algebra_bridge_ready :
     spectral_measure_pvm_genuine_spectral_measure_construction_still_open_ready,
     spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
-/-- Public boundary after the actual Borel endpoint set-algebra bridge. -/
+/-- Public boundary after the actual Borel endpoint set-algebra bridge.
+
+This public-boundary object is retained for lineage only.  It records the local
+endpoint-stage non-collapse boundary and historical deferred markers.  It is
+superseded, for current public routing, by the later R4 operator-topology final
+packet and the R1--R7 terminal discharge chain. -/
 def SpectralMeasurePVMActualBorelEndpointSetAlgebraPublicBoundaryHeld : Prop :=
   SpectralMeasurePVMActualBorelEndpointSetAlgebraBridgeReady ∧
   SpectralMeasurePVMActualBorelEndpointSetAlgebraTarget ∧
@@ -174,7 +191,8 @@ def SpectralMeasurePVMActualBorelEndpointSetAlgebraPublicBoundaryHeld : Prop :=
   SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen ∧
   SpectralMeasurePVMNoShellToFullCollapseBoundary
 
-/-- The public boundary after the actual Borel endpoint set-algebra bridge is held. -/
+/-- The public boundary after the actual Borel endpoint set-algebra bridge is
+held as a historical local endpoint-stage boundary object. -/
 theorem spectral_measure_pvm_actual_borel_endpoint_set_algebra_public_boundary_held :
     SpectralMeasurePVMActualBorelEndpointSetAlgebraPublicBoundaryHeld := by
   exact ⟨
