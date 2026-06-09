@@ -55,8 +55,6 @@ def SpectralMeasurePVMTargetAPI.ready (A : SpectralMeasurePVMTargetAPI) : Prop :
   SpectralMeasurePVMObligationMapReady ∧
   A.setIndex = SpectralMeasurePVMTargetSetIndex ∧
   A.projectionTarget = SpectralMeasurePVMTargetProjectionType ∧
-  A.sourceIsRealBorelLike ∧
-  A.targetIsProjectionShell ∧
   A.normalizationTag = SpectralMeasurePVMObligationTag.normalization ∧
   A.projectionValuednessTag = SpectralMeasurePVMObligationTag.projectionValuedness ∧
   A.countableAdditivityTag = SpectralMeasurePVMObligationTag.countableAdditivity ∧
@@ -71,12 +69,18 @@ theorem spectral_measure_pvm_target_api_ready :
     rfl,
     rfl,
     rfl,
-    rfl,
-    rfl,
     rfl⟩
 
 theorem spectral_measure_pvm_target_api_set_index :
     spectralMeasurePVMTargetAPI.setIndex = SpectralMeasurePVMTargetSetIndex := by
+  rfl
+
+theorem spectral_measure_pvm_target_api_source_witness :
+    spectralMeasurePVMTargetAPI.sourceIsRealBorelLike = rfl := by
+  rfl
+
+theorem spectral_measure_pvm_target_api_target_witness :
+    spectralMeasurePVMTargetAPI.targetIsProjectionShell = rfl := by
   rfl
 
 theorem spectral_measure_pvm_target_api_has_spectral_measure_candidate :
