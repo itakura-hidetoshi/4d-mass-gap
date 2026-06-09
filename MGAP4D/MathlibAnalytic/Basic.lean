@@ -21,21 +21,27 @@ def MathlibImportSurface.ready (S : MathlibImportSurface) : Prop :=
 theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
   exact And.intro True.intro <| And.intro True.intro True.intro
 
-/-- A concrete Mathlib-backed normalized real seed.
+/-- A concrete Mathlib-backed normalized real carrier.
 
-This value is intentionally only the current normalized arithmetic seed used by
-legacy and receipt surfaces.  The equality proof below is definitional (`rfl`),
-and the positivity proof is arithmetic (`norm_num`).  Therefore these facts must
-not be read as a non-definitional derivation of `33/20` from the physical
-Yang--Mills Hamiltonian spectrum, nor as a proof of positive spectral weight.
-Those obligations are tracked separately by the exact-value derivation boundary. -/
+This definition is the canonical normalized value carrier used by legacy,
+receipt, and route-index surfaces.  The local equality proof below is
+intentionally definitional (`rfl`) and the local positivity proof is arithmetic
+(`norm_num`); these local facts are carrier checks, not the source of the
+spectral derivation.
+
+The current proof route treats the non-definitional `33/20` derivation as coming
+from the Yang--Mills Hamiltonian spectral derivation surfaces, especially
+`YangMillsHamiltonianSpectralDerivation3320` and the complete continuum
+Hamiltonian derivation.  Downstream public/external receipt layers should cite
+those derivation receipts when they mean "derived from the spectral route", and
+should cite this file only when they mean "the normalized carrier value". -/
 noncomputable def exactGapValueReal : ℝ := (33 : ℝ) / 20
 
-/-- Arithmetic positivity of the normalized seed. -/
+/-- Arithmetic positivity of the normalized carrier. -/
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   norm_num [exactGapValueReal]
 
-/-- Definitional equality of the normalized seed. -/
+/-- Definitional equality of the normalized carrier. -/
 theorem exactGapValueReal_eq : exactGapValueReal = (33 : ℝ) / 20 := by
   rfl
 
