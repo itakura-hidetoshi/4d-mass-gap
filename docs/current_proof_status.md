@@ -85,6 +85,24 @@ R2-to-spectral-input handoff connects the current R2 body to the actual LinearPM
 Full spectral theorem, PVM construction, exact atom 33/20, and positive spectral-weight construction remain separately reviewable downstream surfaces.
 ```
 
+## Placeholder / witness inventory
+
+External review must distinguish mathematical theorem bodies from placeholders, witnesses, receipts, and readiness packets.
+
+Primary inventory note:
+
+```text
+docs/proof_placeholder_inventory.md
+```
+
+Inventory audit script:
+
+```text
+scripts/audit_proof_placeholder_inventory.py
+```
+
+The inventory classifies `PUnit`, `True`, `StillOpen`, `theoremWitnessOnly`, `receipt`, `ready`, `prototype`, `skeleton`, `boundary`, `packet`, and `manifest` surfaces by replacement strength. These markers do not automatically substitute for analytic theorem bodies.
+
 ## Exact-gap layer separation
 
 The current route separates four layers:
@@ -237,13 +255,15 @@ When this receipt chain is read as an exact-value derivation, its upstream sourc
 
 ## Audit route
 
-The current hard physical residual audit checks the terminal discharge index and the public/external receipt chain:
+The current hard physical residual audit checks the terminal discharge index and the public/external receipt chain. The placeholder inventory audit separately lists review markers and witness-like surfaces:
 
 ```text
 scripts/audit_hard_physical_residual_ledger.py
+scripts/audit_proof_placeholder_inventory.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
 docs/r2_infinite_l2_diagonal_operator_lane.md
+docs/proof_placeholder_inventory.md
 docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
