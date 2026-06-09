@@ -12,19 +12,21 @@ KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance
 
 ---
 
-## Status snapshot as of 2026-06-07
+## Status snapshot as of 2026-06-09
 
-The active front is now the **R4 actual-Borel spectral-measure/PVM transition**.
-
-The local finite-supported measurable PVM line has done enough work to serve as scaffold and boundary. The next movement is no longer more local-PVM accumulation. The main line is now:
+The active front is now a two-lane hardening surface:
 
 ```text
-Set ℝ endpoint carrier
-  -> actual Borel endpoint set algebra
-  -> arbitrary Borel carrier wrapper
-  -> actual Borel wrapper closure
-  -> genuine operator-valued spectral measure obligations
-  -> R5 compact centered plaquette observable / R7 atom-weight route
+R4 actual-Borel carrier / wrapper / closure
+  -> genuine operator-valued spectral-measure API
+  -> operator-topology countable additivity
+  -> self-adjoint spectral theorem handoff
+
+R5 compact centered plaquette observable
+  -> direct review-ready decomposition
+  -> direct-proof final export
+  -> downstream input contract
+  -> later R7 atom / positive-weight route
 ```
 
 Current normalized theorem-body value:
@@ -58,7 +60,10 @@ R4 actual Set ℝ endpoint carrier: present
 R4 actual Borel endpoint set algebra: present
 R4 actual Borel carrier wrapper: present as phase surface
 R4 actual Borel wrapper closure: present as phase surface
-full genuine operator-valued spectral measure: not yet claimed
+R4 genuine operator-valued spectral measure: not yet claimed
+R5 direct proof of compact/centered/smeared chosen-observable laws: present
+R5 direct-proof downstream input contract: present and root-integrated
+R7 exact atom / positive spectral weight: not yet claimed
 external mathematical consensus: not claimed
 public final theorem claim: review-gated
 ```
@@ -73,7 +78,7 @@ documentation is not theorem body
 finite-supported local PVM is not genuine spectral measure
 actual Borel wrapper closure is not operator-topology countable additivity
 formal-adjoint graph equality is not Mathlib IsSelfAdjoint promotion
-R4 spectral-measure progress is not R5/R7 atom-weight release
+R5 direct observable laws are not R7 atom/weight release
 ```
 
 ---
@@ -179,7 +184,7 @@ positive spectral weight: not claimed
 physical Yang-Mills Hamiltonian promotion: not claimed
 ```
 
-R2 should not remain the main thread unless it directly supports R4/R5 obligations.
+R2 should not remain the main thread unless it directly supports R4/R5/R7 obligations.
 
 ---
 
@@ -213,7 +218,7 @@ This phase should now be treated as a support base rather than the place to keep
 
 ## Phase F — R4 actual-Borel carrier and endpoint set algebra
 
-Status: **active and partially root-integrated; boundary-held**
+Status: **complete enough; boundary-held**
 
 Purpose: move from local finite-supported PVM scaffolding into actual Borel subsets of `ℝ`.
 
@@ -237,27 +242,21 @@ MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointCarrier.lea
 MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelEndpointSetAlgebra.lean
 ```
 
-Next / active:
-
-- [ ] Keep `MGAP4D/R4/TheoremSurface.lean` synchronized with the intended root-integrated R4 front.
-- [ ] Add or tighten theorem-index documentation for the actual endpoint carrier and endpoint set algebra.
-- [ ] Add audit wording that prevents endpoint-only results from being read as arbitrary Borel spectral-measure construction.
-
-Exit gate:
+Boundary retained:
 
 ```text
 endpoint Set ℝ realization visible
 endpoint measurability visible
 endpoint Boolean set algebra visible
 nonpromotion firewall visible
-root/theorem-index docs synchronized
+endpoint-only results do not imply arbitrary Borel spectral-measure construction
 ```
 
 ---
 
 ## Phase G — R4 arbitrary Borel carrier wrapper and closure
 
-Status: **present as phase surfaces; active hardening target; boundary-held**
+Status: **present as phase surfaces; boundary-held**
 
 Purpose: pass from endpoint-only Borel objects to an arbitrary measurable-subset wrapper over `ℝ`, while still preserving the boundary before genuine operator-valued spectral measures.
 
@@ -293,11 +292,10 @@ MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedActualBorelClosurePhaseSurface
 
 Active / next:
 
-- [ ] Decide whether `ActualBorelClosurePhaseSurface` should be imported by the main R4 theorem surface or kept as a separate phase surface until the next obligation is ready.
-- [ ] Add a root-export receipt if promoted into the main theorem surface.
-- [ ] Add theorem-index entries for wrapper and closure surfaces.
+- [ ] Keep root-export status explicit.
+- [ ] Add theorem-index entries for wrapper and closure surfaces where still missing.
 - [ ] Add audit hooks preventing wrapper closure from implying operator-topology countable additivity.
-- [ ] State the next arbitrary-Borel API target explicitly.
+- [ ] Use this layer only as the carrier surface for the genuine operator-valued spectral-measure API.
 
 Exit gate:
 
@@ -305,7 +303,6 @@ Exit gate:
 arbitrary Borel wrapper surface visible
 closure witnesses visible
 endpoint lift compatibility visible
-root-export status explicit
 operator-topology countable-additivity boundary explicit
 self-adjoint spectral-theorem boundary explicit
 ```
@@ -314,7 +311,7 @@ self-adjoint spectral-theorem boundary explicit
 
 ## Phase H — R4 genuine operator-valued spectral measure
 
-Status: **next genuine analytic phase; not yet claimed**
+Status: **active genuine analytic phase; not yet claimed complete**
 
 Purpose: convert the actual Borel carrier/wrapper work into the real operator-valued PVM/spectral-measure layer, without skipping topology, countable additivity, or self-adjoint spectral theorem obligations.
 
@@ -343,15 +340,40 @@ R5/R7 promotion still blocked until genuine layer is ready
 
 ---
 
-## Phase I — R5 compact centered plaquette observable and R7 atom/weight route
+## Phase I — R5 compact centered plaquette observable direct-proof lane
 
-Status: **downstream; blocked by R4 genuine spectral-measure obligations**
+Status: **partially root-integrated support lane; not atom/weight release**
 
-Purpose: once the genuine R4 spectral-measure/PVM layer is strong enough, move into the observable and atom/weight route.
+Purpose: expose the compact centered plaquette observable through theorem-body proof, not through opaque review readiness, while preserving all atom/weight and R4 genuine-PVM boundaries.
 
-Required downstream steps:
+Completed / present:
 
-- [ ] Define the compact centered plaquette observable against the genuine PVM surface.
+- [x] Add direct decomposition of compact-plaquette review-surface readiness.
+- [x] Extract compact support for the R5 chosen observable.
+- [x] Extract centeredness for the R5 chosen observable.
+- [x] Extract smearing for the R5 chosen observable.
+- [x] Package the compact / centered / smeared chosen-observable laws.
+- [x] Transport the laws to the observable-atom chosen observable.
+- [x] Add direct-proof final export.
+- [x] Add public boundary for the direct-proof final export.
+- [x] Add downstream input contract exposing both chosen-observable faces.
+- [x] Preserve the boundary that this lane does not consume exact atom `33/20`.
+- [x] Preserve the boundary that this lane does not consume positive spectral weight.
+- [x] Preserve the R4 no-shell-to-full-collapse boundary.
+- [x] Root-integrate the downstream input contract through `MGAP4D/R5/TheoremSurface.lean`.
+
+Representative files:
+
+```text
+MGAP4D/R5/TheoremSurface.lean
+MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableReviewReadyDirectProof.lean
+MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean
+MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofDownstreamInputContract.lean
+```
+
+Still blocked:
+
+- [ ] Consume the R5 downstream input against a genuine R4 operator-valued PVM surface.
 - [ ] State operator-measure compatibility using the genuine spectral measure, not the local scaffold.
 - [ ] Derive the exact `33/20` atom from theorem bodies, not from documentation or release packets.
 - [ ] Prove positive spectral weight in the relevant observable/spectral-measure interface.
@@ -361,8 +383,8 @@ Required downstream steps:
 Exit gate:
 
 ```text
-genuine PVM layer available
-compact centered plaquette observable available
+genuine R4 PVM layer available
+R5 compact centered plaquette observable consumes the genuine PVM surface
 exact atom 33/20 derived through theorem bodies
 positive spectral weight proved through theorem bodies
 physical-normalization boundary preserved
@@ -371,7 +393,35 @@ public final theorem boundary still review-gated
 
 ---
 
-## Phase J — Independent replay and external mathematical review
+## Phase J — R7 exact atom / positive spectral weight route
+
+Status: **downstream; blocked by R4 genuine PVM and R5 consumption gates**
+
+Purpose: move from R5 compact centered plaquette support into exact atom and positive spectral weight only after the genuine spectral-measure obligations are available.
+
+Required downstream steps:
+
+- [ ] Define the R7 atom target against the genuine operator-valued spectral measure.
+- [ ] Connect the atom route to the R5 downstream input contract.
+- [ ] Prove exact atom `33/20` through theorem bodies.
+- [ ] Prove positive spectral weight through theorem bodies.
+- [ ] Preserve the no-documentation-shortcut rule.
+- [ ] Preserve the physical-normalization boundary.
+- [ ] Preserve public final theorem review gate.
+
+Exit gate:
+
+```text
+R4 genuine PVM layer available
+R5 direct-proof observable consumed correctly
+R7 atom/exact-gap theorem body closed
+positive spectral weight theorem body closed
+public final theorem boundary still review-gated
+```
+
+---
+
+## Phase K — Independent replay and external mathematical review
 
 Status: **active governance layer**
 
@@ -385,7 +435,9 @@ Purpose: move from internal readiness to externally reproducible review without 
 - [ ] Ask at least one reviewer to inspect `THEOREM_INDEX.md`.
 - [ ] Ask at least one reviewer to inspect the physical-normalization boundary.
 - [ ] Ask at least one reviewer to inspect the R4 actual-Borel carrier/wrapper front.
-- [ ] Ask at least one reviewer to inspect the genuine operator-valued spectral-measure obligations before any R5/R7 promotion.
+- [ ] Ask at least one reviewer to inspect the R4 genuine operator-valued spectral-measure obligations.
+- [ ] Ask at least one reviewer to inspect the R5 direct-proof downstream input contract.
+- [ ] Ask at least one reviewer to inspect the R7 atom/weight obligations before any public release wording changes.
 - [ ] Collect review notes as append-only external audit notes.
 - [ ] Preserve the rule: review success does not automatically open public final theorem release.
 
@@ -397,13 +449,15 @@ external reviewer transcript present
 major theorem-surface review notes present
 normalization boundary review notes present
 R4 actual-Borel review notes present
-genuine PVM obligation review notes present
+R4 genuine PVM obligation review notes present
+R5 direct-proof review notes present
+R7 atom/weight obligation review notes present
 public-boundary wording unchanged
 ```
 
 ---
 
-## Phase K — Audit-oriented version tag and Zenodo synchronization
+## Phase L — Audit-oriented version tag and Zenodo synchronization
 
 Status: **pending**
 
@@ -413,6 +467,7 @@ Status: **pending**
 - [ ] Confirm `lake build` from a fresh clone.
 - [ ] Confirm README / ROADMAP / THEOREM_INDEX / EXTERNAL_AUDIT_PACKET consistency.
 - [ ] Confirm R4 actual-Borel wording does not overclaim genuine spectral-measure completion.
+- [ ] Confirm R5 direct-proof wording does not overclaim exact atom / positive weight.
 - [ ] Confirm R2 local analytic wording does not overclaim self-adjoint/spectral/PVM promotion.
 - [ ] Create tag only after source-tree review.
 - [ ] Generate post-tag verification receipt.
@@ -429,6 +484,7 @@ post-tag verification receipt attached
 Zenodo metadata synchronized
 public final theorem boundary preserved
 R4 genuine spectral-measure boundary preserved
+R5 atom/weight boundary preserved
 R2 local analytic boundary preserved
 ```
 
@@ -443,7 +499,9 @@ Use:
 ```text
 MGAP4D currently provides a Lean 4 proof architecture and replayable audit surface
 for an internal normalized 4D mass-gap theorem-body route with normalized value 33/20.
-The current active front is the R4 actual-Borel spectral-measure/PVM phase.
+The active analytic front is the R4 genuine operator-valued spectral-measure/PVM layer.
+The R5 compact centered plaquette observable has a root-integrated direct-proof
+downstream contract, but exact atom/positive-weight release remains blocked.
 Public final theorem acceptance is not claimed.
 ```
 
@@ -457,26 +515,29 @@ audit scripts replace Lean kernel checking
 external-audit-readiness gate equals external audit
 finite-supported local PVM implies genuine spectral measure
 actual Borel wrapper closure implies operator-topology countable additivity
-endpoint-only Borel surfaces imply arbitrary Borel spectral measure construction
+endpoint-only Borel surfaces imply arbitrary Borel spectral-measure construction
 concrete l2 R2 residual-zero audit implies a closed operator theorem
 formal-adjoint graph equality implies Mathlib self-adjointness
-R4 current surfaces already imply exact atom / positive weight / R5 plaquette release
+R5 compact/centered/smeared laws imply exact atom 33/20
+R5 compact/centered/smeared laws imply positive spectral weight
+R4/R5 current surfaces already imply public final theorem release
 ```
 
 ---
 
 ## Current priorities
 
-1. Keep `README.md` and `ROADMAP.md` synchronized with the R4 actual-Borel front.
-2. Decide and document whether the actual-Borel closure phase should be root-exported through `MGAP4D/R4/TheoremSurface.lean`.
-3. Update `THEOREM_INDEX.md` for the R4 actual endpoint carrier, endpoint set algebra, actual Borel wrapper, and closure phase surfaces.
+1. Keep `README.md` and `ROADMAP.md` synchronized with the R4/R5 two-lane front.
+2. State the genuine operator-valued spectral-measure API target explicitly.
+3. State the operator topology for countable additivity before trying to discharge it.
 4. Add or tighten audit hooks preventing wrapper closure from being read as countable additivity.
-5. State the genuine operator-valued spectral-measure API target explicitly.
-6. State the operator topology for countable additivity before trying to discharge it.
-7. Keep R2 residual taxonomy as support, not the main thread.
-8. Advance toward R5 only after the genuine R4 spectral-measure layer is strong enough.
-9. Collect independent replay receipts.
-10. Prepare an audit-oriented tag only after source-tree review and CI green confirmation.
+5. Keep `THEOREM_INDEX.md` synchronized for the R4 actual-Borel surfaces.
+6. Add or tighten `THEOREM_INDEX.md` entries for the R5 direct-proof downstream contract.
+7. Connect R5 only to a genuine R4 PVM surface, not to finite-supported local scaffolds.
+8. Prepare the R7 atom/positive-weight route only after R4/R5 gates are explicit.
+9. Keep R2 residual taxonomy as support, not the main thread.
+10. Collect independent replay receipts.
+11. Prepare an audit-oriented tag only after source-tree review and CI green confirmation.
 
 ---
 
@@ -487,12 +548,12 @@ Do not expand the roadmap by adding new phases merely to make the project look l
 The next mathematical movement should be narrow:
 
 ```text
-R4 actual-Borel root/export synchronization
-R4 theorem-index synchronization
-operator-valued spectral-measure API
-operator-topology countable-additivity target
-self-adjoint spectral theorem handoff
-then R5 compact centered plaquette / R7 atom-weight route
+R4 operator-valued spectral-measure API
+R4 operator-topology countable-additivity target
+R4 self-adjoint spectral theorem handoff
+R5 direct-proof downstream contract review
+R5 consumption against genuine R4 PVM
+R7 exact atom / positive spectral weight route
 ```
 
 Everything else remains secondary unless it directly supports these gates.
