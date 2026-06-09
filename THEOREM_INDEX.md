@@ -18,6 +18,9 @@ The current public route is the R1--R7 terminal / public / external audit receip
 
 ```text
 R1 ConcreteRealHilbertSpace
+  -> R2 DenselyDefinedOperator
+  -> R2 GraphClosednessReadinessPromotion
+  -> R2 GraphClosednessObligationPromotion
   -> R2 DenseDomainUnboundedHamiltonian
   -> R3 SelfAdjointPhysicalHamiltonian
   -> R4 ConcretePVMSpectralMeasure
@@ -39,6 +42,29 @@ MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
+```
+
+## R2 graph-closedness route milestones
+
+These milestones are the explicit bridge between the densely-defined unbounded operator and the R3 adjoint/self-adjointness route. They should be read as the R2 graph-closedness subroute inside the top-level public route.
+
+```text
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean
+  -> establishes the concrete densely-defined operator surface.
+
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean
+  -> promotes graph-closedness readiness from the concrete operator route.
+
+MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean
+  -> promotes graph-closedness obligations into the downstream adjoint/self-adjointness route.
+```
+
+Review interpretation:
+
+```text
+DenselyDefinedOperator is the R2 operator-body entry point.
+GraphClosednessReadinessPromotion is the R2 graph-readiness bridge.
+GraphClosednessObligationPromotion is the R2-to-R3 obligation bridge.
 ```
 
 ## Terminal R1--R7 receipt
@@ -158,6 +184,9 @@ lake build
 |---|---|
 | `MGAP4D.lean` | Top-level Lean import root. |
 | `MGAP4D/MathlibAnalytic.lean` | Mathlib analytic theorem-surface root. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean` | R2 densely-defined operator entry point. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean` | R2 graph-closedness readiness promotion surface. |
+| `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean` | R2 graph-closedness obligation promotion surface. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` | Terminal R1--R7 hard residual discharge index. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean` | Public audit surface for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
 | `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean` | Public route index for exact value, positive weight, R4 genuine-PVM visibility, and boundary lock. |
@@ -170,14 +199,18 @@ Recommended external review order:
 
 1. Run `bash scripts/check.sh`.
 2. Inspect `docs/current_proof_status.md`.
-3. Inspect `docs/hard_physical_residual_ledger.md`.
-4. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
-5. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
-6. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
-7. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
-8. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
-9. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
-10. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+3. Inspect `THEOREM_INDEX.md`.
+4. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
+5. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
+6. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
+7. Inspect `docs/hard_physical_residual_ledger.md`.
+8. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
+9. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
+10. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
+11. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
+12. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
+13. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
+14. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 
 ## Superseded route notes
 
