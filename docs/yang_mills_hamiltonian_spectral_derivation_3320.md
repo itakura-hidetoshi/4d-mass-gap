@@ -1,9 +1,12 @@
-# Yang--Mills Hamiltonian spectral derivation of 33/20
+# Yang--Mills Hamiltonian spectral value alignment before R6
 
 This note documents the additive Lean theorem surface
 `MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320`.
 
-The purpose is to make the direction of the exact value explicit:
+The file name is legacy, but the contract is now stricter: this upstream layer
+must not introduce or derive the concrete numeric value `33/20`.  The concrete
+value is reserved for the R6 exact-atom layer.  Upstream of R6, this surface only
+records spectral-route alignment around one derived Hamiltonian spectral value.
 
 ```text
 Yang--Mills continuum Hamiltonian
@@ -12,7 +15,8 @@ Yang--Mills continuum Hamiltonian
   -> Rayleigh lower-bound surface
   -> Rayleigh attainment surface
   -> positive spectral-mass observable surface
-  -> derived Hamiltonian spectral value = 33/20
+  -> one shared derived Hamiltonian spectral value
+  -> no upstream 33/20 claim
 ```
 
 ## Core Lean surface
@@ -24,27 +28,29 @@ YangMillsHamiltonianSpectralDerivation3320.ready
 yang_mills_hamiltonian_spectral_derivation_3320_ready
 ```
 
-## Spectral derivation anchors
+## Spectral alignment anchors
 
 ```text
-yang_mills_hamiltonian_spectral_infimum_eq_3320
-yang_mills_hamiltonian_spectral_attainment_eq_3320
-yang_mills_hamiltonian_observable_atom_eq_3320
-yang_mills_hamiltonian_spectral_analysis_derives_3320
+infimum_eq_derived
+attainment_eq_derived
+atom_eq_derived
+yang_mills_hamiltonian_spectral_infimum_eq_derived
+yang_mills_hamiltonian_spectral_attainment_eq_derived
+yang_mills_hamiltonian_observable_atom_eq_derived
 yang_mills_hamiltonian_exact_gap_eq_spectral_value
-yang_mills_hamiltonian_spectral_derivation_exact_gap_value
 ```
 
 The intended reading is:
 
 ```text
-spectral infimum value = 33/20
-attained spectral value = 33/20
-observable spectral atom value = 33/20
-derived Hamiltonian spectral value = 33/20
+spectral infimum value = derived Hamiltonian spectral value
+attained spectral value = derived Hamiltonian spectral value
+observable spectral atom value = derived Hamiltonian spectral value
 exactGapValueReal = derived Hamiltonian spectral value
-therefore exactGapValueReal = 33/20
 ```
+
+This is not a derivation of `33/20`.  It is a no-numeric upstream carrier and
+alignment surface.  R6 is the first layer allowed to state the concrete value.
 
 ## Positive spectral mass anchors
 
@@ -62,34 +68,34 @@ yang_mills_hamiltonian_spectral_derivation_public_boundary_held
 yang_mills_hamiltonian_spectral_derivation_final_release_held
 ```
 
-The surface remains theorem-witness-only. It does not claim external mathematical consensus, peer-review completion, or final public theorem acceptance.
+The surface remains theorem-witness-only. It does not claim external mathematical
+consensus, peer-review completion, final public theorem acceptance, or upstream
+numeric derivation.
 
 ## Relation to the existing continuum-Hamiltonian route
 
-The prior route already provided:
+The prior route provides a positive mass-gap carrier and a review-ready chain:
 
 ```text
-continuum_hamiltonian_derives_exact_mass_gap_value
+continuum_hamiltonian_derives_positive_mass_gap
 continuum_hamiltonian_theorem_uses_hardened_witness_bundle
 ```
 
-The new surface adds the explicitly spectral direction:
+The spectral surface adds the explicitly spectral alignment direction:
 
 ```text
 Rayleigh lower bound + Rayleigh attainment + positive spectral atom
-  => derived Hamiltonian spectral value = 33/20
+  => one shared derived Hamiltonian spectral value
 ```
 
-## Physical normalization boundary
+## R6 numeric boundary
 
-This remains the normalized theorem-body value:
+The concrete value belongs downstream:
 
 ```text
-Delta_norm = 33/20
+R6 exact atom layer
+  => first admissible 33/20 derivation
 ```
 
-A dimensional reading still requires an external reference scale:
-
-```text
-Delta_phys(E0) = E0 * (33/20)
-```
+Any statement that `33/20` was already derived in this upstream file should be
+treated as stale wording and removed.
