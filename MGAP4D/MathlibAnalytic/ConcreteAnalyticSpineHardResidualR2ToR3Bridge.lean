@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R4FormalGraphSelfAdjointness
+import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenseDiagonalDomainUnboundedness
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -35,12 +36,14 @@ theorem concrete_analytic_spine_hard_residual_ledger_alignment :
 spine.
 
 This captures the strengthened densely-defined/unbounded-operator lane: concrete
-operator obligations, direct original diagonal closed graph theorem, and the R3
-closed-graph-promotion surface of the local L2 ladder. -/
+operator obligations, direct original diagonal closed graph theorem, the R3
+closed-graph-promotion surface of the local L2 ladder, and now the explicit
+unit-probe unboundedness quantification. -/
 def concreteAnalyticSpineHardResidualR2Evidence : Prop :=
   concreteAnalyticSpineL2R2ClosedOperatorTheoremObligationPacketReady ∧
   concreteAnalyticSpineL2R2CoordinateSquareDistanceBoundsReady ∧
-  concreteAnalyticSpineL2R3ClosedGraphPromotionReady
+  concreteAnalyticSpineL2R3ClosedGraphPromotionReady ∧
+  concreteAnalyticSpineL2R2DenseDiagonalDomainUnboundednessSurfaceReady
 
 /-- The hard-residual R2 evidence packet is ready. -/
 theorem concrete_analytic_spine_hard_residual_r2_evidence_ready :
@@ -48,13 +51,15 @@ theorem concrete_analytic_spine_hard_residual_r2_evidence_ready :
   exact ⟨
     concrete_analytic_spine_l2_r2_closed_operator_theorem_obligation_packet_ready,
     concrete_analytic_spine_l2_r2_coordinate_square_distance_bounds_ready,
-    concrete_analytic_spine_l2_r3_closed_graph_promotion_ready⟩
+    concrete_analytic_spine_l2_r3_closed_graph_promotion_ready,
+    concrete_analytic_spine_l2_r2_dense_diagonal_domain_unboundedness_surface_ready⟩
 
 /-- Hard-residual R2-to-R3 bridge.
 
-This bridge contains the concrete closed-graph promotion and formal graph-level
-self-adjointness evidence needed to approach the ledger-R3 self-adjointness proof.
-It does not assert ledger-R3 closure. -/
+This bridge contains the concrete closed-graph promotion, unit-probe
+unboundedness, and formal graph-level self-adjointness evidence needed to
+approach the ledger-R3 self-adjointness proof.  It does not assert ledger-R3
+closure. -/
 def concreteAnalyticSpineHardResidualR2ToR3Bridge : Prop :=
   concreteAnalyticSpineHardResidualLedgerAlignment ∧
   concreteAnalyticSpineHardResidualR2Evidence ∧
