@@ -40,8 +40,10 @@ def SpectralMeasurePVMSpectralCompatibilityShellReady : Prop :=
   spectralMeasurePVMCandidateConstruction.spectralTheoremCompatibilityObligation =
     SpectralMeasurePVMObligationTag.spectralTheoremCompatibility ∧
   (∀ s : Set ℝ,
-    spectralMeasurePVMTargetAPI.pvmCandidate s =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate s) ∧
+    (spectralMeasurePVMTargetAPI.pvmCandidate s).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate s).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility) ∧
   IsSelfAdjoint MathlibAnalytic.concreteL2R2DenseDiagonalDomainLinearPMap
 
 /-- The R4 spectral-compatibility shell is ready. -/
