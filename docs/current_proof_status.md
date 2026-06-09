@@ -14,6 +14,43 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
+## R4 status and historical `StillOpen` markers
+
+Current canonical R4 status is terminal-visible through the R1--R7 route:
+
+```text
+R4 genuine PVM closure
+  -> R5 compact centered plaquette observable closure
+  -> R6 non-definitional exact atom 33/20 closure
+  -> R7 positive spectral-weight closure
+  -> R1--R7 terminal discharge chain index
+```
+
+Older endpoint-stage files may still contain identifiers such as:
+
+```text
+SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+```
+
+These are historical local boundary markers for earlier endpoint-stage files, not the current global status of the R4 route on `main`.
+
+Current R4 status should be reviewed through:
+
+```text
+docs/r4_terminal_status_supersession.md
+MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean
+MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
+```
+
+The review reading is:
+
+```text
+old endpoint-stage StillOpen marker
+  -> historical local lineage marker
+  -> superseded for current public status by R4 operator-topology final packet and R1--R7 terminal receipt
+```
+
 ## Witness-slot provenance
 
 The current route distinguishes a receipt slot from the theorem anchor that generates it. External reviewers should inspect:
@@ -128,6 +165,7 @@ scripts/audit_hard_physical_residual_ledger.py
 docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
 docs/continuum_hamiltonian_witness_provenance.md
+docs/r4_terminal_status_supersession.md
 ```
 
 ## Boundary
