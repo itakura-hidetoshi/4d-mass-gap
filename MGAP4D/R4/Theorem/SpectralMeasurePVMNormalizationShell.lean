@@ -8,24 +8,30 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- The R4 target API candidate maps agree on every registered real set.
+/-- The R4 target API candidate maps carry their own registered obligation tags
+on every real set.
 
-This is only a shell theorem for the current `PUnit` target API.  It does not
-state the full PVM normalization axiom `E(ℝ) = I`. -/
+This is only a shell theorem for the current typed target API.  It deliberately
+does not state that the PVM candidate and spectral-measure candidate are the same
+value. -/
 theorem spectral_measure_pvm_target_api_candidate_maps_agree
     (s : Set ℝ) :
-    spectralMeasurePVMTargetAPI.pvmCandidate s =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate s := by
-  rfl
+    (spectralMeasurePVMTargetAPI.pvmCandidate s).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate s).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility := by
+  exact ⟨rfl, rfl⟩
 
-/-- The R4 target API candidate maps agree on the universal set.
+/-- The R4 target API candidate maps carry their expected tags on the universal set.
 
-This is the minimal normalization shell: agreement of the two candidate maps at
-`Set.univ`.  Full normalization as an identity-operator theorem remains open. -/
+This is the minimal normalization shell: `Set.univ` is registered on both routes.
+Full normalization as an identity-operator theorem remains open. -/
 theorem spectral_measure_pvm_target_api_univ_candidate_maps_agree :
-    spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ) =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ) := by
-  rfl
+    (spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ)).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ)).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility := by
+  exact spectral_measure_pvm_target_api_candidate_maps_agree (Set.univ : Set ℝ)
 
 /-- R4 normalization shell readiness.
 
@@ -35,11 +41,15 @@ def SpectralMeasurePVMNormalizationShellReady : Prop :=
   SpectralMeasurePVMTargetAPICoverageReady ∧
   spectralMeasurePVMTargetAPI.normalizationTag =
     SpectralMeasurePVMObligationTag.normalization ∧
-  spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ) =
-    spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ) ∧
+  (spectralMeasurePVMTargetAPI.pvmCandidate (Set.univ : Set ℝ)).obligationTag =
+    SpectralMeasurePVMObligationTag.projectionValuedness ∧
+  (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (Set.univ : Set ℝ)).obligationTag =
+    SpectralMeasurePVMObligationTag.spectralTheoremCompatibility ∧
   (∀ s : Set ℝ,
-    spectralMeasurePVMTargetAPI.pvmCandidate s =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate s) ∧
+    (spectralMeasurePVMTargetAPI.pvmCandidate s).obligationTag =
+      SpectralMeasurePVMObligationTag.projectionValuedness ∧
+    (spectralMeasurePVMTargetAPI.spectralMeasureCandidate s).obligationTag =
+      SpectralMeasurePVMObligationTag.spectralTheoremCompatibility) ∧
   spectralMeasurePVMCandidateConstruction.normalizationObligation =
     SpectralMeasurePVMObligationTag.normalization
 
@@ -49,7 +59,8 @@ theorem spectral_measure_pvm_normalization_shell_ready :
   exact ⟨
     spectral_measure_pvm_target_api_coverage_ready,
     rfl,
-    spectral_measure_pvm_target_api_univ_candidate_maps_agree,
+    (spectral_measure_pvm_target_api_univ_candidate_maps_agree).1,
+    (spectral_measure_pvm_target_api_univ_candidate_maps_agree).2,
     spectral_measure_pvm_target_api_candidate_maps_agree,
     rfl⟩
 
