@@ -24,6 +24,7 @@ R1 ConcreteRealHilbertSpace
   -> R2 DenseDomainUnboundedHamiltonian
   -> R3 SelfAdjointPhysicalHamiltonian
   -> R4 ConcretePVMSpectralMeasure
+  -> R4 OperatorTopologyConcreteRouteTopLevelFinalPacket
   -> R5 CompactCenteredPlaquetteObservable
   -> R6 NondefinitionalSpectralAtom3320
   -> R7 PositiveSpectralWeightDerivation3320
@@ -40,6 +41,8 @@ R1 ConcreteRealHilbertSpace
 Canonical source files:
 
 ```text
+MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean
+docs/r4_terminal_status_supersession.md
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean
@@ -72,6 +75,43 @@ Review interpretation:
 DenselyDefinedOperator is the R2 operator-body entry point.
 GraphClosednessReadinessPromotion is the R2 graph-readiness bridge.
 GraphClosednessObligationPromotion is the R2-to-R3 obligation bridge.
+```
+
+## R4 terminal status and historical endpoint-stage markers
+
+Older R4 endpoint-stage files may still contain names such as:
+
+```text
+SpectralMeasurePVMGenuineOperatorTopologyCountableAdditivityStillOpen
+SpectralMeasurePVMGenuineSpectralMeasureConstructionStillOpen
+```
+
+These names are append-only historical boundary markers for earlier local endpoint-stage files. They are not the current global R4 status on `main`.
+
+Current R4 status is read through:
+
+```text
+MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean
+docs/r4_terminal_status_supersession.md
+MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
+```
+
+Primary current R4 theorem anchors:
+
+```text
+spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_final_packet_ready
+spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_final_packet_public_boundary_held
+spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_final_packet_extracts_operator_topology_convergence_target
+spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_final_packet_extracts_genuine_bridge
+spectral_measure_pvm_operator_topology_r4_concrete_route_top_level_final_packet_preserves_no_shell_collapse
+```
+
+External-review interpretation:
+
+```text
+old endpoint-stage StillOpen marker
+  -> historical local lineage marker
+  -> superseded for current public status by R4 operator-topology final packet and R1--R7 terminal receipt
 ```
 
 ## Continuum Hamiltonian witness provenance
@@ -116,7 +156,7 @@ receipt slot exists
 
 ## Exact `33/20` derivation source
 
-The public route now distinguishes the normalized carrier from the derivation receipt.
+The public route distinguishes the normalized carrier from the derivation receipt.
 
 Carrier files:
 
@@ -253,6 +293,7 @@ docs/hard_physical_residual_ledger.md
 docs/hard_physical_residual_ledger_terminal_discharge_index.md
 docs/current_proof_status.md
 docs/continuum_hamiltonian_witness_provenance.md
+docs/r4_terminal_status_supersession.md
 ```
 
 The strongest executable check remains:
@@ -276,6 +317,7 @@ lake build
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean` | R2 densely-defined operator entry point. |
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean` | R2 graph-closedness readiness promotion surface. |
 | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean` | R2 graph-closedness obligation promotion surface. |
+| `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean` | Current R4 operator-topology final packet and supersession anchor. |
 | `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` | Exact `33/20` spectral derivation route. |
 | `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` | Complete continuum-Hamiltonian spectral derivation route. |
 | `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean` | Provenance map from witness slots to upstream theorem anchors. |
@@ -292,25 +334,29 @@ Recommended external review order:
 1. Run `bash scripts/check.sh`.
 2. Inspect `docs/current_proof_status.md`.
 3. Inspect `THEOREM_INDEX.md`.
-4. Inspect `docs/continuum_hamiltonian_witness_provenance.md`.
-5. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean`.
-6. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
-7. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
-8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
-9. Inspect `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean`.
-10. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean`.
-11. Inspect `docs/hard_physical_residual_ledger.md`.
-12. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
-13. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
-14. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
-15. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
-16. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
-17. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
-18. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
+4. Inspect `docs/r4_terminal_status_supersession.md`.
+5. Inspect `MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean`.
+6. Inspect `docs/continuum_hamiltonian_witness_provenance.md`.
+7. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean`.
+8. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2DenselyDefinedOperator.lean`.
+9. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessReadinessPromotion.lean`.
+10. Inspect `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2GraphClosednessObligationPromotion.lean`.
+11. Inspect `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean`.
+12. Inspect `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean`.
+13. Inspect `docs/hard_physical_residual_ledger.md`.
+14. Inspect `docs/hard_physical_residual_ledger_terminal_discharge_index.md`.
+15. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean`.
+16. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean`.
+17. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean`.
+18. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean`.
+19. Inspect `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean`.
+20. Confirm `lake build` on a fresh clone with the pinned `lean-toolchain`.
 
 ## Superseded route notes
 
 Older open pull requests or older route documents that describe R3/R4/R5/R6/R7 as still downstream or open are historical. They should not be used as the current public route unless they are rebased and rewritten against this R1--R7 receipt chain.
+
+Older R4 endpoint-stage files that still expose `StillOpen` markers are also historical local lineage files. They are superseded for current public status by the R4 operator-topology final packet and the R1--R7 terminal receipt chain.
 
 The previous continuum-Hamiltonian / R2 frontier route is preserved as historical context, not as the current public route index.
 
