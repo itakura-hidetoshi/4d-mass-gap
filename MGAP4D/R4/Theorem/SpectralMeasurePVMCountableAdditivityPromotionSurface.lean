@@ -8,11 +8,13 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Candidate-map agreement at countable-union inputs for the current shell API. -/
+/-- Candidate-map tag coherence at countable-union inputs for the current shell API. -/
 theorem spectral_measure_pvm_target_api_all_countable_union_candidates_agree :
     ∀ A : ℕ → Set ℝ,
-      spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n) =
-        spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n) := by
+      (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n)).obligationTag =
+          SpectralMeasurePVMObligationTag.projectionValuedness ∧
+        (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)).obligationTag =
+          SpectralMeasurePVMObligationTag.spectralTheoremCompatibility := by
   intro A
   exact spectral_measure_pvm_target_api_countable_union_candidate_maps_agree A
 
@@ -47,8 +49,10 @@ def SpectralMeasurePVMCountableAdditivityPrototypeAxiomReady : Prop :=
   spectralMeasurePVMTargetAPI.countableAdditivityTag =
     SpectralMeasurePVMObligationTag.countableAdditivity ∧
   (∀ A : ℕ → Set ℝ,
-    spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n) =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)) ∧
+    (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n)).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility) ∧
   (∀ A : ℕ → Set ℝ,
     ProjectionLikeShell (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n))) ∧
   (∀ A : ℕ → Set ℝ,
@@ -71,9 +75,9 @@ theorem spectral_measure_pvm_countable_additivity_prototype_axiom_ready :
 
 /-- Boundary after the countable-additivity promotion surface.
 
-The countable-additivity prototype is proved for the current `PUnit` shell
-target, but full operator-theoretic countable additivity remains in the
-full-axioms obligation list. -/
+The countable-additivity prototype is proved for the current typed shell target,
+but full operator-theoretic countable additivity remains in the full-axioms
+obligation list. -/
 def SpectralMeasurePVMCountableAdditivityPromotionBoundary : Prop :=
   SpectralMeasurePVMCountableAdditivityPrototypeAxiomReady ∧
   SpectralMeasurePVMFullAxiomsStillOpen ∧
