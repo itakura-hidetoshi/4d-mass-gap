@@ -14,6 +14,36 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
+## Exact `33/20` derivation source
+
+The repository now distinguishes two roles:
+
+```text
+carrier role:
+  MGAP4D/MathlibAnalytic/Basic.lean
+  MGAP4D/MathlibAnalytic/ExactGapReal.lean
+
+derivation role:
+  MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
+  MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+```
+
+`exactGapValueReal : ℝ := 33 / 20` remains the canonical normalized carrier. Its local `rfl` / `norm_num` checks are not the derivation source.
+
+The current derivation source is the spectral route that identifies the Hamiltonian spectral value with the same normalized carrier and carries positive spectral mass:
+
+```text
+yang_mills_hamiltonian_spectral_derivation_3320_ready
+yang_mills_hamiltonian_spectral_analysis_derives_3320
+yang_mills_hamiltonian_exact_gap_eq_spectral_value
+yang_mills_hamiltonian_spectral_derivation_exact_gap_value
+yang_mills_hamiltonian_spectral_derivation_positive_mass
+yang_mills_hamiltonian_spectral_derivation_nonzero_mass
+physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_nonzero
+```
+
 ## Terminal R1--R7 receipt
 
 The terminal receipt indexes the following readiness chain:
@@ -40,6 +70,8 @@ R4 genuine-PVM law receipts
 finalReleaseHeld
 publicBoundaryLocked
 ```
+
+When this receipt chain is read as an exact-value derivation, its upstream source is the spectral derivation route above, not the local carrier definition.
 
 Primary named theorem anchors:
 
