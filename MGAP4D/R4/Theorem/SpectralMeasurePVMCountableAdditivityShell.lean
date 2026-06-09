@@ -8,22 +8,24 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Candidate-map agreement on countable unions in the current skeleton API.
+/-- Candidate-map tag coherence on countable unions in the current skeleton API.
 
 This is not the full PVM countable-additivity theorem.  It only states that the
-current PVM candidate and spectral-measure candidate agree on a countable union
-input. -/
+current PVM candidate and spectral-measure candidate keep their expected tags on
+a countable-union input. -/
 theorem spectral_measure_pvm_target_api_countable_union_candidate_maps_agree
     (A : ℕ → Set ℝ) :
-    spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n) =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n) := by
-  rfl
+    (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n)).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility := by
+  exact spectral_measure_pvm_target_api_candidate_maps_agree (⋃ n, A n)
 
 /-- The PVM candidate value on a countable union is projection-like in the shell. -/
 theorem spectral_measure_pvm_target_api_countable_union_pvm_projection_shell
     (A : ℕ → Set ℝ) :
     ProjectionLikeShell (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n)) := by
-  rfl
+  exact spectral_measure_pvm_target_api_pvm_candidate_projection_shell (⋃ n, A n)
 
 /-- The spectral-measure candidate value on a countable union is projection-like
 in the shell. -/
@@ -31,7 +33,7 @@ theorem spectral_measure_pvm_target_api_countable_union_spectral_projection_shel
     (A : ℕ → Set ℝ) :
     ProjectionLikeShell
       (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)) := by
-  rfl
+  exact spectral_measure_pvm_target_api_spectral_candidate_projection_shell (⋃ n, A n)
 
 /-- R4 countable-additivity shell readiness.
 
@@ -43,8 +45,10 @@ def SpectralMeasurePVMCountableAdditivityShellReady : Prop :=
   spectralMeasurePVMTargetAPI.countableAdditivityTag =
     SpectralMeasurePVMObligationTag.countableAdditivity ∧
   (∀ A : ℕ → Set ℝ,
-    spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n) =
-      spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)) ∧
+    (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n)).obligationTag =
+        SpectralMeasurePVMObligationTag.projectionValuedness ∧
+      (spectralMeasurePVMTargetAPI.spectralMeasureCandidate (⋃ n, A n)).obligationTag =
+        SpectralMeasurePVMObligationTag.spectralTheoremCompatibility) ∧
   (∀ A : ℕ → Set ℝ,
     ProjectionLikeShell (spectralMeasurePVMTargetAPI.pvmCandidate (⋃ n, A n))) ∧
   (∀ A : ℕ → Set ℝ,
