@@ -98,10 +98,25 @@ hard_physical_residual_ledger_final_bundle_audit_map_no_auto_release
 hard_physical_residual_ledger_final_bundle_audit_map_nonpromotion_boundary
 ```
 
+The final-bundle audit map now has an explicit status manifest that keeps the open residual statuses adjacent to the carried exact-value and mass witnesses:
+
+```text
+MGAP4D/HardPhysicalResidualLedgerFinalBundleStatusManifest.lean
+HardPhysicalResidualLedgerFinalBundleStatusManifest
+hardPhysicalResidualLedgerFinalBundleStatusManifest3320
+hard_physical_residual_ledger_final_bundle_status_manifest_3320_ready
+hard_physical_residual_ledger_final_bundle_status_manifest_exact_gap_value_3320
+hard_physical_residual_ledger_final_bundle_status_manifest_positive_nonzero_spectral_mass
+hard_physical_residual_ledger_final_bundle_status_manifest_final_release_held
+hard_physical_residual_ledger_final_bundle_status_manifest_public_boundary_locked
+hard_physical_residual_ledger_final_bundle_status_manifest_no_auto_release
+hard_physical_residual_ledger_final_bundle_status_manifest_nonpromotion_boundary
+```
+
 Boundary of this update:
 
 ```text
-This update records a replay-visible internal discharge/index spine, ledger bridge, and final-bundle-facing ledger audit map. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
+This update records a replay-visible internal discharge/index spine, ledger bridge, final-bundle-facing ledger audit map, and final-bundle status manifest. It does not assert external consensus, does not unlock public final release, and does not replace the harder Mathlib/operator-theoretic closure conditions listed below.
 ```
 
 ## Hard residuals
@@ -289,6 +304,8 @@ The hard physical residual ledger bridge adds an explicit Lean-side audit map fr
 
 The hard physical residual ledger final-bundle audit map carries that ledger bridge into the `H_phys`/R3 final-bundle audit surface while preserving no-auto-release and non-promotion boundaries.
 
+The hard physical residual ledger final-bundle status manifest records the same exact-value, positive-mass, boundary, and open-status witnesses in one status packet.
+
 ## Current status
 
 ```text
@@ -307,6 +324,7 @@ R7: open / nontrivial positive spectral-weight derivation required
 ConcreteR1R7ResidualDischarge: installed / internal discharge spine visible
 HardPhysicalResidualLedgerR1R7DischargeBridge: installed / ledger bridge visible
 HardPhysicalResidualLedgerFinalBundleAuditMap: installed / final-bundle-facing ledger audit map visible
+HardPhysicalResidualLedgerFinalBundleStatusManifest: installed / final-bundle status manifest visible
 R1--R7 user-facing spine names: bound to replay-visible theorem-obligation completion
 Exact 33/20 projection: carried by continuum spectral-complete derivation
 Positive spectral-mass projection: carried as positive and nonzero spectral mass
