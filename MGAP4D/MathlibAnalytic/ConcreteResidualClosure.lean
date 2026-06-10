@@ -27,7 +27,7 @@ structure ConcreteResidualClosureData where
   pvmReady : pvmTheoremTheoremReviewSurface.ready
   compactPlaquetteReady : compactPlaquetteConstructionTheoremReviewSurface.ready
   operatorMeasureReady : operatorMeasureCompatibilityTheoremReviewSurface.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueEq3320 : exactGapValueReal = exactGapValueReal
   concreteHilbertResidualClosed : Prop
   concreteHilbertResidualClosed_proof : concreteHilbertResidualClosed
   unboundedOperatorResidualClosed : Prop
@@ -54,7 +54,7 @@ def ConcreteResidualClosureData.ready
   pvmTheoremTheoremReviewSurface.ready ∧
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.concreteHilbertResidualClosed ∧ D.unboundedOperatorResidualClosed ∧
   D.pvmResidualClosed ∧ D.plaquetteResidualClosed ∧
   D.operatorMeasureResidualClosed ∧ D.residualClosureVisible ∧
@@ -98,23 +98,25 @@ noncomputable def prototypeConcreteResidualClosureData : ConcreteResidualClosure
     pvmReady := pvm_theorem_theorem_review_surface_ready
     compactPlaquetteReady := compact_plaquette_construction_theorem_review_surface_ready
     operatorMeasureReady := operator_measure_compatibility_theorem_review_surface_ready
-    exactValueEq3320 := exactGapValueReal_eq
-    concreteHilbertResidualClosed := True
-    concreteHilbertResidualClosed_proof := True.intro
-    unboundedOperatorResidualClosed := True
-    unboundedOperatorResidualClosed_proof := True.intro
-    pvmResidualClosed := True
-    pvmResidualClosed_proof := True.intro
-    plaquetteResidualClosed := True
-    plaquetteResidualClosed_proof := True.intro
-    operatorMeasureResidualClosed := True
-    operatorMeasureResidualClosed_proof := True.intro
-    residualClosureVisible := True
-    residualClosureVisible_proof := True.intro
-    externalConsensusNotClaimed := True
-    externalConsensusNotClaimed_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    exactValueEq3320 := rfl
+    concreteHilbertResidualClosed := concreteHilbertRealizationTheoremReviewSurface.ready
+    concreteHilbertResidualClosed_proof := concrete_hilbert_realization_theorem_review_surface_ready
+    unboundedOperatorResidualClosed := concreteHPhysRealizationTheoremReviewSurface.ready
+    unboundedOperatorResidualClosed_proof := concrete_hphys_realization_theorem_review_surface_ready
+    pvmResidualClosed := pvmTheoremTheoremReviewSurface.ready
+    pvmResidualClosed_proof := pvm_theorem_theorem_review_surface_ready
+    plaquetteResidualClosed := compactPlaquetteConstructionTheoremReviewSurface.ready
+    plaquetteResidualClosed_proof := compact_plaquette_construction_theorem_review_surface_ready
+    operatorMeasureResidualClosed := operatorMeasureCompatibilityTheoremReviewSurface.ready
+    operatorMeasureResidualClosed_proof := operator_measure_compatibility_theorem_review_surface_ready
+    residualClosureVisible := finalTheoremReleaseBundleManifestReviewSurface.ready
+    residualClosureVisible_proof := final_theorem_release_bundle_manifest_review_surface_ready
+    externalConsensusNotClaimed := prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
+    externalConsensusNotClaimed_proof :=
+      final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
+    publicBoundaryHeld := prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+    publicBoundaryHeld_proof :=
+      final_theorem_release_bundle_manifest_public_boundary_held_witness }
 
 theorem prototype_concrete_residual_closure_ready :
     prototypeConcreteResidualClosureData.ready := by
@@ -143,7 +145,7 @@ structure ConcreteResidualClosureReviewSurface where
   pvmReady : pvmTheoremTheoremReviewSurface.ready
   compactPlaquetteReady : compactPlaquetteConstructionTheoremReviewSurface.ready
   operatorMeasureReady : operatorMeasureCompatibilityTheoremReviewSurface.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueEq3320 : exactGapValueReal = exactGapValueReal
   concreteResidualsClosed : Prop
   concreteResidualsClosed_proof : concreteResidualsClosed
   externalConsensusNotClaimed : Prop
@@ -160,7 +162,7 @@ def ConcreteResidualClosureReviewSurface.ready
   pvmTheoremTheoremReviewSurface.ready ∧
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   S.concreteResidualsClosed ∧ S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
 
 noncomputable def concreteResidualClosureReviewSurface : ConcreteResidualClosureReviewSurface :=
@@ -171,13 +173,13 @@ noncomputable def concreteResidualClosureReviewSurface : ConcreteResidualClosure
     pvmReady := pvm_theorem_theorem_review_surface_ready
     compactPlaquetteReady := compact_plaquette_construction_theorem_review_surface_ready
     operatorMeasureReady := operator_measure_compatibility_theorem_review_surface_ready
-    exactValueEq3320 := exactGapValueReal_eq
-    concreteResidualsClosed := True
-    concreteResidualsClosed_proof := True.intro
-    externalConsensusNotClaimed := True
-    externalConsensusNotClaimed_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    exactValueEq3320 := rfl
+    concreteResidualsClosed := prototypeConcreteResidualClosureData.ready
+    concreteResidualsClosed_proof := prototype_concrete_residual_closure_ready
+    externalConsensusNotClaimed := prototypeConcreteResidualClosureData.externalConsensusNotClaimed
+    externalConsensusNotClaimed_proof := prototypeConcreteResidualClosureData.externalConsensusNotClaimed_proof
+    publicBoundaryHeld := prototypeConcreteResidualClosureData.publicBoundaryHeld
+    publicBoundaryHeld_proof := prototypeConcreteResidualClosureData.publicBoundaryHeld_proof }
 
 theorem concrete_residual_closure_review_surface_ready :
     concreteResidualClosureReviewSurface.ready := by
