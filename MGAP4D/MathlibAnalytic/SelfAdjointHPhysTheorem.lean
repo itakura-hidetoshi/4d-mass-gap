@@ -12,7 +12,8 @@ universe u
 This is the second post-interface theorem-body step. It does not yet construct
 a concrete unbounded operator on an infinite-dimensional Hilbert space. It
 makes the operator domain, symmetry-on-domain, self-adjointness certificate, and
-Rayleigh-quotient compatibility explicit. -/
+Rayleigh-quotient compatibility explicit.  It deliberately carries no upstream
+`33/20` theorem; that numeric equality is first exported at R6. -/
 structure SelfAdjointHPhysTheoremData where
   state : Type u
   inner : state → state → ℝ
@@ -33,7 +34,6 @@ structure SelfAdjointHPhysTheoremData where
     exactGapValueReal ≤ rayleighData.quotient (state_to_rayleigh ψ)
   witness_rayleigh_attains_exact :
     rayleighData.quotient (state_to_rayleigh witness) = exactGapValueReal
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   exact_value_positive : 0 < exactGapValueReal
   concreteUnboundedRealizationStillOpen : Prop
 
@@ -49,7 +49,7 @@ def SelfAdjointHPhysTheoremData.ready
   (∀ ψ, D.domain ψ → exactGapValueReal ≤
     D.rayleighData.quotient (D.state_to_rayleigh ψ)) ∧
   D.rayleighData.quotient (D.state_to_rayleigh D.witness) = exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧ 0 < exactGapValueReal ∧
+  0 < exactGapValueReal ∧
   D.concreteUnboundedRealizationStillOpen
 
 /-- Symmetry theorem body for `H_phys` on the declared domain. -/
@@ -57,7 +57,7 @@ theorem self_adjoint_hphys_symmetric_on_domain
     (D : SelfAdjointHPhysTheoremData) (hD : D.ready)
     (ψ φ : D.state) (hψ : D.domain ψ) (hφ : D.domain φ) :
     D.inner (D.H_phys ψ) φ = D.inner ψ (D.H_phys φ) := by
-  rcases hD with ⟨_, _, hSymm, _, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, hSymm, _, _, _, _, _, _⟩
   exact hSymm ψ φ hψ hφ
 
 /-- Domain-closure theorem body for `H_phys`. -/
@@ -65,14 +65,14 @@ theorem self_adjoint_hphys_domain_closed
     (D : SelfAdjointHPhysTheoremData) (hD : D.ready)
     (ψ : D.state) (hψ : D.domain ψ) :
     D.domain (D.H_phys ψ) := by
-  rcases hD with ⟨_, hClosed, _, _, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, hClosed, _, _, _, _, _, _, _⟩
   exact hClosed ψ hψ
 
 /-- Self-adjointness certificate theorem body. -/
 theorem self_adjoint_hphys_certificate
     (D : SelfAdjointHPhysTheoremData) (hD : D.ready) :
     D.selfAdjointCertificate := by
-  rcases hD with ⟨_, _, _, hCert, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, hCert, _, _, _, _, _⟩
   exact hCert
 
 /-- Rayleigh admissibility compatibility theorem body for domain states. -/
@@ -80,7 +80,7 @@ theorem self_adjoint_hphys_rayleigh_admissible
     (D : SelfAdjointHPhysTheoremData) (hD : D.ready)
     (ψ : D.state) (hψ : D.domain ψ) :
     D.rayleighData.admissible (D.state_to_rayleigh ψ) := by
-  rcases hD with ⟨_, _, _, _, hAdm, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, hAdm, _, _, _, _⟩
   exact hAdm ψ hψ
 
 /-- Rayleigh lower-bound compatibility theorem body for domain states. -/
@@ -88,14 +88,14 @@ theorem self_adjoint_hphys_rayleigh_lower_bound
     (D : SelfAdjointHPhysTheoremData) (hD : D.ready)
     (ψ : D.state) (hψ : D.domain ψ) :
     exactGapValueReal ≤ D.rayleighData.quotient (D.state_to_rayleigh ψ) := by
-  rcases hD with ⟨_, _, _, _, _, hLower, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, hLower, _, _, _⟩
   exact hLower ψ hψ
 
 /-- Exact-gap witness theorem body for the operator witness. -/
 theorem self_adjoint_hphys_witness_rayleigh_attains
     (D : SelfAdjointHPhysTheoremData) (hD : D.ready) :
     D.rayleighData.quotient (D.state_to_rayleigh D.witness) = exactGapValueReal := by
-  rcases hD with ⟨_, _, _, _, _, _, hWitness, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, _, hWitness, _, _⟩
   exact hWitness
 
 /-- Singleton theorem-body realization for the self-adjoint `H_phys` layer.
@@ -127,7 +127,6 @@ def singletonSelfAdjointHPhysTheoremData : SelfAdjointHPhysTheoremData.{0} :=
       intro ψ hψ
       exact singleton_hilbert_rayleigh_quotient_lower_bound PUnit.unit True.intro
     witness_rayleigh_attains_exact := singleton_hilbert_rayleigh_quotient_witness_attains
-    exact_value_eq_3320 := exactGapValueReal_eq
     exact_value_positive := exactGapValueReal_pos
     concreteUnboundedRealizationStillOpen := True }
 
@@ -140,7 +139,6 @@ theorem singleton_self_adjoint_hphys_theorem_data_ready :
     And.intro singletonSelfAdjointHPhysTheoremData.rayleigh_admissible_of_domain <|
     And.intro singletonSelfAdjointHPhysTheoremData.rayleigh_lower_bound_of_domain <|
     And.intro singletonSelfAdjointHPhysTheoremData.witness_rayleigh_attains_exact <|
-    And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos True.intro
 
 theorem singleton_self_adjoint_hphys_symmetric_on_domain
