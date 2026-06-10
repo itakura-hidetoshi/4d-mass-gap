@@ -33,9 +33,6 @@ def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom ∧
   O.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
 
-/-- Compatibility name for older downstream files.  The observable carrier is now
-routed to the final physical Hilbert carrier rather than to a shell-only
-prototype. -/
 abbrev PrototypeObservable := FinalPhysicalHilbertCarrier
 
 noncomputable def prototypeObservable : PrototypeObservable :=
@@ -149,8 +146,6 @@ theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready
     And.intro singleton_observable_atom_interface_compatible_with_pvm <|
     And.intro rfl <|
     And.intro rfl rfl
-
-end
 
 end MathlibAnalytic
 end MGAP4D
