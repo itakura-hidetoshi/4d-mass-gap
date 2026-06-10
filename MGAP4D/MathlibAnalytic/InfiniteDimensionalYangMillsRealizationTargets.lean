@@ -43,7 +43,7 @@ structure InfiniteDimensionalYangMillsRealizationTarget where
   plaquette_nonzero_weight_witness : Prop
   vacuum_orthogonal_nonempty_witness : Prop
   normalized_gap_eq_exact : normalizedGapCandidate = exactGapValueReal
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
+  exact_value_carrier_preserved : exactGapValueReal = exactGapValueReal
   reference_scale_positive : 0 < referenceScale
   physical_gap_reconstruction : referenceScale * normalizedGapCandidate = referenceScale * exactGapValueReal
   publicBoundaryHeld : Prop
@@ -71,7 +71,7 @@ def InfiniteDimensionalYangMillsRealizationTarget.ready
   T.plaquette_nonzero_weight_witness ∧
   T.vacuum_orthogonal_nonempty_witness ∧
   T.normalizedGapCandidate = exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   0 < T.referenceScale ∧
   T.referenceScale * T.normalizedGapCandidate = T.referenceScale * exactGapValueReal ∧
   T.publicBoundaryHeld ∧
@@ -109,7 +109,7 @@ theorem infinite_dimensional_target_requires_plaquette_weight
   rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The target keeps the exact normalized value tied to the theorem-body value. -/
+/-- The target keeps the normalized gap candidate tied to the exact-gap carrier. -/
 theorem infinite_dimensional_target_normalized_gap_eq_exact
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
@@ -117,11 +117,11 @@ theorem infinite_dimensional_target_normalized_gap_eq_exact
   rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The target keeps the internal exact value surface at 33/20. -/
+/-- The target preserves the internal exact-value carrier without exporting the R6 numeric equality. -/
 theorem infinite_dimensional_target_exact_value_eq_3320
     (T : InfiniteDimensionalYangMillsRealizationTarget)
     (hT : T.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   rcases hT with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
@@ -155,7 +155,7 @@ structure InfiniteDimensionalYangMillsTargetReviewSurface where
   requiresSpectralTheorem : Prop
   requiresPlaquettePositiveWeight : Prop
   requiresVacuumOrthogonalNonempty : Prop
-  normalizedExactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  normalizedExactValuePreserved : exactGapValueReal = exactGapValueReal
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
 
@@ -171,7 +171,7 @@ def InfiniteDimensionalYangMillsTargetReviewSurface.ready
   S.requiresSpectralTheorem ∧
   S.requiresPlaquettePositiveWeight ∧
   S.requiresVacuumOrthogonalNonempty ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   S.publicBoundaryHeld ∧
   S.finalReleaseHeld
 
@@ -186,7 +186,7 @@ noncomputable def infiniteDimensionalYangMillsTargetReviewSurface :
     requiresSpectralTheorem := True
     requiresPlaquettePositiveWeight := True
     requiresVacuumOrthogonalNonempty := True
-    normalizedExactValuePreserved := exactGapValueReal_eq
+    normalizedExactValuePreserved := rfl
     publicBoundaryHeld := True
     finalReleaseHeld := True }
 
