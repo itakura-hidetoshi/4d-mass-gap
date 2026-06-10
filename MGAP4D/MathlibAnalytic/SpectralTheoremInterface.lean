@@ -24,7 +24,6 @@ structure SpectralTheoremInterface where
   support_lower_bound : ∀ lam : ℝ, lam ∈ spectralSupport → exactGapValueReal ≤ lam
   positive_mass_at_exact : 0 < spectralMass exactGapValueReal
   nonzero_mass_at_exact : spectralMass exactGapValueReal ≠ 0
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   spectralTheoremBoundary : SpectralTheoremInterfaceBoundaryMarker
   pvmTheoremBoundary : SpectralTheoremInterfaceBoundaryMarker
 
@@ -34,7 +33,6 @@ def SpectralTheoremInterface.ready (S : SpectralTheoremInterface) : Prop :=
   (∀ lam : ℝ, lam ∈ S.spectralSupport → exactGapValueReal ≤ lam) ∧
   0 < S.spectralMass exactGapValueReal ∧
   S.spectralMass exactGapValueReal ≠ 0 ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   S.spectralTheoremBoundary = SpectralTheoremInterfaceBoundaryMarker.spectralTheoremDeferred ∧
   S.pvmTheoremBoundary = SpectralTheoremInterfaceBoundaryMarker.pvmTheoremDeferred
 
@@ -47,7 +45,6 @@ noncomputable def singletonSpectralTheoremInterface : SpectralTheoremInterface :
     support_lower_bound := exactGapEnergyRay_lower_bound
     positive_mass_at_exact := exactGapSpectralMassReal_pos
     nonzero_mass_at_exact := exactGapSpectralMassReal_ne_zero
-    exact_value_eq_3320 := exactGapValueReal_eq
     spectralTheoremBoundary := SpectralTheoremInterfaceBoundaryMarker.spectralTheoremDeferred
     pvmTheoremBoundary := SpectralTheoremInterfaceBoundaryMarker.pvmTheoremDeferred }
 
@@ -59,7 +56,6 @@ theorem singleton_spectral_theorem_interface_ready :
     exactGapEnergyRay_lower_bound,
     exactGapSpectralMassReal_pos,
     exactGapSpectralMassReal_ne_zero,
-    exactGapValueReal_eq,
     rfl,
     rfl⟩
 
