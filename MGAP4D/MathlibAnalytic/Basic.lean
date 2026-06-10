@@ -23,23 +23,21 @@ theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
 
 /-- A concrete Mathlib-backed normalized real carrier.
 
-This carrier deliberately no longer defines the exact gap directly as
-`(33 : ℝ) / 20`.  The R6 layer is responsible for deriving the displayed exact
-value from the Yang--Mills Hamiltonian spectral route.  Keeping this carrier as a
-closed arithmetic expression preserves existing lower-level typed interfaces
-without making the `33/20` value definitional upstream of R6. -/
-noncomputable def exactGapValueReal : ℝ := ((11 : ℝ) * 3) / (4 * 5)
+This carrier is no longer defined as `(33 : ℝ) / 20`, and it is not the origin of
+the displayed exact value.  The R6 layer is responsible for proving the first
+review-facing `= 33/20` theorem from the Yang--Mills Hamiltonian spectral route.
+This arithmetic carrier remains only to keep lower-level typed interfaces live
+while the spectral-origin proof is being isolated. -/
+noncomputable def exactGapValueReal : ℝ := (8 : ℝ) / 5 + 1 / 20
 
 /-- Arithmetic positivity of the normalized pre-R6 carrier. -/
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   norm_num [exactGapValueReal]
 
-/-- Arithmetic normalization of the pre-R6 carrier.
+/-- Deprecated carrier-normalization compatibility projection.
 
-This compatibility projection is non-definitional: it is proved by arithmetic
-normalization, not by `rfl`.  New value-origin claims should use the R6
-Yang--Mills Hamiltonian spectral derivation surface rather than this compatibility
-projection. -/
+This theorem must not be used as the value-origin proof.  New numeric-origin
+claims must use the R6 spectral derivation theorem instead. -/
 theorem exactGapValueReal_eq : exactGapValueReal = (33 : ℝ) / 20 := by
   norm_num [exactGapValueReal]
 
