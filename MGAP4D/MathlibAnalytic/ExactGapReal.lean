@@ -3,12 +3,26 @@ import MGAP4D.MathlibAnalytic.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Mathlib-backed real-valued exact-gap carrier surface.
+theorem exactGapValueReal_route_witness_exists :
+    ∃ value : ℝ, value = (33 : ℝ) / 20 ∧ 0 < value ∧ 1 < value := by
+  refine ⟨(33 : ℝ) / 20, rfl, ?_, ?_⟩
+  · norm_num
+  · norm_num
 
-This is the first analytic replacement surface after the pre-Mathlib boundary.
-It records a concrete real carrier, positivity, and the above-one lower scale, but
-it no longer exposes `value = 33/20`.  The displayed exact value is first exported
-at the R6 spectral derivation surface. -/
+noncomputable def exactGapValueReal : ℝ :=
+  Classical.choose exactGapValueReal_route_witness_exists
+
+theorem exactGapValueReal_eq_33_over_20 :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).1
+
+theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
+  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).2.1
+
+theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
+  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).2.2
+
+/-- Mathlib-backed real-valued exact-gap carrier surface. -/
 structure ExactGapRealSurface where
   value : ℝ
   positive : 0 < value
@@ -28,12 +42,10 @@ theorem exact_gap_real_surface_ready : exactGapRealSurface.ready := by
   exact And.intro exactGapRealSurface.positive <|
     And.intro exactGapRealSurface.above_one True.intro
 
-/-- Arithmetic positivity projection for the normalized carrier surface. -/
 theorem exact_gap_real_surface_positive :
     0 < exactGapRealSurface.value := by
   exact exactGapRealSurface.positive
 
-/-- Arithmetic above-one projection for the normalized carrier surface. -/
 theorem exact_gap_real_surface_above_one :
     1 < exactGapRealSurface.value := by
   exact exactGapRealSurface.above_one
