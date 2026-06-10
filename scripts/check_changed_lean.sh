@@ -88,6 +88,9 @@ python3 scripts/audit_hard_physical_residual_ledger.py
 echo "[fast] audit analytic bridge coherence"
 python3 scripts/audit_bridge_coherence.py
 
+echo "[fast] audit final physical carrier routing"
+python3 scripts/audit_final_physical_carrier_routing.py
+
 # Root import changes are text-audited in the fast lane.  Building aggregate root
 # modules is intentionally avoided here because they import historical archive
 # surfaces that can contain non-fast-safe import cycles unrelated to the PR.
