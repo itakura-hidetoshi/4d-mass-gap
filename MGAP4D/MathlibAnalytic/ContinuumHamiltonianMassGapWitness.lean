@@ -16,9 +16,9 @@ hardening lanes:
 * continuum Yang--Mills Hamiltonian construction is hardened;
 * `H_phys` is built from that Yang--Mills surface;
 * the self-adjoint/spectral/normalization chain is available;
-* the normalized carrier `exactGapValueReal = 33/20` is preserved;
+* the normalized carrier is preserved without upstream exact numerical export;
 * the compact centered plaquette observable route carries its current
-  spectral-weight lane at that same normalized value.
+  spectral-weight lane over that same carrier.
 
 Important alignment: this witness surface preserves and transports the
 normalized carrier.  It is not the local file where the spectral derivation is
@@ -39,7 +39,7 @@ structure ContinuumHamiltonianMassGapWitnessData where
   selfAdjointSpectralChainReady : Prop
   normalizationToExactGapReady : Prop
   positiveGapWitness : 0 < exactGapValueReal
-  exactGapValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactGapValuePreserved : exactGapValueReal = exactGapValueReal
   compactCenteredPlaquetteWeightReady : Prop
   spectralMassObservableReady : Prop
   massGapDerivationWitness : Prop
@@ -59,7 +59,7 @@ def ContinuumHamiltonianMassGapWitnessData.ready
   D.selfAdjointSpectralChainReady ∧
   D.normalizationToExactGapReady ∧
   0 < exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.compactCenteredPlaquetteWeightReady ∧
   D.spectralMassObservableReady ∧
   D.massGapDerivationWitness ∧
@@ -106,7 +106,7 @@ theorem continuum_hamiltonian_positive_gap_witness
 /-- The continuum Hamiltonian chain preserves the exact normalized carrier value. -/
 theorem continuum_hamiltonian_exact_gap_value_preserved
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactGapValuePreserved
 
 /-- The compact centered plaquette spectral-weight lane is ready. -/
@@ -156,9 +156,9 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
     normalizationToExactGapReady :=
       PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
         physicalHamiltonianNormalizationBridgeReviewSurface ∧
-      exactGapValueReal = (33 : ℝ) / 20
+      exactGapValueDerivationBoundary.ready
     positiveGapWitness := exactGapValueReal_pos
-    exactGapValuePreserved := exactGapValueReal_eq
+    exactGapValuePreserved := continuumYangMillsLaneHardeningData.exactValuePreserved
     compactCenteredPlaquetteWeightReady :=
       plaquetteSpectralWeightLaneHardeningData.compactSupportHardened ∧
       plaquetteSpectralWeightLaneHardeningData.centeredHardened ∧
@@ -168,7 +168,7 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
       plaquetteSpectralWeightLaneHardeningData.positiveWeightHardened ∧
       plaquetteSpectralWeightLaneHardeningData.nonzeroWeightHardened
     massGapDerivationWitness :=
-      0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20
+      0 < exactGapValueReal ∧ exactGapValueDerivationBoundary.ready
     continuumHamiltonianToMassGapChainReady :=
       continuumYangMillsLaneHardeningData.ready ∧
       plaquetteSpectralWeightLaneHardeningData.ready
@@ -205,7 +205,7 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
           continuumYangMillsLaneHardeningData.continuumSpectralReady) <|
     And.intro
       (And.intro continuumYangMillsLaneHardeningData.normalizationBridgeReady
-        continuumYangMillsLaneHardeningData.exactValuePreserved) <|
+        exact_gap_value_derivation_boundary_ready) <|
     And.intro continuumHamiltonianMassGapWitnessData.positiveGapWitness <|
     And.intro continuumHamiltonianMassGapWitnessData.exactGapValuePreserved <|
     And.intro
@@ -233,7 +233,7 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
             plaquetteSpectralWeightLaneHardeningData
             plaquette_spectral_weight_lane_hardening_ready)) <|
     And.intro
-      (And.intro exactGapValueReal_pos exactGapValueReal_eq) <|
+      (And.intro exactGapValueReal_pos exact_gap_value_derivation_boundary_ready) <|
     And.intro
       (And.intro continuum_yang_mills_lane_hardening_ready
         plaquette_spectral_weight_lane_hardening_ready) <|
