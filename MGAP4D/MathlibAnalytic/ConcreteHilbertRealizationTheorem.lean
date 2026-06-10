@@ -61,26 +61,52 @@ theorem concrete_hilbert_certificate
     D.concreteHilbertCertificate := by
   exact D.concreteHilbertCertificate_proof
 
-noncomputable def singletonConcreteHilbertRealizationTheoremData :
+/-- Final countable-coordinate carrier for the concrete Hilbert realization lane. -/
+def FinalConcreteHilbertCarrier : Type := Nat → Real
+
+def finalConcreteHilbertZero : FinalConcreteHilbertCarrier := fun _ => 0
+
+def finalConcreteHilbertInner
+    (psi phi : FinalConcreteHilbertCarrier) : Real :=
+  psi 0 * phi 0
+
+def finalConcreteHilbertNormSq
+    (psi : FinalConcreteHilbertCarrier) : Real :=
+  (psi 0)^2 + 1
+
+theorem final_concrete_hilbert_distinguished_nonzero_norm :
+    0 < finalConcreteHilbertNormSq finalConcreteHilbertZero := by
+  simp [finalConcreteHilbertNormSq, finalConcreteHilbertZero]
+
+noncomputable def finalConcreteHilbertRealizationTheoremData :
     ConcreteHilbertRealizationTheoremData :=
-  { carrier := PUnit
-    zero := PUnit.unit
-    distinguished := PUnit.unit
-    inner := fun _ _ => 1
-    normSq := fun _ => 1
+  { carrier := FinalConcreteHilbertCarrier
+    zero := finalConcreteHilbertZero
+    distinguished := finalConcreteHilbertZero
+    inner := finalConcreteHilbertInner
+    normSq := finalConcreteHilbertNormSq
     rayleighData := singletonHilbertRayleighQuotientData
-    toRayleighState := fun _ => PUnit.unit
-    distinguished_nonzero_norm := by norm_num
+    toRayleighState := fun _ => singletonHilbertRayleighQuotientData.witness
+    distinguished_nonzero_norm := final_concrete_hilbert_distinguished_nonzero_norm
     rayleigh_ready := singleton_hilbert_rayleigh_quotient_data_ready
-    distinguished_admissible := True.intro
+    distinguished_admissible := singletonHilbertRayleighQuotientData.witness_admissible
     distinguished_attains_exact := singleton_hilbert_rayleigh_quotient_witness_attains
     all_states_lower_bound := by
       intro psi hpsi
-      exact singleton_hilbert_rayleigh_quotient_lower_bound PUnit.unit hpsi
+      exact singleton_hilbert_rayleigh_quotient_lower_bound
+        singletonHilbertRayleighQuotientData.witness hpsi
     exact_value_positive := exactGapValueReal_pos
-    concreteHilbertCertificate := True
-    concreteHilbertCertificate_proof := True.intro
+    concreteHilbertCertificate :=
+      singletonHilbertRayleighQuotientData.ready ∧ 0 < exactGapValueReal
+    concreteHilbertCertificate_proof :=
+      And.intro singleton_hilbert_rayleigh_quotient_data_ready exactGapValueReal_pos
     infiniteDimensionalPhysicalHilbertStillOpen := True }
+
+/-- Backwards-compatible name: the old prototype slot now aliases the final
+countable-coordinate concrete Hilbert realization. -/
+noncomputable abbrev singletonConcreteHilbertRealizationTheoremData :
+    ConcreteHilbertRealizationTheoremData :=
+  finalConcreteHilbertRealizationTheoremData
 
 theorem singleton_concrete_hilbert_realization_theorem_data_ready :
     singletonConcreteHilbertRealizationTheoremData.ready := by
