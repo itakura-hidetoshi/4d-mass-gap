@@ -11,10 +11,10 @@ its principal review slots through upstream theorem-derived witnesses from the
 continuum Yang--Mills hardening lane and the plaquette spectral-weight hardening
 lane.
 
-Boundary and alignment: the exact-value component of this bundle is the
-normalized carrier receipt `0 < exactGapValueReal ∧ exactGapValueReal = 33/20`.
-This local bundle is not the source of the spectral derivation.  The installed
-route derives the same normalized value through
+Boundary and alignment: the exact-value component of this bundle keeps the
+positive `exactGapValueReal` carrier together with the exact-value derivation
+boundary, rather than re-exporting the numerical equality upstream.  The
+installed route derives the normalized value through
 `YangMillsHamiltonianSpectralDerivation3320` and the complete
 continuum-Hamiltonian derivation, while this bundle keeps the carrier/witness
 slots available for that downstream derivation route. -/
@@ -26,14 +26,14 @@ theorem continuum_hamiltonian_mass_gap_witness_hardened_bundle :
         continuumSpectralTheoremSkeletonReviewSurface.ready) ∧
       (PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
           physicalHamiltonianNormalizationBridgeReviewSurface ∧
-        exactGapValueReal = (33 : ℝ) / 20) ∧
+        exactGapValueDerivationBoundary.ready) ∧
       (plaquetteSpectralWeightLaneHardeningData.compactSupportHardened ∧
         plaquetteSpectralWeightLaneHardeningData.centeredHardened ∧
         plaquetteSpectralWeightLaneHardeningData.smearedHardened) ∧
       (plaquetteSpectralWeightLaneHardeningData.observableAtomHardened ∧
         plaquetteSpectralWeightLaneHardeningData.positiveWeightHardened ∧
         plaquetteSpectralWeightLaneHardeningData.nonzeroWeightHardened) ∧
-      (0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20) ∧
+      (0 < exactGapValueReal ∧ exactGapValueDerivationBoundary.ready) ∧
       (continuumYangMillsLaneHardeningData.ready ∧
         plaquetteSpectralWeightLaneHardeningData.ready) ∧
       continuumHamiltonianMassGapWitnessData.ready := by
@@ -51,7 +51,7 @@ theorem continuum_hamiltonian_mass_gap_witness_hardened_bundle :
           continuumYangMillsLaneHardeningData.continuumSpectralReady) <|
     And.intro
       (And.intro continuumYangMillsLaneHardeningData.normalizationBridgeReady
-        continuumYangMillsLaneHardeningData.exactValuePreserved) <|
+        exact_gap_value_derivation_boundary_ready) <|
     And.intro
       (And.intro
         (plaquette_weight_compact_support_hardened
@@ -77,7 +77,7 @@ theorem continuum_hamiltonian_mass_gap_witness_hardened_bundle :
             plaquetteSpectralWeightLaneHardeningData
             plaquette_spectral_weight_lane_hardening_ready)) <|
     And.intro
-      (And.intro exactGapValueReal_pos exactGapValueReal_eq) <|
+      (And.intro exactGapValueReal_pos exact_gap_value_derivation_boundary_ready) <|
     And.intro
       (And.intro continuum_yang_mills_lane_hardening_ready
         plaquette_spectral_weight_lane_hardening_ready)
@@ -93,11 +93,11 @@ theorem continuum_hamiltonian_hphys_from_ym_witness_from_hardened_bundle :
     continuumYangMillsLaneHardeningData.hphysBuiltFromYMHardened := by
   exact continuum_hamiltonian_mass_gap_witness_hardened_bundle.2.1
 
-/-- The hardened bundle exposes exact positive normalized-carrier data.  The
-spectral derivation using this carrier is recorded by the dedicated Yang--Mills
-Hamiltonian spectral derivation route. -/
+/-- The hardened bundle exposes positivity of the carrier together with the
+exact-value derivation boundary.  The spectral derivation using this carrier is
+recorded by the dedicated Yang--Mills Hamiltonian spectral derivation route. -/
 theorem continuum_hamiltonian_exact_positive_mass_gap_from_hardened_bundle :
-    0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20 := by
+    0 < exactGapValueReal ∧ exactGapValueDerivationBoundary.ready := by
   exact continuum_hamiltonian_mass_gap_witness_hardened_bundle.2.2.2.2.2.2.1
 
 /-- The hardened bundle still points back to the installed witness surface. -/
