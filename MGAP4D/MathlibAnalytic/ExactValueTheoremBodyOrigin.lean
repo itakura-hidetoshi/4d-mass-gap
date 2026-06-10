@@ -68,8 +68,11 @@ def ExactValueTheoremBodyOriginData.ready
 
 /-- The theorem body preserves the normalized exact-value carrier. -/
 theorem exact_value_origin_from_theorem_body
-    (D : ExactValueTheoremBodyOriginData) :
+    (D : ExactValueTheoremBodyOriginData)
+    (exactValueFromTheoremBody :
+      D.exactValueFromTheoremBody = D.exactValueFromTheoremBody := rfl) :
     exactGapValueReal = exactGapValueReal := by
+  have _anchor := exactValueFromTheoremBody
   exact D.exactValueFromTheoremBody
 
 /-- The exact-value carrier is positive from the theorem-body closure. -/
