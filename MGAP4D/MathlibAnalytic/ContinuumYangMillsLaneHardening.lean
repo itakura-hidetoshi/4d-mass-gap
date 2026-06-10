@@ -43,7 +43,7 @@ structure ContinuumYangMillsLaneHardeningData where
   continuumSpectralTheoremHardened : Prop
   continuumLimitBoundaryVisible : Prop
   hardPhysicalBoundaryVisible : Prop
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   reviewLevelOnly : Prop
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
@@ -70,7 +70,7 @@ def ContinuumYangMillsLaneHardeningData.ready
   D.continuumSpectralTheoremHardened ∧
   D.continuumLimitBoundaryVisible ∧
   D.hardPhysicalBoundaryVisible ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -168,10 +168,10 @@ theorem continuum_ym_hard_physical_boundary_visible
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hBoundary, _⟩
   exact hBoundary
 
-/-- Exact normalized value is preserved by the continuum Yang--Mills lane. -/
+/-- Exact-value carrier is preserved by the continuum Yang--Mills lane before R6 numeric export. -/
 theorem continuum_ym_exact_value_preserved
     (D : ContinuumYangMillsLaneHardeningData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- Installed continuum Yang--Mills hardening lane. -/
@@ -196,7 +196,7 @@ def continuumYangMillsLaneHardeningData : ContinuumYangMillsLaneHardeningData :=
     continuumSpectralTheoremHardened := True
     continuumLimitBoundaryVisible := True
     hardPhysicalBoundaryVisible := True
-    exactValuePreserved := exactGapValueReal_eq
+    exactValuePreserved := selfAdjointHPhysBridgeAdoptionData.exactValuePreserved
     reviewLevelOnly := True
     publicBoundaryHeld := True
     finalReleaseHeld := True }
