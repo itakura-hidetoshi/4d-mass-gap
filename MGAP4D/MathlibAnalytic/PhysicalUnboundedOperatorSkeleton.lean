@@ -12,8 +12,8 @@ operator, domain preservation, symmetry, self-adjoint certificate surface, and
 Rayleigh lower-bound surface.
 
 Boundary: this is still a proof-carrying skeleton.  It does not install a
-Mathlib unbounded-operator API, a concrete Yang--Mills Hamiltonian, or a final
-spectral realization. -/
+Mathlib unbounded-operator API, a concrete Yang--Mills Hamiltonian, a final
+spectral realization, or any upstream exact numeric identification before R6. -/
 structure PhysicalUnboundedOperatorSkeletonData where
   hilbertInstanceReady : hilbertSpaceInstanceSkeletonReviewSurface.ready
   carrier : Type u
@@ -32,7 +32,6 @@ structure PhysicalUnboundedOperatorSkeletonData where
   rayleigh : carrier → ℝ
   rayleigh_lower_bound : ∀ ψ, domain ψ → exactGapValueReal ≤ rayleigh ψ
   distinguished_attains_exact : rayleigh distinguished = exactGapValueReal
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   physicalUnboundedOperatorSkeletonVisible : Prop
   physicalUnboundedOperatorSkeletonVisible_proof : physicalUnboundedOperatorSkeletonVisible
   concreteYangMillsHamiltonianStillOpen : Prop
@@ -58,7 +57,6 @@ def PhysicalUnboundedOperatorSkeletonData.ready
   D.selfAdjointCertificate ∧
   (∀ ψ, D.domain ψ → exactGapValueReal ≤ D.rayleigh ψ) ∧
   D.rayleigh D.distinguished = exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.physicalUnboundedOperatorSkeletonVisible ∧ D.concreteYangMillsHamiltonianStillOpen ∧
   D.spectralRealizationStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
@@ -111,22 +109,17 @@ noncomputable def prototypePhysicalUnboundedOperatorSkeletonData :
     symmetric_on_domain := by intro ψ φ hψ hφ; rfl
     selfAdjointCertificate :=
       hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
-      exactGapValueReal = (33 : ℝ) / 20 ∧
       0 < exactGapValueReal
     selfAdjointCertificate_proof :=
-      And.intro hilbert_space_instance_skeleton_review_surface_ready <|
-        And.intro exactGapValueReal_eq exactGapValueReal_pos
+      And.intro hilbert_space_instance_skeleton_review_surface_ready exactGapValueReal_pos
     rayleigh := fun _ => exactGapValueReal
     rayleigh_lower_bound := by intro ψ hψ; exact le_rfl
     distinguished_attains_exact := rfl
-    exact_value_eq_3320 := exactGapValueReal_eq
     physicalUnboundedOperatorSkeletonVisible :=
       hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
-      exactGapValueReal = (33 : ℝ) / 20 ∧
       0 < exactGapValueReal
     physicalUnboundedOperatorSkeletonVisible_proof :=
-      And.intro hilbert_space_instance_skeleton_review_surface_ready <|
-        And.intro exactGapValueReal_eq exactGapValueReal_pos
+      And.intro hilbert_space_instance_skeleton_review_surface_ready exactGapValueReal_pos
     concreteYangMillsHamiltonianStillOpen :=
       hilbertSpaceInstanceSkeletonReviewSurface.physicalUnboundedOperatorStillOpen
     concreteYangMillsHamiltonianStillOpen_proof :=
@@ -149,7 +142,6 @@ theorem prototype_physical_unbounded_operator_skeleton_ready :
     And.intro prototypePhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate_proof <|
     And.intro prototypePhysicalUnboundedOperatorSkeletonData.rayleigh_lower_bound <|
     And.intro prototypePhysicalUnboundedOperatorSkeletonData.distinguished_attains_exact <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.exact_value_eq_3320 <|
     And.intro prototypePhysicalUnboundedOperatorSkeletonData.physicalUnboundedOperatorSkeletonVisible_proof <|
     And.intro prototypePhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen_proof <|
     And.intro prototypePhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof <|
