@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.CompleteInfiniteDimensionalHilbertConstruction
 import MGAP4D.MathlibAnalytic.SelfAdjointHPhysLaneHardening
 import MGAP4D.MathlibAnalytic.ContinuumYangMillsLaneHardening
 import MGAP4D.MathlibAnalytic.PlaquetteSpectralWeightLaneHardening
+import MGAP4D.MathlibAnalytic.ExactGapTheoremBodyClosure
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -188,7 +189,7 @@ def fourLaneResidualClosureData : FourLaneResidualClosureData :=
       continuumYangMillsLaneHardeningData.ready ∧
       plaquetteSpectralWeightLaneHardeningData.ready
     noReviewLevelResidualLeft_proof := four_lane_closure_no_review_level_residual_left_witness
-    exactValuePreserved := exactGapValueReal_eq
+    exactValuePreserved := exactGapTheoremBodyClosure.exactValue_eq_3320
     externalReviewBoundaryVisible := True
     publicBoundaryHeld := True
     finalReleaseHeld := True }
