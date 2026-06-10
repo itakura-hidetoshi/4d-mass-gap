@@ -205,7 +205,7 @@ YangMillsHamiltonianSpectralDerivation3320.lean = spectral derivation interface 
 ExactGapLayerSeparation.lean = current separation map
 ```
 
-The carrier definition `exactGapValueReal : ℝ := 33 / 20` is not, by itself, the whole review route.  The current exact-value route is reviewed through the R1--R7 terminal discharge route and the complete continuum-Hamiltonian spectral route.
+`exactGapValueReal` is the canonical normalized carrier defined through `fourDYangMillsAnalyticGapValue`; the local `33/20` check is a carrier-level normalization, while the review route is the R1--R7 terminal chain plus the complete continuum-Hamiltonian spectral route.
 
 ---
 
