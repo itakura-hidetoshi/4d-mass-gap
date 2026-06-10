@@ -1,20 +1,24 @@
-# Yang--Mills Hamiltonian spectral value alignment before R6
+# Yang--Mills Hamiltonian spectral derivation claim
 
 This note documents the additive Lean theorem surface
 `MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320`.
 
-The file name is legacy, but the contract is now two-layered:
+The file name is legacy, but the contract is now three-layered:
 
 1. the carrier fields remain an alignment surface around one derived Hamiltonian
-   spectral value, with no upstream 33/20 claim baked into the structure fields;
-2. the theorem layer may read that aligned carrier through the already-installed
+   spectral value, with no independent upstream 33/20 claim baked into the
+   structure fields;
+2. the theorem layer reads that aligned carrier through the already-installed
    continuum-Hamiltonian exact-value theorem, yielding the forced normalized
-   value `33/20`.
+   value `33/20`;
+3. the claim layer exposes the full Yang--Mills Hamiltonian spectral derivation
+   as a theorem-witnessed public claim surface.
 
 The phrase **no upstream 33/20 claim** therefore means: no independent numeric
 claim is inserted into the spectral carrier fields before the exact-value route.
-The numeric value appears only as a theorem-level consequence of the spectral /
-PVM / Hamiltonian chain plus the internal exact-value theorem.
+The numeric value appears as a theorem-level consequence of the spectral / PVM /
+Hamiltonian chain plus the internal exact-value theorem, and is then collected in
+`YangMillsHamiltonianSpectralDerivationClaim3320`.
 
 ```text
 Yang--Mills continuum Hamiltonian
@@ -26,6 +30,7 @@ Yang--Mills continuum Hamiltonian
   -> one shared derived Hamiltonian spectral value
   -> continuum-Hamiltonian exact-value theorem
   -> forced normalized value 33/20
+  -> Yang--Mills Hamiltonian spectral derivation claim
 ```
 
 ## Core Lean surface
@@ -86,6 +91,40 @@ spectral infimum, spectral attainment, and PVM/observable atom all collapse to
 the derived Hamiltonian carrier, that carrier is forced to `33/20`, the spectral
 mass is positive and nonzero, and the public/final boundaries remain held.
 
+## Claim surface
+
+The explicit claim surface is:
+
+```text
+YangMillsHamiltonianSpectralDerivationClaim3320
+yang_mills_hamiltonian_spectral_derivation_claim_3320
+yang_mills_hamiltonian_spectral_derivation_claim_forces_gap_33_over_20
+yang_mills_hamiltonian_spectral_derivation_claim_positive_nonzero_pvm_mass
+yang_mills_hamiltonian_spectral_derivation_claim_boundary_held
+```
+
+Its intended reading is:
+
+```text
+Yang--Mills Hamiltonian spectral derivation claim
+  := installed Yang--Mills Hamiltonian spectral interface is ready
+   ∧ self-adjoint spectral chain is ready
+   ∧ spectral infimum = derived Hamiltonian spectral value
+   ∧ spectral attainment = derived Hamiltonian spectral value
+   ∧ PVM / observable spectral atom = derived Hamiltonian spectral value
+   ∧ derived Hamiltonian spectral value = 33/20
+   ∧ PVM spectral mass > 0
+   ∧ PVM spectral mass != 0
+   ∧ theoremWitnessOnly
+   ∧ noExternalConsensusClaim
+   ∧ publicBoundaryHeld
+   ∧ finalReleaseHeld
+```
+
+This is the precise place where the repository can claim the Yang--Mills
+Hamiltonian spectral derivation, while still separating theorem-witness status
+from external consensus or final public theorem acceptance.
+
 ## Positive spectral mass anchors
 
 ```text
@@ -121,7 +160,7 @@ Rayleigh lower bound + Rayleigh attainment + positive spectral atom
   => one shared derived Hamiltonian spectral value
 ```
 
-The release-adoption layer now preserves the forced-value reading through:
+The release-adoption layer preserves the forced-value reading through:
 
 ```text
 continuum_hamiltonian_complete_spectral_release_adoption_forces_gap_33_over_20
@@ -133,4 +172,5 @@ continuum_hamiltonian_complete_spectral_release_adoption_pvm_hamiltonian_forces_
 The R6 exact atom layer remains the first exact-value carrier route.  This file
 now records that, once the continuum-Hamiltonian exact-value theorem is imported,
 the spectral theorem / PVM / Hamiltonian route necessarily evaluates its derived
-spectral carrier to `33/20`.
+spectral carrier to `33/20`, and the claim surface can state the Yang--Mills
+Hamiltonian spectral derivation explicitly.
