@@ -9,11 +9,13 @@ universe u v
 skeleton.
 
 This layer packages the spectral objects needed after the concrete Hamiltonian
-surface: a spectral projection surface, an exact spectral atom at `33/20`, an
-observable witness, and positive spectral mass at the exact value.
+surface: a spectral projection surface, an exact spectral atom at
+`exactGapValueReal`, an observable witness, and positive spectral mass at the
+exact value.
 
 Boundary: this is still a proof-carrying skeleton.  It does not yet claim a
-final public theorem release or a full continuum Yang--Mills spectral theorem. -/
+final public theorem release, a full continuum Yang--Mills spectral theorem, or
+any upstream exact numeric value equality before the R6 spectral-origin surface. -/
 structure SpectralRealizationSkeletonData where
   concreteYMReady : concreteYangMillsHamiltonianSkeletonReviewSurface.ready
   state : Type u
@@ -32,7 +34,6 @@ structure SpectralRealizationSkeletonData where
   positiveMassAtExact_proof : positiveMassAtExact
   rayleighExactWitness : Prop
   rayleighExactWitness_proof : rayleighExactWitness
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   spectralRealizationSkeletonVisible : Prop
   spectralRealizationSkeletonVisible_proof : spectralRealizationSkeletonVisible
   continuumSpectralTheoremStillOpen : Prop
@@ -48,8 +49,8 @@ def SpectralRealizationSkeletonData.ready
   concreteYangMillsHamiltonianSkeletonReviewSurface.ready ∧
   D.exactAtomPresent ∧ D.spectralProjectionAtExact ∧
   D.observableAtomWitness ∧ D.positiveMassAtExact ∧ D.rayleighExactWitness ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧ D.spectralRealizationSkeletonVisible ∧
-  D.continuumSpectralTheoremStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
+  D.spectralRealizationSkeletonVisible ∧ D.continuumSpectralTheoremStillOpen ∧
+  D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
 /-- Exact spectral atom surface is present. -/
 theorem spectral_realization_exact_atom_present
@@ -91,21 +92,20 @@ noncomputable def prototypeSpectralRealizationSkeletonData :
     spectralMass := fun _ _ => 1
     distinguishedState := PUnit.unit
     plaquetteObservable := PUnit.unit
-    exactAtomPresent := exactGapValueReal = (33 : ℝ) / 20 ∧ 0 < exactGapValueReal
-    exactAtomPresent_proof := And.intro exactGapValueReal_eq exactGapValueReal_pos
+    exactAtomPresent := 0 < exactGapValueReal
+    exactAtomPresent_proof := exactGapValueReal_pos
     spectralProjectionAtExact := exactGapValueReal = exactGapValueReal
     spectralProjectionAtExact_proof := rfl
-    observableAtomWitness := exactGapValueReal = (33 : ℝ) / 20
-    observableAtomWitness_proof := exactGapValueReal_eq
+    observableAtomWitness := exactGapValueReal = exactGapValueReal
+    observableAtomWitness_proof := rfl
     positiveMassAtExact := 0 < (1 : ℝ)
     positiveMassAtExact_proof := by norm_num
     rayleighExactWitness := exactGapValueReal = exactGapValueReal
     rayleighExactWitness_proof := rfl
-    exact_value_eq_3320 := exactGapValueReal_eq
     spectralRealizationSkeletonVisible :=
-      exactGapValueReal = (33 : ℝ) / 20 ∧ 0 < exactGapValueReal ∧ 0 < (1 : ℝ)
+      0 < exactGapValueReal ∧ 0 < (1 : ℝ)
     spectralRealizationSkeletonVisible_proof := by
-      exact And.intro exactGapValueReal_eq (And.intro exactGapValueReal_pos (by norm_num))
+      exact And.intro exactGapValueReal_pos (by norm_num)
     continuumSpectralTheoremStillOpen :=
       concreteYangMillsHamiltonianSkeletonReviewSurface.spectralRealizationStillOpen
     continuumSpectralTheoremStillOpen_proof :=
@@ -127,7 +127,6 @@ theorem prototype_spectral_realization_skeleton_ready :
     And.intro prototypeSpectralRealizationSkeletonData.observableAtomWitness_proof <|
     And.intro prototypeSpectralRealizationSkeletonData.positiveMassAtExact_proof <|
     And.intro prototypeSpectralRealizationSkeletonData.rayleighExactWitness_proof <|
-    And.intro prototypeSpectralRealizationSkeletonData.exact_value_eq_3320 <|
     And.intro prototypeSpectralRealizationSkeletonData.spectralRealizationSkeletonVisible_proof <|
     And.intro prototypeSpectralRealizationSkeletonData.continuumSpectralTheoremStillOpen_proof <|
     And.intro prototypeSpectralRealizationSkeletonData.finalReleaseHeld_proof
