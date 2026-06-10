@@ -11,7 +11,8 @@ This is the fifth post-interface theorem-body step. It does not yet construct
 a concrete compactly supported smeared centered plaquette observable. It makes
 explicit the observable carrier, chosen observable, compact-support / centered /
 smeared witnesses, exact atom, positive nonzero observable spectral weight, and
-compatibility with the PVM theorem body's exact-atom mass. -/
+compatibility with the PVM theorem body's exact-atom mass.  It does not assert
+`33/20` upstream of the R6 value-origin theorem. -/
 structure ObservableAtomTheoremTheoremData where
   pvmData : PVMTheoremTheoremData
   pvmDataReady : pvmData.ready
@@ -31,7 +32,6 @@ structure ObservableAtomTheoremTheoremData where
   nonzero_atom_weight : spectralWeight chosenObservable atom ≠ 0
   compatible_with_pvm_mass : spectralWeight chosenObservable atom =
     pvmData.projectionMass pvmData.exactAtom
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   observableAtomCertificate : Prop
   observableAtomCertificate_proof : observableAtomCertificate
   concretePlaquetteConstructionStillOpen : Prop
@@ -47,7 +47,6 @@ def ObservableAtomTheoremTheoremData.ready
   D.spectralWeight D.chosenObservable D.atom ≠ 0 ∧
   D.spectralWeight D.chosenObservable D.atom =
     D.pvmData.projectionMass D.pvmData.exactAtom ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.observableAtomCertificate ∧ D.concretePlaquetteConstructionStillOpen ∧
   D.concreteOperatorMeasureCompatibilityStillOpen
 
@@ -55,21 +54,21 @@ def ObservableAtomTheoremTheoremData.ready
 theorem observable_atom_theorem_exact_value_in_atom
     (D : ObservableAtomTheoremTheoremData) (hD : D.ready) :
     exactGapValueReal ∈ D.atom := by
-  rcases hD with ⟨_, _, _, _, _, hIn, _, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, hIn, _, _, _, _, _, _⟩
   exact hIn
 
 /-- The observable spectral weight on the exact atom is positive. -/
 theorem observable_atom_theorem_positive_weight
     (D : ObservableAtomTheoremTheoremData) (hD : D.ready) :
     0 < D.spectralWeight D.chosenObservable D.atom := by
-  rcases hD with ⟨_, _, _, _, _, _, hPos, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, _, hPos, _, _, _, _, _⟩
   exact hPos
 
 /-- The observable spectral weight on the exact atom is nonzero. -/
 theorem observable_atom_theorem_nonzero_weight
     (D : ObservableAtomTheoremTheoremData) (hD : D.ready) :
     D.spectralWeight D.chosenObservable D.atom ≠ 0 := by
-  rcases hD with ⟨_, _, _, _, _, _, _, hNe, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, _, _, hNe, _, _, _, _⟩
   exact hNe
 
 /-- The observable spectral weight is compatible with the PVM theorem body's
@@ -78,7 +77,7 @@ theorem observable_atom_theorem_compatible_with_pvm_mass
     (D : ObservableAtomTheoremTheoremData) (hD : D.ready) :
     D.spectralWeight D.chosenObservable D.atom =
       D.pvmData.projectionMass D.pvmData.exactAtom := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, hCompat, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, _, _, _, hCompat, _, _, _⟩
   exact hCompat
 
 /-- Compact-support witness for the chosen observable. -/
@@ -106,7 +105,7 @@ theorem observable_atom_theorem_smeared
 theorem observable_atom_theorem_certificate
     (D : ObservableAtomTheoremTheoremData) (hD : D.ready) :
     D.observableAtomCertificate := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, hCert, _, _⟩
+  rcases hD with ⟨_, _, _, _, _, _, _, _, _, hCert, _, _⟩
   exact hCert
 
 /-- Singleton theorem-body realization for the observable atom layer. -/
@@ -128,7 +127,6 @@ def singletonObservableAtomTheoremTheoremData : ObservableAtomTheoremTheoremData
     positive_atom_weight := exactGapSpectralMassReal_pos
     nonzero_atom_weight := exactGapSpectralMassReal_ne_zero
     compatible_with_pvm_mass := rfl
-    exact_value_eq_3320 := exactGapValueReal_eq
     observableAtomCertificate := True
     observableAtomCertificate_proof := True.intro
     concretePlaquetteConstructionStillOpen := True
@@ -145,7 +143,6 @@ theorem singleton_observable_atom_theorem_theorem_data_ready :
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
     And.intro rfl <|
-    And.intro exactGapValueReal_eq <|
     And.intro True.intro <|
     And.intro True.intro True.intro
 
