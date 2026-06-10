@@ -68,6 +68,7 @@ externalAuditReadinessCompleteSpectralMassGapAddendumReady
 continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady
 external_audit_readiness_complete_spectral_mass_gap_addendum_ready
 external_audit_readiness_complete_spectral_mass_gap_exact_value
+external_audit_readiness_complete_spectral_mass_gap_forces_gap_33_over_20
 external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass
 external_audit_readiness_complete_spectral_mass_gap_boundary_held
 ```
@@ -78,6 +79,7 @@ PVM / observable spectral atom public audit projection anchors:
 externalAuditReadinessPVMSpectralAtomPublicAuditProjection
 external_audit_readiness_pvm_spectral_atom_public_audit_projection
 external_audit_readiness_pvm_spectral_atom_value_eq_derived
+external_audit_readiness_pvm_spectral_atom_forces_gap_33_over_20
 external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass
 external_audit_readiness_pvm_spectral_atom_boundary_held
 ```
@@ -86,13 +88,14 @@ PVM / observable spectral atom public audit meaning:
 
 ```text
 observable spectral atom = derived Hamiltonian spectral value
+derived Hamiltonian spectral value = 33/20
 PVM spectral mass > 0
 PVM spectral mass != 0
 publicBoundaryHeld
 finalReleaseHeld
 ```
 
-Spectral route meaning before R6:
+Spectral theorem / PVM / Hamiltonian route meaning:
 
 ```text
 Yang--Mills continuum Hamiltonian
@@ -101,7 +104,15 @@ Yang--Mills continuum Hamiltonian
   -> observable spectral atom = derived Hamiltonian spectral value with positive nonzero spectral mass
   -> PVM / observable spectral atom public audit projection
   -> exactGapValueReal = derived Hamiltonian spectral value
-  -> no upstream 33/20 claim
+  -> derived Hamiltonian spectral value = 33/20
+```
+
+Boundary meaning:
+
+```text
+no upstream 33/20 claim is inserted as an independent spectral carrier-field assertion;
+the 33/20 value is exposed here only through the theorem-level exact-value route;
+external consensus and public final release remain separate boundaries.
 ```
 
 Meaning:
@@ -111,6 +122,7 @@ repository-internal residual closure is external-audit ready;
 complete continuum-Hamiltonian and spectral-alignment routes are visible for replay;
 continuum-Hamiltonian chain-index exact 33/20 addendum is visible as append-only review surface;
 PVM / observable spectral atom positive mass is visible as a public-audit projection;
+the spectral theorem / PVM / Hamiltonian analysis forces the derived spectral carrier to 33/20;
 R6 remains the first admissible concrete public numeric value layer;
 external consensus and public final release remain separate boundaries.
 ```
