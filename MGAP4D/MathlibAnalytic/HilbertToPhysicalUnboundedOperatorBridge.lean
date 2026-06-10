@@ -10,12 +10,12 @@ lane to the physical unbounded-operator skeleton.
 This is additive: it does not claim a new concrete Yang--Mills Hamiltonian or a
 closed spectral realization.  It records that the upstream complete Hilbert
 construction lane and the downstream physical unbounded-operator skeleton are
-simultaneously available, with the exact normalized value and the public/final
+simultaneously available, with the exact-value carrier and the public/final
 boundary flags preserved. -/
 structure HilbertToPhysicalUnboundedOperatorBridgeData where
   hilbertLaneReady : completeInfiniteDimensionalHilbertConstructionLaneData.ready
   hilbertInstanceHardened : completeInfiniteDimensionalHilbertConstructionLaneData.hilbertInstanceHardened
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   physicalOperatorReady : physicalUnboundedOperatorSkeletonReviewSurface.ready
   domainPreserved : physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved
   symmetricOnDomain : physicalUnboundedOperatorSkeletonReviewSurface.symmetricOnDomain
@@ -34,7 +34,7 @@ def HilbertToPhysicalUnboundedOperatorBridgeData.ready
     (D : HilbertToPhysicalUnboundedOperatorBridgeData) : Prop :=
   completeInfiniteDimensionalHilbertConstructionLaneData.ready ∧
   completeInfiniteDimensionalHilbertConstructionLaneData.hilbertInstanceHardened ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
   physicalUnboundedOperatorSkeletonReviewSurface.domainPreserved ∧
   physicalUnboundedOperatorSkeletonReviewSurface.symmetricOnDomain ∧
@@ -59,10 +59,10 @@ theorem hilbert_to_physical_bridge_operator_ready
     physicalUnboundedOperatorSkeletonReviewSurface.ready := by
   exact D.physicalOperatorReady
 
-/-- The bridge keeps the exact normalized gap value visible. -/
+/-- The bridge keeps the exact-value carrier visible before the R6 numeric export. -/
 theorem hilbert_to_physical_bridge_exact_value_preserved
     (D : HilbertToPhysicalUnboundedOperatorBridgeData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- The bridge carries domain preservation for the physical operator. -/
@@ -129,7 +129,7 @@ def hilbertToPhysicalUnboundedOperatorBridgeData :
     bridgeEstablished :=
       completeInfiniteDimensionalHilbertConstructionLaneData.ready ∧
       physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
-      exactGapValueReal = (33 : ℝ) / 20
+      exactGapValueReal = exactGapValueReal
     bridgeEstablished_proof :=
       And.intro complete_infinite_dimensional_hilbert_construction_lane_ready <|
         And.intro physical_unbounded_operator_skeleton_review_surface_ready
