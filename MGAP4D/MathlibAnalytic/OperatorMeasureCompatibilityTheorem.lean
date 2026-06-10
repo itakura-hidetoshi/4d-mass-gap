@@ -100,14 +100,15 @@ theorem operator_measure_compatibility_certificate
     D.operatorMeasureCompatibilityCertificate := by
   exact D.operatorMeasureCompatibilityCertificate_proof
 
-/-- Singleton theorem-body realization for operator-measure compatibility. -/
+/-- Compatibility theorem-body realization for operator-measure compatibility;
+the constructed observable is the final physical Hilbert-space zero vector. -/
 def singletonOperatorMeasureCompatibilityTheoremData :
     OperatorMeasureCompatibilityTheoremData :=
   { constructionData := singletonCompactPlaquetteConstructionTheoremData
     constructionDataReady := singleton_compact_plaquette_construction_theorem_data_ready
     observableAtomData := singletonObservableAtomTheoremTheoremData
     observableAtomDataReady := singleton_observable_atom_theorem_theorem_data_ready
-    constructedObservable := prototypeObservable
+    constructedObservable := finalPhysicalHilbertZero
     exactAtom := exactGapAtomReal
     constructedObservable_def := rfl
     exactAtom_def := rfl
