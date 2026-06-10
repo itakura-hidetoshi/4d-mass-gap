@@ -12,7 +12,8 @@ full spectral theorem for a concrete unbounded self-adjoint operator. It makes
 explicit the spectral support, spectral mass, exact-gap support membership,
 lower-bound support condition, positive mass at the exact value, and
 compatibility with the already closed abstract self-adjoint `H_phys` theorem
-body. -/
+body.  It deliberately does not assert the displayed numeric value upstream of
+R6. -/
 structure SpectralTheoremTheoremData where
   hphysData : SelfAdjointHPhysTheoremData
   hphysDataReady : hphysData.ready
@@ -22,7 +23,6 @@ structure SpectralTheoremTheoremData where
   support_lower_bound : ∀ x : ℝ, x ∈ spectralSupport → exactGapValueReal ≤ x
   positive_mass_at_exact : 0 < spectralMass exactGapValueReal
   nonzero_mass_at_exact : spectralMass exactGapValueReal ≠ 0
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   exact_value_positive : 0 < exactGapValueReal
   spectralTheoremCertificate : Prop
   spectralTheoremCertificate_proof : spectralTheoremCertificate
@@ -36,7 +36,6 @@ def SpectralTheoremTheoremData.ready
   (∀ x : ℝ, x ∈ D.spectralSupport → exactGapValueReal ≤ x) ∧
   0 < D.spectralMass exactGapValueReal ∧
   D.spectralMass exactGapValueReal ≠ 0 ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   0 < exactGapValueReal ∧ D.spectralTheoremCertificate ∧
   D.concreteSpectralMeasureStillOpen
 
@@ -44,7 +43,7 @@ def SpectralTheoremTheoremData.ready
 theorem spectral_theorem_exact_value_in_support
     (D : SpectralTheoremTheoremData) (hD : D.ready) :
     exactGapValueReal ∈ D.spectralSupport := by
-  rcases hD with ⟨_, hIn, _, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, hIn, _, _, _, _, _, _⟩
   exact hIn
 
 /-- All declared spectral support values are bounded below by the exact gap. -/
@@ -52,28 +51,28 @@ theorem spectral_theorem_support_lower_bound
     (D : SpectralTheoremTheoremData) (hD : D.ready)
     (x : ℝ) (hx : x ∈ D.spectralSupport) :
     exactGapValueReal ≤ x := by
-  rcases hD with ⟨_, _, hLower, _, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, hLower, _, _, _, _, _⟩
   exact hLower x hx
 
 /-- The exact gap carries positive spectral mass. -/
 theorem spectral_theorem_positive_mass_at_exact
     (D : SpectralTheoremTheoremData) (hD : D.ready) :
     0 < D.spectralMass exactGapValueReal := by
-  rcases hD with ⟨_, _, _, hPos, _, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, hPos, _, _, _, _⟩
   exact hPos
 
 /-- The exact gap carries nonzero spectral mass. -/
 theorem spectral_theorem_nonzero_mass_at_exact
     (D : SpectralTheoremTheoremData) (hD : D.ready) :
     D.spectralMass exactGapValueReal ≠ 0 := by
-  rcases hD with ⟨_, _, _, _, hNe, _, _, _, _⟩
+  rcases hD with ⟨_, _, _, _, hNe, _, _, _⟩
   exact hNe
 
 /-- The spectral theorem certificate surface is present. -/
 theorem spectral_theorem_certificate
     (D : SpectralTheoremTheoremData) (hD : D.ready) :
     D.spectralTheoremCertificate := by
-  rcases hD with ⟨_, _, _, _, _, _, _, hCert, _⟩
+  rcases hD with ⟨_, _, _, _, _, _, hCert, _⟩
   exact hCert
 
 /-- Singleton theorem-body realization for spectral theorem integration. -/
@@ -86,7 +85,6 @@ def singletonSpectralTheoremTheoremData : SpectralTheoremTheoremData :=
     support_lower_bound := exactGapEnergyRay_lower_bound
     positive_mass_at_exact := exactGapSpectralMassReal_pos
     nonzero_mass_at_exact := exactGapSpectralMassReal_ne_zero
-    exact_value_eq_3320 := exactGapValueReal_eq
     exact_value_positive := exactGapValueReal_pos
     spectralTheoremCertificate := True
     spectralTheoremCertificate_proof := True.intro
@@ -99,7 +97,6 @@ theorem singleton_spectral_theorem_theorem_data_ready :
     And.intro exactGapEnergyRay_lower_bound <|
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
-    And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos <|
     And.intro True.intro True.intro
 
