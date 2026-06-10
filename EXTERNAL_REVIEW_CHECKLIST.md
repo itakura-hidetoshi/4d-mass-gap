@@ -10,6 +10,8 @@ EXTERNAL_AUDIT_PACKET.md
 INDEPENDENT_REPLAY.md
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/mathlib_physical_unbounded_operator_skeleton.md
+docs/mathlib_concrete_yang_mills_hamiltonian_skeleton.md
 docs/infinite_dimensional_yang_mills_target_layer.md
 docs/complete_infinite_dimensional_hilbert_construction.md
 docs/continuum_hamiltonian_complete_release_surface.md
@@ -26,6 +28,7 @@ Before starting, record that the current repository claim is:
 internal normalized theorem-body / proof-architecture surface
 with replay, audit, bridge-coherence support, explicit infinite-dimensional Yang-Mills target obligations,
 complete infinite-dimensional Hilbert construction, downstream hardening lanes,
+final-physical-carrier routing for the physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons,
 continuum-Hamiltonian theorem/release surfaces, and external-audit readiness gates
 ```
 
@@ -46,6 +49,7 @@ Reviewer checkpoint:
 [ ] I understand CI/audit scripts do not replace mathematical review.
 [ ] I understand the normalized value 33/20 is dimensionless unless E0 is supplied.
 [ ] I understand the complete Hilbert construction and continuum-Hamiltonian surfaces are repository-internal Lean surfaces pending external audit.
+[ ] I understand the current physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons are routed through `FinalPhysicalHilbertCarrier`, not through a one-point carrier.
 ```
 
 ## 1. Fresh clone
@@ -216,6 +220,8 @@ Use:
 ```text
 THEOREM_INDEX.md
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/mathlib_physical_unbounded_operator_skeleton.md
+docs/mathlib_concrete_yang_mills_hamiltonian_skeleton.md
 docs/infinite_dimensional_yang_mills_target_layer.md
 docs/infinite_dimensional_residual_filling_bridge.md
 docs/hard_physical_residual_hardening_map.md
@@ -228,7 +234,11 @@ Reviewer checkpoint:
 [ ] `ConcreteHilbertRealizationTheorem.lean` inspected with boundary markers.
 [ ] `ConcreteHPhysRealizationTheorem.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected with boundary markers.
+[ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected for `FinalPhysicalHilbertCarrier`, `finalPhysicalHamiltonian`, `finalPhysicalRayleigh`, and `finalPhysicalUnboundedOperatorSkeletonData`.
+[ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm `prototypePhysicalUnboundedOperatorSkeletonData` aliases the final physical data.
 [ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected with boundary markers.
+[ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected for `FinalPhysicalHilbertCarrier`, `finalPhysicalHamiltonian`, `finalPhysicalRayleigh`, and `finalConcreteYangMillsHamiltonianSkeletonData`.
+[ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected to confirm `prototypeConcreteYangMillsHamiltonianSkeletonData` aliases the final physical carrier route.
 [ ] `SpectralRealizationSkeleton.lean` inspected with boundary markers.
 [ ] `ContinuumSpectralTheoremSkeleton.lean` inspected with boundary markers.
 [ ] `PhysicalHamiltonianNormalizationBridge.lean` inspected with boundary markers.
@@ -265,6 +275,8 @@ Read:
 
 ```text
 PHYSICAL_REALIZATION_BOUNDARY.md
+docs/mathlib_physical_unbounded_operator_skeleton.md
+docs/mathlib_concrete_yang_mills_hamiltonian_skeleton.md
 docs/infinite_dimensional_yang_mills_target_layer.md
 docs/complete_infinite_dimensional_hilbert_construction.md
 ```
@@ -272,7 +284,9 @@ docs/complete_infinite_dimensional_hilbert_construction.md
 Reviewer checkpoint:
 
 ```text
-[ ] I have not interpreted `PUnit` / singleton surfaces as the final physical Hilbert space.
+[ ] I have not interpreted remaining `PUnit` / singleton surfaces as the final physical Hilbert space.
+[ ] I have confirmed that the physical unbounded-operator skeleton is final-physical-carrier routed.
+[ ] I have confirmed that the concrete Yang-Mills Hamiltonian skeleton is final-physical-carrier routed.
 [ ] I have not interpreted prototype spectral mass as the final physical spectral measure.
 [ ] I have checked the relevant `publicBoundaryHeld` / `finalReleaseHeld` markers.
 [ ] I have distinguished contract witnesses from physical continuum realization targets.
@@ -323,6 +337,8 @@ docs/mathlib_physical_hamiltonian_normalization_bridge.md
 docs/mathlib_physical_hamiltonian_normalization_bridge_ci.md
 docs/mathlib_exact_value_theorem_body_origin.md
 docs/mathlib_exact_value_theorem_body_origin_ci.md
+docs/mathlib_physical_unbounded_operator_skeleton.md
+docs/mathlib_concrete_yang_mills_hamiltonian_skeleton.md
 docs/mathlib_concrete_residual_closure.md
 docs/mathlib_concrete_residual_closure_ci.md
 docs/infinite_dimensional_yang_mills_target_layer.md
@@ -354,6 +370,8 @@ the declared theorem surfaces are present
 the declared bridge surfaces are present
 the infinite-dimensional target obligations are present
 the complete infinite-dimensional Hilbert construction is present
+the physical unbounded-operator skeleton is final-physical-carrier routed
+the concrete Yang-Mills Hamiltonian skeleton is final-physical-carrier routed
 the continuum-Hamiltonian theorem and complete release surfaces are present
 the audit scripts pass
 the Lean build passes
@@ -376,6 +394,7 @@ Final reviewer checkpoint:
 [ ] Commit SHA recorded.
 [ ] Lean / Lake versions recorded.
 [ ] Any failures or concerns recorded with file names and theorem names.
+[ ] Final physical carrier routing for the unbounded-operator and concrete Yang-Mills Hamiltonian skeletons recorded.
 [ ] Infinite-dimensional target-layer interpretation preserved.
 [ ] Complete Hilbert construction interpretation preserved.
 [ ] Public-boundary interpretation preserved.
