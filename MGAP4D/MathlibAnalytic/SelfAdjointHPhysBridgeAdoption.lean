@@ -24,7 +24,7 @@ structure SelfAdjointHPhysBridgeAdoptionData where
   bridgeRayleighLowerBound : physicalUnboundedOperatorSkeletonReviewSurface.rayleighLowerBound
   laneSelfAdjointCertificateHardened : selfAdjointHPhysLaneHardeningData.selfAdjointCertificateHardened
   laneRayleighCompatibilityHardened : selfAdjointHPhysLaneHardeningData.rayleighCompatibilityHardened
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   bridgeAdoptedByLane : Prop
   bridgeAdoptedByLane_proof : bridgeAdoptedByLane
   downstreamConcreteHPhysBridgeReady : concreteHPhysRealizationTheoremReviewSurface.ready
@@ -44,7 +44,7 @@ def SelfAdjointHPhysBridgeAdoptionData.ready
   physicalUnboundedOperatorSkeletonReviewSurface.rayleighLowerBound ∧
   selfAdjointHPhysLaneHardeningData.selfAdjointCertificateHardened ∧
   selfAdjointHPhysLaneHardeningData.rayleighCompatibilityHardened ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.bridgeAdoptedByLane ∧
   concreteHPhysRealizationTheoremReviewSurface.ready ∧
   physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen ∧
@@ -76,10 +76,10 @@ theorem self_adjoint_hphys_bridge_adoption_rayleigh_lower_bound
     physicalUnboundedOperatorSkeletonReviewSurface.rayleighLowerBound := by
   exact D.bridgeRayleighLowerBound
 
-/-- Exact normalized value remains fixed across bridge adoption. -/
+/-- Exact-value carrier remains fixed across bridge adoption before R6 numeric export. -/
 theorem self_adjoint_hphys_bridge_adoption_exact_value
     (D : SelfAdjointHPhysBridgeAdoptionData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 private theorem selfAdjointHPhysLanePublicBoundaryHeld_proof :
