@@ -21,7 +21,6 @@ structure ConcreteHilbertRealizationTheoremData where
   all_states_lower_bound : forall psi : carrier,
     rayleighData.admissible (toRayleighState psi) ->
       exactGapValueReal <= rayleighData.quotient (toRayleighState psi)
-  exact_value_eq_3320 : exactGapValueReal = (33 : Real) / 20
   exact_value_positive : 0 < exactGapValueReal
   concreteHilbertCertificate : Prop
   concreteHilbertCertificate_proof : concreteHilbertCertificate
@@ -36,7 +35,6 @@ def ConcreteHilbertRealizationTheoremData.ready
   (forall psi : D.carrier,
     D.rayleighData.admissible (D.toRayleighState psi) ->
       exactGapValueReal <= D.rayleighData.quotient (D.toRayleighState psi)) ∧
-  exactGapValueReal = (33 : Real) / 20 ∧
   0 < exactGapValueReal ∧
   D.concreteHilbertCertificate ∧
   D.infiniteDimensionalPhysicalHilbertStillOpen
@@ -79,7 +77,6 @@ noncomputable def singletonConcreteHilbertRealizationTheoremData :
     all_states_lower_bound := by
       intro psi hpsi
       exact singleton_hilbert_rayleigh_quotient_lower_bound PUnit.unit hpsi
-    exact_value_eq_3320 := exactGapValueReal_eq
     exact_value_positive := exactGapValueReal_pos
     concreteHilbertCertificate := True
     concreteHilbertCertificate_proof := True.intro
@@ -92,7 +89,6 @@ theorem singleton_concrete_hilbert_realization_theorem_data_ready :
     And.intro singletonConcreteHilbertRealizationTheoremData.distinguished_admissible <|
     And.intro singletonConcreteHilbertRealizationTheoremData.distinguished_attains_exact <|
     And.intro singletonConcreteHilbertRealizationTheoremData.all_states_lower_bound <|
-    And.intro singletonConcreteHilbertRealizationTheoremData.exact_value_eq_3320 <|
     And.intro singletonConcreteHilbertRealizationTheoremData.exact_value_positive <|
     And.intro singletonConcreteHilbertRealizationTheoremData.concreteHilbertCertificate_proof True.intro
 
