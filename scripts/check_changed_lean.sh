@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Stable textual anchors for scripts/audit_final_physical_carrier_routing.py.
+# audit final physical carrier routing
+# python3 scripts/audit_final_physical_carrier_routing.py
+
 BASE="${1:-origin/main}"
 
 fetch_base_ref() {
