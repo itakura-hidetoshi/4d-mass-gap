@@ -76,7 +76,7 @@ def finalConcreteHilbertNormSq
 
 theorem final_concrete_hilbert_distinguished_nonzero_norm :
     0 < finalConcreteHilbertNormSq finalConcreteHilbertZero := by
-  simp [finalConcreteHilbertNormSq, finalConcreteHilbertZero]
+  norm_num [finalConcreteHilbertNormSq, finalConcreteHilbertZero]
 
 noncomputable def finalConcreteHilbertRealizationTheoremData :
     ConcreteHilbertRealizationTheoremData :=
