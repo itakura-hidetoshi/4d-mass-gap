@@ -2,7 +2,7 @@
 
 **MGAP4D** is Hidetoshi Itakura's canonical GitHub-native **Lean 4 / Lake** repository for a normalized four-dimensional mass-gap proof architecture.
 
-The repository contains Lean source files, theorem-surface maps, physical-normalization boundaries, audit scripts, review packets, and independent replay instructions for the MGAP4D line.
+This repository is the primary Lean source tree for the MGAP4D line.  It contains Lean theorem surfaces, theorem-body anchors, proof-spine ledgers, physical-normalization boundaries, audit scripts, review packets, and independent replay instructions.
 
 ```text
 Canonical proof repository: itakura-hidetoshi/4d-mass-gap
@@ -10,15 +10,15 @@ KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may refer to MGAP4D as a physics-facing bridge and public-core governance surface.  It does **not** replace this repository as the canonical Lean source tree, and it does not independently supply external mathematical consensus.
+KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface.  KuuOS documents do not replace this repository as the canonical Lean source tree, and they do not independently provide external mathematical consensus.
 
 ---
 
-## Current status as of 2026-06-10
+## Current status as of 2026-06-11
 
-Current `main` should be read as an **internal Lean terminal discharge route with a public / external audit receipt surface**.
+The current `main` branch should be read as an **internal Lean terminal discharge route with a public / external audit receipt surface**.
 
-It should **not** be described as external mathematical consensus, peer-review completion, or Clay-style public acceptance.
+It should **not** be described as external mathematical consensus, independent peer-review completion, or Clay-style public acceptance.
 
 The current proof-facing surface is the R1--R7 terminal / public / external audit receipt chain:
 
@@ -63,7 +63,11 @@ This repository currently claims, at repository-surface level:
 Lean 4 / Lake replay surface: present
 canonical normalized carrier: exactGapValueReal = 33/20
 R1--R7 terminal discharge route: present
-positive spectral-weight witness: terminal-visible
+R2 current lane: infinite-dimensional ℓ² diagonal closed / unbounded operator lane
+R4 genuine-PVM law-component route: terminal-visible
+R5 compact centered plaquette observable route: terminal-visible
+R6 non-definitional exact atom 33/20 route: terminal-visible
+R7 positive spectral-weight witness route: terminal-visible
 public / external audit receipt chain: present
 physical-normalization boundary through E0: explicit
 ```
@@ -78,6 +82,7 @@ a dimensional physical mass gap without choosing a positive scale E0
 that CI success replaces mathematical proof review
 that audit scripts replace Lean kernel checking
 that readiness receipts are theorem bodies unless they carry substantive typed theorem payloads
+that historical StillOpen / PUnit / True markers can be ignored without classification
 ```
 
 Review rule:
@@ -92,7 +97,7 @@ External public acceptance remains a separate review process.
 
 ## Current proof spine
 
-The current reading of the proof spine is:
+The current proof spine should be read as:
 
 ```text
 R1 concrete Hilbert closure
@@ -112,6 +117,7 @@ Important review anchors:
 |---|---|
 | Top-level import root | `MGAP4D.lean` |
 | Analytic root | `MGAP4D/MathlibAnalytic.lean` |
+| Current status anchor | `docs/current_proof_status.md` |
 | R2 current lane | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean` |
 | Exact-gap layer separation | `MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean` |
 | Complete Hamiltonian route | `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` |
@@ -122,6 +128,8 @@ Important review anchors:
 | R7 positive weight | `MGAP4D/R7/Theorem.lean` |
 | Terminal discharge chain | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` |
 | External audit receipt chain | `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean` |
+| Placeholder / witness inventory | `docs/proof_placeholder_inventory.md` |
+| R4 supersession note | `docs/r4_terminal_status_supersession.md` |
 
 Representative terminal theorem:
 
@@ -203,7 +211,7 @@ The carrier definition `exactGapValueReal : ℝ := 33 / 20` is not, by itself, t
 
 ## Proof-debt and witness-marker inventory
 
-External reviewers must distinguish theorem bodies from placeholders, witnesses, receipts, and readiness packets.
+External reviewers must distinguish theorem bodies from placeholders, witnesses, receipts, readiness packets, and historical markers.
 
 Primary inventory:
 
@@ -217,7 +225,6 @@ Current rule:
 ```text
 PUnit, True, and StillOpen are open proof-debt markers unless they have been
 replaced, discharged, or explicitly superseded by typed theorem anchors.
-
 Readiness markers such as theoremWitnessOnly, receipt, ready, prototype,
 skeleton, boundary, packet, and manifest are review-order evidence unless their
 payload is a substantive typed theorem.
@@ -268,13 +275,14 @@ Recommended first-pass review order:
 7. Inspect `PHYSICAL_REALIZATION_BOUNDARY.md`.
 8. Inspect `docs/exact_gap_layer_separation.md`.
 9. Inspect `docs/proof_placeholder_inventory.md`.
-10. Inspect the R2 infinite `ℓ²` diagonal operator lane.
-11. Inspect the R4 genuine-PVM law components.
-12. Inspect the R5 plaquette-observable closure.
-13. Inspect the R6 exact atom `33/20` theorem bodies.
-14. Inspect the R7 positive-weight theorem bodies.
-15. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
-16. Record review notes append-only.
+10. Inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
+11. Inspect `docs/r4_terminal_status_supersession.md`.
+12. Inspect the R4 genuine-PVM law components.
+13. Inspect the R5 plaquette-observable closure.
+14. Inspect the R6 exact atom `33/20` theorem bodies.
+15. Inspect the R7 positive-weight theorem bodies.
+16. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
+17. Record review notes append-only.
 
 ---
 
@@ -296,16 +304,16 @@ ROADMAP.md           Review and audit roadmap
 
 ## Current priorities
 
-```text
-1. Keep README, ROADMAP, THEOREM_INDEX, EXTERNAL_AUDIT_PACKET, and current_proof_status synchronized.
-2. Keep the R2 infinite ℓ² lane, exact-gap layer separation, and placeholder inventory visible to reviewers.
-3. Refresh independent replay receipts from clean environments.
-4. Confirm CI and local replay on the documentation / audit commit.
-5. Prepare an audit-oriented version tag only after source-tree review.
-6. Synchronize Zenodo only after the tag and post-tag verification receipt are stable.
-7. Preserve the normalized / dimensional E0 boundary.
-8. Preserve the boundary between internal Lean terminal discharge and external public acceptance.
-```
+1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
+2. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
+3. Keep exact-gap layer separation visible to prevent carrier / derivation confusion.
+4. Keep placeholder, witness, and proof-debt inventory visible.
+5. Refresh independent replay receipts from clean environments.
+6. Confirm CI and local replay on the documentation / audit-synchronization commit.
+7. Prepare an audit-oriented version tag only after source-tree review.
+8. Synchronize Zenodo only after the tag and post-tag verification receipt are stable.
+9. Preserve the normalized / dimensional `E0` boundary.
+10. Preserve the boundary between internal Lean terminal discharge and external public acceptance.
 
 ---
 
@@ -322,3 +330,23 @@ License: CC-BY-4.0
 ```
 
 The DOI-backed Zenodo record is an archival / reproducibility snapshot.  The current repository state, CI status, and external review boundary should be checked in GitHub before citing the latest development state.
+
+---
+
+## Contribution and review policy
+
+External contributions are most useful when they improve one of the following:
+
+```text
+fresh-clone replay
+Lean build reproducibility
+theorem-surface review
+source-tree clarity
+placeholder / witness-marker classification
+physical-normalization boundary clarity
+external mathematical review notes
+audit script precision
+public-boundary accuracy
+```
+
+Do not treat documentation, CI ledgers, receipts, or audit scripts as substitutes for Lean kernel checking and mathematical proof review.
