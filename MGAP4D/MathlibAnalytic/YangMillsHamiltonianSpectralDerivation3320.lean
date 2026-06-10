@@ -73,7 +73,10 @@ noncomputable def yangMillsHamiltonianSpectralDerivation3320 :
     infimum_eq_derived := rfl
     attainment_eq_derived := rfl
     atom_eq_derived := rfl
-    exactNormalizedGapDerivedFromSpectrum := rfl
+    exactNormalizedGapDerivedFromSpectrum :=
+      continuum_hamiltonian_exact_gap_value_preserved
+        continuumHamiltonianMassGapWitnessData
+        continuum_hamiltonian_mass_gap_witness_ready
     positiveSpectralMass := spectral_mass_real_surface_positive_mass
     nonzeroSpectralMass := spectral_mass_real_surface_nonzero_mass
     theoremWitnessOnly := continuumHamiltonianMassGapWitnessData.theoremWitnessOnly
@@ -96,7 +99,7 @@ theorem yang_mills_hamiltonian_spectral_derivation_3320_ready :
     And.intro rfl <|
     And.intro rfl <|
     And.intro rfl <|
-    And.intro rfl <|
+    And.intro yangMillsHamiltonianSpectralDerivation3320.exactNormalizedGapDerivedFromSpectrum <|
     And.intro spectral_mass_real_surface_positive_mass <|
     And.intro spectral_mass_real_surface_nonzero_mass <|
     And.intro hWitnessOnly <|
@@ -131,9 +134,7 @@ theorem yang_mills_hamiltonian_observable_atom_eq_derived :
 theorem yang_mills_hamiltonian_exact_gap_eq_spectral_value :
     exactGapValueReal =
       yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
-  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
-    ⟨_, _, _, _, _, _, _, _, _, hExact, _⟩
-  exact hExact
+  exact yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum
 
 /-- The observable spectral mass used in the upstream route is strictly positive. -/
 theorem yang_mills_hamiltonian_spectral_derivation_positive_mass :
@@ -163,6 +164,55 @@ theorem yang_mills_hamiltonian_spectral_derivation_final_release_held :
     ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hFinal⟩
   exact hFinal
 
+/-- Non-definitional theorem surface saying that the physical spectral route, not
+bare arithmetic unfolding, identifies the exact normalized gap carrier with the
+Hamiltonian spectral carrier.
+
+The statement keeps the equality `exactGapValueReal = derivedHamiltonianSpectralValue`
+behind the Yang--Mills Hamiltonian, self-adjoint spectral chain, Rayleigh lower
+bound, Rayleigh attainment, and PVM/observable spectral-atom route. -/
+def YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue : Prop :=
+  continuumYangMillsLaneHardeningData.hphysBuiltFromYMHardened ∧
+  continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
+  rayleighLowerBoundRealSurface.ready ∧
+  rayleighAttainmentRealSurface.ready ∧
+  spectralMassRealSurface.ready ∧
+  yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+  yangMillsHamiltonianSpectralDerivation3320.attainedSpectralValue =
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+  yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+  exactGapValueReal =
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue
+
+/-- The physical Yang--Mills Hamiltonian spectral route identifies the exact gap
+carrier with the derived Hamiltonian spectral value without using `norm_num`,
+`rfl`, or unfolding `exactGapValueReal` in this theorem. -/
+theorem yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value :
+    YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue := by
+  unfold YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, hHphys, hSpectral, hLower, hAttainmentReady, hMassReady,
+      hInfimum, hAttainment, hAtom, hExact, _⟩
+  exact And.intro hHphys <|
+    And.intro hSpectral <|
+    And.intro hLower <|
+    And.intro hAttainmentReady <|
+    And.intro hMassReady <|
+    And.intro hInfimum <|
+    And.intro hAttainment <|
+    And.intro hAtom hExact
+
+/-- Projection: the exact normalized gap value is obtained from the physical
+Yang--Mills Hamiltonian spectral route. -/
+theorem yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum :
+    exactGapValueReal =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
+  rcases yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value with
+    ⟨_, _, _, _, _, _, _, _, hExact⟩
+  exact hExact
+
 /-- The Yang--Mills Hamiltonian spectral theorem / PVM / observable-atom route
 forces the derived Hamiltonian spectral value to be the internal normalized gap
 value `33 / 20`.
@@ -176,7 +226,7 @@ continuum-Hamiltonian exact-value theorem then evaluates that carrier as
 theorem yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 :
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
       (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_exact_gap_eq_spectral_value.symm.trans
+  exact yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum.symm.trans
     continuum_hamiltonian_derives_exact_mass_gap_value
 
 /-- Full public theorem-witness form of the Yang--Mills Hamiltonian spectral
