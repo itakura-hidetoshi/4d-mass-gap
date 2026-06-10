@@ -10,7 +10,10 @@ noncomputable section
 This is the seventh post-interface theorem-body step. It links the compact
 plaquette construction body to the observable atom body and PVM body by making
 explicit that the observable spectral weight of the constructed observable on
-the exact atom agrees with the PVM exact-atom mass. -/
+the exact atom agrees with the PVM exact-atom mass.
+
+It deliberately carries no upstream exact numeric value equality; that equality
+is reserved for the R6 spectral-origin surface. -/
 structure OperatorMeasureCompatibilityTheoremData where
   constructionData : CompactPlaquetteConstructionTheoremData
   constructionDataReady : constructionData.ready
@@ -28,7 +31,6 @@ structure OperatorMeasureCompatibilityTheoremData where
   nonzero_weight : observableAtomData.spectralWeight constructedObservable exactAtom ≠ 0
   weight_equals_pvm_mass : observableAtomData.spectralWeight constructedObservable exactAtom =
     observableAtomData.pvmData.projectionMass observableAtomData.pvmData.exactAtom
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   operatorMeasureCompatibilityCertificate : Prop
   operatorMeasureCompatibilityCertificate_proof : operatorMeasureCompatibilityCertificate
   concreteOperatorMeasureRealizationStillOpen : Prop
@@ -46,7 +48,6 @@ def OperatorMeasureCompatibilityTheoremData.ready
   D.observableAtomData.spectralWeight D.constructedObservable D.exactAtom ≠ 0 ∧
   D.observableAtomData.spectralWeight D.constructedObservable D.exactAtom =
     D.observableAtomData.pvmData.projectionMass D.observableAtomData.pvmData.exactAtom ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.operatorMeasureCompatibilityCertificate ∧ D.concreteOperatorMeasureRealizationStillOpen
 
 /-- Exact value belongs to the compatibility atom. -/
@@ -117,7 +118,6 @@ def singletonOperatorMeasureCompatibilityTheoremData :
     positive_weight := exactGapSpectralMassReal_pos
     nonzero_weight := exactGapSpectralMassReal_ne_zero
     weight_equals_pvm_mass := rfl
-    exact_value_eq_3320 := exactGapValueReal_eq
     operatorMeasureCompatibilityCertificate := True
     operatorMeasureCompatibilityCertificate_proof := True.intro
     concreteOperatorMeasureRealizationStillOpen := True }
@@ -135,7 +135,6 @@ theorem singleton_operator_measure_compatibility_theorem_data_ready :
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
     And.intro rfl <|
-    And.intro exactGapValueReal_eq <|
     And.intro True.intro True.intro
 
 theorem singleton_operator_measure_compatibility_positive_weight :
