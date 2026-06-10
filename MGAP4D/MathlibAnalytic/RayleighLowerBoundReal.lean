@@ -7,7 +7,8 @@ namespace MathlibAnalytic
 
 At this stage the Hilbert-space Rayleigh quotient is represented by a real
 energy value constrained to the exact-gap energy ray.  The theorem body is an
-actual order-theoretic lower-bound proof over `ℝ`. -/
+actual order-theoretic lower-bound proof over `ℝ`, with no upstream `33/20`
+value claim. -/
 def RayleighEnergyAdmissible (energy : ℝ) : Prop :=
   energy ∈ exactGapEnergyRay
 
@@ -26,7 +27,6 @@ theorem exact_gap_value_rayleigh_admissible :
 structure RayleighLowerBoundRealSurface where
   value : ℝ
   admissible : ℝ → Prop
-  value_eq_3320 : value = (33 : ℝ) / 20
   lower_bound : ∀ energy, admissible energy → value ≤ energy
   attained : admissible value
   positive : 0 < value
@@ -35,7 +35,6 @@ structure RayleighLowerBoundRealSurface where
 noncomputable def rayleighLowerBoundRealSurface : RayleighLowerBoundRealSurface :=
   { value := exactGapValueReal
     admissible := RayleighEnergyAdmissible
-    value_eq_3320 := exactGapValueReal_eq
     lower_bound := rayleigh_energy_admissible_lower_bound
     attained := exact_gap_value_rayleigh_admissible
     positive := exactGapValueReal_pos
@@ -43,7 +42,6 @@ noncomputable def rayleighLowerBoundRealSurface : RayleighLowerBoundRealSurface 
 
 def RayleighLowerBoundRealSurface.ready
     (S : RayleighLowerBoundRealSurface) : Prop :=
-  S.value = (33 : ℝ) / 20 ∧
   (∀ energy, S.admissible energy → S.value ≤ energy) ∧
   S.admissible S.value ∧
   0 < S.value ∧
@@ -51,14 +49,9 @@ def RayleighLowerBoundRealSurface.ready
 
 theorem rayleigh_lower_bound_real_surface_ready :
     rayleighLowerBoundRealSurface.ready := by
-  exact And.intro exactGapValueReal_eq <|
-    And.intro rayleigh_energy_admissible_lower_bound <|
+  exact And.intro rayleigh_energy_admissible_lower_bound <|
     And.intro exact_gap_value_rayleigh_admissible <|
     And.intro exactGapValueReal_pos True.intro
-
-theorem rayleigh_lower_bound_real_surface_value :
-    rayleighLowerBoundRealSurface.value = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_eq
 
 theorem rayleigh_lower_bound_real_surface_lower_bound :
     ∀ energy, rayleighLowerBoundRealSurface.admissible energy →
