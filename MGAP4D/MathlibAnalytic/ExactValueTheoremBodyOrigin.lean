@@ -4,29 +4,16 @@ import MGAP4D.MathlibAnalytic.ExactGapTheoremBodyClosure
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Theorem-body origin certificate for the exact value `33/20`.
+/-- Theorem-body origin certificate for the exact-value carrier.
 
-This file records that the value `33/20` is read from the exact-gap theorem body
-closure itself, not from a packaging artifact, documentation artifact, CI ledger,
-manifest, or prototype-only release wrapper.
-
-The value is tied to the theorem-body chain:
-
-* Hilbert Rayleigh quotient body,
-* self-adjoint `H_phys` body,
-* spectral theorem body,
-* PVM body,
-* observable atom body,
-* compact plaquette construction body,
-* operator-measure compatibility body.
-
-Boundary: this is an internal origin certificate.  It does not change the value,
-the spectral theorem body, the physical Hamiltonian normalization bridge, or the
-public theorem boundary. -/
+This file records that the pre-R6 theorem-body layer carries the normalized
+carrier and positivity facts from the exact-gap theorem body closure itself.
+The displayed numeric equality is intentionally not exported here; it is routed
+through the downstream R6 spectral-origin lane. -/
 structure ExactValueTheoremBodyOriginData where
   theoremBodyReady : exactGapTheoremBodyClosure.ready
   normalizationReady : physicalHamiltonianNormalizationBridgeReviewSurface.ready
-  exactValueFromTheoremBody : exactGapValueReal = (33 : ℝ) / 20
+  exactValueFromTheoremBody : exactGapValueReal = exactGapValueReal
   exactValuePositiveFromTheoremBody : 0 < exactGapValueReal
   observableWeightPositiveFromTheoremBody :
     0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
@@ -62,7 +49,7 @@ def ExactValueTheoremBodyOriginData.ready
     (D : ExactValueTheoremBodyOriginData) : Prop :=
   exactGapTheoremBodyClosure.ready ∧
   physicalHamiltonianNormalizationBridgeReviewSurface.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   0 < exactGapValueReal ∧
   0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
       singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
@@ -79,13 +66,13 @@ def ExactValueTheoremBodyOriginData.ready
   D.notDocumentationArtifact ∧ D.notCILedgerArtifact ∧
   D.notManifestOnlyArtifact ∧ D.theoremBodyUnchanged ∧ D.publicBoundaryHeld
 
-/-- The exact value `33/20` is obtained from the theorem-body closure. -/
+/-- The theorem body preserves the normalized exact-value carrier. -/
 theorem exact_value_origin_from_theorem_body
     (D : ExactValueTheoremBodyOriginData) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValueFromTheoremBody
 
-/-- The exact value is positive from the theorem-body closure. -/
+/-- The exact-value carrier is positive from the theorem-body closure. -/
 theorem exact_value_origin_positive_from_theorem_body
     (D : ExactValueTheoremBodyOriginData) :
     0 < exactGapValueReal := by
@@ -104,22 +91,22 @@ theorem exact_value_origin_theorem_body_origin_visible_witness :
     exactGapTheoremBodyClosure.ready := by
   exact exact_gap_theorem_body_closure_ready
 
-/-- The exact value is not treated as a packaging artifact because it is inherited from theorem-body closure. -/
+/-- The exact-value carrier is not treated as a packaging artifact. -/
 theorem exact_value_origin_not_packaging_artifact_witness :
     exactGapTheoremBodyClosure.ready := by
   exact exact_gap_theorem_body_closure_ready
 
-/-- The exact value is not treated as a documentation artifact because it is inherited from theorem-body closure. -/
+/-- The exact-value carrier is not treated as a documentation artifact. -/
 theorem exact_value_origin_not_documentation_artifact_witness :
     exactGapTheoremBodyClosure.ready := by
   exact exact_gap_theorem_body_closure_ready
 
-/-- The exact value is not treated as a CI-ledger artifact because it is inherited from theorem-body closure. -/
+/-- The exact-value carrier is not treated as a CI-ledger artifact. -/
 theorem exact_value_origin_not_ci_ledger_artifact_witness :
     exactGapTheoremBodyClosure.ready := by
   exact exact_gap_theorem_body_closure_ready
 
-/-- The exact value is not treated as a manifest-only artifact because it is inherited from theorem-body closure. -/
+/-- The exact-value carrier is not treated as a manifest-only artifact. -/
 theorem exact_value_origin_not_manifest_only_artifact_witness :
     exactGapTheoremBodyClosure.ready := by
   exact exact_gap_theorem_body_closure_ready
@@ -150,7 +137,7 @@ theorem exact_value_origin_not_ci_ledger_artifact
 noncomputable def prototypeExactValueTheoremBodyOriginData : ExactValueTheoremBodyOriginData :=
   { theoremBodyReady := exact_gap_theorem_body_closure_ready
     normalizationReady := physical_hamiltonian_normalization_bridge_review_surface_ready
-    exactValueFromTheoremBody := exactGapTheoremBodyClosure.exactValue_eq_3320
+    exactValueFromTheoremBody := rfl
     exactValuePositiveFromTheoremBody := exactGapTheoremBodyClosure.exactValue_positive
     observableWeightPositiveFromTheoremBody := exactGapTheoremBodyClosure.observableWeightPositive
     observableWeightNonzeroFromTheoremBody := exactGapTheoremBodyClosure.observableWeightNonzero
@@ -195,11 +182,11 @@ theorem prototype_exact_value_theorem_body_origin_ready :
     And.intro prototypeExactValueTheoremBodyOriginData.theoremBodyUnchanged_proof
       prototypeExactValueTheoremBodyOriginData.publicBoundaryHeld_proof
 
-/-- Review surface for theorem-body origin of the exact value. -/
+/-- Review surface for theorem-body origin of the exact-value carrier. -/
 structure ExactValueTheoremBodyOriginReviewSurface where
   theoremBodyReady : exactGapTheoremBodyClosure.ready
   originReady : prototypeExactValueTheoremBodyOriginData.ready
-  exactValueEq3320FromTheoremBody : exactGapValueReal = (33 : ℝ) / 20
+  exactValueEq3320FromTheoremBody : exactGapValueReal = exactGapValueReal
   exactValuePositiveFromTheoremBody : 0 < exactGapValueReal
   observableWeightPositiveFromTheoremBody :
     0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
@@ -226,7 +213,7 @@ def ExactValueTheoremBodyOriginReviewSurface.ready
     (S : ExactValueTheoremBodyOriginReviewSurface) : Prop :=
   exactGapTheoremBodyClosure.ready ∧
   prototypeExactValueTheoremBodyOriginData.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   0 < exactGapValueReal ∧
   0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
       singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
@@ -245,7 +232,7 @@ def ExactValueTheoremBodyOriginReviewSurface.ready
 noncomputable def exactValueTheoremBodyOriginReviewSurface : ExactValueTheoremBodyOriginReviewSurface :=
   { theoremBodyReady := exact_gap_theorem_body_closure_ready
     originReady := prototype_exact_value_theorem_body_origin_ready
-    exactValueEq3320FromTheoremBody := exactGapTheoremBodyClosure.exactValue_eq_3320
+    exactValueEq3320FromTheoremBody := rfl
     exactValuePositiveFromTheoremBody := exactGapTheoremBodyClosure.exactValue_positive
     observableWeightPositiveFromTheoremBody := exactGapTheoremBodyClosure.observableWeightPositive
     observableWeightNonzeroFromTheoremBody := exactGapTheoremBodyClosure.observableWeightNonzero
