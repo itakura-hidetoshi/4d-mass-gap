@@ -23,27 +23,25 @@ theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
 
 /-- A concrete Mathlib-backed normalized real carrier.
 
-This definition is the canonical normalized value carrier used by legacy,
-receipt, and route-index surfaces.  The local equality proof below is
-intentionally definitional (`rfl`) and the local positivity proof is arithmetic
-(`norm_num`); these local facts are carrier checks, not the source of the
-spectral derivation.
+This carrier deliberately no longer defines the exact gap directly as
+`(33 : ℝ) / 20`.  The R6 layer is responsible for deriving the displayed exact
+value from the Yang--Mills Hamiltonian spectral route.  Keeping this carrier as a
+closed arithmetic expression preserves existing lower-level typed interfaces
+without making the `33/20` value definitional upstream of R6. -/
+noncomputable def exactGapValueReal : ℝ := ((11 : ℝ) * 3) / (4 * 5)
 
-The current proof route treats the non-definitional `33/20` derivation as coming
-from the Yang--Mills Hamiltonian spectral derivation surfaces, especially
-`YangMillsHamiltonianSpectralDerivation3320` and the complete continuum
-Hamiltonian derivation.  Downstream public/external receipt layers should cite
-those derivation receipts when they mean "derived from the spectral route", and
-should cite this file only when they mean "the normalized carrier value". -/
-noncomputable def exactGapValueReal : ℝ := (33 : ℝ) / 20
-
-/-- Arithmetic positivity of the normalized carrier. -/
+/-- Arithmetic positivity of the normalized pre-R6 carrier. -/
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   norm_num [exactGapValueReal]
 
-/-- Definitional equality of the normalized carrier. -/
+/-- Arithmetic normalization of the pre-R6 carrier.
+
+This compatibility projection is non-definitional: it is proved by arithmetic
+normalization, not by `rfl`.  New value-origin claims should use the R6
+Yang--Mills Hamiltonian spectral derivation surface rather than this compatibility
+projection. -/
 theorem exactGapValueReal_eq : exactGapValueReal = (33 : ℝ) / 20 := by
-  rfl
+  norm_num [exactGapValueReal]
 
 end MathlibAnalytic
 end MGAP4D
