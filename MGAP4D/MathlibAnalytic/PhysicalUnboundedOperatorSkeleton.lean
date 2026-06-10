@@ -5,6 +5,8 @@ namespace MathlibAnalytic
 
 universe u
 
+noncomputable section
+
 structure PhysicalUnboundedOperatorSkeletonData where
   hilbertInstanceReady : hilbertSpaceInstanceSkeletonReviewSurface.ready
   carrier : Type u
@@ -94,7 +96,7 @@ def finalPhysicalHamiltonian (ψ : FinalPhysicalHilbertCarrier) :
     FinalPhysicalHilbertCarrier :=
   fun n => finalPhysicalHamiltonianWeight n * ψ n
 
-noncomputable def finalPhysicalRayleigh (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
+def finalPhysicalRayleigh (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
   exactGapValueReal + (ψ 0)^2
 
 theorem final_physical_hamiltonian_domain_preserved
@@ -123,7 +125,7 @@ theorem final_physical_distinguished_attains_exact :
     finalPhysicalRayleigh finalPhysicalHilbertZero = exactGapValueReal := by
   simp [finalPhysicalRayleigh, finalPhysicalHilbertZero]
 
-noncomputable def finalPhysicalUnboundedOperatorSkeletonData :
+def finalPhysicalUnboundedOperatorSkeletonData :
     PhysicalUnboundedOperatorSkeletonData.{0} :=
   { hilbertInstanceReady := hilbert_space_instance_skeleton_review_surface_ready
     carrier := FinalPhysicalHilbertCarrier
@@ -160,7 +162,7 @@ noncomputable def finalPhysicalUnboundedOperatorSkeletonData :
     publicBoundaryHeld := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld_proof }
 
-noncomputable abbrev prototypePhysicalUnboundedOperatorSkeletonData :
+abbrev prototypePhysicalUnboundedOperatorSkeletonData :
     PhysicalUnboundedOperatorSkeletonData.{0} :=
   finalPhysicalUnboundedOperatorSkeletonData
 
@@ -216,7 +218,7 @@ def PhysicalUnboundedOperatorSkeletonReviewSurface.ready
   S.concreteYangMillsHamiltonianStillOpen ∧ S.spectralRealizationStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
-noncomputable def physicalUnboundedOperatorSkeletonReviewSurface :
+def physicalUnboundedOperatorSkeletonReviewSurface :
     PhysicalUnboundedOperatorSkeletonReviewSurface :=
   { hilbertInstanceReady := hilbert_space_instance_skeleton_review_surface_ready
     operatorReady := final_physical_unbounded_operator_skeleton_ready
@@ -269,5 +271,6 @@ theorem physical_unbounded_operator_skeleton_review_surface_ready :
     And.intro physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld_proof
       physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof
 
+end
 end MathlibAnalytic
 end MGAP4D
