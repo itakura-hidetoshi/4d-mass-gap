@@ -8,11 +8,11 @@ KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface. It does not replace this repository as the canonical Lean proof repository and does not independently supply external mathematical consensus.
+KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface.  It does not replace this repository as the canonical Lean proof repository and does not independently supply external mathematical consensus.
 
 ---
 
-## Status snapshot as of 2026-06-10
+## Status snapshot as of 2026-06-11
 
 Current `main` should be read as an **internal Lean terminal discharge route with a public / external audit receipt surface**.
 
@@ -20,6 +20,7 @@ Current `main` should be read as an **internal Lean terminal discharge route wit
 internal Lean terminal route: present
 public / external audit receipt surface: present
 external mathematical consensus: not claimed
+independent peer-review completion: not claimed
 Clay-style public acceptance: not claimed by documentation alone
 ```
 
@@ -62,7 +63,7 @@ docs/current_proof_status.md
 
 ## Roadmap posture
 
-The next movement is not another theorem-goal detour. The active work is:
+The project should not move by adding another decorative theorem phase.  The active work is now review, replay, provenance, and public-boundary precision.
 
 ```text
 repository / documentation synchronization
@@ -74,7 +75,7 @@ audit-oriented version tagging
 Zenodo synchronization after a stable tag and replay receipt
 ```
 
-New work should directly support review, replay, provenance, source-level clarity, or public-boundary accuracy.
+New work should directly support one of these goals.  If a change does not improve replayability, theorem-surface clarity, proof-debt classification, external review, or public-boundary accuracy, it should be deferred.
 
 ---
 
@@ -254,7 +255,8 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 
 Status: **active**
 
-- [ ] Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
+- [x] Rewrite `README.md` and `ROADMAP.md` around the current R1--R7 terminal / public / external audit receipt surface.
+- [ ] Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized after this documentation pass.
 - [ ] Keep documentation from saying R7 is merely downstream.
 - [ ] Keep documentation from saying exact `33/20` is only a future target.
 - [ ] Keep documentation from implying external consensus has completed.
@@ -297,7 +299,9 @@ Status: **active governance layer**
 - [ ] Ask at least one reviewer to inspect `PHYSICAL_REALIZATION_BOUNDARY.md`.
 - [ ] Ask at least one reviewer to inspect `docs/exact_gap_layer_separation.md`.
 - [ ] Ask at least one reviewer to inspect `docs/proof_placeholder_inventory.md`.
-- [ ] Ask at least one reviewer to inspect the R2, R4, R6, R7, terminal-chain, and public / external audit surfaces.
+- [ ] Ask at least one reviewer to inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
+- [ ] Ask at least one reviewer to inspect `docs/r4_terminal_status_supersession.md`.
+- [ ] Ask at least one reviewer to inspect the R2, R4, R5, R6, R7, terminal-chain, and public / external audit surfaces.
 - [ ] Collect review notes as append-only external audit notes.
 
 ### Gate 5 — Audit-oriented version tag and Zenodo synchronization
@@ -346,7 +350,7 @@ historical StillOpen markers can be ignored without classification
 
 ## Current priorities
 
-1. Keep README, ROADMAP, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
+1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
 2. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
 3. Keep exact-gap layer separation visible to prevent carrier / derivation confusion.
 4. Keep placeholder, witness, and proof-debt inventory visible.
