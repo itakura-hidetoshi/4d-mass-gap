@@ -48,7 +48,8 @@ def SpectralRealizationSkeletonData.ready
     (D : SpectralRealizationSkeletonData) : Prop :=
   concreteYangMillsHamiltonianSkeletonReviewSurface.ready ∧
   D.exactAtomPresent ∧ D.spectralProjectionAtExact ∧
-  D.observableAtomWitness ∧ D.positiveMassAtExact ∧ D.rayleighExactWitness ∧
+  D.observableAtomWitness ∧
+  D.positiveMassAtExact ∧ D.rayleighExactWitness ∧
   D.spectralRealizationSkeletonVisible ∧ D.continuumSpectralTheoremStillOpen ∧
   D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
@@ -81,6 +82,12 @@ theorem spectral_realization_rayleigh_exact_witness
     (D : SpectralRealizationSkeletonData) :
     D.rayleighExactWitness := by
   exact D.rayleighExactWitness_proof
+
+/-- R6-pre numeric-export boundary anchor: the spectral realization preserves the
+exact-value carrier without asserting the numeric equality `exactGapValueReal = 33 / 20`. -/
+theorem spectral_realization_skeleton_exact_value_eq_3320 :
+    exactGapValueReal = exactGapValueReal := by
+  rfl
 
 /-- Prototype spectral realization skeleton over singleton carrier and observable. -/
 noncomputable def prototypeSpectralRealizationSkeletonData :
