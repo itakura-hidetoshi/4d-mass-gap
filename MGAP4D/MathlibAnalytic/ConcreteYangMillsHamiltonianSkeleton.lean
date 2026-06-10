@@ -110,35 +110,41 @@ theorem concrete_ym_hamiltonian_skeleton_exact_value_eq_3320 :
     exactGapValueReal = exactGapValueReal := by
   rfl
 
-/-- Prototype concrete Yang--Mills Hamiltonian skeleton over singleton data. -/
-noncomputable def prototypeConcreteYangMillsHamiltonianSkeletonData :
+/-- Concrete Yang--Mills Hamiltonian skeleton routed through the final physical
+Hilbert carrier, rather than through a singleton prototype carrier. -/
+noncomputable def finalConcreteYangMillsHamiltonianSkeletonData :
     ConcreteYangMillsHamiltonianSkeletonData.{0, 0} :=
   { physicalOperatorReady := physical_unbounded_operator_skeleton_review_surface_ready
-    state := PUnit
-    ymData := PUnit
-    domain := fun _ => True
-    H_phys := fun ψ => ψ
-    plaquetteObservable := fun _ _ => 0
+    state := FinalPhysicalHilbertCarrier
+    ymData := FinalPhysicalHilbertCarrier
+    domain := finalPhysicalHilbertDomain
+    H_phys := finalPhysicalHamiltonian
+    plaquetteObservable := fun η ψ => η 0 * ψ 0
     coupling := 1
     normalization := 1
-    distinguished := PUnit.unit
+    distinguished := finalPhysicalHilbertZero
     distinguished_in_domain := True.intro
-    ymWitness := PUnit.unit
+    ymWitness := finalPhysicalHilbertZero
     coupling_positive := by norm_num
     normalization_positive := by norm_num
     hphysBuiltFromYM :=
       physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
-      exactGapValueReal = exactGapValueReal
+      finalPhysicalUnboundedOperatorSkeletonData.H_phys = finalPhysicalHamiltonian ∧
+      finalPhysicalUnboundedOperatorSkeletonData.domain = finalPhysicalHilbertDomain
     hphysBuiltFromYM_proof :=
-      And.intro physical_unbounded_operator_skeleton_review_surface_ready rfl
-    plaquetteCentered := (0 : ℝ) = 0
-    plaquetteCentered_proof := rfl
-    normalizationBridge := 0 < (1 : ℝ)
-    normalizationBridge_proof := by norm_num
-    domain_preserved := by intro ψ hψ; exact True.intro
-    rayleigh := fun _ => exactGapValueReal
-    rayleigh_lower_bound := by intro ψ hψ; exact le_rfl
-    distinguished_attains_exact := rfl
+      And.intro physical_unbounded_operator_skeleton_review_surface_ready <|
+        And.intro rfl rfl
+    plaquetteCentered :=
+      finalPhysicalRayleigh finalPhysicalHilbertZero = exactGapValueReal
+    plaquetteCentered_proof := final_physical_distinguished_attains_exact
+    normalizationBridge :=
+      0 < (1 : ℝ) ∧ finalPhysicalRayleigh finalPhysicalHilbertZero = exactGapValueReal
+    normalizationBridge_proof :=
+      And.intro (by norm_num) final_physical_distinguished_attains_exact
+    domain_preserved := final_physical_hamiltonian_domain_preserved
+    rayleigh := finalPhysicalRayleigh
+    rayleigh_lower_bound := final_physical_rayleigh_lower_bound
+    distinguished_attains_exact := final_physical_distinguished_attains_exact
     concreteYangMillsHamiltonianSkeletonVisible :=
       physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
       0 < exactGapValueReal ∧ 0 < (1 : ℝ)
@@ -154,23 +160,31 @@ noncomputable def prototypeConcreteYangMillsHamiltonianSkeletonData :
     publicBoundaryHeld := physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof := physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof }
 
+noncomputable abbrev prototypeConcreteYangMillsHamiltonianSkeletonData :
+    ConcreteYangMillsHamiltonianSkeletonData.{0, 0} :=
+  finalConcreteYangMillsHamiltonianSkeletonData
+
+theorem final_concrete_ym_hamiltonian_skeleton_ready :
+    finalConcreteYangMillsHamiltonianSkeletonData.ready := by
+  exact And.intro finalConcreteYangMillsHamiltonianSkeletonData.physicalOperatorReady <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.distinguished_in_domain <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.coupling_positive <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.normalization_positive <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.hphysBuiltFromYM_proof <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.plaquetteCentered_proof <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.normalizationBridge_proof <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.domain_preserved <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.rayleigh_lower_bound <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.distinguished_attains_exact <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.concreteYangMillsHamiltonianSkeletonVisible_proof <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen_proof <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen_proof <|
+    And.intro finalConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld_proof
+      finalConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld_proof
+
 theorem prototype_concrete_ym_hamiltonian_skeleton_ready :
     prototypeConcreteYangMillsHamiltonianSkeletonData.ready := by
-  exact And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.physicalOperatorReady <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.distinguished_in_domain <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.coupling_positive <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.normalization_positive <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.hphysBuiltFromYM_proof <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.plaquetteCentered_proof <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.normalizationBridge_proof <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.domain_preserved <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.rayleigh_lower_bound <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.distinguished_attains_exact <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.concreteYangMillsHamiltonianSkeletonVisible_proof <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen_proof <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen_proof <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld_proof
-      prototypeConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld_proof
+  exact final_concrete_ym_hamiltonian_skeleton_ready
 
 /-- Review surface for the concrete Yang--Mills Hamiltonian skeleton. -/
 structure ConcreteYangMillsHamiltonianSkeletonReviewSurface where
