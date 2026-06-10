@@ -43,9 +43,6 @@ structure ExactGapFullInterfaceClosure where
   finalReleaseBoundary : ExactGapFullInterfaceClosureMarker
   publicBoundary : ExactGapFullInterfaceClosureMarker
 
-theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
-  norm_num [exactGapValueReal]
-
 def ExactGapFullInterfaceClosure.ready (C : ExactGapFullInterfaceClosure) : Prop :=
   exactGapAnalyticRealClosure.ready ∧
   hilbertRayleighInterfaceReviewSurface.ready ∧
