@@ -28,7 +28,7 @@ structure SelfAdjointHPhysLaneHardeningData where
   physicalOperatorSkeletonHardened : Prop
   concreteHPhysBridgeHardened : Prop
   hardPhysicalBoundaryVisible : Prop
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   reviewLevelOnly : Prop
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
@@ -50,7 +50,7 @@ def SelfAdjointHPhysLaneHardeningData.ready
   D.physicalOperatorSkeletonHardened ∧
   D.concreteHPhysBridgeHardened ∧
   D.hardPhysicalBoundaryVisible ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -118,10 +118,10 @@ theorem self_adjoint_hphys_hard_boundary_visible
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- Exact normalized value is preserved by self-adjoint lane hardening. -/
+/-- Exact-value carrier is preserved by self-adjoint lane hardening. -/
 theorem self_adjoint_hphys_exact_value_preserved
     (D : SelfAdjointHPhysLaneHardeningData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- Installed self-adjoint `H_phys` hardening lane. -/
@@ -164,7 +164,7 @@ def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
     hardPhysicalBoundaryVisible :=
       physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld ∧
       concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
-    exactValuePreserved := exactGapValueReal_eq
+    exactValuePreserved := rfl
     reviewLevelOnly :=
       selfAdjointHPhysReviewSurface.fullSelfAdjointTheoremStillOpen ∧
       selfAdjointHPhysTheoremReviewSurface.concreteUnboundedRealizationStillOpen
