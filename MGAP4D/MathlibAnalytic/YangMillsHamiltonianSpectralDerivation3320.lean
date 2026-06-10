@@ -197,7 +197,7 @@ theorem yang_mills_hamiltonian_spectral_pvm_derives_exact_gap_3320 :
     yangMillsHamiltonianSpectralPVMDerivesExactGap3320 := by
   unfold yangMillsHamiltonianSpectralPVMDerivesExactGap3320
   rcases continuum_hamiltonian_mass_gap_witness_ready with
-    ⟨_, _, hPhysical, hHPhys, hSpectral, _, _, _, _, _, _, _, _, _, _, _⟩
+    ⟨_, _, hPhysical, hHPhys, hSpectral, _, _, _, _, _, _, _, _, _, hPublic, hFinal⟩
   exact And.intro hPhysical <|
     And.intro hHPhys <|
     And.intro hSpectral <|
@@ -208,8 +208,7 @@ theorem yang_mills_hamiltonian_spectral_pvm_derives_exact_gap_3320 :
     And.intro yang_mills_hamiltonian_spectral_derivation_nonzero_mass <|
     And.intro yang_mills_hamiltonian_spectral_value_eq_33_over_20 <|
     And.intro (by norm_num [exactGapValueReal]) <|
-    And.intro yang_mills_hamiltonian_spectral_derivation_public_boundary_held
-      yang_mills_hamiltonian_spectral_derivation_final_release_held
+    And.intro hPublic hFinal
 
 /-- Final projection: the exact gap value is not merely postulated downstream;
 it is obtained from the Yang--Mills Hamiltonian spectral theorem/PVM route. -/
