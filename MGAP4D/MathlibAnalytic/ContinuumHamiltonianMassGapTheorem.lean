@@ -18,6 +18,13 @@ theorem continuum_hamiltonian_derives_exact_mass_gap_value :
     exactGapValueReal = (33 : ℝ) / 20 := by
   norm_num [exactGapValueReal]
 
+/-- Bridge projection required by the hardened-witness audit: the theorem layer
+reuses the exact-positive carrier/boundary projection from the hardened bundle
+without strengthening the pre-R6 hardening surface into a numerical-value proof. -/
+theorem continuum_hamiltonian_theorem_reuses_exact_positive_hardened_bridge :
+    0 < exactGapValueReal ∧ exactGapValueDerivationBoundary.ready := by
+  exact continuum_hamiltonian_exact_positive_mass_gap_from_hardened_bundle
+
 /-- The installed continuum Hamiltonian witness derives the physical-to-spectral
 chain from the four-dimensional continuum Yang--Mills Hamiltonian lane to the
 mass-gap observable lane. -/
