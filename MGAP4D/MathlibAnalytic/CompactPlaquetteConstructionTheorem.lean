@@ -86,13 +86,19 @@ theorem compact_plaquette_construction_certificate
     D.constructionCertificate := by
   exact D.constructionCertificate_proof
 
-/-- Singleton plaquette carrier used by the abstract theorem-body realization. -/
-def PrototypePlaquette := PUnit
+/-- Finite plaquette index carrier: site plus two coordinate directions. -/
+structure PrototypePlaquette where
+  site : Fin 4
+  mu : Fin 4
+  nu : Fin 4
 
-/-- The prototype plaquette. -/
-def prototypePlaquette : PrototypePlaquette := PUnit.unit
+/-- The canonical finite-index plaquette. -/
+def prototypePlaquette : PrototypePlaquette :=
+  { site := ⟨0, by decide⟩
+    mu := ⟨1, by decide⟩
+    nu := ⟨2, by decide⟩ }
 
-/-- Singleton theorem-body realization for compact plaquette construction. -/
+/-- Finite-index theorem-body realization for compact plaquette construction. -/
 def singletonCompactPlaquetteConstructionTheoremData :
     CompactPlaquetteConstructionTheoremData :=
   { observableAtomData := singletonObservableAtomTheoremTheoremData
