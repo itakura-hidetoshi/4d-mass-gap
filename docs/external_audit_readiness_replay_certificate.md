@@ -30,6 +30,7 @@ The script route includes the following final Lean build targets:
 ```bash
 lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
 lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build
 ```
@@ -69,6 +70,7 @@ total_lines: 27611
 ```text
 MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
 MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 ```
 
@@ -93,7 +95,7 @@ external_audit_readiness_gate_ready
 
 ## Abstract exact-value carrier route
 
-The external-audit gate now preserves the carrier abstractly:
+The external-audit gate preserves the carrier abstractly:
 
 ```text
 external_audit_readiness_exact_value_preserved_witness
@@ -103,10 +105,36 @@ exactGapValueReal = exactGapValueReal
 
 It does not assert a pre-R6 `33/20` derivation.
 
+## Continuum-Hamiltonian chain-index exact addendum replay receipt
+
+The chain-index exact 33/20 addendum is now visible through the external-audit gate as an append-only replay surface:
+
+```text
+FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady
+final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready
+externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady
+external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready
+external_audit_readiness_continuum_hamiltonian_exact_33_over_20
+external_audit_readiness_continuum_hamiltonian_addendum_boundary_held
+physicalContinuumHamiltonianToExactPositiveMassGap
+physicalContinuumHamiltonianExactGap33Over20
+continuumHamiltonianMassGapTheoremDerivedWitness
+```
+
+The addendum replay receipt records:
+
+```text
+continuum-Hamiltonian exact positive mass-gap route visible
+chain-index exact 33/20 addendum
+publicBoundaryHeld
+finalReleaseHeld
+theoremWitnessOnly
+```
+
 ## Spectral value alignment replay addendum
 
-The spectral route is now exposed through the complete Hamiltonian derivation,
-release-adoption surface, and external-audit gate as value alignment before R6.
+The spectral route is exposed through the complete Hamiltonian derivation, release-adoption surface, and external-audit gate as value alignment before R6.
 
 Core spectral theorem surface:
 
@@ -151,7 +179,7 @@ external_audit_readiness_complete_spectral_mass_gap_boundary_held
 
 ## PVM / observable spectral atom replay receipt
 
-The PVM / observable spectral atom route is now exposed as a public-audit projection:
+The PVM / observable spectral atom route is exposed as a public-audit projection:
 
 ```text
 externalAuditReadinessPVMSpectralAtomPublicAuditProjection
@@ -196,6 +224,7 @@ python3 scripts/audit_external_audit_readiness_gate.py
 python3 scripts/audit_external_audit_readiness_replay_certificate.py
 lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320
 lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 ```
 
@@ -209,6 +238,7 @@ repository-internal audit scripts passed
 external-audit-readiness gate built successfully
 forbidden Lean tokens were absent in the scanned Lean files
 abstract exact-value carrier was preserved through the gate
+continuum-Hamiltonian chain-index exact addendum is replay-visible
 spectral infimum / attainment / observable-atom alignment route is externally visible
 PVM / observable spectral atom positive mass is public-audit-visible
 ```
@@ -241,8 +271,10 @@ A reviewer can independently replay the current route by checking:
 10. scripts/audit_external_audit_readiness_replay_certificate.py passes.
 11. lake build MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320 completes.
 12. lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption completes.
-13. external_audit_readiness_pvm_spectral_atom_public_audit_projection is present.
-14. external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass is present.
+13. lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum completes.
+14. external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready is present.
+15. external_audit_readiness_pvm_spectral_atom_public_audit_projection is present.
+16. external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass is present.
 ```
 
 ## Status
@@ -254,6 +286,7 @@ Lean semantics changed: no
 External consensus claimed: no
 External audit completed: no
 Final theorem release opened: no
+Continuum-Hamiltonian chain-index addendum visible: yes
 Spectral replay addendum visible: yes
 PVM spectral atom public audit projection visible: yes
 ```
