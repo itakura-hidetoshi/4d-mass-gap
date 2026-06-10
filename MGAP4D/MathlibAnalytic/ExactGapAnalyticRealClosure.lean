@@ -5,16 +5,8 @@ namespace MathlibAnalytic
 
 /-- Mathlib-backed real-order closure for the exact-gap analytic prototypes.
 
-This closure bundles the current Mathlib analytic replacement surfaces:
-
-* exact gap value as a real number,
-* order-theoretic gap infimum carrier,
-* Rayleigh lower-bound prototype,
-* Rayleigh attainment prototype,
-* positive spectral-mass prototype.
-
-It is still a real-order prototype, not yet the full Hilbert-space operator,
-Rayleigh quotient, or projection-valued-measure theorem. -/
+This closure bundles the current Mathlib analytic replacement surfaces while
+leaving the displayed numeric value to the downstream R6 spectral derivation. -/
 structure ExactGapAnalyticRealClosure where
   exactValueReady : exactGapRealSurface.ready
   gapInfimumReady : gapInfimumRealSurface.ready
@@ -22,7 +14,6 @@ structure ExactGapAnalyticRealClosure where
   rayleighAttainmentReady : rayleighAttainmentRealSurface.ready
   spectralMassReady : spectralMassRealSurface.ready
   exactValue : ℝ
-  exactValue_eq_3320 : exactValue = (33 : ℝ) / 20
   exactValue_pos : 0 < exactValue
   exactValue_above_one : 1 < exactValue
   gapInfimumLowerBound : ∀ energy, RayleighEnergyAdmissible energy → exactValue ≤ energy
@@ -43,7 +34,6 @@ def ExactGapAnalyticRealClosure.ready
   rayleighLowerBoundRealSurface.ready ∧
   rayleighAttainmentRealSurface.ready ∧
   spectralMassRealSurface.ready ∧
-  C.exactValue = (33 : ℝ) / 20 ∧
   0 < C.exactValue ∧
   1 < C.exactValue ∧
   (∀ energy, RayleighEnergyAdmissible energy → C.exactValue ≤ energy) ∧
@@ -64,7 +54,6 @@ noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
     rayleighAttainmentReady := rayleigh_attainment_real_surface_ready
     spectralMassReady := spectral_mass_real_surface_ready
     exactValue := exactGapValueReal
-    exactValue_eq_3320 := exactGapValueReal_eq
     exactValue_pos := exactGapValueReal_pos
     exactValue_above_one := by
       norm_num [exactGapValueReal]
@@ -86,7 +75,6 @@ theorem exact_gap_analytic_real_closure_ready :
     And.intro rayleigh_lower_bound_real_surface_ready <|
     And.intro rayleigh_attainment_real_surface_ready <|
     And.intro spectral_mass_real_surface_ready <|
-    And.intro exactGapValueReal_eq <|
     And.intro exactGapValueReal_pos <|
     And.intro exactGapAnalyticRealClosure.exactValue_above_one <|
     And.intro rayleigh_energy_admissible_lower_bound <|
@@ -98,10 +86,6 @@ theorem exact_gap_analytic_real_closure_ready :
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro True.intro
-
-theorem exact_gap_analytic_real_closure_value :
-    exactGapAnalyticRealClosure.exactValue = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_eq
 
 theorem exact_gap_analytic_real_closure_positive :
     0 < exactGapAnalyticRealClosure.exactValue := by
