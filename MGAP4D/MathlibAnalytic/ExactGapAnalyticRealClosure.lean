@@ -55,8 +55,7 @@ noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
     spectralMassReady := spectral_mass_real_surface_ready
     exactValue := exactGapValueReal
     exactValue_pos := exactGapValueReal_pos
-    exactValue_above_one := by
-      norm_num [exactGapValueReal]
+    exactValue_above_one := exactGapValueReal_above_one
     gapInfimumLowerBound := rayleigh_energy_admissible_lower_bound
     gapInfimumAttained := exact_gap_value_attains_rayleigh
     positiveSpectralMass := positive_spectral_mass_at_exact_gap_prototype
