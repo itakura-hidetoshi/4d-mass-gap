@@ -8,7 +8,7 @@ obligation layer.
 
 It is a syntactic/contract audit: Lean's kernel remains `lake build`. This
 script ensures the named bridge files expose the expected import edges, ready
-surfaces, value preservation anchors, positivity anchors, physical target
+surfaces, value-carrier anchors, positivity anchors, physical target
 obligations, and public-boundary anchors.
 """
 
@@ -164,7 +164,7 @@ BRIDGE_FILES: tuple[BridgeFileSpec, ...] = (
             "physical_gap_reconstruction",
             "internal_reference_scale_eq_one",
             "normalized_gap_eq_exact",
-            "exact_value_eq_3320",
+            "physical_gap_eq_exact_in_internal_units",
         ),
         required_ready=(
             "PhysicalHamiltonianNormalizationBridgeData.ready",
@@ -337,7 +337,7 @@ def main() -> None:
     print(f"Ordered import edges audited: {len(ORDERED_IMPORT_EDGES)}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
     print("Bridge anchors audited: Hilbert, H_phys, Yang-Mills, spectral/PVM, continuum, normalization, infinite-dimensional target")
-    print("Value anchors audited: exact_value_eq_3320 / exactGapValueReal")
+    print("Value anchors audited: exact value route / exactGapValueReal carrier")
     print("Boundary anchors audited: publicBoundaryHeld, finalReleaseHeld, and open-boundary markers")
 
     if failures:
