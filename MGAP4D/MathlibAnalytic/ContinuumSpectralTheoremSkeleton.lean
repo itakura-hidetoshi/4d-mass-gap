@@ -9,11 +9,13 @@ universe u v
 
 This layer records the bridge from the discrete/skeleton spectral realization to
 an abstract continuum spectral theorem surface: a continuum carrier, a limit
-map, continuum spectral projection, preservation of the exact atom at `33/20`,
-and preservation of a positive observable spectral mass.
+map, continuum spectral projection, preservation of the exact atom at
+`exactGapValueReal`, and preservation of a positive observable spectral mass.
 
 Boundary: this is still a proof-carrying skeleton.  It does not yet claim a
-final public theorem release or a complete analytic continuum Yang--Mills proof. -/
+final public theorem release, a complete analytic continuum Yang--Mills proof,
+or any upstream exact numeric value equality before the R6 spectral-origin
+surface. -/
 structure ContinuumSpectralTheoremSkeletonData where
   spectralReady : spectralRealizationSkeletonReviewSurface.ready
   discreteState : Type u
@@ -34,7 +36,6 @@ structure ContinuumSpectralTheoremSkeletonData where
   positiveMassPreserved_proof : positiveMassPreserved
   observableWitnessPreserved : Prop
   observableWitnessPreserved_proof : observableWitnessPreserved
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   continuumSpectralTheoremSkeletonVisible : Prop
   continuumSpectralTheoremSkeletonVisible_proof : continuumSpectralTheoremSkeletonVisible
   finalTheoremReleaseStillHeld : Prop
@@ -49,8 +50,8 @@ def ContinuumSpectralTheoremSkeletonData.ready
   D.continuumWitness = D.continuumLimit D.discreteWitness ∧
   D.continuumSpectralTheoremCertificate ∧ D.exactAtomPreserved ∧
   D.positiveMassPreserved ∧ D.observableWitnessPreserved ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧ D.continuumSpectralTheoremSkeletonVisible ∧
-  D.finalTheoremReleaseStillHeld ∧ D.publicBoundaryHeld
+  D.continuumSpectralTheoremSkeletonVisible ∧ D.finalTheoremReleaseStillHeld ∧
+  D.publicBoundaryHeld
 
 /-- The continuum spectral theorem certificate is present. -/
 theorem continuum_spectral_theorem_certificate
@@ -97,24 +98,19 @@ noncomputable def prototypeContinuumSpectralTheoremSkeletonData :
     plaquetteObservable := PUnit.unit
     continuumWitness_eq_limit := rfl
     continuumSpectralTheoremCertificate :=
-      spectralRealizationSkeletonReviewSurface.ready ∧
-      exactGapValueReal = (33 : ℝ) / 20
+      spectralRealizationSkeletonReviewSurface.ready
     continuumSpectralTheoremCertificate_proof :=
-      And.intro spectral_realization_skeleton_review_surface_ready exactGapValueReal_eq
+      spectral_realization_skeleton_review_surface_ready
     exactAtomPreserved := prototypeSpectralRealizationSkeletonData.exactAtomPresent
     exactAtomPreserved_proof := prototypeSpectralRealizationSkeletonData.exactAtomPresent_proof
     positiveMassPreserved := prototypeSpectralRealizationSkeletonData.positiveMassAtExact
     positiveMassPreserved_proof := prototypeSpectralRealizationSkeletonData.positiveMassAtExact_proof
     observableWitnessPreserved := prototypeSpectralRealizationSkeletonData.observableAtomWitness
     observableWitnessPreserved_proof := prototypeSpectralRealizationSkeletonData.observableAtomWitness_proof
-    exact_value_eq_3320 := exactGapValueReal_eq
     continuumSpectralTheoremSkeletonVisible :=
-      spectralRealizationSkeletonReviewSurface.ready ∧
-      exactGapValueReal = (33 : ℝ) / 20 ∧
-      0 < exactGapValueReal
+      spectralRealizationSkeletonReviewSurface.ready ∧ 0 < exactGapValueReal
     continuumSpectralTheoremSkeletonVisible_proof :=
-      And.intro spectral_realization_skeleton_review_surface_ready
-        (And.intro exactGapValueReal_eq exactGapValueReal_pos)
+      And.intro spectral_realization_skeleton_review_surface_ready exactGapValueReal_pos
     finalTheoremReleaseStillHeld := spectralRealizationSkeletonReviewSurface.finalReleaseHeld
     finalTheoremReleaseStillHeld_proof := spectralRealizationSkeletonReviewSurface.finalReleaseHeld_proof
     publicBoundaryHeld := spectralRealizationSkeletonReviewSurface.publicBoundaryHeld
@@ -128,7 +124,6 @@ theorem prototype_continuum_spectral_theorem_skeleton_ready :
     And.intro prototypeContinuumSpectralTheoremSkeletonData.exactAtomPreserved_proof <|
     And.intro prototypeContinuumSpectralTheoremSkeletonData.positiveMassPreserved_proof <|
     And.intro prototypeContinuumSpectralTheoremSkeletonData.observableWitnessPreserved_proof <|
-    And.intro prototypeContinuumSpectralTheoremSkeletonData.exact_value_eq_3320 <|
     And.intro prototypeContinuumSpectralTheoremSkeletonData.continuumSpectralTheoremSkeletonVisible_proof <|
     And.intro prototypeContinuumSpectralTheoremSkeletonData.finalTheoremReleaseStillHeld_proof
       prototypeContinuumSpectralTheoremSkeletonData.publicBoundaryHeld_proof
