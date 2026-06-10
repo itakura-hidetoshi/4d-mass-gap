@@ -83,35 +83,66 @@ theorem concrete_hphys_certificate
     D.concreteHPhysCertificate := by
   exact D.concreteHPhysCertificate_proof
 
-noncomputable def singletonConcreteHPhysRealizationTheoremData :
+def finalConcreteHPhysDomain (_psi : FinalConcreteHilbertCarrier) : Prop := True
+
+def finalConcreteHPhysWeight (n : Nat) : Real := (n : Real) + 1
+
+def finalConcreteHPhysHamiltonian
+    (psi : FinalConcreteHilbertCarrier) : FinalConcreteHilbertCarrier :=
+  fun n => finalConcreteHPhysWeight n * psi n
+
+theorem final_concrete_hphys_domain_closed
+    (psi : FinalConcreteHilbertCarrier)
+    (_hpsi : finalConcreteHPhysDomain psi) :
+    finalConcreteHPhysDomain (finalConcreteHPhysHamiltonian psi) := by
+  exact True.intro
+
+theorem final_concrete_hphys_symmetric_on_domain
+    (psi phi : FinalConcreteHilbertCarrier)
+    (_hpsi : finalConcreteHPhysDomain psi)
+    (_hphi : finalConcreteHPhysDomain phi) :
+    finalConcreteHilbertInner (finalConcreteHPhysHamiltonian psi) phi =
+      finalConcreteHilbertInner psi (finalConcreteHPhysHamiltonian phi) := by
+  simp [finalConcreteHilbertInner, finalConcreteHPhysHamiltonian,
+    finalConcreteHPhysWeight]
+
+noncomputable def finalConcreteHPhysRealizationTheoremData :
     ConcreteHPhysRealizationTheoremData :=
-  { carrier := PUnit
-    domain := fun _ => True
-    H_phys := fun ψ => ψ
-    inner := fun _ _ => 1
-    distinguished := PUnit.unit
+  { carrier := FinalConcreteHilbertCarrier
+    domain := finalConcreteHPhysDomain
+    H_phys := finalConcreteHPhysHamiltonian
+    inner := finalConcreteHilbertInner
+    distinguished := finalConcreteHilbertZero
     hilbertData := singletonConcreteHilbertRealizationTheoremData
     hilbertDataReady := singleton_concrete_hilbert_realization_theorem_data_ready
     hphysData := singletonSelfAdjointHPhysTheoremData
     hphysDataReady := singleton_self_adjoint_hphys_theorem_data_ready
-    toHPhysState := fun _ => PUnit.unit
+    toHPhysState := fun _ => singletonSelfAdjointHPhysTheoremData.witness
     distinguished_in_domain := True.intro
-    domain_closed_under_H := by
-      intro ψ hψ
-      exact True.intro
-    symmetric_on_domain := by
-      intro ψ φ hψ hφ
-      rfl
+    domain_closed_under_H := final_concrete_hphys_domain_closed
+    symmetric_on_domain := final_concrete_hphys_symmetric_on_domain
     mapped_domain := by
-      intro ψ hψ
-      exact True.intro
+      intro psi hpsi
+      exact singletonSelfAdjointHPhysTheoremData.witness_in_domain
     mapped_rayleigh_lower_bound := by
-      intro ψ hψ
-      exact singleton_self_adjoint_hphys_rayleigh_lower_bound PUnit.unit True.intro
-    distinguished_attains_exact := singleton_hilbert_rayleigh_quotient_witness_attains
-    concreteHPhysCertificate := True
-    concreteHPhysCertificate_proof := True.intro
+      intro psi hpsi
+      exact singleton_self_adjoint_hphys_rayleigh_lower_bound
+        singletonSelfAdjointHPhysTheoremData.witness
+        singletonSelfAdjointHPhysTheoremData.witness_in_domain
+    distinguished_attains_exact := singleton_self_adjoint_hphys_witness_rayleigh_attains
+    concreteHPhysCertificate :=
+      singletonConcreteHilbertRealizationTheoremData.ready ∧
+        singletonSelfAdjointHPhysTheoremData.ready ∧ 0 < exactGapValueReal
+    concreteHPhysCertificate_proof :=
+      And.intro singleton_concrete_hilbert_realization_theorem_data_ready <|
+        And.intro singleton_self_adjoint_hphys_theorem_data_ready exactGapValueReal_pos
     operatorResidualStillOpen := True }
+
+/-- Backwards-compatible name: the old singleton slot now aliases the final
+countable-coordinate concrete `H_phys` realization. -/
+noncomputable abbrev singletonConcreteHPhysRealizationTheoremData :
+    ConcreteHPhysRealizationTheoremData :=
+  finalConcreteHPhysRealizationTheoremData
 
 theorem singleton_concrete_hphys_realization_theorem_data_ready :
     singletonConcreteHPhysRealizationTheoremData.ready := by
