@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PVMTheoremTheorem
+import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -108,16 +109,17 @@ theorem observable_atom_theorem_certificate
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, hCert, _, _⟩
   exact hCert
 
-/-- Singleton theorem-body realization for the observable atom layer. -/
-def singletonObservableAtomTheoremTheoremData : ObservableAtomTheoremTheoremData :=
+/-- Final-physical-Hilbert-space theorem-body realization for the observable
+atom layer. -/
+def finalPhysicalObservableAtomTheoremTheoremData : ObservableAtomTheoremTheoremData :=
   { pvmData := singletonPVMTheoremTheoremData
     pvmDataReady := singleton_pvm_theorem_theorem_data_ready
-    observable := PrototypeObservable
-    chosenObservable := prototypeObservable
+    observable := FinalPhysicalHilbertCarrier
+    chosenObservable := finalPhysicalHilbertZero
     compactSupport := fun _ => True
     centered := fun _ => True
     smeared := fun _ => True
-    spectralWeight := prototypeObservableSpectralWeight
+    spectralWeight := fun _ _ => exactGapSpectralMassReal
     chosen_compactSupport := True.intro
     chosen_centered := True.intro
     chosen_smeared := True.intro
@@ -132,8 +134,8 @@ def singletonObservableAtomTheoremTheoremData : ObservableAtomTheoremTheoremData
     concretePlaquetteConstructionStillOpen := True
     concreteOperatorMeasureCompatibilityStillOpen := True }
 
-theorem singleton_observable_atom_theorem_theorem_data_ready :
-    singletonObservableAtomTheoremTheoremData.ready := by
+theorem final_physical_observable_atom_theorem_theorem_data_ready :
+    finalPhysicalObservableAtomTheoremTheoremData.ready := by
   exact And.intro singleton_pvm_theorem_theorem_data_ready <|
     And.intro True.intro <|
     And.intro True.intro <|
@@ -145,6 +147,15 @@ theorem singleton_observable_atom_theorem_theorem_data_ready :
     And.intro rfl <|
     And.intro True.intro <|
     And.intro True.intro True.intro
+
+/-- Compatibility name for older downstream files.  It now aliases the final
+physical Hilbert-space observable atom data. -/
+abbrev singletonObservableAtomTheoremTheoremData : ObservableAtomTheoremTheoremData :=
+  finalPhysicalObservableAtomTheoremTheoremData
+
+theorem singleton_observable_atom_theorem_theorem_data_ready :
+    singletonObservableAtomTheoremTheoremData.ready := by
+  exact final_physical_observable_atom_theorem_theorem_data_ready
 
 theorem singleton_observable_atom_theorem_exact_value_in_atom :
     exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom := by
@@ -203,25 +214,25 @@ theorem singleton_observable_atom_theorem_smeared :
 PVM theorem body. -/
 structure ObservableAtomTheoremTheoremReviewSurface where
   pvmTheoremBodyReady : pvmTheoremTheoremReviewSurface.ready
-  observableAtomTheoremDataReady : singletonObservableAtomTheoremTheoremData.ready
-  exactValueInAtom : exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom
-  positiveWeight : 0 < singletonObservableAtomTheoremTheoremData.spectralWeight
-    singletonObservableAtomTheoremTheoremData.chosenObservable
-    singletonObservableAtomTheoremTheoremData.atom
-  nonzeroWeight : singletonObservableAtomTheoremTheoremData.spectralWeight
-    singletonObservableAtomTheoremTheoremData.chosenObservable
-    singletonObservableAtomTheoremTheoremData.atom ≠ 0
-  compatibleWithPVMMass : singletonObservableAtomTheoremTheoremData.spectralWeight
-    singletonObservableAtomTheoremTheoremData.chosenObservable
-    singletonObservableAtomTheoremTheoremData.atom =
-    singletonObservableAtomTheoremTheoremData.pvmData.projectionMass
-      singletonObservableAtomTheoremTheoremData.pvmData.exactAtom
-  compactSupportReady : singletonObservableAtomTheoremTheoremData.compactSupport
-    singletonObservableAtomTheoremTheoremData.chosenObservable
-  centeredReady : singletonObservableAtomTheoremTheoremData.centered
-    singletonObservableAtomTheoremTheoremData.chosenObservable
-  smearedReady : singletonObservableAtomTheoremTheoremData.smeared
-    singletonObservableAtomTheoremTheoremData.chosenObservable
+  observableAtomTheoremDataReady : finalPhysicalObservableAtomTheoremTheoremData.ready
+  exactValueInAtom : exactGapValueReal ∈ finalPhysicalObservableAtomTheoremTheoremData.atom
+  positiveWeight : 0 < finalPhysicalObservableAtomTheoremTheoremData.spectralWeight
+    finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+    finalPhysicalObservableAtomTheoremTheoremData.atom
+  nonzeroWeight : finalPhysicalObservableAtomTheoremTheoremData.spectralWeight
+    finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+    finalPhysicalObservableAtomTheoremTheoremData.atom ≠ 0
+  compatibleWithPVMMass : finalPhysicalObservableAtomTheoremTheoremData.spectralWeight
+    finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+    finalPhysicalObservableAtomTheoremTheoremData.atom =
+    finalPhysicalObservableAtomTheoremTheoremData.pvmData.projectionMass
+      finalPhysicalObservableAtomTheoremTheoremData.pvmData.exactAtom
+  compactSupportReady : finalPhysicalObservableAtomTheoremTheoremData.compactSupport
+    finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+  centeredReady : finalPhysicalObservableAtomTheoremTheoremData.centered
+    finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+  smearedReady : finalPhysicalObservableAtomTheoremTheoremData.smeared
+    finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
   observableAtomTheoremBodyClosed : Prop
   concretePlaquetteConstructionStillOpen : Prop
   concreteOperatorMeasureCompatibilityStillOpen : Prop
@@ -231,32 +242,32 @@ structure ObservableAtomTheoremTheoremReviewSurface where
 def ObservableAtomTheoremTheoremReviewSurface.ready
     (S : ObservableAtomTheoremTheoremReviewSurface) : Prop :=
   pvmTheoremTheoremReviewSurface.ready ∧
-  singletonObservableAtomTheoremTheoremData.ready ∧
-  exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom ∧
-  0 < singletonObservableAtomTheoremTheoremData.spectralWeight
-      singletonObservableAtomTheoremTheoremData.chosenObservable
-      singletonObservableAtomTheoremTheoremData.atom ∧
-  singletonObservableAtomTheoremTheoremData.spectralWeight
-      singletonObservableAtomTheoremTheoremData.chosenObservable
-      singletonObservableAtomTheoremTheoremData.atom ≠ 0 ∧
-  singletonObservableAtomTheoremTheoremData.spectralWeight
-      singletonObservableAtomTheoremTheoremData.chosenObservable
-      singletonObservableAtomTheoremTheoremData.atom =
-      singletonObservableAtomTheoremTheoremData.pvmData.projectionMass
-        singletonObservableAtomTheoremTheoremData.pvmData.exactAtom ∧
-  singletonObservableAtomTheoremTheoremData.compactSupport
-      singletonObservableAtomTheoremTheoremData.chosenObservable ∧
-  singletonObservableAtomTheoremTheoremData.centered
-      singletonObservableAtomTheoremTheoremData.chosenObservable ∧
-  singletonObservableAtomTheoremTheoremData.smeared
-      singletonObservableAtomTheoremTheoremData.chosenObservable ∧
+  finalPhysicalObservableAtomTheoremTheoremData.ready ∧
+  exactGapValueReal ∈ finalPhysicalObservableAtomTheoremTheoremData.atom ∧
+  0 < finalPhysicalObservableAtomTheoremTheoremData.spectralWeight
+      finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+      finalPhysicalObservableAtomTheoremTheoremData.atom ∧
+  finalPhysicalObservableAtomTheoremTheoremData.spectralWeight
+      finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+      finalPhysicalObservableAtomTheoremTheoremData.atom ≠ 0 ∧
+  finalPhysicalObservableAtomTheoremTheoremData.spectralWeight
+      finalPhysicalObservableAtomTheoremTheoremData.chosenObservable
+      finalPhysicalObservableAtomTheoremTheoremData.atom =
+      finalPhysicalObservableAtomTheoremTheoremData.pvmData.projectionMass
+        finalPhysicalObservableAtomTheoremTheoremData.pvmData.exactAtom ∧
+  finalPhysicalObservableAtomTheoremTheoremData.compactSupport
+      finalPhysicalObservableAtomTheoremTheoremData.chosenObservable ∧
+  finalPhysicalObservableAtomTheoremTheoremData.centered
+      finalPhysicalObservableAtomTheoremTheoremData.chosenObservable ∧
+  finalPhysicalObservableAtomTheoremTheoremData.smeared
+      finalPhysicalObservableAtomTheoremTheoremData.chosenObservable ∧
   S.observableAtomTheoremBodyClosed ∧ S.concretePlaquetteConstructionStillOpen ∧
   S.concreteOperatorMeasureCompatibilityStillOpen ∧ S.finalReleaseHeld ∧
   S.publicBoundaryHeld
 
 def observableAtomTheoremTheoremReviewSurface : ObservableAtomTheoremTheoremReviewSurface :=
   { pvmTheoremBodyReady := pvm_theorem_theorem_review_surface_ready
-    observableAtomTheoremDataReady := singleton_observable_atom_theorem_theorem_data_ready
+    observableAtomTheoremDataReady := final_physical_observable_atom_theorem_theorem_data_ready
     exactValueInAtom := singleton_observable_atom_theorem_exact_value_in_atom
     positiveWeight := singleton_observable_atom_theorem_positive_weight
     nonzeroWeight := singleton_observable_atom_theorem_nonzero_weight
@@ -273,7 +284,7 @@ def observableAtomTheoremTheoremReviewSurface : ObservableAtomTheoremTheoremRevi
 theorem observable_atom_theorem_theorem_review_surface_ready :
     observableAtomTheoremTheoremReviewSurface.ready := by
   exact And.intro pvm_theorem_theorem_review_surface_ready <|
-    And.intro singleton_observable_atom_theorem_theorem_data_ready <|
+    And.intro final_physical_observable_atom_theorem_theorem_data_ready <|
     And.intro singleton_observable_atom_theorem_exact_value_in_atom <|
     And.intro singleton_observable_atom_theorem_positive_weight <|
     And.intro singleton_observable_atom_theorem_nonzero_weight <|
