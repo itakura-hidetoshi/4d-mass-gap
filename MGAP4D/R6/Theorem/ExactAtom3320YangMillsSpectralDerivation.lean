@@ -120,17 +120,19 @@ def exactAtom3320YangMillsSpectralDerivation :
 /-- The installed R6 Yang--Mills spectral derivation is ready. -/
 theorem exact_atom_3320_yang_mills_spectral_derivation_ready :
     exactAtom3320YangMillsSpectralDerivation.ready := by
+  rcases MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨hReady, _, _, _, _, _, _, _, _, _, _, _, hWitness, _, hPublic, hFinal⟩
   exact ⟨
-    MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_spectral_derivation_3320_ready,
+    hReady,
     yang_mills_hamiltonian_spectral_infimum_eq_3320,
     yang_mills_hamiltonian_spectral_attainment_eq_3320,
     yang_mills_hamiltonian_observable_atom_eq_3320,
     yang_mills_hamiltonian_spectral_derivation_exact_gap_value,
     MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_spectral_derivation_positive_mass,
     MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_spectral_derivation_nonzero_mass,
-    MGAP4D.MathlibAnalytic.continuumHamiltonianMassGapWitnessData.theoremWitnessOnly,
-    MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_spectral_derivation_public_boundary_held,
-    MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_spectral_derivation_final_release_held⟩
+    hWitness,
+    hPublic,
+    hFinal⟩
 
 end
 
