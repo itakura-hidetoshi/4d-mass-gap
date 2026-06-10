@@ -141,5 +141,14 @@ theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
     fourDYangMillsAnalyticGapValueOrigin, fourDYangMillsHamiltonianSpectralCenter,
     fourDYangMillsPVMObservableCorrection]
 
+/-- Arithmetic above-one projection for the normalized pre-R6 carrier.  This is a
+base-layer numeric scale check over the 4D Yang--Mills analytic origin carrier,
+not the downstream review-facing theorem that identifies the carrier with the
+physical Yang--Mills Hamiltonian spectral gap. -/
+theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
+  norm_num [exactGapValueReal, fourDYangMillsAnalyticGapValue,
+    fourDYangMillsAnalyticGapValueOrigin, fourDYangMillsHamiltonianSpectralCenter,
+    fourDYangMillsPVMObservableCorrection]
+
 end MathlibAnalytic
 end MGAP4D
