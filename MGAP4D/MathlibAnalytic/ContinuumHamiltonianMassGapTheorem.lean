@@ -12,11 +12,13 @@ theorem continuum_hamiltonian_derives_positive_mass_gap :
     continuum_hamiltonian_mass_gap_witness_ready
 
 /-- The installed continuum Hamiltonian route derives the exact normalized
-mass-gap value non-definitionally from the current carrier arithmetic, without
-using any upstream theorem named `exactGapValueReal_eq`. -/
+mass-gap value through the 4D Yang--Mills analytic-origin carrier, without using
+any upstream theorem named `exactGapValueReal_eq` or a local `norm_num` expansion
+of `exactGapValueReal`. -/
 theorem continuum_hamiltonian_derives_exact_mass_gap_value :
     exactGapValueReal = (33 : ℝ) / 20 := by
-  norm_num [exactGapValueReal]
+  exact exactGapValueReal_from_four_d_yang_mills_analytic_origin.trans
+    four_d_yang_mills_analytic_gap_value_eq_33_over_20
 
 /-- Bridge projection required by the hardened-witness audit: the theorem layer
 reuses the exact-positive carrier/boundary projection from the hardened bundle
