@@ -94,7 +94,7 @@ def finalPhysicalHamiltonian (ψ : FinalPhysicalHilbertCarrier) :
     FinalPhysicalHilbertCarrier :=
   fun n => finalPhysicalHamiltonianWeight n * ψ n
 
-def finalPhysicalRayleigh (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
+noncomputable def finalPhysicalRayleigh (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
   exactGapValueReal + (ψ 0)^2
 
 theorem final_physical_hamiltonian_domain_preserved
@@ -160,7 +160,7 @@ noncomputable def finalPhysicalUnboundedOperatorSkeletonData :
     publicBoundaryHeld := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld_proof }
 
-abbrev prototypePhysicalUnboundedOperatorSkeletonData :
+noncomputable abbrev prototypePhysicalUnboundedOperatorSkeletonData :
     PhysicalUnboundedOperatorSkeletonData.{0} :=
   finalPhysicalUnboundedOperatorSkeletonData
 
