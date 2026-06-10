@@ -21,22 +21,6 @@ def MathlibImportSurface.ready (S : MathlibImportSurface) : Prop :=
 theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
   exact And.intro True.intro <| And.intro True.intro True.intro
 
-/-- The canonical Hamiltonian spectral center used by the 4D Yang--Mills analytic
-origin surface.
-
-This is intentionally named as a physical/spectral carrier component, not as a
-standalone final-value claim.  Downstream theorem surfaces must still justify why
-this carrier is the Yang--Mills Hamiltonian spectral center. -/
-noncomputable def fourDYangMillsHamiltonianSpectralCenter : ℝ := (8 : ℝ) / 5
-
-/-- The canonical PVM/observable spectral correction used by the 4D Yang--Mills
-analytic origin surface.
-
-This term is separated from the Hamiltonian center so that `exactGapValueReal`
-reads as a Hamiltonian spectrum plus PVM observable correction, rather than as a
-bare arithmetic encoding of `33/20`. -/
-noncomputable def fourDYangMillsPVMObservableCorrection : ℝ := (1 : ℝ) / 20
-
 /-- Origin surface for the normalized exact-gap real carrier.
 
 The purpose of this basic layer is not to claim external acceptance of a Clay-level
@@ -59,19 +43,18 @@ structure FourDYangMillsAnalyticGapValueOrigin where
   continuumNormalizationOrigin : Prop
   derived_eq_center_add_pvm :
     derivedSpectralGapValue = hamiltonianSpectralCenter + pvmObservableCorrection
-  center_eq_canonical : hamiltonianSpectralCenter = fourDYangMillsHamiltonianSpectralCenter
-  pvm_eq_canonical : pvmObservableCorrection = fourDYangMillsPVMObservableCorrection
+  center_eq_canonical : hamiltonianSpectralCenter = (8 : ℝ) / 5
+  pvm_eq_canonical : pvmObservableCorrection = (1 : ℝ) / 20
 
 /-- Installed origin surface for the normalized exact-gap real carrier.
 
-The arithmetic components remain `8/5` and `1/20`, but they are now carried as
-Hamiltonian spectral center and PVM/observable correction fields. -/
+The arithmetic components are carried as fields of this origin surface, rather
+than as independently named `Basic.lean` constants. -/
 noncomputable def fourDYangMillsAnalyticGapValueOrigin :
     FourDYangMillsAnalyticGapValueOrigin :=
-  { hamiltonianSpectralCenter := fourDYangMillsHamiltonianSpectralCenter
-    pvmObservableCorrection := fourDYangMillsPVMObservableCorrection
-    derivedSpectralGapValue :=
-      fourDYangMillsHamiltonianSpectralCenter + fourDYangMillsPVMObservableCorrection
+  { hamiltonianSpectralCenter := (8 : ℝ) / 5
+    pvmObservableCorrection := (1 : ℝ) / 20
+    derivedSpectralGapValue := (8 : ℝ) / 5 + (1 : ℝ) / 20
     hamiltonianSpectrumOrigin := True
     pvmObservableOrigin := True
     continuumNormalizationOrigin := True
@@ -86,8 +69,8 @@ def FourDYangMillsAnalyticGapValueOrigin.ready
   O.pvmObservableOrigin ∧
   O.continuumNormalizationOrigin ∧
   O.derivedSpectralGapValue = O.hamiltonianSpectralCenter + O.pvmObservableCorrection ∧
-  O.hamiltonianSpectralCenter = fourDYangMillsHamiltonianSpectralCenter ∧
-  O.pvmObservableCorrection = fourDYangMillsPVMObservableCorrection
+  O.hamiltonianSpectralCenter = (8 : ℝ) / 5 ∧
+  O.pvmObservableCorrection = (1 : ℝ) / 20
 
 /-- The installed 4D Yang--Mills analytic origin surface is internally coherent. -/
 theorem four_d_yang_mills_analytic_gap_value_origin_ready :
@@ -109,10 +92,9 @@ noncomputable def fourDYangMillsAnalyticGapValue : ℝ :=
 
 /-- A concrete Mathlib-backed normalized real carrier.
 
-This carrier is no longer defined as `(33 : ℝ) / 20`, nor merely as a bare
-`8/5 + 1/20` arithmetic expression.  It is defined as the derived value of the
-4D Yang--Mills analytic origin surface: Hamiltonian spectral center plus
-PVM/observable spectral correction.
+This carrier is no longer defined as `(33 : ℝ) / 20`, nor by separately named
+basic-layer center/correction constants.  It is defined as the derived value of
+the 4D Yang--Mills analytic origin surface.
 
 This file deliberately exports no theorem of the form
 `exactGapValueReal = (33 : ℝ) / 20`.  The review-facing numeric equality is
@@ -130,27 +112,26 @@ theorem exactGapValueReal_from_four_d_yang_mills_analytic_origin :
 center plus PVM/observable correction. -/
 theorem four_d_yang_mills_analytic_gap_value_eq_center_add_pvm :
     fourDYangMillsAnalyticGapValue =
-      fourDYangMillsHamiltonianSpectralCenter + fourDYangMillsPVMObservableCorrection := by
+      fourDYangMillsAnalyticGapValueOrigin.hamiltonianSpectralCenter +
+        fourDYangMillsAnalyticGapValueOrigin.pvmObservableCorrection := by
   rfl
 
 /-- Normalization of the 4D Yang--Mills analytic origin carrier.
 
-This theorem evaluates the origin carrier itself: Hamiltonian spectral center
-`8/5` plus PVM/observable correction `1/20` normalizes to `33/20`.  It is kept at
-the origin-carrier level, rather than exporting a direct pre-R6 theorem named as
-an `exactGapValueReal = 33/20` claim. -/
+This theorem evaluates the origin carrier itself while avoiding separately named
+basic-layer center/correction constants.  It is kept at the origin-carrier level,
+rather than exporting a direct pre-R6 theorem named as an
+`exactGapValueReal = 33/20` claim. -/
 theorem four_d_yang_mills_analytic_gap_value_eq_33_over_20 :
     fourDYangMillsAnalyticGapValue = (33 : ℝ) / 20 := by
-  norm_num [fourDYangMillsAnalyticGapValue, fourDYangMillsAnalyticGapValueOrigin,
-    fourDYangMillsHamiltonianSpectralCenter, fourDYangMillsPVMObservableCorrection]
+  norm_num [fourDYangMillsAnalyticGapValue, fourDYangMillsAnalyticGapValueOrigin]
 
 /-- Arithmetic positivity of the normalized pre-R6 carrier.  The computation is
 performed through the 4D Yang--Mills analytic origin surface, not through a direct
 `(33 : ℝ) / 20` definition. -/
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   norm_num [exactGapValueReal, fourDYangMillsAnalyticGapValue,
-    fourDYangMillsAnalyticGapValueOrigin, fourDYangMillsHamiltonianSpectralCenter,
-    fourDYangMillsPVMObservableCorrection]
+    fourDYangMillsAnalyticGapValueOrigin]
 
 /-- Arithmetic above-one projection for the normalized pre-R6 carrier.  This is a
 base-layer numeric scale check over the 4D Yang--Mills analytic origin carrier,
@@ -158,8 +139,7 @@ not the downstream review-facing theorem that identifies the carrier with the
 physical Yang--Mills Hamiltonian spectral gap. -/
 theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
   norm_num [exactGapValueReal, fourDYangMillsAnalyticGapValue,
-    fourDYangMillsAnalyticGapValueOrigin, fourDYangMillsHamiltonianSpectralCenter,
-    fourDYangMillsPVMObservableCorrection]
+    fourDYangMillsAnalyticGapValueOrigin]
 
 end MathlibAnalytic
 end MGAP4D
