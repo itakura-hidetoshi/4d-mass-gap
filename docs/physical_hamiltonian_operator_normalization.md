@@ -6,7 +6,7 @@ Lean source:
 MGAP4D/MathlibAnalytic/PhysicalHamiltonianOperatorNormalization.lean
 ```
 
-This surface makes the physical Hamiltonian normalization explicit at operator-scale level.
+This surface makes the physical Hamiltonian normalization explicit at operator-scale level while keeping the numeric `33/20` theorem outside this pre-R6 layer.
 
 ## Convention
 
@@ -18,17 +18,19 @@ H_phys = E0 * H_norm
 The corresponding gap reading is:
 
 ```text
-Delta_norm = 33/20
+Delta_norm = exactGapValueReal
 Delta_phys(E0) = E0 * Delta_norm
-Delta_phys(E0) = E0 * (33/20)
+Delta_phys(E0) = E0 * exactGapValueReal
 ```
 
 In MGAP4D internal normalized units:
 
 ```text
 E0 = 1
-Delta_phys(1) = 33/20
+Delta_phys(1) = exactGapValueReal
 ```
+
+The arithmetic normalization of this exact carrier to `33/20` is reserved for the R6 spectral-origin layer.
 
 ## Anchors
 
@@ -39,9 +41,9 @@ PhysicalHamiltonianOperatorNormalizationData.ready
 physical_hamiltonian_operator_normalization_ready
 physical_hamiltonian_operator_normalized_scale_def
 physical_hamiltonian_operator_scale_reconstruction
-physical_hamiltonian_operator_normalized_gap_eq_3320
-physical_hamiltonian_operator_dimensional_gap_eq_reference_mul_3320
-physical_hamiltonian_operator_internal_dimensional_gap_eq_3320
+physical_hamiltonian_operator_normalized_gap_eq_exact
+physical_hamiltonian_operator_dimensional_gap_eq_reference_mul_exact
+physical_hamiltonian_operator_internal_dimensional_gap_eq_exact
 ```
 
 ## Boundary
