@@ -13,8 +13,9 @@ unbounded operator surface: lattice/configuration data, plaquette observable,
 coupling, normalization bridge, and compatibility with the declared `H_phys`.
 
 Boundary: this is a proof-carrying construction skeleton.  It does not yet prove
-a full continuum Yang--Mills Hamiltonian construction or the final spectral
-realization. -/
+a full continuum Yang--Mills Hamiltonian construction, the final spectral
+realization, or any upstream exact numeric value equality before the R6
+spectral-origin surface. -/
 structure ConcreteYangMillsHamiltonianSkeletonData where
   physicalOperatorReady : physicalUnboundedOperatorSkeletonReviewSurface.ready
   state : Type u
@@ -39,7 +40,6 @@ structure ConcreteYangMillsHamiltonianSkeletonData where
   rayleigh : state → ℝ
   rayleigh_lower_bound : ∀ ψ, domain ψ → exactGapValueReal ≤ rayleigh ψ
   distinguished_attains_exact : rayleigh distinguished = exactGapValueReal
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   concreteYangMillsHamiltonianSkeletonVisible : Prop
   concreteYangMillsHamiltonianSkeletonVisible_proof : concreteYangMillsHamiltonianSkeletonVisible
   continuumLimitStillOpen : Prop
@@ -63,7 +63,6 @@ def ConcreteYangMillsHamiltonianSkeletonData.ready
   (∀ ψ, D.domain ψ → D.domain (D.H_phys ψ)) ∧
   (∀ ψ, D.domain ψ → exactGapValueReal ≤ D.rayleigh ψ) ∧
   D.rayleigh D.distinguished = exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.concreteYangMillsHamiltonianSkeletonVisible ∧ D.continuumLimitStillOpen ∧
   D.spectralRealizationStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
@@ -128,23 +127,18 @@ noncomputable def prototypeConcreteYangMillsHamiltonianSkeletonData :
       And.intro physical_unbounded_operator_skeleton_review_surface_ready rfl
     plaquetteCentered := (0 : ℝ) = 0
     plaquetteCentered_proof := rfl
-    normalizationBridge :=
-      0 < (1 : ℝ) ∧ exactGapValueReal = (33 : ℝ) / 20
-    normalizationBridge_proof :=
-      And.intro (by norm_num) exactGapValueReal_eq
+    normalizationBridge := 0 < (1 : ℝ)
+    normalizationBridge_proof := by norm_num
     domain_preserved := by intro ψ hψ; exact True.intro
     rayleigh := fun _ => exactGapValueReal
     rayleigh_lower_bound := by intro ψ hψ; exact le_rfl
     distinguished_attains_exact := rfl
-    exact_value_eq_3320 := exactGapValueReal_eq
     concreteYangMillsHamiltonianSkeletonVisible :=
       physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
-      exactGapValueReal = (33 : ℝ) / 20 ∧
       0 < exactGapValueReal ∧ 0 < (1 : ℝ)
     concreteYangMillsHamiltonianSkeletonVisible_proof :=
       And.intro physical_unbounded_operator_skeleton_review_surface_ready <|
-        And.intro exactGapValueReal_eq <|
-          And.intro exactGapValueReal_pos (by norm_num)
+        And.intro exactGapValueReal_pos (by norm_num)
     continuumLimitStillOpen := physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen
     continuumLimitStillOpen_proof := physicalUnboundedOperatorSkeletonReviewSurface.concreteYangMillsHamiltonianStillOpen_proof
     spectralRealizationStillOpen := physicalUnboundedOperatorSkeletonReviewSurface.spectralRealizationStillOpen
@@ -166,7 +160,6 @@ theorem prototype_concrete_ym_hamiltonian_skeleton_ready :
     And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.domain_preserved <|
     And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.rayleigh_lower_bound <|
     And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.distinguished_attains_exact <|
-    And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.exact_value_eq_3320 <|
     And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.concreteYangMillsHamiltonianSkeletonVisible_proof <|
     And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen_proof <|
     And.intro prototypeConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen_proof <|
