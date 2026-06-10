@@ -18,8 +18,7 @@ structure ExactGapRealSurface where
 noncomputable def exactGapRealSurface : ExactGapRealSurface :=
   { value := exactGapValueReal
     positive := exactGapValueReal_pos
-    above_one := by
-      norm_num [exactGapValueReal]
+    above_one := exactGapValueReal_above_one
     analyticReplacementBranchOnly := True }
 
 def ExactGapRealSurface.ready (S : ExactGapRealSurface) : Prop :=
