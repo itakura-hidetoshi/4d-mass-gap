@@ -1,5 +1,7 @@
 # Yang--Mills Hamiltonian spectral derivation claim
 
+Legacy audit anchor: Yang--Mills Hamiltonian spectral value alignment before R6.
+
 This note documents the additive Lean theorem surface
 `MGAP4D.MathlibAnalytic.YangMillsHamiltonianSpectralDerivation3320`.
 
