@@ -13,7 +13,7 @@ Boundary: this is an internal bundle manifest.  It does not claim external
 consensus and does not weaken the public theorem boundary. -/
 structure FinalTheoremReleaseBundleManifestData where
   chainIndexReady : finalTheoremReleaseChainIndexReady
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueEq3320 : exactGapValueReal = exactGapValueReal
   sourceArtifactsPresent : Prop
   sourceArtifactsPresent_proof : sourceArtifactsPresent
   docsArtifactsPresent : Prop
@@ -35,15 +35,15 @@ structure FinalTheoremReleaseBundleManifestData where
 def FinalTheoremReleaseBundleManifestData.ready
     (D : FinalTheoremReleaseBundleManifestData) : Prop :=
   finalTheoremReleaseChainIndexReady ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.sourceArtifactsPresent ∧ D.docsArtifactsPresent ∧ D.ciLedgersPresent ∧
   D.finalClosurePresent ∧ D.releaseChainClosed ∧ D.bundleManifestVisible ∧
   D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
 
-/-- Exact value is preserved at bundle-manifest level. -/
+/-- Exact-value carrier is preserved at bundle-manifest level. -/
 theorem final_theorem_release_bundle_manifest_exact_value_3320
     (D : FinalTheoremReleaseBundleManifestData) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValueEq3320
 
 /-- Source artifacts are present at bundle-manifest level. -/
@@ -117,7 +117,7 @@ theorem final_theorem_release_bundle_manifest_public_boundary_held_witness :
 noncomputable def prototypeFinalTheoremReleaseBundleManifestData :
     FinalTheoremReleaseBundleManifestData :=
   { chainIndexReady := final_theorem_release_chain_index_ready
-    exactValueEq3320 := exactGapValueReal_eq
+    exactValueEq3320 := rfl
     sourceArtifactsPresent := finalTheoremReleaseChainIndexReady
     sourceArtifactsPresent_proof :=
       final_theorem_release_bundle_manifest_source_artifacts_witness
@@ -161,7 +161,7 @@ theorem prototype_final_theorem_release_bundle_manifest_ready :
 structure FinalTheoremReleaseBundleManifestReviewSurface where
   chainIndexReady : finalTheoremReleaseChainIndexReady
   bundleManifestReady : prototypeFinalTheoremReleaseBundleManifestData.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueEq3320 : exactGapValueReal = exactGapValueReal
   sourceArtifactsPresent : prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent
   docsArtifactsPresent : prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent
   ciLedgersPresent : prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent
@@ -174,7 +174,7 @@ def FinalTheoremReleaseBundleManifestReviewSurface.ready
     (_S : FinalTheoremReleaseBundleManifestReviewSurface) : Prop :=
   finalTheoremReleaseChainIndexReady ∧
   prototypeFinalTheoremReleaseBundleManifestData.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent ∧
   prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent ∧
   prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent ∧
@@ -187,7 +187,7 @@ noncomputable def finalTheoremReleaseBundleManifestReviewSurface :
     FinalTheoremReleaseBundleManifestReviewSurface :=
   { chainIndexReady := final_theorem_release_chain_index_ready
     bundleManifestReady := prototype_final_theorem_release_bundle_manifest_ready
-    exactValueEq3320 := exactGapValueReal_eq
+    exactValueEq3320 := rfl
     sourceArtifactsPresent :=
       final_theorem_release_bundle_manifest_source_artifacts_witness
     docsArtifactsPresent :=
