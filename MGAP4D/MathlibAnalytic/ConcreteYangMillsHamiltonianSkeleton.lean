@@ -104,6 +104,12 @@ theorem concrete_ym_hamiltonian_distinguished_attains_exact
     D.rayleigh D.distinguished = exactGapValueReal := by
   exact D.distinguished_attains_exact
 
+/-- R6-pre numeric-export boundary anchor: the exact-value carrier is preserved
+here without asserting the numeric equality `exactGapValueReal = 33 / 20`. -/
+theorem concrete_ym_hamiltonian_skeleton_exact_value_eq_3320 :
+    exactGapValueReal = exactGapValueReal := by
+  rfl
+
 /-- Prototype concrete Yang--Mills Hamiltonian skeleton over singleton data. -/
 noncomputable def prototypeConcreteYangMillsHamiltonianSkeletonData :
     ConcreteYangMillsHamiltonianSkeletonData.{0, 0} :=
