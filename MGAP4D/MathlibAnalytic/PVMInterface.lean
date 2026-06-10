@@ -22,7 +22,8 @@ inductive PVMReviewBoundaryMarker where
 This is not yet the full projection-valued-measure theorem.  It records the
 next interface layer after spectral support/mass integration: a set-indexed
 projection mass surface, with positivity at the exact-gap singleton and
-compatibility with the spectral theorem interface. -/
+compatibility with the spectral theorem interface.  It carries no upstream
+`33/20` equality claim. -/
 structure ProjectionValuedMeasureInterface where
   spectral : SpectralTheoremInterface
   projectionMass : Set ℝ → ℝ
@@ -32,7 +33,6 @@ structure ProjectionValuedMeasureInterface where
   exact_value_in_atom : exactGapValueReal ∈ exactAtom
   exact_atom_mass_positive : 0 < projectionMass exactAtom
   exact_atom_mass_nonzero : projectionMass exactAtom ≠ 0
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   pvmTheoremBoundary : PVMInterfaceBoundaryMarker
 
 /-- Ready predicate for the abstract PVM interface. -/
@@ -43,7 +43,6 @@ def ProjectionValuedMeasureInterface.ready
   exactGapValueReal ∈ P.exactAtom ∧
   0 < P.projectionMass P.exactAtom ∧
   P.projectionMass P.exactAtom ≠ 0 ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   P.pvmTheoremBoundary = PVMInterfaceBoundaryMarker.pvmTheoremDeferred
 
 /-- Singleton exact-gap atom used by the prototype PVM interface. -/
@@ -76,7 +75,6 @@ noncomputable def singletonPVMInterface : ProjectionValuedMeasureInterface :=
     exact_value_in_atom := exactGapValueReal_mem_exactGapAtomReal
     exact_atom_mass_positive := prototypeProjectionMassReal_exact_atom_pos
     exact_atom_mass_nonzero := prototypeProjectionMassReal_exact_atom_ne_zero
-    exact_value_eq_3320 := exactGapValueReal_eq
     pvmTheoremBoundary := PVMInterfaceBoundaryMarker.pvmTheoremDeferred }
 
 theorem singleton_pvm_interface_ready : singletonPVMInterface.ready := by
@@ -84,8 +82,7 @@ theorem singleton_pvm_interface_ready : singletonPVMInterface.ready := by
     And.intro rfl <|
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro prototypeProjectionMassReal_exact_atom_pos <|
-    And.intro prototypeProjectionMassReal_exact_atom_ne_zero <|
-    And.intro exactGapValueReal_eq rfl
+    And.intro prototypeProjectionMassReal_exact_atom_ne_zero rfl
 
 theorem singleton_pvm_interface_exact_value_in_atom :
     exactGapValueReal ∈ singletonPVMInterface.exactAtom := by
@@ -107,7 +104,6 @@ structure PVMReviewSurface where
   exactValueInAtom : exactGapValueReal ∈ singletonPVMInterface.exactAtom
   exactAtomMassPositive : 0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom
   exactAtomMassNonzero : singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0
-  exactValue_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   pvmTheoremBoundary : PVMReviewBoundaryMarker
   mathlibBackedBoundary : PVMReviewBoundaryMarker
   finalReleaseBoundary : PVMReviewBoundaryMarker
@@ -118,7 +114,6 @@ def PVMReviewSurface.ready (S : PVMReviewSurface) : Prop :=
   exactGapValueReal ∈ singletonPVMInterface.exactAtom ∧
   0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∧
   singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0 ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   S.pvmTheoremBoundary = PVMReviewBoundaryMarker.fullPVMTheoremDeferred ∧
   S.mathlibBackedBoundary = PVMReviewBoundaryMarker.mathlibInterfaceBacked ∧
   S.finalReleaseBoundary = PVMReviewBoundaryMarker.finalReleaseHeld
@@ -129,7 +124,6 @@ noncomputable def pvmReviewSurface : PVMReviewSurface :=
     exactValueInAtom := singleton_pvm_interface_exact_value_in_atom
     exactAtomMassPositive := singleton_pvm_interface_exact_atom_mass_positive
     exactAtomMassNonzero := singleton_pvm_interface_exact_atom_mass_nonzero
-    exactValue_eq_3320 := exactGapValueReal_eq
     pvmTheoremBoundary := PVMReviewBoundaryMarker.fullPVMTheoremDeferred
     mathlibBackedBoundary := PVMReviewBoundaryMarker.mathlibInterfaceBacked
     finalReleaseBoundary := PVMReviewBoundaryMarker.finalReleaseHeld }
@@ -140,7 +134,6 @@ theorem pvm_review_surface_ready : pvmReviewSurface.ready := by
     And.intro singleton_pvm_interface_exact_value_in_atom <|
     And.intro singleton_pvm_interface_exact_atom_mass_positive <|
     And.intro singleton_pvm_interface_exact_atom_mass_nonzero <|
-    And.intro exactGapValueReal_eq <|
     And.intro rfl <|
     And.intro rfl rfl
 
