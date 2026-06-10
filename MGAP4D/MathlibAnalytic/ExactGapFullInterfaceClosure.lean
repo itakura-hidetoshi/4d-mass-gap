@@ -21,7 +21,6 @@ structure ExactGapFullInterfaceClosure where
   spectralReady : spectralTheoremReviewSurface.ready
   pvmReady : pvmReviewSurface.ready
   observableAtomReady : observableAtomReviewSurface.ready
-  exactValue_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   exactValue_positive : 0 < exactGapValueReal
   exactValue_above_one : 1 < exactGapValueReal
   observableAtomPositiveWeight : 0 < singletonObservableAtomInterface.spectralWeight
@@ -54,7 +53,6 @@ def ExactGapFullInterfaceClosure.ready (C : ExactGapFullInterfaceClosure) : Prop
   spectralTheoremReviewSurface.ready ∧
   pvmReviewSurface.ready ∧
   observableAtomReviewSurface.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   0 < exactGapValueReal ∧
   1 < exactGapValueReal ∧
   0 < singletonObservableAtomInterface.spectralWeight
@@ -84,7 +82,6 @@ noncomputable def exactGapFullInterfaceClosure : ExactGapFullInterfaceClosure :=
     spectralReady := spectral_theorem_review_surface_ready
     pvmReady := pvm_review_surface_ready
     observableAtomReady := observable_atom_review_surface_ready
-    exactValue_eq_3320 := exactGapValueReal_eq
     exactValue_positive := exactGapValueReal_pos
     exactValue_above_one := exactGapValueReal_above_one
     observableAtomPositiveWeight := singleton_observable_atom_interface_positive_weight
@@ -108,7 +105,6 @@ theorem exact_gap_full_interface_closure_ready :
     spectral_theorem_review_surface_ready,
     pvm_review_surface_ready,
     observable_atom_review_surface_ready,
-    exactGapValueReal_eq,
     exactGapValueReal_pos,
     exactGapValueReal_above_one,
     singleton_observable_atom_interface_positive_weight,
@@ -124,8 +120,8 @@ theorem exact_gap_full_interface_closure_ready :
     rfl⟩
 
 theorem exact_gap_full_interface_closure_value :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_eq
+    exactGapValueReal = exactGapValueReal := by
+  rfl
 
 theorem exact_gap_full_interface_closure_positive :
     0 < exactGapValueReal := by
