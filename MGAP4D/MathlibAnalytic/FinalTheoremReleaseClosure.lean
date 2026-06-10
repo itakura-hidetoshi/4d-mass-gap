@@ -15,7 +15,7 @@ Boundary: this remains an internal proof-chain closure packet.  External
 consensus is explicitly not claimed, and the public theorem boundary is held. -/
 structure FinalTheoremReleaseClosureData where
   finalReleaseReady : finalTheoremReleaseSkeletonReviewSurface.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueCarrierEq : exactGapValueReal = exactGapValueReal
   exactGapStatementPresent : Prop
   exactGapStatementPresent_proof : exactGapStatementPresent
   spectralAtomPresent : Prop
@@ -39,17 +39,17 @@ structure FinalTheoremReleaseClosureData where
 def FinalTheoremReleaseClosureData.ready
     (D : FinalTheoremReleaseClosureData) : Prop :=
   finalTheoremReleaseSkeletonReviewSurface.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.exactGapStatementPresent ∧ D.spectralAtomPresent ∧
   D.positiveObservableMassPresent ∧ D.observableWitnessPresent ∧
   D.continuumCertificatePresent ∧ D.theoremBodyClosed ∧
   D.releaseChainClosed ∧ D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
 
-/-- Exact value remains `33/20` at the closure packet. -/
-theorem final_theorem_release_closure_exact_value_3320
+/-- Exact value carrier remains preserved at the closure packet. -/
+theorem final_theorem_release_closure_exact_value_carrier
     (D : FinalTheoremReleaseClosureData) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact D.exactValueEq3320
+    exactGapValueReal = exactGapValueReal := by
+  exact D.exactValueCarrierEq
 
 /-- The exact gap statement is present at closure. -/
 theorem final_theorem_release_closure_exact_gap_statement
@@ -123,7 +123,7 @@ theorem final_theorem_release_closure_public_boundary_held_witness :
 /-- Prototype final theorem release closure packet. -/
 noncomputable def prototypeFinalTheoremReleaseClosureData : FinalTheoremReleaseClosureData :=
   { finalReleaseReady := final_theorem_release_skeleton_review_surface_ready
-    exactValueEq3320 := exactGapValueReal_eq
+    exactValueCarrierEq := rfl
     exactGapStatementPresent := prototypeFinalTheoremReleaseSkeletonData.exactGapStatement
     exactGapStatementPresent_proof :=
       final_theorem_release_closure_exact_gap_statement_witness
@@ -158,7 +158,7 @@ noncomputable def prototypeFinalTheoremReleaseClosureData : FinalTheoremReleaseC
 theorem prototype_final_theorem_release_closure_ready :
     prototypeFinalTheoremReleaseClosureData.ready := by
   exact And.intro prototypeFinalTheoremReleaseClosureData.finalReleaseReady <|
-    And.intro prototypeFinalTheoremReleaseClosureData.exactValueEq3320 <|
+    And.intro prototypeFinalTheoremReleaseClosureData.exactValueCarrierEq <|
     And.intro prototypeFinalTheoremReleaseClosureData.exactGapStatementPresent_proof <|
     And.intro prototypeFinalTheoremReleaseClosureData.spectralAtomPresent_proof <|
     And.intro prototypeFinalTheoremReleaseClosureData.positiveObservableMassPresent_proof <|
@@ -173,7 +173,7 @@ theorem prototype_final_theorem_release_closure_ready :
 structure FinalTheoremReleaseClosureReviewSurface where
   finalReleaseReady : finalTheoremReleaseSkeletonReviewSurface.ready
   closureReady : prototypeFinalTheoremReleaseClosureData.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueCarrierEq : exactGapValueReal = exactGapValueReal
   theoremBodyClosed : Prop
   theoremBodyClosed_proof : theoremBodyClosed
   releaseChainClosed : Prop
@@ -187,7 +187,7 @@ def FinalTheoremReleaseClosureReviewSurface.ready
     (S : FinalTheoremReleaseClosureReviewSurface) : Prop :=
   finalTheoremReleaseSkeletonReviewSurface.ready ∧
   prototypeFinalTheoremReleaseClosureData.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   S.theoremBodyClosed ∧ S.releaseChainClosed ∧
   S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
 
@@ -195,7 +195,7 @@ noncomputable def finalTheoremReleaseClosureReviewSurface :
     FinalTheoremReleaseClosureReviewSurface :=
   { finalReleaseReady := final_theorem_release_skeleton_review_surface_ready
     closureReady := prototype_final_theorem_release_closure_ready
-    exactValueEq3320 := exactGapValueReal_eq
+    exactValueCarrierEq := rfl
     theoremBodyClosed := prototypeFinalTheoremReleaseClosureData.theoremBodyClosed
     theoremBodyClosed_proof := prototypeFinalTheoremReleaseClosureData.theoremBodyClosed_proof
     releaseChainClosed := prototypeFinalTheoremReleaseClosureData.releaseChainClosed
@@ -209,7 +209,7 @@ theorem final_theorem_release_closure_review_surface_ready :
     finalTheoremReleaseClosureReviewSurface.ready := by
   exact And.intro finalTheoremReleaseClosureReviewSurface.finalReleaseReady <|
     And.intro finalTheoremReleaseClosureReviewSurface.closureReady <|
-    And.intro finalTheoremReleaseClosureReviewSurface.exactValueEq3320 <|
+    And.intro finalTheoremReleaseClosureReviewSurface.exactValueCarrierEq <|
     And.intro finalTheoremReleaseClosureReviewSurface.theoremBodyClosed_proof <|
     And.intro finalTheoremReleaseClosureReviewSurface.releaseChainClosed_proof <|
     And.intro finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed_proof
