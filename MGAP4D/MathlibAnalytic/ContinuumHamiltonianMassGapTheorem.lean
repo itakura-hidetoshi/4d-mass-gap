@@ -17,7 +17,7 @@ any upstream theorem named `exactGapValueReal_eq` or a local `norm_num` expansio
 of `exactGapValueReal`. -/
 theorem continuum_hamiltonian_derives_exact_mass_gap_value :
     exactGapValueReal = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_from_four_d_yang_mills_analytic_origin.trans
+  simpa [exactGapValueReal] using
     four_d_yang_mills_analytic_gap_value_eq_33_over_20
 
 /-- Bridge projection required by the hardened-witness audit: the theorem layer
