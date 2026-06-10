@@ -56,6 +56,7 @@ declare -a AUDITS=(
   "audit concrete analytic spine l2 R2 progress index|python3 scripts/audit_concrete_analytic_spine_l2_r2_progress_index.py"
   "audit physical Hamiltonian operator normalization|python3 scripts/audit_physical_hamiltonian_operator_normalization.py"
   "audit Yang-Mills Hamiltonian spectral value alignment before R6|python3 scripts/audit_yang_mills_hamiltonian_spectral_derivation_3320.py"
+  "audit spectral theorem / PVM / Hamiltonian gap necessity|python3 scripts/audit_spectral_pvm_hamiltonian_gap_necessity.py"
   "audit infinite-dimensional Yang-Mills target layer|python3 scripts/audit_infinite_dimensional_target_layer.py"
   "audit infinite-dimensional residual filling bridge|python3 scripts/audit_infinite_dimensional_residual_filling.py"
   "audit hard physical residual hardening map|python3 scripts/audit_hard_physical_residual_hardening_map.py"
