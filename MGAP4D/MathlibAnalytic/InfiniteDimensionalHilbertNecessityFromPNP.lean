@@ -22,7 +22,8 @@ The bridge is intentionally abstract:
   remains necessary for the physical realization.
 
 Boundary: this is a necessity bridge, not yet the full infinite-dimensional
-physical Hilbert construction. -/
+physical Hilbert construction, and it carries no upstream exact numeric value
+equality before the R6 spectral-origin surface. -/
 structure InfiniteDimensionalHilbertNecessityFromPNPData where
   concreteHPhysReady : concreteHPhysRealizationTheoremReviewSurface.ready
   finiteCollapseModel : Type u
@@ -42,7 +43,6 @@ structure InfiniteDimensionalHilbertNecessityFromPNPData where
   onePointModelNotFinalPhysicalHilbert_proof : onePointModelNotFinalPhysicalHilbert
   hilbertCompletionNecessary : Prop
   hilbertCompletionNecessary_proof : hilbertCompletionNecessary
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   finalReleaseHeld : Prop
   publicBoundaryHeld : Prop
 
@@ -56,7 +56,6 @@ def InfiniteDimensionalHilbertNecessityFromPNPData.ready
   D.infiniteDistinguishableFamilyVisible ∧
   D.onePointModelNotFinalPhysicalHilbert ∧
   D.hilbertCompletionNecessary ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   D.finalReleaseHeld ∧
   D.publicBoundaryHeld
 
@@ -124,7 +123,6 @@ noncomputable def prototypeInfiniteDimensionalHilbertNecessityFromPNPData :
     onePointModelNotFinalPhysicalHilbert_proof := True.intro
     hilbertCompletionNecessary := True
     hilbertCompletionNecessary_proof := True.intro
-    exact_value_eq_3320 := exactGapValueReal_eq
     finalReleaseHeld := True
     publicBoundaryHeld := True }
 
@@ -137,7 +135,6 @@ theorem prototype_pnp_hilbert_necessity_ready :
     And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.infiniteDistinguishableFamilyVisible_proof <|
     And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.onePointModelNotFinalPhysicalHilbert_proof <|
     And.intro prototypeInfiniteDimensionalHilbertNecessityFromPNPData.hilbertCompletionNecessary_proof <|
-    And.intro exactGapValueReal_eq <|
     And.intro True.intro True.intro
 
 theorem prototype_pnp_hilbert_necessity_distinguishable_excitations
