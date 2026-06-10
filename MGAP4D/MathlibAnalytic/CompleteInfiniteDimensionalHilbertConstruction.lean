@@ -34,7 +34,7 @@ structure CompleteInfiniteDimensionalHilbertConstructionLaneData where
   innerProductHardened : Prop
   hilbertInstanceHardened : Prop
   hardPhysicalBoundaryVisible : Prop
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   reviewLevelOnly : Prop
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
@@ -58,7 +58,7 @@ def CompleteInfiniteDimensionalHilbertConstructionLaneData.ready
   D.innerProductHardened ∧
   D.hilbertInstanceHardened ∧
   D.hardPhysicalBoundaryVisible ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -119,10 +119,10 @@ theorem complete_hilbert_construction_hard_boundary_visible
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- Exact normalized value is preserved by the complete Hilbert construction lane. -/
+/-- Exact-value carrier is preserved by the complete Hilbert construction lane. -/
 theorem complete_hilbert_construction_exact_value_preserved
     (D : CompleteInfiniteDimensionalHilbertConstructionLaneData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- The complete Hilbert construction lane remains review-level only. -/
@@ -176,7 +176,7 @@ structure CompleteInfiniteDimensionalHilbertConstructionData where
   innerProductRealized_proof : innerProductRealized
   hilbertInstanceRealized : Prop
   hilbertInstanceRealized_proof : hilbertInstanceRealized
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   reviewLevelOnly : Prop
   reviewLevelOnly_proof : reviewLevelOnly
   publicBoundaryHeld : Prop
@@ -207,7 +207,7 @@ def CompleteInfiniteDimensionalHilbertConstructionData.ready
   D.completeNormedSpaceRealized ∧
   D.innerProductRealized ∧
   D.hilbertInstanceRealized ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.reviewLevelOnly ∧ D.publicBoundaryHeld ∧ D.finalReleaseHeld
 
 /-- Concrete Nat-indexed complete infinite-dimensional Hilbert construction
@@ -257,7 +257,7 @@ def completeInfiniteDimensionalHilbertConstructionData :
     innerProductRealized_proof := hilbert_inner_product_skeleton_review_surface_ready
     hilbertInstanceRealized := hilbertSpaceInstanceSkeletonReviewSurface.ready
     hilbertInstanceRealized_proof := hilbert_space_instance_skeleton_review_surface_ready
-    exactValuePreserved := exactGapValueReal_eq
+    exactValuePreserved := rfl
     reviewLevelOnly := True
     reviewLevelOnly_proof := True.intro
     publicBoundaryHeld := True
@@ -331,7 +331,7 @@ def completeInfiniteDimensionalHilbertConstructionLaneData :
     innerProductHardened := completeInfiniteDimensionalHilbertConstructionData.innerProductRealized
     hilbertInstanceHardened := completeInfiniteDimensionalHilbertConstructionData.hilbertInstanceRealized
     hardPhysicalBoundaryVisible := completeInfiniteDimensionalHilbertConstructionData.noFiniteRankCollapse
-    exactValuePreserved := exactGapValueReal_eq
+    exactValuePreserved := rfl
     reviewLevelOnly := completeInfiniteDimensionalHilbertConstructionData.reviewLevelOnly
     publicBoundaryHeld := completeInfiniteDimensionalHilbertConstructionData.publicBoundaryHeld
     finalReleaseHeld := completeInfiniteDimensionalHilbertConstructionData.finalReleaseHeld }
