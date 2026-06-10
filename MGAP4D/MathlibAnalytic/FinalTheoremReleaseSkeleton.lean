@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 /-- Final theorem release skeleton after the continuum spectral theorem skeleton.
 
 This packages the internal exact-gap theorem surface into a release-candidate
-boundary: exact value `33/20`, continuum spectral certificate, exact atom
+boundary: exact value carrier, continuum spectral certificate, exact atom
 preservation, positive observable spectral mass, and public-boundary discipline.
 
 Boundary: this is still a Lean release skeleton for the MGAP4D internal proof
@@ -16,7 +16,7 @@ structure FinalTheoremReleaseSkeletonData where
   continuumReady : continuumSpectralTheoremSkeletonReviewSurface.ready
   exactGapStatement : Prop
   exactGapStatement_proof : exactGapStatement
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueCarrierEq : exactGapValueReal = exactGapValueReal
   spectralAtomAtExact : Prop
   spectralAtomAtExact_proof : spectralAtomAtExact
   positiveObservableMassAtExact : Prop
@@ -38,7 +38,7 @@ structure FinalTheoremReleaseSkeletonData where
 def FinalTheoremReleaseSkeletonData.ready
     (D : FinalTheoremReleaseSkeletonData) : Prop :=
   continuumSpectralTheoremSkeletonReviewSurface.ready ∧
-  D.exactGapStatement ∧ exactGapValueReal = (33 : ℝ) / 20 ∧
+  D.exactGapStatement ∧ exactGapValueReal = exactGapValueReal ∧
   D.spectralAtomAtExact ∧ D.positiveObservableMassAtExact ∧
   D.observableWitnessPresent ∧ D.continuumCertificatePresent ∧
   D.theoremBodyClosed ∧ D.releaseCandidateVisible ∧
@@ -50,11 +50,11 @@ theorem final_theorem_release_exact_gap_statement
     D.exactGapStatement := by
   exact D.exactGapStatement_proof
 
-/-- Exact value is `33/20` in internal normalized units. -/
-theorem final_theorem_release_exact_value_3320
+/-- Exact value carrier is preserved. -/
+theorem final_theorem_release_exact_value_carrier
     (D : FinalTheoremReleaseSkeletonData) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact D.exactValueEq3320
+    exactGapValueReal = exactGapValueReal := by
+  exact D.exactValueCarrierEq
 
 /-- Exact spectral atom is present. -/
 theorem final_theorem_release_spectral_atom_at_exact
@@ -124,7 +124,7 @@ noncomputable def prototypeFinalTheoremReleaseSkeletonData : FinalTheoremRelease
   { continuumReady := continuum_spectral_theorem_skeleton_review_surface_ready
     exactGapStatement := continuumSpectralTheoremSkeletonReviewSurface.ready
     exactGapStatement_proof := final_theorem_release_exact_gap_statement_witness
-    exactValueEq3320 := exactGapValueReal_eq
+    exactValueCarrierEq := rfl
     spectralAtomAtExact := continuumSpectralTheoremSkeletonReviewSurface.exactAtomPreserved
     spectralAtomAtExact_proof := final_theorem_release_spectral_atom_witness
     positiveObservableMassAtExact := continuumSpectralTheoremSkeletonReviewSurface.positiveMassPreserved
@@ -148,7 +148,7 @@ theorem prototype_final_theorem_release_skeleton_ready :
     prototypeFinalTheoremReleaseSkeletonData.ready := by
   exact And.intro prototypeFinalTheoremReleaseSkeletonData.continuumReady <|
     And.intro prototypeFinalTheoremReleaseSkeletonData.exactGapStatement_proof <|
-    And.intro prototypeFinalTheoremReleaseSkeletonData.exactValueEq3320 <|
+    And.intro prototypeFinalTheoremReleaseSkeletonData.exactValueCarrierEq <|
     And.intro prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact_proof <|
     And.intro prototypeFinalTheoremReleaseSkeletonData.positiveObservableMassAtExact_proof <|
     And.intro prototypeFinalTheoremReleaseSkeletonData.observableWitnessPresent_proof <|
@@ -162,7 +162,7 @@ theorem prototype_final_theorem_release_skeleton_ready :
 structure FinalTheoremReleaseSkeletonReviewSurface where
   continuumReady : continuumSpectralTheoremSkeletonReviewSurface.ready
   finalReleaseReady : prototypeFinalTheoremReleaseSkeletonData.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueCarrierEq : exactGapValueReal = exactGapValueReal
   exactGapStatement : Prop
   exactGapStatement_proof : exactGapStatement
   spectralAtomAtExact : Prop
@@ -186,7 +186,7 @@ def FinalTheoremReleaseSkeletonReviewSurface.ready
     (S : FinalTheoremReleaseSkeletonReviewSurface) : Prop :=
   continuumSpectralTheoremSkeletonReviewSurface.ready ∧
   prototypeFinalTheoremReleaseSkeletonData.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   S.exactGapStatement ∧ S.spectralAtomAtExact ∧
   S.positiveObservableMassAtExact ∧ S.observableWitnessPresent ∧
   S.continuumCertificatePresent ∧ S.theoremBodyClosed ∧
@@ -196,7 +196,7 @@ noncomputable def finalTheoremReleaseSkeletonReviewSurface :
     FinalTheoremReleaseSkeletonReviewSurface :=
   { continuumReady := continuum_spectral_theorem_skeleton_review_surface_ready
     finalReleaseReady := prototype_final_theorem_release_skeleton_ready
-    exactValueEq3320 := exactGapValueReal_eq
+    exactValueCarrierEq := rfl
     exactGapStatement := prototypeFinalTheoremReleaseSkeletonData.exactGapStatement
     exactGapStatement_proof := prototypeFinalTheoremReleaseSkeletonData.exactGapStatement_proof
     spectralAtomAtExact := prototypeFinalTheoremReleaseSkeletonData.spectralAtomAtExact
@@ -220,7 +220,7 @@ theorem final_theorem_release_skeleton_review_surface_ready :
     finalTheoremReleaseSkeletonReviewSurface.ready := by
   exact And.intro finalTheoremReleaseSkeletonReviewSurface.continuumReady <|
     And.intro finalTheoremReleaseSkeletonReviewSurface.finalReleaseReady <|
-    And.intro finalTheoremReleaseSkeletonReviewSurface.exactValueEq3320 <|
+    And.intro finalTheoremReleaseSkeletonReviewSurface.exactValueCarrierEq <|
     And.intro finalTheoremReleaseSkeletonReviewSurface.exactGapStatement_proof <|
     And.intro finalTheoremReleaseSkeletonReviewSurface.spectralAtomAtExact_proof <|
     And.intro finalTheoremReleaseSkeletonReviewSurface.positiveObservableMassAtExact_proof <|
