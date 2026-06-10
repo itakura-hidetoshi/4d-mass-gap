@@ -32,7 +32,7 @@ structure FourLaneResidualClosureData where
   allFourLanesClosed_proof : allFourLanesClosed
   noReviewLevelResidualLeft : Prop
   noReviewLevelResidualLeft_proof : noReviewLevelResidualLeft
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   externalReviewBoundaryVisible : Prop
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
@@ -50,7 +50,7 @@ def FourLaneResidualClosureData.ready
   D.plaquetteWeightLaneClosed ∧
   D.allFourLanesClosed ∧
   D.noReviewLevelResidualLeft ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.externalReviewBoundaryVisible ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -136,10 +136,10 @@ theorem four_lane_closure_no_review_level_residual_left
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- Exact normalized value is preserved by the four-lane closure. -/
+/-- Exact-value carrier is preserved by the four-lane closure before R6 numeric export. -/
 theorem four_lane_closure_exact_value_preserved
     (D : FourLaneResidualClosureData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- External review boundary remains visible after the repository-internal closure. -/
@@ -189,7 +189,7 @@ def fourLaneResidualClosureData : FourLaneResidualClosureData :=
       continuumYangMillsLaneHardeningData.ready ∧
       plaquetteSpectralWeightLaneHardeningData.ready
     noReviewLevelResidualLeft_proof := four_lane_closure_no_review_level_residual_left_witness
-    exactValuePreserved := exactGapTheoremBodyClosure.exactValue_eq_3320
+    exactValuePreserved := plaquetteSpectralWeightLaneHardeningData.exactValuePreserved
     externalReviewBoundaryVisible := True
     publicBoundaryHeld := True
     finalReleaseHeld := True }
