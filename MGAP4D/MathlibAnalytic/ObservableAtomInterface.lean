@@ -11,8 +11,6 @@ inductive ObservableAtomBoundaryMarker where
 
 structure ObservablePrototypeShell where
   label : String
-  exactValue : ℝ
-  exactValue_eq_3320 : exactValue = (33 : ℝ) / 20
 
 structure ObservableAtomInterface where
   pvm : ProjectionValuedMeasureInterface
@@ -26,7 +24,6 @@ structure ObservableAtomInterface where
   positive_atom_weight : 0 < spectralWeight chosenObservable atom
   nonzero_atom_weight : spectralWeight chosenObservable atom ≠ 0
   compatible_with_pvm_mass : spectralWeight chosenObservable atom = pvm.projectionMass pvm.exactAtom
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   observableAtomBoundary : ObservableAtomBoundaryMarker
 
 def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
@@ -36,15 +33,12 @@ def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   0 < O.spectralWeight O.chosenObservable O.atom ∧
   O.spectralWeight O.chosenObservable O.atom ≠ 0 ∧
   O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   O.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
 
 def PrototypeObservable := ObservablePrototypeShell
 
 noncomputable def prototypeObservable : PrototypeObservable :=
-  { label := "observable-atom-shell"
-    exactValue := (33 : ℝ) / 20
-    exactValue_eq_3320 := rfl }
+  { label := "observable-atom-shell" }
 
 noncomputable def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
   exactGapSpectralMassReal
@@ -61,7 +55,6 @@ noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
     positive_atom_weight := exactGapSpectralMassReal_pos
     nonzero_atom_weight := exactGapSpectralMassReal_ne_zero
     compatible_with_pvm_mass := rfl
-    exact_value_eq_3320 := exactGapValueReal_eq
     observableAtomBoundary := ObservableAtomBoundaryMarker.observableAtomTheoremDeferred }
 
 theorem singleton_observable_atom_interface_ready :
@@ -71,8 +64,7 @@ theorem singleton_observable_atom_interface_ready :
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
-    And.intro rfl <|
-    And.intro exactGapValueReal_eq rfl
+    And.intro rfl rfl
 
 theorem singleton_observable_atom_interface_exact_in_atom :
     exactGapValueReal ∈ singletonObservableAtomInterface.atom := by
