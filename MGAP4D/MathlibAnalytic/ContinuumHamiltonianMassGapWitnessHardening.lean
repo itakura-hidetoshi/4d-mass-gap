@@ -3,6 +3,12 @@ import MGAP4D.MathlibAnalytic.ContinuumHamiltonianMassGapWitness
 namespace MGAP4D
 namespace MathlibAnalytic
 
+/-- R6 downstream target anchor for the non-definitional exact-value route.
+This is a proposition anchor only; it does not prove or re-export the numerical
+equality from the pre-R6 hardening surface. -/
+def continuumHamiltonianMassGapWitnessR6ExactValueTarget : Prop :=
+  exactGapValueReal = (33 : ℝ) / 20
+
 /-- Theorem-derived hardening bundle for the continuum-Hamiltonian mass-gap
 witness surface.
 
