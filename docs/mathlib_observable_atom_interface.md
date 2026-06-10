@@ -8,6 +8,7 @@ This note records the observable-facing positive spectral-weight interface after
 
 ```text
 MGAP4D/MathlibAnalytic/ObservableAtomInterface.lean
+MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean
 MGAP4D/MathlibAnalytic.lean
 ```
 
@@ -32,12 +33,22 @@ MathlibAnalytic.observable_atom_review_surface_ready
 MathlibAnalytic.observable_atom_review_surface_final_release_held
 ```
 
+## Final physical carrier routing
+
+```text
+PrototypeObservable is now a compatibility alias for FinalPhysicalHilbertCarrier.
+prototypeObservable is finalPhysicalHilbertZero.
+singletonObservableAtomInterface.observable is FinalPhysicalHilbertCarrier.
+singletonObservableAtomInterface.chosenObservable is finalPhysicalHilbertZero.
+The observable atom surface is routed through the final countable-coordinate physical Hilbert carrier, not a shell-only prototype carrier.
+```
+
 ## Meaning
 
 ```text
 PVM exact atom interface is linked to an observable spectral-weight surface
-observable carrier is explicit
-chosen observable is explicit
+observable carrier is explicit and final-physical-carrier routed
+chosen observable is explicit and final-physical-carrier routed
 compact-support / centered / smeared witnesses are explicit
 exact atom {33/20} is explicit
 33/20 belongs to the exact atom
