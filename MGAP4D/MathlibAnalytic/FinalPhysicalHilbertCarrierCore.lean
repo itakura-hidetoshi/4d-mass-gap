@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.Basic
+import MGAP4D.MathlibAnalytic.ExactGapReal
 
 namespace MGAP4D
 namespace MathlibAnalytic
