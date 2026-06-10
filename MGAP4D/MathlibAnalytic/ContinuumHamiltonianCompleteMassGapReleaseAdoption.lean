@@ -111,5 +111,30 @@ theorem continuum_hamiltonian_complete_spectral_release_adoption_boundary_preser
     ⟨_, _, _, _, _, _, _, _, _, hPublic, hFinal⟩
   exact And.intro hPublic hFinal
 
+/-- Append-only release adoption for the stronger reading that the
+Yang--Mills-derived Hamiltonian spectral theorem/PVM lane itself forces the
+normalized exact value `33 / 20`. -/
+def continuumHamiltonianCompleteSpectralPVMExactMassGapReleaseAdoptionReady : Prop :=
+  continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady ∧
+  yangMillsHamiltonianSpectralPVMDerivesExactGap3320 ∧
+  yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+    (33 : ℝ) / 20 ∧
+  exactGapValueReal = (33 : ℝ) / 20 ∧
+  yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+  yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
+
+/-- The complete release boundary carries the stronger spectral theorem/PVM exact
+value route without opening the public or final-release boundaries. -/
+theorem continuum_hamiltonian_complete_spectral_pvm_exact_mass_gap_release_adoption_ready :
+    continuumHamiltonianCompleteSpectralPVMExactMassGapReleaseAdoptionReady := by
+  unfold continuumHamiltonianCompleteSpectralPVMExactMassGapReleaseAdoptionReady
+  rcases continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved with
+    ⟨hPublic, hFinal⟩
+  exact And.intro continuum_hamiltonian_complete_spectral_mass_gap_release_adoption_ready <|
+    And.intro yang_mills_hamiltonian_spectral_pvm_derives_exact_gap_3320 <|
+    And.intro yang_mills_hamiltonian_spectral_value_eq_33_over_20 <|
+    And.intro yang_mills_hamiltonian_spectral_theorem_pvm_forces_exact_gap_33_over_20 <|
+    And.intro hPublic hFinal
+
 end MathlibAnalytic
 end MGAP4D
