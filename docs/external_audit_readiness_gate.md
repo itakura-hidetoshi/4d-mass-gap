@@ -35,6 +35,32 @@ external_audit_readiness_complete_mass_gap_addendum_ready
 external_audit_readiness_complete_mass_gap_exact_positive
 ```
 
+Continuum-Hamiltonian chain-index exact 33/20 addendum anchors:
+
+```text
+externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady
+finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady
+physicalContinuumHamiltonianToExactPositiveMassGap
+physicalContinuumHamiltonianExactGap33Over20
+continuumHamiltonianMassGapTheoremDerivedWitness
+external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready
+external_audit_readiness_continuum_hamiltonian_exact_33_over_20
+external_audit_readiness_continuum_hamiltonian_addendum_boundary_held
+```
+
+Continuum-Hamiltonian chain-index addendum meaning:
+
+```text
+final theorem release chain index
+  -> append-only continuum-Hamiltonian exact derivation addendum
+  -> physical continuum Hamiltonian exact positive mass gap
+  -> chain-index exact 33/20 addendum
+  -> theorem-derived continuum Hamiltonian witness
+  -> publicBoundaryHeld
+  -> finalReleaseHeld
+  -> theoremWitnessOnly
+```
+
 Complete spectral-value alignment addendum anchors:
 
 ```text
@@ -83,7 +109,8 @@ Meaning:
 ```text
 repository-internal residual closure is external-audit ready;
 complete continuum-Hamiltonian and spectral-alignment routes are visible for replay;
+continuum-Hamiltonian chain-index exact 33/20 addendum is visible as append-only review surface;
 PVM / observable spectral atom positive mass is visible as a public-audit projection;
-R6 remains the first admissible concrete numeric value layer;
+R6 remains the first admissible concrete public numeric value layer;
 external consensus and public final release remain separate boundaries.
 ```
