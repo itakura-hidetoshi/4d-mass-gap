@@ -108,6 +108,8 @@ Expected stages:
 [check] verify manifest
 [check] audit Lean forbidden tokens
 [check] audit major theorem non-placeholder surfaces
+[check] audit proof placeholder inventory
+[check] audit final physical carrier routing
 [check] audit analytic bridge coherence
 [check] audit infinite-dimensional Yang-Mills target layer
 [check] audit infinite-dimensional residual filling bridge
@@ -137,6 +139,7 @@ Reviewer checkpoint:
 [ ] Manifest verification passes.
 [ ] Forbidden-token audit passes.
 [ ] Major theorem non-placeholder audit passes.
+[ ] Final physical carrier routing audit passes.
 [ ] Bridge-coherence audit passes.
 [ ] Infinite-dimensional target-layer audit passes.
 [ ] Complete infinite-dimensional Hilbert construction audit passes.
@@ -153,6 +156,8 @@ If `scripts/check.sh` fails or if individual stage inspection is desired, run:
 python3 scripts/verify_manifest.py
 python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
+python3 scripts/audit_proof_placeholder_inventory.py
+python3 scripts/audit_final_physical_carrier_routing.py
 python3 scripts/audit_bridge_coherence.py
 python3 scripts/audit_infinite_dimensional_target_layer.py
 python3 scripts/audit_infinite_dimensional_residual_filling.py
