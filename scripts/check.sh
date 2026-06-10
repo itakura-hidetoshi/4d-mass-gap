@@ -12,6 +12,8 @@ set -euo pipefail
 # lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
 # build continuum Hamiltonian release-chain addendum
 # lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+# build spectral theorem / PVM / Hamiltonian gap necessity surface
+# lake build MGAP4D.MathlibAnalytic.SpectralPVMHamiltonianGapNecessity
 # build external audit readiness gate
 # lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 
@@ -116,6 +118,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
   MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
   MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
+  MGAP4D.MathlibAnalytic.SpectralPVMHamiltonianGapNecessity
   MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 )
 
