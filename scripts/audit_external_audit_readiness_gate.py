@@ -31,6 +31,7 @@ REQUIRED_TARGET_ANCHORS = (
     "finalReleaseHeld",
     "exactValuePreserved",
     "externalAuditReadinessCompleteMassGapAddendumReady",
+    "externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady",
     "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
     "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
 )
@@ -48,6 +49,9 @@ REQUIRED_THEOREM_ANCHORS = (
     "external_audit_readiness_exact_value_preserved",
     "external_audit_readiness_complete_mass_gap_addendum_ready",
     "external_audit_readiness_complete_mass_gap_exact_positive",
+    "external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready",
+    "external_audit_readiness_continuum_hamiltonian_exact_33_over_20",
+    "external_audit_readiness_continuum_hamiltonian_addendum_boundary_held",
     "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
     "external_audit_readiness_complete_spectral_mass_gap_exact_value",
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
@@ -56,6 +60,18 @@ REQUIRED_THEOREM_ANCHORS = (
     "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
     "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
+)
+
+REQUIRED_CHAIN_ADDENDUM_ANCHORS = (
+    "FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum",
+    "finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady",
+    "final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready",
+    "physicalContinuumHamiltonianToExactPositiveMassGap",
+    "physicalContinuumHamiltonianExactGap33Over20",
+    "continuumHamiltonianMassGapTheoremDerivedWitness",
+    "continuumHamiltonianMassGapWitnessData.publicBoundaryHeld",
+    "continuumHamiltonianMassGapWitnessData.finalReleaseHeld",
+    "continuumHamiltonianMassGapWitnessData.theoremWitnessOnly",
 )
 
 REQUIRED_SPECTRAL_ANCHORS = (
@@ -93,8 +109,16 @@ REQUIRED_DOC_ANCHORS = (
     "publicBoundaryHeld",
     "finalReleaseHeld",
     "externalAuditReadinessCompleteMassGapAddendumReady",
+    "externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady",
     "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
     "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
+    "finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady",
+    "physicalContinuumHamiltonianToExactPositiveMassGap",
+    "physicalContinuumHamiltonianExactGap33Over20",
+    "continuumHamiltonianMassGapTheoremDerivedWitness",
+    "external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready",
+    "external_audit_readiness_continuum_hamiltonian_exact_33_over_20",
+    "external_audit_readiness_continuum_hamiltonian_addendum_boundary_held",
     "continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady",
     "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
     "external_audit_readiness_complete_spectral_mass_gap_exact_value",
@@ -109,6 +133,7 @@ REQUIRED_DOC_ANCHORS = (
     "observable spectral atom",
     "PVM spectral mass > 0",
     "no upstream 33/20 claim",
+    "chain-index exact 33/20 addendum",
 )
 
 
@@ -174,6 +199,7 @@ def main() -> None:
     failures.extend(audit_forbidden_tokens(TARGET_PATH))
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "external audit readiness theorem", clean_lean=True))
+    failures.extend(require(TARGET_PATH, REQUIRED_CHAIN_ADDENDUM_ANCHORS, "external audit continuum Hamiltonian chain addendum", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_SPECTRAL_ANCHORS, "external audit readiness spectral addendum", clean_lean=True))
     failures.extend(forbid(TARGET_PATH, FORBIDDEN_STALE_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "external audit readiness documentation", clean_lean=False))
@@ -181,6 +207,7 @@ def main() -> None:
     print("External audit readiness gate audit")
     print(f"External audit readiness anchors audited: {len(REQUIRED_TARGET_ANCHORS)}")
     print(f"External audit readiness theorem anchors audited: {len(REQUIRED_THEOREM_ANCHORS)}")
+    print(f"External audit continuum Hamiltonian chain addendum anchors audited: {len(REQUIRED_CHAIN_ADDENDUM_ANCHORS)}")
     print(f"External audit spectral addendum anchors audited: {len(REQUIRED_SPECTRAL_ANCHORS)}")
     print("Documentation audited: docs/external_audit_readiness_gate.md")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
