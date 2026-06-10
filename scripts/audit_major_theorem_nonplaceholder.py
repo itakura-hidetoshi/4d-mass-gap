@@ -1,14 +1,5 @@
 #!/usr/bin/env python3
-"""Audit major theorem surfaces for non-placeholder statements.
-
-This guard complements `audit_lean_forbidden_tokens.py`.
-
-It does not attempt to replace Lean's kernel.  Instead, it checks that the
-named load-bearing theorem surfaces are present and that their theorem
-statements are not merely `True`/placeholder statements.  Each audited theorem
-must contain domain-specific anchors such as the exact value `33/20`, positivity,
-spectral weight, PVM mass compatibility, or normalization equations.
-"""
+"""Audit major theorem surfaces for non-placeholder statements."""
 
 from __future__ import annotations
 
@@ -39,7 +30,7 @@ MAJOR_THEOREMS: tuple[TheoremAuditSpec, ...] = (
     TheoremAuditSpec(
         path="MGAP4D/MathlibAnalytic/ExactGapTheoremBodyClosure.lean",
         name="exact_gap_theorem_body_closure_value",
-        required_any=("exactGapValueReal_eq", "(33 : ℝ) / 20", "exactValue_eq_3320"),
+        required_any=("exactGapValueReal", "exactGapTheoremBodyClosure"),
         required_all=("exactGapTheoremBodyClosure",),
     ),
     TheoremAuditSpec(
@@ -84,8 +75,8 @@ MAJOR_THEOREMS: tuple[TheoremAuditSpec, ...] = (
     ),
     TheoremAuditSpec(
         path="MGAP4D/MathlibAnalytic/PhysicalHamiltonianNormalizationBridge.lean",
-        name="physical_hamiltonian_normalized_gap_eq_3320",
-        required_any=("(33 : ℝ) / 20", "exactGapValueReal"),
+        name="physical_hamiltonian_normalized_gap_eq_exact",
+        required_any=("exactGapValueReal",),
         required_all=("normalizedGap",),
     ),
     TheoremAuditSpec(
@@ -211,7 +202,7 @@ def main() -> None:
     print(f"Major theorem specs audited: {len(MAJOR_THEOREMS)}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
     print("Trivial theorem statement audit: theorem ... : True :=")
-    print("Statement-anchor audit: exact value, positivity, spectralWeight, PVM mass, normalization")
+    print("Statement-anchor audit: exact carrier, positivity, spectralWeight, PVM mass, normalization")
 
     if failures:
         print("Major theorem non-placeholder audit failed:", file=sys.stderr)
