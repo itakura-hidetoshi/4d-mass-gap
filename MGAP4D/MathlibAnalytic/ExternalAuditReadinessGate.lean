@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.InternalReviewResidualClosureGate
 import MGAP4D.MathlibAnalytic.FinalTheoremReleaseBundleManifest
 import MGAP4D.MathlibAnalytic.ContinuumHamiltonianCompleteMassGapReleaseAdoption
+import MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -239,6 +240,49 @@ theorem external_audit_readiness_complete_mass_gap_exact_positive :
   rcases external_audit_readiness_complete_mass_gap_addendum_ready with
     ⟨_, _, hPos, _⟩
   exact hPos
+
+/-- Append-only external-audit projection of the continuum-Hamiltonian exact
+chain-index addendum.  This exposes the already-built addendum at the external
+readiness gate while preserving witness-only status and boundary locks. -/
+def externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady : Prop :=
+  externalAuditReadinessGateData.ready ∧
+  finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady ∧
+  physicalContinuumHamiltonianToExactPositiveMassGap ∧
+  physicalContinuumHamiltonianExactGap33Over20 ∧
+  continuumHamiltonianMassGapTheoremDerivedWitness ∧
+  continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
+  continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
+  continuumHamiltonianMassGapWitnessData.theoremWitnessOnly
+
+/-- The continuum-Hamiltonian chain-index addendum is external-audit-visible
+without opening public/final release boundaries. -/
+theorem external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready :
+    externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady := by
+  unfold externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady
+  rcases final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready with
+    ⟨_, hExactMassGap, hExactValue, hDerived, hPublic, hFinal, hWitnessOnly⟩
+  exact And.intro external_audit_readiness_gate_ready <|
+    And.intro final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready <|
+    And.intro hExactMassGap <|
+    And.intro hExactValue <|
+    And.intro hDerived <|
+    And.intro hPublic <|
+    And.intro hFinal hWitnessOnly
+
+/-- Exact `33 / 20` value projection from the continuum-Hamiltonian addendum. -/
+theorem external_audit_readiness_continuum_hamiltonian_exact_33_over_20 :
+    physicalContinuumHamiltonianExactGap33Over20 := by
+  rcases external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready with
+    ⟨_, _, _, hExactValue, _⟩
+  exact hExactValue
+
+/-- Boundary projection from the continuum-Hamiltonian chain-index addendum. -/
+theorem external_audit_readiness_continuum_hamiltonian_addendum_boundary_held :
+    continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
+      continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
+  rcases external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready with
+    ⟨_, _, _, _, _, hPublic, hFinal, _⟩
+  exact And.intro hPublic hFinal
 
 /-- Append-only external-audit projection of the complete spectral-value
 Yang--Mills Hamiltonian route.
