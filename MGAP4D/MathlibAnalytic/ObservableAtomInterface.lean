@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PVMInterface
-import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
+import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -9,9 +9,6 @@ inductive ObservableAtomBoundaryMarker where
   | mathlibInterfaceBacked
   | finalReleaseHeld
   deriving DecidableEq
-
-structure ObservablePrototypeShell where
-  label : String
 
 structure ObservableAtomInterface where
   pvm : ProjectionValuedMeasureInterface
