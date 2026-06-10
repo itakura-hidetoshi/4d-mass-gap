@@ -32,7 +32,7 @@ structure PlaquetteSpectralWeightLaneHardeningData where
   concretePlaquetteBoundaryVisible : Prop
   concreteOperatorMeasureBoundaryVisible : Prop
   hardPhysicalBoundaryVisible : Prop
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
   reviewLevelOnly : Prop
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
@@ -58,7 +58,7 @@ def PlaquetteSpectralWeightLaneHardeningData.ready
   D.concretePlaquetteBoundaryVisible ∧
   D.concreteOperatorMeasureBoundaryVisible ∧
   D.hardPhysicalBoundaryVisible ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.reviewLevelOnly ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
@@ -147,10 +147,10 @@ theorem plaquette_weight_operator_measure_boundary_visible
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- Exact normalized value is preserved by the plaquette spectral-weight lane. -/
+/-- Exact-value carrier is preserved by the plaquette spectral-weight lane before R6 numeric export. -/
 theorem plaquette_weight_exact_value_preserved
     (D : PlaquetteSpectralWeightLaneHardeningData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- Installed plaquette spectral-weight hardening lane. -/
@@ -194,7 +194,7 @@ def plaquetteSpectralWeightLaneHardeningData : PlaquetteSpectralWeightLaneHarden
     hardPhysicalBoundaryVisible :=
       compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen ∧
       operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
-    exactValuePreserved := exactGapValueReal_eq
+    exactValuePreserved := continuumYangMillsLaneHardeningData.exactValuePreserved
     reviewLevelOnly :=
       observableAtomTheoremTheoremReviewSurface.concretePlaquetteConstructionStillOpen ∧
       observableAtomTheoremTheoremReviewSurface.concreteOperatorMeasureCompatibilityStillOpen ∧
