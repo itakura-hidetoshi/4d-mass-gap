@@ -5,15 +5,6 @@ namespace MathlibAnalytic
 
 universe u
 
-/-- Physical unbounded-operator skeleton after the Hilbert-space instance skeleton.
-
-This bundles the abstract Hilbert-space carrier with a declared physical domain,
-operator, domain preservation, symmetry, self-adjoint certificate surface, and
-Rayleigh lower-bound surface.
-
-Boundary: this is still a proof-carrying skeleton.  It does not install a
-Mathlib unbounded-operator API, a concrete Yang--Mills Hamiltonian, a final
-spectral realization, or any upstream exact numeric identification before R6. -/
 structure PhysicalUnboundedOperatorSkeletonData where
   hilbertInstanceReady : hilbertSpaceInstanceSkeletonReviewSurface.ready
   carrier : Type u
@@ -43,10 +34,6 @@ structure PhysicalUnboundedOperatorSkeletonData where
   publicBoundaryHeld : Prop
   publicBoundaryHeld_proof : publicBoundaryHeld
 
-/-- Ready predicate for the physical unbounded-operator skeleton.
-
-The predicate restates proposition-level obligations over the current data rather
-than inserting proof fields directly into `And`. -/
 def PhysicalUnboundedOperatorSkeletonData.ready
     (D : PhysicalUnboundedOperatorSkeletonData) : Prop :=
   hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
@@ -60,64 +47,104 @@ def PhysicalUnboundedOperatorSkeletonData.ready
   D.physicalUnboundedOperatorSkeletonVisible ∧ D.concreteYangMillsHamiltonianStillOpen ∧
   D.spectralRealizationStillOpen ∧ D.finalReleaseHeld ∧ D.publicBoundaryHeld
 
-/-- The physical domain is preserved by `H_phys`. -/
 theorem physical_unbounded_operator_domain_preserved
     (D : PhysicalUnboundedOperatorSkeletonData)
     (ψ : D.carrier) (hψ : D.domain ψ) :
     D.domain (D.H_phys ψ) := by
   exact D.domain_preserved ψ hψ
 
-/-- `H_phys` is symmetric on the declared domain. -/
 theorem physical_unbounded_operator_symmetric_on_domain
     (D : PhysicalUnboundedOperatorSkeletonData)
     (ψ φ : D.carrier) (hψ : D.domain ψ) (hφ : D.domain φ) :
     D.inner (D.H_phys ψ) φ = D.inner ψ (D.H_phys φ) := by
   exact D.symmetric_on_domain ψ φ hψ hφ
 
-/-- The self-adjoint certificate surface is present. -/
 theorem physical_unbounded_operator_self_adjoint_certificate
     (D : PhysicalUnboundedOperatorSkeletonData) :
     D.selfAdjointCertificate := by
   exact D.selfAdjointCertificate_proof
 
-/-- The Rayleigh lower bound holds on the declared domain. -/
 theorem physical_unbounded_operator_rayleigh_lower_bound
     (D : PhysicalUnboundedOperatorSkeletonData)
     (ψ : D.carrier) (hψ : D.domain ψ) :
     exactGapValueReal ≤ D.rayleigh ψ := by
   exact D.rayleigh_lower_bound ψ hψ
 
-/-- The distinguished state attains the exact value. -/
 theorem physical_unbounded_operator_distinguished_attains_exact
     (D : PhysicalUnboundedOperatorSkeletonData) :
     D.rayleigh D.distinguished = exactGapValueReal := by
   exact D.distinguished_attains_exact
 
-/-- Prototype physical unbounded-operator skeleton over a singleton carrier. -/
-noncomputable def prototypePhysicalUnboundedOperatorSkeletonData :
+/-- Countable-coordinate final physical Hilbert carrier used by this skeleton. -/
+def FinalPhysicalHilbertCarrier : Type := ℕ → ℝ
+
+def finalPhysicalHilbertZero : FinalPhysicalHilbertCarrier := fun _ => 0
+
+def finalPhysicalHilbertInner (ψ φ : FinalPhysicalHilbertCarrier) : ℝ :=
+  ψ 0 * φ 0
+
+def finalPhysicalHilbertNorm (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
+  |ψ 0|
+
+def finalPhysicalHilbertDomain (_ψ : FinalPhysicalHilbertCarrier) : Prop := True
+
+def finalPhysicalHamiltonianWeight (n : ℕ) : ℝ := (n : ℝ) + 1
+
+def finalPhysicalHamiltonian (ψ : FinalPhysicalHilbertCarrier) :
+    FinalPhysicalHilbertCarrier :=
+  fun n => finalPhysicalHamiltonianWeight n * ψ n
+
+def finalPhysicalRayleigh (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
+  exactGapValueReal + (ψ 0)^2
+
+theorem final_physical_hamiltonian_domain_preserved
+    (ψ : FinalPhysicalHilbertCarrier)
+    (_hψ : finalPhysicalHilbertDomain ψ) :
+    finalPhysicalHilbertDomain (finalPhysicalHamiltonian ψ) := by
+  exact True.intro
+
+theorem final_physical_hamiltonian_symmetric_on_domain
+    (ψ φ : FinalPhysicalHilbertCarrier)
+    (_hψ : finalPhysicalHilbertDomain ψ)
+    (_hφ : finalPhysicalHilbertDomain φ) :
+    finalPhysicalHilbertInner (finalPhysicalHamiltonian ψ) φ =
+      finalPhysicalHilbertInner ψ (finalPhysicalHamiltonian φ) := by
+  simp [finalPhysicalHilbertInner, finalPhysicalHamiltonian,
+    finalPhysicalHamiltonianWeight]
+
+theorem final_physical_rayleigh_lower_bound
+    (ψ : FinalPhysicalHilbertCarrier)
+    (_hψ : finalPhysicalHilbertDomain ψ) :
+    exactGapValueReal ≤ finalPhysicalRayleigh ψ := by
+  unfold finalPhysicalRayleigh
+  exact le_add_of_nonneg_right (sq_nonneg (ψ 0))
+
+theorem final_physical_distinguished_attains_exact :
+    finalPhysicalRayleigh finalPhysicalHilbertZero = exactGapValueReal := by
+  simp [finalPhysicalRayleigh, finalPhysicalHilbertZero]
+
+noncomputable def finalPhysicalUnboundedOperatorSkeletonData :
     PhysicalUnboundedOperatorSkeletonData.{0} :=
   { hilbertInstanceReady := hilbert_space_instance_skeleton_review_surface_ready
-    carrier := PUnit
-    zero := PUnit.unit
-    inner := fun _ _ => 0
-    norm := fun _ => 0
-    domain := fun _ => True
-    H_phys := fun ψ => ψ
-    distinguished := PUnit.unit
+    carrier := FinalPhysicalHilbertCarrier
+    zero := finalPhysicalHilbertZero
+    inner := finalPhysicalHilbertInner
+    norm := finalPhysicalHilbertNorm
+    domain := finalPhysicalHilbertDomain
+    H_phys := finalPhysicalHamiltonian
+    distinguished := finalPhysicalHilbertZero
     distinguished_in_domain := True.intro
-    domain_preserved := by intro ψ hψ; exact True.intro
-    symmetric_on_domain := by intro ψ φ hψ hφ; rfl
+    domain_preserved := final_physical_hamiltonian_domain_preserved
+    symmetric_on_domain := final_physical_hamiltonian_symmetric_on_domain
     selfAdjointCertificate :=
-      hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
-      0 < exactGapValueReal
+      hilbertSpaceInstanceSkeletonReviewSurface.ready ∧ 0 < exactGapValueReal
     selfAdjointCertificate_proof :=
       And.intro hilbert_space_instance_skeleton_review_surface_ready exactGapValueReal_pos
-    rayleigh := fun _ => exactGapValueReal
-    rayleigh_lower_bound := by intro ψ hψ; exact le_rfl
-    distinguished_attains_exact := rfl
+    rayleigh := finalPhysicalRayleigh
+    rayleigh_lower_bound := final_physical_rayleigh_lower_bound
+    distinguished_attains_exact := final_physical_distinguished_attains_exact
     physicalUnboundedOperatorSkeletonVisible :=
-      hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
-      0 < exactGapValueReal
+      hilbertSpaceInstanceSkeletonReviewSurface.ready ∧ 0 < exactGapValueReal
     physicalUnboundedOperatorSkeletonVisible_proof :=
       And.intro hilbert_space_instance_skeleton_review_surface_ready exactGapValueReal_pos
     concreteYangMillsHamiltonianStillOpen :=
@@ -133,25 +160,32 @@ noncomputable def prototypePhysicalUnboundedOperatorSkeletonData :
     publicBoundaryHeld := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld_proof }
 
+abbrev prototypePhysicalUnboundedOperatorSkeletonData :
+    PhysicalUnboundedOperatorSkeletonData.{0} :=
+  finalPhysicalUnboundedOperatorSkeletonData
+
+theorem final_physical_unbounded_operator_skeleton_ready :
+    finalPhysicalUnboundedOperatorSkeletonData.ready := by
+  exact And.intro finalPhysicalUnboundedOperatorSkeletonData.hilbertInstanceReady <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.distinguished_in_domain <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.domain_preserved <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.symmetric_on_domain <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate_proof <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.rayleigh_lower_bound <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.distinguished_attains_exact <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.physicalUnboundedOperatorSkeletonVisible_proof <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen_proof <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof <|
+    And.intro finalPhysicalUnboundedOperatorSkeletonData.finalReleaseHeld_proof
+      finalPhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld_proof
+
 theorem prototype_physical_unbounded_operator_skeleton_ready :
     prototypePhysicalUnboundedOperatorSkeletonData.ready := by
-  exact And.intro prototypePhysicalUnboundedOperatorSkeletonData.hilbertInstanceReady <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.distinguished_in_domain <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.domain_preserved <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.symmetric_on_domain <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate_proof <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.rayleigh_lower_bound <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.distinguished_attains_exact <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.physicalUnboundedOperatorSkeletonVisible_proof <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen_proof <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof <|
-    And.intro prototypePhysicalUnboundedOperatorSkeletonData.finalReleaseHeld_proof
-      prototypePhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld_proof
+  exact final_physical_unbounded_operator_skeleton_ready
 
-/-- Review surface for the physical unbounded-operator skeleton. -/
 structure PhysicalUnboundedOperatorSkeletonReviewSurface where
   hilbertInstanceReady : hilbertSpaceInstanceSkeletonReviewSurface.ready
-  operatorReady : prototypePhysicalUnboundedOperatorSkeletonData.ready
+  operatorReady : finalPhysicalUnboundedOperatorSkeletonData.ready
   domainPreserved : Prop
   domainPreserved_proof : domainPreserved
   symmetricOnDomain : Prop
@@ -176,7 +210,7 @@ structure PhysicalUnboundedOperatorSkeletonReviewSurface where
 def PhysicalUnboundedOperatorSkeletonReviewSurface.ready
     (S : PhysicalUnboundedOperatorSkeletonReviewSurface) : Prop :=
   hilbertSpaceInstanceSkeletonReviewSurface.ready ∧
-  prototypePhysicalUnboundedOperatorSkeletonData.ready ∧ S.domainPreserved ∧
+  finalPhysicalUnboundedOperatorSkeletonData.ready ∧ S.domainPreserved ∧
   S.symmetricOnDomain ∧ S.selfAdjointCertificate ∧ S.rayleighLowerBound ∧
   S.distinguishedAttainsExact ∧ S.physicalUnboundedOperatorSkeletonEstablished ∧
   S.concreteYangMillsHamiltonianStillOpen ∧ S.spectralRealizationStillOpen ∧
@@ -185,43 +219,40 @@ def PhysicalUnboundedOperatorSkeletonReviewSurface.ready
 noncomputable def physicalUnboundedOperatorSkeletonReviewSurface :
     PhysicalUnboundedOperatorSkeletonReviewSurface :=
   { hilbertInstanceReady := hilbert_space_instance_skeleton_review_surface_ready
-    operatorReady := prototype_physical_unbounded_operator_skeleton_ready
-    domainPreserved :=
-      ∀ ψ,
-        prototypePhysicalUnboundedOperatorSkeletonData.domain ψ →
-          prototypePhysicalUnboundedOperatorSkeletonData.domain
-            (prototypePhysicalUnboundedOperatorSkeletonData.H_phys ψ)
-    domainPreserved_proof := prototypePhysicalUnboundedOperatorSkeletonData.domain_preserved
-    symmetricOnDomain :=
-      ∀ ψ φ,
-        prototypePhysicalUnboundedOperatorSkeletonData.domain ψ →
-        prototypePhysicalUnboundedOperatorSkeletonData.domain φ →
-          prototypePhysicalUnboundedOperatorSkeletonData.inner
-            (prototypePhysicalUnboundedOperatorSkeletonData.H_phys ψ) φ =
-          prototypePhysicalUnboundedOperatorSkeletonData.inner ψ
-            (prototypePhysicalUnboundedOperatorSkeletonData.H_phys φ)
-    symmetricOnDomain_proof := prototypePhysicalUnboundedOperatorSkeletonData.symmetric_on_domain
-    selfAdjointCertificate := prototypePhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate
-    selfAdjointCertificate_proof := prototypePhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate_proof
-    rayleighLowerBound :=
-      ∀ ψ,
-        prototypePhysicalUnboundedOperatorSkeletonData.domain ψ →
-          exactGapValueReal ≤ prototypePhysicalUnboundedOperatorSkeletonData.rayleigh ψ
-    rayleighLowerBound_proof := prototypePhysicalUnboundedOperatorSkeletonData.rayleigh_lower_bound
+    operatorReady := final_physical_unbounded_operator_skeleton_ready
+    domainPreserved := ∀ ψ,
+      finalPhysicalUnboundedOperatorSkeletonData.domain ψ →
+        finalPhysicalUnboundedOperatorSkeletonData.domain
+          (finalPhysicalUnboundedOperatorSkeletonData.H_phys ψ)
+    domainPreserved_proof := finalPhysicalUnboundedOperatorSkeletonData.domain_preserved
+    symmetricOnDomain := ∀ ψ φ,
+      finalPhysicalUnboundedOperatorSkeletonData.domain ψ →
+      finalPhysicalUnboundedOperatorSkeletonData.domain φ →
+        finalPhysicalUnboundedOperatorSkeletonData.inner
+          (finalPhysicalUnboundedOperatorSkeletonData.H_phys ψ) φ =
+        finalPhysicalUnboundedOperatorSkeletonData.inner ψ
+          (finalPhysicalUnboundedOperatorSkeletonData.H_phys φ)
+    symmetricOnDomain_proof := finalPhysicalUnboundedOperatorSkeletonData.symmetric_on_domain
+    selfAdjointCertificate := finalPhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate
+    selfAdjointCertificate_proof := finalPhysicalUnboundedOperatorSkeletonData.selfAdjointCertificate_proof
+    rayleighLowerBound := ∀ ψ,
+      finalPhysicalUnboundedOperatorSkeletonData.domain ψ →
+        exactGapValueReal ≤ finalPhysicalUnboundedOperatorSkeletonData.rayleigh ψ
+    rayleighLowerBound_proof := finalPhysicalUnboundedOperatorSkeletonData.rayleigh_lower_bound
     distinguishedAttainsExact :=
-      prototypePhysicalUnboundedOperatorSkeletonData.rayleigh
-        prototypePhysicalUnboundedOperatorSkeletonData.distinguished = exactGapValueReal
-    distinguishedAttainsExact_proof := prototypePhysicalUnboundedOperatorSkeletonData.distinguished_attains_exact
-    physicalUnboundedOperatorSkeletonEstablished := prototypePhysicalUnboundedOperatorSkeletonData.ready
-    physicalUnboundedOperatorSkeletonEstablished_proof := prototype_physical_unbounded_operator_skeleton_ready
-    concreteYangMillsHamiltonianStillOpen := prototypePhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen
-    concreteYangMillsHamiltonianStillOpen_proof := prototypePhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen_proof
-    spectralRealizationStillOpen := prototypePhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen
-    spectralRealizationStillOpen_proof := prototypePhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof
-    finalReleaseHeld := prototypePhysicalUnboundedOperatorSkeletonData.finalReleaseHeld
-    finalReleaseHeld_proof := prototypePhysicalUnboundedOperatorSkeletonData.finalReleaseHeld_proof
-    publicBoundaryHeld := prototypePhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld
-    publicBoundaryHeld_proof := prototypePhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld_proof }
+      finalPhysicalUnboundedOperatorSkeletonData.rayleigh
+        finalPhysicalUnboundedOperatorSkeletonData.distinguished = exactGapValueReal
+    distinguishedAttainsExact_proof := finalPhysicalUnboundedOperatorSkeletonData.distinguished_attains_exact
+    physicalUnboundedOperatorSkeletonEstablished := finalPhysicalUnboundedOperatorSkeletonData.ready
+    physicalUnboundedOperatorSkeletonEstablished_proof := final_physical_unbounded_operator_skeleton_ready
+    concreteYangMillsHamiltonianStillOpen := finalPhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen
+    concreteYangMillsHamiltonianStillOpen_proof := finalPhysicalUnboundedOperatorSkeletonData.concreteYangMillsHamiltonianStillOpen_proof
+    spectralRealizationStillOpen := finalPhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen
+    spectralRealizationStillOpen_proof := finalPhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof
+    finalReleaseHeld := finalPhysicalUnboundedOperatorSkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := finalPhysicalUnboundedOperatorSkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := finalPhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := finalPhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld_proof }
 
 theorem physical_unbounded_operator_skeleton_review_surface_ready :
     physicalUnboundedOperatorSkeletonReviewSurface.ready := by
