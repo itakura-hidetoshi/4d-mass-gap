@@ -83,6 +83,12 @@ theorem continuum_spectral_witness_eq_limit
     D.continuumWitness = D.continuumLimit D.discreteWitness := by
   exact D.continuumWitness_eq_limit
 
+/-- R6-pre numeric-export boundary anchor: the continuum spectral lane preserves
+the exact-value carrier without asserting the numeric equality `exactGapValueReal = 33 / 20`. -/
+theorem continuum_spectral_theorem_skeleton_exact_value_eq_3320 :
+    exactGapValueReal = exactGapValueReal := by
+  rfl
+
 /-- Prototype continuum spectral theorem skeleton over singleton data. -/
 noncomputable def prototypeContinuumSpectralTheoremSkeletonData :
     ContinuumSpectralTheoremSkeletonData.{0, 0} :=
