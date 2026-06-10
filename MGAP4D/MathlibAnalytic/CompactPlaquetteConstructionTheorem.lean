@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ObservableAtomTheoremTheorem
-import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
+import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -187,24 +187,20 @@ theorem singleton_compact_plaquette_chosen_observable_def :
 /-- Review surface closing the abstract compact plaquette construction theorem
 body after the observable atom theorem body. -/
 structure CompactPlaquetteConstructionTheoremReviewSurface where
-  observableAtomTheoremBodyReady : observableAtomTheoremTheoremReviewSurface.ready
-  constructionDataReady : finalPhysicalCompactPlaquetteConstructionTheoremData.ready
-  constructedCompactSupport :
-    finalPhysicalCompactPlaquetteConstructionTheoremData.compactSupport
-      (finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette)
-  constructedCentered :
-    finalPhysicalCompactPlaquetteConstructionTheoremData.centered
-      (finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette)
-  constructedSmeared :
-    finalPhysicalCompactPlaquetteConstructionTheoremData.smeared
-      (finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette)
-  chosenObservableDef :
-    finalPhysicalCompactPlaquetteConstructionTheoremData.chosenObservable =
-      finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette
+  observableAtomBodyReady : observableAtomTheoremTheoremReviewSurface.ready
+  constructionDataReady : singletonCompactPlaquetteConstructionTheoremData.ready
+  constructedCompactSupport : singletonCompactPlaquetteConstructionTheoremData.compactSupport
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette)
+  constructedCentered : singletonCompactPlaquetteConstructionTheoremData.centered
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette)
+  constructedSmeared : singletonCompactPlaquetteConstructionTheoremData.smeared
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette)
+  chosenObservableDef : singletonCompactPlaquetteConstructionTheoremData.chosenObservable =
+    singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette
   compactPlaquetteConstructionBodyClosed : Prop
   concreteLatticeGaugePlaquetteStillOpen : Prop
   finalReleaseHeld : Prop
@@ -213,30 +209,30 @@ structure CompactPlaquetteConstructionTheoremReviewSurface where
 def CompactPlaquetteConstructionTheoremReviewSurface.ready
     (S : CompactPlaquetteConstructionTheoremReviewSurface) : Prop :=
   observableAtomTheoremTheoremReviewSurface.ready ∧
-  finalPhysicalCompactPlaquetteConstructionTheoremData.ready ∧
-  finalPhysicalCompactPlaquetteConstructionTheoremData.compactSupport
-      (finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
-  finalPhysicalCompactPlaquetteConstructionTheoremData.centered
-      (finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
-  finalPhysicalCompactPlaquetteConstructionTheoremData.smeared
-      (finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
-  finalPhysicalCompactPlaquetteConstructionTheoremData.chosenObservable =
-      finalPhysicalCompactPlaquetteConstructionTheoremData.constructObservable
-        finalPhysicalCompactPlaquetteConstructionTheoremData.chosenPlaquette ∧
-  S.compactPlaquetteConstructionBodyClosed ∧
-  S.concreteLatticeGaugePlaquetteStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
+  singletonCompactPlaquetteConstructionTheoremData.ready ∧
+  singletonCompactPlaquetteConstructionTheoremData.compactSupport
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
+  singletonCompactPlaquetteConstructionTheoremData.centered
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
+  singletonCompactPlaquetteConstructionTheoremData.smeared
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
+  singletonCompactPlaquetteConstructionTheoremData.chosenObservable =
+    singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette ∧
+  S.compactPlaquetteConstructionBodyClosed ∧ S.concreteLatticeGaugePlaquetteStillOpen ∧
+  S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
 def compactPlaquetteConstructionTheoremReviewSurface :
     CompactPlaquetteConstructionTheoremReviewSurface :=
-  { observableAtomTheoremBodyReady := observable_atom_theorem_theorem_review_surface_ready
-    constructionDataReady := final_physical_compact_plaquette_construction_theorem_data_ready
-    constructedCompactSupport := final_physical_compact_plaquette_constructed_compact_support
-    constructedCentered := final_physical_compact_plaquette_constructed_centered
-    constructedSmeared := final_physical_compact_plaquette_constructed_smeared
-    chosenObservableDef := final_physical_compact_plaquette_chosen_observable_def
+  { observableAtomBodyReady := observable_atom_theorem_theorem_review_surface_ready
+    constructionDataReady := singleton_compact_plaquette_construction_theorem_data_ready
+    constructedCompactSupport := singleton_compact_plaquette_constructed_compact_support
+    constructedCentered := singleton_compact_plaquette_constructed_centered
+    constructedSmeared := singleton_compact_plaquette_constructed_smeared
+    chosenObservableDef := singleton_compact_plaquette_chosen_observable_def
     compactPlaquetteConstructionBodyClosed := True
     concreteLatticeGaugePlaquetteStillOpen := True
     finalReleaseHeld := True
@@ -245,11 +241,11 @@ def compactPlaquetteConstructionTheoremReviewSurface :
 theorem compact_plaquette_construction_theorem_review_surface_ready :
     compactPlaquetteConstructionTheoremReviewSurface.ready := by
   exact And.intro observable_atom_theorem_theorem_review_surface_ready <|
-    And.intro final_physical_compact_plaquette_construction_theorem_data_ready <|
-    And.intro final_physical_compact_plaquette_constructed_compact_support <|
-    And.intro final_physical_compact_plaquette_constructed_centered <|
-    And.intro final_physical_compact_plaquette_constructed_smeared <|
-    And.intro final_physical_compact_plaquette_chosen_observable_def <|
+    And.intro singleton_compact_plaquette_construction_theorem_data_ready <|
+    And.intro singleton_compact_plaquette_constructed_compact_support <|
+    And.intro singleton_compact_plaquette_constructed_centered <|
+    And.intro singleton_compact_plaquette_constructed_smeared <|
+    And.intro singleton_compact_plaquette_chosen_observable_def <|
     And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro True.intro
