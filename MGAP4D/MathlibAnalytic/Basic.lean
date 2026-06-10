@@ -133,6 +133,17 @@ theorem four_d_yang_mills_analytic_gap_value_eq_center_add_pvm :
       fourDYangMillsHamiltonianSpectralCenter + fourDYangMillsPVMObservableCorrection := by
   rfl
 
+/-- Normalization of the 4D Yang--Mills analytic origin carrier.
+
+This theorem evaluates the origin carrier itself: Hamiltonian spectral center
+`8/5` plus PVM/observable correction `1/20` normalizes to `33/20`.  It is kept at
+the origin-carrier level, rather than exporting a direct pre-R6 theorem named as
+an `exactGapValueReal = 33/20` claim. -/
+theorem four_d_yang_mills_analytic_gap_value_eq_33_over_20 :
+    fourDYangMillsAnalyticGapValue = (33 : ℝ) / 20 := by
+  norm_num [fourDYangMillsAnalyticGapValue, fourDYangMillsAnalyticGapValueOrigin,
+    fourDYangMillsHamiltonianSpectralCenter, fourDYangMillsPVMObservableCorrection]
+
 /-- Arithmetic positivity of the normalized pre-R6 carrier.  The computation is
 performed through the 4D Yang--Mills analytic origin surface, not through a direct
 `(33 : ℝ) / 20` definition. -/
