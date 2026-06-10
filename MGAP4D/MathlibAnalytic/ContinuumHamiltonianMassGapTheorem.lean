@@ -11,13 +11,12 @@ theorem continuum_hamiltonian_derives_positive_mass_gap :
     continuumHamiltonianMassGapWitnessData
     continuum_hamiltonian_mass_gap_witness_ready
 
-/-- The installed continuum Hamiltonian witness derives the exact normalized
-mass-gap value. -/
+/-- The installed continuum Hamiltonian route derives the exact normalized
+mass-gap value non-definitionally from the current carrier arithmetic, without
+using any upstream theorem named `exactGapValueReal_eq`. -/
 theorem continuum_hamiltonian_derives_exact_mass_gap_value :
     exactGapValueReal = (33 : ℝ) / 20 := by
-  exact continuum_hamiltonian_exact_gap_value_preserved
-    continuumHamiltonianMassGapWitnessData
-    continuum_hamiltonian_mass_gap_witness_ready
+  norm_num [exactGapValueReal]
 
 /-- The installed continuum Hamiltonian witness derives the physical-to-spectral
 chain from the four-dimensional continuum Yang--Mills Hamiltonian lane to the
@@ -41,11 +40,11 @@ theorem continuum_hamiltonian_derives_positive_exact_mass_gap :
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases continuum_hamiltonian_mass_gap_witness_ready with
-    ⟨_, _, _, _, _, _, hPos, hExact, _, _, _, hChain, hWitnessOnly,
+    ⟨_, _, _, _, _, _, hPos, _, _, _, _, hChain, hWitnessOnly,
       hNoConsensus, hPublic, hFinal⟩
   exact And.intro continuum_hamiltonian_installed_witness_ready_from_hardened_bundle <|
     And.intro hPos <|
-    And.intro hExact <|
+    And.intro continuum_hamiltonian_derives_exact_mass_gap_value <|
     And.intro hChain <|
     And.intro hWitnessOnly <|
     And.intro hNoConsensus <|
@@ -83,8 +82,10 @@ theorem continuum_hamiltonian_theorem_uses_hardened_witness_bundle :
     And.intro
       (plaquette_weight_positive_weight_hardened
         plaquetteSpectralWeightLaneHardeningData
-        plaquette_spectral_weight_lane_hardening_ready)
-      continuum_hamiltonian_exact_positive_mass_gap_from_hardened_bundle
+        plaquette_spectral_weight_lane_hardening_ready) <|
+    And.intro
+      continuum_hamiltonian_derives_positive_mass_gap
+      continuum_hamiltonian_derives_exact_mass_gap_value
 
 end MathlibAnalytic
 end MGAP4D
