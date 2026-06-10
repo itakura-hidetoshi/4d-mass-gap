@@ -3,8 +3,9 @@
 
 This is a syntactic/contract audit. Lean kernel checking remains `lake build`.
 The audit prevents regression from the final countable-coordinate physical
-Hilbert carrier back to one-point/PUnit prototype carriers in the physical
-unbounded-operator and concrete Yang--Mills Hamiltonian skeletons.
+Hilbert carrier back to one-point/PUnit prototype carriers in the concrete
+Hilbert, concrete H_phys, physical unbounded-operator, and concrete
+Yang--Mills Hamiltonian skeletons.
 """
 
 from __future__ import annotations
@@ -16,6 +17,8 @@ import sys
 STRING_RE = re.compile(r'"(?:[^"\\]|\\.)*"')
 FORBIDDEN_TOKENS_RE = re.compile(r"\b(sorry|admit|axiom|constant)\b")
 
+CONCRETE_HILBERT_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ConcreteHilbertRealizationTheorem.lean")
+CONCRETE_HPHYS_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ConcreteHPhysRealizationTheorem.lean")
 PHYSICAL_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean")
 CONCRETE_YM_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ConcreteYangMillsHamiltonianSkeleton.lean")
 PHYSICAL_DOC_PATH = Path("docs/mathlib_physical_unbounded_operator_skeleton.md")
@@ -23,6 +26,38 @@ CONCRETE_YM_DOC_PATH = Path("docs/mathlib_concrete_yang_mills_hamiltonian_skelet
 CHECKLIST_PATH = Path("EXTERNAL_REVIEW_CHECKLIST.md")
 CHECK_PATH = Path("scripts/check.sh")
 FAST_CHECK_PATH = Path("scripts/check_changed_lean.sh")
+
+REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS = (
+    "FinalConcreteHilbertCarrier",
+    "finalConcreteHilbertZero",
+    "finalConcreteHilbertInner",
+    "finalConcreteHilbertNormSq",
+    "finalConcreteHilbertRealizationTheoremData",
+    "carrier := FinalConcreteHilbertCarrier",
+    "zero := finalConcreteHilbertZero",
+    "distinguished := finalConcreteHilbertZero",
+    "inner := finalConcreteHilbertInner",
+    "normSq := finalConcreteHilbertNormSq",
+    "noncomputable abbrev singletonConcreteHilbertRealizationTheoremData",
+    "finalConcreteHilbertRealizationTheoremData",
+    "singleton_concrete_hilbert_realization_theorem_data_ready",
+)
+
+REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS = (
+    "FinalConcreteHilbertCarrier",
+    "finalConcreteHPhysDomain",
+    "finalConcreteHPhysWeight",
+    "finalConcreteHPhysHamiltonian",
+    "finalConcreteHPhysRealizationTheoremData",
+    "carrier := FinalConcreteHilbertCarrier",
+    "domain := finalConcreteHPhysDomain",
+    "H_phys := finalConcreteHPhysHamiltonian",
+    "inner := finalConcreteHilbertInner",
+    "distinguished := finalConcreteHilbertZero",
+    "noncomputable abbrev singletonConcreteHPhysRealizationTheoremData",
+    "finalConcreteHPhysRealizationTheoremData",
+    "singleton_concrete_hphys_realization_theorem_data_ready",
+)
 
 REQUIRED_PHYSICAL_LEAN_ANCHORS = (
     "FinalPhysicalHilbertCarrier",
@@ -63,6 +98,22 @@ REQUIRED_CONCRETE_YM_LEAN_ANCHORS = (
     "finalConcreteYangMillsHamiltonianSkeletonData",
     "final_concrete_ym_hamiltonian_skeleton_ready",
     "prototype_concrete_ym_hamiltonian_skeleton_ready",
+)
+
+FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS = (
+    "PUnit",
+    "carrier := PUnit",
+    "zero := PUnit.unit",
+    "distinguished := PUnit.unit",
+    "toRayleighState := fun _ => PUnit.unit",
+)
+
+FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS = (
+    "PUnit",
+    "carrier := PUnit",
+    "distinguished := PUnit.unit",
+    "H_phys := fun ψ => ψ",
+    "toHPhysState := fun _ => PUnit.unit",
 )
 
 FORBIDDEN_PHYSICAL_CODE_SNIPPETS = (
@@ -185,6 +236,16 @@ def audit_lean_file(path: Path, anchors: tuple[str, ...], forbidden: tuple[str, 
 
 
 def main() -> int:
+    audit_lean_file(
+        CONCRETE_HILBERT_LEAN_PATH,
+        REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS,
+        FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS,
+    )
+    audit_lean_file(
+        CONCRETE_HPHYS_LEAN_PATH,
+        REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS,
+        FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS,
+    )
     audit_lean_file(PHYSICAL_LEAN_PATH, REQUIRED_PHYSICAL_LEAN_ANCHORS, FORBIDDEN_PHYSICAL_CODE_SNIPPETS)
     audit_lean_file(CONCRETE_YM_LEAN_PATH, REQUIRED_CONCRETE_YM_LEAN_ANCHORS, FORBIDDEN_CONCRETE_YM_CODE_SNIPPETS)
 
@@ -195,6 +256,8 @@ def main() -> int:
     require_all("check_changed_lean.sh", require_file(FAST_CHECK_PATH), REQUIRED_CHECK_ANCHORS)
 
     print("Final physical carrier routing audit")
+    print(f"Concrete Hilbert Lean anchors audited: {len(REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS)}")
+    print(f"Concrete HPhys Lean anchors audited: {len(REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS)}")
     print(f"Physical Lean anchors audited: {len(REQUIRED_PHYSICAL_LEAN_ANCHORS)}")
     print(f"Concrete Yang-Mills Lean anchors audited: {len(REQUIRED_CONCRETE_YM_LEAN_ANCHORS)}")
     print("Forbidden singleton/PUnit snippets audited in final routed skeleton files")
