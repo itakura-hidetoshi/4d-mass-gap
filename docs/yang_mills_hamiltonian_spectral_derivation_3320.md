@@ -30,6 +30,7 @@ Yang--Mills continuum Hamiltonian
   -> Rayleigh attainment surface
   -> positive spectral-mass observable surface
   -> one shared derived Hamiltonian spectral value
+  -> physical spectrum identifies exact gap carrier
   -> continuum-Hamiltonian exact-value theorem
   -> forced normalized value 33/20
   -> Yang--Mills Hamiltonian spectral derivation claim
@@ -64,6 +65,34 @@ attained spectral value = derived Hamiltonian spectral value
 observable spectral atom value = derived Hamiltonian spectral value
 exactGapValueReal = derived Hamiltonian spectral value
 ```
+
+## Physical spectrum exact-gap carrier identification
+
+The non-definitional carrier-identification layer is:
+
+```text
+YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue
+yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value
+yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum
+continuum_hamiltonian_exact_gap_value_preserved
+```
+
+Its intended reading is:
+
+```text
+Yang--Mills H_phys + self-adjoint spectral chain
+  + Rayleigh lower bound
+  + Rayleigh attainment
+  + PVM / observable spectral atom
+  => exactGapValueReal = derived Hamiltonian spectral value
+```
+
+This theorem surface is deliberately separated from arithmetic evaluation of
+`exactGapValueReal`.  The installed field `exactNormalizedGapDerivedFromSpectrum`
+is supplied through `continuum_hamiltonian_exact_gap_value_preserved`, not by
+`exactNormalizedGapDerivedFromSpectrum := rfl`, and the theorem
+`yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum` does not use
+`norm_num [exactGapValueReal]` or unfold `exactGapValueReal`.
 
 ## Forced exact-value theorem
 
@@ -114,6 +143,7 @@ Yang--Mills Hamiltonian spectral derivation claim
    ∧ spectral infimum = derived Hamiltonian spectral value
    ∧ spectral attainment = derived Hamiltonian spectral value
    ∧ PVM / observable spectral atom = derived Hamiltonian spectral value
+   ∧ physical spectrum identifies exact gap carrier
    ∧ derived Hamiltonian spectral value = 33/20
    ∧ PVM spectral mass > 0
    ∧ PVM spectral mass != 0
