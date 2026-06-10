@@ -134,7 +134,9 @@ theorem yang_mills_hamiltonian_observable_atom_eq_derived :
 theorem yang_mills_hamiltonian_exact_gap_eq_spectral_value :
     exactGapValueReal =
       yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
-  exact yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, hExact, _⟩
+  exact hExact
 
 /-- The observable spectral mass used in the upstream route is strictly positive. -/
 theorem yang_mills_hamiltonian_spectral_derivation_positive_mass :
