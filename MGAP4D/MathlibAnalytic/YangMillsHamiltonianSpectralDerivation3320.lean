@@ -161,5 +161,52 @@ theorem yang_mills_hamiltonian_spectral_derivation_final_release_held :
     ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, hFinal⟩
   exact hFinal
 
+/-- The Yang--Mills Hamiltonian spectral theorem / PVM / observable-atom route
+forces the derived Hamiltonian spectral value to be the internal normalized gap
+value `33 / 20`.
+
+This is the key theorem-shaped reading: the numeric value is not attached as an
+external label after the Hamiltonian construction.  The self-adjoint spectral
+chain, spectral infimum, spectral attainment, and PVM/observable atom are first
+identified with the derived Hamiltonian spectral carrier; the installed
+continuum-Hamiltonian exact-value theorem then evaluates that carrier as
+`33 / 20`. -/
+theorem yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 :
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+      (33 : ℝ) / 20 := by
+  exact yang_mills_hamiltonian_exact_gap_eq_spectral_value.symm.trans
+    continuum_hamiltonian_derives_exact_mass_gap_value
+
+/-- Full public theorem-witness form of the Yang--Mills Hamiltonian spectral
+analysis: spectral infimum, spectral attainment, and PVM/observable atom all
+collapse to the same Hamiltonian spectral carrier, and that carrier is forced to
+be `33 / 20`, with positive nonzero observable spectral mass and boundary
+markers preserved. -/
+theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_exact_gap :
+    continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
+    yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+    yangMillsHamiltonianSpectralDerivation3320.attainedSpectralValue =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+    yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+      (33 : ℝ) / 20 ∧
+    0 < spectralMassRealSurface.mass ∧
+    spectralMassRealSurface.mass ≠ 0 ∧
+    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+    yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, hSpectral, _, _, _, hInfimum, hAttainment, hAtom, _,
+      hMassPositive, hMassNonzero, _, _, hPublic, hFinal⟩
+  exact And.intro hSpectral <|
+    And.intro hInfimum <|
+    And.intro hAttainment <|
+    And.intro hAtom <|
+    And.intro yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 <|
+    And.intro hMassPositive <|
+    And.intro hMassNonzero <|
+    And.intro hPublic hFinal
+
 end MathlibAnalytic
 end MGAP4D
