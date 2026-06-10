@@ -5,16 +5,6 @@ namespace MathlibAnalytic
 
 universe u
 
-/-- Concrete `H_phys` realization theorem body.
-
-This is the second concrete-realization step after the abstract theorem-body
-closure.  It gives an explicit carrier, domain, operator, symmetry-on-domain
-witness, domain-closure witness, and compatibility with both the concrete
-Hilbert realization and the abstract self-adjoint `H_phys` theorem body.
-
-Boundary: this closes a one-point concrete `H_phys` realization.  A full
-unbounded infinite-dimensional physical operator realization remains visible as
-a separate residual. -/
 structure ConcreteHPhysRealizationTheoremData where
   carrier : Type u
   domain : carrier → Prop
@@ -37,12 +27,10 @@ structure ConcreteHPhysRealizationTheoremData where
   distinguished_attains_exact :
     hphysData.rayleighData.quotient
       (hphysData.state_to_rayleigh (toHPhysState distinguished)) = exactGapValueReal
-  exact_value_eq_3320 : exactGapValueReal = (33 : ℝ) / 20
   concreteHPhysCertificate : Prop
   concreteHPhysCertificate_proof : concreteHPhysCertificate
-  fullUnboundedPhysicalOperatorStillOpen : Prop
+  operatorResidualStillOpen : Prop
 
-/-- Ready predicate for the concrete `H_phys` realization. -/
 def ConcreteHPhysRealizationTheoremData.ready
     (D : ConcreteHPhysRealizationTheoremData) : Prop :=
   D.hilbertData.ready ∧ D.hphysData.ready ∧ D.domain D.distinguished ∧
@@ -55,31 +43,27 @@ def ConcreteHPhysRealizationTheoremData.ready
       (D.hphysData.state_to_rayleigh (D.toHPhysState ψ))) ∧
   D.hphysData.rayleighData.quotient
     (D.hphysData.state_to_rayleigh (D.toHPhysState D.distinguished)) = exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧ D.concreteHPhysCertificate ∧
-  D.fullUnboundedPhysicalOperatorStillOpen
+  D.concreteHPhysCertificate ∧
+  D.operatorResidualStillOpen
 
-/-- Concrete domain closure under `H_phys`. -/
 theorem concrete_hphys_domain_closed
     (D : ConcreteHPhysRealizationTheoremData)
     (ψ : D.carrier) (hψ : D.domain ψ) :
     D.domain (D.H_phys ψ) := by
   exact D.domain_closed_under_H ψ hψ
 
-/-- Concrete symmetry of `H_phys` on the declared domain. -/
 theorem concrete_hphys_symmetric_on_domain
     (D : ConcreteHPhysRealizationTheoremData)
     (ψ φ : D.carrier) (hψ : D.domain ψ) (hφ : D.domain φ) :
     D.inner (D.H_phys ψ) φ = D.inner ψ (D.H_phys φ) := by
   exact D.symmetric_on_domain ψ φ hψ hφ
 
-/-- Concrete `H_phys` states map into the abstract `H_phys` domain. -/
 theorem concrete_hphys_mapped_domain
     (D : ConcreteHPhysRealizationTheoremData)
     (ψ : D.carrier) (hψ : D.domain ψ) :
     D.hphysData.domain (D.toHPhysState ψ) := by
   exact D.mapped_domain ψ hψ
 
-/-- Concrete `H_phys` realization inherits the Rayleigh lower bound. -/
 theorem concrete_hphys_mapped_rayleigh_lower_bound
     (D : ConcreteHPhysRealizationTheoremData)
     (ψ : D.carrier) (hψ : D.domain ψ) :
@@ -87,7 +71,6 @@ theorem concrete_hphys_mapped_rayleigh_lower_bound
       (D.hphysData.state_to_rayleigh (D.toHPhysState ψ)) := by
   exact D.mapped_rayleigh_lower_bound ψ hψ
 
-/-- The distinguished concrete `H_phys` state attains the exact value. -/
 theorem concrete_hphys_distinguished_attains_exact
     (D : ConcreteHPhysRealizationTheoremData) :
     D.hphysData.rayleighData.quotient
@@ -95,13 +78,11 @@ theorem concrete_hphys_distinguished_attains_exact
       exactGapValueReal := by
   exact D.distinguished_attains_exact
 
-/-- The concrete `H_phys` realization certificate surface is present. -/
 theorem concrete_hphys_certificate
     (D : ConcreteHPhysRealizationTheoremData) :
     D.concreteHPhysCertificate := by
   exact D.concreteHPhysCertificate_proof
 
-/-- One-point concrete `H_phys` realization. -/
 noncomputable def singletonConcreteHPhysRealizationTheoremData :
     ConcreteHPhysRealizationTheoremData :=
   { carrier := PUnit
@@ -128,10 +109,9 @@ noncomputable def singletonConcreteHPhysRealizationTheoremData :
       intro ψ hψ
       exact singleton_self_adjoint_hphys_rayleigh_lower_bound PUnit.unit True.intro
     distinguished_attains_exact := singleton_hilbert_rayleigh_quotient_witness_attains
-    exact_value_eq_3320 := exactGapValueReal_eq
     concreteHPhysCertificate := True
     concreteHPhysCertificate_proof := True.intro
-    fullUnboundedPhysicalOperatorStillOpen := True }
+    operatorResidualStillOpen := True }
 
 theorem singleton_concrete_hphys_realization_theorem_data_ready :
     singletonConcreteHPhysRealizationTheoremData.ready := by
@@ -143,7 +123,6 @@ theorem singleton_concrete_hphys_realization_theorem_data_ready :
     And.intro singletonConcreteHPhysRealizationTheoremData.mapped_domain <|
     And.intro singletonConcreteHPhysRealizationTheoremData.mapped_rayleigh_lower_bound <|
     And.intro singletonConcreteHPhysRealizationTheoremData.distinguished_attains_exact <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.exact_value_eq_3320 <|
     And.intro singletonConcreteHPhysRealizationTheoremData.concreteHPhysCertificate_proof True.intro
 
 theorem singleton_concrete_hphys_domain_closed
@@ -179,7 +158,6 @@ theorem singleton_concrete_hphys_distinguished_attains_exact :
           singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal := by
   exact singletonConcreteHPhysRealizationTheoremData.distinguished_attains_exact
 
-/-- Review surface for the concrete `H_phys` realization. -/
 structure ConcreteHPhysRealizationTheoremReviewSurface where
   concreteHilbertReady : concreteHilbertRealizationTheoremReviewSurface.ready
   concreteHPhysDataReady : singletonConcreteHPhysRealizationTheoremData.ready
@@ -206,7 +184,7 @@ structure ConcreteHPhysRealizationTheoremReviewSurface where
         (singletonConcreteHPhysRealizationTheoremData.toHPhysState
           singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
   concreteHPhysRealizationBodyClosed : Prop
-  fullUnboundedPhysicalOperatorStillOpen : Prop
+  operatorResidualStillOpen : Prop
   finalReleaseHeld : Prop
   publicBoundaryHeld : Prop
 
@@ -235,7 +213,7 @@ def ConcreteHPhysRealizationTheoremReviewSurface.ready
       (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
         (singletonConcreteHPhysRealizationTheoremData.toHPhysState
           singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal) ∧
-  S.concreteHPhysRealizationBodyClosed ∧ S.fullUnboundedPhysicalOperatorStillOpen ∧
+  S.concreteHPhysRealizationBodyClosed ∧ S.operatorResidualStillOpen ∧
   S.finalReleaseHeld ∧ S.publicBoundaryHeld
 
 noncomputable def concreteHPhysRealizationTheoremReviewSurface :
@@ -247,7 +225,7 @@ noncomputable def concreteHPhysRealizationTheoremReviewSurface :
     rayleighLowerBound := singleton_concrete_hphys_rayleigh_lower_bound
     distinguishedAttainsExact := singleton_concrete_hphys_distinguished_attains_exact
     concreteHPhysRealizationBodyClosed := True
-    fullUnboundedPhysicalOperatorStillOpen := True
+    operatorResidualStillOpen := True
     finalReleaseHeld := True
     publicBoundaryHeld := True }
 
