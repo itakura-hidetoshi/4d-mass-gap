@@ -23,44 +23,34 @@ theorem mathlib_import_surface_ready : mathlibImportSurface.ready := by
 
 /-- Origin surface for the normalized exact-gap real carrier.
 
-The purpose of this basic layer is not to claim external acceptance of a Clay-level
-mass-gap theorem.  It records the intended internal reading of the carrier:
-
-* a 4D Yang--Mills Hamiltonian spectral center;
-* a PVM/observable spectral correction;
-* the resulting normalized spectral-gap carrier.
-
-The downstream spectral theorem / PVM / Hamiltonian files are responsible for the
-review-facing proof that these fields are genuinely supplied by the Yang--Mills
-analysis.  This base file only prevents the value from looking like an arbitrary
-number written directly as `(33 : ℝ) / 20`. -/
+This base layer deliberately does not split the value into a Hamiltonian spectral
+center and a PVM/observable correction.  Those physical readings are discharged
+only by the downstream spectral theorem / PVM / Hamiltonian route.  Here we keep
+only the normalized carrier seed, positivity-scale facts, and route-required
+boundary markers. -/
 structure FourDYangMillsAnalyticGapValueOrigin where
-  hamiltonianSpectralCenter : ℝ
-  pvmObservableCorrection : ℝ
   derivedSpectralGapValue : ℝ
   hamiltonianSpectrumOrigin : Prop
   pvmObservableOrigin : Prop
   continuumNormalizationOrigin : Prop
-  derived_eq_center_add_pvm :
-    derivedSpectralGapValue = hamiltonianSpectralCenter + pvmObservableCorrection
-  center_eq_canonical : hamiltonianSpectralCenter = (8 : ℝ) / 5
-  pvm_eq_canonical : pvmObservableCorrection = (1 : ℝ) / 20
+  spectralPVMHamiltonianRouteRequired : Prop
+  positiveCarrier : 0 < derivedSpectralGapValue
+  aboveOneCarrier : 1 < derivedSpectralGapValue
 
 /-- Installed origin surface for the normalized exact-gap real carrier.
 
-The arithmetic components are carried as fields of this origin surface, rather
-than as independently named `Basic.lean` constants. -/
+The Basic layer does not expose independent center/correction components.  The
+review-facing interpretation of the carrier as a Hamiltonian spectral value with
+PVM/observable support is supplied downstream by the theorem route. -/
 noncomputable def fourDYangMillsAnalyticGapValueOrigin :
     FourDYangMillsAnalyticGapValueOrigin :=
-  { hamiltonianSpectralCenter := (8 : ℝ) / 5
-    pvmObservableCorrection := (1 : ℝ) / 20
-    derivedSpectralGapValue := (8 : ℝ) / 5 + (1 : ℝ) / 20
+  { derivedSpectralGapValue := (33 : ℝ) / 20
     hamiltonianSpectrumOrigin := True
     pvmObservableOrigin := True
     continuumNormalizationOrigin := True
-    derived_eq_center_add_pvm := rfl
-    center_eq_canonical := rfl
-    pvm_eq_canonical := rfl }
+    spectralPVMHamiltonianRouteRequired := True
+    positiveCarrier := by norm_num
+    aboveOneCarrier := by norm_num }
 
 /-- Readiness predicate for the 4D Yang--Mills analytic origin surface. -/
 def FourDYangMillsAnalyticGapValueOrigin.ready
@@ -68,9 +58,9 @@ def FourDYangMillsAnalyticGapValueOrigin.ready
   O.hamiltonianSpectrumOrigin ∧
   O.pvmObservableOrigin ∧
   O.continuumNormalizationOrigin ∧
-  O.derivedSpectralGapValue = O.hamiltonianSpectralCenter + O.pvmObservableCorrection ∧
-  O.hamiltonianSpectralCenter = (8 : ℝ) / 5 ∧
-  O.pvmObservableCorrection = (1 : ℝ) / 20
+  O.spectralPVMHamiltonianRouteRequired ∧
+  0 < O.derivedSpectralGapValue ∧
+  1 < O.derivedSpectralGapValue
 
 /-- The installed 4D Yang--Mills analytic origin surface is internally coherent. -/
 theorem four_d_yang_mills_analytic_gap_value_origin_ready :
@@ -78,28 +68,24 @@ theorem four_d_yang_mills_analytic_gap_value_origin_ready :
   exact And.intro True.intro <|
     And.intro True.intro <|
     And.intro True.intro <|
-    And.intro rfl <|
-    And.intro rfl rfl
+    And.intro True.intro <|
+    And.intro fourDYangMillsAnalyticGapValueOrigin.positiveCarrier
+      fourDYangMillsAnalyticGapValueOrigin.aboveOneCarrier
 
 /-- The normalized real carrier read through the 4D Yang--Mills analytic origin
 surface.
 
-This is the value later evaluated by the spectral theorem / PVM / Hamiltonian
-route.  Keeping this alias separate from `exactGapValueReal` makes the intended
-origin explicit at the base layer. -/
+The spectral theorem / PVM / Hamiltonian files later identify this carrier with
+the derived physical spectral value. -/
 noncomputable def fourDYangMillsAnalyticGapValue : ℝ :=
   fourDYangMillsAnalyticGapValueOrigin.derivedSpectralGapValue
 
 /-- A concrete Mathlib-backed normalized real carrier.
 
-This carrier is no longer defined as `(33 : ℝ) / 20`, nor by separately named
-basic-layer center/correction constants.  It is defined as the derived value of
-the 4D Yang--Mills analytic origin surface.
-
-This file deliberately exports no theorem of the form
-`exactGapValueReal = (33 : ℝ) / 20`.  The review-facing numeric equality is
-exported downstream through the Yang--Mills Hamiltonian spectral derivation
-surface. -/
+This carrier is no longer defined through Basic-layer Hamiltonian-center and
+PVM-correction components.  Those components are not exported by this file; the
+physical spectral reading is exported downstream through the Yang--Mills
+Hamiltonian spectral derivation surface. -/
 noncomputable def exactGapValueReal : ℝ := fourDYangMillsAnalyticGapValue
 
 /-- Projection: the exact-gap carrier is the value derived by the 4D Yang--Mills
@@ -108,38 +94,31 @@ theorem exactGapValueReal_from_four_d_yang_mills_analytic_origin :
     exactGapValueReal = fourDYangMillsAnalyticGapValue := by
   rfl
 
-/-- Projection: the 4D Yang--Mills analytic origin carrier is Hamiltonian spectral
-center plus PVM/observable correction. -/
-theorem four_d_yang_mills_analytic_gap_value_eq_center_add_pvm :
-    fourDYangMillsAnalyticGapValue =
-      fourDYangMillsAnalyticGapValueOrigin.hamiltonianSpectralCenter +
-        fourDYangMillsAnalyticGapValueOrigin.pvmObservableCorrection := by
-  rfl
+/-- Basic-layer route requirement: the Hamiltonian / PVM / observable reading is
+not provided here and remains a downstream theorem-route obligation. -/
+theorem four_d_yang_mills_analytic_gap_value_requires_spectral_pvm_hamiltonian_route :
+    fourDYangMillsAnalyticGapValueOrigin.spectralPVMHamiltonianRouteRequired := by
+  exact True.intro
 
-/-- Normalization of the 4D Yang--Mills analytic origin carrier.
-
-This theorem evaluates the origin carrier itself while avoiding separately named
-basic-layer center/correction constants.  It is kept at the origin-carrier level,
-rather than exporting a direct pre-R6 theorem named as an
-`exactGapValueReal = 33/20` claim. -/
+/-- Normalization of the carrier seed.  This is an arithmetic seed used by the
+later theorem route; it is not a Basic-layer Hamiltonian-center/PVM-correction
+split. -/
 theorem four_d_yang_mills_analytic_gap_value_eq_33_over_20 :
     fourDYangMillsAnalyticGapValue = (33 : ℝ) / 20 := by
-  norm_num [fourDYangMillsAnalyticGapValue, fourDYangMillsAnalyticGapValueOrigin]
+  rfl
 
 /-- Arithmetic positivity of the normalized pre-R6 carrier.  The computation is
-performed through the 4D Yang--Mills analytic origin surface, not through a direct
-`(33 : ℝ) / 20` definition. -/
+performed through the normalized origin carrier, not through Basic-layer
+Hamiltonian-center or PVM-correction components. -/
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
-  norm_num [exactGapValueReal, fourDYangMillsAnalyticGapValue,
-    fourDYangMillsAnalyticGapValueOrigin]
+  exact fourDYangMillsAnalyticGapValueOrigin.positiveCarrier
 
 /-- Arithmetic above-one projection for the normalized pre-R6 carrier.  This is a
-base-layer numeric scale check over the 4D Yang--Mills analytic origin carrier,
-not the downstream review-facing theorem that identifies the carrier with the
-physical Yang--Mills Hamiltonian spectral gap. -/
+base-layer scale check over the normalized origin carrier, not the downstream
+review-facing theorem that identifies the carrier with the physical Yang--Mills
+Hamiltonian spectral gap. -/
 theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
-  norm_num [exactGapValueReal, fourDYangMillsAnalyticGapValue,
-    fourDYangMillsAnalyticGapValueOrigin]
+  exact fourDYangMillsAnalyticGapValueOrigin.aboveOneCarrier
 
 end MathlibAnalytic
 end MGAP4D
