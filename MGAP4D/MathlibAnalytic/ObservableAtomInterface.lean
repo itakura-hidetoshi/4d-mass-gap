@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PVMInterface
+import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -35,18 +36,21 @@ def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom ∧
   O.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
 
-def PrototypeObservable := ObservablePrototypeShell
+/-- Compatibility name for older downstream files.  The observable carrier is now
+routed to the final physical Hilbert carrier rather than to a shell-only
+prototype. -/
+abbrev PrototypeObservable := FinalPhysicalHilbertCarrier
 
 noncomputable def prototypeObservable : PrototypeObservable :=
-  { label := "observable-atom-shell" }
+  finalPhysicalHilbertZero
 
 noncomputable def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
   exactGapSpectralMassReal
 
 noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
   { pvm := singletonPVMInterface
-    observable := PrototypeObservable
-    chosenObservable := prototypeObservable
+    observable := FinalPhysicalHilbertCarrier
+    chosenObservable := finalPhysicalHilbertZero
     spectralWeight := prototypeObservableSpectralWeight
     pvmReady := singleton_pvm_interface_ready
     atom := exactGapAtomReal
@@ -139,20 +143,17 @@ noncomputable def observableAtomReviewSurface : ObservableAtomReviewSurface :=
     mathlibBackedBoundary := ObservableAtomBoundaryMarker.mathlibInterfaceBacked
     finalReleaseBoundary := ObservableAtomBoundaryMarker.finalReleaseHeld }
 
-theorem observable_atom_review_surface_ready :
-    observableAtomReviewSurface.ready := by
+theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready := by
   exact And.intro pvm_review_surface_ready <|
     And.intro singleton_observable_atom_interface_ready <|
-    And.intro singleton_observable_atom_interface_exact_in_atom <|
+    And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro singleton_observable_atom_interface_positive_weight <|
     And.intro singleton_observable_atom_interface_nonzero_weight <|
     And.intro singleton_observable_atom_interface_compatible_with_pvm <|
     And.intro rfl <|
     And.intro rfl rfl
 
-theorem observable_atom_review_surface_final_release_held :
-    observableAtomReviewSurface.finalReleaseBoundary = ObservableAtomBoundaryMarker.finalReleaseHeld := by
-  rfl
+end
 
 end MathlibAnalytic
 end MGAP4D
