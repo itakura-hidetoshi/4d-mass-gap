@@ -3,7 +3,8 @@
 
 This is a syntactic/contract audit. Lean kernel checking remains `lake build`.
 The audit ensures the operator-level normalization surface is present, imported,
-documented, and boundary-preserving.
+documented, and boundary-preserving.  Numeric `33/20` normalization is reserved
+for the R6 spectral-origin layer.
 """
 
 from __future__ import annotations
@@ -36,9 +37,8 @@ REQUIRED_LEAN_ANCHORS = (
     "dimensionalGap",
     "dimensional_gap_def",
     "dimensional_gap_eq_reference_mul_exact",
-    "dimensional_gap_eq_reference_mul_3320",
     "internal_reference_scale_eq_one",
-    "internal_dimensional_gap_eq_3320",
+    "internal_dimensional_gap_eq_exact",
     "normalizedHamiltonianConventionVisible",
     "dimensionalGapReadingVisible",
     "theoremBodyUnchanged",
@@ -46,16 +46,16 @@ REQUIRED_LEAN_ANCHORS = (
     "physical_hamiltonian_operator_normalization_ready",
     "physical_hamiltonian_operator_normalized_scale_def",
     "physical_hamiltonian_operator_scale_reconstruction",
-    "physical_hamiltonian_operator_normalized_gap_eq_3320",
-    "physical_hamiltonian_operator_dimensional_gap_eq_reference_mul_3320",
-    "physical_hamiltonian_operator_internal_dimensional_gap_eq_3320",
+    "physical_hamiltonian_operator_normalized_gap_eq_exact",
+    "physical_hamiltonian_operator_dimensional_gap_eq_reference_mul_exact",
+    "physical_hamiltonian_operator_internal_dimensional_gap_eq_exact",
 )
 
 REQUIRED_EQUATION_ANCHORS = (
     "normalizedHamiltonianScale = referenceEnergyScale⁻¹ * physicalHamiltonianScale",
     "physicalHamiltonianScale = referenceEnergyScale * normalizedHamiltonianScale",
     "dimensionalGap = referenceEnergyScale * normalizedGap",
-    "dimensionalGap = referenceEnergyScale * ((33 : ℝ) / 20)",
+    "dimensionalGap = referenceEnergyScale * exactGapValueReal",
 )
 
 REQUIRED_ROOT_IMPORTS = (
@@ -65,8 +65,9 @@ REQUIRED_ROOT_IMPORTS = (
 REQUIRED_DOC_ANCHORS = (
     "H_norm = E0^{-1} * H_phys",
     "H_phys = E0 * H_norm",
-    "Delta_phys(E0) = E0 * (33/20)",
+    "Delta_phys(E0) = E0 * Delta_norm",
     "physical_hamiltonian_operator_normalization_ready",
+    "R6 spectral-origin layer",
     "the theorem body",
     "the public release gate",
 )
