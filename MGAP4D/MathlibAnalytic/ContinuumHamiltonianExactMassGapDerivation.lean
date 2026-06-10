@@ -41,14 +41,15 @@ theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
     ⟨_, _, hPhysical, hHPhys, hSpectral, hNorm, hPos, _,
       hPlaquette, hObservable, hDerivation, _, _, hNoConsensus,
       hPublic, hFinal⟩
+  have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
+    simpa [exactGapValueReal] using
+      four_d_yang_mills_analytic_gap_value_eq_33_over_20
   exact And.intro hPhysical <|
     And.intro hHPhys <|
     And.intro hSpectral <|
     And.intro hNorm <|
     And.intro hPos <|
-    And.intro
-      (exactGapValueReal_from_four_d_yang_mills_analytic_origin.trans
-        four_d_yang_mills_analytic_gap_value_eq_33_over_20) <|
+    And.intro hExact <|
     And.intro hPlaquette <|
     And.intro hObservable <|
     And.intro hDerivation <|
@@ -66,9 +67,10 @@ theorem physical_continuum_hamiltonian_exact_gap_33_over_20 :
   unfold physicalContinuumHamiltonianExactGap33Over20
   rcases continuum_hamiltonian_mass_gap_witness_ready with
     ⟨_, _, _, _, _, _, hPos, _, _⟩
-  exact And.intro hPos
-    (exactGapValueReal_from_four_d_yang_mills_analytic_origin.trans
-      four_d_yang_mills_analytic_gap_value_eq_33_over_20)
+  have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
+    simpa [exactGapValueReal] using
+      four_d_yang_mills_analytic_gap_value_eq_33_over_20
+  exact And.intro hPos hExact
 
 /-- The continuum Hamiltonian mass-gap witness is theorem-derived from the
 upstream continuum Yang--Mills and plaquette spectral-weight hardening lanes. -/
