@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PVMTheoremTheorem
-import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton
+import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore
 
 namespace MGAP4D
 namespace MathlibAnalytic
