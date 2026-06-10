@@ -17,6 +17,7 @@ import sys
 STRING_RE = re.compile(r'"(?:[^"\\]|\\.)*"')
 FORBIDDEN_TOKENS_RE = re.compile(r"\b(sorry|admit|axiom|constant)\b")
 
+CORE_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/FinalPhysicalHilbertCarrierCore.lean")
 OBSERVABLE_INTERFACE_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ObservableAtomInterface.lean")
 OBSERVABLE_THEOREM_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ObservableAtomTheoremTheorem.lean")
 COMPACT_PLAQUETTE_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/CompactPlaquetteConstructionTheorem.lean")
@@ -31,8 +32,24 @@ CHECKLIST_PATH = Path("EXTERNAL_REVIEW_CHECKLIST.md")
 CHECK_PATH = Path("scripts/check.sh")
 FAST_CHECK_PATH = Path("scripts/check_changed_lean.sh")
 
+REQUIRED_CORE_LEAN_ANCHORS = (
+    "import MGAP4D.MathlibAnalytic.Basic",
+    "def FinalPhysicalHilbertCarrier : Type := ℕ → ℝ",
+    "def finalPhysicalHilbertZero : FinalPhysicalHilbertCarrier",
+    "def finalPhysicalHilbertInner",
+    "def finalPhysicalHilbertNorm",
+    "def finalPhysicalHilbertDomain",
+    "def finalPhysicalHamiltonianWeight",
+    "def finalPhysicalHamiltonian",
+    "def finalPhysicalRayleigh",
+    "final_physical_hamiltonian_domain_preserved",
+    "final_physical_hamiltonian_symmetric_on_domain",
+    "final_physical_rayleigh_lower_bound",
+    "final_physical_distinguished_attains_exact",
+)
+
 REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS = (
-    "import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton",
+    "import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore",
     "abbrev PrototypeObservable := FinalPhysicalHilbertCarrier",
     "def prototypeObservable : PrototypeObservable :=",
     "finalPhysicalHilbertZero",
@@ -42,7 +59,7 @@ REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS = (
 )
 
 REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS = (
-    "import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton",
+    "import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore",
     "finalPhysicalObservableAtomTheoremTheoremData",
     "observable := FinalPhysicalHilbertCarrier",
     "chosenObservable := finalPhysicalHilbertZero",
@@ -53,7 +70,7 @@ REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS = (
 )
 
 REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS = (
-    "import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton",
+    "import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore",
     "finalPhysicalCompactPlaquetteConstructionTheoremData",
     "plaquette := FinalPhysicalHilbertCarrier",
     "observable := FinalPhysicalHilbertCarrier",
@@ -107,14 +124,7 @@ REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS = (
 )
 
 REQUIRED_PHYSICAL_LEAN_ANCHORS = (
-    "FinalPhysicalHilbertCarrier",
-    "finalPhysicalHilbertZero",
-    "finalPhysicalHilbertInner",
-    "finalPhysicalHilbertNorm",
-    "finalPhysicalHilbertDomain",
-    "finalPhysicalHamiltonianWeight",
-    "finalPhysicalHamiltonian",
-    "finalPhysicalRayleigh",
+    "import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore",
     "finalPhysicalUnboundedOperatorSkeletonData",
     "carrier := FinalPhysicalHilbertCarrier",
     "zero := finalPhysicalHilbertZero",
@@ -145,6 +155,13 @@ REQUIRED_CONCRETE_YM_LEAN_ANCHORS = (
     "finalConcreteYangMillsHamiltonianSkeletonData",
     "final_concrete_ym_hamiltonian_skeleton_ready",
     "prototype_concrete_ym_hamiltonian_skeleton_ready",
+)
+
+FORBIDDEN_CORE_CODE_SNIPPETS = (
+    "PUnit",
+    "carrier := PUnit",
+    "H_phys := fun ψ => ψ",
+    "rayleigh := fun _ => exactGapValueReal",
 )
 
 FORBIDDEN_OBSERVABLE_INTERFACE_CODE_SNIPPETS = (
@@ -306,6 +323,7 @@ def audit_lean_file(path: Path, anchors: tuple[str, ...], forbidden: tuple[str, 
 
 
 def main() -> int:
+    audit_lean_file(CORE_LEAN_PATH, REQUIRED_CORE_LEAN_ANCHORS, FORBIDDEN_CORE_CODE_SNIPPETS)
     audit_lean_file(OBSERVABLE_INTERFACE_LEAN_PATH, REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS, FORBIDDEN_OBSERVABLE_INTERFACE_CODE_SNIPPETS)
     audit_lean_file(OBSERVABLE_THEOREM_LEAN_PATH, REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS, FORBIDDEN_OBSERVABLE_THEOREM_CODE_SNIPPETS)
     audit_lean_file(COMPACT_PLAQUETTE_LEAN_PATH, REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS, FORBIDDEN_COMPACT_PLAQUETTE_CODE_SNIPPETS)
@@ -322,6 +340,7 @@ def main() -> int:
     require_all("check_changed_lean.sh", require_file(FAST_CHECK_PATH), REQUIRED_CHECK_ANCHORS)
 
     print("Final physical carrier routing audit")
+    print(f"Final physical carrier core Lean anchors audited: {len(REQUIRED_CORE_LEAN_ANCHORS)}")
     print(f"Observable interface Lean anchors audited: {len(REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS)}")
     print(f"Observable theorem Lean anchors audited: {len(REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS)}")
     print(f"Compact plaquette Lean anchors audited: {len(REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS)}")
