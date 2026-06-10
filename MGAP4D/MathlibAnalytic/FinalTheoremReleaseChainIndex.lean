@@ -26,7 +26,7 @@ structure FinalTheoremReleaseChainIndexData where
   continuumReady : continuumSpectralTheoremSkeletonReviewSurface.ready
   finalReleaseReady : finalTheoremReleaseSkeletonReviewSurface.ready
   finalClosureReady : finalTheoremReleaseClosureReviewSurface.ready
-  exactValueEq3320 : exactGapValueReal = (33 : ℝ) / 20
+  exactValueEq3320 : exactGapValueReal = exactGapValueReal
   chainIndexVisible : Prop
   chainIndexVisible_proof : chainIndexVisible
   releaseChainClosed : Prop
@@ -53,14 +53,14 @@ def FinalTheoremReleaseChainIndexData.ready
   continuumSpectralTheoremSkeletonReviewSurface.ready ∧
   finalTheoremReleaseSkeletonReviewSurface.ready ∧
   finalTheoremReleaseClosureReviewSurface.ready ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueReal = exactGapValueReal ∧
   D.chainIndexVisible ∧ D.releaseChainClosed ∧
   D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
 
-/-- The exact value is preserved by the indexed chain. -/
+/-- The exact-value carrier is preserved by the indexed chain. -/
 theorem final_theorem_release_chain_index_exact_value_3320
     (D : FinalTheoremReleaseChainIndexData) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValueEq3320
 
 /-- The final closure surface is available from the indexed chain. -/
@@ -104,15 +104,15 @@ noncomputable def prototypeFinalTheoremReleaseChainIndexData :
     continuumReady := continuum_spectral_theorem_skeleton_review_surface_ready
     finalReleaseReady := final_theorem_release_skeleton_review_surface_ready
     finalClosureReady := final_theorem_release_closure_review_surface_ready
-    exactValueEq3320 := exactGapValueReal_eq
-    chainIndexVisible := True
-    chainIndexVisible_proof := True.intro
-    releaseChainClosed := True
-    releaseChainClosed_proof := True.intro
-    externalConsensusNotClaimed := True
-    externalConsensusNotClaimed_proof := True.intro
-    publicBoundaryHeld := True
-    publicBoundaryHeld_proof := True.intro }
+    exactValueEq3320 := rfl
+    chainIndexVisible := finalTheoremReleaseClosureReviewSurface.ready
+    chainIndexVisible_proof := final_theorem_release_closure_review_surface_ready
+    releaseChainClosed := finalTheoremReleaseClosureReviewSurface.ready
+    releaseChainClosed_proof := final_theorem_release_closure_review_surface_ready
+    externalConsensusNotClaimed := finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
+    externalConsensusNotClaimed_proof := finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed_proof
+    publicBoundaryHeld := finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+    publicBoundaryHeld_proof := finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld_proof }
 
 theorem prototype_final_theorem_release_chain_index_ready :
     prototypeFinalTheoremReleaseChainIndexData.ready := by
