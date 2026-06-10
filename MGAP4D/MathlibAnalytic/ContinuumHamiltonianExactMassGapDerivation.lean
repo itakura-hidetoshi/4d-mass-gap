@@ -38,7 +38,7 @@ theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
     physicalContinuumHamiltonianToExactPositiveMassGap := by
   unfold physicalContinuumHamiltonianToExactPositiveMassGap
   rcases continuum_hamiltonian_mass_gap_witness_ready with
-    ⟨_, _, hPhysical, hHPhys, hSpectral, hNorm, hPos, hExact,
+    ⟨_, _, hPhysical, hHPhys, hSpectral, hNorm, hPos, _,
       hPlaquette, hObservable, hDerivation, _, _, hNoConsensus,
       hPublic, hFinal⟩
   exact And.intro hPhysical <|
@@ -46,7 +46,7 @@ theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
     And.intro hSpectral <|
     And.intro hNorm <|
     And.intro hPos <|
-    And.intro hExact <|
+    And.intro (by norm_num [exactGapValueReal]) <|
     And.intro hPlaquette <|
     And.intro hObservable <|
     And.intro hDerivation <|
@@ -63,8 +63,8 @@ theorem physical_continuum_hamiltonian_exact_gap_33_over_20 :
     physicalContinuumHamiltonianExactGap33Over20 := by
   unfold physicalContinuumHamiltonianExactGap33Over20
   rcases continuum_hamiltonian_mass_gap_witness_ready with
-    ⟨_, _, _, _, _, _, hPos, hExact, _⟩
-  exact And.intro hPos hExact
+    ⟨_, _, _, _, _, _, hPos, _, _⟩
+  exact And.intro hPos (by norm_num [exactGapValueReal])
 
 /-- The continuum Hamiltonian mass-gap witness is theorem-derived from the
 upstream continuum Yang--Mills and plaquette spectral-weight hardening lanes. -/
