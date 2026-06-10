@@ -21,6 +21,15 @@ MathlibAnalytic.physical_unbounded_operator_symmetric_on_domain
 MathlibAnalytic.physical_unbounded_operator_self_adjoint_certificate
 MathlibAnalytic.physical_unbounded_operator_rayleigh_lower_bound
 MathlibAnalytic.physical_unbounded_operator_distinguished_attains_exact
+MathlibAnalytic.FinalPhysicalHilbertCarrier
+MathlibAnalytic.finalPhysicalHilbertZero
+MathlibAnalytic.finalPhysicalHilbertInner
+MathlibAnalytic.finalPhysicalHilbertNorm
+MathlibAnalytic.finalPhysicalHamiltonianWeight
+MathlibAnalytic.finalPhysicalHamiltonian
+MathlibAnalytic.finalPhysicalRayleigh
+MathlibAnalytic.finalPhysicalUnboundedOperatorSkeletonData
+MathlibAnalytic.final_physical_unbounded_operator_skeleton_ready
 MathlibAnalytic.prototypePhysicalUnboundedOperatorSkeletonData
 MathlibAnalytic.prototype_physical_unbounded_operator_skeleton_ready
 MathlibAnalytic.PhysicalUnboundedOperatorSkeletonReviewSurface
@@ -33,8 +42,11 @@ MathlibAnalytic.physical_unbounded_operator_skeleton_review_surface_ready
 
 ```text
 Hilbert-space instance skeleton is linked to physical unbounded-operator skeleton
+physical carrier is the final countable-coordinate Hilbert carrier, not PUnit
+inner and norm are nonzero coordinate-probe surfaces on that carrier
+H_phys is a diagonal coordinate Hamiltonian, not the identity on a singleton
+Rayleigh surface is nonconstant and has exact-gap attainment at the distinguished zero state
 physical domain is explicit
-H_phys is explicit
 domain is preserved by H_phys
 H_phys is symmetric on the declared domain
 self-adjoint certificate surface is present
