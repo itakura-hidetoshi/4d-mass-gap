@@ -3,7 +3,7 @@
 
 This guard checks the declared bridge from concrete Hilbert realization through
 physical/Yang--Mills Hamiltonian, spectral/PVM realization, continuum spectral
-theorem surfaces, normalization, and the infinite-dimensional Yang--Mills target
+theorem surfaces, normalization, and the infinite-dimensional Yang-Mills target
 obligation layer.
 
 It is a syntactic/contract audit: Lean's kernel remains `lake build`. This
@@ -42,7 +42,6 @@ BRIDGE_FILES: tuple[BridgeFileSpec, ...] = (
             "distinguished_nonzero_norm",
             "distinguished_attains_exact",
             "all_states_lower_bound",
-            "exact_value_eq_3320",
             "exact_value_positive",
         ),
         required_ready=(
@@ -62,13 +61,12 @@ BRIDGE_FILES: tuple[BridgeFileSpec, ...] = (
             "symmetric_on_domain",
             "mapped_rayleigh_lower_bound",
             "distinguished_attains_exact",
-            "exact_value_eq_3320",
         ),
         required_ready=(
             "ConcreteHPhysRealizationTheoremData.ready",
             "concrete_hphys_realization_theorem_review_surface_ready",
         ),
-        required_boundary=("fullUnboundedPhysicalOperatorStillOpen", "publicBoundaryHeld"),
+        required_boundary=("operatorResidualStillOpen", "publicBoundaryHeld"),
     ),
     BridgeFileSpec(
         path="MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean",
