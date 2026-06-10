@@ -3,9 +3,9 @@
 
 This is a syntactic/contract audit. Lean kernel checking remains `lake build`.
 The audit prevents regression from the final countable-coordinate physical
-Hilbert carrier back to one-point/PUnit prototype carriers in the compact
-plaquette, concrete Hilbert, concrete H_phys, physical unbounded-operator, and
-concrete Yang--Mills Hamiltonian skeletons.
+Hilbert carrier back to one-point/PUnit prototype carriers in the observable,
+compact plaquette, concrete Hilbert, concrete H_phys, physical unbounded-
+operator, concrete Yang--Mills Hamiltonian, and operator-measure surfaces.
 """
 
 from __future__ import annotations
@@ -17,7 +17,10 @@ import sys
 STRING_RE = re.compile(r'"(?:[^"\\]|\\.)*"')
 FORBIDDEN_TOKENS_RE = re.compile(r"\b(sorry|admit|axiom|constant)\b")
 
+OBSERVABLE_INTERFACE_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ObservableAtomInterface.lean")
+OBSERVABLE_THEOREM_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ObservableAtomTheoremTheorem.lean")
 COMPACT_PLAQUETTE_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/CompactPlaquetteConstructionTheorem.lean")
+OPERATOR_MEASURE_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/OperatorMeasureCompatibilityTheorem.lean")
 CONCRETE_HILBERT_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ConcreteHilbertRealizationTheorem.lean")
 CONCRETE_HPHYS_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/ConcreteHPhysRealizationTheorem.lean")
 PHYSICAL_LEAN_PATH = Path("MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean")
@@ -27,6 +30,27 @@ CONCRETE_YM_DOC_PATH = Path("docs/mathlib_concrete_yang_mills_hamiltonian_skelet
 CHECKLIST_PATH = Path("EXTERNAL_REVIEW_CHECKLIST.md")
 CHECK_PATH = Path("scripts/check.sh")
 FAST_CHECK_PATH = Path("scripts/check_changed_lean.sh")
+
+REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS = (
+    "import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton",
+    "abbrev PrototypeObservable := FinalPhysicalHilbertCarrier",
+    "def prototypeObservable : PrototypeObservable :=",
+    "finalPhysicalHilbertZero",
+    "observable := FinalPhysicalHilbertCarrier",
+    "chosenObservable := finalPhysicalHilbertZero",
+    "spectralWeight := prototypeObservableSpectralWeight",
+)
+
+REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS = (
+    "import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton",
+    "finalPhysicalObservableAtomTheoremTheoremData",
+    "observable := FinalPhysicalHilbertCarrier",
+    "chosenObservable := finalPhysicalHilbertZero",
+    "spectralWeight := fun _ _ => exactGapSpectralMassReal",
+    "final_physical_observable_atom_theorem_theorem_data_ready",
+    "abbrev singletonObservableAtomTheoremTheoremData",
+    "finalPhysicalObservableAtomTheoremTheoremData",
+)
 
 REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS = (
     "import MGAP4D.MathlibAnalytic.PhysicalUnboundedOperatorSkeleton",
@@ -41,6 +65,13 @@ REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS = (
     "final_physical_compact_plaquette_chosen_observable_def",
     "abbrev singletonCompactPlaquetteConstructionTheoremData",
     "finalPhysicalCompactPlaquetteConstructionTheoremData",
+)
+
+REQUIRED_OPERATOR_MEASURE_LEAN_ANCHORS = (
+    "constructedObservable := finalPhysicalHilbertZero",
+    "constructionData := singletonCompactPlaquetteConstructionTheoremData",
+    "observableAtomData := singletonObservableAtomTheoremTheoremData",
+    "constructedObservable_def := rfl",
 )
 
 REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS = (
@@ -116,12 +147,27 @@ REQUIRED_CONCRETE_YM_LEAN_ANCHORS = (
     "prototype_concrete_ym_hamiltonian_skeleton_ready",
 )
 
+FORBIDDEN_OBSERVABLE_INTERFACE_CODE_SNIPPETS = (
+    "observable := PrototypeObservable",
+    "chosenObservable := prototypeObservable",
+)
+
+FORBIDDEN_OBSERVABLE_THEOREM_CODE_SNIPPETS = (
+    "observable := PrototypeObservable",
+    "chosenObservable := prototypeObservable",
+    "spectralWeight := prototypeObservableSpectralWeight",
+)
+
 FORBIDDEN_COMPACT_PLAQUETTE_CODE_SNIPPETS = (
     "PrototypePlaquette",
     "plaquette := PrototypePlaquette",
     "observable := PrototypeObservable",
     "constructObservable := fun _ => prototypeObservable",
     "chosenObservable := prototypeObservable",
+)
+
+FORBIDDEN_OPERATOR_MEASURE_CODE_SNIPPETS = (
+    "constructedObservable := prototypeObservable",
 )
 
 FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS = (
@@ -260,21 +306,12 @@ def audit_lean_file(path: Path, anchors: tuple[str, ...], forbidden: tuple[str, 
 
 
 def main() -> int:
-    audit_lean_file(
-        COMPACT_PLAQUETTE_LEAN_PATH,
-        REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS,
-        FORBIDDEN_COMPACT_PLAQUETTE_CODE_SNIPPETS,
-    )
-    audit_lean_file(
-        CONCRETE_HILBERT_LEAN_PATH,
-        REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS,
-        FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS,
-    )
-    audit_lean_file(
-        CONCRETE_HPHYS_LEAN_PATH,
-        REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS,
-        FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS,
-    )
+    audit_lean_file(OBSERVABLE_INTERFACE_LEAN_PATH, REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS, FORBIDDEN_OBSERVABLE_INTERFACE_CODE_SNIPPETS)
+    audit_lean_file(OBSERVABLE_THEOREM_LEAN_PATH, REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS, FORBIDDEN_OBSERVABLE_THEOREM_CODE_SNIPPETS)
+    audit_lean_file(COMPACT_PLAQUETTE_LEAN_PATH, REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS, FORBIDDEN_COMPACT_PLAQUETTE_CODE_SNIPPETS)
+    audit_lean_file(OPERATOR_MEASURE_LEAN_PATH, REQUIRED_OPERATOR_MEASURE_LEAN_ANCHORS, FORBIDDEN_OPERATOR_MEASURE_CODE_SNIPPETS)
+    audit_lean_file(CONCRETE_HILBERT_LEAN_PATH, REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS, FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS)
+    audit_lean_file(CONCRETE_HPHYS_LEAN_PATH, REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS, FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS)
     audit_lean_file(PHYSICAL_LEAN_PATH, REQUIRED_PHYSICAL_LEAN_ANCHORS, FORBIDDEN_PHYSICAL_CODE_SNIPPETS)
     audit_lean_file(CONCRETE_YM_LEAN_PATH, REQUIRED_CONCRETE_YM_LEAN_ANCHORS, FORBIDDEN_CONCRETE_YM_CODE_SNIPPETS)
 
@@ -285,7 +322,10 @@ def main() -> int:
     require_all("check_changed_lean.sh", require_file(FAST_CHECK_PATH), REQUIRED_CHECK_ANCHORS)
 
     print("Final physical carrier routing audit")
+    print(f"Observable interface Lean anchors audited: {len(REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS)}")
+    print(f"Observable theorem Lean anchors audited: {len(REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS)}")
     print(f"Compact plaquette Lean anchors audited: {len(REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS)}")
+    print(f"Operator-measure Lean anchors audited: {len(REQUIRED_OPERATOR_MEASURE_LEAN_ANCHORS)}")
     print(f"Concrete Hilbert Lean anchors audited: {len(REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS)}")
     print(f"Concrete HPhys Lean anchors audited: {len(REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS)}")
     print(f"Physical Lean anchors audited: {len(REQUIRED_PHYSICAL_LEAN_ANCHORS)}")
