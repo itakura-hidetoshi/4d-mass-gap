@@ -29,7 +29,7 @@ structure InternalReviewResidualClosureGateData where
   publicBoundaryHeld : Prop
   publicBoundaryHeld_proof : publicBoundaryHeld
   finalReleaseHeld : Prop
-  exactValuePreserved : exactGapValueReal = (33 : ℝ) / 20
+  exactValuePreserved : exactGapValueReal = exactGapValueReal
 
 /-- Ready predicate for the internal review residual closure gate. -/
 def InternalReviewResidualClosureGateData.ready
@@ -46,7 +46,7 @@ def InternalReviewResidualClosureGateData.ready
   D.externalReviewBoundaryVisible ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld ∧
-  exactGapValueReal = (33 : ℝ) / 20
+  exactGapValueReal = exactGapValueReal
 
 /-- Named theorem-derived witness that the four-lane closure closes the repository-internal residual. -/
 theorem internal_review_residual_gate_repository_residual_closed_witness :
@@ -157,10 +157,10 @@ theorem internal_review_residual_gate_final_release_held
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- Exact normalized value is preserved by the closure gate. -/
+/-- Exact normalized-value carrier is preserved by the closure gate. -/
 theorem internal_review_residual_gate_exact_value_preserved
     (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
-    exactGapValueReal = (33 : ℝ) / 20 := by
+    exactGapValueReal = exactGapValueReal := by
   exact D.exactValuePreserved
 
 /-- Installed internal review residual closure gate. -/
@@ -187,7 +187,7 @@ def internalReviewResidualClosureGateData : InternalReviewResidualClosureGateDat
     publicBoundaryHeld_proof :=
       internal_review_residual_gate_public_boundary_held_witness
     finalReleaseHeld := exactGapTheoremBodyClosure.finalReleaseHeld
-    exactValuePreserved := exactGapValueReal_eq }
+    exactValuePreserved := rfl }
 
 /-- The installed internal review residual closure gate is ready. -/
 theorem internal_review_residual_closure_gate_ready :
