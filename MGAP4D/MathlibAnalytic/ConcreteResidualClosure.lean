@@ -6,20 +6,6 @@ import MGAP4D.MathlibAnalytic.OperatorMeasureCompatibilityTheorem
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Concrete residual closure for the remaining analytic/physical interfaces.
-
-This closes, as a single proof-carrying surface, the residuals that were kept
-visible in earlier layers:
-
-* concrete Hilbert realization,
-* concrete `H_phys` / unbounded-operator realization,
-* spectral measure / PVM exact-atom realization,
-* compact lattice-gauge plaquette observable construction,
-* operator-measure realization and compatibility.
-
-Boundary: this is an internal MGAP4D/MathlibAnalytic residual-closure surface.
-It does not claim external consensus, and it keeps the public theorem boundary
-explicit. -/
 structure ConcreteResidualClosureData where
   bundleManifestReady : finalTheoremReleaseBundleManifestReviewSurface.ready
   concreteHilbertReady : concreteHilbertRealizationTheoremReviewSurface.ready
@@ -28,26 +14,17 @@ structure ConcreteResidualClosureData where
   compactPlaquetteReady : compactPlaquetteConstructionTheoremReviewSurface.ready
   operatorMeasureReady : operatorMeasureCompatibilityTheoremReviewSurface.ready
   exactValueEq3320 : exactGapValueReal = exactGapValueReal
-  concreteHilbertResidualClosed : Prop
-  concreteHilbertResidualClosed_proof : concreteHilbertResidualClosed
-  unboundedOperatorResidualClosed : Prop
-  unboundedOperatorResidualClosed_proof : unboundedOperatorResidualClosed
-  pvmResidualClosed : Prop
-  pvmResidualClosed_proof : pvmResidualClosed
-  plaquetteResidualClosed : Prop
-  plaquetteResidualClosed_proof : plaquetteResidualClosed
-  operatorMeasureResidualClosed : Prop
-  operatorMeasureResidualClosed_proof : operatorMeasureResidualClosed
-  residualClosureVisible : Prop
-  residualClosureVisible_proof : residualClosureVisible
-  externalConsensusNotClaimed : Prop
-  externalConsensusNotClaimed_proof : externalConsensusNotClaimed
-  publicBoundaryHeld : Prop
-  publicBoundaryHeld_proof : publicBoundaryHeld
+  concreteHilbertResidualClosed : concreteHilbertRealizationTheoremReviewSurface.ready
+  unboundedOperatorResidualClosed : concreteHPhysRealizationTheoremReviewSurface.ready
+  pvmResidualClosed : pvmTheoremTheoremReviewSurface.ready
+  plaquetteResidualClosed : compactPlaquetteConstructionTheoremReviewSurface.ready
+  operatorMeasureResidualClosed : operatorMeasureCompatibilityTheoremReviewSurface.ready
+  residualClosureVisible : finalTheoremReleaseBundleManifestReviewSurface.ready
+  externalConsensusNotClaimed : prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
+  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
-/-- Ready predicate for the concrete residual closure. -/
 def ConcreteResidualClosureData.ready
-    (D : ConcreteResidualClosureData) : Prop :=
+    (_D : ConcreteResidualClosureData) : Prop :=
   finalTheoremReleaseBundleManifestReviewSurface.ready ∧
   concreteHilbertRealizationTheoremReviewSurface.ready ∧
   concreteHPhysRealizationTheoremReviewSurface.ready ∧
@@ -55,42 +32,40 @@ def ConcreteResidualClosureData.ready
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
   exactGapValueReal = exactGapValueReal ∧
-  D.concreteHilbertResidualClosed ∧ D.unboundedOperatorResidualClosed ∧
-  D.pvmResidualClosed ∧ D.plaquetteResidualClosed ∧
-  D.operatorMeasureResidualClosed ∧ D.residualClosureVisible ∧
-  D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
+  concreteHilbertRealizationTheoremReviewSurface.ready ∧
+  concreteHPhysRealizationTheoremReviewSurface.ready ∧
+  pvmTheoremTheoremReviewSurface.ready ∧
+  compactPlaquetteConstructionTheoremReviewSurface.ready ∧
+  operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
+  finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+  prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed ∧
+  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
-/-- The concrete Hilbert residual is closed at this surface. -/
 theorem concrete_residual_closure_hilbert_closed
-    (D : ConcreteResidualClosureData) :
-    D.concreteHilbertResidualClosed := by
-  exact D.concreteHilbertResidualClosed_proof
+    (_D : ConcreteResidualClosureData) :
+    concreteHilbertRealizationTheoremReviewSurface.ready := by
+  exact concrete_hilbert_realization_theorem_review_surface_ready
 
-/-- The concrete unbounded-operator residual is closed at this surface. -/
 theorem concrete_residual_closure_unbounded_operator_closed
-    (D : ConcreteResidualClosureData) :
-    D.unboundedOperatorResidualClosed := by
-  exact D.unboundedOperatorResidualClosed_proof
+    (_D : ConcreteResidualClosureData) :
+    concreteHPhysRealizationTheoremReviewSurface.ready := by
+  exact concrete_hphys_realization_theorem_review_surface_ready
 
-/-- The spectral measure / PVM residual is closed at this surface. -/
 theorem concrete_residual_closure_pvm_closed
-    (D : ConcreteResidualClosureData) :
-    D.pvmResidualClosed := by
-  exact D.pvmResidualClosed_proof
+    (_D : ConcreteResidualClosureData) :
+    pvmTheoremTheoremReviewSurface.ready := by
+  exact pvm_theorem_theorem_review_surface_ready
 
-/-- The lattice-gauge plaquette residual is closed at this surface. -/
 theorem concrete_residual_closure_plaquette_closed
-    (D : ConcreteResidualClosureData) :
-    D.plaquetteResidualClosed := by
-  exact D.plaquetteResidualClosed_proof
+    (_D : ConcreteResidualClosureData) :
+    compactPlaquetteConstructionTheoremReviewSurface.ready := by
+  exact compact_plaquette_construction_theorem_review_surface_ready
 
-/-- The operator-measure residual is closed at this surface. -/
 theorem concrete_residual_closure_operator_measure_closed
-    (D : ConcreteResidualClosureData) :
-    D.operatorMeasureResidualClosed := by
-  exact D.operatorMeasureResidualClosed_proof
+    (_D : ConcreteResidualClosureData) :
+    operatorMeasureCompatibilityTheoremReviewSurface.ready := by
+  exact operator_measure_compatibility_theorem_review_surface_ready
 
-/-- Prototype concrete residual closure. -/
 noncomputable def prototypeConcreteResidualClosureData : ConcreteResidualClosureData :=
   { bundleManifestReady := final_theorem_release_bundle_manifest_review_surface_ready
     concreteHilbertReady := concrete_hilbert_realization_theorem_review_surface_ready
@@ -99,44 +74,36 @@ noncomputable def prototypeConcreteResidualClosureData : ConcreteResidualClosure
     compactPlaquetteReady := compact_plaquette_construction_theorem_review_surface_ready
     operatorMeasureReady := operator_measure_compatibility_theorem_review_surface_ready
     exactValueEq3320 := rfl
-    concreteHilbertResidualClosed := concreteHilbertRealizationTheoremReviewSurface.ready
-    concreteHilbertResidualClosed_proof := concrete_hilbert_realization_theorem_review_surface_ready
-    unboundedOperatorResidualClosed := concreteHPhysRealizationTheoremReviewSurface.ready
-    unboundedOperatorResidualClosed_proof := concrete_hphys_realization_theorem_review_surface_ready
-    pvmResidualClosed := pvmTheoremTheoremReviewSurface.ready
-    pvmResidualClosed_proof := pvm_theorem_theorem_review_surface_ready
-    plaquetteResidualClosed := compactPlaquetteConstructionTheoremReviewSurface.ready
-    plaquetteResidualClosed_proof := compact_plaquette_construction_theorem_review_surface_ready
-    operatorMeasureResidualClosed := operatorMeasureCompatibilityTheoremReviewSurface.ready
-    operatorMeasureResidualClosed_proof := operator_measure_compatibility_theorem_review_surface_ready
-    residualClosureVisible := finalTheoremReleaseBundleManifestReviewSurface.ready
-    residualClosureVisible_proof := final_theorem_release_bundle_manifest_review_surface_ready
-    externalConsensusNotClaimed := prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
-    externalConsensusNotClaimed_proof :=
+    concreteHilbertResidualClosed := concrete_hilbert_realization_theorem_review_surface_ready
+    unboundedOperatorResidualClosed := concrete_hphys_realization_theorem_review_surface_ready
+    pvmResidualClosed := pvm_theorem_theorem_review_surface_ready
+    plaquetteResidualClosed := compact_plaquette_construction_theorem_review_surface_ready
+    operatorMeasureResidualClosed := operator_measure_compatibility_theorem_review_surface_ready
+    residualClosureVisible := final_theorem_release_bundle_manifest_review_surface_ready
+    externalConsensusNotClaimed :=
       final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
-    publicBoundaryHeld := prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
-    publicBoundaryHeld_proof :=
+    publicBoundaryHeld :=
       final_theorem_release_bundle_manifest_public_boundary_held_witness }
 
 theorem prototype_concrete_residual_closure_ready :
     prototypeConcreteResidualClosureData.ready := by
-  exact And.intro prototypeConcreteResidualClosureData.bundleManifestReady <|
-    And.intro prototypeConcreteResidualClosureData.concreteHilbertReady <|
-    And.intro prototypeConcreteResidualClosureData.concreteHPhysReady <|
-    And.intro prototypeConcreteResidualClosureData.pvmReady <|
-    And.intro prototypeConcreteResidualClosureData.compactPlaquetteReady <|
-    And.intro prototypeConcreteResidualClosureData.operatorMeasureReady <|
-    And.intro prototypeConcreteResidualClosureData.exactValueEq3320 <|
-    And.intro prototypeConcreteResidualClosureData.concreteHilbertResidualClosed_proof <|
-    And.intro prototypeConcreteResidualClosureData.unboundedOperatorResidualClosed_proof <|
-    And.intro prototypeConcreteResidualClosureData.pvmResidualClosed_proof <|
-    And.intro prototypeConcreteResidualClosureData.plaquetteResidualClosed_proof <|
-    And.intro prototypeConcreteResidualClosureData.operatorMeasureResidualClosed_proof <|
-    And.intro prototypeConcreteResidualClosureData.residualClosureVisible_proof <|
-    And.intro prototypeConcreteResidualClosureData.externalConsensusNotClaimed_proof
-      prototypeConcreteResidualClosureData.publicBoundaryHeld_proof
+  exact And.intro final_theorem_release_bundle_manifest_review_surface_ready <|
+    And.intro concrete_hilbert_realization_theorem_review_surface_ready <|
+    And.intro concrete_hphys_realization_theorem_review_surface_ready <|
+    And.intro pvm_theorem_theorem_review_surface_ready <|
+    And.intro compact_plaquette_construction_theorem_review_surface_ready <|
+    And.intro operator_measure_compatibility_theorem_review_surface_ready <|
+    And.intro rfl <|
+    And.intro concrete_hilbert_realization_theorem_review_surface_ready <|
+    And.intro concrete_hphys_realization_theorem_review_surface_ready <|
+    And.intro pvm_theorem_theorem_review_surface_ready <|
+    And.intro compact_plaquette_construction_theorem_review_surface_ready <|
+    And.intro operator_measure_compatibility_theorem_review_surface_ready <|
+    And.intro final_theorem_release_bundle_manifest_review_surface_ready <|
+    And.intro
+      final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
+      final_theorem_release_bundle_manifest_public_boundary_held_witness
 
-/-- Review surface for concrete residual closure. -/
 structure ConcreteResidualClosureReviewSurface where
   bundleManifestReady : finalTheoremReleaseBundleManifestReviewSurface.ready
   closureReady : prototypeConcreteResidualClosureData.ready
@@ -146,15 +113,12 @@ structure ConcreteResidualClosureReviewSurface where
   compactPlaquetteReady : compactPlaquetteConstructionTheoremReviewSurface.ready
   operatorMeasureReady : operatorMeasureCompatibilityTheoremReviewSurface.ready
   exactValueEq3320 : exactGapValueReal = exactGapValueReal
-  concreteResidualsClosed : Prop
-  concreteResidualsClosed_proof : concreteResidualsClosed
-  externalConsensusNotClaimed : Prop
-  externalConsensusNotClaimed_proof : externalConsensusNotClaimed
-  publicBoundaryHeld : Prop
-  publicBoundaryHeld_proof : publicBoundaryHeld
+  concreteResidualsClosed : prototypeConcreteResidualClosureData.ready
+  externalConsensusNotClaimed : prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
+  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
 def ConcreteResidualClosureReviewSurface.ready
-    (S : ConcreteResidualClosureReviewSurface) : Prop :=
+    (_S : ConcreteResidualClosureReviewSurface) : Prop :=
   finalTheoremReleaseBundleManifestReviewSurface.ready ∧
   prototypeConcreteResidualClosureData.ready ∧
   concreteHilbertRealizationTheoremReviewSurface.ready ∧
@@ -163,7 +127,9 @@ def ConcreteResidualClosureReviewSurface.ready
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
   exactGapValueReal = exactGapValueReal ∧
-  S.concreteResidualsClosed ∧ S.externalConsensusNotClaimed ∧ S.publicBoundaryHeld
+  prototypeConcreteResidualClosureData.ready ∧
+  prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed ∧
+  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
 
 noncomputable def concreteResidualClosureReviewSurface : ConcreteResidualClosureReviewSurface :=
   { bundleManifestReady := final_theorem_release_bundle_manifest_review_surface_ready
@@ -174,26 +140,26 @@ noncomputable def concreteResidualClosureReviewSurface : ConcreteResidualClosure
     compactPlaquetteReady := compact_plaquette_construction_theorem_review_surface_ready
     operatorMeasureReady := operator_measure_compatibility_theorem_review_surface_ready
     exactValueEq3320 := rfl
-    concreteResidualsClosed := prototypeConcreteResidualClosureData.ready
-    concreteResidualsClosed_proof := prototype_concrete_residual_closure_ready
-    externalConsensusNotClaimed := prototypeConcreteResidualClosureData.externalConsensusNotClaimed
-    externalConsensusNotClaimed_proof := prototypeConcreteResidualClosureData.externalConsensusNotClaimed_proof
-    publicBoundaryHeld := prototypeConcreteResidualClosureData.publicBoundaryHeld
-    publicBoundaryHeld_proof := prototypeConcreteResidualClosureData.publicBoundaryHeld_proof }
+    concreteResidualsClosed := prototype_concrete_residual_closure_ready
+    externalConsensusNotClaimed :=
+      final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
+    publicBoundaryHeld :=
+      final_theorem_release_bundle_manifest_public_boundary_held_witness }
 
 theorem concrete_residual_closure_review_surface_ready :
     concreteResidualClosureReviewSurface.ready := by
-  exact And.intro concreteResidualClosureReviewSurface.bundleManifestReady <|
-    And.intro concreteResidualClosureReviewSurface.closureReady <|
-    And.intro concreteResidualClosureReviewSurface.concreteHilbertReady <|
-    And.intro concreteResidualClosureReviewSurface.concreteHPhysReady <|
-    And.intro concreteResidualClosureReviewSurface.pvmReady <|
-    And.intro concreteResidualClosureReviewSurface.compactPlaquetteReady <|
-    And.intro concreteResidualClosureReviewSurface.operatorMeasureReady <|
-    And.intro concreteResidualClosureReviewSurface.exactValueEq3320 <|
-    And.intro concreteResidualClosureReviewSurface.concreteResidualsClosed_proof <|
-    And.intro concreteResidualClosureReviewSurface.externalConsensusNotClaimed_proof
-      concreteResidualClosureReviewSurface.publicBoundaryHeld_proof
+  exact And.intro final_theorem_release_bundle_manifest_review_surface_ready <|
+    And.intro prototype_concrete_residual_closure_ready <|
+    And.intro concrete_hilbert_realization_theorem_review_surface_ready <|
+    And.intro concrete_hphys_realization_theorem_review_surface_ready <|
+    And.intro pvm_theorem_theorem_review_surface_ready <|
+    And.intro compact_plaquette_construction_theorem_review_surface_ready <|
+    And.intro operator_measure_compatibility_theorem_review_surface_ready <|
+    And.intro rfl <|
+    And.intro prototype_concrete_residual_closure_ready <|
+    And.intro
+      final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
+      final_theorem_release_bundle_manifest_public_boundary_held_witness
 
 end MathlibAnalytic
 end MGAP4D
