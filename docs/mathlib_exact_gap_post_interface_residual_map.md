@@ -27,6 +27,25 @@ MathlibAnalytic.exact_gap_post_interface_no_final_release_from_interface_only
 MathlibAnalytic.exact_gap_post_interface_public_boundary_held
 ```
 
+The historical theorem names are retained for compatibility, but their payloads
+are no longer `True`/`trivial` placeholders.  They now project concrete facts
+from the interface chain.
+
+## Typed post-interface facts
+
+```text
+exactGapValueReal ∈ exactGapEnergyRay
+exactGapValueReal ∈ Set.Ioi (0 : ℝ)
+exactGapValueReal ∈ Set.Ioi (1 : ℝ)
+singletonSpectralTheoremInterface.spectralSupport = exactGapEnergyRay
+singletonPVMInterface.exactAtom = Set.singleton exactGapValueReal
+singletonObservableAtomInterface.atom = exactGapAtomReal
+observable atom spectral weight is positive
+observable atom spectral weight is nonzero
+observable atom spectral weight lies in Set.Ioi (0 : ℝ)
+observable atom spectral weight equals the PVM projection mass at the exact atom
+```
+
 ## Remaining non-interface theorem bodies
 
 ```text
@@ -43,16 +62,17 @@ operator-measure compatibility theorem
 
 ```text
 full interface closure is ready
-all open residuals are visible
-interface closure alone cannot open final theorem release
-public theorem boundary remains held
+post-interface slots now expose concrete typed facts
+no True/trivial residual witness is used in this map
+interface closure alone is not treated as external mathematical consensus
+public theorem boundary remains held by positive observable weight
 ```
 
 ## Boundary
 
 ```text
 residual map only
-not final theorem release
-not public theorem release
-next step should choose one residual theorem body to close
+not external consensus
+not Clay-style public acceptance
+next step should choose one residual theorem body to close or harden
 ```
