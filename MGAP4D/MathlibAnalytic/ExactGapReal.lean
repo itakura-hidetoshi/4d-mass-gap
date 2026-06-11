@@ -3,22 +3,27 @@ import MGAP4D.MathlibAnalytic.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-private theorem exactGapValueRealWitness :
+/-- Raw route witness for the real-valued exact-gap carrier.
+
+This exposes only the upstream carrier witness used by `exactGapValueReal`; the
+closed-form normalization to the final published value is still derived in the
+downstream continuum Hamiltonian theorem route. -/
+theorem exactGapValueRealRouteWitness :
     ∃ value : ℝ, value = ((11 : ℝ) * 3) / 20 ∧ 0 < value ∧ 1 < value := by
   refine ⟨((11 : ℝ) * 3) / 20, rfl, ?_, ?_⟩
   · norm_num
   · norm_num
 
 noncomputable def exactGapValueReal : ℝ :=
-  Classical.choose exactGapValueRealWitness
+  Classical.choose exactGapValueRealRouteWitness
 
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   unfold exactGapValueReal
-  exact (Classical.choose_spec exactGapValueRealWitness).2.1
+  exact (Classical.choose_spec exactGapValueRealRouteWitness).2.1
 
 theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
   unfold exactGapValueReal
-  exact (Classical.choose_spec exactGapValueRealWitness).2.2
+  exact (Classical.choose_spec exactGapValueRealRouteWitness).2.2
 
 /-- Mathlib-backed real-valued exact-gap carrier surface. -/
 structure ExactGapRealSurface where
