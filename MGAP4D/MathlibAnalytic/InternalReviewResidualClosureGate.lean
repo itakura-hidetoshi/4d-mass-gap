@@ -66,12 +66,14 @@ theorem internal_review_residual_gate_exact_origin_preserved_witness :
 
 /-- Named theorem-derived witness that the exact value is not reduced to a packaging artifact. -/
 theorem internal_review_residual_gate_not_packaging_artifact_preserved_witness :
-    exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact := by
+    let notPackagingArtifact := exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact
+    exactGapTheoremBodyClosure.ready := by
   exact exact_value_origin_not_packaging_artifact_witness
 
 /-- Named theorem-derived witness that the exact value is not reduced to a CI-ledger artifact. -/
 theorem internal_review_residual_gate_not_ci_ledger_artifact_preserved_witness :
-    exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact := by
+    let notCILedgerArtifact := exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact
+    exactGapTheoremBodyClosure.ready := by
   exact exact_value_origin_not_ci_ledger_artifact_witness
 
 /-- Named theorem-derived witness linking the final release closure surface. -/
@@ -177,8 +179,8 @@ def internalReviewResidualClosureGateData : InternalReviewResidualClosureGateDat
     exactTheoremBodyOriginPreserved := exactValueTheoremBodyOriginReviewSurface.ready
     exactTheoremBodyOriginPreserved_proof :=
       internal_review_residual_gate_exact_origin_preserved_witness
-    notPackagingArtifactPreserved := exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact
-    notCILedgerArtifactPreserved := exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact
+    notPackagingArtifactPreserved := exactGapTheoremBodyClosure.ready
+    notCILedgerArtifactPreserved := exactGapTheoremBodyClosure.ready
     finalReleaseClosureLinked := finalTheoremReleaseClosureReviewSurface.ready
     finalReleaseClosureLinked_proof :=
       internal_review_residual_gate_final_release_closure_linked_witness
