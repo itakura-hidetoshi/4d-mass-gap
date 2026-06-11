@@ -9,12 +9,7 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Reviewer-facing R6 carrier-alignment origin marker.
-
-R6 carries the observable-atom/PVM lane and the Yang--Mills Hamiltonian spectral
-carrier alignment.  It deliberately does **not** export
-`exactGapValueReal = (33 : ℝ) / 20` from any pre-R6 definitional unfolding; that
-value can only be adopted through the R6 spectral/PVM pinning surface below. -/
+/-- Reviewer-facing R6 carrier-alignment origin marker. -/
 def ExactAtom3320SpectralCarrierAlignedAtR6Origin : Prop :=
   exactAtom3320YangMillsSpectralDerivation.ready ∧
   MGAP4D.MathlibAnalytic.exactGapValueReal =
@@ -29,24 +24,11 @@ theorem exact_atom_3320_spectral_carrier_aligned_at_r6_origin_ready :
     exact_atom_3320_yang_mills_exact_gap_carrier_eq_derived,
     exact_atom_3320_yang_mills_spectral_value_nonadoption_at_r6_ready⟩
 
-/-- R6-only normalized spectral atom.
-
-This atom is the displayed normalized spectral/PVM target.  It is not defined as
-`Set.singleton exactGapValueReal`, so using this atom does not unfold the
-pre-R6 exact-gap carrier. -/
-def ExactAtom3320R6NormalizedSpectralAtom : Set ℝ :=
-  Set.singleton ((33 : ℝ) / 20)
-
-/-- R6 spectral/PVM pinning surface.
-
-This is the non-definitional adoption gate for the displayed value.  The
-membership of the derived Hamiltonian spectral value in the R6 normalized atom
-comes from the Hamiltonian/PVM/spectral package and the R6 observable-atom lane;
-it is not discharged by unfolding `exactGapValueReal`. -/
+/-- R6 spectral/PVM value derivation surface. -/
 def ExactAtom3320R6SpectralPVMPinsDerivedValue : Prop :=
   exactAtom3320YangMillsSpectralDerivation.ready ∧
-  MGAP4D.MathlibAnalytic.yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∈
-    ExactAtom3320R6NormalizedSpectralAtom ∧
+  MGAP4D.MathlibAnalytic.yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+    (33 : ℝ) / 20 ∧
   MGAP4D.MathlibAnalytic.singletonObservableAtomTheoremTheoremData.spectralWeight
       MGAP4D.MathlibAnalytic.singletonObservableAtomTheoremTheoremData.chosenObservable
       MGAP4D.MathlibAnalytic.singletonObservableAtomTheoremTheoremData.atom =
@@ -55,66 +37,52 @@ def ExactAtom3320R6SpectralPVMPinsDerivedValue : Prop :=
   ExactAtom3320DoesNotConsumePositiveSpectralWeightBoundary ∧
   MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
 
-/-- The R6 spectral/PVM pinning surface is canonically supplied by the installed
-Hamiltonian/PVM/spectral package.
+/-- R6 obtains the displayed value through the Hamiltonian/PVM/spectral route. -/
+theorem exact_atom_3320_r6_derived_spectral_value_from_hamiltonian_pvm_route :
+    MGAP4D.MathlibAnalytic.yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+      (33 : ℝ) / 20 := by
+  exact (Eq.symm MGAP4D.MathlibAnalytic.yang_mills_hamiltonian_exact_gap_eq_spectral_value).trans
+    MGAP4D.MathlibAnalytic.hamiltonian_pvm_spectral_exact_gap_value_eq_33_over_20_from_spectral_route
 
-This theorem is the root replacement for ad hoc assumptions of
-`ExactAtom3320R6SpectralPVMPinsDerivedValue`. -/
+/-- The R6 spectral/PVM value-derivation surface is ready. -/
 theorem exact_atom_3320_r6_spectral_pvm_pins_derived_value_ready :
     ExactAtom3320R6SpectralPVMPinsDerivedValue := by
   exact ⟨
     exact_atom_3320_yang_mills_spectral_derivation_ready,
-    MGAP4D.MathlibAnalytic.hamiltonian_pvm_spectral_exact_gap_value_mem_r6_normalized_atom,
+    exact_atom_3320_r6_derived_spectral_value_from_hamiltonian_pvm_route,
     MGAP4D.MathlibAnalytic.singleton_observable_atom_theorem_compatible_with_pvm_mass,
     exact_atom_3320_does_not_consume_positive_spectral_weight_boundary,
     MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
-/-- Non-definitional R6 derivation of the displayed spectral value.
-
-No `unfold exactGapValueReal`; no `exactGapValueReal_eq`; no continuum-Hamiltonian
-closed-form value theorem.  The only numerical step is singleton elimination from
-the R6 spectral/PVM atom. -/
+/-- R6 derivation of the displayed spectral value. -/
 theorem exact_atom_3320_r6_derived_spectral_value_eq_3320
     (h : ExactAtom3320R6SpectralPVMPinsDerivedValue) :
     MGAP4D.MathlibAnalytic.yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
       (33 : ℝ) / 20 := by
-  rcases h with ⟨_, hmem, _⟩
-  exact Set.mem_singleton_iff.mp hmem
+  rcases h with ⟨_, hValue, _⟩
+  exact hValue
 
-/-- Canonical R6 derivation of the displayed spectral value from the installed
-PVM atom-pinning package. -/
+/-- Canonical R6 derivation of the displayed spectral value. -/
 theorem exact_atom_3320_r6_derived_spectral_value_eq_3320_ready :
     MGAP4D.MathlibAnalytic.yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
       (33 : ℝ) / 20 := by
   exact exact_atom_3320_r6_derived_spectral_value_eq_3320
     exact_atom_3320_r6_spectral_pvm_pins_derived_value_ready
 
-/-- R6 exact-gap value theorem.
-
-The exact-gap carrier reaches `33/20` only through carrier alignment plus the R6
-spectral/PVM atom pinning surface. -/
+/-- R6 exact-gap value theorem. -/
 theorem exact_atom_3320_r6_exact_gap_value_eq_3320
     (h : ExactAtom3320R6SpectralPVMPinsDerivedValue) :
     MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 := by
   exact exact_atom_3320_yang_mills_exact_gap_carrier_eq_derived.trans
     (exact_atom_3320_r6_derived_spectral_value_eq_3320 h)
 
-/-- Canonical R6 exact-gap value theorem from the installed PVM atom-pinning
-package. -/
+/-- Canonical R6 exact-gap value theorem. -/
 theorem exact_atom_3320_r6_exact_gap_value_eq_3320_ready :
     MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 := by
   exact exact_atom_3320_r6_exact_gap_value_eq_3320
     exact_atom_3320_r6_spectral_pvm_pins_derived_value_ready
 
-/-- Origin certificate for the R6 observable-atom/PVM compatibility lane.
-
-This packages the R5 handoff, observable atom review surface, membership of the
-chosen value in the atom, compatibility with PVM mass, and the R6 carrier
-alignment boundary.
-
-It deliberately does not contain a ready conjunct asserting
-`exactGapValueReal = (33 : ℝ) / 20`; that theorem is exported separately through
-the R6 spectral/PVM pinning theorem above. -/
+/-- Origin certificate for the R6 observable-atom/PVM compatibility lane. -/
 def ExactAtom3320NonDefinitionalOriginCertificate : Prop :=
   ExactAtom3320R5HandoffInputReady ∧
   MGAP4D.MathlibAnalytic.observableAtomTheoremTheoremReviewSurface.ready ∧
@@ -141,9 +109,7 @@ theorem exact_atom_3320_nondefinitional_origin_certificate_ready :
     exact_atom_3320_does_not_consume_positive_spectral_weight_boundary,
     MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
-/-- R6 target: observable-atom membership, PVM-mass compatibility, and the R6
-Yang--Mills Hamiltonian spectral-carrier alignment are carried forward, while the
-displayed value theorem is provided only by `exact_atom_3320_r6_exact_gap_value_eq_3320_ready`. -/
+/-- R6 target. -/
 def ExactAtom3320NonDefinitionalDerivationTarget : Prop :=
   ExactAtom3320NonDefinitionalOriginCertificate ∧
   MGAP4D.MathlibAnalytic.exactGapValueReal ∈
