@@ -247,7 +247,7 @@ theorem continuum_yang_mills_lane_hardening_ready :
         continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld_proof) <|
     And.intro
       (And.intro
-        (self_adjoint_hphys_hard_physical_boundary_visible
+        (self_adjoint_hphys_hard_boundary_visible
           selfAdjointHPhysLaneHardeningData self_adjoint_hphys_lane_hardening_ready)
         physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof) <|
     And.intro continuumYangMillsLaneHardeningData.exactValuePreserved <|
