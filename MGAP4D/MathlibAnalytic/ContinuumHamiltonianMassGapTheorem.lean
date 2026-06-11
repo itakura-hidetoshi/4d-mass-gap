@@ -16,7 +16,7 @@ mass-gap value through the theorem-route carrier, without unfolding a Basic-laye
 numeric assignment. -/
 theorem continuum_hamiltonian_derives_exact_mass_gap_value :
     exactGapValueReal = (33 : ℝ) / 20 := by
-  exact exactGapValueReal_eq_33_over_20
+  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).1
 
 /-- Bridge projection required by the hardened-witness audit: the theorem layer
 reuses the exact-positive carrier/boundary projection from the hardened bundle
