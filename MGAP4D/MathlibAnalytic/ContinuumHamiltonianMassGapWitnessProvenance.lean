@@ -35,24 +35,17 @@ theorem continuum_hamiltonian_witness_self_adjoint_spectral_slot_provenance :
     continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady := by
   exact continuum_hamiltonian_witness_self_adjoint_spectral_source_provenance
 
-/-- Provenance map for the exact-value theorem-route receipt.
-
-The exact value is read through the installed continuum-Hamiltonian theorem route,
-not by consuming the carrier-level theorem name `exactGapValueReal_eq`. -/
-theorem continuum_hamiltonian_witness_exact_value_derivation_provenance :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact continuum_hamiltonian_derives_exact_mass_gap_value
-
 /-- Provenance map for the normalization-to-exact-gap slot.
 
-The normalization slot now consumes the theorem-route receipt above rather than
-the carrier-level closed-form theorem name. -/
+This slot deliberately does not assert `exactGapValueReal = 33/20`.  Until a
+non-definitional value derivation exists, it only carries the normalization bridge
+and the value-derivation boundary. -/
 theorem continuum_hamiltonian_witness_normalization_source_provenance :
     PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
         physicalHamiltonianNormalizationBridgeReviewSurface ∧
-      exactGapValueReal = (33 : ℝ) / 20 := by
+      exactGapValueDerivationBoundary.ready := by
   exact And.intro physical_hamiltonian_normalization_bridge_review_surface_ready
-    continuum_hamiltonian_witness_exact_value_derivation_provenance
+    exact_gap_value_derivation_boundary_ready
 
 /-- Slot-level projection of the normalization provenance. -/
 theorem continuum_hamiltonian_witness_normalization_slot_provenance :
@@ -96,13 +89,12 @@ theorem continuum_hamiltonian_witness_positive_spectral_mass_provenance :
 
 /-- Slot-level provenance for the mass-gap derivation witness.
 
-This keeps the old witness slot compatible with the newer spectral derivation
-route by pairing the installed positivity theorem with the theorem-route exact
-value receipt. -/
+This remains an internal theorem-witness boundary, not an adoption of the numeric
+claim `exactGapValueReal = 33/20`. -/
 theorem continuum_hamiltonian_witness_mass_gap_derivation_slot_provenance :
     continuumHamiltonianMassGapWitnessData.massGapDerivationWitness := by
   exact And.intro continuum_hamiltonian_derives_positive_mass_gap
-    continuum_hamiltonian_witness_exact_value_derivation_provenance
+    exact_gap_value_derivation_boundary_ready
 
 /-- Provenance map for the whole continuum-Hamiltonian-to-mass-gap chain slot. -/
 theorem continuum_hamiltonian_witness_chain_slot_provenance :
@@ -111,7 +103,8 @@ theorem continuum_hamiltonian_witness_chain_slot_provenance :
     plaquette_spectral_weight_lane_hardening_ready
 
 /-- External-review summary: every non-boundary `ContinuumHamiltonianMassGapWitnessData`
-slot is now paired with an explicit upstream theorem anchor. -/
+slot is now paired with an explicit upstream theorem anchor, while the displayed
+`33/20` value remains non-adopted until a non-definitional derivation exists. -/
 theorem continuum_hamiltonian_witness_provenance_map_ready :
     continuumHamiltonianMassGapWitnessData.physicalContinuumHamiltonianReady ∧
       continuumHamiltonianMassGapWitnessData.hphysFromContinuumYMReady ∧
@@ -121,7 +114,6 @@ theorem continuum_hamiltonian_witness_provenance_map_ready :
       continuumHamiltonianMassGapWitnessData.spectralMassObservableReady ∧
       continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
       continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
-      exactGapValueReal = (33 : ℝ) / 20 ∧
       0 < spectralMassRealSurface.mass ∧
       spectralMassRealSurface.mass ≠ 0 := by
   exact And.intro continuum_hamiltonian_witness_physical_surface_provenance <|
@@ -131,8 +123,7 @@ theorem continuum_hamiltonian_witness_provenance_map_ready :
     And.intro continuum_hamiltonian_witness_compact_plaquette_provenance <|
     And.intro continuum_hamiltonian_witness_spectral_mass_observable_provenance <|
     And.intro continuum_hamiltonian_witness_mass_gap_derivation_slot_provenance <|
-    And.intro continuum_hamiltonian_witness_chain_slot_provenance <|
-    And.intro continuum_hamiltonian_witness_exact_value_derivation_provenance
+    And.intro continuum_hamiltonian_witness_chain_slot_provenance
       continuum_hamiltonian_witness_positive_spectral_mass_provenance
 
 end MathlibAnalytic
