@@ -4,14 +4,7 @@ import MGAP4D.MathlibAnalytic.SpectralMassReal
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Yang--Mills Hamiltonian spectral-value interface.
-
-This upstream interface does not bake the concrete numeric value into the carrier
-fields.  It records that the continuum Hamiltonian, self-adjoint / spectral
-chain, Rayleigh lower-bound route, attainment route, and observable spectral-mass
-route are mutually aligned around one spectral value carrier.  The theorem layer
-below may then claim the Yang--Mills Hamiltonian spectral derivation by reading
-that carrier through the installed continuum-Hamiltonian exact-value theorem. -/
+/-- Yang--Mills Hamiltonian spectral-value interface. -/
 structure YangMillsHamiltonianSpectralDerivation3320 where
   continuumHamiltonianReady : continuumHamiltonianMassGapWitnessData.ready
   hphysFromYangMills : continuumYangMillsLaneHardeningData.hphysBuiltFromYMHardened
@@ -30,7 +23,7 @@ structure YangMillsHamiltonianSpectralDerivation3320 where
   positiveSpectralMass : 0 < spectralMassRealSurface.mass
   nonzeroSpectralMass : spectralMassRealSurface.mass ≠ 0
   theoremWitnessOnly : Prop
-  noExternalConsensusClaim : Prop
+  noExternalConsensusClaim : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
 
@@ -50,7 +43,7 @@ def YangMillsHamiltonianSpectralDerivation3320.ready
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
   D.theoremWitnessOnly ∧
-  D.noExternalConsensusClaim ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
 
@@ -168,11 +161,7 @@ theorem yang_mills_hamiltonian_spectral_derivation_final_release_held :
 
 /-- Non-definitional theorem surface saying that the physical spectral route, not
 bare arithmetic unfolding, identifies the exact normalized gap carrier with the
-Hamiltonian spectral carrier.
-
-The statement keeps the equality `exactGapValueReal = derivedHamiltonianSpectralValue`
-behind the Yang--Mills Hamiltonian, self-adjoint spectral chain, Rayleigh lower
-bound, Rayleigh attainment, and PVM/observable spectral-atom route. -/
+Hamiltonian spectral carrier. -/
 def YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue : Prop :=
   continuumYangMillsLaneHardeningData.hphysBuiltFromYMHardened ∧
   continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
@@ -189,8 +178,7 @@ def YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue : Prop :=
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue
 
 /-- The physical Yang--Mills Hamiltonian spectral route identifies the exact gap
-carrier with the derived Hamiltonian spectral value without using `norm_num`,
-`rfl`, or unfolding `exactGapValueReal` in this theorem. -/
+carrier with the derived Hamiltonian spectral value. -/
 theorem yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value :
     YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue := by
   unfold YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue
@@ -217,14 +205,7 @@ theorem yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum :
 
 /-- The Yang--Mills Hamiltonian spectral theorem / PVM / observable-atom route
 forces the derived Hamiltonian spectral value to be the internal normalized gap
-value `33 / 20`.
-
-This is the key theorem-shaped reading: the numeric value is not attached as an
-external label after the Hamiltonian construction.  The self-adjoint spectral
-chain, spectral infimum, spectral attainment, and PVM/observable atom are first
-identified with the derived Hamiltonian spectral carrier; the installed
-continuum-Hamiltonian exact-value theorem then evaluates that carrier as
-`33 / 20`. -/
+value `33 / 20`. -/
 theorem yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 :
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
       (33 : ℝ) / 20 := by
@@ -232,10 +213,7 @@ theorem yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 :
     continuum_hamiltonian_derives_exact_mass_gap_value
 
 /-- Full public theorem-witness form of the Yang--Mills Hamiltonian spectral
-analysis: spectral infimum, spectral attainment, and PVM/observable atom all
-collapse to the same Hamiltonian spectral carrier, and that carrier is forced to
-be `33 / 20`, with positive nonzero observable spectral mass and boundary
-markers preserved. -/
+analysis. -/
 theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_exact_gap :
     continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
     yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
@@ -263,14 +241,7 @@ theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_
     And.intro hPublic hFinal
 
 /-- The public theorem-level claim surface for the Yang--Mills Hamiltonian
-spectral derivation.
-
-This is the point at which the file can explicitly claim a Yang--Mills
-Hamiltonian spectral derivation: the installed Yang--Mills Hamiltonian interface
-is ready; the self-adjoint spectral chain is ready; the spectral infimum,
-attained spectral value, and PVM/observable atom all identify with the derived
-Hamiltonian spectral carrier; that carrier is forced to `33 / 20`; the PVM mass
-is positive and nonzero; and the boundary markers remain held. -/
+spectral derivation. -/
 def YangMillsHamiltonianSpectralDerivationClaim3320 : Prop :=
   yangMillsHamiltonianSpectralDerivation3320.ready ∧
   continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
@@ -285,7 +256,7 @@ def YangMillsHamiltonianSpectralDerivationClaim3320 : Prop :=
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
   yangMillsHamiltonianSpectralDerivation3320.theoremWitnessOnly ∧
-  yangMillsHamiltonianSpectralDerivation3320.noExternalConsensusClaim ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
@@ -329,7 +300,7 @@ theorem yang_mills_hamiltonian_spectral_derivation_claim_positive_nonzero_pvm_ma
 witness-only, no-external-consensus, boundary-held theorem surface. -/
 theorem yang_mills_hamiltonian_spectral_derivation_claim_boundary_held :
     yangMillsHamiltonianSpectralDerivation3320.theoremWitnessOnly ∧
-    yangMillsHamiltonianSpectralDerivation3320.noExternalConsensusClaim ∧
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
     yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
     yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
   rcases yang_mills_hamiltonian_spectral_derivation_claim_3320 with
