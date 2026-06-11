@@ -2,7 +2,7 @@
 
 This index gives the current external-review map for the MGAP4D public proof route on `main`.
 
-Last synchronized: 2026-06-09
+Last synchronized: 2026-06-11
 
 ## Current public route
 
@@ -131,31 +131,43 @@ The inventory classifies `PUnit`, `True`, `StillOpen`, `theoremWitnessOnly`, `re
 
 ## Exact `33/20` source roles
 
-The public route distinguishes the normalized carrier from the derivation route.
+The public route distinguishes the Basic marker, the downstream real carrier, and the derivation route.
 
-Carrier files:
+Basic-layer marker file:
 
 ```text
 MGAP4D/MathlibAnalytic/Basic.lean
+```
+
+This file does not define a real-valued gap carrier and does not expose a final-value numerical assignment. It records that the spectral / PVM / Hamiltonian theorem routes are deferred downstream.
+
+Real-carrier file:
+
+```text
 MGAP4D/MathlibAnalytic/ExactGapReal.lean
 ```
 
-These files expose the normalized carrier `exactGapValueReal = 33/20`. Their local `rfl` / `norm_num` proofs are carrier checks.
+This file introduces `exactGapValueReal`, its positivity facts, and a raw route witness used to stabilize downstream `Classical.choose_spec` references. It does not export the final normalized equality theorem.
 
 Derivation-route files:
 
 ```text
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
 MGAP4D/ConcreteR1R7ResidualDischarge.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
 ```
 
-These files are the current proof-facing route for the claim that the normalized value `33/20` is carried by the Hamiltonian / PVM / plaquette / spectral-weight chain. The carrier is the normalized target value; the derivation claim is reviewed through the R1--R7 terminal route.
+These files are the current proof-facing route for the claim that the normalized value `33/20` is carried by the Hamiltonian / PVM / plaquette / spectral-weight chain. The carrier is the downstream normalized target; the derivation claim is reviewed through the continuum-Hamiltonian and R1--R7 terminal route.
 
 Primary derivation anchors:
 
 ```text
+continuum_hamiltonian_derives_exact_mass_gap_value
+physical_continuum_hamiltonian_to_exact_positive_mass_gap
+physical_continuum_hamiltonian_exact_gap_33_over_20
 concrete_r1r7_residual_discharge_3320_ready
 concrete_r6_residual_discharge_nondefinitional_spectral_atom_3320
 concrete_r7_residual_discharge_positive_spectral_weight_derivation_3320
@@ -172,7 +184,7 @@ The exact-gap route separates four review layers:
 
 ```text
 abstract theorem-body layer
-normalized carrier layer
+Basic-layer marker and downstream real-carrier layer
 operator/spectral derivation layer
 engineering / review-marker layer
 ```
@@ -271,7 +283,7 @@ finalReleaseHeld
 publicBoundaryLocked
 ```
 
-When this route refers to the exact value as derived, its upstream source is the R1--R7 operator/spectral route above, not the local carrier definition in `Basic.lean`.
+When this route refers to the exact value as derived, its upstream source is the R1--R7 operator/spectral route above, not the Basic-layer marker and not the carrier witness alone.
 
 ## Audit route
 
