@@ -24,8 +24,8 @@ theorem mathlib_import_surface_ready : mathlibImportSurface.ready = true := by
 /-- Basic-layer route marker for the normalized exact-gap carrier.
 
 This file intentionally does not install a real-valued gap carrier and does not
-expose a `33/20` numerical assignment.  The Hamiltonian spectrum, PVM observable,
-and normalized carrier are deferred to the downstream theorem route. -/
+expose any closed-form numerical assignment. The Hamiltonian spectrum, PVM
+observable, and normalized carrier are deferred to the downstream theorem route. -/
 structure FourDYangMillsAnalyticGapValueOrigin where
   spectralTheoremRouteDeferred : Bool
   pvmObservableRouteDeferred : Bool
