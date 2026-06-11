@@ -115,10 +115,6 @@ def finalPhysicalUnboundedOperatorSkeletonData :
     publicBoundaryHeld := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof := hilbertSpaceInstanceSkeletonReviewSurface.publicBoundaryHeld_proof }
 
-abbrev prototypePhysicalUnboundedOperatorSkeletonData :
-    PhysicalUnboundedOperatorSkeletonData.{0} :=
-  finalPhysicalUnboundedOperatorSkeletonData
-
 theorem final_physical_unbounded_operator_skeleton_ready :
     finalPhysicalUnboundedOperatorSkeletonData.ready := by
   exact And.intro finalPhysicalUnboundedOperatorSkeletonData.hilbertInstanceReady <|
@@ -133,10 +129,6 @@ theorem final_physical_unbounded_operator_skeleton_ready :
     And.intro finalPhysicalUnboundedOperatorSkeletonData.spectralRealizationStillOpen_proof <|
     And.intro finalPhysicalUnboundedOperatorSkeletonData.finalReleaseHeld_proof
       finalPhysicalUnboundedOperatorSkeletonData.publicBoundaryHeld_proof
-
-theorem prototype_physical_unbounded_operator_skeleton_ready :
-    prototypePhysicalUnboundedOperatorSkeletonData.ready := by
-  exact final_physical_unbounded_operator_skeleton_ready
 
 structure PhysicalUnboundedOperatorSkeletonReviewSurface where
   hilbertInstanceReady : hilbertSpaceInstanceSkeletonReviewSurface.ready
