@@ -19,6 +19,11 @@ theorem exactGapSpectralMassReal_pos : 0 < exactGapSpectralMassReal := by
 theorem exactGapSpectralMassReal_ne_zero : exactGapSpectralMassReal ≠ 0 := by
   exact ne_of_gt exactGapSpectralMassReal_pos
 
+/-- The prototype spectral mass is a member of the positive real ray. -/
+theorem exactGapSpectralMassReal_mem_positive_ray :
+    exactGapSpectralMassReal ∈ Set.Ioi (0 : ℝ) := by
+  simpa using exactGapSpectralMassReal_pos
+
 /-- A real-order positive atom at the exact gap. -/
 def PositiveSpectralMassAtExactGap (value mass : ℝ) : Prop :=
   value = exactGapValueReal ∧ 0 < mass
@@ -47,31 +52,32 @@ structure SpectralMassRealSurface where
   mass : ℝ
   positive_mass : 0 < mass
   nonzero_mass : mass ≠ 0
+  mass_in_positive_ray : mass ∈ Set.Ioi (0 : ℝ)
   exists_positive_mass : ∃ value mass : ℝ, PositiveSpectralMassAtExactGap value mass
   compatible_with_attainment : RayleighAttainsExactGap value
-  analyticReplacementBranchOnly : Prop
 
 noncomputable def spectralMassRealSurface : SpectralMassRealSurface :=
   { value := exactGapValueReal
     mass := exactGapSpectralMassReal
     positive_mass := exactGapSpectralMassReal_pos
     nonzero_mass := exactGapSpectralMassReal_ne_zero
+    mass_in_positive_ray := exactGapSpectralMassReal_mem_positive_ray
     exists_positive_mass := exists_positive_spectral_mass_at_exact_gap
-    compatible_with_attainment := exact_gap_value_attains_rayleigh
-    analyticReplacementBranchOnly := True }
+    compatible_with_attainment := exact_gap_value_attains_rayleigh }
 
 def SpectralMassRealSurface.ready (S : SpectralMassRealSurface) : Prop :=
   0 < S.mass ∧
   S.mass ≠ 0 ∧
+  S.mass ∈ Set.Ioi (0 : ℝ) ∧
   (∃ value mass : ℝ, PositiveSpectralMassAtExactGap value mass) ∧
-  RayleighAttainsExactGap S.value ∧
-  S.analyticReplacementBranchOnly
+  RayleighAttainsExactGap S.value
 
 theorem spectral_mass_real_surface_ready : spectralMassRealSurface.ready := by
   exact And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
-    And.intro exists_positive_spectral_mass_at_exact_gap <|
-    And.intro exact_gap_value_attains_rayleigh True.intro
+    And.intro exactGapSpectralMassReal_mem_positive_ray <|
+    And.intro exists_positive_spectral_mass_at_exact_gap
+      exact_gap_value_attains_rayleigh
 
 theorem spectral_mass_real_surface_positive_mass :
     0 < spectralMassRealSurface.mass := by
@@ -80,6 +86,10 @@ theorem spectral_mass_real_surface_positive_mass :
 theorem spectral_mass_real_surface_nonzero_mass :
     spectralMassRealSurface.mass ≠ 0 := by
   exact exactGapSpectralMassReal_ne_zero
+
+theorem spectral_mass_real_surface_mass_in_positive_ray :
+    spectralMassRealSurface.mass ∈ Set.Ioi (0 : ℝ) := by
+  exact exactGapSpectralMassReal_mem_positive_ray
 
 theorem spectral_mass_real_surface_exists_positive_mass :
     ∃ value mass : ℝ, PositiveSpectralMassAtExactGap value mass := by
