@@ -42,20 +42,23 @@ theorem exactGapValueReal_mem_above_one_ray :
 
 The surface carries order and Hamiltonian/PVM/spectral provenance facts only.  It
 deliberately has no field asserting a closed-form numerical equality for the
-carrier. -/
+carrier and no `True`/placeholder witness field. -/
 structure ExactGapRealSurface where
   value : ℝ
   positive : 0 < value
   above_one : 1 < value
-  theoremRouteWitnessed : concreteHamiltonianPVMSpectralExactGapValueOrigin.theoremWitnessOnly
-  pvmWindowMembership : value ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow
-  spectralSupportMembership : value ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport
+  theoremRouteCertified :
+    concreteHamiltonianPVMSpectralExactGapValueOrigin.certified
+  pvmWindowMembership :
+    value ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow
+  spectralSupportMembership :
+    value ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport
   spectralSupportLowerBound :
-    ∀ λ : ℝ,
-      λ ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport → value ≤ λ
+    ∀ x : ℝ,
+      x ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport → value ≤ x
   pvmWindowLowerBound :
-    ∀ λ : ℝ,
-      λ ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow → value ≤ λ
+    ∀ x : ℝ,
+      x ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow → value ≤ x
   positiveSpectralWeight :
     0 < concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralWeight
       concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow
@@ -69,8 +72,8 @@ def exactGapRealSurface : ExactGapRealSurface :=
   { value := exactGapValueReal
     positive := exactGapValueReal_pos
     above_one := exactGapValueReal_above_one
-    theoremRouteWitnessed :=
-      concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_witnessed
+    theoremRouteCertified :=
+      concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_certified
     pvmWindowMembership := hamiltonian_pvm_spectral_exact_gap_value_mem_pvm_window
     spectralSupportMembership :=
       hamiltonian_pvm_spectral_exact_gap_value_mem_spectral_support
@@ -81,34 +84,43 @@ def exactGapRealSurface : ExactGapRealSurface :=
     positiveSpectralWeight := hamiltonian_pvm_spectral_exact_gap_positive_weight
     nonzeroSpectralWeight := hamiltonian_pvm_spectral_exact_gap_nonzero_weight }
 
-/-- Readiness predicate for the public exact-gap surface. -/
-def ExactGapRealSurface.ready (S : ExactGapRealSurface) : Prop :=
+/-- Certification predicate for the public exact-gap surface. -/
+def ExactGapRealSurface.certified (S : ExactGapRealSurface) : Prop :=
   0 < S.value ∧
   1 < S.value ∧
-  concreteHamiltonianPVMSpectralExactGapValueOrigin.theoremWitnessOnly ∧
+  concreteHamiltonianPVMSpectralExactGapValueOrigin.certified ∧
   S.value ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow ∧
   S.value ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport ∧
-  (∀ λ : ℝ,
-    λ ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport → S.value ≤ λ) ∧
-  (∀ λ : ℝ,
-    λ ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow → S.value ≤ λ) ∧
+  (∀ x : ℝ,
+    x ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport → S.value ≤ x) ∧
+  (∀ x : ℝ,
+    x ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow → S.value ≤ x) ∧
   0 < concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralWeight
     concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow ∧
   concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralWeight
     concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmSpectralWindow ≠ 0
 
-/-- The public exact-gap surface is ready without exposing a closed-form value
+/-- Backward-compatible readiness name during downstream migration.  The payload
+is the concrete certification predicate, not a placeholder readiness receipt. -/
+def ExactGapRealSurface.ready (S : ExactGapRealSurface) : Prop :=
+  S.certified
+
+/-- The public exact-gap surface is certified without exposing a closed-form value
 equality. -/
-theorem exact_gap_real_surface_ready : exactGapRealSurface.ready := by
+theorem exact_gap_real_surface_certified : exactGapRealSurface.certified := by
   exact And.intro exactGapRealSurface.positive <|
     And.intro exactGapRealSurface.above_one <|
-    And.intro exactGapRealSurface.theoremRouteWitnessed <|
+    And.intro exactGapRealSurface.theoremRouteCertified <|
     And.intro exactGapRealSurface.pvmWindowMembership <|
     And.intro exactGapRealSurface.spectralSupportMembership <|
     And.intro exactGapRealSurface.spectralSupportLowerBound <|
     And.intro exactGapRealSurface.pvmWindowLowerBound <|
     And.intro exactGapRealSurface.positiveSpectralWeight
       exactGapRealSurface.nonzeroSpectralWeight
+
+/-- Backward-compatible theorem name for downstream migration. -/
+theorem exact_gap_real_surface_ready : exactGapRealSurface.ready := by
+  exact exact_gap_real_surface_certified
 
 end
 
