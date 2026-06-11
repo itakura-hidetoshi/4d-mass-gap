@@ -197,13 +197,27 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
       (And.intro continuum_yang_mills_lane_hardening_ready
         plaquette_spectral_weight_lane_hardening_ready) <|
     And.intro
-      (And.intro (by change True; exact True.intro) hPQReview) <|
+      (And.intro
+        (And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.continuumLimitStillOpen_proof
+          spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof)
+        hPQReview) <|
     And.intro
       (final_theorem_release_chain_index_external_consensus_not_claimed
         prototypeFinalTheoremReleaseChainIndexData) <|
     And.intro
-      (And.intro (by change True; exact True.intro) hPQPublic) <|
-    And.intro (by change True; exact True.intro) hPQFinal
+      (And.intro
+        (And.intro selfAdjointHPhysBridgeAdoptionData.publicBoundaryHeld <|
+          And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.publicBoundaryHeld_proof <|
+          And.intro spectralRealizationSkeletonReviewSurface.publicBoundaryHeld_proof <|
+          And.intro continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld_proof
+            final_theorem_release_bundle_manifest_public_boundary_held_witness)
+        hPQPublic) <|
+    And.intro
+      (And.intro selfAdjointHPhysBridgeAdoptionData.finalReleaseHeld <|
+        And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.finalReleaseHeld_proof <|
+        And.intro spectralRealizationSkeletonReviewSurface.finalReleaseHeld_proof
+          continuumSpectralTheoremSkeletonReviewSurface.finalTheoremReleaseStillHeld_proof)
+      hPQFinal
 
 theorem continuum_hamiltonian_witness_exact_gap_value_derivation_boundary :
     exactGapValueDerivationBoundary.ready := by
