@@ -2,32 +2,47 @@
 
 **MGAP4D** is Hidetoshi Itakura's canonical GitHub-native **Lean 4 / Lake** repository for a normalized four-dimensional mass-gap proof architecture.
 
-This repository is the primary Lean source tree for the MGAP4D line.  It contains Lean theorem surfaces, theorem-body anchors, proof-spine ledgers, physical-normalization boundaries, audit scripts, review packets, and independent replay instructions.
-
 ```text
 Canonical proof repository: itakura-hidetoshi/4d-mass-gap
 KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface.  KuuOS documents do not replace this repository as the canonical Lean source tree, and they do not independently provide external mathematical consensus.
+KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface.  It does not replace this repository as the canonical Lean source tree, and it does not independently supply external mathematical consensus.
 
 ---
 
 ## Current status as of 2026-06-11
 
-The current `main` branch should be read as an **internal Lean terminal discharge route with a public / external audit receipt surface**.
+The current `main` branch should be read as an **internal Lean terminal discharge route with a public / external audit receipt surface** for a normalized 4D mass-gap route.
 
 It should **not** be described as external mathematical consensus, independent peer-review completion, or Clay-style public acceptance.
 
-The current proof-facing surface is the R1--R7 terminal / public / external audit receipt chain:
+The present proof-facing surface is:
 
 ```text
-MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
+canonical normalized carrier:
+  MGAP4D/MathlibAnalytic/ExactGapReal.lean
+  exactGapValueReal
+  exactGapValueReal_eq : exactGapValueReal = (33 : ℝ) / 20
+
+operator / spectral derivation route:
+  MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+  MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
+  MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+  MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
+
+R6 / R7 terminal value and positive-weight route:
+  MGAP4D/R6/Theorem/ExactAtom3320YangMillsSpectralDerivation.lean
+  MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean
+  MGAP4D/R7/Theorem.lean
+
+R1--R7 terminal / public / external audit receipt chain:
+  MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
+  MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
+  MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
+  MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
+  MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
 
 Central Lean-facing payload:
@@ -61,12 +76,14 @@ This repository currently claims, at repository-surface level:
 
 ```text
 Lean 4 / Lake replay surface: present
-canonical normalized carrier: exactGapValueReal = 33/20
+canonical normalized real carrier: exactGapValueReal
+carrier-level arithmetic normalization: exactGapValueReal = 33/20
+Basic-layer carrier absence marker: present
 R1--R7 terminal discharge route: present
 R2 current lane: infinite-dimensional ℓ² diagonal closed / unbounded operator lane
 R4 genuine-PVM law-component route: terminal-visible
 R5 compact centered plaquette observable route: terminal-visible
-R6 non-definitional exact atom 33/20 route: terminal-visible
+R6 non-definitional exact atom / spectral-PVM pinning route: terminal-visible
 R7 positive spectral-weight witness route: terminal-visible
 public / external audit receipt chain: present
 physical-normalization boundary through E0: explicit
@@ -79,6 +96,8 @@ external mathematical consensus
 independent peer-review completion
 Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing a positive scale E0
+that the Basic layer by itself carries the numerical mass-gap value
+that a carrier-level arithmetic check replaces the Hamiltonian/PVM/spectral route
 that CI success replaces mathematical proof review
 that audit scripts replace Lean kernel checking
 that readiness receipts are theorem bodies unless they carry substantive typed theorem payloads
@@ -100,12 +119,15 @@ External public acceptance remains a separate review process.
 The current proof spine should be read as:
 
 ```text
-R1 concrete Hilbert closure
+Basic-layer route marker
+  -> downstream exactGapValueReal carrier
+  -> continuum-Hamiltonian / PVM / operator-spectral derivation route
+  -> R1 concrete Hilbert closure
   -> R2 infinite-dimensional ℓ² diagonal closed / unbounded operator lane
   -> R3 adjoint / self-adjointness theorem discharge
   -> R4 genuine-PVM law-component closure
   -> R5 compact centered plaquette observable closure
-  -> R6 non-definitional exact atom 33/20 closure
+  -> R6 non-definitional exact atom 33/20 / spectral-PVM pinning route
   -> R7 positive spectral-weight witness closure
   -> terminal R1--R7 discharge chain
   -> public / external audit receipt chain
@@ -118,10 +140,12 @@ Important review anchors:
 | Top-level import root | `MGAP4D.lean` |
 | Analytic root | `MGAP4D/MathlibAnalytic.lean` |
 | Current status anchor | `docs/current_proof_status.md` |
-| R2 current lane | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean` |
+| Basic-layer route marker | `MGAP4D/MathlibAnalytic/Basic.lean` |
+| Real carrier | `MGAP4D/MathlibAnalytic/ExactGapReal.lean` |
 | Exact-gap layer separation | `MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean` |
 | Complete Hamiltonian route | `MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean` |
 | Yang--Mills spectral derivation interface | `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` |
+| R2 current lane | `MGAP4D/MathlibAnalytic/ConcreteAnalyticSpineL2R2InfiniteDiagonalOperatorLane.lean` |
 | R4 theorem surface | `MGAP4D/R4/TheoremSurface.lean` |
 | R5 theorem surface | `MGAP4D/R5/TheoremSurface.lean` |
 | R6 exact atom | `MGAP4D/R6/Theorem.lean` |
@@ -130,6 +154,14 @@ Important review anchors:
 | External audit receipt chain | `MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean` |
 | Placeholder / witness inventory | `docs/proof_placeholder_inventory.md` |
 | R4 supersession note | `docs/r4_terminal_status_supersession.md` |
+| Layer-separation note | `docs/exact_gap_layer_separation.md` |
+
+Representative carrier theorem:
+
+```lean
+theorem exactGapValueReal_eq :
+  exactGapValueReal = (33 : ℝ) / 20
+```
 
 Representative terminal theorem:
 
@@ -147,6 +179,51 @@ theorem atom_exact_r6_direct_positive_weight_review_surface_payload :
   exactGapValueReal = (33 : ℝ) / 20 ∧
   exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom ∧
   witnessSector = orthogonal ∧ witnessSector ≠ vacuum
+```
+
+---
+
+## Exact-gap layer separation
+
+External review should keep the following layers separate:
+
+```text
+1. Basic-layer route marker
+2. downstream real-carrier / carrier-level arithmetic normalization
+3. continuum-Hamiltonian / PVM / operator-spectral derivation
+4. R6 exact atom and R7 positive spectral-weight route
+5. engineering / audit / public-boundary marker layer
+```
+
+Current reading:
+
+```text
+Basic.lean
+  -> marker-only route-deferred layer
+  -> no real-valued gap carrier
+  -> no local final-value assignment
+
+ExactGapReal.lean
+  -> defines exactGapValueReal as the downstream normalized real carrier
+  -> proves exactGapValueReal_eq : exactGapValueReal = 33/20
+  -> this is a carrier-level arithmetic normalization, not the whole physical derivation
+
+YangMillsHamiltonianSpectralDerivation3320.lean
+  -> aligns spectral infimum / attainment / observable atom values with exactGapValueReal
+  -> intentionally does not export derivedHamiltonianSpectralValue = 33/20 outside R6
+
+R6 exact-atom layer
+  -> supplies the non-definitional spectral/PVM pinning route for the displayed value
+
+R1--R7 terminal chain
+  -> records exact 33/20 plus positive spectral weight at the terminal audit surface
+```
+
+Current map:
+
+```text
+MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
+docs/exact_gap_layer_separation.md
 ```
 
 ---
@@ -174,44 +251,6 @@ Delta_phys(1) = 33/20
 ```
 
 A dimensional physical mass gap therefore requires an external positive reference scale `E0`.
-
----
-
-## Layer separation
-
-External review should keep four layers separate:
-
-```text
-abstract theorem-body layer
-Basic-layer marker and downstream real-carrier layer
-operator / spectral derivation layer
-engineering / review-marker layer
-```
-
-Current map:
-
-```text
-MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
-docs/exact_gap_layer_separation.md
-```
-
-Reading guide:
-
-```text
-Basic.lean = marker-only route-deferred layer, with no real-valued gap carrier
-ExactGapReal.lean = downstream real carrier and raw route witness
-ContinuumHamiltonianMassGapTheorem.lean = theorem-route final normalization boundary
-ContinuumHamiltonianExactMassGapDerivation.lean = exact positive mass-gap package boundary
-ConcreteR1R7ResidualDischarge.lean = current terminal derivation discharge
-ContinuumHamiltonianCompleteMassGapDerivation.lean = complete Hamiltonian spectral derivation surface
-YangMillsHamiltonianSpectralDerivation3320.lean = spectral derivation interface into the normalized carrier
-ExactGapLayerSeparation.lean = current separation map
-```
-
-`exactGapValueReal` is the downstream real carrier.  The Basic layer does not
-install a numerical carrier or local final-value assignment, and the final
-normalized equality should be reviewed through the R1--R7 terminal chain plus the
-continuum-Hamiltonian / PVM / operator-spectral theorem route.
 
 ---
 
@@ -283,12 +322,10 @@ Recommended first-pass review order:
 9. Inspect `docs/proof_placeholder_inventory.md`.
 10. Inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
 11. Inspect `docs/r4_terminal_status_supersession.md`.
-12. Inspect the R4 genuine-PVM law components.
-13. Inspect the R5 plaquette-observable closure.
-14. Inspect the R6 exact atom `33/20` theorem bodies.
-15. Inspect the R7 positive-weight theorem bodies.
-16. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
-17. Record review notes append-only.
+12. Inspect the Basic / ExactGapReal / Yang--Mills spectral derivation separation.
+13. Inspect the R2, R4, R5, R6, R7 theorem surfaces.
+14. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
+15. Record review notes append-only.
 
 ---
 
@@ -311,8 +348,8 @@ ROADMAP.md           Review and audit roadmap
 ## Current priorities
 
 1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
-2. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
-3. Keep exact-gap layer separation visible to prevent carrier / derivation confusion.
+2. Keep the Basic / ExactGapReal / spectral-derivation / R6-R7 layer separation visible.
+3. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
 4. Keep placeholder, witness, and proof-debt inventory visible.
 5. Refresh independent replay receipts from clean environments.
 6. Confirm CI and local replay on the documentation / audit-synchronization commit.
@@ -350,6 +387,7 @@ theorem-surface review
 source-tree clarity
 placeholder / witness-marker classification
 physical-normalization boundary clarity
+exact-gap layer-separation clarity
 external mathematical review notes
 audit script precision
 public-boundary accuracy
