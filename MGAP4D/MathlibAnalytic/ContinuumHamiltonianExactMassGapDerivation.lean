@@ -30,7 +30,7 @@ def physicalContinuumHamiltonianToExactPositiveMassGap : Prop :=
   continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
   continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
   continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
-  continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
 
 /-- Physical continuum Yang--Mills Hamiltonian chain yields an exact positive
 normalized mass-gap witness. -/
