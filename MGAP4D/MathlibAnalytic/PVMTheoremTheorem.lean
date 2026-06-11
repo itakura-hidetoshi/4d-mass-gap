@@ -130,6 +130,35 @@ theorem admissible_pvm_theorem_compatible_with_spectral_mass :
   exact pvm_theorem_compatible_with_spectral_mass
     admissiblePVMTheoremTheoremData admissible_pvm_theorem_theorem_data_ready
 
+/-- Downstream migration alias: the concrete body is now admissible, not a
+singleton construction. -/
+abbrev singletonPVMTheoremTheoremData : PVMTheoremTheoremData :=
+  admissiblePVMTheoremTheoremData
+
+theorem singleton_pvm_theorem_theorem_data_ready :
+    singletonPVMTheoremTheoremData.ready := by
+  exact admissible_pvm_theorem_theorem_data_ready
+
+theorem singleton_pvm_theorem_exact_value_in_atom :
+    exactGapValueReal ∈ singletonPVMTheoremTheoremData.exactAtom := by
+  exact admissible_pvm_theorem_exact_value_in_atom
+
+theorem singleton_pvm_theorem_exact_atom_mass_positive :
+    0 < singletonPVMTheoremTheoremData.projectionMass
+      singletonPVMTheoremTheoremData.exactAtom := by
+  exact admissible_pvm_theorem_exact_atom_mass_positive
+
+theorem singleton_pvm_theorem_exact_atom_mass_nonzero :
+    singletonPVMTheoremTheoremData.projectionMass
+      singletonPVMTheoremTheoremData.exactAtom ≠ 0 := by
+  exact admissible_pvm_theorem_exact_atom_mass_nonzero
+
+theorem singleton_pvm_theorem_compatible_with_spectral_mass :
+    singletonPVMTheoremTheoremData.projectionMass
+      singletonPVMTheoremTheoremData.exactAtom =
+    singletonPVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal := by
+  exact admissible_pvm_theorem_compatible_with_spectral_mass
+
 /-- Review surface closing the abstract PVM theorem body after the spectral
 integration theorem body. -/
 structure PVMTheoremTheoremReviewSurface where
