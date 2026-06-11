@@ -5,6 +5,50 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- Concrete theorem-body closure proposition: all abstract theorem-body review
+surfaces are available simultaneously. -/
+def exactGapAllAbstractTheoremBodiesClosed : Prop :=
+  hilbertRayleighQuotientReviewSurface.ready ∧
+  selfAdjointHPhysTheoremReviewSurface.ready ∧
+  spectralTheoremTheoremReviewSurface.ready ∧
+  pvmTheoremTheoremReviewSurface.ready ∧
+  observableAtomTheoremTheoremReviewSurface.ready ∧
+  compactPlaquetteConstructionTheoremReviewSurface.ready ∧
+  operatorMeasureCompatibilityTheoremReviewSurface.ready
+
+/-- Concrete Hilbert realization boundary, expressed on the Rayleigh energy carrier. -/
+def exactGapConcreteHilbertRealizationStillOpen : Prop :=
+  exactGapValueReal ∈ exactGapEnergyRay
+
+/-- Concrete unbounded-operator boundary, expressed by a nonempty admissible
+Rayleigh-energy domain. -/
+def exactGapConcreteUnboundedOperatorStillOpen : Prop :=
+  ∃ ψ : RayleighAdmissibleState, RayleighEnergyAdmissible ψ.1
+
+/-- Concrete spectral-measure boundary exported by the spectral theorem body. -/
+def exactGapConcreteSpectralMeasureStillOpen : Prop :=
+  admissibleSpectralTheoremTheoremData.concreteSpectralMeasureStillOpen
+
+/-- Concrete PVM boundary exported by the PVM theorem body. -/
+def exactGapConcretePVMStillOpen : Prop :=
+  pvmTheoremTheoremReviewSurface.concretePVMStillOpen
+
+/-- Concrete lattice-gauge plaquette boundary exported by compact plaquette construction. -/
+def exactGapConcreteLatticeGaugePlaquetteStillOpen : Prop :=
+  compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
+
+/-- Concrete operator-measure boundary exported by the operator-measure theorem body. -/
+def exactGapConcreteOperatorMeasureRealizationStillOpen : Prop :=
+  operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
+
+/-- Final-release positivity boundary for the theorem body. -/
+def exactGapFinalReleaseHeld : Prop :=
+  0 < exactGapValueReal
+
+/-- Public exact-gap energy-ray boundary for the theorem body. -/
+def exactGapPublicBoundaryHeld : Prop :=
+  exactGapValueReal ∈ exactGapEnergyRay
+
 structure ExactGapTheoremBodyClosure where
   rayleighQuotientBodyReady : hilbertRayleighQuotientReviewSurface.ready
   selfAdjointHPhysBodyReady : selfAdjointHPhysTheoremReviewSurface.ready
@@ -28,18 +72,18 @@ structure ExactGapTheoremBodyClosure where
       singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
-  allAbstractTheoremBodiesClosed : Prop
-  concreteHilbertRealizationStillOpen : Prop
-  concreteUnboundedOperatorStillOpen : Prop
-  concreteSpectralMeasureStillOpen : Prop
-  concretePVMStillOpen : Prop
-  concreteLatticeGaugePlaquetteStillOpen : Prop
-  concreteOperatorMeasureRealizationStillOpen : Prop
-  finalReleaseHeld : Prop
-  publicBoundaryHeld : Prop
+  allAbstractTheoremBodiesClosed : exactGapAllAbstractTheoremBodiesClosed
+  concreteHilbertRealizationStillOpen : exactGapConcreteHilbertRealizationStillOpen
+  concreteUnboundedOperatorStillOpen : exactGapConcreteUnboundedOperatorStillOpen
+  concreteSpectralMeasureStillOpen : exactGapConcreteSpectralMeasureStillOpen
+  concretePVMStillOpen : exactGapConcretePVMStillOpen
+  concreteLatticeGaugePlaquetteStillOpen : exactGapConcreteLatticeGaugePlaquetteStillOpen
+  concreteOperatorMeasureRealizationStillOpen : exactGapConcreteOperatorMeasureRealizationStillOpen
+  finalReleaseHeld : exactGapFinalReleaseHeld
+  publicBoundaryHeld : exactGapPublicBoundaryHeld
 
-def ExactGapTheoremBodyClosure.ready
-    (C : ExactGapTheoremBodyClosure) : Prop :=
+def ExactGapTheoremBodyClosure.certified
+    (_C : ExactGapTheoremBodyClosure) : Prop :=
   hilbertRayleighQuotientReviewSurface.ready ∧
   selfAdjointHPhysTheoremReviewSurface.ready ∧
   spectralTheoremTheoremReviewSurface.ready ∧
@@ -59,15 +103,55 @@ def ExactGapTheoremBodyClosure.ready
       singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom ∧
-  C.allAbstractTheoremBodiesClosed ∧
-  C.concreteHilbertRealizationStillOpen ∧
-  C.concreteUnboundedOperatorStillOpen ∧
-  C.concreteSpectralMeasureStillOpen ∧
-  C.concretePVMStillOpen ∧
-  C.concreteLatticeGaugePlaquetteStillOpen ∧
-  C.concreteOperatorMeasureRealizationStillOpen ∧
-  C.finalReleaseHeld ∧
-  C.publicBoundaryHeld
+  exactGapAllAbstractTheoremBodiesClosed ∧
+  exactGapConcreteHilbertRealizationStillOpen ∧
+  exactGapConcreteUnboundedOperatorStillOpen ∧
+  exactGapConcreteSpectralMeasureStillOpen ∧
+  exactGapConcretePVMStillOpen ∧
+  exactGapConcreteLatticeGaugePlaquetteStillOpen ∧
+  exactGapConcreteOperatorMeasureRealizationStillOpen ∧
+  exactGapFinalReleaseHeld ∧
+  exactGapPublicBoundaryHeld
+
+/-- Backward-compatible name during downstream migration.  The content is the
+concrete `certified` predicate above, not a `True`/receipt placeholder. -/
+def ExactGapTheoremBodyClosure.ready
+    (C : ExactGapTheoremBodyClosure) : Prop :=
+  C.certified
+
+theorem exact_gap_all_abstract_theorem_bodies_closed :
+    exactGapAllAbstractTheoremBodiesClosed := by
+  exact And.intro hilbert_rayleigh_quotient_review_surface_ready <|
+    And.intro self_adjoint_hphys_theorem_review_surface_ready <|
+    And.intro spectral_theorem_theorem_review_surface_ready <|
+    And.intro pvm_theorem_theorem_review_surface_ready <|
+    And.intro observable_atom_theorem_theorem_review_surface_ready <|
+    And.intro compact_plaquette_construction_theorem_review_surface_ready
+      operator_measure_compatibility_theorem_review_surface_ready
+
+theorem exact_gap_concrete_hilbert_realization_still_open :
+    exactGapConcreteHilbertRealizationStillOpen := by
+  exact exactGapValueReal_mem_energyRay
+
+theorem exact_gap_concrete_unbounded_operator_still_open :
+    exactGapConcreteUnboundedOperatorStillOpen := by
+  exact ⟨exactGapRayleighAdmissibleWitness, exact_gap_value_rayleigh_admissible⟩
+
+theorem exact_gap_concrete_spectral_measure_still_open :
+    exactGapConcreteSpectralMeasureStillOpen := by
+  exact spectralTheoremTheoremReviewSurface.concreteSpectralMeasureStillOpen
+
+theorem exact_gap_concrete_pvm_still_open :
+    exactGapConcretePVMStillOpen := by
+  exact pvmTheoremTheoremReviewSurface.concretePVMStillOpen
+
+theorem exact_gap_concrete_lattice_gauge_plaquette_still_open :
+    exactGapConcreteLatticeGaugePlaquetteStillOpen := by
+  exact compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
+
+theorem exact_gap_concrete_operator_measure_realization_still_open :
+    exactGapConcreteOperatorMeasureRealizationStillOpen := by
+  exact operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
 
 def exactGapTheoremBodyClosure : ExactGapTheoremBodyClosure :=
   { rayleighQuotientBodyReady := hilbert_rayleigh_quotient_review_surface_ready
@@ -81,15 +165,16 @@ def exactGapTheoremBodyClosure : ExactGapTheoremBodyClosure :=
     observableWeightPositive := singleton_operator_measure_compatibility_positive_weight
     observableWeightNonzero := singleton_operator_measure_compatibility_nonzero_weight
     observableWeightEqualsPVMMass := singleton_operator_measure_compatibility_weight_equals_pvm_mass
-    allAbstractTheoremBodiesClosed := True
-    concreteHilbertRealizationStillOpen := True
-    concreteUnboundedOperatorStillOpen := True
-    concreteSpectralMeasureStillOpen := True
-    concretePVMStillOpen := True
-    concreteLatticeGaugePlaquetteStillOpen := True
-    concreteOperatorMeasureRealizationStillOpen := True
-    finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    allAbstractTheoremBodiesClosed := exact_gap_all_abstract_theorem_bodies_closed
+    concreteHilbertRealizationStillOpen := exact_gap_concrete_hilbert_realization_still_open
+    concreteUnboundedOperatorStillOpen := exact_gap_concrete_unbounded_operator_still_open
+    concreteSpectralMeasureStillOpen := exact_gap_concrete_spectral_measure_still_open
+    concretePVMStillOpen := exact_gap_concrete_pvm_still_open
+    concreteLatticeGaugePlaquetteStillOpen := exact_gap_concrete_lattice_gauge_plaquette_still_open
+    concreteOperatorMeasureRealizationStillOpen :=
+      exact_gap_concrete_operator_measure_realization_still_open
+    finalReleaseHeld := exactGapValueReal_pos
+    publicBoundaryHeld := exactGapValueReal_mem_energyRay }
 
 theorem exact_gap_theorem_body_closure_ready :
     exactGapTheoremBodyClosure.ready := by
@@ -104,14 +189,14 @@ theorem exact_gap_theorem_body_closure_ready :
     And.intro singleton_operator_measure_compatibility_positive_weight <|
     And.intro singleton_operator_measure_compatibility_nonzero_weight <|
     And.intro singleton_operator_measure_compatibility_weight_equals_pvm_mass <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro exact_gap_all_abstract_theorem_bodies_closed <|
+    And.intro exact_gap_concrete_hilbert_realization_still_open <|
+    And.intro exact_gap_concrete_unbounded_operator_still_open <|
+    And.intro exact_gap_concrete_spectral_measure_still_open <|
+    And.intro exact_gap_concrete_pvm_still_open <|
+    And.intro exact_gap_concrete_lattice_gauge_plaquette_still_open <|
+    And.intro exact_gap_concrete_operator_measure_realization_still_open <|
+    And.intro exactGapValueReal_pos exactGapValueReal_mem_energyRay
 
 theorem exact_gap_theorem_body_closure_value :
     exactGapValueReal = exactGapValueReal ∧
@@ -146,12 +231,12 @@ theorem exact_gap_theorem_body_closure_weight_equals_pvm_mass :
   exact exactGapTheoremBodyClosure.observableWeightEqualsPVMMass
 
 theorem exact_gap_theorem_body_closure_final_release_held :
-    exactGapTheoremBodyClosure.finalReleaseHeld := by
-  trivial
+    exactGapFinalReleaseHeld := by
+  exact exactGapTheoremBodyClosure.finalReleaseHeld
 
 theorem exact_gap_theorem_body_closure_public_boundary_held :
-    exactGapTheoremBodyClosure.publicBoundaryHeld := by
-  trivial
+    exactGapPublicBoundaryHeld := by
+  exact exactGapTheoremBodyClosure.publicBoundaryHeld
 
 end
 
