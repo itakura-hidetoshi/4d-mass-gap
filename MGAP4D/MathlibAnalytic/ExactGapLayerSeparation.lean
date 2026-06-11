@@ -5,11 +5,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 /-- Mathematical theorem-body layer, excluding carrier definitions and engineering
-state markers.
-
-This layer contains theorem-body readiness and the observable-weight theorem
-facts that come from the abstract theorem-body route.  It deliberately omits
-`exactGapValueReal = 33/20` and all `StillOpen` / boundary-marker fields. -/
+state markers. -/
 def ExactGapAbstractTheoremBodyLayerReady : Prop :=
   hilbertRayleighQuotientReviewSurface.ready ∧
   selfAdjointHPhysTheoremReviewSurface.ready ∧
@@ -30,18 +26,13 @@ def ExactGapAbstractTheoremBodyLayerReady : Prop :=
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
 
-/-- Carrier layer: the normalized real carrier and its theorem-route arithmetic checks.
-
-This legacy layer is isolated from the upstream spectral receipt layer; it should
-not be read as the source of the R6 exact atom value. -/
+/-- Carrier layer with positivity and the value-derivation boundary.  This layer
+intentionally does not assert the displayed numeric value. -/
 def ExactGapCarrierLayerReady : Prop :=
-  exactGapValueReal = (33 : ℝ) / 20 ∧
-  0 < exactGapValueReal
+  0 < exactGapValueReal ∧
+  exactGapValueDerivationBoundary.ready
 
-/-- Proposition extracted from the continuum-Hamiltonian witness provenance map.
-This is the proposition proved by
-`continuum_hamiltonian_witness_provenance_map_ready`; it is named separately so
-that layer separation does not confuse a theorem term with a `Prop`. -/
+/-- Proposition extracted from the continuum-Hamiltonian witness provenance map. -/
 def ExactGapContinuumWitnessProvenanceLayerReady : Prop :=
   continuumHamiltonianMassGapWitnessData.physicalContinuumHamiltonianReady ∧
     continuumHamiltonianMassGapWitnessData.hphysFromContinuumYMReady ∧
@@ -51,17 +42,10 @@ def ExactGapContinuumWitnessProvenanceLayerReady : Prop :=
     continuumHamiltonianMassGapWitnessData.spectralMassObservableReady ∧
     continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
     continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
-    exactGapValueReal = (33 : ℝ) / 20 ∧
     0 < spectralMassRealSurface.mass ∧
     spectralMassRealSurface.mass ≠ 0
 
-/-- Spectral receipt layer.
-
-This layer records the current spectral receipt: the Yang--Mills Hamiltonian
-spectral surface, the identification of the normalized carrier with the surface's
-`derivedHamiltonianSpectralValue`, and the positive/nonzero spectral-mass facts.
-It no longer states that this upstream receipt derives the concrete value
-`33/20`; that numeric claim is reserved for the R6 exact-atom layer. -/
+/-- Spectral receipt layer. -/
 def ExactGapSpectralReceiptLayerReady : Prop :=
   yangMillsHamiltonianSpectralDerivation3320.ready ∧
   exactGapValueReal =
@@ -70,12 +54,7 @@ def ExactGapSpectralReceiptLayerReady : Prop :=
   spectralMassRealSurface.mass ≠ 0 ∧
   ExactGapContinuumWitnessProvenanceLayerReady
 
-/-- Engineering/review-marker layer.
-
-This layer isolates the state markers that were historically mixed into closure
-records: abstract-body-closed flags, concrete-realization deferred markers, and
-public/final boundary markers.  These are review-state markers, not additional
-mathematical theorem bodies. -/
+/-- Engineering/review-marker layer. -/
 def ExactGapEngineeringMarkerLayerReady : Prop :=
   exactGapTheoremBodyClosure.allAbstractTheoremBodiesClosed ∧
   exactGapTheoremBodyClosure.concreteHilbertRealizationStillOpen ∧
@@ -109,10 +88,9 @@ theorem exact_gap_abstract_theorem_body_layer_ready :
     And.intro singleton_operator_measure_compatibility_nonzero_weight
       singleton_operator_measure_compatibility_weight_equals_pvm_mass
 
-/-- The carrier layer is ready via the continuum-Hamiltonian theorem route. -/
+/-- The carrier layer is ready without using a numeric equality claim. -/
 theorem exact_gap_carrier_layer_ready : ExactGapCarrierLayerReady := by
-  exact And.intro continuum_hamiltonian_witness_exact_value_derivation_provenance
-    exactGapValueReal_pos
+  exact And.intro exactGapValueReal_pos exact_gap_value_derivation_boundary_ready
 
 /-- The continuum witness provenance proposition is ready. -/
 theorem exact_gap_continuum_witness_provenance_layer_ready :
