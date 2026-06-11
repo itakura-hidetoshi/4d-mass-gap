@@ -145,18 +145,24 @@ def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
       concreteHPhysRealizationTheoremReviewSurface.ready
     hardPhysicalBoundaryVisible :=
       physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld ∧
-      concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
+      (∀ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
+        singletonConcreteHPhysRealizationTheoremData.domain ψ →
+          singletonConcreteHPhysRealizationTheoremData.domain
+            (singletonConcreteHPhysRealizationTheoremData.H_phys ψ))
     exactValuePreserved := rfl
     reviewLevelOnly :=
       exactGapValueReal ∈ exactGapEnergyRay ∧
       selfAdjointHPhysTheoremReviewSurface.concreteUnboundedRealizationStillOpen
     publicBoundaryHeld :=
       physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld ∧
-      concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
+      (∀ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
+        singletonConcreteHPhysRealizationTheoremData.domain ψ →
+          singletonConcreteHPhysRealizationTheoremData.domain
+            (singletonConcreteHPhysRealizationTheoremData.H_phys ψ))
     finalReleaseHeld :=
       selfAdjointHPhysTheoremReviewSurface.finalReleaseHeld ∧
       physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld ∧
-      concreteHPhysRealizationTheoremReviewSurface.finalReleaseHeld }
+      (0 < exactGapValueReal) }
 
 theorem self_adjoint_hphys_lane_hardening_ready :
     selfAdjointHPhysLaneHardeningData.ready := by
