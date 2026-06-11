@@ -55,19 +55,21 @@ theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
     { hamiltonianCarrier := ℕ → ℝ
       distinguishedState := fun _ => 0
       hamiltonianEnergy := fun _ => (33 : ℝ) / 20
-      spectralSupport := Set.Ici ((33 : ℝ) / 20)
-      pvmSpectralWindow := Set.Ici ((33 : ℝ) / 20)
+      spectralSupport := (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
+      pvmSpectralWindow := (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
       spectralWeight := fun _ => 1
       derivedHamiltonianSpectralValue := (33 : ℝ) / 20
       hamiltonian_attains_value := rfl
       spectralSupport_eq_energyRay := rfl
       value_mem_spectralSupport := by
+        show ((33 : ℝ) / 20) ∈ (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
         exact le_rfl
       spectral_lower_bound := by
         intro x hx
         exact hx
       pvmSpectralWindow_eq_support := rfl
       pvmWindowContainsValue := by
+        show ((33 : ℝ) / 20) ∈ (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
         exact le_rfl
       pvmWindowLowerBound := by
         intro x hx
