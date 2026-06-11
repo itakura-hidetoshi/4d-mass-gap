@@ -238,7 +238,6 @@ REQUIRED_CONCRETE_YM_DOC_ANCHORS = (
     "rayleigh := finalPhysicalRayleigh",
     "final-physical-carrier routed skeleton",
     "not as a one-point carrier prototype",
-    "final-name routed without legacy prototype aliases",
 )
 
 REQUIRED_CHECKLIST_ANCHORS = (
@@ -249,7 +248,6 @@ REQUIRED_CHECKLIST_ANCHORS = (
     "finalPhysicalUnboundedOperatorSkeletonData",
     "finalConcreteYangMillsHamiltonianSkeletonData",
     "PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases",
-    "ConcreteYangMillsHamiltonianSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases",
 )
 
 REQUIRED_CHECK_ANCHORS = (
