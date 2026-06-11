@@ -11,15 +11,12 @@ noncomputable section
 /-- Spectral input handoff for the dense diagonal `LinearPMap` lane.
 
 This layer connects the newly realized actual Mathlib self-adjointness of the
-concrete dense diagonal `LinearPMap` to the existing abstract spectral review
-surface.  It is an input handoff only: it does not assert the full unbounded
-spectral theorem, does not construct the PVM, and does not close the positive
-spectral-weight lane. -/
+concrete dense diagonal `LinearPMap` to the certified spectral review surface. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface where
   selfAdjointHandoffReady :
     concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSelfAdjointHandoffReady
-  spectralReviewReady :
-    spectralTheoremReviewSurface.ready
+  spectralReviewCertified :
+    spectralTheoremReviewSurface.certified
   actualSelfAdjoint :
     IsSelfAdjoint concreteL2R2DenseDiagonalDomainLinearPMap
   actualClosed :
@@ -28,20 +25,23 @@ structure ConcreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface w
     LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap =
       concreteL2R2DenseDiagonalDomainLinearPMap
   abstractExactValueInSupport :
-    exactGapValueReal ∈ singletonSpectralTheoremInterface.spectralSupport
+    exactGapValueReal ∈ admissibleSpectralTheoremInterface.spectralSupport
   abstractPositiveMass :
-    0 < singletonSpectralTheoremInterface.spectralMass exactGapValueReal
-  boundaryFullSpectralTheoremStillSeparate : Prop
-  boundaryPVMStillSeparate : Prop
-  boundaryPositiveSpectralWeightStillSeparate : Prop
+    0 < admissibleSpectralTheoremInterface.spectralMass exactGapValueReal
+  spectralInterfaceCertified :
+    admissibleSpectralTheoremInterface.certified
+  supportEqEnergyRay :
+    admissibleSpectralTheoremInterface.spectralSupport = exactGapEnergyRay
+  positiveMassInPositiveRay :
+    admissibleSpectralTheoremInterface.spectralMass exactGapValueReal ∈ Set.Ioi (0 : ℝ)
 
 /-- Concrete spectral input handoff surface. -/
 def concreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface :
     ConcreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface :=
   { selfAdjointHandoffReady :=
       concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_self_adjoint_handoff_ready
-    spectralReviewReady :=
-      spectral_theorem_review_surface_ready
+    spectralReviewCertified :=
+      spectral_theorem_review_surface_certified
     actualSelfAdjoint :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint
     actualClosed :=
@@ -49,56 +49,63 @@ def concreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface :
     actualAdjointEqSelf :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self
     abstractExactValueInSupport :=
-      singleton_spectral_theorem_interface_exact_in_support
+      admissible_spectral_theorem_interface_exact_in_support
     abstractPositiveMass :=
-      singleton_spectral_theorem_interface_positive_mass
-    boundaryFullSpectralTheoremStillSeparate := True
-    boundaryPVMStillSeparate := True
-    boundaryPositiveSpectralWeightStillSeparate := True }
+      admissible_spectral_theorem_interface_positive_mass
+    spectralInterfaceCertified :=
+      admissible_spectral_theorem_interface_certified
+    supportEqEnergyRay :=
+      admissible_spectral_theorem_interface_support_eq_energyRay
+    positiveMassInPositiveRay :=
+      admissible_spectral_theorem_interface_exact_mass_in_positive_ray }
 
-/-- Public readiness predicate for the dense diagonal `LinearPMap` spectral input
+/-- Public certification predicate for the dense diagonal `LinearPMap` spectral input
 handoff. -/
-def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffReady : Prop :=
+def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffCertified : Prop :=
   concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSelfAdjointHandoffReady ∧
-  spectralTheoremReviewSurface.ready ∧
+  spectralTheoremReviewSurface.certified ∧
   IsSelfAdjoint concreteL2R2DenseDiagonalDomainLinearPMap ∧
   LinearPMap.IsClosed concreteL2R2DenseDiagonalDomainLinearPMap ∧
   LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap =
     concreteL2R2DenseDiagonalDomainLinearPMap ∧
-  exactGapValueReal ∈ singletonSpectralTheoremInterface.spectralSupport ∧
-  0 < singletonSpectralTheoremInterface.spectralMass exactGapValueReal ∧
-  concreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface.boundaryFullSpectralTheoremStillSeparate ∧
-  concreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface.boundaryPVMStillSeparate ∧
-  concreteL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffSurface.boundaryPositiveSpectralWeightStillSeparate
+  exactGapValueReal ∈ admissibleSpectralTheoremInterface.spectralSupport ∧
+  0 < admissibleSpectralTheoremInterface.spectralMass exactGapValueReal ∧
+  admissibleSpectralTheoremInterface.certified ∧
+  admissibleSpectralTheoremInterface.spectralSupport = exactGapEnergyRay ∧
+  admissibleSpectralTheoremInterface.spectralMass exactGapValueReal ∈ Set.Ioi (0 : ℝ)
 
-/-- The dense diagonal `LinearPMap` spectral input handoff is ready. -/
-theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_ready :
-    concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffReady := by
+/-- Backward-compatible readiness name during downstream migration. -/
+def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffReady : Prop :=
+  concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffCertified
+
+/-- The dense diagonal `LinearPMap` spectral input handoff is certified. -/
+theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_certified :
+    concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffCertified := by
   exact ⟨
     concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_self_adjoint_handoff_ready,
-    spectral_theorem_review_surface_ready,
+    spectral_theorem_review_surface_certified,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isClosed,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self,
-    singleton_spectral_theorem_interface_exact_in_support,
-    singleton_spectral_theorem_interface_positive_mass,
-    trivial,
-    trivial,
-    trivial⟩
+    admissible_spectral_theorem_interface_exact_in_support,
+    admissible_spectral_theorem_interface_positive_mass,
+    admissible_spectral_theorem_interface_certified,
+    admissible_spectral_theorem_interface_support_eq_energyRay,
+    admissible_spectral_theorem_interface_exact_mass_in_positive_ray⟩
 
-/-- Boundary marker for the spectral input handoff.
+/-- Backward-compatible theorem name during downstream migration. -/
+theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_ready :
+    concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffReady := by
+  exact concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_certified
 
-The concrete dense diagonal `LinearPMap` has crossed the actual Mathlib
-self-adjointness threshold and can be used as an input to later spectral/PVM
-lanes.  The spectral theorem, PVM construction, and positive spectral-weight
-construction remain separate downstream obligations. -/
+/-- Boundary marker for the spectral input handoff. -/
 def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffBoundaryHeld : Prop :=
-  concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffReady
+  concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffCertified
 
 /-- The spectral input handoff boundary is held. -/
 theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_boundary_held :
     concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralInputHandoffBoundaryHeld := by
-  exact concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_ready
+  exact concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral_input_handoff_certified
 
 end
 
