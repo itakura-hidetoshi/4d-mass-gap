@@ -173,7 +173,7 @@ structure ConcreteHilbertRealizationTheoremReviewSurface where
           (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi)
 
 def ConcreteHilbertRealizationTheoremReviewSurface.ready
-    (S : ConcreteHilbertRealizationTheoremReviewSurface) : Prop :=
+    (_S : ConcreteHilbertRealizationTheoremReviewSurface) : Prop :=
   exactGapPostTheoremBodyConcreteResidualMap.ready ∧
   singletonConcreteHilbertRealizationTheoremData.ready ∧
   (0 < singletonConcreteHilbertRealizationTheoremData.normSq
@@ -186,10 +186,17 @@ def ConcreteHilbertRealizationTheoremReviewSurface.ready
       (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi) ->
         exactGapValueReal <= singletonConcreteHilbertRealizationTheoremData.rayleighData.quotient
           (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi)) ∧
-  S.concreteHilbertRealizationBodyClosed ∧
-  S.infiniteDimensionalPhysicalHilbertStillOpen ∧
-  S.finalReleaseHeld ∧
-  S.publicBoundaryHeld
+  (singletonConcreteHilbertRealizationTheoremData.rayleighData.quotient
+      (singletonConcreteHilbertRealizationTheoremData.toRayleighState
+        singletonConcreteHilbertRealizationTheoremData.distinguished) = exactGapValueReal) ∧
+  (∃ psi : singletonConcreteHilbertRealizationTheoremData.carrier,
+      0 < singletonConcreteHilbertRealizationTheoremData.normSq psi) ∧
+  (0 < exactGapValueReal) ∧
+  (forall psi : singletonConcreteHilbertRealizationTheoremData.carrier,
+    singletonConcreteHilbertRealizationTheoremData.rayleighData.admissible
+      (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi) ->
+        exactGapValueReal <= singletonConcreteHilbertRealizationTheoremData.rayleighData.quotient
+          (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi))
 
 noncomputable def concreteHilbertRealizationTheoremReviewSurface :
     ConcreteHilbertRealizationTheoremReviewSurface :=
@@ -219,9 +226,8 @@ theorem concrete_hilbert_realization_theorem_review_surface_ready :
     And.intro exactGapValueReal_pos singleton_concrete_hilbert_all_states_lower_bound
 
 theorem concrete_hilbert_realization_theorem_review_surface_final_release_held :
-    ConcreteHilbertRealizationTheoremReviewSurface.finalReleaseHeld
-      concreteHilbertRealizationTheoremReviewSurface := by
-  exact exactGapValueReal_pos
+    0 < exactGapValueReal := by
+  exact concreteHilbertRealizationTheoremReviewSurface.finalReleaseHeld
 
 end MathlibAnalytic
 end MGAP4D
