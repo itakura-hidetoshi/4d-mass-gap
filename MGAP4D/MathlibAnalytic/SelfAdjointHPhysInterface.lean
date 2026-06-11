@@ -119,7 +119,7 @@ structure SelfAdjointHPhysReviewSurface where
   exactValue_in_positive_ray : exactGapValueReal ∈ Set.Ioi (0 : ℝ)
 
 def SelfAdjointHPhysReviewSurface.ready
-    (S : SelfAdjointHPhysReviewSurface) : Prop :=
+    (_S : SelfAdjointHPhysReviewSurface) : Prop :=
   hilbertRayleighInterfaceReviewSurface.ready ∧
   singletonSelfAdjointHPhysInterface.ready ∧
   (∀ ψ φ, singletonSelfAdjointHPhysInterface.inner
@@ -137,7 +137,7 @@ def SelfAdjointHPhysReviewSurface.ready
     exactGapValueReal ≤
       singletonSelfAdjointHPhysInterface.rayleigh.rayleighEnergy
         (singletonSelfAdjointHPhysInterface.state_to_rayleigh ψ)) ∧
-  S.exactValue_in_energyRay ∧ S.exactValue_in_positive_ray
+  exactGapValueReal ∈ exactGapEnergyRay ∧ exactGapValueReal ∈ Set.Ioi (0 : ℝ)
 
 noncomputable def selfAdjointHPhysReviewSurface : SelfAdjointHPhysReviewSurface :=
   { hilbertRayleighReady := hilbert_rayleigh_interface_review_surface_ready
@@ -160,7 +160,7 @@ theorem self_adjoint_hphys_review_surface_ready :
     And.intro exactGapValueReal_mem_energyRay exactGapValueReal_mem_positive_ray
 
 theorem self_adjoint_hphys_review_surface_exact_value_in_energyRay :
-    selfAdjointHPhysReviewSurface.exactValue_in_energyRay := by
+    exactGapValueReal ∈ exactGapEnergyRay := by
   exact exactGapValueReal_mem_energyRay
 
 end MathlibAnalytic
