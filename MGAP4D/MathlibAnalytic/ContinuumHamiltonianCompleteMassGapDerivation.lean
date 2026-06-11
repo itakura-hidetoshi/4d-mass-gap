@@ -23,7 +23,7 @@ theorem physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap :
       continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
       continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
       continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
-      continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+      finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases continuum_hamiltonian_mass_gap_witness_ready with
@@ -80,7 +80,7 @@ def Physical4DYMContinuumHamiltonianSpectralCompleteDerivationReady : Prop :=
     continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
     continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
     continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
-    continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
     continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
     continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
     yangMillsHamiltonianSpectralDerivation3320.ready ∧
@@ -173,7 +173,7 @@ theorem physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_non
 
 /-- External-consensus boundary projection for the complete continuum-Hamiltonian derivation. -/
 theorem physical_4d_ym_continuum_hamiltonian_complete_derivation_no_external_consensus_claim :
-    continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim := by
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed := by
   rcases physical_4d_ym_continuum_hamiltonian_derives_complete_exact_mass_gap with
     ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, hNoConsensus, _⟩
   exact hNoConsensus
