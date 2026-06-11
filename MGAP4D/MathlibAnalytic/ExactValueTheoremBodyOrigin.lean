@@ -103,14 +103,14 @@ theorem exact_value_origin_public_boundary_held_witness :
   exact exact_gap_theorem_body_closure_public_boundary_held
 
 theorem exact_value_origin_not_packaging_artifact
-    (_D : ExactValueTheoremBodyOriginData) :
-    exactGapTheoremBodyClosure.ready := by
-  exact exact_gap_theorem_body_closure_ready
+    (D : ExactValueTheoremBodyOriginData) :
+    D.notPackagingArtifact := by
+  exact D.notPackagingArtifact
 
 theorem exact_value_origin_not_ci_ledger_artifact
-    (_D : ExactValueTheoremBodyOriginData) :
-    exactGapTheoremBodyClosure.ready := by
-  exact exact_gap_theorem_body_closure_ready
+    (D : ExactValueTheoremBodyOriginData) :
+    D.notCILedgerArtifact := by
+  exact D.notCILedgerArtifact
 
 noncomputable def prototypeExactValueTheoremBodyOriginData : ExactValueTheoremBodyOriginData :=
   { theoremBodyReady := exact_gap_theorem_body_closure_ready
