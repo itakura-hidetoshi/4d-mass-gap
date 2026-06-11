@@ -13,7 +13,7 @@ structure HilbertRayleighInterface where
   witness_energy_eq_exact : rayleighEnergy witness = exactGapValueReal
   lower_bound : ∀ ψ, admissible ψ → exactGapValueReal ≤ rayleighEnergy ψ
   exact_value_positive : 0 < exactGapValueReal
-  fullHilbertTheoremStillOpen : Prop
+  witness_in_energyRay : exactGapValueReal ∈ exactGapEnergyRay
 
 /-- The interface-level exact-gap attainment predicate. -/
 def HilbertRayleighInterface.attainsExactGap
@@ -26,35 +26,35 @@ def HilbertRayleighInterface.ready (I : HilbertRayleighInterface) : Prop :=
   I.rayleighEnergy I.witness = exactGapValueReal ∧
   (∀ ψ, I.admissible ψ → exactGapValueReal ≤ I.rayleighEnergy ψ) ∧
   0 < exactGapValueReal ∧
-  I.fullHilbertTheoremStillOpen
+  exactGapValueReal ∈ exactGapEnergyRay
 
 /-- A minimal singleton-state realization of the abstract interface. -/
 noncomputable def singletonHilbertRayleighInterface : HilbertRayleighInterface :=
   { state := PUnit
     rayleighEnergy := fun _ => exactGapValueReal
-    admissible := fun _ => True
+    admissible := fun _ => exactGapValueReal ∈ exactGapEnergyRay
     witness := PUnit.unit
-    witness_admissible := True.intro
+    witness_admissible := exactGapValueReal_mem_energyRay
     witness_energy_eq_exact := rfl
     lower_bound := by
       intro _ _
       exact le_rfl
     exact_value_positive := exactGapValueReal_pos
-    fullHilbertTheoremStillOpen := True }
+    witness_in_energyRay := exactGapValueReal_mem_energyRay }
 
 theorem singleton_hilbert_rayleigh_interface_ready :
     singletonHilbertRayleighInterface.ready := by
-  exact And.intro True.intro <|
+  exact And.intro exactGapValueReal_mem_energyRay <|
     And.intro rfl <|
     And.intro (by
       intro _ _
       exact le_rfl) <|
-    And.intro exactGapValueReal_pos True.intro
+    And.intro exactGapValueReal_pos exactGapValueReal_mem_energyRay
 
 theorem singleton_hilbert_rayleigh_interface_attains :
     singletonHilbertRayleighInterface.attainsExactGap
       singletonHilbertRayleighInterface.witness := by
-  exact And.intro True.intro rfl
+  exact And.intro exactGapValueReal_mem_energyRay rfl
 
 theorem singleton_hilbert_rayleigh_interface_lower_bound
     (ψ : singletonHilbertRayleighInterface.state)
@@ -70,9 +70,9 @@ structure HilbertRayleighInterfaceReviewSurface where
     singletonHilbertRayleighInterface.witness
   lowerBoundCompatible : ∀ ψ, singletonHilbertRayleighInterface.admissible ψ →
     exactGapValueReal ≤ singletonHilbertRayleighInterface.rayleighEnergy ψ
-  fullHilbertTheoremStillOpen : Prop
-  mainMathlibBacked : Prop
-  finalReleaseHeld : Prop
+  exactValue_in_energyRay : exactGapValueReal ∈ exactGapEnergyRay
+  exactValue_in_positive_ray : exactGapValueReal ∈ Set.Ioi (0 : ℝ)
+  exactValue_attains_rayleigh : RayleighAttainsExactGap exactGapValueReal
 
 def HilbertRayleighInterfaceReviewSurface.ready
     (S : HilbertRayleighInterfaceReviewSurface) : Prop :=
@@ -82,9 +82,9 @@ def HilbertRayleighInterfaceReviewSurface.ready
     singletonHilbertRayleighInterface.witness ∧
   (∀ ψ, singletonHilbertRayleighInterface.admissible ψ →
     exactGapValueReal ≤ singletonHilbertRayleighInterface.rayleighEnergy ψ) ∧
-  S.fullHilbertTheoremStillOpen ∧
-  S.mainMathlibBacked ∧
-  S.finalReleaseHeld
+  S.exactValue_in_energyRay ∧
+  S.exactValue_in_positive_ray ∧
+  S.exactValue_attains_rayleigh
 
 noncomputable def hilbertRayleighInterfaceReviewSurface :
     HilbertRayleighInterfaceReviewSurface :=
@@ -92,9 +92,9 @@ noncomputable def hilbertRayleighInterfaceReviewSurface :
     interfaceReady := singleton_hilbert_rayleigh_interface_ready
     witnessAttains := singleton_hilbert_rayleigh_interface_attains
     lowerBoundCompatible := singleton_hilbert_rayleigh_interface_lower_bound
-    fullHilbertTheoremStillOpen := True
-    mainMathlibBacked := True
-    finalReleaseHeld := True }
+    exactValue_in_energyRay := exactGapValueReal_mem_energyRay
+    exactValue_in_positive_ray := exactGapValueReal_mem_positive_ray
+    exactValue_attains_rayleigh := exact_gap_value_attains_rayleigh }
 
 theorem hilbert_rayleigh_interface_review_surface_ready :
     hilbertRayleighInterfaceReviewSurface.ready := by
@@ -102,12 +102,12 @@ theorem hilbert_rayleigh_interface_review_surface_ready :
     And.intro singleton_hilbert_rayleigh_interface_ready <|
     And.intro singleton_hilbert_rayleigh_interface_attains <|
     And.intro singleton_hilbert_rayleigh_interface_lower_bound <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro exactGapValueReal_mem_energyRay <|
+    And.intro exactGapValueReal_mem_positive_ray exact_gap_value_attains_rayleigh
 
-theorem hilbert_rayleigh_interface_review_surface_final_release_held :
-    hilbertRayleighInterfaceReviewSurface.finalReleaseHeld := by
-  trivial
+theorem hilbert_rayleigh_interface_review_surface_exact_value_in_energyRay :
+    hilbertRayleighInterfaceReviewSurface.exactValue_in_energyRay := by
+  exact exactGapValueReal_mem_energyRay
 
 end MathlibAnalytic
 end MGAP4D
