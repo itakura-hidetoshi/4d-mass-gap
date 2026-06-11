@@ -123,7 +123,7 @@ noncomputable def finalConcreteYangMillsHamiltonianSkeletonData :
     coupling := 1
     normalization := 1
     distinguished := finalPhysicalHilbertZero
-    distinguished_in_domain := True.intro
+    distinguished_in_domain := final_physical_hilbert_zero_in_domain
     ymWitness := finalPhysicalHilbertZero
     coupling_positive := by norm_num
     normalization_positive := by norm_num
