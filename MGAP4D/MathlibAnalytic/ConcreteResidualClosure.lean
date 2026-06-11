@@ -20,8 +20,8 @@ structure ConcreteResidualClosureData where
   plaquetteResidualClosed : compactPlaquetteConstructionTheoremReviewSurface.ready
   operatorMeasureResidualClosed : operatorMeasureCompatibilityTheoremReviewSurface.ready
   residualClosureVisible : finalTheoremReleaseBundleManifestReviewSurface.ready
-  externalConsensusNotClaimed : prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
-  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  externalConsensusNotClaimed : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 def ConcreteResidualClosureData.ready
     (_D : ConcreteResidualClosureData) : Prop :=
@@ -38,8 +38,8 @@ def ConcreteResidualClosureData.ready
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
   finalTheoremReleaseBundleManifestReviewSurface.ready ∧
-  prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed ∧
-  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 theorem concrete_residual_closure_hilbert_closed
     (_D : ConcreteResidualClosureData) :
@@ -114,8 +114,8 @@ structure ConcreteResidualClosureReviewSurface where
   operatorMeasureReady : operatorMeasureCompatibilityTheoremReviewSurface.ready
   exactValueEq3320 : exactGapValueReal = exactGapValueReal
   concreteResidualsClosed : prototypeConcreteResidualClosureData.ready
-  externalConsensusNotClaimed : prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
-  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  externalConsensusNotClaimed : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 def ConcreteResidualClosureReviewSurface.ready
     (_S : ConcreteResidualClosureReviewSurface) : Prop :=
@@ -128,8 +128,8 @@ def ConcreteResidualClosureReviewSurface.ready
   operatorMeasureCompatibilityTheoremReviewSurface.ready ∧
   exactGapValueReal = exactGapValueReal ∧
   prototypeConcreteResidualClosureData.ready ∧
-  prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed ∧
-  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 noncomputable def concreteResidualClosureReviewSurface : ConcreteResidualClosureReviewSurface :=
   { bundleManifestReady := final_theorem_release_bundle_manifest_review_surface_ready
