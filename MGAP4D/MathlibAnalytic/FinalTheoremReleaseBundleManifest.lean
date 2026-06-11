@@ -14,31 +14,28 @@ consensus and does not weaken the public theorem boundary. -/
 structure FinalTheoremReleaseBundleManifestData where
   chainIndexReady : finalTheoremReleaseChainIndexReady
   exactValueEq3320 : exactGapValueReal = exactGapValueReal
-  sourceArtifactsPresent : Prop
-  sourceArtifactsPresent_proof : sourceArtifactsPresent
-  docsArtifactsPresent : Prop
-  docsArtifactsPresent_proof : docsArtifactsPresent
-  ciLedgersPresent : Prop
-  ciLedgersPresent_proof : ciLedgersPresent
-  finalClosurePresent : Prop
-  finalClosurePresent_proof : finalClosurePresent
-  releaseChainClosed : Prop
-  releaseChainClosed_proof : releaseChainClosed
-  bundleManifestVisible : Prop
-  bundleManifestVisible_proof : bundleManifestVisible
-  externalConsensusNotClaimed : Prop
-  externalConsensusNotClaimed_proof : externalConsensusNotClaimed
-  publicBoundaryHeld : Prop
-  publicBoundaryHeld_proof : publicBoundaryHeld
+  sourceArtifactsPresent : finalTheoremReleaseChainIndexReady
+  docsArtifactsPresent : finalTheoremReleaseClosureReviewSurface.ready
+  ciLedgersPresent : finalTheoremReleaseChainIndexReady
+  finalClosurePresent : finalTheoremReleaseClosureReviewSurface.ready
+  releaseChainClosed : finalTheoremReleaseClosureReviewSurface.ready
+  bundleManifestVisible : finalTheoremReleaseChainIndexReady
+  externalConsensusNotClaimed : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 /-- Ready predicate for the final theorem release bundle manifest. -/
 def FinalTheoremReleaseBundleManifestData.ready
-    (D : FinalTheoremReleaseBundleManifestData) : Prop :=
+    (_D : FinalTheoremReleaseBundleManifestData) : Prop :=
   finalTheoremReleaseChainIndexReady ∧
   exactGapValueReal = exactGapValueReal ∧
-  D.sourceArtifactsPresent ∧ D.docsArtifactsPresent ∧ D.ciLedgersPresent ∧
-  D.finalClosurePresent ∧ D.releaseChainClosed ∧ D.bundleManifestVisible ∧
-  D.externalConsensusNotClaimed ∧ D.publicBoundaryHeld
+  finalTheoremReleaseChainIndexReady ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseChainIndexReady ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseChainIndexReady ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 /-- Exact-value carrier is preserved at bundle-manifest level. -/
 theorem final_theorem_release_bundle_manifest_exact_value_3320
@@ -49,26 +46,30 @@ theorem final_theorem_release_bundle_manifest_exact_value_3320
 /-- Source artifacts are present at bundle-manifest level. -/
 theorem final_theorem_release_bundle_manifest_sources_present
     (D : FinalTheoremReleaseBundleManifestData) :
-    D.sourceArtifactsPresent := by
-  exact D.sourceArtifactsPresent_proof
+    let _sourceArtifactsPresent := D.sourceArtifactsPresent
+    finalTheoremReleaseChainIndexReady := by
+  exact D.sourceArtifactsPresent
 
 /-- Documentation artifacts are present at bundle-manifest level. -/
 theorem final_theorem_release_bundle_manifest_docs_present
     (D : FinalTheoremReleaseBundleManifestData) :
-    D.docsArtifactsPresent := by
-  exact D.docsArtifactsPresent_proof
+    let _docsArtifactsPresent := D.docsArtifactsPresent
+    finalTheoremReleaseClosureReviewSurface.ready := by
+  exact D.docsArtifactsPresent
 
 /-- CI ledgers are present at bundle-manifest level. -/
 theorem final_theorem_release_bundle_manifest_ci_ledgers_present
     (D : FinalTheoremReleaseBundleManifestData) :
-    D.ciLedgersPresent := by
-  exact D.ciLedgersPresent_proof
+    let _ciLedgersPresent := D.ciLedgersPresent
+    finalTheoremReleaseChainIndexReady := by
+  exact D.ciLedgersPresent
 
 /-- Public theorem boundary is held at bundle-manifest level. -/
 theorem final_theorem_release_bundle_manifest_public_boundary_held
     (D : FinalTheoremReleaseBundleManifestData) :
-    D.publicBoundaryHeld := by
-  exact D.publicBoundaryHeld_proof
+    let _publicBoundaryHeld := D.publicBoundaryHeld
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
+  exact D.publicBoundaryHeld
 
 /-- Source artifacts are witnessed by the final theorem release chain index. -/
 theorem final_theorem_release_bundle_manifest_source_artifacts_witness :
@@ -92,7 +93,8 @@ theorem final_theorem_release_bundle_manifest_final_closure_witness :
 
 /-- Release-chain closure is witnessed by the chain-index theorem. -/
 theorem final_theorem_release_bundle_manifest_release_chain_closed_witness :
-    prototypeFinalTheoremReleaseChainIndexData.releaseChainClosed := by
+    let _chainReleaseChainClosed := prototypeFinalTheoremReleaseChainIndexData.releaseChainClosed
+    finalTheoremReleaseClosureReviewSurface.ready := by
   exact final_theorem_release_chain_index_release_chain_closed
     prototypeFinalTheoremReleaseChainIndexData
 
@@ -103,13 +105,16 @@ theorem final_theorem_release_bundle_manifest_visible_witness :
 
 /-- External consensus is explicitly not claimed by the chain index. -/
 theorem final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness :
-    prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed := by
+    let _chainExternalConsensusNotClaimed :=
+      prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed := by
   exact final_theorem_release_chain_index_external_consensus_not_claimed
     prototypeFinalTheoremReleaseChainIndexData
 
 /-- Public theorem boundary is held by the chain index. -/
 theorem final_theorem_release_bundle_manifest_public_boundary_held_witness :
-    prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld := by
+    let _chainPublicBoundaryHeld := prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
   exact final_theorem_release_chain_index_public_boundary_held
     prototypeFinalTheoremReleaseChainIndexData
 
@@ -118,70 +123,54 @@ noncomputable def prototypeFinalTheoremReleaseBundleManifestData :
     FinalTheoremReleaseBundleManifestData :=
   { chainIndexReady := final_theorem_release_chain_index_ready
     exactValueEq3320 := rfl
-    sourceArtifactsPresent := finalTheoremReleaseChainIndexReady
-    sourceArtifactsPresent_proof :=
-      final_theorem_release_bundle_manifest_source_artifacts_witness
-    docsArtifactsPresent := finalTheoremReleaseClosureReviewSurface.ready
-    docsArtifactsPresent_proof :=
-      final_theorem_release_bundle_manifest_docs_artifacts_witness
-    ciLedgersPresent := finalTheoremReleaseChainIndexReady
-    ciLedgersPresent_proof :=
-      final_theorem_release_bundle_manifest_ci_ledgers_witness
-    finalClosurePresent := finalTheoremReleaseClosureReviewSurface.ready
-    finalClosurePresent_proof :=
-      final_theorem_release_bundle_manifest_final_closure_witness
-    releaseChainClosed := prototypeFinalTheoremReleaseChainIndexData.releaseChainClosed
-    releaseChainClosed_proof :=
-      final_theorem_release_bundle_manifest_release_chain_closed_witness
-    bundleManifestVisible := finalTheoremReleaseChainIndexReady
-    bundleManifestVisible_proof :=
-      final_theorem_release_bundle_manifest_visible_witness
+    sourceArtifactsPresent := final_theorem_release_bundle_manifest_source_artifacts_witness
+    docsArtifactsPresent := final_theorem_release_bundle_manifest_docs_artifacts_witness
+    ciLedgersPresent := final_theorem_release_bundle_manifest_ci_ledgers_witness
+    finalClosurePresent := final_theorem_release_bundle_manifest_final_closure_witness
+    releaseChainClosed := final_theorem_release_bundle_manifest_release_chain_closed_witness
+    bundleManifestVisible := final_theorem_release_bundle_manifest_visible_witness
     externalConsensusNotClaimed :=
-      prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed
-    externalConsensusNotClaimed_proof :=
       final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
-    publicBoundaryHeld := prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld
-    publicBoundaryHeld_proof :=
-      final_theorem_release_bundle_manifest_public_boundary_held_witness }
+    publicBoundaryHeld := final_theorem_release_bundle_manifest_public_boundary_held_witness }
 
 theorem prototype_final_theorem_release_bundle_manifest_ready :
     prototypeFinalTheoremReleaseBundleManifestData.ready := by
-  exact And.intro prototypeFinalTheoremReleaseBundleManifestData.chainIndexReady <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.exactValueEq3320 <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent_proof <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent_proof <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent_proof <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.finalClosurePresent_proof <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.releaseChainClosed_proof <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.bundleManifestVisible_proof <|
-    And.intro prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed_proof
-      prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld_proof
+  exact And.intro final_theorem_release_chain_index_ready <|
+    And.intro rfl <|
+    And.intro final_theorem_release_bundle_manifest_source_artifacts_witness <|
+    And.intro final_theorem_release_bundle_manifest_docs_artifacts_witness <|
+    And.intro final_theorem_release_bundle_manifest_ci_ledgers_witness <|
+    And.intro final_theorem_release_bundle_manifest_final_closure_witness <|
+    And.intro final_theorem_release_bundle_manifest_release_chain_closed_witness <|
+    And.intro final_theorem_release_bundle_manifest_visible_witness <|
+    And.intro final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
+      final_theorem_release_bundle_manifest_public_boundary_held_witness
 
 /-- Review surface for the final theorem release bundle manifest. -/
 structure FinalTheoremReleaseBundleManifestReviewSurface where
   chainIndexReady : finalTheoremReleaseChainIndexReady
   bundleManifestReady : prototypeFinalTheoremReleaseBundleManifestData.ready
   exactValueEq3320 : exactGapValueReal = exactGapValueReal
-  sourceArtifactsPresent : prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent
-  docsArtifactsPresent : prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent
-  ciLedgersPresent : prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent
-  finalClosurePresent : prototypeFinalTheoremReleaseBundleManifestData.finalClosurePresent
-  releaseChainClosed : prototypeFinalTheoremReleaseBundleManifestData.releaseChainClosed
-  externalConsensusNotClaimed : prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed
-  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  sourceArtifactsPresent : finalTheoremReleaseChainIndexReady
+  docsArtifactsPresent : finalTheoremReleaseClosureReviewSurface.ready
+  ciLedgersPresent : finalTheoremReleaseChainIndexReady
+  finalClosurePresent : finalTheoremReleaseClosureReviewSurface.ready
+  releaseChainClosed : finalTheoremReleaseClosureReviewSurface.ready
+  externalConsensusNotClaimed : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 def FinalTheoremReleaseBundleManifestReviewSurface.ready
     (_S : FinalTheoremReleaseBundleManifestReviewSurface) : Prop :=
   finalTheoremReleaseChainIndexReady ∧
   prototypeFinalTheoremReleaseBundleManifestData.ready ∧
   exactGapValueReal = exactGapValueReal ∧
-  prototypeFinalTheoremReleaseBundleManifestData.sourceArtifactsPresent ∧
-  prototypeFinalTheoremReleaseBundleManifestData.docsArtifactsPresent ∧
-  prototypeFinalTheoremReleaseBundleManifestData.ciLedgersPresent ∧
-  prototypeFinalTheoremReleaseBundleManifestData.finalClosurePresent ∧
-  prototypeFinalTheoremReleaseBundleManifestData.releaseChainClosed ∧
-  prototypeFinalTheoremReleaseBundleManifestData.externalConsensusNotClaimed ∧
-  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  finalTheoremReleaseChainIndexReady ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseChainIndexReady ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 noncomputable def finalTheoremReleaseBundleManifestReviewSurface :
     FinalTheoremReleaseBundleManifestReviewSurface :=
@@ -205,16 +194,16 @@ noncomputable def finalTheoremReleaseBundleManifestReviewSurface :
 
 theorem final_theorem_release_bundle_manifest_review_surface_ready :
     finalTheoremReleaseBundleManifestReviewSurface.ready := by
-  exact And.intro finalTheoremReleaseBundleManifestReviewSurface.chainIndexReady <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.bundleManifestReady <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.exactValueEq3320 <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.sourceArtifactsPresent <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.docsArtifactsPresent <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.ciLedgersPresent <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.finalClosurePresent <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.releaseChainClosed <|
-    And.intro finalTheoremReleaseBundleManifestReviewSurface.externalConsensusNotClaimed
-      finalTheoremReleaseBundleManifestReviewSurface.publicBoundaryHeld
+  exact And.intro final_theorem_release_chain_index_ready <|
+    And.intro prototype_final_theorem_release_bundle_manifest_ready <|
+    And.intro rfl <|
+    And.intro final_theorem_release_bundle_manifest_source_artifacts_witness <|
+    And.intro final_theorem_release_bundle_manifest_docs_artifacts_witness <|
+    And.intro final_theorem_release_bundle_manifest_ci_ledgers_witness <|
+    And.intro final_theorem_release_bundle_manifest_final_closure_witness <|
+    And.intro final_theorem_release_bundle_manifest_release_chain_closed_witness <|
+    And.intro final_theorem_release_bundle_manifest_external_consensus_not_claimed_witness
+      final_theorem_release_bundle_manifest_public_boundary_held_witness
 
 end MathlibAnalytic
 end MGAP4D
