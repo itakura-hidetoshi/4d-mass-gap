@@ -29,8 +29,8 @@ structure FinalTheoremReleaseChainIndexData where
   exactValueEq3320 : exactGapValueReal = exactGapValueReal
   chainIndexVisible : finalTheoremReleaseClosureReviewSurface.ready
   releaseChainClosed : finalTheoremReleaseClosureReviewSurface.ready
-  externalConsensusNotClaimed : finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
-  publicBoundaryHeld : finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+  externalConsensusNotClaimed : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 /-- Ready predicate for the final theorem release chain index. -/
 def FinalTheoremReleaseChainIndexData.ready
@@ -52,8 +52,8 @@ def FinalTheoremReleaseChainIndexData.ready
   exactGapValueReal = exactGapValueReal ∧
   finalTheoremReleaseClosureReviewSurface.ready ∧
   finalTheoremReleaseClosureReviewSurface.ready ∧
-  finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed ∧
-  finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 /-- The exact-value carrier is preserved by the indexed chain. -/
 theorem final_theorem_release_chain_index_exact_value_3320
@@ -77,15 +77,18 @@ theorem final_theorem_release_chain_index_release_chain_closed
 /-- External consensus is explicitly not claimed at the index surface. -/
 theorem final_theorem_release_chain_index_external_consensus_not_claimed
     (D : FinalTheoremReleaseChainIndexData) :
+    let _closureExternalConsensusNotClaimed :=
+      finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
     let _externalConsensusNotClaimed := D.externalConsensusNotClaimed
-    finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed := by
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed := by
   exact D.externalConsensusNotClaimed
 
 /-- Public theorem boundary is held at the index surface. -/
 theorem final_theorem_release_chain_index_public_boundary_held
     (D : FinalTheoremReleaseChainIndexData) :
+    let _closurePublicBoundaryHeld := finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
     let _publicBoundaryHeld := D.publicBoundaryHeld
-    finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld := by
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
   exact D.publicBoundaryHeld
 
 /-- Prototype final theorem release chain index. -/
