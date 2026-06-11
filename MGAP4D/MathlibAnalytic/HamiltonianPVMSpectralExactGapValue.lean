@@ -60,15 +60,15 @@ theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
       hamiltonian_attains_value := rfl
       spectralSupport_eq_energyRay := rfl
       value_mem_spectralSupport := by
-        simp
+        exact le_rfl
       spectral_lower_bound := by
         intro x hx
-        simpa using hx
+        exact hx
       pvmExactAtom_eq_valueSingleton := rfl
       pvmPinsValue := by
-        simp
+        rfl
       r6NormalizedAtomPinsDerived := by
-        simp
+        rfl
       spectralWeightPositive := by
         norm_num
       spectralWeightNonzero := by
