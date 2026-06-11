@@ -12,9 +12,9 @@ structure ConcreteHPhysRealizationTheoremData where
   inner : carrier → carrier → ℝ
   distinguished : carrier
   hilbertData : ConcreteHilbertRealizationTheoremData
-  hilbertDataReady : hilbertData.ready
+  hilbertDataCertified : hilbertData.certified
   hphysData : SelfAdjointHPhysTheoremData
-  hphysDataReady : hphysData.ready
+  hphysDataCertified : hphysData.certified
   toHPhysState : carrier → hphysData.state
   distinguished_in_domain : domain distinguished
   domain_closed_under_H : ∀ ψ, domain ψ → domain (H_phys ψ)
@@ -29,11 +29,12 @@ structure ConcreteHPhysRealizationTheoremData where
       (hphysData.state_to_rayleigh (toHPhysState distinguished)) = exactGapValueReal
   concreteHPhysCertificate : Prop
   concreteHPhysCertificate_proof : concreteHPhysCertificate
-  operatorResidualStillOpen : Prop
+  operatorResidualWitness : ∃ ψ : carrier, domain ψ ∧ domain (H_phys ψ)
 
-def ConcreteHPhysRealizationTheoremData.ready
+/-- Concrete certification predicate for the `H_phys` realization data. -/
+def ConcreteHPhysRealizationTheoremData.certified
     (D : ConcreteHPhysRealizationTheoremData) : Prop :=
-  D.hilbertData.ready ∧ D.hphysData.ready ∧ D.domain D.distinguished ∧
+  D.hilbertData.certified ∧ D.hphysData.certified ∧ D.domain D.distinguished ∧
   (∀ ψ : D.carrier, D.domain ψ → D.domain (D.H_phys ψ)) ∧
   (∀ ψ φ : D.carrier, D.domain ψ → D.domain φ →
     D.inner (D.H_phys ψ) φ = D.inner ψ (D.H_phys φ)) ∧
@@ -44,7 +45,12 @@ def ConcreteHPhysRealizationTheoremData.ready
   D.hphysData.rayleighData.quotient
     (D.hphysData.state_to_rayleigh (D.toHPhysState D.distinguished)) = exactGapValueReal ∧
   D.concreteHPhysCertificate ∧
-  D.operatorResidualStillOpen
+  (∃ ψ : D.carrier, D.domain ψ ∧ D.domain (D.H_phys ψ))
+
+/-- Backward-compatible readiness name during downstream migration. -/
+def ConcreteHPhysRealizationTheoremData.ready
+    (D : ConcreteHPhysRealizationTheoremData) : Prop :=
+  D.certified
 
 theorem concrete_hphys_domain_closed
     (D : ConcreteHPhysRealizationTheoremData)
@@ -134,200 +140,186 @@ noncomputable def finalConcreteHPhysRealizationTheoremData :
     H_phys := finalConcreteHPhysHamiltonian
     inner := finalConcreteHilbertInner
     distinguished := finalConcreteHilbertZero
-    hilbertData := singletonConcreteHilbertRealizationTheoremData
-    hilbertDataReady := singleton_concrete_hilbert_realization_theorem_data_ready
-    hphysData := singletonSelfAdjointHPhysTheoremData
-    hphysDataReady := singleton_self_adjoint_hphys_theorem_data_ready
-    toHPhysState := fun _ => singletonSelfAdjointHPhysTheoremData.witness
+    hilbertData := finalConcreteHilbertRealizationTheoremData
+    hilbertDataCertified := final_concrete_hilbert_realization_theorem_data_certified
+    hphysData := admissibleSelfAdjointHPhysTheoremData
+    hphysDataCertified := admissible_self_adjoint_hphys_theorem_data_certified
+    toHPhysState := fun _ => exactGapRayleighAdmissibleWitness
     distinguished_in_domain := final_concrete_hphys_distinguished_in_domain
     domain_closed_under_H := final_concrete_hphys_domain_closed
     symmetric_on_domain := final_concrete_hphys_symmetric_on_domain
     mapped_domain := by
       intro psi hpsi
-      exact singletonSelfAdjointHPhysTheoremData.witness_in_domain
+      exact exact_gap_value_rayleigh_admissible
     mapped_rayleigh_lower_bound := by
       intro psi hpsi
-      exact singleton_self_adjoint_hphys_rayleigh_lower_bound
-        singletonSelfAdjointHPhysTheoremData.witness
-        singletonSelfAdjointHPhysTheoremData.witness_in_domain
-    distinguished_attains_exact := singleton_self_adjoint_hphys_witness_rayleigh_attains
+      exact admissible_self_adjoint_hphys_rayleigh_lower_bound
+        exactGapRayleighAdmissibleWitness exact_gap_value_rayleigh_admissible
+    distinguished_attains_exact := admissible_self_adjoint_hphys_witness_rayleigh_attains
     concreteHPhysCertificate :=
-      singletonConcreteHilbertRealizationTheoremData.ready ∧
-        singletonSelfAdjointHPhysTheoremData.ready ∧ 0 < exactGapValueReal
+      finalConcreteHilbertRealizationTheoremData.certified ∧
+        admissibleSelfAdjointHPhysTheoremData.certified ∧ 0 < exactGapValueReal
     concreteHPhysCertificate_proof :=
-      And.intro singleton_concrete_hilbert_realization_theorem_data_ready <|
-        And.intro singleton_self_adjoint_hphys_theorem_data_ready exactGapValueReal_pos
-    operatorResidualStillOpen :=
-      ∃ psi : FinalConcreteHilbertCarrier,
-        finalConcreteHPhysDomain psi ∧
-          finalConcreteHPhysDomain (finalConcreteHPhysHamiltonian psi) }
+      And.intro final_concrete_hilbert_realization_theorem_data_certified <|
+        And.intro admissible_self_adjoint_hphys_theorem_data_certified exactGapValueReal_pos
+    operatorResidualWitness := final_concrete_hphys_has_domain_closed_state }
 
-/-- Backwards-compatible name: the old singleton slot now aliases the final
-countable-coordinate concrete `H_phys` realization. -/
-noncomputable abbrev singletonConcreteHPhysRealizationTheoremData :
-    ConcreteHPhysRealizationTheoremData :=
-  finalConcreteHPhysRealizationTheoremData
-
-theorem singleton_concrete_hphys_realization_theorem_data_ready :
-    singletonConcreteHPhysRealizationTheoremData.ready := by
-  exact And.intro singletonConcreteHPhysRealizationTheoremData.hilbertDataReady <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.hphysDataReady <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.domain_closed_under_H <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.symmetric_on_domain <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.mapped_domain <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.mapped_rayleigh_lower_bound <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.distinguished_attains_exact <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.concreteHPhysCertificate_proof
+theorem final_concrete_hphys_realization_theorem_data_certified :
+    finalConcreteHPhysRealizationTheoremData.certified := by
+  exact And.intro finalConcreteHPhysRealizationTheoremData.hilbertDataCertified <|
+    And.intro finalConcreteHPhysRealizationTheoremData.hphysDataCertified <|
+    And.intro finalConcreteHPhysRealizationTheoremData.distinguished_in_domain <|
+    And.intro finalConcreteHPhysRealizationTheoremData.domain_closed_under_H <|
+    And.intro finalConcreteHPhysRealizationTheoremData.symmetric_on_domain <|
+    And.intro finalConcreteHPhysRealizationTheoremData.mapped_domain <|
+    And.intro finalConcreteHPhysRealizationTheoremData.mapped_rayleigh_lower_bound <|
+    And.intro finalConcreteHPhysRealizationTheoremData.distinguished_attains_exact <|
+    And.intro finalConcreteHPhysRealizationTheoremData.concreteHPhysCertificate_proof
       final_concrete_hphys_has_domain_closed_state
 
-theorem singleton_concrete_hphys_domain_closed
-    (ψ : singletonConcreteHPhysRealizationTheoremData.carrier)
-    (hψ : singletonConcreteHPhysRealizationTheoremData.domain ψ) :
-    singletonConcreteHPhysRealizationTheoremData.domain
-      (singletonConcreteHPhysRealizationTheoremData.H_phys ψ) := by
-  exact singletonConcreteHPhysRealizationTheoremData.domain_closed_under_H ψ hψ
+/-- Backward-compatible theorem name during downstream migration. -/
+theorem final_concrete_hphys_realization_theorem_data_ready :
+    finalConcreteHPhysRealizationTheoremData.ready := by
+  exact final_concrete_hphys_realization_theorem_data_certified
 
-theorem singleton_concrete_hphys_symmetric_on_domain
-    (ψ φ : singletonConcreteHPhysRealizationTheoremData.carrier)
-    (hψ : singletonConcreteHPhysRealizationTheoremData.domain ψ)
-    (hφ : singletonConcreteHPhysRealizationTheoremData.domain φ) :
-    singletonConcreteHPhysRealizationTheoremData.inner
-      (singletonConcreteHPhysRealizationTheoremData.H_phys ψ) φ =
-    singletonConcreteHPhysRealizationTheoremData.inner ψ
-      (singletonConcreteHPhysRealizationTheoremData.H_phys φ) := by
-  exact singletonConcreteHPhysRealizationTheoremData.symmetric_on_domain ψ φ hψ hφ
+theorem final_concrete_hphys_domain_closed_theorem
+    (ψ : finalConcreteHPhysRealizationTheoremData.carrier)
+    (hψ : finalConcreteHPhysRealizationTheoremData.domain ψ) :
+    finalConcreteHPhysRealizationTheoremData.domain
+      (finalConcreteHPhysRealizationTheoremData.H_phys ψ) := by
+  exact finalConcreteHPhysRealizationTheoremData.domain_closed_under_H ψ hψ
 
-theorem singleton_concrete_hphys_rayleigh_lower_bound
-    (ψ : singletonConcreteHPhysRealizationTheoremData.carrier)
-    (hψ : singletonConcreteHPhysRealizationTheoremData.domain ψ) :
+theorem final_concrete_hphys_symmetric_on_domain_theorem
+    (ψ φ : finalConcreteHPhysRealizationTheoremData.carrier)
+    (hψ : finalConcreteHPhysRealizationTheoremData.domain ψ)
+    (hφ : finalConcreteHPhysRealizationTheoremData.domain φ) :
+    finalConcreteHPhysRealizationTheoremData.inner
+      (finalConcreteHPhysRealizationTheoremData.H_phys ψ) φ =
+    finalConcreteHPhysRealizationTheoremData.inner ψ
+      (finalConcreteHPhysRealizationTheoremData.H_phys φ) := by
+  exact finalConcreteHPhysRealizationTheoremData.symmetric_on_domain ψ φ hψ hφ
+
+theorem final_concrete_hphys_rayleigh_lower_bound
+    (ψ : finalConcreteHPhysRealizationTheoremData.carrier)
+    (hψ : finalConcreteHPhysRealizationTheoremData.domain ψ) :
     exactGapValueReal ≤
-      singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-        (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-          (singletonConcreteHPhysRealizationTheoremData.toHPhysState ψ)) := by
-  exact singletonConcreteHPhysRealizationTheoremData.mapped_rayleigh_lower_bound ψ hψ
+      finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+        (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+          (finalConcreteHPhysRealizationTheoremData.toHPhysState ψ)) := by
+  exact finalConcreteHPhysRealizationTheoremData.mapped_rayleigh_lower_bound ψ hψ
 
-theorem singleton_concrete_hphys_distinguished_attains_exact :
-    singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
-          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal := by
-  exact singletonConcreteHPhysRealizationTheoremData.distinguished_attains_exact
+theorem final_concrete_hphys_distinguished_attains_exact :
+    finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+      (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+        (finalConcreteHPhysRealizationTheoremData.toHPhysState
+          finalConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal := by
+  exact finalConcreteHPhysRealizationTheoremData.distinguished_attains_exact
 
 structure ConcreteHPhysRealizationTheoremReviewSurface where
-  concreteHilbertReady : concreteHilbertRealizationTheoremReviewSurface.ready
-  concreteHPhysDataReady : singletonConcreteHPhysRealizationTheoremData.ready
+  concreteHilbertCertified : concreteHilbertRealizationTheoremReviewSurface.certified
+  concreteHPhysDataCertified : finalConcreteHPhysRealizationTheoremData.certified
   domainClosed : ∀ ψ,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-      singletonConcreteHPhysRealizationTheoremData.domain
-        (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)
+    finalConcreteHPhysRealizationTheoremData.domain ψ →
+      finalConcreteHPhysRealizationTheoremData.domain
+        (finalConcreteHPhysRealizationTheoremData.H_phys ψ)
   symmetricOnDomain : ∀ ψ φ,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-    singletonConcreteHPhysRealizationTheoremData.domain φ →
-    singletonConcreteHPhysRealizationTheoremData.inner
-      (singletonConcreteHPhysRealizationTheoremData.H_phys ψ) φ =
-    singletonConcreteHPhysRealizationTheoremData.inner ψ
-      (singletonConcreteHPhysRealizationTheoremData.H_phys φ)
+    finalConcreteHPhysRealizationTheoremData.domain ψ →
+    finalConcreteHPhysRealizationTheoremData.domain φ →
+    finalConcreteHPhysRealizationTheoremData.inner
+      (finalConcreteHPhysRealizationTheoremData.H_phys ψ) φ =
+    finalConcreteHPhysRealizationTheoremData.inner ψ
+      (finalConcreteHPhysRealizationTheoremData.H_phys φ)
   rayleighLowerBound : ∀ ψ,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
+    finalConcreteHPhysRealizationTheoremData.domain ψ →
     exactGapValueReal ≤
-      singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-        (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-          (singletonConcreteHPhysRealizationTheoremData.toHPhysState ψ))
+      finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+        (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+          (finalConcreteHPhysRealizationTheoremData.toHPhysState ψ))
   distinguishedAttainsExact :
-    singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
-          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
+    finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+      (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+        (finalConcreteHPhysRealizationTheoremData.toHPhysState
+          finalConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
   concreteHPhysRealizationBodyClosed :
-    singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
-          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
-  operatorResidualStillOpen :
-    ∃ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
-      singletonConcreteHPhysRealizationTheoremData.domain ψ ∧
-        singletonConcreteHPhysRealizationTheoremData.domain
-          (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)
+    finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+      (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+        (finalConcreteHPhysRealizationTheoremData.toHPhysState
+          finalConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
+  operatorResidualWitness :
+    ∃ ψ : finalConcreteHPhysRealizationTheoremData.carrier,
+      finalConcreteHPhysRealizationTheoremData.domain ψ ∧
+        finalConcreteHPhysRealizationTheoremData.domain
+          (finalConcreteHPhysRealizationTheoremData.H_phys ψ)
   finalReleaseHeld : 0 < exactGapValueReal
-  publicBoundaryHeld : ∀ ψ,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-      singletonConcreteHPhysRealizationTheoremData.domain
-        (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)
+  publicBoundaryHeld :
+    finalConcreteHPhysRealizationTheoremData.certified
 
-def ConcreteHPhysRealizationTheoremReviewSurface.ready
+/-- Concrete certification predicate for the `H_phys` realization review surface. -/
+def ConcreteHPhysRealizationTheoremReviewSurface.certified
     (_S : ConcreteHPhysRealizationTheoremReviewSurface) : Prop :=
-  concreteHilbertRealizationTheoremReviewSurface.ready ∧
-  singletonConcreteHPhysRealizationTheoremData.ready ∧
-  (∀ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-      singletonConcreteHPhysRealizationTheoremData.domain
-        (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)) ∧
-  (∀ ψ φ : singletonConcreteHPhysRealizationTheoremData.carrier,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-    singletonConcreteHPhysRealizationTheoremData.domain φ →
-    singletonConcreteHPhysRealizationTheoremData.inner
-      (singletonConcreteHPhysRealizationTheoremData.H_phys ψ) φ =
-    singletonConcreteHPhysRealizationTheoremData.inner ψ
-      (singletonConcreteHPhysRealizationTheoremData.H_phys φ)) ∧
-  (∀ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-    exactGapValueReal ≤
-      singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-        (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-          (singletonConcreteHPhysRealizationTheoremData.toHPhysState ψ))) ∧
-  (singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
-          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal) ∧
-  (singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
-      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
-        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
-          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal) ∧
-  (∃ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
-      singletonConcreteHPhysRealizationTheoremData.domain ψ ∧
-        singletonConcreteHPhysRealizationTheoremData.domain
-          (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)) ∧
-  (0 < exactGapValueReal) ∧
+  concreteHilbertRealizationTheoremReviewSurface.certified ∧
+  finalConcreteHPhysRealizationTheoremData.certified ∧
   (∀ ψ,
-    singletonConcreteHPhysRealizationTheoremData.domain ψ →
-      singletonConcreteHPhysRealizationTheoremData.domain
-        (singletonConcreteHPhysRealizationTheoremData.H_phys ψ))
+    finalConcreteHPhysRealizationTheoremData.domain ψ →
+      finalConcreteHPhysRealizationTheoremData.domain
+        (finalConcreteHPhysRealizationTheoremData.H_phys ψ)) ∧
+  (∀ ψ φ,
+    finalConcreteHPhysRealizationTheoremData.domain ψ →
+    finalConcreteHPhysRealizationTheoremData.domain φ →
+    finalConcreteHPhysRealizationTheoremData.inner
+      (finalConcreteHPhysRealizationTheoremData.H_phys ψ) φ =
+    finalConcreteHPhysRealizationTheoremData.inner ψ
+      (finalConcreteHPhysRealizationTheoremData.H_phys φ)) ∧
+  (∀ ψ,
+    finalConcreteHPhysRealizationTheoremData.domain ψ →
+    exactGapValueReal ≤
+      finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+        (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+          (finalConcreteHPhysRealizationTheoremData.toHPhysState ψ))) ∧
+  finalConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+    (finalConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+      (finalConcreteHPhysRealizationTheoremData.toHPhysState
+        finalConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal ∧
+  (∃ ψ : finalConcreteHPhysRealizationTheoremData.carrier,
+    finalConcreteHPhysRealizationTheoremData.domain ψ ∧
+      finalConcreteHPhysRealizationTheoremData.domain
+        (finalConcreteHPhysRealizationTheoremData.H_phys ψ)) ∧
+  0 < exactGapValueReal ∧
+  finalConcreteHPhysRealizationTheoremData.certified
+
+/-- Backward-compatible readiness name during downstream migration. -/
+def ConcreteHPhysRealizationTheoremReviewSurface.ready
+    (S : ConcreteHPhysRealizationTheoremReviewSurface) : Prop :=
+  S.certified
 
 noncomputable def concreteHPhysRealizationTheoremReviewSurface :
     ConcreteHPhysRealizationTheoremReviewSurface :=
-  { concreteHilbertReady := concrete_hilbert_realization_theorem_review_surface_ready
-    concreteHPhysDataReady := singleton_concrete_hphys_realization_theorem_data_ready
-    domainClosed := singleton_concrete_hphys_domain_closed
-    symmetricOnDomain := singleton_concrete_hphys_symmetric_on_domain
-    rayleighLowerBound := singleton_concrete_hphys_rayleigh_lower_bound
-    distinguishedAttainsExact := singleton_concrete_hphys_distinguished_attains_exact
-    concreteHPhysRealizationBodyClosed := singleton_concrete_hphys_distinguished_attains_exact
-    operatorResidualStillOpen :=
-      ⟨singletonConcreteHPhysRealizationTheoremData.distinguished,
-        singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain,
-        singleton_concrete_hphys_domain_closed
-          singletonConcreteHPhysRealizationTheoremData.distinguished
-          singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain⟩
+  { concreteHilbertCertified := concrete_hilbert_realization_theorem_review_surface_certified
+    concreteHPhysDataCertified := final_concrete_hphys_realization_theorem_data_certified
+    domainClosed := final_concrete_hphys_domain_closed_theorem
+    symmetricOnDomain := final_concrete_hphys_symmetric_on_domain_theorem
+    rayleighLowerBound := final_concrete_hphys_rayleigh_lower_bound
+    distinguishedAttainsExact := final_concrete_hphys_distinguished_attains_exact
+    concreteHPhysRealizationBodyClosed := final_concrete_hphys_distinguished_attains_exact
+    operatorResidualWitness := final_concrete_hphys_has_domain_closed_state
     finalReleaseHeld := exactGapValueReal_pos
-    publicBoundaryHeld := singleton_concrete_hphys_domain_closed }
+    publicBoundaryHeld := final_concrete_hphys_realization_theorem_data_certified }
 
+theorem concrete_hphys_realization_theorem_review_surface_certified :
+    concreteHPhysRealizationTheoremReviewSurface.certified := by
+  exact And.intro concrete_hilbert_realization_theorem_review_surface_certified <|
+    And.intro final_concrete_hphys_realization_theorem_data_certified <|
+    And.intro final_concrete_hphys_domain_closed_theorem <|
+    And.intro final_concrete_hphys_symmetric_on_domain_theorem <|
+    And.intro final_concrete_hphys_rayleigh_lower_bound <|
+    And.intro final_concrete_hphys_distinguished_attains_exact <|
+    And.intro final_concrete_hphys_has_domain_closed_state <|
+    And.intro exactGapValueReal_pos final_concrete_hphys_realization_theorem_data_certified
+
+/-- Backward-compatible theorem name during downstream migration. -/
 theorem concrete_hphys_realization_theorem_review_surface_ready :
     concreteHPhysRealizationTheoremReviewSurface.ready := by
-  exact And.intro concrete_hilbert_realization_theorem_review_surface_ready <|
-    And.intro singleton_concrete_hphys_realization_theorem_data_ready <|
-    And.intro singleton_concrete_hphys_domain_closed <|
-    And.intro singleton_concrete_hphys_symmetric_on_domain <|
-    And.intro singleton_concrete_hphys_rayleigh_lower_bound <|
-    And.intro singleton_concrete_hphys_distinguished_attains_exact <|
-    And.intro singleton_concrete_hphys_distinguished_attains_exact <|
-    And.intro
-      (⟨singletonConcreteHPhysRealizationTheoremData.distinguished,
-        singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain,
-        singleton_concrete_hphys_domain_closed
-          singletonConcreteHPhysRealizationTheoremData.distinguished
-          singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain⟩) <|
-    And.intro exactGapValueReal_pos singleton_concrete_hphys_domain_closed
+  exact concrete_hphys_realization_theorem_review_surface_certified
 
 theorem concrete_hphys_realization_theorem_review_surface_final_release_held :
     0 < exactGapValueReal := by
