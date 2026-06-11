@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.ConcreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapConcreteResidualRefinement
 import MGAP4D.MathlibAnalytic.SpectralRealizationSkeleton
+import MGAP4D.MathlibAnalytic.ContinuumHamiltonianMassGapWitnessProvenance
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -61,7 +62,7 @@ def concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface 
     rayleighExactWitness :=
       spectralRealizationSkeletonReviewSurface.rayleighExactWitness_proof
     exactValueEq3320 :=
-      exactGapValueReal_eq
+      continuum_hamiltonian_witness_exact_value_derivation_provenance
     spectralMeasureInputConnected := True
     concreteSpectralMeasureStillOpen := True
     concretePVMStillOpen := True
@@ -103,7 +104,7 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral
     spectralRealizationSkeletonReviewSurface.observableAtomWitness_proof,
     spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof,
     spectralRealizationSkeletonReviewSurface.rayleighExactWitness_proof,
-    exactGapValueReal_eq,
+    continuum_hamiltonian_witness_exact_value_derivation_provenance,
     trivial,
     trivial,
     trivial,
