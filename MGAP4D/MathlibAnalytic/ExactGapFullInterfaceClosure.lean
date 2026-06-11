@@ -31,7 +31,7 @@ structure ExactGapFullInterfaceClosure where
   observableAtom_def : singletonObservableAtomInterface.atom = exactGapAtomReal
   pvmExactAtom_def : singletonPVMInterface.exactAtom = Set.singleton exactGapValueReal
 
-def ExactGapFullInterfaceClosure.ready (C : ExactGapFullInterfaceClosure) : Prop :=
+def ExactGapFullInterfaceClosure.ready (_C : ExactGapFullInterfaceClosure) : Prop :=
   exactGapAnalyticRealClosure.ready ∧
   hilbertRayleighInterfaceReviewSurface.ready ∧
   selfAdjointHPhysReviewSurface.ready ∧
