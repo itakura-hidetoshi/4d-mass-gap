@@ -144,10 +144,10 @@ REQUIRED_CONCRETE_YM_LEAN_ANCHORS = (
     "ymWitness := finalPhysicalHilbertZero",
     "finalPhysicalUnboundedOperatorSkeletonData.H_phys = finalPhysicalHamiltonian",
     "finalPhysicalUnboundedOperatorSkeletonData.domain = finalPhysicalHilbertDomain",
-    "noncomputable abbrev prototypeConcreteYangMillsHamiltonianSkeletonData",
-    "finalConcreteYangMillsHamiltonianSkeletonData",
+    "concreteYMReady : finalConcreteYangMillsHamiltonianSkeletonData.ready",
+    "finalConcreteYangMillsHamiltonianSkeletonData.ready ∧ S.hphysBuiltFromYM",
     "final_concrete_ym_hamiltonian_skeleton_ready",
-    "prototype_concrete_ym_hamiltonian_skeleton_ready",
+    "concrete_ym_hamiltonian_skeleton_review_surface_ready",
 )
 
 FORBIDDEN_CORE_CODE_SNIPPETS = (
@@ -217,6 +217,8 @@ FORBIDDEN_CONCRETE_YM_CODE_SNIPPETS = (
     "ymData := PUnit",
     "H_phys := fun ψ => ψ",
     "rayleigh := fun _ => exactGapValueReal",
+    "prototypeConcreteYangMillsHamiltonianSkeletonData",
+    "prototype_concrete_ym_hamiltonian_skeleton_ready",
 )
 
 REQUIRED_PHYSICAL_DOC_ANCHORS = (
@@ -230,13 +232,13 @@ REQUIRED_PHYSICAL_DOC_ANCHORS = (
 
 REQUIRED_CONCRETE_YM_DOC_ANCHORS = (
     "finalConcreteYangMillsHamiltonianSkeletonData",
-    "prototypeConcreteYangMillsHamiltonianSkeletonData",
     "state := FinalPhysicalHilbertCarrier",
     "ymData := FinalPhysicalHilbertCarrier",
     "H_phys := finalPhysicalHamiltonian",
     "rayleigh := finalPhysicalRayleigh",
     "final-physical-carrier routed skeleton",
     "not as a one-point carrier prototype",
+    "final-name routed without legacy prototype aliases",
 )
 
 REQUIRED_CHECKLIST_ANCHORS = (
@@ -247,7 +249,7 @@ REQUIRED_CHECKLIST_ANCHORS = (
     "finalPhysicalUnboundedOperatorSkeletonData",
     "finalConcreteYangMillsHamiltonianSkeletonData",
     "PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases",
-    "prototypeConcreteYangMillsHamiltonianSkeletonData` aliases the final physical carrier route",
+    "ConcreteYangMillsHamiltonianSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases",
 )
 
 REQUIRED_CHECK_ANCHORS = (
