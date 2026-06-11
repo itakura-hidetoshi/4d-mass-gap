@@ -44,7 +44,8 @@ theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
   have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
     unfold exactGapValueReal
     calc
-      Classical.choose _ = ((11 : ℝ) * 3) / 20 := (Classical.choose_spec _).1
+      Classical.choose exactGapValueRealRouteWitness = ((11 : ℝ) * 3) / 20 :=
+        (Classical.choose_spec exactGapValueRealRouteWitness).1
       _ = (33 : ℝ) / 20 := by norm_num
   exact And.intro hPhysical <|
     And.intro hHPhys <|
@@ -72,7 +73,8 @@ theorem physical_continuum_hamiltonian_exact_gap_33_over_20 :
   have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
     unfold exactGapValueReal
     calc
-      Classical.choose _ = ((11 : ℝ) * 3) / 20 := (Classical.choose_spec _).1
+      Classical.choose exactGapValueRealRouteWitness = ((11 : ℝ) * 3) / 20 :=
+        (Classical.choose_spec exactGapValueRealRouteWitness).1
       _ = (33 : ℝ) / 20 := by norm_num
   exact And.intro hPos hExact
 
