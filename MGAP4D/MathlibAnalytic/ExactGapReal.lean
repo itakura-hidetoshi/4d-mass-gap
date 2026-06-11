@@ -13,10 +13,6 @@ theorem exactGapValueReal_route_witness_exists :
 noncomputable def exactGapValueReal : ℝ :=
   Classical.choose exactGapValueReal_route_witness_exists
 
-theorem exactGapValueReal_eq_33_over_20 :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).1
-
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   exact (Classical.choose_spec exactGapValueReal_route_witness_exists).2.1
 
