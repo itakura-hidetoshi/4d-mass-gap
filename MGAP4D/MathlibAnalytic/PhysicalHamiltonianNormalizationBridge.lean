@@ -21,7 +21,7 @@ structure PhysicalHamiltonianNormalizationBridgeData where
     (1 : ℝ) = 1 ∧ exactGapValueReal = exactGapValueReal ∧
     exactGapValueReal = exactGapValueReal
   theoremBodyUnchanged : concreteResidualClosureReviewSurface.ready
-  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 def PhysicalHamiltonianNormalizationBridgeData.ready
     (_D : PhysicalHamiltonianNormalizationBridgeData) : Prop :=
@@ -37,7 +37,7 @@ def PhysicalHamiltonianNormalizationBridgeData.ready
   ((1 : ℝ) = 1 ∧ exactGapValueReal = exactGapValueReal ∧
     exactGapValueReal = exactGapValueReal) ∧
   concreteResidualClosureReviewSurface.ready ∧
-  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 theorem physical_hamiltonian_normalization_scale_positive
     (D : PhysicalHamiltonianNormalizationBridgeData) :
@@ -83,7 +83,7 @@ theorem physical_hamiltonian_normalization_theorem_body_unchanged
 
 theorem physical_hamiltonian_normalization_public_boundary_held
     (_D : PhysicalHamiltonianNormalizationBridgeData) :
-    prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld := by
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
   exact final_theorem_release_bundle_manifest_public_boundary_held_witness
 
 noncomputable def prototypePhysicalHamiltonianNormalizationBridgeData :
@@ -139,7 +139,7 @@ structure PhysicalHamiltonianNormalizationBridgeReviewSurface where
     (1 : ℝ) = 1 ∧ exactGapValueReal = exactGapValueReal ∧
     exactGapValueReal = exactGapValueReal
   theoremBodyUnchanged : concreteResidualClosureReviewSurface.ready
-  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 def PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
     (_S : PhysicalHamiltonianNormalizationBridgeReviewSurface) : Prop :=
@@ -159,7 +159,7 @@ def PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
   ((1 : ℝ) = 1 ∧ exactGapValueReal = exactGapValueReal ∧
     exactGapValueReal = exactGapValueReal) ∧
   concreteResidualClosureReviewSurface.ready ∧
-  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 noncomputable def physicalHamiltonianNormalizationBridgeReviewSurface :
     PhysicalHamiltonianNormalizationBridgeReviewSurface :=
