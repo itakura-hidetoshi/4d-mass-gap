@@ -9,7 +9,7 @@ structure ObservableAtomInterface where
   observable : Type
   chosenObservable : observable
   spectralWeight : observable → Set ℝ → ℝ
-  pvmReady : pvm.ready
+  pvmCertified : pvm.certified
   atom : Set ℝ
   atom_def : atom = exactGapAtomReal
   atom_contains_exact : exactGapValueReal ∈ atom
@@ -18,14 +18,19 @@ structure ObservableAtomInterface where
   atom_weight_in_positive_ray : spectralWeight chosenObservable atom ∈ Set.Ioi (0 : ℝ)
   compatible_with_pvm_mass : spectralWeight chosenObservable atom = pvm.projectionMass pvm.exactAtom
 
-def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
-  O.pvm.ready ∧
+/-- Concrete certification predicate for the observable atom interface. -/
+def ObservableAtomInterface.certified (O : ObservableAtomInterface) : Prop :=
+  O.pvm.certified ∧
   O.atom = exactGapAtomReal ∧
   exactGapValueReal ∈ O.atom ∧
   0 < O.spectralWeight O.chosenObservable O.atom ∧
   O.spectralWeight O.chosenObservable O.atom ≠ 0 ∧
   O.spectralWeight O.chosenObservable O.atom ∈ Set.Ioi (0 : ℝ) ∧
   O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom
+
+/-- Backward-compatible readiness name during downstream migration. -/
+def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
+  O.certified
 
 abbrev PrototypeObservable := FinalPhysicalHilbertCarrier
 
@@ -35,12 +40,13 @@ noncomputable def prototypeObservable : PrototypeObservable :=
 noncomputable def prototypeObservableSpectralWeight (_ : PrototypeObservable) (_ : Set ℝ) : ℝ :=
   exactGapSpectralMassReal
 
-noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
-  { pvm := singletonPVMInterface
+/-- Observable atom interface routed through the certified exact-atom PVM interface. -/
+noncomputable def exactAtomObservableInterface : ObservableAtomInterface :=
+  { pvm := exactAtomPVMInterface
     observable := FinalPhysicalHilbertCarrier
     chosenObservable := finalPhysicalHilbertZero
     spectralWeight := prototypeObservableSpectralWeight
-    pvmReady := singleton_pvm_interface_ready
+    pvmCertified := exact_atom_pvm_interface_certified
     atom := exactGapAtomReal
     atom_def := rfl
     atom_contains_exact := exactGapValueReal_mem_exactGapAtomReal
@@ -49,109 +55,123 @@ noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
     atom_weight_in_positive_ray := exactGapSpectralMassReal_mem_positive_ray
     compatible_with_pvm_mass := rfl }
 
-theorem singleton_observable_atom_interface_ready :
-    singletonObservableAtomInterface.ready := by
-  exact And.intro singleton_pvm_interface_ready <|
+theorem exact_atom_observable_interface_certified :
+    exactAtomObservableInterface.certified := by
+  exact And.intro exact_atom_pvm_interface_certified <|
     And.intro rfl <|
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
     And.intro exactGapSpectralMassReal_mem_positive_ray rfl
 
-theorem singleton_observable_atom_interface_exact_in_atom :
-    exactGapValueReal ∈ singletonObservableAtomInterface.atom := by
+/-- Backward-compatible readiness theorem during downstream migration. -/
+theorem exact_atom_observable_interface_ready :
+    exactAtomObservableInterface.ready := by
+  exact exact_atom_observable_interface_certified
+
+theorem exact_atom_observable_interface_exact_in_atom :
+    exactGapValueReal ∈ exactAtomObservableInterface.atom := by
   exact exactGapValueReal_mem_exactGapAtomReal
 
-theorem singleton_observable_atom_interface_positive_weight :
-    0 < singletonObservableAtomInterface.spectralWeight
-      singletonObservableAtomInterface.chosenObservable
-      singletonObservableAtomInterface.atom := by
+theorem exact_atom_observable_interface_positive_weight :
+    0 < exactAtomObservableInterface.spectralWeight
+      exactAtomObservableInterface.chosenObservable
+      exactAtomObservableInterface.atom := by
   exact exactGapSpectralMassReal_pos
 
-theorem singleton_observable_atom_interface_nonzero_weight :
-    singletonObservableAtomInterface.spectralWeight
-      singletonObservableAtomInterface.chosenObservable
-      singletonObservableAtomInterface.atom ≠ 0 := by
+theorem exact_atom_observable_interface_nonzero_weight :
+    exactAtomObservableInterface.spectralWeight
+      exactAtomObservableInterface.chosenObservable
+      exactAtomObservableInterface.atom ≠ 0 := by
   exact exactGapSpectralMassReal_ne_zero
 
-theorem singleton_observable_atom_interface_weight_in_positive_ray :
-    singletonObservableAtomInterface.spectralWeight
-      singletonObservableAtomInterface.chosenObservable
-      singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ) := by
+theorem exact_atom_observable_interface_weight_in_positive_ray :
+    exactAtomObservableInterface.spectralWeight
+      exactAtomObservableInterface.chosenObservable
+      exactAtomObservableInterface.atom ∈ Set.Ioi (0 : ℝ) := by
   exact exactGapSpectralMassReal_mem_positive_ray
 
-theorem singleton_observable_atom_interface_compatible_with_pvm :
-    singletonObservableAtomInterface.spectralWeight
-      singletonObservableAtomInterface.chosenObservable
-      singletonObservableAtomInterface.atom =
-    singletonObservableAtomInterface.pvm.projectionMass
-      singletonObservableAtomInterface.pvm.exactAtom := by
+theorem exact_atom_observable_interface_compatible_with_pvm :
+    exactAtomObservableInterface.spectralWeight
+      exactAtomObservableInterface.chosenObservable
+      exactAtomObservableInterface.atom =
+    exactAtomObservableInterface.pvm.projectionMass
+      exactAtomObservableInterface.pvm.exactAtom := by
   rfl
 
 structure ObservableAtomReviewSurface where
-  pvmReviewReady : pvmReviewSurface.ready
-  observableInterfaceReady : singletonObservableAtomInterface.ready
-  exactValueInAtom : exactGapValueReal ∈ singletonObservableAtomInterface.atom
-  positiveWeight : 0 < singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom
-  nonzeroWeight : singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom ≠ 0
-  weightInPositiveRay : singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ)
-  compatibleWithPVM : singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom =
-    singletonObservableAtomInterface.pvm.projectionMass
-      singletonObservableAtomInterface.pvm.exactAtom
-  atom_def : singletonObservableAtomInterface.atom = exactGapAtomReal
+  pvmReviewCertified : pvmReviewSurface.certified
+  observableInterfaceCertified : exactAtomObservableInterface.certified
+  exactValueInAtom : exactGapValueReal ∈ exactAtomObservableInterface.atom
+  positiveWeight : 0 < exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom
+  nonzeroWeight : exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom ≠ 0
+  weightInPositiveRay : exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom ∈ Set.Ioi (0 : ℝ)
+  compatibleWithPVM : exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom =
+    exactAtomObservableInterface.pvm.projectionMass
+      exactAtomObservableInterface.pvm.exactAtom
+  atom_def : exactAtomObservableInterface.atom = exactGapAtomReal
 
-def ObservableAtomReviewSurface.ready (_S : ObservableAtomReviewSurface) : Prop :=
-  pvmReviewSurface.ready ∧
-  singletonObservableAtomInterface.ready ∧
-  exactGapValueReal ∈ singletonObservableAtomInterface.atom ∧
-  0 < singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom ∧
-  singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom ≠ 0 ∧
-  singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ) ∧
-  singletonObservableAtomInterface.spectralWeight
-    singletonObservableAtomInterface.chosenObservable
-    singletonObservableAtomInterface.atom =
-    singletonObservableAtomInterface.pvm.projectionMass
-      singletonObservableAtomInterface.pvm.exactAtom ∧
-  singletonObservableAtomInterface.atom = exactGapAtomReal
+/-- Concrete certification predicate for the observable atom review surface. -/
+def ObservableAtomReviewSurface.certified (_S : ObservableAtomReviewSurface) : Prop :=
+  pvmReviewSurface.certified ∧
+  exactAtomObservableInterface.certified ∧
+  exactGapValueReal ∈ exactAtomObservableInterface.atom ∧
+  0 < exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom ∧
+  exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom ≠ 0 ∧
+  exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom ∈ Set.Ioi (0 : ℝ) ∧
+  exactAtomObservableInterface.spectralWeight
+    exactAtomObservableInterface.chosenObservable
+    exactAtomObservableInterface.atom =
+    exactAtomObservableInterface.pvm.projectionMass
+      exactAtomObservableInterface.pvm.exactAtom ∧
+  exactAtomObservableInterface.atom = exactGapAtomReal
+
+/-- Backward-compatible readiness name during downstream migration. -/
+def ObservableAtomReviewSurface.ready (S : ObservableAtomReviewSurface) : Prop :=
+  S.certified
 
 noncomputable def observableAtomReviewSurface : ObservableAtomReviewSurface :=
-  { pvmReviewReady := pvm_review_surface_ready
-    observableInterfaceReady := singleton_observable_atom_interface_ready
-    exactValueInAtom := singleton_observable_atom_interface_exact_in_atom
-    positiveWeight := singleton_observable_atom_interface_positive_weight
-    nonzeroWeight := singleton_observable_atom_interface_nonzero_weight
-    weightInPositiveRay := singleton_observable_atom_interface_weight_in_positive_ray
-    compatibleWithPVM := singleton_observable_atom_interface_compatible_with_pvm
+  { pvmReviewCertified := pvm_review_surface_certified
+    observableInterfaceCertified := exact_atom_observable_interface_certified
+    exactValueInAtom := exact_atom_observable_interface_exact_in_atom
+    positiveWeight := exact_atom_observable_interface_positive_weight
+    nonzeroWeight := exact_atom_observable_interface_nonzero_weight
+    weightInPositiveRay := exact_atom_observable_interface_weight_in_positive_ray
+    compatibleWithPVM := exact_atom_observable_interface_compatible_with_pvm
     atom_def := rfl }
 
-theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready := by
-  exact And.intro pvm_review_surface_ready <|
-    And.intro singleton_observable_atom_interface_ready <|
+theorem observable_atom_review_surface_certified : observableAtomReviewSurface.certified := by
+  exact And.intro pvm_review_surface_certified <|
+    And.intro exact_atom_observable_interface_certified <|
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
-    And.intro singleton_observable_atom_interface_positive_weight <|
-    And.intro singleton_observable_atom_interface_nonzero_weight <|
-    And.intro singleton_observable_atom_interface_weight_in_positive_ray <|
-    And.intro singleton_observable_atom_interface_compatible_with_pvm rfl
+    And.intro exact_atom_observable_interface_positive_weight <|
+    And.intro exact_atom_observable_interface_nonzero_weight <|
+    And.intro exact_atom_observable_interface_weight_in_positive_ray <|
+    And.intro exact_atom_observable_interface_compatible_with_pvm rfl
+
+/-- Backward-compatible theorem name during downstream migration. -/
+theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready := by
+  exact observable_atom_review_surface_certified
 
 theorem observable_atom_review_surface_weight_in_positive_ray :
-    singletonObservableAtomInterface.spectralWeight
-      singletonObservableAtomInterface.chosenObservable
-      singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ) := by
-  exact singleton_observable_atom_interface_weight_in_positive_ray
+    exactAtomObservableInterface.spectralWeight
+      exactAtomObservableInterface.chosenObservable
+      exactAtomObservableInterface.atom ∈ Set.Ioi (0 : ℝ) := by
+  exact exact_atom_observable_interface_weight_in_positive_ray
 
 end MathlibAnalytic
 end MGAP4D
