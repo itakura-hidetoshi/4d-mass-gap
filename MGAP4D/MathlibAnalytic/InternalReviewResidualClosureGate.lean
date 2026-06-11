@@ -66,13 +66,13 @@ theorem internal_review_residual_gate_exact_origin_preserved_witness :
 
 /-- Named theorem-derived witness that the exact value is not reduced to a packaging artifact. -/
 theorem internal_review_residual_gate_not_packaging_artifact_preserved_witness :
-    let notPackagingArtifact := exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact
+    let _notPackagingArtifact := exactValueTheoremBodyOriginReviewSurface.notPackagingArtifact
     exactGapTheoremBodyClosure.ready := by
   exact exact_value_origin_not_packaging_artifact_witness
 
 /-- Named theorem-derived witness that the exact value is not reduced to a CI-ledger artifact. -/
 theorem internal_review_residual_gate_not_ci_ledger_artifact_preserved_witness :
-    let notCILedgerArtifact := exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact
+    let _notCILedgerArtifact := exactValueTheoremBodyOriginReviewSurface.notCILedgerArtifact
     exactGapTheoremBodyClosure.ready := by
   exact exact_value_origin_not_ci_ledger_artifact_witness
 
