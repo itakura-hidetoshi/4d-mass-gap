@@ -20,12 +20,12 @@ structure ExactGapAnalyticRealClosure where
   gapInfimumAttained : RayleighAttainsExactGap exactValue
   positiveSpectralMass : PositiveSpectralMassAtExactGap exactValue exactGapSpectralMassReal
   spectralMassNonzero : exactGapSpectralMassReal ≠ 0
-  allRealAnalyticSurfacesClosed : Prop
-  analyticReplacementBranchOnly : Prop
-  notFullHilbertRayleighYet : Prop
-  notFullPVMYet : Prop
-  mainBoundaryPreserved : Prop
-  finalReleaseHeld : Prop
+  exactValue_in_positive_ray : exactValue ∈ Set.Ioi (0 : ℝ)
+  exactValue_in_above_one_ray : exactValue ∈ Set.Ioi (1 : ℝ)
+  exactValue_in_energyRay : exactValue ∈ exactGapEnergyRay
+  gapInfimumCarrier_closed_upper_ray : gapInfimumRealSurface.carrier = Set.Ici exactValue
+  spectralMass_in_positive_ray : exactGapSpectralMassReal ∈ Set.Ioi (0 : ℝ)
+  rayleighWitnessAttainsExactGap : RayleighAttainsExactGap exactValue
 
 def ExactGapAnalyticRealClosure.ready
     (C : ExactGapAnalyticRealClosure) : Prop :=
@@ -40,12 +40,12 @@ def ExactGapAnalyticRealClosure.ready
   RayleighAttainsExactGap C.exactValue ∧
   PositiveSpectralMassAtExactGap C.exactValue exactGapSpectralMassReal ∧
   exactGapSpectralMassReal ≠ 0 ∧
-  C.allRealAnalyticSurfacesClosed ∧
-  C.analyticReplacementBranchOnly ∧
-  C.notFullHilbertRayleighYet ∧
-  C.notFullPVMYet ∧
-  C.mainBoundaryPreserved ∧
-  C.finalReleaseHeld
+  C.exactValue ∈ Set.Ioi (0 : ℝ) ∧
+  C.exactValue ∈ Set.Ioi (1 : ℝ) ∧
+  C.exactValue ∈ exactGapEnergyRay ∧
+  gapInfimumRealSurface.carrier = Set.Ici C.exactValue ∧
+  exactGapSpectralMassReal ∈ Set.Ioi (0 : ℝ) ∧
+  RayleighAttainsExactGap C.exactValue
 
 noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
   { exactValueReady := exact_gap_real_surface_ready
@@ -60,12 +60,12 @@ noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
     gapInfimumAttained := exact_gap_value_attains_rayleigh
     positiveSpectralMass := positive_spectral_mass_at_exact_gap_prototype
     spectralMassNonzero := exactGapSpectralMassReal_ne_zero
-    allRealAnalyticSurfacesClosed := True
-    analyticReplacementBranchOnly := True
-    notFullHilbertRayleighYet := True
-    notFullPVMYet := True
-    mainBoundaryPreserved := True
-    finalReleaseHeld := True }
+    exactValue_in_positive_ray := exactGapValueReal_mem_positive_ray
+    exactValue_in_above_one_ray := exactGapValueReal_mem_above_one_ray
+    exactValue_in_energyRay := exactGapValueReal_mem_energyRay
+    gapInfimumCarrier_closed_upper_ray := gap_infimum_real_surface_carrier_closed_upper_ray
+    spectralMass_in_positive_ray := exactGapSpectralMassReal_mem_positive_ray
+    rayleighWitnessAttainsExactGap := exact_gap_value_attains_rayleigh }
 
 theorem exact_gap_analytic_real_closure_ready :
     exactGapAnalyticRealClosure.ready := by
@@ -80,11 +80,12 @@ theorem exact_gap_analytic_real_closure_ready :
     And.intro exact_gap_value_attains_rayleigh <|
     And.intro positive_spectral_mass_at_exact_gap_prototype <|
     And.intro exactGapSpectralMassReal_ne_zero <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro exactGapValueReal_mem_positive_ray <|
+    And.intro exactGapValueReal_mem_above_one_ray <|
+    And.intro exactGapValueReal_mem_energyRay <|
+    And.intro gap_infimum_real_surface_carrier_closed_upper_ray <|
+    And.intro exactGapSpectralMassReal_mem_positive_ray
+      exact_gap_value_attains_rayleigh
 
 theorem exact_gap_analytic_real_closure_positive :
     0 < exactGapAnalyticRealClosure.exactValue := by
@@ -111,6 +112,18 @@ theorem exact_gap_analytic_real_closure_positive_spectral_mass :
 theorem exact_gap_analytic_real_closure_spectral_mass_nonzero :
     exactGapSpectralMassReal ≠ 0 := by
   exact exactGapSpectralMassReal_ne_zero
+
+theorem exact_gap_analytic_real_closure_exact_value_in_positive_ray :
+    exactGapAnalyticRealClosure.exactValue ∈ Set.Ioi (0 : ℝ) := by
+  exact exactGapValueReal_mem_positive_ray
+
+theorem exact_gap_analytic_real_closure_exact_value_in_energyRay :
+    exactGapAnalyticRealClosure.exactValue ∈ exactGapEnergyRay := by
+  exact exactGapValueReal_mem_energyRay
+
+theorem exact_gap_analytic_real_closure_spectral_mass_in_positive_ray :
+    exactGapSpectralMassReal ∈ Set.Ioi (0 : ℝ) := by
+  exact exactGapSpectralMassReal_mem_positive_ray
 
 end MathlibAnalytic
 end MGAP4D
