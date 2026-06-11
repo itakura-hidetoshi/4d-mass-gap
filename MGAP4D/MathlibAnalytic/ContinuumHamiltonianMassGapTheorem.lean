@@ -47,7 +47,7 @@ theorem continuum_hamiltonian_derives_positive_exact_mass_gap :
       exactGapValueReal = (33 : ℝ) / 20 ∧
       continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
       continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
-      continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+      finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases continuum_hamiltonian_mass_gap_witness_ready with
