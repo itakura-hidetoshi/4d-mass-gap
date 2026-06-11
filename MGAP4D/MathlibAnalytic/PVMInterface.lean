@@ -7,13 +7,13 @@ namespace MathlibAnalytic
 
 This is not yet the full projection-valued-measure theorem.  It records the
 next interface layer after spectral support/mass integration: a set-indexed
-projection mass surface, with positivity at the exact-gap singleton and
+projection mass surface, with positivity at the exact-gap atom and
 compatibility with the spectral theorem interface.  It carries no upstream
 `33/20` equality claim. -/
 structure ProjectionValuedMeasureInterface where
   spectral : SpectralTheoremInterface
   projectionMass : Set ℝ → ℝ
-  spectralReady : spectral.ready
+  spectralCertified : spectral.certified
   exactAtom : Set ℝ
   exactAtom_def : exactAtom = Set.singleton exactGapValueReal
   exact_value_in_atom : exactGapValueReal ∈ exactAtom
@@ -21,17 +21,22 @@ structure ProjectionValuedMeasureInterface where
   exact_atom_mass_nonzero : projectionMass exactAtom ≠ 0
   exact_atom_mass_in_positive_ray : projectionMass exactAtom ∈ Set.Ioi (0 : ℝ)
 
-/-- Ready predicate for the abstract PVM interface. -/
-def ProjectionValuedMeasureInterface.ready
+/-- Concrete certification predicate for the abstract PVM interface. -/
+def ProjectionValuedMeasureInterface.certified
     (P : ProjectionValuedMeasureInterface) : Prop :=
-  P.spectral.ready ∧
+  P.spectral.certified ∧
   P.exactAtom = Set.singleton exactGapValueReal ∧
   exactGapValueReal ∈ P.exactAtom ∧
   0 < P.projectionMass P.exactAtom ∧
   P.projectionMass P.exactAtom ≠ 0 ∧
   P.projectionMass P.exactAtom ∈ Set.Ioi (0 : ℝ)
 
-/-- Singleton exact-gap atom used by the prototype PVM interface. -/
+/-- Backward-compatible readiness name during downstream migration. -/
+def ProjectionValuedMeasureInterface.ready
+    (P : ProjectionValuedMeasureInterface) : Prop :=
+  P.certified
+
+/-- Exact-gap spectral atom used by the PVM interface. -/
 def exactGapAtomReal : Set ℝ := Set.singleton exactGapValueReal
 
 theorem exactGapValueReal_mem_exactGapAtomReal :
@@ -39,7 +44,7 @@ theorem exactGapValueReal_mem_exactGapAtomReal :
   change exactGapValueReal ∈ Set.singleton exactGapValueReal
   exact Set.mem_singleton exactGapValueReal
 
-/-- Prototype PVM mass.  It assigns the already-certified positive real mass to
+/-- Interface PVM mass.  It assigns the already-certified positive real mass to
 all sets.  This is only an interface witness, not a countably-additive theorem. -/
 def prototypeProjectionMassReal (_ : Set ℝ) : ℝ := exactGapSpectralMassReal
 
@@ -55,11 +60,11 @@ theorem prototypeProjectionMassReal_exact_atom_mem_positive_ray :
     prototypeProjectionMassReal exactGapAtomReal ∈ Set.Ioi (0 : ℝ) := by
   exact exactGapSpectralMassReal_mem_positive_ray
 
-/-- Singleton PVM interface prototype. -/
-noncomputable def singletonPVMInterface : ProjectionValuedMeasureInterface :=
-  { spectral := singletonSpectralTheoremInterface
+/-- PVM interface routed through the certified admissible spectral interface. -/
+noncomputable def exactAtomPVMInterface : ProjectionValuedMeasureInterface :=
+  { spectral := admissibleSpectralTheoremInterface
     projectionMass := prototypeProjectionMassReal
-    spectralReady := singleton_spectral_theorem_interface_ready
+    spectralCertified := admissible_spectral_theorem_interface_certified
     exactAtom := exactGapAtomReal
     exactAtom_def := rfl
     exact_value_in_atom := exactGapValueReal_mem_exactGapAtomReal
@@ -67,70 +72,83 @@ noncomputable def singletonPVMInterface : ProjectionValuedMeasureInterface :=
     exact_atom_mass_nonzero := prototypeProjectionMassReal_exact_atom_ne_zero
     exact_atom_mass_in_positive_ray := prototypeProjectionMassReal_exact_atom_mem_positive_ray }
 
-theorem singleton_pvm_interface_ready : singletonPVMInterface.ready := by
-  exact And.intro singleton_spectral_theorem_interface_ready <|
+theorem exact_atom_pvm_interface_certified : exactAtomPVMInterface.certified := by
+  exact And.intro admissible_spectral_theorem_interface_certified <|
     And.intro rfl <|
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro prototypeProjectionMassReal_exact_atom_pos <|
     And.intro prototypeProjectionMassReal_exact_atom_ne_zero
       prototypeProjectionMassReal_exact_atom_mem_positive_ray
 
-theorem singleton_pvm_interface_exact_value_in_atom :
-    exactGapValueReal ∈ singletonPVMInterface.exactAtom := by
+/-- Backward-compatible readiness theorem during downstream migration. -/
+theorem exact_atom_pvm_interface_ready : exactAtomPVMInterface.ready := by
+  exact exact_atom_pvm_interface_certified
+
+theorem exact_atom_pvm_interface_exact_value_in_atom :
+    exactGapValueReal ∈ exactAtomPVMInterface.exactAtom := by
   exact exactGapValueReal_mem_exactGapAtomReal
 
-theorem singleton_pvm_interface_exact_atom_mass_positive :
-    0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom := by
+theorem exact_atom_pvm_interface_exact_atom_mass_positive :
+    0 < exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom := by
   exact prototypeProjectionMassReal_exact_atom_pos
 
-theorem singleton_pvm_interface_exact_atom_mass_nonzero :
-    singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0 := by
+theorem exact_atom_pvm_interface_exact_atom_mass_nonzero :
+    exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ≠ 0 := by
   exact prototypeProjectionMassReal_exact_atom_ne_zero
 
-theorem singleton_pvm_interface_exact_atom_mass_in_positive_ray :
-    singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) := by
+theorem exact_atom_pvm_interface_exact_atom_mass_in_positive_ray :
+    exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) := by
   exact prototypeProjectionMassReal_exact_atom_mem_positive_ray
 
 /-- Review surface linking spectral theorem integration to the PVM-shaped exact
 atom interface. -/
 structure PVMReviewSurface where
-  spectralReviewReady : spectralTheoremReviewSurface.ready
-  pvmInterfaceReady : singletonPVMInterface.ready
-  exactValueInAtom : exactGapValueReal ∈ singletonPVMInterface.exactAtom
-  exactAtomMassPositive : 0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom
-  exactAtomMassNonzero : singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0
-  exactAtomMassInPositiveRay : singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ)
-  exactAtom_def : singletonPVMInterface.exactAtom = Set.singleton exactGapValueReal
+  spectralReviewCertified : spectralTheoremReviewSurface.certified
+  pvmInterfaceCertified : exactAtomPVMInterface.certified
+  exactValueInAtom : exactGapValueReal ∈ exactAtomPVMInterface.exactAtom
+  exactAtomMassPositive : 0 < exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom
+  exactAtomMassNonzero : exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ≠ 0
+  exactAtomMassInPositiveRay : exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ)
+  exactAtom_def : exactAtomPVMInterface.exactAtom = Set.singleton exactGapValueReal
 
-def PVMReviewSurface.ready (_S : PVMReviewSurface) : Prop :=
-  spectralTheoremReviewSurface.ready ∧
-  singletonPVMInterface.ready ∧
-  exactGapValueReal ∈ singletonPVMInterface.exactAtom ∧
-  0 < singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∧
-  singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ≠ 0 ∧
-  singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) ∧
-  singletonPVMInterface.exactAtom = Set.singleton exactGapValueReal
+/-- Concrete certification predicate for the PVM review surface. -/
+def PVMReviewSurface.certified (_S : PVMReviewSurface) : Prop :=
+  spectralTheoremReviewSurface.certified ∧
+  exactAtomPVMInterface.certified ∧
+  exactGapValueReal ∈ exactAtomPVMInterface.exactAtom ∧
+  0 < exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ∧
+  exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ≠ 0 ∧
+  exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) ∧
+  exactAtomPVMInterface.exactAtom = Set.singleton exactGapValueReal
+
+/-- Backward-compatible readiness name during downstream migration. -/
+def PVMReviewSurface.ready (S : PVMReviewSurface) : Prop :=
+  S.certified
 
 noncomputable def pvmReviewSurface : PVMReviewSurface :=
-  { spectralReviewReady := spectral_theorem_review_surface_ready
-    pvmInterfaceReady := singleton_pvm_interface_ready
-    exactValueInAtom := singleton_pvm_interface_exact_value_in_atom
-    exactAtomMassPositive := singleton_pvm_interface_exact_atom_mass_positive
-    exactAtomMassNonzero := singleton_pvm_interface_exact_atom_mass_nonzero
-    exactAtomMassInPositiveRay := singleton_pvm_interface_exact_atom_mass_in_positive_ray
+  { spectralReviewCertified := spectral_theorem_review_surface_certified
+    pvmInterfaceCertified := exact_atom_pvm_interface_certified
+    exactValueInAtom := exact_atom_pvm_interface_exact_value_in_atom
+    exactAtomMassPositive := exact_atom_pvm_interface_exact_atom_mass_positive
+    exactAtomMassNonzero := exact_atom_pvm_interface_exact_atom_mass_nonzero
+    exactAtomMassInPositiveRay := exact_atom_pvm_interface_exact_atom_mass_in_positive_ray
     exactAtom_def := rfl }
 
+theorem pvm_review_surface_certified : pvmReviewSurface.certified := by
+  exact And.intro spectral_theorem_review_surface_certified <|
+    And.intro exact_atom_pvm_interface_certified <|
+    And.intro exact_atom_pvm_interface_exact_value_in_atom <|
+    And.intro exact_atom_pvm_interface_exact_atom_mass_positive <|
+    And.intro exact_atom_pvm_interface_exact_atom_mass_nonzero <|
+    And.intro exact_atom_pvm_interface_exact_atom_mass_in_positive_ray rfl
+
+/-- Backward-compatible theorem name during downstream migration. -/
 theorem pvm_review_surface_ready : pvmReviewSurface.ready := by
-  exact And.intro spectral_theorem_review_surface_ready <|
-    And.intro singleton_pvm_interface_ready <|
-    And.intro singleton_pvm_interface_exact_value_in_atom <|
-    And.intro singleton_pvm_interface_exact_atom_mass_positive <|
-    And.intro singleton_pvm_interface_exact_atom_mass_nonzero <|
-    And.intro singleton_pvm_interface_exact_atom_mass_in_positive_ray rfl
+  exact pvm_review_surface_certified
 
 theorem pvm_review_surface_exact_atom_mass_in_positive_ray :
-    singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) := by
-  exact singleton_pvm_interface_exact_atom_mass_in_positive_ray
+    exactAtomPVMInterface.projectionMass exactAtomPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) := by
+  exact exact_atom_pvm_interface_exact_atom_mass_in_positive_ray
 
 end MathlibAnalytic
 end MGAP4D
