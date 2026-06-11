@@ -8,7 +8,7 @@ namespace MathlibAnalytic
 This closure bundles the current Mathlib analytic replacement surfaces while
 leaving the displayed numeric value to the downstream R6 spectral derivation. -/
 structure ExactGapAnalyticRealClosure where
-  exactValueReady : exactGapRealSurface.ready
+  exactValueCertified : exactGapRealSurface.certified
   gapInfimumReady : gapInfimumRealSurface.ready
   rayleighLowerBoundReady : rayleighLowerBoundRealSurface.ready
   rayleighAttainmentReady : rayleighAttainmentRealSurface.ready
@@ -27,9 +27,14 @@ structure ExactGapAnalyticRealClosure where
   spectralMass_in_positive_ray : exactGapSpectralMassReal ∈ Set.Ioi (0 : ℝ)
   rayleighWitnessAttainsExactGap : RayleighAttainsExactGap exactValue
 
-def ExactGapAnalyticRealClosure.ready
+/-- Concrete certification predicate for the analytic exact-gap closure.
+
+The exact-value component is now certified by the Hamiltonian/PVM/spectral origin
+rather than by a generic `ready` placeholder.  Older `ready` names are kept below
+only as compatibility aliases to this predicate. -/
+def ExactGapAnalyticRealClosure.certified
     (C : ExactGapAnalyticRealClosure) : Prop :=
-  exactGapRealSurface.ready ∧
+  exactGapRealSurface.certified ∧
   gapInfimumRealSurface.ready ∧
   rayleighLowerBoundRealSurface.ready ∧
   rayleighAttainmentRealSurface.ready ∧
@@ -47,8 +52,13 @@ def ExactGapAnalyticRealClosure.ready
   exactGapSpectralMassReal ∈ Set.Ioi (0 : ℝ) ∧
   RayleighAttainsExactGap C.exactValue
 
+/-- Backward-compatible readiness name during downstream migration. -/
+def ExactGapAnalyticRealClosure.ready
+    (C : ExactGapAnalyticRealClosure) : Prop :=
+  C.certified
+
 noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
-  { exactValueReady := exact_gap_real_surface_ready
+  { exactValueCertified := exact_gap_real_surface_certified
     gapInfimumReady := gap_infimum_real_surface_ready
     rayleighLowerBoundReady := rayleigh_lower_bound_real_surface_ready
     rayleighAttainmentReady := rayleigh_attainment_real_surface_ready
@@ -67,9 +77,9 @@ noncomputable def exactGapAnalyticRealClosure : ExactGapAnalyticRealClosure :=
     spectralMass_in_positive_ray := exactGapSpectralMassReal_mem_positive_ray
     rayleighWitnessAttainsExactGap := exact_gap_value_attains_rayleigh }
 
-theorem exact_gap_analytic_real_closure_ready :
-    exactGapAnalyticRealClosure.ready := by
-  exact And.intro exact_gap_real_surface_ready <|
+theorem exact_gap_analytic_real_closure_certified :
+    exactGapAnalyticRealClosure.certified := by
+  exact And.intro exact_gap_real_surface_certified <|
     And.intro gap_infimum_real_surface_ready <|
     And.intro rayleigh_lower_bound_real_surface_ready <|
     And.intro rayleigh_attainment_real_surface_ready <|
@@ -86,6 +96,11 @@ theorem exact_gap_analytic_real_closure_ready :
     And.intro gap_infimum_real_surface_carrier_closed_upper_ray <|
     And.intro exactGapSpectralMassReal_mem_positive_ray
       exact_gap_value_attains_rayleigh
+
+/-- Backward-compatible theorem name for downstream migration. -/
+theorem exact_gap_analytic_real_closure_ready :
+    exactGapAnalyticRealClosure.ready := by
+  exact exact_gap_analytic_real_closure_certified
 
 theorem exact_gap_analytic_real_closure_positive :
     0 < exactGapAnalyticRealClosure.exactValue := by
