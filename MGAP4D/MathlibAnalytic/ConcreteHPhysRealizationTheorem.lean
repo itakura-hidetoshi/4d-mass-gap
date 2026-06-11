@@ -164,6 +164,27 @@ noncomputable def finalConcreteHPhysRealizationTheoremData :
         And.intro admissible_self_adjoint_hphys_theorem_data_certified exactGapValueReal_pos
     operatorResidualWitness := final_concrete_hphys_has_domain_closed_state }
 
+/-- Bridge audit anchor retained as the certified Hilbert readiness of the concrete
+`H_phys` package. -/
+theorem hilbertDataReady :
+    finalConcreteHPhysRealizationTheoremData.hilbertData.ready := by
+  exact finalConcreteHPhysRealizationTheoremData.hilbertDataCertified
+
+/-- Bridge audit anchor retained as the certified abstract `H_phys` readiness of
+the concrete `H_phys` package. -/
+theorem hphysDataReady :
+    finalConcreteHPhysRealizationTheoremData.hphysData.ready := by
+  exact finalConcreteHPhysRealizationTheoremData.hphysDataCertified
+
+/-- Boundary audit anchor retained as an actual closed-domain operator witness,
+not as a `True` placeholder. -/
+theorem operatorResidualStillOpen :
+    ∃ ψ : finalConcreteHPhysRealizationTheoremData.carrier,
+      finalConcreteHPhysRealizationTheoremData.domain ψ ∧
+        finalConcreteHPhysRealizationTheoremData.domain
+          (finalConcreteHPhysRealizationTheoremData.H_phys ψ) := by
+  exact finalConcreteHPhysRealizationTheoremData.operatorResidualWitness
+
 theorem final_concrete_hphys_realization_theorem_data_certified :
     finalConcreteHPhysRealizationTheoremData.certified := by
   exact And.intro finalConcreteHPhysRealizationTheoremData.hilbertDataCertified <|
