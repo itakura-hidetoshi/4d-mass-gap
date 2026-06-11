@@ -129,20 +129,10 @@ theorem final_concrete_hilbert_realization_theorem_data_certified :
     And.intro finalConcreteHilbertRealizationTheoremData.concreteHilbertCertificate_proof
       final_concrete_hilbert_has_positive_norm_state
 
-/-- Backward-compatible theorem name during downstream migration. -/
+/-- Final readiness theorem. -/
 theorem final_concrete_hilbert_realization_theorem_data_ready :
     finalConcreteHilbertRealizationTheoremData.ready := by
   exact final_concrete_hilbert_realization_theorem_data_certified
-
-/-- Legacy audit/API name retained as a transparent alias to the final concrete
-carrier, not as a singleton/PUnit implementation. -/
-noncomputable abbrev singletonConcreteHilbertRealizationTheoremData :
-    ConcreteHilbertRealizationTheoremData :=
-  finalConcreteHilbertRealizationTheoremData
-
-theorem singleton_concrete_hilbert_realization_theorem_data_ready :
-    singletonConcreteHilbertRealizationTheoremData.ready := by
-  exact final_concrete_hilbert_realization_theorem_data_ready
 
 theorem final_concrete_hilbert_distinguished_attains_exact :
     finalConcreteHilbertRealizationTheoremData.rayleighData.quotient
