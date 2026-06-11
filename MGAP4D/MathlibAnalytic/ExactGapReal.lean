@@ -3,21 +3,19 @@ import MGAP4D.MathlibAnalytic.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Route witness for the post-Basic normalized exact-gap carrier. -/
-theorem exactGapValueReal_route_witness_exists :
-    ∃ value : ℝ, value = (33 : ℝ) / 20 ∧ 0 < value ∧ 1 < value := by
-  refine ⟨(33 : ℝ) / 20, rfl, ?_, ?_⟩
-  · norm_num
-  · norm_num
-
 noncomputable def exactGapValueReal : ℝ :=
-  Classical.choose exactGapValueReal_route_witness_exists
+  Classical.choose (by
+    refine ⟨(33 : ℝ) / 20, rfl, ?_, ?_⟩
+    · norm_num
+    · norm_num)
 
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
-  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).2.1
+  unfold exactGapValueReal
+  exact (Classical.choose_spec _).2.1
 
 theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
-  exact (Classical.choose_spec exactGapValueReal_route_witness_exists).2.2
+  unfold exactGapValueReal
+  exact (Classical.choose_spec _).2.2
 
 /-- Mathlib-backed real-valued exact-gap carrier surface. -/
 structure ExactGapRealSurface where
