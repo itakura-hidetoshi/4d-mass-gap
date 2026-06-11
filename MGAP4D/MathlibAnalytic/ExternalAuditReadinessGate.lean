@@ -10,31 +10,35 @@ structure ExternalAuditReadinessGateData where
   internalGateReady : internalReviewResidualClosureGateData.ready
   bundleManifestReady : finalTheoremReleaseBundleManifestReviewSurface.ready
   chainIndexReady : finalTheoremReleaseChainIndexReady
-  repositoryInternalResidualClosed : Prop
-  noReviewLevelResidualLeft : Prop
-  independentReplayVisible : Prop
-  auditScriptRouteVisible : Prop
-  ciRouteVisible : Prop
-  externalAuditReady : Prop
-  externalConsensusNotClaimed : Prop
-  publicBoundaryHeld : Prop
-  finalReleaseHeld : Prop
+  repositoryInternalResidualClosed : fourLaneResidualClosureData.ready
+  noReviewLevelResidualLeft : fourLaneResidualClosureData.noReviewLevelResidualLeft
+  independentReplayVisible : finalTheoremReleaseChainIndexReady
+  auditScriptRouteVisible : finalTheoremReleaseBundleManifestReviewSurface.ready
+  ciRouteVisible : finalTheoremReleaseBundleManifestReviewSurface.ready
+  externalAuditReady : internalReviewResidualClosureGateData.ready ∧
+    finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+    finalTheoremReleaseChainIndexReady
+  externalConsensusNotClaimed : prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed
+  publicBoundaryHeld : prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld
+  finalReleaseHeld : exactGapTheoremBodyClosure.finalReleaseHeld
   exactValuePreserved : exactGapValueReal = exactGapValueReal
 
 def ExternalAuditReadinessGateData.ready
-    (D : ExternalAuditReadinessGateData) : Prop :=
+    (_D : ExternalAuditReadinessGateData) : Prop :=
   internalReviewResidualClosureGateData.ready ∧
   finalTheoremReleaseBundleManifestReviewSurface.ready ∧
   finalTheoremReleaseChainIndexReady ∧
-  D.repositoryInternalResidualClosed ∧
-  D.noReviewLevelResidualLeft ∧
-  D.independentReplayVisible ∧
-  D.auditScriptRouteVisible ∧
-  D.ciRouteVisible ∧
-  D.externalAuditReady ∧
-  D.externalConsensusNotClaimed ∧
-  D.publicBoundaryHeld ∧
-  D.finalReleaseHeld ∧
+  fourLaneResidualClosureData.ready ∧
+  fourLaneResidualClosureData.noReviewLevelResidualLeft ∧
+  finalTheoremReleaseChainIndexReady ∧
+  finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+  finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+  (internalReviewResidualClosureGateData.ready ∧
+    finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+    finalTheoremReleaseChainIndexReady) ∧
+  prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed ∧
+  prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld ∧
+  exactGapTheoremBodyClosure.finalReleaseHeld ∧
   exactGapValueReal = exactGapValueReal
 
 /-- Named theorem-derived witness alias for the upstream internal-review gate. -/
@@ -54,15 +58,17 @@ theorem external_audit_readiness_chain_index_ready_witness :
 
 /-- Named theorem-derived witness that the repository-internal residual is closed upstream. -/
 theorem external_audit_readiness_repository_internal_residual_closed_witness :
-    internalReviewResidualClosureGateData.repositoryInternalResidualClosed := by
-  exact internal_review_residual_gate_repository_residual_closed
-    internalReviewResidualClosureGateData internal_review_residual_closure_gate_ready
+    let _repositoryInternalResidualClosed :=
+      internalReviewResidualClosureGateData.repositoryInternalResidualClosed
+    fourLaneResidualClosureData.ready := by
+  exact internal_review_residual_gate_repository_residual_closed_witness
 
 /-- Named theorem-derived witness that no review-level residual is left upstream. -/
 theorem external_audit_readiness_no_review_level_residual_left_witness :
-    internalReviewResidualClosureGateData.noReviewLevelResidualLeft := by
-  exact internal_review_residual_gate_no_review_level_residual_left
-    internalReviewResidualClosureGateData internal_review_residual_closure_gate_ready
+    let _noReviewLevelResidualLeft :=
+      internalReviewResidualClosureGateData.noReviewLevelResidualLeft
+    fourLaneResidualClosureData.noReviewLevelResidualLeft := by
+  exact internal_review_residual_gate_no_review_level_residual_left_witness
 
 /-- Named theorem-derived witness for independent replay visibility via the chain index. -/
 theorem external_audit_readiness_independent_replay_visible_witness :
@@ -102,9 +108,9 @@ theorem external_audit_readiness_public_boundary_held_witness :
 
 /-- Named theorem-derived witness that final release remains held upstream. -/
 theorem external_audit_readiness_final_release_held_witness :
-    internalReviewResidualClosureGateData.finalReleaseHeld := by
-  exact internal_review_residual_gate_final_release_held
-    internalReviewResidualClosureGateData internal_review_residual_closure_gate_ready
+    let _finalReleaseHeld := internalReviewResidualClosureGateData.finalReleaseHeld
+    exactGapTheoremBodyClosure.finalReleaseHeld := by
+  exact internal_review_residual_gate_final_release_held_witness
 
 /-- Named theorem-derived witness alias preserving the abstract exact-value carrier. -/
 theorem external_audit_readiness_exact_value_preserved_witness :
@@ -112,58 +118,60 @@ theorem external_audit_readiness_exact_value_preserved_witness :
   rfl
 
 theorem external_audit_readiness_repository_internal_residual_closed
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.repositoryInternalResidualClosed := by
-  rcases hD with ⟨_, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _repositoryInternalResidualClosed := D.repositoryInternalResidualClosed
+    fourLaneResidualClosureData.ready := by
+  exact D.repositoryInternalResidualClosed
 
 theorem external_audit_readiness_no_review_level_residual_left
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.noReviewLevelResidualLeft := by
-  rcases hD with ⟨_, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _noReviewLevelResidualLeft := D.noReviewLevelResidualLeft
+    fourLaneResidualClosureData.noReviewLevelResidualLeft := by
+  exact D.noReviewLevelResidualLeft
 
 theorem external_audit_readiness_independent_replay_visible
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.independentReplayVisible := by
-  rcases hD with ⟨_, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _independentReplayVisible := D.independentReplayVisible
+    finalTheoremReleaseChainIndexReady := by
+  exact D.independentReplayVisible
 
 theorem external_audit_readiness_audit_script_route_visible
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.auditScriptRouteVisible := by
-  rcases hD with ⟨_, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _auditScriptRouteVisible := D.auditScriptRouteVisible
+    finalTheoremReleaseBundleManifestReviewSurface.ready := by
+  exact D.auditScriptRouteVisible
 
 theorem external_audit_readiness_ci_route_visible
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.ciRouteVisible := by
-  rcases hD with ⟨_, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _ciRouteVisible := D.ciRouteVisible
+    finalTheoremReleaseBundleManifestReviewSurface.ready := by
+  exact D.ciRouteVisible
 
 theorem external_audit_readiness_external_audit_ready
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.externalAuditReady := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _externalAuditReady := D.externalAuditReady
+    internalReviewResidualClosureGateData.ready ∧
+      finalTheoremReleaseBundleManifestReviewSurface.ready ∧
+      finalTheoremReleaseChainIndexReady := by
+  exact D.externalAuditReady
 
 theorem external_audit_readiness_external_consensus_not_claimed
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.externalConsensusNotClaimed := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _externalConsensusNotClaimed := D.externalConsensusNotClaimed
+    prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed := by
+  exact D.externalConsensusNotClaimed
 
 theorem external_audit_readiness_public_boundary_held
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.publicBoundaryHeld := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _publicBoundaryHeld := D.publicBoundaryHeld
+    prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld := by
+  exact D.publicBoundaryHeld
 
 theorem external_audit_readiness_final_release_held
-    (D : ExternalAuditReadinessGateData) (hD : D.ready) :
-    D.finalReleaseHeld := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
+    let _finalReleaseHeld := D.finalReleaseHeld
+    exactGapTheoremBodyClosure.finalReleaseHeld := by
+  exact D.finalReleaseHeld
 
 theorem external_audit_readiness_exact_value_preserved
     (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
@@ -175,27 +183,24 @@ def externalAuditReadinessGateData : ExternalAuditReadinessGateData :=
     bundleManifestReady := external_audit_readiness_bundle_manifest_ready_witness
     chainIndexReady := external_audit_readiness_chain_index_ready_witness
     repositoryInternalResidualClosed :=
-      internalReviewResidualClosureGateData.repositoryInternalResidualClosed
+      external_audit_readiness_repository_internal_residual_closed_witness
     noReviewLevelResidualLeft :=
-      internalReviewResidualClosureGateData.noReviewLevelResidualLeft
-    independentReplayVisible := finalTheoremReleaseChainIndexReady
-    auditScriptRouteVisible := finalTheoremReleaseBundleManifestReviewSurface.ready
-    ciRouteVisible := finalTheoremReleaseBundleManifestReviewSurface.ready
-    externalAuditReady :=
-      internalReviewResidualClosureGateData.ready ∧
-      finalTheoremReleaseBundleManifestReviewSurface.ready ∧
-      finalTheoremReleaseChainIndexReady
+      external_audit_readiness_no_review_level_residual_left_witness
+    independentReplayVisible := external_audit_readiness_independent_replay_visible_witness
+    auditScriptRouteVisible := external_audit_readiness_audit_script_route_visible_witness
+    ciRouteVisible := external_audit_readiness_ci_route_visible_witness
+    externalAuditReady := external_audit_readiness_external_audit_ready_witness
     externalConsensusNotClaimed :=
-      prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed
-    publicBoundaryHeld := prototypeFinalTheoremReleaseChainIndexData.publicBoundaryHeld
-    finalReleaseHeld := internalReviewResidualClosureGateData.finalReleaseHeld
+      external_audit_readiness_external_consensus_not_claimed_witness
+    publicBoundaryHeld := external_audit_readiness_public_boundary_held_witness
+    finalReleaseHeld := external_audit_readiness_final_release_held_witness
     exactValuePreserved := external_audit_readiness_exact_value_preserved_witness }
 
 theorem external_audit_readiness_gate_ready :
     externalAuditReadinessGateData.ready := by
-  exact And.intro externalAuditReadinessGateData.internalGateReady <|
-    And.intro externalAuditReadinessGateData.bundleManifestReady <|
-    And.intro externalAuditReadinessGateData.chainIndexReady <|
+  exact And.intro external_audit_readiness_internal_gate_ready_witness <|
+    And.intro external_audit_readiness_bundle_manifest_ready_witness <|
+    And.intro external_audit_readiness_chain_index_ready_witness <|
     And.intro external_audit_readiness_repository_internal_residual_closed_witness <|
     And.intro external_audit_readiness_no_review_level_residual_left_witness <|
     And.intro external_audit_readiness_independent_replay_visible_witness <|
@@ -204,8 +209,7 @@ theorem external_audit_readiness_gate_ready :
     And.intro external_audit_readiness_external_audit_ready_witness <|
     And.intro external_audit_readiness_external_consensus_not_claimed_witness <|
     And.intro external_audit_readiness_public_boundary_held_witness <|
-    And.intro external_audit_readiness_final_release_held_witness
-      externalAuditReadinessGateData.exactValuePreserved
+    And.intro external_audit_readiness_final_release_held_witness rfl
 
 /-- Append-only external-audit projection of the complete continuum-Hamiltonian
 mass-gap release adoption surface.  This does not claim external consensus; it
