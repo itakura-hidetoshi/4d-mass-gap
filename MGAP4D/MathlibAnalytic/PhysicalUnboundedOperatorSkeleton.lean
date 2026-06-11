@@ -88,7 +88,7 @@ def finalPhysicalUnboundedOperatorSkeletonData :
     domain := finalPhysicalHilbertDomain
     H_phys := finalPhysicalHamiltonian
     distinguished := finalPhysicalHilbertZero
-    distinguished_in_domain := True.intro
+    distinguished_in_domain := final_physical_hilbert_zero_in_domain
     domain_preserved := final_physical_hamiltonian_domain_preserved
     symmetric_on_domain := final_physical_hamiltonian_symmetric_on_domain
     selfAdjointCertificate :=
