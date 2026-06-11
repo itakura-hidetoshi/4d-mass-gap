@@ -12,7 +12,7 @@ def continuumHamiltonianCompleteMassGapReleaseAdoptionReady : Prop :=
   continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
   0 < exactGapValueReal ∧
   continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
-  continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
   continuumHamiltonianMassGapWitnessData.finalReleaseHeld
 
@@ -127,7 +127,7 @@ theorem continuum_hamiltonian_complete_spectral_release_adoption_positive_nonzer
 makes no external-consensus claim. -/
 theorem continuum_hamiltonian_complete_release_adoption_boundary_preserved :
     continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
-      continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+      finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
       continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases continuum_hamiltonian_complete_mass_gap_release_adoption_ready with
