@@ -240,7 +240,7 @@ Reviewer checkpoint:
 [ ] `ConcreteHPhysRealizationTheorem.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected for `FinalPhysicalHilbertCarrier`, `finalPhysicalHamiltonian`, `finalPhysicalRayleigh`, and `finalPhysicalUnboundedOperatorSkeletonData`.
-[ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm `prototypePhysicalUnboundedOperatorSkeletonData` aliases the final physical data.
+[ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases.
 [ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected with boundary markers.
 [ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected for `FinalPhysicalHilbertCarrier`, `finalPhysicalHamiltonian`, `finalPhysicalRayleigh`, and `finalConcreteYangMillsHamiltonianSkeletonData`.
 [ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected to confirm `prototypeConcreteYangMillsHamiltonianSkeletonData` aliases the final physical carrier route.
