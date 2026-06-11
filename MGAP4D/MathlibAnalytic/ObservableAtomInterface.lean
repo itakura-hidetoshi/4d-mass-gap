@@ -108,7 +108,7 @@ structure ObservableAtomReviewSurface where
       singletonObservableAtomInterface.pvm.exactAtom
   atom_def : singletonObservableAtomInterface.atom = exactGapAtomReal
 
-def ObservableAtomReviewSurface.ready (S : ObservableAtomReviewSurface) : Prop :=
+def ObservableAtomReviewSurface.ready (_S : ObservableAtomReviewSurface) : Prop :=
   pvmReviewSurface.ready ∧
   singletonObservableAtomInterface.ready ∧
   exactGapValueReal ∈ singletonObservableAtomInterface.atom ∧
@@ -148,7 +148,9 @@ theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready
     And.intro singleton_observable_atom_interface_compatible_with_pvm rfl
 
 theorem observable_atom_review_surface_weight_in_positive_ray :
-    observableAtomReviewSurface.weightInPositiveRay := by
+    singletonObservableAtomInterface.spectralWeight
+      singletonObservableAtomInterface.chosenObservable
+      singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ) := by
   exact singleton_observable_atom_interface_weight_in_positive_ray
 
 end MathlibAnalytic
