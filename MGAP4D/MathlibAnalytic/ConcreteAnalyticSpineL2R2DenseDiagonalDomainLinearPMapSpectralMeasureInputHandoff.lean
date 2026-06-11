@@ -14,7 +14,8 @@ noncomputable section
 This is still an input handoff, not a concrete spectral-measure construction.  It
 records that the actual self-adjoint dense `LinearPMap` lane can now be connected
 to the existing spectral realization skeleton, while concrete spectral measure
-and concrete PVM remain visible downstream residuals. -/
+and concrete PVM remain visible downstream residuals.  It deliberately carries
+only the exact-value derivation boundary, not a direct `33/20` value theorem. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface where
   residualRefinementReady :
     concreteL2R2DenseDiagonalDomainLinearPMapConcreteResidualRefinement.ready
@@ -33,8 +34,8 @@ structure ConcreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSu
     spectralRealizationSkeletonReviewSurface.positiveMassAtExact
   rayleighExactWitness :
     spectralRealizationSkeletonReviewSurface.rayleighExactWitness
-  exactValueEq3320 :
-    exactGapValueReal = (33 : ℝ) / 20
+  exactValueDerivationBoundaryReady :
+    exactGapValueDerivationBoundary.ready
   spectralMeasureInputConnected : Prop
   concreteSpectralMeasureStillOpen : Prop
   concretePVMStillOpen : Prop
@@ -61,8 +62,8 @@ def concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface 
       spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof
     rayleighExactWitness :=
       spectralRealizationSkeletonReviewSurface.rayleighExactWitness_proof
-    exactValueEq3320 :=
-      continuum_hamiltonian_witness_exact_value_derivation_provenance
+    exactValueDerivationBoundaryReady :=
+      exact_gap_value_derivation_boundary_ready
     spectralMeasureInputConnected := True
     concreteSpectralMeasureStillOpen := True
     concretePVMStillOpen := True
@@ -84,7 +85,7 @@ def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHa
   spectralRealizationSkeletonReviewSurface.observableAtomWitness ∧
   spectralRealizationSkeletonReviewSurface.positiveMassAtExact ∧
   spectralRealizationSkeletonReviewSurface.rayleighExactWitness ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+  exactGapValueDerivationBoundary.ready ∧
   concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.spectralMeasureInputConnected ∧
   concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concreteSpectralMeasureStillOpen ∧
   concreteL2R2DenseDiagonalDomainLinearPMapSpectralMeasureInputHandoffSurface.concretePVMStillOpen ∧
@@ -104,7 +105,7 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_spectral
     spectralRealizationSkeletonReviewSurface.observableAtomWitness_proof,
     spectralRealizationSkeletonReviewSurface.positiveMassAtExact_proof,
     spectralRealizationSkeletonReviewSurface.rayleighExactWitness_proof,
-    continuum_hamiltonian_witness_exact_value_derivation_provenance,
+    exact_gap_value_derivation_boundary_ready,
     trivial,
     trivial,
     trivial,
