@@ -10,6 +10,9 @@ import sys
 STRING_RE = re.compile(r'"(?:[^"\\]|\\.)*"')
 FORBIDDEN_TOKENS_RE = re.compile(r"\b(sorry|admit|axiom|constant)\b")
 TARGET_PATH = Path("MGAP4D/MathlibAnalytic/ExternalAuditReadinessGate.lean")
+CHAIN_ADDENDUM_PATH = Path(
+    "MGAP4D/MathlibAnalytic/FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum.lean"
+)
 DOC_PATH = Path("docs/external_audit_readiness_gate.md")
 
 REQUIRED_TARGET_ANCHORS = (
@@ -164,7 +167,7 @@ def main() -> None:
     failures.extend(audit_forbidden_tokens(TARGET_PATH))
     failures.extend(require(TARGET_PATH, REQUIRED_TARGET_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_THEOREM_ANCHORS, "external audit readiness theorem", clean_lean=True))
-    failures.extend(require(TARGET_PATH, REQUIRED_CHAIN_ADDENDUM_ANCHORS, "external audit continuum Hamiltonian chain addendum", clean_lean=True))
+    failures.extend(require(CHAIN_ADDENDUM_PATH, REQUIRED_CHAIN_ADDENDUM_ANCHORS, "external audit continuum Hamiltonian chain addendum", clean_lean=True))
     failures.extend(require(TARGET_PATH, REQUIRED_SPECTRAL_ANCHORS, "external audit readiness spectral addendum", clean_lean=True))
     failures.extend(forbid(TARGET_PATH, FORBIDDEN_STALE_ANCHORS, "external audit readiness target", clean_lean=True))
     failures.extend(require(DOC_PATH, REQUIRED_DOC_ANCHORS, "external audit readiness documentation", clean_lean=False))
@@ -174,6 +177,7 @@ def main() -> None:
     print(f"External audit readiness theorem anchors audited: {len(REQUIRED_THEOREM_ANCHORS)}")
     print(f"External audit continuum Hamiltonian chain addendum anchors audited: {len(REQUIRED_CHAIN_ADDENDUM_ANCHORS)}")
     print(f"External audit spectral addendum anchors audited: {len(REQUIRED_SPECTRAL_ANCHORS)}")
+    print(f"Continuum Hamiltonian chain addendum audited: {CHAIN_ADDENDUM_PATH}")
     print("Documentation audited: docs/external_audit_readiness_gate.md")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
 
