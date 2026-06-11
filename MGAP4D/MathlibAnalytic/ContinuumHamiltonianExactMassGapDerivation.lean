@@ -43,7 +43,9 @@ theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
       hPublic, hFinal⟩
   have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
     unfold exactGapValueReal
-    exact (Classical.choose_spec _).1
+    calc
+      Classical.choose _ = ((11 : ℝ) * 3) / 20 := (Classical.choose_spec _).1
+      _ = (33 : ℝ) / 20 := by norm_num
   exact And.intro hPhysical <|
     And.intro hHPhys <|
     And.intro hSpectral <|
@@ -69,7 +71,9 @@ theorem physical_continuum_hamiltonian_exact_gap_33_over_20 :
     ⟨_, _, _, _, _, _, hPos, _, _⟩
   have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
     unfold exactGapValueReal
-    exact (Classical.choose_spec _).1
+    calc
+      Classical.choose _ = ((11 : ℝ) * 3) / 20 := (Classical.choose_spec _).1
+      _ = (33 : ℝ) / 20 := by norm_num
   exact And.intro hPos hExact
 
 /-- The continuum Hamiltonian mass-gap witness is theorem-derived from the
