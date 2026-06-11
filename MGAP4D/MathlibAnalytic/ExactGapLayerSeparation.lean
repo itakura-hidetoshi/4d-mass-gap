@@ -30,7 +30,7 @@ def ExactGapAbstractTheoremBodyLayerReady : Prop :=
       singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
         singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
 
-/-- Carrier layer: the normalized real carrier and its arithmetic checks.
+/-- Carrier layer: the normalized real carrier and its theorem-route arithmetic checks.
 
 This legacy layer is isolated from the upstream spectral receipt layer; it should
 not be read as the source of the R6 exact atom value. -/
@@ -109,9 +109,10 @@ theorem exact_gap_abstract_theorem_body_layer_ready :
     And.intro singleton_operator_measure_compatibility_nonzero_weight
       singleton_operator_measure_compatibility_weight_equals_pvm_mass
 
-/-- The carrier layer is ready. -/
+/-- The carrier layer is ready via the continuum-Hamiltonian theorem route. -/
 theorem exact_gap_carrier_layer_ready : ExactGapCarrierLayerReady := by
-  exact And.intro exactGapValueReal_eq exactGapValueReal_pos
+  exact And.intro continuum_hamiltonian_witness_exact_value_derivation_provenance
+    exactGapValueReal_pos
 
 /-- The continuum witness provenance proposition is ready. -/
 theorem exact_gap_continuum_witness_provenance_layer_ready :
