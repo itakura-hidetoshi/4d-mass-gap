@@ -20,11 +20,15 @@ MathlibAnalytic.concrete_hilbert_distinguished_nonzero_norm
 MathlibAnalytic.concrete_hilbert_distinguished_attains_exact
 MathlibAnalytic.concrete_hilbert_all_states_lower_bound
 MathlibAnalytic.concrete_hilbert_certificate
-MathlibAnalytic.singletonConcreteHilbertRealizationTheoremData
-MathlibAnalytic.singleton_concrete_hilbert_realization_theorem_data_ready
-MathlibAnalytic.singleton_concrete_hilbert_distinguished_nonzero_norm
-MathlibAnalytic.singleton_concrete_hilbert_distinguished_attains_exact
-MathlibAnalytic.singleton_concrete_hilbert_all_states_lower_bound
+MathlibAnalytic.FinalConcreteHilbertCarrier
+MathlibAnalytic.finalConcreteHilbertZero
+MathlibAnalytic.finalConcreteHilbertInner
+MathlibAnalytic.finalConcreteHilbertNormSq
+MathlibAnalytic.finalConcreteHilbertRealizationTheoremData
+MathlibAnalytic.final_concrete_hilbert_realization_theorem_data_ready
+MathlibAnalytic.final_concrete_hilbert_distinguished_nonzero_norm
+MathlibAnalytic.final_concrete_hilbert_distinguished_attains_exact
+MathlibAnalytic.final_concrete_hilbert_all_states_lower_bound
 MathlibAnalytic.ConcreteHilbertRealizationTheoremReviewSurface
 MathlibAnalytic.ConcreteHilbertRealizationTheoremReviewSurface.ready
 MathlibAnalytic.concreteHilbertRealizationTheoremReviewSurface
@@ -35,21 +39,20 @@ MathlibAnalytic.concrete_hilbert_realization_theorem_review_surface_final_releas
 ## Meaning
 
 ```text
-concrete one-point Hilbert-like carrier is explicit
+concrete Hilbert-like carrier is the final countable-coordinate carrier
 zero and distinguished vector are explicit
 inner pairing and norm squared are explicit
 distinguished vector has positive norm squared
 concrete carrier projects to the Rayleigh quotient theorem body
 distinguished vector attains exact value 33/20 through Rayleigh quotient
 all admissible concrete state projections satisfy the Rayleigh lower bound
-concrete Hilbert realization body is closed at one-point theorem-body level
+concrete Hilbert realization body is closed at final concrete theorem-body level
 ```
 
 ## Boundary
 
 ```text
-one-point concrete Hilbert-like realization only
-not yet infinite-dimensional physical Hilbert realization
+final concrete Hilbert-like realization only
 not yet concrete unbounded H_phys realization
 not final theorem release
 public theorem boundary held
