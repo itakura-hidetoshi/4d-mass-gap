@@ -234,37 +234,38 @@ theorem external_audit_readiness_complete_mass_gap_exact_positive :
 def externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady : Prop :=
   externalAuditReadinessGateData.ready ∧
   finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady ∧
-  physicalContinuumHamiltonianToExactPositiveMassGap ∧
-  physicalContinuumHamiltonianExactGap33Over20 ∧
   continuumHamiltonianMassGapTheoremDerivedWitness ∧
   continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
   continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
-  continuumHamiltonianMassGapWitnessData.theoremWitnessOnly
+  continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
 
 theorem external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready :
     externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady := by
   unfold externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady
   rcases final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready with
-    ⟨_, hExactMassGap, hExactValue, hDerived, hPublic, hFinal, hWitnessOnly⟩
+    ⟨hNoConsensus, _, _, hDerived, hPublic, hFinal, hWitnessOnly⟩
   exact And.intro external_audit_readiness_gate_ready <|
     And.intro final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready <|
-    And.intro hExactMassGap <|
-    And.intro hExactValue <|
     And.intro hDerived <|
     And.intro hPublic <|
-    And.intro hFinal hWitnessOnly
+    And.intro hFinal <|
+    And.intro hWitnessOnly hNoConsensus
 
-theorem external_audit_readiness_continuum_hamiltonian_exact_33_over_20 :
-    physicalContinuumHamiltonianExactGap33Over20 := by
+theorem external_audit_readiness_continuum_hamiltonian_addendum_nonadoption_boundary :
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+      continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
+      continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready with
-    ⟨_, _, _, hExactValue, _⟩
-  exact hExactValue
+    ⟨_, _, _, hPublic, hFinal, _, hNoConsensus⟩
+  exact And.intro hNoConsensus <|
+    And.intro hPublic hFinal
 
 theorem external_audit_readiness_continuum_hamiltonian_addendum_boundary_held :
     continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
       continuumHamiltonianMassGapWitnessData.finalReleaseHeld := by
   rcases external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready with
-    ⟨_, _, _, _, _, hPublic, hFinal, _⟩
+    ⟨_, _, _, hPublic, hFinal, _⟩
   exact And.intro hPublic hFinal
 
 def externalAuditReadinessCompleteSpectralMassGapAddendumReady : Prop :=
@@ -272,10 +273,10 @@ def externalAuditReadinessCompleteSpectralMassGapAddendumReady : Prop :=
   continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady ∧
   exactGapValueReal =
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
-  yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-    (33 : ℝ) / 20 ∧
+  YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
@@ -285,13 +286,14 @@ theorem external_audit_readiness_complete_spectral_mass_gap_addendum_ready :
   rcases continuum_hamiltonian_complete_spectral_release_adoption_positive_nonzero_mass with
     ⟨hMassPos, hMassNonzero⟩
   rcases continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved with
-    ⟨hPublic, hFinal⟩
+    ⟨hNoConsensus, hPublic, hFinal⟩
   exact And.intro external_audit_readiness_gate_ready <|
     And.intro continuum_hamiltonian_complete_spectral_mass_gap_release_adoption_ready <|
     And.intro continuum_hamiltonian_complete_spectral_release_adoption_exact_mass_gap <|
-    And.intro continuum_hamiltonian_complete_spectral_release_adoption_forces_gap_33_over_20 <|
+    And.intro continuum_hamiltonian_complete_spectral_release_adoption_requires_r6_value_pinning <|
     And.intro hMassPos <|
     And.intro hMassNonzero <|
+    And.intro hNoConsensus <|
     And.intro hPublic hFinal
 
 theorem external_audit_readiness_complete_spectral_mass_gap_exact_value :
@@ -301,12 +303,11 @@ theorem external_audit_readiness_complete_spectral_mass_gap_exact_value :
     ⟨_, _, hExact, _⟩
   exact hExact
 
-theorem external_audit_readiness_complete_spectral_mass_gap_forces_gap_33_over_20 :
-    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-      (33 : ℝ) / 20 := by
+theorem external_audit_readiness_complete_spectral_mass_gap_requires_r6_value_pinning :
+    YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning := by
   rcases external_audit_readiness_complete_spectral_mass_gap_addendum_ready with
-    ⟨_, _, _, hForced, _⟩
-  exact hForced
+    ⟨_, _, _, hRequires, _⟩
+  exact hRequires
 
 theorem external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass :
     0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
@@ -315,20 +316,22 @@ theorem external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mas
   exact And.intro hMassPos hMassNonzero
 
 theorem external_audit_readiness_complete_spectral_mass_gap_boundary_held :
-    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+      yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
       yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
   rcases external_audit_readiness_complete_spectral_mass_gap_addendum_ready with
-    ⟨_, _, _, _, _, _, hPublic, hFinal⟩
-  exact And.intro hPublic hFinal
+    ⟨_, _, _, _, _, _, hNoConsensus, hPublic, hFinal⟩
+  exact And.intro hNoConsensus <|
+    And.intro hPublic hFinal
 
 def externalAuditReadinessPVMSpectralAtomPublicAuditProjection : Prop :=
   externalAuditReadinessCompleteSpectralMassGapAddendumReady ∧
   yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
-  yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-    (33 : ℝ) / 20 ∧
+  YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
@@ -338,12 +341,13 @@ theorem external_audit_readiness_pvm_spectral_atom_public_audit_projection :
   rcases external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass with
     ⟨hMassPos, hMassNonzero⟩
   rcases external_audit_readiness_complete_spectral_mass_gap_boundary_held with
-    ⟨hPublic, hFinal⟩
+    ⟨hNoConsensus, hPublic, hFinal⟩
   exact And.intro external_audit_readiness_complete_spectral_mass_gap_addendum_ready <|
     And.intro yang_mills_hamiltonian_observable_atom_eq_derived <|
-    And.intro external_audit_readiness_complete_spectral_mass_gap_forces_gap_33_over_20 <|
+    And.intro external_audit_readiness_complete_spectral_mass_gap_requires_r6_value_pinning <|
     And.intro hMassPos <|
     And.intro hMassNonzero <|
+    And.intro hNoConsensus <|
     And.intro hPublic hFinal
 
 theorem external_audit_readiness_pvm_spectral_atom_value_eq_derived :
@@ -353,12 +357,11 @@ theorem external_audit_readiness_pvm_spectral_atom_value_eq_derived :
     ⟨_, hAtom, _⟩
   exact hAtom
 
-theorem external_audit_readiness_pvm_spectral_atom_forces_gap_33_over_20 :
-    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-      (33 : ℝ) / 20 := by
+theorem external_audit_readiness_pvm_spectral_atom_requires_r6_value_pinning :
+    YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning := by
   rcases external_audit_readiness_pvm_spectral_atom_public_audit_projection with
-    ⟨_, _, hForced, _⟩
-  exact hForced
+    ⟨_, _, hRequires, _⟩
+  exact hRequires
 
 theorem external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass :
     0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
@@ -367,11 +370,13 @@ theorem external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass :
   exact And.intro hMassPos hMassNonzero
 
 theorem external_audit_readiness_pvm_spectral_atom_boundary_held :
-    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+      yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
       yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
   rcases external_audit_readiness_pvm_spectral_atom_public_audit_projection with
-    ⟨_, _, _, _, _, hPublic, hFinal⟩
-  exact And.intro hPublic hFinal
+    ⟨_, _, _, _, _, hNoConsensus, hPublic, hFinal⟩
+  exact And.intro hNoConsensus <|
+    And.intro hPublic hFinal
 
 end MathlibAnalytic
 end MGAP4D
