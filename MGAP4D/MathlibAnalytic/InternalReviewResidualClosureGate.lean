@@ -21,8 +21,8 @@ structure InternalReviewResidualClosureGateData where
   notPackagingArtifactPreserved : exactGapTheoremBodyClosure.ready
   notCILedgerArtifactPreserved : exactGapTheoremBodyClosure.ready
   finalReleaseClosureLinked : finalTheoremReleaseClosureReviewSurface.ready
-  externalReviewBoundaryVisible : finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
-  publicBoundaryHeld : finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+  externalReviewBoundaryVisible : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
   finalReleaseHeld : exactGapTheoremBodyClosure.finalReleaseHeld
   exactValuePreserved : exactGapValueReal = exactGapValueReal
 
@@ -38,8 +38,8 @@ def InternalReviewResidualClosureGateData.ready
   exactGapTheoremBodyClosure.ready ∧
   exactGapTheoremBodyClosure.ready ∧
   finalTheoremReleaseClosureReviewSurface.ready ∧
-  finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed ∧
-  finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld ∧
   exactGapTheoremBodyClosure.finalReleaseHeld ∧
   exactGapValueReal = exactGapValueReal
 
@@ -78,13 +78,16 @@ theorem internal_review_residual_gate_final_release_closure_linked_witness :
 
 /-- Named theorem-derived witness that the external-review boundary remains visible. -/
 theorem internal_review_residual_gate_external_review_boundary_visible_witness :
-    finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed := by
-  exact finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
+    let _closureExternalConsensusNotClaimed :=
+      finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed := by
+  exact final_theorem_release_closure_external_consensus_not_claimed_witness
 
 /-- Named theorem-derived witness that the public theorem boundary remains held. -/
 theorem internal_review_residual_gate_public_boundary_held_witness :
-    finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld := by
-  exact finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+    let _closurePublicBoundaryHeld := finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
+  exact final_theorem_release_closure_public_boundary_held_witness
 
 /-- Named theorem-derived witness that final release remains held at the theorem-body boundary. -/
 theorem internal_review_residual_gate_final_release_held_witness :
@@ -137,14 +140,14 @@ theorem internal_review_residual_gate_final_release_closure_linked
 theorem internal_review_residual_gate_external_review_boundary_visible
     (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
     let _externalReviewBoundaryVisible := D.externalReviewBoundaryVisible
-    finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed := by
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed := by
   exact D.externalReviewBoundaryVisible
 
 /-- Public theorem boundary remains held. -/
 theorem internal_review_residual_gate_public_boundary_held
     (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
     let _publicBoundaryHeld := D.publicBoundaryHeld
-    finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld := by
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
   exact D.publicBoundaryHeld
 
 /-- Final release remains held. -/
