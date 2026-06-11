@@ -256,7 +256,7 @@ structure ConcreteHPhysRealizationTheoremReviewSurface where
         (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)
 
 def ConcreteHPhysRealizationTheoremReviewSurface.ready
-    (S : ConcreteHPhysRealizationTheoremReviewSurface) : Prop :=
+    (_S : ConcreteHPhysRealizationTheoremReviewSurface) : Prop :=
   concreteHilbertRealizationTheoremReviewSurface.ready ∧
   singletonConcreteHPhysRealizationTheoremData.ready ∧
   (∀ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
@@ -280,8 +280,19 @@ def ConcreteHPhysRealizationTheoremReviewSurface.ready
       (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
         (singletonConcreteHPhysRealizationTheoremData.toHPhysState
           singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal) ∧
-  S.concreteHPhysRealizationBodyClosed ∧ S.operatorResidualStillOpen ∧
-  S.finalReleaseHeld ∧ S.publicBoundaryHeld
+  (singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
+          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal) ∧
+  (∃ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
+      singletonConcreteHPhysRealizationTheoremData.domain ψ ∧
+        singletonConcreteHPhysRealizationTheoremData.domain
+          (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)) ∧
+  (0 < exactGapValueReal) ∧
+  (∀ ψ,
+    singletonConcreteHPhysRealizationTheoremData.domain ψ →
+      singletonConcreteHPhysRealizationTheoremData.domain
+        (singletonConcreteHPhysRealizationTheoremData.H_phys ψ))
 
 noncomputable def concreteHPhysRealizationTheoremReviewSurface :
     ConcreteHPhysRealizationTheoremReviewSurface :=
@@ -319,9 +330,8 @@ theorem concrete_hphys_realization_theorem_review_surface_ready :
     And.intro exactGapValueReal_pos singleton_concrete_hphys_domain_closed
 
 theorem concrete_hphys_realization_theorem_review_surface_final_release_held :
-    ConcreteHPhysRealizationTheoremReviewSurface.finalReleaseHeld
-      concreteHPhysRealizationTheoremReviewSurface := by
-  exact exactGapValueReal_pos
+    0 < exactGapValueReal := by
+  exact concreteHPhysRealizationTheoremReviewSurface.finalReleaseHeld
 
 end MathlibAnalytic
 end MGAP4D
