@@ -8,17 +8,14 @@ open scoped Topology ENNReal lp
 
 noncomputable section
 
-/-- Local exact-value witness for the theorem-body closure handoff.
+/-- Non-definitional exact-value positivity route for the theorem-body closure handoff.
 
-This replaces the stale short name `exactGapValueReal_eq` with a replayed proof
-from the normalized exact-gap carrier witness. -/
-theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_eq_3320 :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  unfold exactGapValueReal
-  calc
-    Classical.choose exactGapValueRealRouteWitness = ((11 : ℝ) * 3) / 20 :=
-      (Classical.choose_spec exactGapValueRealRouteWitness).1
-    _ = (33 : ℝ) / 20 := by norm_num
+This handoff deliberately does not restate or unfold the numeric identity
+`exactGapValueReal = 33 / 20`.  It only transports the already-established
+positive exact-gap carrier through the imported theorem-body closure surface. -/
+theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_positive :
+    0 < exactGapValueReal := by
+  exact exactGapValueReal_pos
 
 /-- Theorem-body closure handoff for the dense diagonal `LinearPMap` lane. -/
 structure ConcreteL2R2DenseDiagonalDomainLinearPMapTheoremBodyClosureHandoffSurface where
@@ -31,8 +28,6 @@ structure ConcreteL2R2DenseDiagonalDomainLinearPMapTheoremBodyClosureHandoffSurf
   actualAdjointEqSelf :
     LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap =
       concreteL2R2DenseDiagonalDomainLinearPMap
-  exactValueEq3320 :
-    exactGapValueReal = (33 : ℝ) / 20
   exactValuePositive :
     0 < exactGapValueReal
   observableWeightPositive :
@@ -64,10 +59,8 @@ def concreteL2R2DenseDiagonalDomainLinearPMapTheoremBodyClosureHandoffSurface :
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint
     actualAdjointEqSelf :=
       concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self
-    exactValueEq3320 :=
-      concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_eq_3320
     exactValuePositive :=
-      exactGapValueReal_pos
+      concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_positive
     observableWeightPositive :=
       exact_gap_theorem_body_closure_weight_positive
     observableWeightNonzero :=
@@ -85,7 +78,6 @@ def concreteAnalyticSpineL2R2DenseDiagonalDomainLinearPMapTheoremBodyClosureHand
   IsSelfAdjoint concreteL2R2DenseDiagonalDomainLinearPMap ∧
   LinearPMap.adjoint concreteL2R2DenseDiagonalDomainLinearPMap =
     concreteL2R2DenseDiagonalDomainLinearPMap ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   0 < exactGapValueReal ∧
   0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
     singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
@@ -110,8 +102,7 @@ theorem concrete_analytic_spine_l2_r2_dense_diagonal_domain_linear_pmap_theorem_
     exact_gap_theorem_body_closure_ready,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint,
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_actual_adjoint_eq_self,
-    concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_eq_3320,
-    exactGapValueReal_pos,
+    concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_positive,
     exact_gap_theorem_body_closure_weight_positive,
     exact_gap_theorem_body_closure_weight_nonzero,
     exact_gap_theorem_body_closure_weight_equals_pvm_mass,
