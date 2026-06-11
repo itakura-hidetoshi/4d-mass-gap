@@ -20,6 +20,11 @@ theorem exactGapEnergyRay_lower_bound :
   intro x hx
   simpa [exactGapEnergyRay] using hx
 
+/-- The exact-gap energy carrier is a closed upper real ray. -/
+theorem exactGapEnergyRay_eq_closed_upper_ray :
+    exactGapEnergyRay = Set.Ici exactGapValueReal := by
+  rfl
+
 /-- The exact gap value is an attained lower bound of the analytic energy ray. -/
 structure GapInfimumRealSurface where
   value : ℝ
@@ -27,7 +32,7 @@ structure GapInfimumRealSurface where
   lower_bound : ∀ x ∈ carrier, value ≤ x
   attained : value ∈ carrier
   positive : 0 < value
-  analyticReplacementBranchOnly : Prop
+  carrier_closed_upper_ray : carrier = Set.Ici value
 
 noncomputable def gapInfimumRealSurface : GapInfimumRealSurface :=
   { value := exactGapValueReal
@@ -35,18 +40,18 @@ noncomputable def gapInfimumRealSurface : GapInfimumRealSurface :=
     lower_bound := exactGapEnergyRay_lower_bound
     attained := exactGapValueReal_mem_energyRay
     positive := exactGapValueReal_pos
-    analyticReplacementBranchOnly := True }
+    carrier_closed_upper_ray := exactGapEnergyRay_eq_closed_upper_ray }
 
 def GapInfimumRealSurface.ready (S : GapInfimumRealSurface) : Prop :=
   (∀ x ∈ S.carrier, S.value ≤ x) ∧
   S.value ∈ S.carrier ∧
   0 < S.value ∧
-  S.analyticReplacementBranchOnly
+  S.carrier = Set.Ici S.value
 
 theorem gap_infimum_real_surface_ready : gapInfimumRealSurface.ready := by
   exact And.intro exactGapEnergyRay_lower_bound <|
     And.intro exactGapValueReal_mem_energyRay <|
-    And.intro exactGapValueReal_pos True.intro
+    And.intro exactGapValueReal_pos exactGapEnergyRay_eq_closed_upper_ray
 
 theorem gap_infimum_real_surface_lower_bound :
     ∀ x ∈ gapInfimumRealSurface.carrier, gapInfimumRealSurface.value ≤ x := by
@@ -59,6 +64,10 @@ theorem gap_infimum_real_surface_attained :
 theorem gap_infimum_real_surface_positive :
     0 < gapInfimumRealSurface.value := by
   exact exactGapValueReal_pos
+
+theorem gap_infimum_real_surface_carrier_closed_upper_ray :
+    gapInfimumRealSurface.carrier = Set.Ici gapInfimumRealSurface.value := by
+  exact exactGapEnergyRay_eq_closed_upper_ray
 
 end MathlibAnalytic
 end MGAP4D
