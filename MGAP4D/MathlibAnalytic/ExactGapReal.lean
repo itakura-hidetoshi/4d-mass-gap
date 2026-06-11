@@ -3,33 +3,21 @@ import MGAP4D.MathlibAnalytic.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Raw route witness for the real-valued exact-gap carrier.
+/-- Abstract normalized real-valued exact-gap carrier.
 
-This exposes only the upstream carrier witness used by `exactGapValueReal`; the
-closed-form normalization to the final published value is still derived in the
-downstream continuum Hamiltonian theorem route. -/
-theorem exactGapValueRealRouteWitness :
-    ∃ value : ℝ, value = ((11 : ℝ) * 3) / 20 ∧ 0 < value ∧ 1 < value := by
-  refine ⟨((11 : ℝ) * 3) / 20, rfl, ?_, ?_⟩
-  · norm_num
-  · norm_num
-
+This carrier records only that the upstream normalized real gap is strictly above
+one.  It deliberately does **not** choose `33 / 20`, does not expose a closed-form
+numeric equality, and must not be used as the source of the R6 displayed value.
+The displayed value is reserved for the downstream spectral/PVM pinning route. -/
 noncomputable def exactGapValueReal : ℝ :=
-  Classical.choose exactGapValueRealRouteWitness
-
-/-- Closed-form arithmetic normalization of the exact-gap carrier. -/
-theorem exactGapValueReal_eq :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  unfold exactGapValueReal
-  exact (Classical.choose_spec exactGapValueRealRouteWitness).1.trans (by norm_num)
-
-theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
-  unfold exactGapValueReal
-  exact (Classical.choose_spec exactGapValueRealRouteWitness).2.1
+  Classical.choose (exists_gt (1 : ℝ))
 
 theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
   unfold exactGapValueReal
-  exact (Classical.choose_spec exactGapValueRealRouteWitness).2.2
+  exact Classical.choose_spec (exists_gt (1 : ℝ))
+
+theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
+  exact lt_trans zero_lt_one exactGapValueReal_above_one
 
 /-- The exact-gap carrier lies in the positive real ray. -/
 theorem exactGapValueReal_mem_positive_ray :
