@@ -5,82 +5,70 @@ namespace MathlibAnalytic
 
 /--
 Spectral theorem / PVM / Hamiltonian necessity surface for the normalized gap
-value.
+carrier.
 
-This is an append-only synthesis layer: the concrete value is not introduced by
-an isolated post-hoc arithmetic rewrite.  Instead, the value is forced through
-these already-imported typed routes:
-
-* continuum Yang--Mills Hamiltonian readiness;
-* self-adjoint / spectral theorem chain readiness;
-* Rayleigh infimum and attainment alignment;
-* PVM / observable spectral atom public-audit projection;
-* exact Hamiltonian normalization to `exactGapValueReal`;
-* the chain-index exact `33/20` addendum.
-
-The statement remains an internal Lean replay surface.  It does not claim
-external mathematical consensus and it does not open the public/final-release
-boundaries. -/
+This append-only synthesis layer records typed carrier alignment through the
+Yang--Mills Hamiltonian spectral route.  It does not adopt
+`derivedHamiltonianSpectralValue = (33 : ℝ) / 20`; that remains the R6
+non-definitional value-pinning obligation.
+-/
 def SpectralPVMHamiltonianGapNecessity : Prop :=
   yangMillsHamiltonianSpectralDerivation3320.ready ∧
   externalAuditReadinessPVMSpectralAtomPublicAuditProjection ∧
   externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady ∧
   yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
-    (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
   yangMillsHamiltonianSpectralDerivation3320.attainedSpectralValue =
-    (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
   yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
-    (33 : ℝ) / 20 ∧
-  yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-    (33 : ℝ) / 20 ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+  exactGapValueReal =
+    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
+  YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
-/-- The Hamiltonian-derived spectral value is necessarily the normalized `33/20`
-value, once the spectral/PVM route and the continuum-Hamiltonian exact addendum
-are both in scope. -/
-theorem spectral_pvm_hamiltonian_derived_value_eq_33_over_20 :
-    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-      (33 : ℝ) / 20 := by
-  exact (Eq.symm yang_mills_hamiltonian_exact_gap_eq_spectral_value).trans
-    physical_continuum_hamiltonian_exact_gap_33_over_20.2
+/-- The Hamiltonian spectral carrier is aligned with the exact-gap carrier. -/
+theorem spectral_pvm_hamiltonian_exact_gap_eq_derived_value :
+    exactGapValueReal =
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
+  exact yang_mills_hamiltonian_exact_gap_eq_spectral_value
 
-/-- The spectral infimum is forced to the normalized `33/20` value through the
-Hamiltonian spectral route. -/
-theorem spectral_pvm_hamiltonian_infimum_value_eq_33_over_20 :
+/-- The spectral infimum is aligned with the derived Hamiltonian spectral carrier. -/
+theorem spectral_pvm_hamiltonian_infimum_value_eq_derived :
     yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
-      (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_spectral_infimum_eq_derived.trans
-    spectral_pvm_hamiltonian_derived_value_eq_33_over_20
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
+  exact yang_mills_hamiltonian_spectral_infimum_eq_derived
 
-/-- The attained spectral value is forced to the normalized `33/20` value through
-the Hamiltonian spectral route. -/
-theorem spectral_pvm_hamiltonian_attained_value_eq_33_over_20 :
+/-- The attained spectral value is aligned with the derived Hamiltonian spectral carrier. -/
+theorem spectral_pvm_hamiltonian_attained_value_eq_derived :
     yangMillsHamiltonianSpectralDerivation3320.attainedSpectralValue =
-      (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_spectral_attainment_eq_derived.trans
-    spectral_pvm_hamiltonian_derived_value_eq_33_over_20
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
+  exact yang_mills_hamiltonian_spectral_attainment_eq_derived
 
-/-- The PVM / observable spectral atom is forced to the normalized `33/20` value
-through the Hamiltonian spectral route. -/
-theorem spectral_pvm_hamiltonian_observable_atom_eq_33_over_20 :
+/-- The PVM / observable spectral atom is aligned with the Hamiltonian spectral carrier. -/
+theorem spectral_pvm_hamiltonian_observable_atom_eq_derived :
     yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
-      (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_observable_atom_eq_derived.trans
-    spectral_pvm_hamiltonian_derived_value_eq_33_over_20
+      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue := by
+  exact yang_mills_hamiltonian_observable_atom_eq_derived
 
-/-- The positive nonzero PVM / observable spectral mass is present on the
-necessity route. -/
+/-- R6 remains responsible for a non-definitional `33/20` value-pinning theorem. -/
+theorem spectral_pvm_hamiltonian_requires_r6_value_pinning :
+    YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning := by
+  exact external_audit_readiness_pvm_spectral_atom_requires_r6_value_pinning
+
+/-- The positive nonzero PVM / observable spectral mass is present on the route. -/
 theorem spectral_pvm_hamiltonian_positive_nonzero_mass :
     0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
   exact external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass
 
-/-- Public/final boundary markers remain held on the necessity route. -/
+/-- Public/final boundary markers remain held on the route. -/
 theorem spectral_pvm_hamiltonian_boundary_held :
-    yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+    finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+      yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
       yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
   exact external_audit_readiness_pvm_spectral_atom_boundary_held
 
@@ -91,17 +79,18 @@ theorem spectral_pvm_hamiltonian_gap_necessity_ready :
   rcases spectral_pvm_hamiltonian_positive_nonzero_mass with
     ⟨hMassPos, hMassNonzero⟩
   rcases spectral_pvm_hamiltonian_boundary_held with
-    ⟨hPublic, hFinal⟩
+    ⟨hNoConsensus, hPublic, hFinal⟩
   exact And.intro yang_mills_hamiltonian_spectral_derivation_3320_ready <|
     And.intro external_audit_readiness_pvm_spectral_atom_public_audit_projection <|
     And.intro external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready <|
-    And.intro spectral_pvm_hamiltonian_infimum_value_eq_33_over_20 <|
-    And.intro spectral_pvm_hamiltonian_attained_value_eq_33_over_20 <|
-    And.intro spectral_pvm_hamiltonian_observable_atom_eq_33_over_20 <|
-    And.intro spectral_pvm_hamiltonian_derived_value_eq_33_over_20 <|
-    And.intro physical_continuum_hamiltonian_exact_gap_33_over_20.2 <|
+    And.intro spectral_pvm_hamiltonian_infimum_value_eq_derived <|
+    And.intro spectral_pvm_hamiltonian_attained_value_eq_derived <|
+    And.intro spectral_pvm_hamiltonian_observable_atom_eq_derived <|
+    And.intro spectral_pvm_hamiltonian_exact_gap_eq_derived_value <|
+    And.intro spectral_pvm_hamiltonian_requires_r6_value_pinning <|
     And.intro hMassPos <|
     And.intro hMassNonzero <|
+    And.intro hNoConsensus <|
     And.intro hPublic hFinal
 
 end MathlibAnalytic
