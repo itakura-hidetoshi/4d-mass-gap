@@ -154,16 +154,20 @@ structure HilbertRayleighQuotientReviewSurface where
   finalReleaseHeld : 0 < exactGapValueReal
   publicBoundaryHeld : exactGapValueReal ∈ exactGapEnergyRay
 
-/-- Concrete certification predicate for the Rayleigh quotient review surface. -/
+/-- Concrete certification predicate for the Rayleigh quotient review surface.
+
+The predicate is a conjunction of propositions.  The fields `S.finalReleaseHeld`
+and `S.publicBoundaryHeld` are proof terms, so they are intentionally not used as
+proposition heads inside the conjunction. -/
 def HilbertRayleighQuotientReviewSurface.certified
-    (S : HilbertRayleighQuotientReviewSurface) : Prop :=
+    (_S : HilbertRayleighQuotientReviewSurface) : Prop :=
   exactGapPostInterfaceResidualMap.certified ∧
   admissibleHilbertRayleighQuotientData.certified ∧
   (∀ ψ : admissibleHilbertRayleighQuotientData.state,
     admissibleHilbertRayleighQuotientData.admissible ψ →
       exactGapValueReal ≤ admissibleHilbertRayleighQuotientData.quotient ψ) ∧
-  admissibleHilbertRayleighQuotientData.quotient
-    admissibleHilbertRayleighQuotientData.witness = exactGapValueReal ∧
+  (admissibleHilbertRayleighQuotientData.quotient
+    admissibleHilbertRayleighQuotientData.witness = exactGapValueReal) ∧
   (∀ ψ : admissibleHilbertRayleighQuotientData.state,
     admissibleHilbertRayleighQuotientData.quotient ψ =
       admissibleHilbertRayleighQuotientData.numerator ψ /
@@ -171,7 +175,8 @@ def HilbertRayleighQuotientReviewSurface.certified
   (∀ ψ : admissibleHilbertRayleighQuotientData.state,
     admissibleHilbertRayleighQuotientData.admissible ψ →
       0 < admissibleHilbertRayleighQuotientData.normSq ψ) ∧
-  S.finalReleaseHeld ∧ S.publicBoundaryHeld
+  (0 < exactGapValueReal) ∧
+  (exactGapValueReal ∈ exactGapEnergyRay)
 
 /-- Backward-compatible readiness name during downstream migration. -/
 def HilbertRayleighQuotientReviewSurface.ready
@@ -204,8 +209,8 @@ theorem hilbert_rayleigh_quotient_review_surface_ready :
   exact hilbert_rayleigh_quotient_review_surface_certified
 
 theorem hilbert_rayleigh_quotient_review_surface_final_release_held :
-    hilbertRayleighQuotientReviewSurface.finalReleaseHeld := by
-  exact exactGapValueReal_pos
+    0 < exactGapValueReal := by
+  exact hilbertRayleighQuotientReviewSurface.finalReleaseHeld
 
 end
 
