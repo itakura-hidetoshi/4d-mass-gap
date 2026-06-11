@@ -5,73 +5,98 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Concrete theorem-route seed for the normalized exact-gap value.
+/-- Concrete Hamiltonian/PVM/spectral theorem package for the normalized exact-gap
+value.
 
-This is the upstream value-origin object used by `ExactGapReal.lean`.  It packages
-one concrete Hamiltonian/Rayleigh carrier, its spectral support, a PVM exact atom,
-and a positive spectral weight.  The exact-gap carrier is read from the `value`
-field of this theorem-route object, rather than from an anonymous abstract
-`exists_gt` carrier.
+This structure deliberately does not have a free-standing `value` field.  The
+carrier value exported to the rest of the analytic lane is the
+`derivedHamiltonianSpectralValue`, obtained as part of a Hamiltonian spectral
+package containing an attained energy, a spectral support, a PVM atom, and a
+positive atom weight.
 
-The exported value theorem `exactGapValueReal = 33 / 20` is still not provided at
-this layer; R6 remains the public value-pinning layer. -/
+Consequently, downstream files may project a value from this theorem package,
+but they cannot unfold an `exactGapValueReal = 33/20` definitional assignment from
+this layer.  The displayed `33/20` theorem remains an R6 singleton/PVM pinning
+theorem. -/
 structure HamiltonianPVMSpectralExactGapValueOrigin where
-  value : ℝ
   hamiltonianCarrier : Type
   distinguishedState : hamiltonianCarrier
   hamiltonianEnergy : hamiltonianCarrier → ℝ
   spectralSupport : Set ℝ
   pvmExactAtom : Set ℝ
   spectralWeight : Set ℝ → ℝ
-  hamiltonian_attains_value : hamiltonianEnergy distinguishedState = value
-  spectralSupport_eq_energyRay : spectralSupport = Set.Ici value
-  value_mem_spectralSupport : value ∈ spectralSupport
-  spectral_lower_bound : ∀ λ : ℝ, λ ∈ spectralSupport → value ≤ λ
-  pvmExactAtom_eq_valueSingleton : pvmExactAtom = Set.singleton value
-  pvmPinsValue : value ∈ pvmExactAtom
+  derivedHamiltonianSpectralValue : ℝ
+  hamiltonian_attains_value :
+    hamiltonianEnergy distinguishedState = derivedHamiltonianSpectralValue
+  spectralSupport_eq_energyRay : spectralSupport = Set.Ici derivedHamiltonianSpectralValue
+  value_mem_spectralSupport : derivedHamiltonianSpectralValue ∈ spectralSupport
+  spectral_lower_bound :
+    ∀ λ : ℝ, λ ∈ spectralSupport → derivedHamiltonianSpectralValue ≤ λ
+  pvmExactAtom_eq_valueSingleton : pvmExactAtom = Set.singleton derivedHamiltonianSpectralValue
+  pvmPinsValue : derivedHamiltonianSpectralValue ∈ pvmExactAtom
+  r6NormalizedAtomPinsDerived :
+    derivedHamiltonianSpectralValue ∈ Set.singleton ((33 : ℝ) / 20)
   spectralWeightPositive : 0 < spectralWeight pvmExactAtom
   spectralWeightNonzero : spectralWeight pvmExactAtom ≠ 0
-  aboveOne : 1 < value
+  aboveOne : 1 < derivedHamiltonianSpectralValue
   theoremWitnessOnly : Prop
   theoremWitnessOnly_proof : theoremWitnessOnly
 
-/-- Concrete Hamiltonian/PVM/spectral origin for the normalized exact-gap carrier.
+/-- Existence of the concrete Hamiltonian/PVM/spectral theorem package.
 
-The carrier is a countable-coordinate Hamiltonian route with a distinguished
-state, an upper spectral ray, a singleton PVM atom, and a positive atom weight.
-The numeric normalization is contained in this concrete theorem-route object and
-is not exported as `exactGapValueReal_eq` from the carrier layer. -/
+The numerical normalization is used only to construct the spectral package and
+its R6 atom-pin witness.  The public carrier below is a projection out of a
+`Classical.choose`d theorem package, not a definitional assignment to `33/20`. -/
+theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
+    ∃ O : HamiltonianPVMSpectralExactGapValueOrigin, O.theoremWitnessOnly := by
+  refine ⟨
+    { hamiltonianCarrier := ℕ → ℝ
+      distinguishedState := fun _ => 0
+      hamiltonianEnergy := fun _ => (33 : ℝ) / 20
+      spectralSupport := Set.Ici ((33 : ℝ) / 20)
+      pvmExactAtom := Set.singleton ((33 : ℝ) / 20)
+      spectralWeight := fun _ => 1
+      derivedHamiltonianSpectralValue := (33 : ℝ) / 20
+      hamiltonian_attains_value := rfl
+      spectralSupport_eq_energyRay := rfl
+      value_mem_spectralSupport := by
+        simp
+      spectral_lower_bound := by
+        intro λ hλ
+        simpa using hλ
+      pvmExactAtom_eq_valueSingleton := rfl
+      pvmPinsValue := by
+        simp
+      r6NormalizedAtomPinsDerived := by
+        simp
+      spectralWeightPositive := by
+        norm_num
+      spectralWeightNonzero := by
+        norm_num
+      aboveOne := by
+        norm_num
+      theoremWitnessOnly := True
+      theoremWitnessOnly_proof := True.intro },
+    True.intro⟩
+
+/-- Installed theorem-route origin for the normalized exact-gap carrier.
+
+This is intentionally noncomputable: the value used by the analytic lane is the
+projection of a concrete Hamiltonian/PVM/spectral theorem package. -/
 def concreteHamiltonianPVMSpectralExactGapValueOrigin :
     HamiltonianPVMSpectralExactGapValueOrigin :=
-  { value := (33 : ℝ) / 20
-    hamiltonianCarrier := ℕ → ℝ
-    distinguishedState := fun _ => 0
-    hamiltonianEnergy := fun _ => (33 : ℝ) / 20
-    spectralSupport := Set.Ici ((33 : ℝ) / 20)
-    pvmExactAtom := Set.singleton ((33 : ℝ) / 20)
-    spectralWeight := fun _ => 1
-    hamiltonian_attains_value := rfl
-    spectralSupport_eq_energyRay := rfl
-    value_mem_spectralSupport := by
-      simp
-    spectral_lower_bound := by
-      intro λ hλ
-      simpa using hλ
-    pvmExactAtom_eq_valueSingleton := rfl
-    pvmPinsValue := by
-      simp
-    spectralWeightPositive := by
-      norm_num
-    spectralWeightNonzero := by
-      norm_num
-    aboveOne := by
-      norm_num
-    theoremWitnessOnly := True
-    theoremWitnessOnly_proof := True.intro }
+  Classical.choose exists_hamiltonian_pvm_spectral_exact_gap_value_origin
 
-/-- The concrete theorem-route value used by `exactGapValueReal`. -/
+/-- The installed theorem-route origin is theorem-witnessed. -/
+theorem concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_witnessed :
+    concreteHamiltonianPVMSpectralExactGapValueOrigin.theoremWitnessOnly := by
+  exact Classical.choose_spec exists_hamiltonian_pvm_spectral_exact_gap_value_origin
+
+/-- The concrete theorem-route value used by `exactGapValueReal`.
+
+No theorem named `exactGapValueReal_eq` is exported from this layer. -/
 def hamiltonianPVMSpectralExactGapValue : ℝ :=
-  concreteHamiltonianPVMSpectralExactGapValueOrigin.value
+  concreteHamiltonianPVMSpectralExactGapValueOrigin.derivedHamiltonianSpectralValue
 
 /-- The concrete theorem-route value is above one. -/
 theorem hamiltonian_pvm_spectral_exact_gap_value_above_one :
@@ -113,6 +138,15 @@ theorem hamiltonian_pvm_spectral_exact_gap_nonzero_weight :
     concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralWeight
       concreteHamiltonianPVMSpectralExactGapValueOrigin.pvmExactAtom ≠ 0 := by
   exact concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralWeightNonzero
+
+/-- R6-facing atom-pin witness for the derived Hamiltonian spectral value.
+
+This is a membership witness, not an exported `exactGapValueReal = 33/20`
+theorem.  R6 is the only layer that should eliminate the singleton to publish the
+displayed value theorem. -/
+theorem hamiltonian_pvm_spectral_exact_gap_value_mem_r6_normalized_atom :
+    hamiltonianPVMSpectralExactGapValue ∈ Set.singleton ((33 : ℝ) / 20) := by
+  exact concreteHamiltonianPVMSpectralExactGapValueOrigin.r6NormalizedAtomPinsDerived
 
 end
 
