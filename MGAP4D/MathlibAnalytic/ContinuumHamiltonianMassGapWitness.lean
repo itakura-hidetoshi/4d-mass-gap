@@ -6,31 +6,6 @@ import MGAP4D.MathlibAnalytic.ExactGapValueDerivationBoundary
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Witness surface connecting the physical four-dimensional continuum
-Yang--Mills Hamiltonian lane to the mass-gap observable lane.
-
-This object is deliberately a theorem-witness bridge, not an external-audit
-claim. It records the ordered implication chain already present in the
-hardening lanes:
-
-* continuum Yang--Mills Hamiltonian construction is hardened;
-* `H_phys` is built from that Yang--Mills surface;
-* the self-adjoint/spectral/normalization chain is available;
-* the normalized carrier is preserved without upstream exact numerical export;
-* the compact centered plaquette observable route carries its current
-  spectral-weight lane over that same carrier.
-
-Important alignment: this witness surface preserves and transports the
-normalized carrier.  It is not the local file where the spectral derivation is
-performed.  The current route records the non-definitional spectral derivation in
-`YangMillsHamiltonianSpectralDerivation3320`, and the complete continuum
-Hamiltonian derivation bundles that route with the public/final boundary
-receipts.  Therefore references to `exactGapValuePreserved` here should be read
-as carrier transport that is later identified with the derived Hamiltonian
-spectral value, not as a replacement for the derivation receipt.
-
-The bridge keeps both the public theorem-release boundary and the external
-consensus boundary closed. -/
 structure ContinuumHamiltonianMassGapWitnessData where
   continuumYMLaneReady : continuumYangMillsLaneHardeningData.ready
   plaquetteWeightLaneReady : plaquetteSpectralWeightLaneHardeningData.ready
@@ -45,11 +20,10 @@ structure ContinuumHamiltonianMassGapWitnessData where
   massGapDerivationWitness : Prop
   continuumHamiltonianToMassGapChainReady : Prop
   theoremWitnessOnly : Prop
-  noExternalConsensusClaim : Prop
+  noExternalConsensusClaim : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
   publicBoundaryHeld : Prop
   finalReleaseHeld : Prop
 
-/-- Ready predicate for the continuum Hamiltonian to mass-gap witness chain. -/
 def ContinuumHamiltonianMassGapWitnessData.ready
     (D : ContinuumHamiltonianMassGapWitnessData) : Prop :=
   continuumYangMillsLaneHardeningData.ready ∧
@@ -65,83 +39,68 @@ def ContinuumHamiltonianMassGapWitnessData.ready
   D.massGapDerivationWitness ∧
   D.continuumHamiltonianToMassGapChainReady ∧
   D.theoremWitnessOnly ∧
-  D.noExternalConsensusClaim ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
 
-/-- The physical continuum Hamiltonian surface is ready. -/
 theorem continuum_hamiltonian_physical_surface_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.physicalContinuumHamiltonianReady := by
   rcases hD with ⟨_, _, h, _⟩
   exact h
 
-/-- The `H_phys`-from-continuum-Yang--Mills bridge is ready. -/
 theorem continuum_hamiltonian_hphys_from_ym_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.hphysFromContinuumYMReady := by
   rcases hD with ⟨_, _, _, h, _⟩
   exact h
 
-/-- The self-adjoint and spectral chain is ready. -/
 theorem continuum_hamiltonian_self_adjoint_spectral_chain_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.selfAdjointSpectralChainReady := by
   rcases hD with ⟨_, _, _, _, h, _⟩
   exact h
 
-/-- The normalization-to-exact-gap bridge is ready. -/
 theorem continuum_hamiltonian_normalization_to_exact_gap_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.normalizationToExactGapReady := by
   rcases hD with ⟨_, _, _, _, _, h, _⟩
   exact h
 
-/-- The exact normalized carrier is a strictly positive arithmetic witness. -/
 theorem continuum_hamiltonian_positive_gap_witness
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
     0 < exactGapValueReal := by
   exact D.positiveGapWitness
 
-/-- The continuum Hamiltonian chain preserves the exact normalized carrier value. -/
 theorem continuum_hamiltonian_exact_gap_value_preserved
     (D : ContinuumHamiltonianMassGapWitnessData) (_hD : D.ready) :
     exactGapValueReal = exactGapValueReal := by
   exact D.exactGapValuePreserved
 
-/-- The compact centered plaquette spectral-weight lane is ready. -/
 theorem continuum_hamiltonian_compact_centered_plaquette_weight_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.compactCenteredPlaquetteWeightReady := by
   rcases hD with ⟨_, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The spectral-mass observable witness is ready. -/
 theorem continuum_hamiltonian_spectral_mass_observable_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.spectralMassObservableReady := by
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The mass-gap witness slot is ready as a carrier-transport witness surface.
-The spectral derivation itself is recorded downstream by the dedicated
-Yang--Mills Hamiltonian spectral derivation and complete continuum-Hamiltonian
-derivation surfaces. -/
 theorem continuum_hamiltonian_mass_gap_derivation_witness
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.massGapDerivationWitness := by
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The whole continuum-Hamiltonian-to-mass-gap chain is ready as a witness and
-handoff surface. -/
 theorem continuum_hamiltonian_to_mass_gap_chain_ready
     (D : ContinuumHamiltonianMassGapWitnessData) (hD : D.ready) :
     D.continuumHamiltonianToMassGapChainReady := by
   rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, h, _⟩
   exact h
 
-/-- The installed continuum Hamiltonian mass-gap witness surface. -/
 def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessData :=
   { continuumYMLaneReady := continuum_yang_mills_lane_hardening_ready
     plaquetteWeightLaneReady := plaquette_spectral_weight_lane_hardening_ready
@@ -176,7 +135,8 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
       continuumYangMillsLaneHardeningData.reviewLevelOnly ∧
       plaquetteSpectralWeightLaneHardeningData.reviewLevelOnly
     noExternalConsensusClaim :=
-      prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed
+      final_theorem_release_chain_index_external_consensus_not_claimed
+        prototypeFinalTheoremReleaseChainIndexData
     publicBoundaryHeld :=
       continuumYangMillsLaneHardeningData.publicBoundaryHeld ∧
       plaquetteSpectralWeightLaneHardeningData.publicBoundaryHeld
@@ -184,7 +144,6 @@ def continuumHamiltonianMassGapWitnessData : ContinuumHamiltonianMassGapWitnessD
       continuumYangMillsLaneHardeningData.finalReleaseHeld ∧
       plaquetteSpectralWeightLaneHardeningData.finalReleaseHeld }
 
-/-- The installed continuum Hamiltonian mass-gap witness chain is ready. -/
 theorem continuum_hamiltonian_mass_gap_witness_ready :
     continuumHamiltonianMassGapWitnessData.ready := by
   rcases plaquette_spectral_weight_lane_hardening_ready with
@@ -246,10 +205,6 @@ theorem continuum_hamiltonian_mass_gap_witness_ready :
       (And.intro (by change True; exact True.intro) hPQPublic) <|
     And.intro (by change True; exact True.intro) hPQFinal
 
-/-- Boundary projection: this witness preserves the normalized carrier and the
-exact-value derivation boundary.  The installed spectral derivation receipts are
-provided downstream by the Yang--Mills Hamiltonian spectral derivation and the
-complete continuum-Hamiltonian derivation. -/
 theorem continuum_hamiltonian_witness_exact_gap_value_derivation_boundary :
     exactGapValueDerivationBoundary.ready := by
   exact exact_gap_value_derivation_boundary_ready
