@@ -160,10 +160,6 @@ noncomputable def finalConcreteYangMillsHamiltonianSkeletonData :
     publicBoundaryHeld := physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld
     publicBoundaryHeld_proof := physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof }
 
-noncomputable abbrev prototypeConcreteYangMillsHamiltonianSkeletonData :
-    ConcreteYangMillsHamiltonianSkeletonData.{0, 0} :=
-  finalConcreteYangMillsHamiltonianSkeletonData
-
 theorem final_concrete_ym_hamiltonian_skeleton_ready :
     finalConcreteYangMillsHamiltonianSkeletonData.ready := by
   exact And.intro finalConcreteYangMillsHamiltonianSkeletonData.physicalOperatorReady <|
@@ -182,14 +178,10 @@ theorem final_concrete_ym_hamiltonian_skeleton_ready :
     And.intro finalConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld_proof
       finalConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld_proof
 
-theorem prototype_concrete_ym_hamiltonian_skeleton_ready :
-    prototypeConcreteYangMillsHamiltonianSkeletonData.ready := by
-  exact final_concrete_ym_hamiltonian_skeleton_ready
-
 /-- Review surface for the concrete Yang--Mills Hamiltonian skeleton. -/
 structure ConcreteYangMillsHamiltonianSkeletonReviewSurface where
   physicalOperatorReady : physicalUnboundedOperatorSkeletonReviewSurface.ready
-  concreteYMReady : prototypeConcreteYangMillsHamiltonianSkeletonData.ready
+  concreteYMReady : finalConcreteYangMillsHamiltonianSkeletonData.ready
   hphysBuiltFromYM : Prop
   hphysBuiltFromYM_proof : hphysBuiltFromYM
   plaquetteCentered : Prop
@@ -214,7 +206,7 @@ structure ConcreteYangMillsHamiltonianSkeletonReviewSurface where
 def ConcreteYangMillsHamiltonianSkeletonReviewSurface.ready
     (S : ConcreteYangMillsHamiltonianSkeletonReviewSurface) : Prop :=
   physicalUnboundedOperatorSkeletonReviewSurface.ready ∧
-  prototypeConcreteYangMillsHamiltonianSkeletonData.ready ∧ S.hphysBuiltFromYM ∧
+  finalConcreteYangMillsHamiltonianSkeletonData.ready ∧ S.hphysBuiltFromYM ∧
   S.plaquetteCentered ∧ S.normalizationBridge ∧ S.rayleighLowerBound ∧
   S.distinguishedAttainsExact ∧ S.concreteYangMillsHamiltonianSkeletonEstablished ∧
   S.continuumLimitStillOpen ∧ S.spectralRealizationStillOpen ∧
@@ -223,32 +215,32 @@ def ConcreteYangMillsHamiltonianSkeletonReviewSurface.ready
 noncomputable def concreteYangMillsHamiltonianSkeletonReviewSurface :
     ConcreteYangMillsHamiltonianSkeletonReviewSurface :=
   { physicalOperatorReady := physical_unbounded_operator_skeleton_review_surface_ready
-    concreteYMReady := prototype_concrete_ym_hamiltonian_skeleton_ready
-    hphysBuiltFromYM := prototypeConcreteYangMillsHamiltonianSkeletonData.hphysBuiltFromYM
-    hphysBuiltFromYM_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.hphysBuiltFromYM_proof
-    plaquetteCentered := prototypeConcreteYangMillsHamiltonianSkeletonData.plaquetteCentered
-    plaquetteCentered_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.plaquetteCentered_proof
-    normalizationBridge := prototypeConcreteYangMillsHamiltonianSkeletonData.normalizationBridge
-    normalizationBridge_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.normalizationBridge_proof
+    concreteYMReady := final_concrete_ym_hamiltonian_skeleton_ready
+    hphysBuiltFromYM := finalConcreteYangMillsHamiltonianSkeletonData.hphysBuiltFromYM
+    hphysBuiltFromYM_proof := finalConcreteYangMillsHamiltonianSkeletonData.hphysBuiltFromYM_proof
+    plaquetteCentered := finalConcreteYangMillsHamiltonianSkeletonData.plaquetteCentered
+    plaquetteCentered_proof := finalConcreteYangMillsHamiltonianSkeletonData.plaquetteCentered_proof
+    normalizationBridge := finalConcreteYangMillsHamiltonianSkeletonData.normalizationBridge
+    normalizationBridge_proof := finalConcreteYangMillsHamiltonianSkeletonData.normalizationBridge_proof
     rayleighLowerBound :=
       ∀ ψ,
-        prototypeConcreteYangMillsHamiltonianSkeletonData.domain ψ →
-          exactGapValueReal ≤ prototypeConcreteYangMillsHamiltonianSkeletonData.rayleigh ψ
-    rayleighLowerBound_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.rayleigh_lower_bound
+        finalConcreteYangMillsHamiltonianSkeletonData.domain ψ →
+          exactGapValueReal ≤ finalConcreteYangMillsHamiltonianSkeletonData.rayleigh ψ
+    rayleighLowerBound_proof := finalConcreteYangMillsHamiltonianSkeletonData.rayleigh_lower_bound
     distinguishedAttainsExact :=
-      prototypeConcreteYangMillsHamiltonianSkeletonData.rayleigh
-        prototypeConcreteYangMillsHamiltonianSkeletonData.distinguished = exactGapValueReal
-    distinguishedAttainsExact_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.distinguished_attains_exact
-    concreteYangMillsHamiltonianSkeletonEstablished := prototypeConcreteYangMillsHamiltonianSkeletonData.ready
-    concreteYangMillsHamiltonianSkeletonEstablished_proof := prototype_concrete_ym_hamiltonian_skeleton_ready
-    continuumLimitStillOpen := prototypeConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen
-    continuumLimitStillOpen_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen_proof
-    spectralRealizationStillOpen := prototypeConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen
-    spectralRealizationStillOpen_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen_proof
-    finalReleaseHeld := prototypeConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld
-    finalReleaseHeld_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld_proof
-    publicBoundaryHeld := prototypeConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld
-    publicBoundaryHeld_proof := prototypeConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld_proof }
+      finalConcreteYangMillsHamiltonianSkeletonData.rayleigh
+        finalConcreteYangMillsHamiltonianSkeletonData.distinguished = exactGapValueReal
+    distinguishedAttainsExact_proof := finalConcreteYangMillsHamiltonianSkeletonData.distinguished_attains_exact
+    concreteYangMillsHamiltonianSkeletonEstablished := finalConcreteYangMillsHamiltonianSkeletonData.ready
+    concreteYangMillsHamiltonianSkeletonEstablished_proof := final_concrete_ym_hamiltonian_skeleton_ready
+    continuumLimitStillOpen := finalConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen
+    continuumLimitStillOpen_proof := finalConcreteYangMillsHamiltonianSkeletonData.continuumLimitStillOpen_proof
+    spectralRealizationStillOpen := finalConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen
+    spectralRealizationStillOpen_proof := finalConcreteYangMillsHamiltonianSkeletonData.spectralRealizationStillOpen_proof
+    finalReleaseHeld := finalConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld
+    finalReleaseHeld_proof := finalConcreteYangMillsHamiltonianSkeletonData.finalReleaseHeld_proof
+    publicBoundaryHeld := finalConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld
+    publicBoundaryHeld_proof := finalConcreteYangMillsHamiltonianSkeletonData.publicBoundaryHeld_proof }
 
 theorem concrete_ym_hamiltonian_skeleton_review_surface_ready :
     concreteYangMillsHamiltonianSkeletonReviewSurface.ready := by
