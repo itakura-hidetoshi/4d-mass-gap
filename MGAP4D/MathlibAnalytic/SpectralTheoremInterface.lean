@@ -15,7 +15,7 @@ structure SpectralTheoremInterface where
   support_eq_energyRay : spectralSupport = exactGapEnergyRay
   exact_mass_in_positive_ray : spectralMass exactGapValueReal ∈ Set.Ioi (0 : ℝ)
 
- def SpectralTheoremInterface.ready (S : SpectralTheoremInterface) : Prop :=
+def SpectralTheoremInterface.ready (S : SpectralTheoremInterface) : Prop :=
   S.hphys.ready ∧
   exactGapValueReal ∈ S.spectralSupport ∧
   (∀ lam : ℝ, lam ∈ S.spectralSupport → exactGapValueReal ≤ lam) ∧
@@ -83,7 +83,7 @@ structure SpectralTheoremReviewSurface where
   support_eq_energyRay : singletonSpectralTheoremInterface.spectralSupport = exactGapEnergyRay
   exact_mass_in_positive_ray : singletonSpectralTheoremInterface.spectralMass exactGapValueReal ∈ Set.Ioi (0 : ℝ)
 
-def SpectralTheoremReviewSurface.ready (S : SpectralTheoremReviewSurface) : Prop :=
+def SpectralTheoremReviewSurface.ready (_S : SpectralTheoremReviewSurface) : Prop :=
   selfAdjointHPhysReviewSurface.ready ∧
   singletonSpectralTheoremInterface.ready ∧
   exactGapValueReal ∈ singletonSpectralTheoremInterface.spectralSupport ∧
@@ -116,7 +116,7 @@ theorem spectral_theorem_review_surface_ready :
     singleton_spectral_theorem_interface_exact_mass_in_positive_ray⟩
 
 theorem spectral_theorem_review_surface_exact_mass_in_positive_ray :
-    spectralTheoremReviewSurface.exact_mass_in_positive_ray := by
+    singletonSpectralTheoremInterface.spectralMass exactGapValueReal ∈ Set.Ioi (0 : ℝ) := by
   exact singleton_spectral_theorem_interface_exact_mass_in_positive_ray
 
 end MathlibAnalytic
