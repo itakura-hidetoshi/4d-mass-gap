@@ -27,37 +27,37 @@ structure RayleighAttainmentRealSurface where
   witnessEnergy : ℝ
   witness_admissible : RayleighEnergyAdmissible witnessEnergy
   witness_attains_value : witnessEnergy = value
+  witness_attains_exact_gap : RayleighAttainsExactGap witnessEnergy
   lower_bound : ∀ energy, RayleighEnergyAdmissible energy → value ≤ energy
   exists_attainment : ∃ energy : ℝ, RayleighAttainsExactGap energy
   positive : 0 < value
-  analyticReplacementBranchOnly : Prop
 
 noncomputable def rayleighAttainmentRealSurface : RayleighAttainmentRealSurface :=
   { value := exactGapValueReal
     witnessEnergy := exactGapValueReal
     witness_admissible := exact_gap_value_rayleigh_admissible
     witness_attains_value := rfl
+    witness_attains_exact_gap := exact_gap_value_attains_rayleigh
     lower_bound := rayleigh_energy_admissible_lower_bound
     exists_attainment := exists_rayleigh_exact_gap_attainment
-    positive := exactGapValueReal_pos
-    analyticReplacementBranchOnly := True }
+    positive := exactGapValueReal_pos }
 
 def RayleighAttainmentRealSurface.ready
     (S : RayleighAttainmentRealSurface) : Prop :=
   RayleighEnergyAdmissible S.witnessEnergy ∧
   S.witnessEnergy = S.value ∧
+  RayleighAttainsExactGap S.witnessEnergy ∧
   (∀ energy, RayleighEnergyAdmissible energy → S.value ≤ energy) ∧
   (∃ energy : ℝ, RayleighAttainsExactGap energy) ∧
-  0 < S.value ∧
-  S.analyticReplacementBranchOnly
+  0 < S.value
 
 theorem rayleigh_attainment_real_surface_ready :
     rayleighAttainmentRealSurface.ready := by
   exact And.intro exact_gap_value_rayleigh_admissible <|
     And.intro rfl <|
+    And.intro exact_gap_value_attains_rayleigh <|
     And.intro rayleigh_energy_admissible_lower_bound <|
-    And.intro exists_rayleigh_exact_gap_attainment <|
-    And.intro exactGapValueReal_pos True.intro
+    And.intro exists_rayleigh_exact_gap_attainment exactGapValueReal_pos
 
 theorem rayleigh_attainment_real_surface_witness_admissible :
     RayleighEnergyAdmissible rayleighAttainmentRealSurface.witnessEnergy := by
@@ -66,6 +66,10 @@ theorem rayleigh_attainment_real_surface_witness_admissible :
 theorem rayleigh_attainment_real_surface_witness_attains_value :
     rayleighAttainmentRealSurface.witnessEnergy = rayleighAttainmentRealSurface.value := by
   rfl
+
+theorem rayleigh_attainment_real_surface_witness_attains_exact_gap :
+    RayleighAttainsExactGap rayleighAttainmentRealSurface.witnessEnergy := by
+  exact exact_gap_value_attains_rayleigh
 
 theorem rayleigh_attainment_real_surface_lower_bound :
     ∀ energy, RayleighEnergyAdmissible energy →
