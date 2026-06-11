@@ -82,7 +82,7 @@ REQUIRED_CLAIM_ANCHORS = (
     "yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_exact_gap",
     "yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =\n    (33 : ℝ) / 20",
     "yangMillsHamiltonianSpectralDerivation3320.theoremWitnessOnly",
-    "yangMillsHamiltonianSpectralDerivation3320.noExternalConsensusClaim",
+    "finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed",
 )
 
 FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS = (
