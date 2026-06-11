@@ -198,20 +198,10 @@ theorem final_concrete_hphys_realization_theorem_data_certified :
     And.intro finalConcreteHPhysRealizationTheoremData.concreteHPhysCertificate_proof
       final_concrete_hphys_has_domain_closed_state
 
-/-- Backward-compatible theorem name during downstream migration. -/
+/-- Final readiness theorem. -/
 theorem final_concrete_hphys_realization_theorem_data_ready :
     finalConcreteHPhysRealizationTheoremData.ready := by
   exact final_concrete_hphys_realization_theorem_data_certified
-
-/-- Legacy audit/API name retained as a transparent alias to the final concrete
-`H_phys` carrier, not as a singleton/PUnit implementation. -/
-noncomputable abbrev singletonConcreteHPhysRealizationTheoremData :
-    ConcreteHPhysRealizationTheoremData :=
-  finalConcreteHPhysRealizationTheoremData
-
-theorem singleton_concrete_hphys_realization_theorem_data_ready :
-    singletonConcreteHPhysRealizationTheoremData.ready := by
-  exact final_concrete_hphys_realization_theorem_data_ready
 
 theorem final_concrete_hphys_domain_closed_theorem
     (ψ : finalConcreteHPhysRealizationTheoremData.carrier)
