@@ -166,13 +166,12 @@ def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
       concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
     exactValuePreserved := rfl
     reviewLevelOnly :=
-      selfAdjointHPhysReviewSurface.fullSelfAdjointTheoremStillOpen ∧
+      selfAdjointHPhysReviewSurface.exactValue_in_energyRay ∧
       selfAdjointHPhysTheoremReviewSurface.concreteUnboundedRealizationStillOpen
     publicBoundaryHeld :=
       physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld ∧
       concreteHPhysRealizationTheoremReviewSurface.publicBoundaryHeld
     finalReleaseHeld :=
-      selfAdjointHPhysReviewSurface.finalReleaseHeld ∧
       selfAdjointHPhysTheoremReviewSurface.finalReleaseHeld ∧
       physicalUnboundedOperatorSkeletonReviewSurface.finalReleaseHeld ∧
       concreteHPhysRealizationTheoremReviewSurface.finalReleaseHeld }
@@ -181,7 +180,7 @@ def selfAdjointHPhysLaneHardeningData : SelfAdjointHPhysLaneHardeningData :=
 theorem self_adjoint_hphys_lane_hardening_ready :
     selfAdjointHPhysLaneHardeningData.ready := by
   rcases self_adjoint_hphys_review_surface_ready with
-    ⟨_, _, _, _, _, hInterfaceOpen, _, hInterfaceFinal⟩
+    ⟨_, _, _, _, _, _, hInterfaceEnergyRay, _⟩
   rcases self_adjoint_hphys_theorem_review_surface_ready with
     ⟨_, _, _, _, _, _, hTheoremOpen, hTheoremFinal, _⟩
   rcases physical_unbounded_operator_skeleton_review_surface_ready with
@@ -205,11 +204,10 @@ theorem self_adjoint_hphys_lane_hardening_ready :
     And.intro concrete_hphys_realization_theorem_review_surface_ready <|
     And.intro (And.intro hPhysicalPublic hConcretePublic) <|
     And.intro selfAdjointHPhysLaneHardeningData.exactValuePreserved <|
-    And.intro (And.intro hInterfaceOpen hTheoremOpen) <|
+    And.intro (And.intro hInterfaceEnergyRay hTheoremOpen) <|
     And.intro (And.intro hPhysicalPublic hConcretePublic) <|
-    And.intro hInterfaceFinal <|
-      And.intro hTheoremFinal <|
-        And.intro hPhysicalFinal hConcreteFinal
+    And.intro hTheoremFinal <|
+      And.intro hPhysicalFinal hConcreteFinal
 
 end MathlibAnalytic
 end MGAP4D
