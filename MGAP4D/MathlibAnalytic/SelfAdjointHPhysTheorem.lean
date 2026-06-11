@@ -206,9 +206,13 @@ structure SelfAdjointHPhysTheoremReviewSurface where
   finalReleaseHeld : 0 < exactGapValueReal
   publicBoundaryHeld : exactGapValueReal ∈ exactGapEnergyRay
 
-/-- Concrete certification predicate for the self-adjoint `H_phys` review surface. -/
+/-- Concrete certification predicate for the self-adjoint `H_phys` review surface.
+
+As in the Rayleigh review surface, proof fields are not reused as proposition
+heads.  The certification predicate names the corresponding concrete Mathlib
+propositions directly, keeping the record fields as witnesses. -/
 def SelfAdjointHPhysTheoremReviewSurface.certified
-    (S : SelfAdjointHPhysTheoremReviewSurface) : Prop :=
+    (_S : SelfAdjointHPhysTheoremReviewSurface) : Prop :=
   hilbertRayleighQuotientReviewSurface.certified ∧
   admissibleSelfAdjointHPhysTheoremData.certified ∧
   (∀ ψ φ : admissibleSelfAdjointHPhysTheoremData.state,
@@ -223,11 +227,13 @@ def SelfAdjointHPhysTheoremReviewSurface.certified
     exactGapValueReal ≤
       admissibleSelfAdjointHPhysTheoremData.rayleighData.quotient
         (admissibleSelfAdjointHPhysTheoremData.state_to_rayleigh ψ)) ∧
-  admissibleSelfAdjointHPhysTheoremData.rayleighData.quotient
+  (admissibleSelfAdjointHPhysTheoremData.rayleighData.quotient
     (admissibleSelfAdjointHPhysTheoremData.state_to_rayleigh
-      admissibleSelfAdjointHPhysTheoremData.witness) = exactGapValueReal ∧
-  S.selfAdjointTheoremBodyClosed ∧ S.concreteUnboundedRealizationStillOpen ∧
-  S.finalReleaseHeld ∧ S.publicBoundaryHeld
+      admissibleSelfAdjointHPhysTheoremData.witness) = exactGapValueReal) ∧
+  admissibleSelfAdjointHPhysTheoremData.selfAdjointCertificate ∧
+  (∃ ψ : RayleighAdmissibleState, RayleighEnergyAdmissible ψ.1) ∧
+  (0 < exactGapValueReal) ∧
+  (exactGapValueReal ∈ exactGapEnergyRay)
 
 /-- Backward-compatible readiness name during downstream migration. -/
 def SelfAdjointHPhysTheoremReviewSurface.ready
@@ -263,8 +269,8 @@ theorem self_adjoint_hphys_theorem_review_surface_ready :
   exact self_adjoint_hphys_theorem_review_surface_certified
 
 theorem self_adjoint_hphys_theorem_review_surface_final_release_held :
-    selfAdjointHPhysTheoremReviewSurface.finalReleaseHeld := by
-  exact exactGapValueReal_pos
+    0 < exactGapValueReal := by
+  exact selfAdjointHPhysTheoremReviewSurface.finalReleaseHeld
 
 end
 
