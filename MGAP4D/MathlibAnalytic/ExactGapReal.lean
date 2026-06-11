@@ -3,6 +3,7 @@ import MGAP4D.MathlibAnalytic.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
+/-- Route witness for the post-Basic normalized exact-gap carrier. -/
 theorem exactGapValueReal_route_witness_exists :
     ∃ value : ℝ, value = (33 : ℝ) / 20 ∧ 0 < value ∧ 1 < value := by
   refine ⟨(33 : ℝ) / 20, rfl, ?_, ?_⟩
