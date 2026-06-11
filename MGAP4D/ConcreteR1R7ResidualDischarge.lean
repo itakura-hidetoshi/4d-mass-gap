@@ -60,7 +60,7 @@ structure ConcreteR1R7ResidualDischarge where
   positiveSpectralMass : 0 < MathlibAnalytic.spectralMassRealSurface.mass
   nonzeroSpectralMass : MathlibAnalytic.spectralMassRealSurface.mass ≠ 0
   noExternalConsensusClaim :
-    MathlibAnalytic.continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim
+    MathlibAnalytic.finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
   publicBoundaryHeld : MathlibAnalytic.continuumHamiltonianMassGapWitnessData.publicBoundaryHeld
   finalReleaseHeld : r1r7TheoremObligationCompletion3320.finalReleaseHeld
   publicBoundaryLocked : r1r7TheoremObligationCompletion3320.publicBoundaryLocked
@@ -84,7 +84,7 @@ def ConcreteR1R7ResidualDischarge.ready
   MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
   0 < MathlibAnalytic.spectralMassRealSurface.mass ∧
   MathlibAnalytic.spectralMassRealSurface.mass ≠ 0 ∧
-  MathlibAnalytic.continuumHamiltonianMassGapWitnessData.noExternalConsensusClaim ∧
+  MathlibAnalytic.finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   MathlibAnalytic.continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
   r1r7TheoremObligationCompletion3320.finalReleaseHeld ∧
   r1r7TheoremObligationCompletion3320.publicBoundaryLocked
