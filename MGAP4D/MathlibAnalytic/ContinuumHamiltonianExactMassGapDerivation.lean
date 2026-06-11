@@ -7,16 +7,11 @@ namespace MathlibAnalytic
 Continuum Hamiltonian exact mass-gap derivation surface.
 
 This proposition packages the theorem-derived upstream witnesses already carried
-by `continuumHamiltonianMassGapWitnessData` into the readable chain:
-
-physical 4D continuum Yang--Mills lane
-  → `H_phys` built from continuum Yang--Mills
-  → self-adjoint / spectral / normalization chain
-  → exact normalized value `33 / 20`
-  → compact centered plaquette spectral-weight lane
-  → positive exact mass-gap witness
-  → public/final release boundaries held
-  → no external-consensus claim introduced.
+by `continuumHamiltonianMassGapWitnessData` into the readable chain from the
+physical continuum Yang--Mills lane to a positive exact normalized carrier.  It
+intentionally does not prove `exactGapValueReal = (33 : ℝ) / 20` by unfolding the
+carrier; a numeric value theorem must enter through the R6 non-definitional
+spectral/PVM value-pinning route.
 -/
 def physicalContinuumHamiltonianToExactPositiveMassGap : Prop :=
   continuumHamiltonianMassGapWitnessData.physicalContinuumHamiltonianReady ∧
@@ -24,7 +19,6 @@ def physicalContinuumHamiltonianToExactPositiveMassGap : Prop :=
   continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
   continuumHamiltonianMassGapWitnessData.normalizationToExactGapReady ∧
   0 < exactGapValueReal ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
   continuumHamiltonianMassGapWitnessData.compactCenteredPlaquetteWeightReady ∧
   continuumHamiltonianMassGapWitnessData.spectralMassObservableReady ∧
   continuumHamiltonianMassGapWitnessData.massGapDerivationWitness ∧
@@ -32,8 +26,8 @@ def physicalContinuumHamiltonianToExactPositiveMassGap : Prop :=
   continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
   finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
 
-/-- Physical continuum Yang--Mills Hamiltonian chain yields an exact positive
-normalized mass-gap witness. -/
+/-- Physical continuum Yang--Mills Hamiltonian chain yields a positive exact
+normalized mass-gap carrier, without adopting the displayed `33/20` value. -/
 theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
     physicalContinuumHamiltonianToExactPositiveMassGap := by
   unfold physicalContinuumHamiltonianToExactPositiveMassGap
@@ -41,42 +35,33 @@ theorem physical_continuum_hamiltonian_to_exact_positive_mass_gap :
     ⟨_, _, hPhysical, hHPhys, hSpectral, hNorm, hPos, _,
       hPlaquette, hObservable, hDerivation, _, _, hNoConsensus,
       hPublic, hFinal⟩
-  have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
-    unfold exactGapValueReal
-    calc
-      Classical.choose exactGapValueRealRouteWitness = ((11 : ℝ) * 3) / 20 :=
-        (Classical.choose_spec exactGapValueRealRouteWitness).1
-      _ = (33 : ℝ) / 20 := by norm_num
   exact And.intro hPhysical <|
     And.intro hHPhys <|
     And.intro hSpectral <|
     And.intro hNorm <|
     And.intro hPos <|
-    And.intro hExact <|
     And.intro hPlaquette <|
     And.intro hObservable <|
     And.intro hDerivation <|
     And.intro hPublic <|
     And.intro hFinal hNoConsensus
 
-/-- The exact normalized gap value used by the continuum Hamiltonian witness. -/
-def physicalContinuumHamiltonianExactGap33Over20 : Prop :=
-  0 < exactGapValueReal ∧ exactGapValueReal = (33 : ℝ) / 20
+/-- Boundary for the exact normalized gap value used by the continuum Hamiltonian
+witness.  This is not a numeric `33/20` theorem. -/
+def physicalContinuumHamiltonianExactGapValueBoundary : Prop :=
+  0 < exactGapValueReal ∧
+  continuumHamiltonianMassGapWitnessData.normalizationToExactGapReady ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
 
-/-- The normalized exact mass-gap value is positive and equal to `33/20` inside
-MGAP4D internal normalization. -/
-theorem physical_continuum_hamiltonian_exact_gap_33_over_20 :
-    physicalContinuumHamiltonianExactGap33Over20 := by
-  unfold physicalContinuumHamiltonianExactGap33Over20
+/-- The normalized exact mass-gap carrier is positive and normalization-ready,
+while the displayed numeric value remains non-adopted at this level. -/
+theorem physical_continuum_hamiltonian_exact_gap_value_boundary :
+    physicalContinuumHamiltonianExactGapValueBoundary := by
+  unfold physicalContinuumHamiltonianExactGapValueBoundary
   rcases continuum_hamiltonian_mass_gap_witness_ready with
-    ⟨_, _, _, _, _, _, hPos, _, _⟩
-  have hExact : exactGapValueReal = (33 : ℝ) / 20 := by
-    unfold exactGapValueReal
-    calc
-      Classical.choose exactGapValueRealRouteWitness = ((11 : ℝ) * 3) / 20 :=
-        (Classical.choose_spec exactGapValueRealRouteWitness).1
-      _ = (33 : ℝ) / 20 := by norm_num
-  exact And.intro hPos hExact
+    ⟨_, _, _, _, _, hNorm, hPos, _, _, _, _, _, _, hNoConsensus, _⟩
+  exact And.intro hPos <|
+    And.intro hNorm hNoConsensus
 
 /-- The continuum Hamiltonian mass-gap witness is theorem-derived from the
 upstream continuum Yang--Mills and plaquette spectral-weight hardening lanes. -/
