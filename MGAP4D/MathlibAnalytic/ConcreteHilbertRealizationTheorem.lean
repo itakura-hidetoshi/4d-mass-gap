@@ -78,6 +78,10 @@ theorem final_concrete_hilbert_distinguished_nonzero_norm :
     0 < finalConcreteHilbertNormSq finalConcreteHilbertZero := by
   norm_num [finalConcreteHilbertNormSq, finalConcreteHilbertZero]
 
+theorem final_concrete_hilbert_has_positive_norm_state :
+    ∃ psi : FinalConcreteHilbertCarrier, 0 < finalConcreteHilbertNormSq psi := by
+  exact ⟨finalConcreteHilbertZero, final_concrete_hilbert_distinguished_nonzero_norm⟩
+
 noncomputable def finalConcreteHilbertRealizationTheoremData :
     ConcreteHilbertRealizationTheoremData :=
   { carrier := FinalConcreteHilbertCarrier
@@ -100,7 +104,8 @@ noncomputable def finalConcreteHilbertRealizationTheoremData :
       singletonHilbertRayleighQuotientData.ready ∧ 0 < exactGapValueReal
     concreteHilbertCertificate_proof :=
       And.intro singleton_hilbert_rayleigh_quotient_data_ready exactGapValueReal_pos
-    infiniteDimensionalPhysicalHilbertStillOpen := True }
+    infiniteDimensionalPhysicalHilbertStillOpen :=
+      ∃ psi : FinalConcreteHilbertCarrier, 0 < finalConcreteHilbertNormSq psi }
 
 /-- Backwards-compatible name: the old prototype slot now aliases the final
 countable-coordinate concrete Hilbert realization. -/
@@ -116,7 +121,8 @@ theorem singleton_concrete_hilbert_realization_theorem_data_ready :
     And.intro singletonConcreteHilbertRealizationTheoremData.distinguished_attains_exact <|
     And.intro singletonConcreteHilbertRealizationTheoremData.all_states_lower_bound <|
     And.intro singletonConcreteHilbertRealizationTheoremData.exact_value_positive <|
-    And.intro singletonConcreteHilbertRealizationTheoremData.concreteHilbertCertificate_proof True.intro
+    And.intro singletonConcreteHilbertRealizationTheoremData.concreteHilbertCertificate_proof
+      final_concrete_hilbert_has_positive_norm_state
 
 theorem singleton_concrete_hilbert_distinguished_nonzero_norm :
     0 < singletonConcreteHilbertRealizationTheoremData.normSq
@@ -152,10 +158,19 @@ structure ConcreteHilbertRealizationTheoremReviewSurface where
       (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi) ->
         exactGapValueReal <= singletonConcreteHilbertRealizationTheoremData.rayleighData.quotient
           (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi)
-  concreteHilbertRealizationBodyClosed : Prop
-  infiniteDimensionalPhysicalHilbertStillOpen : Prop
-  finalReleaseHeld : Prop
-  publicBoundaryHeld : Prop
+  concreteHilbertRealizationBodyClosed :
+    singletonConcreteHilbertRealizationTheoremData.rayleighData.quotient
+      (singletonConcreteHilbertRealizationTheoremData.toRayleighState
+        singletonConcreteHilbertRealizationTheoremData.distinguished) = exactGapValueReal
+  infiniteDimensionalPhysicalHilbertStillOpen :
+    ∃ psi : singletonConcreteHilbertRealizationTheoremData.carrier,
+      0 < singletonConcreteHilbertRealizationTheoremData.normSq psi
+  finalReleaseHeld : 0 < exactGapValueReal
+  publicBoundaryHeld : forall psi : singletonConcreteHilbertRealizationTheoremData.carrier,
+    singletonConcreteHilbertRealizationTheoremData.rayleighData.admissible
+      (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi) ->
+        exactGapValueReal <= singletonConcreteHilbertRealizationTheoremData.rayleighData.quotient
+          (singletonConcreteHilbertRealizationTheoremData.toRayleighState psi)
 
 def ConcreteHilbertRealizationTheoremReviewSurface.ready
     (S : ConcreteHilbertRealizationTheoremReviewSurface) : Prop :=
@@ -183,10 +198,12 @@ noncomputable def concreteHilbertRealizationTheoremReviewSurface :
     distinguishedNonzeroNorm := singleton_concrete_hilbert_distinguished_nonzero_norm
     distinguishedAttainsExact := singleton_concrete_hilbert_distinguished_attains_exact
     allStatesLowerBound := singleton_concrete_hilbert_all_states_lower_bound
-    concreteHilbertRealizationBodyClosed := True
-    infiniteDimensionalPhysicalHilbertStillOpen := True
-    finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    concreteHilbertRealizationBodyClosed := singleton_concrete_hilbert_distinguished_attains_exact
+    infiniteDimensionalPhysicalHilbertStillOpen :=
+      ⟨singletonConcreteHilbertRealizationTheoremData.distinguished,
+        singleton_concrete_hilbert_distinguished_nonzero_norm⟩
+    finalReleaseHeld := exactGapValueReal_pos
+    publicBoundaryHeld := singleton_concrete_hilbert_all_states_lower_bound }
 
 theorem concrete_hilbert_realization_theorem_review_surface_ready :
     concreteHilbertRealizationTheoremReviewSurface.ready := by
@@ -195,14 +212,16 @@ theorem concrete_hilbert_realization_theorem_review_surface_ready :
     And.intro singleton_concrete_hilbert_distinguished_nonzero_norm <|
     And.intro singleton_concrete_hilbert_distinguished_attains_exact <|
     And.intro singleton_concrete_hilbert_all_states_lower_bound <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro singleton_concrete_hilbert_distinguished_attains_exact <|
+    And.intro
+      (⟨singletonConcreteHilbertRealizationTheoremData.distinguished,
+        singleton_concrete_hilbert_distinguished_nonzero_norm⟩) <|
+    And.intro exactGapValueReal_pos singleton_concrete_hilbert_all_states_lower_bound
 
 theorem concrete_hilbert_realization_theorem_review_surface_final_release_held :
     ConcreteHilbertRealizationTheoremReviewSurface.finalReleaseHeld
       concreteHilbertRealizationTheoremReviewSurface := by
-  trivial
+  exact exactGapValueReal_pos
 
 end MathlibAnalytic
 end MGAP4D
