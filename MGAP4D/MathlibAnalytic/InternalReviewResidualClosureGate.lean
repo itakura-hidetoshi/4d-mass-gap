@@ -79,12 +79,12 @@ theorem internal_review_residual_gate_final_release_closure_linked_witness :
 /-- Named theorem-derived witness that the external-review boundary remains visible. -/
 theorem internal_review_residual_gate_external_review_boundary_visible_witness :
     finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed := by
-  exact finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed_proof
+  exact finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
 
 /-- Named theorem-derived witness that the public theorem boundary remains held. -/
 theorem internal_review_residual_gate_public_boundary_held_witness :
     finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld := by
-  exact finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld_proof
+  exact finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
 
 /-- Named theorem-derived witness that final release remains held at the theorem-body boundary. -/
 theorem internal_review_residual_gate_final_release_held_witness :
