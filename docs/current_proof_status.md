@@ -1,10 +1,22 @@
 # Current proof status anchor
 
-This file is the current short status anchor for `main` when older open pull requests or README/ROADMAP text lag behind the proof spine.
+This file is the short status anchor for `main` when older open pull requests, README/ROADMAP text, or external summaries lag behind the proof spine.
 
 ## Current `main` proof-facing surface
 
-The current `main` proof-facing surface is the R1--R7 terminal/public/external audit receipt chain:
+The current `main` proof-facing surface is the carrier / spectral-route / R1--R7 terminal-public-external audit chain:
+
+```text
+Basic-layer route marker
+  -> downstream exactGapValueReal carrier
+  -> continuum-Hamiltonian / PVM / operator-spectral derivation route
+  -> R6 exact atom 33/20 / spectral-PVM pinning route
+  -> R7 positive spectral-weight witness route
+  -> R1--R7 terminal discharge chain
+  -> public / external audit receipt chain
+```
+
+Current terminal/public/external anchors:
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
@@ -13,6 +25,241 @@ MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 ```
+
+Current public-boundary reading:
+
+```text
+internal Lean terminal discharge route: present
+public / external audit receipt surface: present
+external mathematical consensus: not claimed
+independent peer-review completion: not claimed
+Clay-style public acceptance: not claimed
+```
+
+## Central payload
+
+The central Lean-facing payload is:
+
+```text
+MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
+Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
+```
+
+The terminal R1--R7 theorem anchor is:
+
+```lean
+theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight :
+  MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
+  Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
+```
+
+## Exact-gap layer separation
+
+The current route separates five review layers:
+
+```text
+1. Basic-layer route marker
+2. downstream real-carrier / carrier-level arithmetic normalization
+3. continuum-Hamiltonian / PVM / operator-spectral derivation layer
+4. R6 exact atom and R7 positive spectral-weight layer
+5. engineering / audit / public-boundary marker layer
+```
+
+Current Lean separation map:
+
+```text
+MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
+```
+
+Human-readable note:
+
+```text
+docs/exact_gap_layer_separation.md
+```
+
+Primary separation theorem anchors:
+
+```text
+exact_gap_abstract_theorem_body_layer_ready
+exact_gap_carrier_layer_ready
+exact_gap_spectral_receipt_layer_ready
+exact_gap_engineering_marker_layer_ready
+exact_gap_layer_separation_ready
+```
+
+Correct reading:
+
+```text
+Basic.lean
+  -> marker-only route-deferred layer
+  -> no real-valued gap carrier
+  -> no local final-value assignment
+
+ExactGapReal.lean
+  -> defines exactGapValueReal as the downstream normalized real carrier
+  -> proves exactGapValueReal_eq : exactGapValueReal = 33/20
+  -> this is a carrier-level arithmetic normalization
+
+YangMillsHamiltonianSpectralDerivation3320.lean
+  -> aligns the spectral infimum / attainment / observable atom value with exactGapValueReal
+  -> keeps the public boundary and final-release boundary held
+  -> intentionally does not export derivedHamiltonianSpectralValue = 33/20 outside R6
+
+R6 ExactAtom3320 lane
+  -> supplies the non-definitional spectral/PVM pinning route for the displayed value
+
+R7 positive-weight lane
+  -> supplies the positive spectral-weight witness and preserves the exact value
+
+R1--R7 terminal chain
+  -> records exact 33/20 plus positive spectral weight at terminal level
+```
+
+The final normalized value should therefore be reviewed through the R1--R7 terminal route plus the continuum-Hamiltonian / PVM / operator-spectral route.  It should not be reviewed as if `Basic.lean` or a local carrier arithmetic theorem alone were the physical derivation.
+
+## Exact `33/20` derivation source
+
+The repository distinguishes the following roles.
+
+### 1. Basic-layer marker role
+
+```text
+MGAP4D/MathlibAnalytic/Basic.lean
+```
+
+`Basic.lean` records that the spectral theorem route, PVM observable route, and Hamiltonian theorem route are deferred.  It explicitly records that the Basic layer has no numeric carrier.
+
+Primary anchors:
+
+```text
+FourDYangMillsAnalyticGapValueOrigin.ready
+four_d_yang_mills_analytic_gap_value_origin_ready
+four_d_yang_mills_basic_layer_numeric_carrier_absent
+```
+
+### 2. Real-carrier role
+
+```text
+MGAP4D/MathlibAnalytic/ExactGapReal.lean
+```
+
+`ExactGapReal.lean` defines the downstream normalized real carrier:
+
+```text
+exactGapValueReal
+exactGapValueRealRouteWitness
+exactGapValueReal_eq
+exactGapValueReal_pos
+exactGapValueReal_above_one
+exactGapRealSurface
+```
+
+The theorem
+
+```lean
+theorem exactGapValueReal_eq :
+  exactGapValueReal = (33 : ℝ) / 20
+```
+
+is the carrier-level arithmetic normalization.  It is important evidence, but documentation must not present it as the entire Hamiltonian/PVM/spectral derivation.
+
+### 3. Continuum-Hamiltonian / PVM / spectral derivation role
+
+```text
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
+MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
+MGAP4D/ConcreteR1R7ResidualDischarge.lean
+```
+
+Primary anchors:
+
+```text
+continuum_hamiltonian_derives_exact_mass_gap_value
+physical_continuum_hamiltonian_to_exact_positive_mass_gap
+physical_continuum_hamiltonian_exact_gap_33_over_20
+physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_nonzero
+yang_mills_hamiltonian_spectral_derivation_3320_ready
+yang_mills_hamiltonian_exact_gap_eq_spectral_value
+yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum
+```
+
+The Yang--Mills spectral interface aligns the derived Hamiltonian spectral value with `exactGapValueReal`, while its boundary comments and theorem surfaces keep the public / final-release boundary held.
+
+### 4. R6 exact-atom / value-pinning role
+
+```text
+MGAP4D/R6/Theorem/ExactAtom3320YangMillsSpectralDerivation.lean
+MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean
+MGAP4D/R6/Theorem/ExactAtom3320SpectralOriginFirewall.lean
+MGAP4D/R6/Theorem/ExactAtom3320ValueOriginQuarantine.lean
+MGAP4D/R6/Theorem/ExactAtom3320DirectReviewBridge.lean
+```
+
+Primary anchors:
+
+```text
+exact_atom_3320_yang_mills_spectral_derivation_ready
+exact_atom_3320_yang_mills_exact_gap_carrier_eq_derived
+exact_atom_3320_yang_mills_positive_nonzero_spectral_mass
+ExactAtom3320R6NormalizedSpectralAtom
+ExactAtom3320R6SpectralPVMPinsDerivedValue
+exact_atom_3320_r6_derived_spectral_value_eq_3320
+exact_atom_3320_r6_exact_gap_value_eq_3320
+exact_atom_3320_nondefinitional_origin_certificate_ready
+exact_atom_3320_nondefinitional_derivation_target_ready
+```
+
+R6 is the review layer that prevents the displayed value `33/20` from being read as a pre-R6 definitional unfolding.  It should be reviewed as the non-definitional spectral/PVM pinning lane.
+
+### 5. R7 positive spectral-weight role
+
+```text
+MGAP4D/R7/Theorem.lean
+MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightBridge.lean
+MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightSlotClosure.lean
+MGAP4D/HardPhysicalResidualLedgerR6ExactAtomDischargedR7PositiveWeightClosure.lean
+```
+
+Primary payload:
+
+```text
+observableSpectralWeight3320Certificate.massWitness.positiveMass = true
+exactGapValueReal = 33/20
+exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom
+witnessSector = orthogonal
+witnessSector ≠ vacuum
+```
+
+### 6. Terminal receipt role
+
+```text
+MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
+MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
+MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
+```
+
+The terminal chain records:
+
+```text
+R1 concrete Hilbert closure readiness indexed
+R2 dense-domain unbounded operator closure readiness indexed
+R3 adjoint/self-adjointness theorem discharge readiness indexed
+R4 genuine-PVM closure readiness indexed
+R5 compact centered plaquette observable closure readiness indexed
+R6 non-definitional exact atom 33/20 closure readiness indexed
+R7 positive spectral-weight closure readiness indexed
+exactGapValueReal = 33/20
+positive spectral weight
+R4 genuine-PVM law receipts
+finalReleaseHeld
+publicBoundaryLocked
+```
+
+When this receipt chain is read as an exact-value derivation, its upstream source is the R1--R7 operator/spectral route above, not the local Basic marker and not the carrier arithmetic theorem alone.
 
 ## R2 current main lane
 
@@ -37,18 +284,6 @@ Human-readable note:
 docs/r2_infinite_l2_diagonal_operator_lane.md
 ```
 
-Primary theorem anchors:
-
-```text
-concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_ready
-concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_closed_operator
-concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_unbounded
-concrete_analytic_spine_l2_r2_infinite_diagonal_operator_lane_graph_promotions
-hard_physical_residual_ledger_r2_infinite_lane_r3_input_handoff_ready
-concrete_analytic_spine_l2_r2_infinite_lane_spectral_input_handoff_ready
-concrete_analytic_spine_l2_r2_infinite_lane_spectral_input_handoff_boundaries_visible
-```
-
 Review reading:
 
 ```text
@@ -57,100 +292,14 @@ current R2 body = completed ℓ² diagonal closed/unbounded operator lane
 R1--R7 chain = terminal/public receipt route that consumes the current R2 body
 ```
 
-Current R2 route:
-
-```text
-ConcreteL2R1HilbertCarrier
-  -> ConcreteL2R2DiagonalDomainCandidate
-  -> finite-support domain/core
-  -> graph-norm finite-support density
-  -> graph-norm core release
-  -> graph-closedness readiness promotion
-  -> graph-closedness obligation promotion
-  -> graph-closure closed theorem
-  -> completed diagonal graph-defined closed operator
-  -> completed Hilbert operator-norm unboundedness
-  -> self-adjointness concrete preconditions
-  -> R2InfiniteLaneR3InputHandoff
-  -> R2InfiniteLaneSpectralInputHandoff
-  -> R3 self-adjointness lane
-```
-
 Boundary reading:
 
 ```text
 R2 gives completed diagonal closed-operator and unboundedness surfaces.
 R2-to-R3 handoff consumes the current R2 body without shortcutting downstream obligations.
-R2-to-spectral-input handoff connects the current R2 body to the actual LinearPMap self-adjoint spectral input surface.
+R2-to-spectral-input handoff connects the current R2 body to the LinearPMap self-adjoint spectral input surface.
 Full spectral theorem, PVM construction, exact atom 33/20, and positive spectral-weight construction remain separately reviewable downstream surfaces.
 ```
-
-## Placeholder / witness inventory
-
-External review must distinguish mathematical theorem bodies from placeholders, witnesses, receipts, and readiness packets.
-
-Primary inventory note:
-
-```text
-docs/proof_placeholder_inventory.md
-```
-
-Inventory audit script:
-
-```text
-scripts/audit_proof_placeholder_inventory.py
-```
-
-`PUnit`, `True`, and `StillOpen` are open proof-debt markers. They must be replaced, discharged, or explicitly superseded by typed theorem anchors before any public analytic theorem route can count as discharged. Provenance and readiness markers such as `theoremWitnessOnly`, `receipt`, `ready`, `prototype`, `skeleton`, `boundary`, `packet`, and `manifest` remain review-order evidence unless their payload is a substantive typed theorem.
-
-## Exact-gap layer separation
-
-The current route separates four layers:
-
-```text
-abstract theorem-body layer
-Basic-layer marker and downstream real-carrier layer
-operator/spectral derivation layer
-engineering / review-marker layer
-```
-
-Current Lean separation map:
-
-```text
-MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
-```
-
-Human-readable note:
-
-```text
-docs/exact_gap_layer_separation.md
-```
-
-Primary theorem anchors:
-
-```text
-exact_gap_abstract_theorem_body_layer_ready
-exact_gap_carrier_layer_ready
-exact_gap_spectral_receipt_layer_ready
-exact_gap_engineering_marker_layer_ready
-exact_gap_layer_separation_ready
-```
-
-Review reading:
-
-```text
-Basic.lean = marker-only route-deferred layer, with no real-valued gap carrier
-ExactGapReal.lean = downstream real carrier and raw route witness
-ContinuumHamiltonianMassGapTheorem.lean = theorem-route final normalization boundary
-ContinuumHamiltonianExactMassGapDerivation.lean = exact positive mass-gap package boundary
-ConcreteR1R7ResidualDischarge.lean = current terminal derivation discharge
-ContinuumHamiltonianCompleteMassGapDerivation.lean = complete Hamiltonian spectral derivation surface
-YangMillsHamiltonianSpectralDerivation3320.lean = spectral derivation interface into the normalized carrier
-ExactGapTheoremBodyClosure.lean = older mixed closure record
-ExactGapLayerSeparation.lean = current separation map
-```
-
-The value `exactGapValueReal` is the downstream real carrier.  The current exact-value route is reviewed through the R1--R7 terminal discharge and the continuum-Hamiltonian / PVM / operator-spectral theorem route, not through `Basic.lean` and not through the carrier witness alone.
 
 ## R4 status and historical `StillOpen` markers
 
@@ -196,72 +345,34 @@ The summary theorem is:
 continuum_hamiltonian_witness_provenance_map_ready
 ```
 
-## Exact `33/20` derivation source
+## Placeholder / witness inventory
 
-The repository distinguishes three roles:
+External review must distinguish mathematical theorem bodies from placeholders, witnesses, receipts, and readiness packets.
 
-```text
-Basic-layer marker role:
-  MGAP4D/MathlibAnalytic/Basic.lean
-
-real-carrier role:
-  MGAP4D/MathlibAnalytic/ExactGapReal.lean
-
-operator/spectral derivation role:
-  MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
-  MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
-  MGAP4D/ConcreteR1R7ResidualDischarge.lean
-  MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
-  MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
-  MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
-```
-
-`exactGapValueReal` is the downstream normalized real carrier.  `Basic.lean` does not define a numerical carrier, and `ExactGapReal.lean` does not export the final normalized equality theorem.  The final equality is derived through the continuum-Hamiltonian / PVM / spectral route.
-
-The current exact-value route is the R1--R7 terminal route plus the complete continuum-Hamiltonian spectral route:
+Primary inventory note:
 
 ```text
-continuum_hamiltonian_derives_exact_mass_gap_value
-physical_continuum_hamiltonian_to_exact_positive_mass_gap
-physical_continuum_hamiltonian_exact_gap_33_over_20
-concrete_r1r7_residual_discharge_3320_ready
-concrete_r6_residual_discharge_nondefinitional_spectral_atom_3320
-concrete_r7_residual_discharge_positive_spectral_weight_derivation_3320
-concrete_r1r7_residual_discharge_exact_gap_value_3320
-physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
-physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
-physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_nonzero
-yang_mills_hamiltonian_spectral_derivation_3320_ready
+docs/proof_placeholder_inventory.md
 ```
 
-## Terminal R1--R7 receipt
-
-The terminal receipt indexes the following readiness chain:
+Inventory audit script:
 
 ```text
-R1 concrete Hilbert closure readiness indexed
-R2 dense-domain unbounded operator closure readiness indexed
-R3 adjoint-graph theorem discharge readiness indexed
-R3 concrete self-adjointness theorem discharge readiness indexed
-R4 genuine PVM closure readiness indexed
-R5 compact centered plaquette observable closure readiness indexed
-R6 non-definitional exact atom 33/20 closure readiness indexed
-R7 positive spectral-weight closure readiness indexed
+scripts/audit_proof_placeholder_inventory.py
 ```
 
-## Public/external audit receipt
+`PUnit`, `True`, and `StillOpen` are open proof-debt markers. They must be replaced, discharged, or explicitly superseded by typed theorem anchors before any public analytic theorem route can count as discharged. Provenance and readiness markers such as `theoremWitnessOnly`, `receipt`, `ready`, `prototype`, `skeleton`, `boundary`, `packet`, and `manifest` remain review-order evidence unless their payload is a substantive typed theorem.
 
-The public/external receipt chain carries:
+## Physical normalization
+
+The exact value is normalized and dimensionless:
 
 ```text
-exactGapValueReal = 33 / 20
-positive spectral weight
-R4 genuine-PVM law receipts
-finalReleaseHeld
-publicBoundaryLocked
+Delta_norm = 33/20
+Delta_phys(E0) = E0 * (33/20)
 ```
 
-When this receipt chain is read as an exact-value derivation, its upstream source is the R1--R7 operator/spectral route above, not the local carrier definition.
+A dimensional physical mass gap requires a positive reference scale `E0`.  Internal normalized units correspond to `E0 = 1`.
 
 ## Audit route
 
@@ -277,4 +388,23 @@ docs/proof_placeholder_inventory.md
 docs/exact_gap_layer_separation.md
 docs/continuum_hamiltonian_witness_provenance.md
 docs/r4_terminal_status_supersession.md
+```
+
+## Final public boundary
+
+Use:
+
+```text
+internal Lean terminal discharge route with public / external audit receipt surface
+```
+
+Do not use:
+
+```text
+external mathematical consensus
+independent peer-review completion
+Clay-style public acceptance
+Basic-layer numerical derivation
+carrier arithmetic theorem alone as physical derivation
+CI success as mathematical proof review
 ```
