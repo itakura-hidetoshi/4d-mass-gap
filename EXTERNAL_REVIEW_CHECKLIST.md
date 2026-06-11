@@ -243,7 +243,7 @@ Reviewer checkpoint:
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases.
 [ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected with boundary markers.
 [ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected for `FinalPhysicalHilbertCarrier`, `finalPhysicalHamiltonian`, `finalPhysicalRayleigh`, and `finalConcreteYangMillsHamiltonianSkeletonData`.
-[ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected to confirm `prototypeConcreteYangMillsHamiltonianSkeletonData` aliases the final physical carrier route.
+[ ] `ConcreteYangMillsHamiltonianSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases.
 [ ] `SpectralRealizationSkeleton.lean` inspected with boundary markers.
 [ ] `ContinuumSpectralTheoremSkeleton.lean` inspected with boundary markers.
 [ ] `PhysicalHamiltonianNormalizationBridge.lean` inspected with boundary markers.
