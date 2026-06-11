@@ -102,7 +102,7 @@ structure PVMReviewSurface where
   exactAtomMassInPositiveRay : singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ)
   exactAtom_def : singletonPVMInterface.exactAtom = Set.singleton exactGapValueReal
 
-def PVMReviewSurface.ready (S : PVMReviewSurface) : Prop :=
+def PVMReviewSurface.ready (_S : PVMReviewSurface) : Prop :=
   spectralTheoremReviewSurface.ready ∧
   singletonPVMInterface.ready ∧
   exactGapValueReal ∈ singletonPVMInterface.exactAtom ∧
@@ -129,7 +129,7 @@ theorem pvm_review_surface_ready : pvmReviewSurface.ready := by
     And.intro singleton_pvm_interface_exact_atom_mass_in_positive_ray rfl
 
 theorem pvm_review_surface_exact_atom_mass_in_positive_ray :
-    pvmReviewSurface.exactAtomMassInPositiveRay := by
+    singletonPVMInterface.projectionMass singletonPVMInterface.exactAtom ∈ Set.Ioi (0 : ℝ) := by
   exact singleton_pvm_interface_exact_atom_mass_in_positive_ray
 
 end MathlibAnalytic
