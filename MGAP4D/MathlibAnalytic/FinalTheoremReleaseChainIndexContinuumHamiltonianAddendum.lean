@@ -14,7 +14,7 @@ surfaces and records the extra derivation layer as an append-only index
 extension.
 -/
 def finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady : Prop :=
-  prototypeFinalTheoremReleaseChainIndexData.externalConsensusNotClaimed ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   physicalContinuumHamiltonianToExactPositiveMassGap ∧
   physicalContinuumHamiltonianExactGap33Over20 ∧
   continuumHamiltonianMassGapTheoremDerivedWitness ∧
