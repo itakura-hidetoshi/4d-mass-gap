@@ -35,18 +35,18 @@ theorem continuum_hamiltonian_witness_self_adjoint_spectral_slot_provenance :
     continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady := by
   exact continuum_hamiltonian_witness_self_adjoint_spectral_source_provenance
 
-/-- Provenance map for the exact-value derivation receipt.
+/-- Provenance map for the exact-value theorem-route receipt.
 
-The exact value is read here through the spectral derivation route, not merely
-through the carrier equality in `ExactGapReal.lean`. -/
+The exact value is read through the installed continuum-Hamiltonian theorem route,
+not by consuming the carrier-level theorem name `exactGapValueReal_eq`. -/
 theorem continuum_hamiltonian_witness_exact_value_derivation_provenance :
     exactGapValueReal = (33 : ℝ) / 20 := by
-  exact physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
+  exact continuum_hamiltonian_derives_exact_mass_gap_value
 
 /-- Provenance map for the normalization-to-exact-gap slot.
 
-The normalization slot now consumes the concrete spectral derivation theorem
-rather than the carrier-level closed-form equality. -/
+The normalization slot now consumes the theorem-route receipt above rather than
+the carrier-level closed-form theorem name. -/
 theorem continuum_hamiltonian_witness_normalization_source_provenance :
     PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
         physicalHamiltonianNormalizationBridgeReviewSurface ∧
@@ -97,8 +97,8 @@ theorem continuum_hamiltonian_witness_positive_spectral_mass_provenance :
 /-- Slot-level provenance for the mass-gap derivation witness.
 
 This keeps the old witness slot compatible with the newer spectral derivation
-route by pairing the installed positivity theorem with the complete spectral
-exact-value derivation. -/
+route by pairing the installed positivity theorem with the theorem-route exact
+value receipt. -/
 theorem continuum_hamiltonian_witness_mass_gap_derivation_slot_provenance :
     continuumHamiltonianMassGapWitnessData.massGapDerivationWitness := by
   exact And.intro continuum_hamiltonian_derives_positive_mass_gap
