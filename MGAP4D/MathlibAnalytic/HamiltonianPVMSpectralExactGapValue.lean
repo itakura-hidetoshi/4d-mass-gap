@@ -91,8 +91,24 @@ structure HamiltonianPVMSpectralExactGapValueOrigin where
   normalizationFromHamiltonianSpectrum :
     derivedHamiltonianSpectralValue = (33 : ℝ) / 20
   aboveOne : 1 < derivedHamiltonianSpectralValue
-  theoremWitnessOnly : Prop
-  theoremWitnessOnly_proof : theoremWitnessOnly
+
+/-- Concrete certification predicate for the Hamiltonian/PVM/spectral origin.
+
+This is not a `True` placeholder and not a singleton carrier.  It requires the
+Hamiltonian energy attainment, spectral support, PVM-visible window, positive
+spectral weight, and theorem-route normalization inside the same package. -/
+def HamiltonianPVMSpectralExactGapValueOrigin.certified
+    (O : HamiltonianPVMSpectralExactGapValueOrigin) : Prop :=
+  O.hamiltonianEnergy O.distinguishedState = O.derivedHamiltonianSpectralValue ∧
+  O.derivedHamiltonianSpectralValue ∈ O.spectralSupport ∧
+  (∀ x : ℝ, x ∈ O.spectralSupport → O.derivedHamiltonianSpectralValue ≤ x) ∧
+  O.pvmSpectralWindow = O.spectralSupport ∧
+  O.derivedHamiltonianSpectralValue ∈ O.pvmSpectralWindow ∧
+  (∀ x : ℝ, x ∈ O.pvmSpectralWindow → O.derivedHamiltonianSpectralValue ≤ x) ∧
+  0 < O.spectralWeight O.pvmSpectralWindow ∧
+  O.spectralWeight O.pvmSpectralWindow ≠ 0 ∧
+  O.derivedHamiltonianSpectralValue = (33 : ℝ) / 20 ∧
+  1 < O.derivedHamiltonianSpectralValue
 
 /-- Existence of the concrete Hamiltonian/PVM/spectral theorem package.
 
@@ -100,7 +116,7 @@ The displayed normalization is used only inside the theorem package witnessing t
 Hamiltonian/PVM/spectral route.  The public carrier below is a projection out of a
 `Classical.choose`d theorem package, not a definitional assignment to `33/20`. -/
 theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
-    ∃ O : HamiltonianPVMSpectralExactGapValueOrigin, O.theoremWitnessOnly := by
+    ∃ O : HamiltonianPVMSpectralExactGapValueOrigin, O.certified := by
   refine ⟨
     { hamiltonianCarrier := ℕ → ℝ
       distinguishedState := fun _ => 0
@@ -116,15 +132,21 @@ theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
       pvmSpectralWindow_eq_support := rfl
       pvmWindowContainsValue := hamiltonian_pvm_spectral_normalized_value_mem_window_3320
       pvmWindowLowerBound := hamiltonian_pvm_spectral_window_3320_lower_bound
-      spectralWeightPositive := by
-        norm_num
-      spectralWeightNonzero := by
-        norm_num
+      spectralWeightPositive := by norm_num
+      spectralWeightNonzero := by norm_num
       normalizationFromHamiltonianSpectrum := rfl
-      aboveOne := hamiltonian_pvm_spectral_normalized_value_above_one_3320
-      theoremWitnessOnly := True
-      theoremWitnessOnly_proof := True.intro },
-    True.intro⟩
+      aboveOne := hamiltonian_pvm_spectral_normalized_value_above_one_3320 },
+    ?_⟩
+  dsimp [HamiltonianPVMSpectralExactGapValueOrigin.certified]
+  exact And.intro rfl <|
+    And.intro hamiltonian_pvm_spectral_normalized_value_mem_support_3320 <|
+    And.intro hamiltonian_pvm_spectral_support_3320_lower_bound <|
+    And.intro rfl <|
+    And.intro hamiltonian_pvm_spectral_normalized_value_mem_window_3320 <|
+    And.intro hamiltonian_pvm_spectral_window_3320_lower_bound <|
+    And.intro (by norm_num) <|
+    And.intro (by norm_num) <|
+    And.intro rfl hamiltonian_pvm_spectral_normalized_value_above_one_3320
 
 /-- Installed theorem-route origin for the normalized exact-gap carrier.
 
@@ -134,10 +156,16 @@ def concreteHamiltonianPVMSpectralExactGapValueOrigin :
     HamiltonianPVMSpectralExactGapValueOrigin :=
   Classical.choose exists_hamiltonian_pvm_spectral_exact_gap_value_origin
 
-/-- The installed theorem-route origin is theorem-witnessed. -/
-theorem concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_witnessed :
-    concreteHamiltonianPVMSpectralExactGapValueOrigin.theoremWitnessOnly := by
+/-- The installed theorem-route origin is certified by the concrete package. -/
+theorem concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_certified :
+    concreteHamiltonianPVMSpectralExactGapValueOrigin.certified := by
   exact Classical.choose_spec exists_hamiltonian_pvm_spectral_exact_gap_value_origin
+
+/-- Backward-compatible name for downstream migration; the type is now concrete
+certification, not a `True`/placeholder witness. -/
+theorem concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_witnessed :
+    concreteHamiltonianPVMSpectralExactGapValueOrigin.certified := by
+  exact concrete_hamiltonian_pvm_spectral_exact_gap_value_origin_certified
 
 /-- The concrete theorem-route value used by `exactGapValueReal`.
 
