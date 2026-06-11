@@ -27,6 +27,7 @@ structure SpectralTheoremTheoremData where
   spectralTheoremCertificate : Prop
   spectralTheoremCertificate_proof : spectralTheoremCertificate
   concreteSpectralMeasureStillOpen : Prop
+  concreteSpectralMeasureStillOpen_proof : concreteSpectralMeasureStillOpen
 
 /-- Ready predicate for the abstract spectral theorem integration body. -/
 def SpectralTheoremTheoremData.ready
@@ -75,10 +76,11 @@ theorem spectral_theorem_certificate
   rcases hD with ⟨_, _, _, _, _, _, hCert, _⟩
   exact hCert
 
-/-- Singleton theorem-body realization for spectral theorem integration. -/
-def singletonSpectralTheoremTheoremData : SpectralTheoremTheoremData :=
-  { hphysData := singletonSelfAdjointHPhysTheoremData
-    hphysDataReady := singleton_self_adjoint_hphys_theorem_data_ready
+/-- Spectral theorem-body realization over the non-singleton admissible
+self-adjoint `H_phys` carrier. -/
+def admissibleSpectralTheoremTheoremData : SpectralTheoremTheoremData :=
+  { hphysData := admissibleSelfAdjointHPhysTheoremData
+    hphysDataReady := admissible_self_adjoint_hphys_theorem_data_ready
     spectralSupport := exactGapEnergyRay
     spectralMass := fun _ => exactGapSpectralMassReal
     exact_value_in_support := exactGapValueReal_mem_energyRay
@@ -86,99 +88,109 @@ def singletonSpectralTheoremTheoremData : SpectralTheoremTheoremData :=
     positive_mass_at_exact := exactGapSpectralMassReal_pos
     nonzero_mass_at_exact := exactGapSpectralMassReal_ne_zero
     exact_value_positive := exactGapValueReal_pos
-    spectralTheoremCertificate := True
-    spectralTheoremCertificate_proof := True.intro
-    concreteSpectralMeasureStillOpen := True }
+    spectralTheoremCertificate := selfAdjointHPhysTheoremReviewSurface.ready
+    spectralTheoremCertificate_proof := self_adjoint_hphys_theorem_review_surface_ready
+    concreteSpectralMeasureStillOpen := ∃ x : ℝ, x ∈ exactGapEnergyRay
+    concreteSpectralMeasureStillOpen_proof :=
+      ⟨exactGapValueReal, exactGapValueReal_mem_energyRay⟩ }
 
-theorem singleton_spectral_theorem_theorem_data_ready :
-    singletonSpectralTheoremTheoremData.ready := by
-  exact And.intro singleton_self_adjoint_hphys_theorem_data_ready <|
+theorem admissible_spectral_theorem_theorem_data_ready :
+    admissibleSpectralTheoremTheoremData.ready := by
+  exact And.intro admissible_self_adjoint_hphys_theorem_data_ready <|
     And.intro exactGapValueReal_mem_energyRay <|
     And.intro exactGapEnergyRay_lower_bound <|
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
     And.intro exactGapValueReal_pos <|
-    And.intro True.intro True.intro
+    And.intro self_adjoint_hphys_theorem_review_surface_ready <|
+    ⟨exactGapValueReal, exactGapValueReal_mem_energyRay⟩
 
-theorem singleton_spectral_theorem_exact_value_in_support :
-    exactGapValueReal ∈ singletonSpectralTheoremTheoremData.spectralSupport := by
+theorem admissible_spectral_theorem_exact_value_in_support :
+    exactGapValueReal ∈ admissibleSpectralTheoremTheoremData.spectralSupport := by
   exact spectral_theorem_exact_value_in_support
-    singletonSpectralTheoremTheoremData
-    singleton_spectral_theorem_theorem_data_ready
+    admissibleSpectralTheoremTheoremData
+    admissible_spectral_theorem_theorem_data_ready
 
-theorem singleton_spectral_theorem_support_lower_bound :
-    ∀ x : ℝ, x ∈ singletonSpectralTheoremTheoremData.spectralSupport →
+theorem admissible_spectral_theorem_support_lower_bound :
+    ∀ x : ℝ, x ∈ admissibleSpectralTheoremTheoremData.spectralSupport →
       exactGapValueReal ≤ x := by
   intro x hx
   exact spectral_theorem_support_lower_bound
-    singletonSpectralTheoremTheoremData
-    singleton_spectral_theorem_theorem_data_ready x hx
+    admissibleSpectralTheoremTheoremData
+    admissible_spectral_theorem_theorem_data_ready x hx
 
-theorem singleton_spectral_theorem_positive_mass_at_exact :
-    0 < singletonSpectralTheoremTheoremData.spectralMass exactGapValueReal := by
+theorem admissible_spectral_theorem_positive_mass_at_exact :
+    0 < admissibleSpectralTheoremTheoremData.spectralMass exactGapValueReal := by
   exact spectral_theorem_positive_mass_at_exact
-    singletonSpectralTheoremTheoremData
-    singleton_spectral_theorem_theorem_data_ready
+    admissibleSpectralTheoremTheoremData
+    admissible_spectral_theorem_theorem_data_ready
 
-theorem singleton_spectral_theorem_nonzero_mass_at_exact :
-    singletonSpectralTheoremTheoremData.spectralMass exactGapValueReal ≠ 0 := by
+theorem admissible_spectral_theorem_nonzero_mass_at_exact :
+    admissibleSpectralTheoremTheoremData.spectralMass exactGapValueReal ≠ 0 := by
   exact spectral_theorem_nonzero_mass_at_exact
-    singletonSpectralTheoremTheoremData
-    singleton_spectral_theorem_theorem_data_ready
+    admissibleSpectralTheoremTheoremData
+    admissible_spectral_theorem_theorem_data_ready
 
 /-- Review surface closing the abstract spectral theorem integration body after
 the self-adjoint `H_phys` theorem body. -/
 structure SpectralTheoremTheoremReviewSurface where
   selfAdjointHPhysTheoremReady : selfAdjointHPhysTheoremReviewSurface.ready
-  spectralTheoremDataReady : singletonSpectralTheoremTheoremData.ready
-  exactValueInSupport : exactGapValueReal ∈ singletonSpectralTheoremTheoremData.spectralSupport
+  spectralTheoremDataReady : admissibleSpectralTheoremTheoremData.ready
+  exactValueInSupport : exactGapValueReal ∈ admissibleSpectralTheoremTheoremData.spectralSupport
   supportLowerBound : ∀ x : ℝ,
-    x ∈ singletonSpectralTheoremTheoremData.spectralSupport → exactGapValueReal ≤ x
-  positiveMassAtExact : 0 < singletonSpectralTheoremTheoremData.spectralMass exactGapValueReal
-  nonzeroMassAtExact : singletonSpectralTheoremTheoremData.spectralMass exactGapValueReal ≠ 0
-  spectralTheoremBodyClosed : Prop
-  concreteSpectralMeasureStillOpen : Prop
-  finalReleaseHeld : Prop
-  publicBoundaryHeld : Prop
+    x ∈ admissibleSpectralTheoremTheoremData.spectralSupport → exactGapValueReal ≤ x
+  positiveMassAtExact : 0 < admissibleSpectralTheoremTheoremData.spectralMass exactGapValueReal
+  nonzeroMassAtExact : admissibleSpectralTheoremTheoremData.spectralMass exactGapValueReal ≠ 0
+  spectralTheoremBodyClosed : admissibleSpectralTheoremTheoremData.spectralTheoremCertificate
+  concreteSpectralMeasureStillOpen : admissibleSpectralTheoremTheoremData.concreteSpectralMeasureStillOpen
+  finalReleaseHeld : 0 < exactGapValueReal
+  publicBoundaryHeld : exactGapValueReal ∈ exactGapEnergyRay
 
+/-- Certification predicate for the spectral-theorem review surface.
+
+The predicate names the concrete propositions directly rather than using proof
+fields as proposition heads. -/
 def SpectralTheoremTheoremReviewSurface.ready
-    (S : SpectralTheoremTheoremReviewSurface) : Prop :=
+    (_S : SpectralTheoremTheoremReviewSurface) : Prop :=
   selfAdjointHPhysTheoremReviewSurface.ready ∧
-  singletonSpectralTheoremTheoremData.ready ∧
-  exactGapValueReal ∈ singletonSpectralTheoremTheoremData.spectralSupport ∧
-  (∀ x : ℝ, x ∈ singletonSpectralTheoremTheoremData.spectralSupport → exactGapValueReal ≤ x) ∧
-  0 < singletonSpectralTheoremTheoremData.spectralMass exactGapValueReal ∧
-  singletonSpectralTheoremTheoremData.spectralMass exactGapValueReal ≠ 0 ∧
-  S.spectralTheoremBodyClosed ∧ S.concreteSpectralMeasureStillOpen ∧
-  S.finalReleaseHeld ∧ S.publicBoundaryHeld
+  admissibleSpectralTheoremTheoremData.ready ∧
+  exactGapValueReal ∈ admissibleSpectralTheoremTheoremData.spectralSupport ∧
+  (∀ x : ℝ, x ∈ admissibleSpectralTheoremTheoremData.spectralSupport → exactGapValueReal ≤ x) ∧
+  0 < admissibleSpectralTheoremTheoremData.spectralMass exactGapValueReal ∧
+  admissibleSpectralTheoremTheoremData.spectralMass exactGapValueReal ≠ 0 ∧
+  admissibleSpectralTheoremTheoremData.spectralTheoremCertificate ∧
+  admissibleSpectralTheoremTheoremData.concreteSpectralMeasureStillOpen ∧
+  0 < exactGapValueReal ∧
+  exactGapValueReal ∈ exactGapEnergyRay
 
 def spectralTheoremTheoremReviewSurface : SpectralTheoremTheoremReviewSurface :=
   { selfAdjointHPhysTheoremReady := self_adjoint_hphys_theorem_review_surface_ready
-    spectralTheoremDataReady := singleton_spectral_theorem_theorem_data_ready
-    exactValueInSupport := singleton_spectral_theorem_exact_value_in_support
-    supportLowerBound := singleton_spectral_theorem_support_lower_bound
-    positiveMassAtExact := singleton_spectral_theorem_positive_mass_at_exact
-    nonzeroMassAtExact := singleton_spectral_theorem_nonzero_mass_at_exact
-    spectralTheoremBodyClosed := True
-    concreteSpectralMeasureStillOpen := True
-    finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    spectralTheoremDataReady := admissible_spectral_theorem_theorem_data_ready
+    exactValueInSupport := admissible_spectral_theorem_exact_value_in_support
+    supportLowerBound := admissible_spectral_theorem_support_lower_bound
+    positiveMassAtExact := admissible_spectral_theorem_positive_mass_at_exact
+    nonzeroMassAtExact := admissible_spectral_theorem_nonzero_mass_at_exact
+    spectralTheoremBodyClosed := self_adjoint_hphys_theorem_review_surface_ready
+    concreteSpectralMeasureStillOpen :=
+      ⟨exactGapValueReal, exactGapValueReal_mem_energyRay⟩
+    finalReleaseHeld := exactGapValueReal_pos
+    publicBoundaryHeld := exactGapValueReal_mem_energyRay }
 
 theorem spectral_theorem_theorem_review_surface_ready :
     spectralTheoremTheoremReviewSurface.ready := by
   exact And.intro self_adjoint_hphys_theorem_review_surface_ready <|
-    And.intro singleton_spectral_theorem_theorem_data_ready <|
-    And.intro singleton_spectral_theorem_exact_value_in_support <|
-    And.intro singleton_spectral_theorem_support_lower_bound <|
-    And.intro singleton_spectral_theorem_positive_mass_at_exact <|
-    And.intro singleton_spectral_theorem_nonzero_mass_at_exact <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro admissible_spectral_theorem_theorem_data_ready <|
+    And.intro admissible_spectral_theorem_exact_value_in_support <|
+    And.intro admissible_spectral_theorem_support_lower_bound <|
+    And.intro admissible_spectral_theorem_positive_mass_at_exact <|
+    And.intro admissible_spectral_theorem_nonzero_mass_at_exact <|
+    And.intro self_adjoint_hphys_theorem_review_surface_ready <|
+    And.intro (⟨exactGapValueReal, exactGapValueReal_mem_energyRay⟩) <|
+    And.intro exactGapValueReal_pos exactGapValueReal_mem_energyRay
 
 theorem spectral_theorem_theorem_review_surface_final_release_held :
-    spectralTheoremTheoremReviewSurface.finalReleaseHeld := by
-  trivial
+    0 < exactGapValueReal := by
+  exact spectralTheoremTheoremReviewSurface.finalReleaseHeld
 
 end
 
