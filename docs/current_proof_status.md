@@ -109,7 +109,7 @@ The current route separates four layers:
 
 ```text
 abstract theorem-body layer
-normalized carrier layer
+Basic-layer marker and downstream real-carrier layer
 operator/spectral derivation layer
 engineering / review-marker layer
 ```
@@ -139,7 +139,10 @@ exact_gap_layer_separation_ready
 Review reading:
 
 ```text
-Basic.lean / ExactGapReal.lean = carrier layer
+Basic.lean = marker-only route-deferred layer, with no real-valued gap carrier
+ExactGapReal.lean = downstream real carrier and raw route witness
+ContinuumHamiltonianMassGapTheorem.lean = theorem-route final normalization boundary
+ContinuumHamiltonianExactMassGapDerivation.lean = exact positive mass-gap package boundary
 ConcreteR1R7ResidualDischarge.lean = current terminal derivation discharge
 ContinuumHamiltonianCompleteMassGapDerivation.lean = complete Hamiltonian spectral derivation surface
 YangMillsHamiltonianSpectralDerivation3320.lean = spectral derivation interface into the normalized carrier
@@ -147,7 +150,7 @@ ExactGapTheoremBodyClosure.lean = older mixed closure record
 ExactGapLayerSeparation.lean = current separation map
 ```
 
-The value `exactGapValueReal` is the normalized target/codomain. The current exact-value route is reviewed through the R1--R7 terminal discharge and the complete continuum-Hamiltonian spectral route, not through the carrier file alone.
+The value `exactGapValueReal` is the downstream real carrier.  The current exact-value route is reviewed through the R1--R7 terminal discharge and the continuum-Hamiltonian / PVM / operator-spectral theorem route, not through `Basic.lean` and not through the carrier witness alone.
 
 ## R4 status and historical `StillOpen` markers
 
@@ -195,25 +198,32 @@ continuum_hamiltonian_witness_provenance_map_ready
 
 ## Exact `33/20` derivation source
 
-The repository distinguishes two roles:
+The repository distinguishes three roles:
 
 ```text
-carrier role:
+Basic-layer marker role:
   MGAP4D/MathlibAnalytic/Basic.lean
+
+real-carrier role:
   MGAP4D/MathlibAnalytic/ExactGapReal.lean
 
 operator/spectral derivation role:
+  MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+  MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
   MGAP4D/ConcreteR1R7ResidualDischarge.lean
   MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
   MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
   MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
 ```
 
-`exactGapValueReal : ℝ := 33 / 20` remains the canonical normalized carrier. Its local `rfl` / `norm_num` checks are carrier checks.
+`exactGapValueReal` is the downstream normalized real carrier.  `Basic.lean` does not define a numerical carrier, and `ExactGapReal.lean` does not export the final normalized equality theorem.  The final equality is derived through the continuum-Hamiltonian / PVM / spectral route.
 
 The current exact-value route is the R1--R7 terminal route plus the complete continuum-Hamiltonian spectral route:
 
 ```text
+continuum_hamiltonian_derives_exact_mass_gap_value
+physical_continuum_hamiltonian_to_exact_positive_mass_gap
+physical_continuum_hamiltonian_exact_gap_33_over_20
 concrete_r1r7_residual_discharge_3320_ready
 concrete_r6_residual_discharge_nondefinitional_spectral_atom_3320
 concrete_r7_residual_discharge_positive_spectral_weight_derivation_3320
