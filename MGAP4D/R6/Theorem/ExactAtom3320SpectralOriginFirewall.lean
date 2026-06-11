@@ -29,18 +29,43 @@ theorem exact_atom_3320_observable_atom_pvm_compatibility_route_ready :
     MGAP4D.MathlibAnalytic.singleton_observable_atom_theorem_exact_value_in_atom,
     MGAP4D.MathlibAnalytic.singleton_observable_atom_theorem_compatible_with_pvm_mass⟩
 
-/-- Marker that the R6 value-origin route now derives the displayed value through
-the Yang--Mills Hamiltonian spectral surface. -/
-def ExactAtom3320GenuineSpectralValueDerivedAtR6 : Prop :=
-  ExactAtom3320SpectralValueDerivedAtR6Origin
+/-- R6 non-definitional value-derivation gate.
 
-/-- The R6 spectral-value derivation route is ready. -/
+This gate is intentionally conditional: R6 may derive the displayed `33/20` value
+only after the spectral/PVM lane supplies
+`ExactAtom3320R6SpectralPVMPinsDerivedValue`.  The theorem body below never
+unfolds `exactGapValueReal`; it consumes only the R6 pinning surface. -/
+def ExactAtom3320R6SpectralValueDerivationGate : Prop :=
+  ExactAtom3320NonDefinitionalDerivationTarget ∧
+  (ExactAtom3320R6SpectralPVMPinsDerivedValue →
+    MGAP4D.MathlibAnalytic.yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
+      (33 : ℝ) / 20) ∧
+  (ExactAtom3320R6SpectralPVMPinsDerivedValue →
+    MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20)
+
+/-- The R6 non-definitional value-derivation gate is ready. -/
+theorem exact_atom_3320_r6_spectral_value_derivation_gate_ready :
+    ExactAtom3320R6SpectralValueDerivationGate := by
+  exact ⟨
+    exact_atom_3320_nondefinitional_derivation_target_ready,
+    exact_atom_3320_r6_derived_spectral_value_eq_3320,
+    exact_atom_3320_r6_exact_gap_value_eq_3320⟩
+
+/-- Marker that R6 has a guarded, non-definitional route for the displayed value.
+
+This is not an unconditional adoption of `exactGapValueReal = 33/20`; it records
+that the value theorem is available exactly when the R6 spectral/PVM pinning
+surface is supplied. -/
+def ExactAtom3320GenuineSpectralValueDerivedAtR6 : Prop :=
+  ExactAtom3320R6SpectralValueDerivationGate
+
+/-- The guarded R6 spectral-value derivation route is ready. -/
 theorem exact_atom_3320_genuine_spectral_value_derived_at_r6_ready :
     ExactAtom3320GenuineSpectralValueDerivedAtR6 := by
-  exact exact_atom_3320_spectral_value_derived_at_r6_origin_ready
+  exact exact_atom_3320_r6_spectral_value_derivation_gate_ready
 
-/-- Firewall: R6 now carries a spectral-value derivation certificate, while the
-full R4 Borel PVM construction boundary remains guarded. -/
+/-- Firewall: R6 carries a guarded non-definitional spectral-value derivation gate,
+while the full R4 Borel PVM construction boundary remains guarded. -/
 def ExactAtom3320SpectralOriginFirewall : Prop :=
   ExactAtom3320ObservableAtomPVMCompatibilityRoute ∧
   ExactAtom3320GenuineSpectralValueDerivedAtR6 ∧
