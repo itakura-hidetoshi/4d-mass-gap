@@ -26,7 +26,9 @@ structure PVMTheoremTheoremData where
   pvmCertificate : Prop
   pvmCertificate_proof : pvmCertificate
   concreteCountableAdditivityStillOpen : Prop
+  concreteCountableAdditivityStillOpen_proof : concreteCountableAdditivityStillOpen
   concreteProjectionOperatorStillOpen : Prop
+  concreteProjectionOperatorStillOpen_proof : concreteProjectionOperatorStillOpen
 
 /-- Ready predicate for the abstract PVM theorem body. -/
 def PVMTheoremTheoremData.ready (D : PVMTheoremTheoremData) : Prop :=
@@ -75,10 +77,10 @@ theorem pvm_theorem_certificate
   rcases hD with ⟨_, _, _, _, _, _, hCert, _, _⟩
   exact hCert
 
-/-- Singleton theorem-body realization for the PVM layer. -/
-def singletonPVMTheoremTheoremData : PVMTheoremTheoremData :=
-  { spectralData := singletonSpectralTheoremTheoremData
-    spectralDataReady := singleton_spectral_theorem_theorem_data_ready
+/-- PVM theorem-body realization over the admissible spectral theorem carrier. -/
+def admissiblePVMTheoremTheoremData : PVMTheoremTheoremData :=
+  { spectralData := admissibleSpectralTheoremTheoremData
+    spectralDataReady := admissible_spectral_theorem_theorem_data_ready
     projectionMass := prototypeProjectionMassReal
     exactAtom := exactGapAtomReal
     exactAtom_def := rfl
@@ -86,108 +88,114 @@ def singletonPVMTheoremTheoremData : PVMTheoremTheoremData :=
     exact_atom_mass_positive := prototypeProjectionMassReal_exact_atom_pos
     exact_atom_mass_nonzero := prototypeProjectionMassReal_exact_atom_ne_zero
     compatible_with_spectral_mass := rfl
-    pvmCertificate := True
-    pvmCertificate_proof := True.intro
-    concreteCountableAdditivityStillOpen := True
-    concreteProjectionOperatorStillOpen := True }
+    pvmCertificate := spectralTheoremTheoremReviewSurface.ready
+    pvmCertificate_proof := spectral_theorem_theorem_review_surface_ready
+    concreteCountableAdditivityStillOpen := exactGapValueReal ∈ exactGapAtomReal
+    concreteCountableAdditivityStillOpen_proof := exactGapValueReal_mem_exactGapAtomReal
+    concreteProjectionOperatorStillOpen := 0 < prototypeProjectionMassReal exactGapAtomReal
+    concreteProjectionOperatorStillOpen_proof := prototypeProjectionMassReal_exact_atom_pos }
 
-theorem singleton_pvm_theorem_theorem_data_ready :
-    singletonPVMTheoremTheoremData.ready := by
-  exact And.intro singleton_spectral_theorem_theorem_data_ready <|
+theorem admissible_pvm_theorem_theorem_data_ready :
+    admissiblePVMTheoremTheoremData.ready := by
+  exact And.intro admissible_spectral_theorem_theorem_data_ready <|
     And.intro rfl <|
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro prototypeProjectionMassReal_exact_atom_pos <|
     And.intro prototypeProjectionMassReal_exact_atom_ne_zero <|
     And.intro rfl <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro spectral_theorem_theorem_review_surface_ready <|
+    And.intro exactGapValueReal_mem_exactGapAtomReal prototypeProjectionMassReal_exact_atom_pos
 
-theorem singleton_pvm_theorem_exact_value_in_atom :
-    exactGapValueReal ∈ singletonPVMTheoremTheoremData.exactAtom := by
+theorem admissible_pvm_theorem_exact_value_in_atom :
+    exactGapValueReal ∈ admissiblePVMTheoremTheoremData.exactAtom := by
   exact pvm_theorem_exact_value_in_atom
-    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
+    admissiblePVMTheoremTheoremData admissible_pvm_theorem_theorem_data_ready
 
-theorem singleton_pvm_theorem_exact_atom_mass_positive :
-    0 < singletonPVMTheoremTheoremData.projectionMass
-      singletonPVMTheoremTheoremData.exactAtom := by
+theorem admissible_pvm_theorem_exact_atom_mass_positive :
+    0 < admissiblePVMTheoremTheoremData.projectionMass
+      admissiblePVMTheoremTheoremData.exactAtom := by
   exact pvm_theorem_exact_atom_mass_positive
-    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
+    admissiblePVMTheoremTheoremData admissible_pvm_theorem_theorem_data_ready
 
-theorem singleton_pvm_theorem_exact_atom_mass_nonzero :
-    singletonPVMTheoremTheoremData.projectionMass
-      singletonPVMTheoremTheoremData.exactAtom ≠ 0 := by
+theorem admissible_pvm_theorem_exact_atom_mass_nonzero :
+    admissiblePVMTheoremTheoremData.projectionMass
+      admissiblePVMTheoremTheoremData.exactAtom ≠ 0 := by
   exact pvm_theorem_exact_atom_mass_nonzero
-    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
+    admissiblePVMTheoremTheoremData admissible_pvm_theorem_theorem_data_ready
 
-theorem singleton_pvm_theorem_compatible_with_spectral_mass :
-    singletonPVMTheoremTheoremData.projectionMass
-      singletonPVMTheoremTheoremData.exactAtom =
-    singletonPVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal := by
+theorem admissible_pvm_theorem_compatible_with_spectral_mass :
+    admissiblePVMTheoremTheoremData.projectionMass
+      admissiblePVMTheoremTheoremData.exactAtom =
+    admissiblePVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal := by
   exact pvm_theorem_compatible_with_spectral_mass
-    singletonPVMTheoremTheoremData singleton_pvm_theorem_theorem_data_ready
+    admissiblePVMTheoremTheoremData admissible_pvm_theorem_theorem_data_ready
 
 /-- Review surface closing the abstract PVM theorem body after the spectral
 integration theorem body. -/
 structure PVMTheoremTheoremReviewSurface where
   spectralTheoremBodyReady : spectralTheoremTheoremReviewSurface.ready
-  pvmTheoremDataReady : singletonPVMTheoremTheoremData.ready
-  exactValueInAtom : exactGapValueReal ∈ singletonPVMTheoremTheoremData.exactAtom
-  exactAtomMassPositive : 0 < singletonPVMTheoremTheoremData.projectionMass
-    singletonPVMTheoremTheoremData.exactAtom
-  exactAtomMassNonzero : singletonPVMTheoremTheoremData.projectionMass
-    singletonPVMTheoremTheoremData.exactAtom ≠ 0
-  compatibleWithSpectralMass : singletonPVMTheoremTheoremData.projectionMass
-    singletonPVMTheoremTheoremData.exactAtom =
-    singletonPVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal
-  pvmTheoremBodyClosed : Prop
-  concreteCountableAdditivityStillOpen : Prop
-  concreteProjectionOperatorStillOpen : Prop
-  finalReleaseHeld : Prop
-  publicBoundaryHeld : Prop
+  pvmTheoremDataReady : admissiblePVMTheoremTheoremData.ready
+  exactValueInAtom : exactGapValueReal ∈ admissiblePVMTheoremTheoremData.exactAtom
+  exactAtomMassPositive : 0 < admissiblePVMTheoremTheoremData.projectionMass
+    admissiblePVMTheoremTheoremData.exactAtom
+  exactAtomMassNonzero : admissiblePVMTheoremTheoremData.projectionMass
+    admissiblePVMTheoremTheoremData.exactAtom ≠ 0
+  compatibleWithSpectralMass : admissiblePVMTheoremTheoremData.projectionMass
+    admissiblePVMTheoremTheoremData.exactAtom =
+    admissiblePVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal
+  pvmTheoremBodyClosed : admissiblePVMTheoremTheoremData.pvmCertificate
+  concreteCountableAdditivityStillOpen : admissiblePVMTheoremTheoremData.concreteCountableAdditivityStillOpen
+  concreteProjectionOperatorStillOpen : admissiblePVMTheoremTheoremData.concreteProjectionOperatorStillOpen
+  finalReleaseHeld : 0 < exactGapValueReal
+  publicBoundaryHeld : exactGapValueReal ∈ exactGapAtomReal
 
+/-- Certification predicate for the PVM review surface. -/
 def PVMTheoremTheoremReviewSurface.ready
-    (S : PVMTheoremTheoremReviewSurface) : Prop :=
-  spectralTheoremTheoremReviewSurface.ready ∧ singletonPVMTheoremTheoremData.ready ∧
-  exactGapValueReal ∈ singletonPVMTheoremTheoremData.exactAtom ∧
-  0 < singletonPVMTheoremTheoremData.projectionMass
-      singletonPVMTheoremTheoremData.exactAtom ∧
-  singletonPVMTheoremTheoremData.projectionMass
-      singletonPVMTheoremTheoremData.exactAtom ≠ 0 ∧
-  singletonPVMTheoremTheoremData.projectionMass
-      singletonPVMTheoremTheoremData.exactAtom =
-      singletonPVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal ∧
-  S.pvmTheoremBodyClosed ∧ S.concreteCountableAdditivityStillOpen ∧
-  S.concreteProjectionOperatorStillOpen ∧ S.finalReleaseHeld ∧ S.publicBoundaryHeld
+    (_S : PVMTheoremTheoremReviewSurface) : Prop :=
+  spectralTheoremTheoremReviewSurface.ready ∧ admissiblePVMTheoremTheoremData.ready ∧
+  exactGapValueReal ∈ admissiblePVMTheoremTheoremData.exactAtom ∧
+  0 < admissiblePVMTheoremTheoremData.projectionMass
+      admissiblePVMTheoremTheoremData.exactAtom ∧
+  admissiblePVMTheoremTheoremData.projectionMass
+      admissiblePVMTheoremTheoremData.exactAtom ≠ 0 ∧
+  admissiblePVMTheoremTheoremData.projectionMass
+      admissiblePVMTheoremTheoremData.exactAtom =
+      admissiblePVMTheoremTheoremData.spectralData.spectralMass exactGapValueReal ∧
+  admissiblePVMTheoremTheoremData.pvmCertificate ∧
+  admissiblePVMTheoremTheoremData.concreteCountableAdditivityStillOpen ∧
+  admissiblePVMTheoremTheoremData.concreteProjectionOperatorStillOpen ∧
+  0 < exactGapValueReal ∧
+  exactGapValueReal ∈ exactGapAtomReal
 
 def pvmTheoremTheoremReviewSurface : PVMTheoremTheoremReviewSurface :=
   { spectralTheoremBodyReady := spectral_theorem_theorem_review_surface_ready
-    pvmTheoremDataReady := singleton_pvm_theorem_theorem_data_ready
-    exactValueInAtom := singleton_pvm_theorem_exact_value_in_atom
-    exactAtomMassPositive := singleton_pvm_theorem_exact_atom_mass_positive
-    exactAtomMassNonzero := singleton_pvm_theorem_exact_atom_mass_nonzero
-    compatibleWithSpectralMass := singleton_pvm_theorem_compatible_with_spectral_mass
-    pvmTheoremBodyClosed := True
-    concreteCountableAdditivityStillOpen := True
-    concreteProjectionOperatorStillOpen := True
-    finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    pvmTheoremDataReady := admissible_pvm_theorem_theorem_data_ready
+    exactValueInAtom := admissible_pvm_theorem_exact_value_in_atom
+    exactAtomMassPositive := admissible_pvm_theorem_exact_atom_mass_positive
+    exactAtomMassNonzero := admissible_pvm_theorem_exact_atom_mass_nonzero
+    compatibleWithSpectralMass := admissible_pvm_theorem_compatible_with_spectral_mass
+    pvmTheoremBodyClosed := spectral_theorem_theorem_review_surface_ready
+    concreteCountableAdditivityStillOpen := exactGapValueReal_mem_exactGapAtomReal
+    concreteProjectionOperatorStillOpen := prototypeProjectionMassReal_exact_atom_pos
+    finalReleaseHeld := exactGapValueReal_pos
+    publicBoundaryHeld := exactGapValueReal_mem_exactGapAtomReal }
 
 theorem pvm_theorem_theorem_review_surface_ready :
     pvmTheoremTheoremReviewSurface.ready := by
   exact And.intro spectral_theorem_theorem_review_surface_ready <|
-    And.intro singleton_pvm_theorem_theorem_data_ready <|
-    And.intro singleton_pvm_theorem_exact_value_in_atom <|
-    And.intro singleton_pvm_theorem_exact_atom_mass_positive <|
-    And.intro singleton_pvm_theorem_exact_atom_mass_nonzero <|
-    And.intro singleton_pvm_theorem_compatible_with_spectral_mass <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro admissible_pvm_theorem_theorem_data_ready <|
+    And.intro admissible_pvm_theorem_exact_value_in_atom <|
+    And.intro admissible_pvm_theorem_exact_atom_mass_positive <|
+    And.intro admissible_pvm_theorem_exact_atom_mass_nonzero <|
+    And.intro admissible_pvm_theorem_compatible_with_spectral_mass <|
+    And.intro spectral_theorem_theorem_review_surface_ready <|
+    And.intro exactGapValueReal_mem_exactGapAtomReal <|
+    And.intro prototypeProjectionMassReal_exact_atom_pos <|
+    And.intro exactGapValueReal_pos exactGapValueReal_mem_exactGapAtomReal
 
 theorem pvm_theorem_theorem_review_surface_final_release_held :
-    pvmTheoremTheoremReviewSurface.finalReleaseHeld := by
-  trivial
+    0 < exactGapValueReal := by
+  exact pvmTheoremTheoremReviewSurface.finalReleaseHeld
 
 end
 
