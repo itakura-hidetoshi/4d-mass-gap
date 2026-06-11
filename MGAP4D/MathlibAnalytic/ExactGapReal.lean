@@ -17,6 +17,12 @@ theorem exactGapValueRealRouteWitness :
 noncomputable def exactGapValueReal : ℝ :=
   Classical.choose exactGapValueRealRouteWitness
 
+/-- Closed-form arithmetic normalization of the exact-gap carrier. -/
+theorem exactGapValueReal_eq :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  unfold exactGapValueReal
+  exact (Classical.choose_spec exactGapValueRealRouteWitness).1.trans (by norm_num)
+
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   unfold exactGapValueReal
   exact (Classical.choose_spec exactGapValueRealRouteWitness).2.1
