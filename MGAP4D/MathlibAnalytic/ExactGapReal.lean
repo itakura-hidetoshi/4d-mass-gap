@@ -3,19 +3,22 @@ import MGAP4D.MathlibAnalytic.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
+private theorem exactGapValueRealWitness :
+    ∃ value : ℝ, value = ((11 : ℝ) * 3) / 20 ∧ 0 < value ∧ 1 < value := by
+  refine ⟨((11 : ℝ) * 3) / 20, rfl, ?_, ?_⟩
+  · norm_num
+  · norm_num
+
 noncomputable def exactGapValueReal : ℝ :=
-  Classical.choose (by
-    refine ⟨((11 : ℝ) * 3) / 20, rfl, ?_, ?_⟩
-    · norm_num
-    · norm_num)
+  Classical.choose exactGapValueRealWitness
 
 theorem exactGapValueReal_pos : 0 < exactGapValueReal := by
   unfold exactGapValueReal
-  exact (Classical.choose_spec _).2.1
+  exact (Classical.choose_spec exactGapValueRealWitness).2.1
 
 theorem exactGapValueReal_above_one : 1 < exactGapValueReal := by
   unfold exactGapValueReal
-  exact (Classical.choose_spec _).2.2
+  exact (Classical.choose_spec exactGapValueRealWitness).2.2
 
 /-- Mathlib-backed real-valued exact-gap carrier surface. -/
 structure ExactGapRealSurface where
