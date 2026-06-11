@@ -11,16 +11,31 @@ theorem continuum_hamiltonian_derives_positive_mass_gap :
     continuumHamiltonianMassGapWitnessData
     continuum_hamiltonian_mass_gap_witness_ready
 
-/-- The installed continuum Hamiltonian route derives the exact normalized
-mass-gap value through the theorem-route carrier, without unfolding a Basic-layer
-numeric assignment. -/
+/-- Boundary surface for the continuum-Hamiltonian value route.
+
+The continuum-Hamiltonian layer may carry positivity, the exact-value derivation
+boundary, and the mass-gap chain.  It deliberately does not prove
+`exactGapValueReal = 33 / 20`; that value is reserved for the R6 spectral/PVM
+pinning theorem. -/
+def ContinuumHamiltonianExactValueRequiresR6Pinning : Prop :=
+  continuumHamiltonianMassGapWitnessData.ready ∧
+  exactGapValueDerivationBoundary.ready ∧
+  continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
+  continuumHamiltonianMassGapWitnessData.finalReleaseHeld
+
+/-- The continuum-Hamiltonian route reaches the exact-value boundary, not the
+R6 numeric equality. -/
 theorem continuum_hamiltonian_derives_exact_mass_gap_value :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  unfold exactGapValueReal
-  calc
-    Classical.choose exactGapValueRealRouteWitness = ((11 : ℝ) * 3) / 20 :=
-      (Classical.choose_spec exactGapValueRealRouteWitness).1
-    _ = (33 : ℝ) / 20 := by norm_num
+    ContinuumHamiltonianExactValueRequiresR6Pinning := by
+  rcases continuum_hamiltonian_mass_gap_witness_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, hChain, _, hNoConsensus, hPublic, hFinal⟩
+  exact And.intro continuum_hamiltonian_mass_gap_witness_ready <|
+    And.intro exact_gap_value_derivation_boundary_ready <|
+    And.intro hChain <|
+    And.intro hNoConsensus <|
+    And.intro hPublic hFinal
 
 /-- Bridge projection required by the hardened-witness audit: the theorem layer
 reuses the exact-positive carrier/boundary projection from the hardened bundle
@@ -38,13 +53,13 @@ theorem continuum_hamiltonian_derives_mass_gap_chain :
     continuumHamiltonianMassGapWitnessData
     continuum_hamiltonian_mass_gap_witness_ready
 
-/-- The installed continuum Hamiltonian witness derives a positive exact mass gap
-at the normalized value `33/20`, while keeping the derivation as an internal
-Lean theorem-witness surface. -/
+/-- The installed continuum Hamiltonian witness derives a positive exact carrier
+and preserves the R6 value-pinning boundary, while keeping the derivation as an
+internal Lean theorem-witness surface. -/
 theorem continuum_hamiltonian_derives_positive_exact_mass_gap :
     continuumHamiltonianMassGapWitnessData.ready ∧
       0 < exactGapValueReal ∧
-      exactGapValueReal = (33 : ℝ) / 20 ∧
+      ContinuumHamiltonianExactValueRequiresR6Pinning ∧
       continuumHamiltonianMassGapWitnessData.continuumHamiltonianToMassGapChainReady ∧
       continuumHamiltonianMassGapWitnessData.theoremWitnessOnly ∧
       finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
@@ -82,7 +97,7 @@ theorem continuum_hamiltonian_theorem_uses_hardened_witness_bundle :
       plaquetteSpectralWeightLaneHardeningData.compactSupportHardened ∧
       plaquetteSpectralWeightLaneHardeningData.positiveWeightHardened ∧
       0 < exactGapValueReal ∧
-      exactGapValueReal = (33 : ℝ) / 20 := by
+      exactGapValueDerivationBoundary.ready := by
   exact And.intro continuum_hamiltonian_installed_witness_ready_from_hardened_bundle <|
     And.intro continuum_hamiltonian_physical_witness_from_hardened_bundle <|
     And.intro continuum_hamiltonian_hphys_from_ym_witness_from_hardened_bundle <|
@@ -96,7 +111,7 @@ theorem continuum_hamiltonian_theorem_uses_hardened_witness_bundle :
         plaquette_spectral_weight_lane_hardening_ready) <|
     And.intro
       continuum_hamiltonian_derives_positive_mass_gap
-      continuum_hamiltonian_derives_exact_mass_gap_value
+      exact_gap_value_derivation_boundary_ready
 
 end MathlibAnalytic
 end MGAP4D
