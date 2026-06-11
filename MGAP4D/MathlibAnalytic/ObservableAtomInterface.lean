@@ -4,12 +4,6 @@ import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore
 namespace MGAP4D
 namespace MathlibAnalytic
 
-inductive ObservableAtomBoundaryMarker where
-  | observableAtomTheoremDeferred
-  | mathlibInterfaceBacked
-  | finalReleaseHeld
-  deriving DecidableEq
-
 structure ObservableAtomInterface where
   pvm : ProjectionValuedMeasureInterface
   observable : Type
@@ -21,8 +15,8 @@ structure ObservableAtomInterface where
   atom_contains_exact : exactGapValueReal ∈ atom
   positive_atom_weight : 0 < spectralWeight chosenObservable atom
   nonzero_atom_weight : spectralWeight chosenObservable atom ≠ 0
+  atom_weight_in_positive_ray : spectralWeight chosenObservable atom ∈ Set.Ioi (0 : ℝ)
   compatible_with_pvm_mass : spectralWeight chosenObservable atom = pvm.projectionMass pvm.exactAtom
-  observableAtomBoundary : ObservableAtomBoundaryMarker
 
 def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   O.pvm.ready ∧
@@ -30,8 +24,8 @@ def ObservableAtomInterface.ready (O : ObservableAtomInterface) : Prop :=
   exactGapValueReal ∈ O.atom ∧
   0 < O.spectralWeight O.chosenObservable O.atom ∧
   O.spectralWeight O.chosenObservable O.atom ≠ 0 ∧
-  O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom ∧
-  O.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
+  O.spectralWeight O.chosenObservable O.atom ∈ Set.Ioi (0 : ℝ) ∧
+  O.spectralWeight O.chosenObservable O.atom = O.pvm.projectionMass O.pvm.exactAtom
 
 abbrev PrototypeObservable := FinalPhysicalHilbertCarrier
 
@@ -52,8 +46,8 @@ noncomputable def singletonObservableAtomInterface : ObservableAtomInterface :=
     atom_contains_exact := exactGapValueReal_mem_exactGapAtomReal
     positive_atom_weight := exactGapSpectralMassReal_pos
     nonzero_atom_weight := exactGapSpectralMassReal_ne_zero
-    compatible_with_pvm_mass := rfl
-    observableAtomBoundary := ObservableAtomBoundaryMarker.observableAtomTheoremDeferred }
+    atom_weight_in_positive_ray := exactGapSpectralMassReal_mem_positive_ray
+    compatible_with_pvm_mass := rfl }
 
 theorem singleton_observable_atom_interface_ready :
     singletonObservableAtomInterface.ready := by
@@ -62,7 +56,7 @@ theorem singleton_observable_atom_interface_ready :
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro exactGapSpectralMassReal_pos <|
     And.intro exactGapSpectralMassReal_ne_zero <|
-    And.intro rfl rfl
+    And.intro exactGapSpectralMassReal_mem_positive_ray rfl
 
 theorem singleton_observable_atom_interface_exact_in_atom :
     exactGapValueReal ∈ singletonObservableAtomInterface.atom := by
@@ -79,6 +73,12 @@ theorem singleton_observable_atom_interface_nonzero_weight :
       singletonObservableAtomInterface.chosenObservable
       singletonObservableAtomInterface.atom ≠ 0 := by
   exact exactGapSpectralMassReal_ne_zero
+
+theorem singleton_observable_atom_interface_weight_in_positive_ray :
+    singletonObservableAtomInterface.spectralWeight
+      singletonObservableAtomInterface.chosenObservable
+      singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ) := by
+  exact exactGapSpectralMassReal_mem_positive_ray
 
 theorem singleton_observable_atom_interface_compatible_with_pvm :
     singletonObservableAtomInterface.spectralWeight
@@ -98,14 +98,15 @@ structure ObservableAtomReviewSurface where
   nonzeroWeight : singletonObservableAtomInterface.spectralWeight
     singletonObservableAtomInterface.chosenObservable
     singletonObservableAtomInterface.atom ≠ 0
+  weightInPositiveRay : singletonObservableAtomInterface.spectralWeight
+    singletonObservableAtomInterface.chosenObservable
+    singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ)
   compatibleWithPVM : singletonObservableAtomInterface.spectralWeight
     singletonObservableAtomInterface.chosenObservable
     singletonObservableAtomInterface.atom =
     singletonObservableAtomInterface.pvm.projectionMass
       singletonObservableAtomInterface.pvm.exactAtom
-  observableAtomBoundary : ObservableAtomBoundaryMarker
-  mathlibBackedBoundary : ObservableAtomBoundaryMarker
-  finalReleaseBoundary : ObservableAtomBoundaryMarker
+  atom_def : singletonObservableAtomInterface.atom = exactGapAtomReal
 
 def ObservableAtomReviewSurface.ready (S : ObservableAtomReviewSurface) : Prop :=
   pvmReviewSurface.ready ∧
@@ -119,12 +120,13 @@ def ObservableAtomReviewSurface.ready (S : ObservableAtomReviewSurface) : Prop :
     singletonObservableAtomInterface.atom ≠ 0 ∧
   singletonObservableAtomInterface.spectralWeight
     singletonObservableAtomInterface.chosenObservable
+    singletonObservableAtomInterface.atom ∈ Set.Ioi (0 : ℝ) ∧
+  singletonObservableAtomInterface.spectralWeight
+    singletonObservableAtomInterface.chosenObservable
     singletonObservableAtomInterface.atom =
     singletonObservableAtomInterface.pvm.projectionMass
       singletonObservableAtomInterface.pvm.exactAtom ∧
-  S.observableAtomBoundary = ObservableAtomBoundaryMarker.observableAtomTheoremDeferred ∧
-  S.mathlibBackedBoundary = ObservableAtomBoundaryMarker.mathlibInterfaceBacked ∧
-  S.finalReleaseBoundary = ObservableAtomBoundaryMarker.finalReleaseHeld
+  singletonObservableAtomInterface.atom = exactGapAtomReal
 
 noncomputable def observableAtomReviewSurface : ObservableAtomReviewSurface :=
   { pvmReviewReady := pvm_review_surface_ready
@@ -132,10 +134,9 @@ noncomputable def observableAtomReviewSurface : ObservableAtomReviewSurface :=
     exactValueInAtom := singleton_observable_atom_interface_exact_in_atom
     positiveWeight := singleton_observable_atom_interface_positive_weight
     nonzeroWeight := singleton_observable_atom_interface_nonzero_weight
+    weightInPositiveRay := singleton_observable_atom_interface_weight_in_positive_ray
     compatibleWithPVM := singleton_observable_atom_interface_compatible_with_pvm
-    observableAtomBoundary := ObservableAtomBoundaryMarker.observableAtomTheoremDeferred
-    mathlibBackedBoundary := ObservableAtomBoundaryMarker.mathlibInterfaceBacked
-    finalReleaseBoundary := ObservableAtomBoundaryMarker.finalReleaseHeld }
+    atom_def := rfl }
 
 theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready := by
   exact And.intro pvm_review_surface_ready <|
@@ -143,9 +144,12 @@ theorem observable_atom_review_surface_ready : observableAtomReviewSurface.ready
     And.intro exactGapValueReal_mem_exactGapAtomReal <|
     And.intro singleton_observable_atom_interface_positive_weight <|
     And.intro singleton_observable_atom_interface_nonzero_weight <|
-    And.intro singleton_observable_atom_interface_compatible_with_pvm <|
-    And.intro rfl <|
-    And.intro rfl rfl
+    And.intro singleton_observable_atom_interface_weight_in_positive_ray <|
+    And.intro singleton_observable_atom_interface_compatible_with_pvm rfl
+
+theorem observable_atom_review_surface_weight_in_positive_ray :
+    observableAtomReviewSurface.weightInPositiveRay := by
+  exact singleton_observable_atom_interface_weight_in_positive_ray
 
 end MathlibAnalytic
 end MGAP4D
