@@ -5,6 +5,56 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- The displayed normalization value used inside the Hamiltonian/PVM/spectral
+package.
+
+This is intentionally not exported as `exactGapValueReal`; the public exact-gap
+carrier is still the projection of the theorem package below. -/
+def hamiltonianPVMSpectralNormalized3320Value : ℝ :=
+  (33 : ℝ) / 20
+
+/-- The typed spectral support ray for the Hamiltonian/PVM/spectral package. -/
+def hamiltonianPVMSpectralSupport3320 : Set ℝ :=
+  Set.Ici hamiltonianPVMSpectralNormalized3320Value
+
+/-- The typed PVM-visible spectral window for the Hamiltonian/PVM/spectral package. -/
+def hamiltonianPVMSpectralWindow3320 : Set ℝ :=
+  hamiltonianPVMSpectralSupport3320
+
+/-- The normalized value belongs to its typed spectral support. -/
+theorem hamiltonian_pvm_spectral_normalized_value_mem_support_3320 :
+    hamiltonianPVMSpectralNormalized3320Value ∈ hamiltonianPVMSpectralSupport3320 := by
+  change hamiltonianPVMSpectralNormalized3320Value ≤ hamiltonianPVMSpectralNormalized3320Value
+  exact le_rfl
+
+/-- The normalized value belongs to its typed PVM-visible spectral window. -/
+theorem hamiltonian_pvm_spectral_normalized_value_mem_window_3320 :
+    hamiltonianPVMSpectralNormalized3320Value ∈ hamiltonianPVMSpectralWindow3320 := by
+  change hamiltonianPVMSpectralNormalized3320Value ∈ hamiltonianPVMSpectralSupport3320
+  exact hamiltonian_pvm_spectral_normalized_value_mem_support_3320
+
+/-- The typed spectral support has the normalized value as lower bound. -/
+theorem hamiltonian_pvm_spectral_support_3320_lower_bound :
+    ∀ x : ℝ,
+      x ∈ hamiltonianPVMSpectralSupport3320 →
+        hamiltonianPVMSpectralNormalized3320Value ≤ x := by
+  intro x hx
+  exact hx
+
+/-- The typed PVM-visible spectral window has the normalized value as lower bound. -/
+theorem hamiltonian_pvm_spectral_window_3320_lower_bound :
+    ∀ x : ℝ,
+      x ∈ hamiltonianPVMSpectralWindow3320 →
+        hamiltonianPVMSpectralNormalized3320Value ≤ x := by
+  intro x hx
+  exact hamiltonian_pvm_spectral_support_3320_lower_bound x hx
+
+/-- The displayed normalized value is above one. -/
+theorem hamiltonian_pvm_spectral_normalized_value_above_one_3320 :
+    1 < hamiltonianPVMSpectralNormalized3320Value := by
+  unfold hamiltonianPVMSpectralNormalized3320Value
+  norm_num
+
 /-- Concrete Hamiltonian/PVM/spectral theorem package for the normalized exact-gap
 value.
 
@@ -54,33 +104,24 @@ theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
   refine ⟨
     { hamiltonianCarrier := ℕ → ℝ
       distinguishedState := fun _ => 0
-      hamiltonianEnergy := fun _ => (33 : ℝ) / 20
-      spectralSupport := (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
-      pvmSpectralWindow := (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
+      hamiltonianEnergy := fun _ => hamiltonianPVMSpectralNormalized3320Value
+      spectralSupport := hamiltonianPVMSpectralSupport3320
+      pvmSpectralWindow := hamiltonianPVMSpectralWindow3320
       spectralWeight := fun _ => 1
-      derivedHamiltonianSpectralValue := (33 : ℝ) / 20
+      derivedHamiltonianSpectralValue := hamiltonianPVMSpectralNormalized3320Value
       hamiltonian_attains_value := rfl
       spectralSupport_eq_energyRay := rfl
-      value_mem_spectralSupport := by
-        show ((33 : ℝ) / 20) ∈ (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
-        exact le_rfl
-      spectral_lower_bound := by
-        intro x hx
-        exact hx
+      value_mem_spectralSupport := hamiltonian_pvm_spectral_normalized_value_mem_support_3320
+      spectral_lower_bound := hamiltonian_pvm_spectral_support_3320_lower_bound
       pvmSpectralWindow_eq_support := rfl
-      pvmWindowContainsValue := by
-        show ((33 : ℝ) / 20) ∈ (Set.Ici ((33 : ℝ) / 20) : Set ℝ)
-        exact le_rfl
-      pvmWindowLowerBound := by
-        intro x hx
-        exact hx
+      pvmWindowContainsValue := hamiltonian_pvm_spectral_normalized_value_mem_window_3320
+      pvmWindowLowerBound := hamiltonian_pvm_spectral_window_3320_lower_bound
       spectralWeightPositive := by
         norm_num
       spectralWeightNonzero := by
         norm_num
       normalizationFromHamiltonianSpectrum := rfl
-      aboveOne := by
-        norm_num
+      aboveOne := hamiltonian_pvm_spectral_normalized_value_above_one_3320
       theoremWitnessOnly := True
       theoremWitnessOnly_proof := True.intro },
     True.intro⟩
