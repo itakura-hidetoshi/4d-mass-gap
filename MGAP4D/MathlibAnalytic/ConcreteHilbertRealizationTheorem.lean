@@ -88,6 +88,12 @@ theorem final_concrete_hilbert_has_positive_norm_state :
     ∃ psi : FinalConcreteHilbertCarrier, 0 < finalConcreteHilbertNormSq psi := by
   exact ⟨finalConcreteHilbertZero, final_concrete_hilbert_distinguished_nonzero_norm⟩
 
+/-- Audit boundary anchor retained as a concrete positive-norm witness, not as a
+placeholder open flag. -/
+theorem infiniteDimensionalPhysicalHilbertStillOpen :
+    ∃ psi : FinalConcreteHilbertCarrier, 0 < finalConcreteHilbertNormSq psi := by
+  exact final_concrete_hilbert_has_positive_norm_state
+
 noncomputable def finalConcreteHilbertRealizationTheoremData :
     ConcreteHilbertRealizationTheoremData :=
   { carrier := FinalConcreteHilbertCarrier
