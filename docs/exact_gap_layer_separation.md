@@ -1,12 +1,13 @@
 # Exact gap layer separation note
 
-This note fixes the external-review distinction around the value `33/20`.
+This note fixes the external-review distinction around the final normalized
+mass-gap value.
 
 The repository separates four layers:
 
 ```text
 1. abstract theorem-body layer
-2. normalized carrier layer
+2. Basic-layer route marker and downstream real carrier layer
 3. operator/spectral derivation layer
 4. engineering / review-marker layer
 ```
@@ -23,40 +24,57 @@ Primary summary theorem:
 exact_gap_layer_separation_ready
 ```
 
-## Current source of the `33/20` derivation claim
+## Current source of the final-value derivation claim
 
-The carrier file is not the source of the derivation claim.  The current source is the R1--R7 terminal operator/spectral route:
+The Basic file is not the source of the derivation claim and does not carry a
+real-valued numerical assignment.  The exact-value equality is exposed through
+the downstream Hamiltonian / PVM / spectral theorem route.
+
+Current theorem-route anchors include:
 
 ```text
-MGAP4D/ConcreteR1R7ResidualDischarge.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
+MGAP4D/ConcreteR1R7ResidualDischarge.lean
 MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
 ```
 
 Primary Lean anchors:
 
 ```text
+continuum_hamiltonian_derives_exact_mass_gap_value
+physical_continuum_hamiltonian_to_exact_positive_mass_gap
+physical_continuum_hamiltonian_exact_gap_33_over_20
+physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
+physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
+yang_mills_hamiltonian_spectral_derivation_3320_ready
 concrete_r1r7_residual_discharge_3320_ready
 concrete_r6_residual_discharge_nondefinitional_spectral_atom_3320
 concrete_r7_residual_discharge_positive_spectral_weight_derivation_3320
 concrete_r1r7_residual_discharge_exact_gap_value_3320
-physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
-physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
-yang_mills_hamiltonian_spectral_derivation_3320_ready
 ```
 
 Correct reading:
 
 ```text
-Basic.lean / ExactGapReal.lean
-  -> normalized target carrier and arithmetic check
+Basic.lean
+  -> no real-valued gap carrier
+  -> route-deferred marker only
 
-R1--R7 terminal route + complete continuum-Hamiltonian spectral route
-  -> derivation route that carries the value 33/20 and positive spectral weight
+ExactGapReal.lean
+  -> downstream real carrier
+  -> raw route witness for the carrier
+  -> no public final-value equality theorem
+
+Continuum Hamiltonian / PVM / spectral theorem route
+  -> derives the final normalized equality and positivity package
 ```
 
-Thus `exactGapValueReal` is the normalized target/codomain used by the derivation, while the proof-facing derivation claim is carried by the R1--R7 / Hamiltonian / PVM / plaquette / spectral-weight route.
+Thus `exactGapValueReal` is the downstream real carrier used by the derivation,
+while the proof-facing final-value claim is carried by the Hamiltonian / PVM /
+plaquette / spectral-weight theorem route.
 
 ## 1. Abstract theorem-body layer
 
@@ -67,7 +85,8 @@ ExactGapAbstractTheoremBodyLayerReady
 exact_gap_abstract_theorem_body_layer_ready
 ```
 
-This layer contains theorem-body readiness and observable-weight theorem facts from the abstract theorem route:
+This layer contains theorem-body readiness and observable-weight theorem facts
+from the abstract theorem route:
 
 ```text
 Hilbert Rayleigh quotient theorem body
@@ -83,26 +102,27 @@ observable spectral weight positive / nonzero / equal to PVM mass
 This layer deliberately excludes:
 
 ```text
-exactGapValueReal := 33 / 20
+Basic-layer numerical assignment
+final-value equality as a carrier definition
 R1--R7 terminal derivation route
 StillOpen markers
 publicBoundaryHeld / finalReleaseHeld markers
 ```
 
-## 2. Normalized carrier layer
+## 2. Basic-layer marker and downstream real-carrier layer
 
-Lean anchor:
+Lean anchors:
 
 ```text
+FourDYangMillsAnalyticGapValueOrigin.ready
+four_d_yang_mills_analytic_gap_value_origin_ready
+four_d_yang_mills_basic_layer_numeric_carrier_absent
 ExactGapCarrierLayerReady
 exact_gap_carrier_layer_ready
-```
-
-This layer contains:
-
-```text
-exactGapValueReal = 33 / 20
-0 < exactGapValueReal
+exactGapValueReal
+exactGapValueRealRouteWitness
+exactGapValueReal_pos
+exactGapValueReal_above_one
 ```
 
 Source files:
@@ -112,7 +132,23 @@ MGAP4D/MathlibAnalytic/Basic.lean
 MGAP4D/MathlibAnalytic/ExactGapReal.lean
 ```
 
-These are carrier checks.  The local proofs by `rfl` and `norm_num` identify the normalized codomain value; they are not where the operator/spectral route is reviewed.
+Current policy:
+
+```text
+Basic.lean
+  contains no final-value literal and no real-valued carrier
+  records only that spectral / PVM / Hamiltonian theorem routes are deferred
+
+ExactGapReal.lean
+  introduces the real carrier and positivity facts
+  exposes a raw route witness so downstream theorem files avoid unstable
+  `Classical.choose_spec _` placeholders
+  does not export the final normalized equality theorem
+```
+
+The final normalized equality is intentionally not treated as a Basic-layer or
+early carrier assignment.  It is derived in the continuum Hamiltonian theorem
+route.
 
 ## 3. Operator/spectral derivation layer
 
@@ -128,7 +164,7 @@ This layer contains the installed operator/spectral derivation interface:
 ```text
 YangMillsHamiltonianSpectralDerivation3320.ready
 exactGapValueReal = derivedHamiltonianSpectralValue
-derivedHamiltonianSpectralValue = 33 / 20
+derivedHamiltonianSpectralValue = final normalized value
 0 < spectralMassRealSurface.mass
 spectralMassRealSurface.mass ≠ 0
 continuum_hamiltonian_witness_provenance_map_ready
@@ -137,6 +173,8 @@ continuum_hamiltonian_witness_provenance_map_ready
 Source files:
 
 ```text
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
+MGAP4D/MathlibAnalytic/ContinuumHamiltonianExactMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
 MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapWitnessProvenance.lean
@@ -148,7 +186,8 @@ Important review reading:
 ```text
 current operator/spectral derivation
   = R1--R7 terminal route plus Hamiltonian/PVM/plaquette/spectral-weight route
-  = not merely the Basic.lean carrier definition
+  = not merely the Basic.lean marker
+  = not merely the ExactGapReal.lean carrier witness
 ```
 
 ## 4. Engineering / review-marker layer
@@ -174,15 +213,17 @@ finalReleaseHeld
 publicBoundaryHeld
 ```
 
-These are review-state / boundary markers. They are not additional mathematical theorem bodies.
+These are review-state / boundary markers. They are not additional mathematical
+theorem bodies.
 
 ## Why this matters
 
 Without this separation, external reviewers may reasonably confuse:
 
 ```text
-carrier equality by rfl
-R1--R7 operator/spectral derivation route
+Basic-layer route marker
+ExactGapReal carrier witness
+Hamiltonian/PVM/spectral derivation route
 actual mathematical theorem body
 engineering progress marker
 ```
@@ -190,8 +231,17 @@ engineering progress marker
 The correct reading is:
 
 ```text
-Basic.lean / ExactGapReal.lean
-  -> carrier layer
+Basic.lean
+  -> marker-only route-deferred layer
+
+ExactGapReal.lean
+  -> real carrier and positivity carrier witness
+
+ContinuumHamiltonianMassGapTheorem.lean
+  -> first local continuum-Hamiltonian theorem-route normalization boundary
+
+ContinuumHamiltonianExactMassGapDerivation.lean
+  -> exact positive mass-gap package boundary
 
 ConcreteR1R7ResidualDischarge.lean
   -> current terminal derivation discharge
@@ -218,13 +268,17 @@ When reviewing a claim, first ask which layer it belongs to:
 
 ```text
 Is this a mathematical theorem-body claim?
-Is this a normalized carrier claim?
-Is this an R1--R7 operator/spectral derivation claim?
+Is this a Basic-layer marker claim?
+Is this a downstream real-carrier claim?
+Is this a Hamiltonian/PVM/spectral derivation claim?
 Is this an engineering marker / boundary claim?
 ```
 
-The current `33/20` claim should be reviewed through the R1--R7 operator/spectral route, not through the local carrier definition alone.
+The final normalized value should be reviewed through the continuum Hamiltonian /
+PVM / operator-spectral theorem route, not through `Basic.lean` and not through a
+local carrier definition alone.
 
 ## Boundary
 
-This separation improves honesty and auditability. It does not claim that documentation replaces Lean theorem bodies or independent mathematical review.
+This separation improves honesty and auditability. It does not claim that
+documentation replaces Lean theorem bodies or independent mathematical review.
