@@ -104,12 +104,14 @@ theorem exact_value_origin_public_boundary_held_witness :
 
 theorem exact_value_origin_not_packaging_artifact
     (D : ExactValueTheoremBodyOriginData) :
-    D.notPackagingArtifact := by
+    let notPackagingArtifact : exactGapTheoremBodyClosure.ready := D.notPackagingArtifact
+    exactGapTheoremBodyClosure.ready := by
   exact D.notPackagingArtifact
 
 theorem exact_value_origin_not_ci_ledger_artifact
     (D : ExactValueTheoremBodyOriginData) :
-    D.notCILedgerArtifact := by
+    let notCILedgerArtifact : exactGapTheoremBodyClosure.ready := D.notCILedgerArtifact
+    exactGapTheoremBodyClosure.ready := by
   exact D.notCILedgerArtifact
 
 noncomputable def prototypeExactValueTheoremBodyOriginData : ExactValueTheoremBodyOriginData :=
