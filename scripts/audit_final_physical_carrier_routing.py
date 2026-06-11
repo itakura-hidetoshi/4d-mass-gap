@@ -102,9 +102,7 @@ REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS = (
     "distinguished := finalConcreteHilbertZero",
     "inner := finalConcreteHilbertInner",
     "normSq := finalConcreteHilbertNormSq",
-    "noncomputable abbrev singletonConcreteHilbertRealizationTheoremData",
-    "finalConcreteHilbertRealizationTheoremData",
-    "singleton_concrete_hilbert_realization_theorem_data_ready",
+    "theorem final_concrete_hilbert_realization_theorem_data_ready",
 )
 
 REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS = (
@@ -118,9 +116,7 @@ REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS = (
     "H_phys := finalConcreteHPhysHamiltonian",
     "inner := finalConcreteHilbertInner",
     "distinguished := finalConcreteHilbertZero",
-    "noncomputable abbrev singletonConcreteHPhysRealizationTheoremData",
-    "finalConcreteHPhysRealizationTheoremData",
-    "singleton_concrete_hphys_realization_theorem_data_ready",
+    "theorem final_concrete_hphys_realization_theorem_data_ready",
 )
 
 REQUIRED_PHYSICAL_LEAN_ANCHORS = (
@@ -133,10 +129,7 @@ REQUIRED_PHYSICAL_LEAN_ANCHORS = (
     "domain := finalPhysicalHilbertDomain",
     "H_phys := finalPhysicalHamiltonian",
     "rayleigh := finalPhysicalRayleigh",
-    "abbrev prototypePhysicalUnboundedOperatorSkeletonData",
-    "finalPhysicalUnboundedOperatorSkeletonData",
-    "final_physical_unbounded_operator_skeleton_ready",
-    "prototype_physical_unbounded_operator_skeleton_ready",
+    "theorem final_physical_unbounded_operator_skeleton_ready",
 )
 
 REQUIRED_CONCRETE_YM_LEAN_ANCHORS = (
@@ -193,6 +186,8 @@ FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS = (
     "zero := PUnit.unit",
     "distinguished := PUnit.unit",
     "toRayleighState := fun _ => PUnit.unit",
+    "singletonConcreteHilbertRealizationTheoremData",
+    "singleton_concrete_hilbert_realization_theorem_data_ready",
 )
 
 FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS = (
@@ -201,6 +196,8 @@ FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS = (
     "distinguished := PUnit.unit",
     "H_phys := fun ψ => ψ",
     "toHPhysState := fun _ => PUnit.unit",
+    "singletonConcreteHPhysRealizationTheoremData",
+    "singleton_concrete_hphys_realization_theorem_data_ready",
 )
 
 FORBIDDEN_PHYSICAL_CODE_SNIPPETS = (
@@ -210,6 +207,8 @@ FORBIDDEN_PHYSICAL_CODE_SNIPPETS = (
     "norm := fun _ => 0",
     "H_phys := fun ψ => ψ",
     "rayleigh := fun _ => exactGapValueReal",
+    "prototypePhysicalUnboundedOperatorSkeletonData",
+    "prototype_physical_unbounded_operator_skeleton_ready",
 )
 
 FORBIDDEN_CONCRETE_YM_CODE_SNIPPETS = (
@@ -247,7 +246,7 @@ REQUIRED_CHECKLIST_ANCHORS = (
     "finalPhysicalRayleigh",
     "finalPhysicalUnboundedOperatorSkeletonData",
     "finalConcreteYangMillsHamiltonianSkeletonData",
-    "prototypePhysicalUnboundedOperatorSkeletonData` aliases the final physical data",
+    "PhysicalUnboundedOperatorSkeleton.lean` inspected to confirm final-name routing without legacy prototype aliases",
     "prototypeConcreteYangMillsHamiltonianSkeletonData` aliases the final physical carrier route",
 )
 
@@ -258,27 +257,30 @@ REQUIRED_CHECK_ANCHORS = (
 
 
 def strip_lean_comments(text: str) -> str:
+    """Remove nested Lean block comments and line comments before token audit."""
     out: list[str] = []
     i = 0
     depth = 0
     while i < len(text):
-        if depth == 0 and text.startswith("--", i):
-            while i < len(text) and text[i] != "\n":
-                i += 1
-            if i < len(text):
-                out.append("\n")
-                i += 1
-            continue
         if text.startswith("/-", i):
             depth += 1
             i += 2
             continue
-        if depth > 0 and text.startswith("-/", i):
+        if depth and text.startswith("-/", i):
             depth -= 1
             i += 2
             continue
-        if depth == 0:
-            out.append(text[i])
+        if depth:
+            i += 1
+            continue
+        if text.startswith("--", i):
+            j = text.find("\n", i)
+            if j == -1:
+                break
+            out.append("\n")
+            i = j + 1
+            continue
+        out.append(text[i])
         i += 1
     return "".join(out)
 
@@ -287,58 +289,83 @@ def strip_strings(text: str) -> str:
     return STRING_RE.sub('""', text)
 
 
-def lean_code(text: str) -> str:
-    return strip_strings(strip_lean_comments(text))
-
-
-def require_file(path: Path) -> str:
+def require(path: Path, anchors: tuple[str, ...], label: str, errors: list[str]) -> str:
     if not path.exists():
-        raise AssertionError(f"missing required file: {path}")
-    return path.read_text(encoding="utf-8")
+        errors.append(f"missing {label} file: {path}")
+        return ""
+    text = path.read_text(encoding="utf-8")
+    for anchor in anchors:
+        if anchor not in text:
+            errors.append(f"{path} missing {label} anchor: {anchor}")
+    return text
 
 
-def require_all(label: str, text: str, anchors: tuple[str, ...]) -> None:
-    missing = [anchor for anchor in anchors if anchor not in text]
-    if missing:
-        raise AssertionError(f"{label} missing anchors: {', '.join(missing)}")
+def forbid(path: Path, snippets: tuple[str, ...], label: str, errors: list[str]) -> None:
+    if not path.exists():
+        return
+    raw = path.read_text(encoding="utf-8")
+    code = strip_strings(strip_lean_comments(raw)) if path.suffix == ".lean" else raw
+    for snippet in snippets:
+        if snippet in code:
+            errors.append(f"{path} contains forbidden {label} snippet: {snippet}")
 
 
-def forbid_all(label: str, text: str, snippets: tuple[str, ...]) -> None:
-    present = [snippet for snippet in snippets if snippet in text]
-    if present:
-        raise AssertionError(f"{label} contains forbidden prototype/singleton snippets: {', '.join(present)}")
-
-
-def audit_lean_file(path: Path, anchors: tuple[str, ...], forbidden: tuple[str, ...]) -> None:
-    text = require_file(path)
-    without_comments = strip_lean_comments(text)
-    code = lean_code(text)
-
-    forbidden_tokens = sorted(set(FORBIDDEN_TOKENS_RE.findall(code)))
-    if forbidden_tokens:
-        raise AssertionError(f"forbidden Lean tokens found in {path}: {', '.join(forbidden_tokens)}")
-
-    require_all(str(path), without_comments, anchors)
-    forbid_all(str(path), code, forbidden)
+def audit_forbidden_tokens(errors: list[str]) -> None:
+    for path in Path("MGAP4D").rglob("*.lean"):
+        code = strip_strings(strip_lean_comments(path.read_text(encoding="utf-8")))
+        match = FORBIDDEN_TOKENS_RE.search(code)
+        if match:
+            errors.append(f"{path} contains forbidden Lean token: {match.group(1)}")
 
 
 def main() -> int:
-    audit_lean_file(CORE_LEAN_PATH, REQUIRED_CORE_LEAN_ANCHORS, FORBIDDEN_CORE_CODE_SNIPPETS)
-    audit_lean_file(OBSERVABLE_INTERFACE_LEAN_PATH, REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS, FORBIDDEN_OBSERVABLE_INTERFACE_CODE_SNIPPETS)
-    audit_lean_file(OBSERVABLE_THEOREM_LEAN_PATH, REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS, FORBIDDEN_OBSERVABLE_THEOREM_CODE_SNIPPETS)
-    audit_lean_file(COMPACT_PLAQUETTE_LEAN_PATH, REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS, FORBIDDEN_COMPACT_PLAQUETTE_CODE_SNIPPETS)
-    audit_lean_file(OPERATOR_MEASURE_LEAN_PATH, REQUIRED_OPERATOR_MEASURE_LEAN_ANCHORS, FORBIDDEN_OPERATOR_MEASURE_CODE_SNIPPETS)
-    audit_lean_file(CONCRETE_HILBERT_LEAN_PATH, REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS, FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS)
-    audit_lean_file(CONCRETE_HPHYS_LEAN_PATH, REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS, FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS)
-    audit_lean_file(PHYSICAL_LEAN_PATH, REQUIRED_PHYSICAL_LEAN_ANCHORS, FORBIDDEN_PHYSICAL_CODE_SNIPPETS)
-    audit_lean_file(CONCRETE_YM_LEAN_PATH, REQUIRED_CONCRETE_YM_LEAN_ANCHORS, FORBIDDEN_CONCRETE_YM_CODE_SNIPPETS)
+    errors: list[str] = []
 
-    require_all("physical unbounded-operator documentation", require_file(PHYSICAL_DOC_PATH), REQUIRED_PHYSICAL_DOC_ANCHORS)
-    require_all("concrete Yang-Mills Hamiltonian documentation", require_file(CONCRETE_YM_DOC_PATH), REQUIRED_CONCRETE_YM_DOC_ANCHORS)
-    require_all("external review checklist", require_file(CHECKLIST_PATH), REQUIRED_CHECKLIST_ANCHORS)
-    require_all("check.sh", require_file(CHECK_PATH), REQUIRED_CHECK_ANCHORS)
-    require_all("check_changed_lean.sh", require_file(FAST_CHECK_PATH), REQUIRED_CHECK_ANCHORS)
+    require(CORE_LEAN_PATH, REQUIRED_CORE_LEAN_ANCHORS, "final physical carrier core Lean", errors)
+    require(OBSERVABLE_INTERFACE_LEAN_PATH, REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS,
+            "observable interface Lean", errors)
+    require(OBSERVABLE_THEOREM_LEAN_PATH, REQUIRED_OBSERVABLE_THEOREM_LEAN_ANCHORS,
+            "observable theorem Lean", errors)
+    require(COMPACT_PLAQUETTE_LEAN_PATH, REQUIRED_COMPACT_PLAQUETTE_LEAN_ANCHORS,
+            "compact plaquette Lean", errors)
+    require(OPERATOR_MEASURE_LEAN_PATH, REQUIRED_OPERATOR_MEASURE_LEAN_ANCHORS,
+            "operator-measure Lean", errors)
+    require(CONCRETE_HILBERT_LEAN_PATH, REQUIRED_CONCRETE_HILBERT_LEAN_ANCHORS,
+            "concrete Hilbert Lean", errors)
+    require(CONCRETE_HPHYS_LEAN_PATH, REQUIRED_CONCRETE_HPHYS_LEAN_ANCHORS,
+            "concrete HPhys Lean", errors)
+    require(PHYSICAL_LEAN_PATH, REQUIRED_PHYSICAL_LEAN_ANCHORS, "physical Lean", errors)
+    require(CONCRETE_YM_LEAN_PATH, REQUIRED_CONCRETE_YM_LEAN_ANCHORS,
+            "concrete Yang-Mills Lean", errors)
+    require(PHYSICAL_DOC_PATH, REQUIRED_PHYSICAL_DOC_ANCHORS, "physical doc", errors)
+    require(CONCRETE_YM_DOC_PATH, REQUIRED_CONCRETE_YM_DOC_ANCHORS, "concrete Yang-Mills doc", errors)
+    require(CHECKLIST_PATH, REQUIRED_CHECKLIST_ANCHORS, "external review checklist", errors)
+    require(CHECK_PATH, REQUIRED_CHECK_ANCHORS, "check script", errors)
+    require(FAST_CHECK_PATH, REQUIRED_CHECK_ANCHORS, "fast check script", errors)
 
+    forbid(CORE_LEAN_PATH, FORBIDDEN_CORE_CODE_SNIPPETS, "final physical carrier core", errors)
+    forbid(OBSERVABLE_INTERFACE_LEAN_PATH, FORBIDDEN_OBSERVABLE_INTERFACE_CODE_SNIPPETS,
+           "observable interface", errors)
+    forbid(OBSERVABLE_THEOREM_LEAN_PATH, FORBIDDEN_OBSERVABLE_THEOREM_CODE_SNIPPETS,
+           "observable theorem", errors)
+    forbid(COMPACT_PLAQUETTE_LEAN_PATH, FORBIDDEN_COMPACT_PLAQUETTE_CODE_SNIPPETS,
+           "compact plaquette", errors)
+    forbid(OPERATOR_MEASURE_LEAN_PATH, FORBIDDEN_OPERATOR_MEASURE_CODE_SNIPPETS,
+           "operator-measure", errors)
+    forbid(CONCRETE_HILBERT_LEAN_PATH, FORBIDDEN_CONCRETE_HILBERT_CODE_SNIPPETS,
+           "concrete Hilbert", errors)
+    forbid(CONCRETE_HPHYS_LEAN_PATH, FORBIDDEN_CONCRETE_HPHYS_CODE_SNIPPETS,
+           "concrete HPhys", errors)
+    forbid(PHYSICAL_LEAN_PATH, FORBIDDEN_PHYSICAL_CODE_SNIPPETS, "physical", errors)
+    forbid(CONCRETE_YM_LEAN_PATH, FORBIDDEN_CONCRETE_YM_CODE_SNIPPETS,
+           "concrete Yang-Mills", errors)
+
+    audit_forbidden_tokens(errors)
+
+    if errors:
+        print("Final physical carrier routing audit failed:", file=sys.stderr)
+        for error in errors:
+            print(f"  {error}", file=sys.stderr)
     print("Final physical carrier routing audit")
     print(f"Final physical carrier core Lean anchors audited: {len(REQUIRED_CORE_LEAN_ANCHORS)}")
     print(f"Observable interface Lean anchors audited: {len(REQUIRED_OBSERVABLE_INTERFACE_LEAN_ANCHORS)}")
@@ -353,13 +380,11 @@ def main() -> int:
     print(f"Documentation audited: {PHYSICAL_DOC_PATH}, {CONCRETE_YM_DOC_PATH}")
     print(f"Checklist audited: {CHECKLIST_PATH}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
+    if errors:
+        return 1
     print("Final physical carrier routing audit passed")
     return 0
 
 
 if __name__ == "__main__":
-    try:
-        raise SystemExit(main())
-    except AssertionError as exc:
-        print(f"audit_final_physical_carrier_routing.py: {exc}", file=sys.stderr)
-        raise SystemExit(1)
+    raise SystemExit(main())
