@@ -16,6 +16,7 @@ continuum spectral theorem skeleton, and normalization bridge. It remains a
 review-level hardening lane and preserves the public boundary.
 
 The lane now also records the adopted route
+
 `HilbertConstructionLaneHardening → HilbertToPhysicalUnboundedOperatorBridge
  → SelfAdjointHPhysBridgeAdoption → ContinuumYangMillsLaneHardening`, so the
 continuum Yang--Mills surface no longer merely imports the adoption bridge: its
@@ -187,19 +188,39 @@ def continuumYangMillsLaneHardeningData : ContinuumYangMillsLaneHardeningData :=
     spectralSkeletonReady := spectral_realization_skeleton_review_surface_ready
     continuumSpectralReady := continuum_spectral_theorem_skeleton_review_surface_ready
     normalizationBridgeReady := physical_hamiltonian_normalization_bridge_review_surface_ready
-    concreteYMHardened := True
-    hphysBuiltFromYMHardened := True
-    plaquetteCenteredHardened := True
-    normalizationBridgeHardened := True
-    spectralRealizationHardened := True
-    exactAtomHardened := True
-    continuumSpectralTheoremHardened := True
-    continuumLimitBoundaryVisible := True
-    hardPhysicalBoundaryVisible := True
+    concreteYMHardened :=
+      concreteYangMillsHamiltonianSkeletonReviewSurface.concreteYangMillsHamiltonianSkeletonEstablished
+    hphysBuiltFromYMHardened := concreteYangMillsHamiltonianSkeletonReviewSurface.hphysBuiltFromYM
+    plaquetteCenteredHardened := concreteYangMillsHamiltonianSkeletonReviewSurface.plaquetteCentered
+    normalizationBridgeHardened :=
+      PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
+        physicalHamiltonianNormalizationBridgeReviewSurface
+    spectralRealizationHardened :=
+      spectralRealizationSkeletonReviewSurface.spectralRealizationSkeletonEstablished
+    exactAtomHardened := spectralRealizationSkeletonReviewSurface.exactAtomPresent
+    continuumSpectralTheoremHardened :=
+      continuumSpectralTheoremSkeletonReviewSurface.continuumSpectralTheoremSkeletonEstablished
+    continuumLimitBoundaryVisible :=
+      concreteYangMillsHamiltonianSkeletonReviewSurface.continuumLimitStillOpen ∧
+      continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld
+    hardPhysicalBoundaryVisible :=
+      selfAdjointHPhysLaneHardeningData.hardPhysicalBoundaryVisible ∧
+      physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld
     exactValuePreserved := selfAdjointHPhysBridgeAdoptionData.exactValuePreserved
-    reviewLevelOnly := True
-    publicBoundaryHeld := True
-    finalReleaseHeld := True }
+    reviewLevelOnly :=
+      concreteYangMillsHamiltonianSkeletonReviewSurface.continuumLimitStillOpen ∧
+      spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen
+    publicBoundaryHeld :=
+      selfAdjointHPhysLaneHardeningData.publicBoundaryHeld ∧
+      concreteYangMillsHamiltonianSkeletonReviewSurface.publicBoundaryHeld ∧
+      spectralRealizationSkeletonReviewSurface.publicBoundaryHeld ∧
+      continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld ∧
+      finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
+    finalReleaseHeld :=
+      selfAdjointHPhysLaneHardeningData.finalReleaseHeld ∧
+      concreteYangMillsHamiltonianSkeletonReviewSurface.finalReleaseHeld ∧
+      spectralRealizationSkeletonReviewSurface.finalReleaseHeld ∧
+      continuumSpectralTheoremSkeletonReviewSurface.finalTheoremReleaseStillHeld }
 
 /-- The installed continuum Yang--Mills hardening lane is ready. -/
 theorem continuum_yang_mills_lane_hardening_ready :
@@ -214,18 +235,35 @@ theorem continuum_yang_mills_lane_hardening_ready :
     And.intro continuumYangMillsLaneHardeningData.spectralSkeletonReady <|
     And.intro continuumYangMillsLaneHardeningData.continuumSpectralReady <|
     And.intro continuumYangMillsLaneHardeningData.normalizationBridgeReady <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro <|
+    And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.concreteYangMillsHamiltonianSkeletonEstablished_proof <|
+    And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.hphysBuiltFromYM_proof <|
+    And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.plaquetteCentered_proof <|
+    And.intro physical_hamiltonian_normalization_bridge_review_surface_ready <|
+    And.intro spectralRealizationSkeletonReviewSurface.spectralRealizationSkeletonEstablished_proof <|
+    And.intro spectralRealizationSkeletonReviewSurface.exactAtomPresent_proof <|
+    And.intro continuumSpectralTheoremSkeletonReviewSurface.continuumSpectralTheoremSkeletonEstablished_proof <|
+    And.intro
+      (And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.continuumLimitStillOpen_proof
+        continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld_proof) <|
+    And.intro
+      (And.intro
+        (self_adjoint_hphys_hard_physical_boundary_visible
+          selfAdjointHPhysLaneHardeningData self_adjoint_hphys_lane_hardening_ready)
+        physicalUnboundedOperatorSkeletonReviewSurface.publicBoundaryHeld_proof) <|
     And.intro continuumYangMillsLaneHardeningData.exactValuePreserved <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro
+      (And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.continuumLimitStillOpen_proof
+        spectralRealizationSkeletonReviewSurface.continuumSpectralTheoremStillOpen_proof) <|
+    And.intro
+      (And.intro selfAdjointHPhysBridgeAdoptionData.publicBoundaryHeld <|
+        And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.publicBoundaryHeld_proof <|
+        And.intro spectralRealizationSkeletonReviewSurface.publicBoundaryHeld_proof <|
+        And.intro continuumSpectralTheoremSkeletonReviewSurface.publicBoundaryHeld_proof
+          final_theorem_release_bundle_manifest_public_boundary_held_witness) <|
+      And.intro selfAdjointHPhysBridgeAdoptionData.finalReleaseHeld <|
+        And.intro concreteYangMillsHamiltonianSkeletonReviewSurface.finalReleaseHeld_proof <|
+        And.intro spectralRealizationSkeletonReviewSurface.finalReleaseHeld_proof
+          continuumSpectralTheoremSkeletonReviewSurface.finalTheoremReleaseStillHeld_proof
 
 end MathlibAnalytic
 end MGAP4D
