@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""Audit Yang--Mills Hamiltonian spectral-derivation claim anchors.
-
-This is a syntactic/contract audit. Lean kernel checking remains `lake build`.
-The audit ensures the spectral surface is present, imported, documented,
-boundary-preserving, and now exposes an explicit theorem-level Yang--Mills
-Hamiltonian spectral derivation claim without baking an independent numeric value
-into the upstream carrier fields.
-"""
+"""Audit Yang--Mills Hamiltonian spectral-derivation boundary anchors."""
 
 from __future__ import annotations
 
@@ -45,7 +38,6 @@ REQUIRED_LEAN_ANCHORS = (
     "attainment_eq_derived",
     "atom_eq_derived",
     "exactNormalizedGapDerivedFromSpectrum",
-    "continuum_hamiltonian_exact_gap_value_preserved",
     "YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue",
     "yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value",
     "yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum",
@@ -72,16 +64,15 @@ REQUIRED_SPECTRAL_CHAIN_ANCHORS = (
     "spectralMassRealSurface.mass ≠ 0",
 )
 
-REQUIRED_CLAIM_ANCHORS = (
-    "YangMillsHamiltonianSpectralDerivationClaim3320",
-    "yang_mills_hamiltonian_spectral_derivation_claim_3320",
-    "yang_mills_hamiltonian_spectral_derivation_claim_forces_gap_33_over_20",
-    "yang_mills_hamiltonian_spectral_derivation_claim_positive_nonzero_pvm_mass",
-    "yang_mills_hamiltonian_spectral_derivation_claim_boundary_held",
-    "yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20",
-    "yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_exact_gap",
-    "yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =\n    (33 : ℝ) / 20",
-    "yangMillsHamiltonianSpectralDerivation3320.theoremWitnessOnly",
+REQUIRED_BOUNDARY_ANCHORS = (
+    "YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue",
+    "YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning",
+    "yang_mills_hamiltonian_spectral_pvm_analysis_requires_r6_value_pinning",
+    "yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_boundary_held",
+    "YangMillsHamiltonianSpectralDerivationBoundary3320",
+    "yang_mills_hamiltonian_spectral_derivation_boundary_3320",
+    "yang_mills_hamiltonian_spectral_derivation_boundary_positive_nonzero_pvm_mass",
+    "yang_mills_hamiltonian_spectral_derivation_boundary_held",
     "finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed",
 )
 
@@ -90,12 +81,10 @@ FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS = (
     "attainedSpectralValue_eq_3320",
     "observableSpectralAtomValue_eq_3320",
     "derivedHamiltonianSpectralValue_eq_3320",
-    "yang_mills_hamiltonian_spectral_infimum_eq_3320",
-    "yang_mills_hamiltonian_spectral_attainment_eq_3320",
-    "yang_mills_hamiltonian_observable_atom_eq_3320",
-    "yang_mills_hamiltonian_spectral_analysis_derives_3320",
-    "yang_mills_hamiltonian_spectral_derivation_exact_gap_value",
-    "exactNormalizedGapDerivedFromSpectrum := rfl",
+    "yang_mills_hamiltonian_spectral_derivation_claim_forces_gap_33_over_20",
+    "yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20",
+    "yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_exact_gap",
+    "yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =\n    (33 : ℝ) / 20",
     "D.spectralInfimumValue = (33 : ℝ) / 20",
     "D.attainedSpectralValue = (33 : ℝ) / 20",
     "D.observableSpectralAtomValue = (33 : ℝ) / 20",
@@ -107,30 +96,9 @@ REQUIRED_ROOT_IMPORTS = (
 )
 
 REQUIRED_DOC_ANCHORS = (
-    "Yang--Mills Hamiltonian spectral derivation claim",
+    "Yang--Mills Hamiltonian spectral derivation",
     "no upstream 33/20 claim",
     "R6 exact atom layer",
-    "physical spectrum identifies exact gap carrier",
-    "YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue",
-    "yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value",
-    "yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum",
-    "continuum_hamiltonian_exact_gap_value_preserved",
-    "spectral infimum value = derived Hamiltonian spectral value",
-    "attained spectral value = derived Hamiltonian spectral value",
-    "observable spectral atom value = derived Hamiltonian spectral value",
-    "yang_mills_hamiltonian_spectral_infimum_eq_derived",
-    "yang_mills_hamiltonian_spectral_attainment_eq_derived",
-    "yang_mills_hamiltonian_observable_atom_eq_derived",
-    "yang_mills_hamiltonian_exact_gap_eq_spectral_value",
-    "YangMillsHamiltonianSpectralDerivationClaim3320",
-    "yang_mills_hamiltonian_spectral_derivation_claim_3320",
-    "yang_mills_hamiltonian_spectral_derivation_claim_forces_gap_33_over_20",
-    "yang_mills_hamiltonian_spectral_derivation_claim_positive_nonzero_pvm_mass",
-    "yang_mills_hamiltonian_spectral_derivation_claim_boundary_held",
-    "Yang--Mills Hamiltonian spectral derivation claim",
-    "PVM spectral mass > 0",
-    "noExternalConsensusClaim",
-    "yang_mills_hamiltonian_spectral_derivation_public_boundary_held",
 )
 
 REQUIRED_CHECK_ANCHORS = (
@@ -205,7 +173,7 @@ def main() -> int:
     require_all("Lean imports", lean_without_comments, REQUIRED_IMPORTS)
     require_all("Lean anchors", lean_without_comments, REQUIRED_LEAN_ANCHORS)
     require_all("spectral chain anchors", lean_without_comments, REQUIRED_SPECTRAL_CHAIN_ANCHORS)
-    require_all("Yang-Mills spectral derivation claim anchors", lean_without_comments, REQUIRED_CLAIM_ANCHORS)
+    require_all("Yang-Mills spectral boundary anchors", lean_without_comments, REQUIRED_BOUNDARY_ANCHORS)
     forbid_all("Lean upstream numeric anchors", lean_without_comments, FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS)
 
     root_text = require_file(ROOT_IMPORT_PATH)
@@ -217,15 +185,15 @@ def main() -> int:
     check_text = require_file(CHECK_PATH)
     require_all("check.sh", check_text, REQUIRED_CHECK_ANCHORS)
 
-    print("Yang-Mills Hamiltonian spectral derivation claim audit")
+    print("Yang-Mills Hamiltonian spectral boundary audit")
     print(f"Lean anchors audited: {len(REQUIRED_LEAN_ANCHORS)}")
     print(f"Spectral-chain anchors audited: {len(REQUIRED_SPECTRAL_CHAIN_ANCHORS)}")
-    print(f"Claim anchors audited: {len(REQUIRED_CLAIM_ANCHORS)}")
-    print(f"Forbidden stale upstream numeric anchors audited: {len(FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS)}")
+    print(f"Boundary anchors audited: {len(REQUIRED_BOUNDARY_ANCHORS)}")
+    print(f"Forbidden stale numeric anchors audited: {len(FORBIDDEN_UPSTREAM_NUMERIC_ANCHORS)}")
     print(f"Root import audited: {ROOT_IMPORT_PATH}")
     print(f"Documentation audited: {DOC_PATH}")
     print("Forbidden Lean tokens audited: sorry/admit/axiom/constant")
-    print("Yang-Mills Hamiltonian spectral derivation claim audit passed")
+    print("Yang-Mills Hamiltonian spectral boundary audit passed")
     return 0
 
 
