@@ -31,18 +31,28 @@ MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
 Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
 ```
 
-Current proof spine:
+Layer-correct reading:
 
 ```text
-R1 concrete Hilbert closure
-  -> R2 infinite-dimensional ℓ² diagonal closed / unbounded operator lane
-  -> R3 adjoint / self-adjointness theorem discharge
-  -> R4 genuine-PVM law-component closure
-  -> R5 compact centered plaquette observable closure
-  -> R6 non-definitional exact atom 33/20 closure
-  -> R7 positive spectral-weight witness closure
-  -> terminal R1--R7 discharge chain
-  -> public / external audit receipt chain
+Basic.lean
+  -> route-deferred marker only
+  -> no real-valued gap carrier
+
+ExactGapReal.lean
+  -> downstream normalized real carrier exactGapValueReal
+  -> carrier-level arithmetic normalization exactGapValueReal_eq : exactGapValueReal = 33/20
+
+Continuum Hamiltonian / PVM / spectral route
+  -> identifies the carrier with the physical spectral route
+
+R6
+  -> non-definitional exact-atom / spectral-PVM pinning route for 33/20
+
+R7
+  -> positive spectral-weight witness
+
+R1--R7 terminal chain
+  -> terminal receipt for exact 33/20 plus positive spectral weight
 ```
 
 Physical normalization boundary:
@@ -63,7 +73,7 @@ docs/current_proof_status.md
 
 ## Roadmap posture
 
-The project should not move by adding another decorative theorem phase.  The active work is now review, replay, provenance, and public-boundary precision.
+The project should not move by adding another decorative theorem phase.  The active work is now review, replay, provenance, source-tree clarity, and public-boundary precision.
 
 ```text
 repository / documentation synchronization
@@ -75,7 +85,7 @@ audit-oriented version tagging
 Zenodo synchronization after a stable tag and replay receipt
 ```
 
-New work should directly support one of these goals.  If a change does not improve replayability, theorem-surface clarity, proof-debt classification, external review, or public-boundary accuracy, it should be deferred.
+New work should directly support one of these goals.  If a change does not improve replayability, theorem-surface clarity, proof-debt classification, exact-gap layer separation, external review, or public-boundary accuracy, it should be deferred.
 
 ---
 
@@ -92,20 +102,18 @@ Status: **complete**
 - [x] GitHub Actions workflows.
 - [x] `scripts/check.sh` one-command replay path.
 
-### B. Normalized exact value and physical boundary
+### B. Basic marker, real carrier, and physical boundary
 
-Status: **complete as theorem-route payload and physical-normalization boundary**
+Status: **complete as separated layers; active as review discipline**
 
-- [x] Record exact normalized theorem-body value `33/20` at the theorem-route / terminal surfaces.
-- [x] Keep `Basic.lean` free of a real-valued numerical gap carrier.
-- [x] Keep `ExactGapReal.lean` as downstream real carrier plus raw route witness, without exporting the final normalized equality theorem.
+- [x] Keep `Basic.lean` as the route-deferred marker layer with no real-valued gap carrier.
+- [x] Keep `ExactGapReal.lean` as the downstream normalized real carrier layer.
+- [x] Record the carrier-level arithmetic normalization `exactGapValueReal_eq : exactGapValueReal = (33 : ℝ) / 20`.
+- [x] Keep the Hamiltonian / PVM / spectral route separate from the carrier-level arithmetic check.
 - [x] Add scalar and operator physical-Hamiltonian normalization.
-- [x] Preserve normalized / dimensional distinction through `E0`.
+- [x] Preserve the normalized / dimensional distinction through `E0`.
 
 ```text
-continuum_hamiltonian_derives_exact_mass_gap_value:
-  exactGapValueReal = (33 : ℝ) / 20
-
 Delta_norm = 33/20
 Delta_phys(E0) = E0 * (33/20)
 ```
@@ -114,9 +122,10 @@ Delta_phys(E0) = E0 * (33/20)
 
 Status: **complete as separation map; active as review discipline**
 
-- [x] Separate abstract theorem-body, Basic-layer marker / downstream real carrier, operator / spectral derivation, and engineering / review-marker layers.
+- [x] Separate Basic marker, downstream real carrier, operator / spectral derivation, R6/R7 terminal route, and engineering / audit-marker layers.
 - [x] Add Lean separation map and human-readable review note.
-- [x] Keep documentation from implying that `Basic.lean` or a local carrier definition alone is the derivation source.
+- [x] Keep documentation from implying that `Basic.lean` or a local carrier arithmetic theorem alone is the physical derivation source.
+- [x] Keep documentation from downgrading the terminal R1--R7 exact-value and positive-weight surfaces.
 
 ```text
 MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
@@ -147,6 +156,7 @@ Status: **complete and terminal-visible, subject to supersession audit for histo
 - [x] Actual Borel carrier surface.
 - [x] Empty / whole / complement / union / intersection laws.
 - [x] Operator-topology countable-additivity / convergence receipt.
+- [x] No-shell-collapse boundary.
 - [x] R4 handoff into R5, R6, and R7.
 
 ```text
@@ -170,22 +180,20 @@ MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean
 MGAP4D/HardPhysicalResidualLedgerR4GenuinePVMDischargedR5PlaquetteObservableClosure.lean
 ```
 
-### G. R6 exact atom 33/20
+### G. R6 exact atom `33/20`
 
-Status: **complete and terminal-visible**
+Status: **complete and terminal-visible as the value-pinning route**
 
 - [x] R5 handoff input for exact atom `33/20`.
+- [x] Yang--Mills Hamiltonian spectral-carrier alignment.
 - [x] Non-definitional origin certificate.
-- [x] Exact value equality at the R6 / theorem-route surface.
+- [x] R6 normalized spectral/PVM atom route.
+- [x] Exact value equality available through the R6 / terminal route.
 - [x] Atom membership for `exactGapValueReal`.
-
-```lean
-theorem exact_atom_3320_value_eq :
-  MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
-```
 
 ```text
 MGAP4D/R6/Theorem/ExactAtom3320R5Handoff.lean
+MGAP4D/R6/Theorem/ExactAtom3320YangMillsSpectralDerivation.lean
 MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean
 MGAP4D/HardPhysicalResidualLedgerR5PlaquetteObservableDischargedR6ExactAtomClosure.lean
 ```
@@ -221,6 +229,7 @@ Status: **complete / ready**
 - [x] Bundle R1 through R7 into terminal discharge chain.
 - [x] Record exact value `33/20` at terminal level.
 - [x] Record positive spectral weight at terminal level.
+- [x] Carry R4 genuine-PVM law components to the terminal layer.
 - [x] Keep final-release hold and public-boundary lock explicit.
 
 ```lean
@@ -244,6 +253,7 @@ Status: **complete as internal audit surface; external review remains active**
 - [x] External audit handoff.
 - [x] External audit receipt chain index.
 - [x] Projection of exact `33/20` and positive weight from terminal receipt.
+- [x] Explicit final-release hold and public-boundary lock.
 
 ```text
 MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
@@ -260,9 +270,11 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 
 Status: **active**
 
-- [x] Rewrite `README.md` and `ROADMAP.md` around the current R1--R7 terminal / public / external audit receipt surface.
-- [x] Keep documentation from implying that `Basic.lean` or a local carrier definition alone derives exact `33/20`.
-- [ ] Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized after this documentation pass.
+- [x] Rewrite `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, and `docs/exact_gap_layer_separation.md` around the current carrier / spectral route / R1--R7 terminal audit surface.
+- [x] Correct the Basic-layer reading: marker-only, no real-valued gap carrier.
+- [x] Correct the carrier reading: `exactGapValueReal` is the downstream normalized real carrier; `exactGapValueReal_eq` is carrier-level arithmetic normalization.
+- [x] Correct the review reading: final public review goes through R1--R7 plus the complete continuum-Hamiltonian / PVM / spectral route, not through `Basic.lean` or a carrier arithmetic theorem alone.
+- [ ] Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized after each source-tree change.
 - [ ] Keep documentation from saying R7 is merely downstream.
 - [ ] Keep documentation from saying exact `33/20` is only a future target.
 - [ ] Keep documentation from implying external consensus has completed.
@@ -307,7 +319,8 @@ Status: **active governance layer**
 - [ ] Ask at least one reviewer to inspect `docs/proof_placeholder_inventory.md`.
 - [ ] Ask at least one reviewer to inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
 - [ ] Ask at least one reviewer to inspect `docs/r4_terminal_status_supersession.md`.
-- [ ] Ask at least one reviewer to inspect the R2, R4, R5, R6, R7, terminal-chain, and public / external audit surfaces.
+- [ ] Ask at least one reviewer to inspect the Basic / ExactGapReal / Yang--Mills spectral derivation / R6 / R7 layer separation.
+- [ ] Ask at least one reviewer to inspect the terminal-chain and public / external audit surfaces.
 - [ ] Collect review notes as append-only external audit notes.
 
 ### Gate 5 — Audit-oriented version tag and Zenodo synchronization
@@ -343,6 +356,8 @@ Do **not** say:
 R7 is still unproved or merely downstream
 exact 33/20 is only a roadmap target
 positive spectral weight is still open inside the Lean terminal chain
+Basic.lean itself carries the real-valued numerical gap
+carrier-level arithmetic normalization alone is the physical derivation
 README / ROADMAP are substitutes for theorem bodies
 external peer review has completed
 Clay-style public acceptance has completed
@@ -357,8 +372,8 @@ historical StillOpen markers can be ignored without classification
 ## Current priorities
 
 1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
-2. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
-3. Keep exact-gap layer separation visible to prevent carrier / derivation confusion.
+2. Keep the Basic / ExactGapReal / spectral-derivation / R6-R7 layer separation visible.
+3. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
 4. Keep placeholder, witness, and proof-debt inventory visible.
 5. Add or refresh independent replay receipts.
 6. Confirm CI green on the documentation / audit-synchronization commit.
@@ -380,6 +395,7 @@ README / ROADMAP synchronization
 THEOREM_INDEX synchronization
 EXTERNAL_AUDIT_PACKET synchronization
 current_proof_status synchronization
+exact_gap_layer_separation synchronization
 placeholder / witness inventory review
 fresh-clone replay receipt
 CI confirmation
