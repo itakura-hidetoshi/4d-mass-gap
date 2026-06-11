@@ -81,17 +81,17 @@ noncomputable def exactGap3320HphysToFinalTheoremReleaseHandoff :
     theoremBodyExactValue3320 :=
       exactGap3320HphysToTheoremBodyOriginHandoff.theoremBodyExactValue3320
     finalClosureExactValue3320 :=
-      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.exactValueEq3320
+      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.exactValueCarrierEq
     theoremBodyValuePositive :=
       exactGap3320HphysToTheoremBodyOriginHandoff.theoremBodyExactValuePositive
     theoremBodyClosed :=
-      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.theoremBodyClosed_proof
+      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.theoremBodyClosed
     releaseChainClosed :=
-      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.releaseChainClosed_proof
+      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.releaseChainClosed
     externalConsensusNotClaimed :=
-      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed_proof
+      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
     publicBoundaryHeld :=
-      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld_proof
+      MathlibAnalytic.finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
     finalReleaseHeld :=
       exactGap3320HphysToTheoremBodyOriginHandoff.finalReleaseHeld
     publicBoundaryLocked :=
