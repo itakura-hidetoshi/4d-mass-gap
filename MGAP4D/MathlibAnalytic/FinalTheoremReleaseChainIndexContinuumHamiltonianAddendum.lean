@@ -7,23 +7,21 @@ namespace MathlibAnalytic
 /--
 Append-only continuum Hamiltonian exact mass-gap addendum.
 
-This file avoids an import cycle: `ContinuumHamiltonianMassGapWitness` imports
-`FinalTheoremReleaseChainIndex`, so the base chain index should not import the
-continuum-Hamiltonian derivation surface directly.  This addendum imports both
-surfaces and records the extra derivation layer as an append-only index
-extension.
+This addendum records the extra continuum-Hamiltonian derivation layer as an
+append-only index extension.  It carries the positive exact carrier and the
+normalization boundary, not a definitional `33/20` theorem.
 -/
 def finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady : Prop :=
   finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   physicalContinuumHamiltonianToExactPositiveMassGap ∧
-  physicalContinuumHamiltonianExactGap33Over20 ∧
+  physicalContinuumHamiltonianExactGapValueBoundary ∧
   continuumHamiltonianMassGapTheoremDerivedWitness ∧
   continuumHamiltonianMassGapWitnessData.publicBoundaryHeld ∧
   continuumHamiltonianMassGapWitnessData.finalReleaseHeld ∧
   continuumHamiltonianMassGapWitnessData.theoremWitnessOnly
 
 /-- The addendum is ready when the upstream final release-chain boundary, the
-continuum Hamiltonian exact mass-gap derivation, and the public/final release
+continuum Hamiltonian mass-gap derivation, and the public/final release
 boundaries are all held. -/
 theorem final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready :
     finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady := by
@@ -34,7 +32,7 @@ theorem final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready :
     (final_theorem_release_chain_index_external_consensus_not_claimed
       prototypeFinalTheoremReleaseChainIndexData) <|
     And.intro physical_continuum_hamiltonian_to_exact_positive_mass_gap <|
-    And.intro physical_continuum_hamiltonian_exact_gap_33_over_20 <|
+    And.intro physical_continuum_hamiltonian_exact_gap_value_boundary <|
     And.intro continuum_hamiltonian_mass_gap_theorem_derived_witness <|
     And.intro hPublic <|
     And.intro hFinal hWitnessOnly
