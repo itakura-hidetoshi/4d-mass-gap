@@ -94,14 +94,18 @@ Status: **complete**
 
 ### B. Normalized exact value and physical boundary
 
-Status: **complete as normalized theorem-body / carrier boundary**
+Status: **complete as theorem-route payload and physical-normalization boundary**
 
-- [x] Record exact normalized theorem-body value `33/20`.
+- [x] Record exact normalized theorem-body value `33/20` at the theorem-route / terminal surfaces.
+- [x] Keep `Basic.lean` free of a real-valued numerical gap carrier.
+- [x] Keep `ExactGapReal.lean` as downstream real carrier plus raw route witness, without exporting the final normalized equality theorem.
 - [x] Add scalar and operator physical-Hamiltonian normalization.
 - [x] Preserve normalized / dimensional distinction through `E0`.
 
 ```text
-exactGapValueReal = (33 : ℝ) / 20
+continuum_hamiltonian_derives_exact_mass_gap_value:
+  exactGapValueReal = (33 : ℝ) / 20
+
 Delta_norm = 33/20
 Delta_phys(E0) = E0 * (33/20)
 ```
@@ -110,8 +114,9 @@ Delta_phys(E0) = E0 * (33/20)
 
 Status: **complete as separation map; active as review discipline**
 
-- [x] Separate abstract theorem-body, normalized carrier, operator / spectral derivation, and engineering / review-marker layers.
+- [x] Separate abstract theorem-body, Basic-layer marker / downstream real carrier, operator / spectral derivation, and engineering / review-marker layers.
 - [x] Add Lean separation map and human-readable review note.
+- [x] Keep documentation from implying that `Basic.lean` or a local carrier definition alone is the derivation source.
 
 ```text
 MGAP4D/MathlibAnalytic/ExactGapLayerSeparation.lean
@@ -171,7 +176,7 @@ Status: **complete and terminal-visible**
 
 - [x] R5 handoff input for exact atom `33/20`.
 - [x] Non-definitional origin certificate.
-- [x] Exact value equality.
+- [x] Exact value equality at the R6 / theorem-route surface.
 - [x] Atom membership for `exactGapValueReal`.
 
 ```lean
@@ -256,6 +261,7 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 Status: **active**
 
 - [x] Rewrite `README.md` and `ROADMAP.md` around the current R1--R7 terminal / public / external audit receipt surface.
+- [x] Keep documentation from implying that `Basic.lean` or a local carrier definition alone derives exact `33/20`.
 - [ ] Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized after this documentation pass.
 - [ ] Keep documentation from saying R7 is merely downstream.
 - [ ] Keep documentation from saying exact `33/20` is only a future target.
@@ -331,7 +337,7 @@ External mathematical consensus and Clay-style public acceptance remain separate
 review processes.
 ```
 
-Avoid wording that implies:
+Do **not** say:
 
 ```text
 R7 is still unproved or merely downstream
