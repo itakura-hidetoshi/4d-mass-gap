@@ -86,7 +86,7 @@ Source:
 MGAP4D/MathlibAnalytic/ConcreteYangMillsHamiltonianSkeleton.lean
 ```
 
-This layer is routed through:
+This layer now uses final names only for the concrete Yang--Mills Hamiltonian route:
 
 ```text
 FinalPhysicalHilbertCarrier
@@ -95,13 +95,7 @@ finalPhysicalRayleigh
 finalConcreteYangMillsHamiltonianSkeletonData
 ```
 
-The compatibility name:
-
-```text
-prototypeConcreteYangMillsHamiltonianSkeletonData
-```
-
-is retained for downstream imports, but it aliases the final physical carrier route.
+No legacy concrete Yang--Mills prototype alias is retained in this layer; downstream references should target the final concrete Yang--Mills data directly.
 
 Relevant boundary markers:
 
