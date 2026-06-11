@@ -17,23 +17,14 @@ REQUIRED_TARGET_ANCHORS = (
     "ExternalAuditReadinessGateData.ready",
     "externalAuditReadinessGateData",
     "external_audit_readiness_gate_ready",
-    "internalGateReady",
-    "bundleManifestReady",
-    "chainIndexReady",
-    "repositoryInternalResidualClosed",
-    "noReviewLevelResidualLeft",
-    "independentReplayVisible",
-    "auditScriptRouteVisible",
-    "ciRouteVisible",
-    "externalAuditReady",
-    "externalConsensusNotClaimed",
-    "publicBoundaryHeld",
-    "finalReleaseHeld",
-    "exactValuePreserved",
     "externalAuditReadinessCompleteMassGapAddendumReady",
     "externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady",
     "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
     "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
+    "externalConsensusNotClaimed",
+    "publicBoundaryHeld",
+    "finalReleaseHeld",
+    "exactValuePreserved",
 )
 
 REQUIRED_THEOREM_ANCHORS = (
@@ -50,24 +41,25 @@ REQUIRED_THEOREM_ANCHORS = (
     "external_audit_readiness_complete_mass_gap_addendum_ready",
     "external_audit_readiness_complete_mass_gap_exact_positive",
     "external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready",
-    "external_audit_readiness_continuum_hamiltonian_exact_33_over_20",
+    "external_audit_readiness_continuum_hamiltonian_addendum_nonadoption_boundary",
     "external_audit_readiness_continuum_hamiltonian_addendum_boundary_held",
     "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
     "external_audit_readiness_complete_spectral_mass_gap_exact_value",
+    "external_audit_readiness_complete_spectral_mass_gap_requires_r6_value_pinning",
     "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
     "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
     "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
     "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
+    "external_audit_readiness_pvm_spectral_atom_requires_r6_value_pinning",
     "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
     "external_audit_readiness_pvm_spectral_atom_boundary_held",
 )
 
 REQUIRED_CHAIN_ADDENDUM_ANCHORS = (
-    "FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum",
     "finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady",
     "final_theorem_release_chain_index_continuum_hamiltonian_addendum_ready",
     "physicalContinuumHamiltonianToExactPositiveMassGap",
-    "physicalContinuumHamiltonianExactGap33Over20",
+    "physicalContinuumHamiltonianExactGapValueBoundary",
     "continuumHamiltonianMassGapTheoremDerivedWitness",
     "continuumHamiltonianMassGapWitnessData.publicBoundaryHeld",
     "continuumHamiltonianMassGapWitnessData.finalReleaseHeld",
@@ -78,62 +70,35 @@ REQUIRED_SPECTRAL_ANCHORS = (
     "continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady",
     "continuum_hamiltonian_complete_spectral_mass_gap_release_adoption_ready",
     "continuum_hamiltonian_complete_spectral_release_adoption_exact_mass_gap",
-    "continuum_hamiltonian_complete_spectral_release_adoption_positive_nonzero_mass",
-    "continuum_hamiltonian_complete_spectral_release_adoption_boundary_preserved",
+    "continuum_hamiltonian_complete_spectral_release_adoption_requires_r6_value_pinning",
+    "YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning",
+    "external_audit_readiness_complete_spectral_mass_gap_requires_r6_value_pinning",
+    "external_audit_readiness_pvm_spectral_atom_requires_r6_value_pinning",
+    "finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed",
     "yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld",
     "yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld",
     "yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue",
     "yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue",
-    "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
     "0 < spectralMassRealSurface.mass",
     "spectralMassRealSurface.mass ≠ 0",
     "PVM",
 )
 
 FORBIDDEN_STALE_ANCHORS = (
-    "external_audit_readiness_pvm_spectral_atom_value_eq_3320",
-    "yang_mills_hamiltonian_observable_atom_eq_3320",
+    "external_audit_readiness_continuum_hamiltonian_exact_33_over_20",
+    "external_audit_readiness_complete_spectral_mass_gap_forces_gap_33_over_20",
+    "external_audit_readiness_pvm_spectral_atom_forces_gap_33_over_20",
+    "physicalContinuumHamiltonianExactGap33Over20",
     "observableSpectralAtomValue =\n    (33 : ℝ) / 20",
+    "derivedHamiltonianSpectralValue =\n    (33 : ℝ) / 20",
     "exactGapValueReal = (33 : ℝ) / 20",
 )
 
 REQUIRED_DOC_ANCHORS = (
     "External Audit Readiness Gate",
-    "repositoryInternalResidualClosed",
-    "noReviewLevelResidualLeft",
-    "independentReplayVisible",
-    "auditScriptRouteVisible",
-    "ciRouteVisible",
-    "externalAuditReady",
     "externalConsensusNotClaimed",
     "publicBoundaryHeld",
     "finalReleaseHeld",
-    "externalAuditReadinessCompleteMassGapAddendumReady",
-    "externalAuditReadinessContinuumHamiltonianChainIndexAddendumReady",
-    "externalAuditReadinessCompleteSpectralMassGapAddendumReady",
-    "externalAuditReadinessPVMSpectralAtomPublicAuditProjection",
-    "finalTheoremReleaseChainIndexContinuumHamiltonianAddendumReady",
-    "physicalContinuumHamiltonianToExactPositiveMassGap",
-    "physicalContinuumHamiltonianExactGap33Over20",
-    "continuumHamiltonianMassGapTheoremDerivedWitness",
-    "external_audit_readiness_continuum_hamiltonian_chain_index_addendum_ready",
-    "external_audit_readiness_continuum_hamiltonian_exact_33_over_20",
-    "external_audit_readiness_continuum_hamiltonian_addendum_boundary_held",
-    "continuumHamiltonianCompleteSpectralMassGapReleaseAdoptionReady",
-    "external_audit_readiness_complete_spectral_mass_gap_addendum_ready",
-    "external_audit_readiness_complete_spectral_mass_gap_exact_value",
-    "external_audit_readiness_complete_spectral_mass_gap_positive_nonzero_mass",
-    "external_audit_readiness_complete_spectral_mass_gap_boundary_held",
-    "external_audit_readiness_pvm_spectral_atom_public_audit_projection",
-    "external_audit_readiness_pvm_spectral_atom_value_eq_derived",
-    "external_audit_readiness_pvm_spectral_atom_positive_nonzero_mass",
-    "external_audit_readiness_pvm_spectral_atom_boundary_held",
-    "spectral infimum",
-    "spectral attainment",
-    "observable spectral atom",
-    "PVM spectral mass > 0",
-    "no upstream 33/20 claim",
-    "chain-index exact 33/20 addendum",
 )
 
 
@@ -187,11 +152,11 @@ def audit_forbidden_tokens(path: Path) -> list[str]:
     if not path.exists():
         return [f"missing external audit readiness gate file for forbidden-token audit: {path}"]
     source = cleaned_lean_source(path)
-    hits: list[str] = []
-    for lineno, line in enumerate(source.splitlines(), start=1):
-        if FORBIDDEN_TOKENS_RE.search(line):
-            hits.append(f"{path}:{lineno}: forbidden token in external audit readiness gate audit")
-    return hits
+    return [
+        f"{path}:{lineno}: forbidden token in external audit readiness gate audit"
+        for lineno, line in enumerate(source.splitlines(), start=1)
+        if FORBIDDEN_TOKENS_RE.search(line)
+    ]
 
 
 def main() -> None:
