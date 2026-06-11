@@ -83,7 +83,9 @@ theorem concrete_hphys_certificate
     D.concreteHPhysCertificate := by
   exact D.concreteHPhysCertificate_proof
 
-def finalConcreteHPhysDomain (_psi : FinalConcreteHilbertCarrier) : Prop := True
+/-- Concrete Mathlib-backed `H_phys` domain: finite-support coordinate states. -/
+def finalConcreteHPhysDomain (psi : FinalConcreteHilbertCarrier) : Prop :=
+  Set.Finite {n : Nat | psi n ≠ 0}
 
 def finalConcreteHPhysWeight (n : Nat) : Real := (n : Real) + 1
 
@@ -91,11 +93,21 @@ def finalConcreteHPhysHamiltonian
     (psi : FinalConcreteHilbertCarrier) : FinalConcreteHilbertCarrier :=
   fun n => finalConcreteHPhysWeight n * psi n
 
+theorem final_concrete_hphys_distinguished_in_domain :
+    finalConcreteHPhysDomain finalConcreteHilbertZero := by
+  simpa [finalConcreteHPhysDomain, finalConcreteHilbertZero] using
+    (Set.finite_empty : Set.Finite (∅ : Set Nat))
+
 theorem final_concrete_hphys_domain_closed
     (psi : FinalConcreteHilbertCarrier)
-    (_hpsi : finalConcreteHPhysDomain psi) :
+    (hpsi : finalConcreteHPhysDomain psi) :
     finalConcreteHPhysDomain (finalConcreteHPhysHamiltonian psi) := by
-  exact True.intro
+  unfold finalConcreteHPhysDomain at hpsi ⊢
+  exact hpsi.subset (by
+    intro n hn
+    by_contra hzero
+    have hpsizero : psi n = 0 := not_not.mp hzero
+    exact hn (by simp [finalConcreteHPhysHamiltonian, hpsizero]))
 
 theorem final_concrete_hphys_symmetric_on_domain
     (psi phi : FinalConcreteHilbertCarrier)
@@ -105,6 +117,15 @@ theorem final_concrete_hphys_symmetric_on_domain
       finalConcreteHilbertInner psi (finalConcreteHPhysHamiltonian phi) := by
   simp [finalConcreteHilbertInner, finalConcreteHPhysHamiltonian,
     finalConcreteHPhysWeight]
+
+theorem final_concrete_hphys_has_domain_closed_state :
+    ∃ psi : FinalConcreteHilbertCarrier,
+      finalConcreteHPhysDomain psi ∧
+        finalConcreteHPhysDomain (finalConcreteHPhysHamiltonian psi) := by
+  exact ⟨finalConcreteHilbertZero,
+    final_concrete_hphys_distinguished_in_domain,
+    final_concrete_hphys_domain_closed finalConcreteHilbertZero
+      final_concrete_hphys_distinguished_in_domain⟩
 
 noncomputable def finalConcreteHPhysRealizationTheoremData :
     ConcreteHPhysRealizationTheoremData :=
@@ -118,7 +139,7 @@ noncomputable def finalConcreteHPhysRealizationTheoremData :
     hphysData := singletonSelfAdjointHPhysTheoremData
     hphysDataReady := singleton_self_adjoint_hphys_theorem_data_ready
     toHPhysState := fun _ => singletonSelfAdjointHPhysTheoremData.witness
-    distinguished_in_domain := True.intro
+    distinguished_in_domain := final_concrete_hphys_distinguished_in_domain
     domain_closed_under_H := final_concrete_hphys_domain_closed
     symmetric_on_domain := final_concrete_hphys_symmetric_on_domain
     mapped_domain := by
@@ -136,7 +157,10 @@ noncomputable def finalConcreteHPhysRealizationTheoremData :
     concreteHPhysCertificate_proof :=
       And.intro singleton_concrete_hilbert_realization_theorem_data_ready <|
         And.intro singleton_self_adjoint_hphys_theorem_data_ready exactGapValueReal_pos
-    operatorResidualStillOpen := True }
+    operatorResidualStillOpen :=
+      ∃ psi : FinalConcreteHilbertCarrier,
+        finalConcreteHPhysDomain psi ∧
+          finalConcreteHPhysDomain (finalConcreteHPhysHamiltonian psi) }
 
 /-- Backwards-compatible name: the old singleton slot now aliases the final
 countable-coordinate concrete `H_phys` realization. -/
@@ -154,7 +178,8 @@ theorem singleton_concrete_hphys_realization_theorem_data_ready :
     And.intro singletonConcreteHPhysRealizationTheoremData.mapped_domain <|
     And.intro singletonConcreteHPhysRealizationTheoremData.mapped_rayleigh_lower_bound <|
     And.intro singletonConcreteHPhysRealizationTheoremData.distinguished_attains_exact <|
-    And.intro singletonConcreteHPhysRealizationTheoremData.concreteHPhysCertificate_proof True.intro
+    And.intro singletonConcreteHPhysRealizationTheoremData.concreteHPhysCertificate_proof
+      final_concrete_hphys_has_domain_closed_state
 
 theorem singleton_concrete_hphys_domain_closed
     (ψ : singletonConcreteHPhysRealizationTheoremData.carrier)
@@ -214,10 +239,21 @@ structure ConcreteHPhysRealizationTheoremReviewSurface where
       (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
         (singletonConcreteHPhysRealizationTheoremData.toHPhysState
           singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
-  concreteHPhysRealizationBodyClosed : Prop
-  operatorResidualStillOpen : Prop
-  finalReleaseHeld : Prop
-  publicBoundaryHeld : Prop
+  concreteHPhysRealizationBodyClosed :
+    singletonConcreteHPhysRealizationTheoremData.hphysData.rayleighData.quotient
+      (singletonConcreteHPhysRealizationTheoremData.hphysData.state_to_rayleigh
+        (singletonConcreteHPhysRealizationTheoremData.toHPhysState
+          singletonConcreteHPhysRealizationTheoremData.distinguished)) = exactGapValueReal
+  operatorResidualStillOpen :
+    ∃ ψ : singletonConcreteHPhysRealizationTheoremData.carrier,
+      singletonConcreteHPhysRealizationTheoremData.domain ψ ∧
+        singletonConcreteHPhysRealizationTheoremData.domain
+          (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)
+  finalReleaseHeld : 0 < exactGapValueReal
+  publicBoundaryHeld : ∀ ψ,
+    singletonConcreteHPhysRealizationTheoremData.domain ψ →
+      singletonConcreteHPhysRealizationTheoremData.domain
+        (singletonConcreteHPhysRealizationTheoremData.H_phys ψ)
 
 def ConcreteHPhysRealizationTheoremReviewSurface.ready
     (S : ConcreteHPhysRealizationTheoremReviewSurface) : Prop :=
@@ -255,10 +291,15 @@ noncomputable def concreteHPhysRealizationTheoremReviewSurface :
     symmetricOnDomain := singleton_concrete_hphys_symmetric_on_domain
     rayleighLowerBound := singleton_concrete_hphys_rayleigh_lower_bound
     distinguishedAttainsExact := singleton_concrete_hphys_distinguished_attains_exact
-    concreteHPhysRealizationBodyClosed := True
-    operatorResidualStillOpen := True
-    finalReleaseHeld := True
-    publicBoundaryHeld := True }
+    concreteHPhysRealizationBodyClosed := singleton_concrete_hphys_distinguished_attains_exact
+    operatorResidualStillOpen :=
+      ⟨singletonConcreteHPhysRealizationTheoremData.distinguished,
+        singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain,
+        singleton_concrete_hphys_domain_closed
+          singletonConcreteHPhysRealizationTheoremData.distinguished
+          singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain⟩
+    finalReleaseHeld := exactGapValueReal_pos
+    publicBoundaryHeld := singleton_concrete_hphys_domain_closed }
 
 theorem concrete_hphys_realization_theorem_review_surface_ready :
     concreteHPhysRealizationTheoremReviewSurface.ready := by
@@ -268,14 +309,19 @@ theorem concrete_hphys_realization_theorem_review_surface_ready :
     And.intro singleton_concrete_hphys_symmetric_on_domain <|
     And.intro singleton_concrete_hphys_rayleigh_lower_bound <|
     And.intro singleton_concrete_hphys_distinguished_attains_exact <|
-    And.intro True.intro <|
-    And.intro True.intro <|
-    And.intro True.intro True.intro
+    And.intro singleton_concrete_hphys_distinguished_attains_exact <|
+    And.intro
+      (⟨singletonConcreteHPhysRealizationTheoremData.distinguished,
+        singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain,
+        singleton_concrete_hphys_domain_closed
+          singletonConcreteHPhysRealizationTheoremData.distinguished
+          singletonConcreteHPhysRealizationTheoremData.distinguished_in_domain⟩) <|
+    And.intro exactGapValueReal_pos singleton_concrete_hphys_domain_closed
 
 theorem concrete_hphys_realization_theorem_review_surface_final_release_held :
     ConcreteHPhysRealizationTheoremReviewSurface.finalReleaseHeld
       concreteHPhysRealizationTheoremReviewSurface := by
-  trivial
+  exact exactGapValueReal_pos
 
 end MathlibAnalytic
 end MGAP4D
