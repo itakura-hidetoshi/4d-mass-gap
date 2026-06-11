@@ -20,7 +20,9 @@ def finalPhysicalHilbertInner (ψ φ : FinalPhysicalHilbertCarrier) : ℝ :=
 def finalPhysicalHilbertNorm (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
   |ψ 0|
 
-def finalPhysicalHilbertDomain (_ψ : FinalPhysicalHilbertCarrier) : Prop := True
+/-- Concrete Mathlib-backed domain: finite-support countable-coordinate states. -/
+def finalPhysicalHilbertDomain (ψ : FinalPhysicalHilbertCarrier) : Prop :=
+  Set.Finite {n : ℕ | ψ n ≠ 0}
 
 def finalPhysicalHamiltonianWeight (n : ℕ) : ℝ := (n : ℝ) + 1
 
@@ -31,11 +33,21 @@ def finalPhysicalHamiltonian (ψ : FinalPhysicalHilbertCarrier) :
 def finalPhysicalRayleigh (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
   exactGapValueReal + (ψ 0)^2
 
+theorem final_physical_hilbert_zero_in_domain :
+    finalPhysicalHilbertDomain finalPhysicalHilbertZero := by
+  simpa [finalPhysicalHilbertDomain, finalPhysicalHilbertZero] using
+    (Set.finite_empty : Set.Finite (∅ : Set ℕ))
+
 theorem final_physical_hamiltonian_domain_preserved
     (ψ : FinalPhysicalHilbertCarrier)
-    (_hψ : finalPhysicalHilbertDomain ψ) :
+    (hψ : finalPhysicalHilbertDomain ψ) :
     finalPhysicalHilbertDomain (finalPhysicalHamiltonian ψ) := by
-  exact True.intro
+  unfold finalPhysicalHilbertDomain at hψ ⊢
+  exact hψ.subset (by
+    intro n hn
+    by_contra hzero
+    have hψzero : ψ n = 0 := not_not.mp hzero
+    exact hn (by simp [finalPhysicalHamiltonian, hψzero]))
 
 theorem final_physical_hamiltonian_symmetric_on_domain
     (ψ φ : FinalPhysicalHilbertCarrier)
