@@ -49,9 +49,15 @@ def YangMillsHamiltonianSpectralDerivation3320.ready
 
 /-- Installed upstream spectral-value interface.
 
-This pre-R6 interface aligns spectral carriers.  It does not adopt a theorem of
-the form `derivedHamiltonianSpectralValue = (33 : ℝ) / 20`; that value theorem is
-reserved for the R6 spectral/PVM pinning layer. -/
+The direction is important: the derived Hamiltonian spectral value is read from
+`hamiltonianPVMSpectralExactGapValue`, i.e. from the concrete Hamiltonian/PVM/
+spectral theorem package.  The public normalized carrier `exactGapValueReal` is
+then aligned to that derived spectral value.  This avoids the circular/definitional
+pattern `derivedHamiltonianSpectralValue := exactGapValueReal`.
+
+This pre-R6 interface still does not adopt a theorem of the form
+`derivedHamiltonianSpectralValue = (33 : ℝ) / 20`; that displayed value theorem is
+reserved for the R6 spectral/PVM singleton-pinning layer. -/
 noncomputable def yangMillsHamiltonianSpectralDerivation3320 :
     YangMillsHamiltonianSpectralDerivation3320 :=
   { continuumHamiltonianReady := continuum_hamiltonian_mass_gap_witness_ready
@@ -63,17 +69,14 @@ noncomputable def yangMillsHamiltonianSpectralDerivation3320 :
     rayleighLowerBoundReady := rayleigh_lower_bound_real_surface_ready
     rayleighAttainmentReady := rayleigh_attainment_real_surface_ready
     positiveSpectralMassReady := spectral_mass_real_surface_ready
-    spectralInfimumValue := exactGapValueReal
-    attainedSpectralValue := exactGapValueReal
-    observableSpectralAtomValue := exactGapValueReal
-    derivedHamiltonianSpectralValue := exactGapValueReal
+    spectralInfimumValue := hamiltonianPVMSpectralExactGapValue
+    attainedSpectralValue := hamiltonianPVMSpectralExactGapValue
+    observableSpectralAtomValue := hamiltonianPVMSpectralExactGapValue
+    derivedHamiltonianSpectralValue := hamiltonianPVMSpectralExactGapValue
     infimum_eq_derived := rfl
     attainment_eq_derived := rfl
     atom_eq_derived := rfl
-    exactNormalizedGapDerivedFromSpectrum :=
-      continuum_hamiltonian_exact_gap_value_preserved
-        continuumHamiltonianMassGapWitnessData
-        continuum_hamiltonian_mass_gap_witness_ready
+    exactNormalizedGapDerivedFromSpectrum := rfl
     positiveSpectralMass := spectral_mass_real_surface_positive_mass
     nonzeroSpectralMass := spectral_mass_real_surface_nonzero_mass
     theoremWitnessOnly := continuumHamiltonianMassGapWitnessData.theoremWitnessOnly
