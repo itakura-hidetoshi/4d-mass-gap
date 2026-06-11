@@ -60,7 +60,7 @@ Source:
 MGAP4D/MathlibAnalytic/PhysicalUnboundedOperatorSkeleton.lean
 ```
 
-This layer now uses:
+This layer now uses final names only for the physical unbounded-operator route:
 
 ```text
 FinalPhysicalHilbertCarrier
@@ -69,13 +69,7 @@ finalPhysicalRayleigh
 finalPhysicalUnboundedOperatorSkeletonData
 ```
 
-The compatibility name:
-
-```text
-prototypePhysicalUnboundedOperatorSkeletonData
-```
-
-is retained for downstream imports, but it aliases the final physical carrier data rather than a singleton carrier.
+No legacy physical prototype alias is retained in this layer; downstream references should target the final physical data directly.
 
 Relevant boundary markers:
 
@@ -216,28 +210,4 @@ Relevant boundary markers:
 ```text
 publicBoundaryHeld
 finalReleaseHeld
-```
-
-## Correct reading after the physical-carrier hardening
-
-Singleton witnesses that remain in early or still-prototype surfaces are Lean interface witnesses. They should be read together with their boundary markers.
-
-The physical unbounded-operator skeleton and the concrete Yang--Mills Hamiltonian skeleton should now be read as final-physical-carrier routed skeletons, not as one-point carrier skeletons.
-
-The target layer should be read as an analytic proof-obligation map, not as a completed external continuum proof.
-
-## Review rule
-
-A correct review statement is:
-
-```text
-The repository provides internal normalized theorem-body and proof-architecture surfaces with replay support, bridge audit support, target obligations, final-physical-carrier routing for the unbounded-operator and concrete Yang--Mills Hamiltonian skeletons, and explicit review boundaries.
-```
-
-Use this document together with:
-
-```text
-README.md
-INDEPENDENT_REPLAY.md
-THEOREM_INDEX.md
 ```
