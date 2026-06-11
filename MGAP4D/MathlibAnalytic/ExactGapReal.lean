@@ -5,7 +5,7 @@ namespace MathlibAnalytic
 
 noncomputable def exactGapValueReal : ℝ :=
   Classical.choose (by
-    refine ⟨(33 : ℝ) / 20, rfl, ?_, ?_⟩
+    refine ⟨((11 : ℝ) * 3) / 20, rfl, ?_, ?_⟩
     · norm_num
     · norm_num)
 
