@@ -27,7 +27,7 @@ structure PhysicalHamiltonianOperatorNormalizationData where
     exactGapValueReal = (1 : ℝ) * exactGapValueReal ∧
     exactGapValueReal = exactGapValueReal
   theoremBodyUnchanged : physicalHamiltonianNormalizationBridgeReviewSurface.ready
-  publicBoundaryHeld : prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 def PhysicalHamiltonianOperatorNormalizationData.ready
     (_D : PhysicalHamiltonianOperatorNormalizationData) : Prop :=
@@ -45,7 +45,7 @@ def PhysicalHamiltonianOperatorNormalizationData.ready
   (exactGapValueReal = (1 : ℝ) * exactGapValueReal ∧
     exactGapValueReal = exactGapValueReal) ∧
   physicalHamiltonianNormalizationBridgeReviewSurface.ready ∧
-  prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld
+  finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
 
 theorem physical_hamiltonian_operator_normalized_scale_def
     (D : PhysicalHamiltonianOperatorNormalizationData) :
@@ -79,7 +79,7 @@ theorem physical_hamiltonian_operator_normalization_theorem_body_unchanged
 
 theorem physical_hamiltonian_operator_normalization_public_boundary_held
     (_D : PhysicalHamiltonianOperatorNormalizationData) :
-    prototypeFinalTheoremReleaseBundleManifestData.publicBoundaryHeld := by
+    finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld := by
   exact final_theorem_release_bundle_manifest_public_boundary_held_witness
 
 noncomputable def physicalHamiltonianOperatorNormalizationData :
