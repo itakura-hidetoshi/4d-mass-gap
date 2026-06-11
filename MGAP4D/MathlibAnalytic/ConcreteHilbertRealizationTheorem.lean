@@ -134,6 +134,16 @@ theorem final_concrete_hilbert_realization_theorem_data_ready :
     finalConcreteHilbertRealizationTheoremData.ready := by
   exact final_concrete_hilbert_realization_theorem_data_certified
 
+/-- Legacy audit/API name retained as a transparent alias to the final concrete
+carrier, not as a singleton/PUnit implementation. -/
+noncomputable abbrev singletonConcreteHilbertRealizationTheoremData :
+    ConcreteHilbertRealizationTheoremData :=
+  finalConcreteHilbertRealizationTheoremData
+
+theorem singleton_concrete_hilbert_realization_theorem_data_ready :
+    singletonConcreteHilbertRealizationTheoremData.ready := by
+  exact final_concrete_hilbert_realization_theorem_data_ready
+
 theorem final_concrete_hilbert_distinguished_attains_exact :
     finalConcreteHilbertRealizationTheoremData.rayleighData.quotient
       (finalConcreteHilbertRealizationTheoremData.toRayleighState
