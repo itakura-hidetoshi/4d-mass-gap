@@ -35,13 +35,24 @@ theorem continuum_hamiltonian_witness_self_adjoint_spectral_slot_provenance :
     continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady := by
   exact continuum_hamiltonian_witness_self_adjoint_spectral_source_provenance
 
-/-- Provenance map for the normalization-to-exact-gap slot. -/
+/-- Provenance map for the exact-value derivation receipt.
+
+The exact value is read here through the spectral derivation route, not merely
+through the carrier equality in `ExactGapReal.lean`. -/
+theorem continuum_hamiltonian_witness_exact_value_derivation_provenance :
+    exactGapValueReal = (33 : ℝ) / 20 := by
+  exact physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
+
+/-- Provenance map for the normalization-to-exact-gap slot.
+
+The normalization slot now consumes the concrete spectral derivation theorem
+rather than the carrier-level closed-form equality. -/
 theorem continuum_hamiltonian_witness_normalization_source_provenance :
     PhysicalHamiltonianNormalizationBridgeReviewSurface.ready
         physicalHamiltonianNormalizationBridgeReviewSurface ∧
       exactGapValueReal = (33 : ℝ) / 20 := by
   exact And.intro physical_hamiltonian_normalization_bridge_review_surface_ready
-    exactGapValueReal_eq
+    continuum_hamiltonian_witness_exact_value_derivation_provenance
 
 /-- Slot-level projection of the normalization provenance. -/
 theorem continuum_hamiltonian_witness_normalization_slot_provenance :
@@ -77,14 +88,6 @@ theorem continuum_hamiltonian_witness_spectral_mass_observable_provenance :
       (plaquette_weight_nonzero_weight_hardened
         plaquetteSpectralWeightLaneHardeningData
         plaquette_spectral_weight_lane_hardening_ready)
-
-/-- Provenance map for the exact-value derivation receipt.
-
-The exact value is read here through the spectral derivation route, not merely
-through the carrier equality in `Basic.lean`. -/
-theorem continuum_hamiltonian_witness_exact_value_derivation_provenance :
-    exactGapValueReal = (33 : ℝ) / 20 := by
-  exact physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
 
 /-- Provenance map for the positive/nonzero observable spectral mass. -/
 theorem continuum_hamiltonian_witness_positive_spectral_mass_provenance :
