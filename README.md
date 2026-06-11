@@ -183,7 +183,7 @@ External review should keep four layers separate:
 
 ```text
 abstract theorem-body layer
-normalized carrier layer
+Basic-layer marker and downstream real-carrier layer
 operator / spectral derivation layer
 engineering / review-marker layer
 ```
@@ -198,14 +198,20 @@ docs/exact_gap_layer_separation.md
 Reading guide:
 
 ```text
-Basic.lean / ExactGapReal.lean = normalized carrier layer
+Basic.lean = marker-only route-deferred layer, with no real-valued gap carrier
+ExactGapReal.lean = downstream real carrier and raw route witness
+ContinuumHamiltonianMassGapTheorem.lean = theorem-route final normalization boundary
+ContinuumHamiltonianExactMassGapDerivation.lean = exact positive mass-gap package boundary
 ConcreteR1R7ResidualDischarge.lean = current terminal derivation discharge
 ContinuumHamiltonianCompleteMassGapDerivation.lean = complete Hamiltonian spectral derivation surface
 YangMillsHamiltonianSpectralDerivation3320.lean = spectral derivation interface into the normalized carrier
 ExactGapLayerSeparation.lean = current separation map
 ```
 
-`exactGapValueReal` is the canonical normalized carrier defined through `fourDYangMillsAnalyticGapValue`; the local `33/20` check is a carrier-level normalization, while the review route is the R1--R7 terminal chain plus the complete continuum-Hamiltonian spectral route.
+`exactGapValueReal` is the downstream real carrier.  The Basic layer does not
+install a numerical carrier or local final-value assignment, and the final
+normalized equality should be reviewed through the R1--R7 terminal chain plus the
+continuum-Hamiltonian / PVM / operator-spectral theorem route.
 
 ---
 
