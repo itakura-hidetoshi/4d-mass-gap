@@ -47,7 +47,11 @@ def YangMillsHamiltonianSpectralDerivation3320.ready
   D.publicBoundaryHeld ∧
   D.finalReleaseHeld
 
-/-- Installed upstream spectral-value interface. -/
+/-- Installed upstream spectral-value interface.
+
+This pre-R6 interface aligns spectral carriers.  It does not adopt a theorem of
+the form `derivedHamiltonianSpectralValue = (33 : ℝ) / 20`; that value theorem is
+reserved for the R6 spectral/PVM pinning layer. -/
 noncomputable def yangMillsHamiltonianSpectralDerivation3320 :
     YangMillsHamiltonianSpectralDerivation3320 :=
   { continuumHamiltonianReady := continuum_hamiltonian_mass_gap_witness_ready
@@ -203,18 +207,30 @@ theorem yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum :
     ⟨_, _, _, _, _, _, _, _, hExact⟩
   exact hExact
 
-/-- The Yang--Mills Hamiltonian spectral theorem / PVM / observable-atom route
-forces the derived Hamiltonian spectral value to be the internal normalized gap
-value `33 / 20`. -/
-theorem yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 :
-    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-      (33 : ℝ) / 20 := by
-  exact yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum.symm.trans
-    continuum_hamiltonian_derives_exact_mass_gap_value
+/-- Boundary marker: outside R6, the displayed numeric value theorem is not
+adopted.  The R6 layer must provide the spectral/PVM pinning of the derived
+Hamiltonian value before `33/20` can be exported. -/
+def YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning : Prop :=
+  YangMillsHamiltonianPhysicalSpectrumIdentifiesExactGapValue ∧
+  finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
+  yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
+  yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
-/-- Full public theorem-witness form of the Yang--Mills Hamiltonian spectral
-analysis. -/
-theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_exact_gap :
+/-- The pre-R6 Yang--Mills Hamiltonian spectral/PVM analysis is boundary-held and
+requires the R6 value-pinning theorem before adopting the displayed `33/20` value. -/
+theorem yang_mills_hamiltonian_spectral_pvm_analysis_requires_r6_value_pinning :
+    YangMillsHamiltonianSpectralPVMAnalysisRequiresR6ValuePinning := by
+  rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, _, _, hNoConsensus, hPublic, hFinal⟩
+  exact And.intro yang_mills_hamiltonian_physical_spectrum_identifies_exact_gap_value <|
+    And.intro hNoConsensus <|
+    And.intro hPublic hFinal
+
+/-- Full public theorem-witness boundary form of the Yang--Mills Hamiltonian
+spectral analysis.  It carries all spectral alignments and positive nonzero mass,
+but intentionally does not contain a `derivedHamiltonianSpectralValue = 33/20`
+conjunct outside R6. -/
+theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_boundary_held :
     continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
     yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
       yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
@@ -222,8 +238,6 @@ theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_
       yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
     yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
       yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
-    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-      (33 : ℝ) / 20 ∧
     0 < spectralMassRealSurface.mass ∧
     spectralMassRealSurface.mass ≠ 0 ∧
     yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
@@ -235,14 +249,13 @@ theorem yang_mills_hamiltonian_spectral_theorem_pvm_hamiltonian_analysis_forces_
     And.intro hInfimum <|
     And.intro hAttainment <|
     And.intro hAtom <|
-    And.intro yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 <|
     And.intro hMassPositive <|
     And.intro hMassNonzero <|
     And.intro hPublic hFinal
 
-/-- The public theorem-level claim surface for the Yang--Mills Hamiltonian
+/-- The public theorem-level boundary surface for the Yang--Mills Hamiltonian
 spectral derivation. -/
-def YangMillsHamiltonianSpectralDerivationClaim3320 : Prop :=
+def YangMillsHamiltonianSpectralDerivationBoundary3320 : Prop :=
   yangMillsHamiltonianSpectralDerivation3320.ready ∧
   continuumHamiltonianMassGapWitnessData.selfAdjointSpectralChainReady ∧
   yangMillsHamiltonianSpectralDerivation3320.spectralInfimumValue =
@@ -251,8 +264,6 @@ def YangMillsHamiltonianSpectralDerivationClaim3320 : Prop :=
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
   yangMillsHamiltonianSpectralDerivation3320.observableSpectralAtomValue =
     yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue ∧
-  yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-    (33 : ℝ) / 20 ∧
   0 < spectralMassRealSurface.mass ∧
   spectralMassRealSurface.mass ≠ 0 ∧
   yangMillsHamiltonianSpectralDerivation3320.theoremWitnessOnly ∧
@@ -260,10 +271,10 @@ def YangMillsHamiltonianSpectralDerivationClaim3320 : Prop :=
   yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
   yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld
 
-/-- The Yang--Mills Hamiltonian spectral derivation claim is theorem-witnessed. -/
-theorem yang_mills_hamiltonian_spectral_derivation_claim_3320 :
-    YangMillsHamiltonianSpectralDerivationClaim3320 := by
-  unfold YangMillsHamiltonianSpectralDerivationClaim3320
+/-- The Yang--Mills Hamiltonian spectral derivation boundary is theorem-witnessed. -/
+theorem yang_mills_hamiltonian_spectral_derivation_boundary_3320 :
+    YangMillsHamiltonianSpectralDerivationBoundary3320 := by
+  unfold YangMillsHamiltonianSpectralDerivationBoundary3320
   rcases yang_mills_hamiltonian_spectral_derivation_3320_ready with
     ⟨_, _, hSpectral, _, _, _, hInfimum, hAttainment, hAtom, _,
       hMassPositive, hMassNonzero, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
@@ -272,39 +283,29 @@ theorem yang_mills_hamiltonian_spectral_derivation_claim_3320 :
     And.intro hInfimum <|
     And.intro hAttainment <|
     And.intro hAtom <|
-    And.intro yang_mills_hamiltonian_spectral_pvm_analysis_forces_gap_33_over_20 <|
     And.intro hMassPositive <|
     And.intro hMassNonzero <|
     And.intro hWitnessOnly <|
     And.intro hNoConsensus <|
     And.intro hPublic hFinal
 
-/-- Projection: the Yang--Mills Hamiltonian spectral derivation claim forces the
-exact normalized gap value. -/
-theorem yang_mills_hamiltonian_spectral_derivation_claim_forces_gap_33_over_20 :
-    yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue =
-      (33 : ℝ) / 20 := by
-  rcases yang_mills_hamiltonian_spectral_derivation_claim_3320 with
-    ⟨_, _, _, _, _, hForced, _⟩
-  exact hForced
-
-/-- Projection: the Yang--Mills Hamiltonian spectral derivation claim carries a
+/-- Projection: the Yang--Mills Hamiltonian spectral derivation boundary carries a
 positive nonzero PVM/observable spectral mass. -/
-theorem yang_mills_hamiltonian_spectral_derivation_claim_positive_nonzero_pvm_mass :
+theorem yang_mills_hamiltonian_spectral_derivation_boundary_positive_nonzero_pvm_mass :
     0 < spectralMassRealSurface.mass ∧ spectralMassRealSurface.mass ≠ 0 := by
-  rcases yang_mills_hamiltonian_spectral_derivation_claim_3320 with
-    ⟨_, _, _, _, _, _, hMassPositive, hMassNonzero, _⟩
+  rcases yang_mills_hamiltonian_spectral_derivation_boundary_3320 with
+    ⟨_, _, _, _, _, hMassPositive, hMassNonzero, _⟩
   exact And.intro hMassPositive hMassNonzero
 
-/-- Projection: the Yang--Mills Hamiltonian spectral derivation claim remains a
+/-- Projection: the Yang--Mills Hamiltonian spectral derivation boundary remains a
 witness-only, no-external-consensus, boundary-held theorem surface. -/
-theorem yang_mills_hamiltonian_spectral_derivation_claim_boundary_held :
+theorem yang_mills_hamiltonian_spectral_derivation_boundary_held :
     yangMillsHamiltonianSpectralDerivation3320.theoremWitnessOnly ∧
     finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
     yangMillsHamiltonianSpectralDerivation3320.publicBoundaryHeld ∧
     yangMillsHamiltonianSpectralDerivation3320.finalReleaseHeld := by
-  rcases yang_mills_hamiltonian_spectral_derivation_claim_3320 with
-    ⟨_, _, _, _, _, _, _, _, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
+  rcases yang_mills_hamiltonian_spectral_derivation_boundary_3320 with
+    ⟨_, _, _, _, _, _, _, hWitnessOnly, hNoConsensus, hPublic, hFinal⟩
   exact And.intro hWitnessOnly <|
     And.intro hNoConsensus <|
     And.intro hPublic hFinal
