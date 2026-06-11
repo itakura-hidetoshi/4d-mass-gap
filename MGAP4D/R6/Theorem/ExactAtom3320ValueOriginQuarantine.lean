@@ -8,26 +8,25 @@ open scoped BigOperators ENNReal lp
 
 noncomputable section
 
-/-- Boundary for the current R6 numeric value-origin claim.
+/-- Boundary for the R6 value-origin route.
 
-The old quarantine marker is now converted into a guarded-derivation marker: R6
-exports the `33/20` value through the Yang--Mills Hamiltonian spectral derivation,
-while the R4 actual Borel PVM/full spectral-measure boundary remains guarded. -/
+R6 carries a guarded non-definitional gate.  It does not adopt an unconditional
+`exactGapValueReal = 33/20` theorem unless the R6 spectral/PVM pinning surface is
+provided. -/
 def ExactAtom3320ValueOriginQuarantine : Prop :=
   ExactAtom3320SpectralOriginFirewall ∧
   ExactAtom3320GenuineSpectralValueDerivedAtR6 ∧
-  ExactAtom3320SpectralValueDerivedAtR6Origin
+  ExactAtom3320R6SpectralValueDerivationGate
 
-/-- The R6 numeric value-origin boundary is active as a guarded derivation. -/
+/-- The R6 value-origin boundary is active as a guarded gate. -/
 theorem exact_atom_3320_value_origin_quarantine_ready :
     ExactAtom3320ValueOriginQuarantine := by
   exact ⟨
     exact_atom_3320_spectral_origin_firewall_ready,
     exact_atom_3320_genuine_spectral_value_derived_at_r6_ready,
-    exact_atom_3320_spectral_value_derived_at_r6_origin_ready⟩
+    exact_atom_3320_r6_spectral_value_derivation_gate_ready⟩
 
-/-- Corrected public status: R6 supplies a guarded Yang--Mills spectral derivation,
-not a full R4 Borel PVM closure. -/
+/-- Corrected public status: the value route is guarded. -/
 def ExactAtom3320ValueOriginBlocked : Prop :=
   ExactAtom3320ValueOriginQuarantine ∧
   MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
@@ -39,11 +38,7 @@ theorem exact_atom_3320_value_origin_blocked_ready :
     exact_atom_3320_value_origin_quarantine_ready,
     MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
-/-- Typed target shape for a future genuine full spectral-measure/PVM discharge.
-
-R6 now derives the displayed numeric value through the Yang--Mills spectral route,
-but a future closure must still provide an actual Borel spectral-measure/PVM route
-if the claim is strengthened to a full operator-valued spectral theorem. -/
+/-- Typed target shape for a later full spectral-measure/PVM route. -/
 structure ExactAtom3320RequiredFutureSpectralValueDischarge where
   concreteSelfAdjointOperatorRoute : Prop
   actualBorelSpectralMeasureRoute : Prop
@@ -51,17 +46,19 @@ structure ExactAtom3320RequiredFutureSpectralValueDischarge where
   numericCalculationForcesValue : Prop
   finalIdentificationOnly : Prop
 
-/-- The future full Borel-PVM discharge remains open, even though the R6 numeric
-spectral value has a guarded Yang--Mills derivation surface. -/
+/-- The full spectral-measure/PVM target remains open; R6 only carries the guarded
+non-definitional theorem gate. -/
 def ExactAtom3320RequiredFutureSpectralValueDischargeStillOpen : Prop :=
   ExactAtom3320GenuineSpectralValueDerivedAtR6 ∧
+  ExactAtom3320R6SpectralValueDerivationGate ∧
   MGAP4D.R4.Theorem.SpectralMeasurePVMNoShellToFullCollapseBoundary
 
-/-- The future full spectral-measure/PVM target remains open. -/
+/-- The full spectral-measure/PVM target remains open. -/
 theorem exact_atom_3320_required_future_spectral_value_discharge_still_open_ready :
     ExactAtom3320RequiredFutureSpectralValueDischargeStillOpen := by
   exact ⟨
     exact_atom_3320_genuine_spectral_value_derived_at_r6_ready,
+    exact_atom_3320_r6_spectral_value_derivation_gate_ready,
     MGAP4D.R4.Theorem.spectral_measure_pvm_no_shell_to_full_collapse_boundary_ready⟩
 
 end
