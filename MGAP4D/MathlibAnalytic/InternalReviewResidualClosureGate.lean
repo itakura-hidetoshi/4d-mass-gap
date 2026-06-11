@@ -15,37 +15,32 @@ structure InternalReviewResidualClosureGateData where
   fourLaneClosureReady : fourLaneResidualClosureData.ready
   exactValueOriginReady : exactValueTheoremBodyOriginReviewSurface.ready
   finalReleaseClosureReady : finalTheoremReleaseClosureReviewSurface.ready
-  repositoryInternalResidualClosed : Prop
-  repositoryInternalResidualClosed_proof : repositoryInternalResidualClosed
-  noReviewLevelResidualLeft : Prop
-  noReviewLevelResidualLeft_proof : noReviewLevelResidualLeft
-  exactTheoremBodyOriginPreserved : Prop
-  exactTheoremBodyOriginPreserved_proof : exactTheoremBodyOriginPreserved
-  notPackagingArtifactPreserved : Prop
-  notCILedgerArtifactPreserved : Prop
-  finalReleaseClosureLinked : Prop
-  finalReleaseClosureLinked_proof : finalReleaseClosureLinked
-  externalReviewBoundaryVisible : Prop
-  publicBoundaryHeld : Prop
-  publicBoundaryHeld_proof : publicBoundaryHeld
-  finalReleaseHeld : Prop
+  repositoryInternalResidualClosed : fourLaneResidualClosureData.ready
+  noReviewLevelResidualLeft : fourLaneResidualClosureData.noReviewLevelResidualLeft
+  exactTheoremBodyOriginPreserved : exactValueTheoremBodyOriginReviewSurface.ready
+  notPackagingArtifactPreserved : exactGapTheoremBodyClosure.ready
+  notCILedgerArtifactPreserved : exactGapTheoremBodyClosure.ready
+  finalReleaseClosureLinked : finalTheoremReleaseClosureReviewSurface.ready
+  externalReviewBoundaryVisible : finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
+  publicBoundaryHeld : finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
+  finalReleaseHeld : exactGapTheoremBodyClosure.finalReleaseHeld
   exactValuePreserved : exactGapValueReal = exactGapValueReal
 
 /-- Ready predicate for the internal review residual closure gate. -/
 def InternalReviewResidualClosureGateData.ready
-    (D : InternalReviewResidualClosureGateData) : Prop :=
+    (_D : InternalReviewResidualClosureGateData) : Prop :=
   fourLaneResidualClosureData.ready ∧
   exactValueTheoremBodyOriginReviewSurface.ready ∧
   finalTheoremReleaseClosureReviewSurface.ready ∧
-  D.repositoryInternalResidualClosed ∧
-  D.noReviewLevelResidualLeft ∧
-  D.exactTheoremBodyOriginPreserved ∧
-  D.notPackagingArtifactPreserved ∧
-  D.notCILedgerArtifactPreserved ∧
-  D.finalReleaseClosureLinked ∧
-  D.externalReviewBoundaryVisible ∧
-  D.publicBoundaryHeld ∧
-  D.finalReleaseHeld ∧
+  fourLaneResidualClosureData.ready ∧
+  fourLaneResidualClosureData.noReviewLevelResidualLeft ∧
+  exactValueTheoremBodyOriginReviewSurface.ready ∧
+  exactGapTheoremBodyClosure.ready ∧
+  exactGapTheoremBodyClosure.ready ∧
+  finalTheoremReleaseClosureReviewSurface.ready ∧
+  finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed ∧
+  finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld ∧
+  exactGapTheoremBodyClosure.finalReleaseHeld ∧
   exactGapValueReal = exactGapValueReal
 
 /-- Named theorem-derived witness that the four-lane closure closes the repository-internal residual. -/
@@ -98,66 +93,66 @@ theorem internal_review_residual_gate_final_release_held_witness :
 
 /-- Repository-internal review residual is closed at the gate level. -/
 theorem internal_review_residual_gate_repository_residual_closed
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.repositoryInternalResidualClosed := by
-  rcases hD with ⟨_, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _repositoryInternalResidualClosed := D.repositoryInternalResidualClosed
+    fourLaneResidualClosureData.ready := by
+  exact D.repositoryInternalResidualClosed
 
 /-- No review-level residual is left at the gate level. -/
 theorem internal_review_residual_gate_no_review_level_residual_left
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.noReviewLevelResidualLeft := by
-  rcases hD with ⟨_, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _noReviewLevelResidualLeft := D.noReviewLevelResidualLeft
+    fourLaneResidualClosureData.noReviewLevelResidualLeft := by
+  exact D.noReviewLevelResidualLeft
 
 /-- Exact theorem-body origin is preserved. -/
 theorem internal_review_residual_gate_exact_origin_preserved
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.exactTheoremBodyOriginPreserved := by
-  rcases hD with ⟨_, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _exactTheoremBodyOriginPreserved := D.exactTheoremBodyOriginPreserved
+    exactValueTheoremBodyOriginReviewSurface.ready := by
+  exact D.exactTheoremBodyOriginPreserved
 
 /-- The exact value is still not reduced to a packaging artifact. -/
 theorem internal_review_residual_gate_not_packaging_artifact_preserved
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.notPackagingArtifactPreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _notPackagingArtifactPreserved := D.notPackagingArtifactPreserved
+    exactGapTheoremBodyClosure.ready := by
+  exact D.notPackagingArtifactPreserved
 
 /-- The exact value is still not reduced to a CI-ledger artifact. -/
 theorem internal_review_residual_gate_not_ci_ledger_artifact_preserved
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.notCILedgerArtifactPreserved := by
-  rcases hD with ⟨_, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _notCILedgerArtifactPreserved := D.notCILedgerArtifactPreserved
+    exactGapTheoremBodyClosure.ready := by
+  exact D.notCILedgerArtifactPreserved
 
 /-- Final release closure is linked but not opened. -/
 theorem internal_review_residual_gate_final_release_closure_linked
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.finalReleaseClosureLinked := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _finalReleaseClosureLinked := D.finalReleaseClosureLinked
+    finalTheoremReleaseClosureReviewSurface.ready := by
+  exact D.finalReleaseClosureLinked
 
 /-- External review boundary remains visible. -/
 theorem internal_review_residual_gate_external_review_boundary_visible
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.externalReviewBoundaryVisible := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _externalReviewBoundaryVisible := D.externalReviewBoundaryVisible
+    finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed := by
+  exact D.externalReviewBoundaryVisible
 
 /-- Public theorem boundary remains held. -/
 theorem internal_review_residual_gate_public_boundary_held
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.publicBoundaryHeld := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _publicBoundaryHeld := D.publicBoundaryHeld
+    finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld := by
+  exact D.publicBoundaryHeld
 
 /-- Final release remains held. -/
 theorem internal_review_residual_gate_final_release_held
-    (D : InternalReviewResidualClosureGateData) (hD : D.ready) :
-    D.finalReleaseHeld := by
-  rcases hD with ⟨_, _, _, _, _, _, _, _, _, _, _, h, _⟩
-  exact h
+    (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
+    let _finalReleaseHeld := D.finalReleaseHeld
+    exactGapTheoremBodyClosure.finalReleaseHeld := by
+  exact D.finalReleaseHeld
 
 /-- Exact normalized-value carrier is preserved by the closure gate. -/
 theorem internal_review_residual_gate_exact_value_preserved
@@ -170,43 +165,40 @@ def internalReviewResidualClosureGateData : InternalReviewResidualClosureGateDat
   { fourLaneClosureReady := four_lane_residual_closure_ready
     exactValueOriginReady := exact_value_theorem_body_origin_review_surface_ready
     finalReleaseClosureReady := final_theorem_release_closure_review_surface_ready
-    repositoryInternalResidualClosed := fourLaneResidualClosureData.ready
-    repositoryInternalResidualClosed_proof :=
+    repositoryInternalResidualClosed :=
       internal_review_residual_gate_repository_residual_closed_witness
-    noReviewLevelResidualLeft := fourLaneResidualClosureData.noReviewLevelResidualLeft
-    noReviewLevelResidualLeft_proof :=
+    noReviewLevelResidualLeft :=
       internal_review_residual_gate_no_review_level_residual_left_witness
-    exactTheoremBodyOriginPreserved := exactValueTheoremBodyOriginReviewSurface.ready
-    exactTheoremBodyOriginPreserved_proof :=
+    exactTheoremBodyOriginPreserved :=
       internal_review_residual_gate_exact_origin_preserved_witness
-    notPackagingArtifactPreserved := exactGapTheoremBodyClosure.ready
-    notCILedgerArtifactPreserved := exactGapTheoremBodyClosure.ready
-    finalReleaseClosureLinked := finalTheoremReleaseClosureReviewSurface.ready
-    finalReleaseClosureLinked_proof :=
+    notPackagingArtifactPreserved :=
+      internal_review_residual_gate_not_packaging_artifact_preserved_witness
+    notCILedgerArtifactPreserved :=
+      internal_review_residual_gate_not_ci_ledger_artifact_preserved_witness
+    finalReleaseClosureLinked :=
       internal_review_residual_gate_final_release_closure_linked_witness
-    externalReviewBoundaryVisible := finalTheoremReleaseClosureReviewSurface.externalConsensusNotClaimed
-    publicBoundaryHeld := finalTheoremReleaseClosureReviewSurface.publicBoundaryHeld
-    publicBoundaryHeld_proof :=
+    externalReviewBoundaryVisible :=
+      internal_review_residual_gate_external_review_boundary_visible_witness
+    publicBoundaryHeld :=
       internal_review_residual_gate_public_boundary_held_witness
-    finalReleaseHeld := exactGapTheoremBodyClosure.finalReleaseHeld
+    finalReleaseHeld := internal_review_residual_gate_final_release_held_witness
     exactValuePreserved := rfl }
 
 /-- The installed internal review residual closure gate is ready. -/
 theorem internal_review_residual_closure_gate_ready :
     internalReviewResidualClosureGateData.ready := by
-  exact And.intro internalReviewResidualClosureGateData.fourLaneClosureReady <|
-    And.intro internalReviewResidualClosureGateData.exactValueOriginReady <|
-    And.intro internalReviewResidualClosureGateData.finalReleaseClosureReady <|
-    And.intro internalReviewResidualClosureGateData.repositoryInternalResidualClosed_proof <|
-    And.intro internalReviewResidualClosureGateData.noReviewLevelResidualLeft_proof <|
-    And.intro internalReviewResidualClosureGateData.exactTheoremBodyOriginPreserved_proof <|
+  exact And.intro four_lane_residual_closure_ready <|
+    And.intro exact_value_theorem_body_origin_review_surface_ready <|
+    And.intro final_theorem_release_closure_review_surface_ready <|
+    And.intro four_lane_residual_closure_ready <|
+    And.intro internal_review_residual_gate_no_review_level_residual_left_witness <|
+    And.intro exact_value_theorem_body_origin_review_surface_ready <|
     And.intro internal_review_residual_gate_not_packaging_artifact_preserved_witness <|
     And.intro internal_review_residual_gate_not_ci_ledger_artifact_preserved_witness <|
-    And.intro internalReviewResidualClosureGateData.finalReleaseClosureLinked_proof <|
+    And.intro final_theorem_release_closure_review_surface_ready <|
     And.intro internal_review_residual_gate_external_review_boundary_visible_witness <|
-    And.intro internalReviewResidualClosureGateData.publicBoundaryHeld_proof <|
-    And.intro internal_review_residual_gate_final_release_held_witness
-      internalReviewResidualClosureGateData.exactValuePreserved
+    And.intro internal_review_residual_gate_public_boundary_held_witness <|
+    And.intro internal_review_residual_gate_final_release_held_witness rfl
 
 end MathlibAnalytic
 end MGAP4D
