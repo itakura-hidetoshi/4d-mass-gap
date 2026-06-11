@@ -22,12 +22,16 @@ MathlibAnalytic.concrete_hphys_mapped_domain
 MathlibAnalytic.concrete_hphys_mapped_rayleigh_lower_bound
 MathlibAnalytic.concrete_hphys_distinguished_attains_exact
 MathlibAnalytic.concrete_hphys_certificate
-MathlibAnalytic.singletonConcreteHPhysRealizationTheoremData
-MathlibAnalytic.singleton_concrete_hphys_realization_theorem_data_ready
-MathlibAnalytic.singleton_concrete_hphys_domain_closed
-MathlibAnalytic.singleton_concrete_hphys_symmetric_on_domain
-MathlibAnalytic.singleton_concrete_hphys_rayleigh_lower_bound
-MathlibAnalytic.singleton_concrete_hphys_distinguished_attains_exact
+MathlibAnalytic.FinalConcreteHilbertCarrier
+MathlibAnalytic.finalConcreteHPhysDomain
+MathlibAnalytic.finalConcreteHPhysWeight
+MathlibAnalytic.finalConcreteHPhysHamiltonian
+MathlibAnalytic.finalConcreteHPhysRealizationTheoremData
+MathlibAnalytic.final_concrete_hphys_realization_theorem_data_ready
+MathlibAnalytic.final_concrete_hphys_domain_closed_theorem
+MathlibAnalytic.final_concrete_hphys_symmetric_on_domain_theorem
+MathlibAnalytic.final_concrete_hphys_rayleigh_lower_bound
+MathlibAnalytic.final_concrete_hphys_distinguished_attains_exact
 MathlibAnalytic.ConcreteHPhysRealizationTheoremReviewSurface
 MathlibAnalytic.ConcreteHPhysRealizationTheoremReviewSurface.ready
 MathlibAnalytic.concreteHPhysRealizationTheoremReviewSurface
@@ -45,13 +49,13 @@ H_phys is symmetric on the declared domain
 concrete states map into the abstract H_phys domain
 Rayleigh lower bound is inherited
 concrete distinguished state attains exact value 33/20
-concrete H_phys realization body is closed at one-point theorem-body level
+concrete H_phys realization body is closed at final concrete theorem-body level
 ```
 
 ## Boundary
 
 ```text
-one-point concrete H_phys realization only
+final concrete H_phys realization only
 not yet full unbounded infinite-dimensional physical operator realization
 not final theorem release
 public theorem boundary held
