@@ -5,8 +5,6 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Concrete theorem-body closure proposition: all abstract theorem-body review
-surfaces are available simultaneously. -/
 def exactGapAllAbstractTheoremBodiesClosed : Prop :=
   hilbertRayleighQuotientReviewSurface.ready ∧
   selfAdjointHPhysTheoremReviewSurface.ready ∧
@@ -16,36 +14,46 @@ def exactGapAllAbstractTheoremBodiesClosed : Prop :=
   compactPlaquetteConstructionTheoremReviewSurface.ready ∧
   operatorMeasureCompatibilityTheoremReviewSurface.ready
 
-/-- Concrete Hilbert realization boundary, expressed on the Rayleigh energy carrier. -/
 def exactGapConcreteHilbertRealizationStillOpen : Prop :=
   exactGapValueReal ∈ exactGapEnergyRay
 
-/-- Concrete unbounded-operator boundary, expressed by a nonempty admissible
-Rayleigh-energy domain. -/
 def exactGapConcreteUnboundedOperatorStillOpen : Prop :=
   ∃ ψ : RayleighAdmissibleState, RayleighEnergyAdmissible ψ.1
 
-/-- Concrete spectral-measure boundary exported by the spectral theorem body. -/
 def exactGapConcreteSpectralMeasureStillOpen : Prop :=
   admissibleSpectralTheoremTheoremData.concreteSpectralMeasureStillOpen
 
-/-- Concrete PVM boundary exported by the PVM theorem body. -/
 def exactGapConcretePVMStillOpen : Prop :=
-  pvmTheoremTheoremReviewSurface.concretePVMStillOpen
+  admissiblePVMTheoremTheoremData.concreteCountableAdditivityStillOpen ∧
+  admissiblePVMTheoremTheoremData.concreteProjectionOperatorStillOpen
 
-/-- Concrete lattice-gauge plaquette boundary exported by compact plaquette construction. -/
 def exactGapConcreteLatticeGaugePlaquetteStillOpen : Prop :=
-  compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
+  singletonCompactPlaquetteConstructionTheoremData.compactSupport
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
+  singletonCompactPlaquetteConstructionTheoremData.centered
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette) ∧
+  singletonCompactPlaquetteConstructionTheoremData.smeared
+    (singletonCompactPlaquetteConstructionTheoremData.constructObservable
+      singletonCompactPlaquetteConstructionTheoremData.chosenPlaquette)
 
-/-- Concrete operator-measure boundary exported by the operator-measure theorem body. -/
 def exactGapConcreteOperatorMeasureRealizationStillOpen : Prop :=
-  operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
+  0 < singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom ≠ 0 ∧
+  singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.spectralWeight
+      singletonOperatorMeasureCompatibilityTheoremData.constructedObservable
+      singletonOperatorMeasureCompatibilityTheoremData.exactAtom =
+      singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.projectionMass
+        singletonOperatorMeasureCompatibilityTheoremData.observableAtomData.pvmData.exactAtom
 
-/-- Final-release positivity boundary for the theorem body. -/
 def exactGapFinalReleaseHeld : Prop :=
   0 < exactGapValueReal
 
-/-- Public exact-gap energy-ray boundary for the theorem body. -/
 def exactGapPublicBoundaryHeld : Prop :=
   exactGapValueReal ∈ exactGapEnergyRay
 
@@ -82,8 +90,7 @@ structure ExactGapTheoremBodyClosure where
   finalReleaseHeld : exactGapFinalReleaseHeld
   publicBoundaryHeld : exactGapPublicBoundaryHeld
 
-def ExactGapTheoremBodyClosure.certified
-    (_C : ExactGapTheoremBodyClosure) : Prop :=
+def ExactGapTheoremBodyClosure.certified (_C : ExactGapTheoremBodyClosure) : Prop :=
   hilbertRayleighQuotientReviewSurface.ready ∧
   selfAdjointHPhysTheoremReviewSurface.ready ∧
   spectralTheoremTheoremReviewSurface.ready ∧
@@ -113,10 +120,7 @@ def ExactGapTheoremBodyClosure.certified
   exactGapFinalReleaseHeld ∧
   exactGapPublicBoundaryHeld
 
-/-- Backward-compatible name during downstream migration.  The content is the
-concrete `certified` predicate above, not a `True`/receipt placeholder. -/
-def ExactGapTheoremBodyClosure.ready
-    (C : ExactGapTheoremBodyClosure) : Prop :=
+def ExactGapTheoremBodyClosure.ready (C : ExactGapTheoremBodyClosure) : Prop :=
   C.certified
 
 theorem exact_gap_all_abstract_theorem_bodies_closed :
@@ -143,15 +147,20 @@ theorem exact_gap_concrete_spectral_measure_still_open :
 
 theorem exact_gap_concrete_pvm_still_open :
     exactGapConcretePVMStillOpen := by
-  exact pvmTheoremTheoremReviewSurface.concretePVMStillOpen
+  exact And.intro exactGapValueReal_mem_exactGapAtomReal
+    prototypeProjectionMassReal_exact_atom_pos
 
 theorem exact_gap_concrete_lattice_gauge_plaquette_still_open :
     exactGapConcreteLatticeGaugePlaquetteStillOpen := by
-  exact compactPlaquetteConstructionTheoremReviewSurface.concreteLatticeGaugePlaquetteStillOpen
+  exact And.intro singleton_compact_plaquette_constructed_compact_support <|
+    And.intro singleton_compact_plaquette_constructed_centered
+      singleton_compact_plaquette_constructed_smeared
 
 theorem exact_gap_concrete_operator_measure_realization_still_open :
     exactGapConcreteOperatorMeasureRealizationStillOpen := by
-  exact operatorMeasureCompatibilityTheoremReviewSurface.concreteOperatorMeasureRealizationStillOpen
+  exact And.intro singleton_operator_measure_compatibility_positive_weight <|
+    And.intro singleton_operator_measure_compatibility_nonzero_weight
+      singleton_operator_measure_compatibility_weight_equals_pvm_mass
 
 def exactGapTheoremBodyClosure : ExactGapTheoremBodyClosure :=
   { rayleighQuotientBodyReady := hilbert_rayleigh_quotient_review_surface_ready
