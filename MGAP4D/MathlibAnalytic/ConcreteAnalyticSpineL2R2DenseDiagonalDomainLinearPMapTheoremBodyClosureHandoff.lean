@@ -10,9 +10,9 @@ noncomputable section
 
 /-- Non-definitional exact-value positivity route for the theorem-body closure handoff.
 
-This handoff deliberately does not restate or unfold the numeric identity
-`exactGapValueReal = 33 / 20`.  It only transports the already-established
-positive exact-gap carrier through the imported theorem-body closure surface. -/
+This handoff deliberately does not restate or unfold the numeric exact-gap
+identity.  It only transports the already-established positive exact-gap carrier
+through the imported theorem-body closure surface. -/
 theorem concrete_l2_r2_dense_diagonal_domain_linear_pmap_theorem_body_closure_exact_value_positive :
     0 < exactGapValueReal := by
   exact exactGapValueReal_pos
