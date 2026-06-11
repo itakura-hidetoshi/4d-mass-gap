@@ -17,7 +17,9 @@ numeric assignment. -/
 theorem continuum_hamiltonian_derives_exact_mass_gap_value :
     exactGapValueReal = (33 : ℝ) / 20 := by
   unfold exactGapValueReal
-  exact (Classical.choose_spec _).1
+  calc
+    Classical.choose _ = ((11 : ℝ) * 3) / 20 := (Classical.choose_spec _).1
+    _ = (33 : ℝ) / 20 := by norm_num
 
 /-- Bridge projection required by the hardened-witness audit: the theorem layer
 reuses the exact-positive carrier/boundary projection from the hardened bundle
