@@ -31,7 +31,7 @@ structure HamiltonianPVMSpectralExactGapValueOrigin where
   spectralSupport_eq_energyRay : spectralSupport = Set.Ici derivedHamiltonianSpectralValue
   value_mem_spectralSupport : derivedHamiltonianSpectralValue ∈ spectralSupport
   spectral_lower_bound :
-    ∀ λ : ℝ, λ ∈ spectralSupport → derivedHamiltonianSpectralValue ≤ λ
+    ∀ x : ℝ, x ∈ spectralSupport → derivedHamiltonianSpectralValue ≤ x
   pvmExactAtom_eq_valueSingleton : pvmExactAtom = Set.singleton derivedHamiltonianSpectralValue
   pvmPinsValue : derivedHamiltonianSpectralValue ∈ pvmExactAtom
   r6NormalizedAtomPinsDerived :
@@ -62,8 +62,8 @@ theorem exists_hamiltonian_pvm_spectral_exact_gap_value_origin :
       value_mem_spectralSupport := by
         simp
       spectral_lower_bound := by
-        intro λ hλ
-        simpa using hλ
+        intro x hx
+        simpa using hx
       pvmExactAtom_eq_valueSingleton := rfl
       pvmPinsValue := by
         simp
@@ -122,9 +122,9 @@ theorem hamiltonian_pvm_spectral_exact_gap_value_mem_spectral_support :
 
 /-- The concrete theorem-route spectral support has the value as a lower bound. -/
 theorem hamiltonian_pvm_spectral_exact_gap_value_lower_bound :
-    ∀ λ : ℝ,
-      λ ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport →
-        hamiltonianPVMSpectralExactGapValue ≤ λ := by
+    ∀ x : ℝ,
+      x ∈ concreteHamiltonianPVMSpectralExactGapValueOrigin.spectralSupport →
+        hamiltonianPVMSpectralExactGapValue ≤ x := by
   exact concreteHamiltonianPVMSpectralExactGapValueOrigin.spectral_lower_bound
 
 /-- The concrete theorem-route PVM atom carries positive spectral weight. -/
