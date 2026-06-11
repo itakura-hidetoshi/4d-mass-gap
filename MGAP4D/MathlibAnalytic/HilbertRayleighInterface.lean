@@ -75,16 +75,16 @@ structure HilbertRayleighInterfaceReviewSurface where
   exactValue_attains_rayleigh : RayleighAttainsExactGap exactGapValueReal
 
 def HilbertRayleighInterfaceReviewSurface.ready
-    (S : HilbertRayleighInterfaceReviewSurface) : Prop :=
+    (_S : HilbertRayleighInterfaceReviewSurface) : Prop :=
   exactGapAnalyticRealClosure.ready ∧
   singletonHilbertRayleighInterface.ready ∧
   singletonHilbertRayleighInterface.attainsExactGap
     singletonHilbertRayleighInterface.witness ∧
   (∀ ψ, singletonHilbertRayleighInterface.admissible ψ →
     exactGapValueReal ≤ singletonHilbertRayleighInterface.rayleighEnergy ψ) ∧
-  S.exactValue_in_energyRay ∧
-  S.exactValue_in_positive_ray ∧
-  S.exactValue_attains_rayleigh
+  exactGapValueReal ∈ exactGapEnergyRay ∧
+  exactGapValueReal ∈ Set.Ioi (0 : ℝ) ∧
+  RayleighAttainsExactGap exactGapValueReal
 
 noncomputable def hilbertRayleighInterfaceReviewSurface :
     HilbertRayleighInterfaceReviewSurface :=
@@ -106,7 +106,7 @@ theorem hilbert_rayleigh_interface_review_surface_ready :
     And.intro exactGapValueReal_mem_positive_ray exact_gap_value_attains_rayleigh
 
 theorem hilbert_rayleigh_interface_review_surface_exact_value_in_energyRay :
-    hilbertRayleighInterfaceReviewSurface.exactValue_in_energyRay := by
+    exactGapValueReal ∈ exactGapEnergyRay := by
   exact exactGapValueReal_mem_energyRay
 
 end MathlibAnalytic
