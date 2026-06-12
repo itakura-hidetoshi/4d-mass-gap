@@ -72,6 +72,49 @@ run_audit_if_present() {
   fi
 }
 
+lakefile_requires_mathlib() {
+  [ -f lakefile.lean ] && grep -q 'require[[:space:]]\+mathlib' lakefile.lean
+}
+
+lake_manifest_has_mathlib() {
+  [ -f lake-manifest.json ] && grep -Eq '"name"[[:space:]]*:[[:space:]]*"mathlib"|mathlib4\.git|leanprover-community/mathlib4' lake-manifest.json
+}
+
+lake_manifest_empty_packages() {
+  [ -f lake-manifest.json ] && grep -Eq '"packages"[[:space:]]*:[[:space:]]*\[[[:space:]]*\]' lake-manifest.json
+}
+
+ensure_lake_manifest() {
+  if [ ! -f lake-manifest.json ]; then
+    echo "[fast] lake manifest missing; run lake update once"
+    lake update
+    return
+  fi
+
+  if lakefile_requires_mathlib && lake_manifest_empty_packages; then
+    echo "[fast] lake manifest has empty package list but lakefile requires mathlib; run lake update"
+    lake update
+    return
+  fi
+
+  if lakefile_requires_mathlib && ! lake_manifest_has_mathlib; then
+    echo "[fast] lake manifest missing mathlib dependency; run lake update"
+    lake update
+    return
+  fi
+
+  echo "[fast] lake manifest present and JSON-compatible; skip lake update"
+}
+
+ensure_mathlib_cache() {
+  if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
+    echo "[fast] mathlib cache present; skip lake exe cache get"
+  else
+    echo "[fast] mathlib cache missing; lake exe cache get"
+    lake exe cache get || true
+  fi
+}
+
 # Run changed-file static Lean preflight before any global audits or Lake work.
 # This catches common syntax-shape, namespace, import, duplicate declaration,
 # and known hazardous proof-pattern issues without invoking Lean or Lake.
@@ -97,6 +140,11 @@ python3 scripts/audit_final_physical_carrier_routing.py
 
 echo "[fast] audit OS/Wightman mass-gap bridge"
 python3 scripts/audit_os_wightman_mass_gap_bridge.py
+
+declare -a audit_sensitive_targets=()
+if printf '%s\n' "${changed_scripts}" | grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py'; then
+  audit_sensitive_targets+=(MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget)
+fi
 
 # Root import changes are text-audited in the fast lane.  Building aggregate root
 # modules is intentionally avoided here because they import historical archive
@@ -144,57 +192,35 @@ if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperato
 fi
 
 if [ -z "${changed_lean_files}" ]; then
+  if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
+    ensure_lake_manifest
+    ensure_mathlib_cache
+    printf '[fast] lake build audit-sensitive targets:'
+    printf ' %s' "${audit_sensitive_targets[@]}"
+    printf '\n'
+    lake build "${audit_sensitive_targets[@]}"
+    exit 0
+  fi
   echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lake build"
   exit 0
 fi
 
 if [ -z "${non_root_changed_lean_files}" ]; then
+  if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
+    ensure_lake_manifest
+    ensure_mathlib_cache
+    printf '[fast] lake build audit-sensitive targets:'
+    printf ' %s' "${audit_sensitive_targets[@]}"
+    printf '\n'
+    lake build "${audit_sensitive_targets[@]}"
+    exit 0
+  fi
   echo "[fast] no non-aggregate Lean leaf files changed; skip Lake build in fast lane"
   exit 0
 fi
 
-lakefile_requires_mathlib() {
-  [ -f lakefile.lean ] && grep -q 'require[[:space:]]\+mathlib' lakefile.lean
-}
-
-lake_manifest_has_mathlib() {
-  [ -f lake-manifest.json ] && grep -Eq '"name"[[:space:]]*:[[:space:]]*"mathlib"|mathlib4\.git|leanprover-community/mathlib4' lake-manifest.json
-}
-
-lake_manifest_empty_packages() {
-  [ -f lake-manifest.json ] && grep -Eq '"packages"[[:space:]]*:[[:space:]]*\[[[:space:]]*\]' lake-manifest.json
-}
-
-ensure_lake_manifest() {
-  if [ ! -f lake-manifest.json ]; then
-    echo "[fast] lake manifest missing; run lake update once"
-    lake update
-    return
-  fi
-
-  if lakefile_requires_mathlib && lake_manifest_empty_packages; then
-    echo "[fast] lake manifest has empty package list but lakefile requires mathlib; run lake update"
-    lake update
-    return
-  fi
-
-  if lakefile_requires_mathlib && ! lake_manifest_has_mathlib; then
-    echo "[fast] lake manifest missing mathlib dependency; run lake update"
-    lake update
-    return
-  fi
-
-  echo "[fast] lake manifest present and JSON-compatible; skip lake update"
-}
-
 ensure_lake_manifest
-
-if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
-  echo "[fast] mathlib cache present; skip lake exe cache get"
-else
-  echo "[fast] mathlib cache missing; lake exe cache get"
-  lake exe cache get || true
-fi
+ensure_mathlib_cache
 
 # Build only maximal changed non-aggregate modules. If changed module A imports
 # changed module B, then building A already builds B, so B is removed from the
@@ -232,6 +258,10 @@ done
 if [ "${#maximal_targets[@]}" -eq 0 ]; then
   echo "[fast] maximal target reduction was empty; fall back to all changed non-aggregate targets"
   maximal_targets=("${targets[@]}")
+fi
+
+if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
+  maximal_targets+=("${audit_sensitive_targets[@]}")
 fi
 
 printf '[fast] lake build maximal changed non-aggregate targets:'
