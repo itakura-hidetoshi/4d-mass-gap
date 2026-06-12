@@ -191,9 +191,15 @@ ANCHORS = {
         "`EuclideanYangMillsMeasureConstructionSpine.lean` inspected as the finite-volume/continuum construction spine feeding the unconditional target",
         "euclidean_yang_mills_unconditional_target_ready",
         "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
+        "euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum",
+        "euclidean_yang_mills_continuum_spine_vacuum_isolated",
+        "euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected",
+        "euclidean_yang_mills_continuum_spine_mass_gap_definition",
         "euclidean_yang_mills_finite_volume_continuum_construction_mass_gap",
+        "spectral projections from construction spine to positive energy, vacuum isolation, PVM detection, and mass-gap definition are present and audited",
         "Euclidean measure unconditional-construction target interpretation recorded",
         "Finite-volume/continuum construction spine interpretation recorded",
+        "Spectral construction-spine projection interpretation recorded",
     ],
 }
 
