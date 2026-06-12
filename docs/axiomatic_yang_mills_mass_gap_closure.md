@@ -353,3 +353,6 @@ Yang--Mills measure, reconstruction spine, and mass-gap definition bridge from
 Yang--Mills theory.  These files are theorem-level closure targets into which
 that construction should plug; they are not substitutes for the construction and
 do not by themselves provide external mathematical acceptance.
+
+Boundary anchor: the construction-spine external-audit projection is a review route, not external acceptance.
+Boundary anchor: external acceptance of the construction-spine external-audit projection is not claimed.
