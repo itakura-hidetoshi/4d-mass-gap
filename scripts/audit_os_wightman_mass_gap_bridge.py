@@ -5,9 +5,10 @@ The goal of this audit is narrow and textual: keep the conditional axiom-to-
 Hamiltonian route from regressing into terminal True/receipt placeholders, and
 make sure the root aggregator, Euclidean-measure pipeline, unconditional
 construction target, finite-volume construction spine, construction external
-audit bridge, full replay script, workflow, documentation, theorem index, full
-local check ledger, current proof status, external audit packet, independent
-replay guide, and external review checklist expose the final theorem surfaces.
+audit bridge, README, full replay script, workflow, documentation, theorem
+index, full local check ledger, current proof status, external audit packet,
+independent replay guide, and external review checklist expose the final theorem
+surfaces.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 
 FILES = {
+    "readme": ROOT / "README.md",
     "axiomatic": ROOT / "MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean",
     "spine": ROOT / "MGAP4D/MathlibAnalytic/OSWightmanHamiltonianReconstructionSpine.lean",
     "definition_bridge": ROOT / "MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean",
@@ -78,6 +80,23 @@ COMMON_EUCLIDEAN_THEOREM_ANCHORS = [
 ]
 
 ANCHORS = {
+    "readme": [
+        "Current status as of 2026-06-12",
+        "OS/Wightman external audit bridge",
+        "Euclidean measure unconditional-construction target",
+        "finite-volume / continuum construction spine",
+        "Euclidean construction external audit bridge",
+        "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
+        "externally accepted construction-spine external-audit projection",
+        "construction-spine external-audit projection",
+        "construction-spine external-audit projection equals external acceptance",
+        "OS/Wightman--Euclidean theorem-facing route",
+        *COMMON_EUCLIDEAN_ROUTE_ANCHORS,
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[:6],
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[6:],
+        "EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean",
+        *COMMON_EUCLIDEAN_THEOREM_ANCHORS[-4:],
+    ],
     "axiomatic": [
         "structure OSWightmanYangMillsAxioms where",
         "structure FourDimensionalYangMillsAxiomaticModel where",
@@ -367,7 +386,7 @@ def main() -> int:
     require_order(failures, text=root_text, rel=root_rel, before=gate_import, after=bridge_import, label="root external audit gate before OS/Wightman bridge")
     require_order(failures, text=root_text, rel=root_rel, before=bridge_import, after=pipeline_import, label="root OS/Wightman bridge before Euclidean measure pipeline")
     require_order(failures, text=root_text, rel=root_rel, before=pipeline_import, after=target_import, label="root Euclidean measure pipeline before unconditional target")
-    require_order(failures, text=root_text, rel=root_rel, before=target_import, after=construction_import, label="root unconditional target before finite-volume construction spine")
+    require_order(failures, text=root_text, rel=root_rel, before=target_import, after=construction_import, label="root unconditional target before construction spine")
     require_order(failures, text=root_text, rel=root_rel, before=construction_import, after=construction_external_import, label="root construction spine before construction external audit bridge")
 
     external_text = contents["external_bridge"]
@@ -413,14 +432,16 @@ def main() -> int:
 
     print("OS/Wightman mass-gap bridge audit")
     for name in [
-        "axiomatic", "spine", "definition_bridge", "external_bridge", "measure_pipeline",
-        "unconditional_target", "construction_spine", "construction_external_bridge",
-        "theorem_index", "full_local_check_doc", "current_status_doc",
-        "external_audit_packet", "independent_replay", "review_checklist",
+        "readme", "axiomatic", "spine", "definition_bridge", "external_bridge",
+        "measure_pipeline", "unconditional_target", "construction_spine",
+        "construction_external_bridge", "theorem_index", "full_local_check_doc",
+        "current_status_doc", "external_audit_packet", "independent_replay",
+        "review_checklist",
     ]:
         print(f"{name} anchors audited: {len(ANCHORS[name])}")
     print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline before EuclideanYangMillsMeasureUnconditionalTarget before EuclideanYangMillsMeasureConstructionSpine before EuclideanYangMillsMeasureConstructionExternalAuditBridge")
     print("Full replay script audited: audit + OS/Wightman build + Euclidean measure pipeline build + unconditional target build + finite-volume construction spine build + construction external audit bridge build connected through scripts/check.sh")
+    print("README audited: README.md")
     print("External audit packet audited: EXTERNAL_AUDIT_PACKET.md")
     print("Independent replay guide audited: INDEPENDENT_REPLAY.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
