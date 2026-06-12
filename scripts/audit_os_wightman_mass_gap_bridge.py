@@ -3,8 +3,9 @@
 
 The goal of this audit is narrow and textual: keep the conditional axiom-to-
 Hamiltonian route from regressing into terminal True/receipt placeholders, and
-make sure the root aggregator, Euclidean-measure pipeline, full replay script,
-workflow, and documentation expose the final theorem surfaces.
+make sure the root aggregator, Euclidean-measure pipeline, unconditional
+construction target, full replay script, workflow, and documentation expose the
+final theorem surfaces.
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ FILES = {
     "definition_bridge": ROOT / "MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean",
     "external_bridge": ROOT / "MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean",
     "measure_pipeline": ROOT / "MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean",
+    "unconditional_target": ROOT / "MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean",
     "root_import": ROOT / "MGAP4D/MathlibAnalytic.lean",
     "check_sh": ROOT / "scripts/check.sh",
     "full_local_workflow": ROOT / ".github/workflows/full-local-check.yml",
@@ -80,15 +82,34 @@ ANCHORS = {
         "structure EuclideanYangMillsMeasureToMassGapPipelineCertificate",
         "def euclideanYangMillsMeasureToMassGapPipelineCertificate",
     ],
+    "unconditional_target": [
+        "import MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline",
+        "structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where",
+        "continuumFourDimensionalYangMillsMeasureConstructed_proof",
+        "nontrivialCompactGaugeGroupConstructed_proof",
+        "interactingContinuumLimitConstructed_proof",
+        "gaugeInvariantSchwingerFunctionsConstructed_proof",
+        "theorem euclidean_yang_mills_unconditional_target_measure_ready",
+        "theorem euclidean_yang_mills_unconditional_target_ready",
+        "theorem euclidean_yang_mills_unconditional_target_bridge_measure_ready",
+        "def EuclideanYangMillsMeasureUnconditionalConstructionTarget.toPipeline",
+        "theorem euclidean_yang_mills_unconditional_target_delta_positive",
+        "theorem euclidean_yang_mills_unconditional_target_nonvacuum_threshold",
+        "theorem euclidean_yang_mills_unconditional_measure_construction_mass_gap",
+        "structure EuclideanYangMillsMeasureUnconditionalConstructionCertificate",
+        "def euclideanYangMillsMeasureUnconditionalConstructionCertificate",
+    ],
     "root_import": [
         "import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate",
         "import MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge",
         "import MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline",
+        "import MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
     ],
     "check_sh": [
         "audit OS/Wightman mass-gap bridge|python3 scripts/audit_os_wightman_mass_gap_bridge.py",
         "MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge",
         "MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline",
+        "MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
     ],
     "full_local_workflow": [
         "name: Full Local Check CI",
@@ -97,9 +118,13 @@ ANCHORS = {
     "docs": [
         "OSWightmanMassGapExternalAuditBridge.lean",
         "EuclideanYangMillsMeasureToMassGapPipeline.lean",
+        "EuclideanYangMillsMeasureUnconditionalTarget.lean",
         "EuclideanYangMillsMeasurePackage",
         "EuclideanYangMillsMeasureMassGapPipeline",
+        "EuclideanYangMillsMeasureUnconditionalConstructionTarget",
+        "continuumFourDimensionalYangMillsMeasureConstructed_proof",
         "euclidean_yang_mills_measure_os_reconstruction_wightman_hamiltonian_mass_gap",
+        "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
         "external_audit_readiness_os_wightman_mass_gap_definition_bridge_projection",
         "external_audit_readiness_os_wightman_definition_bridge_exact_gap_positive",
         "external_audit_readiness_os_wightman_definition_bridge_exact_gap_threshold",
@@ -125,6 +150,18 @@ LEAN_FORBIDDEN_IN_MEASURE_PIPELINE = [
     "receipt : True",
     "readyReceipt",
     "terminalReceipt",
+]
+
+LEAN_FORBIDDEN_IN_UNCONDITIONAL_TARGET = [
+    " : Prop :=\n  True",
+    "sorry",
+    "admit",
+    "axiom ",
+    "constant ",
+    "receipt : True",
+    "readyReceipt",
+    "terminalReceipt",
+    "Constructed : Prop\n  nontrivialCompactGaugeGroupConstructed",
 ]
 
 # Receipt language is allowed in explanatory prose comments, but not as a named
@@ -181,6 +218,7 @@ def main() -> int:
     gate_import = "import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate"
     bridge_import = "import MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge"
     pipeline_import = "import MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline"
+    target_import = "import MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget"
     require_order(
         failures,
         text=root_text,
@@ -196,6 +234,14 @@ def main() -> int:
         before=bridge_import,
         after=pipeline_import,
         label="root OS/Wightman bridge before Euclidean measure pipeline",
+    )
+    require_order(
+        failures,
+        text=root_text,
+        rel=root_rel,
+        before=pipeline_import,
+        after=target_import,
+        label="root Euclidean measure pipeline before unconditional target",
     )
 
     external_text = contents["external_bridge"]
@@ -218,6 +264,12 @@ def main() -> int:
     for forbidden in LEAN_FORBIDDEN_IN_MEASURE_PIPELINE:
         if forbidden in measure_text:
             failures.append(f"{measure_rel} contains forbidden placeholder snippet: {forbidden!r}")
+
+    target_text = contents["unconditional_target"]
+    target_rel = FILES["unconditional_target"].relative_to(ROOT)
+    for forbidden in LEAN_FORBIDDEN_IN_UNCONDITIONAL_TARGET:
+        if forbidden in target_text:
+            failures.append(f"{target_rel} contains forbidden placeholder snippet: {forbidden!r}")
 
     definition_text = contents["definition_bridge"]
     definition_rel = FILES["definition_bridge"].relative_to(ROOT)
@@ -251,6 +303,14 @@ def main() -> int:
         after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline",
         label="full replay OS/Wightman bridge build before Euclidean measure pipeline build",
     )
+    require_order(
+        failures,
+        text=check_text,
+        rel=check_rel,
+        before="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline",
+        after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
+        label="full replay Euclidean measure pipeline build before unconditional target build",
+    )
 
     if failures:
         print("OS/Wightman mass-gap bridge audit failed:")
@@ -264,9 +324,10 @@ def main() -> int:
     print(f"Definition bridge anchors audited: {len(ANCHORS['definition_bridge'])}")
     print(f"External bridge anchors audited: {len(ANCHORS['external_bridge'])}")
     print(f"Euclidean measure pipeline anchors audited: {len(ANCHORS['measure_pipeline'])}")
-    print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline")
+    print(f"Unconditional Euclidean target anchors audited: {len(ANCHORS['unconditional_target'])}")
+    print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline before EuclideanYangMillsMeasureUnconditionalTarget")
     print("Direct bridge import order audited: ExternalAuditReadinessGate before OSWightmanMassGapDefinitionBridge")
-    print("Full replay script audited: audit + OS/Wightman build + Euclidean measure pipeline build connected through scripts/check.sh")
+    print("Full replay script audited: audit + OS/Wightman build + Euclidean measure pipeline build + unconditional target build connected through scripts/check.sh")
     print("Full local workflow audited: .github/workflows/full-local-check.yml runs scripts/check.sh")
     print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
