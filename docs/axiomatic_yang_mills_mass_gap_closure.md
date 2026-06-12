@@ -343,6 +343,45 @@ def EuclideanYangMillsContinuumMeasureConstructionSpine.toUnconditionalTarget
     EuclideanYangMillsMeasureUnconditionalConstructionTarget
 ```
 
+It then exposes the OS/Wightman readiness route as named theorem surfaces:
+
+```lean
+theorem euclidean_yang_mills_continuum_spine_measure_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.measurePackage.ready
+
+theorem euclidean_yang_mills_continuum_spine_bridge_measure_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.bridge.measure.ready
+
+theorem euclidean_yang_mills_continuum_spine_os_axioms_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.axioms.ready
+
+theorem euclidean_yang_mills_continuum_spine_wightman_theory
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.axioms.wightmanLocality ∧
+    S.definitionBridge.spine.axioms.wightmanCovariance ∧
+    S.definitionBridge.spine.axioms.wightmanSpectrumCondition
+```
+
+The reconstructed Hilbert/Hamiltonian/vacuum stage is also exposed:
+
+```lean
+theorem euclidean_yang_mills_continuum_spine_physical_hilbert_space
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    Nonempty S.definitionBridge.spine.model.H
+
+theorem euclidean_yang_mills_continuum_spine_hamiltonian_time_translation_generator
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hamiltonianSelfAdjoint
+
+theorem euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.vacuum ∈
+      S.definitionBridge.spine.model.spectralPVM ({0} : Set ℝ)
+```
+
 The main theorem from this upstream construction layer is:
 
 ```lean
@@ -359,8 +398,10 @@ Thus the proof route is now:
 finite-volume Mathlib measures
 → projective consistency / tightness / weak limit
 → continuum Euclidean Yang--Mills measure package
-→ unconditional construction target
-→ OS/Wightman reconstruction bridge
+→ measure and bridge readiness
+→ OS/Wightman readiness
+→ Wightman locality / covariance / spectrum condition
+→ reconstructed Hilbert space / Hamiltonian / vacuum spectral point
 → Hamiltonian/PVM mass-gap bridge
 → Δ > 0
 ```
