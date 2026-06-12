@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.Basic
 import MGAP4D.MathlibAnalytic.AxiomaticYangMillsMassGapClosure
+import MGAP4D.MathlibAnalytic.AxiomaticYangMillsExternalAuditProjection
 import MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore
 import MGAP4D.MathlibAnalytic.ExactGapReal
 import MGAP4D.MathlibAnalytic.GapInfimumReal
