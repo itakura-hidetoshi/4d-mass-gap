@@ -115,6 +115,16 @@ theorem external_audit_readiness_euclidean_construction_spine_pvm_detects_first_
   exact external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first_excitation
     S.definitionBridge
 
+/-- The construction spine exposes a positive lower bound for all non-vacuum
+spectral energies at the external-audit surface. -/
+theorem external_audit_readiness_euclidean_construction_spine_nonvacuum_energy_lower_bound
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E := by
+  exact euclidean_yang_mills_continuum_spine_nonvacuum_energy_lower_bound S
+
 /-- External-audit theorem package: from the construction spine, the mass-gap
 predicate, exact positivity, threshold identity, and PVM first-excitation
 detection are available together. -/
@@ -151,6 +161,11 @@ structure ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
   exactGapThreshold :
     exactGapValueReal =
       sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ))
+  nonVacuumEnergyLowerBound :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E
   firstExcitationPVMDetected :
     ∃ ψ : S.definitionBridge.spine.model.H,
       ψ ∈ S.definitionBridge.spine.model.spectralPVM
@@ -181,6 +196,8 @@ def externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
       (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.1
     exactGapThreshold :=
       (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.2.1
+    nonVacuumEnergyLowerBound :=
+      external_audit_readiness_euclidean_construction_spine_nonvacuum_energy_lower_bound S
     firstExcitationPVMDetected :=
       (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.2.2 }
 
@@ -204,6 +221,17 @@ theorem external_audit_readiness_euclidean_construction_spine_certificate_readin
     C.osAxiomsReady,
     C.unconditionalTargetReady,
     C.osWightmanProjection⟩
+
+/-- A certificate can be consumed as the external-audit lower-bound package for
+non-vacuum spectral energies. -/
+theorem external_audit_readiness_euclidean_construction_spine_certificate_nonvacuum_energy_lower_bound
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S) :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E := by
+  exact C.nonVacuumEnergyLowerBound
 
 /-- A certificate can be consumed as the same external-audit mass-gap package.
 This theorem is useful for downstream files that receive only the certificate
