@@ -13,35 +13,32 @@ audit projection in
 Euclidean-measure-to-mass-gap pipeline in
 `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean`, the
 unconditional-construction target in
-`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean`, and
-the finite-volume/continuum construction spine in
-`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean`.
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean`, the
+finite-volume/continuum construction spine in
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean`, and
+the construction-spine external audit bridge in
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean`.
 
 ## Scope
 
-The file does **not** claim an unconditional solution of the Clay Yang--Mills
-mass gap problem.  Instead, it replaces terminal `True` / bare `Prop` /
-`ready` / `receipt` markers with explicit theorem projections over displayed
-Mathlib data:
+The repository surface does **not** claim an unconditional solution of the Clay
+Yang--Mills mass gap problem.  It records theorem-level closure targets and
+reviewable bridge surfaces over displayed Mathlib data:
 
 - Euclidean Yang--Mills measure data,
 - finite-volume Mathlib measure carriers,
 - tightness / weak-limit / projective-consistency construction fields,
 - Osterwalder--Schrader assumption package,
 - Wightman assumption package,
-- gauge group and field-configuration carriers,
 - reconstructed Hilbert-space carrier,
 - Hamiltonian,
 - vacuum,
 - spectral PVM interface,
-- energy spectrum and energy-momentum spectrum,
 - positive-energy condition,
 - isolated vacuum,
 - positive first non-vacuum spectral excitation.
 
 ## Closure theorem
-
-The public closure theorem is:
 
 ```lean
 theorem wightman_os_hamiltonian_spectral_pvm_closes_4d_mass_gap
@@ -51,25 +48,14 @@ theorem wightman_os_hamiltonian_spectral_pvm_closes_4d_mass_gap
       M.massGapValue = sInf (M.energySpectrum \ ({0} : Set ℝ))
 ```
 
-Thus, once a concrete four-dimensional Yang--Mills construction supplies the
-OS/Wightman readiness assumptions and the reconstructed spectral data, the
-mass-gap statement is obtained as an ordinary Lean theorem over the Mathlib
-carrier.
-
 ## External audit projection
-
-The external audit projection exposes the same theorem in the audit surface:
 
 ```lean
 theorem external_audit_readiness_axiomatic_yang_mills_closure_projection
     (M : FourDimensionalYangMillsAxiomaticModel)
     (hOS : M.osWightman.ready) :
     ExternalAuditReadinessAxiomaticYangMillsClosureProjection M
-```
 
-The exact-gap bridge is also explicit:
-
-```lean
 theorem external_audit_readiness_axiomatic_yang_mills_exact_gap_projection
     (M : FourDimensionalYangMillsAxiomaticModel)
     (hOS : M.osWightman.ready)
@@ -77,14 +63,7 @@ theorem external_audit_readiness_axiomatic_yang_mills_exact_gap_projection
     ExternalAuditReadinessAxiomaticYangMillsExactGapProjection M
 ```
 
-This says that if a concrete OS/Wightman Yang--Mills model identifies its
-Hamiltonian/PVM spectral mass gap value with the repository's normalized
-`exactGapValueReal`, then the audit layer obtains both positivity and the
-non-vacuum spectral-threshold identity for `exactGapValueReal`.
-
 ## Reconstruction spine
-
-The reconstruction spine records the missing concrete bridge explicitly:
 
 ```lean
 structure OSWightmanHamiltonianReconstructionSpine where
@@ -93,11 +72,7 @@ structure OSWightmanHamiltonianReconstructionSpine where
   model_uses_axioms : model.osWightman = axioms
   axioms_ready : axioms.ready
   exact_gap_value_identified : model.massGapValue = exactGapValueReal
-```
 
-From this spine, Lean derives:
-
-```lean
 theorem os_wightman_reconstruction_spine_has_mass_gap
     (S : OSWightmanHamiltonianReconstructionSpine) :
     S.model.hasMassGap
@@ -111,13 +86,7 @@ theorem os_wightman_reconstruction_spine_exact_gap_is_sInf_nonvacuum
     exactGapValueReal = sInf (S.model.energySpectrum \ ({0} : Set ℝ))
 ```
 
-The hard construction target is therefore no longer hidden in a receipt-like
-marker: it is the explicit production of `OSWightmanHamiltonianReconstructionSpine`.
-
 ## Definition bridge
-
-The next bridge fixes the precise meaning of the route from named assumptions to
-the mass-gap predicate:
 
 ```lean
 structure OSWightmanMassGapDefinitionBridge where
@@ -136,39 +105,17 @@ structure OSWightmanMassGapDefinitionBridge where
       ∃ δ : ℝ, 0 < δ ∧ Set.Ioo 0 δ ∩ spine.model.energySpectrum = ∅
 ```
 
-This bridge makes the route auditable:
+The certificate `OSWightmanMassGapDefinitionBridgeCertificate` records positive
+energy, vacuum isolation, PVM detection, the model-level mass-gap predicate, and
+the exact spectral-threshold identity as theorem fields.
 
-- the Wightman spectrum condition projects to positive Hamiltonian energy,
-- the OS cluster property projects to vacuum isolation,
-- the spectral PVM detects the first excitation,
-- the reconstructed Hamiltonian has the model-level mass-gap predicate,
-- `exactGapValueReal` is identified with the non-vacuum spectral threshold.
-
-The certificate
-`OSWightmanMassGapDefinitionBridgeCertificate` records these as theorem fields,
-not as terminal receipts.
-
-## External bridge audit surface
-
-The file `OSWightmanMassGapExternalAuditBridge.lean` adds the external-audit
-projection for a concrete definition bridge:
+## OS/Wightman external bridge audit surface
 
 ```lean
 theorem external_audit_readiness_os_wightman_mass_gap_definition_bridge_projection
     (B : OSWightmanMassGapDefinitionBridge) :
     ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection B
-```
 
-The projection exposes, in one audit-visible theorem, the gauge compactness and
-nontriviality assumptions, reflection positivity, locality, covariance, the
-spectrum condition, the four-dimensional Hilbert carrier, the self-adjoint
-Hamiltonian predicate, the vacuum spectral point, positive energy, vacuum
-isolation, PVM detection of the first excitation, model-level mass gap,
-`0 < exactGapValueReal`, and the exact spectral-threshold identity.
-
-The direct audit-visible consequences are also available as named theorems:
-
-```lean
 theorem external_audit_readiness_os_wightman_definition_bridge_exact_gap_positive
     (B : OSWightmanMassGapDefinitionBridge) :
     0 < exactGapValueReal
@@ -185,9 +132,6 @@ theorem external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first
 
 ## Euclidean measure to positive mass gap pipeline
 
-The file `EuclideanYangMillsMeasureToMassGapPipeline.lean` adds the upstream
-Euclidean-measure object and the end-to-end theorem surface:
-
 ```lean
 structure EuclideanYangMillsMeasurePackage where
   configurationSpace : Type
@@ -203,20 +147,22 @@ structure EuclideanYangMillsMeasurePackage where
   symmetric : Prop
   clusterProperty : Prop
   regularity : Prop
-```
 
-The full conditional object is:
-
-```lean
 structure EuclideanYangMillsMeasureMassGapPipeline where
   euclideanToOSWightman : EuclideanYangMillsMeasureToOSWightmanBridge
   definitionBridge : OSWightmanMassGapDefinitionBridge
   measureReady : euclideanToOSWightman.measure.ready
   bridge_uses_reconstructed_axioms :
     definitionBridge.spine.axioms = euclideanToOSWightman.axioms
+
+theorem euclidean_yang_mills_measure_os_reconstruction_wightman_hamiltonian_mass_gap
+    (P : EuclideanYangMillsMeasureMassGapPipeline) :
+    P.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf P.nonVacuumHamiltonianSpectrum
 ```
 
-This gives the named route:
+Route:
 
 ```text
 Euclidean Yang--Mills measure
@@ -230,25 +176,7 @@ Euclidean Yang--Mills measure
 → Δ > 0
 ```
 
-The main theorem surface is:
-
-```lean
-theorem euclidean_yang_mills_measure_os_reconstruction_wightman_hamiltonian_mass_gap
-    (P : EuclideanYangMillsMeasureMassGapPipeline) :
-    P.definitionBridge.spine.model.hasMassGap ∧
-    0 < exactGapValueReal ∧
-    exactGapValueReal = sInf P.nonVacuumHamiltonianSpectrum
-```
-
-The theorem is still conditional: it proves the downstream implication once the
-Euclidean measure package, OS/Wightman reconstruction bridge, and Hamiltonian/PVM
-definition bridge are supplied.  It does not assert that the Euclidean
-Yang--Mills measure has already been constructed unconditionally.
-
 ## Unconditional construction target
-
-The file `EuclideanYangMillsMeasureUnconditionalTarget.lean` adds the theorem
-target needed for genuine unconditional promotion:
 
 ```lean
 structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where
@@ -269,22 +197,11 @@ structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where
     gaugeInvariantSchwingerFunctionsConstructed
   reflectionPositivityTheorem : measurePackage.reflectionPositive
   clusterPropertyTheorem : measurePackage.clusterProperty
-```
 
-The key difference from the conditional pipeline is that the construction-side
-obligations are not mere names: each named construction proposition has a proof
-field inside the target.  Therefore `ready` is derived without additional
-external hypotheses:
-
-```lean
 theorem euclidean_yang_mills_unconditional_target_ready
     (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
     C.ready
-```
 
-The promotion theorem has only the target object as its input:
-
-```lean
 theorem euclidean_yang_mills_unconditional_measure_construction_mass_gap
     (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
     C.toPipeline.definitionBridge.spine.model.hasMassGap ∧
@@ -292,15 +209,7 @@ theorem euclidean_yang_mills_unconditional_measure_construction_mass_gap
     exactGapValueReal = sInf C.toPipeline.nonVacuumHamiltonianSpectrum
 ```
 
-This is still not a declaration that the Clay-level construction has already
-been accepted; it is the Lean theorem socket into which such a construction must
-plug.
-
 ## Finite-volume / continuum measure construction spine
-
-The file `EuclideanYangMillsMeasureConstructionSpine.lean` adds one more upstream
-layer.  It separates the hard Euclidean measure construction into finite-volume
-Mathlib measure carriers and continuum-limit proof fields:
 
 ```lean
 structure EuclideanYangMillsFiniteVolumeApproximation where
@@ -315,11 +224,7 @@ structure EuclideanYangMillsFiniteVolumeApproximation where
   gaugeInvariantFiniteVolume_proof : gaugeInvariantFiniteVolume
   finiteVolumeReflectionPositive : Prop
   finiteVolumeReflectionPositive_proof : finiteVolumeReflectionPositive
-```
 
-The continuum construction spine then adds the analytic limit layer:
-
-```lean
 structure EuclideanYangMillsContinuumMeasureConstructionSpine where
   finiteVolume : EuclideanYangMillsFiniteVolumeApproximation
   measurePackage : EuclideanYangMillsMeasurePackage
@@ -335,7 +240,7 @@ structure EuclideanYangMillsContinuumMeasureConstructionSpine where
   schwingerFunctionsAreContinuumLimits_proof : schwingerFunctionsAreContinuumLimits
 ```
 
-This spine is converted to the unconditional target by:
+The spine converts into the unconditional target:
 
 ```lean
 def EuclideanYangMillsContinuumMeasureConstructionSpine.toUnconditionalTarget
@@ -343,17 +248,9 @@ def EuclideanYangMillsContinuumMeasureConstructionSpine.toUnconditionalTarget
     EuclideanYangMillsMeasureUnconditionalConstructionTarget
 ```
 
-It then exposes the OS/Wightman readiness route as named theorem surfaces:
+It exposes readiness and Wightman data:
 
 ```lean
-theorem euclidean_yang_mills_continuum_spine_measure_ready
-    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    S.measurePackage.ready
-
-theorem euclidean_yang_mills_continuum_spine_bridge_measure_ready
-    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    S.bridge.measure.ready
-
 theorem euclidean_yang_mills_continuum_spine_os_axioms_ready
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
     S.definitionBridge.spine.axioms.ready
@@ -365,25 +262,7 @@ theorem euclidean_yang_mills_continuum_spine_wightman_theory
     S.definitionBridge.spine.axioms.wightmanSpectrumCondition
 ```
 
-The reconstructed Hilbert/Hamiltonian/vacuum stage is also exposed:
-
-```lean
-theorem euclidean_yang_mills_continuum_spine_physical_hilbert_space
-    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    Nonempty S.definitionBridge.spine.model.H
-
-theorem euclidean_yang_mills_continuum_spine_hamiltonian_time_translation_generator
-    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    S.definitionBridge.spine.model.hamiltonianSelfAdjoint
-
-theorem euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point
-    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    S.definitionBridge.spine.model.vacuum ∈
-      S.definitionBridge.spine.model.spectralPVM ({0} : Set ℝ)
-```
-
-The spectral mass-gap stage is also exposed directly from the construction
-spine:
+It exposes the spectral mass-gap stage:
 
 ```lean
 theorem euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum
@@ -400,20 +279,7 @@ theorem euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
     ∃ ψ : S.definitionBridge.spine.model.H,
       ψ ∈ S.definitionBridge.spine.model.spectralPVM
         ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ)
-```
 
-The model-level mass-gap predicate is exposed before reading off the normalized
-exact value:
-
-```lean
-theorem euclidean_yang_mills_continuum_spine_mass_gap_definition
-    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    S.definitionBridge.spine.model.hasMassGap
-```
-
-The main theorem from this upstream construction layer is:
-
-```lean
 theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
     S.toPipeline.definitionBridge.spine.model.hasMassGap ∧
@@ -421,7 +287,47 @@ theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
     exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum
 ```
 
-Thus the proof route is now:
+## Construction-spine external audit bridge
+
+The file `EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` projects
+the finite-volume/continuum spine into the existing OS/Wightman external audit
+surface:
+
+```lean
+def ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) : Prop
+
+theorem external_audit_readiness_euclidean_yang_mills_construction_spine_projection
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection S
+```
+
+The exact external-audit consequences are also named:
+
+```lean
+theorem external_audit_readiness_euclidean_construction_spine_exact_gap_positive
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    0 < exactGapValueReal
+
+theorem external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ))
+
+theorem external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ)
+```
+
+The certificate
+`ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate` records
+limit readiness, measure readiness, OS/Wightman readiness, the external
+OS/Wightman projection, exact positivity, exact threshold identity, and PVM
+first-excitation detection.
+
+## Proof route summary
 
 ```text
 finite-volume Mathlib measures
@@ -436,6 +342,7 @@ finite-volume Mathlib measures
 → first excitation detected by the spectral PVM
 → model-level mass-gap predicate
 → exact normalized threshold identity
+→ external audit construction-spine projection
 → Δ > 0
 ```
 
@@ -443,5 +350,6 @@ finite-volume Mathlib measures
 
 The remaining hard part is the construction of such a concrete Euclidean
 Yang--Mills measure, reconstruction spine, and mass-gap definition bridge from
-Yang--Mills theory.  These files are the theorem-level closure target into which
-that construction should plug; they are not substitutes for the construction.
+Yang--Mills theory.  These files are theorem-level closure targets into which
+that construction should plug; they are not substitutes for the construction and
+do not by themselves provide external mathematical acceptance.
