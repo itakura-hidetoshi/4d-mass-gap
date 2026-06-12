@@ -455,5 +455,29 @@ theorem euclidean_yang_mills_continuum_spine_certificate_definition_bridge_mass_
     C.definitionBridgeNonVacuumThreshold,
     C.firstExcitationPVMDetected⟩
 
+/-- A construction certificate can be consumed as the full definition-bridge
+spectral package: mass-gap predicate, exact-gap positivity, threshold identity,
+non-vacuum lower bound, and first-excitation PVM detection. -/
+theorem euclidean_yang_mills_continuum_spine_certificate_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : EuclideanYangMillsContinuumMeasureConstructionCertificate S) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    C.massGapDefinition,
+    C.deltaPositive,
+    C.definitionBridgeNonVacuumThreshold,
+    C.nonVacuumEnergyLowerBound,
+    C.firstExcitationPVMDetected⟩
+
 end MathlibAnalytic
 end MGAP4D
