@@ -12,20 +12,25 @@ KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance
 
 ---
 
-## Status snapshot as of 2026-06-11
+## Status snapshot as of 2026-06-12
 
-Current `main` should be read as an **internal Lean replay / terminal-audit surface** for a normalized 4D mass-gap route.
+Current `main` should be read as an **internal Lean replay / terminal-audit surface**, not as external mathematical acceptance.
 
 ```text
-internal Lean terminal route: present
-public / external audit receipt surface: present
+normalized R1--R7 terminal audit route: present
+exact normalized value 33/20 at terminal audit level: present
+positive spectral-weight witness at terminal audit level: present
+OS/Wightman mass-gap bridge: present
+Euclidean measure to mass-gap pipeline: present
+finite-volume / continuum construction-spine audit bridge: present
+placeholder / witness / proof-debt inventory: active
 external mathematical consensus: not claimed
 independent peer-review completion: not claimed
-Clay-style public acceptance: not claimed by documentation alone
-complete public solution of the 4D Yang--Mills mass-gap problem: not claimed
+Clay-style public acceptance: not claimed
+unconditional physical Yang--Mills measure construction: not claimed
 ```
 
-Central terminal-audit payload:
+Central normalized terminal-audit payload:
 
 ```text
 MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
@@ -43,13 +48,11 @@ Basic.lean
 ExactGapReal.lean
   -> downstream abstract normalized real carrier exactGapValueReal
   -> positivity and above-one facts only
-  -> no exactGapValueReal_eq theorem
   -> no exposed exactGapValueReal = 33/20 equality
 
 Continuum Hamiltonian / PVM / spectral route
   -> aligns exactGapValueReal with a derived Hamiltonian spectral value
-  -> carries positivity / nonzero spectral-mass surfaces
-  -> keeps final-value adoption gated before R6
+  -> keeps final-value adoption gated to R6
 
 R6
   -> non-definitional exact-atom / spectral-PVM value-pinning route for 33/20
@@ -59,6 +62,10 @@ R7
 
 R1--R7 terminal chain
   -> terminal audit projection of exact 33/20 plus positive spectral weight
+
+Axiomatic / OS-Wightman / Euclidean construction route
+  -> conditional closure targets and external audit projections
+  -> construction-spine bridge, not an unconditional physical construction by itself
 ```
 
 Physical normalization boundary:
@@ -79,25 +86,24 @@ docs/current_proof_status.md
 
 ## Roadmap posture
 
-The project should not move by adding another decorative theorem phase. The active work is now:
+The project should not move by adding decorative theorem phases. The active work is now:
 
 ```text
 repository / documentation synchronization
 fresh-clone independent replay
-placeholder / witness / proof-debt inventory review
-source-tree inspection
+source-tree dependency review
+placeholder / witness / proof-debt classification
+OS/Wightman and Euclidean construction bridge review
 external mathematical review
 audit-oriented version tagging
 Zenodo synchronization after a stable tag and replay receipt
 ```
 
-New work should directly support one of these goals. If a change does not improve replayability, theorem-surface clarity, proof-debt classification, exact-gap layer separation, external review, or public-boundary accuracy, it should be deferred.
+New work should directly support replayability, theorem-surface clarity, proof-debt classification, exact-gap layer separation, OS/Wightman / Euclidean bridge clarity, external review, or public-boundary accuracy.
 
 ---
 
-## Completed or currently installed lanes
-
-The following lanes are installed in the source tree. Their review status must still be read through `docs/proof_placeholder_inventory.md`, because a lane can be present and replayable while still containing receipt, witness, `True`, `PUnit`, or `StillOpen` proof-debt markers.
+## Installed lanes and review status
 
 ### A. Repository foundation
 
@@ -119,13 +125,7 @@ Status: **installed as separated layers; active as review discipline**
 - [x] Keep `ExactGapReal.lean` as the downstream abstract normalized real carrier layer.
 - [x] Record positivity and above-one facts for `exactGapValueReal`.
 - [x] Keep `exactGapValueReal = 33/20` out of `ExactGapReal.lean`.
-- [x] Keep the Hamiltonian / PVM / spectral route separate from the carrier layer.
 - [x] Preserve the normalized / dimensional distinction through `E0`.
-
-```text
-Delta_norm = 33/20
-Delta_phys(E0) = E0 * (33/20)
-```
 
 ### C. Exact-gap layer separation
 
@@ -170,12 +170,6 @@ Status: **installed; historical-marker supersession audit remains active**
 - [x] R4 handoff into R5, R6, and R7.
 - [ ] Keep every historical `StillOpen` occurrence classified as active, historical, or superseded.
 
-```text
-MGAP4D/R4/TheoremSurface.lean
-MGAP4D/R4/Theorem/SpectralMeasurePVMOperatorValuedOperatorTopologyR4ConcreteRouteTopLevelFinalPacket.lean
-docs/r4_terminal_status_supersession.md
-```
-
 ### F. R5 compact centered plaquette observable
 
 Status: **installed in the hard-physical-residual ledger**
@@ -186,12 +180,6 @@ Status: **installed in the hard-physical-residual ledger**
 - [x] Downstream handoff to the observable-atom lane.
 - [ ] Keep handoff / receipt objects separated from theorem-body closure.
 
-```text
-MGAP4D/R5/TheoremSurface.lean
-MGAP4D/R5/Theorem/CompactCenteredPlaquetteObservableDirectProofFinalExport.lean
-MGAP4D/HardPhysicalResidualLedgerR4GenuinePVMDischargedR5PlaquetteObservableClosure.lean
-```
-
 ### G. R6 exact atom `33/20`
 
 Status: **installed as the value-pinning route; review remains source-dependent**
@@ -200,16 +188,9 @@ Status: **installed as the value-pinning route; review remains source-dependent*
 - [x] Yang--Mills Hamiltonian spectral-carrier alignment.
 - [x] Non-definitional origin certificate.
 - [x] R6 normalized spectral/PVM atom route.
-- [x] Exact value theorem available through the R6 value-pinning hypothesis.
+- [x] Canonical exact-value theorem: `exact_atom_3320_r6_exact_gap_value_eq_3320_ready`.
 - [x] Atom membership for `exactGapValueReal`.
 - [ ] Keep documentation clear that this is not pre-R6 definitional unfolding.
-
-```text
-MGAP4D/R6/Theorem/ExactAtom3320R5Handoff.lean
-MGAP4D/R6/Theorem/ExactAtom3320YangMillsSpectralDerivation.lean
-MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean
-MGAP4D/HardPhysicalResidualLedgerR5PlaquetteObservableDischargedR6ExactAtomClosure.lean
-```
 
 ### H. R7 positive spectral-weight witness
 
@@ -221,20 +202,6 @@ Status: **installed and terminal-visible**
 - [x] Atom membership preserved.
 - [x] Orthogonal non-vacuum witness sector.
 - [ ] Keep witness / receipt content classified before public mathematical promotion.
-
-```lean
-theorem atom_exact_r6_direct_positive_weight_review_surface_payload :
-  observableSpectralWeight3320Certificate.massWitness.positiveMass = true ∧
-  exactGapValueReal = (33 : ℝ) / 20 ∧
-  exactGapValueReal ∈ singletonObservableAtomTheoremTheoremData.atom ∧
-  witnessSector = orthogonal ∧ witnessSector ≠ vacuum
-```
-
-```text
-MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightBridge.lean
-MGAP4D/R7/Theorem/AtomExactR6DirectPositiveWeightSlotClosure.lean
-MGAP4D/HardPhysicalResidualLedgerR6ExactAtomDischargedR7PositiveWeightClosure.lean
-```
 
 ### I. Terminal R1--R7 audit chain
 
@@ -253,11 +220,6 @@ theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_we
   Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
 ```
 
-```text
-MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
-MGAP4D/HardPhysicalResidualLedgerTerminalDischargeAuditReceipt.lean
-```
-
 ### J. Public / external audit receipt surface
 
 Status: **installed as internal audit surface; external review remains active**
@@ -271,11 +233,32 @@ Status: **installed as internal audit surface; external review remains active**
 - [x] Explicit final-release hold and public-boundary lock.
 - [ ] Keep public wording bounded by external review status.
 
+### K. Axiomatic / OS-Wightman / Euclidean construction route
+
+Status: **installed as conditional closure and construction-target bridge; not an unconditional construction by itself**
+
+- [x] Axiomatic Yang--Mills mass-gap closure theorem target.
+- [x] Axiomatic external audit projection.
+- [x] OS/Wightman Hamiltonian reconstruction spine.
+- [x] OS/Wightman mass-gap definition bridge.
+- [x] OS/Wightman mass-gap external audit bridge.
+- [x] Euclidean measure to mass-gap pipeline.
+- [x] Euclidean Yang--Mills measure unconditional-construction target surface.
+- [x] Finite-volume / continuum construction spine.
+- [x] Euclidean construction-spine external audit bridge.
+- [ ] Keep this lane clearly described as a bridge into which a concrete construction must plug.
+- [ ] Review all assumptions, construction fields, and proof-debt markers before public promotion.
+
 ```text
-MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditSurface.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7PublicAuditChainIndex.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditHandoff.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
+MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean
+MGAP4D/MathlibAnalytic/OSWightmanHamiltonianReconstructionSpine.lean
+MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean
+MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean
+docs/axiomatic_yang_mills_mass_gap_closure.md
 ```
 
 ---
@@ -287,9 +270,7 @@ MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
 Status: **active / repeat after every source-tree change**
 
 - [x] Rewrite `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, and `docs/exact_gap_layer_separation.md` around the current carrier / spectral route / R1--R7 terminal audit surface.
-- [x] Correct the Basic-layer reading: marker-only, no real-valued gap carrier.
-- [x] Correct the carrier reading: `exactGapValueReal` is the downstream abstract normalized real carrier; its layer proves positivity and above-one facts only.
-- [x] Correct the review reading: final public review goes through R1--R7 plus the continuum-Hamiltonian / PVM / spectral route, not through `Basic.lean` or `ExactGapReal.lean` alone.
+- [x] Add the OS/Wightman and Euclidean construction bridge status to public-facing documentation.
 - [ ] Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized after each source-tree change.
 - [ ] Keep documentation from saying R7 is merely downstream or still absent.
 - [ ] Keep documentation from saying exact `33/20` is only a future target.
@@ -309,128 +290,58 @@ Status: **active review layer**
 Current rule:
 
 ```text
-PUnit, True, and StillOpen are open proof-debt markers unless they are replaced,
-discharged, or explicitly superseded by typed theorem anchors.
+PUnit, True, and StillOpen are proof-debt markers unless replaced or explicitly
+superseded by typed theorem anchors.
 ```
 
-### Gate 3 — Independent replay
+### Gate 3 — Fresh-clone replay
 
-Status: **active governance layer**
+Status: **active before any public tag**
 
-- [ ] Run a fresh-clone replay on at least one second local machine.
-- [ ] Record OS, CPU architecture, Lean version, Lake version, commit SHA, and complete command transcript.
-- [ ] Add or refresh `docs/independent_replay_latest.md` as a compact append-only replay receipt.
-- [ ] Confirm `bash scripts/check.sh` from a fresh clone.
-- [ ] Confirm `lake build` from a fresh clone.
+- [ ] Run `bash scripts/check.sh` from a fresh clone.
+- [ ] Run `lake build`.
+- [ ] Record toolchain and replay output.
+- [ ] Confirm that audit scripts cover the current OS/Wightman and Euclidean construction bridge files.
 
-### Gate 4 — Source-tree reduction and proof-debt closure
+### Gate 4 — External review packet
 
-Status: **active proof-review layer**
+Status: **active / not complete**
 
-- [ ] Replace every public-route `PUnit` placeholder with a typed mathematical object or explicitly keep it outside theorem closure.
-- [ ] Replace every analytic-claim `True` marker with a substantive theorem field or classify it as metadata only.
-- [ ] Classify every `StillOpen` marker as active, historical, or superseded by a cited theorem.
-- [ ] Distinguish actual Mathlib property theorems from receipts, packets, manifests, and witness-only slots.
-- [ ] Re-run the placeholder inventory after each source-tree change.
+- [ ] Keep `EXTERNAL_AUDIT_PACKET.md` synchronized with this roadmap.
+- [ ] Keep final-release hold and public-boundary lock visible.
+- [ ] Add review notes append-only.
+- [ ] Separate internal replay success from external mathematical acceptance.
 
-### Gate 5 — External mathematical review
+### Gate 5 — Version tagging and archive synchronization
 
-Status: **active governance layer**
+Status: **blocked until replay receipt and documentation sync**
 
-- [ ] Ask at least one external reviewer to run `bash scripts/check.sh`.
-- [ ] Ask at least one reviewer to inspect `docs/current_proof_status.md`.
-- [ ] Ask at least one reviewer to inspect `THEOREM_INDEX.md`.
-- [ ] Ask at least one reviewer to inspect `PHYSICAL_REALIZATION_BOUNDARY.md`.
-- [ ] Ask at least one reviewer to inspect `docs/exact_gap_layer_separation.md`.
-- [ ] Ask at least one reviewer to inspect `docs/proof_placeholder_inventory.md`.
-- [ ] Ask at least one reviewer to inspect `docs/r2_infinite_l2_diagonal_operator_lane.md`.
-- [ ] Ask at least one reviewer to inspect `docs/r4_terminal_status_supersession.md`.
-- [ ] Ask at least one reviewer to inspect the Basic / ExactGapReal / Yang--Mills spectral derivation / R6 / R7 layer separation.
-- [ ] Ask at least one reviewer to inspect the terminal-chain and public / external audit surfaces.
-- [ ] Collect review notes as append-only external audit notes.
-
-### Gate 6 — Audit-oriented version tag and Zenodo synchronization
-
-Status: **pending**
-
-- [ ] Choose an audit-oriented version name, for example `v1.7-terminal-audit-boundary` or the next appropriate audit tag.
-- [ ] Confirm CI green on the exact commit to be tagged.
-- [ ] Confirm fresh-clone `bash scripts/check.sh` and `lake build`.
-- [ ] Confirm README / ROADMAP / THEOREM_INDEX / EXTERNAL_AUDIT_PACKET / current_proof_status consistency.
-- [ ] Confirm placeholder inventory and exact-gap layer separation are foregrounded.
-- [ ] Create tag only after source-tree review.
-- [ ] Generate post-tag verification receipt.
-- [ ] Update Zenodo only after the tag and post-tag replay receipt are stable.
+- [ ] Create a stable audit tag only after Gate 1--4 are current.
+- [ ] Prepare Zenodo / citation metadata after the tag.
+- [ ] Do not archive a tag that advertises external consensus or unconditional construction beyond what the Lean bodies support.
 
 ---
 
-## Public communication boundary
-
-Use:
+## Non-goals for the next phase
 
 ```text
-MGAP4D currently provides a Lean 4 proof-carrying and replayable audit surface
-for a normalized 4D mass-gap route. The internal R1--R7 terminal chain records
-exact value 33/20 and a positive spectral-weight witness. External mathematical
-consensus and Clay-style public acceptance remain separate review processes.
-```
-
-Do **not** say:
-
-```text
-R7 is still unproved or absent
-exact 33/20 is only a roadmap target
-positive spectral weight is still open inside the Lean terminal chain
-Basic.lean itself carries the real-valued numerical gap
-ExactGapReal.lean itself proves exactGapValueReal = 33/20
-carrier-level arithmetic normalization alone is the physical derivation
-README / ROADMAP are substitutes for theorem bodies
-external peer review has completed
-Clay-style public acceptance has completed
-dimensional physical gap is fixed without E0
-CI output equals mathematical proof review
-audit scripts replace Lean kernel checking
-historical StillOpen markers can be ignored without classification
-PUnit or True can close an analytic theorem by themselves
+Do not add another theorem-looking decorative receipt unless it improves reviewability.
+Do not move the value 33/20 into Basic.lean or ExactGapReal.lean.
+Do not describe the OS/Wightman / Euclidean bridge as an unconditional physical construction by itself.
+Do not treat CI success or audit-script success as external mathematical consensus.
+Do not suppress PUnit / True / StillOpen markers from the review surface.
 ```
 
 ---
 
-## Current priorities
+## Definition of done for the next stable audit tag
 
-1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
-2. Keep the Basic / ExactGapReal / spectral-derivation / R6-R7 layer separation visible.
-3. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
-4. Keep placeholder, witness, and proof-debt inventory visible.
-5. Resolve or explicitly supersede `PUnit`, `True`, and `StillOpen` markers before public theorem promotion.
-6. Add or refresh independent replay receipts.
-7. Confirm CI green on the documentation / audit-synchronization commit.
-8. Prepare an audit-oriented tag after source-tree review.
-9. Synchronize Zenodo metadata after the tag and post-tag replay receipt.
-10. Preserve the normalized / dimensional physical-scale boundary.
-11. Preserve the distinction between internal Lean terminal audit chain and external public acceptance.
+A stable audit tag should require:
 
----
-
-## Stop condition
-
-Do not expand the roadmap by adding new mathematical phases merely to make the project look larger.
-
-The next movement should be:
-
-```text
-README / ROADMAP synchronization
-THEOREM_INDEX synchronization
-EXTERNAL_AUDIT_PACKET synchronization
-current_proof_status synchronization
-exact_gap_layer_separation synchronization
-placeholder / witness inventory review
-fresh-clone replay receipt
-CI confirmation
-source-tree proof-debt reduction
-version tag
-Zenodo synchronization
-external mathematical review
-```
-
-Everything else remains secondary unless it directly supports these gates.
+1. `bash scripts/check.sh` passes from a fresh clone.
+2. `lake build` passes under the pinned toolchain.
+3. `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `docs/exact_gap_layer_separation.md`, and `docs/axiomatic_yang_mills_mass_gap_closure.md` agree.
+4. Placeholder inventory is current.
+5. The R6/R7/terminal exact-value route is not confused with Basic or ExactGapReal.
+6. The OS/Wightman / Euclidean construction route is described as conditional / construction-target material.
+7. External-consensus and Clay-style acceptance boundaries remain explicit.
