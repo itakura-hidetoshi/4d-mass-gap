@@ -334,6 +334,29 @@ theorem euclidean_yang_mills_continuum_spine_definition_bridge_nonvacuum_thresho
   simpa [euclidean_yang_mills_continuum_spine_toPipeline_nonvacuum_spectrum S]
     using euclidean_yang_mills_continuum_spine_nonvacuum_threshold S
 
+/-- Direct construction-spine spectral package: mass-gap predicate, exact-gap
+positivity, definition-bridge threshold identity, non-vacuum lower bound, and
+first-excitation PVM detection are all available directly from `S`. -/
+theorem euclidean_yang_mills_continuum_spine_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    euclidean_yang_mills_continuum_spine_mass_gap_definition S,
+    euclidean_yang_mills_continuum_spine_delta_positive S,
+    euclidean_yang_mills_continuum_spine_definition_bridge_nonvacuum_threshold S,
+    euclidean_yang_mills_continuum_spine_nonvacuum_energy_lower_bound S,
+    euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected S⟩
+
 /-- End-to-end theorem from the finite-volume/continuum construction spine to the
 mass-gap statement. -/
 theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
