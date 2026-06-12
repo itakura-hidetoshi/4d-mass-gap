@@ -224,5 +224,16 @@ theorem external_audit_readiness_euclidean_construction_spine_certificate_mass_g
     C.exactGapThreshold,
     C.firstExcitationPVMDetected⟩
 
+/-- A construction-spine certificate also consumes as the induced Euclidean
+measure-to-mass-gap pipeline theorem.  This connects the external-audit
+certificate back to the original `S.toPipeline` theorem surface. -/
+theorem external_audit_readiness_euclidean_construction_spine_certificate_induced_pipeline_mass_gap
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (_C : ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S) :
+    S.toPipeline.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum := by
+  exact euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S
+
 end MathlibAnalytic
 end MGAP4D
