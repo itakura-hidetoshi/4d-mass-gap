@@ -530,5 +530,21 @@ theorem euclidean_yang_mills_continuum_spine_certificate_full_spectral_package
     C.nonVacuumEnergyLowerBound,
     C.firstExcitationPVMDetected⟩
 
+/-- A construction certificate also consumes as the full induced-pipeline spectral
+package, including the transported lower bound on
+`S.toPipeline.nonVacuumHamiltonianSpectrum`. -/
+theorem euclidean_yang_mills_continuum_spine_certificate_induced_pipeline_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (_C : EuclideanYangMillsContinuumMeasureConstructionCertificate S) :
+    S.toPipeline.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ, E ∈ S.toPipeline.nonVacuumHamiltonianSpectrum → δ ≤ E) ∧
+    ∃ ψ : S.toPipeline.definitionBridge.spine.model.H,
+      ψ ∈ S.toPipeline.definitionBridge.spine.model.spectralPVM
+        ({S.toPipeline.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact euclidean_yang_mills_continuum_spine_toPipeline_full_spectral_package S
+
 end MathlibAnalytic
 end MGAP4D
