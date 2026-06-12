@@ -7,9 +7,11 @@ audit projection in
 OS/Wightman-to-Hamiltonian reconstruction spine in
 `MGAP4D/MathlibAnalytic/OSWightmanHamiltonianReconstructionSpine.lean`, the
 OS/Wightman mass-gap definition bridge in
-`MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean`, and its external
+`MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean`, its external
 audit projection in
-`MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean`.
+`MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean`, and the
+Euclidean-measure-to-mass-gap pipeline in
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean`.
 
 ## Scope
 
@@ -18,7 +20,9 @@ mass gap problem.  Instead, it replaces terminal `True` / bare `Prop` /
 `ready` / `receipt` markers with explicit theorem projections over displayed
 Mathlib data:
 
-- Wightman / Osterwalder--Schrader axiom package,
+- Euclidean Yang--Mills measure data,
+- Osterwalder--Schrader axiom package,
+- Wightman axiom package,
 - gauge group and field-configuration carriers,
 - reconstructed Hilbert-space carrier,
 - Hamiltonian,
@@ -173,9 +177,71 @@ theorem external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first
       ψ ∈ B.spine.model.spectralPVM ({B.spine.model.firstExcitation} : Set ℝ)
 ```
 
+## Euclidean measure to positive mass gap pipeline
+
+The file `EuclideanYangMillsMeasureToMassGapPipeline.lean` adds the upstream
+Euclidean-measure object and the end-to-end theorem surface:
+
+```lean
+structure EuclideanYangMillsMeasurePackage where
+  configurationSpace : Type
+  [instMeasurableSpace : MeasurableSpace configurationSpace]
+  euclideanMeasure : MeasureTheory.Measure configurationSpace
+  gaugeGroup : Type
+  fieldAlgebra : Type
+  schwingerFunctions : ℕ → Type
+  gaugeGroupCompact : Prop
+  gaugeGroupNontrivial : Prop
+  reflectionPositive : Prop
+  euclideanInvariant : Prop
+  symmetric : Prop
+  clusterProperty : Prop
+  regularity : Prop
+```
+
+The full conditional object is:
+
+```lean
+structure EuclideanYangMillsMeasureMassGapPipeline where
+  euclideanToOSWightman : EuclideanYangMillsMeasureToOSWightmanBridge
+  definitionBridge : OSWightmanMassGapDefinitionBridge
+  measureReady : euclideanToOSWightman.measure.ready
+  bridge_uses_reconstructed_axioms :
+    definitionBridge.spine.axioms = euclideanToOSWightman.axioms
+```
+
+This gives the named route:
+
+```text
+Euclidean Yang--Mills measure
+→ Osterwalder--Schrader axioms
+→ OS reconstruction
+→ Wightman theory
+→ physical Hilbert space
+→ Hamiltonian as time-translation generator
+→ vacuum Ω
+→ spectrum of H away from the vacuum energy
+→ Δ > 0
+```
+
+The main theorem surface is:
+
+```lean
+theorem euclidean_yang_mills_measure_os_reconstruction_wightman_hamiltonian_mass_gap
+    (P : EuclideanYangMillsMeasureMassGapPipeline) :
+    P.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf P.nonVacuumHamiltonianSpectrum
+```
+
+The theorem is still conditional: it proves the downstream implication once the
+Euclidean measure package, OS/Wightman reconstruction bridge, and Hamiltonian/PVM
+definition bridge are supplied.  It does not assert that the Euclidean
+Yang--Mills measure has already been constructed unconditionally.
+
 ## Boundary
 
-The remaining hard part is the construction of such a concrete spine and
-mass-gap definition bridge from Yang--Mills theory.  These files are the
-theorem-level closure target into which that construction should plug; they are
-not substitutes for the construction.
+The remaining hard part is the construction of such a concrete Euclidean
+Yang--Mills measure, reconstruction spine, and mass-gap definition bridge from
+Yang--Mills theory.  These files are the theorem-level closure target into which
+that construction should plug; they are not substitutes for the construction.
