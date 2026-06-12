@@ -272,6 +272,7 @@ Reviewer checkpoint:
 [ ] `EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected for construction proof fields, `toPipeline`, `euclidean_yang_mills_unconditional_target_ready`, and `euclidean_yang_mills_unconditional_measure_construction_mass_gap`.
 [ ] `EuclideanYangMillsMeasureConstructionSpine.lean` inspected as the finite-volume/continuum construction spine feeding the unconditional target.
 [ ] `EuclideanYangMillsMeasureConstructionSpine.lean` inspected for `finiteVolumeMeasure`, `projectiveConsistency_proof`, `tightness_proof`, `weakLimitExists_proof`, `toUnconditionalTarget`, `toPipeline`, and `euclidean_yang_mills_finite_volume_continuum_construction_mass_gap`.
+[ ] `EuclideanYangMillsMeasureConstructionSpine.lean` inspected for `euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum`, `euclidean_yang_mills_continuum_spine_vacuum_isolated`, `euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected`, and `euclidean_yang_mills_continuum_spine_mass_gap_definition`.
 [ ] `ConcreteHilbertRealizationTheorem.lean` inspected with boundary markers.
 [ ] `ConcreteHPhysRealizationTheorem.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected with boundary markers.
@@ -337,6 +338,7 @@ Reviewer checkpoint:
 [ ] I have interpreted the Euclidean measure pipeline as conditional theorem plumbing, not as an unconditional construction of the Yang-Mills measure.
 [ ] I have interpreted the Euclidean measure unconditional-construction target as a proof-field socket, not as external acceptance of the construction.
 [ ] I have interpreted the finite-volume/continuum construction spine as an upstream proof-field route, not as external acceptance of the measure construction.
+[ ] I have interpreted the spectral projections from the construction spine as theorem-surface routing, not as external acceptance of the physical construction by themselves.
 ```
 
 ## 9. Check normalization and dimensional reading
@@ -419,6 +421,7 @@ the conditional OS/Wightman mass-gap definition bridge is present and audited
 the conditional Euclidean measure to mass-gap pipeline is present and audited
 the Euclidean measure unconditional-construction target is present and audited
 the finite-volume/continuum Euclidean-measure construction spine is present and audited
+the spectral projections from construction spine to positive energy, vacuum isolation, PVM detection, and mass-gap definition are present and audited
 the infinite-dimensional target obligations are present
 the complete infinite-dimensional Hilbert construction is present
 the physical unbounded-operator skeleton is final-physical-carrier routed
@@ -440,6 +443,7 @@ the conditional OS/Wightman bridge supplies an unconditional Yang-Mills construc
 the conditional Euclidean measure pipeline supplies an unconditional Yang-Mills measure construction
 the Euclidean measure unconditional-construction target supplies external acceptance of the measure construction by itself
 the finite-volume/continuum construction spine supplies external acceptance of the measure construction by itself
+the spectral construction-spine projections supply external acceptance of the physical construction by themselves
 ```
 
 Final reviewer checkpoint:
@@ -454,6 +458,7 @@ Final reviewer checkpoint:
 [ ] Euclidean measure pipeline conditionality recorded.
 [ ] Euclidean measure unconditional-construction target interpretation recorded.
 [ ] Finite-volume/continuum construction spine interpretation recorded.
+[ ] Spectral construction-spine projection interpretation recorded.
 [ ] Infinite-dimensional target-layer interpretation preserved.
 [ ] Complete Hilbert construction interpretation preserved.
 [ ] Public-boundary interpretation preserved.
