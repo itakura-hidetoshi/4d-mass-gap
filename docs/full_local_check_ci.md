@@ -64,17 +64,66 @@ bash scripts/check.sh
 
 ## Covered replay stages
 
-Because the workflow invokes `scripts/check.sh`, it covers:
+Because the workflow invokes `scripts/check.sh`, it covers the full reviewer replay path, including:
 
 ```text
 [check] verify manifest
 [check] audit Lean forbidden tokens
 [check] audit major theorem non-placeholder surfaces
+[check] audit proof placeholder inventory
+[check] audit final physical carrier routing
 [check] audit analytic bridge coherence
+[check] audit hard physical residual ledger
+[check] audit external audit readiness gate
+[check] audit external audit readiness gate field classification
+[check] audit external audit readiness replay certificate
+[check] audit OS/Wightman mass-gap bridge
 [check] replay summary
 [check] lake update
+[check] build external audit readiness gate
+[check] build OS/Wightman mass-gap external audit bridge
+[check] build Euclidean Yang-Mills measure to mass-gap pipeline
+[check] build unconditional Euclidean Yang-Mills measure target
+[check] build Euclidean Yang-Mills measure construction spine
+[check] build Euclidean Yang-Mills construction external audit bridge
+[check] build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge
 [check] lake build
 ```
+
+The OS/Wightman / Euclidean construction replay subroute is:
+
+```text
+ExternalAuditReadinessGate
+  -> OSWightmanMassGapExternalAuditBridge
+  -> EuclideanYangMillsMeasureToMassGapPipeline
+  -> EuclideanYangMillsMeasureUnconditionalTarget
+  -> EuclideanYangMillsMeasureConstructionSpine
+  -> EuclideanYangMillsMeasureConstructionExternalAuditBridge
+```
+
+## Current replay interpretation
+
+A current successful run of `bash scripts/check.sh` means that the following surfaces are replayed together:
+
+```text
+forbidden-token audits
+major theorem non-placeholder audits
+proof placeholder inventory
+bridge-coherence audits
+final physical carrier routing
+OS/Wightman mass-gap bridge audit
+THEOREM_INDEX.md route anchors
+EXTERNAL_REVIEW_CHECKLIST.md route anchors
+external audit readiness gate
+OS/Wightman external audit bridge
+Euclidean measure conditional pipeline
+Euclidean measure unconditional-construction target
+finite-volume/continuum construction spine
+construction-spine external-audit projection
+full Lean build
+```
+
+It still does not mean external mathematical acceptance of the Euclidean Yang--Mills measure construction, the OS/Wightman bridge, or the construction-spine external-audit projection.
 
 ## Confirmed run
 
@@ -87,6 +136,8 @@ Commit checked out by CI: bd3111714d81b6e51615a7b912fec33c0a69d3bc
 Result: success
 Date: 2026-05-16
 ```
+
+The confirmed run above predates the OS/Wightman--Euclidean construction external-audit bridge additions. New reviewers should record a fresh run against the current commit before treating this ledger as current replay evidence.
 
 Confirmed job steps:
 
@@ -107,7 +158,7 @@ Lean (version 4.30.0-rc2, x86_64-unknown-linux-gnu, commit 3dc1a088b6d2d8eafe25a
 Lake version 5.0.0-src+3dc1a08 (Lean version 4.30.0-rc2)
 ```
 
-Confirmed `scripts/check.sh` replay:
+Historical confirmed `scripts/check.sh` replay:
 
 ```text
 [check] verify manifest: archived manifest verification passed
@@ -121,16 +172,25 @@ Confirmed `scripts/check.sh` replay:
 
 ## Audit meaning
 
-A successful Full Local Check CI run means:
+A successful current Full Local Check CI run means:
 
 ```text
 the repository can execute the same replay path documented for external reviewers
 the manifest verification passes
 the forbidden-token audit passes
 the major theorem non-placeholder audit passes
+the proof placeholder inventory passes
 the analytic bridge-coherence audit passes
+the OS/Wightman mass-gap bridge audit passes
+the THEOREM_INDEX.md OS/Wightman--Euclidean construction route anchors pass
+the EXTERNAL_REVIEW_CHECKLIST.md construction external-audit anchors pass
 the replay summary is generated
 the Lake manifest step succeeds
+the OS/Wightman external bridge builds
+the Euclidean measure conditional pipeline builds
+the Euclidean measure unconditional-construction target builds
+the finite-volume/continuum construction spine builds
+the construction-spine external-audit projection builds
 the Lean build succeeds
 ```
 
@@ -142,6 +202,9 @@ peer-review completion
 Clay-style public final theorem acceptance
 that audit scripts replace Lean kernel checking
 that CI replaces expert mathematical review
+that the Euclidean Yang-Mills measure has been externally accepted
+that the OS/Wightman bridge has been externally accepted
+that the construction-spine external-audit projection is itself external acceptance
 ```
 
 ## Relationship to other CI workflows
@@ -170,6 +233,8 @@ Full Local Check CI job ID:
 Lean version:
 Lake version:
 scripts/check.sh result:
+OS/Wightman mass-gap bridge audit result:
+Euclidean construction external audit bridge build result:
 lake build result:
 ```
 
