@@ -18,6 +18,8 @@ set -euo pipefail
 # lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 # build OS/Wightman mass-gap external audit bridge
 # lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
+# build Euclidean Yang-Mills measure to mass-gap pipeline
+# lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
 
 declare -a AUDITS=(
   "verify manifest|python3 scripts/verify_manifest.py"
@@ -126,6 +128,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.SpectralPVMHamiltonianGapNecessity
   MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
   MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
+  MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
 )
 
 for target in "${BUILDS[@]}"; do
