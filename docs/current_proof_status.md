@@ -24,6 +24,7 @@ B. axiomatic / OS-Wightman / Euclidean construction route
      -> OS/Wightman mass-gap definition bridge
      -> OS/Wightman external audit bridge
      -> Euclidean measure to mass-gap pipeline
+     -> Euclidean measure unconditional-construction target
      -> finite-volume / continuum construction spine
      -> Euclidean construction external audit bridge
 ```
@@ -34,11 +35,13 @@ Current public-boundary reading:
 internal Lean terminal audit route: present
 public / external audit receipt surface: present
 OS/Wightman and Euclidean construction bridge surfaces: present
+construction-spine external-audit projection: present
 external mathematical consensus: not claimed
 independent peer-review completion: not claimed
 Clay-style public acceptance: not claimed
 complete public solution of the 4D Yang--Mills mass-gap problem: not claimed
 unconditional physical Yang--Mills measure construction: not claimed
+external acceptance of the construction-spine external-audit projection: not claimed
 ```
 
 This status file is a documentation anchor only. The Lean source tree and theorem bodies remain authoritative.
@@ -84,7 +87,7 @@ ExactGapReal.lean
   -> proves ray-membership consequences
   -> does not provide exactGapValueRealRouteWitness
   -> does not provide exactGapValueReal_eq
-  -> does not expose exactGapValueReal = 33/20
+  -> does not expose exactGapValueReal = (33 : ℝ) / 20
 
 ContinuumHamiltonianMassGapTheorem.lean and related Hamiltonian files
   -> provide continuum-Hamiltonian / spectral-chain readiness surfaces
@@ -130,7 +133,7 @@ EuclideanYangMillsMeasureToMassGapPipeline.lean
   -> pipeline from Euclidean measure data to the OS/Wightman mass-gap bridge
 
 EuclideanYangMillsMeasureUnconditionalTarget.lean
-  -> target surface for an eventual concrete construction
+  -> proof-field target surface for an eventual concrete Euclidean measure construction
 
 EuclideanYangMillsMeasureConstructionSpine.lean
   -> finite-volume / continuum construction spine
@@ -139,19 +142,65 @@ EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean
   -> external audit projection for the construction spine
 ```
 
+Current theorem-facing route:
+
+```text
+EuclideanYangMillsFiniteVolumeApproximation
+  -> EuclideanYangMillsContinuumMeasureConstructionSpine
+  -> EuclideanYangMillsMeasureUnconditionalConstructionTarget
+  -> EuclideanYangMillsMeasureMassGapPipeline
+  -> OSWightmanMassGapDefinitionBridge
+  -> ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
+  -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
+```
+
+Primary construction/external-audit anchors:
+
+```text
+euclidean_yang_mills_continuum_spine_limit_ready
+euclidean_yang_mills_continuum_spine_os_axioms_ready
+euclidean_yang_mills_continuum_spine_wightman_theory
+euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum
+euclidean_yang_mills_continuum_spine_vacuum_isolated
+euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
+euclidean_yang_mills_continuum_spine_mass_gap_definition
+euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
+external_audit_readiness_euclidean_yang_mills_construction_spine_projection
+external_audit_readiness_euclidean_construction_spine_exact_gap_positive
+external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
+external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
+ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
+externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
+```
+
+Audit/documentation anchoring:
+
+```text
+scripts/audit_os_wightman_mass_gap_bridge.py
+THEOREM_INDEX.md
+EXTERNAL_REVIEW_CHECKLIST.md
+docs/axiomatic_yang_mills_mass_gap_closure.md
+docs/full_local_check_ci.md
+```
+
 Current boundary:
 
 ```text
 These files provide theorem-level closure targets and audit projections.
-They do not by themselves prove that the physical 4D Yang--Mills measure has
-already been unconditionally constructed from first principles.
+The construction spine is a proof-field route into the unconditional target.
+The unconditional target is a theorem socket, not community acceptance.
+The construction external-audit bridge is a review-routing projection, not community acceptance.
+They do not by themselves prove that the physical 4D Yang--Mills measure has already been unconditionally constructed from first principles.
 A concrete construction and external validation remain separate review tasks.
 ```
 
-Primary human-readable note:
+Primary human-readable notes:
 
 ```text
 docs/axiomatic_yang_mills_mass_gap_closure.md
+THEOREM_INDEX.md
+EXTERNAL_REVIEW_CHECKLIST.md
+docs/full_local_check_ci.md
 ```
 
 ---
@@ -352,7 +401,8 @@ Use this wording for public summaries:
 MGAP4D currently provides a Lean 4 proof-carrying and replayable audit surface for
 a normalized 4D mass-gap route. The internal R1--R7 terminal chain records exact
 value 33/20 and a positive spectral-weight witness. The repository also exposes
-conditional axiomatic / OS-Wightman / Euclidean construction bridge surfaces.
-External mathematical consensus and Clay-style public acceptance remain separate
-review processes.
+conditional axiomatic / OS-Wightman / Euclidean construction bridge surfaces,
+including a finite-volume/continuum construction spine and a construction-spine
+external-audit projection. External mathematical consensus and Clay-style public
+acceptance remain separate review processes.
 ```
