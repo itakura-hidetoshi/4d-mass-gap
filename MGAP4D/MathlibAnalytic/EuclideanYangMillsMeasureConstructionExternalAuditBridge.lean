@@ -115,6 +115,24 @@ theorem external_audit_readiness_euclidean_construction_spine_pvm_detects_first_
   exact external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first_excitation
     S.definitionBridge
 
+/-- External-audit theorem package: from the construction spine, the mass-gap
+predicate, exact positivity, threshold identity, and PVM first-excitation
+detection are available together. -/
+theorem external_audit_readiness_euclidean_construction_spine_mass_gap_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    euclidean_yang_mills_continuum_spine_mass_gap_definition S,
+    external_audit_readiness_euclidean_construction_spine_exact_gap_positive S,
+    external_audit_readiness_euclidean_construction_spine_exact_gap_threshold S,
+    external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation S⟩
+
 /-- External-audit certificate collecting the construction-spine readiness,
 OS/Wightman projection, and exact spectral consequences. -/
 structure ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
@@ -128,6 +146,7 @@ structure ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
   osWightmanProjection :
     ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
       S.definitionBridge
+  massGapDefinition : S.definitionBridge.spine.model.hasMassGap
   exactGapPositive : 0 < exactGapValueReal
   exactGapThreshold :
     exactGapValueReal =
@@ -156,12 +175,14 @@ def externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
       external_audit_readiness_euclidean_construction_spine_projection_unconditional_target_ready S
     osWightmanProjection :=
       external_audit_readiness_euclidean_construction_spine_projection_os_wightman_bridge S
+    massGapDefinition :=
+      (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).1
     exactGapPositive :=
-      external_audit_readiness_euclidean_construction_spine_exact_gap_positive S
+      (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.1
     exactGapThreshold :=
-      external_audit_readiness_euclidean_construction_spine_exact_gap_threshold S
+      (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.2.1
     firstExcitationPVMDetected :=
-      external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation S }
+      (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.2.2 }
 
 end MathlibAnalytic
 end MGAP4D
