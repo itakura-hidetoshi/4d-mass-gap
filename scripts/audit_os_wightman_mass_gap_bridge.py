@@ -4,8 +4,8 @@
 The goal of this audit is narrow and textual: keep the conditional axiom-to-
 Hamiltonian route from regressing into terminal True/receipt placeholders, and
 make sure the root aggregator, Euclidean-measure pipeline, unconditional
-construction target, full replay script, workflow, and documentation expose the
-final theorem surfaces.
+construction target, full replay script, workflow, documentation, and external
+review checklist expose the final theorem surfaces.
 """
 
 from __future__ import annotations
@@ -26,6 +26,7 @@ FILES = {
     "check_sh": ROOT / "scripts/check.sh",
     "full_local_workflow": ROOT / ".github/workflows/full-local-check.yml",
     "docs": ROOT / "docs/axiomatic_yang_mills_mass_gap_closure.md",
+    "review_checklist": ROOT / "EXTERNAL_REVIEW_CHECKLIST.md",
 }
 
 ANCHORS = {
@@ -129,6 +130,17 @@ ANCHORS = {
         "external_audit_readiness_os_wightman_definition_bridge_exact_gap_positive",
         "external_audit_readiness_os_wightman_definition_bridge_exact_gap_threshold",
         "external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first_excitation",
+    ],
+    "review_checklist": [
+        "Euclidean-measure unconditional-construction target",
+        "proof-field socket",
+        "[check] build unconditional Euclidean Yang-Mills measure target",
+        "Unconditional Euclidean Yang-Mills measure target build succeeds",
+        "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
+        "`EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected as the proof-field target for unconditional promotion",
+        "euclidean_yang_mills_unconditional_target_ready",
+        "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
+        "Euclidean measure unconditional-construction target interpretation recorded",
     ],
 }
 
@@ -324,11 +336,13 @@ def main() -> int:
     print(f"External bridge anchors audited: {len(ANCHORS['external_bridge'])}")
     print(f"Euclidean measure pipeline anchors audited: {len(ANCHORS['measure_pipeline'])}")
     print(f"Unconditional Euclidean target anchors audited: {len(ANCHORS['unconditional_target'])}")
+    print(f"External review checklist anchors audited: {len(ANCHORS['review_checklist'])}")
     print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline before EuclideanYangMillsMeasureUnconditionalTarget")
     print("Direct bridge import order audited: ExternalAuditReadinessGate before OSWightmanMassGapDefinitionBridge")
     print("Full replay script audited: audit + OS/Wightman build + Euclidean measure pipeline build + unconditional target build connected through scripts/check.sh")
     print("Full local workflow audited: .github/workflows/full-local-check.yml runs scripts/check.sh")
     print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
+    print("External review checklist audited: EXTERNAL_REVIEW_CHECKLIST.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
     print("OS/Wightman mass-gap bridge audit passed")
     return 0
