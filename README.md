@@ -37,15 +37,7 @@ B. axiomatic / OS-Wightman / Euclidean construction route
      -> Euclidean construction external audit bridge
 ```
 
-The repository does **not** claim:
-
-```text
-external mathematical consensus
-independent peer-review completion
-Clay-style public final acceptance
-a complete public solution of the 4D Yang--Mills mass-gap problem
-an unconditional construction of the physical 4D Yang--Mills measure from first principles
-```
+The repository does **not** claim external consensus, independent peer-review completion, public final acceptance, or an unconditional construction of the physical four-dimensional Yang--Mills measure from first principles.
 
 Compact public wording:
 
@@ -54,8 +46,8 @@ MGAP4D provides a Lean 4 proof-carrying and replayable audit surface for a
 normalized 4D mass-gap route. The internal R1--R7 terminal chain records the
 normalized value 33/20 and a positive spectral-weight witness. The repository
 also contains conditional axiomatic / OS-Wightman / Euclidean-construction
-bridge surfaces. External mathematical consensus and Clay-style public
-acceptance remain separate review processes.
+bridge surfaces. External mathematical consensus and public acceptance remain
+separate review processes.
 ```
 
 For the shortest status anchor, read `docs/current_proof_status.md`.
@@ -75,26 +67,12 @@ Hamiltonian / PVM / spectral carrier-alignment route
 R6 spectral/PVM value-pinning lane for 33/20
 R7 positive spectral-weight witness lane
 R1--R7 terminal audit projection of exact 33/20 plus positive weight
-public / external audit receipt surfaces with final-release hold and boundary lock
-axiomatic Yang--Mills mass-gap closure target
-OS/Wightman reconstruction and mass-gap definition bridge surfaces
-Euclidean measure to mass-gap pipeline and construction-spine audit bridge
+OS/Wightman and Euclidean construction bridge surfaces
 normalized / dimensional E0 boundary
 proof-debt inventory for PUnit / True / StillOpen / witness / receipt markers
 ```
 
-It does **not** claim by documentation alone:
-
-```text
-that Basic.lean carries the numerical mass-gap value
-that ExactGapReal.lean itself proves exactGapValueReal = 33/20
-that carrier-level arithmetic replaces the Hamiltonian/PVM/spectral route
-that the axiomatic / Euclidean bridge by itself constructs the physical Yang--Mills measure
-that CI success replaces mathematical proof review
-that audit scripts replace Lean kernel checking
-that receipt / ready / witness-only records are theorem bodies by themselves
-that historical or active StillOpen / PUnit / True markers can be ignored
-```
+It does **not** claim by documentation alone that `Basic.lean` or `ExactGapReal.lean` proves the final numeric value, that audit scripts replace Lean checking, or that receipt / ready / witness-only records are theorem bodies by themselves.
 
 Review rule:
 
@@ -108,8 +86,6 @@ External public acceptance remains a separate review process.
 
 ## Current proof-facing spine
 
-The normalized exact-gap route is layered, not a single definitional unfolding:
-
 ```text
 Basic-layer route marker
   -> downstream abstract normalized real carrier exactGapValueReal
@@ -117,22 +93,9 @@ Basic-layer route marker
   -> R6 non-definitional spectral/PVM exact-atom pinning route for 33/20
   -> R7 positive spectral-weight witness route
   -> R1--R7 terminal audit chain
-  -> public / external audit receipt chain
 ```
 
-The newer axiomatic / Euclidean route is a conditional construction and audit bridge:
-
-```text
-Euclidean Yang--Mills measure data
-  -> OS/Wightman assumptions and reconstruction
-  -> physical Hilbert space / Hamiltonian / vacuum / spectral PVM interface
-  -> positive energy / isolated vacuum / first non-vacuum excitation
-  -> model-level mass-gap predicate
-  -> exact normalized spectral-threshold identity
-  -> external audit projection
-```
-
-The remaining hard mathematical task for the second route is the concrete construction and external validation of the physical four-dimensional Yang--Mills measure and reconstruction spine.
+The newer OS/Wightman / Euclidean route records conditional theorem targets and construction-spine audit projections. The remaining hard task there is the concrete construction and external validation of the physical four-dimensional Yang--Mills measure and reconstruction spine.
 
 ---
 
@@ -154,7 +117,6 @@ The remaining hard mathematical task for the second route is the concrete constr
 | OS/Wightman external audit bridge | `MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean` |
 | Euclidean construction external audit bridge | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` |
 | Placeholder / witness inventory | `docs/proof_placeholder_inventory.md` |
-```
 
 Representative current theorem anchors:
 
@@ -182,52 +144,30 @@ theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_we
 
 ## Exact-gap layer separation
 
-External review should keep these layers separate:
-
-```text
-1. Basic-layer route marker
-2. downstream abstract real-carrier / positivity-boundary layer
-3. continuum-Hamiltonian / PVM / operator-spectral carrier-alignment layer
-4. R6 exact atom and R7 positive spectral-weight route
-5. engineering / audit / public-boundary marker layer
-6. axiomatic / OS-Wightman / Euclidean construction bridge layer
-```
-
-Current reading:
-
 ```text
 Basic.lean
-  -> marker-only route-deferred layer
-  -> no real-valued gap carrier
-  -> no local final-value assignment
+  -> marker-only route-deferred layer, no real-valued carrier
 
 ExactGapReal.lean
-  -> defines exactGapValueReal as an abstract downstream normalized real carrier
-  -> proves positivity and above-one facts
-  -> does not expose exactGapValueReal = 33/20
+  -> abstract normalized real carrier, positivity and above-one facts only
 
 R6 exact-atom layer
-  -> pins the displayed value 33/20 through the Hamiltonian/PVM/spectral atom lane
-  -> prevents the value from being read as pre-R6 definitional unfolding
+  -> pins 33/20 through the Hamiltonian/PVM/spectral atom lane
 
 R7 / terminal chain
-  -> carries exact 33/20 plus positive spectral weight to the terminal audit surface
+  -> carries exact 33/20 plus positive spectral weight to terminal audit level
 
 Axiomatic / Euclidean construction layer
-  -> records conditional closure and construction-spine audit projections
-  -> does not by itself provide an unconditional physical Yang--Mills construction
+  -> conditional bridge and construction-target material, not an unconditional construction by itself
 ```
 
 ---
 
 ## Physical normalization
 
-The value `33/20` is normalized and dimensionless:
-
 ```text
 H_norm = E0^{-1} * H_phys
 H_phys = E0 * H_norm
-
 Delta_norm = 33/20
 Delta_phys(E0) = E0 * (33/20)
 ```
@@ -238,24 +178,12 @@ In internal normalized units, `E0 = 1`. A dimensional physical mass gap requires
 
 ## Proof-debt and witness-marker inventory
 
-External reviewers must distinguish theorem bodies from placeholders, witnesses, receipts, readiness packets, and historical markers.
-
 ```text
 Primary inventory: docs/proof_placeholder_inventory.md
 Companion script: scripts/audit_proof_placeholder_inventory.py
 ```
 
-Current rule:
-
-```text
-PUnit, True, and StillOpen are open proof-debt markers unless they have been
-replaced, discharged, or explicitly superseded by typed theorem anchors.
-Readiness markers such as theoremWitnessOnly, receipt, ready, prototype,
-skeleton, boundary, packet, and manifest are review-order evidence unless their
-payload is a substantive typed theorem.
-```
-
-A terminal-looking chain is therefore a review route, not an automatic substitute for dependency review.
+`PUnit`, `True`, and `StillOpen` remain proof-debt markers unless replaced or explicitly superseded by typed theorem anchors. A terminal-looking chain is therefore a review route, not an automatic substitute for dependency review.
 
 ---
 
@@ -299,7 +227,6 @@ A successful replay means that the pinned Lean / Lake / mathlib environment buil
 8. Inspect the Basic / ExactGapReal / Yang--Mills spectral derivation / R6 / R7 separation.
 9. Inspect the OS/Wightman and Euclidean construction bridge files.
 10. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
-11. Record review notes append-only.
 
 ---
 
@@ -308,6 +235,5 @@ A successful replay means that the pinned Lean / Lake / mathlib environment buil
 1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `docs/exact_gap_layer_separation.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
 2. Keep the Basic / ExactGapReal / spectral-derivation / R6-R7 layer separation visible.
 3. Keep the OS/Wightman and Euclidean construction bridge status visible as conditional / construction-target material.
-4. Keep the R2 infinite `ℓ²` lane visible as the current main R2 reading.
-5. Keep placeholder, witness, and proof-debt inventory visible.
-6. Keep final-release hold, public-boundary lock, and external-acceptance boundary explicit.
+4. Keep placeholder, witness, and proof-debt inventory visible.
+5. Keep final-release hold, public-boundary lock, and external-acceptance boundary explicit.
