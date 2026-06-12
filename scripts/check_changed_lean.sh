@@ -95,6 +95,9 @@ python3 scripts/audit_bridge_coherence.py
 echo "[fast] audit final physical carrier routing"
 python3 scripts/audit_final_physical_carrier_routing.py
 
+echo "[fast] audit OS/Wightman mass-gap bridge"
+python3 scripts/audit_os_wightman_mass_gap_bridge.py
+
 # Root import changes are text-audited in the fast lane.  Building aggregate root
 # modules is intentionally avoided here because they import historical archive
 # surfaces that can contain non-fast-safe import cycles unrelated to the PR.
