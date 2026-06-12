@@ -161,7 +161,6 @@ LEAN_FORBIDDEN_IN_UNCONDITIONAL_TARGET = [
     "receipt : True",
     "readyReceipt",
     "terminalReceipt",
-    "Constructed : Prop\n  nontrivialCompactGaugeGroupConstructed",
 ]
 
 # Receipt language is allowed in explanatory prose comments, but not as a named
