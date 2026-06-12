@@ -217,6 +217,38 @@ theorem euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point
   exact euclidean_yang_mills_measure_pipeline_vacuum_omega_spectral_point
     S.toPipeline
 
+/-- The construction spine exposes positivity of the reconstructed Hamiltonian
+spectrum. -/
+theorem euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∀ E : ℝ, E ∈ S.definitionBridge.spine.model.energySpectrum → 0 ≤ E := by
+  exact euclidean_yang_mills_measure_pipeline_positive_hamiltonian_spectrum
+    S.toPipeline
+
+/-- The construction spine exposes vacuum isolation, routed through the OS cluster
+property in the definition bridge. -/
+theorem euclidean_yang_mills_continuum_spine_vacuum_isolated
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ δ : ℝ, 0 < δ ∧
+      Set.Ioo 0 δ ∩ S.definitionBridge.spine.model.energySpectrum = ∅ := by
+  exact os_wightman_bridge_vacuum_isolated S.definitionBridge
+
+/-- The construction spine exposes detection of the first excitation by the
+spectral PVM. -/
+theorem euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact os_wightman_bridge_first_excitation_has_pvm_support S.definitionBridge
+
+/-- The construction spine exposes the model-level mass-gap predicate before the
+normalized exact value is read off. -/
+theorem euclidean_yang_mills_continuum_spine_mass_gap_definition
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hasMassGap := by
+  exact os_wightman_bridge_mass_gap_definition S.definitionBridge
+
 /-- Main construction-spine theorem: once the finite-volume approximation,
 continuum limit, OS positivity, Schwinger-function construction, and
 Hamiltonian/PVM bridge fields are supplied, the normalized gap is positive. -/
@@ -261,6 +293,16 @@ structure EuclideanYangMillsContinuumMeasureConstructionCertificate
   vacuumOmegaSpectralPoint :
     S.definitionBridge.spine.model.vacuum ∈
       S.definitionBridge.spine.model.spectralPVM ({0} : Set ℝ)
+  positiveHamiltonianSpectrum :
+    ∀ E : ℝ, E ∈ S.definitionBridge.spine.model.energySpectrum → 0 ≤ E
+  vacuumIsolated :
+    ∃ δ : ℝ, 0 < δ ∧
+      Set.Ioo 0 δ ∩ S.definitionBridge.spine.model.energySpectrum = ∅
+  firstExcitationPVMDetected :
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ)
+  massGapDefinition : S.definitionBridge.spine.model.hasMassGap
   unconditionalTargetReady : S.toUnconditionalTarget.ready
   inducedPipeline : EuclideanYangMillsMeasureMassGapPipeline
   inducedPipeline_eq : inducedPipeline = S.toPipeline
@@ -285,6 +327,13 @@ def euclideanYangMillsContinuumMeasureConstructionCertificate
       euclidean_yang_mills_continuum_spine_hamiltonian_time_translation_generator S
     vacuumOmegaSpectralPoint :=
       euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point S
+    positiveHamiltonianSpectrum :=
+      euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum S
+    vacuumIsolated := euclidean_yang_mills_continuum_spine_vacuum_isolated S
+    firstExcitationPVMDetected :=
+      euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected S
+    massGapDefinition :=
+      euclidean_yang_mills_continuum_spine_mass_gap_definition S
     unconditionalTargetReady :=
       euclidean_yang_mills_continuum_spine_unconditional_target_ready S
     inducedPipeline := S.toPipeline
