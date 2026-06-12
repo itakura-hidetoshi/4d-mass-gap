@@ -22,6 +22,8 @@ set -euo pipefail
 # lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
 # build unconditional Euclidean Yang-Mills measure target
 # lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
+# build Euclidean Yang-Mills measure construction spine
+# lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
 
 declare -a AUDITS=(
   "verify manifest|python3 scripts/verify_manifest.py"
@@ -132,6 +134,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
   MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
   MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
+  MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
 )
 
 for target in "${BUILDS[@]}"; do
