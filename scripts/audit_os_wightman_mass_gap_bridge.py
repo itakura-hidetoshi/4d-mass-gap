@@ -5,8 +5,9 @@ The goal of this audit is narrow and textual: keep the conditional axiom-to-
 Hamiltonian route from regressing into terminal True/receipt placeholders, and
 make sure the root aggregator, Euclidean-measure pipeline, unconditional
 construction target, finite-volume construction spine, construction external
-audit bridge, full replay script, workflow, documentation, theorem index, and
-external review checklist expose the final theorem surfaces.
+audit bridge, full replay script, workflow, documentation, theorem index, full
+local check ledger, and external review checklist expose the final theorem
+surfaces.
 """
 
 from __future__ import annotations
@@ -30,6 +31,7 @@ FILES = {
     "full_local_workflow": ROOT / ".github/workflows/full-local-check.yml",
     "docs": ROOT / "docs/axiomatic_yang_mills_mass_gap_closure.md",
     "theorem_index": ROOT / "THEOREM_INDEX.md",
+    "full_local_check_doc": ROOT / "docs/full_local_check_ci.md",
     "review_checklist": ROOT / "EXTERNAL_REVIEW_CHECKLIST.md",
 }
 
@@ -216,6 +218,25 @@ ANCHORS = {
         "docs/axiomatic_yang_mills_mass_gap_closure.md",
         "EXTERNAL_REVIEW_CHECKLIST.md",
     ],
+    "full_local_check_doc": [
+        "Full Local Check CI Ledger",
+        "[check] audit OS/Wightman mass-gap bridge",
+        "[check] build OS/Wightman mass-gap external audit bridge",
+        "[check] build Euclidean Yang-Mills measure to mass-gap pipeline",
+        "[check] build unconditional Euclidean Yang-Mills measure target",
+        "[check] build Euclidean Yang-Mills measure construction spine",
+        "[check] build Euclidean Yang-Mills construction external audit bridge",
+        "MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge",
+        "ExternalAuditReadinessGate",
+        "OSWightmanMassGapExternalAuditBridge",
+        "EuclideanYangMillsMeasureToMassGapPipeline",
+        "EuclideanYangMillsMeasureUnconditionalTarget",
+        "EuclideanYangMillsMeasureConstructionSpine",
+        "EuclideanYangMillsMeasureConstructionExternalAuditBridge",
+        "construction-spine external-audit projection builds",
+        "that the construction-spine external-audit projection is itself external acceptance",
+        "Euclidean construction external audit bridge build result",
+    ],
     "review_checklist": [
         "Euclidean-measure unconditional-construction target",
         "proof-field socket",
@@ -263,56 +284,11 @@ LEAN_FORBIDDEN_IN_BRIDGE = [
     "constant ",
 ]
 
-LEAN_FORBIDDEN_IN_MEASURE_PIPELINE = [
-    " : Prop :=\n  True",
-    "sorry",
-    "admit",
-    "axiom ",
-    "constant ",
-    "receipt : True",
-    "readyReceipt",
-    "terminalReceipt",
-]
-
-LEAN_FORBIDDEN_IN_UNCONDITIONAL_TARGET = [
-    " : Prop :=\n  True",
-    "sorry",
-    "admit",
-    "axiom ",
-    "constant ",
-    "receipt : True",
-    "readyReceipt",
-    "terminalReceipt",
-]
-
-LEAN_FORBIDDEN_IN_CONSTRUCTION_SPINE = [
-    " : Prop :=\n  True",
-    "sorry",
-    "admit",
-    "axiom ",
-    "constant ",
-    "receipt : True",
-    "readyReceipt",
-    "terminalReceipt",
-]
-
-LEAN_FORBIDDEN_IN_CONSTRUCTION_EXTERNAL_BRIDGE = [
-    " : Prop :=\n  True",
-    "sorry",
-    "admit",
-    "axiom ",
-    "constant ",
-    "receipt : True",
-    "readyReceipt",
-    "terminalReceipt",
-]
-
-LEAN_PLACEHOLDER_DECLS = [
-    "Receipt",
-    "receipt : True",
-    "readyReceipt",
-    "terminalReceipt",
-]
+LEAN_FORBIDDEN_IN_MEASURE_PIPELINE = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
+LEAN_FORBIDDEN_IN_UNCONDITIONAL_TARGET = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
+LEAN_FORBIDDEN_IN_CONSTRUCTION_SPINE = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
+LEAN_FORBIDDEN_IN_CONSTRUCTION_EXTERNAL_BRIDGE = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
+LEAN_PLACEHOLDER_DECLS = ["Receipt", "receipt : True", "readyReceipt", "terminalReceipt"]
 
 
 def read(path: Path) -> str:
@@ -323,15 +299,7 @@ def read(path: Path) -> str:
         raise
 
 
-def require_order(
-    failures: list[str],
-    *,
-    text: str,
-    rel: Path,
-    before: str,
-    after: str,
-    label: str,
-) -> None:
+def require_order(failures: list[str], *, text: str, rel: Path, before: str, after: str, label: str) -> None:
     if before not in text:
         failures.append(f"{rel} missing order anchor before-side for {label}: {before!r}")
         return
@@ -418,6 +386,7 @@ def main() -> int:
     print(f"Finite-volume construction spine anchors audited: {len(ANCHORS['construction_spine'])}")
     print(f"Construction external audit bridge anchors audited: {len(ANCHORS['construction_external_bridge'])}")
     print(f"Theorem index anchors audited: {len(ANCHORS['theorem_index'])}")
+    print(f"Full local check CI ledger anchors audited: {len(ANCHORS['full_local_check_doc'])}")
     print(f"External review checklist anchors audited: {len(ANCHORS['review_checklist'])}")
     print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline before EuclideanYangMillsMeasureUnconditionalTarget before EuclideanYangMillsMeasureConstructionSpine before EuclideanYangMillsMeasureConstructionExternalAuditBridge")
     print("Direct bridge import order audited: ExternalAuditReadinessGate before OSWightmanMassGapDefinitionBridge")
@@ -425,6 +394,7 @@ def main() -> int:
     print("Full local workflow audited: .github/workflows/full-local-check.yml runs scripts/check.sh")
     print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
     print("Theorem index audited: THEOREM_INDEX.md")
+    print("Full local check CI ledger audited: docs/full_local_check_ci.md")
     print("External review checklist audited: EXTERNAL_REVIEW_CHECKLIST.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
     print("OS/Wightman mass-gap bridge audit passed")
