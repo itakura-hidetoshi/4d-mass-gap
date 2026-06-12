@@ -26,10 +26,6 @@ structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where
   regularityTheorem : measurePackage.regularity
   gaugeGroupCompactTheorem : measurePackage.gaugeGroupCompact
   gaugeGroupNontrivialTheorem : measurePackage.gaugeGroupNontrivial
-  osReconstructionLocalityTheorem : measurePackage.ready → bridge.axioms.wightmanLocality
-  osReconstructionCovarianceTheorem : measurePackage.ready → bridge.axioms.wightmanCovariance
-  osReconstructionSpectrumConditionTheorem :
-    measurePackage.ready → bridge.axioms.wightmanSpectrumCondition
   hamiltonianSelfAdjointTheorem : definitionBridge.spine.model.hamiltonianSelfAdjoint
   spectralPVMDetectionTheorem :
     ∀ E : ℝ, E ∈ definitionBridge.spine.model.energySpectrum →
@@ -39,10 +35,10 @@ structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where
     definitionBridge.spine.model.vacuum ∈
       definitionBridge.spine.model.spectralPVM ({0} : Set ℝ)
   positiveEnergyTheorem :
-    bridge.axioms.wightmanSpectrumCondition →
+    definitionBridge.spine.axioms.wightmanSpectrumCondition →
       ∀ E : ℝ, E ∈ definitionBridge.spine.model.energySpectrum → 0 ≤ E
   vacuumIsolationTheorem :
-    bridge.axioms.osClusterProperty →
+    definitionBridge.spine.axioms.osClusterProperty →
       ∃ δ : ℝ, 0 < δ ∧
         Set.Ioo 0 δ ∩ definitionBridge.spine.model.energySpectrum = ∅
 
@@ -88,52 +84,13 @@ theorem euclidean_yang_mills_unconditional_target_ready
     hSchwinger,
     euclidean_yang_mills_unconditional_target_measure_ready C⟩
 
-/-- The target canonically induces a Euclidean-measure-to-OS/Wightman bridge
-whose theorem fields are supplied by the construction target. -/
-def EuclideanYangMillsMeasureUnconditionalConstructionTarget.toBridge
+/-- The target supplies readiness for the bridge's own measure carrier by
+transporting along the displayed measure identification. -/
+theorem euclidean_yang_mills_unconditional_target_bridge_measure_ready
     (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
-    EuclideanYangMillsMeasureToOSWightmanBridge :=
-  { measure := C.measurePackage
-    axioms := C.bridge.axioms
-    gaugeGroup_identified := by
-      rw [← C.measurePackage_identified]
-      exact C.bridge.gaugeGroup_identified
-    fieldAlgebra_identified := by
-      rw [← C.measurePackage_identified]
-      exact C.bridge.fieldAlgebra_identified
-    euclideanConfigurationSpace_identified := by
-      rw [← C.measurePackage_identified]
-      exact C.bridge.euclideanConfigurationSpace_identified
-    schwingerFunctions_identified := by
-      rw [← C.measurePackage_identified]
-      exact C.bridge.schwingerFunctions_identified
-    gaugeGroupCompact_from_measure := C.bridge.gaugeGroupCompact_from_measure
-    gaugeGroupNontrivial_from_measure := C.bridge.gaugeGroupNontrivial_from_measure
-    osReflectionPositive_from_measure := C.bridge.osReflectionPositive_from_measure
-    osEuclideanInvariant_from_measure := C.bridge.osEuclideanInvariant_from_measure
-    osSymmetric_from_measure := C.bridge.osSymmetric_from_measure
-    osClusterProperty_from_measure := C.bridge.osClusterProperty_from_measure
-    osRegularity_from_measure := C.bridge.osRegularity_from_measure
-    wightmanLocality_from_os_reconstruction := C.osReconstructionLocalityTheorem
-    wightmanCovariance_from_os_reconstruction := C.osReconstructionCovarianceTheorem
-    wightmanSpectrumCondition_from_os_reconstruction :=
-      C.osReconstructionSpectrumConditionTheorem }
-
-/-- The target canonically induces a mass-gap definition bridge.  The construction
-side theorem fields replace any receipt-like terminal marker. -/
-def EuclideanYangMillsMeasureUnconditionalConstructionTarget.toDefinitionBridge
-    (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
-    OSWightmanMassGapDefinitionBridge :=
-  { spine := C.definitionBridge.spine
-    hamiltonianSelfAdjoint_proof := C.hamiltonianSelfAdjointTheorem
-    spectralPVM_detects_energySpectrum := C.spectralPVMDetectionTheorem
-    vacuumSpectralPoint := C.vacuumSpectralPointTheorem
-    positiveEnergy_from_wightmanSpectrum := by
-      intro hSpectrum E hE
-      exact C.positiveEnergyTheorem hSpectrum E hE
-    vacuumIsolation_from_osCluster := by
-      intro hCluster
-      exact C.vacuumIsolationTheorem hCluster }
+    C.bridge.measure.ready := by
+  rw [C.measurePackage_identified]
+  exact euclidean_yang_mills_unconditional_target_measure_ready C
 
 /-- The unconditional construction target induces the existing Euclidean
 measure-to-mass-gap pipeline without requiring an additional measure-readiness
@@ -141,12 +98,10 @@ assumption from outside the target. -/
 def EuclideanYangMillsMeasureUnconditionalConstructionTarget.toPipeline
     (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
     EuclideanYangMillsMeasureMassGapPipeline :=
-  { euclideanToOSWightman := C.toBridge
-    definitionBridge := C.toDefinitionBridge
-    measureReady := euclidean_yang_mills_unconditional_target_measure_ready C
-    bridge_uses_reconstructed_axioms := by
-      change C.definitionBridge.spine.axioms = C.bridge.axioms
-      exact C.bridge_uses_definition_axioms }
+  { euclideanToOSWightman := C.bridge
+    definitionBridge := C.definitionBridge
+    measureReady := euclidean_yang_mills_unconditional_target_bridge_measure_ready C
+    bridge_uses_reconstructed_axioms := C.bridge_uses_definition_axioms }
 
 /-- If the full unconditional construction target is supplied, the existing
 Euclidean measure pipeline yields a positive normalized gap. -/
