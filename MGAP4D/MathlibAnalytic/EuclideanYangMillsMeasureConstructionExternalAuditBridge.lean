@@ -252,6 +252,30 @@ theorem external_audit_readiness_euclidean_construction_spine_certificate_mass_g
     C.exactGapThreshold,
     C.firstExcitationPVMDetected⟩
 
+/-- A certificate can be consumed as the full external-audit spectral package:
+mass-gap predicate, exact-gap positivity, threshold identity, non-vacuum lower
+bound, and first-excitation PVM detection. -/
+theorem external_audit_readiness_euclidean_construction_spine_certificate_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    C.massGapDefinition,
+    C.exactGapPositive,
+    C.exactGapThreshold,
+    C.nonVacuumEnergyLowerBound,
+    C.firstExcitationPVMDetected⟩
+
 /-- A construction-spine certificate also consumes as the induced Euclidean
 measure-to-mass-gap pipeline theorem.  This connects the external-audit
 certificate back to the original `S.toPipeline` theorem surface. -/
