@@ -31,7 +31,8 @@ with replay, audit, bridge-coherence support, explicit infinite-dimensional Yang
 complete infinite-dimensional Hilbert construction, downstream hardening lanes,
 final-physical-carrier routing for the physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons,
 continuum-Hamiltonian theorem/release surfaces, OS/Wightman conditional definition bridge,
-Euclidean-measure conditional pipeline, and external-audit readiness gates
+Euclidean-measure conditional pipeline, Euclidean-measure unconditional-construction target,
+and external-audit readiness gates
 ```
 
 It is not a claim of:
@@ -43,7 +44,7 @@ Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
 a completed public-final continuum Yang-Mills proof solely from CI or audit ledgers
 an unconditional construction of the OS/Wightman Yang-Mills bridge
-an unconditional construction of the Euclidean Yang-Mills measure pipeline
+an accepted unconditional construction of the Euclidean Yang-Mills measure
 ```
 
 Reviewer checkpoint:
@@ -56,6 +57,7 @@ Reviewer checkpoint:
 [ ] I understand the current physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons are routed through `FinalPhysicalHilbertCarrier`, not through a one-point carrier.
 [ ] I understand the OS/Wightman mass-gap bridge is conditional on an explicitly supplied bridge object.
 [ ] I understand the Euclidean-measure-to-mass-gap pipeline is conditional on an explicitly supplied Euclidean measure package and reconstruction bridge.
+[ ] I understand the Euclidean-measure unconditional-construction target is a proof-field socket, not external mathematical acceptance of the construction.
 ```
 
 ## 1. Fresh clone
@@ -138,6 +140,7 @@ Expected stages:
 [check] build external audit readiness gate
 [check] build OS/Wightman mass-gap external audit bridge
 [check] build Euclidean Yang-Mills measure to mass-gap pipeline
+[check] build unconditional Euclidean Yang-Mills measure target
 [check] lake build
 ```
 
@@ -157,6 +160,7 @@ Reviewer checkpoint:
 [ ] External audit readiness gate build succeeds.
 [ ] OS/Wightman mass-gap external audit bridge build succeeds.
 [ ] Euclidean Yang-Mills measure to mass-gap pipeline build succeeds.
+[ ] Unconditional Euclidean Yang-Mills measure target build succeeds.
 [ ] Final `lake build` succeeds.
 ```
 
@@ -192,6 +196,7 @@ lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamilton
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
 lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
 lake build
 ```
 
@@ -252,11 +257,13 @@ docs/complete_infinite_dimensional_hilbert_construction.md
 Reviewer checkpoint:
 
 ```text
-[ ] `AxiomaticYangMillsMassGapClosure.lean` inspected for OS/Wightman axiom package and model-level `hasMassGap`.
+[ ] `AxiomaticYangMillsMassGapClosure.lean` inspected for OS/Wightman assumption package and model-level `hasMassGap`.
 [ ] `OSWightmanHamiltonianReconstructionSpine.lean` inspected as the conditional reconstruction spine.
 [ ] `OSWightmanMassGapDefinitionBridge.lean` inspected as the explicit Hamiltonian/PVM definition bridge.
 [ ] `OSWightmanMassGapExternalAuditBridge.lean` inspected as the external-audit projection for the conditional OS/Wightman route.
 [ ] `EuclideanYangMillsMeasureToMassGapPipeline.lean` inspected as the conditional Euclidean measure → OS/Wightman → Hilbert/Hamiltonian → Δ>0 pipeline.
+[ ] `EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected as the proof-field target for unconditional promotion.
+[ ] `EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected for construction proof fields, `toPipeline`, `euclidean_yang_mills_unconditional_target_ready`, and `euclidean_yang_mills_unconditional_measure_construction_mass_gap`.
 [ ] `ConcreteHilbertRealizationTheorem.lean` inspected with boundary markers.
 [ ] `ConcreteHPhysRealizationTheorem.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected with boundary markers.
@@ -320,6 +327,7 @@ Reviewer checkpoint:
 [ ] I have interpreted the infinite-dimensional target layer and complete Hilbert construction as repository-internal Lean surfaces pending external audit.
 [ ] I have interpreted the OS/Wightman bridge as conditional theorem plumbing, not as an unconditional construction of Yang-Mills theory.
 [ ] I have interpreted the Euclidean measure pipeline as conditional theorem plumbing, not as an unconditional construction of the Yang-Mills measure.
+[ ] I have interpreted the Euclidean measure unconditional-construction target as a proof-field socket, not as external acceptance of the construction.
 ```
 
 ## 9. Check normalization and dimensional reading
@@ -400,6 +408,7 @@ the declared theorem surfaces are present
 the declared bridge surfaces are present
 the conditional OS/Wightman mass-gap definition bridge is present and audited
 the conditional Euclidean measure to mass-gap pipeline is present and audited
+the Euclidean measure unconditional-construction target is present and audited
 the infinite-dimensional target obligations are present
 the complete infinite-dimensional Hilbert construction is present
 the physical unbounded-operator skeleton is final-physical-carrier routed
@@ -419,6 +428,7 @@ Clay-style final theorem status has been reached
 the target / construction / gate layers alone complete external public proof acceptance
 the conditional OS/Wightman bridge supplies an unconditional Yang-Mills construction
 the conditional Euclidean measure pipeline supplies an unconditional Yang-Mills measure construction
+the Euclidean measure unconditional-construction target supplies external acceptance of the measure construction by itself
 ```
 
 Final reviewer checkpoint:
@@ -431,6 +441,7 @@ Final reviewer checkpoint:
 [ ] Final physical carrier routing for the unbounded-operator and concrete Yang-Mills Hamiltonian skeletons recorded.
 [ ] OS/Wightman bridge conditionality recorded.
 [ ] Euclidean measure pipeline conditionality recorded.
+[ ] Euclidean measure unconditional-construction target interpretation recorded.
 [ ] Infinite-dimensional target-layer interpretation preserved.
 [ ] Complete Hilbert construction interpretation preserved.
 [ ] Public-boundary interpretation preserved.
