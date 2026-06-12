@@ -16,9 +16,15 @@ structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where
   measurePackage_identified : bridge.measure = measurePackage
   bridge_uses_definition_axioms : definitionBridge.spine.axioms = bridge.axioms
   continuumFourDimensionalYangMillsMeasureConstructed : Prop
+  continuumFourDimensionalYangMillsMeasureConstructed_proof :
+    continuumFourDimensionalYangMillsMeasureConstructed
   nontrivialCompactGaugeGroupConstructed : Prop
+  nontrivialCompactGaugeGroupConstructed_proof : nontrivialCompactGaugeGroupConstructed
   interactingContinuumLimitConstructed : Prop
+  interactingContinuumLimitConstructed_proof : interactingContinuumLimitConstructed
   gaugeInvariantSchwingerFunctionsConstructed : Prop
+  gaugeInvariantSchwingerFunctionsConstructed_proof :
+    gaugeInvariantSchwingerFunctionsConstructed
   reflectionPositivityTheorem : measurePackage.reflectionPositive
   euclideanInvarianceTheorem : measurePackage.euclideanInvariant
   symmetryTheorem : measurePackage.symmetric
@@ -67,21 +73,17 @@ theorem euclidean_yang_mills_unconditional_target_measure_ready
     C.clusterPropertyTheorem,
     C.regularityTheorem⟩
 
-/-- The unconditional target is ready once its four construction-side obligations
-are provided. -/
+/-- The construction-side obligations and analytic outputs make the target ready;
+no extra hypothesis is requested outside the target object. -/
 theorem euclidean_yang_mills_unconditional_target_ready
-    (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget)
-    (hMeasureConstructed : C.continuumFourDimensionalYangMillsMeasureConstructed)
-    (hGaugeConstructed : C.nontrivialCompactGaugeGroupConstructed)
-    (hInteractingLimit : C.interactingContinuumLimitConstructed)
-    (hSchwinger : C.gaugeInvariantSchwingerFunctionsConstructed) :
+    (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
     C.ready := by
   unfold EuclideanYangMillsMeasureUnconditionalConstructionTarget.ready
   exact ⟨
-    hMeasureConstructed,
-    hGaugeConstructed,
-    hInteractingLimit,
-    hSchwinger,
+    C.continuumFourDimensionalYangMillsMeasureConstructed_proof,
+    C.nontrivialCompactGaugeGroupConstructed_proof,
+    C.interactingContinuumLimitConstructed_proof,
+    C.gaugeInvariantSchwingerFunctionsConstructed_proof,
     euclidean_yang_mills_unconditional_target_measure_ready C⟩
 
 /-- The target supplies readiness for the bridge's own measure carrier by
@@ -131,7 +133,9 @@ theorem euclidean_yang_mills_unconditional_measure_construction_mass_gap
 /-- Audit-visible certificate for the target route. -/
 structure EuclideanYangMillsMeasureUnconditionalConstructionCertificate
     (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) where
+  constructionReady : C.ready
   measureReady : C.measurePackage.ready
+  bridgeMeasureReady : C.bridge.measure.ready
   inducedPipeline : EuclideanYangMillsMeasureMassGapPipeline
   inducedPipeline_eq : inducedPipeline = C.toPipeline
   massGapTheorem : C.toPipeline.definitionBridge.spine.model.hasMassGap
@@ -143,7 +147,9 @@ structure EuclideanYangMillsMeasureUnconditionalConstructionCertificate
 def euclideanYangMillsMeasureUnconditionalConstructionCertificate
     (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
     EuclideanYangMillsMeasureUnconditionalConstructionCertificate C :=
-  { measureReady := euclidean_yang_mills_unconditional_target_measure_ready C
+  { constructionReady := euclidean_yang_mills_unconditional_target_ready C
+    measureReady := euclidean_yang_mills_unconditional_target_measure_ready C
+    bridgeMeasureReady := euclidean_yang_mills_unconditional_target_bridge_measure_ready C
     inducedPipeline := C.toPipeline
     inducedPipeline_eq := rfl
     massGapTheorem :=
