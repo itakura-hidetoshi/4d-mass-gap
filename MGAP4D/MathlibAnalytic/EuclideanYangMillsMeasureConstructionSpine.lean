@@ -163,6 +163,60 @@ def EuclideanYangMillsContinuumMeasureConstructionSpine.toPipeline
     EuclideanYangMillsMeasureMassGapPipeline :=
   S.toUnconditionalTarget.toPipeline
 
+/-- The construction spine proves readiness of the continuum Euclidean measure
+package itself. -/
+theorem euclidean_yang_mills_continuum_spine_measure_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.measurePackage.ready := by
+  exact euclidean_yang_mills_unconditional_target_measure_ready S.toUnconditionalTarget
+
+/-- The construction spine proves readiness of the measure carrier used by its
+OS/Wightman bridge. -/
+theorem euclidean_yang_mills_continuum_spine_bridge_measure_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.bridge.measure.ready := by
+  exact euclidean_yang_mills_unconditional_target_bridge_measure_ready
+    S.toUnconditionalTarget
+
+/-- The construction spine proves readiness of the reconstructed OS/Wightman
+assumption package used downstream by the Hamiltonian/PVM definition bridge. -/
+theorem euclidean_yang_mills_continuum_spine_os_axioms_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.axioms.ready := by
+  exact euclidean_yang_mills_measure_pipeline_os_axioms_ready S.toPipeline
+
+/-- The construction spine exposes the Wightman locality, covariance, and spectrum
+condition obtained from the OS reconstruction route. -/
+theorem euclidean_yang_mills_continuum_spine_wightman_theory
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.axioms.wightmanLocality ∧
+    S.definitionBridge.spine.axioms.wightmanCovariance ∧
+    S.definitionBridge.spine.axioms.wightmanSpectrumCondition := by
+  exact euclidean_yang_mills_measure_pipeline_wightman_theory S.toPipeline
+
+/-- The construction spine exposes the reconstructed physical Hilbert carrier. -/
+theorem euclidean_yang_mills_continuum_spine_physical_hilbert_space
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    Nonempty S.definitionBridge.spine.model.H := by
+  exact euclidean_yang_mills_measure_pipeline_physical_hilbert_space S.toPipeline
+
+/-- The construction spine exposes the Hamiltonian as the self-adjoint
+ time-translation generator supplied by the definition bridge. -/
+theorem euclidean_yang_mills_continuum_spine_hamiltonian_time_translation_generator
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hamiltonianSelfAdjoint := by
+  exact euclidean_yang_mills_measure_pipeline_hamiltonian_time_translation_generator
+    S.toPipeline
+
+/-- The construction spine exposes the vacuum vector Ω as a spectral point at
+energy zero. -/
+theorem euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.vacuum ∈
+      S.definitionBridge.spine.model.spectralPVM ({0} : Set ℝ) := by
+  exact euclidean_yang_mills_measure_pipeline_vacuum_omega_spectral_point
+    S.toPipeline
+
 /-- Main construction-spine theorem: once the finite-volume approximation,
 continuum limit, OS positivity, Schwinger-function construction, and
 Hamiltonian/PVM bridge fields are supplied, the normalized gap is positive. -/
@@ -194,6 +248,19 @@ theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
 structure EuclideanYangMillsContinuumMeasureConstructionCertificate
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) where
   limitReady : S.limitReady
+  measureReady : S.measurePackage.ready
+  bridgeMeasureReady : S.bridge.measure.ready
+  osAxiomsReady : S.definitionBridge.spine.axioms.ready
+  wightmanTheory :
+    S.definitionBridge.spine.axioms.wightmanLocality ∧
+    S.definitionBridge.spine.axioms.wightmanCovariance ∧
+    S.definitionBridge.spine.axioms.wightmanSpectrumCondition
+  physicalHilbertSpace : Nonempty S.definitionBridge.spine.model.H
+  hamiltonianTimeTranslationGenerator :
+    S.definitionBridge.spine.model.hamiltonianSelfAdjoint
+  vacuumOmegaSpectralPoint :
+    S.definitionBridge.spine.model.vacuum ∈
+      S.definitionBridge.spine.model.spectralPVM ({0} : Set ℝ)
   unconditionalTargetReady : S.toUnconditionalTarget.ready
   inducedPipeline : EuclideanYangMillsMeasureMassGapPipeline
   inducedPipeline_eq : inducedPipeline = S.toPipeline
@@ -207,6 +274,17 @@ def euclideanYangMillsContinuumMeasureConstructionCertificate
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
     EuclideanYangMillsContinuumMeasureConstructionCertificate S :=
   { limitReady := euclidean_yang_mills_continuum_spine_limit_ready S
+    measureReady := euclidean_yang_mills_continuum_spine_measure_ready S
+    bridgeMeasureReady :=
+      euclidean_yang_mills_continuum_spine_bridge_measure_ready S
+    osAxiomsReady := euclidean_yang_mills_continuum_spine_os_axioms_ready S
+    wightmanTheory := euclidean_yang_mills_continuum_spine_wightman_theory S
+    physicalHilbertSpace :=
+      euclidean_yang_mills_continuum_spine_physical_hilbert_space S
+    hamiltonianTimeTranslationGenerator :=
+      euclidean_yang_mills_continuum_spine_hamiltonian_time_translation_generator S
+    vacuumOmegaSpectralPoint :=
+      euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point S
     unconditionalTargetReady :=
       euclidean_yang_mills_continuum_spine_unconditional_target_ready S
     inducedPipeline := S.toPipeline
