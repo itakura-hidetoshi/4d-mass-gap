@@ -143,6 +143,29 @@ theorem external_audit_readiness_euclidean_construction_spine_mass_gap_package
     external_audit_readiness_euclidean_construction_spine_exact_gap_threshold S,
     external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation S⟩
 
+/-- Direct external-audit spectral package: mass-gap predicate, exact-gap
+positivity, threshold identity, non-vacuum lower bound, and first-excitation PVM
+detection are all available directly from the construction spine. -/
+theorem external_audit_readiness_euclidean_construction_spine_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    euclidean_yang_mills_continuum_spine_mass_gap_definition S,
+    external_audit_readiness_euclidean_construction_spine_exact_gap_positive S,
+    external_audit_readiness_euclidean_construction_spine_exact_gap_threshold S,
+    external_audit_readiness_euclidean_construction_spine_nonvacuum_energy_lower_bound S,
+    external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation S⟩
+
 /-- External-audit certificate collecting the construction-spine readiness,
 OS/Wightman projection, and exact spectral consequences. -/
 structure ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
