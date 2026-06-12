@@ -32,6 +32,7 @@ complete infinite-dimensional Hilbert construction, downstream hardening lanes,
 final-physical-carrier routing for the physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons,
 continuum-Hamiltonian theorem/release surfaces, OS/Wightman conditional definition bridge,
 Euclidean-measure conditional pipeline, Euclidean-measure unconditional-construction target,
+finite-volume/continuum Euclidean-measure construction spine,
 and external-audit readiness gates
 ```
 
@@ -45,6 +46,7 @@ a dimensional physical mass gap without choosing E0
 a completed public-final continuum Yang-Mills proof solely from CI or audit ledgers
 an unconditional construction of the OS/Wightman Yang-Mills bridge
 an accepted unconditional construction of the Euclidean Yang-Mills measure
+external acceptance of the finite-volume/continuum construction spine by itself
 ```
 
 Reviewer checkpoint:
@@ -58,6 +60,7 @@ Reviewer checkpoint:
 [ ] I understand the OS/Wightman mass-gap bridge is conditional on an explicitly supplied bridge object.
 [ ] I understand the Euclidean-measure-to-mass-gap pipeline is conditional on an explicitly supplied Euclidean measure package and reconstruction bridge.
 [ ] I understand the Euclidean-measure unconditional-construction target is a proof-field socket, not external mathematical acceptance of the construction.
+[ ] I understand the finite-volume/continuum construction spine is an upstream proof-field route into that target, not external mathematical acceptance by itself.
 ```
 
 ## 1. Fresh clone
@@ -141,6 +144,7 @@ Expected stages:
 [check] build OS/Wightman mass-gap external audit bridge
 [check] build Euclidean Yang-Mills measure to mass-gap pipeline
 [check] build unconditional Euclidean Yang-Mills measure target
+[check] build Euclidean Yang-Mills measure construction spine
 [check] lake build
 ```
 
@@ -161,6 +165,7 @@ Reviewer checkpoint:
 [ ] OS/Wightman mass-gap external audit bridge build succeeds.
 [ ] Euclidean Yang-Mills measure to mass-gap pipeline build succeeds.
 [ ] Unconditional Euclidean Yang-Mills measure target build succeeds.
+[ ] Euclidean Yang-Mills measure construction spine build succeeds.
 [ ] Final `lake build` succeeds.
 ```
 
@@ -197,6 +202,7 @@ lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
 lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
 lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
 lake build
 ```
 
@@ -264,6 +270,8 @@ Reviewer checkpoint:
 [ ] `EuclideanYangMillsMeasureToMassGapPipeline.lean` inspected as the conditional Euclidean measure → OS/Wightman → Hilbert/Hamiltonian → Δ>0 pipeline.
 [ ] `EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected as the proof-field target for unconditional promotion.
 [ ] `EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected for construction proof fields, `toPipeline`, `euclidean_yang_mills_unconditional_target_ready`, and `euclidean_yang_mills_unconditional_measure_construction_mass_gap`.
+[ ] `EuclideanYangMillsMeasureConstructionSpine.lean` inspected as the finite-volume/continuum construction spine feeding the unconditional target.
+[ ] `EuclideanYangMillsMeasureConstructionSpine.lean` inspected for `finiteVolumeMeasure`, `projectiveConsistency_proof`, `tightness_proof`, `weakLimitExists_proof`, `toUnconditionalTarget`, `toPipeline`, and `euclidean_yang_mills_finite_volume_continuum_construction_mass_gap`.
 [ ] `ConcreteHilbertRealizationTheorem.lean` inspected with boundary markers.
 [ ] `ConcreteHPhysRealizationTheorem.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected with boundary markers.
@@ -328,6 +336,7 @@ Reviewer checkpoint:
 [ ] I have interpreted the OS/Wightman bridge as conditional theorem plumbing, not as an unconditional construction of Yang-Mills theory.
 [ ] I have interpreted the Euclidean measure pipeline as conditional theorem plumbing, not as an unconditional construction of the Yang-Mills measure.
 [ ] I have interpreted the Euclidean measure unconditional-construction target as a proof-field socket, not as external acceptance of the construction.
+[ ] I have interpreted the finite-volume/continuum construction spine as an upstream proof-field route, not as external acceptance of the measure construction.
 ```
 
 ## 9. Check normalization and dimensional reading
@@ -409,6 +418,7 @@ the declared bridge surfaces are present
 the conditional OS/Wightman mass-gap definition bridge is present and audited
 the conditional Euclidean measure to mass-gap pipeline is present and audited
 the Euclidean measure unconditional-construction target is present and audited
+the finite-volume/continuum Euclidean-measure construction spine is present and audited
 the infinite-dimensional target obligations are present
 the complete infinite-dimensional Hilbert construction is present
 the physical unbounded-operator skeleton is final-physical-carrier routed
@@ -429,6 +439,7 @@ the target / construction / gate layers alone complete external public proof acc
 the conditional OS/Wightman bridge supplies an unconditional Yang-Mills construction
 the conditional Euclidean measure pipeline supplies an unconditional Yang-Mills measure construction
 the Euclidean measure unconditional-construction target supplies external acceptance of the measure construction by itself
+the finite-volume/continuum construction spine supplies external acceptance of the measure construction by itself
 ```
 
 Final reviewer checkpoint:
@@ -442,6 +453,7 @@ Final reviewer checkpoint:
 [ ] OS/Wightman bridge conditionality recorded.
 [ ] Euclidean measure pipeline conditionality recorded.
 [ ] Euclidean measure unconditional-construction target interpretation recorded.
+[ ] Finite-volume/continuum construction spine interpretation recorded.
 [ ] Infinite-dimensional target-layer interpretation preserved.
 [ ] Complete Hilbert construction interpretation preserved.
 [ ] Public-boundary interpretation preserved.
