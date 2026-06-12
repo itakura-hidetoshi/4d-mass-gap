@@ -16,6 +16,8 @@ set -euo pipefail
 # lake build MGAP4D.MathlibAnalytic.SpectralPVMHamiltonianGapNecessity
 # build external audit readiness gate
 # lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
+# build OS/Wightman mass-gap external audit bridge
+# lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
 
 declare -a AUDITS=(
   "verify manifest|python3 scripts/verify_manifest.py"
@@ -71,6 +73,7 @@ declare -a AUDITS=(
   "audit external audit readiness gate|python3 scripts/audit_external_audit_readiness_gate.py"
   "audit external audit readiness gate field classification|python3 scripts/audit_external_audit_readiness_gate_field_classification.py"
   "audit external audit readiness replay certificate|python3 scripts/audit_external_audit_readiness_replay_certificate.py"
+  "audit OS/Wightman mass-gap bridge|python3 scripts/audit_os_wightman_mass_gap_bridge.py"
   "replay summary|python3 scripts/replay_summary.py"
 )
 
@@ -122,6 +125,7 @@ declare -a BUILDS=(
   MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
   MGAP4D.MathlibAnalytic.SpectralPVMHamiltonianGapNecessity
   MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
+  MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
 )
 
 for target in "${BUILDS[@]}"; do
