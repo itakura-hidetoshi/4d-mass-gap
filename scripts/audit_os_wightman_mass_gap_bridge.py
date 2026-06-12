@@ -6,8 +6,8 @@ Hamiltonian route from regressing into terminal True/receipt placeholders, and
 make sure the root aggregator, Euclidean-measure pipeline, unconditional
 construction target, finite-volume construction spine, construction external
 audit bridge, full replay script, workflow, documentation, theorem index, full
-local check ledger, and external review checklist expose the final theorem
-surfaces.
+local check ledger, current proof status, and external review checklist expose
+the final theorem surfaces.
 """
 
 from __future__ import annotations
@@ -32,6 +32,7 @@ FILES = {
     "docs": ROOT / "docs/axiomatic_yang_mills_mass_gap_closure.md",
     "theorem_index": ROOT / "THEOREM_INDEX.md",
     "full_local_check_doc": ROOT / "docs/full_local_check_ci.md",
+    "current_status_doc": ROOT / "docs/current_proof_status.md",
     "review_checklist": ROOT / "EXTERNAL_REVIEW_CHECKLIST.md",
 }
 
@@ -167,10 +168,7 @@ ANCHORS = {
         "MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine",
         "MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge",
     ],
-    "full_local_workflow": [
-        "name: Full Local Check CI",
-        "bash scripts/check.sh",
-    ],
+    "full_local_workflow": ["name: Full Local Check CI", "bash scripts/check.sh"],
     "docs": [
         "OSWightmanMassGapExternalAuditBridge.lean",
         "EuclideanYangMillsMeasureToMassGapPipeline.lean",
@@ -237,6 +235,26 @@ ANCHORS = {
         "that the construction-spine external-audit projection is itself external acceptance",
         "Euclidean construction external audit bridge build result",
     ],
+    "current_status_doc": [
+        "Current proof status anchor",
+        "construction-spine external-audit projection: present",
+        "external acceptance of the construction-spine external-audit projection: not claimed",
+        "EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean",
+        "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
+        "external_audit_readiness_euclidean_yang_mills_construction_spine_projection",
+        "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
+        "external_audit_readiness_euclidean_construction_spine_exact_gap_threshold",
+        "external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation",
+        "ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate",
+        "externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate",
+        "scripts/audit_os_wightman_mass_gap_bridge.py",
+        "THEOREM_INDEX.md",
+        "EXTERNAL_REVIEW_CHECKLIST.md",
+        "docs/full_local_check_ci.md",
+        "The construction external-audit bridge is a review-routing projection, not community acceptance.",
+        "including a finite-volume/continuum construction spine and a construction-spine",
+        "external-audit projection. External mathematical consensus and Clay-style public",
+    ],
     "review_checklist": [
         "Euclidean-measure unconditional-construction target",
         "proof-field socket",
@@ -283,7 +301,6 @@ LEAN_FORBIDDEN_IN_BRIDGE = [
     "axiom ",
     "constant ",
 ]
-
 LEAN_FORBIDDEN_IN_MEASURE_PIPELINE = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
 LEAN_FORBIDDEN_IN_UNCONDITIONAL_TARGET = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
 LEAN_FORBIDDEN_IN_CONSTRUCTION_SPINE = [" : Prop :=\n  True", "sorry", "admit", "axiom ", "constant ", "receipt : True", "readyReceipt", "terminalReceipt"]
@@ -387,6 +404,7 @@ def main() -> int:
     print(f"Construction external audit bridge anchors audited: {len(ANCHORS['construction_external_bridge'])}")
     print(f"Theorem index anchors audited: {len(ANCHORS['theorem_index'])}")
     print(f"Full local check CI ledger anchors audited: {len(ANCHORS['full_local_check_doc'])}")
+    print(f"Current proof status anchors audited: {len(ANCHORS['current_status_doc'])}")
     print(f"External review checklist anchors audited: {len(ANCHORS['review_checklist'])}")
     print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline before EuclideanYangMillsMeasureUnconditionalTarget before EuclideanYangMillsMeasureConstructionSpine before EuclideanYangMillsMeasureConstructionExternalAuditBridge")
     print("Direct bridge import order audited: ExternalAuditReadinessGate before OSWightmanMassGapDefinitionBridge")
@@ -395,6 +413,7 @@ def main() -> int:
     print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
     print("Theorem index audited: THEOREM_INDEX.md")
     print("Full local check CI ledger audited: docs/full_local_check_ci.md")
+    print("Current proof status audited: docs/current_proof_status.md")
     print("External review checklist audited: EXTERNAL_REVIEW_CHECKLIST.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
     print("OS/Wightman mass-gap bridge audit passed")
