@@ -367,6 +367,34 @@ theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
   exact euclidean_yang_mills_unconditional_measure_construction_mass_gap
     S.toUnconditionalTarget
 
+/-- Full spectral package on the induced Euclidean measure-to-mass-gap pipeline:
+the pipeline mass-gap theorem, exact-gap positivity and threshold, the non-vacuum
+lower bound transported to `S.toPipeline.nonVacuumHamiltonianSpectrum`, and PVM
+first-excitation detection. -/
+theorem euclidean_yang_mills_continuum_spine_toPipeline_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.toPipeline.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ, E ∈ S.toPipeline.nonVacuumHamiltonianSpectrum → δ ≤ E) ∧
+    ∃ ψ : S.toPipeline.definitionBridge.spine.model.H,
+      ψ ∈ S.toPipeline.definitionBridge.spine.model.spectralPVM
+        ({S.toPipeline.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  rcases euclidean_yang_mills_continuum_spine_nonvacuum_energy_lower_bound S with
+    ⟨δ, hδPositive, hLower⟩
+  exact ⟨
+    (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).1,
+    (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).2.1,
+    (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).2.2,
+    ⟨δ, hδPositive,
+      fun E hE => hLower E (by
+        simpa [euclidean_yang_mills_continuum_spine_toPipeline_nonvacuum_spectrum S]
+          using hE)⟩,
+    by
+      simpa [euclidean_yang_mills_continuum_spine_toPipeline_definitionBridge S]
+        using euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected S⟩
+
 /-- Audit-visible certificate for the finite-volume/continuum construction spine. -/
 structure EuclideanYangMillsContinuumMeasureConstructionCertificate
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) where
