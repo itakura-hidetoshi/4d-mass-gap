@@ -143,7 +143,7 @@ python3 scripts/audit_os_wightman_mass_gap_bridge.py
 
 declare -a audit_sensitive_targets=()
 if printf '%s\n' "${changed_scripts}" | grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py'; then
-  audit_sensitive_targets+=(MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine)
+  audit_sensitive_targets+=(MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge)
 fi
 
 # Root import changes are text-audited in the fast lane.  Building aggregate root
