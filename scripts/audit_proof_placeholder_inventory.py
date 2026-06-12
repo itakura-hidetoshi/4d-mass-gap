@@ -2,6 +2,7 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+INVENTORY_DOC = ROOT / "docs/proof_placeholder_inventory.md"
 
 OPEN_DEBT_TOKENS = [
     "PUnit",
@@ -27,6 +28,30 @@ PROVENANCE_TOKENS = [
     "Manifest",
 ]
 
+REQUIRED_INVENTORY_ANCHORS = [
+    "Euclidean construction target / spine interpretation",
+    "EuclideanYangMillsMeasureUnconditionalConstructionTarget",
+    "EuclideanYangMillsContinuumMeasureConstructionSpine",
+    "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
+    "continuumFourDimensionalYangMillsMeasureConstructed_proof",
+    "nontrivialCompactGaugeGroupConstructed_proof",
+    "interactingContinuumLimitConstructed_proof",
+    "gaugeInvariantSchwingerFunctionsConstructed_proof",
+    "projectiveConsistency_proof",
+    "tightness_proof",
+    "weakLimitExists_proof",
+    "continuumMeasureIdentified_proof",
+    "schwingerFunctionsAreContinuumLimits_proof",
+    "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
+    "euclidean_yang_mills_finite_volume_continuum_construction_mass_gap",
+    "external_audit_readiness_euclidean_yang_mills_construction_spine_projection",
+    "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
+    "external_audit_readiness_euclidean_construction_spine_exact_gap_threshold",
+    "external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation",
+    "The construction-spine external-audit projection is not external acceptance.",
+    "External acceptance of the construction-spine external-audit projection is not claimed.",
+]
+
 TOKENS = OPEN_DEBT_TOKENS + PROVENANCE_TOKENS
 
 
@@ -40,7 +65,21 @@ def collect_files():
     return sorted(files)
 
 
+def audit_required_inventory_anchors() -> list[str]:
+    if not INVENTORY_DOC.exists():
+        return [f"missing inventory doc: {INVENTORY_DOC.relative_to(ROOT)}"]
+    text = INVENTORY_DOC.read_text(encoding="utf-8")
+    failures = []
+    for anchor in REQUIRED_INVENTORY_ANCHORS:
+        if anchor not in text:
+            failures.append(
+                f"docs/proof_placeholder_inventory.md missing construction proof-debt anchor: {anchor!r}"
+            )
+    return failures
+
+
 def main() -> int:
+    failures = audit_required_inventory_anchors()
     files = collect_files()
     if not files:
         return 1
@@ -79,6 +118,13 @@ def main() -> int:
         if len(rows) > 8:
             print(f"  ... {len(rows) - 8} more")
 
+    if failures:
+        print("Proof placeholder inventory audit failed:")
+        for failure in failures:
+            print(f"  {failure}")
+        return 1
+
+    print(f"Euclidean construction proof-debt anchors audited: {len(REQUIRED_INVENTORY_ANCHORS)}")
     print("Proof placeholder inventory audit completed")
     return 0
 
