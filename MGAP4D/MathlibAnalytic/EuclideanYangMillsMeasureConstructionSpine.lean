@@ -366,6 +366,11 @@ structure EuclideanYangMillsContinuumMeasureConstructionCertificate
   vacuumIsolated :
     ∃ δ : ℝ, 0 < δ ∧
       Set.Ioo 0 δ ∩ S.definitionBridge.spine.model.energySpectrum = ∅
+  nonVacuumEnergyLowerBound :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E
   firstExcitationPVMDetected :
     ∃ ψ : S.definitionBridge.spine.model.H,
       ψ ∈ S.definitionBridge.spine.model.spectralPVM
@@ -401,6 +406,8 @@ def euclideanYangMillsContinuumMeasureConstructionCertificate
     positiveHamiltonianSpectrum :=
       euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum S
     vacuumIsolated := euclidean_yang_mills_continuum_spine_vacuum_isolated S
+    nonVacuumEnergyLowerBound :=
+      euclidean_yang_mills_continuum_spine_nonvacuum_energy_lower_bound S
     firstExcitationPVMDetected :=
       euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected S
     massGapDefinition :=
@@ -417,6 +424,17 @@ def euclideanYangMillsContinuumMeasureConstructionCertificate
       (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).2.2
     definitionBridgeNonVacuumThreshold :=
       euclidean_yang_mills_continuum_spine_definition_bridge_nonvacuum_threshold S }
+
+/-- A construction certificate can be consumed as a definition-bridge-level
+non-vacuum spectral lower-bound package. -/
+theorem euclidean_yang_mills_continuum_spine_certificate_nonvacuum_energy_lower_bound
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : EuclideanYangMillsContinuumMeasureConstructionCertificate S) :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E := by
+  exact C.nonVacuumEnergyLowerBound
 
 /-- A construction certificate can be consumed as a definition-bridge-level
 mass-gap package.  This is the certificate-only form of the theorem surface used
