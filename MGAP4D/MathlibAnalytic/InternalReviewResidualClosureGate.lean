@@ -23,7 +23,7 @@ structure InternalReviewResidualClosureGateData where
   finalReleaseClosureLinked : finalTheoremReleaseClosureReviewSurface.ready
   externalReviewBoundaryVisible : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
   publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
-  finalReleaseHeld : exactGapTheoremBodyClosure.finalReleaseHeld
+  finalReleaseHeld : exactGapFinalReleaseHeld
   exactValuePreserved : exactGapValueReal = exactGapValueReal
 
 /-- Ready predicate for the internal review residual closure gate. -/
@@ -40,7 +40,7 @@ def InternalReviewResidualClosureGateData.ready
   finalTheoremReleaseClosureReviewSurface.ready ∧
   finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld ∧
-  exactGapTheoremBodyClosure.finalReleaseHeld ∧
+  exactGapFinalReleaseHeld ∧
   exactGapValueReal = exactGapValueReal
 
 /-- Named theorem-derived witness that the four-lane closure closes the repository-internal residual. -/
@@ -91,7 +91,7 @@ theorem internal_review_residual_gate_public_boundary_held_witness :
 
 /-- Named theorem-derived witness that final release remains held at the theorem-body boundary. -/
 theorem internal_review_residual_gate_final_release_held_witness :
-    exactGapTheoremBodyClosure.finalReleaseHeld := by
+    exactGapFinalReleaseHeld := by
   exact exact_gap_theorem_body_closure_final_release_held
 
 /-- Repository-internal review residual is closed at the gate level. -/
@@ -154,7 +154,7 @@ theorem internal_review_residual_gate_public_boundary_held
 theorem internal_review_residual_gate_final_release_held
     (D : InternalReviewResidualClosureGateData) (_hD : D.ready) :
     let _finalReleaseHeld := D.finalReleaseHeld
-    exactGapTheoremBodyClosure.finalReleaseHeld := by
+    exactGapFinalReleaseHeld := by
   exact D.finalReleaseHeld
 
 /-- Exact normalized-value carrier is preserved by the closure gate. -/
