@@ -334,6 +334,9 @@ structure EuclideanYangMillsContinuumMeasureConstructionCertificate
   deltaPositive : 0 < exactGapValueReal
   nonVacuumThreshold :
     exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum
+  definitionBridgeNonVacuumThreshold :
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ))
 
 /-- Build the finite-volume/continuum construction certificate. -/
 def euclideanYangMillsContinuumMeasureConstructionCertificate
@@ -367,7 +370,9 @@ def euclideanYangMillsContinuumMeasureConstructionCertificate
     deltaPositive :=
       (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).2.1
     nonVacuumThreshold :=
-      (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).2.2 }
+      (euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S).2.2
+    definitionBridgeNonVacuumThreshold :=
+      euclidean_yang_mills_continuum_spine_definition_bridge_nonvacuum_threshold S }
 
 end MathlibAnalytic
 end MGAP4D
