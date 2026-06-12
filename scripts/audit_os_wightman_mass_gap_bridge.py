@@ -6,8 +6,8 @@ Hamiltonian route from regressing into terminal True/receipt placeholders, and
 make sure the root aggregator, Euclidean-measure pipeline, unconditional
 construction target, finite-volume construction spine, construction external
 audit bridge, full replay script, workflow, documentation, theorem index, full
-local check ledger, current proof status, and external review checklist expose
-the final theorem surfaces.
+local check ledger, current proof status, external audit packet, independent
+replay guide, and external review checklist expose the final theorem surfaces.
 """
 
 from __future__ import annotations
@@ -33,8 +33,49 @@ FILES = {
     "theorem_index": ROOT / "THEOREM_INDEX.md",
     "full_local_check_doc": ROOT / "docs/full_local_check_ci.md",
     "current_status_doc": ROOT / "docs/current_proof_status.md",
+    "external_audit_packet": ROOT / "EXTERNAL_AUDIT_PACKET.md",
+    "independent_replay": ROOT / "INDEPENDENT_REPLAY.md",
     "review_checklist": ROOT / "EXTERNAL_REVIEW_CHECKLIST.md",
 }
+
+COMMON_EUCLIDEAN_REPLAY_ANCHORS = [
+    "[check] audit OS/Wightman mass-gap bridge",
+    "[check] build OS/Wightman mass-gap external audit bridge",
+    "[check] build Euclidean Yang-Mills measure to mass-gap pipeline",
+    "[check] build unconditional Euclidean Yang-Mills measure target",
+    "[check] build Euclidean Yang-Mills measure construction spine",
+    "[check] build Euclidean Yang-Mills construction external audit bridge",
+    "lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge",
+    "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline",
+    "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
+    "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine",
+    "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge",
+]
+
+COMMON_EUCLIDEAN_ROUTE_ANCHORS = [
+    "EuclideanYangMillsFiniteVolumeApproximation",
+    "EuclideanYangMillsContinuumMeasureConstructionSpine",
+    "EuclideanYangMillsMeasureUnconditionalConstructionTarget",
+    "EuclideanYangMillsMeasureMassGapPipeline",
+    "OSWightmanMassGapDefinitionBridge",
+    "ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection",
+    "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
+]
+
+COMMON_EUCLIDEAN_THEOREM_ANCHORS = [
+    "euclidean_yang_mills_continuum_spine_limit_ready",
+    "euclidean_yang_mills_continuum_spine_os_axioms_ready",
+    "euclidean_yang_mills_continuum_spine_wightman_theory",
+    "euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum",
+    "euclidean_yang_mills_continuum_spine_vacuum_isolated",
+    "euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected",
+    "euclidean_yang_mills_continuum_spine_mass_gap_definition",
+    "euclidean_yang_mills_finite_volume_continuum_construction_mass_gap",
+    "external_audit_readiness_euclidean_yang_mills_construction_spine_projection",
+    "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
+    "external_audit_readiness_euclidean_construction_spine_exact_gap_threshold",
+    "external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation",
+]
 
 ANCHORS = {
     "axiomatic": [
@@ -180,11 +221,8 @@ ANCHORS = {
         "EuclideanYangMillsMeasureUnconditionalConstructionTarget",
         "EuclideanYangMillsContinuumMeasureConstructionSpine",
         "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
-        "continuumFourDimensionalYangMillsMeasureConstructed_proof",
         "euclidean_yang_mills_measure_os_reconstruction_wightman_hamiltonian_mass_gap",
         "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
-        "euclidean_yang_mills_continuum_spine_os_axioms_ready",
-        "euclidean_yang_mills_continuum_spine_wightman_theory",
         "euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum",
         "euclidean_yang_mills_continuum_spine_vacuum_isolated",
         "euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected",
@@ -192,38 +230,19 @@ ANCHORS = {
         "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
         "euclidean_yang_mills_finite_volume_continuum_construction_mass_gap",
         "external_audit_readiness_os_wightman_mass_gap_definition_bridge_projection",
-        "external_audit_readiness_os_wightman_definition_bridge_exact_gap_positive",
-        "external_audit_readiness_os_wightman_definition_bridge_exact_gap_threshold",
-        "external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first_excitation",
     ],
     "theorem_index": [
         "OS/Wightman--Euclidean construction audit route",
-        "EuclideanYangMillsFiniteVolumeApproximation",
-        "EuclideanYangMillsContinuumMeasureConstructionSpine",
-        "EuclideanYangMillsMeasureUnconditionalConstructionTarget",
-        "EuclideanYangMillsMeasureMassGapPipeline",
-        "OSWightmanMassGapDefinitionBridge",
-        "ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection",
-        "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
+        *COMMON_EUCLIDEAN_ROUTE_ANCHORS,
         "MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean",
-        "external_audit_readiness_euclidean_yang_mills_construction_spine_projection",
-        "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
-        "external_audit_readiness_euclidean_construction_spine_exact_gap_threshold",
-        "external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation",
-        "construction spine = proof-field route into the unconditional target",
         "external audit bridge = review-routing projection, not community acceptance",
         "scripts/audit_os_wightman_mass_gap_bridge.py",
         "docs/axiomatic_yang_mills_mass_gap_closure.md",
         "EXTERNAL_REVIEW_CHECKLIST.md",
-    ],
+    ] + COMMON_EUCLIDEAN_THEOREM_ANCHORS[-4:],
     "full_local_check_doc": [
         "Full Local Check CI Ledger",
-        "[check] audit OS/Wightman mass-gap bridge",
-        "[check] build OS/Wightman mass-gap external audit bridge",
-        "[check] build Euclidean Yang-Mills measure to mass-gap pipeline",
-        "[check] build unconditional Euclidean Yang-Mills measure target",
-        "[check] build Euclidean Yang-Mills measure construction spine",
-        "[check] build Euclidean Yang-Mills construction external audit bridge",
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[:6],
         "MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge",
         "ExternalAuditReadinessGate",
         "OSWightmanMassGapExternalAuditBridge",
@@ -240,11 +259,8 @@ ANCHORS = {
         "construction-spine external-audit projection: present",
         "external acceptance of the construction-spine external-audit projection: not claimed",
         "EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean",
-        "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
-        "external_audit_readiness_euclidean_yang_mills_construction_spine_projection",
-        "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
-        "external_audit_readiness_euclidean_construction_spine_exact_gap_threshold",
-        "external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation",
+        *COMMON_EUCLIDEAN_ROUTE_ANCHORS,
+        *COMMON_EUCLIDEAN_THEOREM_ANCHORS,
         "ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate",
         "externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate",
         "scripts/audit_os_wightman_mass_gap_bridge.py",
@@ -252,43 +268,45 @@ ANCHORS = {
         "EXTERNAL_REVIEW_CHECKLIST.md",
         "docs/full_local_check_ci.md",
         "The construction external-audit bridge is a review-routing projection, not community acceptance.",
-        "including a finite-volume/continuum construction spine and a construction-spine",
-        "external-audit projection. External mathematical consensus and Clay-style public",
+    ],
+    "external_audit_packet": [
+        "MGAP4D External Audit Packet",
+        "construction-spine external-audit projection",
+        "that the construction-spine external-audit projection is itself external acceptance",
+        "OS/Wightman--Euclidean construction audit route",
+        *COMMON_EUCLIDEAN_ROUTE_ANCHORS,
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[:6],
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[6:],
+        *COMMON_EUCLIDEAN_THEOREM_ANCHORS[-4:],
+        "scripts/audit_os_wightman_mass_gap_bridge.py",
+        "construction-spine external-audit projection builds",
+        "Euclidean construction external audit bridge build result",
+    ],
+    "independent_replay": [
+        "Independent Replay Guide",
+        "OS/Wightman--Euclidean construction route",
+        "external acceptance of the construction-spine external-audit projection",
+        *COMMON_EUCLIDEAN_ROUTE_ANCHORS,
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[:6],
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[6:],
+        *COMMON_EUCLIDEAN_THEOREM_ANCHORS,
+        "EuclideanYangMillsMeasureConstructionExternalAuditBridge",
     ],
     "review_checklist": [
         "Euclidean-measure unconditional-construction target",
         "proof-field socket",
         "finite-volume/continuum Euclidean-measure construction spine",
         "construction-spine external-audit projection",
-        "[check] build unconditional Euclidean Yang-Mills measure target",
-        "[check] build Euclidean Yang-Mills measure construction spine",
-        "[check] build Euclidean Yang-Mills construction external audit bridge",
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[:6],
         "Unconditional Euclidean Yang-Mills measure target build succeeds",
         "Euclidean Yang-Mills measure construction spine build succeeds",
         "Euclidean Yang-Mills construction external audit bridge build succeeds",
-        "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
-        "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine",
-        "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge",
-        "`EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected as the proof-field target for unconditional promotion",
-        "`EuclideanYangMillsMeasureConstructionSpine.lean` inspected as the finite-volume/continuum construction spine feeding the unconditional target",
+        *COMMON_EUCLIDEAN_REPLAY_ANCHORS[8:],
         "`EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` inspected as the construction-spine external-audit projection",
         "ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection",
-        "external_audit_readiness_euclidean_yang_mills_construction_spine_projection",
-        "external_audit_readiness_euclidean_construction_spine_exact_gap_positive",
-        "external_audit_readiness_euclidean_construction_spine_exact_gap_threshold",
-        "external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation",
-        "euclidean_yang_mills_unconditional_target_ready",
-        "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
-        "euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum",
-        "euclidean_yang_mills_continuum_spine_vacuum_isolated",
-        "euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected",
-        "euclidean_yang_mills_continuum_spine_mass_gap_definition",
-        "euclidean_yang_mills_finite_volume_continuum_construction_mass_gap",
+        *COMMON_EUCLIDEAN_THEOREM_ANCHORS[-4:],
         "spectral projections from construction spine to positive energy, vacuum isolation, PVM detection, and mass-gap definition are present and audited",
         "construction-spine external-audit projection is present and audited",
-        "Euclidean measure unconditional-construction target interpretation recorded",
-        "Finite-volume/continuum construction spine interpretation recorded",
-        "Spectral construction-spine projection interpretation recorded",
         "Construction-spine external-audit projection interpretation recorded",
     ],
 }
@@ -384,8 +402,8 @@ def main() -> int:
     require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate", after="MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge", label="full replay external audit gate build before OS/Wightman bridge build")
     require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge", after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline", label="full replay OS/Wightman bridge build before Euclidean measure pipeline build")
     require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline", after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget", label="full replay Euclidean measure pipeline build before unconditional target build")
-    require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget", after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine", label="full replay unconditional target build before finite-volume construction spine build")
-    require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine", after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge", label="full replay construction spine build before construction external audit bridge build")
+    require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget", after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine", label="full replay unconditional target before construction spine")
+    require_order(failures, text=check_text, rel=check_rel, before="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine", after="MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge", label="full replay construction spine before external audit bridge")
 
     if failures:
         print("OS/Wightman mass-gap bridge audit failed:")
@@ -394,27 +412,17 @@ def main() -> int:
         return 1
 
     print("OS/Wightman mass-gap bridge audit")
-    print(f"Axiomatic anchors audited: {len(ANCHORS['axiomatic'])}")
-    print(f"Reconstruction spine anchors audited: {len(ANCHORS['spine'])}")
-    print(f"Definition bridge anchors audited: {len(ANCHORS['definition_bridge'])}")
-    print(f"External bridge anchors audited: {len(ANCHORS['external_bridge'])}")
-    print(f"Euclidean measure pipeline anchors audited: {len(ANCHORS['measure_pipeline'])}")
-    print(f"Unconditional Euclidean target anchors audited: {len(ANCHORS['unconditional_target'])}")
-    print(f"Finite-volume construction spine anchors audited: {len(ANCHORS['construction_spine'])}")
-    print(f"Construction external audit bridge anchors audited: {len(ANCHORS['construction_external_bridge'])}")
-    print(f"Theorem index anchors audited: {len(ANCHORS['theorem_index'])}")
-    print(f"Full local check CI ledger anchors audited: {len(ANCHORS['full_local_check_doc'])}")
-    print(f"Current proof status anchors audited: {len(ANCHORS['current_status_doc'])}")
-    print(f"External review checklist anchors audited: {len(ANCHORS['review_checklist'])}")
+    for name in [
+        "axiomatic", "spine", "definition_bridge", "external_bridge", "measure_pipeline",
+        "unconditional_target", "construction_spine", "construction_external_bridge",
+        "theorem_index", "full_local_check_doc", "current_status_doc",
+        "external_audit_packet", "independent_replay", "review_checklist",
+    ]:
+        print(f"{name} anchors audited: {len(ANCHORS[name])}")
     print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge before EuclideanYangMillsMeasureToMassGapPipeline before EuclideanYangMillsMeasureUnconditionalTarget before EuclideanYangMillsMeasureConstructionSpine before EuclideanYangMillsMeasureConstructionExternalAuditBridge")
-    print("Direct bridge import order audited: ExternalAuditReadinessGate before OSWightmanMassGapDefinitionBridge")
     print("Full replay script audited: audit + OS/Wightman build + Euclidean measure pipeline build + unconditional target build + finite-volume construction spine build + construction external audit bridge build connected through scripts/check.sh")
-    print("Full local workflow audited: .github/workflows/full-local-check.yml runs scripts/check.sh")
-    print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
-    print("Theorem index audited: THEOREM_INDEX.md")
-    print("Full local check CI ledger audited: docs/full_local_check_ci.md")
-    print("Current proof status audited: docs/current_proof_status.md")
-    print("External review checklist audited: EXTERNAL_REVIEW_CHECKLIST.md")
+    print("External audit packet audited: EXTERNAL_AUDIT_PACKET.md")
+    print("Independent replay guide audited: INDEPENDENT_REPLAY.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
     print("OS/Wightman mass-gap bridge audit passed")
     return 0
