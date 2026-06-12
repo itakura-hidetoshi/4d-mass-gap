@@ -30,7 +30,8 @@ internal normalized theorem-body / proof-architecture surface
 with replay, audit, bridge-coherence support, explicit infinite-dimensional Yang-Mills target obligations,
 complete infinite-dimensional Hilbert construction, downstream hardening lanes,
 final-physical-carrier routing for the physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons,
-continuum-Hamiltonian theorem/release surfaces, OS/Wightman conditional definition bridge, and external-audit readiness gates
+continuum-Hamiltonian theorem/release surfaces, OS/Wightman conditional definition bridge,
+Euclidean-measure conditional pipeline, and external-audit readiness gates
 ```
 
 It is not a claim of:
@@ -42,6 +43,7 @@ Clay-style public final theorem acceptance
 a dimensional physical mass gap without choosing E0
 a completed public-final continuum Yang-Mills proof solely from CI or audit ledgers
 an unconditional construction of the OS/Wightman Yang-Mills bridge
+an unconditional construction of the Euclidean Yang-Mills measure pipeline
 ```
 
 Reviewer checkpoint:
@@ -53,6 +55,7 @@ Reviewer checkpoint:
 [ ] I understand the complete Hilbert construction and continuum-Hamiltonian surfaces are repository-internal Lean surfaces pending external audit.
 [ ] I understand the current physical unbounded-operator and concrete Yang-Mills Hamiltonian skeletons are routed through `FinalPhysicalHilbertCarrier`, not through a one-point carrier.
 [ ] I understand the OS/Wightman mass-gap bridge is conditional on an explicitly supplied bridge object.
+[ ] I understand the Euclidean-measure-to-mass-gap pipeline is conditional on an explicitly supplied Euclidean measure package and reconstruction bridge.
 ```
 
 ## 1. Fresh clone
@@ -134,6 +137,7 @@ Expected stages:
 [check] build continuum Hamiltonian release-chain addendum
 [check] build external audit readiness gate
 [check] build OS/Wightman mass-gap external audit bridge
+[check] build Euclidean Yang-Mills measure to mass-gap pipeline
 [check] lake build
 ```
 
@@ -152,6 +156,7 @@ Reviewer checkpoint:
 [ ] Continuum-Hamiltonian exact mass-gap derivation build succeeds.
 [ ] External audit readiness gate build succeeds.
 [ ] OS/Wightman mass-gap external audit bridge build succeeds.
+[ ] Euclidean Yang-Mills measure to mass-gap pipeline build succeeds.
 [ ] Final `lake build` succeeds.
 ```
 
@@ -186,6 +191,7 @@ lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
 lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
 lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
 lake build
 ```
 
@@ -250,6 +256,7 @@ Reviewer checkpoint:
 [ ] `OSWightmanHamiltonianReconstructionSpine.lean` inspected as the conditional reconstruction spine.
 [ ] `OSWightmanMassGapDefinitionBridge.lean` inspected as the explicit Hamiltonian/PVM definition bridge.
 [ ] `OSWightmanMassGapExternalAuditBridge.lean` inspected as the external-audit projection for the conditional OS/Wightman route.
+[ ] `EuclideanYangMillsMeasureToMassGapPipeline.lean` inspected as the conditional Euclidean measure → OS/Wightman → Hilbert/Hamiltonian → Δ>0 pipeline.
 [ ] `ConcreteHilbertRealizationTheorem.lean` inspected with boundary markers.
 [ ] `ConcreteHPhysRealizationTheorem.lean` inspected with boundary markers.
 [ ] `PhysicalUnboundedOperatorSkeleton.lean` inspected with boundary markers.
@@ -312,6 +319,7 @@ Reviewer checkpoint:
 [ ] I have distinguished contract witnesses from physical continuum realization targets.
 [ ] I have interpreted the infinite-dimensional target layer and complete Hilbert construction as repository-internal Lean surfaces pending external audit.
 [ ] I have interpreted the OS/Wightman bridge as conditional theorem plumbing, not as an unconditional construction of Yang-Mills theory.
+[ ] I have interpreted the Euclidean measure pipeline as conditional theorem plumbing, not as an unconditional construction of the Yang-Mills measure.
 ```
 
 ## 9. Check normalization and dimensional reading
@@ -391,6 +399,7 @@ the repository can be independently replayed
 the declared theorem surfaces are present
 the declared bridge surfaces are present
 the conditional OS/Wightman mass-gap definition bridge is present and audited
+the conditional Euclidean measure to mass-gap pipeline is present and audited
 the infinite-dimensional target obligations are present
 the complete infinite-dimensional Hilbert construction is present
 the physical unbounded-operator skeleton is final-physical-carrier routed
@@ -409,6 +418,7 @@ all analytic residuals have been accepted by the mathematical community
 Clay-style final theorem status has been reached
 the target / construction / gate layers alone complete external public proof acceptance
 the conditional OS/Wightman bridge supplies an unconditional Yang-Mills construction
+the conditional Euclidean measure pipeline supplies an unconditional Yang-Mills measure construction
 ```
 
 Final reviewer checkpoint:
@@ -420,6 +430,7 @@ Final reviewer checkpoint:
 [ ] Any failures or concerns recorded with file names and theorem names.
 [ ] Final physical carrier routing for the unbounded-operator and concrete Yang-Mills Hamiltonian skeletons recorded.
 [ ] OS/Wightman bridge conditionality recorded.
+[ ] Euclidean measure pipeline conditionality recorded.
 [ ] Infinite-dimensional target-layer interpretation preserved.
 [ ] Complete Hilbert construction interpretation preserved.
 [ ] Public-boundary interpretation preserved.
