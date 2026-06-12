@@ -11,9 +11,11 @@ OS/Wightman mass-gap definition bridge in
 audit projection in
 `MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean`, the
 Euclidean-measure-to-mass-gap pipeline in
-`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean`, and the
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean`, the
 unconditional-construction target in
-`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean`.
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean`, and
+the finite-volume/continuum construction spine in
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean`.
 
 ## Scope
 
@@ -23,6 +25,8 @@ mass gap problem.  Instead, it replaces terminal `True` / bare `Prop` /
 Mathlib data:
 
 - Euclidean Yang--Mills measure data,
+- finite-volume Mathlib measure carriers,
+- tightness / weak-limit / projective-consistency construction fields,
 - Osterwalder--Schrader assumption package,
 - Wightman assumption package,
 - gauge group and field-configuration carriers,
@@ -291,6 +295,75 @@ theorem euclidean_yang_mills_unconditional_measure_construction_mass_gap
 This is still not a declaration that the Clay-level construction has already
 been accepted; it is the Lean theorem socket into which such a construction must
 plug.
+
+## Finite-volume / continuum measure construction spine
+
+The file `EuclideanYangMillsMeasureConstructionSpine.lean` adds one more upstream
+layer.  It separates the hard Euclidean measure construction into finite-volume
+Mathlib measure carriers and continuum-limit proof fields:
+
+```lean
+structure EuclideanYangMillsFiniteVolumeApproximation where
+  index : Type
+  finiteVolumeConfiguration : index → Type
+  finiteVolumeMeasurableSpace :
+    (i : index) → MeasurableSpace (finiteVolumeConfiguration i)
+  finiteVolumeMeasure :
+    (i : index) → @MeasureTheory.Measure
+      (finiteVolumeConfiguration i) (finiteVolumeMeasurableSpace i)
+  gaugeInvariantFiniteVolume : Prop
+  gaugeInvariantFiniteVolume_proof : gaugeInvariantFiniteVolume
+  finiteVolumeReflectionPositive : Prop
+  finiteVolumeReflectionPositive_proof : finiteVolumeReflectionPositive
+```
+
+The continuum construction spine then adds the analytic limit layer:
+
+```lean
+structure EuclideanYangMillsContinuumMeasureConstructionSpine where
+  finiteVolume : EuclideanYangMillsFiniteVolumeApproximation
+  measurePackage : EuclideanYangMillsMeasurePackage
+  projectiveConsistency : Prop
+  projectiveConsistency_proof : projectiveConsistency
+  tightness : Prop
+  tightness_proof : tightness
+  weakLimitExists : Prop
+  weakLimitExists_proof : weakLimitExists
+  continuumMeasureIdentified : Prop
+  continuumMeasureIdentified_proof : continuumMeasureIdentified
+  schwingerFunctionsAreContinuumLimits : Prop
+  schwingerFunctionsAreContinuumLimits_proof : schwingerFunctionsAreContinuumLimits
+```
+
+This spine is converted to the unconditional target by:
+
+```lean
+def EuclideanYangMillsContinuumMeasureConstructionSpine.toUnconditionalTarget
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    EuclideanYangMillsMeasureUnconditionalConstructionTarget
+```
+
+The main theorem from this upstream construction layer is:
+
+```lean
+theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.toPipeline.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum
+```
+
+Thus the proof route is now:
+
+```text
+finite-volume Mathlib measures
+→ projective consistency / tightness / weak limit
+→ continuum Euclidean Yang--Mills measure package
+→ unconditional construction target
+→ OS/Wightman reconstruction bridge
+→ Hamiltonian/PVM mass-gap bridge
+→ Δ > 0
+```
 
 ## Boundary
 
