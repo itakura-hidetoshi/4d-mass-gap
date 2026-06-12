@@ -204,12 +204,12 @@ def plaquetteSpectralWeightLaneHardeningData : PlaquetteSpectralWeightLaneHarden
       observableAtomTheoremTheoremReviewSurface.publicBoundaryHeld ∧
       compactPlaquetteConstructionTheoremReviewSurface.publicBoundaryHeld ∧
       operatorMeasureCompatibilityTheoremReviewSurface.publicBoundaryHeld ∧
-      exactGapTheoremBodyClosure.publicBoundaryHeld
+      exactGapPublicBoundaryHeld
     finalReleaseHeld :=
       observableAtomTheoremTheoremReviewSurface.finalReleaseHeld ∧
       compactPlaquetteConstructionTheoremReviewSurface.finalReleaseHeld ∧
       operatorMeasureCompatibilityTheoremReviewSurface.finalReleaseHeld ∧
-      exactGapTheoremBodyClosure.finalReleaseHeld }
+      exactGapFinalReleaseHeld }
 
 /-- The installed plaquette spectral-weight hardening lane is ready. -/
 theorem plaquette_spectral_weight_lane_hardening_ready :
