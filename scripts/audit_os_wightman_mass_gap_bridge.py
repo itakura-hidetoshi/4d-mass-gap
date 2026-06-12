@@ -163,13 +163,20 @@ ANCHORS = {
     "review_checklist": [
         "Euclidean-measure unconditional-construction target",
         "proof-field socket",
+        "finite-volume/continuum Euclidean-measure construction spine",
         "[check] build unconditional Euclidean Yang-Mills measure target",
+        "[check] build Euclidean Yang-Mills measure construction spine",
         "Unconditional Euclidean Yang-Mills measure target build succeeds",
+        "Euclidean Yang-Mills measure construction spine build succeeds",
         "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget",
+        "lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine",
         "`EuclideanYangMillsMeasureUnconditionalTarget.lean` inspected as the proof-field target for unconditional promotion",
+        "`EuclideanYangMillsMeasureConstructionSpine.lean` inspected as the finite-volume/continuum construction spine feeding the unconditional target",
         "euclidean_yang_mills_unconditional_target_ready",
         "euclidean_yang_mills_unconditional_measure_construction_mass_gap",
+        "euclidean_yang_mills_finite_volume_continuum_construction_mass_gap",
         "Euclidean measure unconditional-construction target interpretation recorded",
+        "Finite-volume/continuum construction spine interpretation recorded",
     ],
 }
 
