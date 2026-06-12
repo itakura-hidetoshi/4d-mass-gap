@@ -42,6 +42,8 @@ B. axiomatic / OS-Wightman / Euclidean construction route
 
 The repository does **not** claim external consensus, independent peer-review completion, public final acceptance, an externally accepted OS/Wightman bridge, an externally accepted construction-spine external-audit projection, or an unconditional construction of the physical four-dimensional Yang--Mills measure from first principles.
 
+Boundary anchor: external acceptance of the construction-spine external-audit projection is not claimed.
+
 Compact public wording:
 
 ```text
