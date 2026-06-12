@@ -4,9 +4,9 @@ This document gives a minimal independent replay procedure for the MGAP4D Lean 4
 
 ## Scope
 
-This guide checks the public repository state only. It confirms the repository audit chain, physical Hamiltonian scalar/operator normalization surfaces, complete infinite-dimensional Hilbert construction lane, downstream lane hardening chain, four-lane residual closure, internal review residual closure gate, external audit readiness gate, replay summary, Lake manifest generation, and Lean build.
+This guide checks the public repository state only. It confirms the repository audit chain, physical Hamiltonian scalar/operator normalization surfaces, complete infinite-dimensional Hilbert construction lane, downstream lane hardening chain, four-lane residual closure, internal review residual closure gate, external audit readiness gate, OS/Wightman--Euclidean construction route, replay summary, Lake manifest generation, and Lean build.
 
-It does not claim external mathematical consensus, peer-review completion, Clay-style public final theorem acceptance, or a dimensional physical mass gap without an external reference scale `E0`.
+It does not claim external mathematical consensus, peer-review completion, Clay-style public final theorem acceptance, an unconditional construction of the Euclidean Yang--Mills measure, external acceptance of the OS/Wightman bridge, external acceptance of the construction-spine external-audit projection, or a dimensional physical mass gap without an external reference scale `E0`.
 
 ## Fresh clone replay
 
@@ -31,33 +31,15 @@ Lake 5.0.0-src+3dc1a08 or compatible Lake for the pinned Lean toolchain
 bash scripts/check.sh
 ```
 
-This executes, in order:
+This executes the full replay path. The OS/Wightman--Euclidean route includes:
 
 ```text
-[check] verify manifest
-[check] audit Lean forbidden tokens
-[check] audit major theorem non-placeholder surfaces
-[check] audit analytic bridge coherence
-[check] audit physical Hamiltonian operator normalization
-[check] audit infinite-dimensional Yang-Mills target layer
-[check] audit infinite-dimensional residual filling bridge
-[check] audit hard physical residual hardening map
-[check] audit complete infinite-dimensional Hilbert construction
-[check] audit self-adjoint HPhys lane hardening
-[check] audit continuum Yang-Mills lane hardening
-[check] audit plaquette spectral weight lane hardening
-[check] audit continuum Hamiltonian witness hardening
-[check] audit four-lane residual closure
-[check] audit internal review residual closure gate
-[check] audit external audit readiness gate
-[check] audit external audit readiness gate field classification
-[check] audit external audit readiness replay certificate
-[check] replay summary
-[check] lake update
-[check] build physical Hamiltonian operator normalization
-[check] build continuum Hamiltonian exact mass-gap derivation
-[check] build continuum Hamiltonian release-chain addendum
-[check] build external audit readiness gate
+[check] audit OS/Wightman mass-gap bridge
+[check] build OS/Wightman mass-gap external audit bridge
+[check] build Euclidean Yang-Mills measure to mass-gap pipeline
+[check] build unconditional Euclidean Yang-Mills measure target
+[check] build Euclidean Yang-Mills measure construction spine
+[check] build Euclidean Yang-Mills construction external audit bridge
 [check] lake build
 ```
 
@@ -67,28 +49,64 @@ This executes, in order:
 python3 scripts/verify_manifest.py
 python3 scripts/audit_lean_forbidden_tokens.py
 python3 scripts/audit_major_theorem_nonplaceholder.py
+python3 scripts/audit_proof_placeholder_inventory.py
 python3 scripts/audit_bridge_coherence.py
-python3 scripts/audit_physical_hamiltonian_operator_normalization.py
-python3 scripts/audit_infinite_dimensional_target_layer.py
-python3 scripts/audit_infinite_dimensional_residual_filling.py
-python3 scripts/audit_hard_physical_residual_hardening_map.py
-python3 scripts/audit_complete_infinite_dimensional_hilbert_construction.py
-python3 scripts/audit_self_adjoint_hphys_lane_hardening.py
-python3 scripts/audit_continuum_yang_mills_lane_hardening.py
-python3 scripts/audit_plaquette_spectral_weight_lane_hardening.py
-python3 scripts/audit_continuum_hamiltonian_mass_gap_witness_hardening.py
-python3 scripts/audit_four_lane_residual_closure.py
-python3 scripts/audit_internal_review_residual_closure_gate.py
+python3 scripts/audit_final_physical_carrier_routing.py
 python3 scripts/audit_external_audit_readiness_gate.py
 python3 scripts/audit_external_audit_readiness_gate_field_classification.py
 python3 scripts/audit_external_audit_readiness_replay_certificate.py
+python3 scripts/audit_os_wightman_mass_gap_bridge.py
 python3 scripts/replay_summary.py
 lake update
-lake build MGAP4D.MathlibAnalytic.PhysicalHamiltonianOperatorNormalization
-lake build MGAP4D.MathlibAnalytic.ContinuumHamiltonianExactMassGapDerivation
-lake build MGAP4D.MathlibAnalytic.FinalTheoremReleaseChainIndexContinuumHamiltonianAddendum
 lake build MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate
+lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge
 lake build
+```
+
+## OS/Wightman--Euclidean construction replay route
+
+```text
+AxiomaticYangMillsMassGapClosure
+  -> OSWightmanHamiltonianReconstructionSpine
+  -> OSWightmanMassGapDefinitionBridge
+  -> OSWightmanMassGapExternalAuditBridge
+  -> EuclideanYangMillsMeasureToMassGapPipeline
+  -> EuclideanYangMillsMeasureUnconditionalTarget
+  -> EuclideanYangMillsMeasureConstructionSpine
+  -> EuclideanYangMillsMeasureConstructionExternalAuditBridge
+```
+
+The construction-facing theorem route is:
+
+```text
+EuclideanYangMillsFiniteVolumeApproximation
+  -> EuclideanYangMillsContinuumMeasureConstructionSpine
+  -> EuclideanYangMillsMeasureUnconditionalConstructionTarget
+  -> EuclideanYangMillsMeasureMassGapPipeline
+  -> OSWightmanMassGapDefinitionBridge
+  -> ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
+  -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
+```
+
+Primary anchors:
+
+```text
+euclidean_yang_mills_continuum_spine_limit_ready
+euclidean_yang_mills_continuum_spine_os_axioms_ready
+euclidean_yang_mills_continuum_spine_wightman_theory
+euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum
+euclidean_yang_mills_continuum_spine_vacuum_isolated
+euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
+euclidean_yang_mills_continuum_spine_mass_gap_definition
+euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
+external_audit_readiness_euclidean_yang_mills_construction_spine_projection
+external_audit_readiness_euclidean_construction_spine_exact_gap_positive
+external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
+external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
 ```
 
 ## Normalization replay boundary
@@ -177,30 +195,12 @@ The external audit readiness gate also has a dedicated workflow:
 ## Latest checkpoint
 
 ```text
-Pull request: #47
-Head commit: a41f44cda3bf1f98b454d40f5364b3731ce39243
-Merge commit: b65e6d596831f244edb31234dd5c847e32aa8419
-Bridge Coherence CI: success
-Lean Direct Elan CI: success
-Full Local Check CI: success
-External Audit Readiness CI: success
-Observed timestamp: 2026-05-17
-```
-
-## Operator-normalization checkpoint
-
-```text
-Pull request: #46
-Head commit: a212a163fe98067dee2a3704022d1e9271172554
-Merge commit: 62ce858efb9006c458a4370c3bac23d7a137db69
-Workflow: Full Local Check CI
-Workflow run ID: 25992161524
-Result: success
-Observed timestamp: 2026-05-17
+Older confirmed CI checkpoints in this repository predate the current OS/Wightman--Euclidean construction external-audit bridge additions.
+A reviewer should record a fresh Full Local Check CI run against the reviewed commit.
 ```
 
 ## Review boundary
 
-A successful independent replay means the repository builds with the pinned Lean toolchain, declared audit scripts pass, physical Hamiltonian operator normalization is present and audited, lane-hardening and closure gates pass, the external audit readiness gate passes, and the replay summary is reproducible.
+A successful independent replay means the repository builds with the pinned Lean toolchain, declared audit scripts pass, physical Hamiltonian operator normalization is present and audited, lane-hardening and closure gates pass, the external audit readiness gate passes, the OS/Wightman--Euclidean construction route builds through `EuclideanYangMillsMeasureConstructionExternalAuditBridge`, and the replay summary is reproducible.
 
-It does not mean external consensus has been obtained or that the gate layers alone complete the physical continuum proof.
+It does not mean external consensus has been obtained, that the gate layers alone complete the physical continuum proof, that the Euclidean Yang--Mills measure has been externally accepted, or that the construction-spine external-audit projection is itself external acceptance.
