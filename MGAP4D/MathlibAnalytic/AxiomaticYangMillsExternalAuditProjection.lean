@@ -82,7 +82,7 @@ def externalAuditReadinessAxiomaticYangMillsClosureCertificate
 theorem external_audit_readiness_axiomatic_certificate_mass_gap
     (M : FourDimensionalYangMillsAxiomaticModel)
     (hOS : M.osWightman.ready) :
-    (externalAuditReadinessAxiomaticYangMillsClosureCertificate M hOS).massGapTheorem := by
+    M.hasMassGap := by
   exact (externalAuditReadinessAxiomaticYangMillsClosureCertificate M hOS).massGapTheorem
 
 end MathlibAnalytic
