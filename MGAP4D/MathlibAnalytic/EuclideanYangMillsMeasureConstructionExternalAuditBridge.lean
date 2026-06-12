@@ -184,6 +184,27 @@ def externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
     firstExcitationPVMDetected :=
       (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.2.2 }
 
+/-- A certificate can be consumed as the same external-audit readiness package.
+This theorem is useful for downstream files that receive only the certificate
+record rather than the original construction spine. -/
+theorem external_audit_readiness_euclidean_construction_spine_certificate_readiness_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S) :
+    S.limitReady ∧
+    S.measurePackage.ready ∧
+    S.bridge.measure.ready ∧
+    S.definitionBridge.spine.axioms.ready ∧
+    S.toUnconditionalTarget.ready ∧
+    ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
+      S.definitionBridge := by
+  exact ⟨
+    C.limitReady,
+    C.measureReady,
+    C.bridgeMeasureReady,
+    C.osAxiomsReady,
+    C.unconditionalTargetReady,
+    C.osWightmanProjection⟩
+
 /-- A certificate can be consumed as the same external-audit mass-gap package.
 This theorem is useful for downstream files that receive only the certificate
 record rather than the original construction spine. -/
