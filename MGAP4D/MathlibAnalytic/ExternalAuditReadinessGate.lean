@@ -20,7 +20,7 @@ structure ExternalAuditReadinessGateData where
     finalTheoremReleaseChainIndexReady
   externalConsensusNotClaimed : finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed
   publicBoundaryHeld : finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld
-  finalReleaseHeld : exactGapTheoremBodyClosure.finalReleaseHeld
+  finalReleaseHeld : exactGapFinalReleaseHeld
   exactValuePreserved : exactGapValueReal = exactGapValueReal
 
 def ExternalAuditReadinessGateData.ready
@@ -38,7 +38,7 @@ def ExternalAuditReadinessGateData.ready
     finalTheoremReleaseChainIndexReady) ∧
   finalTheoremReleaseSkeletonReviewSurface.externalConsensusNotClaimed ∧
   finalTheoremReleaseSkeletonReviewSurface.publicBoundaryHeld ∧
-  exactGapTheoremBodyClosure.finalReleaseHeld ∧
+  exactGapFinalReleaseHeld ∧
   exactGapValueReal = exactGapValueReal
 
 theorem external_audit_readiness_internal_gate_ready_witness :
@@ -101,7 +101,7 @@ theorem external_audit_readiness_public_boundary_held_witness :
 
 theorem external_audit_readiness_final_release_held_witness :
     let _finalReleaseHeld := internalReviewResidualClosureGateData.finalReleaseHeld
-    exactGapTheoremBodyClosure.finalReleaseHeld := by
+    exactGapFinalReleaseHeld := by
   exact internal_review_residual_gate_final_release_held_witness
 
 theorem external_audit_readiness_exact_value_preserved_witness :
@@ -161,7 +161,7 @@ theorem external_audit_readiness_public_boundary_held
 theorem external_audit_readiness_final_release_held
     (D : ExternalAuditReadinessGateData) (_hD : D.ready) :
     let _finalReleaseHeld := D.finalReleaseHeld
-    exactGapTheoremBodyClosure.finalReleaseHeld := by
+    exactGapFinalReleaseHeld := by
   exact D.finalReleaseHeld
 
 theorem external_audit_readiness_exact_value_preserved
