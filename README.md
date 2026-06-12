@@ -79,7 +79,7 @@ normalized / dimensional E0 boundary
 proof-debt inventory for PUnit / True / StillOpen / witness / receipt markers
 ```
 
-It does **not** claim by documentation alone that `Basic.lean` or `ExactGapReal.lean` proves the final numeric value, that audit scripts replace Lean checking, that receipt / ready / witness-only records are theorem bodies by themselves, or that construction-spine audit projection equals external acceptance.
+It does **not** claim by documentation alone that `Basic.lean` or `ExactGapReal.lean` proves the final numeric value, that audit scripts replace Lean checking, that receipt / ready / witness-only records are theorem bodies by themselves, or that construction-spine external-audit projection equals external acceptance.
 
 Review rule:
 
