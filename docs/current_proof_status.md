@@ -2,18 +2,30 @@
 
 This file is the short status anchor for `main` when older pull requests, README/ROADMAP text, external summaries, or citation snapshots lag behind the proof spine.
 
+---
+
 ## Current `main` proof-facing surface
 
-The current proof-facing surface is a carrier / spectral-route / R1--R7 terminal-audit chain:
+The current proof-facing surface has two visible layers:
 
 ```text
-Basic-layer route marker
-  -> abstract normalized exactGapValueReal carrier with positivity / above-one facts
-  -> continuum-Hamiltonian / PVM / operator-spectral carrier-alignment route
-  -> R6 exact atom 33/20 / spectral-PVM value-pinning route
-  -> R7 positive spectral-weight witness route
-  -> R1--R7 terminal audit chain
-  -> public / external audit receipt chain
+A. normalized exact-gap audit route
+   Basic-layer route marker
+     -> abstract normalized exactGapValueReal carrier with positivity / above-one facts
+     -> continuum-Hamiltonian / PVM / operator-spectral carrier-alignment route
+     -> R6 exact atom 33/20 / spectral-PVM value-pinning route
+     -> R7 positive spectral-weight witness route
+     -> R1--R7 terminal audit chain
+     -> public / external audit receipt chain
+
+B. axiomatic / OS-Wightman / Euclidean construction route
+   axiomatic Yang--Mills closure target
+     -> OS/Wightman Hamiltonian reconstruction spine
+     -> OS/Wightman mass-gap definition bridge
+     -> OS/Wightman external audit bridge
+     -> Euclidean measure to mass-gap pipeline
+     -> finite-volume / continuum construction spine
+     -> Euclidean construction external audit bridge
 ```
 
 Current public-boundary reading:
@@ -21,17 +33,19 @@ Current public-boundary reading:
 ```text
 internal Lean terminal audit route: present
 public / external audit receipt surface: present
+OS/Wightman and Euclidean construction bridge surfaces: present
 external mathematical consensus: not claimed
 independent peer-review completion: not claimed
 Clay-style public acceptance: not claimed
 complete public solution of the 4D Yang--Mills mass-gap problem: not claimed
+unconditional physical Yang--Mills measure construction: not claimed
 ```
 
 This status file is a documentation anchor only. The Lean source tree and theorem bodies remain authoritative.
 
 ---
 
-## Central terminal payload
+## Central normalized terminal payload
 
 The central terminal-audit payload currently exposed by the R1--R7 chain is:
 
@@ -46,7 +60,7 @@ The important correction is the origin of the first line: it must not be read as
 
 ## Exact-gap layer separation
 
-The current route separates five review layers:
+The current normalized exact-gap route separates five review layers:
 
 ```text
 1. Basic-layer route marker
@@ -80,16 +94,64 @@ ContinuumHamiltonianMassGapTheorem.lean and related Hamiltonian files
 YangMillsHamiltonianSpectralDerivation3320.lean
   -> aligns the spectral infimum / attainment / observable atom value with the derived spectral value
   -> aligns exactGapValueReal with the derived Hamiltonian spectral value
-  -> intentionally does not export derivedHamiltonianSpectralValue = 33/20 outside R6
+  -> keeps final-value adoption routed through the R6 value-pinning lane
 
 R6 ExactAtom3320 lane
   -> supplies the non-definitional spectral/PVM pinning route for the displayed value
+  -> exposes the canonical ready theorem exact_atom_3320_r6_exact_gap_value_eq_3320_ready
 
 R7 positive-weight lane
   -> supplies the positive spectral-weight witness and preserves the exact value
 
 R1--R7 terminal chain
   -> records exact 33/20 plus positive spectral weight at terminal audit level
+```
+
+---
+
+## Axiomatic / OS-Wightman / Euclidean construction route
+
+The current source tree also exposes a conditional construction and audit route:
+
+```text
+AxiomaticYangMillsMassGapClosure.lean
+  -> theorem-level closure target for an axiomatic Yang--Mills model
+
+OSWightmanHamiltonianReconstructionSpine.lean
+  -> reconstruction spine from OS/Wightman assumptions to Hilbert/Hamiltonian data
+
+OSWightmanMassGapDefinitionBridge.lean
+  -> mass-gap definition bridge with PVM detection, positive energy, and vacuum isolation fields
+
+OSWightmanMassGapExternalAuditBridge.lean
+  -> external audit projection for the OS/Wightman bridge
+
+EuclideanYangMillsMeasureToMassGapPipeline.lean
+  -> pipeline from Euclidean measure data to the OS/Wightman mass-gap bridge
+
+EuclideanYangMillsMeasureUnconditionalTarget.lean
+  -> target surface for an eventual concrete construction
+
+EuclideanYangMillsMeasureConstructionSpine.lean
+  -> finite-volume / continuum construction spine
+
+EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean
+  -> external audit projection for the construction spine
+```
+
+Current boundary:
+
+```text
+These files provide theorem-level closure targets and audit projections.
+They do not by themselves prove that the physical 4D Yang--Mills measure has
+already been unconditionally constructed from first principles.
+A concrete construction and external validation remain separate review tasks.
+```
+
+Primary human-readable note:
+
+```text
+docs/axiomatic_yang_mills_mass_gap_closure.md
 ```
 
 ---
@@ -175,7 +237,7 @@ Current status:
 The Yang--Mills spectral interface aligns exactGapValueReal with the derived Hamiltonian spectral value.
 It preserves positive and nonzero spectral-mass surfaces.
 It keeps public / final-release boundary markers visible.
-It deliberately does not export derivedHamiltonianSpectralValue = 33/20 outside R6.
+It routes final value adoption through R6 rather than Basic.lean or ExactGapReal.lean.
 ```
 
 ### 4. R6 exact-atom / value-pinning role
@@ -193,8 +255,12 @@ Primary anchors:
 ```text
 ExactAtom3320R6NormalizedSpectralAtom
 ExactAtom3320R6SpectralPVMPinsDerivedValue
+exact_atom_3320_r6_spectral_pvm_pins_derived_value_ready
+exact_atom_3320_r6_derived_spectral_value_from_hamiltonian_pvm_route
 exact_atom_3320_r6_derived_spectral_value_eq_3320
+exact_atom_3320_r6_derived_spectral_value_eq_3320_ready
 exact_atom_3320_r6_exact_gap_value_eq_3320
+exact_atom_3320_r6_exact_gap_value_eq_3320_ready
 exact_atom_3320_nondefinitional_origin_certificate_ready
 exact_atom_3320_nondefinitional_derivation_target_ready
 ```
@@ -203,7 +269,7 @@ Current status:
 
 ```text
 R6 is the review layer that prevents the displayed value 33/20 from being read as a pre-R6 definitional unfolding.
-The exact value theorem is obtained by carrier alignment plus spectral/PVM pinning, not by unfolding ExactGapReal.lean.
+The canonical ready theorem derives exactGapValueReal = 33/20 by carrier alignment plus Hamiltonian/PVM/spectral pinning.
 ```
 
 ### 5. R7 / terminal role
@@ -222,6 +288,7 @@ hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready
 hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight
 hard_physical_residual_ledger_r1_r7_terminal_final_release_held
 hard_physical_residual_ledger_r1_r7_terminal_public_boundary_locked
+hard_physical_residual_ledger_r1_r7_terminal_carries_r4_genuine_pvm_laws
 ```
 
 Current status:
@@ -236,7 +303,7 @@ The same terminal layer keeps final-release hold and public-boundary lock visibl
 
 ## Proof-debt reading rule
 
-Do not read a terminal-looking chain as external mathematical acceptance until the dependency chain has been reviewed.
+Do not read a terminal-looking chain or bridge-looking construction surface as external mathematical acceptance until the dependency chain has been reviewed.
 
 ```text
 PUnit
@@ -284,6 +351,8 @@ Use this wording for public summaries:
 ```text
 MGAP4D currently provides a Lean 4 proof-carrying and replayable audit surface for
 a normalized 4D mass-gap route. The internal R1--R7 terminal chain records exact
-value 33/20 and a positive spectral-weight witness. External mathematical
-consensus and Clay-style public acceptance remain separate review processes.
+value 33/20 and a positive spectral-weight witness. The repository also exposes
+conditional axiomatic / OS-Wightman / Euclidean construction bridge surfaces.
+External mathematical consensus and Clay-style public acceptance remain separate
+review processes.
 ```
