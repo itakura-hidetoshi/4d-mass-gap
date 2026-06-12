@@ -29,7 +29,7 @@ structure ExactValueTheoremBodyOriginData where
   notCILedgerArtifact : exactGapTheoremBodyClosure.ready
   notManifestOnlyArtifact : exactGapTheoremBodyClosure.ready
   theoremBodyUnchanged : exactGapTheoremBodyClosure.ready
-  publicBoundaryHeld : exactGapTheoremBodyClosure.publicBoundaryHeld
+  publicBoundaryHeld : exactGapPublicBoundaryHeld
 
 def ExactValueTheoremBodyOriginData.ready
     (_D : ExactValueTheoremBodyOriginData) : Prop :=
@@ -54,7 +54,7 @@ def ExactValueTheoremBodyOriginData.ready
   exactGapTheoremBodyClosure.ready ∧
   exactGapTheoremBodyClosure.ready ∧
   exactGapTheoremBodyClosure.ready ∧
-  exactGapTheoremBodyClosure.publicBoundaryHeld
+  exactGapPublicBoundaryHeld
 
 theorem exact_value_origin_from_theorem_body
     (_D : ExactValueTheoremBodyOriginData)
@@ -99,7 +99,7 @@ theorem exact_value_origin_theorem_body_unchanged_witness :
   exact exact_gap_theorem_body_closure_ready
 
 theorem exact_value_origin_public_boundary_held_witness :
-    exactGapTheoremBodyClosure.publicBoundaryHeld := by
+    exactGapPublicBoundaryHeld := by
   exact exact_gap_theorem_body_closure_public_boundary_held
 
 theorem exact_value_origin_not_packaging_artifact
@@ -172,7 +172,7 @@ structure ExactValueTheoremBodyOriginReviewSurface where
   notCILedgerArtifact : exactGapTheoremBodyClosure.ready
   notManifestOnlyArtifact : exactGapTheoremBodyClosure.ready
   theoremBodyUnchanged : exactGapTheoremBodyClosure.ready
-  publicBoundaryHeld : exactGapTheoremBodyClosure.publicBoundaryHeld
+  publicBoundaryHeld : exactGapPublicBoundaryHeld
 
 def ExactValueTheoremBodyOriginReviewSurface.ready
     (_S : ExactValueTheoremBodyOriginReviewSurface) : Prop :=
@@ -196,7 +196,7 @@ def ExactValueTheoremBodyOriginReviewSurface.ready
   exactGapTheoremBodyClosure.ready ∧
   exactGapTheoremBodyClosure.ready ∧
   exactGapTheoremBodyClosure.ready ∧
-  exactGapTheoremBodyClosure.publicBoundaryHeld
+  exactGapPublicBoundaryHeld
 
 noncomputable def exactValueTheoremBodyOriginReviewSurface : ExactValueTheoremBodyOriginReviewSurface :=
   { theoremBodyReady := exact_gap_theorem_body_closure_ready
