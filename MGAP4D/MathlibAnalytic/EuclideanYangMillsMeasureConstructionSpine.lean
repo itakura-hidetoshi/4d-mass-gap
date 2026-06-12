@@ -269,6 +269,29 @@ theorem euclidean_yang_mills_continuum_spine_vacuum_isolated
       Set.Ioo 0 δ ∩ S.definitionBridge.spine.model.energySpectrum = ∅ := by
   exact os_wightman_bridge_vacuum_isolated S.definitionBridge
 
+/-- Vacuum isolation supplies a positive lower bound for all non-vacuum spectral
+energies in the construction spine. -/
+theorem euclidean_yang_mills_continuum_spine_nonvacuum_energy_lower_bound
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E := by
+  rcases euclidean_yang_mills_continuum_spine_vacuum_isolated S with
+    ⟨δ, hδPositive, hNoSpectrumInGap⟩
+  refine ⟨δ, hδPositive, ?_⟩
+  intro E hE
+  by_contra hNotLe
+  have hELtDelta : E < δ := lt_of_not_ge hNotLe
+  have hEPositive : 0 < E :=
+    euclidean_yang_mills_continuum_spine_nonvacuum_energy_positive S hE
+  have hInGap :
+      E ∈ Set.Ioo 0 δ ∩ S.definitionBridge.spine.model.energySpectrum :=
+    ⟨⟨hEPositive, hELtDelta⟩, hE.1⟩
+  have hEmpty : E ∈ (∅ : Set ℝ) := by
+    simpa [hNoSpectrumInGap] using hInGap
+  exact hEmpty
+
 /-- The construction spine exposes detection of the first excitation by the
 spectral PVM. -/
 theorem euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
