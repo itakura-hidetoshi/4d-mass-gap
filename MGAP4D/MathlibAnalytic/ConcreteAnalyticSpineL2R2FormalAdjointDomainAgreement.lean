@@ -70,7 +70,7 @@ theorem concrete_l2_r2_formal_adjoint_operator_value_eq_completed_diagonal_opera
     exact concrete_l2_r2_formal_adjoint_candidate_subset_completed_diagonal_graph hFormal
   have hValue :=
     concrete_l2_r2_completed_diagonal_operator_value_eq_of_graph yd hCompleted
-  exact hValue.symm
+  simpa [yd] using hValue.symm
 
 end
 
