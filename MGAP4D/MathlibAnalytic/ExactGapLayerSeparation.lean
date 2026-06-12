@@ -56,15 +56,15 @@ def ExactGapSpectralReceiptLayerReady : Prop :=
 
 /-- Engineering/review-marker layer. -/
 def ExactGapEngineeringMarkerLayerReady : Prop :=
-  exactGapTheoremBodyClosure.allAbstractTheoremBodiesClosed ∧
-  exactGapTheoremBodyClosure.concreteHilbertRealizationStillOpen ∧
-  exactGapTheoremBodyClosure.concreteUnboundedOperatorStillOpen ∧
-  exactGapTheoremBodyClosure.concreteSpectralMeasureStillOpen ∧
-  exactGapTheoremBodyClosure.concretePVMStillOpen ∧
-  exactGapTheoremBodyClosure.concreteLatticeGaugePlaquetteStillOpen ∧
-  exactGapTheoremBodyClosure.concreteOperatorMeasureRealizationStillOpen ∧
-  exactGapTheoremBodyClosure.finalReleaseHeld ∧
-  exactGapTheoremBodyClosure.publicBoundaryHeld
+  exactGapAllAbstractTheoremBodiesClosed ∧
+  exactGapConcreteHilbertRealizationStillOpen ∧
+  exactGapConcreteUnboundedOperatorStillOpen ∧
+  exactGapConcreteSpectralMeasureStillOpen ∧
+  exactGapConcretePVMStillOpen ∧
+  exactGapConcreteLatticeGaugePlaquetteStillOpen ∧
+  exactGapConcreteOperatorMeasureRealizationStillOpen ∧
+  exactGapFinalReleaseHeld ∧
+  exactGapPublicBoundaryHeld
 
 /-- The four layers are simultaneously available, while remaining separated for
 external review. -/
@@ -109,8 +109,14 @@ theorem exact_gap_spectral_receipt_layer_ready :
 /-- The engineering/review-marker layer is ready. -/
 theorem exact_gap_engineering_marker_layer_ready :
     ExactGapEngineeringMarkerLayerReady := by
-  unfold ExactGapEngineeringMarkerLayerReady
-  repeat constructor <;> trivial
+  exact And.intro exact_gap_all_abstract_theorem_bodies_closed <|
+    And.intro exact_gap_concrete_hilbert_realization_still_open <|
+    And.intro exact_gap_concrete_unbounded_operator_still_open <|
+    And.intro exact_gap_concrete_spectral_measure_still_open <|
+    And.intro exact_gap_concrete_pvm_still_open <|
+    And.intro exact_gap_concrete_lattice_gauge_plaquette_still_open <|
+    And.intro exact_gap_concrete_operator_measure_realization_still_open <|
+    And.intro exactGapValueReal_pos exactGapValueReal_mem_energyRay
 
 /-- The exact-gap layer separation map is ready. -/
 theorem exact_gap_layer_separation_ready : ExactGapLayerSeparationReady := by
