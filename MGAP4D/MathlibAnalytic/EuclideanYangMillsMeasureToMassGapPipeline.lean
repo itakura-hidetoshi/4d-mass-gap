@@ -93,7 +93,7 @@ theorem euclidean_yang_mills_measure_ready_regularity
   exact hRegularity
 
 /-- Bridge from a Euclidean Yang--Mills measure package to the named
-Osterwalder--Schrader and Wightman axiom package.
+Osterwalder--Schrader and Wightman assumption package.
 
 The OS reconstruction theorem is represented here by typed maps from the
 Euclidean measure-side hypotheses to the Wightman-side hypotheses.  Thus the
@@ -120,7 +120,7 @@ structure EuclideanYangMillsMeasureToOSWightmanBridge where
     measure.ready → axioms.wightmanSpectrumCondition
 
 /-- The Euclidean measure-to-OS/Wightman bridge proves readiness of the
-OS/Wightman axiom package. -/
+OS/Wightman assumption package. -/
 theorem euclidean_yang_mills_measure_to_os_wightman_ready
     (E : EuclideanYangMillsMeasureToOSWightmanBridge)
     (hμ : E.measure.ready) :
@@ -171,7 +171,7 @@ def EuclideanYangMillsMeasureMassGapPipeline.vacuumOmega
   P.definitionBridge.spine.model.vacuum
 
 /-- The upstream Euclidean measure package proves the downstream OS/Wightman
-axiom package used by the bridge. -/
+assumption package used by the bridge. -/
 theorem euclidean_yang_mills_measure_pipeline_os_axioms_ready
     (P : EuclideanYangMillsMeasureMassGapPipeline) :
     P.definitionBridge.spine.axioms.ready := by
@@ -262,8 +262,8 @@ theorem euclidean_yang_mills_measure_os_reconstruction_wightman_hamiltonian_mass
     euclidean_yang_mills_measure_pipeline_nonvacuum_spectrum_threshold P⟩
 
 /-- Certificate bundling the complete theorem-level chain.  Every field is an
-ordinary proposition over Mathlib data: a measure, an OS/Wightman axiom package,
-a reconstructed Hilbert carrier, a Hamiltonian, a vacuum vector, and the
+ordinary proposition over Mathlib data: a measure, an OS/Wightman assumption
+package, a reconstructed Hilbert carrier, a Hamiltonian, a vacuum vector, and the
 non-vacuum spectral threshold. -/
 structure EuclideanYangMillsMeasureToMassGapPipelineCertificate
     (P : EuclideanYangMillsMeasureMassGapPipeline) where
