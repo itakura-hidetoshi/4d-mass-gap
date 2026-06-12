@@ -1,9 +1,11 @@
 # Axiomatic Yang--Mills Mass Gap Closure Route
 
 This note records the conditional proof kernel installed in
-`MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean` and its external
+`MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean`, its external
 audit projection in
-`MGAP4D/MathlibAnalytic/AxiomaticYangMillsExternalAuditProjection.lean`.
+`MGAP4D/MathlibAnalytic/AxiomaticYangMillsExternalAuditProjection.lean`, and the
+OS/Wightman-to-Hamiltonian reconstruction spine in
+`MGAP4D/MathlibAnalytic/OSWightmanHamiltonianReconstructionSpine.lean`.
 
 ## Scope
 
@@ -66,8 +68,40 @@ Hamiltonian/PVM spectral mass gap value with the repository's normalized
 `exactGapValueReal`, then the audit layer obtains both positivity and the
 non-vacuum spectral-threshold identity for `exactGapValueReal`.
 
+## Reconstruction spine
+
+The reconstruction spine records the missing concrete bridge explicitly:
+
+```lean
+structure OSWightmanHamiltonianReconstructionSpine where
+  axioms : OSWightmanYangMillsAxioms
+  model : FourDimensionalYangMillsAxiomaticModel
+  model_uses_axioms : model.osWightman = axioms
+  axioms_ready : axioms.ready
+  exact_gap_value_identified : model.massGapValue = exactGapValueReal
+```
+
+From this spine, Lean derives:
+
+```lean
+theorem os_wightman_reconstruction_spine_has_mass_gap
+    (S : OSWightmanHamiltonianReconstructionSpine) :
+    S.model.hasMassGap
+
+theorem os_wightman_reconstruction_spine_exact_gap_positive
+    (S : OSWightmanHamiltonianReconstructionSpine) :
+    0 < exactGapValueReal
+
+theorem os_wightman_reconstruction_spine_exact_gap_is_sInf_nonvacuum
+    (S : OSWightmanHamiltonianReconstructionSpine) :
+    exactGapValueReal = sInf (S.model.energySpectrum \ ({0} : Set ℝ))
+```
+
+The hard construction target is therefore no longer hidden in a receipt-like
+marker: it is the explicit production of `OSWightmanHamiltonianReconstructionSpine`.
+
 ## Boundary
 
-The remaining hard part is the construction of such a concrete model from
+The remaining hard part is the construction of such a concrete spine from
 Yang--Mills theory.  This file is the theorem-level closure target into which
 that construction should plug; it is not a substitute for the construction.
