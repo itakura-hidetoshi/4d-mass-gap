@@ -250,6 +250,17 @@ theorem euclidean_yang_mills_continuum_spine_nonvacuum_energy_nonnegative_and_ne
     euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum S E hE.1,
     fun hZero => hE.2 (by simpa [hZero])⟩
 
+/-- Every non-vacuum spectral energy in the construction spine is strictly
+positive. -/
+theorem euclidean_yang_mills_continuum_spine_nonvacuum_energy_positive
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) {E : ℝ}
+    (hE : E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) :
+    0 < E := by
+  rcases euclidean_yang_mills_continuum_spine_nonvacuum_energy_nonnegative_and_ne_zero
+      S hE with
+    ⟨hNonnegative, hNeZero⟩
+  exact lt_of_le_of_ne hNonnegative (Ne.symm hNeZero)
+
 /-- The construction spine exposes vacuum isolation, routed through the OS cluster
 property in the definition bridge. -/
 theorem euclidean_yang_mills_continuum_spine_vacuum_isolated
