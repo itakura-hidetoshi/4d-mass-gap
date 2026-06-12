@@ -374,5 +374,24 @@ def euclideanYangMillsContinuumMeasureConstructionCertificate
     definitionBridgeNonVacuumThreshold :=
       euclidean_yang_mills_continuum_spine_definition_bridge_nonvacuum_threshold S }
 
+/-- A construction certificate can be consumed as a definition-bridge-level
+mass-gap package.  This is the certificate-only form of the theorem surface used
+by downstream proof files. -/
+theorem euclidean_yang_mills_continuum_spine_certificate_definition_bridge_mass_gap_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : EuclideanYangMillsContinuumMeasureConstructionCertificate S) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    C.massGapDefinition,
+    C.deltaPositive,
+    C.definitionBridgeNonVacuumThreshold,
+    C.firstExcitationPVMDetected⟩
+
 end MathlibAnalytic
 end MGAP4D
