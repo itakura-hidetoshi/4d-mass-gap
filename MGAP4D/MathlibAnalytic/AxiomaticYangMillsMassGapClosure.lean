@@ -51,9 +51,9 @@ structure FourDimensionalYangMillsAxiomaticModel where
   spacetimeDim : ℕ
   spacetimeDim_eq_four : spacetimeDim = 4
   H : Type
-  instNormedAddCommGroup : NormedAddCommGroup H
-  instInnerProductSpace : InnerProductSpace ℝ H
-  instCompleteSpace : CompleteSpace H
+  [instNormedAddCommGroup : NormedAddCommGroup H]
+  [instInnerProductSpace : InnerProductSpace ℝ H]
+  [instCompleteSpace : CompleteSpace H]
   vacuum : H
   hamiltonian : H → H
   spectralPVM : Set ℝ → Set H
