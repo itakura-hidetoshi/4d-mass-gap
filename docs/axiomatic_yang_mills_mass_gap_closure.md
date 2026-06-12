@@ -3,9 +3,11 @@
 This note records the conditional proof kernel installed in
 `MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean`, its external
 audit projection in
-`MGAP4D/MathlibAnalytic/AxiomaticYangMillsExternalAuditProjection.lean`, and the
+`MGAP4D/MathlibAnalytic/AxiomaticYangMillsExternalAuditProjection.lean`, the
 OS/Wightman-to-Hamiltonian reconstruction spine in
-`MGAP4D/MathlibAnalytic/OSWightmanHamiltonianReconstructionSpine.lean`.
+`MGAP4D/MathlibAnalytic/OSWightmanHamiltonianReconstructionSpine.lean`, and the
+OS/Wightman mass-gap definition bridge in
+`MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean`.
 
 ## Scope
 
@@ -100,8 +102,43 @@ theorem os_wightman_reconstruction_spine_exact_gap_is_sInf_nonvacuum
 The hard construction target is therefore no longer hidden in a receipt-like
 marker: it is the explicit production of `OSWightmanHamiltonianReconstructionSpine`.
 
+## Definition bridge
+
+The next bridge fixes the precise meaning of the route from named axioms to the
+mass-gap predicate:
+
+```lean
+structure OSWightmanMassGapDefinitionBridge where
+  spine : OSWightmanHamiltonianReconstructionSpine
+  hamiltonianSelfAdjoint_proof : spine.model.hamiltonianSelfAdjoint
+  spectralPVM_detects_energySpectrum :
+    ∀ E : ℝ, E ∈ spine.model.energySpectrum →
+      ∃ ψ : spine.model.H, ψ ∈ spine.model.spectralPVM ({E} : Set ℝ)
+  vacuumSpectralPoint :
+    spine.model.vacuum ∈ spine.model.spectralPVM ({0} : Set ℝ)
+  positiveEnergy_from_wightmanSpectrum :
+    spine.axioms.wightmanSpectrumCondition →
+      ∀ E : ℝ, E ∈ spine.model.energySpectrum → 0 ≤ E
+  vacuumIsolation_from_osCluster :
+    spine.axioms.osClusterProperty →
+      ∃ δ : ℝ, 0 < δ ∧ Set.Ioo 0 δ ∩ spine.model.energySpectrum = ∅
+```
+
+This bridge makes the route auditable:
+
+- the Wightman spectrum condition projects to positive Hamiltonian energy,
+- the OS cluster property projects to vacuum isolation,
+- the spectral PVM detects the first excitation,
+- the reconstructed Hamiltonian has the model-level mass-gap predicate,
+- `exactGapValueReal` is identified with the non-vacuum spectral threshold.
+
+The certificate
+`OSWightmanMassGapDefinitionBridgeCertificate` records these as theorem fields,
+not as terminal receipts.
+
 ## Boundary
 
-The remaining hard part is the construction of such a concrete spine from
-Yang--Mills theory.  This file is the theorem-level closure target into which
-that construction should plug; it is not a substitute for the construction.
+The remaining hard part is the construction of such a concrete spine and
+mass-gap definition bridge from Yang--Mills theory.  These files are the
+theorem-level closure target into which that construction should plug; they are
+not substitutes for the construction.
