@@ -310,5 +310,21 @@ theorem external_audit_readiness_euclidean_construction_spine_certificate_induce
     exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum := by
   exact euclidean_yang_mills_finite_volume_continuum_construction_mass_gap S
 
+/-- An external-audit construction-spine certificate also consumes as the full
+induced-pipeline spectral package, including the transported non-vacuum lower
+bound on `S.toPipeline.nonVacuumHamiltonianSpectrum`. -/
+theorem external_audit_readiness_euclidean_construction_spine_certificate_induced_pipeline_full_spectral_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (_C : ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S) :
+    S.toPipeline.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum ∧
+    (∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ, E ∈ S.toPipeline.nonVacuumHamiltonianSpectrum → δ ≤ E) ∧
+    ∃ ψ : S.toPipeline.definitionBridge.spine.model.H,
+      ψ ∈ S.toPipeline.definitionBridge.spine.model.spectralPVM
+        ({S.toPipeline.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact euclidean_yang_mills_continuum_spine_toPipeline_full_spectral_package S
+
 end MathlibAnalytic
 end MGAP4D
