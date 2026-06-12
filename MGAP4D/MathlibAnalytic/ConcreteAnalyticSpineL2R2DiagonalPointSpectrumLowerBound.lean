@@ -45,6 +45,18 @@ theorem concrete_l2_r2_diagonal_point_spectrum_isLeast_one :
     concrete_l2_r2_one_mem_diagonal_point_spectrum,
     fun _ hlam => concrete_l2_r2_diagonal_point_spectrum_lower_bound hlam⟩
 
+/-- The infimum of the explicit diagonal point-spectrum candidate is exactly one. -/
+theorem concrete_l2_r2_diagonal_point_spectrum_sInf_eq_one :
+    sInf concreteL2R2DiagonalPointSpectrum = (1 : ℝ) := by
+  have hBdd : BddBelow concreteL2R2DiagonalPointSpectrum :=
+    ⟨1, fun _ hlam => concrete_l2_r2_diagonal_point_spectrum_lower_bound hlam⟩
+  have hNonempty : concreteL2R2DiagonalPointSpectrum.Nonempty :=
+    ⟨1, concrete_l2_r2_one_mem_diagonal_point_spectrum⟩
+  apply le_antisymm
+  · exact csInf_le hBdd concrete_l2_r2_one_mem_diagonal_point_spectrum
+  · exact le_csInf hNonempty
+      (fun _ hlam => concrete_l2_r2_diagonal_point_spectrum_lower_bound hlam)
+
 /-- The explicit diagonal point-spectrum candidate contains no zero energy. -/
 theorem concrete_l2_r2_zero_not_mem_diagonal_point_spectrum :
     (0 : ℝ) ∉ concreteL2R2DiagonalPointSpectrum := by
@@ -52,6 +64,27 @@ theorem concrete_l2_r2_zero_not_mem_diagonal_point_spectrum :
   have hLower : (1 : ℝ) ≤ 0 :=
     concrete_l2_r2_diagonal_point_spectrum_lower_bound hzero
   norm_num at hLower
+
+/-- Removing zero does not alter the explicit diagonal point spectrum. -/
+theorem concrete_l2_r2_diagonal_point_spectrum_diff_zero_eq :
+    concreteL2R2DiagonalPointSpectrum \ ({0} : Set ℝ) =
+      concreteL2R2DiagonalPointSpectrum := by
+  ext lam
+  constructor
+  · intro hlam
+    exact hlam.1
+  · intro hlam
+    exact ⟨hlam, by
+      intro hzero
+      have : lam = 0 := by simpa using hzero
+      subst lam
+      exact concrete_l2_r2_zero_not_mem_diagonal_point_spectrum hlam⟩
+
+/-- The nonzero point-spectrum infimum is exactly one. -/
+theorem concrete_l2_r2_diagonal_nonzero_point_spectrum_sInf_eq_one :
+    sInf (concreteL2R2DiagonalPointSpectrum \ ({0} : Set ℝ)) = (1 : ℝ) := by
+  rw [concrete_l2_r2_diagonal_point_spectrum_diff_zero_eq]
+  exact concrete_l2_r2_diagonal_point_spectrum_sInf_eq_one
 
 /-- Every coordinate unit is a normalized eigenvector of the completed diagonal
 graph-defined operator with eigenvalue `n + 1`. -/
@@ -64,6 +97,26 @@ theorem concrete_l2_r2_coordinate_unit_normalized_eigenpair (n : ℕ) :
     concrete_l2_r2_completed_diagonal_unit_graph_mem n,
     concrete_l2_mathlib_unit_norm_eq_one n⟩
 
+/-- The coordinate-unit eigenpairs belong to the actual Mathlib `LinearPMap`
+graph, not merely to the auxiliary graph-defined carrier. -/
+theorem concrete_l2_r2_coordinate_unit_mem_actual_linear_pmap_graph (n : ℕ) :
+    (concreteL2MathlibUnit n,
+        concreteL2R2DiagonalWeight n • concreteL2MathlibUnit n) ∈
+      concreteL2R2DenseDiagonalDomainLinearPMap.graph := by
+  rw [concrete_l2_r2_dense_diagonal_domain_linear_pmap_graph_eq_completed_graph_carrier]
+  exact concrete_l2_r2_completed_diagonal_unit_graph_mem n
+
+/-- The actual self-adjoint `LinearPMap` has a normalized eigenpair at the lower
+edge eigenvalue one. -/
+theorem concrete_l2_r2_actual_linear_pmap_normalized_eigenpair_one :
+    (concreteL2MathlibUnit 0, (1 : ℝ) • concreteL2MathlibUnit 0) ∈
+      concreteL2R2DenseDiagonalDomainLinearPMap.graph ∧
+    ‖concreteL2MathlibUnit 0‖ = 1 := by
+  constructor
+  · simpa [concrete_l2_r2_diagonal_weight_zero_eq_one] using
+      concrete_l2_r2_coordinate_unit_mem_actual_linear_pmap_graph 0
+  · exact concrete_l2_mathlib_unit_norm_eq_one 0
+
 /-- Every explicit diagonal eigenvalue is strictly positive. -/
 theorem concrete_l2_r2_diagonal_point_spectrum_positive
     {lam : ℝ}
@@ -73,10 +126,16 @@ theorem concrete_l2_r2_diagonal_point_spectrum_positive
     (concrete_l2_r2_diagonal_point_spectrum_lower_bound hlam)
 
 /-- The actual Mathlib self-adjoint diagonal `LinearPMap` is accompanied by an
-explicit normalized eigenpair family whose eigenvalue set has least element one. -/
+explicit normalized eigenpair family whose eigenvalue set and nonzero part both
+have infimum one. -/
 theorem concrete_l2_r2_self_adjoint_diagonal_has_point_spectrum_lower_edge_one :
     IsSelfAdjoint concreteL2R2DenseDiagonalDomainLinearPMap ∧
     IsLeast concreteL2R2DiagonalPointSpectrum (1 : ℝ) ∧
+    sInf concreteL2R2DiagonalPointSpectrum = (1 : ℝ) ∧
+    sInf (concreteL2R2DiagonalPointSpectrum \ ({0} : Set ℝ)) = (1 : ℝ) ∧
+    (concreteL2MathlibUnit 0, (1 : ℝ) • concreteL2MathlibUnit 0) ∈
+      concreteL2R2DenseDiagonalDomainLinearPMap.graph ∧
+    ‖concreteL2MathlibUnit 0‖ = 1 ∧
     (∀ n : ℕ,
       (concreteL2MathlibUnit n,
           concreteL2R2DiagonalWeight n • concreteL2MathlibUnit n) ∈
@@ -85,6 +144,10 @@ theorem concrete_l2_r2_self_adjoint_diagonal_has_point_spectrum_lower_edge_one :
   exact ⟨
     concrete_l2_r2_dense_diagonal_domain_linear_pmap_isSelfAdjoint,
     concrete_l2_r2_diagonal_point_spectrum_isLeast_one,
+    concrete_l2_r2_diagonal_point_spectrum_sInf_eq_one,
+    concrete_l2_r2_diagonal_nonzero_point_spectrum_sInf_eq_one,
+    concrete_l2_r2_actual_linear_pmap_normalized_eigenpair_one.1,
+    concrete_l2_r2_actual_linear_pmap_normalized_eigenpair_one.2,
     concrete_l2_r2_coordinate_unit_normalized_eigenpair⟩
 
 end
