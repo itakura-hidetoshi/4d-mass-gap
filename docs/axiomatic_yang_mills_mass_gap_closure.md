@@ -9,9 +9,11 @@ OS/Wightman-to-Hamiltonian reconstruction spine in
 OS/Wightman mass-gap definition bridge in
 `MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean`, its external
 audit projection in
-`MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean`, and the
+`MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean`, the
 Euclidean-measure-to-mass-gap pipeline in
-`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean`.
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean`, and the
+unconditional-construction target in
+`MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean`.
 
 ## Scope
 
@@ -21,8 +23,8 @@ mass gap problem.  Instead, it replaces terminal `True` / bare `Prop` /
 Mathlib data:
 
 - Euclidean Yang--Mills measure data,
-- Osterwalder--Schrader axiom package,
-- Wightman axiom package,
+- Osterwalder--Schrader assumption package,
+- Wightman assumption package,
 - gauge group and field-configuration carriers,
 - reconstructed Hilbert-space carrier,
 - Hamiltonian,
@@ -110,8 +112,8 @@ marker: it is the explicit production of `OSWightmanHamiltonianReconstructionSpi
 
 ## Definition bridge
 
-The next bridge fixes the precise meaning of the route from named axioms to the
-mass-gap predicate:
+The next bridge fixes the precise meaning of the route from named assumptions to
+the mass-gap predicate:
 
 ```lean
 structure OSWightmanMassGapDefinitionBridge where
@@ -214,7 +216,7 @@ This gives the named route:
 
 ```text
 Euclidean Yang--Mills measure
-→ Osterwalder--Schrader axioms
+→ Osterwalder--Schrader assumptions
 → OS reconstruction
 → Wightman theory
 → physical Hilbert space
@@ -238,6 +240,57 @@ The theorem is still conditional: it proves the downstream implication once the
 Euclidean measure package, OS/Wightman reconstruction bridge, and Hamiltonian/PVM
 definition bridge are supplied.  It does not assert that the Euclidean
 Yang--Mills measure has already been constructed unconditionally.
+
+## Unconditional construction target
+
+The file `EuclideanYangMillsMeasureUnconditionalTarget.lean` adds the theorem
+target needed for genuine unconditional promotion:
+
+```lean
+structure EuclideanYangMillsMeasureUnconditionalConstructionTarget where
+  measurePackage : EuclideanYangMillsMeasurePackage
+  bridge : EuclideanYangMillsMeasureToOSWightmanBridge
+  definitionBridge : OSWightmanMassGapDefinitionBridge
+  measurePackage_identified : bridge.measure = measurePackage
+  bridge_uses_definition_axioms : definitionBridge.spine.axioms = bridge.axioms
+  continuumFourDimensionalYangMillsMeasureConstructed : Prop
+  continuumFourDimensionalYangMillsMeasureConstructed_proof :
+    continuumFourDimensionalYangMillsMeasureConstructed
+  nontrivialCompactGaugeGroupConstructed : Prop
+  nontrivialCompactGaugeGroupConstructed_proof : nontrivialCompactGaugeGroupConstructed
+  interactingContinuumLimitConstructed : Prop
+  interactingContinuumLimitConstructed_proof : interactingContinuumLimitConstructed
+  gaugeInvariantSchwingerFunctionsConstructed : Prop
+  gaugeInvariantSchwingerFunctionsConstructed_proof :
+    gaugeInvariantSchwingerFunctionsConstructed
+  reflectionPositivityTheorem : measurePackage.reflectionPositive
+  clusterPropertyTheorem : measurePackage.clusterProperty
+```
+
+The key difference from the conditional pipeline is that the construction-side
+obligations are not mere names: each named construction proposition has a proof
+field inside the target.  Therefore `ready` is derived without additional
+external hypotheses:
+
+```lean
+theorem euclidean_yang_mills_unconditional_target_ready
+    (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
+    C.ready
+```
+
+The promotion theorem has only the target object as its input:
+
+```lean
+theorem euclidean_yang_mills_unconditional_measure_construction_mass_gap
+    (C : EuclideanYangMillsMeasureUnconditionalConstructionTarget) :
+    C.toPipeline.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal = sInf C.toPipeline.nonVacuumHamiltonianSpectrum
+```
+
+This is still not a declaration that the Clay-level construction has already
+been accepted; it is the Lean theorem socket into which such a construction must
+plug.
 
 ## Boundary
 
