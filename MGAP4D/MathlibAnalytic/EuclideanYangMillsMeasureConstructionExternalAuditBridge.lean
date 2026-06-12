@@ -184,5 +184,24 @@ def externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
     firstExcitationPVMDetected :=
       (external_audit_readiness_euclidean_construction_spine_mass_gap_package S).2.2.2 }
 
+/-- A certificate can be consumed as the same external-audit mass-gap package.
+This theorem is useful for downstream files that receive only the certificate
+record rather than the original construction spine. -/
+theorem external_audit_readiness_euclidean_construction_spine_certificate_mass_gap_package
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
+    (C : ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S) :
+    S.definitionBridge.spine.model.hasMassGap ∧
+    0 < exactGapValueReal ∧
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ) := by
+  exact ⟨
+    C.massGapDefinition,
+    C.exactGapPositive,
+    C.exactGapThreshold,
+    C.firstExcitationPVMDetected⟩
+
 end MathlibAnalytic
 end MGAP4D
