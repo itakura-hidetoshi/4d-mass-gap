@@ -36,6 +36,60 @@ theorem external_audit_readiness_euclidean_yang_mills_construction_spine_project
     external_audit_readiness_os_wightman_mass_gap_definition_bridge_projection
       S.definitionBridge⟩
 
+/-- The construction-spine external-audit projection exposes limit readiness. -/
+theorem external_audit_readiness_euclidean_construction_spine_projection_limit_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.limitReady := by
+  rcases external_audit_readiness_euclidean_yang_mills_construction_spine_projection S with
+    ⟨hLimit, hMeasure, hBridgeMeasure, hOSAxioms, hTarget, hOSWightman⟩
+  exact hLimit
+
+/-- The construction-spine external-audit projection exposes readiness of the
+continuum Euclidean measure package. -/
+theorem external_audit_readiness_euclidean_construction_spine_projection_measure_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.measurePackage.ready := by
+  rcases external_audit_readiness_euclidean_yang_mills_construction_spine_projection S with
+    ⟨hLimit, hMeasure, hBridgeMeasure, hOSAxioms, hTarget, hOSWightman⟩
+  exact hMeasure
+
+/-- The construction-spine external-audit projection exposes readiness of the
+measure package used by its OS/Wightman bridge. -/
+theorem external_audit_readiness_euclidean_construction_spine_projection_bridge_measure_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.bridge.measure.ready := by
+  rcases external_audit_readiness_euclidean_yang_mills_construction_spine_projection S with
+    ⟨hLimit, hMeasure, hBridgeMeasure, hOSAxioms, hTarget, hOSWightman⟩
+  exact hBridgeMeasure
+
+/-- The construction-spine external-audit projection exposes readiness of the
+OS/Wightman axioms used by the downstream definition bridge. -/
+theorem external_audit_readiness_euclidean_construction_spine_projection_os_axioms_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.axioms.ready := by
+  rcases external_audit_readiness_euclidean_yang_mills_construction_spine_projection S with
+    ⟨hLimit, hMeasure, hBridgeMeasure, hOSAxioms, hTarget, hOSWightman⟩
+  exact hOSAxioms
+
+/-- The construction-spine external-audit projection exposes readiness of the
+induced unconditional Euclidean-measure construction target. -/
+theorem external_audit_readiness_euclidean_construction_spine_projection_unconditional_target_ready
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.toUnconditionalTarget.ready := by
+  rcases external_audit_readiness_euclidean_yang_mills_construction_spine_projection S with
+    ⟨hLimit, hMeasure, hBridgeMeasure, hOSAxioms, hTarget, hOSWightman⟩
+  exact hTarget
+
+/-- The construction-spine external-audit projection exposes the underlying
+OS/Wightman mass-gap definition bridge projection. -/
+theorem external_audit_readiness_euclidean_construction_spine_projection_os_wightman_bridge
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
+      S.definitionBridge := by
+  rcases external_audit_readiness_euclidean_yang_mills_construction_spine_projection S with
+    ⟨hLimit, hMeasure, hBridgeMeasure, hOSAxioms, hTarget, hOSWightman⟩
+  exact hOSWightman
+
 /-- The construction spine has the external-audit exact-gap positivity consequence. -/
 theorem external_audit_readiness_euclidean_construction_spine_exact_gap_positive
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
@@ -90,16 +144,18 @@ def externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
     ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate S :=
   { projection :=
       external_audit_readiness_euclidean_yang_mills_construction_spine_projection S
-    limitReady := euclidean_yang_mills_continuum_spine_limit_ready S
-    measureReady := euclidean_yang_mills_continuum_spine_measure_ready S
+    limitReady :=
+      external_audit_readiness_euclidean_construction_spine_projection_limit_ready S
+    measureReady :=
+      external_audit_readiness_euclidean_construction_spine_projection_measure_ready S
     bridgeMeasureReady :=
-      euclidean_yang_mills_continuum_spine_bridge_measure_ready S
-    osAxiomsReady := euclidean_yang_mills_continuum_spine_os_axioms_ready S
+      external_audit_readiness_euclidean_construction_spine_projection_bridge_measure_ready S
+    osAxiomsReady :=
+      external_audit_readiness_euclidean_construction_spine_projection_os_axioms_ready S
     unconditionalTargetReady :=
-      euclidean_yang_mills_continuum_spine_unconditional_target_ready S
+      external_audit_readiness_euclidean_construction_spine_projection_unconditional_target_ready S
     osWightmanProjection :=
-      external_audit_readiness_os_wightman_mass_gap_definition_bridge_projection
-        S.definitionBridge
+      external_audit_readiness_euclidean_construction_spine_projection_os_wightman_bridge S
     exactGapPositive :=
       external_audit_readiness_euclidean_construction_spine_exact_gap_positive S
     exactGapThreshold :=
