@@ -382,6 +382,35 @@ theorem euclidean_yang_mills_continuum_spine_vacuum_omega_spectral_point
       S.definitionBridge.spine.model.spectralPVM ({0} : Set ℝ)
 ```
 
+The spectral mass-gap stage is also exposed directly from the construction
+spine:
+
+```lean
+theorem euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∀ E : ℝ, E ∈ S.definitionBridge.spine.model.energySpectrum → 0 ≤ E
+
+theorem euclidean_yang_mills_continuum_spine_vacuum_isolated
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ δ : ℝ, 0 < δ ∧
+      Set.Ioo 0 δ ∩ S.definitionBridge.spine.model.energySpectrum = ∅
+
+theorem euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ ψ : S.definitionBridge.spine.model.H,
+      ψ ∈ S.definitionBridge.spine.model.spectralPVM
+        ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ)
+```
+
+The model-level mass-gap predicate is exposed before reading off the normalized
+exact value:
+
+```lean
+theorem euclidean_yang_mills_continuum_spine_mass_gap_definition
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.definitionBridge.spine.model.hasMassGap
+```
+
 The main theorem from this upstream construction layer is:
 
 ```lean
@@ -402,7 +431,11 @@ finite-volume Mathlib measures
 → OS/Wightman readiness
 → Wightman locality / covariance / spectrum condition
 → reconstructed Hilbert space / Hamiltonian / vacuum spectral point
-→ Hamiltonian/PVM mass-gap bridge
+→ positive Hamiltonian spectrum
+→ vacuum isolation
+→ first excitation detected by the spectral PVM
+→ model-level mass-gap predicate
+→ exact normalized threshold identity
 → Δ > 0
 ```
 
