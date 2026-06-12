@@ -50,6 +50,7 @@ ANCHORS = {
         "def osWightmanMassGapDefinitionBridgeCertificate",
     ],
     "external_bridge": [
+        "import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate",
         "import MGAP4D.MathlibAnalytic.OSWightmanMassGapDefinitionBridge",
         "def ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection",
         "theorem external_audit_readiness_os_wightman_mass_gap_definition_bridge_projection",
@@ -108,6 +109,16 @@ def main() -> int:
             if anchor not in text:
                 failures.append(f"{rel} missing OS/Wightman bridge anchor: {anchor!r}")
 
+    root_text = contents["root_import"]
+    gate_import = "import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate"
+    bridge_import = "import MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge"
+    if gate_import in root_text and bridge_import in root_text:
+        if root_text.index(bridge_import) < root_text.index(gate_import):
+            failures.append(
+                "MGAP4D/MathlibAnalytic.lean imports OSWightmanMassGapExternalAuditBridge "
+                "before ExternalAuditReadinessGate"
+            )
+
     external_text = contents["external_bridge"]
     external_rel = FILES["external_bridge"].relative_to(ROOT)
     for forbidden in LEAN_FORBIDDEN_IN_BRIDGE + LEAN_PLACEHOLDER_DECLS:
@@ -131,7 +142,7 @@ def main() -> int:
     print(f"Reconstruction spine anchors audited: {len(ANCHORS['spine'])}")
     print(f"Definition bridge anchors audited: {len(ANCHORS['definition_bridge'])}")
     print(f"External bridge anchors audited: {len(ANCHORS['external_bridge'])}")
-    print("Root import audited: MGAP4D/MathlibAnalytic.lean")
+    print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge")
     print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
     print("OS/Wightman mass-gap bridge audit passed")
