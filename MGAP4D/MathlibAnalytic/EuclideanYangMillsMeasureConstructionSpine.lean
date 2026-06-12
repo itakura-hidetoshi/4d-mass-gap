@@ -163,6 +163,21 @@ def EuclideanYangMillsContinuumMeasureConstructionSpine.toPipeline
     EuclideanYangMillsMeasureMassGapPipeline :=
   S.toUnconditionalTarget.toPipeline
 
+/-- The induced Euclidean measure-to-mass-gap pipeline uses exactly the definition
+bridge carried by the construction spine. -/
+theorem euclidean_yang_mills_continuum_spine_toPipeline_definitionBridge
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.toPipeline.definitionBridge = S.definitionBridge := by
+  rfl
+
+/-- The induced pipeline's non-vacuum Hamiltonian spectrum is the definition
+bridge spectrum with the vacuum energy removed. -/
+theorem euclidean_yang_mills_continuum_spine_toPipeline_nonvacuum_spectrum
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    S.toPipeline.nonVacuumHamiltonianSpectrum =
+      S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) := by
+  rfl
+
 /-- The construction spine proves readiness of the continuum Euclidean measure
 package itself. -/
 theorem euclidean_yang_mills_continuum_spine_measure_ready
@@ -265,6 +280,15 @@ theorem euclidean_yang_mills_continuum_spine_nonvacuum_threshold
     exactGapValueReal = sInf S.toPipeline.nonVacuumHamiltonianSpectrum := by
   exact euclidean_yang_mills_unconditional_target_nonvacuum_threshold
     S.toUnconditionalTarget
+
+/-- The same threshold can be read directly on the definition bridge carried by
+the construction spine, because the induced pipeline preserves that bridge. -/
+theorem euclidean_yang_mills_continuum_spine_definition_bridge_nonvacuum_threshold
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    exactGapValueReal =
+      sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) := by
+  simpa [euclidean_yang_mills_continuum_spine_toPipeline_nonvacuum_spectrum S]
+    using euclidean_yang_mills_continuum_spine_nonvacuum_threshold S
 
 /-- End-to-end theorem from the finite-volume/continuum construction spine to the
 mass-gap statement. -/
