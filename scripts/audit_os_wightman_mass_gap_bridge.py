@@ -3,8 +3,8 @@
 
 The goal of this audit is narrow and textual: keep the conditional axiom-to-
 Hamiltonian route from regressing into terminal True/receipt placeholders, and
-make sure the root aggregator and documentation expose the final external-audit
-bridge file.
+make sure the root aggregator, full replay script, workflow, and documentation
+expose the final external-audit bridge file.
 """
 
 from __future__ import annotations
@@ -20,6 +20,8 @@ FILES = {
     "definition_bridge": ROOT / "MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean",
     "external_bridge": ROOT / "MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean",
     "root_import": ROOT / "MGAP4D/MathlibAnalytic.lean",
+    "check_sh": ROOT / "scripts/check.sh",
+    "full_local_workflow": ROOT / ".github/workflows/full-local-check.yml",
     "docs": ROOT / "docs/axiomatic_yang_mills_mass_gap_closure.md",
 }
 
@@ -59,7 +61,16 @@ ANCHORS = {
         "theorem external_audit_readiness_os_wightman_definition_bridge_pvm_detects_first_excitation",
     ],
     "root_import": [
+        "import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate",
         "import MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge",
+    ],
+    "check_sh": [
+        "audit OS/Wightman mass-gap bridge|python3 scripts/audit_os_wightman_mass_gap_bridge.py",
+        "MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge",
+    ],
+    "full_local_workflow": [
+        "name: Full Local Check CI",
+        "bash scripts/check.sh",
     ],
     "docs": [
         "OSWightmanMassGapExternalAuditBridge.lean",
@@ -98,6 +109,25 @@ def read(path: Path) -> str:
         raise
 
 
+def require_order(
+    failures: list[str],
+    *,
+    text: str,
+    rel: Path,
+    before: str,
+    after: str,
+    label: str,
+) -> None:
+    if before not in text:
+        failures.append(f"{rel} missing order anchor before-side for {label}: {before!r}")
+        return
+    if after not in text:
+        failures.append(f"{rel} missing order anchor after-side for {label}: {after!r}")
+        return
+    if text.index(after) < text.index(before):
+        failures.append(f"{rel} has invalid order for {label}: {after!r} precedes {before!r}")
+
+
 def main() -> int:
     failures: list[str] = []
     contents = {name: read(path) for name, path in FILES.items()}
@@ -110,17 +140,29 @@ def main() -> int:
                 failures.append(f"{rel} missing OS/Wightman bridge anchor: {anchor!r}")
 
     root_text = contents["root_import"]
+    root_rel = FILES["root_import"].relative_to(ROOT)
     gate_import = "import MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate"
     bridge_import = "import MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge"
-    if gate_import in root_text and bridge_import in root_text:
-        if root_text.index(bridge_import) < root_text.index(gate_import):
-            failures.append(
-                "MGAP4D/MathlibAnalytic.lean imports OSWightmanMassGapExternalAuditBridge "
-                "before ExternalAuditReadinessGate"
-            )
+    require_order(
+        failures,
+        text=root_text,
+        rel=root_rel,
+        before=gate_import,
+        after=bridge_import,
+        label="root external audit gate before OS/Wightman bridge",
+    )
 
     external_text = contents["external_bridge"]
     external_rel = FILES["external_bridge"].relative_to(ROOT)
+    definition_bridge_import = "import MGAP4D.MathlibAnalytic.OSWightmanMassGapDefinitionBridge"
+    require_order(
+        failures,
+        text=external_text,
+        rel=external_rel,
+        before=gate_import,
+        after=definition_bridge_import,
+        label="direct ExternalAuditReadinessGate import before definition bridge import",
+    )
     for forbidden in LEAN_FORBIDDEN_IN_BRIDGE + LEAN_PLACEHOLDER_DECLS:
         if forbidden in external_text:
             failures.append(f"{external_rel} contains forbidden placeholder snippet: {forbidden!r}")
@@ -130,6 +172,25 @@ def main() -> int:
     for forbidden in ["receipt : True", "terminalReceipt", "readyReceipt"]:
         if forbidden in definition_text:
             failures.append(f"{definition_rel} contains forbidden bridge placeholder snippet: {forbidden!r}")
+
+    check_text = contents["check_sh"]
+    check_rel = FILES["check_sh"].relative_to(ROOT)
+    require_order(
+        failures,
+        text=check_text,
+        rel=check_rel,
+        before="audit OS/Wightman mass-gap bridge|python3 scripts/audit_os_wightman_mass_gap_bridge.py",
+        after="replay summary|python3 scripts/replay_summary.py",
+        label="OS/Wightman audit before replay summary",
+    )
+    require_order(
+        failures,
+        text=check_text,
+        rel=check_rel,
+        before="MGAP4D.MathlibAnalytic.ExternalAuditReadinessGate",
+        after="MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge",
+        label="full replay external audit gate build before OS/Wightman bridge build",
+    )
 
     if failures:
         print("OS/Wightman mass-gap bridge audit failed:")
@@ -143,6 +204,9 @@ def main() -> int:
     print(f"Definition bridge anchors audited: {len(ANCHORS['definition_bridge'])}")
     print(f"External bridge anchors audited: {len(ANCHORS['external_bridge'])}")
     print("Root import order audited: ExternalAuditReadinessGate before OSWightmanMassGapExternalAuditBridge")
+    print("Direct bridge import order audited: ExternalAuditReadinessGate before OSWightmanMassGapDefinitionBridge")
+    print("Full replay script audited: audit + build connected through scripts/check.sh")
+    print("Full local workflow audited: .github/workflows/full-local-check.yml runs scripts/check.sh")
     print("Documentation audited: docs/axiomatic_yang_mills_mass_gap_closure.md")
     print("Forbidden placeholder snippets audited: True/receipt/sorry/admit/axiom/constant")
     print("OS/Wightman mass-gap bridge audit passed")
