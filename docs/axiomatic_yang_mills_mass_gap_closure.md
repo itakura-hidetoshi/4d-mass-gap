@@ -1,7 +1,9 @@
 # Axiomatic Yang--Mills Mass Gap Closure Route
 
 This note records the conditional proof kernel installed in
-`MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean`.
+`MGAP4D/MathlibAnalytic/AxiomaticYangMillsMassGapClosure.lean` and its external
+audit projection in
+`MGAP4D/MathlibAnalytic/AxiomaticYangMillsExternalAuditProjection.lean`.
 
 ## Scope
 
@@ -23,7 +25,7 @@ Mathlib data:
 
 ## Closure theorem
 
-The public theorem is:
+The public closure theorem is:
 
 ```lean
 theorem wightman_os_hamiltonian_spectral_pvm_closes_4d_mass_gap
@@ -37,6 +39,32 @@ Thus, once a concrete four-dimensional Yang--Mills construction supplies the
 OS/Wightman readiness assumptions and the reconstructed spectral data, the
 mass-gap statement is obtained as an ordinary Lean theorem over the Mathlib
 carrier.
+
+## External audit projection
+
+The external audit projection exposes the same theorem in the audit surface:
+
+```lean
+theorem external_audit_readiness_axiomatic_yang_mills_closure_projection
+    (M : FourDimensionalYangMillsAxiomaticModel)
+    (hOS : M.osWightman.ready) :
+    ExternalAuditReadinessAxiomaticYangMillsClosureProjection M
+```
+
+The exact-gap bridge is also explicit:
+
+```lean
+theorem external_audit_readiness_axiomatic_yang_mills_exact_gap_projection
+    (M : FourDimensionalYangMillsAxiomaticModel)
+    (hOS : M.osWightman.ready)
+    (hExact : M.massGapValue = exactGapValueReal) :
+    ExternalAuditReadinessAxiomaticYangMillsExactGapProjection M
+```
+
+This says that if a concrete OS/Wightman Yang--Mills model identifies its
+Hamiltonian/PVM spectral mass gap value with the repository's normalized
+`exactGapValueReal`, then the audit layer obtains both positivity and the
+non-vacuum spectral-threshold identity for `exactGapValueReal`.
 
 ## Boundary
 
