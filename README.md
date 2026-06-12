@@ -32,12 +32,15 @@ B. axiomatic / OS-Wightman / Euclidean construction route
    axiomatic closure target
      -> OS/Wightman Hamiltonian reconstruction spine
      -> OS/Wightman mass-gap definition bridge
+     -> OS/Wightman external audit bridge
      -> Euclidean measure to mass-gap pipeline
+     -> Euclidean measure unconditional-construction target
      -> finite-volume / continuum construction spine
      -> Euclidean construction external audit bridge
+     -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
 ```
 
-The repository does **not** claim external consensus, independent peer-review completion, public final acceptance, or an unconditional construction of the physical four-dimensional Yang--Mills measure from first principles.
+The repository does **not** claim external consensus, independent peer-review completion, public final acceptance, an externally accepted OS/Wightman bridge, an externally accepted construction-spine external-audit projection, or an unconditional construction of the physical four-dimensional Yang--Mills measure from first principles.
 
 Compact public wording:
 
@@ -45,9 +48,10 @@ Compact public wording:
 MGAP4D provides a Lean 4 proof-carrying and replayable audit surface for a
 normalized 4D mass-gap route. The internal R1--R7 terminal chain records the
 normalized value 33/20 and a positive spectral-weight witness. The repository
-also contains conditional axiomatic / OS-Wightman / Euclidean-construction
-bridge surfaces. External mathematical consensus and public acceptance remain
-separate review processes.
+also contains conditional axiomatic / OS-Wightman / Euclidean-construction bridge
+surfaces, including a finite-volume/continuum construction spine and a
+construction-spine external-audit projection. External mathematical consensus
+and public acceptance remain separate review processes.
 ```
 
 For the shortest status anchor, read `docs/current_proof_status.md`.
@@ -68,11 +72,14 @@ R6 spectral/PVM value-pinning lane for 33/20
 R7 positive spectral-weight witness lane
 R1--R7 terminal audit projection of exact 33/20 plus positive weight
 OS/Wightman and Euclidean construction bridge surfaces
+Euclidean measure unconditional-construction target
+finite-volume/continuum construction spine
+construction-spine external-audit projection
 normalized / dimensional E0 boundary
 proof-debt inventory for PUnit / True / StillOpen / witness / receipt markers
 ```
 
-It does **not** claim by documentation alone that `Basic.lean` or `ExactGapReal.lean` proves the final numeric value, that audit scripts replace Lean checking, or that receipt / ready / witness-only records are theorem bodies by themselves.
+It does **not** claim by documentation alone that `Basic.lean` or `ExactGapReal.lean` proves the final numeric value, that audit scripts replace Lean checking, that receipt / ready / witness-only records are theorem bodies by themselves, or that construction-spine audit projection equals external acceptance.
 
 Review rule:
 
@@ -97,6 +104,18 @@ Basic-layer route marker
 
 The newer OS/Wightman / Euclidean route records conditional theorem targets and construction-spine audit projections. The remaining hard task there is the concrete construction and external validation of the physical four-dimensional Yang--Mills measure and reconstruction spine.
 
+OS/Wightman--Euclidean theorem-facing route:
+
+```text
+EuclideanYangMillsFiniteVolumeApproximation
+  -> EuclideanYangMillsContinuumMeasureConstructionSpine
+  -> EuclideanYangMillsMeasureUnconditionalConstructionTarget
+  -> EuclideanYangMillsMeasureMassGapPipeline
+  -> OSWightmanMassGapDefinitionBridge
+  -> ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
+  -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
+```
+
 ---
 
 ## Important review anchors
@@ -114,7 +133,11 @@ The newer OS/Wightman / Euclidean route records conditional theorem targets and 
 | R7 positive weight route | `MGAP4D/R7/Theorem.lean` |
 | Terminal R1--R7 chain | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` |
 | Axiomatic / OS-Wightman / Euclidean route note | `docs/axiomatic_yang_mills_mass_gap_closure.md` |
+| OS/Wightman definition bridge | `MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean` |
 | OS/Wightman external audit bridge | `MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean` |
+| Euclidean measure pipeline | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean` |
+| Euclidean unconditional target | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean` |
+| Euclidean construction spine | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean` |
 | Euclidean construction external audit bridge | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` |
 | Placeholder / witness inventory | `docs/proof_placeholder_inventory.md` |
 
@@ -138,6 +161,16 @@ theorem exact_atom_3320_r6_exact_gap_value_eq_3320_ready :
 theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight :
     MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
       Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
+
+theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
+
+theorem external_audit_readiness_euclidean_yang_mills_construction_spine_projection
+
+theorem external_audit_readiness_euclidean_construction_spine_exact_gap_positive
+
+theorem external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
+
+theorem external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
 ```
 
 ---
@@ -204,7 +237,28 @@ cd 4d-mass-gap
 bash scripts/check.sh
 ```
 
-Manual Lean build:
+The OS/Wightman--Euclidean replay stages include:
+
+```text
+[check] audit OS/Wightman mass-gap bridge
+[check] build OS/Wightman mass-gap external audit bridge
+[check] build Euclidean Yang-Mills measure to mass-gap pipeline
+[check] build unconditional Euclidean Yang-Mills measure target
+[check] build Euclidean Yang-Mills measure construction spine
+[check] build Euclidean Yang-Mills construction external audit bridge
+```
+
+Manual route for this lane:
+
+```bash
+lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
+lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge
+```
+
+Manual full Lean build:
 
 ```bash
 lake update
@@ -223,17 +277,19 @@ A successful replay means that the pinned Lean / Lake / mathlib environment buil
 4. Read `docs/exact_gap_layer_separation.md`.
 5. Read `docs/axiomatic_yang_mills_mass_gap_closure.md`.
 6. Read `docs/proof_placeholder_inventory.md`.
-7. Read `THEOREM_INDEX.md` and `EXTERNAL_AUDIT_PACKET.md`.
+7. Read `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, and `INDEPENDENT_REPLAY.md`.
 8. Inspect the Basic / ExactGapReal / Yang--Mills spectral derivation / R6 / R7 separation.
 9. Inspect the OS/Wightman and Euclidean construction bridge files.
-10. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
+10. Inspect `EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` and confirm it is a review-routing projection, not external acceptance.
+11. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
 
 ---
 
 ## Current priorities
 
-1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `docs/exact_gap_layer_separation.md`, `THEOREM_INDEX.md`, and `EXTERNAL_AUDIT_PACKET.md` synchronized.
+1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `docs/exact_gap_layer_separation.md`, `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, and `INDEPENDENT_REPLAY.md` synchronized.
 2. Keep the Basic / ExactGapReal / spectral-derivation / R6-R7 layer separation visible.
 3. Keep the OS/Wightman and Euclidean construction bridge status visible as conditional / construction-target material.
-4. Keep placeholder, witness, and proof-debt inventory visible.
-5. Keep final-release hold, public-boundary lock, and external-acceptance boundary explicit.
+4. Keep the construction-spine external-audit projection visible as a review-routing surface, not external acceptance.
+5. Keep placeholder, witness, and proof-debt inventory visible.
+6. Keep final-release hold, public-boundary lock, and external-acceptance boundary explicit.
