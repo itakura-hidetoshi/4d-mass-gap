@@ -146,6 +146,59 @@ of symmetry, adjoint-domain agreement, self-adjointness, spectral theorem, PVM,
 or positive spectral weight, that route remains **not discharged** until a typed
 replacement theorem is cited.
 
+## Euclidean construction target / spine interpretation
+
+The OS/Wightman--Euclidean construction lane is a higher-level theorem route, not
+a shortcut around construction proof debt.
+
+```text
+EuclideanYangMillsMeasureUnconditionalConstructionTarget
+  = proof-field socket for an eventual concrete Euclidean Yang--Mills measure construction
+  = candidate route only after each construction field is reviewed as a typed theorem or externally supplied construction proof
+
+EuclideanYangMillsContinuumMeasureConstructionSpine
+  = finite-volume / continuum construction spine
+  = carries projective consistency, tightness, weak-limit, continuum-measure identification, and Schwinger-function limit proof fields
+
+ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
+  = construction-spine external-audit projection
+  = review-routing projection, not external acceptance
+```
+
+Key fields requiring dependency review:
+
+```text
+continuumFourDimensionalYangMillsMeasureConstructed_proof
+nontrivialCompactGaugeGroupConstructed_proof
+interactingContinuumLimitConstructed_proof
+gaugeInvariantSchwingerFunctionsConstructed_proof
+projectiveConsistency_proof
+tightness_proof
+weakLimitExists_proof
+continuumMeasureIdentified_proof
+schwingerFunctionsAreContinuumLimits_proof
+```
+
+Typed theorem anchors currently projecting the construction spine into the
+mass-gap route include:
+
+```text
+euclidean_yang_mills_unconditional_measure_construction_mass_gap
+euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
+external_audit_readiness_euclidean_yang_mills_construction_spine_projection
+external_audit_readiness_euclidean_construction_spine_exact_gap_positive
+external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
+external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
+```
+
+Boundary rule:
+
+```text
+The construction-spine external-audit projection is not external acceptance.
+External acceptance of the construction-spine external-audit projection is not claimed.
+A concrete Euclidean Yang--Mills measure construction and external validation remain separate review tasks.
+```
+
 ## Audit command
 
 Run the companion audit script to produce a grep-style inventory:
