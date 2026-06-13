@@ -33,12 +33,12 @@ theorem z2_crossing_kernel_product_eq_exp_action
   | nil =>
       simp [z2CrossingAction]
   | cons q qs ih =>
-      simp only [List.map_cons, List.prod_cons, List.sum_cons,
-        z2CrossingAction]
+      rw [List.map_cons, List.prod_cons]
       rw [z2GaugeWilsonPlaquetteGramKernel_eq_boltzmann]
       rw [ih]
       rw [← Real.exp_add]
       congr 1
+      simp only [z2CrossingAction, List.map_cons, List.sum_cons]
       ring
 
 /-- Reflection decomposition of the finite-lattice Wilson action.
