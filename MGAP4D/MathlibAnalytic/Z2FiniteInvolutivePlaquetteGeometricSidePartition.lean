@@ -69,22 +69,59 @@ theorem FiniteInvolutivePlaquetteGeometricSidePartition.side_reflection
         hc, hcr, hlt, hgt, P.reflection_involutive p]
 
 /-- Compatibility data connecting the concrete even-torus plaquette reflection
-to the already established reflected vertex support.  The remaining geometric
-work is isolated in the ordered-support identity and the fixed-plane lemma. -/
+to the already established reflected vertex support.  Vertex order may change
+under orientation correction, so compatibility is expressed by membership
+rather than ordered-list equality. -/
 structure FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
     (H : ℕ) where
-  vertices_reflection :
-    ∀ p : FiniteEvenFourTorusPlaquette H,
-      finiteFourTorusPlaquetteVertices
-          (finiteEvenFourTorusPlaquetteReflection H p) =
-        finiteEvenFourTorusPlaquetteReflectedVertices p
+  vertices_reflection_mem :
+    ∀ (p : FiniteEvenFourTorusPlaquette H)
+      (v : FiniteEvenFourTorusVertex H),
+      v ∈ finiteFourTorusPlaquetteVertices
+          (finiteEvenFourTorusPlaquetteReflection H p) ↔
+        v ∈ finiteEvenFourTorusPlaquetteReflectedVertices p
   fixed_crossing :
     ∀ p : FiniteEvenFourTorusPlaquette H,
       finiteEvenFourTorusPlaquetteReflection H p = p →
         finiteEvenFourTorusCrossingPlaquette p
 
+/-- Strict-positive support is invariant under replacing a vertex list by a
+membership-equivalent one. -/
+theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictPositiveSupport_reflection_iff
+    {H : ℕ}
+    (C : FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
+    (p : FiniteEvenFourTorusPlaquette H) :
+    finiteEvenFourTorusStrictPositiveSupport H
+        (finiteFourTorusPlaquetteVertices
+          (finiteEvenFourTorusPlaquetteReflection H p)) ↔
+      finiteEvenFourTorusStrictPositiveSupport H
+        (finiteEvenFourTorusPlaquetteReflectedVertices p) := by
+  unfold finiteEvenFourTorusStrictPositiveSupport
+  constructor
+  · intro h v hv
+    exact h v ((C.vertices_reflection_mem p v).2 hv)
+  · intro h v hv
+    exact h v ((C.vertices_reflection_mem p v).1 hv)
+
+/-- The analogous membership-invariance for strict-negative support. -/
+theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictNegativeSupport_reflection_iff
+    {H : ℕ}
+    (C : FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
+    (p : FiniteEvenFourTorusPlaquette H) :
+    finiteEvenFourTorusStrictNegativeSupport H
+        (finiteFourTorusPlaquetteVertices
+          (finiteEvenFourTorusPlaquetteReflection H p)) ↔
+      finiteEvenFourTorusStrictNegativeSupport H
+        (finiteEvenFourTorusPlaquetteReflectedVertices p) := by
+  unfold finiteEvenFourTorusStrictNegativeSupport
+  constructor
+  · intro h v hv
+    exact h v ((C.vertices_reflection_mem p v).2 hv)
+  · intro h v hv
+    exact h v ((C.vertices_reflection_mem p v).1 hv)
+
 /-- Concrete reflection exchanges strict-positive and strict-negative
-plaquettes once ordered support compatibility is available. -/
+plaquettes once support compatibility is available. -/
 theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictPositive_reflection_iff_negative
     {H : ℕ}
     (C : FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
@@ -94,8 +131,9 @@ theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictPositiv
       finiteEvenFourTorusStrictNegativePlaquette p := by
   unfold finiteEvenFourTorusStrictPositivePlaquette
     finiteEvenFourTorusPlaquetteVertices
-  rw [C.vertices_reflection p]
-  exact finiteEvenFourTorusPlaquette_reflectedPositive_iff_negative p
+  exact
+    (C.strictPositiveSupport_reflection_iff p).trans
+      (finiteEvenFourTorusPlaquette_reflectedPositive_iff_negative p)
 
 /-- The reverse open-side exchange. -/
 theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictNegative_reflection_iff_positive
@@ -107,8 +145,9 @@ theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictNegativ
       finiteEvenFourTorusStrictPositivePlaquette p := by
   unfold finiteEvenFourTorusStrictNegativePlaquette
     finiteEvenFourTorusPlaquetteVertices
-  rw [C.vertices_reflection p]
-  exact finiteEvenFourTorusPlaquette_reflectedNegative_iff_positive p
+  exact
+    (C.strictNegativeSupport_reflection_iff p).trans
+      (finiteEvenFourTorusPlaquette_reflectedNegative_iff_positive p)
 
 /-- Concrete plaquette reflection preserves the geometric crossing sector. -/
 theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.crossing_reflection_iff
@@ -118,10 +157,16 @@ theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.crossing_refl
     finiteEvenFourTorusCrossingPlaquette
         (finiteEvenFourTorusPlaquetteReflection H p) ↔
       finiteEvenFourTorusCrossingPlaquette p := by
-  unfold finiteEvenFourTorusCrossingPlaquette
-    finiteEvenFourTorusPlaquetteVertices
-  rw [C.vertices_reflection p]
-  exact finiteEvenFourTorusPlaquette_reflectedCrossing_iff p
+  change
+    (¬ finiteEvenFourTorusStrictPositivePlaquette
+        (finiteEvenFourTorusPlaquetteReflection H p) ∧
+      ¬ finiteEvenFourTorusStrictNegativePlaquette
+        (finiteEvenFourTorusPlaquetteReflection H p)) ↔
+    (¬ finiteEvenFourTorusStrictPositivePlaquette p ∧
+      ¬ finiteEvenFourTorusStrictNegativePlaquette p)
+  rw [C.strictPositive_reflection_iff_negative p,
+    C.strictNegative_reflection_iff_positive p]
+  exact and_comm
 
 /-- Package compatible concrete even-torus geometry as a reflection-invariant
 geometric three-sector partition. -/
@@ -135,8 +180,7 @@ def finiteEvenFourTorusGeometricPlaquetteSidePartition
       finiteEvenFourTorusPlaquetteReflection_involutive H
     crossing := finiteEvenFourTorusCrossingPlaquette
     crossing_reflection :=
-      FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
-        .crossing_reflection_iff C
+      FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.crossing_reflection_iff C
     fixed_crossing := C.fixed_crossing
     rank := Fintype.equivFin (FiniteEvenFourTorusPlaquette H) }
 
