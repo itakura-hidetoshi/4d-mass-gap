@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSReflectionPositivity
-import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTimeReflection
+import MGAP4D.MathlibAnalytic.Z2FiniteInvolutiveEdgeOrbitAssembly
 
 namespace MGAP4D
 namespace MathlibAnalytic
