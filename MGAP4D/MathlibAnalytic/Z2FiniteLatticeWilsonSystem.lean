@@ -30,7 +30,6 @@ def boolEquivZ2Gauge : Bool ≃ Z2Gauge where
     cases b <;> simp [z2GaugeNontrivial]
   right_inv := by
     intro g
-    rcases g with ⟨g⟩
     fin_cases g <;> norm_num [z2GaugeNontrivial]
 
 /-- Transport a fixed-carrier Gram kernel along a finite equivalence. -/
@@ -97,7 +96,7 @@ theorem z2GaugeWilsonPlaquetteGramKernel_apply
       exact hxy (boolEquivZ2Gauge.symm.injective h)
     simp [z2GaugeWilsonPlaquetteGramKernel,
       FiniteOSGramKernelOn.transport, z2WilsonPlaquetteGramKernel,
-      z2PlaquetteGramKernel, z2PlaquetteKernel, hxy, hsymm]
+      z2PlaquetteGramKernel, z2PlaquetteKernel, hxy]
 
 /-- The local `Z2Gauge` Wilson kernel is OS reflection positive. -/
 theorem z2GaugeWilson_singlePlaquette_reflectionPositive
@@ -167,10 +166,10 @@ theorem z2FiniteLatticeWilsonSystem_energy_identity
     (h30 : ∀ p, target (boundary p 3) = source (boundary p 0))
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β) (hE0 : 0 ≤ energyIdentity) (hE1 : 0 ≤ energyNontrivial) :
-    (z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
+    ((z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
       h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
-      .plaquetteEnergy (1 : Z2Gauge) = energyIdentity := by
-  simp [z2FiniteLatticeWilsonSystem]
+      .plaquetteEnergy) (1 : Z2Gauge) = energyIdentity := by
+  rfl
 
 /-- The concrete system assigns the nontrivial plaquette energy to the unique
 nonidentity group element. -/
@@ -186,10 +185,12 @@ theorem z2FiniteLatticeWilsonSystem_energy_nontrivial
     (h30 : ∀ p, target (boundary p 3) = source (boundary p 0))
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β) (hE0 : 0 ≤ energyIdentity) (hE1 : 0 ≤ energyNontrivial) :
-    (z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
+    ((z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
       h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
-      .plaquetteEnergy z2GaugeNontrivial = energyNontrivial := by
-  simp [z2FiniteLatticeWilsonSystem, z2GaugeNontrivial]
+      .plaquetteEnergy) z2GaugeNontrivial = energyNontrivial := by
+  change (if z2GaugeNontrivial = 1 then energyIdentity else energyNontrivial) =
+    energyNontrivial
+  simp [z2GaugeNontrivial]
 
 /-- On the actual `Z₂` gauge carrier, the transported local kernel agrees with
 the Boltzmann weight determined by the concrete plaquette energy. -/
