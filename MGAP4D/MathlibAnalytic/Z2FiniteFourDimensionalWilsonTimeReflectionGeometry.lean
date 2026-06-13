@@ -145,8 +145,8 @@ theorem z2_finite_fourDimensional_wilson_reflectionPositive
     {L : FiniteLatticeWilsonSystem}
     (G : Z2FiniteFourDimensionalWilsonTimeReflectionGeometry L) :
     FiniteLatticeWilsonOSReflectionPositive
-      (G.toSideClassification.toIndexPartition.toTermPartition
-        .toActionDecomposition.toFactorization.toReflectionCertificate) :=
+      ((((G.toSideClassification.toIndexPartition).toTermPartition)
+        .toActionDecomposition.toFactorization).toReflectionCertificate) :=
   z2_finite_lattice_wilson_reflectionPositive_of_sideClassification
     G.toSideClassification
 
