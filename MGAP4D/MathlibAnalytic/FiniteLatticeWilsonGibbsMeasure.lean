@@ -164,6 +164,7 @@ theorem finite_lattice_partitionFunction_ne_zero
 theorem finite_lattice_partitionFunction_ne_top
     (L : FiniteLatticeWilsonSystem) :
     L.partitionFunction ≠ ∞ := by
+  classical
   unfold FiniteLatticeWilsonSystem.partitionFunction
   rw [tsum_fintype]
   exact ENNReal.sum_ne_top.2 fun A _hA => by
