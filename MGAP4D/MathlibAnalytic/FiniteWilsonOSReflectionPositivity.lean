@@ -93,9 +93,9 @@ theorem finite_gram_quadratic_identity
                     (∑ y : α, F y * feature k y) := by
                       rw [← Finset.mul_sum]
               _ = coefficient k *
-                    (∑ x : α, F x * feature k x) *
-                    (∑ y : α, F y * feature k y) := by
-                      rw [mul_assoc]
+                    ((∑ x : α, F x * feature k x) *
+                      (∑ x : α, F x * feature k x)) := by
+                      simpa only [mul_assoc]
 
 /-- The reflection kernel arising from a Gram certificate is symmetric. -/
 theorem finite_os_reflection_kernel_symmetric
