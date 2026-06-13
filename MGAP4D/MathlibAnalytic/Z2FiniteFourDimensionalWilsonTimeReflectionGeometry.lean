@@ -160,7 +160,7 @@ def z2FiniteFourDimensionalWilsonOSCertificate
     (L : FiniteLatticeWilsonSystem)
     (G : Z2FiniteFourDimensionalWilsonTimeReflectionGeometry L) :
     FiniteWilsonOSReflectionPositivityCertificate L :=
-  z2FiniteFourDimensionalWilsonOSCertificateOfSideClassification
+  z2FiniteLatticeWilsonOSCertificateOfSideClassification
     L G.toSideClassification
 
 end
