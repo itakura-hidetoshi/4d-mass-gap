@@ -96,7 +96,7 @@ theorem z2GaugeWilsonPlaquetteGramKernel_apply
       exact hxy (boolEquivZ2Gauge.symm.injective h)
     simp [z2GaugeWilsonPlaquetteGramKernel,
       FiniteOSGramKernelOn.transport, z2WilsonPlaquetteGramKernel,
-      z2PlaquetteGramKernel, z2PlaquetteKernel, hxy]
+      z2PlaquetteGramKernel, z2PlaquetteKernel, hxy, hsymm]
 
 /-- The local `Z2Gauge` Wilson kernel is OS reflection positive. -/
 theorem z2GaugeWilson_singlePlaquette_reflectionPositive
@@ -169,7 +169,7 @@ theorem z2FiniteLatticeWilsonSystem_energy_identity
     ((z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
       h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
       .plaquetteEnergy) (1 : Z2Gauge) = energyIdentity := by
-  rfl
+  simp [z2FiniteLatticeWilsonSystem]
 
 /-- The concrete system assigns the nontrivial plaquette energy to the unique
 nonidentity group element. -/
