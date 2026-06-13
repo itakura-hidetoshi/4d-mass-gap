@@ -164,27 +164,19 @@ theorem continuous_compact_gauge_gibbs_preimage_eq
           rw [Measure.map_apply hMP.measurable hs]
     _ = C.gibbsMeasure s := by rw [hMP.map_eq]
 
-/-- The finite-volume approximation family now supplies actual gauge invariance,
-not merely a propositional marker. -/
-def ContinuousCompactGaugeWilsonApproximationFamily.actualGaugeInvariant :
-    Prop :=
-  ∀ (i : ContinuousCompactGaugeWilsonApproximationFamily.index)
-    (γ : ((ContinuousCompactGaugeWilsonApproximationFamily.system i).base)
-      .GaugeTransformation),
-    Measure.map
-      (((ContinuousCompactGaugeWilsonApproximationFamily.system i).base)
-        .gaugeTransform γ)
-      ((ContinuousCompactGaugeWilsonApproximationFamily.system i).gibbsMeasure) =
-    (ContinuousCompactGaugeWilsonApproximationFamily.system i).gibbsMeasure
+/-- Family-level statement of actual pushforward gauge invariance. -/
+def ContinuousCompactGaugeWilsonApproximationFamily.ActualGaugeInvariant
+    (F : ContinuousCompactGaugeWilsonApproximationFamily) : Prop :=
+  ∀ (i : F.index) (γ : (F.system i).base.GaugeTransformation),
+    Measure.map ((F.system i).base.gaugeTransform γ)
+      (F.system i).gibbsMeasure =
+    (F.system i).gibbsMeasure
 
 /-- Actual finite-volume gauge invariance is automatic for every continuous
 compact-gauge Wilson approximation family. -/
 theorem continuous_compact_gauge_family_actualGaugeInvariant
     (F : ContinuousCompactGaugeWilsonApproximationFamily) :
-    ∀ i γ,
-      Measure.map ((F.system i).base.gaugeTransform γ)
-        (F.system i).gibbsMeasure =
-      (F.system i).gibbsMeasure := by
+    F.ActualGaugeInvariant := by
   intro i γ
   exact continuous_compact_gauge_gibbs_map_eq_self (F.system i) γ
 
