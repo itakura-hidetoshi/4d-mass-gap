@@ -43,6 +43,17 @@ structure FiniteLatticeWilsonSystem where
   beta : ℝ
   beta_nonneg : 0 ≤ beta
 
+attribute [instance]
+  FiniteLatticeWilsonSystem.gaugeGroup
+  FiniteLatticeWilsonSystem.gaugeFintype
+  FiniteLatticeWilsonSystem.gaugeInhabited
+  FiniteLatticeWilsonSystem.gaugeNontrivial
+  FiniteLatticeWilsonSystem.gaugeMeasurableSpace
+  FiniteLatticeWilsonSystem.gaugeMeasurableSingleton
+  FiniteLatticeWilsonSystem.vertexFintype
+  FiniteLatticeWilsonSystem.edgeFintype
+  FiniteLatticeWilsonSystem.plaquetteFintype
+
 /-- Link configurations on a finite lattice. -/
 abbrev FiniteLatticeWilsonSystem.Configuration
     (L : FiniteLatticeWilsonSystem) : Type :=
@@ -258,7 +269,8 @@ measures, by construction from normalized PMFs. -/
 theorem finite_lattice_wilson_family_probability_measure
     (F : FiniteLatticeWilsonApproximationFamily) (i : F.index) :
     IsProbabilityMeasure
-      (F.toFiniteVolumeApproximation.finiteVolumeMeasure i) := by
+      (F.toFiniteVolumeApproximation.finiteVolumeMeasure
+        (show F.toFiniteVolumeApproximation.index from i)) := by
   change IsProbabilityMeasure (F.system i).gibbsMeasure
   infer_instance
 
