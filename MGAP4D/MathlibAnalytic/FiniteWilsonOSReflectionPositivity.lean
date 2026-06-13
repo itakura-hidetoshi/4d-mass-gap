@@ -117,13 +117,13 @@ structure FiniteLatticeWilsonOSReflectionCertificate
       kernel x y =
         Real.exp (-L.beta * L.wilsonAction (assemble x y))
   gram : FiniteOSReflectionGramCertificate
-  positiveConfiguration_identified :
-    gram.PositiveConfiguration = PositiveConfiguration
+  positiveConfigurationEquiv :
+    PositiveConfiguration ≃ gram.PositiveConfiguration
   gram_kernel_agrees :
     ∀ x y,
       gram.kernel
-        (positiveConfiguration_identified ▸ x)
-        (positiveConfiguration_identified ▸ y) = kernel x y
+        (positiveConfigurationEquiv x)
+        (positiveConfigurationEquiv y) = kernel x y
 
 /-- The Wilson reflection form, expressed directly through the Boltzmann kernel. -/
 def FiniteLatticeWilsonOSReflectionCertificate.wilsonReflectionForm
