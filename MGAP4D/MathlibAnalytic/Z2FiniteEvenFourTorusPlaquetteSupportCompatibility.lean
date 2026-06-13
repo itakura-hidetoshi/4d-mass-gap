@@ -132,13 +132,37 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteEvenFourTorusTimeReflection_step_spatial,
         finiteFourTorusStep_comm]
 
-/-- The concrete support compatibility certificate is now theorem-generated;
+/-- The concrete support compatibility certificate is theorem-generated;
 fixed reflection orbits are handled internally by the geometric classifier. -/
 def finiteEvenFourTorusPlaquetteSupportReflectionCompatibility
     (H : ℕ) :
     FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H :=
   { vertices_reflection_mem :=
       finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff H }
+
+/-- Fully concrete geometric plaquette side partition on the even four-torus. -/
+def finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition
+    (H : ℕ) :
+    FiniteInvolutivePlaquetteGeometricSidePartition
+      (FiniteEvenFourTorusPlaquette H) :=
+  finiteEvenFourTorusGeometricPlaquetteSidePartition H
+    (finiteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
+
+/-- The concrete geometric side classifier exchanges positive and negative
+plaquettes and preserves crossing plaquettes under reflection. -/
+@[simp]
+theorem finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition_side_reflection
+    (H : ℕ) (p : FiniteEvenFourTorusPlaquette H) :
+    (finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H).side
+        (finiteEvenFourTorusPlaquetteReflection H p) =
+      match
+        (finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H).side p with
+      | .positive => .negative
+      | .crossing => .crossing
+      | .negative => .positive := by
+  exact
+    (finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H)
+      .side_reflection p
 
 end
 
