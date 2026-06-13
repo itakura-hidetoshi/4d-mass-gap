@@ -110,15 +110,10 @@ theorem z2_finite_lattice_fullGramKernel_eq_wilson_weight
     D.fullGramKernel.kernel x y =
       Real.exp (-L.beta * L.wilsonAction (D.assemble x y)) := by
   rw [D.wilson_weight_factorization x y]
-  simp only [Z2FiniteLatticeWilsonReflectionFactorization.fullGramKernel,
-    finite_os_gram_kernel_sandwich_apply,
+  simp [Z2FiniteLatticeWilsonReflectionFactorization.fullGramKernel,
     Z2FiniteLatticeWilsonReflectionFactorization.crossingKernels,
-    finite_os_gram_kernel_listProduct_apply]
-  congr 2
-  induction D.crossingVariables with
-  | nil => rfl
-  | cons q qs ih =>
-      simp [Z2FiniteLatticeWilsonReflectionFactorization.localKernel, ih]
+    Z2FiniteLatticeWilsonReflectionFactorization.localKernel,
+    finite_os_gram_kernel_listProduct_apply, List.map_map]
 
 /-- Build the repository's Wilson reflection certificate directly from the
 `Z₂` lattice factorization. -/
