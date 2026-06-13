@@ -16,7 +16,7 @@ inductive ReflectionPlaquetteSide
 /-- Move one element through a prefix, preserving permutation. -/
 theorem list_perm_cons_append
     {α : Type} (a : α) (l₁ l₂ : List α) :
-    a :: (l₁ ++ l₂) ~ l₁ ++ a :: l₂ := by
+    List.Perm (a :: (l₁ ++ l₂)) (l₁ ++ a :: l₂) := by
   induction l₁ with
   | nil => simp
   | cons b bs ih =>
@@ -28,10 +28,10 @@ theorem list_perm_three_side_partition
     {α : Type}
     (side : α → ReflectionPlaquetteSide)
     (l : List α) :
-    l ~
-      l.filter (fun a => side a = .positive) ++
-      l.filter (fun a => side a = .crossing) ++
-      l.filter (fun a => side a = .negative) := by
+    List.Perm l
+      (l.filter (fun a => side a = .positive) ++
+        l.filter (fun a => side a = .crossing) ++
+        l.filter (fun a => side a = .negative)) := by
   induction l with
   | nil => simp
   | cons a as ih =>
