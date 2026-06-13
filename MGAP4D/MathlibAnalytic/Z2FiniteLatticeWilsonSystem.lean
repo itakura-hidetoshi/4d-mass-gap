@@ -74,6 +74,31 @@ def z2GaugeWilsonPlaquetteGramKernel
   (z2WilsonPlaquetteGramKernel
     β energyIdentity energyNontrivial hβ hEnergy).transport boolEquivZ2Gauge
 
+/-- The transported kernel depends only on whether its two gauge arguments
+agree; this isolates the carrier relabelling from all later group reasoning. -/
+theorem z2GaugeWilsonPlaquetteGramKernel_apply
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β) (hEnergy : energyIdentity ≤ energyNontrivial)
+    (x y : Z2Gauge) :
+    (z2GaugeWilsonPlaquetteGramKernel
+      β energyIdentity energyNontrivial hβ hEnergy).kernel x y =
+      if x = y then
+        z2WilsonWeightIdentity β energyIdentity
+      else
+        z2WilsonWeightNontrivial β energyNontrivial := by
+  by_cases hxy : x = y
+  · subst y
+    simp [z2GaugeWilsonPlaquetteGramKernel,
+      FiniteOSGramKernelOn.transport, z2WilsonPlaquetteGramKernel,
+      z2PlaquetteGramKernel, z2PlaquetteKernel]
+  · have hsymm :
+        boolEquivZ2Gauge.symm x ≠ boolEquivZ2Gauge.symm y := by
+      intro h
+      exact hxy (boolEquivZ2Gauge.symm.injective h)
+    simp [z2GaugeWilsonPlaquetteGramKernel,
+      FiniteOSGramKernelOn.transport, z2WilsonPlaquetteGramKernel,
+      z2PlaquetteGramKernel, z2PlaquetteKernel, hxy, hsymm]
+
 /-- The local `Z2Gauge` Wilson kernel is OS reflection positive. -/
 theorem z2GaugeWilson_singlePlaquette_reflectionPositive
     (β energyIdentity energyNontrivial : ℝ)
@@ -176,17 +201,17 @@ theorem z2GaugeWilsonPlaquetteGramKernel_eq_boltzmann
       β energyIdentity energyNontrivial hβ hEnergy).kernel x y =
       Real.exp (-β *
         (if x⁻¹ * y = 1 then energyIdentity else energyNontrivial)) := by
+  rw [z2GaugeWilsonPlaquetteGramKernel_apply]
   by_cases hxy : x = y
   · subst y
-    simp [z2GaugeWilsonPlaquetteGramKernel, FiniteOSGramKernelOn.transport,
-      z2WilsonPlaquetteGramKernel, z2PlaquetteGramKernel,
-      z2PlaquetteKernel, z2WilsonWeightIdentity]
+    simp [z2WilsonWeightIdentity]
   · have hne : x⁻¹ * y ≠ 1 := by
-      simpa [inv_mul_eq_one] using hxy
-    simp [z2GaugeWilsonPlaquetteGramKernel, FiniteOSGramKernelOn.transport,
-      z2WilsonPlaquetteGramKernel, z2PlaquetteGramKernel,
-      z2PlaquetteKernel, z2WilsonWeightNontrivial, hxy, hne,
-      boolEquivZ2Gauge]
+      intro h
+      have hleft := congrArg (fun z : Z2Gauge => x * z) h
+      have hyx : y = x := by
+        simpa [mul_assoc] using hleft
+      exact hxy hyx.symm
+    simp [hxy, hne, z2WilsonWeightNontrivial]
 
 end
 
