@@ -14,14 +14,32 @@ theorem all_positive_negateTimeSupport_iff_all_negative
     (times : List ℤ) :
     (∀ t ∈ negateTimeSupport times, 0 < t) ↔
       ∀ t ∈ times, t < 0 := by
-  simp [negateTimeSupport]
+  constructor
+  · intro h t ht
+    have hreflected : -t ∈ negateTimeSupport times := by
+      exact List.mem_map.mpr ⟨t, ht, rfl⟩
+    have hneg := h (-t) hreflected
+    omega
+  · intro h t ht
+    rcases List.mem_map.mp ht with ⟨s, hs, rfl⟩
+    have hsneg := h s hs
+    omega
 
 /-- Negativity of the reflected support is positivity of the original support. -/
 theorem all_negative_negateTimeSupport_iff_all_positive
     (times : List ℤ) :
     (∀ t ∈ negateTimeSupport times, t < 0) ↔
       ∀ t ∈ times, 0 < t := by
-  simp [negateTimeSupport]
+  constructor
+  · intro h t ht
+    have hreflected : -t ∈ negateTimeSupport times := by
+      exact List.mem_map.mpr ⟨t, ht, rfl⟩
+    have hneg := h (-t) hreflected
+    omega
+  · intro h t ht
+    rcases List.mem_map.mp ht with ⟨s, hs, rfl⟩
+    have hspos := h s hs
+    omega
 
 /-- Time reflection exchanges the positive and negative sectors of every
 nonempty support and preserves the crossing sector.  Nonemptiness is essential:
@@ -37,7 +55,7 @@ theorem reflectionTimeSupportSide_negate
   classical
   have hPosRef := all_positive_negateTimeSupport_iff_all_negative times
   have hNegRef := all_negative_negateTimeSupport_iff_all_positive times
-  obtain ⟨a, ha⟩ := List.exists_mem_of_ne_nil hne
+  obtain ⟨a, ha⟩ := List.exists_mem_of_ne_nil times hne
   by_cases hp : ∀ t ∈ times, 0 < t
   · have hn : ¬ ∀ t ∈ times, t < 0 := by
       intro h
