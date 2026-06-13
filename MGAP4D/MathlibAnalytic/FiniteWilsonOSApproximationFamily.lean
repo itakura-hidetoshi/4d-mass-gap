@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSReflectionPositivity
-import MGAP4D.MathlibAnalytic.Z2FiniteFourDimensionalWilsonTimeReflectionGeometry
+import MGAP4D.MathlibAnalytic.Z2FiniteFourDimensionalHypercubicPlaquetteGeometry
 
 namespace MGAP4D
 namespace MathlibAnalytic
