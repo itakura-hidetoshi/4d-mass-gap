@@ -20,7 +20,8 @@ theorem list_perm_cons_append
   induction l₁ with
   | nil => simp
   | cons b bs ih =>
-      exact (List.Perm.swap a b (bs ++ l₂)).trans (List.Perm.cons b ih)
+      exact (List.Perm.swap a b (bs ++ l₂)).symm.trans
+        (List.Perm.cons b ih)
 
 /-- Every list is a permutation of the concatenation of its three classifier
 fibres. -/
