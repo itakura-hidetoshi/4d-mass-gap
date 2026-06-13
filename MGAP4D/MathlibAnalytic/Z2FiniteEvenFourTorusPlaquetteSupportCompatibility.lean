@@ -51,6 +51,16 @@ theorem finiteFourTorusStep_sub_timeStep_cancel
   simpa [finiteFourTorusStep] using
     sub_add_cancel v (finiteFourTorusUnitStep (2 * H + 1) 0)
 
+/-- A positive time step followed by subtraction of the time unit vector
+cancels. -/
+@[simp]
+theorem finiteFourTorusStep_time_sub_timeStep_cancel
+    (H : ℕ) (v : FiniteEvenFourTorusVertex H) :
+    finiteFourTorusStep (2 * H + 1) v 0 -
+        finiteFourTorusUnitStep (2 * H + 1) 0 = v := by
+  simpa [finiteFourTorusStep] using
+    add_sub_cancel_right v (finiteFourTorusUnitStep (2 * H + 1) 0)
+
 /-- Unit translations in distinct or equal directions commute. -/
 theorem finiteFourTorusStep_comm
     (N : ℕ) (v : FiniteFourTorusVertex N) (μ ν : Fin 4) :
@@ -101,6 +111,7 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
       finiteEvenFourTorusTimeReflection_step_spatial,
       finiteEvenFourTorusTimeReflection_step_time,
       finiteFourTorusStep_sub_timeStep_cancel,
+      finiteFourTorusStep_time_sub_timeStep_cancel,
       finiteFourTorusStep_sub_timeStep,
       finiteFourTorusStep_comm,
       or_assoc, or_left_comm, or_comm]
@@ -123,6 +134,7 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteEvenFourTorusTimeReflection_step_spatial,
         finiteEvenFourTorusTimeReflection_step_time,
         finiteFourTorusStep_sub_timeStep_cancel,
+        finiteFourTorusStep_time_sub_timeStep_cancel,
         finiteFourTorusStep_sub_timeStep,
         finiteFourTorusStep_comm,
         or_assoc, or_left_comm, or_comm]
