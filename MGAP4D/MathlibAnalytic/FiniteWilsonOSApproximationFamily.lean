@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSReflectionPositivity
-import MGAP4D.MathlibAnalytic.Z2FiniteFourDimensionalHypercubicPlaquetteGeometry
+import MGAP4D.MathlibAnalytic.Z2FiniteFourDimensionalTorusLattice
 
 namespace MGAP4D
 namespace MathlibAnalytic
