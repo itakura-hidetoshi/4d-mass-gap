@@ -1,5 +1,7 @@
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTimeReflection
 import MGAP4D.MathlibAnalytic.Z2FiniteFourDimensionalTimeSupportReflection
+import MGAP4D.MathlibAnalytic.Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification
+import Mathlib.Data.Fintype.EquivFin
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -102,6 +104,30 @@ theorem finiteEvenFourTorusPlaquetteReflection_involutive
   apply Prod.ext
   · exact finiteEvenFourTorusReflectedPlaquetteBase_involutive H p
   · rfl
+
+/-- Concrete plaquette reflection packaged with a finite orbit ranking. -/
+def finiteEvenFourTorusPlaquetteOrbitPartition
+    (H : ℕ) :
+    FiniteInvolutivePlaquetteOrbitPartition
+      (FiniteFourTorusPlaquette (2 * H + 1)) :=
+  { reflection := finiteEvenFourTorusPlaquetteReflection H
+    reflection_involutive :=
+      finiteEvenFourTorusPlaquetteReflection_involutive H
+    rank := Fintype.equivFin (FiniteFourTorusPlaquette (2 * H + 1)) }
+
+/-- The concrete orbit classifier exchanges positive and negative plaquette
+representatives and preserves fixed plaquettes. -/
+@[simp]
+theorem finiteEvenFourTorusPlaquetteOrbitPartition_side_reflection
+    (H : ℕ) (p : FiniteFourTorusPlaquette (2 * H + 1)) :
+    (finiteEvenFourTorusPlaquetteOrbitPartition H).side
+        (finiteEvenFourTorusPlaquetteReflection H p) =
+      match (finiteEvenFourTorusPlaquetteOrbitPartition H).side p with
+      | .positive => .negative
+      | .crossing => .crossing
+      | .negative => .positive := by
+  exact
+    (finiteEvenFourTorusPlaquetteOrbitPartition H).side_reflection p
 
 end
 
