@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.Z2FiniteInvolutiveEdgeOrbitAssembly
 import MGAP4D.MathlibAnalytic.Z2FiniteInvolutivePlaquetteGeometricSidePartition
 import MGAP4D.MathlibAnalytic.Z2FiniteLatticeWilsonPlaquetteSideClassification
 
@@ -140,8 +141,12 @@ theorem z2_finite_lattice_wilson_reflectionPositive_of_geometricPlaquetteSideCla
     {L : FiniteLatticeWilsonSystem}
     (C : Z2FiniteLatticeWilsonGeometricPlaquetteSideClassification L) :
     FiniteLatticeWilsonOSReflectionPositive
-      C.toSideClassification.toIndexPartition.toTermPartition
-        .toActionDecomposition.toFactorization.toReflectionCertificate :=
+      (Z2FiniteLatticeWilsonReflectionFactorization.toReflectionCertificate
+        (Z2FiniteLatticeWilsonActionReflectionDecomposition.toFactorization
+          (Z2FiniteLatticeWilsonPlaquetteTermPartition.toActionDecomposition
+            (Z2FiniteLatticeWilsonPlaquetteIndexPartition.toTermPartition
+              (Z2FiniteLatticeWilsonPlaquetteSideClassification.toIndexPartition
+                C.toSideClassification))))) :=
   z2_finite_lattice_wilson_reflectionPositive_of_sideClassification
     C.toSideClassification
 
