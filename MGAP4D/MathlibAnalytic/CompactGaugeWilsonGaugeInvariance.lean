@@ -21,11 +21,14 @@ theorem normalizedCompactHaar_map_mul_right_eq_self
     Measure.map (fun x : G => x * g) (normalizedCompactHaar G) =
       normalizedCompactHaar G := by
   let μ : Measure G := normalizedCompactHaar G
+  letI : Measure.IsHaarMeasure μ := by
+    dsimp [μ, normalizedCompactHaar]
+    infer_instance
   let μ' : Measure G := Measure.map (fun x : G => x * g) μ
-  have hμ'left : IsMulLeftInvariant μ' := by
+  have hμ'left : Measure.IsMulLeftInvariant μ' := by
     dsimp [μ']
     infer_instance
-  letI : IsMulLeftInvariant μ' := hμ'left
+  letI : Measure.IsMulLeftInvariant μ' := hμ'left
   have hμ'finite : IsFiniteMeasure μ' := by
     refine ⟨?_⟩
     rw [Measure.map_apply (measurable_mul_const g) MeasurableSet.univ]
@@ -51,7 +54,7 @@ theorem normalizedCompactHaar_map_mul_right_eq_self
 instance normalizedCompactHaar_isMulRightInvariant
     (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [CompactSpace G] [MeasurableSpace G] [BorelSpace G] :
-    IsMulRightInvariant (normalizedCompactHaar G) where
+    Measure.IsMulRightInvariant (normalizedCompactHaar G) where
   map_mul_right_eq_self := normalizedCompactHaar_map_mul_right_eq_self G
 
 /-- A fixed left-right affine translation of a compact group preserves normalized
@@ -112,7 +115,7 @@ theorem measurePreserving_tilted_of_invariant
     (hT : MeasurePreserving T μ μ)
     (hf : Measurable f)
     (hInvariant : ∀ x, f (T x) = f x)
-    (hIntegrable : Integrable (fun x => Real.exp (f x)) μ) :
+    (_hIntegrable : Integrable (fun x => Real.exp (f x)) μ) :
     MeasurePreserving T (μ.tilted f) (μ.tilted f) := by
   refine ⟨hT.measurable, ?_⟩
   ext s hs
