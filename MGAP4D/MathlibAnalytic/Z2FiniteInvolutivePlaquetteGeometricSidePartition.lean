@@ -25,13 +25,15 @@ noncrossing two-element orbits. -/
 def FiniteInvolutivePlaquetteGeometricSidePartition.side
     {Plaquette : Type} [Fintype Plaquette]
     (P : FiniteInvolutivePlaquetteGeometricSidePartition Plaquette)
-    (p : Plaquette) : ReflectionPlaquetteSide :=
-  if P.crossing p then
-    .crossing
-  else if P.rank p < P.rank (P.reflection p) then
-    .positive
-  else
-    .negative
+    (p : Plaquette) : ReflectionPlaquetteSide := by
+  classical
+  exact
+    if P.crossing p then
+      .crossing
+    else if P.rank p < P.rank (P.reflection p) then
+      .positive
+    else
+      .negative
 
 /-- Reflection exchanges the two open sides and preserves the full geometric
 crossing sector, including nonfixed crossing orbits. -/
@@ -45,18 +47,21 @@ theorem FiniteInvolutivePlaquetteGeometricSidePartition.side_reflection
       | .positive => .negative
       | .crossing => .crossing
       | .negative => .positive := by
+  classical
   by_cases hc : P.crossing p
   · have hcr : P.crossing (P.reflection p) :=
       (P.crossing_reflection p).2 hc
-    simp [FiniteInvolutivePlaquetteGeometricSidePartition.side, hc, hcr]
+    unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
+    rw [if_pos hcr, if_pos hc]
   · have hcr : ¬ P.crossing (P.reflection p) := by
       intro h
       exact hc ((P.crossing_reflection p).1 h)
     by_cases hlt : P.rank p < P.rank (P.reflection p)
     · have hnot : ¬ P.rank (P.reflection p) < P.rank p :=
         not_lt_of_ge hlt.le
-      simp [FiniteInvolutivePlaquetteGeometricSidePartition.side,
-        hc, hcr, hlt, hnot, P.reflection_involutive p]
+      unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
+      rw [if_neg hcr, P.reflection_involutive p, if_neg hnot,
+        if_neg hc, if_pos hlt]
     · have hreflection_ne : P.reflection p ≠ p := by
         intro hfix
         exact hc (P.fixed_crossing p hfix)
@@ -65,8 +70,9 @@ theorem FiniteInvolutivePlaquetteGeometricSidePartition.side_reflection
         exact hreflection_ne (P.rank.injective h)
       have hgt : P.rank (P.reflection p) < P.rank p :=
         lt_of_le_of_ne (le_of_not_gt hlt) hrank_ne
-      simp [FiniteInvolutivePlaquetteGeometricSidePartition.side,
-        hc, hcr, hlt, hgt, P.reflection_involutive p]
+      unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
+      rw [if_neg hcr, P.reflection_involutive p, if_pos hgt,
+        if_neg hc, if_neg hlt]
 
 /-- Compatibility data connecting the concrete even-torus plaquette reflection
 to the already established reflected vertex support.  Vertex order may change
