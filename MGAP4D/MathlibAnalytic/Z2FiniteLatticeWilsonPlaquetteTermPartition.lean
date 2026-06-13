@@ -109,7 +109,7 @@ def Z2FiniteLatticeWilsonPlaquetteTermPartition.toActionDecomposition
       have hsum := (P.plaquette_terms_perm x y).sum_eq
       rw [finiteWilsonPlaquetteEnergyTerms_sum] at hsum
       simpa [Z2FiniteLatticeWilsonPlaquetteTermPartition.halfAction,
-        List.sum_append] using hsum }
+        List.sum_append, add_assoc] using hsum }
 
 /-- A plaquette-term partition produces the full finite-volume OS reflection
 positivity theorem. -/
