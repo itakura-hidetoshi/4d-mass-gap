@@ -132,18 +132,13 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteEvenFourTorusTimeReflection_step_spatial,
         finiteFourTorusStep_comm]
 
-/-- Once fixed plaquettes are known to be crossing, all remaining support
-compatibility data is theorem-generated. -/
-def finiteEvenFourTorusPlaquetteSupportReflectionCompatibilityOfFixedCrossing
-    (H : ℕ)
-    (hFixedCrossing :
-      ∀ p : FiniteEvenFourTorusPlaquette H,
-        finiteEvenFourTorusPlaquetteReflection H p = p →
-          finiteEvenFourTorusCrossingPlaquette p) :
+/-- The concrete support compatibility certificate is now theorem-generated;
+fixed reflection orbits are handled internally by the geometric classifier. -/
+def finiteEvenFourTorusPlaquetteSupportReflectionCompatibility
+    (H : ℕ) :
     FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H :=
   { vertices_reflection_mem :=
-      finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff H
-    fixed_crossing := hFixedCrossing }
+      finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff H }
 
 end
 
