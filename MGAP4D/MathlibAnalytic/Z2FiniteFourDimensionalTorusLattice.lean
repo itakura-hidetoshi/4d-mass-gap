@@ -102,18 +102,22 @@ def finiteFourTorusEdgeTarget
   e.2
 
 /-- Four directed boundary edges of a torus plaquette.  The third and fourth
-edges are oriented back toward the base vertex. -/
+edges are oriented back toward the base vertex.  Explicit equality tests avoid
+relying on tactic-generated elimination from `Fin 4`. -/
 def finiteFourTorusPlaquetteBoundary
     {N : ℕ} (p : FiniteFourTorusPlaquette N) (k : Fin 4) :
-    FiniteFourTorusEdge N := by
-  fin_cases k
-  · exact (finiteFourTorusPlaquetteCorner00 p,
+    FiniteFourTorusEdge N :=
+  if k = 0 then
+    (finiteFourTorusPlaquetteCorner00 p,
       finiteFourTorusPlaquetteCorner10 p)
-  · exact (finiteFourTorusPlaquetteCorner10 p,
+  else if k = 1 then
+    (finiteFourTorusPlaquetteCorner10 p,
       finiteFourTorusPlaquetteCorner11 p)
-  · exact (finiteFourTorusPlaquetteCorner11 p,
+  else if k = 2 then
+    (finiteFourTorusPlaquetteCorner11 p,
       finiteFourTorusPlaquetteCorner01 p)
-  · exact (finiteFourTorusPlaquetteCorner01 p,
+  else
+    (finiteFourTorusPlaquetteCorner01 p,
       finiteFourTorusPlaquetteCorner00 p)
 
 @[simp]
@@ -121,28 +125,32 @@ theorem finiteFourTorus_boundary_cycle_01
     {N : ℕ} (p : FiniteFourTorusPlaquette N) :
     finiteFourTorusEdgeTarget (finiteFourTorusPlaquetteBoundary p 0) =
       finiteFourTorusEdgeSource (finiteFourTorusPlaquetteBoundary p 1) := by
-  rfl
+  simp [finiteFourTorusPlaquetteBoundary,
+    finiteFourTorusEdgeTarget, finiteFourTorusEdgeSource]
 
 @[simp]
 theorem finiteFourTorus_boundary_cycle_12
     {N : ℕ} (p : FiniteFourTorusPlaquette N) :
     finiteFourTorusEdgeTarget (finiteFourTorusPlaquetteBoundary p 1) =
       finiteFourTorusEdgeSource (finiteFourTorusPlaquetteBoundary p 2) := by
-  rfl
+  simp [finiteFourTorusPlaquetteBoundary,
+    finiteFourTorusEdgeTarget, finiteFourTorusEdgeSource]
 
 @[simp]
 theorem finiteFourTorus_boundary_cycle_23
     {N : ℕ} (p : FiniteFourTorusPlaquette N) :
     finiteFourTorusEdgeTarget (finiteFourTorusPlaquetteBoundary p 2) =
       finiteFourTorusEdgeSource (finiteFourTorusPlaquetteBoundary p 3) := by
-  rfl
+  simp [finiteFourTorusPlaquetteBoundary,
+    finiteFourTorusEdgeTarget, finiteFourTorusEdgeSource]
 
 @[simp]
 theorem finiteFourTorus_boundary_cycle_30
     {N : ℕ} (p : FiniteFourTorusPlaquette N) :
     finiteFourTorusEdgeTarget (finiteFourTorusPlaquetteBoundary p 3) =
       finiteFourTorusEdgeSource (finiteFourTorusPlaquetteBoundary p 0) := by
-  rfl
+  simp [finiteFourTorusPlaquetteBoundary,
+    finiteFourTorusEdgeTarget, finiteFourTorusEdgeSource]
 
 /-- Concrete finite four-dimensional periodic `Z₂` Wilson system. -/
 def finiteFourTorusZ2WilsonSystem
