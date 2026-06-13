@@ -28,8 +28,9 @@ structure Z2FiniteLatticeWilsonPlaquetteIndexPartition
   crossingPlaquettes : List L.Plaquette
   negativePlaquettes : List L.Plaquette
   plaquette_index_perm :
-    Finset.univ.toList ~
-      positivePlaquettes ++ crossingPlaquettes ++ negativePlaquettes
+    List.Perm
+      (Finset.univ.toList : List L.Plaquette)
+      (positivePlaquettes ++ crossingPlaquettes ++ negativePlaquettes)
   positiveEnergyTerms : PositiveConfiguration → List ℝ
   positive_terms_eq :
     ∀ x y,
