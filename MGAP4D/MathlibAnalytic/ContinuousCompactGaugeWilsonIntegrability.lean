@@ -57,6 +57,8 @@ theorem continuous_compact_gauge_boltzmannIntegrable
       (fun A : C.base.Configuration =>
         Real.exp (C.base.gibbsExponent A))
       C.base.configurationHaarMeasure := by
+  letI : OpensMeasurableSpace C.base.Configuration :=
+    compactGauge_configuration_opensMeasurableSpace C.base
   exact
     (continuous_compact_gauge_boltzmannFactor C).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
