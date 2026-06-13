@@ -65,8 +65,7 @@ theorem finiteEvenFourTorusReflectVertexSupport_involutive
         (finiteEvenFourTorusReflectVertexSupport H vertices) =
       vertices := by
   simp [finiteEvenFourTorusReflectVertexSupport,
-    List.map_map, Function.comp_def,
-    finiteEvenFourTorusTimeReflection_involutive]
+    List.map_map, finiteEvenFourTorusTimeReflection_involutive]
 
 /-- Every vertex of a support lies in the strict positive sector. -/
 def finiteEvenFourTorusStrictPositiveSupport
@@ -113,7 +112,10 @@ theorem finiteEvenFourTorus_reflectSupport_crossing_iff
     finiteEvenFourTorusCrossingSupport H
         (finiteEvenFourTorusReflectVertexSupport H vertices) ↔
       finiteEvenFourTorusCrossingSupport H vertices := by
-  simp [finiteEvenFourTorusCrossingSupport]
+  simpa only [finiteEvenFourTorusCrossingSupport,
+    finiteEvenFourTorus_reflectSupport_strictPositive_iff_strictNegative,
+    finiteEvenFourTorus_reflectSupport_strictNegative_iff_strictPositive,
+    and_comm]
 
 /-- Ordered vertex support of an even-torus plaquette. -/
 def finiteEvenFourTorusPlaquetteVertices
@@ -126,7 +128,7 @@ def finiteEvenFourTorusPlaquetteReflectedVertices
     {H : ℕ} (p : FiniteEvenFourTorusPlaquette H) :
     List (FiniteEvenFourTorusVertex H) :=
   finiteEvenFourTorusReflectVertexSupport H
-    (finiteEvenFourTorusPlaquetteVertices p)
+    (finiteFourTorusPlaquetteVertices p)
 
 /-- Reflecting the reflected support returns the original plaquette support. -/
 @[simp]
@@ -134,7 +136,7 @@ theorem finiteEvenFourTorusPlaquetteReflectedVertices_involutive
     {H : ℕ} (p : FiniteEvenFourTorusPlaquette H) :
     finiteEvenFourTorusReflectVertexSupport H
         (finiteEvenFourTorusPlaquetteReflectedVertices p) =
-      finiteEvenFourTorusPlaquetteVertices p := by
+      finiteFourTorusPlaquetteVertices p := by
   simp [finiteEvenFourTorusPlaquetteReflectedVertices]
 
 /-- Plaquette-support sector predicates. -/
