@@ -85,8 +85,7 @@ structure FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
 
 /-- Concrete reflection exchanges strict-positive and strict-negative
 plaquettes once ordered support compatibility is available. -/
-theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
-    .strictPositive_reflection_iff_negative
+theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictPositive_reflection_iff_negative
     {H : ℕ}
     (C : FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
     (p : FiniteEvenFourTorusPlaquette H) :
@@ -99,8 +98,7 @@ theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
   exact finiteEvenFourTorusPlaquette_reflectedPositive_iff_negative p
 
 /-- The reverse open-side exchange. -/
-theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
-    .strictNegative_reflection_iff_positive
+theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.strictNegative_reflection_iff_positive
     {H : ℕ}
     (C : FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
     (p : FiniteEvenFourTorusPlaquette H) :
@@ -113,8 +111,7 @@ theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
   exact finiteEvenFourTorusPlaquette_reflectedNegative_iff_positive p
 
 /-- Concrete plaquette reflection preserves the geometric crossing sector. -/
-theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
-    .crossing_reflection_iff
+theorem FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.crossing_reflection_iff
     {H : ℕ}
     (C : FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H)
     (p : FiniteEvenFourTorusPlaquette H) :
@@ -137,7 +134,9 @@ def finiteEvenFourTorusGeometricPlaquetteSidePartition
     reflection_involutive :=
       finiteEvenFourTorusPlaquetteReflection_involutive H
     crossing := finiteEvenFourTorusCrossingPlaquette
-    crossing_reflection := C.crossing_reflection_iff
+    crossing_reflection :=
+      FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
+        .crossing_reflection_iff C
     fixed_crossing := C.fixed_crossing
     rank := Fintype.equivFin (FiniteEvenFourTorusPlaquette H) }
 
