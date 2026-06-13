@@ -44,7 +44,8 @@ theorem FiniteFourDimensionalWilsonGeometry.plaquetteSide_eq_positive
     (h : ∀ v ∈ G.plaquetteVertices p, 0 < G.timeCoordinate v) :
     G.plaquetteSide p = .positive := by
   classical
-  simp [FiniteFourDimensionalWilsonGeometry.plaquetteSide, h]
+  unfold FiniteFourDimensionalWilsonGeometry.plaquetteSide
+  rw [if_pos h]
 
 /-- Strictly negative support, after excluding the positive case, is classified
 as a negative plaquette. -/
@@ -56,8 +57,8 @@ theorem FiniteFourDimensionalWilsonGeometry.plaquetteSide_eq_negative
     (hNegative : ∀ v ∈ G.plaquetteVertices p, G.timeCoordinate v < 0) :
     G.plaquetteSide p = .negative := by
   classical
-  simp [FiniteFourDimensionalWilsonGeometry.plaquetteSide,
-    hPositive, hNegative]
+  unfold FiniteFourDimensionalWilsonGeometry.plaquetteSide
+  rw [if_neg hPositive, if_pos hNegative]
 
 /-- Any support that is neither wholly positive nor wholly negative crosses the
 reflection plane. -/
@@ -69,8 +70,8 @@ theorem FiniteFourDimensionalWilsonGeometry.plaquetteSide_eq_crossing
     (hNegative : ¬ ∀ v ∈ G.plaquetteVertices p, G.timeCoordinate v < 0) :
     G.plaquetteSide p = .crossing := by
   classical
-  simp [FiniteFourDimensionalWilsonGeometry.plaquetteSide,
-    hPositive, hNegative]
+  unfold FiniteFourDimensionalWilsonGeometry.plaquetteSide
+  rw [if_neg hPositive, if_neg hNegative]
 
 /-- Four-dimensional time-reflection data for a finite `Z₂` Wilson system.
 
@@ -144,8 +145,8 @@ theorem z2_finite_fourDimensional_wilson_reflectionPositive
     {L : FiniteLatticeWilsonSystem}
     (G : Z2FiniteFourDimensionalWilsonTimeReflectionGeometry L) :
     FiniteLatticeWilsonOSReflectionPositive
-      G.toSideClassification.toIndexPartition.toTermPartition
-        .toActionDecomposition.toFactorization.toReflectionCertificate :=
+      (G.toSideClassification.toIndexPartition.toTermPartition
+        .toActionDecomposition.toFactorization.toReflectionCertificate) :=
   z2_finite_lattice_wilson_reflectionPositive_of_sideClassification
     G.toSideClassification
 
