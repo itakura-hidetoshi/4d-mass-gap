@@ -69,11 +69,12 @@ structure Z2FiniteLatticeWilsonPlaquetteTermPartition
   positiveEnergyTerms : PositiveConfiguration → List ℝ
   plaquette_terms_perm :
     ∀ x y,
-      finiteWilsonPlaquetteEnergyTerms L (assemble x y) ~
-        positiveEnergyTerms x ++
+      List.Perm
+        (finiteWilsonPlaquetteEnergyTerms L (assemble x y))
+        (positiveEnergyTerms x ++
           z2CrossingEnergyTerms crossingVariables
             energyIdentity energyNontrivial x y ++
-          positiveEnergyTerms y
+          positiveEnergyTerms y)
 
 attribute [instance]
   Z2FiniteLatticeWilsonPlaquetteTermPartition.positiveFintype
