@@ -96,6 +96,8 @@ structure Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification
     (L : FiniteLatticeWilsonSystem) where
   configurationEquiv : L.Configuration ≃ (L.Edge → Z2Gauge)
   edgeOrbit : FiniteInvolutiveEdgeOrbitPartition L.Edge
+  [positiveFintype : Fintype edgeOrbit.PositiveConfiguration]
+  [positiveInhabited : Inhabited edgeOrbit.PositiveConfiguration]
   plaquetteOrbit : FiniteInvolutivePlaquetteOrbitPartition L.Plaquette
   energyIdentity : ℝ
   energyNontrivial : ℝ
@@ -130,6 +132,10 @@ structure Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification
               (configurationEquiv.symm (edgeOrbit.assemble x y)) p)) =
         positiveEnergyTerms y
 
+attribute [instance]
+  Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.positiveFintype
+  Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.positiveInhabited
+
 /-- Assemble two orbit-half configurations into the Wilson configuration
 carrier. -/
 def Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.assemble
@@ -153,8 +159,10 @@ theorem Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.reflection_involut
     Function.Involutive C.reflection := by
   intro A
   apply C.configurationEquiv.injective
-  simp [Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.reflection,
-    C.edgeOrbit.configurationReflection_involutive]
+  simpa only [Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.reflection,
+    Equiv.apply_symm_apply] using
+      C.edgeOrbit.configurationReflection_involutive
+        (C.configurationEquiv A)
 
 /-- Reflection exchanges the two assembled half-configurations. -/
 theorem Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.reflection_assemble
