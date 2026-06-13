@@ -65,21 +65,24 @@ theorem reflectionTimeSupportSide_negate
       exact hn (hPosRef.mp h)
     have hnRef : ∀ t ∈ negateTimeSupport times, t < 0 :=
       hNegRef.mpr hp
-    simp [reflectionTimeSupportSide, hp, hn, hpRef, hnRef]
+    unfold reflectionTimeSupportSide
+    rw [if_neg hpRef, if_pos hnRef, if_pos hp]
   · by_cases hn : ∀ t ∈ times, t < 0
     · have hpRef : ∀ t ∈ negateTimeSupport times, 0 < t :=
         hPosRef.mpr hn
       have hnRef : ¬ ∀ t ∈ negateTimeSupport times, t < 0 := by
         intro h
         exact hp (hNegRef.mp h)
-      simp [reflectionTimeSupportSide, hp, hn, hpRef, hnRef]
+      unfold reflectionTimeSupportSide
+      rw [if_pos hpRef, if_neg hp, if_pos hn]
     · have hpRef : ¬ ∀ t ∈ negateTimeSupport times, 0 < t := by
         intro h
         exact hn (hPosRef.mp h)
       have hnRef : ¬ ∀ t ∈ negateTimeSupport times, t < 0 := by
         intro h
         exact hp (hNegRef.mp h)
-      simp [reflectionTimeSupportSide, hp, hn, hpRef, hnRef]
+      unfold reflectionTimeSupportSide
+      rw [if_neg hpRef, if_neg hnRef, if_neg hp, if_neg hn]
 
 /-- The four-corner hypercubic time support is always nonempty. -/
 @[simp]
