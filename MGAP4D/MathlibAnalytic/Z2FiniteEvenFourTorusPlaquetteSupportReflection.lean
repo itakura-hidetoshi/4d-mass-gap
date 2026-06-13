@@ -161,8 +161,11 @@ theorem finiteEvenFourTorusPlaquette_reflectedNegative_iff_positive
     finiteEvenFourTorusStrictNegativeSupport H
         (finiteEvenFourTorusPlaquetteReflectedVertices p) ↔
       finiteEvenFourTorusStrictPositivePlaquette p := by
-  simp [finiteEvenFourTorusPlaquetteReflectedVertices,
-    finiteEvenFourTorusStrictPositivePlaquette]
+  simpa [finiteEvenFourTorusPlaquetteReflectedVertices,
+    finiteEvenFourTorusStrictPositivePlaquette,
+    finiteEvenFourTorusPlaquetteVertices] using
+      finiteEvenFourTorus_reflectSupport_strictNegative_iff_strictPositive
+        H (finiteFourTorusPlaquetteVertices p)
 
 /-- The reflected support of a negative plaquette is strictly positive. -/
 theorem finiteEvenFourTorusPlaquette_reflectedPositive_iff_negative
@@ -170,8 +173,11 @@ theorem finiteEvenFourTorusPlaquette_reflectedPositive_iff_negative
     finiteEvenFourTorusStrictPositiveSupport H
         (finiteEvenFourTorusPlaquetteReflectedVertices p) ↔
       finiteEvenFourTorusStrictNegativePlaquette p := by
-  simp [finiteEvenFourTorusPlaquetteReflectedVertices,
-    finiteEvenFourTorusStrictNegativePlaquette]
+  simpa [finiteEvenFourTorusPlaquetteReflectedVertices,
+    finiteEvenFourTorusStrictNegativePlaquette,
+    finiteEvenFourTorusPlaquetteVertices] using
+      finiteEvenFourTorus_reflectSupport_strictPositive_iff_strictNegative
+        H (finiteFourTorusPlaquetteVertices p)
 
 /-- Crossing plaquette supports remain crossing after reflection. -/
 theorem finiteEvenFourTorusPlaquette_reflectedCrossing_iff
@@ -179,8 +185,11 @@ theorem finiteEvenFourTorusPlaquette_reflectedCrossing_iff
     finiteEvenFourTorusCrossingSupport H
         (finiteEvenFourTorusPlaquetteReflectedVertices p) ↔
       finiteEvenFourTorusCrossingPlaquette p := by
-  simp [finiteEvenFourTorusPlaquetteReflectedVertices,
-    finiteEvenFourTorusCrossingPlaquette]
+  simpa [finiteEvenFourTorusPlaquetteReflectedVertices,
+    finiteEvenFourTorusCrossingPlaquette,
+    finiteEvenFourTorusPlaquetteVertices] using
+      finiteEvenFourTorus_reflectSupport_crossing_iff
+        H (finiteFourTorusPlaquetteVertices p)
 
 end
 
