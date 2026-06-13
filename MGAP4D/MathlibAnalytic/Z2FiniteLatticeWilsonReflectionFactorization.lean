@@ -101,6 +101,21 @@ def Z2FiniteLatticeWilsonReflectionFactorization.fullGramKernel
   (FiniteOSGramKernelOn.listProduct D.crossingKernels).sandwich
     D.halfSpaceFactor
 
+/-- The constructed crossing-kernel product is exactly the product displayed
+in the Wilson reflection factorization. -/
+theorem z2_finite_lattice_crossingKernel_product_eq
+    {L : FiniteLatticeWilsonSystem}
+    (D : Z2FiniteLatticeWilsonReflectionFactorization L)
+    (x y : D.PositiveConfiguration) :
+    (D.crossingKernels.map fun K => K.kernel x y).prod =
+      (D.crossingVariables.map fun q =>
+        (z2GaugeWilsonPlaquetteGramKernel
+          L.beta D.energyIdentity D.energyNontrivial
+          L.beta_nonneg D.energy_order).kernel (q x) (q y)).prod := by
+  simp [Z2FiniteLatticeWilsonReflectionFactorization.crossingKernels,
+    Z2FiniteLatticeWilsonReflectionFactorization.localKernel,
+    List.map_map, Function.comp_def]
+
 /-- The constructed full Gram kernel is exactly the finite-volume Wilson
 Boltzmann kernel supplied by the reflection factorization. -/
 theorem z2_finite_lattice_fullGramKernel_eq_wilson_weight
@@ -109,11 +124,22 @@ theorem z2_finite_lattice_fullGramKernel_eq_wilson_weight
     (x y : D.PositiveConfiguration) :
     D.fullGramKernel.kernel x y =
       Real.exp (-L.beta * L.wilsonAction (D.assemble x y)) := by
-  rw [D.wilson_weight_factorization x y]
-  simp [Z2FiniteLatticeWilsonReflectionFactorization.fullGramKernel,
-    Z2FiniteLatticeWilsonReflectionFactorization.crossingKernels,
-    Z2FiniteLatticeWilsonReflectionFactorization.localKernel,
-    finite_os_gram_kernel_listProduct_apply, List.map_map]
+  calc
+    D.fullGramKernel.kernel x y =
+        D.halfSpaceFactor x *
+          (D.crossingKernels.map fun K => K.kernel x y).prod *
+          D.halfSpaceFactor y := by
+            simp [Z2FiniteLatticeWilsonReflectionFactorization.fullGramKernel,
+              finite_os_gram_kernel_listProduct_apply]
+    _ = D.halfSpaceFactor x *
+          ((D.crossingVariables.map fun q =>
+            (z2GaugeWilsonPlaquetteGramKernel
+              L.beta D.energyIdentity D.energyNontrivial
+              L.beta_nonneg D.energy_order).kernel (q x) (q y)).prod) *
+          D.halfSpaceFactor y := by
+            rw [z2_finite_lattice_crossingKernel_product_eq D x y]
+    _ = Real.exp (-L.beta * L.wilsonAction (D.assemble x y)) :=
+      (D.wilson_weight_factorization x y).symm
 
 /-- Build the repository's Wilson reflection certificate directly from the
 `Z₂` lattice factorization. -/
