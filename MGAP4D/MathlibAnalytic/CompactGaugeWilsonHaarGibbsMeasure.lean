@@ -72,6 +72,18 @@ structure CompactGaugeWilsonSystem where
   beta : ℝ
   beta_nonneg : 0 ≤ beta
 
+attribute [instance]
+  CompactGaugeWilsonSystem.gaugeGroup
+  CompactGaugeWilsonSystem.gaugeTopology
+  CompactGaugeWilsonSystem.gaugeTopologicalGroup
+  CompactGaugeWilsonSystem.gaugeCompact
+  CompactGaugeWilsonSystem.gaugeMeasurableSpace
+  CompactGaugeWilsonSystem.gaugeBorel
+  CompactGaugeWilsonSystem.gaugeNontrivial
+  CompactGaugeWilsonSystem.vertexFintype
+  CompactGaugeWilsonSystem.edgeFintype
+  CompactGaugeWilsonSystem.plaquetteFintype
+
 abbrev CompactGaugeWilsonSystem.Configuration
     (L : CompactGaugeWilsonSystem) : Type :=
   L.Edge → L.Gauge
@@ -266,7 +278,8 @@ measure. -/
 theorem compact_gauge_wilson_family_probability_measure
     (F : CompactGaugeWilsonApproximationFamily) (i : F.index) :
     IsProbabilityMeasure
-      (F.toFiniteVolumeApproximation.finiteVolumeMeasure i) := by
+      (F.toFiniteVolumeApproximation.finiteVolumeMeasure
+        (show F.toFiniteVolumeApproximation.index from i)) := by
   change IsProbabilityMeasure
     ((F.system i).gibbsMeasure (F.boltzmannIntegrable i))
   exact compactGauge_gibbsMeasure_isProbabilityMeasure
