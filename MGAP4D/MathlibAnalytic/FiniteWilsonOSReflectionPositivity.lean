@@ -1,0 +1,226 @@
+import MGAP4D.MathlibAnalytic.CompactGaugeWilsonGaugeInvariance
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped BigOperators
+
+noncomputable section
+
+/-- Time reflection on a pair of negative/positive half-lattice configurations. -/
+def osPairReflection {α : Type} (p : α × α) : α × α := (p.2, p.1)
+
+/-- Pair reflection is an involution. -/
+theorem osPairReflection_involutive {α : Type} :
+    Function.Involutive (@osPairReflection α) := by
+  rintro ⟨x, y⟩
+  rfl
+
+/-- A finite reflection kernel together with an explicit nonnegative Gram
+factorization.
+
+For a positive-time observable `F`, the OS form is
+`∑ x,y, F x K(x,y) F y`.  The certificate identifies this form with a sum of
+squares carrying nonnegative coefficients.  In lattice gauge theory, the
+feature index is supplied by the character/Peter--Weyl expansion of the
+plaquettes crossing the reflection plane. -/
+structure FiniteOSReflectionGramCertificate where
+  PositiveConfiguration : Type
+  [positiveFintype : Fintype PositiveConfiguration]
+  Feature : Type
+  [featureFintype : Fintype Feature]
+  kernel : PositiveConfiguration → PositiveConfiguration → ℝ
+  coefficient : Feature → ℝ
+  coefficient_nonneg : ∀ k, 0 ≤ coefficient k
+  feature : Feature → PositiveConfiguration → ℝ
+  kernel_decomposition :
+    ∀ x y,
+      kernel x y =
+        ∑ k : Feature, coefficient k * feature k x * feature k y
+  reflectionForm_eq_gram :
+    ∀ F : PositiveConfiguration → ℝ,
+      (∑ x : PositiveConfiguration,
+        ∑ y : PositiveConfiguration, F x * kernel x y * F y) =
+      ∑ k : Feature,
+        coefficient k *
+          (∑ x : PositiveConfiguration, F x * feature k x) ^ 2
+
+/-- The reflection kernel arising from a Gram certificate is symmetric. -/
+theorem finite_os_reflection_kernel_symmetric
+    (K : FiniteOSReflectionGramCertificate)
+    (x y : K.PositiveConfiguration) :
+    K.kernel x y = K.kernel y x := by
+  rw [K.kernel_decomposition, K.kernel_decomposition]
+  apply Finset.sum_congr rfl
+  intro k _hk
+  ring
+
+/-- The unnormalized Osterwalder--Schrader quadratic form. -/
+def FiniteOSReflectionGramCertificate.reflectionForm
+    (K : FiniteOSReflectionGramCertificate)
+    (F : K.PositiveConfiguration → ℝ) : ℝ :=
+  ∑ x : K.PositiveConfiguration,
+    ∑ y : K.PositiveConfiguration, F x * K.kernel x y * F y
+
+/-- The OS form is the displayed weighted sum of squares. -/
+theorem finite_os_reflectionForm_eq_weighted_sum_sq
+    (K : FiniteOSReflectionGramCertificate)
+    (F : K.PositiveConfiguration → ℝ) :
+    K.reflectionForm F =
+      ∑ k : K.Feature,
+        K.coefficient k *
+          (∑ x : K.PositiveConfiguration, F x * K.feature k x) ^ 2 := by
+  exact K.reflectionForm_eq_gram F
+
+/-- Gram factorization proves finite Osterwalder--Schrader reflection
+positivity. -/
+theorem finite_os_reflectionForm_nonneg
+    (K : FiniteOSReflectionGramCertificate)
+    (F : K.PositiveConfiguration → ℝ) :
+    0 ≤ K.reflectionForm F := by
+  rw [finite_os_reflectionForm_eq_weighted_sum_sq]
+  exact Finset.sum_nonneg fun k _hk =>
+    mul_nonneg (K.coefficient_nonneg k) (sq_nonneg _)
+
+/-- Reflection positivity of a finite kernel, stated as a reusable predicate. -/
+def FiniteOSReflectionPositive
+    (K : FiniteOSReflectionGramCertificate) : Prop :=
+  ∀ F : K.PositiveConfiguration → ℝ, 0 ≤ K.reflectionForm F
+
+/-- Every nonnegative Gram certificate is reflection positive. -/
+theorem finite_os_gram_certificate_reflectionPositive
+    (K : FiniteOSReflectionGramCertificate) :
+    FiniteOSReflectionPositive K :=
+  finite_os_reflectionForm_nonneg K
+
+/-- Wilson-specific reflection decomposition data.
+
+`assemble x y` glues negative and positive half-lattice configurations.  The
+reflection exchanges the two halves.  `kernel_eq_wilson_weight` identifies the
+reflection kernel with the finite-volume Wilson Boltzmann factor.  The remaining
+substantive lattice theorem is the nonnegative character expansion encoded by
+`gram` and `gram_kernel_agrees`.
+-/
+structure FiniteLatticeWilsonOSReflectionCertificate
+    (L : FiniteLatticeWilsonSystem) where
+  PositiveConfiguration : Type
+  [positiveFintype : Fintype PositiveConfiguration]
+  [positiveInhabited : Inhabited PositiveConfiguration]
+  assemble : PositiveConfiguration → PositiveConfiguration → L.Configuration
+  reflection : L.Configuration → L.Configuration
+  reflection_involutive : Function.Involutive reflection
+  reflection_assemble :
+    ∀ x y, reflection (assemble x y) = assemble y x
+  kernel : PositiveConfiguration → PositiveConfiguration → ℝ
+  kernel_eq_wilson_weight :
+    ∀ x y,
+      kernel x y =
+        Real.exp (-L.beta * L.wilsonAction (assemble x y))
+  gram : FiniteOSReflectionGramCertificate
+  positiveConfiguration_identified :
+    gram.PositiveConfiguration = PositiveConfiguration
+  gram_kernel_agrees :
+    ∀ x y,
+      gram.kernel
+        (positiveConfiguration_identified ▸ x)
+        (positiveConfiguration_identified ▸ y) = kernel x y
+
+/-- The Wilson reflection form, expressed directly through the Boltzmann kernel. -/
+def FiniteLatticeWilsonOSReflectionCertificate.wilsonReflectionForm
+    {L : FiniteLatticeWilsonSystem}
+    (R : FiniteLatticeWilsonOSReflectionCertificate L)
+    (F : R.PositiveConfiguration → ℝ) : ℝ :=
+  ∑ x : R.PositiveConfiguration,
+    ∑ y : R.PositiveConfiguration, F x * R.kernel x y * F y
+
+/-- A transport field exposing the equality between the Wilson reflection form
+and its Gram form.  Keeping this equality explicit avoids hiding the essential
+character-expansion step behind a generic readiness proposition. -/
+structure FiniteLatticeWilsonOSGramBridge
+    {L : FiniteLatticeWilsonSystem}
+    (R : FiniteLatticeWilsonOSReflectionCertificate L) where
+  transportObservable :
+    (R.PositiveConfiguration → ℝ) →
+      (R.gram.PositiveConfiguration → ℝ)
+  reflectionForm_eq :
+    ∀ F,
+      R.wilsonReflectionForm F =
+        R.gram.reflectionForm (transportObservable F)
+
+/-- The Wilson Boltzmann kernel is reflection positive once its crossing-plane
+part has the displayed nonnegative Gram/character expansion. -/
+theorem finite_lattice_wilson_os_reflection_positive
+    {L : FiniteLatticeWilsonSystem}
+    (R : FiniteLatticeWilsonOSReflectionCertificate L)
+    (B : FiniteLatticeWilsonOSGramBridge R)
+    (F : R.PositiveConfiguration → ℝ) :
+    0 ≤ R.wilsonReflectionForm F := by
+  rw [B.reflectionForm_eq F]
+  exact finite_os_reflectionForm_nonneg R.gram (B.transportObservable F)
+
+/-- Predicate form of finite-lattice Wilson OS positivity. -/
+def FiniteLatticeWilsonOSReflectionPositive
+    {L : FiniteLatticeWilsonSystem}
+    (R : FiniteLatticeWilsonOSReflectionCertificate L) : Prop :=
+  ∀ F : R.PositiveConfiguration → ℝ,
+    0 ≤ R.wilsonReflectionForm F
+
+/-- A Gram bridge discharges the finite Wilson OS-positivity obligation. -/
+theorem finite_lattice_wilson_os_gram_bridge_closes_reflectionPositivity
+    {L : FiniteLatticeWilsonSystem}
+    (R : FiniteLatticeWilsonOSReflectionCertificate L)
+    (B : FiniteLatticeWilsonOSGramBridge R) :
+    FiniteLatticeWilsonOSReflectionPositive R := by
+  intro F
+  exact finite_lattice_wilson_os_reflection_positive R B F
+
+/-- Normalization by a positive partition function preserves reflection
+positivity. -/
+def normalizedOSReflectionForm
+    {α : Type} [Fintype α]
+    (kernel : α → α → ℝ) (partitionFunction : ℝ)
+    (F : α → ℝ) : ℝ :=
+  partitionFunction⁻¹ *
+    (∑ x : α, ∑ y : α, F x * kernel x y * F y)
+
+/-- Positive normalization preserves nonnegativity of the OS form. -/
+theorem normalized_os_reflectionForm_nonneg
+    {α : Type} [Fintype α]
+    {kernel : α → α → ℝ} {Z : ℝ}
+    (hZ : 0 < Z)
+    (hOS : ∀ F : α → ℝ,
+      0 ≤ ∑ x : α, ∑ y : α, F x * kernel x y * F y)
+    (F : α → ℝ) :
+    0 ≤ normalizedOSReflectionForm kernel Z F := by
+  unfold normalizedOSReflectionForm
+  exact mul_nonneg (inv_nonneg.mpr hZ.le) (hOS F)
+
+/-- Audit-visible decomposition of the finite-volume OS step.
+
+The general positivity theorem is complete.  For the standard Wilson action,
+the only model-specific input is the Gram/character decomposition of the
+crossing-plaquette kernel and its identification with the reflected Boltzmann
+weight. -/
+structure FiniteWilsonOSReflectionPositivityCertificate
+    (L : FiniteLatticeWilsonSystem) where
+  reflectionData : FiniteLatticeWilsonOSReflectionCertificate L
+  gramBridge : FiniteLatticeWilsonOSGramBridge reflectionData
+  reflectionPositive :
+    FiniteLatticeWilsonOSReflectionPositive reflectionData
+
+/-- Build the complete finite-volume OS certificate from the reflection data and
+its Gram bridge. -/
+def finiteWilsonOSReflectionPositivityCertificate
+    (L : FiniteLatticeWilsonSystem)
+    (R : FiniteLatticeWilsonOSReflectionCertificate L)
+    (B : FiniteLatticeWilsonOSGramBridge R) :
+    FiniteWilsonOSReflectionPositivityCertificate L :=
+  { reflectionData := R
+    gramBridge := B
+    reflectionPositive :=
+      finite_lattice_wilson_os_gram_bridge_closes_reflectionPositivity R B }
+
+end
+
+end MathlibAnalytic
+end MGAP4D
