@@ -41,14 +41,18 @@ instance normalizedCompactHaar_isProbabilityMeasure
     IsProbabilityMeasure (normalizedCompactHaar G) :=
   ⟨normalizedCompactHaar_univ G⟩
 
-/-- A finite four-dimensional Wilson lattice with an arbitrary compact
-(topological, not necessarily finite) gauge group. -/
+/-- A finite four-dimensional Wilson lattice with a second-countable compact
+(topological, not necessarily finite) gauge group.  Second countability is the
+standard compact-matrix-group hypothesis ensuring that the finite product
+Borel structure on link configurations agrees with the product measurable
+structure used by `Measure.pi`. -/
 structure CompactGaugeWilsonSystem where
   Gauge : Type
   [gaugeGroup : Group Gauge]
   [gaugeTopology : TopologicalSpace Gauge]
   [gaugeTopologicalGroup : IsTopologicalGroup Gauge]
   [gaugeCompact : CompactSpace Gauge]
+  [gaugeSecondCountable : SecondCountableTopology Gauge]
   [gaugeMeasurableSpace : MeasurableSpace Gauge]
   [gaugeBorel : BorelSpace Gauge]
   [gaugeNontrivial : Nontrivial Gauge]
@@ -77,6 +81,7 @@ attribute [instance]
   CompactGaugeWilsonSystem.gaugeTopology
   CompactGaugeWilsonSystem.gaugeTopologicalGroup
   CompactGaugeWilsonSystem.gaugeCompact
+  CompactGaugeWilsonSystem.gaugeSecondCountable
   CompactGaugeWilsonSystem.gaugeMeasurableSpace
   CompactGaugeWilsonSystem.gaugeBorel
   CompactGaugeWilsonSystem.gaugeNontrivial
