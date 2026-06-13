@@ -139,7 +139,8 @@ theorem continuous_compact_gauge_wilson_family_probability_measure
     (F : ContinuousCompactGaugeWilsonApproximationFamily)
     (i : F.index) :
     IsProbabilityMeasure
-      (F.toFiniteVolumeApproximation.finiteVolumeMeasure i) := by
+      (F.toFiniteVolumeApproximation.finiteVolumeMeasure
+        (show F.toFiniteVolumeApproximation.index from i)) := by
   exact compact_gauge_wilson_family_probability_measure F.toCompactFamily i
 
 end
