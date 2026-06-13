@@ -40,14 +40,16 @@ direction occurs, positive orientation after reflection requires moving the
 base one unit backward in Euclidean time. -/
 def finiteEvenFourTorusReflectedPlaquetteBase
     (H : ℕ) (p : FiniteFourTorusPlaquette (2 * H + 1)) :
-    FiniteEvenFourTorusVertex H :=
-  if finiteEvenFourTorusPlaquetteHasTimeDirection p then
-    finiteEvenFourTorusTimeReflection H
-        (finiteFourTorusPlaquetteBase p) -
-      finiteFourTorusUnitStep (2 * H + 1) 0
-  else
-    finiteEvenFourTorusTimeReflection H
-      (finiteFourTorusPlaquetteBase p)
+    FiniteEvenFourTorusVertex H := by
+  classical
+  exact
+    if finiteEvenFourTorusPlaquetteHasTimeDirection p then
+      finiteEvenFourTorusTimeReflection H
+          (finiteFourTorusPlaquetteBase p) -
+        finiteFourTorusUnitStep (2 * H + 1) 0
+    else
+      finiteEvenFourTorusTimeReflection H
+        (finiteFourTorusPlaquetteBase p)
 
 /-- Concrete plaquette reflection on the even four-dimensional torus.  The
 direction pair is retained while the base vertex is reflected with the
@@ -81,20 +83,51 @@ theorem finiteEvenFourTorusPlaquetteReflection_hasTimeDirection
       finiteEvenFourTorusPlaquetteHasTimeDirection p := by
   rfl
 
+/-- The reflected plaquette has the reflected base by construction. -/
+@[simp]
+theorem finiteFourTorusPlaquetteBase_reflection
+    (H : ℕ) (p : FiniteFourTorusPlaquette (2 * H + 1)) :
+    finiteFourTorusPlaquetteBase
+        (finiteEvenFourTorusPlaquetteReflection H p) =
+      finiteEvenFourTorusReflectedPlaquetteBase H p := by
+  rfl
+
 /-- The orientation-corrected reflected base is involutive. -/
 theorem finiteEvenFourTorusReflectedPlaquetteBase_involutive
     (H : ℕ) (p : FiniteFourTorusPlaquette (2 * H + 1)) :
     finiteEvenFourTorusReflectedPlaquetteBase H
         (finiteEvenFourTorusPlaquetteReflection H p) =
       finiteFourTorusPlaquetteBase p := by
+  classical
   by_cases ht : finiteEvenFourTorusPlaquetteHasTimeDirection p
-  · simp [finiteEvenFourTorusReflectedPlaquetteBase,
-      finiteEvenFourTorusPlaquetteReflection, ht,
-      finiteEvenFourTorusTimeReflection_sub_timeStep,
-      finiteEvenFourTorusTimeReflection_involutive]
-  · simp [finiteEvenFourTorusReflectedPlaquetteBase,
-      finiteEvenFourTorusPlaquetteReflection, ht,
-      finiteEvenFourTorusTimeReflection_involutive]
+  · have htr : finiteEvenFourTorusPlaquetteHasTimeDirection
+        (finiteEvenFourTorusPlaquetteReflection H p) :=
+      (finiteEvenFourTorusPlaquetteReflection_hasTimeDirection H p).2 ht
+    unfold finiteEvenFourTorusReflectedPlaquetteBase
+    rw [if_pos htr]
+    change finiteEvenFourTorusTimeReflection H
+        (finiteEvenFourTorusReflectedPlaquetteBase H p) -
+      finiteFourTorusUnitStep (2 * H + 1) 0 =
+        finiteFourTorusPlaquetteBase p
+    rw [finiteEvenFourTorusReflectedPlaquetteBase]
+    rw [if_pos ht]
+    rw [finiteEvenFourTorusTimeReflection_sub_timeStep]
+    rw [finiteEvenFourTorusTimeReflection_involutive]
+    simp
+  · have htr : ¬ finiteEvenFourTorusPlaquetteHasTimeDirection
+        (finiteEvenFourTorusPlaquetteReflection H p) := by
+      intro h
+      exact ht
+        ((finiteEvenFourTorusPlaquetteReflection_hasTimeDirection H p).1 h)
+    unfold finiteEvenFourTorusReflectedPlaquetteBase
+    rw [if_neg htr]
+    change finiteEvenFourTorusTimeReflection H
+        (finiteEvenFourTorusReflectedPlaquetteBase H p) =
+      finiteFourTorusPlaquetteBase p
+    rw [finiteEvenFourTorusReflectedPlaquetteBase]
+    rw [if_neg ht]
+    exact finiteEvenFourTorusTimeReflection_involutive H
+      (finiteFourTorusPlaquetteBase p)
 
 /-- Plaquette reflection is an involution. -/
 theorem finiteEvenFourTorusPlaquetteReflection_involutive
