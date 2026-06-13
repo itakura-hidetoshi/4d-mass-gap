@@ -90,12 +90,19 @@ theorem compact_gauge_configurationHaar_measurePreserving
   · unfold CompactGaugeWilsonSystem.gaugeTransform
     fun_prop
   · unfold CompactGaugeWilsonSystem.configurationHaarMeasure
-    rw [Measure.pi_map_pi]
-    · congr 1
-      funext e
-      exact (compact_gauge_link_measurePreserving L γ e).map_eq
-    · intro e
-      exact (compact_gauge_link_measurePreserving L γ e).measurable.aemeasurable
+    let f : L.Edge → L.Gauge → L.Gauge := fun e x =>
+      γ (L.source e) * x * (γ (L.target e))⁻¹
+    have hf : ∀ e, AEMeasurable (f e) (normalizedCompactHaar L.Gauge) :=
+      fun e => (compact_gauge_link_measurePreserving L γ e).measurable.aemeasurable
+    letI : ∀ e, SigmaFinite
+        ((normalizedCompactHaar L.Gauge).map (f e)) := fun e => by
+      rw [(compact_gauge_link_measurePreserving L γ e).map_eq]
+      infer_instance
+    rw [show L.gaugeTransform γ = (fun A e => f e (A e)) by rfl]
+    rw [Measure.pi_map_pi hf]
+    congr 1
+    funext e
+    exact (compact_gauge_link_measurePreserving L γ e).map_eq
 
 /-- Exponential tilting preserves a measure-preserving symmetry whenever the
 exponent is invariant under that symmetry. -/
