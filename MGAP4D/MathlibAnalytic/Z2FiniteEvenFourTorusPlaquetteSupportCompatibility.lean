@@ -77,11 +77,13 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         (finiteEvenFourTorusPlaquetteReflection H p) ↔
       v ∈ finiteEvenFourTorusPlaquetteReflectedVertices p := by
   classical
-  by_cases hμ : finiteFourTorusPlaquetteFirstDirection p = 0
-  · have hν : finiteFourTorusPlaquetteSecondDirection p ≠ 0 := by
+  rcases p with ⟨base, ⟨⟨μ, ν⟩, hμν⟩⟩
+  by_cases hμ : μ = 0
+  · subst μ
+    have hν : ν ≠ 0 := by
       intro hν0
-      exact (finiteFourTorusPlaquette_directions_ne p)
-        (hμ.trans hν0.symm)
+      apply hμν
+      simpa [hν0]
     simp [finiteFourTorusPlaquetteVertices,
       finiteFourTorusPlaquetteCorner00,
       finiteFourTorusPlaquetteCorner10,
@@ -95,15 +97,15 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
       finiteEvenFourTorusPlaquetteReflection,
       finiteEvenFourTorusReflectedPlaquetteBase,
       finiteEvenFourTorusPlaquetteHasTimeDirection,
-      hμ, hν,
+      hν,
       finiteEvenFourTorusTimeReflection_step_spatial,
       finiteEvenFourTorusTimeReflection_step_time,
       finiteFourTorusStep_sub_timeStep_cancel,
       finiteFourTorusStep_sub_timeStep,
       finiteFourTorusStep_comm,
       or_assoc, or_left_comm, or_comm]
-  · by_cases hν : finiteFourTorusPlaquetteSecondDirection p = 0
-    · have hμne : finiteFourTorusPlaquetteFirstDirection p ≠ 0 := hμ
+  · by_cases hν : ν = 0
+    · subst ν
       simp [finiteFourTorusPlaquetteVertices,
         finiteFourTorusPlaquetteCorner00,
         finiteFourTorusPlaquetteCorner10,
@@ -117,7 +119,7 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteEvenFourTorusPlaquetteReflection,
         finiteEvenFourTorusReflectedPlaquetteBase,
         finiteEvenFourTorusPlaquetteHasTimeDirection,
-        hμne, hν,
+        hμ,
         finiteEvenFourTorusTimeReflection_step_spatial,
         finiteEvenFourTorusTimeReflection_step_time,
         finiteFourTorusStep_sub_timeStep_cancel,
@@ -139,7 +141,8 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteEvenFourTorusPlaquetteHasTimeDirection,
         hμ, hν,
         finiteEvenFourTorusTimeReflection_step_spatial,
-        finiteFourTorusStep_comm]
+        finiteFourTorusStep_comm,
+        or_assoc, or_left_comm, or_comm]
 
 /-- The concrete support compatibility certificate is theorem-generated;
 fixed reflection orbits are handled internally by the geometric classifier. -/
