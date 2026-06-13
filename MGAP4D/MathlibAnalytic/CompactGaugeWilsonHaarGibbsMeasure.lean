@@ -15,7 +15,7 @@ noncomputable section
 It is used to normalize Haar measure to total mass one. -/
 def compactGroupPositiveCompacts
     (G : Type) [Group G] [TopologicalSpace G] [CompactSpace G] :
-    PositiveCompacts G :=
+    TopologicalSpace.PositiveCompacts G :=
   ⟨⟨Set.univ, isCompact_univ⟩, by simp⟩
 
 /-- Haar probability measure on a compact topological group, normalized on the
