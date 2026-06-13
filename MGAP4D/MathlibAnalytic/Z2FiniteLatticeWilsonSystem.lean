@@ -30,7 +30,7 @@ def boolEquivZ2Gauge : Bool ≃ Z2Gauge where
     cases b <;> simp [z2GaugeNontrivial]
   right_inv := by
     intro g
-    fin_cases g <;> norm_num [z2GaugeNontrivial]
+    fin_cases g <;> native_decide
 
 /-- Transport a fixed-carrier Gram kernel along a finite equivalence. -/
 def FiniteOSGramKernelOn.transport
@@ -166,10 +166,11 @@ theorem z2FiniteLatticeWilsonSystem_energy_identity
     (h30 : ∀ p, target (boundary p 3) = source (boundary p 0))
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β) (hE0 : 0 ≤ energyIdentity) (hE1 : 0 ≤ energyNontrivial) :
-    ((z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
-      h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
-      .plaquetteEnergy) (1 : Z2Gauge) = energyIdentity := by
-  simp [z2FiniteLatticeWilsonSystem]
+    FiniteLatticeWilsonSystem.plaquetteEnergy
+      (z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
+        h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
+      (1 : Z2Gauge) = energyIdentity := by
+  rfl
 
 /-- The concrete system assigns the nontrivial plaquette energy to the unique
 nonidentity group element. -/
@@ -185,9 +186,10 @@ theorem z2FiniteLatticeWilsonSystem_energy_nontrivial
     (h30 : ∀ p, target (boundary p 3) = source (boundary p 0))
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β) (hE0 : 0 ≤ energyIdentity) (hE1 : 0 ≤ energyNontrivial) :
-    ((z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
-      h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
-      .plaquetteEnergy) z2GaugeNontrivial = energyNontrivial := by
+    FiniteLatticeWilsonSystem.plaquetteEnergy
+      (z2FiniteLatticeWilsonSystem Vertex Edge Plaquette source target boundary
+        h01 h12 h23 h30 β energyIdentity energyNontrivial hβ hE0 hE1)
+      z2GaugeNontrivial = energyNontrivial := by
   change (if z2GaugeNontrivial = 1 then energyIdentity else energyNontrivial) =
     energyNontrivial
   simp [z2GaugeNontrivial]
