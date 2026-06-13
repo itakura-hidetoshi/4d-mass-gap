@@ -164,7 +164,26 @@ theorem FiniteFourDimensionalHypercubicPlaquetteGeometry.plaquetteSide_eq
     simp
   unfold FiniteFourDimensionalWilsonGeometry.plaquetteSide
     hypercubicPlaquetteSide reflectionTimeSupportSide
-  rw [hPositive, hNegative]
+  by_cases hp : ∀ v ∈ H.geometry.plaquetteVertices p,
+      0 < H.geometry.timeCoordinate v
+  · have hp' : ∀ t ∈ hypercubicPlaquetteTimes
+        (H.baseTime p) (H.firstDirection p) (H.secondDirection p),
+        0 < t := hPositive.mp hp
+    rw [if_pos hp, if_pos hp']
+  · have hp' : ¬ ∀ t ∈ hypercubicPlaquetteTimes
+        (H.baseTime p) (H.firstDirection p) (H.secondDirection p),
+        0 < t := fun h => hp (hPositive.mpr h)
+    rw [if_neg hp, if_neg hp']
+    by_cases hn : ∀ v ∈ H.geometry.plaquetteVertices p,
+        H.geometry.timeCoordinate v < 0
+    · have hn' : ∀ t ∈ hypercubicPlaquetteTimes
+          (H.baseTime p) (H.firstDirection p) (H.secondDirection p),
+          t < 0 := hNegative.mp hn
+      rw [if_pos hn, if_pos hn']
+    · have hn' : ¬ ∀ t ∈ hypercubicPlaquetteTimes
+          (H.baseTime p) (H.firstDirection p) (H.secondDirection p),
+          t < 0 := fun h => hn (hNegative.mpr h)
+      rw [if_neg hn, if_neg hn']
 
 end
 
