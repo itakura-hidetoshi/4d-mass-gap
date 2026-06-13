@@ -11,9 +11,8 @@ open MeasureTheory Set Function
 noncomputable section
 
 /-- On a compact group, the normalized left Haar probability measure is also
-right invariant.  The proof uses uniqueness of left-invariant finite measures:
-right translation of a left Haar measure is again left invariant, and total
-mass one forces the scalar of proportionality to be one. -/
+right invariant.  Right translation preserves both the Haar property and total
+mass one, so uniqueness of probability Haar measure gives the result directly. -/
 theorem normalizedCompactHaar_map_mul_right_eq_self
     (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [CompactSpace G] [MeasurableSpace G] [BorelSpace G]
@@ -24,34 +23,17 @@ theorem normalizedCompactHaar_map_mul_right_eq_self
   letI : Measure.IsHaarMeasure μ := by
     dsimp [μ, normalizedCompactHaar]
     infer_instance
+  letI : IsProbabilityMeasure μ := by
+    dsimp [μ]
+    infer_instance
   let μ' : Measure G := Measure.map (fun x : G => x * g) μ
-  have hμ'left : Measure.IsMulLeftInvariant μ' := by
+  letI : Measure.IsHaarMeasure μ' := by
     dsimp [μ']
     infer_instance
-  letI : Measure.IsMulLeftInvariant μ' := hμ'left
-  have hμ'finite : IsFiniteMeasure μ' := by
-    refine ⟨?_⟩
-    rw [Measure.map_apply (measurable_mul_const g) MeasurableSet.univ]
-    simp [μ]
-  letI : IsFiniteMeasure μ' := hμ'finite
-  have hμ'compact : IsFiniteMeasureOnCompacts μ' := by infer_instance
-  letI : IsFiniteMeasureOnCompacts μ' := hμ'compact
-  have hscalar :
-      μ' = Measure.haarScalarFactor μ' μ • μ := by
-    exact Measure.isMulInvariant_eq_smul_of_compactSpace μ' μ
-  have huniv :
-      μ' Set.univ =
-        (Measure.haarScalarFactor μ' μ • μ) Set.univ :=
-    congrArg (fun ν : Measure G => ν Set.univ) hscalar
-  have hmapUniv : μ' Set.univ = 1 := by
-    dsimp [μ']
-    rw [Measure.map_apply (measurable_mul_const g) MeasurableSet.univ]
-    simp [μ]
-  have hscalarOne : Measure.haarScalarFactor μ' μ = 1 := by
-    rw [hmapUniv] at huniv
-    simpa [μ, ENNReal.smul_def] using huniv.symm
-  dsimp [μ'] at hscalar ⊢
-  rw [hscalar, hscalarOne, one_smul]
+  letI : IsProbabilityMeasure μ' :=
+    Measure.isProbabilityMeasure_map (measurable_mul_const g).aemeasurable
+  change μ' = μ
+  exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure μ' μ
 
 /-- The normalized Haar probability measure on a compact group is bi-invariant. -/
 instance normalizedCompactHaar_isMulRightInvariant
