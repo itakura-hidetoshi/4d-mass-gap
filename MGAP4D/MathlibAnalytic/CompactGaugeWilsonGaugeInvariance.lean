@@ -39,7 +39,10 @@ theorem normalizedCompactHaar_map_mul_right_eq_self
   have hscalar :
       μ' = Measure.haarScalarFactor μ' μ • μ := by
     exact Measure.isMulInvariant_eq_smul_of_compactSpace μ' μ
-  have huniv := congrArg (fun ν : Measure G => ν Set.univ) hscalar
+  have huniv :
+      μ' Set.univ =
+        (Measure.haarScalarFactor μ' μ • μ) Set.univ :=
+    congrArg (fun ν : Measure G => ν Set.univ) hscalar
   have hmapUniv : μ' Set.univ = 1 := by
     dsimp [μ']
     rw [Measure.map_apply (measurable_mul_const g) MeasurableSet.univ]
@@ -65,6 +68,9 @@ theorem normalizedCompactHaar_measurePreserving_mul_left_right
     (a b : G) :
     MeasurePreserving (fun x : G => a * x * b)
       (normalizedCompactHaar G) (normalizedCompactHaar G) := by
+  letI : Measure.IsHaarMeasure (normalizedCompactHaar G) := by
+    dsimp [normalizedCompactHaar]
+    infer_instance
   exact
     (measurePreserving_mul_right (normalizedCompactHaar G) b).comp
       (measurePreserving_mul_left (normalizedCompactHaar G) a)
