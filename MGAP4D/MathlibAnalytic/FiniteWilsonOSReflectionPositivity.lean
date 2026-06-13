@@ -37,6 +37,10 @@ structure FiniteOSReflectionGramCertificate where
       kernel x y =
         ∑ k : Feature, coefficient k * feature k x * feature k y
 
+attribute [instance]
+  FiniteOSReflectionGramCertificate.positiveFintype
+  FiniteOSReflectionGramCertificate.featureFintype
+
 /-- The finite-sum algebra behind reflection positivity: a kernel with a Gram
 expansion has a quadratic form equal to a weighted sum of squares. -/
 theorem finite_gram_quadratic_identity
@@ -174,6 +178,10 @@ structure FiniteLatticeWilsonOSReflectionCertificate
       gram.kernel
         (positiveConfigurationEquiv x)
         (positiveConfigurationEquiv y) = kernel x y
+
+attribute [instance]
+  FiniteLatticeWilsonOSReflectionCertificate.positiveFintype
+  FiniteLatticeWilsonOSReflectionCertificate.positiveInhabited
 
 /-- The Wilson reflection form, expressed directly through the Boltzmann kernel. -/
 def FiniteLatticeWilsonOSReflectionCertificate.wilsonReflectionForm
