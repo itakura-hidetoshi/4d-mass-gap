@@ -1,0 +1,151 @@
+import MGAP4D.MathlibAnalytic.Z2FiniteInvolutivePlaquetteGeometricSidePartition
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+/-- Time reflection commutes with a spatial unit step. -/
+@[simp]
+theorem finiteEvenFourTorusTimeReflection_step_spatial
+    (H : ℕ) (v : FiniteEvenFourTorusVertex H)
+    {μ : Fin 4} (hμ : μ ≠ 0) :
+    finiteEvenFourTorusTimeReflection H
+        (finiteFourTorusStep (2 * H + 1) v μ) =
+      finiteFourTorusStep (2 * H + 1)
+        (finiteEvenFourTorusTimeReflection H v) μ := by
+  have h0μ : (0 : Fin 4) ≠ μ := Ne.symm hμ
+  funext i
+  by_cases hi : i = 0
+  · subst i
+    simp [finiteEvenFourTorusTimeReflection,
+      finiteFourTorusStep, finiteFourTorusUnitStep, h0μ]
+  · simp [finiteEvenFourTorusTimeReflection,
+      finiteFourTorusStep, finiteFourTorusUnitStep, hi]
+
+/-- Time reflection turns a positive time step into subtraction of the time
+unit vector. -/
+@[simp]
+theorem finiteEvenFourTorusTimeReflection_step_time
+    (H : ℕ) (v : FiniteEvenFourTorusVertex H) :
+    finiteEvenFourTorusTimeReflection H
+        (finiteFourTorusStep (2 * H + 1) v 0) =
+      finiteEvenFourTorusTimeReflection H v -
+        finiteFourTorusUnitStep (2 * H + 1) 0 := by
+  funext i
+  by_cases hi : i = 0
+  · subst i
+    simp [finiteEvenFourTorusTimeReflection,
+      finiteFourTorusStep, finiteFourTorusUnitStep]
+    ring
+  · simp [finiteEvenFourTorusTimeReflection,
+      finiteFourTorusStep, finiteFourTorusUnitStep, hi]
+
+/-- A backward time shift followed by a positive time step cancels. -/
+@[simp]
+theorem finiteFourTorusStep_sub_timeStep_cancel
+    (H : ℕ) (v : FiniteEvenFourTorusVertex H) :
+    finiteFourTorusStep (2 * H + 1)
+        (v - finiteFourTorusUnitStep (2 * H + 1) 0) 0 = v := by
+  simpa [finiteFourTorusStep] using
+    sub_add_cancel v (finiteFourTorusUnitStep (2 * H + 1) 0)
+
+/-- Unit translations in distinct or equal directions commute. -/
+theorem finiteFourTorusStep_comm
+    (N : ℕ) (v : FiniteFourTorusVertex N) (μ ν : Fin 4) :
+    finiteFourTorusStep N (finiteFourTorusStep N v μ) ν =
+      finiteFourTorusStep N (finiteFourTorusStep N v ν) μ := by
+  simp [finiteFourTorusStep, add_assoc, add_comm, add_left_comm]
+
+/-- Spatial translation commutes with subtracting the time unit vector. -/
+theorem finiteFourTorusStep_sub_timeStep
+    (H : ℕ) (v : FiniteEvenFourTorusVertex H) (μ : Fin 4) :
+    finiteFourTorusStep (2 * H + 1)
+        (v - finiteFourTorusUnitStep (2 * H + 1) 0) μ =
+      finiteFourTorusStep (2 * H + 1) v μ -
+        finiteFourTorusUnitStep (2 * H + 1) 0 := by
+  unfold finiteFourTorusStep
+  abel
+
+/-- The reflected concrete plaquette has exactly the time-reflected vertex
+support of the original plaquette, up to ordering. -/
+theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
+    (H : ℕ) (p : FiniteEvenFourTorusPlaquette H)
+    (v : FiniteEvenFourTorusVertex H) :
+    v ∈ finiteFourTorusPlaquetteVertices
+        (finiteEvenFourTorusPlaquetteReflection H p) ↔
+      v ∈ finiteEvenFourTorusPlaquetteReflectedVertices p := by
+  classical
+  by_cases hμ : finiteFourTorusPlaquetteFirstDirection p = 0
+  · have hν : finiteFourTorusPlaquetteSecondDirection p ≠ 0 := by
+      intro hν0
+      exact (finiteFourTorusPlaquette_directions_ne p)
+        (hμ.trans hν0.symm)
+    simp [finiteFourTorusPlaquetteVertices,
+      finiteFourTorusPlaquetteCorner00,
+      finiteFourTorusPlaquetteCorner10,
+      finiteFourTorusPlaquetteCorner11,
+      finiteFourTorusPlaquetteCorner01,
+      finiteEvenFourTorusPlaquetteReflectedVertices,
+      finiteEvenFourTorusReflectVertexSupport,
+      finiteEvenFourTorusPlaquetteReflection,
+      finiteEvenFourTorusReflectedPlaquetteBase,
+      finiteEvenFourTorusPlaquetteHasTimeDirection,
+      hμ, hν,
+      finiteEvenFourTorusTimeReflection_step_spatial,
+      finiteEvenFourTorusTimeReflection_step_time,
+      finiteFourTorusStep_sub_timeStep_cancel,
+      finiteFourTorusStep_sub_timeStep,
+      finiteFourTorusStep_comm,
+      or_assoc, or_left_comm, or_comm]
+  · by_cases hν : finiteFourTorusPlaquetteSecondDirection p = 0
+    · have hμne : finiteFourTorusPlaquetteFirstDirection p ≠ 0 := hμ
+      simp [finiteFourTorusPlaquetteVertices,
+        finiteFourTorusPlaquetteCorner00,
+        finiteFourTorusPlaquetteCorner10,
+        finiteFourTorusPlaquetteCorner11,
+        finiteFourTorusPlaquetteCorner01,
+        finiteEvenFourTorusPlaquetteReflectedVertices,
+        finiteEvenFourTorusReflectVertexSupport,
+        finiteEvenFourTorusPlaquetteReflection,
+        finiteEvenFourTorusReflectedPlaquetteBase,
+        finiteEvenFourTorusPlaquetteHasTimeDirection,
+        hμne, hν,
+        finiteEvenFourTorusTimeReflection_step_spatial,
+        finiteEvenFourTorusTimeReflection_step_time,
+        finiteFourTorusStep_sub_timeStep_cancel,
+        finiteFourTorusStep_sub_timeStep,
+        finiteFourTorusStep_comm,
+        or_assoc, or_left_comm, or_comm]
+    · simp [finiteFourTorusPlaquetteVertices,
+        finiteFourTorusPlaquetteCorner00,
+        finiteFourTorusPlaquetteCorner10,
+        finiteFourTorusPlaquetteCorner11,
+        finiteFourTorusPlaquetteCorner01,
+        finiteEvenFourTorusPlaquetteReflectedVertices,
+        finiteEvenFourTorusReflectVertexSupport,
+        finiteEvenFourTorusPlaquetteReflection,
+        finiteEvenFourTorusReflectedPlaquetteBase,
+        finiteEvenFourTorusPlaquetteHasTimeDirection,
+        hμ, hν,
+        finiteEvenFourTorusTimeReflection_step_spatial,
+        finiteFourTorusStep_comm]
+
+/-- Once fixed plaquettes are known to be crossing, all remaining support
+compatibility data is theorem-generated. -/
+def finiteEvenFourTorusPlaquetteSupportReflectionCompatibilityOfFixedCrossing
+    (H : ℕ)
+    (hFixedCrossing :
+      ∀ p : FiniteEvenFourTorusPlaquette H,
+        finiteEvenFourTorusPlaquetteReflection H p = p →
+          finiteEvenFourTorusCrossingPlaquette p) :
+    FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility H :=
+  { vertices_reflection_mem :=
+      finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff H
+    fixed_crossing := hFixedCrossing }
+
+end
+
+end MathlibAnalytic
+end MGAP4D
