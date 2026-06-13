@@ -31,7 +31,8 @@ theorem z2PlaquetteKernel_fourier_decomposition
         z2KernelCoefficient w₀ w₁ mode *
           z2RealCharacter mode x * z2RealCharacter mode y := by
   cases x <;> cases y <;>
-    norm_num [z2PlaquetteKernel, z2KernelCoefficient, z2RealCharacter]
+    norm_num [z2PlaquetteKernel, z2KernelCoefficient, z2RealCharacter] <;>
+    ring
 
 /-- The trivial Fourier coefficient is nonnegative when both kernel values are
 nonnegative. -/
@@ -148,11 +149,10 @@ theorem z2Wilson_fullReflectionKernel_reflectionPositive
     (hβ : 0 ≤ β) (hEnergy : energyIdentity ≤ energyNontrivial)
     (n : ℕ) (a : Bool → ℝ) :
     FiniteOSReflectionPositive
-      ((FiniteOSGramKernelOn.listProduct
+      (((FiniteOSGramKernelOn.listProduct
         (List.replicate n
           (z2WilsonPlaquetteGramKernel
-            β energyIdentity energyNontrivial hβ hEnergy))).sandwich a)
-        .toCertificate :=
+            β energyIdentity energyNontrivial hβ hEnergy))).sandwich a).toCertificate) :=
   finite_os_crossing_product_with_halfspace_factor_reflectionPositive _ a
 
 end
