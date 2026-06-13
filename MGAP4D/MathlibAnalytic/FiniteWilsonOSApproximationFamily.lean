@@ -79,7 +79,8 @@ probability measure. -/
 theorem finite_wilson_os_family_probability_measure
     (F : FiniteWilsonOSApproximationFamily) (i : F.index) :
     MeasureTheory.IsProbabilityMeasure
-      (F.toFiniteVolumeApproximation.finiteVolumeMeasure i) := by
+      (F.toFiniteVolumeApproximation.finiteVolumeMeasure
+        (show F.toFiniteVolumeApproximation.index from i)) := by
   change MeasureTheory.IsProbabilityMeasure (F.system i).gibbsMeasure
   infer_instance
 
@@ -87,8 +88,9 @@ theorem finite_wilson_os_family_probability_measure
 structure FiniteWilsonOSMeasureCertificate
     (F : FiniteWilsonOSApproximationFamily) where
   probabilityMeasure :
-    ∀ i, MeasureTheory.IsProbabilityMeasure
-      (F.toFiniteVolumeApproximation.finiteVolumeMeasure i)
+    ∀ i : F.index, MeasureTheory.IsProbabilityMeasure
+      (F.toFiniteVolumeApproximation.finiteVolumeMeasure
+        (show F.toFiniteVolumeApproximation.index from i))
   gaugeInvariant : F.ActualGaugeInvariant
   reflectionPositive : F.ActualReflectionPositive
   euclideanCovariant : F.finiteVolumeEuclideanCovariant
