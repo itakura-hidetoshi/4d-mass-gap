@@ -20,10 +20,9 @@ theorem osPairReflection_involutive {α : Type} :
 factorization.
 
 For a positive-time observable `F`, the OS form is
-`∑ x,y, F x K(x,y) F y`.  The certificate identifies this form with a sum of
-squares carrying nonnegative coefficients.  In lattice gauge theory, the
-feature index is supplied by the character/Peter--Weyl expansion of the
-plaquettes crossing the reflection plane. -/
+`∑ x,y, F x K(x,y) F y`.  In lattice gauge theory, the feature index is
+supplied by the character/Peter--Weyl expansion of plaquettes crossing the
+reflection plane. -/
 structure FiniteOSReflectionGramCertificate where
   PositiveConfiguration : Type
   [positiveFintype : Fintype PositiveConfiguration]
@@ -37,13 +36,61 @@ structure FiniteOSReflectionGramCertificate where
     ∀ x y,
       kernel x y =
         ∑ k : Feature, coefficient k * feature k x * feature k y
-  reflectionForm_eq_gram :
-    ∀ F : PositiveConfiguration → ℝ,
-      (∑ x : PositiveConfiguration,
-        ∑ y : PositiveConfiguration, F x * kernel x y * F y) =
-      ∑ k : Feature,
-        coefficient k *
-          (∑ x : PositiveConfiguration, F x * feature k x) ^ 2
+
+/-- The finite-sum algebra behind reflection positivity: a kernel with a Gram
+expansion has a quadratic form equal to a weighted sum of squares. -/
+theorem finite_gram_quadratic_identity
+    {α κ : Type} [Fintype α] [Fintype κ]
+    (coefficient : κ → ℝ) (feature : κ → α → ℝ)
+    (F : α → ℝ) :
+    (∑ x : α, ∑ y : α,
+      F x * (∑ k : κ, coefficient k * feature k x * feature k y) * F y) =
+    ∑ k : κ, coefficient k * (∑ x : α, F x * feature k x) ^ 2 := by
+  classical
+  calc
+    (∑ x : α, ∑ y : α,
+      F x * (∑ k : κ, coefficient k * feature k x * feature k y) * F y) =
+        ∑ x : α, ∑ y : α, ∑ k : κ,
+          coefficient k * (F x * feature k x) * (F y * feature k y) := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            apply Finset.sum_congr rfl
+            intro y _hy
+            rw [Finset.mul_sum, Finset.sum_mul]
+            apply Finset.sum_congr rfl
+            intro k _hk
+            ring
+    _ = ∑ x : α, ∑ k : κ, ∑ y : α,
+          coefficient k * (F x * feature k x) * (F y * feature k y) := by
+            apply Finset.sum_congr rfl
+            intro x _hx
+            rw [Finset.sum_comm]
+    _ = ∑ k : κ, ∑ x : α, ∑ y : α,
+          coefficient k * (F x * feature k x) * (F y * feature k y) := by
+            rw [Finset.sum_comm]
+    _ = ∑ k : κ, coefficient k * (∑ x : α, F x * feature k x) ^ 2 := by
+            apply Finset.sum_congr rfl
+            intro k _hk
+            rw [pow_two]
+            calc
+              (∑ x : α, ∑ y : α,
+                coefficient k * (F x * feature k x) *
+                  (F y * feature k y)) =
+                  ∑ x : α,
+                    (coefficient k * (F x * feature k x)) *
+                      (∑ y : α, F y * feature k y) := by
+                        apply Finset.sum_congr rfl
+                        intro x _hx
+                        rw [← Finset.mul_sum]
+              _ = (∑ x : α, coefficient k * (F x * feature k x)) *
+                    (∑ y : α, F y * feature k y) := by
+                      rw [← Finset.sum_mul]
+              _ = (coefficient k * (∑ x : α, F x * feature k x)) *
+                    (∑ y : α, F y * feature k y) := by
+                      rw [← Finset.mul_sum]
+              _ = coefficient k *
+                    (∑ x : α, F x * feature k x) *
+                    (∑ y : α, F y * feature k y) := by ring
 
 /-- The reflection kernel arising from a Gram certificate is symmetric. -/
 theorem finite_os_reflection_kernel_symmetric
@@ -62,7 +109,8 @@ def FiniteOSReflectionGramCertificate.reflectionForm
   ∑ x : K.PositiveConfiguration,
     ∑ y : K.PositiveConfiguration, F x * K.kernel x y * F y
 
-/-- The OS form is the displayed weighted sum of squares. -/
+/-- The OS form is the displayed weighted sum of squares, derived solely from
+the pointwise Gram decomposition of the kernel. -/
 theorem finite_os_reflectionForm_eq_weighted_sum_sq
     (K : FiniteOSReflectionGramCertificate)
     (F : K.PositiveConfiguration → ℝ) :
@@ -70,7 +118,9 @@ theorem finite_os_reflectionForm_eq_weighted_sum_sq
       ∑ k : K.Feature,
         K.coefficient k *
           (∑ x : K.PositiveConfiguration, F x * K.feature k x) ^ 2 := by
-  exact K.reflectionForm_eq_gram F
+  unfold FiniteOSReflectionGramCertificate.reflectionForm
+  simp_rw [K.kernel_decomposition]
+  exact finite_gram_quadratic_identity K.coefficient K.feature F
 
 /-- Gram factorization proves finite Osterwalder--Schrader reflection
 positivity. -/
