@@ -16,12 +16,11 @@ structure FiniteInvolutivePlaquetteGeometricSidePartition
   reflection_involutive : Function.Involutive reflection
   crossing : Plaquette → Prop
   crossing_reflection : ∀ p, crossing (reflection p) ↔ crossing p
-  fixed_crossing : ∀ p, reflection p = p → crossing p
   rank : Plaquette ≃ Fin (Fintype.card Plaquette)
 
-/-- Geometric side classifier.  Crossing plaquettes remain crossing even when
-their reflection orbit has two distinct members.  Rank is used only on the
-noncrossing two-element orbits. -/
+/-- Geometric side classifier.  Geometric crossing plaquettes stay crossing.
+Outside that sector, rank orders nontrivial reflection pairs; equal-rank fixed
+orbits are classified as crossing automatically. -/
 def FiniteInvolutivePlaquetteGeometricSidePartition.side
     {Plaquette : Type} [Fintype Plaquette]
     (P : FiniteInvolutivePlaquetteGeometricSidePartition Plaquette)
@@ -32,11 +31,13 @@ def FiniteInvolutivePlaquetteGeometricSidePartition.side
       .crossing
     else if P.rank p < P.rank (P.reflection p) then
       .positive
-    else
+    else if P.rank (P.reflection p) < P.rank p then
       .negative
+    else
+      .crossing
 
-/-- Reflection exchanges the two open sides and preserves the full geometric
-crossing sector, including nonfixed crossing orbits. -/
+/-- Reflection exchanges the two open sides and preserves both the geometric
+crossing sector and fixed reflection orbits. -/
 @[simp]
 theorem FiniteInvolutivePlaquetteGeometricSidePartition.side_reflection
     {Plaquette : Type} [Fintype Plaquette]
@@ -59,20 +60,36 @@ theorem FiniteInvolutivePlaquetteGeometricSidePartition.side_reflection
     by_cases hlt : P.rank p < P.rank (P.reflection p)
     · have hnot : ¬ P.rank (P.reflection p) < P.rank p :=
         not_lt_of_ge hlt.le
+      have hfirstRef :
+          ¬ P.rank (P.reflection p) <
+            P.rank (P.reflection (P.reflection p)) := by
+        simpa only [P.reflection_involutive p] using hnot
+      have hsecondRef :
+          P.rank (P.reflection (P.reflection p)) <
+            P.rank (P.reflection p) := by
+        simpa only [P.reflection_involutive p] using hlt
       unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
-      rw [if_neg hcr, P.reflection_involutive p, if_neg hnot,
+      rw [if_neg hcr, if_neg hfirstRef, if_pos hsecondRef,
         if_neg hc, if_pos hlt]
-    · have hreflection_ne : P.reflection p ≠ p := by
-        intro hfix
-        exact hc (P.fixed_crossing p hfix)
-      have hrank_ne : P.rank (P.reflection p) ≠ P.rank p := by
-        intro h
-        exact hreflection_ne (P.rank.injective h)
-      have hgt : P.rank (P.reflection p) < P.rank p :=
-        lt_of_le_of_ne (le_of_not_gt hlt) hrank_ne
-      unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
-      rw [if_neg hcr, P.reflection_involutive p, if_pos hgt,
-        if_neg hc, if_neg hlt]
+    · by_cases hgt : P.rank (P.reflection p) < P.rank p
+      · have hfirstRef :
+            P.rank (P.reflection p) <
+              P.rank (P.reflection (P.reflection p)) := by
+          simpa only [P.reflection_involutive p] using hgt
+        unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
+        rw [if_neg hcr, if_pos hfirstRef,
+          if_neg hc, if_neg hlt, if_pos hgt]
+      · have hfirstRef :
+            ¬ P.rank (P.reflection p) <
+              P.rank (P.reflection (P.reflection p)) := by
+          simpa only [P.reflection_involutive p] using hgt
+        have hsecondRef :
+            ¬ P.rank (P.reflection (P.reflection p)) <
+              P.rank (P.reflection p) := by
+          simpa only [P.reflection_involutive p] using hlt
+        unfold FiniteInvolutivePlaquetteGeometricSidePartition.side
+        rw [if_neg hcr, if_neg hfirstRef, if_neg hsecondRef,
+          if_neg hc, if_neg hlt, if_neg hgt]
 
 /-- Compatibility data connecting the concrete even-torus plaquette reflection
 to the already established reflected vertex support.  Vertex order may change
@@ -86,10 +103,6 @@ structure FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility
       v ∈ finiteFourTorusPlaquetteVertices
           (finiteEvenFourTorusPlaquetteReflection H p) ↔
         v ∈ finiteEvenFourTorusPlaquetteReflectedVertices p
-  fixed_crossing :
-    ∀ p : FiniteEvenFourTorusPlaquette H,
-      finiteEvenFourTorusPlaquetteReflection H p = p →
-        finiteEvenFourTorusCrossingPlaquette p
 
 /-- Strict-positive support is invariant under replacing a vertex list by a
 membership-equivalent one. -/
@@ -187,7 +200,6 @@ def finiteEvenFourTorusGeometricPlaquetteSidePartition
     crossing := finiteEvenFourTorusCrossingPlaquette
     crossing_reflection :=
       FiniteEvenFourTorusPlaquetteSupportReflectionCompatibility.crossing_reflection_iff C
-    fixed_crossing := C.fixed_crossing
     rank := Fintype.equivFin (FiniteEvenFourTorusPlaquette H) }
 
 /-- The concrete geometric classifier satisfies the desired side exchange law. -/
