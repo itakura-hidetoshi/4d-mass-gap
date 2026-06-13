@@ -56,7 +56,7 @@ theorem finiteFourTorusStep_comm
     (N : ℕ) (v : FiniteFourTorusVertex N) (μ ν : Fin 4) :
     finiteFourTorusStep N (finiteFourTorusStep N v μ) ν =
       finiteFourTorusStep N (finiteFourTorusStep N v ν) μ := by
-  simp [finiteFourTorusStep, add_assoc, add_comm, add_left_comm]
+  simp [finiteFourTorusStep, add_comm, add_left_comm]
 
 /-- Spatial translation commutes with subtracting the time unit vector. -/
 theorem finiteFourTorusStep_sub_timeStep
@@ -87,6 +87,9 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
       finiteFourTorusPlaquetteCorner10,
       finiteFourTorusPlaquetteCorner11,
       finiteFourTorusPlaquetteCorner01,
+      finiteFourTorusPlaquetteBase,
+      finiteFourTorusPlaquetteFirstDirection,
+      finiteFourTorusPlaquetteSecondDirection,
       finiteEvenFourTorusPlaquetteReflectedVertices,
       finiteEvenFourTorusReflectVertexSupport,
       finiteEvenFourTorusPlaquetteReflection,
@@ -106,6 +109,9 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteFourTorusPlaquetteCorner10,
         finiteFourTorusPlaquetteCorner11,
         finiteFourTorusPlaquetteCorner01,
+        finiteFourTorusPlaquetteBase,
+        finiteFourTorusPlaquetteFirstDirection,
+        finiteFourTorusPlaquetteSecondDirection,
         finiteEvenFourTorusPlaquetteReflectedVertices,
         finiteEvenFourTorusReflectVertexSupport,
         finiteEvenFourTorusPlaquetteReflection,
@@ -123,6 +129,9 @@ theorem finiteEvenFourTorusPlaquetteReflection_vertices_mem_iff
         finiteFourTorusPlaquetteCorner10,
         finiteFourTorusPlaquetteCorner11,
         finiteFourTorusPlaquetteCorner01,
+        finiteFourTorusPlaquetteBase,
+        finiteFourTorusPlaquetteFirstDirection,
+        finiteFourTorusPlaquetteSecondDirection,
         finiteEvenFourTorusPlaquetteReflectedVertices,
         finiteEvenFourTorusReflectVertexSupport,
         finiteEvenFourTorusPlaquetteReflection,
@@ -161,8 +170,8 @@ theorem finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition_side_reflecti
       | .crossing => .crossing
       | .negative => .positive := by
   exact
-    (finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H)
-      .side_reflection p
+    FiniteInvolutivePlaquetteGeometricSidePartition.side_reflection
+      (finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H) p
 
 end
 
