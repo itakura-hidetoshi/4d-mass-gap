@@ -97,6 +97,13 @@ abbrev CompactGaugeWilsonSystem.GaugeTransformation
     (L : CompactGaugeWilsonSystem) : Type :=
   L.Vertex → L.Gauge
 
+/-- Open subsets of the finite link-configuration space are measurable for the
+product measurable structure used by `Measure.pi`. -/
+instance compactGauge_configuration_opensMeasurableSpace
+    (L : CompactGaugeWilsonSystem) :
+    OpensMeasurableSpace L.Configuration := by
+  infer_instance
+
 /-- Gauge action on compact-group link configurations. -/
 def CompactGaugeWilsonSystem.gaugeTransform
     (L : CompactGaugeWilsonSystem)
