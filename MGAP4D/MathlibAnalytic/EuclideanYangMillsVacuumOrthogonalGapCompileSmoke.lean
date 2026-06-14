@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsVacuumOrthogonalGapBridge
-import MGAP4D.MathlibAnalytic.WightmanOSEuclideanTimeSemigroupLaplaceBridge
+import MGAP4D.MathlibAnalytic.WightmanOSQuadraticPVMMeasureConstruction
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -77,6 +77,33 @@ theorem euclidean_yang_mills_semigroup_factorization_compile_smoke
         exactGapValueReal := by
   exact euclidean_semigroup_spectral_formula_clustering_exact_gap
     C P T E S X hExactSpectrum
+
+/-- Integration theorem forcing actual construction of the scalar measures from
+one quadratic PVM countable-additivity law. -/
+theorem euclidean_yang_mills_quadratic_pvm_measure_compile_smoke
+    (C : EuclideanYangMillsConnectedObservableCore)
+    (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity C.explicitModel)
+    (T : ExplicitWightmanOSEuclideanTimeSemigroup C.explicitModel)
+    (E : EuclideanYangMillsConnectedCorrelationSemigroupIdentification C T)
+    (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
+      C.explicitModel A.toScalarSpectralRealization T)
+    (X : EuclideanYangMillsExponentialClusteringEstimate C)
+    (hExactSpectrum :
+      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
+    let L :=
+      euclideanYangMillsOSLaplaceSemigroupIdentificationOfMatrixCoefficients E S
+    0 < exactGapValueReal ∧
+      ((C.assemble L.toOSSpectralLaplace X).vacuumOrthogonalSpectrum
+        ((C.assemble L.toOSSpectralLaplace X).exactEnergy
+          hExactSpectrum)).restrictedSpectrum ⊆
+        Set.Ici exactGapValueReal ∧
+      sInf
+        ((C.assemble L.toOSSpectralLaplace X).vacuumOrthogonalSpectrum
+          ((C.assemble L.toOSSpectralLaplace X).exactEnergy
+            hExactSpectrum)).restrictedSpectrum =
+        exactGapValueReal := by
+  exact euclidean_quadratic_pvm_semigroup_clustering_exact_gap
+    C A T E S X hExactSpectrum
 
 end
 
