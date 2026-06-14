@@ -185,7 +185,7 @@ theorem euclidean_yang_mills_projective_continuum_measure_package_ready
     (C : EuclideanYangMillsProjectiveContinuumMeasureConstruction F) :
     C.toMeasurePackage.ready := by
   unfold EuclideanYangMillsMeasurePackage.ready
-  exact ⟨inferInstance, inferInstance,
+  exact ⟨C.gaugeGroupCompact, C.gaugeGroupNontrivial,
     C.reflectionPositive_proof,
     C.euclideanInvariant_proof,
     C.symmetric_proof,
@@ -231,7 +231,7 @@ def euclideanYangMillsProjectiveContinuumMeasureCertificate
       euclidean_yang_mills_projective_limit_recovers_marginal C.limit
     continuumUnique := fun ν hν =>
       euclidean_yang_mills_projective_limit_unique C.limit ν hν
-    gaugeInvariantOnMeasurableEvents := fun g s hs =>
+    gaugeInvariantOnMeasurableEvents := fun g _s hs =>
       euclidean_yang_mills_projective_continuum_measure_gauge_invariant C g hs
     measurePackageReady :=
       euclidean_yang_mills_projective_continuum_measure_package_ready C }
