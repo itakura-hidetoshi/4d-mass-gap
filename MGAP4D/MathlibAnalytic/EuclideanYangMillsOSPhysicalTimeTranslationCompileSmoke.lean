@@ -5,9 +5,9 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Regression smoke after removing downstream smoke imports from the legacy
-physical-carrier core and correcting the upstream OS typeclass and Laplace-field
-declarations.  This target must remain a leaf of the import graph. -/
+/-- Regression smoke after exposing the OS-completion Hilbert instances to the
+reconstructed model and normalizing the scalar Laplace interface.  This target
+must remain a leaf of the import graph. -/
 theorem euclidean_yang_mills_os_time_translation_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
