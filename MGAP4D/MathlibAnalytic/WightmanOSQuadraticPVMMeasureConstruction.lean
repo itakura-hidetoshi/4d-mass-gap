@@ -14,7 +14,7 @@ energy set.  The measurable-set proof is intentionally ignored by the value. -/
 def ExplicitWightmanOSReconstructedModel.quadraticPVMWeight
     (M : ExplicitWightmanOSReconstructedModel)
     (ψ : M.H) (s : Set ℝ) (_hs : MeasurableSet s) : ENNReal :=
-  ENNReal.ofReal ‖M.spectralPVM.projection s ψ‖ ^ 2
+  ENNReal.ofReal (‖M.spectralPVM.projection s ψ‖ ^ 2)
 
 /-- The single missing measure-theoretic law needed to turn the quadratic PVM
 weights into genuine scalar spectral measures.
@@ -61,7 +61,7 @@ theorem quadraticPVM_scalarMeasure_apply
     (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity M)
     (ψ : M.H) (s : Set ℝ) (hs : MeasurableSet s) :
     A.scalarMeasure ψ s =
-      ENNReal.ofReal ‖M.spectralPVM.projection s ψ‖ ^ 2 := by
+      ENNReal.ofReal (‖M.spectralPVM.projection s ψ‖ ^ 2) := by
   unfold ExplicitWightmanOSQuadraticPVMCountableAdditivity.scalarMeasure
   rw [Measure.ofMeasurable_apply s hs]
   rfl
