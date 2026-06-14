@@ -172,6 +172,7 @@ def explicitWightmanOSVacuumOrthogonalGapCertificate
     (hRelGap : HasRelativisticMassGap M.energyMomentumSpectrum m)
     (hmSpectrum : m ∈ M.hamiltonianEnergySpectrum) :
     ExplicitWightmanOSVacuumOrthogonalGapCertificate M B m := by
+  letI : CompleteSpace M.H := M.hilbertCompleteSpace
   have hHamiltonianGap : M.HasMassGap m :=
     explicit_wightman_os_reconstruction_has_mass_gap M hRelGap
   exact
