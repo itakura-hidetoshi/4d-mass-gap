@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTimeReflection
-import Mathlib.Data.Fintype.EquivFin
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -13,51 +12,60 @@ inductive ReflectionEdgeSide
   | fixed
   deriving DecidableEq
 
-/-- A finite edge carrier equipped with an involution and a noncanonical finite
-ranking.  The ranking chooses one representative from every nontrivial
-reflection orbit; fixed edges form the third sector. -/
+/-- A finite edge carrier equipped with an involution and an explicit
+reflection-compatible side classifier.  Keeping the classifier as data avoids
+silently choosing a nongeometric order on the edge carrier. -/
 structure FiniteInvolutiveEdgeOrbitPartition (Edge : Type) [Fintype Edge] where
   reflection : Edge → Edge
   reflection_involutive : Function.Involutive reflection
-  rank : Edge ≃ Fin (Fintype.card Edge)
+  side : Edge → ReflectionEdgeSide
+  side_reflection :
+    ∀ e,
+      side (reflection e) =
+        match side e with
+        | .positive => .negative
+        | .negative => .positive
+        | .fixed => .fixed
 
-/-- Orbit-side classifier: the lower-ranked member of a two-element orbit is
-positive, the higher-ranked member is negative, and fixed points are fixed. -/
-def FiniteInvolutiveEdgeOrbitPartition.side
-    {Edge : Type} [Fintype Edge]
-    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+attribute [simp] FiniteInvolutiveEdgeOrbitPartition.side_reflection
+
+/-- A reflection-compatible side classifier generated from any natural-valued
+geometric rank.  Ties are treated as fixed-sector edges. -/
+def finiteInvolutiveEdgeRankSide
+    {Edge : Type}
+    (reflection : Edge → Edge)
+    (rank : Edge → ℕ)
     (e : Edge) : ReflectionEdgeSide :=
-  if P.rank e < P.rank (P.reflection e) then
+  if rank e < rank (reflection e) then
     .positive
-  else if P.rank (P.reflection e) < P.rank e then
+  else if rank (reflection e) < rank e then
     .negative
   else
     .fixed
 
-/-- Reflection swaps the positive and negative members of every two-element
-orbit and preserves fixed edges. -/
+/-- Comparing a geometric rank across an involution exchanges the two strict
+sides and preserves ties. -/
 @[simp]
-theorem FiniteInvolutiveEdgeOrbitPartition.side_reflection
-    {Edge : Type} [Fintype Edge]
-    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+theorem finiteInvolutiveEdgeRankSide_reflection
+    {Edge : Type}
+    (reflection : Edge → Edge)
+    (hreflection : Function.Involutive reflection)
+    (rank : Edge → ℕ)
     (e : Edge) :
-    P.side (P.reflection e) =
-      match P.side e with
+    finiteInvolutiveEdgeRankSide reflection rank (reflection e) =
+      match finiteInvolutiveEdgeRankSide reflection rank e with
       | .positive => .negative
       | .negative => .positive
       | .fixed => .fixed := by
-  by_cases hlt : P.rank e < P.rank (P.reflection e)
-  · have hnot : ¬ P.rank (P.reflection e) < P.rank e :=
+  by_cases hlt : rank e < rank (reflection e)
+  · have hnot : ¬ rank (reflection e) < rank e :=
       not_lt_of_ge hlt.le
-    simp [FiniteInvolutiveEdgeOrbitPartition.side,
-      P.reflection_involutive e, hlt, hnot]
-  · by_cases hgt : P.rank (P.reflection e) < P.rank e
-    · simp [FiniteInvolutiveEdgeOrbitPartition.side,
-        P.reflection_involutive e, hlt, hgt]
-    · have heq : P.rank e = P.rank (P.reflection e) :=
+    simp [finiteInvolutiveEdgeRankSide, hreflection e, hlt, hnot]
+  · by_cases hgt : rank (reflection e) < rank e
+    · simp [finiteInvolutiveEdgeRankSide, hreflection e, hlt, hgt]
+    · have heq : rank e = rank (reflection e) :=
         le_antisymm (le_of_not_gt hgt) (le_of_not_gt hlt)
-      simp [FiniteInvolutiveEdgeOrbitPartition.side,
-        P.reflection_involutive e, hlt, hgt, heq]
+      simp [finiteInvolutiveEdgeRankSide, hreflection e, hlt, hgt, heq]
 
 /-- Positive-half data are stored on the finite edge carrier.  The assembly
 operation below reads only the selected member of each reflection orbit. -/
@@ -95,7 +103,7 @@ theorem FiniteInvolutiveEdgeOrbitPartition.configurationReflection_involutive
   simp [FiniteInvolutiveEdgeOrbitPartition.configurationReflection,
     P.reflection_involutive e]
 
-/-- Reflection exchanges the two assembled half-configurations. -/
+/-- Reflection exchanges the two assembled positive-half inputs. -/
 theorem FiniteInvolutiveEdgeOrbitPartition.reflection_assemble
     {Edge : Type} [Fintype Edge]
     (P : FiniteInvolutiveEdgeOrbitPartition Edge)
@@ -107,15 +115,49 @@ theorem FiniteInvolutiveEdgeOrbitPartition.reflection_assemble
       FiniteInvolutiveEdgeOrbitPartition.assemble,
       hside, P.reflection_involutive e]
 
-/-- The concrete even four-torus edge involution equipped with a finite orbit
-ranking. -/
+/-- A geometric rank for an even-torus edge: the sum of the canonical residue
+representatives of the two endpoint time coordinates. -/
+def finiteEvenFourTorusEdgeTimeRank
+    (H : ℕ) (e : FiniteEvenFourTorusEdge H) : ℕ :=
+  (e.1 0).val + (e.2 0).val
+
+/-- Time-geometric side of an even-torus edge.  The representative whose
+endpoint-time rank is smaller is selected as positive; its reflected partner is
+negative, while reflection-symmetric ties are fixed. -/
+def finiteEvenFourTorusEdgeGeometricSide
+    (H : ℕ) (e : FiniteEvenFourTorusEdge H) : ReflectionEdgeSide :=
+  finiteInvolutiveEdgeRankSide
+    (finiteEvenFourTorusEdgeReflection H)
+    (finiteEvenFourTorusEdgeTimeRank H)
+    e
+
+/-- The concrete time-geometric edge classifier obeys the reflection exchange
+law. -/
+@[simp]
+theorem finiteEvenFourTorusEdgeGeometricSide_reflection
+    (H : ℕ) (e : FiniteEvenFourTorusEdge H) :
+    finiteEvenFourTorusEdgeGeometricSide H
+        (finiteEvenFourTorusEdgeReflection H e) =
+      match finiteEvenFourTorusEdgeGeometricSide H e with
+      | .positive => .negative
+      | .negative => .positive
+      | .fixed => .fixed := by
+  exact finiteInvolutiveEdgeRankSide_reflection
+    (finiteEvenFourTorusEdgeReflection H)
+    (finiteEvenFourTorusEdgeReflection_involutive H)
+    (finiteEvenFourTorusEdgeTimeRank H)
+    e
+
+/-- The concrete even four-torus edge involution equipped with the
+endpoint-time geometric side classifier. -/
 def finiteEvenFourTorusEdgeOrbitPartition
     (H : ℕ) :
     FiniteInvolutiveEdgeOrbitPartition (FiniteEvenFourTorusEdge H) :=
   { reflection := finiteEvenFourTorusEdgeReflection H
     reflection_involutive :=
       finiteEvenFourTorusEdgeReflection_involutive H
-    rank := Fintype.equivFin (FiniteEvenFourTorusEdge H) }
+    side := finiteEvenFourTorusEdgeGeometricSide H
+    side_reflection := finiteEvenFourTorusEdgeGeometricSide_reflection H }
 
 /-- Concrete assembly of two half-configurations on the even four-torus. -/
 def finiteEvenFourTorusAssemble
