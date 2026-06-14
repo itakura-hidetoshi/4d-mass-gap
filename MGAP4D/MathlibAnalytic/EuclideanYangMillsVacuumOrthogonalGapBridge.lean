@@ -100,9 +100,9 @@ theorem euclidean_yang_mills_nonvacuum_hamiltonian_exact_gap
         Set.Ici exactGapValueReal ∧
       sInf (B.explicitModel.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) =
         exactGapValueReal := by
-  simpa [EuclideanYangMillsVacuumOrthogonalGapBridge.vacuumOrthogonalSpectrum,
-    explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfPVM] using
-    euclidean_yang_mills_vacuum_orthogonal_exact_gap B
+  have hPhysical := euclidean_yang_mills_vacuum_orthogonal_exact_gap B
+  rw [B.vacuumOrthogonalSpectrum.restrictedSpectrum_eq_nonvacuum] at hPhysical
+  exact hPhysical
 
 end
 
