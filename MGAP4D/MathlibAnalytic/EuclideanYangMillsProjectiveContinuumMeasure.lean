@@ -5,6 +5,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
+open scoped ENNReal
 
 noncomputable section
 
@@ -118,9 +119,9 @@ structure EuclideanYangMillsProjectiveContinuumMeasureConstruction
   [gaugeGroupNontrivial : Nontrivial gaugeGroup]
   [gaugeAction : MulAction gaugeGroup F.Configuration]
   gaugeActionMeasurable :
-    ∀ g, Measurable (fun A : F.Configuration => g • A)
+    ∀ (g : gaugeGroup), Measurable (fun A : F.Configuration => g • A)
   gaugeInvariant :
-    ∀ g,
+    ∀ (g : gaugeGroup),
       limit.continuumMeasure.map
           (fun A : F.Configuration => g • A) =
         limit.continuumMeasure
