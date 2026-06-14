@@ -6,7 +6,8 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- Regression smoke after removing downstream smoke imports from the legacy
-physical-carrier core.  This target must remain a leaf of the import graph. -/
+physical-carrier core and explicitly typing the upstream OS structures.  This
+target must remain a leaf of the import graph. -/
 theorem euclidean_yang_mills_os_time_translation_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
