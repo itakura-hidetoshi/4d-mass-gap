@@ -9,6 +9,8 @@ open MeasureTheory
 
 noncomputable section
 
+attribute [instance] EuclideanYangMillsMeasurePackage.instMeasurableSpace
+
 /-- The non-vacuum Hamiltonian energies of an explicitly reconstructed
 OS/Wightman model. -/
 abbrev ExplicitWightmanOSReconstructedModel.NonVacuumEnergy
@@ -151,6 +153,16 @@ def EuclideanYangMillsConnectedObservableSpectralFamily.vacuumOrthogonalSpectrum
   explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfPVM
     B.explicitModel B.pvmDisjointComposition (B.spectralWitness e)
 
+/-- The exact normalized threshold as a non-vacuum energy, once spectral
+attainment has been supplied. -/
+def EuclideanYangMillsConnectedObservableSpectralFamily.exactEnergy
+    (B : EuclideanYangMillsConnectedObservableSpectralFamily)
+    (hExactSpectrum :
+      exactGapValueReal ∈ B.explicitModel.hamiltonianEnergySpectrum) :
+    B.explicitModel.NonVacuumEnergy :=
+  ⟨exactGapValueReal,
+    ⟨hExactSpectrum, by simpa using (ne_of_gt exactGapValueReal_pos)⟩⟩
+
 /-- If the exact decay threshold is attained by the Hamiltonian spectrum, the
 measure-defined connected correlations identify the exact physical gap on
 `Ω⊥`. -/
@@ -158,24 +170,21 @@ theorem euclidean_connected_observable_vacuum_orthogonal_exact_gap
     (B : EuclideanYangMillsConnectedObservableSpectralFamily)
     (hExactSpectrum :
       exactGapValueReal ∈ B.explicitModel.hamiltonianEnergySpectrum) :
-    let eExact : B.explicitModel.NonVacuumEnergy :=
-      ⟨exactGapValueReal,
-        ⟨hExactSpectrum, by simpa using (ne_of_gt exactGapValueReal_pos)⟩⟩
     0 < exactGapValueReal ∧
-      (B.vacuumOrthogonalSpectrum eExact).restrictedSpectrum ⊆
+      (B.vacuumOrthogonalSpectrum
+        (B.exactEnergy hExactSpectrum)).restrictedSpectrum ⊆
         Set.Ici exactGapValueReal ∧
-      sInf (B.vacuumOrthogonalSpectrum eExact).restrictedSpectrum =
+      sInf
+        (B.vacuumOrthogonalSpectrum
+          (B.exactEnergy hExactSpectrum)).restrictedSpectrum =
         exactGapValueReal := by
-  dsimp
-  let eExact : B.explicitModel.NonVacuumEnergy :=
-    ⟨exactGapValueReal,
-      ⟨hExactSpectrum, by simpa using (ne_of_gt exactGapValueReal_pos)⟩⟩
   have hGap := euclidean_connected_observable_hasHamiltonianMassGap B
   exact ⟨exactGapValueReal_pos,
     vacuum_orthogonal_restrictedSpectrum_subset_Ici
-      (B.vacuumOrthogonalSpectrum eExact) hGap,
+      (B.vacuumOrthogonalSpectrum (B.exactEnergy hExactSpectrum)) hGap,
     vacuum_orthogonal_restrictedSpectrum_sInf_eq
-      (B.vacuumOrthogonalSpectrum eExact) hGap hExactSpectrum⟩
+      (B.vacuumOrthogonalSpectrum (B.exactEnergy hExactSpectrum))
+      hGap hExactSpectrum⟩
 
 end
 
