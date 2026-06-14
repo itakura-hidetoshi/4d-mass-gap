@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsVacuumOrthogonalGapBridge
-import MGAP4D.MathlibAnalytic.WightmanOSQuadraticPVMMeasureConstruction
+import MGAP4D.MathlibAnalytic.WightmanOSQuadraticPVMFiniteAdditivity
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -104,6 +104,22 @@ theorem euclidean_yang_mills_quadratic_pvm_measure_compile_smoke
         exactGapValueReal := by
   exact euclidean_quadratic_pvm_semigroup_clustering_exact_gap
     C A T E S X hExactSpectrum
+
+/-- The finite quadratic measure laws are already consequences of the weak PVM
+interface plus disjoint-composition zero. -/
+theorem euclidean_yang_mills_quadratic_pvm_finite_laws_compile_smoke
+    (M : ExplicitWightmanOSReconstructedModel)
+    (hComposition : M.spectralPVM.HasDisjointCompositionZero) :
+    (∀ ψ : M.H,
+      M.quadraticPVMWeight ψ ∅ MeasurableSet.empty = 0) ∧
+    (∀ (ψ : M.H) {s t : Set ℝ}
+      (hs : MeasurableSet s) (ht : MeasurableSet t),
+      Disjoint s t →
+        M.quadraticPVMWeight ψ (s ∪ t) (hs.union ht) =
+          M.quadraticPVMWeight ψ s hs +
+            M.quadraticPVMWeight ψ t ht) := by
+  exact explicit_wightman_os_quadratic_pvm_finite_measure_laws
+    M hComposition
 
 end
 
