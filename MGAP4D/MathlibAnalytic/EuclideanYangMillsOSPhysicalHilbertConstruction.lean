@@ -92,15 +92,16 @@ def EuclideanYangMillsOSPositiveTimeObservableConstruction.vacuum
     P.PhysicalHilbert :=
   P.physicalState P.vacuumObservable
 
-/-- The separated OS quotient is an actual real inner-product space. -/
-theorem os_separated_preHilbert_innerProductSpace
+/-- The separated OS quotient carries the inferred real inner-product-space
+data. -/
+noncomputable def os_separated_preHilbert_innerProductSpace
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     InnerProductSpace ℝ P.OSSeparatedPreHilbert := by
   infer_instance
 
-/-- The completed OS space is an actual real Hilbert space. -/
-theorem os_physical_hilbert_innerProductSpace
+/-- The completed OS space carries the inferred real inner-product-space data. -/
+noncomputable def os_physical_hilbert_innerProductSpace
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     InnerProductSpace ℝ P.PhysicalHilbert := by
