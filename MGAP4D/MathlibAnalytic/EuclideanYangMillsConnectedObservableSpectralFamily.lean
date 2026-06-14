@@ -22,9 +22,8 @@ spectral energy.
 
 The connected correlations are genuine Bochner integrals against the continuum
 Euclidean Yang--Mills measure.  Each energy has a Hilbert-space source vector
-whose singleton PVM projection is nonzero.  Thus its spectral weight is derived
-from an actual PVM projection norm rather than supplied as a free positive
-number. -/
+whose singleton PVM projection is nonzero.  Its canonical scalar spectral weight
+is the squared norm of that projection. -/
 structure EuclideanYangMillsConnectedObservableSpectralFamily where
   continuum : EuclideanYangMillsContinuumMeasureConstructionSpine
   explicitModel : ExplicitWightmanOSReconstructedModel
@@ -80,21 +79,21 @@ structure EuclideanYangMillsConnectedObservableSpectralFamily where
   osSpectralLaplaceLowerBound :
     ∀ (e : explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
       ‖explicitModel.spectralPVM.projection ({(e : ℝ)} : Set ℝ)
-        (sourceVector e)‖ * Real.exp (-(e : ℝ) * t) ≤
+        (sourceVector e)‖ ^ 2 * Real.exp (-(e : ℝ) * t) ≤
         connectedCorrelation e t
   exponentialClusteringUpperBound :
     ∀ (e : explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
       connectedCorrelation e t ≤
         decayConstant e * Real.exp (-exactGapValueReal * t)
 
-/-- The PVM projection norm gives a strictly positive spectral weight for every
-non-vacuum energy in the observable family. -/
+/-- The squared PVM projection norm gives a strictly positive scalar spectral
+weight for every non-vacuum energy in the observable family. -/
 theorem euclidean_connected_observable_spectralWeight_pos
     (B : EuclideanYangMillsConnectedObservableSpectralFamily)
     (e : B.explicitModel.NonVacuumEnergy) :
     0 < ‖B.explicitModel.spectralPVM.projection ({(e : ℝ)} : Set ℝ)
-      (B.sourceVector e)‖ := by
-  exact norm_pos_iff.mpr (B.projectedSource_ne_zero e)
+      (B.sourceVector e)‖ ^ 2 := by
+  exact sq_pos_of_pos (norm_pos_iff.mpr (B.projectedSource_ne_zero e))
 
 /-- Every non-vacuum spectral energy has a concrete nonzero singleton-PVM
 witness. -/
@@ -129,7 +128,7 @@ theorem euclidean_connected_observable_nonvacuum_spectrum_subset_Ici
   change
     B.decayConstant e * Real.exp (-exactGapValueReal * t) <
       ‖B.explicitModel.spectralPVM.projection ({E} : Set ℝ)
-        (B.sourceVector e)‖ * Real.exp (-E * t)
+        (B.sourceVector e)‖ ^ 2 * Real.exp (-E * t)
     at hSeparation
   linarith
 
