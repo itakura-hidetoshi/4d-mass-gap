@@ -6,20 +6,9 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- A reconstructed Yang--Mills model whose Hilbert carrier is definitionally the
-OS null-quotient completion constructed from the Euclidean measure.
-
-Unlike `ExplicitWightmanOSReconstructedModel`, the Hilbert type is not an
-independent input here.  It is fixed to
-`Completion (SeparationQuotient PositiveTimeObservable)`. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) where
   observables : EuclideanYangMillsOSPositiveTimeObservableConstruction S
-  [physicalNormedAddCommGroup :
-    NormedAddCommGroup observables.PhysicalHilbert]
-  [physicalInnerProductSpace :
-    InnerProductSpace ℝ observables.PhysicalHilbert]
-  [physicalCompleteSpace : CompleteSpace observables.PhysicalHilbert]
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
     axioms.toLegacy = S.definitionBridge.spine.axioms
@@ -27,7 +16,7 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
   hamiltonian :
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
-  hamiltonianSelfAdjoint : IsSelfAdjoint hamiltonian
+  hamiltonianAdjoint_eq : hamiltonian.adjoint = hamiltonian
   vacuum : observables.PhysicalHilbert
   vacuum_eq_os_vacuum : vacuum = observables.vacuum
   vacuum_norm : ‖vacuum‖ = 1
@@ -44,22 +33,19 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
   energySpectrum_eq_projection :
     hamiltonianEnergySpectrum = energyProjection energyMomentumSpectrum
 
-attribute [instance]
-  EuclideanYangMillsOSPhysicalHilbertReconstructedModel.physicalNormedAddCommGroup
-  EuclideanYangMillsOSPhysicalHilbertReconstructedModel.physicalInnerProductSpace
-  EuclideanYangMillsOSPhysicalHilbertReconstructedModel.physicalCompleteSpace
+theorem EuclideanYangMillsOSPhysicalHilbertReconstructedModel.hamiltonianSelfAdjoint
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
+    IsSelfAdjoint M.hamiltonian := by
+  rw [LinearPMap.isSelfAdjoint_def]
+  exact M.hamiltonianAdjoint_eq
 
-/-- Forgetful projection to the existing explicit reconstructed-model interface.
-The projected Hilbert carrier is definitionally the OS physical completion. -/
 def EuclideanYangMillsOSPhysicalHilbertReconstructedModel.toExplicitModel
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     ExplicitWightmanOSReconstructedModel :=
   { axioms := M.axioms
     H := M.observables.PhysicalHilbert
-    hilbertNormedAddCommGroup := M.physicalNormedAddCommGroup
-    hilbertInnerProductSpace := M.physicalInnerProductSpace
-    hilbertCompleteSpace := M.physicalCompleteSpace
     field := M.field
     hamiltonian := M.hamiltonian
     hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
@@ -74,32 +60,24 @@ def EuclideanYangMillsOSPhysicalHilbertReconstructedModel.toExplicitModel
     hamiltonianEnergySpectrum := M.hamiltonianEnergySpectrum
     energySpectrum_eq_projection := M.energySpectrum_eq_projection }
 
-/-- The existing reconstructed-model Hilbert carrier is now definitionally the
-OS quotient completion. -/
 theorem os_physical_reconstructed_model_hilbert_identified
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     M.toExplicitModel.H = M.observables.PhysicalHilbert := by
   rfl
 
-/-- Completeness of the projected reconstructed-model carrier comes from the OS
-completion, not from a separately postulated Hilbert type. -/
 theorem os_physical_reconstructed_model_complete
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     CompleteSpace M.toExplicitModel.H := by
-  exact M.physicalCompleteSpace
+  infer_instance
 
-/-- The projected vacuum is the OS class of the constant positive-time
-observable. -/
 theorem os_physical_reconstructed_model_vacuum_eq_os_class
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     M.toExplicitModel.vacuum = M.observables.vacuum :=
   M.vacuum_eq_os_vacuum
 
-/-- The projected model uses exactly the continuum construction's OS/Wightman
-axioms. -/
 theorem os_physical_reconstructed_model_uses_continuum_axioms
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
@@ -107,8 +85,6 @@ theorem os_physical_reconstructed_model_uses_continuum_axioms
       S.definitionBridge.spine.axioms :=
   M.axioms_toLegacy_identified
 
-/-- Existing relativistic-to-Hamiltonian mass-gap theorems apply directly to the
-OS-constructed physical Hilbert model. -/
 theorem os_physical_reconstructed_model_has_mass_gap
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S)
@@ -117,9 +93,6 @@ theorem os_physical_reconstructed_model_has_mass_gap
     M.toExplicitModel.HasMassGap m := by
   exact explicit_wightman_os_reconstruction_has_mass_gap M.toExplicitModel hGap
 
-/-- Certificate making the distinction from the auxiliary diagonal `ℓ²` model
-explicit: the physical carrier is generated from Euclidean observables by OS
-quotient completion. -/
 structure EuclideanYangMillsOSPhysicalReconstructionCertificate
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) where
@@ -133,7 +106,6 @@ structure EuclideanYangMillsOSPhysicalReconstructionCertificate
       S.definitionBridge.spine.axioms
   hamiltonianSelfAdjoint : IsSelfAdjoint M.toExplicitModel.hamiltonian
 
-/-- Construct the physical reconstruction certificate. -/
 def euclideanYangMillsOSPhysicalReconstructionCertificate
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
