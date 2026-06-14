@@ -115,10 +115,11 @@ theorem explicit_wightman_os_pvm_vacuum_orthogonal_spectrum_gap
       sInf (M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) = m := by
   let B := explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfPVM
     M hDisjointComposition W
-  simpa [B,
-    explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfPVM] using
-    (explicit_wightman_os_vacuum_orthogonal_spectrum_gap
-      M B hRelGap hmSpectrum)
+  have hPhysical :=
+    explicit_wightman_os_vacuum_orthogonal_spectrum_gap
+      M B hRelGap hmSpectrum
+  rw [B.restrictedSpectrum_eq_nonvacuum] at hPhysical
+  exact hPhysical
 
 /-- Exact-gap specialization obtained from the PVM law rather than a primitive
 vacuum-orthogonality assumption. -/
