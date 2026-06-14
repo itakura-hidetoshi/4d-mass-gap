@@ -25,6 +25,16 @@ abbrev ExplicitWightmanOSReconstructedModel.VacuumOrthogonalHilbert
     (M : ExplicitWightmanOSReconstructedModel) : Type :=
   M.vacuumOrthogonal
 
+/-- Reusable completeness instance for the physical vacuum-orthogonal carrier.
+The explicit unfolding prevents typeclass search from getting stuck at the
+abbreviation `VacuumOrthogonalHilbert`. -/
+instance explicitWightmanOSVacuumOrthogonalCompleteSpace
+    (M : ExplicitWightmanOSReconstructedModel) :
+    CompleteSpace M.VacuumOrthogonalHilbert := by
+  letI : CompleteSpace M.H := M.hilbertCompleteSpace
+  change CompleteSpace ↥(M.vacuumLine)ᗮ
+  exact Submodule.instOrthogonalCompleteSpace M.vacuumLine
+
 /-- Membership in `Ω⊥` is exactly orthogonality to the reconstructed vacuum. -/
 theorem explicit_wightman_os_mem_vacuumOrthogonal_iff
     (M : ExplicitWightmanOSReconstructedModel) (ψ : M.H) :
@@ -172,14 +182,11 @@ def explicitWightmanOSVacuumOrthogonalGapCertificate
     (hRelGap : HasRelativisticMassGap M.energyMomentumSpectrum m)
     (hmSpectrum : m ∈ M.hamiltonianEnergySpectrum) :
     ExplicitWightmanOSVacuumOrthogonalGapCertificate M B m := by
-  letI : CompleteSpace M.H := M.hilbertCompleteSpace
   have hHamiltonianGap : M.HasMassGap m :=
     explicit_wightman_os_reconstruction_has_mass_gap M hRelGap
   exact
     { physicalHilbertComplete := M.hilbertCompleteSpace
-      vacuumOrthogonalComplete := by
-        change CompleteSpace ↥(M.vacuumLine)ᗮ
-        exact Submodule.instOrthogonalCompleteSpace M.vacuumLine
+      vacuumOrthogonalComplete := inferInstance
       hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
       vacuumNormalized := M.vacuum_norm
       vacuumEnergyZero := M.vacuumEnergyZero
