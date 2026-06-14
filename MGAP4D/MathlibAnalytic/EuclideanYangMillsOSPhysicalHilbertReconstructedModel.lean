@@ -17,6 +17,10 @@ local instance : InnerProductSpace ℝ P.PhysicalHilbert :=
 local instance : CompleteSpace P.PhysicalHilbert :=
   os_physical_hilbert_complete P
 
+local instance physicalLinearPMapStar :
+    Star (P.PhysicalHilbert →ₗ.[ℝ] P.PhysicalHilbert) :=
+  LinearPMap.instStar
+
 /-- Operator and spectral data indexed by the complete positive-time observable
 package.  Indexing by `P` keeps the canonical completion inner-product instance
 in scope while the self-adjoint Hamiltonian field is elaborated. -/
@@ -64,6 +68,12 @@ instance physicalCompleteSpace
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     CompleteSpace M.observables.PhysicalHilbert :=
   os_physical_hilbert_complete M.observables
+
+noncomputable instance physicalLinearPMapStar
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
+    Star (M.observables.PhysicalHilbert →ₗ.[ℝ]
+      M.observables.PhysicalHilbert) :=
+  LinearPMap.instStar
 
 abbrev axioms (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.axioms
