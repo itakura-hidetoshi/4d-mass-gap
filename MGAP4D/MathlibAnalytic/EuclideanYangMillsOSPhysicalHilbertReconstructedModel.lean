@@ -6,6 +6,9 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- The OS quotient and completion inner products are registered upstream as
+instances, so the `LinearPMap` adjoint star is available on the physical
+Hilbert carrier throughout this reconstructed package. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) where
   observables : EuclideanYangMillsOSPositiveTimeObservableConstruction S
