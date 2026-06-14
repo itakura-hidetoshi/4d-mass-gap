@@ -12,10 +12,13 @@ variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
 variable (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
 
 /-- Operator and spectral data indexed by the complete positive-time observable
-package.  The canonical separation-quotient completion instances are used
-throughout, so the Hamiltonian, its adjoint, and the exported model share one
-and the same Hilbert structure. -/
+package.  The Hilbert structures are stored before the self-adjointness field,
+matching the explicit Wightman model and ensuring that its `Star` instance is
+built from the same complete inner-product-space data. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
+  [physicalNormedAddCommGroup : NormedAddCommGroup P.PhysicalHilbert]
+  [physicalInnerProductSpace : InnerProductSpace ℝ P.PhysicalHilbert]
+  [physicalCompleteSpace : CompleteSpace P.PhysicalHilbert]
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
     axioms.toLegacy = S.definitionBridge.spine.axioms
@@ -36,6 +39,11 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
   hamiltonianEnergySpectrum : Set ℝ
   energySpectrum_eq_projection :
     hamiltonianEnergySpectrum = energyProjection energyMomentumSpectrum
+
+attribute [instance]
+  EuclideanYangMillsOSPhysicalHilbertReconstructedData.physicalNormedAddCommGroup
+  EuclideanYangMillsOSPhysicalHilbertReconstructedData.physicalInnerProductSpace
+  EuclideanYangMillsOSPhysicalHilbertReconstructedData.physicalCompleteSpace
 
 end ReconstructedData
 
@@ -115,6 +123,9 @@ def toExplicitModel
     ExplicitWightmanOSReconstructedModel :=
   { axioms := M.axioms
     H := M.observables.PhysicalHilbert
+    hilbertNormedAddCommGroup := M.data.physicalNormedAddCommGroup
+    hilbertInnerProductSpace := M.data.physicalInnerProductSpace
+    hilbertCompleteSpace := M.data.physicalCompleteSpace
     field := M.field
     hamiltonian := M.hamiltonian
     hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
