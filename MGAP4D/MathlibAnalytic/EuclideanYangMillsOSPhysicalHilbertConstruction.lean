@@ -62,14 +62,54 @@ abbrev EuclideanYangMillsOSPositiveTimeObservableConstruction.OSSeparatedPreHilb
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) : Type :=
   SeparationQuotient P.PositiveTimeObservable
 
-/-- The physical real Yang--Mills Hilbert space obtained by completing the OS
-null quotient.  This remains definitionally the Mathlib completion so all
-algebraic, metric, inner-product and completeness instances come from one
-canonical source. -/
-abbrev EuclideanYangMillsOSPositiveTimeObservableConstruction.PhysicalHilbert
+/-- The physical real Yang--Mills Hilbert carrier.  It is kept opaque so the
+low-level additive and module instances on `UniformSpace.Completion` cannot
+compete with the single public Hilbert hierarchy installed below. -/
+def EuclideanYangMillsOSPositiveTimeObservableConstruction.PhysicalHilbert
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) : Type :=
   UniformSpace.Completion P.OSSeparatedPreHilbert
+
+/-- The exact canonical normed additive structure of the underlying Mathlib
+completion, transported to the opaque physical carrier. -/
+noncomputable instance os_physical_hilbert_normedAddCommGroup
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
+    NormedAddCommGroup P.PhysicalHilbert := by
+  change NormedAddCommGroup
+    (UniformSpace.Completion P.OSSeparatedPreHilbert)
+  exact UniformSpace.Completion.instNormedAddCommGroup
+    P.OSSeparatedPreHilbert
+
+/-- The exact canonical real inner-product structure of the underlying Mathlib
+completion, transported without invoking a second typeclass search. -/
+noncomputable instance os_physical_hilbert_innerProductSpace
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
+    InnerProductSpace ℝ P.PhysicalHilbert := by
+  change InnerProductSpace ℝ
+    (UniformSpace.Completion P.OSSeparatedPreHilbert)
+  exact UniformSpace.Completion.innerProductSpace
+
+/-- The exact canonical completeness witness of the underlying Mathlib
+completion, transported to the same public uniform structure. -/
+noncomputable instance os_physical_hilbert_completeSpace
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
+    CompleteSpace P.PhysicalHilbert := by
+  change CompleteSpace
+    (UniformSpace.Completion P.OSSeparatedPreHilbert)
+  exact UniformSpace.Completion.completeSpace P.OSSeparatedPreHilbert
+
+/-- Canonical embedding of the separated OS quotient into the opaque physical
+Hilbert carrier. -/
+@[reducible] noncomputable instance os_preHilbert_coe_physical
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
+    Coe P.OSSeparatedPreHilbert P.PhysicalHilbert where
+  coe x := by
+    change UniformSpace.Completion P.OSSeparatedPreHilbert
+    exact (x : UniformSpace.Completion P.OSSeparatedPreHilbert)
 
 /-- Quotient class of a positive-time observable before completion. -/
 def EuclideanYangMillsOSPositiveTimeObservableConstruction.osClass
@@ -92,20 +132,11 @@ def EuclideanYangMillsOSPositiveTimeObservableConstruction.vacuum
     P.PhysicalHilbert :=
   P.physicalState P.vacuumObservable
 
-/-- A data witness for the canonical real inner-product structure on the
-separated OS quotient.  This is not registered as a competing instance. -/
-noncomputable def os_separated_preHilbert_innerProductSpace
+/-- The separated quotient carries its canonical real inner-product structure. -/
+@[implicit_reducible] noncomputable def os_separated_preHilbert_innerProductSpace
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     InnerProductSpace ℝ P.OSSeparatedPreHilbert := by
-  infer_instance
-
-/-- A data witness for Mathlib's canonical real inner-product structure on the
-completed OS space.  This is not registered as a competing instance. -/
-noncomputable def os_physical_hilbert_innerProductSpace
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    InnerProductSpace ℝ P.PhysicalHilbert := by
   infer_instance
 
 /-- The completed OS physical carrier is complete. -/
@@ -122,6 +153,9 @@ theorem os_preHilbert_dense_in_physical
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     DenseRange
       (fun x : P.OSSeparatedPreHilbert => (x : P.PhysicalHilbert)) := by
+  change DenseRange
+    (fun x : P.OSSeparatedPreHilbert =>
+      (x : UniformSpace.Completion P.OSSeparatedPreHilbert))
   exact UniformSpace.Completion.denseRange_coe
 
 /-- The displayed inner product on positive-time observables is genuinely the
@@ -169,7 +203,7 @@ def euclideanYangMillsOSPhysicalHilbertCertificate
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     EuclideanYangMillsOSPhysicalHilbertCertificate P :=
   { preHilbertInner := os_separated_preHilbert_innerProductSpace P
-    physicalInner := os_physical_hilbert_innerProductSpace P
+    physicalInner := inferInstance
     physicalComplete := os_physical_hilbert_complete P
     preHilbertDense := os_preHilbert_dense_in_physical P
     vacuumState := P.vacuum
