@@ -40,15 +40,19 @@ structure EuclideanYangMillsOSLaplaceSemigroupIdentification
     (C : EuclideanYangMillsConnectedObservableCore)
     (R : ExplicitWightmanOSScalarSpectralMeasureRealization C.explicitModel) where
   laplaceIntegrable :
-    ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
-      Integrable
-        (fun λ : ℝ => Real.exp (-λ * t))
-        (R.scalarMeasure (C.sourceVector e))
+    ∀ e : C.explicitModel.NonVacuumEnergy,
+      ∀ t : ℝ,
+        0 ≤ t →
+          Integrable
+            (fun λ : ℝ => Real.exp (-λ * t))
+            (R.scalarMeasure (C.sourceVector e))
   correlation_eq_laplaceIntegral :
-    ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
-      C.connectedCorrelation e t =
-        ∫ λ : ℝ, Real.exp (-λ * t)
-          ∂R.scalarMeasure (C.sourceVector e)
+    ∀ e : C.explicitModel.NonVacuumEnergy,
+      ∀ t : ℝ,
+        0 ≤ t →
+          C.connectedCorrelation e t =
+            ∫ λ : ℝ, Real.exp (-λ * t)
+              ∂R.scalarMeasure (C.sourceVector e)
 
 /-- The coherent vector-indexed scalar spectral measure and the OS semigroup
 identification induce the positive per-observable spectral-measure package. -/
