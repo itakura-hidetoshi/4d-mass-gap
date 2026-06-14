@@ -12,12 +12,11 @@ variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
 variable (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
 
 /-- Operator and spectral data indexed by the complete positive-time observable
-package.  The canonical normed-additive and inner-product structures of the OS
-completion are used throughout.  Only completeness is retained as an instance
-field before self-adjointness, so `LinearPMap.instStar` is available without
-introducing a second Hilbert structure on the same carrier. -/
+package.  The opaque OS physical carrier exposes one coherent
+`NormedAddCommGroup` / `InnerProductSpace` / `CompleteSpace` hierarchy, so the
+Hamiltonian, its adjoint and the exported model are elaborated over identical
+algebraic data. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
-  [physicalCompleteSpace : CompleteSpace P.PhysicalHilbert]
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
     axioms.toLegacy = S.definitionBridge.spine.axioms
@@ -38,9 +37,6 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
   hamiltonianEnergySpectrum : Set ℝ
   energySpectrum_eq_projection :
     hamiltonianEnergySpectrum = energyProjection energyMomentumSpectrum
-
-attribute [instance]
-  EuclideanYangMillsOSPhysicalHilbertReconstructedData.physicalCompleteSpace
 
 end ReconstructedData
 
@@ -120,7 +116,6 @@ def toExplicitModel
     ExplicitWightmanOSReconstructedModel :=
   { axioms := M.axioms
     H := M.observables.PhysicalHilbert
-    hilbertCompleteSpace := M.data.physicalCompleteSpace
     field := M.field
     hamiltonian := M.hamiltonian
     hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
