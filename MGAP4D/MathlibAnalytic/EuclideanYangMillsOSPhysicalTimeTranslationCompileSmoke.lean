@@ -1,26 +1,25 @@
-import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalHamiltonianGenerator
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalStrongContinuityCore
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Regression smoke after exposing the OS-completion Hilbert instances to the
-reconstructed model and normalizing the scalar Laplace interface.  This target
-must remain a leaf of the import graph. -/
+/-- Compile the lightweight physical semigroup without importing the downstream
+spectral-Laplace bridge. -/
 theorem euclidean_yang_mills_os_time_translation_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    (T : EuclideanYangMillsOSPhysicalTimeTranslation M) :
-    ExplicitWightmanOSEuclideanTimeSemigroup M.toExplicitModel :=
-  T.toEuclideanTimeSemigroup
+    (T : EuclideanYangMillsOSPhysicalTimeTranslationCore M) :
+    EuclideanYangMillsOSPhysicalSemigroup M :=
+  T.toSemigroup
 
 /-- Compile the compatibility between translated Euclidean observables and their
 dense physical states. -/
 theorem euclidean_yang_mills_os_time_translation_dense_state_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    (T : EuclideanYangMillsOSPhysicalTimeTranslation M)
+    (T : EuclideanYangMillsOSPhysicalTimeTranslationCore M)
     (t : ℝ) (ht : 0 ≤ t)
     (F : M.observables.PositiveTimeObservable) :
     T.operator t (M.observables.physicalState F) =
@@ -31,21 +30,21 @@ theorem euclidean_yang_mills_os_time_translation_dense_state_compile_smoke
 theorem euclidean_yang_mills_os_time_translation_physical_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    (T : EuclideanYangMillsOSPhysicalTimeTranslation M)
+    (T : EuclideanYangMillsOSPhysicalTimeTranslationCore M)
     (t : ℝ) (ht : 0 ≤ t)
-    (ψ : M.observables.PhysicalHilbert) :
+    (psi : M.observables.PhysicalHilbert) :
     T.operator t M.observables.vacuum = M.observables.vacuum ∧
-      ‖T.operator t ψ‖ ≤ ‖ψ‖ := by
-  exact ⟨os_physical_time_translation_fixes_vacuum T t ht,
-    T.contraction t ht ψ⟩
+      ‖T.operator t psi‖ ≤ ‖psi‖ := by
+  rw [← M.vacuum_eq_os_vacuum]
+  exact ⟨T.vacuum_fixed t ht, T.contraction t ht psi⟩
 
-/-- Compile the strong-continuity and right-generator identification
-`dT_t/dt|₀⁺ = -H` on the Hamiltonian domain. -/
+/-- Compile strong continuity and the right derivative equal to the negative
+Hamiltonian action on its domain. -/
 theorem euclidean_yang_mills_os_hamiltonian_generator_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    {T : EuclideanYangMillsOSPhysicalTimeTranslation M}
-    (G : EuclideanYangMillsOSPhysicalHamiltonianGenerator T)
+    {T : EuclideanYangMillsOSPhysicalTimeTranslationCore M}
+    (G : EuclideanYangMillsOSPhysicalStrongContinuityCore T)
     (x : M.hamiltonian.domain) :
     Tendsto
       (fun t : ℝ =>
@@ -54,7 +53,7 @@ theorem euclidean_yang_mills_os_hamiltonian_generator_compile_smoke
             (x : M.observables.PhysicalHilbert)))
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (-(M.hamiltonian x))) := by
-  exact G.generatorLimit x
+  exact G.rightDerivativeLimit x
 
 end
 
