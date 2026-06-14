@@ -22,12 +22,12 @@ structure EuclideanYangMillsPositiveSpectralMeasureRepresentation
   laplaceIntegrable :
     ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
       Integrable
-        (fun λ : ℝ => Real.exp (-λ * t))
+        (fun energy : ℝ => Real.exp (-energy * t))
         (spectralMeasure e)
   correlation_eq_laplaceIntegral :
     ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
       C.connectedCorrelation e t =
-        ∫ λ : ℝ, Real.exp (-λ * t) ∂spectralMeasure e
+        ∫ energy : ℝ, Real.exp (-energy * t) ∂spectralMeasure e
   singletonMass_eq_squaredProjectionNorm :
     ∀ e : C.explicitModel.NonVacuumEnergy,
       (spectralMeasure e).real ({(e : ℝ)} : Set ℝ) =
@@ -51,8 +51,8 @@ theorem positive_spectral_measure_singleton_laplace_integral
     {C : EuclideanYangMillsConnectedObservableCore}
     (S : EuclideanYangMillsPositiveSpectralMeasureRepresentation C)
     (e : C.explicitModel.NonVacuumEnergy) (t : ℝ) :
-    (∫ λ : ℝ in ({(e : ℝ)} : Set ℝ),
-      Real.exp (-λ * t) ∂S.spectralMeasure e) =
+    (∫ energy : ℝ in ({(e : ℝ)} : Set ℝ),
+      Real.exp (-energy * t) ∂S.spectralMeasure e) =
       ‖C.explicitModel.spectralPVM.projection ({(e : ℝ)} : Set ℝ)
         (C.sourceVector e)‖ ^ 2 * Real.exp (-(e : ℝ) * t) := by
   rw [MeasureTheory.integral_singleton]
@@ -65,12 +65,13 @@ theorem positive_spectral_measure_singleton_le_full_laplace
     {C : EuclideanYangMillsConnectedObservableCore}
     (S : EuclideanYangMillsPositiveSpectralMeasureRepresentation C)
     (e : C.explicitModel.NonVacuumEnergy) (t : ℝ) (ht : 0 ≤ t) :
-    (∫ λ : ℝ in ({(e : ℝ)} : Set ℝ),
-      Real.exp (-λ * t) ∂S.spectralMeasure e) ≤
-      ∫ λ : ℝ, Real.exp (-λ * t) ∂S.spectralMeasure e := by
+    (∫ energy : ℝ in ({(e : ℝ)} : Set ℝ),
+      Real.exp (-energy * t) ∂S.spectralMeasure e) ≤
+      ∫ energy : ℝ, Real.exp (-energy * t) ∂S.spectralMeasure e := by
   exact MeasureTheory.setIntegral_le_integral
     (S.laplaceIntegrable e t ht)
-    (Filter.Eventually.of_forall fun λ => (Real.exp_pos (-λ * t)).le)
+    (Filter.Eventually.of_forall fun energy =>
+      (Real.exp_pos (-energy * t)).le)
 
 /-- A positive scalar spectral-measure representation automatically supplies the
 OS spectral Laplace lower-bound certificate. -/
@@ -83,11 +84,11 @@ def EuclideanYangMillsPositiveSpectralMeasureRepresentation.toOSSpectralLaplace
       calc
         ‖C.explicitModel.spectralPVM.projection ({(e : ℝ)} : Set ℝ)
             (C.sourceVector e)‖ ^ 2 * Real.exp (-(e : ℝ) * t) =
-            ∫ λ : ℝ in ({(e : ℝ)} : Set ℝ),
-              Real.exp (-λ * t) ∂S.spectralMeasure e :=
+            ∫ energy : ℝ in ({(e : ℝ)} : Set ℝ),
+              Real.exp (-energy * t) ∂S.spectralMeasure e :=
           (positive_spectral_measure_singleton_laplace_integral
             S e t).symm
-        _ ≤ ∫ λ : ℝ, Real.exp (-λ * t) ∂S.spectralMeasure e :=
+        _ ≤ ∫ energy : ℝ, Real.exp (-energy * t) ∂S.spectralMeasure e :=
           positive_spectral_measure_singleton_le_full_laplace S e t ht
         _ = C.connectedCorrelation e t :=
           (S.correlation_eq_laplaceIntegral e t ht).symm }
