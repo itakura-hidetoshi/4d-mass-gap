@@ -68,6 +68,10 @@ instance physicalCompleteSpace
 abbrev axioms (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.axioms
 
+abbrev axioms_toLegacy_identified
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.axioms_toLegacy_identified
+
 abbrev field (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.field
 
@@ -77,18 +81,46 @@ abbrev hamiltonian (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S)
 abbrev vacuum (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.vacuum
 
+abbrev vacuum_eq_os_vacuum
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.vacuum_eq_os_vacuum
+
+abbrev vacuum_norm
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.vacuum_norm
+
+abbrev vacuum_mem_hamiltonianDomain
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.vacuum_mem_hamiltonianDomain
+
+abbrev vacuumEnergyZero
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.vacuumEnergyZero
+
 abbrev spectralPVM (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.spectralPVM
+
+abbrev vacuumSpectralProjection
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.vacuumSpectralProjection
 
 abbrev energyMomentumSpectrum
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.energyMomentumSpectrum
 
+abbrev spectrumCondition
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.spectrumCondition
+
 abbrev hamiltonianEnergySpectrum
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.hamiltonianEnergySpectrum
 
- theorem hamiltonianSelfAdjoint
+abbrev energySpectrum_eq_projection
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
+  M.data.energySpectrum_eq_projection
+
+theorem hamiltonianSelfAdjoint
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     IsSelfAdjoint M.hamiltonian :=
   M.data.hamiltonianSelfAdjoint
@@ -102,15 +134,15 @@ def toExplicitModel
     hamiltonian := M.hamiltonian
     hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
     vacuum := M.vacuum
-    vacuum_norm := M.data.vacuum_norm
-    vacuum_mem_hamiltonianDomain := M.data.vacuum_mem_hamiltonianDomain
-    vacuumEnergyZero := M.data.vacuumEnergyZero
+    vacuum_norm := M.vacuum_norm
+    vacuum_mem_hamiltonianDomain := M.vacuum_mem_hamiltonianDomain
+    vacuumEnergyZero := M.vacuumEnergyZero
     spectralPVM := M.spectralPVM
-    vacuumSpectralProjection := M.data.vacuumSpectralProjection
+    vacuumSpectralProjection := M.vacuumSpectralProjection
     energyMomentumSpectrum := M.energyMomentumSpectrum
-    spectrumCondition := M.data.spectrumCondition
+    spectrumCondition := M.spectrumCondition
     hamiltonianEnergySpectrum := M.hamiltonianEnergySpectrum
-    energySpectrum_eq_projection := M.data.energySpectrum_eq_projection }
+    energySpectrum_eq_projection := M.energySpectrum_eq_projection }
 
 end EuclideanYangMillsOSPhysicalHilbertReconstructedModel
 
@@ -130,14 +162,14 @@ theorem os_physical_reconstructed_model_vacuum_eq_os_class
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     M.toExplicitModel.vacuum = M.observables.vacuum :=
-  M.data.vacuum_eq_os_vacuum
+  M.vacuum_eq_os_vacuum
 
 theorem os_physical_reconstructed_model_uses_continuum_axioms
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     M.toExplicitModel.axioms.toLegacy =
       S.definitionBridge.spine.axioms :=
-  M.data.axioms_toLegacy_identified
+  M.axioms_toLegacy_identified
 
 theorem os_physical_reconstructed_model_has_mass_gap
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
