@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsVacuumOrthogonalGapBridge
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsFiniteVolumeClusteringLimit
+import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalRestrictedHamiltonian
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -160,6 +161,15 @@ theorem explicit_wightman_os_vacuum_orthogonal_complete_compile_smoke
   letI : CompleteSpace M.H := M.hilbertCompleteSpace
   change CompleteSpace ↥(M.vacuumLine)ᗮ
   exact Submodule.instOrthogonalCompleteSpace M.vacuumLine
+
+/-- Integration theorem forcing the actual partially-defined restriction
+`H|Ω⊥` to elaborate with its intersection domain and self-adjointness surface. -/
+theorem explicit_wightman_os_restricted_hamiltonian_compile_smoke
+    {M : ExplicitWightmanOSReconstructedModel}
+    (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
+    IsSelfAdjoint B.operator ∧
+      B.operator.domain = M.vacuumOrthogonalHamiltonianDomain := by
+  exact ⟨vacuum_orthogonal_restrictedHamiltonian_isSelfAdjoint B, rfl⟩
 
 end
 
