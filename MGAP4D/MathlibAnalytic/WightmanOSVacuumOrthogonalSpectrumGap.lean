@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.WightmanOSHamiltonianGapSpectrumTheorems
+import MGAP4D.MathlibAnalytic.ExactGapReal
 import Mathlib.Analysis.InnerProductSpace.Orthogonal
 
 namespace MGAP4D
