@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalRestrictedHamiltonian
+import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalHamiltonianInvariance
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -10,8 +10,7 @@ domain `D(H) ∩ Ω⊥` to be dense in the physical non-vacuum Hilbert sector. -
 theorem vacuum_orthogonal_restrictedHamiltonian_dense_domain
     {M : ExplicitWightmanOSReconstructedModel}
     (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
-    Dense ((B.operator.domain :
-      Set M.VacuumOrthogonalHilbert)) := by
+    Dense ((B.operator.domain : Set M.VacuumOrthogonalHilbert)) := by
   exact (vacuum_orthogonal_restrictedHamiltonian_isSelfAdjoint B).dense_domain
 
 /-- The actual restricted Hamiltonian is a closed partially-defined operator. -/
