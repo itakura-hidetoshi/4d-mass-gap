@@ -12,10 +12,9 @@ variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
 variable (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
 
 /-- Operator and spectral data indexed by the complete positive-time observable
-package.  The opaque OS physical carrier exposes one coherent
-`NormedAddCommGroup` / `InnerProductSpace` / `CompleteSpace` hierarchy, so the
-Hamiltonian, its adjoint and the exported model are elaborated over identical
-algebraic data. -/
+package.  The physical carrier remains definitionally Mathlib's canonical OS
+completion, so the Hamiltonian, its adjoint and the exported model are all
+elaborated over the same normed, inner-product and complete-space hierarchy. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
@@ -132,6 +131,18 @@ def toExplicitModel
 
 end EuclideanYangMillsOSPhysicalHilbertReconstructedModel
 
+/-- The canonical OS completion supplies the adjoint-based `Star` operation on
+physical-Hilbert linear partial maps.  This theorem is an explicit compile gate
+for the instance that is required by `IsSelfAdjoint`. -/
+theorem os_physical_reconstructed_model_star_available
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
+    Nonempty
+      (Star
+        (M.observables.PhysicalHilbert →ₗ.[ℝ]
+          M.observables.PhysicalHilbert)) := by
+  exact ⟨inferInstance⟩
+
 theorem os_physical_reconstructed_model_hilbert_identified
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
@@ -190,6 +201,29 @@ def euclideanYangMillsOSPhysicalReconstructionCertificate
     continuumAxiomsIdentified :=
       os_physical_reconstructed_model_uses_continuum_axioms M
     hamiltonianSelfAdjoint := M.toExplicitModel.hamiltonianSelfAdjoint }
+
+/-- Final certificate joining the OS-completion reconstruction data to the
+relativistic spectral gap and the corresponding explicit Wightman mass-gap
+statement. -/
+structure EuclideanYangMillsOSPhysicalMassGapCertificate
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S)
+    (m : ℝ) where
+  reconstruction : EuclideanYangMillsOSPhysicalReconstructionCertificate M
+  relativisticGap : HasRelativisticMassGap M.energyMomentumSpectrum m
+  explicitMassGap : M.toExplicitModel.HasMassGap m
+
+/-- Assemble the complete OS physical-Hilbert reconstruction and mass-gap
+certificate from a relativistic energy-momentum gap. -/
+def euclideanYangMillsOSPhysicalMassGapCertificate
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S)
+    {m : ℝ}
+    (hGap : HasRelativisticMassGap M.energyMomentumSpectrum m) :
+    EuclideanYangMillsOSPhysicalMassGapCertificate M m :=
+  { reconstruction := euclideanYangMillsOSPhysicalReconstructionCertificate M
+    relativisticGap := hGap
+    explicitMassGap := os_physical_reconstructed_model_has_mass_gap M hGap }
 
 end
 
