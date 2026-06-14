@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsVacuumOrthogonalGapBridge
-import MGAP4D.MathlibAnalytic.WightmanOSCountablyAdditivePVMScalarMeasure
+import MGAP4D.MathlibAnalytic.WightmanOSEuclideanTimeSemigroupLaplaceBridge
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -48,6 +48,35 @@ theorem euclidean_yang_mills_countably_additive_gap_compile_smoke
         exactGapValueReal := by
   exact euclidean_countably_additive_pvm_semigroup_clustering_exact_gap
     C P L X hExactSpectrum
+
+/-- Integration theorem forcing the fully factored OS route
+
+`Euclidean correlation → exp(-tH) matrix coefficient → scalar spectral
+Laplace transform → singleton spectral atom → exponential clustering → gap`. -/
+theorem euclidean_yang_mills_semigroup_factorization_compile_smoke
+    (C : EuclideanYangMillsConnectedObservableCore)
+    (P : ExplicitWightmanOSCountablyAdditivePVMScalarMeasure C.explicitModel)
+    (T : ExplicitWightmanOSEuclideanTimeSemigroup C.explicitModel)
+    (E : EuclideanYangMillsConnectedCorrelationSemigroupIdentification C T)
+    (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
+      C.explicitModel P.toScalarSpectralRealization T)
+    (X : EuclideanYangMillsExponentialClusteringEstimate C)
+    (hExactSpectrum :
+      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
+    let L :=
+      euclideanYangMillsOSLaplaceSemigroupIdentificationOfMatrixCoefficients E S
+    0 < exactGapValueReal ∧
+      ((C.assemble L.toOSSpectralLaplace X).vacuumOrthogonalSpectrum
+        ((C.assemble L.toOSSpectralLaplace X).exactEnergy
+          hExactSpectrum)).restrictedSpectrum ⊆
+        Set.Ici exactGapValueReal ∧
+      sInf
+        ((C.assemble L.toOSSpectralLaplace X).vacuumOrthogonalSpectrum
+          ((C.assemble L.toOSSpectralLaplace X).exactEnergy
+            hExactSpectrum)).restrictedSpectrum =
+        exactGapValueReal := by
+  exact euclidean_semigroup_spectral_formula_clustering_exact_gap
+    C P T E S X hExactSpectrum
 
 end
 
