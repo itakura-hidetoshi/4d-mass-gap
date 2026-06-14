@@ -153,14 +153,12 @@ theorem euclidean_yang_mills_finite_volume_clustering_compile_smoke
   exact euclidean_finite_volume_clustering_exact_gap
     C A T E S F hExactSpectrum
 
-/-- The physical vacuum-orthogonal carrier is complete by the explicit Mathlib
-orthogonal-complement instance used by the certificate constructor. -/
+/-- The physical vacuum-orthogonal carrier is complete by the reusable instance
+registered on the orthogonal-complement carrier. -/
 theorem explicit_wightman_os_vacuum_orthogonal_complete_compile_smoke
     (M : ExplicitWightmanOSReconstructedModel) :
     CompleteSpace M.VacuumOrthogonalHilbert := by
-  letI : CompleteSpace M.H := M.hilbertCompleteSpace
-  change CompleteSpace ↥(M.vacuumLine)ᗮ
-  exact Submodule.instOrthogonalCompleteSpace M.vacuumLine
+  infer_instance
 
 /-- Integration theorem forcing the actual partially-defined restriction
 `H|Ω⊥` to elaborate with its intersection domain and self-adjointness surface. -/
@@ -170,6 +168,16 @@ theorem explicit_wightman_os_restricted_hamiltonian_compile_smoke
     IsSelfAdjoint B.operator ∧
       B.operator.domain = M.vacuumOrthogonalHamiltonianDomain := by
   exact ⟨vacuum_orthogonal_restrictedHamiltonian_isSelfAdjoint B, rfl⟩
+
+/-- The restricted operator agrees with the ambient Hamiltonian after inclusion
+of both its domain point and its value into the physical Hilbert space. -/
+theorem explicit_wightman_os_restricted_hamiltonian_action_compile_smoke
+    {M : ExplicitWightmanOSReconstructedModel}
+    (I : ExplicitWightmanOSVacuumOrthogonalHamiltonianInvariant M)
+    (x : I.restrictedHamiltonian.domain) :
+    ((I.restrictedHamiltonian x : M.VacuumOrthogonalHilbert) : M.H) =
+      M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x) := by
+  exact vacuum_orthogonal_restrictedHamiltonian_apply I x
 
 end
 
