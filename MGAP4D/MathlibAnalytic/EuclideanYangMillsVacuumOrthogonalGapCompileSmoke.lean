@@ -152,6 +152,15 @@ theorem euclidean_yang_mills_finite_volume_clustering_compile_smoke
   exact euclidean_finite_volume_clustering_exact_gap
     C A T E S F hExactSpectrum
 
+/-- The physical vacuum-orthogonal carrier is complete by the explicit Mathlib
+orthogonal-complement instance used by the certificate constructor. -/
+theorem explicit_wightman_os_vacuum_orthogonal_complete_compile_smoke
+    (M : ExplicitWightmanOSReconstructedModel) :
+    CompleteSpace M.VacuumOrthogonalHilbert := by
+  letI : CompleteSpace M.H := M.hilbertCompleteSpace
+  change CompleteSpace ↥(M.vacuumLine)ᗮ
+  exact Submodule.instOrthogonalCompleteSpace M.vacuumLine
+
 end
 
 end MathlibAnalytic
