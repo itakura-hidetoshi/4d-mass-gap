@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianGap
+import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianSymmetry
 
 namespace MGAP4D
 namespace MathlibAnalytic
