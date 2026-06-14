@@ -166,6 +166,77 @@ def finiteEvenFourTorusAssemble
     FiniteEvenFourTorusConfiguration H :=
   (finiteEvenFourTorusEdgeOrbitPartition H).assemble x y
 
+/-- A positive geometric edge reads the first half-configuration. -/
+@[simp]
+theorem finiteEvenFourTorusAssemble_positive
+    (H : ℕ)
+    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
+    (e : FiniteEvenFourTorusEdge H)
+    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .positive) :
+    finiteEvenFourTorusAssemble H x y e = x e := by
+  simp [finiteEvenFourTorusAssemble,
+    finiteEvenFourTorusEdgeOrbitPartition,
+    FiniteInvolutiveEdgeOrbitPartition.assemble,
+    hside]
+
+/-- A negative geometric edge reads the reflected edge from the second
+half-configuration. -/
+@[simp]
+theorem finiteEvenFourTorusAssemble_negative
+    (H : ℕ)
+    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
+    (e : FiniteEvenFourTorusEdge H)
+    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .negative) :
+    finiteEvenFourTorusAssemble H x y e =
+      y (finiteEvenFourTorusEdgeReflection H e) := by
+  simp [finiteEvenFourTorusAssemble,
+    finiteEvenFourTorusEdgeOrbitPartition,
+    FiniteInvolutiveEdgeOrbitPartition.assemble,
+    hside]
+
+/-- A fixed geometric edge is assigned the identity gauge element. -/
+@[simp]
+theorem finiteEvenFourTorusAssemble_fixed
+    (H : ℕ)
+    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
+    (e : FiniteEvenFourTorusEdge H)
+    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .fixed) :
+    finiteEvenFourTorusAssemble H x y e = 1 := by
+  simp [finiteEvenFourTorusAssemble,
+    finiteEvenFourTorusEdgeOrbitPartition,
+    FiniteInvolutiveEdgeOrbitPartition.assemble,
+    hside]
+
+/-- The reflection partner of a positive edge reads the second
+half-configuration at the original representative. -/
+@[simp]
+theorem finiteEvenFourTorusAssemble_reflection_of_positive
+    (H : ℕ)
+    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
+    (e : FiniteEvenFourTorusEdge H)
+    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .positive) :
+    finiteEvenFourTorusAssemble H x y
+        (finiteEvenFourTorusEdgeReflection H e) = y e := by
+  simp [finiteEvenFourTorusAssemble,
+    finiteEvenFourTorusEdgeOrbitPartition,
+    FiniteInvolutiveEdgeOrbitPartition.assemble,
+    hside, finiteEvenFourTorusEdgeReflection_involutive H e]
+
+/-- The reflection partner of a negative edge reads the first
+half-configuration at the original representative. -/
+@[simp]
+theorem finiteEvenFourTorusAssemble_reflection_of_negative
+    (H : ℕ)
+    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
+    (e : FiniteEvenFourTorusEdge H)
+    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .negative) :
+    finiteEvenFourTorusAssemble H x y
+        (finiteEvenFourTorusEdgeReflection H e) = x e := by
+  simp [finiteEvenFourTorusAssemble,
+    finiteEvenFourTorusEdgeOrbitPartition,
+    FiniteInvolutiveEdgeOrbitPartition.assemble,
+    hside]
+
 /-- Concrete configuration reflection agrees with the generic orbit
 reflection. -/
 theorem finiteEvenFourTorus_configurationReflection_eq_orbitReflection
