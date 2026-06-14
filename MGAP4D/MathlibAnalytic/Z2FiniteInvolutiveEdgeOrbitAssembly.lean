@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTimeReflection
+import Mathlib.Data.Fintype.Pi
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -76,12 +77,13 @@ abbrev FiniteInvolutiveEdgeOrbitPartition.PositiveConfiguration
 
 /-- Every positive-half configuration carrier is finite because it is a
 function space from a finite edge carrier to the finite gauge group.  The
-`Z2Gauge` enumeration is transported explicitly from `Bool`, avoiding reliance
-on reducible-instance search through `Multiplicative (ZMod 2)`. -/
+`Z2Gauge` enumeration is transported explicitly from `Bool`, while the
+function-space enumeration comes from Mathlib's pi-fintype construction. -/
 instance finiteInvolutiveEdgeOrbitPositiveConfigurationFintype
     {Edge : Type} [Fintype Edge]
     (P : FiniteInvolutiveEdgeOrbitPartition Edge) :
     Fintype P.PositiveConfiguration := by
+  classical
   letI : Fintype Z2Gauge := Fintype.ofEquiv Bool boolEquivZ2Gauge
   change Fintype (Edge → Z2Gauge)
   infer_instance
