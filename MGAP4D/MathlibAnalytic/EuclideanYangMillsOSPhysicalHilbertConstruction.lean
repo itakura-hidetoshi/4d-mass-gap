@@ -92,17 +92,17 @@ def EuclideanYangMillsOSPositiveTimeObservableConstruction.vacuum
     P.PhysicalHilbert :=
   P.physicalState P.vacuumObservable
 
-/-- The separated OS quotient carries the inferred real inner-product-space
-data. -/
-theorem os_separated_preHilbert_innerProductSpace
+/-- A data witness for the canonical real inner-product structure on the
+separated OS quotient.  This is not registered as a competing instance. -/
+noncomputable def os_separated_preHilbert_innerProductSpace
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     InnerProductSpace ℝ P.OSSeparatedPreHilbert := by
   infer_instance
 
-/-- The completed OS space carries Mathlib's canonical real inner-product-space
-data.  This is a theorem, not a competing typeclass instance. -/
-theorem os_physical_hilbert_innerProductSpace
+/-- A data witness for Mathlib's canonical real inner-product structure on the
+completed OS space.  This is not registered as a competing instance. -/
+noncomputable def os_physical_hilbert_innerProductSpace
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     InnerProductSpace ℝ P.PhysicalHilbert := by
