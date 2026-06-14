@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalRestrictedHamiltonianConsequences
+import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalRestrictedHamiltonian
 
 namespace MGAP4D
 namespace MathlibAnalytic
