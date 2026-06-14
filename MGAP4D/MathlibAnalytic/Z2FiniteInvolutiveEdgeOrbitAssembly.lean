@@ -222,8 +222,8 @@ theorem finiteEvenFourTorusAssemble_reflection_of_positive
     FiniteInvolutiveEdgeOrbitPartition.assemble,
     hside, finiteEvenFourTorusEdgeReflection_involutive H e]
 
-/-- The reflection partner of a negative edge reads the first
-half-configuration at the original representative. -/
+/-- The reflection partner of a negative edge is positive and therefore reads
+the first half-configuration at that reflected representative. -/
 @[simp]
 theorem finiteEvenFourTorusAssemble_reflection_of_negative
     (H : ℕ)
@@ -231,7 +231,8 @@ theorem finiteEvenFourTorusAssemble_reflection_of_negative
     (e : FiniteEvenFourTorusEdge H)
     (hside : finiteEvenFourTorusEdgeGeometricSide H e = .negative) :
     finiteEvenFourTorusAssemble H x y
-        (finiteEvenFourTorusEdgeReflection H e) = x e := by
+        (finiteEvenFourTorusEdgeReflection H e) =
+      x (finiteEvenFourTorusEdgeReflection H e) := by
   simp [finiteEvenFourTorusAssemble,
     finiteEvenFourTorusEdgeOrbitPartition,
     FiniteInvolutiveEdgeOrbitPartition.assemble,
