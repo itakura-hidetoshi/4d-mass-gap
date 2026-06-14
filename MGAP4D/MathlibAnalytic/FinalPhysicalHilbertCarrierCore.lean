@@ -1,26 +1,37 @@
 import MGAP4D.MathlibAnalytic.Basic
 import MGAP4D.MathlibAnalytic.ExactGapReal
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalHilbertCompileSmoke
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Countable-coordinate final physical Hilbert carrier shared by the early
-observable/plaquette surfaces and the later physical unbounded-operator
-skeleton.  This file is deliberately upstream of the operator skeleton so that
-final physical carrier routing does not create an import cycle. -/
+/-- Legacy countable-coordinate prototype retained for compatibility with the
+early operator and audit skeletons.
+
+This is **not** the physical Yang--Mills Hilbert space: its displayed pairing and
+norm inspect only coordinate `0`.  The physical carrier is now constructed in
+`EuclideanYangMillsOSPhysicalHilbertConstruction` as the completion of the OS
+separation quotient of positive-time Euclidean observables. -/
 def FinalPhysicalHilbertCarrier : Type := ℕ → ℝ
+
+/-- Explicit compatibility name making the prototype status visible. -/
+abbrev LegacyCountableCoordinateCarrier := FinalPhysicalHilbertCarrier
 
 def finalPhysicalHilbertZero : FinalPhysicalHilbertCarrier := fun _ => 0
 
+/-- Legacy prototype pairing.  It must not be used to identify the physical
+Yang--Mills Hilbert inner product. -/
 def finalPhysicalHilbertInner (ψ φ : FinalPhysicalHilbertCarrier) : ℝ :=
   ψ 0 * φ 0
 
+/-- Legacy prototype seminorm.  The genuine physical norm is the completed OS
+norm on reflected positive-time observables. -/
 def finalPhysicalHilbertNorm (ψ : FinalPhysicalHilbertCarrier) : ℝ :=
   |ψ 0|
 
-/-- Concrete Mathlib-backed domain: finite-support countable-coordinate states. -/
+/-- Concrete prototype domain: finite-support countable-coordinate states. -/
 def finalPhysicalHilbertDomain (ψ : FinalPhysicalHilbertCarrier) : Prop :=
   Set.Finite {n : ℕ | ψ n ≠ 0}
 
