@@ -82,19 +82,28 @@ def finiteEvenFourTorusWilsonGeometricPlaquetteSideClassification
       energyNontrivial hβ hEnergyIdentity hEnergyNontrivial) :
     Z2FiniteLatticeWilsonGeometricPlaquetteSideClassification
       (finiteEvenFourTorusZ2WilsonSystem H β energyIdentity energyNontrivial
-        hβ hEnergyIdentity hEnergyNontrivial) :=
-  { configurationEquiv := Equiv.refl _
-    edgeOrbit := finiteEvenFourTorusEdgeOrbitPartition H
-    plaquetteGeometry :=
-      finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H
-    energyIdentity := energyIdentity
-    energyNontrivial := energyNontrivial
-    energy_order := D.energy_order
-    crossingVariables := D.crossingVariables
-    positiveEnergyTerms := D.positiveEnergyTerms
-    positive_terms_eq := D.positive_terms_eq
-    crossing_terms_eq := D.crossing_terms_eq
-    negative_terms_eq := D.negative_terms_eq }
+        hβ hEnergyIdentity hEnergyNontrivial) := by
+  letI : Fintype
+      ((finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration) :=
+    inferInstanceAs
+      (Fintype (FiniteEvenFourTorusEdge H → Z2Gauge))
+  letI : Inhabited
+      ((finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration) :=
+    inferInstanceAs
+      (Inhabited (FiniteEvenFourTorusEdge H → Z2Gauge))
+  exact
+    { configurationEquiv := Equiv.refl _
+      edgeOrbit := finiteEvenFourTorusEdgeOrbitPartition H
+      plaquetteGeometry :=
+        finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H
+      energyIdentity := energyIdentity
+      energyNontrivial := energyNontrivial
+      energy_order := D.energy_order
+      crossingVariables := D.crossingVariables
+      positiveEnergyTerms := D.positiveEnergyTerms
+      positive_terms_eq := D.positive_terms_eq
+      crossing_terms_eq := D.crossing_terms_eq
+      negative_terms_eq := D.negative_terms_eq }
 
 /-- Once the three concrete local energy identities are discharged, the even
 four-torus Wilson model satisfies finite-volume OS reflection positivity. -/
