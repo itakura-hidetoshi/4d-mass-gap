@@ -75,12 +75,16 @@ abbrev FiniteInvolutiveEdgeOrbitPartition.PositiveConfiguration
   Edge → Z2Gauge
 
 /-- Every positive-half configuration carrier is finite because it is a
-function space from a finite edge carrier to the finite gauge group. -/
+function space from a finite edge carrier to the finite gauge group.  The
+`Z2Gauge` enumeration is transported explicitly from `Bool`, avoiding reliance
+on reducible-instance search through `Multiplicative (ZMod 2)`. -/
 instance finiteInvolutiveEdgeOrbitPositiveConfigurationFintype
     {Edge : Type} [Fintype Edge]
     (P : FiniteInvolutiveEdgeOrbitPartition Edge) :
-    Fintype P.PositiveConfiguration :=
-  inferInstanceAs (Fintype (Edge → Z2Gauge))
+    Fintype P.PositiveConfiguration := by
+  letI : Fintype Z2Gauge := Fintype.ofEquiv Bool boolEquivZ2Gauge
+  change Fintype (Edge → Z2Gauge)
+  infer_instance
 
 /-- The identity assignment inhabits every positive-half configuration
 carrier. -/
