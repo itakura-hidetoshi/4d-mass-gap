@@ -147,6 +147,23 @@ theorem finite_wilson_gibbs_common_refinement_cylinder_content
   exact finite_wilson_gibbs_cylinder_content_eq_gibbs_preimage
     R.toProjectiveRealization J hs
 
+/-- Once a projective-limit measure is supplied, every measurable continuum
+cylinder has the finite Wilson Gibbs probability selected by the common-
+refinement realization. -/
+theorem finite_wilson_gibbs_common_refinement_projective_limit_cylinder
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsCommonRefinementRealization W)
+    (L : EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily)
+    (J : Finset EuclideanFourSpace)
+    {s : Set (∀ x : J, R.fieldValue x)}
+    (hs : MeasurableSet s) :
+    L.continuumMeasure (cylinder J s) =
+      (W.system (R.scale J)).gibbsMeasure
+        ((R.observe J) ⁻¹' s) := by
+  exact finite_wilson_gibbs_projective_limit_cylinder_eq_gibbs_preimage
+    R.toProjectiveRealization L J hs
+
 /-- Audit-visible common-refinement certificate. -/
 structure FiniteWilsonGibbsCommonRefinementCertificate
     {W : FiniteWilsonOSAutomaticApproximationFamily}
