@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsVacuumOrthogonalGapBridge
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsFiniteVolumeClusteringLimit
-import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalRestrictedHamiltonian
+import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalRestrictedHamiltonianConsequences
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -178,6 +178,16 @@ theorem explicit_wightman_os_restricted_hamiltonian_action_compile_smoke
     ((I.restrictedHamiltonian x : M.VacuumOrthogonalHilbert) : M.H) =
       M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x) := by
   exact vacuum_orthogonal_restrictedHamiltonian_apply I x
+
+/-- Self-adjointness of the restricted Hamiltonian is compiled through its dense
+intersection domain and closed graph consequences. -/
+theorem explicit_wightman_os_restricted_hamiltonian_operator_package_compile_smoke
+    {M : ExplicitWightmanOSReconstructedModel}
+    (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
+    B.operator.domain = M.vacuumOrthogonalHamiltonianDomain ∧
+      Dense ((B.operator.domain : Set M.VacuumOrthogonalHilbert)) ∧
+      LinearPMap.IsClosed B.operator := by
+  exact vacuum_orthogonal_restrictedHamiltonian_operator_package B
 
 end
 
