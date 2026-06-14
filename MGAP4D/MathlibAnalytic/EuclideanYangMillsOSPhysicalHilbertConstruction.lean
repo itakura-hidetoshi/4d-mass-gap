@@ -47,7 +47,8 @@ structure EuclideanYangMillsOSPositiveTimeObservableConstruction
   vacuumObservable : PositiveTimeObservable
   vacuumRealization : ∀ ω, realization vacuumObservable ω = 1
   vacuumNorm : ‖vacuumObservable‖ = 1
-  nontrivialObservable : ∃ F, ‖F‖ ≠ 0
+  nontrivialObservable :
+    ∃ F : PositiveTimeObservable, ‖F‖ ≠ 0
 
 attribute [instance]
   EuclideanYangMillsOSPositiveTimeObservableConstruction.observableSeminormedAddCommGroup
