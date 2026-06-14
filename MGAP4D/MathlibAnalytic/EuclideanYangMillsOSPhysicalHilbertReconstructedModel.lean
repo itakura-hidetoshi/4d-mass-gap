@@ -12,9 +12,9 @@ variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
 variable (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
 
 /-- Operator and spectral data indexed by the complete positive-time observable
-package.  The physical carrier remains definitionally Mathlib's canonical OS
-completion, so the Hamiltonian, its adjoint and the exported model are all
-elaborated over the same normed, inner-product and complete-space hierarchy. -/
+package.  The opaque physical carrier exposes exactly one transported Mathlib
+completion hierarchy, so its linear partial maps have the canonical adjoint
+`Star` instance. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
@@ -110,11 +110,19 @@ theorem hamiltonianSelfAdjoint
     IsSelfAdjoint M.hamiltonian :=
   M.data.hamiltonianSelfAdjoint
 
+/-- Export the reconstructed model while reusing, field-for-field, the exact
+transported Hilbert instances of the opaque OS physical carrier. -/
 def toExplicitModel
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     ExplicitWightmanOSReconstructedModel :=
   { axioms := M.axioms
     H := M.observables.PhysicalHilbert
+    hilbertNormedAddCommGroup :=
+      os_physical_hilbert_normedAddCommGroup M.observables
+    hilbertInnerProductSpace :=
+      os_physical_hilbert_innerProductSpace M.observables
+    hilbertCompleteSpace :=
+      os_physical_hilbert_completeSpace M.observables
     field := M.field
     hamiltonian := M.hamiltonian
     hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
@@ -132,8 +140,7 @@ def toExplicitModel
 end EuclideanYangMillsOSPhysicalHilbertReconstructedModel
 
 /-- The canonical OS completion supplies the adjoint-based `Star` operation on
-physical-Hilbert linear partial maps.  This theorem is an explicit compile gate
-for the instance that is required by `IsSelfAdjoint`. -/
+physical-Hilbert linear partial maps. -/
 theorem os_physical_reconstructed_model_star_available
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
