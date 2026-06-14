@@ -73,6 +73,22 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_sInf_eq
     B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
     hGap hmSpectrum
 
+/-- A positive attained lower spectral value produces an actual nonzero
+eigenvector of the canonical restricted Hamiltonian. -/
+theorem canonical_vacuum_orthogonal_exact_gap_eigenvector
+    {M : ExplicitWightmanOSReconstructedModel}
+    (B : ExplicitWightmanOSCanonicalPointSpectrumBridge M)
+    {m : ℝ} (hmPositive : 0 < m)
+    (hmSpectrum : m ∈ M.hamiltonianEnergySpectrum) :
+    ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
+      (x : M.VacuumOrthogonalHilbert) ≠ 0 ∧
+        M.canonicalVacuumOrthogonalHamiltonian x =
+          m • (x : M.VacuumOrthogonalHilbert) := by
+  apply (mem_canonical_vacuum_orthogonal_pointSpectrum_iff M m).1
+  rw [B.pointSpectrum_eq_restrictedSpectrum,
+    B.restrictedSpectrum_eq_nonvacuum]
+  exact ⟨hmSpectrum, by simpa using (ne_of_gt hmPositive)⟩
+
 /-- Euclidean finite-volume clustering yields a positive lower bound on every
 actual eigenvalue of `H|Ω⊥`. -/
 theorem euclidean_clustering_canonical_pointSpectrum_lower_bound
@@ -115,6 +131,29 @@ theorem euclidean_clustering_canonical_pointSpectrum_exact_gap
     canonical_vacuum_orthogonal_pointSpectrum_lower_bound B hGap,
     canonical_vacuum_orthogonal_pointSpectrum_sInf_eq
       B hGap hExactSpectrum⟩
+
+/-- The exact gap is realized by a nonzero eigenvector of the actual canonical
+restriction whenever the Euclidean clustering threshold is attained. -/
+theorem euclidean_clustering_exact_gap_eigenvector
+    (C : EuclideanYangMillsConnectedObservableCore)
+    (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity C.explicitModel)
+    (T : ExplicitWightmanOSEuclideanTimeSemigroup C.explicitModel)
+    (E : EuclideanYangMillsConnectedCorrelationSemigroupIdentification C T)
+    (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
+      C.explicitModel A.toScalarSpectralRealization T)
+    (F : EuclideanYangMillsFiniteVolumeClusteringApproximation C)
+    (B : ExplicitWightmanOSCanonicalPointSpectrumBridge C.explicitModel)
+    (hExactSpectrum :
+      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
+    ∃ x : C.explicitModel.canonicalVacuumOrthogonalHamiltonian.domain,
+      (x : C.explicitModel.VacuumOrthogonalHilbert) ≠ 0 ∧
+        C.explicitModel.canonicalVacuumOrthogonalHamiltonian x =
+          exactGapValueReal •
+            (x : C.explicitModel.VacuumOrthogonalHilbert) := by
+  have hGap : C.explicitModel.HasMassGap exactGapValueReal :=
+    euclidean_finite_volume_clustering_mass_gap C A T E S F
+  exact canonical_vacuum_orthogonal_exact_gap_eigenvector
+    B hGap.1 hExactSpectrum
 
 end
 
