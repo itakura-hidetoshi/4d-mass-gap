@@ -20,21 +20,6 @@ def finiteEvenFourTorusZ2WilsonSystem
     (2 * H + 1) β energyIdentity energyNontrivial
     hβ hEnergyIdentity hEnergyNontrivial
 
-/-- The positive-half configuration carrier is a finite function space on the
-finite even-torus edge set.  This named instance prevents dependent record
-elaboration from having to unfold `PositiveConfiguration` on its own. -/
-instance finiteEvenFourTorusPositiveConfigurationFintype
-    (H : ℕ) :
-    Fintype ((finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration) :=
-  inferInstanceAs (Fintype (FiniteEvenFourTorusEdge H → Z2Gauge))
-
-/-- The identity edge assignment inhabits the positive-half configuration
-carrier. -/
-instance finiteEvenFourTorusPositiveConfigurationInhabited
-    (H : ℕ) :
-    Inhabited ((finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration) :=
-  ⟨fun _ => 1⟩
-
 /-- The remaining local analytic input for the concrete even-torus geometric
 classifier.  All carrier, involution, support, crossing-sector, and assembly
 data are already fixed by the preceding geometric construction; only the
@@ -100,8 +85,12 @@ def finiteEvenFourTorusWilsonGeometricPlaquetteSideClassification
         hβ hEnergyIdentity hEnergyNontrivial) :=
   { configurationEquiv := Equiv.refl _
     edgeOrbit := finiteEvenFourTorusEdgeOrbitPartition H
-    positiveFintype := finiteEvenFourTorusPositiveConfigurationFintype H
-    positiveInhabited := finiteEvenFourTorusPositiveConfigurationInhabited H
+    positiveFintype :=
+      finiteInvolutiveEdgeOrbitPositiveConfigurationFintype
+        (finiteEvenFourTorusEdgeOrbitPartition H)
+    positiveInhabited :=
+      finiteInvolutiveEdgeOrbitPositiveConfigurationInhabited
+        (finiteEvenFourTorusEdgeOrbitPartition H)
     plaquetteGeometry :=
       finiteEvenFourTorusConcreteGeometricPlaquetteSidePartition H
     energyIdentity := energyIdentity
