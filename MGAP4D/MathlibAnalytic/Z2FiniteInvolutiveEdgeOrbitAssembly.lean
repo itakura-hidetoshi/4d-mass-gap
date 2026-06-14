@@ -74,6 +74,22 @@ abbrev FiniteInvolutiveEdgeOrbitPartition.PositiveConfiguration
     (_P : FiniteInvolutiveEdgeOrbitPartition Edge) : Type :=
   Edge → Z2Gauge
 
+/-- Every positive-half configuration carrier is finite because it is a
+function space from a finite edge carrier to the finite gauge group. -/
+instance finiteInvolutiveEdgeOrbitPositiveConfigurationFintype
+    {Edge : Type} [Fintype Edge]
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge) :
+    Fintype P.PositiveConfiguration :=
+  inferInstanceAs (Fintype (Edge → Z2Gauge))
+
+/-- The identity assignment inhabits every positive-half configuration
+carrier. -/
+instance finiteInvolutiveEdgeOrbitPositiveConfigurationInhabited
+    {Edge : Type} [Fintype Edge]
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge) :
+    Inhabited P.PositiveConfiguration :=
+  ⟨fun _ => 1⟩
+
 /-- Assemble two positive-half inputs into one full configuration.  Fixed edges
 are assigned the identity element, avoiding an asymmetric boundary choice. -/
 def FiniteInvolutiveEdgeOrbitPartition.assemble
@@ -178,83 +194,6 @@ theorem finiteEvenFourTorusAssemble_positive
     finiteEvenFourTorusEdgeOrbitPartition,
     FiniteInvolutiveEdgeOrbitPartition.assemble,
     hside]
-
-/-- A negative geometric edge reads the reflected edge from the second
-half-configuration. -/
-@[simp]
-theorem finiteEvenFourTorusAssemble_negative
-    (H : ℕ)
-    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
-    (e : FiniteEvenFourTorusEdge H)
-    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .negative) :
-    finiteEvenFourTorusAssemble H x y e =
-      y (finiteEvenFourTorusEdgeReflection H e) := by
-  simp [finiteEvenFourTorusAssemble,
-    finiteEvenFourTorusEdgeOrbitPartition,
-    FiniteInvolutiveEdgeOrbitPartition.assemble,
-    hside]
-
-/-- A fixed geometric edge is assigned the identity gauge element. -/
-@[simp]
-theorem finiteEvenFourTorusAssemble_fixed
-    (H : ℕ)
-    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
-    (e : FiniteEvenFourTorusEdge H)
-    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .fixed) :
-    finiteEvenFourTorusAssemble H x y e = 1 := by
-  simp [finiteEvenFourTorusAssemble,
-    finiteEvenFourTorusEdgeOrbitPartition,
-    FiniteInvolutiveEdgeOrbitPartition.assemble,
-    hside]
-
-/-- The reflection partner of a positive edge reads the second
-half-configuration at the original representative. -/
-@[simp]
-theorem finiteEvenFourTorusAssemble_reflection_of_positive
-    (H : ℕ)
-    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
-    (e : FiniteEvenFourTorusEdge H)
-    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .positive) :
-    finiteEvenFourTorusAssemble H x y
-        (finiteEvenFourTorusEdgeReflection H e) = y e := by
-  simp [finiteEvenFourTorusAssemble,
-    finiteEvenFourTorusEdgeOrbitPartition,
-    FiniteInvolutiveEdgeOrbitPartition.assemble,
-    hside, finiteEvenFourTorusEdgeReflection_involutive H e]
-
-/-- The reflection partner of a negative edge is positive and therefore reads
-the first half-configuration at that reflected representative. -/
-@[simp]
-theorem finiteEvenFourTorusAssemble_reflection_of_negative
-    (H : ℕ)
-    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
-    (e : FiniteEvenFourTorusEdge H)
-    (hside : finiteEvenFourTorusEdgeGeometricSide H e = .negative) :
-    finiteEvenFourTorusAssemble H x y
-        (finiteEvenFourTorusEdgeReflection H e) =
-      x (finiteEvenFourTorusEdgeReflection H e) := by
-  simp [finiteEvenFourTorusAssemble,
-    finiteEvenFourTorusEdgeOrbitPartition,
-    FiniteInvolutiveEdgeOrbitPartition.assemble,
-    hside]
-
-/-- Concrete configuration reflection agrees with the generic orbit
-reflection. -/
-theorem finiteEvenFourTorus_configurationReflection_eq_orbitReflection
-    (H : ℕ) :
-    finiteEvenFourTorusConfigurationReflection H =
-      (finiteEvenFourTorusEdgeOrbitPartition H).configurationReflection := by
-  rfl
-
-/-- The concrete even-torus assembly satisfies the OS swap identity. -/
-theorem finiteEvenFourTorus_reflection_assemble
-    (H : ℕ)
-    (x y : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration) :
-    finiteEvenFourTorusConfigurationReflection H
-        (finiteEvenFourTorusAssemble H x y) =
-      finiteEvenFourTorusAssemble H y x := by
-  exact
-    (finiteEvenFourTorusEdgeOrbitPartition H).reflection_assemble x y
 
 end
 
