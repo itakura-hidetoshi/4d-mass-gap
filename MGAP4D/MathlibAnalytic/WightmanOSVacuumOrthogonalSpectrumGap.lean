@@ -177,7 +177,9 @@ def explicitWightmanOSVacuumOrthogonalGapCertificate
     explicit_wightman_os_reconstruction_has_mass_gap M hRelGap
   exact
     { physicalHilbertComplete := M.hilbertCompleteSpace
-      vacuumOrthogonalComplete := inferInstance
+      vacuumOrthogonalComplete := by
+        change CompleteSpace ↥(M.vacuumLine)ᗮ
+        exact Submodule.instOrthogonalCompleteSpace M.vacuumLine
       hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
       vacuumNormalized := M.vacuum_norm
       vacuumEnergyZero := M.vacuumEnergyZero
