@@ -12,12 +12,19 @@ def ExplicitWightmanOSReconstructedModel.vacuumOrthogonalHamiltonianDomain
     (M : ExplicitWightmanOSReconstructedModel) :
     Submodule ℝ M.VacuumOrthogonalHilbert where
   carrier := {ψ | (ψ : M.H) ∈ M.hamiltonian.domain}
-  zero_mem' := M.hamiltonian.domain.zero_mem
+  zero_mem' := by
+    change (0 : M.H) ∈ M.hamiltonian.domain
+    exact M.hamiltonian.domain.zero_mem
   add_mem' := by
     intro x y hx hy
+    change (x : M.H) ∈ M.hamiltonian.domain at hx
+    change (y : M.H) ∈ M.hamiltonian.domain at hy
+    change (x : M.H) + (y : M.H) ∈ M.hamiltonian.domain
     exact M.hamiltonian.domain.add_mem hx hy
   smul_mem' := by
     intro c x hx
+    change (x : M.H) ∈ M.hamiltonian.domain at hx
+    change c • (x : M.H) ∈ M.hamiltonian.domain
     exact M.hamiltonian.domain.smul_mem c hx
 
 /-- A domain point of the restricted Hamiltonian, viewed as a domain point of the
