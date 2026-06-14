@@ -36,7 +36,7 @@ structure CompactNontrivialGaugeGroup where
   carrier : Type
   [group : Group carrier]
   [topologicalSpace : TopologicalSpace carrier]
-  [topologicalGroup : TopologicalGroup carrier]
+  [topologicalGroup : IsTopologicalGroup carrier]
   [compactSpace : CompactSpace carrier]
   [nontrivial : Nontrivial carrier]
 
