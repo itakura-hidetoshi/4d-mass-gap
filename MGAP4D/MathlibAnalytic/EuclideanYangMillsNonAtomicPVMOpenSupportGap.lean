@@ -56,13 +56,6 @@ theorem euclidean_nonatomic_canonical_hamiltonian_support_gap
       B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge,
     hSupport, hRestricted⟩
 
-/-- The discrete singleton route is explicitly separated as an optional
-pure-point specialization. -/
-def EuclideanYangMillsHasPurePointNonvacuumSpectrum
-    (C : EuclideanYangMillsConnectedObservableCore) : Prop :=
-  C.explicitModel.canonicalVacuumOrthogonalPointSpectrum =
-    C.explicitModel.vacuumOrthogonalPVMOpenSupport
-
 end
 
 end MathlibAnalytic
