@@ -73,22 +73,27 @@ theorem finite_wilson_gibbs_coherent_pushforwards_projective
     IsProjectiveMeasureFamily R.finiteMarginal := by
   intro I J hJI
   let μI := (W.system (R.scale I)).gibbsMeasure
+  let μJ := (W.system (R.scale J)).gibbsMeasure
   let c := R.coarseGrain I J hJI
+  let oI := R.observe I
+  let oJ := R.observe J
   let r : (∀ x : I, R.fieldValue x) → (∀ x : J, R.fieldValue x) :=
     Finset.restrict₂ hJI
   have hc : Measurable c := R.coarseGrain_measurable I J hJI
-  have hObsI : Measurable (R.observe I) := R.observe_measurable I
-  have hObsJ : Measurable (R.observe J) := R.observe_measurable J
+  have hoI : Measurable oI := R.observe_measurable I
+  have hoJ : Measurable oJ := R.observe_measurable J
   have hr : Measurable r :=
     finite_wilson_gibbs_finset_restrict_measurable hJI
-  change
-    (W.system (R.scale J)).gibbsMeasure.map (R.observe J) =
-      ((W.system (R.scale I)).gibbsMeasure.map (R.observe I)).map r
-  rw [← R.gibbsMeasure_map_coarseGrain I J hJI]
-  rw [Measure.map_map hObsJ hc, Measure.map_map hr hObsI]
-  apply congrArg (fun f => μI.map f)
-  funext A
-  exact R.observe_coarseGrain I J hJI A
+  change μJ.map oJ = (μI.map oI).map r
+  calc
+    μJ.map oJ = (μI.map c).map oJ := by
+      rw [R.gibbsMeasure_map_coarseGrain I J hJI]
+    _ = μI.map (oJ ∘ c) := Measure.map_map hoJ hc
+    _ = μI.map (r ∘ oI) := by
+      congr 1
+      funext A
+      exact R.observe_coarseGrain I J hJI A
+    _ = (μI.map oI).map r := (Measure.map_map hr hoI).symm
 
 /-- The explicit restriction equation underlying the projective-family
 predicate. -/
