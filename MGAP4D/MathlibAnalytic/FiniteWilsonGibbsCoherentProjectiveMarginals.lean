@@ -74,7 +74,8 @@ theorem finite_wilson_gibbs_coherent_pushforwards_projective
   intro I J hJI
   let μI := (W.system (R.scale I)).gibbsMeasure
   let c := R.coarseGrain I J hJI
-  let r := Finset.restrict₂ hJI
+  let r : (∀ x : I, R.fieldValue x) → (∀ x : J, R.fieldValue x) :=
+    Finset.restrict₂ hJI
   have hc : Measurable c := R.coarseGrain_measurable I J hJI
   have hObsI : Measurable (R.observe I) := R.observe_measurable I
   have hObsJ : Measurable (R.observe J) := R.observe_measurable J
@@ -88,6 +89,17 @@ theorem finite_wilson_gibbs_coherent_pushforwards_projective
   apply congrArg (fun f => μI.map f)
   funext A
   exact R.observe_coarseGrain I J hJI A
+
+/-- The explicit restriction equation underlying the projective-family
+predicate. -/
+theorem finite_wilson_gibbs_coherent_marginal_restriction
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsCoherentProjectiveRealization W)
+    (I J : Finset EuclideanFourSpace)
+    (hJI : J ⊆ I) :
+    R.finiteMarginal J =
+      (R.finiteMarginal I).map (Finset.restrict₂ hJI) := by
+  exact finite_wilson_gibbs_coherent_pushforwards_projective R I J hJI
 
 /-- Forget the explicit coarse-graining witnesses after deriving the projective
 compatibility theorem. -/
@@ -136,6 +148,23 @@ theorem finite_wilson_gibbs_coherent_marginal_apply
         ((R.observe J) ⁻¹' s) := by
   exact finite_wilson_gibbs_projective_marginal_apply
     R.toProjectiveRealization J hs
+
+/-- Once a projective-limit measure exists, every measurable continuum cylinder
+has exactly the finite Wilson Gibbs probability prescribed by the coherent
+observation map. -/
+theorem finite_wilson_gibbs_coherent_projective_limit_cylinder
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsCoherentProjectiveRealization W)
+    (L : EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily)
+    (J : Finset EuclideanFourSpace)
+    {s : Set (∀ x : J, R.fieldValue x)}
+    (hs : MeasurableSet s) :
+    L.continuumMeasure (cylinder J s) =
+      (W.system (R.scale J)).gibbsMeasure
+        ((R.observe J) ⁻¹' s) := by
+  exact finite_wilson_gibbs_projective_limit_cylinder_eq_gibbs_preimage
+    R.toProjectiveRealization L J hs
 
 /-- Audit-visible certificate showing that projectivity is derived from an
 explicit measure-preserving coarse-graining diagram rather than supplied as an
