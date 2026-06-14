@@ -15,6 +15,11 @@ independent input here.  It is fixed to
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) where
   observables : EuclideanYangMillsOSPositiveTimeObservableConstruction S
+  [physicalNormedAddCommGroup :
+    NormedAddCommGroup observables.PhysicalHilbert]
+  [physicalInnerProductSpace :
+    InnerProductSpace ℝ observables.PhysicalHilbert]
+  [physicalCompleteSpace : CompleteSpace observables.PhysicalHilbert]
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
     axioms.toLegacy = S.definitionBridge.spine.axioms
@@ -39,6 +44,11 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
   energySpectrum_eq_projection :
     hamiltonianEnergySpectrum = energyProjection energyMomentumSpectrum
 
+attribute [instance]
+  EuclideanYangMillsOSPhysicalHilbertReconstructedModel.physicalNormedAddCommGroup
+  EuclideanYangMillsOSPhysicalHilbertReconstructedModel.physicalInnerProductSpace
+  EuclideanYangMillsOSPhysicalHilbertReconstructedModel.physicalCompleteSpace
+
 /-- Forgetful projection to the existing explicit reconstructed-model interface.
 The projected Hilbert carrier is definitionally the OS physical completion. -/
 def EuclideanYangMillsOSPhysicalHilbertReconstructedModel.toExplicitModel
@@ -47,6 +57,9 @@ def EuclideanYangMillsOSPhysicalHilbertReconstructedModel.toExplicitModel
     ExplicitWightmanOSReconstructedModel :=
   { axioms := M.axioms
     H := M.observables.PhysicalHilbert
+    hilbertNormedAddCommGroup := M.physicalNormedAddCommGroup
+    hilbertInnerProductSpace := M.physicalInnerProductSpace
+    hilbertCompleteSpace := M.physicalCompleteSpace
     field := M.field
     hamiltonian := M.hamiltonian
     hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
@@ -75,7 +88,7 @@ theorem os_physical_reconstructed_model_complete
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
     CompleteSpace M.toExplicitModel.H := by
-  infer_instance
+  exact M.physicalCompleteSpace
 
 /-- The projected vacuum is the OS class of the constant positive-time
 observable. -/
