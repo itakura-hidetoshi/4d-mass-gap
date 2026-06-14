@@ -6,9 +6,12 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- The OS quotient and completion inner products are registered upstream as
-instances, so the `LinearPMap` adjoint star is available on the physical
-Hilbert carrier throughout this reconstructed package. -/
+/-- A reconstructed Yang--Mills model whose Hilbert carrier is definitionally the
+OS null-quotient completion constructed from the Euclidean measure.
+
+The inner-product instance depends on the complete positive-time observable
+package, which cannot be reconstructed from the abbreviated carrier type alone.
+It is therefore installed explicitly at the self-adjointness boundary. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) where
   observables : EuclideanYangMillsOSPositiveTimeObservableConstruction S
@@ -19,7 +22,12 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
   hamiltonian :
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
-  hamiltonianSelfAdjoint : IsSelfAdjoint hamiltonian
+  hamiltonianSelfAdjoint :
+    letI : InnerProductSpace ℝ observables.PhysicalHilbert :=
+      os_physical_hilbert_innerProductSpace observables
+    letI : CompleteSpace observables.PhysicalHilbert :=
+      os_physical_hilbert_complete observables
+    IsSelfAdjoint hamiltonian
   vacuum : observables.PhysicalHilbert
   vacuum_eq_os_vacuum : vacuum = observables.vacuum
   vacuum_norm : ‖vacuum‖ = 1
@@ -39,22 +47,27 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
 def EuclideanYangMillsOSPhysicalHilbertReconstructedModel.toExplicitModel
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
-    ExplicitWightmanOSReconstructedModel :=
-  { axioms := M.axioms
-    H := M.observables.PhysicalHilbert
-    field := M.field
-    hamiltonian := M.hamiltonian
-    hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
-    vacuum := M.vacuum
-    vacuum_norm := M.vacuum_norm
-    vacuum_mem_hamiltonianDomain := M.vacuum_mem_hamiltonianDomain
-    vacuumEnergyZero := M.vacuumEnergyZero
-    spectralPVM := M.spectralPVM
-    vacuumSpectralProjection := M.vacuumSpectralProjection
-    energyMomentumSpectrum := M.energyMomentumSpectrum
-    spectrumCondition := M.spectrumCondition
-    hamiltonianEnergySpectrum := M.hamiltonianEnergySpectrum
-    energySpectrum_eq_projection := M.energySpectrum_eq_projection }
+    ExplicitWightmanOSReconstructedModel := by
+  letI : InnerProductSpace ℝ M.observables.PhysicalHilbert :=
+    os_physical_hilbert_innerProductSpace M.observables
+  letI : CompleteSpace M.observables.PhysicalHilbert :=
+    os_physical_hilbert_complete M.observables
+  exact
+    { axioms := M.axioms
+      H := M.observables.PhysicalHilbert
+      field := M.field
+      hamiltonian := M.hamiltonian
+      hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint
+      vacuum := M.vacuum
+      vacuum_norm := M.vacuum_norm
+      vacuum_mem_hamiltonianDomain := M.vacuum_mem_hamiltonianDomain
+      vacuumEnergyZero := M.vacuumEnergyZero
+      spectralPVM := M.spectralPVM
+      vacuumSpectralProjection := M.vacuumSpectralProjection
+      energyMomentumSpectrum := M.energyMomentumSpectrum
+      spectrumCondition := M.spectrumCondition
+      hamiltonianEnergySpectrum := M.hamiltonianEnergySpectrum
+      energySpectrum_eq_projection := M.energySpectrum_eq_projection }
 
 theorem os_physical_reconstructed_model_hilbert_identified
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
@@ -113,7 +126,7 @@ def euclideanYangMillsOSPhysicalReconstructionCertificate
       os_physical_reconstructed_model_vacuum_eq_os_class M
     continuumAxiomsIdentified :=
       os_physical_reconstructed_model_uses_continuum_axioms M
-    hamiltonianSelfAdjoint := M.hamiltonianSelfAdjoint }
+    hamiltonianSelfAdjoint := M.toExplicitModel.hamiltonianSelfAdjoint }
 
 end
 
