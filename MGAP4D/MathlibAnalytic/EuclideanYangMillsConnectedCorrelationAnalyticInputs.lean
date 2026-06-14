@@ -68,14 +68,14 @@ structure EuclideanYangMillsConnectedObservableCore where
     ∀ e : explicitModel.NonVacuumEnergy, 0 ≤ decayConstant e
 
 /-- First hard analytic input: OS reconstruction and the spectral theorem identify
-a positive singleton-PVM contribution beneath the Euclidean connected
+its canonical positive singleton-PVM mass beneath the Euclidean connected
 correlation. -/
 structure EuclideanYangMillsOSSpectralLaplaceRepresentation
     (C : EuclideanYangMillsConnectedObservableCore) where
   lowerBound :
     ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ), 0 ≤ t →
       ‖C.explicitModel.spectralPVM.projection ({(e : ℝ)} : Set ℝ)
-        (C.sourceVector e)‖ * Real.exp (-(e : ℝ) * t) ≤
+        (C.sourceVector e)‖ ^ 2 * Real.exp (-(e : ℝ) * t) ≤
         C.connectedCorrelation e t
 
 /-- Second hard analytic input: the connected Euclidean correlations decay
