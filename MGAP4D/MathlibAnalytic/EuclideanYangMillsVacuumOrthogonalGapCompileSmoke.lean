@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsVacuumOrthogonalGapBridge
-import MGAP4D.MathlibAnalytic.WightmanOSQuadraticPVMFiniteAdditivity
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsFiniteVolumeClusteringLimit
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -120,6 +120,37 @@ theorem euclidean_yang_mills_quadratic_pvm_finite_laws_compile_smoke
             M.quadraticPVMWeight ψ t ht) := by
   exact explicit_wightman_os_quadratic_pvm_finite_measure_laws
     M hComposition
+
+/-- Integration theorem forcing the uniform finite-volume clustering bound to
+pass to the continuum before the physical gap theorem is invoked. -/
+theorem euclidean_yang_mills_finite_volume_clustering_compile_smoke
+    (C : EuclideanYangMillsConnectedObservableCore)
+    (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity C.explicitModel)
+    (T : ExplicitWightmanOSEuclideanTimeSemigroup C.explicitModel)
+    (E : EuclideanYangMillsConnectedCorrelationSemigroupIdentification C T)
+    (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
+      C.explicitModel A.toScalarSpectralRealization T)
+    (F : EuclideanYangMillsFiniteVolumeClusteringApproximation C)
+    (hExactSpectrum :
+      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
+    let L :=
+      euclideanYangMillsOSLaplaceSemigroupIdentificationOfMatrixCoefficients E S
+    0 < exactGapValueReal ∧
+      ((C.assemble L.toOSSpectralLaplace
+        F.toExponentialClustering).vacuumOrthogonalSpectrum
+          ((C.assemble L.toOSSpectralLaplace
+            F.toExponentialClustering).exactEnergy
+              hExactSpectrum)).restrictedSpectrum ⊆
+        Set.Ici exactGapValueReal ∧
+      sInf
+        ((C.assemble L.toOSSpectralLaplace
+          F.toExponentialClustering).vacuumOrthogonalSpectrum
+            ((C.assemble L.toOSSpectralLaplace
+              F.toExponentialClustering).exactEnergy
+                hExactSpectrum)).restrictedSpectrum =
+        exactGapValueReal := by
+  exact euclidean_finite_volume_clustering_exact_gap
+    C A T E S F hExactSpectrum
 
 end
 
