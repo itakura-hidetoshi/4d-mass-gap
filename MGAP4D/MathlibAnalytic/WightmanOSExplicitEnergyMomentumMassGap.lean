@@ -40,6 +40,13 @@ structure CompactNontrivialGaugeGroup where
   [compactSpace : CompactSpace carrier]
   [nontrivial : Nontrivial carrier]
 
+attribute [instance]
+  CompactNontrivialGaugeGroup.group
+  CompactNontrivialGaugeGroup.topologicalSpace
+  CompactNontrivialGaugeGroup.topologicalGroup
+  CompactNontrivialGaugeGroup.compactSpace
+  CompactNontrivialGaugeGroup.nontrivial
+
 /-- A typed Osterwalder--Schrader / Wightman field package.  Reflection positivity
 is stated as positivity of the reflected two-point Schwinger form.  The remaining
 named axioms are predicates over this displayed field package and are therefore
@@ -60,6 +67,10 @@ structure ExplicitOSWightmanFieldAxioms where
   wightmanLocality : Prop
   wightmanCovariance : Prop
   wightmanSpectrumCondition : Prop
+
+attribute [instance]
+  ExplicitOSWightmanFieldAxioms.testNormedAddCommGroup
+  ExplicitOSWightmanFieldAxioms.testNormedSpace
 
 /-- Projection-valued-measure laws needed by the present mass-gap bridge,
 expressed as a Borel-set-indexed family of bounded operators on a Hilbert space.
@@ -158,6 +169,11 @@ structure ExplicitWightmanOSReconstructedModel where
   energySpectrum_eq_projection :
     hamiltonianEnergySpectrum = energyProjection energyMomentumSpectrum
 
+attribute [instance]
+  ExplicitWightmanOSReconstructedModel.hilbertNormedAddCommGroup
+  ExplicitWightmanOSReconstructedModel.hilbertInnerProductSpace
+  ExplicitWightmanOSReconstructedModel.hilbertCompleteSpace
+
 /-- The reconstructed model has mass gap `m` precisely through its Hamiltonian
 energy spectrum. -/
 def ExplicitWightmanOSReconstructedModel.HasMassGap
@@ -249,6 +265,18 @@ theorem explicit_os_wightman_toLegacy_ready
     (hCovariance : A.wightmanCovariance)
     (hSpectrum : A.wightmanSpectrumCondition) :
     A.toLegacy.ready := by
+  unfold OSWightmanYangMillsAxioms.ready
+  change
+    CompactSpace A.gauge.carrier ∧
+    Nontrivial A.gauge.carrier ∧
+    (∀ f, 0 ≤ A.schwingerTwo (A.reflection f) f) ∧
+    A.euclideanInvariant ∧
+    (∀ f g, A.schwingerTwo f g = A.schwingerTwo g f) ∧
+    A.clusterProperty ∧
+    A.regularity ∧
+    A.wightmanLocality ∧
+    A.wightmanCovariance ∧
+    A.wightmanSpectrumCondition
   exact ⟨A.gauge.compactSpace, A.gauge.nontrivial,
     A.reflectionPositive, hEuclidean, A.schwingerSymmetric,
     hCluster, hRegularity, hLocality, hCovariance, hSpectrum⟩
