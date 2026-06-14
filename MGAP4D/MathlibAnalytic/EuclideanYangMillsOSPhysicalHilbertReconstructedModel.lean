@@ -11,19 +11,10 @@ section ReconstructedData
 variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
 variable (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
 
-local instance : InnerProductSpace ℝ P.PhysicalHilbert :=
-  os_physical_hilbert_innerProductSpace P
-
-local instance : CompleteSpace P.PhysicalHilbert :=
-  os_physical_hilbert_complete P
-
-local instance physicalLinearPMapStar :
-    Star (P.PhysicalHilbert →ₗ.[ℝ] P.PhysicalHilbert) :=
-  LinearPMap.instStar
-
 /-- Operator and spectral data indexed by the complete positive-time observable
-package.  Indexing by `P` keeps the canonical completion inner-product instance
-in scope while the self-adjoint Hamiltonian field is elaborated. -/
+package.  The canonical separation-quotient completion instances are used
+throughout, so the Hamiltonian, its adjoint, and the exported model share one
+and the same Hilbert structure. -/
 structure EuclideanYangMillsOSPhysicalHilbertReconstructedData where
   axioms : ExplicitOSWightmanFieldAxioms
   axioms_toLegacy_identified :
@@ -58,22 +49,6 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
 namespace EuclideanYangMillsOSPhysicalHilbertReconstructedModel
 
 variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-
-noncomputable instance physicalInnerProductSpace
-    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
-    InnerProductSpace ℝ M.observables.PhysicalHilbert :=
-  os_physical_hilbert_innerProductSpace M.observables
-
-instance physicalCompleteSpace
-    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
-    CompleteSpace M.observables.PhysicalHilbert :=
-  os_physical_hilbert_complete M.observables
-
-noncomputable instance physicalLinearPMapStar
-    (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :
-    Star (M.observables.PhysicalHilbert →ₗ.[ℝ]
-      M.observables.PhysicalHilbert) :=
-  LinearPMap.instStar
 
 abbrev axioms (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S) :=
   M.data.axioms
