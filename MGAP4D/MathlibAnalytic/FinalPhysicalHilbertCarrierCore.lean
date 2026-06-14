@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.Basic
 import MGAP4D.MathlibAnalytic.ExactGapReal
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalHilbertCompileSmoke
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalTimeTranslationCompileSmoke
 
 namespace MGAP4D
 namespace MathlibAnalytic
