@@ -5,7 +5,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Compile the reconstructed Euclidean semigroup on the physical OS completion. -/
+/-- Regression smoke after removing downstream smoke imports from the legacy
+physical-carrier core.  This target must remain a leaf of the import graph. -/
 theorem euclidean_yang_mills_os_time_translation_compile_smoke
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
