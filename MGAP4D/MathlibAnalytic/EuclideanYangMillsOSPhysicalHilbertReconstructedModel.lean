@@ -16,7 +16,10 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
   hamiltonian :
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
-  hamiltonianAdjoint_eq : hamiltonian.adjoint = hamiltonian
+  hamiltonianAdjoint_eq :
+    (LinearPMap.adjoint (𝕜 := ℝ) hamiltonian :
+      observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert) =
+        hamiltonian
   vacuum : observables.PhysicalHilbert
   vacuum_eq_os_vacuum : vacuum = observables.vacuum
   vacuum_norm : ‖vacuum‖ = 1
