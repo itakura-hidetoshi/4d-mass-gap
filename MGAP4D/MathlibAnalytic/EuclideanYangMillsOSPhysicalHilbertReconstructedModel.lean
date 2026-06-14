@@ -24,7 +24,7 @@ structure EuclideanYangMillsOSPhysicalHilbertReconstructedModel
   axioms_toLegacy_identified :
     axioms.toLegacy = S.definitionBridge.spine.axioms
   field : axioms.TestFunction →
-    observables.PhysicalHilbert →ₗ[ℝ] observables.PhysicalHilbert
+    observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
   hamiltonian :
     observables.PhysicalHilbert →ₗ.[ℝ] observables.PhysicalHilbert
   hamiltonianSelfAdjoint : IsSelfAdjoint hamiltonian
