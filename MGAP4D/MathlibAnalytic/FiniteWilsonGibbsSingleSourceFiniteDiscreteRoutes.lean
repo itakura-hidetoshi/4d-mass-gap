@@ -35,6 +35,14 @@ noncomputable def
     R.toProjectiveRealization.toProjectiveCylinderFamily
     R.fieldValueStandardBorelFamily
 
+/-- The countable-discrete Standard-Borel construction is exactly the explicit
+common-source pushforward continuum law. -/
+theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
+    R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
+  finite_wilson_gibbs_single_source_constructed_unique R
+    R.finiteDiscreteStandardBorelLimit.continuumMeasure
+    R.finiteDiscreteStandardBorelLimit.projectiveLimit
+
 end
 
 end MathlibAnalytic
