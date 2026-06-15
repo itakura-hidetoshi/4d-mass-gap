@@ -64,21 +64,21 @@ theorem finite_wilson_single_source_finiteProduct_set_finite
     finite_wilson_single_source_finiteProduct_fintype R J
   exact Set.toFinite A
 
-/-- Every finite-dimensional Wilson marginal is compact inner regular. Since
-its carrier is finite, a measurable set is itself a compact closed inner
-approximation, with no probability loss. -/
-theorem finite_wilson_single_source_finiteMarginal_innerRegular
-    (J : Finset EuclideanFourSpace) :
-    (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J).InnerRegularWRT
-      (fun s => IsCompact s ∧ IsClosed s) MeasurableSet := by
-  classical
-  letI : Fintype (∀ x : J, R.fieldValue x) :=
-    finite_wilson_single_source_finiteProduct_fintype R J
+/-- Every finite-dimensional Wilson subset is compact. -/
+theorem finite_wilson_single_source_finiteProduct_set_compact
+    (J : Finset EuclideanFourSpace)
+    (A : Set (∀ x : J, R.fieldValue x)) :
+    IsCompact A := by
+  exact (finite_wilson_single_source_finiteProduct_set_finite R J A).isCompact
+
+/-- Every finite-dimensional Wilson subset is closed. -/
+theorem finite_wilson_single_source_finiteProduct_set_closed
+    (J : Finset EuclideanFourSpace)
+    (A : Set (∀ x : J, R.fieldValue x)) :
+    IsClosed A := by
   letI : DiscreteTopology (∀ x : J, R.fieldValue x) :=
     finite_wilson_single_source_finiteProduct_discrete R J
-  intro A hA r hr
-  have hAfin : A.Finite := Set.toFinite A
-  exact ⟨A, subset_rfl, ⟨hAfin.isCompact, hAfin.isClosed⟩, hr⟩
+  exact (finite_wilson_single_source_finiteProduct_set_finite R J A).isClosed
 
 /-- Standard-Borel projective limit generated automatically from finite
 discrete Wilson field values. -/
