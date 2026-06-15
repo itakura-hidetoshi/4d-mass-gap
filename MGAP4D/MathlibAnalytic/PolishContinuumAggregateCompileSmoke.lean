@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsPolishContinuumCompileSmoke
+import MGAP4D.MathlibAnalytic.ProjectiveLimitThreeRoutesCompileSmoke
 
 namespace MGAP4D
 namespace MathlibAnalytic
