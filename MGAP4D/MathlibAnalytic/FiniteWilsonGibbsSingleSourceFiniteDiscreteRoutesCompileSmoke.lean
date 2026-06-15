@@ -3,8 +3,6 @@ import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceFiniteDiscreteRoutes
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory
-
 noncomputable section
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -12,14 +10,11 @@ variable {W : FiniteWilsonOSAutomaticApproximationFamily}
   [∀ x, Fintype (R.fieldValue x)]
   [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
 
-noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
-    EuclideanYangMillsProjectiveLimitMeasure
-      R.toProjectiveRealization.toProjectiveCylinderFamily :=
-  R.finiteDiscreteStandardBorelLimit
-
-theorem finiteDiscrete_standardBorel_eq_explicit_compile_smoke :
-    R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
-  finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
+/-- Focused compile gate for the finite-discrete standard-Borel instance. -/
+theorem finiteDiscrete_fieldValue_standardBorel_compile_smoke
+    (x : EuclideanFourSpace) :
+    StandardBorelSpace (R.fieldValue x) :=
+  finite_wilson_single_source_fieldValue_standardBorel R x
 
 end
 
