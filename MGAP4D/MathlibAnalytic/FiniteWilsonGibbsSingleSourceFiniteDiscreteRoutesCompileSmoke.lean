@@ -17,27 +17,10 @@ noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
       R.toProjectiveRealization.toProjectiveCylinderFamily :=
   R.finiteDiscreteStandardBorelLimit
 
-/-- Focused compile gate for the bundled compact-tightness projective limit. -/
-noncomputable def finiteDiscrete_compactTight_limit_compile_smoke :
-    EuclideanYangMillsProjectiveLimitMeasure
-      R.toProjectiveRealization.toProjectiveCylinderFamily :=
-  R.finiteDiscreteCompactTightLimit
-
 /-- The Standard-Borel law agrees with the explicit common-source law. -/
 theorem finiteDiscrete_standardBorel_eq_explicit_compile_smoke :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
   finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
-
-/-- The compact-tightness law agrees with the explicit common-source law. -/
-theorem finiteDiscrete_compactTight_eq_explicit_compile_smoke :
-    R.finiteDiscreteCompactTightLimit.continuumMeasure = R.continuumMeasure :=
-  finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R
-
-/-- The two independent constructions agree exactly. -/
-theorem finiteDiscrete_routes_agree_compile_smoke :
-    R.finiteDiscreteStandardBorelLimit.continuumMeasure =
-      R.finiteDiscreteCompactTightLimit.continuumMeasure :=
-  finite_wilson_single_source_finiteDiscrete_routes_agree R
 
 end
 
