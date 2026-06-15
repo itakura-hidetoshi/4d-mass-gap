@@ -63,8 +63,8 @@ theorem finite_wilson_single_source_finiteProduct_discrete
 theorem finite_wilson_single_source_finiteProduct_completelyMetrizable
     (J : Finset EuclideanFourSpace) :
     IsCompletelyMetrizableSpace (∀ x : J, R.fieldValue x) := by
-  letI : DiscreteTopology (∀ x : J, R.fieldValue x) :=
-    finite_wilson_single_source_finiteProduct_discrete R J
+  letI : ∀ x : J, IsCompletelyMetrizableSpace (R.fieldValue x) :=
+    fun x => (inferInstance : PolishSpace (R.fieldValue x)).toIsCompletelyMetrizableSpace
   infer_instance
 
 /-- Standard-Borel projective limit generated automatically from countable
