@@ -35,6 +35,7 @@ concurrency:
 
 permissions:
   contents: read
+  issues: write
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
@@ -45,8 +46,6 @@ jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-latest
-    outputs:
-      diagnostic: ${{ steps.lean-check.outputs.diagnostic }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -138,20 +137,31 @@ jobs:
         id: lean-check
         shell: bash
         run: |
-          set -uo pipefail
+          set +e
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee /tmp/changed-lean.log
-          status=${PIPESTATUS[0]}
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/changed-lean.log 2>&1
+          status=$?
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
           {
-            echo "status=${status}"
-            echo "diagnostic<<LEAN_DIAGNOSTIC_EOF"
+            echo "### Temporary Lean diagnostic for PR #${{ github.event.pull_request.number }}"
+            echo
+            echo '```text'
             echo "=== error matches ==="
-            grep -nE "error:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|declaration has metavariables" /tmp/changed-lean.log | head -200 || true
+            grep -nE "error:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|declaration has metavariables" /tmp/changed-lean.log | head -120 || true
             echo "=== log tail ==="
-            tail -n 240 /tmp/changed-lean.log || true
-            echo "LEAN_DIAGNOSTIC_EOF"
-          } >> "$GITHUB_OUTPUT"
+            tail -n 140 /tmp/changed-lean.log || true
+            echo '```'
+          } > /tmp/lean-diagnostic.md
           exit 0
+
+      - name: Post temporary Lean diagnostic
+        if: github.event_name == 'pull_request' && steps.lean-check.outputs.status != '0'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
+            -f body="$(cat /tmp/lean-diagnostic.md)"
 
       - name: Fail changed Lean fast check when needed
         if: steps.lean-check.outputs.status != '0'
@@ -176,15 +186,3 @@ jobs:
             .lake
             lake-manifest.json
           key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
-
-  diagnostic-report:
-    name: Lean diagnostic report
-    needs: pr-lean-fast-check
-    if: always() && needs.pr-lean-fast-check.result == 'failure'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print Lean diagnostic
-        shell: bash
-        env:
-          DIAGNOSTIC: ${{ needs.pr-lean-fast-check.outputs.diagnostic }}
-        run: printf '%s\n' "$DIAGNOSTIC"
