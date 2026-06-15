@@ -40,11 +40,35 @@ local instance finiteDiscreteFieldValuePolishSpace
     (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) := by
   infer_instance
 
-/-- Install the product topology before statements mentioning compact or closed
-subsets of a finite Wilson carrier are elaborated. -/
 local instance finiteDiscreteFiniteProductTopologicalSpace
     (J : Finset EuclideanFourSpace) :
     TopologicalSpace (∀ x : J, R.fieldValue x) := by
+  infer_instance
+
+/-- The projective-family field projection is definitionally the original
+Wilson field family, but instance search does not unfold that record path. -/
+local instance finiteDiscreteProjectiveFiniteProductTopologicalSpace
+    (J : Finset EuclideanFourSpace) :
+    TopologicalSpace
+      (∀ x : J,
+        R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  change TopologicalSpace (∀ x : J, R.fieldValue x)
+  infer_instance
+
+local instance finiteDiscreteProjectiveFiniteProductBorelSpace
+    (J : Finset EuclideanFourSpace) :
+    BorelSpace
+      (∀ x : J,
+        R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  change BorelSpace (∀ x : J, R.fieldValue x)
+  infer_instance
+
+local instance finiteDiscreteProjectiveFiniteProductPolishSpace
+    (J : Finset EuclideanFourSpace) :
+    PolishSpace
+      (∀ x : J,
+        R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  change PolishSpace (∀ x : J, R.fieldValue x)
   infer_instance
 
 noncomputable def finite_wilson_single_source_finiteProduct_fintype
@@ -99,10 +123,6 @@ theorem finite_wilson_single_source_finiteMarginal_innerRegular
     (J : Finset EuclideanFourSpace) :
     (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J).InnerRegularWRT
       (fun s => IsCompact s ∧ IsClosed s) MeasurableSet := by
-  letI : BorelSpace (∀ x : J, R.fieldValue x) :=
-    finite_wilson_single_source_finiteProduct_borel R J
-  letI : PolishSpace (∀ x : J, R.fieldValue x) :=
-    finite_wilson_single_source_finiteProduct_polish R J
   letI : IsFiniteMeasure
       (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
     finite_wilson_single_source_finiteMarginal_isFinite R J
