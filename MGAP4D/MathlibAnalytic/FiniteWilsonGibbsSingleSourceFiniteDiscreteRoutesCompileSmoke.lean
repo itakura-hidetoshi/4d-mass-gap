@@ -27,6 +27,12 @@ theorem finiteDiscrete_standardBorel_eq_explicit_compile_smoke :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
   finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
 
+/-- Focused compile gate for the compact-tightness projective limit. -/
+noncomputable def finiteDiscrete_compactTight_limit_compile_smoke :
+    EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  R.finiteDiscreteCompactTightLimit
+
 end
 
 end MathlibAnalytic
