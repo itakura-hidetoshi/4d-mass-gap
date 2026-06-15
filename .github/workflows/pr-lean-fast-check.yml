@@ -135,9 +135,26 @@ jobs:
       - name: Run changed Lean fast check
         shell: bash
         run: |
-          set -euxo pipefail
+          set -uo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee /tmp/changed-lean.log
+          status=${PIPESTATUS[0]}
+          {
+            echo "=== error matches ==="
+            grep -nE "error:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|declaration has metavariables" /tmp/changed-lean.log | head -200 || true
+            echo "=== log tail ==="
+            tail -n 240 /tmp/changed-lean.log || true
+          } > /tmp/lean-diagnostic.txt
+          exit "$status"
+
+      - name: Upload Lean diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-diagnostic
+          path: /tmp/lean-diagnostic.txt
+          if-no-files-found: warn
+          retention-days: 1
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
