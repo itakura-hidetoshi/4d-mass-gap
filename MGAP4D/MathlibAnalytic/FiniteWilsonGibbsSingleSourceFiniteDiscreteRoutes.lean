@@ -63,7 +63,10 @@ theorem finite_wilson_single_source_finiteProduct_set_compact
     (J : Finset EuclideanFourSpace)
     (A : Set (∀ x : J, R.fieldValue x)) :
     IsCompact A := by
-  exact (finite_wilson_single_source_finiteProduct_set_finite R J A).isCompact
+  letI : DiscreteTopology (∀ x : J, R.fieldValue x) :=
+    finite_wilson_single_source_finiteProduct_discrete R J
+  exact isCompact_iff_finite.mpr
+    (finite_wilson_single_source_finiteProduct_set_finite R J A)
 
 noncomputable def
     FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteStandardBorelLimit :
