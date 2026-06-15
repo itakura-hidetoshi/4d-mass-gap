@@ -15,8 +15,7 @@ noncomputable def finite_wilson_exact_gap_cluster_data_compile_smoke :
 
 /-- Compile gate for continuum clustering at the exact-gap rate. -/
 theorem finite_wilson_exact_gap_cluster_compile_smoke :
-    D.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.
-      ContinuumClusterProperty :=
+    D.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.ContinuumClusterProperty :=
   finite_wilson_exact_gap_cluster_passes_to_limit D
 
 /-- Compile gate for the inherited exact-gap continuum bound. -/
