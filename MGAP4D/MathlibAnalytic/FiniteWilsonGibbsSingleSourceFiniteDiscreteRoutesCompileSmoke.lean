@@ -33,11 +33,19 @@ theorem finiteDiscrete_compactTight_eq_explicit_compile_smoke :
     R.finiteDiscreteCompactTightLimit.continuumMeasure = R.continuumMeasure :=
   finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R
 
-/-- Both independently constructed continuum measures agree exactly. -/
+/-- The two extension constructions agree exactly. -/
 theorem finiteDiscrete_routes_agree_compile_smoke :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure =
       R.finiteDiscreteCompactTightLimit.continuumMeasure :=
   finite_wilson_single_source_finiteDiscrete_routes_agree R
+
+/-- Standard-Borel, compact-tightness, and explicit common-source constructions
+all define the same continuum Wilson law. -/
+theorem finiteDiscrete_three_continuum_laws_compile_smoke :
+    R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure ∧
+      R.finiteDiscreteCompactTightLimit.continuumMeasure = R.continuumMeasure :=
+  ⟨finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R,
+    finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R⟩
 
 end
 
