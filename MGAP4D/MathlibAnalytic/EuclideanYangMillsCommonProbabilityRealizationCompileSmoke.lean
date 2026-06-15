@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsCommonProbabilityRealizationProjectiveLimit
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsKolmogorovExtensionCompileSmoke
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceProjectiveLimitExistence
 
 namespace MGAP4D
