@@ -67,6 +67,24 @@ theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure
     R.finiteDiscreteStandardBorelLimit.projectiveLimit
 
+/-- Compact-inner-regularity data for every finite Wilson marginal. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightnessData :
+    EuclideanYangMillsCompactTightnessData
+      R.toProjectiveRealization.toProjectiveCylinderFamily := by
+  letI : ∀ J,
+      IsProbabilityMeasure
+        (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
+    R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginalProbability
+  letI : ∀ J,
+      IsFiniteMeasure
+        (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
+    fun J => inferInstance
+  exact
+    { innerRegular := fun J =>
+        innerRegular_isCompact_isClosed_measurableSet_of_finite
+          (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) }
+
 end
 
 end MathlibAnalytic
