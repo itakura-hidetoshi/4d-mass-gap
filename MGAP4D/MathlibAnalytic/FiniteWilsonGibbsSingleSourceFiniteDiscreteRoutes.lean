@@ -19,16 +19,21 @@ theorem finite_wilson_single_source_fieldValue_standardBorel
     StandardBorelSpace (R.fieldValue x) := by
   infer_instance
 
+/-- The full coordinatewise standard-Borel instance family. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.fieldValueStandardBorelFamily :
+    ∀ x, StandardBorelSpace (R.fieldValue x) :=
+  fun x => finite_wilson_single_source_fieldValue_standardBorel R x
+
 /-- Standard-Borel projective limit generated automatically from countable
 discrete Wilson field values. -/
 noncomputable def
     FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteStandardBorelLimit :
     EuclideanYangMillsProjectiveLimitMeasure
-      R.toProjectiveRealization.toProjectiveCylinderFamily := by
-  letI : ∀ x, StandardBorelSpace (R.fieldValue x) :=
-    fun x => finite_wilson_single_source_fieldValue_standardBorel R x
-  exact euclideanYangMillsStandardBorelProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  @euclideanYangMillsStandardBorelProjectiveLimitMeasure
     R.toProjectiveRealization.toProjectiveCylinderFamily
+    R.fieldValueStandardBorelFamily
 
 end
 
