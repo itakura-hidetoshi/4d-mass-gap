@@ -47,6 +47,12 @@ theorem finite_wilson_single_source_finiteProduct_borel
     BorelSpace (∀ x : J, R.fieldValue x) := by
   infer_instance
 
+/-- The finite dependent product is second countable. -/
+theorem finite_wilson_single_source_finiteProduct_secondCountable
+    (J : Finset EuclideanFourSpace) :
+    SecondCountableTopology (∀ x : J, R.fieldValue x) := by
+  infer_instance
+
 /-- Standard-Borel projective limit generated automatically from countable
 discrete Wilson field values. -/
 noncomputable def
