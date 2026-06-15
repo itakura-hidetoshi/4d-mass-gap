@@ -45,6 +45,8 @@ jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-latest
+    outputs:
+      diagnostic: ${{ steps.lean-check.outputs.diagnostic }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -133,6 +135,7 @@ jobs:
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
       - name: Run changed Lean fast check
+        id: lean-check
         shell: bash
         run: |
           set -uo pipefail
@@ -140,21 +143,20 @@ jobs:
           bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee /tmp/changed-lean.log
           status=${PIPESTATUS[0]}
           {
+            echo "status=${status}"
+            echo "diagnostic<<LEAN_DIAGNOSTIC_EOF"
             echo "=== error matches ==="
             grep -nE "error:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|declaration has metavariables" /tmp/changed-lean.log | head -200 || true
             echo "=== log tail ==="
             tail -n 240 /tmp/changed-lean.log || true
-          } > /tmp/lean-diagnostic.txt
-          exit "$status"
+            echo "LEAN_DIAGNOSTIC_EOF"
+          } >> "$GITHUB_OUTPUT"
+          exit 0
 
-      - name: Upload Lean diagnostic
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: lean-diagnostic
-          path: /tmp/lean-diagnostic.txt
-          if-no-files-found: warn
-          retention-days: 1
+      - name: Fail changed Lean fast check when needed
+        if: steps.lean-check.outputs.status != '0'
+        shell: bash
+        run: exit 1
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
@@ -181,11 +183,8 @@ jobs:
     if: always() && needs.pr-lean-fast-check.result == 'failure'
     runs-on: ubuntu-latest
     steps:
-      - name: Download Lean diagnostic
-        uses: actions/download-artifact@v4
-        with:
-          name: lean-diagnostic
-
       - name: Print Lean diagnostic
         shell: bash
-        run: cat lean-diagnostic.txt
+        env:
+          DIAGNOSTIC: ${{ needs.pr-lean-fast-check.outputs.diagnostic }}
+        run: printf '%s\n' "$DIAGNOSTIC"
