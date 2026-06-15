@@ -24,10 +24,8 @@ theorem exact_gap_cluster_contraction_ratio_nonneg :
 theorem exact_gap_cluster_contraction_ratio_lt_one :
     exactGapClusterContractionRatio < 1 := by
   unfold exactGapClusterContractionRatio
-  have hneg : -exactGapValueReal < 0 := neg_neg_of_pos exactGapValueReal_pos
-  have hexp : Real.exp (-exactGapValueReal) < Real.exp 0 :=
-    Real.exp_lt_exp.mpr hneg
-  simpa using hexp
+  simpa only [Real.exp_zero] using
+    Real.exp_strictMono (neg_lt_zero.mpr exactGapValueReal_pos)
 
 end
 
