@@ -139,10 +139,8 @@ theorem finite_wilson_gibbs_single_source_projective_limit_exists
         R.toProjectiveRealization.toProjectiveCylinderFamily.Configuration,
       IsProjectiveLimit μ
         R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal := by
-  simpa [finite_wilson_gibbs_single_source_continuumMeasure_eq_common_realization R]
-    using
-      euclidean_yang_mills_projective_limit_exists_of_common_realization
-        R.toCommonProbabilityRealization
+  exact euclidean_yang_mills_projective_limit_exists_of_common_realization
+    R.toCommonProbabilityRealization
 
 /-- Equivalent structure-level existence statement. -/
 theorem finite_wilson_gibbs_single_source_projective_limit_nonempty
