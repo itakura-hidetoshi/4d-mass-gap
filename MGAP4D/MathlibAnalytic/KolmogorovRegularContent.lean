@@ -88,7 +88,7 @@ theorem regular_addContent_iUnion_eq_tsum
       ∃ K, K ∈ C ∧ K ⊆ A ∧ m (A \ K) ≤ ε)
     {f : ℕ → Set α} (hf : ∀ n, f n ∈ R)
     (hUnion : (⋃ n, f n) ∈ R)
-    (hdisjoint : Pairwise (Disjoint on f)) :
+    (hdisjoint : Pairwise (Function.onFun Disjoint f)) :
     m (⋃ n, f n) = ∑' n, m (f n) := by
   refine addContent_iUnion_eq_sum_of_tendsto_zero
     hR m hmFinite ?_ hf hUnion hdisjoint
