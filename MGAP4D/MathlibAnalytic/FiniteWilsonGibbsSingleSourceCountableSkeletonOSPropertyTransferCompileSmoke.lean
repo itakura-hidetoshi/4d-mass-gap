@@ -33,6 +33,14 @@ noncomputable def finite_wilson_countableSkeleton_transfer_compile_smoke :
       S.projectiveLimitMeasure :=
   finite_wilson_single_source_countableSkeleton_analyticTransferData R S D
 
+/-- The transferred countable-skeleton construction retains the explicit
+finite Wilson continuum measure. -/
+theorem finite_wilson_countableSkeleton_transfer_measure_compile_smoke :
+    (finite_wilson_countableSkeleton_transfer_compile_smoke R S D)
+        .toContinuumConstruction.limit.continuumMeasure =
+      R.continuumMeasure :=
+  finite_wilson_single_source_countableSkeleton_transfer_measure R S D
+
 /-- Focused compile gate for countable-skeleton OS/Wightman readiness. -/
 theorem finite_wilson_countableSkeleton_ready_compile_smoke :
     (finite_wilson_countableSkeleton_transfer_compile_smoke R S D)
