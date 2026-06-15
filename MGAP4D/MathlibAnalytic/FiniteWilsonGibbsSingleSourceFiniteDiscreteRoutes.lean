@@ -8,6 +8,12 @@ open MeasureTheory
 
 noncomputable section
 
+/-- Generic compile probe for the mathlib finite-set compactness lemma. -/
+theorem finite_set_isCompact_probe
+    {α : Type*} [TopologicalSpace α] {A : Set α} (hA : A.Finite) :
+    IsCompact A :=
+  hA.isCompact
+
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
   (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
   [∀ x, Fintype (R.fieldValue x)]
@@ -58,15 +64,6 @@ theorem finite_wilson_single_source_finiteProduct_set_finite
   letI : Fintype (∀ x : J, R.fieldValue x) :=
     finite_wilson_single_source_finiteProduct_fintype R J
   exact Set.toFinite A
-
-theorem finite_wilson_single_source_finiteProduct_set_compact
-    (J : Finset EuclideanFourSpace)
-    (A : Set (∀ x : J, R.fieldValue x)) :
-    IsCompact A := by
-  letI : DiscreteTopology (∀ x : J, R.fieldValue x) :=
-    finite_wilson_single_source_finiteProduct_discrete R J
-  exact isCompact_iff_finite.mpr
-    (finite_wilson_single_source_finiteProduct_set_finite R J A)
 
 noncomputable def
     FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteStandardBorelLimit :
