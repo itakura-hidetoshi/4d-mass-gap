@@ -59,7 +59,7 @@ theorem finite_wilson_gibbs_single_source_projective
   change μ.map oJ = (μ.map oI).map r
   calc
     μ.map oJ = μ.map (r ∘ oI) := by
-      congr 1
+      apply congrArg (fun f => μ.map f)
       funext A
       exact R.observe_restrict I J hJI A
     _ = (μ.map oI).map r := (Measure.map_map hr hoI).symm
