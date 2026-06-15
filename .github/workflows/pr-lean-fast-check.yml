@@ -112,48 +112,17 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          retry() {
-            local n=0
-            local max=5
-            local delay=10
-            until "$@"; do
-              n=$((n + 1))
-              if [ "$n" -ge "$max" ]; then
-                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
-                return 1
-              fi
-              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
-              sleep "$delay"
-              delay=$((delay * 2))
-            done
-          }
-          retry lean --version
-          retry lake --version
-          echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
-          echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
+          lean --version
+          lake --version
 
-      - name: Run changed Lean fast check
+      - name: Run changed Lean diagnostic
         shell: bash
         run: |
-          set -euxo pipefail
-          echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
-
-      - name: Check Lake cache is saveable
-        id: lake-cache-ready
-        shell: bash
-        run: |
-          if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Save Lake build cache from main only
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true'
-        uses: actions/cache/save@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          set +e
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean.log 2>&1
+          status=$?
+          echo "=== first errors ==="
+          grep -n -m 12 -B 3 -A 14 -E "error: .*\.lean:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|unsolved goals" /tmp/lean.log || true
+          echo "=== tail ==="
+          tail -n 180 /tmp/lean.log || true
+          exit "$status"
