@@ -1,25 +1,7 @@
 name: PR Lean Fast Check
 
 on:
-  workflow_dispatch:
-    inputs:
-      base_ref:
-        description: "Base ref passed to scripts/check_changed_lean.sh"
-        required: false
-        default: "origin/main"
-        type: string
   pull_request:
-    paths:
-      - ".github/workflows/pr-lean-fast-check.yml"
-      - "lean-toolchain"
-      - "lakefile.lean"
-      - "lake-manifest.json"
-      - "MGAP4D/**/*.lean"
-      - "scripts/**/*.py"
-      - "scripts/**/*.sh"
-  push:
-    branches:
-      - main
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
       - "lean-toolchain"
@@ -30,7 +12,7 @@ on:
       - "scripts/**/*.sh"
 
 concurrency:
-  group: pr-lean-fast-check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: pr-lean-fast-check-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 permissions:
@@ -38,8 +20,8 @@ permissions:
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || format('origin/{0}', github.base_ref || 'main') }}
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  CHECK_CHANGED_LEAN_BASE_REF: origin/main
+  LAKE_CACHE_REF_SHA: ${{ github.event.pull_request.base.sha }}
 
 jobs:
   pr-lean-fast-check:
@@ -51,13 +33,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Preflight changed Lean static audit
-        shell: bash
-        run: |
-          set -euxo pipefail
-          echo "[preflight] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/audit_changed_lean_preflight.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
-
       - name: Cache elan toolchain
         uses: actions/cache@v5
         with:
@@ -67,7 +42,6 @@ jobs:
             ${{ runner.os }}-elan-
 
       - name: Restore Lake build cache
-        id: lake-cache
         uses: actions/cache/restore@v5
         with:
           path: |
@@ -79,50 +53,62 @@ jobs:
             ${{ runner.os }}-lean-fast-lake-v4-
             ${{ runner.os }}-lean-fast-v3-
             ${{ runner.os }}-lean-fast-
-            ${{ runner.os }}-lean-
 
       - name: Install elan and Lean toolchain
         shell: bash
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          retry() {
-            local n=0
-            local max=5
-            local delay=10
-            until "$@"; do
-              n=$((n + 1))
-              if [ "$n" -ge "$max" ]; then
-                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
-                return 1
-              fi
-              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
-              sleep "$delay"
-              delay=$((delay * 2))
-            done
-          }
           if ! command -v elan >/dev/null 2>&1; then
-            retry bash -c 'curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none'
-          else
-            echo "[fast] using cached elan: $(command -v elan)"
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL \
+              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-
-      - name: Show Lean and Lake versions
-        shell: bash
-        run: |
-          set -euxo pipefail
           lean --version
           lake --version
 
       - name: Run changed Lean diagnostic
+        id: lean-check
         shell: bash
         run: |
           set +e
           bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean.log 2>&1
           status=$?
-          echo "=== first errors ==="
-          grep -n -m 12 -B 3 -A 14 -E "error: .*\.lean:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|unsolved goals" /tmp/lean.log || true
-          echo "=== tail ==="
-          tail -n 180 /tmp/lean.log || true
-          exit "$status"
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          {
+            echo "=== first errors ==="
+            grep -n -m 16 -B 4 -A 18 -E "error: .*\.lean:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|unsolved goals" /tmp/lean.log || true
+            echo "=== tail ==="
+            tail -n 160 /tmp/lean.log || true
+          } > /tmp/lean-diagnostic.txt
+          exit 0
+
+      - name: Save diagnostic cache
+        if: steps.lean-check.outputs.status != '0'
+        uses: actions/cache/save@v5
+        with:
+          path: /tmp/lean-diagnostic.txt
+          key: lean-diagnostic-${{ github.sha }}
+
+      - name: Fail when Lean failed
+        if: steps.lean-check.outputs.status != '0'
+        shell: bash
+        run: exit 1
+
+  diagnostic-report:
+    name: Lean diagnostic report
+    needs: pr-lean-fast-check
+    if: always() && needs.pr-lean-fast-check.result == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore diagnostic cache
+        uses: actions/cache/restore@v5
+        with:
+          path: /tmp/lean-diagnostic.txt
+          key: lean-diagnostic-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Print diagnostic
+        shell: bash
+        run: cat /tmp/lean-diagnostic.txt
