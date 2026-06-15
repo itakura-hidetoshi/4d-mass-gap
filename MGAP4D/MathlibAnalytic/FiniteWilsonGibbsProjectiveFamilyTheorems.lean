@@ -19,6 +19,8 @@ theorem finite_wilson_gibbs_coherent_projective_restriction
     R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J =
       (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal I).map
         (Finset.restrict₂ hJI) := by
+  change R.finiteMarginal J =
+    (R.finiteMarginal I).map (Finset.restrict₂ hJI)
   exact finite_wilson_gibbs_coherent_pushforwards_projective R I J hJI
 
 /-- A common-refinement Wilson diagram proves the finite-dimensional marginal
@@ -31,6 +33,8 @@ theorem finite_wilson_gibbs_common_refinement_projective_restriction
     R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J =
       (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal I).map
         (Finset.restrict₂ hJI) := by
+  change R.finiteMarginal J =
+    (R.finiteMarginal I).map (Finset.restrict₂ hJI)
   exact finite_wilson_gibbs_common_refinement_projective R I J hJI
 
 /-- Compatible observations of one fixed Wilson Gibbs measure prove the
@@ -44,6 +48,8 @@ theorem finite_wilson_gibbs_single_source_projective_restriction
     R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J =
       (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal I).map
         (Finset.restrict₂ hJI) := by
+  change R.finiteMarginal J =
+    (R.finiteMarginal I).map (Finset.restrict₂ hJI)
   exact finite_wilson_gibbs_single_source_projective R I J hJI
 
 /-- The direct coarse-graining construction supplies a complete Mathlib
@@ -53,6 +59,7 @@ theorem finite_wilson_gibbs_coherent_isProjectiveMeasureFamily
     (R : FiniteWilsonGibbsCoherentProjectiveRealization W) :
     IsProjectiveMeasureFamily
       R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal := by
+  change IsProjectiveMeasureFamily R.finiteMarginal
   exact finite_wilson_gibbs_coherent_pushforwards_projective R
 
 /-- The common-refinement construction supplies a complete Mathlib projective
@@ -62,6 +69,7 @@ theorem finite_wilson_gibbs_common_refinement_isProjectiveMeasureFamily
     (R : FiniteWilsonGibbsCommonRefinementRealization W) :
     IsProjectiveMeasureFamily
       R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal := by
+  change IsProjectiveMeasureFamily R.finiteMarginal
   exact finite_wilson_gibbs_common_refinement_projective R
 
 /-- The single common Gibbs source construction supplies a complete Mathlib
@@ -71,6 +79,7 @@ theorem finite_wilson_gibbs_single_source_isProjectiveMeasureFamily
     (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
     IsProjectiveMeasureFamily
       R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal := by
+  change IsProjectiveMeasureFamily R.finiteMarginal
   exact finite_wilson_gibbs_single_source_projective R
 
 /-- Audit-visible bundle collecting all three proved projective-family routes. -/
