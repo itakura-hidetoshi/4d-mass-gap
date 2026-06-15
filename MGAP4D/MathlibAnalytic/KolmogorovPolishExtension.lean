@@ -91,7 +91,7 @@ theorem projectiveFamilyContent_sigma_additive_of_innerRegular
     {f : ℕ → Set (∀ i, α i)}
     (hf : ∀ i, f i ∈ measurableCylinders α)
     (hfUnion : (⋃ i, f i) ∈ measurableCylinders α)
-    (hdisjoint : Pairwise (Disjoint on f)) :
+    (hdisjoint : Pairwise (Function.onFun Disjoint f)) :
     projectiveFamilyContent hP (⋃ i, f i) =
       ∑' i, projectiveFamilyContent hP (f i) :=
   regular_addContent_iUnion_eq_tsum
@@ -182,7 +182,8 @@ instance kolmogorovProjectiveLimit_isProbabilityMeasure
     [Nonempty ι] [∀ I, IsProbabilityMeasure (P I)]
     (hP : IsProjectiveMeasureFamily P) :
     IsProbabilityMeasure (kolmogorovProjectiveLimit P hP) := by
-  exact (isProjectiveLimit_kolmogorovProjectiveLimit hP).isProbabilityMeasure
+  exact MeasureTheory.IsProjectiveLimit.isProbabilityMeasure
+    (isProjectiveLimit_kolmogorovProjectiveLimit hP)
 
 end Polish
 
