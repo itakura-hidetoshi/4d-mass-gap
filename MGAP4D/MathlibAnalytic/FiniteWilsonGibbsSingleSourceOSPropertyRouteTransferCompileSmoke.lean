@@ -3,8 +3,6 @@ import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceOSPropertyRouteTransf
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory
-
 noncomputable section
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -43,59 +41,33 @@ theorem finite_wilson_compactTight_os_ready_compile_smoke
     (R.compactTightOSContinuumConstruction D).toMeasurePackage.ready :=
   finite_wilson_single_source_compactTight_os_ready R D
 
-variable {κ : Type*} [Countable κ] [Nonempty κ]
-  {β : κ → Type*} [∀ k, MeasurableSpace (β k)]
-  [∀ k, StandardBorelSpace (β k)]
-
-/-- Compile gate for countable-skeleton equality and readiness. -/
-theorem finite_wilson_countableSkeleton_os_ready_compile_smoke
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
-    (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
-    S.projectiveLimitMeasure.continuumMeasure =
-        R.projectiveLimitMeasure.continuumMeasure ∧
-      (R.countableSkeletonOSContinuumConstruction S D).toMeasurePackage.ready :=
-  ⟨finite_wilson_single_source_countableSkeletonLimit_eq_explicitLimit R S,
-    finite_wilson_single_source_countableSkeleton_os_ready R S D⟩
-
-/-- Compile gate for simultaneous readiness of all four continuum routes. -/
-theorem finite_wilson_all_os_routes_ready_compile_smoke
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+/-- Compile gate for simultaneous readiness of all three closed routes. -/
+theorem finite_wilson_three_os_routes_ready_compile_smoke
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (R.explicitOSContinuumConstruction D).toMeasurePackage.ready ∧
       (R.standardBorelOSContinuumConstruction D).toMeasurePackage.ready ∧
-      (R.compactTightOSContinuumConstruction D).toMeasurePackage.ready ∧
-      (R.countableSkeletonOSContinuumConstruction S D).toMeasurePackage.ready :=
-  finite_wilson_single_source_all_os_routes_ready R S D
+      (R.compactTightOSContinuumConstruction D).toMeasurePackage.ready :=
+  finite_wilson_single_source_three_os_routes_ready R D
 
-/-- Compile gate showing that all four analytic constructions use the explicit
+/-- Compile gate showing that all three constructions use the explicit
 `globalObserve` pushforward law. -/
-theorem finite_wilson_all_os_route_measures_eq_explicit_compile_smoke
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+theorem finite_wilson_three_os_route_measures_eq_explicit_compile_smoke
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (R.explicitOSContinuumConstruction D).limit.continuumMeasure =
         R.continuumMeasure ∧
       (R.standardBorelOSContinuumConstruction D).limit.continuumMeasure =
         R.continuumMeasure ∧
       (R.compactTightOSContinuumConstruction D).limit.continuumMeasure =
-        R.continuumMeasure ∧
-      (R.countableSkeletonOSContinuumConstruction S D).limit.continuumMeasure =
         R.continuumMeasure :=
-  finite_wilson_single_source_all_os_route_measures_eq_explicit R S D
+  finite_wilson_single_source_three_os_route_measures_eq_explicit R D
 
-/-- Compile gate for simultaneous agreement of the three independent
-existence routes after OS-property transfer. -/
+/-- Compile gate for agreement of the standard-Borel and compact-tightness
+analytic constructions. -/
 theorem finite_wilson_os_route_measures_agree_compile_smoke
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (R.standardBorelOSContinuumConstruction D).limit.continuumMeasure =
-        (R.compactTightOSContinuumConstruction D).limit.continuumMeasure ∧
-      (R.compactTightOSContinuumConstruction D).limit.continuumMeasure =
-        (R.countableSkeletonOSContinuumConstruction S D).limit.continuumMeasure :=
-  finite_wilson_single_source_os_route_measures_agree R S D
+      (R.compactTightOSContinuumConstruction D).limit.continuumMeasure :=
+  finite_wilson_single_source_os_route_measures_agree R D
 
 end
 
