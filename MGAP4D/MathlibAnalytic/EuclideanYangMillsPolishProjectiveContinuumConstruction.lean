@@ -80,6 +80,17 @@ noncomputable def
     regularity_proof := D.regularity_proof }
 
 theorem
+    EuclideanYangMillsPolishContinuumAnalyticData.continuumMeasure_eq_kolmogorov
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    [∀ x, TopologicalSpace (F.fieldValue x)]
+    [∀ x, BorelSpace (F.fieldValue x)]
+    [∀ x, PolishSpace (F.fieldValue x)]
+    (D : EuclideanYangMillsPolishContinuumAnalyticData F) :
+    D.toContinuumConstruction.limit.continuumMeasure =
+      euclideanYangMillsPolishKolmogorovMeasure F := by
+  rfl
+
+theorem
     EuclideanYangMillsPolishContinuumAnalyticData.projectiveLimit
     {F : EuclideanYangMillsProjectiveCylinderFamily}
     [∀ x, TopologicalSpace (F.fieldValue x)]
@@ -90,6 +101,40 @@ theorem
       D.toContinuumConstruction.limit.continuumMeasure
       F.finiteMarginal :=
   D.toContinuumConstruction.limit.projectiveLimit
+
+theorem
+    EuclideanYangMillsPolishContinuumAnalyticData.continuumProbability
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    [∀ x, TopologicalSpace (F.fieldValue x)]
+    [∀ x, BorelSpace (F.fieldValue x)]
+    [∀ x, PolishSpace (F.fieldValue x)]
+    (D : EuclideanYangMillsPolishContinuumAnalyticData F) :
+    IsProbabilityMeasure
+      D.toContinuumConstruction.limit.continuumMeasure :=
+  euclidean_yang_mills_projective_limit_probability
+    D.toContinuumConstruction.limit
+
+noncomputable def
+    EuclideanYangMillsPolishContinuumAnalyticData.toContinuumCertificate
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    [∀ x, TopologicalSpace (F.fieldValue x)]
+    [∀ x, BorelSpace (F.fieldValue x)]
+    [∀ x, PolishSpace (F.fieldValue x)]
+    (D : EuclideanYangMillsPolishContinuumAnalyticData F) :
+    EuclideanYangMillsProjectiveContinuumMeasureCertificate
+      D.toContinuumConstruction :=
+  euclideanYangMillsProjectiveContinuumMeasureCertificate
+    D.toContinuumConstruction
+
+theorem
+    EuclideanYangMillsPolishContinuumAnalyticData.measurePackageReady
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    [∀ x, TopologicalSpace (F.fieldValue x)]
+    [∀ x, BorelSpace (F.fieldValue x)]
+    [∀ x, PolishSpace (F.fieldValue x)]
+    (D : EuclideanYangMillsPolishContinuumAnalyticData F) :
+    D.toContinuumConstruction.toMeasurePackage.ready :=
+  D.toContinuumCertificate.measurePackageReady
 
 end
 
