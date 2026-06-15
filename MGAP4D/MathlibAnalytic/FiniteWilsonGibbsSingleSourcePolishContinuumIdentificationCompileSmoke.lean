@@ -22,7 +22,7 @@ theorem finite_wilson_single_source_polish_identification_compile_smoke :
   finite_wilson_single_source_polish_measure_eq_globalObserve_map R D
 
 /-- Compile gate for the bundled identification audit packet. -/
-theorem finite_wilson_single_source_polish_identification_certificate_compile_smoke :
+noncomputable def finiteWilsonGibbsSingleSourcePolishIdentificationCertificateCompileSmoke :
     FiniteWilsonGibbsSingleSourcePolishIdentificationCertificate R D :=
   finiteWilsonGibbsSingleSourcePolishIdentificationCertificate R D
 
