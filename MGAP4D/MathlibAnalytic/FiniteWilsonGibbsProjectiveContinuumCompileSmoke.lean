@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsCommonRefinementContinuumMeasureCertificate
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsProjectiveContinuumMeasureCertificate
-import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceProjectiveMarginals
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceContinuumMeasureCertificate
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -60,8 +60,8 @@ theorem finite_wilson_common_refinement_marginal_compile_smoke
       (W.system (R.scale J)).gibbsMeasure.map (R.observe J) :=
   finite_wilson_common_refinement_continuum_recovers_marginal K J
 
-/-- Compile gate: the continuum measure package reaches the OS/Wightman
-readiness interface. -/
+/-- Compile gate: the common-refinement continuum measure package reaches the
+OS/Wightman readiness interface. -/
 theorem finite_wilson_common_refinement_ready_compile_smoke
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     {R : FiniteWilsonGibbsCommonRefinementRealization W}
@@ -70,6 +70,41 @@ theorem finite_wilson_common_refinement_ready_compile_smoke
     (K : FiniteWilsonGibbsCommonRefinementContinuumMeasureCertificate R C) :
     C.toMeasurePackage.ready :=
   finite_wilson_common_refinement_continuum_measure_package_ready K
+
+/-- Compile gate: the single-source continuum certificate exposes an actual
+continuum probability measure. -/
+theorem finite_wilson_single_source_probability_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {R : FiniteWilsonGibbsSingleSourceProjectiveRealization W}
+    {C : EuclideanYangMillsProjectiveContinuumMeasureConstruction
+      R.toProjectiveRealization.toProjectiveCylinderFamily}
+    (K : FiniteWilsonGibbsSingleSourceContinuumMeasureCertificate R C) :
+    IsProbabilityMeasure C.limit.continuumMeasure :=
+  finite_wilson_single_source_continuum_probability K
+
+/-- Compile gate: every continuum finite marginal is the pushforward of the
+fixed Wilson Gibbs source. -/
+theorem finite_wilson_single_source_marginal_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {R : FiniteWilsonGibbsSingleSourceProjectiveRealization W}
+    {C : EuclideanYangMillsProjectiveContinuumMeasureConstruction
+      R.toProjectiveRealization.toProjectiveCylinderFamily}
+    (K : FiniteWilsonGibbsSingleSourceContinuumMeasureCertificate R C)
+    (J : Finset EuclideanFourSpace) :
+    C.limit.continuumMeasure.map J.restrict =
+      (W.system R.sourceScale).gibbsMeasure.map (R.observe J) :=
+  finite_wilson_single_source_continuum_recovers_marginal K J
+
+/-- Compile gate: the single-source continuum measure package reaches the
+OS/Wightman readiness interface. -/
+theorem finite_wilson_single_source_ready_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {R : FiniteWilsonGibbsSingleSourceProjectiveRealization W}
+    {C : EuclideanYangMillsProjectiveContinuumMeasureConstruction
+      R.toProjectiveRealization.toProjectiveCylinderFamily}
+    (K : FiniteWilsonGibbsSingleSourceContinuumMeasureCertificate R C) :
+    C.toMeasurePackage.ready :=
+  finite_wilson_single_source_continuum_measure_package_ready K
 
 end
 
