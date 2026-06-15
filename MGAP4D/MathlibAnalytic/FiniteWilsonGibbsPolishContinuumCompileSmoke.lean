@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsCommonRefinementPolishContinuumConstruction
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourcePolishContinuumTheorems
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourcePolishContinuumIdentificationCompileSmoke
 
 namespace MGAP4D
 namespace MathlibAnalytic
