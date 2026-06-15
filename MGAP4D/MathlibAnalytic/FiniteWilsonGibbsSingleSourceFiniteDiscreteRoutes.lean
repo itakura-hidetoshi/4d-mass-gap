@@ -72,17 +72,16 @@ theorem finite_wilson_single_source_finiteProduct_set_closed
     IsClosed A :=
   (finite_wilson_single_source_finiteProduct_set_finite R J A).isClosed
 
-/-- Every finite-dimensional Wilson marginal is compact inner regular. The
-measurable set itself is the compact closed inner approximation, with no loss. -/
+/-- Every finite-dimensional Wilson marginal is compact inner regular. -/
 theorem finite_wilson_single_source_finiteMarginal_innerRegular
     (J : Finset EuclideanFourSpace) :
     (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J).InnerRegularWRT
-      (fun s => IsCompact s ∧ IsClosed s) MeasurableSet :=
-  fun {A} _ r hr =>
-    ⟨A, subset_rfl,
-      ⟨finite_wilson_single_source_finiteProduct_set_compact R J A,
-        finite_wilson_single_source_finiteProduct_set_closed R J A⟩,
-      hr⟩
+      (fun s => IsCompact s ∧ IsClosed s) MeasurableSet := by
+  letI : IsProbabilityMeasure
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
+    R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginalProbability J
+  exact innerRegular_isCompact_isClosed_measurableSet_of_finite
+    (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J)
 
 /-- Standard-Borel projective limit generated from finite discrete Wilson field
 values. -/
