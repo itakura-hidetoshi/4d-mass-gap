@@ -1,0 +1,10 @@
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsPolishProjectiveContinuumConstructionFixed
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+abbrev EuclideanYangMillsPolishContinuumAnalyticDataReplacement :=
+  EuclideanYangMillsPolishContinuumAnalyticDataFixed
+
+end MathlibAnalytic
+end MGAP4D
