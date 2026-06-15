@@ -7,10 +7,10 @@ noncomputable section
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
   (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
-  [∀ x, Fintype (R.fieldValue x)]
+  [∀ x, Countable (R.fieldValue x)]
   [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
 
-/-- Focused compile gate for the finite-discrete standard-Borel instance. -/
+/-- Focused compile gate for the countable-discrete standard-Borel instance. -/
 theorem finiteDiscrete_fieldValue_standardBorel_compile_smoke
     (x : EuclideanFourSpace) :
     StandardBorelSpace (R.fieldValue x) :=
