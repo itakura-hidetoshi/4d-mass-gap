@@ -90,7 +90,7 @@ theorem finite_wilson_gibbs_coherent_pushforwards_projective
       rw [R.gibbsMeasure_map_coarseGrain I J hJI]
     _ = μI.map (oJ ∘ c) := Measure.map_map hoJ hc
     _ = μI.map (r ∘ oI) := by
-      congr 1
+      apply congrArg (fun f => μI.map f)
       funext A
       exact R.observe_coarseGrain I J hJI A
     _ = (μI.map oI).map r := (Measure.map_map hr hoI).symm
