@@ -19,8 +19,6 @@ section InnerRegular
 variable [∀ i, TopologicalSpace (α i)] [∀ i, OpensMeasurableSpace (α i)]
   [∀ i, SecondCountableTopology (α i)] [∀ I, IsFiniteMeasure (P I)]
 
-/-- Inner regularity gives a compact subset of a finite-dimensional measurable
-set whose complement inside the set has arbitrarily small mass. -/
 theorem kolmogorov_exists_compact
     (hPinner : ∀ J,
       (P J).InnerRegularWRT (fun s => IsCompact s ∧ IsClosed s) MeasurableSet)
@@ -42,8 +40,6 @@ theorem kolmogorov_exists_compact
 local notation "Js" => measurableCylinders.finset
 local notation "As" => measurableCylinders.set
 
-/-- The projective cylinder content is inner regular with respect to closed
-compact cylinders whenever every finite-dimensional law is inner regular. -/
 theorem innerRegular_projectiveFamilyContent
     (hP : IsProjectiveMeasureFamily P)
     (hPinner : ∀ J,
@@ -74,16 +70,13 @@ theorem innerRegular_projectiveFamilyContent
         exact measurableCylinders.eq_cylinder hs
       rw [heq, diff_cylinder_same]
       refine (le_of_eq ?_).trans hKmass
-      have hmeas : MeasurableSet (As hs \ K') :=
-        MeasurableSet.diff (measurableCylinders.measurableSet hs)
-          hKclosed.measurableSet
-      exact projectiveFamilyContent_cylinder hP hmeas
+      exact projectiveFamilyContent_cylinder hP
+        (MeasurableSet.diff (measurableCylinders.measurableSet hs)
+          hKclosed.measurableSet)
   · have : IsEmpty (∀ i, α i) := isEmpty_pi.mpr (by simpa using hα)
     exact ⟨∅, empty_mem_closedCompactCylinders α, empty_subset _,
       by simp [eq_empty_of_isEmpty s]⟩
 
-/-- Inner regularity of all finite-dimensional laws makes the projective
-cylinder content countably additive on disjoint cylinder sequences. -/
 theorem projectiveFamilyContent_sigma_additive_of_innerRegular
     (hP : IsProjectiveMeasureFamily P)
     (hPinner : ∀ J,
@@ -100,12 +93,10 @@ theorem projectiveFamilyContent_sigma_additive_of_innerRegular
     (fun _ _ => projectiveFamilyContent_ne_top hP)
     isCompactSystem_closedCompactCylinders
     (fun _ => mem_measurableCylinders_of_mem_closedCompactCylinders)
-    (fun A hA ε hε =>
+    (fun _ hA ε hε =>
       innerRegular_projectiveFamilyContent hP hPinner hA ε hε)
     hf hfUnion hdisjoint
 
-/-- Inner regularity implies sigma-subadditivity of the projective cylinder
-content. -/
 theorem projectiveFamilyContent_sigmaSubadditive_of_innerRegular
     (hP : IsProjectiveMeasureFamily P)
     (hPinner : ∀ J,
@@ -124,8 +115,6 @@ section Polish
 variable [∀ i, TopologicalSpace (α i)] [∀ i, BorelSpace (α i)]
   [∀ i, PolishSpace (α i)] [∀ I, IsFiniteMeasure (P I)]
 
-/-- On Polish coordinate spaces, finite-dimensional finite measures are tight,
-so the projective cylinder content is sigma-subadditive. -/
 theorem projectiveFamilyContent_sigmaSubadditive_polish
     (hP : IsProjectiveMeasureFamily P) :
     (projectiveFamilyContent hP).IsSigmaSubadditive := by
@@ -133,8 +122,6 @@ theorem projectiveFamilyContent_sigmaSubadditive_polish
   intro J
   exact innerRegular_isCompact_isClosed_measurableSet_of_finite (P J)
 
-/-- General Kolmogorov extension measure for a projective family on Polish
-coordinate spaces. -/
 noncomputable def kolmogorovProjectiveLimit
     (P : ∀ J : Finset ι, Measure (∀ j : J, α j))
     [∀ I, IsFiniteMeasure (P I)]
@@ -145,7 +132,6 @@ noncomputable def kolmogorovProjectiveLimit
     generateFrom_measurableCylinders.symm.le
     (projectiveFamilyContent_sigmaSubadditive_polish hP)
 
-/-- Kolmogorov extension theorem on arbitrary products of Polish spaces. -/
 theorem isProjectiveLimit_kolmogorovProjectiveLimit
     (hP : IsProjectiveMeasureFamily P) :
     IsProjectiveLimit (kolmogorovProjectiveLimit P hP) P := by
@@ -155,29 +141,25 @@ theorem isProjectiveLimit_kolmogorovProjectiveLimit
   · have hmem : J.restrict ⁻¹' s ∈ measurableCylinders α :=
       (mem_measurableCylinders _).mpr ⟨J, s, hs, rfl⟩
     rw [kolmogorovProjectiveLimit,
-      AddContent.measure_eq _ _ _ _ hmem,
-      projectiveFamilyContent_congr hP _ rfl hs]
-    exact generateFrom_measurableCylinders.symm
+      AddContent.measure_eq _ _ _ _ hmem]
+    · simpa only [cylinder] using
+        (projectiveFamilyContent_cylinder hP hs)
+    · exact generateFrom_measurableCylinders.symm
   · exact J.measurable_restrict
   · exact hs
 
-/-- Existence form of the general Kolmogorov extension theorem. -/
 theorem kolmogorov_projective_limit_exists
     (hP : IsProjectiveMeasureFamily P) :
     ∃ μ : Measure (∀ i, α i), IsProjectiveLimit μ P :=
   ⟨kolmogorovProjectiveLimit P hP,
     isProjectiveLimit_kolmogorovProjectiveLimit hP⟩
 
-/-- The general Kolmogorov extension is finite whenever all finite-dimensional
-laws are finite. -/
 instance kolmogorovProjectiveLimit_isFiniteMeasure
     (hP : IsProjectiveMeasureFamily P) :
     IsFiniteMeasure (kolmogorovProjectiveLimit P hP) :=
   IsProjectiveLimit.isFiniteMeasure
     (isProjectiveLimit_kolmogorovProjectiveLimit hP)
 
-/-- For projective probability laws, the Kolmogorov extension is a probability
-measure. -/
 instance kolmogorovProjectiveLimit_isProbabilityMeasure
     [Nonempty ι] [∀ I, IsProbabilityMeasure (P I)]
     (hP : IsProjectiveMeasureFamily P) :
