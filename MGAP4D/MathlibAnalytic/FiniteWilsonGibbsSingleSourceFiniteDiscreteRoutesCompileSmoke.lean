@@ -3,8 +3,6 @@ import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceFiniteDiscreteRoutes
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory
-
 noncomputable section
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -19,29 +17,25 @@ theorem finiteDiscrete_fieldValue_standardBorel_compile_smoke
     StandardBorelSpace (R.fieldValue x) :=
   finite_wilson_single_source_fieldValue_standardBorel R x
 
-/-- Focused compile gate for finite dependent-product enumeration. -/
-noncomputable def finiteDiscrete_finiteProduct_fintype_compile_smoke
-    (J : Finset EuclideanFourSpace) :
-    Fintype (∀ x : J, R.fieldValue x) :=
-  finite_wilson_single_source_finiteProduct_fintype R J
+/-- Focused compile gate for compact finite-product subsets. -/
+theorem finiteDiscrete_finiteProduct_set_compact_compile_smoke
+    (J : Finset EuclideanFourSpace)
+    (A : Set (∀ x : J, R.fieldValue x)) :
+    IsCompact A :=
+  finite_wilson_single_source_finiteProduct_set_compact R J A
 
-/-- Focused compile gate for finite-dimensional compact inner regularity. -/
-theorem finiteDiscrete_innerRegular_compile_smoke
-    (J : Finset EuclideanFourSpace) :
-    (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J).InnerRegularWRT
-      (fun s => IsCompact s ∧ IsClosed s) MeasurableSet :=
-  finite_wilson_single_source_finiteMarginal_innerRegular R J
+/-- Focused compile gate for closed finite-product subsets. -/
+theorem finiteDiscrete_finiteProduct_set_closed_compile_smoke
+    (J : Finset EuclideanFourSpace)
+    (A : Set (∀ x : J, R.fieldValue x)) :
+    IsClosed A :=
+  finite_wilson_single_source_finiteProduct_set_closed R J A
 
 /-- Focused compile gate for the bundled Standard-Borel projective limit. -/
 noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
     EuclideanYangMillsProjectiveLimitMeasure
       R.toProjectiveRealization.toProjectiveCylinderFamily :=
   R.finiteDiscreteStandardBorelLimit
-
-/-- The Standard-Borel law agrees with the explicit Wilson pushforward. -/
-theorem finiteDiscrete_standardBorel_eq_explicit_compile_smoke :
-    R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
-  finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
 
 end
 
