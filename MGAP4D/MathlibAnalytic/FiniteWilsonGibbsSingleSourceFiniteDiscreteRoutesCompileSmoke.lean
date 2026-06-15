@@ -24,13 +24,6 @@ theorem finiteDiscrete_finiteProduct_set_compact_compile_smoke
     IsCompact A :=
   finite_wilson_single_source_finiteProduct_set_compact R J A
 
-/-- Focused compile gate for closed finite-product subsets. -/
-theorem finiteDiscrete_finiteProduct_set_closed_compile_smoke
-    (J : Finset EuclideanFourSpace)
-    (A : Set (∀ x : J, R.fieldValue x)) :
-    IsClosed A :=
-  finite_wilson_single_source_finiteProduct_set_closed R J A
-
 /-- Focused compile gate for the bundled Standard-Borel projective limit. -/
 noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
     EuclideanYangMillsProjectiveLimitMeasure
