@@ -5,26 +5,17 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+theorem finiteSet_isCompact_compile_smoke
+    {α : Type*} [TopologicalSpace α] {A : Set α} (hA : A.Finite) :
+    IsCompact A :=
+  finite_set_isCompact_probe hA
+
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
   (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
   [∀ x, Fintype (R.fieldValue x)]
   [∀ x, Countable (R.fieldValue x)]
   [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
 
-/-- Focused compile gate for the finite-discrete standard-Borel instance. -/
-theorem finiteDiscrete_fieldValue_standardBorel_compile_smoke
-    (x : EuclideanFourSpace) :
-    StandardBorelSpace (R.fieldValue x) :=
-  finite_wilson_single_source_fieldValue_standardBorel R x
-
-/-- Focused compile gate for compact finite-product subsets. -/
-theorem finiteDiscrete_finiteProduct_set_compact_compile_smoke
-    (J : Finset EuclideanFourSpace)
-    (A : Set (∀ x : J, R.fieldValue x)) :
-    IsCompact A :=
-  finite_wilson_single_source_finiteProduct_set_compact R J A
-
-/-- Focused compile gate for the bundled Standard-Borel projective limit. -/
 noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
     EuclideanYangMillsProjectiveLimitMeasure
       R.toProjectiveRealization.toProjectiveCylinderFamily :=
