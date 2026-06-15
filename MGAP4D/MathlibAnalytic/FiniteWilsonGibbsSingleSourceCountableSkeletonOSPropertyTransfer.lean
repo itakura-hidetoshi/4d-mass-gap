@@ -60,9 +60,12 @@ theorem finite_wilson_single_source_countableSkeleton_transfer_ready
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (finite_wilson_single_source_countableSkeleton_analyticTransferData R S D)
         .toContinuumConstruction.toMeasurePackage.ready := by
-  simpa only [finite_wilson_single_source_countableSkeleton_analyticTransferData]
-    using euclidean_yang_mills_projective_limit_rebase_ready D
-      (finite_wilson_single_source_countableSkeleton_eq_explicit R S)
+  change
+    (D.rebaseLimit
+      (finite_wilson_single_source_countableSkeleton_eq_explicit R S))
+      .toContinuumConstruction.toMeasurePackage.ready
+  exact euclidean_yang_mills_projective_limit_rebase_ready D
+    (finite_wilson_single_source_countableSkeleton_eq_explicit R S)
 
 /-- Explicit common-source, standard-Borel, compact-tightness, and countable
 skeleton realizations are simultaneously OS/Wightman ready from one analytic
@@ -75,11 +78,14 @@ theorem finite_wilson_single_source_four_route_transfer_ready
       (R.standardBorelOSContinuumConstruction D).toMeasurePackage.ready ∧
       (R.compactTightOSContinuumConstruction D).toMeasurePackage.ready ∧
       (finite_wilson_single_source_countableSkeleton_analyticTransferData R S D)
-        .toContinuumConstruction.toMeasurePackage.ready :=
-  ⟨finite_wilson_single_source_explicit_os_ready R D,
-    finite_wilson_single_source_standardBorel_os_ready R D,
-    finite_wilson_single_source_compactTight_os_ready R D,
-    finite_wilson_single_source_countableSkeleton_transfer_ready R S D⟩
+        .toContinuumConstruction.toMeasurePackage.ready := by
+  constructor
+  · exact finite_wilson_single_source_explicit_os_ready R D
+  constructor
+  · exact finite_wilson_single_source_standardBorel_os_ready R D
+  constructor
+  · exact finite_wilson_single_source_compactTight_os_ready R D
+  · exact finite_wilson_single_source_countableSkeleton_transfer_ready R S D
 
 /-- All four theorem-generated analytic constructions have exactly the explicit
 common-source Wilson continuum measure. -/
@@ -94,11 +100,14 @@ theorem finite_wilson_single_source_four_route_transfer_measures
       (R.compactTightOSContinuumConstruction D).limit.continuumMeasure =
         R.continuumMeasure ∧
       (finite_wilson_single_source_countableSkeleton_analyticTransferData R S D)
-        .toContinuumConstruction.limit.continuumMeasure = R.continuumMeasure :=
-  ⟨rfl,
-    finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R,
-    finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R,
-    finite_wilson_single_source_countableSkeleton_transfer_measure R S D⟩
+        .toContinuumConstruction.limit.continuumMeasure = R.continuumMeasure := by
+  constructor
+  · rfl
+  constructor
+  · exact finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
+  constructor
+  · exact finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R
+  · exact finite_wilson_single_source_countableSkeleton_transfer_measure R S D
 
 end
 
