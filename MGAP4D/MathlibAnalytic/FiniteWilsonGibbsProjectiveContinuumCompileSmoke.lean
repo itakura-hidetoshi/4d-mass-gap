@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsCommonRefinementContinuumMeasureCertificate
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsProjectiveContinuumMeasureCertificate
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceProjectiveMarginals
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -25,6 +26,15 @@ theorem finite_wilson_common_refinement_projective_compile_smoke
     IsProjectiveMeasureFamily
       R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal :=
   finite_wilson_gibbs_common_refinement_projective R
+
+/-- Compile gate: compatible observations of one fixed Wilson Gibbs measure
+already form a typed projective family. -/
+theorem finite_wilson_single_source_projective_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    IsProjectiveMeasureFamily
+      R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal :=
+  finite_wilson_gibbs_single_source_projective R
 
 /-- Compile gate: the common-refinement continuum certificate exposes the
 actual continuum probability measure. -/
