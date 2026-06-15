@@ -40,6 +40,13 @@ local instance finiteDiscreteFieldValuePolishSpace
     (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) := by
   infer_instance
 
+/-- Install the product topology before statements mentioning compact or closed
+subsets of a finite Wilson carrier are elaborated. -/
+local instance finiteDiscreteFiniteProductTopologicalSpace
+    (J : Finset EuclideanFourSpace) :
+    TopologicalSpace (∀ x : J, R.fieldValue x) := by
+  infer_instance
+
 noncomputable def finite_wilson_single_source_finiteProduct_fintype
     (J : Finset EuclideanFourSpace) :
     Fintype (∀ x : J, R.fieldValue x) := by
