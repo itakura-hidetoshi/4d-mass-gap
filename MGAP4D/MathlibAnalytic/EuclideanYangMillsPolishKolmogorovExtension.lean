@@ -54,7 +54,8 @@ theorem euclidean_yang_mills_polish_kolmogorov_probability :
     IsProbabilityMeasure (euclideanYangMillsPolishKolmogorovMeasure F) := by
   letI : ∀ J, IsProbabilityMeasure (F.finiteMarginal J) :=
     F.finiteMarginalProbability
-  exact euclidean_yang_mills_polish_kolmogorov_isProjectiveLimit.isProbabilityMeasure
+  exact MeasureTheory.IsProjectiveLimit.isProbabilityMeasure
+    euclidean_yang_mills_polish_kolmogorov_isProjectiveLimit
 
 /-- Every measurable cylinder has exactly the prescribed finite-dimensional
 probability. -/
