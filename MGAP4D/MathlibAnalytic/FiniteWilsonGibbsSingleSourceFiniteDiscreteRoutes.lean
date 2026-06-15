@@ -40,6 +40,29 @@ local instance finiteDiscreteFieldValuePolishSpace
     (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) := by
   infer_instance
 
+/-- Bridge the concrete Wilson field topology across the projective-family
+record projections. -/
+local instance finiteDiscreteProjectiveFieldValueTopologicalSpace
+    (x : EuclideanFourSpace) :
+    TopologicalSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  change TopologicalSpace (R.fieldValue x)
+  infer_instance
+
+local instance finiteDiscreteProjectiveFieldValueOpensMeasurableSpace
+    (x : EuclideanFourSpace) :
+    OpensMeasurableSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  change OpensMeasurableSpace (R.fieldValue x)
+  infer_instance
+
+local instance finiteDiscreteProjectiveFieldValueSecondCountableTopology
+    (x : EuclideanFourSpace) :
+    SecondCountableTopology
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  change SecondCountableTopology (R.fieldValue x)
+  infer_instance
+
 local instance finiteDiscreteFiniteProductTopologicalSpace
     (J : Finset EuclideanFourSpace) :
     TopologicalSpace (∀ x : J, R.fieldValue x) := by
@@ -129,6 +152,8 @@ theorem finite_wilson_single_source_finiteMarginal_innerRegular
   exact innerRegular_isCompact_isClosed_measurableSet_of_finite
     (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J)
 
+/-- Standard-Borel projective limit generated from finite discrete Wilson field
+values. -/
 noncomputable def
     FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteStandardBorelLimit :
     EuclideanYangMillsProjectiveLimitMeasure
@@ -137,11 +162,46 @@ noncomputable def
     R.toProjectiveRealization.toProjectiveCylinderFamily
     R.fieldValueStandardBorelFamily
 
+/-- The Standard-Borel construction is exactly the explicit common-source
+pushforward continuum law. -/
 theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
   finite_wilson_gibbs_single_source_constructed_unique R
     R.finiteDiscreteStandardBorelLimit.continuumMeasure
     R.finiteDiscreteStandardBorelLimit.projectiveLimit
+
+/-- Compact-tightness data obtained directly from finite-dimensional inner
+regularity. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightnessData :
+    EuclideanYangMillsCompactTightnessData
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  { innerRegular := finite_wilson_single_source_finiteMarginal_innerRegular R }
+
+/-- Compact-tightness projective limit generated from the same finite Wilson
+marginals. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightLimit :
+    EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  euclideanYangMillsCompactTightProjectiveLimitMeasure
+    R.toProjectiveRealization.toProjectiveCylinderFamily
+    R.finiteDiscreteCompactTightnessData
+
+/-- The compact-tightness construction is exactly the explicit common-source
+pushforward continuum law. -/
+theorem finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit :
+    R.finiteDiscreteCompactTightLimit.continuumMeasure = R.continuumMeasure :=
+  finite_wilson_gibbs_single_source_constructed_unique R
+    R.finiteDiscreteCompactTightLimit.continuumMeasure
+    R.finiteDiscreteCompactTightLimit.projectiveLimit
+
+/-- The Standard-Borel and compact-tightness continuum constructions coincide. -/
+theorem finite_wilson_single_source_finiteDiscrete_routes_agree :
+    R.finiteDiscreteStandardBorelLimit.continuumMeasure =
+      R.finiteDiscreteCompactTightLimit.continuumMeasure := by
+  rw [finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R,
+    finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R]
 
 end
 
