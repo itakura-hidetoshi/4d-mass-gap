@@ -103,8 +103,7 @@ theorem
     {L : EuclideanYangMillsProjectiveLimitMeasure F}
     (C : EuclideanYangMillsProjectiveLimitAnalyticTransferCore F L)
     (D : FiniteWilsonOSAutomaticReflectionLimitData W) :
-    (C.withAutomaticWilsonReflection D).reflectionLimit.
-      ContinuumReflectionPositive := by
+    (C.withAutomaticWilsonReflection D).reflectionLimit.ContinuumReflectionPositive := by
   change D.toReflectionPositivityLimitData.ContinuumReflectionPositive
   exact euclidean_yang_mills_reflection_positivity_passes_to_limit
     D.toReflectionPositivityLimitData
