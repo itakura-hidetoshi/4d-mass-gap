@@ -25,6 +25,26 @@ noncomputable def
     ∀ x, StandardBorelSpace (R.fieldValue x) :=
   fun x => finite_wilson_single_source_fieldValue_standardBorel R x
 
+/-- A fixed compatible Polish realization of each countable discrete coordinate. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.fieldValueUpgrade
+    (x : EuclideanFourSpace) :
+    UpgradedStandardBorel (R.fieldValue x) :=
+  @upgradeStandardBorel (R.fieldValue x) _
+    (R.fieldValueStandardBorelFamily x)
+
+local instance finiteDiscreteFieldValueTopologicalSpace
+    (x : EuclideanFourSpace) : TopologicalSpace (R.fieldValue x) :=
+  (R.fieldValueUpgrade x).toTopologicalSpace
+
+local instance finiteDiscreteFieldValueBorelSpace
+    (x : EuclideanFourSpace) : BorelSpace (R.fieldValue x) :=
+  (R.fieldValueUpgrade x).toBorelSpace
+
+local instance finiteDiscreteFieldValuePolishSpace
+    (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) :=
+  (R.fieldValueUpgrade x).toPolishSpace
+
 /-- Standard-Borel projective limit generated automatically from countable
 discrete Wilson field values. -/
 noncomputable def
@@ -43,26 +63,29 @@ theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure
     R.finiteDiscreteStandardBorelLimit.projectiveLimit
 
-/-- Compact-inner-regularity is automatic after equipping each countable
-discrete coordinate with its compatible upgraded Polish topology. -/
+/-- Compact-inner-regularity data for every finite Wilson marginal. -/
 noncomputable def
-    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightLimit :
-    EuclideanYangMillsProjectiveLimitMeasure
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightnessData :
+    EuclideanYangMillsCompactTightnessData
       R.toProjectiveRealization.toProjectiveCylinderFamily := by
-  letI : ∀ x, StandardBorelSpace (R.fieldValue x) :=
-    R.fieldValueStandardBorelFamily
-  letI := fun x => upgradeStandardBorel (R.fieldValue x)
   letI : ∀ J,
       IsProbabilityMeasure
         (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
     R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginalProbability
-  let T : EuclideanYangMillsCompactTightnessData
-      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  exact
     { innerRegular := fun J =>
         innerRegular_isCompact_isClosed_measurableSet_of_finite
           (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) }
-  exact euclideanYangMillsCompactTightProjectiveLimitMeasure
-    R.toProjectiveRealization.toProjectiveCylinderFamily T
+
+/-- Compact-tightness projective limit generated from finite discrete Wilson
+marginals. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightLimit :
+    EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  euclideanYangMillsCompactTightProjectiveLimitMeasure
+    R.toProjectiveRealization.toProjectiveCylinderFamily
+    R.finiteDiscreteCompactTightnessData
 
 end
 
