@@ -22,6 +22,11 @@ noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
       R.toProjectiveRealization.toProjectiveCylinderFamily :=
   R.finiteDiscreteStandardBorelLimit
 
+/-- The Standard-Borel law agrees with the explicit Wilson pushforward. -/
+theorem finiteDiscrete_standardBorel_eq_explicit_compile_smoke :
+    R.finiteDiscreteStandardBorelLimit.continuumMeasure = R.continuumMeasure :=
+  finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
+
 end
 
 end MathlibAnalytic
