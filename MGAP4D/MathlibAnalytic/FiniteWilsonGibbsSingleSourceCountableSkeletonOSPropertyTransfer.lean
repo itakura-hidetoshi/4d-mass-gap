@@ -28,6 +28,45 @@ theorem finite_wilson_single_source_countableSkeleton_eq_explicit
   exact finite_wilson_gibbs_single_source_constructed_unique R
     S.continuumMeasure S.isProjectiveLimit
 
+/-- Transport the four theorem-generated OS analytic properties from the
+explicit common-source Wilson law to an equal countable-skeleton realization. -/
+noncomputable def finite_wilson_single_source_countableSkeleton_analyticTransferData
+    (S : EuclideanYangMillsCountableSkeletonData
+      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+    (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
+    EuclideanYangMillsProjectiveLimitAnalyticTransferData
+      R.toProjectiveRealization.toProjectiveCylinderFamily
+      S.projectiveLimitMeasure :=
+  D.rebaseLimit (finite_wilson_single_source_countableSkeleton_eq_explicit R S)
+
+/-- The transferred countable-skeleton construction uses exactly the explicit
+finite Wilson continuum measure. -/
+theorem finite_wilson_single_source_countableSkeleton_transfer_measure
+    (S : EuclideanYangMillsCountableSkeletonData
+      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+    (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
+    (finite_wilson_single_source_countableSkeleton_analyticTransferData R S D)
+        .toContinuumConstruction.limit.continuumMeasure =
+      R.continuumMeasure := by
+  change S.continuumMeasure = R.continuumMeasure
+  exact finite_wilson_gibbs_single_source_constructed_unique R
+    S.continuumMeasure S.isProjectiveLimit
+
+/-- Reflection positivity, Euclidean invariance, clustering, and regularity all
+remain available after transport to the countable-skeleton projective limit. -/
+theorem finite_wilson_single_source_countableSkeleton_transfer_ready
+    (S : EuclideanYangMillsCountableSkeletonData
+      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+    (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
+    (finite_wilson_single_source_countableSkeleton_analyticTransferData R S D)
+        .toContinuumConstruction.toMeasurePackage.ready := by
+  change
+    (D.rebaseLimit
+      (finite_wilson_single_source_countableSkeleton_eq_explicit R S))
+      .toContinuumConstruction.toMeasurePackage.ready
+  exact euclidean_yang_mills_projective_limit_rebase_ready D
+    (finite_wilson_single_source_countableSkeleton_eq_explicit R S)
+
 end
 
 end MathlibAnalytic
