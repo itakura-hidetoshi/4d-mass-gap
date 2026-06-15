@@ -25,25 +25,24 @@ noncomputable def
     ∀ x, StandardBorelSpace (R.fieldValue x) :=
   fun x => finite_wilson_single_source_fieldValue_standardBorel R x
 
-/-- A fixed compatible Polish realization of each countable discrete coordinate. -/
-noncomputable def
-    FiniteWilsonGibbsSingleSourceProjectiveRealization.fieldValueUpgrade
-    (x : EuclideanFourSpace) :
-    UpgradedStandardBorel (R.fieldValue x) :=
-  @upgradeStandardBorel (R.fieldValue x) _
-    (R.fieldValueStandardBorelFamily x)
-
+/-- Use the literal discrete topology on every countable discrete Wilson
+field-value carrier.  This keeps the Borel sigma-algebra definitionally aligned
+with the existing discrete measurable space. -/
 local instance finiteDiscreteFieldValueTopologicalSpace
     (x : EuclideanFourSpace) : TopologicalSpace (R.fieldValue x) :=
-  (R.fieldValueUpgrade x).toTopologicalSpace
+  ⊥
+
+local instance finiteDiscreteFieldValueDiscreteTopology
+    (x : EuclideanFourSpace) : DiscreteTopology (R.fieldValue x) :=
+  ⟨rfl⟩
 
 local instance finiteDiscreteFieldValueBorelSpace
-    (x : EuclideanFourSpace) : BorelSpace (R.fieldValue x) :=
-  (R.fieldValueUpgrade x).toBorelSpace
+    (x : EuclideanFourSpace) : BorelSpace (R.fieldValue x) := by
+  infer_instance
 
 local instance finiteDiscreteFieldValuePolishSpace
-    (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) :=
-  (R.fieldValueUpgrade x).toPolishSpace
+    (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) := by
+  infer_instance
 
 /-- Standard-Borel projective limit generated automatically from countable
 discrete Wilson field values. -/
