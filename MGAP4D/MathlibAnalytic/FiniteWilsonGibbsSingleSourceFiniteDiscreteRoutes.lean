@@ -59,6 +59,16 @@ theorem finite_wilson_single_source_finiteProduct_discrete
     DiscreteTopology (∀ x : J, R.fieldValue x) := by
   infer_instance
 
+/-- The finite dependent product is completely pseudometrizable. -/
+theorem finite_wilson_single_source_finiteProduct_completelyPseudoMetrizable
+    (J : Finset EuclideanFourSpace) :
+    IsCompletelyPseudoMetrizableSpace (∀ x : J, R.fieldValue x) := by
+  letI : DiscreteTopology (∀ x : J, R.fieldValue x) :=
+    finite_wilson_single_source_finiteProduct_discrete R J
+  letI : IsCompletelyMetrizableSpace (∀ x : J, R.fieldValue x) :=
+    TopologicalSpace.IsCompletelyMetrizableSpace.discrete
+  exact TopologicalSpace.IsCompletelyMetrizableSpace.toIsCompletelyPseudoMetrizableSpace
+
 /-- Standard-Borel projective limit generated automatically from countable
 discrete Wilson field values. -/
 noncomputable def
