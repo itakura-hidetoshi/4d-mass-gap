@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsPolishKolmogorovExtension
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsProjectiveFamilyTheorems
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceProjectiveLimitExistence
 
 namespace MGAP4D
 namespace MathlibAnalytic
