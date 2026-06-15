@@ -87,6 +87,21 @@ theorem finite_wilson_single_source_finiteMarginal_isFinite
     R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginalProbability J
   infer_instance
 
+/-- Every Wilson finite marginal is compact inner regular. -/
+theorem finite_wilson_single_source_finiteMarginal_innerRegular
+    (J : Finset EuclideanFourSpace) :
+    (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J).InnerRegularWRT
+      (fun s => IsCompact s ∧ IsClosed s) MeasurableSet := by
+  letI : BorelSpace (∀ x : J, R.fieldValue x) :=
+    finite_wilson_single_source_finiteProduct_borel R J
+  letI : PolishSpace (∀ x : J, R.fieldValue x) :=
+    finite_wilson_single_source_finiteProduct_polish R J
+  letI : IsFiniteMeasure
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
+    finite_wilson_single_source_finiteMarginal_isFinite R J
+  exact innerRegular_isCompact_isClosed_measurableSet_of_finite
+    (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J)
+
 noncomputable def
     FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteStandardBorelLimit :
     EuclideanYangMillsProjectiveLimitMeasure
