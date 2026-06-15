@@ -97,7 +97,7 @@ theorem finite_wilson_gibbs_common_refinement_projective
       rw [R.commonPushforwardToSmall I J hJI]
     _ = μK.map (oJ ∘ pJ) := Measure.map_map hoJ hpJ
     _ = μK.map ((r ∘ oI) ∘ pI) := by
-      congr 1
+      apply congrArg (fun f => μK.map f)
       funext A
       exact R.observe_commonRefinement I J hJI A
     _ = (μK.map pI).map (r ∘ oI) :=
