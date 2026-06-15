@@ -110,7 +110,7 @@ theorem euclidean_yang_mills_cluster_envelope_passes_to_limit
       Tendsto
         (fun n : ℕ => ‖D.finiteConnectedCorrelation n O r‖) atTop
         (nhds ‖D.continuumConnectedCorrelation O r‖) :=
-    continuous_norm.tendsto.comp (D.pointwiseConvergence O r)
+    (continuous_norm.tendsto _).comp (D.pointwiseConvergence O r)
   exact le_of_tendsto' hNorm (fun n => D.uniformEnvelope n O r)
 
 /-- A decaying volume-uniform envelope forces the limiting connected
@@ -153,7 +153,7 @@ theorem euclidean_yang_mills_regularity_passes_to_limit
   have hNorm :
       Tendsto (fun n : ℕ => ‖D.finiteSchwingerValue n q‖) atTop
         (nhds ‖D.continuumSchwingerValue q‖) :=
-    continuous_norm.tendsto.comp (D.pointwiseConvergence q)
+    (continuous_norm.tendsto _).comp (D.pointwiseConvergence q)
   exact le_of_tendsto' hNorm (fun n => D.uniformRegularityBound n q)
 
 /-- Analytic data that builds a projective-limit continuum measure construction
