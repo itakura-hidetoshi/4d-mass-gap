@@ -156,12 +156,17 @@ jobs:
 
       - name: Post temporary Lean diagnostic
         if: github.event_name == 'pull_request' && steps.lean-check.outputs.status != '0'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" \
-            -f body="$(cat /tmp/lean-diagnostic.md)"
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('/tmp/lean-diagnostic.md', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
 
       - name: Fail changed Lean fast check when needed
         if: steps.lean-check.outputs.status != '0'
