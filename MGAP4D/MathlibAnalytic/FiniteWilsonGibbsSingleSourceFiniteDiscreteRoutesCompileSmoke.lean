@@ -16,6 +16,12 @@ theorem finiteDiscrete_fieldValue_standardBorel_compile_smoke
     StandardBorelSpace (R.fieldValue x) :=
   finite_wilson_single_source_fieldValue_standardBorel R x
 
+/-- Focused compile gate for the bundled Standard-Borel projective limit. -/
+noncomputable def finiteDiscrete_standardBorel_limit_compile_smoke :
+    EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  R.finiteDiscreteStandardBorelLimit
+
 end
 
 end MathlibAnalytic
