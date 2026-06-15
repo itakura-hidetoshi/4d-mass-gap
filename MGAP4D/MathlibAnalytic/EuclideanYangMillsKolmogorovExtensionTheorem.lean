@@ -120,8 +120,8 @@ theorem euclidean_yang_mills_kolmogorovMeasure_probability
     IsProbabilityMeasure (euclideanYangMillsKolmogorovMeasure K) := by
   letI : ∀ J, IsProbabilityMeasure (F.finiteMarginal J) :=
     F.finiteMarginalProbability
-  exact (euclidean_yang_mills_kolmogorovMeasure_isProjectiveLimit K)
-    .isProbabilityMeasure
+  exact MeasureTheory.IsProjectiveLimit.isProbabilityMeasure
+    (euclidean_yang_mills_kolmogorovMeasure_isProjectiveLimit K)
 
 /-- The Kolmogorov extension is uniquely determined by its finite-dimensional
 marginals. -/
