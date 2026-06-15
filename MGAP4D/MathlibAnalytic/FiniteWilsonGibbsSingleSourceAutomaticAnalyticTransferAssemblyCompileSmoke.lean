@@ -31,8 +31,7 @@ theorem finite_wilson_automatic_reflection_component_compile_smoke :
 /-- Compile gate for theorem-generated continuum reflection positivity inside
 the completed analytic transfer record. -/
 theorem finite_wilson_automatic_reflection_positive_compile_smoke :
-    (R.osAnalyticTransferDataOfAutomaticReflection C D).reflectionLimit.
-      ContinuumReflectionPositive :=
+    (R.osAnalyticTransferDataOfAutomaticReflection C D).reflectionLimit.ContinuumReflectionPositive :=
   C.automaticWilsonReflectionPositive D
 
 /-- Compile gate for the explicit route after automatic reflection assembly. -/
