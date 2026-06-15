@@ -53,14 +53,10 @@ theorem finite_wilson_single_source_finiteProduct_secondCountable
     SecondCountableTopology (∀ x : J, R.fieldValue x) := by
   infer_instance
 
-/-- The finite dependent product is completely pseudometrizable. -/
-theorem finite_wilson_single_source_finiteProduct_completelyPseudoMetrizable
+/-- The finite dependent product topology is discrete. -/
+theorem finite_wilson_single_source_finiteProduct_discrete
     (J : Finset EuclideanFourSpace) :
-    IsCompletelyPseudoMetrizableSpace (∀ x : J, R.fieldValue x) := by
-  letI : DiscreteTopology (∀ x : J, R.fieldValue x) := by
-    infer_instance
-  letI : IsCompletelyMetrizableSpace (∀ x : J, R.fieldValue x) := by
-    infer_instance
+    DiscreteTopology (∀ x : J, R.fieldValue x) := by
   infer_instance
 
 /-- Standard-Borel projective limit generated automatically from countable
