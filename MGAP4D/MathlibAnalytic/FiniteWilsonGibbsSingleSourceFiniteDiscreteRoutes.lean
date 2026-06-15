@@ -57,6 +57,10 @@ theorem finite_wilson_single_source_finiteProduct_secondCountable
 theorem finite_wilson_single_source_finiteProduct_completelyPseudoMetrizable
     (J : Finset EuclideanFourSpace) :
     IsCompletelyPseudoMetrizableSpace (∀ x : J, R.fieldValue x) := by
+  letI : DiscreteTopology (∀ x : J, R.fieldValue x) := by
+    infer_instance
+  letI : IsCompletelyMetrizableSpace (∀ x : J, R.fieldValue x) := by
+    infer_instance
   infer_instance
 
 /-- Standard-Borel projective limit generated automatically from countable
