@@ -174,3 +174,18 @@ jobs:
             .lake
             lake-manifest.json
           key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+
+  diagnostic-report:
+    name: Lean diagnostic report
+    needs: pr-lean-fast-check
+    if: always() && needs.pr-lean-fast-check.result == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Lean diagnostic
+        uses: actions/download-artifact@v4
+        with:
+          name: lean-diagnostic
+
+      - name: Print Lean diagnostic
+        shell: bash
+        run: cat lean-diagnostic.txt
