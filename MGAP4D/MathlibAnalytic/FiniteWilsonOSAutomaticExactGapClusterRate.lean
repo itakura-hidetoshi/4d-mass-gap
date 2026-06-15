@@ -56,8 +56,7 @@ noncomputable def
 theorem finite_wilson_exact_gap_cluster_passes_to_limit
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapClusterData W) :
-    D.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.
-      ContinuumClusterProperty :=
+    D.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.ContinuumClusterProperty :=
   finite_wilson_uniform_geometric_cluster_passes_to_limit
     D.toUniformGeometricClusterData
 
