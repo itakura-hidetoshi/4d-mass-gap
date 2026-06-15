@@ -8,32 +8,43 @@ open MeasureTheory
 
 noncomputable section
 
-abbrev FiniteWilsonGibbsSingleSourcePolishAnalyticData
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
-    [∀ x, TopologicalSpace (R.fieldValue x)]
-    [∀ x, BorelSpace (R.fieldValue x)]
-    [∀ x, PolishSpace (R.fieldValue x)] :=
+section SingleSourcePolishContinuum
+
+variable {W : FiniteWilsonOSAutomaticApproximationFamily}
+  (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
+  [hTop : ∀ x, TopologicalSpace (R.fieldValue x)]
+  [hBorel : ∀ x, BorelSpace (R.fieldValue x)]
+  [hPolish : ∀ x, PolishSpace (R.fieldValue x)]
+
+local instance singleSourceProjectedTopologicalSpace
+    (x : EuclideanFourSpace) :
+    TopologicalSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) :=
+  hTop x
+
+local instance singleSourceProjectedBorelSpace
+    (x : EuclideanFourSpace) :
+    BorelSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) :=
+  hBorel x
+
+local instance singleSourceProjectedPolishSpace
+    (x : EuclideanFourSpace) :
+    PolishSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) :=
+  hPolish x
+
+abbrev FiniteWilsonGibbsSingleSourcePolishAnalyticData :=
   EuclideanYangMillsPolishContinuumAnalyticData
     R.toProjectiveRealization.toProjectiveCylinderFamily
 
 noncomputable def finiteWilsonGibbsSingleSourcePolishContinuumConstruction
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
-    [∀ x, TopologicalSpace (R.fieldValue x)]
-    [∀ x, BorelSpace (R.fieldValue x)]
-    [∀ x, PolishSpace (R.fieldValue x)]
     (D : FiniteWilsonGibbsSingleSourcePolishAnalyticData R) :
     EuclideanYangMillsProjectiveContinuumMeasureConstruction
       R.toProjectiveRealization.toProjectiveCylinderFamily :=
   D.toContinuumConstruction
 
 noncomputable def finiteWilsonGibbsSingleSourcePolishContinuumCertificate
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
-    [∀ x, TopologicalSpace (R.fieldValue x)]
-    [∀ x, BorelSpace (R.fieldValue x)]
-    [∀ x, PolishSpace (R.fieldValue x)]
     (D : FiniteWilsonGibbsSingleSourcePolishAnalyticData R) :
     FiniteWilsonGibbsSingleSourceContinuumMeasureCertificate
       R (finiteWilsonGibbsSingleSourcePolishContinuumConstruction R D) :=
@@ -41,11 +52,6 @@ noncomputable def finiteWilsonGibbsSingleSourcePolishContinuumCertificate
     R (finiteWilsonGibbsSingleSourcePolishContinuumConstruction R D)
 
 theorem finite_wilson_single_source_polish_recovers_marginal
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
-    [∀ x, TopologicalSpace (R.fieldValue x)]
-    [∀ x, BorelSpace (R.fieldValue x)]
-    [∀ x, PolishSpace (R.fieldValue x)]
     (D : FiniteWilsonGibbsSingleSourcePolishAnalyticData R)
     (J : Finset EuclideanFourSpace) :
     (finiteWilsonGibbsSingleSourcePolishContinuumConstruction R D).limit.continuumMeasure.map
@@ -55,11 +61,6 @@ theorem finite_wilson_single_source_polish_recovers_marginal
     (finiteWilsonGibbsSingleSourcePolishContinuumCertificate R D) J
 
 theorem finite_wilson_single_source_polish_cylinder
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
-    [∀ x, TopologicalSpace (R.fieldValue x)]
-    [∀ x, BorelSpace (R.fieldValue x)]
-    [∀ x, PolishSpace (R.fieldValue x)]
     (D : FiniteWilsonGibbsSingleSourcePolishAnalyticData R)
     (J : Finset EuclideanFourSpace)
     {s : Set (∀ x : J, R.fieldValue x)}
@@ -67,8 +68,10 @@ theorem finite_wilson_single_source_polish_cylinder
     (finiteWilsonGibbsSingleSourcePolishContinuumConstruction R D).limit.continuumMeasure
         (cylinder J s) =
       (W.system R.sourceScale).gibbsMeasure ((R.observe J) ⁻¹' s) :=
-  (finiteWilsonGibbsSingleSourcePolishContinuumCertificate R D)
-    .continuumCylinderIsWilsonGibbs J s hs
+  (finiteWilsonGibbsSingleSourcePolishContinuumCertificate R D).continuumCylinderIsWilsonGibbs
+    J s hs
+
+end SingleSourcePolishContinuum
 
 end
 
