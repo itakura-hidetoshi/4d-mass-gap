@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.KolmogorovPolishExtension
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsPolishKolmogorovExtension
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsPolishKolmogorovCondition
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsPolishKolmogorovExtension
 
 namespace MGAP4D
@@ -46,6 +47,28 @@ theorem euclidean_yang_mills_polish_exists_compile_smoke
     ∃ μ : Measure F.Configuration,
       IsProjectiveLimit μ F.finiteMarginal :=
   euclidean_yang_mills_polish_projective_limit_exists
+
+/-- Compile gate: Polish tightness supplies the abstract cylinder-continuity
+condition used by the Carathéodory extension theorem. -/
+theorem euclidean_yang_mills_polish_condition_compile_smoke
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    [∀ x, TopologicalSpace (F.fieldValue x)]
+    [∀ x, BorelSpace (F.fieldValue x)]
+    [∀ x, PolishSpace (F.fieldValue x)] :
+    EuclideanYangMillsKolmogorovExtensionCondition F :=
+  euclideanYangMillsPolishKolmogorovExtensionCondition F
+
+/-- Compile gate: the abstract continuity construction and the direct Polish
+construction define the same measure. -/
+theorem euclidean_yang_mills_polish_constructions_agree_compile_smoke
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    [∀ x, TopologicalSpace (F.fieldValue x)]
+    [∀ x, BorelSpace (F.fieldValue x)]
+    [∀ x, PolishSpace (F.fieldValue x)] :
+    euclideanYangMillsKolmogorovMeasure
+        (euclideanYangMillsPolishKolmogorovExtensionCondition F) =
+      euclideanYangMillsPolishKolmogorovMeasure F :=
+  euclidean_yang_mills_condition_measure_eq_polish_measure
 
 /-- Compile gate: direct coarse-graining Wilson marginals admit a Polish
 Kolmogorov extension. -/
