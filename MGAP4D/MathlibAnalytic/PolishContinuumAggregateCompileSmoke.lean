@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsPolishContinuumCompileSmoke
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -14,7 +14,7 @@ variable {W : FiniteWilsonOSAutomaticApproximationFamily}
   [∀ x, PolishSpace (R.fieldValue x)]
   (D : FiniteWilsonGibbsSingleSourcePolishAnalyticData R)
 
-/-- Aggregate-root compile gate for the canonical Wilson--Kolmogorov continuum
+/-- Focused PR compile gate for the canonical Wilson--Kolmogorov continuum
 measure and its exact finite-dimensional marginal law. -/
 theorem polish_continuum_aggregate_compile_smoke
     (J : Finset EuclideanFourSpace) :
