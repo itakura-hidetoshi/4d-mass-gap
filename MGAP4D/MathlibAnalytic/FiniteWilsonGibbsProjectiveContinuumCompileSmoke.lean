@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsCommonRefinementContinuumMeasureC
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsProjectiveContinuumMeasureCertificate
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceContinuumMeasureCertificate
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsProjectiveFamilyTheorems
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceProjectiveLimitExistence
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -60,6 +61,33 @@ theorem finite_wilson_single_source_restriction_compile_smoke
       (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal I).map
         (Finset.restrict₂ hJI) :=
   finite_wilson_gibbs_single_source_projective_restriction R I J hJI
+
+/-- Compile gate: the single-source projective family has an explicitly
+constructed projective-limit measure. -/
+theorem finite_wilson_single_source_projective_limit_exists_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    ∃ μ : Measure
+        R.toProjectiveRealization.toProjectiveCylinderFamily.Configuration,
+      IsProjectiveLimit μ
+        R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal :=
+  finite_wilson_gibbs_single_source_projective_limit_exists R
+
+/-- Compile gate: the concrete pushforward measure is the projective limit. -/
+theorem finite_wilson_single_source_isProjectiveLimit_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    IsProjectiveLimit R.continuumMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal :=
+  finite_wilson_gibbs_single_source_continuumMeasure_isProjectiveLimit R
+
+/-- Compile gate: the explicitly constructed projective limit is a probability
+measure. -/
+theorem finite_wilson_single_source_constructed_probability_compile_smoke
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    IsProbabilityMeasure R.continuumMeasure :=
+  finite_wilson_gibbs_single_source_continuumMeasure_probability R
 
 /-- Compile gate: the common-refinement continuum certificate exposes the
 actual continuum probability measure. -/
