@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceProjectiveMarginals
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsCommonProbabilityRealizationProjectiveLimit
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -54,6 +55,42 @@ theorem finite_wilson_gibbs_single_source_globalObserve_restrict
       R.observe J A j
   simpa [Finset.restrict₂] using hpoint
 
+/-- The fixed finite Wilson Gibbs configuration space simultaneously realizes
+all finite-dimensional marginal laws. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.toCommonProbabilityRealization
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    EuclideanYangMillsCommonProbabilityRealization
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+  { sampleSpace := (W.system R.sourceScale).Configuration
+    sampleMeasurableSpace := inferInstance
+    sourceMeasure := (W.system R.sourceScale).gibbsMeasure
+    sourceProbability := inferInstance
+    globalField := R.globalObserve
+    globalField_measurable :=
+      finite_wilson_gibbs_single_source_globalObserve_measurable R
+    finiteLaw := by
+      intro J
+      change
+        (W.system R.sourceScale).gibbsMeasure.map
+            (fun A => J.restrict (R.globalObserve A)) =
+          (W.system R.sourceScale).gibbsMeasure.map (R.observe J)
+      apply congrArg (fun f =>
+        (W.system R.sourceScale).gibbsMeasure.map f)
+      funext A
+      exact finite_wilson_gibbs_single_source_globalObserve_restrict R J A }
+
+/-- The additional common-realization hypothesis is satisfied by every
+single-source Wilson Gibbs realization. -/
+theorem finite_wilson_gibbs_single_source_common_realization_exists
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    Nonempty
+      (EuclideanYangMillsCommonProbabilityRealization
+        R.toProjectiveRealization.toProjectiveCylinderFamily) :=
+  ⟨R.toCommonProbabilityRealization⟩
+
 /-- Explicit continuum measure: push the normalized finite Wilson Gibbs measure
 forward through the global observation map. -/
 noncomputable def
@@ -63,6 +100,14 @@ noncomputable def
     Measure R.toProjectiveRealization.toProjectiveCylinderFamily.Configuration :=
   (W.system R.sourceScale).gibbsMeasure.map R.globalObserve
 
+/-- The explicit Wilson pushforward agrees definitionally with the continuum
+measure supplied by the general common-realization theorem. -/
+theorem finite_wilson_gibbs_single_source_continuumMeasure_eq_common_realization
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
+    R.continuumMeasure = R.toCommonProbabilityRealization.continuumMeasure := by
+  rfl
+
 /-- The explicitly constructed pushforward measure realizes every finite Wilson
 Gibbs marginal, hence is a Mathlib projective-limit measure. -/
 theorem finite_wilson_gibbs_single_source_continuumMeasure_isProjectiveLimit
@@ -70,29 +115,8 @@ theorem finite_wilson_gibbs_single_source_continuumMeasure_isProjectiveLimit
     (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
     IsProjectiveLimit R.continuumMeasure
       R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal := by
-  intro J
-  have hglobal : Measurable R.globalObserve :=
-    finite_wilson_gibbs_single_source_globalObserve_measurable R
-  have hrestrict : Measurable
-      (J.restrict :
-        R.toProjectiveRealization.toProjectiveCylinderFamily.Configuration →
-          (∀ x : J, R.fieldValue x)) :=
-    measurable_pi_lambda _ (fun _ => measurable_pi_apply _)
-  change
-    (((W.system R.sourceScale).gibbsMeasure.map R.globalObserve).map
-        J.restrict) =
-      (W.system R.sourceScale).gibbsMeasure.map (R.observe J)
-  calc
-    ((W.system R.sourceScale).gibbsMeasure.map R.globalObserve).map
-        J.restrict =
-      (W.system R.sourceScale).gibbsMeasure.map
-        (J.restrict ∘ R.globalObserve) :=
-      Measure.map_map hrestrict hglobal
-    _ = (W.system R.sourceScale).gibbsMeasure.map (R.observe J) := by
-      apply congrArg (fun f =>
-        (W.system R.sourceScale).gibbsMeasure.map f)
-      funext A
-      exact finite_wilson_gibbs_single_source_globalObserve_restrict R J A
+  rw [finite_wilson_gibbs_single_source_continuumMeasure_eq_common_realization R]
+  exact R.toCommonProbabilityRealization.continuumMeasure_isProjectiveLimit
 
 /-- The explicit projective-limit measure object. -/
 noncomputable def
@@ -106,16 +130,19 @@ noncomputable def
       finite_wilson_gibbs_single_source_continuumMeasure_isProjectiveLimit R }
 
 /-- Existence of a measure realizing all finite-dimensional Wilson Gibbs
-marginals. -/
+marginals.  This is the common-realization existence theorem specialized to the
+Wilson Gibbs source. -/
 theorem finite_wilson_gibbs_single_source_projective_limit_exists
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
     ∃ μ : Measure
         R.toProjectiveRealization.toProjectiveCylinderFamily.Configuration,
       IsProjectiveLimit μ
-        R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal :=
-  ⟨R.continuumMeasure,
-    finite_wilson_gibbs_single_source_continuumMeasure_isProjectiveLimit R⟩
+        R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal := by
+  simpa [finite_wilson_gibbs_single_source_continuumMeasure_eq_common_realization R]
+    using
+      euclidean_yang_mills_projective_limit_exists_of_common_realization
+        R.toCommonProbabilityRealization
 
 /-- Equivalent structure-level existence statement. -/
 theorem finite_wilson_gibbs_single_source_projective_limit_nonempty
@@ -131,10 +158,8 @@ theorem finite_wilson_gibbs_single_source_continuumMeasure_probability
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W) :
     IsProbabilityMeasure R.continuumMeasure := by
-  letI : IsProbabilityMeasure
-      ((W.system R.sourceScale).gibbsMeasure) := inferInstance
-  exact Measure.isProbabilityMeasure_map
-    (finite_wilson_gibbs_single_source_globalObserve_measurable R).aemeasurable
+  rw [finite_wilson_gibbs_single_source_continuumMeasure_eq_common_realization R]
+  exact R.toCommonProbabilityRealization.continuumMeasure_probability
 
 /-- Every measurable cylinder of the constructed continuum measure is exactly a
 finite Wilson Gibbs probability. -/
