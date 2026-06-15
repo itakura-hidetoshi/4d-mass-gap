@@ -25,8 +25,6 @@ noncomputable def
     ∀ x, StandardBorelSpace (R.fieldValue x) :=
   fun x => finite_wilson_single_source_fieldValue_standardBorel R x
 
-/-- Use the literal discrete topology on every countable discrete Wilson
-field-value carrier. -/
 local instance finiteDiscreteFieldValueTopologicalSpace
     (x : EuclideanFourSpace) : TopologicalSpace (R.fieldValue x) :=
   ⊥
@@ -43,10 +41,10 @@ local instance finiteDiscreteFieldValuePolishSpace
     (x : EuclideanFourSpace) : PolishSpace (R.fieldValue x) := by
   infer_instance
 
-/-- Audit theorem exposing the directly wired discrete Polish structure. -/
-theorem finite_wilson_single_source_fieldValue_polish
-    (x : EuclideanFourSpace) :
-    PolishSpace (R.fieldValue x) := by
+/-- The finite dependent product carries the expected Borel structure. -/
+theorem finite_wilson_single_source_finiteProduct_borel
+    (J : Finset EuclideanFourSpace) :
+    BorelSpace (∀ x : J, R.fieldValue x) := by
   infer_instance
 
 /-- Standard-Borel projective limit generated automatically from countable
@@ -66,24 +64,6 @@ theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
   finite_wilson_gibbs_single_source_constructed_unique R
     R.finiteDiscreteStandardBorelLimit.continuumMeasure
     R.finiteDiscreteStandardBorelLimit.projectiveLimit
-
-/-- Compact-inner-regularity data for every finite Wilson marginal. -/
-noncomputable def
-    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightnessData :
-    EuclideanYangMillsCompactTightnessData
-      R.toProjectiveRealization.toProjectiveCylinderFamily := by
-  letI : ∀ J,
-      IsProbabilityMeasure
-        (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
-    R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginalProbability
-  letI : ∀ J,
-      IsFiniteMeasure
-        (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
-    fun J => inferInstance
-  exact
-    { innerRegular := fun J =>
-        innerRegular_isCompact_isClosed_measurableSet_of_finite
-          (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) }
 
 end
 
