@@ -102,38 +102,6 @@ theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure
     R.finiteDiscreteStandardBorelLimit.projectiveLimit
 
-/-- Compact-tightness data obtained directly from finiteness of every marginal
-configuration carrier. -/
-noncomputable def
-    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightnessData :
-    EuclideanYangMillsCompactTightnessData
-      R.toProjectiveRealization.toProjectiveCylinderFamily :=
-  { innerRegular := finite_wilson_single_source_finiteMarginal_innerRegular R }
-
-/-- Compact-tightness projective limit generated from finite discrete Wilson
-marginals. -/
-noncomputable def
-    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightLimit :
-    EuclideanYangMillsProjectiveLimitMeasure
-      R.toProjectiveRealization.toProjectiveCylinderFamily :=
-  euclideanYangMillsCompactTightProjectiveLimitMeasure
-    R.toProjectiveRealization.toProjectiveCylinderFamily
-    R.finiteDiscreteCompactTightnessData
-
-/-- The compact-tightness construction is the explicit common-source law. -/
-theorem finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit :
-    R.finiteDiscreteCompactTightLimit.continuumMeasure = R.continuumMeasure :=
-  finite_wilson_gibbs_single_source_constructed_unique R
-    R.finiteDiscreteCompactTightLimit.continuumMeasure
-    R.finiteDiscreteCompactTightLimit.projectiveLimit
-
-/-- The Standard-Borel and compact-tightness constructions agree exactly. -/
-theorem finite_wilson_single_source_finiteDiscrete_routes_agree :
-    R.finiteDiscreteStandardBorelLimit.continuumMeasure =
-      R.finiteDiscreteCompactTightLimit.continuumMeasure := by
-  rw [finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R,
-    finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R]
-
 end
 
 end MathlibAnalytic
