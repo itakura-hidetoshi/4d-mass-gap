@@ -43,6 +43,27 @@ theorem finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit :
     R.finiteDiscreteStandardBorelLimit.continuumMeasure
     R.finiteDiscreteStandardBorelLimit.projectiveLimit
 
+/-- Compact-inner-regularity is automatic after equipping each countable
+discrete coordinate with its compatible upgraded Polish topology. -/
+noncomputable def
+    FiniteWilsonGibbsSingleSourceProjectiveRealization.finiteDiscreteCompactTightLimit :
+    EuclideanYangMillsProjectiveLimitMeasure
+      R.toProjectiveRealization.toProjectiveCylinderFamily := by
+  letI : ∀ x, StandardBorelSpace (R.fieldValue x) :=
+    R.fieldValueStandardBorelFamily
+  letI := fun x => upgradeStandardBorel (R.fieldValue x)
+  letI : ∀ J,
+      IsProbabilityMeasure
+        (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) :=
+    R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginalProbability
+  let T : EuclideanYangMillsCompactTightnessData
+      R.toProjectiveRealization.toProjectiveCylinderFamily :=
+    { innerRegular := fun J =>
+        innerRegular_isCompact_isClosed_measurableSet_of_finite
+          (R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal J) }
+  exact euclideanYangMillsCompactTightProjectiveLimitMeasure
+    R.toProjectiveRealization.toProjectiveCylinderFamily T
+
 end
 
 end MathlibAnalytic
