@@ -133,11 +133,33 @@ jobs:
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
       - name: Run changed Lean fast check
+        id: lean-check
         shell: bash
         run: |
-          set -euxo pipefail
+          set +e
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/changed-lean.log 2>&1
+          status=$?
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          {
+            echo "=== error matches ==="
+            grep -nE "error:|failed to synthesize|type mismatch|application type mismatch|unknown identifier|invalid field|declaration has metavariables|unsolved goals" /tmp/changed-lean.log | head -160 || true
+            echo "=== log tail ==="
+            tail -n 180 /tmp/changed-lean.log || true
+          } > /tmp/lean-diagnostic.txt
+          exit 0
+
+      - name: Save temporary Lean diagnostic cache
+        if: steps.lean-check.outputs.status != '0'
+        uses: actions/cache/save@v5
+        with:
+          path: /tmp/lean-diagnostic.txt
+          key: lean-diagnostic-${{ github.sha }}
+
+      - name: Fail changed Lean fast check when needed
+        if: steps.lean-check.outputs.status != '0'
+        shell: bash
+        run: exit 1
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
@@ -157,3 +179,20 @@ jobs:
             .lake
             lake-manifest.json
           key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+
+  diagnostic-report:
+    name: Lean diagnostic report
+    needs: pr-lean-fast-check
+    if: always() && needs.pr-lean-fast-check.result == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore temporary Lean diagnostic cache
+        uses: actions/cache/restore@v5
+        with:
+          path: /tmp/lean-diagnostic.txt
+          key: lean-diagnostic-${{ github.sha }}
+          fail-on-cache-miss: true
+
+      - name: Print Lean diagnostic
+        shell: bash
+        run: cat /tmp/lean-diagnostic.txt
