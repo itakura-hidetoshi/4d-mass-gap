@@ -1,11 +1,8 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsProjectiveLimitOSPropertyTransferRebase
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceFiniteDiscreteRoutes
-import MGAP4D.MathlibAnalytic.EuclideanYangMillsCountableSkeletonExtension
 
 namespace MGAP4D
 namespace MathlibAnalytic
-
-open MeasureTheory
 
 noncomputable section
 
@@ -90,93 +87,38 @@ theorem finite_wilson_single_source_compactTight_os_ready
   exact euclidean_yang_mills_projective_limit_rebase_ready D
     (finite_wilson_single_source_compactTightLimit_eq_explicitLimit R)
 
-variable {κ : Type*} [Countable κ] [Nonempty κ]
-  {β : κ → Type*} [∀ k, MeasurableSpace (β k)]
-  [∀ k, StandardBorelSpace (β k)]
-
-/-- Any countable-skeleton reconstruction of the same Wilson finite marginals
-is equal to the explicit common-source continuum law. -/
-theorem finite_wilson_single_source_countableSkeletonLimit_eq_explicitLimit
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β) :
-    S.projectiveLimitMeasure.continuumMeasure =
-      R.projectiveLimitMeasure.continuumMeasure := by
-  change S.continuumMeasure = R.continuumMeasure
-  exact finite_wilson_gibbs_single_source_constructed_unique R
-    S.continuumMeasure S.isProjectiveLimit
-
-/-- Rebase all four transferred OS properties to an arbitrary countable
-standard-Borel skeleton reconstruction recovering the Wilson finite laws. -/
-noncomputable def
-    FiniteWilsonGibbsSingleSourceProjectiveRealization.countableSkeletonOSContinuumConstruction
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
-    (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
-    EuclideanYangMillsProjectiveContinuumMeasureConstruction
-      R.toProjectiveRealization.toProjectiveCylinderFamily :=
-  (D.rebaseLimit
-    (finite_wilson_single_source_countableSkeletonLimit_eq_explicitLimit R S)).toContinuumConstruction
-
-/-- The countable-skeleton route inherits the same four OS properties and is
-ready for the OS/Wightman bridge. -/
-theorem finite_wilson_single_source_countableSkeleton_os_ready
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
-    (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
-    (R.countableSkeletonOSContinuumConstruction S D).toMeasurePackage.ready := by
-  exact euclidean_yang_mills_projective_limit_rebase_ready D
-    (finite_wilson_single_source_countableSkeletonLimit_eq_explicitLimit R S)
-
-/-- Explicit common-source, standard-Borel, compact-tightness, and countable-
-skeleton constructions are simultaneously ready for OS/Wightman reconstruction. -/
-theorem finite_wilson_single_source_all_os_routes_ready
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+/-- Explicit common-source, standard-Borel, and compact-tightness constructions
+are simultaneously ready for OS/Wightman reconstruction. -/
+theorem finite_wilson_single_source_three_os_routes_ready
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (R.explicitOSContinuumConstruction D).toMeasurePackage.ready ∧
       (R.standardBorelOSContinuumConstruction D).toMeasurePackage.ready ∧
-      (R.compactTightOSContinuumConstruction D).toMeasurePackage.ready ∧
-      (R.countableSkeletonOSContinuumConstruction S D).toMeasurePackage.ready :=
+      (R.compactTightOSContinuumConstruction D).toMeasurePackage.ready :=
   ⟨finite_wilson_single_source_explicit_os_ready R D,
     finite_wilson_single_source_standardBorel_os_ready R D,
-    finite_wilson_single_source_compactTight_os_ready R D,
-    finite_wilson_single_source_countableSkeleton_os_ready R S D⟩
+    finite_wilson_single_source_compactTight_os_ready R D⟩
 
 /-- Every theorem-generated OS construction uses exactly the explicit
 `globalObserve` pushforward Wilson law. -/
-theorem finite_wilson_single_source_all_os_route_measures_eq_explicit
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+theorem finite_wilson_single_source_three_os_route_measures_eq_explicit
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (R.explicitOSContinuumConstruction D).limit.continuumMeasure =
         R.continuumMeasure ∧
       (R.standardBorelOSContinuumConstruction D).limit.continuumMeasure =
         R.continuumMeasure ∧
       (R.compactTightOSContinuumConstruction D).limit.continuumMeasure =
-        R.continuumMeasure ∧
-      (R.countableSkeletonOSContinuumConstruction S D).limit.continuumMeasure =
-        R.continuumMeasure := by
-  refine ⟨rfl, ?_, ?_, ?_⟩
-  · exact finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R
-  · exact finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R
-  · change S.continuumMeasure = R.continuumMeasure
-    exact finite_wilson_gibbs_single_source_constructed_unique R
-      S.continuumMeasure S.isProjectiveLimit
+        R.continuumMeasure :=
+  ⟨rfl,
+    finite_wilson_single_source_finiteDiscrete_standardBorel_eq_explicit R,
+    finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R⟩
 
-/-- The three independent existence routes carry exactly the same continuum
-law as the explicit common-source route. -/
+/-- The standard-Borel and compact-tightness analytic constructions have the
+same continuum law. -/
 theorem finite_wilson_single_source_os_route_measures_agree
-    (S : EuclideanYangMillsCountableSkeletonData
-      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
     (D : FiniteWilsonGibbsSingleSourceOSPropertyTransferData R) :
     (R.standardBorelOSContinuumConstruction D).limit.continuumMeasure =
-        (R.compactTightOSContinuumConstruction D).limit.continuumMeasure ∧
-      (R.compactTightOSContinuumConstruction D).limit.continuumMeasure =
-        (R.countableSkeletonOSContinuumConstruction S D).limit.continuumMeasure := by
-  constructor
-  · exact finite_wilson_single_source_finiteDiscrete_routes_agree R
-  · rw [finite_wilson_single_source_finiteDiscrete_compactTight_eq_explicit R]
-    exact (finite_wilson_single_source_countableSkeletonLimit_eq_explicitLimit R S).symm
+      (R.compactTightOSContinuumConstruction D).limit.continuumMeasure :=
+  finite_wilson_single_source_finiteDiscrete_routes_agree R
 
 end
 
