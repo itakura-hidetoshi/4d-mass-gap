@@ -8,7 +8,7 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Summing the pointwise transition identity gives the forward sum as the
+/-- Summing the transition-function identity gives the forward sum as the
 backward sum composed with the involutive link exchange. -/
 theorem finite_lattice_singleLinkHeatBath_forward_sum_eq_swapped_backward_sum
     (L : FiniteLatticeWilsonSystem)
@@ -18,11 +18,7 @@ theorem finite_lattice_singleLinkHeatBath_forward_sum_eq_swapped_backward_sum
       ∑ x : L.Configuration × L.Gauge,
         L.singleLinkHeatBathBackwardTerm e f g
           (L.singleLinkUpdateSwapEquiv e x) := by
-  classical
-  apply Finset.sum_congr rfl
-  intro x _hx
-  exact finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
-    L e f g x
+  rw [finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_comp]
 
 end
 
