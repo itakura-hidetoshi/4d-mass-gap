@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapSingleScaleTransfer
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Filter
+
 noncomputable section
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -18,7 +20,7 @@ theorem finite_wilson_single_scale_pointwise_compile_smoke
       (fun _ : ℕ =>
         (W.system D.sourceScale).gibbsConnectedCorrelation
           (D.leftObservable O) (D.rightObservable O r))
-      Filter.atTop (nhds (D.continuumConnectedCorrelation O r)) :=
+      atTop (nhds (D.continuumConnectedCorrelation O r)) :=
   finite_wilson_single_scale_pointwise_convergence D O r
 
 theorem finite_wilson_single_scale_continuum_bound_compile_smoke
