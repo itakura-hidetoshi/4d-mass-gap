@@ -27,8 +27,8 @@ theorem rayleigh_eq_sum_of_orthonormal_eigenaction
     _ = ∑ i : ι, (inner ℝ (b i) x) ^ 2 * a i := by
       apply Finset.sum_congr rfl
       intro i hi
-      rw [hT x (b i), hEigen i]
-      simp [pow_two, mul_comm, mul_left_comm, mul_assoc]
+      rw [hT x (b i), hEigen i, real_inner_smul_left]
+      ring
 
 end
 
