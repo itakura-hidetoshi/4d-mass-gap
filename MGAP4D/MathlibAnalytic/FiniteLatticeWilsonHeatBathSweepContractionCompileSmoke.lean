@@ -11,9 +11,10 @@ variable (L : FiniteLatticeWilsonSystem)
 example : L.ExactGapSingleLinkHeatBathPoincare :=
   finite_lattice_exactGap_heatBathPoincare_of_sweepContraction L S
 
-noncomputable def finite_lattice_sweep_to_approximate_tensorization_compile_smoke :
-    FiniteLatticeWilsonSingleLinkApproximateTensorizationData L :=
-  S.toApproximateTensorizationData
+example (f : L.Configuration → ℝ) :
+    (1 - S.contractionRate) * L.gibbsVarianceReal f ≤
+      L.singleLinkHeatBathDirichletForm f :=
+  finite_lattice_one_sub_sweepRate_mul_variance_le_dirichlet L S f
 
 variable (F : FiniteLatticeWilsonApproximationFamily)
   (U : F.UniformHeatBathSweepContractionData)
