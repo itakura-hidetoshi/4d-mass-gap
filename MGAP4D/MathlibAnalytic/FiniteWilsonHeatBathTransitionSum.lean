@@ -19,6 +19,7 @@ theorem finite_lattice_singleLinkHeatBath_backwardTerm_sum_swap
       ∑ x : L.Configuration × L.Gauge,
         L.singleLinkHeatBathBackwardTerm e f g x := by
   classical
+  -- Keep every carrier and codomain explicit at this dependent specialization.
   exact finite_sum_comp_equiv
     (α := L.Configuration × L.Gauge)
     (β := L.Configuration × L.Gauge)
