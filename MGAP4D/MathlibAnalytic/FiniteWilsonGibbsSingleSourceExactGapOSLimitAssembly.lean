@@ -69,18 +69,18 @@ noncomputable def
     regularityLimit := D.regularityLimit }
 
 /-- Reflection positivity, Euclidean invariance, exact-gap clustering, and
-regularity are simultaneously available in the continuum limit. -/
+regularity are simultaneously available after the exact-gap package is
+embedded in the general automatic assembly. -/
 theorem finite_wilson_os_exact_gap_four_limit_properties
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     {F : EuclideanYangMillsProjectiveCylinderFamily}
     {L : EuclideanYangMillsProjectiveLimitMeasure F}
     (D : FiniteWilsonOSAutomaticExactGapAnalyticLimitConstructionData W F L) :
-    D.reflectionLimit.ContinuumReflectionPositive ∧
-      D.euclideanLimit.toEuclideanInvarianceLimitData.ContinuumEuclideanInvariant ∧
-      D.clusterStep.toExactGapClusterData.toUniformGeometricClusterData.toClusterLimitData.
-        toClusterLimitData.ContinuumClusterProperty ∧
-      D.regularityLimit.toRegularityLimitData.ContinuumRegularity := by
-  exact finite_wilson_os_automatic_four_limit_properties D.toAutomaticData
+    D.toAutomaticData.reflectionLimit.ContinuumReflectionPositive ∧
+      D.toAutomaticData.euclideanLimit.toEuclideanInvarianceLimitData.ContinuumEuclideanInvariant ∧
+      D.toAutomaticData.clusterLimit.toClusterLimitData.ContinuumClusterProperty ∧
+      D.toAutomaticData.regularityLimit.toRegularityLimitData.ContinuumRegularity :=
+  finite_wilson_os_automatic_four_limit_properties D.toAutomaticData
 
 /-- The assembled continuum measure package is OS/Wightman-ready. -/
 theorem finite_wilson_os_exact_gap_continuum_measure_package_ready
@@ -88,8 +88,7 @@ theorem finite_wilson_os_exact_gap_continuum_measure_package_ready
     {F : EuclideanYangMillsProjectiveCylinderFamily}
     {L : EuclideanYangMillsProjectiveLimitMeasure F}
     (D : FiniteWilsonOSAutomaticExactGapAnalyticLimitConstructionData W F L) :
-    D.toAutomaticData.toProjectiveLimitTransferData.toContinuumConstruction.
-      toMeasurePackage.ready :=
+    D.toAutomaticData.toProjectiveLimitTransferData.toContinuumConstruction.toMeasurePackage.ready :=
   finite_wilson_os_automatic_continuum_measure_package_ready D.toAutomaticData
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
