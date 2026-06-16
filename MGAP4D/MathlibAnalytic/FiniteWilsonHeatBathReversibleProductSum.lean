@@ -10,7 +10,7 @@ noncomputable section
 
 /-- Exact detailed balance reindexes the complete finite configuration--gauge
 transition sum through the involutive link exchange. -/
-theorem finite_lattice_singleLinkHeatBath_reversible_product_sum
+theorem finite_lattice_singleLinkHeatBath_reversible_product_sum_v2
     (L : FiniteLatticeWilsonSystem)
     (e : L.Edge) (f g : L.Configuration → ℝ) :
     (∑ x : L.Configuration × L.Gauge,
