@@ -10,7 +10,7 @@ variable {W : FiniteWilsonOSAutomaticApproximationFamily}
   {L : EuclideanYangMillsProjectiveLimitMeasure F}
   (D : FiniteWilsonOSAutomaticFiniteSpectralAnalyticLimitConstructionData W F L)
 
-noncomputable def finite_wilson_finite_spectral_positive_data_compile_smoke :
+noncomputable def finite_wilson_finite_spectral_positive_analytic_data_compile_smoke :
     FiniteWilsonOSAutomaticPositiveRayleighAnalyticLimitConstructionData W F L :=
   D.toPositiveRayleighAnalyticData
 
