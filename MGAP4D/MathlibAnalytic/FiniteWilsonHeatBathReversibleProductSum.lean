@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonHeatBathTransitionSum
+import Mathlib.Data.Fintype.BigOperators
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -18,7 +19,7 @@ theorem finite_lattice_singleLinkHeatBath_forward_sum_eq_swapped_backward_sum
         L.singleLinkHeatBathBackwardTerm e f g
           (L.singleLinkUpdateSwapEquiv e x) := by
   classical
-  exact congrArg
+  simpa only using congrArg
     (fun k : (L.Configuration × L.Gauge) → ℝ => ∑ x, k x)
     (finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_comp
       L e f g)
