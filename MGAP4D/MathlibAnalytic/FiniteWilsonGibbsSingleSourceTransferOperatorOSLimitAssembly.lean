@@ -1,0 +1,177 @@
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceAutomaticOSLimitAssembly
+import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapTransferOperator
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory
+
+noncomputable section
+
+/-- The automatic finite-Wilson analytic package with clustering generated from
+an iterated transfer-operator representation.
+
+The scalar all-distance connected-correlation estimate is not a field of this
+structure.  It is derived from the operator-norm contraction and the uniform
+readout/initial-state amplitude bound carried by `clusterTransfer`. -/
+structure FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData
+    (W : FiniteWilsonOSAutomaticApproximationFamily)
+    (F : EuclideanYangMillsProjectiveCylinderFamily)
+    (L : EuclideanYangMillsProjectiveLimitMeasure F) where
+  gaugeGroup : Type
+  [gaugeGroupGroup : Group gaugeGroup]
+  [gaugeGroupTopology : TopologicalSpace gaugeGroup]
+  [gaugeGroupCompact : CompactSpace gaugeGroup]
+  [gaugeGroupNontrivial : Nontrivial gaugeGroup]
+  [gaugeAction : MulAction gaugeGroup F.Configuration]
+  gaugeActionMeasurable :
+    ∀ g : gaugeGroup, Measurable (fun A : F.Configuration => g • A)
+  gaugeInvariant :
+    ∀ g : gaugeGroup,
+      L.continuumMeasure.map (fun A : F.Configuration => g • A) =
+        L.continuumMeasure
+  fieldAlgebra : Type
+  schwingerFunctions : ℕ → Type
+  symmetric : Prop
+  symmetric_proof : symmetric
+  reflectionLimit : FiniteWilsonOSAutomaticReflectionLimitData W
+  euclideanLimit : FiniteWilsonOSAutomaticEuclideanLimitData W
+  clusterTransfer : FiniteWilsonOSAutomaticExactGapTransferOperatorData W
+  regularityLimit : FiniteWilsonOSAutomaticRegularityLimitData W
+
+attribute [instance]
+  FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData.gaugeGroupGroup
+  FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData.gaugeGroupTopology
+  FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData.gaugeGroupCompact
+  FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData.gaugeGroupNontrivial
+  FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData.gaugeAction
+
+/-- Forget the transfer-operator presentation after deriving the exact-gap
+cluster datum, and recover the general automatic four-property input. -/
+noncomputable def
+    FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData.toAutomaticData
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {L : EuclideanYangMillsProjectiveLimitMeasure F}
+    (D : FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData W F L) :
+    FiniteWilsonOSAutomaticAnalyticLimitConstructionData W F L :=
+  { gaugeGroup := D.gaugeGroup
+    gaugeGroupGroup := D.gaugeGroupGroup
+    gaugeGroupTopology := D.gaugeGroupTopology
+    gaugeGroupCompact := D.gaugeGroupCompact
+    gaugeGroupNontrivial := D.gaugeGroupNontrivial
+    gaugeAction := D.gaugeAction
+    gaugeActionMeasurable := D.gaugeActionMeasurable
+    gaugeInvariant := D.gaugeInvariant
+    fieldAlgebra := D.fieldAlgebra
+    schwingerFunctions := D.schwingerFunctions
+    symmetric := D.symmetric
+    symmetric_proof := D.symmetric_proof
+    reflectionLimit := D.reflectionLimit
+    euclideanLimit := D.euclideanLimit
+    clusterLimit :=
+      D.clusterTransfer.toExactGapClusterData.toUniformGeometricClusterData.toClusterLimitData
+    regularityLimit := D.regularityLimit }
+
+/-- Reflection positivity, Euclidean invariance, transfer-operator exact-gap
+clustering, and regularity hold simultaneously for the continuum law. -/
+theorem finite_wilson_os_transfer_operator_four_limit_properties
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {L : EuclideanYangMillsProjectiveLimitMeasure F}
+    (D : FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData W F L) :
+    D.toAutomaticData.reflectionLimit.ContinuumReflectionPositive ∧
+      D.toAutomaticData.euclideanLimit.toEuclideanInvarianceLimitData.ContinuumEuclideanInvariant ∧
+      D.toAutomaticData.clusterLimit.toClusterLimitData.ContinuumClusterProperty ∧
+      D.toAutomaticData.regularityLimit.toRegularityLimitData.ContinuumRegularity :=
+  finite_wilson_os_automatic_four_limit_properties D.toAutomaticData
+
+/-- The continuum connected correlation inherits the exact-gap rate generated
+by the transfer operator. -/
+theorem finite_wilson_os_transfer_operator_continuum_bound
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {L : EuclideanYangMillsProjectiveLimitMeasure F}
+    (D : FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData W F L)
+    (O : D.clusterTransfer.Observable) (r : ℕ) :
+    ‖D.clusterTransfer.continuumConnectedCorrelation O r‖ ≤
+      D.clusterTransfer.decayAmplitude O *
+        exactGapClusterContractionRatio ^ r :=
+  finite_wilson_exact_gap_transfer_operator_continuum_bound
+    D.clusterTransfer O r
+
+/-- The assembled continuum measure package is OS/Wightman-ready. -/
+theorem finite_wilson_os_transfer_operator_continuum_measure_package_ready
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {L : EuclideanYangMillsProjectiveLimitMeasure F}
+    (D : FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData W F L) :
+    D.toAutomaticData.toProjectiveLimitTransferData.toContinuumConstruction.toMeasurePackage.ready :=
+  finite_wilson_os_automatic_continuum_measure_package_ready D.toAutomaticData
+
+variable {W : FiniteWilsonOSAutomaticApproximationFamily}
+  (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
+  [∀ x, Fintype (R.fieldValue x)]
+  [∀ x, Countable (R.fieldValue x)]
+  [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
+
+/-- Transfer-operator automatic analytic data for the explicit single-source
+Wilson continuum law. -/
+abbrev FiniteWilsonGibbsSingleSourceTransferOperatorOSLimitData :=
+  FiniteWilsonOSAutomaticTransferOperatorAnalyticLimitConstructionData W
+    R.toProjectiveRealization.toProjectiveCylinderFamily
+    R.projectiveLimitMeasure
+
+/-- The explicit common-source Wilson continuum law is OS/Wightman-ready when
+clustering is supplied by the transfer-operator contraction package. -/
+theorem finite_wilson_single_source_transfer_operator_os_limit_ready
+    (D : FiniteWilsonGibbsSingleSourceTransferOperatorOSLimitData R) :
+    (R.explicitOSContinuumConstruction
+      (R.automaticOSLimitTransferData D.toAutomaticData)).toMeasurePackage.ready :=
+  finite_wilson_single_source_automatic_os_limit_ready R D.toAutomaticData
+
+variable {κ : Type*} [Countable κ] [Nonempty κ]
+  {β : κ → Type*} [∀ k, MeasurableSpace (β k)]
+  [∀ k, StandardBorelSpace (β k)]
+
+/-- All four continuum routes are simultaneously OS/Wightman-ready with
+clustering generated from the transfer operator. -/
+theorem finite_wilson_single_source_transfer_operator_four_routes_ready
+    (S : EuclideanYangMillsCountableSkeletonData
+      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+    (D : FiniteWilsonGibbsSingleSourceTransferOperatorOSLimitData R) :
+    (R.explicitOSContinuumConstruction
+        (R.automaticOSLimitTransferData D.toAutomaticData)).toMeasurePackage.ready ∧
+      (R.standardBorelOSContinuumConstruction
+        (R.automaticOSLimitTransferData D.toAutomaticData)).toMeasurePackage.ready ∧
+      (R.compactTightOSContinuumConstruction
+        (R.automaticOSLimitTransferData D.toAutomaticData)).toMeasurePackage.ready ∧
+      (R.countableSkeletonOSContinuumConstruction S
+        (R.automaticOSLimitTransferData D.toAutomaticData)).toMeasurePackage.ready :=
+  finite_wilson_single_source_automatic_four_routes_ready R S D.toAutomaticData
+
+/-- All four transfer-operator constructions use exactly the explicit
+`globalObserve` pushforward continuum law. -/
+theorem finite_wilson_single_source_transfer_operator_four_route_measures_eq_explicit
+    (S : EuclideanYangMillsCountableSkeletonData
+      R.toProjectiveRealization.toProjectiveCylinderFamily κ β)
+    (D : FiniteWilsonGibbsSingleSourceTransferOperatorOSLimitData R) :
+    (R.explicitOSContinuumConstruction
+        (R.automaticOSLimitTransferData D.toAutomaticData)).limit.continuumMeasure =
+        R.continuumMeasure ∧
+      (R.standardBorelOSContinuumConstruction
+        (R.automaticOSLimitTransferData D.toAutomaticData)).limit.continuumMeasure =
+        R.continuumMeasure ∧
+      (R.compactTightOSContinuumConstruction
+        (R.automaticOSLimitTransferData D.toAutomaticData)).limit.continuumMeasure =
+        R.continuumMeasure ∧
+      (R.countableSkeletonOSContinuumConstruction S
+        (R.automaticOSLimitTransferData D.toAutomaticData)).limit.continuumMeasure =
+        R.continuumMeasure :=
+  finite_wilson_single_source_automatic_four_route_measures_eq_explicit
+    R S D.toAutomaticData
+
+end
+
+end MathlibAnalytic
+end MGAP4D
