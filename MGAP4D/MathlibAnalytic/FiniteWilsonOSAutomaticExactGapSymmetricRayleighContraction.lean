@@ -21,7 +21,8 @@ theorem real_symmetric_matrix_coefficient_le_of_abs_quadratic_bound
       4 * inner ℝ (T x) y =
         inner ℝ (T (x + y)) (x + y) -
           inner ℝ (T (x - y)) (x - y) := by
-    simp only [map_add, map_sub, inner_add_left, inner_add_right]
+    simp only [map_add, map_sub, inner_add_left, inner_add_right,
+      inner_sub_left, inner_sub_right]
     rw [hsymm y x]
     ring
   have hdiff :
