@@ -22,10 +22,24 @@ theorem finite_lattice_singleLinkHeatBath_reversible_product_sum
           (L.singleLinkConditionalPMF x.1 e x.2).toReal *
           f x.1 * g (L.replaceLink x.1 e x.2) := by
   classical
-  refine Fintype.sum_equiv (L.singleLinkUpdateSwapEquiv e) _ _ ?_
-  rintro ⟨A, h⟩
-  simpa [FiniteLatticeWilsonSystem.singleLinkUpdateSwapEquiv] using
-    finite_lattice_singleLinkHeatBath_reversible_term L A e h f g
+  let τ := L.singleLinkUpdateSwapEquiv e
+  let lhsTerm : (L.Configuration × L.Gauge) → ℝ := fun x =>
+    L.gibbsProbabilityReal x.1 *
+      (L.singleLinkConditionalPMF x.1 e x.2).toReal *
+      f (L.replaceLink x.1 e x.2) * g x.1
+  let rhsTerm : (L.Configuration × L.Gauge) → ℝ := fun x =>
+    L.gibbsProbabilityReal x.1 *
+      (L.singleLinkConditionalPMF x.1 e x.2).toReal *
+      f x.1 * g (L.replaceLink x.1 e x.2)
+  change (∑ x, lhsTerm x) = ∑ x, rhsTerm x
+  calc
+    _ = ∑ x, rhsTerm (τ x) := by
+      apply Finset.sum_congr rfl
+      rintro ⟨A, h⟩ _
+      simpa [lhsTerm, rhsTerm, τ,
+        FiniteLatticeWilsonSystem.singleLinkUpdateSwapEquiv] using
+        finite_lattice_singleLinkHeatBath_reversible_term L A e h f g
+    _ = _ := τ.sum_comp rhsTerm
 
 end
 
