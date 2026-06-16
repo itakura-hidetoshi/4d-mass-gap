@@ -24,8 +24,8 @@ theorem finite_lattice_singleLinkHeatBath_reversible_product_sum
   classical
   refine Fintype.sum_equiv (L.singleLinkUpdateSwapEquiv e) _ _ ?_
   rintro ⟨A, h⟩
-  exact finite_lattice_singleLinkHeatBath_reversible_term
-    L A e h f g
+  simpa [FiniteLatticeWilsonSystem.singleLinkUpdateSwapEquiv] using
+    finite_lattice_singleLinkHeatBath_reversible_term L A e h f g
 
 end
 
