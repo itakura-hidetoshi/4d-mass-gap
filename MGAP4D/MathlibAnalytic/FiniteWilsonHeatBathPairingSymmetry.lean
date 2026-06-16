@@ -21,6 +21,7 @@ theorem finite_lattice_singleLinkHeatBath_forward_sum_eq_gibbsPairing
     FiniteLatticeWilsonSystem.gibbsPairingReal
     FiniteLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteLatticeWilsonSystem.singleLinkConditionalExpectation
+  simp only [Prod.fst, Prod.snd]
   apply Finset.sum_congr rfl
   intro A _hA
   rw [Finset.mul_sum, Finset.sum_mul]
@@ -41,6 +42,7 @@ theorem finite_lattice_singleLinkHeatBath_backward_sum_eq_gibbsPairing
     FiniteLatticeWilsonSystem.gibbsPairingReal
     FiniteLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteLatticeWilsonSystem.singleLinkConditionalExpectation
+  simp only [Prod.fst, Prod.snd]
   apply Finset.sum_congr rfl
   intro A _hA
   rw [Finset.mul_sum]
