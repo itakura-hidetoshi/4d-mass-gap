@@ -37,6 +37,23 @@ theorem finite_lattice_singleLinkHeatBath_reversible_mass
   unfold FiniteLatticeWilsonSystem.singleLinkBoltzmannWeight
   ac_rfl
 
+theorem finite_lattice_singleLinkHeatBath_detailedBalance_real
+    (L : FiniteLatticeWilsonSystem)
+    (A : L.Configuration) (e : L.Edge) (g : L.Gauge) :
+    L.gibbsProbabilityReal A *
+        (L.singleLinkConditionalPMF A e g).toReal =
+      L.gibbsProbabilityReal (L.replaceLink A e g) *
+        (L.singleLinkConditionalPMF
+          (L.replaceLink A e g) e (A e)).toReal := by
+  change (L.gibbsPMF A).toReal *
+      (L.singleLinkConditionalPMF A e g).toReal =
+    (L.gibbsPMF (L.replaceLink A e g)).toReal *
+      (L.singleLinkConditionalPMF
+        (L.replaceLink A e g) e (A e)).toReal
+  simpa only [ENNReal.toReal_mul] using
+    congrArg ENNReal.toReal
+      (finite_lattice_singleLinkHeatBath_reversible_mass L A e g)
+
 end
 
 end MathlibAnalytic
