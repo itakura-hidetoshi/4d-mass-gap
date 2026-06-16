@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonSingleLinkApproximateTensorization
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonSingleLinkHeatBathDirichlet
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- A one-sweep contraction certificate for the concrete finite Wilson Gibbs
-law.  The sweep may later be instantiated by an ordered single-link heat-bath
+law. The sweep may later be instantiated by an ordered single-link heat-bath
 sweep, a random scan, or a block update. -/
 structure FiniteLatticeWilsonHeatBathSweepContractionData
     (L : FiniteLatticeWilsonSystem) where
@@ -34,9 +34,17 @@ theorem finite_lattice_one_sub_sweepRate_mul_variance_le_dirichlet
     (f : L.Configuration → ℝ) :
     (1 - S.contractionRate) * L.gibbsVarianceReal f ≤
       L.singleLinkHeatBathDirichletForm f := by
-  have hDecomposition := S.variance_decomposition f
-  have hContraction := S.sweep_variance_contraction f
-  nlinarith
+  calc
+    (1 - S.contractionRate) * L.gibbsVarianceReal f =
+        L.gibbsVarianceReal f -
+          S.contractionRate * L.gibbsVarianceReal f := by
+      ring
+    _ ≤ L.gibbsVarianceReal f -
+        L.gibbsVarianceReal (S.sweep f) :=
+      sub_le_sub_left (S.sweep_variance_contraction f)
+        (L.gibbsVarianceReal f)
+    _ ≤ L.singleLinkHeatBathDirichletForm f :=
+      (sub_le_iff_le_add).2 (S.variance_decomposition f)
 
 /-- A heat-bath sweep contracting variance at rate `ρ`, with
 `exactGapValueReal ≤ 1 - ρ`, generates the concrete exact-gap Wilson Poincare
@@ -54,35 +62,6 @@ theorem finite_lattice_exactGap_heatBathPoincare_of_sweepContraction
         (finite_lattice_gibbsVarianceReal_nonneg L f)
     _ ≤ L.singleLinkHeatBathDirichletForm f :=
       finite_lattice_one_sub_sweepRate_mul_variance_le_dirichlet L S f
-
-/-- Convert a sweep-contraction certificate into the approximate tensorization
-package with constant `(1 - ρ)⁻¹`. -/
-noncomputable def
-    FiniteLatticeWilsonHeatBathSweepContractionData.toApproximateTensorizationData
-    {L : FiniteLatticeWilsonSystem}
-    (S : FiniteLatticeWilsonHeatBathSweepContractionData L) :
-    FiniteLatticeWilsonSingleLinkApproximateTensorizationData L := by
-  have hPositive : 0 < 1 - S.contractionRate :=
-    sub_pos.mpr S.contractionRate_lt_one
-  refine
-    { tensorizationConstant := (1 - S.contractionRate)⁻¹
-      tensorizationConstant_nonneg := inv_nonneg.mpr (le_of_lt hPositive)
-      variance_le_constant_mul_dirichlet := ?_
-      exactGap_mul_constant_le_one := ?_ }
-  · intro f
-    have hCoercive :=
-      finite_lattice_one_sub_sweepRate_mul_variance_le_dirichlet L S f
-    have hDiv :
-        L.gibbsVarianceReal f ≤
-          L.singleLinkHeatBathDirichletForm f /
-            (1 - S.contractionRate) :=
-      (le_div_iff₀ hPositive).2 hCoercive
-    simpa [div_eq_mul_inv, mul_comm] using hDiv
-  · have hDiv :
-        exactGapValueReal / (1 - S.contractionRate) ≤ 1 := by
-      apply (div_le_iff₀ hPositive).2
-      simpa using S.exactGap_le_one_sub_rate
-    simpa [div_eq_mul_inv] using hDiv
 
 /-- Uniform sweep-contraction data for a whole finite Wilson approximation
 family, with one common contraction rate. -/
