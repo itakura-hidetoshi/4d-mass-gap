@@ -21,7 +21,7 @@ theorem finite_wilson_finite_spectral_four_properties_compile_smoke :
       D.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.regularityLimit.toRegularityLimitData.ContinuumRegularity :=
   finite_wilson_os_finite_spectral_four_limit_properties D
 
-theorem finite_wilson_finite_spectral_continuum_bound_compile_smoke
+theorem finite_wilson_finite_spectral_assembly_continuum_bound_compile_smoke
     (O : D.clusterSpectral.Observable) (r : ℕ) :
     ‖D.clusterSpectral.continuumConnectedCorrelation O r‖ ≤
       D.clusterSpectral.decayAmplitude O *
