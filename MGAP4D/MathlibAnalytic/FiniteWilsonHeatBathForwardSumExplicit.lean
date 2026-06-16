@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-noncomputable local instance finiteLatticeWilsonConfigurationFintype
+noncomputable instance finiteLatticeWilsonConfigurationFintype
     (L : FiniteLatticeWilsonSystem) : Fintype L.Configuration := by
   classical
   exact Fintype.ofFinite L.Configuration
