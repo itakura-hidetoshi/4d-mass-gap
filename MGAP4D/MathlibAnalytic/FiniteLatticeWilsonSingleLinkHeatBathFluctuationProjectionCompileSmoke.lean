@@ -37,6 +37,12 @@ theorem finite_lattice_single_link_heat_bath_fluctuation_range_compile_smoke
       LinearMap.ker (L.singleLinkHeatBathProjectionLinearMap e) :=
   finite_lattice_singleLinkHeatBathFluctuationLinearMap_range_eq_projection_ker L e
 
+theorem finite_lattice_single_link_heat_bath_fluctuation_fixed_compile_smoke
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.singleLinkHeatBathFluctuationLinearMap e f = f ↔
+      L.singleLinkHeatBathProjectionLinearMap e f = 0 :=
+  finite_lattice_singleLinkHeatBathFluctuationLinearMap_fixed_iff L e f
+
 end
 
 end MathlibAnalytic
