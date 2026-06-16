@@ -12,11 +12,21 @@ theorem finite_pmf_sum_toReal_eq_one
     {α : Type*} [Fintype α] (p : PMF α) :
     ∑ a : α, (p a).toReal = 1 := by
   classical
-  rw [← ENNReal.toReal_sum]
-  · rw [← tsum_fintype, p.tsum_coe]
-    simp
-  · intro a _ha
-    exact p.apply_ne_top a
+  have hToReal :
+      (∑ a : α, (p a).toReal) =
+        (ENNReal.toReal (∑ a : α, p a)) := by
+    symm
+    simpa using
+      (ENNReal.toReal_sum
+        (s := Finset.univ)
+        (f := fun a : α => p a)
+        (fun a _ha => p.apply_ne_top a))
+  rw [hToReal]
+  have hMass : (∑ a : α, p a) = (1 : ℝ≥0∞) := by
+    rw [← tsum_fintype]
+    exact p.tsum_coe
+  rw [hMass]
+  simp
 
 /-- A real observable is constant on the fibers obtained by forgetting one
 selected link. -/
@@ -62,9 +72,11 @@ theorem finite_lattice_singleLinkHeatBathProjection_fixes
           (L.singleLinkConditionalPMF A e g).toReal * f A := by
       apply Finset.sum_congr rfl
       intro g _hg
-      rw [hFiber (L.replaceLink A e g) A]
-      intro e' he
-      simp [FiniteLatticeWilsonSystem.replaceLink, he]
+      have hReplace : f (L.replaceLink A e g) = f A := by
+        apply hFiber (L.replaceLink A e g) A
+        intro e' he
+        simp [FiniteLatticeWilsonSystem.replaceLink, he]
+      rw [hReplace]
     _ = (∑ g : L.Gauge,
           (L.singleLinkConditionalPMF A e g).toReal) * f A := by
       rw [Finset.sum_mul]
