@@ -12,6 +12,11 @@ noncomputable def finite_wilson_constructed_transfer_orbit_data_compile_smoke :
     FiniteWilsonOSAutomaticExactGapConstructedHamiltonianTransferContractionData W :=
   D.toConstructedHamiltonianTransferData
 
+theorem finite_wilson_constructed_transfer_orbit_amplitude_nonneg_compile_smoke
+    (O : D.Observable) :
+    0 ≤ D.decayAmplitude O :=
+  finite_wilson_constructed_transfer_orbit_decayAmplitude_nonneg D O
+
 theorem finite_wilson_constructed_transfer_orbit_succ_compile_smoke
     (n : ℕ) (O : D.Observable) (r : ℕ) :
     D.correlationState n O (Nat.succ r) =
