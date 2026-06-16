@@ -8,8 +8,13 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Summing the pointwise transition identity gives the forward sum as the
-backward sum composed with the involutive link exchange. -/
+theorem finite_sum_eq_of_function_eq
+    {α M : Type*} [Fintype α] [AddCommMonoid M]
+    {u v : α → M} (h : u = v) :
+    (∑ x : α, u x) = ∑ x : α, v x := by
+  cases h
+  rfl
+
 theorem finite_lattice_singleLinkHeatBath_forward_sum_eq_swapped_backward_sum
     (L : FiniteLatticeWilsonSystem)
     (e : L.Edge) (f g : L.Configuration → ℝ) :
@@ -19,15 +24,9 @@ theorem finite_lattice_singleLinkHeatBath_forward_sum_eq_swapped_backward_sum
         L.singleLinkHeatBathBackwardTerm e f g
           (L.singleLinkUpdateSwapEquiv e x) := by
   classical
-  exact Fintype.sum_congr
-    (fun x : L.Configuration × L.Gauge =>
-      L.singleLinkHeatBathForwardTerm e f g x)
-    (fun x : L.Configuration × L.Gauge =>
-      L.singleLinkHeatBathBackwardTerm e f g
-        (L.singleLinkUpdateSwapEquiv e x))
-    (fun x =>
-      finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
-        L e f g x)
+  exact finite_sum_eq_of_function_eq
+    (finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_comp
+      L e f g)
 
 end
 
