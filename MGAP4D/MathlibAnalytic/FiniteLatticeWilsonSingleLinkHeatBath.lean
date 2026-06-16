@@ -12,13 +12,15 @@ noncomputable section
 def FiniteLatticeWilsonSystem.replaceLink
     (L : FiniteLatticeWilsonSystem)
     (A : L.Configuration) (e : L.Edge) (g : L.Gauge) :
-    L.Configuration :=
-  Function.update A e g
+    L.Configuration := by
+  classical
+  exact Function.update A e g
 
 @[simp] theorem finite_lattice_replaceLink_same
     (L : FiniteLatticeWilsonSystem)
     (A : L.Configuration) (e : L.Edge) (g : L.Gauge) :
     L.replaceLink A e g e = g := by
+  classical
   simp [FiniteLatticeWilsonSystem.replaceLink]
 
 @[simp] theorem finite_lattice_replaceLink_ne
@@ -26,6 +28,7 @@ def FiniteLatticeWilsonSystem.replaceLink
     (A : L.Configuration) (e e' : L.Edge) (g : L.Gauge)
     (h : e' ≠ e) :
     L.replaceLink A e g e' = A e' := by
+  classical
   simp [FiniteLatticeWilsonSystem.replaceLink, h]
 
 /-- The conditional Boltzmann weight obtained by varying one link and freezing
@@ -55,8 +58,9 @@ theorem finite_lattice_singleLinkPartitionFunction_ne_zero
     L.singleLinkPartitionFunction A e ≠ 0 := by
   intro hZero
   have hAll :
-      ∀ g : L.Gauge, L.singleLinkBoltzmannWeight A e g = 0 :=
-    ENNReal.tsum_eq_zero.mp hZero
+      ∀ g : L.Gauge, L.singleLinkBoltzmannWeight A e g = 0 := by
+    simpa [FiniteLatticeWilsonSystem.singleLinkPartitionFunction] using
+      (ENNReal.tsum_eq_zero.mp hZero)
   exact
     (ne_of_gt (finite_lattice_singleLinkBoltzmannWeight_pos L A e default))
       (hAll default)
