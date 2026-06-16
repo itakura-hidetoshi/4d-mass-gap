@@ -91,6 +91,30 @@ theorem finite_lattice_singleLinkHeatBathProjection_fixes
       rw [finite_pmf_sum_toReal_eq_one]
       simp
 
+/-- Single-link heat-bath conditional expectation is idempotent. -/
+theorem finite_lattice_singleLinkHeatBathProjection_idempotent
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.singleLinkHeatBathProjection e
+        (L.singleLinkHeatBathProjection e f) =
+      L.singleLinkHeatBathProjection e f :=
+  finite_lattice_singleLinkHeatBathProjection_fixes L e
+    (L.singleLinkHeatBathProjection e f)
+    (finite_lattice_singleLinkHeatBathProjection_offLinkFiberConstant L e f)
+
+/-- A function is fixed by the single-link heat-bath projection exactly when it
+is constant on the corresponding off-link fibers. -/
+theorem finite_lattice_singleLinkHeatBathProjection_fixed_iff
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.singleLinkHeatBathProjection e f = f ↔
+      L.OffLinkFiberConstant e f := by
+  constructor
+  · intro hFix
+    rw [← hFix]
+    exact finite_lattice_singleLinkHeatBathProjection_offLinkFiberConstant L e f
+  · exact finite_lattice_singleLinkHeatBathProjection_fixes L e f
+
 end
 
 end MathlibAnalytic
