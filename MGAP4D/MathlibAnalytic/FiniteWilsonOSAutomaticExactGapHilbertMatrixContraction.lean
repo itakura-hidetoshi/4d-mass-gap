@@ -68,57 +68,6 @@ theorem finite_wilson_exact_gap_operator_norm_bound_of_matrix_coefficients
     exact_gap_cluster_contraction_ratio_nonneg
     (D.matrixCoefficientBound n)
 
-noncomputable def
-    FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData.toTransferOperatorData
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W) :
-    FiniteWilsonOSAutomaticExactGapTransferOperatorData W :=
-  { Observable := D.Observable
-    StateSpace := D.StateSpace
-    stateNormedAddCommGroup := D.stateNormedAddCommGroup
-    stateNormedSpace := D.stateNormedSpace
-    scale := D.scale
-    leftObservable := D.leftObservable
-    rightObservable := D.rightObservable
-    continuumConnectedCorrelation := D.continuumConnectedCorrelation
-    decayAmplitude := D.decayAmplitude
-    decayAmplitude_nonneg := D.decayAmplitude_nonneg
-    transferOperator := D.transferOperator
-    correlationState := D.correlationState
-    correlationReadout := D.correlationReadout
-    state_succ := D.state_succ
-    connectedCorrelation_representation := D.connectedCorrelation_representation
-    transferOperatorNormBound :=
-      finite_wilson_exact_gap_operator_norm_bound_of_matrix_coefficients D
-    readoutInitialStateBound := D.readoutInitialStateBound
-    pointwiseConvergence := D.pointwiseConvergence }
-
-theorem finite_wilson_exact_gap_bound_of_hilbert_matrix_contraction
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W)
-    (n : ℕ) (O : D.Observable) (r : ℕ) :
-    ‖(W.system (D.scale n)).gibbsConnectedCorrelation
-        (D.leftObservable n O) (D.rightObservable n O r)‖ ≤
-      D.decayAmplitude O * exactGapClusterContractionRatio ^ r :=
-  finite_wilson_exact_gap_bound_of_transfer_operator
-    D.toTransferOperatorData n O r
-
-theorem finite_wilson_exact_gap_hilbert_matrix_contraction_passes_to_limit
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W) :
-    D.toTransferOperatorData.toExactGapClusterData.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.ContinuumClusterProperty :=
-  finite_wilson_exact_gap_transfer_operator_passes_to_limit
-    D.toTransferOperatorData
-
-theorem finite_wilson_exact_gap_hilbert_matrix_contraction_continuum_bound
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W)
-    (O : D.Observable) (r : ℕ) :
-    ‖D.continuumConnectedCorrelation O r‖ ≤
-      D.decayAmplitude O * exactGapClusterContractionRatio ^ r :=
-  finite_wilson_exact_gap_transfer_operator_continuum_bound
-    D.toTransferOperatorData O r
-
 end
 
 end MathlibAnalytic
