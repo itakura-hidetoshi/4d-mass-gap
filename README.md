@@ -159,12 +159,12 @@ or by using a correctly scaled continuous-time generator rather than directly id
 | Fluctuation projection `Q_e` | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathFluctuationProjection.lean` |
 | Fluctuation energy | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathFluctuationEnergy.lean` |
 | Random-scan sweep | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonRandomScanHeatBathSweep.lean` |
-| Dobrushin data | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinMatrix.lean` and uniform-family companion files |
+| Dobrushin data | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinMatrix.lean` and `FiniteLatticeWilsonUniformDobrushinMatrix.lean` |
 | Detailed balance | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathDetailedBalance.lean` |
 | Reversible product sum | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathForwardSumExplicit.lean` |
 | Conditional Hamiltonian bridge | `MGAP4D/MathlibAnalytic/FiniteWilsonSingleLinkHeatBathHamiltonianBridge.lean` |
-| Continuum clustering route | `MGAP4D/MathlibAnalytic/FiniteWilsonSingleLinkHeatBathTransferOrbit.lean` |
-| Full OS assembly route | `MGAP4D/MathlibAnalytic/FiniteWilsonSingleLinkHeatBathFullOSAssembly.lean` |
+| Continuum clustering route | `MGAP4D/MathlibAnalytic/FiniteWilsonOSAutomaticExactGapSingleLinkHeatBathTransferOrbitContraction.lean` |
+| Full OS assembly route | `MGAP4D/MathlibAnalytic/FiniteWilsonGibbsSingleSourceSingleLinkHeatBathOSLimitAssembly.lean` |
 | Placeholder / proof-debt inventory | `docs/proof_placeholder_inventory.md` |
 
 ## Replay
