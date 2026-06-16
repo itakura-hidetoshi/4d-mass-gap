@@ -1,408 +1,104 @@
-# Current proof status anchor
+# Current proof status
 
-This file is the short status anchor for `main` when older pull requests, README/ROADMAP text, external summaries, or citation snapshots lag behind the proof spine.
+**Updated:** 2026-06-17  
+**Latest merged checkpoint:** PR #241  
+**Open continuation:** PR #242, not yet on `main`
 
----
+## Status
 
-## Current `main` proof-facing surface
-
-The current proof-facing surface has two visible layers:
-
-```text
-A. normalized exact-gap audit route
-   Basic-layer route marker
-     -> abstract normalized exactGapValueReal carrier with positivity / above-one facts
-     -> continuum-Hamiltonian / PVM / operator-spectral carrier-alignment route
-     -> R6 exact atom 33/20 / spectral-PVM value-pinning route
-     -> R7 positive spectral-weight witness route
-     -> R1--R7 terminal audit chain
-     -> public / external audit receipt chain
-
-B. axiomatic / OS-Wightman / Euclidean construction route
-   axiomatic Yang--Mills closure target
-     -> OS/Wightman Hamiltonian reconstruction spine
-     -> OS/Wightman mass-gap definition bridge
-     -> OS/Wightman external audit bridge
-     -> Euclidean measure to mass-gap pipeline
-     -> Euclidean measure unconditional-construction target
-     -> finite-volume / continuum construction spine
-     -> Euclidean construction external audit bridge
-```
-
-Current public-boundary reading:
+The current source tree contains a concrete finite Wilson Gibbs and heat-bath lane:
 
 ```text
-internal Lean terminal audit route: present
-public / external audit receipt surface: present
-OS/Wightman and Euclidean construction bridge surfaces: present
-construction-spine external-audit projection: present
-external mathematical consensus: not claimed
-independent peer-review completion: not claimed
-Clay-style public acceptance: not claimed
-complete public solution of the 4D Yang--Mills mass-gap problem: not claimed
-unconditional physical Yang--Mills measure construction: not claimed
-external acceptance of the construction-spine external-audit projection: not claimed
+finite Wilson Gibbs law
+  -> exact single-link conditional law
+  -> Gibbs and conditional variances
+  -> heat-bath Dirichlet form
+  -> projection P_e
+  -> fluctuation projection Q_e = I - P_e
+  -> detailed balance
+  -> reversible finite product-sum identity
 ```
 
-This status file is a documentation anchor only. The Lean source tree and theorem bodies remain authoritative.
+On `main`, the projection algebra, local fluctuation-energy identity, exact detailed balance, and the theorem
 
----
+```lean
+finite_lattice_singleLinkHeatBath_reversible_product_sum
+```
 
-## Central normalized terminal payload
+are present. Gibbs-pairing symmetry of `P_e` is proposed in PR #242 and is not yet merged.
 
-The central terminal-audit payload currently exposed by the R1--R7 chain is:
+The repository also contains conditional conversions from a uniform finite-volume coercivity estimate to Hamiltonian lower bounds, transfer contraction, continuum clustering, and OS/Wightman reconstruction. The required uniform non-Abelian estimate, physical quadratic-form identification, and nontrivial continuum construction remain open.
+
+## Random-scan normalization issue
+
+The current random-scan data require
 
 ```text
-MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
-Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
+0 <= rho < 1
+exactGapValueReal <= 1 - rho.
 ```
 
-The important correction is the origin of the first line: it must not be read as a Basic-layer theorem, an `ExactGapReal.lean` theorem, or a pre-R6 definitional unfolding. The displayed `33/20` value is adopted through the R6 non-definitional spectral/PVM value-pinning surface and then carried forward by R7 and the terminal chain.
+The source tree also proves
 
----
+```lean
+exactGapValueReal_above_one : 1 < exactGapValueReal
+```
 
-## Exact-gap layer separation
-
-The current normalized exact-gap route separates five review layers:
+Since `0 <= rho` implies `1 - rho <= 1`, these hypotheses cannot hold together. The heat-bath/Markov gap must therefore be separated from the normalized physical gap, with an explicit scale bridge such as
 
 ```text
-1. Basic-layer route marker
-2. downstream abstract real-carrier / positivity-boundary layer
-3. continuum-Hamiltonian / PVM / operator-spectral carrier-alignment layer
-4. R6 exact atom and R7 positive spectral-weight layer
-5. engineering / audit / public-boundary marker layer
+lambda_HB <= 1 - rho
+Delta_norm = scale_HB * lambda_HB
+scale_HB > 0.
 ```
 
-Correct reading:
+Until that repair is made, the random-scan implication route has an unfilled normalization hypothesis.
+
+## Exact `33/20` dependency
+
+The numerical value enters in
 
 ```text
-Basic.lean
-  -> marker-only route-deferred layer
-  -> no real-valued gap carrier
-  -> no local final-value assignment
-
-ExactGapReal.lean
-  -> defines exactGapValueReal as an abstract downstream normalized real carrier
-  -> proves exactGapValueReal_pos and exactGapValueReal_above_one
-  -> proves ray-membership consequences
-  -> does not provide exactGapValueRealRouteWitness
-  -> does not provide exactGapValueReal_eq
-  -> does not expose exactGapValueReal = (33 : ℝ) / 20
-
-ContinuumHamiltonianMassGapTheorem.lean and related Hamiltonian files
-  -> provide continuum-Hamiltonian / spectral-chain readiness surfaces
-  -> preserve positivity and nonzero spectral-mass information
-  -> expose boundary markers that require R6 pinning for the displayed exact value
-
-YangMillsHamiltonianSpectralDerivation3320.lean
-  -> aligns the spectral infimum / attainment / observable atom value with the derived spectral value
-  -> aligns exactGapValueReal with the derived Hamiltonian spectral value
-  -> keeps final-value adoption routed through the R6 value-pinning lane
-
-R6 ExactAtom3320 lane
-  -> supplies the non-definitional spectral/PVM pinning route for the displayed value
-  -> exposes the canonical ready theorem exact_atom_3320_r6_exact_gap_value_eq_3320_ready
-
-R7 positive-weight lane
-  -> supplies the positive spectral-weight witness and preserves the exact value
-
-R1--R7 terminal chain
-  -> records exact 33/20 plus positive spectral weight at terminal audit level
+MGAP4D/MathlibAnalytic/HamiltonianPVMSpectralExactGapValue.lean
 ```
 
----
+through the definition
 
-## Axiomatic / OS-Wightman / Euclidean construction route
-
-The current source tree also exposes a conditional construction and audit route:
-
-```text
-AxiomaticYangMillsMassGapClosure.lean
-  -> theorem-level closure target for an axiomatic Yang--Mills model
-
-OSWightmanHamiltonianReconstructionSpine.lean
-  -> reconstruction spine from OS/Wightman assumptions to Hilbert/Hamiltonian data
-
-OSWightmanMassGapDefinitionBridge.lean
-  -> mass-gap definition bridge with PVM detection, positive energy, and vacuum isolation fields
-
-OSWightmanMassGapExternalAuditBridge.lean
-  -> external audit projection for the OS/Wightman bridge
-
-EuclideanYangMillsMeasureToMassGapPipeline.lean
-  -> pipeline from Euclidean measure data to the OS/Wightman mass-gap bridge
-
-EuclideanYangMillsMeasureUnconditionalTarget.lean
-  -> proof-field target surface for an eventual concrete Euclidean measure construction
-
-EuclideanYangMillsMeasureConstructionSpine.lean
-  -> finite-volume / continuum construction spine
-
-EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean
-  -> external audit projection for the construction spine
+```lean
+hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 ```
 
-Current theorem-facing route:
+`ExactGapReal.lean` projects `exactGapValueReal` from the package constructed there. Later spectral, R6, and R7 files transport the same value. Thus the lack of a literal `33/20` in `ExactGapReal.lean` is a local syntactic separation, not an independent physical derivation.
 
-```text
-EuclideanYangMillsFiniteVolumeApproximation
-  -> EuclideanYangMillsContinuumMeasureConstructionSpine
-  -> EuclideanYangMillsMeasureUnconditionalConstructionTarget
-  -> EuclideanYangMillsMeasureMassGapPipeline
-  -> OSWightmanMassGapDefinitionBridge
-  -> ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
-  -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
-```
+## Claim table
 
-Primary construction/external-audit anchors:
+| Claim | Status |
+|---|---|
+| Exact finite Wilson conditional law | constructed |
+| Gibbs variance and heat-bath Dirichlet form | constructed |
+| Algebraic `P_e` and `Q_e` projections | constructed |
+| Local variance/fluctuation-energy identity | proved |
+| Exact detailed balance | proved |
+| Reversible finite product sum | proved on `main` |
+| Gibbs-pairing symmetry | open PR #242 |
+| Gibbs orthogonality | open |
+| Uniform Wilson influence estimate | open |
+| Dobrushin-to-contraction theorem | open |
+| Heat-bath/physical-gap scale bridge | open |
+| Physical Hamiltonian identification | conditional |
+| Continuum clustering | conditional |
+| Nontrivial continuum Yang--Mills measure | open |
+| Physical mass gap | open |
+| Independent physical derivation of `33/20` | open |
+| External consensus | not claimed |
 
-```text
-euclidean_yang_mills_continuum_spine_limit_ready
-euclidean_yang_mills_continuum_spine_os_axioms_ready
-euclidean_yang_mills_continuum_spine_wightman_theory
-euclidean_yang_mills_continuum_spine_positive_hamiltonian_spectrum
-euclidean_yang_mills_continuum_spine_vacuum_isolated
-euclidean_yang_mills_continuum_spine_first_excitation_pvm_detected
-euclidean_yang_mills_continuum_spine_mass_gap_definition
-euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
-external_audit_readiness_euclidean_yang_mills_construction_spine_projection
-external_audit_readiness_euclidean_construction_spine_exact_gap_positive
-external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
-external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
-ExternalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
-externalAuditReadinessEuclideanYangMillsConstructionSpineCertificate
-```
+## Next steps
 
-Audit/documentation anchoring:
+1. Complete Gibbs-pairing symmetry and `P_e`/`Q_e` orthogonality.
+2. Repair the heat-bath/physical-gap normalization.
+3. Derive contraction from Dobrushin assumptions.
+4. Prove scale-uniform Wilson influence bounds.
+5. Construct the transfer Hamiltonian and quadratic-form bridge.
+6. Establish a nontrivial continuum limit and independent review.
 
-```text
-scripts/audit_os_wightman_mass_gap_bridge.py
-THEOREM_INDEX.md
-EXTERNAL_REVIEW_CHECKLIST.md
-docs/axiomatic_yang_mills_mass_gap_closure.md
-docs/full_local_check_ci.md
-```
-
-Current boundary:
-
-```text
-These files provide theorem-level closure targets and audit projections.
-The construction spine is a proof-field route into the unconditional target.
-The unconditional target is a theorem socket, not community acceptance.
-The construction external-audit bridge is a review-routing projection, not community acceptance.
-They do not by themselves prove that the physical 4D Yang--Mills measure has already been unconditionally constructed from first principles.
-A concrete construction and external validation remain separate review tasks.
-```
-
-Primary human-readable notes:
-
-```text
-docs/axiomatic_yang_mills_mass_gap_closure.md
-THEOREM_INDEX.md
-EXTERNAL_REVIEW_CHECKLIST.md
-docs/full_local_check_ci.md
-```
-
----
-
-## Exact `33/20` derivation source
-
-### 1. Basic-layer marker role
-
-```text
-MGAP4D/MathlibAnalytic/Basic.lean
-```
-
-Primary anchors:
-
-```text
-FourDYangMillsAnalyticGapValueOrigin.ready
-four_d_yang_mills_analytic_gap_value_origin_ready
-four_d_yang_mills_basic_layer_numeric_carrier_absent
-```
-
-Current status:
-
-```text
-Basic.lean is a route marker.
-It records that the spectral theorem, PVM observable, and Hamiltonian theorem routes are deferred.
-It explicitly records basicLayerNumericCarrierAbsent = true.
-It is not a numerical exact-gap source.
-```
-
-### 2. Real-carrier role
-
-```text
-MGAP4D/MathlibAnalytic/ExactGapReal.lean
-```
-
-Current anchors:
-
-```text
-exactGapValueReal
-exactGapValueReal_pos
-exactGapValueReal_above_one
-exactGapValueReal_mem_positive_ray
-exactGapValueReal_mem_above_one_ray
-exactGapRealSurface
-exact_gap_real_surface_ready
-```
-
-Current status:
-
-```text
-ExactGapReal.lean introduces an abstract normalized real carrier.
-It proves positivity and above-one facts.
-It does not contain exactGapValueReal_eq.
-It does not choose 33/20.
-It does not expose exactGapValueReal = (33 : ℝ) / 20.
-```
-
-### 3. Continuum-Hamiltonian / PVM / spectral derivation role
-
-```text
-MGAP4D/MathlibAnalytic/ContinuumHamiltonianMassGapTheorem.lean
-MGAP4D/MathlibAnalytic/ContinuumHamiltonianCompleteMassGapDerivation.lean
-MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean
-```
-
-Primary anchors:
-
-```text
-ContinuumHamiltonianExactValueRequiresR6Pinning
-continuum_hamiltonian_derives_exact_mass_gap_value
-physical_4d_ym_continuum_hamiltonian_derives_complete_spectral_exact_mass_gap
-physical_4d_ym_continuum_hamiltonian_complete_spectral_derivation_exact_gap
-physical_4d_ym_continuum_hamiltonian_complete_spectral_atom_positive_nonzero
-yang_mills_hamiltonian_spectral_derivation_3320_ready
-yang_mills_hamiltonian_exact_gap_eq_spectral_value
-yang_mills_hamiltonian_exact_gap_value_from_physical_spectrum
-yang_mills_hamiltonian_spectral_pvm_analysis_requires_r6_value_pinning
-```
-
-Current status:
-
-```text
-The Yang--Mills spectral interface aligns exactGapValueReal with the derived Hamiltonian spectral value.
-It preserves positive and nonzero spectral-mass surfaces.
-It keeps public / final-release boundary markers visible.
-It routes final value adoption through R6 rather than Basic.lean or ExactGapReal.lean.
-```
-
-### 4. R6 exact-atom / value-pinning role
-
-```text
-MGAP4D/R6/Theorem/ExactAtom3320YangMillsSpectralDerivation.lean
-MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean
-MGAP4D/R6/Theorem/ExactAtom3320SpectralOriginFirewall.lean
-MGAP4D/R6/Theorem/ExactAtom3320ValueOriginQuarantine.lean
-MGAP4D/R6/Theorem/ExactAtom3320DirectReviewBridge.lean
-```
-
-Primary anchors:
-
-```text
-ExactAtom3320R6NormalizedSpectralAtom
-ExactAtom3320R6SpectralPVMPinsDerivedValue
-exact_atom_3320_r6_spectral_pvm_pins_derived_value_ready
-exact_atom_3320_r6_derived_spectral_value_from_hamiltonian_pvm_route
-exact_atom_3320_r6_derived_spectral_value_eq_3320
-exact_atom_3320_r6_derived_spectral_value_eq_3320_ready
-exact_atom_3320_r6_exact_gap_value_eq_3320
-exact_atom_3320_r6_exact_gap_value_eq_3320_ready
-exact_atom_3320_nondefinitional_origin_certificate_ready
-exact_atom_3320_nondefinitional_derivation_target_ready
-```
-
-Current status:
-
-```text
-R6 is the review layer that prevents the displayed value 33/20 from being read as a pre-R6 definitional unfolding.
-The canonical ready theorem derives exactGapValueReal = 33/20 by carrier alignment plus Hamiltonian/PVM/spectral pinning.
-```
-
-### 5. R7 / terminal role
-
-```text
-MGAP4D/R7/Theorem.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean
-MGAP4D/HardPhysicalResidualLedgerR1R7ExternalAuditReceiptChainIndex.lean
-```
-
-Primary anchors:
-
-```text
-atom_exact_r6_direct_positive_weight_review_surface_payload
-hard_physical_residual_ledger_r1_r7_terminal_discharge_chain_index_3320_ready
-hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight
-hard_physical_residual_ledger_r1_r7_terminal_final_release_held
-hard_physical_residual_ledger_r1_r7_terminal_public_boundary_locked
-hard_physical_residual_ledger_r1_r7_terminal_carries_r4_genuine_pvm_laws
-```
-
-Current status:
-
-```text
-R7 preserves the R6 exact value together with the positive spectral-weight witness.
-The terminal R1--R7 chain records exact 33/20 and positive weight at the terminal audit level.
-The same terminal layer keeps final-release hold and public-boundary lock visible.
-```
-
----
-
-## Proof-debt reading rule
-
-Do not read a terminal-looking chain or bridge-looking construction surface as external mathematical acceptance until the dependency chain has been reviewed.
-
-```text
-PUnit
-  -> placeholder carrier / target-API shell
-  -> open proof debt unless replaced or superseded by a typed theorem
-
-True
-  -> metadata / visibility / non-promotion flag
-  -> cannot close analytic content by itself
-
-StillOpen
-  -> active or historical open-obligation marker
-  -> must be classified as active, historical, or superseded
-
-theoremWitnessOnly / ready / receipt / packet / manifest
-  -> provenance or review-order evidence unless the payload contains a substantive typed theorem
-```
-
-Primary inventory:
-
-```text
-docs/proof_placeholder_inventory.md
-scripts/audit_proof_placeholder_inventory.py
-```
-
----
-
-## Physical normalization boundary
-
-The internal value is normalized and dimensionless:
-
-```text
-Delta_norm = 33/20
-Delta_phys(E0) = E0 * (33/20)
-```
-
-A dimensional physical mass gap requires a positive external reference scale `E0`. In internal normalized units, `E0 = 1`.
-
----
-
-## Public status sentence
-
-Use this wording for public summaries:
-
-```text
-MGAP4D currently provides a Lean 4 proof-carrying and replayable audit surface for
-a normalized 4D mass-gap route. The internal R1--R7 terminal chain records exact
-value 33/20 and a positive spectral-weight witness. The repository also exposes
-conditional axiomatic / OS-Wightman / Euclidean construction bridge surfaces,
-including a finite-volume/continuum construction spine and a construction-spine
-external-audit projection. External mathematical consensus and Clay-style public
-acceptance remain separate review processes.
-```
+Lean theorem bodies are authoritative. Conditional structures and normalization carriers must not be presented as unconditional physical results.
