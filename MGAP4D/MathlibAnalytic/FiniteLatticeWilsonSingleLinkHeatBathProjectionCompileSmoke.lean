@@ -8,8 +8,8 @@ noncomputable section
 variable {α : Type*} [Fintype α]
 
 example (p : PMF α) :
-    ∑ a : α, (p a).toReal = 1 :=
-  finite_pmf_sum_toReal_eq_one p
+    ∑ a : α, p a = 1 :=
+  finite_pmf_sum_eq_one p
 
 end
 
