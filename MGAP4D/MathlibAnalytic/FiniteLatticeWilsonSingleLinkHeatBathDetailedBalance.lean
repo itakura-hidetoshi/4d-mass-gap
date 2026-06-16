@@ -16,6 +16,13 @@ noncomputable section
     simp
   · simp [FiniteLatticeWilsonSystem.replaceLink, h]
 
+@[simp] theorem finite_lattice_singleLinkBoltzmannWeight_original
+    (L : FiniteLatticeWilsonSystem)
+    (A : L.Configuration) (e : L.Edge) :
+    L.singleLinkBoltzmannWeight A e (A e) = L.boltzmannWeight A := by
+  unfold FiniteLatticeWilsonSystem.singleLinkBoltzmannWeight
+  rw [finite_lattice_replaceLink_original]
+
 end
 
 end MathlibAnalytic
