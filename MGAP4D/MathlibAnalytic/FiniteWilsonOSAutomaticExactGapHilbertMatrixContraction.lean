@@ -8,13 +8,16 @@ open Filter
 
 noncomputable section
 
-/-- Hilbert coefficient input for the finite Wilson transfer contraction. -/
+/-- Hilbert coefficient input for the finite Wilson transfer contraction.
+
+The inner-product structure is the unique source of the real normed-space
+instance, preventing distinct `NormedSpace` dictionaries from appearing in the
+stored operator and in the matrix-coefficient theorem. -/
 structure FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData
     (W : FiniteWilsonOSAutomaticApproximationFamily) where
   Observable : Type
   StateSpace : Type
   [stateNormedAddCommGroup : NormedAddCommGroup StateSpace]
-  [stateNormedSpace : NormedSpace ℝ StateSpace]
   [stateInnerProductSpace : InnerProductSpace ℝ StateSpace]
   scale : ℕ → W.index
   leftObservable :
@@ -55,9 +58,10 @@ structure FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData
 
 attribute [instance]
   FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData.stateNormedAddCommGroup
-  FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData.stateNormedSpace
   FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData.stateInnerProductSpace
 
+/-- Uniform control of all unit Hilbert matrix coefficients controls the
+operator norm. -/
 theorem finite_wilson_exact_gap_operator_norm_bound_of_matrix_coefficients
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W)
