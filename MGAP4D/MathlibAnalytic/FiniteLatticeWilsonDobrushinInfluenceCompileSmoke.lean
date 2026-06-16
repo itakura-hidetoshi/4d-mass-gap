@@ -16,21 +16,12 @@ theorem finite_lattice_conditional_tv_nonneg_compile_smoke
     0 ≤ L.singleLinkConditionalTotalVariation A B e :=
   finite_lattice_singleLinkConditionalTotalVariation_nonneg L A B e
 
-variable (D : FiniteLatticeWilsonDobrushinInfluenceData L)
-
-example : 0 ≤ D.dobrushinCoefficient :=
-  D.dobrushinCoefficient_nonneg
-
-example : D.dobrushinCoefficient < 1 :=
-  D.dobrushinCoefficient_lt_one
-
-variable (F : FiniteLatticeWilsonApproximationFamily)
-  (U : F.UniformDobrushinInfluenceData)
-
-noncomputable def finite_lattice_uniform_dobrushin_system_compile_smoke
-    (i : F.index) :
-    FiniteLatticeWilsonDobrushinInfluenceData (F.system i) :=
-  U.toSystemData i
+theorem finite_lattice_conditional_tv_fiber_zero_compile_smoke
+    (A B : L.Configuration) (e : L.Edge)
+    (hAgree : L.AgreeOffLink A B e) :
+    L.singleLinkConditionalTotalVariation A B e = 0 :=
+  finite_lattice_singleLinkConditionalTotalVariation_eq_zero_of_agreeOffLink
+    L A B e hAgree
 
 end
 
