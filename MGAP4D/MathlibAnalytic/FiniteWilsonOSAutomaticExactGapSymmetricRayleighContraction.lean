@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapHilbertMatrixContraction
+import Mathlib.Analysis.InnerProductSpace.Rayleigh
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -7,69 +8,12 @@ open Filter
 
 noncomputable section
 
-/-- A real symmetric continuous linear operator is controlled by its absolute
-quadratic form.  This is the real polarization step needed to replace the
-all-matrix-coefficient cluster input by a Rayleigh-type input. -/
-theorem real_symmetric_matrix_coefficient_le_of_abs_quadratic_bound
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    (T : E →L[ℝ] E) (C : ℝ)
-    (hsymm : ∀ x y : E, inner ℝ (T x) y = inner ℝ (T y) x)
-    (hquad : ∀ z : E, |inner ℝ (T z) z| ≤ C * ‖z‖ ^ 2)
-    {x y : E} (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) :
-    inner ℝ (T x) y ≤ C := by
-  have hpolar :
-      4 * inner ℝ (T x) y =
-        inner ℝ (T (x + y)) (x + y) -
-          inner ℝ (T (x - y)) (x - y) := by
-    simp only [map_add, map_sub, inner_add_left, inner_add_right,
-      inner_sub_left, inner_sub_right]
-    rw [hsymm y x]
-    ring
-  have hdiff :
-      inner ℝ (T (x + y)) (x + y) -
-          inner ℝ (T (x - y)) (x - y) ≤
-        |inner ℝ (T (x + y)) (x + y)| +
-          |inner ℝ (T (x - y)) (x - y)| := by
-    calc
-      inner ℝ (T (x + y)) (x + y) -
-          inner ℝ (T (x - y)) (x - y) ≤
-        |inner ℝ (T (x + y)) (x + y)| -
-          inner ℝ (T (x - y)) (x - y) :=
-            sub_le_sub_right (le_abs_self _) _
-      _ ≤ |inner ℝ (T (x + y)) (x + y)| +
-          |inner ℝ (T (x - y)) (x - y)| := by
-            rw [sub_eq_add_neg]
-            gcongr
-            exact neg_le_abs _
-  have hquadSum :
-      |inner ℝ (T (x + y)) (x + y)| +
-          |inner ℝ (T (x - y)) (x - y)| ≤
-        C * (‖x + y‖ ^ 2 + ‖x - y‖ ^ 2) := by
-    calc
-      |inner ℝ (T (x + y)) (x + y)| +
-          |inner ℝ (T (x - y)) (x - y)| ≤
-        C * ‖x + y‖ ^ 2 + C * ‖x - y‖ ^ 2 :=
-          add_le_add (hquad (x + y)) (hquad (x - y))
-      _ = C * (‖x + y‖ ^ 2 + ‖x - y‖ ^ 2) := by ring
-  have hparallelogram : ‖x + y‖ ^ 2 + ‖x - y‖ ^ 2 = 4 := by
-    calc
-      ‖x + y‖ ^ 2 + ‖x - y‖ ^ 2 =
-          2 * (‖x‖ ^ 2 + ‖y‖ ^ 2) :=
-        parallelogram_law_with_norm ℝ x y
-      _ = 4 := by rw [hx, hy]; norm_num
-  have hfour : 4 * inner ℝ (T x) y ≤ 4 * C := by
-    calc
-      4 * inner ℝ (T x) y =
-          inner ℝ (T (x + y)) (x + y) -
-            inner ℝ (T (x - y)) (x - y) := hpolar
-      _ ≤ |inner ℝ (T (x + y)) (x + y)| +
-          |inner ℝ (T (x - y)) (x - y)| := hdiff
-      _ ≤ C * (‖x + y‖ ^ 2 + ‖x - y‖ ^ 2) := hquadSum
-      _ = 4 * C := by rw [hparallelogram]; ring
-  linarith
+/-- A symmetric Hilbert-space transfer operator controlled only through its
+unit-sphere Rayleigh quotients.
 
-/-- Finite Wilson transfer-state data in which exact-gap contraction is given
-by symmetry plus an absolute Rayleigh quadratic-form estimate. -/
+For symmetric operators, mathlib identifies the operator norm with the supremum
+of the absolute Rayleigh quotient. Thus no off-diagonal matrix-coefficient bound
+is required at this layer. -/
 structure FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData
     (W : FiniteWilsonOSAutomaticApproximationFamily) where
   Observable : Type
@@ -85,14 +29,7 @@ structure FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData
   decayAmplitude : Observable → ℝ
   decayAmplitude_nonneg : ∀ O : Observable, 0 ≤ decayAmplitude O
   transferOperator : ℕ → StateSpace →L[ℝ] StateSpace
-  transferSymmetric :
-    ∀ (n : ℕ) (x y : StateSpace),
-      inner ℝ (transferOperator n x) y =
-        inner ℝ (transferOperator n y) x
-  rayleighAbsBound :
-    ∀ (n : ℕ) (x : StateSpace),
-      |inner ℝ (transferOperator n x) x| ≤
-        exactGapClusterContractionRatio * ‖x‖ ^ 2
+  transferOperatorSymmetric : ∀ n : ℕ, (transferOperator n).IsSymmetric
   correlationState : ℕ → Observable → ℕ → StateSpace
   correlationReadout : ℕ → Observable → StateSpace →L[ℝ] ℝ
   state_succ :
@@ -104,6 +41,11 @@ structure FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData
       (W.system (scale n)).gibbsConnectedCorrelation
           (leftObservable n O) (rightObservable n O r) =
         correlationReadout n O (correlationState n O r)
+  unitRayleighAbsBound :
+    ∀ (n : ℕ) (x : StateSpace),
+      ‖x‖ = 1 →
+        |(transferOperator n).rayleighQuotient x| ≤
+          exactGapClusterContractionRatio
   readoutInitialStateBound :
     ∀ (n : ℕ) (O : Observable),
       ‖correlationReadout n O‖ * ‖correlationState n O 0‖ ≤
@@ -120,17 +62,44 @@ attribute [instance]
   FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData.stateNormedAddCommGroup
   FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData.stateInnerProductSpace
 
-/-- Polarization converts the symmetric Rayleigh package into the Hilbert
-matrix-coefficient package. -/
+/-- A unit-sphere Rayleigh bound extends to every vector by scale invariance. -/
+theorem finite_wilson_exact_gap_rayleigh_abs_bound
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W)
+    (n : ℕ) (x : D.StateSpace) :
+    |(D.transferOperator n).rayleighQuotient x| ≤
+      exactGapClusterContractionRatio := by
+  by_cases hx : x = 0
+  · simp [hx, exact_gap_cluster_contraction_ratio_nonneg]
+  · let c : ℝ := ‖x‖⁻¹
+    have hc : c ≠ 0 := by
+      exact inv_ne_zero (norm_ne_zero_iff.mpr hx)
+    have hcx : ‖c • x‖ = 1 := by
+      simp [c, hx]
+    have h := D.unitRayleighAbsBound n (c • x) hcx
+    rwa [(D.transferOperator n).rayleigh_smul x hc] at h
+
+/-- Symmetry plus the unit Rayleigh bound gives the exact-gap operator-norm
+contraction. -/
+theorem finite_wilson_exact_gap_operator_norm_bound_of_symmetric_rayleigh
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W)
+    (n : ℕ) :
+    ‖D.transferOperator n‖ ≤ exactGapClusterContractionRatio := by
+  rw [(D.transferOperator n).norm_eq_iSup_rayleighQuotient
+    (D.transferOperatorSymmetric n)]
+  exact ciSup_le fun x => finite_wilson_exact_gap_rayleigh_abs_bound D n x
+
+/-- Convert the symmetric Rayleigh package to the transfer-operator package. -/
 noncomputable def
-    FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData.toHilbertMatrixData
+    FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData.toTransferOperatorData
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W) :
-    FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W :=
+    FiniteWilsonOSAutomaticExactGapTransferOperatorData W :=
   { Observable := D.Observable
     StateSpace := D.StateSpace
     stateNormedAddCommGroup := D.stateNormedAddCommGroup
-    stateInnerProductSpace := D.stateInnerProductSpace
+    stateNormedSpace := D.stateInnerProductSpace.toNormedSpace
     scale := D.scale
     leftObservable := D.leftObservable
     rightObservable := D.rightObservable
@@ -142,55 +111,40 @@ noncomputable def
     correlationReadout := D.correlationReadout
     state_succ := D.state_succ
     connectedCorrelation_representation := D.connectedCorrelation_representation
-    matrixCoefficientBound := by
-      intro n x y hx hy
-      simpa using
-        real_symmetric_matrix_coefficient_le_of_abs_quadratic_bound
-          (D.transferOperator n) exactGapClusterContractionRatio
-          (D.transferSymmetric n) (D.rayleighAbsBound n) hx hy
+    transferOperatorNormBound :=
+      finite_wilson_exact_gap_operator_norm_bound_of_symmetric_rayleigh D
     readoutInitialStateBound := D.readoutInitialStateBound
     pointwiseConvergence := D.pointwiseConvergence }
 
-/-- Symmetric Rayleigh control generates the exact-gap operator contraction. -/
-theorem finite_wilson_exact_gap_operator_norm_bound_of_symmetric_rayleigh
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W)
-    (n : ℕ) :
-    ‖D.transferOperator n‖ ≤ exactGapClusterContractionRatio :=
-  finite_wilson_exact_gap_operator_norm_bound_of_matrix_coefficients
-    D.toHilbertMatrixData n
-
-/-- Symmetric Rayleigh control generates the full finite-volume exact-gap
-connected-correlation estimate. -/
-theorem finite_wilson_exact_gap_bound_of_symmetric_rayleigh
+/-- Symmetric Rayleigh contraction generates the finite exact-gap correlation
+bound. -/
+theorem finite_wilson_exact_gap_bound_of_symmetric_rayleigh_contraction
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W)
     (n : ℕ) (O : D.Observable) (r : ℕ) :
     ‖(W.system (D.scale n)).gibbsConnectedCorrelation
         (D.leftObservable n O) (D.rightObservable n O r)‖ ≤
       D.decayAmplitude O * exactGapClusterContractionRatio ^ r :=
-  finite_wilson_exact_gap_bound_of_hilbert_matrix_contraction
-    D.toHilbertMatrixData n O r
+  finite_wilson_exact_gap_bound_of_transfer_operator
+    D.toTransferOperatorData n O r
 
-/-- Symmetric Rayleigh control implies continuum clustering after pointwise
-convergence. -/
+/-- Symmetric Rayleigh contraction implies continuum clustering. -/
 theorem finite_wilson_exact_gap_symmetric_rayleigh_passes_to_limit
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W) :
-    D.toHilbertMatrixData.toTransferOperatorData.toExactGapClusterData.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.ContinuumClusterProperty :=
-  finite_wilson_exact_gap_hilbert_matrix_contraction_passes_to_limit
-    D.toHilbertMatrixData
+    D.toTransferOperatorData.toExactGapClusterData.toUniformGeometricClusterData.toClusterLimitData.toClusterLimitData.ContinuumClusterProperty :=
+  finite_wilson_exact_gap_transfer_operator_passes_to_limit
+    D.toTransferOperatorData
 
-/-- The continuum connected correlation inherits the exact-gap estimate
-constructed from symmetry and the Rayleigh bound. -/
+/-- The continuum correlation inherits the symmetric-Rayleigh exact-gap rate. -/
 theorem finite_wilson_exact_gap_symmetric_rayleigh_continuum_bound
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapSymmetricRayleighContractionData W)
     (O : D.Observable) (r : ℕ) :
     ‖D.continuumConnectedCorrelation O r‖ ≤
       D.decayAmplitude O * exactGapClusterContractionRatio ^ r :=
-  finite_wilson_exact_gap_hilbert_matrix_contraction_continuum_bound
-    D.toHilbertMatrixData O r
+  finite_wilson_exact_gap_transfer_operator_continuum_bound
+    D.toTransferOperatorData O r
 
 end
 
