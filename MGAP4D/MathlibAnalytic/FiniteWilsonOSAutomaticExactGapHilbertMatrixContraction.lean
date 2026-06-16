@@ -63,11 +63,14 @@ theorem finite_wilson_exact_gap_operator_norm_bound_of_matrix_coefficients
     (D : FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData W)
     (n : ℕ) :
     ‖D.transferOperator n‖ ≤ exactGapClusterContractionRatio := by
-  exact ContinuousLinearMap.opNorm_le_of_re_inner_le
+  apply ContinuousLinearMap.opNorm_le_of_re_inner_le
+    (𝕜 := ℝ)
+    (E := D.StateSpace)
+    (F := D.StateSpace)
     (T := D.transferOperator n)
-    (C := exactGapClusterContractionRatio)
     exact_gap_cluster_contraction_ratio_nonneg
-    (D.matrixCoefficientBound n)
+  intro x y hx hy
+  exact D.matrixCoefficientBound n x y hx hy
 
 end
 
