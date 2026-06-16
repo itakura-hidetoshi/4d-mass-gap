@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonHeatBathForwardSumExplicit
-import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonSingleLinkHeatBathProjection
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonSingleLinkHeatBathLinearProjection
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -7,8 +7,6 @@ namespace MathlibAnalytic
 open scoped BigOperators
 
 noncomputable section
-
-attribute [local instance] finiteLatticeWilsonConfigurationFintype
 
 /-- The total forward transition sum is the Gibbs pairing with the heat-bath
 projection in the first slot. -/
@@ -67,6 +65,18 @@ theorem finite_lattice_singleLinkHeatBath_gibbsPairing_projection_symm
     _ = L.gibbsPairingReal f (L.singleLinkHeatBathProjection e g) :=
       finite_lattice_singleLinkHeatBath_backward_sum_eq_gibbsPairing
         L e f g
+
+/-- The real-linear single-link heat-bath projection is symmetric for the
+finite Wilson Gibbs pairing. -/
+theorem finite_lattice_singleLinkHeatBathProjectionLinearMap_gibbsPairing_symm
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f g : L.Configuration → ℝ) :
+    L.gibbsPairingReal
+        (L.singleLinkHeatBathProjectionLinearMap e f) g =
+      L.gibbsPairingReal f
+        (L.singleLinkHeatBathProjectionLinearMap e g) := by
+  simpa only [finite_lattice_singleLinkHeatBathProjectionLinearMap_apply] using
+    finite_lattice_singleLinkHeatBath_gibbsPairing_projection_symm L e f g
 
 end
 
