@@ -1,0 +1,31 @@
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceFiniteDimensionalHamiltonianOSLimitAssembly
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+variable {W : FiniteWilsonOSAutomaticApproximationFamily}
+  {F : EuclideanYangMillsProjectiveCylinderFamily}
+  {L : EuclideanYangMillsProjectiveLimitMeasure F}
+  (D : FiniteWilsonOSAutomaticFiniteDimensionalHamiltonianAnalyticLimitConstructionData W F L)
+
+noncomputable def finite_wilson_hamiltonian_assembly_compile :
+    FiniteWilsonOSAutomaticOrthonormalEigenbasisAnalyticLimitConstructionData W F L :=
+  D.toOrthonormalEigenbasisAnalyticData
+
+theorem finite_wilson_hamiltonian_four_properties_compile :
+    D.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.reflectionLimit.ContinuumReflectionPositive ∧
+      D.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.euclideanLimit.toEuclideanInvarianceLimitData.ContinuumEuclideanInvariant ∧
+      D.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.clusterLimit.toClusterLimitData.ContinuumClusterProperty ∧
+      D.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.regularityLimit.toRegularityLimitData.ContinuumRegularity :=
+  finite_wilson_os_finite_dimensional_hamiltonian_four_limit_properties D
+
+theorem finite_wilson_hamiltonian_package_ready_compile :
+    D.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.toProjectiveLimitTransferData.toContinuumConstruction.toMeasurePackage.ready :=
+  finite_wilson_os_finite_dimensional_hamiltonian_continuum_measure_package_ready D
+
+end
+
+end MathlibAnalytic
+end MGAP4D
