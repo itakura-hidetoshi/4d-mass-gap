@@ -126,14 +126,7 @@ theorem finite_lattice_singleLinkHeatBathFluctuationLinearMap_fixed_iff
     L.singleLinkHeatBathFluctuationLinearMap e f = f ↔
       L.singleLinkHeatBathProjectionLinearMap e f = 0 := by
   rw [finite_lattice_singleLinkHeatBathFluctuationLinearMap_apply]
-  constructor
-  · intro h
-    have : -L.singleLinkHeatBathProjectionLinearMap e f = 0 := by
-      linarith
-    exact neg_eq_zero.mp this
-  · intro h
-    rw [h]
-    simp
+  exact sub_eq_self
 
 end
 
