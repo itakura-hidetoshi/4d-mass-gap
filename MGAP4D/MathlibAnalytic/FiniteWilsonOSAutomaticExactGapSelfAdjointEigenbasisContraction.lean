@@ -85,8 +85,9 @@ theorem finite_wilson_generated_spectral_basis_hasEigenvector
     HasEigenvector (D.transferOperator n).toLinearMap
       ((D.transferLinearSymmetric n).eigenvalues D.stateFinrank i)
       (D.generatedSpectralBasis n i) := by
-  exact (D.transferLinearSymmetric n).hasEigenvector_eigenvectorBasis
-    D.stateFinrank i
+  simpa [FiniteWilsonOSAutomaticExactGapSelfAdjointEigenbasisContractionData.generatedSpectralBasis]
+    using (D.transferLinearSymmetric n).hasEigenvector_eigenvectorBasis
+      D.stateFinrank i
 
 noncomputable def
     FiniteWilsonOSAutomaticExactGapSelfAdjointEigenbasisContractionData.toOrthonormalEigenbasisData
@@ -112,11 +113,14 @@ noncomputable def
           D.transferLinearSymmetric n x y
         _ = inner ℝ (D.transferOperator n y) x := real_inner_comm _ _
     SpectralIndex := fun _ => Fin D.stateDimension
+    spectralFintype := fun _ => inferInstance
     spectralBasis := fun n => D.generatedSpectralBasis n
     spectralEnergy := D.spectralEnergy
     spectralEnergy_ge_exactGap := D.spectralEnergy_ge_exactGap
-    transferRayleighEigenbasisRepresentation :=
-      D.transferRayleighEigenbasisRepresentation
+    transferRayleighEigenbasisRepresentation := by
+      intro n x
+      simpa [FiniteWilsonOSAutomaticExactGapSelfAdjointEigenbasisContractionData.generatedSpectralBasis]
+        using D.transferRayleighEigenbasisRepresentation n x
     correlationState := D.correlationState
     correlationReadout := D.correlationReadout
     state_succ := D.state_succ
