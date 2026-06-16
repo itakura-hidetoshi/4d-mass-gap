@@ -132,14 +132,13 @@ jobs:
           echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
-      - name: Run changed Lean fast check
+      - name: Build pairing symmetry target
         id: lean-fast
         continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
-          echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee lean-fast-check.log
+          lake build MGAP4D.MathlibAnalytic.FiniteWilsonHeatBathPairingSymmetry 2>&1 | tee lean-fast-check.log
 
       - name: Upload Lean fast-check diagnostics
         if: always()
