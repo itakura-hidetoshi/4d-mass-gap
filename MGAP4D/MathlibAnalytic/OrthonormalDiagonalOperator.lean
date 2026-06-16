@@ -57,12 +57,8 @@ theorem orthonormalDiagonalOperator_apply
     (x : E) :
     orthonormalDiagonalOperator b a x =
       ∑ i : ι, inner ℝ (b i) x • (a i • b i) := by
-  change (b.toBasis.constr ℝ (fun i => a i • b i)) x = _
-  rw [Basis.constr_apply_fintype]
-  congr 1
-  funext i
-  rw [← Basis.equivFun_apply]
-  rw [b.coe_toBasis_repr_apply, b.repr_apply_apply]
+  conv_lhs => rw [← b.sum_repr' x]
+  simp only [map_sum, map_smul, orthonormalDiagonalOperator_apply_basis]
 
 /-- A real diagonal operator in an orthonormal basis is symmetric. -/
 theorem orthonormalDiagonalOperator_isSymmetric
@@ -75,14 +71,27 @@ theorem orthonormalDiagonalOperator_isSymmetric
     (a : ι → ℝ) :
     (orthonormalDiagonalOperator b a).toLinearMap.IsSymmetric := by
   intro x y
-  rw [orthonormalDiagonalOperator_apply b a x,
-    orthonormalDiagonalOperator_apply b a y]
-  simp only [sum_inner, inner_sum, real_inner_smul_left,
-    real_inner_smul_right]
-  apply Finset.sum_congr rfl
-  intro i hi
-  rw [real_inner_comm x (b i)]
-  ring
+  have hx := orthonormalDiagonalOperator_apply b a x
+  have hy := orthonormalDiagonalOperator_apply b a y
+  calc
+    inner ℝ (orthonormalDiagonalOperator b a x) y =
+        inner ℝ
+          (∑ i : ι, inner ℝ (b i) x • (a i • b i)) y :=
+      congrArg (fun z : E => inner ℝ z y) hx
+    _ = ∑ i : ι,
+        inner ℝ (b i) x * (a i * inner ℝ (b i) y) := by
+      simp only [sum_inner, real_inner_smul_left]
+    _ = ∑ i : ι,
+        inner ℝ (b i) y * (a i * inner ℝ x (b i)) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [real_inner_comm x (b i)]
+      ring
+    _ = inner ℝ x
+        (∑ i : ι, inner ℝ (b i) y • (a i • b i)) := by
+      simp only [inner_sum, real_inner_smul_right]
+    _ = inner ℝ x (orthonormalDiagonalOperator b a y) :=
+      congrArg (fun z : E => inner ℝ x z) hy.symm
 
 /-- Pairing symmetry in the orientation used by the finite Wilson transfer
 interfaces. -/
