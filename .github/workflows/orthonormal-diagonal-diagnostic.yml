@@ -53,5 +53,30 @@ jobs:
           set +e
           lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/OrthonormalDiagonalOperator.lean > /tmp/full.log 2>&1
           status=$?
-          grep -n -B 8 -A 40 -E 'error:|unsolved goals|Application type mismatch|failed to synthesize|tactic.*failed' /tmp/full.log || tail -n 180 /tmp/full.log
-          exit "$status"
+          echo "$status" > /tmp/status.txt
+          grep -n -B 8 -A 40 -E 'error:|unsolved goals|Application type mismatch|failed to synthesize|tactic.*failed' /tmp/full.log > /tmp/errors.txt || tail -n 180 /tmp/full.log > /tmp/errors.txt
+          exit 0
+      - uses: actions/cache/save@v5
+        with:
+          path: |
+            /tmp/errors.txt
+            /tmp/status.txt
+          key: orthonormal-diagonal-errors-${{ github.event.pull_request.head.sha }}
+
+  report:
+    if: always()
+    needs: diagnose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            /tmp/errors.txt
+            /tmp/status.txt
+          key: orthonormal-diagonal-errors-${{ github.event.pull_request.head.sha }}
+          fail-on-cache-miss: true
+      - name: Report errors
+        shell: bash
+        run: |
+          cat /tmp/errors.txt
+          test "$(cat /tmp/status.txt)" -eq 0
