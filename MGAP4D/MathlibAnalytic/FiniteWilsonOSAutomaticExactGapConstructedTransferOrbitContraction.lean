@@ -47,7 +47,6 @@ structure FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData
     (n : ℕ) → Observable → ℕ → (W.system (scale n)).Configuration → ℝ
   continuumConnectedCorrelation : Observable → ℕ → ℝ
   decayAmplitude : Observable → ℝ
-  decayAmplitude_nonneg : ∀ O : Observable, 0 ≤ decayAmplitude O
   hamiltonian : ℕ → StateSpace →ₗ[ℝ] StateSpace
   hamiltonianSymmetric :
     ∀ n : ℕ, (hamiltonian n).IsSymmetric
@@ -85,6 +84,18 @@ attribute [instance]
   FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.stateNormedAddCommGroup
   FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.stateInnerProductSpace
   FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.stateFiniteDimensional
+
+/-- The volume-uniform initial-state estimate forces the decay amplitude to be
+nonnegative; this sign condition is not an independent input. -/
+theorem finite_wilson_constructed_transfer_orbit_decayAmplitude_nonneg
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
+    (O : D.Observable) :
+    0 ≤ D.decayAmplitude O := by
+  calc
+    0 ≤ ‖D.correlationReadout 0 O‖ * ‖D.initialCorrelationState 0 O‖ :=
+      mul_nonneg (norm_nonneg _) (norm_nonneg _)
+    _ ≤ D.decayAmplitude O := D.readoutInitialStateBound 0 O
 
 /-- The canonically constructed Hamiltonian transfer operator. -/
 noncomputable def
@@ -139,7 +150,8 @@ noncomputable def
     rightObservable := D.rightObservable
     continuumConnectedCorrelation := D.continuumConnectedCorrelation
     decayAmplitude := D.decayAmplitude
-    decayAmplitude_nonneg := D.decayAmplitude_nonneg
+    decayAmplitude_nonneg :=
+      finite_wilson_constructed_transfer_orbit_decayAmplitude_nonneg D
     hamiltonian := D.hamiltonian
     hamiltonianSymmetric := D.hamiltonianSymmetric
     hamiltonianEigenvalues_ge_exactGap := D.hamiltonianEigenvalues_ge_exactGap
