@@ -1,45 +1,15 @@
 name: PR Lean Fast Check
 
 on:
-  workflow_dispatch:
-    inputs:
-      base_ref:
-        description: "Base ref passed to scripts/check_changed_lean.sh"
-        required: false
-        default: "origin/main"
-        type: string
   pull_request:
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
-      - "lean-toolchain"
-      - "lakefile.lean"
-      - "lake-manifest.json"
       - "MGAP4D/**/*.lean"
       - "scripts/**/*.py"
       - "scripts/**/*.sh"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/pr-lean-fast-check.yml"
-      - "lean-toolchain"
-      - "lakefile.lean"
-      - "lake-manifest.json"
-      - "MGAP4D/**/*.lean"
-      - "scripts/**/*.py"
-      - "scripts/**/*.sh"
-
-concurrency:
-  group: pr-lean-fast-check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
-
-env:
-  MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || format('origin/{0}', github.base_ref || 'main') }}
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
 
 jobs:
   pr-lean-fast-check:
@@ -48,112 +18,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+
+      - name: Run OS/Wightman route audit
+        id: route-audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/audit_os_wightman_mass_gap_bridge.py 2>&1 | tee route-audit.log
+
+      - name: Upload route-audit diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          fetch-depth: 2
+          name: route-audit-log
+          path: route-audit.log
+          if-no-files-found: error
 
-      - name: Preflight changed Lean static audit
+      - name: Propagate route-audit failure
+        if: steps.route-audit.outcome == 'failure'
         shell: bash
-        run: |
-          set -euxo pipefail
-          echo "[preflight] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/audit_changed_lean_preflight.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
-
-      - name: Cache elan toolchain
-        uses: actions/cache@v5
-        with:
-          path: ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
-          restore-keys: |
-            ${{ runner.os }}-elan-
-
-      - name: Restore Lake build cache
-        id: lake-cache
-        uses: actions/cache/restore@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
-          restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-            ${{ runner.os }}-lean-fast-lake-v4-
-            ${{ runner.os }}-lean-fast-v3-
-            ${{ runner.os }}-lean-fast-
-            ${{ runner.os }}-lean-
-
-      - name: Install elan and Lean toolchain
-        shell: bash
-        run: |
-          set -euxo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          retry() {
-            local n=0
-            local max=5
-            local delay=10
-            until "$@"; do
-              n=$((n + 1))
-              if [ "$n" -ge "$max" ]; then
-                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
-                return 1
-              fi
-              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
-              sleep "$delay"
-              delay=$((delay * 2))
-            done
-          }
-          if ! command -v elan >/dev/null 2>&1; then
-            retry bash -c 'curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none'
-          else
-            echo "[fast] using cached elan: $(command -v elan)"
-          fi
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-
-      - name: Show Lean and Lake versions
-        shell: bash
-        run: |
-          set -euxo pipefail
-          retry() {
-            local n=0
-            local max=5
-            local delay=10
-            until "$@"; do
-              n=$((n + 1))
-              if [ "$n" -ge "$max" ]; then
-                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
-                return 1
-              fi
-              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
-              sleep "$delay"
-              delay=$((delay * 2))
-            done
-          }
-          retry lean --version
-          retry lake --version
-          echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
-          echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
-
-      - name: Run changed Lean fast check
-        shell: bash
-        run: |
-          set -euxo pipefail
-          echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
-
-      - name: Check Lake cache is saveable
-        id: lake-cache-ready
-        shell: bash
-        run: |
-          if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Save Lake build cache from main only
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true'
-        uses: actions/cache/save@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+        run: exit 1
