@@ -97,8 +97,10 @@ noncomputable def
     finiteLatticeWilsonRandomScanContractionDataOfDobrushin
     (L : FiniteLatticeWilsonSystem)
     (C : FiniteLatticeWilsonDobrushinInfluenceCertificate L)
-    (hDecomposition : L.FiniteLatticeWilsonRandomScanVarianceDecompositionPrinciple)
-    (hComparison : L.FiniteLatticeWilsonDobrushinVarianceComparisonPrinciple) :
+    (hDecomposition :
+      FiniteLatticeWilsonRandomScanVarianceDecompositionPrinciple L)
+    (hComparison :
+      FiniteLatticeWilsonDobrushinVarianceComparisonPrinciple L) :
     FiniteLatticeWilsonRandomScanHeatBathContractionData L :=
   { contractionRate := C.contractionRate
     contractionRate_nonneg := C.contractionRate_nonneg
@@ -112,8 +114,10 @@ Poincare inequality once the universal comparison principles are supplied. -/
 theorem finite_lattice_exactGap_heatBathPoincare_of_dobrushin
     (L : FiniteLatticeWilsonSystem)
     (C : FiniteLatticeWilsonDobrushinInfluenceCertificate L)
-    (hDecomposition : L.FiniteLatticeWilsonRandomScanVarianceDecompositionPrinciple)
-    (hComparison : L.FiniteLatticeWilsonDobrushinVarianceComparisonPrinciple) :
+    (hDecomposition :
+      FiniteLatticeWilsonRandomScanVarianceDecompositionPrinciple L)
+    (hComparison :
+      FiniteLatticeWilsonDobrushinVarianceComparisonPrinciple L) :
     L.ExactGapSingleLinkHeatBathPoincare :=
   finite_lattice_exactGap_heatBathPoincare_of_randomScanContraction
     L
