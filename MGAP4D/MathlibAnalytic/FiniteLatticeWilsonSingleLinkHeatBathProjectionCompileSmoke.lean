@@ -12,13 +12,20 @@ example (p : PMF α) :
   finite_pmf_sum_eq_one p
 
 example (p : PMF α) :
-    ∑ a : α, (p a).toReal =
-      ENNReal.toReal (∑ a : α, p a) :=
-  finite_pmf_sum_toReal_eq_toReal_sum p
-
-example (p : PMF α) :
     ∑ a : α, (p a).toReal = 1 :=
   finite_pmf_sum_toReal_eq_one p
+
+variable (L : FiniteLatticeWilsonSystem)
+
+noncomputable def finite_lattice_single_link_heat_bath_projection_compile_smoke
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.Configuration → ℝ :=
+  L.singleLinkHeatBathProjection e f
+
+theorem finite_lattice_single_link_heat_bath_projection_fiber_compile_smoke
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.OffLinkFiberConstant e (L.singleLinkHeatBathProjection e f) :=
+  finite_lattice_singleLinkHeatBathProjection_offLinkFiberConstant L e f
 
 end
 
