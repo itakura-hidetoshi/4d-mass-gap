@@ -22,7 +22,7 @@ theorem symmetric_eigenvalue_ge_of_quadratic_form_lower_bound
     (i : Fin n) :
     δ ≤ hT.eigenvalues hn i := by
   simpa only [hT.apply_eigenvectorBasis, real_inner_smul_left,
-    inner_self_eq_norm_sq, OrthonormalBasis.norm_eq_one, one_pow, mul_one]
+    inner_self_eq_norm_sq_to_K, OrthonormalBasis.norm_eq_one, one_pow, mul_one]
     using hLower (hT.eigenvectorBasis hn i)
 
 end
