@@ -35,6 +35,32 @@ theorem finite_pmf_sum_toReal_eq_one
     finite_pmf_sum_eq_one p]
   simp
 
+/-- A real observable is constant on the fibers obtained by forgetting one
+selected link. -/
+def FiniteLatticeWilsonSystem.OffLinkFiberConstant
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f : L.Configuration → ℝ) : Prop :=
+  ∀ A B : L.Configuration,
+    L.AgreeOffLink A B e → f A = f B
+
+/-- Exact single-link heat-bath conditional expectation, viewed as an operator
+on real observables. -/
+def FiniteLatticeWilsonSystem.singleLinkHeatBathProjection
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.Configuration → ℝ :=
+  fun A => L.singleLinkConditionalExpectation f A e
+
+/-- The heat-bath projection always produces an observable that is constant on
+off-link fibers. -/
+theorem finite_lattice_singleLinkHeatBathProjection_offLinkFiberConstant
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f : L.Configuration → ℝ) :
+    L.OffLinkFiberConstant e (L.singleLinkHeatBathProjection e f) := by
+  intro A B hAgree
+  exact finite_lattice_singleLinkConditionalExpectation_eq_of_agreeOffLink
+    L f A B e hAgree
+
 end
 
 end MathlibAnalytic
