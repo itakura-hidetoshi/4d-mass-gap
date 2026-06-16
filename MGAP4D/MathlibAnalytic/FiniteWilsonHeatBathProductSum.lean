@@ -18,12 +18,16 @@ theorem finite_lattice_singleLinkHeatBath_reversible_product_sum
       ∑ x : L.Configuration × L.Gauge,
         L.singleLinkHeatBathBackwardTerm e f g x := by
   classical
-  exact Fintype.sum_equiv
-    (L.singleLinkUpdateSwapEquiv e)
-    (L.singleLinkHeatBathForwardTerm e f g)
+  have hTransport :
+      L.singleLinkHeatBathForwardTerm e f g =
+        fun x => L.singleLinkHeatBathBackwardTerm e f g
+          (L.singleLinkUpdateSwapEquiv e x) := by
+    funext x
+    exact finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
+      L e f g x
+  rw [hTransport]
+  exact (L.singleLinkUpdateSwapEquiv e).sum_comp
     (L.singleLinkHeatBathBackwardTerm e f g)
-    (finite_lattice_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
-      L e f g)
 
 end
 
