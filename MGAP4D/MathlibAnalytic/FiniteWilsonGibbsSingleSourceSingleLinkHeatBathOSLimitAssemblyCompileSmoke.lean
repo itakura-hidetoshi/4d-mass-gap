@@ -24,7 +24,7 @@ theorem finite_wilson_single_link_heat_bath_four_properties_compile_smoke :
       D.toAutomaticOSData.regularityLimit.toRegularityLimitData.ContinuumRegularity :=
   finite_wilson_os_single_link_heat_bath_four_limit_properties D
 
-theorem finite_wilson_single_link_heat_bath_continuum_bound_compile_smoke
+theorem finite_wilson_single_link_heat_bath_os_continuum_bound_compile_smoke
     (O : D.clusterHeatBath.Observable) (r : ℕ) :
     ‖D.clusterHeatBath.continuumConnectedCorrelation O r‖ ≤
       D.clusterHeatBath.decayAmplitude O * exactGapClusterContractionRatio ^ r :=
