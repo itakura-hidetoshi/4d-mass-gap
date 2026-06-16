@@ -8,6 +8,7 @@ open Filter
 
 noncomputable section
 
+/-- Hilbert coefficient input for the finite Wilson transfer contraction. -/
 structure FiniteWilsonOSAutomaticExactGapHilbertMatrixContractionData
     (W : FiniteWilsonOSAutomaticApproximationFamily) where
   Observable : Type
