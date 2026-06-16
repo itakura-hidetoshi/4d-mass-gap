@@ -27,6 +27,12 @@ theorem finite_lattice_single_link_heat_bath_projection_fiber_compile_smoke
     L.OffLinkFiberConstant e (L.singleLinkHeatBathProjection e f) :=
   finite_lattice_singleLinkHeatBathProjection_offLinkFiberConstant L e f
 
+theorem finite_lattice_single_link_heat_bath_projection_fixes_compile_smoke
+    (e : L.Edge) (f : L.Configuration → ℝ)
+    (hFiber : L.OffLinkFiberConstant e f) :
+    L.singleLinkHeatBathProjection e f = f :=
+  finite_lattice_singleLinkHeatBathProjection_fixes L e f hFiber
+
 end
 
 end MathlibAnalytic
