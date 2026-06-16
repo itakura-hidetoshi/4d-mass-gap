@@ -1,0 +1,38 @@
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceHamiltonianEigenactionOSLimitAssembly
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+variable {W : FiniteWilsonOSAutomaticApproximationFamily}
+  {F : EuclideanYangMillsProjectiveCylinderFamily}
+  {L : EuclideanYangMillsProjectiveLimitMeasure F}
+  (D : FiniteWilsonOSAutomaticHamiltonianEigenactionAnalyticLimitConstructionData W F L)
+
+noncomputable def finite_wilson_hamiltonian_eigenaction_analytic_data_compile_smoke :
+    FiniteWilsonOSAutomaticFiniteDimensionalHamiltonianAnalyticLimitConstructionData W F L :=
+  D.toFiniteDimensionalHamiltonianAnalyticData
+
+theorem finite_wilson_hamiltonian_eigenaction_four_properties_compile_smoke :
+    D.toFiniteDimensionalHamiltonianAnalyticData.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.reflectionLimit.ContinuumReflectionPositive ∧
+      D.toFiniteDimensionalHamiltonianAnalyticData.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.euclideanLimit.toEuclideanInvarianceLimitData.ContinuumEuclideanInvariant ∧
+      D.toFiniteDimensionalHamiltonianAnalyticData.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.clusterLimit.toClusterLimitData.ContinuumClusterProperty ∧
+      D.toFiniteDimensionalHamiltonianAnalyticData.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.regularityLimit.toRegularityLimitData.ContinuumRegularity :=
+  finite_wilson_os_hamiltonian_eigenaction_four_limit_properties D
+
+theorem finite_wilson_hamiltonian_eigenaction_assembly_continuum_bound_compile_smoke
+    (O : D.clusterEigenaction.Observable) (r : ℕ) :
+    ‖D.clusterEigenaction.continuumConnectedCorrelation O r‖ ≤
+      D.clusterEigenaction.decayAmplitude O *
+        exactGapClusterContractionRatio ^ r :=
+  finite_wilson_os_hamiltonian_eigenaction_continuum_bound D O r
+
+theorem finite_wilson_hamiltonian_eigenaction_package_ready_compile_smoke :
+    D.toFiniteDimensionalHamiltonianAnalyticData.toOrthonormalEigenbasisAnalyticData.toFiniteSpectralAnalyticData.toPositiveRayleighAnalyticData.toSymmetricRayleighAnalyticData.toTransferAnalyticData.toAutomaticData.toProjectiveLimitTransferData.toContinuumConstruction.toMeasurePackage.ready :=
+  finite_wilson_os_hamiltonian_eigenaction_continuum_measure_package_ready D
+
+end
+
+end MathlibAnalytic
+end MGAP4D
