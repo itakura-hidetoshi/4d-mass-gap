@@ -121,11 +121,22 @@ ANCHORS = {
     ],
 }
 
-FORBIDDEN_DECLARATIONS = (
+LEAN_PLACEHOLDER_FILES = (
+    "measure_pipeline",
+    "unconditional_target",
+    "construction_spine",
+    "construction_external_bridge",
+)
+
+FORBIDDEN_PLACEHOLDER_SNIPPETS = (
+    " : Prop :=\n  True",
     "sorry",
     "admit",
     "axiom ",
     "constant ",
+    "receipt : True",
+    "readyReceipt",
+    "terminalReceipt",
 )
 
 
@@ -142,16 +153,15 @@ def require_order(
 ) -> None:
     if before not in text:
         failures.append(f"{rel} missing order anchor before-side for {label}: {before!r}")
-    elif after not in text:
+        return
+    if after not in text:
         failures.append(f"{rel} missing order anchor after-side for {label}: {after!r}")
-    elif text.index(after) < text.index(before):
+        return
+    if text.index(after) < text.index(before):
         failures.append(f"{rel} has invalid order for {label}: {after!r} precedes {before!r}")
 
 
-def main() -> int:
-    failures: list[str] = []
-    contents = {name: read(path) for name, path in FILES.items()}
-
+def audit_anchors(failures: list[str], contents: dict[str, str]) -> None:
     for name, anchors in ANCHORS.items():
         text = contents[name]
         rel = FILES[name].relative_to(ROOT)
@@ -159,18 +169,17 @@ def main() -> int:
             if anchor not in text:
                 failures.append(f"{rel} missing OS/Wightman route anchor: {anchor!r}")
 
-    for name in (
-        "measure_pipeline",
-        "unconditional_target",
-        "construction_spine",
-        "construction_external_bridge",
-    ):
+
+def audit_placeholders(failures: list[str], contents: dict[str, str]) -> None:
+    for name in LEAN_PLACEHOLDER_FILES:
         text = contents[name]
         rel = FILES[name].relative_to(ROOT)
-        for token in FORBIDDEN_DECLARATIONS:
-            if token in text:
-                failures.append(f"{rel} contains forbidden placeholder token: {token!r}")
+        for snippet in FORBIDDEN_PLACEHOLDER_SNIPPETS:
+            if snippet in text:
+                failures.append(f"{rel} contains forbidden placeholder snippet: {snippet!r}")
 
+
+def audit_order(failures: list[str], contents: dict[str, str]) -> None:
     root_text = contents["root_import"]
     root_rel = FILES["root_import"].relative_to(ROOT)
     root_chain = [
@@ -202,6 +211,15 @@ def main() -> int:
         label="OS/Wightman audit before replay summary",
     )
 
+
+def main() -> int:
+    failures: list[str] = []
+    contents = {name: read(path) for name, path in FILES.items()}
+
+    audit_anchors(failures, contents)
+    audit_placeholders(failures, contents)
+    audit_order(failures, contents)
+
     if failures:
         print("OS/Wightman mass-gap bridge audit failed:")
         for failure in failures:
@@ -211,8 +229,10 @@ def main() -> int:
     print("OS/Wightman mass-gap bridge audit")
     for name in sorted(ANCHORS):
         print(f"{name} anchors audited: {len(ANCHORS[name])}")
+    print("Root import order audited through EuclideanYangMillsMeasureConstructionExternalAuditBridge")
+    print("Full replay route audited through EuclideanYangMillsMeasureConstructionExternalAuditBridge")
     print("Proof-progressive policy audited: no public-status sentence or unresolved-state anchor is required")
-    print("Lean route, replay entry points, import order, and placeholder exclusions audited")
+    print("Forbidden structural placeholder snippets audited")
     print("OS/Wightman mass-gap bridge audit passed")
     return 0
 
