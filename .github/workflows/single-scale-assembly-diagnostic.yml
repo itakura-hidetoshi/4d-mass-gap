@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           set +e
-          lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/FiniteWilsonGibbsSingleSourceSingleScaleTransferOrbitOSLimitAssemblyCompileSmoke.lean > /tmp/full.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceSingleScaleTransferOrbitOSLimitAssemblyCompileSmoke > /tmp/full.log 2>&1
           status=$?
           echo "$status" > /tmp/status.txt
           grep -n -B 8 -A 50 -E 'error:|unsolved goals|Application type mismatch|failed to synthesize|tactic.*failed' /tmp/full.log > /tmp/errors.txt || tail -n 200 /tmp/full.log > /tmp/errors.txt
