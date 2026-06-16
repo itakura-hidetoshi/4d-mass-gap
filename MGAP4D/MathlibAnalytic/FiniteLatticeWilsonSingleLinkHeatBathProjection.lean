@@ -61,6 +61,36 @@ theorem finite_lattice_singleLinkHeatBathProjection_offLinkFiberConstant
   exact finite_lattice_singleLinkConditionalExpectation_eq_of_agreeOffLink
     L f A B e hAgree
 
+/-- Exact single-link conditional expectation fixes every observable that is
+already constant on the corresponding off-link fibers. -/
+theorem finite_lattice_singleLinkHeatBathProjection_fixes
+    (L : FiniteLatticeWilsonSystem)
+    (e : L.Edge) (f : L.Configuration → ℝ)
+    (hFiber : L.OffLinkFiberConstant e f) :
+    L.singleLinkHeatBathProjection e f = f := by
+  funext A
+  unfold FiniteLatticeWilsonSystem.singleLinkHeatBathProjection
+  unfold FiniteLatticeWilsonSystem.singleLinkConditionalExpectation
+  calc
+    ∑ g : L.Gauge,
+        (L.singleLinkConditionalPMF A e g).toReal *
+          f (L.replaceLink A e g) =
+        ∑ g : L.Gauge,
+          (L.singleLinkConditionalPMF A e g).toReal * f A := by
+      apply Finset.sum_congr rfl
+      intro g _hg
+      have hReplace : f (L.replaceLink A e g) = f A := by
+        apply hFiber (L.replaceLink A e g) A
+        intro e' he
+        simp [FiniteLatticeWilsonSystem.replaceLink, he]
+      rw [hReplace]
+    _ = (∑ g : L.Gauge,
+          (L.singleLinkConditionalPMF A e g).toReal) * f A := by
+      rw [Finset.sum_mul]
+    _ = f A := by
+      rw [finite_pmf_sum_toReal_eq_one]
+      simp
+
 end
 
 end MathlibAnalytic
