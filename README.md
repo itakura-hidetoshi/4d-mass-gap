@@ -1,230 +1,175 @@
 # MGAP4D
 
-**MGAP4D** is Hidetoshi Itakura's canonical GitHub-native **Lean 4 / Lake** repository for a normalized four-dimensional Yang--Mills mass-gap proof architecture.
+**MGAP4D** is Hidetoshi Itakura's canonical Lean 4 / Lake repository for a proof-carrying investigation of the four-dimensional Yang--Mills mass-gap problem.
 
 ```text
-Canonical proof repository: itakura-hidetoshi/4d-mass-gap
+Canonical repository: itakura-hidetoshi/4d-mass-gap
 KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-KuuOS may reference MGAP4D as a physics-facing bridge and public-core governance surface. It does not replace this repository as the canonical Lean source tree, and it does not independently supply external mathematical consensus.
+## Current status — 2026-06-17
 
----
+The current `main` branch is a **replayable formal-development and internal review surface**. It is not a completed public solution of the four-dimensional Yang--Mills existence and mass-gap problem.
 
-## Current status as of 2026-06-12
+The latest merged finite Wilson checkpoint is PR **#241**, which proves the reversible product-sum identity for the exact single-link heat-bath transition. PR **#242** is open and is intended to derive symmetry of the single-link projection for the Gibbs pairing; it is not yet part of `main`.
 
-The current `main` branch should be read as a **Lean replay / internal terminal-audit surface**, not as external mathematical acceptance.
+The repository now contains three distinct lanes that must not be conflated.
 
-Two proof-facing surfaces are visible:
+### 1. Concrete finite Wilson heat-bath lane
 
-```text
-A. normalized exact-gap audit route
-   Basic marker
-     -> abstract normalized carrier exactGapValueReal
-     -> Hamiltonian / PVM / spectral carrier alignment
-     -> R6 exact-atom value pinning for 33/20
-     -> R7 positive spectral-weight witness
-     -> R1--R7 terminal audit chain
-     -> public / external audit receipt chain
-
-B. axiomatic / OS-Wightman / Euclidean construction route
-   axiomatic closure target
-     -> OS/Wightman Hamiltonian reconstruction spine
-     -> OS/Wightman mass-gap definition bridge
-     -> OS/Wightman external audit bridge
-     -> Euclidean measure to mass-gap pipeline
-     -> Euclidean measure unconditional-construction target
-     -> finite-volume / continuum construction spine
-     -> Euclidean construction external audit bridge
-     -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
-```
-
-The repository does **not** claim external consensus, independent peer-review completion, public final acceptance, an externally accepted OS/Wightman bridge, an externally accepted construction-spine external-audit projection, or an unconditional construction of the physical four-dimensional Yang--Mills measure from first principles.
-
-Boundary anchor: external acceptance of the construction-spine external-audit projection is not claimed.
-
-Compact public wording:
+This lane is built from actual finite Wilson Gibbs weights and exact single-link conditional laws.
 
 ```text
-MGAP4D provides a Lean 4 proof-carrying and replayable audit surface for a
-normalized 4D mass-gap route. The internal R1--R7 terminal chain records the
-normalized value 33/20 and a positive spectral-weight witness. The repository
-also contains conditional axiomatic / OS-Wightman / Euclidean-construction bridge
-surfaces, including a finite-volume/continuum construction spine and a
-construction-spine external-audit projection. External mathematical consensus
-and public acceptance remain separate review processes.
+finite Wilson action and Gibbs PMF
+  -> exact single-link conditional PMF
+  -> Gibbs expectation and variance
+  -> conditional expectation and conditional variance
+  -> single-link heat-bath Dirichlet form
+  -> idempotent projection P_e
+  -> fluctuation projection Q_e = I - P_e
+  -> local variance = fluctuation energy
+  -> exact detailed balance
+  -> finite transition reindexing
+  -> reversible product-sum identity
 ```
 
-For the shortest status anchor, read `docs/current_proof_status.md`.
+The following components are already on `main`:
 
----
+- finite Gibbs expectation and variance;
+- exact single-link conditional PMFs, expectations, and variances;
+- the global heat-bath Dirichlet form;
+- off-link fiber invariance;
+- the idempotent conditional-expectation projection `P_e`;
+- its real-linear form and image/fixed-point characterization;
+- the complementary fluctuation projection `Q_e = I - P_e`;
+- conditional variance and Dirichlet energy expressed through `Q_e`;
+- the concrete random-scan heat-bath sweep;
+- conditional total variation and finite/uniform Dobrushin data interfaces;
+- exact single-link detailed balance;
+- the reversible finite product-sum theorem
+  `finite_lattice_singleLinkHeatBath_reversible_product_sum`.
 
-## Claim boundary
-
-This repository currently exposes:
+The next local operator step is Gibbs-pairing symmetry of `P_e`, followed by orthogonality of `P_e` and `Q_e` and the global weighted identity
 
 ```text
-canonical Lean 4 / Lake replay surface
-Mathlib-backed analytic branch
-Basic-layer marker showing that the numeric carrier is absent there
-abstract downstream normalized carrier exactGapValueReal
-Hamiltonian / PVM / spectral carrier-alignment route
-R6 spectral/PVM value-pinning lane for 33/20
-R7 positive spectral-weight witness lane
-R1--R7 terminal audit projection of exact 33/20 plus positive weight
-OS/Wightman and Euclidean construction bridge surfaces
-Euclidean measure unconditional-construction target
-finite-volume/continuum construction spine
-construction-spine external-audit projection
-normalized / dimensional E0 boundary
-proof-debt inventory for PUnit / True / StillOpen / witness / receipt markers
+E_mu[Var_e(f)] = ||Q_e f||^2_{L^2(mu)}.
 ```
 
-It does **not** claim by documentation alone that `Basic.lean` or `ExactGapReal.lean` proves the final numeric value, that audit scripts replace Lean checking, that receipt / ready / witness-only records are theorem bodies by themselves, or that construction-spine external-audit projection equals external acceptance.
+### 2. Conditional propagation lane
 
-Review rule:
+The repository also contains typed implication chains of the form
 
 ```text
-Lean theorem bodies are the repository authority.
-Documentation must track theorem bodies without upgrading receipts into proofs.
-External public acceptance remains a separate review process.
+uniform finite-volume coercivity / Poincare input
+  -> vacuum Hamiltonian lower bound
+  -> transfer contraction
+  -> finite-volume correlation decay
+  -> continuum clustering
+  -> OS/Wightman assembly
+  -> projective-limit continuum routes
 ```
 
----
+These transformations are formalized, but their principal analytic inputs are not yet constructed unconditionally for the physical non-Abelian four-dimensional Wilson theory. In particular, the following remain open:
 
-## Current proof-facing spine
+- a volume- and lattice-spacing-uniform quantitative estimate for the actual Wilson conditional laws;
+- an operator theorem deriving the required random-scan contraction from the Dobrushin matrix package;
+- a concrete Hilbert/observable realization and quadratic-form identity for the physical transfer Hamiltonian;
+- a transfer-orbit representation with a uniform amplitude bound;
+- convergence to a nontrivial regular continuum Yang--Mills measure;
+- external validation of the OS/Wightman reconstruction and physical mass-gap conclusion.
+
+### 3. Normalized exact-gap audit lane
+
+The source tree carries a normalized value `33/20` through the internal Hamiltonian/PVM/spectral and R6--R7 audit interfaces. This is a useful typed normalization and dependency-routing surface, but it is **not yet an independent derivation of the physical four-dimensional Yang--Mills mass gap**.
+
+The semantic origin is important:
 
 ```text
-Basic-layer route marker
-  -> downstream abstract normalized real carrier exactGapValueReal
-  -> continuum-Hamiltonian / PVM / operator-spectral carrier alignment
-  -> R6 non-definitional spectral/PVM exact-atom pinning route for 33/20
-  -> R7 positive spectral-weight witness route
-  -> R1--R7 terminal audit chain
-```
-
-The newer OS/Wightman / Euclidean route records conditional theorem targets and construction-spine audit projections. The remaining hard task there is the concrete construction and external validation of the physical four-dimensional Yang--Mills measure and reconstruction spine.
-
-OS/Wightman--Euclidean theorem-facing route:
-
-```text
-EuclideanYangMillsFiniteVolumeApproximation
-  -> EuclideanYangMillsContinuumMeasureConstructionSpine
-  -> EuclideanYangMillsMeasureUnconditionalConstructionTarget
-  -> EuclideanYangMillsMeasureMassGapPipeline
-  -> OSWightmanMassGapDefinitionBridge
-  -> ExternalAuditReadinessOSWightmanMassGapDefinitionBridgeProjection
-  -> ExternalAuditReadinessEuclideanYangMillsConstructionSpineProjection
-```
-
----
-
-## Important review anchors
-
-| Surface | Anchor |
-|---|---|
-| Top-level import root | `MGAP4D.lean` |
-| Analytic root | `MGAP4D/MathlibAnalytic.lean` |
-| Current status anchor | `docs/current_proof_status.md` |
-| Basic-layer route marker | `MGAP4D/MathlibAnalytic/Basic.lean` |
-| Abstract real carrier | `MGAP4D/MathlibAnalytic/ExactGapReal.lean` |
-| Exact-gap layer note | `docs/exact_gap_layer_separation.md` |
-| Yang--Mills spectral interface | `MGAP4D/MathlibAnalytic/YangMillsHamiltonianSpectralDerivation3320.lean` |
-| R6 exact atom route | `MGAP4D/R6/Theorem/ExactAtom3320NonDefinitionalDerivation.lean` |
-| R7 positive weight route | `MGAP4D/R7/Theorem.lean` |
-| Terminal R1--R7 chain | `MGAP4D/HardPhysicalResidualLedgerR1R7TerminalDischargeChainIndex.lean` |
-| Axiomatic / OS-Wightman / Euclidean route note | `docs/axiomatic_yang_mills_mass_gap_closure.md` |
-| OS/Wightman definition bridge | `MGAP4D/MathlibAnalytic/OSWightmanMassGapDefinitionBridge.lean` |
-| OS/Wightman external audit bridge | `MGAP4D/MathlibAnalytic/OSWightmanMassGapExternalAuditBridge.lean` |
-| Euclidean measure pipeline | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureToMassGapPipeline.lean` |
-| Euclidean unconditional target | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureUnconditionalTarget.lean` |
-| Euclidean construction spine | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean` |
-| Euclidean construction external audit bridge | `MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` |
-| Placeholder / witness inventory | `docs/proof_placeholder_inventory.md` |
-
-Representative current theorem anchors:
-
-```lean
-theorem four_d_yang_mills_basic_layer_numeric_carrier_absent :
-    fourDYangMillsAnalyticGapValueOrigin.basicLayerNumericCarrierAbsent = true
-
-theorem exactGapValueReal_pos : 0 < exactGapValueReal
-
-theorem exactGapValueReal_above_one : 1 < exactGapValueReal
-
-theorem yang_mills_hamiltonian_exact_gap_eq_spectral_value :
-    exactGapValueReal =
-      yangMillsHamiltonianSpectralDerivation3320.derivedHamiltonianSpectralValue
-
-theorem exact_atom_3320_r6_exact_gap_value_eq_3320_ready :
-    MGAP4D.MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20
-
-theorem hard_physical_residual_ledger_r1_r7_terminal_exact_value_and_positive_weight :
-    MathlibAnalytic.exactGapValueReal = (33 : ℝ) / 20 ∧
-      Plaquette.observableSpectralWeight3320Certificate.massWitness.positiveMass = true
-
-theorem euclidean_yang_mills_finite_volume_continuum_construction_mass_gap
-
-theorem external_audit_readiness_euclidean_yang_mills_construction_spine_projection
-
-theorem external_audit_readiness_euclidean_construction_spine_exact_gap_positive
-
-theorem external_audit_readiness_euclidean_construction_spine_exact_gap_threshold
-
-theorem external_audit_readiness_euclidean_construction_spine_pvm_detects_first_excitation
-```
-
----
-
-## Exact-gap layer separation
-
-```text
-Basic.lean
-  -> marker-only route-deferred layer, no real-valued carrier
+HamiltonianPVMSpectralExactGapValue.lean
+  defines hamiltonianPVMSpectralNormalized3320Value := 33/20
+  and constructs an internal certified package carrying that normalization
 
 ExactGapReal.lean
-  -> abstract normalized real carrier, positivity and above-one facts only
+  projects exactGapValueReal from that package
 
-R6 exact-atom layer
-  -> pins 33/20 through the Hamiltonian/PVM/spectral atom lane
-
-R7 / terminal chain
-  -> carries exact 33/20 plus positive spectral weight to terminal audit level
-
-Axiomatic / Euclidean construction layer
-  -> conditional bridge and construction-target material, not an unconditional construction by itself
+later spectral / R6 / R7 files
+  align, transport, and audit the same carried value
 ```
 
----
+Therefore, the absence of a literal `33/20` in `ExactGapReal.lean` is only a local syntactic separation. It does not by itself show that `33/20` was derived from a separately constructed physical Yang--Mills Hamiltonian.
 
-## Physical normalization
+Read `docs/exact_gap_layer_separation.md` for the full dependency-level account.
+
+## Critical normalization issue
+
+The current random-scan contraction interface includes
 
 ```text
-H_norm = E0^{-1} * H_phys
-H_phys = E0 * H_norm
-Delta_norm = 33/20
-Delta_phys(E0) = E0 * (33/20)
+0 <= rho < 1
+exactGapValueReal <= 1 - rho.
 ```
 
-In internal normalized units, `E0 = 1`. A dimensional physical mass gap requires an external positive reference scale `E0`.
-
----
-
-## Proof-debt and witness-marker inventory
+At the same time, `exactGapValueReal_above_one` proves
 
 ```text
-Primary inventory: docs/proof_placeholder_inventory.md
-Companion script: scripts/audit_proof_placeholder_inventory.py
+1 < exactGapValueReal.
 ```
 
-`PUnit`, `True`, and `StillOpen` remain proof-debt markers unless replaced or explicitly superseded by typed theorem anchors. A terminal-looking chain is therefore a review route, not an automatic substitute for dependency review.
+Since `0 <= rho` implies `1 - rho <= 1`, these conditions cannot hold simultaneously. Consequently, the present `FiniteLatticeWilsonRandomScanHeatBathContractionData` exact-gap field cannot be instantiated with the current normalized carrier.
 
----
+This is a normalization-layer mismatch, not a proof of the desired spectral estimate. The formal route must be repaired by separating the Markov/heat-bath gap from the normalized physical gap, or by inserting an explicit positive scale factor, for example
+
+```text
+lambda_HB <= 1 - rho
+Delta_norm = s_HB * lambda_HB
+```
+
+or by using a correctly scaled continuous-time generator rather than directly identifying the normalized random-scan gap with `33/20`.
+
+## What the repository currently proves
+
+| Surface | Current reading |
+|---|---|
+| Finite Wilson Gibbs and conditional laws | Concrete definitions and finite identities are present |
+| `P_e` and `Q_e` algebra | Idempotence, ranges, kernels, decomposition, and local fluctuation-energy identities are present |
+| Detailed balance | Pointwise and finite product-sum reversibility are present |
+| Gibbs-pairing symmetry of `P_e` | Open PR #242; not yet on `main` |
+| Dobrushin influence data structures | Present |
+| Uniform Wilson Dobrushin estimate | Not proved |
+| Random-scan contraction from Dobrushin data | Not yet derived |
+| Heat-bath-to-physical-gap normalization | Not yet repaired |
+| Hamiltonian / transfer / continuum propagation | Typed conditional implication route is present |
+| Nontrivial physical continuum construction | Not proved unconditionally |
+| Physical derivation of `33/20` | Not established |
+| External mathematical consensus | Not claimed |
+
+## Primary review anchors
+
+| Topic | File |
+|---|---|
+| Short status anchor | `docs/current_proof_status.md` |
+| Exact-gap dependency separation | `docs/exact_gap_layer_separation.md` |
+| Exact normalized carrier | `MGAP4D/MathlibAnalytic/ExactGapReal.lean` |
+| Internal `33/20` origin package | `MGAP4D/MathlibAnalytic/HamiltonianPVMSpectralExactGapValue.lean` |
+| Finite Gibbs variance | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonGibbsRealExpectation.lean` |
+| Single-link variance / Dirichlet form | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathDirichlet.lean` |
+| Projection `P_e` | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathProjection.lean` |
+| Linear projection | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathLinearProjection.lean` |
+| Fluctuation projection `Q_e` | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathFluctuationProjection.lean` |
+| Fluctuation energy | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathFluctuationEnergy.lean` |
+| Random-scan sweep | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonRandomScanHeatBathSweep.lean` |
+| Dobrushin data | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinMatrix.lean` and uniform-family companion files |
+| Detailed balance | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSingleLinkHeatBathDetailedBalance.lean` |
+| Reversible product sum | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathForwardSumExplicit.lean` |
+| Conditional Hamiltonian bridge | `MGAP4D/MathlibAnalytic/FiniteWilsonSingleLinkHeatBathHamiltonianBridge.lean` |
+| Continuum clustering route | `MGAP4D/MathlibAnalytic/FiniteWilsonSingleLinkHeatBathTransferOrbit.lean` |
+| Full OS assembly route | `MGAP4D/MathlibAnalytic/FiniteWilsonSingleLinkHeatBathFullOSAssembly.lean` |
+| Placeholder / proof-debt inventory | `docs/proof_placeholder_inventory.md` |
 
 ## Replay
 
-Pinned lane:
+Pinned toolchain:
 
 ```text
 Lean:    leanprover/lean4:v4.30.0-rc2
@@ -237,61 +182,29 @@ From a fresh clone:
 git clone https://github.com/itakura-hidetoshi/4d-mass-gap.git
 cd 4d-mass-gap
 bash scripts/check.sh
-```
-
-The OS/Wightman--Euclidean replay stages include:
-
-```text
-[check] audit OS/Wightman mass-gap bridge
-[check] build OS/Wightman mass-gap external audit bridge
-[check] build Euclidean Yang-Mills measure to mass-gap pipeline
-[check] build unconditional Euclidean Yang-Mills measure target
-[check] build Euclidean Yang-Mills measure construction spine
-[check] build Euclidean Yang-Mills construction external audit bridge
-```
-
-Manual route for this lane:
-
-```bash
-lake build MGAP4D.MathlibAnalytic.OSWightmanMassGapExternalAuditBridge
-lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureToMassGapPipeline
-lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureUnconditionalTarget
-lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
-lake build MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge
-```
-
-Manual full Lean build:
-
-```bash
-lake update
 lake build
 ```
 
-A successful replay means that the pinned Lean / Lake / mathlib environment builds and that the declared audit scripts and theorem-surface checks pass locally. It is reproducibility evidence, not external mathematical consensus by itself.
-
----
-
-## External review order
-
-1. Run `bash scripts/check.sh` from a fresh clone.
-2. Run `lake build`.
-3. Read `docs/current_proof_status.md`.
-4. Read `docs/exact_gap_layer_separation.md`.
-5. Read `docs/axiomatic_yang_mills_mass_gap_closure.md`.
-6. Read `docs/proof_placeholder_inventory.md`.
-7. Read `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, and `INDEPENDENT_REPLAY.md`.
-8. Inspect the Basic / ExactGapReal / Yang--Mills spectral derivation / R6 / R7 separation.
-9. Inspect the OS/Wightman and Euclidean construction bridge files.
-10. Inspect `EuclideanYangMillsMeasureConstructionExternalAuditBridge.lean` and confirm it is a review-routing projection, not external acceptance.
-11. Inspect the terminal R1--R7 discharge chain and public / external audit receipt chain.
-
----
+A successful replay means that the declared Lean files and audit scripts build in the pinned environment. It is reproducibility evidence, not external certification of the physical theorem.
 
 ## Current priorities
 
-1. Keep `README.md`, `ROADMAP.md`, `docs/current_proof_status.md`, `docs/exact_gap_layer_separation.md`, `THEOREM_INDEX.md`, `EXTERNAL_AUDIT_PACKET.md`, and `INDEPENDENT_REPLAY.md` synchronized.
-2. Keep the Basic / ExactGapReal / spectral-derivation / R6-R7 layer separation visible.
-3. Keep the OS/Wightman and Euclidean construction bridge status visible as conditional / construction-target material.
-4. Keep the construction-spine external-audit projection visible as a review-routing surface, not external acceptance.
-5. Keep placeholder, witness, and proof-debt inventory visible.
-6. Keep final-release hold, public-boundary lock, and external-acceptance boundary explicit.
+1. Complete Gibbs-pairing symmetry, self-adjointness, and `P_e`/`Q_e` orthogonality.
+2. Repair the random-scan/physical-gap normalization mismatch.
+3. Derive an operator contraction theorem from the finite and uniform Dobrushin packages.
+4. Prove a genuine scale-uniform estimate for the non-Abelian Wilson conditional laws.
+5. Construct the physical Hamiltonian/observable quadratic-form bridge.
+6. Establish a nontrivial regular continuum limit and complete independent external review.
+
+## Public claim boundary
+
+Recommended wording:
+
+```text
+MGAP4D is a Lean 4 formal-development repository for a four-dimensional
+Yang--Mills mass-gap proof architecture. It contains a concrete finite Wilson
+heat-bath probability and operator lane, conditional Hamiltonian/transfer/OS
+propagation theorems, and an internal normalized 33/20 audit carrier. The
+uniform non-Abelian estimate, normalization bridge, physical continuum
+construction, and independent derivation of the physical mass gap remain open.
+```
