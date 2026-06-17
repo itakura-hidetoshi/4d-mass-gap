@@ -34,12 +34,12 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check local majorant
+      - name: Build local majorant and dependencies
         id: build
         continue-on-error: true
         run: |
           set -o pipefail
-          lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalDobrushinLocalMajorant.lean 2>&1 | tee local-majorant.log
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalDobrushinLocalMajorant 2>&1 | tee local-majorant.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
