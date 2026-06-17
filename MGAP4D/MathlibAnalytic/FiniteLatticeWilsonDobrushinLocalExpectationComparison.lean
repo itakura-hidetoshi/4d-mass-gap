@@ -13,12 +13,12 @@ absolute values.  This local version keeps the Dobrushin comparison proof
 independent of normed-space API details. -/
 theorem finite_abs_sum_le_sum_abs
     {α : Type*} (s : Finset α) (u : α → ℝ) :
-    |∑ a in s, u a| ≤ ∑ a in s, |u a| := by
+    abs (∑ a in s, u a) ≤ ∑ a in s, abs (u a) := by
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha]
-      exact le_trans (abs_add _ _) (add_le_add_left ih _)
+      exact le_trans (abs_add_le _ _) (add_le_add_left ih _)
 
 /-- A finite PMF average of a uniformly bounded real test function is bounded
 by the same uniform bound. -/
@@ -104,8 +104,8 @@ theorem finite_pmf_expectation_difference_abs_le_two_mul_tv_mul_radius
         intro a _ha
         ring
       _ = (∑ a : α, (r a).toReal * h a) -
-          ∑ a : α, (r a).toReal * center :=
-        Finset.sum_sub_distrib
+          ∑ a : α, (r a).toReal * center := by
+        rw [Finset.sum_sub_distrib]
       _ = (∑ a : α, (r a).toReal * h a) - center := by
         rw [← Finset.sum_mul, finite_pmf_sum_toReal_eq_one]
         simp
@@ -250,7 +250,7 @@ theorem finite_lattice_dobrushin_singleLinkConditionalExpectation_difference_abs
             ∑ g : L.Gauge, (pB g).toReal * hB g) := by
         rw [hFirst]
   rw [hSplit]
-  exact le_trans (abs_add _ _) (add_le_add hDirect hLaw)
+  exact le_trans (abs_add_le _ _) (add_le_add hDirect hLaw)
 
 end
 
