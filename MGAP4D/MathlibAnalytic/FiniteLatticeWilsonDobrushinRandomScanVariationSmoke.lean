@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinRandomScanVariationContraction
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finiteLatticeWilsonDobrushinRandomScanUpdatedVariation
+#check finite_lattice_dobrushinRandomScanUpdatedVariation_nonneg
+#check finite_lattice_dobrushinRandomScanUpdatedVariation_total_eq
+#check finite_lattice_dobrushinRandomScanUpdatedVariation_total_le_rate_mul
+
+end MathlibAnalytic
+end MGAP4D
