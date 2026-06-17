@@ -103,18 +103,27 @@ theorem finite_lattice_gibbsExpectationReal_const
     (L : FiniteLatticeWilsonSystem)
     (c : ℝ) :
     L.gibbsExpectationReal (fun _ : L.Configuration => c) = c := by
-  classical
-  unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
+  have hEmbedConst :
+      L.gibbsHilbertEmbedLinearMap (fun _ : L.Configuration => c) =
+        c • L.gibbsHilbertVacuum := by
+    rw [FiniteLatticeWilsonSystem.gibbsHilbertVacuum]
+    ext A
+    change Real.sqrt (L.gibbsProbabilityReal A) * c =
+      c * (Real.sqrt (L.gibbsProbabilityReal A) * 1)
+    ring
   calc
-    (∑ A : L.Configuration, L.gibbsProbabilityReal A * c) =
-        (∑ A : L.Configuration, L.gibbsProbabilityReal A) * c := by
-      rw [Finset.sum_mul]
-    _ = 1 * c := by
-      apply congrArg (fun x : ℝ => x * c)
-      simpa [FiniteLatticeWilsonSystem.gibbsProbabilityReal] using
-        (@finite_pmf_sum_toReal_eq_one
-          L.Configuration Pi.instFintype L.gibbsPMF)
-    _ = c := by simp
+    L.gibbsExpectationReal (fun _ : L.Configuration => c) =
+        inner ℝ L.gibbsHilbertVacuum
+          (L.gibbsHilbertEmbedLinearMap
+            (fun _ : L.Configuration => c)) :=
+      (finite_lattice_gibbsHilbert_inner_vacuum_embed
+        L (fun _ : L.Configuration => c)).symm
+    _ = inner ℝ L.gibbsHilbertVacuum
+        (c • L.gibbsHilbertVacuum) := by rw [hEmbedConst]
+    _ = c := by
+      rw [inner_smul_right, real_inner_self_eq_norm_sq,
+        finite_lattice_gibbsHilbertVacuum_norm]
+      norm_num
 
 /-- On the Gibbs-centered sector, the canonical link variations have trivial
 joint kernel. -/
