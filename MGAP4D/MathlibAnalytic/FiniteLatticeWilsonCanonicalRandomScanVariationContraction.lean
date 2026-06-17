@@ -1,8 +1,10 @@
-import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalCenteredVariationProfile
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalVariationMinimality
 import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinRandomScanVariationBound
 
 namespace MGAP4D
 namespace MathlibAnalytic
+
+open scoped BigOperators
 
 noncomputable section
 
@@ -58,9 +60,23 @@ theorem finite_lattice_canonical_randomScanHeatBathSweep_difference_abs_le
     (L.canonicalRandomScanHeatBathSweepVariationBound f D).variation_bound
       source A B hAgree
 
-/-- Every finite Wilson observable therefore inherits the standard Dobrushin
-random-scan contraction in canonical total link variation.  This remains a
-finite oscillation-seminorm result, not a Gibbs `L²` Rayleigh theorem. -/
+/-- The actual canonical variation of the random-scan sweep lies below its
+proof-relevant Dobrushin update profile. -/
+theorem
+    finite_lattice_canonical_randomScanHeatBathSweep_canonicalVariation_le_updatedVariation
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (D : FiniteLatticeWilsonDobrushinMatrixData L)
+    (source : L.Edge) :
+    L.canonicalLinkVariation (L.randomScanHeatBathSweep f) source ≤
+      finiteLatticeWilsonDobrushinRandomScanUpdatedVariation
+        D (L.canonicalLinkVariation f) source := by
+  exact finite_lattice_canonicalLinkVariation_le_linkVariationBound
+    L (L.randomScanHeatBathSweep f)
+      (L.canonicalRandomScanHeatBathSweepVariationBound f D) source
+
+/-- The declared updated profile satisfies the standard Dobrushin total
+variation contraction. -/
 theorem finite_lattice_canonical_randomScanHeatBathSweep_totalVariation_le_rate_mul
     (L : FiniteLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
@@ -75,6 +91,39 @@ theorem finite_lattice_canonical_randomScanHeatBathSweep_totalVariation_le_rate_
   simpa using
     (finite_lattice_dobrushin_randomScanHeatBathSweep_totalVariation_le_rate_mul
       (L.canonicalCenteredVariationProfile f) D hEdge)
+
+/-- The concrete random-scan heat-bath sweep contracts its actual canonical
+total link variation at the certified Dobrushin rate.  This is a genuine
+oscillation-seminorm statement for the updated observable, not merely for a
+declared upper-bound profile. -/
+theorem
+    finite_lattice_canonical_randomScanHeatBathSweep_actualTotalVariation_le_rate_mul
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (D : FiniteLatticeWilsonDobrushinMatrixData L)
+    (hEdge : 0 < Fintype.card L.Edge) :
+    finiteLatticeWilsonTotalVariation
+        (L.canonicalLinkVariation (L.randomScanHeatBathSweep f)) ≤
+      finiteLatticeWilsonDobrushinRandomScanRate L D *
+        finiteLatticeWilsonTotalVariation
+          (L.canonicalLinkVariation f) := by
+  calc
+    finiteLatticeWilsonTotalVariation
+        (L.canonicalLinkVariation (L.randomScanHeatBathSweep f)) ≤
+      finiteLatticeWilsonTotalVariation
+        (finiteLatticeWilsonDobrushinRandomScanUpdatedVariation
+          D (L.canonicalLinkVariation f)) := by
+      unfold finiteLatticeWilsonTotalVariation
+      apply Finset.sum_le_sum
+      intro source _hsource
+      exact
+        finite_lattice_canonical_randomScanHeatBathSweep_canonicalVariation_le_updatedVariation
+          L f D source
+    _ ≤ finiteLatticeWilsonDobrushinRandomScanRate L D *
+        finiteLatticeWilsonTotalVariation
+          (L.canonicalLinkVariation f) :=
+      finite_lattice_canonical_randomScanHeatBathSweep_totalVariation_le_rate_mul
+        L f D hEdge
 
 end
 
