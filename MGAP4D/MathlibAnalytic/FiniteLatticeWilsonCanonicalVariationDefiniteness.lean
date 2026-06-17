@@ -1,10 +1,15 @@
-import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalVariationDefinitenessV2
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalCenteredVariationProfile
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsHilbertRealization
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
+
+/-- Finite Wilson links admit classical decidable equality for finite patching. -/
+noncomputable instance finiteLatticeWilsonEdgeDecidableEq
+    (L : FiniteLatticeWilsonSystem) : DecidableEq L.Edge :=
+  Classical.decEq L.Edge
 
 /-- Patch into `A` the values of `B` on the selected finite set of links. -/
 def FiniteLatticeWilsonSystem.configurationPatch
