@@ -38,8 +38,13 @@ theorem finite_lattice_gibbsHeatBathHamiltonian_eq_edgeCard_smul_id_sub_randomSc
   have hCardReal : (Fintype.card L.Edge : ℝ) ≠ 0 :=
     ne_of_gt hCardRealPos
   rw [finite_lattice_gibbsCanonicalRandomScanLinearMap_apply]
-  rw [sub_sub_cancel_left, smul_smul,
-    mul_inv_cancel₀ hCardReal, one_smul]
+  have hSub :
+      x - (x - (Fintype.card L.Edge : ℝ)⁻¹ •
+        L.gibbsHeatBathHamiltonianLinearMap x) =
+      (Fintype.card L.Edge : ℝ)⁻¹ •
+        L.gibbsHeatBathHamiltonianLinearMap x := by
+    abel
+  rw [hSub, smul_smul, mul_inv_cancel₀ hCardReal, one_smul]
 
 /-- Exact Rayleigh identity relating the canonical random-scan operator and the
 unnormalized heat-bath Hamiltonian. -/
@@ -55,6 +60,11 @@ theorem finite_lattice_gibbsHeatBathHamiltonian_quadraticForm_eq_edgeCard_mul_ra
     (fun y : L.GibbsHilbertSpace => inner ℝ y x)
     (finite_lattice_gibbsHeatBathHamiltonian_eq_edgeCard_smul_id_sub_randomScan
       L hEdge x)
+  change
+    inner ℝ (L.gibbsHeatBathHamiltonianLinearMap x) x =
+      inner ℝ
+        ((Fintype.card L.Edge : ℝ) •
+          (x - L.gibbsCanonicalRandomScanLinearMap x)) x at hVector
   rw [real_inner_smul_left, inner_sub_left,
     real_inner_self_eq_norm_sq] at hVector
   exact hVector
