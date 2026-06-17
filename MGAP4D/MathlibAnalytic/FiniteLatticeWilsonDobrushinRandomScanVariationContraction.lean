@@ -123,7 +123,6 @@ theorem finite_lattice_dobrushinRandomScanUpdatedVariation_total_le_rate_mul
       dsimp [n, gap]
       unfold finiteLatticeWilsonDobrushinRandomScanRate
       field_simp [hCardNe]
-      ring
 
 end
 
