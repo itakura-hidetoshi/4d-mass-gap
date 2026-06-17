@@ -1,0 +1,15 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinVariationProfile
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check FiniteLatticeWilsonLinkVariationBound
+#check FiniteLatticeWilsonCenteredVariationProfile
+#check finite_lattice_replaceLink_agreeOffLink
+#check finite_lattice_dobrushin_centeredVariation_conditionalExpectation_difference_abs_le
+#check finiteLatticeWilsonDobrushinUpdatedVariation
+#check finite_lattice_dobrushinUpdatedVariation_nonneg
+#check FiniteLatticeWilsonCenteredVariationProfile.conditionalExpectationVariationBound
+
+end MathlibAnalytic
+end MGAP4D
