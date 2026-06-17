@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalCenteredVariationProfile
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalVariationDefinitenessV2
 
 namespace MGAP4D
 namespace MathlibAnalytic
