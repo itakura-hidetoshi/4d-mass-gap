@@ -28,19 +28,22 @@ theorem finite_lattice_canonicalDobrushinInfluenceValues_nonempty
   classical
   refine ⟨L.singleLinkConditionalTotalVariation default
     (L.replaceLink default source default) target, ?_⟩
-  simp [FiniteLatticeWilsonSystem.canonicalDobrushinInfluenceValues]
+  unfold FiniteLatticeWilsonSystem.canonicalDobrushinInfluenceValues
+  apply Finset.mem_image.mpr
+  exact ⟨(default, default), Finset.mem_univ _, rfl⟩
 
 /-- The canonical Wilson influence coefficient.  The diagonal is exactly zero;
 off the diagonal it is the largest realizable conditional-TV change caused by
 one source-link perturbation. -/
 noncomputable def FiniteLatticeWilsonSystem.canonicalDobrushinInfluence
     (L : FiniteLatticeWilsonSystem)
-    (target source : L.Edge) : ℝ :=
-  if target = source then 0
-  else
-    (L.canonicalDobrushinInfluenceValues target source).max'
-      (finite_lattice_canonicalDobrushinInfluenceValues_nonempty
-        L target source)
+    (target source : L.Edge) : ℝ := by
+  classical
+  exact if target = source then 0
+    else
+      (L.canonicalDobrushinInfluenceValues target source).max'
+        (finite_lattice_canonicalDobrushinInfluenceValues_nonempty
+          L target source)
 
 /-- Canonical Wilson influences are nonnegative. -/
 theorem finite_lattice_canonicalDobrushinInfluence_nonneg
@@ -59,7 +62,9 @@ theorem finite_lattice_canonicalDobrushinInfluence_nonneg
         (L.singleLinkConditionalTotalVariation default
           (L.replaceLink default source default) target)
         (by
-          simp [FiniteLatticeWilsonSystem.canonicalDobrushinInfluenceValues]))
+          unfold FiniteLatticeWilsonSystem.canonicalDobrushinInfluenceValues
+          apply Finset.mem_image.mpr
+          exact ⟨(default, default), Finset.mem_univ _, rfl⟩))
 
 /-- The canonical influence has exact zero diagonal. -/
 @[simp] theorem finite_lattice_canonicalDobrushinInfluence_diagonal
@@ -86,14 +91,12 @@ theorem finite_lattice_singleLinkConditionalTotalVariation_le_canonicalDobrushin
         L A B source hAgree)
   · rw [FiniteLatticeWilsonSystem.canonicalDobrushinInfluence, if_neg h]
     apply Finset.le_max'
-    change
-      L.singleLinkConditionalTotalVariation A B target ∈
-        L.canonicalDobrushinInfluenceValues target source
+    unfold FiniteLatticeWilsonSystem.canonicalDobrushinInfluenceValues
+    apply Finset.mem_image.mpr
     have hReplace : L.replaceLink A source (B source) = B :=
       finite_lattice_replaceLink_right_of_agreeOffLink
         L A B source hAgree
-    simp [FiniteLatticeWilsonSystem.canonicalDobrushinInfluenceValues,
-      hReplace]
+    exact ⟨(A, B source), Finset.mem_univ _, by rw [hReplace]⟩
 
 /-- Canonical row sum of exact single-link influences. -/
 def FiniteLatticeWilsonSystem.canonicalDobrushinRowSum
