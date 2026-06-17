@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinTotalVariationContraction
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finiteLatticeWilsonTotalVariation
+#check finite_lattice_dobrushinUpdatedVariation_sum_eq
+#check finite_lattice_dobrushinUpdatedVariation_total_le
+#check finite_lattice_dobrushinUpdatedVariation_total_le_original
+
+end MathlibAnalytic
+end MGAP4D
