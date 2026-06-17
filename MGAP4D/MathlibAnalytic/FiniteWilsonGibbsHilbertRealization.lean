@@ -59,19 +59,21 @@ theorem finite_lattice_gibbsHilbert_inner_embed
   classical
   rw [PiLp.inner_apply]
   unfold FiniteLatticeWilsonSystem.gibbsPairingReal
-  apply Finset.sum_congr rfl
-  intro A _hA
-  change
-    (Real.sqrt (L.gibbsProbabilityReal A) * f A) *
-        (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
-      L.gibbsProbabilityReal A * f A * g A
-  calc
-    (Real.sqrt (L.gibbsProbabilityReal A) * f A) *
-        (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
-      (Real.sqrt (L.gibbsProbabilityReal A)) ^ 2 * f A * g A := by
-        ring
-    _ = L.gibbsProbabilityReal A * f A * g A := by
-      rw [Real.sq_sqrt (finite_lattice_gibbsProbabilityReal_nonneg L A)]
+  apply Finset.sum_congr
+  · ext A
+    simp
+  · intro A _hA
+    change
+      (Real.sqrt (L.gibbsProbabilityReal A) * f A) *
+          (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
+        L.gibbsProbabilityReal A * f A * g A
+    calc
+      (Real.sqrt (L.gibbsProbabilityReal A) * f A) *
+          (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
+        (Real.sqrt (L.gibbsProbabilityReal A)) ^ 2 * f A * g A := by
+          ring
+      _ = L.gibbsProbabilityReal A * f A * g A := by
+        rw [Real.sq_sqrt (finite_lattice_gibbsProbabilityReal_nonneg L A)]
 
 /-- The squared Euclidean norm of the Gibbs embedding is the Gibbs pairing of
 an observable with itself. -/
@@ -101,15 +103,18 @@ theorem finite_lattice_gibbsHilbertVacuum_norm
     ‖L.gibbsHilbertVacuum‖ = 1 := by
   have hsq : ‖L.gibbsHilbertVacuum‖ ^ 2 = (1 : ℝ) := by
     rw [FiniteLatticeWilsonSystem.gibbsHilbertVacuum,
-      finite_lattice_gibbsHilbert_norm_sq_embed]
-    unfold FiniteLatticeWilsonSystem.gibbsPairingReal
+      EuclideanSpace.real_norm_sq_eq]
     calc
       ∑ A : L.Configuration,
-          L.gibbsProbabilityReal A * (1 : ℝ) * (1 : ℝ) =
+          (L.gibbsHilbertEmbedLinearMap
+            (fun _ : L.Configuration => (1 : ℝ)) A) ^ 2 =
           ∑ A : L.Configuration, L.gibbsProbabilityReal A := by
         apply Finset.sum_congr rfl
         intro A _hA
-        ring
+        rw [finite_lattice_gibbsHilbertEmbedLinearMap_apply]
+        simp only
+        rw [mul_one,
+          Real.sq_sqrt (finite_lattice_gibbsProbabilityReal_nonneg L A)]
       _ = 1 := finite_lattice_gibbsProbabilityReal_sum_eq_one L
   nlinarith [norm_nonneg L.gibbsHilbertVacuum]
 
@@ -145,12 +150,26 @@ theorem finite_lattice_gibbsHilbert_vacuumCentered_embed
       L.gibbsHilbertEmbedLinearMap (L.gibbsCenteredObservable f) := by
   unfold finiteVacuumCentered
   rw [finite_lattice_gibbsHilbert_inner_vacuum_embed]
-  ext A
-  simp only [FiniteLatticeWilsonSystem.gibbsHilbertVacuum,
-    finite_lattice_gibbsHilbertEmbedLinearMap_apply,
-    FiniteLatticeWilsonSystem.gibbsCenteredObservable,
-    Pi.smul_apply, smul_eq_mul]
-  ring
+  change
+    L.gibbsHilbertEmbedLinearMap f -
+        L.gibbsExpectationReal f •
+          L.gibbsHilbertEmbedLinearMap
+            (fun _ : L.Configuration => (1 : ℝ)) =
+      L.gibbsHilbertEmbedLinearMap (L.gibbsCenteredObservable f)
+  calc
+    L.gibbsHilbertEmbedLinearMap f -
+        L.gibbsExpectationReal f •
+          L.gibbsHilbertEmbedLinearMap
+            (fun _ : L.Configuration => (1 : ℝ)) =
+      L.gibbsHilbertEmbedLinearMap
+        (f - L.gibbsExpectationReal f •
+          (fun _ : L.Configuration => (1 : ℝ))) := by
+            symm
+            rw [map_sub, map_smul]
+    _ = L.gibbsHilbertEmbedLinearMap (L.gibbsCenteredObservable f) := by
+      apply congrArg L.gibbsHilbertEmbedLinearMap
+      funext A
+      simp [FiniteLatticeWilsonSystem.gibbsCenteredObservable]
 
 /-- The squared norm of the vacuum-centered Gibbs Hilbert vector is exactly the
 finite Wilson Gibbs variance. -/
