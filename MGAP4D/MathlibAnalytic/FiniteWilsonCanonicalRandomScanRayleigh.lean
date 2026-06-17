@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonCanonicalHeatBathHamiltonian
+import MGAP4D.MathlibAnalytic.FiniteWilsonRandomScanRayleighContraction
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -164,6 +165,112 @@ theorem finite_wilson_canonicalRandomScanRayleigh_restricted_eigenvalues_ge_exac
         0).eigenvalues rfl j :=
   finite_wilson_derived_invariance_restricted_eigenvalues_ge_exactGap
     (finiteWilsonCanonicalRandomScanRayleighDerivedGapData W i R) 0 j
+
+/-- On Gibbs-embedded observables, the canonical Hilbert random scan is exactly
+the square-root-density transport of the concrete Wilson random-scan sweep. -/
+theorem finite_lattice_gibbsCanonicalRandomScan_embed
+    (L : FiniteLatticeWilsonSystem)
+    (hEdge : 0 < Fintype.card L.Edge)
+    (f : L.Configuration → ℝ) :
+    L.gibbsCanonicalRandomScanLinearMap
+        (L.gibbsHilbertEmbedLinearMap f) =
+      L.gibbsHilbertEmbedLinearMap
+        (L.randomScanHeatBathSweep f) := by
+  have hCardReal : (Fintype.card L.Edge : ℝ) ≠ 0 :=
+    ne_of_gt (Nat.cast_pos.mpr hEdge)
+  rw [finite_lattice_gibbsCanonicalRandomScanLinearMap_apply,
+    finite_lattice_gibbsHeatBathHamiltonianLinearMap_apply,
+    finite_lattice_gibbsHilbert_observe_embed,
+    finite_lattice_singleLinkHeatBathHamiltonianObservable_eq_edgeCard_sub_randomScan
+      L hEdge f]
+  calc
+    L.gibbsHilbertEmbedLinearMap f -
+        (Fintype.card L.Edge : ℝ)⁻¹ •
+          L.gibbsHilbertEmbedLinearMap
+            ((Fintype.card L.Edge : ℝ) • f -
+              (Fintype.card L.Edge : ℝ) •
+                L.randomScanHeatBathSweep f) =
+      L.gibbsHilbertEmbedLinearMap
+        (f - (Fintype.card L.Edge : ℝ)⁻¹ •
+          ((Fintype.card L.Edge : ℝ) • f -
+            (Fintype.card L.Edge : ℝ) •
+              L.randomScanHeatBathSweep f)) := by
+      symm
+      rw [map_sub, map_smul]
+    _ = L.gibbsHilbertEmbedLinearMap
+        (L.randomScanHeatBathSweep f) := by
+      apply congrArg L.gibbsHilbertEmbedLinearMap
+      rw [smul_sub, smul_smul, smul_smul,
+        inv_mul_cancel₀ hCardReal, one_smul]
+      abel
+
+/-- Vacuum orthogonality in the concrete Gibbs Hilbert carrier is exactly the
+mean-zero condition for the recovered observable. -/
+theorem finite_lattice_gibbsExpectationReal_observe_eq_zero_of_mem_vacuumOrthogonal
+    (L : FiniteLatticeWilsonSystem)
+    (x : L.GibbsHilbertSpace)
+    (hx : x ∈ finiteVacuumOrthogonal L.gibbsHilbertVacuum) :
+    L.gibbsExpectationReal (L.gibbsHilbertObserveLinearMap x) = 0 := by
+  calc
+    L.gibbsExpectationReal (L.gibbsHilbertObserveLinearMap x) =
+        inner ℝ L.gibbsHilbertVacuum
+          (L.gibbsHilbertEmbedLinearMap
+            (L.gibbsHilbertObserveLinearMap x)) :=
+      (finite_lattice_gibbsHilbert_inner_vacuum_embed
+        L (L.gibbsHilbertObserveLinearMap x)).symm
+    _ = inner ℝ L.gibbsHilbertVacuum x := by
+      rw [finite_lattice_gibbsHilbert_embed_observe]
+    _ = 0 := by
+      have hiff :
+          x ∈ finiteVacuumOrthogonal L.gibbsHilbertVacuum ↔
+            inner ℝ L.gibbsHilbertVacuum x = 0 := by
+        simpa [finiteVacuumOrthogonal, finiteVacuumLine] using
+          (Submodule.mem_orthogonal_singleton_iff_inner_right
+            (𝕜 := ℝ) (u := L.gibbsHilbertVacuum) (v := x))
+      exact hiff.mp hx
+
+/-- The centered observable-side Wilson random-scan certificate generates the
+canonical Hilbert-space Rayleigh certificate without imposing contraction on
+the constant vacuum mode. -/
+noncomputable def
+    FiniteLatticeWilsonRandomScanRayleighContractionData.toCanonicalData
+    {L : FiniteLatticeWilsonSystem}
+    (R : FiniteLatticeWilsonRandomScanRayleighContractionData L) :
+    FiniteLatticeWilsonCanonicalRandomScanRayleighData L :=
+  { edgeCard_pos := R.edgeCard_pos
+    contractionRate := R.contractionRate
+    contractionRate_nonneg := R.contractionRate_nonneg
+    contractionRate_lt_one := R.contractionRate_lt_one
+    rayleigh_contraction := by
+      intro x hx
+      let f := L.gibbsHilbertObserveLinearMap x
+      have hxrepr : L.gibbsHilbertEmbedLinearMap f = x := by
+        dsimp [f]
+        exact finite_lattice_gibbsHilbert_embed_observe L x
+      have hMean : L.gibbsExpectationReal f = 0 := by
+        dsimp [f]
+        exact
+          finite_lattice_gibbsExpectationReal_observe_eq_zero_of_mem_vacuumOrthogonal
+            L x hx
+      rw [← hxrepr,
+        finite_lattice_gibbsCanonicalRandomScan_embed L R.edgeCard_pos f,
+        finite_lattice_gibbsHilbert_inner_embed L,
+        finite_lattice_gibbsHilbert_norm_sq_embed L]
+      exact R.centered_rayleigh_contraction f hMean
+    exactGap_le_edgeCard_mul_one_sub_rate :=
+      R.exactGap_le_edgeCard_mul_one_sub_rate }
+
+/-- The concrete centered Wilson random-scan Rayleigh estimate therefore gives
+the exact Hamiltonian lower bound on the vacuum-orthogonal sector. -/
+theorem finite_lattice_randomScanRayleigh_implies_hamiltonian_gap
+    (L : FiniteLatticeWilsonSystem)
+    (R : FiniteLatticeWilsonRandomScanRayleighContractionData L)
+    (x : L.GibbsHilbertSpace)
+    (hx : x ∈ finiteVacuumOrthogonal L.gibbsHilbertVacuum) :
+    exactGapValueReal * ‖x‖ ^ 2 ≤
+      inner ℝ (L.gibbsHeatBathHamiltonianLinearMap x) x :=
+  finite_lattice_canonicalRandomScanRayleigh_implies_hamiltonian_gap
+    L R.toCanonicalData x hx
 
 end
 
