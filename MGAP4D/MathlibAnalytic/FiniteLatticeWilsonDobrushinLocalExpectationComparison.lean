@@ -36,7 +36,7 @@ theorem finite_pmf_abs_expectation_le_bound
     _ = ∑ a : α, (p a).toReal * |h a| := by
       apply Finset.sum_congr rfl
       intro a _ha
-      rw [abs_mul, abs_of_nonneg (ENNReal.toReal_nonneg)]
+      rw [abs_mul, abs_of_nonneg ENNReal.toReal_nonneg]
     _ ≤ ∑ a : α, (p a).toReal * M := by
       apply Finset.sum_le_sum
       intro a _ha
@@ -109,10 +109,13 @@ theorem finite_pmf_expectation_difference_abs_le_two_mul_tv_mul_radius
       _ = (∑ a : α, (r a).toReal * h a) - center := by
         rw [← Finset.sum_mul, finite_pmf_sum_toReal_eq_one]
         simp
-  rw [← sub_sub_sub_cancel_right
-    (∑ a : α, (p a).toReal * h a)
-    (∑ a : α, (q a).toReal * h a) center]
-  rw [← hShift p, ← hShift q]
+  have hCenter :
+      (∑ a : α, (p a).toReal * h a) -
+          ∑ a : α, (q a).toReal * h a =
+        ((∑ a : α, (p a).toReal * h a) - center) -
+          ((∑ a : α, (q a).toReal * h a) - center) := by
+    ring
+  rw [hCenter, ← hShift p, ← hShift q]
   exact finite_pmf_expectation_difference_abs_le_l1_mul_bound
     p q (fun a => h a - center) radius hRadius
 
@@ -226,24 +229,26 @@ theorem finite_lattice_dobrushin_singleLinkConditionalExpectation_difference_abs
         (∑ g : L.Gauge, (pA g).toReal * (hA g - hB g)) +
           ((∑ g : L.Gauge, (pA g).toReal * hB g) -
             ∑ g : L.Gauge, (pB g).toReal * hB g) := by
-    rw [Finset.mul_sum]
-    apply Eq.symm
+    have hFirst :
+        (∑ g : L.Gauge, (pA g).toReal * hA g) -
+            ∑ g : L.Gauge, (pA g).toReal * hB g =
+          ∑ g : L.Gauge, (pA g).toReal * (hA g - hB g) := by
+      rw [← Finset.sum_sub_distrib]
+      apply Finset.sum_congr rfl
+      intro g _hg
+      ring
     calc
-      (∑ g : L.Gauge, (pA g).toReal * (hA g - hB g)) +
-          ((∑ g : L.Gauge, (pA g).toReal * hB g) -
-            ∑ g : L.Gauge, (pB g).toReal * hB g) =
-        (∑ g : L.Gauge,
-          ((pA g).toReal * hA g - (pA g).toReal * hB g)) +
+      (∑ g : L.Gauge, (pA g).toReal * hA g) -
+          ∑ g : L.Gauge, (pB g).toReal * hB g =
+        ((∑ g : L.Gauge, (pA g).toReal * hA g) -
+          ∑ g : L.Gauge, (pA g).toReal * hB g) +
           ((∑ g : L.Gauge, (pA g).toReal * hB g) -
             ∑ g : L.Gauge, (pB g).toReal * hB g) := by
-          congr 1
-          apply Finset.sum_congr rfl
-          intro g _hg
           ring
-      _ = (∑ g : L.Gauge, (pA g).toReal * hA g) -
-          ∑ g : L.Gauge, (pB g).toReal * hB g := by
-        rw [Finset.sum_sub_distrib]
-        ring
+      _ = (∑ g : L.Gauge, (pA g).toReal * (hA g - hB g)) +
+          ((∑ g : L.Gauge, (pA g).toReal * hB g) -
+            ∑ g : L.Gauge, (pB g).toReal * hB g) := by
+        rw [hFirst]
   rw [hSplit]
   exact le_trans (abs_add _ _) (add_le_add hDirect hLaw)
 
