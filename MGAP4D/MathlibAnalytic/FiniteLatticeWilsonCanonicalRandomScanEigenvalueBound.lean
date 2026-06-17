@@ -13,10 +13,10 @@ theorem finite_lattice_randomScanHeatBathSweep_eigenvalue_abs_le_rate
     (f : L.Configuration → ℝ)
     (D : FiniteLatticeWilsonDobrushinMatrixData L)
     (hEdge : 0 < Fintype.card L.Edge)
-    (λ : ℝ)
-    (hEigen : L.randomScanHeatBathSweep f = λ • f)
+    (eigenvalue : ℝ)
+    (hEigen : L.randomScanHeatBathSweep f = eigenvalue • f)
     (hVariation : L.canonicalTotalVariation f ≠ 0) :
-    |λ| ≤ finiteLatticeWilsonDobrushinRandomScanRate L D := by
+    |eigenvalue| ≤ finiteLatticeWilsonDobrushinRandomScanRate L D := by
   have hContract :=
     finite_lattice_randomScanHeatBathSweep_canonicalTotalVariation_le_rate_mul
       L f D hEdge
@@ -34,13 +34,13 @@ theorem finite_lattice_centered_randomScanHeatBathSweep_eigenvalue_abs_le_rate
     (f : L.Configuration → ℝ)
     (D : FiniteLatticeWilsonDobrushinMatrixData L)
     (hEdge : 0 < Fintype.card L.Edge)
-    (λ : ℝ)
+    (eigenvalue : ℝ)
     (hMean : L.gibbsExpectationReal f = 0)
     (hNonzero : f ≠ 0)
-    (hEigen : L.randomScanHeatBathSweep f = λ • f) :
-    |λ| ≤ finiteLatticeWilsonDobrushinRandomScanRate L D := by
+    (hEigen : L.randomScanHeatBathSweep f = eigenvalue • f) :
+    |eigenvalue| ≤ finiteLatticeWilsonDobrushinRandomScanRate L D := by
   apply finite_lattice_randomScanHeatBathSweep_eigenvalue_abs_le_rate
-    L f D hEdge λ hEigen
+    L f D hEdge eigenvalue hEigen
   intro hVariation
   apply hNonzero
   exact
