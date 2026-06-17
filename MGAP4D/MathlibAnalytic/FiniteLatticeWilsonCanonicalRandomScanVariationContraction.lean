@@ -25,8 +25,8 @@ noncomputable def
     (D : FiniteLatticeWilsonDobrushinMatrixData L) :
     FiniteLatticeWilsonLinkVariationBound L
       (L.randomScanHeatBathSweep f) :=
-  (L.canonicalCenteredVariationProfile f)
-    .randomScanHeatBathSweepVariationBound D
+  FiniteLatticeWilsonCenteredVariationProfile.randomScanHeatBathSweepVariationBound
+    (L.canonicalCenteredVariationProfile f) D
 
 /-- The declared canonical random-scan variation is the standard averaged
 Dobrushin update of the canonical link variation. -/
