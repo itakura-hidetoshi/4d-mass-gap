@@ -105,8 +105,14 @@ theorem finite_lattice_gibbsExpectationReal_const
     L.gibbsExpectationReal (fun _ : L.Configuration => c) = c := by
   classical
   unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
-  rw [← Finset.sum_mul, finite_lattice_gibbsProbabilityReal_sum_eq_one]
-  simp
+  calc
+    (∑ A : L.Configuration, L.gibbsProbabilityReal A * c) =
+        (∑ A : L.Configuration, L.gibbsProbabilityReal A) * c := by
+      rw [Finset.sum_mul]
+    _ = 1 * c := by
+      exact congrArg (fun x : ℝ => x * c)
+        (finite_lattice_gibbsProbabilityReal_sum_eq_one L)
+    _ = c := by simp
 
 /-- On the Gibbs-centered sector, the canonical link variations have trivial
 joint kernel. -/
