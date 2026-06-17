@@ -42,25 +42,25 @@ theorem finite_lattice_canonicalDobrushinRowSum_le_degree_mul_eta
     L.canonicalDobrushinRowSum target ≤ (M.degreeBound : ℝ) * M.eta := by
   classical
   have hSupport :
-      (∑ source in M.neighbors target,
-          L.canonicalDobrushinInfluence target source) =
-        ∑ source : L.Edge,
-          L.canonicalDobrushinInfluence target source := by
+      (∑ e in M.neighbors target,
+          L.canonicalDobrushinInfluence target e) =
+        ∑ e : L.Edge,
+          L.canonicalDobrushinInfluence target e := by
     apply Finset.sum_subset (Finset.subset_univ _)
-    intro source _hsource hNotMem
-    exact M.influence_eq_zero_of_not_mem target source hNotMem
+    intro e _he hNotMem
+    exact M.influence_eq_zero_of_not_mem target e hNotMem
   have hCard :
       ((M.neighbors target).card : ℝ) ≤ (M.degreeBound : ℝ) := by
     exact_mod_cast M.neighbor_card_le target
   unfold FiniteLatticeWilsonSystem.canonicalDobrushinRowSum
   rw [← hSupport]
   calc
-    (∑ source in M.neighbors target,
-        L.canonicalDobrushinInfluence target source) ≤
-      ∑ _source in M.neighbors target, M.eta := by
+    (∑ e in M.neighbors target,
+        L.canonicalDobrushinInfluence target e) ≤
+      ∑ _e in M.neighbors target, M.eta := by
         apply Finset.sum_le_sum
-        intro source hSource
-        exact M.influence_le_eta_of_mem target source hSource
+        intro e hEdge
+        exact M.influence_le_eta_of_mem target e hEdge
     _ = ((M.neighbors target).card : ℝ) * M.eta := by
       simp [nsmul_eq_mul]
     _ ≤ (M.degreeBound : ℝ) * M.eta :=
