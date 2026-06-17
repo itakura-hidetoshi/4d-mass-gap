@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonCanonicalHeatBathHamiltonian
-import MGAP4D.MathlibAnalytic.FiniteWilsonScaledHeatBathSweepContraction
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonRandomScanHeatBathSweep
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -34,14 +34,13 @@ theorem finite_lattice_singleLinkHeatBathHamiltonianObservable_eq_edgeCard_sub_r
   classical
   funext A
   rw [finite_lattice_singleLinkHeatBathHamiltonianObservable_apply]
-  change
-    (∑ e : L.Edge,
-      (f A - L.singleLinkConditionalExpectation f A e)) =
-      (Fintype.card L.Edge : ℝ) * f A -
-        (Fintype.card L.Edge : ℝ) *
-          ((Fintype.card L.Edge : ℝ)⁻¹ *
-            ∑ e : L.Edge,
-              L.singleLinkConditionalExpectation f A e)
+  simp only [Finset.sum_apply,
+    finite_lattice_singleLinkHeatBathFluctuationLinearMap_apply,
+    Pi.sub_apply,
+    finite_lattice_singleLinkHeatBathProjectionLinearMap_apply,
+    Pi.smul_apply,
+    smul_eq_mul,
+    finite_lattice_randomScanHeatBathSweep_apply]
   rw [Finset.sum_sub_distrib]
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   have hCard : (Fintype.card L.Edge : ℝ) ≠ 0 := by
@@ -83,37 +82,24 @@ theorem finite_lattice_gibbsExpectationReal_centered
     (L : FiniteLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
     L.gibbsExpectationReal (L.gibbsCenteredObservable f) = 0 := by
-  classical
-  unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
-    FiniteLatticeWilsonSystem.gibbsCenteredObservable
   calc
-    (∑ A : L.Configuration,
-        L.gibbsProbabilityReal A *
-          (f A - L.gibbsExpectationReal f)) =
-      (∑ A : L.Configuration,
-        L.gibbsProbabilityReal A * f A) -
-      (∑ A : L.Configuration,
-        L.gibbsProbabilityReal A * L.gibbsExpectationReal f) := by
-      rw [Finset.sum_sub_distrib]
-      apply congrArg₂ (· - ·)
-      · apply Finset.sum_congr rfl
-        intro A _hA
-        ring
-      · apply Finset.sum_congr rfl
-        intro A _hA
-        ring
-    _ = L.gibbsExpectationReal f -
-        L.gibbsExpectationReal f *
-          (∑ A : L.Configuration, L.gibbsProbabilityReal A) := by
-      unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
-      rw [Finset.mul_sum]
-      congr 1
-      apply Finset.sum_congr rfl
-      intro A _hA
-      ring
+    L.gibbsExpectationReal (L.gibbsCenteredObservable f) =
+        inner ℝ L.gibbsHilbertVacuum
+          (L.gibbsHilbertEmbedLinearMap
+            (L.gibbsCenteredObservable f)) :=
+      (finite_lattice_gibbsHilbert_inner_vacuum_embed
+        L (L.gibbsCenteredObservable f)).symm
+    _ = inner ℝ L.gibbsHilbertVacuum
+        (finiteVacuumCentered L.gibbsHilbertVacuum
+          (L.gibbsHilbertEmbedLinearMap f)) := by
+      rw [finite_lattice_gibbsHilbert_vacuumCentered_embed]
     _ = 0 := by
-      rw [finite_lattice_gibbsProbabilityReal_sum_eq_one]
-      ring
+      have hvac :
+          inner ℝ L.gibbsHilbertVacuum L.gibbsHilbertVacuum = 1 := by
+        rw [real_inner_self_eq_norm_sq,
+          finite_lattice_gibbsHilbertVacuum_norm]
+        norm_num
+      simp [finiteVacuumCentered, hvac]
 
 /-- The Gibbs squared norm of the centered observable is the Gibbs variance. -/
 theorem finite_lattice_gibbsPairingReal_centered_self
