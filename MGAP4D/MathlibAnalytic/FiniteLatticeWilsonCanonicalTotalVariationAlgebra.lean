@@ -81,9 +81,12 @@ theorem finite_lattice_canonicalLinkVariation_neg
           intro source A B hAgree
           change |(-f A) - (-f B)| ≤
             L.canonicalLinkVariation f source
-          simpa only [neg_sub_neg, abs_neg] using
-            (finite_lattice_canonicalLinkVariation_difference_abs_le
-              L f source A B hAgree) }
+          calc
+            |(-f A) - (-f B)| = |f A - f B| := by
+              rw [neg_sub_neg, abs_sub_comm]
+            _ ≤ L.canonicalLinkVariation f source :=
+              finite_lattice_canonicalLinkVariation_difference_abs_le
+                L f source A B hAgree }
     exact finite_lattice_canonicalLinkVariation_le_linkVariationBound
       L (-f) P e
   have hBackward :
@@ -100,7 +103,7 @@ theorem finite_lattice_canonicalLinkVariation_neg
               L (-f) source A B hAgree
           change |f A - f B| ≤
             L.canonicalLinkVariation (-f) source
-          simpa only [Pi.neg_apply, neg_sub_neg, abs_neg] using hNeg }
+          simpa only [Pi.neg_apply, neg_sub_neg, abs_sub_comm] using hNeg }
     exact finite_lattice_canonicalLinkVariation_le_linkVariationBound
       L f P e
   exact le_antisymm hForward hBackward
