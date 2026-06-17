@@ -1,0 +1,32 @@
+name: Canonical Homogeneity Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/canonical-homogeneity-diagnostic.yml"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationAlgebra.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationHomogeneity.lean"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install elan
+        run: |
+          curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build modules
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationAlgebra MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationHomogeneity 2>&1 | tee canonical-homogeneity.log
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-homogeneity-log
+          path: canonical-homogeneity.log
