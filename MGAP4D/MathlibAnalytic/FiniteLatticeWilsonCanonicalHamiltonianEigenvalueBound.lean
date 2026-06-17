@@ -23,6 +23,24 @@ theorem finite_lattice_singleLinkHeatBathHamiltonianObservable_eigen_of_randomSc
   simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
   ring
 
+/-- The same random-scan eigenobservable gives an eigenvector of the concrete
+Gibbs-Hilbert heat-bath Hamiltonian after multiplication by `sqrt(μ)`. -/
+theorem finite_lattice_gibbsHeatBathHamiltonian_embed_eigen_of_randomScan
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (hEdge : 0 < Fintype.card L.Edge)
+    (λ : ℝ)
+    (hEigen : L.randomScanHeatBathSweep f = λ • f) :
+    L.gibbsHeatBathHamiltonianLinearMap
+        (L.gibbsHilbertEmbedLinearMap f) =
+      ((Fintype.card L.Edge : ℝ) * (1 - λ)) •
+        L.gibbsHilbertEmbedLinearMap f := by
+  rw [finite_lattice_gibbsHeatBathHamiltonianLinearMap_apply,
+    finite_lattice_gibbsHilbert_observe_embed,
+    finite_lattice_singleLinkHeatBathHamiltonianObservable_eigen_of_randomScan
+      L f hEdge λ hEigen,
+    map_smul]
+
 /-- Every nonzero centered random-scan eigenobservable therefore produces an
 observable heat-bath Hamiltonian eigenvalue at least the Dobrushin heat-bath
 gap `1 - α`. -/
