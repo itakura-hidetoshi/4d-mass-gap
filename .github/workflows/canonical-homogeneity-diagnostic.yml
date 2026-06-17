@@ -1,4 +1,4 @@
-name: Canonical Homogeneity Diagnostic
+name: Canonical Variation Spectral Diagnostic
 
 on:
   pull_request:
@@ -6,6 +6,9 @@ on:
       - ".github/workflows/canonical-homogeneity-diagnostic.yml"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationAlgebra.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationHomogeneity.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationSeminorm.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalRandomScanEigenvalueBound.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalHamiltonianEigenvalueBound.lean"
 
 permissions:
   contents: read
@@ -33,14 +36,20 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build modules
+      - name: Build canonical spectral bridge
         continue-on-error: true
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationAlgebra MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationHomogeneity 2>&1 | tee canonical-homogeneity.log
+          lake build \
+            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationAlgebra \
+            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationHomogeneity \
+            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationSeminorm \
+            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalRandomScanEigenvalueBound \
+            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalHamiltonianEigenvalueBound \
+            2>&1 | tee canonical-spectral.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: canonical-homogeneity-log
-          path: canonical-homogeneity.log
+          name: canonical-spectral-log
+          path: canonical-spectral.log
