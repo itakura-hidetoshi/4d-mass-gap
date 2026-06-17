@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationIterates
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check FiniteLatticeWilsonSystem.randomScanHeatBathIterate
+#check finite_lattice_randomScanHeatBathIterate_zero
+#check finite_lattice_randomScanHeatBathIterate_succ
+#check finite_lattice_randomScanHeatBathIterate_canonicalTotalVariation_le_pow_mul
+
+end MathlibAnalytic
+end MGAP4D
