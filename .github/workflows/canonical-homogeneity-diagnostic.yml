@@ -10,14 +10,28 @@ on:
 permissions:
   contents: read
 
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+
 jobs:
   diagnostic:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-
       - name: Install elan
         run: |
-          curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Build modules
         continue-on-error: true
