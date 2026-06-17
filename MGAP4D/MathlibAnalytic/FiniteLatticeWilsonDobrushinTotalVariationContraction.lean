@@ -88,7 +88,7 @@ theorem finite_lattice_dobrushinUpdatedVariation_total_le
       (∑ source : L.Edge, variation source) +
           D.dobrushinCoefficient * variation target -
             variation target :=
-      sub_le_sub_right (add_le_add_left hRowMul _) _
+      sub_le_sub_right (add_le_add (le_refl _) hRowMul) _
     _ = (∑ source : L.Edge, variation source) -
         (1 - D.dobrushinCoefficient) * variation target := by
       ring
