@@ -1,14 +1,10 @@
-name: Canonical Variation Spectral Diagnostic
+name: Canonical Variation Full Diagnostic
 
 on:
   pull_request:
     paths:
       - ".github/workflows/canonical-homogeneity-diagnostic.yml"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationAlgebra.lean"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationHomogeneity.lean"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalTotalVariationSeminorm.lean"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalRandomScanEigenvalueBound.lean"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalHamiltonianEigenvalueBound.lean"
+      - "MGAP4D/MathlibAnalytic/*.lean"
 
 permissions:
   contents: read
@@ -21,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
       - uses: actions/cache/restore@v5
         with:
           path: |
@@ -36,20 +34,25 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build canonical spectral bridge
+      - name: Check every changed Lean file
+        id: build
         continue-on-error: true
         run: |
           set -o pipefail
-          lake build \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationAlgebra \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationHomogeneity \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationSeminorm \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalRandomScanEigenvalueBound \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalHamiltonianEigenvalueBound \
-            2>&1 | tee canonical-spectral.log
+          git fetch --no-tags --depth=1 origin "${{ github.event.pull_request.base.ref }}"
+          status=0
+          while IFS= read -r file; do
+            echo
+            echo "===== ${file} ====="
+            lake env lean "$file" || status=1
+          done < <(git diff --name-only "origin/${{ github.event.pull_request.base.ref }}...HEAD" -- '*.lean') 2>&1 | tee canonical-full.log
+          exit "$status"
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: canonical-spectral-log
-          path: canonical-spectral.log
+          name: canonical-full-log
+          path: canonical-full.log
+      - name: Propagate failure
+        if: steps.build.outcome == 'failure'
+        run: exit 1
