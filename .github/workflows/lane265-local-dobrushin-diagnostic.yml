@@ -4,55 +4,37 @@ on:
   pull_request:
     paths:
       - ".github/workflows/lane265-local-dobrushin-diagnostic.yml"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinLocalExpectationComparison.lean"
-      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinLocalExpectationComparisonCompileSmoke.lean"
 
 permissions:
+  actions: read
   contents: read
-
-env:
-  MATHLIB_NO_CACHE_ON_UPDATE: "1"
 
 jobs:
   diagnostic:
-    name: Local Dobrushin comparison diagnostic
+    name: Extract failed Lean diagnostics
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache/restore@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
-          restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-            ${{ runner.os }}-lean-fast-lake-v4-
-            ${{ runner.os }}-lean-fast-
-      - name: Install elan
+      - name: Download failed Lean job log
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if ! command -v elan >/dev/null 2>&1; then
-            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
-          fi
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build local Dobrushin comparison
-        id: build
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -o pipefail
-          lake build \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinLocalExpectationComparison \
-            MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinLocalExpectationComparisonCompileSmoke \
-            2>&1 | tee lane265-local-dobrushin.log
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/jobs/81849297915/logs" \
+            -o failed-lean-job.log
+          {
+            echo "=== Lean errors ==="
+            grep -n -C 4 -E "error:|failed to synthesize|unsolved goals|unknown constant|type mismatch|application type mismatch" failed-lean-job.log || true
+            echo "=== Log tail ==="
+            tail -n 260 failed-lean-job.log
+          } > lane265-local-dobrushin.log
       - name: Upload diagnostics
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lane265-local-dobrushin-log
           path: lane265-local-dobrushin.log
           if-no-files-found: error
-      - name: Propagate failure
-        if: steps.build.outcome == 'failure'
-        run: exit 1
