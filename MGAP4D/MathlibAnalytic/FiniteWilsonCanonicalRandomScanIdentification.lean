@@ -146,7 +146,7 @@ theorem finite_lattice_gibbsExpectationReal_observe_eq_inner_vacuum
     _ = inner ℝ L.gibbsHilbertVacuum x := by
       rw [finite_lattice_gibbsHilbert_embed_observe]
 
-/-- Vacuum-orthogonal Gibbs Hilbert vectors recover precisely mean-zero
+/-- Vacuum-orthogonal Gibbs Hilbert vectors recover exactly mean-zero
 observables. -/
 theorem finite_lattice_gibbsExpectationReal_observe_eq_zero_of_mem_vacuumOrthogonal
     (L : FiniteLatticeWilsonSystem)
