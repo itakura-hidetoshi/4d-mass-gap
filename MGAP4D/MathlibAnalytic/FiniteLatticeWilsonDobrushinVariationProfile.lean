@@ -6,6 +6,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- A proof-relevant linkwise oscillation bound for one finite Wilson observable. -/
 structure FiniteLatticeWilsonLinkVariationBound
     (L : FiniteLatticeWilsonSystem)
     (f : L.Configuration → ℝ) where
@@ -15,6 +16,9 @@ structure FiniteLatticeWilsonLinkVariationBound
     ∀ (e : L.Edge) (A B : L.Configuration),
       L.AgreeOffLink A B e → |f A - f B| ≤ variation e
 
+/-- A linkwise oscillation profile equipped with a center on every single-link
+fiber.  The radius is half the declared variation, which is the normalization
+needed to turn total variation into the sharp Dobrushin coefficient. -/
 structure FiniteLatticeWilsonCenteredVariationProfile
     (L : FiniteLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
@@ -24,6 +28,8 @@ structure FiniteLatticeWilsonCenteredVariationProfile
     ∀ (A : L.Configuration) (e : L.Edge) (g : L.Gauge),
       |f (L.replaceLink A e g) - fiberCenter A e| ≤ variation e / 2
 
+/-- Applying the same target-link replacement to two configurations preserves
+agreement away from any declared source link. -/
 theorem finite_lattice_replaceLink_agreeOffLink
     (L : FiniteLatticeWilsonSystem)
     (A B : L.Configuration)
@@ -40,6 +46,8 @@ theorem finite_lattice_replaceLink_agreeOffLink
     simp
   · simp [FiniteLatticeWilsonSystem.replaceLink, ht, hAgree e he]
 
+/-- A centered fiber-radius profile converts the local total-variation estimate
+into the sharp Dobrushin variation update. -/
 theorem finite_lattice_dobrushin_centeredVariation_conditionalExpectation_difference_abs_le
     (L : FiniteLatticeWilsonSystem)
     (D : FiniteLatticeWilsonDobrushinMatrixData L)
@@ -79,6 +87,9 @@ theorem finite_lattice_dobrushin_centeredVariation_conditionalExpectation_differ
         D.influence target source * P.variation target := by
       ring
 
+/-- Linkwise variation after one exact target-link heat-bath update.  The
+updated link has zero variation, while every other source retains its direct
+variation plus the influence transported from the target link. -/
 def finiteLatticeWilsonDobrushinUpdatedVariation
     {L : FiniteLatticeWilsonSystem}
     (D : FiniteLatticeWilsonDobrushinMatrixData L)
@@ -87,6 +98,7 @@ def finiteLatticeWilsonDobrushinUpdatedVariation
   if source = target then 0
   else variation source + D.influence target source * variation target
 
+/-- The updated Dobrushin variation profile is nonnegative. -/
 theorem finite_lattice_dobrushinUpdatedVariation_nonneg
     {L : FiniteLatticeWilsonSystem}
     (D : FiniteLatticeWilsonDobrushinMatrixData L)
@@ -104,6 +116,8 @@ theorem finite_lattice_dobrushinUpdatedVariation_nonneg
       (mul_nonneg (D.influence_nonneg target source)
         (hVariation target))
 
+/-- Package the sharp single-link Dobrushin update as a link-variation bound
+for the exact conditional expectation observable. -/
 noncomputable def
     FiniteLatticeWilsonCenteredVariationProfile.conditionalExpectationVariationBound
     {L : FiniteLatticeWilsonSystem}
