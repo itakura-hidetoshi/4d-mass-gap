@@ -42,6 +42,24 @@ theorem finite_lattice_configurationPatch_agreeOffLink_insert
       simp [hne, hs]
     simp [FiniteLatticeWilsonSystem.configurationPatch, hs, hInsert]
 
+/-- Zero canonical variation at one link forces invariance under every change
+supported on that link. -/
+theorem finite_lattice_observable_eq_of_agreeOffLink_of_canonicalVariation_eq_zero
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (e : L.Edge)
+    (A B : L.Configuration)
+    (hAgree : L.AgreeOffLink A B e)
+    (hZero : L.canonicalLinkVariation f e = 0) :
+    f A = f B := by
+  have hBound : |f A - f B| ≤ 0 := by
+    simpa [hZero] using
+      (finite_lattice_canonicalLinkVariation_difference_abs_le
+        L f e A B hAgree)
+  have hAbs : |f A - f B| = 0 :=
+    le_antisymm hBound (abs_nonneg _)
+  exact sub_eq_zero.mp (abs_eq_zero.mp hAbs)
+
 end
 
 end MathlibAnalytic
