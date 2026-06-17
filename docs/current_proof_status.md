@@ -1,12 +1,12 @@
 # Current proof status
 
 **Updated:** 2026-06-17  
-**Latest merged checkpoint:** PR #262  
-**Active open continuation:** PR #263, not yet on `main`
+**Latest merged checkpoint:** PR #263  
+**Later pull request:** none found at the time of this update
 
 ## Status
 
-The current source tree contains a concrete finite Wilson Gibbs, heat-bath, orthogonal-projection, Gibbs-Hilbert, canonical Hamiltonian, and family-wide centered-Rayleigh implication lane:
+The current source tree contains a concrete finite Wilson Gibbs, heat-bath, orthogonal-projection, Gibbs-Hilbert, canonical Hamiltonian, family-wide centered-Rayleigh implication, and explicitly rescaled Dobrushin Hamiltonian lane:
 
 ```text
 finite Wilson Gibbs law
@@ -24,7 +24,8 @@ finite Wilson Gibbs law
   -> exact Hamiltonian/Dirichlet quadratic-form identity
   -> H_HB = |E| (I - P_scan)
   -> centered random-scan Rayleigh coercivity
-  -> family-wide finite Poincare and Hamiltonian gap consequences.
+  -> family-wide finite Poincare and Hamiltonian gap consequences
+  -> explicitly Dobrushin-rescaled finite heat-bath Hamiltonian.
 ```
 
 ## Proved on `main`
@@ -46,9 +47,16 @@ The following formerly open steps are now proved:
 - the exact link-count-scaled random-scan Rayleigh-defect identity;
 - centered Rayleigh contraction implies the correctly scaled finite heat-bath Poincare inequality;
 - the canonical finite Hamiltonian coercivity and excitation-sector lower-bound route;
-- the family-wide package merged in PR #262, which derives these consequences at every approximation index from a family of centered-Rayleigh certificates.
+- the family-wide package merged in PR #262, which derives these consequences at every approximation index from a family of centered-Rayleigh certificates;
+- the PR #263 Dobrushin-scaled lane, conditional on a
+  `FiniteLatticeWilsonDobrushinRandomScanRayleighCertificate`, including:
+  - `(1 - alpha) * Var_mu(f) <= E_HB(f)`;
+  - the explicitly scaled symmetric Gibbs-Hilbert Hamiltonian;
+  - zero vacuum energy and the scaled quadratic-form identity;
+  - the `exactGapValueReal` lower bound on the finite vacuum-orthogonal sector;
+  - the corresponding excitation-eigenvalue lower bound.
 
-These are conditional gap consequences: PR #262 packages the required centered-Rayleigh estimate uniformly, but does not prove that estimate from the Wilson action or Dobrushin matrix.
+The gap consequences remain conditional: neither PR #262 nor PR #263 derives the centered-Rayleigh estimate from the Wilson action or from the Dobrushin matrix alone.
 
 ## Dobrushin and normalization status
 
@@ -81,13 +89,13 @@ and proves
 scale_HB * lambda_HB = exactGapValueReal.
 ```
 
-PR #263 proposes to multiply the canonical finite heat-bath Hamiltonian by this explicit scale and transport the corresponding lower bound to the vacuum-orthogonal and excitation sectors. It is still open and is not part of `main`.
+PR #263 transports this algebraic scale to a finite symmetric Gibbs-Hilbert Hamiltonian and its vacuum-orthogonal lower bound.
 
-This proposed rescaling is algebraically valid if its Lean proof checks, but it is **not** a physical derivation of the scale: the numerator is the pre-existing normalized carrier. A transfer-time or generator normalization derived from Wilson dynamics remains open.
+This is **not** a physical derivation of the normalization scale: the numerator is the pre-existing normalized carrier. A transfer-time or generator normalization derived independently from Wilson dynamics remains open.
 
 ## Principal remaining finite-volume analytic input
 
-The finite Dobrushin matrix controls one-link conditional laws in total variation. The canonical Hamiltonian lane requires the centered Gibbs-pairing estimate
+The finite Dobrushin matrix controls one-link conditional laws in total variation. The canonical and scaled Hamiltonian lanes require the centered Gibbs-pairing estimate
 
 ```text
 <P_scan f, f>_mu <= rho_scan <f, f>_mu,
@@ -118,7 +126,7 @@ through
 hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 ```
 
-`ExactGapReal.lean` projects `exactGapValueReal` from that package. Later spectral, R6, and R7 files transport the same value. The explicit heat-bath scale uses `exactGapValueReal` as its numerator. None of these facts independently derives `33/20` from a physical Yang--Mills Hamiltonian.
+`ExactGapReal.lean` projects `exactGapValueReal` from that package. Later spectral, R6, and R7 files transport the same value. The explicit Dobrushin scale uses `exactGapValueReal` as its numerator. None of these facts independently derives `33/20` from a physical Yang--Mills Hamiltonian.
 
 ## Claim table
 
@@ -137,10 +145,9 @@ hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 | Centered Rayleigh certificate -> finite Poincare/Hamiltonian gap | proved on `main` |
 | Family-wide centered-Rayleigh gap package | proved on `main` via PR #262 |
 | Dobrushin heat-bath/random-scan rate identities | proved on `main` |
+| Dobrushin-scaled finite Hamiltonian | constructed conditionally on `main` via PR #263 |
 | Dobrushin TV -> centered `L²` Rayleigh contraction | open |
 | Uniform Wilson influence estimate | open |
-| Heat-bath/normalized-carrier layer separation | implemented |
-| Explicitly rescaled Dobrushin Hamiltonian | open PR #263 |
 | Physical derivation of the normalization scale | open |
 | Physical transfer Hamiltonian identification | open |
 | Continuum clustering | conditional |
@@ -151,11 +158,10 @@ hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 
 ## Next steps
 
-1. Review PR #263 as an algebraic finite rescaling lane without presenting it as a physical derivation.
-2. Derive centered Gibbs `L²`/Rayleigh contraction from the Dobrushin influence package.
-3. Construct actual Wilson influence coefficients and prove a scale-uniform row-sum or block estimate.
-4. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
-5. Prove uniform transfer contraction, nontrivial continuum convergence, and the analytic OS/Wightman hypotheses.
-6. Obtain independent replay, dependency review, and expert validation.
+1. Derive centered Gibbs `L²`/Rayleigh contraction from the Dobrushin influence package.
+2. Construct actual Wilson influence coefficients and prove a scale-uniform row-sum or block estimate.
+3. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
+4. Prove uniform transfer contraction, nontrivial continuum convergence, and the analytic OS/Wightman hypotheses.
+5. Obtain independent replay, dependency review, and expert validation.
 
 Lean theorem bodies are authoritative. Conditional structures, algebraically defined normalization scales, and internal exact-gap carriers must not be presented as unconditional physical results.
