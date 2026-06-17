@@ -1,0 +1,10 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalRandomScanActualVariationContraction
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finite_lattice_canonicalLinkVariation_randomScanHeatBathSweep_le_updated
+#check finite_lattice_canonical_randomScanHeatBathSweep_actual_totalVariation_le_rate_mul
+
+end MathlibAnalytic
+end MGAP4D
