@@ -17,18 +17,33 @@ theorem finite_lattice_gibbsCanonicalRandomScanLinearMap_embed
         (L.gibbsHilbertEmbedLinearMap f) =
       L.gibbsHilbertEmbedLinearMap
         (L.randomScanHeatBathSweep f) := by
-  ext A
   rw [finite_lattice_gibbsCanonicalRandomScanLinearMap_apply,
     finite_lattice_gibbsHeatBathHamiltonianLinearMap_apply,
     finite_lattice_gibbsHilbert_observe_embed,
     finite_lattice_singleLinkHeatBathHamiltonianObservable_eq_edgeCard_sub_randomScan
       L hEdge f]
-  simp only [Pi.sub_apply, Pi.smul_apply,
-    finite_lattice_gibbsHilbertEmbedLinearMap_apply, smul_eq_mul]
   have hCard : (Fintype.card L.Edge : ℝ) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt hEdge
-  field_simp [hCard]
-  ring
+  calc
+    L.gibbsHilbertEmbedLinearMap f -
+          (Fintype.card L.Edge : ℝ)⁻¹ •
+            L.gibbsHilbertEmbedLinearMap
+              ((Fintype.card L.Edge : ℝ) • f -
+                (Fintype.card L.Edge : ℝ) •
+                  L.randomScanHeatBathSweep f) =
+        L.gibbsHilbertEmbedLinearMap
+          (f - (Fintype.card L.Edge : ℝ)⁻¹ •
+            ((Fintype.card L.Edge : ℝ) • f -
+              (Fintype.card L.Edge : ℝ) •
+                L.randomScanHeatBathSweep f)) := by
+      rw [map_sub, map_smul]
+    _ = L.gibbsHilbertEmbedLinearMap
+        (L.randomScanHeatBathSweep f) := by
+      apply congrArg L.gibbsHilbertEmbedLinearMap
+      ext A
+      simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
+      field_simp [hCard]
+      ring
 
 /-- The canonical Gibbs-Hilbert random-scan operator is symmetric. -/
 theorem finite_lattice_gibbsCanonicalRandomScanLinearMap_isSymmetric
@@ -140,15 +155,21 @@ theorem finite_lattice_gibbsCanonicalRandomScanRestricted_eigenvalue_abs_le_rate
       finite_lattice_gibbsHilbert_embed_observe L
         (x : L.GibbsHilbertSpace)]
     exact hEigenHilbert
-  have hObservedEigen := congrArg
-    (fun y : L.GibbsHilbertSpace => L.gibbsHilbertObserveLinearMap y)
-    hEmbeddedEigen
   have hObservableEigen :
       L.randomScanHeatBathSweep f = r • f := by
-    rw [map_smul,
-      finite_lattice_gibbsHilbert_observe_embed,
-      finite_lattice_gibbsHilbert_observe_embed] at hObservedEigen
-    exact hObservedEigen
+    calc
+      L.randomScanHeatBathSweep f =
+          L.gibbsHilbertObserveLinearMap
+            (L.gibbsHilbertEmbedLinearMap
+              (L.randomScanHeatBathSweep f)) :=
+        (finite_lattice_gibbsHilbert_observe_embed L
+          (L.randomScanHeatBathSweep f)).symm
+      _ = L.gibbsHilbertObserveLinearMap
+          (r • L.gibbsHilbertEmbedLinearMap f) :=
+        congrArg (fun y : L.GibbsHilbertSpace =>
+          L.gibbsHilbertObserveLinearMap y) hEmbeddedEigen
+      _ = r • f := by
+        rw [map_smul, finite_lattice_gibbsHilbert_observe_embed]
   exact
     finite_lattice_centered_randomScanHeatBathSweep_eigenvalue_abs_le_rate
       L f D hEdge r hMean hf hObservableEigen
