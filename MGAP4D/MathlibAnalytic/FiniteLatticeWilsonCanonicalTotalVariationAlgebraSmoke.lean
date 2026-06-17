@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalTotalVariationAlgebra
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finite_lattice_canonicalLinkVariation_add_le
+#check finite_lattice_canonicalTotalVariation_add_le
+#check finite_lattice_canonicalLinkVariation_neg
+#check finite_lattice_canonicalTotalVariation_neg
+
+end MathlibAnalytic
+end MGAP4D
