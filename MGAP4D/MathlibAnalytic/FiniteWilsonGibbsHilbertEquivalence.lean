@@ -14,10 +14,10 @@ theorem finite_lattice_gibbsProbabilityReal_pos
   unfold FiniteLatticeWilsonSystem.gibbsProbabilityReal
   apply ENNReal.toReal_pos
   · rw [finite_lattice_gibbsPMF_apply]
-    exact ne_of_gt
-      (mul_pos
-        (finite_lattice_boltzmannWeight_pos L A)
-        (ENNReal.inv_pos.2 (finite_lattice_partitionFunction_ne_top L)))
+    exact mul_ne_zero
+      (finite_lattice_boltzmannWeight_ne_zero L A)
+      (ENNReal.inv_ne_zero.mpr
+        (finite_lattice_partitionFunction_ne_top L))
   · exact L.gibbsPMF.apply_ne_top A
 
 /-- The square root of every finite Wilson Gibbs probability is nonzero. -/
@@ -82,8 +82,18 @@ noncomputable def FiniteLatticeWilsonSystem.gibbsHilbertLinearEquiv
     (L : FiniteLatticeWilsonSystem) :
     (L.Configuration → ℝ) ≃ₗ[ℝ] L.GibbsHilbertSpace :=
   LinearEquiv.ofBijective L.gibbsHilbertEmbedLinearMap
-    ⟨(finite_lattice_gibbsHilbert_observe_embed L).injective,
-      (finite_lattice_gibbsHilbert_embed_observe L).surjective⟩
+    ⟨by
+      intro f g hfg
+      have h := congrArg
+        (fun x : L.GibbsHilbertSpace =>
+          L.gibbsHilbertObserveLinearMap x) hfg
+      rw [finite_lattice_gibbsHilbert_observe_embed L f,
+        finite_lattice_gibbsHilbert_observe_embed L g] at h
+      exact h,
+    by
+      intro x
+      exact ⟨L.gibbsHilbertObserveLinearMap x,
+        finite_lattice_gibbsHilbert_embed_observe L x⟩⟩
 
 /-- For an arbitrary vector in the concrete Gibbs Hilbert carrier, vacuum
 centering has squared norm equal to the Gibbs variance of its recovered
@@ -93,9 +103,15 @@ theorem finite_lattice_gibbsHilbert_vacuumCentered_norm_sq_observe
     (x : L.GibbsHilbertSpace) :
     ‖finiteVacuumCentered L.gibbsHilbertVacuum x‖ ^ 2 =
       L.gibbsVarianceReal (L.gibbsHilbertObserveLinearMap x) := by
-  rw [← finite_lattice_gibbsHilbert_embed_observe L x]
-  exact finite_lattice_gibbsHilbert_vacuumCentered_norm_sq
-    L (L.gibbsHilbertObserveLinearMap x)
+  calc
+    ‖finiteVacuumCentered L.gibbsHilbertVacuum x‖ ^ 2 =
+        ‖finiteVacuumCentered L.gibbsHilbertVacuum
+          (L.gibbsHilbertEmbedLinearMap
+            (L.gibbsHilbertObserveLinearMap x))‖ ^ 2 := by
+              rw [finite_lattice_gibbsHilbert_embed_observe L x]
+    _ = L.gibbsVarianceReal (L.gibbsHilbertObserveLinearMap x) :=
+      finite_lattice_gibbsHilbert_vacuumCentered_norm_sq
+        L (L.gibbsHilbertObserveLinearMap x)
 
 end
 
