@@ -36,7 +36,11 @@ theorem finite_lattice_configurationPatch_agreeOffLink_insert
       (L.configurationPatch A B s)
       (L.configurationPatch A B (insert e s)) e := by
   intro e' hne
-  simp [FiniteLatticeWilsonSystem.configurationPatch, hne]
+  by_cases hs : e' ∈ s
+  · simp [FiniteLatticeWilsonSystem.configurationPatch, hs]
+  · have hInsert : e' ∉ insert e s := by
+      simp [hne, hs]
+    simp [FiniteLatticeWilsonSystem.configurationPatch, hs, hInsert]
 
 end
 
