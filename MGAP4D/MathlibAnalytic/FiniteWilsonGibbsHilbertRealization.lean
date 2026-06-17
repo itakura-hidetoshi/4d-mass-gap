@@ -69,12 +69,12 @@ theorem finite_lattice_gibbsHilbert_inner_embed
           (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
         L.gibbsProbabilityReal A * f A * g A
     change
-      (Real.sqrt (L.gibbsProbabilityReal A) * f A) *
-          (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
+      (Real.sqrt (L.gibbsProbabilityReal A) * g A) *
+          (Real.sqrt (L.gibbsProbabilityReal A) * f A) =
         L.gibbsProbabilityReal A * f A * g A
     calc
-      (Real.sqrt (L.gibbsProbabilityReal A) * f A) *
-          (Real.sqrt (L.gibbsProbabilityReal A) * g A) =
+      (Real.sqrt (L.gibbsProbabilityReal A) * g A) *
+          (Real.sqrt (L.gibbsProbabilityReal A) * f A) =
         (Real.sqrt (L.gibbsProbabilityReal A)) ^ 2 * f A * g A := by
           ring
       _ = L.gibbsProbabilityReal A * f A * g A := by
