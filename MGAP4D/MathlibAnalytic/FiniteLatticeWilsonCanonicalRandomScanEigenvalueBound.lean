@@ -25,7 +25,7 @@ theorem finite_lattice_randomScanHeatBathSweep_eigenvalue_abs_le_rate
     lt_of_le_of_ne
       (finite_lattice_canonicalTotalVariation_nonneg L f)
       (Ne.symm hVariation)
-  exact (mul_le_mul_right hVariationPos).mp hContract
+  nlinarith
 
 /-- In particular, every nonzero Gibbs-centered eigenobservable has eigenvalue
 bounded in modulus by the same strict Dobrushin rate. -/
