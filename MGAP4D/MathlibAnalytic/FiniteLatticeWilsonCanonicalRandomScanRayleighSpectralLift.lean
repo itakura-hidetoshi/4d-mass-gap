@@ -55,17 +55,24 @@ theorem finite_lattice_gibbsCanonicalRandomScanLinearMap_preserves_vacuumOrthogo
     (x : L.GibbsHilbertSpace)
     (hx : x ∈ finiteVacuumOrthogonal L.gibbsHilbertVacuum) :
     L.gibbsCanonicalRandomScanLinearMap x ∈
-      finiteVacuumOrthogonal L.gibbsHilbertVacuum :=
-  symmetric_zero_vacuum_preserves_vacuumOrthogonal
-    L.gibbsHilbertVacuum
-    (L.gibbsCanonicalRandomScanLinearMap - LinearMap.id)
-    ((finite_lattice_gibbsCanonicalRandomScanLinearMap_isSymmetric L).sub
-      LinearMap.IsSymmetric.id)
-    (by
-      rw [LinearMap.sub_apply,
-        finite_lattice_gibbsCanonicalRandomScanLinearMap_vacuum]
-      simp)
-    hx
+      finiteVacuumOrthogonal L.gibbsHilbertVacuum := by
+  rw [finite_wilson_mem_vacuumOrthogonal_iff]
+  have hOrth : inner ℝ L.gibbsHilbertVacuum x = 0 :=
+    (finite_wilson_mem_vacuumOrthogonal_iff
+      L.gibbsHilbertVacuum x).mp hx
+  calc
+    inner ℝ L.gibbsHilbertVacuum
+        (L.gibbsCanonicalRandomScanLinearMap x) =
+      inner ℝ (L.gibbsCanonicalRandomScanLinearMap x)
+        L.gibbsHilbertVacuum := real_inner_comm _ _
+    _ = inner ℝ x
+        (L.gibbsCanonicalRandomScanLinearMap L.gibbsHilbertVacuum) :=
+      (finite_lattice_gibbsCanonicalRandomScanLinearMap_isSymmetric L)
+        x L.gibbsHilbertVacuum
+    _ = inner ℝ x L.gibbsHilbertVacuum := by
+      rw [finite_lattice_gibbsCanonicalRandomScanLinearMap_vacuum]
+    _ = inner ℝ L.gibbsHilbertVacuum x := real_inner_comm _ _
+    _ = 0 := hOrth
 
 /-- Restriction of the canonical random-scan operator to the centered Gibbs
 Hilbert sector. -/
