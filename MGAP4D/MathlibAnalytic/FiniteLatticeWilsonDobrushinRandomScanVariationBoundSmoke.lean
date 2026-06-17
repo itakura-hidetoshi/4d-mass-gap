@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinRandomScanVariationBound
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check FiniteLatticeWilsonCenteredVariationProfile.randomScanHeatBathSweepVariationBound
+#check finite_lattice_dobrushin_randomScanHeatBathSweep_difference_abs_le
+#check finite_lattice_dobrushin_randomScanHeatBathSweep_totalVariation_le_rate_mul
+
+end MathlibAnalytic
+end MGAP4D
