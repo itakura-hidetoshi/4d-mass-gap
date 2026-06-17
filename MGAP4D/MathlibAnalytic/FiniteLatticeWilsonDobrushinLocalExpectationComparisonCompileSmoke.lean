@@ -1,0 +1,15 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinLocalExpectationComparison
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finite_abs_sum_le_sum_abs
+#check finite_pmf_abs_expectation_le_bound
+#check finite_pmf_expectation_difference_abs_le_l1_mul_bound
+#check finite_pmf_expectation_difference_abs_le_two_mul_tv_mul_radius
+#check finite_lattice_singleLinkConditionalPMF_test_difference_abs_le
+#check finite_lattice_dobrushin_conditionalPMF_test_difference_abs_le
+#check finite_lattice_dobrushin_singleLinkConditionalExpectation_difference_abs_le
+
+end MathlibAnalytic
+end MGAP4D
