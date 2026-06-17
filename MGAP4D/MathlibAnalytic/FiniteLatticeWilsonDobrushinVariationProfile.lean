@@ -90,13 +90,14 @@ theorem finite_lattice_dobrushin_centeredVariation_conditionalExpectation_differ
 /-- Linkwise variation after one exact target-link heat-bath update.  The
 updated link has zero variation, while every other source retains its direct
 variation plus the influence transported from the target link. -/
-def finiteLatticeWilsonDobrushinUpdatedVariation
+noncomputable def finiteLatticeWilsonDobrushinUpdatedVariation
     {L : FiniteLatticeWilsonSystem}
     (D : FiniteLatticeWilsonDobrushinMatrixData L)
     (variation : L.Edge → ℝ)
-    (target source : L.Edge) : ℝ :=
-  if source = target then 0
-  else variation source + D.influence target source * variation target
+    (target source : L.Edge) : ℝ := by
+  classical
+  exact if source = target then 0
+    else variation source + D.influence target source * variation target
 
 /-- The updated Dobrushin variation profile is nonnegative. -/
 theorem finite_lattice_dobrushinUpdatedVariation_nonneg
