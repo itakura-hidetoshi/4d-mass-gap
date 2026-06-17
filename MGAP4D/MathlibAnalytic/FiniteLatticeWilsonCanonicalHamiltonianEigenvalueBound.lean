@@ -61,7 +61,7 @@ theorem finite_lattice_centered_heatBathHamiltonian_eigenvalue_ge_dobrushinGap
       L f D hEdge r hMean hNonzero hEigen
   have hr : r ≤ finiteLatticeWilsonDobrushinRandomScanRate L D :=
     le_trans (le_abs_self r) hAbs
-  rw [finite_lattice_edgeCard_mul_one_sub_dobrushinRandomScanRate
+  rw [← finite_lattice_edgeCard_mul_one_sub_dobrushinRandomScanRate
     L D hEdge]
   exact mul_le_mul_of_nonneg_left
     (sub_le_sub_left hr 1)
