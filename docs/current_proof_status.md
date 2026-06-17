@@ -1,12 +1,12 @@
 # Current proof status
 
 **Updated:** 2026-06-17  
-**Latest merged checkpoint:** PR #261  
-**Active open continuation:** PR #262, not yet on `main`
+**Latest merged checkpoint:** PR #262  
+**Active open continuation:** PR #263, not yet on `main`
 
 ## Status
 
-The current source tree contains a concrete finite Wilson Gibbs, heat-bath, orthogonal-projection, Gibbs-Hilbert, and canonical Hamiltonian lane:
+The current source tree contains a concrete finite Wilson Gibbs, heat-bath, orthogonal-projection, Gibbs-Hilbert, canonical Hamiltonian, and family-wide centered-Rayleigh implication lane:
 
 ```text
 finite Wilson Gibbs law
@@ -24,14 +24,14 @@ finite Wilson Gibbs law
   -> exact Hamiltonian/Dirichlet quadratic-form identity
   -> H_HB = |E| (I - P_scan)
   -> centered random-scan Rayleigh coercivity
+  -> family-wide finite Poincare and Hamiltonian gap consequences.
 ```
 
 ## Proved on `main`
 
 The following formerly open steps are now proved:
 
-- Gibbs-pairing symmetry of the exact single-link projection `P_e`;
-- Gibbs-pairing symmetry of `Q_e`;
+- Gibbs-pairing symmetry of the exact single-link projection `P_e` and fluctuation projection `Q_e`;
 - orthogonality of the projection and fluctuation ranges;
 - the Gibbs-weighted Pythagorean decomposition;
 - the exact identity
@@ -40,14 +40,15 @@ The following formerly open steps are now proved:
 - the finite Gibbs Hilbert carrier, normalized vacuum, and observable/Hilbert linear equivalence;
 - the centered Hilbert norm/Gibbs-variance identity for every Hilbert vector;
 - the canonical observable heat-bath Hamiltonian `sum_e Q_e`;
-- symmetry, zero vacuum energy, and the exact Dirichlet quadratic-form identity for the Gibbs-Hilbert Hamiltonian;
+- symmetry, zero vacuum energy, and the exact Dirichlet quadratic-form identity;
 - the exact generator/random-scan relation
   `H_HB = |E| (I - P_scan)`;
 - the exact link-count-scaled random-scan Rayleigh-defect identity;
 - centered Rayleigh contraction implies the correctly scaled finite heat-bath Poincare inequality;
-- the resulting canonical finite Hamiltonian coercivity and excitation-sector lower-bound route.
+- the canonical finite Hamiltonian coercivity and excitation-sector lower-bound route;
+- the family-wide package merged in PR #262, which derives these consequences at every approximation index from a family of centered-Rayleigh certificates.
 
-PR #262 packages these consequences uniformly across a finite Wilson approximation family, but it is still open and therefore not part of `main`.
+These are conditional gap consequences: PR #262 packages the required centered-Rayleigh estimate uniformly, but does not prove that estimate from the Wilson action or Dobrushin matrix.
 
 ## Dobrushin and normalization status
 
@@ -68,7 +69,7 @@ and proves, for a nonempty edge set,
 
 The old unscaled random-scan certificates required a Markov contraction gap bounded by one to dominate `exactGapValueReal > 1`. PR #255 proves those old system-level and family-level structures uninhabited. The impossible route is therefore explicitly closed.
 
-The replacement lane separates the heat-bath gap from the normalized carrier. PR #261 defines an explicit positive scale
+The replacement lane separates the heat-bath gap from the normalized carrier. PR #261 defines
 
 ```text
 scale_HB = exactGapValueReal / lambda_HB
@@ -80,7 +81,9 @@ and proves
 scale_HB * lambda_HB = exactGapValueReal.
 ```
 
-This is a valid algebraic normalization bridge, but it is **not** a physical derivation of the scale: the numerator is the pre-existing normalized carrier. A transfer-time or generator normalization derived from Wilson dynamics remains open.
+PR #263 proposes to multiply the canonical finite heat-bath Hamiltonian by this explicit scale and transport the corresponding lower bound to the vacuum-orthogonal and excitation sectors. It is still open and is not part of `main`.
+
+This proposed rescaling is algebraically valid if its Lean proof checks, but it is **not** a physical derivation of the scale: the numerator is the pre-existing normalized carrier. A transfer-time or generator normalization derived from Wilson dynamics remains open.
 
 ## Principal remaining finite-volume analytic input
 
@@ -91,7 +94,7 @@ The finite Dobrushin matrix controls one-link conditional laws in total variatio
 E_mu[f] = 0.
 ```
 
-The repository deliberately represents this as a separate
+The repository represents this as a separate
 `FiniteLatticeWilsonDobrushinRandomScanRayleighCertificate`. The implication
 
 ```text
@@ -115,7 +118,7 @@ through
 hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 ```
 
-`ExactGapReal.lean` projects `exactGapValueReal` from that package. Later spectral, R6, and R7 files transport the same value. The new explicit heat-bath scale also uses `exactGapValueReal` as its numerator. None of these facts independently derives `33/20` from a physical Yang--Mills Hamiltonian.
+`ExactGapReal.lean` projects `exactGapValueReal` from that package. Later spectral, R6, and R7 files transport the same value. The explicit heat-bath scale uses `exactGapValueReal` as its numerator. None of these facts independently derives `33/20` from a physical Yang--Mills Hamiltonian.
 
 ## Claim table
 
@@ -131,12 +134,13 @@ hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 | Canonical finite heat-bath Hamiltonian | constructed on `main` |
 | Hamiltonian/Dirichlet quadratic form | proved on `main` |
 | `H_HB = |E|(I-P_scan)` | proved on `main` |
-| Centered Rayleigh contraction -> finite Poincare/Hamiltonian gap | proved conditionally |
-| Family-wide centered Rayleigh package | open PR #262 |
+| Centered Rayleigh certificate -> finite Poincare/Hamiltonian gap | proved on `main` |
+| Family-wide centered-Rayleigh gap package | proved on `main` via PR #262 |
 | Dobrushin heat-bath/random-scan rate identities | proved on `main` |
 | Dobrushin TV -> centered `L²` Rayleigh contraction | open |
 | Uniform Wilson influence estimate | open |
-| Heat-bath/normalized-gap layer separation | implemented |
+| Heat-bath/normalized-carrier layer separation | implemented |
+| Explicitly rescaled Dobrushin Hamiltonian | open PR #263 |
 | Physical derivation of the normalization scale | open |
 | Physical transfer Hamiltonian identification | open |
 | Continuum clustering | conditional |
@@ -147,7 +151,7 @@ hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
 
 ## Next steps
 
-1. Complete the family-level lift in PR #262.
+1. Review PR #263 as an algebraic finite rescaling lane without presenting it as a physical derivation.
 2. Derive centered Gibbs `L²`/Rayleigh contraction from the Dobrushin influence package.
 3. Construct actual Wilson influence coefficients and prove a scale-uniform row-sum or block estimate.
 4. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
