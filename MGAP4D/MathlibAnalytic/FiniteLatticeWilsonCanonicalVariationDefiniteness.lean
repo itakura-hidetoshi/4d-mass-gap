@@ -60,6 +60,43 @@ theorem finite_lattice_observable_eq_of_agreeOffLink_of_canonicalVariation_eq_ze
     le_antisymm hBound (abs_nonneg _)
   exact sub_eq_zero.mp (abs_eq_zero.mp hAbs)
 
+/-- If all canonical link variations vanish, the observable is constant on the
+whole finite Wilson configuration space. -/
+theorem finite_lattice_observable_eq_of_all_canonicalVariations_eq_zero
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (hZero : ∀ e : L.Edge, L.canonicalLinkVariation f e = 0)
+    (A B : L.Configuration) :
+    f A = f B := by
+  have hPatch :
+      ∀ s : Finset L.Edge,
+        f A = f (L.configurationPatch A B s) := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert e s he ih =>
+        calc
+          f A = f (L.configurationPatch A B s) := ih
+          _ = f (L.configurationPatch A B (insert e s)) :=
+            finite_lattice_observable_eq_of_agreeOffLink_of_canonicalVariation_eq_zero
+              L f e
+              (L.configurationPatch A B s)
+              (L.configurationPatch A B (insert e s))
+              (finite_lattice_configurationPatch_agreeOffLink_insert
+                L A B s e)
+              (hZero e)
+  simpa using hPatch Finset.univ
+
+/-- Joint vanishing of canonical link variations characterizes constants. -/
+theorem finite_lattice_observable_eq_const_of_all_canonicalVariations_eq_zero
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (hZero : ∀ e : L.Edge, L.canonicalLinkVariation f e = 0) :
+    f = fun _ : L.Configuration => f default := by
+  funext A
+  exact finite_lattice_observable_eq_of_all_canonicalVariations_eq_zero
+    L f hZero A default
+
 end
 
 end MathlibAnalytic
