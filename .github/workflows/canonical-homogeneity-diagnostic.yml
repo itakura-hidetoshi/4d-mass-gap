@@ -1,0 +1,52 @@
+name: Canonical Variation Fast-Check Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/canonical-homogeneity-diagnostic.yml"
+      - "MGAP4D/MathlibAnalytic/*.lean"
+
+permissions:
+  contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  CHECK_CHANGED_LEAN_BASE_REF: origin/main
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-
+      - name: Install elan
+        run: |
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Run exact fast-check script
+        id: build
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          bash scripts/check_changed_lean.sh origin/main 2>&1 | tee canonical-fast-check.log
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-fast-check-log
+          path: canonical-fast-check.log
+      - name: Propagate failure
+        if: steps.build.outcome == 'failure'
+        run: exit 1
