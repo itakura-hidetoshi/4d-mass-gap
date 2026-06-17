@@ -10,8 +10,10 @@ base configuration while keeping the selected link fixed. -/
 noncomputable def FiniteLatticeWilsonSystem.fiberObservableRanges
     (L : FiniteLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
-    (e : L.Edge) : Finset ℝ :=
-  Finset.univ.image (fun A : L.Configuration =>
+    (e : L.Edge) : Finset ℝ := by
+  classical
+  letI : Fintype L.Configuration := Fintype.ofFinite L.Configuration
+  exact Finset.univ.image (fun A : L.Configuration =>
     L.fiberObservableRange f A e)
 
 /-- The finite set of fiber ranges is nonempty. -/
