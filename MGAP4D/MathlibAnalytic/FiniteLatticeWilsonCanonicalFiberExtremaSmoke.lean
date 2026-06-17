@@ -1,0 +1,19 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalFiberExtrema
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check FiniteLatticeWilsonSystem.fiberObservableValues
+#check finite_lattice_fiberObservableValues_nonempty
+#check FiniteLatticeWilsonSystem.fiberObservableMax
+#check FiniteLatticeWilsonSystem.fiberObservableMin
+#check finite_lattice_fiberObservableValue_le_max
+#check finite_lattice_fiberObservableMin_le_value
+#check FiniteLatticeWilsonSystem.fiberObservableRange
+#check finite_lattice_fiberObservableRange_nonneg
+#check FiniteLatticeWilsonSystem.fiberObservableCenter
+#check finite_lattice_fiberObservable_abs_sub_center_le_half_range
+#check finite_lattice_fiberObservable_difference_abs_le_range
+
+end MathlibAnalytic
+end MGAP4D
