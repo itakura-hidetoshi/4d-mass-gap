@@ -84,6 +84,7 @@ theorem finite_lattice_edgeCard_mul_one_sub_dobrushinRandomScanRate
     ne_of_gt (Nat.cast_pos.mpr hEdge)
   unfold finiteLatticeWilsonDobrushinRandomScanRate
   field_simp [hCard]
+  ring
 
 /-- Explicit positive conversion factor from the Dobrushin heat-bath gap to the
 repository's normalized exact-gap carrier.  This is a normalization bridge; it
