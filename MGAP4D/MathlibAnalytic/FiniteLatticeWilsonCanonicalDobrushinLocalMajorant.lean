@@ -42,7 +42,7 @@ theorem finite_lattice_canonicalDobrushinRowSum_le_degree_mul_eta
     L.canonicalDobrushinRowSum target ≤ (M.degreeBound : ℝ) * M.eta := by
   classical
   have hSupport :
-      (∑ e in M.neighbors target,
+      (∑ e ∈ M.neighbors target,
           L.canonicalDobrushinInfluence target e) =
         ∑ e : L.Edge,
           L.canonicalDobrushinInfluence target e := by
@@ -55,9 +55,9 @@ theorem finite_lattice_canonicalDobrushinRowSum_le_degree_mul_eta
   unfold FiniteLatticeWilsonSystem.canonicalDobrushinRowSum
   rw [← hSupport]
   calc
-    (∑ e in M.neighbors target,
+    (∑ e ∈ M.neighbors target,
         L.canonicalDobrushinInfluence target e) ≤
-      ∑ _e in M.neighbors target, M.eta := by
+      ∑ _e ∈ M.neighbors target, M.eta := by
         apply Finset.sum_le_sum
         intro e hEdge
         exact M.influence_le_eta_of_mem target e hEdge
