@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonCanonicalRandomScanRayleigh
-import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonRandomScanHeatBathSweep
+import MGAP4D.MathlibAnalytic.FiniteWilsonRandomScanRayleighContraction
+import MGAP4D.MathlibAnalytic.FiniteWilsonVacuumOrthogonalInvariance
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -128,48 +129,63 @@ theorem finite_lattice_gibbsHilbert_norm_sq_eq_gibbsPairing_observe
         (L.gibbsHilbertObserveLinearMap x) :=
       finite_lattice_gibbsHilbert_norm_sq_embed L _
 
-/-- Concrete observable-side Rayleigh contraction data for the actual finite
-Wilson random-scan heat-bath sweep. -/
-structure FiniteLatticeWilsonConcreteRandomScanRayleighData
-    (L : FiniteLatticeWilsonSystem) where
-  edgeCard_pos : 0 < Fintype.card L.Edge
-  contractionRate : ℝ
-  contractionRate_nonneg : 0 ≤ contractionRate
-  contractionRate_lt_one : contractionRate < 1
-  gibbsPairing_randomScan_le :
-    ∀ f : L.Configuration → ℝ,
-      L.gibbsPairingReal (L.randomScanHeatBathSweep f) f ≤
-        contractionRate * L.gibbsPairingReal f f
-  exactGap_le_edgeCard_mul_one_sub_rate :
-    exactGapValueReal ≤
-      (Fintype.card L.Edge : ℝ) * (1 - contractionRate)
+/-- Recovering an observable from a Gibbs Hilbert vector converts its Gibbs
+expectation into the Hilbert pairing with the square-root-density vacuum. -/
+theorem finite_lattice_gibbsExpectationReal_observe_eq_inner_vacuum
+    (L : FiniteLatticeWilsonSystem)
+    (x : L.GibbsHilbertSpace) :
+    L.gibbsExpectationReal (L.gibbsHilbertObserveLinearMap x) =
+      inner ℝ L.gibbsHilbertVacuum x := by
+  calc
+    L.gibbsExpectationReal (L.gibbsHilbertObserveLinearMap x) =
+        inner ℝ L.gibbsHilbertVacuum
+          (L.gibbsHilbertEmbedLinearMap
+            (L.gibbsHilbertObserveLinearMap x)) :=
+      (finite_lattice_gibbsHilbert_inner_vacuum_embed
+        L (L.gibbsHilbertObserveLinearMap x)).symm
+    _ = inner ℝ L.gibbsHilbertVacuum x := by
+      rw [finite_lattice_gibbsHilbert_embed_observe]
 
-/-- Concrete observable-side random-scan contraction generates the canonical
-Hilbert-space Rayleigh package. -/
+/-- Vacuum-orthogonal Gibbs Hilbert vectors recover precisely mean-zero
+observables. -/
+theorem finite_lattice_gibbsExpectationReal_observe_eq_zero_of_mem_vacuumOrthogonal
+    (L : FiniteLatticeWilsonSystem)
+    (x : L.GibbsHilbertSpace)
+    (hx : x ∈ finiteVacuumOrthogonal L.gibbsHilbertVacuum) :
+    L.gibbsExpectationReal (L.gibbsHilbertObserveLinearMap x) = 0 := by
+  rw [finite_lattice_gibbsExpectationReal_observe_eq_inner_vacuum]
+  exact
+    (finite_wilson_mem_vacuumOrthogonal_iff
+      L.gibbsHilbertVacuum x).mp hx
+
+/-- The centered observable-side random-scan Rayleigh certificate from the
+finite Wilson Gibbs system generates the canonical Hilbert-space certificate. -/
 noncomputable def
-    FiniteLatticeWilsonConcreteRandomScanRayleighData.toCanonicalData
+    FiniteLatticeWilsonRandomScanRayleighContractionData.toCanonicalData
     {L : FiniteLatticeWilsonSystem}
-    (R : FiniteLatticeWilsonConcreteRandomScanRayleighData L) :
+    (R : FiniteLatticeWilsonRandomScanRayleighContractionData L) :
     FiniteLatticeWilsonCanonicalRandomScanRayleighData L :=
   { edgeCard_pos := R.edgeCard_pos
     contractionRate := R.contractionRate
     contractionRate_nonneg := R.contractionRate_nonneg
     contractionRate_lt_one := R.contractionRate_lt_one
     rayleigh_contraction := by
-      intro x _hx
+      intro x hx
       rw [finite_lattice_gibbsCanonicalRandomScan_inner_eq_gibbsPairing
           L R.edgeCard_pos x,
         finite_lattice_gibbsHilbert_norm_sq_eq_gibbsPairing_observe]
-      exact R.gibbsPairing_randomScan_le
+      exact R.centered_rayleigh_contraction
         (L.gibbsHilbertObserveLinearMap x)
+        (finite_lattice_gibbsExpectationReal_observe_eq_zero_of_mem_vacuumOrthogonal
+          L x hx)
     exactGap_le_edgeCard_mul_one_sub_rate :=
       R.exactGap_le_edgeCard_mul_one_sub_rate }
 
-/-- Concrete Wilson random-scan Rayleigh contraction implies the canonical
-finite-volume Hamiltonian lower bound on the excitation sector. -/
-theorem finite_lattice_concreteRandomScanRayleigh_implies_hamiltonian_gap
+/-- Centered concrete Wilson random-scan Rayleigh contraction implies the
+canonical finite-volume Hamiltonian lower bound on the excitation sector. -/
+theorem finite_lattice_randomScanRayleigh_implies_hamiltonian_gap
     (L : FiniteLatticeWilsonSystem)
-    (R : FiniteLatticeWilsonConcreteRandomScanRayleighData L)
+    (R : FiniteLatticeWilsonRandomScanRayleighContractionData L)
     (x : L.GibbsHilbertSpace)
     (hx : x ∈ finiteVacuumOrthogonal L.gibbsHilbertVacuum) :
     exactGapValueReal * ‖x‖ ^ 2 ≤
