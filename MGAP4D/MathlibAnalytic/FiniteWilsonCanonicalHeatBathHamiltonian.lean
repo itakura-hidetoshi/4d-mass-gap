@@ -42,8 +42,8 @@ theorem finite_lattice_gibbsPairingReal_finset_sum_left
     {ι : Type*} (s : Finset ι)
     (F : ι → L.Configuration → ℝ)
     (g : L.Configuration → ℝ) :
-    L.gibbsPairingReal (∑ i in s, F i) g =
-      ∑ i in s, L.gibbsPairingReal (F i) g := by
+    L.gibbsPairingReal (s.sum F) g =
+      s.sum (fun i => L.gibbsPairingReal (F i) g) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -60,8 +60,8 @@ theorem finite_lattice_gibbsPairingReal_finset_sum_right
     {ι : Type*} (s : Finset ι)
     (f : L.Configuration → ℝ)
     (G : ι → L.Configuration → ℝ) :
-    L.gibbsPairingReal f (∑ i in s, G i) =
-      ∑ i in s, L.gibbsPairingReal f (G i) := by
+    L.gibbsPairingReal f (s.sum G) =
+      s.sum (fun i => L.gibbsPairingReal f (G i)) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
