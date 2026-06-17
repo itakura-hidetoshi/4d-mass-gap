@@ -19,7 +19,7 @@ theorem finite_abs_sum_le_sum_abs
   | empty => simp
   | @insert a s ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha]
-      exact le_trans (abs_add_le _ _) (add_le_add_left ih _)
+      exact le_trans (abs_add_le _ _) (add_le_add (le_refl _) ih)
 
 /-- A finite PMF average of a uniformly bounded real test function is bounded
 by the same uniform bound. -/
