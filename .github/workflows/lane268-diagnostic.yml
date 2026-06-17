@@ -1,0 +1,52 @@
+name: Lane268 Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lane268-diagnostic.yml"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinTotalVariationContraction.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinTotalVariationContractionCompileSmoke.lean"
+
+permissions:
+  contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+      - name: Install elan
+        shell: bash
+        run: |
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build total variation contraction
+        id: build
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinTotalVariationContractionCompileSmoke 2>&1 | tee lane268.log
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lane268-log
+          path: lane268.log
+          if-no-files-found: error
+      - name: Propagate failure
+        if: steps.build.outcome == 'failure'
+        run: exit 1
