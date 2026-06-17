@@ -84,12 +84,16 @@ noncomputable def FiniteLatticeWilsonSystem.gibbsHilbertLinearEquiv
   LinearEquiv.ofBijective L.gibbsHilbertEmbedLinearMap
     ⟨by
       intro f g hfg
-      have h := congrArg
-        (fun x : L.GibbsHilbertSpace =>
-          L.gibbsHilbertObserveLinearMap x) hfg
-      rw [finite_lattice_gibbsHilbert_observe_embed L f,
-        finite_lattice_gibbsHilbert_observe_embed L g] at h
-      exact h,
+      calc
+        f = L.gibbsHilbertObserveLinearMap
+            (L.gibbsHilbertEmbedLinearMap f) :=
+          (finite_lattice_gibbsHilbert_observe_embed L f).symm
+        _ = L.gibbsHilbertObserveLinearMap
+            (L.gibbsHilbertEmbedLinearMap g) := by
+          exact congrArg
+            (fun x : L.GibbsHilbertSpace =>
+              L.gibbsHilbertObserveLinearMap x) hfg
+        _ = g := finite_lattice_gibbsHilbert_observe_embed L g,
     by
       intro x
       exact ⟨L.gibbsHilbertObserveLinearMap x,
