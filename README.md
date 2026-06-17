@@ -212,9 +212,9 @@ and proves the resulting algebraic equality. This repairs the formal layer misma
 | Short status anchor | `docs/current_proof_status.md` |
 | Development roadmap | `ROADMAP.md` |
 | Exact-gap dependency separation | `docs/exact_gap_layer_separation.md` |
-| Projection symmetry | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathGibbsPairingSymmetry.lean` |
-| Projection orthogonality | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathGibbsOrthogonality.lean` |
-| Weighted Pythagoras | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathGibbsPythagorean.lean` |
+| Projection symmetry | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathPairingSymmetry.lean` |
+| Projection orthogonality | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathPairingOrthogonality.lean` |
+| Weighted Pythagoras | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathPythagorean.lean` |
 | Weighted fluctuation norm | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathWeightedFluctuationNorm.lean` |
 | Gibbs Hilbert realization | `MGAP4D/MathlibAnalytic/FiniteWilsonGibbsHilbertRealization.lean` |
 | Gibbs Hilbert equivalence | `MGAP4D/MathlibAnalytic/FiniteWilsonGibbsHilbertEquivalence.lean` |
