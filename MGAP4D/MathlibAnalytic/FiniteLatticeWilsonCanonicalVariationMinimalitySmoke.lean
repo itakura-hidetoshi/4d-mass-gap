@@ -1,0 +1,10 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalVariationMinimality
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finite_lattice_fiberObservableRange_le_linkVariationBound
+#check finite_lattice_canonicalLinkVariation_le_linkVariationBound
+
+end MathlibAnalytic
+end MGAP4D
