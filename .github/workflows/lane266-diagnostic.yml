@@ -29,11 +29,20 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build and print tail
+      - name: Build variation profile
+        id: build
+        continue-on-error: true
         shell: bash
         run: |
-          set +e
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinVariationProfile > lane266.log 2>&1
-          status=$?
-          tail -n 220 lane266.log
-          exit $status
+          set -o pipefail
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinVariationProfile 2>&1 | tee lane266.log
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lane266-log
+          path: lane266.log
+          if-no-files-found: error
+      - name: Propagate failure
+        if: steps.build.outcome == 'failure'
+        run: exit 1
