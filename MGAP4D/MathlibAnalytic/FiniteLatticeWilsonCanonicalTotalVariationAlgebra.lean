@@ -89,9 +89,20 @@ theorem finite_lattice_canonicalLinkVariation_neg
   have hBackward :
       L.canonicalLinkVariation f e ≤
         L.canonicalLinkVariation (-f) e := by
-    simpa only [neg_neg] using
-      (finite_lattice_canonicalLinkVariation_add_le
-        L (-f) f e)
+    let P : FiniteLatticeWilsonLinkVariationBound L f :=
+      { variation := L.canonicalLinkVariation (-f)
+        variation_nonneg :=
+          finite_lattice_canonicalLinkVariation_nonneg L (-f)
+        variation_bound := by
+          intro source A B hAgree
+          have hNeg :=
+            finite_lattice_canonicalLinkVariation_difference_abs_le
+              L (-f) source A B hAgree
+          change |f A - f B| ≤
+            L.canonicalLinkVariation (-f) source
+          simpa only [Pi.neg_apply, neg_sub_neg, abs_neg] using hNeg }
+    exact finite_lattice_canonicalLinkVariation_le_linkVariationBound
+      L f P e
   exact le_antisymm hForward hBackward
 
 /-- Canonical total variation is invariant under negation. -/
