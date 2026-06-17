@@ -33,7 +33,7 @@ theorem finite_lattice_canonicalLinkVariation_add_le
               |(f A - f B) + (g A - g B)| := by
             congr 1
             ring
-          _ ≤ |f A - f B| + |g A - g B| := abs_add _ _
+          _ ≤ |f A - f B| + |g A - g B| := abs_add_le _ _
           _ ≤ L.canonicalLinkVariation f source +
               L.canonicalLinkVariation g source :=
             add_le_add
