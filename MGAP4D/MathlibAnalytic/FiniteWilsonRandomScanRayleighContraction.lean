@@ -38,6 +38,7 @@ theorem finite_lattice_singleLinkHeatBathHamiltonianObservable_eq_edgeCard_sub_r
     finite_lattice_singleLinkHeatBathFluctuationLinearMap_apply,
     Pi.sub_apply,
     finite_lattice_singleLinkHeatBathProjectionLinearMap_apply,
+    FiniteLatticeWilsonSystem.singleLinkHeatBathProjection,
     Pi.smul_apply,
     smul_eq_mul,
     finite_lattice_randomScanHeatBathSweep_apply]
@@ -99,7 +100,9 @@ theorem finite_lattice_gibbsExpectationReal_centered
         rw [real_inner_self_eq_norm_sq,
           finite_lattice_gibbsHilbertVacuum_norm]
         norm_num
-      simp [finiteVacuumCentered, hvac]
+      unfold finiteVacuumCentered
+      rw [inner_sub_right, inner_smul_right, hvac]
+      ring
 
 /-- The Gibbs squared norm of the centered observable is the Gibbs variance. -/
 theorem finite_lattice_gibbsPairingReal_centered_self
