@@ -4,26 +4,19 @@ This roadmap records the active proof-development path of the canonical Lean rep
 
 ## Status snapshot — 2026-06-17
 
-Current `main` contains a concrete finite Wilson heat-bath probability, orthogonal-projection, Gibbs-Hilbert, canonical Hamiltonian, random-scan scaling, and family-wide centered-Rayleigh implication lane. It also contains conditional bridges to transfer contraction, continuum clustering, and OS/Wightman reconstruction.
+Current `main` contains a concrete finite Wilson heat-bath probability, orthogonal-projection, Gibbs-Hilbert, canonical Hamiltonian, random-scan scaling, family-wide centered-Rayleigh implication, and explicitly rescaled Dobrushin Hamiltonian lane. It also contains conditional bridges to transfer contraction, continuum clustering, and OS/Wightman reconstruction.
 
 It does **not** yet contain an unconditional construction of four-dimensional Yang--Mills theory with a physical mass gap.
 
 Latest merged checkpoint:
 
 ```text
-PR #262
-lift centered random-scan Rayleigh certificates to a finite Wilson family
-and derive family-wide Poincare, Hamiltonian coercivity, and excitation bounds
-```
-
-Active open continuation:
-
-```text
 PR #263
-construct an explicitly Dobrushin-rescaled finite heat-bath Hamiltonian
-from the existing centered-Rayleigh certificate and normalized carrier scale
-not yet on main
+construct the explicitly Dobrushin-rescaled finite heat-bath Hamiltonian
+and derive its conditional vacuum-orthogonal and excitation lower bounds
 ```
+
+No later pull request was found at the time of this update.
 
 The active route is now:
 
@@ -39,6 +32,7 @@ exact finite Wilson conditional laws
   -> H_HB = |E| (I - P_scan)
   -> centered random-scan Rayleigh coercivity
   -> family-wide finite Hamiltonian gap consequences
+  -> explicit algebraic Dobrushin rescaling
   -> Dobrushin influence theorem and scale-uniform Wilson bound
   -> physically normalized transfer Hamiltonian
   -> continuum clustering
@@ -138,9 +132,9 @@ Status: **finite algebra and conditional family implication implemented**
 
 Representative merged PRs: #256--#258, #260, and #262.
 
-### F. Dobrushin normalization layer
+### F. Dobrushin normalization and scaled Hamiltonian layer
 
-Status: **scale separation implemented; analytic conversion remains open**
+Status: **algebraic and conditional operator layer implemented; analytic conversion remains open**
 
 - [x] finite Dobrushin matrix and row-sum interfaces;
 - [x] heat-bath gap `lambda_HB = 1 - alpha`;
@@ -151,51 +145,24 @@ Status: **scale separation implemented; analytic conversion remains open**
 - [x] proof that the former unscaled exact-gap certificates are uninhabited;
 - [x] explicit positive normalized-carrier scale and algebraic multiplication identity;
 - [x] separate certificate for centered Gibbs `L²`/Rayleigh contraction;
-- [ ] derive that centered Rayleigh contraction from the Dobrushin influence assumptions;
+- [x] conditional coercivity `(1-alpha) Var_mu(f) <= E_HB(f)`;
+- [x] explicitly scaled symmetric finite Gibbs-Hilbert Hamiltonian;
+- [x] zero vacuum energy and scaled quadratic-form identity;
+- [x] conditional `exactGapValueReal` lower bound on vacuum-orthogonal and excitation sectors;
+- [ ] derive the centered Rayleigh certificate from the Dobrushin influence assumptions;
 - [ ] construct actual Wilson influence coefficients;
-- [ ] prove a volume- and lattice-spacing-uniform row-sum or block bound.
+- [ ] prove a volume- and lattice-spacing-uniform row-sum or block bound;
+- [ ] derive the normalization scale from physical transfer dynamics.
 
-Representative merged PRs: #255, #256, #258, and #261.
-
----
-
-## Immediate milestone 1 — evaluate the explicitly rescaled Dobrushin Hamiltonian lane
-
-PR #263 proposes:
-
-```text
-Dobrushin centered-Rayleigh certificate
-  -> (1-alpha) heat-bath Poincare coercivity
-  -> multiplication by scale_HB
-  -> rescaled finite Hamiltonian quadratic form
-  -> exactGapValueReal lower bound on the vacuum-orthogonal sector.
-```
-
-Tasks:
-
-- [ ] verify all Lean statements and imports in PR #263;
-- [ ] retain explicit dependence on
-  `FiniteLatticeWilsonDobrushinRandomScanRayleighCertificate`;
-- [ ] state clearly that the rescaling is algebraic, not dynamically derived;
-- [ ] avoid calling the rescaled operator the physical transfer Hamiltonian;
-- [ ] add the file to review anchors only after merge;
-- [ ] decide whether this lane clarifies the dependency graph or merely repackages the normalized carrier.
-
-Definition of done:
-
-```text
-The rescaled finite Hamiltonian lane is mathematically correct, dependency-
-transparent, and cannot be misread as deriving the physical scale or 33/20
-from Wilson dynamics.
-```
+Representative merged PRs: #255, #256, #258, #261, and #263.
 
 ---
 
-## Immediate milestone 2 — derive Dobrushin data to centered `L²` contraction
+## Immediate milestone 1 — derive Dobrushin data to centered `L²` contraction
 
 Goal: replace the remaining certificate socket by a genuine theorem.
 
-The current Dobrushin matrix controls conditional laws in total variation. The canonical Hamiltonian lane requires a centered Gibbs-pairing Rayleigh estimate. These are not definitionally identical.
+The current Dobrushin matrix controls conditional laws in total variation. The canonical Hamiltonian and scaled Dobrushin lanes require a centered Gibbs-pairing Rayleigh estimate. These are not definitionally identical.
 
 Tasks:
 
@@ -207,19 +174,20 @@ Tasks:
   `<P_scan f,f>_mu <= rho <f,f>_mu` for centered `f`;
 - [ ] preserve the exact factor `|E|` between normalized scan and generator;
 - [ ] lift the theorem through the family package merged in PR #262;
+- [ ] feed the proved certificate into the scaled Hamiltonian lane merged in PR #263;
 - [ ] provide finite-system compile smokes and small explicit examples.
 
 Definition of done:
 
 ```text
 FiniteLatticeWilsonDobrushinMatrixData is consumed by a theorem that produces
-the centered random-scan Rayleigh certificate required by the canonical
-heat-bath Hamiltonian lane.
+the centered random-scan Rayleigh certificate required by the canonical and
+scaled finite heat-bath Hamiltonian lanes.
 ```
 
 ---
 
-## Milestone 3 — prove a scale-uniform Wilson influence estimate
+## Milestone 2 — prove a scale-uniform Wilson influence estimate
 
 Goal: discharge the principal finite-volume analytic input for the non-Abelian Wilson measures.
 
@@ -234,9 +202,9 @@ This is a genuine hard analytic milestone. Adding a field that asserts the estim
 
 ---
 
-## Milestone 4 — derive the physical normalization and transfer Hamiltonian
+## Milestone 3 — derive the physical normalization and transfer Hamiltonian
 
-The finite canonical heat-bath Hamiltonian and family-wide conditional gap lane are constructed. The remaining issue is their physical scale and relation to the transfer Hamiltonian.
+The finite canonical and algebraically rescaled heat-bath Hamiltonians are constructed. The remaining issue is their physical scale and relation to the transfer Hamiltonian.
 
 Completed formal separation:
 
@@ -246,13 +214,13 @@ rho_scan    = normalized random-scan rate
 Delta_norm  = scale_HB * lambda_HB.
 ```
 
-The current explicit definition
+The current definition
 
 ```text
 scale_HB = exactGapValueReal / lambda_HB
 ```
 
-proves an algebraic equality but uses the pre-existing normalized carrier. It is not a dynamical derivation.
+proves an algebraic equality and supports the finite scaled operator merged in PR #263, but it uses the pre-existing normalized carrier. It is not a dynamical derivation.
 
 Open tasks:
 
@@ -274,7 +242,7 @@ as exactGapValueReal divided by the heat-bath gap.
 
 ---
 
-## Milestone 5 — transfer orbit and continuum clustering
+## Milestone 4 — transfer orbit and continuum clustering
 
 - [ ] construct the correlation-orbit representation for the physical transfer operator;
 - [ ] prove a scale-uniform readout/initial-state amplitude bound;
@@ -285,7 +253,7 @@ as exactGapValueReal divided by the heat-bath gap.
 
 ---
 
-## Milestone 6 — continuum measure and OS/Wightman reconstruction
+## Milestone 5 — continuum measure and OS/Wightman reconstruction
 
 Existing projective-limit and OS/Wightman files provide typed routes and comparison theorems. They do not by themselves discharge all analytic hypotheses of the physical theory.
 
@@ -308,6 +276,7 @@ Status: **internal normalized audit carrier; not an independently derived physic
 - [x] `exactGapValueReal` projects the package value;
 - [x] downstream R6/R7 and terminal audit surfaces carry the same equality;
 - [x] the heat-bath and normalized layers are formally separated;
+- [x] the carrier is transported through an explicitly rescaled finite Hamiltonian conditional on a centered-Rayleigh certificate;
 - [ ] derive the physical scale independently of `exactGapValueReal`;
 - [ ] construct the continuum physical Yang--Mills Hamiltonian independently of that value;
 - [ ] derive its spectral infimum and positive observable weight;
@@ -347,10 +316,9 @@ Until those open items are closed, documentation must describe `33/20` as an int
 
 ## Current priority order
 
-1. Review PR #263 as an algebraic rescaling lane, not a physical derivation.
-2. Prove the Dobrushin TV/influence to centered Gibbs `L²` Rayleigh theorem.
-3. Prove a genuine scale-uniform Wilson influence or block-dynamics estimate.
-4. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
-5. Establish uniform transfer contraction and nontrivial continuum clustering.
-6. Discharge the OS/Wightman hypotheses and obtain independent review.
-7. Reassess any exact `33/20` claim only after the physical construction is independent of the normalization carrier.
+1. Prove the Dobrushin TV/influence to centered Gibbs `L²` Rayleigh theorem.
+2. Prove a genuine scale-uniform Wilson influence or block-dynamics estimate.
+3. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
+4. Establish uniform transfer contraction and nontrivial continuum clustering.
+5. Discharge the OS/Wightman hypotheses and obtain independent review.
+6. Reassess any exact `33/20` claim only after the physical construction is independent of the normalization carrier.
