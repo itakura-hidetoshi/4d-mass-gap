@@ -110,8 +110,10 @@ theorem finite_lattice_gibbsExpectationReal_const
         (∑ A : L.Configuration, L.gibbsProbabilityReal A) * c := by
       rw [Finset.sum_mul]
     _ = 1 * c := by
-      exact congrArg (fun x : ℝ => x * c)
-        (finite_lattice_gibbsProbabilityReal_sum_eq_one L)
+      apply congrArg (fun x : ℝ => x * c)
+      simpa [FiniteLatticeWilsonSystem.gibbsProbabilityReal] using
+        (@finite_pmf_sum_toReal_eq_one
+          L.Configuration Pi.instFintype L.gibbsPMF)
     _ = c := by simp
 
 /-- On the Gibbs-centered sector, the canonical link variations have trivial
