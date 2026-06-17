@@ -32,11 +32,14 @@ theorem finite_lattice_gibbsHeatBathHamiltonian_eq_edgeCard_smul_id_sub_randomSc
     L.gibbsHeatBathHamiltonianLinearMap x =
       (Fintype.card L.Edge : ℝ) •
         (x - L.gibbsCanonicalRandomScanLinearMap x) := by
-  have hCardReal : (Fintype.card L.Edge : ℝ) ≠ 0 := by
-    exact_mod_cast (Nat.ne_of_gt hEdge)
+  have hCardRealPos :
+      (0 : ℝ) < (Fintype.card L.Edge : ℝ) :=
+    Nat.cast_pos.mpr hEdge
+  have hCardReal : (Fintype.card L.Edge : ℝ) ≠ 0 :=
+    ne_of_gt hCardRealPos
   rw [finite_lattice_gibbsCanonicalRandomScanLinearMap_apply]
-  simp only [sub_sub_cancel_left, smul_smul]
-  rw [mul_inv_cancel₀ hCardReal, one_smul]
+  rw [sub_sub_cancel_left, smul_smul,
+    mul_inv_cancel₀ hCardReal, one_smul]
 
 /-- Exact Rayleigh identity relating the canonical random-scan operator and the
 unnormalized heat-bath Hamiltonian. -/
@@ -52,7 +55,9 @@ theorem finite_lattice_gibbsHeatBathHamiltonian_quadraticForm_eq_edgeCard_mul_ra
     (fun y : L.GibbsHilbertSpace => inner ℝ y x)
     (finite_lattice_gibbsHeatBathHamiltonian_eq_edgeCard_smul_id_sub_randomScan
       L hEdge x)
-  simpa [real_inner_smul_left, real_inner_self_eq_norm_sq, mul_sub] using hVector
+  rw [real_inner_smul_left, inner_sub_left,
+    real_inner_self_eq_norm_sq] at hVector
+  exact hVector
 
 /-- Rayleigh contraction data for the canonical normalized random-scan
 operator on the vacuum-orthogonal sector. -/
