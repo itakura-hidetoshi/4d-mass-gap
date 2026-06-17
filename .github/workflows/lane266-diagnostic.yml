@@ -1,0 +1,39 @@
+name: Lane266 Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lane266-diagnostic.yml"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinVariationProfile.lean"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+      - name: Install elan
+        shell: bash
+        run: |
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build and print tail
+        shell: bash
+        run: |
+          set +e
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinVariationProfile > lane266.log 2>&1
+          status=$?
+          tail -n 220 lane266.log
+          exit $status
