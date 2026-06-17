@@ -13,7 +13,8 @@ absolute values.  This local version keeps the Dobrushin comparison proof
 independent of normed-space API details. -/
 theorem finite_abs_sum_le_sum_abs
     {α : Type*} (s : Finset α) (u : α → ℝ) :
-    abs (∑ a in s, u a) ≤ ∑ a in s, abs (u a) := by
+    abs (Finset.sum s u) ≤ Finset.sum s (fun a => abs (u a)) := by
+  classical
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
