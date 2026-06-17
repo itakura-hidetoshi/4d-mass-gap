@@ -225,7 +225,7 @@ theorem finite_lattice_observable_eq_of_all_canonicalVariations_eq_zero
                   L A B s e)
                 (hZero e)
           _ = f A := ih
-  simpa using hPatch Finset.univ
+  simpa using (hPatch Finset.univ).symm
 
 /-- Joint vanishing of canonical link variations characterizes constants. -/
 theorem finite_lattice_observable_eq_const_of_all_canonicalVariations_eq_zero
