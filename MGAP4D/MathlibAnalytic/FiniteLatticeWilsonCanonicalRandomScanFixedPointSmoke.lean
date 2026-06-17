@@ -1,0 +1,10 @@
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalRandomScanFixedPoint
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finite_lattice_randomScanHeatBathSweep_fixed_eq_const
+#check finite_lattice_centered_randomScanHeatBathSweep_fixed_eq_zero
+
+end MathlibAnalytic
+end MGAP4D
