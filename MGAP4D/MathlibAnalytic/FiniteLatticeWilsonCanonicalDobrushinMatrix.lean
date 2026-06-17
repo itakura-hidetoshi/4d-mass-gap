@@ -15,7 +15,6 @@ noncomputable def
     (L : FiniteLatticeWilsonSystem)
     (target source : L.Edge) : Finset ℝ := by
   classical
-  letI : Fintype L.Configuration := Fintype.ofFinite L.Configuration
   exact Finset.univ.image fun p : L.Configuration × L.Gauge =>
     L.singleLinkConditionalTotalVariation p.1
       (L.replaceLink p.1 source p.2) target
