@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonCanonicalVariationDefinitenessV2
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsHilbertRealization
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -96,6 +97,33 @@ theorem finite_lattice_observable_eq_const_of_all_canonicalVariations_eq_zero
   funext A
   exact finite_lattice_observable_eq_of_all_canonicalVariations_eq_zero
     L f hZero A default
+
+/-- Gibbs expectation preserves constant observables. -/
+theorem finite_lattice_gibbsExpectationReal_const
+    (L : FiniteLatticeWilsonSystem)
+    (c : ℝ) :
+    L.gibbsExpectationReal (fun _ : L.Configuration => c) = c := by
+  classical
+  unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
+  rw [← Finset.sum_mul, finite_lattice_gibbsProbabilityReal_sum_eq_one]
+  simp
+
+/-- On the Gibbs-centered sector, the canonical link variations have trivial
+joint kernel. -/
+theorem finite_lattice_centered_observable_eq_zero_of_all_canonicalVariations_eq_zero
+    (L : FiniteLatticeWilsonSystem)
+    (f : L.Configuration → ℝ)
+    (hMean : L.gibbsExpectationReal f = 0)
+    (hZero : ∀ e : L.Edge, L.canonicalLinkVariation f e = 0) :
+    f = 0 := by
+  have hConst :=
+    finite_lattice_observable_eq_const_of_all_canonicalVariations_eq_zero
+      L f hZero
+  have hValue : f default = 0 := by
+    rw [hConst, finite_lattice_gibbsExpectationReal_const] at hMean
+    exact hMean
+  rw [hConst, hValue]
+  rfl
 
 end
 
