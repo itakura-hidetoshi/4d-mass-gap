@@ -49,6 +49,7 @@ theorem finite_lattice_canonicalLinkVariation_smul
       |c| * L.canonicalLinkVariation f e := by
   by_cases hc : c = 0
   · subst c
+    rw [zero_smul, abs_zero, zero_mul]
     change L.canonicalLinkVariation
       (fun _ : L.Configuration => 0) e = 0
     exact finite_lattice_canonicalLinkVariation_const_eq_zero L 0 e
