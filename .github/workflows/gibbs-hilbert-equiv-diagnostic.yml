@@ -1,0 +1,54 @@
+name: Gibbs Hilbert Equivalence Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/gibbs-hilbert-equiv-diagnostic.yml"
+      - "MGAP4D/MathlibAnalytic/FiniteWilsonGibbsHilbertEquivalence.lean"
+
+permissions:
+  contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+
+jobs:
+  diagnostic:
+    name: Gibbs Hilbert equivalence leaf diagnostic
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-lake-v4-
+            ${{ runner.os }}-lean-fast-
+      - name: Install elan
+        shell: bash
+        run: |
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build equivalence leaf
+        id: build
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          lake build MGAP4D.MathlibAnalytic.FiniteWilsonGibbsHilbertEquivalence 2>&1 | tee gibbs-hilbert-equiv.log
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gibbs-hilbert-equiv-log
+          path: gibbs-hilbert-equiv.log
+          if-no-files-found: error
+      - name: Propagate failure
+        if: steps.build.outcome == 'failure'
+        run: exit 1
