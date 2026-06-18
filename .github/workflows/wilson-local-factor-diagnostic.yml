@@ -1,4 +1,4 @@
-name: Wilson Exact Plaquette Family Gap Diagnostic
+name: Wilson Exact Plaquette Transfer Diagnostic
 
 on:
   pull_request:
@@ -9,6 +9,7 @@ on:
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalPlaquetteSupport.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonExactPlaquetteDobrushinProfile.lean"
       - "MGAP4D/MathlibAnalytic/FiniteWilsonExactPlaquetteDobrushinFamilyGap.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteWilsonOSAutomaticExactGapExactPlaquetteTransferOrbitContraction.lean"
 
 permissions:
   contents: read
@@ -38,18 +39,18 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build exact plaquette family gap
+      - name: Build exact plaquette transfer
         id: build
         continue-on-error: true
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.FiniteWilsonExactPlaquetteDobrushinFamilyGap 2>&1 | tee wilson-exact-plaquette-family-gap.log
+          lake build MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapExactPlaquetteTransferOrbitContraction 2>&1 | tee wilson-exact-plaquette-transfer.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wilson-exact-plaquette-family-gap-log
-          path: wilson-exact-plaquette-family-gap.log
+          name: wilson-exact-plaquette-transfer-log
+          path: wilson-exact-plaquette-transfer.log
       - name: Propagate failure
         if: steps.build.outcome == 'failure'
         run: exit 1
