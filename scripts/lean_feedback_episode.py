@@ -26,15 +26,18 @@ DEFAULT_LEDGER = Path(".lean-feedback/episodes.jsonl")
 
 
 def _run(command: Sequence[str]) -> tuple[int, str]:
-    completed = subprocess.run(
-        list(command),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-    )
+    try:
+        completed = subprocess.run(
+            list(command),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+    except OSError as error:
+        return 127, f"lake error: unable to execute {command[0]!r}: {error}\n"
     return completed.returncode, completed.stdout
 
 
