@@ -1,4 +1,4 @@
-name: Wilson Local Factor Diagnostic
+name: Wilson Plaquette Support Diagnostic
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
       - ".github/workflows/wilson-local-factor-diagnostic.yml"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecomposition.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalLocalFactor.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalPlaquetteSupport.lean"
 
 permissions:
   contents: read
@@ -35,18 +36,18 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build local factor
+      - name: Build plaquette support
         id: build
         continue-on-error: true
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonConditionalLocalFactor 2>&1 | tee wilson-local-factor.log
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonConditionalPlaquetteSupport 2>&1 | tee wilson-plaquette-support.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wilson-local-factor-log
-          path: wilson-local-factor.log
+          name: wilson-plaquette-support-log
+          path: wilson-plaquette-support.log
       - name: Propagate failure
         if: steps.build.outcome == 'failure'
         run: exit 1
