@@ -14,15 +14,9 @@ theorem finset_card_biUnion_le_sum_card
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
-      calc
-        ((insert a s).biUnion f).card = (f a ∪ s.biUnion f).card := by
-          simp [ha]
-        _ ≤ (f a).card + (s.biUnion f).card :=
-          Finset.card_union_le (f a) (s.biUnion f)
-        _ ≤ (f a).card + ∑ b in s, (f b).card :=
-          Nat.add_le_add_left ih _
-        _ = ∑ b in insert a s, (f b).card := by
-          simp [ha]
+      rw [Finset.biUnion_insert, Finset.sum_insert ha]
+      exact (Finset.card_union_le (f a) (s.biUnion f)).trans
+        (Nat.add_le_add_left ih (f a).card)
 
 end
 
