@@ -54,10 +54,20 @@ if [ -f scripts/test_lean_feedback_classifier.py ]; then
   python3 scripts/test_lean_feedback_classifier.py
 fi
 
+if [ -f scripts/test_audit_lean_source_integrity.py ]; then
+  echo "[preflight] Lean source integrity regression tests"
+  python3 scripts/test_audit_lean_source_integrity.py
+fi
+
 if [ -z "${changed_lean_files}" ]; then
   echo "[preflight] no Lean files changed"
   exit 0
 fi
+
+# Reject catastrophic one-token source replacements before structural audits and
+# before the expensive Lean/Lake build lane.
+# shellcheck disable=SC2086
+python3 scripts/audit_lean_source_integrity.py ${changed_lean_files}
 
 # shellcheck disable=SC2086
 python3 scripts/audit_changed_lean_preflight.py ${changed_lean_files}
