@@ -66,8 +66,12 @@ theorem finiteNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
     finiteExpPartition_pos referenceLogWeight
   constructor
   · unfold finiteNormalizedExp
-    apply (div_le_iff₀ hZ).2
-    apply (le_div_iff₀ hZref).2
+    rw [show Real.exp R *
+        (Real.exp (referenceLogWeight x) /
+          finiteExpPartition referenceLogWeight) =
+      (Real.exp R * Real.exp (referenceLogWeight x)) /
+        finiteExpPartition referenceLogWeight by ring]
+    apply (div_le_div_iff₀ hZ hZref).2
     unfold finiteExpPartition
     rw [Finset.mul_sum, Finset.mul_sum]
     apply Finset.sum_le_sum
@@ -84,8 +88,11 @@ theorem finiteNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
         rw [Real.exp_add, Real.exp_add]
         ring
   · unfold finiteNormalizedExp
-    apply (div_le_iff₀ hZref).2
-    apply (le_div_iff₀ hZ).2
+    rw [show Real.exp R *
+        (Real.exp (logWeight x) / finiteExpPartition logWeight) =
+      (Real.exp R * Real.exp (logWeight x)) /
+        finiteExpPartition logWeight by ring]
+    apply (div_le_div_iff₀ hZref hZ).2
     unfold finiteExpPartition
     rw [Finset.mul_sum, Finset.mul_sum]
     apply Finset.sum_le_sum
