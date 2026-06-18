@@ -15,7 +15,7 @@ vertices. -/
 theorem periodicHypercubicVertex_card
     (L : ℕ) [NeZero L] :
     Fintype.card (PeriodicHypercubicVertex L) = L ^ 4 := by
-  simp [PeriodicHypercubicVertex, Fintype.card_fun, ZMod.card]
+  simp [PeriodicHypercubicVertex, ZMod.card]
 
 /-- A periodic four-dimensional hypercubic box of side length `L` has exactly
 `6 * L^4` positively based coordinate plaquettes. -/
