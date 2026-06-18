@@ -8,7 +8,11 @@ open MeasureTheory
 
 noncomputable section
 
-/-- Change of variables for the interpolated lattice probability law. -/
+/-- Change of variables for the interpolated lattice probability law.
+
+This removes a separate pushforward-moment hypothesis: an estimate for
+`f (E.interpolate n u)` under the original lattice law is exactly the
+corresponding estimate for `f` under the embedded law. -/
 theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.lintegral_embeddedMeasure
     (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
     (f : E.PhysicalConfiguration → ENNReal)
