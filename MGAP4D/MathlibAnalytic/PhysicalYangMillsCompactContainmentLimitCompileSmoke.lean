@@ -3,16 +3,25 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsCompactContainmentLimit
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Filter MeasureTheory Set
+
 noncomputable section
 
-/-- Compile gate for compactness of the quantitative Prokhorov class. -/
-theorem physical_compact_containment_set_compile_smoke
+/-- Compile gate for the quantitative compact-core data. -/
+theorem physical_compact_containment_tail_compile_smoke
     {E : PhysicalFourDimensionalYangMillsLatticeEmbedding}
     (C : PhysicalYangMillsUniformCompactContainment E) :
-    IsCompact
-      {μ : ProbabilityMeasure E.PhysicalConfiguration |
-        ∀ m, μ (C.compactCore m)ᶜ ≤ C.tailBound m} :=
-  physical_yang_mills_compact_containment_measure_set_isCompact C
+    Tendsto C.tailBound atTop (nhds 0) :=
+  C.tailBound_tendsto_zero
+
+/-- Compile gate for the uniform complement-mass estimate. -/
+theorem physical_compact_containment_bound_compile_smoke
+    {E : PhysicalFourDimensionalYangMillsLatticeEmbedding}
+    (C : PhysicalYangMillsUniformCompactContainment E)
+    (latticeScale compactScale : ℕ) :
+    E.embeddedMeasure latticeScale (C.compactCore compactScale)ᶜ ≤
+      C.tailBound compactScale :=
+  C.measure_compl_le latticeScale compactScale
 
 end
 
