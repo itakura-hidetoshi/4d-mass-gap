@@ -13,12 +13,15 @@ structure PhysicalYangMillsSpecialUnitaryFinalFrontier where
   finiteSystem : ContinuousCompactGaugeWilsonSystem
   weakLimit : PhysicalFourDimensionalYangMillsWeakLimit
 
-/-- Assemble the concrete finite `SU(N)` Wilson system and the canonical
-standard-energy physical weak limit into one typed frontier package. -/
+/-- Assemble the finite `SU(N)` Wilson system and the canonical standard-energy
+physical weak limit into one typed frontier package.  The standard compact
+matrix-group topology is supplied explicitly. -/
 noncomputable def assemblePhysicalYangMillsSpecialUnitaryFinalFrontier
     (finiteGeometry : FiniteFourDimensionalPlaquetteGeometry)
     (rank : ℕ)
     (rank_pos : 0 < rank)
+    [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
+    [CompactSpace (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
