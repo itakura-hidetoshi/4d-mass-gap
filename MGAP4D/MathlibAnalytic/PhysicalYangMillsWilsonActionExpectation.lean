@@ -66,10 +66,14 @@ def toWilsonActionControlMomentBound
     (M : E.WilsonActionMomentBound) :
     E.WilsonActionControlMomentBound scale offset :=
   { momentBound := C.scaleBound * M.momentBound + C.offsetBound
-    momentBound_ne_top := by
-      simp [C.scaleBound_ne_top, M.momentBound_ne_top, C.offsetBound_ne_top]
+    momentBound_ne_top :=
+      ENNReal.add_ne_top.2
+        ⟨ENNReal.mul_ne_top C.scaleBound_ne_top M.momentBound_ne_top,
+          C.offsetBound_ne_top⟩
     uniform_lintegral_le := by
       intro n
+      letI : IsProbabilityMeasure (E.system n).gibbsMeasure :=
+        continuous_compact_gauge_gibbsMeasure_isProbabilityMeasure (E.system n)
       have hActionMeas : Measurable (E.wilsonActionObservable n) :=
         E.wilsonActionObservable_measurable n
       have hScaledMeas :
