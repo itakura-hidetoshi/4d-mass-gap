@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsLatticeMomentCertificate
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsAutomaticMarkovTail
 import Mathlib.MeasureTheory.Measure.Prokhorov
 
 namespace MGAP4D
@@ -30,11 +30,27 @@ theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.isTight_of_coerciveMome
     E.IsTight :=
   C.isTight
 
+/-- Canonical compact sublevels and a finite uniform physical moment bound imply
+tightness, with the Markov-tail limit generated automatically. -/
+theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.isTight_of_naturalRadiusCoerciveMoment
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.NaturalRadiusCoerciveMomentCertificate) :
+    E.IsTight :=
+  C.isTight
+
 /-- A uniform moment estimate stated on the original lattice laws supplies the
 same tightness input after interpolation. -/
 theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.isTight_of_latticeCoerciveMoment
     (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
     (C : E.LatticeCoerciveMomentCertificate) :
+    E.IsTight :=
+  C.isTight
+
+/-- A finite uniform moment bound stated directly on the original lattice laws,
+with canonical compact sublevels, supplies tightness without a tail hypothesis. -/
+theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.isTight_of_latticeNaturalRadiusCoerciveMoment
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.LatticeNaturalRadiusCoerciveMomentCertificate) :
     E.IsTight :=
   C.isTight
 
@@ -114,6 +130,15 @@ noncomputable def physical_yang_mills_weak_limit_of_coerciveMoment
   physical_yang_mills_weak_limit_of_tight E
     (E.isTight_of_coerciveMoment C)
 
+/-- Canonical compact sublevels and a finite uniform moment bound produce a
+physical weak limit without a separately supplied tail-limit proof. -/
+noncomputable def physical_yang_mills_weak_limit_of_naturalRadiusCoerciveMoment
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.NaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_tight E
+    (E.isTight_of_naturalRadiusCoerciveMoment C)
+
 /-- The concrete finite-lattice moment estimate now reaches the weak limit
 without a separately supplied pushforward estimate. -/
 noncomputable def physical_yang_mills_weak_limit_of_latticeCoerciveMoment
@@ -122,6 +147,16 @@ noncomputable def physical_yang_mills_weak_limit_of_latticeCoerciveMoment
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_tight E
     (E.isTight_of_latticeCoerciveMoment C)
+
+/-- A finite uniform moment estimate on the original lattice laws, together
+with canonical compact sublevels, now reaches the physical weak limit directly. -/
+noncomputable def
+    physical_yang_mills_weak_limit_of_latticeNaturalRadiusCoerciveMoment
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.LatticeNaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_tight E
+    (E.isTight_of_latticeNaturalRadiusCoerciveMoment C)
 
 /-- Concrete specialization: tightness of the interpolated compact-gauge Wilson
 Gibbs laws is sufficient for existence of a subsequential continuum probability
@@ -147,6 +182,15 @@ noncomputable def continuous_compact_gauge_wilson_weak_limit_of_coerciveMoment
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_coerciveMoment E.toLatticeEmbedding C
 
+/-- Concrete Wilson specialization of canonical physical coercive moments. -/
+noncomputable def
+    continuous_compact_gauge_wilson_weak_limit_of_naturalRadiusCoerciveMoment
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.NaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_naturalRadiusCoerciveMoment
+    E.toLatticeEmbedding C
+
 /-- Concrete Wilson specialization of the original-lattice moment route. -/
 noncomputable def
     continuous_compact_gauge_wilson_weak_limit_of_latticeCoerciveMoment
@@ -154,6 +198,16 @@ noncomputable def
     (C : E.toLatticeEmbedding.LatticeCoerciveMomentCertificate) :
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_latticeCoerciveMoment E.toLatticeEmbedding C
+
+/-- Concrete Wilson specialization requiring only canonical compact sublevels
+and a finite uniform moment estimate on the original Gibbs laws. -/
+noncomputable def
+    continuous_compact_gauge_wilson_weak_limit_of_latticeNaturalRadiusCoerciveMoment
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.LatticeNaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_latticeNaturalRadiusCoerciveMoment
+    E.toLatticeEmbedding C
 
 end
 
