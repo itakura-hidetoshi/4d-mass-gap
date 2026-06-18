@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonSystem
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicActiveNeighborBound
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSharedPlaquetteUniqueness
 import MGAP4D.MathlibAnalytic.Z2FiniteLatticeWilsonSystem
 
@@ -151,8 +152,8 @@ theorem z2PeriodicHypercubicOrientedWilsonSystem_activeNeighbors_eq
     (n : ℕ) [NeZero n]
     (beta : ℝ) (hBeta : 0 ≤ beta)
     (target : PeriodicHypercubicEdge n) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        activePlaquetteNeighbors target =
+    ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
+        activePlaquetteNeighbors target) =
       periodicHypercubicActiveNeighbors n target := by
   classical
   apply Finset.ext
@@ -167,8 +168,8 @@ theorem z2PeriodicHypercubicOrientedWilsonSystem_sharedPlaquettes_eq
     (n : ℕ) [NeZero n]
     (beta : ℝ) (hBeta : 0 ≤ beta)
     (target source : PeriodicHypercubicEdge n) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        sharedPlaquettes target source =
+    ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
+        sharedPlaquettes target source) =
       periodicHypercubicSharedPlaquettes n target source := by
   classical
   apply Finset.ext
@@ -196,7 +197,7 @@ def z2PeriodicHypercubicOrientedIncidenceCertificate
     FiniteOrientedWilsonFourDimensionalIncidenceCertificate
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) :=
   { edgeCard_pos := by
-      exact Fintype.card_pos_iff.mpr ⟨default⟩
+      exact Fintype.card_pos_iff.mpr ⟨((fun _ => 0), 0)⟩
     activeNeighborCard_le_eighteen := by
       intro target
       rw [z2PeriodicHypercubicOrientedWilsonSystem_activeNeighbors_eq]
