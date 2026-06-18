@@ -19,12 +19,40 @@ noncomputable def physical_weak_limit_of_tight_compile_smoke
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_tight E hTight
 
+/-- Compile gate for quantitative compact containment. -/
+noncomputable def physical_weak_limit_of_compact_containment_compile_smoke
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.CompactContainmentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_compactContainment E C
+
+/-- Compile gate for the coercive-functional uniform-moment route. -/
+noncomputable def physical_weak_limit_of_coercive_moment_compile_smoke
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.CoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_coerciveMoment E C
+
 /-- Compile gate for the concrete compact-gauge Wilson specialization. -/
 noncomputable def compact_wilson_weak_limit_of_tight_compile_smoke
     (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
     (hTight : E.toLatticeEmbedding.IsTight) :
     PhysicalFourDimensionalYangMillsWeakLimit :=
   continuous_compact_gauge_wilson_weak_limit_of_tight E hTight
+
+/-- Compile gate for Wilson compact containment. -/
+noncomputable def compact_wilson_weak_limit_of_compact_containment_compile_smoke
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.CompactContainmentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  continuous_compact_gauge_wilson_weak_limit_of_compactContainment E C
+
+/-- Compile gate for Wilson coercive moments. -/
+noncomputable def compact_wilson_weak_limit_of_coercive_moment_compile_smoke
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.CoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  continuous_compact_gauge_wilson_weak_limit_of_coerciveMoment E C
 
 end
 
