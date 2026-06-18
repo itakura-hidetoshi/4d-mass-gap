@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonConditionalPlaquetteSupport
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open scoped BigOperators
+
 noncomputable section
 
 /-- The finite set of cardinalities of target plaquette-neighbor sets. -/
@@ -112,6 +114,52 @@ theorem finite_lattice_canonicalDobrushinInfluence_le_plaquetteLocalBound
   apply Finset.mem_image.mpr
   exact ⟨(target, source), Finset.mem_univ _, by simp [hNeighbor]⟩
 
+/-- Every exact canonical influence row sum is bounded by the product of the
+exact plaquette degree and exact largest local influence. -/
+theorem finite_lattice_canonicalDobrushinRowSum_le_exactPlaquetteProduct
+    (L : FiniteLatticeWilsonSystem)
+    (hEdge : 0 < Fintype.card L.Edge)
+    (target : L.Edge) :
+    L.canonicalDobrushinRowSum target ≤
+      (L.canonicalPlaquetteDegree hEdge : ℝ) *
+        L.canonicalPlaquetteLocalInfluenceBound hEdge := by
+  classical
+  have hSupport :
+      (∑ source ∈ L.plaquetteNeighbors target,
+          L.canonicalDobrushinInfluence target source) =
+        ∑ source : L.Edge,
+          L.canonicalDobrushinInfluence target source := by
+    apply Finset.sum_subset (Finset.subset_univ _)
+    intro source _hSource hNotNeighbor
+    exact
+      finite_lattice_canonicalDobrushinInfluence_eq_zero_of_not_plaquetteNeighbor
+        L target source hNotNeighbor
+  have hCard :
+      ((L.plaquetteNeighbors target).card : ℝ) ≤
+        (L.canonicalPlaquetteDegree hEdge : ℝ) := by
+    exact_mod_cast
+      finite_lattice_plaquetteNeighbors_card_le_canonicalPlaquetteDegree
+        L hEdge target
+  unfold FiniteLatticeWilsonSystem.canonicalDobrushinRowSum
+  rw [← hSupport]
+  calc
+    (∑ source ∈ L.plaquetteNeighbors target,
+        L.canonicalDobrushinInfluence target source) ≤
+      ∑ _source ∈ L.plaquetteNeighbors target,
+        L.canonicalPlaquetteLocalInfluenceBound hEdge := by
+          apply Finset.sum_le_sum
+          intro source hSource
+          exact
+            finite_lattice_canonicalDobrushinInfluence_le_plaquetteLocalBound
+              L hEdge target source hSource
+    _ = ((L.plaquetteNeighbors target).card : ℝ) *
+        L.canonicalPlaquetteLocalInfluenceBound hEdge := by
+      simp [nsmul_eq_mul]
+    _ ≤ (L.canonicalPlaquetteDegree hEdge : ℝ) *
+        L.canonicalPlaquetteLocalInfluenceBound hEdge :=
+      mul_le_mul_of_nonneg_right hCard
+        (finite_lattice_canonicalPlaquetteLocalInfluenceBound_nonneg L hEdge)
+
 /-- The canonical Dobrushin coefficient is bounded by the product of the exact
 plaquette degree and the exact largest local influence. -/
 theorem finite_lattice_canonicalDobrushinCoefficient_le_exactPlaquetteProduct
@@ -120,27 +168,14 @@ theorem finite_lattice_canonicalDobrushinCoefficient_le_exactPlaquetteProduct
     L.canonicalDobrushinCoefficient hEdge ≤
       (L.canonicalPlaquetteDegree hEdge : ℝ) *
         L.canonicalPlaquetteLocalInfluenceBound hEdge := by
-  let M : FiniteLatticeWilsonCanonicalDobrushinLocalMajorantData L :=
-    { neighbors := L.plaquetteNeighbors
-      eta := L.canonicalPlaquetteLocalInfluenceBound hEdge
-      eta_nonneg :=
-        finite_lattice_canonicalPlaquetteLocalInfluenceBound_nonneg L hEdge
-      influence_eq_zero_of_not_mem :=
-        finite_lattice_canonicalDobrushinInfluence_eq_zero_of_not_plaquetteNeighbor L
-      influence_le_eta_of_mem :=
-        finite_lattice_canonicalDobrushinInfluence_le_plaquetteLocalBound L hEdge
-      degreeBound := L.canonicalPlaquetteDegree hEdge
-      neighbor_card_le :=
-        finite_lattice_plaquetteNeighbors_card_le_canonicalPlaquetteDegree L hEdge
-      degree_mul_eta_lt_one := by
-        exact False.elim (by
-          have h : ¬ ((L.canonicalPlaquetteDegree hEdge : ℝ) *
-              L.canonicalPlaquetteLocalInfluenceBound hEdge < 1) := by
-            intro _h
-            contradiction
-          exact h (by contradiction)) }
-  exact finite_lattice_canonicalDobrushinCoefficient_le_degree_mul_eta
-    L M hEdge
+  classical
+  unfold FiniteLatticeWilsonSystem.canonicalDobrushinCoefficient
+  apply Finset.max'_le
+  intro r hr
+  unfold FiniteLatticeWilsonSystem.canonicalDobrushinRowSums at hr
+  rcases Finset.mem_image.mp hr with ⟨target, _hTarget, rfl⟩
+  exact finite_lattice_canonicalDobrushinRowSum_le_exactPlaquetteProduct
+    L hEdge target
 
 /-- The single exact scalar inequality `degree * localInfluence < 1` generates
 the complete local-majorant certificate. -/
@@ -173,8 +208,10 @@ theorem finite_lattice_canonicalDobrushinCoefficient_lt_one_of_exactPlaquettePro
       (L.canonicalPlaquetteDegree hEdge : ℝ) *
           L.canonicalPlaquetteLocalInfluenceBound hEdge < 1) :
     L.canonicalDobrushinCoefficient hEdge < 1 :=
-  finite_lattice_canonicalDobrushinCoefficient_lt_one_of_localMajorant
-    L (finiteLatticeWilsonExactPlaquetteLocalMajorantData L hEdge hStrict) hEdge
+  lt_of_le_of_lt
+    (finite_lattice_canonicalDobrushinCoefficient_le_exactPlaquetteProduct
+      L hEdge)
+    hStrict
 
 /-- The exact plaquette-profile inequality generates the proof-relevant
 canonical Dobrushin matrix used by the spectral-gap spine. -/
