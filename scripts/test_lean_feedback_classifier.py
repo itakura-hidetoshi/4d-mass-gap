@@ -44,7 +44,7 @@ error: build failed
         feedback = classify_text(log, exit_code=1)
         self.assertEqual(feedback.primary_category, "projection_chain")
         self.assertNotIn("auto_implicit", {match.category for match in feedback.matches})
-        self.assertIn("import_build", {match.category for match in feedback.matches})
+        self.assertIn("elaboration", {match.category for match in feedback.matches})
 
     def test_auto_implicit_option_alone_is_not_a_diagnostic(self) -> None:
         feedback = classify_text(
