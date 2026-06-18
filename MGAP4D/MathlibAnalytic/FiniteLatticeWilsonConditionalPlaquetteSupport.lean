@@ -111,8 +111,10 @@ theorem finite_lattice_canonicalDobrushinInfluence_eq_zero_of_not_plaquetteNeigh
         L p.1 (L.replaceLink p.1 source p.2) target source hNotNeighbor]
       intro e he
       simp [FiniteLatticeWilsonSystem.replaceLink, he]
-    · exact finite_lattice_canonicalDobrushinInfluence_nonneg
-        L target source
+    · have hNonneg :=
+        finite_lattice_canonicalDobrushinInfluence_nonneg L target source
+      simpa [FiniteLatticeWilsonSystem.canonicalDobrushinInfluence,
+        hDiagonal] using hNonneg
 
 /-- Once the remaining local influence and neighborhood-cardinality estimates
 are supplied, the concrete plaquette geometry generates the local majorant data
