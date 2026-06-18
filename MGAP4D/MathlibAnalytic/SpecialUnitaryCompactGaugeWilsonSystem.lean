@@ -7,14 +7,17 @@ noncomputable section
 
 /-- The finite compact-gauge Wilson system associated with finite four-step
 plaquette geometry and the canonical `SU(N)` Wilson energy.  The compact
-matrix-group topology is supplied explicitly because Mathlib does not currently
-register these two instances for `specialUnitaryGroup`. -/
+matrix-group topology and Borel receipts are supplied explicitly because this
+Mathlib version does not register all of them for `specialUnitaryGroup`. -/
 def specialUnitaryCompactGaugeWilsonSystem
     (geometry : FiniteFourDimensionalPlaquetteGeometry)
     (N : ℕ)
     (hN : 0 < N)
     [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta) :
@@ -38,13 +41,16 @@ def specialUnitaryCompactGaugeWilsonSystem
     beta_nonneg := beta_nonneg }
 
 /-- The canonical finite `SU(N)` Wilson system is continuous once the standard
-compact topological-group structure is supplied. -/
+compact topological-group and Borel receipts are supplied. -/
 def specialUnitaryContinuousCompactGaugeWilsonSystem
     (geometry : FiniteFourDimensionalPlaquetteGeometry)
     (N : ℕ)
     (hN : 0 < N)
     [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta) :
@@ -52,8 +58,8 @@ def specialUnitaryContinuousCompactGaugeWilsonSystem
   { base := specialUnitaryCompactGaugeWilsonSystem
       geometry N hN beta beta_nonneg
     plaquetteEnergy_continuous := by
-      change Continuous (specialUnitaryWilsonPlaquetteEnergy N)
-      exact continuous_specialUnitaryWilsonPlaquetteEnergy N }
+      simpa only [specialUnitaryCompactGaugeWilsonSystem] using
+        continuous_specialUnitaryWilsonPlaquetteEnergy N }
 
 end
 
