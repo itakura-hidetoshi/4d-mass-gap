@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsLatticeMomentCertificate
-import Mathlib.Analysis.SpecificLimits.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -8,11 +7,15 @@ open Filter
 
 noncomputable section
 
-/-- The nonnegative-real canonical reciprocal tail. -/
-theorem nnreal_tendsto_const_div_nat
-    (C : ℝ≥0) :
-    Tendsto (fun n : ℕ => C / (n : ℝ≥0)) atTop (nhds 0) :=
-  tendsto_const_div_atTop_nhds_zero_nat C
+/-- A finite extended-nonnegative constant divided by the canonical radii
+`n + 1` tends to zero. -/
+theorem ennreal_tendsto_const_div_natCast_add_one
+    (C : ℝ≥0∞) (hC : C ≠ ∞) :
+    Tendsto (fun n : ℕ => C / ((n + 1 : ℕ) : ℝ≥0∞)) atTop (nhds 0) := by
+  have hRadius :
+      Tendsto (fun n : ℕ => ((n + 1 : ℕ) : ℝ≥0∞)) atTop (nhds ∞) :=
+    (tendsto_add_atTop_iff_nat 1).2 ENNReal.tendsto_nat_nhds_top
+  simpa using ENNReal.Tendsto.const_div hRadius (Or.inr hC)
 
 end
 
