@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsLatticeMomentCertificate
+import Mathlib.Topology.Instances.ENNReal.Lemmas
 
 namespace MGAP4D
 namespace MathlibAnalytic
