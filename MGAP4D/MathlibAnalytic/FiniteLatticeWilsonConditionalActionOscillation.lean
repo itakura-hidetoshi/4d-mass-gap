@@ -38,7 +38,8 @@ theorem finite_lattice_targetLocalSingleLinkPartitionFunction_toReal
         (L.targetLocalSingleLinkBoltzmannWeight A target u).toReal := by
           exact ENNReal.toReal_sum
             (fun u _hu => by
-              simp [FiniteLatticeWilsonSystem.targetLocalSingleLinkBoltzmannWeight])
+              simp [FiniteLatticeWilsonSystem.targetLocalSingleLinkBoltzmannWeight]
+              positivity)
     _ = ∑ u : L.Gauge,
         Real.exp (L.targetLocalSingleLinkLogWeight A target u) := by
       apply Finset.sum_congr rfl
@@ -63,7 +64,7 @@ theorem finite_lattice_singleLinkConditionalPMF_toReal_eq_finiteNormalizedExp
     finite_lattice_targetLocalSingleLinkPartitionFunction_toReal]
   simp [FiniteLatticeWilsonSystem.targetLocalSingleLinkBoltzmannWeight,
     FiniteLatticeWilsonSystem.targetLocalSingleLinkLogWeight,
-    div_eq_mul_inv]
+    div_eq_mul_inv] <;> positivity
 
 /-- Uniform oscillation control of the target-local action difference produced
 by every active source-link perturbation. -/
@@ -88,7 +89,7 @@ conditional likelihood-ratio radius `beta * omega` after normalization. -/
 theorem finite_lattice_activeConditionalExpRatioBound_of_localActionOscillation
     (L : FiniteLatticeWilsonSystem)
     (omega : ℝ)
-    (hOmega : 0 ≤ omega)
+    (_hOmega : 0 ≤ omega)
     (hOsc : L.ActiveLocalActionDifferenceOscillationBound omega) :
     L.ActiveConditionalExpRatioBound (L.beta * omega) := by
   intro target source A g hActive u
@@ -116,7 +117,7 @@ conditional likelihood-ratio radius `2 * beta * delta`. -/
 theorem finite_lattice_activeConditionalExpRatioBound_of_abs_localActionDifference
     (L : FiniteLatticeWilsonSystem)
     (delta : ℝ)
-    (hDelta : 0 ≤ delta)
+    (_hDelta : 0 ≤ delta)
     (hAbs : ∀ (target source : L.Edge) (A : L.Configuration) (g : L.Gauge),
       source ∈ L.activePlaquetteNeighbors target →
         ∀ u : L.Gauge,
@@ -195,8 +196,8 @@ theorem finite_wilson_active_local_action_oscillation_family_hamiltonian_gap
     exactGapValueReal * ‖x‖ ^ 2 ≤
       inner ℝ
         ((W.system i).gibbsDobrushinScaledHeatBathHamiltonianLinearMap
-          (D.toConditionalExpRatioFamilyData.toReciprocalInfluenceFamilyData
-            .toProductFamilyData.rayleighFamilyData.atScale i) x) x :=
+          (((D.toConditionalExpRatioFamilyData.toReciprocalInfluenceFamilyData)
+            .toProductFamilyData).rayleighFamilyData.atScale i) x) x :=
   finite_wilson_active_conditional_exp_ratio_family_hamiltonian_gap
     W D.toConditionalExpRatioFamilyData i x hx
 
