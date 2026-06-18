@@ -38,7 +38,8 @@ theorem periodicHypercubicUnshift_vertex_injective
         periodicHypercubicShift n y mu ↔
       x = y := by
   constructor
-  · exact periodicHypercubicShift_vertex_injective n mu
+  · intro h
+    exact periodicHypercubicShift_vertex_injective n mu h
   · intro h
     rw [h]
 
@@ -50,7 +51,8 @@ theorem periodicHypercubicUnshift_vertex_injective
         periodicHypercubicUnshift n y mu ↔
       x = y := by
   constructor
-  · exact periodicHypercubicUnshift_vertex_injective n mu
+  · intro h
+    exact periodicHypercubicUnshift_vertex_injective n mu h
   · intro h
     rw [h]
 
@@ -148,16 +150,42 @@ theorem periodicHypercubicIncidentTransverseVertex_injective
           data.1 data.2) := by
   rcases target with ⟨x, mu⟩
   rcases nu with ⟨nu, hnu⟩
+  change nu ≠ mu at hnu
+  have hnTwo : 2 ≤ n := by omega
+  have hAB :
+      x ≠ periodicHypercubicShift n x mu :=
+    Ne.symm (periodicHypercubicShift_ne_self n hnTwo x mu)
+  have hAC :
+      x ≠ periodicHypercubicUnshift n x nu :=
+    Ne.symm (periodicHypercubicUnshift_ne_self n hnTwo x nu)
+  have hAD :
+      x ≠ periodicHypercubicShift n
+        (periodicHypercubicUnshift n x nu) mu :=
+    Ne.symm (periodicHypercubicShift_unshift_other_ne_self
+      n hnTwo x mu nu hnu.symm)
+  have hBC :
+      periodicHypercubicShift n x mu ≠
+        periodicHypercubicUnshift n x nu :=
+    periodicHypercubicShift_ne_unshift n hn x mu nu
+  have hBD :
+      periodicHypercubicShift n x mu ≠
+        periodicHypercubicShift n
+          (periodicHypercubicUnshift n x nu) mu := by
+    intro h
+    have hBase := periodicHypercubicShift_vertex_injective n mu h
+    exact hAC hBase
+  have hCD :
+      periodicHypercubicUnshift n x nu ≠
+        periodicHypercubicShift n
+          (periodicHypercubicUnshift n x nu) mu :=
+    Ne.symm (periodicHypercubicShift_ne_self n hnTwo
+      (periodicHypercubicUnshift n x nu) mu)
   intro a b h
   rcases a with ⟨sideA, slotA⟩
   rcases b with ⟨sideB, slotB⟩
   cases sideA <;> cases sideB <;>
     fin_cases slotA <;> fin_cases slotB <;>
-    simp_all [periodicHypercubicIncidentTransverseVertex,
-      periodicHypercubicShift_ne_self,
-      periodicHypercubicUnshift_ne_self,
-      periodicHypercubicShift_ne_unshift,
-      periodicHypercubicShift_unshift_other_ne_self]
+    simp_all [periodicHypercubicIncidentTransverseVertex]
 
 end
 
