@@ -1,4 +1,4 @@
-name: Wilson Plaquette Support Diagnostic
+name: Wilson Exact Plaquette Profile Diagnostic
 
 on:
   pull_request:
@@ -7,6 +7,7 @@ on:
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecomposition.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalLocalFactor.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalPlaquetteSupport.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonExactPlaquetteDobrushinProfile.lean"
 
 permissions:
   contents: read
@@ -36,18 +37,18 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build plaquette support
+      - name: Build exact plaquette profile
         id: build
         continue-on-error: true
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonConditionalPlaquetteSupport 2>&1 | tee wilson-plaquette-support.log
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonExactPlaquetteDobrushinProfile 2>&1 | tee wilson-exact-plaquette-profile.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wilson-plaquette-support-log
-          path: wilson-plaquette-support.log
+          name: wilson-exact-plaquette-profile-log
+          path: wilson-exact-plaquette-profile.log
       - name: Propagate failure
         if: steps.build.outcome == 'failure'
         run: exit 1
