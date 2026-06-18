@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonCompactFactorizedEnvelope
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicPlaquetteCardinality
+import Mathlib.Data.ENNReal.Inv
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -38,6 +39,49 @@ theorem plaquette_card_eq
     _ = 6 * H.sideLength n ^ 4 :=
       periodicHypercubicPlaquette_card (H.sideLength n)
 
+/-- The extended-nonnegative plaquette multiplicity `6 * L_n^4`. -/
+def plaquetteVolume
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (n : ℕ) : ENNReal :=
+  ((6 * H.sideLength n ^ 4 : ℕ) : ENNReal)
+
+/-- The canonical scale reciprocal to the number of periodic four-dimensional
+plaquettes. -/
+def reciprocalPlaquetteScale
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    (H : E.PeriodicHypercubicPlaquetteFamily) : ℕ → ENNReal :=
+  fun n => (H.plaquetteVolume n)⁻¹
+
+/-- The periodic four-dimensional plaquette volume is nonzero. -/
+theorem plaquetteVolume_ne_zero
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (n : ℕ) :
+    H.plaquetteVolume n ≠ 0 := by
+  have hL : H.sideLength n ≠ 0 := Nat.ne_of_gt (H.sideLength_pos n)
+  have hNat : 6 * H.sideLength n ^ 4 ≠ 0 :=
+    Nat.mul_ne_zero (by norm_num) (pow_ne_zero 4 hL)
+  exact_mod_cast hNat
+
+/-- The periodic four-dimensional plaquette volume is finite. -/
+theorem plaquetteVolume_ne_top
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (n : ℕ) :
+    H.plaquetteVolume n ≠ ⊤ := by
+  simp [plaquetteVolume]
+
+/-- Reciprocal plaquette scaling cancels the exact four-dimensional plaquette
+multiplicity. -/
+theorem reciprocalPlaquetteScale_mul_volume
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (n : ℕ) :
+    H.reciprocalPlaquetteScale n * H.plaquetteVolume n = 1 := by
+  exact ENNReal.inv_mul_cancel
+    (H.plaquetteVolume_ne_zero n) (H.plaquetteVolume_ne_top n)
+
 end ContinuousCompactGaugeWilsonPhysicalEmbedding.PeriodicHypercubicPlaquetteFamily
 
 /-- A finite bound for the renormalization scale multiplied by the explicit
@@ -50,7 +94,7 @@ structure ContinuousCompactGaugeWilsonPhysicalEmbedding.WilsonPeriodicHypercubic
   bound_ne_top : bound ≠ ⊤
   scaled_volume_le :
     ∀ n,
-      scale n * (((6 * H.sideLength n ^ 4 : ℕ) : ENNReal)) ≤ bound
+      scale n * H.plaquetteVolume n ≤ bound
 
 namespace ContinuousCompactGaugeWilsonPhysicalEmbedding.WilsonPeriodicHypercubicScaledVolumeBound
 
@@ -101,6 +145,53 @@ noncomputable def toWeakLimit
 
 end ContinuousCompactGaugeWilsonPhysicalEmbedding.WilsonPeriodicHypercubicScaledVolumeBound
 
+namespace ContinuousCompactGaugeWilsonPhysicalEmbedding.PeriodicHypercubicPlaquetteFamily
+
+/-- Reciprocal plaquette scaling canonically supplies the scaled-volume receipt
+with sharp bound one. -/
+def reciprocalScaledVolumeBound
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    (H : E.PeriodicHypercubicPlaquetteFamily) :
+    E.WilsonPeriodicHypercubicScaledVolumeBound
+      H.reciprocalPlaquetteScale H :=
+  { bound := 1
+    bound_ne_top := by simp
+    scaled_volume_le := by
+      intro n
+      exact le_of_eq (H.reciprocalPlaquetteScale_mul_volume n) }
+
+/-- With reciprocal plaquette scaling, compact-energy and offset control together
+with physical coercivity imply tightness; no separate volume normalization
+estimate remains. -/
+theorem isTight_of_reciprocalPlaquetteScale
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    {Phi : E.toLatticeEmbedding.PhysicalCoerciveFunctional}
+    {offset : ℕ → ENNReal}
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (M : E.WilsonCompactEnergyMaximumUniformBound)
+    (O : WilsonOffsetUniformBound offset)
+    (D : E.WilsonActionControlsFunctional
+      Phi H.reciprocalPlaquetteScale offset) :
+    IsTightMeasureSet E.toLatticeEmbedding.embeddedMeasureSet :=
+  H.reciprocalScaledVolumeBound.isTight M O D
+
+/-- Reciprocal plaquette scaling reduces the periodic four-dimensional weak-limit
+constructor to compact-energy control, offset control, and the physical
+coercivity estimate. -/
+noncomputable def weakLimit_of_reciprocalPlaquetteScale
+    {E : ContinuousCompactGaugeWilsonPhysicalEmbedding}
+    {Phi : E.toLatticeEmbedding.PhysicalCoerciveFunctional}
+    {offset : ℕ → ENNReal}
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (M : E.WilsonCompactEnergyMaximumUniformBound)
+    (O : WilsonOffsetUniformBound offset)
+    (D : E.WilsonActionControlsFunctional
+      Phi H.reciprocalPlaquetteScale offset) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  H.reciprocalScaledVolumeBound.toWeakLimit M O D
+
+end ContinuousCompactGaugeWilsonPhysicalEmbedding.PeriodicHypercubicPlaquetteFamily
+
 /-- Public constructor with the four-dimensional periodic plaquette multiplicity
 made explicit as `6 * L_n^4`. -/
 noncomputable def
@@ -115,6 +206,21 @@ noncomputable def
     (D : E.WilsonActionControlsFunctional Phi scale offset) :
     PhysicalFourDimensionalYangMillsWeakLimit :=
   V.toWeakLimit M O D
+
+/-- Public constructor using the canonical reciprocal plaquette scale
+`(6 * L_n^4)⁻¹`. -/
+noncomputable def
+    continuous_compact_gauge_wilson_weak_limit_of_periodicHypercubicReciprocalScale
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (Phi : E.toLatticeEmbedding.PhysicalCoerciveFunctional)
+    (offset : ℕ → ENNReal)
+    (H : E.PeriodicHypercubicPlaquetteFamily)
+    (M : E.WilsonCompactEnergyMaximumUniformBound)
+    (O : WilsonOffsetUniformBound offset)
+    (D : E.WilsonActionControlsFunctional
+      Phi H.reciprocalPlaquetteScale offset) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  H.weakLimit_of_reciprocalPlaquetteScale M O D
 
 end
 
