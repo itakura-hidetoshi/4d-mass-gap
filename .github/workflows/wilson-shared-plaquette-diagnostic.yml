@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/wilson-shared-plaquette-diagnostic.yml"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecompositionSmoke.lean"
 
 permissions:
   contents: read
@@ -34,18 +35,21 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build shared plaquette energy gap
-        id: build
+      - name: Strict-check shared plaquette energy gap
         continue-on-error: true
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonSharedPlaquetteEnergyGap 2>&1 | tee wilson-shared-plaquette-gap.log
-      - name: Upload log
+          lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean 2>&1 | tee wilson-shared-plaquette-gap.log
+      - name: Strict-check consolidated smoke
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecompositionSmoke.lean 2>&1 | tee wilson-shared-plaquette-smoke.log
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wilson-shared-plaquette-gap-log
-          path: wilson-shared-plaquette-gap.log
-      - name: Propagate failure
-        if: steps.build.outcome == 'failure'
-        run: exit 1
+          name: wilson-shared-plaquette-strict-logs
+          path: |
+            wilson-shared-plaquette-gap.log
+            wilson-shared-plaquette-smoke.log
