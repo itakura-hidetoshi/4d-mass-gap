@@ -134,6 +134,8 @@ theorem periodicHypercubicIncidentPlaquette_other_edge_classification
         apply hNe
         simpa [periodicHypercubicPhysicalBoundaryEdge,
           periodicHypercubicIncidentPlaquette,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis,
           periodicHypercubicAxisPairOfNe, hlt] using hk.symm
       · refine ⟨0, ?_⟩
         simpa [periodicHypercubicIncidentOtherEdge,
@@ -172,6 +174,8 @@ theorem periodicHypercubicIncidentPlaquette_other_edge_classification
         apply hNe
         simpa [periodicHypercubicPhysicalBoundaryEdge,
           periodicHypercubicIncidentPlaquette,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis,
           periodicHypercubicAxisPairOfNe, hlt] using hk.symm
       · refine ⟨1, ?_⟩
         simpa [periodicHypercubicIncidentOtherEdge,
