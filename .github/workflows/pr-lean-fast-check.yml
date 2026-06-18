@@ -133,24 +133,11 @@ jobs:
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
       - name: Run changed Lean fast check
-        id: lean-fast-check
         shell: bash
         run: |
-          set +e
+          set -euxo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean-fast-check.log 2>&1
-          status=$?
-          tail -n 120 /tmp/lean-fast-check.log
-          exit "$status"
-
-      - name: Upload Lean diagnostic log
-        if: failure() && steps.lean-fast-check.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: lean-fast-check-diagnostic
-          path: /tmp/lean-fast-check.log
-          if-no-files-found: error
-          retention-days: 1
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
@@ -163,7 +150,7 @@ jobs:
           fi
 
       - name: Save Lake build cache from main only
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true'
         uses: actions/cache/save@v5
         with:
           path: |
