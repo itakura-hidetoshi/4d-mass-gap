@@ -63,6 +63,11 @@ theorem specialUnitaryGroup_isCompact (N : ℕ) :
     entry_norm_bound_of_unitary
       (Matrix.specialUnitaryGroup_le_unitaryGroup hU) i j
 
+/-- Canonical compact-space receipt for `SU(N)`. -/
+def specialUnitaryGroupCompactSpace (N : ℕ) :
+    CompactSpace (SpecialUnitaryMatrixGroup N) :=
+  isCompact_iff_compactSpace.mp (specialUnitaryGroup_isCompact N)
+
 end
 
 end MathlibAnalytic
