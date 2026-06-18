@@ -152,8 +152,8 @@ theorem z2PeriodicHypercubicOrientedWilsonSystem_activeNeighbors_eq
     (n : ℕ) [NeZero n]
     (beta : ℝ) (hBeta : 0 ≤ beta)
     (target : PeriodicHypercubicEdge n) :
-    ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        activePlaquetteNeighbors target) =
+    FiniteOrientedLatticeWilsonSystem.activePlaquetteNeighbors
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) target =
       periodicHypercubicActiveNeighbors n target := by
   classical
   apply Finset.ext
@@ -168,8 +168,9 @@ theorem z2PeriodicHypercubicOrientedWilsonSystem_sharedPlaquettes_eq
     (n : ℕ) [NeZero n]
     (beta : ℝ) (hBeta : 0 ≤ beta)
     (target source : PeriodicHypercubicEdge n) :
-    ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        sharedPlaquettes target source) =
+    FiniteOrientedLatticeWilsonSystem.sharedPlaquettes
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        target source =
       periodicHypercubicSharedPlaquettes n target source := by
   classical
   apply Finset.ext
