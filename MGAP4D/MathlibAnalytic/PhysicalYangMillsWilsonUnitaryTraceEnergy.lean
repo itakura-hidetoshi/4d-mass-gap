@@ -48,10 +48,12 @@ theorem normalizedUnitaryRealTrace_mem_Icc
   have hNreal : 0 < (N : ℝ) := by
     exact_mod_cast hN
   constructor
-  · rw [le_div_iff₀ hNreal]
-    simpa [normalizedUnitaryRealTrace] using hlower
-  · rw [div_le_iff₀ hNreal]
-    simpa [normalizedUnitaryRealTrace] using hupper
+  · change (-1 : ℝ) ≤ (∑ i : Fin N, (U i i).re) / (N : ℝ)
+    rw [le_div_iff₀ hNreal]
+    simpa using hlower
+  · change (∑ i : Fin N, (U i i).re) / (N : ℝ) ≤ (1 : ℝ)
+    rw [div_le_iff₀ hNreal]
+    simpa using hupper
 
 /-- A Wilson family whose plaquette energy is represented by the normalized
 real trace of a fixed-rank complex unitary matrix representation. -/
