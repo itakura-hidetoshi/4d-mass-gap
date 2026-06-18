@@ -158,9 +158,25 @@ theorem z2PeriodicHypercubicOrientedWilsonSystem_activeNeighbors_eq
   classical
   apply Finset.ext
   intro source
-  rw [finite_oriented_mem_activePlaquetteNeighbors_iff,
-    periodicHypercubic_mem_activeNeighbors_iff]
-  simp only [z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+  constructor
+  · intro hSource
+    have hGeneric :=
+      (finite_oriented_mem_activePlaquetteNeighbors_iff
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        target source).mp hSource
+    apply (periodicHypercubic_mem_activeNeighbors_iff
+      n target source).mpr
+    simpa only [z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+      using hGeneric
+  · intro hSource
+    have hConcrete :=
+      (periodicHypercubic_mem_activeNeighbors_iff
+        n target source).mp hSource
+    apply (finite_oriented_mem_activePlaquetteNeighbors_iff
+      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+      target source).mpr
+    simpa only [z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+      using hConcrete
 
 /-- The orientation-aware shared-plaquette finset agrees exactly with the
 concrete periodic shared-plaquette finset. -/
@@ -175,9 +191,25 @@ theorem z2PeriodicHypercubicOrientedWilsonSystem_sharedPlaquettes_eq
   classical
   apply Finset.ext
   intro p
-  rw [finite_oriented_mem_sharedPlaquettes_iff,
-    periodicHypercubic_mem_sharedPlaquettes_iff]
-  simp only [z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+  constructor
+  · intro hp
+    have hGeneric :=
+      (finite_oriented_mem_sharedPlaquettes_iff
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        target source p).mp hp
+    apply (periodicHypercubic_mem_sharedPlaquettes_iff
+      n target source p).mpr
+    simpa only [z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+      using hGeneric
+  · intro hp
+    have hConcrete :=
+      (periodicHypercubic_mem_sharedPlaquettes_iff
+        n target source p).mp hp
+    apply (finite_oriented_mem_sharedPlaquettes_iff
+      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+      target source p).mpr
+    simpa only [z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+      using hConcrete
 
 /-- Incidence certificate for an orientation-correct four-dimensional Wilson
 system. -/
