@@ -50,7 +50,8 @@ theorem finite_lattice_targetReplace_sourceReplace_boundary_eq_of_not_touches_so
         (L.boundary p k) := by
   classical
   by_cases hTarget : L.boundary p k = target
-  · simp [FiniteLatticeWilsonSystem.replaceLink, hTarget]
+  · rw [hTarget]
+    simp [FiniteLatticeWilsonSystem.replaceLink]
   · have hSource : L.boundary p k ≠ source := by
       intro hk
       exact hNotSource ⟨k, hk⟩
