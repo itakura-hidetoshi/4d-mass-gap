@@ -28,6 +28,8 @@ def toWilsonActionMomentBound
     momentBound_ne_top := B.bound_ne_top
     uniform_lintegral_le := by
       intro n
+      letI : IsProbabilityMeasure (E.system n).gibbsMeasure :=
+        continuous_compact_gauge_gibbsMeasure_isProbabilityMeasure (E.system n)
       calc
         ∫⁻ U, E.wilsonActionObservable n U
             ∂((E.system n).gibbsProbabilityMeasure :
