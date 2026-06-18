@@ -1,6 +1,6 @@
 # MGAP4D
 
-**MGAP4D** is Hidetoshi Itakura's canonical Lean 4 / Lake repository for a proof-carrying investigation of the four-dimensional Yang--Mills mass-gap problem.
+**MGAP4D** is Hidetoshi Itakura's canonical Lean 4 / mathlib repository for a proof-carrying investigation of the four-dimensional Yang--Mills existence and mass-gap problem.
 
 ```text
 Canonical repository: itakura-hidetoshi/4d-mass-gap
@@ -8,167 +8,222 @@ KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-## Current status — 2026-06-17
+## Current status — 2026-06-18
 
-The current `main` branch is a **replayable formal-development and internal review surface**. It is not a completed public solution of the four-dimensional Yang--Mills existence and mass-gap problem.
+The current `main` branch is a replayable formal-development and internal-review surface. It is **not** a completed public solution of the four-dimensional Yang--Mills existence and mass-gap problem.
 
-The latest merged checkpoint is PR **#263**. The finite Wilson lane now contains:
+Latest merged checkpoint:
 
 ```text
-exact single-link Wilson heat bath
-  -> Gibbs-symmetric orthogonal projections P_e and Q_e
-  -> concrete Gibbs Hilbert realization
-  -> canonical H_HB = sum_e Q_e
-  -> exact Dirichlet quadratic form
-  -> H_HB = |E| (I - P_scan)
-  -> centered random-scan Rayleigh certificate
-  -> family-wide finite Poincare and Hamiltonian gap consequences
-  -> explicitly Dobrushin-rescaled finite heat-bath Hamiltonian.
+PR #288
+commit 59c5780e1efd9e0035aad9bb8c65ff752f5b89dc
+Instantiate the orientation-correct finite Z2 Wilson system on the periodic
+four-dimensional torus and package
+  d_active <= 18,
+  m_shared <= 1
+for side length n >= 3.
 ```
 
-No later pull request was found at the time of this update.
+Active development at the time of this update:
 
-## Proof lanes
+- PR **#289**: orientation-correct Wilson plaquette locality and target-local/target-remote action decomposition;
+- PR **#282**: a genuine `ProbabilityMeasure` weak-limit, tightness, compact-containment, and coercive-moment route on a fixed physical Polish carrier.
 
-The source tree contains four related lanes that must not be conflated.
+The main proof architecture has advanced substantially beyond the former PR #263 documentation. In particular, PR #272 closes the abstract finite-volume route
 
-### 1. Concrete finite Wilson heat-bath and Hilbert lane
+```text
+canonical conditional total variation
+  -> Dobrushin variation contraction
+  -> centered random-scan spectral/Rayleigh contraction
+  -> canonical finite heat-bath Hamiltonian gap.
+```
 
-This lane is built from actual finite Wilson Gibbs weights and exact single-link conditional laws.
+The remaining problem is no longer the abstract Dobrushin-to-Rayleigh implication. The hard frontier is to instantiate the strict coefficient and scaling assumptions in an orientation-correct physical Wilson family and then construct the nontrivial continuum theory.
+
+## Main proof architecture
+
+### 1. Finite Wilson Gibbs, projection, and Hamiltonian lane
+
+On `main`, the finite Wilson lane contains:
 
 ```text
 finite Wilson action and Gibbs PMF
   -> exact single-link conditional PMF
   -> Gibbs expectation and variance
-  -> conditional expectation and variance
-  -> single-link heat-bath Dirichlet form
-  -> projection P_e
+  -> single-link conditional expectation P_e
   -> fluctuation projection Q_e = I - P_e
-  -> exact detailed balance and reversible product sums
-  -> Gibbs symmetry and P_e/Q_e orthogonality
-  -> Gibbs-weighted Pythagorean decomposition
-  -> E_mu[Var_e(f)] = <Q_e f, Q_e f>_mu
-  -> concrete Gibbs Hilbert equivalence
+  -> exact detailed balance
+  -> Gibbs symmetry and orthogonality
+  -> Gibbs-weighted Pythagoras
+  -> local variance = Gibbs squared norm of Q_e
+  -> concrete finite Gibbs Hilbert realization
   -> H_HB = sum_e Q_e
   -> <H_HB x, x> = heat-bath Dirichlet energy
   -> H_HB = |E| (I - P_scan).
 ```
 
-The following are on `main`:
+These finite algebraic and Hilbert-space layers are constructed rather than postulated.
 
-- finite Gibbs expectation, variance, and exact single-link conditional laws;
-- the global single-link heat-bath Dirichlet form;
-- idempotent `P_e` and complementary `Q_e`;
-- exact detailed balance and reversible finite product sums;
-- Gibbs-pairing symmetry of `P_e` and `Q_e`;
-- Gibbs orthogonality of their ranges;
-- the Gibbs-weighted Pythagorean identity;
-- the exact averaged local-variance/fluctuation-norm identity;
-- the full Dirichlet form as the sum of local Gibbs squared norms;
-- the finite Gibbs Hilbert carrier, normalized vacuum, and observable/Hilbert linear equivalence;
-- the canonical observable and Gibbs-Hilbert heat-bath Hamiltonians;
-- Hamiltonian symmetry, zero vacuum energy, and the exact quadratic-form identity;
-- the normalized random-scan operator and exact link-count scaling relation.
+### 2. Canonical Dobrushin-to-Rayleigh lane
 
-The local projection, weighted-Hilbert, and finite heat-bath Hamiltonian construction obligations are therefore closed on `main`.
+PRs #267--#272 construct the canonical finite-volume route from exact conditional laws.
 
-### 2. Random-scan Rayleigh and Dobrushin lane
+For every finite Wilson system in the legacy finite-system interface, the source defines by finite enumeration:
 
-The canonical generator and normalized random scan satisfy
+- the exact off-diagonal conditional total-variation influence;
+- the exact zero diagonal;
+- exact row sums and the canonical Dobrushin coefficient `alpha_can`;
+- a canonical link-variation seminorm and its total-variation form;
+- one-update and normalized random-scan variation contraction;
+- iterate contraction and centered fixed-point triviality;
+- nonconstant eigenvalue bounds;
+- a symmetric Gibbs-Hilbert spectral lift;
+- the centered random-scan Rayleigh certificate.
+
+Thus the scalar hypothesis
 
 ```text
-H_HB = |E| (I - P_scan).
+alpha_can < 1
 ```
 
-A centered Gibbs-pairing Rayleigh estimate
+automatically produces the finite Dobrushin matrix data, centered Rayleigh contraction, heat-bath coercivity, vacuum-orthogonal Hamiltonian lower bounds, and excitation-eigenvalue lower bounds. The previous documentation statement that
 
 ```text
-<P_scan f, f>_mu <= rho <f, f>_mu,
-E_mu[f] = 0,
+Dobrushin TV row-sum control -> centered Gibbs L2/Rayleigh contraction
 ```
 
-yields the correctly scaled heat-bath coercivity constant
+was still open is obsolete.
+
+What remains open is a physically relevant, scale-uniform proof of `alpha_can < 1` for the intended four-dimensional approximation family.
+
+### 3. Exact plaquette-supported influence lane
+
+PRs #273--#274 localize the finite Wilson influence to the plaquette geometry.
+
+On `main`:
+
+- the Wilson action is split into target-local and target-remote parts;
+- the target-remote Boltzmann factor is proved independent of the replacement value and cancels under conditional normalization;
+- non-plaquette neighbors have exactly zero conditional total variation and zero canonical influence;
+- the diagonal is removed through `activePlaquetteNeighbors`;
+- the canonical coefficient satisfies a refined product bound
 
 ```text
-lambda_HB = |E| (1 - rho).
+alpha_can <= d_active * eta_active;
 ```
 
-This conversion is proved on `main`, including:
-
-- the exact Rayleigh-defect identity;
-- finite heat-bath Poincare coercivity;
-- the canonical finite Hamiltonian lower bound;
-- vacuum-orthogonal and excitation-eigenvalue consequences;
-- the family-wide lift merged in PR #262.
-
-From finite Dobrushin matrix data, PR #261 defines
+- normalized exponential laws satisfy the sharp finite comparison
 
 ```text
-alpha      = Dobrushin coefficient,
-lambda_HB  = 1 - alpha,
-rho_scan   = 1 - (1 - alpha) / |E|,
+TV <= (exp R - 1) / (exp R + 1);
 ```
 
-and proves
+- source dependence of the target-local action is localized exactly to the shared plaquettes;
+- if `m_shared` is the maximum active shared-plaquette multiplicity and `E_max` the maximum plaquette energy, then
 
 ```text
-0 <= rho_scan < 1,
-|E| (1 - rho_scan) = lambda_HB.
+eta_active <=
+  (exp (2 * beta * m_shared * E_max) - 1) /
+  (exp (2 * beta * m_shared * E_max) + 1).
 ```
 
-PR #263 additionally proves, conditional on a
-`FiniteLatticeWilsonDobrushinRandomScanRayleighCertificate`, the unnormalized coercive estimate
+Whenever the resulting majorant is below `1 / d_active`, the finite family Hamiltonian-gap and transfer-orbit consequences are generated automatically.
+
+### 4. Concrete periodic four-dimensional geometry
+
+PRs #278 and #281--#288 construct the signed periodic hypercubic geometry and its exact local incidence bounds.
+
+For side length `n >= 3`, `main` proves:
 
 ```text
-(1 - alpha) Var_mu(f) <= E_HB(f),
+number of active physical-link neighbors <= 18,
+number of plaquettes shared by two distinct active links <= 1.
 ```
 
-rescales the canonical finite heat-bath Hamiltonian by
+The restriction `n >= 3` is essential: at side length two, periodic wrapping can make two distinct parallel links share two plaquettes.
+
+PR #287 introduces `FiniteOrientedLatticeWilsonSystem`, in which configurations assign one group element to each physical positive link and each plaquette boundary separately records forward or backward traversal. It proves:
+
+- signed step gauge covariance;
+- plaquette-holonomy conjugation covariance;
+- gauge invariance of the orientation-correct Wilson action;
+- physical-link plaquette-neighbor, active-neighbor, and shared-plaquette finsets.
+
+PR #288 instantiates this interface for the periodic four-dimensional `Z2` Wilson system and packages the bounds `d_active <= 18` and `m_shared <= 1` into an orientation-correct incidence certificate.
+
+This orientation-aware lane is the preferred physical geometry. The older `FiniteLatticeWilsonSystem` theorems remain valid for the model they define, but the quantitative Gibbs/Dobrushin/Hamiltonian spine has not yet been fully transported to `FiniteOrientedLatticeWilsonSystem` on `main`.
+
+PR #289 begins that migration by adding orientation-correct physical-link replacement, non-neighbor locality, signed holonomy congruence, and target-local/target-remote decomposition.
+
+### 5. Continuum probability-measure lane
+
+The merged source contains typed conditional routes from finite transfer contraction to continuum clustering and OS/Wightman reconstruction. Those routes do not themselves construct the continuum Yang--Mills law.
+
+Open PR #282 adds a more substantive measure-theoretic route:
 
 ```text
-scale_HB = exactGapValueReal / (1 - alpha),
+finite lattice law on a varying configuration type
+  -> measurable interpolation into one fixed Polish carrier
+  -> pushforward ProbabilityMeasure
+  -> coercive moment bound
+  -> compact containment
+  -> tightness
+  -> Prokhorov subsequence
+  -> weakly convergent physical continuum ProbabilityMeasure,
+     with a_n -> 0 and V_n -> infinity.
 ```
 
-and derives the corresponding `exactGapValueReal` lower bound on the finite vacuum-orthogonal and excitation sectors.
+It also proves convergence of expectations for every bounded continuous observable and inheritance of continuous symmetries that preserve all approximating laws.
 
-The source deliberately keeps the following as a separate certificate:
+The concrete analytic inputs are still open: a suitable gauge-invariant/distributional carrier, interpolation maps, renormalized coupling trajectory, compact-sublevel coercive functional, uniform Wilson moment estimate, nontriviality, uniqueness or phase selection, reflection positivity, Euclidean covariance, clustering, and Schwinger regularity.
+
+## What is proved and what is not
+
+| Surface | Current reading |
+|---|---|
+| Finite Wilson Gibbs and conditional laws | Constructed on `main` |
+| `P_e`, `Q_e`, detailed balance, orthogonality, Pythagoras | Proved on `main` |
+| Concrete finite Gibbs Hilbert realization | Constructed on `main` |
+| Canonical heat-bath Hamiltonian | Constructed on `main` |
+| `H_HB = |E|(I-P_scan)` | Proved on `main` |
+| Exact canonical conditional-TV influence matrix | Constructed on `main` |
+| Strict canonical Dobrushin coefficient -> centered Rayleigh contraction | Proved on `main` via PR #272 |
+| Centered Rayleigh contraction -> finite Hamiltonian gap | Proved on `main` |
+| Exact plaquette support of influence | Proved on `main` via PR #274 |
+| Sharp normalized-exponential TV bound | Proved on `main` |
+| Shared-plaquette action localization | Proved on `main` |
+| Periodic 4D active-neighbor bound `<= 18` | Proved on `main` |
+| Periodic 4D shared-plaquette multiplicity `<= 1` for `n >= 3` | Proved on `main` |
+| Orientation-correct finite Wilson system and periodic `Z2` instance | Constructed on `main` |
+| Orientation-correct locality/conditional-law bridge | In progress in PR #289 |
+| Uniform strict Dobrushin bound along a continuum family | Not proved |
+| Non-Abelian orientation-correct quantitative family | Not yet constructed |
+| Physical heat-bath/transfer normalization | Not dynamically derived |
+| Genuine weak-limit framework on a fixed physical carrier | Implemented in open PR #282, not yet on `main` |
+| Concrete nontrivial continuum Yang--Mills measure | Not proved |
+| OS/Wightman analytic hypotheses | Not discharged |
+| Physical mass gap | Open |
+| Independent physical derivation of `33/20` | Open |
+| External mathematical consensus | Not claimed |
+
+## Quantitative interpretation of the present geometry
+
+The merged geometry supplies the finite constants
 
 ```text
-Dobrushin TV row-sum control
-  -> centered Gibbs L2/Rayleigh contraction of P_scan.
+d_active <= 18,
+m_shared <= 1
 ```
 
-That theorem has **not** yet been derived from the matrix package. Actual Wilson influence coefficients and a volume- and lattice-spacing-uniform bound also remain open.
+for the periodic four-dimensional physical-link lattice with `n >= 3`. Combined with the merged abstract plaquette estimate, this identifies the exact next formal target: transport the orientation-correct system into the conditional-law/Dobrushin spine and specialize the plaquette energy bound.
 
-### 3. Conditional transfer and continuum lane
+For the current `Z2` instance, the plaquette energy is defined to be `0` or `1`. The final theorem that packages this fact as the required `E_max`, inserts the `18` and `1` bounds, and derives a strict canonical coefficient has not yet been merged.
 
-The repository contains typed implication chains of the form
+Moreover, the resulting single-link Dobrushin condition is expected to be a restrictive small-`beta` regime. It should not be confused with the weak-coupling continuum scaling regime. A successful continuum route may therefore require block dynamics, multiscale estimates, or a different coercive mechanism even after the finite `Z2` specialization is closed.
 
-```text
-uniform finite-volume centered Rayleigh/coercivity input
-  -> canonical finite heat-bath Hamiltonian gap
-  -> transfer contraction
-  -> finite-volume correlation decay
-  -> continuum clustering
-  -> OS/Wightman assembly
-  -> projective-limit continuum routes.
-```
+## Exact `33/20` lane
 
-The finite Gibbs-Hilbert heat-bath Hamiltonian is constructed rather than postulated. The remaining physical task is to identify its correctly scaled generator with the physical transfer Hamiltonian across the approximation family and continuum limit.
-
-Still open:
-
-- Dobrushin influence data to centered `L²`/Rayleigh contraction;
-- concrete scale-uniform Wilson influence or block-dynamics estimates;
-- a physically derived transfer-time or generator normalization;
-- a uniform transfer-orbit amplitude estimate;
-- convergence to a nontrivial regular continuum Yang--Mills measure;
-- discharge of the analytic OS/Wightman hypotheses;
-- independent validation of the physical mass-gap conclusion.
-
-### 4. Normalized exact-gap audit lane
-
-The source tree carries a normalized value `33/20` through internal Hamiltonian/PVM/spectral and R6--R7 audit interfaces. This is a typed normalization and dependency-routing surface, but it is **not an independent derivation of the physical four-dimensional Yang--Mills mass gap**.
+The source carries the normalized value `33/20` through internal Hamiltonian/PVM/spectral and R6--R7 audit interfaces.
 
 ```text
 HamiltonianPVMSpectralExactGapValue.lean
@@ -181,52 +236,7 @@ later spectral / R6 / R7 files
   transport and audit the same carried value.
 ```
 
-Read `docs/exact_gap_layer_separation.md` for the dependency-level account.
-
-## Normalization status
-
-The former unscaled random-scan route required a Markov contraction gap bounded by one to dominate `exactGapValueReal > 1`. PR #255 proves the affected old certificate structures uninhabited, so that inconsistent route is explicitly closed.
-
-The replacement lane separates:
-
-```text
-lambda_HB        = heat-bath coercivity gap,
-rho_scan         = normalized random-scan rate,
-scale_HB > 0     = conversion to the normalized carrier,
-Delta_norm       = scale_HB * lambda_HB.
-```
-
-PR #261 defines
-
-```text
-scale_HB = exactGapValueReal / lambda_HB
-```
-
-and proves the resulting algebraic equality. PR #263 transports this algebraic rescaling to a symmetric finite Gibbs-Hilbert Hamiltonian, proves zero vacuum energy and its scaled quadratic form, and derives the normalized lower bound conditional on the centered-Rayleigh certificate.
-
-This is mathematically valid as an algebraic rescaling, but it does **not** derive the scale from Wilson dynamics or transfer time: the numerator remains the pre-existing normalized carrier. A physical normalization theorem remains open.
-
-## What the repository currently proves
-
-| Surface | Current reading |
-|---|---|
-| Finite Wilson Gibbs and conditional laws | Concrete definitions and finite identities are present |
-| `P_e` and `Q_e` algebra | Idempotence, symmetry, orthogonality, decomposition, and weighted Pythagoras are proved |
-| Detailed balance | Pointwise and finite product-sum reversibility are proved |
-| Local variance / fluctuation norm | Exact Gibbs-weighted identity is proved |
-| Finite Gibbs Hilbert realization | Constructed with an explicit linear equivalence and normalized vacuum |
-| Canonical finite heat-bath Hamiltonian | Constructed; symmetric; zero vacuum energy; exact Dirichlet quadratic form |
-| Random-scan/generator scaling | `H_HB = |E|(I-P_scan)` and the Rayleigh-defect identity are proved |
-| Centered Rayleigh certificate -> finite gap | Proved for one system and family-wide on `main` |
-| Dobrushin rate normalization | `1-alpha`, `1-(1-alpha)/|E|`, positivity, and link-count identity are proved |
-| Dobrushin-scaled finite Hamiltonian | Constructed conditionally on the centered-Rayleigh certificate |
-| Dobrushin TV -> centered `L²` Rayleigh contraction | Not yet proved |
-| Uniform Wilson influence estimate | Not proved |
-| Physical heat-bath -> transfer scale | Not dynamically derived |
-| Transfer / continuum propagation | Typed conditional implication route is present |
-| Nontrivial physical continuum construction | Not proved unconditionally |
-| Physical derivation of `33/20` | Not established |
-| External mathematical consensus | Not claimed |
+This is a typed normalization and dependency-routing surface. It is **not** an independent derivation of the physical four-dimensional Yang--Mills mass gap. Read `docs/exact_gap_layer_separation.md` for the dependency-level account.
 
 ## Primary review anchors
 
@@ -234,21 +244,18 @@ This is mathematically valid as an algebraic rescaling, but it does **not** deri
 |---|---|
 | Short status anchor | `docs/current_proof_status.md` |
 | Development roadmap | `ROADMAP.md` |
+| Canonical Dobrushin spectral/Rayleigh lift | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalRandomScanRayleighSpectralLift.lean` |
+| Canonical strict-family gap | `MGAP4D/MathlibAnalytic/FiniteWilsonCanonicalDobrushinStrictFamilyGap.lean` |
+| Target-local/remote decomposition | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecomposition.lean` |
+| Conditional plaquette support | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalPlaquetteSupport.lean` |
+| Active plaquette profile | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActivePlaquetteDobrushinProfile.lean` |
+| Shared-plaquette energy bound | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean` |
+| Signed periodic geometry | `MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.lean` |
+| Active-neighbor bound | `MGAP4D/MathlibAnalytic/PeriodicHypercubicActiveNeighborBound.lean` |
+| Shared-plaquette uniqueness | `MGAP4D/MathlibAnalytic/PeriodicHypercubicSharedPlaquetteUniqueness.lean` |
+| Orientation-correct finite Wilson system | `MGAP4D/MathlibAnalytic/FiniteOrientedLatticeWilsonSystem.lean` |
+| Periodic oriented `Z2` instance | `MGAP4D/MathlibAnalytic/Z2PeriodicHypercubicOrientedWilsonSystem.lean` |
 | Exact-gap dependency separation | `docs/exact_gap_layer_separation.md` |
-| Projection symmetry | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathPairingSymmetry.lean` |
-| Projection orthogonality | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathPairingOrthogonality.lean` |
-| Weighted Pythagoras | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathPythagorean.lean` |
-| Weighted fluctuation norm | `MGAP4D/MathlibAnalytic/FiniteWilsonHeatBathWeightedFluctuationNorm.lean` |
-| Gibbs Hilbert realization | `MGAP4D/MathlibAnalytic/FiniteWilsonGibbsHilbertRealization.lean` |
-| Gibbs Hilbert equivalence | `MGAP4D/MathlibAnalytic/FiniteWilsonGibbsHilbertEquivalence.lean` |
-| Canonical heat-bath Hamiltonian | `MGAP4D/MathlibAnalytic/FiniteWilsonCanonicalHeatBathHamiltonian.lean` |
-| Random-scan Rayleigh bridge | `MGAP4D/MathlibAnalytic/FiniteWilsonRandomScanRayleighContraction.lean` |
-| Canonical Hamiltonian gap composition | `MGAP4D/MathlibAnalytic/FiniteWilsonRandomScanRayleighCanonicalHamiltonianGap.lean` |
-| Family-wide Rayleigh gap | `MGAP4D/MathlibAnalytic/FiniteWilsonRandomScanRayleighFamilyGap.lean` |
-| Dobrushin scale separation | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonDobrushinRandomScanScale.lean` |
-| Dobrushin-scaled Hamiltonian | `MGAP4D/MathlibAnalytic/FiniteWilsonDobrushinScaledHamiltonianGap.lean` |
-| Continuum clustering route | `MGAP4D/MathlibAnalytic/FiniteWilsonOSAutomaticExactGapSingleLinkHeatBathTransferOrbitContraction.lean` |
-| Full OS assembly route | `MGAP4D/MathlibAnalytic/FiniteWilsonGibbsSingleSourceSingleLinkHeatBathOSLimitAssembly.lean` |
 | Placeholder / proof-debt inventory | `docs/proof_placeholder_inventory.md` |
 
 ## Replay
@@ -273,11 +280,14 @@ A successful replay means that the declared Lean files and audit scripts build i
 
 ## Current priorities
 
-1. Derive centered Gibbs `L²`/Rayleigh contraction from the finite Dobrushin influence package.
-2. Construct actual Wilson influence coefficients and prove a scale-uniform bound, or justify a block-dynamics replacement.
-3. Derive the physical transfer-time/generator scale independently of `exactGapValueReal`.
-4. Prove uniform transfer contraction, nontrivial continuum convergence, and the analytic OS/Wightman hypotheses.
-5. Subject the complete dependency chain and physical interpretation to independent review.
+1. Merge and verify the orientation-correct locality layer in PR #289.
+2. Transport the exact single-link conditional law, canonical influence, Dobrushin contraction, and Hamiltonian-gap spine to `FiniteOrientedLatticeWilsonSystem`.
+3. Specialize the periodic `Z2` energy bound and connect `d_active <= 18`, `m_shared <= 1` to an explicit strict-coefficient theorem.
+4. Determine rigorously whether single-link Dobrushin estimates can serve any continuum scaling regime; otherwise construct a block or multiscale replacement.
+5. Generalize the orientation-correct quantitative lane beyond finite `Z2` to the intended compact non-Abelian gauge group.
+6. Merge and instantiate the physical weak-limit framework of PR #282 with concrete uniform analytic estimates.
+7. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
+8. Prove nontrivial continuum convergence, clustering, and the analytic OS/Wightman hypotheses, followed by independent review.
 
 ## Public claim boundary
 
@@ -285,12 +295,15 @@ Recommended wording:
 
 ```text
 MGAP4D is a Lean 4 formal-development repository for a four-dimensional
-Yang--Mills mass-gap proof architecture. It contains a concrete finite Wilson
-heat-bath probability lane, orthogonal projection and Gibbs-Hilbert
-realizations, a constructed canonical finite heat-bath Hamiltonian, exact
-random-scan scaling identities, family-wide conditional finite-gap theorems,
-and an explicitly rescaled finite Dobrushin Hamiltonian. The Dobrushin-to-L2
-theorem, scale-uniform Wilson estimate, physical normalization and transfer
-identification, nontrivial continuum construction, and independent derivation
-of the physical mass gap remain open.
+Yang--Mills mass-gap proof architecture. It contains concrete finite Wilson
+Gibbs, projection, Gibbs-Hilbert and heat-bath Hamiltonian constructions; an
+exact canonical Dobrushin-to-centered-Rayleigh theorem; exact plaquette-supported
+influence estimates; and an orientation-correct periodic four-dimensional Z2
+geometry with active degree at most 18 and shared-plaquette multiplicity at most
+one for side length at least three. Work is continuing on the orientation-correct
+conditional-law bridge, scale-uniform physical estimates, weak continuum limits,
+physical transfer normalization, and OS/Wightman reconstruction. The repository
+does not currently establish an unconditional continuum Yang--Mills theory or a
+physical mass gap, and it does not independently derive the normalized value
+33/20.
 ```
