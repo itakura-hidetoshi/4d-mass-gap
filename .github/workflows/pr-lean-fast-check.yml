@@ -38,7 +38,25 @@ jobs:
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Build locality target
+        id: build
         shell: bash
         run: |
-          set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonPlaquetteLocality 2>&1 | tail -n 300
+          set +e
+          lake build MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonPlaquetteLocality > full.log 2>&1
+          code=$?
+          tail -n 320 full.log > tail.log
+          python3 scripts/lean_feedback_classifier.py --exit-code "$code" --pretty full.log > feedback.json
+          cat tail.log
+          cat feedback.json
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - name: Upload locality logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oriented-locality-diagnostic
+          path: |
+            tail.log
+            feedback.json
+      - name: Propagate failure
+        if: steps.build.outputs.exit_code != '0'
+        run: exit 1
