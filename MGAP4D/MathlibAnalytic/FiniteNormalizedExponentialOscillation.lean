@@ -83,10 +83,9 @@ theorem finiteNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
       _ ≤ Real.exp (R + referenceLogWeight x + logWeight y) := by
         apply Real.exp_le_exp.mpr
         linarith [hOsc x y]
-      _ = Real.exp R *
-          (Real.exp (referenceLogWeight x) * Real.exp (logWeight y)) := by
+      _ = Real.exp R * Real.exp (referenceLogWeight x) *
+          Real.exp (logWeight y) := by
         rw [Real.exp_add, Real.exp_add]
-        ring
   · unfold finiteNormalizedExp
     rw [show Real.exp R *
         (Real.exp (logWeight x) / finiteExpPartition logWeight) =
@@ -104,10 +103,9 @@ theorem finiteNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
       _ ≤ Real.exp (R + logWeight x + referenceLogWeight y) := by
         apply Real.exp_le_exp.mpr
         linarith [hOsc y x]
-      _ = Real.exp R *
-          (Real.exp (logWeight x) * Real.exp (referenceLogWeight y)) := by
+      _ = Real.exp R * Real.exp (logWeight x) *
+          Real.exp (referenceLogWeight y) := by
         rw [Real.exp_add, Real.exp_add]
-        ring
 
 /-- The same comparison packaged for all points. -/
 theorem finiteNormalizedExp_mutual_le_exp_mul_of_difference_oscillation_all
