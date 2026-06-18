@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsCoerciveFunctional
 import Mathlib.Topology.Maps.Proper.Basic
+import Mathlib.Topology.Instances.ENNReal.Lemmas
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -11,7 +12,8 @@ noncomputable section
 namespace NaturalRadiusCoerciveFunctional
 
 /-- A proper extended-nonnegative functional on a Borel space automatically has
-compact natural-radius sublevels and therefore defines a coercive functional. -/
+compact natural-radius sublevels. Since `ENNReal` is compact, this route is most
+useful when the physical carrier itself is compact. -/
 def ofProper
     {X : Type*}
     [TopologicalSpace X] [MeasurableSpace X] [BorelSpace X]
@@ -27,9 +29,34 @@ def ofProper
         functional_proper.isCompact_preimage isCompact_Iic
       simpa only [Set.preimage_setOf_eq, Set.mem_Iic] using hCompact }
 
+/-- A proper nonnegative-real functional yields the practically useful coercive
+receipt on a possibly noncompact physical carrier. Its finite `NNReal`
+sublevels are compact, and coercion supplies the required `ENNReal` observable. -/
+def ofProperNNReal
+    {X : Type*}
+    [TopologicalSpace X] [MeasurableSpace X] [BorelSpace X]
+    (functional : X → NNReal)
+    (functional_proper : IsProperMap functional) :
+    NaturalRadiusCoerciveFunctional X :=
+  { toFun := fun x => (functional x : ENNReal)
+    measurable_toFun :=
+      (ENNReal.continuous_coe.comp functional_proper.continuous).measurable
+    compact_sublevel := by
+      intro n
+      have hCompact :
+          IsCompact (functional ⁻¹' Set.Iic ((n + 1 : ℕ) : NNReal)) :=
+        functional_proper.isCompact_preimage isCompact_Iic
+      have hSet :
+          {x | (functional x : ENNReal) ≤ ((n + 1 : ℕ) : ENNReal)} =
+            functional ⁻¹' Set.Iic ((n + 1 : ℕ) : NNReal) := by
+        ext x
+        simp
+      rw [hSet]
+      exact hCompact }
+
 end NaturalRadiusCoerciveFunctional
 
-/-- A proper physical functional gives the canonical coercive-functional receipt
+/-- A proper `ENNReal`-valued physical functional gives the canonical receipt
 for a fixed lattice embedding. -/
 def PhysicalFourDimensionalYangMillsLatticeEmbedding.physicalCoerciveFunctional_ofProper
     (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
@@ -38,13 +65,30 @@ def PhysicalFourDimensionalYangMillsLatticeEmbedding.physicalCoerciveFunctional_
     E.PhysicalCoerciveFunctional :=
   NaturalRadiusCoerciveFunctional.ofProper functional functional_proper
 
-/-- Compact-gauge Wilson specialization of the proper-functional constructor. -/
+/-- A proper `NNReal`-valued physical functional gives a coercive receipt on a
+possibly noncompact physical carrier. -/
+def PhysicalFourDimensionalYangMillsLatticeEmbedding.physicalCoerciveFunctional_ofProperNNReal
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (functional : E.PhysicalConfiguration → NNReal)
+    (functional_proper : IsProperMap functional) :
+    E.PhysicalCoerciveFunctional :=
+  NaturalRadiusCoerciveFunctional.ofProperNNReal functional functional_proper
+
+/-- Compact-gauge Wilson specialization of the proper `ENNReal` constructor. -/
 def ContinuousCompactGaugeWilsonPhysicalEmbedding.physicalCoerciveFunctional_ofProper
     (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
     (functional : E.PhysicalConfiguration → ENNReal)
     (functional_proper : IsProperMap functional) :
     E.toLatticeEmbedding.PhysicalCoerciveFunctional :=
   NaturalRadiusCoerciveFunctional.ofProper functional functional_proper
+
+/-- Compact-gauge Wilson specialization of the proper `NNReal` constructor. -/
+def ContinuousCompactGaugeWilsonPhysicalEmbedding.physicalCoerciveFunctional_ofProperNNReal
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (functional : E.PhysicalConfiguration → NNReal)
+    (functional_proper : IsProperMap functional) :
+    E.toLatticeEmbedding.PhysicalCoerciveFunctional :=
+  NaturalRadiusCoerciveFunctional.ofProperNNReal functional functional_proper
 
 end
 
