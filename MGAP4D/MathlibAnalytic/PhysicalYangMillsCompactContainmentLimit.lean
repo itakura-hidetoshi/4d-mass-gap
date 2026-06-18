@@ -7,6 +7,9 @@ open Filter MeasureTheory Set
 
 noncomputable section
 
+/-- Quantitative uniform compact containment for the embedded lattice
+Yang--Mills laws.  The increasing compact cores capture every lattice law with
+a scale-uniform tail bound tending to zero. -/
 structure PhysicalYangMillsUniformCompactContainment
     (E : PhysicalFourDimensionalYangMillsLatticeEmbedding) where
   compactCore : ℕ → Set E.PhysicalConfiguration
@@ -19,21 +22,7 @@ structure PhysicalYangMillsUniformCompactContainment
       E.embeddedMeasure latticeScale (compactCore compactScale)ᶜ ≤
         tailBound compactScale
 
-theorem physical_yang_mills_compact_containment_measure_set_isCompact
-    {E : PhysicalFourDimensionalYangMillsLatticeEmbedding}
-    (C : PhysicalYangMillsUniformCompactContainment E) :
-    IsCompact
-      {μ : ProbabilityMeasure E.PhysicalConfiguration |
-        ∀ m, μ (C.compactCore m)ᶜ ≤ C.tailBound m} := by
-  exact
-    isCompact_setOf_probabilityMeasure_mass_eq_compl_isCompact_le
-      (E := E.PhysicalConfiguration)
-      (u := C.tailBound)
-      (K := C.compactCore)
-      C.tailBound_tendsto_zero
-      C.compactCore_isCompact
-      (Or.inr C.compactCore_monotone)
-
 end
+
 end MathlibAnalytic
 end MGAP4D
