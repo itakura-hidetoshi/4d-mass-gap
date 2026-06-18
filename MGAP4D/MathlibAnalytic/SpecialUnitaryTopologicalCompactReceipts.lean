@@ -9,18 +9,16 @@ noncomputable section
 abbrev SpecialUnitaryMatrixGroup (N : ℕ) :=
   Matrix.specialUnitaryGroup (Fin N) ℂ
 
-/-- Inversion on `SU(N)` is continuous because it is conjugate transpose. -/
-def specialUnitaryGroupContinuousInv (N : ℕ) :
-    ContinuousInv (SpecialUnitaryMatrixGroup N) where
-  continuous_inv :=
-    continuous_induced_rng.mpr continuous_subtype_val.star
-
-/-- The induced topology makes `SU(N)` a topological group. -/
+/-- The induced topology makes `SU(N)` a topological group: multiplication is
+inherited from matrices and inversion is conjugate transpose. -/
 def specialUnitaryGroupIsTopologicalGroup (N : ℕ) :
-    IsTopologicalGroup (SpecialUnitaryMatrixGroup N) := by
-  letI : ContinuousInv (SpecialUnitaryMatrixGroup N) :=
-    specialUnitaryGroupContinuousInv N
-  infer_instance
+    IsTopologicalGroup (SpecialUnitaryMatrixGroup N) where
+  continuous_inv :=
+    continuous_induced_rng.mpr continuous_induced_dom.star
+  continuous_mul :=
+    continuous_induced_rng.mpr <|
+      (continuous_induced_dom.comp continuous_fst).mul
+        (continuous_induced_dom.comp continuous_snd)
 
 /-- `SU(N)` is closed in the ambient complex matrix space. -/
 theorem specialUnitaryGroup_isClosed (N : ℕ) :
