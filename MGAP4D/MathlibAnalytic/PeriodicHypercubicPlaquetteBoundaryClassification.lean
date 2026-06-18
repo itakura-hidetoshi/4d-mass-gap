@@ -5,18 +5,17 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Boundary slot zero is the based-side canonical plaquette. -/
-theorem periodicHypercubic_boundary_zero_incident_exists
-    (n : ℕ) (p : PeriodicHypercubicPlaquette n) :
-    ∃ transverse : PeriodicHypercubicOtherAxis
-        (periodicHypercubicPhysicalBoundaryEdge n p 0).2,
-      periodicHypercubicIncidentPlaquette n
-          (periodicHypercubicPhysicalBoundaryEdge n p 0)
-          transverse false = p := by
-  rcases p with ⟨x, ⟨⟨mu, nu⟩, hlt⟩⟩
-  refine ⟨⟨nu, ne_of_gt hlt⟩, ?_⟩
-  simp [periodicHypercubicPhysicalBoundaryEdge,
-    periodicHypercubicIncidentPlaquette,
+/-- The based plaquette in an ordered `mu`-`nu` plane is recovered from its
+slot-zero physical link and the transverse direction `nu`. -/
+theorem periodicHypercubic_boundary_zero_incident_eq
+    (n : ℕ)
+    (x : PeriodicHypercubicVertex n)
+    (mu nu : PeriodicHypercubicAxis)
+    (hlt : mu < nu) :
+    periodicHypercubicIncidentPlaquette n (x, mu)
+        ⟨nu, ne_of_gt hlt⟩ false =
+      (x, ⟨(mu, nu), hlt⟩) := by
+  simp [periodicHypercubicIncidentPlaquette,
     periodicHypercubicAxisPairOfNe, hlt]
 
 end
