@@ -239,9 +239,7 @@ theorem finite_wilson_global_plaquette_energy_family_hamiltonian_gap
     exactGapValueReal * ‖x‖ ^ 2 ≤
       inner ℝ
         ((W.system i).gibbsDobrushinScaledHeatBathHamiltonianLinearMap
-          (((D.toActionOscillationFamilyData).toConditionalExpRatioFamilyData)
-            .toReciprocalInfluenceFamilyData.toProductFamilyData
-              .rayleighFamilyData.atScale i)
+          (D.toActionOscillationFamilyData.toConditionalExpRatioFamilyData.toReciprocalInfluenceFamilyData.toProductFamilyData.rayleighFamilyData.atScale i)
           x) x :=
   finite_wilson_active_local_action_oscillation_family_hamiltonian_gap
     W D.toActionOscillationFamilyData i x hx
