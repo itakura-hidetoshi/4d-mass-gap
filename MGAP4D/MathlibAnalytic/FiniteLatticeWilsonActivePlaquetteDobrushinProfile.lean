@@ -61,7 +61,7 @@ theorem finite_lattice_activePlaquetteNeighbors_card_le_plaquetteNeighbors
       (L.plaquetteNeighbors target).card := by
   classical
   unfold FiniteLatticeWilsonSystem.activePlaquetteNeighbors
-  exact Finset.card_erase_le _ _
+  exact Finset.card_erase_le
 
 /-- The finite set of active plaquette-neighbor cardinalities. -/
 noncomputable def FiniteLatticeWilsonSystem.activePlaquetteNeighborCardValues
