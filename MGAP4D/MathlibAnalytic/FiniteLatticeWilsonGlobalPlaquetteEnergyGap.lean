@@ -7,14 +7,13 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- The finite set of values taken by the plaquette energy on the finite gauge
-group. -/
+/-- The finite set of values taken by the plaquette energy. -/
 noncomputable def FiniteLatticeWilsonSystem.plaquetteEnergyValues
     (L : FiniteLatticeWilsonSystem) : Finset ℝ := by
   classical
   exact Finset.univ.image L.plaquetteEnergy
 
-/-- The plaquette-energy value set is nonempty. -/
+/-- The finite plaquette-energy value set is nonempty. -/
 theorem finite_lattice_plaquetteEnergyValues_nonempty
     (L : FiniteLatticeWilsonSystem) :
     L.plaquetteEnergyValues.Nonempty := by
@@ -23,8 +22,7 @@ theorem finite_lattice_plaquetteEnergyValues_nonempty
   unfold FiniteLatticeWilsonSystem.plaquetteEnergyValues
   exact Finset.mem_image.mpr ⟨default, Finset.mem_univ _, rfl⟩
 
-/-- Exact maximum of the nonnegative plaquette energy on the finite gauge
-group. -/
+/-- Exact maximum of the plaquette energy on the finite gauge group. -/
 noncomputable def FiniteLatticeWilsonSystem.plaquetteEnergyMax
     (L : FiniteLatticeWilsonSystem) : ℝ :=
   L.plaquetteEnergyValues.max'
@@ -48,18 +46,20 @@ theorem finite_lattice_plaquetteEnergyMax_nonneg
   le_trans (L.plaquetteEnergy_nonneg default)
     (finite_lattice_plaquetteEnergy_le_max L default)
 
-/-- A coarse but completely explicit target-local action scale: twice the
-number of finite plaquettes times the exact plaquette-energy maximum. -/
+/-- Coarse explicit action-oscillation scale: twice the plaquette count times
+its exact energy maximum. -/
 def FiniteLatticeWilsonSystem.globalPlaquetteEnergyActionOscillation
     (L : FiniteLatticeWilsonSystem) : ℝ :=
   2 * (Fintype.card L.Plaquette : ℝ) * L.plaquetteEnergyMax
 
-/-- The global plaquette-energy action-oscillation scale is nonnegative. -/
+/-- The global plaquette-energy action scale is nonnegative. -/
 theorem finite_lattice_globalPlaquetteEnergyActionOscillation_nonneg
     (L : FiniteLatticeWilsonSystem) :
     0 ≤ L.globalPlaquetteEnergyActionOscillation := by
   unfold FiniteLatticeWilsonSystem.globalPlaquetteEnergyActionOscillation
-  positivity
+  exact mul_nonneg
+    (mul_nonneg (by norm_num) (Nat.cast_nonneg _))
+    (finite_lattice_plaquetteEnergyMax_nonneg L)
 
 /-- Every target-local Wilson action is nonnegative. -/
 theorem finite_lattice_targetLocalPlaquetteAction_nonneg
@@ -76,8 +76,7 @@ theorem finite_lattice_targetLocalPlaquetteAction_nonneg
   · simp [hTouch]
 
 /-- The target-local action is bounded by the total plaquette count times the
-exact finite plaquette-energy maximum.  This bound is deliberately geometry
-agnostic; sharper shared-plaquette counts can refine it later. -/
+exact finite plaquette-energy maximum. -/
 theorem finite_lattice_targetLocalPlaquetteAction_le_globalEnergy
     (L : FiniteLatticeWilsonSystem)
     (A : L.Configuration)
@@ -102,8 +101,7 @@ theorem finite_lattice_targetLocalPlaquetteAction_le_globalEnergy
     _ = (Fintype.card L.Plaquette : ℝ) * L.plaquetteEnergyMax := by
       simp [nsmul_eq_mul]
 
-/-- Any two target-local actions differ by at most the same global energy
-scale, since both lie in the interval from zero to that scale. -/
+/-- Any two target-local actions differ by at most the global energy scale. -/
 theorem finite_lattice_targetLocalPlaquetteAction_abs_sub_le_globalEnergy
     (L : FiniteLatticeWilsonSystem)
     (A B : L.Configuration)
@@ -118,8 +116,8 @@ theorem finite_lattice_targetLocalPlaquetteAction_abs_sub_le_globalEnergy
   apply abs_sub_le_iff.mpr
   constructor <;> linarith
 
-/-- The exact local action-difference oscillation is bounded explicitly by
-`2 * (#plaquettes) * max plaquetteEnergy`. -/
+/-- The local action-difference oscillation is explicitly bounded by twice the
+global target-local action scale. -/
 theorem finite_lattice_activeLocalActionDifferenceOscillationBound_globalEnergy
     (L : FiniteLatticeWilsonSystem) :
     L.ActiveLocalActionDifferenceOscillationBound
@@ -138,8 +136,8 @@ theorem finite_lattice_activeLocalActionDifferenceOscillationBound_globalEnergy
   unfold FiniteLatticeWilsonSystem.globalPlaquetteEnergyActionOscillation
   linarith
 
-/-- Concrete finite-system conditional likelihood-ratio control generated only
-from the finite plaquette-energy maximum and total plaquette count. -/
+/-- Concrete conditional likelihood-ratio control from the finite energy
+maximum and plaquette count. -/
 theorem finite_lattice_activeConditionalExpRatioBound_globalPlaquetteEnergy
     (L : FiniteLatticeWilsonSystem) :
     L.ActiveConditionalExpRatioBound
@@ -149,7 +147,7 @@ theorem finite_lattice_activeConditionalExpRatioBound_globalPlaquetteEnergy
       (finite_lattice_globalPlaquetteEnergyActionOscillation_nonneg L)
       (finite_lattice_activeLocalActionDifferenceOscillationBound_globalEnergy L)
 
-/-- The exact active influence maximum is therefore bounded by the explicit
+/-- The exact active influence maximum is bounded by the corresponding explicit
 normalized-exponential majorant. -/
 theorem finite_lattice_canonicalActivePlaquetteInfluenceBound_le_globalEnergyExpRatio
     (L : FiniteLatticeWilsonSystem)
@@ -165,9 +163,8 @@ theorem finite_lattice_canonicalActivePlaquetteInfluenceBound_le_globalEnergyExp
         (finite_lattice_globalPlaquetteEnergyActionOscillation_nonneg L))
       (finite_lattice_activeConditionalExpRatioBound_globalPlaquetteEnergy L)
 
-/-- A fully concrete finite-system scalar inequality in `beta`, the plaquette
-count, the exact finite plaquette-energy maximum, and the active degree implies
-strict canonical Dobrushin contraction. -/
+/-- The explicit scalar threshold implies strict canonical Dobrushin
+contraction. -/
 theorem finite_lattice_canonicalDobrushinCoefficient_lt_one_of_globalPlaquetteEnergy
     (L : FiniteLatticeWilsonSystem)
     (hEdge : 0 < Fintype.card L.Edge)
@@ -187,8 +184,8 @@ theorem finite_lattice_canonicalDobrushinCoefficient_lt_one_of_globalPlaquetteEn
       (finite_lattice_activeConditionalExpRatioBound_globalPlaquetteEnergy L)
       hThreshold
 
-/-- Family-level concrete input using only each finite Wilson system's own
-plaquette count, exact plaquette-energy maximum, coupling, and active degree. -/
+/-- Family-level concrete input using each finite Wilson system's plaquette
+count, exact energy maximum, coupling, and active degree. -/
 structure FiniteWilsonGlobalPlaquetteEnergyFamilyData
     (W : FiniteWilsonOSAutomaticApproximationFamily) where
   edgeCard_pos : ∀ i : W.index, 0 < Fintype.card (W.system i).Edge
@@ -203,8 +200,8 @@ structure FiniteWilsonGlobalPlaquetteEnergyFamilyData
             (W.system i).globalPlaquetteEnergyActionOscillation) + 1) <
       ((W.system i).canonicalActivePlaquetteDegree (edgeCard_pos i) : ℝ)⁻¹
 
-/-- Convert the concrete plaquette-energy criterion into the action-oscillation
-family package already connected to the Hamiltonian gap spine. -/
+/-- Convert the concrete energy criterion into the action-oscillation family
+package. -/
 noncomputable def
     FiniteWilsonGlobalPlaquetteEnergyFamilyData.toActionOscillationFamilyData
     {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -231,8 +228,8 @@ noncomputable def
     FiniteWilsonVacuumOrthogonalDerivedInvarianceGapData :=
   D.toActionOscillationFamilyData.hamiltonianGapData i
 
-/-- The concrete global plaquette-energy threshold gives normalized Hamiltonian
-exact-gap coercivity on every finite-volume vacuum-orthogonal sector. -/
+/-- The concrete global energy threshold gives normalized Hamiltonian exact-gap
+coercivity on every finite-volume vacuum-orthogonal sector. -/
 theorem finite_wilson_global_plaquette_energy_family_hamiltonian_gap
     (W : FiniteWilsonOSAutomaticApproximationFamily)
     (D : FiniteWilsonGlobalPlaquetteEnergyFamilyData W)
@@ -242,14 +239,13 @@ theorem finite_wilson_global_plaquette_energy_family_hamiltonian_gap
     exactGapValueReal * ‖x‖ ^ 2 ≤
       inner ℝ
         ((W.system i).gibbsDobrushinScaledHeatBathHamiltonianLinearMap
-          (D.toActionOscillationFamilyData.toConditionalExpRatioFamilyData
-            .toReciprocalInfluenceFamilyData.toProductFamilyData
-              .rayleighFamilyData.atScale i) x) x :=
+          (D.toActionOscillationFamilyData.toConditionalExpRatioFamilyData.toReciprocalInfluenceFamilyData.toProductFamilyData.rayleighFamilyData.atScale i)
+          x) x :=
   finite_wilson_active_local_action_oscillation_family_hamiltonian_gap
     W D.toActionOscillationFamilyData i x hx
 
-/-- Every excitation-sector eigenvalue generated by the concrete global
-plaquette-energy criterion is bounded below by the public exact gap. -/
+/-- Every excitation-sector eigenvalue generated by the concrete global energy
+criterion is bounded below by the public exact gap. -/
 theorem finite_wilson_global_plaquette_energy_family_restricted_eigenvalues_ge_exactGap
     (W : FiniteWilsonOSAutomaticApproximationFamily)
     (D : FiniteWilsonGlobalPlaquetteEnergyFamilyData W)
