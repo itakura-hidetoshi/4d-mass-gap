@@ -6,7 +6,6 @@ on:
       - ".github/workflows/wilson-shared-plaquette-diagnostic.yml"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecompositionSmoke.lean"
-      - "scripts/lean_feedback_classifier.py"
 
 permissions:
   contents: read
@@ -36,76 +35,33 @@ jobs:
             curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build and strict-check shared plaquette energy gap
-        id: gap
-        shell: bash
+      - name: Strict-check shared plaquette energy gap
+        id: shared
+        continue-on-error: true
         run: |
-          set -uo pipefail
-          build_exit=0
-          strict_exit=0
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonSharedPlaquetteEnergyGap \
-            2>&1 | tee wilson-shared-plaquette-gap-build.log || build_exit=$?
-          if [ "${build_exit}" -eq 0 ]; then
-            lake env lean -DautoImplicit=false \
-              MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean \
-              2>&1 | tee wilson-shared-plaquette-gap-strict.log || strict_exit=$?
-          else
-            strict_exit=125
-            echo "strict check skipped because dependency-aware build failed" \
-              | tee wilson-shared-plaquette-gap-strict.log
-          fi
-          cat wilson-shared-plaquette-gap-build.log \
-              wilson-shared-plaquette-gap-strict.log \
-              > wilson-shared-plaquette-gap.log
-          overall_exit="${build_exit}"
-          if [ "${overall_exit}" -eq 0 ]; then
-            overall_exit="${strict_exit}"
-          fi
-          python3 scripts/lean_feedback_classifier.py \
-            --exit-code "${overall_exit}" --pretty \
-            wilson-shared-plaquette-gap.log \
-            > wilson-shared-plaquette-gap-feedback.json
-          cat wilson-shared-plaquette-gap-feedback.json
-          echo "exit_code=${overall_exit}" >> "$GITHUB_OUTPUT"
-      - name: Build and strict-check consolidated smoke
+          set -o pipefail
+          lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean 2>&1 | tee wilson-shared-plaquette-gap.log
+      - name: Strict-check consolidated smoke
         id: smoke
-        shell: bash
+        continue-on-error: true
         run: |
-          set -uo pipefail
-          build_exit=0
-          strict_exit=0
-          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonActionLocalDecompositionSmoke \
-            2>&1 | tee wilson-shared-plaquette-smoke-build.log || build_exit=$?
-          if [ "${build_exit}" -eq 0 ]; then
-            lake env lean -DautoImplicit=false \
-              MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecompositionSmoke.lean \
-              2>&1 | tee wilson-shared-plaquette-smoke-strict.log || strict_exit=$?
-          else
-            strict_exit=125
-            echo "strict check skipped because dependency-aware build failed" \
-              | tee wilson-shared-plaquette-smoke-strict.log
-          fi
-          cat wilson-shared-plaquette-smoke-build.log \
-              wilson-shared-plaquette-smoke-strict.log \
-              > wilson-shared-plaquette-smoke.log
-          overall_exit="${build_exit}"
-          if [ "${overall_exit}" -eq 0 ]; then
-            overall_exit="${strict_exit}"
-          fi
-          python3 scripts/lean_feedback_classifier.py \
-            --exit-code "${overall_exit}" --pretty \
-            wilson-shared-plaquette-smoke.log \
-            > wilson-shared-plaquette-smoke-feedback.json
-          cat wilson-shared-plaquette-smoke-feedback.json
-          echo "exit_code=${overall_exit}" >> "$GITHUB_OUTPUT"
-      - name: Upload logs and feedback
+          set -o pipefail
+          lake env lean -DautoImplicit=false MGAP4D/MathlibAnalytic/FiniteLatticeWilsonActionLocalDecompositionSmoke.lean 2>&1 | tee wilson-shared-plaquette-smoke.log
+      - name: Reproduce changed Lean fast check
+        id: driver
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          bash scripts/check_changed_lean.sh origin/main 2>&1 | tee changed-lean-fast-check.log
+      - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wilson-shared-plaquette-strict-logs
+          name: wilson-shared-plaquette-driver-logs
           path: |
-            wilson-shared-plaquette-*.log
-            wilson-shared-plaquette-*-feedback.json
-      - name: Propagate diagnostic failure
-        if: steps.gap.outputs.exit_code != '0' || steps.smoke.outputs.exit_code != '0'
+            wilson-shared-plaquette-gap.log
+            wilson-shared-plaquette-smoke.log
+            changed-lean-fast-check.log
+      - name: Propagate failure
+        if: steps.shared.outcome == 'failure' || steps.smoke.outcome == 'failure' || steps.driver.outcome == 'failure'
         run: exit 1
