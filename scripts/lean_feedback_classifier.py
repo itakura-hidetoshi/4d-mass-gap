@@ -153,7 +153,7 @@ RULES: tuple[FeedbackRule, ...] = (
 )
 
 WARNING_PATTERNS: tuple[str, ...] = (
-    r"\bwarning:\b",
+    r"\bwarning:",
     r"declaration uses ['`]?sorry",
 )
 
