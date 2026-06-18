@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsCompactContainment
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsLatticeMomentCertificate
 import Mathlib.MeasureTheory.Measure.Prokhorov
 
 namespace MGAP4D
@@ -27,6 +27,14 @@ moment estimate supply the tightness input by Markov's inequality. -/
 theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.isTight_of_coerciveMoment
     (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
     (C : E.CoerciveMomentCertificate) :
+    E.IsTight :=
+  C.isTight
+
+/-- A uniform moment estimate stated on the original lattice laws supplies the
+same tightness input after interpolation. -/
+theorem PhysicalFourDimensionalYangMillsLatticeEmbedding.isTight_of_latticeCoerciveMoment
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.LatticeCoerciveMomentCertificate) :
     E.IsTight :=
   C.isTight
 
@@ -106,6 +114,15 @@ noncomputable def physical_yang_mills_weak_limit_of_coerciveMoment
   physical_yang_mills_weak_limit_of_tight E
     (E.isTight_of_coerciveMoment C)
 
+/-- The concrete finite-lattice moment estimate now reaches the weak limit
+without a separately supplied pushforward estimate. -/
+noncomputable def physical_yang_mills_weak_limit_of_latticeCoerciveMoment
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.LatticeCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_tight E
+    (E.isTight_of_latticeCoerciveMoment C)
+
 /-- Concrete specialization: tightness of the interpolated compact-gauge Wilson
 Gibbs laws is sufficient for existence of a subsequential continuum probability
 measure on the fixed physical carrier. -/
@@ -129,6 +146,14 @@ noncomputable def continuous_compact_gauge_wilson_weak_limit_of_coerciveMoment
     (C : E.toLatticeEmbedding.CoerciveMomentCertificate) :
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_coerciveMoment E.toLatticeEmbedding C
+
+/-- Concrete Wilson specialization of the original-lattice moment route. -/
+noncomputable def
+    continuous_compact_gauge_wilson_weak_limit_of_latticeCoerciveMoment
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.LatticeCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_latticeCoerciveMoment E.toLatticeEmbedding C
 
 end
 
