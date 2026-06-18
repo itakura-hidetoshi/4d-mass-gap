@@ -20,7 +20,7 @@ theorem ContinuousCompactGaugeWilsonSystem.exists_plaquetteEnergy_maximizer
     isCompact_univ.exists_isMaxOn
       (Set.univ_nonempty : (Set.univ : Set C.base.Gauge).Nonempty)
       C.plaquetteEnergy_continuous.continuousOn
-  exact ⟨g, fun h => hmax h (Set.mem_univ h)⟩
+  exact ⟨g, fun h => hmax (Set.mem_univ h)⟩
 
 /-- A chosen maximizer of the plaquette energy. -/
 noncomputable def ContinuousCompactGaugeWilsonSystem.plaquetteEnergyMaximizer
