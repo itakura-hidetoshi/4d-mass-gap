@@ -1,5 +1,5 @@
 import Mathlib.Data.Finset.Card
-import Mathlib.Data.Finset.Union
+import Mathlib.Data.Finset.Lattice.Lemmas
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicPlaquetteIncidenceCompleteness
 
