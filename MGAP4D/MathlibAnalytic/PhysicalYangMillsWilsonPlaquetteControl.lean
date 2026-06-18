@@ -5,6 +5,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open scoped BigOperators
+open MeasureTheory
 
 noncomputable section
 
@@ -82,11 +83,16 @@ def toWilsonActionControlUniformPointwiseBound
       classical
       intro n U
       rw [E.renormalizedWilsonActionObservable_eq]
-      refine (add_le_add_right ?_ (offset n)).trans (N.envelope_le n)
-      apply mul_le_mul_left'
-      rw [E.wilsonActionObservable_eq_plaquette_sum]
-      exact Finset.sum_le_sum fun p _hp =>
-        B.pointwise_le n ((E.system n).base.plaquetteHolonomy U p) }
+      calc
+        scale n * E.wilsonActionObservable n U + offset n ≤
+            scale n *
+                (∑ _p : (E.system n).base.Plaquette, B.energyBound) +
+              offset n := by
+          gcongr
+          rw [E.wilsonActionObservable_eq_plaquette_sum]
+          exact Finset.sum_le_sum fun p _hp =>
+            B.pointwise_le n ((E.system n).base.plaquetteHolonomy U p)
+        _ ≤ N.bound := N.envelope_le n }
 
 /-- The plaquette-level deterministic receipts imply tightness. -/
 theorem isTight
