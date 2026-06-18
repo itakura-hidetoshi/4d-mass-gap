@@ -22,8 +22,8 @@ theorem finite_pmf_totalVariation_le_one
     intro a
     have hp : 0 ≤ (p a).toReal := ENNReal.toReal_nonneg
     have hq : 0 ≤ (q a).toReal := ENNReal.toReal_nonneg
-    simpa [sub_eq_add_neg, abs_of_nonneg hp, abs_of_nonneg hq] using
-      (abs_add (p a).toReal (-(q a).toReal))
+    apply abs_sub_le_iff.mpr
+    constructor <;> linarith
   calc
     (2 : ℝ)⁻¹ *
           ∑ a : α, |(p a).toReal - (q a).toReal| ≤
