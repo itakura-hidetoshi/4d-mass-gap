@@ -52,45 +52,72 @@ reciprocalPlaquetteScale_n * plaquetteVolume_n = 1.
 
 This removes the separate scaled-cardinality hypothesis on the reciprocal-volume route.
 
-## Uniform plaquette-energy reduction
+## Unitary normalized traces
 
-A pointwise uniform receipt
+For a complex unitary matrix `U : U(N)`, define
+
+```text
+normalizedUnitaryRealTrace(U)
+  = (1 / N) * sum_i Re(U_ii).
+```
+
+Mathlib's `entry_norm_bound_of_unitary` and `RCLike.abs_re_le_norm` give
+
+```text
+|Re(U_ii)| <= norm(U_ii) <= 1.
+```
+
+Finite-sum monotonicity and division by the positive rank then prove
+
+```text
+-1 <= normalizedUnitaryRealTrace(U) <= 1.
+```
+
+`WilsonUnitaryTraceEnergyFamily` records the standard Wilson presentation
+
+```text
+E_n(g) = 1 - normalizedUnitaryRealTrace(rho_n(g)).
+```
+
+It automatically supplies the abstract normalized-character receipt and the universal energy bound
+
+```text
+E_n(g) <= 2.
+```
+
+## Special-unitary gauge realization
+
+The determinant-forgetting map
+
+```text
+SU(N) -> U(N)
+```
+
+is formalized as a monoid homomorphism. Consequently a fixed-rank special-unitary representation
+
+```text
+rho_n : Gauge_n ->* SU(N)
+```
+
+produces the unitary-trace and normalized-character receipts automatically.
+
+The still more concrete structure
 
 ```lean
-WilsonPlaquetteEnergyUniformBound
+WilsonSpecialUnitaryGaugeFamily
 ```
 
-now automatically supplies
-
-```lean
-WilsonCompactEnergyMaximumUniformBound
-```
-
-by evaluating the pointwise estimate at the compactness-generated maximizer. A real-valued bound
+asks for scale-wise group equivalences
 
 ```text
-plaquetteEnergy_n(g) <= C_E
+Gauge_n ≃* SU(N)
 ```
 
-is converted directly to the finite `ENNReal` receipt.
+and the standard trace formula for the plaquette energy. This removes the separate representation receipt: the representation is generated from the group equivalence.
 
-## Normalized-character Wilson energy
+## Sharp normalized action bound
 
-`WilsonNormalizedCharacterEnergyFamily` records the standard presentation
-
-```text
-E_n(g) = 1 - chi_n(g),
--1 <= chi_n(g) <= 1.
-```
-
-Mathlib then proves
-
-```text
-E_n(g) <= 2,
-E_n^max <= 2.
-```
-
-Together with the exact periodic cardinality and reciprocal plaquette scale, this yields the sharp deterministic estimate
+Combining the exact periodic cardinality, reciprocal plaquette scaling, and the unitary trace bound gives
 
 ```text
 renormalizedWilsonAction_n(U)
@@ -98,7 +125,7 @@ renormalizedWilsonAction_n(U)
   <= 2.
 ```
 
-The resulting `WilsonActionControlUniformPointwiseBound` generates the uniform Gibbs moment bound, tightness, and the Prokhorov weak limit once the physical coercive interpolation estimate is supplied.
+The resulting `WilsonActionControlUniformPointwiseBound` generates the uniform Gibbs moment bound without a separate expectation estimate.
 
 ## Proper physical coercive functionals
 
@@ -127,14 +154,14 @@ The `ENNReal`-valued proper-map constructor is also available, but because `ENNR
 The current endpoint is
 
 ```lean
-continuous_compact_gauge_wilson_weak_limit_of_periodicHypercubicProperNNRealFunctional
+continuous_compact_gauge_wilson_weak_limit_of_periodicHypercubicSpecialUnitaryGaugeProperNNRealFunctional
 ```
 
 Its inputs are:
 
 1. a `ContinuousCompactGaugeWilsonPhysicalEmbedding` into one fixed physical Polish carrier;
 2. a `PeriodicHypercubicPlaquetteFamily`;
-3. a `WilsonNormalizedCharacterEnergyFamily`;
+3. a `WilsonSpecialUnitaryGaugeFamily`, identifying every lattice gauge group with one fixed `SU(N)` and the plaquette energy with the normalized real-trace Wilson energy;
 4. a proper functional `Phi : PhysicalConfiguration -> NNReal`;
 5. the pointwise interpolation estimate
 
@@ -143,7 +170,7 @@ Phi(interpolate_n(U))
   <= (6 * L_n^4)^-1 * S_n^Wilson(U).
 ```
 
-It returns a `PhysicalFourDimensionalYangMillsWeakLimit`. The intermediate receipts for compact sublevels, plaquette maxima, normalized-action moments, tightness, and Prokhorov extraction are constructed automatically.
+It returns a `PhysicalFourDimensionalYangMillsWeakLimit`. The intermediate receipts for normalized characters, the universal plaquette-energy bound, compact maxima, normalized-action moments, compact sublevels, tightness, and Prokhorov extraction are constructed automatically.
 
 The reciprocal plaquette scale is a canonical deterministic normalization route. It is not asserted to be the physically correct renormalized weak-coupling trajectory.
 
@@ -156,7 +183,7 @@ A concrete non-Abelian four-dimensional construction must still provide:
 3. a physically justified renormalized weak-coupling trajectory;
 4. a concrete proper Sobolev/Besov-type `NNReal` functional;
 5. the interpolation/coercivity estimate;
-6. a concrete compact-matrix-group realization of the normalized character receipt, or an equivalent sharper energy estimate;
+6. the concrete identification of the finite-lattice gauge systems and Wilson energy with the `SU(N)` receipt used here;
 7. uniqueness, nontriviality, and interacting character of subsequential limits;
 8. reflection positivity, Euclidean covariance, clustering, and Schwinger regularity in the limit;
 9. Osterwalder--Schrader reconstruction and the final continuum Hamiltonian mass-gap connection.
