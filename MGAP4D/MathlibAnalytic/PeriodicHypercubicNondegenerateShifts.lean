@@ -11,13 +11,15 @@ theorem periodicHypercubic_zmod_one_ne_zero
     (n : ℕ) (hn : 2 ≤ n) :
     (1 : ZMod n) ≠ 0 := by
   intro h
-  have hv := congrArg (fun z : ZMod n => z.val) h
+  have hCast : ((1 : ℕ) : ZMod n) = 0 := by
+    simpa using h
+  have hv := congrArg (fun z : ZMod n => z.val) hCast
   have hlt : 1 < n := by omega
-  have hOneVal : (1 : ZMod n).val = 1 :=
+  have hOneVal : (((1 : ℕ) : ZMod n).val) = 1 :=
     ZMod.val_natCast_of_lt hlt
   have hvNat : (1 : ℕ) = 0 := by
     calc
-      (1 : ℕ) = (1 : ZMod n).val := hOneVal.symm
+      (1 : ℕ) = (((1 : ℕ) : ZMod n).val) := hOneVal.symm
       _ = (0 : ZMod n).val := hv
       _ = 0 := ZMod.val_zero
   omega
@@ -28,13 +30,15 @@ theorem periodicHypercubic_zmod_two_ne_zero
     (n : ℕ) (hn : 3 ≤ n) :
     (2 : ZMod n) ≠ 0 := by
   intro h
-  have hv := congrArg (fun z : ZMod n => z.val) h
+  have hCast : ((2 : ℕ) : ZMod n) = 0 := by
+    simpa using h
+  have hv := congrArg (fun z : ZMod n => z.val) hCast
   have hlt : 2 < n := by omega
-  have hTwoVal : (2 : ZMod n).val = 2 :=
+  have hTwoVal : (((2 : ℕ) : ZMod n).val) = 2 :=
     ZMod.val_natCast_of_lt hlt
   have hvNat : (2 : ℕ) = 0 := by
     calc
-      (2 : ℕ) = (2 : ZMod n).val := hTwoVal.symm
+      (2 : ℕ) = (((2 : ℕ) : ZMod n).val) := hTwoVal.symm
       _ = (0 : ZMod n).val := hv
       _ = 0 := ZMod.val_zero
   omega
