@@ -6,6 +6,7 @@ on:
       - ".github/workflows/wilson-action-oscillation-diagnostic.yml"
       - "MGAP4D/MathlibAnalytic/FiniteNormalizedExponentialOscillation.lean"
       - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonConditionalActionOscillation.lean"
+      - "MGAP4D/MathlibAnalytic/FiniteLatticeWilsonGlobalPlaquetteEnergyGap.lean"
 
 permissions:
   contents: read
@@ -47,6 +48,12 @@ jobs:
         run: |
           set -o pipefail
           lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonConditionalActionOscillation 2>&1 | tee wilson-action-oscillation.log
+      - name: Build global plaquette energy gap
+        id: build_energy
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          lake build MGAP4D.MathlibAnalytic.FiniteLatticeWilsonGlobalPlaquetteEnergyGap 2>&1 | tee wilson-global-energy-gap.log
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -55,6 +62,7 @@ jobs:
           path: |
             normalized-exp-oscillation.log
             wilson-action-oscillation.log
+            wilson-global-energy-gap.log
       - name: Propagate failure
-        if: steps.build_generic.outcome == 'failure' || steps.build_wilson.outcome == 'failure'
+        if: steps.build_generic.outcome == 'failure' || steps.build_wilson.outcome == 'failure' || steps.build_energy.outcome == 'failure'
         run: exit 1
