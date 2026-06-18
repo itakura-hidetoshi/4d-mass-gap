@@ -62,6 +62,7 @@ theorem plaquetteVolume_ne_zero
   have hL : H.sideLength n ≠ 0 := Nat.ne_of_gt (H.sideLength_pos n)
   have hNat : 6 * H.sideLength n ^ 4 ≠ 0 :=
     Nat.mul_ne_zero (by norm_num) (pow_ne_zero 4 hL)
+  unfold plaquetteVolume
   exact_mod_cast hNat
 
 /-- The periodic four-dimensional plaquette volume is finite. -/
@@ -70,7 +71,8 @@ theorem plaquetteVolume_ne_top
     (H : E.PeriodicHypercubicPlaquetteFamily)
     (n : ℕ) :
     H.plaquetteVolume n ≠ ⊤ := by
-  simp [plaquetteVolume]
+  unfold plaquetteVolume
+  exact ENNReal.natCast_ne_top _
 
 /-- Reciprocal plaquette scaling cancels the exact four-dimensional plaquette
 multiplicity. -/
