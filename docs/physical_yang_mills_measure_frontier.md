@@ -1,26 +1,84 @@
 # Physical four-dimensional Yang--Mills measure frontier
 
-The finite compact-gauge Wilson Gibbs measures are already constructed as genuine Mathlib probability measures.  The new physical weak-limit layer requires all approximating laws to be pushed into one fixed Polish configuration space and then uses the weak topology on `ProbabilityMeasure`.
+The finite compact-gauge Wilson Gibbs measures are genuine Mathlib probability measures.  The physical weak-limit layer pushes the varying lattice laws into one fixed Polish configuration space and uses Mathlib weak convergence of `ProbabilityMeasure`.
 
-## Closed in the new layer
+## Closed measure-theoretic and topological spine
 
-- an actual continuum probability-measure carrier;
-- lattice spacing tending to zero;
-- physical volume tending to infinity;
-- weak convergence in law on a fixed physical configuration space;
+The branch now formalizes the following implication chain:
+
+```text
+finite-lattice deterministic or expectation estimate
+  -> uniform coercive moment
+  -> canonical Markov tail
+  -> compact containment
+  -> tightness
+  -> Prokhorov subsequence
+  -> physical continuum weak limit
+```
+
+In particular, it contains:
+
+- a fixed physical Polish/Borel carrier;
+- measurable interpolation maps from scale-dependent lattice configuration spaces;
+- pushforward lattice probability measures;
+- an actual continuum `ProbabilityMeasure` and Mathlib weak convergence;
+- preservation along the extracted subsequence of lattice spacing tending to zero and physical volume tending to infinity;
 - convergence of every bounded continuous observable expectation;
-- automatic passage of every continuous finite-lattice symmetry to the weak-limit measure;
-- direct bundling of continuous compact-gauge Wilson Gibbs measures as `ProbabilityMeasure`.
+- inheritance of continuous symmetries preserved by all approximating laws;
+- exact pushforward `lintegral` identities, allowing moment hypotheses to be stated on the original finite lattices;
+- canonical compact sublevels `K_n = {x | Phi x <= n + 1}` and automatic Markov tails `C / (n + 1) -> 0`;
+- domination, expectation-supremum, uniform pointwise, and affine Wilson-action routes to the same tightness theorem;
+- exact decomposition of the Wilson action into a finite sum of plaquette energies;
+- compactness-generated maxima of continuous plaquette energies on compact gauge groups.
+
+## Current most concrete constructor
+
+The public constructor
+
+```lean
+continuous_compact_gauge_wilson_weak_limit_of_compactPlaquetteCardinalityEnvelope
+```
+
+requires two analytic receipts.
+
+First, a physical coercive interpolation estimate:
+
+```text
+Phi (I_n U) <= scale_n * S_n^Wilson(U) + offset_n.
+```
+
+Second, an explicit finite-volume normalization envelope:
+
+```text
+scale_n * (# Plaquette_n * E_n^max) + offset_n <= C < infinity,
+```
+
+where
+
+```text
+E_n^max = max_{g in G_n} E_n(g)
+```
+
+is generated automatically by compactness of the gauge group and continuity of the plaquette energy.  Mathlib's finite-sum simplification proves
+
+```text
+sum_{p in Plaquette_n} E_n^max = # Plaquette_n * E_n^max,
+```
+
+so the earlier abstract finite-sum envelope and this cardinality form are definitionally connected by a proved conversion.
 
 ## Remaining analytic construction
 
 A concrete non-Abelian four-dimensional construction must still provide:
 
-1. a fixed Polish distributional configuration space suitable for gauge fields or gauge-invariant observables;
-2. measurable interpolation or blocking maps from every finite lattice configuration space into that carrier;
-3. a renormalized coupling trajectory with lattice spacing tending to zero and volume tending to infinity;
-4. tightness of the pushed-forward Wilson Gibbs laws in that topology;
-5. identification of every subsequential weak limit and proof that it is nontrivial and interacting;
-6. reflection positivity, Euclidean covariance, clustering, and Schwinger regularity for the physical limit.
+1. a fixed gauge-invariant or distributional Polish carrier suitable for continuum gauge fields or observables;
+2. explicit interpolation or blocking maps into that carrier;
+3. a renormalized weak-coupling trajectory with lattice spacing tending to zero and volume tending to infinity;
+4. a concrete Sobolev/Besov-type coercive functional with compact canonical sublevels;
+5. the interpolation/coercivity estimate against the affine-renormalized Wilson action;
+6. a concrete proof of the cardinality normalization envelope along the chosen trajectory;
+7. uniqueness, nontriviality, and interacting character of subsequential limits;
+8. reflection positivity, Euclidean covariance, clustering, and Schwinger regularity for the physical limit;
+9. Osterwalder--Schrader reconstruction and the final continuum Hamiltonian mass-gap connection.
 
-These are not represented as completed facts by the new file.  The point of the layer is to replace opaque continuum-construction propositions by Mathlib probability measures and weak convergence, while proving symmetry inheritance once those analytic inputs are supplied.
+The present files do not claim these remaining analytic facts.  They prove that once the two explicit finite-lattice receipts above are supplied, the passage to a physical subsequential continuum weak limit is a theorem rather than an opaque assumption.
