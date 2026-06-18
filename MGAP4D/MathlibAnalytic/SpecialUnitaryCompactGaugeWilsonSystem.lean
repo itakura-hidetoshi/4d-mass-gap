@@ -6,11 +6,15 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- The finite compact-gauge Wilson system associated with finite four-step
-plaquette geometry and the canonical `SU(N)` Wilson energy. -/
+plaquette geometry and the canonical `SU(N)` Wilson energy.  The compact
+matrix-group topology is supplied explicitly because Mathlib does not currently
+register these two instances for `specialUnitaryGroup`. -/
 def specialUnitaryCompactGaugeWilsonSystem
     (geometry : FiniteFourDimensionalPlaquetteGeometry)
     (N : ℕ)
     (hN : 0 < N)
+    [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta) :
@@ -33,19 +37,23 @@ def specialUnitaryCompactGaugeWilsonSystem
     beta := beta
     beta_nonneg := beta_nonneg }
 
-/-- The canonical finite `SU(N)` Wilson system is automatically continuous. -/
+/-- The canonical finite `SU(N)` Wilson system is continuous once the standard
+compact topological-group structure is supplied. -/
 def specialUnitaryContinuousCompactGaugeWilsonSystem
     (geometry : FiniteFourDimensionalPlaquetteGeometry)
     (N : ℕ)
     (hN : 0 < N)
+    [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta) :
     ContinuousCompactGaugeWilsonSystem :=
   { base := specialUnitaryCompactGaugeWilsonSystem
       geometry N hN beta beta_nonneg
-    plaquetteEnergy_continuous :=
-      continuous_specialUnitaryWilsonPlaquetteEnergy N }
+    plaquetteEnergy_continuous := by
+      change Continuous (specialUnitaryWilsonPlaquetteEnergy N)
+      exact continuous_specialUnitaryWilsonPlaquetteEnergy N }
 
 end
 
