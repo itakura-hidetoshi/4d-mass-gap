@@ -30,22 +30,28 @@ theorem periodicHypercubicIncidentPlaquette_touches
   by_cases hlt : mu < nu
   · cases otherSide
     · refine ⟨0, ?_⟩
-      simp [periodicHypercubicPhysicalBoundaryEdge,
-        periodicHypercubicIncidentPlaquette,
-        periodicHypercubicAxisPairOfNe, hlt]
+      change
+        (x, (periodicHypercubicAxisPairOfNe mu nu hne).1.1) = (x, mu)
+      simp [periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨2, ?_⟩
-      simp [periodicHypercubicPhysicalBoundaryEdge,
-        periodicHypercubicIncidentPlaquette,
-        periodicHypercubicAxisPairOfNe, hlt]
+      change
+        (periodicHypercubicShift n (periodicHypercubicUnshift n x nu)
+            (periodicHypercubicAxisPairOfNe mu nu hne).1.2,
+          (periodicHypercubicAxisPairOfNe mu nu hne).1.1) =
+        (x, mu)
+      simp [periodicHypercubicAxisPairOfNe, hlt]
   · cases otherSide
     · refine ⟨3, ?_⟩
-      simp [periodicHypercubicPhysicalBoundaryEdge,
-        periodicHypercubicIncidentPlaquette,
-        periodicHypercubicAxisPairOfNe, hlt]
+      change
+        (x, (periodicHypercubicAxisPairOfNe mu nu hne).1.2) = (x, mu)
+      simp [periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨1, ?_⟩
-      simp [periodicHypercubicPhysicalBoundaryEdge,
-        periodicHypercubicIncidentPlaquette,
-        periodicHypercubicAxisPairOfNe, hlt]
+      change
+        (periodicHypercubicShift n (periodicHypercubicUnshift n x nu)
+            (periodicHypercubicAxisPairOfNe mu nu hne).1.1,
+          (periodicHypercubicAxisPairOfNe mu nu hne).1.2) =
+        (x, mu)
+      simp [periodicHypercubicAxisPairOfNe, hlt]
 
 /-- Every plaquette in the finite canonical incidence family has genuine
 physical-link support. -/
