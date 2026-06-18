@@ -25,8 +25,11 @@ theorem ENNReal.tendsto_const_div_natCast_add_one
         (fun n : ℕ =>
           ((C.toNNReal / ((n + 1 : ℕ) : NNReal) : NNReal) : ENNReal))
         atTop (nhds 0) :=
-    ENNReal.continuous_coe.continuousAt.tendsto.comp hShift
-  simpa [ENNReal.coe_toNNReal hC] using hCoe
+    _root_.ENNReal.continuous_coe.continuousAt.tendsto.comp hShift
+  refine hCoe.congr' ?_
+  filter_upwards with n
+  rw [← _root_.ENNReal.coe_toNNReal hC]
+  exact (_root_.ENNReal.coe_div (by positivity)).symm
 
 /-- Coercive-moment data using the canonical compact sublevels
 `functional ≤ n + 1`. The Markov-tail convergence is derived automatically. -/
