@@ -65,7 +65,7 @@ is generated automatically by compactness of the gauge group and continuity of t
 sum_{p in Plaquette_n} E_n^max = # Plaquette_n * E_n^max,
 ```
 
-so the earlier abstract finite-sum envelope and this cardinality form are definitionally connected by a proved conversion.
+so the earlier abstract finite-sum envelope and this cardinality form are connected by a proved conversion.
 
 ## Remaining analytic construction
 
