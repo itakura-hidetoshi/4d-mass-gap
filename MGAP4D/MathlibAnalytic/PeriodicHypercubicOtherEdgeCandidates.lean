@@ -44,6 +44,20 @@ theorem periodicHypercubicShift_unshift_comm
   unfold periodicHypercubicShift periodicHypercubicUnshift
   abel
 
+@[simp] theorem periodicHypercubicPlaquetteFirstAxis_mk
+    (n : ℕ) (x : PeriodicHypercubicVertex n)
+    (mu nu : PeriodicHypercubicAxis) (hlt : mu < nu) :
+    periodicHypercubicPlaquetteFirstAxis
+      (x, ⟨(mu, nu), hlt⟩ : PeriodicHypercubicPlaquette n) = mu :=
+  rfl
+
+@[simp] theorem periodicHypercubicPlaquetteSecondAxis_mk
+    (n : ℕ) (x : PeriodicHypercubicVertex n)
+    (mu nu : PeriodicHypercubicAxis) (hlt : mu < nu) :
+    periodicHypercubicPlaquetteSecondAxis
+      (x, ⟨(mu, nu), hlt⟩ : PeriodicHypercubicPlaquette n) = nu :=
+  rfl
+
 /-- The physical link selected by one of the eighteen canonical neighbor
 positions around a target link. -/
 def periodicHypercubicOtherEdgeCandidate
@@ -111,76 +125,64 @@ theorem periodicHypercubicOtherEdgeCandidate_touches_incident
   by_cases hlt : mu < nu
   · cases side <;> cases kind
     · refine ⟨2, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨3, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨1, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨0, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨3, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨1, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt,
         periodicHypercubicShift_unshift_comm]
   · cases side <;> cases kind
     · refine ⟨1, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨0, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨2, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨3, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨0, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt]
     · refine ⟨2, ?_⟩
-      simp [periodicHypercubicPlaquetteTouchesEdge,
-        periodicHypercubicPhysicalBoundaryEdge,
+      simp [periodicHypercubicPhysicalBoundaryEdge,
         periodicHypercubicOtherEdgeCandidate,
         periodicHypercubicIncidentPlaquette,
         periodicHypercubicAxisPairOfNe, hlt,
