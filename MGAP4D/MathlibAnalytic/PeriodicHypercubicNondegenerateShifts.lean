@@ -11,9 +11,15 @@ theorem periodicHypercubic_zmod_one_ne_zero
     (n : ℕ) (hn : 2 ≤ n) :
     (1 : ZMod n) ≠ 0 := by
   intro h
-  have hv := congrArg ZMod.val h
+  have hv := congrArg (fun z : ZMod n => z.val) h
   have hlt : 1 < n := by omega
-  rw [ZMod.val_natCast_of_lt hlt, ZMod.val_zero] at hv
+  have hOneVal : (1 : ZMod n).val = 1 :=
+    ZMod.val_natCast_of_lt hlt
+  have hvNat : (1 : ℕ) = 0 := by
+    calc
+      (1 : ℕ) = (1 : ZMod n).val := hOneVal.symm
+      _ = (0 : ZMod n).val := hv
+      _ = 0 := ZMod.val_zero
   omega
 
 /-- In a periodic box of side at least three, the residue class of two is
@@ -22,9 +28,15 @@ theorem periodicHypercubic_zmod_two_ne_zero
     (n : ℕ) (hn : 3 ≤ n) :
     (2 : ZMod n) ≠ 0 := by
   intro h
-  have hv := congrArg ZMod.val h
+  have hv := congrArg (fun z : ZMod n => z.val) h
   have hlt : 2 < n := by omega
-  rw [ZMod.val_natCast_of_lt hlt, ZMod.val_zero] at hv
+  have hTwoVal : (2 : ZMod n).val = 2 :=
+    ZMod.val_natCast_of_lt hlt
+  have hvNat : (2 : ℕ) = 0 := by
+    calc
+      (2 : ℕ) = (2 : ZMod n).val := hTwoVal.symm
+      _ = (0 : ZMod n).val := hv
+      _ = 0 := ZMod.val_zero
   omega
 
 /-- For side length at least three, positive and negative unit displacements
@@ -90,12 +102,18 @@ theorem periodicHypercubicUnshift_axis_injective
     (x : PeriodicHypercubicVertex n) :
     Function.Injective (periodicHypercubicUnshift n x) := by
   intro mu nu h
-  have hneg :
+  have hAdd :
+      x + (-periodicHypercubicUnit n mu) =
+        x + (-periodicHypercubicUnit n nu) := by
+    simpa [periodicHypercubicUnshift, sub_eq_add_neg] using h
+  have hNeg :
       -periodicHypercubicUnit n mu =
-        -periodicHypercubicUnit n nu := by
-    unfold periodicHypercubicUnshift at h
-    simpa [sub_eq_add_neg] using add_left_cancel h
-  exact periodicHypercubicUnit_injective n hn (neg_injective hneg)
+        -periodicHypercubicUnit n nu :=
+    add_left_cancel hAdd
+  have hUnit := congrArg
+    (fun z : PeriodicHypercubicVertex n => -z) hNeg
+  apply periodicHypercubicUnit_injective n hn
+  simpa using hUnit
 
 /-- For side length at least three, no positive unit translate of a vertex is
 a negative unit translate, even in a different coordinate direction. -/
@@ -106,11 +124,15 @@ theorem periodicHypercubicShift_ne_unshift
     periodicHypercubicShift n x mu ≠
       periodicHypercubicUnshift n x nu := by
   intro h
+  have hAdd :
+      x + periodicHypercubicUnit n mu =
+        x + (-periodicHypercubicUnit n nu) := by
+    simpa [periodicHypercubicShift, periodicHypercubicUnshift,
+      sub_eq_add_neg] using h
   have hUnits :
       periodicHypercubicUnit n mu =
-        -periodicHypercubicUnit n nu := by
-    unfold periodicHypercubicShift periodicHypercubicUnshift at h
-    simpa [sub_eq_add_neg] using add_left_cancel h
+        -periodicHypercubicUnit n nu :=
+    add_left_cancel hAdd
   by_cases hmn : mu = nu
   · subst nu
     have hcoord := congrFun hUnits mu
