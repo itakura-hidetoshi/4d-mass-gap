@@ -33,12 +33,26 @@ noncomputable def physical_weak_limit_of_coercive_moment_compile_smoke
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_coerciveMoment E C
 
+/-- Compile gate for common-carrier canonical-radius coercive moments. -/
+noncomputable def physical_weak_limit_of_natural_radius_moment_compile_smoke
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.NaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_naturalRadiusCoerciveMoment E C
+
 /-- Compile gate for the original-lattice moment route. -/
 noncomputable def physical_weak_limit_of_lattice_moment_compile_smoke
     (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
     (C : E.LatticeCoerciveMomentCertificate) :
     PhysicalFourDimensionalYangMillsWeakLimit :=
   physical_yang_mills_weak_limit_of_latticeCoerciveMoment E C
+
+/-- Compile gate for original-lattice canonical-radius coercive moments. -/
+noncomputable def physical_weak_limit_of_lattice_natural_radius_compile_smoke
+    (E : PhysicalFourDimensionalYangMillsLatticeEmbedding)
+    (C : E.LatticeNaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  physical_yang_mills_weak_limit_of_latticeNaturalRadiusCoerciveMoment E C
 
 /-- Compile gate for the concrete compact-gauge Wilson specialization. -/
 noncomputable def compact_wilson_weak_limit_of_tight_compile_smoke
@@ -61,12 +75,26 @@ noncomputable def compact_wilson_weak_limit_of_coercive_moment_compile_smoke
     PhysicalFourDimensionalYangMillsWeakLimit :=
   continuous_compact_gauge_wilson_weak_limit_of_coerciveMoment E C
 
+/-- Compile gate for Wilson common-carrier canonical-radius moments. -/
+noncomputable def compact_wilson_weak_limit_of_natural_radius_compile_smoke
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.NaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  continuous_compact_gauge_wilson_weak_limit_of_naturalRadiusCoerciveMoment E C
+
 /-- Compile gate for Wilson finite-lattice coercive moments. -/
 noncomputable def compact_wilson_weak_limit_of_lattice_moment_compile_smoke
     (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
     (C : E.toLatticeEmbedding.LatticeCoerciveMomentCertificate) :
     PhysicalFourDimensionalYangMillsWeakLimit :=
   continuous_compact_gauge_wilson_weak_limit_of_latticeCoerciveMoment E C
+
+/-- Compile gate for Wilson finite-lattice canonical-radius moments. -/
+noncomputable def compact_wilson_weak_limit_of_lattice_natural_radius_compile_smoke
+    (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
+    (C : E.toLatticeEmbedding.LatticeNaturalRadiusCoerciveMomentCertificate) :
+    PhysicalFourDimensionalYangMillsWeakLimit :=
+  continuous_compact_gauge_wilson_weak_limit_of_latticeNaturalRadiusCoerciveMoment E C
 
 end
 
