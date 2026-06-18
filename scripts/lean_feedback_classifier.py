@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Classify Lean/mathlib build output into stable feedback categories.
 
-The classifier is intentionally dependency-free so it can run before Lake or
-Mathlib caches are available. It converts compiler feedback into a small,
-version-controlled reward signal suitable for iterative proof repair.
+The classifier is dependency-free and deliberately narrow. Compiler command
+lines are not treated as diagnostics merely because they contain options such
+as ``-DautoImplicit=false``; a category is assigned only when a corresponding
+Lean error message is present.
 """
 
 from __future__ import annotations
@@ -48,9 +49,8 @@ class Feedback:
         return result
 
 
-# Earlier rules have higher diagnostic priority when several layers fail in the
-# same build. This reflects Lean's processing order: syntax before elaboration,
-# elaboration before tactics/kernel acceptance.
+# Earlier rules have higher diagnostic priority. Syntax is repaired before
+# elaboration, and specific elaboration shapes precede generic ones.
 RULES: tuple[FeedbackRule, ...] = (
     FeedbackRule(
         "placeholder",
@@ -80,9 +80,9 @@ RULES: tuple[FeedbackRule, ...] = (
         -6,
         "Declare every variable and type parameter explicitly under -DautoImplicit=false.",
         (
-            r"autoImplicit",
             r"implicit variable declaration has been disabled",
-            r"unknown identifier.*(?:type|variable|parameter)",
+            r"autoImplicit is disabled",
+            r"automatic implicit variable declaration is disabled",
         ),
     ),
     FeedbackRule(
@@ -107,6 +107,14 @@ RULES: tuple[FeedbackRule, ...] = (
             r"type class instance problem is stuck",
             r"failed to infer instance",
             r"synthInstance.*failed",
+        ),
+    ),
+    FeedbackRule(
+        "projection_chain",
+        -4,
+        "A projection result was parsed as a function application. Keep the field chain contiguous or bind the intermediate value with an explicit type.",
+        (
+            r"function expected at[\s\S]{0,800}expected a function because this term is being applied to the argument\s*\n\s*\.to[A-Za-z_]",
         ),
     ),
     FeedbackRule(
@@ -140,7 +148,7 @@ RULES: tuple[FeedbackRule, ...] = (
     FeedbackRule(
         "import_build",
         -2,
-        "Verify the module path, toolchain, lake-manifest, and the smallest build target before proof edits.",
+        "Verify the module path, dependency build, toolchain, lake-manifest, and the smallest build target before proof edits.",
         (
             r"unknown module prefix",
             r"bad import",
@@ -171,9 +179,8 @@ def _count(pattern: str, text: str) -> int:
 def classify_text(text: str, exit_code: int | None = None) -> Feedback:
     """Classify a combined Lean/Lake log.
 
-    The first matched rule is the primary category. All matched categories are
-    returned so downstream reports can distinguish a parser cascade from later
-    elaboration or tactic diagnostics.
+    The first matching rule is primary. All matching layers are retained so a
+    report can distinguish the root diagnostic from later build-failure noise.
     """
 
     matches: list[FeedbackMatch] = []
@@ -232,11 +239,10 @@ def classify_text(text: str, exit_code: int | None = None) -> Feedback:
 def _read_inputs(paths: Sequence[str]) -> str:
     if not paths:
         return sys.stdin.read()
-    chunks: list[str] = []
-    for raw_path in paths:
-        path = Path(raw_path)
-        chunks.append(path.read_text(encoding="utf-8", errors="replace"))
-    return "\n".join(chunks)
+    return "\n".join(
+        Path(raw_path).read_text(encoding="utf-8", errors="replace")
+        for raw_path in paths
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:

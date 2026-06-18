@@ -30,6 +30,29 @@ class LeanFeedbackClassifierTest(unittest.TestCase):
     def test_elaboration(self) -> None:
         self.assert_category("application type mismatch: argument h has type P", "elaboration")
 
+    def test_projection_chain_from_real_build_shape(self) -> None:
+        log = """trace: lean -DautoImplicit=false Example.lean --json
+error: Example.lean:242:11: Function expected at
+  D.toActionOscillationFamilyData.toConditionalExpRatioFamilyData
+but this term has type
+  FiniteWilsonActiveConditionalExpRatioFamilyData W
+
+Note: Expected a function because this term is being applied to the argument
+  .toReciprocalInfluenceFamilyData.toProductFamilyData
+error: build failed
+"""
+        feedback = classify_text(log, exit_code=1)
+        self.assertEqual(feedback.primary_category, "projection_chain")
+        self.assertNotIn("auto_implicit", {match.category for match in feedback.matches})
+        self.assertIn("elaboration", {match.category for match in feedback.matches})
+
+    def test_auto_implicit_option_alone_is_not_a_diagnostic(self) -> None:
+        feedback = classify_text(
+            "trace: lean -DautoImplicit=false Example.lean\nerror: function expected at f",
+            exit_code=1,
+        )
+        self.assertEqual(feedback.primary_category, "elaboration")
+
     def test_tactic(self) -> None:
         self.assert_category("unsolved goals\n⊢ x = x", "tactic")
 
