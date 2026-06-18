@@ -20,8 +20,12 @@ theorem specialUnitaryWilsonPlaquetteEnergy_conjInvariant
         ((h⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
           Matrix (Fin N) (Fin N) ℂ)) =
     Matrix.trace (g : Matrix (Fin N) (Fin N) ℂ)
-  rw [Matrix.trace_mul_cycle]
-  simp
+  have hInvMul :
+      (((h⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+          Matrix (Fin N) (Fin N) ℂ) *
+        (h : Matrix (Fin N) (Fin N) ℂ)) = 1 := by
+    exact congrArg Subtype.val (inv_mul_cancel h)
+  rw [Matrix.trace_mul_cycle, hInvMul, one_mul]
 
 end
 
