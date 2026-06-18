@@ -11,14 +11,15 @@ noncomputable section
 open scoped BigOperators
 
 /-- Adding one index to a finite union increases cardinality by at most the
-cardinality of the newly added finset. -/
+cardinality of the newly added finset. In the pinned mathlib version the two
+finsets of `Finset.card_union_le` are implicit and are inferred from the goal. -/
 theorem finset_card_biUnion_insert_le
     {α β : Type} [DecidableEq α] [DecidableEq β]
     (a : α) (s : Finset α) (f : α → Finset β) :
     ((insert a s).biUnion f).card ≤
       (f a).card + (s.biUnion f).card := by
   rw [Finset.biUnion_insert]
-  exact Finset.card_union_le (f a) (s.biUnion f)
+  exact Finset.card_union_le
 
 /-- The cardinality of a finite union is bounded by the sum of the
 cardinalities of its members. -/
