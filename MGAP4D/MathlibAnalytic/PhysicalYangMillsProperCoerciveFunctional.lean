@@ -25,9 +25,17 @@ def ofProper
     compact_sublevel := by
       intro n
       have hCompact :
-          IsCompact (functional ⁻¹' Set.Iic (((n + 1 : ℕ) : ENNReal))) :=
-        functional_proper.isCompact_preimage isCompact_Iic
-      simpa only [Set.preimage_setOf_eq, Set.mem_Iic] using hCompact }
+          IsCompact
+            (functional ⁻¹'
+              Set.Icc 0 (((n + 1 : ℕ) : ENNReal))) :=
+        functional_proper.isCompact_preimage isCompact_Icc
+      have hSet :
+          {x | functional x ≤ ((n + 1 : ℕ) : ENNReal)} =
+            functional ⁻¹' Set.Icc 0 (((n + 1 : ℕ) : ENNReal)) := by
+        ext x
+        simp
+      rw [hSet]
+      exact hCompact }
 
 /-- A proper nonnegative-real functional yields the practically useful coercive
 receipt on a possibly noncompact physical carrier. Its finite `NNReal`
@@ -44,13 +52,17 @@ def ofProperNNReal
     compact_sublevel := by
       intro n
       have hCompact :
-          IsCompact (functional ⁻¹' Set.Iic ((n + 1 : ℕ) : NNReal)) :=
-        functional_proper.isCompact_preimage isCompact_Iic
+          IsCompact
+            (functional ⁻¹'
+              Set.Icc 0 (((n + 1 : ℕ) : NNReal))) :=
+        functional_proper.isCompact_preimage isCompact_Icc
       have hSet :
           {x | (functional x : ENNReal) ≤ ((n + 1 : ℕ) : ENNReal)} =
-            functional ⁻¹' Set.Iic ((n + 1 : ℕ) : NNReal) := by
+            functional ⁻¹' Set.Icc 0 (((n + 1 : ℕ) : NNReal)) := by
         ext x
-        simp
+        simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Icc,
+          zero_le, true_and]
+        constructor <;> intro h <;> exact_mod_cast h
       rw [hSet]
       exact hCompact }
 
