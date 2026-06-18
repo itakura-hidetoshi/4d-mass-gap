@@ -195,6 +195,7 @@ theorem finite_lattice_singleLinkConditionalPMF_eq_targetLocal
           (z * r)⁻¹ =
         (L.targetLocalSingleLinkBoltzmannWeight A target g * z⁻¹) *
           (r * r⁻¹) := by
+      rw [ENNReal.mul_inv (Or.inr hrt) (Or.inr hr0)]
       ac_rfl
     _ = L.targetLocalSingleLinkBoltzmannWeight A target g * z⁻¹ := by
       rw [ENNReal.mul_inv_cancel hr0 hrt, mul_one]
