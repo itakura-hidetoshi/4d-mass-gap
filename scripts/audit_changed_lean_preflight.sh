@@ -49,6 +49,11 @@ changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$
 printf '[preflight] base: %s\n' "${BASE}"
 printf '[preflight] changed Lean files:\n%s\n' "${changed_lean_files:-<none>}"
 
+if [ -f scripts/test_lean_feedback_classifier.py ]; then
+  echo "[preflight] Lean feedback classifier regression tests"
+  python3 scripts/test_lean_feedback_classifier.py
+fi
+
 if [ -z "${changed_lean_files}" ]; then
   echo "[preflight] no Lean files changed"
   exit 0
