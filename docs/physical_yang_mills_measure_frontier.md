@@ -1,10 +1,8 @@
 # Physical four-dimensional Yang--Mills measure frontier
 
-The finite compact-gauge Wilson Gibbs measures are genuine Mathlib probability measures.  The physical weak-limit layer pushes the varying lattice laws into one fixed Polish configuration space and uses Mathlib weak convergence of `ProbabilityMeasure`.
+The finite compact-gauge Wilson Gibbs measures are genuine Mathlib probability measures. The physical weak-limit layer pushes the varying lattice laws into one fixed Polish configuration space and uses Mathlib weak convergence of `ProbabilityMeasure`.
 
 ## Closed measure-theoretic and topological spine
-
-The branch now formalizes the following implication chain:
 
 ```text
 finite-lattice deterministic or expectation estimate
@@ -16,69 +14,96 @@ finite-lattice deterministic or expectation estimate
   -> physical continuum weak limit
 ```
 
-In particular, it contains:
+The branch contains:
 
-- a fixed physical Polish/Borel carrier;
-- measurable interpolation maps from scale-dependent lattice configuration spaces;
-- pushforward lattice probability measures;
-- an actual continuum `ProbabilityMeasure` and Mathlib weak convergence;
-- preservation along the extracted subsequence of lattice spacing tending to zero and physical volume tending to infinity;
-- convergence of every bounded continuous observable expectation;
-- inheritance of continuous symmetries preserved by all approximating laws;
-- exact pushforward `lintegral` identities, allowing moment hypotheses to be stated on the original finite lattices;
-- canonical compact sublevels `K_n = {x | Phi x <= n + 1}` and automatic Markov tails `C / (n + 1) -> 0`;
-- domination, expectation-supremum, uniform pointwise, and affine Wilson-action routes to the same tightness theorem;
-- exact decomposition of the Wilson action into a finite sum of plaquette energies;
-- compactness-generated maxima of continuous plaquette energies on compact gauge groups.
+- a fixed physical Polish/Borel carrier and measurable lattice interpolation maps;
+- pushforward lattice probability measures and an actual continuum `ProbabilityMeasure`;
+- weak convergence together with lattice spacing tending to zero and physical volume tending to infinity along the extracted subsequence;
+- bounded-continuous observable convergence and continuous-symmetry inheritance;
+- exact pushforward `lintegral` identities, canonical compact sublevels, and automatic Markov tails;
+- observable domination, expectation-supremum, pointwise, and affine Wilson-action routes;
+- exact Wilson-action decomposition into plaquette energies;
+- compactness-generated plaquette-energy maxima.
 
-## Current most concrete constructor
+## Factorized normalization receipts
 
-The public constructor
+The compact plaquette-cardinality envelope
+
+```text
+scale_n * (#Plaquette_n * E_n^max) + offset_n <= C
+```
+
+is now generated from three independent receipts:
 
 ```lean
-continuous_compact_gauge_wilson_weak_limit_of_compactPlaquetteCardinalityEnvelope
+WilsonScaledPlaquetteCardinalityBound
+WilsonCompactEnergyMaximumUniformBound
+WilsonOffsetUniformBound
 ```
 
-requires two analytic receipts.
+Thus geometric finite-volume growth, compact-group energy control, and affine offsets can be proved separately and then combined by Mathlib monotonicity and `ENNReal` finiteness lemmas.
 
-First, a physical coercive interpolation estimate:
+## Exact periodic four-dimensional cardinality
+
+For the periodic four-dimensional hypercubic geometry, Mathlib proves
 
 ```text
-Phi (I_n U) <= scale_n * S_n^Wilson(U) + offset_n.
+#Vertex(L) = L^4,
+#AxisPair = 6,
+#Plaquette(L) = 6 * L^4.
 ```
 
-Second, an explicit finite-volume normalization envelope:
+A `PeriodicHypercubicPlaquetteFamily` identifies each abstract Wilson plaquette type with this concrete periodic geometry. Consequently, the geometric normalization receipt becomes
 
 ```text
-scale_n * (# Plaquette_n * E_n^max) + offset_n <= C < infinity,
+scale_n * (6 * L_n^4) <= C_volume.
 ```
 
-where
+## Canonical reciprocal plaquette scale
+
+Define
 
 ```text
-E_n^max = max_{g in G_n} E_n(g)
+plaquetteVolume_n = 6 * L_n^4,
+scale_n = plaquetteVolume_n^-1.
 ```
 
-is generated automatically by compactness of the gauge group and continuity of the plaquette energy.  Mathlib's finite-sum simplification proves
+Positive side length implies that `plaquetteVolume_n` is nonzero and finite, so Mathlib's `ENNReal.inv_mul_cancel` gives the exact identity
 
 ```text
-sum_{p in Plaquette_n} E_n^max = # Plaquette_n * E_n^max,
+scale_n * plaquetteVolume_n = 1.
 ```
 
-so the earlier abstract finite-sum envelope and this cardinality form are connected by a proved conversion.
+Therefore no separate geometric volume-bound hypothesis remains on this route.
+
+The current most concrete public constructor is
+
+```lean
+continuous_compact_gauge_wilson_weak_limit_of_periodicHypercubicReciprocalScale
+```
+
+Its remaining inputs are:
+
+1. a `PeriodicHypercubicPlaquetteFamily` identifying the lattice geometry;
+2. a finite uniform bound on the compactness-generated maxima `E_n^max`;
+3. a finite uniform offset bound;
+4. the physical interpolation/coercivity estimate
+   `Phi(I_n U) <= (6 * L_n^4)^-1 * S_n^Wilson(U) + offset_n`.
+
+This reciprocal scale is a canonical deterministic normalization route. It is not asserted to be the physically correct renormalized weak-coupling trajectory.
 
 ## Remaining analytic construction
 
 A concrete non-Abelian four-dimensional construction must still provide:
 
-1. a fixed gauge-invariant or distributional Polish carrier suitable for continuum gauge fields or observables;
-2. explicit interpolation or blocking maps into that carrier;
-3. a renormalized weak-coupling trajectory with lattice spacing tending to zero and volume tending to infinity;
+1. a fixed gauge-invariant or distributional Polish carrier;
+2. explicit interpolation or blocking maps;
+3. a physically justified renormalized weak-coupling trajectory;
 4. a concrete Sobolev/Besov-type coercive functional with compact canonical sublevels;
-5. the interpolation/coercivity estimate against the affine-renormalized Wilson action;
-6. a concrete proof of the cardinality normalization envelope along the chosen trajectory;
+5. the interpolation/coercivity estimate;
+6. compact-energy maximum control, or a sharper scale-dependent energy estimate;
 7. uniqueness, nontriviality, and interacting character of subsequential limits;
-8. reflection positivity, Euclidean covariance, clustering, and Schwinger regularity for the physical limit;
+8. reflection positivity, Euclidean covariance, clustering, and Schwinger regularity in the limit;
 9. Osterwalder--Schrader reconstruction and the final continuum Hamiltonian mass-gap connection.
 
-The present files do not claim these remaining analytic facts.  They prove that once the two explicit finite-lattice receipts above are supplied, the passage to a physical subsequential continuum weak limit is a theorem rather than an opaque assumption.
+The present files do not claim these remaining analytic facts. They prove that once the explicit analytic receipts are supplied, the passage from finite-lattice Wilson estimates to a physical subsequential continuum weak limit is a theorem rather than an opaque assumption.
