@@ -11,6 +11,9 @@ noncomputable def special_unitary_compact_wilson_system_compile_smoke
     (hN : 0 < N)
     [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    [BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta) :
