@@ -46,6 +46,11 @@ class LeanFeedbackClassifierTest(unittest.TestCase):
         self.assertEqual(feedback.primary_category, "build_success")
         self.assertEqual(feedback.reward, 8)
 
+    def test_success_with_warning(self) -> None:
+        feedback = classify_text("warning: unused variable\nBuild completed successfully.", exit_code=0)
+        self.assertEqual(feedback.primary_category, "build_success_with_warning")
+        self.assertEqual(feedback.reward, 6)
+
     def test_unknown_failure_is_retained(self) -> None:
         feedback = classify_text("process terminated", exit_code=137)
         self.assertEqual(feedback.primary_category, "unknown_failure")
