@@ -40,6 +40,19 @@ theorem periodicHypercubicFiniteOrientedGeometry_stepValue
   cases s with
   | mk edge orientation => cases orientation <;> rfl
 
+/-- The generic oriented holonomy agrees exactly with the signed periodic
+plaquette holonomy. -/
+theorem periodicHypercubicFiniteOrientedGeometry_plaquetteHolonomy
+    {n : ℕ} [NeZero n]
+    {Gauge : Type} [Group Gauge]
+    (A : PeriodicHypercubicEdge n → Gauge)
+    (p : PeriodicHypercubicPlaquette n) :
+    (periodicHypercubicFiniteOrientedGeometry n).plaquetteHolonomy A p =
+      periodicHypercubicPlaquetteHolonomy A p := by
+  simp [FiniteOrientedFourDimensionalPlaquetteGeometry.plaquetteHolonomy,
+    periodicHypercubicPlaquetteHolonomy,
+    periodicHypercubicFiniteOrientedGeometry]
+
 end
 
 end MathlibAnalytic
