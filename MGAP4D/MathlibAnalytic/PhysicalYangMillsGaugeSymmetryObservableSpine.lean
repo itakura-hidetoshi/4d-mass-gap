@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantContinuousExpectation
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantWeakStarState
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -23,7 +23,9 @@ This aggregate module exposes the complete typed route
 * the fixed real subalgebra of pointwise gauge-invariant bounded continuous observables;
 * normalized positive lattice and continuum expectation functionals;
 * uniform norm bounds and continuous real-linear expectation functionals;
-* pointwise convergence of the continuous lattice expectation functionals.
+* normalized positive contractive continuous state packages;
+* pointwise convergence of the continuous lattice states;
+* weak-star convergence of the lattice state sequence to the continuum state.
 
 The construction remains conditional on the supplied continuous physical action
 and interpolation equivariance.
