@@ -63,8 +63,7 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_apply
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-    (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-        toContinuousLinearMap O =
+    (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).toContinuousLinearMap O =
       physicalYangMillsApproximatingGaugeInvariantExpectation S n O := by
   rfl
 
@@ -72,8 +71,7 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_apply
 theorem physicalYangMillsContinuumGaugeInvariantContinuousState_apply
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-    (physicalYangMillsContinuumGaugeInvariantContinuousState S).
-        toContinuousLinearMap O =
+    (physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap O =
       physicalYangMillsContinuumGaugeInvariantExpectation S O := by
   rfl
 
@@ -81,15 +79,13 @@ theorem physicalYangMillsContinuumGaugeInvariantContinuousState_apply
 theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_one
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ) :
-    (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-        toContinuousLinearMap 1 = 1 :=
+    (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).toContinuousLinearMap 1 = 1 :=
   (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).map_one'
 
 @[simp]
 theorem physicalYangMillsContinuumGaugeInvariantContinuousState_one
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
-    (physicalYangMillsContinuumGaugeInvariantContinuousState S).
-        toContinuousLinearMap 1 = 1 :=
+    (physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap 1 = 1 :=
   (physicalYangMillsContinuumGaugeInvariantContinuousState S).map_one'
 
 /-- Every embedded-lattice continuous state is positive on pointwise
@@ -101,8 +97,7 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_nonneg
     (hO : ∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) :
     0 ≤ (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
       toContinuousLinearMap O :=
-  (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-    map_nonneg' O hO
+  (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).map_nonneg' O hO
 
 /-- The continuum continuous state is positive on pointwise nonnegative
 physical gauge-invariant observables. -/
@@ -112,8 +107,7 @@ theorem physicalYangMillsContinuumGaugeInvariantContinuousState_nonneg
     (hO : ∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) :
     0 ≤ (physicalYangMillsContinuumGaugeInvariantContinuousState S).
       toContinuousLinearMap O :=
-  (physicalYangMillsContinuumGaugeInvariantContinuousState S).
-    map_nonneg' O hO
+  (physicalYangMillsContinuumGaugeInvariantContinuousState S).map_nonneg' O hO
 
 /-- Every embedded-lattice continuous state is contractive in the observable
 uniform norm. -/
@@ -124,8 +118,7 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_norm_le
     ‖(physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
         toContinuousLinearMap O‖ ≤
       ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖ :=
-  (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-    map_norm_le' O
+  (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).map_norm_le' O
 
 /-- The continuum continuous state is contractive in the observable uniform
 norm. -/
@@ -135,8 +128,7 @@ theorem physicalYangMillsContinuumGaugeInvariantContinuousState_norm_le
     ‖(physicalYangMillsContinuumGaugeInvariantContinuousState S).
         toContinuousLinearMap O‖ ≤
       ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖ :=
-  (physicalYangMillsContinuumGaugeInvariantContinuousState S).
-    map_norm_le' O
+  (physicalYangMillsContinuumGaugeInvariantContinuousState S).map_norm_le' O
 
 /-- The normalized positive contractive lattice states converge pointwise to
 the continuum state. -/
