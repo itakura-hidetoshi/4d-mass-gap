@@ -62,8 +62,19 @@ theorem compact_oriented_plaquetteHolonomy_gaugeTransform
         L.plaquetteHolonomy A p *
         (gamma ((L.geometry.boundary p 0).initial
           L.geometry.edgeSource L.geometry.edgeTarget))⁻¹ := by
-  unfold CompactOrientedGaugeWilsonSystem.plaquetteHolonomy
-    FiniteOrientedFourDimensionalPlaquetteGeometry.plaquetteHolonomy
+  change
+    L.stepValue (L.gaugeTransform gamma A) (L.geometry.boundary p 0) *
+          L.stepValue (L.gaugeTransform gamma A) (L.geometry.boundary p 1) *
+        L.stepValue (L.gaugeTransform gamma A) (L.geometry.boundary p 2) *
+      L.stepValue (L.gaugeTransform gamma A) (L.geometry.boundary p 3) =
+    gamma ((L.geometry.boundary p 0).initial
+        L.geometry.edgeSource L.geometry.edgeTarget) *
+      (L.stepValue A (L.geometry.boundary p 0) *
+          L.stepValue A (L.geometry.boundary p 1) *
+        L.stepValue A (L.geometry.boundary p 2) *
+      L.stepValue A (L.geometry.boundary p 3)) *
+      (gamma ((L.geometry.boundary p 0).initial
+        L.geometry.edgeSource L.geometry.edgeTarget))⁻¹
   rw [compact_oriented_stepValue_gaugeTransform,
     compact_oriented_stepValue_gaugeTransform,
     compact_oriented_stepValue_gaugeTransform,
