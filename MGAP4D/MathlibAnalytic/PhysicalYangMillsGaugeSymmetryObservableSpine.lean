@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantWeakStarState
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantWeakStarReflectionPositivity
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -25,10 +25,14 @@ This aggregate module exposes the complete typed route
 * uniform norm bounds and continuous real-linear expectation functionals;
 * normalized positive contractive continuous state packages;
 * pointwise convergence of the continuous lattice states;
-* weak-star convergence of the lattice state sequence to the continuum state.
+* weak-star convergence of the lattice state sequence to the continuum state;
+* an involutive reflection on a positive-time observable subalgebra;
+* weak-star closedness of reflection positivity;
+* transfer of automatic finite Wilson Gram positivity to the continuum state.
 
-The construction remains conditional on the supplied continuous physical action
-and interpolation equivariance.
+The construction remains conditional on the supplied continuous physical action,
+interpolation equivariance, and the model-specific identification of finite
+Wilson reflection forms with evaluations of the physical approximating states.
 -/
 
 end MathlibAnalytic
