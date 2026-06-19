@@ -29,6 +29,29 @@ theorem continuumMeasure_map_eq_self_of_tight
   physical_yang_mills_symmetry_passes_to_weak_limit
     (G.toSymmetryLimit_of_tight hTight) g
 
+noncomputable def toSymmetryLimit_of_actionPointwiseBound
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    {Phi : E.toLatticeEmbedding.PhysicalCoerciveFunctional}
+    {scale offset : ℕ → ENNReal}
+    (B : E.WilsonActionControlUniformPointwiseBound scale offset)
+    (D : E.WilsonActionControlsFunctional Phi scale offset) :
+    PhysicalFourDimensionalYangMillsSymmetryLimit :=
+  G.toSymmetryLimit_of_tight (B.isTight D)
+
+theorem continuumMeasure_map_eq_self_of_actionPointwiseBound
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    {Phi : E.toLatticeEmbedding.PhysicalCoerciveFunctional}
+    {scale offset : ℕ → ENNReal}
+    (B : E.WilsonActionControlUniformPointwiseBound scale offset)
+    (D : E.WilsonActionControlsFunctional Phi scale offset)
+    (g : G.Symmetry) :
+    (G.toSymmetryLimit_of_actionPointwiseBound B D).continuumMeasure.map
+        (G.action_continuous g).measurable.aemeasurable =
+      (G.toSymmetryLimit_of_actionPointwiseBound B D).continuumMeasure :=
+  G.continuumMeasure_map_eq_self_of_tight (B.isTight D) g
+
 end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
 
 end
