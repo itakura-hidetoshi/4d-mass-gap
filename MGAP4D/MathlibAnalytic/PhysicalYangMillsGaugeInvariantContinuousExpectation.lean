@@ -8,40 +8,41 @@ open Filter
 
 noncomputable section
 
+private theorem physicalYangMillsApproximatingGaugeInvariantExpectation_continuous_bound
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (n : ℕ)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+    ‖physicalYangMillsApproximatingGaugeInvariantExpectation S n O‖ ≤
+      (1 : ℝ) * ‖O‖ := by
+  simpa only [one_mul] using
+    physicalYangMillsApproximatingGaugeInvariantExpectation_norm_le S n O
+
+private theorem physicalYangMillsContinuumGaugeInvariantExpectation_continuous_bound
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+    ‖physicalYangMillsContinuumGaugeInvariantExpectation S O‖ ≤
+      (1 : ℝ) * ‖O‖ := by
+  simpa only [one_mul] using
+    physicalYangMillsContinuumGaugeInvariantExpectation_norm_le S O
+
 /-- The `n`-th embedded-lattice expectation as a continuous real-linear
 functional on the physical gauge-invariant observable algebra. -/
 noncomputable def physicalYangMillsApproximatingGaugeInvariantContinuousExpectation
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ) :
     physicalYangMillsGaugeInvariantObservableSubalgebra S →L[ℝ] ℝ :=
-  LinearMap.mkContinuous
-    (physicalYangMillsApproximatingGaugeInvariantExpectation S n :
-      physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ)
+  (physicalYangMillsApproximatingGaugeInvariantExpectation S n).mkContinuous
     1
-    (by
-      intro O
-      rw [one_mul]
-      change
-        ‖physicalYangMillsApproximatingGaugeInvariantExpectation S n O‖ ≤
-          ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖
-      exact physicalYangMillsApproximatingGaugeInvariantExpectation_norm_le S n O)
+    (physicalYangMillsApproximatingGaugeInvariantExpectation_continuous_bound S n)
 
 /-- The continuum expectation as a continuous real-linear functional on the
 physical gauge-invariant observable algebra. -/
 noncomputable def physicalYangMillsContinuumGaugeInvariantContinuousExpectation
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
     physicalYangMillsGaugeInvariantObservableSubalgebra S →L[ℝ] ℝ :=
-  LinearMap.mkContinuous
-    (physicalYangMillsContinuumGaugeInvariantExpectation S :
-      physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ)
+  (physicalYangMillsContinuumGaugeInvariantExpectation S).mkContinuous
     1
-    (by
-      intro O
-      rw [one_mul]
-      change
-        ‖physicalYangMillsContinuumGaugeInvariantExpectation S O‖ ≤
-          ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖
-      exact physicalYangMillsContinuumGaugeInvariantExpectation_norm_le S O)
+    (physicalYangMillsContinuumGaugeInvariantExpectation_continuous_bound S)
 
 @[simp]
 theorem physicalYangMillsApproximatingGaugeInvariantContinuousExpectation_apply
