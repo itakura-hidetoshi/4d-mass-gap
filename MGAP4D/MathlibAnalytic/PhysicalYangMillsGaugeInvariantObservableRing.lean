@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsSymmetryNPoint
-import Mathlib.Algebra.Ring.Subring.Basic
+import Mathlib.Algebra.Algebra.Subalgebra.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -38,11 +38,35 @@ theorem mem_physicalYangMillsGaugeInvariantObservableSubring_iff
       ∀ g A, O (S.action g A) = O A :=
   Iff.rfl
 
+/-- Pointwise gauge-invariant bounded continuous observables are also closed
+under real scalar multiplication, hence form a real subalgebra. -/
+def physicalYangMillsGaugeInvariantObservableSubalgebra
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
+    Subalgebra ℝ (BoundedContinuousFunction S.Configuration ℝ) where
+  carrier := {O | ∀ g A, O (S.action g A) = O A}
+  mul_mem' := by
+    intro O₁ O₂ h₁ h₂ g A
+    simp [h₁ g A, h₂ g A]
+  add_mem' := by
+    intro O₁ O₂ h₁ h₂ g A
+    simp [h₁ g A, h₂ g A]
+  algebraMap_mem' := by
+    intro r g A
+    rfl
+
+@[simp]
+theorem mem_physicalYangMillsGaugeInvariantObservableSubalgebra_iff
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (O : BoundedContinuousFunction S.Configuration ℝ) :
+    O ∈ physicalYangMillsGaugeInvariantObservableSubalgebra S ↔
+      ∀ g A, O (S.action g A) = O A :=
+  Iff.rfl
+
 /-- A gauge-invariant bounded continuous observable is pointwise unchanged by
 the physical symmetry action. -/
 theorem physical_yang_mills_gaugeInvariantObservable_action_eq
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (O : physicalYangMillsGaugeInvariantObservableSubring S)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
     (g : S.Symmetry)
     (A : S.Configuration) :
     (O : BoundedContinuousFunction S.Configuration ℝ) (S.action g A) =
@@ -53,7 +77,7 @@ theorem physical_yang_mills_gaugeInvariantObservable_action_eq
 along the embedded lattice laws to their continuum expectations. -/
 theorem physical_yang_mills_gaugeInvariantObservable_expectation_converges
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (O : physicalYangMillsGaugeInvariantObservableSubring S) :
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
     Tendsto
       (fun n : ℕ =>
         ∫ A, (O : BoundedContinuousFunction S.Configuration ℝ) A
@@ -69,7 +93,7 @@ theorem physical_yang_mills_gaugeInvariantObservable_expectation_converges
 pointwise with the untransformed expectations at every lattice scale. -/
 theorem physical_yang_mills_gaugeInvariantObservable_approximating_expectation_eq
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (O : physicalYangMillsGaugeInvariantObservableSubring S)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
     (n : ℕ)
     (g : S.Symmetry) :
     (∫ A, (O : BoundedContinuousFunction S.Configuration ℝ) (S.action g A)
@@ -84,7 +108,7 @@ theorem physical_yang_mills_gaugeInvariantObservable_approximating_expectation_e
 continuum expectations. -/
 theorem physical_yang_mills_gaugeInvariantObservable_continuum_expectation_eq
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (O : physicalYangMillsGaugeInvariantObservableSubring S)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
     (g : S.Symmetry) :
     (∫ A, (O : BoundedContinuousFunction S.Configuration ℝ) (S.action g A)
       ∂(S.continuumMeasure : Measure S.Configuration)) =
