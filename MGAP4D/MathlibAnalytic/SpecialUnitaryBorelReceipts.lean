@@ -26,6 +26,12 @@ def specialUnitaryGroupMeasurableSpace (N : ℕ) :
     MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
   borel (SpecialUnitaryMatrixGroup N)
 
+@[reducible]
+def specialUnitaryGroupBorelSpace (N : ℕ) :
+    BorelSpace (SpecialUnitaryMatrixGroup N) := by
+  constructor
+  rfl
+
 end
 
 end MathlibAnalytic
