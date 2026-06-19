@@ -90,13 +90,14 @@ theorem periodicHypercubicSpecialUnitaryWilsonActionObservable_le_volume_mul_two
           (specialUnitaryWilsonPlaquetteEnergy N
             (periodicHypercubicPlaquetteHolonomy A p))) ≤
         ∑ _p : PeriodicHypercubicPlaquette sideLength, (2 : ENNReal) := by
-      exact Finset.sum_le_sum fun p _hp =>
-        ENNReal.ofReal_le_ofReal
-          (specialUnitaryWilsonPlaquetteEnergy_le_two hN
-            (periodicHypercubicPlaquetteHolonomy A p))
+      exact Finset.sum_le_sum fun p _hp => by
+        simpa using
+          ENNReal.ofReal_le_ofReal
+            (specialUnitaryWilsonPlaquetteEnergy_le_two hN
+              (periodicHypercubicPlaquetteHolonomy A p))
     _ = periodicHypercubicOrientedPlaquetteVolume sideLength * 2 := by
-      rw [Finset.sum_const, nsmul_eq_mul]
-      rw [periodicHypercubicPlaquette_card]
+      rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ,
+        periodicHypercubicPlaquette_card]
       rfl
 
 /-- The reciprocal-volume normalized signed periodic `SU(N)` Wilson action is
