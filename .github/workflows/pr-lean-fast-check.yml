@@ -135,21 +135,9 @@ jobs:
       - name: Run changed Lean fast check
         shell: bash
         run: |
-          set -uo pipefail
+          set -euxo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee /tmp/lean-fast-check.log
-          status=${PIPESTATUS[0]}
-          echo "[diagnostic] tail of Lean fast check"
-          tail -n 250 /tmp/lean-fast-check.log || true
-          exit "${status}"
-
-      - name: Upload Lean diagnostic log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: lean-fast-check-log
-          path: /tmp/lean-fast-check.log
-          if-no-files-found: warn
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
