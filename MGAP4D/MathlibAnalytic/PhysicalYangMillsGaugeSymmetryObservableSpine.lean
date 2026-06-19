@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHalfLatticePeterWeyl
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -32,7 +32,8 @@ This aggregate module exposes the complete typed route
 * a geometric and measure-theoretic half-lattice kernel decomposition;
 * an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
 * generation of the Bochner/Hilbert Gram identity from these two inputs;
-* transfer of finite compact Wilson reflection positivity to the continuum state.
+* transfer of finite compact Wilson reflection positivity to the continuum state;
+* a terminal construction record producing the continuum OS-positive weak-star state package.
 
 The construction remains conditional on the supplied continuous physical action,
 interpolation equivariance, a physical positive-time reflection, the concrete
