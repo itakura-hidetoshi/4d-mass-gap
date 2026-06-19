@@ -28,7 +28,11 @@ def specialUnitaryGroupMeasurableSpace (N : ℕ) :
 
 @[reducible]
 def specialUnitaryGroupBorelSpace (N : ℕ) :
+    letI : MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
+      specialUnitaryGroupMeasurableSpace N
     BorelSpace (SpecialUnitaryMatrixGroup N) := by
+  letI : MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
+    specialUnitaryGroupMeasurableSpace N
   constructor
   rfl
 
