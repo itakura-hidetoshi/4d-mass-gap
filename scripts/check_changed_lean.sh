@@ -51,6 +51,10 @@ changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$\|^MGAP4D\.lean$' || true)"
 changed_scripts="$(printf '%s\n' "${changed_files}" | grep -E '^scripts/.*\.(py|sh)$' || true)"
 
+# Fast lane builds only changed non-aggregate leaf modules.  Aggregate import
+# roots intentionally pull very large historical surfaces, including archived or
+# currently non-fast-safe modules.  Their import text is still audited, but Lake
+# building them belongs to the full/manual integration lane, not the PR fast lane.
 aggregate_root_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -E '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' || true)"
 non_root_changed_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -Ev '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' || true)"
 
@@ -110,6 +114,82 @@ ensure_mathlib_cache() {
     lake exe cache get || true
   fi
 }
+
+# Run changed-file static Lean preflight before any global audits or Lake work.
+# This catches common syntax-shape, namespace, import, duplicate declaration,
+# and known hazardous proof-pattern issues without invoking Lean or Lake.
+if [ -n "${changed_lean_files}" ]; then
+  echo "[fast] preflight changed Lean static audit"
+  # shellcheck disable=SC2086
+  python3 scripts/audit_changed_lean_preflight.py ${changed_lean_files}
+fi
+
+# Always keep the hard safety gates. These are Python/text audits and do not
+# require Lake setup.
+echo "[fast] audit Lean forbidden tokens"
+python3 scripts/audit_lean_forbidden_tokens.py
+
+echo "[fast] audit hard physical residual ledger"
+python3 scripts/audit_hard_physical_residual_ledger.py
+
+echo "[fast] audit analytic bridge coherence"
+python3 scripts/audit_bridge_coherence.py
+
+echo "[fast] audit final physical carrier routing"
+python3 scripts/audit_final_physical_carrier_routing.py
+
+echo "[fast] audit OS/Wightman mass-gap bridge"
+python3 scripts/audit_os_wightman_mass_gap_bridge.py
+
+declare -a audit_sensitive_targets=()
+if printf '%s\n' "${changed_scripts}" | grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py'; then
+  audit_sensitive_targets+=(MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge)
+fi
+
+# Root import changes are text-audited in the fast lane.  Building aggregate root
+# modules is intentionally avoided here because they import historical archive
+# surfaces that can contain non-fast-safe import cycles unrelated to the PR.
+if [ -n "${aggregate_root_lean_files}" ]; then
+  echo "[fast] aggregate root imports changed; Lake build is restricted to changed leaf modules"
+fi
+
+# Run targeted audits for changed concrete analytic spine files when available.
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2HilbertNormOneTarget\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_hilbert_norm_one_target.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2R2ProgressIndex\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_r2_progress_index.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2ObstructionIndex\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_obstruction_index.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2UnboundednessObstruction\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_unboundedness_obstruction.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2DiagonalWeightThreshold\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_diagonal_weight_threshold.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2DiagonalWeightProbe\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_diagonal_weight_probe.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2FiniteSupportCore\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_finite_support_core.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2DiagonalGraphNorm\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_diagonal_graph_norm.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2DiagonalGraph\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_diagonal_graph.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2RealSequence\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_l2_real_sequence.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperatorLaneCheckpoint\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane_checkpoint.py
+fi
+if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperatorLane\.lean'; then
+  run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane.py
+fi
 
 tmp_script="$(mktemp)"
 trap 'rm -f "${tmp_script}"' EXIT
