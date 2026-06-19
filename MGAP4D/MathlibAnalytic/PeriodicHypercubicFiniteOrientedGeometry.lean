@@ -49,9 +49,7 @@ theorem periodicHypercubicFiniteOrientedGeometry_plaquetteHolonomy
     (p : PeriodicHypercubicPlaquette n) :
     (periodicHypercubicFiniteOrientedGeometry n).plaquetteHolonomy A p =
       periodicHypercubicPlaquetteHolonomy A p := by
-  simp [FiniteOrientedFourDimensionalPlaquetteGeometry.plaquetteHolonomy,
-    periodicHypercubicPlaquetteHolonomy,
-    periodicHypercubicFiniteOrientedGeometry]
+  rfl
 
 end
 
