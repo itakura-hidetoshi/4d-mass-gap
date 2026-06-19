@@ -1,0 +1,27 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsSymmetryObservableConvergence
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+/-!
+# Physical Yang--Mills gauge-symmetry observable spine
+
+This aggregate module exposes the complete typed route
+
+* finite oriented Wilson Gibbs gauge invariance;
+* equivariant physical interpolation;
+* embedded-law invariance;
+* tightness and Prokhorov extraction;
+* continuum measure preservation;
+* measurable-event probability invariance;
+* measurable-observable law invariance;
+* bounded-continuous expectation invariance;
+* symmetry-compatible expectation convergence.
+
+The construction remains conditional on the supplied continuous physical action
+and interpolation equivariance.
+-/
+
+end MathlibAnalytic
+end MGAP4D
