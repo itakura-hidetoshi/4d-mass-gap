@@ -37,9 +37,20 @@ theorem continuous_compact_oriented_plaquetteHolonomy
     (p : C.base.geometry.Plaquette) :
     Continuous (fun A : C.base.Configuration =>
       C.base.plaquetteHolonomy A p) := by
-  unfold CompactOrientedGaugeWilsonSystem.plaquetteHolonomy
-    FiniteOrientedFourDimensionalPlaquetteGeometry.plaquetteHolonomy
-  fun_prop
+  change Continuous (fun A : C.base.Configuration =>
+    C.base.stepValue A (C.base.geometry.boundary p 0) *
+      C.base.stepValue A (C.base.geometry.boundary p 1) *
+      C.base.stepValue A (C.base.geometry.boundary p 2) *
+      C.base.stepValue A (C.base.geometry.boundary p 3))
+  exact
+    (((continuous_compact_oriented_stepValue C
+          (C.base.geometry.boundary p 0)).mul
+        (continuous_compact_oriented_stepValue C
+          (C.base.geometry.boundary p 1))).mul
+      (continuous_compact_oriented_stepValue C
+        (C.base.geometry.boundary p 2))).mul
+    (continuous_compact_oriented_stepValue C
+      (C.base.geometry.boundary p 3))
 
 /-- The finite oriented Wilson action is continuous. -/
 theorem continuous_compact_oriented_wilsonAction
