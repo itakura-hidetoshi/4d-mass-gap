@@ -36,7 +36,8 @@ theorem embeddedMeasure_toMeasure_eq
     (E.toLatticeEmbedding.embeddedMeasure n :
       Measure E.PhysicalConfiguration) =
       Measure.map (E.interpolate n) (E.system n).gibbsMeasure := by
-  rfl
+  simp [PhysicalFourDimensionalYangMillsLatticeEmbedding.embeddedMeasure,
+    ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.toLatticeEmbedding]
 
 end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
 
