@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBochnerGram
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHalfLatticePeterWeyl
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -29,14 +29,15 @@ This aggregate module exposes the complete typed route
 * an involutive reflection on a positive-time observable subalgebra;
 * weak-star closedness of reflection positivity;
 * exact pullback of physical state evaluations to the original compact Wilson Gibbs laws;
-* Hilbert-space Gram factorization of compact Wilson reflection forms;
-* generation of the Hilbert Gram identity from half-lattice Bochner feature integrals;
+* a geometric and measure-theoretic half-lattice kernel decomposition;
+* an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
+* generation of the Bochner/Hilbert Gram identity from these two inputs;
 * transfer of finite compact Wilson reflection positivity to the continuum state.
 
 The construction remains conditional on the supplied continuous physical action,
-interpolation equivariance, a physical positive-time reflection, and a
-model-specific half-lattice Peter--Weyl feature decomposition of the compact
-Wilson pullback forms.
+interpolation equivariance, a physical positive-time reflection, the concrete
+half-lattice Wilson-action decomposition, and the compact `SU(N)` Peter--Weyl
+feature theorem for the crossing kernel.
 -/
 
 end MathlibAnalytic
