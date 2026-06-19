@@ -48,7 +48,7 @@ structure PhysicalYangMillsGaugeInvariantPositiveFunctional
   toLinearMap :
     physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ
   map_nonneg' :
-    ∀ O,
+    ∀ (O : physicalYangMillsGaugeInvariantObservableSubalgebra S),
       (∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) →
       0 ≤ toLinearMap O
   map_one' : toLinearMap 1 = 1
