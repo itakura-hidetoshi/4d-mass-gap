@@ -17,6 +17,21 @@ structure ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAct
     E.interpolate n ((E.system n).base.gaugeTransform (latticeGauge n g) U) =
       action g (E.interpolate n U)
 
+namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
+
+theorem action_comp_interpolate
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    (n : ℕ)
+    (g : G.Symmetry) :
+    G.action g ∘ E.interpolate n =
+      E.interpolate n ∘
+        (E.system n).base.gaugeTransform (G.latticeGauge n g) := by
+  funext U
+  exact (G.interpolate_equivariant n g U).symm
+
+end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
+
 end
 
 end MathlibAnalytic
