@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[diagnostic] compile oriented gauge symmetry Prokhorov layer"
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryProkhorovLimit
+echo "[diagnostic] build symmetry limit module"
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
