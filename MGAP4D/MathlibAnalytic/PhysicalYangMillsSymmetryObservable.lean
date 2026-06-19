@@ -4,7 +4,7 @@ import Mathlib.MeasureTheory.Integral.Bochner.Basic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory Function
+open MeasureTheory Function Set
 
 noncomputable section
 
@@ -18,6 +18,37 @@ theorem physical_yang_mills_symmetry_toMeasure_map_eq_self
   have h := congrArg ProbabilityMeasure.toMeasure
     (physical_yang_mills_symmetry_passes_to_weak_limit S g)
   simpa only [ProbabilityMeasure.toMeasure_map] using h
+
+/-- Every inherited continuum symmetry is measure preserving for the physical
+weak-limit law. -/
+theorem physical_yang_mills_symmetry_measurePreserving
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (g : S.Symmetry) :
+    MeasurePreserving (S.action g)
+      (S.continuumMeasure : Measure S.Configuration)
+      (S.continuumMeasure : Measure S.Configuration) :=
+  ⟨(S.action_continuous g).measurable,
+    physical_yang_mills_symmetry_toMeasure_map_eq_self S g⟩
+
+/-- Every measurable physical event has symmetry-invariant continuum
+probability. -/
+theorem physical_yang_mills_symmetry_event_probability_invariant
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (g : S.Symmetry)
+    {s : Set S.Configuration}
+    (hs : MeasurableSet s) :
+    (S.continuumMeasure : Measure S.Configuration)
+        ((S.action g) ⁻¹' s) =
+      (S.continuumMeasure : Measure S.Configuration) s := by
+  have hMP := physical_yang_mills_symmetry_measurePreserving S g
+  calc
+    (S.continuumMeasure : Measure S.Configuration)
+        ((S.action g) ⁻¹' s) =
+        Measure.map (S.action g)
+          (S.continuumMeasure : Measure S.Configuration) s := by
+      rw [Measure.map_apply hMP.measurable hs]
+    _ = (S.continuumMeasure : Measure S.Configuration) s := by
+      rw [hMP.map_eq]
 
 /-- Every measurable physical observable has the same continuum pushforward law
 before and after a compatible symmetry transformation. -/
