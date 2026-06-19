@@ -28,6 +28,18 @@ def periodicHypercubicFiniteOrientedGeometry
     intro p
     simpa using periodicHypercubic_boundary_cycle_30 n p
 
+@[simp]
+theorem periodicHypercubicFiniteOrientedGeometry_stepValue
+    {n : ℕ} [NeZero n]
+    {Gauge : Type} [Group Gauge]
+    (A : PeriodicHypercubicEdge n → Gauge)
+    (s : PeriodicHypercubicBoundaryStep n) :
+    (periodicHypercubicFiniteOrientedGeometry n).stepValue A
+        (periodicBoundaryStepToFinite s) =
+      periodicHypercubicStepValue A s := by
+  cases s with
+  | mk edge orientation => cases orientation <;> rfl
+
 end
 
 end MathlibAnalytic
