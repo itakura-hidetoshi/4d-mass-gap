@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHilbertGram
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBochnerGram
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -30,12 +30,13 @@ This aggregate module exposes the complete typed route
 * weak-star closedness of reflection positivity;
 * exact pullback of physical state evaluations to the original compact Wilson Gibbs laws;
 * Hilbert-space Gram factorization of compact Wilson reflection forms;
+* generation of the Hilbert Gram identity from half-lattice Bochner feature integrals;
 * transfer of finite compact Wilson reflection positivity to the continuum state.
 
 The construction remains conditional on the supplied continuous physical action,
 interpolation equivariance, a physical positive-time reflection, and a
-model-specific Hilbert Gram/Peter--Weyl factorization of the compact Wilson
-pullback forms.
+model-specific half-lattice Peter--Weyl feature decomposition of the compact
+Wilson pullback forms.
 -/
 
 end MathlibAnalytic
