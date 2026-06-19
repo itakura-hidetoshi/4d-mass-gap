@@ -13,9 +13,12 @@ signed periodic SU(N) Wilson law
   -> tightness
   -> Prokhorov subsequence
   -> physical continuum weak limit
+  -> continuum gauge invariance
 ```
 
-The branch contains the physical carrier and interpolation maps, pushforward laws, scale and volume asymptotics, bounded-continuous observable convergence, exact pushforward integrals, compact sublevels, automatic tails, and the concrete signed periodic finite-volume input.
+The final symmetry step applies whenever a continuous action on the physical carrier is supplied together with scale-by-scale lattice gauge transformations and an equivariant interpolation identity.
+
+The branch contains the physical carrier and interpolation maps, pushforward laws, scale and volume asymptotics, bounded-continuous observable convergence, exact pushforward integrals, compact sublevels, automatic tails, the concrete signed periodic finite-volume input, and the finite-to-continuum gauge-symmetry transfer.
 
 ## Signed physical-link geometry
 
@@ -132,8 +135,52 @@ The constructor returns a `PhysicalFourDimensionalYangMillsWeakLimit`. Finite-vo
 
 The reciprocal plaquette scale is a deterministic normalization route, not a claim about the physically correct renormalized weak-coupling trajectory.
 
+## Continuum gauge-symmetry transfer
+
+`ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction` packages:
+
+1. a symmetry type;
+2. a continuous action on the common physical carrier;
+3. a lattice gauge transformation at every scale;
+4. the equivariance identity
+
+```text
+action(g, interpolate_n(U))
+  = interpolate_n(latticeGauge_n(g) . U).
+```
+
+The embedded physical laws are invariant because
+
+```text
+map(action g, map(interpolate_n, mu_n))
+  = map(interpolate_n, map(latticeGauge_n(g), mu_n))
+  = map(interpolate_n, mu_n).
+```
+
+The following constructors package this invariance with Prokhorov extraction:
+
+```lean
+toSymmetryLimit
+toSymmetryLimit_of_tight
+toSymmetryLimit_of_actionPointwiseBound
+```
+
+The terminal theorem
+
+```lean
+continuumMeasure_map_eq_self_of_actionPointwiseBound
+```
+
+proves, for every supplied physical symmetry `g`,
+
+```text
+map(action g, mu_YM) = mu_YM.
+```
+
+This is a typed finite-to-continuum symmetry-transfer theorem. It is conditional on the chosen physical carrier carrying a continuous action and on the interpolation maps satisfying the stated equivariance identity; it does not by itself construct the final distributional continuum gauge group or its action.
+
 ## Remaining analytic frontier
 
 A complete non-Abelian construction must still supply a physically appropriate distributional continuum carrier, explicit interpolation or blocking maps, the justified renormalized coupling trajectory, a proper Sobolev/Besov-type functional, and the coercive interpolation estimate above. Uniqueness, nontriviality and interacting character of the continuum law, reflection positivity and the other OS properties in the limit, OS reconstruction, and the final Hamiltonian mass gap remain open.
 
-The present files prove the concrete signed-periodic-finite-law-to-subsequential-weak-limit spine once those remaining analytic inputs are supplied. They do not claim the complete four-dimensional Yang--Mills construction or mass-gap theorem.
+The present files prove the concrete signed-periodic-finite-law-to-subsequential-weak-limit spine and the conditional transfer of compatible continuous gauge symmetry once those remaining analytic inputs are supplied. They do not claim the complete four-dimensional Yang--Mills construction or mass-gap theorem.
