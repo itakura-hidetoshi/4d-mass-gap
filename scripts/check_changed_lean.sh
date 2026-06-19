@@ -191,7 +191,80 @@ if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineOperato
   run_audit_if_present scripts/audit_concrete_analytic_spine_operator_lane.py
 fi
 
-tmp_script="$(mktemp)"
-trap 'rm -f "${tmp_script}"' EXIT
-git show origin/main:scripts/check_changed_lean.sh > "${tmp_script}"
-bash "${tmp_script}" "${BASE}"
+if [ -z "${changed_lean_files}" ]; then
+  if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
+    ensure_lake_manifest
+    ensure_mathlib_cache
+    printf '[fast] lake build audit-sensitive targets:'
+    printf ' %s' "${audit_sensitive_targets[@]}"
+    printf '\n'
+    lake build "${audit_sensitive_targets[@]}"
+    exit 0
+  fi
+  echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lake build"
+  exit 0
+fi
+
+if [ -z "${non_root_changed_lean_files}" ]; then
+  if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
+    ensure_lake_manifest
+    ensure_mathlib_cache
+    printf '[fast] lake build audit-sensitive targets:'
+    printf ' %s' "${audit_sensitive_targets[@]}"
+    printf '\n'
+    lake build "${audit_sensitive_targets[@]}"
+    exit 0
+  fi
+  echo "[fast] no non-aggregate Lean leaf files changed; skip Lake build in fast lane"
+  exit 0
+fi
+
+ensure_lake_manifest
+ensure_mathlib_cache
+
+# Build only maximal changed non-aggregate modules. If changed module A imports
+# changed module B, then building A already builds B, so B is removed from the
+# explicit target set.  This preserves local coverage of the changed import
+# frontier without accidentally building aggregate roots such as `MGAP4D`.
+declare -A changed_target_set=()
+declare -A imported_by_changed=()
+targets=()
+
+while IFS= read -r file; do
+  [ -z "${file}" ] && continue
+  target="${file%.lean}"
+  target="${target//\//.}"
+  changed_target_set["${target}"]=1
+  targets+=("${target}")
+done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+while IFS= read -r file; do
+  [ -z "${file}" ] && continue
+  while IFS= read -r imported; do
+    [ -z "${imported}" ] && continue
+    if [ -n "${changed_target_set[${imported}]+x}" ]; then
+      imported_by_changed["${imported}"]=1
+    fi
+  done <<< "$(grep -E '^import[[:space:]]+MGAP4D\.' "${file}" 2>/dev/null | awk '{print $2}' || true)"
+done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+maximal_targets=()
+for target in "${targets[@]}"; do
+  if [ -z "${imported_by_changed[${target}]+x}" ]; then
+    maximal_targets+=("${target}")
+  fi
+done
+
+if [ "${#maximal_targets[@]}" -eq 0 ]; then
+  echo "[fast] maximal target reduction was empty; fall back to all changed non-aggregate targets"
+  maximal_targets=("${targets[@]}")
+fi
+
+if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
+  maximal_targets+=("${audit_sensitive_targets[@]}")
+fi
+
+printf '[fast] lake build maximal changed non-aggregate targets:'
+printf ' %s' "${maximal_targets[@]}"
+printf '\n'
+lake build "${maximal_targets[@]}"
