@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantExpectationNormBound
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantContinuousExpectation
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -22,8 +22,8 @@ This aggregate module exposes the complete typed route
 * arbitrary finite n-point moment invariance and convergence;
 * the fixed real subalgebra of pointwise gauge-invariant bounded continuous observables;
 * normalized positive lattice and continuum expectation functionals;
-* pointwise convergence of the lattice expectation functionals;
-* uniform norm-one bounds on all physical expectation values.
+* uniform norm bounds and continuous real-linear expectation functionals;
+* pointwise convergence of the continuous lattice expectation functionals.
 
 The construction remains conditional on the supplied continuous physical action
 and interpolation equivariance.
