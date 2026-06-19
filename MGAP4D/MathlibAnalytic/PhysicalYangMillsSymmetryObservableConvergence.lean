@@ -94,8 +94,9 @@ theorem physical_yang_mills_symmetry_transformed_bounded_observable_expectation_
       physical_yang_mills_approximating_symmetry_bounded_observable_expectation_invariant
         S n g O
   rw [hSequence]
-  exact physical_yang_mills_bounded_observable_expectation_converges
-    S.toPhysicalFourDimensionalYangMillsWeakLimit O
+  exact
+    (ProbabilityMeasure.tendsto_iff_forall_integral_tendsto.mp
+      S.weakConvergence) O
 
 end
 
