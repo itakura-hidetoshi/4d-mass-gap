@@ -3,7 +3,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsSymmetryObservable
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Filter MeasureTheory Function
+open Filter MeasureTheory Function Set
 
 noncomputable section
 
@@ -18,6 +18,40 @@ theorem physical_yang_mills_approximating_symmetry_toMeasure_map_eq_self
   have h := congrArg ProbabilityMeasure.toMeasure
     (S.approximatingInvariant n g)
   simpa only [ProbabilityMeasure.toMeasure_map] using h
+
+/-- Every inherited symmetry is measure preserving for every embedded lattice
+approximation. -/
+theorem physical_yang_mills_approximating_symmetry_measurePreserving
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (n : ℕ)
+    (g : S.Symmetry) :
+    MeasurePreserving (S.action g)
+      (S.approximatingMeasure n : Measure S.Configuration)
+      (S.approximatingMeasure n : Measure S.Configuration) :=
+  ⟨(S.action_continuous g).measurable,
+    physical_yang_mills_approximating_symmetry_toMeasure_map_eq_self S n g⟩
+
+/-- Every measurable event has symmetry-invariant probability at every embedded
+lattice approximation. -/
+theorem physical_yang_mills_approximating_symmetry_event_probability_invariant
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (n : ℕ)
+    (g : S.Symmetry)
+    {s : Set S.Configuration}
+    (hs : MeasurableSet s) :
+    (S.approximatingMeasure n : Measure S.Configuration)
+        ((S.action g) ⁻¹' s) =
+      (S.approximatingMeasure n : Measure S.Configuration) s := by
+  have hMP :=
+    physical_yang_mills_approximating_symmetry_measurePreserving S n g
+  calc
+    (S.approximatingMeasure n : Measure S.Configuration)
+        ((S.action g) ⁻¹' s) =
+        Measure.map (S.action g)
+          (S.approximatingMeasure n : Measure S.Configuration) s := by
+      rw [Measure.map_apply hMP.measurable hs]
+    _ = (S.approximatingMeasure n : Measure S.Configuration) s := by
+      rw [hMP.map_eq]
 
 /-- Every measurable observable has the same pushforward law before and after a
 compatible symmetry transformation at every lattice approximation. -/
