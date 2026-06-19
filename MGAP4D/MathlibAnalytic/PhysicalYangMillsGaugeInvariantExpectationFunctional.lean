@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantObservableRing
-import Mathlib.Algebra.Order.Module.PositiveLinearMap
 import Mathlib.MeasureTheory.Integral.BoundedContinuousFunction
 
 namespace MGAP4D
@@ -9,8 +8,6 @@ open Filter MeasureTheory
 
 noncomputable section
 
-/-- Expectation against the `n`-th embedded lattice law, restricted to the real
-algebra of pointwise gauge-invariant bounded continuous observables. -/
 noncomputable def physicalYangMillsApproximatingGaugeInvariantExpectation
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ) :
@@ -28,8 +25,6 @@ noncomputable def physicalYangMillsApproximatingGaugeInvariantExpectation
     simpa using integral_smul c
       (O : BoundedContinuousFunction S.Configuration ℝ)
 
-/-- Continuum expectation restricted to the real algebra of pointwise
- gauge-invariant bounded continuous observables. -/
 noncomputable def physicalYangMillsContinuumGaugeInvariantExpectation
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
     physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ where
@@ -46,28 +41,34 @@ noncomputable def physicalYangMillsContinuumGaugeInvariantExpectation
     simpa using integral_smul c
       (O : BoundedContinuousFunction S.Configuration ℝ)
 
-/-- The `n`-th embedded lattice expectation is a positive linear functional on
-the physical gauge-invariant observable algebra. -/
-noncomputable def physicalYangMillsApproximatingGaugeInvariantPositiveExpectation
+/-- A real linear functional equipped with pointwise positivity and unit
+normalization on the gauge-invariant observable algebra. -/
+structure PhysicalYangMillsGaugeInvariantPositiveFunctional
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit) where
+  toLinearMap :
+    physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ
+  map_nonneg' :
+    ∀ O,
+      (∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) →
+      0 ≤ toLinearMap O
+  map_one' : toLinearMap 1 = 1
+
+noncomputable def physicalYangMillsApproximatingGaugeInvariantPositiveFunctional
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ) :
-    physicalYangMillsGaugeInvariantObservableSubalgebra S →ₚ[ℝ] ℝ :=
-  PositiveLinearMap.mk₀
-    (physicalYangMillsApproximatingGaugeInvariantExpectation S n)
-    (by
-      intro O hO
-      exact integral_nonneg (fun A => hO A))
+    PhysicalYangMillsGaugeInvariantPositiveFunctional S where
+  toLinearMap := physicalYangMillsApproximatingGaugeInvariantExpectation S n
+  map_nonneg' O hO := integral_nonneg hO
+  map_one' := by
+    simp [physicalYangMillsApproximatingGaugeInvariantExpectation]
 
-/-- The continuum expectation is a positive linear functional on the physical
-gauge-invariant observable algebra. -/
-noncomputable def physicalYangMillsContinuumGaugeInvariantPositiveExpectation
+noncomputable def physicalYangMillsContinuumGaugeInvariantPositiveFunctional
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
-    physicalYangMillsGaugeInvariantObservableSubalgebra S →ₚ[ℝ] ℝ :=
-  PositiveLinearMap.mk₀
-    (physicalYangMillsContinuumGaugeInvariantExpectation S)
-    (by
-      intro O hO
-      exact integral_nonneg (fun A => hO A))
+    PhysicalYangMillsGaugeInvariantPositiveFunctional S where
+  toLinearMap := physicalYangMillsContinuumGaugeInvariantExpectation S
+  map_nonneg' O hO := integral_nonneg hO
+  map_one' := by
+    simp [physicalYangMillsContinuumGaugeInvariantExpectation]
 
 @[simp]
 theorem physicalYangMillsApproximatingGaugeInvariantExpectation_apply
@@ -89,25 +90,23 @@ theorem physicalYangMillsContinuumGaugeInvariantExpectation_apply
   rfl
 
 @[simp]
-theorem physicalYangMillsApproximatingGaugeInvariantPositiveExpectation_apply
+theorem physicalYangMillsApproximatingGaugeInvariantPositiveFunctional_apply
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-    physicalYangMillsApproximatingGaugeInvariantPositiveExpectation S n O =
+    (physicalYangMillsApproximatingGaugeInvariantPositiveFunctional S n).toLinearMap O =
       physicalYangMillsApproximatingGaugeInvariantExpectation S n O :=
   rfl
 
 @[simp]
-theorem physicalYangMillsContinuumGaugeInvariantPositiveExpectation_apply
+theorem physicalYangMillsContinuumGaugeInvariantPositiveFunctional_apply
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-    physicalYangMillsContinuumGaugeInvariantPositiveExpectation S O =
+    (physicalYangMillsContinuumGaugeInvariantPositiveFunctional S).toLinearMap O =
       physicalYangMillsContinuumGaugeInvariantExpectation S O :=
   rfl
 
-/-- The embedded-lattice expectation functionals converge pointwise on the
-physical gauge-invariant observable algebra to the continuum expectation
-functional. -/
+/-- Pointwise convergence of the lattice expectation linear maps. -/
 theorem physical_yang_mills_gaugeInvariantExpectation_pointwise_converges
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
@@ -118,21 +117,18 @@ theorem physical_yang_mills_gaugeInvariantExpectation_pointwise_converges
       (nhds (physicalYangMillsContinuumGaugeInvariantExpectation S O)) :=
   physical_yang_mills_gaugeInvariantObservable_expectation_converges S O
 
-/-- The positive expectation functionals converge pointwise on every physical
- gauge-invariant observable. -/
-theorem physical_yang_mills_gaugeInvariantPositiveExpectation_pointwise_converges
+/-- Pointwise convergence of the normalized positive functional packages. -/
+theorem physical_yang_mills_gaugeInvariantPositiveFunctional_pointwise_converges
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
     Tendsto
       (fun n : ℕ =>
-        physicalYangMillsApproximatingGaugeInvariantPositiveExpectation S n O)
+        (physicalYangMillsApproximatingGaugeInvariantPositiveFunctional S n).toLinearMap O)
       atTop
       (nhds
-        (physicalYangMillsContinuumGaugeInvariantPositiveExpectation S O)) :=
+        ((physicalYangMillsContinuumGaugeInvariantPositiveFunctional S).toLinearMap O)) :=
   physical_yang_mills_gaugeInvariantExpectation_pointwise_converges S O
 
-/-- Every approximating expectation functional is normalized on the constant
-unit observable. -/
 @[simp]
 theorem physicalYangMillsApproximatingGaugeInvariantExpectation_one
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
@@ -140,28 +136,26 @@ theorem physicalYangMillsApproximatingGaugeInvariantExpectation_one
     physicalYangMillsApproximatingGaugeInvariantExpectation S n 1 = 1 := by
   simp [physicalYangMillsApproximatingGaugeInvariantExpectation]
 
-/-- The continuum expectation functional is normalized on the constant unit
-observable. -/
 @[simp]
 theorem physicalYangMillsContinuumGaugeInvariantExpectation_one
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
     physicalYangMillsContinuumGaugeInvariantExpectation S 1 = 1 := by
   simp [physicalYangMillsContinuumGaugeInvariantExpectation]
 
-/-- Every approximating positive expectation functional is normalized. -/
-@[simp]
-theorem physicalYangMillsApproximatingGaugeInvariantPositiveExpectation_one
+theorem physicalYangMillsApproximatingGaugeInvariantExpectation_nonneg
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (n : ℕ) :
-    physicalYangMillsApproximatingGaugeInvariantPositiveExpectation S n 1 = 1 := by
-  simp
+    (n : ℕ)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
+    (hO : ∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) :
+    0 ≤ physicalYangMillsApproximatingGaugeInvariantExpectation S n O :=
+  (physicalYangMillsApproximatingGaugeInvariantPositiveFunctional S n).map_nonneg' O hO
 
-/-- The continuum positive expectation functional is normalized. -/
-@[simp]
-theorem physicalYangMillsContinuumGaugeInvariantPositiveExpectation_one
-    (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
-    physicalYangMillsContinuumGaugeInvariantPositiveExpectation S 1 = 1 := by
-  simp
+theorem physicalYangMillsContinuumGaugeInvariantExpectation_nonneg
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
+    (hO : ∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) :
+    0 ≤ physicalYangMillsContinuumGaugeInvariantExpectation S O :=
+  (physicalYangMillsContinuumGaugeInvariantPositiveFunctional S).map_nonneg' O hO
 
 end
 
