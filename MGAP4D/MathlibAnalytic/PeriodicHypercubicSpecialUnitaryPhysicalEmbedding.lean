@@ -42,6 +42,7 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide_plaquette_car
 /-- Exact signed Wilson-action formula for the positive-side constructor. -/
 theorem periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide_wilsonAction
     (sideLength N : ℕ)
+    [NeZero sideLength]
     (sideLength_pos : 0 < sideLength)
     (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -54,7 +55,6 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide_wilsonAction
       ∑ p : PeriodicHypercubicPlaquette sideLength,
         specialUnitaryWilsonPlaquetteEnergy N
           (periodicHypercubicPlaquetteHolonomy A p) := by
-  letI : NeZero sideLength := ⟨Nat.ne_of_gt sideLength_pos⟩
   exact periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction
     sideLength N hN beta beta_nonneg A
 
