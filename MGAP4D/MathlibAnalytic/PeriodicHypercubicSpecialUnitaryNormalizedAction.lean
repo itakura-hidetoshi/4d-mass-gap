@@ -63,6 +63,7 @@ theorem periodicHypercubicSpecialUnitaryWilsonActionObservable_le_volume_mul_two
         ((periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide
           sideLength N sideLength_pos hN beta beta_nonneg).base.wilsonAction A) ≤
       periodicHypercubicOrientedPlaquetteVolume sideLength * 2 := by
+  letI : NeZero sideLength := ⟨Nat.ne_of_gt sideLength_pos⟩
   rw [periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide_wilsonAction]
   have hOfRealSum :
       ENNReal.ofReal
@@ -94,7 +95,6 @@ theorem periodicHypercubicSpecialUnitaryWilsonActionObservable_le_volume_mul_two
           (specialUnitaryWilsonPlaquetteEnergy_le_two hN
             (periodicHypercubicPlaquetteHolonomy A p))
     _ = periodicHypercubicOrientedPlaquetteVolume sideLength * 2 := by
-      letI : NeZero sideLength := ⟨Nat.ne_of_gt sideLength_pos⟩
       rw [Finset.sum_const, nsmul_eq_mul]
       rw [periodicHypercubicPlaquette_card]
       rfl
