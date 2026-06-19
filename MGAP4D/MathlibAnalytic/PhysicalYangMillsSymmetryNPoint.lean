@@ -9,6 +9,19 @@ open scoped BigOperators
 
 noncomputable section
 
+/-- Evaluation of a finite product in the bounded-continuous-function algebra. -/
+theorem physical_yang_mills_boundedContinuousFunction_finset_prod_apply
+    {X ι : Type}
+    [TopologicalSpace X]
+    [DecidableEq ι]
+    (s : Finset ι)
+    (O : ι → BoundedContinuousFunction X ℝ)
+    (x : X) :
+    (∏ i in s, O i) x = ∏ i in s, O i x := by
+  induction s using Finset.induction_on with
+  | empty => simp
+  | @insert a s ha ih => simp [ha, ih]
+
 /-- Simultaneously transformed finite products of bounded continuous observables
 have invariant continuum expectations. -/
 theorem physical_yang_mills_symmetry_nPoint_expectation_invariant
@@ -21,7 +34,7 @@ theorem physical_yang_mills_symmetry_nPoint_expectation_invariant
       ∂(S.continuumMeasure : Measure S.Configuration)) =
       ∫ A, ∏ i in s, O i A
         ∂(S.continuumMeasure : Measure S.Configuration) := by
-  simpa using
+  simpa only [physical_yang_mills_boundedContinuousFunction_finset_prod_apply] using
     physical_yang_mills_symmetry_bounded_observable_expectation_invariant
       S g (∏ i in s, O i)
 
@@ -38,7 +51,7 @@ theorem physical_yang_mills_approximating_symmetry_nPoint_expectation_invariant
       ∂(S.approximatingMeasure n : Measure S.Configuration)) =
       ∫ A, ∏ i in s, O i A
         ∂(S.approximatingMeasure n : Measure S.Configuration) := by
-  simpa using
+  simpa only [physical_yang_mills_boundedContinuousFunction_finset_prod_apply] using
     physical_yang_mills_approximating_symmetry_bounded_observable_expectation_invariant
       S n g (∏ i in s, O i)
 
@@ -58,7 +71,7 @@ theorem physical_yang_mills_symmetry_transformed_nPoint_expectation_converges
       (nhds
         (∫ A, ∏ i in s, O i A
           ∂(S.continuumMeasure : Measure S.Configuration))) := by
-  simpa using
+  simpa only [physical_yang_mills_boundedContinuousFunction_finset_prod_apply] using
     physical_yang_mills_symmetry_transformed_bounded_observable_expectation_converges
       S g (∏ i in s, O i)
 
