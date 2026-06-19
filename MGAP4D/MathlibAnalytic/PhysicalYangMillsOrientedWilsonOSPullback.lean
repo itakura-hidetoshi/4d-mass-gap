@@ -37,8 +37,8 @@ theorem physical_yang_mills_oriented_approximatingExpectation_eq_gibbs_pullback
         ∂(E.system (L.subsequence n)).gibbsMeasure
   exact MeasureTheory.integral_map
     (E.interpolate_measurable (L.subsequence n)).aemeasurable
-    (O : BoundedContinuousFunction E.PhysicalConfiguration ℝ).
-      continuous.aestronglyMeasurable
+    ((O : BoundedContinuousFunction E.PhysicalConfiguration ℝ).continuous.
+      aestronglyMeasurable)
 
 /-- The same pullback identity stated directly for the physical weak-star state. -/
 theorem physical_yang_mills_oriented_approximatingWeakStarState_eq_gibbs_pullback
