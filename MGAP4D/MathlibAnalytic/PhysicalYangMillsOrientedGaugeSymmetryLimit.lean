@@ -37,6 +37,57 @@ theorem embeddedMeasure_toMeasure_eq
       Measure.map (E.interpolate n) (E.system n).gibbsMeasure := by
   rfl
 
+theorem embeddedMeasure_toMeasure_map_eq_self
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    (n : ℕ)
+    (g : G.Symmetry) :
+    Measure.map (G.action g)
+        (ProbabilityMeasure.toMeasure
+          (E.toLatticeEmbedding.embeddedMeasure n)) =
+      ProbabilityMeasure.toMeasure
+        (E.toLatticeEmbedding.embeddedMeasure n) := by
+  have hGaugeMeasurable :
+      Measurable
+        ((E.system n).base.gaugeTransform (G.latticeGauge n g)) :=
+    (continuous_compact_oriented_gibbs_measurePreserving
+      (E.system n) (G.latticeGauge n g)).measurable
+  change
+    Measure.map (G.action g)
+        (Measure.map (E.interpolate n) (E.system n).gibbsMeasure) =
+      Measure.map (E.interpolate n) (E.system n).gibbsMeasure
+  calc
+    Measure.map (G.action g)
+        (Measure.map (E.interpolate n) (E.system n).gibbsMeasure) =
+        Measure.map (G.action g ∘ E.interpolate n)
+          (E.system n).gibbsMeasure :=
+      Measure.map_map (G.action_continuous g).measurable
+        (E.interpolate_measurable n)
+    _ = Measure.map
+          (E.interpolate n ∘
+            (E.system n).base.gaugeTransform (G.latticeGauge n g))
+          (E.system n).gibbsMeasure := by
+      rw [G.action_comp_interpolate n g]
+    _ = Measure.map (E.interpolate n)
+          (Measure.map
+            ((E.system n).base.gaugeTransform (G.latticeGauge n g))
+            (E.system n).gibbsMeasure) :=
+      (Measure.map_map (E.interpolate_measurable n) hGaugeMeasurable).symm
+    _ = Measure.map (E.interpolate n) (E.system n).gibbsMeasure := by
+      rw [continuous_compact_oriented_gibbs_map_eq_self]
+
+theorem embeddedMeasure_map_eq_self
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    (n : ℕ)
+    (g : G.Symmetry) :
+    (E.toLatticeEmbedding.embeddedMeasure n).map
+        (G.action_continuous g).measurable.aemeasurable =
+      E.toLatticeEmbedding.embeddedMeasure n := by
+  apply ProbabilityMeasure.toMeasure_injective
+  rw [ProbabilityMeasure.toMeasure_map]
+  exact G.embeddedMeasure_toMeasure_map_eq_self n g
+
 end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
 
 end
