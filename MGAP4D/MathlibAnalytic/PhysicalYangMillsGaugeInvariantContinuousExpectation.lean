@@ -15,7 +15,8 @@ noncomputable def physicalYangMillsApproximatingGaugeInvariantContinuousExpectat
     (n : ℕ) :
     physicalYangMillsGaugeInvariantObservableSubalgebra S →L[ℝ] ℝ :=
   LinearMap.mkContinuous
-    (physicalYangMillsApproximatingGaugeInvariantExpectation S n)
+    (physicalYangMillsApproximatingGaugeInvariantExpectation S n :
+      physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ)
     1
     (by
       intro O
@@ -31,7 +32,8 @@ noncomputable def physicalYangMillsContinuumGaugeInvariantContinuousExpectation
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit) :
     physicalYangMillsGaugeInvariantObservableSubalgebra S →L[ℝ] ℝ :=
   LinearMap.mkContinuous
-    (physicalYangMillsContinuumGaugeInvariantExpectation S)
+    (physicalYangMillsContinuumGaugeInvariantExpectation S :
+      physicalYangMillsGaugeInvariantObservableSubalgebra S →ₗ[ℝ] ℝ)
     1
     (by
       intro O
