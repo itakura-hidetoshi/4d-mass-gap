@@ -11,6 +11,11 @@ def periodicOrientationToFinite :
   | .forward => .forward
   | .backward => .backward
 
+def periodicBoundaryStepToFinite
+    {n : ℕ} (s : PeriodicHypercubicBoundaryStep n) :
+    FiniteOrientedBoundaryStep (PeriodicHypercubicEdge n) :=
+  ⟨s.edge, periodicOrientationToFinite s.orientation⟩
+
 end
 
 end MathlibAnalytic
