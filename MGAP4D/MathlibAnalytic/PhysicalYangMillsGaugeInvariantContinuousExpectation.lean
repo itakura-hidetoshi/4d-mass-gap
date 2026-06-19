@@ -17,8 +17,14 @@ noncomputable def physicalYangMillsApproximatingGaugeInvariantContinuousExpectat
   (physicalYangMillsApproximatingGaugeInvariantExpectation S n).mkContinuous 1
     (by
       intro O
-      simpa using
-        physicalYangMillsApproximatingGaugeInvariantExpectation_norm_le S n O)
+      change
+        ‖physicalYangMillsApproximatingGaugeInvariantExpectation S n O‖ ≤
+          1 * ‖O‖
+      rw [one_mul]
+      change
+        ‖physicalYangMillsApproximatingGaugeInvariantExpectation S n O‖ ≤
+          ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖
+      exact physicalYangMillsApproximatingGaugeInvariantExpectation_norm_le S n O)
 
 /-- The continuum expectation as a continuous real-linear functional on the
 physical gauge-invariant observable algebra. -/
@@ -28,8 +34,14 @@ noncomputable def physicalYangMillsContinuumGaugeInvariantContinuousExpectation
   (physicalYangMillsContinuumGaugeInvariantExpectation S).mkContinuous 1
     (by
       intro O
-      simpa using
-        physicalYangMillsContinuumGaugeInvariantExpectation_norm_le S O)
+      change
+        ‖physicalYangMillsContinuumGaugeInvariantExpectation S O‖ ≤
+          1 * ‖O‖
+      rw [one_mul]
+      change
+        ‖physicalYangMillsContinuumGaugeInvariantExpectation S O‖ ≤
+          ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖
+      exact physicalYangMillsContinuumGaugeInvariantExpectation_norm_le S O)
 
 @[simp]
 theorem physicalYangMillsApproximatingGaugeInvariantContinuousExpectation_apply
@@ -37,16 +49,16 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousExpectation_apply
     (n : ℕ)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
     physicalYangMillsApproximatingGaugeInvariantContinuousExpectation S n O =
-      physicalYangMillsApproximatingGaugeInvariantExpectation S n O :=
-  rfl
+      physicalYangMillsApproximatingGaugeInvariantExpectation S n O := by
+  simp [physicalYangMillsApproximatingGaugeInvariantContinuousExpectation]
 
 @[simp]
 theorem physicalYangMillsContinuumGaugeInvariantContinuousExpectation_apply
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
     physicalYangMillsContinuumGaugeInvariantContinuousExpectation S O =
-      physicalYangMillsContinuumGaugeInvariantExpectation S O :=
-  rfl
+      physicalYangMillsContinuumGaugeInvariantExpectation S O := by
+  simp [physicalYangMillsContinuumGaugeInvariantContinuousExpectation]
 
 /-- The continuous lattice expectation functionals converge pointwise to the
 continuous continuum expectation functional. -/
@@ -58,8 +70,8 @@ theorem physical_yang_mills_gaugeInvariantContinuousExpectation_pointwise_conver
         physicalYangMillsApproximatingGaugeInvariantContinuousExpectation S n O)
       atTop
       (nhds
-        (physicalYangMillsContinuumGaugeInvariantContinuousExpectation S O)) :=
-  physical_yang_mills_gaugeInvariantExpectation_pointwise_converges S O
+        (physicalYangMillsContinuumGaugeInvariantContinuousExpectation S O)) := by
+  simpa using physical_yang_mills_gaugeInvariantExpectation_pointwise_converges S O
 
 end
 
