@@ -1,13 +1,12 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonSystem
 import MGAP4D.MathlibAnalytic.SpecialUnitaryBorelReceipts
+import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonContinuousSystem
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Canonical compact `SU(N)` Wilson system on a finite signed plaquette
-geometry. -/
 def specialUnitaryCompactOrientedGaugeWilsonSystem
     (geometry : FiniteOrientedFourDimensionalPlaquetteGeometry)
     (N : ℕ)
@@ -36,8 +35,6 @@ def specialUnitaryCompactOrientedGaugeWilsonSystem
       beta := beta
       beta_nonneg := beta_nonneg }
 
-/-- Continuous canonical `SU(N)` Wilson system on signed physical-link
-geometry. -/
 def specialUnitaryContinuousCompactOrientedGaugeWilsonSystem
     (geometry : FiniteOrientedFourDimensionalPlaquetteGeometry)
     (N : ℕ)
