@@ -22,23 +22,26 @@ theorem physical_yang_mills_oriented_approximatingExpectation_eq_gibbs_pullback
     physicalYangMillsApproximatingGaugeInvariantExpectation
         (G.toSymmetryLimit L) n O =
       ∫ U,
-        (O : BoundedContinuousFunction E.PhysicalConfiguration ℝ)
+        (O : BoundedContinuousFunction
+          (G.toSymmetryLimit L).Configuration ℝ)
           (E.interpolate (L.subsequence n) U)
         ∂(E.system (L.subsequence n)).gibbsMeasure := by
   rw [physicalYangMillsApproximatingGaugeInvariantExpectation_apply]
   change
     (∫ A,
-      (O : BoundedContinuousFunction E.PhysicalConfiguration ℝ) A
+      (O : BoundedContinuousFunction
+        (G.toSymmetryLimit L).Configuration ℝ) A
       ∂Measure.map (E.interpolate (L.subsequence n))
         (E.system (L.subsequence n)).gibbsMeasure) =
       ∫ U,
-        (O : BoundedContinuousFunction E.PhysicalConfiguration ℝ)
+        (O : BoundedContinuousFunction
+          (G.toSymmetryLimit L).Configuration ℝ)
           (E.interpolate (L.subsequence n) U)
         ∂(E.system (L.subsequence n)).gibbsMeasure
   exact MeasureTheory.integral_map
     (E.interpolate_measurable (L.subsequence n)).aemeasurable
-    ((O : BoundedContinuousFunction E.PhysicalConfiguration ℝ).continuous.
-      aestronglyMeasurable)
+    ((O : BoundedContinuousFunction
+      (G.toSymmetryLimit L).Configuration ℝ).continuous.aestronglyMeasurable)
 
 /-- The same pullback identity stated directly for the physical weak-star state. -/
 theorem physical_yang_mills_oriented_approximatingWeakStarState_eq_gibbs_pullback
@@ -52,7 +55,8 @@ theorem physical_yang_mills_oriented_approximatingWeakStarState_eq_gibbs_pullbac
     physicalYangMillsApproximatingGaugeInvariantWeakStarState
         (G.toSymmetryLimit L) n O =
       ∫ U,
-        (O : BoundedContinuousFunction E.PhysicalConfiguration ℝ)
+        (O : BoundedContinuousFunction
+          (G.toSymmetryLimit L).Configuration ℝ)
           (E.interpolate (L.subsequence n) U)
         ∂(E.system (L.subsequence n)).gibbsMeasure := by
   rw [physicalYangMillsApproximatingGaugeInvariantWeakStarState_apply]
@@ -76,7 +80,7 @@ noncomputable def
     ((D.quadraticObservable F :
         physicalYangMillsGaugeInvariantObservableSubalgebra
           (G.toSymmetryLimit L)) :
-      BoundedContinuousFunction E.PhysicalConfiguration ℝ)
+      BoundedContinuousFunction (G.toSymmetryLimit L).Configuration ℝ)
       (E.interpolate (L.subsequence n) U)
     ∂(E.system (L.subsequence n)).gibbsMeasure
 
