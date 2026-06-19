@@ -21,7 +21,7 @@ theorem physical_yang_mills_symmetry_nPoint_expectation_invariant
       ∂(S.continuumMeasure : Measure S.Configuration)) =
       ∫ A, ∏ i in s, O i A
         ∂(S.continuumMeasure : Measure S.Configuration) := by
-  simpa only [Finset.prod_apply] using
+  simpa using
     physical_yang_mills_symmetry_bounded_observable_expectation_invariant
       S g (∏ i in s, O i)
 
@@ -38,7 +38,7 @@ theorem physical_yang_mills_approximating_symmetry_nPoint_expectation_invariant
       ∂(S.approximatingMeasure n : Measure S.Configuration)) =
       ∫ A, ∏ i in s, O i A
         ∂(S.approximatingMeasure n : Measure S.Configuration) := by
-  simpa only [Finset.prod_apply] using
+  simpa using
     physical_yang_mills_approximating_symmetry_bounded_observable_expectation_invariant
       S n g (∏ i in s, O i)
 
@@ -58,7 +58,7 @@ theorem physical_yang_mills_symmetry_transformed_nPoint_expectation_converges
       (nhds
         (∫ A, ∏ i in s, O i A
           ∂(S.continuumMeasure : Measure S.Configuration))) := by
-  simpa only [Finset.prod_apply] using
+  simpa using
     physical_yang_mills_symmetry_transformed_bounded_observable_expectation_converges
       S g (∏ i in s, O i)
 
