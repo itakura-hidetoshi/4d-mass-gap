@@ -6,20 +6,25 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Second countability inherited from the finite-dimensional matrix space. -/
+@[reducible]
+def specialUnitaryAmbientMatrixSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix (Fin N) (Fin N) ℂ) :=
+  inferInstanceAs (SecondCountableTopology (Fin N → Fin N → ℂ))
+
+@[reducible]
 def specialUnitaryGroupSecondCountableTopology (N : ℕ) :
     SecondCountableTopology (SpecialUnitaryMatrixGroup N) := by
-  infer_instance
+  letI : SecondCountableTopology (Matrix (Fin N) (Fin N) ℂ) :=
+    specialUnitaryAmbientMatrixSecondCountableTopology N
+  exact TopologicalSpace.secondCountableTopology_induced
+    (SpecialUnitaryMatrixGroup N)
+    (Matrix (Fin N) (Fin N) ℂ)
+    ((↑) : SpecialUnitaryMatrixGroup N → Matrix (Fin N) (Fin N) ℂ)
 
-/-- The measurable structure inherited from the ambient matrix space. -/
+@[reducible]
 def specialUnitaryGroupMeasurableSpace (N : ℕ) :
-    MeasurableSpace (SpecialUnitaryMatrixGroup N) := by
-  infer_instance
-
-/-- The inherited measurable structure is the Borel structure. -/
-def specialUnitaryGroupBorelSpace (N : ℕ) :
-    BorelSpace (SpecialUnitaryMatrixGroup N) := by
-  infer_instance
+    MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
+  borel (SpecialUnitaryMatrixGroup N)
 
 end
 
