@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsSymmetryNPoint
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantObservableRing
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -19,7 +19,8 @@ This aggregate module exposes the complete typed route
 * bounded-continuous expectation invariance;
 * symmetry-compatible expectation convergence;
 * two-point and connected-correlation invariance and convergence;
-* arbitrary finite n-point moment invariance and convergence.
+* arbitrary finite n-point moment invariance and convergence;
+* the fixed subring of pointwise gauge-invariant bounded continuous observables.
 
 The construction remains conditional on the supplied continuous physical action
 and interpolation equivariance.
