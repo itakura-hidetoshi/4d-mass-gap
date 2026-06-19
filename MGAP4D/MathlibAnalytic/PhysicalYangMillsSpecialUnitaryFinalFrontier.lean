@@ -7,24 +7,14 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- The current special-unitary frontier keeps the completed finite Wilson
-system and the completed physical subsequential weak limit as separate outputs. -/
 structure PhysicalYangMillsSpecialUnitaryFinalFrontier where
   finiteSystem : ContinuousCompactGaugeWilsonSystem
   weakLimit : PhysicalFourDimensionalYangMillsWeakLimit
 
-/-- Assemble the finite `SU(N)` Wilson system and the canonical standard-energy
-physical weak limit into one typed frontier package.  The standard compact
-matrix-group topology and Borel receipts are supplied explicitly. -/
 noncomputable def assemblePhysicalYangMillsSpecialUnitaryFinalFrontier
     (finiteGeometry : FiniteFourDimensionalPlaquetteGeometry)
     (rank : ℕ)
     (rank_pos : 0 < rank)
-    [IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
-    [CompactSpace (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
-    [SecondCountableTopology (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
-    [MeasurableSpace (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
-    [BorelSpace (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
     [Nontrivial (Matrix.specialUnitaryGroup (Fin rank) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
