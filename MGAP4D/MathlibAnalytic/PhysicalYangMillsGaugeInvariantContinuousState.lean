@@ -95,8 +95,7 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_nonneg
     (n : ℕ)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
     (hO : ∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) :
-    0 ≤ (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-      toContinuousLinearMap O :=
+    0 ≤ (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).toContinuousLinearMap O :=
   (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).map_nonneg' O hO
 
 /-- The continuum continuous state is positive on pointwise nonnegative
@@ -105,8 +104,7 @@ theorem physicalYangMillsContinuumGaugeInvariantContinuousState_nonneg
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
     (hO : ∀ A, 0 ≤ (O : BoundedContinuousFunction S.Configuration ℝ) A) :
-    0 ≤ (physicalYangMillsContinuumGaugeInvariantContinuousState S).
-      toContinuousLinearMap O :=
+    0 ≤ (physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap O :=
   (physicalYangMillsContinuumGaugeInvariantContinuousState S).map_nonneg' O hO
 
 /-- Every embedded-lattice continuous state is contractive in the observable
@@ -115,8 +113,7 @@ theorem physicalYangMillsApproximatingGaugeInvariantContinuousState_norm_le
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (n : ℕ)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-    ‖(physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-        toContinuousLinearMap O‖ ≤
+    ‖(physicalYangMillsApproximatingGaugeInvariantContinuousState S n).toContinuousLinearMap O‖ ≤
       ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖ :=
   (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).map_norm_le' O
 
@@ -125,8 +122,7 @@ norm. -/
 theorem physicalYangMillsContinuumGaugeInvariantContinuousState_norm_le
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-    ‖(physicalYangMillsContinuumGaugeInvariantContinuousState S).
-        toContinuousLinearMap O‖ ≤
+    ‖(physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap O‖ ≤
       ‖(O : BoundedContinuousFunction S.Configuration ℝ)‖ :=
   (physicalYangMillsContinuumGaugeInvariantContinuousState S).map_norm_le' O
 
@@ -137,12 +133,10 @@ theorem physical_yang_mills_gaugeInvariantContinuousState_pointwise_converges
     (O : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
     Tendsto
       (fun n : ℕ =>
-        (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-          toContinuousLinearMap O)
+        (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).toContinuousLinearMap O)
       atTop
       (nhds
-        ((physicalYangMillsContinuumGaugeInvariantContinuousState S).
-          toContinuousLinearMap O)) := by
+        ((physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap O)) := by
   simpa using
     physical_yang_mills_gaugeInvariantContinuousExpectation_pointwise_converges S O
 
