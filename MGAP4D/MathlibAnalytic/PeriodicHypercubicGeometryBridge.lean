@@ -25,6 +25,15 @@ theorem periodicBoundaryStepToFinite_initial
   cases s with
   | mk edge orientation => cases orientation <;> rfl
 
+@[simp]
+theorem periodicBoundaryStepToFinite_terminal
+    {n : ℕ} (s : PeriodicHypercubicBoundaryStep n) :
+    (periodicBoundaryStepToFinite s).terminal
+        (periodicHypercubicEdgeSource n)
+        (periodicHypercubicEdgeTarget n) = s.target := by
+  cases s with
+  | mk edge orientation => cases orientation <;> rfl
+
 end
 
 end MathlibAnalytic
