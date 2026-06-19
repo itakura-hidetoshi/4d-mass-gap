@@ -33,11 +33,11 @@ theorem action_comp_interpolate
 theorem embeddedMeasure_toMeasure_eq
     {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     (n : ℕ) :
-    (E.toLatticeEmbedding.embeddedMeasure n :
-      Measure E.PhysicalConfiguration) =
+    ProbabilityMeasure.toMeasure (E.toLatticeEmbedding.embeddedMeasure n) =
       Measure.map (E.interpolate n) (E.system n).gibbsMeasure := by
-  simp [PhysicalFourDimensionalYangMillsLatticeEmbedding.embeddedMeasure,
-    ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.toLatticeEmbedding]
+  rw [continuous_compact_oriented_gauge_wilson_embeddedMeasure_eq]
+  rw [ProbabilityMeasure.toMeasure_map]
+  rw [continuous_compact_oriented_gibbsProbabilityMeasure_toMeasure]
 
 end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
 
