@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantWeakStarReflectionPositivity
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHilbertGram
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -28,11 +28,14 @@ This aggregate module exposes the complete typed route
 * weak-star convergence of the lattice state sequence to the continuum state;
 * an involutive reflection on a positive-time observable subalgebra;
 * weak-star closedness of reflection positivity;
-* transfer of automatic finite Wilson Gram positivity to the continuum state.
+* exact pullback of physical state evaluations to the original compact Wilson Gibbs laws;
+* Hilbert-space Gram factorization of compact Wilson reflection forms;
+* transfer of finite compact Wilson reflection positivity to the continuum state.
 
 The construction remains conditional on the supplied continuous physical action,
-interpolation equivariance, and the model-specific identification of finite
-Wilson reflection forms with evaluations of the physical approximating states.
+interpolation equivariance, a physical positive-time reflection, and a
+model-specific Hilbert Gram/Peter--Weyl factorization of the compact Wilson
+pullback forms.
 -/
 
 end MathlibAnalytic
