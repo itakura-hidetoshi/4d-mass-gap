@@ -35,9 +35,7 @@ theorem embeddedMeasure_toMeasure_eq
     (n : ℕ) :
     ProbabilityMeasure.toMeasure (E.toLatticeEmbedding.embeddedMeasure n) =
       Measure.map (E.interpolate n) (E.system n).gibbsMeasure := by
-  rw [continuous_compact_oriented_gauge_wilson_embeddedMeasure_eq]
-  rw [ProbabilityMeasure.toMeasure_map]
-  rw [continuous_compact_oriented_gibbsProbabilityMeasure_toMeasure]
+  rfl
 
 end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction
 
