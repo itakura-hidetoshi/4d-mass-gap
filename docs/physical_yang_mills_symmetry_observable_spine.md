@@ -94,13 +94,69 @@ physical_yang_mills_symmetry_transformed_twoPoint_expectation_converges
 physical_yang_mills_symmetry_transformed_connectedCorrelation_converges
 ```
 
+## Finite n-point moments
+
+For a finite set of bounded continuous real observables, multiplication is taken in the pointwise bounded-continuous-function algebra. The resulting finite product satisfies symmetry invariance at every lattice scale and for the continuum law, and its transformed expectations converge to the continuum n-point moment.
+
+```lean
+physical_yang_mills_symmetry_nPoint_expectation_invariant
+physical_yang_mills_approximating_symmetry_nPoint_expectation_invariant
+physical_yang_mills_symmetry_transformed_nPoint_expectation_converges
+```
+
+In formulas, for a finite index set `s`,
+
+```text
+E_mu_n[(prod_{i in s} O_i)(g.A)]
+  = E_mu_n[(prod_{i in s} O_i)(A)]
+  -> E_muYM[(prod_{i in s} O_i)(A)].
+```
+
+The empty finite product includes the normalized zero-point observable as a special case.
+
+## Gauge-invariant observable algebra
+
+Pointwise fixed bounded continuous observables satisfy
+
+```text
+O(g.A) = O(A)
+```
+
+for every supplied symmetry `g` and configuration `A`. They form both
+
+```lean
+physicalYangMillsGaugeInvariantObservableSubring
+physicalYangMillsGaugeInvariantObservableSubalgebra
+```
+
+inside `BoundedContinuousFunction Configuration ℝ`. Thus gauge-invariant observables are closed under constants, addition, negation, multiplication, and real scalar multiplication.
+
+Membership is characterized by
+
+```lean
+mem_physicalYangMillsGaugeInvariantObservableSubalgebra_iff
+```
+
+and each element of the fixed real subalgebra has a lattice-to-continuum expectation limit:
+
+```lean
+physical_yang_mills_gaugeInvariantObservable_expectation_converges
+```
+
+Pointwise fixedness also identifies its transformed and untransformed expectations at every embedded scale and in the continuum:
+
+```lean
+physical_yang_mills_gaugeInvariantObservable_approximating_expectation_eq
+physical_yang_mills_gaugeInvariantObservable_continuum_expectation_eq
+```
+
 ## Aggregate import
 
 ```lean
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeSymmetryObservableSpine
 ```
 
-exposes the measure, event, observable, expectation, and correlation layers together.
+exposes the measure, event, observable-law, expectation, correlation, finite n-point, and gauge-invariant observable-algebra layers together.
 
 ## Scope boundary
 
