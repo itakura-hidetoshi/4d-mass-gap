@@ -18,6 +18,15 @@ def RealKernelPositiveSemidefinite
       0 ≤ ∑ i : ι, ∑ j : ι,
         coefficients i * coefficients j * kernel (points i) (points j)
 
+/-- Every kernel represented by a real Hilbert inner product is symmetric. -/
+theorem RealHilbertKernelFeature.symmetric
+    {X : Type}
+    {kernel : X → X → ℝ}
+    (C : RealHilbertKernelFeature X kernel)
+    (x y : X) :
+    kernel x y = kernel y x := by
+  rw [C.kernel_eq_inner, C.kernel_eq_inner, real_inner_comm]
+
 /-- Every real Hilbert feature realization generates a positive-semidefinite
 kernel.  The finite Gram quadratic form is the squared norm of the weighted
 sum of feature vectors. -/
@@ -41,7 +50,7 @@ theorem RealHilbertKernelFeature.positiveSemidefinite
     apply Finset.sum_congr rfl
     intro j hj
     rw [← C.kernel_eq_inner]
-    ring
+    rw [C.symmetric (points j) (points i)]
   rw [← hGram]
   exact real_inner_self_nonneg
 
@@ -66,7 +75,7 @@ theorem RealHilbertKernelFeature.finiteGram_eq_inner
   apply Finset.sum_congr rfl
   intro j hj
   rw [← C.kernel_eq_inner]
-  ring
+  rw [C.symmetric (points j) (points i)]
 
 end
 
