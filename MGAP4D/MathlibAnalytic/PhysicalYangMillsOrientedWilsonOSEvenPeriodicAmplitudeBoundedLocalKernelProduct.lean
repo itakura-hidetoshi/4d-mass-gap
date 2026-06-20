@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicBoundedLocalKernelProduct
 import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelFeatureNorm
+import MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureMeasurability
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -146,12 +147,13 @@ theorem physical_yang_mills_oriented_evenPeriodicAmplitudeBoundedLocalKernel_con
   physical_yang_mills_oriented_evenPeriodicBoundedLocalKernel_continuum_reflectionPositive
     G L D H C.toBoundedLocalKernelData
 
-/-- A factored measurability interface for the same exact Wilson constructor.
+/-- A locally factored measurability interface for the exact Wilson constructor.
 
 Instead of assuming measurability of the amplitude-weighted global feature as a
 single compound function, this package asks separately for measurability of the
-scalar amplitude and of the unweighted completed-tensor-product RKHS feature.
-Mathlib then combines the two inputs using `AEStronglyMeasurable.smul`. -/
+scalar amplitude and of each one-plaquette Wilson RKHS feature.  The finite
+completed-tensor-product global feature is then measurable automatically, and
+Mathlib combines it with the amplitude using `AEStronglyMeasurable.smul`. -/
 structure PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData
     {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     {G : E.PhysicalGaugeAction}
@@ -178,26 +180,23 @@ structure PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedL
   amplitude_aestronglyMeasurable :
     ∀ (n : ℕ) (F : D.positiveTimeSubalgebra),
       AEStronglyMeasurable (fun x => H.amplitude n F x) H.halfMeasure
-  globalFeature_aestronglyMeasurable :
-    ∀ (n : ℕ),
+  localFeature_aestronglyMeasurable :
+    ∀ (n : ℕ)
+      (p : PeriodicHypercubicEvenCrossingPlaquetteLabel (halfExtent n)),
       AEStronglyMeasurable
         (fun x =>
-          (RealHilbertKernelFeature.listProd
-            (periodicHypercubicEvenCrossingPlaquetteList (halfExtent n))
-            (fun p =>
-              localCrossingWilsonKernel N (beta n)
-                (positiveHalfHolonomy n p))
-            (fun p =>
-              localCrossingWilsonKernelConcreteFeature
-                N hN (beta n) (hbeta n) (positiveHalfHolonomy n p))).feature x)
+          (localCrossingWilsonKernelConcreteFeature
+            N hN (beta n) (hbeta n)
+            (positiveHalfHolonomy n p)).feature x)
         H.halfMeasure
   amplitudeBound : ℕ → D.positiveTimeSubalgebra → ℝ
   amplitude_abs_le :
     ∀ (n : ℕ) (F : D.positiveTimeSubalgebra) (x : H.HalfConfiguration),
       |H.amplitude n F x| ≤ amplitudeBound n F
 
-/-- Separate measurability of the scalar amplitude and exact global RKHS feature
-implies measurability of their pointwise scalar product. -/
+/-- Local one-plaquette feature measurability generates global feature
+measurability through the finite completed tensor product; scalar multiplication
+then gives the weighted global feature required by the amplitude constructor. -/
 noncomputable def
     PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData.toAmplitudeBoundedLocalKernelData
     {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
@@ -222,14 +221,36 @@ noncomputable def
   halfMeasureFinite := C.halfMeasureFinite
   weightedGlobalFeature_aestronglyMeasurable := by
     intro n F
+    have hGlobal :
+        AEStronglyMeasurable
+          (RealHilbertKernelFeature.listProd
+            (periodicHypercubicEvenCrossingPlaquetteList (halfExtent n))
+            (fun p =>
+              localCrossingWilsonKernel N (beta n)
+                (C.positiveHalfHolonomy n p))
+            (fun p =>
+              localCrossingWilsonKernelConcreteFeature
+                N C.hN (beta n) (C.hbeta n)
+                  (C.positiveHalfHolonomy n p))).feature
+          H.halfMeasure :=
+      RealHilbertKernelFeature.listProd_feature_aestronglyMeasurable
+        (periodicHypercubicEvenCrossingPlaquetteList (halfExtent n))
+        (fun p =>
+          localCrossingWilsonKernel N (beta n)
+            (C.positiveHalfHolonomy n p))
+        (fun p =>
+          localCrossingWilsonKernelConcreteFeature
+            N C.hN (beta n) (C.hbeta n)
+              (C.positiveHalfHolonomy n p))
+        (fun p => C.localFeature_aestronglyMeasurable n p)
     exact AEStronglyMeasurable.smul
       (C.amplitude_aestronglyMeasurable n F)
-      (C.globalFeature_aestronglyMeasurable n)
+      hGlobal
   amplitudeBound := C.amplitudeBound
   amplitude_abs_le := C.amplitude_abs_le
 
-/-- Factored amplitude/global-feature measurability and a scalar amplitude bound
-imply reflection positivity at every approximating scale. -/
+/-- Local feature measurability and a scalar amplitude bound imply reflection
+positivity at every approximating scale. -/
 theorem physical_yang_mills_oriented_evenPeriodicFactoredAmplitudeBoundedLocalKernel_approximating_reflectionPositive
     {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     (G : E.PhysicalGaugeAction)
@@ -250,8 +271,8 @@ theorem physical_yang_mills_oriented_evenPeriodicFactoredAmplitudeBoundedLocalKe
   physical_yang_mills_oriented_evenPeriodicAmplitudeBoundedLocalKernel_approximating_reflectionPositive
     G L D H C.toAmplitudeBoundedLocalKernelData n
 
-/-- Factored amplitude/global-feature measurability and a scalar amplitude bound
-imply continuum Osterwalder--Schrader reflection positivity. -/
+/-- Local feature measurability and a scalar amplitude bound imply continuum
+Osterwalder--Schrader reflection positivity. -/
 theorem physical_yang_mills_oriented_evenPeriodicFactoredAmplitudeBoundedLocalKernel_continuum_reflectionPositive
     {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     (G : E.PhysicalGaugeAction)
