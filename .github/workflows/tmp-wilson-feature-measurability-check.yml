@@ -1,0 +1,56 @@
+name: Temporary Wilson Feature Measurability Check
+
+on:
+  pull_request:
+
+concurrency:
+  group: temporary-wilson-feature-measurability-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  wilson-feature-measurability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          show-progress: false
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+      - name: Install Lean
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build Wilson feature measurability
+        shell: bash
+        run: |
+          set +e
+          lake build MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelFeatureMeasurability > /tmp/wilson-feature.log 2>&1
+          status=$?
+          echo "$status" > /tmp/wilson-feature.status
+          if [ "$status" -eq 0 ]; then
+            echo "Wilson feature measurability build passed" | tee /tmp/wilson-feature-diagnostics.txt
+          else
+            {
+              echo "Wilson feature measurability build failed; compact diagnostics follow"
+              grep -n -B 4 -A 20 'error:' /tmp/wilson-feature.log || tail -n 180 /tmp/wilson-feature.log
+            } | tee /tmp/wilson-feature-diagnostics.txt
+          fi
+          exit 0
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wilson-feature-measurability-diagnostics
+          path: /tmp/wilson-feature-diagnostics.txt
+          if-no-files-found: error
+      - name: Propagate build status
+        if: always()
+        shell: bash
+        run: exit "$(cat /tmp/wilson-feature.status)"
