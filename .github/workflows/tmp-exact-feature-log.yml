@@ -1,4 +1,4 @@
-name: Temporary Exact Feature Log
+name: Temporary Concrete Local Kernel Log
 
 on:
   pull_request:
@@ -23,17 +23,17 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build exact feature
+      - name: Build concrete local kernel adapter
         id: build
         continue-on-error: true
         run: |
-          lake build MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelRKHSFeature > /tmp/lean.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConcreteLocalKernelProduct > /tmp/lean.log 2>&1
           echo "status=$?" >> "$GITHUB_OUTPUT"
           tail -n 200 /tmp/lean.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: exact-feature-log
+          name: concrete-local-kernel-log
           path: /tmp/lean.log
       - name: Fail on error
         if: steps.build.outputs.status != '0'
