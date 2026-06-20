@@ -18,7 +18,7 @@ one-dimensional real Hilbert space. -/
 def RealKernelPositiveSemidefiniteCertificate.operatorKernel
     {X : Type}
     {kernel : X → X → ℝ}
-    (C : RealKernelPositiveSemidefiniteCertificate X kernel) :
+    (_C : RealKernelPositiveSemidefiniteCertificate X kernel) :
     Matrix X X (ℝ →L[ℝ] ℝ) :=
   fun x y => kernel x y • (1 : ℝ →L[ℝ] ℝ)
 
