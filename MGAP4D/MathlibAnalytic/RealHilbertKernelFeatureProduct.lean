@@ -33,6 +33,37 @@ noncomputable def RealHilbertKernelFeature.one
   feature := fun _ => 1
   kernel_eq_inner x y := by simp
 
+/-- The pointwise sum of two Hilbert kernels is realized by the Hilbert product
+of their feature spaces. -/
+noncomputable def RealHilbertKernelFeature.add
+    {X : Type}
+    {kernel₁ kernel₂ : X → X → ℝ}
+    (C₁ : RealHilbertKernelFeature X kernel₁)
+    (C₂ : RealHilbertKernelFeature X kernel₂) :
+    RealHilbertKernelFeature X
+      (fun x y => kernel₁ x y + kernel₂ x y) where
+  FeatureHilbert := C₁.FeatureHilbert × C₂.FeatureHilbert
+  feature := fun x => (C₁.feature x, C₂.feature x)
+  kernel_eq_inner x y := by
+    rw [C₁.kernel_eq_inner, C₂.kernel_eq_inner]
+    simp
+
+/-- Multiplication of a Hilbert kernel by a nonnegative scalar is realized by
+scaling its feature map by the square root of that scalar. -/
+noncomputable def RealHilbertKernelFeature.nonnegSMul
+    {X : Type}
+    {kernel : X → X → ℝ}
+    (c : ℝ)
+    (hc : 0 ≤ c)
+    (C : RealHilbertKernelFeature X kernel) :
+    RealHilbertKernelFeature X (fun x y => c * kernel x y) where
+  FeatureHilbert := C.FeatureHilbert
+  feature := fun x => Real.sqrt c • C.feature x
+  kernel_eq_inner x y := by
+    simp only [real_inner_smul_left, real_inner_smul_right]
+    rw [← C.kernel_eq_inner]
+    nlinarith [Real.sq_sqrt hc]
+
 /-- The pointwise product of two Hilbert kernels is realized by the completed
 algebraic tensor product of their feature spaces. -/
 noncomputable def RealHilbertKernelFeature.mul
@@ -53,6 +84,20 @@ noncomputable def RealHilbertKernelFeature.mul
   kernel_eq_inner x y := by
     rw [UniformSpace.Completion.inner_coe, TensorProduct.inner_tmul]
     rw [← C₁.kernel_eq_inner, ← C₂.kernel_eq_inner]
+
+/-- Every natural pointwise power of a Hilbert kernel has a Hilbert feature
+realization.  The successor step uses the completed tensor-product product
+constructor. -/
+noncomputable def RealHilbertKernelFeature.pow
+    {X : Type}
+    {kernel : X → X → ℝ}
+    (C : RealHilbertKernelFeature X kernel) :
+    ∀ n : ℕ, RealHilbertKernelFeature X (fun x y => kernel x y ^ n)
+  | 0 => by
+      simpa using RealHilbertKernelFeature.one X
+  | n + 1 => by
+      simpa [pow_succ, mul_comm] using
+        RealHilbertKernelFeature.mul C (RealHilbertKernelFeature.pow C n)
 
 /-- A finite ordered product of Hilbert kernels has a Hilbert feature
 realization, constructed recursively by completed tensor products.
