@@ -8,6 +8,11 @@ open scoped BigOperators
 
 noncomputable section
 
+/-- The real one-dimensional inner product is ordinary multiplication. -/
+private theorem real_inner_eq_mul (x y : ℝ) :
+    inner ℝ x y = x * y := by
+  simpa [RCLike.inner_apply]
+
 /-- Turn a real scalar kernel into an operator-valued kernel on the
 one-dimensional real Hilbert space. -/
 def RealKernelPositiveSemidefiniteCertificate.operatorKernel
@@ -23,9 +28,9 @@ theorem RealKernelPositiveSemidefiniteCertificate.operatorKernel_isHermitian
     {kernel : X → X → ℝ}
     (C : RealKernelPositiveSemidefiniteCertificate X kernel) :
     C.operatorKernel.IsHermitian := by
-  ext x y z
+  ext x y
   simp [RealKernelPositiveSemidefiniteCertificate.operatorKernel,
-    C.symmetric y x]
+    C.symmetric y x, star_one]
 
 /-- The operator-valued lift of a symmetric positive-semidefinite scalar
 kernel is positive semidefinite in the sense required by `RKHS.OfKernel`. -/
@@ -38,12 +43,15 @@ theorem RealKernelPositiveSemidefiniteCertificate.operatorKernel_posSemidef
     (𝕜 := ℝ) (X := X) (V := ℝ) (K := C.operatorKernel)).out 2 0).mp ?_
   refine ⟨C.operatorKernel_isHermitian, ?_⟩
   intro coefficients
+  classical
   have hFinite := C.positiveSemidefinite
     {x // x ∈ coefficients.support}
     (fun x => x.1)
     (fun x => coefficients x.1)
   simpa [RealKernelPositiveSemidefiniteCertificate.operatorKernel,
-    Finsupp.sum, C.symmetric, mul_comm, mul_left_comm, mul_assoc]
+    Finsupp.sum, real_inner_eq_mul,
+    ← Finset.sum_attach coefficients.support,
+    C.symmetric, mul_comm, mul_left_comm, mul_assoc]
     using hFinite
 
 /-- Moore--Aronszajn realization of a symmetric positive-semidefinite real
@@ -64,7 +72,7 @@ noncomputable def RealKernelPositiveSemidefiniteCertificate.toHilbertFeature
     RKHS.kernel_inner (H := RKHS.OfKernel K) y x (1 : ℝ) (1 : ℝ)
   rw [← hKernel]
   simp [K, RealKernelPositiveSemidefiniteCertificate.operatorKernel,
-    C.symmetric]
+    C.symmetric, real_inner_eq_mul]
 
 end
 
