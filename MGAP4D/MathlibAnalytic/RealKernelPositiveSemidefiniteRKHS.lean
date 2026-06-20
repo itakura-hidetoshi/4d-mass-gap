@@ -8,11 +8,11 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- The real one-dimensional inner product, normalized from
-`RCLike.inner_apply`, is ordinary multiplication. -/
+/-- The real one-dimensional inner product is ordinary multiplication. -/
 private theorem real_inner_eq_mul (x y : ℝ) :
     inner ℝ x y = x * y := by
-  simp [RCLike.inner_apply, mul_comm]
+  change y * x = x * y
+  exact mul_comm _ _
 
 /-- Turn a real scalar kernel into an operator-valued kernel on the
 one-dimensional real Hilbert space. -/
@@ -31,8 +31,9 @@ theorem RealKernelPositiveSemidefiniteCertificate.operatorKernel_isHermitian
     C.operatorKernel.IsHermitian := by
   have hstarOne :
       star (1 : ℝ →L[ℝ] ℝ) = 1 := by
-    rw [ContinuousLinearMap.star_eq_adjoint]
-    exact ContinuousLinearMap.adjoint_one
+    change ContinuousLinearMap.adjoint (ContinuousLinearMap.id ℝ ℝ) =
+      ContinuousLinearMap.id ℝ ℝ
+    exact ContinuousLinearMap.adjoint_id
   ext x y
   simp [RealKernelPositiveSemidefiniteCertificate.operatorKernel,
     C.symmetric y x, hstarOne]
