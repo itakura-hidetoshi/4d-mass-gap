@@ -17,13 +17,10 @@ theorem periodicHypercubicEven_shift_unshift_time_comm
   unfold periodicHypercubicShift periodicHypercubicUnshift
   abel
 
-/-- The reflected plaquette has exactly the time-reflected vertex support of the
-original plaquette, up to ordering.
-
-The proof normalizes two explicit four-corner lists.  Its heartbeat budget is
-kept local to this finite geometric normalization and does not affect the rest
-of the development. -/
-set_option maxHeartbeats 1000000 in
+/- The reflected plaquette has exactly the time-reflected vertex support of the
+original plaquette, up to ordering.  The local budget is used only for this
+finite four-corner normalization. -/
+set_option maxHeartbeats 2000000 in
 theorem periodicHypercubicEvenPlaquetteReflection_vertices_mem_iff
     (H : ℕ) (p : PeriodicHypercubicEvenPlaquette H)
     (v : PeriodicHypercubicEvenVertex H) :
@@ -44,6 +41,8 @@ theorem periodicHypercubicEvenPlaquetteReflection_vertices_mem_iff
       periodicHypercubicEvenPlaquetteCorner10,
       periodicHypercubicEvenPlaquetteCorner11,
       periodicHypercubicEvenPlaquetteCorner01,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis,
       periodicHypercubicEvenReflectVertexSupport,
       periodicHypercubicEvenPlaquetteReflection,
       periodicHypercubicEvenReflectedPlaquetteBase,
@@ -65,6 +64,8 @@ theorem periodicHypercubicEvenPlaquetteReflection_vertices_mem_iff
       periodicHypercubicEvenPlaquetteCorner10,
       periodicHypercubicEvenPlaquetteCorner11,
       periodicHypercubicEvenPlaquetteCorner01,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis,
       periodicHypercubicEvenReflectVertexSupport,
       periodicHypercubicEvenPlaquetteReflection,
       periodicHypercubicEvenReflectedPlaquetteBase,
