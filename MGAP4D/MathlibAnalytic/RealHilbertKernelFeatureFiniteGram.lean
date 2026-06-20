@@ -50,7 +50,7 @@ theorem RealHilbertKernelFeature.positiveSemidefinite
     apply Finset.sum_congr rfl
     intro j hj
     rw [← C.kernel_eq_inner]
-    rw [C.symmetric (points j) (points i)]
+    rw [C.symmetric (points j) (points i), mul_assoc]
   rw [← hGram]
   exact real_inner_self_nonneg
 
@@ -75,7 +75,7 @@ theorem RealHilbertKernelFeature.finiteGram_eq_inner
   apply Finset.sum_congr rfl
   intro j hj
   rw [← C.kernel_eq_inner]
-  rw [C.symmetric (points j) (points i)]
+  rw [C.symmetric (points j) (points i), mul_assoc]
 
 end
 
