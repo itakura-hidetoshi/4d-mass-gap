@@ -1,14 +1,14 @@
-name: Temporary Wilson Feature Measurability Check
+name: Temporary Holonomy Measurability Consumer Check
 
 on:
   pull_request:
 
 concurrency:
-  group: temporary-wilson-feature-measurability-${{ github.event.pull_request.number }}
+  group: temporary-holonomy-measurability-consumer-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  wilson-feature-measurability:
+  holonomy-measurability-consumer:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -27,30 +27,30 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build Wilson feature measurability
+      - name: Build holonomy measurability consumer
         shell: bash
         run: |
           set +e
-          lake build MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelFeatureMeasurability > /tmp/wilson-feature.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicHolonomyMeasurableAmplitudeBoundedLocalKernelProduct > /tmp/holonomy-consumer.log 2>&1
           status=$?
-          echo "$status" > /tmp/wilson-feature.status
+          echo "$status" > /tmp/holonomy-consumer.status
           if [ "$status" -eq 0 ]; then
-            echo "Wilson feature measurability build passed" | tee /tmp/wilson-feature-diagnostics.txt
+            echo "Holonomy measurability consumer build passed" | tee /tmp/holonomy-consumer-diagnostics.txt
           else
             {
-              echo "Wilson feature measurability build failed; compact diagnostics follow"
-              grep -n -B 4 -A 20 'error:' /tmp/wilson-feature.log || tail -n 180 /tmp/wilson-feature.log
-            } | tee /tmp/wilson-feature-diagnostics.txt
+              echo "Holonomy measurability consumer build failed; compact diagnostics follow"
+              grep -n -B 4 -A 20 'error:' /tmp/holonomy-consumer.log || tail -n 180 /tmp/holonomy-consumer.log
+            } | tee /tmp/holonomy-consumer-diagnostics.txt
           fi
           exit 0
       - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: wilson-feature-measurability-diagnostics
-          path: /tmp/wilson-feature-diagnostics.txt
+          name: holonomy-consumer-diagnostics
+          path: /tmp/holonomy-consumer-diagnostics.txt
           if-no-files-found: error
       - name: Propagate build status
         if: always()
         shell: bash
-        run: exit "$(cat /tmp/wilson-feature.status)"
+        run: exit "$(cat /tmp/holonomy-consumer.status)"
