@@ -25,16 +25,16 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build RKHS bridge
+      - name: Build RKHS consumer
         shell: bash
         run: |
           set +e
-          lake build MGAP4D.MathlibAnalytic.RealKernelPositiveSemidefiniteRKHS > /tmp/rkhs.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelProduct > /tmp/rkhs.log 2>&1
           status=$?
           if [ "$status" -eq 0 ]; then
-            echo "RKHS bridge build passed"
+            echo "RKHS consumer build passed"
           else
-            echo "RKHS bridge build failed; compact diagnostics follow"
-            grep -n -B 3 -A 12 'error:' /tmp/rkhs.log || tail -n 100 /tmp/rkhs.log
+            echo "RKHS consumer build failed; compact diagnostics follow"
+            grep -n -B 3 -A 16 'error:' /tmp/rkhs.log || tail -n 120 /tmp/rkhs.log
           fi
           exit "$status"
