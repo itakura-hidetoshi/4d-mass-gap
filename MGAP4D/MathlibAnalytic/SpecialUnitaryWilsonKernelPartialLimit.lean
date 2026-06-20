@@ -24,10 +24,13 @@ theorem RealHilbertKernelFeature.exponentialPartialKernel_eq_sum
   | zero =>
       simp [RealHilbertKernelFeature.exponentialPartialKernel]
   | succ n ih =>
-      rw [RealHilbertKernelFeature.exponentialPartialKernel, ih,
-        Finset.sum_range_succ]
-      congr 1
-      rw [mul_pow]
+      change
+        RealHilbertKernelFeature.exponentialPartialKernel kernel c n x y +
+            (c ^ (n + 1) / (Nat.factorial (n + 1) : ℝ)) *
+              kernel x y ^ (n + 1) =
+          ∑ m ∈ Finset.range (n + 1 + 1),
+            (c * kernel x y) ^ m / (Nat.factorial m : ℝ)
+      rw [ih, Finset.sum_range_succ, mul_pow]
       ring
 
 /-- Every finite exponential Hilbert kernel approximation converges pointwise
