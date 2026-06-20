@@ -1,33 +1,38 @@
 # Current proof status
 
-**Updated:** 2026-06-18  
-**Latest merged checkpoint:** PR #288  
-**Latest merged commit:** `59c5780e1efd9e0035aad9bb8c65ff752f5b89dc`  
+**Updated:** 2026-06-20  
+**Main head:** `017ad8ea96346100af31af114f69380c6194d8e1` (PR #290, documentation)  
+**Latest merged proof checkpoint:** PR #288, `59c5780e1efd9e0035aad9bb8c65ff752f5b89dc`  
 **Active proof PRs:** #289 and #282
 
-## Status
+## Status boundary
 
-The repository is a replayable finite-volume and continuum-architecture development. It does **not** yet prove an unconditional four-dimensional Yang--Mills continuum theory or physical mass gap.
+MGAP4D is a replayable formal-development repository. It does **not** yet prove an unconditional four-dimensional continuum Yang--Mills theory, a reconstructed physical Hamiltonian, or a physical mass gap.
 
-The merged chain now includes:
+The current proof surface has two distinct lanes:
 
 ```text
+main:
 finite Wilson Gibbs law
-  -> exact single-link conditional law
-  -> P_e and Q_e projections
-  -> Gibbs Hilbert realization
-  -> canonical H_HB = sum_e Q_e
-  -> H_HB = |E| (I - P_scan)
-  -> exact canonical conditional-TV influence
-  -> Dobrushin variation contraction
-  -> centered spectral/Rayleigh contraction
-  -> finite Hamiltonian gap consequences
-  -> exact plaquette-supported influence bounds
-  -> periodic 4D incidence bounds
-  -> orientation-correct periodic Z2 Wilson foundation.
+  -> exact conditionals and projections
+  -> Gibbs Hilbert space and heat-bath Hamiltonian
+  -> canonical Dobrushin influence
+  -> centered Rayleigh contraction
+  -> finite Hamiltonian-gap consequences
+  -> plaquette-supported influence
+  -> periodic oriented four-dimensional incidence bounds
+
+open PR #282:
+signed periodic SU(N) Haar--Gibbs laws
+  -> gauge invariance and normalized action bound
+  -> coercive moment / tightness / Prokhorov subsequence
+  -> physical weak-limit package on one Polish carrier
+  -> gauge-symmetry and observable transfer
+  -> gauge-invariant continuous and weak-star states
+  -> conditional OS reflection-positivity transfer
 ```
 
-The previous status document stopped at PR #263. Its statement that Dobrushin conditional-TV control had not yet been converted to centered Gibbs `L2`/Rayleigh contraction is obsolete: PR #272 proves that finite abstract route.
+Open-PR theorems are not part of `main` until merged and replayed.
 
 ## Proved on `main`
 
@@ -35,18 +40,18 @@ The previous status document stopped at PR #263. Its statement that Dobrushin co
 
 - exact finite Wilson Gibbs and single-link conditional PMFs;
 - Gibbs expectation, variance, and heat-bath Dirichlet form;
-- conditional-expectation projection `P_e` and fluctuation projection `Q_e`;
+- conditional expectation projection `P_e` and fluctuation projection `Q_e`;
 - detailed balance, symmetry, orthogonality, and weighted Pythagoras;
 - concrete finite Gibbs Hilbert realization and normalized vacuum;
-- canonical finite heat-bath Hamiltonian;
-- zero vacuum energy and exact quadratic-form identity;
+- canonical heat-bath Hamiltonian `H_HB = sum_e Q_e`;
+- exact quadratic-form identity;
 - exact relation `H_HB = |E| (I - P_scan)`.
 
 ### Canonical Dobrushin-to-Rayleigh route
 
 PRs #267--#272 prove:
 
-- exact off-diagonal conditional-TV influences and zero diagonal;
+- exact off-diagonal conditional-TV influence and zero diagonal;
 - exact row sums and canonical coefficient `alpha_can`;
 - minimality among admissible Dobrushin matrices;
 - link-variation and total-variation seminorms;
@@ -55,85 +60,174 @@ PRs #267--#272 prove:
 - nonconstant eigenvalue control;
 - symmetric Gibbs-Hilbert spectral lift;
 - centered random-scan Rayleigh contraction;
-- automatic finite Hamiltonian and excitation lower bounds from `alpha_can < 1`.
+- automatic finite Hamiltonian and excitation bounds from `alpha_can < 1`.
 
-Thus the remaining finite quantitative input is a physically relevant proof of `alpha_can < 1`, not a separate Rayleigh certificate.
+Thus the missing finite quantitative input is a physically relevant strict estimate, not a separate `L2`/Rayleigh bridge.
 
-### Exact plaquette-supported influence
+### Plaquette support and periodic geometry
 
 PRs #273--#274 prove:
 
-- target-local / target-remote action decomposition;
-- cancellation of the remote factor in normalized conditionals;
-- exact zero influence outside plaquette support;
-- active neighbors with the zero diagonal removed;
-- `alpha_can <= d_active * eta_active`;
-- sharp normalized-exponential total-variation comparison;
-- exact shared-plaquette localization;
-- the bound
-
 ```text
+alpha_can <= d_active * eta_active,
+
 eta_active <=
   (exp (2 * beta * m_shared * E_max) - 1) /
   (exp (2 * beta * m_shared * E_max) + 1).
 ```
 
-### Periodic four-dimensional geometry
+They also prove exact zero influence outside plaquette support, remote-factor cancellation, and exact localization to shared plaquettes.
 
-PRs #278 and #281--#286 prove, for side length `n >= 3`:
+PRs #278 and #281--#288 construct signed periodic four-dimensional geometry and prove, for `n >= 3`,
 
 ```text
 d_active <= 18,
 m_shared <= 1.
 ```
 
-The restriction `n >= 3` is essential because side length two has a periodic shared-plaquette degeneracy.
+PR #287 adds the orientation-correct finite Wilson system; PR #288 adds the periodic oriented `Z2` instance and incidence certificate.
 
-### Orientation-correct Wilson foundation
+## Active PR #289 — oriented locality bridge
 
-PR #287 introduces `FiniteOrientedLatticeWilsonSystem`, with one variable per physical positive link and a separate forward/backward orientation on each plaquette boundary incidence. It proves signed gauge covariance, plaquette-holonomy conjugation covariance, action gauge invariance, and physical incidence finsets.
+State: **open and mergeable**.  
+Head at this snapshot: `837feed093504e7f6467933847040b7102fe1972`.
 
-PR #288 instantiates the periodic four-dimensional `Z2` system and packages `d_active <= 18` and `m_shared <= 1` into an oriented incidence certificate.
+Implemented on the branch:
 
-The legacy finite Wilson spine remains valid for its declared interface, but it has not yet been fully transported to the orientation-correct system.
+- physical-link replacement;
+- agreement away from one replaced source link;
+- signed holonomy congruence;
+- non-neighbor locality;
+- oriented target-local / target-remote action decomposition.
 
-## Active pull requests
+Still open:
 
-### PR #289 — orientation-correct locality
+- rebase onto the current `main`;
+- oriented exact conditional law;
+- normalized remote-factor cancellation;
+- oriented canonical influence;
+- connection to the merged Dobrushin/Rayleigh/Hamiltonian spine.
 
-State: **open and mergeable**.
+## Active PR #282 — physical `SU(N)` weak-limit and OS frontier
 
-It adds physical-link replacement, agreement away from one source link, signed holonomy congruence, non-neighbor locality, and target-local/target-remote action decomposition. This is the foundation for an oriented exact conditional-law and influence lane. It is not yet on `main`.
+State: **open and mergeable**.  
+Head at this snapshot: `ceb2d9b5ba4f186ba98e914982ff5e1b5598bd13`.  
+Scale: 301 commits, 111 changed files, +8752/-2 at the snapshot.
 
-### PR #282 — physical weak limits
+### Concrete finite-volume input
 
-State: **open and mergeable**.
+The branch constructs actual finite-volume probability laws, not only an abstract convergence wrapper:
 
-It adds varying lattice configuration types embedded into one fixed Polish carrier, pushforward `ProbabilityMeasure`s, weak convergence, bounded-continuous observable convergence, symmetry inheritance, compact containment, tightness, coercive moments, and Prokhorov subsequence extraction while preserving `a_n -> 0` and `V_n -> infinity`.
-
-The concrete analytic inputs remain open: the physical carrier, interpolation maps, renormalized trajectory, compact-sublevel functional, uniform Wilson moment estimate, nontriviality, uniqueness or phase selection, reflection positivity, Euclidean covariance, clustering, and regularity.
-
-## Present frontier
-
-For the periodic oriented `Z2` system, the merged geometry gives
+- one configuration variable per positive physical link;
+- signed forward/backward plaquette traversal;
+- finite oriented compact gauge Wilson systems;
+- normalized compact Haar product measure;
+- Wilson Gibbs tilt as a `ProbabilityMeasure`;
+- finite-volume gauge invariance;
+- periodic four-dimensional geometry bridge;
+- exact counts
 
 ```text
-d_active <= 18,
-m_shared <= 1,
-plaquette energy in {0,1}.
+#Vertex(L) = L^4,
+#AxisPair = 6,
+#Plaquette(L) = 6 * L^4;
 ```
 
-The next finite theorem is to connect the oriented conditional law to the merged quantitative interface, package `E_max = 1`, and derive
+- specialization to `SU(N)`;
+- standard energy
 
 ```text
-eta_active <= (exp (2 * beta) - 1) / (exp (2 * beta) + 1),
-18 * eta_active < 1
-  -> alpha_can < 1
-  -> centered Rayleigh contraction
-  -> finite Hamiltonian gap.
+E_W(U) = 1 - Re(trace U) / N,
+0 <= E_W(U) <= 2;
 ```
 
-This would be an exact finite-volume result. The single-link condition is expected to be a restrictive small-`beta` regime and is not by itself a continuum weak-coupling theorem. A block or multiscale replacement may be required.
+- deterministic normalized action bound
+
+```text
+(6 * L^4)^-1 * S_L(A) <= 2.
+```
+
+### Physical weak-limit route
+
+`periodicHypercubicSpecialUnitaryPhysicalEmbedding` packages actual finite lattice laws, measurable interpolation into one common Polish carrier, `a_n -> 0`, and `V_n -> infinity`.
+
+Given a proper physical functional `Phi` and
+
+```text
+Phi(interpolate_n(A))
+  <= (6 * L_n^4)^-1 * S_n(A),
+```
+
+`periodicHypercubicSpecialUnitaryWeakLimitOfProperNNRealFunctional` generates:
+
+- pointwise action control;
+- uniform moment control;
+- Markov tails;
+- compact containment and tightness;
+- Prokhorov subsequence extraction;
+- a `PhysicalFourDimensionalYangMillsWeakLimit`;
+- convergence of every bounded continuous observable expectation.
+
+This is conditional on the supplied carrier, interpolation maps, proper functional, and coercive inequality. The reciprocal plaquette scale is a deterministic normalization route, not a physical renormalization theorem.
+
+### Symmetry, observables, and weak-star states
+
+Under a continuous physical action and interpolation equivariance, the branch proves
+
+```text
+map(action g, mu_YM) = mu_YM.
+```
+
+Consequences include:
+
+- invariant finite and continuum event probabilities;
+- invariant laws of arbitrary measurable observables;
+- invariant bounded-continuous expectations;
+- invariant two-point and connected correlations;
+- finite n-point invariance and convergence;
+- a real subalgebra of gauge-invariant bounded continuous observables;
+- normalized positive continuous expectation states;
+- weak-star convergence of lattice states to the continuum state.
+
+### OS reflection-positivity frontier
+
+The newest branch files prove generic closure and packaging results:
+
+```text
+positive-time observable algebra and reflection
+  + exact half-lattice measure/action decomposition
+  + Peter--Weyl Hilbert-feature factorization
+  -> finite-lattice reflection positivity
+  -> weak-star limit transfer
+  -> continuum reflection-positive state.
+```
+
+Implemented interfaces/theorems include:
+
+- weak-star closedness of reflection positivity;
+- bridge from finite Wilson OS certificates to physical lattice states;
+- oriented Wilson pullback form;
+- kernel-quadratic and Hilbert-feature certificates;
+- terminal `PhysicalYangMillsContinuumOSPositiveStatePackage`.
+
+The branch does **not** yet supply the complete concrete periodic `SU(N)` half-lattice decomposition and Peter--Weyl/character certificate. The newest Hilbert-kernel layer is under active compiler validation at this snapshot. The current head temporarily enables diagnostic log capture in the PR workflow; that workflow change must be removed before merge.
+
+## Present mathematical frontier
+
+The remaining decisive inputs are:
+
+1. a physically appropriate gauge-compatible distributional carrier;
+2. explicit interpolation, blocking, or smearing maps;
+3. a justified renormalized coupling trajectory;
+4. a proper Sobolev/Besov-type functional with compact sublevels;
+5. a uniform coercive interpolation estimate for the actual physical scaling;
+6. concrete periodic `SU(N)` half-lattice and Peter--Weyl reflection-positivity data;
+7. nontriviality, interacting character, and uniqueness or phase selection;
+8. Euclidean covariance, regularity, clustering, and the remaining OS axioms;
+9. OS reconstruction and physical transfer-time normalization;
+10. a continuum-relevant uniform gap estimate and the physical Hamiltonian mass gap.
+
+Single-link Dobrushin control is expected to describe a restrictive regime. Block dynamics, multiscale estimates, reflection-positive transfer bounds, or another scale-uniform mechanism may be required.
 
 ## Claim table
 
@@ -141,36 +235,41 @@ This would be an exact finite-volume result. The single-link condition is expect
 |---|---|
 | Finite Gibbs/projection/Hilbert/Hamiltonian spine | proved or constructed on `main` |
 | Exact canonical Dobrushin matrix | constructed on `main` |
-| Strict canonical coefficient -> centered Rayleigh contraction | proved on `main` via PR #272 |
-| Exact plaquette support and shared-plaquette majorant | proved on `main` via PR #274 |
-| Periodic 4D bounds `d_active <= 18`, `m_shared <= 1` | proved on `main` for `n >= 3` |
+| `alpha_can < 1` -> centered Rayleigh contraction | proved on `main` |
+| Exact plaquette support and shared-plaquette majorant | proved on `main` |
+| Periodic bounds `d_active <= 18`, `m_shared <= 1` | proved on `main` for `n >= 3` |
 | Orientation-correct finite Wilson system and periodic `Z2` instance | constructed on `main` |
 | Orientation-correct locality bridge | open in PR #289 |
-| Oriented conditional/Dobrushin/Hamiltonian spine | incomplete |
+| Oriented conditional/influence/Hamiltonian bridge | incomplete |
 | Explicit periodic `Z2` strict-coefficient theorem | open |
-| Continuum-relevant uniform estimate | open |
-| Compact non-Abelian oriented finite theory | open |
-| Physical weak-limit framework | implemented in open PR #282 |
-| Concrete nontrivial continuum Yang--Mills measure | open |
-| Physical transfer normalization | open |
-| OS/Wightman analytic hypotheses | open |
-| Physical mass gap | open |
+| Compact oriented Haar--Gibbs and standard `SU(N)` finite law | implemented in PR #282 |
+| Concrete signed periodic `SU(N)` weak-limit constructor | implemented in PR #282 under explicit analytic inputs |
+| Gauge-symmetry, observable, correlation, and n-point transfer | implemented in PR #282 under compatibility inputs |
+| Gauge-invariant continuous and weak-star state convergence | implemented in PR #282 |
+| Generic OS reflection-positivity limit transfer | implemented in PR #282 |
+| Concrete periodic `SU(N)` half-lattice/Peter--Weyl OS certificate | incomplete |
+| Concrete physical carrier/interpolation/renormalized trajectory | open |
+| Nontrivial interacting continuum measure | open |
+| Full OS reconstruction | open |
+| Physical Hamiltonian mass gap | open |
 | Independent physical derivation of `33/20` | open |
-| External consensus | not claimed |
+| External mathematical consensus | not claimed |
 
 ## Exact `33/20` dependency
 
-`HamiltonianPVMSpectralExactGapValue.lean` defines the normalized value `33/20`; `ExactGapReal.lean` projects `exactGapValueReal`, and later audit files transport the same value. This is an internal normalization and dependency-routing lane, not an independent physical derivation.
+`HamiltonianPVMSpectralExactGapValue.lean` defines the normalized internal value `33/20`; `ExactGapReal.lean` projects `exactGapValueReal`; later spectral and R6--R7 files transport the same value.
 
-## Next steps
+This is an internal normalization and dependency-routing lane, not an independent physical derivation.
 
-1. Merge and replay PR #289.
-2. Construct the oriented Gibbs PMF, exact conditional law, and canonical influence.
-3. Package `E_max = 1` and derive the periodic `Z2` finite strict-coefficient theorem.
-4. Develop a block, multiscale, or other continuum-relevant uniform estimate if single-link Dobrushin is insufficient.
-5. Extend to the intended compact non-Abelian gauge group.
-6. Merge and instantiate PR #282 with concrete uniform estimates.
-7. Derive physical transfer normalization independently of `exactGapValueReal`.
-8. Prove nontrivial continuum convergence, clustering, OS/Wightman reconstruction, and obtain independent review.
+## Next actions
 
-Lean theorem bodies are authoritative. Open-PR results, conditional assumptions, algebraically selected scales, and internal exact-gap carriers must not be presented as unconditional physical conclusions.
+1. Complete PR #282 Hilbert-kernel compiler validation and restore the ordinary workflow.
+2. Instantiate the concrete periodic `SU(N)` half-lattice and Peter--Weyl OS inputs.
+3. Rebase, audit, and merge the stable compact-gauge/weak-limit spine.
+4. Choose the physical carrier, interpolation maps, and renormalized trajectory.
+5. Prove the actual coercive compactness estimate and nontriviality.
+6. Complete PR #289 and the oriented conditional/influence bridge.
+7. Develop a continuum-relevant block, multiscale, or transfer estimate.
+8. Prove the remaining OS axioms, reconstruct the physical Hamiltonian, and derive a positive gap independently of `exactGapValueReal`.
+
+Lean theorem bodies are authoritative. Open-PR results, conditional hypotheses, selected normalizations, diagnostic workflows, and internal exact-gap carriers must not be presented as unconditional physical conclusions.
