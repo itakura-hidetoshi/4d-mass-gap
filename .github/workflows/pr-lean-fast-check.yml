@@ -133,15 +133,30 @@ jobs:
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
       - name: Run changed Lean fast check
+        id: lean-check
+        continue-on-error: true
         shell: bash
         run: |
-          set -euxo pipefail
+          set +e
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          if ! bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean-fast-check.log 2>&1; then
-            tail -n 240 /tmp/lean-fast-check.log
-            exit 1
-          fi
-          cat /tmp/lean-fast-check.log
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean-fast-check.log 2>&1
+          status=$?
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          tail -n 80 /tmp/lean-fast-check.log
+          exit 0
+
+      - name: Upload Lean diagnostic log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-fast-check-log
+          path: /tmp/lean-fast-check.log
+          if-no-files-found: error
+
+      - name: Fail on Lean error
+        if: steps.lean-check.outputs.status != '0'
+        shell: bash
+        run: exit 1
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
