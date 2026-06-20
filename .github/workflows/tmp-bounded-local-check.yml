@@ -1,31 +1,13 @@
-name: Temporary Reflection RKHS Check
+name: Temporary RKHS Check
 
 on:
   pull_request:
 
 concurrency:
-  group: temporary-reflection-rkhs-${{ github.event.pull_request.number }}
+  group: temporary-rkhs-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  reflection:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache/restore@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
-          restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-      - name: Install Lean
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build crossing reflection
-        run: lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingReflection
   rkhs:
     runs-on: ubuntu-latest
     steps:
@@ -44,21 +26,3 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Build RKHS bridge
         run: lake build MGAP4D.MathlibAnalytic.RealKernelPositiveSemidefiniteRKHS
-  amplitude:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/cache/restore@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
-          restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-      - name: Install Lean
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build amplitude constructor
-        run: lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelProduct
