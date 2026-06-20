@@ -114,6 +114,21 @@ State: **open and mergeable**.
 Head at this snapshot: `ceb2d9b5ba4f186ba98e914982ff5e1b5598bd13`.  
 Scale: 301 commits, 111 changed files, +8752/-2 at the snapshot.
 
+### Current CI receipt
+
+PR Lean Fast Check run **3687** completed with **failure**. The failure is localized to
+
+```text
+MGAP4D/MathlibAnalytic/RealHilbertKernelFeatureProduct.lean:68:2
+Type mismatch when assigning motive:
+a Type-valued finite kernel-product construction was elaborated where a
+Prop-valued motive was expected.
+```
+
+In the same run, the weak-limit, gauge-symmetry, observable, weak-star state, reflection-positivity transfer, oriented Wilson OS pullback, Hilbert-Gram, Bochner-Gram, kernel-feature, half-lattice/Peter--Weyl, and terminal OS-construction files all built successfully. The current head is therefore not green, but the stopping error is one explicit generic Hilbert-kernel product helper rather than a failure of the already compiled physical weak-limit or OS transfer files.
+
+The head temporarily enables diagnostic log capture in the PR workflow. That workflow change must be removed after the proof repair and before merge.
+
 ### Concrete finite-volume input
 
 The branch constructs actual finite-volume probability laws, not only an abstract convergence wrapper:
@@ -191,7 +206,7 @@ Consequences include:
 
 ### OS reflection-positivity frontier
 
-The newest branch files prove generic closure and packaging results:
+The branch proves generic closure and packaging results:
 
 ```text
 positive-time observable algebra and reflection
@@ -210,7 +225,7 @@ Implemented interfaces/theorems include:
 - kernel-quadratic and Hilbert-feature certificates;
 - terminal `PhysicalYangMillsContinuumOSPositiveStatePackage`.
 
-The branch does **not** yet supply the complete concrete periodic `SU(N)` half-lattice decomposition and Peter--Weyl/character certificate. The newest Hilbert-kernel layer is under active compiler validation at this snapshot. The current head temporarily enables diagnostic log capture in the PR workflow; that workflow change must be removed before merge.
+The branch does **not** yet supply the complete concrete periodic `SU(N)` half-lattice decomposition and Peter--Weyl/character certificate. The generic finite-product Hilbert-feature helper must also be repaired before the head is green.
 
 ## Present mathematical frontier
 
@@ -247,6 +262,7 @@ Single-link Dobrushin control is expected to describe a restrictive regime. Bloc
 | Gauge-symmetry, observable, correlation, and n-point transfer | implemented in PR #282 under compatibility inputs |
 | Gauge-invariant continuous and weak-star state convergence | implemented in PR #282 |
 | Generic OS reflection-positivity limit transfer | implemented in PR #282 |
+| PR #282 latest head | failing at `RealHilbertKernelFeatureProduct.lean:68:2` |
 | Concrete periodic `SU(N)` half-lattice/Peter--Weyl OS certificate | incomplete |
 | Concrete physical carrier/interpolation/renormalized trajectory | open |
 | Nontrivial interacting continuum measure | open |
@@ -263,13 +279,14 @@ This is an internal normalization and dependency-routing lane, not an independen
 
 ## Next actions
 
-1. Complete PR #282 Hilbert-kernel compiler validation and restore the ordinary workflow.
-2. Instantiate the concrete periodic `SU(N)` half-lattice and Peter--Weyl OS inputs.
-3. Rebase, audit, and merge the stable compact-gauge/weak-limit spine.
-4. Choose the physical carrier, interpolation maps, and renormalized trajectory.
-5. Prove the actual coercive compactness estimate and nontriviality.
-6. Complete PR #289 and the oriented conditional/influence bridge.
-7. Develop a continuum-relevant block, multiscale, or transfer estimate.
-8. Prove the remaining OS axioms, reconstruct the physical Hamiltonian, and derive a positive gap independently of `exactGapValueReal`.
+1. Repair the Type-valued recursive motive in `RealHilbertKernelFeatureProduct.lean` and rerun the ordinary PR check.
+2. Remove the temporary diagnostic workflow change.
+3. Instantiate the concrete periodic `SU(N)` half-lattice and Peter--Weyl OS inputs.
+4. Rebase, audit, and merge the stable compact-gauge/weak-limit spine.
+5. Choose the physical carrier, interpolation maps, and renormalized trajectory.
+6. Prove the actual coercive compactness estimate and nontriviality.
+7. Complete PR #289 and the oriented conditional/influence bridge.
+8. Develop a continuum-relevant block, multiscale, or transfer estimate.
+9. Prove the remaining OS axioms, reconstruct the physical Hamiltonian, and derive a positive gap independently of `exactGapValueReal`.
 
 Lean theorem bodies are authoritative. Open-PR results, conditional hypotheses, selected normalizations, diagnostic workflows, and internal exact-gap carriers must not be presented as unconditional physical conclusions.
