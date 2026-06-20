@@ -30,7 +30,9 @@ theorem RealHilbertKernelFeature.exponentialPartialKernel_eq_sum
               kernel x y ^ (n + 1) =
           ∑ m ∈ Finset.range (n + 1 + 1),
             (c * kernel x y) ^ m / (Nat.factorial m : ℝ)
-      rw [ih, Finset.sum_range_succ, mul_pow]
+      rw [ih]
+      conv_rhs => rw [Finset.sum_range_succ]
+      rw [mul_pow]
       ring
 
 /-- Every finite exponential Hilbert kernel approximation converges pointwise
