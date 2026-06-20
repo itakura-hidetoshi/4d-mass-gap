@@ -1,5 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.TensorProduct
 import Mathlib.Analysis.InnerProductSpace.Completion
+import Mathlib.Analysis.InnerProductSpace.ProdL2
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -33,8 +34,8 @@ noncomputable def RealHilbertKernelFeature.one
   feature := fun _ => 1
   kernel_eq_inner x y := by simp
 
-/-- The pointwise sum of two Hilbert kernels is realized by the Hilbert product
-of their feature spaces. -/
+/-- The pointwise sum of two Hilbert kernels is realized by the Hilbert `L²`
+product of their feature spaces. -/
 noncomputable def RealHilbertKernelFeature.add
     {X : Type}
     {kernel₁ kernel₂ : X → X → ℝ}
@@ -42,11 +43,14 @@ noncomputable def RealHilbertKernelFeature.add
     (C₂ : RealHilbertKernelFeature X kernel₂) :
     RealHilbertKernelFeature X
       (fun x y => kernel₁ x y + kernel₂ x y) where
-  FeatureHilbert := C₁.FeatureHilbert × C₂.FeatureHilbert
-  feature := fun x => (C₁.feature x, C₂.feature x)
+  FeatureHilbert := WithLp 2 (C₁.FeatureHilbert × C₂.FeatureHilbert)
+  feature := fun x => WithLp.toLp 2 (C₁.feature x, C₂.feature x)
   kernel_eq_inner x y := by
-    rw [C₁.kernel_eq_inner, C₂.kernel_eq_inner]
-    simp
+    rw [WithLp.prod_inner_apply]
+    change kernel₁ x y + kernel₂ x y =
+      inner ℝ (C₁.feature x) (C₁.feature y) +
+        inner ℝ (C₂.feature x) (C₂.feature y)
+    rw [← C₁.kernel_eq_inner, ← C₂.kernel_eq_inner]
 
 /-- Multiplication of a Hilbert kernel by a nonnegative scalar is realized by
 scaling its feature map by the square root of that scalar. -/
@@ -61,8 +65,7 @@ noncomputable def RealHilbertKernelFeature.nonnegSMul
   feature := fun x => Real.sqrt c • C.feature x
   kernel_eq_inner x y := by
     simp only [real_inner_smul_left, real_inner_smul_right]
-    rw [← C.kernel_eq_inner]
-    nlinarith [Real.sq_sqrt hc]
+    rw [← C.kernel_eq_inner, ← mul_assoc, Real.mul_self_sqrt hc]
 
 /-- The pointwise product of two Hilbert kernels is realized by the completed
 algebraic tensor product of their feature spaces. -/
