@@ -41,7 +41,7 @@ theorem complexMatrixRealFeature_inner
   simp [complexMatrixRealFeature, Matrix.trace, Matrix.mul_apply,
     Complex.mul_re, Finset.sum_add_distrib, mul_comm]
   rw [Fintype.sum_prod_type, Fintype.sum_prod_type]
-  simp
+  simp [RCLike.inner_apply]
 
 /-- The realification of the defining matrix representation of `SU(N)`. -/
 noncomputable def specialUnitaryMatrixRealFeature
