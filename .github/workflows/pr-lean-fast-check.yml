@@ -137,7 +137,11 @@ jobs:
         run: |
           set -euxo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+          if ! bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean-fast-check.log 2>&1; then
+            tail -n 240 /tmp/lean-fast-check.log
+            exit 1
+          fi
+          cat /tmp/lean-fast-check.log
 
       - name: Check Lake cache is saveable
         id: lake-cache-ready
