@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
-import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelPositiveSemidefinite
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConcreteLocalKernelProduct
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -39,8 +39,12 @@ This aggregate module exposes the complete typed route
 * finite completed-tensor Taylor features for the Wilson exponential kernel;
 * pointwise convergence of their inner products to the exact Wilson kernel;
 * finite Gram positivity for every real Hilbert feature kernel;
-* exact positive semidefiniteness of the one-plaquette Wilson relative kernel;
+* exact positive semidefiniteness and symmetry of the Wilson relative kernel;
+* a generic scalar-kernel-to-RKHS Moore--Aronszajn construction;
+* an exact RKHS Hilbert feature for the one-plaquette Wilson relative kernel;
+* exact pullback features along concrete positive-half plaquette holonomies;
 * completed tensor-product realization of finite products of local crossing kernels;
+* automatic generation of every local feature from concrete crossing holonomies;
 * scale-dependent global feature spaces generated separately at each lattice scale;
 * generation of the Bochner/Hilbert Gram identity from these inputs;
 * transfer of finite compact Wilson reflection positivity to the continuum state;
@@ -50,10 +54,16 @@ This aggregate module exposes the complete typed route
 The construction remains conditional on the supplied continuous physical action,
 interpolation equivariance, a physical positive-time reflection, and the concrete
 half-lattice Wilson-action decomposition.  For `N > 0` and `beta >= 0`, the exact
-one-plaquette Wilson relative kernel is now proved positive semidefinite as the
-finite-Gram limit of explicit completed-tensor Taylor features, without assuming
-Peter--Weyl coefficient positivity.  Producing the exact `RealHilbertKernelFeature`
-record from this theorem remains the generic Moore--Aronszajn/GNS completion step.
+one-plaquette Wilson relative kernel is proved symmetric and positive semidefinite
+as the finite-Gram limit of explicit completed-tensor Taylor features.  Mathlib's
+`RKHS.OfKernel` then generates its exact Hilbert feature without assuming
+Peter--Weyl coefficient positivity.  Consequently, once the actual crossing
+plaquette labels and positive-half holonomies are supplied, every local feature
+and their finite completed-tensor product are generated automatically.
+
+The remaining local analytic inputs are the exact half-lattice change of variables,
+the equality of the crossing factor with the finite product of these concrete
+Wilson kernels, and Bochner integrability of the amplitude-weighted global feature.
 -/
 
 end MathlibAnalytic
