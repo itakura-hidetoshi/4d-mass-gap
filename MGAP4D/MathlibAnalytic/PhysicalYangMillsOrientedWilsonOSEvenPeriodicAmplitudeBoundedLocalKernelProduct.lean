@@ -146,6 +146,131 @@ theorem physical_yang_mills_oriented_evenPeriodicAmplitudeBoundedLocalKernel_con
   physical_yang_mills_oriented_evenPeriodicBoundedLocalKernel_continuum_reflectionPositive
     G L D H C.toBoundedLocalKernelData
 
+/-- A factored measurability interface for the same exact Wilson constructor.
+
+Instead of assuming measurability of the amplitude-weighted global feature as a
+single compound function, this package asks separately for measurability of the
+scalar amplitude and of the unweighted completed-tensor-product RKHS feature.
+Mathlib then combines the two inputs using `AEStronglyMeasurable.smul`. -/
+structure PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    {G : E.PhysicalGaugeAction}
+    {L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E.toLatticeEmbedding}
+    {D : PhysicalYangMillsGaugeInvariantOSReflectionData
+      (G.toSymmetryLimit L)}
+    (H : PhysicalYangMillsOrientedWilsonOSHalfLatticeDecomposition G L D)
+    (N : ℕ)
+    (beta : ℕ → ℝ)
+    (halfExtent : ℕ → ℕ) where
+  hN : 0 < N
+  hbeta : ∀ n, 0 ≤ beta n
+  positiveHalfHolonomy :
+    ∀ n, PeriodicHypercubicEvenCrossingPlaquetteLabel (halfExtent n) →
+      H.HalfConfiguration → Matrix.specialUnitaryGroup (Fin N) ℂ
+  crossingKernel_eq_localWilsonProduct :
+    ∀ (n : ℕ) (x y : H.HalfConfiguration),
+      H.crossingKernel n x y =
+        ((periodicHypercubicEvenCrossingPlaquetteList (halfExtent n)).map fun p =>
+          localCrossingWilsonKernel N (beta n)
+            (positiveHalfHolonomy n p) x y).prod
+  halfMeasureFinite : IsFiniteMeasure H.halfMeasure
+  amplitude_aestronglyMeasurable :
+    ∀ (n : ℕ) (F : D.positiveTimeSubalgebra),
+      AEStronglyMeasurable (fun x => H.amplitude n F x) H.halfMeasure
+  globalFeature_aestronglyMeasurable :
+    ∀ (n : ℕ),
+      AEStronglyMeasurable
+        (fun x =>
+          (RealHilbertKernelFeature.listProd
+            (periodicHypercubicEvenCrossingPlaquetteList (halfExtent n))
+            (fun p =>
+              localCrossingWilsonKernel N (beta n)
+                (positiveHalfHolonomy n p))
+            (fun p =>
+              localCrossingWilsonKernelConcreteFeature
+                N hN (beta n) (hbeta n) (positiveHalfHolonomy n p))).feature x)
+        H.halfMeasure
+  amplitudeBound : ℕ → D.positiveTimeSubalgebra → ℝ
+  amplitude_abs_le :
+    ∀ (n : ℕ) (F : D.positiveTimeSubalgebra) (x : H.HalfConfiguration),
+      |H.amplitude n F x| ≤ amplitudeBound n F
+
+/-- Separate measurability of the scalar amplitude and exact global RKHS feature
+implies measurability of their pointwise scalar product. -/
+noncomputable def
+    PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData.toAmplitudeBoundedLocalKernelData
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    {G : E.PhysicalGaugeAction}
+    {L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E.toLatticeEmbedding}
+    {D : PhysicalYangMillsGaugeInvariantOSReflectionData
+      (G.toSymmetryLimit L)}
+    {H : PhysicalYangMillsOrientedWilsonOSHalfLatticeDecomposition G L D}
+    {N : ℕ}
+    {beta : ℕ → ℝ}
+    {halfExtent : ℕ → ℕ}
+    (C : PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData
+      H N beta halfExtent) :
+    PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelData
+      H N beta halfExtent where
+  hN := C.hN
+  hbeta := C.hbeta
+  positiveHalfHolonomy := C.positiveHalfHolonomy
+  crossingKernel_eq_localWilsonProduct :=
+    C.crossingKernel_eq_localWilsonProduct
+  halfMeasureFinite := C.halfMeasureFinite
+  weightedGlobalFeature_aestronglyMeasurable := by
+    intro n F
+    exact AEStronglyMeasurable.smul
+      (C.amplitude_aestronglyMeasurable n F)
+      (C.globalFeature_aestronglyMeasurable n)
+  amplitudeBound := C.amplitudeBound
+  amplitude_abs_le := C.amplitude_abs_le
+
+/-- Factored amplitude/global-feature measurability and a scalar amplitude bound
+imply reflection positivity at every approximating scale. -/
+theorem physical_yang_mills_oriented_evenPeriodicFactoredAmplitudeBoundedLocalKernel_approximating_reflectionPositive
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E.toLatticeEmbedding)
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData
+      (G.toSymmetryLimit L))
+    (H : PhysicalYangMillsOrientedWilsonOSHalfLatticeDecomposition G L D)
+    {N : ℕ}
+    {beta : ℕ → ℝ}
+    {halfExtent : ℕ → ℕ}
+    (C : PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData
+      H N beta halfExtent)
+    (n : ℕ) :
+    D.WeakStarReflectionPositive
+      (physicalYangMillsApproximatingGaugeInvariantWeakStarState
+        (G.toSymmetryLimit L) n) :=
+  physical_yang_mills_oriented_evenPeriodicAmplitudeBoundedLocalKernel_approximating_reflectionPositive
+    G L D H C.toAmplitudeBoundedLocalKernelData n
+
+/-- Factored amplitude/global-feature measurability and a scalar amplitude bound
+imply continuum Osterwalder--Schrader reflection positivity. -/
+theorem physical_yang_mills_oriented_evenPeriodicFactoredAmplitudeBoundedLocalKernel_continuum_reflectionPositive
+    {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    (G : E.PhysicalGaugeAction)
+    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E.toLatticeEmbedding)
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData
+      (G.toSymmetryLimit L))
+    (H : PhysicalYangMillsOrientedWilsonOSHalfLatticeDecomposition G L D)
+    {N : ℕ}
+    {beta : ℕ → ℝ}
+    {halfExtent : ℕ → ℕ}
+    (C : PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData
+      H N beta halfExtent) :
+    D.WeakStarReflectionPositive
+      (physicalYangMillsContinuumGaugeInvariantWeakStarState
+        (G.toSymmetryLimit L)) :=
+  physical_yang_mills_oriented_evenPeriodicAmplitudeBoundedLocalKernel_continuum_reflectionPositive
+    G L D H C.toAmplitudeBoundedLocalKernelData
+
 end
 
 end MathlibAnalytic
