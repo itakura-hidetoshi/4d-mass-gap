@@ -11,8 +11,14 @@ noncomputable section
 /-- The real one-dimensional inner product is ordinary multiplication. -/
 private theorem real_inner_eq_mul (x y : ℝ) :
     inner ℝ x y = x * y := by
-  change star x * y = x * y
-  rw [star_trivial]
+  calc
+    inner ℝ x y =
+        inner ℝ (x • (1 : ℝ)) (y • (1 : ℝ)) := by simp
+    _ = x * (y * inner ℝ (1 : ℝ) (1 : ℝ)) := by
+      rw [real_inner_smul_left, real_inner_smul_right]
+    _ = x * y := by
+      rw [real_inner_self_eq_norm_sq]
+      norm_num
 
 /-- Turn a real scalar kernel into an operator-valued kernel on the
 one-dimensional real Hilbert space. -/
@@ -29,10 +35,13 @@ theorem RealKernelPositiveSemidefiniteCertificate.operatorKernel_isHermitian
     {kernel : X → X → ℝ}
     (C : RealKernelPositiveSemidefiniteCertificate X kernel) :
     C.operatorKernel.IsHermitian := by
+  have hstarOne :
+      (star (1 : ℝ →L[ℝ] ℝ)) (1 : ℝ) = 1 := by
+    rw [star_one]
+    rfl
   ext x y
-  change kernel x y * ((star (1 : ℝ →L[ℝ] ℝ)) 1) = kernel y x
-  rw [star_one]
-  simpa [C.symmetric x y]
+  simp [RealKernelPositiveSemidefiniteCertificate.operatorKernel,
+    C.symmetric y x, hstarOne]
 
 /-- The operator-valued lift of a symmetric positive-semidefinite scalar
 kernel is positive semidefinite in the sense required by `RKHS.OfKernel`. -/
