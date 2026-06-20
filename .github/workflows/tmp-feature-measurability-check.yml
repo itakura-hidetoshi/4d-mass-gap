@@ -1,14 +1,14 @@
-name: Temporary Feature Measurability Check
+name: Temporary Local Feature Consumer Check
 
 on:
   pull_request:
 
 concurrency:
-  group: temporary-feature-measurability-${{ github.event.pull_request.number }}
+  group: temporary-local-feature-consumer-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  feature-measurability:
+  local-feature-consumer:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -27,30 +27,30 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build feature measurability
+      - name: Build local feature consumer
         shell: bash
         run: |
           set +e
-          lake build MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureMeasurability > /tmp/feature-measurability.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelProduct > /tmp/local-feature-consumer.log 2>&1
           status=$?
-          echo "$status" > /tmp/feature-measurability.status
+          echo "$status" > /tmp/local-feature-consumer.status
           if [ "$status" -eq 0 ]; then
-            echo "Feature measurability build passed" | tee /tmp/feature-measurability-diagnostics.txt
+            echo "Local feature consumer build passed" | tee /tmp/local-feature-consumer-diagnostics.txt
           else
             {
-              echo "Feature measurability build failed; compact diagnostics follow"
-              grep -n -B 4 -A 18 'error:' /tmp/feature-measurability.log || tail -n 160 /tmp/feature-measurability.log
-            } | tee /tmp/feature-measurability-diagnostics.txt
+              echo "Local feature consumer build failed; compact diagnostics follow"
+              grep -n -B 4 -A 18 'error:' /tmp/local-feature-consumer.log || tail -n 160 /tmp/local-feature-consumer.log
+            } | tee /tmp/local-feature-consumer-diagnostics.txt
           fi
           exit 0
       - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: feature-measurability-diagnostics
-          path: /tmp/feature-measurability-diagnostics.txt
+          name: local-feature-consumer-diagnostics
+          path: /tmp/local-feature-consumer-diagnostics.txt
           if-no-files-found: error
       - name: Propagate build status
         if: always()
         shell: bash
-        run: exit "$(cat /tmp/feature-measurability.status)"
+        run: exit "$(cat /tmp/local-feature-consumer.status)"
