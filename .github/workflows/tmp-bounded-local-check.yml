@@ -1,44 +1,16 @@
-name: Temporary Bounded Local Check
+name: Temporary Amplitude Bound Check
 
 on:
   pull_request:
-
-permissions:
-  contents: read
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/cache/restore@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
-          restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
       - name: Install Lean
         run: |
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build bounded constructor
-        id: bounded
-        continue-on-error: true
-        run: |
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicBoundedLocalKernelProduct > /tmp/bounded.log 2>&1
-          echo "status=$?" >> "$GITHUB_OUTPUT"
-          grep -n -E 'error:|failed to synthesize|application type mismatch|unknown identifier|type mismatch' /tmp/bounded.log | head -n 80 || true
-          tail -n 180 /tmp/bounded.log
-      - name: Build unit norm theorems
-        id: norm
-        continue-on-error: true
-        run: |
-          lake build MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelFeatureNorm > /tmp/norm.log 2>&1
-          echo "status=$?" >> "$GITHUB_OUTPUT"
-          grep -n -E 'error:|failed to synthesize|application type mismatch|unknown identifier|type mismatch' /tmp/norm.log | head -n 80 || true
-          tail -n 180 /tmp/norm.log
-      - name: Fail on error
-        if: steps.bounded.outputs.status != '0' || steps.norm.outputs.status != '0'
-        run: exit 1
+      - name: Build
+        run: lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelProduct
