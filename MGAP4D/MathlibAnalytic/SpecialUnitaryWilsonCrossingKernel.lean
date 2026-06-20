@@ -49,12 +49,33 @@ theorem specialUnitaryWilsonBoltzmannCentralFunction_eq_trace
       -beta + beta * normalizedSpecialUnitaryRealTrace N U by ring]
   exact Real.exp_add _ _
 
+/-- The normalized real-trace relative kernel underlying the Wilson
+Boltzmann kernel. -/
+def specialUnitaryNormalizedTraceRelativeKernel
+    (N : ℕ)
+    (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  normalizedSpecialUnitaryRealTrace N (g⁻¹ * h)
+
 /-- The relative one-plaquette Wilson kernel on `SU(N)`. -/
 def specialUnitaryWilsonRelativeKernel
     (N : ℕ)
     (beta : ℝ)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
   specialUnitaryWilsonBoltzmannCentralFunction N beta (g⁻¹ * h)
+
+/-- The relative Wilson kernel is the positive constant `exp (-beta)` times the
+exponential of the normalized real-trace relative kernel. -/
+theorem specialUnitaryWilsonRelativeKernel_eq_trace
+    (N : ℕ)
+    (beta : ℝ)
+    (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    specialUnitaryWilsonRelativeKernel N beta g h =
+      Real.exp (-beta) *
+        Real.exp
+          (beta * specialUnitaryNormalizedTraceRelativeKernel N g h) := by
+  unfold specialUnitaryWilsonRelativeKernel
+  rw [specialUnitaryWilsonBoltzmannCentralFunction_eq_trace]
+  rfl
 
 /-- The relative Wilson kernel is invariant under simultaneous left
 translation of its two arguments. -/
@@ -66,6 +87,56 @@ theorem specialUnitaryWilsonRelativeKernel_leftInvariant
       specialUnitaryWilsonRelativeKernel N beta g h := by
   unfold specialUnitaryWilsonRelativeKernel
   rw [show (a * g)⁻¹ * (a * h) = g⁻¹ * h by group]
+
+/-- Degree-`n` finite exponential approximation to the relative Wilson kernel.
+The constant factor `exp (-beta)` is retained exactly. -/
+def specialUnitaryWilsonRelativeKernelPartial
+    (N : ℕ)
+    (beta : ℝ)
+    (n : ℕ)
+    (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  Real.exp (-beta) *
+    RealHilbertKernelFeature.exponentialPartialKernel
+      (specialUnitaryNormalizedTraceRelativeKernel N) beta n g h
+
+/-- Once the normalized real-trace relative kernel has a Hilbert feature, every
+finite Wilson exponential approximation has an explicit Hilbert feature. -/
+noncomputable def specialUnitaryWilsonRelativeKernelPartialFeature
+    (N : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (C : RealHilbertKernelFeature
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (specialUnitaryNormalizedTraceRelativeKernel N))
+    (n : ℕ) :
+    RealHilbertKernelFeature
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (specialUnitaryWilsonRelativeKernelPartial N beta n) := by
+  simpa [specialUnitaryWilsonRelativeKernelPartial] using
+    RealHilbertKernelFeature.nonnegSMul
+      (Real.exp (-beta))
+      (Real.exp_nonneg (-beta))
+      (RealHilbertKernelFeature.exponentialPartial C beta hbeta n)
+
+/-- The finite Wilson approximation is exactly the inner product of the
+explicit finite completed-tensor-product feature. -/
+theorem specialUnitaryWilsonRelativeKernelPartial_eq_inner
+    (N : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (C : RealHilbertKernelFeature
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (specialUnitaryNormalizedTraceRelativeKernel N))
+    (n : ℕ)
+    (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    specialUnitaryWilsonRelativeKernelPartial N beta n g h =
+      inner ℝ
+        ((specialUnitaryWilsonRelativeKernelPartialFeature
+          N beta hbeta C n).feature g)
+        ((specialUnitaryWilsonRelativeKernelPartialFeature
+          N beta hbeta C n).feature h) :=
+  (specialUnitaryWilsonRelativeKernelPartialFeature
+    N beta hbeta C n).kernel_eq_inner g h
 
 /-- Pull the relative Wilson kernel back along the positive-half holonomy of one
 crossing plaquette. -/
