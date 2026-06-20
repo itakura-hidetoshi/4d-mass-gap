@@ -92,6 +92,12 @@ noncomputable def
       fun z =>
         C.amplitude n F z.1 * C.crossingKernel n z.1 z.2 *
           C.amplitude n F z.2
+    have hqMap :
+        AEStronglyMeasurable q
+          (Measure.map (C.split n)
+            (E.system (L.subsequence n)).gibbsMeasure) := by
+      rw [C.split_map_gibbsMeasure n]
+      exact (C.kernelQuadratic_integrable n F).aestronglyMeasurable
     unfold PhysicalYangMillsGaugeInvariantOSReflectionData.orientedWilsonPullbackForm
     calc
       (∫ U,
@@ -112,8 +118,7 @@ noncomputable def
             (E.system (L.subsequence n)).gibbsMeasure := by
             symm
             exact MeasureTheory.integral_map
-              (C.split_aemeasurable n)
-              (C.kernelQuadratic_integrable n F).aestronglyMeasurable
+              (C.split_aemeasurable n) hqMap
       _ = ∫ z, q z ∂(C.halfMeasure.prod C.halfMeasure) := by
             rw [C.split_map_gibbsMeasure n]
       _ = ∫ x, ∫ y,
