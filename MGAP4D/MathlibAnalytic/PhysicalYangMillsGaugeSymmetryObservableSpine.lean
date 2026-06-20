@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
-import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonCrossingKernel
+import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelPartialLimit
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -35,6 +35,9 @@ This aggregate module exposes the complete typed route
 * an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
 * the concrete one-plaquette `SU(N)` Wilson Boltzmann central function;
 * the relative group kernel `k_beta(g⁻¹h)` and its half-holonomy pullback;
+* a finite-dimensional real Euclidean feature for the normalized trace kernel;
+* finite completed-tensor Taylor features for the Wilson exponential kernel;
+* pointwise convergence of their inner products to the exact Wilson kernel;
 * completed tensor-product realization of finite products of local crossing kernels;
 * scale-dependent global feature spaces generated separately at each lattice scale;
 * generation of the Bochner/Hilbert Gram identity from these inputs;
@@ -43,9 +46,11 @@ This aggregate module exposes the complete typed route
   continuum OS-positive weak-star state packages.
 
 The construction remains conditional on the supplied continuous physical action,
-interpolation equivariance, a physical positive-time reflection, the concrete
-half-lattice Wilson-action decomposition, and nonnegative Peter--Weyl
-coefficients for the concrete one-plaquette compact `SU(N)` Wilson kernel.
+interpolation equivariance, a physical positive-time reflection, and the concrete
+half-lattice Wilson-action decomposition.  The exact one-plaquette Wilson kernel
+is now obtained as a pointwise limit of explicit finite Hilbert Gram kernels; an
+exact single Hilbert feature still requires the corresponding infinite Fock/GNS
+completion, or an equivalent positive-definite-kernel realization.
 -/
 
 end MathlibAnalytic
