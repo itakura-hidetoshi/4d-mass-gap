@@ -51,7 +51,7 @@ theorem specialUnitaryRealTraceRelativeKernel_eq_inner
     specialUnitaryRealTraceRelativeKernel,
     Matrix.trace, Matrix.mul_apply,
     star_eq_conjTranspose, Complex.mul_re,
-    Finset.sum_add_distrib]
+    Finset.sum_add_distrib, mul_comm]
 
 /-- The unnormalized real-trace relative kernel has a concrete finite-dimensional
 real Hilbert feature realization. -/
