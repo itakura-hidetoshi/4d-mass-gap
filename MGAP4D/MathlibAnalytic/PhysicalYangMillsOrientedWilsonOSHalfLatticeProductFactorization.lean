@@ -6,6 +6,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
+open scoped ENNReal
 
 noncomputable section
 
@@ -152,7 +153,7 @@ noncomputable def
             rw [C.split_map_gibbsMeasure n]
       _ = ∫ z, (C.gibbsDensity n z).toReal • s z ∂muHalf := by
             exact
-              MeasureTheory.integral_withDensity_eq_integral_toReal_smul₀
+              integral_withDensity_eq_integral_toReal_smul₀
                 (C.gibbsDensity_aemeasurable n)
                 (C.gibbsDensity_lt_top_ae n)
                 s
@@ -166,13 +167,8 @@ noncomputable def
             C.amplitude n F y
           ∂C.halfMeasure ∂C.halfMeasure := by
             letI : IsFiniteMeasure C.halfMeasure := C.halfMeasureFinite
-            change
-              (∫ z,
-                C.amplitude n F z.1 * C.crossingKernel n z.1 z.2 *
-                  C.amplitude n F z.2
-                ∂(C.halfMeasure.prod C.halfMeasure)) = _
-            rw [MeasureTheory.integral_prod]
-            exact C.kernelQuadratic_integrable n F
+            exact MeasureTheory.integral_prod _
+              (C.kernelQuadratic_integrable n F)
 
 end
 
