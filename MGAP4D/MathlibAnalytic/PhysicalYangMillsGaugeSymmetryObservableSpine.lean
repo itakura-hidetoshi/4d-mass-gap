@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
+import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonCrossingKernel
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -32,6 +33,8 @@ This aggregate module exposes the complete typed route
 * exact pullback of physical state evaluations to the original compact Wilson Gibbs laws;
 * a geometric and measure-theoretic half-lattice kernel decomposition;
 * an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
+* the concrete one-plaquette `SU(N)` Wilson Boltzmann central function;
+* the relative group kernel `k_beta(g⁻¹h)` and its half-holonomy pullback;
 * completed tensor-product realization of finite products of local crossing kernels;
 * scale-dependent global feature spaces generated separately at each lattice scale;
 * generation of the Bochner/Hilbert Gram identity from these inputs;
@@ -41,8 +44,8 @@ This aggregate module exposes the complete typed route
 
 The construction remains conditional on the supplied continuous physical action,
 interpolation equivariance, a physical positive-time reflection, the concrete
-half-lattice Wilson-action decomposition, and a local compact `SU(N)`
-Peter--Weyl feature theorem for each crossing plaquette kernel.
+half-lattice Wilson-action decomposition, and nonnegative Peter--Weyl
+coefficients for the concrete one-plaquette compact `SU(N)` Wilson kernel.
 -/
 
 end MathlibAnalytic
