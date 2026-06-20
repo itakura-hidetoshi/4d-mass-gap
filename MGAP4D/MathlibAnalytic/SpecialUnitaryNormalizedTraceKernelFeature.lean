@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonCrossingKernel
+import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.PiL2
 
 namespace MGAP4D
@@ -17,9 +18,8 @@ abbrev SpecialUnitaryMatrixRealFeatureSpace (N : ℕ) : Type :=
 
 /-- The standard real inner product on scalar coordinates is multiplication. -/
 theorem realScalarInner_eq_mul (x y : ℝ) :
-    inner ℝ x y = x * y := by
-  rw [RCLike.inner_apply]
-  simp [mul_comm]
+    inner ℝ x y = x * y :=
+  Real.inner_apply x y
 
 /-- Realification of a complex matrix by listing the real and imaginary parts
 of all entries in transposed index order. -/
