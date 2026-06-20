@@ -15,6 +15,12 @@ order so that the inner product follows the diagonal expansion of
 abbrev SpecialUnitaryMatrixRealFeatureSpace (N : ℕ) : Type :=
   EuclideanSpace ℝ ((Fin N × Fin N) × Bool)
 
+/-- The standard real inner product on scalar coordinates is multiplication. -/
+theorem realScalarInner_eq_mul (x y : ℝ) :
+    inner ℝ x y = x * y := by
+  change x * y = x * y
+  rfl
+
 /-- Realification of a complex matrix by listing the real and imaginary parts
 of all entries in transposed index order. -/
 noncomputable def complexMatrixRealFeature
@@ -41,7 +47,7 @@ theorem complexMatrixRealFeature_inner
   simp [complexMatrixRealFeature, Matrix.trace, Matrix.mul_apply,
     Complex.mul_re, Finset.sum_add_distrib, mul_comm]
   rw [Fintype.sum_prod_type, Fintype.sum_prod_type]
-  simp [RCLike.inner_apply]
+  simp [realScalarInner_eq_mul]
 
 /-- The realification of the defining matrix representation of `SU(N)`. -/
 noncomputable def specialUnitaryMatrixRealFeature
