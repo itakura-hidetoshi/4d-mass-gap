@@ -10,8 +10,8 @@ noncomputable section
 
 /-- The real one-dimensional inner product is ordinary multiplication. -/
 private theorem real_inner_eq_mul (x y : ℝ) :
-    inner ℝ x y = x * y :=
-  Real.inner_apply x y
+    inner ℝ x y = x * y := by
+  rfl
 
 /-- Turn a real scalar kernel into an operator-valued kernel on the
 one-dimensional real Hilbert space. -/
@@ -30,8 +30,7 @@ theorem RealKernelPositiveSemidefiniteCertificate.operatorKernel_isHermitian
     C.operatorKernel.IsHermitian := by
   have hstarOne :
       (star (1 : ℝ →L[ℝ] ℝ)) (1 : ℝ) = 1 := by
-    rw [star_one]
-    rfl
+    simp
   ext x y
   simp [RealKernelPositiveSemidefiniteCertificate.operatorKernel,
     C.symmetric y x, hstarOne]
