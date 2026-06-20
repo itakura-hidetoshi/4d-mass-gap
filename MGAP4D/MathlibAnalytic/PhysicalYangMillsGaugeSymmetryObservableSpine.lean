@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
-import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelPartialLimit
+import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelPositiveSemidefinite
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -38,6 +38,8 @@ This aggregate module exposes the complete typed route
 * a finite-dimensional real Euclidean feature for the normalized trace kernel;
 * finite completed-tensor Taylor features for the Wilson exponential kernel;
 * pointwise convergence of their inner products to the exact Wilson kernel;
+* finite Gram positivity for every real Hilbert feature kernel;
+* exact positive semidefiniteness of the one-plaquette Wilson relative kernel;
 * completed tensor-product realization of finite products of local crossing kernels;
 * scale-dependent global feature spaces generated separately at each lattice scale;
 * generation of the Bochner/Hilbert Gram identity from these inputs;
@@ -47,10 +49,11 @@ This aggregate module exposes the complete typed route
 
 The construction remains conditional on the supplied continuous physical action,
 interpolation equivariance, a physical positive-time reflection, and the concrete
-half-lattice Wilson-action decomposition.  The exact one-plaquette Wilson kernel
-is now obtained as a pointwise limit of explicit finite Hilbert Gram kernels; an
-exact single Hilbert feature still requires the corresponding infinite Fock/GNS
-completion, or an equivalent positive-definite-kernel realization.
+half-lattice Wilson-action decomposition.  For `N > 0` and `beta >= 0`, the exact
+one-plaquette Wilson relative kernel is now proved positive semidefinite as the
+finite-Gram limit of explicit completed-tensor Taylor features, without assuming
+Peter--Weyl coefficient positivity.  Producing the exact `RealHilbertKernelFeature`
+record from this theorem remains the generic Moore--Aronszajn/GNS completion step.
 -/
 
 end MathlibAnalytic
