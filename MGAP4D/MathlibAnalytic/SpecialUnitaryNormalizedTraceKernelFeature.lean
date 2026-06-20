@@ -11,7 +11,7 @@ noncomputable section
 /-- The real Euclidean carrier of the real and imaginary parts of all entries
 of an `N × N` complex matrix.  The matrix indices are stored in transposed
 order so that the inner product follows the diagonal expansion of
-`Tr(AᴴB)` without a subsequent reindexing. -/
+`Tr(A* B)` without a subsequent reindexing. -/
 abbrev SpecialUnitaryMatrixRealFeatureSpace (N : ℕ) : Type :=
   EuclideanSpace ℝ ((Fin N × Fin N) × Bool)
 
@@ -35,7 +35,7 @@ theorem complexMatrixRealFeature_inner
     inner ℝ
         (complexMatrixRealFeature N A)
         (complexMatrixRealFeature N B) =
-      (Matrix.trace (Aᴴ * B)).re := by
+      (Matrix.trace (A.conjTranspose * B)).re := by
   classical
   rw [PiLp.inner_apply, Fintype.sum_prod_type]
   simp [complexMatrixRealFeature, Matrix.trace, Matrix.mul_apply,
@@ -68,7 +68,7 @@ theorem specialUnitaryRealTraceRelativeKernel_eq_inner
         (specialUnitaryMatrixRealFeature N h) := by
   change
     (Matrix.trace
-      (((g : Matrix (Fin N) (Fin N) ℂ)ᴴ) *
+      ((g : Matrix (Fin N) (Fin N) ℂ).conjTranspose *
         (h : Matrix (Fin N) (Fin N) ℂ))).re =
       inner ℝ
         (complexMatrixRealFeature N
