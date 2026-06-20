@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedGaugeSymmetryTightLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConcreteLocalKernelProduct
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicLocalKernelProduct
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -44,6 +45,11 @@ This aggregate module exposes the complete typed route
 * an exact RKHS Hilbert feature for the one-plaquette Wilson relative kernel;
 * exact pullback features along concrete positive-half plaquette holonomies;
 * completed tensor-product realization of finite products of local crossing kernels;
+* scale-dependent couplings `beta n` in the exact local RKHS features;
+* site reflection on even periodic four-dimensional lattices;
+* orientation-corrected involutive reflection of periodic plaquettes;
+* strict positive, strict negative, and crossing plaquette support sectors;
+* a finite canonical subtype and list of all crossing plaquettes at every scale;
 * automatic generation of every local feature from concrete crossing holonomies;
 * scale-dependent global feature spaces generated separately at each lattice scale;
 * generation of the Bochner/Hilbert Gram identity from these inputs;
@@ -53,13 +59,17 @@ This aggregate module exposes the complete typed route
 
 The construction remains conditional on the supplied continuous physical action,
 interpolation equivariance, a physical positive-time reflection, and the concrete
-half-lattice Wilson-action decomposition.  For `N > 0` and `beta >= 0`, the exact
-one-plaquette Wilson relative kernel is proved symmetric and positive semidefinite
-as the finite-Gram limit of explicit completed-tensor Taylor features.  Mathlib's
-`RKHS.OfKernel` then generates its exact Hilbert feature without assuming
-Peter--Weyl coefficient positivity.  Consequently, once the actual crossing
-plaquette labels and positive-half holonomies are supplied, every local feature
-and their finite completed-tensor product are generated automatically.
+half-lattice Wilson-action decomposition.  For `N > 0` and every nonnegative
+scale-dependent coupling `beta n`, the exact one-plaquette Wilson relative kernel
+is proved symmetric and positive semidefinite as the finite-Gram limit of explicit
+completed-tensor Taylor features.  Mathlib's `RKHS.OfKernel` then generates its
+exact Hilbert feature without assuming Peter--Weyl coefficient positivity.
+
+On an even periodic lattice of side length `2 (H_n + 1)`, the time reflection,
+orientation-corrected plaquette reflection, geometric crossing predicate, crossing
+subtype, and complete finite crossing list are now explicit.  Consequently, once
+the positive-half holonomy of each concrete crossing plaquette is supplied, every
+local feature and their finite completed-tensor product are generated automatically.
 
 The remaining local analytic inputs are the exact half-lattice change of variables,
 the equality of the crossing factor with the finite product of these concrete
