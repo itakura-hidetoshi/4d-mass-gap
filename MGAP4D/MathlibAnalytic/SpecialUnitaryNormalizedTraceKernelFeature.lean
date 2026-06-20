@@ -11,21 +11,43 @@ noncomputable section
 /-- The real Euclidean carrier of the real and imaginary parts of all entries
 of an `N × N` complex matrix.  The matrix indices are stored in transposed
 order so that the inner product follows the diagonal expansion of
-`Tr(g⁻¹h)` without a subsequent reindexing. -/
+`Tr(AᴴB)` without a subsequent reindexing. -/
 abbrev SpecialUnitaryMatrixRealFeatureSpace (N : ℕ) : Type :=
   EuclideanSpace ℝ ((Fin N × Fin N) × Bool)
 
-/-- The realification of the defining matrix representation of `SU(N)`.
-The `Bool` coordinate selects the real or imaginary part. -/
+/-- Realification of a complex matrix by listing the real and imaginary parts
+of all entries in transposed index order. -/
+noncomputable def complexMatrixRealFeature
+    (N : ℕ)
+    (A : Matrix (Fin N) (Fin N) ℂ) :
+    SpecialUnitaryMatrixRealFeatureSpace N :=
+  WithLp.toLp 2 fun q =>
+    if q.2 then
+      (A q.1.2 q.1.1).re
+    else
+      (A q.1.2 q.1.1).im
+
+/-- The Euclidean inner product of two realified matrices is the real part of
+the Hilbert--Schmidt trace pairing. -/
+theorem complexMatrixRealFeature_inner
+    (N : ℕ)
+    (A B : Matrix (Fin N) (Fin N) ℂ) :
+    inner ℝ
+        (complexMatrixRealFeature N A)
+        (complexMatrixRealFeature N B) =
+      (Matrix.trace (Aᴴ * B)).re := by
+  classical
+  rw [PiLp.inner_apply, Fintype.sum_prod_type]
+  simp [complexMatrixRealFeature, Matrix.trace, Matrix.mul_apply,
+    Complex.mul_re, Finset.sum_add_distrib, mul_comm]
+
+/-- The realification of the defining matrix representation of `SU(N)`. -/
 noncomputable def specialUnitaryMatrixRealFeature
     (N : ℕ)
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     SpecialUnitaryMatrixRealFeatureSpace N :=
-  WithLp.toLp 2 fun q =>
-    if q.2 then
-      (U q.1.2 q.1.1).re
-    else
-      (U q.1.2 q.1.1).im
+  complexMatrixRealFeature N
+    (U : Matrix (Fin N) (Fin N) ℂ)
 
 /-- The unnormalized real-trace relative kernel. -/
 def specialUnitaryRealTraceRelativeKernel
@@ -44,14 +66,18 @@ theorem specialUnitaryRealTraceRelativeKernel_eq_inner
       inner ℝ
         (specialUnitaryMatrixRealFeature N g)
         (specialUnitaryMatrixRealFeature N h) := by
-  classical
-  symm
-  rw [PiLp.inner_apply, Fintype.sum_prod_type]
-  simp [specialUnitaryMatrixRealFeature,
-    specialUnitaryRealTraceRelativeKernel,
-    Matrix.trace, Matrix.mul_apply,
-    star_eq_conjTranspose, Complex.mul_re,
-    Finset.sum_add_distrib, mul_comm]
+  change
+    (Matrix.trace
+      (((g : Matrix (Fin N) (Fin N) ℂ)ᴴ) *
+        (h : Matrix (Fin N) (Fin N) ℂ))).re =
+      inner ℝ
+        (complexMatrixRealFeature N
+          (g : Matrix (Fin N) (Fin N) ℂ))
+        (complexMatrixRealFeature N
+          (h : Matrix (Fin N) (Fin N) ℂ))
+  exact (complexMatrixRealFeature_inner N
+    (g : Matrix (Fin N) (Fin N) ℂ)
+    (h : Matrix (Fin N) (Fin N) ℂ)).symm
 
 /-- The unnormalized real-trace relative kernel has a concrete finite-dimensional
 real Hilbert feature realization. -/
@@ -64,11 +90,10 @@ noncomputable def specialUnitaryRealTraceRelativeKernelFeature
   feature := specialUnitaryMatrixRealFeature N
   kernel_eq_inner := specialUnitaryRealTraceRelativeKernel_eq_inner N
 
-/-- The normalized relative trace kernel is the nonnegative scalar multiple
-`1/N` of the unnormalized real-trace kernel. -/
+/-- The normalized relative trace kernel is the scalar multiple `1/N` of the
+unnormalized real-trace kernel. -/
 theorem specialUnitaryNormalizedTraceRelativeKernel_eq_scaled
-    {N : ℕ}
-    (hN : 0 < N)
+    (N : ℕ)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     specialUnitaryNormalizedTraceRelativeKernel N g h =
       (1 / (N : ℝ)) * specialUnitaryRealTraceRelativeKernel N g h := by
@@ -88,10 +113,19 @@ noncomputable def specialUnitaryNormalizedTraceRelativeKernelFeature
       (specialUnitaryNormalizedTraceRelativeKernel N) := by
   have hNreal : 0 < (N : ℝ) := by exact_mod_cast hN
   have hScale : 0 ≤ (1 / (N : ℝ)) := by positivity
-  simpa [specialUnitaryNormalizedTraceRelativeKernel_eq_scaled hN] using
-    RealHilbertKernelFeature.nonnegSMul
-      (1 / (N : ℝ)) hScale
-      (specialUnitaryRealTraceRelativeKernelFeature N)
+  let C := RealHilbertKernelFeature.nonnegSMul
+    (1 / (N : ℝ)) hScale
+    (specialUnitaryRealTraceRelativeKernelFeature N)
+  exact
+    { FeatureHilbert := C.FeatureHilbert
+      featureNormedAddCommGroup := C.featureNormedAddCommGroup
+      featureInnerProductSpace := C.featureInnerProductSpace
+      featureCompleteSpace := C.featureCompleteSpace
+      feature := C.feature
+      kernel_eq_inner := by
+        intro g h
+        rw [specialUnitaryNormalizedTraceRelativeKernel_eq_scaled]
+        exact C.kernel_eq_inner g h }
 
 /-- Consequently every finite Taylor approximation of the one-plaquette Wilson
 relative kernel has an explicit finite completed-tensor-product Hilbert
