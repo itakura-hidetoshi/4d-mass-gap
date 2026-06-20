@@ -33,7 +33,7 @@ theorem specialUnitaryWilsonRelativeKernel_self
     (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     specialUnitaryWilsonRelativeKernel N beta g g = 1 := by
   unfold specialUnitaryWilsonRelativeKernel
-  rw [inv_mul_self]
+  rw [show g⁻¹ * g = (1 : Matrix.specialUnitaryGroup (Fin N) ℂ) by group]
   unfold specialUnitaryWilsonBoltzmannCentralFunction
   rw [specialUnitaryWilsonPlaquetteEnergy_one N hN]
   simp
