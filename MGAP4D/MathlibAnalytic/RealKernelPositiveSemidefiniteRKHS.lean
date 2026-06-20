@@ -11,7 +11,7 @@ noncomputable section
 /-- The real one-dimensional inner product is ordinary multiplication. -/
 private theorem real_inner_eq_mul (x y : ℝ) :
     inner ℝ x y = x * y := by
-  simp [RCLike.inner_apply]
+  simp [RCLike.inner_apply, mul_comm]
 
 /-- Turn a real scalar kernel into an operator-valued kernel on the
 one-dimensional real Hilbert space. -/
