@@ -89,11 +89,11 @@ theorem specialUnitaryWilsonRelativeKernel_positiveSemidefinite
   have hQuadratic :
       Tendsto partialQuadratic atTop (𝓝 exactQuadratic) := by
     exact tendsto_fintype_sum_real
-      (fun degree p =>
+      (fun degree (p : ι × ι) =>
         coefficients p.1 * coefficients p.2 *
           specialUnitaryWilsonRelativeKernelPartial N beta degree
             (points p.1) (points p.2))
-      (fun p =>
+      (fun (p : ι × ι) =>
         coefficients p.1 * coefficients p.2 *
           specialUnitaryWilsonRelativeKernel N beta
             (points p.1) (points p.2))
@@ -107,8 +107,8 @@ theorem specialUnitaryWilsonRelativeKernel_positiveSemidefinite
         N hN beta hbeta degree).positiveSemidefinite
           ι points coefficients
   have hExactNonneg : 0 ≤ exactQuadratic := by
-    apply le_of_tendsto hQuadratic
-    exact Filter.Eventually.of_forall hPartialNonneg
+    exact ge_of_tendsto hQuadratic
+      (Filter.Eventually.of_forall hPartialNonneg)
   unfold exactQuadratic at hExactNonneg
   rw [Fintype.sum_prod_type] at hExactNonneg
   exact hExactNonneg
