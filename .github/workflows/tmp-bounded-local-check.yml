@@ -28,4 +28,6 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Build
-        run: lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicBoundedLocalKernelProduct
+        run: |
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicBoundedLocalKernelProduct
+          lake build MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelFeatureNorm
