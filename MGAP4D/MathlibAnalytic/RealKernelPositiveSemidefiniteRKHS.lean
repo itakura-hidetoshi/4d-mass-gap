@@ -8,7 +8,8 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- The real one-dimensional inner product is ordinary multiplication. -/
+/-- The real one-dimensional inner product, normalized from
+`RCLike.inner_apply`, is ordinary multiplication. -/
 private theorem real_inner_eq_mul (x y : ℝ) :
     inner ℝ x y = x * y := by
   simp [RCLike.inner_apply, mul_comm]
