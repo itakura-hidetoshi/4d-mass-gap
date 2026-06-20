@@ -1,0 +1,45 @@
+name: Temporary Changed Lean Log
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    env:
+      MATHLIB_NO_CACHE_ON_UPDATE: "1"
+      CHECK_CHANGED_LEAN_BASE_REF: origin/main
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+      - name: Install Lean
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Run changed Lean script
+        id: check
+        continue-on-error: true
+        run: |
+          bash scripts/check_changed_lean.sh origin/main > /tmp/changed-lean.log 2>&1
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          grep -n -E '^\[fast\] lake build maximal|error:|failed to|✖|Build completed with failures' /tmp/changed-lean.log | tail -n 120 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: changed-lean-log
+          path: /tmp/changed-lean.log
+      - name: Fail on error
+        if: steps.check.outputs.status != '0'
+        run: exit 1
