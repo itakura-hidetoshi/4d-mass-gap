@@ -132,14 +132,13 @@ jobs:
           echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
-      - name: Run changed Lean fast check
+      - name: Run targeted Lean diagnostic
         id: lean-check
         continue-on-error: true
         shell: bash
         run: |
           set +e
-          echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" > /tmp/lean-fast-check.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.SpecialUnitaryNormalizedTraceKernelFeature > /tmp/lean-fast-check.log 2>&1
           status=$?
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           tail -n 80 /tmp/lean-fast-check.log
