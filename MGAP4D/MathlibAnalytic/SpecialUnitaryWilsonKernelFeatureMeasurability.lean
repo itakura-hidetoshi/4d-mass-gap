@@ -46,7 +46,6 @@ theorem RealHilbertKernelFeature.continuous_feature_of_continuous_kernel
       ← real_inner_self_eq_norm_sq (C.feature x)]
     rw [← C.kernel_eq_inner y y, ← C.kernel_eq_inner y x,
       ← C.kernel_eq_inner x x]
-    rfl
   have hq : ContinuousAt (fun y => ‖C.feature y - C.feature x‖) x := by
     rw [show (fun y => ‖C.feature y - C.feature x‖) =
         fun y => Real.sqrt (r y) by
@@ -67,7 +66,10 @@ theorem continuous_specialUnitaryWilsonBoltzmannCentralFunction
     (continuous_const.mul
       (continuous_specialUnitaryWilsonPlaquetteEnergy N))
 
-/-- The exact relative Wilson kernel is jointly continuous on `SU(N) × SU(N)`. -/
+/-- The exact relative Wilson kernel is jointly continuous on `SU(N) × SU(N)`.
+
+The inverse is unfolded to conjugate transpose on the underlying matrix.  This
+avoids requiring a global `ContinuousInv` instance on the subtype. -/
 theorem continuous_specialUnitaryWilsonRelativeKernel
     (N : ℕ)
     (beta : ℝ) :
@@ -76,8 +78,19 @@ theorem continuous_specialUnitaryWilsonRelativeKernel
         Matrix.specialUnitaryGroup (Fin N) ℂ =>
       specialUnitaryWilsonRelativeKernel N beta p.1 p.2 := by
   unfold specialUnitaryWilsonRelativeKernel
-  exact (continuous_specialUnitaryWilsonBoltzmannCentralFunction N beta).comp
-    (continuous_fst.inv.mul continuous_snd)
+  unfold specialUnitaryWilsonBoltzmannCentralFunction
+  unfold specialUnitaryWilsonPlaquetteEnergy
+  change Continuous fun p :
+      Matrix.specialUnitaryGroup (Fin N) ℂ ×
+        Matrix.specialUnitaryGroup (Fin N) ℂ =>
+    Real.exp
+      (-beta *
+        (1 -
+          (Matrix.trace
+            (star (p.1 : Matrix (Fin N) (Fin N) ℂ) *
+              (p.2 : Matrix (Fin N) (Fin N) ℂ))).re /
+            (N : ℝ)))
+  fun_prop
 
 /-- The exact Moore--Aronszajn Wilson RKHS feature map is continuous. -/
 theorem continuous_specialUnitaryWilsonRelativeKernelFeature_feature
