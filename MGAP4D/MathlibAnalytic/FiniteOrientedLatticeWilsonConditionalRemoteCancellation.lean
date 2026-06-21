@@ -63,6 +63,28 @@ theorem finite_oriented_singleLinkPartitionFunction_eq_local_mul_remote
   simp_rw [finite_oriented_singleLinkBoltzmannWeight_eq_local_mul_remote]
   exact (Finset.sum_mul _ _ _).symm
 
+/-- Conditional law formed only from target-local factors. -/
+def FiniteOrientedLatticeWilsonSystem.targetLocalSingleLinkConditionalPMF
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge) : PMF L.Gauge :=
+  PMF.normalize (L.targetLocalSingleLinkBoltzmannWeight A target)
+    (finite_oriented_targetLocalSingleLinkPartitionFunction_ne_zero
+      L A target)
+    (finite_oriented_targetLocalSingleLinkPartitionFunction_ne_top
+      L A target)
+
+/-- Pointwise formula for the target-local conditional law. -/
+theorem finite_oriented_targetLocalSingleLinkConditionalPMF_apply
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge)
+    (g : L.Gauge) :
+    L.targetLocalSingleLinkConditionalPMF A target g =
+      L.targetLocalSingleLinkBoltzmannWeight A target g *
+        (L.targetLocalSingleLinkPartitionFunction A target)⁻¹ := by
+  rfl
+
 end
 
 end MathlibAnalytic
