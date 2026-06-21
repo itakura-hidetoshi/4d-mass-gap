@@ -6,6 +6,10 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicLocal
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedCoordinates
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedMeasureFactorization
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedBochnerFactorization
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasure
+import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonBoundaryFiberedHaarFactorization
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEdgeReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryBoundaryFiberedHaarFactorization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHalfLatticeProductFactorization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGram
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateConstruction
@@ -47,6 +51,10 @@ This aggregate module exposes the complete typed route
 * an exact pushforward-measure interface for those boundary-fibered coordinates;
 * two-stage Fubini transport from full-configuration integrals to boundary/half/half integrals;
 * a generic boundary-fibered measure-to-Bochner Gram theorem;
+* a generic finite-`pi` product-measure factorization under every involutive edge partition;
+* an exact boundary/open-half/open-half factorization of compact Wilson product Haar laws;
+* a physical positive-link reflection and side partition on even periodic lattices;
+* a concrete periodic `SU(N)` normalized-Haar pushforward identity;
 * a boundary-fibered decomposition retaining shared reflection-fixed-plane variables;
 * conditional Bochner Gram reduction over each fixed boundary configuration;
 * a concrete coordinate-to-physical-pullback constructor producing finite-volume and
@@ -78,27 +86,24 @@ This aggregate module exposes the complete typed route
   continuum OS-positive weak-star state packages.
 
 The construction remains conditional on the supplied continuous physical action,
-interpolation equivariance, a physical positive-time reflection, and a concrete
-Wilson half-lattice or boundary-fibered change of variables.  For `N > 0` and
-every nonnegative scale-dependent coupling `beta n`, the exact one-plaquette
-Wilson relative kernel is proved symmetric and positive semidefinite as the
-finite-Gram limit of explicit completed-tensor Taylor features.  Mathlib's
-`RKHS.OfKernel` then generates its exact Hilbert feature without assuming
-Peter--Weyl coefficient positivity.
+interpolation equivariance, a physical positive-time reflection, and the concrete
+Wilson-action decomposition.  For `N > 0` and every nonnegative scale-dependent
+coupling `beta n`, the exact one-plaquette Wilson relative kernel is proved symmetric
+and positive semidefinite as the finite-Gram limit of explicit completed-tensor
+Taylor features.  Mathlib's `RKHS.OfKernel` then generates its exact Hilbert feature
+without assuming Peter--Weyl coefficient positivity.
 
-On an even periodic lattice of side length `2 (H_n + 1)`, the time reflection,
-orientation-corrected plaquette reflection, geometric crossing predicate,
-crossing subtype, and complete finite crossing list are explicit.  Consequently,
-once the positive-half holonomy of each concrete crossing plaquette is supplied,
-every local feature and their finite completed-tensor product are generated
-automatically.
+On an even periodic lattice of side length `2 (H_n + 1)`, the positive-link edge
+reflection, reflection-compatible side partition, product normalized-Haar
+boundary-fibered pushforward, time reflection, orientation-corrected plaquette
+reflection, geometric crossing predicate, crossing subtype, and complete finite
+crossing list are explicit.
 
-The exact full-edge coordinate equivalence and the abstract measure/Fubini/Bochner
-transport layers are now internal.  The remaining geometric-measure input is the
-proof that the concrete periodic `SU(N)` product Haar law, and then its Wilson
-Gibbs density, satisfy the required boundary-fibered pushforward identity.  The
-remaining action input is the Wilson-action decomposition that generates the
-boundary-conditioned amplitudes and crossing kernel.
+The exact full-edge coordinate equivalence, product Haar pushforward, and abstract
+measure/Fubini/Bochner transport layers are now internal.  The remaining
+geometric-measure input is the transport of the Wilson Gibbs density through these
+coordinates.  The remaining action input is the Wilson-action decomposition that
+generates the boundary-conditioned amplitudes and crossing kernel.
 -/
 
 end MathlibAnalytic
