@@ -123,9 +123,9 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_preimage_e
         (periodicHypercubicEvenConfigurationReflection
           (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
         (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure s := by
-          rw [Measure.map_apply hMP.measurable hs]
-    _ = _ := by rw [hMP.map_eq]
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure s :=
+      (Measure.map_apply hMP.measurable hs).symm
+    _ = _ := congrArg (fun μ : Measure _ => μ s) hMP.map_eq
 
 end
 
