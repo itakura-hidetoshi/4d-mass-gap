@@ -9,6 +9,26 @@ open MeasureTheory
 
 noncomputable section
 
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- Concrete boundary-fibered factorization of the product normalized Haar law
 for the canonical even-periodic `SU(N)` Wilson system. -/
 noncomputable def
