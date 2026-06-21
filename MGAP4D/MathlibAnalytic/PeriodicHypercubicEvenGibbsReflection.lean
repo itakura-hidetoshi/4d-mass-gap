@@ -99,7 +99,8 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_map_eq_sel
   (periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_measurePreserving
     H N hN beta beta_nonneg).map_eq
 
-/-- Reflection invariance of every measurable finite-volume Wilson Gibbs event. -/
+/-- Reflection invariance of every measurable finite-volume Wilson Gibbs event,
+obtained by evaluating the pushforward equality on that event. -/
 theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_preimage_eq
     (H N : ℕ)
     (hN : 0 < N)
