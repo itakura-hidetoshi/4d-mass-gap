@@ -15,7 +15,7 @@ reflected initial vertex. -/
 def periodicHypercubicEvenEdgeReflection
     (H : ℕ) (e : PeriodicHypercubicEvenEdge H) :
     PeriodicHypercubicEvenEdge H :=
-  if htime : e.2 = 0 then
+  if e.2 = 0 then
     (periodicHypercubicUnshift (PeriodicHypercubicEvenSideLength H)
       (periodicHypercubicEvenTimeReflection H e.1) 0, e.2)
   else
@@ -53,14 +53,16 @@ theorem periodicHypercubicEvenEdgeReflection_involutive
   by_cases htime : mu = 0
   · subst mu
     apply Prod.ext
-    · simp [periodicHypercubicEvenEdgeReflection,
-        periodicHypercubicEvenTimeReflection_unshift_time,
-        periodicHypercubicEvenTimeReflection_involutive,
-        periodicHypercubicUnshift_shift]
+    · simp only [periodicHypercubicEvenEdgeReflection_time]
+      rw [periodicHypercubicEvenTimeReflection_unshift_time]
+      rw [periodicHypercubicUnshift_shift]
+      exact periodicHypercubicEvenTimeReflection_involutive H v
     · rfl
   · apply Prod.ext
-    · simp [periodicHypercubicEvenEdgeReflection, htime,
-        periodicHypercubicEvenTimeReflection_involutive]
+    · rw [periodicHypercubicEvenEdgeReflection_spatial H (v, mu) htime]
+      rw [periodicHypercubicEvenEdgeReflection_spatial H
+        (periodicHypercubicEvenTimeReflection H v, mu) htime]
+      exact periodicHypercubicEvenTimeReflection_involutive H v
     · simp [periodicHypercubicEvenEdgeReflection, htime]
 
 /-- Geometric time rank of a physical positive link, given by the canonical
