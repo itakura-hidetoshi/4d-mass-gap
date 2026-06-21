@@ -7,6 +7,8 @@ open MeasureTheory
 
 noncomputable section
 
+/-- Canonical compact-topological and Borel receipts used by the concrete
+`SU(N)` reflection specialization below. -/
 local instance periodicHypercubicSpecialUnitaryIsTopologicalGroup
     (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
