@@ -7,6 +7,26 @@ open MeasureTheory
 
 noncomputable section
 
+local instance periodicHypercubicSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance periodicHypercubicSpecialUnitaryCompactSpace
+    (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance periodicHypercubicSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance periodicHypercubicSpecialUnitaryBorelSpace
+    (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- Physical configuration reflection factors as reflected-edge reindexing
 followed by the orientation correction that inverts time-link values. -/
 theorem periodicHypercubicEvenConfigurationReflection_eq_orientationCorrection_reindex
@@ -18,8 +38,9 @@ theorem periodicHypercubicEvenConfigurationReflection_eq_orientationCorrection_r
         (H := H)
         (periodicHypercubicEvenConfigurationReindexMeasurableEquiv H Gauge A) := by
   funext e
+  unfold periodicHypercubicEvenConfigurationReflection
+  unfold periodicHypercubicEvenConfigurationOrientationCorrection
   rw [periodicHypercubicEvenConfigurationReindexMeasurableEquiv_apply]
-  rfl
 
 /-- Physical even-periodic configuration reflection preserves product normalized
 Haar probability for every compact topological gauge group. -/
