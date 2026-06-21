@@ -8,19 +8,19 @@ KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-## Current status — 2026-06-20
+## Current status — 2026-06-21
 
-This repository is a replayable formal-development and internal-review surface. It does **not** yet establish an unconditional four-dimensional continuum Yang--Mills theory or a physical mass gap.
+This repository is a replayable formal-development and internal-review surface. It does **not** yet establish an unconditional four-dimensional continuum Yang--Mills theory, a reconstructed physical Hamiltonian, or a physical mass gap.
 
-The current public source has two complementary proof lanes.
+The current source has two complementary proof lanes.
 
 ```text
-A. finite Gibbs / Dobrushin / Hamiltonian lane on main
+A. merged finite Gibbs / Dobrushin / Hamiltonian lane on main
 
 finite Wilson Gibbs law
   -> exact single-link conditional law
   -> conditional projections P_e and Q_e
-  -> Gibbs Hilbert realization
+  -> concrete Gibbs Hilbert space
   -> heat-bath Hamiltonian H_HB
   -> exact canonical conditional-TV influence
   -> Dobrushin variation contraction
@@ -28,29 +28,33 @@ finite Wilson Gibbs law
   -> finite Hamiltonian-gap consequences
   -> exact plaquette-supported influence bounds
   -> periodic four-dimensional incidence constants
+  -> orientation-correct physical-link Wilson geometry
 
-B. physical SU(N) probability-measure lane in open PR #282
+B. physical SU(N) probability / observable / OS lane in open PR #282
 
 signed periodic SU(N) Wilson geometry
   -> finite-volume Haar--Gibbs probability laws
   -> finite-volume gauge invariance
-  -> exact plaquette counting and normalized action bound
+  -> exact plaquette counting and normalized action control
   -> coercive moment / compact containment / tightness
   -> Prokhorov subsequence on one fixed Polish carrier
-  -> physical continuum weak limit
+  -> physical continuum weak-limit package
   -> compatible continuum gauge-symmetry transfer
   -> invariant events, observable laws, expectations and correlations
-  -> finite n-point moments
-  -> gauge-invariant observable algebra and weak-star state
-  -> conditional OS reflection-positivity transfer
+  -> finite n-point moments and gauge-invariant weak-star states
+  -> exact Wilson RKHS crossing-kernel features
+  -> finite tensor-product feature, measurability and bounded integrability
+  -> amplitude-bounded OS constructors
+  -> boundary-fibered Bochner Gram reflection-positivity route
 ```
 
 ### Repository snapshot
 
-- `main` head: merge of documentation PR **#290**, commit `017ad8ea96346100af31af114f69380c6194d8e1`;
+- `main` head: `42223c9a87dc1a8474be95d37abf51299578e9c0`; this reverts an accidental branch-file addition and makes no net proof addition;
 - latest merged proof checkpoint: PR **#288**, commit `59c5780e1efd9e0035aad9bb8c65ff752f5b89dc`;
-- active proof PR **#289**: orientation-correct physical-link locality and target-local/target-remote decomposition;
-- active proof PR **#282**: concrete signed periodic `SU(N)` Haar--Gibbs laws, physical weak limits, symmetry/observable consequences, and the current weak-star/OS bridge frontier.
+- latest merged documentation checkpoint: PR **#291**, merge commit `d89e8375ab1c5b1dd028829901bc32f92060e0a0`;
+- active finite-geometry PR **#289**: orientation-correct physical-link locality and target-local/target-remote decomposition;
+- active physical PR **#282**: head `592f3068bbb7f00b3a803ea75a3ed402d6674e3a`, open, mergeable, 459 commits, 141 changed files, `+13289/-0` at this snapshot.
 
 Open-PR results are not statements about `main` until merged and replayed.
 
@@ -152,7 +156,7 @@ The quantitative conditional-law/Dobrushin/Hamiltonian spine has not yet been fu
 
 ## What open PR #282 now constructs
 
-PR #282 has advanced beyond an abstract weak-convergence shell. Its current branch contains a concrete compact non-Abelian finite-volume input and a typed route to a subsequential physical probability measure.
+PR #282 has advanced beyond an abstract weak-convergence shell. It contains a concrete compact non-Abelian finite-volume probability input, a typed subsequential weak-limit route, a gauge-invariant observable/state spine, and an increasingly concrete reflection-positivity route.
 
 ### 1. Signed periodic compact-gauge and `SU(N)` Wilson laws
 
@@ -247,22 +251,78 @@ The aggregate observable import is
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeSymmetryObservableSpine
 ```
 
-### 4. Current OS reflection-positivity frontier
+### 4. Exact Wilson kernel and RKHS feature layer
 
-The newest PR #282 files separate the continuum OS problem into explicit inputs:
+The current branch constructs the standard relative Wilson crossing kernel and its real Hilbert/RKHS feature realization. The exact diagonal identity
 
 ```text
-physical positive-time observable algebra and reflection
-  + exact half-lattice change of variables / action splitting
-  + Peter--Weyl Hilbert-feature factorization of the crossing kernel
-  -> finite-lattice reflection positivity
-  -> weak-star closedness
-  -> continuum reflection-positive state.
+K_beta(g, g) = 1
 ```
 
-The branch proves the abstract limit-transfer theorem and packages a terminal continuum OS-positive state once the half-lattice decomposition and Peter--Weyl feature data are supplied.
+implies:
 
-This is not yet a completed concrete `SU(N)` OS construction. The model-specific half-lattice decomposition, character-coefficient positivity/feature realization, and final compiler validation of the newest Hilbert-kernel layer remain active work.
+```text
+||feature(g)|| = 1;
+```
+
+this is proved for the one-plaquette `SU(N)` Wilson feature, every pulled-back local crossing feature, and every finite completed-tensor-product global feature.
+
+This exact norm result removes a former analytic over-assumption. For a weighted global feature
+
+```text
+amplitude(n,F,x) * globalFeature_n(x),
+```
+
+its norm is exactly `|amplitude(n,F,x)|`. Therefore finite half-measure, strong measurability, and a scalar amplitude bound are sufficient to generate the required integrability and Bochner-Gram reflection-positivity certificate. A factored interface further derives global measurability from separate measurability of the scalar amplitude and each one-plaquette feature.
+
+### 5. Even-periodic local-kernel product and OS transfer
+
+The branch now includes typed constructors for:
+
+```text
+exact crossing-plaquette list
+  -> local Wilson kernels
+  -> finite kernel product
+  -> completed tensor-product feature
+  -> bounded integrability
+  -> finite-lattice pullback-form nonnegativity
+  -> approximating weak-star reflection positivity
+  -> continuum weak-star reflection positivity.
+```
+
+These are theorem-generating constructors under explicit half-lattice, amplitude, measurability, and kernel-identification data. They do not by themselves prove that the actual periodic `SU(N)` Gibbs reflection form satisfies every required input.
+
+### 6. Boundary-fibered reflection positivity
+
+A simple product of two independent half-lattice measures is not correct when spatial links on reflection-fixed time planes are shared. The newest branch files introduce the correct boundary-fibered shape:
+
+```text
+boundary configuration b
+  -> conditional open-half measure mu_half(b)
+  -> conditional Bochner moment M_b(F)
+  -> reflected form = integral_b ||M_b(F)||^2 dmu_boundary(b)
+  -> nonnegativity.
+```
+
+The branch adds:
+
+- an involutive edge-orbit partition into positive, negative, and reflection-fixed boundary sectors;
+- boundary-fibered coordinate and index equivalences;
+- product/Pi-measure factorization infrastructure;
+- a boundary-fibered Bochner-Gram certificate;
+- transfer from this certificate to approximating and continuum reflection positivity.
+
+The current model-specific frontier is to complete and validate the exact factorization of the actual periodic `SU(N)` Haar--Gibbs pullback form into this boundary-fibered representation, including the Wilson action/crossing-kernel identification and removal of temporary diagnostic workflow support.
+
+## Current CI snapshot for PR #282
+
+At head `592f3068bbb7f00b3a803ea75a3ed402d6674e3a`:
+
+- ordinary **PR Lean Fast Check** run 3844 is in progress at this snapshot;
+- temporary **Boundary-Fibered Pi Measure Check** run 2 recorded failure in its final status-propagation step, while its targeted `Build boundary-fibered pi measure factorization` step completed successfully;
+- the branch still contains a temporary boundary-fibered diagnostic workflow and is not merge-ready until the ordinary workflow is green and temporary diagnostics are removed.
+
+This volatile CI receipt belongs in the proof-status snapshot, not in the mathematical claim boundary.
 
 ## Current theorem boundary
 
@@ -276,12 +336,16 @@ This is not yet a completed concrete `SU(N)` OS construction. The model-specific
 | Periodic 4D bounds `d_active <= 18`, `m_shared <= 1` | proved on `main` for `n >= 3` |
 | Orientation-correct finite Wilson system and periodic `Z2` instance | constructed on `main` |
 | Orientation-correct locality bridge | open in PR #289 |
+| Oriented conditional/influence/Hamiltonian bridge | incomplete |
 | Explicit periodic `Z2` strict-coefficient theorem | open |
 | Compact oriented Haar--Gibbs gauge theory and standard `SU(N)` energy | implemented in PR #282, not on `main` |
 | Concrete signed periodic `SU(N)` weak-limit constructor | implemented in PR #282 under explicit analytic inputs |
 | Continuum gauge-symmetry and observable transfer | implemented in PR #282 under compatibility inputs |
 | Gauge-invariant continuous/weak-star state convergence | implemented in PR #282 |
-| Concrete `SU(N)` half-lattice/Peter--Weyl OS certificate | incomplete |
+| Exact local/global Wilson RKHS feature norm `= 1` | implemented in PR #282 |
+| Finite-measure bounded-integrability and amplitude-bound OS constructors | implemented in PR #282 |
+| Boundary-fibered Bochner-Gram positivity theorem | implemented in PR #282 |
+| Exact actual periodic `SU(N)` boundary-fibered Haar--Gibbs identification | incomplete |
 | Concrete physical carrier and interpolation/blocking maps | open |
 | Justified renormalized coupling trajectory | open |
 | Nontriviality, interacting character, and uniqueness/phase selection | open |
@@ -292,12 +356,13 @@ This is not yet a completed concrete `SU(N)` OS construction. The model-specific
 
 ## Relation of the two lanes
 
-The finite Dobrushin lane and the physical weak-limit lane solve different parts of the problem.
+The finite Dobrushin lane and the physical weak-limit/OS lane solve different parts of the problem.
 
 - The Dobrushin lane gives exact finite-volume coercivity and spectral consequences once a strict influence estimate is available.
 - The weak-limit lane constructs subsequential probability measures once a concrete carrier, interpolation, and coercive compactness estimate are available.
+- The OS lane converts an exact half-lattice/kernel factorization into reflection positivity and transfers it through weak-star convergence.
 
-Neither lane currently supplies the missing continuum-relevant scale-uniform estimate. Single-link Dobrushin control is expected to describe a restrictive regime and may need to be replaced by block dynamics, multiscale estimates, reflection-positive transfer bounds, or another justified coercive mechanism.
+None currently supplies the missing continuum-relevant scale-uniform physical gap estimate. Single-link Dobrushin control is expected to describe a restrictive regime and may need to be replaced by block dynamics, multiscale estimates, reflection-positive transfer bounds, renormalization-group coercivity, or another justified mechanism.
 
 ## Exact `33/20` lane
 
@@ -320,19 +385,19 @@ This is an internal normalization and dependency-routing surface. It is **not** 
 
 | Topic | File |
 |---|---|
-| Short authoritative status | `docs/current_proof_status.md` |
+| Authoritative short status | `docs/current_proof_status.md` |
 | Development roadmap | `ROADMAP.md` |
 | Physical measure frontier | `docs/physical_yang_mills_measure_frontier.md` in PR #282 |
 | Symmetry and observable spine | `docs/physical_yang_mills_symmetry_observable_spine.md` in PR #282 |
 | Canonical Dobrushin spectral/Rayleigh lift | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonCanonicalRandomScanRayleighSpectralLift.lean` |
-| Canonical strict-family gap | `MGAP4D/MathlibAnalytic/FiniteWilsonCanonicalDobrushinStrictFamilyGap.lean` |
 | Shared-plaquette energy bound | `MGAP4D/MathlibAnalytic/FiniteLatticeWilsonSharedPlaquetteEnergyGap.lean` |
-| Signed periodic geometry | `MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.lean` |
 | Orientation-correct finite Wilson system | `MGAP4D/MathlibAnalytic/FiniteOrientedLatticeWilsonSystem.lean` |
 | Periodic oriented `Z2` instance | `MGAP4D/MathlibAnalytic/Z2PeriodicHypercubicOrientedWilsonSystem.lean` |
-| PR #282 physical weak-limit constructor | `MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryWeakLimit.lean` |
-| PR #282 weak-star OS transfer | `MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantWeakStarReflectionPositivity.lean` |
-| PR #282 oriented OS construction package | `MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSConstruction.lean` |
+| Physical weak-limit constructor | `MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryWeakLimit.lean` in PR #282 |
+| Exact Wilson RKHS feature norm | `MGAP4D/MathlibAnalytic/SpecialUnitaryWilsonKernelFeatureNorm.lean` in PR #282 |
+| Amplitude-bounded OS constructor | `MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelProduct.lean` in PR #282 |
+| Boundary-fibered Bochner Gram | `MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGram.lean` in PR #282 |
+| Boundary-fibered Pi measure | `MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedPiMeasure.lean` in PR #282 |
 | Exact-gap dependency separation | `docs/exact_gap_layer_separation.md` |
 | Placeholder / proof-debt inventory | `docs/proof_placeholder_inventory.md` |
 
@@ -358,14 +423,15 @@ A successful replay verifies the declared Lean source in the pinned environment.
 
 ## Current priorities
 
-1. Complete compiler validation of the newest Hilbert-kernel/OS files in PR #282 and restore the ordinary workflow before merge.
-2. Supply the concrete periodic `SU(N)` half-lattice decomposition and Peter--Weyl feature theorem required by the OS package.
-3. Choose a physically appropriate distributional carrier, explicit interpolation/blocking maps, and a justified renormalized coupling trajectory.
-4. Construct a proper Sobolev/Besov-type functional and prove its uniform coercive interpolation estimate.
-5. Prove nontriviality, interacting character, and uniqueness or characterize phase selection of the continuum law.
-6. Merge or rebase the orientation-correct locality work in PR #289 and connect it to the canonical conditional-influence API.
-7. Determine a continuum-relevant uniform coercive mechanism: block/multiscale Dobrushin, reflection-positive transfer bounds, or another explicit route.
-8. Transfer the remaining OS axioms, perform OS reconstruction, derive the physical transfer normalization independently of `exactGapValueReal`, and prove a positive physical Hamiltonian gap.
+1. Complete the boundary-fibered Pi-measure/factorization validation in PR #282, remove temporary diagnostics, and obtain an ordinary green PR check.
+2. Identify the actual periodic `SU(N)` Haar--Gibbs reflection form with the boundary-fibered Bochner-Gram/kernel product representation.
+3. Rebase and audit PR #282, then merge only the stable finite-law, weak-limit, observable, and OS layers that replay on the ordinary workflow.
+4. Choose a physically appropriate distributional carrier, explicit interpolation/blocking maps, and a justified renormalized coupling trajectory.
+5. Construct a proper Sobolev/Besov-type functional and prove its uniform coercive interpolation estimate.
+6. Prove nontriviality, interacting character, and uniqueness or characterize phase selection of the continuum law.
+7. Complete PR #289 and connect the oriented conditional/influence interface to the canonical Dobrushin/Rayleigh/Hamiltonian spine.
+8. Develop a continuum-relevant block, multiscale, reflection-positive-transfer, or renormalization-group gap mechanism.
+9. Prove the remaining OS axioms, perform OS reconstruction, derive physical transfer normalization independently of `exactGapValueReal`, and prove a positive physical Hamiltonian gap.
 
 ## Public claim boundary
 
@@ -379,8 +445,10 @@ canonical Dobrushin-to-Rayleigh, plaquette-locality, and periodic oriented
 four-dimensional incidence results. Open PR #282 additionally constructs actual
 signed periodic SU(N) Haar--Gibbs laws and a conditional route to subsequential
 physical weak limits, gauge-symmetry transfer, observable moments, weak-star
-states, and OS reflection positivity from explicit half-lattice/Peter--Weyl
-inputs. The repository does not yet provide the final physical carrier,
-renormalized scaling, nontrivial continuum measure, complete OS reconstruction,
-or physical Hamiltonian mass gap, and it does not independently derive 33/20.
+states, exact Wilson RKHS crossing features, bounded-integrability OS
+constructors, and boundary-fibered Bochner-Gram reflection positivity. The
+repository does not yet provide the final physical carrier, renormalized scaling,
+nontrivial continuum measure, complete concrete SU(N) reflection factorization,
+full OS reconstruction, or physical Hamiltonian mass gap, and it does not
+independently derive 33/20.
 ```
