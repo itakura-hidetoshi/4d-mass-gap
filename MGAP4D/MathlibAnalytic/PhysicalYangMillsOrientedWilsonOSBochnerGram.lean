@@ -8,11 +8,13 @@ open MeasureTheory
 
 noncomputable section
 
+universe u v
+
 /-- An iterated real Hilbert Gram integral is the squared norm of its Bochner
 moment.  This is the analytic identity underlying the compact-group
 Peter--Weyl reflection-positivity argument. -/
 theorem iterated_integral_real_inner_eq_norm_integral_sq
-    {X H : Type}
+    {X : Type u} {H : Type v}
     [MeasurableSpace X]
     [NormedAddCommGroup H]
     [InnerProductSpace ℝ H]
