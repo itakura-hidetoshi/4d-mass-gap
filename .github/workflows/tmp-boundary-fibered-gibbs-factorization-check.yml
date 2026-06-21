@@ -1,21 +1,14 @@
-name: Temporary Boundary-Fibered Gibbs Factorization Check
+name: Manual Boundary-Fibered Gibbs Factorization Check
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/tmp-boundary-fibered-gibbs-factorization-check.yml"
-      - "MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonBoundaryFiberedGibbsFactorization.lean"
-      - "lean-toolchain"
-      - "lakefile.lean"
-      - "lake-manifest.json"
 
 permissions:
   contents: read
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  LAKE_CACHE_REF_SHA: ${{ github.sha }}
 
 jobs:
   boundary-fibered-gibbs-factorization:
