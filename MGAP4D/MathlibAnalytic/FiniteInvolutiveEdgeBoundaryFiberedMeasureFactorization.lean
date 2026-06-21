@@ -29,6 +29,7 @@ structure BoundaryFiberedMeasureFactorization
   fullMeasure : Measure (Edge → Value)
   boundaryMeasure : Measure (P.BoundaryConfiguration Value)
   halfMeasure : Measure (P.OpenHalfConfiguration Value)
+  boundaryMeasure_sfinite : SFinite boundaryMeasure
   halfMeasure_sfinite : SFinite halfMeasure
   coordinates_aemeasurable :
     AEMeasurable (P.boundaryFiberedCoordinates Value) fullMeasure
@@ -37,6 +38,7 @@ structure BoundaryFiberedMeasureFactorization
       boundaryMeasure.prod (halfMeasure.prod halfMeasure)
 
 attribute [instance]
+  BoundaryFiberedMeasureFactorization.boundaryMeasure_sfinite
   BoundaryFiberedMeasureFactorization.halfMeasure_sfinite
 
 /-- Transport a full-configuration integral through the exact
