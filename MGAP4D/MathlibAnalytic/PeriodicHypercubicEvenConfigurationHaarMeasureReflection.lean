@@ -53,6 +53,25 @@ theorem periodicHypercubicEvenConfigurationReflection_measurePreserving
   rw [hfun] at hcomposition
   exact hcomposition
 
+/-- The canonical product Haar reference measure of the actual even-periodic
+`SU(N)` Wilson system is invariant under physical time reflection. -/
+theorem periodicHypercubicSpecialUnitaryWilsonSystem_configurationHaar_reflection_measurePreserving
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta) :
+    MeasurePreserving
+      (periodicHypercubicEvenConfigurationReflection
+        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).base.configurationHaarMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).base.configurationHaarMeasure := by
+  unfold CompactOrientedGaugeWilsonSystem.configurationHaarMeasure
+  exact periodicHypercubicEvenConfigurationReflection_measurePreserving H
+    (Matrix.specialUnitaryGroup (Fin N) ℂ)
+
 end
 
 end MathlibAnalytic
