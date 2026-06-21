@@ -68,4 +68,15 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Build target
-        run: lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenReflectionSectorCompileSmoke
+        shell: bash
+        run: |
+          set -o pipefail
+          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenReflectionSectorCompileSmoke 2>&1 | tee /tmp/even-periodic-reflection-build.log
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: even-periodic-reflection-build-log
+          path: /tmp/even-periodic-reflection-build.log
+          if-no-files-found: error
