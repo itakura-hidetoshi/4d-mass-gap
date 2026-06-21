@@ -9,6 +9,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenOpenHalfPlaquetteReflection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenOpenHalfDisjointness.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenConfigurationReflection.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenConfigurationHaarReflection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenPlaquetteHolonomyReflection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenWilsonActionSectorDecomposition.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenWilsonActionExactSectors.lean"
