@@ -1,0 +1,23 @@
+name: Temporary Even-Periodic Action Sector Check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-even-periodic-action-sector-check.yml"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenWilsonActionSectorDecomposition.lean"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Lean
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build target
+        run: lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorDecomposition
