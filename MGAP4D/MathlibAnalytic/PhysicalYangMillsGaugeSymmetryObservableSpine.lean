@@ -8,6 +8,7 @@ import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedMeasureFactoriz
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedBochnerFactorization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHalfLatticeProductFactorization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGram
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicHolonomyMeasurableAmplitudeBoundedLocalKernelProduct
 
 namespace MGAP4D
@@ -48,6 +49,8 @@ This aggregate module exposes the complete typed route
 * a generic boundary-fibered measure-to-Bochner Gram theorem;
 * a boundary-fibered decomposition retaining shared reflection-fixed-plane variables;
 * conditional Bochner Gram reduction over each fixed boundary configuration;
+* a concrete coordinate-to-physical-pullback constructor producing finite-volume and
+  continuum Osterwalder--Schrader reflection positivity;
 * an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
 * the concrete one-plaquette `SU(N)` Wilson Boltzmann central function;
 * the relative group kernel `k_beta(g⁻¹h)` and its half-holonomy pullback;
