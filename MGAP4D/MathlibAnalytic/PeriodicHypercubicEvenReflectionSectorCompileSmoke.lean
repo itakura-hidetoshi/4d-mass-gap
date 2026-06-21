@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfPlaquetteReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfDisjointness
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPlaquetteHolonomyReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorDecomposition
@@ -10,9 +11,10 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Compile receipt for the even-periodic reflection-sector geometry, physical
-configuration involution, plaquette-holonomy reflection law, Wilson-energy and
-full-action reflection invariance, and exact three-sector action decomposition. -/
+/-- Compile receipt for the even-periodic reflection-sector geometry, disjoint
+open halves, physical configuration involution, plaquette-holonomy reflection
+law, Wilson-energy and full-action reflection invariance, and exact three-sector
+action decomposition. -/
 theorem periodicHypercubicEvenReflectionSector_compile_receipt : True := by
   trivial
 
