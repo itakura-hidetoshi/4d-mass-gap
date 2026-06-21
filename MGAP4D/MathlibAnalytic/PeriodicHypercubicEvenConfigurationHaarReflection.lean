@@ -64,7 +64,7 @@ theorem periodicHypercubicEvenConfigurationReindex_measurePreserving
 
 /-- Pointwise orientation correction after reflected-edge reindexing. -/
 def periodicHypercubicEvenConfigurationOrientationCorrection
-    {Gauge : Type} [Group Gauge]
+    {H : ℕ} {Gauge : Type} [Group Gauge]
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
     PeriodicHypercubicEvenEdge H → Gauge :=
   fun e => if e.2 = 0 then (A e)⁻¹ else A e
