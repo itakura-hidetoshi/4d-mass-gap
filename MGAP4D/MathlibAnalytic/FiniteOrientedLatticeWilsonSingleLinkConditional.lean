@@ -51,6 +51,38 @@ theorem finite_oriented_singleLinkPartitionFunction_ne_zero
         L A target default))
       (hAll default)
 
+/-- The exact single-link conditional partition function is finite. -/
+theorem finite_oriented_singleLinkPartitionFunction_ne_top
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge) :
+    L.singleLinkPartitionFunction A target ≠ ∞ := by
+  classical
+  unfold FiniteOrientedLatticeWilsonSystem.singleLinkPartitionFunction
+  rw [tsum_fintype]
+  exact ENNReal.sum_ne_top.2 fun g _hg => by
+    simp [FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight]
+
+/-- Exact single-link conditional law of the orientation-correct Wilson action. -/
+def FiniteOrientedLatticeWilsonSystem.singleLinkConditionalPMF
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge) : PMF L.Gauge :=
+  PMF.normalize (L.singleLinkBoltzmannWeight A target)
+    (finite_oriented_singleLinkPartitionFunction_ne_zero L A target)
+    (finite_oriented_singleLinkPartitionFunction_ne_top L A target)
+
+/-- Pointwise formula for the exact single-link conditional law. -/
+theorem finite_oriented_singleLinkConditionalPMF_apply
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge)
+    (g : L.Gauge) :
+    L.singleLinkConditionalPMF A target g =
+      L.singleLinkBoltzmannWeight A target g *
+        (L.singleLinkPartitionFunction A target)⁻¹ := by
+  rfl
+
 end
 
 end MathlibAnalytic
