@@ -58,15 +58,31 @@ theorem boundaryFiberedMeasurableEquiv_coe
   funext A
   apply Prod.ext
   · funext e
-    simp [boundaryFiberedMeasurableEquiv, boundaryFiberedCoordinates,
-      boundaryRestriction, boundaryFiberedIndexEquiv]
+    change
+      (MeasurableEquiv.piCongrLeft
+        (fun _ : P.BoundaryFiberedIndex => Value)
+        P.boundaryFiberedIndexEquiv A) (Sum.inl e) = A e.1
+    rw [← P.boundaryFiberedIndexEquiv_apply_fixed e]
+    exact MeasurableEquiv.piCongrLeft_apply_apply
+      P.boundaryFiberedIndexEquiv A e.1
   · apply Prod.ext
     · funext e
-      simp [boundaryFiberedMeasurableEquiv, boundaryFiberedCoordinates,
-        positiveRestriction, boundaryFiberedIndexEquiv]
+      change
+        (MeasurableEquiv.piCongrLeft
+          (fun _ : P.BoundaryFiberedIndex => Value)
+          P.boundaryFiberedIndexEquiv A) (Sum.inr (Sum.inl e)) = A e.1
+      rw [← P.boundaryFiberedIndexEquiv_apply_positive e]
+      exact MeasurableEquiv.piCongrLeft_apply_apply
+        P.boundaryFiberedIndexEquiv A e.1
     · funext e
-      simp [boundaryFiberedMeasurableEquiv, boundaryFiberedCoordinates,
-        negativeRestriction, boundaryFiberedIndexEquiv]
+      change
+        (MeasurableEquiv.piCongrLeft
+          (fun _ : P.BoundaryFiberedIndex => Value)
+          P.boundaryFiberedIndexEquiv A) (Sum.inr (Sum.inr e)) =
+            A (P.reflection e.1)
+      rw [← P.boundaryFiberedIndexEquiv_apply_reflected_positive e]
+      exact MeasurableEquiv.piCongrLeft_apply_apply
+        P.boundaryFiberedIndexEquiv A (P.reflection e.1)
 
 @[simp]
 theorem boundaryFiberedMeasurableEquiv_apply
