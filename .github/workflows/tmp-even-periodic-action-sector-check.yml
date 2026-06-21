@@ -17,6 +17,10 @@ on:
       - "lakefile.lean"
       - "lake-manifest.json"
 
+concurrency:
+  group: tmp-even-periodic-reflection-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
