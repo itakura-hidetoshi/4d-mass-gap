@@ -3,6 +3,9 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConcreteLocalKernelProduct
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicLocalKernelProduct
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedCoordinates
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedMeasureFactorization
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedBochnerFactorization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHalfLatticeProductFactorization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGram
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicHolonomyMeasurableAmplitudeBoundedLocalKernelProduct
@@ -38,6 +41,11 @@ This aggregate module exposes the complete typed route
 * a geometric and measure-theoretic half-lattice kernel decomposition;
 * density transport from the split Gibbs law to a product half-reference measure;
 * generation of the iterated kernel formula by `integral_map`, `withDensity`, and Fubini;
+* an exact coordinate equivalence from full edge configurations to shared fixed-plane
+  boundary data together with positive and negative open-half configurations;
+* an exact pushforward-measure interface for those boundary-fibered coordinates;
+* two-stage Fubini transport from full-configuration integrals to boundary/half/half integrals;
+* a generic boundary-fibered measure-to-Bochner Gram theorem;
 * a boundary-fibered decomposition retaining shared reflection-fixed-plane variables;
 * conditional Bochner Gram reduction over each fixed boundary configuration;
 * an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
@@ -82,10 +90,12 @@ once the positive-half holonomy of each concrete crossing plaquette is supplied,
 every local feature and their finite completed-tensor product are generated
 automatically.
 
-The remaining geometric inputs are the explicit decomposition of full link
-configurations into shared fixed-plane boundary links and the two open halves,
-the corresponding Haar/Gibbs disintegration, and the Wilson-action identity
-that produces the boundary-conditioned amplitudes and crossing kernel.
+The exact full-edge coordinate equivalence and the abstract measure/Fubini/Bochner
+transport layers are now internal.  The remaining geometric-measure input is the
+proof that the concrete periodic `SU(N)` product Haar law, and then its Wilson
+Gibbs density, satisfy the required boundary-fibered pushforward identity.  The
+remaining action input is the Wilson-action decomposition that generates the
+boundary-conditioned amplitudes and crossing kernel.
 -/
 
 end MathlibAnalytic
