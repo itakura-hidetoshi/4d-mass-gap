@@ -18,6 +18,25 @@ noncomputable def periodicHypercubicEvenNegativeWilsonAction
       (specialUnitaryWilsonPlaquetteEnergy N
         (periodicHypercubicPlaquetteHolonomy A p))
 
+theorem periodicHypercubicEvenNegativeResidualWilsonAction_eq_negativeWilsonAction
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenNegativeResidualWilsonAction H N A =
+      periodicHypercubicEvenNegativeWilsonAction H N A := by
+  classical
+  unfold periodicHypercubicEvenNegativeResidualWilsonAction
+  unfold periodicHypercubicEvenNegativeWilsonAction
+  apply Finset.sum_congr rfl
+  intro p hp
+  by_cases hneg : periodicHypercubicEvenStrictNegativePlaquette p
+  · have hnpos : ¬ periodicHypercubicEvenStrictPositivePlaquette p :=
+      periodicHypercubicEvenStrictNegativePlaquette_not_strictPositivePlaquette
+        H p hneg
+    simp [propositionIndicator, hneg, hnpos]
+  · simp [propositionIndicator, hneg]
+
 end
 
 end MathlibAnalytic
