@@ -7,6 +7,8 @@ open MeasureTheory
 
 noncomputable section
 
+universe u v
+
 /-- Boundary-fibered Bochner Gram data for a Wilson reflection with fixed-plane
 variables shared by the positive and negative halves.
 
@@ -24,13 +26,13 @@ structure PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGramCertificate
       E.toLatticeEmbedding)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData
       (G.toSymmetryLimit L)) where
-  BoundaryConfiguration : Type
+  BoundaryConfiguration : Type u
   [boundaryMeasurableSpace : MeasurableSpace BoundaryConfiguration]
   boundaryMeasure : Measure BoundaryConfiguration
-  HalfConfiguration : Type
+  HalfConfiguration : Type u
   [halfMeasurableSpace : MeasurableSpace HalfConfiguration]
   halfMeasure : BoundaryConfiguration → Measure HalfConfiguration
-  FeatureHilbert : Type
+  FeatureHilbert : Type v
   [featureNormedAddCommGroup : NormedAddCommGroup FeatureHilbert]
   [featureInnerProductSpace : InnerProductSpace ℝ FeatureHilbert]
   [featureCompleteSpace : CompleteSpace FeatureHilbert]
