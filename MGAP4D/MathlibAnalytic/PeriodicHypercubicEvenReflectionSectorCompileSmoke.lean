@@ -10,6 +10,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsSectorFactorization
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingWilsonBoltzmannProduct
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsWeight
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenGibbsReflection
 import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonPlaquetteEnergyInversion
 
@@ -22,8 +23,9 @@ noncomputable section
 open halves, physical configuration involution, plaquette-holonomy reflection
 law, Wilson-energy and full-action reflection invariance, exact three-sector
 action decomposition, exponentiated Gibbs-sector factorization, exact finite
-crossing-plaquette Boltzmann product, reflected sector exchange, product-Haar
-invariance, and actual finite-volume Wilson Gibbs-law reflection invariance. -/
+crossing-plaquette Boltzmann product, its transport to exact boundary-fibered
+coordinates, reflected sector exchange, product-Haar invariance, and actual
+finite-volume Wilson Gibbs-law reflection invariance. -/
 theorem periodicHypercubicEvenReflectionSector_compile_receipt : True := by
   trivial
 
