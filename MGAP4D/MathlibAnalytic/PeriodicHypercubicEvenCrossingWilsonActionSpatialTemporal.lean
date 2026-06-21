@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorDecomposition
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsSectorFactorization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -17,9 +17,9 @@ def periodicHypercubicEvenSpatialCrossingPlaquette
   periodicHypercubicEvenCrossingPlaquette p ∧
     ¬ periodicHypercubicEvenPlaquetteHasTimeDirection p
 
-/-- A crossing plaquette containing the Euclidean-time direction.  This is the
-sector whose Wilson factors can subsequently be identified with relative
-positive-half holonomy kernels. -/
+/-- A crossing plaquette containing the Euclidean-time direction.  This sector
+is separated from the fixed-plane spatial weight before its precise
+boundary/half-lattice dependence is analyzed. -/
 def periodicHypercubicEvenTemporalCrossingPlaquette
     {H : ℕ} (p : PeriodicHypercubicEvenPlaquette H) : Prop :=
   periodicHypercubicEvenCrossingPlaquette p ∧
@@ -56,7 +56,7 @@ noncomputable def periodicHypercubicEvenSpatialCrossingWilsonAction
       (specialUnitaryWilsonPlaquetteEnergy N
         (periodicHypercubicPlaquetteHolonomy A p))
 
-/-- Time-containing bridge contribution to the crossing Wilson action. -/
+/-- Time-containing contribution to the crossing Wilson action. -/
 noncomputable def periodicHypercubicEvenTemporalCrossingWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -69,7 +69,7 @@ noncomputable def periodicHypercubicEvenTemporalCrossingWilsonAction
         (periodicHypercubicPlaquetteHolonomy A p))
 
 /-- The crossing Wilson action is exactly the sum of its fixed-plane spatial
-part and its time-containing bridge part. -/
+part and its time-containing part. -/
 theorem periodicHypercubicEvenCrossingWilsonAction_eq_spatial_add_temporal
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -116,7 +116,7 @@ noncomputable def periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
   Real.exp (-beta * periodicHypercubicEvenSpatialCrossingWilsonAction H N A)
 
-/-- Boltzmann weight of the time-containing bridge sector. -/
+/-- Boltzmann weight of the time-containing crossing sector. -/
 noncomputable def periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -125,8 +125,8 @@ noncomputable def periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
   Real.exp (-beta * periodicHypercubicEvenTemporalCrossingWilsonAction H N A)
 
-/-- The full crossing Boltzmann weight factors into the boundary spatial weight
-and the temporal bridge weight. -/
+/-- The full crossing Boltzmann weight factors into the spatial fixed-plane
+weight and the time-containing weight. -/
 theorem periodicHypercubicEvenCrossingWilsonBoltzmannWeight_eq_spatial_mul_temporal
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
