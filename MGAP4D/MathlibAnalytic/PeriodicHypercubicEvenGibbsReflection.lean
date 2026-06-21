@@ -1,11 +1,12 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationHaarMeasureReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionReflection
 import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonGaugeInvariance
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory Set
+open MeasureTheory Function Set
 
 noncomputable section
 
@@ -127,6 +128,86 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_preimage_e
           (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure s :=
       (Measure.map_apply hMP.measurable hs).symm
     _ = _ := congrArg (fun μ : Measure _ => μ s) hMP.map_eq
+
+/-- Every measurable finite-volume observable has the same Wilson Gibbs
+pushforward law before and after physical time reflection. -/
+theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_observable_law_invariant
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta)
+    {Y : Type} [MeasurableSpace Y]
+    (O : (PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) → Y)
+    (hO : Measurable O) :
+    Measure.map
+        (O ∘ periodicHypercubicEvenConfigurationReflection
+          (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure =
+      Measure.map O
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
+  have hMP :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_measurePreserving
+      H N hN beta beta_nonneg
+  calc
+    Measure.map
+        (O ∘ periodicHypercubicEvenConfigurationReflection
+          (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure =
+        Measure.map O
+          (Measure.map
+            (periodicHypercubicEvenConfigurationReflection
+              (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
+            (periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure) :=
+      (Measure.map_map hO hMP.measurable).symm
+    _ = Measure.map O
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
+      rw [hMP.map_eq]
+
+/-- Expectations of bounded continuous real observables under the actual
+finite-volume Wilson Gibbs law are invariant under physical time reflection. -/
+theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_bounded_observable_expectation_invariant
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta)
+    (O : BoundedContinuousFunction
+      (PeriodicHypercubicEvenEdge H →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) ℝ) :
+    (∫ A, O (periodicHypercubicEvenConfigurationReflection H A)
+      ∂(periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure) =
+      ∫ A, O A
+        ∂(periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
+  have hMP :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_measurePreserving
+      H N hN beta beta_nonneg
+  calc
+    (∫ A, O (periodicHypercubicEvenConfigurationReflection H A)
+      ∂(periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure) =
+        ∫ A, O A
+          ∂Measure.map
+            (periodicHypercubicEvenConfigurationReflection
+              (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
+            (periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
+      symm
+      exact MeasureTheory.integral_map
+        hMP.measurable.aemeasurable
+        O.continuous.aestronglyMeasurable
+    _ = ∫ A, O A
+        ∂(periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
+      rw [hMP.map_eq]
 
 end
 
