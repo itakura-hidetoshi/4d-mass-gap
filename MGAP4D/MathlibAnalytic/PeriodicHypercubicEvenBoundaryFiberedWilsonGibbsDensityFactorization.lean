@@ -79,8 +79,8 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal
             (P.boundaryFiberedAssemble z.1 z.2.1 z.2.2)) /
         C.base.partitionFunction
   rw [P.boundaryFiberedPiMeasurableEquiv_symm_apply]
-  rw [ENNReal.toReal_ofReal]
-  exact div_nonneg (Real.exp_pos _).le hZ.le
+  exact ENNReal.toReal_ofReal
+    (div_nonneg (Real.exp_pos _).le hZ.le)
 
 /-- Exact factorization of the actual transported Wilson Gibbs density into the
 positive and negative open-half amplitudes, the finite product of crossing
