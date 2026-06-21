@@ -37,6 +37,22 @@ theorem periodicHypercubicEvenNegativeResidualWilsonAction_eq_negativeWilsonActi
     simp [propositionIndicator, hneg, hnpos]
   · simp [propositionIndicator, hneg]
 
+theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_exact_sector_decomposition
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta)
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).base.wilsonAction A =
+      periodicHypercubicEvenPositiveWilsonAction H N A +
+      periodicHypercubicEvenNegativeWilsonAction H N A +
+      periodicHypercubicEvenCrossingWilsonAction H N A := by
+  rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_sector_decomposition]
+  rw [periodicHypercubicEvenNegativeResidualWilsonAction_eq_negativeWilsonAction]
+
 end
 
 end MathlibAnalytic
