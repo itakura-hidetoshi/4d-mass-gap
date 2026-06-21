@@ -1,0 +1,40 @@
+name: Temporary Boundary-Fibered Product Measure Preflight
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-boundary-fibered-product-measure-preflight.yml"
+      - "MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedProductMeasure.lean"
+      - "scripts/audit_changed_lean_preflight.py"
+      - "scripts/audit_lean_source_integrity.py"
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: Boundary-fibered product measure preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Run source audits
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 scripts/audit_lean_source_integrity.py \
+            MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedProductMeasure.lean \
+            2>&1 | tee /tmp/boundary-fibered-product-measure-preflight.log
+          python3 scripts/audit_changed_lean_preflight.py \
+            MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedProductMeasure.lean \
+            2>&1 | tee -a /tmp/boundary-fibered-product-measure-preflight.log
+
+      - name: Upload preflight diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: boundary-fibered-product-measure-preflight-diagnostics
+          path: /tmp/boundary-fibered-product-measure-preflight.log
+          if-no-files-found: ignore
