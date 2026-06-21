@@ -94,16 +94,37 @@ theorem periodicHypercubicEvenCrossingWilsonAction_configurationReflection
     periodicHypercubicEvenCrossingWilsonAction H N
         (periodicHypercubicEvenConfigurationReflection H A) =
       periodicHypercubicEvenCrossingWilsonAction H N A := by
+  have hzero : (0 : ℝ) ≤ 0 := le_rfl
   have hreflected :=
     periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_exact_sector_decomposition
-      H N hN 0 (by positivity)
+      H N hN 0 hzero
       (periodicHypercubicEvenConfigurationReflection H A)
   have horiginal :=
     periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_exact_sector_decomposition
-      H N hN 0 (by positivity) A
-  rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_reflection_invariant,
-    periodicHypercubicEvenPositiveWilsonAction_configurationReflection,
-    periodicHypercubicEvenNegativeWilsonAction_configurationReflection] at hreflected
+      H N hN 0 hzero A
+  have hinvariant :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_reflection_invariant
+      H N hN 0 hzero A
+  have hsum :
+      periodicHypercubicEvenPositiveWilsonAction H N
+          (periodicHypercubicEvenConfigurationReflection H A) +
+        periodicHypercubicEvenNegativeWilsonAction H N
+          (periodicHypercubicEvenConfigurationReflection H A) +
+        periodicHypercubicEvenCrossingWilsonAction H N
+          (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenPositiveWilsonAction H N A +
+        periodicHypercubicEvenNegativeWilsonAction H N A +
+        periodicHypercubicEvenCrossingWilsonAction H N A := by
+    calc
+      _ = (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN 0 hzero).base.wilsonAction
+          (periodicHypercubicEvenConfigurationReflection H A) := hreflected.symm
+      _ = (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN 0 hzero).base.wilsonAction A :=
+            hinvariant
+      _ = _ := horiginal
+  rw [periodicHypercubicEvenPositiveWilsonAction_configurationReflection,
+    periodicHypercubicEvenNegativeWilsonAction_configurationReflection] at hsum
   linarith
 
 end
