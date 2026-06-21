@@ -38,6 +38,36 @@ def boundaryFiberedMeasurableEquiv
         (MeasurableEquiv.sumPiEquivProdPi
           (fun _ : P.PositiveEdge ⊕ P.PositiveEdge => Value))))
 
+/-- The canonical measurable equivalence has exactly the same underlying
+function as the previously constructed explicit boundary-fibered coordinates. -/
+theorem boundaryFiberedMeasurableEquiv_coe
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+    (Value : Type v)
+    [MeasurableSpace Value] :
+    ((P.boundaryFiberedMeasurableEquiv Value :
+        (Edge → Value) ≃ᵐ
+          P.BoundaryConfiguration Value ×
+            (P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value)) :
+      (Edge → Value) →
+        P.BoundaryConfiguration Value ×
+          (P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value)) =
+      (P.boundaryFiberedCoordinates Value :
+        (Edge → Value) →
+          P.BoundaryConfiguration Value ×
+            (P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value)) := by
+  funext A
+  apply Prod.ext
+  · funext e
+    simp [boundaryFiberedMeasurableEquiv, boundaryFiberedCoordinates,
+      boundaryRestriction, boundaryFiberedIndexEquiv]
+  · apply Prod.ext
+    · funext e
+      simp [boundaryFiberedMeasurableEquiv, boundaryFiberedCoordinates,
+        positiveRestriction, boundaryFiberedIndexEquiv]
+    · funext e
+      simp [boundaryFiberedMeasurableEquiv, boundaryFiberedCoordinates,
+        negativeRestriction, boundaryFiberedIndexEquiv]
+
 @[simp]
 theorem boundaryFiberedMeasurableEquiv_apply
     (P : FiniteInvolutiveEdgeOrbitPartition Edge)
@@ -46,7 +76,7 @@ theorem boundaryFiberedMeasurableEquiv_apply
     (A : Edge → Value) :
     P.boundaryFiberedMeasurableEquiv Value A =
       P.boundaryFiberedCoordinates Value A := by
-  rfl
+  exact congr_fun (P.boundaryFiberedMeasurableEquiv_coe Value) A
 
 /-- A finite product of one common sigma-finite measure is preserved by the
 exact boundary-fibered coordinate equivalence. -/
@@ -127,8 +157,8 @@ theorem map_boundaryFiberedCoordinates_pi
       (Measure.pi fun _ : P.FixedEdge => mu).prod
         ((Measure.pi fun _ : P.PositiveEdge => mu).prod
           (Measure.pi fun _ : P.PositiveEdge => mu)) := by
-  simpa only [boundaryFiberedMeasurableEquiv_apply] using
-    (P.measurePreserving_boundaryFiberedMeasurableEquiv Value mu).map_eq
+  rw [← P.boundaryFiberedMeasurableEquiv_coe Value]
+  exact (P.measurePreserving_boundaryFiberedMeasurableEquiv Value mu).map_eq
 
 /-- Canonical boundary-fibered measure-factorization package for a finite
 product of one sigma-finite base measure. -/
@@ -144,8 +174,9 @@ noncomputable def piBoundaryFiberedMeasureFactorization
   halfMeasure := Measure.pi fun _ : P.PositiveEdge => mu
   boundaryMeasure_sfinite := inferInstance
   halfMeasure_sfinite := inferInstance
-  coordinates_aemeasurable :=
-    (P.boundaryFiberedMeasurableEquiv Value).measurable.aemeasurable
+  coordinates_aemeasurable := by
+    rw [← P.boundaryFiberedMeasurableEquiv_coe Value]
+    exact (P.boundaryFiberedMeasurableEquiv Value).measurable.aemeasurable
   map_coordinates_fullMeasure :=
     P.map_boundaryFiberedCoordinates_pi Value mu
 
