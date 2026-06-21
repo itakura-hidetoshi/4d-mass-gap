@@ -70,6 +70,20 @@ theorem periodicHypercubicEvenPositiveWilsonAction_configurationReflection
               intro p hp
               rw [periodicHypercubicEvenPlaquetteReflection_strictPositive_iff_strictNegative]
 
+/-- Reflection exchanges the exact negative-open-half Wilson action with the
+positive-open-half Wilson action. -/
+theorem periodicHypercubicEvenNegativeWilsonAction_configurationReflection
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenNegativeWilsonAction H N
+        (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenPositiveWilsonAction H N A := by
+  rw [← periodicHypercubicEvenPositiveWilsonAction_configurationReflection
+    H N (periodicHypercubicEvenConfigurationReflection H A)]
+  rw [periodicHypercubicEvenConfigurationReflection_involutive H A]
+
 end
 
 end MathlibAnalytic
