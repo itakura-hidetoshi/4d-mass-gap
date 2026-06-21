@@ -57,8 +57,12 @@ theorem periodicHypercubicEvenPlaquetteHolonomy_configurationReflection_of_hasTi
           (periodicHypercubicEvenPlaquetteReflection H p))⁻¹ *
         A ((periodicHypercubicEvenPlaquetteReflection H p).1, 0) := by
   rcases p with ⟨base, ⟨⟨mu, nu⟩, hmunu⟩⟩
+  have haxes : mu = 0 ∨ nu = 0 := by
+    simpa [periodicHypercubicEvenPlaquetteHasTimeDirection,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis] using htime
   have hmu : mu = 0 := by
-    rcases htime with hmu | hnu
+    rcases haxes with hmu | hnu
     · exact hmu
     · subst nu
       exact False.elim ((Fin.not_lt_zero mu) hmunu)
@@ -81,9 +85,7 @@ theorem periodicHypercubicEvenPlaquetteHolonomy_configurationReflection_of_hasTi
     periodicHypercubicEvenTimeReflection_shift_time,
     periodicHypercubicEvenTimeReflection_shift_spatial,
     periodicHypercubicEven_shift_unshift_time_comm,
-    periodicHypercubicShift_unshift,
-    periodicHypercubicUnshift_shift,
-    periodicHypercubicShift_comm]
+    periodicHypercubicShift_unshift]
   group
 
 end
