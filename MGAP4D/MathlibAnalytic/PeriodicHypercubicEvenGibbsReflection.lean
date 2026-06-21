@@ -22,6 +22,11 @@ local instance periodicHypercubicGibbsSpecialUnitaryCompactSpace
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
+local instance periodicHypercubicGibbsSpecialUnitarySecondCountableTopology
+    (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
 local instance periodicHypercubicGibbsSpecialUnitaryMeasurableSpace
     (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -168,7 +173,9 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_observable
     _ = Measure.map O
         (periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
-      rw [hMP.map_eq]
+      exact congrArg (Measure.map O)
+        (periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_map_eq_self
+          H N hN beta beta_nonneg)
 
 /-- Expectations of bounded continuous real observables under the actual
 finite-volume Wilson Gibbs law are invariant under physical time reflection. -/
@@ -207,7 +214,7 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_bounded_ob
     _ = ∫ A, O A
         ∂(periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
-      rw [hMP.map_eq]
+      rw [periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_map_eq_self]
 
 end
 
