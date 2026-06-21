@@ -7,8 +7,9 @@ on:
       - ".github/workflows/tmp-boundary-fibered-density-bochner-check.yml"
       - "MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedDensityBochnerFactorization.lean"
       - "MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonBoundaryFiberedDensityBochner.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSBoundaryFiberedGibbsBochner.lean"
       - "MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonBoundaryFiberedGibbsFactorization.lean"
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSBochnerGram.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSPullback.lean"
       - "scripts/audit_changed_lean_preflight.py"
       - "scripts/audit_lean_source_integrity.py"
       - "lean-toolchain"
@@ -39,10 +40,12 @@ jobs:
           python3 scripts/audit_lean_source_integrity.py \
             MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedDensityBochnerFactorization.lean \
             MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonBoundaryFiberedDensityBochner.lean \
+            MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSBoundaryFiberedGibbsBochner.lean \
             2>&1 | tee /tmp/boundary-fibered-density-bochner-preflight.log
           python3 scripts/audit_changed_lean_preflight.py \
             MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedDensityBochnerFactorization.lean \
             MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonBoundaryFiberedDensityBochner.lean \
+            MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedWilsonOSBoundaryFiberedGibbsBochner.lean \
             2>&1 | tee -a /tmp/boundary-fibered-density-bochner-preflight.log
 
       - name: Cache elan toolchain
@@ -83,6 +86,7 @@ jobs:
           lake build \
             MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedDensityBochnerFactorization \
             MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonBoundaryFiberedDensityBochner \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedGibbsBochner \
             2>&1 | tee /tmp/boundary-fibered-density-bochner.log
 
       - name: Upload diagnostics
