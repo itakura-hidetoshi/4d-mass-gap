@@ -86,8 +86,6 @@ structure PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateData
           ∂measureFactorization.fullMeasure
 
 attribute [instance]
-  PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateData.edgeFintype
-  PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateData.valueMeasurableSpace
   PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateData.featureNormedAddCommGroup
   PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateData.featureInnerProductSpace
   PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateData.featureCompleteSpace
