@@ -100,7 +100,11 @@ theorem periodicHypercubicEvenConfigurationOrientationCorrection_measurePreservi
         normalizedCompactHaar Gauge)) := by
   refine ⟨?_, ?_⟩
   · unfold periodicHypercubicEvenConfigurationOrientationCorrection
-    fun_prop
+    refine measurable_pi_lambda _ ?_
+    intro e
+    exact
+      (periodicHypercubicEvenOrientationCorrection_coordinate_measurePreserving
+        H Gauge e).measurable.comp (measurable_pi_apply e)
   · let f : PeriodicHypercubicEvenEdge H → Gauge → Gauge :=
       fun e x => if e.2 = 0 then x⁻¹ else x
     have hf : ∀ e,
