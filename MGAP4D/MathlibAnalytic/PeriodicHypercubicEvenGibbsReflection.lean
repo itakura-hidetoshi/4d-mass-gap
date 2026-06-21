@@ -214,7 +214,12 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_bounded_ob
     _ = ∫ A, O A
         ∂(periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).gibbsMeasure := by
-      rw [periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_map_eq_self]
+      simpa only using congrArg
+        (fun μ : Measure (PeriodicHypercubicEvenEdge H →
+            Matrix.specialUnitaryGroup (Fin N) ℂ) =>
+          ∫ A, O A ∂μ)
+        (periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_map_eq_self
+          H N hN beta beta_nonneg)
 
 end
 
