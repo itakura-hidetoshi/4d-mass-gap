@@ -79,6 +79,15 @@ theorem periodicHypercubicEvenCrossingWilsonPlaquetteEnergyTerms_sum
         periodicHypercubicEvenStrictNegativePlaquette,
         Set.toFinset_setOf]
       rw [Finset.sum_filter]
+      apply Finset.sum_congr rfl
+      intro p _
+      by_cases hcross :
+          ¬ periodicHypercubicEvenStrictPositiveSupport H
+              (periodicHypercubicEvenPlaquetteVertices p) ∧
+            ¬ periodicHypercubicEvenStrictNegativeSupport H
+              (periodicHypercubicEvenPlaquetteVertices p)
+      · simp [hcross]
+      · simp [hcross]
 
 /-- The genuine crossing-sector Wilson Boltzmann weight is exactly the finite
 product of one-plaquette Wilson central functions over the canonical crossing
