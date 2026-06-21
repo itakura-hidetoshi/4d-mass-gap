@@ -16,43 +16,29 @@ variable {Edge : Type} [Fintype Edge]
 
 /-- Boundary-fibered measure transport followed by the Bochner Gram identity. -/
 theorem BoundaryFiberedMeasureFactorization.integral_pullback_inner_eq_boundary_norm_sq
-    {P : FiniteInvolutiveEdgeOrbitPartition Edge}
-    {Value : Type v}
+    {P : FiniteInvolutiveEdgeOrbitPartition Edge} {Value : Type v}
     [MeasurableSpace Value]
     (M : BoundaryFiberedMeasureFactorization P Value)
-    (FeatureHilbert : Type w)
-    [NormedAddCommGroup FeatureHilbert]
-    [InnerProductSpace ℝ FeatureHilbert]
-    [CompleteSpace FeatureHilbert]
-    (weightedFeature :
-      P.BoundaryConfiguration Value →
-        P.OpenHalfConfiguration Value → FeatureHilbert)
+    (FeatureHilbert : Type w) [NormedAddCommGroup FeatureHilbert]
+    [InnerProductSpace ℝ FeatureHilbert] [CompleteSpace FeatureHilbert]
+    (weightedFeature : P.BoundaryConfiguration Value →
+      P.OpenHalfConfiguration Value → FeatureHilbert)
     (hWeightedFeatureIntegrable :
       ∀ b, Integrable (weightedFeature b) M.halfMeasure)
-    (hKernelIntegrable :
-      Integrable
-        (fun z : P.BoundaryConfiguration Value ×
-            (P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value) =>
-          inner ℝ
-            (weightedFeature z.1 z.2.1)
-            (weightedFeature z.1 z.2.2))
-        (M.boundaryMeasure.prod (M.halfMeasure.prod M.halfMeasure)))
-    (hFiberKernelIntegrable :
-      ∀ b,
-        Integrable
-          (fun z : P.OpenHalfConfiguration Value ×
-              P.OpenHalfConfiguration Value =>
-            inner ℝ (weightedFeature b z.1) (weightedFeature b z.2))
-          (M.halfMeasure.prod M.halfMeasure)) :
-    (∫ U,
-        inner ℝ
-          (weightedFeature
-            (P.boundaryFiberedCoordinates Value U).1
-            (P.boundaryFiberedCoordinates Value U).2.1)
-          (weightedFeature
-            (P.boundaryFiberedCoordinates Value U).1
-            (P.boundaryFiberedCoordinates Value U).2.2)
-        ∂M.fullMeasure) =
+    (hKernelIntegrable : Integrable
+      (fun z : P.BoundaryConfiguration Value ×
+          (P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value) =>
+        inner ℝ (weightedFeature z.1 z.2.1) (weightedFeature z.1 z.2.2))
+      (M.boundaryMeasure.prod (M.halfMeasure.prod M.halfMeasure)))
+    (hFiberKernelIntegrable : ∀ b, Integrable
+      (fun z : P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value =>
+        inner ℝ (weightedFeature b z.1) (weightedFeature b z.2))
+      (M.halfMeasure.prod M.halfMeasure)) :
+    (∫ U, inner ℝ
+      (weightedFeature (P.boundaryFiberedCoordinates Value U).1
+        (P.boundaryFiberedCoordinates Value U).2.1)
+      (weightedFeature (P.boundaryFiberedCoordinates Value U).1
+        (P.boundaryFiberedCoordinates Value U).2.2) ∂M.fullMeasure) =
       ∫ b, ‖∫ x, weightedFeature b x ∂M.halfMeasure‖ ^ 2
         ∂M.boundaryMeasure := by
   calc
