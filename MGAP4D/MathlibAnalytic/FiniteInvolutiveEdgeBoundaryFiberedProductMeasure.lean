@@ -1,0 +1,157 @@
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedMeasureFactorization
+import Mathlib.MeasureTheory.Constructions.Pi
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory
+
+noncomputable section
+
+namespace FiniteInvolutiveEdgeOrbitPartition
+
+universe v
+
+variable {Edge : Type} [Fintype Edge]
+
+/-- Measurable realization of the exact boundary-fibered coordinate equivalence.
+
+It is assembled from three canonical measurable equivalences:
+
+1. reindex the full edge function by the reflection-orbit index equivalence;
+2. split fixed edges from the two open-half copies;
+3. split the two open-half copies from one another. -/
+def boundaryFiberedMeasurableEquiv
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+    (Value : Type v)
+    [MeasurableSpace Value] :
+    (Edge → Value) ≃ᵐ
+      P.BoundaryConfiguration Value ×
+        (P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value) :=
+  (MeasurableEquiv.piCongrLeft
+      (fun _ : P.BoundaryFiberedIndex => Value)
+      P.boundaryFiberedIndexEquiv).trans
+    ((MeasurableEquiv.sumPiEquivProdPi
+        (fun _ : P.FixedEdge ⊕ (P.PositiveEdge ⊕ P.PositiveEdge) => Value)).trans
+      ((MeasurableEquiv.refl (P.BoundaryConfiguration Value)).prodCongr
+        (MeasurableEquiv.sumPiEquivProdPi
+          (fun _ : P.PositiveEdge ⊕ P.PositiveEdge => Value))))
+
+@[simp]
+theorem boundaryFiberedMeasurableEquiv_apply
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+    (Value : Type v)
+    [MeasurableSpace Value]
+    (A : Edge → Value) :
+    P.boundaryFiberedMeasurableEquiv Value A =
+      P.boundaryFiberedCoordinates Value A := by
+  rfl
+
+/-- A finite product of one common sigma-finite measure is preserved by the
+exact boundary-fibered coordinate equivalence. -/
+theorem measurePreserving_boundaryFiberedMeasurableEquiv
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+    (Value : Type v)
+    [MeasurableSpace Value]
+    (mu : Measure Value)
+    [SigmaFinite mu] :
+    MeasurePreserving
+      (P.boundaryFiberedMeasurableEquiv Value)
+      (Measure.pi fun _ : Edge => mu)
+      ((Measure.pi fun _ : P.FixedEdge => mu).prod
+        ((Measure.pi fun _ : P.PositiveEdge => mu).prod
+          (Measure.pi fun _ : P.PositiveEdge => mu))) := by
+  let reindex :
+      (Edge → Value) ≃ᵐ (P.BoundaryFiberedIndex → Value) :=
+    MeasurableEquiv.piCongrLeft
+      (fun _ : P.BoundaryFiberedIndex => Value)
+      P.boundaryFiberedIndexEquiv
+  let splitBoundary :
+      (P.BoundaryFiberedIndex → Value) ≃ᵐ
+        P.BoundaryConfiguration Value ×
+          ((P.PositiveEdge ⊕ P.PositiveEdge) → Value) :=
+    MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : P.FixedEdge ⊕ (P.PositiveEdge ⊕ P.PositiveEdge) => Value)
+  let splitHalves :
+      ((P.PositiveEdge ⊕ P.PositiveEdge) → Value) ≃ᵐ
+        P.OpenHalfConfiguration Value × P.OpenHalfConfiguration Value :=
+    MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : P.PositiveEdge ⊕ P.PositiveEdge => Value)
+  have hReindex :
+      MeasurePreserving reindex
+        (Measure.pi fun _ : Edge => mu)
+        (Measure.pi fun _ : P.BoundaryFiberedIndex => mu) := by
+    simpa [reindex] using
+      (measurePreserving_piCongrLeft
+        (α := fun _ : P.BoundaryFiberedIndex => Value)
+        (fun _ : P.BoundaryFiberedIndex => mu)
+        P.boundaryFiberedIndexEquiv)
+  have hSplitBoundary :
+      MeasurePreserving splitBoundary
+        (Measure.pi fun _ : P.BoundaryFiberedIndex => mu)
+        ((Measure.pi fun _ : P.FixedEdge => mu).prod
+          (Measure.pi fun _ : P.PositiveEdge ⊕ P.PositiveEdge => mu)) := by
+    simpa [splitBoundary] using
+      (measurePreserving_sumPiEquivProdPi
+        (X := fun _ : P.FixedEdge ⊕ (P.PositiveEdge ⊕ P.PositiveEdge) => Value)
+        (fun _ => mu))
+  have hSplitHalves :
+      MeasurePreserving splitHalves
+        (Measure.pi fun _ : P.PositiveEdge ⊕ P.PositiveEdge => mu)
+        ((Measure.pi fun _ : P.PositiveEdge => mu).prod
+          (Measure.pi fun _ : P.PositiveEdge => mu)) := by
+    simpa [splitHalves] using
+      (measurePreserving_sumPiEquivProdPi
+        (X := fun _ : P.PositiveEdge ⊕ P.PositiveEdge => Value)
+        (fun _ => mu))
+  have hBoundaryId :
+      MeasurePreserving
+        (MeasurableEquiv.refl (P.BoundaryConfiguration Value))
+        (Measure.pi fun _ : P.FixedEdge => mu)
+        (Measure.pi fun _ : P.FixedEdge => mu) :=
+    ⟨measurable_id, Measure.map_id⟩
+  have hFinal := hBoundaryId.prod hSplitHalves
+  simpa [boundaryFiberedMeasurableEquiv, reindex, splitBoundary, splitHalves] using
+    hFinal.comp (hSplitBoundary.comp hReindex)
+
+/-- Pushforward form of product-measure boundary factorization. -/
+theorem map_boundaryFiberedCoordinates_pi
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+    (Value : Type v)
+    [MeasurableSpace Value]
+    (mu : Measure Value)
+    [SigmaFinite mu] :
+    Measure.map (P.boundaryFiberedCoordinates Value)
+        (Measure.pi fun _ : Edge => mu) =
+      (Measure.pi fun _ : P.FixedEdge => mu).prod
+        ((Measure.pi fun _ : P.PositiveEdge => mu).prod
+          (Measure.pi fun _ : P.PositiveEdge => mu)) := by
+  simpa only [boundaryFiberedMeasurableEquiv_apply] using
+    (P.measurePreserving_boundaryFiberedMeasurableEquiv Value mu).map_eq
+
+/-- Canonical boundary-fibered measure-factorization package for a finite
+product of one sigma-finite base measure. -/
+noncomputable def piBoundaryFiberedMeasureFactorization
+    (P : FiniteInvolutiveEdgeOrbitPartition Edge)
+    (Value : Type v)
+    [MeasurableSpace Value]
+    (mu : Measure Value)
+    [SigmaFinite mu] :
+    P.BoundaryFiberedMeasureFactorization Value where
+  fullMeasure := Measure.pi fun _ : Edge => mu
+  boundaryMeasure := Measure.pi fun _ : P.FixedEdge => mu
+  halfMeasure := Measure.pi fun _ : P.PositiveEdge => mu
+  boundaryMeasure_sfinite := inferInstance
+  halfMeasure_sfinite := inferInstance
+  coordinates_aemeasurable :=
+    (P.boundaryFiberedMeasurableEquiv Value).measurable.aemeasurable
+  map_coordinates_fullMeasure :=
+    P.map_boundaryFiberedCoordinates_pi Value mu
+
+end FiniteInvolutiveEdgeOrbitPartition
+
+end
+
+end MathlibAnalytic
+end MGAP4D
