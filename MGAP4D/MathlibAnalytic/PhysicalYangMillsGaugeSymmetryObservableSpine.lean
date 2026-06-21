@@ -3,6 +3,9 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSLocalConstruction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSConcreteLocalKernelProduct
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicLocalKernelProduct
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSHalfLatticeProductFactorization
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGram
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSEvenPeriodicHolonomyMeasurableAmplitudeBoundedLocalKernelProduct
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -33,6 +36,10 @@ This aggregate module exposes the complete typed route
 * weak-star closedness of reflection positivity;
 * exact pullback of physical state evaluations to the original compact Wilson Gibbs laws;
 * a geometric and measure-theoretic half-lattice kernel decomposition;
+* density transport from the split Gibbs law to a product half-reference measure;
+* generation of the iterated kernel formula by `integral_map`, `withDensity`, and Fubini;
+* a boundary-fibered decomposition retaining shared reflection-fixed-plane variables;
+* conditional Bochner Gram reduction over each fixed boundary configuration;
 * an independent Peter--Weyl Hilbert feature factorization of the crossing kernel;
 * the concrete one-plaquette `SU(N)` Wilson Boltzmann central function;
 * the relative group kernel `k_beta(g⁻¹h)` and its half-holonomy pullback;
@@ -51,6 +58,8 @@ This aggregate module exposes the complete typed route
 * strict positive, strict negative, and crossing plaquette support sectors;
 * a finite canonical subtype and list of all crossing plaquettes at every scale;
 * automatic generation of every local feature from concrete crossing holonomies;
+* generation of feature measurability from measurable positive-half holonomies;
+* scalar amplitude bounds generating Bochner integrability;
 * scale-dependent global feature spaces generated separately at each lattice scale;
 * generation of the Bochner/Hilbert Gram identity from these inputs;
 * transfer of finite compact Wilson reflection positivity to the continuum state;
@@ -58,22 +67,25 @@ This aggregate module exposes the complete typed route
   continuum OS-positive weak-star state packages.
 
 The construction remains conditional on the supplied continuous physical action,
-interpolation equivariance, a physical positive-time reflection, and the concrete
-half-lattice Wilson-action decomposition.  For `N > 0` and every nonnegative
-scale-dependent coupling `beta n`, the exact one-plaquette Wilson relative kernel
-is proved symmetric and positive semidefinite as the finite-Gram limit of explicit
-completed-tensor Taylor features.  Mathlib's `RKHS.OfKernel` then generates its
-exact Hilbert feature without assuming Peter--Weyl coefficient positivity.
+interpolation equivariance, a physical positive-time reflection, and a concrete
+Wilson half-lattice or boundary-fibered change of variables.  For `N > 0` and
+every nonnegative scale-dependent coupling `beta n`, the exact one-plaquette
+Wilson relative kernel is proved symmetric and positive semidefinite as the
+finite-Gram limit of explicit completed-tensor Taylor features.  Mathlib's
+`RKHS.OfKernel` then generates its exact Hilbert feature without assuming
+Peter--Weyl coefficient positivity.
 
 On an even periodic lattice of side length `2 (H_n + 1)`, the time reflection,
-orientation-corrected plaquette reflection, geometric crossing predicate, crossing
-subtype, and complete finite crossing list are now explicit.  Consequently, once
-the positive-half holonomy of each concrete crossing plaquette is supplied, every
-local feature and their finite completed-tensor product are generated automatically.
+orientation-corrected plaquette reflection, geometric crossing predicate,
+crossing subtype, and complete finite crossing list are explicit.  Consequently,
+once the positive-half holonomy of each concrete crossing plaquette is supplied,
+every local feature and their finite completed-tensor product are generated
+automatically.
 
-The remaining local analytic inputs are the exact half-lattice change of variables,
-the equality of the crossing factor with the finite product of these concrete
-Wilson kernels, and Bochner integrability of the amplitude-weighted global feature.
+The remaining geometric inputs are the explicit decomposition of full link
+configurations into shared fixed-plane boundary links and the two open halves,
+the corresponding Haar/Gibbs disintegration, and the Wilson-action identity
+that produces the boundary-conditioned amplitudes and crossing kernel.
 -/
 
 end MathlibAnalytic
