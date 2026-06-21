@@ -60,17 +60,20 @@ theorem boundaryFiberedPiMeasurableEquiv_apply
     simpa [boundaryFiberedPiMeasurableEquiv, boundaryFiberedCoordinates,
       boundaryRestriction] using
       (MeasurableEquiv.piCongrLeft_apply_apply
+        (β := fun _ : P.BoundaryFiberedIndex => Value)
         P.boundaryFiberedIndexEquiv A e.1)
   · apply Prod.ext
     · funext e
       simpa [boundaryFiberedPiMeasurableEquiv, boundaryFiberedCoordinates,
         positiveRestriction] using
         (MeasurableEquiv.piCongrLeft_apply_apply
+          (β := fun _ : P.BoundaryFiberedIndex => Value)
           P.boundaryFiberedIndexEquiv A e.1)
     · funext e
       simpa [boundaryFiberedPiMeasurableEquiv, boundaryFiberedCoordinates,
         negativeRestriction] using
         (MeasurableEquiv.piCongrLeft_apply_apply
+          (β := fun _ : P.BoundaryFiberedIndex => Value)
           P.boundaryFiberedIndexEquiv A (P.reflection e.1))
 
 /-- The full constant finite product measure is preserved by the canonical
@@ -83,6 +86,9 @@ theorem boundaryFiberedPiMeasurableEquiv_measurePreserving
       (Measure.pi (fun _ : Edge => μ))
       ((P.boundaryPiMeasure μ).prod
         ((P.openHalfPiMeasure μ).prod (P.openHalfPiMeasure μ))) := by
+  letI : SFinite (P.boundaryPiMeasure μ) := by
+    unfold boundaryPiMeasure
+    infer_instance
   let reindex := MeasurableEquiv.piCongrLeft
     (fun _ : P.BoundaryFiberedIndex => Value)
     P.boundaryFiberedIndexEquiv
@@ -174,8 +180,12 @@ noncomputable def boundaryFiberedPiMeasureFactorization
   fullMeasure := Measure.pi (fun _ : Edge => μ)
   boundaryMeasure := P.boundaryPiMeasure μ
   halfMeasure := P.openHalfPiMeasure μ
-  boundaryMeasure_sfinite := inferInstance
-  halfMeasure_sfinite := inferInstance
+  boundaryMeasure_sfinite := by
+    unfold boundaryPiMeasure
+    infer_instance
+  halfMeasure_sfinite := by
+    unfold openHalfPiMeasure
+    infer_instance
   coordinates_aemeasurable :=
     (P.boundaryFiberedCoordinates_measurable Value).aemeasurable
   map_coordinates_fullMeasure := P.map_boundaryFiberedCoordinates_pi μ
