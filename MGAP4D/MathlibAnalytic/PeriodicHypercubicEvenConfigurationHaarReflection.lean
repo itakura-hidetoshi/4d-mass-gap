@@ -69,6 +69,60 @@ def periodicHypercubicEvenConfigurationOrientationCorrection
     PeriodicHypercubicEvenEdge H → Gauge :=
   fun e => if e.2 = 0 then (A e)⁻¹ else A e
 
+/-- Each coordinate of orientation correction preserves normalized compact
+Haar probability: inversion on time links and identity on spatial links. -/
+theorem periodicHypercubicEvenOrientationCorrection_coordinate_measurePreserving
+    (H : ℕ)
+    (Gauge : Type) [Group Gauge] [TopologicalSpace Gauge]
+    [IsTopologicalGroup Gauge] [CompactSpace Gauge]
+    [MeasurableSpace Gauge] [BorelSpace Gauge]
+    (e : PeriodicHypercubicEvenEdge H) :
+    MeasurePreserving
+      (fun x : Gauge => if e.2 = 0 then x⁻¹ else x)
+      (normalizedCompactHaar Gauge) (normalizedCompactHaar Gauge) := by
+  by_cases htime : e.2 = 0
+  · simpa [htime] using normalizedCompactHaar_measurePreserving_inv Gauge
+  · simpa [htime] using
+      (MeasurePreserving.id (normalizedCompactHaar Gauge))
+
+/-- Orientation correction preserves product normalized Haar measure. -/
+theorem periodicHypercubicEvenConfigurationOrientationCorrection_measurePreserving
+    (H : ℕ)
+    (Gauge : Type) [Group Gauge] [TopologicalSpace Gauge]
+    [IsTopologicalGroup Gauge] [CompactSpace Gauge]
+    [MeasurableSpace Gauge] [BorelSpace Gauge] :
+    MeasurePreserving
+      (periodicHypercubicEvenConfigurationOrientationCorrection
+        (H := H) (Gauge := Gauge))
+      (Measure.pi (fun _ : PeriodicHypercubicEvenEdge H =>
+        normalizedCompactHaar Gauge))
+      (Measure.pi (fun _ : PeriodicHypercubicEvenEdge H =>
+        normalizedCompactHaar Gauge)) := by
+  refine ⟨?_, ?_⟩
+  · unfold periodicHypercubicEvenConfigurationOrientationCorrection
+    fun_prop
+  · let f : PeriodicHypercubicEvenEdge H → Gauge → Gauge :=
+      fun e x => if e.2 = 0 then x⁻¹ else x
+    have hf : ∀ e,
+        AEMeasurable (f e) (normalizedCompactHaar Gauge) :=
+      fun e =>
+        (periodicHypercubicEvenOrientationCorrection_coordinate_measurePreserving
+          H Gauge e).measurable.aemeasurable
+    letI : ∀ e, SigmaFinite
+        ((normalizedCompactHaar Gauge).map (f e)) := fun e => by
+      rw [(periodicHypercubicEvenOrientationCorrection_coordinate_measurePreserving
+        H Gauge e).map_eq]
+      infer_instance
+    rw [show periodicHypercubicEvenConfigurationOrientationCorrection
+        (H := H) (Gauge := Gauge) =
+      (fun A e => f e (A e)) by rfl]
+    rw [Measure.pi_map_pi hf]
+    congr 1
+    funext e
+    exact
+      (periodicHypercubicEvenOrientationCorrection_coordinate_measurePreserving
+        H Gauge e).map_eq
+
 end
 
 end MathlibAnalytic
