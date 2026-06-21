@@ -12,8 +12,9 @@ def FiniteOrientedLatticeWilsonSystem.replaceLink
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration)
     (target : L.Edge)
-    (g : L.Gauge) : L.Configuration :=
-  fun e => if e = target then g else A e
+    (g : L.Gauge) : L.Configuration := by
+  classical
+  exact fun e => if e = target then g else A e
 
 @[simp] theorem finite_oriented_replaceLink_same
     (L : FiniteOrientedLatticeWilsonSystem)
@@ -187,7 +188,7 @@ def FiniteOrientedLatticeWilsonSystem.targetRemotePlaquetteAction
     else L.plaquetteEnergy (L.plaquetteHolonomy A p)
 
 /-- The oriented Wilson action splits exactly into target-local and
- target-remote plaquette contributions. -/
+target-remote plaquette contributions. -/
 theorem finite_oriented_wilsonAction_eq_targetLocal_add_targetRemote
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration)
