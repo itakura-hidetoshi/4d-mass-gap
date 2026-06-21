@@ -6,72 +6,70 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open scoped BigOperators
-
 noncomputable section
 
-/-- An exact three-sector decomposition of a finite sum. The second predicate
-is tested only after the first has failed, so no disjointness hypothesis is
-needed. -/
+noncomputable def finsetFilterByProp
+    {ι : Type*} (s : Finset ι) (p : ι → Prop) : Finset ι := by
+  classical
+  exact s.filter p
+
 theorem finset_sum_eq_first_add_secondResidual_add_neither
     {ι M : Type*} [AddCommMonoid M]
-    (s : Finset ι) (first second : ι → Prop)
-    [DecidablePred first] [DecidablePred second]
-    (f : ι → M) :
+    (s : Finset ι) (first second : ι → Prop) (f : ι → M) :
     (∑ i ∈ s, f i) =
-      (∑ i ∈ s.filter first, f i) +
-      (∑ i ∈ s.filter (fun i => ¬ first i ∧ second i), f i) +
-      (∑ i ∈ s.filter (fun i => ¬ first i ∧ ¬ second i), f i) := by
+      (∑ i ∈ finsetFilterByProp s first, f i) +
+      (∑ i ∈ finsetFilterByProp s (fun i => ¬ first i ∧ second i), f i) +
+      (∑ i ∈ finsetFilterByProp s (fun i => ¬ first i ∧ ¬ second i), f i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simp
+  | empty => simp [finsetFilterByProp]
   | @insert a s ha ih =>
       by_cases hFirst : first a
-      · simp [ha, hFirst, ih, add_assoc, add_comm, add_left_comm]
+      · simp [finsetFilterByProp, ha, hFirst, ih,
+          add_assoc, add_comm, add_left_comm]
       · by_cases hSecond : second a
-        · simp [ha, hFirst, hSecond, ih, add_assoc, add_comm, add_left_comm]
-        · simp [ha, hFirst, hSecond, ih, add_assoc, add_comm, add_left_comm]
+        · simp [finsetFilterByProp, ha, hFirst, hSecond, ih,
+            add_assoc, add_comm, add_left_comm]
+        · simp [finsetFilterByProp, ha, hFirst, hSecond, ih,
+            add_assoc, add_comm, add_left_comm]
 
-/-- Positive-open-half contribution to the periodic `SU(N)` Wilson action. -/
 noncomputable def periodicHypercubicEvenPositiveWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ := by
-  classical
-  exact
-    ∑ p ∈ Finset.univ.filter periodicHypercubicEvenStrictPositivePlaquette,
-      specialUnitaryWilsonPlaquetteEnergy N
-        (periodicHypercubicPlaquetteHolonomy A p)
+      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  ∑ p ∈ finsetFilterByProp
+      (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H))
+      periodicHypercubicEvenStrictPositivePlaquette,
+    specialUnitaryWilsonPlaquetteEnergy N
+      (periodicHypercubicPlaquetteHolonomy A p)
 
-/-- Negative-open-half contribution after removing any plaquette already
-classified as strictly positive. -/
 noncomputable def periodicHypercubicEvenNegativeResidualWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ := by
-  classical
-  exact
-    ∑ p ∈ Finset.univ.filter (fun p =>
+      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  ∑ p ∈ finsetFilterByProp
+      (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H))
+      (fun p =>
         ¬ periodicHypercubicEvenStrictPositivePlaquette p ∧
           periodicHypercubicEvenStrictNegativePlaquette p),
-      specialUnitaryWilsonPlaquetteEnergy N
-        (periodicHypercubicPlaquetteHolonomy A p)
+    specialUnitaryWilsonPlaquetteEnergy N
+      (periodicHypercubicPlaquetteHolonomy A p)
 
-/-- Crossing-plane contribution to the periodic `SU(N)` Wilson action. -/
 noncomputable def periodicHypercubicEvenCrossingWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ := by
-  classical
-  exact
-    ∑ p ∈ Finset.univ.filter periodicHypercubicEvenCrossingPlaquette,
-      specialUnitaryWilsonPlaquetteEnergy N
-        (periodicHypercubicPlaquetteHolonomy A p)
+      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  ∑ p ∈ finsetFilterByProp
+      (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H))
+      (fun p =>
+        ¬ periodicHypercubicEvenStrictPositivePlaquette p ∧
+          ¬ periodicHypercubicEvenStrictNegativePlaquette p),
+    specialUnitaryWilsonPlaquetteEnergy N
+      (periodicHypercubicPlaquetteHolonomy A p)
 
-/-- The actual even-periodic `SU(N)` Wilson action is exactly the sum of its
-positive, negative-residual, and crossing-plane plaquette sectors. -/
 theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_sector_decomposition
     (H N : ℕ)
     (hN : 0 < N)
@@ -85,15 +83,10 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_sector_decompo
       periodicHypercubicEvenPositiveWilsonAction H N A +
       periodicHypercubicEvenNegativeResidualWilsonAction H N A +
       periodicHypercubicEvenCrossingWilsonAction H N A := by
-  classical
   rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction]
   simpa [periodicHypercubicEvenPositiveWilsonAction,
     periodicHypercubicEvenNegativeResidualWilsonAction,
-    periodicHypercubicEvenCrossingWilsonAction,
-    periodicHypercubicEvenCrossingPlaquette,
-    periodicHypercubicEvenCrossingSupport,
-    periodicHypercubicEvenStrictPositivePlaquette,
-    periodicHypercubicEvenStrictNegativePlaquette] using
+    periodicHypercubicEvenCrossingWilsonAction] using
     (finset_sum_eq_first_add_secondResidual_add_neither
       (s := (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H)))
       (first := periodicHypercubicEvenStrictPositivePlaquette)
@@ -102,6 +95,5 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_sector_decompo
         (periodicHypercubicPlaquetteHolonomy A p)))
 
 end
-
 end MathlibAnalytic
 end MGAP4D
