@@ -181,6 +181,12 @@ abbrev PeriodicHypercubicEvenCrossingPlaquetteLabel (H : ℕ) : Type :=
   {p : PeriodicHypercubicEvenPlaquette H //
     periodicHypercubicEvenCrossingPlaquette p}
 
+/-- Canonical finite enumeration of crossing plaquette labels. -/
+noncomputable instance periodicHypercubicEvenCrossingPlaquetteLabelFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenCrossingPlaquetteLabel H) := by
+  classical
+  exact Subtype.fintype periodicHypercubicEvenCrossingPlaquette
+
 /-- Canonical finite ordered list of all crossing plaquette labels. -/
 noncomputable def periodicHypercubicEvenCrossingPlaquetteList
     (H : ℕ) : List (PeriodicHypercubicEvenCrossingPlaquetteLabel H) := by
