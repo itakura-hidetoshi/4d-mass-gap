@@ -6,18 +6,55 @@ on:
     paths:
       - ".github/workflows/tmp-even-periodic-action-sector-check.yml"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenWilsonActionSectorDecomposition.lean"
+      - "lean-toolchain"
+      - "lakefile.lean"
+      - "lake-manifest.json"
 
 permissions:
   contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Cache elan toolchain
+        uses: actions/cache@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-elan-
+
+      - name: Restore Lake build cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-lake-v4-
+            ${{ runner.os }}-lean-fast-v3-
+            ${{ runner.os }}-lean-fast-
+            ${{ runner.os }}-lean-
+
       - name: Install Lean
+        shell: bash
         run: |
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          set -euxo pipefail
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
       - name: Build target
         run: lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorDecomposition
