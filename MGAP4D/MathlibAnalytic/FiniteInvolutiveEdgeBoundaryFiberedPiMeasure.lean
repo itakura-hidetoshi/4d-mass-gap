@@ -11,9 +11,9 @@ noncomputable section
 
 namespace FiniteInvolutiveEdgeOrbitPartition
 
-universe u v
+universe v
 
-variable {Edge : Type u} [Fintype Edge]
+variable {Edge : Type} [Fintype Edge]
 
 /-- Product measure on the reflection-fixed boundary edge sector. -/
 noncomputable def boundaryPiMeasure
