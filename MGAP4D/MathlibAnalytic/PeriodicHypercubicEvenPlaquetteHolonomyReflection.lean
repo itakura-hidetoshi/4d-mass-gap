@@ -10,7 +10,7 @@ noncomputable section
 /-- A purely spatial plaquette has exactly the reflected plaquette holonomy
 when evaluated in the reflected configuration. -/
 theorem periodicHypercubicEvenPlaquetteHolonomy_configurationReflection_of_not_hasTimeDirection
-    {Gauge : Type*} [Group Gauge]
+    {Gauge : Type} [Group Gauge]
     (H : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge)
     (p : PeriodicHypercubicEvenPlaquette H)
@@ -45,7 +45,7 @@ theorem periodicHypercubicEvenPlaquetteHolonomy_configurationReflection_of_not_h
 Its reflected-configuration holonomy is the inverse reflected plaquette
 holonomy, conjugated to the original plaquette base point. -/
 theorem periodicHypercubicEvenPlaquetteHolonomy_configurationReflection_of_hasTimeDirection
-    {Gauge : Type*} [Group Gauge]
+    {Gauge : Type} [Group Gauge]
     (H : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge)
     (p : PeriodicHypercubicEvenPlaquette H)
