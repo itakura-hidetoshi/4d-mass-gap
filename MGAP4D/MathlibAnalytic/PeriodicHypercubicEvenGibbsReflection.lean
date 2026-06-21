@@ -49,7 +49,6 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_measurePre
       (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
     C.gibbsMeasure C.gibbsMeasure
   unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsMeasure
-  unfold CompactOrientedGaugeWilsonSystem.gibbsMeasure
   apply measurePreserving_tilted_of_invariant
   · simpa [C] using
       periodicHypercubicSpecialUnitaryWilsonSystem_configurationHaar_reflection_measurePreserving
