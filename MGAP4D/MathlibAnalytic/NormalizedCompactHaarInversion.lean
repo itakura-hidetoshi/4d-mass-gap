@@ -29,7 +29,7 @@ theorem normalizedCompactHaar_measurePreserving_inv
   letI : Measure.IsHaarMeasure μinv := by
     dsimp [μinv]
     change Measure.IsHaarMeasure μ.inv
-    infer_instance
+    exact {}
   letI : IsProbabilityMeasure μinv := by
     dsimp [μinv]
     exact Measure.isProbabilityMeasure_map measurable_inv.aemeasurable
