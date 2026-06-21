@@ -70,16 +70,16 @@ jobs:
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Build target
+      - name: Run full changed Lean diagnostic
         shell: bash
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenReflectionSectorCompileSmoke 2>&1 | tee /tmp/even-periodic-reflection-build.log
+          bash scripts/check_changed_lean.sh origin/main 2>&1 | tee /tmp/full-fast-check.log
 
-      - name: Upload build log
+      - name: Upload diagnostic log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: even-periodic-reflection-build-log
-          path: /tmp/even-periodic-reflection-build.log
+          name: full-fast-check-log
+          path: /tmp/full-fast-check.log
           if-no-files-found: error
