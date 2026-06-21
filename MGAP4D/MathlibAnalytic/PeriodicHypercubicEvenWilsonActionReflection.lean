@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPlaquetteHolonomyReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryWilsonSystem
 import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonPlaquetteEnergyInversion
-import Mathlib.Algebra.BigOperators.Group.Finset
 
 namespace MGAP4D
 namespace MathlibAnalytic
