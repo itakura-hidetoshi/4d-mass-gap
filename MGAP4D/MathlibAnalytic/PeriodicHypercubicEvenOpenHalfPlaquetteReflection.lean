@@ -43,6 +43,16 @@ abbrev PeriodicHypercubicEvenStrictNegativePlaquetteLabel (H : ℕ) : Type :=
   {p : PeriodicHypercubicEvenPlaquette H //
     periodicHypercubicEvenStrictNegativePlaquette p}
 
+noncomputable instance periodicHypercubicEvenStrictPositivePlaquetteLabelFintype
+    (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenStrictPositivePlaquetteLabel H) :=
+  Fintype.ofFinite _
+
+noncomputable instance periodicHypercubicEvenStrictNegativePlaquetteLabelFintype
+    (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenStrictNegativePlaquetteLabel H) :=
+  Fintype.ofFinite _
+
 /-- Reflection sends every positive-open-half plaquette to a negative-open-half
 plaquette. -/
 def periodicHypercubicEvenStrictPositivePlaquetteReflection
