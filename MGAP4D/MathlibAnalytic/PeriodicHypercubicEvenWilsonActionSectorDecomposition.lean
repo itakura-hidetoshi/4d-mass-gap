@@ -16,10 +16,10 @@ theorem finset_sum_eq_first_add_secondResidual_add_neither
     {ι M : Type*} [AddCommMonoid M]
     (s : Finset ι) (first second : ι → Prop)
     (f : ι → M) :
-    (∑ i in s, f i) =
-      (∑ i in s.filter first, f i) +
-      (∑ i in s.filter (fun i => ¬ first i ∧ second i), f i) +
-      (∑ i in s.filter (fun i => ¬ first i ∧ ¬ second i), f i) := by
+    (∑ i ∈ s, f i) =
+      (∑ i ∈ s.filter first, f i) +
+      (∑ i ∈ s.filter (fun i => ¬ first i ∧ second i), f i) +
+      (∑ i ∈ s.filter (fun i => ¬ first i ∧ ¬ second i), f i) := by
   classical
   induction s using Finset.induction_on with
   | empty => simp
@@ -36,7 +36,7 @@ noncomputable def periodicHypercubicEvenPositiveWilsonAction
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ p in Finset.univ.filter periodicHypercubicEvenStrictPositivePlaquette,
+  ∑ p ∈ Finset.univ.filter periodicHypercubicEvenStrictPositivePlaquette,
     specialUnitaryWilsonPlaquetteEnergy N
       (periodicHypercubicPlaquetteHolonomy A p)
 
@@ -47,7 +47,7 @@ noncomputable def periodicHypercubicEvenNegativeResidualWilsonAction
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ p in Finset.univ.filter (fun p =>
+  ∑ p ∈ Finset.univ.filter (fun p =>
       ¬ periodicHypercubicEvenStrictPositivePlaquette p ∧
         periodicHypercubicEvenStrictNegativePlaquette p),
     specialUnitaryWilsonPlaquetteEnergy N
@@ -59,7 +59,7 @@ noncomputable def periodicHypercubicEvenCrossingWilsonAction
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ p in Finset.univ.filter periodicHypercubicEvenCrossingPlaquette,
+  ∑ p ∈ Finset.univ.filter periodicHypercubicEvenCrossingPlaquette,
     specialUnitaryWilsonPlaquetteEnergy N
       (periodicHypercubicPlaquetteHolonomy A p)
 
