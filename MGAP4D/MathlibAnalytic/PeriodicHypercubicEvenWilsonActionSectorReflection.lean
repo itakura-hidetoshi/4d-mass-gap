@@ -84,6 +84,28 @@ theorem periodicHypercubicEvenNegativeWilsonAction_configurationReflection
     H N (periodicHypercubicEvenConfigurationReflection H A)]
   rw [periodicHypercubicEvenConfigurationReflection_involutive H A]
 
+/-- Reflection preserves the crossing-plane Wilson action. -/
+theorem periodicHypercubicEvenCrossingWilsonAction_configurationReflection
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenCrossingWilsonAction H N
+        (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenCrossingWilsonAction H N A := by
+  have hreflected :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_exact_sector_decomposition
+      H N hN 0 (by positivity)
+      (periodicHypercubicEvenConfigurationReflection H A)
+  have horiginal :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_exact_sector_decomposition
+      H N hN 0 (by positivity) A
+  rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_reflection_invariant,
+    periodicHypercubicEvenPositiveWilsonAction_configurationReflection,
+    periodicHypercubicEvenNegativeWilsonAction_configurationReflection] at hreflected
+  linarith
+
 end
 
 end MathlibAnalytic
