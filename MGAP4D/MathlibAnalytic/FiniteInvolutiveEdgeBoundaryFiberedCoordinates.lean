@@ -112,7 +112,7 @@ theorem boundaryFiberedAssemble_reflected_positive
     (x y : P.OpenHalfConfiguration Value)
     (e : P.PositiveEdge) :
     P.boundaryFiberedAssemble b x y (P.reflection e.1) = y e := by
-  simp [boundaryFiberedAssemble, P.reflection_involutive e.1]
+  simp [boundaryFiberedAssemble, P.reflection_involutive e.1, e.2]
 
 @[simp]
 theorem boundaryRestriction_boundaryFiberedAssemble
