@@ -9,6 +9,28 @@ open MeasureTheory Set
 
 noncomputable section
 
+/-- Canonical compact-topological and Borel receipts used while elaborating the
+concrete `SU(N)` configuration measures below. -/
+local instance periodicHypercubicGibbsSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance periodicHypercubicGibbsSpecialUnitaryCompactSpace
+    (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance periodicHypercubicGibbsSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance periodicHypercubicGibbsSpecialUnitaryBorelSpace
+    (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- The actual even-periodic `SU(N)` Wilson Gibbs exponent is invariant under
 physical time reflection of positive-link configurations. -/
 theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbsExponent_reflection_invariant
