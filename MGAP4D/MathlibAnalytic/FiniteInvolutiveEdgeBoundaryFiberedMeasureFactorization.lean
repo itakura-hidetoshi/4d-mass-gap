@@ -29,11 +29,15 @@ structure BoundaryFiberedMeasureFactorization
   fullMeasure : Measure (Edge → Value)
   boundaryMeasure : Measure (P.BoundaryConfiguration Value)
   halfMeasure : Measure (P.OpenHalfConfiguration Value)
+  halfMeasure_sfinite : SFinite halfMeasure
   coordinates_aemeasurable :
     AEMeasurable (P.boundaryFiberedCoordinates Value) fullMeasure
   map_coordinates_fullMeasure :
     Measure.map (P.boundaryFiberedCoordinates Value) fullMeasure =
       boundaryMeasure.prod (halfMeasure.prod halfMeasure)
+
+attribute [instance]
+  BoundaryFiberedMeasureFactorization.halfMeasure_sfinite
 
 /-- Transport a full-configuration integral through the exact
 boundary-fibered coordinates and then apply Fubini twice.
