@@ -7,7 +7,10 @@ on:
       - ".github/workflows/tmp-even-periodic-action-sector-check.yml"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingReflection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenOpenHalfPlaquetteReflection.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenConfigurationReflection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenWilsonActionSectorDecomposition.lean"
+      - "MGAP4D/MathlibAnalytic/SpecialUnitaryWilsonPlaquetteEnergyInversion.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenReflectionSectorCompileSmoke.lean"
       - "lean-toolchain"
       - "lakefile.lean"
       - "lake-manifest.json"
@@ -59,4 +62,4 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Build target
-        run: lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfPlaquetteReflection
+        run: lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenReflectionSectorCompileSmoke
