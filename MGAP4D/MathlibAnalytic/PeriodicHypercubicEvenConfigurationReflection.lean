@@ -52,13 +52,16 @@ theorem periodicHypercubicEvenConfigurationReflection_involutive
       (periodicHypercubicEvenConfigurationReflection (Gauge := Gauge) H) := by
   intro A
   funext e
+  simp only [periodicHypercubicEvenConfigurationReflection]
   by_cases htime : e.2 = 0
-  · simp [periodicHypercubicEvenConfigurationReflection, htime,
-      periodicHypercubicEvenEdgeReflection_direction,
-      periodicHypercubicEvenEdgeReflection_involutive]
-  · simp [periodicHypercubicEvenConfigurationReflection, htime,
-      periodicHypercubicEvenEdgeReflection_direction,
-      periodicHypercubicEvenEdgeReflection_involutive]
+  · have htime' : (periodicHypercubicEvenEdgeReflection H e).2 = 0 := by
+      simpa using htime
+    rw [if_pos htime, if_pos htime', inv_inv,
+      periodicHypercubicEvenEdgeReflection_involutive H e]
+  · have htime' : (periodicHypercubicEvenEdgeReflection H e).2 ≠ 0 := by
+      simpa using htime
+    rw [if_neg htime, if_neg htime',
+      periodicHypercubicEvenEdgeReflection_involutive H e]
 
 end
 
