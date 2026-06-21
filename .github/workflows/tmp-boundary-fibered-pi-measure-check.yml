@@ -1,14 +1,14 @@
-name: Temporary Boundary-Fibered Pi Measure Check
+name: Temporary Periodic SU(N) Boundary Haar Check
 
 on:
   pull_request:
 
 concurrency:
-  group: temporary-boundary-fibered-pi-measure-${{ github.event.pull_request.number }}
+  group: temporary-periodic-su-boundary-haar-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  boundary-fibered-pi-measure:
+  periodic-su-boundary-haar:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -27,30 +27,30 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Build boundary-fibered pi measure factorization
+      - name: Build periodic SU(N) boundary Haar factorization
         shell: bash
         run: |
           set +e
-          lake build MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasure > /tmp/boundary-fibered-pi-measure.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryBoundaryFiberedHaarFactorization > /tmp/periodic-su-boundary-haar.log 2>&1
           status=$?
-          echo "$status" > /tmp/boundary-fibered-pi-measure.status
+          echo "$status" > /tmp/periodic-su-boundary-haar.status
           if [ "$status" -eq 0 ]; then
-            echo "Boundary-fibered pi measure build passed" | tee /tmp/boundary-fibered-pi-measure-diagnostics.txt
+            echo "Periodic SU(N) boundary Haar factorization build passed" | tee /tmp/periodic-su-boundary-haar-diagnostics.txt
           else
             {
-              echo "Boundary-fibered pi measure build failed; compact diagnostics follow"
-              grep -n -B 4 -A 32 'error:' /tmp/boundary-fibered-pi-measure.log || tail -n 260 /tmp/boundary-fibered-pi-measure.log
-            } | tee /tmp/boundary-fibered-pi-measure-diagnostics.txt
+              echo "Periodic SU(N) boundary Haar factorization build failed; compact diagnostics follow"
+              grep -n -B 4 -A 36 'error:' /tmp/periodic-su-boundary-haar.log || tail -n 300 /tmp/periodic-su-boundary-haar.log
+            } | tee /tmp/periodic-su-boundary-haar-diagnostics.txt
           fi
           exit 0
       - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boundary-fibered-pi-measure-diagnostics
-          path: /tmp/boundary-fibered-pi-measure-diagnostics.txt
+          name: periodic-su-boundary-haar-diagnostics
+          path: /tmp/periodic-su-boundary-haar-diagnostics.txt
           if-no-files-found: error
       - name: Propagate build status
         if: always()
         shell: bash
-        run: exit "$(cat /tmp/boundary-fibered-pi-measure.status)"
+        run: exit "$(cat /tmp/periodic-su-boundary-haar.status)"
