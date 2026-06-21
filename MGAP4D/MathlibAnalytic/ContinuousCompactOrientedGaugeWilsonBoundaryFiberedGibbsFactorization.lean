@@ -9,10 +9,12 @@ open MeasureTheory
 
 noncomputable section
 
+namespace MeasurableEquiv
+
 /-- A measurable equivalence transports a density by composition with its
-inverse.  This is the exact change-of-coordinates identity needed for the
+inverse. This is the exact change-of-coordinates identity needed for the
 boundary-fibered Wilson Gibbs law. -/
-theorem map_withDensity_measurableEquiv
+theorem map_withDensity_comp_symm
     {α β : Type*}
     [MeasurableSpace α]
     [MeasurableSpace β]
@@ -29,11 +31,12 @@ theorem map_withDensity_measurableEquiv
   rw [setLIntegral_map hs (hf.comp e.symm.measurable) e.measurable]
   simp
 
+end MeasurableEquiv
+
 /-- Wilson Gibbs density written in canonical shared-boundary/open-half
-coordinates.  The inverse measurable equivalence reconstructs the unique full
+coordinates. The inverse measurable equivalence reconstructs the unique full
 physical-link configuration, so reflection-fixed links occur only once. -/
-noncomputable def
-    ContinuousCompactOrientedGaugeWilsonSystem.boundaryFiberedGibbsDensity
+noncomputable def ContinuousCompactOrientedGaugeWilsonSystem.boundaryFiberedGibbsDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (P : FiniteInvolutiveEdgeOrbitPartition C.base.geometry.Edge) :
     P.BoundaryConfiguration C.base.Gauge ×
@@ -46,8 +49,7 @@ noncomputable def
       C.base.partitionFunction)
 
 /-- The boundary-fibered Wilson Gibbs density is measurable. -/
-theorem
-    ContinuousCompactOrientedGaugeWilsonSystem.boundaryFiberedGibbsDensity_measurable
+theorem ContinuousCompactOrientedGaugeWilsonSystem.boundaryFiberedGibbsDensity_measurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (P : FiniteInvolutiveEdgeOrbitPartition C.base.geometry.Edge) :
     Measurable (C.boundaryFiberedGibbsDensity P) := by
@@ -58,10 +60,9 @@ theorem
 shared-boundary/open-half/open-half coordinates.
 
 The reference measure is the already constructed boundary-fibered product Haar
-law.  All interaction, including the crossing plaquettes, remains in the
+law. All interaction, including the crossing plaquettes, remains in the
 explicit pulled-back Gibbs density. -/
-theorem
-    ContinuousCompactOrientedGaugeWilsonSystem.map_boundaryFiberedCoordinates_gibbsMeasure
+theorem ContinuousCompactOrientedGaugeWilsonSystem.map_boundaryFiberedCoordinates_gibbsMeasure
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (P : FiniteInvolutiveEdgeOrbitPartition C.base.geometry.Edge) :
     Measure.map (P.boundaryFiberedCoordinates C.base.Gauge) C.gibbsMeasure =
@@ -82,7 +83,7 @@ theorem
   rw [← hfun]
   unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsMeasure
   rw [compact_oriented_gibbsMeasure_eq_withDensity]
-  rw [map_withDensity_measurableEquiv]
+  rw [MeasurableEquiv.map_withDensity_comp_symm]
   · rw [(P.boundaryFiberedPiMeasurableEquiv_measurePreserving
       (normalizedCompactHaar C.base.Gauge)).map_eq]
     rfl
