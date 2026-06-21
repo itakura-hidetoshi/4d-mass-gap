@@ -11,11 +11,12 @@ open scoped BigOperators
 noncomputable section
 
 /-- Canonical noncomputable finite enumeration of the crossing-plaquette
-subtype. -/
+subtype, using the same subtype `Fintype` as the canonical crossing list. -/
 noncomputable local instance periodicHypercubicEvenCrossingPlaquetteLabelFintype
     (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenCrossingPlaquetteLabel H) :=
-  Fintype.ofFinite _
+    Fintype (PeriodicHypercubicEvenCrossingPlaquetteLabel H) := by
+  classical
+  exact Subtype.fintype periodicHypercubicEvenCrossingPlaquette
 
 /-- Exponentiating a negative scalar multiple of a finite list sum produces the
 product of the corresponding exponential factors. -/
@@ -77,8 +78,7 @@ theorem periodicHypercubicEvenCrossingWilsonPlaquetteEnergyTerms_sum
         periodicHypercubicEvenStrictPositivePlaquette,
         periodicHypercubicEvenStrictNegativePlaquette,
         Set.toFinset_setOf]
-      rw [Finset.sum_ite]
-      simp
+      rw [Finset.sum_filter]
 
 /-- The genuine crossing-sector Wilson Boltzmann weight is exactly the finite
 product of one-plaquette Wilson central functions over the canonical crossing
