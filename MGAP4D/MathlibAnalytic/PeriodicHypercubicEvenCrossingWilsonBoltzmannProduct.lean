@@ -10,14 +10,6 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Canonical noncomputable finite enumeration of the crossing-plaquette
-subtype, using the same subtype `Fintype` as the canonical crossing list. -/
-noncomputable local instance periodicHypercubicEvenCrossingPlaquetteLabelFintype
-    (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenCrossingPlaquetteLabel H) := by
-  classical
-  exact Subtype.fintype periodicHypercubicEvenCrossingPlaquette
-
 /-- Exponentiating a negative scalar multiple of a finite list sum produces the
 product of the corresponding exponential factors. -/
 theorem real_exp_neg_mul_list_sum_eq_map_exp_prod
