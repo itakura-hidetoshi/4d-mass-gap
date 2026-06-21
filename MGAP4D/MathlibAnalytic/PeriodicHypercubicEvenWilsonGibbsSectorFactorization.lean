@@ -50,6 +50,14 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_gibbsExponent_exact_sector_
       (-beta * periodicHypercubicEvenCrossingWilsonAction H N A) := by
   unfold CompactOrientedGaugeWilsonSystem.gibbsExponent
   rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_exact_sector_decomposition]
+  change
+    -beta *
+        (periodicHypercubicEvenPositiveWilsonAction H N A +
+          periodicHypercubicEvenNegativeWilsonAction H N A +
+          periodicHypercubicEvenCrossingWilsonAction H N A) =
+      (-beta * periodicHypercubicEvenPositiveWilsonAction H N A) +
+      (-beta * periodicHypercubicEvenNegativeWilsonAction H N A) +
+      (-beta * periodicHypercubicEvenCrossingWilsonAction H N A)
   ring
 
 /-- Exponentiating the exact action-sector decomposition factors the genuine
