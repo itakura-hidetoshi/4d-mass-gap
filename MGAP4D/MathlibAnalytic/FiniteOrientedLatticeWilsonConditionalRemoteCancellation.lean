@@ -85,6 +85,38 @@ theorem finite_oriented_targetLocalSingleLinkConditionalPMF_apply
         (L.targetLocalSingleLinkPartitionFunction A target)⁻¹ := by
   rfl
 
+/-- The common target-remote factor cancels exactly after PMF normalization. -/
+theorem finite_oriented_singleLinkConditionalPMF_eq_targetLocal
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge) :
+    L.singleLinkConditionalPMF A target =
+      L.targetLocalSingleLinkConditionalPMF A target := by
+  ext g
+  rw [finite_oriented_singleLinkConditionalPMF_apply,
+    finite_oriented_targetLocalSingleLinkConditionalPMF_apply,
+    finite_oriented_singleLinkBoltzmannWeight_eq_local_mul_remote,
+    finite_oriented_singleLinkPartitionFunction_eq_local_mul_remote]
+  let z := L.targetLocalSingleLinkPartitionFunction A target
+  let r := L.targetRemoteBoltzmannFactor A target
+  have hr0 : r ≠ 0 := by
+    exact finite_oriented_targetRemoteBoltzmannFactor_ne_zero L A target
+  have hrt : r ≠ ∞ := by
+    exact finite_oriented_targetRemoteBoltzmannFactor_ne_top L A target
+  change
+    (L.targetLocalSingleLinkBoltzmannWeight A target g * r) *
+        (z * r)⁻¹ =
+      L.targetLocalSingleLinkBoltzmannWeight A target g * z⁻¹
+  calc
+    (L.targetLocalSingleLinkBoltzmannWeight A target g * r) *
+          (z * r)⁻¹ =
+        (L.targetLocalSingleLinkBoltzmannWeight A target g * z⁻¹) *
+          (r * r⁻¹) := by
+      rw [ENNReal.mul_inv (Or.inr hrt) (Or.inr hr0)]
+      ac_rfl
+    _ = L.targetLocalSingleLinkBoltzmannWeight A target g * z⁻¹ := by
+      rw [ENNReal.mul_inv_cancel hr0 hrt, mul_one]
+
 end
 
 end MathlibAnalytic
