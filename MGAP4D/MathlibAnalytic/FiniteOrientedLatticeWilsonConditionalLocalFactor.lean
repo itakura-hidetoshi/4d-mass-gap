@@ -49,6 +49,22 @@ theorem finite_oriented_targetRemoteBoltzmannFactor_pos
     ENNReal.ofReal_pos]
   exact Real.exp_pos _
 
+/-- The target-remote factor is nonzero. -/
+theorem finite_oriented_targetRemoteBoltzmannFactor_ne_zero
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge) :
+    L.targetRemoteBoltzmannFactor A target ≠ 0 :=
+  ne_of_gt (finite_oriented_targetRemoteBoltzmannFactor_pos L A target)
+
+/-- The target-remote factor is finite. -/
+theorem finite_oriented_targetRemoteBoltzmannFactor_ne_top
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration)
+    (target : L.Edge) :
+    L.targetRemoteBoltzmannFactor A target ≠ ∞ := by
+  simp [FiniteOrientedLatticeWilsonSystem.targetRemoteBoltzmannFactor]
+
 end
 
 end MathlibAnalytic
