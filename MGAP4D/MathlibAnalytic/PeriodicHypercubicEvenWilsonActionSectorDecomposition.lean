@@ -15,6 +15,7 @@ needed. -/
 theorem finset_sum_eq_first_add_secondResidual_add_neither
     {ι M : Type*} [AddCommMonoid M]
     (s : Finset ι) (first second : ι → Prop)
+    [DecidablePred first] [DecidablePred second]
     (f : ι → M) :
     (∑ i ∈ s, f i) =
       (∑ i ∈ s.filter first, f i) +
@@ -35,10 +36,12 @@ noncomputable def periodicHypercubicEvenPositiveWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ p ∈ Finset.univ.filter periodicHypercubicEvenStrictPositivePlaquette,
-    specialUnitaryWilsonPlaquetteEnergy N
-      (periodicHypercubicPlaquetteHolonomy A p)
+      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ := by
+  classical
+  exact
+    ∑ p ∈ Finset.univ.filter periodicHypercubicEvenStrictPositivePlaquette,
+      specialUnitaryWilsonPlaquetteEnergy N
+        (periodicHypercubicPlaquetteHolonomy A p)
 
 /-- Negative-open-half contribution after removing any plaquette already
 classified as strictly positive. -/
@@ -46,22 +49,26 @@ noncomputable def periodicHypercubicEvenNegativeResidualWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ p ∈ Finset.univ.filter (fun p =>
-      ¬ periodicHypercubicEvenStrictPositivePlaquette p ∧
-        periodicHypercubicEvenStrictNegativePlaquette p),
-    specialUnitaryWilsonPlaquetteEnergy N
-      (periodicHypercubicPlaquetteHolonomy A p)
+      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ := by
+  classical
+  exact
+    ∑ p ∈ Finset.univ.filter (fun p =>
+        ¬ periodicHypercubicEvenStrictPositivePlaquette p ∧
+          periodicHypercubicEvenStrictNegativePlaquette p),
+      specialUnitaryWilsonPlaquetteEnergy N
+        (periodicHypercubicPlaquetteHolonomy A p)
 
 /-- Crossing-plane contribution to the periodic `SU(N)` Wilson action. -/
 noncomputable def periodicHypercubicEvenCrossingWilsonAction
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ p ∈ Finset.univ.filter periodicHypercubicEvenCrossingPlaquette,
-    specialUnitaryWilsonPlaquetteEnergy N
-      (periodicHypercubicPlaquetteHolonomy A p)
+      Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ := by
+  classical
+  exact
+    ∑ p ∈ Finset.univ.filter periodicHypercubicEvenCrossingPlaquette,
+      specialUnitaryWilsonPlaquetteEnergy N
+        (periodicHypercubicPlaquetteHolonomy A p)
 
 /-- The actual even-periodic `SU(N)` Wilson action is exactly the sum of its
 positive, negative-residual, and crossing-plane plaquette sectors. -/
@@ -78,6 +85,7 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_sector_decompo
       periodicHypercubicEvenPositiveWilsonAction H N A +
       periodicHypercubicEvenNegativeResidualWilsonAction H N A +
       periodicHypercubicEvenCrossingWilsonAction H N A := by
+  classical
   rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction]
   simpa [periodicHypercubicEvenPositiveWilsonAction,
     periodicHypercubicEvenNegativeResidualWilsonAction,
