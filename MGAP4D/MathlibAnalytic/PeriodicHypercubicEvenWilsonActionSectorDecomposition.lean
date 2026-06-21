@@ -9,7 +9,7 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- An exact three-sector decomposition of a finite sum.  The second predicate
+/-- An exact three-sector decomposition of a finite sum. The second predicate
 is tested only after the first has failed, so no disjointness hypothesis is
 needed. -/
 theorem finset_sum_eq_first_add_secondResidual_add_neither
@@ -25,14 +25,14 @@ theorem finset_sum_eq_first_add_secondResidual_add_neither
   | empty => simp
   | @insert a s ha ih =>
       by_cases hFirst : first a
-      · simp [ha, hFirst, ih, add_assoc]
+      · simp [ha, hFirst, ih, add_assoc, add_comm, add_left_comm]
       · by_cases hSecond : second a
-        · simp [ha, hFirst, hSecond, ih, add_assoc]
-        · simp [ha, hFirst, hSecond, ih, add_assoc]
+        · simp [ha, hFirst, hSecond, ih, add_assoc, add_comm, add_left_comm]
+        · simp [ha, hFirst, hSecond, ih, add_assoc, add_comm, add_left_comm]
 
 /-- Positive-open-half contribution to the periodic `SU(N)` Wilson action. -/
 noncomputable def periodicHypercubicEvenPositiveWilsonAction
-    (H N : ℕ) (hN : 0 < N)
+    (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
@@ -43,7 +43,7 @@ noncomputable def periodicHypercubicEvenPositiveWilsonAction
 /-- Negative-open-half contribution after removing any plaquette already
 classified as strictly positive. -/
 noncomputable def periodicHypercubicEvenNegativeResidualWilsonAction
-    (H N : ℕ) (hN : 0 < N)
+    (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
@@ -55,7 +55,7 @@ noncomputable def periodicHypercubicEvenNegativeResidualWilsonAction
 
 /-- Crossing-plane contribution to the periodic `SU(N)` Wilson action. -/
 noncomputable def periodicHypercubicEvenCrossingWilsonAction
-    (H N : ℕ) (hN : 0 < N)
+    (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
@@ -75,9 +75,9 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_sector_decompo
       Matrix.specialUnitaryGroup (Fin N) ℂ) :
     (periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta beta_nonneg).base.wilsonAction A =
-      periodicHypercubicEvenPositiveWilsonAction H N hN A +
-      periodicHypercubicEvenNegativeResidualWilsonAction H N hN A +
-      periodicHypercubicEvenCrossingWilsonAction H N hN A := by
+      periodicHypercubicEvenPositiveWilsonAction H N A +
+      periodicHypercubicEvenNegativeResidualWilsonAction H N A +
+      periodicHypercubicEvenCrossingWilsonAction H N A := by
   rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction]
   simpa [periodicHypercubicEvenPositiveWilsonAction,
     periodicHypercubicEvenNegativeResidualWilsonAction,
