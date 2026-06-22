@@ -115,13 +115,9 @@ theorem periodicHypercubicEven_neg_add_one_val_of_val_eq_last
   have hnat : 2 * H + 1 + 1 = PeriodicHypercubicEvenSideLength H := by
     simp only [PeriodicHypercubicEvenSideLength]
     omega
-  have hcast :
-      ((2 * H + 1 + 1 : ℕ) :
-          ZMod (PeriodicHypercubicEvenSideLength H)) = 0 := by
-    rw [hnat, ZMod.natCast_self]
   have hsum :
       (((2 * H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) + 1) = 0 := by
-    simpa only [Nat.cast_add, Nat.cast_one, add_assoc] using hcast
+    rw [← Nat.cast_one, ← Nat.cast_add, hnat, ZMod.natCast_self]
   rw [hsum]
   simp
 
