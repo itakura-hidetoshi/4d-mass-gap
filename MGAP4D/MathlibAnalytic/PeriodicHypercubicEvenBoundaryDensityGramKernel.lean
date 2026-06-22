@@ -98,45 +98,59 @@ theorem periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_inner
           H N hN beta hbeta b y) := by
   rw [periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_gramKernel]
   unfold periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
-  unfold periodicHypercubicEvenBoundaryGramCoefficient
-  have hCoefficient :
-      0 ≤ periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
-          H N beta b /
-        (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction :=
-    periodicHypercubicEvenBoundaryGramCoefficient_nonneg
+  let c : ℝ := periodicHypercubicEvenBoundaryGramCoefficient
+    H N hN beta hbeta b
+  have hc : 0 ≤ c := by
+    dsimp [c]
+    exact periodicHypercubicEvenBoundaryGramCoefficient_nonneg
       H N hN beta hbeta b
-  rw [show inner ℝ
-      (Real.sqrt
-          (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
-              H N beta b /
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction) *
+  have hInner :
+      inner ℝ
+        (Real.sqrt c *
+          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+            H N beta b x)
+        (Real.sqrt c *
+          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+            H N beta b y) =
+      (Real.sqrt c *
+          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+            H N beta b x) *
+        (Real.sqrt c *
+          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+            H N beta b y) := by
+    simp
+  rw [show periodicHypercubicEvenBoundaryGramCoefficient
+      H N hN beta hbeta b = c by rfl]
+  rw [hInner]
+  calc
+    (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
+          H N beta b *
         periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-          H N beta b x)
-      (Real.sqrt
-          (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
-              H N beta b /
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction) *
+          H N beta b x *
         periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-          H N beta b y) =
-      (Real.sqrt
-          (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
-              H N beta b /
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction) *
+          H N beta b y) /
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction =
+      c *
         periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-          H N beta b x) *
-      (Real.sqrt
-          (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
-              H N beta b /
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction) *
+          H N beta b x *
         periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-          H N beta b y) by simp]
-  rw [← Real.mul_self_sqrt hCoefficient]
-  ring
+          H N beta b y := by
+      dsimp [c, periodicHypercubicEvenBoundaryGramCoefficient]
+      ring
+    _ = (Real.sqrt c * Real.sqrt c) *
+        periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+          H N beta b x *
+        periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+          H N beta b y := by
+      rw [Real.mul_self_sqrt hc]
+    _ = (Real.sqrt c *
+          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+            H N beta b x) *
+        (Real.sqrt c *
+          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
+            H N beta b y) := by
+      ring
 
 end
 
