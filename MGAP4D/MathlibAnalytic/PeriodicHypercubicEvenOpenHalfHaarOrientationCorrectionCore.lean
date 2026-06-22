@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasure
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedConfigurationReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationHaarReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryObservableGram
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -103,6 +104,86 @@ theorem periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv_measu
       ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
         (normalizedCompactHaar Gauge)) := by
   exact periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving H Gauge
+
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+/-- Haar invariance removes the orientation correction from the density argument
+and transfers it to the reflected observable. -/
+theorem periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_original
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
+    (∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta
+        (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y)
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)) =
+    ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta (b, (x, y))).toReal *
+        (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y))
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+  let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
+  let e := periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv H Gauge
+  let mu :=
+    (periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+      (normalizedCompactHaar Gauge)
+  let k := fun y =>
+    (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+      H N hN beta hbeta (b, (x, y))).toReal * (f x * f (e y))
+  change (∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta
+        (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y) ∂mu) =
+    ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta (b, (x, y))).toReal *
+        (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y)) ∂mu
+  calc
+    (∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta
+        (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y) ∂mu) = ∫ y, k (e y) ∂mu := by
+      apply integral_congr_ae
+      filter_upwards [] with y
+      dsimp [k, e]
+      rw [periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H y]
+    _ = ∫ y, k y ∂mu := by
+      exact
+        (periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv_measurePreserving
+          H Gauge).integral_comp' k
+    _ = ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta (b, (x, y))).toReal *
+        (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y)) ∂mu := by
+      rfl
 
 end
 
