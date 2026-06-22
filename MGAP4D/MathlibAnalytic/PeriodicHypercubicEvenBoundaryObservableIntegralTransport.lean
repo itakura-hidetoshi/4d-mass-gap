@@ -20,8 +20,17 @@ theorem integral_measurePreserving_involutive_transport
     (density observable : X → ℝ) :
     (∫ x, density (c x) * observable x ∂mu) =
       ∫ x, density x * observable (c x) ∂mu := by
-  simpa only [hc] using
-    (hmp.integral_comp hme (fun x => density x * observable (c x)))
+  have hIntegrand :
+      (fun x => density (c x) * observable x) =
+        (fun x => density (c x) * observable (c (c x))) := by
+    funext x
+    exact congrArg (fun z => density (c x) * observable z) (hc x).symm
+  calc
+    (∫ x, density (c x) * observable x ∂mu) =
+        ∫ x, density (c x) * observable (c (c x)) ∂mu := by
+      exact congrArg (fun q : X → ℝ => ∫ x, q x ∂mu) hIntegrand
+    _ = ∫ x, density x * observable (c x) ∂mu :=
+      hmp.integral_comp hme (fun x => density x * observable (c x))
 
 local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
