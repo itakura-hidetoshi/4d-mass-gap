@@ -79,7 +79,18 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_orig
         (f x * f y) ∂mu) = ∫ y, k (e y) ∂mu := by
       apply integral_congr_ae
       filter_upwards [] with y
-      simp [k, e, periodicHypercubicEvenOpenHalfOrientationCorrection_involutive]
+      change
+        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+            (f x * f y) =
+        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+            (f x * f
+              (periodicHypercubicEvenOpenHalfOrientationCorrection H
+                (periodicHypercubicEvenOpenHalfOrientationCorrection H y)))
+      rw [periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H y]
     _ = ∫ y, k y ∂mu := hmp.integral_comp' k
     _ = ∫ y,
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
