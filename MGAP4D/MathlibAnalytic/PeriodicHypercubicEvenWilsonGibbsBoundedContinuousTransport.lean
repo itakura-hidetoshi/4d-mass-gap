@@ -209,7 +209,7 @@ noncomputable def
     have hEmbedding : Measurable
         (fun z : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N => (b, z)) :=
-      hb.prod_mk measurable_id
+      hb.prodMk measurable_id
     have hFiberMeasurable : Measurable (fun z => weightedObservable (b, z)) :=
       hWeightedMeasurable.comp hEmbedding
     exact Integrable.of_bound hFiberMeasurable.aestronglyMeasurable bound
