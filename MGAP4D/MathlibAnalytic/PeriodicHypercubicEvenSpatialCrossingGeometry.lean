@@ -82,8 +82,7 @@ theorem periodicHypercubicEvenStrictPositivePlaquette_iff_base_of_not_hasTimeDir
       simp [periodicHypercubicEvenPlaquetteVertices,
         periodicHypercubicEvenPlaquetteCorner00])
   · intro hb v hv
-    simp only [periodicHypercubicEvenPlaquetteVertices,
-      List.mem_cons, List.mem_singleton] at hv
+    simp [periodicHypercubicEvenPlaquetteVertices] at hv
     rcases hv with rfl | rfl | rfl | rfl
     · simpa [periodicHypercubicEvenPlaquetteCorner00] using hb
     · simpa [periodicHypercubicEvenStrictPositiveVertex,
@@ -109,8 +108,7 @@ theorem periodicHypercubicEvenStrictNegativePlaquette_iff_base_of_not_hasTimeDir
       simp [periodicHypercubicEvenPlaquetteVertices,
         periodicHypercubicEvenPlaquetteCorner00])
   · intro hb v hv
-    simp only [periodicHypercubicEvenPlaquetteVertices,
-      List.mem_cons, List.mem_singleton] at hv
+    simp [periodicHypercubicEvenPlaquetteVertices] at hv
     rcases hv with rfl | rfl | rfl | rfl
     · simpa [periodicHypercubicEvenPlaquetteCorner00] using hb
     · simpa [periodicHypercubicEvenStrictNegativeVertex,
