@@ -16,7 +16,7 @@ theorem finiteInvolutiveEdgeRankSide_eq_positive_of_lt
     (hlt : rank e < rank (reflection e)) :
     finiteInvolutiveEdgeRankSide reflection rank e =
       ReflectionEdgeSide.positive := by
-  simp [finiteInvolutiveEdgeRankSide, hlt, not_lt_of_ge hlt.le]
+  simp [finiteInvolutiveEdgeRankSide, hlt]
 
 /-- Strictly larger geometric rank selects the negative representative of a
 reflection orbit. -/
@@ -80,8 +80,8 @@ theorem periodicHypercubicEvenEdgeSide_spatial_eq_fixed_of_val_eq_zero
     (hzero : (e.1 0).val = 0) :
     periodicHypercubicEvenEdgeSide H e = ReflectionEdgeSide.fixed := by
   apply finiteInvolutiveEdgeRankSide_eq_fixed_of_eq
-  unfold periodicHypercubicEvenEdgeTimeRank
   rw [periodicHypercubicEvenEdgeTimeRank_reflection_spatial H e hspace]
+  unfold periodicHypercubicEvenEdgeTimeRank
   have ht : e.1 0 = 0 := (ZMod.val_eq_zero _).mp hzero
   simp [ht, hzero]
 
@@ -236,10 +236,8 @@ theorem periodicHypercubicEvenEdgeSide_time_eq_negative_of_half_le_val
     omega
   · have hnext := periodicHypercubicEven_val_add_one_of_not_lt H (v 0) hnowrap
     have hzero : v 0 + 1 = 0 := (ZMod.val_eq_zero _).mp hnext
-    simp [hzero]
-    have hlt := ZMod.val_lt (v 0)
-    simp only [PeriodicHypercubicEvenSideLength] at hlt
-    omega
+    have hpos : 0 < (v 0).val := by omega
+    simpa [hzero] using hpos
 
 end
 
