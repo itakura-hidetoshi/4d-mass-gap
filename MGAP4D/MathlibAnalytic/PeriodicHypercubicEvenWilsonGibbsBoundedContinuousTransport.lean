@@ -70,6 +70,7 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal_l
     compact_oriented_wilsonAction_nonneg C.base A
   have hExponent : C.base.gibbsExponent A ≤ 0 := by
     unfold CompactOrientedGaugeWilsonSystem.gibbsExponent
+    change -beta * C.base.wilsonAction A ≤ 0
     exact neg_nonpos.mpr (mul_nonneg hbeta hAction)
   have hBoltzmann : Real.exp (C.base.gibbsExponent A) ≤ 1 := by
     simpa only [Real.exp_zero] using Real.exp_le_exp.mpr hExponent
@@ -183,7 +184,7 @@ noncomputable def
       (continuous_compact_oriented_boltzmannIntegrable C)
   have hWeightedNorm : ∀ z, ‖weightedObservable z‖ ≤ bound := by
     intro z
-    have hd : density z |>.toReal ≤ C.base.partitionFunction⁻¹ := by
+    have hd : (density z).toReal ≤ C.base.partitionFunction⁻¹ := by
       simpa [density, C] using
         periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal_le_inv_partitionFunction
           H N hN beta hbeta z
