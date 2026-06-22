@@ -41,6 +41,47 @@ theorem periodicHypercubicEvenBoundaryDensity_mul_observable_eq_inner
   simp [periodicHypercubicEvenBoundaryObservableGramFeature]
   ring
 
+/-- On the reflected diagonal, the boundary-conditioned Wilson Gibbs observable
+kernel is exactly the square of its scalar Gram feature. -/
+theorem periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_eq_sq
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
+    (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta
+        (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal *
+        (f x * f x) =
+      (periodicHypercubicEvenBoundaryObservableGramFeature
+        H N hN beta hbeta f b x) ^ 2 := by
+  rw [periodicHypercubicEvenBoundaryDensity_mul_observable_eq_inner]
+  simp [pow_two]
+
+/-- Pointwise nonnegativity of the reflected diagonal observable kernel.  This is
+its finite-volume boundary-fiber Gram positivity before integration. -/
+theorem periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_nonneg
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
+    0 ≤
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal *
+        (f x * f x) := by
+  rw [periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_eq_sq]
+  exact sq_nonneg _
+
 end
 
 end MathlibAnalytic
