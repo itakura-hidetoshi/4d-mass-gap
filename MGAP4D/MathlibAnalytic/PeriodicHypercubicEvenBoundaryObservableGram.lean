@@ -1,7 +1,10 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryDensityGramKernel
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBochnerGram
 
 namespace MGAP4D
 namespace MathlibAnalytic
+
+open MeasureTheory
 
 noncomputable section
 
@@ -64,8 +67,7 @@ theorem periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_eq_sq
   rw [periodicHypercubicEven_real_inner_eq_mul]
   rw [pow_two]
 
-/-- Pointwise nonnegativity of the reflected diagonal observable kernel.  This is
-its finite-volume boundary-fiber Gram positivity before integration. -/
+/-- Pointwise nonnegativity of the reflected diagonal observable kernel. -/
 theorem periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_nonneg
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -82,6 +84,97 @@ theorem periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_nonneg
           (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal *
         (f x * f x) := by
   rw [periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_eq_sq]
+  exact sq_nonneg _
+
+/-- For a fixed boundary configuration, the orientation-corrected Wilson Gibbs
+quadratic integral is the squared norm of the Bochner moment of the weighted
+positive-half feature. -/
+theorem periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_norm_sq
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (hf : Integrable
+      (periodicHypercubicEvenBoundaryObservableGramFeature
+        H N hN beta hbeta f b)
+      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+    (∫ x, ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y)
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) =
+      ‖∫ x,
+        periodicHypercubicEvenBoundaryObservableGramFeature
+          H N hN beta hbeta f b x
+        ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+          (normalizedCompactHaar
+            (Matrix.specialUnitaryGroup (Fin N) ℂ)))‖ ^ 2 := by
+  let mu :=
+    (periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+  let g := periodicHypercubicEvenBoundaryObservableGramFeature
+    H N hN beta hbeta f b
+  change (∫ x, ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y) ∂mu ∂mu) = ‖∫ x, g x ∂mu‖ ^ 2
+  calc
+    (∫ x, ∫ y,
+        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+            H N hN beta hbeta
+            (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+          (f x * f y) ∂mu ∂mu) =
+        ∫ x, ∫ y, inner ℝ (g x) (g y) ∂mu ∂mu := by
+      apply integral_congr_ae
+      filter_upwards [] with x
+      apply integral_congr_ae
+      filter_upwards [] with y
+      exact periodicHypercubicEvenBoundaryDensity_mul_observable_eq_inner
+        H N hN beta hbeta f b x y
+    _ = ‖∫ x, g x ∂mu‖ ^ 2 := by
+      exact iterated_integral_real_inner_eq_norm_integral_sq mu g hf
+
+/-- The corrected boundary-conditioned Wilson quadratic integral is
+nonnegative. -/
+theorem periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_nonneg
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (hf : Integrable
+      (periodicHypercubicEvenBoundaryObservableGramFeature
+        H N hN beta hbeta f b)
+      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+    0 ≤ ∫ x, ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y)
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
+  rw [periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_norm_sq
+    H N hN beta hbeta f b hf]
   exact sq_nonneg _
 
 end
