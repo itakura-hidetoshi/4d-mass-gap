@@ -26,6 +26,7 @@ theorem periodicHypercubicEvenEdge_direction_ne_zero_of_side_fixed
     e.2 ≠ 0 := by
   rcases e with ⟨v, mu⟩
   intro htime
+  have hmu : mu = 0 := by simpa using htime
   subst mu
   by_cases hle : (v 0).val ≤ H
   · have hpos :=
@@ -66,7 +67,8 @@ theorem periodicHypercubicEvenEdgeReflection_eq_self_of_side_fixed
           cases hfixed
   rw [periodicHypercubicEvenEdgeReflection_spatial H e hspace]
   apply Prod.ext
-  · funext i
+  · change periodicHypercubicEvenTimeReflection H e.1 = e.1
+    funext i
     by_cases hi : i = 0
     · subst i
       rw [periodicHypercubicEvenTimeReflection_time]
@@ -115,7 +117,7 @@ theorem periodicHypercubicEvenConfigurationReflection_boundaryFiberedAssemble
         FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble,
         periodicHypercubicEvenEdgeOrbitPartition, hside,
         periodicHypercubicEvenEdgeSide_reflection,
-        periodicHypercubicEvenEdgeReflection_involutive,
+        periodicHypercubicEvenEdgeReflection_involutive H e,
         periodicHypercubicEvenEdgeReflection_direction]
   | negative =>
       simp [periodicHypercubicEvenConfigurationReflection,
@@ -123,20 +125,17 @@ theorem periodicHypercubicEvenConfigurationReflection_boundaryFiberedAssemble
         FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble,
         periodicHypercubicEvenEdgeOrbitPartition, hside,
         periodicHypercubicEvenEdgeSide_reflection,
-        periodicHypercubicEvenEdgeReflection_involutive,
+        periodicHypercubicEvenEdgeReflection_involutive H e,
         periodicHypercubicEvenEdgeReflection_direction]
   | fixed =>
       have hspace : e.2 ≠ 0 :=
         periodicHypercubicEvenEdge_direction_ne_zero_of_side_fixed H e hside
       have hrefl : periodicHypercubicEvenEdgeReflection H e = e :=
         periodicHypercubicEvenEdgeReflection_eq_self_of_side_fixed H e hside
-      simp [periodicHypercubicEvenConfigurationReflection,
-        periodicHypercubicEvenOpenHalfOrientationCorrection,
-        FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble,
-        periodicHypercubicEvenEdgeOrbitPartition, hside, hspace, hrefl,
-        periodicHypercubicEvenEdgeSide_reflection,
-        periodicHypercubicEvenEdgeReflection_involutive,
-        periodicHypercubicEvenEdgeReflection_direction]
+      rw [periodicHypercubicEvenConfigurationReflection_spatial H _ e hspace]
+      rw [hrefl]
+      simp [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble,
+        periodicHypercubicEvenEdgeOrbitPartition, hside]
 
 end
 
