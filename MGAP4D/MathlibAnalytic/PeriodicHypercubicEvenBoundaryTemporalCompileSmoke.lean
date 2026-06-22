@@ -12,15 +12,17 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenHalfSectorEdgeSupport
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenHalfSectorBoundaryFiberedDependence
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensitySeparatedHalves
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalHalfSectorReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedConfigurationReflection
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Compile receipt for the separated actual Gibbs density and the exact
-reflection exchange of its completed positive and negative Wilson half
-amplitudes, including the four boundary-adjacent temporal base layers. -/
+/-- Compile receipt for the separated actual Gibbs density, the exact reflection
+exchange of its completed positive and negative Wilson half amplitudes, and the
+boundary-coordinate formula exchanging the two open halves with orientation
+correction. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
