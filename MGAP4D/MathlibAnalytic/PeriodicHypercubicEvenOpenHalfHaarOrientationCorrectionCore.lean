@@ -69,6 +69,41 @@ theorem periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving
       (periodicHypercubicEvenOpenHalfOrientationCorrection_coordinate_measurePreserving
         H Gauge e).map_eq
 
+/-- The open-half orientation correction as a measurable involutive equivalence. -/
+noncomputable def periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv
+    (H : ℕ)
+    (Gauge : Type) [Group Gauge] [TopologicalSpace Gauge]
+    [IsTopologicalGroup Gauge] [CompactSpace Gauge]
+    [MeasurableSpace Gauge] [BorelSpace Gauge] :
+    (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge ≃ᵐ
+      (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge where
+  toEquiv :=
+    { toFun := periodicHypercubicEvenOpenHalfOrientationCorrection H
+      invFun := periodicHypercubicEvenOpenHalfOrientationCorrection H
+      left_inv := periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H
+      right_inv := periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H }
+  measurable_toFun :=
+    (periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving
+      H Gauge).measurable
+  measurable_invFun :=
+    (periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving
+      H Gauge).measurable
+
+/-- The measurable orientation-correction equivalence preserves open-half Haar
+measure. -/
+theorem periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv_measurePreserving
+    (H : ℕ)
+    (Gauge : Type) [Group Gauge] [TopologicalSpace Gauge]
+    [IsTopologicalGroup Gauge] [CompactSpace Gauge]
+    [MeasurableSpace Gauge] [BorelSpace Gauge] :
+    MeasurePreserving
+      (periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv H Gauge)
+      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar Gauge))
+      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar Gauge)) := by
+  exact periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving H Gauge
+
 end
 
 end MathlibAnalytic
