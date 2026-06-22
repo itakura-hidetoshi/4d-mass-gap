@@ -9,16 +9,17 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingHalfSectors
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityHalfTemporal
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEdgeSideClassification
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenHalfSectorEdgeSupport
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenHalfSectorBoundaryFiberedDependence
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Compile receipt for the boundary-only spatial factor, completed temporal
-half-sector factorization, time-residue classification of physical link orbits,
-and the resulting exact support of strict and boundary-adjacent plaquette
-boundaries in the positive, negative, and fixed edge sectors. -/
+/-- Compile receipt for completed temporal half-sector factorization, exact
+plaquette boundary support in reflection-orbit sectors, and independence of the
+completed positive amplitude from the negative fiber and of the completed
+negative amplitude from the positive fiber. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
