@@ -14,8 +14,7 @@ open-half bulk amplitudes, the boundary-only spatial crossing weight, the
 positive-boundary temporal weight, the negative-boundary temporal weight, and
 the partition-function normalization. -/
 theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal_eq_half_half_boundary_positiveTemporal_negativeTemporal_div_partition
-    (H N : ℕ)
-    (hN : 0 < N)
+    (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
