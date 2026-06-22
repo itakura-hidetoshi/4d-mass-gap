@@ -12,6 +12,10 @@ on:
       - ".github/workflows/tmp-os-hilbert-completion-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSHilbertCompletion.lean"
 
+concurrency:
+  group: tmp-os-hilbert-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
