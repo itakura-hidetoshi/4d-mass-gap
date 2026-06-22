@@ -8,6 +8,10 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- Compile-smoke entry point for the physical Wilson weak-limit spine.
+
+The imports above now include the continuum gauge-invariant OS positive
+semidefinite bilinear form generated from the actual even-periodic Wilson laws. -/
 noncomputable def periodic_wilson_proper_functional_weak_limit_compile_smoke
     (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
     (H : E.PeriodicHypercubicPlaquetteFamily)
