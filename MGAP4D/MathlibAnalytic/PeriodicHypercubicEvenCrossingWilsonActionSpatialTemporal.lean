@@ -164,16 +164,25 @@ theorem periodicHypercubicEvenRestrictedWilsonAction_configurationReflection
                 rw [periodicHypercubicEvenWilsonPlaquetteEnergy_configurationReflection]
     _ = ∑ p : PeriodicHypercubicEvenPlaquette H,
         propositionIndicator
+          (P (periodicHypercubicEvenPlaquetteReflection H
+            (periodicHypercubicEvenPlaquetteReflection H p)))
+          (specialUnitaryWilsonPlaquetteEnergy N
+            (periodicHypercubicPlaquetteHolonomy A
+              (periodicHypercubicEvenPlaquetteReflection H p))) := by
+              apply Finset.sum_congr rfl
+              intro p _hp
+              rw [periodicHypercubicEvenPlaquetteReflection_involutive H p]
+    _ = ∑ p : PeriodicHypercubicEvenPlaquette H,
+        propositionIndicator
           (P (periodicHypercubicEvenPlaquetteReflection H p))
           (specialUnitaryWilsonPlaquetteEnergy N
             (periodicHypercubicPlaquetteHolonomy A p)) := by
-              simpa [periodicHypercubicEvenPlaquetteReflection_involutive] using
-                (periodicHypercubicEvenPlaquette_sum_reflection H
-                  (fun p : PeriodicHypercubicEvenPlaquette H =>
-                    propositionIndicator
-                      (P (periodicHypercubicEvenPlaquetteReflection H p))
-                      (specialUnitaryWilsonPlaquetteEnergy N
-                        (periodicHypercubicPlaquetteHolonomy A p))))
+              exact periodicHypercubicEvenPlaquette_sum_reflection H
+                (fun p : PeriodicHypercubicEvenPlaquette H =>
+                  propositionIndicator
+                    (P (periodicHypercubicEvenPlaquetteReflection H p))
+                    (specialUnitaryWilsonPlaquetteEnergy N
+                      (periodicHypercubicPlaquetteHolonomy A p)))
     _ = ∑ p : PeriodicHypercubicEvenPlaquette H,
         propositionIndicator (P p)
           (specialUnitaryWilsonPlaquetteEnergy N
@@ -192,6 +201,7 @@ theorem periodicHypercubicEvenSpatialCrossingWilsonAction_configurationReflectio
     periodicHypercubicEvenSpatialCrossingWilsonAction H N
         (periodicHypercubicEvenConfigurationReflection H A) =
       periodicHypercubicEvenSpatialCrossingWilsonAction H N A := by
+  classical
   unfold periodicHypercubicEvenSpatialCrossingWilsonAction
   simpa only using
     periodicHypercubicEvenRestrictedWilsonAction_configurationReflection
@@ -207,6 +217,7 @@ theorem periodicHypercubicEvenTemporalCrossingWilsonAction_configurationReflecti
     periodicHypercubicEvenTemporalCrossingWilsonAction H N
         (periodicHypercubicEvenConfigurationReflection H A) =
       periodicHypercubicEvenTemporalCrossingWilsonAction H N A := by
+  classical
   unfold periodicHypercubicEvenTemporalCrossingWilsonAction
   simpa only using
     periodicHypercubicEvenRestrictedWilsonAction_configurationReflection
