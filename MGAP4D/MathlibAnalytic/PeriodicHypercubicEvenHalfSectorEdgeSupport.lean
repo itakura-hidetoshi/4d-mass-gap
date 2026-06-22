@@ -167,6 +167,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_boundaryStep_sid
     periodicHypercubicPlaquetteSecondAxis_ne_zero p
   have hbaseLe : (p.1 0).val ≤ H := by
     rcases hp.2 with hzero | hH <;> omega
+  have hbaseLeHalf : (p.1 0).val ≤ H + 1 := by
+    omega
   have hnowrap : (p.1 0).val + 1 < PeriodicHypercubicEvenSideLength H := by
     simp only [PeriodicHypercubicEvenSideLength]
     omega
@@ -213,7 +215,7 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_boundaryStep_sid
         ReflectionEdgeSide.negative
     exact
       periodicHypercubicEvenEdgeSide_spatial_ne_negative_of_val_le_half
-        H _ hnu (by omega)
+        H _ hnu hbaseLeHalf
 
 /-- Every boundary link of a negative-boundary temporal plaquette is either
 negative or fixed, and therefore never positive. -/
