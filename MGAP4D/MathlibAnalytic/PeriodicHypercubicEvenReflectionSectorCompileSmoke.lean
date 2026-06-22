@@ -13,6 +13,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingWilsonBoltzmannProdu
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingWilsonActionSpatialTemporal
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialCrossingGeometry
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenFixedTimeClassification
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialCrossingBoundaryDependence
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsWeight
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityFactorization
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenGibbsReflection
@@ -28,10 +29,11 @@ open halves, physical configuration involution, plaquette-holonomy reflection
 law, Wilson-energy and full-action reflection invariance, exact three-sector
 action decomposition, exponentiated Gibbs-sector factorization, exact finite
 crossing-plaquette Boltzmann product, the spatial-boundary/temporal-bridge split,
-the base-time and fixed-plane characterization of spatial crossing plaquettes,
-transport to exact boundary-fibered coordinates, exact factorization of the
-transported Gibbs density, reflected sector exchange, product-Haar invariance,
-and actual finite-volume Wilson Gibbs-law reflection invariance. -/
+the fixed-plane characterization and boundary-only dependence of the spatial
+crossing sector, transport to exact boundary-fibered coordinates, exact
+factorization of the transported Gibbs density, reflected sector exchange,
+product-Haar invariance, and actual finite-volume Wilson Gibbs-law reflection
+invariance. -/
 theorem periodicHypercubicEvenReflectionSector_compile_receipt : True := by
   trivial
 
