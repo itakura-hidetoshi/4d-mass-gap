@@ -1,5 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryDensityGramKernel
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedWilsonOSBochnerGram
+import MGAP4D.MathlibAnalytic.SpecialUnitaryBorelReceipts
+import MGAP4D.MathlibAnalytic.SpecialUnitaryTopologicalCompactReceipts
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -7,6 +9,26 @@ namespace MathlibAnalytic
 open MeasureTheory
 
 noncomputable section
+
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
 
 noncomputable def periodicHypercubicEvenBoundaryObservableGramFeature
     (H N : ℕ) (hN : 0 < N)
