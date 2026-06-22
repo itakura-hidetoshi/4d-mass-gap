@@ -8,6 +8,29 @@ open MeasureTheory
 
 noncomputable section
 
+/-- A measure-preserving involution transfers itself from a density argument to
+an observable argument inside an integral. -/
+theorem integral_measurePreserving_involutive_transport
+    {X : Type} [MeasurableSpace X]
+    (mu : Measure X)
+    (c : X → X)
+    (hmp : MeasurePreserving c mu mu)
+    (hc : Function.Involutive c)
+    (density observable : X → ℝ) :
+    (∫ x, density (c x) * observable x ∂mu) =
+      ∫ x, density x * observable (c x) ∂mu := by
+  let k := fun x => density x * observable (c x)
+  calc
+    (∫ x, density (c x) * observable x ∂mu) = ∫ x, k (c x) ∂mu := by
+      apply integral_congr_ae
+      filter_upwards [] with x
+      change density (c x) * observable x =
+        density (c x) * observable (c (c x))
+      rw [hc x]
+    _ = ∫ x, k x ∂mu := hmp.integral_comp' k
+    _ = ∫ x, density x * observable (c x) ∂mu := by
+      rfl
+
 local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -52,53 +75,29 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_orig
         (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y))
       ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
   let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
+  let mu := periodicHypercubicEvenOpenHalfHaarMeasure H N
   let c : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge →
       (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge :=
     periodicHypercubicEvenOpenHalfOrientationCorrection H
-  let mu := periodicHypercubicEvenOpenHalfHaarMeasure H N
-  let k : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge → ℝ :=
+  let density :
+      (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge → ℝ :=
     fun y =>
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-        H N hN beta hbeta (b, (x, y))).toReal * (f x * f (c y))
+        H N hN beta hbeta (b, (x, y))).toReal
+  let observable :
+      (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge → ℝ :=
+    fun y => f x * f y
   have hmp : MeasurePreserving c mu mu := by
     simpa [c, mu, periodicHypercubicEvenOpenHalfHaarMeasure] using
       (periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving
         H Gauge)
-  change (∫ y,
-      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-        H N hN beta hbeta
-        (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
-        (f x * f y) ∂mu) =
-    ∫ y,
-      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-        H N hN beta hbeta (b, (x, y))).toReal *
-        (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y)) ∂mu
-  calc
-    (∫ y,
-      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-        H N hN beta hbeta
-        (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
-        (f x * f y) ∂mu) = ∫ y, k (c y) ∂mu := by
-      apply integral_congr_ae
-      filter_upwards [] with y
-      change
-        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-          H N hN beta hbeta
-          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
-            (f x * f y) =
-        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-          H N hN beta hbeta
-          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
-            (f x * f
-              (periodicHypercubicEvenOpenHalfOrientationCorrection H
-                (periodicHypercubicEvenOpenHalfOrientationCorrection H y)))
-      rw [periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H y]
-    _ = ∫ y, k y ∂mu := hmp.integral_comp' k
-    _ = ∫ y,
-      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-        H N hN beta hbeta (b, (x, y))).toReal *
-        (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y)) ∂mu := by
-      rfl
+  have hc : Function.Involutive c := by
+    intro y
+    exact periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H y
+  change (∫ y, density (c y) * observable y ∂mu) =
+    ∫ y, density y * observable (c y) ∂mu
+  exact integral_measurePreserving_involutive_transport
+    mu c hmp hc density observable
 
 /-- The corrected boundary Gram integral equals the reflected observable integral
 in the original negative-half coordinates. -/
