@@ -77,12 +77,14 @@ theorem periodicHypercubicEven_neg_add_one_val_of_val_eq_half
   have hnat : H + (H + 1 + 1) = PeriodicHypercubicEvenSideLength H := by
     simp only [PeriodicHypercubicEvenSideLength]
     omega
-  have hcast := congrArg
-    (fun n : ℕ => (n : ZMod (PeriodicHypercubicEvenSideLength H))) hnat
+  have hcast :
+      ((H + (H + 1 + 1) : ℕ) :
+          ZMod (PeriodicHypercubicEvenSideLength H)) = 0 := by
+    rw [hnat, ZMod.natCast_self]
   have hsum :
       ((H : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) +
           (((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) + 1) = 0 := by
-    simpa [Nat.cast_add] using hcast
+    simpa only [Nat.cast_add, Nat.cast_one, add_assoc] using hcast
   have heq :
       -(((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) + 1) =
         ((H : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) := by
@@ -113,11 +115,13 @@ theorem periodicHypercubicEven_neg_add_one_val_of_val_eq_last
   have hnat : 2 * H + 1 + 1 = PeriodicHypercubicEvenSideLength H := by
     simp only [PeriodicHypercubicEvenSideLength]
     omega
-  have hcast := congrArg
-    (fun n : ℕ => (n : ZMod (PeriodicHypercubicEvenSideLength H))) hnat
+  have hcast :
+      ((2 * H + 1 + 1 : ℕ) :
+          ZMod (PeriodicHypercubicEvenSideLength H)) = 0 := by
+    rw [hnat, ZMod.natCast_self]
   have hsum :
       (((2 * H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) + 1) = 0 := by
-    simpa [Nat.cast_add] using hcast
+    simpa only [Nat.cast_add, Nat.cast_one, add_assoc] using hcast
   rw [hsum]
   simp
 
