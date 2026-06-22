@@ -6,6 +6,23 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- Mathlib's inner product on the one-dimensional real Hilbert space is
+ordinary multiplication.  This explicit proof avoids depending on a fragile
+`simp` normal form for `inner ℝ` on scalars. -/
+theorem periodicHypercubicEven_real_inner_eq_mul (a b : ℝ) :
+    inner ℝ a b = a * b := by
+  have h11 : inner ℝ (1 : ℝ) (1 : ℝ) = 1 := by
+    simpa using (inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (1 : ℝ))
+  calc
+    inner ℝ a b = inner ℝ (a • (1 : ℝ)) (b • (1 : ℝ)) := by simp
+    _ = a * inner ℝ (1 : ℝ) (b • (1 : ℝ)) := by
+      rw [real_inner_smul_left]
+    _ = a * (b * inner ℝ (1 : ℝ) (1 : ℝ)) := by
+      rw [real_inner_smul_right]
+    _ = a * b := by
+      rw [h11]
+      ring
+
 /-- After orientation correction of the negative open half, the transported
 Wilson Gibbs density is an outer product of the same positive-half amplitude. -/
 theorem periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_gramKernel
@@ -98,30 +115,15 @@ theorem periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_inner
           H N hN beta hbeta b y) := by
   rw [periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_gramKernel]
   unfold periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+  rw [periodicHypercubicEven_real_inner_eq_mul]
   let c : ℝ := periodicHypercubicEvenBoundaryGramCoefficient
     H N hN beta hbeta b
   have hc : 0 ≤ c := by
     dsimp [c]
     exact periodicHypercubicEvenBoundaryGramCoefficient_nonneg
       H N hN beta hbeta b
-  have hInner :
-      inner ℝ
-        (Real.sqrt c *
-          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-            H N beta b x)
-        (Real.sqrt c *
-          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-            H N beta b y) =
-      (Real.sqrt c *
-          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-            H N beta b x) *
-        (Real.sqrt c *
-          periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude
-            H N beta b y) := by
-    simp
   rw [show periodicHypercubicEvenBoundaryGramCoefficient
       H N hN beta hbeta b = c by rfl]
-  rw [hInner]
   calc
     (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
           H N beta b *
