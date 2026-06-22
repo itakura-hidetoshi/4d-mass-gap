@@ -1,6 +1,10 @@
 name: Temporary OS Bilinear Form Check
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-os-bilinear-form-check.yml"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSBilinearForm.lean"
   push:
     branches:
       - physical-4d-yang-mills-measure-limit
