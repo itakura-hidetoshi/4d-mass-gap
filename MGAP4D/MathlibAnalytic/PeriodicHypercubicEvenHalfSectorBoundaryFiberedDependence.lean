@@ -11,7 +11,7 @@ noncomputable section
 /-- Changing the negative-half input does not affect an assembled edge whose
 side is not negative. -/
 theorem FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble_eq_of_side_ne_negative
-    {Edge Value : Type*} [Fintype Edge]
+    {Edge : Type} {Value : Type*} [Fintype Edge]
     (P : FiniteInvolutiveEdgeOrbitPartition Edge)
     (b : P.BoundaryConfiguration Value)
     (x : P.OpenHalfConfiguration Value)
@@ -30,7 +30,7 @@ theorem FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble_eq_of_side_ne
 /-- Changing the positive-half input does not affect an assembled edge whose
 side is not positive. -/
 theorem FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble_eq_of_side_ne_positive
-    {Edge Value : Type*} [Fintype Edge]
+    {Edge : Type} {Value : Type*} [Fintype Edge]
     (P : FiniteInvolutiveEdgeOrbitPartition Edge)
     (b : P.BoundaryConfiguration Value)
     (x₁ x₂ : P.OpenHalfConfiguration Value)
@@ -75,9 +75,9 @@ theorem periodicHypercubicEvenPlaquetteHolonomy_boundaryFiberedAssemble_independ
           b x y₂
           (periodicHypercubicBoundaryStep
             (PeriodicHypercubicEvenSideLength H) p k).edge :=
-    (periodicHypercubicEvenEdgeOrbitPartition H).
-      boundaryFiberedAssemble_eq_of_side_ne_negative
-        b x y₁ y₂ _ (hside k)
+    FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble_eq_of_side_ne_negative
+      (periodicHypercubicEvenEdgeOrbitPartition H)
+      b x y₁ y₂ _ (hside k)
   have hstep (k : Fin 4) :
       periodicHypercubicStepValue
           ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
@@ -124,9 +124,9 @@ theorem periodicHypercubicEvenPlaquetteHolonomy_boundaryFiberedAssemble_independ
           b x₂ y
           (periodicHypercubicBoundaryStep
             (PeriodicHypercubicEvenSideLength H) p k).edge :=
-    (periodicHypercubicEvenEdgeOrbitPartition H).
-      boundaryFiberedAssemble_eq_of_side_ne_positive
-        b x₁ x₂ y _ (hside k)
+    FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble_eq_of_side_ne_positive
+      (periodicHypercubicEvenEdgeOrbitPartition H)
+      b x₁ x₂ y _ (hside k)
   have hstep (k : Fin 4) :
       periodicHypercubicStepValue
           ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
