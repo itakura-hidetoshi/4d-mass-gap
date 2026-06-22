@@ -50,13 +50,20 @@ theorem periodicHypercubicEven_neg_val_of_ne_zero
         PeriodicHypercubicEvenSideLength H := by
     have hlt := ZMod.val_lt t
     omega
+  have htcast :
+      ((t.val : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) = t :=
+    ZMod.natCast_zmod_val t
   have hneg :
       -t =
         ((PeriodicHypercubicEvenSideLength H - t.val : ℕ) :
           ZMod (PeriodicHypercubicEvenSideLength H)) := by
-    rw [← ZMod.natCast_zmod_val t]
-    rw [Nat.cast_sub (ZMod.val_le t)]
-    simp
+    calc
+      -t = -((t.val : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) :=
+        congrArg Neg.neg htcast.symm
+      _ = ((PeriodicHypercubicEvenSideLength H - t.val : ℕ) :
+          ZMod (PeriodicHypercubicEvenSideLength H)) := by
+        rw [Nat.cast_sub (ZMod.val_le t)]
+        simp
   rw [hneg, ZMod.val_natCast_of_lt hsub_lt]
 
 /-- A periodic time belongs to the strict negative open half exactly when its
