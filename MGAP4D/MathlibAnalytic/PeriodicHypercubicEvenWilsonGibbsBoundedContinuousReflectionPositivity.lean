@@ -116,9 +116,19 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_measurable
             (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal)) :=
     Real.continuous_sqrt.measurable.comp
       ((ENNReal.measurable_toReal.comp hd).comp hdiag)
-  simpa only [
-    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_sqrt_diagonalDensity]
-    using hsqrt
+  have heq :
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H N hN beta hbeta b =
+        fun x => Real.sqrt
+          ((periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+            H N hN beta hbeta
+            (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal) := by
+    funext x
+    exact
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_sqrt_diagonalDensity
+        H N hN beta hbeta b x
+  rw [heq]
+  exact hsqrt
 
 /-- The completed positive Gram feature is uniformly bounded by the square root
 of the reciprocal partition function. -/
