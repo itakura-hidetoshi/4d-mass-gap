@@ -16,6 +16,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedConfiguration
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryCompletedHalfAmplitudeReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfHaarOrientationCorrection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryDensityGramKernel
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryObservableGram
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -24,7 +25,7 @@ noncomputable section
 
 /-- Compile receipt for the separated actual Gibbs density, exact reflection
 exchange, boundary-coordinate orientation correction, open-half Haar invariance,
-and the resulting scalar boundary Gram kernel. -/
+the scalar boundary Gram kernel, and reflected-diagonal observable positivity. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
