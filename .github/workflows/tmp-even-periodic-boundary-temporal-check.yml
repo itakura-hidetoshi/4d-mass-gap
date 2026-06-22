@@ -8,6 +8,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityBoundaryTemporal.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenTemporalCrossingWilsonBoltzmannProduct.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityTemporalPlaquetteProduct.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenTemporalCrossingTimeClassification.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryTemporalCompileSmoke.lean"
       - "lean-toolchain"
       - "lakefile.lean"
@@ -67,7 +68,10 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryTemporalCompileSmoke 2>&1 | tee /tmp/even-periodic-boundary-temporal-build.log
+          lake build \
+            MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryTemporalCompileSmoke \
+            MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingTimeClassification \
+            2>&1 | tee /tmp/even-periodic-boundary-temporal-build.log
 
       - name: Upload build log
         if: always()
