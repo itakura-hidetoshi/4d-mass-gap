@@ -8,19 +8,20 @@ open MeasureTheory
 
 noncomputable section
 
-/-- A measure-preserving involution transfers itself from a density argument to
-an observable argument inside an integral. -/
+/-- A measure-preserving involutive measurable embedding transfers itself from a
+density argument to an observable argument inside an integral. -/
 theorem integral_measurePreserving_involutive_transport
     {X : Type} [MeasurableSpace X]
     (mu : Measure X)
     (c : X → X)
     (hmp : MeasurePreserving c mu mu)
+    (hme : MeasurableEmbedding c)
     (hc : Function.Involutive c)
     (density observable : X → ℝ) :
     (∫ x, density (c x) * observable x ∂mu) =
       ∫ x, density x * observable (c x) ∂mu := by
   simpa only [hc] using
-    (hmp.integral_comp' (fun x => density x * observable (c x)))
+    (hmp.integral_comp hme (fun x => density x * observable (c x)))
 
 local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -82,13 +83,17 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_orig
     simpa [c, mu, periodicHypercubicEvenOpenHalfHaarMeasure] using
       (periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving
         H Gauge)
+  have hme : MeasurableEmbedding c := by
+    simpa [c] using
+      (periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv
+        H Gauge).measurableEmbedding
   have hc : Function.Involutive c := by
     intro y
     exact periodicHypercubicEvenOpenHalfOrientationCorrection_involutive H y
   change (∫ y, density (c y) * observable y ∂mu) =
     ∫ y, density y * observable (c y) ∂mu
   exact integral_measurePreserving_involutive_transport
-    mu c hmp hc density observable
+    mu c hmp hme hc density observable
 
 /-- The corrected boundary Gram integral equals the reflected observable integral
 in the original negative-half coordinates. -/
