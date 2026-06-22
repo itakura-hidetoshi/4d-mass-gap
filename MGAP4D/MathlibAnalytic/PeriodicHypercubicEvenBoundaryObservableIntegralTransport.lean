@@ -52,15 +52,17 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_orig
         (f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y))
       ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
   let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
-  let e := periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv H Gauge
+  let c : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge →
+      (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge :=
+    periodicHypercubicEvenOpenHalfOrientationCorrection H
   let mu := periodicHypercubicEvenOpenHalfHaarMeasure H N
   let k : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge → ℝ :=
     fun y =>
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-        H N hN beta hbeta (b, (x, y))).toReal * (f x * f (e y))
-  have hmp : MeasurePreserving e mu mu := by
-    simpa [e, mu, periodicHypercubicEvenOpenHalfHaarMeasure] using
-      (periodicHypercubicEvenOpenHalfOrientationCorrectionMeasurableEquiv_measurePreserving
+        H N hN beta hbeta (b, (x, y))).toReal * (f x * f (c y))
+  have hmp : MeasurePreserving c mu mu := by
+    simpa [c, mu, periodicHypercubicEvenOpenHalfHaarMeasure] using
+      (periodicHypercubicEvenOpenHalfOrientationCorrection_measurePreserving
         H Gauge)
   change (∫ y,
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
@@ -76,7 +78,7 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_orig
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
         H N hN beta hbeta
         (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
-        (f x * f y) ∂mu) = ∫ y, k (e y) ∂mu := by
+        (f x * f y) ∂mu) = ∫ y, k (c y) ∂mu := by
       apply integral_congr_ae
       filter_upwards [] with y
       change
