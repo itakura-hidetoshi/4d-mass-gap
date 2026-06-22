@@ -44,6 +44,26 @@ theorem periodicHypercubicEvenSpatialCrossingPlaquette_not_temporal
   intro ht
   exact hs.2 ht.2
 
+/-- Orientation-corrected plaquette reflection preserves the purely spatial
+crossing sector. -/
+@[simp]
+theorem periodicHypercubicEvenPlaquetteReflection_spatialCrossing_iff
+    (H : ℕ) (p : PeriodicHypercubicEvenPlaquette H) :
+    periodicHypercubicEvenSpatialCrossingPlaquette
+        (periodicHypercubicEvenPlaquetteReflection H p) ↔
+      periodicHypercubicEvenSpatialCrossingPlaquette p := by
+  simp [periodicHypercubicEvenSpatialCrossingPlaquette]
+
+/-- Orientation-corrected plaquette reflection preserves the time-containing
+crossing sector. -/
+@[simp]
+theorem periodicHypercubicEvenPlaquetteReflection_temporalCrossing_iff
+    (H : ℕ) (p : PeriodicHypercubicEvenPlaquette H) :
+    periodicHypercubicEvenTemporalCrossingPlaquette
+        (periodicHypercubicEvenPlaquetteReflection H p) ↔
+      periodicHypercubicEvenTemporalCrossingPlaquette p := by
+  simp [periodicHypercubicEvenTemporalCrossingPlaquette]
+
 /-- Purely spatial crossing-plane contribution to the Wilson action. -/
 noncomputable def periodicHypercubicEvenSpatialCrossingWilsonAction
     (H N : ℕ)
@@ -107,6 +127,92 @@ theorem periodicHypercubicEvenCrossingWilsonAction_eq_spatial_add_temporal
         periodicHypercubicEvenSpatialCrossingPlaquette,
         periodicHypercubicEvenTemporalCrossingPlaquette, hc, ht]
 
+/-- A Wilson action restricted by any reflection-invariant plaquette predicate
+is invariant under physical configuration reflection. -/
+theorem periodicHypercubicEvenRestrictedWilsonAction_configurationReflection
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (P : PeriodicHypercubicEvenPlaquette H → Prop)
+    [DecidablePred P]
+    (hP : ∀ p,
+      P (periodicHypercubicEvenPlaquetteReflection H p) ↔ P p)
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    (∑ p : PeriodicHypercubicEvenPlaquette H,
+      propositionIndicator (P p)
+        (specialUnitaryWilsonPlaquetteEnergy N
+          (periodicHypercubicPlaquetteHolonomy
+            (periodicHypercubicEvenConfigurationReflection H A) p))) =
+      ∑ p : PeriodicHypercubicEvenPlaquette H,
+        propositionIndicator (P p)
+          (specialUnitaryWilsonPlaquetteEnergy N
+            (periodicHypercubicPlaquetteHolonomy A p)) := by
+  classical
+  calc
+    (∑ p : PeriodicHypercubicEvenPlaquette H,
+      propositionIndicator (P p)
+        (specialUnitaryWilsonPlaquetteEnergy N
+          (periodicHypercubicPlaquetteHolonomy
+            (periodicHypercubicEvenConfigurationReflection H A) p))) =
+      ∑ p : PeriodicHypercubicEvenPlaquette H,
+        propositionIndicator (P p)
+          (specialUnitaryWilsonPlaquetteEnergy N
+            (periodicHypercubicPlaquetteHolonomy A
+              (periodicHypercubicEvenPlaquetteReflection H p))) := by
+                apply Finset.sum_congr rfl
+                intro p _hp
+                rw [periodicHypercubicEvenWilsonPlaquetteEnergy_configurationReflection]
+    _ = ∑ p : PeriodicHypercubicEvenPlaquette H,
+        propositionIndicator
+          (P (periodicHypercubicEvenPlaquetteReflection H p))
+          (specialUnitaryWilsonPlaquetteEnergy N
+            (periodicHypercubicPlaquetteHolonomy A p)) := by
+              simpa [periodicHypercubicEvenPlaquetteReflection_involutive] using
+                (periodicHypercubicEvenPlaquette_sum_reflection H
+                  (fun p : PeriodicHypercubicEvenPlaquette H =>
+                    propositionIndicator
+                      (P (periodicHypercubicEvenPlaquetteReflection H p))
+                      (specialUnitaryWilsonPlaquetteEnergy N
+                        (periodicHypercubicPlaquetteHolonomy A p))))
+    _ = ∑ p : PeriodicHypercubicEvenPlaquette H,
+        propositionIndicator (P p)
+          (specialUnitaryWilsonPlaquetteEnergy N
+            (periodicHypercubicPlaquetteHolonomy A p)) := by
+              apply Finset.sum_congr rfl
+              intro p _hp
+              rw [hP p]
+
+/-- The purely spatial fixed-plane crossing action is separately reflection
+invariant. -/
+theorem periodicHypercubicEvenSpatialCrossingWilsonAction_configurationReflection
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenSpatialCrossingWilsonAction H N
+        (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenSpatialCrossingWilsonAction H N A := by
+  unfold periodicHypercubicEvenSpatialCrossingWilsonAction
+  simpa only using
+    periodicHypercubicEvenRestrictedWilsonAction_configurationReflection
+      H N periodicHypercubicEvenSpatialCrossingPlaquette
+      (periodicHypercubicEvenPlaquetteReflection_spatialCrossing_iff H) A
+
+/-- The time-containing crossing action is separately reflection invariant. -/
+theorem periodicHypercubicEvenTemporalCrossingWilsonAction_configurationReflection
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenTemporalCrossingWilsonAction H N
+        (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenTemporalCrossingWilsonAction H N A := by
+  unfold periodicHypercubicEvenTemporalCrossingWilsonAction
+  simpa only using
+    periodicHypercubicEvenRestrictedWilsonAction_configurationReflection
+      H N periodicHypercubicEvenTemporalCrossingPlaquette
+      (periodicHypercubicEvenPlaquetteReflection_temporalCrossing_iff H) A
+
 /-- Boltzmann weight of the purely spatial crossing-plane sector. -/
 noncomputable def periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight
     (H N : ℕ)
@@ -146,6 +252,34 @@ theorem periodicHypercubicEvenCrossingWilsonBoltzmannWeight_eq_spatial_mul_tempo
       (-beta * periodicHypercubicEvenSpatialCrossingWilsonAction H N A) +
         (-beta * periodicHypercubicEvenTemporalCrossingWilsonAction H N A) by ring]
   rw [Real.exp_add]
+
+/-- The purely spatial crossing Boltzmann weight is separately reflection
+invariant. -/
+theorem periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight_configurationReflection
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight H N beta
+        (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight H N beta A := by
+  unfold periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight
+  rw [periodicHypercubicEvenSpatialCrossingWilsonAction_configurationReflection]
+
+/-- The time-containing crossing Boltzmann weight is separately reflection
+invariant. -/
+theorem periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight_configurationReflection
+    (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (A : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight H N beta
+        (periodicHypercubicEvenConfigurationReflection H A) =
+      periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight H N beta A := by
+  unfold periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight
+  rw [periodicHypercubicEvenTemporalCrossingWilsonAction_configurationReflection]
 
 end
 
