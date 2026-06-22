@@ -109,9 +109,6 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_nonneg
     0 ≤ ∫ A, Q A
       ∂(S.approximatingMeasure n : Measure S.Configuration) := by
   rw [B.approximatingMeasure_toMeasure_eq n]
-  rw [MeasureTheory.integral_map
-    (B.interpolate_measurable n).aemeasurable
-    Q.continuous.aestronglyMeasurable]
   have heq :
       (∫ A, Q (B.interpolate n A)
         ∂(periodicHypercubicSpecialUnitaryWilsonSystem
@@ -126,10 +123,24 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_nonneg
     apply integral_congr_ae
     filter_upwards [] with A
     exact B.quadraticObservable_pullback n A
-  rw [heq]
-  exact periodicHypercubicEvenWilsonGibbs_reflectionPositive_boundedContinuous
-    (halfExtent n) N hN (beta n) (hbeta n)
-      (B.positiveHalfObservable n)
+  calc
+    0 ≤ ∫ A, Q (B.interpolate n A)
+        ∂(periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (halfExtent n))
+          N hN (beta n) (hbeta n)).gibbsMeasure := by
+      rw [heq]
+      exact periodicHypercubicEvenWilsonGibbs_reflectionPositive_boundedContinuous
+        (halfExtent n) N hN (beta n) (hbeta n)
+          (B.positiveHalfObservable n)
+    _ = ∫ A, Q A
+        ∂Measure.map (B.interpolate n)
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength (halfExtent n))
+            N hN (beta n) (hbeta n)).gibbsMeasure := by
+      symm
+      exact MeasureTheory.integral_map
+        (B.interpolate_measurable n).aemeasurable
+        Q.continuous.aestronglyMeasurable
 
 /-- The actual finite-volume even-periodic Wilson Gibbs reflection positivity
 passes to the physical continuum weak limit for every fixed bounded continuous
