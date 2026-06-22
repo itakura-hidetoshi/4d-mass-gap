@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryBoundaryFiberedGibbsFactorization
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsWeight
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingWilsonActionSpatialTemporal
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasurableEquivSymm
 
 namespace MGAP4D
@@ -118,6 +119,44 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal_e
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction := by
   rw [periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal]
   rw [periodicHypercubicSpecialUnitaryWilsonSystem_exp_gibbsExponent_boundaryFibered_eq_half_half_crossingPlaquette_product]
+
+/-- The transported actual Wilson Gibbs density separates further into the two
+open-half amplitudes, the purely spatial fixed-plane crossing weight, the
+time-containing crossing weight, and the partition-function normalization.
+
+This theorem prevents the fixed-plane spatial factor from being conflated with
+a relative half-lattice kernel in the subsequent OS Gram construction. -/
+theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal_eq_half_half_spatial_temporal_crossing_div_partition
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (z : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+          (Matrix.specialUnitaryGroup (Fin N) ℂ) ×
+      ((periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+          (Matrix.specialUnitaryGroup (Fin N) ℂ) ×
+        (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+          (Matrix.specialUnitaryGroup (Fin N) ℂ))) :
+    (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+        H N hN beta hbeta z).toReal =
+      (periodicHypercubicEvenPositiveWilsonBoltzmannAmplitude H N beta
+          ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
+            z.1 z.2.1 z.2.2) *
+        periodicHypercubicEvenNegativeWilsonBoltzmannAmplitude H N beta
+          ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
+            z.1 z.2.1 z.2.2) *
+        (periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight H N beta
+            ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
+              z.1 z.2.1 z.2.2) *
+          periodicHypercubicEvenTemporalCrossingWilsonBoltzmannWeight H N beta
+            ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
+              z.1 z.2.1 z.2.2))) /
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction := by
+  rw [periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_toReal]
+  rw [periodicHypercubicSpecialUnitaryWilsonSystem_exp_gibbsExponent_boundaryFibered_eq_sector_product]
+  rw [periodicHypercubicEvenCrossingWilsonBoltzmannWeight_eq_spatial_mul_temporal]
 
 end
 
