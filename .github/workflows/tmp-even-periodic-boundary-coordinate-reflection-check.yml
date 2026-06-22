@@ -11,6 +11,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenOpenHalfHaarOrientationCorrectionCore.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryDensityGramKernel.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryObservableGram.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryObservableIntegralTransport.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryTemporalCompileSmoke.lean"
       - "lean-toolchain"
       - "lakefile.lean"
@@ -70,7 +71,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfHaarOrientationCorrectionCore 2>&1 | tee /tmp/even-periodic-boundary-half-amplitude-build.log
+          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryObservableIntegralTransport 2>&1 | tee /tmp/even-periodic-boundary-half-amplitude-build.log
 
       - name: Upload build log
         if: always()
