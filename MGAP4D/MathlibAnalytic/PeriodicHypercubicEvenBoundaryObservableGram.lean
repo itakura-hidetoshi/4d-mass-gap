@@ -199,6 +199,85 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_nonn
     H N hN beta hbeta f b hf]
   exact sq_nonneg _
 
+/-- After integrating over the shared boundary, the corrected Wilson Gibbs
+quadratic form remains an exact boundary integral of squared Bochner moments. -/
+theorem periodicHypercubicEvenBoundaryObservable_corrected_boundaryIntegral_eq_integral_norm_sq
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (hf : ∀ b, Integrable
+      (periodicHypercubicEvenBoundaryObservableGramFeature
+        H N hN beta hbeta f b)
+      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+    (∫ b, ∫ x, ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y)
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) =
+      ∫ b, ‖∫ x,
+        periodicHypercubicEvenBoundaryObservableGramFeature
+          H N hN beta hbeta f b x
+        ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+          (normalizedCompactHaar
+            (Matrix.specialUnitaryGroup (Fin N) ℂ)))‖ ^ 2
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
+  apply integral_congr_ae
+  filter_upwards [] with b
+  exact periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_norm_sq
+    H N hN beta hbeta f b (hf b)
+
+/-- The boundary-integrated orientation-corrected Wilson Gibbs quadratic form
+is nonnegative. -/
+theorem periodicHypercubicEvenBoundaryObservable_corrected_boundaryIntegral_nonneg
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
+    (hf : ∀ b, Integrable
+      (periodicHypercubicEvenBoundaryObservableGramFeature
+        H N hN beta hbeta f b)
+      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+    0 ≤ ∫ b, ∫ x, ∫ y,
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
+        (f x * f y)
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      ∂((periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
+        (normalizedCompactHaar
+          (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
+  rw [periodicHypercubicEvenBoundaryObservable_corrected_boundaryIntegral_eq_integral_norm_sq
+    H N hN beta hbeta f hf]
+  exact integral_nonneg fun b => sq_nonneg ‖∫ x,
+    periodicHypercubicEvenBoundaryObservableGramFeature
+      H N hN beta hbeta f b x
+    ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+      (normalizedCompactHaar
+        (Matrix.specialUnitaryGroup (Fin N) ℂ)))‖
+
 end
 
 end MathlibAnalytic
