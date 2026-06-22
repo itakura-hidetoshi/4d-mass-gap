@@ -30,6 +30,22 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- Product normalized Haar measure on the positive open-half coordinates. -/
+noncomputable def periodicHypercubicEvenOpenHalfHaarMeasure
+    (H N : ℕ) : Measure
+      ((periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+        (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+  (periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+
+/-- Product normalized Haar measure on the shared boundary coordinates. -/
+noncomputable def periodicHypercubicEvenBoundaryHaarMeasure
+    (H N : ℕ) : Measure
+      ((periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+        (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+  (periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+
 noncomputable def periodicHypercubicEvenBoundaryObservableGramFeature
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -122,29 +138,19 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_n
     (hf : Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         H N hN beta hbeta f b)
-      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+      (periodicHypercubicEvenOpenHalfHaarMeasure H N)) :
     (∫ x, ∫ y,
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
           H N hN beta hbeta
           (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
         (f x * f y)
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) =
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)) =
       ‖∫ x,
         periodicHypercubicEvenBoundaryObservableGramFeature
           H N hN beta hbeta f b x
-        ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-          (normalizedCompactHaar
-            (Matrix.specialUnitaryGroup (Fin N) ℂ)))‖ ^ 2 := by
-  let mu :=
-    (periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+        ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)‖ ^ 2 := by
+  let mu := periodicHypercubicEvenOpenHalfHaarMeasure H N
   let g := periodicHypercubicEvenBoundaryObservableGramFeature
     H N hN beta hbeta f b
   change (∫ x, ∫ y,
@@ -181,20 +187,14 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_nonn
     (hf : Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         H N hN beta hbeta f b)
-      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+      (periodicHypercubicEvenOpenHalfHaarMeasure H N)) :
     0 ≤ ∫ x, ∫ y,
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
           H N hN beta hbeta
           (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
         (f x * f y)
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
   rw [periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_norm_sq
     H N hN beta hbeta f b hf]
   exact sq_nonneg _
@@ -210,32 +210,20 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_boundaryIntegral_eq_i
     (hf : ∀ b, Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         H N hN beta hbeta f b)
-      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+      (periodicHypercubicEvenOpenHalfHaarMeasure H N)) :
     (∫ b, ∫ x, ∫ y,
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
           H N hN beta hbeta
           (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
         (f x * f y)
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) =
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+      ∂(periodicHypercubicEvenBoundaryHaarMeasure H N)) =
       ∫ b, ‖∫ x,
         periodicHypercubicEvenBoundaryObservableGramFeature
           H N hN beta hbeta f b x
-        ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-          (normalizedCompactHaar
-            (Matrix.specialUnitaryGroup (Fin N) ℂ)))‖ ^ 2
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
+        ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)‖ ^ 2
+      ∂(periodicHypercubicEvenBoundaryHaarMeasure H N) := by
   apply integral_congr_ae
   filter_upwards [] with b
   exact periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_norm_sq
@@ -252,31 +240,21 @@ theorem periodicHypercubicEvenBoundaryObservable_corrected_boundaryIntegral_nonn
     (hf : ∀ b, Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         H N hN beta hbeta f b)
-      ((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+      (periodicHypercubicEvenOpenHalfHaarMeasure H N)) :
     0 ≤ ∫ b, ∫ x, ∫ y,
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
           H N hN beta hbeta
           (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H y))).toReal *
         (f x * f y)
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ)))
-      ∂((periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
-        (normalizedCompactHaar
-          (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+      ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+      ∂(periodicHypercubicEvenBoundaryHaarMeasure H N) := by
   rw [periodicHypercubicEvenBoundaryObservable_corrected_boundaryIntegral_eq_integral_norm_sq
     H N hN beta hbeta f hf]
   exact integral_nonneg fun b => sq_nonneg ‖∫ x,
     periodicHypercubicEvenBoundaryObservableGramFeature
       H N hN beta hbeta f b x
-    ∂((periodicHypercubicEvenEdgeOrbitPartition H).openHalfPiMeasure
-      (normalizedCompactHaar
-        (Matrix.specialUnitaryGroup (Fin N) ℂ)))‖
+    ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)‖
 
 end
 
