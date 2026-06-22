@@ -196,7 +196,10 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_boundaryStep_sid
         ReflectionEdgeSide.negative
     exact
       periodicHypercubicEvenEdgeSide_spatial_ne_negative_of_val_le_half
-        H _ hnu h10Le
+        H
+        (periodicHypercubicEvenPlaquetteCorner10 p,
+          periodicHypercubicPlaquetteSecondAxis p)
+        hnu h10Le
   · change periodicHypercubicEvenEdgeSide H
       (periodicHypercubicEvenPlaquetteCorner01 p,
         periodicHypercubicPlaquetteFirstAxis p) ≠
@@ -215,7 +218,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_boundaryStep_sid
         ReflectionEdgeSide.negative
     exact
       periodicHypercubicEvenEdgeSide_spatial_ne_negative_of_val_le_half
-        H _ hnu hbaseLeHalf
+        H (p.1, periodicHypercubicPlaquetteSecondAxis p)
+        hnu hbaseLeHalf
 
 /-- Every boundary link of a negative-boundary temporal plaquette is either
 negative or fixed, and therefore never positive. -/
@@ -265,7 +269,10 @@ theorem periodicHypercubicEvenNegativeBoundaryTemporalPlaquette_boundaryStep_sid
         ReflectionEdgeSide.positive
     exact
       periodicHypercubicEvenEdgeSide_spatial_ne_positive_of_zero_or_half_le_val
-        H _ hnu h10Region
+        H
+        (periodicHypercubicEvenPlaquetteCorner10 p,
+          periodicHypercubicPlaquetteSecondAxis p)
+        hnu h10Region
   · change periodicHypercubicEvenEdgeSide H
       (periodicHypercubicEvenPlaquetteCorner01 p,
         periodicHypercubicPlaquetteFirstAxis p) ≠
@@ -284,7 +291,8 @@ theorem periodicHypercubicEvenNegativeBoundaryTemporalPlaquette_boundaryStep_sid
         ReflectionEdgeSide.positive
     exact
       periodicHypercubicEvenEdgeSide_spatial_ne_positive_of_zero_or_half_le_val
-        H _ hnu (Or.inr hbaseHalf)
+        H (p.1, periodicHypercubicPlaquetteSecondAxis p)
+        hnu (Or.inr hbaseHalf)
 
 end
 
