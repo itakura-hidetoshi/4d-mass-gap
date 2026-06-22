@@ -44,9 +44,10 @@ theorem periodicHypercubicEvenTimeReflection_eq_self_of_onPrimary
   funext i
   by_cases hi : i = 0
   · subst i
-    simp [periodicHypercubicEvenTimeReflection,
-      periodicHypercubicEvenOnPrimaryReflectionPlane] at hv ⊢
-    exact hv
+    rw [periodicHypercubicEvenTimeReflection_time]
+    unfold periodicHypercubicEvenOnPrimaryReflectionPlane at hv
+    rw [hv]
+    simp
   · simp [periodicHypercubicEvenTimeReflection, hi]
 
 /-- Site reflection fixes every vertex on the antipodal reflection plane. -/
@@ -58,9 +59,10 @@ theorem periodicHypercubicEvenTimeReflection_eq_self_of_onAntipodal
   funext i
   by_cases hi : i = 0
   · subst i
+    rw [periodicHypercubicEvenTimeReflection_time]
     unfold periodicHypercubicEvenOnAntipodalReflectionPlane at hv
-    simp [periodicHypercubicEvenTimeReflection, hv,
-      periodicHypercubicEven_neg_halfPeriod]
+    rw [hv]
+    exact periodicHypercubicEven_neg_halfPeriod H
   · simp [periodicHypercubicEvenTimeReflection, hi]
 
 /-- Site reflection fixes vertices on either reflection-fixed time slice. -/
@@ -209,7 +211,7 @@ theorem periodicHypercubicEvenBoundaryFiberedAssemble_spatialCrossing_boundarySt
 is independent of both open-half configurations. -/
 theorem periodicHypercubicEvenSpatialCrossingPlaquetteHolonomy_boundaryFiberedAssemble_independent
     {H : ℕ}
-    {Gauge : Type*}
+    {Gauge : Type}
     [Group Gauge]
     (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Gauge)
     (x₁ y₁ x₂ y₂ :
