@@ -79,22 +79,24 @@ noncomputable instance
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierSeminormedAddCommGroup
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    (P : D.OSPreHilbertData) : SeminormedAddCommGroup P.Carrier :=
-  P.core.toSeminormedAddCommGroup
+    (P : D.OSPreHilbertData) : SeminormedAddCommGroup P.Carrier := by
+  letI : PreInnerProductSpace.Core ℝ P.Carrier := P.core
+  exact InnerProductSpace.Core.toSeminormedAddCommGroup
 
 noncomputable instance
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierNormedSpace
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    (P : D.OSPreHilbertData) : NormedSpace ℝ P.Carrier :=
-  P.core.toNormedSpace
+    (P : D.OSPreHilbertData) : NormedSpace ℝ P.Carrier := by
+  letI : PreInnerProductSpace.Core ℝ P.Carrier := P.core
+  exact InnerProductSpace.Core.toNormedSpace
 
 noncomputable instance
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierInnerProductSpace
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    (P : D.OSPreHilbertData) : InnerProductSpace ℝ P.Carrier :=
-  InnerProductSpace.ofCore P.core
+    (P : D.OSPreHilbertData) : InnerProductSpace ℝ P.Carrier := by
+  exact InnerProductSpace.ofCore P.core
 
 /-- The inner product on the opaque carrier is definitionally the reflected
 continuum expectation. -/
