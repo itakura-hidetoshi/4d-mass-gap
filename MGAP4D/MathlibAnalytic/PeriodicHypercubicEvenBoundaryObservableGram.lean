@@ -38,7 +38,8 @@ theorem periodicHypercubicEvenBoundaryDensity_mul_observable_eq_inner
         (periodicHypercubicEvenBoundaryObservableGramFeature
           H N hN beta hbeta f b y) := by
   rw [periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_inner]
-  simp [periodicHypercubicEvenBoundaryObservableGramFeature]
+  unfold periodicHypercubicEvenBoundaryObservableGramFeature
+  simp only [periodicHypercubicEven_real_inner_eq_mul]
   ring
 
 /-- On the reflected diagonal, the boundary-conditioned Wilson Gibbs observable
@@ -60,7 +61,8 @@ theorem periodicHypercubicEvenBoundaryDensity_mul_observable_diagonal_eq_sq
       (periodicHypercubicEvenBoundaryObservableGramFeature
         H N hN beta hbeta f b x) ^ 2 := by
   rw [periodicHypercubicEvenBoundaryDensity_mul_observable_eq_inner]
-  simp [pow_two]
+  rw [periodicHypercubicEven_real_inner_eq_mul]
+  rw [pow_two]
 
 /-- Pointwise nonnegativity of the reflected diagonal observable kernel.  This is
 its finite-volume boundary-fiber Gram positivity before integration. -/
