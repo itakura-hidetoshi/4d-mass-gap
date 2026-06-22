@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenFixedTimeClassification
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingOpenHalfCharacterization
 
 namespace MGAP4D
