@@ -138,6 +138,8 @@ theorem periodicHypercubicEvenFullReflectedObservable_eq_boundaryCoordinates
     periodicHypercubicEvenFullReflectedObservable H f A =
       periodicHypercubicEvenBoundaryReflectedObservable H f
         ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedCoordinates Gauge A) := by
+  unfold periodicHypercubicEvenFullReflectedObservable
+  unfold periodicHypercubicEvenBoundaryReflectedObservable
   rw [periodicHypercubicEvenPositiveRestriction_configurationReflection]
   rfl
 
@@ -172,6 +174,14 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_bounda
   let coordinateObservable := periodicHypercubicEvenBoundaryReflectedObservable H f
   let weightedObservable := periodicHypercubicEvenBoundaryWeightedReflectedObservable
     H N hN beta hbeta f
+  letI : SFinite boundaryMeasure := by
+    dsimp [boundaryMeasure, periodicHypercubicEvenBoundaryHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+    infer_instance
+  letI : SFinite halfMeasure := by
+    dsimp [halfMeasure, periodicHypercubicEvenOpenHalfHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+    infer_instance
   have hMap :
       Measure.map (P.boundaryFiberedCoordinates Gauge) C.gibbsMeasure =
         referenceMeasure.withDensity density := by
@@ -225,9 +235,8 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_bounda
     _ = ∫ z, weightedObservable z ∂referenceMeasure := by
       apply integral_congr_ae
       exact Filter.Eventually.of_forall fun z => by
-        simp [weightedObservable,
-          periodicHypercubicEvenBoundaryWeightedReflectedObservable,
-          coordinateObservable, smul_eq_mul]
+        change (density z).toReal * coordinateObservable z = weightedObservable z
+        rfl
     _ = ∫ b, ∫ z, weightedObservable (b, z)
           ∂halfMeasure.prod halfMeasure ∂boundaryMeasure := by
       exact MeasureTheory.integral_prod _ hKernelIntegrable
