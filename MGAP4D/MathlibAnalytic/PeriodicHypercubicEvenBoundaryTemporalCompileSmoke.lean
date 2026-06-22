@@ -6,6 +6,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingGeometry
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingOpenHalfCharacterization
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingTimeClassification
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingHalfSectors
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityHalfTemporal
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -16,8 +17,8 @@ noncomputable section
 boundary-only weight, expansion of the remaining temporal crossing factor as a
 finite product of actual Wilson plaquette central functions, exact temporal
 axis/corner geometry, reduction to adjacent times, classification of the four
-boundary-adjacent layers, and the exact positive/negative boundary-half split
-of the temporal crossing action and Boltzmann weight. -/
+boundary-adjacent layers, exact positive/negative temporal half-sector splitting,
+and the resulting completed-half factorization of the actual Gibbs density. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
