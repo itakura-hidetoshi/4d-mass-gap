@@ -17,6 +17,28 @@ def periodicHypercubicEvenOpenHalfOrientationCorrection
     (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Gauge :=
   fun e => if e.1.2 = 0 then (x e)⁻¹ else x e
 
+/-- Orientation correction fixes the identity open-half configuration. -/
+@[simp]
+theorem periodicHypercubicEvenOpenHalfOrientationCorrection_one
+    {Gauge : Type*} [Group Gauge]
+    (H : ℕ) :
+    periodicHypercubicEvenOpenHalfOrientationCorrection (Gauge := Gauge) H
+        (fun _ => 1) =
+      (fun _ => 1) := by
+  funext e
+  simp [periodicHypercubicEvenOpenHalfOrientationCorrection]
+
+/-- Open-half orientation correction is an involution. -/
+theorem periodicHypercubicEvenOpenHalfOrientationCorrection_involutive
+    {Gauge : Type*} [Group Gauge]
+    (H : ℕ) :
+    Function.Involutive
+      (periodicHypercubicEvenOpenHalfOrientationCorrection (Gauge := Gauge) H) := by
+  intro x
+  funext e
+  by_cases htime : e.1.2 = 0 <;>
+    simp [periodicHypercubicEvenOpenHalfOrientationCorrection, htime]
+
 /-- A reflection-fixed edge in the canonical even-periodic partition cannot be a
 time-directed positive link. -/
 theorem periodicHypercubicEvenEdge_direction_ne_zero_of_side_fixed
