@@ -14,6 +14,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDe
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalHalfSectorReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedConfigurationReflection
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryCompletedHalfAmplitudeReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfHaarOrientationCorrection
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -22,8 +23,9 @@ noncomputable section
 
 /-- Compile receipt for the separated actual Gibbs density, the exact reflection
 exchange of its completed positive and negative Wilson half amplitudes, the
-boundary-coordinate formula exchanging the two open halves, and the induced
-orientation-corrected boundary half-amplitude identities. -/
+boundary-coordinate formula exchanging the two open halves, the induced
+orientation-corrected boundary half-amplitude identities, and preservation of
+the open-half product Haar measure by the orientation correction. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
