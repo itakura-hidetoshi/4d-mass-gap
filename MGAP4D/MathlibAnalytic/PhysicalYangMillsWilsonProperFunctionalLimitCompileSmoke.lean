@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonProperFunctionalLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSpecialUnitaryMatrixTraceFormula
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsEvenPeriodicWilsonOSWeakLimit
 
 namespace MGAP4D
 namespace MathlibAnalytic
