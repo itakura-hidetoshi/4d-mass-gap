@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonProperFunctionalLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSpecialUnitaryMatrixTraceFormula
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsEvenPeriodicWilsonOSWeakStarReflectionPositivity
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBilinearForm
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSHilbertCompletion
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -10,8 +11,9 @@ noncomputable section
 
 /-- Compile-smoke entry point for the physical Wilson weak-limit spine.
 
-The imports above now include the continuum gauge-invariant OS positive
-semidefinite bilinear form generated from the actual even-periodic Wilson laws. -/
+The imports above now include the continuum gauge-invariant OS bilinear form,
+its null quotient, and the completed physical Hilbert carrier generated from the
+actual even-periodic Wilson laws. -/
 noncomputable def periodic_wilson_proper_functional_weak_limit_compile_smoke
     (E : ContinuousCompactGaugeWilsonPhysicalEmbedding)
     (H : E.PeriodicHypercubicPlaquetteFamily)
