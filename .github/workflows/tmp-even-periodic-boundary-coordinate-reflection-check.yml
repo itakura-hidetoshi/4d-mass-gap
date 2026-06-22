@@ -65,7 +65,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryTemporalCompileSmoke 2>&1 | tee /tmp/even-periodic-boundary-coordinate-reflection-build.log
+          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedConfigurationReflection 2>&1 | tee /tmp/even-periodic-boundary-coordinate-reflection-build.log
 
       - name: Upload build log
         if: always()
