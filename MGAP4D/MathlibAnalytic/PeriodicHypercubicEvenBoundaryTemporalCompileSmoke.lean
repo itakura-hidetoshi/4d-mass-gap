@@ -10,16 +10,16 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDe
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEdgeSideClassification
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenHalfSectorEdgeSupport
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenHalfSectorBoundaryFiberedDependence
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensitySeparatedHalves
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Compile receipt for completed temporal half-sector factorization, exact
-plaquette boundary support in reflection-orbit sectors, and independence of the
-completed positive amplitude from the negative fiber and of the completed
-negative amplitude from the positive fiber. -/
+/-- Compile receipt for exact edge support, completed-half coordinate
+independence, and the separated actual Gibbs density
+`boundary(b) * positive(b,x) * negative(b,y) / partitionFunction`. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
