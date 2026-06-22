@@ -72,12 +72,18 @@ theorem periodicHypercubicEvenTemporalCrossingWilsonPlaquetteEnergyTerms_sum
             (periodicHypercubicPlaquetteHolonomy A p))
     _ = periodicHypercubicEvenTemporalCrossingWilsonAction H N A := by
       unfold periodicHypercubicEvenTemporalCrossingWilsonAction
-      rw [Finset.sum_filter]
+      have hfilter :
+          {p : PeriodicHypercubicEvenPlaquette H |
+            periodicHypercubicEvenTemporalCrossingPlaquette p}.toFinset =
+            (Finset.univ.filter fun p : PeriodicHypercubicEvenPlaquette H =>
+              periodicHypercubicEvenTemporalCrossingPlaquette p) := by
+        ext p
+        simp
+      rw [hfilter, Finset.sum_filter]
       apply Finset.sum_congr rfl
       intro p _hp
-      by_cases htemporal : periodicHypercubicEvenTemporalCrossingPlaquette p
-      · simp [propositionIndicator, htemporal]
-      · simp [propositionIndicator, htemporal]
+      by_cases htemporal : periodicHypercubicEvenTemporalCrossingPlaquette p <;>
+        simp [propositionIndicator, htemporal]
 
 /-- The temporal crossing Wilson Boltzmann weight is the finite product of
 one-plaquette Wilson central functions over the canonical temporal crossing
