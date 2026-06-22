@@ -75,28 +75,23 @@ noncomputable def
   smul_left F G r := by
     simp
 
+/-- The OS core induces exactly the seminormed additive structure used in
+Mathlib's GNS construction. -/
 noncomputable instance
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierSeminormedAddCommGroup
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    (P : D.OSPreHilbertData) : SeminormedAddCommGroup P.Carrier := by
-  letI : PreInnerProductSpace.Core ℝ P.Carrier := P.core
-  exact InnerProductSpace.Core.toSeminormedAddCommGroup
+    (P : D.OSPreHilbertData) : SeminormedAddCommGroup P.Carrier :=
+  InnerProductSpace.Core.toSeminormedAddCommGroup (c := P.core)
 
-noncomputable instance
-    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierNormedSpace
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    (P : D.OSPreHilbertData) : NormedSpace ℝ P.Carrier := by
-  letI : PreInnerProductSpace.Core ℝ P.Carrier := P.core
-  exact InnerProductSpace.Core.toNormedSpace
-
+/-- The same OS core supplies the compatible real inner-product-space
+structure. -/
 noncomputable instance
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierInnerProductSpace
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    (P : D.OSPreHilbertData) : InnerProductSpace ℝ P.Carrier := by
-  exact InnerProductSpace.ofCore P.core
+    (P : D.OSPreHilbertData) : InnerProductSpace ℝ P.Carrier :=
+  InnerProductSpace.ofCore P.core
 
 /-- The inner product on the opaque carrier is definitionally the reflected
 continuum expectation. -/
