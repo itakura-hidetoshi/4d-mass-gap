@@ -90,7 +90,7 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_isSymm
               (G : physicalYangMillsGaugeInvariantObservableSubalgebra S) *
             (F : physicalYangMillsGaugeInvariantObservableSubalgebra S)) := by
       apply congrArg omega
-      rw [map_mul, D.reflection_involutive, D.reflection_involutive, mul_comm]
+      rw [map_mul, D.reflection_involutive, mul_comm]
 
 /-- Weak-star reflection positivity is exactly nonnegativity of the diagonal of
 its OS bilinear form. -/
@@ -100,12 +100,13 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_isNonneg
     (omega : WeakDual ℝ
       (physicalYangMillsGaugeInvariantObservableSubalgebra S))
     (hPositive : D.WeakStarReflectionPositive omega) :
-    (D.osBilinForm omega).IsNonneg := by
-  rw [LinearMap.BilinForm.isNonneg_def]
-  intro F
-  rw [D.osBilinForm_apply]
-  simpa [PhysicalYangMillsGaugeInvariantOSReflectionData.quadraticObservable]
-    using hPositive F
+    (D.osBilinForm omega).IsNonneg :=
+  { nonneg := fun F => by
+      change 0 ≤ omega
+        (D.reflection
+            (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) *
+          (F : physicalYangMillsGaugeInvariantObservableSubalgebra S))
+      exact hPositive F }
 
 /-- A reflection-invariant reflection-positive weak-star state generates a
 positive semidefinite Osterwalder--Schrader bilinear form. -/
@@ -116,10 +117,9 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_isPosSemidef
       (physicalYangMillsGaugeInvariantObservableSubalgebra S))
     (hInvariant : D.WeakStarReflectionInvariant omega)
     (hPositive : D.WeakStarReflectionPositive omega) :
-    (D.osBilinForm omega).IsPosSemidef := by
-  rw [LinearMap.BilinForm.isPosSemidef_def]
-  exact ⟨D.osBilinForm_isSymm omega hInvariant,
-    D.osBilinForm_isNonneg omega hPositive⟩
+    (D.osBilinForm omega).IsPosSemidef :=
+  { eq := (D.osBilinForm_isSymm omega hInvariant).eq
+    nonneg := (D.osBilinForm_isNonneg omega hPositive).nonneg }
 
 /-- Reflection invariance is sequentially closed for the weak-star topology. -/
 theorem physical_yang_mills_weakStarReflectionInvariant_of_tendsto
