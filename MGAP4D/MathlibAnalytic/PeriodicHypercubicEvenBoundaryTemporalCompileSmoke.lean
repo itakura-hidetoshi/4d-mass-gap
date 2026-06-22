@@ -7,18 +7,17 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingOpenHalfChar
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingTimeClassification
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenTemporalCrossingHalfSectors
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityHalfTemporal
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEdgeSideClassification
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Compile receipt for extraction of the spatial crossing factor as a
-boundary-only weight, expansion of the remaining temporal crossing factor as a
-finite product of actual Wilson plaquette central functions, exact temporal
-axis/corner geometry, reduction to adjacent times, classification of the four
-boundary-adjacent layers, exact positive/negative temporal half-sector splitting,
-and the resulting completed-half factorization of the actual Gibbs density. -/
+/-- Compile receipt for the boundary-only spatial factor, completed temporal
+half-sector factorization of the actual Gibbs density, and exact classification
+of spatial and temporal physical links into positive, negative, and fixed
+reflection-orbit sectors by their periodic time residues. -/
 theorem periodicHypercubicEvenBoundaryTemporal_compile_receipt : True := by
   trivial
 
