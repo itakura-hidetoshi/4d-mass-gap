@@ -71,6 +71,36 @@ noncomputable def periodicHypercubicEvenBoundaryWeightedReflectedObservable
       H N hN beta hbeta z).toReal *
     periodicHypercubicEvenBoundaryReflectedObservable H f z
 
+/-- Integrability and measurability receipts needed only for transporting the
+physical Gibbs integral to the boundary-fibered reference measure. -/
+structure PeriodicHypercubicEvenWilsonGibbsReflectionTransportData
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ) : Prop where
+  coordinateAestronglyMeasurable :
+    AEStronglyMeasurable
+      (periodicHypercubicEvenBoundaryReflectedObservable H f)
+      (((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
+        ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
+          (periodicHypercubicEvenOpenHalfHaarMeasure H N))).withDensity
+        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta))
+  kernelIntegrable :
+    Integrable
+      (periodicHypercubicEvenBoundaryWeightedReflectedObservable
+        H N hN beta hbeta f)
+      ((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
+        ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
+          (periodicHypercubicEvenOpenHalfHaarMeasure H N)))
+  fiberKernelIntegrable :
+    ∀ b, Integrable
+      (fun z => periodicHypercubicEvenBoundaryWeightedReflectedObservable
+        H N hN beta hbeta f (b, z))
+      ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
+        (periodicHypercubicEvenOpenHalfHaarMeasure H N))
+
 /-- The positive restriction of a reflected full configuration is the
 orientation-corrected negative restriction of the original configuration. -/
 theorem periodicHypercubicEvenPositiveRestriction_configurationReflection
@@ -119,25 +149,8 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_bounda
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
       (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
-    (hCoordinateAestronglyMeasurable :
-      AEStronglyMeasurable
-        (periodicHypercubicEvenBoundaryReflectedObservable H f)
-        (((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
-          ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-            (periodicHypercubicEvenOpenHalfHaarMeasure H N))).withDensity
-          (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-            H N hN beta hbeta)))
-    (hKernelIntegrable : Integrable
-      (periodicHypercubicEvenBoundaryWeightedReflectedObservable
-        H N hN beta hbeta f)
-      ((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
-        ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-          (periodicHypercubicEvenOpenHalfHaarMeasure H N))))
-    (hFiberKernelIntegrable : ∀ b, Integrable
-      (fun z => periodicHypercubicEvenBoundaryWeightedReflectedObservable
-        H N hN beta hbeta f (b, z))
-      ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-        (periodicHypercubicEvenOpenHalfHaarMeasure H N))) :
+    (T : PeriodicHypercubicEvenWilsonGibbsReflectionTransportData
+      H N hN beta hbeta f) :
     (∫ A, periodicHypercubicEvenFullReflectedObservable H f A
       ∂(periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) =
@@ -172,7 +185,7 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_bounda
         (Measure.map (P.boundaryFiberedCoordinates Gauge) C.gibbsMeasure) := by
     rw [hMap]
     simpa [coordinateObservable, referenceMeasure, boundaryMeasure, halfMeasure,
-      density] using hCoordinateAestronglyMeasurable
+      density] using T.coordinateAestronglyMeasurable
   have hDensityMeasurable : Measurable density := by
     simpa [density] using
       (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity_measurable
@@ -182,13 +195,13 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_bounda
       simp [density,
         periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity,
         ContinuousCompactOrientedGaugeWilsonSystem.boundaryFiberedGibbsDensity]
-  have hKernelIntegrable' : Integrable weightedObservable referenceMeasure := by
+  have hKernelIntegrable : Integrable weightedObservable referenceMeasure := by
     simpa [weightedObservable, referenceMeasure, boundaryMeasure, halfMeasure] using
-      hKernelIntegrable
-  have hFiberKernelIntegrable' : ∀ b, Integrable
+      T.kernelIntegrable
+  have hFiberKernelIntegrable : ∀ b, Integrable
       (fun z => weightedObservable (b, z)) (halfMeasure.prod halfMeasure) := by
     intro b
-    simpa [weightedObservable, halfMeasure] using hFiberKernelIntegrable b
+    simpa [weightedObservable, halfMeasure] using T.fiberKernelIntegrable b
   calc
     (∫ A, periodicHypercubicEvenFullReflectedObservable H f A ∂C.gibbsMeasure) =
         ∫ A, coordinateObservable (P.boundaryFiberedCoordinates Gauge A)
@@ -217,12 +230,12 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_bounda
           coordinateObservable, smul_eq_mul]
     _ = ∫ b, ∫ z, weightedObservable (b, z)
           ∂halfMeasure.prod halfMeasure ∂boundaryMeasure := by
-      exact MeasureTheory.integral_prod _ hKernelIntegrable'
+      exact MeasureTheory.integral_prod _ hKernelIntegrable
     _ = ∫ b, ∫ x, ∫ y, weightedObservable (b, (x, y))
           ∂halfMeasure ∂halfMeasure ∂boundaryMeasure := by
       apply integral_congr_ae
       exact Filter.Eventually.of_forall fun b =>
-        MeasureTheory.integral_prod _ (hFiberKernelIntegrable' b)
+        MeasureTheory.integral_prod _ (hFiberKernelIntegrable b)
     _ = ∫ b, ∫ x, ∫ y,
           periodicHypercubicEvenBoundaryWeightedReflectedObservable
             H N hN beta hbeta f (b, (x, y))
@@ -239,25 +252,8 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectionPositive
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (f : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
       (Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
-    (hCoordinateAestronglyMeasurable :
-      AEStronglyMeasurable
-        (periodicHypercubicEvenBoundaryReflectedObservable H f)
-        (((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
-          ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-            (periodicHypercubicEvenOpenHalfHaarMeasure H N))).withDensity
-          (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
-            H N hN beta hbeta)))
-    (hKernelIntegrable : Integrable
-      (periodicHypercubicEvenBoundaryWeightedReflectedObservable
-        H N hN beta hbeta f)
-      ((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
-        ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-          (periodicHypercubicEvenOpenHalfHaarMeasure H N))))
-    (hFiberKernelIntegrable : ∀ b, Integrable
-      (fun z => periodicHypercubicEvenBoundaryWeightedReflectedObservable
-        H N hN beta hbeta f (b, z))
-      ((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-        (periodicHypercubicEvenOpenHalfHaarMeasure H N)))
+    (T : PeriodicHypercubicEvenWilsonGibbsReflectionTransportData
+      H N hN beta hbeta f)
     (hf : ∀ b, Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         H N hN beta hbeta f b)
@@ -266,8 +262,7 @@ theorem periodicHypercubicEvenWilsonGibbs_reflectionPositive
       ∂(periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
   rw [periodicHypercubicEvenWilsonGibbs_reflectedObservable_integral_eq_boundaryIntegral
-    H N hN beta hbeta f hCoordinateAestronglyMeasurable hKernelIntegrable
-      hFiberKernelIntegrable]
+    H N hN beta hbeta f T]
   simpa [periodicHypercubicEvenBoundaryWeightedReflectedObservable,
     periodicHypercubicEvenBoundaryReflectedObservable] using
     periodicHypercubicEvenBoundaryObservable_original_boundaryIntegral_nonneg
