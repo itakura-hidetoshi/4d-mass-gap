@@ -7,6 +7,7 @@ on:
       - ".github/workflows/tmp-even-periodic-boundary-coordinate-reflection-check.yml"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryFiberedConfigurationReflection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryCompletedHalfAmplitudeReflection.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenOpenHalfHaarOrientationCorrection.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenBoundaryTemporalCompileSmoke.lean"
       - "lean-toolchain"
       - "lakefile.lean"
@@ -66,7 +67,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryCompletedHalfAmplitudeReflection 2>&1 | tee /tmp/even-periodic-boundary-half-amplitude-build.log
+          lake build MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfHaarOrientationCorrection 2>&1 | tee /tmp/even-periodic-boundary-half-amplitude-build.log
 
       - name: Upload build log
         if: always()
