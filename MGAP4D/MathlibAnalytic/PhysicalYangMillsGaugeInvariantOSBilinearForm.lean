@@ -18,13 +18,17 @@ def PhysicalYangMillsGaugeInvariantOSReflectionData.WeakStarReflectionInvariant
   ∀ O, omega (D.reflection O) = omega O
 
 /-- The real Osterwalder--Schrader bilinear form
-`B_omega(F,G) = omega(Theta(F) * G)` on positive-time observables. -/
+`B_omega(F,G) = omega(Theta(F) * G)` on positive-time observables.
+
+The carrier is written through `positiveTimeSubalgebra.toSubmodule`.  This keeps
+only the additive and scalar structure needed by `LinearMap.BilinForm`, while
+retaining definitionally the same positive-time observables. -/
 noncomputable def PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
     (omega : WeakDual ℝ
       (physicalYangMillsGaugeInvariantObservableSubalgebra S)) :
-    LinearMap.BilinForm ℝ D.positiveTimeSubalgebra :=
+    LinearMap.BilinForm ℝ D.positiveTimeSubalgebra.toSubmodule :=
   LinearMap.mk₂ ℝ
     (fun F G =>
       omega
@@ -36,13 +40,13 @@ noncomputable def PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm
       simp [add_mul])
     (by
       intro r F G
-      simp [smul_mul_assoc])
+      simp)
     (by
       intro F G H
       simp [mul_add])
     (by
       intro r F G
-      simp [mul_smul_comm])
+      simp)
 
 @[simp]
 theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_apply
@@ -50,7 +54,7 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_apply
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
     (omega : WeakDual ℝ
       (physicalYangMillsGaugeInvariantObservableSubalgebra S))
-    (F G : D.positiveTimeSubalgebra) :
+    (F G : D.positiveTimeSubalgebra.toSubmodule) :
     D.osBilinForm omega F G =
       omega
         (D.reflection
@@ -66,7 +70,7 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_isSymm
       (physicalYangMillsGaugeInvariantObservableSubalgebra S))
     (hInvariant : D.WeakStarReflectionInvariant omega) :
     (D.osBilinForm omega).IsSymm := by
-  refine ⟨?_⟩
+  rw [LinearMap.BilinForm.isSymm_def]
   intro F G
   rw [D.osBilinForm_apply, D.osBilinForm_apply]
   calc
@@ -97,7 +101,7 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_isNonneg
       (physicalYangMillsGaugeInvariantObservableSubalgebra S))
     (hPositive : D.WeakStarReflectionPositive omega) :
     (D.osBilinForm omega).IsNonneg := by
-  refine ⟨?_⟩
+  rw [LinearMap.BilinForm.isNonneg_def]
   intro F
   rw [D.osBilinForm_apply]
   simpa [PhysicalYangMillsGaugeInvariantOSReflectionData.quadraticObservable]
@@ -113,9 +117,9 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_isPosSemidef
     (hInvariant : D.WeakStarReflectionInvariant omega)
     (hPositive : D.WeakStarReflectionPositive omega) :
     (D.osBilinForm omega).IsPosSemidef := by
-  refine ⟨?_, ?_⟩
-  · exact (D.osBilinForm_isSymm omega hInvariant).eq
-  · exact (D.osBilinForm_isNonneg omega hPositive).nonneg
+  rw [LinearMap.BilinForm.isPosSemidef_def]
+  exact ⟨D.osBilinForm_isSymm omega hInvariant,
+    D.osBilinForm_isNonneg omega hPositive⟩
 
 /-- Reflection invariance is sequentially closed for the weak-star topology. -/
 theorem physical_yang_mills_weakStarReflectionInvariant_of_tendsto
