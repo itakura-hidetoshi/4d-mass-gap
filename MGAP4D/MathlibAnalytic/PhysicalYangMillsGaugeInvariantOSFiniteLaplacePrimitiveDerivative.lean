@@ -94,8 +94,9 @@ theorem shiftedExponentialTimePrimitive_hasDerivAt_zero
     simp [shiftedExponentialTimePrimitive, add_comm]
   rw [hfun]
   convert hproduct using 1
-  · simp [finiteLaplaceIntegral]
-    module
+  · simp only [finiteLaplaceIntegral, mul_zero, Real.exp_zero,
+      one_smul, add_zero, T.exponentialTimePrimitive_zero, sub_zero] <;>
+      module
 
 /-- The derivative formula with the terminal term written directly in completed
 semigroup notation. -/
