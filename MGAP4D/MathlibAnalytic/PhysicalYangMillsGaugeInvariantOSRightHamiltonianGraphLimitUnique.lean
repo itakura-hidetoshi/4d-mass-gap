@@ -19,7 +19,7 @@ namespace StronglyContinuousPhysicalSemigroup
 same base-space limit have the same operator-value limit.
 
 This one-valuedness statement is compatible with the canonical Mathlib
-`LinearPMap.closure` constructed in the imported closure layer. -/
+`LinearPMap.closure` and its transferred dissipativity and nonnegativity layer. -/
 theorem rightGenerator_graph_limit_unique
     (T : P.StronglyContinuousPhysicalSemigroup)
     {psi phi : ℕ → T.rightGeneratorDomain}
