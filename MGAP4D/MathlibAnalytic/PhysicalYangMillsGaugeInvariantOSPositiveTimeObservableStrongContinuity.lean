@@ -65,15 +65,16 @@ noncomputable def toStronglyContinuousPhysicalSemigroup
     (T : P.PositiveTimeObservableContractionSemigroup)
     (hT : T.StrongContinuityOnObservableStates) :
     P.StronglyContinuousPhysicalSemigroup :=
-  T.toCarrierSemigroup.toStronglyContinuousPhysicalSemigroup
-    hT.toCarrierStrongContinuity
+  PositiveTimeContractionSemigroup.StrongContinuityOnDenseStates.
+    toStronglyContinuousPhysicalSemigroup
+      T.toCarrierSemigroup hT.toCarrierStrongContinuity
 
 /-- The strongly continuous completion retains the observable-side physical
 semigroup as its underlying contraction semigroup. -/
 @[simp] theorem toStronglyContinuousPhysicalSemigroup_toPhysicalSemigroup
     (T : P.PositiveTimeObservableContractionSemigroup)
     (hT : T.StrongContinuityOnObservableStates) :
-    (T.toStronglyContinuousPhysicalSemigroup hT).toPhysicalSemigroup =
+    (toStronglyContinuousPhysicalSemigroup T hT).toPhysicalSemigroup =
       T.toPhysicalSemigroup :=
   rfl
 
