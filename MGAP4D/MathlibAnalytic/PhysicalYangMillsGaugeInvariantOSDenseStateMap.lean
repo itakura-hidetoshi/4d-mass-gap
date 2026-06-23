@@ -65,6 +65,13 @@ theorem mem_ker_physicalStateLinearMap_iff
     apply norm_eq_zero.mp
     rw [P.norm_physicalState, hF]
 
+/-- As submodules, the kernel of the completed state map and the OS null space
+coincide exactly. -/
+theorem ker_physicalStateLinearMap (P : D.OSPreHilbertData) :
+    LinearMap.ker P.physicalStateLinearMap = P.nullSubmodule := by
+  ext F
+  exact P.mem_ker_physicalStateLinearMap_iff F
+
 /-- The constant unit observable is sent to the canonical physical vacuum. -/
 @[simp] theorem physicalStateLinearMap_vacuumObservable
     (P : D.OSPreHilbertData) :
