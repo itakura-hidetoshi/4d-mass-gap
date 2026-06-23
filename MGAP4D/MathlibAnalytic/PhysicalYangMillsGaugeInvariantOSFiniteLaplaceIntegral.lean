@@ -103,7 +103,7 @@ def finiteLaplaceIntegral
     (lambda : ℝ) (h : NNReal) :
     T.finiteLaplaceIntegral lambda h 0 = 0 := by
   simp [finiteLaplaceIntegral, exponentialTimePrimitive,
-    exponentiallyWeightedPhysicalOrbit]
+    exponentiallyWeightedPhysicalOrbit, realPhysicalOrbit]
 
 @[simp] theorem finiteLaplaceIntegral_add
     (T : P.StronglyContinuousPhysicalSemigroup)
@@ -125,7 +125,8 @@ def finiteLaplaceIntegral
     T.finiteLaplaceIntegral lambda h (r • psi) =
       r • T.finiteLaplaceIntegral lambda h psi := by
   simp [finiteLaplaceIntegral, exponentialTimePrimitive,
-    exponentiallyWeightedPhysicalOrbit]
+    exponentiallyWeightedPhysicalOrbit, realPhysicalOrbit,
+    smul_smul, mul_comm]
 
 /-- The finite-time Laplace integral is a real-linear map on the completed
 physical Hilbert space. -/
@@ -152,9 +153,11 @@ theorem norm_exponential_terminal_le
     ‖Real.exp ((-lambda) * (h : ℝ)) •
         T.toPhysicalSemigroup.operator h psi‖ ≤
       Real.exp ((-lambda) * (h : ℝ)) * ‖psi‖ := by
-  rw [norm_smul, Real.norm_eq_abs, abs_of_pos Real.exp_pos]
+  rw [norm_smul, Real.norm_eq_abs,
+    abs_of_pos (Real.exp_pos ((-lambda) * (h : ℝ)))]
   exact mul_le_mul_of_nonneg_left
-    (T.physicalOperator_norm_le h psi) Real.exp_pos.le
+    (T.physicalOperator_norm_le h psi)
+    (Real.exp_pos ((-lambda) * (h : ℝ))).le
 
 end StronglyContinuousPhysicalSemigroup
 
