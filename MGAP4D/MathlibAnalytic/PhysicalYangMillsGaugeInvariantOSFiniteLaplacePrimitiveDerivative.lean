@@ -84,8 +84,18 @@ theorem shiftedExponentialTimePrimitive_hasDerivAt_zero
   have hinterval :=
     T.exponentialMovingInterval_hasDerivAt_zero lambda h psi
   have hproduct := hscalar.smul hinterval
-  simpa [shiftedExponentialTimePrimitive, finiteLaplaceIntegral,
-    add_comm, add_left_comm, add_assoc] using hproduct
+  have hfun :
+      T.shiftedExponentialTimePrimitive lambda h psi =
+        (fun r : ℝ =>
+          Real.exp (lambda * r) •
+            (T.exponentialTimePrimitive lambda psi (r + (h : ℝ)) -
+              T.exponentialTimePrimitive lambda psi r)) := by
+    funext r
+    simp [shiftedExponentialTimePrimitive, add_comm]
+  rw [hfun]
+  convert hproduct using 1
+  · simp [finiteLaplaceIntegral]
+    module
 
 /-- The derivative formula with the terminal term written directly in completed
 semigroup notation. -/
