@@ -50,6 +50,7 @@ theorem nnreal_coe_tendsto_zero_right :
     nhdsWithin (0 : ℝ) (Ioi 0)
   rw [NNReal.map_coe_nhdsGT]
   simp only [NNReal.coe_zero]
+  exact le_rfl
 
 /-- The normalized positive-time averages converge strongly to the original
 physical vector as the averaging width tends to zero from the right. -/
