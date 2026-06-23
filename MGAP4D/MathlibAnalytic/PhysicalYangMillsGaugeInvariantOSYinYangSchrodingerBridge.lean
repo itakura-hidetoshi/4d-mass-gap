@@ -64,7 +64,7 @@ def yinYangComplexStructure (P : D.OSPreHilbertData) :
 @[simp] theorem yinYangComplexStructure_yangEmbedding
     (P : D.OSPreHilbertData) (psi : P.PhysicalHilbert) :
     P.yinYangComplexStructure (P.yangEmbedding psi) = P.yinEmbedding psi := by
-  rfl
+  ext <;> simp [yinYangComplexStructure, yinEmbedding, yangEmbedding]
 
 /-- A pure Yin component turns into the negative pure Yang component. -/
 @[simp] theorem yinYangComplexStructure_yinEmbedding
