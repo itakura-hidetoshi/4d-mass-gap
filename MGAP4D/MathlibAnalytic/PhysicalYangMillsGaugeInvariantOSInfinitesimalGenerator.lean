@@ -27,7 +27,7 @@ right difference quotient converges to `eta` as positive time tends to zero. -/
 def HasRightGeneratorValue
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi eta : P.PhysicalHilbert) : Prop :=
-  Tendsto (T.rightDifferenceQuotient psi)
+  Tendsto (fun t : NNReal => T.rightDifferenceQuotient psi t)
     (nhdsWithin 0 (Ioi 0)) (nhds eta)
 
 /-- The right infinitesimal-generator value is unique. -/
@@ -65,7 +65,7 @@ theorem hasRightGeneratorValue_unique
 theorem hasRightGeneratorValue_zero
     (T : P.StronglyContinuousPhysicalSemigroup) :
     T.HasRightGeneratorValue 0 0 := by
-  simpa [HasRightGeneratorValue] using
+  simpa only [HasRightGeneratorValue, rightDifferenceQuotient_zero] using
     (tendsto_const_nhds :
       Tendsto (fun _ : NNReal => (0 : P.PhysicalHilbert))
         (nhdsWithin 0 (Ioi 0)) (nhds 0))
@@ -139,7 +139,7 @@ theorem rightGenerator_hasRightGeneratorValue
 theorem hasRightGeneratorValue_vacuum_zero
     (T : P.StronglyContinuousPhysicalSemigroup) :
     T.HasRightGeneratorValue P.vacuum 0 := by
-  simpa [HasRightGeneratorValue] using
+  simpa only [HasRightGeneratorValue, rightDifferenceQuotient_vacuum] using
     (tendsto_const_nhds :
       Tendsto (fun _ : NNReal => (0 : P.PhysicalHilbert))
         (nhdsWithin 0 (Ioi 0)) (nhds 0))
