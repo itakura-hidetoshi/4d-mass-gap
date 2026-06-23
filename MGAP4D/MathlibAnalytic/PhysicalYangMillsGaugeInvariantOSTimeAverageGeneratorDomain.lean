@@ -147,7 +147,7 @@ theorem hasRightGeneratorValue_timeAverage
         (r⁻¹ •
           (T.shiftedTimeIntegralPrimitive h psi (0 + r) -
             T.shiftedTimeIntegralPrimitive h psi 0)))
-      (𝓝[>] (0 : ℝ))
+      (nhdsWithin 0 (Ioi 0))
       (nhds ((h : ℝ)⁻¹ •
         (T.toPhysicalSemigroup.operator h psi - psi))))
   have hcomp := hscaled.comp nnreal_coe_tendsto_zero_right
