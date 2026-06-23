@@ -84,23 +84,11 @@ theorem shiftedExponentialTimePrimitive_hasDerivAt_zero
   have hinterval :=
     T.exponentialMovingInterval_hasDerivAt_zero lambda h psi
   have hproduct := hscalar.smul hinterval
-  have hfun :
-      T.shiftedExponentialTimePrimitive lambda h psi =
-        (fun r : ℝ =>
-          Real.exp (lambda * r) •
-            (T.exponentialTimePrimitive lambda psi (r + (h : ℝ)) -
-              T.exponentialTimePrimitive lambda psi r)) := by
-    funext r
-    simp [shiftedExponentialTimePrimitive, add_comm]
-  rw [hfun]
   convert hproduct using 1
-  · rw [mul_zero, Real.exp_zero, one_smul, add_zero,
-      T.exponentialTimePrimitive_zero lambda psi, sub_zero]
-    change
-      lambda • T.exponentialTimePrimitive lambda psi (h : ℝ) +
-          T.exponentiallyWeightedPhysicalOrbit lambda psi (h : ℝ) - psi =
-        (T.exponentiallyWeightedPhysicalOrbit lambda psi (h : ℝ) - psi) +
-          lambda • T.exponentialTimePrimitive lambda psi (h : ℝ)
+  · ext r
+    rfl
+  · simp only [finiteLaplaceIntegral, mul_zero, Real.exp_zero, one_smul,
+      add_zero, T.exponentialTimePrimitive_zero lambda psi, sub_zero]
     module
 
 /-- The derivative formula with the terminal term written directly in completed
