@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianNonnegative
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianRange
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -19,7 +19,8 @@ namespace StronglyContinuousPhysicalSemigroup
 same base-space limit have the same operator-value limit.
 
 This one-valuedness statement is compatible with the canonical Mathlib
-`LinearPMap.closure` and its transferred dissipativity and nonnegativity layer. -/
+`LinearPMap.closure`, transferred nonnegativity, and closed positive-shift
+range layer. -/
 theorem rightGenerator_graph_limit_unique
     (T : P.StronglyContinuousPhysicalSemigroup)
     {psi phi : ℕ → T.rightGeneratorDomain}
