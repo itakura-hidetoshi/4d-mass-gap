@@ -31,13 +31,12 @@ theorem realPhysicalOrbit_operator_eq_add_of_nonneg
     T.realPhysicalOrbit (T.toPhysicalSemigroup.operator t psi) s =
       T.realPhysicalOrbit psi (s + (t : ℝ)) := by
   unfold realPhysicalOrbit
-  have hs_to : s.toNNReal = ⟨s, hs⟩ := by
-    apply NNReal.eq
-    simp [Real.toNNReal_of_nonneg hs]
+  have hs_to : s.toNNReal = NNReal.mk s hs :=
+    Real.toNNReal_of_nonneg hs
   have hsum :
-      (s + (t : ℝ)).toNNReal = (⟨s, hs⟩ : NNReal) + t := by
+      (s + (t : ℝ)).toNNReal = NNReal.mk s hs + t := by
     apply NNReal.eq
-    simp [Real.toNNReal_of_nonneg (add_nonneg hs t.coe_nonneg)]
+    simp [Real.coe_toNNReal, add_nonneg hs t.coe_nonneg]
   rw [hs_to, hsum, T.toPhysicalSemigroup.operator_add]
   rfl
 
@@ -108,11 +107,13 @@ theorem shiftedTimeIntegralPrimitive_hasDerivAt_zero
     simpa using (hasDerivAt_id (x := (0 : ℝ))).const_add (h : ℝ)
   have hshift :
       HasDerivAt (fun r : ℝ => T.timePrimitive psi ((h : ℝ) + r))
-        (T.realPhysicalOrbit psi (h : ℝ)) 0 := by
-    simpa using (T.timePrimitive_hasDerivAt psi (h : ℝ)).comp 0 harg
-  have hzero := T.timePrimitive_hasDerivAt psi 0
-  simpa [shiftedTimeIntegralPrimitive, realPhysicalOrbit] using
-    hshift.sub hzero
+        (T.toPhysicalSemigroup.operator h psi) 0 := by
+    have hout := T.timePrimitive_hasDerivAt psi ((h : ℝ) + 0)
+    have hcomp := hout.comp 0 harg
+    simpa [realPhysicalOrbit] using hcomp
+  have hzero : HasDerivAt (T.timePrimitive psi) psi 0 := by
+    simpa [realPhysicalOrbit] using T.timePrimitive_hasDerivAt psi 0
+  simpa [shiftedTimeIntegralPrimitive] using hshift.sub hzero
 
 /-- The right difference quotient of a time average is the normalized slope of
 the moving interval primitive. -/
@@ -124,11 +125,11 @@ theorem rightDifferenceQuotient_timeAverage
         ((t : ℝ)⁻¹ •
           (T.shiftedTimeIntegralPrimitive h psi (t : ℝ) -
             T.shiftedTimeIntegralPrimitive h psi 0)) := by
-  simp only [rightDifferenceQuotient, timeAverage, map_smul,
-    T.physicalOperator_timeIntegral_eq_timePrimitive_sub,
-    T.timeIntegral_eq_timePrimitive]
-  rw [T.timePrimitive_zero]
-  unfold shiftedTimeIntegralPrimitive
+  simp only [rightDifferenceQuotient, timeAverage, map_smul]
+  rw [T.physicalOperator_timeIntegral_eq_timePrimitive_sub]
+  rw [T.timeIntegral_eq_timePrimitive]
+  simp only [shiftedTimeIntegralPrimitive, add_zero,
+    T.timePrimitive_zero, sub_zero]
   module
 
 /-- Every fixed-width time average admits the expected right generator value. -/
