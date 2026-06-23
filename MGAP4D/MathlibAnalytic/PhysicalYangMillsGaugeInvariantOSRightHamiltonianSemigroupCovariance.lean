@@ -143,7 +143,14 @@ theorem physicalOperator_vacuum_mem_rightHamiltonianDomain
     T.rightHamiltonian
         ⟨T.toPhysicalSemigroup.operator s P.vacuum,
           T.physicalOperator_vacuum_mem_rightHamiltonianDomain s⟩ = 0 := by
-  rw [T.rightHamiltonian_operator, T.rightHamiltonian_vacuum, map_zero]
+  have hsub :
+      (⟨T.toPhysicalSemigroup.operator s P.vacuum,
+          T.physicalOperator_vacuum_mem_rightHamiltonianDomain s⟩ :
+        T.rightGeneratorDomain) =
+      ⟨P.vacuum, T.vacuum_mem_rightHamiltonianDomain⟩ := by
+    apply Subtype.ext
+    exact T.toPhysicalSemigroup.fixes_vacuum s
+  rw [hsub, T.rightHamiltonian_vacuum]
 
 end StronglyContinuousPhysicalSemigroup
 
