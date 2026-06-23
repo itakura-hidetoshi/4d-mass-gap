@@ -51,6 +51,7 @@ theorem closedRightGenerator_inner_nonpos
     huSnd.inner huFst
   apply le_of_tendsto_of_tendsto hinner tendsto_const_nhds
   exact Filter.Eventually.of_forall fun n => by
+    change ⟪(u n).2, (u n).1⟫_ℝ ≤ 0
     rcases (LinearPMap.mem_graph_iff T.rightGeneratorLinearPMap).1
       (huGraph n) with ⟨z, hzBase, hzValue⟩
     rw [← hzBase, ← hzValue]
@@ -90,6 +91,7 @@ theorem closedRightHamiltonian_inner_nonneg
     huSnd.inner huFst
   apply le_of_tendsto_of_tendsto tendsto_const_nhds hinner
   exact Filter.Eventually.of_forall fun n => by
+    change 0 ≤ ⟪(u n).2, (u n).1⟫_ℝ
     rcases (LinearPMap.mem_graph_iff T.rightHamiltonianLinearPMap).1
       (huGraph n) with ⟨z, hzBase, hzValue⟩
     rw [← hzBase, ← hzValue]
@@ -124,7 +126,7 @@ theorem lambda_mul_norm_le_norm_closedRightHamiltonianShift
           (psi : P.PhysicalHilbert)⟫_ℝ := by
     rw [T.closedRightHamiltonianShift_apply, inner_add_left,
       real_inner_smul_left, real_inner_self_eq_norm_sq]
-    linarith [T.closedRightHamiltonian_inner_nonneg psi]
+    linarith [hlambda.le, T.closedRightHamiltonian_inner_nonneg psi]
   have hcs :
       ⟪T.closedRightHamiltonianShift lambda psi,
           (psi : P.PhysicalHilbert)⟫_ℝ ≤
