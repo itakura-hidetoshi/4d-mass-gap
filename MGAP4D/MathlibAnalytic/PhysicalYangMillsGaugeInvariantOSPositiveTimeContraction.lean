@@ -15,7 +15,7 @@ variable {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
 packaged with exactly the algebraic and contractive data required to descend
 through the null quotient and extend to the completed physical Hilbert space. -/
 structure PositiveTimeContractionSemigroup (P : D.OSPreHilbertData) where
-  translate : ℝ≥0 → P.Carrier →ₗ[ℝ] P.Carrier
+  translate : NNReal → P.Carrier →ₗ[ℝ] P.Carrier
   translate_zero : ∀ F, translate 0 F = F
   translate_add : ∀ s t F, translate (s + t) F = translate s (translate t F)
   norm_translate_le : ∀ t F, ‖translate t F‖ ≤ ‖F‖
@@ -28,7 +28,7 @@ variable {P : D.OSPreHilbertData}
 /-- Contractivity forces positive-time translation to preserve the OS null
 space. -/
 theorem translate_mem_nullSubmodule
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0)
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal)
     {F : P.Carrier} (hF : F ∈ P.nullSubmodule) :
     T.translate t F ∈ P.nullSubmodule := by
   rw [P.mem_nullSubmodule] at hF ⊢
@@ -38,18 +38,18 @@ theorem translate_mem_nullSubmodule
 
 /-- Translation is contractive on represented physical vectors. -/
 theorem translated_physicalState_norm_le
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) (F : P.Carrier) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) (F : P.Carrier) :
     ‖P.physicalState (T.translate t F)‖ ≤ ‖P.physicalState F‖ := by
   simpa using T.norm_translate_le t F
 
 /-- Translation followed by the dense physical-state map. -/
 def translatedDenseStateLinearMap
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) :
     P.Carrier →ₗ[ℝ] P.PhysicalHilbert :=
   P.physicalStateLinearMap.comp (T.translate t)
 
 @[simp] theorem translatedDenseStateLinearMap_apply
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) (F : P.Carrier) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) (F : P.Carrier) :
     T.translatedDenseStateLinearMap t F =
       P.physicalState (T.translate t F) := by
   rw [translatedDenseStateLinearMap, LinearMap.comp_apply,
@@ -58,7 +58,7 @@ def translatedDenseStateLinearMap
 /-- The translated dense-state map is bounded by the original dense embedding
 with sharp constant one. -/
 theorem translatedDenseStateLinearMap_norm_le
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) (F : P.Carrier) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) (F : P.Carrier) :
     ‖T.translatedDenseStateLinearMap t F‖ ≤
       1 * ‖P.physicalStateLinearMap F‖ := by
   rw [T.translatedDenseStateLinearMap_apply,
@@ -68,14 +68,14 @@ theorem translatedDenseStateLinearMap_norm_le
 /-- The unique bounded physical time-translation operator obtained by extending
 translation from the dense family of represented OS states. -/
 noncomputable def physicalOperator
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) :
     P.PhysicalHilbert →L[ℝ] P.PhysicalHilbert :=
   (T.translatedDenseStateLinearMap t).extendOfNorm P.physicalStateLinearMap
 
 /-- The completed physical operator agrees with observable translation on the
 dense represented-state family. -/
 theorem physicalOperator_on_physicalState
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) (F : P.Carrier) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) (F : P.Carrier) :
     T.physicalOperator t (P.physicalState F) =
       P.physicalState (T.translate t F) := by
   rw [← P.physicalStateLinearMap_apply,
@@ -87,7 +87,7 @@ theorem physicalOperator_on_physicalState
 /-- Physical positive-time translations are contractions on the completed
 Hilbert space. -/
 theorem physicalOperator_norm_le
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0)
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal)
     (psi : P.PhysicalHilbert) :
     ‖T.physicalOperator t psi‖ ≤ ‖psi‖ := by
   have h := LinearMap.norm_extendOfNorm_apply_le
@@ -99,7 +99,7 @@ theorem physicalOperator_norm_le
 
 /-- The physical positive-time operator fixes the normalized OS vacuum. -/
 theorem physicalOperator_fixes_vacuum
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0) :
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal) :
     T.physicalOperator t P.vacuum = P.vacuum := by
   calc
     T.physicalOperator t P.vacuum =
@@ -113,7 +113,7 @@ theorem physicalOperator_fixes_vacuum
 /-- Translation is independent of the chosen observable representative of a
 physical vector. -/
 theorem translate_respects_physical_equivalence
-    (T : P.PositiveTimeContractionSemigroup) (t : ℝ≥0)
+    (T : P.PositiveTimeContractionSemigroup) (t : NNReal)
     {F G : P.Carrier} (hFG : P.physicalState F = P.physicalState G) :
     P.physicalState (T.translate t F) = P.physicalState (T.translate t G) := by
   calc
