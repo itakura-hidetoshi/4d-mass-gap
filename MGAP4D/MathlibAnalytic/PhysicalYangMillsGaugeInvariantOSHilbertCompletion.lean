@@ -89,8 +89,8 @@ protected def Carrier.sub
       have h :=
         D.positiveTimeSubalgebra.smul_mem G.positiveTime (-1 : ℝ)
       simpa using h
-    rw [sub_eq_add_neg]
-    exact D.positiveTimeSubalgebra.add_mem F.positiveTime hneg
+    simpa only [sub_eq_add_neg] using
+      D.positiveTimeSubalgebra.add_mem F.positiveTime hneg
 
 protected def Carrier.nsmul
     {P : D.OSPreHilbertData} (n : ℕ) (F : P.Carrier) : P.Carrier where
@@ -112,7 +112,7 @@ protected def Carrier.zsmul
     change n • F.toGaugeInvariant ∈ D.positiveTimeSubalgebra
     have h :=
       D.positiveTimeSubalgebra.smul_mem F.positiveTime (n : ℝ)
-    simpa only [Int.cast_smul_eq_zsmul] using h
+    simpa only [Int.cast_smul_eq_zsmul, Carrier.toGaugeInvariant] using h
 
 protected def Carrier.smul
     {P : D.OSPreHilbertData} (r : ℝ) (F : P.Carrier) : P.Carrier where
