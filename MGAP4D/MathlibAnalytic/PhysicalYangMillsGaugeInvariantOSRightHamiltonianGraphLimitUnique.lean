@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianLinearPMapClosure
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianNonnegative
 
 namespace MGAP4D
 namespace MathlibAnalytic
