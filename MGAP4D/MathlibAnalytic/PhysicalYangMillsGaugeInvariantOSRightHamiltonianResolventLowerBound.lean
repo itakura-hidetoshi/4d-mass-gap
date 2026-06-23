@@ -63,6 +63,31 @@ theorem lambda_mul_norm_le_norm_rightHamiltonianShift
       lt_of_le_of_ne (norm_nonneg _) (Ne.symm hzero)
     nlinarith [hmul]
 
+/-- The lower bound controls distances between any two domain vectors. -/
+theorem lambda_mul_dist_le_dist_rightHamiltonianShift
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    {lambda : ℝ} (hlambda : 0 < lambda)
+    (psi phi : T.rightGeneratorDomain) :
+    lambda * dist (psi : P.PhysicalHilbert) (phi : P.PhysicalHilbert) ≤
+      dist (T.rightHamiltonianShift lambda psi)
+        (T.rightHamiltonianShift lambda phi) := by
+  have h := T.lambda_mul_norm_le_norm_rightHamiltonianShift
+    hlambda (psi - phi)
+  simpa [dist_eq_norm] using h
+
+/-- On the image of a positive shift, its inverse relation is
+`1 / lambda`-Lipschitz.  No surjectivity of the shift is used. -/
+theorem dist_le_div_dist_rightHamiltonianShift
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    {lambda : ℝ} (hlambda : 0 < lambda)
+    (psi phi : T.rightGeneratorDomain) :
+    dist (psi : P.PhysicalHilbert) (phi : P.PhysicalHilbert) ≤
+      dist (T.rightHamiltonianShift lambda psi)
+        (T.rightHamiltonianShift lambda phi) / lambda := by
+  apply (le_div_iff₀ hlambda).2
+  simpa [mul_comm] using
+    T.lambda_mul_dist_le_dist_rightHamiltonianShift hlambda psi phi
+
 /-- A positive resolvent shift has trivial kernel. -/
 theorem rightHamiltonianShift_eq_zero_iff
     (T : P.StronglyContinuousPhysicalSemigroup)
