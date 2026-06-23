@@ -109,10 +109,11 @@ theorem shiftedTimeIntegralPrimitive_hasDerivAt_zero
       HasDerivAt (fun r : ℝ => T.timePrimitive psi ((h : ℝ) + r))
         (T.toPhysicalSemigroup.operator h psi) 0 := by
     have hout := T.timePrimitive_hasDerivAt psi ((h : ℝ) + 0)
-    have hcomp := hout.comp 0 harg
+    have hcomp := hout.scomp 0 harg
     simpa [realPhysicalOrbit] using hcomp
   have hzero : HasDerivAt (T.timePrimitive psi) psi 0 := by
-    simpa [realPhysicalOrbit] using T.timePrimitive_hasDerivAt psi 0
+    simpa [realPhysicalOrbit, T.toPhysicalSemigroup.operator_zero] using
+      T.timePrimitive_hasDerivAt psi 0
   simpa [shiftedTimeIntegralPrimitive] using hshift.sub hzero
 
 /-- The right difference quotient of a time average is the normalized slope of
