@@ -46,7 +46,7 @@ private theorem linearPMap_isClosable_of_sequentially_closable
   have huFst :
       Tendsto (fun n => (u n).1) atTop (nhds p.1) := by
     simpa only [Function.comp_apply] using
-      continuous_fst.continuousAt.comp hu
+      (continuous_fst.tendsto p).comp hu
   have hbaseEq :
       (fun n => (u n).1) = fun n => ((psi n : f.domain) : H) :=
     funext fun n => (hpsiBase n).symm
@@ -54,7 +54,7 @@ private theorem linearPMap_isClosable_of_sequentially_closable
   have huSnd :
       Tendsto (fun n => (u n).2) atTop (nhds p.2) := by
     simpa only [Function.comp_apply] using
-      continuous_snd.continuousAt.comp hu
+      (continuous_snd.tendsto p).comp hu
   have hvalueEq :
       (fun n => (u n).2) = fun n => f (psi n) :=
     funext fun n => (hpsiValue n).symm
