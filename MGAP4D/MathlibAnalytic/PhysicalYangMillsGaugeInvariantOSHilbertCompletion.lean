@@ -73,7 +73,7 @@ protected def Carrier.neg
     (physicalYangMillsGaugeInvariantObservableSubalgebra S).neg_mem F.gaugeInvariant
   positiveTime := by
     change -F.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    exact D.positiveTimeSubalgebra.neg_mem F.positiveTime
+    exact neg_mem F.positiveTime
 
 protected def Carrier.sub
     {P : D.OSPreHilbertData} (F G : P.Carrier) : P.Carrier where
@@ -83,7 +83,7 @@ protected def Carrier.sub
       F.gaugeInvariant G.gaugeInvariant
   positiveTime := by
     change F.toGaugeInvariant - G.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    exact D.positiveTimeSubalgebra.sub_mem F.positiveTime G.positiveTime
+    exact sub_mem F.positiveTime G.positiveTime
 
 protected def Carrier.nsmul
     {P : D.OSPreHilbertData} (n : ℕ) (F : P.Carrier) : P.Carrier where
@@ -103,7 +103,7 @@ protected def Carrier.zsmul
       F.gaugeInvariant n
   positiveTime := by
     change n • F.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    exact D.positiveTimeSubalgebra.zsmul_mem F.positiveTime n
+    exact zsmul_mem F.positiveTime n
 
 protected def Carrier.smul
     {P : D.OSPreHilbertData} (r : ℝ) (F : P.Carrier) : P.Carrier where
@@ -132,7 +132,17 @@ instance carrierAddCommGroup (P : D.OSPreHilbertData) : AddCommGroup P.Carrier :
   letI : SMul ℤ P.Carrier := ⟨Carrier.zsmul⟩
   refine Function.Injective.addCommGroup Carrier.observable
     (Carrier.observable_injective P) ?_ ?_ ?_ ?_ ?_ ?_
-  all_goals rfl
+  · rfl
+  · intro F G
+    rfl
+  · intro F
+    rfl
+  · intro F G
+    rfl
+  · intro F n
+    rfl
+  · intro F n
+    rfl
 
 instance carrierRealSMul (P : D.OSPreHilbertData) : SMul ℝ P.Carrier :=
   ⟨Carrier.smul⟩
@@ -141,7 +151,11 @@ instance carrierModule (P : D.OSPreHilbertData) : Module ℝ P.Carrier := by
   refine Function.Injective.module ℝ
     ⟨⟨Carrier.observable, ?_⟩, ?_⟩
     (Carrier.observable_injective P) ?_
-  all_goals rfl
+  · rfl
+  · intro F G
+    rfl
+  · intro r F
+    rfl
 
 @[simp] theorem Carrier.observable_zero (P : D.OSPreHilbertData) :
     (0 : P.Carrier).observable = 0 := rfl
