@@ -44,7 +44,7 @@ def yinYangComplexStructure (P : D.OSPreHilbertData) :
     P.YinYangPhysicalState →ₗ[ℝ] P.YinYangPhysicalState where
   toFun state := (-state.2, state.1)
   map_add' state₁ state₂ := by
-    ext <;> simp <;> module
+    ext <;> simp [add_comm]
   map_smul' r state := by
     ext <;> simp
 
@@ -87,7 +87,7 @@ noncomputable def rightHamiltonianYinYangPair
   toFun state :=
     (T.rightHamiltonian state.1, T.rightHamiltonian state.2)
   map_add' state₁ state₂ := by
-    ext <;> simp <;> module
+    ext <;> simp [add_comm]
   map_smul' r state := by
     ext <;> simp
 
