@@ -103,8 +103,9 @@ theorem closedRightHamiltonianShift_range_isClosed
           ((psi n : P.PhysicalHilbert),
             T.closedRightHamiltonian (psi n)))
         atTop
-        (nhds (x, y - lambda • x)) :=
-    hx.prodMk hHamiltonian
+        (nhds (x, y - lambda • x)) := by
+    rw [nhds_prod_eq]
+    exact hx.prodMk hHamiltonian
   have hlimitGraph :
       (x, y - lambda • x) ∈ T.closedRightHamiltonian.graph :=
     T.closedRightHamiltonian_isClosed.mem_of_tendsto hpair
