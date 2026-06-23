@@ -51,9 +51,25 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Build OS dense state and contraction layers
+        id: build
         shell: bash
         run: |
-          set -euxo pipefail
+          set +e
           lake build \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSDenseStateMap \
-            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSPositiveTimeContraction
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSPositiveTimeContraction \
+            > /tmp/os-positive-time-contraction.log 2>&1
+          status=$?
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload diagnostic log
+        uses: actions/upload-artifact@v6
+        with:
+          name: os-positive-time-contraction-log
+          path: /tmp/os-positive-time-contraction.log
+          if-no-files-found: error
+
+      - name: Fail if Lean failed
+        shell: bash
+        run: exit "${{ steps.build.outputs.status }}"
