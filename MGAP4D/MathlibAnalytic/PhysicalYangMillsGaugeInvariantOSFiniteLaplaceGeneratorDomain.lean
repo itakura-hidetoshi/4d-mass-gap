@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFiniteLaplacePrimitiveDerivative
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -168,20 +169,6 @@ theorem rightGenerator_finiteLaplaceIntegral
     (T.rightGenerator_hasRightGeneratorValue
       (T.finiteLaplaceIntegralGeneratorDomain lambda h psi))
   exact T.hasRightGeneratorValue_finiteLaplaceIntegral lambda h psi
-
-/-- The positive shift `lambda I + H` on the canonical right-Hamiltonian
-domain. -/
-noncomputable def rightHamiltonianShift
-    (T : P.StronglyContinuousPhysicalSemigroup) (lambda : ℝ) :
-    T.rightGeneratorDomain →ₗ[ℝ] P.PhysicalHilbert :=
-  lambda • T.rightGeneratorDomain.subtype + T.rightHamiltonian
-
-@[simp] theorem rightHamiltonianShift_apply
-    (T : P.StronglyContinuousPhysicalSemigroup) (lambda : ℝ)
-    (psi : T.rightGeneratorDomain) :
-    T.rightHamiltonianShift lambda psi =
-      lambda • (psi : P.PhysicalHilbert) + T.rightHamiltonian psi :=
-  rfl
 
 /-- The positive canonical Hamiltonian shift maps a finite Laplace integral to
 `psi` minus its exponentially decaying terminal orbit. -/
