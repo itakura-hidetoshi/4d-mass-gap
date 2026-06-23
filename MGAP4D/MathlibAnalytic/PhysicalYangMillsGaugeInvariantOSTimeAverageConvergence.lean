@@ -45,7 +45,11 @@ filter at zero. -/
 theorem nnreal_coe_tendsto_zero_right :
     Tendsto (fun h : NNReal => (h : ℝ))
       (nhdsWithin 0 (Ioi 0)) (nhdsWithin 0 (Ioi 0)) := by
-  simpa using (NNReal.map_coe_nhdsGT (0 : NNReal)).le
+  change Filter.map NNReal.toReal
+      (nhdsWithin (0 : NNReal) (Ioi 0)) ≤
+    nhdsWithin (0 : ℝ) (Ioi 0)
+  rw [NNReal.map_coe_nhdsGT]
+  simp only [NNReal.coe_zero]
 
 /-- The normalized positive-time averages converge strongly to the original
 physical vector as the averaging width tends to zero from the right. -/
