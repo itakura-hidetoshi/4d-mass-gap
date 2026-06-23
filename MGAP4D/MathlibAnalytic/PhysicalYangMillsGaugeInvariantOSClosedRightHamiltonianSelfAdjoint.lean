@@ -36,8 +36,10 @@ theorem closedRightHamiltonian_isSelfAdjoint_of_isFormalAdjoint
   let A := T.closedRightHamiltonian
   have hDense : Dense (A.domain : Set P.PhysicalHilbert) := by
     simpa [A] using T.closedRightHamiltonian_dense_domain
+  have hSymmetricA : A.IsFormalAdjoint A := by
+    simpa [A] using hSymmetric
   have hA_le_adjoint : A ≤ A.adjoint :=
-    hSymmetric.le_adjoint hDense
+    hSymmetricA.le_adjoint hDense
   have hAdjoint_le_A : A.adjoint ≤ A := by
     refine ⟨?_, ?_⟩
     · intro x hx
@@ -70,7 +72,7 @@ theorem closedRightHamiltonian_isSelfAdjoint_of_isFormalAdjoint
         have hSymmetricPairing :
             inner ℝ (A v) (u : P.PhysicalHilbert) =
               inner ℝ (v : P.PhysicalHilbert) (A u) :=
-          hSymmetric v u
+          hSymmetricA v u
         calc
           inner ℝ (T.closedRightHamiltonianShift 1 v) w =
               (inner ℝ (v : P.PhysicalHilbert) x -
@@ -123,9 +125,9 @@ theorem closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint
   constructor
   · intro hSelf
     rw [LinearPMap.isSelfAdjoint_def] at hSelf
-    rw [← hSelf]
-    exact LinearPMap.adjoint_isFormalAdjoint
-      T.closedRightHamiltonian_dense_domain
+    simpa only [hSelf] using
+      (LinearPMap.adjoint_isFormalAdjoint
+        T.closedRightHamiltonian_dense_domain)
   · exact T.closedRightHamiltonian_isSelfAdjoint_of_isFormalAdjoint
 
 end StronglyContinuousPhysicalSemigroup
