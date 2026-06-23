@@ -42,12 +42,15 @@ noncomputable def physicalStateLinearMap (P : D.OSPreHilbertData) :
     P.Carrier →ₗ[ℝ] P.PhysicalHilbert := by
   change P.Carrier →ₗ[ℝ] UniformSpace.Completion P.Separated
   exact
-    (UniformSpace.Completion.toComplₗᵢ ℝ P.Separated).toLinearMap.comp
-      P.osClassLinearMap
+    (UniformSpace.Completion.toComplₗᵢ
+      (𝕜 := ℝ) (E := P.Separated)).toLinearMap.comp P.osClassLinearMap
 
 @[simp] theorem physicalStateLinearMap_apply
     (P : D.OSPreHilbertData) (F : P.Carrier) :
-    P.physicalStateLinearMap F = P.physicalState F :=
+    P.physicalStateLinearMap F = P.physicalState F := by
+  change
+    ((P.osClass F : P.Separated) : UniformSpace.Completion P.Separated) =
+      ((P.osClass F : P.Separated) : UniformSpace.Completion P.Separated)
   rfl
 
 /-- The kernel of the completed represented-state map is exactly the OS null
@@ -55,7 +58,8 @@ submodule. -/
 theorem mem_ker_physicalStateLinearMap_iff
     (P : D.OSPreHilbertData) (F : P.Carrier) :
     F ∈ LinearMap.ker P.physicalStateLinearMap ↔ F ∈ P.nullSubmodule := by
-  change P.physicalState F = 0 ↔ ‖F‖ = 0
+  change P.physicalStateLinearMap F = 0 ↔ ‖F‖ = 0
+  rw [P.physicalStateLinearMap_apply]
   constructor
   · intro hF
     have hnorm : ‖P.physicalState F‖ = 0 := by
@@ -75,7 +79,8 @@ theorem ker_physicalStateLinearMap (P : D.OSPreHilbertData) :
 /-- The constant unit observable is sent to the canonical physical vacuum. -/
 @[simp] theorem physicalStateLinearMap_vacuumObservable
     (P : D.OSPreHilbertData) :
-    P.physicalStateLinearMap P.vacuumObservable = P.vacuum :=
+    P.physicalStateLinearMap P.vacuumObservable = P.vacuum := by
+  rw [P.physicalStateLinearMap_apply]
   rfl
 
 /-- Positive-time observables represent a dense linear family of vectors in
@@ -87,7 +92,8 @@ theorem physicalStateLinearMap_denseRange (P : D.OSPreHilbertData) :
     (by
       rintro y ⟨q, rfl⟩
       rcases SeparationQuotient.surjective_mk q with ⟨F, rfl⟩
-      exact ⟨F, rfl⟩)
+      refine ⟨F, ?_⟩
+      exact P.physicalStateLinearMap_apply F)
     (P.separated_dense_in_physical x)
 
 /-- Equivalently, the closure of represented physical states is the whole
