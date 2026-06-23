@@ -44,8 +44,9 @@ def carrierOfPositiveTime (P : D.OSPreHilbertData)
   rfl
 
 /-- Transport a real-algebra endomorphism of positive-time observables to a
-real-linear endomorphism of the OS seminormed carrier.  The map is built
-explicitly so that nested subtype typeclass search is not needed. -/
+real-linear endomorphism of the OS seminormed carrier.  Additivity and scalar
+linearity are routed through the explicit positive-time submodule to avoid
+nested-subtype typeclass search. -/
 noncomputable def translateCarrierByPositiveTimeAlgHom
     (P : D.OSPreHilbertData)
     (tau : D.positiveTimeSubalgebra →ₐ[ℝ] D.positiveTimeSubalgebra) :
@@ -54,35 +55,23 @@ noncomputable def translateCarrierByPositiveTimeAlgHom
     P.carrierOfPositiveTime (tau (P.positiveTimeElement F))
   map_add' := by
     intro F G
-    have hsource :
-        P.positiveTimeElement (F + G) =
-          P.positiveTimeElement F + P.positiveTimeElement G := by
-      apply Subtype.ext
-      apply Subtype.ext
-      rfl
     apply Carrier.observable_injective P
     change
-      (tau (P.positiveTimeElement (F + G))).1.1 =
-        (tau (P.positiveTimeElement F)).1.1 +
-          (tau (P.positiveTimeElement G)).1.1
-    rw [hsource]
+      (tau (P.toPositiveTime (F + G))).1.1 =
+        (tau (P.toPositiveTime F)).1.1 +
+          (tau (P.toPositiveTime G)).1.1
+    rw [P.toPositiveTime_add]
     exact congrArg (fun H : D.positiveTimeSubalgebra => H.1.1)
-      (tau.map_add (P.positiveTimeElement F) (P.positiveTimeElement G))
+      (tau.map_add (P.toPositiveTime F) (P.toPositiveTime G))
   map_smul' := by
     intro r F
-    have hsource :
-        P.positiveTimeElement (r • F) =
-          r • P.positiveTimeElement F := by
-      apply Subtype.ext
-      apply Subtype.ext
-      rfl
     apply Carrier.observable_injective P
     change
-      (tau (P.positiveTimeElement (r • F))).1.1 =
-        r • (tau (P.positiveTimeElement F)).1.1
-    rw [hsource]
+      (tau (P.toPositiveTime (r • F))).1.1 =
+        r • (tau (P.toPositiveTime F)).1.1
+    rw [P.toPositiveTime_smul]
     exact congrArg (fun H : D.positiveTimeSubalgebra => H.1.1)
-      (tau.toLinearMap.map_smul r (P.positiveTimeElement F))
+      (tau.toLinearMap.map_smul r (P.toPositiveTime F))
 
 @[simp] theorem translateCarrierByPositiveTimeAlgHom_apply
     (P : D.OSPreHilbertData)
