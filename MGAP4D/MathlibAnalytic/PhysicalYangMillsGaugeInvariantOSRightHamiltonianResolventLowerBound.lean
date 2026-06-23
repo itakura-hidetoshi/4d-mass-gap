@@ -71,9 +71,16 @@ theorem lambda_mul_dist_le_dist_rightHamiltonianShift
     lambda * dist (psi : P.PhysicalHilbert) (phi : P.PhysicalHilbert) ≤
       dist (T.rightHamiltonianShift lambda psi)
         (T.rightHamiltonianShift lambda phi) := by
-  have h := T.lambda_mul_norm_le_norm_rightHamiltonianShift
-    hlambda (psi - phi)
-  simpa [dist_eq_norm] using h
+  rw [dist_eq_norm, dist_eq_norm]
+  calc
+    lambda * ‖(psi : P.PhysicalHilbert) - (phi : P.PhysicalHilbert)‖ =
+        lambda * ‖((psi - phi : T.rightGeneratorDomain) :
+          P.PhysicalHilbert)‖ := by simp
+    _ ≤ ‖T.rightHamiltonianShift lambda (psi - phi)‖ :=
+      T.lambda_mul_norm_le_norm_rightHamiltonianShift hlambda (psi - phi)
+    _ = ‖T.rightHamiltonianShift lambda psi -
+          T.rightHamiltonianShift lambda phi‖ := by
+      rw [map_sub]
 
 /-- On the image of a positive shift, its inverse relation is
 `1 / lambda`-Lipschitz.  No surjectivity of the shift is used. -/
