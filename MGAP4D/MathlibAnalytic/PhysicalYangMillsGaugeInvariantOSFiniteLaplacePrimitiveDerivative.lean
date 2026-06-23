@@ -94,9 +94,14 @@ theorem shiftedExponentialTimePrimitive_hasDerivAt_zero
     simp [shiftedExponentialTimePrimitive, add_comm]
   rw [hfun]
   convert hproduct using 1
-  · simp only [finiteLaplaceIntegral, mul_zero, Real.exp_zero,
-      one_smul, add_zero, T.exponentialTimePrimitive_zero, sub_zero] <;>
-      module
+  · rw [mul_zero, Real.exp_zero, one_smul, add_zero,
+      T.exponentialTimePrimitive_zero lambda psi, sub_zero]
+    change
+      lambda • T.exponentialTimePrimitive lambda psi (h : ℝ) +
+          T.exponentiallyWeightedPhysicalOrbit lambda psi (h : ℝ) - psi =
+        (T.exponentiallyWeightedPhysicalOrbit lambda psi (h : ℝ) - psi) +
+          lambda • T.exponentialTimePrimitive lambda psi (h : ℝ)
+    module
 
 /-- The derivative formula with the terminal term written directly in completed
 semigroup notation. -/
