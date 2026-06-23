@@ -73,7 +73,9 @@ protected def Carrier.neg
     (physicalYangMillsGaugeInvariantObservableSubalgebra S).neg_mem F.gaugeInvariant
   positiveTime := by
     change -F.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    exact neg_mem F.positiveTime
+    have h :=
+      D.positiveTimeSubalgebra.smul_mem F.positiveTime (-1 : ℝ)
+    simpa using h
 
 protected def Carrier.sub
     {P : D.OSPreHilbertData} (F G : P.Carrier) : P.Carrier where
@@ -83,7 +85,12 @@ protected def Carrier.sub
       F.gaugeInvariant G.gaugeInvariant
   positiveTime := by
     change F.toGaugeInvariant - G.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    exact sub_mem F.positiveTime G.positiveTime
+    have hneg : -G.toGaugeInvariant ∈ D.positiveTimeSubalgebra := by
+      have h :=
+        D.positiveTimeSubalgebra.smul_mem G.positiveTime (-1 : ℝ)
+      simpa using h
+    rw [sub_eq_add_neg]
+    exact D.positiveTimeSubalgebra.add_mem F.positiveTime hneg
 
 protected def Carrier.nsmul
     {P : D.OSPreHilbertData} (n : ℕ) (F : P.Carrier) : P.Carrier where
@@ -103,7 +110,9 @@ protected def Carrier.zsmul
       F.gaugeInvariant n
   positiveTime := by
     change n • F.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    exact zsmul_mem F.positiveTime n
+    have h :=
+      D.positiveTimeSubalgebra.smul_mem F.positiveTime (n : ℝ)
+    simpa only [Int.cast_smul_eq_zsmul] using h
 
 protected def Carrier.smul
     {P : D.OSPreHilbertData} (r : ℝ) (F : P.Carrier) : P.Carrier where
