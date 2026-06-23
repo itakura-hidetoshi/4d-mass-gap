@@ -39,7 +39,7 @@ namespace StrongContinuityOnDenseStates
 /-- Contractivity and density transfer continuity at time zero from represented
 OS states to every vector of the completed physical Hilbert space. -/
 theorem physicalOperator_continuousAt_zero
-    (T : P.PositiveTimeContractionSemigroup)
+    {T : P.PositiveTimeContractionSemigroup}
     (hT : T.StrongContinuityOnDenseStates)
     (psi : P.PhysicalHilbert) :
     ContinuousAt (fun t : NNReal => T.physicalOperator t psi) 0 := by
@@ -69,7 +69,7 @@ theorem physicalOperator_continuousAt_zero
       dist (T.physicalOperator t psi)
           (T.physicalOperator t (P.physicalState F)) ≤
         dist psi (P.physicalState F) := by
-    simpa [dist_eq_norm] using
+    simpa only [dist_eq_norm, map_sub] using
       T.physicalOperator_norm_le t (psi - P.physicalState F)
   calc
     dist (T.physicalOperator t psi) psi ≤
@@ -83,14 +83,14 @@ theorem physicalOperator_continuousAt_zero
 
 /-- Equivalent strong-limit formulation at the origin. -/
 theorem physicalOperator_tendsto_zero
-    (T : P.PositiveTimeContractionSemigroup)
+    {T : P.PositiveTimeContractionSemigroup}
     (hT : T.StrongContinuityOnDenseStates)
     (psi : P.PhysicalHilbert) :
     Filter.Tendsto
       (fun t : NNReal => T.physicalOperator t psi)
       (nhds 0) (nhds psi) := by
   simpa [ContinuousAt, T.physicalOperator_zero_apply] using
-    hT.physicalOperator_continuousAt_zero T psi
+    hT.physicalOperator_continuousAt_zero psi
 
 /-- Canonical strongly continuous physical contraction semigroup generated from
 observable-side continuity on the dense represented-state family. -/
@@ -102,7 +102,7 @@ noncomputable def toStronglyContinuousPhysicalSemigroup
   strongContinuousAt_zero := by
     intro psi
     change ContinuousAt (fun t : NNReal => T.physicalOperator t psi) 0
-    exact hT.physicalOperator_continuousAt_zero T psi
+    exact hT.physicalOperator_continuousAt_zero psi
 
 end StrongContinuityOnDenseStates
 
