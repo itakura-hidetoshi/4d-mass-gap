@@ -18,8 +18,8 @@ namespace StronglyContinuousPhysicalSemigroup
 /-- Two strongly convergent graph sequences for the right generator with the
 same base-space limit have the same operator-value limit.
 
-This is the one-valuedness statement needed before defining the operator whose
-graph is the closure of the canonical generator graph. -/
+This one-valuedness statement is compatible with the canonical Mathlib
+`LinearPMap.closure` constructed in the imported closure layer. -/
 theorem rightGenerator_graph_limit_unique
     (T : P.StronglyContinuousPhysicalSemigroup)
     {psi phi : ℕ → T.rightGeneratorDomain}
