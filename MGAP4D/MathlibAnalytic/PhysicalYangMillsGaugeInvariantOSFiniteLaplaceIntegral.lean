@@ -124,9 +124,12 @@ def finiteLaplaceIntegral
     (lambda : ℝ) (h : NNReal) (r : ℝ) (psi : P.PhysicalHilbert) :
     T.finiteLaplaceIntegral lambda h (r • psi) =
       r • T.finiteLaplaceIntegral lambda h psi := by
-  simp [finiteLaplaceIntegral, exponentialTimePrimitive,
-    exponentiallyWeightedPhysicalOrbit, realPhysicalOrbit,
-    smul_smul, mul_comm]
+  unfold finiteLaplaceIntegral exponentialTimePrimitive
+  simpa only [exponentiallyWeightedPhysicalOrbit_smul] using
+    (intervalIntegral.integral_smul
+      (a := (0 : ℝ)) (b := (h : ℝ))
+      (μ := MeasureTheory.volume) r
+      (T.exponentiallyWeightedPhysicalOrbit lambda psi))
 
 /-- The finite-time Laplace integral is a real-linear map on the completed
 physical Hilbert space. -/
