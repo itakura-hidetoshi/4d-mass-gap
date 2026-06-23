@@ -209,7 +209,7 @@ theorem timeAverage_norm_le
     {h : NNReal} (hh : 0 < h) (psi : P.PhysicalHilbert) :
     ‖T.timeAverage h psi‖ ≤ ‖psi‖ := by
   have hhreal : 0 < (h : ℝ) := by exact_mod_cast hh
-  rw [timeAverage, norm_smul, Real.norm_inv, Real.norm_eq_abs,
+  rw [timeAverage, norm_smul, norm_inv, Real.norm_eq_abs,
     abs_of_pos hhreal]
   calc
     (h : ℝ)⁻¹ * ‖T.timeIntegral h psi‖ ≤
