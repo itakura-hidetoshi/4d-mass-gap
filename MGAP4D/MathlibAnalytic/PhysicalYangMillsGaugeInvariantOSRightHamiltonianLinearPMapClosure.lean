@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianGraphLimitUnique
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianClosable
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Topology.Sequences
 
