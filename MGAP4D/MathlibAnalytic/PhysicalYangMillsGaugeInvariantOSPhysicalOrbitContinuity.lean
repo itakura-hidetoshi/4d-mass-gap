@@ -73,37 +73,57 @@ theorem physicalOrbit_continuousAt
     exact h
   rcases le_total t s with hts | hst_le
   · have hu : dist (s - t) 0 < delta := by
-      rw [T.nnreal_dist_tsub_zero_eq hts]
+      rw [nnreal_dist_tsub_zero_eq hts]
       exact hst
     have hsmall := hzero' (s - t) hu
     have hs : s = t + (s - t) := by
       rw [add_comm, tsub_add_cancel_of_le hts]
+    have hop_s :
+        T.toPhysicalSemigroup.operator s psi =
+          T.toPhysicalSemigroup.operator t
+            (T.toPhysicalSemigroup.operator (s - t) psi) := by
+      calc
+        T.toPhysicalSemigroup.operator s psi =
+            T.toPhysicalSemigroup.operator (t + (s - t)) psi :=
+          congrArg (fun u : NNReal => T.toPhysicalSemigroup.operator u psi) hs
+        _ = T.toPhysicalSemigroup.operator t
+              (T.toPhysicalSemigroup.operator (s - t) psi) := by
+          rw [T.toPhysicalSemigroup.operator_add]
+          rfl
     calc
       dist (T.toPhysicalSemigroup.operator s psi)
           (T.toPhysicalSemigroup.operator t psi) =
         dist
           (T.toPhysicalSemigroup.operator t
             (T.toPhysicalSemigroup.operator (s - t) psi))
-          (T.toPhysicalSemigroup.operator t psi) := by
-            rw [hs, T.toPhysicalSemigroup.operator_add]
-            rfl
+          (T.toPhysicalSemigroup.operator t psi) := by rw [hop_s]
       _ ≤ dist (T.toPhysicalSemigroup.operator (s - t) psi) psi :=
         T.physicalOperator_dist_le t _ _
       _ < epsilon := hsmall
   · have hu : dist (t - s) 0 < delta := by
-      rw [T.nnreal_dist_tsub_zero_eq hst_le]
+      rw [nnreal_dist_tsub_zero_eq hst_le]
       simpa [dist_comm] using hst
     have hsmall := hzero' (t - s) hu
     have ht : t = s + (t - s) := by
       rw [add_comm, tsub_add_cancel_of_le hst_le]
+    have hop_t :
+        T.toPhysicalSemigroup.operator t psi =
+          T.toPhysicalSemigroup.operator s
+            (T.toPhysicalSemigroup.operator (t - s) psi) := by
+      calc
+        T.toPhysicalSemigroup.operator t psi =
+            T.toPhysicalSemigroup.operator (s + (t - s)) psi :=
+          congrArg (fun u : NNReal => T.toPhysicalSemigroup.operator u psi) ht
+        _ = T.toPhysicalSemigroup.operator s
+              (T.toPhysicalSemigroup.operator (t - s) psi) := by
+          rw [T.toPhysicalSemigroup.operator_add]
+          rfl
     calc
       dist (T.toPhysicalSemigroup.operator s psi)
           (T.toPhysicalSemigroup.operator t psi) =
         dist (T.toPhysicalSemigroup.operator s psi)
           (T.toPhysicalSemigroup.operator s
-            (T.toPhysicalSemigroup.operator (t - s) psi)) := by
-            rw [ht, T.toPhysicalSemigroup.operator_add]
-            rfl
+            (T.toPhysicalSemigroup.operator (t - s) psi)) := by rw [hop_t]
       _ ≤ dist psi (T.toPhysicalSemigroup.operator (t - s) psi) :=
         T.physicalOperator_dist_le s _ _
       _ = dist (T.toPhysicalSemigroup.operator (t - s) psi) psi :=
