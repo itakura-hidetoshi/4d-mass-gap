@@ -110,9 +110,14 @@ protected def Carrier.zsmul
       F.gaugeInvariant n
   positiveTime := by
     change n • F.toGaugeInvariant ∈ D.positiveTimeSubalgebra
-    have h :=
+    have h :
+        (n : ℝ) • F.toGaugeInvariant ∈ D.positiveTimeSubalgebra :=
       D.positiveTimeSubalgebra.smul_mem F.positiveTime (n : ℝ)
-    simpa only [Int.cast_smul_eq_zsmul, Carrier.toGaugeInvariant] using h
+    have hz :
+        (n : ℝ) • F.toGaugeInvariant = n • F.toGaugeInvariant :=
+      Int.cast_smul_eq_zsmul ℝ n F.toGaugeInvariant
+    rw [hz] at h
+    exact h
 
 protected def Carrier.smul
     {P : D.OSPreHilbertData} (r : ℝ) (F : P.Carrier) : P.Carrier where
