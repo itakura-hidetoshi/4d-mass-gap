@@ -83,8 +83,8 @@ theorem exponentialTimePrimitive_hasDerivAt
     HasDerivAt (T.exponentialTimePrimitive lambda psi)
       (T.exponentiallyWeightedPhysicalOrbit lambda psi r) r := by
   simpa only [exponentialTimePrimitive] using
-    ((T.exponentiallyWeightedPhysicalOrbit_continuous lambda psi)
-      .integral_hasStrictDerivAt 0 r).hasDerivAt
+    ((T.exponentiallyWeightedPhysicalOrbit_continuous lambda psi).integral_hasStrictDerivAt
+      0 r).hasDerivAt
 
 /-- The finite-time Laplace integral of a completed physical orbit. -/
 def finiteLaplaceIntegral
