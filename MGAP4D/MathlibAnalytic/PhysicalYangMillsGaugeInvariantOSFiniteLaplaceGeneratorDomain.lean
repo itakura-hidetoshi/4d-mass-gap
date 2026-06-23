@@ -169,6 +169,20 @@ theorem rightGenerator_finiteLaplaceIntegral
       (T.finiteLaplaceIntegralGeneratorDomain lambda h psi))
   exact T.hasRightGeneratorValue_finiteLaplaceIntegral lambda h psi
 
+/-- The positive shift `lambda I + H` on the canonical right-Hamiltonian
+domain. -/
+noncomputable def rightHamiltonianShift
+    (T : P.StronglyContinuousPhysicalSemigroup) (lambda : ℝ) :
+    T.rightGeneratorDomain →ₗ[ℝ] P.PhysicalHilbert :=
+  lambda • T.rightGeneratorDomain.subtype + T.rightHamiltonian
+
+@[simp] theorem rightHamiltonianShift_apply
+    (T : P.StronglyContinuousPhysicalSemigroup) (lambda : ℝ)
+    (psi : T.rightGeneratorDomain) :
+    T.rightHamiltonianShift lambda psi =
+      lambda • (psi : P.PhysicalHilbert) + T.rightHamiltonian psi :=
+  rfl
+
 /-- The positive canonical Hamiltonian shift maps a finite Laplace integral to
 `psi` minus its exponentially decaying terminal orbit. -/
 theorem rightHamiltonianShift_finiteLaplaceIntegral
@@ -208,7 +222,9 @@ theorem closedRightHamiltonian_finiteLaplaceIntegral
         (T.finiteLaplaceIntegralClosedDomain lambda h psi) =
       T.rightHamiltonian
         (T.finiteLaplaceIntegralGeneratorDomain lambda h psi) := by
-  exact T.rightHamiltonianLinearPMap_le_closedRightHamiltonian.2 rfl
+  exact T.rightHamiltonianLinearPMap_le_closedRightHamiltonian.2
+    (x := T.finiteLaplaceIntegralGeneratorDomain lambda h psi)
+    (y := T.finiteLaplaceIntegralClosedDomain lambda h psi) rfl
 
 /-- The positive shift of the closed right Hamiltonian obeys the finite-time
 Laplace resolvent identity. -/
@@ -219,9 +235,10 @@ theorem closedRightHamiltonianShift_finiteLaplaceIntegral
         (T.finiteLaplaceIntegralClosedDomain lambda h psi) =
       psi - Real.exp ((-lambda) * (h : ℝ)) •
         T.toPhysicalSemigroup.operator h psi := by
-  rw [T.closedRightHamiltonianShift_apply,
-    T.closedRightHamiltonian_finiteLaplaceIntegral]
-  exact T.rightHamiltonianShift_finiteLaplaceIntegral lambda h psi
+  simpa only [T.closedRightHamiltonianShift_apply,
+    T.closedRightHamiltonian_finiteLaplaceIntegral,
+    T.rightHamiltonianShift_apply] using
+      T.rightHamiltonianShift_finiteLaplaceIntegral lambda h psi
 
 end StronglyContinuousPhysicalSemigroup
 
