@@ -43,34 +43,46 @@ def carrierOfPositiveTime (P : D.OSPreHilbertData)
   apply Carrier.observable_injective P
   rfl
 
-/-- The opaque OS carrier and the original positive-time observable algebra are
-linearly equivalent.  The distinction between them is therefore analytic, not
-algebraic: only the carrier is equipped with the OS seminorm. -/
-noncomputable def carrierPositiveTimeLinearEquiv (P : D.OSPreHilbertData) :
-    P.Carrier ≃ₗ[ℝ] D.positiveTimeSubalgebra where
-  toFun := P.positiveTimeElement
-  invFun := P.carrierOfPositiveTime
-  left_inv := P.carrierOfPositiveTime_positiveTimeElement
-  right_inv := P.positiveTimeElement_carrierOfPositiveTime
-  map_add' := by
-    intro F G
-    apply Subtype.ext
-    apply Subtype.ext
-    rfl
-  map_smul' := by
-    intro r F
-    apply Subtype.ext
-    apply Subtype.ext
-    rfl
-
 /-- Transport a real-algebra endomorphism of positive-time observables to a
-real-linear endomorphism of the OS seminormed carrier. -/
+real-linear endomorphism of the OS seminormed carrier.  The map is built
+explicitly so that nested subtype typeclass search is not needed. -/
 noncomputable def translateCarrierByPositiveTimeAlgHom
     (P : D.OSPreHilbertData)
     (tau : D.positiveTimeSubalgebra →ₐ[ℝ] D.positiveTimeSubalgebra) :
-    P.Carrier →ₗ[ℝ] P.Carrier :=
-  P.carrierPositiveTimeLinearEquiv.symm.toLinearMap.comp
-    (tau.toLinearMap.comp P.carrierPositiveTimeLinearEquiv.toLinearMap)
+    P.Carrier →ₗ[ℝ] P.Carrier where
+  toFun := fun F =>
+    P.carrierOfPositiveTime (tau (P.positiveTimeElement F))
+  map_add' := by
+    intro F G
+    have hsource :
+        P.positiveTimeElement (F + G) =
+          P.positiveTimeElement F + P.positiveTimeElement G := by
+      apply Subtype.ext
+      apply Subtype.ext
+      rfl
+    apply Carrier.observable_injective P
+    change
+      (tau (P.positiveTimeElement (F + G))).1.1 =
+        (tau (P.positiveTimeElement F)).1.1 +
+          (tau (P.positiveTimeElement G)).1.1
+    rw [hsource]
+    exact congrArg (fun H : D.positiveTimeSubalgebra => H.1.1)
+      (tau.map_add (P.positiveTimeElement F) (P.positiveTimeElement G))
+  map_smul' := by
+    intro r F
+    have hsource :
+        P.positiveTimeElement (r • F) =
+          r • P.positiveTimeElement F := by
+      apply Subtype.ext
+      apply Subtype.ext
+      rfl
+    apply Carrier.observable_injective P
+    change
+      (tau (P.positiveTimeElement (r • F))).1.1 =
+        r • (tau (P.positiveTimeElement F)).1.1
+    rw [hsource]
+    exact congrArg (fun H : D.positiveTimeSubalgebra => H.1.1)
+      (tau.toLinearMap.map_smul r (P.positiveTimeElement F))
 
 @[simp] theorem translateCarrierByPositiveTimeAlgHom_apply
     (P : D.OSPreHilbertData)
@@ -87,8 +99,10 @@ def osQuadraticValue (P : D.OSPreHilbertData) (F : P.Carrier) : ℝ :=
 @[simp] theorem osQuadraticValue_eq_norm_sq
     (P : D.OSPreHilbertData) (F : P.Carrier) :
     P.osQuadraticValue F = ‖F‖ ^ 2 := by
-  rw [← P.inner_eq_osBilinForm]
-  exact real_inner_self_eq_norm_sq F
+  calc
+    P.osQuadraticValue F = inner ℝ F F :=
+      (P.inner_eq_osBilinForm F F).symm
+    _ = ‖F‖ ^ 2 := real_inner_self_eq_norm_sq F
 
 /-- Positive-time translations expressed on the actual positive-time observable
 algebra.  Preservation of positive time and of the unit are built into the
@@ -196,8 +210,14 @@ theorem physicalOperator_on_positiveTimeObservable
     T.toPhysicalSemigroup.operator t
         (P.physicalState (P.carrierOfPositiveTime F)) =
       P.physicalState (P.carrierOfPositiveTime (T.translate t F)) := by
-  exact T.toCarrierSemigroup.physicalOperator_on_physicalState
-    t (P.carrierOfPositiveTime F)
+  change T.toCarrierSemigroup.physicalOperator t
+      (P.physicalState (P.carrierOfPositiveTime F)) =
+    P.physicalState (P.carrierOfPositiveTime (T.translate t F))
+  rw [T.toCarrierSemigroup.physicalOperator_on_physicalState]
+  change P.physicalState
+      (T.carrierTranslation t (P.carrierOfPositiveTime F)) =
+    P.physicalState (P.carrierOfPositiveTime (T.translate t F))
+  rw [T.carrierTranslation_carrierOfPositiveTime]
 
 end PositiveTimeObservableContractionSemigroup
 
