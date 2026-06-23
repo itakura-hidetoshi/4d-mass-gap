@@ -19,10 +19,10 @@ def osClassLinearMap (P : D.OSPreHilbertData) :
   toFun := P.osClass
   map_add' := by
     intro F G
-    rfl
+    exact SeparationQuotient.mk_add F G
   map_smul' := by
     intro r F
-    rfl
+    exact SeparationQuotient.mk_smul r F
 
 @[simp] theorem osClassLinearMap_apply
     (P : D.OSPreHilbertData) (F : P.Carrier) :
@@ -56,7 +56,14 @@ theorem mem_ker_physicalStateLinearMap_iff
     (P : D.OSPreHilbertData) (F : P.Carrier) :
     F ∈ LinearMap.ker P.physicalStateLinearMap ↔ F ∈ P.nullSubmodule := by
   change P.physicalState F = 0 ↔ ‖F‖ = 0
-  rw [← norm_eq_zero, P.norm_physicalState]
+  constructor
+  · intro hF
+    have hnorm : ‖P.physicalState F‖ = 0 := by
+      rw [hF, norm_zero]
+    simpa using hnorm
+  · intro hF
+    apply norm_eq_zero.mp
+    rw [P.norm_physicalState, hF]
 
 /-- The constant unit observable is sent to the canonical physical vacuum. -/
 @[simp] theorem physicalStateLinearMap_vacuumObservable
@@ -69,17 +76,19 @@ the completed physical OS Hilbert space. -/
 theorem physicalStateLinearMap_denseRange (P : D.OSPreHilbertData) :
     DenseRange P.physicalStateLinearMap := by
   intro x
-  apply closure_mono ?_ (P.separated_dense_in_physical x)
-  rintro y ⟨q, rfl⟩
-  rcases SeparationQuotient.surjective_mk q with ⟨F, rfl⟩
-  exact ⟨F, rfl⟩
+  exact closure_mono
+    (by
+      rintro y ⟨q, rfl⟩
+      rcases SeparationQuotient.surjective_mk q with ⟨F, rfl⟩
+      exact ⟨F, rfl⟩)
+    (P.separated_dense_in_physical x)
 
 /-- Equivalently, the closure of represented physical states is the whole
 physical Hilbert space. -/
 theorem closure_range_physicalStateLinearMap
     (P : D.OSPreHilbertData) :
     closure (Set.range P.physicalStateLinearMap) = Set.univ :=
-  (denseRange_iff_closure_range.mp P.physicalStateLinearMap_denseRange)
+  P.physicalStateLinearMap_denseRange.closure_range
 
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
