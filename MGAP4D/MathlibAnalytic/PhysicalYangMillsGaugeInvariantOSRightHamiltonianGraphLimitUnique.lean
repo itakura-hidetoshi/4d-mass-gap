@@ -44,7 +44,7 @@ theorem rightGenerator_graph_limit_unique
         (fun n => T.rightGenerator (psi n - phi n))
         atTop
         (nhds (eta - zeta)) := by
-    simpa using hgeneratorPsi.sub hgeneratorPhi
+    simpa only [map_sub] using hgeneratorPsi.sub hgeneratorPhi
   have hzero : eta - zeta = 0 :=
     T.rightGenerator_sequentially_closable
       hbaseDifference hvalueDifference
@@ -76,7 +76,7 @@ theorem rightHamiltonian_graph_limit_unique
         (fun n => T.rightHamiltonian (psi n - phi n))
         atTop
         (nhds (eta - zeta)) := by
-    simpa using hHamiltonianPsi.sub hHamiltonianPhi
+    simpa only [map_sub] using hHamiltonianPsi.sub hHamiltonianPhi
   have hzero : eta - zeta = 0 :=
     T.rightHamiltonian_sequentially_closable
       hbaseDifference hvalueDifference
