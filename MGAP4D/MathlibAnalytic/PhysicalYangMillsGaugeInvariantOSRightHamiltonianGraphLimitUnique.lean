@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFiniteLaplacePrimitiveDerivative
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFiniteLaplaceGeneratorDomain
 
 namespace MGAP4D
 namespace MathlibAnalytic
