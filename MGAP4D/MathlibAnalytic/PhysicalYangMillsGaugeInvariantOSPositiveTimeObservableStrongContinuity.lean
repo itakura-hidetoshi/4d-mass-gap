@@ -75,7 +75,7 @@ semigroup as its underlying contraction semigroup. -/
 @[simp] theorem toStronglyContinuousPhysicalSemigroup_toPhysicalSemigroup
     (T : P.PositiveTimeObservableContractionSemigroup)
     (hT : T.StrongContinuityOnObservableStates) :
-    (T.toStronglyContinuousPhysicalSemigroup hT).toPhysicalSemigroup =
+    (toStronglyContinuousPhysicalSemigroup T hT).toPhysicalSemigroup =
       T.toPhysicalSemigroup :=
   rfl
 
