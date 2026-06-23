@@ -45,7 +45,8 @@ filter at zero. -/
 theorem nnreal_coe_tendsto_zero_right :
     Tendsto (fun h : NNReal => (h : ℝ))
       (nhdsWithin 0 (Ioi 0)) (nhdsWithin 0 (Ioi 0)) := by
-  change Filter.map NNReal.toReal (𝓝[>] (0 : NNReal)) ≤ 𝓝[>] (0 : ℝ)
+  change Filter.map NNReal.toReal (nhdsWithin 0 (Ioi 0)) ≤
+    nhdsWithin 0 (Ioi 0)
   rw [NNReal.map_coe_nhdsGT]
 
 /-- The normalized positive-time averages converge strongly to the original
