@@ -102,6 +102,7 @@ theorem diracProba_prod_map_jointTranslate
       Measure E.PhysicalConfiguration)
   exact toMeasure_diracProba_prod_map_jointTranslate J s μ
 
+set_option maxHeartbeats 400000 in
 private theorem diracProba_tendsto_of_tendsto
     {τ : ℕ → ℝ} {t : ℝ}
     (hτ : Tendsto τ atTop (nhds t)) :
