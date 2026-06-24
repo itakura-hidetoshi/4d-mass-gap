@@ -157,12 +157,12 @@ theorem finite_oriented_plaquetteHolonomy_gaugeTransform
     (gamma : L.GaugeTransformation)
     (A : L.Configuration)
     (p : L.Plaquette) :
-    L.plquetteHolonomy (L.gaugeTransform gamma A) p =
+    L.plaquetteHolonomy (L.gaugeTransform gamma A) p =
       gamma ((L.boundary p 0).initial L.edgeSource L.edgeTarget) *
-        L.plquetteHolonomy A p *
+        L.plaquetteHolonomy A p *
         (gamma ((L.boundary p 0).initial
           L.edgeSource L.edgeTarget))⁻¹ := by
-  unfold FiniteOrientedLatticeWilsonSystem.plquetteHolonomy
+  unfold FiniteOrientedLatticeWilsonSystem.plaquetteHolonomy
   rw [finite_oriented_stepValue_gaugeTransform,
     finite_oriented_stepValue_gaugeTransform,
     finite_oriented_stepValue_gaugeTransform,
@@ -176,7 +176,7 @@ def FiniteOrientedLatticeWilsonSystem.wilsonAction
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration) : ℝ :=
   ∑ p : L.Plaquette,
-    L.plaquetteEnergy (L.plquetteHolonomy A p)
+    L.plaquetteEnergy (L.plaquetteHolonomy A p)
 
 /-- The orientation-correct Wilson action is nonnegative. -/
 theorem finite_oriented_wilsonAction_nonneg
