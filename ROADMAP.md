@@ -4,47 +4,46 @@ This roadmap records the active proof-development path of the canonical Lean rep
 
 ## Status snapshot — 2026-06-24
 
-The repository now has two relevant development levels.
+The repository has two relevant development levels.
 
 ```text
 main
-  -> finite Wilson heat-bath and exact Dobrushin route through merged PR #274
+  -> concrete finite Wilson heat-bath and exact Dobrushin route
+     through merged PR #274
 
 physical-4d-yang-mills-measure-limit
   -> active PR #282
-  -> physical weak limits, finite and weak-limit OS positivity,
-     gauge-invariant OS Hilbert completion, strongly continuous semigroup,
-     right Hamiltonian closure and Laplace resolvent,
-     plus finite periodic translation invariance
+  -> common-carrier weak limits
+  -> finite and weak-limit OS positivity
+  -> gauge-invariant OS Hilbert completion
+  -> strongly continuous physical semigroup
+  -> closed nonnegative right Hamiltonian
+  -> finite-time Laplace resolvent and positive-shift surjectivity
+  -> periodic translation invariance
+  -> concrete integer temporal translations
 ```
 
-PR #282 is open, non-draft, and mergeable.
-
-The code baseline reviewed for this roadmap is:
+The newest code milestone reviewed for this roadmap is:
 
 ```text
-54b3404d5096ec007f757e1c288d472bc3ac8a3d
+458c51b2a653229da24d605906abd48b833b6a75
 ```
 
-Verification at that baseline:
-
-- dedicated `Temporary Periodic Translation Check` run 3: success;
-- ordinary `PR Lean Fast Check` run 4274: cancelled before completion of the changed-Lean build;
-- no final branch-wide ordinary-CI green claim is made here.
+At the time of this update, no workflow run was attached to that newest milestone. A dedicated periodic-translation run had succeeded on the preceding translation implementation, but the ordinary changed-Lean run on that predecessor was cancelled before completion. No final branch-wide ordinary-CI green claim is made here.
 
 The repository does **not** yet contain an unconditional, physically complete construction of four-dimensional Yang--Mills theory with a positive mass gap.
 
 ## Governing distinctions
 
-Every roadmap item must be classified as one of the following.
+Every roadmap item must be read as one of the following.
 
-1. **Concrete finite theorem:** proved from the actual finite Wilson geometry and Gibbs law.
-2. **Theorem-generated transfer:** proved from an explicit typed bridge whose fields remain to be constructed physically.
-3. **Analytic OS construction:** constructed from reflection-positive state, continuity, and covariance data.
-4. **Physical continuum conclusion:** requires justified carrier, scaling, regularity, nontriviality, and independent review.
-5. **Internal normalization carrier:** transports a selected value but does not independently derive it.
+1. **Concrete finite theorem:** proved from actual finite Wilson geometry and Gibbs laws.
+2. **Theorem-generated transfer:** proved from explicit typed bridge data.
+3. **Analytic OS construction:** constructed from reflection positivity, continuity, and covariance data.
+4. **Physical continuum conclusion:** requires a justified carrier, scaling, regularity, nontriviality, and independent review.
+5. **Internal normalization carrier:** transports a selected value but does not derive it physically.
 
-New work should discharge a real dependency. Additional receipt layers, duplicated wrappers, or renamed readiness structures are not priorities unless they close a concrete mathematical boundary.
+New work should discharge a genuine dependency. Additional wrappers or readiness receipts are not priorities unless they close a concrete mathematical boundary.
 
 ## Completed finite Wilson layers
 
@@ -72,29 +71,39 @@ Status: **proved on `main` through PR #274**
 - [x] finite Gibbs Hilbert equivalence;
 - [x] canonical heat-bath Hamiltonian `H_HB = sum_e Q_e`;
 - [x] exact identity `H_HB = |E| (I - P_scan)`;
-- [x] centered random-scan Rayleigh contraction from the canonical Dobrushin package;
+- [x] centered random-scan Rayleigh contraction from the Dobrushin package;
 - [x] active/shared-plaquette localization of Wilson influence;
 - [x] finite-volume Poincare and Hamiltonian-gap consequences;
 - [x] family finite-gap packages in the stated Dobrushin regime;
 - [x] transfer-orbit contraction packages driven by the finite gap.
 
-The old roadmap item “derive Dobrushin TV to centered `L²` contraction” is closed. The remaining issue is no longer the finite Dobrushin conversion. It is the relation between the finite heat-bath dynamics and the continuum physical OS Hamiltonian.
+The former milestone “derive Dobrushin total variation to centered `L²` contraction” is closed. The remaining problem is the relation between finite heat-bath dynamics and the continuum physical OS Hamiltonian.
 
-### C. Finite periodic translation invariance
+### C. Periodic and integer temporal translations
 
-Status: **proved in PR #282 source; dedicated workflow succeeded**
+Status: **concrete finite theorems implemented; newest dedicated check pending at this snapshot**
 
 - [x] periodic vertex translation equivalence;
 - [x] periodic edge and plaquette translation equivalences;
 - [x] configuration reindexing measurable equivalence;
 - [x] covariance of signed boundary steps;
 - [x] covariance of plaquette holonomy;
-- [x] invariance of the canonical periodic `SU(N)` Wilson action;
+- [x] invariance of the periodic `SU(N)` Wilson action;
 - [x] invariance of product normalized Haar measure;
 - [x] invariance of the finite Wilson Gibbs probability law;
-- [ ] select and package the temporal subgroup at every approximation scale;
-- [ ] connect it to the physical interpolation map;
-- [ ] derive the continuum temporal-action structure.
+- [x] distinguished temporal displacement by each integer `k`;
+- [x] zero law for integer temporal displacement;
+- [x] addition law for integer temporal displacement;
+- [x] negation law for integer temporal displacement;
+- [x] measurable integer temporal configuration translation;
+- [x] finite Gibbs invariance under integer temporal translations.
+
+Principal files:
+
+```text
+MGAP4D/MathlibAnalytic/PeriodicHypercubicTranslationInvariance.lean
+MGAP4D/MathlibAnalytic/PeriodicHypercubicIntegerTemporalTranslation.lean
+```
 
 ## Active PR #282 weak-limit and OS layers
 
@@ -113,30 +122,31 @@ Status: **implemented from explicit hypotheses**
 - [x] continuous gauge-action transfer;
 - [x] invariant event probabilities and observable laws;
 - [x] bounded continuous expectation convergence;
-- [x] two-point, connected-correlation, and finite n-point observable routes;
+- [x] two-point, connected-correlation, and finite n-point routes;
 - [x] fixed real algebra of gauge-invariant bounded continuous observables;
 - [ ] construct the physically intended distributional carrier;
 - [ ] construct explicit interpolation or blocking;
-- [ ] justify the renormalized coupling/scaling trajectory;
-- [ ] prove the required proper coercive estimate for that physical construction;
+- [ ] justify the renormalized coupling and scaling trajectory;
+- [ ] prove the required coercive estimate for that physical construction;
 - [ ] prove nontriviality and regularity of the limiting law.
 
-### E. Finite even-periodic Wilson reflection positivity
+### E. Finite and weak-limit reflection positivity
 
-Status: **proved**
+Status: **finite theorem proved; weak-limit theorem proved for bridged bounded observables**
 
 - [x] even-periodic time reflection on vertices, links, and configurations;
-- [x] positive, negative, and fixed boundary-sector classification;
+- [x] positive, negative, and fixed-boundary sector classification;
 - [x] boundary-fibered coordinate equivalence;
 - [x] product Haar factorization;
 - [x] orientation-corrected open-half integration;
 - [x] temporal and spatial crossing-plaquette decomposition;
 - [x] Wilson Gibbs density factorization;
-- [x] RKHS/Gram kernel construction for local crossing factors;
+- [x] RKHS/Gram construction for local crossing factors;
 - [x] bounded-continuous finite-volume reflection positivity;
 - [x] transfer of a fixed bounded continuous reflected quadratic observable through weak convergence;
-- [ ] construct a sufficiently large continuum positive-time observable class with all required pullback identifications;
-- [ ] prove the full intended continuum OS axiom package for that class.
+- [ ] construct a sufficiently large continuum positive-time observable class;
+- [ ] prove all pullback identifications for that class;
+- [ ] prove the full intended continuum OS axiom package.
 
 ### F. Gauge-invariant OS Hilbert completion
 
@@ -147,10 +157,10 @@ Status: **implemented from supplied reflection-positive state data**
 - [x] positive-time observable subalgebra;
 - [x] OS bilinear form;
 - [x] null-space quotient;
-- [x] pre-Hilbert structure;
+- [x] real pre-Hilbert carrier;
 - [x] Hilbert completion;
 - [x] vacuum vector;
-- [x] dense physical-state linear map.
+- [x] dense physical-state map.
 
 ### G. Positive-time semigroup and dense generator domain
 
@@ -166,14 +176,14 @@ Status: **implemented from observable translation and continuity data**
 - [x] right infinitesimal-generator domain;
 - [x] right Hamiltonian `H = -G`;
 - [x] Bochner time averages;
-- [x] time-average convergence;
+- [x] convergence of normalized time averages;
 - [x] time averages lie in the generator domain;
-- [x] density of the right-generator and right-Hamiltonian domains;
+- [x] density of the generator and Hamiltonian domains;
 - [x] vacuum belongs to the domain and has zero Hamiltonian value.
 
-### H. Closed nonnegative Hamiltonian and finite-time Laplace resolvent
+### H. Closed Hamiltonian and finite-time Laplace resolvent
 
-Status: **implemented in PR #282 source; final ordinary branch CI still required**
+Status: **implemented in PR #282 source; final branch-wide ordinary CI still required**
 
 - [x] nonnegative Hamiltonian quadratic form;
 - [x] closability of the right Hamiltonian;
@@ -182,21 +192,40 @@ Status: **implemented in PR #282 source; final ordinary branch CI still required
 - [x] nonnegativity of the closed Hamiltonian;
 - [x] lower bound for `lambda I + Hbar`;
 - [x] closed range of every positive shift;
-- [x] finite-time Laplace integral
-  `R_{lambda,h} psi = integral_0^h exp(-lambda s) T_s psi ds`;
+- [x] finite-time Laplace integral;
 - [x] generator-domain theorem for the Laplace integral;
 - [x] resolvent identity with endpoint remainder;
-- [x] endpoint remainder tends to zero;
+- [x] vanishing endpoint remainder;
 - [x] dense range of `lambda I + Hbar`;
 - [x] surjectivity from dense plus closed range;
-- [x] injectivity and bijectivity of positive shifts;
+- [x] injectivity and bijectivity for `lambda > 0`;
 - [x] maximal-accretive package;
-- [ ] obtain final ordinary PR CI success on the complete terminal head;
-- [ ] ensure the terminal aggregate module is registered in the intended root import.
+- [ ] obtain final ordinary PR CI success on the terminal branch head;
+- [ ] register the terminal aggregate module in the intended root import.
 
-### I. Semigroup symmetry and self-adjointness
+### I. Temporal-action constructor
 
-Status: **theorem complete from a concrete covariance bridge; bridge construction remains open**
+Status: **generic constructor implemented; physical/discrete-to-continuous data remain open**
+
+`periodicHypercubicSpecialUnitaryPhysicalTemporalAction` now constructs `PhysicalTemporalAction` from:
+
+- [x] a real-parameter homeomorphism action on the physical carrier;
+- [x] scale-dependent periodic lattice displacements;
+- [x] interpolation equivariance;
+- [x] automatic lattice-map measurability;
+- [x] automatic finite Gibbs invariance generated from periodic translation invariance.
+
+The constructor removes finite Gibbs invariance as an independent socket. It does **not** construct the physical real-parameter action, the scale-dependent displacement map, or interpolation equivariance.
+
+Principal file:
+
+```text
+MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction.lean
+```
+
+### J. Semigroup symmetry and self-adjointness
+
+Status: **theorem complete from a covariance bridge; concrete bridge construction remains open**
 
 - [x] observable reflection/time-translation exchange implies carrier inner-product symmetry;
 - [x] density extends symmetry to the completed semigroup;
@@ -205,41 +234,72 @@ Status: **theorem complete from a concrete covariance bridge; bridge constructio
 - [x] formal symmetry plus positive-shift surjectivity implies self-adjointness;
 - [x] `WeakLimitTimeReflectionBridge` packages a sufficient continuum route;
 - [x] self-adjointness theorem from that bridge and observable-state strong continuity;
-- [ ] construct the continuum Euclidean-time action from the concrete periodic translations;
-- [ ] prove interpolation equivariance for the chosen physical embedding;
+- [ ] construct the continuum Euclidean-time action for the selected physical carrier;
+- [ ] reconcile finite discrete time with real continuum time;
+- [ ] prove interpolation equivariance for the selected embedding;
 - [ ] construct the continuum configuration reflection;
 - [ ] prove reflection conjugates forward translation to inverse translation;
 - [ ] identify the abstract OS state with the continuum expectation state;
 - [ ] discharge the positive-time restriction field;
-- [ ] instantiate `WeakLimitTimeReflectionBridge` for the actual selected continuum construction.
+- [ ] instantiate `WeakLimitTimeReflectionBridge`.
 
-## Immediate milestone 1 — concrete temporal action through the weak limit
+## Immediate milestone 1 — resolve the time-parameter boundary
 
-Goal: turn the new finite translation theorem into the actual continuum temporal-action structure used by the OS Hamiltonian lane.
+The finite periodic lattice has a discrete temporal translation group. The continuum temporal-action interface is parameterized by `ℝ`.
+
+A direct nontrivial group homomorphism from all real times to a finite periodic time group cannot simply be assumed. The formal route must make the approximation mechanism explicit.
+
+Candidate rigorous routes are:
+
+```text
+A. discrete finite semigroups at each scale
+   -> convergence to a strongly continuous continuum semigroup
+
+B. lattice-step times a_n * k
+   -> scale-dependent dense time sets
+   -> extension by strong continuity
+
+C. a revised temporal-action interface separating finite discrete time
+   from continuum real time
+```
 
 Tasks:
 
-- [ ] choose the finite temporal displacement corresponding to each approximation-scale Euclidean time;
-- [ ] package the lattice maps as the `latticeTranslate` field of `PhysicalTemporalAction`;
-- [ ] reuse the proved finite Gibbs invariance;
-- [ ] prove measurability of every lattice temporal map;
-- [ ] prove interpolation equivariance;
-- [ ] construct the physical homeomorphism group on the common carrier;
-- [ ] prove its group law and gauge commutation;
-- [ ] derive invariance of every embedded law;
-- [ ] pass invariance to the continuum weak limit.
+- [ ] select the precise finite-time parameter type;
+- [ ] define the scale-dependent conversion between lattice steps and physical Euclidean time;
+- [ ] prove the finite group/semigroup laws on the correct parameter domain;
+- [ ] avoid a floor/rounding map that falsely preserves addition for all real times;
+- [ ] prove convergence or compatibility on a dense physical-time subset;
+- [ ] extend to real time by continuity when justified;
+- [ ] document the physical time normalization and units.
 
 Definition of done:
 
 ```text
-The chosen periodic Wilson approximation family produces an instantiated
-PhysicalFourDimensionalYangMillsEuclideanTimeTranslationLimit, rather than
-assuming one as external bridge data.
+Finite integer temporal translations feed the continuum real-time Euclidean
+semigroup through a theorem, not through an assumed real-to-integer group map.
 ```
 
-## Immediate milestone 2 — close the OS symmetry bridge
+## Immediate milestone 2 — instantiate the physical temporal action
 
-Goal: instantiate the exact hypothesis that turns the closed nonnegative Hamiltonian into a self-adjoint operator.
+Tasks:
+
+- [ ] construct the real-parameter physical homeomorphism action on the chosen carrier;
+- [ ] provide the scale-dependent lattice displacement on the correct time domain;
+- [ ] prove interpolation equivariance;
+- [ ] prove gauge commutation;
+- [ ] derive invariance of every embedded law;
+- [ ] pass invariance to the continuum weak limit;
+- [ ] instantiate `PhysicalFourDimensionalYangMillsEuclideanTimeTranslationLimit`.
+
+Definition of done:
+
+```text
+The selected Wilson approximation family produces a concrete continuum
+Euclidean-time translation limit rather than assuming one as bridge data.
+```
+
+## Immediate milestone 3 — close the OS symmetry bridge
 
 Tasks:
 
@@ -247,11 +307,11 @@ Tasks:
 - [ ] prove gauge commutation;
 - [ ] identify observable reflection with precomposition by configuration reflection;
 - [ ] prove `Theta tau_t = tau_{-t} Theta`;
-- [ ] prove that positive-time restriction agrees with the observable semigroup translation;
+- [ ] prove positive-time restriction agrees with observable semigroup translation;
 - [ ] identify `omega` with the continuum weak-star expectation state;
 - [ ] prove observable-state strong continuity for the instantiated system;
 - [ ] instantiate `WeakLimitTimeReflectionBridge`;
-- [ ] derive self-adjointness of the graph-closed physical Hamiltonian without an unfilled covariance socket.
+- [ ] derive self-adjointness of the concrete graph-closed Hamiltonian.
 
 Definition of done:
 
@@ -260,21 +320,18 @@ The selected continuum weak-limit construction yields a concrete
 self-adjoint nonnegative OS Hamiltonian through theorem application.
 ```
 
-## Milestone 3 — derive a physical spectral gap
+## Milestone 4 — derive a physical spectral gap
 
-The current right-Hamiltonian route constructs nonnegativity and, conditionally, self-adjointness. It does not prove a positive spectral gap.
-
-Tasks:
+The current Hamiltonian route proves nonnegativity and conditional self-adjointness. It does not prove a positive spectral gap.
 
 - [ ] prove vacuum uniqueness or characterize the zero-energy subspace;
 - [ ] identify the vacuum-orthogonal closed subspace;
-- [ ] transfer finite-volume decay or coercivity to the OS semigroup;
-- [ ] connect the finite heat-bath gap to the physical Euclidean-time semigroup;
-- [ ] derive a uniform positive lower bound independent of lattice scale;
+- [ ] connect finite heat-bath coercivity to the physical Euclidean semigroup;
+- [ ] derive a lower bound uniform in lattice scale;
 - [ ] prove continuum connected-correlation decay;
 - [ ] convert decay to spectral support away from zero;
 - [ ] exclude collapse to a trivial or degenerate continuum theory;
-- [ ] track physical units and normalization without importing a target value.
+- [ ] track physical units without importing a target value.
 
 Definition of done:
 
@@ -283,9 +340,7 @@ The self-adjoint continuum OS Hamiltonian has a theorem-derived positive
 spectral gap on the vacuum-orthogonal sector.
 ```
 
-## Milestone 4 — physical continuum construction
-
-Tasks:
+## Milestone 5 — physical continuum construction
 
 - [ ] select the final distributional gauge-field carrier;
 - [ ] define explicit interpolation, blocking, or renormalization maps;
@@ -297,18 +352,16 @@ Tasks:
 - [ ] prove compatibility of gauge reduction with the OS construction;
 - [ ] obtain fresh-clone replay and independent mathematical review.
 
-## Milestone 5 — real-time reconstruction
+## Milestone 6 — real-time reconstruction
 
-Tasks:
-
-- [ ] complexify the real OS Hilbert space in a canonical way;
+- [ ] complexify the real OS Hilbert space canonically;
 - [ ] apply the spectral theorem to the concrete self-adjoint Hamiltonian;
 - [ ] construct the real-time unitary group;
 - [ ] reconstruct translations and the vacuum representation;
 - [ ] verify the required Wightman properties;
 - [ ] identify the physical particle/mass interpretation of the spectral gap.
 
-The current Yin--Yang two-component file is an algebraic realification and Schrödinger-sign bridge only. It does not yet construct unitary real-time dynamics.
+The current Yin--Yang two-component file is an algebraic realification and Schrödinger-sign bridge only. It does not construct unitary real-time dynamics.
 
 ## Exact `33/20` lane
 
@@ -335,10 +388,11 @@ Until those items are closed, `33/20` must not be described as the proved physic
 - [ ] terminal aggregate imports include every claimed theorem surface;
 - [ ] placeholder and witness inventories are current;
 - [ ] temporary diagnostic workflows are removed;
-- [ ] obsolete or superseded pull requests are clearly closed or marked.
+- [ ] obsolete or superseded pull requests are clearly marked.
 
 ### Gate B — concrete OS Hamiltonian
 
+- [ ] rigorous discrete-to-continuous temporal bridge;
 - [ ] instantiated continuum temporal action;
 - [ ] instantiated continuum reflection;
 - [ ] instantiated weak-limit time/reflection bridge;
@@ -350,7 +404,7 @@ Until those items are closed, `33/20` must not be described as the proved physic
 
 - [ ] physically justified carrier and scaling;
 - [ ] regular, nontrivial continuum measure;
-- [ ] Euclidean covariance and full required OS axioms;
+- [ ] Euclidean covariance and the required OS axioms;
 - [ ] real-time reconstruction;
 - [ ] physical normalization and units;
 - [ ] no target value imported into the derivation.
@@ -365,9 +419,10 @@ Until those items are closed, `33/20` must not be described as the proved physic
 
 ## Current priority order
 
-1. Connect the concrete periodic translation theorem to `PhysicalTemporalAction` and the physical interpolation.
-2. Instantiate the weak-limit reflection/time-translation bridge and obtain the concrete self-adjoint OS Hamiltonian.
-3. Complete branch-wide CI and aggregate-import registration.
-4. Relate the finite heat-bath/Dobrushin gap to the physical OS semigroup and prove a uniform continuum spectral gap.
-5. Construct and validate the physically intended continuum Yang--Mills theory.
-6. Reassess any exact `33/20` claim only after the physical derivation is independent of the normalization carrier.
+1. Resolve the finite integer-time versus continuum real-time parameter boundary.
+2. Prove interpolation equivariance and instantiate the physical temporal action.
+3. Instantiate the weak-limit reflection/time-translation bridge and obtain the concrete self-adjoint OS Hamiltonian.
+4. Complete branch-wide CI and aggregate-import registration.
+5. Relate the finite heat-bath/Dobrushin gap to the physical OS semigroup and prove a uniform continuum spectral gap.
+6. Construct and validate the physically intended continuum Yang--Mills theory.
+7. Reassess any exact `33/20` claim only after the physical derivation is independent of the normalization carrier.
