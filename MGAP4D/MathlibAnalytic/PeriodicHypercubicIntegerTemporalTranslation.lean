@@ -93,8 +93,137 @@ theorem periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translat
   periodicHypercubicConfigurationTranslation_apply_translatedEdge
     n (periodicHypercubicIntegerTemporalDisplacement n k) A e
 
+@[simp]
+theorem periodicHypercubicIntegerTemporalEdgeTranslation_zero_apply
+    (n : ℕ) (e : PeriodicHypercubicEdge n) :
+    periodicHypercubicEdgeTranslationEquiv n
+        (periodicHypercubicIntegerTemporalDisplacement n 0) e = e := by
+  cases e
+  simp [periodicHypercubicEdgeTranslationEquiv]
+
+/-- Integer temporal edge translations compose according to integer addition. -/
+theorem periodicHypercubicIntegerTemporalEdgeTranslation_add_apply
+    (n : ℕ) (k l : ℤ) (e : PeriodicHypercubicEdge n) :
+    periodicHypercubicEdgeTranslationEquiv n
+        (periodicHypercubicIntegerTemporalDisplacement n (k + l)) e =
+      periodicHypercubicEdgeTranslationEquiv n
+        (periodicHypercubicIntegerTemporalDisplacement n k)
+        (periodicHypercubicEdgeTranslationEquiv n
+          (periodicHypercubicIntegerTemporalDisplacement n l) e) := by
+  apply Prod.ext
+  · change e.1 + periodicHypercubicIntegerTemporalDisplacement n (k + l) =
+      (e.1 + periodicHypercubicIntegerTemporalDisplacement n l) +
+        periodicHypercubicIntegerTemporalDisplacement n k
+    rw [periodicHypercubicIntegerTemporalDisplacement_add]
+    abel
+  · rfl
+
+/-- The zero integer temporal translation is the identity on configurations. -/
+@[simp]
+theorem periodicHypercubicIntegerTemporalConfigurationTranslation_zero_apply
+    {Gauge : Type} [MeasurableSpace Gauge]
+    (n : ℕ) (A : PeriodicHypercubicEdge n → Gauge) :
+    periodicHypercubicIntegerTemporalConfigurationTranslation n 0 A = A := by
+  funext e
+  simpa using
+    (periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+      n 0 A e)
+
+/-- Integer temporal configuration translations compose according to integer
+addition. -/
+@[simp]
+theorem periodicHypercubicIntegerTemporalConfigurationTranslation_add_apply
+    {Gauge : Type} [MeasurableSpace Gauge]
+    (n : ℕ) (k l : ℤ) (A : PeriodicHypercubicEdge n → Gauge) :
+    periodicHypercubicIntegerTemporalConfigurationTranslation n (k + l) A =
+      periodicHypercubicIntegerTemporalConfigurationTranslation n k
+        (periodicHypercubicIntegerTemporalConfigurationTranslation n l A) := by
+  funext e'
+  obtain ⟨e, rfl⟩ :=
+    (periodicHypercubicEdgeTranslationEquiv n
+      (periodicHypercubicIntegerTemporalDisplacement n (k + l))).surjective e'
+  calc
+    periodicHypercubicIntegerTemporalConfigurationTranslation n (k + l) A
+        (periodicHypercubicEdgeTranslationEquiv n
+          (periodicHypercubicIntegerTemporalDisplacement n (k + l)) e) =
+      A e :=
+        periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+          n (k + l) A e
+    _ = periodicHypercubicIntegerTemporalConfigurationTranslation n l A
+        (periodicHypercubicEdgeTranslationEquiv n
+          (periodicHypercubicIntegerTemporalDisplacement n l) e) :=
+      (periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+        n l A e).symm
+    _ = periodicHypercubicIntegerTemporalConfigurationTranslation n k
+        (periodicHypercubicIntegerTemporalConfigurationTranslation n l A)
+        (periodicHypercubicEdgeTranslationEquiv n
+          (periodicHypercubicIntegerTemporalDisplacement n k)
+          (periodicHypercubicEdgeTranslationEquiv n
+            (periodicHypercubicIntegerTemporalDisplacement n l) e)) :=
+      (periodicHypercubicIntegerTemporalConfigurationTranslation_apply_translatedEdge
+        n k
+        (periodicHypercubicIntegerTemporalConfigurationTranslation n l A)
+        (periodicHypercubicEdgeTranslationEquiv n
+          (periodicHypercubicIntegerTemporalDisplacement n l) e)).symm
+    _ = periodicHypercubicIntegerTemporalConfigurationTranslation n k
+        (periodicHypercubicIntegerTemporalConfigurationTranslation n l A)
+        (periodicHypercubicEdgeTranslationEquiv n
+          (periodicHypercubicIntegerTemporalDisplacement n (k + l)) e) := by
+      rw [periodicHypercubicIntegerTemporalEdgeTranslation_add_apply]
+
+/-- Integer temporal translations define an additive group action on periodic
+configurations. -/
+noncomputable instance periodicHypercubicIntegerTemporalConfigurationAddAction
+    {Gauge : Type} [MeasurableSpace Gauge] (n : ℕ) :
+    AddAction ℤ (PeriodicHypercubicEdge n → Gauge) where
+  vadd k A := periodicHypercubicIntegerTemporalConfigurationTranslation n k A
+  zero_vadd A :=
+    periodicHypercubicIntegerTemporalConfigurationTranslation_zero_apply n A
+  add_vadd k l A :=
+    periodicHypercubicIntegerTemporalConfigurationTranslation_add_apply n k l A
+
+/-- Translation by `-k` is a left inverse of translation by `k`. -/
+@[simp]
+theorem periodicHypercubicIntegerTemporalConfigurationTranslation_neg_apply
+    {Gauge : Type} [MeasurableSpace Gauge]
+    (n : ℕ) (k : ℤ) (A : PeriodicHypercubicEdge n → Gauge) :
+    periodicHypercubicIntegerTemporalConfigurationTranslation n (-k)
+        (periodicHypercubicIntegerTemporalConfigurationTranslation n k A) = A := by
+  simpa using
+    (periodicHypercubicIntegerTemporalConfigurationTranslation_add_apply
+      n (-k) k A).symm
+
+/-- Translation by `-k` is a right inverse of translation by `k`. -/
+@[simp]
+theorem periodicHypercubicIntegerTemporalConfigurationTranslation_apply_neg
+    {Gauge : Type} [MeasurableSpace Gauge]
+    (n : ℕ) (k : ℤ) (A : PeriodicHypercubicEdge n → Gauge) :
+    periodicHypercubicIntegerTemporalConfigurationTranslation n k
+        (periodicHypercubicIntegerTemporalConfigurationTranslation n (-k) A) = A := by
+  simpa using
+    (periodicHypercubicIntegerTemporalConfigurationTranslation_add_apply
+      n k (-k) A).symm
+
 /-- Every concrete integer temporal translation preserves the canonical finite
 periodic `SU(N)` Wilson Gibbs law. -/
+theorem periodicHypercubicSpecialUnitary_gibbs_measurePreserving_integerTemporalTranslation
+    (n N : ℕ) [NeZero n]
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (beta_nonneg : 0 ≤ beta)
+    (k : ℤ) :
+    MeasurePreserving
+      (periodicHypercubicIntegerTemporalConfigurationTranslation
+        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) n k)
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        n N hN beta beta_nonneg).gibbsMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        n N hN beta beta_nonneg).gibbsMeasure :=
+  periodicHypercubicSpecialUnitary_gibbs_measurePreserving_translation
+    n N hN beta beta_nonneg
+    (periodicHypercubicIntegerTemporalDisplacement n k)
+
+/-- Pushforward form of integer temporal translation invariance. -/
 theorem periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
     (n N : ℕ) [NeZero n]
     (hN : 0 < N)
@@ -108,9 +237,8 @@ theorem periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq
         n N hN beta beta_nonneg).gibbsMeasure =
     (periodicHypercubicSpecialUnitaryWilsonSystem
       n N hN beta beta_nonneg).gibbsMeasure :=
-  periodicHypercubicSpecialUnitary_gibbs_map_translation_eq_self
-    n N hN beta beta_nonneg
-    (periodicHypercubicIntegerTemporalDisplacement n k)
+  (periodicHypercubicSpecialUnitary_gibbs_measurePreserving_integerTemporalTranslation
+    n N hN beta beta_nonneg k).map_eq
 
 end
 
