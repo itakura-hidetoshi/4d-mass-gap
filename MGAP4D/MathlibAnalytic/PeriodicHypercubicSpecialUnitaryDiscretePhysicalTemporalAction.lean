@@ -57,16 +57,15 @@ noncomputable def periodicHypercubicSpecialUnitaryDiscretePhysicalTemporalAction
     (sideLength : ℕ → ℕ) (sideLength_pos : ∀ n, 0 < sideLength n)
     (N : ℕ) (hN : 0 < N) [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℕ → ℝ) (beta_nonneg : ∀ n, 0 ≤ beta n)
-    (interpolate : ∀ n, (periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide
-      (sideLength n) N (sideLength_pos n) hN (beta n) (beta_nonneg n)).base.Configuration →
-      PhysicalConfiguration)
+    (interpolate : ∀ n,
+      (periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide (sideLength n) N
+        (sideLength_pos n) hN (beta n) (beta_nonneg n)).base.Configuration →
+        PhysicalConfiguration)
     (interpolate_measurable : ∀ n, Measurable (interpolate n))
     (latticeSpacing : ℕ → ℝ) (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
-    (latticeSpacing_tendsto_zero :
-      Filter.Tendsto latticeSpacing Filter.atTop (nhds 0))
+    (latticeSpacing_tendsto_zero : Filter.Tendsto latticeSpacing Filter.atTop (nhds 0))
     (physicalVolume : ℕ → ℝ)
-    (physicalVolume_tendsto_atTop :
-      Filter.Tendsto physicalVolume Filter.atTop Filter.atTop)
+    (physicalVolume_tendsto_atTop : Filter.Tendsto physicalVolume Filter.atTop Filter.atTop)
     (physicalTranslate : ℝ → Homeomorph PhysicalConfiguration PhysicalConfiguration)
     (physicalTranslate_zero_apply : ∀ A, physicalTranslate 0 A = A)
     (physicalTranslate_add_apply : ∀ s t A,
@@ -77,8 +76,7 @@ noncomputable def periodicHypercubicSpecialUnitaryDiscretePhysicalTemporalAction
             (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) (sideLength n) k U) =
         physicalTranslate ((k : ℝ) * latticeSpacing n) (interpolate n U)) :
     (periodicHypercubicSpecialUnitaryPhysicalEmbedding
-      sideLength sideLength_pos N hN beta beta_nonneg
-      interpolate interpolate_measurable
+      sideLength sideLength_pos N hN beta beta_nonneg interpolate interpolate_measurable
       latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
       physicalVolume physicalVolume_tendsto_atTop).PhysicalDiscreteTemporalAction := by
   exact
