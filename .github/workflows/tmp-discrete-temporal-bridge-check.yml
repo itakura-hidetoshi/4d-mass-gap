@@ -78,8 +78,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          lake env lean \
-            MGAP4D/MathlibAnalytic/PhysicalYangMillsDiscreteTemporalBridgeCompileSmoke.lean \
+          lake build \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsDiscreteTemporalBridgeCompileSmoke \
             2>&1 | tee /tmp/discrete-temporal-bridge.log
 
       - name: Upload temporal bridge log
