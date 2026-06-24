@@ -35,39 +35,30 @@ Finite-volume Gibbs invariance is no longer supplied as an assumption.  It is
 generated automatically by periodic coordinate translation invariance. -/
 noncomputable def periodicHypercubicSpecialUnitaryPhysicalTemporalAction
     {PhysicalConfiguration : Type}
-    [TopologicalSpace PhysicalConfiguration]
-    [MeasurableSpace PhysicalConfiguration]
-    [BorelSpace PhysicalConfiguration]
-    [PolishSpace PhysicalConfiguration]
-    (sideLength : ℕ → ℕ)
-    (sideLength_pos : ∀ n, 0 < sideLength n)
-    (N : ℕ)
-    (hN : 0 < N)
+    [TopologicalSpace PhysicalConfiguration] [MeasurableSpace PhysicalConfiguration]
+    [BorelSpace PhysicalConfiguration] [PolishSpace PhysicalConfiguration]
+    (sideLength : ℕ → ℕ) (sideLength_pos : ∀ n, 0 < sideLength n)
+    (N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℝ)
-    (beta_nonneg : ∀ n, 0 ≤ beta n)
-    (interpolate :
-      ∀ n,
-        (periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide
-          (sideLength n) N (sideLength_pos n) hN
-          (beta n) (beta_nonneg n)).base.Configuration →
-          PhysicalConfiguration)
+    (beta : ℕ → ℝ) (beta_nonneg : ∀ n, 0 ≤ beta n)
+    (interpolate : ∀ n,
+      (periodicHypercubicSpecialUnitaryWilsonSystemOfPositiveSide
+        (sideLength n) N (sideLength_pos n) hN
+        (beta n) (beta_nonneg n)).base.Configuration →
+        PhysicalConfiguration)
     (interpolate_measurable : ∀ n, Measurable (interpolate n))
-    (latticeSpacing : ℕ → ℝ)
-    (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
+    (latticeSpacing : ℕ → ℝ) (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
     (latticeSpacing_tendsto_zero :
       Filter.Tendsto latticeSpacing Filter.atTop (nhds 0))
     (physicalVolume : ℕ → ℝ)
     (physicalVolume_tendsto_atTop :
       Filter.Tendsto physicalVolume Filter.atTop Filter.atTop)
-    (physicalTranslate : ℝ →
-      Homeomorph PhysicalConfiguration PhysicalConfiguration)
+    (physicalTranslate : ℝ → Homeomorph PhysicalConfiguration PhysicalConfiguration)
     (physicalTranslate_zero_apply : ∀ A, physicalTranslate 0 A = A)
     (physicalTranslate_add_apply : ∀ s t A,
       physicalTranslate (s + t) A =
         physicalTranslate s (physicalTranslate t A))
-    (latticeDisplacement : ∀ n, ℝ →
-      PeriodicHypercubicVertex (sideLength n))
+    (latticeDisplacement : ∀ n, ℝ → PeriodicHypercubicVertex (sideLength n))
     (interpolate_equivariant : ∀ n t U,
       interpolate n
           (periodicHypercubicConfigurationTranslationMeasurableEquiv
