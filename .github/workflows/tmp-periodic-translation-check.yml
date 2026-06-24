@@ -13,6 +13,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicIntegerTemporalTranslation.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedTemporalSymmetryLimit.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSHamiltonianSpine.lean"
 
 concurrency:
   group: tmp-periodic-translation-${{ github.event.pull_request.number || github.ref }}
@@ -89,7 +90,7 @@ jobs:
           lake --version
           echo "[targeted] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
 
-      - name: Build periodic translation bridge
+      - name: Build periodic temporal Hamiltonian spine
         id: targeted-lean
         shell: bash
         run: |
@@ -98,7 +99,8 @@ jobs:
           lake build \
             MGAP4D.MathlibAnalytic.PeriodicHypercubicTranslationInvariance \
             MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation \
-            MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction 2>&1 \
+            MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSHamiltonianSpine 2>&1 \
             | tee /tmp/periodic-translation.log
           status=${PIPESTATUS[0]}
           echo "status=${status}" >> "$GITHUB_OUTPUT"
