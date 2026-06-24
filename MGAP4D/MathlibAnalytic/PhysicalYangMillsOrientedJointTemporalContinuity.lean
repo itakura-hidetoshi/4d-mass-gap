@@ -31,6 +31,12 @@ namespace JointContinuity
 
 variable {A : E.PhysicalDiscreteTemporalAction}
 
+private theorem jointTranslate_comp_prodMk
+    (s : ℝ) :
+    A.jointTranslate ∘ Prod.mk s = A.physicalTranslate s := by
+  funext x
+  rfl
+
 /-- Mapping the product of a Dirac time law and a configuration law by the joint
 action is the same as translating the configuration law at that fixed time. -/
 @[simp]
@@ -60,7 +66,8 @@ theorem diracProba_prod_map_jointTranslate
       Measure.map_map J.jointTranslate_continuous.measurable
         measurable_prodMk_left
     _ = Measure.map (A.physicalTranslate s)
-        (μ : Measure E.PhysicalConfiguration) := rfl
+        (μ : Measure E.PhysicalConfiguration) := by
+      rw [jointTranslate_comp_prodMk]
 
 /-- Joint continuity supplies varying-time weak convergence at each target time. -/
 theorem mappedApproximating_tendsto
