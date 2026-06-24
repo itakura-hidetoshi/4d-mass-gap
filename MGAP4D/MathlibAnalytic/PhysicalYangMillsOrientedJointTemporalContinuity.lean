@@ -87,7 +87,8 @@ theorem diracProba_prod_map_jointTranslate
   ProbabilityMeasure.toMeasure_injective
     (toMeasure_diracProba_prod_map_jointTranslate J s μ)
 
-/-- Joint continuity supplies varying-time weak convergence at each target time. -/
+-- Joint continuity supplies varying-time weak convergence at each target time.
+set_option maxHeartbeats 800000 in
 theorem mappedApproximating_tendsto
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
