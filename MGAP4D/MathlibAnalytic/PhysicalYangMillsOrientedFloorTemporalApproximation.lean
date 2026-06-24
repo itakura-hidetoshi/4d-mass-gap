@@ -105,7 +105,9 @@ theorem physicalTemporalFloorStep_tendsto
         (physicalTemporalFloorStep_error_bounds
           latticeSpacing latticeSpacing_pos t n).2
     · exact latticeSpacing_tendsto_zero
-  have hsub := tendsto_const_nhds.sub herror
+  have hconst : Tendsto (fun _ : ℕ => t) atTop (nhds t) :=
+    tendsto_const_nhds
+  have hsub := hconst.sub herror
   simpa only [sub_sub_cancel, sub_zero] using hsub
 
 namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation
