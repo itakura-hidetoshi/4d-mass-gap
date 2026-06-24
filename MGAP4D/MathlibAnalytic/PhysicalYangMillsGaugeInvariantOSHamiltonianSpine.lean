@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSObservableTimeTranslationCovariance
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation
 
 /-!
 # Physical gauge-invariant OS Hamiltonian spine
@@ -21,8 +21,10 @@ positive-time observable algebra
 → positive-shift surjectivity and bijectivity
 → maximal-accretive package
 → formal symmetry implies self-adjointness
-→ full observable time-translation automorphisms
-→ reflection/time-translation covariance and state invariance
+→ configuration-space time-translation homeomorphisms
+→ induced gauge-invariant observable automorphisms
+→ continuum-measure invariance and continuum-state identification
+→ reflection/time-translation covariance
 → observable OS exchange identity
 → completed semigroup inner-product symmetry
 → right generator and Hamiltonian formal symmetry
@@ -31,10 +33,11 @@ positive-time observable algebra
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
-The terminal self-adjointness theorem remains conditional on full-observable
-time-translation automorphisms whose positive-time restriction is the supplied
-contraction semigroup, together with reflection covariance, state invariance,
-and observable-state strong continuity.  This module does not construct those
-full translations, a real-time unitary group, vacuum uniqueness, or a positive
-spectral gap.
+The terminal self-adjointness theorem remains conditional on configuration-space
+time-translation homeomorphisms commuting with gauge transformations, preserving
+the continuum law, restricting to the positive-time contraction semigroup, and
+obeying reflection covariance.  The OS state must be identified with the actual
+continuum expectation state.  This module does not construct the physical
+configuration translations themselves, a real-time unitary group, vacuum
+uniqueness, or a positive spectral gap.
 -/
