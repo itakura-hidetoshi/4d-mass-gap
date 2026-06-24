@@ -10,6 +10,8 @@ on:
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryWilsonSystem.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicTranslationInvariance.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedTemporalSymmetryLimit.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction.lean"
 
 concurrency:
   group: tmp-periodic-translation-${{ github.event.pull_request.number || github.ref }}
@@ -86,14 +88,15 @@ jobs:
           lake --version
           echo "[targeted] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
 
-      - name: Build periodic translation module
+      - name: Build periodic translation bridge
         id: targeted-lean
         shell: bash
         run: |
           set +e
           set -o pipefail
           lake build \
-            MGAP4D.MathlibAnalytic.PeriodicHypercubicTranslationInvariance 2>&1 \
+            MGAP4D.MathlibAnalytic.PeriodicHypercubicTranslationInvariance \
+            MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction 2>&1 \
             | tee /tmp/periodic-translation.log
           status=${PIPESTATUS[0]}
           echo "status=${status}" >> "$GITHUB_OUTPUT"
