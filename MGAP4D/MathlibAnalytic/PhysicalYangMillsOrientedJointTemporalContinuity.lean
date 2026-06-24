@@ -13,17 +13,13 @@ namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscrete
 
 variable {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
 
-/-- The time-configuration evaluation map associated with a physical temporal
-action. -/
+/-- The time-configuration evaluation map associated with a physical temporal action. -/
 def jointTranslate
     (A : E.PhysicalDiscreteTemporalAction) :
     ℝ × E.PhysicalConfiguration → E.PhysicalConfiguration :=
   fun p => A.physicalTranslate p.1 p.2
 
-/-- Joint continuity in physical time and physical configuration.
-
-This is stronger than continuity of each individual homeomorphism, and is the
-analytic input needed to pass scale-dependent times through weak convergence. -/
+/-- Joint continuity in physical time and physical configuration. -/
 structure JointContinuity (A : E.PhysicalDiscreteTemporalAction) : Prop where
   jointTranslate_continuous : Continuous A.jointTranslate
 
@@ -37,8 +33,31 @@ private theorem jointTranslate_comp_prodMk
   funext x
   rfl
 
-/-- Mapping the product of a Dirac time law and a configuration law by the joint
-action is the same as translating the configuration law at that fixed time. -/
+private theorem map_jointTranslate_map_prodMk
+    (J : A.JointContinuity) (s : ℝ)
+    (μ : Measure E.PhysicalConfiguration) :
+    Measure.map A.jointTranslate (Measure.map (Prod.mk s) μ) =
+      Measure.map (A.physicalTranslate s) μ := by
+  calc
+    Measure.map A.jointTranslate (Measure.map (Prod.mk s) μ) =
+      Measure.map (A.jointTranslate ∘ Prod.mk s) μ :=
+        Measure.map_map J.jointTranslate_continuous.measurable
+          measurable_prodMk_left
+    _ = Measure.map (A.physicalTranslate s) μ :=
+      congrArg
+        (fun f : E.PhysicalConfiguration → E.PhysicalConfiguration =>
+          Measure.map f μ)
+        (jointTranslate_comp_prodMk (A := A) s)
+
+private theorem map_jointTranslate_dirac_prod
+    (J : A.JointContinuity) (s : ℝ)
+    (μ : Measure E.PhysicalConfiguration) :
+    Measure.map A.jointTranslate ((Measure.dirac s).prod μ) =
+      Measure.map (A.physicalTranslate s) μ := by
+  rw [Measure.dirac_prod]
+  exact map_jointTranslate_map_prodMk J s μ
+
+/-- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation. -/
 theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
@@ -54,22 +73,7 @@ theorem diracProba_prod_map_jointTranslate
         ((Measure.dirac s).prod (μ : Measure E.PhysicalConfiguration)) =
       Measure.map (A.physicalTranslate s)
         (μ : Measure E.PhysicalConfiguration)
-  calc
-    Measure.map A.jointTranslate
-        ((Measure.dirac s).prod (μ : Measure E.PhysicalConfiguration)) =
-      Measure.map A.jointTranslate
-        (Measure.map (Prod.mk s) (μ : Measure E.PhysicalConfiguration)) := by
-      rw [Measure.dirac_prod]
-    _ = Measure.map (A.jointTranslate ∘ Prod.mk s)
-        (μ : Measure E.PhysicalConfiguration) :=
-      Measure.map_map J.jointTranslate_continuous.measurable
-        measurable_prodMk_left
-    _ = Measure.map (A.physicalTranslate s)
-        (μ : Measure E.PhysicalConfiguration) :=
-      congrArg
-        (fun f : E.PhysicalConfiguration → E.PhysicalConfiguration =>
-          Measure.map f (μ : Measure E.PhysicalConfiguration))
-        (jointTranslate_comp_prodMk (A := A) s)
+  exact map_jointTranslate_dirac_prod J s μ
 
 /-- Joint continuity supplies varying-time weak convergence at each target time. -/
 theorem mappedApproximating_tendsto
