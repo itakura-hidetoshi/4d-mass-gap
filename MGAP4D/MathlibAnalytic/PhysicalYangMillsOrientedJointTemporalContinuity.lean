@@ -42,13 +42,25 @@ theorem diracProba_prod_map_jointTranslate
       μ.map
         (A.physicalTranslate s).continuous.measurable.aemeasurable := by
   apply ProbabilityMeasure.toMeasure_injective
-  simp only [ProbabilityMeasure.toMeasure_map,
-    ProbabilityMeasure.toMeasure_prod, diracProba]
-  rw [Measure.prod]
-  rw [Measure.dirac_bind Measurable.map_prodMk_left]
-  rw [Measure.map_map J.jointTranslate_continuous.measurable
-    measurable_prodMk_left]
-  rfl
+  rw [ProbabilityMeasure.toMeasure_map, ProbabilityMeasure.toMeasure_map,
+    ProbabilityMeasure.toMeasure_prod]
+  change
+    Measure.map A.jointTranslate
+        ((Measure.dirac s).prod (μ : Measure E.PhysicalConfiguration)) =
+      Measure.map (A.physicalTranslate s)
+        (μ : Measure E.PhysicalConfiguration)
+  calc
+    Measure.map A.jointTranslate
+        ((Measure.dirac s).prod (μ : Measure E.PhysicalConfiguration)) =
+      Measure.map A.jointTranslate
+        (Measure.map (Prod.mk s) (μ : Measure E.PhysicalConfiguration)) := by
+      rw [Measure.dirac_prod]
+    _ = Measure.map (A.jointTranslate ∘ Prod.mk s)
+        (μ : Measure E.PhysicalConfiguration) :=
+      Measure.map_map J.jointTranslate_continuous.measurable
+        measurable_prodMk_left
+    _ = Measure.map (A.physicalTranslate s)
+        (μ : Measure E.PhysicalConfiguration) := rfl
 
 /-- Joint continuity automatically supplies the varying-time weak-limit
 continuity field.
@@ -61,7 +73,8 @@ noncomputable def toWeakLimitContinuity
     (D : A.DenseTemporalApproximation)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
       E.toLatticeEmbedding) :
-    D.WeakLimitContinuity L where
+    ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.WeakLimitContinuity
+      D L where
   mappedApproximating_tendsto t := by
     let τ : ℕ → ℝ := fun n =>
       A.latticeTime (L.subsequence n)
