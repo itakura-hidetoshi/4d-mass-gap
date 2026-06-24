@@ -59,10 +59,7 @@ theorem approximateTime_tendsto_subsequence
     L.subsequence_strictMono.tendsto_atTop
 
 /-- The remaining analytic input for passing varying lattice times through a
-weak limit.
-
-It states that translating the `n`th embedded law at its selected realizable
-time converges to translation of the continuum law at the target real time. -/
+weak limit. -/
 def WeakLimitContinuity
     (D : A.DenseTemporalApproximation)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
@@ -81,13 +78,24 @@ def WeakLimitContinuity
 
 namespace WeakLimitContinuity
 
-/-- Exact finite-scale invariance plus continuity of the varying translated laws
-forces real-time invariance of the Prokhorov continuum measure. -/
-theorem continuumProbabilityMeasure_map_eq_self
+/-- A direct varying-time convergence proof yields invariance of the continuum
+probability law. -/
+theorem continuumProbabilityMeasure_map_eq_self_of_tendsto
     {D : A.DenseTemporalApproximation}
     {L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
       E.toLatticeEmbedding}
-    (C : D.WeakLimitContinuity L) (t : ℝ) :
+    (hMapped : ∀ s : ℝ,
+      Tendsto
+        (fun n =>
+          (E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)).map
+            (A.physicalTranslate
+              (A.latticeTime (L.subsequence n)
+                (D.approximateStep s (L.subsequence n)))).continuous.measurable.aemeasurable)
+        atTop
+        (nhds
+          (L.continuumMeasure.map
+            (A.physicalTranslate s).continuous.measurable.aemeasurable)))
+    (t : ℝ) :
     L.continuumMeasure.map
         (A.physicalTranslate t).continuous.measurable.aemeasurable =
       L.continuumMeasure := by
@@ -101,7 +109,19 @@ theorem continuumProbabilityMeasure_map_eq_self
         atTop (nhds L.continuumMeasure) := by
     simpa only [D.embeddedMeasure_map_approximateTime_eq_self] using
       L.weakConvergence
-  exact tendsto_nhds_unique (C t) hOriginal
+  exact tendsto_nhds_unique (hMapped t) hOriginal
+
+/-- Exact finite-scale invariance plus continuity of the varying translated laws
+forces real-time invariance of the Prokhorov continuum measure. -/
+theorem continuumProbabilityMeasure_map_eq_self
+    {D : A.DenseTemporalApproximation}
+    {L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E.toLatticeEmbedding}
+    (C : D.WeakLimitContinuity L) (t : ℝ) :
+    L.continuumMeasure.map
+        (A.physicalTranslate t).continuous.measurable.aemeasurable =
+      L.continuumMeasure :=
+  continuumProbabilityMeasure_map_eq_self_of_tendsto C t
 
 /-- Measure-valued form of continuum invariance obtained from the dense-time
 approximation bridge. -/
