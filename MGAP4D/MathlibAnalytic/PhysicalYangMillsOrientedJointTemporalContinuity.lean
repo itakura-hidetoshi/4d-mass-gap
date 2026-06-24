@@ -35,7 +35,7 @@ private theorem jointTranslate_comp_prodMk
 
 private theorem map_jointTranslate_map_prodMk
     (J : A.JointContinuity) (s : ℝ)
-    (μ : Measure E.PhysicalConfiguration) :
+    (μ : Measure E.PhysicalConfiguration) [SFinite μ] :
     Measure.map A.jointTranslate (Measure.map (Prod.mk s) μ) =
       Measure.map (A.physicalTranslate s) μ := by
   calc
@@ -51,7 +51,7 @@ private theorem map_jointTranslate_map_prodMk
 
 private theorem map_jointTranslate_dirac_prod
     (J : A.JointContinuity) (s : ℝ)
-    (μ : Measure E.PhysicalConfiguration) :
+    (μ : Measure E.PhysicalConfiguration) [SFinite μ] :
     Measure.map A.jointTranslate ((Measure.dirac s).prod μ) =
       Measure.map (A.physicalTranslate s) μ := by
   rw [Measure.dirac_prod]
