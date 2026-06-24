@@ -75,18 +75,27 @@ private theorem toMeasure_diracProba_prod_map_jointTranslate
         (μ : Measure E.PhysicalConfiguration)
   exact map_jointTranslate_dirac_prod J s μ
 
-set_option backward.isDefEq.respectTransparency false in
+private def diracProductImage
+    (J : A.JointContinuity) (s : ℝ)
+    (μ : ProbabilityMeasure E.PhysicalConfiguration) :
+    ProbabilityMeasure E.PhysicalConfiguration :=
+  ((diracProba s).prod μ).map
+    J.jointTranslate_continuous.measurable.aemeasurable
+
+private def translatedImage
+    (A : E.PhysicalDiscreteTemporalAction) (s : ℝ)
+    (μ : ProbabilityMeasure E.PhysicalConfiguration) :
+    ProbabilityMeasure E.PhysicalConfiguration :=
+  μ.map (A.physicalTranslate s).continuous.measurable.aemeasurable
+
 theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
-    ((diracProba s).prod μ).map
-        J.jointTranslate_continuous.measurable.aemeasurable =
-      μ.map
-        (A.physicalTranslate s).continuous.measurable.aemeasurable :=
-  ProbabilityMeasure.toMeasure_injective
+    diracProductImage J s μ = translatedImage A s μ := by
+  unfold diracProductImage translatedImage
+  exact ProbabilityMeasure.toMeasure_injective
     (toMeasure_diracProba_prod_map_jointTranslate J s μ)
 
-set_option backward.isDefEq.respectTransparency false in
 theorem mappedApproximating_tendsto
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
@@ -119,7 +128,17 @@ theorem mappedApproximating_tendsto
       (fun n => (diracProba (τ n)).prod (μs n))
       ((diracProba t).prod L.continuumMeasure)
       hprod J.jointTranslate_continuous
-  simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap
+  have hbundled :
+      Tendsto
+        (fun n => diracProductImage J (τ n) (μs n)) atTop
+        (nhds (diracProductImage J t L.continuumMeasure)) := by
+    simpa only [diracProductImage] using hmap
+  have htranslated :
+      Tendsto
+        (fun n => translatedImage A (τ n) (μs n)) atTop
+        (nhds (translatedImage A t L.continuumMeasure)) := by
+    simpa only [diracProba_prod_map_jointTranslate] using hbundled
+  simpa only [τ, μs, translatedImage] using htranslated
 
 /-- Joint continuity discharges the varying-time weak-limit continuity input. -/
 theorem toWeakLimitContinuity
