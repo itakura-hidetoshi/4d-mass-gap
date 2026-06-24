@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationReflectionTimeExchange
 
 /-!
 # Physical gauge-invariant OS Hamiltonian spine
@@ -22,9 +22,11 @@ positive-time observable algebra
 → maximal-accretive package
 → formal symmetry implies self-adjointness
 → configuration-space time-translation homeomorphisms
+→ configuration-space reflection homeomorphism
+→ gauge covariance and reflection/time exchange on configurations
 → induced gauge-invariant observable automorphisms
 → continuum-measure invariance and continuum-state identification
-→ reflection/time-translation covariance
+→ observable reflection/time-translation covariance
 → observable OS exchange identity
 → completed semigroup inner-product symmetry
 → right generator and Hamiltonian formal symmetry
@@ -34,10 +36,10 @@ positive-time observable algebra
 ```
 
 The terminal self-adjointness theorem remains conditional on configuration-space
-time-translation homeomorphisms commuting with gauge transformations, preserving
-the continuum law, restricting to the positive-time contraction semigroup, and
-obeying reflection covariance.  The OS state must be identified with the actual
-continuum expectation state.  This module does not construct the physical
-configuration translations themselves, a real-time unitary group, vacuum
-uniqueness, or a positive spectral gap.
+time-translation and reflection homeomorphisms commuting with gauge transformations,
+preserving the continuum law, restricting to the positive-time contraction
+semigroup, and satisfying the Euclidean reflection/time exchange identity.  The
+OS state must be identified with the actual continuum expectation state.  This
+module does not construct the physical configuration transformations themselves,
+a real-time unitary group, vacuum uniqueness, or a positive spectral gap.
 -/
