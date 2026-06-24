@@ -3,35 +3,36 @@
 **Updated:** 2026-06-24  
 **Stable finite checkpoint:** merged PR #274  
 **Active development:** PR #282, `physical-4d-yang-mills-measure-limit`  
-**Reviewed code baseline:** `54b3404d5096ec007f757e1c288d472bc3ac8a3d`
+**Newest reviewed code milestone:** `458c51b2a653229da24d605906abd48b833b6a75`
 
 ## Repository and verification status
 
-PR #282 is open, non-draft, and mergeable.
+PR #282 is open and non-draft.
 
-At the reviewed code baseline:
+At the time of this update:
 
-- `Temporary Periodic Translation Check` run 3 completed successfully;
-- `PR Lean Fast Check` run 4274 was cancelled before the changed-Lean build completed;
-- the current documentation therefore does not claim final ordinary-CI green status for the complete active branch.
+- the newest milestone adds the dedicated check target for concrete integer temporal translations;
+- no workflow run was yet attached to that newest commit;
+- the preceding periodic-translation implementation had passed its dedicated workflow;
+- the ordinary changed-Lean run on that predecessor was cancelled before completion;
+- final ordinary-CI green status for the complete active branch is not claimed.
 
-The theorem bodies are the authoritative mathematical surface. Workflow status is recorded separately because a theorem may be present in source while the final branch-wide verification is still pending.
+Theorem bodies are the authoritative mathematical surface. Source status and workflow status are recorded separately.
 
 ## Status summary
-
-The active source tree now contains the following route:
 
 ```text
 actual finite periodic SU(N) Wilson Gibbs laws
   -> finite gauge invariance
-  -> finite periodic translation invariance
+  -> arbitrary periodic translation invariance
+  -> concrete integer temporal translations
   -> exact Wilson conditional laws
   -> exact Dobrushin and finite heat-bath gap consequences
   -> common-carrier lattice embeddings
   -> tightness and Prokhorov weak limits
   -> continuum gauge-symmetry transfer
   -> finite even-periodic reflection positivity
-  -> weak-limit nonnegativity for bridged bounded continuous OS observables
+  -> weak-limit nonnegativity for bridged bounded OS observables
   -> gauge-invariant positive-time observable algebra
   -> OS pre-Hilbert quotient and Hilbert completion
   -> physical contraction semigroup
@@ -41,10 +42,10 @@ actual finite periodic SU(N) Wilson Gibbs laws
   -> graph-closed Hamiltonian
   -> finite-time Laplace resolvent
   -> positive-shift surjectivity and bijectivity
-  -> self-adjointness from the concrete reflection/time-translation symmetry bridge.
+  -> self-adjointness from reflection/time-translation symmetry.
 ```
 
-The current hard boundary is no longer finite-volume Dobrushin contraction or positive-shift surjectivity. It is the construction of the model-specific continuum temporal/reflection covariance bridge and the derivation of a positive physical spectral gap.
+The hard boundary is no longer finite-volume Dobrushin contraction, finite Gibbs translation invariance, or positive-shift surjectivity. It is now the rigorous passage from discrete finite-lattice time to real continuum Euclidean time, the construction of the continuum reflection/covariance bridge, and the derivation of a positive physical spectral gap.
 
 ## Proved on `main`
 
@@ -57,23 +58,21 @@ The finite Wilson lane through merged PR #274 contains:
 - detailed balance and Gibbs symmetry;
 - orthogonality and weighted Pythagoras;
 - the concrete finite Gibbs Hilbert realization;
-- the canonical heat-bath Hamiltonian
-  `H_HB = sum_e Q_e`;
-- the exact relation
-  `H_HB = |E| (I - P_scan)`;
+- the canonical heat-bath Hamiltonian `H_HB = sum_e Q_e`;
+- the exact relation `H_HB = |E| (I - P_scan)`;
 - canonical Dobrushin random-scan Rayleigh contraction;
 - exact active/shared-plaquette Wilson influence localization;
 - finite-volume and family Poincare/Hamiltonian-gap consequences;
 - transfer-orbit contraction packages in the stated finite regime.
 
-The previous documentation statement that
+The previous documentation statement
 
 ```text
 Dobrushin TV row-sum bound
   -> centered Gibbs L2/Rayleigh contraction
 ```
 
-was still open is obsolete.
+as an open problem is obsolete.
 
 ## Implemented in active PR #282
 
@@ -95,7 +94,7 @@ The branch supplies typed structures and theorems for:
 - two-point, connected-correlation, and finite n-point routes;
 - the real algebra of gauge-invariant bounded continuous observables.
 
-This route is conditional on the supplied physical carrier, interpolation, and coercive data. The repository has not yet selected and justified the final distributional continuum construction.
+This route is conditional on the supplied physical carrier, interpolation, and coercive data. The final distributional continuum construction has not yet been selected and justified.
 
 ### 2. Finite even-periodic reflection positivity
 
@@ -120,13 +119,11 @@ periodicHypercubicEvenWilsonGibbs_reflectionPositive_boundedContinuous
 
 For a fixed bounded continuous physical quadratic observable equipped with a concrete pullback bridge, finite reflection positivity passes to the continuum weak limit.
 
-The principal theorem is:
-
 ```lean
 physical_yang_mills_evenPeriodicWilsonOS_continuum_nonneg
 ```
 
-This is not yet a theorem that every intended continuum positive-time observable has such a bridge.
+This does not yet prove that every intended continuum positive-time observable has the required bridge.
 
 ### 4. Gauge-invariant OS Hilbert completion
 
@@ -151,7 +148,7 @@ From positive-time observable translation, contraction, and observable-state con
 - the right infinitesimal generator;
 - the right Hamiltonian `H = -G`;
 - Bochner time averages;
-- density of the generator/Hamiltonian domain;
+- density of the generator and Hamiltonian domains;
 - the zero-energy vacuum relation.
 
 ### 6. Closed nonnegative Hamiltonian and resolvent
@@ -173,7 +170,7 @@ The branch source implements:
 - injectivity and bijectivity for `lambda > 0`;
 - the maximal-accretive package.
 
-The finite-time Laplace construction therefore removes positive-shift surjectivity as a separate analytic assumption.
+The finite-time Laplace construction removes positive-shift surjectivity as a separate assumption.
 
 ### 7. Self-adjointness theorem
 
@@ -196,25 +193,13 @@ observable reflection/time-translation exchange
   -> self-adjointness.
 ```
 
-The theorem
+`WeakLimitTimeReflectionBridge` packages sufficient continuum covariance data. Together with observable-state strong continuity, it yields the theorem `closedRightHamiltonian_isSelfAdjoint`.
 
-```lean
-closedRightHamiltonian_isSelfAdjoint
-```
+The remaining task is to instantiate that bridge for the selected physical continuum construction.
 
-is available from `WeakLimitTimeReflectionBridge` together with observable-state strong continuity.
+### 8. Arbitrary periodic translation invariance
 
-The remaining issue is to instantiate that bridge from the actual selected continuum construction.
-
-### 8. Finite periodic translation invariance
-
-The newest finite theorem constructs periodic translations of:
-
-- vertices;
-- physical links;
-- plaquettes;
-- signed boundary incidences;
-- configurations.
+The branch constructs periodic translations of vertices, physical links, plaquettes, signed boundary incidences, and configurations.
 
 It proves:
 
@@ -224,27 +209,81 @@ It proves:
 - invariance of the product Haar law;
 - invariance of the finite periodic `SU(N)` Wilson Gibbs law.
 
-The dedicated translation workflow succeeded on the reviewed code baseline.
+### 9. Concrete integer temporal translations
 
-The finite theorem does not by itself construct the real-parameter continuum Euclidean-time action. The interpolation-equivariance and continuum-limit connection remain open.
+The distinguished temporal coordinate is now selected explicitly.
 
-## Exact self-adjointness frontier
+For every `k : ℤ`, the branch defines:
 
-The current model-dependent bridge requires:
-
-```text
-continuum Euclidean-time homeomorphisms
-+ finite/embedded-law invariance
-+ interpolation equivariance
-+ gauge commutation
-+ continuum configuration reflection
-+ reflection/time inversion
-+ positive-time observable restriction
-+ continuum-state identification
-+ observable-state strong continuity.
+```lean
+periodicHypercubicIntegerTemporalDisplacement n k
+periodicHypercubicIntegerTemporalConfigurationTranslation n k
 ```
 
-Once those fields are instantiated, the source theorem produces a self-adjoint nonnegative graph-closed physical Hamiltonian.
+and proves:
+
+- the temporal coordinate equals `k` modulo the period;
+- spatial coordinates remain zero;
+- zero, addition, and negation laws;
+- measurable configuration translation;
+- invariance of the finite periodic `SU(N)` Wilson Gibbs law.
+
+The principal finite invariance theorem is:
+
+```lean
+periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
+```
+
+### 10. Physical temporal-action constructor
+
+The branch contains:
+
+```lean
+periodicHypercubicSpecialUnitaryPhysicalTemporalAction
+```
+
+This constructs the abstract `PhysicalTemporalAction` from:
+
+- a real-parameter homeomorphism action on the physical carrier;
+- scale-dependent periodic lattice displacements;
+- interpolation equivariance.
+
+Measurability and finite Gibbs invariance are generated automatically from the periodic translation theorem. They are no longer independent assumptions.
+
+The constructor does not supply the physical action, the real-time-to-lattice displacement relation, or interpolation equivariance.
+
+## Exact temporal frontier
+
+The finite lattice time group is discrete and periodic. The continuum action is parameterized by `ℝ`.
+
+The missing theorem must not assume that a rounding or floor map from real time to integer lattice steps preserves addition for all real times.
+
+A rigorous route must instead use one of the following patterns or an equivalent construction:
+
+```text
+discrete finite semigroups
+  -> convergence to a continuum strongly continuous semigroup
+
+lattice times a_n * k on scale-dependent dense subsets
+  -> compatibility and convergence
+  -> extension by strong continuity
+
+or
+
+a revised interface separating finite discrete time from continuum real time.
+```
+
+After this parameter boundary is resolved, the remaining fields are:
+
+- physical continuum time-translation homeomorphisms;
+- scale-dependent lattice displacement data;
+- interpolation equivariance;
+- gauge commutation;
+- continuum reflection;
+- reflection/time inversion;
+- positive-time observable restriction;
+- continuum-state identification;
+- observable-state strong continuity.
 
 ## Spectral-gap frontier
 
@@ -252,7 +291,7 @@ No theorem currently proves that the constructed closed OS Hamiltonian has a str
 
 Still required are:
 
-- a concrete instantiated self-adjoint OS Hamiltonian for the selected continuum construction;
+- an instantiated self-adjoint OS Hamiltonian for the selected continuum construction;
 - characterization and preferably uniqueness of the vacuum;
 - a vacuum-orthogonal invariant sector;
 - a uniform relation between finite Wilson/heat-bath decay and the OS semigroup;
@@ -269,13 +308,9 @@ The source tree contains:
 hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20
 ```
 
-and older interfaces transport that internal normalized value.
+Older interfaces transport that internal normalized value.
 
-The active OS Hamiltonian route has not proved:
-
-- that its spectral gap is positive;
-- that its gap equals `33/20`;
-- that `33/20` follows from Wilson dynamics, continuum scaling, or physical units.
+The active OS Hamiltonian route has not proved that its spectral gap is positive, that it equals `33/20`, or that `33/20` follows from Wilson dynamics, continuum scaling, or physical units.
 
 Therefore `33/20` remains an internal normalization/audit value, not an independently derived physical mass gap.
 
@@ -285,7 +320,11 @@ Therefore `33/20` remains an internal normalization/audit value, not an independ
 |---|---|
 | Finite periodic `SU(N)` Wilson Gibbs law | constructed |
 | Finite gauge invariance | proved |
-| Finite periodic translation invariance | proved in PR #282 source; dedicated check succeeded |
+| Arbitrary periodic translation invariance | proved |
+| Integer temporal displacement group laws | proved in source |
+| Finite Gibbs invariance under integer temporal translation | proved in source |
+| Newest integer-temporal dedicated check | pending at this snapshot |
+| Generic physical temporal-action constructor | implemented from supplied physical action and equivariance data |
 | Exact Wilson Dobrushin to centered Rayleigh contraction | proved |
 | Exact plaquette-supported influence profile | proved |
 | Finite heat-bath Poincare/Hamiltonian gap | proved in the stated regime |
@@ -300,21 +339,22 @@ Therefore `33/20` remains an internal normalization/audit value, not an independ
 | Closed nonnegative right Hamiltonian | implemented |
 | Positive-shift surjectivity | implemented by finite-time Laplace resolvent |
 | Self-adjointness from semigroup symmetry | proved |
+| Discrete finite-time to real continuum-time bridge | open |
 | Concrete weak-limit time/reflection bridge | open |
-| Concrete self-adjoint continuum OS Hamiltonian | conditional on that bridge |
+| Concrete self-adjoint continuum OS Hamiltonian | conditional on those bridges |
 | Positive physical spectral gap | open |
 | Vacuum uniqueness | open |
 | Nontrivial physical continuum Yang--Mills theory | open |
 | Independent physical derivation of `33/20` | open |
-| Final ordinary CI green on the current PR branch | not yet claimed |
+| Final ordinary CI green on the current branch | not claimed |
 | External consensus | not claimed |
 
 ## Immediate next steps
 
-1. Package the finite periodic translations as the lattice temporal action at every approximation scale.
-2. Prove interpolation equivariance and construct the continuum Euclidean-time action.
-3. Construct the continuum reflection and instantiate `WeakLimitTimeReflectionBridge`.
-4. Obtain final ordinary CI success and register all terminal aggregate imports.
+1. Resolve the finite integer-time versus continuum real-time parameter boundary.
+2. Prove interpolation equivariance and instantiate the physical temporal action.
+3. Construct continuum reflection and instantiate `WeakLimitTimeReflectionBridge`.
+4. Obtain final ordinary CI success and register terminal aggregate imports.
 5. Derive vacuum uniqueness, continuum clustering, and a positive spectral gap for the constructed OS Hamiltonian.
 6. Complete the physical continuum carrier, scaling, regularity, nontriviality, and external review.
 
