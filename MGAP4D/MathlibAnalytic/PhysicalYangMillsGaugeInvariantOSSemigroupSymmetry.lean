@@ -85,7 +85,8 @@ theorem ReflectionTimeTranslationExchange.toStronglyContinuousPhysicalSemigroup_
     {T : P.PositiveTimeObservableContractionSemigroup}
     (hT : T.ReflectionTimeTranslationExchange)
     (hContinuous : T.StrongContinuityOnObservableStates) :
-    (T.toStronglyContinuousPhysicalSemigroup hContinuous).toPhysicalSemigroup.IsInnerSymmetric := by
+    (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+      T hContinuous).toPhysicalSemigroup.IsInnerSymmetric := by
   simpa only [StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup_toPhysicalSemigroup]
     using hT.toPhysicalSemigroup_isInnerSymmetric
 
@@ -102,8 +103,9 @@ theorem rightDifferenceQuotient_inner_eq_of_innerSymmetric
     inner ℝ (T.rightDifferenceQuotient psi t) phi =
       inner ℝ psi (T.rightDifferenceQuotient phi t) := by
   simp only [rightDifferenceQuotient, inner_smul_left, inner_sub_left,
-    inner_smul_right, inner_sub_right, RingHom.id_apply]
+    inner_smul_right, inner_sub_right]
   rw [hSymmetric t psi phi]
+  simp
 
 /-- The right infinitesimal generator of a symmetric Euclidean contraction
 semigroup is formally symmetric on its canonical right-generator domain.
@@ -157,9 +159,17 @@ theorem rightHamiltonianLinearPMap_isFormalAdjoint_of_innerSymmetric
     T.rightHamiltonianLinearPMap.IsFormalAdjoint
       T.rightHamiltonianLinearPMap := by
   intro psi phi
-  simpa only [rightHamiltonianLinearPMap_apply, rightHamiltonian_apply,
-    inner_neg_left, inner_neg_right] using
-    T.rightGeneratorLinearPMap_isFormalAdjoint_of_innerSymmetric hSymmetric psi phi
+  have hGenerator :=
+    T.rightGeneratorLinearPMap_isFormalAdjoint_of_innerSymmetric
+      hSymmetric psi phi
+  change
+    inner ℝ (-T.rightGenerator psi) (phi : P.PhysicalHilbert) =
+      inner ℝ (psi : P.PhysicalHilbert) (-T.rightGenerator phi)
+  rw [inner_neg_left, inner_neg_right]
+  change
+    -inner ℝ (T.rightGenerator psi) (phi : P.PhysicalHilbert) =
+      -inner ℝ (psi : P.PhysicalHilbert) (T.rightGenerator phi)
+  exact congrArg Neg.neg hGenerator
 
 /-- Formal symmetry is preserved by the canonical graph closure of a closable
 partially defined operator on a real Hilbert space. -/
@@ -267,7 +277,8 @@ theorem closedRightHamiltonian_isSelfAdjoint_of_reflectionTimeTranslationExchang
     (hExchange : T.ReflectionTimeTranslationExchange)
     (hContinuous : T.StrongContinuityOnObservableStates) :
     IsSelfAdjoint
-      (T.toStronglyContinuousPhysicalSemigroup hContinuous).closedRightHamiltonian := by
+      (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        T hContinuous).closedRightHamiltonian := by
   apply StronglyContinuousPhysicalSemigroup.closedRightHamiltonian_isSelfAdjoint_of_innerSymmetric
   exact hExchange.toStronglyContinuousPhysicalSemigroup_isInnerSymmetric hContinuous
 
