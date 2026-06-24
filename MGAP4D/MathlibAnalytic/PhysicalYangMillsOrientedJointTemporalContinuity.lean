@@ -75,8 +75,7 @@ private theorem toMeasure_diracProba_prod_map_jointTranslate
         (μ : Measure E.PhysicalConfiguration)
   exact map_jointTranslate_dirac_prod J s μ
 
--- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation.
-set_option maxHeartbeats 400000 in
+set_option backward.isDefEq.respectTransparency false in
 theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
@@ -87,8 +86,7 @@ theorem diracProba_prod_map_jointTranslate
   ProbabilityMeasure.toMeasure_injective
     (toMeasure_diracProba_prod_map_jointTranslate J s μ)
 
--- Joint continuity supplies varying-time weak convergence at every target time.
-set_option maxHeartbeats 800000 in
+set_option backward.isDefEq.respectTransparency false in
 theorem mappedApproximating_tendsto
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
