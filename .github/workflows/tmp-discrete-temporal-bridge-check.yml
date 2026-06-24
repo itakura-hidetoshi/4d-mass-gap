@@ -1,0 +1,91 @@
+name: Temporary Discrete Temporal Bridge Check
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-discrete-temporal-bridge-check.yml"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicIntegerTemporalTranslation.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedDiscreteTemporalAction.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryDiscretePhysicalTemporalAction.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedDenseTemporalApproximation.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedFloorTemporalApproximation.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryFloorTemporalApproximation.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedJointTemporalContinuity.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsContinuumEuclideanTimeTranslation.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsContinuumTimeTranslationFromDiscrete.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSContinuumTimeTranslationBridge.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslationFromDiscrete.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsDiscreteTemporalBridgeCompileSmoke.lean"
+
+permissions:
+  contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  LAKE_CACHE_REF_SHA: ${{ github.event.pull_request.base.sha }}
+
+jobs:
+  temporal-bridge-check:
+    name: Discrete temporal bridge compile check
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Cache elan toolchain
+        uses: actions/cache@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-elan-
+
+      - name: Restore Lake build cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-lake-v4-
+            ${{ runner.os }}-lean-fast-v3-
+            ${{ runner.os }}-lean-fast-
+            ${{ runner.os }}-lean-
+
+      - name: Install elan and Lean toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL \
+              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | \
+              sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Show Lean and Lake versions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lean --version
+          lake --version
+
+      - name: Compile discrete temporal bridge smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          lake env lean \
+            MGAP4D/MathlibAnalytic/PhysicalYangMillsDiscreteTemporalBridgeCompileSmoke.lean \
+            2>&1 | tee /tmp/discrete-temporal-bridge.log
+
+      - name: Upload temporal bridge log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: discrete-temporal-bridge-log
+          path: /tmp/discrete-temporal-bridge.log
+          if-no-files-found: warn
