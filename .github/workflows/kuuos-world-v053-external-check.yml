@@ -1,0 +1,49 @@
+name: KuuOS WORLD v0.53 External Lean Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'kuuos-v053-external-ci'
+    paths:
+      - '.github/workflows/kuuos-world-v053-external-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out KuuOS v0.53 branch
+        uses: actions/checkout@v6
+        with:
+          repository: itakura-hidetoshi/KuuOS
+          ref: world-kuu-vacuum-central-reference-v0-50
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate v0.53 registration
+        run: python3 scripts/check_world_kuu_vacuum_central_reference_state_v0_53.py
+      - name: Set up pinned Lean and Lake
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
+          use-github-cache: false
+      - name: Resolve pinned dependencies
+        run: lake update
+      - name: Verify lockfile stability
+        run: git diff --exit-code -- lake-manifest.json
+      - name: Fetch Mathlib olean cache
+        run: lake exe cache get
+      - name: Strictly compile v0.53 formal root
+        run: >-
+          lake -KleanArgs=-DwarningAsError=true
+          -KleanArgs=-DsorryAsError=true
+          build KuuOSFormalV0_53
+      - name: Run central runtime regression
+        run: python3 scripts/run_kuuos_runtime_full_check_v0_53.py
