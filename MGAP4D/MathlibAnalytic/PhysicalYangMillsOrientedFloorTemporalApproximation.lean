@@ -108,7 +108,7 @@ theorem physicalTemporalFloorStep_tendsto
   have hsub := tendsto_const_nhds.sub herror
   simpa only [sub_sub_cancel, sub_zero] using hsub
 
-namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation
+namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation
 
 variable {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
 variable {A : E.PhysicalDiscreteTemporalAction}
@@ -126,7 +126,7 @@ noncomputable def ofFloor
       E.latticeSpacing E.latticeSpacing_pos E.latticeSpacing_tendsto_zero t
     simpa only [latticeTime_eq] using h
 
-end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation
+end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation
 
 end
 
