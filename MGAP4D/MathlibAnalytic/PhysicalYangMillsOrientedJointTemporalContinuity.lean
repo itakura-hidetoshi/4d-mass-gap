@@ -72,36 +72,35 @@ noncomputable def toWeakLimitContinuity
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding) :
-    ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.WeakLimitContinuity
-      (E := E) (A := A) D L where
-  mappedApproximating_tendsto t := by
-    let τ : ℕ → ℝ := fun n =>
-      A.latticeTime (L.subsequence n)
-        (D.approximateStep t (L.subsequence n))
-    let μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration := fun n =>
-      E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)
-    have hτ : Tendsto τ atTop (nhds t) := by
-      simpa only [τ] using D.approximateTime_tendsto_subsequence L t
-    have hdirac :
-        Tendsto (fun n => diracProba (τ n)) atTop
-          (nhds (diracProba t)) :=
-      continuous_diracProba.continuousAt.comp hτ
-    have hpair :
-        Tendsto (fun n => (diracProba (τ n), μs n)) atTop
-          (nhds (diracProba t, L.continuumMeasure)) :=
-      (Prod.tendsto_iff _ _).2 ⟨hdirac, L.weakConvergence⟩
-    have hprod :
-        Tendsto
-          (fun n => (diracProba (τ n)).prod (μs n)) atTop
-          (nhds ((diracProba t).prod L.continuumMeasure)) :=
-      ProbabilityMeasure.continuous_prod.continuousAt.comp hpair
-    have hmap :=
-      ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous
-        (fun n => (diracProba (τ n)).prod (μs n))
-        ((diracProba t).prod L.continuumMeasure)
-        hprod J.jointTranslate_continuous
-    simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap
+      E.toLatticeEmbedding) :=
+  ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.WeakLimitContinuity.mk
+    (E := E) (A := A) D L (fun t => by
+      let τ : ℕ → ℝ := fun n =>
+        A.latticeTime (L.subsequence n)
+          (D.approximateStep t (L.subsequence n))
+      let μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration := fun n =>
+        E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)
+      have hτ : Tendsto τ atTop (nhds t) := by
+        simpa only [τ] using D.approximateTime_tendsto_subsequence L t
+      have hdirac :
+          Tendsto (fun n => diracProba (τ n)) atTop
+            (nhds (diracProba t)) :=
+        continuous_diracProba.continuousAt.comp hτ
+      have hpair :
+          Tendsto (fun n => (diracProba (τ n), μs n)) atTop
+            (nhds (diracProba t, L.continuumMeasure)) :=
+        (Prod.tendsto_iff _ _).2 ⟨hdirac, L.weakConvergence⟩
+      have hprod :
+          Tendsto
+            (fun n => (diracProba (τ n)).prod (μs n)) atTop
+            (nhds ((diracProba t).prod L.continuumMeasure)) :=
+        ProbabilityMeasure.continuous_prod.continuousAt.comp hpair
+      have hmap :=
+        ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous
+          (fun n => (diracProba (τ n)).prod (μs n))
+          ((diracProba t).prod L.continuumMeasure)
+          hprod J.jointTranslate_continuous
+      simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap)
 
 end JointContinuity
 
