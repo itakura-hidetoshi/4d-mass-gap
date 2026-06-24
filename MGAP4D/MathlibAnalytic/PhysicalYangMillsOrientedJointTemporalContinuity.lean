@@ -87,24 +87,15 @@ theorem diracProba_prod_map_jointTranslate
   ProbabilityMeasure.toMeasure_injective
     (toMeasure_diracProba_prod_map_jointTranslate J s μ)
 
--- Joint continuity supplies varying-time weak convergence at each target time.
+-- Joint continuity supplies varying-time weak convergence at every target time.
 set_option maxHeartbeats 800000 in
 theorem mappedApproximating_tendsto
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
-    Tendsto
-      (fun n =>
-        (E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)).map
-          (A.physicalTranslate
-            (A.latticeTime (L.subsequence n)
-              (D.approximateStep t (L.subsequence n)))).continuous.measurable.aemeasurable)
-      atTop
-      (nhds
-        (L.continuumMeasure.map
-          (A.physicalTranslate t).continuous.measurable.aemeasurable)) := by
+      E.toLatticeEmbedding) :
+    D.WeakLimitContinuity L := by
+  intro t
   let τ : ℕ → ℝ := fun n =>
     A.latticeTime (L.subsequence n)
       (D.approximateStep t (L.subsequence n))
@@ -131,6 +122,15 @@ theorem mappedApproximating_tendsto
       ((diracProba t).prod L.continuumMeasure)
       hprod J.jointTranslate_continuous
   simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap
+
+/-- Joint continuity discharges the varying-time weak-limit continuity input. -/
+theorem toWeakLimitContinuity
+    (J : A.JointContinuity)
+    (D : A.DenseTemporalApproximation)
+    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E.toLatticeEmbedding) :
+    D.WeakLimitContinuity L :=
+  J.mappedApproximating_tendsto D L
 
 end JointContinuity
 
