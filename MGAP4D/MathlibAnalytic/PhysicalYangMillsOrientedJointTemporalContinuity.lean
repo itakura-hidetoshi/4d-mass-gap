@@ -86,7 +86,7 @@ theorem diracProba_prod_map_jointTranslate
   ProbabilityMeasure.toMeasure_injective
     (toMeasure_diracProba_prod_map_jointTranslate J s μ)
 
-set_option backward.isDefEq.respectTransparency false in
+/-- Joint continuity supplies varying-time weak convergence at every target time. -/
 theorem mappedApproximating_tendsto
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
@@ -119,7 +119,11 @@ theorem mappedApproximating_tendsto
       (fun n => (diracProba (τ n)).prod (μs n))
       ((diracProba t).prod L.continuumMeasure)
       hprod J.jointTranslate_continuous
-  simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap
+  rw [J.diracProba_prod_map_jointTranslate t L.continuumMeasure] at hmap
+  refine hmap.congr' ?_
+  filter_upwards with n
+  simpa only [τ, μs] using
+    J.diracProba_prod_map_jointTranslate (τ n) (μs n)
 
 /-- Joint continuity discharges the varying-time weak-limit continuity input. -/
 theorem toWeakLimitContinuity
