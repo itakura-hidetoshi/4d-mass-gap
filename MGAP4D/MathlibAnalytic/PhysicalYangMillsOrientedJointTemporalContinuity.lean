@@ -102,126 +102,71 @@ theorem diracProba_prod_map_jointTranslate
       Measure E.PhysicalConfiguration)
   exact toMeasure_diracProba_prod_map_jointTranslate J s μ
 
-private def approximatePhysicalTime
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) (n : ℕ) : ℝ :=
-  A.latticeTime (L.subsequence n)
-    (D.approximateStep t (L.subsequence n))
+private theorem diracProba_tendsto_of_tendsto
+    {τ : ℕ → ℝ} {t : ℝ}
+    (hτ : Tendsto τ atTop (nhds t)) :
+    Tendsto (fun n => diracProba (τ n)) atTop (nhds (diracProba t)) :=
+  continuous_diracProba.continuousAt.comp hτ
 
-private def subsequenceMeasure
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (n : ℕ) : ProbabilityMeasure E.PhysicalConfiguration :=
-  E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)
-
-private theorem approximatePhysicalTime_tendsto
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
-    Tendsto (approximatePhysicalTime D L t) atTop (nhds t) := by
-  simpa only [approximatePhysicalTime] using
-    D.approximateTime_tendsto_subsequence L t
-
-private theorem diracApproximateTime_tendsto
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
+private theorem productMeasure_tendsto_of_tendsto
+    {τ : ℕ → ℝ} {t : ℝ}
+    {μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration}
+    {μ : ProbabilityMeasure E.PhysicalConfiguration}
+    (hτ : Tendsto τ atTop (nhds t))
+    (hμ : Tendsto μs atTop (nhds μ)) :
     Tendsto
-      (fun n => diracProba (approximatePhysicalTime D L t n))
-      atTop (nhds (diracProba t)) :=
-  continuous_diracProba.continuousAt.comp
-    (approximatePhysicalTime_tendsto D L t)
-
-private theorem subsequenceMeasure_tendsto
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding) :
-    Tendsto (subsequenceMeasure L) atTop (nhds L.continuumMeasure) := by
-  simpa only [subsequenceMeasure] using L.weakConvergence
-
-private theorem pairMeasure_tendsto
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
-    Tendsto
-      (fun n =>
-        (diracProba (approximatePhysicalTime D L t n),
-          subsequenceMeasure L n))
+      (fun n => (diracProba (τ n)).prod (μs n))
       atTop
-      (nhds (diracProba t, L.continuumMeasure)) :=
-  (Prod.tendsto_iff _ _).2
-    ⟨diracApproximateTime_tendsto D L t, subsequenceMeasure_tendsto L⟩
+      (nhds ((diracProba t).prod μ)) := by
+  have hpair :
+      Tendsto (fun n => (diracProba (τ n), μs n)) atTop
+        (nhds (diracProba t, μ)) :=
+    (Prod.tendsto_iff _ _).2
+      ⟨diracProba_tendsto_of_tendsto hτ, hμ⟩
+  exact (ProbabilityMeasure.continuous_prod.tendsto
+    (diracProba t, μ)).comp hpair
 
-private theorem productMeasure_tendsto
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
-    Tendsto
-      (fun n =>
-        (diracProba (approximatePhysicalTime D L t n)).prod
-          (subsequenceMeasure L n))
-      atTop
-      (nhds ((diracProba t).prod L.continuumMeasure)) :=
-  ProbabilityMeasure.continuous_prod.continuousAt.comp
-    (pairMeasure_tendsto D L t)
-
-private theorem diracProductImage_tendsto
+private theorem diracProductImage_tendsto_of_tendsto
     (J : A.JointContinuity)
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
+    {τ : ℕ → ℝ} {t : ℝ}
+    {μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration}
+    {μ : ProbabilityMeasure E.PhysicalConfiguration}
+    (hτ : Tendsto τ atTop (nhds t))
+    (hμ : Tendsto μs atTop (nhds μ)) :
     Tendsto
-      (fun n =>
-        diracProductImage J (approximatePhysicalTime D L t n)
-          (subsequenceMeasure L n))
+      (fun n => diracProductImage J (τ n) (μs n))
       atTop
-      (nhds (diracProductImage J t L.continuumMeasure)) := by
+      (nhds (diracProductImage J t μ)) := by
   simpa only [diracProductImage] using
     ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous
-      (fun n =>
-        (diracProba (approximatePhysicalTime D L t n)).prod
-          (subsequenceMeasure L n))
-      ((diracProba t).prod L.continuumMeasure)
-      (productMeasure_tendsto D L t)
+      (fun n => (diracProba (τ n)).prod (μs n))
+      ((diracProba t).prod μ)
+      (productMeasure_tendsto_of_tendsto hτ hμ)
       J.jointTranslate_continuous
 
-private theorem translatedImage_tendsto
+private theorem translatedImage_tendsto_of_tendsto
     (J : A.JointContinuity)
-    (D : A.DenseTemporalApproximation)
-    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding)
-    (t : ℝ) :
+    {τ : ℕ → ℝ} {t : ℝ}
+    {μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration}
+    {μ : ProbabilityMeasure E.PhysicalConfiguration}
+    (hτ : Tendsto τ atTop (nhds t))
+    (hμ : Tendsto μs atTop (nhds μ)) :
     Tendsto
-      (fun n =>
-        translatedImage A (approximatePhysicalTime D L t n)
-          (subsequenceMeasure L n))
+      (fun n => translatedImage A (τ n) (μs n))
       atTop
-      (nhds (translatedImage A t L.continuumMeasure)) := by
-  have h := diracProductImage_tendsto J D L t
+      (nhds (translatedImage A t μ)) := by
+  have h := diracProductImage_tendsto_of_tendsto J hτ hμ
   have hSequence :
-      (fun n =>
-        diracProductImage J (approximatePhysicalTime D L t n)
-          (subsequenceMeasure L n)) =
-      (fun n =>
-        translatedImage A (approximatePhysicalTime D L t n)
-          (subsequenceMeasure L n)) := by
+      (fun n => diracProductImage J (τ n) (μs n)) =
+        (fun n => translatedImage A (τ n) (μs n)) := by
     funext n
-    exact J.diracProba_prod_map_jointTranslate
-      (approximatePhysicalTime D L t n) (subsequenceMeasure L n)
+    exact J.diracProba_prod_map_jointTranslate (τ n) (μs n)
   have hLimit :
-      diracProductImage J t L.continuumMeasure =
-        translatedImage A t L.continuumMeasure :=
-    J.diracProba_prod_map_jointTranslate t L.continuumMeasure
+      diracProductImage J t μ = translatedImage A t μ :=
+    J.diracProba_prod_map_jointTranslate t μ
   rw [hSequence, hLimit] at h
   exact h
 
-set_option maxHeartbeats 400000 in
 private theorem weakLimitContinuity_of_joint
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
@@ -229,8 +174,17 @@ private theorem weakLimitContinuity_of_joint
       E.toLatticeEmbedding) :
     D.WeakLimitContinuity L := by
   intro t
-  simpa only [approximatePhysicalTime, subsequenceMeasure, translatedImage] using
-    translatedImage_tendsto J D L t
+  let τ : ℕ → ℝ := fun n =>
+    A.latticeTime (L.subsequence n)
+      (D.approximateStep t (L.subsequence n))
+  let μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration := fun n =>
+    E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)
+  have hτ : Tendsto τ atTop (nhds t) := by
+    simpa only [τ] using D.approximateTime_tendsto_subsequence L t
+  have hμ : Tendsto μs atTop (nhds L.continuumMeasure) := by
+    simpa only [μs] using L.weakConvergence
+  have h := translatedImage_tendsto_of_tendsto J hτ hμ
+  simpa only [τ, μs, translatedImage] using h
 
 /-- Joint continuity supplies varying-time weak convergence at every target time. -/
 theorem mappedApproximating_tendsto
