@@ -20,6 +20,8 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSurjective.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSelfAdjoint.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSObservableTimeTranslationCovariance.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSHamiltonianSpine.lean"
 
 concurrency:
@@ -105,6 +107,8 @@ jobs:
           set -o pipefail
           lake build \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSObservableTimeTranslationCovariance \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSHamiltonianSpine 2>&1 \
             | tee /tmp/os-semigroup-symmetry.log
           status=${PIPESTATUS[0]}
