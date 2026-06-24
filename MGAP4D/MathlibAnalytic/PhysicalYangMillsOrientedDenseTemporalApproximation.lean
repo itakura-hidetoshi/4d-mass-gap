@@ -61,14 +61,13 @@ theorem approximateTime_tendsto_subsequence
 /-- The remaining analytic input for passing varying lattice times through a
 weak limit.
 
-This field is deliberately separate from the algebraic finite-scale action.  It
-states that translating the `n`th embedded law at its selected realizable time
-converges to translation of the continuum law at the target real time. -/
-structure WeakLimitContinuity
+It states that translating the `n`th embedded law at its selected realizable
+time converges to translation of the continuum law at the target real time. -/
+def WeakLimitContinuity
     (D : A.DenseTemporalApproximation)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding) where
-  mappedApproximating_tendsto : ∀ t,
+      E.toLatticeEmbedding) : Prop :=
+  ∀ t,
     Tendsto
       (fun n =>
         (E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)).map
@@ -102,7 +101,7 @@ theorem continuumProbabilityMeasure_map_eq_self
         atTop (nhds L.continuumMeasure) := by
     simpa only [D.embeddedMeasure_map_approximateTime_eq_self] using
       L.weakConvergence
-  exact tendsto_nhds_unique (C.mappedApproximating_tendsto t) hOriginal
+  exact tendsto_nhds_unique (C t) hOriginal
 
 /-- Measure-valued form of continuum invariance obtained from the dense-time
 approximation bridge. -/
