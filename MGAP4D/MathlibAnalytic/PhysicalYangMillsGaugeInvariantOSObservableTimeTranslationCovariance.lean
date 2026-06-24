@@ -28,7 +28,7 @@ structure ReflectionTimeTranslationCovariance
   fullTranslate : NNReal →
     physicalYangMillsGaugeInvariantObservableSubalgebra S ≃ₐ[ℝ]
       physicalYangMillsGaugeInvariantObservableSubalgebra S
-  positive_restriction : ∀ t F,
+  positive_restriction : ∀ (t : NNReal) (F : D.positiveTimeSubalgebra),
     fullTranslate t
         (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) =
       (T.translate t F : physicalYangMillsGaugeInvariantObservableSubalgebra S)
