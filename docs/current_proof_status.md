@@ -1,167 +1,321 @@
 # Current proof status
 
-**Updated:** 2026-06-17  
-**Latest merged checkpoint:** PR #263  
-**Later pull request:** none found at the time of this update
+**Updated:** 2026-06-24  
+**Stable finite checkpoint:** merged PR #274  
+**Active development:** PR #282, `physical-4d-yang-mills-measure-limit`  
+**Reviewed code baseline:** `54b3404d5096ec007f757e1c288d472bc3ac8a3d`
 
-## Status
+## Repository and verification status
 
-The current source tree contains a concrete finite Wilson Gibbs, heat-bath, orthogonal-projection, Gibbs-Hilbert, canonical Hamiltonian, family-wide centered-Rayleigh implication, and explicitly rescaled Dobrushin Hamiltonian lane:
+PR #282 is open, non-draft, and mergeable.
+
+At the reviewed code baseline:
+
+- `Temporary Periodic Translation Check` run 3 completed successfully;
+- `PR Lean Fast Check` run 4274 was cancelled before the changed-Lean build completed;
+- the current documentation therefore does not claim final ordinary-CI green status for the complete active branch.
+
+The theorem bodies are the authoritative mathematical surface. Workflow status is recorded separately because a theorem may be present in source while the final branch-wide verification is still pending.
+
+## Status summary
+
+The active source tree now contains the following route:
 
 ```text
-finite Wilson Gibbs law
-  -> exact single-link conditional law
-  -> Gibbs and conditional variances
-  -> heat-bath Dirichlet form
-  -> projection P_e
-  -> fluctuation projection Q_e = I - P_e
-  -> exact detailed balance and reversible product sums
-  -> Gibbs symmetry and P_e/Q_e orthogonality
-  -> Gibbs-weighted Pythagoras
-  -> averaged local variance = Gibbs squared norm of Q_e
-  -> concrete Gibbs Hilbert equivalence
-  -> canonical H_HB = sum_e Q_e
-  -> exact Hamiltonian/Dirichlet quadratic-form identity
-  -> H_HB = |E| (I - P_scan)
-  -> centered random-scan Rayleigh coercivity
-  -> family-wide finite Poincare and Hamiltonian gap consequences
-  -> explicitly Dobrushin-rescaled finite heat-bath Hamiltonian.
+actual finite periodic SU(N) Wilson Gibbs laws
+  -> finite gauge invariance
+  -> finite periodic translation invariance
+  -> exact Wilson conditional laws
+  -> exact Dobrushin and finite heat-bath gap consequences
+  -> common-carrier lattice embeddings
+  -> tightness and Prokhorov weak limits
+  -> continuum gauge-symmetry transfer
+  -> finite even-periodic reflection positivity
+  -> weak-limit nonnegativity for bridged bounded continuous OS observables
+  -> gauge-invariant positive-time observable algebra
+  -> OS pre-Hilbert quotient and Hilbert completion
+  -> physical contraction semigroup
+  -> strong continuity
+  -> dense right-generator domain
+  -> nonnegative closable right Hamiltonian
+  -> graph-closed Hamiltonian
+  -> finite-time Laplace resolvent
+  -> positive-shift surjectivity and bijectivity
+  -> self-adjointness from the concrete reflection/time-translation symmetry bridge.
 ```
+
+The current hard boundary is no longer finite-volume Dobrushin contraction or positive-shift surjectivity. It is the construction of the model-specific continuum temporal/reflection covariance bridge and the derivation of a positive physical spectral gap.
 
 ## Proved on `main`
 
-The following formerly open steps are now proved:
+The finite Wilson lane through merged PR #274 contains:
 
-- Gibbs-pairing symmetry of the exact single-link projection `P_e` and fluctuation projection `Q_e`;
-- orthogonality of the projection and fluctuation ranges;
-- the Gibbs-weighted Pythagorean decomposition;
-- the exact identity
-  `averagedSingleLinkVariance f e = gibbsPairingReal (Q_e f) (Q_e f)`;
-- the full heat-bath Dirichlet form as the sum of local fluctuation squared norms;
-- the finite Gibbs Hilbert carrier, normalized vacuum, and observable/Hilbert linear equivalence;
-- the centered Hilbert norm/Gibbs-variance identity for every Hilbert vector;
-- the canonical observable heat-bath Hamiltonian `sum_e Q_e`;
-- symmetry, zero vacuum energy, and the exact Dirichlet quadratic-form identity;
-- the exact generator/random-scan relation
+- exact finite Wilson Gibbs probability laws;
+- exact single-link conditional laws;
+- `P_e` conditional-expectation projections;
+- `Q_e = I - P_e` fluctuation projections;
+- detailed balance and Gibbs symmetry;
+- orthogonality and weighted Pythagoras;
+- the concrete finite Gibbs Hilbert realization;
+- the canonical heat-bath Hamiltonian
+  `H_HB = sum_e Q_e`;
+- the exact relation
   `H_HB = |E| (I - P_scan)`;
-- the exact link-count-scaled random-scan Rayleigh-defect identity;
-- centered Rayleigh contraction implies the correctly scaled finite heat-bath Poincare inequality;
-- the canonical finite Hamiltonian coercivity and excitation-sector lower-bound route;
-- the family-wide package merged in PR #262, which derives these consequences at every approximation index from a family of centered-Rayleigh certificates;
-- the PR #263 Dobrushin-scaled lane, conditional on a
-  `FiniteLatticeWilsonDobrushinRandomScanRayleighCertificate`, including:
-  - `(1 - alpha) * Var_mu(f) <= E_HB(f)`;
-  - the explicitly scaled symmetric Gibbs-Hilbert Hamiltonian;
-  - zero vacuum energy and the scaled quadratic-form identity;
-  - the `exactGapValueReal` lower bound on the finite vacuum-orthogonal sector;
-  - the corresponding excitation-eigenvalue lower bound.
+- canonical Dobrushin random-scan Rayleigh contraction;
+- exact active/shared-plaquette Wilson influence localization;
+- finite-volume and family Poincare/Hamiltonian-gap consequences;
+- transfer-orbit contraction packages in the stated finite regime.
 
-The gap consequences remain conditional: neither PR #262 nor PR #263 derives the centered-Rayleigh estimate from the Wilson action or from the Dobrushin matrix alone.
-
-## Dobrushin and normalization status
-
-PR #261 defines
-
-```text
-alpha      = Dobrushin coefficient,
-lambda_HB  = 1 - alpha,
-rho_scan   = 1 - (1 - alpha) / |E|,
-```
-
-and proves, for a nonempty edge set,
-
-```text
-0 <= rho_scan < 1,
-|E| (1 - rho_scan) = lambda_HB.
-```
-
-The old unscaled random-scan certificates required a Markov contraction gap bounded by one to dominate `exactGapValueReal > 1`. PR #255 proves those old system-level and family-level structures uninhabited. The impossible route is therefore explicitly closed.
-
-The replacement lane separates the heat-bath gap from the normalized carrier. PR #261 defines
-
-```text
-scale_HB = exactGapValueReal / lambda_HB
-```
-
-and proves
-
-```text
-scale_HB * lambda_HB = exactGapValueReal.
-```
-
-PR #263 transports this algebraic scale to a finite symmetric Gibbs-Hilbert Hamiltonian and its vacuum-orthogonal lower bound.
-
-This is **not** a physical derivation of the normalization scale: the numerator is the pre-existing normalized carrier. A transfer-time or generator normalization derived independently from Wilson dynamics remains open.
-
-## Principal remaining finite-volume analytic input
-
-The finite Dobrushin matrix controls one-link conditional laws in total variation. The canonical and scaled Hamiltonian lanes require the centered Gibbs-pairing estimate
-
-```text
-<P_scan f, f>_mu <= rho_scan <f, f>_mu,
-E_mu[f] = 0.
-```
-
-The repository represents this as a separate
-`FiniteLatticeWilsonDobrushinRandomScanRayleighCertificate`. The implication
+The previous documentation statement that
 
 ```text
 Dobrushin TV row-sum bound
   -> centered Gibbs L2/Rayleigh contraction
 ```
 
-has not yet been proved. Actual Wilson influence coefficients and a volume- and lattice-spacing-uniform bound also remain open.
+was still open is obsolete.
+
+## Implemented in active PR #282
+
+### 1. Physical weak-limit route
+
+The branch supplies typed structures and theorems for:
+
+- finite oriented periodic Wilson systems;
+- measurable lattice embeddings into one Polish carrier;
+- embedded probability measures;
+- normalized action and observable bounds;
+- proper/coercive functional control;
+- compact containment and tightness;
+- Prokhorov subsequences;
+- weak convergence to a continuum probability measure;
+- transfer of continuous gauge symmetry;
+- invariant event probabilities and observable laws;
+- bounded continuous expectation convergence;
+- two-point, connected-correlation, and finite n-point routes;
+- the real algebra of gauge-invariant bounded continuous observables.
+
+This route is conditional on the supplied physical carrier, interpolation, and coercive data. The repository has not yet selected and justified the final distributional continuum construction.
+
+### 2. Finite even-periodic reflection positivity
+
+The branch proves finite Wilson Gibbs reflection positivity using:
+
+- exact even-periodic reflection geometry;
+- boundary/open-half decomposition;
+- boundary-fibered coordinate factorization;
+- product Haar transport;
+- temporal and spatial crossing-sector factorization;
+- positive-semidefinite local Wilson kernels;
+- finite tensor-product RKHS/Gram constructions;
+- bounded-continuous reflected observables.
+
+The terminal finite theorem is:
+
+```lean
+periodicHypercubicEvenWilsonGibbs_reflectionPositive_boundedContinuous
+```
+
+### 3. Weak-limit OS nonnegativity
+
+For a fixed bounded continuous physical quadratic observable equipped with a concrete pullback bridge, finite reflection positivity passes to the continuum weak limit.
+
+The principal theorem is:
+
+```lean
+physical_yang_mills_evenPeriodicWilsonOS_continuum_nonneg
+```
+
+This is not yet a theorem that every intended continuum positive-time observable has such a bridge.
+
+### 4. Gauge-invariant OS Hilbert completion
+
+From supplied reflection-positive gauge-invariant state data, the branch constructs:
+
+- the positive-time observable subalgebra;
+- the OS bilinear form;
+- the null-space quotient;
+- the real pre-Hilbert carrier;
+- the Hilbert completion;
+- the vacuum;
+- a dense physical-state map.
+
+### 5. Strongly continuous physical semigroup
+
+From positive-time observable translation, contraction, and observable-state continuity, the branch constructs:
+
+- a carrier contraction semigroup;
+- its bounded extension to the Hilbert completion;
+- strong continuity for every physical vector;
+- the canonical right-generator domain;
+- the right infinitesimal generator;
+- the right Hamiltonian `H = -G`;
+- Bochner time averages;
+- density of the generator/Hamiltonian domain;
+- the zero-energy vacuum relation.
+
+### 6. Closed nonnegative Hamiltonian and resolvent
+
+The branch source implements:
+
+- nonnegativity of the right Hamiltonian form;
+- closability;
+- graph closure as a `LinearPMap`;
+- uniqueness of graph limits;
+- nonnegativity of the closed Hamiltonian;
+- the lower bound for `lambda I + Hbar`;
+- closed range of positive shifts;
+- finite-time Laplace integrals;
+- generator-domain membership of those integrals;
+- the endpoint-corrected resolvent identity;
+- vanishing of the endpoint remainder;
+- density and then surjectivity of the shifted range;
+- injectivity and bijectivity for `lambda > 0`;
+- the maximal-accretive package.
+
+The finite-time Laplace construction therefore removes positive-shift surjectivity as a separate analytic assumption.
+
+### 7. Self-adjointness theorem
+
+The branch proves:
+
+```text
+formal symmetry of Hbar
+  + surjectivity of I + Hbar
+  -> Hbar is self-adjoint.
+```
+
+It also proves:
+
+```text
+observable reflection/time-translation exchange
+  -> symmetry of the completed Euclidean semigroup
+  -> formal symmetry of the right generator
+  -> formal symmetry of the right Hamiltonian
+  -> formal symmetry of the graph closure
+  -> self-adjointness.
+```
+
+The theorem
+
+```lean
+closedRightHamiltonian_isSelfAdjoint
+```
+
+is available from `WeakLimitTimeReflectionBridge` together with observable-state strong continuity.
+
+The remaining issue is to instantiate that bridge from the actual selected continuum construction.
+
+### 8. Finite periodic translation invariance
+
+The newest finite theorem constructs periodic translations of:
+
+- vertices;
+- physical links;
+- plaquettes;
+- signed boundary incidences;
+- configurations.
+
+It proves:
+
+- covariance of signed step values;
+- covariance of plaquette holonomy;
+- invariance of the Wilson action;
+- invariance of the product Haar law;
+- invariance of the finite periodic `SU(N)` Wilson Gibbs law.
+
+The dedicated translation workflow succeeded on the reviewed code baseline.
+
+The finite theorem does not by itself construct the real-parameter continuum Euclidean-time action. The interpolation-equivariance and continuum-limit connection remain open.
+
+## Exact self-adjointness frontier
+
+The current model-dependent bridge requires:
+
+```text
+continuum Euclidean-time homeomorphisms
++ finite/embedded-law invariance
++ interpolation equivariance
++ gauge commutation
++ continuum configuration reflection
++ reflection/time inversion
++ positive-time observable restriction
++ continuum-state identification
++ observable-state strong continuity.
+```
+
+Once those fields are instantiated, the source theorem produces a self-adjoint nonnegative graph-closed physical Hamiltonian.
+
+## Spectral-gap frontier
+
+No theorem currently proves that the constructed closed OS Hamiltonian has a strictly positive spectral gap.
+
+Still required are:
+
+- a concrete instantiated self-adjoint OS Hamiltonian for the selected continuum construction;
+- characterization and preferably uniqueness of the vacuum;
+- a vacuum-orthogonal invariant sector;
+- a uniform relation between finite Wilson/heat-bath decay and the OS semigroup;
+- continuum clustering or spectral-support control;
+- a positive lower bound independent of lattice scale;
+- physical normalization and units;
+- nontriviality of the continuum theory.
 
 ## Exact `33/20` dependency
 
-The numerical value enters in
-
-```text
-MGAP4D/MathlibAnalytic/HamiltonianPVMSpectralExactGapValue.lean
-```
-
-through
+The source tree contains:
 
 ```lean
-hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20.
+hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20
 ```
 
-`ExactGapReal.lean` projects `exactGapValueReal` from that package. Later spectral, R6, and R7 files transport the same value. The explicit Dobrushin scale uses `exactGapValueReal` as its numerator. None of these facts independently derives `33/20` from a physical Yang--Mills Hamiltonian.
+and older interfaces transport that internal normalized value.
+
+The active OS Hamiltonian route has not proved:
+
+- that its spectral gap is positive;
+- that its gap equals `33/20`;
+- that `33/20` follows from Wilson dynamics, continuum scaling, or physical units.
+
+Therefore `33/20` remains an internal normalization/audit value, not an independently derived physical mass gap.
 
 ## Claim table
 
 | Claim | Status |
 |---|---|
-| Exact finite Wilson conditional law | constructed |
-| Gibbs variance and heat-bath Dirichlet form | constructed |
-| Algebraic `P_e` and `Q_e` projections | constructed |
-| Detailed balance and reversible product sum | proved |
-| Gibbs symmetry and orthogonality | proved on `main` |
-| Weighted Pythagoras and local fluctuation norm | proved on `main` |
-| Concrete finite Gibbs Hilbert realization | constructed on `main` |
-| Canonical finite heat-bath Hamiltonian | constructed on `main` |
-| Hamiltonian/Dirichlet quadratic form | proved on `main` |
-| `H_HB = |E|(I-P_scan)` | proved on `main` |
-| Centered Rayleigh certificate -> finite Poincare/Hamiltonian gap | proved on `main` |
-| Family-wide centered-Rayleigh gap package | proved on `main` via PR #262 |
-| Dobrushin heat-bath/random-scan rate identities | proved on `main` |
-| Dobrushin-scaled finite Hamiltonian | constructed conditionally on `main` via PR #263 |
-| Dobrushin TV -> centered `L²` Rayleigh contraction | open |
-| Uniform Wilson influence estimate | open |
-| Physical derivation of the normalization scale | open |
-| Physical transfer Hamiltonian identification | open |
-| Continuum clustering | conditional |
-| Nontrivial continuum Yang--Mills measure | open |
-| Physical mass gap | open |
+| Finite periodic `SU(N)` Wilson Gibbs law | constructed |
+| Finite gauge invariance | proved |
+| Finite periodic translation invariance | proved in PR #282 source; dedicated check succeeded |
+| Exact Wilson Dobrushin to centered Rayleigh contraction | proved |
+| Exact plaquette-supported influence profile | proved |
+| Finite heat-bath Poincare/Hamiltonian gap | proved in the stated regime |
+| Common-carrier weak-limit extraction | proved from explicit embedding/coercivity hypotheses |
+| Continuum gauge invariance | proved from continuous action and interpolation-equivariance data |
+| Finite even-periodic Wilson reflection positivity | proved |
+| Weak-limit OS nonnegativity for a bridged bounded observable | proved |
+| Full continuum OS reflection positivity | open |
+| Gauge-invariant OS Hilbert completion | constructed from supplied data |
+| Strongly continuous physical contraction semigroup | constructed from supplied continuity data |
+| Dense right-Hamiltonian domain | implemented |
+| Closed nonnegative right Hamiltonian | implemented |
+| Positive-shift surjectivity | implemented by finite-time Laplace resolvent |
+| Self-adjointness from semigroup symmetry | proved |
+| Concrete weak-limit time/reflection bridge | open |
+| Concrete self-adjoint continuum OS Hamiltonian | conditional on that bridge |
+| Positive physical spectral gap | open |
+| Vacuum uniqueness | open |
+| Nontrivial physical continuum Yang--Mills theory | open |
 | Independent physical derivation of `33/20` | open |
+| Final ordinary CI green on the current PR branch | not yet claimed |
 | External consensus | not claimed |
 
-## Next steps
+## Immediate next steps
 
-1. Derive centered Gibbs `L²`/Rayleigh contraction from the Dobrushin influence package.
-2. Construct actual Wilson influence coefficients and prove a scale-uniform row-sum or block estimate.
-3. Derive the physical transfer-time/generator normalization independently of `exactGapValueReal`.
-4. Prove uniform transfer contraction, nontrivial continuum convergence, and the analytic OS/Wightman hypotheses.
-5. Obtain independent replay, dependency review, and expert validation.
+1. Package the finite periodic translations as the lattice temporal action at every approximation scale.
+2. Prove interpolation equivariance and construct the continuum Euclidean-time action.
+3. Construct the continuum reflection and instantiate `WeakLimitTimeReflectionBridge`.
+4. Obtain final ordinary CI success and register all terminal aggregate imports.
+5. Derive vacuum uniqueness, continuum clustering, and a positive spectral gap for the constructed OS Hamiltonian.
+6. Complete the physical continuum carrier, scaling, regularity, nontriviality, and external review.
 
-Lean theorem bodies are authoritative. Conditional structures, algebraically defined normalization scales, and internal exact-gap carriers must not be presented as unconditional physical results.
+Lean theorem bodies are authoritative. Conditional bridge structures, source files without final branch-wide CI, and internal exact-value carriers must not be presented as unconditional physical results.
