@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryWilsonSystem
 import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonGaugeInvariance
+import MGAP4D.MathlibAnalytic.SpecialUnitaryBorelReceipts
 import Mathlib.MeasureTheory.Constructions.Pi
 
 namespace MGAP4D
@@ -9,6 +10,26 @@ open scoped BigOperators
 open MeasureTheory
 
 noncomputable section
+
+local instance specialUnitaryTranslationIsTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance specialUnitaryTranslationCompactSpace (N : ℕ) :
+    CompactSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance specialUnitaryTranslationSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance specialUnitaryTranslationMeasurableSpace (N : ℕ) :
+    MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance specialUnitaryTranslationBorelSpace (N : ℕ) :
+    BorelSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupBorelSpace N
 
 /-- Translation of periodic vertices by a fixed displacement. -/
 def periodicHypercubicVertexTranslationEquiv
@@ -109,6 +130,8 @@ theorem periodicHypercubicBoundaryStep_translation
         (periodicHypercubicBoundaryStep n p k) := by
   fin_cases k <;>
     simp [periodicHypercubicBoundaryStepTranslate,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis,
       periodicHypercubicShift_add]
 
 /-- Coordinate reindexing of physical-link configurations induced by periodic
@@ -131,8 +154,10 @@ theorem periodicHypercubicConfigurationTranslation_apply_translatedEdge
     periodicHypercubicConfigurationTranslationMeasurableEquiv n a A
         (periodicHypercubicEdgeTranslationEquiv n a e) =
       A e := by
-  exact MeasurableEquiv.piCongrLeft_apply_apply
-    (periodicHypercubicEdgeTranslationEquiv n a) A e
+  simpa [periodicHypercubicConfigurationTranslationMeasurableEquiv] using
+    (Equiv.piCongrLeft_apply_apply
+      (fun _ : PeriodicHypercubicEdge n => Gauge)
+      (periodicHypercubicEdgeTranslationEquiv n a) A e)
 
 /-- Signed boundary values are unchanged after simultaneous translation of the
 configuration and boundary incidence. -/
@@ -187,9 +212,11 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_translation
   rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction,
     periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction]
   refine Fintype.sum_equiv
-    (periodicHypercubicPlaquetteTranslationEquiv n a) _ _ ?_
+    (periodicHypercubicPlaquetteTranslationEquiv n a).symm _ _ ?_
   intro p
-  rw [periodicHypercubicPlaquetteHolonomy_configurationTranslation]
+  simpa using
+    periodicHypercubicPlaquetteHolonomy_configurationTranslation
+      a A ((periodicHypercubicPlaquetteTranslationEquiv n a).symm p)
 
 /-- Product normalized Haar measure on physical links is invariant under periodic
 coordinate translation. -/
