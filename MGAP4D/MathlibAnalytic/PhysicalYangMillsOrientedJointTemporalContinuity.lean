@@ -75,7 +75,7 @@ private theorem toMeasure_diracProba_prod_map_jointTranslate
         (μ : Measure E.PhysicalConfiguration)
   exact map_jointTranslate_dirac_prod J s μ
 
-/-- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation. -/
+-- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation.
 set_option maxHeartbeats 400000 in
 theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
