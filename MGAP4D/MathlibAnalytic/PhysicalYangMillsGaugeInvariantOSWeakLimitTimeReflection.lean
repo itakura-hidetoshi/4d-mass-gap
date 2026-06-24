@@ -53,7 +53,7 @@ theorem reflection_time_exchange
     _ = G.configurationReflection ((E.translate (t : ℝ)).symm A) := by
       rw [E.translate_symm_apply_eq_neg]
 
-theorem toConfigurationReflectionTimeExchange
+noncomputable def toConfigurationReflectionTimeExchange
     {T : P.PositiveTimeObservableContractionSemigroup}
     (G : T.WeakLimitTimeReflectionBridge E) :
     T.ConfigurationReflectionTimeExchange where
