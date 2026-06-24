@@ -1,0 +1,1 @@
+Temporary connector diagnostic file. Remove after applying the temporal inverse proof fix.
