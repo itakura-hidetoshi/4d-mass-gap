@@ -66,8 +66,11 @@ theorem diracProba_prod_map_jointTranslate
       Measure.map_map J.jointTranslate_continuous.measurable
         measurable_prodMk_left
     _ = Measure.map (A.physicalTranslate s)
-        (μ : Measure E.PhysicalConfiguration) := by
-      rw [jointTranslate_comp_prodMk]
+        (μ : Measure E.PhysicalConfiguration) :=
+      congrArg
+        (fun f : E.PhysicalConfiguration → E.PhysicalConfiguration =>
+          Measure.map f (μ : Measure E.PhysicalConfiguration))
+        (jointTranslate_comp_prodMk (A := A) s)
 
 /-- Joint continuity supplies varying-time weak convergence at each target time. -/
 theorem mappedApproximating_tendsto
