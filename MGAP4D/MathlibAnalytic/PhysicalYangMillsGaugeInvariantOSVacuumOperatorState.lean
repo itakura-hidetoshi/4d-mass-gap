@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSContinuumVacuum
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry
 import Mathlib.Analysis.InnerProductSpace.LinearMap
 
 namespace MGAP4D
@@ -69,6 +70,32 @@ theorem identity_isQuadraticNonnegative
   intro x
   change 0 ≤ inner ℝ x x
   exact real_inner_self_nonneg
+
+/-- Symmetric Euclidean time evolution acts on a bounded observable by the
+OS sandwich `U_t T U_t`. -/
+def PhysicalSemigroup.euclideanSandwich
+    {P : D.OSPreHilbertData}
+    (U : P.PhysicalSemigroup) (t : NNReal)
+    (T : P.PhysicalHilbert →L[ℝ] P.PhysicalHilbert) :
+    P.PhysicalHilbert →L[ℝ] P.PhysicalHilbert :=
+  (U.operator t).comp (T.comp (U.operator t))
+
+/-- A symmetric physical Euclidean semigroup that fixes the vacuum leaves the
+vacuum vector state invariant under the OS sandwich action. -/
+theorem vacuumOperatorState_euclideanSandwich_invariant
+    (P : D.OSPreHilbertData)
+    (U : P.PhysicalSemigroup)
+    (hSymmetric : U.IsInnerSymmetric)
+    (t : NNReal)
+    (T : P.PhysicalHilbert →L[ℝ] P.PhysicalHilbert) :
+    P.vacuumOperatorState (U.euclideanSandwich t T) =
+      P.vacuumOperatorState T := by
+  change
+    inner ℝ P.vacuum
+        (U.operator t (T (U.operator t P.vacuum))) =
+      inner ℝ P.vacuum (T P.vacuum)
+  rw [← hSymmetric t P.vacuum (T (U.operator t P.vacuum))]
+  rw [U.fixes_vacuum t, U.fixes_vacuum t]
 
 /-- The physical OS vacuum vector state is a normalized positive linear
 functional on the bounded-operator carrier, with positivity understood through
