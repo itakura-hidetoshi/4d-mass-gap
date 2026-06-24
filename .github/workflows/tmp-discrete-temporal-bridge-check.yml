@@ -5,7 +5,7 @@ on:
     paths:
       - ".github/workflows/tmp-discrete-temporal-bridge-check.yml"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicIntegerTemporalTranslation.lean"
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedDiscreteTemporalAction.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedDiscreteTemporalAction*.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryDiscretePhysicalTemporalAction.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedDenseTemporalApproximation.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedFloorTemporalApproximation.lean"
