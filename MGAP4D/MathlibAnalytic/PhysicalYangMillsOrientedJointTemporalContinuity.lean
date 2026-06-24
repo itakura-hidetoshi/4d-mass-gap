@@ -106,7 +106,7 @@ private theorem diracProba_tendsto_of_tendsto
     {τ : ℕ → ℝ} {t : ℝ}
     (hτ : Tendsto τ atTop (nhds t)) :
     Tendsto (fun n => diracProba (τ n)) atTop (nhds (diracProba t)) :=
-  continuous_diracProba.continuousAt.comp hτ
+  continuous_diracProba.continuousAt.tendsto.comp hτ
 
 private theorem productMeasure_tendsto_of_tendsto
     {τ : ℕ → ℝ} {t : ℝ}
