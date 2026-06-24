@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationReflectionTimeExchange
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
 
 /-!
 # Physical gauge-invariant OS Hamiltonian spine
@@ -21,11 +21,13 @@ positive-time observable algebra
 → positive-shift surjectivity and bijectivity
 → maximal-accretive package
 → formal symmetry implies self-adjointness
+→ approximating-law Euclidean-time invariance
+→ weak-limit continuum-time invariance
 → configuration-space time-translation homeomorphisms
 → configuration-space reflection homeomorphism
 → gauge covariance and reflection/time exchange on configurations
 → induced gauge-invariant observable automorphisms
-→ continuum-measure invariance and continuum-state identification
+→ continuum-state identification
 → observable reflection/time-translation covariance
 → observable OS exchange identity
 → completed semigroup inner-product symmetry
@@ -35,11 +37,11 @@ positive-time observable algebra
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
-The terminal self-adjointness theorem remains conditional on configuration-space
-time-translation and reflection homeomorphisms commuting with gauge transformations,
-preserving the continuum law, restricting to the positive-time contraction
-semigroup, and satisfying the Euclidean reflection/time exchange identity.  The
-OS state must be identified with the actual continuum expectation state.  This
-module does not construct the physical configuration transformations themselves,
-a real-time unitary group, vacuum uniqueness, or a positive spectral gap.
+The terminal self-adjointness theorem remains conditional on a configuration-space
+Euclidean-time action preserving every approximating law, a compatible reflection,
+positive-time restriction, and identification of the OS state with the continuum
+expectation state.  Continuum time-translation invariance itself is now derived
+from weak convergence.  This module does not construct the finite-lattice time
+translations or their compatibility with the physical interpolation, a real-time
+unitary group, vacuum uniqueness, or a positive spectral gap.
 -/
