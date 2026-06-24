@@ -20,6 +20,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSurjective.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSelfAdjoint.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSHamiltonianSpine.lean"
 
 concurrency:
   group: tmp-os-semigroup-symmetry-${{ github.event.pull_request.number || github.ref }}
@@ -102,7 +103,9 @@ jobs:
         run: |
           set +e
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry 2>&1 \
+          lake build \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSHamiltonianSpine 2>&1 \
             | tee /tmp/os-semigroup-symmetry.log
           status=${PIPESTATUS[0]}
           echo "status=${status}" >> "$GITHUB_OUTPUT"
