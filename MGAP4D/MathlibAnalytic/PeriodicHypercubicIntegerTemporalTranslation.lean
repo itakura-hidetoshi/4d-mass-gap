@@ -212,7 +212,7 @@ theorem periodicHypercubicSpecialUnitary_gibbs_measurePreserving_integerTemporal
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (beta_nonneg : 0 ≤ beta)
     (k : ℤ) :
-    MeasurePreserving
+    MeasureTheory.MeasurePreserving
       (periodicHypercubicIntegerTemporalConfigurationTranslation
         (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) n k)
       (periodicHypercubicSpecialUnitaryWilsonSystem
