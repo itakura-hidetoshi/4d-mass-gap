@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedTemporalSymmetryLimit
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
 
 /-!
@@ -21,7 +22,9 @@ positive-time observable algebra
 → positive-shift surjectivity and bijectivity
 → maximal-accretive package
 → formal symmetry implies self-adjointness
-→ approximating-law Euclidean-time invariance
+→ finite-lattice Euclidean-time transformations
+→ finite Gibbs invariance and interpolation equivariance
+→ embedded approximating-law invariance
 → weak-limit continuum-time invariance
 → configuration-space time-translation homeomorphisms
 → configuration-space reflection homeomorphism
@@ -37,11 +40,12 @@ positive-time observable algebra
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
-The terminal self-adjointness theorem remains conditional on a configuration-space
-Euclidean-time action preserving every approximating law, a compatible reflection,
-positive-time restriction, and identification of the OS state with the continuum
-expectation state.  Continuum time-translation invariance itself is now derived
-from weak convergence.  This module does not construct the finite-lattice time
-translations or their compatibility with the physical interpolation, a real-time
-unitary group, vacuum uniqueness, or a positive spectral gap.
+The terminal self-adjointness theorem remains conditional on concrete finite-lattice
+time transformations preserving the Wilson Gibbs laws and compatible with physical
+interpolation, together with a compatible continuum reflection, positive-time
+restriction, and identification of the OS state with the continuum expectation
+state.  Continuum time-translation invariance is derived from the embedded laws
+and weak convergence.  This module does not yet construct the periodic lattice
+time transformations themselves, a real-time unitary group, vacuum uniqueness,
+or a positive spectral gap.
 -/
