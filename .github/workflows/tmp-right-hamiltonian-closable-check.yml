@@ -23,6 +23,8 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSObservableTimeTranslationCovariance.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSConfigurationReflectionTimeExchange.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsEuclideanTimeTranslationLimit.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSHamiltonianSpine.lean"
 
 concurrency:
@@ -111,6 +113,8 @@ jobs:
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSObservableTimeTranslationCovariance \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationReflectionTimeExchange \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsEuclideanTimeTranslationLimit \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSHamiltonianSpine 2>&1 \
             | tee /tmp/os-semigroup-symmetry.log
           status=${PIPESTATUS[0]}
