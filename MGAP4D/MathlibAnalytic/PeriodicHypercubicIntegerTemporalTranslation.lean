@@ -27,7 +27,7 @@ local instance integerTemporalBorelSpace (N : ℕ) :
   specialUnitaryGroupBorelSpace N
 
 /-- The periodic displacement by `k` lattice units in the distinguished temporal
-coordinate `0`.  The remaining three coordinates are fixed. -/
+coordinate indexed by `0`.  The remaining three coordinates are fixed. -/
 def periodicHypercubicIntegerTemporalDisplacement
     (n : ℕ) (k : ℤ) : PeriodicHypercubicVertex n :=
   fun mu => if mu = (0 : Fin 4) then (k : ZMod n) else 0
