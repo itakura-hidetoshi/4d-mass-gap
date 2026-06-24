@@ -10,6 +10,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryWilsonSystem.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicTranslationInvariance.lean"
+      - "MGAP4D/MathlibAnalytic/PeriodicHypercubicIntegerTemporalTranslation.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsOrientedTemporalSymmetryLimit.lean"
       - "MGAP4D/MathlibAnalytic/PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction.lean"
 
@@ -96,6 +97,7 @@ jobs:
           set -o pipefail
           lake build \
             MGAP4D.MathlibAnalytic.PeriodicHypercubicTranslationInvariance \
+            MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation \
             MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction 2>&1 \
             | tee /tmp/periodic-translation.log
           status=${PIPESTATUS[0]}
