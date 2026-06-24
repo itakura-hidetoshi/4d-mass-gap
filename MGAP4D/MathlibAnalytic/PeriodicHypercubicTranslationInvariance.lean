@@ -172,9 +172,15 @@ theorem periodicHypercubicStepValue_configurationTranslation
       periodicHypercubicStepValue A s := by
   cases s with
   | mk edge orientation =>
-      cases orientation <;>
-        simp [periodicHypercubicBoundaryStepTranslate,
-          periodicHypercubicStepValue]
+      cases orientation with
+      | forward =>
+          exact
+            periodicHypercubicConfigurationTranslation_apply_translatedEdge
+              n a A edge
+      | backward =>
+          exact congrArg (fun x : Gauge => x⁻¹)
+            (periodicHypercubicConfigurationTranslation_apply_translatedEdge
+              n a A edge)
 
 /-- Periodic plaquette holonomy is covariant under simultaneous translation of
 configuration and plaquette. -/
@@ -214,9 +220,11 @@ theorem periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_translation
   refine Fintype.sum_equiv
     (periodicHypercubicPlaquetteTranslationEquiv n a).symm _ _ ?_
   intro p
-  simpa using
-    periodicHypercubicPlaquetteHolonomy_configurationTranslation
-      a A ((periodicHypercubicPlaquetteTranslationEquiv n a).symm p)
+  exact congrArg (specialUnitaryWilsonPlaquetteEnergy N)
+    (by
+      simpa using
+        periodicHypercubicPlaquetteHolonomy_configurationTranslation
+          a A ((periodicHypercubicPlaquetteTranslationEquiv n a).symm p))
 
 /-- Product normalized Haar measure on physical links is invariant under periodic
 coordinate translation. -/
@@ -287,7 +295,12 @@ theorem periodicHypercubicSpecialUnitary_gibbs_measurePreserving_translation
           n N hN beta beta_nonneg)).measurable
   · intro A
     unfold CompactOrientedGaugeWilsonSystem.gibbsExponent
-    rw [periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_translation]
+    exact congrArg
+      (fun x : ℝ =>
+        -(periodicHypercubicSpecialUnitaryWilsonSystem
+            n N hN beta beta_nonneg).base.beta * x)
+      (periodicHypercubicSpecialUnitaryWilsonSystem_wilsonAction_translation
+        n N hN beta beta_nonneg a A)
   · exact
       continuous_compact_oriented_boltzmannIntegrable
         (periodicHypercubicSpecialUnitaryWilsonSystem
