@@ -39,7 +39,6 @@ private theorem jointTranslate_comp_prodMk
 
 /-- Mapping the product of a Dirac time law and a configuration law by the joint
 action is the same as translating the configuration law at that fixed time. -/
-@[simp]
 theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
