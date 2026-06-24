@@ -102,29 +102,42 @@ theorem diracProba_prod_map_jointTranslate
       Measure E.PhysicalConfiguration)
   exact toMeasure_diracProba_prod_map_jointTranslate J s μ
 
-private theorem diracProba_tendsto_of_tendsto
+private def diracPath (τ : ℕ → ℝ) : ℕ → ProbabilityMeasure ℝ :=
+  fun n => diracProba (τ n)
+
+private def diracLimit (t : ℝ) : ProbabilityMeasure ℝ :=
+  diracProba t
+
+private theorem diracPath_tendsto
     {τ : ℕ → ℝ} {t : ℝ}
     (hτ : Tendsto τ atTop (nhds t)) :
-    Tendsto (fun n => diracProba (τ n)) atTop (nhds (diracProba t)) :=
-  continuous_diracProba.continuousAt.tendsto.comp hτ
+    Tendsto (diracPath τ) atTop (nhds (diracLimit t)) := by
+  exact continuous_diracProba.continuousAt.tendsto.comp hτ
 
-private theorem productMeasure_tendsto_of_tendsto
+private def productPath
+    (τ : ℕ → ℝ)
+    (μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration) :
+    ℕ → ProbabilityMeasure (ℝ × E.PhysicalConfiguration) :=
+  fun n => (diracPath τ n).prod (μs n)
+
+private def productLimit
+    (t : ℝ) (μ : ProbabilityMeasure E.PhysicalConfiguration) :
+    ProbabilityMeasure (ℝ × E.PhysicalConfiguration) :=
+  (diracLimit t).prod μ
+
+private theorem productPath_tendsto
     {τ : ℕ → ℝ} {t : ℝ}
     {μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration}
     {μ : ProbabilityMeasure E.PhysicalConfiguration}
     (hτ : Tendsto τ atTop (nhds t))
     (hμ : Tendsto μs atTop (nhds μ)) :
-    Tendsto
-      (fun n => (diracProba (τ n)).prod (μs n))
-      atTop
-      (nhds ((diracProba t).prod μ)) := by
+    Tendsto (productPath τ μs) atTop (nhds (productLimit t μ)) := by
   have hpair :
-      Tendsto (fun n => (diracProba (τ n), μs n)) atTop
-        (nhds (diracProba t, μ)) :=
-    (Prod.tendsto_iff _ _).2
-      ⟨diracProba_tendsto_of_tendsto hτ, hμ⟩
+      Tendsto (fun n => (diracPath τ n, μs n)) atTop
+        (nhds (diracLimit t, μ)) :=
+    (Prod.tendsto_iff _ _).2 ⟨diracPath_tendsto hτ, hμ⟩
   exact (ProbabilityMeasure.continuous_prod.tendsto
-    (diracProba t, μ)).comp hpair
+    (diracLimit t, μ)).comp hpair
 
 private theorem diracProductImage_tendsto_of_tendsto
     (J : A.JointContinuity)
@@ -137,12 +150,12 @@ private theorem diracProductImage_tendsto_of_tendsto
       (fun n => diracProductImage J (τ n) (μs n))
       atTop
       (nhds (diracProductImage J t μ)) := by
-  simpa only [diracProductImage] using
+  have hmap :=
     ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous
-      (fun n => (diracProba (τ n)).prod (μs n))
-      ((diracProba t).prod μ)
-      (productMeasure_tendsto_of_tendsto hτ hμ)
-      J.jointTranslate_continuous
+      (productPath τ μs) (productLimit t μ)
+      (productPath_tendsto hτ hμ) J.jointTranslate_continuous
+  simpa only [productPath, productLimit, diracPath, diracLimit,
+    diracProductImage] using hmap
 
 private theorem translatedImage_tendsto_of_tendsto
     (J : A.JointContinuity)
