@@ -45,6 +45,51 @@ theorem continuumMeasure_map_eq_self
     (T.continuumProbabilityMeasure_map_eq_self t)
   simpa only [ProbabilityMeasure.toMeasure_map] using h
 
+/-- Every real Euclidean-time translation is measure preserving for the
+continuum Yang-Mills law. -/
+theorem continuumMeasurePreserving
+    (T : PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation S)
+    (t : ℝ) :
+    MeasurePreserving (T.translate t)
+      (S.continuumMeasure : Measure S.Configuration)
+      (S.continuumMeasure : Measure S.Configuration) :=
+  ⟨(T.translate t).continuous.measurable,
+    T.continuumMeasure_map_eq_self t⟩
+
+/-- Every measurable event has the same continuum probability after a real
+Euclidean-time translation. -/
+theorem continuumMeasure_preimage_eq
+    (T : PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation S)
+    (t : ℝ) {s : Set S.Configuration} (hs : MeasurableSet s) :
+    (S.continuumMeasure : Measure S.Configuration)
+        ((T.translate t) ⁻¹' s) =
+      (S.continuumMeasure : Measure S.Configuration) s := by
+  have h := congrArg
+    (fun μ : Measure S.Configuration => μ s)
+    (T.continuumMeasure_map_eq_self t)
+  rw [Measure.map_apply (T.translate t).continuous.measurable hs] at h
+  exact h
+
+/-- The law of every measurable observable is invariant under every real
+Euclidean-time translation. -/
+theorem continuumObservableLaw_map_eq_self
+    {Observable : Type} [MeasurableSpace Observable]
+    (T : PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation S)
+    (t : ℝ) (O : S.Configuration → Observable) (hO : Measurable O) :
+    Measure.map (O ∘ T.translate t)
+        (S.continuumMeasure : Measure S.Configuration) =
+      Measure.map O (S.continuumMeasure : Measure S.Configuration) := by
+  calc
+    Measure.map (O ∘ T.translate t)
+        (S.continuumMeasure : Measure S.Configuration) =
+      Measure.map O
+        (Measure.map (T.translate t)
+          (S.continuumMeasure : Measure S.Configuration)) := by
+      symm
+      exact Measure.map_map hO (T.translate t).continuous.measurable
+    _ = Measure.map O (S.continuumMeasure : Measure S.Configuration) := by
+      rw [T.continuumMeasure_map_eq_self]
+
 /-- The older stronger interface, when available, forgets to the continuum-only
 real-time action. -/
 noncomputable def ofEuclideanTimeTranslationLimit
