@@ -44,7 +44,7 @@ noncomputable def periodicHypercubicSpecialUnitaryFloorDenseTemporalApproximatio
       latticeSpacing_tendsto_zero physicalVolume physicalVolume_tendsto_atTop
       physicalTranslate physicalTranslate_zero_apply physicalTranslate_add_apply
       interpolate_integerTemporal_equivariant).DenseTemporalApproximation :=
-  ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation.ofFloor
+  ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.ofFloor
     (A := periodicHypercubicSpecialUnitaryDiscretePhysicalTemporalAction
       sideLength sideLength_pos N hN beta beta_nonneg
       interpolate interpolate_measurable latticeSpacing latticeSpacing_pos
