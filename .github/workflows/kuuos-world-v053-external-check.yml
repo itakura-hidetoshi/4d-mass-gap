@@ -47,3 +47,5 @@ jobs:
           build KuuOSFormalV0_53
       - name: Run central runtime regression
         run: python3 scripts/run_kuuos_runtime_full_check_v0_53.py
+      - name: Confirm external validation boundary
+        run: echo 'KuuOS WORLD v0.53 external validation completed'
