@@ -74,7 +74,7 @@ noncomputable def toWeakLimitContinuity
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
       E.toLatticeEmbedding) :
     ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.WeakLimitContinuity
-      D L where
+      (E := E) (A := A) D L where
   mappedApproximating_tendsto t := by
     let τ : ℕ → ℝ := fun n =>
       A.latticeTime (L.subsequence n)
