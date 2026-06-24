@@ -62,45 +62,40 @@ theorem diracProba_prod_map_jointTranslate
     _ = Measure.map (A.physicalTranslate s)
         (μ : Measure E.PhysicalConfiguration) := rfl
 
-/-- Joint continuity automatically supplies the varying-time weak-limit
-continuity field.
-
-The proof packages each time as a Dirac probability measure, uses continuity of
-probability-measure products, and then applies the continuous mapping theorem to
-the fixed joint action. -/
-noncomputable def toWeakLimitContinuity
+/-- Joint continuity automatically supplies varying-time weak-limit continuity. -/
+theorem toWeakLimitContinuity
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      E.toLatticeEmbedding) :=
-  ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.WeakLimitContinuity.mk
-    (E := E) (A := A) (D := D) (L := L) (fun t => by
-      let τ : ℕ → ℝ := fun n =>
-        A.latticeTime (L.subsequence n)
-          (D.approximateStep t (L.subsequence n))
-      let μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration := fun n =>
-        E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)
-      have hτ : Tendsto τ atTop (nhds t) := by
-        simpa only [τ] using D.approximateTime_tendsto_subsequence L t
-      have hdirac :
-          Tendsto (fun n => diracProba (τ n)) atTop
-            (nhds (diracProba t)) :=
-        continuous_diracProba.continuousAt.comp hτ
-      have hpair :
-          Tendsto (fun n => (diracProba (τ n), μs n)) atTop
-            (nhds (diracProba t, L.continuumMeasure)) :=
-        (Prod.tendsto_iff _ _).2 ⟨hdirac, L.weakConvergence⟩
-      have hprod :
-          Tendsto
-            (fun n => (diracProba (τ n)).prod (μs n)) atTop
-            (nhds ((diracProba t).prod L.continuumMeasure)) :=
-        ProbabilityMeasure.continuous_prod.continuousAt.comp hpair
-      have hmap :=
-        ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous
-          (fun n => (diracProba (τ n)).prod (μs n))
-          ((diracProba t).prod L.continuumMeasure)
-          hprod J.jointTranslate_continuous
-      simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap)
+      E.toLatticeEmbedding) :
+    D.WeakLimitContinuity L := by
+  intro t
+  let τ : ℕ → ℝ := fun n =>
+    A.latticeTime (L.subsequence n)
+      (D.approximateStep t (L.subsequence n))
+  let μs : ℕ → ProbabilityMeasure E.PhysicalConfiguration := fun n =>
+    E.toLatticeEmbedding.embeddedMeasure (L.subsequence n)
+  have hτ : Tendsto τ atTop (nhds t) := by
+    simpa only [τ] using D.approximateTime_tendsto_subsequence L t
+  have hdirac :
+      Tendsto (fun n => diracProba (τ n)) atTop
+        (nhds (diracProba t)) :=
+    continuous_diracProba.continuousAt.comp hτ
+  have hpair :
+      Tendsto (fun n => (diracProba (τ n), μs n)) atTop
+        (nhds (diracProba t, L.continuumMeasure)) :=
+    (Prod.tendsto_iff _ _).2 ⟨hdirac, L.weakConvergence⟩
+  have hprod :
+      Tendsto
+        (fun n => (diracProba (τ n)).prod (μs n)) atTop
+        (nhds ((diracProba t).prod L.continuumMeasure)) :=
+    ProbabilityMeasure.continuous_prod.continuousAt.comp hpair
+  have hmap :=
+    ProbabilityMeasure.tendsto_map_of_tendsto_of_continuous
+      (fun n => (diracProba (τ n)).prod (μs n))
+      ((diracProba t).prod L.continuumMeasure)
+      hprod J.jointTranslate_continuous
+  simpa only [τ, μs, J.diracProba_prod_map_jointTranslate] using hmap
 
 end JointContinuity
 
