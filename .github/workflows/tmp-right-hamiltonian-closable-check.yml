@@ -1,4 +1,4 @@
-name: Temporary Right Hamiltonian Self-Adjointness Check
+name: Temporary OS Semigroup Symmetry Check
 
 on:
   pull_request:
@@ -7,8 +7,11 @@ on:
       - "lean-toolchain"
       - "lakefile.lean"
       - "lake-manifest.json"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSPositiveTimeObservableSemigroup.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSPositiveTimeObservableStrongContinuity.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianGraphLimitUnique.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianClosable.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianLinearPMapClosure.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianNonnegative.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSTimeAverageGeneratorDomain.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplaceIntegral.lean"
@@ -16,9 +19,10 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplaceGeneratorDomain.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSurjective.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSelfAdjoint.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry.lean"
 
 concurrency:
-  group: tmp-right-hamiltonian-closure-${{ github.event.pull_request.number || github.ref }}
+  group: tmp-os-semigroup-symmetry-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -30,7 +34,7 @@ env:
 
 jobs:
   targeted-check:
-    name: Right Hamiltonian self-adjointness targeted check
+    name: OS semigroup symmetry targeted check
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
@@ -92,14 +96,14 @@ jobs:
           lake --version
           echo "[targeted] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
 
-      - name: Build closed right Hamiltonian self-adjointness bridge
+      - name: Build OS semigroup symmetry bridge
         id: targeted-lean
         shell: bash
         run: |
           set +e
           set -o pipefail
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSelfAdjoint 2>&1 \
-            | tee /tmp/right-hamiltonian-self-adjointness.log
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry 2>&1 \
+            | tee /tmp/os-semigroup-symmetry.log
           status=${PIPESTATUS[0]}
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
@@ -108,8 +112,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: right-hamiltonian-self-adjointness-log
-          path: /tmp/right-hamiltonian-self-adjointness.log
+          name: os-semigroup-symmetry-log
+          path: /tmp/os-semigroup-symmetry.log
           if-no-files-found: error
 
       - name: Fail if targeted Lean build failed
