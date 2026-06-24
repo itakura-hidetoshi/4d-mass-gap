@@ -79,8 +79,9 @@ theorem closedRightHamiltonian_isSelfAdjoint_of_isFormalAdjoint
                   inner ℝ (v : P.PhysicalHilbert) (u : P.PhysicalHilbert)) +
                 (inner ℝ (A v) x -
                   inner ℝ (A v) (u : P.PhysicalHilbert)) := by
-            simp only [w, T.closedRightHamiltonianShift_apply, one_smul,
+            simp only [A, w, T.closedRightHamiltonianShift_apply, one_smul,
               inner_add_left, inner_sub_right]
+            ring
           _ =
               (inner ℝ (v : P.PhysicalHilbert) x -
                   inner ℝ (v : P.PhysicalHilbert) (u : P.PhysicalHilbert)) +
