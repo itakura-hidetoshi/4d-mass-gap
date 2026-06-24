@@ -1,9 +1,30 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicTranslationInvariance
+import MGAP4D.MathlibAnalytic.SpecialUnitaryBorelReceipts
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
+
+local instance integerTemporalIsTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance integerTemporalCompactSpace (N : ℕ) :
+    CompactSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance integerTemporalSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance integerTemporalMeasurableSpace (N : ℕ) :
+    MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance integerTemporalBorelSpace (N : ℕ) :
+    BorelSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupBorelSpace N
 
 /-- The periodic displacement by `k` lattice units in the distinguished temporal
 coordinate `0`.  The remaining three coordinates are fixed. -/
