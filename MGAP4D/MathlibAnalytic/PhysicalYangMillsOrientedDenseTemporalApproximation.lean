@@ -14,14 +14,14 @@ every prescribed real time.
 No additivity is required of `approximateStep`.  Additivity belongs to the exact
 integer action at each finite scale, whereas this choice only supplies convergent
 approximating times. -/
-structure ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation
+structure ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation
     {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     (A : E.PhysicalDiscreteTemporalAction) where
   approximateStep : ℝ → ℕ → ℤ
   approximateTime_tendsto : ∀ t,
     Tendsto (fun n => A.latticeTime n (approximateStep t n)) atTop (nhds t)
 
-namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation
+namespace ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation
 
 variable {E : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
 variable {A : E.PhysicalDiscreteTemporalAction}
@@ -112,15 +112,15 @@ theorem continuumMeasure_map_eq_self
       E.toLatticeEmbedding}
     (C : D.WeakLimitContinuity L) (t : ℝ) :
     Measure.map (A.physicalTranslate t)
-        (L.continuumMeasure : Measure E.PhysicalConfiguration) =
-      (L.continuumMeasure : Measure E.PhysicalConfiguration) := by
+        (ProbabilityMeasure.toMeasure L.continuumMeasure) =
+      ProbabilityMeasure.toMeasure L.continuumMeasure := by
   have h := congrArg ProbabilityMeasure.toMeasure
     (C.continuumProbabilityMeasure_map_eq_self t)
   simpa only [ProbabilityMeasure.toMeasure_map] using h
 
 end WeakLimitContinuity
 
-end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation
+end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation
 
 end
 
