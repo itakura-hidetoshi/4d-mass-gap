@@ -44,7 +44,7 @@ noncomputable def toContinuumEuclideanTimeTranslationOfFloor
     PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation
       (G.toSymmetryLimit L) :=
   C.toContinuumEuclideanTimeTranslationOfJointContinuity J
-    (ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.DenseTemporalApproximation.ofFloor
+    (ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalDiscreteTemporalAction.DenseTemporalApproximation.ofFloor
       latticeTime_eq) L
 
 end ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.GaugeDiscreteTemporalCompatibility
