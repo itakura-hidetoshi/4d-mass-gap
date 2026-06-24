@@ -67,6 +67,10 @@ theorem continuumMeasure_preimage_eq
   have h := congrArg
     (fun μ : Measure S.Configuration => μ s)
     (T.continuumMeasure_map_eq_self t)
+  change
+    (Measure.map (T.translate t)
+      (S.continuumMeasure : Measure S.Configuration)) s =
+      (S.continuumMeasure : Measure S.Configuration) s at h
   rw [Measure.map_apply (T.translate t).continuous.measurable hs] at h
   exact h
 
