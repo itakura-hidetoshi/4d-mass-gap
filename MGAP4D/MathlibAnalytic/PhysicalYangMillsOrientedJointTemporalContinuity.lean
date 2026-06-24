@@ -27,68 +27,33 @@ namespace JointContinuity
 
 variable {A : E.PhysicalDiscreteTemporalAction}
 
-private theorem jointTranslate_comp_prodMk
-    (s : ℝ) :
-    A.jointTranslate ∘ Prod.mk s = A.physicalTranslate s := by
-  funext x
-  rfl
-
-private theorem map_jointTranslate_map_prodMk
-    (J : A.JointContinuity) (s : ℝ)
-    (μ : Measure E.PhysicalConfiguration) [SFinite μ] :
-    Measure.map A.jointTranslate (Measure.map (Prod.mk s) μ) =
-      Measure.map (A.physicalTranslate s) μ := by
-  calc
-    Measure.map A.jointTranslate (Measure.map (Prod.mk s) μ) =
-      Measure.map (A.jointTranslate ∘ Prod.mk s) μ :=
-        Measure.map_map J.jointTranslate_continuous.measurable
-          measurable_prodMk_left
-    _ = Measure.map (A.physicalTranslate s) μ :=
-      congrArg
-        (fun f : E.PhysicalConfiguration → E.PhysicalConfiguration =>
-          Measure.map f μ)
-        (jointTranslate_comp_prodMk (A := A) s)
-
-private theorem map_jointTranslate_dirac_prod
-    (J : A.JointContinuity) (s : ℝ)
-    (μ : Measure E.PhysicalConfiguration) [SFinite μ] :
-    Measure.map A.jointTranslate ((Measure.dirac s).prod μ) =
-      Measure.map (A.physicalTranslate s) μ := by
-  rw [Measure.dirac_prod]
-  exact map_jointTranslate_map_prodMk J s μ
-
-private theorem toMeasure_diracProba_prod_map_jointTranslate
-    (J : A.JointContinuity) (s : ℝ)
-    (μ : ProbabilityMeasure E.PhysicalConfiguration) :
-    ((((diracProba s).prod μ).map
-        J.jointTranslate_continuous.measurable.aemeasurable) :
-      Measure E.PhysicalConfiguration) =
-      ((μ.map
-        (A.physicalTranslate s).continuous.measurable.aemeasurable) :
-      Measure E.PhysicalConfiguration) := by
-  rw [ProbabilityMeasure.toMeasure_map, ProbabilityMeasure.toMeasure_map,
-    ProbabilityMeasure.toMeasure_prod]
-  change
-    Measure.map A.jointTranslate
-        ((Measure.dirac s).prod (μ : Measure E.PhysicalConfiguration)) =
-      Measure.map (A.physicalTranslate s)
-        (μ : Measure E.PhysicalConfiguration)
-  exact map_jointTranslate_dirac_prod J s μ
-
--- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation.
-set_option maxHeartbeats 400000 in
+/-- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation. -/
 theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
     ((diracProba s).prod μ).map
         J.jointTranslate_continuous.measurable.aemeasurable =
       μ.map
-        (A.physicalTranslate s).continuous.measurable.aemeasurable :=
-  ProbabilityMeasure.toMeasure_injective
-    (toMeasure_diracProba_prod_map_jointTranslate J s μ)
+        (A.physicalTranslate s).continuous.measurable.aemeasurable := by
+  apply ProbabilityMeasure.eq_of_forall_toMeasure_apply_eq
+  intro B hB
+  change
+    Measure.map A.jointTranslate
+        ((Measure.dirac s).prod (μ : Measure E.PhysicalConfiguration)) B =
+      Measure.map (A.physicalTranslate s)
+        (μ : Measure E.PhysicalConfiguration) B
+  rw [Measure.map_apply J.jointTranslate_continuous.measurable hB]
+  rw [Measure.map_apply (A.physicalTranslate s).continuous.measurable hB]
+  rw [Measure.dirac_prod]
+  rw [Measure.map_apply measurable_prodMk_left
+    (J.jointTranslate_continuous.measurable hB)]
+  apply congrArg
+    (fun U : Set E.PhysicalConfiguration =>
+      (μ : Measure E.PhysicalConfiguration) U)
+  ext X
+  rfl
 
--- Joint continuity supplies varying-time weak convergence at each target time.
-set_option maxHeartbeats 800000 in
+/-- Joint continuity supplies varying-time weak convergence at each target time. -/
 theorem mappedApproximating_tendsto
     (J : A.JointContinuity)
     (D : A.DenseTemporalApproximation)
