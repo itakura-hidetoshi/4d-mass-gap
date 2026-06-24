@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSObservableTimeTranslationCovariance
 
 /-!
 # Physical gauge-invariant OS Hamiltonian spine
@@ -21,7 +21,9 @@ positive-time observable algebra
 → positive-shift surjectivity and bijectivity
 → maximal-accretive package
 → formal symmetry implies self-adjointness
-→ conditional reflection/time-translation exchange
+→ full observable time-translation automorphisms
+→ reflection/time-translation covariance and state invariance
+→ observable OS exchange identity
 → completed semigroup inner-product symmetry
 → right generator and Hamiltonian formal symmetry
 → graph-closed Hamiltonian formal symmetry
@@ -29,8 +31,10 @@ positive-time observable algebra
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
-The terminal self-adjointness theorem remains conditional on the observable-side
-Osterwalder--Schrader reflection/time-translation exchange identity.  This module
-does not assert that identity, a real-time unitary group, vacuum uniqueness, or a
-positive spectral gap.
+The terminal self-adjointness theorem remains conditional on full-observable
+time-translation automorphisms whose positive-time restriction is the supplied
+contraction semigroup, together with reflection covariance, state invariance,
+and observable-state strong continuity.  This module does not construct those
+full translations, a real-time unitary group, vacuum uniqueness, or a positive
+spectral gap.
 -/
