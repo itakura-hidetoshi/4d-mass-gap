@@ -6,6 +6,26 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+local instance floorPhysicalTemporalIsTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance floorPhysicalTemporalCompactSpace (N : ℕ) :
+    CompactSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance floorPhysicalTemporalSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance floorPhysicalTemporalMeasurableSpace (N : ℕ) :
+    MeasurableSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance floorPhysicalTemporalBorelSpace (N : ℕ) :
+    BorelSpace (SpecialUnitaryMatrixGroup N) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- The canonical floor-based dense temporal approximation attached to the
 periodic `SU(N)` discrete physical temporal action.
 
