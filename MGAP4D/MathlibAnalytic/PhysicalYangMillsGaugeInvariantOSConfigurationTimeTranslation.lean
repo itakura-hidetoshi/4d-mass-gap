@@ -14,8 +14,8 @@ noncomputable def boundedContinuousPrecompAlgEquiv
     (h : Homeomorph X X) :
     BoundedContinuousFunction X ℝ ≃ₐ[ℝ]
       BoundedContinuousFunction X ℝ where
-  toFun O := O.compContinuous h.toContinuousMap
-  invFun O := O.compContinuous h.symm.toContinuousMap
+  toFun O := O.compContinuous ⟨h, h.continuous⟩
+  invFun O := O.compContinuous ⟨h.symm, h.symm.continuous⟩
   left_inv O := by
     ext x
     simp
@@ -101,6 +101,19 @@ theorem physicalGaugeInvariantObservablePrecompAlgEquiv_apply
       (O : BoundedContinuousFunction S.Configuration ℝ) (h A) :=
   rfl
 
+@[simp]
+theorem physicalGaugeInvariantObservablePrecompAlgEquiv_symm_apply
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (h : Homeomorph S.Configuration S.Configuration)
+    (hGauge : ∀ g A, h (S.action g A) = S.action g (h A))
+    (O : physicalYangMillsGaugeInvariantObservableSubalgebra S)
+    (A : S.Configuration) :
+    (((physicalGaugeInvariantObservablePrecompAlgEquiv S h hGauge).symm O :
+        physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+      BoundedContinuousFunction S.Configuration ℝ) A =
+      (O : BoundedContinuousFunction S.Configuration ℝ) (h.symm A) :=
+  rfl
+
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
@@ -109,15 +122,6 @@ variable {P : D.OSPreHilbertData}
 
 namespace PositiveTimeObservableContractionSemigroup
 
-/-- Configuration-level geometric data sufficient to construct the full
-observable time-translation covariance package.
-
-The time translations are homeomorphisms of the physical configuration space,
-commute with every gauge action, preserve the continuum probability law, and
-restrict to the already constructed positive-time observable semigroup.
-Reflection covariance remains stated on observables because the current
-`OSReflectionData` stores reflection abstractly rather than as a configuration
-homeomorphism. -/
 structure ConfigurationTimeTranslationCovariance
     (T : P.PositiveTimeObservableContractionSemigroup) where
   configurationTranslate : NNReal →
@@ -147,9 +151,7 @@ structure ConfigurationTimeTranslationCovariance
 
 namespace ConfigurationTimeTranslationCovariance
 
-/-- Configuration-level time-translation geometry generates the full observable
-covariance package used by the OS exchange and self-adjointness bridge. -/
-theorem toReflectionTimeTranslationCovariance
+noncomputable def toReflectionTimeTranslationCovariance
     {T : P.PositiveTimeObservableContractionSemigroup}
     (C : T.ConfigurationTimeTranslationCovariance) :
     T.ReflectionTimeTranslationCovariance where
@@ -162,14 +164,8 @@ theorem toReflectionTimeTranslationCovariance
     intro t O
     rw [C.omega_eq_continuumState]
     simp only [physicalYangMillsContinuumGaugeInvariantWeakStarState_apply,
-      physicalYangMillsContinuumGaugeInvariantExpectation_apply]
-    change
-      (∫ A,
-        (O : BoundedContinuousFunction S.Configuration ℝ)
-          (C.configurationTranslate t A)
-        ∂(S.continuumMeasure : Measure S.Configuration)) =
-      ∫ A, (O : BoundedContinuousFunction S.Configuration ℝ) A
-        ∂(S.continuumMeasure : Measure S.Configuration)
+      physicalYangMillsContinuumGaugeInvariantExpectation_apply,
+      physicalGaugeInvariantObservablePrecompAlgEquiv_apply]
     calc
       (∫ A,
           (O : BoundedContinuousFunction S.Configuration ℝ)
@@ -186,8 +182,6 @@ theorem toReflectionTimeTranslationCovariance
           ∂(S.continuumMeasure : Measure S.Configuration) := by
         rw [C.continuumMeasure_invariant]
 
-/-- Configuration-level time-translation covariance and observable-state strong
-continuity imply self-adjointness of the graph-closed physical Hamiltonian. -/
 theorem closedRightHamiltonian_isSelfAdjoint
     {T : P.PositiveTimeObservableContractionSemigroup}
     (C : T.ConfigurationTimeTranslationCovariance)
