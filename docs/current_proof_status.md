@@ -1,361 +1,439 @@
 # Current proof status
 
-**Updated:** 2026-06-24  
-**Stable finite checkpoint:** merged PR #274  
-**Active development:** PR #282, `physical-4d-yang-mills-measure-limit`  
-**Newest reviewed code milestone:** `458c51b2a653229da24d605906abd48b833b6a75`
+**Updated:** 2026-06-21  
+**Main head:** `42223c9a87dc1a8474be95d37abf51299578e9c0`  
+**Latest merged proof checkpoint:** PR #288, `59c5780e1efd9e0035aad9bb8c65ff752f5b89dc`  
+**Latest merged documentation checkpoint:** PR #291, `d89e8375ab1c5b1dd028829901bc32f92060e0a0`  
+**Active proof PRs:** #289 and #282  
+**PR #282 head at this snapshot:** `592f3068bbb7f00b3a803ea75a3ed402d6674e3a`
 
-## Repository and verification status
+## Status boundary
 
-PR #282 is open and non-draft.
+MGAP4D is a replayable Lean 4 / mathlib formal-development repository. It does **not** yet prove an unconditional four-dimensional continuum Yang--Mills theory, a reconstructed physical Hamiltonian, or a physical mass gap.
 
-At the time of this update:
-
-- the newest milestone adds the dedicated check target for concrete integer temporal translations;
-- no workflow run was yet attached to that newest commit;
-- the preceding periodic-translation implementation had passed its dedicated workflow;
-- the ordinary changed-Lean run on that predecessor was cancelled before completion;
-- final ordinary-CI green status for the complete active branch is not claimed.
-
-Theorem bodies are the authoritative mathematical surface. Source status and workflow status are recorded separately.
-
-## Status summary
+The current proof surface has two distinct but complementary lanes:
 
 ```text
-actual finite periodic SU(N) Wilson Gibbs laws
-  -> finite gauge invariance
-  -> arbitrary periodic translation invariance
-  -> concrete integer temporal translations
-  -> exact Wilson conditional laws
-  -> exact Dobrushin and finite heat-bath gap consequences
-  -> common-carrier lattice embeddings
-  -> tightness and Prokhorov weak limits
-  -> continuum gauge-symmetry transfer
-  -> finite even-periodic reflection positivity
-  -> weak-limit nonnegativity for bridged bounded OS observables
-  -> gauge-invariant positive-time observable algebra
-  -> OS pre-Hilbert quotient and Hilbert completion
-  -> physical contraction semigroup
-  -> strong continuity
-  -> dense right-generator domain
-  -> nonnegative closable right Hamiltonian
-  -> graph-closed Hamiltonian
-  -> finite-time Laplace resolvent
-  -> positive-shift surjectivity and bijectivity
-  -> self-adjointness from reflection/time-translation symmetry.
+main:
+finite Wilson Gibbs law
+  -> exact conditionals and projections
+  -> Gibbs Hilbert space and heat-bath Hamiltonian
+  -> canonical Dobrushin influence
+  -> centered Rayleigh contraction
+  -> finite Hamiltonian-gap consequences
+  -> plaquette-supported influence
+  -> periodic oriented four-dimensional incidence bounds
+
+open PR #282:
+signed periodic SU(N) Haar--Gibbs laws
+  -> gauge invariance and normalized action bound
+  -> coercive moment / tightness / Prokhorov subsequence
+  -> physical weak-limit package on one Polish carrier
+  -> gauge-symmetry and observable transfer
+  -> gauge-invariant continuous and weak-star states
+  -> exact Wilson RKHS crossing features
+  -> finite tensor-product feature with exact unit norm
+  -> bounded integrability from amplitude control
+  -> even-periodic local-kernel OS constructors
+  -> boundary-fibered Bochner-Gram reflection positivity
 ```
 
-The hard boundary is no longer finite-volume Dobrushin contraction, finite Gibbs translation invariance, or positive-shift surjectivity. It is now the rigorous passage from discrete finite-lattice time to real continuum Euclidean time, the construction of the continuum reflection/covariance bridge, and the derivation of a positive physical spectral gap.
+Open-PR theorems are not part of `main` until merged and replayed.
 
-## Proved on `main`
+## Main-branch state
 
-The finite Wilson lane through merged PR #274 contains:
+The current `main` head reverts an accidental addition of a PR #282 boundary-fibered file. It therefore makes no net mathematical addition beyond the latest merged proof checkpoint and documentation update.
 
-- exact finite Wilson Gibbs probability laws;
-- exact single-link conditional laws;
-- `P_e` conditional-expectation projections;
-- `Q_e = I - P_e` fluctuation projections;
-- detailed balance and Gibbs symmetry;
-- orthogonality and weighted Pythagoras;
-- the concrete finite Gibbs Hilbert realization;
-- the canonical heat-bath Hamiltonian `H_HB = sum_e Q_e`;
-- the exact relation `H_HB = |E| (I - P_scan)`;
-- canonical Dobrushin random-scan Rayleigh contraction;
-- exact active/shared-plaquette Wilson influence localization;
-- finite-volume and family Poincare/Hamiltonian-gap consequences;
-- transfer-orbit contraction packages in the stated finite regime.
+### Proved or constructed on `main`
 
-The previous documentation statement
+#### Finite Gibbs, projection, and Hamiltonian structure
+
+- exact finite Wilson Gibbs and single-link conditional PMFs;
+- Gibbs expectation, variance, and heat-bath Dirichlet form;
+- conditional expectation projection `P_e` and fluctuation projection `Q_e`;
+- detailed balance, symmetry, orthogonality, and weighted Pythagoras;
+- concrete finite Gibbs Hilbert realization and normalized vacuum;
+- canonical heat-bath Hamiltonian `H_HB = sum_e Q_e`;
+- exact quadratic-form identity;
+- exact relation `H_HB = |E| (I - P_scan)`.
+
+#### Canonical Dobrushin-to-Rayleigh route
+
+PRs #267--#272 prove:
+
+- exact off-diagonal conditional-TV influence and zero diagonal;
+- exact row sums and canonical coefficient `alpha_can`;
+- minimality among admissible Dobrushin matrices;
+- link-variation and total-variation seminorms;
+- one-update and normalized random-scan contraction;
+- iterate contraction and centered fixed-point triviality;
+- nonconstant eigenvalue control;
+- symmetric Gibbs-Hilbert spectral lift;
+- centered random-scan Rayleigh contraction;
+- automatic finite Hamiltonian and excitation bounds from `alpha_can < 1`.
+
+Thus the missing finite quantitative input is a physically relevant scale-uniform strict estimate, not a separate `L2`/Rayleigh bridge.
+
+#### Plaquette support and periodic geometry
+
+PRs #273--#274 prove:
 
 ```text
-Dobrushin TV row-sum bound
-  -> centered Gibbs L2/Rayleigh contraction
+alpha_can <= d_active * eta_active,
+
+eta_active <=
+  (exp (2 * beta * m_shared * E_max) - 1) /
+  (exp (2 * beta * m_shared * E_max) + 1).
 ```
 
-as an open problem is obsolete.
+They also prove exact zero influence outside plaquette support, remote-factor cancellation, and exact localization to shared plaquettes.
 
-## Implemented in active PR #282
+PRs #278 and #281--#288 construct signed periodic four-dimensional geometry and prove, for `n >= 3`,
 
-### 1. Physical weak-limit route
+```text
+d_active <= 18,
+m_shared <= 1.
+```
 
-The branch supplies typed structures and theorems for:
+PR #287 adds the orientation-correct finite Wilson system; PR #288 adds the periodic oriented `Z2` instance and incidence certificate.
 
-- finite oriented periodic Wilson systems;
-- measurable lattice embeddings into one Polish carrier;
-- embedded probability measures;
-- normalized action and observable bounds;
-- proper/coercive functional control;
+## Active PR #289 — oriented locality bridge
+
+State: **open and mergeable**.  
+Head: `837feed093504e7f6467933847040b7102fe1972`.
+
+Implemented on the branch:
+
+- physical-link replacement;
+- agreement away from one replaced source link;
+- signed holonomy congruence;
+- non-neighbor locality;
+- oriented target-local / target-remote action decomposition.
+
+Still open:
+
+- rebase onto current `main`;
+- oriented exact conditional law;
+- normalized remote-factor cancellation;
+- oriented canonical influence;
+- connection to the merged Dobrushin/Rayleigh/Hamiltonian spine.
+
+## Active PR #282 — physical `SU(N)` weak-limit, observable, and OS frontier
+
+State: **open and mergeable**.  
+Head: `592f3068bbb7f00b3a803ea75a3ed402d6674e3a`.  
+Scale: 459 commits, 141 changed files, `+13289/-0` at this snapshot.
+
+The PR body describes an earlier stable observable checkpoint and is now behind the branch. The branch has since added an exact Wilson RKHS feature layer, bounded-integrability/amplitude constructors, even-periodic crossing-kernel products, and a boundary-fibered reflection-positivity route.
+
+### Current CI receipt
+
+At the recorded head:
+
+- ordinary **PR Lean Fast Check** run **3844** is **in progress**;
+- temporary **Boundary-Fibered Pi Measure Check** run **2** completed with an overall **failure**;
+- within that temporary run, the targeted step **Build boundary-fibered pi measure factorization** completed successfully;
+- the failure was recorded in the final **Propagate build status** step;
+- the branch still contains `.github/workflows/tmp-boundary-fibered-pi-measure-check.yml`.
+
+Therefore the current head is not yet merge-ready. The ordinary PR workflow must finish green and the temporary diagnostic workflow must be removed. This is a volatile CI snapshot, not a mathematical theorem statement.
+
+## Concrete finite-volume input in PR #282
+
+The branch constructs actual finite-volume probability laws, not only an abstract convergence wrapper:
+
+- one configuration variable per positive physical link;
+- signed forward/backward plaquette traversal;
+- finite oriented compact gauge Wilson systems;
+- normalized compact Haar product measure;
+- Wilson Gibbs tilt as a `ProbabilityMeasure`;
+- finite-volume gauge invariance;
+- periodic four-dimensional geometry bridge;
+- exact counts
+
+```text
+#Vertex(L) = L^4,
+#AxisPair = 6,
+#Plaquette(L) = 6 * L^4;
+```
+
+- specialization to `SU(N)`;
+- standard energy
+
+```text
+E_W(U) = 1 - Re(trace U) / N,
+0 <= E_W(U) <= 2;
+```
+
+- deterministic normalized action bound
+
+```text
+(6 * L^4)^-1 * S_L(A) <= 2.
+```
+
+## Physical weak-limit route in PR #282
+
+`periodicHypercubicSpecialUnitaryPhysicalEmbedding` packages actual finite lattice laws, measurable interpolation into one common Polish carrier, `a_n -> 0`, and `V_n -> infinity`.
+
+Given a proper physical functional `Phi` and
+
+```text
+Phi(interpolate_n(A))
+  <= (6 * L_n^4)^-1 * S_n(A),
+```
+
+`periodicHypercubicSpecialUnitaryWeakLimitOfProperNNRealFunctional` generates:
+
+- pointwise action control;
+- uniform Gibbs moment control;
+- Markov tails;
 - compact containment and tightness;
-- Prokhorov subsequences;
-- weak convergence to a continuum probability measure;
-- transfer of continuous gauge symmetry;
-- invariant event probabilities and observable laws;
-- bounded continuous expectation convergence;
-- two-point, connected-correlation, and finite n-point routes;
-- the real algebra of gauge-invariant bounded continuous observables.
+- Prokhorov subsequence extraction;
+- a `PhysicalFourDimensionalYangMillsWeakLimit`;
+- convergence of every bounded continuous observable expectation.
 
-This route is conditional on the supplied physical carrier, interpolation, and coercive data. The final distributional continuum construction has not yet been selected and justified.
+This remains conditional on the supplied carrier, interpolation maps, proper functional, and coercive inequality. The reciprocal plaquette scale is a deterministic normalization route, not a physical renormalization theorem.
 
-### 2. Finite even-periodic reflection positivity
+## Symmetry, observables, and weak-star states in PR #282
 
-The branch proves finite Wilson Gibbs reflection positivity using:
-
-- exact even-periodic reflection geometry;
-- boundary/open-half decomposition;
-- boundary-fibered coordinate factorization;
-- product Haar transport;
-- temporal and spatial crossing-sector factorization;
-- positive-semidefinite local Wilson kernels;
-- finite tensor-product RKHS/Gram constructions;
-- bounded-continuous reflected observables.
-
-The terminal finite theorem is:
-
-```lean
-periodicHypercubicEvenWilsonGibbs_reflectionPositive_boundedContinuous
-```
-
-### 3. Weak-limit OS nonnegativity
-
-For a fixed bounded continuous physical quadratic observable equipped with a concrete pullback bridge, finite reflection positivity passes to the continuum weak limit.
-
-```lean
-physical_yang_mills_evenPeriodicWilsonOS_continuum_nonneg
-```
-
-This does not yet prove that every intended continuum positive-time observable has the required bridge.
-
-### 4. Gauge-invariant OS Hilbert completion
-
-From supplied reflection-positive gauge-invariant state data, the branch constructs:
-
-- the positive-time observable subalgebra;
-- the OS bilinear form;
-- the null-space quotient;
-- the real pre-Hilbert carrier;
-- the Hilbert completion;
-- the vacuum;
-- a dense physical-state map.
-
-### 5. Strongly continuous physical semigroup
-
-From positive-time observable translation, contraction, and observable-state continuity, the branch constructs:
-
-- a carrier contraction semigroup;
-- its bounded extension to the Hilbert completion;
-- strong continuity for every physical vector;
-- the canonical right-generator domain;
-- the right infinitesimal generator;
-- the right Hamiltonian `H = -G`;
-- Bochner time averages;
-- density of the generator and Hamiltonian domains;
-- the zero-energy vacuum relation.
-
-### 6. Closed nonnegative Hamiltonian and resolvent
-
-The branch source implements:
-
-- nonnegativity of the right Hamiltonian form;
-- closability;
-- graph closure as a `LinearPMap`;
-- uniqueness of graph limits;
-- nonnegativity of the closed Hamiltonian;
-- the lower bound for `lambda I + Hbar`;
-- closed range of positive shifts;
-- finite-time Laplace integrals;
-- generator-domain membership of those integrals;
-- the endpoint-corrected resolvent identity;
-- vanishing of the endpoint remainder;
-- density and then surjectivity of the shifted range;
-- injectivity and bijectivity for `lambda > 0`;
-- the maximal-accretive package.
-
-The finite-time Laplace construction removes positive-shift surjectivity as a separate assumption.
-
-### 7. Self-adjointness theorem
-
-The branch proves:
+Under a continuous physical action and interpolation equivariance, the branch proves
 
 ```text
-formal symmetry of Hbar
-  + surjectivity of I + Hbar
-  -> Hbar is self-adjoint.
+map(action g, mu_YM) = mu_YM.
 ```
 
-It also proves:
+Consequences include:
+
+- invariant finite and continuum event probabilities;
+- invariant laws of arbitrary measurable observables;
+- invariant bounded-continuous expectations;
+- invariant two-point and connected correlations;
+- finite n-point invariance and convergence;
+- a real subalgebra of gauge-invariant bounded continuous observables;
+- normalized positive continuous expectation states;
+- weak-star convergence of lattice states to the continuum state.
+
+## Exact Wilson RKHS feature layer in PR #282
+
+The branch constructs a real Hilbert/RKHS feature for the standard `SU(N)` Wilson relative kernel.
+
+### Exact diagonal and norm theorems
+
+The following chain is now formalized:
 
 ```text
-observable reflection/time-translation exchange
-  -> symmetry of the completed Euclidean semigroup
-  -> formal symmetry of the right generator
-  -> formal symmetry of the right Hamiltonian
-  -> formal symmetry of the graph closure
-  -> self-adjointness.
+normalized real trace of identity = 1
+  -> Wilson plaquette energy at identity = 0
+  -> relative Wilson kernel K_beta(g,g) = 1
+  -> ||feature(g)|| = 1.
 ```
 
-`WeakLimitTimeReflectionBridge` packages sufficient continuum covariance data. Together with observable-state strong continuity, it yields the theorem `closedRightHamiltonian_isSelfAdjoint`.
-
-The remaining task is to instantiate that bridge for the selected physical continuum construction.
-
-### 8. Arbitrary periodic translation invariance
-
-The branch constructs periodic translations of vertices, physical links, plaquettes, signed boundary incidences, and configurations.
-
-It proves:
-
-- covariance of signed step values;
-- covariance of plaquette holonomy;
-- invariance of the Wilson action;
-- invariance of the product Haar law;
-- invariance of the finite periodic `SU(N)` Wilson Gibbs law.
-
-### 9. Concrete integer temporal translations
-
-The distinguished temporal coordinate is now selected explicitly.
-
-For every `k : ℤ`, the branch defines:
+Key theorems in `SpecialUnitaryWilsonKernelFeatureNorm.lean` include:
 
 ```lean
-periodicHypercubicIntegerTemporalDisplacement n k
-periodicHypercubicIntegerTemporalConfigurationTranslation n k
+normalizedSpecialUnitaryRealTrace_one
+specialUnitaryWilsonPlaquetteEnergy_one
+specialUnitaryWilsonRelativeKernel_self
+RealHilbertKernelFeature.feature_norm_eq_one
+specialUnitaryWilsonRelativeKernelFeature_norm_eq_one
+localCrossingWilsonKernelConcreteFeature_norm_eq_one
+RealHilbertKernelFeature.listProd_feature_norm_eq_one
+localCrossingWilsonKernelConcreteFeature_listProd_norm_eq_one
 ```
 
-and proves:
+The final theorem proves that the finite completed-tensor-product feature of all crossing plaquettes has exact norm one.
 
-- the temporal coordinate equals `k` modulo the period;
-- spatial coordinates remain zero;
-- zero, addition, and negation laws;
-- measurable configuration translation;
-- invariance of the finite periodic `SU(N)` Wilson Gibbs law.
+### Consequence for weighted features
 
-The principal finite invariance theorem is:
-
-```lean
-periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
-```
-
-### 10. Physical temporal-action constructor
-
-The branch contains:
-
-```lean
-periodicHypercubicSpecialUnitaryPhysicalTemporalAction
-```
-
-This constructs the abstract `PhysicalTemporalAction` from:
-
-- a real-parameter homeomorphism action on the physical carrier;
-- scale-dependent periodic lattice displacements;
-- interpolation equivariance.
-
-Measurability and finite Gibbs invariance are generated automatically from the periodic translation theorem. They are no longer independent assumptions.
-
-The constructor does not supply the physical action, the real-time-to-lattice displacement relation, or interpolation equivariance.
-
-## Exact temporal frontier
-
-The finite lattice time group is discrete and periodic. The continuum action is parameterized by `ℝ`.
-
-The missing theorem must not assume that a rounding or floor map from real time to integer lattice steps preserves addition for all real times.
-
-A rigorous route must instead use one of the following patterns or an equivalent construction:
+For
 
 ```text
-discrete finite semigroups
-  -> convergence to a continuum strongly continuous semigroup
-
-lattice times a_n * k on scale-dependent dense subsets
-  -> compatibility and convergence
-  -> extension by strong continuity
-
-or
-
-a revised interface separating finite discrete time from continuum real time.
+weightedFeature(x) = amplitude(n,F,x) * globalFeature_n(x),
 ```
 
-After this parameter boundary is resolved, the remaining fields are:
+Mathlib proves
 
-- physical continuum time-translation homeomorphisms;
-- scale-dependent lattice displacement data;
-- interpolation equivariance;
-- gauge commutation;
-- continuum reflection;
-- reflection/time inversion;
-- positive-time observable restriction;
-- continuum-state identification;
-- observable-state strong continuity.
+```text
+||weightedFeature(x)|| = |amplitude(n,F,x)|.
+```
 
-## Spectral-gap frontier
+This removes the need to assume an independent global feature-norm estimate.
 
-No theorem currently proves that the constructed closed OS Hamiltonian has a strictly positive spectral gap.
+## Bounded-integrability and amplitude constructors in PR #282
 
-Still required are:
+The current branch packages the analytic route
 
-- an instantiated self-adjoint OS Hamiltonian for the selected continuum construction;
-- characterization and preferably uniqueness of the vacuum;
-- a vacuum-orthogonal invariant sector;
-- a uniform relation between finite Wilson/heat-bath decay and the OS semigroup;
-- continuum clustering or spectral-support control;
-- a positive lower bound independent of lattice scale;
-- physical normalization and units;
-- nontriviality of the continuum theory.
+```text
+finite half measure
+  + AE strong measurability
+  + uniform norm bound
+  -> Bochner integrability
+  -> Hilbert Gram representation
+  -> reflection-form nonnegativity.
+```
 
-## Exact `33/20` dependency
+`PhysicalYangMillsOrientedWilsonOSEvenPeriodicAmplitudeBoundedLocalKernelData` asks for:
 
-The source tree contains:
+- exact local Wilson kernel-product identification;
+- finite half measure;
+- AE strong measurability of the weighted global feature;
+- a scalar amplitude bound
+
+```text
+|amplitude(n,F,x)| <= C(n,F).
+```
+
+The exact global feature norm one theorem turns this directly into the weighted-feature norm bound required by the finite-measure constructor.
+
+A second factored interface,
 
 ```lean
-hamiltonianPVMSpectralNormalized3320Value := (33 : Real) / 20
+PhysicalYangMillsOrientedWilsonOSEvenPeriodicFactoredAmplitudeBoundedLocalKernelData
 ```
 
-Older interfaces transport that internal normalized value.
+asks separately for:
 
-The active OS Hamiltonian route has not proved that its spectral gap is positive, that it equals `33/20`, or that `33/20` follows from Wilson dynamics, continuum scaling, or physical units.
+- AE strong measurability of the scalar amplitude;
+- AE strong measurability of each one-plaquette feature;
+- the scalar amplitude bound.
 
-Therefore `33/20` remains an internal normalization/audit value, not an independently derived physical mass gap.
+The global feature measurability is generated by the finite completed tensor product, and scalar multiplication gives the weighted feature measurability.
+
+These constructors produce reflection positivity for every approximating lattice state and, by weak-star closure, for the continuum state, provided the explicit half-lattice/kernel data are instantiated.
+
+## Even-periodic local-kernel product frontier
+
+The branch now contains:
+
+- even periodic time reflection;
+- crossing-plaquette labels and finite lists;
+- local positive-half holonomy interfaces;
+- the product of exact local Wilson crossing kernels;
+- Hilbert-feature and Bochner-Gram certificates;
+- scale-coupling, bounded, amplitude-bounded, and holonomy-measurable constructors;
+- transfer to approximating and continuum weak-star reflection positivity.
+
+The remaining issue is not the abstract Gram nonnegativity theorem. It is the exact model-specific identification of the actual periodic `SU(N)` Haar--Gibbs reflection form with the generated kernel-product expression.
+
+## Boundary-fibered reflection-positivity frontier
+
+### Why a boundary fiber is required
+
+Spatial links lying in reflection-fixed time planes are shared by the positive and negative halves. Treating the two halves as fully independent product coordinates would duplicate these variables and give the wrong measure-theoretic shape.
+
+The correct decomposition is boundary-conditioned:
+
+```text
+b : BoundaryConfiguration
+x,y : open HalfConfiguration
+
+reflection form
+  = integral_b integral_x integral_y
+      <weightedFeature(b,x), weightedFeature(b,y)>
+  = integral_b ||integral_x weightedFeature(b,x)||^2
+  >= 0.
+```
+
+### Implemented branch infrastructure
+
+The newest files add:
+
+- `FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean`;
+- `FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv.lean`;
+- `FiniteInvolutiveEdgeBoundaryFiberedMeasureFactorization.lean`;
+- `FiniteInvolutiveEdgeBoundaryFiberedPiMeasure.lean`;
+- `FiniteInvolutiveEdgeBoundaryFiberedBochnerFactorization.lean`;
+- `PhysicalYangMillsOrientedWilsonOSBoundaryFiberedCoordinateConstruction.lean`;
+- `PhysicalYangMillsOrientedWilsonOSBoundaryFiberedBochnerGram.lean`.
+
+The abstract boundary-fibered certificate proves:
+
+```lean
+physical_yang_mills_oriented_boundaryFiberedBochnerGram_pullbackForm_eq_boundary_norm_sq
+physical_yang_mills_oriented_boundaryFiberedBochnerGram_pullbackForm_nonneg
+physical_yang_mills_oriented_boundaryFiberedBochnerGram_approximating_reflectionPositive
+physical_yang_mills_oriented_boundaryFiberedBochnerGram_continuum_reflectionPositive
+```
+
+Thus, once the actual Wilson pullback form is identified with the boundary-conditioned iterated inner product, nonnegativity is a boundary integral of squared Bochner moments.
+
+### What remains open in the boundary-fibered layer
+
+- instantiate the exact edge-orbit partition for the periodic even lattice;
+- prove the concrete product-Haar disintegration over reflection-fixed boundary variables;
+- combine the boundary factorization with the Wilson action splitting and crossing-kernel product;
+- prove the actual pullback-form equality required by the certificate;
+- discharge boundary-moment square integrability;
+- complete ordinary CI validation and remove the temporary workflow.
+
+## Present mathematical frontier
+
+The remaining decisive inputs are:
+
+1. completion of the actual periodic `SU(N)` boundary-fibered Haar/action/kernel factorization;
+2. a physically appropriate gauge-compatible distributional carrier;
+3. explicit interpolation, blocking, or smearing maps;
+4. a justified renormalized coupling trajectory;
+5. a proper Sobolev/Besov-type functional with compact sublevels;
+6. a uniform coercive interpolation estimate for the actual physical scaling;
+7. nontriviality, interacting character, and uniqueness or phase selection;
+8. Euclidean covariance, regularity, clustering, and the remaining OS axioms;
+9. OS reconstruction and physical transfer-time normalization;
+10. a continuum-relevant uniform gap estimate and the physical Hamiltonian mass gap.
+
+Single-link Dobrushin control is expected to describe a restrictive regime. Block dynamics, multiscale estimates, reflection-positive transfer bounds, renormalization-group coercivity, or another scale-uniform mechanism may be required.
 
 ## Claim table
 
 | Claim | Status |
 |---|---|
-| Finite periodic `SU(N)` Wilson Gibbs law | constructed |
-| Finite gauge invariance | proved |
-| Arbitrary periodic translation invariance | proved |
-| Integer temporal displacement group laws | proved in source |
-| Finite Gibbs invariance under integer temporal translation | proved in source |
-| Newest integer-temporal dedicated check | pending at this snapshot |
-| Generic physical temporal-action constructor | implemented from supplied physical action and equivariance data |
-| Exact Wilson Dobrushin to centered Rayleigh contraction | proved |
-| Exact plaquette-supported influence profile | proved |
-| Finite heat-bath Poincare/Hamiltonian gap | proved in the stated regime |
-| Common-carrier weak-limit extraction | proved from explicit embedding/coercivity hypotheses |
-| Continuum gauge invariance | proved from continuous action and interpolation-equivariance data |
-| Finite even-periodic Wilson reflection positivity | proved |
-| Weak-limit OS nonnegativity for a bridged bounded observable | proved |
-| Full continuum OS reflection positivity | open |
-| Gauge-invariant OS Hilbert completion | constructed from supplied data |
-| Strongly continuous physical contraction semigroup | constructed from supplied continuity data |
-| Dense right-Hamiltonian domain | implemented |
-| Closed nonnegative right Hamiltonian | implemented |
-| Positive-shift surjectivity | implemented by finite-time Laplace resolvent |
-| Self-adjointness from semigroup symmetry | proved |
-| Discrete finite-time to real continuum-time bridge | open |
-| Concrete weak-limit time/reflection bridge | open |
-| Concrete self-adjoint continuum OS Hamiltonian | conditional on those bridges |
-| Positive physical spectral gap | open |
-| Vacuum uniqueness | open |
-| Nontrivial physical continuum Yang--Mills theory | open |
+| Finite Gibbs/projection/Hilbert/Hamiltonian spine | proved or constructed on `main` |
+| Exact canonical Dobrushin matrix | constructed on `main` |
+| `alpha_can < 1` -> centered Rayleigh contraction | proved on `main` |
+| Exact plaquette support and shared-plaquette majorant | proved on `main` |
+| Periodic bounds `d_active <= 18`, `m_shared <= 1` | proved on `main` for `n >= 3` |
+| Orientation-correct finite Wilson system and periodic `Z2` instance | constructed on `main` |
+| Orientation-correct locality bridge | open in PR #289 |
+| Oriented conditional/influence/Hamiltonian bridge | incomplete |
+| Explicit periodic `Z2` strict-coefficient theorem | open |
+| Compact oriented Haar--Gibbs and standard `SU(N)` finite law | implemented in PR #282 |
+| Concrete signed periodic `SU(N)` weak-limit constructor | implemented in PR #282 under explicit analytic inputs |
+| Gauge-symmetry, observable, correlation, and n-point transfer | implemented in PR #282 under compatibility inputs |
+| Gauge-invariant continuous and weak-star state convergence | implemented in PR #282 |
+| Exact local Wilson RKHS feature norm `= 1` | implemented in PR #282 |
+| Exact finite global tensor-product feature norm `= 1` | implemented in PR #282 |
+| Bounded integrability from finite measure and norm bound | implemented in PR #282 |
+| Amplitude-only weighted-feature bound reduction | implemented in PR #282 |
+| Factored local measurability -> global measurability | implemented in PR #282 |
+| Generic/even-periodic kernel-product OS transfer | implemented in PR #282 under explicit data |
+| Boundary-fibered Bochner-Gram nonnegativity | implemented in PR #282 under explicit pullback-form identity |
+| Concrete periodic `SU(N)` boundary/Haar/action/kernel identification | incomplete |
+| PR #282 current ordinary CI | run 3844 in progress at snapshot |
+| Temporary boundary Pi diagnostic | target build step succeeded; overall run failed at status propagation |
+| Concrete physical carrier/interpolation/renormalized trajectory | open |
+| Nontrivial interacting continuum measure | open |
+| Full OS reconstruction | open |
+| Physical Hamiltonian mass gap | open |
 | Independent physical derivation of `33/20` | open |
-| Final ordinary CI green on the current branch | not claimed |
-| External consensus | not claimed |
+| External mathematical consensus | not claimed |
 
-## Immediate next steps
+## Exact `33/20` dependency
 
-1. Resolve the finite integer-time versus continuum real-time parameter boundary.
-2. Prove interpolation equivariance and instantiate the physical temporal action.
-3. Construct continuum reflection and instantiate `WeakLimitTimeReflectionBridge`.
-4. Obtain final ordinary CI success and register terminal aggregate imports.
-5. Derive vacuum uniqueness, continuum clustering, and a positive spectral gap for the constructed OS Hamiltonian.
-6. Complete the physical continuum carrier, scaling, regularity, nontriviality, and external review.
+`HamiltonianPVMSpectralExactGapValue.lean` defines the normalized internal value `33/20`; `ExactGapReal.lean` projects `exactGapValueReal`; later spectral and R6--R7 files transport the same value.
 
-Lean theorem bodies are authoritative. Conditional bridge structures, source files without final branch-wide CI, and internal exact-value carriers must not be presented as unconditional physical results.
+This is an internal normalization and dependency-routing lane, not an independent physical derivation.
+
+## Next actions
+
+1. Finish the ordinary PR #282 check on the current boundary-fibered head.
+2. Remove the temporary boundary-fibered diagnostic workflow.
+3. Complete the exact periodic edge-orbit coordinate and product-Haar boundary disintegration.
+4. Identify the actual periodic `SU(N)` Wilson pullback form with the boundary-fibered local-kernel/Bochner-Gram expression.
+5. Rebase, audit, and merge the stable compact-gauge, weak-limit, observable, RKHS, and OS layers.
+6. Choose the physical carrier, interpolation maps, and renormalized trajectory.
+7. Prove the actual coercive compactness estimate and nontriviality.
+8. Complete PR #289 and the oriented conditional/influence bridge.
+9. Develop a continuum-relevant block, multiscale, reflection-positive-transfer, or renormalization-group estimate.
+10. Prove the remaining OS axioms, reconstruct the physical Hamiltonian, and derive a positive gap independently of `exactGapValueReal`.
+
+Lean theorem bodies are authoritative. Open-PR results, conditional hypotheses, selected normalizations, temporary workflows, and internal exact-gap carriers must not be presented as unconditional physical conclusions.
