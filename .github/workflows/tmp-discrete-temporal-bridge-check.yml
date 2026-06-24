@@ -74,12 +74,12 @@ jobs:
           lean --version
           lake --version
 
-      - name: Compile discrete temporal bridge smoke
+      - name: Compile joint temporal continuity
         shell: bash
         run: |
           set -o pipefail
           lake build \
-            MGAP4D.MathlibAnalytic.PhysicalYangMillsDiscreteTemporalBridgeCompileSmoke \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedJointTemporalContinuity \
             2>&1 | tee /tmp/discrete-temporal-bridge.log
 
       - name: Upload temporal bridge log
