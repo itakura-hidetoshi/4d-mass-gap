@@ -57,15 +57,15 @@ private theorem map_jointTranslate_dirac_prod
   rw [Measure.dirac_prod]
   exact map_jointTranslate_map_prodMk J s μ
 
-/-- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation. -/
-theorem diracProba_prod_map_jointTranslate
+private theorem toMeasure_diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
-    ((diracProba s).prod μ).map
-        J.jointTranslate_continuous.measurable.aemeasurable =
-      μ.map
-        (A.physicalTranslate s).continuous.measurable.aemeasurable := by
-  apply ProbabilityMeasure.toMeasure_injective
+    ((((diracProba s).prod μ).map
+        J.jointTranslate_continuous.measurable.aemeasurable) :
+      Measure E.PhysicalConfiguration) =
+      ((μ.map
+        (A.physicalTranslate s).continuous.measurable.aemeasurable) :
+      Measure E.PhysicalConfiguration) := by
   rw [ProbabilityMeasure.toMeasure_map, ProbabilityMeasure.toMeasure_map,
     ProbabilityMeasure.toMeasure_prod]
   change
@@ -74,6 +74,17 @@ theorem diracProba_prod_map_jointTranslate
       Measure.map (A.physicalTranslate s)
         (μ : Measure E.PhysicalConfiguration)
   exact map_jointTranslate_dirac_prod J s μ
+
+/-- Mapping a fixed-time Dirac product by the joint action equals fixed-time translation. -/
+theorem diracProba_prod_map_jointTranslate
+    (J : A.JointContinuity) (s : ℝ)
+    (μ : ProbabilityMeasure E.PhysicalConfiguration) :
+    ((diracProba s).prod μ).map
+        J.jointTranslate_continuous.measurable.aemeasurable =
+      μ.map
+        (A.physicalTranslate s).continuous.measurable.aemeasurable :=
+  ProbabilityMeasure.toMeasure_injective
+    (toMeasure_diracProba_prod_map_jointTranslate J s μ)
 
 /-- Joint continuity supplies varying-time weak convergence at each target time. -/
 theorem mappedApproximating_tendsto
