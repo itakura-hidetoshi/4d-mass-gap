@@ -92,9 +92,15 @@ theorem diracProba_prod_map_jointTranslate
     (J : A.JointContinuity) (s : ℝ)
     (μ : ProbabilityMeasure E.PhysicalConfiguration) :
     diracProductImage J s μ = translatedImage A s μ := by
-  unfold diracProductImage translatedImage
-  exact ProbabilityMeasure.toMeasure_injective
-    (toMeasure_diracProba_prod_map_jointTranslate J s μ)
+  apply ProbabilityMeasure.toMeasure_injective
+  change
+    ((((diracProba s).prod μ).map
+        J.jointTranslate_continuous.measurable.aemeasurable) :
+      Measure E.PhysicalConfiguration) =
+      ((μ.map
+        (A.physicalTranslate s).continuous.measurable.aemeasurable) :
+      Measure E.PhysicalConfiguration)
+  exact toMeasure_diracProba_prod_map_jointTranslate J s μ
 
 private def approximatePhysicalTime
     (D : A.DenseTemporalApproximation)
