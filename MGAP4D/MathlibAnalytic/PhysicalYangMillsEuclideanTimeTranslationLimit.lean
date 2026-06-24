@@ -31,7 +31,7 @@ theorem translate_symm_apply_eq_neg
   apply (E.translate t).injective
   rw [Homeomorph.apply_symm_apply]
   rw [← E.translate_add_apply]
-  simpa using E.translate_zero_apply A
+  simpa using (E.translate_zero_apply A).symm
 
 theorem continuumProbabilityMeasure_map_eq_self
     (E : PhysicalFourDimensionalYangMillsEuclideanTimeTranslationLimit S)
