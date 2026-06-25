@@ -125,12 +125,10 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalClosedRightHamiltonian_gap
     G.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
       T hP (T.vacuumOrthogonalAmbientDomainPoint x) hxOrthogonal
 
-/-- The transferred Rayleigh gap excludes every nonzero excitation eigenvector
-with eigenvalue strictly below the mass.  Unlike the corresponding ambient
-statement, no positivity assumption on the eigenvalue is needed because
-vacuum orthogonality is built into the carrier. -/
-theorem FiniteVolumeVacuumGapTransfer.
-    vacuumOrthogonalClosedRightHamiltonian_no_eigenvector_below_mass
+/-- On the excitation carrier, an eigenvalue below the transferred mass forces
+its domain vector to vanish.  Positivity of the eigenvalue is unnecessary
+because vacuum orthogonality is encoded in the carrier. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalClosedRightHamiltonian_eq_zero_of_eigenvalue_lt_mass
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
