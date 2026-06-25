@@ -37,14 +37,10 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
       (Set.Iio G.mass) lambda := by
   induction k with
   | zero =>
-      change HasDerivWithinAt
-        (fun _ : ℝ =>
+      simpa only [pow_zero, Nat.cast_zero, zero_smul] using
+        (hasDerivWithinAt_const lambda (Set.Iio G.mass)
           (1 : P.VacuumOrthogonalHilbert →L[ℝ]
             P.VacuumOrthogonalHilbert))
-        (0 : P.VacuumOrthogonalHilbert →L[ℝ]
-          P.VacuumOrthogonalHilbert)
-        (Set.Iio G.mass) lambda
-      exact hasDerivWithinAt_const lambda (Set.Iio G.mass) 1
   | succ k ih =>
       have hR :
           HasDerivWithinAt
@@ -56,7 +52,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
           G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
             T hP hSelf hlambda
       have hmul := HasDerivWithinAt.mul
-        (𝕜 := ℝ) (𝕜' := ℝ)
+        (𝕜 := ℝ)
         (𝔸 := P.VacuumOrthogonalHilbert →L[ℝ]
           P.VacuumOrthogonalHilbert)
         ih hR
@@ -124,10 +120,27 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
                   (n + 2)))
             (Set.Iio G.mass) lambda := by
         simpa only [Pi.smul_apply] using
-          hpow.const_smul (n.factorial : ℝ)
-      rw [hscaled.derivWithin (isOpen_Iio.uniqueDiffOn lambda hlambda)]
+          (HasDerivWithinAt.const_smul
+            (𝕜 := ℝ) (R := ℝ)
+            (F := P.VacuumOrthogonalHilbert →L[ℝ]
+              P.VacuumOrthogonalHilbert)
+            (n.factorial : ℝ) hpow)
+      have hscaledDeriv :
+          derivWithin
+              (fun mu =>
+                (n.factorial : ℝ) •
+                  (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
+              (Set.Iio G.mass) lambda =
+            (n.factorial : ℝ) •
+              (((n + 1 : ℕ) : ℝ) •
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+                  (n + 2)) := by
+        exact HasDerivWithinAt.derivWithin
+          (𝕜 := ℝ) hscaled
+          (isOpen_Iio.uniqueDiffOn lambda hlambda)
+      rw [hscaledDeriv]
       simp [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
-        mul_smul, Nat.succ_eq_add_one, mul_comm, mul_left_comm,
+        smul_smul, Nat.succ_eq_add_one, mul_comm, mul_left_comm,
         mul_assoc, Nat.add_assoc]
 
 /-- Explicit ordinary all-order derivative formula below the transferred mass:
