@@ -52,7 +52,7 @@ private theorem osQuadraticDifferenceIntegrand_eq_ofDiscreteFloor
               (G.toSymmetryLimit L))) :
       physicalYangMillsGaugeInvariantObservableSubalgebra
         (G.toSymmetryLimit L)) :
-      BoundedContinuousFunction (G.toSymmetryLimit L).Configuration ℝ) X = _
+      BoundedContinuousFunction (G.toSymmetryLimit L).Configuration ℝ) X) = _
   rw [H.reflection_realization]
   simp only [← H.positive_restriction t F]
   rfl
@@ -220,8 +220,8 @@ theorem closedRightHamiltonian_isSelfAdjoint_ofDiscreteTemporalActionOfFloor_ofQ
     IsSelfAdjoint
       (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         T
-        (osQuadraticContinuityAtZero_ofDiscreteTemporalAction C J L H)
-          .toStrongContinuityOnObservableStates).closedRightHamiltonian := by
+        ((osQuadraticContinuityAtZero_ofDiscreteTemporalAction C J L H)
+          .toStrongContinuityOnObservableStates)).closedRightHamiltonian := by
   exact
     closedRightHamiltonian_isSelfAdjoint_ofDiscreteTemporalActionOfFloor_ofOSQuadraticContinuity
       C J latticeTime_eq L H
