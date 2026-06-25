@@ -125,6 +125,38 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalClosedRightHamiltonian_gap
     G.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
       T hP (T.vacuumOrthogonalAmbientDomainPoint x) hxOrthogonal
 
+/-- The transferred Rayleigh gap excludes every nonzero excitation eigenvector
+with eigenvalue strictly below the mass.  Unlike the corresponding ambient
+statement, no positivity assumption on the eigenvalue is needed because
+vacuum orthogonality is built into the carrier. -/
+theorem FiniteVolumeVacuumGapTransfer.
+    vacuumOrthogonalClosedRightHamiltonian_no_eigenvector_below_mass
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSymmetric :
+      T.closedRightHamiltonian.IsFormalAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ}
+    (hlambda : lambda < G.mass)
+    (x : (T.vacuumOrthogonalClosedRightHamiltonian hSymmetric).domain)
+    (hEigen :
+      T.vacuumOrthogonalClosedRightHamiltonian hSymmetric x =
+        lambda • ((x : T.vacuumOrthogonalClosedRightHamiltonianDomain) :
+          P.VacuumOrthogonalHilbert)) :
+    ((x : T.vacuumOrthogonalClosedRightHamiltonianDomain) :
+      P.VacuumOrthogonalHilbert) = 0 := by
+  have hgap :=
+    G.vacuumOrthogonalClosedRightHamiltonian_gap T hP hSymmetric x
+  rw [hEigen, real_inner_smul_left,
+    real_inner_self_eq_norm_sq] at hgap
+  have hnormSq :
+      ‖((x : T.vacuumOrthogonalClosedRightHamiltonianDomain) :
+        P.VacuumOrthogonalHilbert)‖ ^ 2 = 0 := by
+    nlinarith [sq_nonneg
+      ‖((x : T.vacuumOrthogonalClosedRightHamiltonianDomain) :
+        P.VacuumOrthogonalHilbert)‖]
+  exact norm_eq_zero.mp (sq_eq_zero_iff.mp hnormSq)
+
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
