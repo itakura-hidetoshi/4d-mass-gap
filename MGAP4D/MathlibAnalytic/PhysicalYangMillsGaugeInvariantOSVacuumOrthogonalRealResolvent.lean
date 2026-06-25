@@ -64,6 +64,66 @@ theorem realShift_injective
   apply Subtype.ext
   exact sub_eq_zero.mp (norm_eq_zero.mp hnorm)
 
+variable [CompleteSpace E]
+
+/-- For a self-adjoint operator bounded below by `mass`, every real shift below
+`mass` has dense range.  Orthogonality to the range creates an adjoint-domain
+eigenvector at `lambda`; self-adjointness and the Rayleigh bound force it to
+vanish. -/
+theorem realShift_dense_range
+    (A : E →ₗ.[ℝ] E) {mass lambda : ℝ}
+    (hSelf : IsSelfAdjoint A)
+    (hlambda : lambda < mass)
+    (hgap : ∀ x : A.domain,
+      mass * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E)) :
+    Dense (LinearMap.range (A.realShift lambda) : Set E) := by
+  have hOrthogonal :
+      (LinearMap.range (A.realShift lambda))ᗮ = (⊥ : Submodule ℝ E) := by
+    apply bot_unique
+    intro z hz
+    have hRangeOrthogonal (x : A.domain) :
+        inner ℝ (A.realShift lambda x) z = 0 :=
+      hz (A.realShift lambda x) ⟨x, rfl⟩
+    have hAdjointPairing (x : A.domain) :
+        inner ℝ (lambda • z) (x : E) = inner ℝ z (A x) := by
+      have hzero := hRangeOrthogonal x
+      simp only [realShift_apply, inner_sub_left, real_inner_smul_left] at hzero
+      calc
+        inner ℝ (lambda • z) (x : E) =
+            lambda * inner ℝ z (x : E) := by
+          rw [real_inner_smul_left]
+        _ = lambda * inner ℝ (x : E) z := by
+          rw [real_inner_comm z (x : E)]
+        _ = inner ℝ (A x) z := by linarith
+        _ = inner ℝ z (A x) := real_inner_comm _ _
+    have hzAdjointDomain : z ∈ A.adjoint.domain :=
+      A.mem_adjoint_domain_of_exists z ⟨lambda • z, hAdjointPairing⟩
+    let zAdjoint : A.adjoint.domain := ⟨z, hzAdjointDomain⟩
+    have hAdjointValue : A.adjoint zAdjoint = lambda • z :=
+      A.adjoint_apply_eq hSelf.dense_domain zAdjoint hAdjointPairing
+    have hSelfEq : A.adjoint = A :=
+      (LinearPMap.isSelfAdjoint_def).mp hSelf
+    have hzDomain : z ∈ A.domain := by
+      rw [← hSelfEq]
+      exact hzAdjointDomain
+    let zDomain : A.domain := ⟨z, hzDomain⟩
+    have hAdjointLe : A.adjoint ≤ A := le_of_eq hSelfEq
+    have hSameValue : A.adjoint zAdjoint = A zDomain :=
+      hAdjointLe.2 rfl
+    have hEigen : A zDomain = lambda • z :=
+      hSameValue.symm.trans hAdjointValue
+    have hgapz := hgap zDomain
+    rw [hEigen, real_inner_smul_left,
+      real_inner_self_eq_norm_sq] at hgapz
+    have hnormSq : ‖z‖ ^ 2 = 0 := by
+      nlinarith [sq_nonneg ‖z‖]
+    have hzZero : z = 0 :=
+      norm_eq_zero.mp (sq_eq_zero_iff.mp hnormSq)
+    simpa [hzZero]
+  rw [dense_iff_closure_eq]
+  rw [← SetLike.coe_eq_coe, ← Submodule.topologicalClosure_coe]
+  exact (Submodule.topologicalClosure_eq_top_iff).2 hOrthogonal
+
 end LinearPMap
 
 namespace MGAP4D
@@ -127,6 +187,29 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealShift_injective
       (T.vacuumOrthogonalClosedRightHamiltonianRealShift hSelf lambda) := by
   apply LinearPMap.realShift_injective
     (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
+    hlambda
+  intro y
+  simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
+    G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
+      ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) y
+
+/-- Every real shift below the transferred mass has dense range in the complete
+excitation Hilbert space. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealShift_dense_range
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ} (hlambda : lambda < G.mass) :
+    Dense
+      (LinearMap.range
+        (T.vacuumOrthogonalClosedRightHamiltonianRealShift hSelf lambda) :
+          Set P.VacuumOrthogonalHilbert) := by
+  apply LinearPMap.realShift_dense_range
+    (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
+    (hSelf :=
+      T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
+        hP hSelf)
     hlambda
   intro y
   simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
