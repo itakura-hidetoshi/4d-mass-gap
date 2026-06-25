@@ -164,7 +164,15 @@ theorem osQuadraticValue_difference_eq_continuum_integral
           P.carrierOfPositiveTime F) =
       ∫ A, T.osQuadraticDifferenceIntegrand t F A
         ∂(S.continuumMeasure : Measure S.Configuration) := by
-  unfold osQuadraticValue
+  change
+    D.osBilinForm P.omega
+        (P.toPositiveTime
+          (P.carrierOfPositiveTime (T.translate t F) -
+            P.carrierOfPositiveTime F))
+        (P.toPositiveTime
+          (P.carrierOfPositiveTime (T.translate t F) -
+            P.carrierOfPositiveTime F)) =
+      _
   rw [D.osBilinForm_apply, hOmega,
     physicalYangMillsContinuumGaugeInvariantWeakStarState_apply,
     physicalYangMillsContinuumGaugeInvariantExpectation_apply]
@@ -173,33 +181,33 @@ theorem osQuadraticValue_difference_eq_continuum_integral
 /-- Dominated-convergence data for the actual continuum reflected quadratic
 integrand at Euclidean time zero. -/
 structure OSQuadraticDominatedConvergenceAtZero
-    (T : P.PositiveTimeObservableContractionSemigroup) where
+    (T : P.PositiveTimeObservableContractionSemigroup) : Type where
   omega_eq_continuumState :
     P.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState S
   bound : D.positiveTimeSubalgebra → S.Configuration → ℝ
   bound_integrable : ∀ F,
     Integrable (bound F) (S.continuumMeasure : Measure S.Configuration)
   integrand_aestronglyMeasurable : ∀ F,
-    ∀ᶠ t : NNReal in 𝓝 0,
+    ∀ᶠ t : NNReal in nhds 0,
       AEStronglyMeasurable
         (T.osQuadraticDifferenceIntegrand t F)
         (S.continuumMeasure : Measure S.Configuration)
   integrand_bound : ∀ F,
-    ∀ᶠ t : NNReal in 𝓝 0,
+    ∀ᶠ t : NNReal in nhds 0,
       ∀ᵐ A ∂(S.continuumMeasure : Measure S.Configuration),
         ‖T.osQuadraticDifferenceIntegrand t F A‖ ≤ bound F A
   integrand_tendsto : ∀ F,
     ∀ᵐ A ∂(S.continuumMeasure : Measure S.Configuration),
       Tendsto
         (fun t : NNReal => T.osQuadraticDifferenceIntegrand t F A)
-        (𝓝 0)
-        (𝓝 (T.osQuadraticDifferenceIntegrand 0 F A))
+        (nhds 0)
+        (nhds (T.osQuadraticDifferenceIntegrand 0 F A))
 
 /-- Concrete pointwise input for dominated convergence.  The reflected quadratic
 integrand is already a bounded continuous function of the configuration, so only
 a uniform scalar bound and pointwise Euclidean-time continuity remain. -/
 structure OSQuadraticUniformBoundContinuityAtZero
-    (T : P.PositiveTimeObservableContractionSemigroup) where
+    (T : P.PositiveTimeObservableContractionSemigroup) : Type where
   omega_eq_continuumState :
     P.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState S
   bound : D.positiveTimeSubalgebra → ℝ
@@ -208,8 +216,8 @@ structure OSQuadraticUniformBoundContinuityAtZero
   integrand_tendsto : ∀ F A,
     Tendsto
       (fun t : NNReal => T.osQuadraticDifferenceIntegrand t F A)
-      (𝓝 0)
-      (𝓝 (T.osQuadraticDifferenceIntegrand 0 F A))
+      (nhds 0)
+      (nhds (T.osQuadraticDifferenceIntegrand 0 F A))
 
 namespace OSQuadraticUniformBoundContinuityAtZero
 
@@ -262,8 +270,8 @@ theorem toOSQuadraticContinuityAtZero
         (fun t : NNReal =>
           ∫ A, T.osQuadraticDifferenceIntegrand t F A
             ∂(S.continuumMeasure : Measure S.Configuration))
-        (𝓝 0)
-        (𝓝
+        (nhds 0)
+        (nhds
           (∫ A, T.osQuadraticDifferenceIntegrand 0 F A
             ∂(S.continuumMeasure : Measure S.Configuration))) :=
     MeasureTheory.tendsto_integral_filter_of_dominated_convergence
