@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIdentity
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventParameterContinuity
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -60,6 +60,9 @@ positive-time observable algebra
 → sharp operator-norm bound by the inverse distance to the mass threshold
 → real resolvent identity
 → quantitative two-parameter resolvent continuity bound
+→ bundled resolvent family on the open sub-mass interval
+→ uniform delta⁻² Lipschitz control away from the mass threshold
+→ local Lipschitz regularity and operator-norm continuity
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -90,9 +93,13 @@ and the quantitative estimate
   ≤ |lambda - mu| (mass - lambda)⁻¹ (mass - mu)⁻¹.
 ```
 
-Thus the real sub-mass resolvent family has explicit two-parameter norm control,
-while point and continuous real spectrum below the transferred mass remain
-excluded without assuming a native unbounded-operator spectrum object.
+The resolvents are now bundled as a single map from `Set.Iio mass` into the
+operator-norm space of continuous linear endomorphisms.  On every truncated
+sub-mass region `lambda ≤ mass - delta` with `delta > 0`, this family is
+Lipschitz with constant `delta⁻²`.  Consequently it is locally Lipschitz and
+continuous throughout the open real sub-mass interval.  Point and continuous
+real spectrum below the transferred mass remain excluded without assuming a
+native unbounded-operator spectrum object.
 
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
