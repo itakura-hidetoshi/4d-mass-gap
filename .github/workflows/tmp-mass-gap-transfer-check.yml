@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/tmp-mass-gap-transfer-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer.lean"
       - "lean-toolchain"
       - "lakefile.lean"
       - "lake-manifest.json"
@@ -24,4 +25,4 @@ jobs:
       - uses: actions/checkout@v6
       - uses: leanprover/lean-action@v1
         with:
-          build-args: MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer
+          build-args: MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer
