@@ -54,7 +54,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
             (0 : ℝ) •
               (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
                 (0 + 1) :=
-        (zero_smul ℝ _).symm
+        (zero_smul ℝ
+          ((G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+            (0 + 1))).symm
       rw [hzero] at hconst
       simpa only [pow_zero] using hconst
   | succ k ih =>
@@ -99,7 +101,11 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
               Rlambda ^ k * Rlambda ^ 2 =
             ((Nat.succ k : ℕ) : ℝ) •
               Rlambda ^ (Nat.succ k + 1)
-        rw [Algebra.smul_mul_assoc]
+        have hsmul :
+            ((k : ℝ) • Rlambda ^ (k + 1)) * Rlambda =
+              (k : ℝ) • (Rlambda ^ (k + 1) * Rlambda) :=
+          Algebra.smul_mul_assoc (k : ℝ) (Rlambda ^ (k + 1)) Rlambda
+        rw [hsmul]
         have hfirst : Rlambda ^ (k + 1) * Rlambda = Rlambda ^ (k + 2) := by
           simpa [Nat.add_assoc] using (pow_succ Rlambda (k + 1)).symm
         have hsecond : Rlambda ^ k * Rlambda ^ 2 = Rlambda ^ (k + 2) := by
