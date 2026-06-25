@@ -79,7 +79,8 @@ theorem realResolventOn_hasDerivWithinAt
   have hres :
       Tendsto (A.realResolventOn hSelf hgap)
         (𝓝[Set.Iio mass] lambda) (𝓝 Rlambda) := by
-    simpa [Rlambda] using hres0
+    rw [A.realResolventOn_of_lt hSelf hgap hlambda] at hres0
+    exact hres0
   have hres' :
       Tendsto (A.realResolventOn hSelf hgap)
         (𝓝[Set.Iio mass \ {lambda}] lambda) (𝓝 Rlambda) :=
@@ -182,7 +183,7 @@ theorem realResolventOn_contDiffOn_one
       mass * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E)) :
     ContDiffOn ℝ 1 (A.realResolventOn hSelf hgap) (Set.Iio mass) := by
   rw [show (1 : ℕ∞ω) = 0 + 1 from rfl,
-    contDiffOn_succ_iff_deriv_of_isOpen Set.isOpen_Iio]
+    contDiffOn_succ_iff_deriv_of_isOpen isOpen_Iio]
   refine ⟨A.realResolventOn_differentiableOn hSelf hgap, ?_, ?_⟩
   · simp
   · simpa only [contDiffOn_zero] using
@@ -201,33 +202,18 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
-/-- The transferred Rayleigh bound in the exact domain type used by the
-vacuum-orthogonal closed Hamiltonian resolvent. -/
-theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent_rayleigh
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
-    (hP : P.IsNormalized)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (y : (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf).domain) :
-    G.mass * ‖(y : P.VacuumOrthogonalHilbert)‖ ^ 2 ≤
-      inner ℝ
-        (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf y)
-        (y : P.VacuumOrthogonalHilbert) := by
-  simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-    G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-      ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) y
-
 /-- A total real-parameter representative of the excitation resolvent. -/
 noncomputable def FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
-    ℝ → P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
-  LinearPMap.realResolventOn
-    (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-    (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint hP hSelf)
-    (G.vacuumOrthogonalRealResolvent_rayleigh T hP hSelf)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (lambda : ℝ) :
+    P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
+  if hlambda : lambda < G.mass then
+    G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
+  else
+    0
 
 @[simp] theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_of_lt
     (T : P.StronglyContinuousPhysicalSemigroup)
@@ -237,12 +223,87 @@ noncomputable def FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn
     {lambda : ℝ} (hlambda : lambda < G.mass) :
     G.vacuumOrthogonalRealResolventOn T hP hSelf lambda =
       G.vacuumOrthogonalRealResolvent T hP hSelf hlambda := by
-  simp [vacuumOrthogonalRealResolventOn,
-    FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent,
-    LinearPMap.realResolventOn, hlambda]
+  simp [vacuumOrthogonalRealResolventOn, hlambda]
 
-/-- The excitation resolvent has operator-norm derivative equal to its square
-at every real parameter below the transferred mass. -/
+/-- The total representative restricts to the continuous excitation-resolvent
+family on the open sub-mass interval. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_continuousOn
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
+    ContinuousOn
+      (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+      (Set.Iio G.mass) := by
+  rw [continuousOn_iff_continuous_restrict]
+  have heq :
+      (Set.Iio G.mass).restrict
+          (G.vacuumOrthogonalRealResolventOn T hP hSelf) =
+        G.vacuumOrthogonalRealResolventFamily T hP hSelf := by
+    funext lambda
+    exact G.vacuumOrthogonalRealResolventOn_of_lt
+      T hP hSelf lambda.property
+  rw [heq]
+  exact G.vacuumOrthogonalRealResolventFamily_continuous T hP hSelf
+
+/-- The excitation resolvent has within-derivative equal to its square below
+the transferred mass. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ} (hlambda : lambda < G.mass) :
+    HasDerivWithinAt
+      (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+      ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+        (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
+      (Set.Iio G.mass) lambda := by
+  rw [hasDerivWithinAt_iff_tendsto_slope]
+  let Rlambda := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
+  have hres0 :
+      Tendsto
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (𝓝[Set.Iio G.mass] lambda)
+        (𝓝 (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda)) :=
+    G.vacuumOrthogonalRealResolventOn_continuousOn
+      T hP hSelf lambda hlambda
+  have hres :
+      Tendsto
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (𝓝[Set.Iio G.mass] lambda) (𝓝 Rlambda) := by
+    rw [G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda] at hres0
+    exact hres0
+  have hres' :
+      Tendsto
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (𝓝[Set.Iio G.mass \ {lambda}] lambda) (𝓝 Rlambda) :=
+    hres.mono_left <| nhdsWithin_mono _ <| by
+      intro mu hmu
+      exact hmu.1
+  have hcomp :
+      Tendsto
+        (fun mu =>
+          (G.vacuumOrthogonalRealResolventOn T hP hSelf mu).comp Rlambda)
+        (𝓝[Set.Iio G.mass \ {lambda}] lambda)
+        (𝓝 (Rlambda.comp Rlambda)) := by
+    exact
+      (continuous_id.clm_comp_const Rlambda).continuousAt.tendsto.comp hres'
+  apply hcomp.congr'
+  filter_upwards [self_mem_nhdsWithin] with mu hmu
+  rcases hmu with ⟨hmuMass, hmuNe⟩
+  have hne : mu - lambda ≠ 0 := by
+    apply sub_ne_zero.mpr
+    simpa only [mem_singleton_iff] using hmuNe
+  rw [slope_def_module,
+    G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hmuMass,
+    G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda,
+    G.vacuumOrthogonalRealResolvent_identity
+      T hP hSelf hmuMass hlambda,
+    inv_smul_smul₀ hne]
+
+/-- The excitation resolvent has ordinary operator-norm derivative equal to its
+square at every real parameter below the transferred mass. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_hasDerivAt
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
@@ -253,16 +314,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_hasDerivAt
       (G.vacuumOrthogonalRealResolventOn T hP hSelf)
       ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
         (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
-      lambda := by
-  simpa only [vacuumOrthogonalRealResolventOn,
-    FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent] using
-    (LinearPMap.realResolventOn_hasDerivAt
-      (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (hSelf :=
-        T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
-          hP hSelf)
-      (hgap := G.vacuumOrthogonalRealResolvent_rayleigh T hP hSelf)
-      hlambda)
+      lambda :=
+  (G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
+    T hP hSelf hlambda).hasDerivAt (Iio_mem_nhds hlambda)
 
 /-- Explicit derivative formula for the excitation resolvent. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_deriv
@@ -289,8 +343,38 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_differenti
       (Set.Iio G.mass) := by
   intro lambda hlambda
   exact
-    (G.vacuumOrthogonalRealResolventOn_hasDerivAt
-      T hP hSelf hlambda).hasDerivWithinAt.differentiableWithinAt
+    (G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
+      T hP hSelf hlambda).differentiableWithinAt
+
+/-- The derivative of the excitation resolvent is continuous on the real
+sub-mass interval. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_continuousOn_deriv
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
+    ContinuousOn
+      (deriv (G.vacuumOrthogonalRealResolventOn T hP hSelf))
+      (Set.Iio G.mass) := by
+  have hdiff :=
+    G.vacuumOrthogonalRealResolventOn_differentiableOn T hP hSelf
+  have hsquare :
+      ContinuousOn
+        (fun lambda =>
+          (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda).comp
+            (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda))
+        (Set.Iio G.mass) :=
+    (hdiff.clm_comp hdiff).continuousOn
+  apply hsquare.congr
+  intro lambda hlambda
+  calc
+    deriv (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
+        (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+          (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) :=
+      G.vacuumOrthogonalRealResolventOn_deriv T hP hSelf hlambda
+    _ = (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda).comp
+          (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) := by
+      rw [G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda]
 
 /-- The excitation resolvent is `C¹` in operator norm throughout the open real
 sub-mass interval. -/
@@ -302,13 +386,13 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_contDiffOn
     ContDiffOn ℝ 1
       (G.vacuumOrthogonalRealResolventOn T hP hSelf)
       (Set.Iio G.mass) := by
-  simpa only [vacuumOrthogonalRealResolventOn] using
-    (LinearPMap.realResolventOn_contDiffOn_one
-      (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (hSelf :=
-        T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
-          hP hSelf)
-      (hgap := G.vacuumOrthogonalRealResolvent_rayleigh T hP hSelf))
+  rw [show (1 : ℕ∞ω) = 0 + 1 from rfl,
+    contDiffOn_succ_iff_deriv_of_isOpen isOpen_Iio]
+  refine ⟨G.vacuumOrthogonalRealResolventOn_differentiableOn
+      T hP hSelf, ?_, ?_⟩
+  · simp
+  · simpa only [contDiffOn_zero] using
+      G.vacuumOrthogonalRealResolventOn_continuousOn_deriv T hP hSelf
 
 /-- Differentiability and `C¹` package for the excitation resolvent below the
 transferred mass. -/
