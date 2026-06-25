@@ -38,7 +38,7 @@ permissions:
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: "ee4097836a9aa7375f9d10f50d43e54075f15d3f"
+  CHECK_CHANGED_LEAN_BASE_REF: "bbfe7a46ba76137cbb73166821937ea64aa177dc"
   LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
 
 jobs:
