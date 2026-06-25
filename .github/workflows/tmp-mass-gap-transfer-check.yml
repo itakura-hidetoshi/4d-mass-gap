@@ -8,6 +8,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedMassGapPointSpectrum.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCore.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalDenseDomain.lean"
       - "lean-toolchain"
@@ -60,7 +61,7 @@ jobs:
           lean --version
           lake --version
 
-      - name: Build excitation Hamiltonian and elaborate dense domain
+      - name: Build mass-gap point spectrum and dense excitation domain
         id: elaborate
         shell: bash
         run: |
@@ -68,6 +69,7 @@ jobs:
           : > /tmp/mass-gap-dense.log
           set +e
           lake build --quiet \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedMassGapPointSpectrum \
             MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian \
             >> /tmp/mass-gap-dense.log 2>&1
           status=$?
