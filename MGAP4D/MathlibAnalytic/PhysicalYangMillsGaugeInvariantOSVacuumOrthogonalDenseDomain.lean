@@ -81,6 +81,26 @@ theorem vacuumOrthogonalClosedRightHamiltonian_dense_domain
     T.closedRightHamiltonian.domain
   simpa [corrected] using hCorrectedDomain n
 
+/-- In the self-adjoint realization on the excitation Hilbert space, every
+putative eigenvector with eigenvalue below the transferred mass is zero. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_eq_zero_of_eigenvalue_lt_mass
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ}
+    (hlambda : lambda < G.mass)
+    (x : (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf).domain)
+    (hEigen :
+      T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf x =
+        lambda • (x : P.VacuumOrthogonalHilbert)) :
+    (x : P.VacuumOrthogonalHilbert) = 0 := by
+  simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
+    G.vacuumOrthogonalClosedRightHamiltonian_eq_zero_of_eigenvalue_lt_mass
+      T hP
+      ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf)
+      hlambda x hEigen
+
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 end
