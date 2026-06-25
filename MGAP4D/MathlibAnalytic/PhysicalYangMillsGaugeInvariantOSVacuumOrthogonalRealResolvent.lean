@@ -57,7 +57,13 @@ theorem realShift_injective
     Function.Injective (A.realShift lambda) := by
   intro x y hxy
   have hbound := A.realShift_norm_lower_bound hlambda hgap (x - y)
-  rw [map_sub, hxy, sub_self, norm_zero] at hbound
+  have hshiftZero : A.realShift lambda (x - y) = 0 := by
+    calc
+      A.realShift lambda (x - y) =
+          A.realShift lambda x - A.realShift lambda y :=
+        (A.realShift lambda).map_sub x y
+      _ = 0 := sub_eq_zero.mpr hxy
+  rw [hshiftZero, norm_zero] at hbound
   have hpositive : 0 < mass - lambda := sub_pos.mpr hlambda
   have hnorm : ‖((x - y : A.domain) : E)‖ = 0 := by
     nlinarith [norm_nonneg (((x - y : A.domain) : E))]
@@ -121,8 +127,12 @@ theorem realShift_dense_range
       norm_eq_zero.mp (sq_eq_zero_iff.mp hnormSq)
     simpa [hzZero]
   rw [dense_iff_closure_eq]
-  rw [← SetLike.coe_eq_coe, ← Submodule.topologicalClosure_coe]
-  exact (Submodule.topologicalClosure_eq_top_iff).2 hOrthogonal
+  have hTopologicalClosure :
+      (LinearMap.range (A.realShift lambda)).topologicalClosure =
+        (⊤ : Submodule ℝ E) :=
+    (Submodule.topologicalClosure_eq_top_iff).2 hOrthogonal
+  simpa only [Submodule.topologicalClosure_coe, Submodule.coe_top] using
+    congrArg (fun K : Submodule ℝ E => (K : Set E)) hTopologicalClosure
 
 end LinearPMap
 
