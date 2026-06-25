@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -43,6 +44,12 @@ positive-time observable algebra
 → right generator and Hamiltonian formal symmetry
 → graph-closed Hamiltonian formal symmetry
 → conditional closed Hamiltonian self-adjointness
+→ complete vacuum-orthogonal excitation Hilbert sector
+→ dense restricted Hamiltonian domain
+→ excitation-sector positive-shift surjectivity
+→ self-adjoint and graph-closed excitation Hamiltonian
+→ transferred Rayleigh lower bound
+→ exclusion of every excitation eigenvalue below the transferred mass
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
@@ -51,11 +58,14 @@ constructed.  Scale-dependent integer times, dense floor approximation, and
 joint continuity now transport exact finite-time invariance to a genuine real
 continuum action without assuming exact finite invariance at every target real
 time.  The continuum-only reflection bridge feeds that action into the existing
-OS symmetry and self-adjointness route.
+OS symmetry and self-adjointness route.  The ambient resolvent then descends to
+the vacuum-orthogonal carrier, where Mathlib supplies a self-adjoint and closed
+excitation Hamiltonian.
 
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
 identification of the OS state with the continuum expectation state, and
 observable-state strong continuity.  A real-time unitary group, vacuum
-uniqueness, and a positive spectral gap are not constructed here.
+uniqueness, and exclusion of continuous spectrum below the transferred mass are
+not constructed here.
 -/
