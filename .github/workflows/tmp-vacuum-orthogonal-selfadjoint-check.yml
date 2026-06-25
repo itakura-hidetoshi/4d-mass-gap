@@ -32,8 +32,9 @@ jobs:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ runner.os }}-vacuum-orthogonal-selfadjoint-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          key: ${{ runner.os }}-vacuum-orthogonal-selfadjoint-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-vacuum-orthogonal-selfadjoint-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-
 
@@ -76,6 +77,15 @@ jobs:
             /tmp/vacuum-orthogonal-selfadjoint.log
             /tmp/vacuum-orthogonal-selfadjoint-tail.log
           if-no-files-found: error
+
+      - name: Save target Lake cache
+        if: always()
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-vacuum-orthogonal-selfadjoint-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
 
       - name: Propagate build status
         if: always()
