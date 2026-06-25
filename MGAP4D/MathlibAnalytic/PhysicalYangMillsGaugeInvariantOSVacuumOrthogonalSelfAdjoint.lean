@@ -2,9 +2,6 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalD
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Tactic
 
-namespace MGAP4D
-namespace MathlibAnalytic
-
 noncomputable section
 
 open Set
@@ -102,6 +99,9 @@ theorem isSelfAdjoint_of_isFormalAdjoint_of_oneShift_surjective
 
 end LinearPMap
 
+namespace MGAP4D
+namespace MathlibAnalytic
+
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
@@ -168,6 +168,10 @@ theorem vacuumOrthogonalClosedRightHamiltonianOneShift_surjective
     have hinner :=
       congrArg (fun z : P.PhysicalHilbert => inner ℝ P.vacuum z)
         huAmbient
+    change inner ℝ P.vacuum
+        ((u : P.PhysicalHilbert) + T.closedRightHamiltonian u) =
+      inner ℝ P.vacuum
+        ((y : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) at hinner
     rw [inner_add_right, hHamiltonianOrthogonal, add_zero,
       hyOrthogonal] at hinner
     exact hinner
@@ -179,9 +183,8 @@ theorem vacuumOrthogonalClosedRightHamiltonianOneShift_surjective
     ⟨uExcitation, u.property⟩
   refine ⟨uRestricted, ?_⟩
   apply Subtype.ext
-  change (u : P.PhysicalHilbert) + T.closedRightHamiltonian u =
-    ((y : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)
-  exact huAmbient
+  simpa [vacuumOrthogonalClosedRightHamiltonianOneShift,
+    LinearPMap.oneShift_apply] using huAmbient
 
 /-- A dense symmetric excitation-sector restriction is self-adjoint. -/
 theorem vacuumOrthogonalClosedRightHamiltonian_isSelfAdjoint_of_dense
@@ -240,7 +243,7 @@ theorem vacuumOrthogonalClosedRightHamiltonian_operator_package
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
-end
-
 end MathlibAnalytic
 end MGAP4D
+
+end
