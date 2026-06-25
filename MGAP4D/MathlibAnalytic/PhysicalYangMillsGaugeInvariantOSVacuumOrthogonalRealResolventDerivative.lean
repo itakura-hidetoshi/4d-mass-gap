@@ -202,6 +202,8 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
+set_option maxHeartbeats 800000
+
 /-- A total real-parameter representative of the excitation resolvent. -/
 noncomputable def FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn
     (T : P.StronglyContinuousPhysicalSemigroup)
