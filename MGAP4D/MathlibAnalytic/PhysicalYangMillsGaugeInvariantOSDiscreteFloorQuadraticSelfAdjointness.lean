@@ -154,8 +154,7 @@ noncomputable def osQuadraticDominatedConvergenceAtZero_ofDiscreteTemporalAction
     {T : P.PositiveTimeObservableContractionSemigroup}
     (H : DiscreteFloorCompatibility C L T) :
     T.OSQuadraticDominatedConvergenceAtZero :=
-  (osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction C J L H)
-    .toOSQuadraticDominatedConvergenceAtZero
+  (osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction C J L H).toOSQuadraticDominatedConvergenceAtZero
 
 /-- The scalar OS quadratic continuity previously left as an analytic input is
 generated from the existing floor-time joint continuity and the boundedness of
@@ -172,8 +171,7 @@ noncomputable def osQuadraticContinuityAtZero_ofDiscreteTemporalAction
     {T : P.PositiveTimeObservableContractionSemigroup}
     (H : DiscreteFloorCompatibility C L T) :
     T.OSQuadraticContinuityAtZero :=
-  (osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction C J L H)
-    .toOSQuadraticContinuityAtZero
+  (osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction C J L H).toOSQuadraticContinuityAtZero
 
 /-- Exact finite integer temporal translations, floor dense-time approximation,
 joint continuity, continuum reflection compatibility, and continuity at zero of
@@ -220,8 +218,7 @@ theorem closedRightHamiltonian_isSelfAdjoint_ofDiscreteTemporalActionOfFloor_ofQ
     IsSelfAdjoint
       (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         T
-        ((osQuadraticContinuityAtZero_ofDiscreteTemporalAction C J L H)
-          .toStrongContinuityOnObservableStates)).closedRightHamiltonian := by
+        (osQuadraticContinuityAtZero_ofDiscreteTemporalAction C J L H).toStrongContinuityOnObservableStates).closedRightHamiltonian := by
   exact
     closedRightHamiltonian_isSelfAdjoint_ofDiscreteTemporalActionOfFloor_ofOSQuadraticContinuity
       C J latticeTime_eq L H
