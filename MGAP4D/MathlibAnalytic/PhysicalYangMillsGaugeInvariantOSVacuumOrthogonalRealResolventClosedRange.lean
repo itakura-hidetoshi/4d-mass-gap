@@ -53,8 +53,7 @@ theorem realShift_isClosed_range
         (mass - lambda) * ‖(((x m - x n : A.domain) : E))‖ <
           (mass - lambda) * epsilon :=
       lt_of_le_of_lt hbound hyclose
-    have hxlt := (mul_lt_mul_left hpositive).mp hmul
-    simpa using hxlt
+    nlinarith
   obtain ⟨xLimit, hxLimit⟩ := cauchySeq_tendsto_of_complete hxCauchy
   have hAeq (n : ℕ) :
       A (x n) = ySeq n + lambda • (x n : E) := by
