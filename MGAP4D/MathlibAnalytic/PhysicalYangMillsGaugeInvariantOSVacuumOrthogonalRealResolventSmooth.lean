@@ -33,8 +33,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_contDiffOn
       (Set.Iio G.mass) := by
   induction n with
   | zero =>
-      simpa only [contDiffOn_zero] using
-        G.vacuumOrthogonalRealResolventOn_continuousOn T hP hSelf
+      simpa using
+        (contDiffOn_zero.2
+          (G.vacuumOrthogonalRealResolventOn_continuousOn T hP hSelf))
   | succ n ih =>
       apply (contDiffOn_succ_iff_deriv_of_isOpen
         (n := (n : ℕ∞ω)) isOpen_Iio).2
@@ -48,8 +49,16 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_contDiffOn
                   (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda))
               (Set.Iio G.mass) :=
           ih.clm_comp ih
-        exact hsquare.congr fun lambda hlambda =>
-          G.vacuumOrthogonalRealResolventOn_deriv T hP hSelf hlambda
+        apply hsquare.congr
+        intro lambda hlambda
+        calc
+          deriv (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
+              (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+                (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) :=
+            G.vacuumOrthogonalRealResolventOn_deriv T hP hSelf hlambda
+          _ = (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda).comp
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) := by
+            rw [G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda]
 
 /-- The vacuum-orthogonal real resolvent is smooth in the operator-norm
 topology throughout the open real sub-mass interval. -/
