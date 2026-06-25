@@ -8,6 +8,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedMassGapPointSpectrum.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian.lean"
       - "lean-toolchain"
       - "lakefile.lean"
       - "lake-manifest.json"
@@ -26,4 +27,4 @@ jobs:
       - uses: actions/checkout@v6
       - uses: leanprover/lean-action@v1
         with:
-          build-args: MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedMassGapPointSpectrum
+          build-args: MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian
