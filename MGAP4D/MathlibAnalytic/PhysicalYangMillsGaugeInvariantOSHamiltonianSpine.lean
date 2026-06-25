@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalContinuousRealResolvent
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIdentity
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -58,6 +58,8 @@ positive-time observable algebra
 → linear real resolvent with quantitative inverse estimate
 → continuous linear real resolvent
 → sharp operator-norm bound by the inverse distance to the mass threshold
+→ real resolvent identity
+→ quantitative two-parameter resolvent continuity bound
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -73,12 +75,24 @@ excitation Hamiltonian.
 
 For every real `lambda` below the transferred mass, the shifted excitation
 Hamiltonian is injective, has dense and closed range, and is therefore
-surjective.  It is bundled as a linear equivalence, and its inverse satisfies
-the sharp coercive estimate determined by `mass - lambda`.  The inverse is now
-also bundled as a continuous linear endomorphism of the excitation Hilbert
-space, with operator norm at most `(mass - lambda)⁻¹`.  This excludes both point
-and continuous real spectrum below the transferred mass without hiding a native
-unbounded-operator spectrum object behind an additional assumption.
+surjective.  Its inverse is bundled as a continuous linear endomorphism with
+operator norm at most `(mass - lambda)⁻¹`.  For any two real parameters
+`lambda, mu < mass`, the resolvents satisfy
+
+```text
+R_lambda - R_mu = (lambda - mu) R_lambda R_mu
+```
+
+and the quantitative estimate
+
+```text
+‖R_lambda - R_mu‖
+  ≤ |lambda - mu| (mass - lambda)⁻¹ (mass - mu)⁻¹.
+```
+
+Thus the real sub-mass resolvent family has explicit two-parameter norm control,
+while point and continuous real spectrum below the transferred mass remain
+excluded without assuming a native unbounded-operator spectrum object.
 
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
