@@ -3,22 +3,16 @@ import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
-
 noncomputable section
-
 open Filter Set Topology
 open scoped InnerProductSpace LinearPMap
-
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
 variable {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
 variable {P : D.OSPreHilbertData}
-
 namespace StronglyContinuousPhysicalSemigroup
 
-/-- The vacuum-orthogonal restriction formed directly from self-adjointness of the
-ambient graph-closed Osterwalder--Schrader Hamiltonian. -/
+/-- The vacuum-orthogonal restriction obtained from ambient self-adjointness. -/
 def vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint
     (T : P.StronglyContinuousPhysicalSemigroup)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
@@ -26,31 +20,18 @@ def vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint
   T.vacuumOrthogonalClosedRightHamiltonian
     ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf)
 
-/-- The actual intersection domain `D(H̄) ∩ Ω⊥` is dense in the complete
-physical excitation Hilbert space `Ω⊥`.
-
-Take an ambient graph-domain approximation `uₙ → ψ` supplied by self-adjointness
-of `H̄`.  Subtract the vacuum coefficient
-
-`uₙ - ⟪uₙ, Ω⟫ Ω`.
-
-Normalization makes these vectors exactly vacuum-orthogonal.  The vacuum belongs
-to `D(H̄)`, so the corrected vectors remain in the Hamiltonian domain, while
-continuity of the inner product makes the correction converge to zero for every
-`ψ ∈ Ω⊥`. -/
+/-- The intersection of the closed Hamiltonian domain with the excitation sector is dense. -/
 theorem vacuumOrthogonalClosedRightHamiltonian_dense_domain
     (T : P.StronglyContinuousPhysicalSemigroup)
     (hP : P.IsNormalized)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
-    Dense
-      (((T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf).domain :
-        Set P.VacuumOrthogonalHilbert)) := by
+    Dense (((T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf).domain :
+      Set P.VacuumOrthogonalHilbert)) := by
   intro psi
   rw [mem_closure_iff_seq_limit]
   have hAmbientClosure :
-      (((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) ∈
-        closure
-          (T.closedRightHamiltonian.domain : Set P.PhysicalHilbert) :=
+      ((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) ∈
+        closure (T.closedRightHamiltonian.domain : Set P.PhysicalHilbert) :=
     hSelf.dense_domain _
   rw [mem_closure_iff_seq_limit] at hAmbientClosure
   rcases hAmbientClosure with ⟨u, huDomain, huTendsto⟩
@@ -58,16 +39,19 @@ theorem vacuumOrthogonalClosedRightHamiltonian_dense_domain
     rw [real_inner_self_eq_norm_sq, P.norm_vacuum hP]
     norm_num
   have hPsiOrthogonal :
-      inner ℝ
-          (((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
-          P.vacuum = 0 := by
+      inner ℝ ((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)
+        P.vacuum = 0 := by
     rw [real_inner_comm]
     exact (P.mem_vacuumOrthogonal_iff _).mp psi.property
-  let coefficient : ℕ → ℝ := fun n =>
-    inner ℝ (u n) P.vacuum
+  let coefficient : ℕ → ℝ := fun n => inner ℝ (u n) P.vacuum
   have hCoefficient : Tendsto coefficient atTop (nhds 0) := by
-    have hInner := huTendsto.inner tendsto_const_nhds
-    simpa [coefficient, hPsiOrthogonal] using hInner
+    have hInner :
+        Tendsto (fun n => inner ℝ (u n) P.vacuum) atTop
+          (nhds (inner ℝ
+            ((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)
+            P.vacuum)) :=
+      huTendsto.inner (𝕜 := ℝ) tendsto_const_nhds
+    simpa only [coefficient, hPsiOrthogonal] using hInner
   let correctedAmbient : ℕ → P.PhysicalHilbert := fun n =>
     u n - coefficient n • P.vacuum
   have hCorrectedOrthogonal (n : ℕ) :
@@ -75,17 +59,15 @@ theorem vacuumOrthogonalClosedRightHamiltonian_dense_domain
     rw [P.mem_vacuumOrthogonal_iff, real_inner_comm]
     change inner ℝ (u n - coefficient n • P.vacuum) P.vacuum = 0
     rw [inner_sub_left, real_inner_smul_left, hVacuumInner, mul_one]
-    rfl
+    simp [coefficient]
   have hCorrectedDomain (n : ℕ) :
-      correctedAmbient n ∈ T.closedRightHamiltonian.domain := by
-    exact T.closedRightHamiltonian.domain.sub_mem
-      (huDomain n)
-      (T.closedRightHamiltonian.domain.smul_mem
-        (coefficient n)
+      correctedAmbient n ∈ T.closedRightHamiltonian.domain :=
+    T.closedRightHamiltonian.domain.sub_mem (huDomain n)
+      (T.closedRightHamiltonian.domain.smul_mem (coefficient n)
         T.closedRightHamiltonianVacuumDomainPoint.property)
   have hCorrectedAmbientTendsto :
       Tendsto correctedAmbient atTop
-        (nhds (((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))) := by
+        (nhds ((psi : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) := by
     simpa [correctedAmbient] using
       huTendsto.sub (hCoefficient.smul_const P.vacuum)
   let corrected : ℕ → P.VacuumOrthogonalHilbert := fun n =>
@@ -95,16 +77,12 @@ theorem vacuumOrthogonalClosedRightHamiltonian_dense_domain
     simpa [corrected] using hCorrectedAmbientTendsto
   refine ⟨corrected, ?_, hCorrectedTendsto⟩
   intro n
-  change
-    ((corrected n : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) ∈
-      T.closedRightHamiltonian.domain
+  change ((corrected n : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) ∈
+    T.closedRightHamiltonian.domain
   simpa [corrected] using hCorrectedDomain n
 
 end StronglyContinuousPhysicalSemigroup
-
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-
 end
-
 end MathlibAnalytic
 end MGAP4D
