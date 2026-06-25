@@ -24,7 +24,7 @@ theorem realShift_isClosed_range
     (hlambda : lambda < mass)
     (hgap : ∀ x : A.domain,
       mass * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E)) :
-    IsClosed (LinearMap.range (A.realShift lambda) : Set E) := by
+    _root_.IsClosed (LinearMap.range (A.realShift lambda) : Set E) := by
   refine IsSeqClosed.isClosed ?_
   intro ySeq y hyRange hyTendsto
   choose x hx using hyRange
@@ -72,7 +72,7 @@ theorem realShift_isClosed_range
       Tendsto (fun n => ((x n : E), A (x n))) atTop
         (𝓝 (xLimit, y + lambda • xLimit)) := by
     simpa only [nhds_prod_eq] using hxLimit.prodMk hATendsto
-  have hGraphClosed : IsClosed (A.graph : Set (E × E)) := hClosed
+  have hGraphClosed : _root_.IsClosed (A.graph : Set (E × E)) := hClosed
   have hGraphMem : (xLimit, y + lambda • xLimit) ∈ A.graph :=
     hGraphClosed.mem_of_tendsto hPairTendsto
       (Eventually.of_forall fun n => A.mem_graph (x n))
@@ -108,7 +108,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealShift_isClosed_range
     (hP : P.IsNormalized)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     {lambda : ℝ} (hlambda : lambda < G.mass) :
-    IsClosed
+    _root_.IsClosed
       (LinearMap.range
         (T.vacuumOrthogonalClosedRightHamiltonianRealShift hSelf lambda) :
           Set P.VacuumOrthogonalHilbert) := by
