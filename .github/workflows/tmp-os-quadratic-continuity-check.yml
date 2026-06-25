@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/tmp-os-quadratic-continuity-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSQuadraticStrongContinuity.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSDiscreteFloorQuadraticSelfAdjointness.lean"
 
 permissions:
   contents: read
@@ -65,7 +66,7 @@ jobs:
         run: |
           set +e
           lake build \
-            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSQuadraticStrongContinuity \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSDiscreteFloorQuadraticSelfAdjointness \
             > /tmp/os-quadratic-continuity.log 2>&1
           status=$?
           cat /tmp/os-quadratic-continuity.log
