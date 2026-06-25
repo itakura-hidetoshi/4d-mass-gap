@@ -105,7 +105,14 @@ theorem VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
     rw [inner_sub_left, real_inner_smul_left, hvacuumInner, mul_one]
     simp [coefficient]
   have hCoefficient : Tendsto coefficient atTop (nhds 0) := by
-    have hinner := hzCoreFst.inner tendsto_const_nhds
+    have hinner :
+        Tendsto
+          (fun n => inner ℝ
+            ((zCore n : T.rightGeneratorDomain) : P.PhysicalHilbert)
+            P.vacuum)
+          atTop
+          (nhds (inner ℝ (psi : P.PhysicalHilbert) P.vacuum)) :=
+      hzCoreFst.inner (𝕜 := ℝ) tendsto_const_nhds
     simpa only [coefficient, hpsi] using hinner
   have hzOrthFst :
       Tendsto (fun n => ((zOrth n : T.rightGeneratorDomain) :
