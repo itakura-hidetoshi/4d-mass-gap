@@ -5,7 +5,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Filter MeasureTheory
+open Filter MeasureTheory Topology
 
 noncomputable section
 
@@ -164,7 +164,8 @@ theorem osQuadraticValue_difference_eq_continuum_integral
           P.carrierOfPositiveTime F) =
       ∫ A, T.osQuadraticDifferenceIntegrand t F A
         ∂(S.continuumMeasure : Measure S.Configuration) := by
-  rw [P.osQuadraticValue, D.osBilinForm_apply, hOmega,
+  unfold osQuadraticValue
+  rw [D.osBilinForm_apply, hOmega,
     physicalYangMillsContinuumGaugeInvariantWeakStarState_apply,
     physicalYangMillsContinuumGaugeInvariantExpectation_apply]
   rfl
@@ -172,7 +173,7 @@ theorem osQuadraticValue_difference_eq_continuum_integral
 /-- Dominated-convergence data for the actual continuum reflected quadratic
 integrand at Euclidean time zero. -/
 structure OSQuadraticDominatedConvergenceAtZero
-    (T : P.PositiveTimeObservableContractionSemigroup) : Prop where
+    (T : P.PositiveTimeObservableContractionSemigroup) where
   omega_eq_continuumState :
     P.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState S
   bound : D.positiveTimeSubalgebra → S.Configuration → ℝ
@@ -198,7 +199,7 @@ structure OSQuadraticDominatedConvergenceAtZero
 integrand is already a bounded continuous function of the configuration, so only
 a uniform scalar bound and pointwise Euclidean-time continuity remain. -/
 structure OSQuadraticUniformBoundContinuityAtZero
-    (T : P.PositiveTimeObservableContractionSemigroup) : Prop where
+    (T : P.PositiveTimeObservableContractionSemigroup) where
   omega_eq_continuumState :
     P.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState S
   bound : D.positiveTimeSubalgebra → ℝ
