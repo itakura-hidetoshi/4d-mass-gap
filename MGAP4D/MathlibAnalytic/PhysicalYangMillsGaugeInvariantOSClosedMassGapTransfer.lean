@@ -66,13 +66,13 @@ theorem VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
         ((psi : P.PhysicalHilbert), T.closedRightHamiltonian psi)).comp hu
   have hvalueEq :
       (fun n => (u n).2) =
-        fun n => T.rightHamiltonianLinearPMap z n := by
+        fun n => T.rightHamiltonianLinearPMap (z n) := by
     funext n
     exact (hzValue n).symm
   rw [hvalueEq] at huSnd
 
   let zCore : ℕ → T.rightGeneratorDomain := fun n =>
-    ⟨(z n : P.PhysicalHilbert), by simpa using (z n).property⟩
+    (show T.rightGeneratorDomain from z n)
   have hzCoreFst :
       Tendsto (fun n => ((zCore n : T.rightGeneratorDomain) :
         P.PhysicalHilbert)) atTop
