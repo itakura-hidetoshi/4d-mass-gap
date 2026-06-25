@@ -33,9 +33,11 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_contDiffOn
       (Set.Iio G.mass) := by
   induction n with
   | zero =>
-      simpa using
-        (contDiffOn_zero.2
-          (G.vacuumOrthogonalRealResolventOn_continuousOn T hP hSelf))
+      change ContDiffOn ℝ 0
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (Set.Iio G.mass)
+      exact (contDiffOn_zero (𝕜 := ℝ)).2
+        (G.vacuumOrthogonalRealResolventOn_continuousOn T hP hSelf)
   | succ n ih =>
       apply (contDiffOn_succ_iff_deriv_of_isOpen
         (n := (n : ℕ∞ω)) isOpen_Iio).2
