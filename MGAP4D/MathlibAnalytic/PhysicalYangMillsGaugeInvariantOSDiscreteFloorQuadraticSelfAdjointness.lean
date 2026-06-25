@@ -119,8 +119,29 @@ private theorem osQuadraticDifferenceIntegrand_norm_le_ofDiscreteFloor
   simpa only [pow_two] using hProduct
 
 /-- Existing joint temporal continuity and bounded-continuous observables provide
-all dominated-convergence data for the continuum reflected quadratic integrand.
-The dominating function is the constant `(2 * ‖F‖∞)^2`. -/
+the exact pointwise input for dominated convergence.  The reflected quadratic
+integrand is uniformly bounded by the constant `(2 * ‖F‖∞)^2`. -/
+noncomputable def osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction
+    {E₀ : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    {G : E₀.PhysicalGaugeAction} {A : E₀.PhysicalDiscreteTemporalAction}
+    (C : E₀.GaugeDiscreteTemporalCompatibility G A)
+    (J : A.JointContinuity)
+    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E₀.toLatticeEmbedding)
+    {D : PhysicalYangMillsGaugeInvariantOSReflectionData (G.toSymmetryLimit L)}
+    {P : D.OSPreHilbertData}
+    {T : P.PositiveTimeObservableContractionSemigroup}
+    (H : DiscreteFloorCompatibility C L T) :
+    T.OSQuadraticUniformBoundContinuityAtZero where
+  omega_eq_continuumState := H.omega_eq_continuumState
+  bound := fun F => (2 * ‖F.1.1‖) ^ 2
+  integrand_bound := fun F t X =>
+    osQuadraticDifferenceIntegrand_norm_le_ofDiscreteFloor C L H t F X
+  integrand_tendsto := fun F X =>
+    osQuadraticDifferenceIntegrand_continuousAt_zero_ofDiscreteFloor C J L H F X
+
+/-- The uniform pointwise estimate is promoted to the complete measure-theoretic
+dominated-convergence package by the continuum probability law. -/
 noncomputable def osQuadraticDominatedConvergenceAtZero_ofDiscreteTemporalAction
     {E₀ : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     {G : E₀.PhysicalGaugeAction} {A : E₀.PhysicalDiscreteTemporalAction}
@@ -132,27 +153,9 @@ noncomputable def osQuadraticDominatedConvergenceAtZero_ofDiscreteTemporalAction
     {P : D.OSPreHilbertData}
     {T : P.PositiveTimeObservableContractionSemigroup}
     (H : DiscreteFloorCompatibility C L T) :
-    T.OSQuadraticDominatedConvergenceAtZero where
-  omega_eq_continuumState := H.omega_eq_continuumState
-  bound := fun F _ => (2 * ‖F.1.1‖) ^ 2
-  bound_integrable := fun F => integrable_const ((2 * ‖F.1.1‖) ^ 2)
-  integrand_aestronglyMeasurable := by
-    intro F
-    exact Eventually.of_forall fun t => by
-      simpa only [osQuadraticDifferenceIntegrand] using
-        ((T.osQuadraticDifferenceObservable t F :
-            BoundedContinuousFunction (G.toSymmetryLimit L).Configuration ℝ).continuous
-          .aestronglyMeasurable)
-  integrand_bound := by
-    intro F
-    exact Eventually.of_forall fun t =>
-      Eventually.of_forall fun X =>
-        osQuadraticDifferenceIntegrand_norm_le_ofDiscreteFloor C L H t F X
-  integrand_tendsto := by
-    intro F
-    exact Eventually.of_forall fun X =>
-      osQuadraticDifferenceIntegrand_continuousAt_zero_ofDiscreteFloor
-        C J L H F X
+    T.OSQuadraticDominatedConvergenceAtZero :=
+  (osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction C J L H)
+    .toOSQuadraticDominatedConvergenceAtZero
 
 /-- The scalar OS quadratic continuity previously left as an analytic input is
 generated from the existing floor-time joint continuity and the boundedness of
@@ -169,7 +172,7 @@ noncomputable def osQuadraticContinuityAtZero_ofDiscreteTemporalAction
     {T : P.PositiveTimeObservableContractionSemigroup}
     (H : DiscreteFloorCompatibility C L T) :
     T.OSQuadraticContinuityAtZero :=
-  (osQuadraticDominatedConvergenceAtZero_ofDiscreteTemporalAction C J L H)
+  (osQuadraticUniformBoundContinuityAtZero_ofDiscreteTemporalAction C J L H)
     .toOSQuadraticContinuityAtZero
 
 /-- Exact finite integer temporal translations, floor dense-time approximation,
