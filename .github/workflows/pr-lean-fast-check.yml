@@ -1,4 +1,4 @@
-name: Temporary Quadratic DCT Check
+name: PR Lean Fast Check
 
 on:
   workflow_dispatch:
@@ -38,19 +38,10 @@ permissions:
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: "bbfe7a46ba76137cbb73166821937ea64aa177dc"
+  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || format('origin/{0}', github.base_ref || 'main') }}
   LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
 
 jobs:
-  quadratic-targeted-check:
-    name: Quadratic DCT targeted check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: leanprover/lean-action@v1
-        with:
-          build-args: --quiet MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSQuadraticStrongContinuity
-
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-latest
@@ -58,7 +49,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 5
+          fetch-depth: 2
 
       - name: Preflight changed Lean static audit
         shell: bash
