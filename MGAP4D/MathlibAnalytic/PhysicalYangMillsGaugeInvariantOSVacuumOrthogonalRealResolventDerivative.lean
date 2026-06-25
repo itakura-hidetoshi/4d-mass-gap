@@ -259,7 +259,13 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_hasDerivWi
       ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
         (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
       (Set.Iio G.mass) lambda := by
-  apply (hasDerivWithinAt_iff_tendsto_slope).2
+  refine (hasDerivWithinAt_iff_tendsto_slope
+    (𝕜 := ℝ)
+    (f := G.vacuumOrthogonalRealResolventOn T hP hSelf)
+    (f' := (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+      (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
+    (s := Set.Iio G.mass)
+    (x := lambda)).2 ?_
   let Rlambda := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
   have hres0 :
       Tendsto
