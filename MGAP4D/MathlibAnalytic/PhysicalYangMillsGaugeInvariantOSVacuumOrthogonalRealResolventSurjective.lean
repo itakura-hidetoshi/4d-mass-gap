@@ -29,7 +29,7 @@ theorem realShift_surjective
     A.realShift_isClosed_range hSelf.isClosed hlambda hgap
   intro y
   have hyClosure :
-      y ∈ closure (LinearMap.range (A.realShift lambda) : Set E) := by
+      y ∈ _root_.closure (LinearMap.range (A.realShift lambda) : Set E) := by
     rw [hDense.closure_eq]
     exact mem_univ y
   exact
