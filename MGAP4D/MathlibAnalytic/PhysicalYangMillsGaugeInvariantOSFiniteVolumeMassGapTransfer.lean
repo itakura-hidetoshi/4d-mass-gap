@@ -60,10 +60,8 @@ structure FiniteVolumeVacuumGapTransfer
       (nhdsWithin 0 (Ioi 0))
       (nhds mass)
   FiniteState : ℕ → Type
-  finiteNormedAddCommGroup :
-    ∀ n, NormedAddCommGroup (FiniteState n)
-  finiteInnerProductSpace :
-    ∀ n, InnerProductSpace ℝ (FiniteState n)
+  [finiteNormedAddCommGroup : ∀ n, NormedAddCommGroup (FiniteState n)]
+  [finiteInnerProductSpace : ∀ n, InnerProductSpace ℝ (FiniteState n)]
   finiteVacuum : (n : ℕ) → FiniteState n
   finiteOperator :
     (n : ℕ) → NNReal → FiniteState n →L[ℝ] FiniteState n
@@ -234,6 +232,7 @@ theorem VacuumSemigroupGapSlope.rightHamiltonian_inner_ge_mass_mul_norm_sq
       simp only [rightHamiltonianDifferenceQuotient,
         real_inner_smul_left, inner_sub_left,
         real_inner_self_eq_norm_sq]
+      ring
 
 /-- The finite-volume transfer package therefore yields the canonical continuum
 Hamiltonian mass-gap inequality on the vacuum-orthogonal generator domain. -/
@@ -244,8 +243,8 @@ theorem FiniteVolumeVacuumGapTransfer.rightHamiltonian_inner_ge_mass_mul_norm_sq
     (hpsi : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0) :
     G.mass * ‖(psi : P.PhysicalHilbert)‖ ^ 2 ≤
       inner ℝ (T.rightHamiltonian psi) (psi : P.PhysicalHilbert) :=
-  G.toVacuumSemigroupGapSlope.rightHamiltonian_inner_ge_mass_mul_norm_sq
-    T psi hpsi
+  VacuumSemigroupGapSlope.rightHamiltonian_inner_ge_mass_mul_norm_sq
+    T G.toVacuumSemigroupGapSlope psi hpsi
 
 end StronglyContinuousPhysicalSemigroup
 
