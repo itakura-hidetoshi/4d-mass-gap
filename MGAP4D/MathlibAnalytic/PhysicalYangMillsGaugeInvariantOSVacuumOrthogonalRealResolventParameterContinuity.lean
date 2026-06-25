@@ -46,6 +46,8 @@ theorem realResolventFamily_lipschitzOn_subMassTruncation
       {lambda : Set.Iio mass | (lambda : ℝ) ≤ mass - delta} := by
   apply LipschitzOnWith.of_dist_le'
   intro lambda hlambda mu hmu
+  change (lambda : ℝ) ≤ mass - delta at hlambda
+  change (mu : ℝ) ≤ mass - delta at hmu
   rw [dist_eq_norm]
   have hdeltaLambda : delta ≤ mass - (lambda : ℝ) := by
     linarith
@@ -78,7 +80,10 @@ theorem realResolventFamily_lipschitzOn_subMassTruncation
         (delta⁻¹ * delta⁻¹) :=
       mul_le_mul_of_nonneg_left hproduct (abs_nonneg _)
     _ = (delta⁻¹ * delta⁻¹) * dist lambda mu := by
-      simp [Real.dist_eq, mul_comm]
+      change |(lambda : ℝ) - (mu : ℝ)| *
+          (delta⁻¹ * delta⁻¹) =
+        (delta⁻¹ * delta⁻¹) * |(lambda : ℝ) - (mu : ℝ)|
+      ring
 
 /-- The sub-mass resolvent family is locally Lipschitz in the operator-norm
 metric. -/
@@ -90,9 +95,10 @@ theorem realResolventFamily_locallyLipschitz
     LocallyLipschitz (A.realResolventFamily hSelf hgap) := by
   intro lambda
   let delta : ℝ := (mass - (lambda : ℝ)) / 2
+  have hlambdaMass : (lambda : ℝ) < mass := lambda.property
   have hdelta : 0 < delta := by
     dsimp [delta]
-    linarith [lambda.property]
+    linarith
   refine ⟨Real.toNNReal (delta⁻¹ * delta⁻¹),
     {mu : Set.Iio mass | (mu : ℝ) ≤ mass - delta}, ?_, ?_⟩
   · refine mem_of_superset (Metric.ball_mem_nhds lambda hdelta) ?_
@@ -152,8 +158,7 @@ noncomputable def FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventFam
 
 /-- Uniform operator-norm Lipschitz control on every excitation-resolvent
 parameter region separated from the mass threshold by `delta > 0`. -/
-theorem FiniteVolumeVacuumGapTransfer.
-    vacuumOrthogonalRealResolventFamily_lipschitzOn_subMassTruncation
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventFamily_lipschitzOn_subMassTruncation
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
@@ -164,6 +169,8 @@ theorem FiniteVolumeVacuumGapTransfer.
       {lambda : Set.Iio G.mass | (lambda : ℝ) ≤ G.mass - delta} := by
   apply LipschitzOnWith.of_dist_le'
   intro lambda hlambda mu hmu
+  change (lambda : ℝ) ≤ G.mass - delta at hlambda
+  change (mu : ℝ) ≤ G.mass - delta at hmu
   rw [dist_eq_norm]
   have hdeltaLambda : delta ≤ G.mass - (lambda : ℝ) := by
     linarith
@@ -198,12 +205,14 @@ theorem FiniteVolumeVacuumGapTransfer.
         (delta⁻¹ * delta⁻¹) :=
       mul_le_mul_of_nonneg_left hproduct (abs_nonneg _)
     _ = (delta⁻¹ * delta⁻¹) * dist lambda mu := by
-      simp [Real.dist_eq, mul_comm]
+      change |(lambda : ℝ) - (mu : ℝ)| *
+          (delta⁻¹ * delta⁻¹) =
+        (delta⁻¹ * delta⁻¹) * |(lambda : ℝ) - (mu : ℝ)|
+      ring
 
 /-- The excitation resolvent family is locally Lipschitz throughout the real
 sub-mass interval. -/
-theorem FiniteVolumeVacuumGapTransfer.
-    vacuumOrthogonalRealResolventFamily_locallyLipschitz
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventFamily_locallyLipschitz
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
@@ -212,9 +221,10 @@ theorem FiniteVolumeVacuumGapTransfer.
       (G.vacuumOrthogonalRealResolventFamily T hP hSelf) := by
   intro lambda
   let delta : ℝ := (G.mass - (lambda : ℝ)) / 2
+  have hlambdaMass : (lambda : ℝ) < G.mass := lambda.property
   have hdelta : 0 < delta := by
     dsimp [delta]
-    linarith [lambda.property]
+    linarith
   refine ⟨Real.toNNReal (delta⁻¹ * delta⁻¹),
     {mu : Set.Iio G.mass | (mu : ℝ) ≤ G.mass - delta}, ?_, ?_⟩
   · refine mem_of_superset (Metric.ball_mem_nhds lambda hdelta) ?_
@@ -243,8 +253,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventFamily_contin
 
 /-- Parameter-continuity package for the excitation resolvent below the
 transferred mass. -/
-theorem FiniteVolumeVacuumGapTransfer.
-    vacuumOrthogonalRealResolventParameterContinuity_package
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventParameterContinuity_package
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
