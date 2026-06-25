@@ -34,6 +34,17 @@ namespace PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation
 
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
 
+/-- The inverse homeomorphism of a real Euclidean-time translation is
+translation by the negative time. -/
+theorem translate_symm_apply_eq_neg
+    (T : PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation S)
+    (t : ℝ) (X : S.Configuration) :
+    (T.translate t).symm X = T.translate (-t) X := by
+  apply (T.translate t).injective
+  rw [Homeomorph.apply_symm_apply]
+  rw [← T.translate_add_apply]
+  simpa using (T.translate_zero_apply X).symm
+
 /-- Measure-valued form of continuum time-translation invariance. -/
 theorem continuumMeasure_map_eq_self
     (T : PhysicalFourDimensionalYangMillsContinuumEuclideanTimeTranslation S)
