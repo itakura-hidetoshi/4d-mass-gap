@@ -48,9 +48,13 @@ theorem realResolventOn_continuousOn
       mass * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E)) :
     ContinuousOn (A.realResolventOn hSelf hgap) (Set.Iio mass) := by
   rw [continuousOn_iff_continuous_restrict]
-  convert A.realResolventFamily_continuous hSelf hgap using 1
-  funext lambda
-  simp [Set.restrict, realResolventFamily]
+  have heq :
+      (Set.Iio mass).restrict (A.realResolventOn hSelf hgap) =
+        A.realResolventFamily hSelf hgap := by
+    funext lambda
+    exact A.realResolventOn_of_lt hSelf hgap lambda.property
+  rw [heq]
+  exact A.realResolventFamily_continuous hSelf hgap
 
 /-- The operator-norm derivative of the real resolvent within the sub-mass
 interval is the square of the resolvent. -/
@@ -67,15 +71,21 @@ theorem realResolventOn_hasDerivWithinAt
       (Set.Iio mass) lambda := by
   rw [hasDerivWithinAt_iff_tendsto_slope]
   let Rlambda : E →L[ℝ] E := A.realResolvent hSelf hlambda hgap
+  have hres0 :
+      Tendsto (A.realResolventOn hSelf hgap)
+        (𝓝[Set.Iio mass] lambda)
+        (𝓝 (A.realResolventOn hSelf hgap lambda)) :=
+    A.realResolventOn_continuousOn hSelf hgap lambda hlambda
   have hres :
       Tendsto (A.realResolventOn hSelf hgap)
         (𝓝[Set.Iio mass] lambda) (𝓝 Rlambda) := by
-    simpa [Rlambda] using
-      (A.realResolventOn_continuousOn hSelf hgap lambda hlambda)
+    simpa [Rlambda] using hres0
   have hres' :
       Tendsto (A.realResolventOn hSelf hgap)
         (𝓝[Set.Iio mass \ {lambda}] lambda) (𝓝 Rlambda) :=
-    hres.mono_left (nhdsWithin_mono _ sdiff_subset)
+    hres.mono_left <| nhdsWithin_mono _ <| by
+      intro mu hmu
+      exact hmu.1
   have hcomp :
       Tendsto
         (fun mu => (A.realResolventOn hSelf hgap mu).comp Rlambda)
@@ -94,7 +104,6 @@ theorem realResolventOn_hasDerivWithinAt
     A.realResolventOn_of_lt hSelf hgap hlambda,
     A.realResolvent_sub_eq_smul_comp hSelf hmuMass hlambda hgap,
     inv_smul_smul₀ hne]
-  rfl
 
 /-- Since the sub-mass interval is open, the within-derivative is the ordinary
 operator-norm derivative at every sub-mass parameter. -/
@@ -110,7 +119,7 @@ theorem realResolventOn_hasDerivAt
         (A.realResolvent hSelf hlambda hgap))
       lambda :=
   (A.realResolventOn_hasDerivWithinAt hSelf hgap hlambda).hasDerivAt
-    (Set.Iio_mem_nhds hlambda)
+    (Iio_mem_nhds hlambda)
 
 /-- Explicit derivative formula for the total representative at every real
 parameter below the Rayleigh threshold. -/
@@ -155,8 +164,14 @@ theorem realResolventOn_continuousOn_deriv
     (hdiff.clm_comp hdiff).continuousOn
   apply hsquare.congr
   intro lambda hlambda
-  rw [A.realResolventOn_deriv hSelf hgap hlambda,
-    A.realResolventOn_of_lt hSelf hgap hlambda]
+  calc
+    deriv (A.realResolventOn hSelf hgap) lambda =
+        (A.realResolvent hSelf hlambda hgap).comp
+          (A.realResolvent hSelf hlambda hgap) :=
+      A.realResolventOn_deriv hSelf hgap hlambda
+    _ = (A.realResolventOn hSelf hgap lambda).comp
+          (A.realResolventOn hSelf hgap lambda) := by
+      rw [A.realResolventOn_of_lt hSelf hgap hlambda]
 
 /-- The sub-mass real resolvent family is continuously differentiable in the
 operator-norm topology. -/
@@ -166,9 +181,12 @@ theorem realResolventOn_contDiffOn_one
     (hgap : ∀ x : A.domain,
       mass * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E)) :
     ContDiffOn ℝ 1 (A.realResolventOn hSelf hgap) (Set.Iio mass) := by
-  rw [contDiffOn_one_iff_deriv_of_isOpen Set.isOpen_Iio]
-  exact ⟨A.realResolventOn_differentiableOn hSelf hgap,
-    A.realResolventOn_continuousOn_deriv hSelf hgap⟩
+  rw [show (1 : ℕ∞ω) = 0 + 1 from rfl,
+    contDiffOn_succ_iff_deriv_of_isOpen Set.isOpen_Iio]
+  refine ⟨A.realResolventOn_differentiableOn hSelf hgap, ?_, ?_⟩
+  · simp
+  · simpa only [contDiffOn_zero] using
+      A.realResolventOn_continuousOn_deriv hSelf hgap
 
 end LinearPMap
 
@@ -183,6 +201,22 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
+/-- The transferred Rayleigh bound in the exact domain type used by the
+vacuum-orthogonal closed Hamiltonian resolvent. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent_rayleigh
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (y : (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf).domain) :
+    G.mass * ‖(y : P.VacuumOrthogonalHilbert)‖ ^ 2 ≤
+      inner ℝ
+        (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf y)
+        (y : P.VacuumOrthogonalHilbert) := by
+  simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
+    G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
+      ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) y
+
 /-- A total real-parameter representative of the excitation resolvent. -/
 noncomputable def FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn
     (T : P.StronglyContinuousPhysicalSemigroup)
@@ -193,11 +227,7 @@ noncomputable def FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn
   LinearPMap.realResolventOn
     (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
     (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint hP hSelf)
-    (by
-      intro y
-      simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-        G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-          ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) y)
+    (G.vacuumOrthogonalRealResolvent_rayleigh T hP hSelf)
 
 @[simp] theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_of_lt
     (T : P.StronglyContinuousPhysicalSemigroup)
@@ -224,17 +254,15 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_hasDerivAt
       ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
         (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
       lambda := by
-  apply LinearPMap.realResolventOn_hasDerivAt
-    (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-    (hSelf :=
-      T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
-        hP hSelf)
-    (hgap := by
-      intro y
-      simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-        G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-          ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) y)
-    hlambda
+  simpa only [vacuumOrthogonalRealResolventOn,
+    FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent] using
+    (LinearPMap.realResolventOn_hasDerivAt
+      (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
+      (hSelf :=
+        T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
+          hP hSelf)
+      (hgap := G.vacuumOrthogonalRealResolvent_rayleigh T hP hSelf)
+      hlambda)
 
 /-- Explicit derivative formula for the excitation resolvent. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_deriv
@@ -274,16 +302,13 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_contDiffOn
     ContDiffOn ℝ 1
       (G.vacuumOrthogonalRealResolventOn T hP hSelf)
       (Set.Iio G.mass) := by
-  apply LinearPMap.realResolventOn_contDiffOn_one
-    (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-    (hSelf :=
-      T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
-        hP hSelf)
-    (hgap := by
-      intro y
-      simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-        G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-          ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) y)
+  simpa only [vacuumOrthogonalRealResolventOn] using
+    (LinearPMap.realResolventOn_contDiffOn_one
+      (A := T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
+      (hSelf :=
+        T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
+          hP hSelf)
+      (hgap := G.vacuumOrthogonalRealResolvent_rayleigh T hP hSelf))
 
 /-- Differentiability and `C¹` package for the excitation resolvent below the
 transferred mass. -/
