@@ -10,7 +10,7 @@ open scoped InnerProductSpace LinearPMap
 namespace LinearPMap
 
 variable {E : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- The unit positive shift of a partially defined linear operator. -/
 def oneShift (A : E →ₗ.[ℝ] E) : A.domain →ₗ[ℝ] E :=
@@ -20,6 +20,8 @@ def oneShift (A : E →ₗ.[ℝ] E) : A.domain →ₗ[ℝ] E :=
     (A : E →ₗ.[ℝ] E) (x : A.domain) :
     A.oneShift x = (x : E) + A x :=
   rfl
+
+variable [CompleteSpace E]
 
 /-- A densely defined symmetric operator is self-adjoint once its unit positive
 shift is surjective.
@@ -181,10 +183,9 @@ theorem vacuumOrthogonalClosedRightHamiltonianOneShift_surjective
   let uRestricted :
       (T.vacuumOrthogonalClosedRightHamiltonian hSymmetric).domain :=
     ⟨uExcitation, u.property⟩
-  refine ⟨uRestricted, ?_⟩
-  apply Subtype.ext
+  refine ⟨uRestricted, Subtype.ext ?_⟩
   simpa [vacuumOrthogonalClosedRightHamiltonianOneShift,
-    LinearPMap.oneShift_apply] using huAmbient
+    LinearPMap.oneShift_apply, uRestricted, uExcitation] using huAmbient
 
 /-- A dense symmetric excitation-sector restriction is self-adjoint. -/
 theorem vacuumOrthogonalClosedRightHamiltonian_isSelfAdjoint_of_dense
