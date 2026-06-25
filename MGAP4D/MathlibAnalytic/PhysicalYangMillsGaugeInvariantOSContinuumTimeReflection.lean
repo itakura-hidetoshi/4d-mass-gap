@@ -90,61 +90,67 @@ theorem closedRightHamiltonian_isSelfAdjoint
   G.toConfigurationReflectionTimeExchange.closedRightHamiltonian_isSelfAdjoint
     hContinuous
 
-/-- Construct the continuum-only reflection bridge directly from the exact
-finite integer temporal action, the floor dense-time selector, and joint
-continuity.
-
-After the discrete-to-continuum temporal passage has been discharged, the only
-remaining inputs are the geometric reflection realization, reflection/time
-inversion, positive-time observable restriction, and continuum-state
-identification. -/
-noncomputable def ofDiscreteTemporalActionOfFloor
+/-- The geometric and OS compatibility data remaining after exact finite
+integer temporal translations have been promoted to a continuum real-time
+action by floor approximation and joint continuity. -/
+structure DiscreteFloorCompatibility
     {E₀ : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
     {G : E₀.PhysicalGaugeAction}
     {A : E₀.PhysicalDiscreteTemporalAction}
     (C : E₀.GaugeDiscreteTemporalCompatibility G A)
-    (J : A.JointContinuity)
-    (latticeTime_eq : ∀ n k,
-      A.latticeTime n k = (k : ℝ) * E₀.latticeSpacing n)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
       E₀.toLatticeEmbedding)
     {D₀ : PhysicalYangMillsGaugeInvariantOSReflectionData
       (G.toSymmetryLimit L)}
     {P₀ : D₀.OSPreHilbertData}
-    {T : P₀.PositiveTimeObservableContractionSemigroup}
-    (configurationReflection : Homeomorph
-      (G.toSymmetryLimit L).Configuration
-      (G.toSymmetryLimit L).Configuration)
-    (reflection_gauge_commute : ∀ g X,
-      configurationReflection ((G.toSymmetryLimit L).action g X) =
-        (G.toSymmetryLimit L).action g (configurationReflection X))
-    (reflection_realization : ∀ O,
-      D₀.reflection O =
-        physicalGaugeInvariantObservablePrecompAlgEquiv (G.toSymmetryLimit L)
-          configurationReflection reflection_gauge_commute O)
-    (reflection_translate_neg : ∀ t X,
-      configurationReflection (A.physicalTranslate t X) =
-        A.physicalTranslate (-t) (configurationReflection X))
-    (positive_restriction : ∀ (t : NNReal)
-      (F : D₀.positiveTimeSubalgebra),
+    (T : P₀.PositiveTimeObservableContractionSemigroup) where
+  configurationReflection : Homeomorph
+    (G.toSymmetryLimit L).Configuration
+    (G.toSymmetryLimit L).Configuration
+  reflection_gauge_commute : ∀ g X,
+    configurationReflection ((G.toSymmetryLimit L).action g X) =
+      (G.toSymmetryLimit L).action g (configurationReflection X)
+  reflection_realization : ∀ O,
+    D₀.reflection O =
       physicalGaugeInvariantObservablePrecompAlgEquiv (G.toSymmetryLimit L)
-          (A.physicalTranslate (t : ℝ)) (C.gauge_commute (t : ℝ))
-          (F : physicalYangMillsGaugeInvariantObservableSubalgebra
-            (G.toSymmetryLimit L)) =
-        (T.translate t F :
-          physicalYangMillsGaugeInvariantObservableSubalgebra
-            (G.toSymmetryLimit L)))
-    (omega_eq_continuumState :
-      P₀.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState
-        (G.toSymmetryLimit L)) :
+        configurationReflection reflection_gauge_commute O
+  reflection_translate_neg : ∀ t X,
+    configurationReflection (A.physicalTranslate t X) =
+      A.physicalTranslate (-t) (configurationReflection X)
+  positive_restriction : ∀ (t : NNReal) (F : D₀.positiveTimeSubalgebra),
+    physicalGaugeInvariantObservablePrecompAlgEquiv (G.toSymmetryLimit L)
+        (A.physicalTranslate (t : ℝ)) (C.gauge_commute (t : ℝ))
+        (F : physicalYangMillsGaugeInvariantObservableSubalgebra
+          (G.toSymmetryLimit L)) =
+      (T.translate t F : physicalYangMillsGaugeInvariantObservableSubalgebra
+        (G.toSymmetryLimit L))
+  omega_eq_continuumState :
+    P₀.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState
+      (G.toSymmetryLimit L)
+
+/-- Construct the continuum-only reflection bridge directly from the exact
+finite integer temporal action, the floor dense-time selector, and joint
+continuity. -/
+noncomputable def ofDiscreteTemporalActionOfFloor
+    {E₀ : ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding}
+    {G : E₀.PhysicalGaugeAction} {A : E₀.PhysicalDiscreteTemporalAction}
+    (C : E₀.GaugeDiscreteTemporalCompatibility G A) (J : A.JointContinuity)
+    (latticeTime_eq : ∀ n k,
+      A.latticeTime n k = (k : ℝ) * E₀.latticeSpacing n)
+    (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
+      E₀.toLatticeEmbedding)
+    {D₀ : PhysicalYangMillsGaugeInvariantOSReflectionData (G.toSymmetryLimit L)}
+    {P₀ : D₀.OSPreHilbertData}
+    {T : P₀.PositiveTimeObservableContractionSemigroup}
+    (H : DiscreteFloorCompatibility C L T) :
     T.ContinuumTimeReflectionBridge
       (C.toContinuumEuclideanTimeTranslationOfFloor J latticeTime_eq L) where
-  configurationReflection := configurationReflection
-  reflection_gauge_commute := reflection_gauge_commute
-  reflection_realization := reflection_realization
-  reflection_translate_neg := reflection_translate_neg
-  positive_restriction := positive_restriction
-  omega_eq_continuumState := omega_eq_continuumState
+  configurationReflection := H.configurationReflection
+  reflection_gauge_commute := H.reflection_gauge_commute
+  reflection_realization := H.reflection_realization
+  reflection_translate_neg := H.reflection_translate_neg
+  positive_restriction := H.positive_restriction
+  omega_eq_continuumState := H.omega_eq_continuumState
 
 end ContinuumTimeReflectionBridge
 
