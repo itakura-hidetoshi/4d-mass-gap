@@ -53,9 +53,10 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
             P.VacuumOrthogonalHilbert) =
             (0 : ℝ) •
               (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
-                (0 + 1) := by
-        simp
-      simpa only [pow_zero] using hconst.congr_deriv hzero
+                (0 + 1) :=
+        (zero_smul ℝ _).symm
+      rw [hzero] at hconst
+      simpa only [pow_zero] using hconst
   | succ k ih =>
       have hR :
           HasDerivWithinAt
@@ -98,14 +99,15 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
               Rlambda ^ k * Rlambda ^ 2 =
             ((Nat.succ k : ℕ) : ℝ) •
               Rlambda ^ (Nat.succ k + 1)
-        rw [smul_mul_assoc]
+        rw [Algebra.smul_mul_assoc]
         have hfirst : Rlambda ^ (k + 1) * Rlambda = Rlambda ^ (k + 2) := by
           simpa [Nat.add_assoc] using (pow_succ Rlambda (k + 1)).symm
         have hsecond : Rlambda ^ k * Rlambda ^ 2 = Rlambda ^ (k + 2) := by
           simpa using (pow_add Rlambda k 2).symm
         rw [hfirst, hsecond]
         simp [Nat.cast_succ, Nat.succ_eq_add_one, add_smul, Nat.add_assoc]
-      exact hmul'.congr_deriv hderiv
+      rw [hderiv] at hmul'
+      exact hmul'
 
 /-- Every iterated derivative within the open real sub-mass interval is the
 factorial multiple of the corresponding composition power. -/
