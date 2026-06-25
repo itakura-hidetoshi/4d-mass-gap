@@ -1,0 +1,94 @@
+name: Temporary PR Fast Diagnostic
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-pr-fast-diagnostic.yml"
+      - "MGAP4D/**/*.lean"
+      - "scripts/**/*.py"
+      - "scripts/**/*.sh"
+      - "lean-toolchain"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+
+permissions:
+  contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  CHECK_CHANGED_LEAN_BASE_REF: origin/main
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 200
+
+      - name: Cache elan toolchain
+        uses: actions/cache@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-elan-
+
+      - name: Restore Lake build cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.event.pull_request.base.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-lake-v4-
+            ${{ runner.os }}-lean-
+
+      - name: Install Lean
+        shell: bash
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL \
+              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          lean --version
+          lake --version
+
+      - name: Capture changed Lean check
+        id: check
+        shell: bash
+        run: |
+          set -uo pipefail
+          : > /tmp/pr-fast-diagnostic.log
+          set +e
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" \
+            > /tmp/pr-fast-diagnostic.log 2>&1
+          status=$?
+          set -e
+          tail -n 400 /tmp/pr-fast-diagnostic.log > /tmp/pr-fast-diagnostic-tail.log
+          cat /tmp/pr-fast-diagnostic-tail.log
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-fast-diagnostic-logs
+          path: |
+            /tmp/pr-fast-diagnostic.log
+            /tmp/pr-fast-diagnostic-tail.log
+          if-no-files-found: error
+
+      - name: Propagate check status
+        if: always()
+        shell: bash
+        run: exit "${{ steps.check.outputs.status }}"
