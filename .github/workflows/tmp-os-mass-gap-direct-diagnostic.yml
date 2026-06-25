@@ -14,6 +14,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: temporary-os-mass-gap-direct-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   targeted:
     strategy:
@@ -22,7 +26,7 @@ jobs:
         target:
           - MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSQuadraticStrongContinuity
           - MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
       - uses: leanprover/lean-action@v1
