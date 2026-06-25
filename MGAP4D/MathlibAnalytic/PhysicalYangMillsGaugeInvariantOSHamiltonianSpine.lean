@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventSurjective
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalContinuousRealResolvent
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -56,6 +56,8 @@ positive-time observable algebra
 → closed shifted range from graph closedness
 → real-shift surjectivity and bijectivity
 → linear real resolvent with quantitative inverse estimate
+→ continuous linear real resolvent
+→ sharp operator-norm bound by the inverse distance to the mass threshold
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -72,9 +74,11 @@ excitation Hamiltonian.
 For every real `lambda` below the transferred mass, the shifted excitation
 Hamiltonian is injective, has dense and closed range, and is therefore
 surjective.  It is bundled as a linear equivalence, and its inverse satisfies
-the sharp coercive estimate determined by `mass - lambda`.  This excludes both
-point and continuous real spectrum below the transferred mass without hiding a
-native unbounded-operator spectrum object behind an additional assumption.
+the sharp coercive estimate determined by `mass - lambda`.  The inverse is now
+also bundled as a continuous linear endomorphism of the excitation Hilbert
+space, with operator norm at most `(mass - lambda)⁻¹`.  This excludes both point
+and continuous real spectrum below the transferred mass without hiding a native
+unbounded-operator spectrum object behind an additional assumption.
 
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
