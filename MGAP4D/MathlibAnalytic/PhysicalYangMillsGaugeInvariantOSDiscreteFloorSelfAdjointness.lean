@@ -27,9 +27,9 @@ theorem closedRightHamiltonian_isSelfAdjoint_ofDiscreteTemporalActionOfFloor
     (hContinuous : T.StrongContinuityOnObservableStates) :
     IsSelfAdjoint
       (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
-        T hContinuous).closedRightHamiltonian :=
-  (ofDiscreteTemporalActionOfFloor C J latticeTime_eq L H).
-    closedRightHamiltonian_isSelfAdjoint hContinuous
+        T hContinuous).closedRightHamiltonian := by
+  exact closedRightHamiltonian_isSelfAdjoint
+    (ofDiscreteTemporalActionOfFloor C J latticeTime_eq L H) hContinuous
 
 end ContinuumTimeReflectionBridge
 end PositiveTimeObservableContractionSemigroup
