@@ -17,13 +17,9 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: temporary-mass-gap-transfer-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
-
 jobs:
   targeted-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
       - uses: leanprover/lean-action@v1
