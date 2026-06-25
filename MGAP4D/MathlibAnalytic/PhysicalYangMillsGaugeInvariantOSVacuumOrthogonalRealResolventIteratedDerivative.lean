@@ -45,7 +45,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
             (0 : P.VacuumOrthogonalHilbert â†’L[â„]
               P.VacuumOrthogonalHilbert)
             (Set.Iio G.mass) lambda :=
-        hasDerivWithinAt_const lambda (Set.Iio G.mass) 1
+        hasDerivWithinAt_const lambda (Set.Iio G.mass)
+          (1 : P.VacuumOrthogonalHilbert â†’L[â„]
+            P.VacuumOrthogonalHilbert)
       have hzero :
           (0 : P.VacuumOrthogonalHilbert â†’L[â„]
             P.VacuumOrthogonalHilbert) =
@@ -79,10 +81,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
               (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ k *
                 (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ 2)
             (Set.Iio G.mass) lambda := by
-        apply hmul.congr
-        Â· intro mu hmu
-          simp [pow_succ]
-        Â· simp [pow_succ]
+        simpa only [Pi.mul_apply, pow_succ] using hmul
       have hderiv :
           ((k : â„) â€¢
                 (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ (k + 1) *
@@ -149,105 +148,14 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
               (n.factorial : â„) â€¢
                 (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
             ((n.factorial : â„) â€¢
-              (((n + 1 : â„•) : â„) â€¢
-                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
-                  (n + 2)))
-            (Set.Iio G.mass) lambda := by
-        simpa only [Pi.smul_apply] using
-          (HasDerivWithinAt.const_smul
-            (ğ•œ := â„) (R := â„)
-            (F := P.VacuumOrthogonalHilbert â†’L[â„]
-              P.VacuumOrthogonalHilbert)
-            (n.factorial : â„) hpow)
-      let derivValue :
-          P.VacuumOrthogonalHilbert â†’L[â„]
-            P.VacuumOrthogonalHilbert :=
-        (n.factorial : â„) â€¢
-          (((n + 1 : â„•) : â„) â€¢
-            (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
-              (n + 2))
-      have hfscaled :
-          HasFDerivWithinAt
-            (fun mu =>
-              (n.factorial : â„) â€¢
-                (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
-            (toSpanSingleton â„ derivValue)
-            (Set.Iio G.mass) lambda := by
-        simpa [derivValue] using hscaled.hasFDerivWithinAt
-      have hfderiv :
-          fderivWithin â„
-              (fun mu =>
-                (n.factorial : â„) â€¢
-                  (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
-              (Set.Iio G.mass) lambda =
-            toSpanSingleton â„ derivValue :=
-        hfscaled.fderivWithin (isOpen_Iio.uniqueDiffOn lambda hlambda)
-      have hscaledDeriv :
-          derivWithin
-              (fun mu =>
-                (n.factorial : â„) â€¢
-                  (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
-              (Set.Iio G.mass) lambda = derivValue := by
-        unfold derivWithin
-        rw [hfderiv]
-        simp [derivValue]
-      rw [hscaledDeriv]
-      simp [derivValue, Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
-        smul_smul, mul_comm, mul_assoc, Nat.add_assoc]
-
-/-- Explicit ordinary all-order derivative formula below the transferred mass:
-`R^(n)(lambda) = n! â€¢ R(lambda)^(n+1)`. -/
-theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDeriv
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
-    (hP : P.IsNormalized)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (n : â„•) {lambda : â„} (hlambda : lambda < G.mass) :
-    iteratedDeriv n
-        (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
-      (n.factorial : â„) â€¢
-        (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) ^ (n + 1) := by
-  calc
-    iteratedDeriv n
-        (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
-      iteratedDerivWithin n
-        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
-        (Set.Iio G.mass) lambda :=
-      (iteratedDerivWithin_of_isOpen
-        (n := n)
-        (f := G.vacuumOrthogonalRealResolventOn T hP hSelf)
-        isOpen_Iio hlambda).symm
-    _ = (n.factorial : â„) â€¢
-        (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ (n + 1) :=
-      G.vacuumOrthogonalRealResolventOn_iteratedDerivWithin
-        T hP hSelf n hlambda
-    _ = (n.factorial : â„) â€¢
-        (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) ^ (n + 1) := by
-      rw [G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda]
-
-/-- Smoothness and all-order derivative package for the excitation resolvent. -/
-theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventSmooth_package
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
-    (hP : P.IsNormalized)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
-    ContDiffOn â„ âˆ
-        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
-        (Set.Iio G.mass) âˆ§
-      âˆ€ (n : â„•) {lambda : â„} (hlambda : lambda < G.mass),
-        iteratedDeriv n
-            (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
-          (n.factorial : â„) â€¢
-            (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) ^ (n + 1) :=
-  âŸ¨G.vacuumOrthogonalRealResolventOn_contDiffOn_infty T hP hSelf,
-    fun n {lambda} hlambda =>
-      G.vacuumOrthogonalRealResolventOn_iteratedDeriv
-        T hP hSelf n (lambda := lambda) hlambdaâŸ©
-
-end StronglyContinuousPhysicalSemigroup
-end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-
-end MathlibAnalytic
-end MGAP4D
-
-end
+              (((n + 1 : â„•) : â„) â€¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆbÆÖ&F’à¢†â²"’’¢…6WBä––òræÖ72’ÆÖ&F£Ò'¢6–×öæÇ’µ’ç6×VÅöÇ•ÒW6–æp¢„†4FW&—ev—F†–äBæ6öç7E÷6×VÀ¢	ÙYÂ£Ò(IÒ’…"£Ò(IÒ¢„b£Òåf7WVÔ÷'F†övöæÄ†–Æ&W'B(i$Å¾(IÕĞ¢åf7WVÔ÷'F†övöæÄ†–Æ&W'B¢†âæf7F÷&–Â¢(IÒ’‡÷r¢ÆWBFW&—efÇVR ¢åf7WVÔ÷'F†övöæÄ†–Æ&W'B(i$Å¾(IÕĞ¢åf7WVÔ÷'F†övöæÄ†–Æ&W'B£Ğ¢†âæf7F÷&–Â¢(IÒ’(
+ ¢‚‚†â²¢(IR’¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆbÆÖ&F’à¢†â²"’¢†fR†g66ÆVB ¢†4dFW&—ev—F†–ä@¢†gVâ×RÓà¢†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb×R’â†â²’¢‡Fõ7å6–ævÆWFöâ(IÒFW&—efÇVR¢…6WBä––òræÖ72’ÆÖ&F£Ò'¢6–×¶FW&—efÇVUÒW6–ær‡66ÆVBæ†4dFW&—ev—F†–ä@¢†fR†fFW&—b ¢fFW&—ev—F†–â(IĞ¢†gVâ×RÓà¢†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb×R’â†â²’¢…6WBä––òræÖ72’ÆÖ&FĞ¢Fõ7å6–ævÆWFöâ(IÒFW&—efÇVR£Ğ¢†g66ÆVBæfFW&—ev—F†–â†—4÷Våô––òçVæ—VTF–fdöâÆÖ&F†ÆÖ&F¢†fR‡66ÆVDFW&—b ¢FW&—ev—F†–à¢†gVâ×RÓà¢†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb×R’â†â²’¢…6WBä––òræÖ72’ÆÖ&FÒFW&—efÇVR£Ò'¢VæföÆBFW&—ev—F†–à¢'r¶†fFW&—eĞ¢6–×¶FW&—efÇVUĞ¢'r¶‡66ÆVDFW&—eĞ¢6–×¶FW&—efÇVRÂæBæf7F÷&–Å÷7V62ÂæBæ67Eö×VÂÂæBæ67E÷7V62À¢6×VÅ÷6×VÂÂ×VÅö6öÖÒÂ×VÅö76ö2ÂæBæFEö76ö5Ğ ¢òÒÒW‡Æ–6—B÷&F–æ'’ÆÂÖ÷&FW"FW&—fF—fRf÷&×VÆ&VÆ÷rF†RG&ç6fW'&VBÖ73 ¦%â†â’†ÆÖ&F’Òâ(
+""†ÆÖ&F•â†â³–âÒğ§F†V÷&VÒf–æ—FUföÇVÖUf7WVÔvG&ç6fW"çf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöåö—FW&FVDFW&—`¢…B¢å7G&öævÇ”6öçF–çV÷W5‡—6–6Å6VÖ–w&÷W¢„r¢Bäf–æ—FUföÇVÖUf7WVÔvG&ç6fW"¢†…¢ä—4æ÷&ÖÆ—¦VB¢†…6VÆb¢—56VÆdF¦ö–çBBæ6Æ÷6VE&–v‡D†Ö–ÇFöæ–â¢†â¢(IR’¶ÆÖ&F¢(I×Ò††ÆÖ&F¢ÆÖ&FÂræÖ72’ ¢—FW&FVDFW&—bà¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb’ÆÖ&FĞ¢†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçBB……6VÆb†ÆÖ&F’â†â²’£Ò'¢6Æ0¢—FW&FVDFW&—bà¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb’ÆÖ&FĞ¢—FW&FVDFW&—ev—F†–âà¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb¢…6WBä––òræÖ72’ÆÖ&F£Ğ¢†—FW&FVDFW&—ev—F†–åööeö—4÷Và¢†â£Òâ¢†b£Òrçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb¢—4÷Våô––ò†ÆÖ&F’ç7–ÖĞ¢òÒ†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆbÆÖ&F’â†â²’£Ğ¢rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöåö—FW&FVDFW&—ev—F†–à¢B……6VÆbâ†ÆÖ&F¢òÒ†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçBB……6VÆb†ÆÖ&F’â†â²’£Ò'¢'r´rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöåööeöÇBB……6VÆb†ÆÖ&FĞ ¢òÒÒ6Öö÷F†æW72æBÆÂÖ÷&FW"FW&—fF—fR6¶vRf÷"F†RW†6—FF–öâ&W6öÇfVçBâÒğ§F†V÷&VÒf–æ—FUföÇVÖUf7WVÔvG&ç6fW"çf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçE6Öö÷F…÷6¶vP¢…B¢å7G&öævÇ”6öçF–çV÷W5‡—6–6Å6VÖ–w&÷W¢„r¢Bäf–æ—FUföÇVÖUf7WVÔvG&ç6fW"¢†…¢ä—4æ÷&ÖÆ—¦VB¢†…6VÆb¢—56VÆdF¦ö–çBBæ6Æ÷6VE&–v‡D†Ö–ÇFöæ–â’ ¢6öçDF–fdöâ(IÒ(‰à¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb¢…6WBä––òræÖ72’(Šp¢(ˆ†â¢(IR’¶ÆÖ&F¢(I×Ò††ÆÖ&F¢ÆÖ&FÂræÖ72’À¢—FW&FVDFW&—bà¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöâB……6VÆb’ÆÖ&FĞ¢†âæf7F÷&–Â¢(IÒ’(
+ ¢„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçBB……6VÆb†ÆÖ&F’â†â²’£Ğ¢)ú„rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöåö6öçDF–fdöåö–ægG’B……6VÆbÀ¢gVââ¶ÆÖ&FÒ†ÆÖ&FÓà¢rçf7WVÔ÷'F†övöæÅ&VÅ&W6öÇfVçDöåö—FW&FVDFW&—`¢B……6VÆbâ†ÆÖ&F£ÒÆÖ&F’†ÆÖ&F)ú ¦VæB7G&öævÇ”6öçF–çV÷W5‡—6–6Å6VÖ–w&÷W ¦VæB‡—6–6Å–ætÖ–ÆÇ4vVvT–çf&–çDõ5&VfÆV7F–öäFFäõ5&T†–Æ&W'DFF ¦VæBÖF†Æ–$æÇ—F–0¦VæBÔtD@ ¦Væ@
