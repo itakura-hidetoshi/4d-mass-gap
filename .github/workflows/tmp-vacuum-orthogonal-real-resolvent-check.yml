@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6
+
       - name: Restore Lake cache
         uses: actions/cache/restore@v5
         with:
@@ -23,8 +24,11 @@ jobs:
             lake-manifest.json
           key: ${{ runner.os }}-vacuum-orthogonal-real-resolvent-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-vacuum-orthogonal-real-resolvent-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-vacuum-orthogonal-selfadjoint-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-
+
       - name: Install Lean
         shell: bash
         run: |
@@ -38,6 +42,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           lean --version
           lake --version
+
       - name: Build and capture diagnostic
         id: build
         shell: bash
@@ -53,6 +58,7 @@ jobs:
           cat /tmp/vacuum-orthogonal-real-resolvent-tail.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
+
       - name: Upload diagnostic
         if: always()
         uses: actions/upload-artifact@v4
@@ -62,6 +68,16 @@ jobs:
             /tmp/vacuum-orthogonal-real-resolvent.log
             /tmp/vacuum-orthogonal-real-resolvent-tail.log
           if-no-files-found: error
+
+      - name: Save target Lake cache
+        if: always()
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-vacuum-orthogonal-real-resolvent-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+
       - name: Propagate build status
         if: always()
         run: exit "${{ steps.build.outputs.status }}"
