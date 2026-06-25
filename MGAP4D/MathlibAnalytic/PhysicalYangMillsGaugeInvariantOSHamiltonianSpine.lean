@@ -3,6 +3,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianR
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSContinuumTimeReflection
 
 /-!
 # Physical gauge-invariant OS Hamiltonian spine
@@ -27,10 +28,11 @@ positive-time observable algebra
 → concrete integer temporal translations along coordinate zero
 → plaquette-holonomy and Wilson-action translation invariance
 → product-Haar and finite Gibbs translation invariance
-→ canonical physical temporal-action constructor
-→ interpolation equivariance
-→ embedded approximating-law invariance
-→ weak-limit continuum-time invariance
+→ exact finite-scale additive temporal action
+→ dense lattice-time approximation by floor selectors
+→ joint continuity for varying configurations and times
+→ weak-limit continuum real-time invariance
+→ continuum-only Euclidean-time action
 → configuration-space reflection homeomorphism
 → gauge covariance and reflection/time exchange on configurations
 → induced gauge-invariant observable automorphisms
@@ -44,13 +46,16 @@ positive-time observable algebra
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
-The finite periodic lattice translations and their Wilson Gibbs invariance are now
-constructed.  The canonical physical temporal-action constructor automatically
-supplies finite-law invariance from scale-dependent periodic displacements.
-The terminal self-adjointness theorem remains conditional on a physical real-time
-Euclidean translation action, interpolation equivariance with the selected lattice
-displacements, compatible gauge and reflection actions, positive-time restriction,
-and identification of the OS state with the continuum expectation state.  A
-real-time unitary group, vacuum uniqueness, and a positive spectral gap are not
-constructed here.
+The finite periodic lattice translations and their Wilson Gibbs invariance are
+constructed.  Scale-dependent integer times, dense floor approximation, and
+joint continuity now transport exact finite-time invariance to a genuine real
+continuum action without assuming exact finite invariance at every target real
+time.  The continuum-only reflection bridge feeds that action into the existing
+OS symmetry and self-adjointness route.
+
+The remaining terminal inputs are a selected physical carrier and interpolation,
+compatible gauge and reflection actions, positive-time observable restriction,
+identification of the OS state with the continuum expectation state, and
+observable-state strong continuity.  A real-time unitary group, vacuum
+uniqueness, and a positive spectral gap are not constructed here.
 -/
