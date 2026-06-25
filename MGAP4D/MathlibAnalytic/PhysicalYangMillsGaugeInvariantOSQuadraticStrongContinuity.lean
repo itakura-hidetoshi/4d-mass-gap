@@ -194,6 +194,56 @@ structure OSQuadraticDominatedConvergenceAtZero
         (𝓝 0)
         (𝓝 (T.osQuadraticDifferenceIntegrand 0 F A))
 
+/-- Concrete pointwise input for dominated convergence.  The reflected quadratic
+integrand is already a bounded continuous function of the configuration, so only
+a uniform scalar bound and pointwise Euclidean-time continuity remain. -/
+structure OSQuadraticUniformBoundContinuityAtZero
+    (T : P.PositiveTimeObservableContractionSemigroup) : Prop where
+  omega_eq_continuumState :
+    P.omega = physicalYangMillsContinuumGaugeInvariantWeakStarState S
+  bound : D.positiveTimeSubalgebra → ℝ
+  integrand_bound : ∀ F t A,
+    ‖T.osQuadraticDifferenceIntegrand t F A‖ ≤ bound F
+  integrand_tendsto : ∀ F A,
+    Tendsto
+      (fun t : NNReal => T.osQuadraticDifferenceIntegrand t F A)
+      (𝓝 0)
+      (𝓝 (T.osQuadraticDifferenceIntegrand 0 F A))
+
+namespace OSQuadraticUniformBoundContinuityAtZero
+
+variable {T : P.PositiveTimeObservableContractionSemigroup}
+
+/-- A configuration-independent bound is integrable against the continuum
+probability law.  Together with pointwise time continuity it supplies all
+measure-theoretic hypotheses of dominated convergence. -/
+def toOSQuadraticDominatedConvergenceAtZero
+    (H : T.OSQuadraticUniformBoundContinuityAtZero) :
+    T.OSQuadraticDominatedConvergenceAtZero where
+  omega_eq_continuumState := H.omega_eq_continuumState
+  bound := fun F _ => H.bound F
+  bound_integrable := by
+    intro F
+    exact integrable_const (H.bound F)
+  integrand_aestronglyMeasurable := by
+    intro F
+    filter_upwards [] with t
+    exact
+      (((T.osQuadraticDifferenceObservable t F :
+          physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+        BoundedContinuousFunction S.Configuration ℝ).continuous).aestronglyMeasurable
+  integrand_bound := by
+    intro F
+    filter_upwards [] with t
+    filter_upwards [] with A
+    exact H.integrand_bound F t A
+  integrand_tendsto := by
+    intro F
+    filter_upwards [] with A
+    exact H.integrand_tendsto F A
+
+end OSQuadraticUniformBoundContinuityAtZero
+
 namespace OSQuadraticDominatedConvergenceAtZero
 
 variable {T : P.PositiveTimeObservableContractionSemigroup}
@@ -225,6 +275,14 @@ theorem toOSQuadraticContinuityAtZero
     H.omega_eq_continuumState] using hIntegral
 
 end OSQuadraticDominatedConvergenceAtZero
+
+/-- Uniform pointwise control of the explicit reflected quadratic integrand
+already implies scalar OS quadratic continuity at zero. -/
+theorem OSQuadraticUniformBoundContinuityAtZero.toOSQuadraticContinuityAtZero
+    {T : P.PositiveTimeObservableContractionSemigroup}
+    (H : T.OSQuadraticUniformBoundContinuityAtZero) :
+    T.OSQuadraticContinuityAtZero :=
+  H.toOSQuadraticDominatedConvergenceAtZero.toOSQuadraticContinuityAtZero
 
 end PositiveTimeObservableContractionSemigroup
 
