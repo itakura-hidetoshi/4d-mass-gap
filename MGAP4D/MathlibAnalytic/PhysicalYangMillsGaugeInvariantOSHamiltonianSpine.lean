@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventParameterContinuity
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventDerivative
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -63,6 +63,8 @@ positive-time observable algebra
 → bundled resolvent family on the open sub-mass interval
 → uniform delta⁻² Lipschitz control away from the mass threshold
 → local Lipschitz regularity and operator-norm continuity
+→ operator-norm derivative R'_lambda = R_lambda²
+→ continuous derivative and C¹ sub-mass resolvent regularity
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -93,13 +95,29 @@ and the quantitative estimate
   ≤ |lambda - mu| (mass - lambda)⁻¹ (mass - mu)⁻¹.
 ```
 
-The resolvents are now bundled as a single map from `Set.Iio mass` into the
+The resolvents are bundled as a single map from `Set.Iio mass` into the
 operator-norm space of continuous linear endomorphisms.  On every truncated
 sub-mass region `lambda ≤ mass - delta` with `delta > 0`, this family is
-Lipschitz with constant `delta⁻²`.  Consequently it is locally Lipschitz and
-continuous throughout the open real sub-mass interval.  Point and continuous
-real spectrum below the transferred mass remain excluded without assuming a
-native unbounded-operator spectrum object.
+Lipschitz with constant `delta⁻²`, and is therefore locally Lipschitz and
+continuous throughout the open interval.
+
+The resolvent identity also gives the operator-norm difference quotient
+
+```text
+(lambda - mu)⁻¹ (R_lambda - R_mu) = R_lambda R_mu.
+```
+
+Passing to the limit with the established operator-norm continuity proves
+
+```text
+R'_lambda = R_lambda R_lambda.
+```
+
+The derivative is continuous because composition of continuous linear maps is
+a continuous bilinear operation.  Thus the real excitation resolvent is `C¹`
+on the full open sub-mass interval.  Point and continuous real spectrum below
+the transferred mass remain excluded without assuming a native
+unbounded-operator spectrum object.
 
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
