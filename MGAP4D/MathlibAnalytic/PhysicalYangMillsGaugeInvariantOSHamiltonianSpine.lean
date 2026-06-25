@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventSurjective
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -49,7 +50,13 @@ positive-time observable algebra
 → excitation-sector positive-shift surjectivity
 → self-adjoint and graph-closed excitation Hamiltonian
 → transferred Rayleigh lower bound
-→ exclusion of every excitation eigenvalue below the transferred mass
+→ coercive real-shift norm bound below the transferred mass
+→ injective shifted excitation Hamiltonian
+→ dense shifted range from self-adjointness
+→ closed shifted range from graph closedness
+→ real-shift surjectivity and bijectivity
+→ linear real resolvent with quantitative inverse estimate
+→ exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
 
@@ -62,10 +69,17 @@ OS symmetry and self-adjointness route.  The ambient resolvent then descends to
 the vacuum-orthogonal carrier, where Mathlib supplies a self-adjoint and closed
 excitation Hamiltonian.
 
+For every real `lambda` below the transferred mass, the shifted excitation
+Hamiltonian is injective, has dense and closed range, and is therefore
+surjective.  It is bundled as a linear equivalence, and its inverse satisfies
+the sharp coercive estimate determined by `mass - lambda`.  This excludes both
+point and continuous real spectrum below the transferred mass without hiding a
+native unbounded-operator spectrum object behind an additional assumption.
+
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
 identification of the OS state with the continuum expectation state, and
 observable-state strong continuity.  A real-time unitary group, vacuum
-uniqueness, and exclusion of continuous spectrum below the transferred mass are
-not constructed here.
+uniqueness, and a native complex spectral-calculus package for the unbounded
+Hamiltonian are not constructed here.
 -/
