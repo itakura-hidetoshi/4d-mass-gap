@@ -71,7 +71,16 @@ private theorem osQuadraticDifferenceIntegrand_continuousAt_zero_ofDiscreteFloor
     (F : D.positiveTimeSubalgebra)
     (X : (G.toSymmetryLimit L).Configuration) :
     ContinuousAt (fun t : NNReal => T.osQuadraticDifferenceIntegrand t F X) 0 := by
-  rw [osQuadraticDifferenceIntegrand_eq_ofDiscreteFloor C L H]
+  have hIntegrand :
+      (fun t : NNReal => T.osQuadraticDifferenceIntegrand t F X) =
+        fun t : NNReal =>
+          (F.1.1
+                (A.physicalTranslate (t : ℝ) (H.configurationReflection X)) -
+              F.1.1 (H.configurationReflection X)) *
+            (F.1.1 (A.physicalTranslate (t : ℝ) X) - F.1.1 X) := by
+    funext t
+    exact osQuadraticDifferenceIntegrand_eq_ofDiscreteFloor C L H t F X
+  rw [hIntegrand]
   have hReflectionTranslate :
       Continuous
         (fun t : NNReal =>
