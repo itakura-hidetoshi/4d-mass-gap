@@ -144,15 +144,32 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_hasDerivAt
       ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
         (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
       lambda := by
+  let d :=
+    (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+      (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda)
   have hwithin :
       HasDerivWithinAt
         (G.vacuumOrthogonalRealResolventOn T hP hSelf)
-        ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
-          (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
-        (Set.Iio G.mass) lambda :=
-    G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
-      T hP hSelf hlambda
-  exact hwithin.hasDerivAt (Iio_mem_nhds hlambda)
+        d (Set.Iio G.mass) lambda := by
+    simpa [d] using
+      G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
+        T hP hSelf hlambda
+  have hfwithin :
+      HasFDerivWithinAt
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (toSpanSingleton ℝ d) (Set.Iio G.mass) lambda :=
+    hwithin.hasFDerivWithinAt
+  have hfat :
+      HasFDerivAt
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (toSpanSingleton ℝ d) lambda :=
+    hfwithin.hasFDerivAt (Iio_mem_nhds hlambda)
+  have hd :
+      HasDerivAt
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        ((toSpanSingleton ℝ d) 1) lambda :=
+    (hasFDerivAt_iff_hasDerivAt).1 hfat
+  simpa [d] using hd
 
 /-- Explicit operator-norm derivative formula for the excitation resolvent. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_deriv
@@ -164,15 +181,27 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_deriv
     deriv (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
       (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
         (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) := by
-  have hderiv :
+  let d :=
+    (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+      (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda)
+  have hd :
       HasDerivAt
         (G.vacuumOrthogonalRealResolventOn T hP hSelf)
-        ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
-          (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
-        lambda :=
-    G.vacuumOrthogonalRealResolventOn_hasDerivAt
-      T hP hSelf hlambda
-  exact hderiv.deriv
+        d lambda := by
+    simpa [d] using
+      G.vacuumOrthogonalRealResolventOn_hasDerivAt T hP hSelf hlambda
+  have hf :
+      HasFDerivAt
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf)
+        (toSpanSingleton ℝ d) lambda :=
+    hd.hasFDerivAt
+  have hfd :
+      fderiv ℝ (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
+        toSpanSingleton ℝ d :=
+    hf.fderiv
+  unfold deriv
+  rw [hfd]
+  simp [d]
 
 /-- The excitation resolvent is differentiable throughout the full real
 sub-mass interval. -/
@@ -185,15 +214,17 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_differenti
       (G.vacuumOrthogonalRealResolventOn T hP hSelf)
       (Set.Iio G.mass) := by
   intro lambda hlambda
+  let d :=
+    (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
+      (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda)
   have hwithin :
       HasDerivWithinAt
         (G.vacuumOrthogonalRealResolventOn T hP hSelf)
-        ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
-          (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda))
-        (Set.Iio G.mass) lambda :=
-    G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
-      T hP hSelf hlambda
-  exact hwithin.differentiableWithinAt
+        d (Set.Iio G.mass) lambda := by
+    simpa [d] using
+      G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
+        T hP hSelf hlambda
+  exact ⟨toSpanSingleton ℝ d, hwithin.hasFDerivWithinAt⟩
 
 /-- The derivative of the excitation resolvent is continuous on the open real
 sub-mass interval. -/
