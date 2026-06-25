@@ -49,6 +49,7 @@ theorem realShift_isClosed_range
     rw [hshift] at hbound
     have hyclose := hN m hm n hn
     rw [dist_eq_norm] at hyclose ⊢
+    change ‖(((x m - x n : A.domain) : E))‖ < epsilon
     have hmul :
         (mass - lambda) * ‖(((x m - x n : A.domain) : E))‖ <
           (mass - lambda) * epsilon :=
