@@ -37,20 +37,29 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
       (Set.Iio G.mass) lambda := by
   induction k with
   | zero =>
-      simpa using
-        (hasDerivWithinAt_const lambda (Set.Iio G.mass)
+      change HasDerivWithinAt
+        (fun _ : ℝ =>
           (1 : P.VacuumOrthogonalHilbert →L[ℝ]
             P.VacuumOrthogonalHilbert))
+        (0 : P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert)
+        (Set.Iio G.mass) lambda
+      exact hasDerivWithinAt_const lambda (Set.Iio G.mass) 1
   | succ k ih =>
       have hR :
           HasDerivWithinAt
             (G.vacuumOrthogonalRealResolventOn T hP hSelf)
             ((G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ 2)
             (Set.Iio G.mass) lambda := by
-        simpa [pow_two, ContinuousLinearMap.mul_def] using
+        simpa [pow_two, ContinuousLinearMap.mul_def,
+          G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda] using
           G.vacuumOrthogonalRealResolventOn_hasDerivWithinAt
             T hP hSelf hlambda
-      have hmul := ih.mul hR
+      have hmul := HasDerivWithinAt.mul
+        (𝕜 := ℝ) (𝕜' := ℝ)
+        (𝔸 := P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert)
+        ih hR
       convert hmul using 1
       · funext mu
         simp [pow_succ]
@@ -97,7 +106,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
                 (n.factorial : ℝ) •
                   (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
               (Set.Iio G.mass) lambda :=
-        derivWithin_congr (fun mu hmu => ih hmu) (ih hlambda)
+        derivWithin_congr
+          (fun mu hmu => ih (lambda := mu) hmu)
+          (ih (lambda := lambda) hlambda)
       rw [hcongr]
       have hpow :=
         G.vacuumOrthogonalRealResolventOn_pow_hasDerivWithinAt
@@ -164,9 +175,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventSmooth_packag
           (n.factorial : ℝ) •
             (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) ^ (n + 1) :=
   ⟨G.vacuumOrthogonalRealResolventOn_contDiffOn_infty T hP hSelf,
-    fun n hlambda =>
+    fun n {lambda} hlambda =>
       G.vacuumOrthogonalRealResolventOn_iteratedDeriv
-        T hP hSelf n hlambda⟩
+        T hP hSelf n (lambda := lambda) hlambda⟩
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
