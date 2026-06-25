@@ -131,7 +131,7 @@ theorem realShift_dense_range
       (LinearMap.range (A.realShift lambda)).topologicalClosure =
         (⊤ : Submodule ℝ E) :=
     (Submodule.topologicalClosure_eq_top_iff).2 hOrthogonal
-  simpa only [Submodule.topologicalClosure_coe, Submodule.coe_top] using
+  simpa [Submodule.topologicalClosure_coe] using
     congrArg (fun K : Submodule ℝ E => (K : Set E)) hTopologicalClosure
 
 end LinearPMap
