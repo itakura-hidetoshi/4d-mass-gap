@@ -85,8 +85,7 @@ theorem realResolvent_norm_le
       mass * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E)) :
     ‖A.realResolvent hSelf hlambda hgap‖ ≤ (mass - lambda)⁻¹ := by
   apply LinearMap.mkContinuous_norm_le
-  · exact inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)
-  · exact A.realResolventLinearMap_norm_bound hSelf hlambda hgap
+  exact inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)
 
 /-- The continuous real resolvent agrees with the unique algebraic shifted
 preimage. -/
