@@ -93,6 +93,8 @@ theorem VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
   have hvacuumInner : inner ℝ P.vacuum P.vacuum = 1 := by
     rw [real_inner_self_eq_norm_sq, P.norm_vacuum hP]
     norm_num
+  have hVacuumHamiltonian : T.rightHamiltonian vacuumDomain = 0 := by
+    simpa only [vacuumDomain] using T.rightHamiltonian_vacuum
   have hzOrthogonal (n : ℕ) :
       inner ℝ ((zOrth n : T.rightGeneratorDomain) : P.PhysicalHilbert)
         P.vacuum = 0 := by
@@ -101,7 +103,7 @@ theorem VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
           coefficient n • P.vacuum)
         P.vacuum = 0
     rw [inner_sub_left, real_inner_smul_left, hvacuumInner, mul_one]
-    rfl
+    simp [coefficient]
   have hCoefficient : Tendsto coefficient atTop (nhds 0) := by
     have hinner := hzCoreFst.inner tendsto_const_nhds
     simpa only [coefficient, hpsi] using hinner
@@ -117,7 +119,9 @@ theorem VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
     simpa using hzCoreFst.sub (hCoefficient.smul_const P.vacuum)
   have hzOrthValue (n : ℕ) :
       T.rightHamiltonian (zOrth n) = T.rightHamiltonian (zCore n) := by
-    simp [zOrth, vacuumDomain, T.rightHamiltonian_vacuum]
+    change T.rightHamiltonian (zCore n - coefficient n • vacuumDomain) =
+      T.rightHamiltonian (zCore n)
+    rw [map_sub, map_smul, hVacuumHamiltonian, smul_zero, sub_zero]
   have hzOrthSnd :
       Tendsto (fun n => T.rightHamiltonian (zOrth n)) atTop
         (nhds (T.closedRightHamiltonian psi)) := by
