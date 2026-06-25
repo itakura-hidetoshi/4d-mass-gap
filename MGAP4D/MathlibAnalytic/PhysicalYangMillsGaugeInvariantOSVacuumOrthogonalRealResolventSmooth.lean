@@ -1,0 +1,5 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventDerivative
+
+noncomputable section
+
+end
