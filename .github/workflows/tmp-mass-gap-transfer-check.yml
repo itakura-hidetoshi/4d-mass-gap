@@ -60,21 +60,29 @@ jobs:
           lean --version
           lake --version
 
-      - name: Elaborate dense-domain target
+      - name: Build excitation Hamiltonian and elaborate dense domain
         id: elaborate
         shell: bash
         run: |
           set -uo pipefail
+          : > /tmp/mass-gap-dense.log
           set +e
-          lake env lean \
-            MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalDenseDomain.lean \
-            > /tmp/mass-gap-dense.log 2>&1
+          lake build --quiet \
+            MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian \
+            >> /tmp/mass-gap-dense.log 2>&1
           status=$?
+          if [ "${status}" -eq 0 ]; then
+            lake env lean \
+              MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalDenseDomain.lean \
+              >> /tmp/mass-gap-dense.log 2>&1
+            status=$?
+          fi
+          set -e
           echo "status=${status}" >> "$GITHUB_OUTPUT"
-          tail -n 180 /tmp/mass-gap-dense.log
+          tail -n 220 /tmp/mass-gap-dense.log
           exit 0
 
-      - name: Upload dense-domain diagnostic
+      - name: Upload mass-gap diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
