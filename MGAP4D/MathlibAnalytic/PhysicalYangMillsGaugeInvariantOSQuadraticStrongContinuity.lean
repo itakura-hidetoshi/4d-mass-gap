@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSPositiveTimeObservableStrongContinuity
+import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -49,19 +50,26 @@ private theorem physicalStateDifference_dist_sq
       P.osQuadraticValue
         (P.carrierOfPositiveTime (T.translate t F) -
           P.carrierOfPositiveTime F) := by
-  rw [dist_eq_norm]
+  let A := P.carrierOfPositiveTime (T.translate t F)
+  let B := P.carrierOfPositiveTime F
   have hsub :
-      P.physicalState (P.carrierOfPositiveTime (T.translate t F)) -
-          P.physicalState (P.carrierOfPositiveTime F) =
-        P.physicalState
-          (P.carrierOfPositiveTime (T.translate t F) -
-            P.carrierOfPositiveTime F) := by
-    rw [← P.physicalStateLinearMap_apply,
-      ← P.physicalStateLinearMap_apply,
-      ← P.physicalStateLinearMap_apply]
-    exact (P.physicalStateLinearMap.map_sub _ _).symm
-  rw [hsub, P.norm_physicalState, P.osQuadraticValue_eq_norm_sq]
-
+      P.physicalState A - P.physicalState B = P.physicalState (A - B) := by
+    calc
+      P.physicalState A - P.physicalState B =
+          P.physicalStateLinearMap A - P.physicalStateLinearMap B := by
+        rw [P.physicalStateLinearMap_apply, P.physicalStateLinearMap_apply]
+      _ = P.physicalStateLinearMap (A - B) := by
+        exact (P.physicalStateLinearMap.map_sub A B).symm
+      _ = P.physicalState (A - B) := P.physicalStateLinearMap_apply _ _
+  calc
+    dist (P.physicalState A) (P.physicalState B) ^ 2 =
+        ‖P.physicalState A - P.physicalState B‖ ^ 2 := by
+      rw [dist_eq_norm]
+    _ = ‖P.physicalState (A - B)‖ ^ 2 := by rw [hsub]
+    _ = ‖A - B‖ ^ 2 := by rw [P.norm_physicalState]
+    _ = P.osQuadraticValue (A - B) := by
+      rw [P.osQuadraticValue_eq_norm_sq]
+  
 /-- Continuity of the scalar OS quadratic difference implies continuity at time
 zero of every represented positive-time observable state. -/
 theorem physicalState_continuousAt_zero
@@ -91,8 +99,9 @@ theorem physicalState_continuousAt_zero
       P.osQuadraticValue
           (P.carrierOfPositiveTime (T.translate t F) -
             P.carrierOfPositiveTime F) < epsilon ^ 2 := by
-    simpa [osQuadraticDifference_zero (T := T) F, Real.dist_eq,
-      abs_of_nonneg hqNonneg] using hqNear
+    rw [osQuadraticDifference_zero (T := T) F, Real.dist_eq, sub_zero,
+      abs_of_nonneg hqNonneg] at hqNear
+    exact hqNear
   have hdistSq := physicalStateDifference_dist_sq (T := T) t F
   have hdistNonneg :
       0 ≤ dist
