@@ -37,10 +37,23 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
       (Set.Iio G.mass) lambda := by
   induction k with
   | zero =>
-      simpa only [pow_zero, Nat.cast_zero, zero_smul] using
-        (hasDerivWithinAt_const lambda (Set.Iio G.mass)
-          (1 : P.VacuumOrthogonalHilbert →L[ℝ]
-            P.VacuumOrthogonalHilbert))
+      have hconst :
+          HasDerivWithinAt
+            (fun _ : ℝ =>
+              (1 : P.VacuumOrthogonalHilbert →L[ℝ]
+                P.VacuumOrthogonalHilbert))
+            (0 : P.VacuumOrthogonalHilbert →L[ℝ]
+              P.VacuumOrthogonalHilbert)
+            (Set.Iio G.mass) lambda :=
+        hasDerivWithinAt_const lambda (Set.Iio G.mass) 1
+      have hzero :
+          (0 : P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert) =
+            (0 : ℝ) •
+              (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+                (0 + 1) := by
+        simp
+      simpa only [pow_zero] using hconst.congr_deriv hzero
   | succ k ih =>
       have hR :
           HasDerivWithinAt
@@ -56,10 +69,30 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
         (𝔸 := P.VacuumOrthogonalHilbert →L[ℝ]
           P.VacuumOrthogonalHilbert)
         ih hR
-      convert hmul using 1
-      · funext mu
-        simp [pow_succ]
-      · let Rlambda :=
+      have hmul' :
+          HasDerivWithinAt
+            (fun mu =>
+              (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (k + 1))
+            ((k : ℝ) •
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ (k + 1) *
+                  G.vacuumOrthogonalRealResolventOn T hP hSelf lambda +
+              (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ k *
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ 2)
+            (Set.Iio G.mass) lambda := by
+        apply hmul.congr
+        · intro mu hmu
+          simp [pow_succ]
+        · simp [pow_succ]
+      have hderiv :
+          ((k : ℝ) •
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ (k + 1) *
+                  G.vacuumOrthogonalRealResolventOn T hP hSelf lambda +
+              (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ k *
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^ 2) =
+            ((Nat.succ k : ℕ) : ℝ) •
+              (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+                (Nat.succ k + 1) := by
+        let Rlambda :=
           G.vacuumOrthogonalRealResolventOn T hP hSelf lambda
         change
           ((k : ℝ) • Rlambda ^ (k + 1)) * Rlambda +
@@ -73,6 +106,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
           simpa using (pow_add Rlambda k 2).symm
         rw [hfirst, hsecond]
         simp [Nat.cast_succ, Nat.succ_eq_add_one, add_smul, Nat.add_assoc]
+      exact hmul'.congr_deriv hderiv
 
 /-- Every iterated derivative within the open real sub-mass interval is the
 factorial multiple of the corresponding composition power. -/
@@ -125,23 +159,41 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
             (F := P.VacuumOrthogonalHilbert →L[ℝ]
               P.VacuumOrthogonalHilbert)
             (n.factorial : ℝ) hpow)
+      let derivValue :
+          P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert :=
+        (n.factorial : ℝ) •
+          (((n + 1 : ℕ) : ℝ) •
+            (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+              (n + 2))
+      have hfscaled :
+          HasFDerivWithinAt
+            (fun mu =>
+              (n.factorial : ℝ) •
+                (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
+            (toSpanSingleton ℝ derivValue)
+            (Set.Iio G.mass) lambda := by
+        simpa [derivValue] using hscaled.hasFDerivWithinAt
+      have hfderiv :
+          fderivWithin ℝ
+              (fun mu =>
+                (n.factorial : ℝ) •
+                  (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
+              (Set.Iio G.mass) lambda =
+            toSpanSingleton ℝ derivValue :=
+        hfscaled.fderivWithin (isOpen_Iio.uniqueDiffOn lambda hlambda)
       have hscaledDeriv :
           derivWithin
               (fun mu =>
                 (n.factorial : ℝ) •
                   (G.vacuumOrthogonalRealResolventOn T hP hSelf mu) ^ (n + 1))
-              (Set.Iio G.mass) lambda =
-            (n.factorial : ℝ) •
-              (((n + 1 : ℕ) : ℝ) •
-                (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
-                  (n + 2)) := by
-        exact HasDerivWithinAt.derivWithin
-          (𝕜 := ℝ) hscaled
-          (isOpen_Iio.uniqueDiffOn lambda hlambda)
+              (Set.Iio G.mass) lambda = derivValue := by
+        unfold derivWithin
+        rw [hfderiv]
+        simp [derivValue]
       rw [hscaledDeriv]
-      simp [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
-        smul_smul, Nat.succ_eq_add_one, mul_comm, mul_left_comm,
-        mul_assoc, Nat.add_assoc]
+      simp [derivValue, Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
+        smul_smul, mul_comm, mul_assoc, Nat.add_assoc]
 
 /-- Explicit ordinary all-order derivative formula below the transferred mass:
 `R^(n)(lambda) = n! • R(lambda)^(n+1)`. -/
