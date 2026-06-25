@@ -9,7 +9,7 @@ open scoped InnerProductSpace LinearPMap
 namespace LinearPMap
 
 variable {E : Type*}
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /-- Changing the real shift parameter changes the shifted value by the
 corresponding scalar multiple of the domain vector. -/
@@ -19,6 +19,8 @@ theorem realShift_change_parameter
       A.realShift mu x + (mu - lambda) • (x : E) := by
   simp only [realShift_apply]
   module
+
+variable [CompleteSpace E]
 
 /-- Pointwise real resolvent identity below a common Rayleigh threshold. -/
 theorem realResolvent_sub_apply
@@ -58,8 +60,18 @@ theorem realResolvent_sub_apply
       _ = y + (mu - lambda) • (xmu : E) := by rw [hxmu]
   have hcandidate :
       A.realShift lambda (xmu + (lambda - mu) • xlambdaMu) = y := by
-    rw [map_add, map_smul, hxmuAtLambda, hxlambdaMu]
-    module
+    calc
+      A.realShift lambda (xmu + (lambda - mu) • xlambdaMu) =
+          A.realShift lambda xmu +
+            A.realShift lambda ((lambda - mu) • xlambdaMu) :=
+        (A.realShift lambda).map_add xmu ((lambda - mu) • xlambdaMu)
+      _ = A.realShift lambda xmu +
+          (lambda - mu) • A.realShift lambda xlambdaMu := by
+        rw [(A.realShift lambda).map_smul]
+      _ = y + (mu - lambda) • (xmu : E) +
+          (lambda - mu) • (xmu : E) := by
+        rw [hxmuAtLambda, hxlambdaMu]
+      _ = y := by module
   have hdomain :
       xlambda = xmu + (lambda - mu) • xlambdaMu := by
     apply A.realShift_injective hlambda hgap
@@ -100,7 +112,10 @@ theorem realResolvent_sub_norm_le
       |lambda - mu| *
         ((mass - lambda)⁻¹ * (mass - mu)⁻¹) := by
   apply ContinuousLinearMap.opNorm_le_bound
-  · positivity
+  · exact mul_nonneg (abs_nonneg _)
+      (mul_nonneg
+        (inv_nonneg.mpr (sub_nonneg.mpr hlambda.le))
+        (inv_nonneg.mpr (sub_nonneg.mpr hmu.le)))
   · intro y
     change
       ‖A.realResolvent hSelf hlambda hgap y -
@@ -175,10 +190,6 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent_sub_apply
       T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
         hP hSelf)
     hlambda hmu
-  intro z
-  simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-    G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-      ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) z
 
 /-- Real resolvent identity as a continuous-linear-map equality on the
 vacuum-orthogonal excitation Hilbert space. -/
@@ -195,7 +206,8 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent_identity
       (lambda - mu) •
         ((G.vacuumOrthogonalRealResolvent T hP hSelf hlambda).comp
           (G.vacuumOrthogonalRealResolvent T hP hSelf hmu)) := by
-  ext y
+  apply ContinuousLinearMap.ext
+  intro y
   exact G.vacuumOrthogonalRealResolvent_sub_apply
     T hP hSelf hlambda hmu y
 
@@ -218,10 +230,6 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolvent_sub_norm_le
       T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
         hP hSelf)
     hlambda hmu
-  intro z
-  simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-    G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-      ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) z
 
 /-- Resolvent-identity and parameter-control package below the transferred mass. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventIdentity_package
