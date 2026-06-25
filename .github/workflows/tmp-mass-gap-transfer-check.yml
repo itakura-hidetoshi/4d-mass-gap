@@ -1,0 +1,27 @@
+name: Temporary Mass Gap Transfer Check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-mass-gap-transfer-check.yml"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer.lean"
+      - "lean-toolchain"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: temporary-mass-gap-transfer-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  targeted-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: leanprover/lean-action@v1
+        with:
+          build-args: MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer
