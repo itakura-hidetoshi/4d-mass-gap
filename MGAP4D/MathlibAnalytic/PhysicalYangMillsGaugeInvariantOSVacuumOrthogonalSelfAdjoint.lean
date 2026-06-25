@@ -183,9 +183,17 @@ theorem vacuumOrthogonalClosedRightHamiltonianOneShift_surjective
   let uRestricted :
       (T.vacuumOrthogonalClosedRightHamiltonian hSymmetric).domain :=
     ⟨uExcitation, u.property⟩
-  refine ⟨uRestricted, Subtype.ext ?_⟩
-  simpa [vacuumOrthogonalClosedRightHamiltonianOneShift,
-    LinearPMap.oneShift_apply, uRestricted, uExcitation] using huAmbient
+  refine ⟨uRestricted, ?_⟩
+  apply P.vacuumOrthogonal.subtype_injective
+  change
+    (((T.vacuumOrthogonalClosedRightHamiltonianOneShift hSymmetric
+        uRestricted : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) =
+      ((y : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)
+  rw [T.vacuumOrthogonalClosedRightHamiltonianOneShift_apply]
+  change
+    (u : P.PhysicalHilbert) + T.closedRightHamiltonian u =
+      ((y : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)
+  exact huAmbient
 
 /-- A dense symmetric excitation-sector restriction is self-adjoint. -/
 theorem vacuumOrthogonalClosedRightHamiltonian_isSelfAdjoint_of_dense
