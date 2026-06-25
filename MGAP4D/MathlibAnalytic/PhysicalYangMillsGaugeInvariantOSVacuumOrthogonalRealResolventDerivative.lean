@@ -6,7 +6,7 @@ import Mathlib.Tactic
 
 noncomputable section
 
-open Set Filter Topology
+open Set Filter Topology ContinuousLinearMap
 open scoped InnerProductSpace LinearPMap ContDiff
 
 namespace MGAP4D
