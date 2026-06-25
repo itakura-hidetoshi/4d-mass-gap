@@ -40,7 +40,7 @@ private theorem osQuadraticDifference_zero
         (P.carrierOfPositiveTime (T.translate 0 F) -
           P.carrierOfPositiveTime F) = 0 := by
   rw [T.translate_zero]
-  simp [P.osQuadraticValue_eq_norm_sq]
+  simp
 
 private theorem physicalStateDifference_dist_sq
     (t : NNReal) (F : D.positiveTimeSubalgebra) :
@@ -60,7 +60,7 @@ private theorem physicalStateDifference_dist_sq
         rw [P.physicalStateLinearMap_apply, P.physicalStateLinearMap_apply]
       _ = P.physicalStateLinearMap (A - B) := by
         exact (P.physicalStateLinearMap.map_sub A B).symm
-      _ = P.physicalState (A - B) := P.physicalStateLinearMap_apply _ _
+      _ = P.physicalState (A - B) := P.physicalStateLinearMap_apply (A - B)
   calc
     dist (P.physicalState A) (P.physicalState B) ^ 2 =
         ‖P.physicalState A - P.physicalState B‖ ^ 2 := by
@@ -69,7 +69,7 @@ private theorem physicalStateDifference_dist_sq
     _ = ‖A - B‖ ^ 2 := by rw [P.norm_physicalState]
     _ = P.osQuadraticValue (A - B) := by
       rw [P.osQuadraticValue_eq_norm_sq]
-  
+
 /-- Continuity of the scalar OS quadratic difference implies continuity at time
 zero of every represented positive-time observable state. -/
 theorem physicalState_continuousAt_zero
