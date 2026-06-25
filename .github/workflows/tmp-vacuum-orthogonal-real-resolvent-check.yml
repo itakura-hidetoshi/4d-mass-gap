@@ -6,6 +6,7 @@ on:
       - ".github/workflows/tmp-vacuum-orthogonal-real-resolvent-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolvent.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventClosedRange.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventSurjective.lean"
   workflow_dispatch:
 
 permissions:
@@ -50,7 +51,7 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventClosedRange \
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventSurjective \
             > /tmp/vacuum-orthogonal-real-resolvent.log 2>&1
           status=$?
           set -e
