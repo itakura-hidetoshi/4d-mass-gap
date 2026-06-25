@@ -60,7 +60,8 @@ jobs:
           lean --version
           lake --version
 
-      - name: Elaborate dense-domain target with diagnostic tail
+      - name: Elaborate dense-domain target
+        id: elaborate
         shell: bash
         run: |
           set -uo pipefail
@@ -69,6 +70,19 @@ jobs:
             MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalDenseDomain.lean \
             > /tmp/mass-gap-dense.log 2>&1
           status=$?
-          set -e
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
           tail -n 180 /tmp/mass-gap-dense.log
-          exit "${status}"
+          exit 0
+
+      - name: Upload dense-domain diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mass-gap-dense-log
+          path: /tmp/mass-gap-dense.log
+          if-no-files-found: error
+
+      - name: Propagate elaboration status
+        if: always()
+        shell: bash
+        run: exit "${{ steps.elaborate.outputs.status }}"
