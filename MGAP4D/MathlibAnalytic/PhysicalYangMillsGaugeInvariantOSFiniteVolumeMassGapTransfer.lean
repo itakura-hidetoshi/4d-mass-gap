@@ -232,7 +232,6 @@ theorem VacuumSemigroupGapSlope.rightHamiltonian_inner_ge_mass_mul_norm_sq
       simp only [rightHamiltonianDifferenceQuotient,
         real_inner_smul_left, inner_sub_left,
         real_inner_self_eq_norm_sq]
-      ring
 
 /-- The finite-volume transfer package therefore yields the canonical continuum
 Hamiltonian mass-gap inequality on the vacuum-orthogonal generator domain. -/
