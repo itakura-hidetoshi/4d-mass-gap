@@ -43,7 +43,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
             (P.VacuumOrthogonalHilbert →L[ℝ]
               P.VacuumOrthogonalHilbert) →L[ℝ]
                 (P.VacuumOrthogonalHilbert →L[ℝ]
-                  P.VacuumOrthogonalHilbert)).flip Rlambda
+                  P.VacuumOrthogonalHilbert)).flip Rlambda)
     let perturb : ℝ →
         (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
       fun mu => (mu - lambda) • Rlambda
