@@ -23,7 +23,7 @@ namespace StronglyContinuousPhysicalSemigroup
 set_option maxHeartbeats 1200000
 
 /-- The vacuum-orthogonal real resolvent is real analytic at every parameter
-strictly below the transferred mass.  Locally it is the geometric inverse of
+strictly below the transferred mass. Locally it is the geometric inverse of
 `1 - (mu - lambda) R_lambda`, multiplied by `R_lambda`. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     (T : P.StronglyContinuousPhysicalSemigroup)
@@ -34,10 +34,16 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     AnalyticAt ℝ
       (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda := by
   with_reducible_and_instances
-    letI : IsBoundedSMul ℝ
-        (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
-      NormedSpace.toIsBoundedSMul
     let Rlambda := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
+    let scaleR :
+        ℝ →L[ℝ]
+          (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
+      ((ContinuousLinearMap.lsmul ℝ ℝ :
+          ℝ →L[ℝ]
+            (P.VacuumOrthogonalHilbert →L[ℝ]
+              P.VacuumOrthogonalHilbert) →L[ℝ]
+                (P.VacuumOrthogonalHilbert →L[ℝ]
+                  P.VacuumOrthogonalHilbert)).flip Rlambda
     let perturb : ℝ →
         (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
       fun mu => (mu - lambda) • Rlambda
@@ -46,13 +52,14 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       fun mu => Ring.inverse (1 - perturb mu) * Rlambda
     have hscalar : AnalyticAt ℝ (fun mu : ℝ => mu - lambda) lambda :=
       analyticAt_id.sub analyticAt_const
-    have hconstant :
-        AnalyticAt ℝ
-          (fun _ : ℝ => Rlambda) lambda :=
+    have hconstant : AnalyticAt ℝ (fun _ : ℝ => Rlambda) lambda :=
       analyticAt_const
     have hperturb : AnalyticAt ℝ perturb lambda := by
-      simpa only [perturb, Pi.smul_apply] using
-        (AnalyticAt.smul (A := ℝ) hscalar hconstant)
+      have hscale : AnalyticAt ℝ scaleR (lambda - lambda) :=
+        scaleR.analyticAt (lambda - lambda)
+      simpa only [perturb, scaleR, Function.comp_apply,
+        ContinuousLinearMap.flip_apply, ContinuousLinearMap.lsmul_apply] using
+        hscale.comp hscalar
     have hperturbZero : perturb lambda = 0 := by
       simp only [perturb, sub_self, zero_smul]
     have hinverse :
@@ -64,8 +71,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
             (perturb lambda) := by
         rw [hperturbZero]
         exact analyticAt_inverse_one_sub ℝ
-          (P.VacuumOrthogonalHilbert →L[ℝ]
-            P.VacuumOrthogonalHilbert)
+          (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert)
       simpa only [Function.comp_apply] using houter.comp hperturb
     have hcandidate : AnalyticAt ℝ candidate lambda := by
       have hmul :
