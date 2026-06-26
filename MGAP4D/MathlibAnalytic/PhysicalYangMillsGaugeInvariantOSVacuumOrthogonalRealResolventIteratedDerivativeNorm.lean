@@ -39,7 +39,8 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
   calc
     ‖(n.factorial : ℝ) • Rlambda ^ (n + 1)‖ ≤
         ‖(n.factorial : ℝ)‖ * ‖Rlambda ^ (n + 1)‖ :=
-      norm_smul_le _ _
+      ContinuousLinearMap.opNorm_smul_le
+        (n.factorial : ℝ) (Rlambda ^ (n + 1))
     _ = (n.factorial : ℝ) * ‖Rlambda ^ (n + 1)‖ := by
       rw [Real.norm_natCast]
     _ ≤ (n.factorial : ℝ) * ‖Rlambda‖ ^ (n + 1) :=
@@ -121,7 +122,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventFactorialDeri
             (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda =
           (n.factorial : ℝ) •
             (G.vacuumOrthogonalRealResolvent T hP hSelf hlambda) ^ (n + 1)) ∧
-      ∀ (n : ℕ) {lambda : ℝ} (hlambda : lambda < G.mass),
+      ∀ (n : ℕ) {lambda : ℝ} (_ : lambda < G.mass),
         ‖iteratedDeriv n
             (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda‖ ≤
           (n.factorial : ℝ) * ((G.mass - lambda)⁻¹) ^ (n + 1) := by
