@@ -48,17 +48,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
         hasDerivWithinAt_const lambda (Set.Iio G.mass)
           (1 : P.VacuumOrthogonalHilbert →L[ℝ]
             P.VacuumOrthogonalHilbert)
-      have hzero :
-          (0 : P.VacuumOrthogonalHilbert →L[ℝ]
-            P.VacuumOrthogonalHilbert) =
-            (0 : ℝ) •
-              (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
-                (0 + 1) :=
-        (zero_smul ℝ
-          ((G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
-            (0 + 1))).symm
-      rw [hzero] at hconst
-      simpa only [pow_zero] using hconst
+      simpa [pow_zero] using hconst
   | succ k ih =>
       have hR :
           HasDerivWithinAt
@@ -111,7 +101,18 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
         have hsecond : Rlambda ^ k * Rlambda ^ 2 = Rlambda ^ (k + 2) := by
           simpa using (pow_add Rlambda k 2).symm
         rw [hfirst, hsecond]
-        simp [Nat.cast_succ, Nat.succ_eq_add_one, add_smul, Nat.add_assoc]
+        calc
+          (k : ℝ) • Rlambda ^ (k + 2) + Rlambda ^ (k + 2) =
+              (k : ℝ) • Rlambda ^ (k + 2) +
+                (1 : ℝ) • Rlambda ^ (k + 2) := by
+            rw [one_smul ℝ]
+          _ = ((k : ℝ) + 1) • Rlambda ^ (k + 2) :=
+            (add_smul (k : ℝ) (1 : ℝ) (Rlambda ^ (k + 2))).symm
+          _ = ((Nat.succ k : ℕ) : ℝ) •
+              Rlambda ^ (Nat.succ k + 1) := by
+            rw [Nat.cast_succ]
+            congr 2
+            omega
       rw [hderiv] at hmul'
       exact hmul'
 
@@ -200,7 +201,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
         simp [derivValue]
       rw [hscaledDeriv]
       simp [derivValue, Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
-        smul_smul, mul_comm, mul_assoc, Nat.add_assoc]
+        smul_smul, mul_comm, Nat.add_assoc]
 
 /-- Explicit ordinary all-order derivative formula below the transferred mass:
 `R^(n)(lambda) = n! • R(lambda)^(n+1)`. -/
