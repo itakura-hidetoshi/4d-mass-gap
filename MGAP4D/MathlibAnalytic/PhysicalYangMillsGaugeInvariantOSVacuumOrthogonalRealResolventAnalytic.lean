@@ -59,7 +59,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     have hperturb : AnalyticAt ℝ perturb lambda := by
       simpa only [perturb, Function.comp_apply,
         ContinuousLinearMap.toSpanSingleton_apply] using
-        hscale.comp hscalar
+        hscale.comp_of_eq hscalar rfl
     have hperturbZero : perturb lambda = 0 := by
       dsimp [perturb]
       module
@@ -87,10 +87,14 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       simpa only [candidate] using hmul
     have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
       have hlt : ‖perturb lambda‖ < (1 : ℝ) := by
-        rw [hperturbZero]
-        simpa using (zero_lt_one : (0 : ℝ) < 1)
-      exact ContinuousAt.eventually_mem
-        hperturb.continuousAt.norm (Iio_mem_nhds hlt)
+        calc
+          ‖perturb lambda‖ = 0 := by rw [hperturbZero, norm_zero]
+          _ < 1 := zero_lt_one
+      have hnorm :
+          Tendsto (fun mu => ‖perturb mu‖) (𝓝 lambda)
+            (𝓝 ‖perturb lambda‖) :=
+        hperturb.continuousAt.norm
+      exact hnorm (Iio_mem_nhds hlt)
     have heq :
         candidate =ᶠ[𝓝 lambda]
           G.vacuumOrthogonalRealResolventOn T hP hSelf := by
