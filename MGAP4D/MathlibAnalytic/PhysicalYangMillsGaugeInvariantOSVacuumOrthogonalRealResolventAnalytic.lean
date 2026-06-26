@@ -35,18 +35,12 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda := by
   with_reducible_and_instances
     let Rlambda := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
-    let scaleR :
-        ℝ →L[ℝ]
-          (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
-      ((ContinuousLinearMap.lsmul ℝ ℝ :
-          ℝ →L[ℝ]
-            (P.VacuumOrthogonalHilbert →L[ℝ]
-              P.VacuumOrthogonalHilbert) →L[ℝ]
-                (P.VacuumOrthogonalHilbert →L[ℝ]
-                  P.VacuumOrthogonalHilbert)).flip Rlambda)
     let perturb : ℝ →
         (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
-      fun mu => (mu - lambda) • Rlambda
+      fun mu =>
+        (algebraMapCLM ℝ
+          (P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert)) (mu - lambda) * Rlambda
     let candidate : ℝ →
         (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
       fun mu => Ring.inverse (1 - perturb mu) * Rlambda
@@ -55,13 +49,37 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     have hconstant : AnalyticAt ℝ (fun _ : ℝ => Rlambda) lambda :=
       analyticAt_const
     have hperturb : AnalyticAt ℝ perturb lambda := by
-      have hscale : AnalyticAt ℝ scaleR (lambda - lambda) :=
-        scaleR.analyticAt (lambda - lambda)
-      simpa only [perturb, scaleR, Function.comp_apply,
-        ContinuousLinearMap.flip_apply, ContinuousLinearMap.lsmul_apply] using
-        hscale.comp hscalar
+      have hmap :
+          AnalyticAt ℝ
+            (algebraMapCLM ℝ
+              (P.VacuumOrthogonalHilbert →L[ℝ]
+                P.VacuumOrthogonalHilbert))
+            (lambda - lambda) :=
+        (algebraMapCLM ℝ
+          (P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert)).analyticAt (lambda - lambda)
+      have hmapComp :
+          AnalyticAt ℝ
+            (fun mu =>
+              (algebraMapCLM ℝ
+                (P.VacuumOrthogonalHilbert →L[ℝ]
+                  P.VacuumOrthogonalHilbert)) (mu - lambda))
+            lambda := by
+        simpa only [Function.comp_apply] using hmap.comp hscalar
+      have hmul :
+          AnalyticAt ℝ
+            (fun mu =>
+              (algebraMapCLM ℝ
+                (P.VacuumOrthogonalHilbert →L[ℝ]
+                  P.VacuumOrthogonalHilbert)) (mu - lambda) * Rlambda)
+            lambda :=
+        AnalyticAt.mul
+          (A := P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert)
+          hmapComp hconstant
+      simpa only [perturb] using hmul
     have hperturbZero : perturb lambda = 0 := by
-      simp only [perturb, sub_self, zero_smul]
+      simp [perturb]
     have hinverse :
         AnalyticAt ℝ (fun mu => Ring.inverse (1 - perturb mu)) lambda := by
       have houter :
@@ -71,7 +89,8 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
             (perturb lambda) := by
         rw [hperturbZero]
         exact analyticAt_inverse_one_sub ℝ
-          (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert)
+          (P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert)
       simpa only [Function.comp_apply] using houter.comp hperturb
     have hcandidate : AnalyticAt ℝ candidate lambda := by
       have hmul :
@@ -114,8 +133,8 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
         abel
       have hmul : (1 - perturb mu) * Rmu = Rlambda := by
         dsimp [perturb]
-        rw [sub_mul, one_mul]
-        simpa [ContinuousLinearMap.mul_def] using hid'
+        rw [sub_mul, one_mul, mul_assoc]
+        simpa [Algebra.smul_def, ContinuousLinearMap.mul_def] using hid'
       rw [G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hmu]
       dsimp [candidate]
       rw [NormedRing.inverse_one_sub (perturb mu) hmuSmall]
