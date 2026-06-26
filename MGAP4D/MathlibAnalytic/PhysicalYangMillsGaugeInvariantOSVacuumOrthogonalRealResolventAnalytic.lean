@@ -63,15 +63,19 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       map_add' := by
         intro R S
         ext y
-        simp
+        change R (Rlambda y) + S (Rlambda y) =
+          R (Rlambda y) + S (Rlambda y)
+        rfl
       map_smul' := by
         intro c R
         ext y
-        simp }
-  let rightMul : A →L[ℝ] A :=
-    rightMulLinear.mkContinuous ‖Rlambda‖ fun R => by
-      dsimp [rightMulLinear]
-      simpa [mul_comm] using R.opNorm_comp_le Rlambda
+        change c • R (Rlambda y) = c • R (Rlambda y)
+        rfl }
+  let rightMul : A →L[ℝ] A := by
+    with_reducible_and_instances
+      exact rightMulLinear.mkContinuous ‖Rlambda‖ fun R => by
+        change ‖R.comp Rlambda‖ ≤ ‖Rlambda‖ * ‖R‖
+        simpa [mul_comm] using R.opNorm_comp_le Rlambda
   have hrightMul_apply (R : A) : rightMul R = R * Rlambda := by
     ext y
     rfl
