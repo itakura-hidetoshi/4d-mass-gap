@@ -54,7 +54,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
                 (0 + 1)) =
             (0 : P.VacuumOrthogonalHilbert →L[ℝ]
               P.VacuumOrthogonalHilbert) := by
-        simp
+        exact zero_smul ℝ _
       rw [hzero]
       simpa only [pow_zero] using hconst
   | succ k ih =>
