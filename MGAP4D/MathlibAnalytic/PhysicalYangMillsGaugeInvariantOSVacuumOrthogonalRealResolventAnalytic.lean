@@ -45,18 +45,14 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       analyticAt_id.sub analyticAt_const
     have hconstant : AnalyticAt ℝ (fun _ : ℝ => Rlambda) lambda :=
       analyticAt_const
-    let scale :
-        ℝ →L[ℝ]
-          (P.VacuumOrthogonalHilbert →L[ℝ]
-            P.VacuumOrthogonalHilbert) :=
-      ContinuousLinearMap.toSpanSingleton ℝ Rlambda
-    have hscale :
-        AnalyticAt ℝ scale ((fun mu : ℝ => mu - lambda) lambda) :=
-      ContinuousLinearMap.analyticAt scale _
+    letI : IsBoundedSMul ℝ
+        (P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert) :=
+      IsBoundedSMul.of_norm_smul_le fun r A =>
+        ContinuousLinearMap.opNorm_smul_le r A
     have hperturb : AnalyticAt ℝ perturb lambda := by
-      have hcomp := hscale.comp hscalar
-      simpa only [perturb, scale, Function.comp_apply,
-        ContinuousLinearMap.toSpanSingleton_apply] using hcomp
+      change AnalyticAt ℝ (fun mu : ℝ => (mu - lambda) • Rlambda) lambda
+      exact hscalar.smul hconstant
     have hperturbZero : perturb lambda = 0 := by
       dsimp [perturb]
       module
