@@ -79,27 +79,20 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
           hinverse hconstant
       simpa only [candidate] using hmul
     have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
-      have hlt : ‖perturb lambda‖ < (1 : ℝ) := by
-        calc
-          ‖perturb lambda‖ = 0 := by
-            simpa only [hperturbZero, norm_zero]
-          _ < 1 := zero_lt_one
-      have hnormOuter :
-          Tendsto
-            (fun A : P.VacuumOrthogonalHilbert →L[ℝ]
-              P.VacuumOrthogonalHilbert => ‖A‖)
-            (𝓝 (perturb lambda))
-            (𝓝 ‖perturb lambda‖) :=
-        (continuous_norm :
-          Continuous
-            (fun A : P.VacuumOrthogonalHilbert →L[ℝ]
-              P.VacuumOrthogonalHilbert => ‖A‖)).continuousAt
-      have hnorm :
-          Tendsto (fun mu => ‖perturb mu‖) (𝓝 lambda)
-            (𝓝 ‖perturb lambda‖) := by
-        simpa only [Function.comp_apply] using
-          hnormOuter.comp hperturb.continuousAt
-      exact hnorm (Iio_mem_nhds hlt)
+      have hboundContinuous :
+          ContinuousAt
+            (fun mu : ℝ => ‖mu - lambda‖ * ‖Rlambda‖)
+            lambda := by
+        fun_prop
+      have hboundAt :
+          ‖lambda - lambda‖ * ‖Rlambda‖ < (1 : ℝ) := by
+        simp
+      have hbound :
+          ∀ᶠ mu in 𝓝 lambda, ‖mu - lambda‖ * ‖Rlambda‖ < 1 :=
+        hboundContinuous (Iio_mem_nhds hboundAt)
+      filter_upwards [hbound] with mu hmu
+      change ‖(mu - lambda) • Rlambda‖ < 1
+      exact (ContinuousLinearMap.opNorm_smul_le (mu - lambda) Rlambda).trans_lt hmu
     have heq :
         candidate =ᶠ[𝓝 lambda]
           G.vacuumOrthogonalRealResolventOn T hP hSelf := by
