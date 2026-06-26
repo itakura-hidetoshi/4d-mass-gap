@@ -39,30 +39,35 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
   let candidate : ℝ →
       (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
     fun mu => Ring.inverse (1 - perturb mu) * Rlambda
-  have hperturb : AnalyticAt ℝ perturb lambda := by
-    dsimp [perturb]
+  have hscalar : AnalyticAt ℝ (fun mu : ℝ => mu - lambda) lambda := by
     fun_prop
+  have hconstR : AnalyticAt ℝ (fun _ : ℝ => Rlambda) lambda :=
+    analyticAt_const
+  have hperturb : AnalyticAt ℝ perturb lambda := by
+    simpa only [perturb] using hscalar.smul hconstR
+  have hperturbZero : perturb lambda = 0 := by
+    simp [perturb]
   have hinverse :
       AnalyticAt ℝ (fun mu => Ring.inverse (1 - perturb mu)) lambda := by
-    simpa [perturb] using
-      (analyticAt_inverse_one_sub ℝ
+    have houter :=
+      analyticAt_inverse_one_sub ℝ
         (P.VacuumOrthogonalHilbert →L[ℝ]
-          P.VacuumOrthogonalHilbert)).comp hperturb
+          P.VacuumOrthogonalHilbert)
+    have hcomp := houter.comp_of_eq hperturb hperturbZero
+    simpa only [Function.comp_apply] using hcomp
   have hcandidate : AnalyticAt ℝ candidate lambda := by
-    dsimp [candidate]
-    exact hinverse.mul analyticAt_const
+    have hmul := hinverse.mul hconstR
+    simpa only [candidate, Pi.mul_apply] using hmul
   have hperturbTendsto : Tendsto perturb (𝓝 lambda) (𝓝 0) := by
-    simpa [perturb] using hperturb.continuousAt
+    simpa only [hperturbZero] using hperturb.continuousAt
   have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
-    have hball :
-        Metric.ball
-            (0 : P.VacuumOrthogonalHilbert →L[ℝ]
-              P.VacuumOrthogonalHilbert) 1 ∈
-          𝓝 (0 : P.VacuumOrthogonalHilbert →L[ℝ]
-            P.VacuumOrthogonalHilbert) :=
-      Metric.ball_mem_nhds _ one_pos
-    filter_upwards [hperturbTendsto.eventually hball] with mu hmu
-    simpa [Metric.mem_ball, dist_zero_right] using hmu
+    let A := P.VacuumOrthogonalHilbert →L[ℝ]
+      P.VacuumOrthogonalHilbert
+    have hopen : IsOpen {R : A | ‖R‖ < 1} :=
+      isOpen_lt continuous_norm continuous_const
+    have hzero : (0 : A) ∈ {R : A | ‖R‖ < 1} := by
+      simp
+    exact hperturbTendsto.eventually (hopen.mem_nhds hzero)
   have heq :
       candidate =ᶠ[𝓝 lambda]
         G.vacuumOrthogonalRealResolventOn T hP hSelf := by
@@ -76,7 +81,14 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
           T hP hSelf hlambda hmu
     have hid' :
         Rmu - (mu - lambda) • (Rlambda.comp Rmu) = Rlambda := by
-      module at hid ⊢
+      calc
+        Rmu - (mu - lambda) • (Rlambda.comp Rmu) =
+            Rmu + (lambda - mu) • (Rlambda.comp Rmu) := by
+          rw [sub_eq_add_neg, ← neg_smul, neg_sub]
+        _ = Rmu + (Rlambda - Rmu) := by
+          rw [hid]
+        _ = Rlambda := by
+          abel
     have hmul : (1 - perturb mu) * Rmu = Rlambda := by
       dsimp [perturb]
       rw [sub_mul, one_mul, Algebra.smul_mul_assoc]
