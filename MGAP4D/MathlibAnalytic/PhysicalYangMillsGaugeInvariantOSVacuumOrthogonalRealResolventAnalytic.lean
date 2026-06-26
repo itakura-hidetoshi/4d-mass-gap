@@ -59,20 +59,21 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     have hcomp := houter.comp_of_eq hperturb hperturbZero
     simpa only [Function.comp_apply] using hcomp
   have hcandidate : AnalyticAt ℝ candidate lambda := by
+    dsimp [candidate]
     with_reducible_and_instances
-      have hmul := hinverse.mul hconstR
-      simpa only [candidate, Pi.mul_apply] using hmul
+      exact hinverse.mul analyticAt_const
   have hperturbTendsto : Tendsto perturb (𝓝 lambda) (𝓝 0) := by
     have hcont := hperturb.continuousAt
     change Tendsto perturb (𝓝 lambda) (𝓝 (perturb lambda)) at hcont
     rw [hperturbZero] at hcont
     exact hcont
   have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
-    have hball : Metric.ball (0 : A) 1 ∈ 𝓝 (0 : A) := by
+    have hopen : IsOpen {R : A | ‖R‖ < 1} := by
       with_reducible_and_instances
-        exact Metric.ball_mem_nhds _ one_pos
-    filter_upwards [hperturbTendsto.eventually hball] with mu hmu
-    simpa [Metric.mem_ball, dist_zero_right] using hmu
+        exact isOpen_lt continuous_norm continuous_const
+    have hzero : (0 : A) ∈ {R : A | ‖R‖ < 1} := by
+      simp
+    exact hperturbTendsto.eventually (hopen.mem_nhds hzero)
   have heq :
       candidate =ᶠ[𝓝 lambda]
         G.vacuumOrthogonalRealResolventOn T hP hSelf := by
