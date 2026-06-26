@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIteratedDerivative
-import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 import Mathlib.Tactic
 
 noncomputable section
@@ -37,16 +37,19 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
   change ‖(n.factorial : ℝ) • Rlambda ^ (n + 1)‖ ≤
     (n.factorial : ℝ) * ((G.mass - lambda)⁻¹) ^ (n + 1)
   calc
-    ‖(n.factorial : ℝ) • Rlambda ^ (n + 1)‖ =
-        (n.factorial : ℝ) * ‖Rlambda ^ (n + 1)‖ := by
-      rw [norm_smul, Real.norm_natCast]
+    ‖(n.factorial : ℝ) • Rlambda ^ (n + 1)‖ ≤
+        ‖(n.factorial : ℝ)‖ * ‖Rlambda ^ (n + 1)‖ :=
+      norm_smul_le _ _
+    _ = (n.factorial : ℝ) * ‖Rlambda ^ (n + 1)‖ := by
+      rw [Real.norm_natCast]
     _ ≤ (n.factorial : ℝ) * ‖Rlambda‖ ^ (n + 1) :=
       mul_le_mul_of_nonneg_left
-        (norm_pow_le Rlambda (n + 1)) (by positivity)
+        (norm_pow_le' Rlambda (by omega)) (by positivity)
     _ ≤ (n.factorial : ℝ) * ((G.mass - lambda)⁻¹) ^ (n + 1) :=
       mul_le_mul_of_nonneg_left
         (pow_le_pow_left₀ (norm_nonneg Rlambda)
-          (G.vacuumOrthogonalRealResolvent_norm_le T hP hSelf hlambda))
+          (G.vacuumOrthogonalRealResolvent_norm_le T hP hSelf hlambda)
+          (n + 1))
         (by positivity)
 
 /-- Uniform factorial derivative bound on every sub-mass truncation that
@@ -75,7 +78,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
     _ ≤ (n.factorial : ℝ) * (delta⁻¹) ^ (n + 1) :=
       mul_le_mul_of_nonneg_left
         (pow_le_pow_left₀
-          (inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)) hinv)
+          (inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)) hinv (n + 1))
         (by positivity)
 
 /-- Pointwise form of the factorial derivative bound on every excitation
