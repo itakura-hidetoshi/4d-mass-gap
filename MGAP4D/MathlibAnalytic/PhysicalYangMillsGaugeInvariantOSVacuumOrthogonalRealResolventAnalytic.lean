@@ -49,7 +49,12 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
         AnalyticAt ℝ
           (ContinuousLinearMap.toSpanSingleton ℝ Rlambda)
           (lambda - lambda) :=
-      (ContinuousLinearMap.toSpanSingleton ℝ Rlambda).analyticAt
+      ContinuousLinearMap.analyticAt
+        (𝕜 := ℝ)
+        (E := ℝ)
+        (F := P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert)
+        (ContinuousLinearMap.toSpanSingleton ℝ Rlambda)
         (lambda - lambda)
     have hperturb : AnalyticAt ℝ perturb lambda := by
       simpa only [perturb, Function.comp_apply,
