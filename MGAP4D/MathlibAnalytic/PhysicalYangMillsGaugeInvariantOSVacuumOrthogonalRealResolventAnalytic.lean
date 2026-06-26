@@ -34,6 +34,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     AnalyticAt ℝ
       (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda := by
   with_reducible_and_instances
+    letI : IsBoundedSMul ℝ
+        (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
+      NormedSpace.toIsBoundedSMul
     let Rlambda := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
     let perturb : ℝ →
         (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
@@ -48,10 +51,10 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
           (fun _ : ℝ => Rlambda) lambda :=
       analyticAt_const
     have hperturb : AnalyticAt ℝ perturb lambda := by
-      simpa only [perturb, Pi.smul_apply] using hscalar.smul hconstant
+      simpa only [perturb, Pi.smul_apply] using
+        (AnalyticAt.smul (A := ℝ) hscalar hconstant)
     have hperturbZero : perturb lambda = 0 := by
-      change (lambda - lambda) • Rlambda = 0
-      rw [sub_self, zero_smul]
+      simp only [perturb, sub_self, zero_smul]
     have hinverse :
         AnalyticAt ℝ (fun mu => Ring.inverse (1 - perturb mu)) lambda := by
       have houter :
@@ -63,15 +66,21 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
         exact analyticAt_inverse_one_sub ℝ
           (P.VacuumOrthogonalHilbert →L[ℝ]
             P.VacuumOrthogonalHilbert)
-      exact houter.comp hperturb
+      simpa only [Function.comp_apply] using houter.comp hperturb
     have hcandidate : AnalyticAt ℝ candidate lambda := by
-      have hmul := hinverse.mul hconstant
-      simpa only [candidate, Pi.mul_apply] using hmul
+      have hmul :
+          AnalyticAt ℝ
+            (fun mu => Ring.inverse (1 - perturb mu) * Rlambda) lambda :=
+        AnalyticAt.mul
+          (A := P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert)
+          hinverse hconstant
+      simpa only [candidate] using hmul
     have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
       have hlt : ‖perturb lambda‖ < (1 : ℝ) := by
-        rw [hperturbZero, norm_zero]
+        simp only [hperturbZero, norm_zero]
         norm_num
-      exact hperturb.continuousAt.norm (Iio_mem_nhds hlt)
+      exact (hperturb.continuousAt.norm).eventually (Iio_mem_nhds hlt)
     have heq :
         candidate =ᶠ[𝓝 lambda]
           G.vacuumOrthogonalRealResolventOn T hP hSelf := by
