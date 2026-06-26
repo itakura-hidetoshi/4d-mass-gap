@@ -45,10 +45,19 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       analyticAt_id.sub analyticAt_const
     have hconstant : AnalyticAt ℝ (fun _ : ℝ => Rlambda) lambda :=
       analyticAt_const
+    have hscale :
+        AnalyticAt ℝ
+          (ContinuousLinearMap.toSpanSingleton ℝ Rlambda)
+          (lambda - lambda) :=
+      (ContinuousLinearMap.toSpanSingleton ℝ Rlambda).analyticAt
+        (lambda - lambda)
     have hperturb : AnalyticAt ℝ perturb lambda := by
-      simpa [perturb] using hscalar.smul hconstant
+      simpa only [perturb, Function.comp_apply,
+        ContinuousLinearMap.toSpanSingleton_apply] using
+        hscale.comp hscalar
     have hperturbZero : perturb lambda = 0 := by
-      simp [perturb]
+      dsimp [perturb]
+      module
     have hinverse :
         AnalyticAt ℝ (fun mu => Ring.inverse (1 - perturb mu)) lambda := by
       have houter :
@@ -62,12 +71,21 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
             P.VacuumOrthogonalHilbert)
       simpa only [Function.comp_def] using houter.comp hperturb
     have hcandidate : AnalyticAt ℝ candidate lambda := by
-      simpa [candidate] using hinverse.mul hconstant
+      have hmul :
+          AnalyticAt ℝ
+            (fun mu => Ring.inverse (1 - perturb mu) * Rlambda) lambda :=
+        AnalyticAt.mul
+          (𝕜 := ℝ)
+          (A := P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert)
+          hinverse hconstant
+      simpa only [candidate] using hmul
     have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
       have hlt : ‖perturb lambda‖ < (1 : ℝ) := by
-        rw [hperturbZero, norm_zero]
-        norm_num
-      exact (hperturb.continuousAt.norm) (Iio_mem_nhds hlt)
+        rw [hperturbZero]
+        simpa using (zero_lt_one : (0 : ℝ) < 1)
+      exact ContinuousAt.eventually_mem
+        hperturb.continuousAt.norm (Iio_mem_nhds hlt)
     have heq :
         candidate =ᶠ[𝓝 lambda]
           G.vacuumOrthogonalRealResolventOn T hP hSelf := by
