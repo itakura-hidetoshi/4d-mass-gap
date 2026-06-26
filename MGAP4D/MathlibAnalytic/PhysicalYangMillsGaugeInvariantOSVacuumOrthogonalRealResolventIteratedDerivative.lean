@@ -48,7 +48,15 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
         hasDerivWithinAt_const lambda (Set.Iio G.mass)
           (1 : P.VacuumOrthogonalHilbert →L[ℝ]
             P.VacuumOrthogonalHilbert)
-      simpa [pow_zero] using hconst
+      have hzero :
+          (((0 : ℕ) : ℝ) •
+              (G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+                (0 + 1)) =
+            (0 : P.VacuumOrthogonalHilbert →L[ℝ]
+              P.VacuumOrthogonalHilbert) := by
+        simp
+      rw [hzero]
+      simpa only [pow_zero] using hconst
   | succ k ih =>
       have hR :
           HasDerivWithinAt
@@ -111,8 +119,6 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
           _ = ((Nat.succ k : ℕ) : ℝ) •
               Rlambda ^ (Nat.succ k + 1) := by
             rw [Nat.cast_succ]
-            congr 2
-            omega
       rw [hderiv] at hmul'
       exact hmul'
 
