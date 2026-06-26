@@ -82,12 +82,23 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
       have hlt : ‖perturb lambda‖ < (1 : ℝ) := by
         calc
           ‖perturb lambda‖ = 0 := by
-            rw [hperturbZero, norm_zero]
+            simpa only [hperturbZero, norm_zero]
           _ < 1 := zero_lt_one
+      have hnormOuter :
+          Tendsto
+            (fun A : P.VacuumOrthogonalHilbert →L[ℝ]
+              P.VacuumOrthogonalHilbert => ‖A‖)
+            (𝓝 (perturb lambda))
+            (𝓝 ‖perturb lambda‖) :=
+        (continuous_norm :
+          Continuous
+            (fun A : P.VacuumOrthogonalHilbert →L[ℝ]
+              P.VacuumOrthogonalHilbert => ‖A‖)).continuousAt
       have hnorm :
           Tendsto (fun mu => ‖perturb mu‖) (𝓝 lambda)
-            (𝓝 ‖perturb lambda‖) :=
-        ContinuousAt.norm hperturb.continuousAt
+            (𝓝 ‖perturb lambda‖) := by
+        simpa only [Function.comp_apply] using
+          hnormOuter.comp hperturb.continuousAt
       exact hnorm (Iio_mem_nhds hlt)
     have heq :
         candidate =ᶠ[𝓝 lambda]
