@@ -49,6 +49,35 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDe
           (G.vacuumOrthogonalRealResolvent_norm_le T hP hSelf hlambda))
         (by positivity)
 
+/-- Uniform factorial derivative bound on every sub-mass truncation that
+stays at least `delta` below the transferred mass. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDeriv_norm_le_of_le_sub
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (n : ℕ) {delta lambda : ℝ} (hdelta : 0 < delta)
+    (hlambda : lambda < G.mass) (haway : lambda ≤ G.mass - delta) :
+    ‖iteratedDeriv n
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda‖ ≤
+      (n.factorial : ℝ) * (delta⁻¹) ^ (n + 1) := by
+  have hdist : delta ≤ G.mass - lambda := by
+    linarith
+  have hinv : (G.mass - lambda)⁻¹ ≤ delta⁻¹ := by
+    simpa only [one_div] using
+      one_div_le_one_div_of_le hdelta hdist
+  calc
+    ‖iteratedDeriv n
+        (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda‖ ≤
+      (n.factorial : ℝ) * ((G.mass - lambda)⁻¹) ^ (n + 1) :=
+        G.vacuumOrthogonalRealResolventOn_iteratedDeriv_norm_le
+          T hP hSelf n hlambda
+    _ ≤ (n.factorial : ℝ) * (delta⁻¹) ^ (n + 1) :=
+      mul_le_mul_of_nonneg_left
+        (pow_le_pow_left₀
+          (inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)) hinv)
+        (by positivity)
+
 /-- Pointwise form of the factorial derivative bound on every excitation
 vector. -/
 theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_iteratedDeriv_apply_norm_le
