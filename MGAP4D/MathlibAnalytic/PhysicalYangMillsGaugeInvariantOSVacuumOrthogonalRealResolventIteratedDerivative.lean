@@ -54,6 +54,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_pow_hasDer
                 (0 + 1)) =
             (0 : P.VacuumOrthogonalHilbert →L[ℝ]
               P.VacuumOrthogonalHilbert) := by
+        rw [Nat.cast_zero]
         exact zero_smul ℝ
           ((G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
             (0 + 1))
