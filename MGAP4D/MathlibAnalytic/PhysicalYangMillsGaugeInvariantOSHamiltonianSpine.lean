@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventDerivative
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIteratedDerivativeNorm
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -65,6 +65,10 @@ positive-time observable algebra
 → local Lipschitz regularity and operator-norm continuity
 → operator-norm derivative R'_lambda = R_lambda²
 → continuous derivative and C¹ sub-mass resolvent regularity
+→ C∞ sub-mass resolvent regularity
+→ derivative of every resolvent composition power
+→ exact all-order formula R_lambda^(n) = n! R_lambda^(n+1)
+→ factorial Cauchy-type derivative norm bound
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -113,11 +117,23 @@ Passing to the limit with the established operator-norm continuity proves
 R'_lambda = R_lambda R_lambda.
 ```
 
-The derivative is continuous because composition of continuous linear maps is
-a continuous bilinear operation.  Thus the real excitation resolvent is `C¹`
-on the full open sub-mass interval.  Point and continuous real spectrum below
-the transferred mass remain excluded without assuming a native
-unbounded-operator spectrum object.
+Differentiating composition powers and inducting over the derivative order then
+gives
+
+```text
+R_lambda^(n) = n! R_lambda^(n + 1).
+```
+
+Thus the real excitation resolvent is `C∞` on the full open sub-mass interval.
+Combining the exact derivative formula with the sharp resolvent norm estimate
+gives the Cauchy-type bound
+
+```text
+‖R_lambda^(n)‖ ≤ n! (mass - lambda)⁻(n + 1).
+```
+
+Point and continuous real spectrum below the transferred mass remain excluded
+without assuming a native unbounded-operator spectrum object.
 
 The remaining terminal inputs are a selected physical carrier and interpolation,
 compatible gauge and reflection actions, positive-time observable restriction,
