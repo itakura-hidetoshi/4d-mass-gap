@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIteratedDerivativeNorm
 import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.Analysis.Normed.Operator.Mul
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Tactic
 
@@ -58,22 +59,26 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     have houter := analyticAt_inverse_one_sub ℝ A
     have hcomp := houter.comp_of_eq hperturb hperturbZero
     simpa only [Function.comp_apply] using hcomp
-  have hcandidate : AnalyticAt ℝ candidate lambda := by
-    dsimp [candidate]
+  let rightMul : A →L[ℝ] A := by
     with_reducible_and_instances
-      exact hinverse.mul analyticAt_const
+      exact (ContinuousLinearMap.mul ℝ A).flip Rlambda
+  have hrightMul_apply (R : A) : rightMul R = R * Rlambda := by
+    dsimp [rightMul]
+    rfl
+  have hcandidate : AnalyticAt ℝ candidate lambda := by
+    have hright := rightMul.analyticAt (Ring.inverse (1 - perturb lambda))
+    have hcomp := hright.comp hinverse
+    simpa only [candidate, Function.comp_apply, hrightMul_apply] using hcomp
   have hperturbTendsto : Tendsto perturb (𝓝 lambda) (𝓝 0) := by
     have hcont := hperturb.continuousAt
     change Tendsto perturb (𝓝 lambda) (𝓝 (perturb lambda)) at hcont
     rw [hperturbZero] at hcont
     exact hcont
   have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
-    have hopen : IsOpen {R : A | ‖R‖ < 1} := by
-      with_reducible_and_instances
-        exact isOpen_lt continuous_norm continuous_const
-    have hzero : (0 : A) ∈ {R : A | ‖R‖ < 1} := by
-      simp
-    exact hperturbTendsto.eventually (hopen.mem_nhds hzero)
+    have hball : Metric.ball (0 : A) 1 ∈ 𝓝 (0 : A) :=
+      Metric.ball_mem_nhds _ one_pos
+    filter_upwards [hperturbTendsto.eventually hball] with mu hmu
+    simpa only [Metric.mem_ball, dist_zero_right] using hmu
   have heq :
       candidate =ᶠ[𝓝 lambda]
         G.vacuumOrthogonalRealResolventOn T hP hSelf := by
