@@ -102,14 +102,17 @@ theorem realResolvent_inner_self_le
     (y : E) :
     inner ℝ (A.realResolvent hSelf hlambda hgap y) y ≤
       (mass - lambda)⁻¹ * ‖y‖ ^ 2 := by
+  have hnorm :
+      ‖A.realResolvent hSelf hlambda hgap y‖ ≤
+        (mass - lambda)⁻¹ * ‖y‖ := by
+    simpa only [realResolvent_apply, realResolventLinearMap_apply] using
+      A.realResolventLinearMap_norm_bound hSelf hlambda hgap y
   calc
     inner ℝ (A.realResolvent hSelf hlambda hgap y) y ≤
         ‖A.realResolvent hSelf hlambda hgap y‖ * ‖y‖ :=
       real_inner_le_norm _ _
     _ ≤ ((mass - lambda)⁻¹ * ‖y‖) * ‖y‖ :=
-      mul_le_mul_of_nonneg_right
-        (A.realResolventLinearMap_norm_bound hSelf hlambda hgap y)
-        (norm_nonneg y)
+      mul_le_mul_of_nonneg_right hnorm (norm_nonneg y)
     _ = (mass - lambda)⁻¹ * ‖y‖ ^ 2 := by ring
 
 end LinearPMap
