@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIteratedDerivativeNorm
 import Mathlib.Analysis.Analytic.Constructions
+import Mathlib.Analysis.Normed.Operator.Bilinear
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Tactic
 
@@ -32,52 +33,39 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     {lambda : ℝ} (hlambda : lambda < G.mass) :
     AnalyticAt ℝ
       (G.vacuumOrthogonalRealResolventOn T hP hSelf) lambda := by
-  let A := P.VacuumOrthogonalHilbert →L[ℝ]
-    P.VacuumOrthogonalHilbert
-  letI : IsBoundedSMul ℝ A :=
-    IsBoundedSMul.of_norm_smul_le fun r R =>
-      ContinuousLinearMap.opNorm_smul_le r R
   let Rlambda := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
-  let perturb : ℝ → A :=
+  let perturb : ℝ →
+      (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
     fun mu => (mu - lambda) • Rlambda
-  let candidate : ℝ → A :=
+  let candidate : ℝ →
+      (P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :=
     fun mu => Ring.inverse (1 - perturb mu) * Rlambda
-  have hscalar : AnalyticAt ℝ (fun mu : ℝ => mu - lambda) lambda := by
-    fun_prop
-  have hconstR : AnalyticAt ℝ (fun _ : ℝ => Rlambda) lambda :=
-    analyticAt_const
   have hperturb : AnalyticAt ℝ perturb lambda := by
-    with_reducible_and_instances
-      simpa only [perturb, Pi.smul_apply] using hscalar.smul hconstR
-  have hperturbZero : perturb lambda = 0 := by
     dsimp [perturb]
-    rw [sub_self]
-    exact zero_smul ℝ Rlambda
+    fun_prop
+  have hperturbZero : perturb lambda = 0 := by
+    simp [perturb]
   have hinverse :
       AnalyticAt ℝ (fun mu => Ring.inverse (1 - perturb mu)) lambda := by
-    have houter := analyticAt_inverse_one_sub ℝ A
+    have houter :=
+      analyticAt_inverse_one_sub ℝ
+        (P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert)
     have hcomp := houter.comp_of_eq hperturb hperturbZero
     simpa only [Function.comp_apply] using hcomp
-  let rightMulLinear : A →ₗ[ℝ] A :=
-    { toFun := fun R => R.comp Rlambda
-      map_add' := by
-        intro R S
-        ext y
-        change R (Rlambda y) + S (Rlambda y) =
-          R (Rlambda y) + S (Rlambda y)
-        rfl
-      map_smul' := by
-        intro c R
-        ext y
-        change c • R (Rlambda y) = c • R (Rlambda y)
-        rfl }
-  let rightMul : A →L[ℝ] A := by
-    with_reducible_and_instances
-      exact rightMulLinear.mkContinuous ‖Rlambda‖ fun R => by
-        change ‖R.comp Rlambda‖ ≤ ‖Rlambda‖ * ‖R‖
-        simpa [mul_comm] using R.opNorm_comp_le Rlambda
-  have hrightMul_apply (R : A) : rightMul R = R * Rlambda := by
-    ext y
+  let rightMul :
+      (P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert) →L[ℝ]
+        (P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert) :=
+    (ContinuousLinearMap.compL ℝ
+      P.VacuumOrthogonalHilbert
+      P.VacuumOrthogonalHilbert
+      P.VacuumOrthogonalHilbert).flip Rlambda
+  have hrightMul_apply
+      (R : P.VacuumOrthogonalHilbert →L[ℝ]
+        P.VacuumOrthogonalHilbert) :
+      rightMul R = R * Rlambda := by
     rfl
   have hcandidate : AnalyticAt ℝ candidate lambda := by
     have hright := rightMul.analyticAt (Ring.inverse (1 - perturb lambda))
@@ -135,10 +123,16 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     rw [NormedRing.inverse_one_sub (perturb mu) hmuSmall]
     let u := Units.oneSub (perturb mu) hmuSmall
     calc
-      (↑u⁻¹ : A) * Rlambda =
-          (↑u⁻¹ : A) * ((1 - perturb mu) * Rmu) := by
+      (↑u⁻¹ : P.VacuumOrthogonalHilbert →L[ℝ]
+          P.VacuumOrthogonalHilbert) * Rlambda =
+          (↑u⁻¹ : P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert) *
+            ((1 - perturb mu) * Rmu) := by
         rw [hmul]
-      _ = (↑u⁻¹ : A) * ((↑u : A) * Rmu) := by
+      _ = (↑u⁻¹ : P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert) *
+          ((↑u : P.VacuumOrthogonalHilbert →L[ℝ]
+            P.VacuumOrthogonalHilbert) * Rmu) := by
         simp [u]
       _ = Rmu := by
         rw [← mul_assoc]
