@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIteratedDerivativeNorm
 import Mathlib.Analysis.Analytic.Constructions
-import Mathlib.Analysis.Normed.Operator.Mul
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Tactic
 
@@ -59,26 +58,45 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
     have houter := analyticAt_inverse_one_sub ℝ A
     have hcomp := houter.comp_of_eq hperturb hperturbZero
     simpa only [Function.comp_apply] using hcomp
-  let rightMul : A →L[ℝ] A := by
-    with_reducible_and_instances
-      exact (ContinuousLinearMap.mul ℝ A).flip Rlambda
+  let rightMulLinear : A →ₗ[ℝ] A :=
+    { toFun := fun R => R.comp Rlambda
+      map_add' := by
+        intro R S
+        ext y
+        simp
+      map_smul' := by
+        intro c R
+        ext y
+        simp }
+  let rightMul : A →L[ℝ] A :=
+    rightMulLinear.mkContinuous ‖Rlambda‖ fun R => by
+      dsimp [rightMulLinear]
+      simpa [mul_comm] using R.opNorm_comp_le Rlambda
   have hrightMul_apply (R : A) : rightMul R = R * Rlambda := by
-    dsimp [rightMul]
+    ext y
     rfl
   have hcandidate : AnalyticAt ℝ candidate lambda := by
     have hright := rightMul.analyticAt (Ring.inverse (1 - perturb lambda))
     have hcomp := hright.comp hinverse
     simpa only [candidate, Function.comp_apply, hrightMul_apply] using hcomp
-  have hperturbTendsto : Tendsto perturb (𝓝 lambda) (𝓝 0) := by
-    have hcont := hperturb.continuousAt
-    change Tendsto perturb (𝓝 lambda) (𝓝 (perturb lambda)) at hcont
-    rw [hperturbZero] at hcont
-    exact hcont
   have hsmall : ∀ᶠ mu in 𝓝 lambda, ‖perturb mu‖ < 1 := by
-    have hball : Metric.ball (0 : A) 1 ∈ 𝓝 (0 : A) :=
-      Metric.ball_mem_nhds _ one_pos
-    filter_upwards [hperturbTendsto.eventually hball] with mu hmu
-    simpa only [Metric.mem_ball, dist_zero_right] using hmu
+    by_cases hR : Rlambda = 0
+    · filter_upwards [] with mu
+      simp [perturb, hR]
+    · have hRpos : 0 < ‖Rlambda‖ := norm_pos_iff.mpr hR
+      have hball : Metric.ball lambda ‖Rlambda‖⁻¹ ∈ 𝓝 lambda :=
+        Metric.ball_mem_nhds _ (inv_pos.mpr hRpos)
+      filter_upwards [hball] with mu hmu
+      have hdist : |mu - lambda| < ‖Rlambda‖⁻¹ := by
+        simpa [Metric.mem_ball, Real.dist_eq] using hmu
+      calc
+        ‖perturb mu‖ ≤ |mu - lambda| * ‖Rlambda‖ := by
+          dsimp [perturb]
+          simpa [Real.norm_eq_abs] using
+            ContinuousLinearMap.opNorm_smul_le (mu - lambda) Rlambda
+        _ < ‖Rlambda‖⁻¹ * ‖Rlambda‖ :=
+          mul_lt_mul_of_pos_right hdist hRpos
+        _ = 1 := inv_mul_cancel₀ (ne_of_gt hRpos)
   have heq :
       candidate =ᶠ[𝓝 lambda]
         G.vacuumOrthogonalRealResolventOn T hP hSelf := by
