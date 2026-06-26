@@ -88,8 +88,9 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventOn_analyticAt
           ‖lambda - lambda‖ * ‖Rlambda‖ < (1 : ℝ) := by
         simp
       have hbound :
-          ∀ᶠ mu in 𝓝 lambda, ‖mu - lambda‖ * ‖Rlambda‖ < 1 :=
-        hboundContinuous.eventually_mem (Iio_mem_nhds hboundAt)
+          ∀ᶠ mu in 𝓝 lambda, ‖mu - lambda‖ * ‖Rlambda‖ < 1 := by
+        simpa only [Set.mem_Iio] using
+          hboundContinuous.eventually_mem (Iio_mem_nhds hboundAt)
       filter_upwards [hbound] with mu hmu
       change ‖(mu - lambda) • Rlambda‖ < 1
       exact (ContinuousLinearMap.opNorm_smul_le (mu - lambda) Rlambda).trans_lt hmu
