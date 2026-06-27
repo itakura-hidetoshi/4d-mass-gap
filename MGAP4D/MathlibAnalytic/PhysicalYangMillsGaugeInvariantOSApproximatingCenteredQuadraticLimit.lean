@@ -95,7 +95,7 @@ theorem carrierTranslation_vacuumCenteredCarrier
   let Fpos := P.positiveTimeElement F
   have homega := T.omega_translate_eq hExchange t Fpos
   unfold vacuumCenteredCarrier
-  rw [T.carrierTranslation.map_sub, T.carrierTranslation.map_smul,
+  rw [(T.carrierTranslation t).map_sub, (T.carrierTranslation t).map_smul,
     T.carrierTranslation_vacuumObservable]
   apply sub_eq_sub_left.mpr
   rw [T.carrierTranslation_apply]
@@ -136,12 +136,12 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_centeredQuadraticValue_tendsto
           (Pn.vacuumCenteredCarrier (Pn.carrierOfPositiveTime F)))
       atTop
       (nhds
-        (let P∞ :=
+        (let Pinf :=
           physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
             S D halfExtent N hN beta hbeta B hInvariant
-        P∞.osQuadraticValue
-          (P∞.vacuumCenteredCarrier (P∞.carrierOfPositiveTime F)))) := by
-  let P∞ :=
+        Pinf.osQuadraticValue
+          (Pinf.vacuumCenteredCarrier (Pinf.carrierOfPositiveTime F)))) := by
+  let Pinf :=
     physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant
   have hquadratic :=
@@ -177,17 +177,17 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_centeredQuadraticValue_tendsto
           S D halfExtent N hN beta hbeta B hInvariant n)
         (Pn.carrierOfPositiveTime F)
   have hcontinuum :
-      P∞.osQuadraticValue
-          (P∞.vacuumCenteredCarrier (P∞.carrierOfPositiveTime F)) =
-        P∞.osQuadraticValue (P∞.carrierOfPositiveTime F) -
-          (P∞.omega
+      Pinf.osQuadraticValue
+          (Pinf.vacuumCenteredCarrier (Pinf.carrierOfPositiveTime F)) =
+        Pinf.osQuadraticValue (Pinf.carrierOfPositiveTime F) -
+          (Pinf.omega
             ((F : D.positiveTimeSubalgebra) :
               physicalYangMillsGaugeInvariantObservableSubalgebra S)) ^ 2 := by
-    simpa only [P∞.carrierOfPositiveTime_positiveTimeElement] using
-      P∞.osQuadraticValue_vacuumCenteredCarrier
+    simpa only [Pinf.carrierOfPositiveTime_positiveTimeElement] using
+      Pinf.osQuadraticValue_vacuumCenteredCarrier
         (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
           S D halfExtent N hN beta hbeta B hInvariant)
-        (P∞.carrierOfPositiveTime F)
+        (Pinf.carrierOfPositiveTime F)
   rw [hfinite, hcontinuum]
   exact hquadratic.sub (hexpectation.pow 2)
 
@@ -226,11 +226,11 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
   exchange := C.continuum_reflectionTimeTranslationExchange Q.exchange
   core_half_quadratic_decay := by
     intro t F
-    let P∞ :=
+    let Pinf :=
       physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant
-    let T∞ := C.toContinuumPositiveTimeObservableContractionSemigroup
-    let Fpos := P∞.positiveTimeElement F
+    let Tinf := C.toContinuumPositiveTimeObservableContractionSemigroup
+    let Fpos := Pinf.positiveTimeElement F
     have hright :=
       physical_yang_mills_evenPeriodicWilsonOS_centeredQuadraticValue_tendsto
         S D halfExtent N hN beta hbeta B hInvariant Fpos
@@ -250,9 +250,9 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
                 (Pn.vacuumCenteredCarrier (Pn.carrierOfPositiveTime Fpos))))
           atTop
           (nhds
-            (P∞.osQuadraticValue
-              (T∞.carrierTranslation (t / 2)
-                (P∞.vacuumCenteredCarrier F)))) := by
+            (Pinf.osQuadraticValue
+              (Tinf.carrierTranslation (t / 2)
+                (Pinf.vacuumCenteredCarrier F)))) := by
       have hfiniteFunctions :
           (fun n : ℕ =>
             let Pn :=
@@ -277,16 +277,16 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
         rw [Tn.carrierTranslation_vacuumCenteredCarrier (Q.exchange n),
           Tn.carrierTranslation_carrierOfPositiveTime]
       have hcontinuumValue :
-          P∞.osQuadraticValue
-              (T∞.carrierTranslation (t / 2)
-                (P∞.vacuumCenteredCarrier F)) =
-            P∞.osQuadraticValue
-              (P∞.vacuumCenteredCarrier
-                (P∞.carrierOfPositiveTime (C.translate (t / 2) Fpos))) := by
-        rw [T∞.carrierTranslation_vacuumCenteredCarrier
+          Pinf.osQuadraticValue
+              (Tinf.carrierTranslation (t / 2)
+                (Pinf.vacuumCenteredCarrier F)) =
+            Pinf.osQuadraticValue
+              (Pinf.vacuumCenteredCarrier
+                (Pinf.carrierOfPositiveTime (C.translate (t / 2) Fpos))) := by
+        rw [Tinf.carrierTranslation_vacuumCenteredCarrier
           (C.continuum_reflectionTimeTranslationExchange Q.exchange),
-          T∞.carrierTranslation_apply]
-        simp only [Fpos, P∞.carrierOfPositiveTime_positiveTimeElement]
+          Tinf.carrierTranslation_apply]
+        simp only [Fpos, Pinf.carrierOfPositiveTime_positiveTimeElement]
       rw [hfiniteFunctions, hcontinuumValue]
       exact hleftBase
     have hrightScaled :
@@ -301,8 +301,8 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
           atTop
           (nhds
             (Q.quadraticDecayFactor t *
-              P∞.osQuadraticValue (P∞.vacuumCenteredCarrier F))) := by
-      simpa only [Fpos, P∞.carrierOfPositiveTime_positiveTimeElement] using
+              Pinf.osQuadraticValue (Pinf.vacuumCenteredCarrier F))) := by
+      simpa only [Fpos, Pinf.carrierOfPositiveTime_positiveTimeElement] using
         tendsto_const_nhds.mul hright
     have hfinite : ∀ n : ℕ,
         let Pn :=
@@ -321,8 +321,8 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
           S D halfExtent N hN beta hbeta B hInvariant n).carrierOfPositiveTime Fpos)
     have hlimit := le_of_tendsto_of_tendsto hleft hrightScaled
       (Eventually.of_forall hfinite)
-    simpa only [P∞, T∞, Fpos,
-      P∞.carrierOfPositiveTime_positiveTimeElement] using hlimit
+    simpa only [Pinf, Tinf, Fpos,
+      Pinf.carrierOfPositiveTime_positiveTimeElement] using hlimit
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHalfQuadraticGapCertificate
 
