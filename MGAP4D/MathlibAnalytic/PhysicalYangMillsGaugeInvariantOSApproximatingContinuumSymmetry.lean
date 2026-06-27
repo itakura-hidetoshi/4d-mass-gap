@@ -9,12 +9,21 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+/-- Regard a positive-time subalgebra element as the definitionally associated
+positive-time submodule element used by the OS bilinear form. -/
+def physicalYangMillsPositiveTimeToSubmodule
+    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
+    (F : D.positiveTimeSubalgebra) :
+    D.positiveTimeSubalgebra.toSubmodule :=
+  ⟨(F : physicalYangMillsGaugeInvariantObservableSubalgebra S), F.property⟩
+
 /-- For fixed positive-time observables, the finite Wilson OS bilinear forms
 converge to the continuum OS bilinear form. -/
 theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_tendsto
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (F G : D.positiveTimeSubalgebra) :
+    (F G : D.positiveTimeSubalgebra.toSubmodule) :
     Tendsto
       (fun n : ℕ =>
         D.osBilinForm
@@ -66,21 +75,29 @@ theorem continuum_reflectionTimeTranslationExchange
       S D halfExtent N hN beta hbeta B hInvariant
   let Fpos := P∞.positiveTimeElement F
   let Gpos := P∞.positiveTimeElement G
+  let Ft : D.positiveTimeSubalgebra.toSubmodule :=
+    physicalYangMillsPositiveTimeToSubmodule D (C.translate t Fpos)
+  let Gt : D.positiveTimeSubalgebra.toSubmodule :=
+    physicalYangMillsPositiveTimeToSubmodule D (C.translate t Gpos)
+  let Fs : D.positiveTimeSubalgebra.toSubmodule :=
+    physicalYangMillsPositiveTimeToSubmodule D Fpos
+  let Gs : D.positiveTimeSubalgebra.toSubmodule :=
+    physicalYangMillsPositiveTimeToSubmodule D Gpos
   have hleft :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_tendsto
-      S D (C.translate t Fpos) Gpos
+      S D Ft Gs
   have hright :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_tendsto
-      S D Fpos (C.translate t Gpos)
+      S D Fs Gt
   have hfunctions :
       (fun n : ℕ =>
         D.osBilinForm
           (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
-          (C.translate t Fpos) Gpos) =
+          Ft Gs) =
         fun n : ℕ =>
           D.osBilinForm
             (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
-            Fpos (C.translate t Gpos) := by
+            Fs Gt := by
     funext n
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
@@ -88,14 +105,34 @@ theorem continuum_reflectionTimeTranslationExchange
     have h := hExchange n t
       (Pn.carrierOfPositiveTime Fpos)
       (Pn.carrierOfPositiveTime Gpos)
-    simpa only [
-      (C.toPositiveTimeObservableContractionSemigroup n)
-        .carrierTranslation_carrierOfPositiveTime] using h
+    rw [(C.toPositiveTimeObservableContractionSemigroup n)
+      .carrierTranslation_carrierOfPositiveTime] at h
+    rw [(C.toPositiveTimeObservableContractionSemigroup n)
+      .carrierTranslation_carrierOfPositiveTime] at h
+    change D.osBilinForm
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+        Ft Gs =
+      D.osBilinForm
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+        Fs Gt at h
+    exact h
   rw [hfunctions] at hleft
   have hlimit := tendsto_nhds_unique hleft hright
-  simpa only [Fpos, Gpos,
-    P∞.translateCarrierByPositiveTimeAlgHom_apply,
-    P∞.carrierOfPositiveTime_positiveTimeElement] using hlimit
+  change D.osBilinForm P∞.omega
+      (P∞.toPositiveTime
+        ((C.toContinuumPositiveTimeObservableContractionSemigroup)
+          .carrierTranslation t F))
+      (P∞.toPositiveTime G) =
+    D.osBilinForm P∞.omega
+      (P∞.toPositiveTime F)
+      (P∞.toPositiveTime
+        ((C.toContinuumPositiveTimeObservableContractionSemigroup)
+          .carrierTranslation t G))
+  simpa only [P∞,
+    (C.toContinuumPositiveTimeObservableContractionSemigroup)
+      .carrierTranslation_carrierOfPositiveTime,
+    Fpos, Gpos, Ft, Gt, Fs, Gs,
+    physicalYangMillsPositiveTimeToSubmodule] using hlimit
 
 /-- Consequently the completed continuum transfer semigroup is symmetric for
 the physical real inner product. -/
