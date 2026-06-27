@@ -58,36 +58,36 @@ theorem quadratic_decay
     (hphi : inner ℝ phi P.vacuum = 0) :
     inner ℝ (T.toPhysicalSemigroup.operator t phi) phi ≤
       Q.quadraticDecayFactor t * ‖phi‖ ^ 2 := by
-  apply
+  exact
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PhysicalSemigroup.quadratic_decay_of_observable_core
       T.toPhysicalSemigroup hP (Q.quadraticDecayFactor t) t
-  · intro F
-    let Fc := P.vacuumCenteredCarrier F
-    have hcenter :
-        P.physicalState Fc =
-          finiteVacuumCentered P.vacuum (P.physicalState F) :=
-      P.physicalState_vacuumCenteredCarrier F
-    calc
-      inner ℝ
-          (T.toPhysicalSemigroup.operator t
-            (finiteVacuumCentered P.vacuum (P.physicalState F)))
-          (finiteVacuumCentered P.vacuum (P.physicalState F)) =
-        D.osBilinForm P.omega
-          (P.toPositiveTime (T.carrierTranslation t Fc))
-          (P.toPositiveTime Fc) := by
-        rw [← hcenter]
-        exact T.inner_operator_physicalState_eq_osBilinForm t Fc
-      _ = P.osQuadraticValue (T.carrierTranslation (t / 2) Fc) :=
-        T.osBilinForm_carrierTranslation_eq_osQuadraticValue_half
-          Q.exchange t Fc
-      _ ≤ Q.quadraticDecayFactor t * P.osQuadraticValue Fc :=
-        Q.core_half_quadratic_decay t F
-      _ = Q.quadraticDecayFactor t *
-          ‖finiteVacuumCentered P.vacuum (P.physicalState F)‖ ^ 2 := by
-        rw [← hcenter, P.norm_physicalState,
-          P.osQuadraticValue_eq_norm_sq]
-  · exact phi
-  · exact hphi
+      (by
+        intro F
+        let Fc := P.vacuumCenteredCarrier F
+        have hcenter :
+            P.physicalState Fc =
+              finiteVacuumCentered P.vacuum (P.physicalState F) :=
+          P.physicalState_vacuumCenteredCarrier F
+        calc
+          inner ℝ
+              (T.toPhysicalSemigroup.operator t
+                (finiteVacuumCentered P.vacuum (P.physicalState F)))
+              (finiteVacuumCentered P.vacuum (P.physicalState F)) =
+            D.osBilinForm P.omega
+              (P.toPositiveTime (T.carrierTranslation t Fc))
+              (P.toPositiveTime Fc) := by
+            rw [← hcenter]
+            exact T.inner_operator_physicalState_eq_osBilinForm t Fc
+          _ = P.osQuadraticValue (T.carrierTranslation (t / 2) Fc) :=
+            T.osBilinForm_carrierTranslation_eq_osQuadraticValue_half
+              Q.exchange t Fc
+          _ ≤ Q.quadraticDecayFactor t * P.osQuadraticValue Fc :=
+            Q.core_half_quadratic_decay t F
+          _ = Q.quadraticDecayFactor t *
+              ‖finiteVacuumCentered P.vacuum (P.physicalState F)‖ ^ 2 := by
+            rw [← hcenter, P.norm_physicalState,
+              P.osQuadraticValue_eq_norm_sq])
+      phi hphi
 
 /-- The diagonal quadratic estimate and semigroup square identity yield the
 completed continuum transfer-operator norm decay. -/
