@@ -85,7 +85,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_h
     (y : P.VacuumOrthogonalHilbert) :
     HasDerivAt
       (G.vacuumOrthogonalRealResolventQuadraticOn T hP hSelf y)
-      ‖G.vacuumOrthogonalRealResolvent T hP hSelf hlambda y‖ ^ 2
+      (‖G.vacuumOrthogonalRealResolvent T hP hSelf hlambda y‖ ^ 2)
       lambda := by
   let R := G.vacuumOrthogonalRealResolvent T hP hSelf hlambda
   have hvector :=
@@ -99,7 +99,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_h
       _ = inner ℝ (R y) (R y) :=
         G.vacuumOrthogonalRealResolvent_symmetric
           T hP hSelf hlambda (R y) y
-      _ = ‖R y‖ ^ 2 := real_inner_self_eq_norm_sq
+      _ = ‖R y‖ ^ 2 := real_inner_self_eq_norm_sq (R y)
   simpa only [vacuumOrthogonalRealResolventQuadraticOn,
     inner_zero_right, zero_add, R, hderivative] using hinner
 
@@ -152,10 +152,6 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_d
         T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
           hP hSelf)
       hlambda
-    intro x
-    simpa only [vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint] using
-      G.vacuumOrthogonalClosedRightHamiltonian_gap T hP
-        ((T.closedRightHamiltonian_selfAdjoint_iff_isFormalAdjoint).mp hSelf) x
   have hresolved :
       G.vacuumOrthogonalRealResolvent T hP hSelf hlambda y ≠ 0 := by
     intro hzero
@@ -175,7 +171,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_m
     MonotoneOn
       (G.vacuumOrthogonalRealResolventQuadraticOn T hP hSelf y)
       (Set.Iio G.mass) := by
-  apply monotoneOn_of_deriv_nonneg convex_Iio
+  apply monotoneOn_of_deriv_nonneg (convex_Iio G.mass)
   · intro lambda hlambda
     exact (G.vacuumOrthogonalRealResolventQuadraticOn_hasDerivAt
       T hP hSelf hlambda y).continuousAt.continuousWithinAt
@@ -199,7 +195,7 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_s
     StrictMonoOn
       (G.vacuumOrthogonalRealResolventQuadraticOn T hP hSelf y)
       (Set.Iio G.mass) := by
-  apply strictMonoOn_of_deriv_pos convex_Iio
+  apply strictMonoOn_of_deriv_pos (convex_Iio G.mass)
   · intro lambda hlambda
     exact (G.vacuumOrthogonalRealResolventQuadraticOn_hasDerivAt
       T hP hSelf hlambda y).continuousAt.continuousWithinAt
