@@ -243,11 +243,12 @@ noncomputable def toApproximatingBoundaryMomentGapCertificate
   gram_integrable := Q.gram_integrable
   finite_boundary_moment_decay := by
     intro n t
+    dsimp only
+    intro F
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant n
     let Tn := C.toPositiveTimeObservableContractionSemigroup n
-    intro F
     let F0 : Pn.Carrier := Pn.vacuumCenteredCarrier F
     let Ft : Pn.Carrier := Tn.carrierTranslation (t / 2) F0
     let v0 :=
