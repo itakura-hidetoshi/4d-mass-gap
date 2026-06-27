@@ -88,15 +88,14 @@ theorem continuum_reflectionTimeTranslationExchange
     have h := hExchange n t
       (Pn.carrierOfPositiveTime Fpos)
       (Pn.carrierOfPositiveTime Gpos)
-    simpa only [Pn.toPositiveTime_carrierOfPositiveTime,
+    simpa only [
       (C.toPositiveTimeObservableContractionSemigroup n)
         .carrierTranslation_carrierOfPositiveTime] using h
   rw [hfunctions] at hleft
   have hlimit := tendsto_nhds_unique hleft hright
   simpa only [Fpos, Gpos,
     P∞.translateCarrierByPositiveTimeAlgHom_apply,
-    P∞.carrierOfPositiveTime_positiveTimeElement,
-    P∞.toPositiveTime_carrierOfPositiveTime] using hlimit
+    P∞.carrierOfPositiveTime_positiveTimeElement] using hlimit
 
 /-- Consequently the completed continuum transfer semigroup is symmetric for
 the physical real inner product. -/
