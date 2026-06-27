@@ -30,8 +30,7 @@ theorem osBilinForm_carrierTranslation_eq_osQuadraticValue_half
       P.osQuadraticValue (T.carrierTranslation (t / 2) F) := by
   have hhalf : t / 2 + t / 2 = t := by
     ext
-    simp
-    ring
+    norm_num <;> ring
   have hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric :=
     hExchange.toPhysicalSemigroup_isInnerSymmetric
   calc
