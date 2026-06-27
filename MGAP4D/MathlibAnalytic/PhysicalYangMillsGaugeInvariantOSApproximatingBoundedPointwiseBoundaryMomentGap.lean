@@ -9,6 +9,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance boundedPointwiseBoundaryMomentSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A local Wilson OS gap package combining bounded measurable open-half Gram
 features with pointwise shared-boundary moment decay.
 
