@@ -31,10 +31,9 @@ theorem finite_vacuum_centered_norm_sq
         (real_inner_self_eq_norm_sq
           (finiteVacuumCentered vacuum x)).symm
     _ = ‖x‖ ^ 2 - (inner ℝ vacuum x) ^ 2 := by
-      simp [finiteVacuumCentered, inner_sub_left, inner_sub_right,
-        inner_smul_left, inner_smul_right, real_inner_self_eq_norm_sq,
-        hcomm, hvacuumInner]
-      ring
+      simp only [finiteVacuumCentered, inner_sub_left, inner_sub_right,
+        inner_smul_left, inner_smul_right]
+      simp [real_inner_self_eq_norm_sq, hcomm, hvacuumInner] <;> ring
 
 /-- Finite Wilson Hamiltonian data in which the excitation-sector gap is
 reduced to a Dirichlet-form representation and a uniform vacuum-centered
