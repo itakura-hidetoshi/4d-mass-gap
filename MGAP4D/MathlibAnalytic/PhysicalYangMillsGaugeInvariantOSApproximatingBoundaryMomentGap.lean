@@ -215,8 +215,7 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_finiteReflectedIntegral_eq_boun
       (halfExtent n) N hN (beta n) (hbeta n)
       ((B.finiteBridge
         ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S D halfExtent N hN beta hbeta B hInvariant n).positiveTimeElement F))
-        .positiveHalfObservable n)
+          S D halfExtent N hN beta hbeta B hInvariant n).positiveTimeElement F)).positiveHalfObservable n)
       hf
 
 /-- A scale-uniform finite Wilson mass-gap certificate stated on the shared
@@ -322,11 +321,12 @@ noncomputable def toApproximatingFiniteIntegralGapCertificate
   exchange := Q.exchange
   finite_integral_decay := by
     intro n t
+    dsimp only
+    intro F
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant n
     let Tn := C.toPositiveTimeObservableContractionSemigroup n
-    intro F
     rw [physical_yang_mills_evenPeriodicWilsonOS_finiteReflectedIntegral_eq_boundaryMoment_norm_sq
       S D halfExtent N hN beta hbeta B hInvariant n
       (Tn.carrierTranslation (t / 2) (Pn.vacuumCenteredCarrier F))
@@ -336,7 +336,7 @@ noncomputable def toApproximatingFiniteIntegralGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant n
       (Pn.vacuumCenteredCarrier F)
       (fun b => Q.gram_integrable n (Pn.vacuumCenteredCarrier F) b)]
-    exact Q.finite_boundary_moment_decay n t F
+    simpa only [Pn, Tn] using Q.finite_boundary_moment_decay n t F
 
 /-- Boundary-moment decay therefore generates the completed finite-volume norm
 decay certificate used by the continuum mass-gap route. -/
