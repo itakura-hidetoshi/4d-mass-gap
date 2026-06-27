@@ -1,13 +1,10 @@
-name: Temporary Approximating Half Quadratic Gap Check
+name: Temporary Finite Wilson Integral Gap Check
 
 on:
   pull_request:
     paths:
       - ".github/workflows/tmp-approximating-quadratic-gap-check.yml"
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingQuadraticGapCertificate.lean"
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingObservableQuadraticGap.lean"
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingReflectedQuadraticGap.lean"
-      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingHalfQuadraticGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingFiniteIntegralGap.lean"
   workflow_dispatch:
 
 permissions:
@@ -18,59 +15,45 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-
-      - name: Restore Lake cache
-        uses: actions/cache/restore@v5
+      - uses: actions/cache/restore@v5
         with:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ runner.os }}-approximating-half-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-finite-wilson-integral-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-approximating-reflected-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-            ${{ runner.os }}-approximating-observable-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-            ${{ runner.os }}-approximating-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-
-
       - name: Install Lean
         shell: bash
         run: |
           set -euxo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
           if ! command -v elan >/dev/null 2>&1; then
-            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL \
-              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
-              | sh -s -- -y --default-toolchain none
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
           fi
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           lean --version
           lake --version
-
-      - name: Build and capture diagnostic
+      - name: Build
         id: build
         shell: bash
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingHalfQuadraticGap > /tmp/approximating-half-quadratic-gap.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingFiniteIntegralGap > /tmp/finite-wilson-integral-gap.log 2>&1
           status=$?
           set -e
-          tail -n 1100 /tmp/approximating-half-quadratic-gap.log > /tmp/approximating-half-quadratic-gap-tail.log
-          cat /tmp/approximating-half-quadratic-gap-tail.log
+          tail -n 1200 /tmp/finite-wilson-integral-gap.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
-
       - name: Upload diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: approximating-half-quadratic-gap-diagnostic
-          path: |
-            /tmp/approximating-half-quadratic-gap.log
-            /tmp/approximating-half-quadratic-gap-tail.log
+          name: finite-wilson-integral-gap-diagnostic
+          path: /tmp/finite-wilson-integral-gap.log
           if-no-files-found: error
-
-      - name: Propagate build status
+      - name: Propagate status
         if: always()
         run: exit "${{ steps.build.outputs.status }}"
