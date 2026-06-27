@@ -156,7 +156,7 @@ theorem rightHamiltonian_inner_ge_mass_mul_norm_sq
           T hContinuous).rightHamiltonian psi)
         (psi : P.PhysicalHilbert) := by
   exact
-    VacuumSemigroupGapSlope.rightHamiltonian_inner_ge_mass_mul_norm_sq
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.StronglyContinuousPhysicalSemigroup.VacuumSemigroupGapSlope.rightHamiltonian_inner_ge_mass_mul_norm_sq
       (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         T hContinuous)
       (Q.toVacuumSemigroupGapSlope hP hContinuous)
