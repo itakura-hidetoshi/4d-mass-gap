@@ -218,6 +218,18 @@ noncomputable def toPositiveTimeObservableContractionSemigroup
   translate_add := C.translate_add
   osQuadratic_translate_le := C.osQuadratic_translate_le n
 
+/-- The completed contraction semigroup on the `n`-th finite-volume Wilson OS
+Hilbert space. -/
+noncomputable def finitePhysicalSemigroup
+    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ) :
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PhysicalSemigroup
+      (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant n) :=
+  PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.toPhysicalSemigroup
+    (C.toPositiveTimeObservableContractionSemigroup n)
+
 /-- The completed finite-volume transfer operator induced on the `n`-th Wilson
 OS Hilbert space. -/
 noncomputable def finiteOperator
@@ -228,8 +240,7 @@ noncomputable def finiteOperator
         S D halfExtent N hN beta hbeta B hInvariant n →L[ℝ]
       PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
         S D halfExtent N hN beta hbeta B hInvariant n :=
-  (C.toPositiveTimeObservableContractionSemigroup n)
-    .toPhysicalSemigroup.operator t
+  (C.finitePhysicalSemigroup n).operator t
 
 @[simp]
 theorem finiteOperator_zero
@@ -240,8 +251,7 @@ theorem finiteOperator_zero
       ContinuousLinearMap.id ℝ
         (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
           S D halfExtent N hN beta hbeta B hInvariant n) := by
-  exact (C.toPositiveTimeObservableContractionSemigroup n)
-    .toPhysicalSemigroup.operator_zero
+  exact (C.finitePhysicalSemigroup n).operator_zero
 
 @[simp]
 theorem finiteOperator_add
@@ -250,8 +260,7 @@ theorem finiteOperator_add
     (n : ℕ) (s t : NNReal) :
     C.finiteOperator n (s + t) =
       (C.finiteOperator n s).comp (C.finiteOperator n t) := by
-  exact (C.toPositiveTimeObservableContractionSemigroup n)
-    .toPhysicalSemigroup.operator_add s t
+  exact (C.finitePhysicalSemigroup n).operator_add s t
 
 /-- Every completed finite-volume Wilson transfer operator is contractive. -/
 theorem finiteOperator_opNorm_le
@@ -259,8 +268,7 @@ theorem finiteOperator_opNorm_le
       S D halfExtent N hN beta hbeta B hInvariant)
     (n : ℕ) (t : NNReal) :
     ‖C.finiteOperator n t‖ ≤ 1 := by
-  exact (C.toPositiveTimeObservableContractionSemigroup n)
-    .toPhysicalSemigroup.opNorm_le t
+  exact (C.finitePhysicalSemigroup n).opNorm_le t
 
 /-- Every finite-volume Wilson transfer operator fixes its normalized OS
 vacuum. -/
@@ -274,8 +282,7 @@ theorem finiteOperator_fixes_vacuum
           S D halfExtent N hN beta hbeta B hInvariant n) =
       physical_yang_mills_evenPeriodicWilsonOS_approximating_vacuum
         S D halfExtent N hN beta hbeta B hInvariant n := by
-  exact (C.toPositiveTimeObservableContractionSemigroup n)
-    .toPhysicalSemigroup.fixes_vacuum t
+  exact (C.finitePhysicalSemigroup n).fixes_vacuum t
 
 /-- On the dense family represented by positive-time observables, the completed
 finite-volume transfer operator is exactly observable translation. -/
@@ -288,8 +295,9 @@ theorem finiteOperator_on_positiveTimeObservable
         S D halfExtent N hN beta hbeta B hInvariant n
     C.finiteOperator n t (P.physicalState (P.carrierOfPositiveTime F)) =
       P.physicalState (P.carrierOfPositiveTime (C.translate t F)) := by
-  exact (C.toPositiveTimeObservableContractionSemigroup n)
-    .physicalOperator_on_positiveTimeObservable t F
+  exact
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.physicalOperator_on_positiveTimeObservable
+      (C.toPositiveTimeObservableContractionSemigroup n) t F
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
 
