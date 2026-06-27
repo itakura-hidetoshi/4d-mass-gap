@@ -137,6 +137,7 @@ noncomputable def toApproximatingBoundaryMomentGapCertificate
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant n
     let Tn := C.toPositiveTimeObservableContractionSemigroup n
+    rw [← integral_const_mul]
     apply integral_mono
     · exact Q.boundary_moment_sq_integrable n
         (Tn.carrierTranslation (t / 2) (Pn.vacuumCenteredCarrier F))
