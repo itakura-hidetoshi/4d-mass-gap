@@ -17,17 +17,15 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
-/-- A positive transferred excitation gap makes every zero-energy vector of the
+/-- A positive continuum semigroup gap makes every zero-energy vector of the
 closed OS Hamiltonian a vacuum multiple.
 
-The proof orthogonalizes an arbitrary zero-energy domain vector by subtracting
-its vacuum coefficient.  The vacuum is itself in the closed-Hamiltonian domain
-and has zero energy, so the orthogonalized vector still has zero energy.  The
-transferred Rayleigh lower bound and positivity of the mass then force its norm
-to vanish. -/
-theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_inner_smul_vacuum_of_eq_zero
+This theorem depends only on the continuum `VacuumSemigroupGapSlope`; no
+finite-volume carrier or common-Hilbert embedding is needed once the semigroup
+vacuum-sector decay has been established. -/
+theorem VacuumSemigroupGapSlope.closedRightHamiltonian_eq_inner_smul_vacuum_of_eq_zero
     (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
+    (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized)
     (psi : T.closedRightHamiltonian.domain)
     (hzero : T.closedRightHamiltonian psi = 0) :
@@ -90,12 +88,11 @@ theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_inner_smul_vacuu
     simpa only [psiOrth, vacuumDomain] using hpsiOrthZero
   simpa only [c] using sub_eq_zero.mp hsub
 
-/-- Under the transferred positive mass gap, the zero eigenspace of the closed
-OS Hamiltonian is exactly the one-dimensional vacuum direction.  The displayed
-coefficient is canonical because the normalized vacuum has unit norm. -/
-theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum
+/-- A positive continuum semigroup gap identifies the zero eigenspace of the
+closed OS Hamiltonian with the one-dimensional normalized vacuum line. -/
+theorem VacuumSemigroupGapSlope.closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum
     (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
+    (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized)
     (psi : T.closedRightHamiltonian.domain) :
     T.closedRightHamiltonian psi = 0 ↔
@@ -119,6 +116,39 @@ theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_zero_iff_eq_inne
         T.closedRightHamiltonian.map_smul c
           T.closedRightHamiltonianVacuumDomainPoint
       _ = 0 := by rw [T.closedRightHamiltonian_vacuum, smul_zero]
+
+/-- A positive transferred excitation gap makes every zero-energy vector of the
+closed OS Hamiltonian a vacuum multiple.
+
+The proof orthogonalizes an arbitrary zero-energy domain vector by subtracting
+its vacuum coefficient.  The vacuum is itself in the closed-Hamiltonian domain
+and has zero energy, so the orthogonalized vector still has zero energy.  The
+transferred Rayleigh lower bound and positivity of the mass then force its norm
+to vanish. -/
+theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_inner_smul_vacuum_of_eq_zero
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (psi : T.closedRightHamiltonian.domain)
+    (hzero : T.closedRightHamiltonian psi = 0) :
+    (psi : P.PhysicalHilbert) =
+      (inner ℝ (psi : P.PhysicalHilbert) P.vacuum) • P.vacuum := by
+  exact G.toVacuumSemigroupGapSlope
+    |>.closedRightHamiltonian_eq_inner_smul_vacuum_of_eq_zero T hP psi hzero
+
+/-- Under the transferred positive mass gap, the zero eigenspace of the closed
+OS Hamiltonian is exactly the one-dimensional vacuum direction.  The displayed
+coefficient is canonical because the normalized vacuum has unit norm. -/
+theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (psi : T.closedRightHamiltonian.domain) :
+    T.closedRightHamiltonian psi = 0 ↔
+      (psi : P.PhysicalHilbert) =
+        (inner ℝ (psi : P.PhysicalHilbert) P.vacuum) • P.vacuum := by
+  exact G.toVacuumSemigroupGapSlope
+    |>.closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum T hP psi
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
