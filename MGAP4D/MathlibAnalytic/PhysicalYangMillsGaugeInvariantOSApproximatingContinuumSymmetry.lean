@@ -105,10 +105,9 @@ theorem continuum_reflectionTimeTranslationExchange
     have h := hExchange n t
       (Pn.carrierOfPositiveTime Fpos)
       (Pn.carrierOfPositiveTime Gpos)
-    rw [(C.toPositiveTimeObservableContractionSemigroup n)
-      .carrierTranslation_carrierOfPositiveTime] at h
-    rw [(C.toPositiveTimeObservableContractionSemigroup n)
-      .carrierTranslation_carrierOfPositiveTime] at h
+    simp only [
+      (C.toPositiveTimeObservableContractionSemigroup n)
+        .carrierTranslation_carrierOfPositiveTime] at h
     change D.osBilinForm
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
         Ft Gs =
