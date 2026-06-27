@@ -96,15 +96,15 @@ theorem carrierTranslation_vacuumCenteredCarrier
   have homega := T.omega_translate_eq hExchange t Fpos
   unfold vacuumCenteredCarrier
   rw [(T.carrierTranslation t).map_sub, (T.carrierTranslation t).map_smul,
-    T.carrierTranslation_vacuumObservable]
-  apply sub_eq_sub_left.mpr
-  rw [T.carrierTranslation_apply]
+    T.carrierTranslation_vacuumObservable, T.carrierTranslation_apply]
   change
-    P.omega F.toGaugeInvariant • P.vacuumObservable =
-      P.omega
-        (((T.translate t Fpos : D.positiveTimeSubalgebra) :
-          physicalYangMillsGaugeInvariantObservableSubalgebra S)) •
-        P.vacuumObservable
+    P.carrierOfPositiveTime (T.translate t Fpos) -
+        P.omega F.toGaugeInvariant • P.vacuumObservable =
+      P.carrierOfPositiveTime (T.translate t Fpos) -
+        P.omega
+          (((T.translate t Fpos : D.positiveTimeSubalgebra) :
+            physicalYangMillsGaugeInvariantObservableSubalgebra S)) •
+          P.vacuumObservable
   rw [homega]
 
 end PositiveTimeObservableContractionSemigroup
@@ -274,6 +274,12 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
           physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
             S D halfExtent N hN beta hbeta B hInvariant n
         let Tn := C.toPositiveTimeObservableContractionSemigroup n
+        change Pn.osQuadraticValue
+            (Tn.carrierTranslation (t / 2)
+              (Pn.vacuumCenteredCarrier (Pn.carrierOfPositiveTime Fpos))) =
+          Pn.osQuadraticValue
+            (Pn.vacuumCenteredCarrier
+              (Pn.carrierOfPositiveTime (C.translate (t / 2) Fpos)))
         rw [Tn.carrierTranslation_vacuumCenteredCarrier (Q.exchange n),
           Tn.carrierTranslation_carrierOfPositiveTime]
       have hcontinuumValue :
@@ -286,7 +292,13 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
         rw [Tinf.carrierTranslation_vacuumCenteredCarrier
           (C.continuum_reflectionTimeTranslationExchange Q.exchange),
           Tinf.carrierTranslation_apply]
-        simp only [Fpos, Pinf.carrierOfPositiveTime_positiveTimeElement]
+        change Pinf.osQuadraticValue
+            (Pinf.vacuumCenteredCarrier
+              (Pinf.carrierOfPositiveTime ((Tinf.translate (t / 2)) Fpos))) =
+          Pinf.osQuadraticValue
+            (Pinf.vacuumCenteredCarrier
+              (Pinf.carrierOfPositiveTime ((C.translate (t / 2)) Fpos)))
+        rfl
       rw [hfiniteFunctions, hcontinuumValue]
       exact hleftBase
     have hrightScaled :
