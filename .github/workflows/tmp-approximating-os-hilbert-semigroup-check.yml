@@ -1,0 +1,70 @@
+name: Temporary Approximating OS Hilbert Semigroup Check
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-approximating-os-hilbert-semigroup-check.yml"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingHilbertSemigroup.lean"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  targeted:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Restore Lake cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-approximating-os-hilbert-semigroup-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-
+
+      - name: Install Lean
+        shell: bash
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL \
+              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          lean --version
+          lake --version
+
+      - name: Build and capture diagnostic
+        id: build
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingHilbertSemigroup > /tmp/approximating-os-hilbert-semigroup.log 2>&1
+          status=$?
+          set -e
+          tail -n 800 /tmp/approximating-os-hilbert-semigroup.log > /tmp/approximating-os-hilbert-semigroup-tail.log
+          cat /tmp/approximating-os-hilbert-semigroup-tail.log
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: approximating-os-hilbert-semigroup-diagnostic
+          path: |
+            /tmp/approximating-os-hilbert-semigroup.log
+            /tmp/approximating-os-hilbert-semigroup-tail.log
+          if-no-files-found: error
+
+      - name: Propagate build status
+        if: always()
+        run: exit "${{ steps.build.outputs.status }}"
