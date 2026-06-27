@@ -40,8 +40,12 @@ theorem osBilinForm_carrierTranslation_eq_osQuadraticValue_half
       inner ℝ (T.toPhysicalSemigroup.operator t (P.physicalState F))
         (P.physicalState F) := by
       exact (T.inner_operator_physicalState_eq_osBilinForm t F).symm
+    _ = inner ℝ
+        (T.toPhysicalSemigroup.operator (t / 2 + t / 2)
+          (P.physicalState F))
+        (P.physicalState F) := by
+      rw [hhalf]
     _ = ‖T.toPhysicalSemigroup.operator (t / 2) (P.physicalState F)‖ ^ 2 := by
-      rw [← hhalf]
       exact
         (T.toPhysicalSemigroup.operator_norm_sq_eq_inner_operator_add_self
           hSymmetric (t / 2) (P.physicalState F)).symm
@@ -50,6 +54,7 @@ theorem osBilinForm_carrierTranslation_eq_osQuadraticValue_half
         ‖T.toCarrierSemigroup.physicalOperator (t / 2)
             (P.physicalState F)‖ ^ 2 = _
       rw [T.toCarrierSemigroup.physicalOperator_on_physicalState]
+      rfl
     _ = ‖T.carrierTranslation (t / 2) F‖ ^ 2 := by
       rw [P.norm_physicalState]
     _ = P.osQuadraticValue (T.carrierTranslation (t / 2) F) := by
@@ -142,11 +147,15 @@ noncomputable def toApproximatingReflectedQuadraticGapCertificate
   slope_tendsto := Q.slope_tendsto
   exchange := Q.exchange
   finite_reflected_quadratic_decay := by
-    intro n t F
+    intro n t
+    dsimp only
+    intro F
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant n
     let Tn := C.toPositiveTimeObservableContractionSemigroup n
+    have hdecay := Q.finite_half_quadratic_decay n t
+    dsimp only at hdecay
     calc
       D.osBilinForm Pn.omega
           (Pn.toPositiveTime
@@ -159,7 +168,7 @@ noncomputable def toApproximatingReflectedQuadraticGapCertificate
             (Q.exchange n) t (Pn.vacuumCenteredCarrier F)
       _ ≤ Q.quadraticDecayFactor t *
           Pn.osQuadraticValue (Pn.vacuumCenteredCarrier F) :=
-        Q.finite_half_quadratic_decay n t F
+        hdecay F
 
 /-- The half-time finite Wilson OS quadratic certificate therefore produces the
 completed finite-volume norm-decay certificate. -/
