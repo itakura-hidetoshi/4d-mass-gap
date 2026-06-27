@@ -9,7 +9,7 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
-local instance (N : ℕ) :
+local instance boundedBoundaryMomentSpecialUnitaryMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
