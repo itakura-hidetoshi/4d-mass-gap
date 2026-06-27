@@ -64,11 +64,11 @@ theorem continuum_reflectionTimeTranslationExchange
     PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.ReflectionTimeTranslationExchange
       C.toContinuumPositiveTimeObservableContractionSemigroup := by
   intro t F G
-  let P∞ :=
+  let Pinf :=
     physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant
-  let Fpos := P∞.positiveTimeElement F
-  let Gpos := P∞.positiveTimeElement G
+  let Fpos := Pinf.positiveTimeElement F
+  let Gpos := Pinf.positiveTimeElement G
   let Ft : D.positiveTimeSubalgebra.toSubmodule :=
     physicalYangMillsPositiveTimeToSubmodule D (C.translate t Fpos)
   let Gt : D.positiveTimeSubalgebra.toSubmodule :=
@@ -109,15 +109,15 @@ theorem continuum_reflectionTimeTranslationExchange
     exact h
   rw [hfunctions] at hleft
   have hlimit := tendsto_nhds_unique hleft hright
-  change D.osBilinForm P∞.omega
-      (P∞.toPositiveTime
+  change D.osBilinForm Pinf.omega
+      (Pinf.toPositiveTime
         (C.toContinuumPositiveTimeObservableContractionSemigroup.carrierTranslation t F))
-      (P∞.toPositiveTime G) =
-    D.osBilinForm P∞.omega
-      (P∞.toPositiveTime F)
-      (P∞.toPositiveTime
+      (Pinf.toPositiveTime G) =
+    D.osBilinForm Pinf.omega
+      (Pinf.toPositiveTime F)
+      (Pinf.toPositiveTime
         (C.toContinuumPositiveTimeObservableContractionSemigroup.carrierTranslation t G))
-  simpa only [P∞,
+  simpa only [Pinf,
     C.toContinuumPositiveTimeObservableContractionSemigroup.carrierTranslation_apply,
     Fpos, Gpos, Ft, Gt, Fs, Gs,
     physicalYangMillsPositiveTimeToSubmodule] using hlimit
