@@ -58,8 +58,8 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_osQuadraticValue_
     (tendsto_iff_forall_eval_tendsto_topDualPairing.mp
       (physical_yang_mills_gaugeInvariantWeakStarState_converges S))
       (D.quadraticObservable F)
-  simpa only [PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-    .osQuadraticValue_carrierOfPositiveTime] using hEval
+  simpa only [PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.osQuadraticValue_carrierOfPositiveTime]
+    using hEval
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
 
@@ -86,9 +86,9 @@ scales automatically generates the continuum completed contraction semigroup. -/
 noncomputable def toContinuumPositiveTimeObservableContractionSemigroup
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
       S D halfExtent N hN beta hbeta B hInvariant) :
-    (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
-      S D halfExtent N hN beta hbeta B hInvariant)
-      .PositiveTimeObservableContractionSemigroup where
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant) where
   translate := C.translate
   translate_zero := C.translate_zero
   translate_add := C.translate_add
@@ -131,9 +131,11 @@ from finite Wilson OS contractivity. -/
 noncomputable def continuumPhysicalSemigroup
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
       S D halfExtent N hN beta hbeta B hInvariant) :
-    (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
-      S D halfExtent N hN beta hbeta B hInvariant).PhysicalSemigroup :=
-  C.toContinuumPositiveTimeObservableContractionSemigroup.toPhysicalSemigroup
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PhysicalSemigroup
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant) :=
+  PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.toPhysicalSemigroup
+    C.toContinuumPositiveTimeObservableContractionSemigroup
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
 
