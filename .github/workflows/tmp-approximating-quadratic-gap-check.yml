@@ -1,10 +1,12 @@
-name: Temporary Finite Wilson Integral Gap Check
+name: Temporary Concrete Wilson OS Gap Frontier Check
 
 on:
   pull_request:
     paths:
       - ".github/workflows/tmp-approximating-quadratic-gap-check.yml"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingConcreteGapFrontier.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingFiniteIntegralGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingContinuumSemigroup.lean"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +22,7 @@ jobs:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ runner.os }}-finite-wilson-integral-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-concrete-wilson-os-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-
@@ -41,18 +43,18 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingFiniteIntegralGap > /tmp/finite-wilson-integral-gap.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingConcreteGapFrontier > /tmp/concrete-wilson-os-gap.log 2>&1
           status=$?
           set -e
-          tail -n 1200 /tmp/finite-wilson-integral-gap.log
+          tail -n 1500 /tmp/concrete-wilson-os-gap.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
       - name: Upload diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: finite-wilson-integral-gap-diagnostic
-          path: /tmp/finite-wilson-integral-gap.log
+          name: concrete-wilson-os-gap-diagnostic
+          path: /tmp/concrete-wilson-os-gap.log
           if-no-files-found: error
       - name: Propagate status
         if: always()
