@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIteratedDerivativeNorm
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventQuadraticDerivative
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -69,6 +69,12 @@ positive-time observable algebra
 → derivative of every resolvent composition power
 → exact all-order formula R_lambda^(n) = n! R_lambda^(n+1)
 → factorial Cauchy-type derivative norm bound
+→ real analyticity on the full open sub-mass interval
+→ symmetric positive resolvent quadratic form
+→ coercive and inverse-distance quadratic-form bounds
+→ scalar derivative q_y'(lambda) = ‖R_lambda y‖²
+→ monotonicity for every excitation vector
+→ strict monotonicity for every nonzero excitation vector
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -124,13 +130,37 @@ gives
 R_lambda^(n) = n! R_lambda^(n + 1).
 ```
 
-Thus the real excitation resolvent is `C∞` on the full open sub-mass interval.
-Combining the exact derivative formula with the sharp resolvent norm estimate
-gives the Cauchy-type bound
+Thus the real excitation resolvent is `C∞` and real analytic on the full open
+sub-mass interval.  Combining the exact derivative formula with the sharp
+resolvent norm estimate gives the Cauchy-type bound
 
 ```text
 ‖R_lambda^(n)‖ ≤ n! (mass - lambda)⁻(n + 1).
 ```
+
+Self-adjointness of the excitation Hamiltonian makes every sub-mass resolvent
+symmetric.  Its Rayleigh lower bound makes the resolvent positive and yields
+
+```text
+(mass - lambda) ‖R_lambda y‖²
+  ≤ ⟪R_lambda y, y⟫
+  ≤ (mass - lambda)⁻¹ ‖y‖².
+```
+
+For the scalar quadratic resolvent
+
+```text
+q_y(lambda) = ⟪R_lambda y, y⟫,
+```
+
+Mathlib proves
+
+```text
+q_y'(lambda) = ‖R_lambda y‖².
+```
+
+Consequently `q_y` is monotone on the full open sub-mass interval and strictly
+monotone whenever `y ≠ 0`.
 
 Point and continuous real spectrum below the transferred mass remain excluded
 without assuming a native unbounded-operator spectrum object.
