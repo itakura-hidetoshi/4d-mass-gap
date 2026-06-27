@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingQuadraticGapCertificate
+import MGAP4D.MathlibAnalytic.FiniteWilsonVacuumPoincareHamiltonianGap
 import Mathlib.Tactic
 
 noncomputable section
