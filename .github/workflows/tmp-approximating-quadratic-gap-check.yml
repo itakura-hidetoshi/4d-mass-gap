@@ -6,6 +6,10 @@ on:
       - ".github/workflows/tmp-approximating-quadratic-gap-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingConcreteGapFrontier.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingFiniteIntegralGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingHalfQuadraticGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingReflectedQuadraticGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingObservableQuadraticGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingQuadraticGapCertificate.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingContinuumSemigroup.lean"
   workflow_dispatch:
 
