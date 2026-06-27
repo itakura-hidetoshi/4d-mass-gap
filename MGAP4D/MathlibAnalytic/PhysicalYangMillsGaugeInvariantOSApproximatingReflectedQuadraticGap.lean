@@ -60,6 +60,7 @@ theorem inner_operator_physicalState_eq_osBilinForm
   rw [T.toCarrierSemigroup.physicalOperator_on_physicalState,
     P.inner_physicalState_physicalState,
     P.inner_eq_osBilinForm]
+  rfl
 
 end PositiveTimeObservableContractionSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
