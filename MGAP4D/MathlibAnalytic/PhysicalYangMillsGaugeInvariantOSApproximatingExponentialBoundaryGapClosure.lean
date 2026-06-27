@@ -63,6 +63,100 @@ theorem closedRightHamiltonian_isSelfAdjoint
   exact Q.toApproximatingBoundaryMomentGapCertificate
     |>.closedRightHamiltonian_isSelfAdjoint hContinuous
 
+/-- The exponential boundary Poincaré estimate gives the exact positive-mass
+Rayleigh lower bound on the full graph-closed continuum Hamiltonian domain. -/
+theorem closedRightHamiltonian_inner_ge_mass_mul_norm_sq
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C)
+    (hContinuous :
+      C.toContinuumPositiveTimeObservableContractionSemigroup
+        .StrongContinuityOnObservableStates)
+    (psi :
+      (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        C.toContinuumPositiveTimeObservableContractionSemigroup
+        hContinuous).closedRightHamiltonian.domain)
+    (hpsi : inner ℝ
+      (psi :
+        (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+          S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert)
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant).vacuum = 0) :
+    Q.mass * ‖(psi :
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert)‖ ^ 2 ≤
+      inner ℝ
+        ((PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+          C.toContinuumPositiveTimeObservableContractionSemigroup
+          hContinuous).closedRightHamiltonian psi)
+        (psi :
+          (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+            S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert) := by
+  exact Q.toApproximatingBoundaryMomentGapCertificate
+    |>.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
+      hContinuous psi hpsi
+
+/-- The exponential finite Wilson boundary estimate identifies the zero-energy
+space of the graph-closed continuum Hamiltonian with the normalized vacuum
+line. -/
+theorem closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C)
+    (hContinuous :
+      C.toContinuumPositiveTimeObservableContractionSemigroup
+        .StrongContinuityOnObservableStates)
+    (psi :
+      (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        C.toContinuumPositiveTimeObservableContractionSemigroup
+        hContinuous).closedRightHamiltonian.domain) :
+    (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        C.toContinuumPositiveTimeObservableContractionSemigroup
+        hContinuous).closedRightHamiltonian psi = 0 ↔
+      (psi :
+        (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+          S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert) =
+        (inner ℝ
+          (psi :
+            (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+              S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert)
+          (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+            S D halfExtent N hN beta hbeta B hInvariant).vacuum) •
+          (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+            S D halfExtent N hN beta hbeta B hInvariant).vacuum := by
+  exact Q.toApproximatingBoundaryMomentGapCertificate
+    |>.closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum
+      hContinuous psi
+
+/-- The exponential boundary Poincaré estimate excludes nonzero continuum
+closed-Hamiltonian eigenvectors with energy strictly between zero and
+`Q.mass`. -/
+theorem closedRightHamiltonian_no_eigenvector_in_open_mass_gap
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C)
+    (hContinuous :
+      C.toContinuumPositiveTimeObservableContractionSemigroup
+        .StrongContinuityOnObservableStates)
+    {lambda : ℝ}
+    (hlambda_pos : 0 < lambda)
+    (hlambda_mass : lambda < Q.mass)
+    (psi :
+      (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        C.toContinuumPositiveTimeObservableContractionSemigroup
+        hContinuous).closedRightHamiltonian.domain)
+    (hEigen :
+      (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+          C.toContinuumPositiveTimeObservableContractionSemigroup
+          hContinuous).closedRightHamiltonian psi =
+        lambda •
+          (psi :
+            (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+              S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert)) :
+    (psi :
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant).PhysicalHilbert) = 0 := by
+  exact Q.toApproximatingBoundaryMomentGapCertificate
+    |>.closedRightHamiltonian_no_eigenvector_in_open_mass_gap
+      hContinuous hlambda_pos hlambda_mass psi hEigen
+
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
 
 end MathlibAnalytic
