@@ -124,7 +124,8 @@ noncomputable def toContinuumPositiveTimeObservableContractionSemigroup
         Pn.positiveTimeElement_carrierOfPositiveTime] using h
     have hlimit := le_of_tendsto_of_tendsto hleft hright
       (Eventually.of_forall hfinite)
-    simpa only [P∞.carrierOfPositiveTime_positiveTimeElement] using hlimit
+    simpa only [Fpos, P∞.translateCarrierByPositiveTimeAlgHom_apply,
+      P∞.carrierOfPositiveTime_positiveTimeElement] using hlimit
 
 /-- The completed continuum physical contraction semigroup generated entirely
 from finite Wilson OS contractivity. -/
