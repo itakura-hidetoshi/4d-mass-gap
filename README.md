@@ -45,11 +45,16 @@ Open-PR results are not statements about `main` until they are merged and replay
 ## Repository snapshot
 
 ```text
-main head: 923d47c997a9b1b59cfb6a87adc30fdc4fdeee9d
-latest merged proof checkpoint: PR #298
-active physical branch: PR #282
-PR #282 head: 509cfbe825ee635940b9fe5728fe1d437a376356
-stacked operator-state branch: PR #299
+latest mathematical proof checkpoint on main:
+  923d47c997a9b1b59cfb6a87adc30fdc4fdeee9d
+latest merged proof PR:
+  PR #298
+active physical branch:
+  PR #282
+PR #282 head:
+  509cfbe825ee635940b9fe5728fe1d437a376356
+stacked operator-state branch:
+  PR #299
 ```
 
 PR #282 is open and currently reported as mergeable, with 1,315 commits, 334 changed files, and `+42411/-0` relative to `main` at this snapshot.
