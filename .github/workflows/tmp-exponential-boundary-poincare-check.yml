@@ -6,6 +6,7 @@ on:
       - ".github/workflows/tmp-exponential-boundary-poincare-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSExponentialGapSlope.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryL2PoincareGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryGapClosure.lean"
   workflow_dispatch:
 
 permissions:
@@ -48,10 +49,10 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryL2PoincareGap > /tmp/exponential-boundary-poincare.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryGapClosure > /tmp/exponential-boundary-poincare.log 2>&1
           status=$?
           set -e
-          tail -n 1500 /tmp/exponential-boundary-poincare.log > /tmp/exponential-boundary-poincare-tail.log
+          tail -n 1800 /tmp/exponential-boundary-poincare.log > /tmp/exponential-boundary-poincare-tail.log
           cat /tmp/exponential-boundary-poincare-tail.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
