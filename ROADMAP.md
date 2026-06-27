@@ -2,17 +2,24 @@
 
 This roadmap records the active proof-development path of `itakura-hidetoshi/4d-mass-gap`.
 
-## Snapshot — 2026-06-21
+## Snapshot — 2026-06-28
 
 ```text
-main head: 42223c9a87dc1a8474be95d37abf51299578e9c0
-latest merged proof checkpoint: PR #288, 59c5780e1efd9e0035aad9bb8c65ff752f5b89dc
-latest merged documentation checkpoint: PR #291, d89e8375ab1c5b1dd028829901bc32f92060e0a0
-active proof PRs: #289 and #282
-PR #282 head: 592f3068bbb7f00b3a803ea75a3ed402d6674e3a
+main head before this documentation update:
+  923d47c997a9b1b59cfb6a87adc30fdc4fdeee9d
+
+latest merged proof checkpoint:
+  PR #298 — oriented canonical Dobrushin influence
+
+active physical branch:
+  PR #282
+  head 509cfbe825ee635940b9fe5728fe1d437a376356
+
+stacked operator-state branch:
+  PR #299
 ```
 
-The repository does not yet prove an unconditional continuum Yang--Mills theory, a reconstructed physical Hamiltonian, or a physical mass gap.
+The repository does not yet prove an unconditional interacting continuum Yang--Mills theory or an independently derived physical mass gap.
 
 Notation:
 
@@ -22,389 +29,296 @@ Notation:
 
 ## Completed on `main`
 
-### 1. Finite Gibbs and Hamiltonian spine
+### Finite Gibbs and Hamiltonian spine
 
-- [x] finite Wilson Gibbs PMF and exact single-link conditional laws;
+- [x] finite Wilson Gibbs PMF and exact single-link conditionals;
 - [x] Gibbs expectation, variance, and heat-bath Dirichlet form;
 - [x] conditional projection `P_e` and fluctuation projection `Q_e`;
-- [x] detailed balance, symmetry, orthogonality, and weighted Pythagoras;
+- [x] detailed balance, Gibbs symmetry, orthogonality, and weighted Pythagoras;
 - [x] concrete finite Gibbs Hilbert realization and normalized vacuum;
 - [x] heat-bath Hamiltonian `H_HB = sum_e Q_e`;
 - [x] exact identity `H_HB = |E| (I - P_scan)`.
 
-### 2. Canonical Dobrushin-to-Rayleigh theorem
+### Legacy canonical Dobrushin-to-Rayleigh spine
 
-PRs #267--#272 prove
+- [x] exact conditional-TV influence and zero diagonal;
+- [x] exact row sums and canonical coefficient `alpha_can`;
+- [x] variation and normalized random-scan contraction;
+- [x] centered fixed-point triviality and eigenvalue control;
+- [x] Gibbs-Hilbert spectral lift;
+- [x] centered Rayleigh contraction;
+- [x] finite Hamiltonian-gap consequences from `alpha_can < 1`.
 
-```text
-exact conditional-TV influence
-  -> canonical coefficient alpha_can
-  -> variation contraction
-  -> random-scan iterate contraction
-  -> centered fixed-point triviality
-  -> eigenvalue control
-  -> Gibbs-Hilbert spectral lift
-  -> centered Rayleigh contraction
-  -> finite Hamiltonian gap.
-```
+### Plaquette locality and periodic geometry
 
-- [x] exact off-diagonal influence and zero diagonal;
-- [x] exact row sums, canonical coefficient, and minimality;
-- [x] centered spectral and Rayleigh consequences;
-- [x] automatic finite-gap consequences from `alpha_can < 1`.
-
-The missing quantitative input is a physically relevant scale-uniform strict estimate, not a separate Rayleigh theorem.
-
-### 3. Plaquette support and periodic oriented geometry
-
-- [x] target-local / target-remote decomposition in the legacy finite interface;
-- [x] remote-factor cancellation in normalized conditionals;
+- [x] target-local / target-remote Wilson-action decomposition in the legacy interface;
+- [x] exact remote-factor cancellation;
 - [x] exact zero influence outside plaquette support;
 - [x] `alpha_can <= d_active * eta_active`;
-- [x] shared-plaquette localization;
-- [x] normalized-exponential bound
-
-```text
-eta_active <=
-  (exp (2 * beta * m_shared * E_max) - 1) /
-  (exp (2 * beta * m_shared * E_max) + 1);
-```
-
+- [x] normalized-exponential TV majorant;
 - [x] signed periodic four-dimensional geometry;
 - [x] `d_active <= 18` and `m_shared <= 1` for side length `n >= 3`;
 - [x] orientation-correct finite Wilson system;
 - [x] periodic oriented `Z2` instance.
 
+### Orientation-correct conditional and influence spine
+
+Merged PRs #289 and #293--#298 complete the following layers:
+
+- [x] physical-link replacement and agreement away from the source link;
+- [x] signed plaquette-holonomy locality;
+- [x] oriented target-local / target-remote action decomposition;
+- [x] exact oriented single-link conditional PMF;
+- [x] local/remote Boltzmann factorization;
+- [x] exact partition-function factorization and remote cancellation;
+- [x] `finiteNormalizedExp` representation;
+- [x] conditional-TV control from mutual exponential ratios;
+- [x] local-action-oscillation TV bound;
+- [x] exact oriented canonical influence;
+- [x] nonnegativity and exact zero diagonal;
+- [x] sharp active-influence exponential-ratio bound.
+
 ---
 
-## Milestone 1 — finish the oriented finite conditional/influence bridge
+## Milestone 1 — close the oriented Dobrushin coefficient bridge
 
-Status: **in progress in PR #289 and follow-up work**
+Status: **next finite `main` milestone**
 
-- [~] physical-link replacement and agreement away from the source link;
-- [~] signed holonomy congruence and non-neighbor locality;
-- [~] oriented target-local / target-remote decomposition;
-- [ ] rebase and merge PR #289;
-- [ ] construct the oriented exact conditional law;
-- [ ] prove normalized remote-factor cancellation in the oriented interface;
-- [ ] construct oriented canonical influence;
-- [ ] connect it to the merged Dobrushin/Rayleigh/Hamiltonian API.
+- [ ] prove coefficient-level zero influence for inactive sources in the oriented interface;
+- [ ] define exact oriented row sums;
+- [ ] define the oriented canonical coefficient;
+- [ ] prove the active-neighbor row-sum bound;
+- [ ] transport the periodic bounds `d_active <= 18` and `m_shared <= 1` into the oriented coefficient;
+- [ ] connect the oriented coefficient to the merged random-scan/Rayleigh/Hamiltonian API;
+- [ ] add one aggregate compile-smoke import.
 
 Definition of done:
 
 ```text
-The physical-link oriented Wilson system generates exact conditionals,
-canonical influence, and finite Hamiltonian consequences directly.
+orientation-correct physical-link Wilson conditionals
+  -> exact oriented canonical coefficient
+  -> strict coefficient hypothesis
+  -> centered Rayleigh contraction
+  -> finite heat-bath Hamiltonian gap.
 ```
 
 ## Milestone 2 — explicit periodic `Z2` finite theorem
 
-- [ ] package `E_max = 1`;
+- [ ] package the concrete `Z2` plaquette-energy bound;
 - [ ] insert `d_active <= 18` and `m_shared <= 1`;
-- [ ] derive `eta_active <= (exp (2*beta)-1)/(exp (2*beta)+1)`;
-- [ ] derive a sufficient strict condition `18 * eta_active < 1`;
+- [ ] derive the explicit active-influence majorant;
+- [ ] state a sufficient strict parameter condition;
 - [ ] generate centered-Rayleigh and finite Hamiltonian-gap consequences;
-- [ ] state the exact finite parameter range.
+- [ ] state the exact finite-volume scope and side-length restriction.
 
-This is a finite-volume small-`beta` result, not a continuum weak-coupling theorem.
+This milestone is a finite small-coupling theorem.
 
----
-
-## Milestone 3 — stabilize the concrete compact `SU(N)` probability lane
-
-Status: **substantially implemented in PR #282**
-
-### Finite-volume input
-
-- [~] orientation-correct compact gauge Wilson system;
-- [~] product Haar probability measure and Gibbs tilt;
-- [~] finite-volume gauge invariance;
-- [~] periodic four-dimensional geometry bridge;
-- [~] exact plaquette count `6 * L^4`;
-- [~] standard `SU(N)` Wilson energy `1 - Re(trace U)/N`;
-- [~] continuity, conjugation invariance, and `0 <= E_W <= 2`;
-- [~] reciprocal-plaquette normalized action bound `<= 2`.
-
-### Weak-limit and observable spine
-
-- [~] varying finite lattice laws embedded into one fixed Polish carrier;
-- [~] lattice spacing to zero and physical volume to infinity;
-- [~] proper coercive-functional interface;
-- [~] action domination, moment control, Markov tails, and tightness;
-- [~] Prokhorov subsequence and physical weak-limit package;
-- [~] bounded-continuous expectation convergence;
-- [~] compatible continuum gauge-symmetry transfer;
-- [~] invariant events, observable laws, correlations, and finite n-point moments;
-- [~] real algebra of gauge-invariant observables;
-- [~] positive continuous states and weak-star convergence.
-
-### Stabilization tasks
-
-- [ ] complete the ordinary PR Lean Fast Check on the current head;
-- [ ] remove all temporary diagnostic workflows;
-- [ ] audit assumptions, generated instances, and aggregate imports;
-- [ ] rebase onto current `main` and resolve overlap with PR #289 where necessary;
-- [ ] split or merge only replayable, reviewable layers.
-
-Definition of done: the concrete finite-law, weak-limit, symmetry, observable, and state spine is on `main` with the ordinary workflow green.
+It is not a continuum weak-coupling or asymptotic-freedom theorem.
 
 ---
 
-## Milestone 4 — complete the exact Wilson RKHS/kernel layer
+## Milestone 3 — stabilize and decompose PR #282
 
-Status: **implemented in PR #282, pending final aggregate validation**
+Status: **large open branch, not merge-ready**
 
-### Kernel and feature construction
-
-- [~] standard `SU(N)` Wilson relative crossing kernel;
-- [~] positive-semidefinite/RKHS certificate;
-- [~] exact unit diagonal `K_beta(g,g) = 1`;
-- [~] exact one-plaquette feature norm `= 1`;
-- [~] exact pulled-back local crossing-feature norm `= 1`;
-- [~] finite completed-tensor-product feature;
-- [~] exact global feature norm `= 1`;
-- [~] finite Gram and Hilbert-feature identities.
-
-### Measurability and integrability
-
-- [~] local feature strong measurability interface;
-- [~] global finite-product feature measurability from local factors;
-- [~] weighted feature measurability from scalar amplitude and global feature;
-- [~] bounded integrability constructor from finite measure, strong measurability, and a uniform norm bound;
-- [~] reduction of the weighted-feature norm bound to a scalar amplitude bound.
-
-### OS constructors
-
-- [~] bounded-local-kernel finite reflection-positivity constructor;
-- [~] amplitude-bounded local-kernel constructor;
-- [~] factored amplitude/local-feature measurability constructor;
-- [~] approximating weak-star reflection positivity;
-- [~] continuum weak-star reflection positivity by sequential closure.
-
-Remaining:
-
-- [ ] ensure all newest files are included in ordinary aggregate replay;
-- [ ] remove redundant earlier interfaces now subsumed by exact unit-norm results;
-- [ ] document the minimal assumptions of the final constructor.
-
-Definition of done: the exact Wilson kernel-to-feature-to-integrability-to-OS route compiles as one ordinary aggregate import with no temporary diagnostics.
-
----
-
-## Milestone 5 — concrete even-periodic half-lattice and crossing product
-
-Status: **substantially implemented in PR #282, but the actual Gibbs-form identification remains incomplete**
-
-### Even-periodic geometry
-
-- [~] even periodic time reflection;
-- [~] crossing-plaquette labels and finite list;
-- [~] positive-half holonomy interfaces;
-- [~] product of local Wilson crossing kernels;
-- [~] half-lattice/Peter--Weyl and local-kernel product packages.
-
-### Required model-specific identities
-
-- [ ] identify the actual positive-time observable algebra and reflection used by the physical state;
-- [ ] prove the exact periodic `SU(N)` half-lattice action decomposition;
-- [ ] prove the exact crossing-kernel identity for the actual Wilson Gibbs weight;
-- [ ] verify Haar-measure factorization with reflection-fixed variables treated correctly;
-- [ ] identify the abstract pullback form with the actual Gibbs reflection form;
-- [ ] replay the entire finite-to-continuum reflection-positive route.
-
-Definition of done:
+Current branch snapshot:
 
 ```text
-The actual periodic SU(N) Gibbs reflection form is proved equal to the
-finite Wilson kernel-product/Bochner-Gram expression required by the OS theorem.
+head: 509cfbe825ee635940b9fe5728fe1d437a376356
+commits: 1315
+changed files: 334
+additions/deletions: +42411/-0
 ```
+
+Current-head workflows are queued:
+
+- [~] ordinary PR Lean Fast Check run 4698;
+- [~] Temporary Concrete Wilson OS Boundary Gap Check run 113;
+- [~] Temporary Exponential Boundary Poincare Check run 30.
+
+Required stabilization:
+
+- [ ] obtain ordinary branch-wide green CI;
+- [ ] remove temporary diagnostic workflows;
+- [ ] audit aggregate imports and compile-smoke roots;
+- [ ] rebase on the updated oriented finite `main` lane;
+- [ ] split the 334-file branch into mathematically reviewable merge units;
+- [ ] merge only replayable layers with explicit claim boundaries.
+
+Recommended split order:
+
+1. finite compact `SU(N)` probability and symmetry layer;
+2. concrete finite even-periodic reflection-positivity layer;
+3. weak-limit, observable, and weak-star state layer;
+4. OS Hilbert and semigroup layer;
+5. closed Hamiltonian and resolvent layer;
+6. conditional boundary-gap transfer layer.
 
 ---
 
-## Milestone 6 — boundary-fibered measure factorization
+## Milestone 4 — merge the concrete finite `SU(N)` reflection-positive theory
 
-Status: **active frontier in PR #282**
+Status: **implemented in PR #282**
 
-The reflection-fixed time planes contain spatial links shared by the positive and negative halves. They cannot be duplicated into two independent Haar coordinates. The correct target is
+### Finite probability and symmetry
 
-```text
-boundary configuration b
-  -> conditional open-half measure mu_half(b)
-  -> reflected form
-       = integral_b integral_x integral_y
-           <weightedFeature(b,x), weightedFeature(b,y)>
-  -> integral_b ||integral_x weightedFeature(b,x)||^2
-  -> nonnegativity.
-```
+- [~] positive-physical-link compact Wilson system;
+- [~] normalized product-Haar probability measure;
+- [~] Wilson Gibbs tilt;
+- [~] finite gauge invariance;
+- [~] arbitrary periodic translation invariance;
+- [~] integer temporal translations;
+- [~] exact periodic plaquette count `6 * L^4`;
+- [~] standard `SU(N)` Wilson energy and `0 <= E_W <= 2`.
 
-Implemented:
+### Reflection positivity
 
-- [~] involutive edge-orbit partition into positive, negative, and fixed boundary sectors;
-- [~] boundary-fibered coordinate equivalence;
-- [~] boundary-fibered index equivalence;
-- [~] product-measure factorization scaffolding;
-- [~] boundary Pi-measure construction;
-- [~] boundary-fibered Bochner factorization interface;
-- [~] boundary-fibered Bochner-Gram positivity theorem;
-- [~] transfer to approximating and continuum reflection positivity.
+- [~] even-periodic time reflection;
+- [~] positive, negative, and fixed-boundary edge sectors;
+- [~] boundary/open-half coordinate equivalences;
+- [~] Haar product and pushforward factorization;
+- [~] exact Wilson Gibbs density sector factorization;
+- [~] temporal and spatial crossing decomposition;
+- [~] local Wilson positive-semidefinite kernels;
+- [~] RKHS/Bochner-Gram representation;
+- [~] bounded-continuous finite Gibbs reflection positivity.
 
-Current validation state at head `592f3068bbb7f00b3a803ea75a3ed402d6674e3a`:
-
-- [~] targeted boundary-fibered Pi-measure build step completed successfully;
-- [ ] ordinary PR Lean Fast Check run 3844 must finish green;
-- [ ] temporary diagnostic status propagation must be repaired or removed;
-- [ ] temporary boundary-fibered workflow must be deleted before merge.
-
-Still required mathematically:
-
-- [ ] instantiate the boundary/positive/negative coordinate partition for the actual periodic lattice;
-- [ ] prove the exact product Haar disintegration over fixed-plane boundary variables;
-- [ ] include the Wilson action and crossing interaction in the fibered factorization;
-- [ ] prove the actual pullback-form equality used by the boundary-fibered Gram certificate;
-- [ ] verify integrability of the boundary moment norm square;
-- [ ] close the concrete periodic `SU(N)` OS theorem.
-
-Definition of done: no abstract boundary-fibered certificate remains uninstantiated in the final finite `SU(N)` reflection-positivity theorem.
+Definition of done: these finite theorems are merged on `main`, replay with ordinary CI, and no longer depend on temporary workflows.
 
 ---
 
-## Milestone 7 — instantiate the physical weak-limit inputs
+## Milestone 5 — instantiate the physical weak-limit construction
 
-PR #282 supplies the constructor, but the decisive physical analytic objects remain open.
+PR #282 supplies a general constructor, but the final physical analytic data remain open.
 
 - [ ] choose a gauge-compatible distributional carrier;
-- [ ] define explicit interpolation, blocking, or smearing maps;
-- [ ] specify the physical lattice spacing, volume, and coupling trajectory;
+- [ ] define explicit interpolation, smearing, or blocking maps;
+- [ ] specify lattice spacing, physical volume, and coupling trajectory;
 - [ ] justify the renormalized `beta_n` scaling;
-- [ ] construct a proper Sobolev/Besov-type functional `Phi`;
+- [ ] construct a proper Sobolev/Besov-type functional;
 - [ ] prove compactness of its sublevels;
-- [ ] prove a uniform coercive estimate of the form
-
-```text
-Phi(interpolate_n(A)) <= controlled renormalized Wilson observable;
-```
-
-- [ ] derive tightness for the actual physical scaling family;
-- [ ] state the gauge quotient or gauge-fixing formulation explicitly.
+- [ ] prove the uniform coercive interpolation estimate;
+- [ ] establish tightness for the intended physical family;
+- [ ] state the gauge quotient or gauge-fixing formulation explicitly;
+- [ ] prove nontriviality of the resulting weak limit.
 
 Definition of done: the weak-limit theorem is instantiated by concrete physical objects rather than abstract parameters.
 
 ---
 
-## Milestone 8 — nontrivial continuum theory and remaining OS axioms
+## Milestone 6 — instantiate continuum time and reflection covariance
 
-- [ ] prove nontriviality and interacting character;
-- [ ] prove uniqueness or characterize subsequence/phase selection;
-- [ ] construct a separating gauge-invariant observable family;
-- [ ] prove convergence of the required Schwinger distributions;
-- [ ] prove Euclidean covariance;
-- [ ] prove regularity;
-- [ ] prove clustering;
-- [ ] establish the remaining Osterwalder--Schrader axioms;
-- [ ] align the probability-measure and observable-algebra formulations.
-
----
-
-## Milestone 9 — continuum-relevant uniform gap mechanism
-
-Single-link Dobrushin control may be too restrictive. Candidate routes are:
-
-- [ ] block heat-bath dynamics or block Dobrushin estimates;
-- [ ] approximate tensorization;
-- [ ] multiscale/polymer estimates;
-- [ ] reflection-positive transfer estimates;
-- [ ] renormalization-group coercivity;
-- [ ] another explicit scale-uniform mechanism.
-
-Every route must track lattice spacing, physical volume, coupling, gauge group, and boundary conditions; distinguish heat-bath time from physical Euclidean time; and avoid assuming the desired gap.
-
----
-
-## Milestone 10 — OS reconstruction and physical mass gap
-
-- [ ] construct the OS pre-Hilbert space and null quotient;
-- [ ] complete the physical Hilbert space and vacuum;
-- [ ] construct the time-translation semigroup and self-adjoint generator;
-- [ ] derive the physical normalization independently of `exactGapValueReal`;
-- [ ] identify the vacuum-orthogonal sector;
-- [ ] transfer continuum decay/coercivity to a positive spectral lower bound;
-- [ ] prove nonzero observable spectral weight;
-- [ ] obtain independent replay and specialist review.
-
----
-
-## Exact `33/20` lane
-
-Status: **internal normalization/audit carrier, not an independently derived physical value**
-
-- [x] `33/20` is transported through internal PVM/spectral and R6--R7 interfaces;
-- [x] internal, finite heat-bath, and physical layers are documented as distinct;
-- [ ] derive the physical normalization independently;
-- [ ] construct the continuum Hamiltonian independently;
-- [ ] derive its spectral infimum and observable weight;
-- [ ] prove, rather than preload, any equality with `33/20`;
-- [ ] obtain external review of any exact-value claim.
-
-## Release gates
-
-### Source gate
-
-- [ ] fresh-clone `bash scripts/check.sh` and `lake build`;
-- [ ] ordinary workflow green with no temporary diagnostics;
-- [ ] new aggregate imports are in replay coverage;
-- [ ] documentation claims have theorem/file anchors;
-- [ ] placeholder inventory is current;
-- [ ] stale or overtaken PRs are closed, rebased, or marked.
-
-### Mathematical gate for PR #282 merge
-
-- [ ] finite compact `SU(N)` law and gauge invariance replayed;
-- [ ] weak-limit and observable/state spine replayed;
-- [ ] exact Wilson RKHS feature and norm layer replayed;
-- [ ] bounded-integrability/amplitude constructor replayed;
-- [ ] boundary-fibered factorization either concretely completed or clearly left as an explicit conditional interface;
-- [ ] no temporary workflow or claim overreach.
-
-### Mathematical gate for a continuum existence claim
-
-- [ ] concrete carrier, interpolation, and renormalized scaling;
-- [ ] concrete coercive compactness estimate;
-- [ ] concrete periodic `SU(N)` OS certificate;
-- [ ] nontrivial interacting continuum law;
-- [ ] remaining OS axioms.
-
-### Mathematical gate for a physical mass-gap claim
-
-- [ ] full OS reconstruction;
-- [ ] continuum-relevant uniform gap estimate;
-- [ ] physical Hamiltonian normalization;
-- [ ] positive spectral lower bound with nonzero observable weight.
-
-### External-claim gate
-
-- [ ] independent replay and dependency audit;
-- [ ] mathematical-physics specialist review;
-- [ ] no circular use of the target gap or numerical value;
-- [ ] public wording matches the theorem boundary.
-
-## Execution order
+The branch now contains the correct constructor pattern:
 
 ```text
-finish PR #282 boundary-fibered validation
-  -> remove temporary diagnostics and obtain ordinary green CI
-  -> finish exact periodic SU(N) boundary/Haar/action factorization
-  -> merge the stable finite-law, weak-limit, observable, RKHS and OS layers
-  -> choose the physical carrier and interpolation
-  -> justify the renormalized coupling trajectory
-  -> prove the actual coercive compactness estimate
-  -> establish nontriviality and the remaining OS axioms
-  -> develop a continuum-relevant uniform gap mechanism
-  -> perform OS reconstruction and physical normalization
-  -> prove the physical Hamiltonian mass gap
-  -> independent validation.
-
-parallel finite lane:
-PR #289 oriented locality
-  -> oriented conditionals and canonical influence
-  -> explicit periodic Z2 finite strict-coefficient theorem.
+integer lattice translations
+  + latticeTime(n,k) = k * latticeSpacing(n)
+  + latticeSpacing(n) -> 0
+  -> floor-based dense temporal approximation
+  + joint continuity
+  -> continuum real-time invariance.
 ```
+
+Still required for the selected physical carrier:
+
+- [ ] construct the real-parameter physical time action;
+- [ ] prove joint continuity;
+- [ ] prove interpolation equivariance at lattice times;
+- [ ] prove gauge/time commutation;
+- [ ] construct the continuum reflection;
+- [ ] prove reflection/time inversion;
+- [ ] prove positive-time observable restriction;
+- [ ] identify the OS state with the continuum weak-star state;
+- [ ] prove observable-state strong continuity.
+
+Definition of done: the physical continuum state carries the concrete reflection and strongly continuous Euclidean-time semigroup used by OS reconstruction.
+
+---
+
+## Milestone 7 — prove the scale-uniform Wilson boundary gap estimate
+
+This is the decisive current mass-gap frontier.
+
+The preferred direct interface is:
+
+```text
+mass > 0,
+
+(1 - exp (-mass * t)) * ||v||^2
+  <= ||v||^2 - ||K_(n,t) v||^2
+```
+
+uniformly in the approximation scale.
+
+Alternative equivalent routes include:
+
+- [ ] a factorization `K_(n,t) = S_(n,t) o A_(n,t)` with a strict operator-norm product bound;
+- [ ] block heat-bath or block Poincaré estimates;
+- [ ] approximate tensorization;
+- [ ] multiscale or polymer estimates;
+- [ ] reflection-positive transfer estimates;
+- [ ] renormalization-group coercivity.
+
+Every route must track lattice spacing, physical volume, coupling, gauge group, boundary conditions, and the distinction between heat-bath time and Euclidean time.
+
+Definition of done: a positive `mass` and the required estimate are proved for the actual physical approximation family, rather than stored in a certificate field.
+
+---
+
+## Milestone 8 — discharge the conditional continuum gap theorem
+
+Status: **the theorem-generating closure is implemented in PR #282**
+
+From the boundary-gap certificate and strong continuity, PR #282 derives:
+
+- [~] a continuum half-time OS quadratic gap certificate;
+- [~] a graph-closed nonnegative Hamiltonian;
+- [~] self-adjointness;
+- [~] the vacuum-orthogonal Rayleigh lower bound with exact mass;
+- [~] zero-energy eigenspace equal to the normalized vacuum line;
+- [~] exclusion of nonzero eigenvectors in `(0, mass)`.
+
+The theorem is conditional until Milestones 5--7 instantiate its inputs.
+
+Definition of done: the actual physical approximation family supplies every field of the certificate and the resulting Hamiltonian theorem is stated without an unproved positive-gap hypothesis.
+
+---
+
+## Milestone 9 — complete the continuum theory and reconstruction
+
+- [ ] prove interacting nontriviality;
+- [ ] prove uniqueness or characterize subsequence/phase selection;
+- [ ] construct a separating local gauge-invariant observable family;
+- [ ] prove convergence and regularity of the required Schwinger distributions;
+- [ ] prove full Euclidean covariance;
+- [ ] prove clustering;
+- [ ] complete the Osterwalder--Schrader axioms;
+- [ ] perform the corresponding Wightman reconstruction;
+- [ ] construct the relevant local operator algebras;
+- [ ] relate the reconstructed Hamiltonian to physical observables and units.
+
+PR #299's vacuum operator vector state is an additive step, not a substitute for these tasks.
+
+---
+
+## Milestone 10 — numerical normalization and external audit
+
+- [ ] keep the internal `33/20` dependency lane separate from the physical mass parameter;
+- [ ] derive any numerical mass value from the instantiated physical Hamiltonian and scaling data;
+- [ ] prove dimensional normalization and units;
+- [ ] provide stable theorem indexes and replay receipts;
+- [ ] obtain independent mathematical review;
+- [ ] distinguish machine replay, internal audit, and external consensus in every public statement.
+
+The value `33/20` remains an internal normalized audit value unless a separate physical derivation is completed.
+
+## Immediate execution order
+
+1. Close the oriented coefficient-to-Hamiltonian bridge on `main`.
+2. Package the explicit periodic `Z2` finite theorem.
+3. Stabilize and split PR #282.
+4. Merge the finite `SU(N)` probability and reflection-positive layers.
+5. Instantiate the carrier, scaling, temporal/reflection covariance, and strong continuity.
+6. Prove the scale-uniform boundary gap estimate.
+7. Apply the existing conditional Hamiltonian-gap closure.
+8. Complete nontriviality, OS/Wightman reconstruction, physical normalization, and external review.
