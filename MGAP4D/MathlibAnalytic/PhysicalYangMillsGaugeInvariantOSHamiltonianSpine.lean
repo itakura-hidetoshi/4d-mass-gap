@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSYinYangSchrodingerBridge
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventQuadraticDerivative
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventQuadraticAbsolutelyMonotone
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryPhysicalTemporalAction
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSWeakLimitTimeReflection
@@ -75,6 +75,10 @@ positive-time observable algebra
 → scalar derivative q_y'(lambda) = ‖R_lambda y‖²
 → monotonicity for every excitation vector
 → strict monotonicity for every nonzero excitation vector
+→ nonnegative quadratic form for every resolvent composition power
+→ exact scalar all-order formula q_y^(n)(lambda) = n! ⟪R_lambda^(n+1)y, y⟫
+→ nonnegativity of every scalar iterated derivative
+→ absolute monotonicity on the open sub-mass interval
 → exclusion of the full real sub-mass spectrum
 → real Yin-Yang Schrödinger algebra bridge
 ```
@@ -161,6 +165,17 @@ q_y'(lambda) = ‖R_lambda y‖².
 
 Consequently `q_y` is monotone on the full open sub-mass interval and strictly
 monotone whenever `y ≠ 0`.
+
+More generally, every composition power of the positive symmetric resolvent has
+a nonnegative quadratic form, and the scalar iterated derivatives satisfy
+
+```text
+q_y^(n)(lambda) = n! ⟪R_lambda^(n + 1) y, y⟫ ≥ 0.
+```
+
+The repository therefore packages `q_y` as `RealAbsolutelyMonotoneOn` on
+`Set.Iio mass`.  This predicate is the all-iterated-derivatives-nonnegative
+characterization used for compatibility with the pinned mathlib revision.
 
 Point and continuous real spectrum below the transferred mass remain excluded
 without assuming a native unbounded-operator spectrum object.
