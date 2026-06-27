@@ -242,11 +242,9 @@ noncomputable def toApproximatingHalfQuadraticGapCertificate
   slope_tendsto := Q.slope_tendsto
   exchange := Q.exchange
   finite_half_quadratic_decay := by
-    intro n t F
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta B hInvariant n
-    let Tn := C.toPositiveTimeObservableContractionSemigroup n
+    intro n t
+    dsimp only
+    intro F
     rw [physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_finiteReflectedIntegral,
       physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_finiteReflectedIntegral]
     exact Q.finite_integral_decay n t F
