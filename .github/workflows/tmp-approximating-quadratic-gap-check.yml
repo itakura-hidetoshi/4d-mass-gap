@@ -1,10 +1,11 @@
-name: Temporary Approximating Quadratic Gap Check
+name: Temporary Approximating Observable Quadratic Gap Check
 
 on:
   pull_request:
     paths:
       - ".github/workflows/tmp-approximating-quadratic-gap-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingQuadraticGapCertificate.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingObservableQuadraticGap.lean"
   workflow_dispatch:
 
 permissions:
@@ -22,8 +23,9 @@ jobs:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ runner.os }}-approximating-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-approximating-observable-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-approximating-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-
 
@@ -47,11 +49,11 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingQuadraticGapCertificate > /tmp/approximating-quadratic-gap.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingObservableQuadraticGap > /tmp/approximating-observable-quadratic-gap.log 2>&1
           status=$?
           set -e
-          tail -n 900 /tmp/approximating-quadratic-gap.log > /tmp/approximating-quadratic-gap-tail.log
-          cat /tmp/approximating-quadratic-gap-tail.log
+          tail -n 900 /tmp/approximating-observable-quadratic-gap.log > /tmp/approximating-observable-quadratic-gap-tail.log
+          cat /tmp/approximating-observable-quadratic-gap-tail.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
 
@@ -59,10 +61,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: approximating-quadratic-gap-diagnostic
+          name: approximating-observable-quadratic-gap-diagnostic
           path: |
-            /tmp/approximating-quadratic-gap.log
-            /tmp/approximating-quadratic-gap-tail.log
+            /tmp/approximating-observable-quadratic-gap.log
+            /tmp/approximating-observable-quadratic-gap-tail.log
           if-no-files-found: error
 
       - name: Propagate build status
