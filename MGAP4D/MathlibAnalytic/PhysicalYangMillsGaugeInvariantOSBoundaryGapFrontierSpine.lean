@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedPointwiseBoundaryMomentGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingMeasurableBoundaryL2PoincareGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2FactorizedGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingMeasurableBoundaryL2FactorizedGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentGapClosure
 
 /-!
@@ -28,7 +28,8 @@ bounded measurable open-half Gram features
 → integrated boundary-moment decay
 → the same finite and continuum gap route
 
-boundary feature analysis A_(n,t)
+measurable boundary moments
++ boundary feature analysis A_(n,t)
 + boundary feature synthesis S_(n,t)
 + K_(n,t) = S_(n,t) ∘ A_(n,t)
 + ‖S_(n,t)‖ ‖A_(n,t)‖ ≤ sqrt(q(t))
@@ -44,9 +45,9 @@ boundary-moment decay
 → no nonzero eigenvector in the open mass gap
 ```
 
-The pointwise, measurable boundary-`L²` Poincaré, and feature-factorized
-formulations are alternative finite-side interfaces.  None supplies the
-scale-uniform strict defect itself.  That quantitative Wilson estimate,
-together with a positive continuum slope, remains the model-specific
+The pointwise, measurable boundary-`L²` Poincaré, and measurable
+feature-factorized formulations are alternative finite-side interfaces.  None
+supplies the scale-uniform strict defect itself.  That quantitative Wilson
+estimate, together with a positive continuum slope, remains the model-specific
 mathematical frontier.
 -/
