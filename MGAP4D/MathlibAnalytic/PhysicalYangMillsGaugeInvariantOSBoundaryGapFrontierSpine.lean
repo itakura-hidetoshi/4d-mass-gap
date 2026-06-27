@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedPointwiseBoundaryMomentGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2QuadraticGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2PoincareGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedBoundaryL2TransferGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentGapClosure
 
@@ -16,7 +16,8 @@ bounded measurable open-half Gram features
 → full finite reflected-integral decay
 → finite Wilson OS vacuum-sector norm decay
 
-boundary L² transfer quadratic estimate
+boundary L² Poincaré defect inequality
+→ boundary L² quadratic transfer contraction
 → boundary transfer operator-norm contraction
 → integrated boundary-moment decay
 → the same finite and continuum gap route
@@ -36,8 +37,8 @@ boundary-moment decay
 → no nonzero eigenvector in the open mass gap
 ```
 
-The pointwise and boundary-`L²` formulations are alternative finite-side
-interfaces.  Neither supplies the scale-uniform strict contraction itself.
-That quantitative Wilson estimate, together with a positive continuum slope,
-remains the model-specific mathematical frontier.
+The pointwise, boundary-`L²` quadratic, and boundary-`L²` Poincaré formulations
+are alternative finite-side interfaces.  None supplies the scale-uniform strict
+defect itself.  That quantitative Wilson estimate, together with a positive
+continuum slope, remains the model-specific mathematical frontier.
 -/
