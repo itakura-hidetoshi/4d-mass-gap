@@ -144,6 +144,16 @@ noncomputable def toApproximatingBoundaryMomentGapCertificate
     · intro b
       exact Q.finite_boundary_moment_pointwise_decay n t F b
 
+/-- Pointwise boundary-moment decay generates the finite reflected-integral gap
+certificate used by the concrete Wilson OS route. -/
+noncomputable def toApproximatingFiniteIntegralGapCertificate
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingPointwiseBoundaryMomentGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C) :
+    PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C :=
+  Q.toApproximatingBoundaryMomentGapCertificate
+    |>.toApproximatingFiniteIntegralGapCertificate
+
 /-- Pointwise boundary-moment decay therefore generates the complete finite
 Wilson OS vacuum-gap norm-decay certificate. -/
 noncomputable def toApproximatingVacuumGapCertificate
