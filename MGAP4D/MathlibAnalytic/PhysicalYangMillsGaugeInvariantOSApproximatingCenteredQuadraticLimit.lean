@@ -110,27 +110,6 @@ theorem carrierTranslation_vacuumCenteredCarrier
 end PositiveTimeObservableContractionSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
-/-- The continuum approximating OS datum is normalized. -/
-theorem physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
-    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (halfExtent : ℕ → ℕ)
-    (N : ℕ)
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℝ)
-    (hbeta : ∀ n, 0 ≤ beta n)
-    (B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
-      S D halfExtent N hN beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)) :
-    (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
-      S D halfExtent N hN beta hbeta B hInvariant).IsNormalized := by
-  change physicalYangMillsContinuumGaugeInvariantWeakStarState S 1 = 1
-  rw [physicalYangMillsContinuumGaugeInvariantWeakStarState_apply]
-  exact physicalYangMillsContinuumGaugeInvariantExpectation_one S
-
 /-- Vacuum-centered OS quadratic values for one fixed positive-time observable
 converge from the actual finite Wilson states to the continuum Wilson state. -/
 theorem physical_yang_mills_evenPeriodicWilsonOS_centeredQuadraticValue_tendsto
@@ -237,8 +216,8 @@ embeddings into a common carrier. -/
 noncomputable def toContinuumHalfQuadraticGapCertificate
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHalfQuadraticGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
-    (C.toContinuumPositiveTimeObservableContractionSemigroup)
-      .HalfQuadraticGapCertificate where
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.HalfQuadraticGapCertificate
+      C.toContinuumPositiveTimeObservableContractionSemigroup where
   mass := Q.mass
   mass_pos := Q.mass_pos
   quadraticDecayFactor := Q.quadraticDecayFactor
@@ -310,8 +289,21 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
         simp only [Fpos, P∞.carrierOfPositiveTime_positiveTimeElement]
       rw [hfiniteFunctions, hcontinuumValue]
       exact hleftBase
-    have hrightScaled :=
-      tendsto_const_nhds.mul hright
+    have hrightScaled :
+        Tendsto
+          (fun n : ℕ =>
+            Q.quadraticDecayFactor t *
+              (let Pn :=
+                physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+                  S D halfExtent N hN beta hbeta B hInvariant n
+              Pn.osQuadraticValue
+                (Pn.vacuumCenteredCarrier (Pn.carrierOfPositiveTime Fpos))))
+          atTop
+          (nhds
+            (Q.quadraticDecayFactor t *
+              P∞.osQuadraticValue (P∞.vacuumCenteredCarrier F))) := by
+      simpa only [Fpos, P∞.carrierOfPositiveTime_positiveTimeElement] using
+        tendsto_const_nhds.mul hright
     have hfinite : ∀ n : ℕ,
         let Pn :=
           physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
