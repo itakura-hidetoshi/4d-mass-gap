@@ -9,6 +9,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance measurableBoundaryL2QuadraticSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A boundary-`L²` quadratic-gap package in which `MemLp` is generated rather
 than postulated.
 
@@ -201,12 +205,9 @@ noncomputable def toApproximatingBoundedBoundaryL2QuadraticGapCertificate
   boundaryTransfer := Q.boundaryTransfer
   boundaryMoment_intertwining := by
     intro n t
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta B hInvariant n
-    let Tn := C.toPositiveTimeObservableContractionSemigroup n
+    dsimp only
     intro F
-    simpa only [Pn, Tn, boundaryMoment_memLp] using
+    simpa only [boundaryMoment_memLp] using
       Q.boundaryMoment_intertwining n t F
   boundaryTransfer_quadratic_bound := Q.boundaryTransfer_quadratic_bound
 
