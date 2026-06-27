@@ -1,33 +1,28 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingFiniteIntegralGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingContinuumSymmetry
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSContinuumHalfQuadraticGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingCenteredQuadraticLimit
 
 /-!
 # Concrete finite Wilson OS gap frontier
 
-This aggregate exposes three theorem-generated routes.
+This aggregate exposes the theorem-generated route
 
 ```text
 finite periodic SU(N) Wilson reflected-integral decay
 → half-time OS quadratic decay
-→ observable-core and completed Hilbert decay
-→ finite vacuum-sector gap certificate
-```
-
-```text
-finite OS contractivity and reflection/time exchange
-→ weak-star limits of quadratic and bilinear forms
-→ continuum contraction semigroup
-→ continuum transfer-operator symmetry
-```
-
-```text
-continuum half-time OS quadratic decay
-→ completed vacuum-sector semigroup decay
+→ centered quadratic-value weak-star convergence
+→ continuum centered observable-core decay
+→ completed continuum vacuum-sector semigroup decay
 → positive right-Hamiltonian Rayleigh lower bound
 ```
 
+Finite OS contractivity and reflection/time exchange also pass through weak-star
+limits, generating the continuum contraction semigroup and its inner-product
+symmetry.
+
+No isometric embeddings of the finite OS Hilbert spaces into a common Hilbert
+carrier are needed for this route.
+
 The remaining model-specific inputs are the common positive-time translation,
-a uniform positive finite-volume decay slope, passage of that quantitative decay
-to the continuum core, and strong continuity.
+a scale-uniform strict reflected-integral decay with positive slope, and strong
+continuity of the continuum observable states.
 -/
