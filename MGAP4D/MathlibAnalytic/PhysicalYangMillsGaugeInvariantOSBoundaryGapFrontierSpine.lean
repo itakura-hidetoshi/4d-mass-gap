@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedPointwiseBoundaryMomentGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingMeasurableBoundaryL2PoincareGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryL2PoincareGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingMeasurableBoundaryL2FactorizedGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentGapClosure
 
@@ -22,7 +22,9 @@ boundary-moment AE strong measurability
 
 bounded measurable open-half Gram features
 + boundary transfer intertwining
-+ boundary L² Poincaré defect inequality
++ exponential Poincaré defect inequality
+    (1 - exp(-mass * t)) ‖v‖² ≤ ‖v‖² - ‖K_(n,t) v‖²
+→ exact positive small-time slope mass
 → boundary L² quadratic transfer contraction
 → boundary transfer operator-norm contraction
 → integrated boundary-moment decay
@@ -45,9 +47,9 @@ boundary-moment decay
 → no nonzero eigenvector in the open mass gap
 ```
 
-The pointwise, measurable boundary-`L²` Poincaré, and measurable
-feature-factorized formulations are alternative finite-side interfaces.  None
-supplies the scale-uniform strict defect itself.  That quantitative Wilson
-estimate, together with a positive continuum slope, remains the model-specific
-mathematical frontier.
+The pointwise, exponential boundary-`L²` Poincaré, and measurable
+feature-factorized formulations are alternative finite-side interfaces.  The
+exponential route removes the abstract slope assumption.  The remaining
+model-specific frontier is the scale-uniform strict Wilson boundary estimate
+or an equivalent factorized operator-norm estimate.
 -/
