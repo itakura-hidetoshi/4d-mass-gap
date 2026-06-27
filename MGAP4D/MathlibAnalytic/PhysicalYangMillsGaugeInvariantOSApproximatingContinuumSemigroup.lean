@@ -94,10 +94,10 @@ noncomputable def toContinuumPositiveTimeObservableContractionSemigroup
   translate_add := C.translate_add
   osQuadratic_translate_le := by
     intro t F
-    let P∞ :=
+    let Pinf :=
       physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant
-    let Fpos := P∞.positiveTimeElement F
+    let Fpos := Pinf.positiveTimeElement F
     have hleft :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_osQuadraticValue_tendsto
         S D halfExtent N hN beta hbeta B hInvariant (C.translate t Fpos)
@@ -124,8 +124,8 @@ noncomputable def toContinuumPositiveTimeObservableContractionSemigroup
         Pn.positiveTimeElement_carrierOfPositiveTime] using h
     have hlimit := le_of_tendsto_of_tendsto hleft hright
       (Eventually.of_forall hfinite)
-    simpa only [Fpos, P∞.translateCarrierByPositiveTimeAlgHom_apply,
-      P∞.carrierOfPositiveTime_positiveTimeElement] using hlimit
+    simpa only [Fpos, Pinf.translateCarrierByPositiveTimeAlgHom_apply,
+      Pinf.carrierOfPositiveTime_positiveTimeElement] using hlimit
 
 /-- The completed continuum physical contraction semigroup generated entirely
 from finite Wilson OS contractivity. -/
