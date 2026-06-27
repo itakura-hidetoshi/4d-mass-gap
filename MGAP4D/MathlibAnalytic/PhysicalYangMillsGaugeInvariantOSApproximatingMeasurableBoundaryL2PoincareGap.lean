@@ -10,6 +10,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance measurableBoundaryL2PoincareSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A finite Wilson shared-boundary Poincaré-gap package with all routine
 integrability and `L²` membership generated from primitive measurable data.
 
@@ -209,12 +213,9 @@ noncomputable def toApproximatingBoundaryL2PoincareGapCertificate
   boundaryTransfer := Q.boundaryTransfer
   boundaryMoment_intertwining := by
     intro n t
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta B hInvariant n
-    let Tn := C.toPositiveTimeObservableContractionSemigroup n
+    dsimp only
     intro F
-    simpa only [Pn, Tn, boundaryMoment_memLp] using
+    simpa only [boundaryMoment_memLp] using
       Q.boundaryMoment_intertwining n t F
   boundaryTransfer_defect_bound := Q.boundaryTransfer_defect_bound
 
