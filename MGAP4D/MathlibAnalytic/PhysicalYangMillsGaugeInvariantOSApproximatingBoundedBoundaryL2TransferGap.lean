@@ -9,6 +9,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance boundedBoundaryL2TransferSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A shared-boundary `L²` transfer-gap package whose open-half Gram integrability
 is generated from finite-measure bounded measurable data.
 
