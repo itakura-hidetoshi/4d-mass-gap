@@ -49,16 +49,40 @@ theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_inner_smul_vacuu
     exact sub_self c
   have hpsiOrthogonalEnergy : T.closedRightHamiltonian psiOrth = 0 := by
     change T.closedRightHamiltonian (psi - c • vacuumDomain) = 0
-    rw [map_sub, map_smul, hzero, T.closedRightHamiltonian_vacuum,
-      smul_zero, sub_zero]
+    calc
+      T.closedRightHamiltonian (psi - c • vacuumDomain) =
+          T.closedRightHamiltonian psi -
+            T.closedRightHamiltonian (c • vacuumDomain) :=
+        T.closedRightHamiltonian.map_sub psi (c • vacuumDomain)
+      _ = T.closedRightHamiltonian psi -
+            c • T.closedRightHamiltonian vacuumDomain := by
+        rw [T.closedRightHamiltonian.map_smul]
+      _ = 0 := by
+        rw [hzero]
+        change 0 - c •
+          T.closedRightHamiltonian
+            T.closedRightHamiltonianVacuumDomainPoint = 0
+        rw [T.closedRightHamiltonian_vacuum, smul_zero, sub_zero]
   have hgap :=
     G.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
       T hP psiOrth hpsiOrthogonal
   have hnonpos :
       G.mass * ‖(psiOrth : P.PhysicalHilbert)‖ ^ 2 ≤ 0 := by
-    simpa only [hpsiOrthogonalEnergy, zero_inner] using hgap
+    calc
+      G.mass * ‖(psiOrth : P.PhysicalHilbert)‖ ^ 2 ≤
+          inner ℝ (T.closedRightHamiltonian psiOrth)
+            (psiOrth : P.PhysicalHilbert) := hgap
+      _ = 0 := by rw [hpsiOrthogonalEnergy]; simp
+  have hmulNonneg :
+      0 ≤ G.mass * ‖(psiOrth : P.PhysicalHilbert)‖ ^ 2 :=
+    mul_nonneg G.mass_pos.le (sq_nonneg _)
+  have hmulZero :
+      G.mass * ‖(psiOrth : P.PhysicalHilbert)‖ ^ 2 = 0 :=
+    le_antisymm hnonpos hmulNonneg
+  have hnormSq : ‖(psiOrth : P.PhysicalHilbert)‖ ^ 2 = 0 :=
+    (mul_eq_zero.mp hmulZero).resolve_left (ne_of_gt G.mass_pos)
   have hnorm : ‖(psiOrth : P.PhysicalHilbert)‖ = 0 := by
-    nlinarith [G.mass_pos, sq_nonneg ‖(psiOrth : P.PhysicalHilbert)‖]
+    nlinarith [norm_nonneg (psiOrth : P.PhysicalHilbert)]
   have hpsiOrthZero : (psiOrth : P.PhysicalHilbert) = 0 :=
     norm_eq_zero.mp hnorm
   have hsub :
@@ -86,7 +110,15 @@ theorem FiniteVolumeVacuumGapTransfer.closedRightHamiltonian_eq_zero_iff_eq_inne
         psi = c • T.closedRightHamiltonianVacuumDomainPoint := by
       apply Subtype.ext
       simpa only [c] using hpsi
-    rw [hpsiDomain, map_smul, T.closedRightHamiltonian_vacuum, smul_zero]
+    rw [hpsiDomain]
+    calc
+      T.closedRightHamiltonian
+          (c • T.closedRightHamiltonianVacuumDomainPoint) =
+          c • T.closedRightHamiltonian
+            T.closedRightHamiltonianVacuumDomainPoint :=
+        T.closedRightHamiltonian.map_smul c
+          T.closedRightHamiltonianVacuumDomainPoint
+      _ = 0 := by rw [T.closedRightHamiltonian_vacuum, smul_zero]
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
