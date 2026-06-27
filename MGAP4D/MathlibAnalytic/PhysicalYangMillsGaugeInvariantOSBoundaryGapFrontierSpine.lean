@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedPointwiseBoundaryMomentGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryL2PoincareGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingExponentialBoundaryGapClosure
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingMeasurableBoundaryL2FactorizedGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentGapClosure
 
 /-!
 # Concrete Wilson OS boundary-gap frontier spine
@@ -28,7 +27,8 @@ bounded measurable open-half Gram features
 → boundary L² quadratic transfer contraction
 → boundary transfer operator-norm contraction
 → integrated boundary-moment decay
-→ the same finite and continuum gap route
+→ continuum half-time OS quadratic gap with exact mass
+→ self-adjoint graph-closed continuum OS Hamiltonian
 
 measurable boundary moments
 + boundary feature analysis A_(n,t)
@@ -48,8 +48,9 @@ boundary-moment decay
 ```
 
 The pointwise, exponential boundary-`L²` Poincaré, and measurable
-feature-factorized formulations are alternative finite-side interfaces.  The
-exponential route removes the abstract slope assumption.  The remaining
-model-specific frontier is the scale-uniform strict Wilson boundary estimate
-or an equivalent factorized operator-norm estimate.
+feature-factorized formulations are alternative finite-side interfaces.
+The exponential route removes the abstract slope assumption and exposes a
+direct finite-boundary-to-continuum-Hamiltonian constructor.
+The remaining model-specific frontier is the scale-uniform strict Wilson
+boundary estimate or an equivalent factorized operator-norm estimate.
 -/
