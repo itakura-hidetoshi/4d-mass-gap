@@ -54,8 +54,7 @@ theorem closedRightHamiltonian_isSelfAdjoint
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (hContinuous :
-      (C.toContinuumPositiveTimeObservableContractionSemigroup)
-        .StrongContinuityOnObservableStates) :
+      (C.toContinuumPositiveTimeObservableContractionSemigroup).StrongContinuityOnObservableStates) :
     IsSelfAdjoint
       (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         C.toContinuumPositiveTimeObservableContractionSemigroup
@@ -69,8 +68,7 @@ theorem closedRightHamiltonian_inner_ge_mass_mul_norm_sq
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (hContinuous :
-      (C.toContinuumPositiveTimeObservableContractionSemigroup)
-        .StrongContinuityOnObservableStates)
+      (C.toContinuumPositiveTimeObservableContractionSemigroup).StrongContinuityOnObservableStates)
     (psi :
       (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         C.toContinuumPositiveTimeObservableContractionSemigroup
@@ -102,8 +100,7 @@ theorem closedRightHamiltonian_eq_zero_iff_eq_inner_smul_vacuum
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (hContinuous :
-      (C.toContinuumPositiveTimeObservableContractionSemigroup)
-        .StrongContinuityOnObservableStates)
+      (C.toContinuumPositiveTimeObservableContractionSemigroup).StrongContinuityOnObservableStates)
     (psi :
       (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         C.toContinuumPositiveTimeObservableContractionSemigroup
@@ -133,8 +130,7 @@ theorem closedRightHamiltonian_no_eigenvector_in_open_mass_gap
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (hContinuous :
-      (C.toContinuumPositiveTimeObservableContractionSemigroup)
-        .StrongContinuityOnObservableStates)
+      (C.toContinuumPositiveTimeObservableContractionSemigroup).StrongContinuityOnObservableStates)
     {lambda : ℝ}
     (hlambda_pos : 0 < lambda)
     (hlambda_mass : lambda < Q.mass)
