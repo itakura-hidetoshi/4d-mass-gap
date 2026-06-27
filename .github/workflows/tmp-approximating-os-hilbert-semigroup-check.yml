@@ -1,4 +1,4 @@
-name: Temporary Approximating OS Vacuum Orthogonal Check
+name: Temporary Wilson OS Common Carrier Gap Check
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
       - ".github/workflows/tmp-approximating-os-hilbert-semigroup-check.yml"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingHilbertSemigroup.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingVacuumOrthogonalSemigroup.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingGapTransfer.lean"
   workflow_dispatch:
 
 permissions:
@@ -49,11 +50,11 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingVacuumOrthogonalSemigroup > /tmp/approximating-os-vacuum-orthogonal.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingGapTransfer > /tmp/wilson-os-common-carrier-gap.log 2>&1
           status=$?
           set -e
-          tail -n 900 /tmp/approximating-os-vacuum-orthogonal.log > /tmp/approximating-os-vacuum-orthogonal-tail.log
-          cat /tmp/approximating-os-vacuum-orthogonal-tail.log
+          tail -n 900 /tmp/wilson-os-common-carrier-gap.log > /tmp/wilson-os-common-carrier-gap-tail.log
+          cat /tmp/wilson-os-common-carrier-gap-tail.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
 
@@ -70,10 +71,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: approximating-os-vacuum-orthogonal-diagnostic
+          name: wilson-os-common-carrier-gap-diagnostic
           path: |
-            /tmp/approximating-os-vacuum-orthogonal.log
-            /tmp/approximating-os-vacuum-orthogonal-tail.log
+            /tmp/wilson-os-common-carrier-gap.log
+            /tmp/wilson-os-common-carrier-gap-tail.log
           if-no-files-found: error
 
       - name: Propagate build status
