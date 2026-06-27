@@ -9,6 +9,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance exponentialBoundaryL2PoincareSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A finite Wilson shared-boundary Poincaré package with the concrete
 exponential defect
 
@@ -22,7 +26,7 @@ lemmas in `PhysicalYangMillsGaugeInvariantOSExponentialGapSlope`.
 The remaining quantitative input is the scale-uniform Wilson boundary estimate
 
 `(1 - exp (-mass * t)) ‖v‖² ≤ ‖v‖² - ‖K_{n,t} v‖²`.
--/
+ -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
