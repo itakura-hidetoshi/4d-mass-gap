@@ -1,11 +1,12 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedPointwiseBoundaryMomentGap
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2TransferGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2QuadraticGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundedBoundaryL2TransferGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentGapClosure
 
 /-!
 # Concrete Wilson OS boundary-gap frontier spine
 
-This aggregate exposes three compatible local interfaces for the remaining
+This aggregate exposes the compatible local interfaces for the remaining
 finite-volume mass-gap estimate.
 
 ```text
@@ -15,9 +16,16 @@ bounded measurable open-half Gram features
 → full finite reflected-integral decay
 → finite Wilson OS vacuum-sector norm decay
 
-boundary L² transfer-operator contraction
+boundary L² transfer quadratic estimate
+→ boundary transfer operator-norm contraction
 → integrated boundary-moment decay
 → the same finite and continuum gap route
+
+bounded measurable open-half Gram features
++ boundary L² membership
++ boundary transfer intertwining
++ boundary transfer contraction
+→ integrated boundary-moment decay
 
 boundary-moment decay
 + centered weak-star convergence
