@@ -22,7 +22,7 @@ theorem finite_vacuum_centered_norm_sq
     rw [real_inner_self_eq_norm_sq, hvacuum]
     norm_num
   have hcomm : inner ℝ x vacuum = inner ℝ vacuum x :=
-    real_inner_comm x vacuum
+    (real_inner_comm x vacuum).symm
   calc
     ‖finiteVacuumCentered vacuum x‖ ^ 2 =
         inner ℝ (finiteVacuumCentered vacuum x)
@@ -31,10 +31,9 @@ theorem finite_vacuum_centered_norm_sq
         (real_inner_self_eq_norm_sq
           (finiteVacuumCentered vacuum x)).symm
     _ = ‖x‖ ^ 2 - (inner ℝ vacuum x) ^ 2 := by
-      unfold finiteVacuumCentered
-      rw [inner_sub_left, inner_sub_right, inner_smul_left,
-        inner_smul_right, real_inner_self_eq_norm_sq, hcomm,
-        hvacuumInner]
+      simp [finiteVacuumCentered, inner_sub_left, inner_sub_right,
+        inner_smul_left, inner_smul_right, real_inner_self_eq_norm_sq,
+        hcomm, hvacuumInner]
       ring
 
 /-- Finite Wilson Hamiltonian data in which the excitation-sector gap is
