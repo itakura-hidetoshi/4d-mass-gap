@@ -106,6 +106,7 @@ theorem carrierTranslation_vacuumCenteredCarrier
             physicalYangMillsGaugeInvariantObservableSubalgebra S)) •
           P.vacuumObservable
   rw [homega]
+  rfl
 
 end PositiveTimeObservableContractionSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
@@ -282,6 +283,7 @@ noncomputable def toContinuumHalfQuadraticGapCertificate
               (Pn.carrierOfPositiveTime (C.translate (t / 2) Fpos)))
         rw [Tn.carrierTranslation_vacuumCenteredCarrier (Q.exchange n),
           Tn.carrierTranslation_carrierOfPositiveTime]
+        rfl
       have hcontinuumValue :
           Pinf.osQuadraticValue
               (Tinf.carrierTranslation (t / 2)
