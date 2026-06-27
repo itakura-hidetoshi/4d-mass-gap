@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventQuadraticDerivative
-import Mathlib.Analysis.Calculus.AbsolutelyMonotone
 import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Tactic
@@ -11,6 +10,13 @@ open scoped InnerProductSpace LinearPMap ContDiff
 
 namespace MGAP4D
 namespace MathlibAnalytic
+
+/-- Absolute monotonicity in the derivative characterization appropriate to an
+open real domain.  This is the compatibility form used with the repository's
+pinned mathlib, which predates the upstream `AbsolutelyMonotoneOn` definition. -/
+def RealAbsolutelyMonotoneOn (f : ℝ → ℝ) (s : Set ℝ) : Prop :=
+  ContDiffOn ℝ ∞ f s ∧
+    ∀ (n : ℕ) (x : ℝ), x ∈ s → 0 ≤ iteratedDerivWithin n f s x
 
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
@@ -216,18 +222,16 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_i
       T hP hSelf hlambda (n + 1) y)
 
 /-- The positive scalar resolvent is absolutely monotone on the entire open
-sub-mass interval. -/
-theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_absolutelyMonotoneOn
+sub-mass interval in the all-derivatives-nonnegative sense. -/
+theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_realAbsolutelyMonotoneOn
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (y : P.VacuumOrthogonalHilbert) :
-    AbsolutelyMonotoneOn
+    RealAbsolutelyMonotoneOn
       (G.vacuumOrthogonalRealResolventQuadraticOn T hP hSelf y)
       (Set.Iio G.mass) := by
-  rw [AbsolutelyMonotoneOn.iff_iteratedDerivWithin_nonneg
-    isOpen_Iio.uniqueDiffOn]
   refine ⟨G.vacuumOrthogonalRealResolventQuadraticOn_contDiffOn_infty
     T hP hSelf y, ?_⟩
   intro n lambda hlambda
