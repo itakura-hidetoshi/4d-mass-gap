@@ -210,10 +210,9 @@ noncomputable def toPositiveTimeObservableContractionSemigroup
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
       S D halfExtent N hN beta hbeta B hInvariant)
     (n : ℕ) :
-    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-      .PositiveTimeObservableContractionSemigroup
-        (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S D halfExtent N hN beta hbeta B hInvariant n) where
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup
+      (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant n) where
   translate := C.translate
   translate_zero := C.translate_zero
   translate_add := C.translate_add
