@@ -215,11 +215,24 @@ theorem FiniteVolumeVacuumGapTransfer.vacuumOrthogonalRealResolventQuadraticOn_i
     0 ≤ iteratedDerivWithin n
       (G.vacuumOrthogonalRealResolventQuadraticOn T hP hSelf y)
       (Set.Iio G.mass) lambda := by
-  rw [G.vacuumOrthogonalRealResolventQuadraticOn_iteratedDerivWithin
-    T hP hSelf y n hlambda]
-  exact mul_nonneg (Nat.cast_nonneg n.factorial)
-    (G.vacuumOrthogonalRealResolvent_pow_inner_self_nonneg
-      T hP hSelf hlambda (n + 1) y)
+  have hpow :
+      0 ≤ inner ℝ
+        (((G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+          (n + 1)) y) y := by
+    rw [G.vacuumOrthogonalRealResolventOn_of_lt T hP hSelf hlambda]
+    exact G.vacuumOrthogonalRealResolvent_pow_inner_self_nonneg
+      T hP hSelf hlambda (n + 1) y
+  have hformula :=
+    G.vacuumOrthogonalRealResolventQuadraticOn_iteratedDerivWithin
+      T hP hSelf y n hlambda
+  calc
+    0 ≤ (n.factorial : ℝ) * inner ℝ
+        (((G.vacuumOrthogonalRealResolventOn T hP hSelf lambda) ^
+          (n + 1)) y) y :=
+      mul_nonneg (Nat.cast_nonneg n.factorial) hpow
+    _ = iteratedDerivWithin n
+        (G.vacuumOrthogonalRealResolventQuadraticOn T hP hSelf y)
+        (Set.Iio G.mass) lambda := hformula.symm
 
 /-- The positive scalar resolvent is absolutely monotone on the entire open
 sub-mass interval in the all-derivatives-nonnegative sense. -/
