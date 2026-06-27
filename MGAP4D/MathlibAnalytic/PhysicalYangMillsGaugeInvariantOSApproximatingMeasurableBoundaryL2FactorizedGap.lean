@@ -9,6 +9,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance measurableBoundaryL2FactorizedSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A measurable feature-space factorization package for the finite Wilson
 shared-boundary `L²` transfer.
 
@@ -222,12 +226,9 @@ noncomputable def toApproximatingBoundaryL2FactorizedGapCertificate
   synthesis := Q.synthesis
   boundaryMoment_intertwining := by
     intro n t
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta B hInvariant n
-    let Tn := C.toPositiveTimeObservableContractionSemigroup n
+    dsimp only
     intro F
-    simpa only [Pn, Tn, boundaryMoment_memLp] using
+    simpa only [boundaryMoment_memLp] using
       Q.boundaryMoment_intertwining n t F
   factor_opNorm_mul_le := Q.factor_opNorm_mul_le
 
