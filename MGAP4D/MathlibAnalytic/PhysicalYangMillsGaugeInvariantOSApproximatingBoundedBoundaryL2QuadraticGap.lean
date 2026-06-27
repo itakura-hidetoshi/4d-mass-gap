@@ -9,6 +9,10 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
+local instance boundedBoundaryL2QuadraticSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- A concrete finite Wilson boundary-`L²` gap interface with primitive
 measurability data and a quadratic transfer estimate.
 
