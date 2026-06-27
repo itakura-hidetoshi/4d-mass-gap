@@ -42,8 +42,7 @@ theorem tendsto_nnreal_inv_mul_one_sub_exp_neg_mul
         (fun t : NNReal => (t : ℝ))
         (nhdsWithin 0 (Ioi 0))
         (nhdsWithin 0 (Ioi 0)) := by
-    rw [← NNReal.map_coe_nhdsGT (0 : NNReal)]
-    exact tendsto_map
+    exact (NNReal.map_coe_nhdsGT (0 : NNReal)).le
   exact hreal.comp hcoe
 
 /-- The square root of the double-time exponential decay is the one-time
@@ -58,9 +57,8 @@ theorem sqrt_exp_neg_mul_double_nnreal
         (-mass * (t : ℝ)) + (-mass * (t : ℝ)) := by
     push_cast
     ring
-  rw [harg, Real.exp_add]
-  change Real.sqrt ((Real.exp (-mass * (t : ℝ))) ^ 2) = _
-  rw [Real.sqrt_sq_eq_abs, abs_of_pos (Real.exp_pos _)]
+  rw [harg, Real.exp_add, ← pow_two, Real.sqrt_sq_eq_abs,
+    abs_of_pos (Real.exp_pos _)]
 
 /-- For the concrete quadratic decay factor `q(t) = exp (-mass * t)`, the exact
 square-root double-time slope required by the Wilson OS continuum transfer is
@@ -71,7 +69,7 @@ theorem exponential_quadraticDecayFactor_slope_tendsto
       (fun t : NNReal =>
         (t : ℝ)⁻¹ *
           (1 - Real.sqrt
-            (Real.exp (-mass * (((t + t : NNReal) : ℝ)))))
+            (Real.exp (-mass * (((t + t : NNReal) : ℝ))))))
       (nhdsWithin 0 (Ioi 0))
       (nhds mass) := by
   convert tendsto_nnreal_inv_mul_one_sub_exp_neg_mul mass using 1
