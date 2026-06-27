@@ -1,4 +1,4 @@
-name: Temporary Approximating Reflected Quadratic Gap Check
+name: Temporary Approximating Half Quadratic Gap Check
 
 on:
   pull_request:
@@ -7,6 +7,7 @@ on:
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingQuadraticGapCertificate.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingObservableQuadraticGap.lean"
       - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingReflectedQuadraticGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingHalfQuadraticGap.lean"
   workflow_dispatch:
 
 permissions:
@@ -24,8 +25,9 @@ jobs:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ runner.os }}-approximating-reflected-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-approximating-half-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-approximating-reflected-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-approximating-observable-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-approximating-quadratic-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
@@ -51,11 +53,11 @@ jobs:
         run: |
           set -uo pipefail
           set +e
-          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingReflectedQuadraticGap > /tmp/approximating-reflected-quadratic-gap.log 2>&1
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingHalfQuadraticGap > /tmp/approximating-half-quadratic-gap.log 2>&1
           status=$?
           set -e
-          tail -n 1000 /tmp/approximating-reflected-quadratic-gap.log > /tmp/approximating-reflected-quadratic-gap-tail.log
-          cat /tmp/approximating-reflected-quadratic-gap-tail.log
+          tail -n 1100 /tmp/approximating-half-quadratic-gap.log > /tmp/approximating-half-quadratic-gap-tail.log
+          cat /tmp/approximating-half-quadratic-gap-tail.log
           echo "status=${status}" >> "$GITHUB_OUTPUT"
           exit 0
 
@@ -63,10 +65,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: approximating-reflected-quadratic-gap-diagnostic
+          name: approximating-half-quadratic-gap-diagnostic
           path: |
-            /tmp/approximating-reflected-quadratic-gap.log
-            /tmp/approximating-reflected-quadratic-gap-tail.log
+            /tmp/approximating-half-quadratic-gap.log
+            /tmp/approximating-half-quadratic-gap-tail.log
           if-no-files-found: error
 
       - name: Propagate build status
