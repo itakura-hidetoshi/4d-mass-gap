@@ -57,10 +57,11 @@ theorem inner_operator_physicalState_eq_osBilinForm
   change inner ℝ
       (T.toCarrierSemigroup.physicalOperator t (P.physicalState F))
       (P.physicalState F) = _
-  rw [T.toCarrierSemigroup.physicalOperator_on_physicalState,
-    P.inner_physicalState_physicalState,
-    P.inner_eq_osBilinForm]
-  rfl
+  rw [T.toCarrierSemigroup.physicalOperator_on_physicalState]
+  change inner ℝ
+      (P.physicalState (T.carrierTranslation t F))
+      (P.physicalState F) = _
+  rw [P.inner_physicalState_physicalState, P.inner_eq_osBilinForm]
 
 end PositiveTimeObservableContractionSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
@@ -149,7 +150,9 @@ noncomputable def toApproximatingObservableQuadraticGapCertificate
   slope_tendsto := Q.slope_tendsto
   exchange := Q.exchange
   finite_observable_quadratic_decay := by
-    intro n t F
+    intro n t
+    dsimp only
+    intro F
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta B hInvariant n
@@ -159,6 +162,8 @@ noncomputable def toApproximatingObservableQuadraticGapCertificate
         Pn.physicalState Fc =
           finiteVacuumCentered Pn.vacuum (Pn.physicalState F) := by
       exact Pn.physicalState_vacuumCenteredCarrier F
+    have hdecay := Q.finite_reflected_quadratic_decay n t
+    dsimp only at hdecay
     calc
       inner ℝ
           (C.finiteOperator n t
@@ -170,7 +175,7 @@ noncomputable def toApproximatingObservableQuadraticGapCertificate
         rw [← hcenter]
         exact Tn.inner_operator_physicalState_eq_osBilinForm t Fc
       _ ≤ Q.quadraticDecayFactor t * Pn.osQuadraticValue Fc :=
-        Q.finite_reflected_quadratic_decay n t F
+        hdecay F
       _ = Q.quadraticDecayFactor t *
           ‖finiteVacuumCentered Pn.vacuum (Pn.physicalState F)‖ ^ 2 := by
         rw [← hcenter, Pn.norm_physicalState,
