@@ -32,8 +32,7 @@ theorem continuous_compact_oriented_lintegral_swap_old_new
       (fun z : C.base.Gauge × C.base.OffLinkConfiguration target =>
         ∫⁻ h, F (z.1, (z.2, h))
           ∂normalizedCompactHaar C.base.Gauge) :=
-    (hF.comp MeasurableEquiv.prodAssoc.measurable).
-      lintegral_prod_right'
+    (hF.comp MeasurableEquiv.prodAssoc.measurable).lintegral_prod_right'
   calc
     (∫⁻ g,
       ∫⁻ Aoff,
