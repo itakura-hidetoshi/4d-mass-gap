@@ -51,8 +51,16 @@ theorem continuous_compact_oriented_dobrushinInfluence_rowSum_eq
       (C.base.activePlaquetteNeighbors target).card *
         continuousCompactOrientedGaugeWilsonConditionalTVMajorant C omega := by
   classical
-  unfold continuousCompactOrientedGaugeWilsonDobrushinInfluence
+  let s := C.base.activePlaquetteNeighbors target
+  let q := continuousCompactOrientedGaugeWilsonConditionalTVMajorant C omega
+  change (∑ source : C.base.geometry.Edge,
+      if source ∈ s then q else 0) = (s.card : ℝ) * q
   rw [← Finset.sum_filter]
+  have hFilter :
+      (Finset.univ.filter fun source : C.base.geometry.Edge => source ∈ s) = s := by
+    ext source
+    simp
+  rw [hFilter]
   simp [nsmul_eq_mul]
 
 end
