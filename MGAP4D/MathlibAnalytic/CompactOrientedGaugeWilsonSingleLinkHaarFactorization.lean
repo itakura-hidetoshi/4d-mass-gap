@@ -61,8 +61,10 @@ theorem compact_oriented_canonicalSingleLinkCoordinates_measurePreserving
       ((normalizedCompactHaar L.Gauge).prod
         (L.offLinkHaarMeasure target)) := by
   classical
-  letI : Fintype (L.SelectedLinkEdge target) := Fintype.ofFinite _
-  letI : Fintype (L.OffLinkEdge target) := Fintype.ofFinite _
+  letI : Fintype (L.SelectedLinkEdge target) :=
+    Subtype.fintype (fun e : L.geometry.Edge => e = target)
+  letI : Fintype (L.OffLinkEdge target) :=
+    Subtype.fintype (fun e : L.geometry.Edge => e ≠ target)
   let μ : Measure L.Gauge := normalizedCompactHaar L.Gauge
   let selectedMeasure : Measure
       (L.SelectedLinkEdge target → L.Gauge) :=
