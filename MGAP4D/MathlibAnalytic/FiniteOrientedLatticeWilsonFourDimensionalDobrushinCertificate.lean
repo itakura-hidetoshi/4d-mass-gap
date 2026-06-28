@@ -65,7 +65,8 @@ theorem z2PeriodicHypercubicOriented_canonicalDobrushinCoefficient_lt_one
     (R : ℝ)
     (hR : 0 ≤ R)
     (hRatio :
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).ActiveConditionalExpRatioBound R)
+      FiniteOrientedLatticeWilsonSystem.ActiveConditionalExpRatioBound
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) R)
     (hThreshold :
       (Real.exp R - 1) / (Real.exp R + 1) < (18 : ℝ)⁻¹) :
     (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).canonicalDobrushinCoefficient
