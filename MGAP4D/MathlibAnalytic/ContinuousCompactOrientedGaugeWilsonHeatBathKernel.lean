@@ -28,7 +28,7 @@ instance continuousCompactOriented_singleLinkHeatBathKernel_isMarkov
     IsMarkovKernel (C.singleLinkHeatBathKernel target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathKernel
-  exact IsMarkovKernel.map
+  exact Kernel.IsMarkovKernel.map
     (Kernel.id ×ₖ C.singleLinkConditionalKernel target)
     (continuous_compact_oriented_replaceLink_uncurry C target).measurable
 
@@ -62,14 +62,18 @@ theorem continuous_compact_oriented_singleLinkHeatBathKernel_apply
         (fun g : C.base.Gauge =>
           C.base.replaceLink A target g) := by
   ext s hs
-  rw [← MeasureTheory.lintegral_indicator hs,
-    continuous_compact_oriented_lintegral_singleLinkHeatBathKernel
-      C target A (s.indicator 1)
-      (measurable_const.indicator hs),
-    MeasureTheory.lintegral_map]
-  · rfl
-  · exact (continuous_compact_oriented_replaceLink C A target).measurable
-  · exact measurable_const.indicator hs
+  rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathKernel,
+    Kernel.map_apply'
+      (Kernel.id ×ₖ C.singleLinkConditionalKernel target)
+      (continuous_compact_oriented_replaceLink_uncurry C target).measurable
+      A hs,
+    Kernel.id_prod_apply'
+      (C.singleLinkConditionalKernel target) A
+      ((continuous_compact_oriented_replaceLink_uncurry C target).measurable hs),
+    continuous_compact_oriented_singleLinkConditionalKernel_apply,
+    Measure.map_apply
+      (continuous_compact_oriented_replaceLink C A target).measurable hs]
+  rfl
 
 end
 
