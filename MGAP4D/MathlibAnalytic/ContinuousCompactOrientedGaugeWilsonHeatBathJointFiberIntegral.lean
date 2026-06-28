@@ -27,20 +27,25 @@ theorem continuous_compact_oriented_coordinateDensity_mul_lintegral_heatBathKern
         ∂normalizedCompactHaar C.base.Gauge := by
   rw [continuous_compact_oriented_lintegral_heatBathKernel_assemble
     C target g Aoff F hF]
-  have hDensity : Measurable
-      (C.singleLinkConditionalDensity target
-        (C.base.singleLinkAssemble target g Aoff)) :=
-    (measurable_compact_oriented_singleLinkConditionalDensity_uncurry
-      C target).comp measurable_prodMk_left
+  let A : C.base.Configuration :=
+    C.base.singleLinkAssemble target g Aoff
+  have hDensity : Measurable (fun h : C.base.Gauge =>
+      C.singleLinkConditionalDensity target A h) := by
+    unfold
+      ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
+    apply ENNReal.measurable_ofReal.comp
+    exact
+      (continuous_compact_oriented_singleLinkBoltzmannFactor
+        C A target).measurable.div measurable_const
   have hAssemble : Measurable (fun h : C.base.Gauge =>
       C.base.singleLinkAssemble target h Aoff) :=
     (C.base.singleLinkCoordinatesMeasurableEquiv target).symm.measurable.comp
-      (measurable_id.prod_mk measurable_const)
+      (measurable_id.prodMk measurable_const)
   have hIntegrand : Measurable (fun h : C.base.Gauge =>
-      C.singleLinkConditionalDensity target
-          (C.base.singleLinkAssemble target g Aoff) h *
+      C.singleLinkConditionalDensity target A h *
         F (C.base.singleLinkAssemble target h Aoff)) :=
     hDensity.mul (hF.comp hAssemble)
+  dsimp [A] at hIntegrand
   rw [← lintegral_const_mul _ hIntegrand]
   apply lintegral_congr
   intro h
