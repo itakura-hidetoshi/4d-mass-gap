@@ -182,7 +182,15 @@ jobs:
         run: |
           set -euxo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee "${RUNNER_TEMP}/lean-fast.log"
+
+      - name: Upload Lean fast-check diagnostics
+        if: ${{ always() && steps.lake-mode.outputs.required == 'true' }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: lean-fast-check-log
+          path: ${{ runner.temp }}/lean-fast.log
+          if-no-files-found: warn
 
       - name: Check Lake cache is saveable
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
