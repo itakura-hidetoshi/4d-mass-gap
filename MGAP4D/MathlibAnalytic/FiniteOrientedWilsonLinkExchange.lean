@@ -28,13 +28,15 @@ noncomputable def FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv
   left_inv := by
     rintro ⟨A, g⟩
     apply Prod.ext
-    · rw [finite_oriented_replaceLink_replaceLink,
+    · change L.replaceLink (L.replaceLink A target g) target (A target) = A
+      rw [finite_oriented_replaceLink_replaceLink,
         finite_oriented_replaceLink_current]
     · simp
   right_inv := by
     rintro ⟨A, g⟩
     apply Prod.ext
-    · rw [finite_oriented_replaceLink_replaceLink,
+    · change L.replaceLink (L.replaceLink A target g) target (A target) = A
+      rw [finite_oriented_replaceLink_replaceLink,
         finite_oriented_replaceLink_current]
     · simp
 
