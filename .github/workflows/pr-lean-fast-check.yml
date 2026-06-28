@@ -38,18 +38,20 @@ permissions:
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || format('origin/{0}', github.base_ref || 'main') }}
+  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
   LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
 
 jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 2
+          show-progress: false
 
       - name: Preflight changed Lean static audit
         shell: bash
@@ -58,7 +60,43 @@ jobs:
           echo "[preflight] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
           bash scripts/audit_changed_lean_preflight.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
+      - name: Detect whether Lake is required
+        id: lake-mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed_file_list="${RUNNER_TEMP}/pr-lean-fast-check-changed-files.txt"
+          if ! git diff --name-only "${CHECK_CHANGED_LEAN_BASE_REF}"...HEAD > "${changed_file_list}"; then
+            echo "[fast] base ${CHECK_CHANGED_LEAN_BASE_REF} unavailable; using HEAD^"
+            git diff --name-only HEAD^ HEAD > "${changed_file_list}"
+          fi
+
+          echo "[fast] changed files used for Lake decision:"
+          cat "${changed_file_list}"
+
+          required=false
+          if grep -E '^(MGAP4D/.*\.lean|MGAP4D\.lean)$' "${changed_file_list}" \
+              | grep -Ev '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' \
+              | grep -q .; then
+            required=true
+          fi
+          if grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py' "${changed_file_list}"; then
+            required=true
+          fi
+
+          echo "required=${required}" >> "${GITHUB_OUTPUT}"
+          echo "[fast] Lake required: ${required}"
+
+      - name: Run static-only changed check
+        if: ${{ steps.lake-mode.outputs.required != 'true' }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "[fast] no changed Lean leaf target; skipping Lake cache and toolchain"
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+
       - name: Cache elan toolchain
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
         uses: actions/cache@v5
         with:
           path: ~/.elan
@@ -67,6 +105,7 @@ jobs:
             ${{ runner.os }}-elan-
 
       - name: Restore Lake build cache
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
         id: lake-cache
         uses: actions/cache/restore@v5
         with:
@@ -82,6 +121,7 @@ jobs:
             ${{ runner.os }}-lean-
 
       - name: Install elan and Lean toolchain
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
         run: |
           set -euxo pipefail
@@ -109,6 +149,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Show Lean and Lake versions
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
         run: |
           set -euxo pipefail
@@ -133,6 +174,7 @@ jobs:
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
       - name: Run changed Lean fast check
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
         run: |
           set -euxo pipefail
@@ -140,6 +182,7 @@ jobs:
           bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
       - name: Check Lake cache is saveable
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
         id: lake-cache-ready
         shell: bash
         run: |
@@ -150,7 +193,7 @@ jobs:
           fi
 
       - name: Save Lake build cache from main only
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true'
+        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
         uses: actions/cache/save@v5
         with:
           path: |
