@@ -150,9 +150,26 @@ theorem finite_oriented_randomScanHeatBathSweep_gibbsPairing_symm
   unfold FiniteOrientedLatticeWilsonSystem.randomScanHeatBathSweep
   rw [finite_oriented_gibbsPairingReal_const_mul_left,
     finite_oriented_gibbsPairingReal_const_mul_right]
-  rw [finite_oriented_gibbsPairingReal_finset_sum_left,
+  have hSumF :
+      (fun A : L.Configuration =>
+        ∑ target : L.Edge,
+          L.singleLinkHeatBathProjection target f A) =
+        ∑ target : L.Edge,
+          L.singleLinkHeatBathProjection target f := by
+    funext A
+    simp
+  have hSumG :
+      (fun A : L.Configuration =>
+        ∑ target : L.Edge,
+          L.singleLinkHeatBathProjection target g A) =
+        ∑ target : L.Edge,
+          L.singleLinkHeatBathProjection target g := by
+    funext A
+    simp
+  rw [hSumF, hSumG,
+    finite_oriented_gibbsPairingReal_finset_sum_left,
     finite_oriented_gibbsPairingReal_finset_sum_right]
-  apply congrArg
+  apply congrArg (fun x : ℝ => (Fintype.card L.Edge : ℝ)⁻¹ * x)
   apply Finset.sum_congr rfl
   intro target _hTarget
   exact finite_oriented_singleLinkHeatBath_gibbsPairing_projection_symm
@@ -220,9 +237,8 @@ theorem finite_oriented_singleLinkHeatBathHamiltonianObservable_eq_card_mul_one_
   rw [Finset.sum_sub_distrib]
   rw [Finset.sum_const, nsmul_eq_mul]
   field_simp [hCard]
-  ring
+  simp [Finset.card_univ, mul_comm]
 
 end
-
 end MathlibAnalytic
 end MGAP4D
