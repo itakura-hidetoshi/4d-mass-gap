@@ -36,10 +36,13 @@ theorem continuous_compact_oriented_lintegral_heatBathKernel_assemble
   let U : C.base.Gauge → C.base.Configuration :=
     fun h => C.base.replaceLink A target h
   have hDensity : Measurable ρ := by
+    dsimp [ρ]
+    unfold
+      ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
+    apply ENNReal.measurable_ofReal.comp
     exact
-      (measurable_compact_oriented_singleLinkConditionalDensity_uncurry
-        C target).comp
-        (measurable_const.prodMk measurable_id)
+      (continuous_compact_oriented_singleLinkBoltzmannFactor
+        C A target).measurable.div measurable_const
   have hUpdated : Measurable (fun h : C.base.Gauge => F (U h)) := by
     exact hF.comp
       (continuous_compact_oriented_replaceLink C A target).measurable
