@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.RealDensityLikelihoodRatioPointwise
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.MeasureTheory.Integral.CompactlySupported
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -33,10 +34,19 @@ theorem continuous_probabilityDensity_totalVariation_le_of_mutual_le_mul
         (c - 1) * (p x + q x) :=
     real_density_abs_sub_mul_le_of_mutual_le_mul
       p q c hc hp hq hpq hqp
+  have hLeftIntegrable : Integrable
+      (fun x : X => (c + 1) * |p x - q x|) μ :=
+    (continuous_const.mul ((hp_cont.sub hq_cont).abs)).
+      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hRightIntegrable : Integrable
+      (fun x : X => (c - 1) * (p x + q x)) μ :=
+    (continuous_const.mul (hp_cont.add hq_cont)).
+      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hIntegral :
       ∫ x, (c + 1) * |p x - q x| ∂μ ≤
         ∫ x, (c - 1) * (p x + q x) ∂μ := by
-    exact integral_mono (Filter.Eventually.of_forall hPoint)
+    exact integral_mono hLeftIntegrable hRightIntegrable
+      (Filter.Eventually.of_forall hPoint)
   rw [integral_const_mul, integral_const_mul] at hIntegral
   have hp_integrable : Integrable p μ :=
     hp_cont.integrable_of_hasCompactSupport
