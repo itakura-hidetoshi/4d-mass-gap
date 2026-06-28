@@ -11,8 +11,9 @@ def CompactOrientedGaugeWilsonSystem.replaceLink
     (L : CompactOrientedGaugeWilsonSystem)
     (A : L.Configuration)
     (target : L.geometry.Edge)
-    (g : L.Gauge) : L.Configuration :=
-  fun e => if e = target then g else A e
+    (g : L.Gauge) : L.Configuration := by
+  classical
+  exact fun e => if e = target then g else A e
 
 @[simp] theorem compact_oriented_replaceLink_same
     (L : CompactOrientedGaugeWilsonSystem)
