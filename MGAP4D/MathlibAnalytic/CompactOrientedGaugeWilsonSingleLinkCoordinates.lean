@@ -19,27 +19,29 @@ abbrev CompactOrientedGaugeWilsonSystem.OffLinkConfiguration
 
 /-- Split a physical-link configuration into the selected link value and all
 off-link values. -/
-def CompactOrientedGaugeWilsonSystem.singleLinkCoordinatesEquiv
+noncomputable def CompactOrientedGaugeWilsonSystem.singleLinkCoordinatesEquiv
     (L : CompactOrientedGaugeWilsonSystem)
     (target : L.geometry.Edge) :
     L.Configuration ≃
-      L.Gauge × L.OffLinkConfiguration target where
-  toFun A := (A target, fun e => A e.1)
-  invFun z := fun e =>
-    if h : e = target then z.1 else z.2 ⟨e, h⟩
-  left_inv := by
-    intro A
-    funext e
-    by_cases h : e = target
-    · subst e
-      simp
-    · simp [h]
-  right_inv := by
-    rintro ⟨g, Aoff⟩
-    apply Prod.ext
-    · simp
-    · funext e
-      simp [e.2]
+      L.Gauge × L.OffLinkConfiguration target := by
+  classical
+  exact
+    { toFun := fun A => (A target, fun e => A e.1)
+      invFun := fun z e =>
+        if h : e = target then z.1 else z.2 ⟨e, h⟩
+      left_inv := by
+        intro A
+        funext e
+        by_cases h : e = target
+        · subst e
+          simp
+        · simp [h]
+      right_inv := by
+        rintro ⟨g, Aoff⟩
+        apply Prod.ext
+        · simp
+        · funext e
+          simp [e.2] }
 
 /-- The single-link coordinate split is a measurable equivalence for the
 finite product Borel structures. -/
@@ -51,7 +53,7 @@ noncomputable def
       L.Gauge × L.OffLinkConfiguration target where
   toEquiv := L.singleLinkCoordinatesEquiv target
   measurable_toFun := by
-    apply Measurable.prod_mk
+    apply Measurable.prodMk
     · exact measurable_pi_apply target
     · refine measurable_pi_lambda _ ?_
       intro e
