@@ -18,7 +18,16 @@ theorem finite_oriented_singleLinkHeatBathProjection_add
   funext A
   unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
-  simp only [Pi.add_apply]
+  change
+    (∑ h : L.Gauge,
+      (L.singleLinkConditionalPMF A target h).toReal *
+        (f (L.replaceLink A target h) + g (L.replaceLink A target h))) =
+      (∑ h : L.Gauge,
+        (L.singleLinkConditionalPMF A target h).toReal *
+          f (L.replaceLink A target h)) +
+      ∑ h : L.Gauge,
+        (L.singleLinkConditionalPMF A target h).toReal *
+          g (L.replaceLink A target h)
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro h _hh
@@ -34,7 +43,13 @@ theorem finite_oriented_singleLinkHeatBathProjection_smul
   funext A
   unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
-  simp only [Pi.smul_apply, smul_eq_mul]
+  change
+    (∑ h : L.Gauge,
+      (L.singleLinkConditionalPMF A target h).toReal *
+        (c * f (L.replaceLink A target h))) =
+      c * ∑ h : L.Gauge,
+        (L.singleLinkConditionalPMF A target h).toReal *
+          f (L.replaceLink A target h)
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro h _hh
