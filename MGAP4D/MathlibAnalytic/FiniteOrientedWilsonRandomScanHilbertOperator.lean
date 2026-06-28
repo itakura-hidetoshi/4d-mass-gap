@@ -129,8 +129,7 @@ theorem finite_oriented_randomScanHeatBathSweep_one
     intro B C hAgree
     rfl
   simp_rw [hFix]
-  simp only
-  field_simp [hCard]
+  simpa [hCard]
 
 theorem finite_oriented_gibbsRandomScanLinearMap_vacuum
     (L : FiniteOrientedLatticeWilsonSystem)
