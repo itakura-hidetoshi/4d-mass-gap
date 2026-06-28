@@ -17,11 +17,12 @@ def continuousCompactOrientedGaugeWilsonConditionalTVMajorant
 
 /-- The sparse compact oriented influence profile supported on active physical
 plaquette neighbors. -/
-def continuousCompactOrientedGaugeWilsonDobrushinInfluence
+noncomputable def continuousCompactOrientedGaugeWilsonDobrushinInfluence
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (omega : ℝ)
-    (target source : C.base.geometry.Edge) : ℝ :=
-  if source ∈ C.base.activePlaquetteNeighbors target then
+    (target source : C.base.geometry.Edge) : ℝ := by
+  classical
+  exact if source ∈ C.base.activePlaquetteNeighbors target then
     continuousCompactOrientedGaugeWilsonConditionalTVMajorant C omega
   else 0
 
