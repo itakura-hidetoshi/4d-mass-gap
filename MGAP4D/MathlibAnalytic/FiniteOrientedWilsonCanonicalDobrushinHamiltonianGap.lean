@@ -63,15 +63,15 @@ theorem z2PeriodicHypercubicOriented_dobrushinHeatBathGap_mul_self_le_hamiltonia
     (R : ℝ)
     (hR : 0 ≤ R)
     (hRatio :
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        ActiveConditionalExpRatioBound R)
+      FiniteOrientedLatticeWilsonSystem.ActiveConditionalExpRatioBound
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) R)
     (hThreshold :
       (Real.exp R - 1) / (Real.exp R + 1) < (18 : ℝ)⁻¹)
-    (f : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-      Configuration)
+    (f : FiniteOrientedLatticeWilsonSystem.Configuration
+      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) → ℝ)
     (hCentered :
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        gibbsExpectationReal f = 0) :
+      FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) f = 0) :
     let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
     let D := z2PeriodicHypercubicOriented_canonicalDobrushinMatrixData
       n hn beta hBeta R hR hRatio hThreshold
@@ -81,9 +81,9 @@ theorem z2PeriodicHypercubicOriented_dobrushinHeatBathGap_mul_self_le_hamiltonia
         (L.singleLinkHeatBathHamiltonianObservable f) f := by
   dsimp
   exact
-    (z2PeriodicHypercubicOrientedIncidenceCertificate n hn beta hBeta).
-      dobrushinHeatBathGap_mul_self_le_hamiltonian_of_expRatioBound
-        R hR hRatio hThreshold f hCentered
+    FiniteOrientedWilsonFourDimensionalIncidenceCertificate.dobrushinHeatBathGap_mul_self_le_hamiltonian_of_expRatioBound
+      (z2PeriodicHypercubicOrientedIncidenceCertificate n hn beta hBeta)
+      R hR hRatio hThreshold f hCentered
 
 end
 end MathlibAnalytic
