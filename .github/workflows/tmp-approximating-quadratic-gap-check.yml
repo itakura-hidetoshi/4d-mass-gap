@@ -1,0 +1,73 @@
+name: Temporary Concrete Wilson OS Boundary Gap Check
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/tmp-approximating-quadratic-gap-check.yml"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSBoundaryGapFrontierSpine.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingBoundedPointwiseBoundaryMomentGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2TransferGap.lean"
+      - "MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSBoundaryMomentGapClosure.lean"
+  workflow_dispatch:
+
+concurrency:
+  group: temporary-concrete-wilson-os-boundary-gap-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  targeted:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-concrete-wilson-os-boundary-gap-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-
+
+      - name: Install Lean
+        shell: bash
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          if ! command -v elan >/dev/null 2>&1; then
+            curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL \
+              https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+              | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          lean --version
+          lake --version
+
+      - name: Build
+        id: build
+        shell: bash
+        run: |
+          set -uo pipefail
+          set +e
+          lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryGapFrontierSpine > /tmp/concrete-wilson-os-boundary-gap.log 2>&1
+          status=$?
+          set -e
+          tail -n 1600 /tmp/concrete-wilson-os-boundary-gap.log
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: concrete-wilson-os-boundary-gap-diagnostic
+          path: /tmp/concrete-wilson-os-boundary-gap.log
+          if-no-files-found: error
+
+      - name: Propagate status
+        if: always()
+        run: exit "${{ steps.build.outputs.status }}"

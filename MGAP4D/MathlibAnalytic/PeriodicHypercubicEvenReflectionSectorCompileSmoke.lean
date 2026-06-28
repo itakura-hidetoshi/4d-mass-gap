@@ -1,0 +1,43 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfPlaquetteReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfDisjointness
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationHaarReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationHaarMeasureReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPlaquetteHolonomyReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorDecomposition
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionExactSectors
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonActionSectorReflection
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsSectorFactorization
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingWilsonBoltzmannProduct
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingWilsonActionSpatialTemporal
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialCrossingGeometry
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenFixedTimeClassification
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialCrossingBoundaryDependence
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsWeight
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryFiberedWilsonGibbsDensityFactorization
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenGibbsReflection
+import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonPlaquetteEnergyInversion
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+/-- Compile receipt for the even-periodic reflection-sector geometry, disjoint
+open halves, physical configuration involution, plaquette-holonomy reflection
+law, Wilson-energy and full-action reflection invariance, exact three-sector
+action decomposition, exponentiated Gibbs-sector factorization, exact finite
+crossing-plaquette Boltzmann product, the spatial-boundary/temporal-bridge split,
+the fixed-plane characterization and boundary-only dependence of the spatial
+crossing sector, transport to exact boundary-fibered coordinates, exact
+factorization of the transported Gibbs density, reflected sector exchange,
+product-Haar invariance, and actual finite-volume Wilson Gibbs-law reflection
+invariance. -/
+theorem periodicHypercubicEvenReflectionSector_compile_receipt : True := by
+  trivial
+
+end
+
+end MathlibAnalytic
+end MGAP4D

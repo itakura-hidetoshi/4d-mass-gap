@@ -11,6 +11,27 @@ def finiteVacuumCentered
     (vacuum x : E) : E :=
   x - inner ℝ vacuum x • vacuum
 
+/-- For a normalized real Hilbert-space vacuum, vacuum centering subtracts
+exactly the squared vacuum coefficient from the squared norm. -/
+theorem finite_vacuum_centered_norm_sq
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (vacuum : E) (hvacuum : ‖vacuum‖ = 1) (x : E) :
+    ‖finiteVacuumCentered vacuum x‖ ^ 2 =
+      ‖x‖ ^ 2 - (inner ℝ vacuum x) ^ 2 := by
+  have hcomm : inner ℝ x vacuum = inner ℝ vacuum x :=
+    (real_inner_comm x vacuum).symm
+  calc
+    ‖finiteVacuumCentered vacuum x‖ ^ 2 =
+        inner ℝ (finiteVacuumCentered vacuum x)
+          (finiteVacuumCentered vacuum x) := by
+      simpa using
+        (real_inner_self_eq_norm_sq
+          (finiteVacuumCentered vacuum x)).symm
+    _ = ‖x‖ ^ 2 - (inner ℝ vacuum x) ^ 2 := by
+      simp only [finiteVacuumCentered, inner_sub_left, inner_sub_right,
+        inner_smul_left, inner_smul_right]
+      simp [hcomm, hvacuum] <;> ring
+
 /-- Finite Wilson Hamiltonian data in which the excitation-sector gap is
 reduced to a Dirichlet-form representation and a uniform vacuum-centered
 Poincare inequality. -/
