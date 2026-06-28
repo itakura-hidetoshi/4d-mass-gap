@@ -24,11 +24,12 @@ instance compactOriented_selectedLinkEdge_unique
     exact e.2
 
 /-- Product normalized Haar measure on all links except the selected one. -/
-def CompactOrientedGaugeWilsonSystem.offLinkHaarMeasure
+noncomputable def CompactOrientedGaugeWilsonSystem.offLinkHaarMeasure
     (L : CompactOrientedGaugeWilsonSystem)
     (target : L.geometry.Edge) :
-    Measure (L.OffLinkConfiguration target) :=
-  Measure.pi (fun _ : L.OffLinkEdge target =>
+    Measure (L.OffLinkConfiguration target) := by
+  classical
+  exact Measure.pi (fun _ : L.OffLinkEdge target =>
     normalizedCompactHaar L.Gauge)
 
 /-- Canonical measurable one-link coordinate decomposition obtained by first
@@ -39,13 +40,15 @@ noncomputable def
     (L : CompactOrientedGaugeWilsonSystem)
     (target : L.geometry.Edge) :
     L.Configuration ≃ᵐ
-      L.Gauge × L.OffLinkConfiguration target :=
-  (MeasurableEquiv.piEquivPiSubtypeProd
-      (fun _ : L.geometry.Edge => L.Gauge)
-      (fun e => e = target)).trans
-    ((MeasurableEquiv.piUnique
-        (fun _ : L.SelectedLinkEdge target => L.Gauge)).prodCongr
-      (MeasurableEquiv.refl (L.OffLinkConfiguration target)))
+      L.Gauge × L.OffLinkConfiguration target := by
+  classical
+  exact
+    (MeasurableEquiv.piEquivPiSubtypeProd
+        (fun _ : L.geometry.Edge => L.Gauge)
+        (fun e => e = target)).trans
+      ((MeasurableEquiv.piUnique
+          (fun _ : L.SelectedLinkEdge target => L.Gauge)).prodCongr
+        (MeasurableEquiv.refl (L.OffLinkConfiguration target)))
 
 /-- The canonical one-link coordinate decomposition preserves product
 normalized Haar measure. -/
@@ -57,12 +60,19 @@ theorem compact_oriented_canonicalSingleLinkCoordinates_measurePreserving
       L.configurationHaarMeasure
       ((normalizedCompactHaar L.Gauge).prod
         (L.offLinkHaarMeasure target)) := by
+  classical
   let μ : Measure L.Gauge := normalizedCompactHaar L.Gauge
   let selectedMeasure : Measure
       (L.SelectedLinkEdge target → L.Gauge) :=
     Measure.pi (fun _ : L.SelectedLinkEdge target => μ)
   let offMeasure : Measure (L.OffLinkConfiguration target) :=
     L.offLinkHaarMeasure target
+  letI : IsProbabilityMeasure selectedMeasure := by
+    dsimp [selectedMeasure, μ]
+    infer_instance
+  letI : IsProbabilityMeasure offMeasure := by
+    dsimp [offMeasure, CompactOrientedGaugeWilsonSystem.offLinkHaarMeasure, μ]
+    infer_instance
   have hSplit : MeasurePreserving
       (MeasurableEquiv.piEquivPiSubtypeProd
         (fun _ : L.geometry.Edge => L.Gauge)
