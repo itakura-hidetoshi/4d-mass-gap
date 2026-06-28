@@ -31,5 +31,7 @@ namespace MathlibAnalytic
 #check continuous_compact_oriented_heatBathHamiltonianL2_eq_inner_smul_vacuum_of_eq_zero
 #check continuous_compact_oriented_heatBathHamiltonianL2_eq_zero_iff_eq_inner_smul_vacuum
 
+-- This file intentionally imports and checks the complete compact heat-bath chain.
+
 end MathlibAnalytic
 end MGAP4D
