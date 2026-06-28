@@ -75,8 +75,10 @@ theorem finite_oriented_gibbsPairingReal_self_nonneg
   classical
   unfold FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
   exact Finset.sum_nonneg fun A _hA => by
-    have hp := finite_oriented_gibbsProbabilityReal_nonneg L A
-    nlinarith [sq_nonneg (f A)]
+    rw [mul_assoc]
+    exact mul_nonneg
+      (finite_oriented_gibbsProbabilityReal_nonneg L A)
+      (mul_self_nonneg (f A))
 
 end
 
