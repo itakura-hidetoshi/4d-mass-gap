@@ -73,7 +73,7 @@ theorem continuous_compact_oriented_singleLinkConditionalExpectation_smul
       c * ∫ g : C.base.Gauge,
         O (C.base.replaceLink A target g)
         ∂C.singleLinkConditionalMeasure A target
-  exact integral_const_mul
+  rw [integral_const_mul]
 
 /-- Positivity of exact compact one-link conditional expectation. -/
 theorem continuous_compact_oriented_singleLinkConditionalExpectation_nonneg
@@ -210,7 +210,7 @@ theorem continuous_compact_oriented_randomScanHeatBathSweep_const
   unfold ContinuousCompactOrientedGaugeWilsonSystem.randomScanHeatBathSweep
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathProjection
   simp_rw [continuous_compact_oriented_singleLinkConditionalExpectation_const]
-  rw [Finset.sum_const, nsmul_eq_mul]
+  rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
   have hCard : (Fintype.card C.base.geometry.Edge : ℝ) ≠ 0 :=
     ne_of_gt (Nat.cast_pos.mpr hEdge)
   field_simp [hCard]
