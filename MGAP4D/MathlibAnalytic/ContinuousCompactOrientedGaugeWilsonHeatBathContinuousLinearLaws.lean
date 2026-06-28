@@ -12,7 +12,10 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionContinuousLinear
     C.singleLinkHeatBathProjectionContinuousLinearMap target
         (C.singleLinkHeatBathProjectionContinuousLinearMap target O) =
       C.singleLinkHeatBathProjectionContinuousLinearMap target O := by
-  simpa using
+  change C.singleLinkHeatBathProjectionBCF target
+      (C.singleLinkHeatBathProjectionBCF target O) =
+    C.singleLinkHeatBathProjectionBCF target O
+  exact
     continuous_compact_oriented_singleLinkHeatBathProjectionBCF_idempotent
       C target O
 
@@ -22,7 +25,8 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionContinuousLinear
     ‖C.singleLinkHeatBathProjectionContinuousLinearMap target‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound (by norm_num)
   intro O
-  simpa using
+  change ‖C.singleLinkHeatBathProjectionBCF target O‖ ≤ ‖O‖
+  exact
     continuous_compact_oriented_singleLinkHeatBathProjectionBCF_norm_le
       C target O
 
