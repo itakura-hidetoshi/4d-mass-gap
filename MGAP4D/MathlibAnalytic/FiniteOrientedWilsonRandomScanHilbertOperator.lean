@@ -18,10 +18,10 @@ theorem finite_oriented_singleLinkHeatBathProjection_add
   funext A
   unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
+  simp only [Pi.add_apply]
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro h _hh
-  simp only [Pi.add_apply]
   ring
 
 theorem finite_oriented_singleLinkHeatBathProjection_smul
@@ -34,10 +34,10 @@ theorem finite_oriented_singleLinkHeatBathProjection_smul
   funext A
   unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
+  simp only [Pi.smul_apply, smul_eq_mul]
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro h _hh
-  simp only [Pi.smul_apply, smul_eq_mul]
   ring
 
 theorem finite_oriented_randomScanHeatBathSweep_add
