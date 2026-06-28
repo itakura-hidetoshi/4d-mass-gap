@@ -46,15 +46,8 @@ noncomputable def
         continuous_compact_oriented_singleLinkConditionalTotalVariation_eq_zero_of_agreeOffLink
           C A B target hAgree
       rw [hZero]
-      exact
-        (continuous_compact_oriented_conditionalTVMajorant_nonneg
-          C omega hOmega).trans
-          (by
-            by_cases hActive : target ∈ C.base.activePlaquetteNeighbors target
-            · simp [continuousCompactOrientedGaugeWilsonDobrushinInfluence,
-                hActive]
-            · simp [continuousCompactOrientedGaugeWilsonDobrushinInfluence,
-                hActive])
+      simp [continuousCompactOrientedGaugeWilsonDobrushinInfluence,
+        CompactOrientedGaugeWilsonSystem.activePlaquetteNeighbors]
     · by_cases hActive : source ∈ C.base.activePlaquetteNeighbors target
       · simpa [continuousCompactOrientedGaugeWilsonDobrushinInfluence,
           hActive] using
