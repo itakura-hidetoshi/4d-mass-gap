@@ -101,7 +101,7 @@ theorem finite_oriented_gibbsRandomScanLinearMap_isSymmetric
     inner ℝ (L.gibbsRandomScanLinearMap x) y =
         inner ℝ (L.gibbsHilbertEmbedLinearMap (L.randomScanHeatBathSweep f))
           (L.gibbsHilbertEmbedLinearMap g) := by
-      rw [← hx, finite_oriented_gibbsRandomScanLinearMap_embed, hy]
+      rw [← hx, finite_oriented_gibbsRandomScanLinearMap_embed, ← hy]
     _ = L.gibbsPairingReal (L.randomScanHeatBathSweep f) g :=
       finite_oriented_gibbsHilbert_inner_embed L _ _
     _ = L.gibbsPairingReal f (L.randomScanHeatBathSweep g) :=
