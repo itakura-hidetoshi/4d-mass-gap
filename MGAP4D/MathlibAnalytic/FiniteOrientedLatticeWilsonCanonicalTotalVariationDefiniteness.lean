@@ -35,20 +35,20 @@ def FiniteOrientedLatticeWilsonSystem.configurationPatch
 
 theorem finite_oriented_configurationPatch_agreeOffLink_insert
     (L : FiniteOrientedLatticeWilsonSystem)
+    [DecidableEq L.Edge]
     (A B : L.Configuration)
     (s : Finset L.Edge)
     (e : L.Edge) :
     L.AgreeOffLink
       (L.configurationPatch A B s)
-      (L.configurationPatch A B (Finset.insert e s)) e := by
-  classical
+      (L.configurationPatch A B (insert e s)) e := by
   intro e' hne
   unfold FiniteOrientedLatticeWilsonSystem.configurationPatch
   by_cases hs : e' ∈ s
-  · have hInsert : e' ∈ Finset.insert e s :=
+  · have hInsert : e' ∈ insert e s :=
       Finset.mem_insert_of_mem hs
     simp [hs, hInsert]
-  · have hInsert : e' ∉ Finset.insert e s := by
+  · have hInsert : e' ∉ insert e s := by
       simp [hne, hs]
     simp [hs, hInsert]
 
@@ -84,11 +84,11 @@ theorem finite_oriented_observable_eq_of_all_canonicalVariations_eq_zero
     | @insert e s he ih =>
         calc
           f A = f (L.configurationPatch A B s) := ih
-          _ = f (L.configurationPatch A B (Finset.insert e s)) :=
+          _ = f (L.configurationPatch A B (insert e s)) :=
             finite_oriented_observable_eq_of_agreeOffLink_of_canonicalVariation_eq_zero
               L f e
               (L.configurationPatch A B s)
-              (L.configurationPatch A B (Finset.insert e s))
+              (L.configurationPatch A B (insert e s))
               (finite_oriented_configurationPatch_agreeOffLink_insert
                 L A B s e)
               (hZero e)
