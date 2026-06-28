@@ -6,8 +6,6 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- The canonical `SU(N)` plaquette energy of the periodic compact system is at
-most two. -/
 theorem periodicHypercubicSpecialUnitary_plaquetteEnergy_le_two
     (n N : ℕ) [NeZero n]
     (hN : 0 < N)
@@ -19,8 +17,6 @@ theorem periodicHypercubicSpecialUnitary_plaquetteEnergy_le_two
   change specialUnitaryWilsonPlaquetteEnergy N U ≤ 2
   exact specialUnitaryWilsonPlaquetteEnergy_le_two hN U
 
-/-- One active physical-link perturbation changes the target-local periodic
-`SU(N)` Wilson action by at most two. -/
 theorem periodicHypercubicSpecialUnitary_activeLocalActionDifference_abs_le_two
     (n N : ℕ) [NeZero n]
     (hn : 3 ≤ n)
@@ -65,16 +61,15 @@ theorem periodicHypercubicSpecialUnitary_activeLocalActionDifference_abs_le_two
     nlinarith
   exact le_trans hRaw hScale
 
-/-- The active target-local action-difference oscillation radius of the
-periodic compact `SU(N)` system is at most four. -/
 theorem periodicHypercubicSpecialUnitary_activeLocalActionDifferenceOscillationBound_four
     (n N : ℕ) [NeZero n]
     (hn : 3 ≤ n)
     (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hBeta : 0 ≤ beta) :
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta hBeta).ActiveLocalActionDifferenceOscillationBound 4 := by
+    ContinuousCompactOrientedGaugeWilsonSystem.ActiveLocalActionDifferenceOscillationBound
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        n N hN beta hBeta) 4 := by
   intro target source A g hActive u v
   have hu := abs_le.mp
     (periodicHypercubicSpecialUnitary_activeLocalActionDifference_abs_le_two
@@ -84,8 +79,6 @@ theorem periodicHypercubicSpecialUnitary_activeLocalActionDifferenceOscillationB
       n N hn hN beta hBeta target source A g v hActive)
   linarith
 
-/-- Explicit strict Dobrushin matrix for the periodic compact `SU(N)` Wilson
-system under the high-temperature likelihood-ratio threshold. -/
 noncomputable def periodicHypercubicSpecialUnitary_dobrushinMatrixData
     (n N : ℕ) [NeZero n]
     (hn : 3 ≤ n)
@@ -100,14 +93,16 @@ noncomputable def periodicHypercubicSpecialUnitary_dobrushinMatrixData
         n N hN beta hBeta) := by
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     n N hN beta hBeta
-  apply
-    (periodicHypercubicSpecialUnitaryIncidenceCertificate
-      n N hn hN beta hBeta).dobrushinMatrixData_of_localActionOscillation
+  exact
+    ContinuousCompactOrientedGaugeWilsonFourDimensionalIncidenceCertificate.dobrushinMatrixData_of_localActionOscillation
+      (periodicHypercubicSpecialUnitaryIncidenceCertificate
+        n N hn hN beta hBeta)
       4 (by norm_num)
       (periodicHypercubicSpecialUnitary_activeLocalActionDifferenceOscillationBound_four
         n N hn hN beta hBeta)
-  simpa [continuousCompactOrientedGaugeWilsonConditionalTVMajorant, C] using
-    hThreshold
+      (by
+        simpa [continuousCompactOrientedGaugeWilsonConditionalTVMajorant, C] using
+          hThreshold)
 
 end
 end MathlibAnalytic
