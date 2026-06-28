@@ -110,9 +110,8 @@ theorem continuous_compact_oriented_singleLinkBoltzmannIntegrable
       (normalizedCompactHaar C.base.Gauge) := by
   exact
     (Real.continuous_exp.comp
-      (continuous_compact_oriented_singleLinkGibbsExponent C A target)).
-        integrable_of_hasCompactSupport
-          (HasCompactSupport.of_compactSpace _)
+      (continuous_compact_oriented_singleLinkGibbsExponent C A target)).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
 
 /-- One-link conditional partition function. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkPartitionFunction
