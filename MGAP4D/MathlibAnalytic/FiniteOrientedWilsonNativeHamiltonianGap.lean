@@ -63,13 +63,16 @@ theorem finite_oriented_native_restricted_eigenvalues_ge_exactGap
     (L : FiniteOrientedLatticeWilsonSystem)
     (hGap : L.ExactGapSingleLinkHeatBathPoincare)
     (i : Fin
-      (Module.finrank ℝ
-        (finiteVacuumOrthogonal L.gibbsHilbertVacuum))) :
+      (finiteOrientedWilsonNativeHeatBathHamiltonianGapData L hGap).
+        ExcitedDimension) :
     exactGapValueReal ≤
       (finite_wilson_vacuum_orthogonal_restricted_hamiltonian_symmetric
         (finiteOrientedWilsonNativeHeatBathHamiltonianGapData L hGap).
           toDerivedInvarianceGapData.toVacuumOrthogonalGapData
-        0).eigenvalues rfl i :=
+        0).eigenvalues
+          (finiteOrientedWilsonNativeHeatBathHamiltonianGapData
+            L hGap).excitedFinrank
+          i :=
   finite_wilson_vacuum_poincare_restricted_eigenvalues_ge_exactGap
     (finiteOrientedWilsonNativeHeatBathHamiltonianGapData L hGap)
     0 i
