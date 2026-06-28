@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonRandomScanHilbertOperator
+import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonDobrushinHamiltonianGap
 import MGAP4D.MathlibAnalytic.SymmetricEigenvalueUpperBound
 
 namespace MGAP4D
