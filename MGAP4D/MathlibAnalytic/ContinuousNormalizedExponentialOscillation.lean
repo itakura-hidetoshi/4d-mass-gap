@@ -81,26 +81,27 @@ theorem continuousNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
     have hLeftIntegrable : Integrable
         (fun y : X => Real.exp (logWeight x) *
           Real.exp (referenceLogWeight y)) μ :=
-      (continuous_const.mul (Real.continuous_exp.comp hRef)).
-        integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+      (continuous_const.mul
+        (Real.continuous_exp.comp hRef)).integrable_of_hasCompactSupport
+          (HasCompactSupport.of_compactSpace _)
     have hRightIntegrable : Integrable
         (fun y : X =>
           (Real.exp R * Real.exp (referenceLogWeight x)) *
             Real.exp (logWeight y)) μ :=
-      (continuous_const.mul (Real.continuous_exp.comp hLog)).
-        integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-    exact integral_mono hLeftIntegrable hRightIntegrable
-      (Filter.Eventually.of_forall fun y => by
-        calc
-          Real.exp (logWeight x) * Real.exp (referenceLogWeight y) =
-              Real.exp (logWeight x + referenceLogWeight y) := by
-                rw [← Real.exp_add]
-          _ ≤ Real.exp (R + referenceLogWeight x + logWeight y) := by
-            apply Real.exp_le_exp.mpr
-            linarith [hOsc x y]
-          _ = (Real.exp R * Real.exp (referenceLogWeight x)) *
-              Real.exp (logWeight y) := by
-            rw [Real.exp_add, Real.exp_add])
+      (continuous_const.mul
+        (Real.continuous_exp.comp hLog)).integrable_of_hasCompactSupport
+          (HasCompactSupport.of_compactSpace _)
+    exact integral_mono hLeftIntegrable hRightIntegrable (fun y => by
+      calc
+        Real.exp (logWeight x) * Real.exp (referenceLogWeight y) =
+            Real.exp (logWeight x + referenceLogWeight y) := by
+              rw [← Real.exp_add]
+        _ ≤ Real.exp (R + referenceLogWeight x + logWeight y) := by
+          apply Real.exp_le_exp.mpr
+          linarith [hOsc x y]
+        _ = (Real.exp R * Real.exp (referenceLogWeight x)) *
+            Real.exp (logWeight y) := by
+          rw [Real.exp_add, Real.exp_add])
   · unfold continuousNormalizedExp
     rw [show Real.exp R *
         (Real.exp (logWeight x) / continuousExpPartition μ logWeight) =
@@ -112,26 +113,27 @@ theorem continuousNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
     have hLeftIntegrable : Integrable
         (fun y : X => Real.exp (referenceLogWeight x) *
           Real.exp (logWeight y)) μ :=
-      (continuous_const.mul (Real.continuous_exp.comp hLog)).
-        integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+      (continuous_const.mul
+        (Real.continuous_exp.comp hLog)).integrable_of_hasCompactSupport
+          (HasCompactSupport.of_compactSpace _)
     have hRightIntegrable : Integrable
         (fun y : X =>
           (Real.exp R * Real.exp (logWeight x)) *
             Real.exp (referenceLogWeight y)) μ :=
-      (continuous_const.mul (Real.continuous_exp.comp hRef)).
-        integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-    exact integral_mono hLeftIntegrable hRightIntegrable
-      (Filter.Eventually.of_forall fun y => by
-        calc
-          Real.exp (referenceLogWeight x) * Real.exp (logWeight y) =
-              Real.exp (referenceLogWeight x + logWeight y) := by
-                rw [← Real.exp_add]
-          _ ≤ Real.exp (R + logWeight x + referenceLogWeight y) := by
-            apply Real.exp_le_exp.mpr
-            linarith [hOsc y x]
-          _ = (Real.exp R * Real.exp (logWeight x)) *
-              Real.exp (referenceLogWeight y) := by
-            rw [Real.exp_add, Real.exp_add])
+      (continuous_const.mul
+        (Real.continuous_exp.comp hRef)).integrable_of_hasCompactSupport
+          (HasCompactSupport.of_compactSpace _)
+    exact integral_mono hLeftIntegrable hRightIntegrable (fun y => by
+      calc
+        Real.exp (referenceLogWeight x) * Real.exp (logWeight y) =
+            Real.exp (referenceLogWeight x + logWeight y) := by
+              rw [← Real.exp_add]
+        _ ≤ Real.exp (R + logWeight x + referenceLogWeight y) := by
+          apply Real.exp_le_exp.mpr
+          linarith [hOsc y x]
+        _ = (Real.exp R * Real.exp (logWeight x)) *
+            Real.exp (referenceLogWeight y) := by
+          rw [Real.exp_add, Real.exp_add])
 
 end
 end MathlibAnalytic
