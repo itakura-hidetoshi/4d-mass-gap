@@ -43,8 +43,8 @@ theorem continuous_probabilityDensity_test_difference_abs_le_l1_mul_radius
     _ ≤ ∫ x, |p x - q x| * radius ∂μ := by
       apply integral_mono hAbsCenteredInt hUpperInt
       intro x
-      change |p x - q x| * |h x - center| ≤ |p x - q x| * radius
-      exact mul_le_mul_of_nonneg_left (hRadius x) (abs_nonneg _)
+      simpa only [abs_mul] using
+        mul_le_mul_of_nonneg_left (hRadius x) (abs_nonneg (p x - q x))
     _ = (∫ x, |p x - q x| ∂μ) * radius := by
       rw [integral_mul_const]
 
