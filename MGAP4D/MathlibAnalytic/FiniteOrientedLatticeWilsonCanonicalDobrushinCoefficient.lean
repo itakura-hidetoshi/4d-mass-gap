@@ -91,7 +91,17 @@ theorem finite_oriented_canonicalDobrushinInfluence_eq_zero_of_not_active
         (finite_oriented_singleLinkConditionalTotalVariation_eq_zero_of_not_neighbor
           L p.1 (L.replaceLink p.1 source p.2) target source hNotNeighbor
           (finite_oriented_agreeOffLink_replaceLink L p.1 source p.2))
-    · exact finite_oriented_canonicalDobrushinInfluence_nonneg L target source
+    · exact le_trans
+        (finite_oriented_singleLinkConditionalTotalVariation_nonneg
+          L default (L.replaceLink default source default) target)
+        (Finset.le_max'
+          (L.canonicalDobrushinInfluenceValues target source)
+          (L.singleLinkConditionalTotalVariation default
+            (L.replaceLink default source default) target)
+          (by
+            unfold FiniteOrientedLatticeWilsonSystem.canonicalDobrushinInfluenceValues
+            apply Finset.mem_image.mpr
+            exact ⟨(default, default), Finset.mem_univ _, rfl⟩))
 
 /-- Canonical row sum of exact orientation-correct single-link influences. -/
 def FiniteOrientedLatticeWilsonSystem.canonicalDobrushinRowSum
@@ -113,8 +123,8 @@ theorem finite_oriented_canonicalDobrushinRowSum_eq_sum_active
     (L : FiniteOrientedLatticeWilsonSystem)
     (target : L.Edge) :
     L.canonicalDobrushinRowSum target =
-      ∑ source in L.activePlaquetteNeighbors target,
-        L.canonicalDobrushinInfluence target source := by
+      (L.activePlaquetteNeighbors target).sum
+        (fun source => L.canonicalDobrushinInfluence target source) := by
   classical
   unfold FiniteOrientedLatticeWilsonSystem.canonicalDobrushinRowSum
   symm
@@ -137,10 +147,10 @@ theorem finite_oriented_canonicalDobrushinRowSum_le_card_mul
   classical
   rw [finite_oriented_canonicalDobrushinRowSum_eq_sum_active]
   calc
-    (∑ source in L.activePlaquetteNeighbors target,
-        L.canonicalDobrushinInfluence target source) ≤
-        ∑ _source in L.activePlaquetteNeighbors target, eta := by
-      exact Finset.sum_le_sum fun source hSource => hInfluence source hSource
+    (L.activePlaquetteNeighbors target).sum
+        (fun source => L.canonicalDobrushinInfluence target source) ≤
+      (L.activePlaquetteNeighbors target).sum (fun _source => eta) := by
+        exact Finset.sum_le_sum fun source hSource => hInfluence source hSource
     _ = ((L.activePlaquetteNeighbors target).card : ℝ) * eta := by
       simp
 
@@ -239,6 +249,5 @@ theorem finite_oriented_canonicalDobrushinCoefficient_lt_one_of_degree_mul_lt_on
     hStrict
 
 end
-
 end MathlibAnalytic
 end MGAP4D
