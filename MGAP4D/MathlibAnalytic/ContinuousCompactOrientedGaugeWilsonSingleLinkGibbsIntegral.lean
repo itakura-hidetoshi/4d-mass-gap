@@ -33,11 +33,11 @@ theorem continuous_compact_oriented_lintegral_gibbs_eq_singleLinkCoordinates
       rw [continuous_compact_oriented_map_singleLinkCoordinates_gibbsMeasure]
     _ = ∫⁻ z,
         C.singleLinkCoordinateGibbsDensity target z * F (e.symm z) ∂μ := by
-      rw [lintegral_withDensity_eq_lintegral_mul μ
-        (continuous_compact_oriented_singleLinkCoordinateGibbsDensity_measurable
-          C target)
-        (hF.comp e.symm.measurable)]
-      rfl
+      simpa only [Function.comp_apply] using
+        (lintegral_withDensity_eq_lintegral_mul μ
+          (continuous_compact_oriented_singleLinkCoordinateGibbsDensity_measurable
+            C target)
+          (hF.comp e.symm.measurable))
     _ = _ := by rfl
 
 /-- Fubini form of the selected-link/off-link Gibbs integral. -/
@@ -53,6 +53,10 @@ theorem continuous_compact_oriented_lintegral_gibbs_eq_singleLinkFubini
             F (C.base.singleLinkAssemble target g Aoff)
           ∂C.base.offLinkHaarMeasure target
         ∂normalizedCompactHaar C.base.Gauge := by
+  letI : IsProbabilityMeasure (C.base.offLinkHaarMeasure target) := by
+    classical
+    unfold CompactOrientedGaugeWilsonSystem.offLinkHaarMeasure
+    infer_instance
   rw [continuous_compact_oriented_lintegral_gibbs_eq_singleLinkCoordinates
     C target F hF]
   have hIntegrand : Measurable
