@@ -64,12 +64,11 @@ theorem z2PeriodicHypercubicOriented_canonicalDobrushinCoefficient_lt_one
     (hBeta : 0 ≤ beta)
     (R : ℝ)
     (hR : 0 ≤ R)
-    (hRatio : (z2PeriodicHypercubicOrientedWilsonSystem
-      n beta hBeta).ActiveConditionalExpRatioBound R)
+    (hRatio :
+      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).ActiveConditionalExpRatioBound R)
     (hThreshold :
       (Real.exp R - 1) / (Real.exp R + 1) < (18 : ℝ)⁻¹) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-      canonicalDobrushinCoefficient
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).canonicalDobrushinCoefficient
         (z2PeriodicHypercubicOrientedIncidenceCertificate
           n hn beta hBeta).edgeCard_pos < 1 := by
   exact
