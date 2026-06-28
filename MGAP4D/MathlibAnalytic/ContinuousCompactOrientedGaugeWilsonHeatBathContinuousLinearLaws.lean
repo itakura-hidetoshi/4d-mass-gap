@@ -19,17 +19,6 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionContinuousLinear
     continuous_compact_oriented_singleLinkHeatBathProjectionBCF_idempotent
       C target O
 
-theorem continuous_compact_oriented_singleLinkHeatBathProjectionContinuousLinearMap_norm_le_one
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge) :
-    ‖C.singleLinkHeatBathProjectionContinuousLinearMap target‖ ≤ 1 := by
-  apply ContinuousLinearMap.opNorm_le_bound (by norm_num)
-  intro O
-  change ‖C.singleLinkHeatBathProjectionBCF target O‖ ≤ ‖O‖
-  exact
-    continuous_compact_oriented_singleLinkHeatBathProjectionBCF_norm_le
-      C target O
-
 end
 end MathlibAnalytic
 end MGAP4D
