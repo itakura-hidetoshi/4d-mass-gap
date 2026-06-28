@@ -40,13 +40,17 @@ theorem finite_oriented_configurationPatch_agreeOffLink_insert
     (e : L.Edge) :
     L.AgreeOffLink
       (L.configurationPatch A B s)
-      (L.configurationPatch A B (insert e s)) e := by
+      (L.configurationPatch A B (Finset.insert e s)) e := by
   classical
   intro e' hne
+  unfold FiniteOrientedLatticeWilsonSystem.configurationPatch
   by_cases hs : e' ∈ s
-  · simp [FiniteOrientedLatticeWilsonSystem.configurationPatch, hs]
-  · have hInsert : e' ∉ insert e s := by simp [hne, hs]
-    simp [FiniteOrientedLatticeWilsonSystem.configurationPatch, hs, hInsert]
+  · have hInsert : e' ∈ Finset.insert e s :=
+      Finset.mem_insert_of_mem hs
+    simp [hs, hInsert]
+  · have hInsert : e' ∉ Finset.insert e s := by
+      simp [hne, hs]
+    simp [hs, hInsert]
 
 theorem finite_oriented_observable_eq_of_agreeOffLink_of_canonicalVariation_eq_zero
     (L : FiniteOrientedLatticeWilsonSystem)
@@ -80,11 +84,11 @@ theorem finite_oriented_observable_eq_of_all_canonicalVariations_eq_zero
     | @insert e s he ih =>
         calc
           f A = f (L.configurationPatch A B s) := ih
-          _ = f (L.configurationPatch A B (insert e s)) :=
+          _ = f (L.configurationPatch A B (Finset.insert e s)) :=
             finite_oriented_observable_eq_of_agreeOffLink_of_canonicalVariation_eq_zero
               L f e
               (L.configurationPatch A B s)
-              (L.configurationPatch A B (insert e s))
+              (L.configurationPatch A B (Finset.insert e s))
               (finite_oriented_configurationPatch_agreeOffLink_insert
                 L A B s e)
               (hZero e)
@@ -104,7 +108,6 @@ theorem finite_oriented_gibbsExpectationReal_const
     (c : ℝ) :
     L.gibbsExpectationReal (fun _ : L.Configuration => c) = c := by
   classical
-  letI : Fintype L.Configuration := Fintype.ofFinite L.Configuration
   unfold FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
     FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
   calc
