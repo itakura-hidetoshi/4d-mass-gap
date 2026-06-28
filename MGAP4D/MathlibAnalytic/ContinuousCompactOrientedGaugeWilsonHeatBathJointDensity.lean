@@ -14,7 +14,7 @@ theorem continuous_compact_oriented_gibbsDensityReal_pos
     0 < C.gibbsDensityReal A := by
   unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsDensityReal
   exact div_pos (Real.exp_pos _)
-    (compact_oriented_partitionFunction_pos C)
+    (compact_oriented_partitionFunction_pos C.base)
 
 /-- Every exact one-link real conditional density is strictly positive. -/
 theorem continuous_compact_oriented_singleLinkConditionalDensityReal_pos
