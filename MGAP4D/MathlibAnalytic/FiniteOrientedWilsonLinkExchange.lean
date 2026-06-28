@@ -5,7 +5,6 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Updating one physical link twice retains only the final inserted value. -/
 @[simp] theorem finite_oriented_replaceLink_replaceLink
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration)
@@ -20,8 +19,6 @@ noncomputable section
     simp
   · simp [FiniteOrientedLatticeWilsonSystem.replaceLink, he]
 
-/-- Exchanging the old and resampled values at one physical link is an
-involution on configuration-value pairs. -/
 noncomputable def FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv
     (L : FiniteOrientedLatticeWilsonSystem)
     (target : L.Edge) :
@@ -31,27 +28,25 @@ noncomputable def FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv
   left_inv := by
     rintro ⟨A, g⟩
     apply Prod.ext
-    · simp
+    · rw [finite_oriented_replaceLink_replaceLink,
+        finite_oriented_replaceLink_current]
     · simp
   right_inv := by
     rintro ⟨A, g⟩
     apply Prod.ext
-    · simp
+    · rw [finite_oriented_replaceLink_replaceLink,
+        finite_oriented_replaceLink_current]
     · simp
 
-/-- The configuration component of two successive update exchanges restores
-the original orientation-correct configuration. -/
 @[simp] theorem finite_oriented_singleLinkUpdateSwap_first_roundTrip
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration)
     (target : L.Edge)
     (g : L.Gauge) :
     L.replaceLink (L.replaceLink A target g) target (A target) = A := by
-  simpa [FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv] using
-    congrArg Prod.fst
-      ((L.singleLinkUpdateSwapEquiv target).left_inv (A, g))
+  rw [finite_oriented_replaceLink_replaceLink,
+    finite_oriented_replaceLink_current]
 
 end
-
 end MathlibAnalytic
 end MGAP4D
