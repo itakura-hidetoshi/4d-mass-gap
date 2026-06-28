@@ -16,6 +16,7 @@ theorem continuous_compact_oriented_singleLinkExponentDifferenceOscillationBound
     (hNe : source ≠ target)
     (hInactive : source ∉ C.base.activePlaquetteNeighbors target) :
     C.SingleLinkExponentDifferenceOscillationBound A B target 0 := by
+  classical
   have hNotNeighbor : source ∉ C.base.plaquetteNeighbors target := by
     intro hNeighbor
     apply hInactive
