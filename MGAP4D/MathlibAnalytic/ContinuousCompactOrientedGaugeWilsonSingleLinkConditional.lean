@@ -65,9 +65,8 @@ theorem continuous_compact_oriented_singleLinkBoltzmannIntegrable
     Integrable (C.singleLinkBoltzmannFactor A target)
       (normalizedCompactHaar C.base.Gauge) := by
   exact
-    (continuous_compact_oriented_singleLinkBoltzmannFactor C A target).
-      integrable_of_hasCompactSupport
-        (HasCompactSupport.of_compactSpace _)
+    (continuous_compact_oriented_singleLinkBoltzmannFactor C A target).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
 
 /-- Exact one-link conditional partition function with respect to normalized
 Haar measure. -/
