@@ -180,9 +180,24 @@ jobs:
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
         run: |
-          set -euxo pipefail
+          set -uo pipefail
+          log_file="${RUNNER_TEMP}/changed-lean-fast-check.log"
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+          set +e
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" >"${log_file}" 2>&1
+          status=$?
+          set -e
+          tail -n 250 "${log_file}"
+          exit "${status}"
+
+      - name: Upload failed Lean build log
+        if: ${{ failure() && steps.lake-mode.outputs.required == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: changed-lean-fast-check-log
+          path: ${{ runner.temp }}/changed-lean-fast-check.log
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Check Lake cache is saveable
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
