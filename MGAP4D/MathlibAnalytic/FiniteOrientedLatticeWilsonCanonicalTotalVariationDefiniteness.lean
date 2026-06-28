@@ -13,13 +13,15 @@ noncomputable section
 def FiniteOrientedLatticeWilsonSystem.configurationPatch
     (L : FiniteOrientedLatticeWilsonSystem)
     (A B : L.Configuration)
-    (s : Finset L.Edge) : L.Configuration :=
-  fun e => if e ∈ s then B e else A e
+    (s : Finset L.Edge) : L.Configuration := by
+  classical
+  exact fun e => if e ∈ s then B e else A e
 
 @[simp] theorem finite_oriented_configurationPatch_empty
     (L : FiniteOrientedLatticeWilsonSystem)
     (A B : L.Configuration) :
     L.configurationPatch A B ∅ = A := by
+  classical
   funext e
   simp [FiniteOrientedLatticeWilsonSystem.configurationPatch]
 
@@ -27,6 +29,7 @@ def FiniteOrientedLatticeWilsonSystem.configurationPatch
     (L : FiniteOrientedLatticeWilsonSystem)
     (A B : L.Configuration) :
     L.configurationPatch A B Finset.univ = B := by
+  classical
   funext e
   simp [FiniteOrientedLatticeWilsonSystem.configurationPatch]
 
@@ -38,6 +41,7 @@ theorem finite_oriented_configurationPatch_agreeOffLink_insert
     L.AgreeOffLink
       (L.configurationPatch A B s)
       (L.configurationPatch A B (insert e s)) e := by
+  classical
   intro e' hne
   by_cases hs : e' ∈ s
   · simp [FiniteOrientedLatticeWilsonSystem.configurationPatch, hs]
@@ -66,6 +70,7 @@ theorem finite_oriented_observable_eq_of_all_canonicalVariations_eq_zero
     (hZero : ∀ e : L.Edge, L.canonicalLinkVariation f e = 0)
     (A B : L.Configuration) :
     f A = f B := by
+  classical
   have hPatch :
       ∀ s : Finset L.Edge,
         f A = f (L.configurationPatch A B s) := by
@@ -98,6 +103,8 @@ theorem finite_oriented_gibbsExpectationReal_const
     (L : FiniteOrientedLatticeWilsonSystem)
     (c : ℝ) :
     L.gibbsExpectationReal (fun _ : L.Configuration => c) = c := by
+  classical
+  letI : Fintype L.Configuration := Fintype.ofFinite L.Configuration
   unfold FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
     FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
   calc
