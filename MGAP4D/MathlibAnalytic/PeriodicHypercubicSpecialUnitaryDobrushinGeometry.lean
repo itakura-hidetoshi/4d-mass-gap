@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryWilsonSystem
 import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonPlaquetteSupport
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicActiveNeighborBound
+import MGAP4D.MathlibAnalytic.Z2PeriodicHypercubicOrientedWilsonSystem
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSharedPlaquetteUniqueness
 
 namespace MGAP4D
