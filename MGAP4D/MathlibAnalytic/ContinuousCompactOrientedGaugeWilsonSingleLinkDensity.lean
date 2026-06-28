@@ -8,8 +8,6 @@ open MeasureTheory Set
 
 noncomputable section
 
-/-- Real Radon--Nikodym density of the exact one-link conditional Gibbs law
-with respect to normalized compact Haar measure. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -18,7 +16,6 @@ def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
   Real.exp (C.singleLinkGibbsExponent A target g) /
     C.singleLinkPartitionFunction A target
 
-/-- The exact compact one-link conditional density is strictly positive. -/
 theorem continuous_compact_oriented_singleLinkConditionalDensity_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -29,8 +26,6 @@ theorem continuous_compact_oriented_singleLinkConditionalDensity_pos
   exact div_pos (Real.exp_pos _)
     (continuous_compact_oriented_singleLinkPartitionFunction_pos C A target)
 
-/-- The exact compact one-link conditional density is continuous in the
-inserted gauge value. -/
 theorem continuous_compact_oriented_singleLinkConditionalDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -41,8 +36,6 @@ theorem continuous_compact_oriented_singleLinkConditionalDensity
     (Real.continuous_exp.comp
       (continuous_compact_oriented_singleLinkGibbsExponent C A target)).div_const _
 
-/-- The exact one-link conditional measure is normalized Haar measure weighted
-by the explicit positive density. -/
 theorem continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -53,7 +46,6 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity
           (C.singleLinkConditionalDensity A target g)) := by
   rfl
 
-/-- The explicit compact one-link conditional density integrates to one. -/
 theorem continuous_compact_oriented_integral_singleLinkConditionalDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -65,13 +57,12 @@ theorem continuous_compact_oriented_integral_singleLinkConditionalDensity
     ne_of_gt
       (continuous_compact_oriented_singleLinkPartitionFunction_pos C A target)
   unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
-    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkPartitionFunction
   simp_rw [div_eq_mul_inv]
   rw [integral_mul_const]
-  field_simp [hZ]
+  change C.singleLinkPartitionFunction A target *
+      (C.singleLinkPartitionFunction A target)⁻¹ = 1
+  exact mul_inv_cancel₀ hZ
 
-/-- Conditional expectation is the normalized Haar integral against the
-explicit one-link density. -/
 theorem continuous_compact_oriented_singleLinkConditionalExpectation_eq_integral_density
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
@@ -88,8 +79,6 @@ theorem continuous_compact_oriented_singleLinkConditionalExpectation_eq_integral
   simp only [smul_eq_mul]
   rfl
 
-/-- The explicit compact one-link conditional density depends only on the
-off-target configuration. -/
 theorem continuous_compact_oriented_singleLinkConditionalDensity_eq_of_agreeOffLink
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A B : C.base.Configuration)
