@@ -1,0 +1,19 @@
+import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonSingleLinkHeatBathVariance
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check FiniteOrientedLatticeWilsonSystem.boltzmannWeight
+#check FiniteOrientedLatticeWilsonSystem.partitionFunction
+#check FiniteOrientedLatticeWilsonSystem.gibbsPMF
+#check finite_oriented_gibbsPMF_gaugeInvariant
+#check FiniteOrientedLatticeWilsonSystem.gibbsMeasure
+#check FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
+#check FiniteOrientedLatticeWilsonSystem.gibbsVarianceReal
+#check FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
+#check FiniteOrientedLatticeWilsonSystem.singleLinkConditionalVariance
+#check FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathDirichletForm
+#check FiniteOrientedLatticeWilsonSystem.ExactGapSingleLinkHeatBathPoincare
+
+end MathlibAnalytic
+end MGAP4D
