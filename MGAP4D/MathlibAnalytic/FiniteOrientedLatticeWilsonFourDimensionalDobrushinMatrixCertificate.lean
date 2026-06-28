@@ -34,16 +34,15 @@ noncomputable def z2PeriodicHypercubicOriented_canonicalDobrushinMatrixData
     (R : ℝ)
     (hR : 0 ≤ R)
     (hRatio :
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        ActiveConditionalExpRatioBound R)
+      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).ActiveConditionalExpRatioBound R)
     (hThreshold :
       (Real.exp R - 1) / (Real.exp R + 1) < (18 : ℝ)⁻¹) :
     FiniteOrientedLatticeWilsonDobrushinMatrixData
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) :=
-  (z2PeriodicHypercubicOrientedIncidenceCertificate n hn beta hBeta).
-    canonicalDobrushinMatrixData_of_expRatioBound R hR hRatio hThreshold
+  (z2PeriodicHypercubicOrientedIncidenceCertificate
+    n hn beta hBeta).canonicalDobrushinMatrixData_of_expRatioBound
+      R hR hRatio hThreshold
 
 end
-
 end MathlibAnalytic
 end MGAP4D
