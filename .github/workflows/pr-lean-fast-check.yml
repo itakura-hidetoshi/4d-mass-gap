@@ -80,6 +80,9 @@ jobs:
               | grep -q .; then
             required=true
           fi
+          if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' "${changed_file_list}"; then
+            required=true
+          fi
           if grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py' "${changed_file_list}"; then
             required=true
           fi
@@ -92,7 +95,7 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          echo "[fast] no changed Lean leaf target; skipping Lake cache and toolchain"
+          echo "[fast] no changed Lean leaf or toolchain target; skipping Lake cache and toolchain"
           bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
 
       - name: Cache elan toolchain
