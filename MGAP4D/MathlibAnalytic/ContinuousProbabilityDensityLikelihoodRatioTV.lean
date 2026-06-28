@@ -9,8 +9,6 @@ open MeasureTheory
 
 noncomputable section
 
-/-- Sharp total-variation estimate for two continuous probability densities
-with a common multiplicative likelihood-ratio bound. -/
 theorem continuous_probabilityDensity_totalVariation_le_of_mutual_le_mul
     {X : Type*}
     [TopologicalSpace X] [CompactSpace X]
@@ -34,30 +32,35 @@ theorem continuous_probabilityDensity_totalVariation_le_of_mutual_le_mul
         (c - 1) * (p x + q x) :=
     real_density_abs_sub_mul_le_of_mutual_le_mul
       p q c hc hp hq hpq hqp
+  have hLeftContinuous : Continuous
+      (fun x : X => (c + 1) * |p x - q x|) :=
+    continuous_const.mul ((hp_cont.sub hq_cont).abs)
+  have hRightContinuous : Continuous
+      (fun x : X => (c - 1) * (p x + q x)) :=
+    continuous_const.mul (hp_cont.add hq_cont)
   have hLeftIntegrable : Integrable
       (fun x : X => (c + 1) * |p x - q x|) μ :=
-    (continuous_const.mul ((hp_cont.sub hq_cont).abs)).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    hLeftContinuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hRightIntegrable : Integrable
       (fun x : X => (c - 1) * (p x + q x)) μ :=
-    (continuous_const.mul (hp_cont.add hq_cont)).
-      integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    hRightContinuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hIntegral :
       ∫ x, (c + 1) * |p x - q x| ∂μ ≤
-        ∫ x, (c - 1) * (p x + q x) ∂μ := by
-    exact integral_mono hLeftIntegrable hRightIntegrable
-      (Filter.Eventually.of_forall hPoint)
+        ∫ x, (c - 1) * (p x + q x) ∂μ :=
+    integral_mono hLeftIntegrable hRightIntegrable hPoint
   rw [integral_const_mul, integral_const_mul] at hIntegral
-  have hp_integrable : Integrable p μ :=
+  have hpIntegrable : Integrable p μ :=
     hp_cont.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace p)
-  have hq_integrable : Integrable q μ :=
+  have hqIntegrable : Integrable q μ :=
     hq_cont.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace q)
-  have hpq_int : ∫ x, p x + q x ∂μ = 2 := by
-    rw [integral_add hp_integrable hq_integrable, hp_int, hq_int]
+  have hpqIntegral : ∫ x, p x + q x ∂μ = 2 := by
+    rw [integral_add hpIntegrable hqIntegrable, hp_int, hq_int]
     norm_num
-  rw [hpq_int] at hIntegral
+  rw [hpqIntegral] at hIntegral
   have hden : 0 < c + 1 := by linarith
   apply (le_div_iff₀ hden).2
   nlinarith
