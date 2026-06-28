@@ -78,8 +78,8 @@ theorem measurable_compact_oriented_singleLinkConditionalDensity_uncurry
   exact
     (continuous_compact_oriented_singleLinkBoltzmannFactor_uncurry
       C target).measurable.div
-      ((measurable_compact_oriented_singleLinkPartitionFunction C target).
-        comp measurable_fst)
+      ((measurable_compact_oriented_singleLinkPartitionFunction C target).comp
+        measurable_fst)
 
 /-- Markov kernel of exact Haar resampling at one physical positive link. -/
 noncomputable def
