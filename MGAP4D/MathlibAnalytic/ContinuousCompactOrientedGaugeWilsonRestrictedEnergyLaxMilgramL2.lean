@@ -47,7 +47,7 @@ theorem continuous_compact_oriented_restrictedEnergyFormL2_isCoercive
         inner ℝ
           (C.heatBathHamiltonianL2 (f : Lp ℝ 2 C.gibbsMeasure))
           (f : Lp ℝ 2 C.gibbsMeasure)
-    simpa [pow_two] using hGap
+    simpa [pow_two, mul_assoc] using hGap
 
 end
 
