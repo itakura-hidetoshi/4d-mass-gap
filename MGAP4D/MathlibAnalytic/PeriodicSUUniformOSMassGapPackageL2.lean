@@ -17,6 +17,26 @@ variable {W : PhysicalYangMillsGaugeInvariantOSReflectionData S}
 variable {P : W.OSPreHilbertData}
 variable {T : P.StronglyContinuousPhysicalSemigroup}
 
+theorem periodicVacuumOrthogonalMassGap_package_of_innerSymmetric
+    (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
+      sideLength sideLength_pos N hN beta beta_nonneg)
+    (B : D.UniformImplicitEulerOSBridge P T)
+    (hP : P.IsNormalized)
+    (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    {lambda : ℝ}
+    (hlambda : lambda < 1 - D.coefficientBound) :
+    ∃ hSelf : IsSelfAdjoint T.closedRightHamiltonian,
+      (∃ R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
+          R = D.periodicVacuumOrthogonalRealResolvent B hP hSelf hlambda ∧
+          ‖R‖ ≤ (1 - D.coefficientBound - lambda)⁻¹) ∧
+        Function.Bijective
+          (T.vacuumOrthogonalClosedRightHamiltonianRealShift hSelf lambda) := by
+  let hSelf : IsSelfAdjoint T.closedRightHamiltonian :=
+    T.closedRightHamiltonian_isSelfAdjoint_of_innerSymmetric hSymmetric
+  exact ⟨hSelf,
+    D.periodicVacuumOrthogonalContinuousRealResolvent_package
+      B hP hSelf hlambda⟩
+
 end PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
 
 end
