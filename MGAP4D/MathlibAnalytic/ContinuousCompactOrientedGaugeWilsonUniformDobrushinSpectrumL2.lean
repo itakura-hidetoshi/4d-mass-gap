@@ -55,11 +55,17 @@ theorem continuous_compact_oriented_uniformDobrushin_mem_resolventSet
     (b := -R) (c := -R) ?_ ?_
   · rw [hScalarShift]
     calc
-      -S * -R = S * R := by rw [mul_neg, neg_mul, neg_neg]
+      -S * -R = S * R := by
+        apply ContinuousLinearMap.ext
+        intro y
+        simp
       _ = 1 := hShiftResolvent
   · rw [hScalarShift]
     calc
-      -R * -S = R * S := by rw [mul_neg, neg_mul, neg_neg]
+      -R * -S = R * S := by
+        apply ContinuousLinearMap.ext
+        intro y
+        simp
       _ = 1 := hResolventShift
 
 /-- No spectral value of a vacuum-orthogonal finite-volume Hamiltonian lies
