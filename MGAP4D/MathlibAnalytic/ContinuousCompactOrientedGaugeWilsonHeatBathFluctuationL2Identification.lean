@@ -114,7 +114,10 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_toLp_eq
     [Lp.coeFn_sub (hfLp.toLp f) (hPfLp.toLp Pf),
       hfLp.coeFn_toLp, hPfLp.coeFn_toLp, hQfLp.coeFn_toLp] with
       A hSubA hfA hPfA hQfA
-  rw [hSubA, hfA, hPfA, hQfA]
+  rw [hSubA]
+  change (hfLp.toLp f) A - (hPfLp.toLp Pf) A =
+    (hQfLp.toLp Qf) A
+  rw [hfA, hPfA, hQfA]
   rfl
 
 /-- For a strongly measurable uniformly bounded observable, the abstract
