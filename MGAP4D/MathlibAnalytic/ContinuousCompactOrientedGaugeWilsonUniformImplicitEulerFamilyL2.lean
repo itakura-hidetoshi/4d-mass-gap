@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonUniformImplici
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Filter Set Topology
+
 noncomputable section
 
 /-- The all-time implicit-Euler transfer family.  At time zero it is the
@@ -28,7 +30,8 @@ noncomputable def
     (i : ι) :
     U.uniformImplicitEulerL2 i 0 =
       ContinuousLinearMap.id ℝ (U.system i).VacuumOrthogonalL2 := by
-  simp [ContinuousCompactOrientedGaugeWilsonUniformDobrushinFamilyData.uniformImplicitEulerL2]
+  rw [ContinuousCompactOrientedGaugeWilsonUniformDobrushinFamilyData.uniformImplicitEulerL2]
+  exact dif_pos rfl
 
 /-- At positive NNReal time, the all-time family agrees with the positive-time
 scaled resolvent definition. -/
@@ -41,7 +44,7 @@ theorem continuous_compact_oriented_uniformImplicitEulerL2_of_pos
     U.uniformImplicitEulerL2 i t =
       U.uniformImplicitEulerStepPositiveL2 i (t : ℝ) (by exact_mod_cast ht) := by
   rw [ContinuousCompactOrientedGaugeWilsonUniformDobrushinFamilyData.uniformImplicitEulerL2]
-  simp only [if_neg (ne_of_gt ht)]
+  exact dif_neg (ne_of_gt ht)
 
 /-- Pointwise decay of every finite-volume implicit-Euler transfer family by
 one common scalar factor. -/
@@ -87,7 +90,7 @@ theorem continuous_compact_oriented_uniformImplicitEulerL2_decay_slope
         (t : ℝ)⁻¹ *
           (1 - implicitEulerGapDecayFactor
             (continuousCompactOrientedUniformDobrushinGap U) t))
-      (nhdsWithin 0 (Set.Ioi 0))
+      (nhdsWithin 0 (Ioi 0))
       (nhds (continuousCompactOrientedUniformDobrushinGap U)) :=
   continuous_compact_oriented_uniformDobrushin_implicitEuler_slope U
 
