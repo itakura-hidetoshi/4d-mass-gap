@@ -25,9 +25,10 @@ theorem tendsto_nnreal_inv_mul_one_sub_implicitEulerGapDecayFactor
       (nhds mass) := by
   have hden :
       HasDerivAt (fun x : ℝ => 1 + mass * x) mass 0 := by
-    simpa using
+    convert
       ((hasDerivAt_const (x := (0 : ℝ)) (c := (1 : ℝ))).add
-        (hasDerivAt_const_mul (x := (0 : ℝ)) mass))
+        (hasDerivAt_const_mul (x := (0 : ℝ)) mass)) using 1 <;>
+      norm_num
   have hinv :
       HasDerivAt (fun x : ℝ => (1 + mass * x)⁻¹) (-mass) 0 := by
     simpa using hden.inv (by norm_num)
@@ -63,9 +64,11 @@ theorem implicitEulerGapDecayFactor_le_one
     {mass : ℝ} (hmass : 0 ≤ mass) (t : NNReal) :
     implicitEulerGapDecayFactor mass t ≤ 1 := by
   unfold implicitEulerGapDecayFactor
-  have hden : 1 ≤ 1 + mass * (t : ℝ) := by
-    linarith [mul_nonneg hmass t.property]
-  exact inv_le_one₀ hden
+  have hden : 1 ≤ 1 + mass * (t : ℝ) :=
+    le_add_of_nonneg_right (mul_nonneg hmass t.property)
+  have hdenPos : 0 < 1 + mass * (t : ℝ) :=
+    zero_lt_one.trans_le hden
+  exact (inv_le_one₀ hdenPos).2 hden
 
 /-- The uniform compact Wilson Dobrushin gap has the canonical implicit-Euler
 small-time slope. -/
