@@ -21,6 +21,10 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionL2_idempotent
     continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply,
     continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply]
   let hm := compact_oriented_offLinkMeasurableSpace_le C.base target
+  letI : Fact
+      (C.base.offLinkMeasurableSpace target ≤
+        (inferInstance : MeasurableSpace C.base.Configuration)) :=
+    ⟨hm⟩
   let q : lpMeas ℝ ℝ (C.base.offLinkMeasurableSpace target)
       2 C.gibbsMeasure :=
     condExpL2 ℝ ℝ hm f
@@ -83,9 +87,9 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_projection_z
     (f : Lp ℝ 2 C.gibbsMeasure) :
     C.singleLinkHeatBathFluctuationL2 target
         (C.singleLinkHeatBathProjectionL2 target f) = 0 := by
-  rw [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply,
-    continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply_projection]
-  simp
+  simp only [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply]
+  rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply_projection]
+  exact sub_self _
 
 /-- The compact one-link `L²` fluctuation projection is idempotent. -/
 theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent
@@ -96,9 +100,11 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent
       C.singleLinkHeatBathFluctuationL2 target := by
   apply ContinuousLinearMap.ext
   intro f
-  simp [ContinuousLinearMap.comp_apply,
-    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply,
+  simp only [ContinuousLinearMap.comp_apply,
+    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply]
+  rw [map_sub,
     continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply_projection]
+  simp
 
 /-- Pointwise idempotence of the compact one-link `L²` fluctuation
 projection. -/
