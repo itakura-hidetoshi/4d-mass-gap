@@ -1,9 +1,11 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathProjectionL2Identification
+import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonHeatBathHamiltonianL2
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
+open scoped BigOperators
 
 noncomputable section
 
@@ -112,6 +114,37 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_toLp_eq
     [hfLp.coeFn_toLp, hPfLp.coeFn_toLp, hQfLp.coeFn_toLp] with A hfA hPfA hQfA
   rw [Lp.coeFn_sub, hfA, hPfA, hQfA]
   rfl
+
+/-- For a strongly measurable uniformly bounded observable, the abstract
+compact heat-bath Hamiltonian quadratic form is the finite sum of the squared
+`L²` norms of its concrete one-link Haar fluctuations. -/
+theorem continuous_compact_oriented_heatBathHamiltonianL2_boundedObservable_quadraticForm
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (f : C.base.Configuration → ℝ)
+    (hf : StronglyMeasurable f)
+    (M : ℝ)
+    (hM0 : 0 ≤ M)
+    (hM : ∀ A, |f A| ≤ M) :
+    inner ℝ
+        (C.heatBathHamiltonianL2
+          ((continuous_compact_oriented_memLp_two_of_uniform_bound
+            C f hf M hM0 hM).toLp f))
+        ((continuous_compact_oriented_memLp_two_of_uniform_bound
+          C f hf M hM0 hM).toLp f) =
+      ∑ target : C.base.geometry.Edge,
+        ‖((continuous_compact_oriented_memLp_two_of_uniform_bound
+          C (C.singleLinkHeatBathFluctuation target f)
+          (continuous_compact_oriented_singleLinkHeatBathFluctuation_stronglyMeasurable
+            C target f hf)
+          (2 * M) (mul_nonneg (by norm_num) hM0)
+          (continuous_compact_oriented_singleLinkHeatBathFluctuation_abs_le
+            C target f hf M hM0 hM)).toLp
+          (C.singleLinkHeatBathFluctuation target f))‖ ^ 2 := by
+  rw [continuous_compact_oriented_heatBathHamiltonianL2_quadraticForm]
+  apply Finset.sum_congr rfl
+  intro target _htarget
+  rw [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_toLp_eq
+    C target f hf M hM0 hM]
 
 end
 
