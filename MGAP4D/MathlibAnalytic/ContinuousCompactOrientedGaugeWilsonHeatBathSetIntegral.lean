@@ -43,11 +43,11 @@ theorem compact_oriented_indicator_offLinkFiberConstant
       L target s hs A B hAgree
   by_cases hA : A ∈ s
   · have hB : B ∈ s := hMem.mp hA
-    simp [Set.indicator_of_mem hA, Set.indicator_of_mem hB]
+    simp [Set.indicator, hA, hB]
   · have hB : B ∉ s := by
       intro h
       exact hA (hMem.mpr h)
-    simp [Set.indicator_of_not_mem hA, Set.indicator_of_not_mem hB]
+    simp [Set.indicator, hA, hB]
 
 /-- Exact Haar conditional expectation fixes indicators of off-link measurable
 sets. -/
@@ -89,8 +89,8 @@ theorem continuous_compact_oriented_setIntegral_singleLinkHeatBathProjection_eq
   have hgBound : ∀ A, |g A| ≤ (1 : ℝ) := by
     intro A
     by_cases hA : A ∈ s
-    · simp [g, Set.indicator_of_mem hA]
-    · simp [g, Set.indicator_of_not_mem hA]
+    · simp [g, Set.indicator, hA]
+    · simp [g, Set.indicator, hA]
   have hPair :=
     continuous_compact_oriented_singleLinkHeatBathProjection_gibbsPairing_symm
       C target f g hf hg M 1 hM0 zero_le_one hM hgBound
@@ -110,8 +110,8 @@ theorem continuous_compact_oriented_setIntegral_singleLinkHeatBathProjection_eq
     apply integral_congr_ae
     filter_upwards [] with A
     by_cases hA : A ∈ s
-    · simp [g, Set.indicator_of_mem hA]
-    · simp [g, Set.indicator_of_not_mem hA]
+    · simp [g, Set.indicator, hA]
+    · simp [g, Set.indicator, hA]
   have hRight :
       (∫ A, f A * g A ∂C.gibbsMeasure) =
         ∫ A in s, f A ∂C.gibbsMeasure := by
@@ -119,8 +119,8 @@ theorem continuous_compact_oriented_setIntegral_singleLinkHeatBathProjection_eq
     apply integral_congr_ae
     filter_upwards [] with A
     by_cases hA : A ∈ s
-    · simp [g, Set.indicator_of_mem hA]
-    · simp [g, Set.indicator_of_not_mem hA]
+    · simp [g, Set.indicator, hA]
+    · simp [g, Set.indicator, hA]
   rw [hLeft, hRight] at hPair
   exact hPair
 
