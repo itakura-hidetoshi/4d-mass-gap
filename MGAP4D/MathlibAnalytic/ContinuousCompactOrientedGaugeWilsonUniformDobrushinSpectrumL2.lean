@@ -16,30 +16,47 @@ theorem continuous_compact_oriented_uniformDobrushin_mem_resolventSet
     (hlambda : lambda < continuousCompactOrientedUniformDobrushinGap U) :
     lambda ∈ resolventSet ℝ
       (U.system i).heatBathHamiltonianVacuumOrthogonalL2 := by
+  let S : (U.system i).VacuumOrthogonalL2 →L[ℝ]
+      (U.system i).VacuumOrthogonalL2 :=
+    (U.system i).restrictedEnergyShiftL2 lambda
   let R : (U.system i).VacuumOrthogonalL2 →L[ℝ]
       (U.system i).VacuumOrthogonalL2 :=
     U.uniformResolventL2 i hlambda
+  have hScalarShift :
+      algebraMap ℝ
+          ((U.system i).VacuumOrthogonalL2 →L[ℝ]
+            (U.system i).VacuumOrthogonalL2) lambda -
+          (U.system i).heatBathHamiltonianVacuumOrthogonalL2 =
+        -S := by
+    apply ContinuousLinearMap.ext
+    intro y
+    change
+      lambda • y -
+          (U.system i).heatBathHamiltonianVacuumOrthogonalL2 y =
+        -((U.system i).heatBathHamiltonianVacuumOrthogonalL2 y - lambda • y)
+    abel
+  have hShiftResolvent : S * R = 1 := by
+    apply ContinuousLinearMap.ext
+    intro y
+    change
+      (U.system i).restrictedEnergyShiftL2 lambda
+          (U.uniformResolventL2 i hlambda y) = y
+    exact continuous_compact_oriented_uniformResolvent_shift_apply
+      U i hlambda y
+  have hResolventShift : R * S = 1 := by
+    apply ContinuousLinearMap.ext
+    intro y
+    change
+      U.uniformResolventL2 i hlambda
+          ((U.system i).restrictedEnergyShiftL2 lambda y) = y
+    exact continuous_compact_oriented_uniformResolvent_apply_shift
+      U i hlambda y
   refine spectrum.mem_resolventSet_of_left_right_inverse
     (b := -R) (c := -R) ?_ ?_
-  · apply ContinuousLinearMap.ext
-    intro y
-    have h := continuous_compact_oriented_uniformResolvent_shift_apply
-      U i hlambda y
-    change
-      lambda • (-R y) -
-          (U.system i).heatBathHamiltonianVacuumOrthogonalL2 (-R y) = y
-    simpa [ContinuousCompactOrientedGaugeWilsonSystem.restrictedEnergyShiftL2,
-      R, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
-  · apply ContinuousLinearMap.ext
-    intro y
-    have h := continuous_compact_oriented_uniformResolvent_apply_shift
-      U i hlambda y
-    change
-      -R
-          (lambda • y -
-            (U.system i).heatBathHamiltonianVacuumOrthogonalL2 y) = y
-    simpa [ContinuousCompactOrientedGaugeWilsonSystem.restrictedEnergyShiftL2,
-      R, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
+  · rw [hScalarShift]
+    simpa only [neg_mul_neg] using hShiftResolvent
+  · rw [hScalarShift]
+    simpa only [neg_mul_neg] using hResolventShift
 
 /-- No spectral value of a vacuum-orthogonal finite-volume Hamiltonian lies
 strictly below the uniform Dobrushin gap. -/
