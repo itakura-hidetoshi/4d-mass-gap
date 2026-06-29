@@ -30,7 +30,9 @@ variable
 four-dimensional `SU(N)` Wilson family. -/
 abbrev UniformImplicitEulerOSBridge
     (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
-      sideLength sideLength_pos N hN beta beta_nonneg) :=
+      sideLength sideLength_pos N hN beta beta_nonneg)
+    (P : W.OSPreHilbertData)
+    (T : P.StronglyContinuousPhysicalSemigroup) :=
   ContinuousCompactOrientedGaugeWilsonUniformImplicitEulerOSBridge
     P T D.toUniformFamily
 
@@ -39,7 +41,7 @@ continuum right Hamiltonian. -/
 theorem rightHamiltonian_inner_ge_uniformGap_mul_norm_sq
     (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
       sideLength sideLength_pos N hN beta beta_nonneg)
-    (B : D.UniformImplicitEulerOSBridge)
+    (B : D.UniformImplicitEulerOSBridge P T)
     (psi : T.rightGeneratorDomain)
     (hpsi : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0) :
     (1 - D.coefficientBound) * ‖(psi : P.PhysicalHilbert)‖ ^ 2 ≤
@@ -52,7 +54,7 @@ OS Hamiltonian. -/
 theorem closedRightHamiltonian_inner_ge_uniformGap_mul_norm_sq
     (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
       sideLength sideLength_pos N hN beta beta_nonneg)
-    (B : D.UniformImplicitEulerOSBridge)
+    (B : D.UniformImplicitEulerOSBridge P T)
     (hP : P.IsNormalized)
     (psi : T.closedRightHamiltonian.domain)
     (hpsi : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0) :
