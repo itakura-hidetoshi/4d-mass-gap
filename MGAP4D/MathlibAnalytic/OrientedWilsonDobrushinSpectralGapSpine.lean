@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonDobrushinOperatorSpine
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryDobrushinCertificate
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonRandomScanVariationContraction
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+def orientedWilsonDobrushinSpectralGapSpineReady : Prop := True
+
+end MathlibAnalytic
+end MGAP4D
