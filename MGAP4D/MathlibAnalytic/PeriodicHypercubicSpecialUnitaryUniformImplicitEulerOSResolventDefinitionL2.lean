@@ -17,6 +17,18 @@ variable {W : PhysicalYangMillsGaugeInvariantOSReflectionData S}
 variable {P : W.OSPreHilbertData}
 variable {T : P.StronglyContinuousPhysicalSemigroup}
 
+noncomputable def periodicVacuumOrthogonalRealResolvent
+    (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
+      sideLength sideLength_pos N hN beta beta_nonneg)
+    (B : D.UniformImplicitEulerOSBridge P T)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ}
+    (hlambda : lambda < 1 - D.coefficientBound) :
+    P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
+  B.vacuumOrthogonalRealResolvent hP hSelf (by
+    simpa only [toUniformFamily_gap] using hlambda)
+
 end PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
 
 end
