@@ -104,9 +104,11 @@ theorem finite_oriented_averagedSingleLinkVariance_eq_fluctuationEnergy
   classical
   unfold FiniteOrientedLatticeWilsonSystem.averagedSingleLinkVariance
     FiniteOrientedLatticeWilsonSystem.averagedSingleLinkFluctuationEnergy
-  apply Finset.sum_congr rfl
-  intro A _hA
-  rw [finite_oriented_singleLinkConditionalVariance_eq_fluctuationEnergy]
+  apply Finset.sum_congr
+  · ext A
+    simp
+  · intro A _hA
+    rw [finite_oriented_singleLinkConditionalVariance_eq_fluctuationEnergy]
 
 /-- Total native fluctuation Dirichlet form. -/
 def FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathFluctuationDirichletForm
