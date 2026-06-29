@@ -41,7 +41,7 @@ theorem compact_oriented_offLinkMeasurableSpace_le
     (target : L.geometry.Edge) :
     L.offLinkMeasurableSpace target ≤
       (inferInstance : MeasurableSpace L.Configuration) := by
-  change Measurable (L.offLinkRestriction target)
+  unfold CompactOrientedGaugeWilsonSystem.offLinkMeasurableSpace
   exact measurable_compact_oriented_offLinkRestriction L target
 
 /-- Native compact-group one-link heat-bath projection on the genuine Gibbs
