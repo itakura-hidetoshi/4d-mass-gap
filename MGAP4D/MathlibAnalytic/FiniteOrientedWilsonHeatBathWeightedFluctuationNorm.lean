@@ -61,10 +61,12 @@ theorem finite_oriented_averagedSingleLinkFluctuationEnergy_eq_gibbsPairing
       unfold
         FiniteOrientedLatticeWilsonSystem.averagedSingleLinkFluctuationEnergy
         FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
-      apply Finset.sum_congr rfl
-      intro A _hA
-      rw [finite_oriented_singleLinkConditionalFluctuationEnergy_eq_projection_sq]
-      ring
+      apply Finset.sum_congr
+      · ext A
+        simp
+      · intro A _hA
+        rw [finite_oriented_singleLinkConditionalFluctuationEnergy_eq_projection_sq]
+        ring
     _ = L.gibbsPairingReal
           (fun B : L.Configuration =>
             (L.singleLinkHeatBathFluctuationLinearMap e f B) ^ 2)
@@ -74,9 +76,11 @@ theorem finite_oriented_averagedSingleLinkFluctuationEnergy_eq_gibbsPairing
           (L.singleLinkHeatBathFluctuationLinearMap e f) := by
       classical
       unfold FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
-      apply Finset.sum_congr rfl
-      intro A _hA
-      ring
+      apply Finset.sum_congr
+      · ext A
+        simp
+      · intro A _hA
+        ring
 
 /-- Averaged native conditional variance is the weighted squared norm of
 `Q_e f`. -/
