@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonHeatBathPoincareL2
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathHamiltonianKernelIdentification
 
 namespace MGAP4D
 namespace MathlibAnalytic
