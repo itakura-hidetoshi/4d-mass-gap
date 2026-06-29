@@ -15,6 +15,11 @@ theorem continuous_compact_oriented_restrictedEnergyShiftL2_gap
       inner ℝ (C.restrictedEnergyShiftL2 lambda f) f := by
   have hGap := continuous_compact_oriented_restrictedEnergy_gap C D f
   rw [continuous_compact_oriented_restrictedEnergyShiftL2_apply]
+  have hSmul :
+      inner ℝ (lambda • f) f = lambda * inner ℝ f f :=
+    real_inner_smul_left f f lambda
+  have hSelf : inner ℝ f f = ‖f‖ ^ 2 :=
+    real_inner_self_eq_norm_sq f
   have hInner :
       inner ℝ
           (C.heatBathHamiltonianVacuumOrthogonalL2 f - lambda • f) f =
@@ -26,8 +31,17 @@ theorem continuous_compact_oriented_restrictedEnergyShiftL2_gap
         inner ℝ (C.heatBathHamiltonianVacuumOrthogonalL2 f) f -
           inner ℝ (lambda • f) f := inner_sub_left _ _ _
       _ = inner ℝ (C.heatBathHamiltonianVacuumOrthogonalL2 f) f -
-          lambda * ‖f‖ ^ 2 := by
-        rw [real_inner_smul_left, real_inner_self_eq_norm_sq]
+          lambda * inner ℝ f f :=
+        congrArg
+          (fun t : ℝ =>
+            inner ℝ (C.heatBathHamiltonianVacuumOrthogonalL2 f) f - t)
+          hSmul
+      _ = inner ℝ (C.heatBathHamiltonianVacuumOrthogonalL2 f) f -
+          lambda * ‖f‖ ^ 2 :=
+        congrArg
+          (fun t : ℝ =>
+            inner ℝ (C.heatBathHamiltonianVacuumOrthogonalL2 f) f - lambda * t)
+          hSelf
   rw [hInner]
   nlinarith [sq_nonneg ‖f‖]
 
