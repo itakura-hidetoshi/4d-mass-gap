@@ -35,6 +35,21 @@ noncomputable def periodicVacuumOrthogonalRealResolvent
   B.vacuumOrthogonalRealResolvent hP hSelf (by
     simpa only [toUniformFamily_gap] using hlambda)
 
+theorem periodicVacuumOrthogonalRealResolvent_norm_le
+    (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
+      sideLength sideLength_pos N hN beta beta_nonneg)
+    (B : D.UniformImplicitEulerOSBridge)
+    (hP : P.IsNormalized)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ}
+    (hlambda : lambda < 1 - D.coefficientBound) :
+    ‖D.periodicVacuumOrthogonalRealResolvent B hP hSelf hlambda‖ ≤
+      (1 - D.coefficientBound - lambda)⁻¹ := by
+  unfold periodicVacuumOrthogonalRealResolvent
+  simpa only [toUniformFamily_gap] using
+    B.vacuumOrthogonalRealResolvent_norm_le hP hSelf
+      (by simpa only [toUniformFamily_gap] using hlambda)
+
 end PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
 
 end
