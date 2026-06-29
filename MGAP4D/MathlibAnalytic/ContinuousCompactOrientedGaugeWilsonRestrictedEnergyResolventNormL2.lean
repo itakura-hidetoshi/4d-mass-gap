@@ -44,8 +44,7 @@ theorem continuous_compact_oriented_restrictedEnergyResolventL2_norm_bound
   have hLinear :
       (continuousCompactOrientedDobrushinHeatBathGap D.coefficient - lambda) *
           ‖x‖ ≤ ‖y‖ := by
-    apply (mul_le_mul_right hxNorm).mp
-    simpa [pow_two, mul_assoc] using hMul
+    nlinarith [sq_nonneg ‖x‖]
   rw [inv_mul_eq_div]
   apply (le_div_iff₀ hShiftPos).2
   simpa [mul_comm] using hLinear
