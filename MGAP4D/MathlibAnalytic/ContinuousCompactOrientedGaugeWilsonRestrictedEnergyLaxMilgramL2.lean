@@ -8,6 +8,16 @@ open MeasureTheory
 
 noncomputable section
 
+/-- The Gibbs-vacuum orthogonal sector is complete because it is an
+orthogonal complement, hence a closed subspace of the ambient Gibbs Hilbert
+space.  This explicit instance avoids expensive reducible unfolding during
+Lax--Milgram typeclass search. -/
+instance continuous_compact_oriented_vacuumOrthogonalL2_completeSpace
+    (C : ContinuousCompactOrientedGaugeWilsonSystem) :
+    CompleteSpace C.VacuumOrthogonalL2 := by
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.VacuumOrthogonalL2
+  infer_instance
+
 /-- The bounded energy form induced by the native heat-bath operator on the
 Gibbs-vacuum orthogonal Hilbert sector. -/
 noncomputable def
