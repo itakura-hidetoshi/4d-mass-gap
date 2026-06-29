@@ -17,8 +17,8 @@ theorem finite_oriented_unsignedProxy_replaceLink_eq
   by_cases h : e' = e
   · subst e'
     simp
-  · simp [FiniteLatticeWilsonSystem.replaceLink,
-      FiniteOrientedLatticeWilsonSystem.replaceLink, h]
+  · rw [finite_lattice_replaceLink_ne L.unsignedProxy A e e' g h,
+      finite_oriented_replaceLink_of_ne L A e e' g h]
 
 /-- Proxy and oriented off-link agreement predicates coincide. -/
 theorem finite_oriented_unsignedProxy_agreeOffLink_iff
@@ -39,9 +39,13 @@ theorem finite_oriented_unsignedProxy_singleLinkBoltzmannWeight_eq
     (g : L.Gauge) :
     L.unsignedProxy.singleLinkBoltzmannWeight A e g =
       L.singleLinkBoltzmannWeight A e g := by
-  unfold FiniteLatticeWilsonSystem.singleLinkBoltzmannWeight
-    FiniteLatticeWilsonSystem.boltzmannWeight
-    FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight
+  change ENNReal.ofReal
+      (Real.exp (-L.beta *
+        L.unsignedProxy.wilsonAction
+          (L.unsignedProxy.replaceLink A e g))) =
+    ENNReal.ofReal
+      (Real.exp (-L.beta *
+        L.wilsonAction (L.replaceLink A e g)))
   rw [finite_oriented_unsignedProxy_replaceLink_eq,
     finite_oriented_unsignedProxy_wilsonAction_eq L hInv]
 
@@ -69,9 +73,12 @@ theorem finite_oriented_unsignedProxy_singleLinkConditionalPMF_eq
     L.unsignedProxy.singleLinkConditionalPMF A e =
       L.singleLinkConditionalPMF A e := by
   ext g
-  rw [finite_lattice_singleLinkConditionalPMF_apply,
-    finite_oriented_singleLinkConditionalPMF_apply,
-    finite_oriented_unsignedProxy_singleLinkBoltzmannWeight_eq
+  change
+    L.unsignedProxy.singleLinkBoltzmannWeight A e g *
+        (L.unsignedProxy.singleLinkPartitionFunction A e)⁻¹ =
+      L.singleLinkBoltzmannWeight A e g *
+        (L.singleLinkPartitionFunction A e)⁻¹
+  rw [finite_oriented_unsignedProxy_singleLinkBoltzmannWeight_eq
       L hInv A e g,
     finite_oriented_unsignedProxy_singleLinkPartitionFunction_eq
       L hInv A e]
@@ -91,9 +98,22 @@ theorem finite_oriented_unsignedProxy_singleLinkConditionalTotalVariation_eq
   have hB :=
     finite_oriented_unsignedProxy_singleLinkConditionalPMF_eq
       L hInv B e
-  simp [FiniteLatticeWilsonSystem.singleLinkConditionalTotalVariation,
-    FiniteOrientedLatticeWilsonSystem.singleLinkConditionalTotalVariation,
-    hA, hB]
+  change
+    (2 : ℝ)⁻¹ *
+        ∑ g : L.Gauge,
+          |(L.unsignedProxy.singleLinkConditionalPMF A e g).toReal -
+            (L.unsignedProxy.singleLinkConditionalPMF B e g).toReal| =
+      (2 : ℝ)⁻¹ *
+        ∑ g : L.Gauge,
+          |(L.singleLinkConditionalPMF A e g).toReal -
+            (L.singleLinkConditionalPMF B e g).toReal|
+  rw [hA, hB]
+  apply congrArg (fun x : ℝ => (2 : ℝ)⁻¹ * x)
+  apply Finset.sum_congr
+  · ext g
+    simp
+  · intro g _hg
+    rfl
 
 end
 
