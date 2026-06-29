@@ -15,6 +15,10 @@ theorem finite_oriented_unsignedProxy_boltzmannWeight_eq
     L.unsignedProxy.boltzmannWeight A = L.boltzmannWeight A := by
   unfold FiniteLatticeWilsonSystem.boltzmannWeight
     FiniteOrientedLatticeWilsonSystem.boltzmannWeight
+  change ENNReal.ofReal
+      (Real.exp (-L.beta * L.unsignedProxy.wilsonAction A)) =
+    ENNReal.ofReal
+      (Real.exp (-L.beta * L.wilsonAction A))
   rw [finite_oriented_unsignedProxy_wilsonAction_eq L hInv]
 
 /-- For exponent-two groups, proxy and native oriented partition functions
@@ -36,9 +40,12 @@ theorem finite_oriented_unsignedProxy_gibbsPMF_eq
     (hInv : ∀ g : L.Gauge, g⁻¹ = g) :
     L.unsignedProxy.gibbsPMF = L.gibbsPMF := by
   ext A
-  rw [finite_lattice_gibbsPMF_apply,
-    finite_oriented_gibbsPMF_apply,
-    finite_oriented_unsignedProxy_boltzmannWeight_eq L hInv A,
+  change
+    L.unsignedProxy.boltzmannWeight A *
+        (L.unsignedProxy.partitionFunction)⁻¹ =
+      L.boltzmannWeight A *
+        (L.partitionFunction)⁻¹
+  rw [finite_oriented_unsignedProxy_boltzmannWeight_eq L hInv A,
     finite_oriented_unsignedProxy_partitionFunction_eq L hInv]
 
 /-- Real Gibbs probabilities agree between the proxy and native oriented
@@ -52,6 +59,7 @@ theorem finite_oriented_unsignedProxy_gibbsProbabilityReal_eq
   unfold FiniteLatticeWilsonSystem.gibbsProbabilityReal
     FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
   rw [finite_oriented_unsignedProxy_gibbsPMF_eq L hInv]
+  rfl
 
 /-- Gibbs expectations agree between the proxy and native oriented
 realizations. -/
@@ -64,9 +72,11 @@ theorem finite_oriented_unsignedProxy_gibbsExpectationReal_eq
   classical
   unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
     FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
-  apply Finset.sum_congr rfl
-  intro A _hA
-  rw [finite_oriented_unsignedProxy_gibbsProbabilityReal_eq L hInv A]
+  apply Finset.sum_congr
+  · ext A
+    simp
+  · intro A _hA
+    rw [finite_oriented_unsignedProxy_gibbsProbabilityReal_eq L hInv A]
 
 /-- Gibbs variances agree between the proxy and native oriented realizations. -/
 theorem finite_oriented_unsignedProxy_gibbsVarianceReal_eq
@@ -79,9 +89,11 @@ theorem finite_oriented_unsignedProxy_gibbsVarianceReal_eq
   unfold FiniteLatticeWilsonSystem.gibbsVarianceReal
     FiniteOrientedLatticeWilsonSystem.gibbsVarianceReal
   rw [finite_oriented_unsignedProxy_gibbsExpectationReal_eq L hInv f]
-  apply Finset.sum_congr rfl
-  intro A _hA
-  rw [finite_oriented_unsignedProxy_gibbsProbabilityReal_eq L hInv A]
+  apply Finset.sum_congr
+  · ext A
+    simp
+  · intro A _hA
+    rw [finite_oriented_unsignedProxy_gibbsProbabilityReal_eq L hInv A]
 
 end
 
