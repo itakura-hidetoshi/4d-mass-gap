@@ -17,8 +17,7 @@ theorem z2PeriodicHypercubicOriented_uniformPlaquetteEnergyUpperBound_one
     (n : ℕ) [NeZero n]
     (beta : ℝ)
     (hBeta : 0 ≤ beta) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-      UniformPlaquetteEnergyUpperBound 1 := by
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).UniformPlaquetteEnergyUpperBound 1 := by
   intro g
   change (if g = 1 then 0 else 1) ≤ (1 : ℝ)
   by_cases hg : g = 1 <;> simp [hg]
@@ -30,8 +29,7 @@ theorem z2PeriodicHypercubicOriented_canonicalDobrushinCoefficient_le
     (hn : 3 ≤ n)
     (beta : ℝ)
     (hBeta : 0 ≤ beta) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        canonicalDobrushinCoefficient
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).canonicalDobrushinCoefficient
           (z2PeriodicHypercubicOrientedIncidenceCertificate
             n hn beta hBeta).edgeCard_pos ≤
       18 * z2PeriodicHypercubicOrientedDobrushinEta beta := by
@@ -75,8 +73,7 @@ theorem z2PeriodicHypercubicOriented_canonicalDobrushinCoefficient_lt_one_of_exp
     (beta : ℝ)
     (hBeta : 0 ≤ beta)
     (hExp : Real.exp (beta * 2) < (19 : ℝ) / 17) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        canonicalDobrushinCoefficient
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).canonicalDobrushinCoefficient
           (z2PeriodicHypercubicOrientedIncidenceCertificate
             n hn beta hBeta).edgeCard_pos < 1 :=
   lt_of_le_of_lt
@@ -92,8 +89,7 @@ theorem z2PeriodicHypercubicOriented_canonicalDobrushinCoefficient_lt_one_of_bet
     (beta : ℝ)
     (hBeta : 0 ≤ beta)
     (hBetaLt : beta < Real.log ((19 : ℝ) / 17) / 2) :
-    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-        canonicalDobrushinCoefficient
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).canonicalDobrushinCoefficient
           (z2PeriodicHypercubicOrientedIncidenceCertificate
             n hn beta hBeta).edgeCard_pos < 1 := by
   have hArg : beta * 2 < Real.log ((19 : ℝ) / 17) := by
