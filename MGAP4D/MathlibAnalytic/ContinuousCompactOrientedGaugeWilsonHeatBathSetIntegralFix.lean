@@ -1,7 +1,0 @@
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathSetIntegral
-
-namespace MGAP4D
-namespace MathlibAnalytic
-
-end MathlibAnalytic
-end MGAP4D
