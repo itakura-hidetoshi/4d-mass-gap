@@ -55,6 +55,9 @@ noncomputable def
   intro source A B hAgree
   let n : ℝ := Fintype.card C.base.geometry.Edge
   have hinv : 0 ≤ n⁻¹ := by positivity
+  simp only [continuous_compact_oriented_randomScanHeatBathSweepBCF_apply]
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.randomScanHeatBathSweep
+  unfold continuousCompactOrientedGaugeWilsonRandomScanUpdatedVariation
   change
     |n⁻¹ * (∑ target : C.base.geometry.Edge,
         C.singleLinkHeatBathProjection target O A) -
@@ -72,10 +75,11 @@ noncomputable def
         |C.singleLinkHeatBathProjection target O A -
           C.singleLinkHeatBathProjection target O B| := by
       exact mul_le_mul_of_nonneg_left
-        (Finset.abs_sum_le_sum_abs Finset.univ
+        (Finset.abs_sum_le_sum_abs
           (fun target : C.base.geometry.Edge =>
             C.singleLinkHeatBathProjection target O A -
-              C.singleLinkHeatBathProjection target O B)) hinv
+              C.singleLinkHeatBathProjection target O B)
+          Finset.univ) hinv
     _ ≤ n⁻¹ * ∑ target : C.base.geometry.Edge,
         continuousCompactOrientedGaugeWilsonDobrushinUpdatedVariation
           D P.variation target source := by
