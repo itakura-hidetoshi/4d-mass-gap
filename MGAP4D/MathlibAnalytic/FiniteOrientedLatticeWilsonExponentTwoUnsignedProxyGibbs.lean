@@ -74,7 +74,7 @@ theorem finite_oriented_unsignedProxy_gibbsExpectationReal_eq
     FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
   apply Finset.sum_congr
   · ext A
-    simp only [Finset.mem_univ]
+    simp
   · intro A _hA
     rw [finite_oriented_unsignedProxy_gibbsProbabilityReal_eq L hInv A]
 
@@ -91,7 +91,7 @@ theorem finite_oriented_unsignedProxy_gibbsVarianceReal_eq
   rw [finite_oriented_unsignedProxy_gibbsExpectationReal_eq L hInv f]
   apply Finset.sum_congr
   · ext A
-    simp only [Finset.mem_univ]
+    simp
   · intro A _hA
     rw [finite_oriented_unsignedProxy_gibbsProbabilityReal_eq L hInv A]
 
