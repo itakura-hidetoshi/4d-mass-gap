@@ -19,7 +19,7 @@ namespace StronglyContinuousPhysicalSemigroup
 /-- Positive times at which the linear small-time defect estimate required by
 the uniformly coercive rescaled-defect package already holds. -/
 def VacuumSemigroupGapSlope.AdmissibleRescaledDefectTime
-    (T : P.StronglyContinuousPhysicalSemigroup)
+    {T : P.StronglyContinuousPhysicalSemigroup}
     (G : T.VacuumSemigroupGapSlope) :=
   {t : NNReal //
     0 < t ∧ (G.mass / 2) * (t : ℝ) ≤ 1 - G.decayFactor t}
@@ -27,19 +27,19 @@ def VacuumSemigroupGapSlope.AdmissibleRescaledDefectTime
 /-- The small-positive-time filter pulled back to admissible rescaled-defect
 times. -/
 def VacuumSemigroupGapSlope.admissibleRescaledDefectTimeFilter
-    (T : P.StronglyContinuousPhysicalSemigroup)
+    {T : P.StronglyContinuousPhysicalSemigroup}
     (G : T.VacuumSemigroupGapSlope) :
-    Filter (G.AdmissibleRescaledDefectTime T) :=
+    Filter G.AdmissibleRescaledDefectTime :=
   comap
-    ((↑) : G.AdmissibleRescaledDefectTime T → NNReal)
+    (fun tau : G.AdmissibleRescaledDefectTime => tau.1)
     (nhdsWithin 0 (Ioi 0))
 
 /-- The coercive symmetric bounded-operator package at one admissible time. -/
 noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectData
-    (T : P.StronglyContinuousPhysicalSemigroup)
+    {T : P.StronglyContinuousPhysicalSemigroup}
     (G : T.VacuumSemigroupGapSlope)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (tau : G.AdmissibleRescaledDefectTime T) :
+    (tau : G.AdmissibleRescaledDefectTime) :
     RealHilbertUniformCoerciveSymmetricStrongLimitData
       Unit P.VacuumOrthogonalHilbert (pure ()) :=
   G.vacuumOrthogonalRescaledDefectStrongLimitData
@@ -48,14 +48,14 @@ noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectData
 /-- The bounded resolvent of the rescaled semigroup defect at one admissible
 small time. -/
 noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent
-    (T : P.StronglyContinuousPhysicalSemigroup)
+    {T : P.StronglyContinuousPhysicalSemigroup}
     (G : T.VacuumSemigroupGapSlope)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (tau : G.AdmissibleRescaledDefectTime T)
+    (tau : G.AdmissibleRescaledDefectTime)
     {lambda : ℝ}
     (hlambda : lambda < G.mass / 2) :
     P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
-  (G.admissibleRescaledDefectData T hSymmetric tau).limitResolvent hlambda
+  (G.admissibleRescaledDefectData hSymmetric tau).limitResolvent hlambda
 
 /-- The closed Hamiltonian shift applied to one canonical core vector. -/
 def vacuumOrthogonalClosedRightHamiltonianCoreShift
@@ -74,17 +74,17 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_apply_shift
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (tau : G.AdmissibleRescaledDefectTime T)
+    (tau : G.AdmissibleRescaledDefectTime)
     {lambda : ℝ}
     (hlambda : lambda < G.mass / 2)
     (x : P.VacuumOrthogonalHilbert) :
-    G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+    G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
         (T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
             hSymmetric tau.1 x - lambda • x) =
       x := by
   exact
     realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_apply_shift
-      (G.admissibleRescaledDefectData T hSymmetric tau)
+      (G.admissibleRescaledDefectData hSymmetric tau)
       hlambda x
 
 /-- Resolvent stability on a core shift: its error is the bounded resolvent
@@ -93,15 +93,15 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_core_error_eq
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (tau : G.AdmissibleRescaledDefectTime T)
+    (tau : G.AdmissibleRescaledDefectTime)
     {lambda : ℝ}
     (hlambda : lambda < G.mass / 2)
     (x : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
-    G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+    G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
           (T.vacuumOrthogonalClosedRightHamiltonianCoreShift
             hSymmetric lambda x) -
         (x : P.VacuumOrthogonalHilbert) =
-      G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+      G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
         (T.vacuumOrthogonalClosedRightHamiltonian
             (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
               hSymmetric)
@@ -109,7 +109,7 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_core_error_eq
           T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
             hSymmetric tau.1 (x : P.VacuumOrthogonalHilbert)) := by
   let R :=
-    G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+    G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
   have hInverse :
       R
           (T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
@@ -153,11 +153,11 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_core_error_nor
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (tau : G.AdmissibleRescaledDefectTime T)
+    (tau : G.AdmissibleRescaledDefectTime)
     {lambda : ℝ}
     (hlambda : lambda < G.mass / 2)
     (x : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
-    ‖G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+    ‖G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
           (T.vacuumOrthogonalClosedRightHamiltonianCoreShift
             hSymmetric lambda x) -
         (x : P.VacuumOrthogonalHilbert)‖ ≤
@@ -172,7 +172,7 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_core_error_nor
     T hSymmetric tau hlambda x]
   exact
     realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_norm_bound
-      (G.admissibleRescaledDefectData T hSymmetric tau)
+      (G.admissibleRescaledDefectData hSymmetric tau)
       hlambda _
 
 /-- Along admissible small times, bounded rescaled-defect resolvents converge
@@ -185,16 +185,16 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_tendsto_on_cor
     (hlambda : lambda < G.mass / 2)
     (x : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
     Tendsto
-      (fun tau : G.AdmissibleRescaledDefectTime T =>
-        G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
           (T.vacuumOrthogonalClosedRightHamiltonianCoreShift
             hSymmetric lambda x))
-      (G.admissibleRescaledDefectTimeFilter T)
+      G.admissibleRescaledDefectTimeFilter
       (nhds (x : P.VacuumOrthogonalHilbert)) := by
   have hTime :
       Tendsto
-        ((↑) : G.AdmissibleRescaledDefectTime T → NNReal)
-        (G.admissibleRescaledDefectTimeFilter T)
+        (fun tau : G.AdmissibleRescaledDefectTime => tau.1)
+        G.admissibleRescaledDefectTimeFilter
         (nhdsWithin 0 (Ioi 0)) := by
     exact tendsto_comap
   have hCore :=
@@ -202,19 +202,19 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_tendsto_on_cor
       hSymmetric x).comp hTime
   have hDifference :
       Tendsto
-        (fun tau : G.AdmissibleRescaledDefectTime T =>
+        (fun tau : G.AdmissibleRescaledDefectTime =>
           T.vacuumOrthogonalClosedRightHamiltonian
               (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
                 hSymmetric)
               (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint x) -
             T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
               hSymmetric tau.1 (x : P.VacuumOrthogonalHilbert))
-        (G.admissibleRescaledDefectTimeFilter T)
+        G.admissibleRescaledDefectTimeFilter
         (nhds 0) := by
     simpa using tendsto_const_nhds.sub hCore
   have hMajorant :
       Tendsto
-        (fun tau : G.AdmissibleRescaledDefectTime T =>
+        (fun tau : G.AdmissibleRescaledDefectTime =>
           (G.mass / 2 - lambda)⁻¹ *
             ‖T.vacuumOrthogonalClosedRightHamiltonian
                   (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
@@ -222,18 +222,18 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_tendsto_on_cor
                   (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint x) -
               T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
                 hSymmetric tau.1 (x : P.VacuumOrthogonalHilbert)‖)
-        (G.admissibleRescaledDefectTimeFilter T)
+        G.admissibleRescaledDefectTimeFilter
         (nhds 0) := by
     have hNorm := hDifference.norm
     simpa using tendsto_const_nhds.mul hNorm
   have hError :
       Tendsto
-        (fun tau : G.AdmissibleRescaledDefectTime T =>
-          G.admissibleRescaledDefectResolvent T hSymmetric tau hlambda
+        (fun tau : G.AdmissibleRescaledDefectTime =>
+          G.admissibleRescaledDefectResolvent hSymmetric tau hlambda
               (T.vacuumOrthogonalClosedRightHamiltonianCoreShift
                 hSymmetric lambda x) -
             (x : P.VacuumOrthogonalHilbert))
-        (G.admissibleRescaledDefectTimeFilter T)
+        G.admissibleRescaledDefectTimeFilter
         (nhds 0) :=
     squeeze_zero_norm'
       (Eventually.of_forall fun tau =>
@@ -243,11 +243,11 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_tendsto_on_cor
   have hAdd := hError.add
     (tendsto_const_nhds :
       Tendsto
-        (fun _ : G.AdmissibleRescaledDefectTime T =>
+        (fun _ : G.AdmissibleRescaledDefectTime =>
           (x : P.VacuumOrthogonalHilbert))
-        (G.admissibleRescaledDefectTimeFilter T)
+        G.admissibleRescaledDefectTimeFilter
         (nhds (x : P.VacuumOrthogonalHilbert)))
-  simpa only [sub_add_cancel] using hAdd
+  simpa only [sub_add_cancel, zero_add] using hAdd
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
