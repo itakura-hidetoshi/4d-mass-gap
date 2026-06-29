@@ -31,9 +31,11 @@ theorem measurable_compact_oriented_singleLinkAssemble_old
         (C.base.OffLinkConfiguration target × C.base.Gauge) =>
           (z.1, z.2.1)) :=
     measurable_fst.prodMk measurable_snd.fst
-  exact
-    (measurable_compact_oriented_singleLinkAssemble_uncurry C target).comp
+  have hOld :=
+    (C.base.singleLinkCoordinatesMeasurableEquiv target).symm.measurable.comp
       hOldCoordinates
+  simpa only [Function.comp_apply,
+    CompactOrientedGaugeWilsonSystem.singleLinkAssemble] using hOld
 
 /-- The newly assembled configuration is measurable in old value, off-link
 configuration, and new value. -/
@@ -48,9 +50,11 @@ theorem measurable_compact_oriented_singleLinkAssemble_new
         (C.base.OffLinkConfiguration target × C.base.Gauge) =>
           (z.2.2, z.2.1)) :=
     measurable_snd.snd.prodMk measurable_snd.fst
-  exact
-    (measurable_compact_oriented_singleLinkAssemble_uncurry C target).comp
+  have hNew :=
+    (C.base.singleLinkCoordinatesMeasurableEquiv target).symm.measurable.comp
       hNewCoordinates
+  simpa only [Function.comp_apply,
+    CompactOrientedGaugeWilsonSystem.singleLinkAssemble] using hNew
 
 /-- The compact one-link joint transition density is jointly measurable in old
 value, off-link configuration, and new value. -/
@@ -65,23 +69,27 @@ theorem measurable_compact_oriented_singleLinkJointDensity
         (C.base.OffLinkConfiguration target × C.base.Gauge) =>
           (z.1, z.2.1)) :=
     measurable_fst.prodMk measurable_snd.fst
-  have hGlobal : Measurable (fun z : C.base.Gauge ×
-      (C.base.OffLinkConfiguration target × C.base.Gauge) =>
-        C.singleLinkCoordinateGibbsDensity target (z.1, z.2.1)) :=
+  have hGlobalCore :=
     (continuous_compact_oriented_singleLinkCoordinateGibbsDensity_measurable
       C target).comp hOldCoordinates
+  have hGlobal : Measurable (fun z : C.base.Gauge ×
+      (C.base.OffLinkConfiguration target × C.base.Gauge) =>
+        C.singleLinkCoordinateGibbsDensity target (z.1, z.2.1)) := by
+    simpa only [Function.comp_apply] using hGlobalCore
   have hConditionalCoordinates : Measurable
       (fun z : C.base.Gauge ×
         (C.base.OffLinkConfiguration target × C.base.Gauge) =>
           (C.base.singleLinkAssemble target z.1 z.2.1, z.2.2)) :=
     (measurable_compact_oriented_singleLinkAssemble_old C target).prodMk
       measurable_snd.snd
+  have hConditionalCore :=
+    (measurable_compact_oriented_singleLinkConditionalDensity_uncurry
+      C target).comp hConditionalCoordinates
   have hConditional : Measurable (fun z : C.base.Gauge ×
       (C.base.OffLinkConfiguration target × C.base.Gauge) =>
         C.singleLinkConditionalDensity target
-          (C.base.singleLinkAssemble target z.1 z.2.1) z.2.2) :=
-    (measurable_compact_oriented_singleLinkConditionalDensity_uncurry
-      C target).comp hConditionalCoordinates
+          (C.base.singleLinkAssemble target z.1 z.2.1) z.2.2) := by
+    simpa only [Function.comp_apply] using hConditionalCore
   exact hGlobal.mul hConditional
 
 /-- Any measurable transition observable evaluated on the old and newly
@@ -103,7 +111,8 @@ theorem measurable_compact_oriented_transitionObservable_assembled
             C.base.singleLinkAssemble target z.2.2 z.2.1)) :=
     (measurable_compact_oriented_singleLinkAssemble_old C target).prodMk
       (measurable_compact_oriented_singleLinkAssemble_new C target)
-  exact hPhi.comp hAssembledPair
+  have h := hPhi.comp hAssembledPair
+  simpa only [Function.comp_apply] using h
 
 end
 
