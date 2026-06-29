@@ -42,7 +42,8 @@ theorem continuous_compact_oriented_restrictedEnergyInverseL2_norm_bound
     unfold continuousCompactOrientedDobrushinHeatBathGap
     exact sub_pos.mpr D.coefficient_lt_one
   by_cases hx : x = 0
-  · simp [hx]
+  · rw [hx, norm_zero]
+    exact mul_nonneg (inv_nonneg.mpr hGapPos.le) (norm_nonneg y)
   have hxNorm : 0 < ‖x‖ := norm_pos_iff.mpr hx
   have hGap := continuous_compact_oriented_restrictedEnergy_gap C D x
   have hInverse : C.heatBathHamiltonianVacuumOrthogonalL2 x = y := by
@@ -55,8 +56,7 @@ theorem continuous_compact_oriented_restrictedEnergyInverseL2_norm_bound
         ‖y‖ * ‖x‖ := hGap.trans hCS
   have hLinear :
       continuousCompactOrientedDobrushinHeatBathGap D.coefficient * ‖x‖ ≤ ‖y‖ := by
-    apply (mul_le_mul_right hxNorm).mp
-    simpa [pow_two, mul_assoc] using hMul
+    nlinarith [sq_nonneg ‖x‖]
   rw [inv_mul_eq_div]
   apply (le_div_iff₀ hGapPos).2
   simpa [mul_comm] using hLinear
