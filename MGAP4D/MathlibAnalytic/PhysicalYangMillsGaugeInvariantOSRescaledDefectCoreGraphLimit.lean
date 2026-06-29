@@ -167,22 +167,22 @@ theorem vacuumOrthogonalRescaledDefect_tendsto_closedRightHamiltonian_on_core
   have hAmbient :=
     T.rightHamiltonianDifferenceQuotient_tendsto_on_vacuumOrthogonalCore x
   rw [← T.vacuumOrthogonalClosedRightHamiltonian_core_apply hSymmetric x] at hAmbient
-  rw [Metric.tendsto_iff]
-  intro epsilon hepsilon
-  have hMetric := (Metric.tendsto_iff.1 hAmbient) epsilon hepsilon
-  filter_upwards [hMetric] with t ht
-  change
-    dist
-      (((T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
-          hSymmetric t (x : P.VacuumOrthogonalHilbert) :
-        P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
-      (((T.vacuumOrthogonalClosedRightHamiltonian
-          (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric hSymmetric)
-          (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint x) :
-        P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) < epsilon
-  rw [T.vacuumOrthogonalRescaledDefect_coe_eq_rightHamiltonianDifferenceQuotient
-    hSymmetric t x]
-  exact ht
+  rw [nhds_subtype, tendsto_comap_iff]
+  have hFunctions :
+      (fun t : NNReal =>
+        (((T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+            hSymmetric t (x : P.VacuumOrthogonalHilbert) :
+          P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))) =
+      (fun t : NNReal =>
+        T.rightHamiltonianDifferenceQuotient
+          (((x : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
+            P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) t) := by
+    funext t
+    exact
+      T.vacuumOrthogonalRescaledDefect_coe_eq_rightHamiltonianDifferenceQuotient
+        hSymmetric t x
+  rw [hFunctions]
+  exact hAmbient
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
