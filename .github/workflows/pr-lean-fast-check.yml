@@ -75,11 +75,13 @@ jobs:
           cat "${changed_file_list}"
 
           required=false
-          if grep -E '^(MGAP4D/.*\.lean|MGAP4D\.lean)$' "${changed_file_list}" \
-              | grep -Ev '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' \
-              | grep -q .; then
-            required=true
-          fi
+          while IFS= read -r changed_path; do
+            if [[ "${changed_path}" =~ ^MGAP4D/.+\.lean$ ]] \
+                && [[ "${changed_path}" != "MGAP4D/MathlibAnalytic.lean" ]]; then
+              required=true
+              break
+            fi
+          done < "${changed_file_list}"
           if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' "${changed_file_list}"; then
             required=true
           fi
