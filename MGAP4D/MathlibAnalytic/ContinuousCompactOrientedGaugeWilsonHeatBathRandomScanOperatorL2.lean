@@ -61,6 +61,7 @@ theorem continuous_compact_oriented_randomScanHeatBathL2_vacuum
     continuous_compact_oriented_heatBathProjectionSumL2_vacuum,
     smul_smul]
   field_simp [hCard]
+  exact one_smul ℝ C.gibbsVacuumL2
 
 /-- The native unnormalized compact heat-bath Hamiltonian is the edge-cardinality
 multiple of the normalized random-scan defect `I - R`. -/
@@ -78,6 +79,7 @@ theorem continuous_compact_oriented_heatBathHamiltonianL2_eq_edgeCard_smul_rando
     smul_smul]
   congr 1
   field_simp [hCard]
+  exact (one_smul ℝ (C.heatBathProjectionSumL2 f)).symm
 
 /-- Quadratic-form version of `H = |E| (I - R)`. -/
 theorem continuous_compact_oriented_heatBathHamiltonianL2_quadraticForm_eq_edgeCard_mul_randomScanDefect
@@ -90,7 +92,6 @@ theorem continuous_compact_oriented_heatBathHamiltonianL2_quadraticForm_eq_edgeC
   rw [continuous_compact_oriented_heatBathHamiltonianL2_eq_edgeCard_smul_randomScanDefect
       C hEdge f,
     real_inner_smul_left, inner_sub_left, real_inner_self_eq_norm_sq]
-  ring
 
 /-- A random-scan Rayleigh bound with rate `rho` immediately yields the
 unnormalized native Hamiltonian lower bound `|E| (1-rho)`. -/
