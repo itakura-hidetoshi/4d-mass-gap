@@ -21,7 +21,8 @@ theorem continuous_compact_oriented_uniformDobrushin_mem_resolventSet
     U.uniformResolventL2 i hlambda
   refine spectrum.mem_resolventSet_of_left_right_inverse
     (b := -R) (c := -R) ?_ ?_
-  · ext y
+  · apply ContinuousLinearMap.ext
+    intro y
     have h := continuous_compact_oriented_uniformResolvent_shift_apply
       U i hlambda y
     change
@@ -29,7 +30,8 @@ theorem continuous_compact_oriented_uniformDobrushin_mem_resolventSet
           (U.system i).heatBathHamiltonianVacuumOrthogonalL2 (-R y) = y
     simpa [ContinuousCompactOrientedGaugeWilsonSystem.restrictedEnergyShiftL2,
       R, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
-  · ext y
+  · apply ContinuousLinearMap.ext
+    intro y
     have h := continuous_compact_oriented_uniformResolvent_apply_shift
       U i hlambda y
     change
@@ -50,10 +52,10 @@ theorem continuous_compact_oriented_uniformDobrushin_not_mem_spectrum
     lambda ∉ spectrum ℝ
       (U.system i).heatBathHamiltonianVacuumOrthogonalL2 := by
   exact
-    (spectrum.notMem_iff.mpr
-      ((spectrum.mem_resolventSet_iff.mp
+    spectrum.notMem_iff.mpr
+      (spectrum.mem_resolventSet_iff.mp
         (continuous_compact_oriented_uniformDobrushin_mem_resolventSet
-          U i hlambda))))
+          U i hlambda))
 
 /-- Uniform lower spectral enclosure for every vacuum-orthogonal Hamiltonian in
 the indexed compact Wilson family. -/
