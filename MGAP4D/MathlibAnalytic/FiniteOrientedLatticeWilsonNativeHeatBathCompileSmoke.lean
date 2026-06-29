@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonNativeHamiltonianGap
 import MGAP4D.MathlibAnalytic.Z2PeriodicHypercubicOrientedNativeSpectralGap
 
 namespace MGAP4D
