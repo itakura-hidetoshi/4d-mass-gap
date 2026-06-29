@@ -56,14 +56,19 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_gibbsPairing_sy
   have hPhiInt : Integrable Phi J :=
     continuous_compact_oriented_integrable_joint_of_uniform_bound
       C target Phi hPhiSM (Mf * Mg) hPhiBound
-  have hSwapSM : StronglyMeasurable (fun z => Phi z.swap) :=
+  have hSwapSM : StronglyMeasurable
+      (fun z : C.base.Configuration × C.base.Configuration => Phi z.swap) :=
     hPhiSM.comp_measurable measurable_swap
-  have hSwapBound : ∀ z, |Phi z.swap| ≤ Mf * Mg := by
+  have hSwapBound : ∀ z : C.base.Configuration × C.base.Configuration,
+      |Phi z.swap| ≤ Mf * Mg := by
     intro z
     exact hPhiBound z.swap
-  have hSwapInt : Integrable (fun z => Phi z.swap) J :=
+  have hSwapInt : Integrable
+      (fun z : C.base.Configuration × C.base.Configuration => Phi z.swap) J :=
     continuous_compact_oriented_integrable_joint_of_uniform_bound
-      C target (fun z => Phi z.swap) hSwapSM (Mf * Mg) hSwapBound
+      C target
+        (fun z : C.base.Configuration × C.base.Configuration => Phi z.swap)
+        hSwapSM (Mf * Mg) hSwapBound
   unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsPairingReal
   calc
     (∫ A, C.singleLinkHeatBathProjection target f A * g A
@@ -92,7 +97,9 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_gibbsPairing_sy
         ∂C.gibbsMeasure := by
       simpa [Phi] using
         (continuous_compact_oriented_integral_singleLinkHeatBathJointMeasure
-          C target (fun z => Phi z.swap) hSwapInt)
+          C target
+          (fun z : C.base.Configuration × C.base.Configuration => Phi z.swap)
+          hSwapInt)
     _ = ∫ A,
         f A * (∫ B, g B ∂C.singleLinkHeatBathKernel target A)
         ∂C.gibbsMeasure := by
