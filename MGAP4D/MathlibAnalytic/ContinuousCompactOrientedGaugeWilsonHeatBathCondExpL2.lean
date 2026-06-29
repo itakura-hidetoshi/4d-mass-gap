@@ -88,7 +88,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_ae_eq_condExpL2
     have hConst : MemLp
         (fun _ : C.base.Configuration => M) 2 C.gibbsMeasure :=
       memLp_const M
-    apply hConst.of_le hPfStrong.aestronglyMeasurable.mono_ac
+    apply hConst.of_le (hPfStrong.aestronglyMeasurable.mono hm)
     filter_upwards [] with A
     simpa [Real.norm_eq_abs, abs_of_nonneg hM0] using hPfBound A
   let fL2 : Lp ℝ 2 C.gibbsMeasure := hfLp.toLp f
@@ -118,14 +118,18 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_ae_eq_condExpL2
       calc
         ∫ A in s, pL2 A ∂C.gibbsMeasure =
             ∫ A in s, Pf A ∂C.gibbsMeasure :=
-          setIntegral_congr_ae (hm s hs)
-            (ae_restrict_of_ae hPfLp.coeFn_toLp)
+          setIntegral_congr_ae (hm s hs) <| by
+            filter_upwards [hPfLp.coeFn_toLp] with A hA
+            intro _hAs
+            simpa [pL2] using hA
         _ = ∫ A in s, f A ∂C.gibbsMeasure :=
           continuous_compact_oriented_setIntegral_singleLinkHeatBathProjection_eq
             C target f hf M hM0 hM s hs
         _ = ∫ A in s, fL2 A ∂C.gibbsMeasure :=
-          setIntegral_congr_ae (hm s hs)
-            (ae_restrict_of_ae hfLp.coeFn_toLp.symm)
+          setIntegral_congr_ae (hm s hs) <| by
+            filter_upwards [hfLp.coeFn_toLp] with A hA
+            intro _hAs
+            simpa [fL2] using hA.symm
         _ = ∫ A in s,
             (condExpL2 ℝ ℝ hm fL2 : Lp ℝ 2 C.gibbsMeasure) A
             ∂C.gibbsMeasure :=
