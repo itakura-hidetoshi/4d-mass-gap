@@ -14,9 +14,11 @@ theorem finite_oriented_unsignedProxy_replaceLink_eq
     L.unsignedProxy.replaceLink A e g = L.replaceLink A e g := by
   classical
   funext e'
-  change Function.update A e g e' =
-    (if e' = e then g else A e')
-  by_cases h : e' = e <;> simp [h]
+  by_cases h : e' = e
+  · subst e'
+    simp
+  · rw [finite_lattice_replaceLink_ne L.unsignedProxy A e e' g h,
+      finite_oriented_replaceLink_of_ne L A e e' g h]
 
 /-- Proxy and oriented off-link agreement predicates coincide. -/
 theorem finite_oriented_unsignedProxy_agreeOffLink_iff
@@ -106,6 +108,12 @@ theorem finite_oriented_unsignedProxy_singleLinkConditionalTotalVariation_eq
           |(L.singleLinkConditionalPMF A e g).toReal -
             (L.singleLinkConditionalPMF B e g).toReal|
   rw [hA, hB]
+  apply congrArg (fun x : ℝ => (2 : ℝ)⁻¹ * x)
+  apply Finset.sum_congr
+  · ext g
+    simp
+  · intro g _hg
+    rfl
 
 end
 
