@@ -27,7 +27,7 @@ variable
 theorem periodicVacuumOrthogonalContinuousRealResolvent_package
     (D : PeriodicHypercubicSpecialUnitaryUniformDobrushinFamilyData
       sideLength sideLength_pos N hN beta beta_nonneg)
-    (B : D.UniformImplicitEulerOSBridge)
+    (B : D.UniformImplicitEulerOSBridge P T)
     (hP : P.IsNormalized)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     {lambda : ℝ}
