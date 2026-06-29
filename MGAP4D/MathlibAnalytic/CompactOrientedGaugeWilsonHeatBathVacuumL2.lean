@@ -36,16 +36,15 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionL2_vacuum
     C.singleLinkHeatBathProjectionL2 target C.gibbsVacuumL2 =
       C.gibbsVacuumL2 := by
   rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply]
-  let m := C.base.offLinkMeasurableSpace target
-  let hm : m ≤ (inferInstance : MeasurableSpace C.base.Configuration) :=
-    compact_oriented_offLinkMeasurableSpace_le C.base target
+  let hm := compact_oriented_offLinkMeasurableSpace_le C.base target
   have hFix := condExpL2_indicator_of_measurable
     (E := ℝ) (𝕜 := ℝ) hm
-    (MeasurableSet.univ : MeasurableSet[m] Set.univ)
+    (MeasurableSet.univ :
+      MeasurableSet[C.base.offLinkMeasurableSpace target] Set.univ)
     (measure_ne_top C.gibbsMeasure Set.univ)
     (1 : ℝ)
   simpa [ContinuousCompactOrientedGaugeWilsonSystem.gibbsVacuumL2,
-    m, hm] using hFix
+    hm] using hFix
 
 /-- Every local compact heat-bath fluctuation projection annihilates the
 Gibbs vacuum. -/
