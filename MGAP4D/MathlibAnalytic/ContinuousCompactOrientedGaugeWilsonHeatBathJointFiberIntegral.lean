@@ -40,7 +40,7 @@ theorem continuous_compact_oriented_coordinateDensity_mul_lintegral_heatBathKern
   have hAssemble : Measurable (fun h : C.base.Gauge =>
       C.base.singleLinkAssemble target h Aoff) :=
     (C.base.singleLinkCoordinatesMeasurableEquiv target).symm.measurable.comp
-      (measurable_id.prod_mk measurable_const)
+      (measurable_id.prodMk measurable_const)
   have hIntegrand : Measurable (fun h : C.base.Gauge =>
       C.singleLinkConditionalDensity target
           (C.base.singleLinkAssemble target g Aoff) h *
