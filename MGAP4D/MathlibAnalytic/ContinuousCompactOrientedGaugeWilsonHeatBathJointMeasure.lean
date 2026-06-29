@@ -22,6 +22,8 @@ instance continuousCompactOriented_singleLinkHeatBathJointMeasure_isProbability
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
     IsProbabilityMeasure (C.singleLinkHeatBathJointMeasure target) := by
+  letI : IsProbabilityMeasure C.gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathJointMeasure
   infer_instance
@@ -35,6 +37,8 @@ theorem continuous_compact_oriented_lintegral_singleLinkHeatBathJointMeasure
     (hPhi : Measurable Phi) :
     ∫⁻ z, Phi z ∂C.singleLinkHeatBathJointMeasure target =
       C.singleLinkHeatBathTransitionLIntegral target Phi := by
+  letI : IsProbabilityMeasure C.gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathJointMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathTransitionLIntegral
@@ -61,15 +65,15 @@ theorem continuous_compact_oriented_map_swap_singleLinkHeatBathJointMeasure
         ∫⁻ z,
           (Prod.swap ⁻¹' s).indicator (fun _ => (1 : ℝ≥0∞)) z
           ∂C.singleLinkHeatBathJointMeasure target := by
-      rw [lintegral_indicator_one hPre]
+      exact
+        (lintegral_indicator_one
+          (μ := C.singleLinkHeatBathJointMeasure target) hPre).symm
     _ = ∫⁻ z,
         s.indicator (fun _ => (1 : ℝ≥0∞)) z.swap
         ∂C.singleLinkHeatBathJointMeasure target := by
       apply lintegral_congr
       intro z
-      by_cases hz : z.swap ∈ s
-      · simp [Set.indicator_of_mem hz]
-      · simp [Set.indicator_of_not_mem hz]
+      by_cases hz : z.swap ∈ s <;> simp [hz]
     _ = C.singleLinkHeatBathTransitionLIntegral target
         (fun z => s.indicator (fun _ => (1 : ℝ≥0∞)) z.swap) :=
       continuous_compact_oriented_lintegral_singleLinkHeatBathJointMeasure
