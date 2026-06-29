@@ -54,9 +54,13 @@ theorem continuous_compact_oriented_uniformDobrushin_mem_resolventSet
   refine spectrum.mem_resolventSet_of_left_right_inverse
     (b := -R) (c := -R) ?_ ?_
   · rw [hScalarShift]
-    simpa only [neg_mul_neg] using hShiftResolvent
+    calc
+      -S * -R = S * R := by rw [mul_neg, neg_mul, neg_neg]
+      _ = 1 := hShiftResolvent
   · rw [hScalarShift]
-    simpa only [neg_mul_neg] using hResolventShift
+    calc
+      -R * -S = R * S := by rw [mul_neg, neg_mul, neg_neg]
+      _ = 1 := hResolventShift
 
 /-- No spectral value of a vacuum-orthogonal finite-volume Hamiltonian lies
 strictly below the uniform Dobrushin gap. -/
