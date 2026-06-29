@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathSetIntegral
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathConditionalSetIntegral
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.Unique
 
 namespace MGAP4D
