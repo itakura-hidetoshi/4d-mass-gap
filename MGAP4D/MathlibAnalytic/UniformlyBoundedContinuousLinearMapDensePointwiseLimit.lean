@@ -77,13 +77,19 @@ theorem uniformlyBoundedContinuousLinearMap_tendsto_of_dense
     (hDense : ∀ x ∈ s,
       Tendsto (fun i => A i x) l (𝓝 (B x))) :
     ∀ x : E, Tendsto (fun i => A i x) l (𝓝 (B x)) := by
-  let q : s → E := fun x => x.1
-  have hq : DenseRange q := by
-    simpa only [q, Subtype.range_val] using hs
-  apply uniformlyBoundedContinuousLinearMap_tendsto_of_denseRange
-    A B K hA q hq
+  let S : Set E :=
+    {x | Tendsto (fun i => A i x) l (𝓝 (B x))}
+  have hEquicontinuous :
+      Equicontinuous (fun i x => A i x) :=
+    (uniformlyBoundedContinuousLinearMap_uniformEquicontinuous
+      A K hA).equicontinuous
+  have hClosed : IsClosed S := by
+    exact hEquicontinuous.isClosed_setOf_tendsto B.continuous
+  have hSubset : s ⊆ S := by
+    intro x hx
+    exact hDense x hx
   intro x
-  exact hDense x.1 x.2
+  exact (closure_minimal hSubset hClosed) (hs x)
 
 end
 
