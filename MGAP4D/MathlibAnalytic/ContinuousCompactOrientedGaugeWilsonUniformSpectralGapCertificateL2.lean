@@ -26,11 +26,14 @@ theorem continuous_compact_oriented_uniformDobrushin_spectrum_inter_Iio_eq_empty
     (i : ι) :
     spectrum ℝ (U.system i).heatBathHamiltonianVacuumOrthogonalL2 ∩
         Set.Iio (continuousCompactOrientedUniformDobrushinGap U) = ∅ := by
-  apply Set.eq_empty_iff_forall_not_mem.mpr
-  intro lambda hlambda
-  exact
-    (continuous_compact_oriented_uniformDobrushin_not_mem_spectrum
-      U i hlambda.2) hlambda.1
+  ext lambda
+  constructor
+  · intro hlambda
+    exact
+      (continuous_compact_oriented_uniformDobrushin_not_mem_spectrum
+        U i hlambda.2) hlambda.1
+  · intro hlambda
+    simp at hlambda
 
 /-- Proof-relevant finite-volume spectral-gap certificate for an indexed
 compact Wilson family.  Downstream limit arguments may consume this package
