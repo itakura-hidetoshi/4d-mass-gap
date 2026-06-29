@@ -14,6 +14,8 @@ theorem continuous_compact_oriented_singleLinkHeatBathJointMeasure_fst
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
     (C.singleLinkHeatBathJointMeasure target).fst = C.gibbsMeasure := by
+  letI : IsProbabilityMeasure C.gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathJointMeasure
   exact Measure.fst_compProd C.gibbsMeasure
@@ -44,6 +46,8 @@ theorem continuous_compact_oriented_singleLinkHeatBathKernel_stationary
     (target : C.base.geometry.Edge) :
     C.singleLinkHeatBathKernel target ∘ₘ C.gibbsMeasure =
       C.gibbsMeasure := by
+  letI : IsProbabilityMeasure C.gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
   calc
     C.singleLinkHeatBathKernel target ∘ₘ C.gibbsMeasure =
         (C.singleLinkHeatBathJointMeasure target).snd := by
