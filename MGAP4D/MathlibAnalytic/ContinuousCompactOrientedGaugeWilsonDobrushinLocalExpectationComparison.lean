@@ -75,6 +75,7 @@ theorem continuous_compact_oriented_singleLinkConditionalDensity_direct_differen
         ∂normalizedCompactHaar C.base.Gauge := by
       apply integral_mono hAbsProductInt hUpperInt
       intro g
+      change |p g * (hA g - hB g)| ≤ p g * sourceBound
       rw [abs_mul, abs_of_nonneg (le_of_lt
         (continuous_compact_oriented_singleLinkConditionalDensity_pos
           C A target g))]
