@@ -34,7 +34,7 @@ theorem continuous_compact_oriented_restrictedEnergyShiftFormL2_isCoercive
     (continuousCompactOrientedDobrushinHeatBathGap D.coefficient - lambda) *
         ‖f‖ * ‖f‖ ≤
       inner ℝ (C.restrictedEnergyShiftL2 lambda f) f
-  simpa [pow_two] using
+  simpa [pow_two, mul_assoc] using
     continuous_compact_oriented_restrictedEnergyShiftL2_gap C D lambda f
 
 end
