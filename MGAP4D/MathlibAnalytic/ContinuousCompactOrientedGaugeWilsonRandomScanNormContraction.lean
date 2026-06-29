@@ -17,6 +17,7 @@ theorem continuous_compact_oriented_randomScanHeatBathSweep_abs_le_norm
     |C.randomScanHeatBathSweep O A| ≤ ‖O‖ := by
   let n : ℝ := Fintype.card C.base.geometry.Edge
   have hn : 0 < n := by
+    dsimp [n]
     exact_mod_cast hEdge
   have hn0 : n ≠ 0 := ne_of_gt hn
   have hinv : 0 ≤ n⁻¹ := inv_nonneg.mpr hn.le
@@ -31,9 +32,10 @@ theorem continuous_compact_oriented_randomScanHeatBathSweep_abs_le_norm
       n⁻¹ * ∑ target : C.base.geometry.Edge,
         |C.singleLinkHeatBathProjection target O A| := by
       exact mul_le_mul_of_nonneg_left
-        (Finset.abs_sum_le_sum_abs Finset.univ
+        (Finset.abs_sum_le_sum_abs
           (fun target : C.base.geometry.Edge =>
-            C.singleLinkHeatBathProjection target O A)) hinv
+            C.singleLinkHeatBathProjection target O A)
+          Finset.univ) hinv
     _ ≤ n⁻¹ * ∑ _target : C.base.geometry.Edge, ‖O‖ := by
       apply mul_le_mul_of_nonneg_left _ hinv
       apply Finset.sum_le_sum
@@ -64,11 +66,14 @@ theorem continuous_compact_oriented_randomScanHeatBathContinuousLinearMap_norm_l
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (hEdge : 0 < Fintype.card C.base.geometry.Edge) :
     ‖C.randomScanHeatBathContinuousLinearMap‖ ≤ 1 := by
-  apply ContinuousLinearMap.opNorm_le_bound (by norm_num)
-  intro O
-  simpa using
-    continuous_compact_oriented_randomScanHeatBathSweepBCF_norm_le
-      C hEdge O
+  refine ContinuousLinearMap.opNorm_le_bound
+    C.randomScanHeatBathContinuousLinearMap zero_le_one ?_
+  exact fun O => by
+    rw [one_mul,
+      continuous_compact_oriented_randomScanHeatBathContinuousLinearMap_apply]
+    exact
+      continuous_compact_oriented_randomScanHeatBathSweepBCF_norm_le
+        C hEdge O
 
 end
 end MathlibAnalytic
