@@ -67,7 +67,7 @@ theorem finite_oriented_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
     FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv] using
     finite_oriented_singleLinkHeatBath_reversible_term L A target h f g
 
-noncomputable local instance finiteOrientedLatticeWilsonConfigurationFintype
+local instance finiteOrientedLatticeWilsonConfigurationFintype
     (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
   classical
   exact Fintype.ofFinite L.Configuration
