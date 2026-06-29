@@ -85,8 +85,12 @@ theorem vacuumOrthogonalDefect_symmetric
         P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert) :
       P.VacuumOrthogonalHilbert →ₗ[ℝ] P.VacuumOrthogonalHilbert).IsSymmetric := by
   intro x y
-  rw [vacuumOrthogonalDefect_apply, vacuumOrthogonalDefect_apply,
-    inner_sub_left, inner_sub_right]
+  change
+    inner ℝ
+        (x - T.vacuumOrthogonalOperator hSymmetric t x) y =
+      inner ℝ x
+        (y - T.vacuumOrthogonalOperator hSymmetric t y)
+  rw [inner_sub_left, inner_sub_right]
   exact congrArg
     (fun z : ℝ => inner ℝ x y - z)
     (T.vacuumOrthogonalOperator_inner_symm hSymmetric t x y)
@@ -126,26 +130,31 @@ theorem VacuumSemigroupGapSlope.vacuumOrthogonalDefect_gap
       _ ≤ (G.decayFactor t * ‖x‖) * ‖x‖ :=
         mul_le_mul_of_nonneg_right hDecay (norm_nonneg x)
       _ = G.decayFactor t * ‖x‖ ^ 2 := by ring
-  rw [PhysicalSemigroup.vacuumOrthogonalDefect_apply]
+  have hInnerRestricted :
+      inner ℝ
+          (T.toPhysicalSemigroup.vacuumOrthogonalOperator hSymmetric t x)
+          x ≤
+        G.decayFactor t * ‖x‖ ^ 2 := by
+    change
+      inner ℝ
+          (T.toPhysicalSemigroup.operator t (x : P.PhysicalHilbert))
+          (x : P.PhysicalHilbert) ≤
+        G.decayFactor t * ‖x‖ ^ 2
+    exact hInner
   change
     (1 - G.decayFactor t) * ‖x‖ ^ 2 ≤
       inner ℝ
-        ((x : P.PhysicalHilbert) -
-          T.toPhysicalSemigroup.operator t (x : P.PhysicalHilbert))
-        (x : P.PhysicalHilbert)
+        (x - T.toPhysicalSemigroup.vacuumOrthogonalOperator hSymmetric t x)
+        x
+  rw [inner_sub_left, real_inner_self_eq_norm_sq]
   calc
     (1 - G.decayFactor t) * ‖x‖ ^ 2 =
         ‖x‖ ^ 2 - G.decayFactor t * ‖x‖ ^ 2 := by ring
     _ ≤ ‖x‖ ^ 2 -
         inner ℝ
-          (T.toPhysicalSemigroup.operator t (x : P.PhysicalHilbert))
-          (x : P.PhysicalHilbert) :=
-      sub_le_sub_left hInner _
-    _ = inner ℝ
-        ((x : P.PhysicalHilbert) -
-          T.toPhysicalSemigroup.operator t (x : P.PhysicalHilbert))
-        (x : P.PhysicalHilbert) := by
-      rw [inner_sub_left, real_inner_self_eq_norm_sq]
+          (T.toPhysicalSemigroup.vacuumOrthogonalOperator hSymmetric t x)
+          x :=
+      sub_le_sub_left hInnerRestricted _
 
 /-- At every time where the vacuum-sector contraction factor is strictly below
 one, the bounded excitation defect supplies a positive coercive symmetric
@@ -157,7 +166,7 @@ noncomputable def VacuumSemigroupGapSlope.vacuumOrthogonalDefectStrongLimitData
     (t : NNReal)
     (ht : G.decayFactor t < 1) :
     RealHilbertUniformCoerciveSymmetricStrongLimitData
-      Unit P.VacuumOrthogonalHilbert (Filter.pure ()) :=
+      Unit P.VacuumOrthogonalHilbert (pure ()) :=
   { approximant := fun _ =>
       T.toPhysicalSemigroup.vacuumOrthogonalDefect hSymmetric t
     limitOperator :=
