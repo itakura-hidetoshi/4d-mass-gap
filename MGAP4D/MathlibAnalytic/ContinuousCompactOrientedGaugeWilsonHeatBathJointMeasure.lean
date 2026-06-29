@@ -9,6 +9,13 @@ open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
+/-- The canonical compact oriented Gibbs law is available to typeclass
+inference as a probability measure. -/
+instance continuousCompactOriented_gibbsMeasure_isProbability
+    (C : ContinuousCompactOrientedGaugeWilsonSystem) :
+    IsProbabilityMeasure C.gibbsMeasure :=
+  continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
+
 /-- Joint law of the old and newly sampled physical-link configurations for
 one exact compact-group heat-bath update. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathJointMeasure
@@ -60,16 +67,14 @@ theorem continuous_compact_oriented_map_swap_singleLinkHeatBathJointMeasure
     C.singleLinkHeatBathJointMeasure target (Prod.swap ⁻¹' s) =
         ∫⁻ z,
           (Prod.swap ⁻¹' s).indicator (fun _ => (1 : ℝ≥0∞)) z
-          ∂C.singleLinkHeatBathJointMeasure target := by
-      rw [lintegral_indicator_one hPre]
+          ∂C.singleLinkHeatBathJointMeasure target :=
+      (lintegral_indicator_one hPre).symm
     _ = ∫⁻ z,
         s.indicator (fun _ => (1 : ℝ≥0∞)) z.swap
         ∂C.singleLinkHeatBathJointMeasure target := by
       apply lintegral_congr
       intro z
-      by_cases hz : z.swap ∈ s
-      · simp [Set.indicator_of_mem hz]
-      · simp [Set.indicator_of_not_mem hz]
+      rfl
     _ = C.singleLinkHeatBathTransitionLIntegral target
         (fun z => s.indicator (fun _ => (1 : ℝ≥0∞)) z.swap) :=
       continuous_compact_oriented_lintegral_singleLinkHeatBathJointMeasure
