@@ -28,23 +28,30 @@ leaves all Hamiltonian values unchanged. -/
 theorem exists_vacuumOrthogonalRightHamiltonianCore_graph_approximation
     (T : P.StronglyContinuousPhysicalSemigroup)
     (hP : P.IsNormalized)
-    (hSymmetric :
-      T.closedRightHamiltonian.IsFormalAdjoint T.closedRightHamiltonian)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (psi : T.vacuumOrthogonalClosedRightHamiltonianDomain) :
     ∃ u : ℕ → T.vacuumOrthogonalRightHamiltonianCoreDomain,
       Tendsto
           (fun n =>
-            (u n : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
-              P.VacuumOrthogonalHilbert)
+            ((u n : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
+              P.VacuumOrthogonalHilbert))
           atTop
           (𝓝 (psi : P.VacuumOrthogonalHilbert)) ∧
         Tendsto
           (fun n =>
-            T.vacuumOrthogonalClosedRightHamiltonian hSymmetric
+            T.vacuumOrthogonalClosedRightHamiltonian
+              (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
+                hInnerSymmetric)
               (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint
                 (u n)))
           atTop
-          (𝓝 (T.vacuumOrthogonalClosedRightHamiltonian hSymmetric psi)) := by
+          (𝓝
+            (T.vacuumOrthogonalClosedRightHamiltonian
+              (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
+                hInnerSymmetric)
+              psi)) := by
+  let hClosedSymmetric :=
+    T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric hInnerSymmetric
   let psiAmbient := T.vacuumOrthogonalAmbientDomainPoint psi
   have hgraph :
       (((psiAmbient : T.closedRightHamiltonian.domain) : P.PhysicalHilbert),
@@ -186,27 +193,28 @@ theorem exists_vacuumOrthogonalRightHamiltonianCore_graph_approximation
   · rw [nhds_subtype, tendsto_comap_iff]
     change Tendsto
       (fun n =>
-        (((T.vacuumOrthogonalClosedRightHamiltonian hSymmetric
+        (((T.vacuumOrthogonalClosedRightHamiltonian hClosedSymmetric
               (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint
                 (u n)) : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)))
       atTop
       (𝓝
-        (((T.vacuumOrthogonalClosedRightHamiltonian hSymmetric psi :
+        (((T.vacuumOrthogonalClosedRightHamiltonian hClosedSymmetric psi :
           P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)))
     have hFunctions :
         (fun n =>
-          (((T.vacuumOrthogonalClosedRightHamiltonian hSymmetric
+          (((T.vacuumOrthogonalClosedRightHamiltonian hClosedSymmetric
                 (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint
                   (u n)) : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))) =
         (fun n => T.rightHamiltonian (zOrth n)) := by
       funext n
       calc
-        (((T.vacuumOrthogonalClosedRightHamiltonian hSymmetric
+        (((T.vacuumOrthogonalClosedRightHamiltonian hClosedSymmetric
               (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint
                 (u n)) : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) =
             T.rightHamiltonian
               (T.vacuumOrthogonalRightHamiltonianCoreAmbientPoint (u n)) :=
-          T.vacuumOrthogonalClosedRightHamiltonian_core_apply hSymmetric (u n)
+          T.vacuumOrthogonalClosedRightHamiltonian_core_apply
+            hInnerSymmetric (u n)
         _ = T.rightHamiltonian (zOrth n) := by
           congr 1
           apply Subtype.ext
