@@ -26,6 +26,7 @@ theorem finite_oriented_unsignedProxy_singleLinkConditionalExpectation_eq
   rw [finite_oriented_unsignedProxy_singleLinkConditionalPMF_eq
       L hInv A e,
     finite_oriented_unsignedProxy_replaceLink_eq L A e g]
+  rfl
 
 /-- For exponent-two groups, proxy and native one-link conditional variances
 agree. -/
@@ -47,6 +48,7 @@ theorem finite_oriented_unsignedProxy_singleLinkConditionalVariance_eq
   rw [finite_oriented_unsignedProxy_singleLinkConditionalPMF_eq
       L hInv A e,
     finite_oriented_unsignedProxy_replaceLink_eq L A e g]
+  rfl
 
 /-- For exponent-two groups, proxy and native averaged one-link variances
 agree. -/
