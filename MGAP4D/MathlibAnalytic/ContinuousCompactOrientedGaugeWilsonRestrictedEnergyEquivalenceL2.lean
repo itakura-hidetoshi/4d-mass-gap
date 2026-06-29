@@ -27,6 +27,20 @@ theorem continuous_compact_oriented_restrictedEnergyEquivalenceL2_apply
   intro g
   rfl
 
+/-- The restricted energy operator is bijective. -/
+theorem continuous_compact_oriented_restrictedEnergy_bijective
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (D : ContinuousCompactOrientedGaugeWilsonDobrushinRandomScanRayleighCertificate C) :
+    Function.Bijective C.heatBathHamiltonianVacuumOrthogonalL2 := by
+  constructor
+  · intro f g hfg
+    apply (C.restrictedEnergyEquivalenceL2 D).injective
+    simpa only [continuous_compact_oriented_restrictedEnergyEquivalenceL2_apply] using hfg
+  · intro y
+    refine ⟨(C.restrictedEnergyEquivalenceL2 D).symm y, ?_⟩
+    rw [← continuous_compact_oriented_restrictedEnergyEquivalenceL2_apply]
+    exact (C.restrictedEnergyEquivalenceL2 D).apply_symm_apply y
+
 end
 
 end MathlibAnalytic
