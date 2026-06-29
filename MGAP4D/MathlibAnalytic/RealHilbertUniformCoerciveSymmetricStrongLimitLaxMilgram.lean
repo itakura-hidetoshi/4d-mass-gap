@@ -9,8 +9,6 @@ open Filter Topology
 
 noncomputable section
 
-/-- Uniformly coercive strong-limit data whose approximating operators are
-symmetric on the common identified real Hilbert space. -/
 structure RealHilbertUniformCoerciveSymmetricStrongLimitData
     (ι E : Type*)
     [NormedAddCommGroup E]
@@ -20,7 +18,6 @@ structure RealHilbertUniformCoerciveSymmetricStrongLimitData
   approximant_symmetric : ∀ i : ι,
     ((approximant i : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric
 
-/-- Symmetry passes to a strong operator limit on one Hilbert space. -/
 theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limit_symmetric
     {ι E : Type*}
     [NormedAddCommGroup E]
@@ -31,15 +28,11 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limit_symmetric
     (D.limitOperator : E →ₗ[ℝ] E).IsSymmetric := by
   intro f g
   have hLeft :
-      Tendsto
-        (fun i => inner ℝ (D.approximant i f) g)
-        l
+      Tendsto (fun i => inner ℝ (D.approximant i f) g) l
         (𝓝 (inner ℝ (D.limitOperator f) g)) :=
     (D.strong_tendsto f).inner tendsto_const_nhds
   have hRight :
-      Tendsto
-        (fun i => inner ℝ f (D.approximant i g))
-        l
+      Tendsto (fun i => inner ℝ f (D.approximant i g)) l
         (𝓝 (inner ℝ f (D.limitOperator g))) :=
     tendsto_const_nhds.inner (D.strong_tendsto g)
   have hFunctions :
@@ -50,7 +43,6 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limit_symmetric
   rw [hFunctions] at hLeft
   exact tendsto_nhds_unique hLeft hRight
 
-/-- The bounded bilinear energy form of the strong-limit operator. -/
 noncomputable def
     RealHilbertUniformCoerciveSymmetricStrongLimitData.limitEnergyForm
     {ι E : Type*}
@@ -71,7 +63,6 @@ noncomputable def
     D.limitEnergyForm f g = inner ℝ (D.limitOperator f) g :=
   rfl
 
-/-- The limit energy form is coercive with the same scale-independent gap. -/
 theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitEnergyForm_isCoercive
     {ι E : Type*}
     [NormedAddCommGroup E]
@@ -87,8 +78,6 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitEnergyForm_isCoerci
     (realHilbert_uniformCoerciveStrongLimit_limit_gap
       D.toRealHilbertUniformCoerciveStrongLimitData f)
 
-/-- Lax–Milgram upgrades the symmetric coercive strong limit to a continuous
-linear equivalence. -/
 noncomputable def
     RealHilbertUniformCoerciveSymmetricStrongLimitData.limitEquivalence
     {ι E : Type*}
@@ -99,10 +88,9 @@ noncomputable def
     [Filter.NeBot l]
     (D : RealHilbertUniformCoerciveSymmetricStrongLimitData ι E l) :
     E ≃L[ℝ] E :=
-  (realHilbert_uniformCoerciveSymmetricStrongLimit_limitEnergyForm_isCoercive D).
-    continuousLinearEquivOfBilin
+  IsCoercive.continuousLinearEquivOfBilin
+    (realHilbert_uniformCoerciveSymmetricStrongLimit_limitEnergyForm_isCoercive D)
 
-/-- The Lax–Milgram equivalence is exactly the strong-limit operator. -/
 theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitEquivalence_apply
     {ι E : Type*}
     [NormedAddCommGroup E]
@@ -113,13 +101,15 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitEquivalence_apply
     (D : RealHilbertUniformCoerciveSymmetricStrongLimitData ι E l)
     (f : E) :
     D.limitEquivalence f = D.limitOperator f := by
+  let hCoercive :=
+    realHilbert_uniformCoerciveSymmetricStrongLimit_limitEnergyForm_isCoercive D
   symm
+  change D.limitOperator f =
+    IsCoercive.continuousLinearEquivOfBilin hCoercive f
   exact
     IsCoercive.unique_continuousLinearEquivOfBilin
-      (realHilbert_uniformCoerciveSymmetricStrongLimit_limitEnergyForm_isCoercive D)
-      (fun _ => rfl)
+      hCoercive (v := f) (f := D.limitOperator f) (fun _ => rfl)
 
-/-- The strong-limit operator is surjective as well as injective. -/
 theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limit_surjective
     {ι E : Type*}
     [NormedAddCommGroup E]
