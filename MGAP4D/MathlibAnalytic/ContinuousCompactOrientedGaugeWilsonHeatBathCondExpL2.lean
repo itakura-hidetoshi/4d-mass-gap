@@ -103,13 +103,13 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_ae_eq_condExpL2
         ∫ A in s, pL2 A ∂C.gibbsMeasure =
             ∫ A in s, Pf A ∂C.gibbsMeasure :=
           setIntegral_congr_ae (hm s hs)
-            (ae_restrict_of_ae hPfLp.coeFn_toLp)
+            (hPfLp.coeFn_toLp.mono fun _ h _ => h)
         _ = ∫ A in s, f A ∂C.gibbsMeasure :=
           continuous_compact_oriented_setIntegral_singleLinkHeatBathProjection_eq
             C target f hf M hM0 hM s hs
         _ = ∫ A in s, fL2 A ∂C.gibbsMeasure :=
           setIntegral_congr_ae (hm s hs)
-            (ae_restrict_of_ae hfLp.coeFn_toLp.symm)
+            (hfLp.coeFn_toLp.symm.mono fun _ h _ => h)
         _ = ∫ A in s,
             (condExpL2 ℝ ℝ hm fL2 : Lp ℝ 2 C.gibbsMeasure) A
             ∂C.gibbsMeasure :=
