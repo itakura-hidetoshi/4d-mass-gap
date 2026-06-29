@@ -172,28 +172,24 @@ theorem VacuumSemigroupGapSlope.eventually_vacuumOrthogonalRescaledDefect_resolv
         T hSymmetric t ht hLinear)
       hlambda
 
-/-- The corresponding rescaled-defect resolvents have the uniform
-inverse-distance estimate below `mass / 2`. -/
-theorem VacuumSemigroupGapSlope.eventually_vacuumOrthogonalRescaledDefect_resolvent_norm_le
+/-- At each admissible positive time, the rescaled-defect resolvent has the
+uniform inverse-distance estimate below `mass / 2`. -/
+theorem VacuumSemigroupGapSlope.vacuumOrthogonalRescaledDefect_resolvent_norm_le
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (t : NNReal)
+    (ht : 0 < t)
+    (hLinear : (G.mass / 2) * (t : ℝ) ≤ 1 - G.decayFactor t)
     {lambda : ℝ}
     (hlambda : lambda < G.mass / 2) :
-    ∀ᶠ t : NNReal in nhdsWithin 0 (Ioi 0),
-      ‖(G.vacuumOrthogonalRescaledDefectStrongLimitData
-          T hSymmetric t
-          (by assumption)
-          (by assumption)).limitResolvent hlambda‖ ≤
-        (G.mass / 2 - lambda)⁻¹ := by
-  filter_upwards
-    [G.eventually_linear_defect_lower_bound T, self_mem_nhdsWithin]
-      with t hLinear ht
-  exact
-    realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_norm_le
-      (G.vacuumOrthogonalRescaledDefectStrongLimitData
-        T hSymmetric t ht hLinear)
-      hlambda
+    ‖(G.vacuumOrthogonalRescaledDefectStrongLimitData
+        T hSymmetric t ht hLinear).limitResolvent hlambda‖ ≤
+      (G.mass / 2 - lambda)⁻¹ :=
+  realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_norm_le
+    (G.vacuumOrthogonalRescaledDefectStrongLimitData
+      T hSymmetric t ht hLinear)
+    hlambda
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
