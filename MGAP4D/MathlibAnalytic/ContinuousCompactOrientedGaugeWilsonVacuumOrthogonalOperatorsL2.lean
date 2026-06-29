@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonRandomScanSpectralEnclosureL2
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 
 namespace MGAP4D
 namespace MathlibAnalytic
