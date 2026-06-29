@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonDobrushinMatrix
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonRandomScanNormContraction
 
 namespace MGAP4D
