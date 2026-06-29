@@ -15,11 +15,6 @@ abbrev FiniteOrientedLatticeWilsonSystem.GibbsHilbertSpace
     (L : FiniteOrientedLatticeWilsonSystem) : Type :=
   EuclideanSpace ℝ L.Configuration
 
-noncomputable instance finiteOrientedLatticeWilsonConfigurationFintype
-    (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
-  classical
-  exact Fintype.ofFinite L.Configuration
-
 /-- Embed an oriented observable as the Euclidean vector `sqrt(mu) * f`. -/
 noncomputable def
     FiniteOrientedLatticeWilsonSystem.gibbsHilbertEmbedLinearMap
