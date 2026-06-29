@@ -30,6 +30,7 @@ theorem continuous_compact_oriented_randomScanUpdatedVariation_total_le
         continuousCompactOrientedGaugeWilsonTotalVariation variation := by
   let n : ℝ := Fintype.card C.base.geometry.Edge
   have hn : 0 < n := by
+    dsimp [n]
     exact_mod_cast hEdge
   have hn0 : n ≠ 0 := ne_of_gt hn
   have hinv : 0 ≤ n⁻¹ := inv_nonneg.mpr hn.le
@@ -74,7 +75,6 @@ theorem continuous_compact_oriented_randomScanUpdatedVariation_total_le
         (1 - (1 - D.dobrushinCoefficient) / n) *
           ∑ source : C.base.geometry.Edge, variation source
       field_simp [hn0]
-      ring
 
 /-- The exact compact random-scan heat-bath observable inherits the strict
 Dobrushin total-variation contraction. -/
