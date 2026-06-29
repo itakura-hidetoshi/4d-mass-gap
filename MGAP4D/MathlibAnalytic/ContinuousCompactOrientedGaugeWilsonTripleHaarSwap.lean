@@ -28,6 +28,10 @@ theorem continuous_compact_oriented_lintegral_swap_old_new
           ∂normalizedCompactHaar C.base.Gauge
         ∂C.base.offLinkHaarMeasure target
       ∂normalizedCompactHaar C.base.Gauge := by
+  letI : IsProbabilityMeasure (C.base.offLinkHaarMeasure target) := by
+    classical
+    unfold CompactOrientedGaugeWilsonSystem.offLinkHaarMeasure
+    infer_instance
   have hInner : Measurable
       (fun z : C.base.Gauge × C.base.OffLinkConfiguration target =>
         ∫⁻ h, F (z.1, (z.2, h))

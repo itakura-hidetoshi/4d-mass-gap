@@ -29,13 +29,18 @@ theorem continuous_compact_oriented_coordinateDensity_mul_lintegral_heatBathKern
     C target g Aoff F hF]
   have hDensity : Measurable
       (C.singleLinkConditionalDensity target
-        (C.base.singleLinkAssemble target g Aoff)) :=
-    (measurable_compact_oriented_singleLinkConditionalDensity_uncurry
-      C target).comp measurable_prodMk_left
+        (C.base.singleLinkAssemble target g Aoff)) := by
+    unfold
+      ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
+    apply ENNReal.measurable_ofReal.comp
+    exact
+      (continuous_compact_oriented_singleLinkBoltzmannFactor
+        C (C.base.singleLinkAssemble target g Aoff) target).measurable.div
+          measurable_const
   have hAssemble : Measurable (fun h : C.base.Gauge =>
       C.base.singleLinkAssemble target h Aoff) :=
     (C.base.singleLinkCoordinatesMeasurableEquiv target).symm.measurable.comp
-      (measurable_id.prod_mk measurable_const)
+      (measurable_id.prodMk measurable_const)
   have hIntegrand : Measurable (fun h : C.base.Gauge =>
       C.singleLinkConditionalDensity target
           (C.base.singleLinkAssemble target g Aoff) h *

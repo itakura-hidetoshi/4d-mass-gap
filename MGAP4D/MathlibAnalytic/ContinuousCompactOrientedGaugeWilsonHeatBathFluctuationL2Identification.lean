@@ -105,12 +105,17 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_toLp_eq
   have hProjection :=
     continuous_compact_oriented_singleLinkHeatBathProjectionL2_toLp_eq
       C target f hf M hM0 hM
-  apply Lp.ext
   rw [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply,
     hProjection]
+  apply Lp.ext
   filter_upwards
-    [hfLp.coeFn_toLp, hPfLp.coeFn_toLp, hQfLp.coeFn_toLp] with A hfA hPfA hQfA
-  rw [Lp.coeFn_sub, hfA, hPfA, hQfA]
+    [Lp.coeFn_sub (hfLp.toLp f) (hPfLp.toLp Pf),
+      hfLp.coeFn_toLp, hPfLp.coeFn_toLp, hQfLp.coeFn_toLp] with
+      A hSubA hfA hPfA hQfA
+  rw [hSubA]
+  change (hfLp.toLp f) A - (hPfLp.toLp Pf) A =
+    (hQfLp.toLp Qf) A
+  rw [hfA, hPfA, hQfA]
   rfl
 
 end

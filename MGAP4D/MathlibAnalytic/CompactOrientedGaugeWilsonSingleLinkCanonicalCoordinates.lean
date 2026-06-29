@@ -13,7 +13,8 @@ in its first component. -/
     (A : L.Configuration) :
     (L.canonicalSingleLinkCoordinatesMeasurableEquiv target A).1 =
       A target := by
-  simp [CompactOrientedGaugeWilsonSystem.canonicalSingleLinkCoordinatesMeasurableEquiv]
+  change A ((default : L.SelectedLinkEdge target).1) = A target
+  rw [(default : L.SelectedLinkEdge target).2]
 
 /-- The second component of the canonical coordinate split is restriction to
 all off-link variables. -/
@@ -24,7 +25,7 @@ all off-link variables. -/
     (e : L.OffLinkEdge target) :
     (L.canonicalSingleLinkCoordinatesMeasurableEquiv target A).2 e =
       A e.1 := by
-  simp [CompactOrientedGaugeWilsonSystem.canonicalSingleLinkCoordinatesMeasurableEquiv]
+  rfl
 
 /-- The canonical and direct one-link coordinate decompositions agree
 pointwise. -/
@@ -33,7 +34,8 @@ theorem compact_oriented_canonicalSingleLinkCoordinates_eq_direct
     (target : L.geometry.Edge) :
     L.canonicalSingleLinkCoordinatesMeasurableEquiv target =
       L.singleLinkCoordinatesMeasurableEquiv target := by
-  ext A
+  apply MeasurableEquiv.ext
+  funext A
   apply Prod.ext
   · simp
   · funext e

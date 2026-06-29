@@ -59,9 +59,17 @@ theorem compact_oriented_replaceLink_singleLinkAssemble
       L.singleLinkAssemble target h Aoff := by
   apply (L.singleLinkCoordinatesMeasurableEquiv target).injective
   rw [compact_oriented_singleLinkCoordinates_replaceLink]
-  exact
+  have hg :
+      L.singleLinkCoordinatesMeasurableEquiv target
+          (L.singleLinkAssemble target g Aoff) = (g, Aoff) :=
+    (L.singleLinkCoordinatesMeasurableEquiv target).apply_symm_apply
+      (g, Aoff)
+  have hh :
+      L.singleLinkCoordinatesMeasurableEquiv target
+          (L.singleLinkAssemble target h Aoff) = (h, Aoff) :=
     (L.singleLinkCoordinatesMeasurableEquiv target).apply_symm_apply
       (h, Aoff)
+  rw [hg, hh]
 
 end
 
