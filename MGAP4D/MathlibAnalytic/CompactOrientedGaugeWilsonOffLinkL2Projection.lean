@@ -43,7 +43,7 @@ theorem compact_oriented_offLinkMeasurableSpace_le
       (inferInstance : MeasurableSpace L.Configuration) := by
   change MeasurableSpace.comap (L.offLinkRestriction target) inferInstance ≤
     (inferInstance : MeasurableSpace L.Configuration)
-  exact measurable_compact_oriented_offLinkRestriction L target
+  exact (measurable_compact_oriented_offLinkRestriction L target).comap_le
 
 /-- Native compact-group one-link heat-bath projection on the genuine Gibbs
 `L²` space, defined as conditional expectation onto the off-link sigma-algebra. -/
