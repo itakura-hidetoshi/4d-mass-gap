@@ -200,6 +200,20 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_tendsto_on_cor
   have hCore :=
     (T.vacuumOrthogonalRescaledDefect_tendsto_closedRightHamiltonian_on_core
       hSymmetric x).comp hTime
+  have hConstant :
+      Tendsto
+        (fun _ : G.AdmissibleRescaledDefectTime =>
+          T.vacuumOrthogonalClosedRightHamiltonian
+            (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
+              hSymmetric)
+            (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint x))
+        G.admissibleRescaledDefectTimeFilter
+        (nhds
+          (T.vacuumOrthogonalClosedRightHamiltonian
+            (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric
+              hSymmetric)
+            (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint x))) :=
+    tendsto_const_nhds
   have hDifference :
       Tendsto
         (fun tau : G.AdmissibleRescaledDefectTime =>
@@ -211,7 +225,7 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_tendsto_on_cor
               hSymmetric tau.1 (x : P.VacuumOrthogonalHilbert))
         G.admissibleRescaledDefectTimeFilter
         (nhds 0) := by
-    simpa using tendsto_const_nhds.sub hCore
+    simpa using hConstant.sub hCore
   have hMajorant :
       Tendsto
         (fun tau : G.AdmissibleRescaledDefectTime =>
