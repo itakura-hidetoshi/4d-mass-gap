@@ -71,15 +71,14 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_ae_eq_condExpL2
         ((continuous_compact_oriented_memLp_two_of_uniform_bound
           C f hf M hM0 hM).toLp f) :
           Lp ℝ 2 C.gibbsMeasure) := by
-  let m := C.base.offLinkMeasurableSpace target
-  let hm : m ≤ (inferInstance : MeasurableSpace C.base.Configuration) :=
-    compact_oriented_offLinkMeasurableSpace_le C.base target
+  let hm := compact_oriented_offLinkMeasurableSpace_le C.base target
   let hfLp : MemLp f 2 C.gibbsMeasure :=
     continuous_compact_oriented_memLp_two_of_uniform_bound
       C f hf M hM0 hM
   let Pf : C.base.Configuration → ℝ :=
     C.singleLinkHeatBathProjection target f
-  have hPfStrong : StronglyMeasurable[m] Pf :=
+  have hPfStrong :
+      StronglyMeasurable[C.base.offLinkMeasurableSpace target] Pf :=
     continuous_compact_oriented_singleLinkHeatBathProjection_offLinkStronglyMeasurable
       C target f hf
   have hPfBound : ∀ A, |Pf A| ≤ M :=
@@ -94,11 +93,14 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_ae_eq_condExpL2
     simpa [Real.norm_eq_abs, abs_of_nonneg hM0] using hPfBound A
   let fL2 : Lp ℝ 2 C.gibbsMeasure := hfLp.toLp f
   let pL2 : Lp ℝ 2 C.gibbsMeasure := hPfLp.toLp Pf
-  have hpMeas : AEStronglyMeasurable[m] pL2 C.gibbsMeasure := by
+  have hpMeas :
+      AEStronglyMeasurable[C.base.offLinkMeasurableSpace target]
+        pL2 C.gibbsMeasure := by
     exact hPfStrong.aestronglyMeasurable.congr hPfLp.coeFn_toLp.symm
-  have hcMeas : AEStronglyMeasurable[m]
-      (condExpL2 ℝ ℝ hm fL2 : Lp ℝ 2 C.gibbsMeasure)
-      C.gibbsMeasure :=
+  have hcMeas :
+      AEStronglyMeasurable[C.base.offLinkMeasurableSpace target]
+        (condExpL2 ℝ ℝ hm fL2 : Lp ℝ 2 C.gibbsMeasure)
+        C.gibbsMeasure :=
     lpMeas.aestronglyMeasurable _
   have hLpEq : pL2 =ᵐ[C.gibbsMeasure]
       (condExpL2 ℝ ℝ hm fL2 : Lp ℝ 2 C.gibbsMeasure) := by
