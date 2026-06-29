@@ -48,8 +48,8 @@ theorem z2PeriodicHypercubicOriented_native_finiteHamiltonian_gap
           n beta hBeta).gibbsHilbertVacuum) :
     exactGapValueReal * ‖x‖ ^ 2 ≤
       inner ℝ
-        ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).
-          gibbsDobrushinScaledHeatBathHamiltonianLinearMap
+        ((z2PeriodicHypercubicOrientedWilsonSystem
+          n beta hBeta).gibbsDobrushinScaledHeatBathHamiltonianLinearMap
             (z2PeriodicHypercubicOrientedCanonicalRayleighCertificate
               n hn beta hBeta hBetaLt)
           x)
