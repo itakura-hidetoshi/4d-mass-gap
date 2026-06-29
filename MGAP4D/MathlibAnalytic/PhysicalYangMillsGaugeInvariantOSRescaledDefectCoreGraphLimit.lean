@@ -168,6 +168,18 @@ theorem vacuumOrthogonalRescaledDefect_tendsto_closedRightHamiltonian_on_core
     T.rightHamiltonianDifferenceQuotient_tendsto_on_vacuumOrthogonalCore x
   rw [← T.vacuumOrthogonalClosedRightHamiltonian_core_apply hSymmetric x] at hAmbient
   rw [nhds_subtype, tendsto_comap_iff]
+  change
+    Tendsto
+      (fun t : NNReal =>
+        (((T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+            hSymmetric t (x : P.VacuumOrthogonalHilbert) :
+          P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)))
+      (nhdsWithin 0 (Ioi 0))
+      (nhds
+        (((T.vacuumOrthogonalClosedRightHamiltonian
+            (T.closedRightHamiltonian_isFormalAdjoint_of_innerSymmetric hSymmetric)
+            (T.vacuumOrthogonalRightHamiltonianCoreClosedDomainPoint x) :
+          P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)))
   have hFunctions :
       (fun t : NNReal =>
         (((T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
