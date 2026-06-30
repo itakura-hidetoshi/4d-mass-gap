@@ -216,8 +216,7 @@ theorem exists_vacuumOrthogonalRightHamiltonianCore_graph_approximation
           T.vacuumOrthogonalClosedRightHamiltonian_core_apply
             hInnerSymmetric (u n)
         _ = T.rightHamiltonian (zOrth n) := by
-          congr 1
-          apply Subtype.ext
+          rfl
     rw [hFunctions]
     simpa only [psiAmbient,
       T.vacuumOrthogonalClosedRightHamiltonian_apply] using hzOrthSnd
