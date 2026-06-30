@@ -56,7 +56,7 @@ current stacked frontier:
   base commit a846a06aa286f4d0beb624bfd5e461653b797b58
 ```
 
-At this snapshot, PR #328 is open, non-draft, and reported as mergeable. Its **PR Lean Fast Check** run 5141 is in progress.
+At this snapshot, PR #328 is open, non-draft, and reported as mergeable. **PR Lean Fast Check** run 5141 completed with failure while building `PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean`: line 220 reports `No goals to be solved`. The frontier is not merge-ready until this Lean error is repaired and the branch is replayed successfully.
 
 Relative to the latest mathematical checkpoint `a80a7544…`, the PR #328 head is reported as 237 commits ahead and 157 commits behind, with merge base `929e20583ae368475d4bedb65c060c2d3c4c0fff`. The frontier therefore requires deliberate rebase and decomposition before mathematical promotion to `main`.
 
@@ -206,7 +206,7 @@ R_tau(lambda) y -> R(lambda) y.
 
 It also proves the equivalent norm-to-zero statement.
 
-This remains conditional on the positive mass slope, OS semigroup package, self-adjointness, and physical approximation data used to generate those structures.
+This remains conditional on the positive mass slope, OS semigroup package, self-adjointness, and physical approximation data used to generate those structures. Its current CI failure is an implementation defect in the graph-core approximation file and must be repaired before the frontier can be treated as replayed.
 
 ## Current theorem boundary
 
@@ -220,7 +220,7 @@ This remains conditional on the positive mass slope, OS semigroup package, self-
 | Native compact Haar heat-bath `L2` theory | stacked frontier |
 | Uniform compact Wilson finite-volume spectral certificate | stacked frontier |
 | Coercive varying-Hilbert strong-limit transport | stacked frontier |
-| Full OS strong-resolvent convergence | PR #328, CI pending at this snapshot |
+| Full OS strong-resolvent convergence | PR #328, Lean CI failed at this snapshot |
 | Concrete gauge-compatible continuum carrier and interpolation | open |
 | Renormalized coupling and scaling trajectory | open |
 | Uniform positive gap for the physical approximation family | open |
@@ -273,7 +273,7 @@ A successful replay verifies the declared Lean source in the pinned environment.
 
 ## Immediate priorities
 
-1. Finish CI for PR #328.
+1. Repair the PR #328 graph-core approximation error at line 220 and obtain green CI.
 2. Rebase and decompose the stacked frontier against current `main`.
 3. Merge the explicit finite `Z2`, native compact Haar heat-bath, uniform spectral, strong-limit, and strong-resolvent layers in dependency order.
 4. Instantiate one concrete gauge-compatible continuum carrier, interpolation scheme, scaling trajectory, and nontriviality argument.
