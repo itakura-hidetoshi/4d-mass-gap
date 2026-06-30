@@ -52,7 +52,13 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefect_approximateShift_error_
           ((T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
                 hInnerSymmetric tau.1 u -
               lambda • u) - y)‖ := by
-      rw [R.map_sub]
+      exact congrArg
+        (fun z : P.VacuumOrthogonalHilbert => ‖z‖)
+        (R.map_sub
+          (T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+              hInnerSymmetric tau.1 u -
+            lambda • u)
+          y).symm
     _ ≤ (G.mass / 2 - lambda)⁻¹ *
           ‖T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
                 hInnerSymmetric tau.1 u -
