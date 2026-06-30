@@ -41,6 +41,7 @@ theorem VacuumSemigroupGapSlope.canonicalPoint_mem_approximateShiftedDefectGraph
       FilterSet.kuratowskiInnerLimit l
         (G.approximateShiftedDefectGraphFamily
           T hInnerSymmetric tau lambdaNet yNet epsilon) := by
+  classical
   let family := G.approximateShiftedDefectGraphFamily
     T hInnerSymmetric tau lambdaNet yNet epsilon
   let canonical : P.VacuumOrthogonalHilbert × P.VacuumOrthogonalHilbert :=
