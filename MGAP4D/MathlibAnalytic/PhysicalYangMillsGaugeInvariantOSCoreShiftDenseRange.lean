@@ -82,6 +82,14 @@ theorem vacuumOrthogonalClosedRightHamiltonianCoreShift_denseRange_of_fullShift_
     obtain ⟨u, huBase, huValue⟩ :=
       T.exists_vacuumOrthogonalRightHamiltonianCore_graph_approximation
         hP hInnerSymmetric psi
+    have hScaled :
+        Tendsto
+          (fun n => lambda •
+            ((u n : T.vacuumOrthogonalRightHamiltonianCoreDomain) :
+              P.VacuumOrthogonalHilbert))
+          atTop
+          (𝓝 (lambda • (psi : P.VacuumOrthogonalHilbert))) :=
+      tendsto_const_nhds.smul huBase
     have hShift :
         Tendsto
           (fun n => coreShift (u n))
@@ -89,7 +97,7 @@ theorem vacuumOrthogonalClosedRightHamiltonianCoreShift_denseRange_of_fullShift_
           (𝓝
             ((T.vacuumOrthogonalClosedRightHamiltonian
                 hClosedSymmetric).realShift lambda psi)) := by
-      have hSub := huValue.sub (huBase.smul_const lambda)
+      have hSub := huValue.sub hScaled
       simpa only [coreShift,
         vacuumOrthogonalClosedRightHamiltonianCoreShift,
         LinearPMap.realShift_apply] using hSub
