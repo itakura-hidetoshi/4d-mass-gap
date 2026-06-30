@@ -44,7 +44,9 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefect_graph_error_tendsto_zer
       (𝓝 0) := by
   simpa using
     (G.admissibleRescaledDefect_graph_tendsto_continuumGraphPoint
-      T hP hInnerSymmetric hSelf hlambda x).sub tendsto_const_nhds
+      T hP hInnerSymmetric hSelf hlambda x).sub_const
+        ((x : P.VacuumOrthogonalHilbert),
+          T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf x)
 
 /-- Equivalently, the product-Hilbert norm of the full graph error tends to
 zero.  This is the norm-form graph approximation needed for later closed-
