@@ -36,7 +36,9 @@ theorem convergentSelectionOuterLimit_subset_kuratowskiOuterLimit
   rw [mem_closure_iff_nhds]
   intro U hU
   letI : NeBot p := hp
-  rcases ((hIndex hA).and ((hPoint hU).and hMem)).exists with
+  have hIndexA : ∀ᶠ z in p, z.1 ∈ A := hIndex.eventually_mem hA
+  have hPointU : ∀ᶠ z in p, z.2 ∈ U := hPoint.eventually_mem hU
+  rcases (hIndexA.and (hPointU.and hMem)).exists with
     ⟨z, hzA, hzU, hzs⟩
   exact ⟨z.2, hzU,
     Set.mem_iUnion.2 ⟨z.1, Set.mem_iUnion.2 ⟨hzA, hzs⟩⟩⟩
