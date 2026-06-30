@@ -26,11 +26,9 @@ theorem VacuumSemigroupGapSlope.approximateShiftedAdmissibleRescaledDefect_varyi
     (hP : P.IsNormalized)
     (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    {lambdaSeq : ℕ → ℝ}
-    {lambda : ℝ}
+    {lambdaSeq : ℕ → ℝ} {lambda : ℝ}
     (hlambda : lambda < G.mass / 2)
-    {ySeq : ℕ → P.VacuumOrthogonalHilbert}
-    {y : P.VacuumOrthogonalHilbert}
+    {ySeq : ℕ → P.VacuumOrthogonalHilbert} {y : P.VacuumOrthogonalHilbert}
     {tau : ℕ → G.AdmissibleRescaledDefectTime}
     {u : ℕ → P.VacuumOrthogonalHilbert}
     (hTau : Tendsto tau atTop G.admissibleRescaledDefectTimeFilter)
@@ -112,11 +110,9 @@ theorem VacuumSemigroupGapSlope.approximateShiftedAdmissibleRescaledDefect_varyi
     (hP : P.IsNormalized)
     (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    {lambdaSeq : ℕ → ℝ}
-    {lambda : ℝ}
+    {lambdaSeq : ℕ → ℝ} {lambda : ℝ}
     (hlambda : lambda < G.mass / 2)
-    {ySeq : ℕ → P.VacuumOrthogonalHilbert}
-    {y : P.VacuumOrthogonalHilbert}
+    {ySeq : ℕ → P.VacuumOrthogonalHilbert} {y : P.VacuumOrthogonalHilbert}
     {tau : ℕ → G.AdmissibleRescaledDefectTime}
     {u : ℕ → P.VacuumOrthogonalHilbert}
     {x eta : P.VacuumOrthogonalHilbert}
