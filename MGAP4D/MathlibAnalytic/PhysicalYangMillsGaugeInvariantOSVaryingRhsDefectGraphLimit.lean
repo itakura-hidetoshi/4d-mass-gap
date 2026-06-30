@@ -51,7 +51,8 @@ theorem VacuumSemigroupGapSlope.approximateShiftedAdmissibleRescaledDefect_varyi
               T hP hInnerSymmetric hSelf hlambda y))) := by
   have hYError :
       Tendsto (fun n => ySeq n - y) atTop (nhds 0) := by
-    simpa using hy.sub tendsto_const_nhds
+    simpa using hy.sub
+      (tendsto_const_nhds : Tendsto (fun _ : ℕ => y) atTop (nhds y))
   have hResidualFixedRaw :
       Tendsto
         (fun n =>
@@ -112,7 +113,8 @@ theorem VacuumSemigroupGapSlope.approximateShiftedAdmissibleRescaledDefect_varyi
         T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf xDomain = eta := by
   have hYError :
       Tendsto (fun n => ySeq n - y) atTop (nhds 0) := by
-    simpa using hy.sub tendsto_const_nhds
+    simpa using hy.sub
+      (tendsto_const_nhds : Tendsto (fun _ : ℕ => y) atTop (nhds y))
   have hResidualFixedRaw :
       Tendsto
         (fun n =>
