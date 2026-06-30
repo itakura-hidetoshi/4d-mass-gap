@@ -38,7 +38,7 @@ theorem vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_graph_limit_mem
         (fun n => ((u n : P.VacuumOrthogonalHilbert), A (u n)))
         atTop
         (nhds (x, eta)) := by
-    simpa [A] using Tendsto.prodMk hu hHu
+    simpa [A] using hu.prodMk_nhds hHu
   have hGraph : (x, eta) ∈ (A.graph : Set (P.VacuumOrthogonalHilbert × P.VacuumOrthogonalHilbert)) :=
     (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isClosed hP hSelf).mem_of_tendsto
       hPair
