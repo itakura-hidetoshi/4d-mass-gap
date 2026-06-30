@@ -82,12 +82,14 @@ theorem kuratowskiLimits_eq_singleton_of_outer_subset_of_mem_lower
   constructor
   · exact Set.Subset.antisymm hOuter (by
       intro y hy
-      simpa only [Set.mem_singleton_iff] using hy ▸ hxOuter)
+      have hyx : y = x := by simpa only [Set.mem_singleton_iff] using hy
+      simpa only [hyx] using hxOuter)
   · apply Set.Subset.antisymm
     · exact Set.Subset.trans
         (kuratowskiLowerLimit_subset_kuratowskiOuterLimit l s) hOuter
     · intro y hy
-      simpa only [Set.mem_singleton_iff] using hy ▸ hLower
+      have hyx : y = x := by simpa only [Set.mem_singleton_iff] using hy
+      simpa only [hyx] using hLower
 
 end FilterSet
 
