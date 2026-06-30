@@ -73,9 +73,10 @@ theorem vacuumOrthogonalClosedRightHamiltonianCoreShift_denseRange_of_fullShift_
       T.vacuumOrthogonalClosedRightHamiltonianCoreShift
         hInnerSymmetric lambda x
   have hFullSubset :
-      LinearMap.range
+      (LinearMap.range
           ((T.vacuumOrthogonalClosedRightHamiltonian
-            hClosedSymmetric).realShift lambda) ⊆
+            hClosedSymmetric).realShift lambda) :
+        Set P.VacuumOrthogonalHilbert) ⊆
         closure (Set.range coreShift) := by
     rintro y ⟨psi, rfl⟩
     obtain ⟨u, huBase, huValue⟩ :=
