@@ -229,7 +229,7 @@ theorem VacuumSemigroupGapSlope.continuumShiftedResolventGraph_subset_fullExactS
               T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf
                 (G.vacuumOrthogonalContinuumRealResolventDomainPoint
                   T hP hInnerSymmetric hSelf hlambda y)))) := by
-    simpa [recovery] using hConst.prodMk hGraphTendsto
+    simpa [recovery] using hConst.prodMk_nhds hGraphTendsto
   have hSingleton :
       ∀ᶠ i in l,
         G.exactShiftedDefectGraphFamily
