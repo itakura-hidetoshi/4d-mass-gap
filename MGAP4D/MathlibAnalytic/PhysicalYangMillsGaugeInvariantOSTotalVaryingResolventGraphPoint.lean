@@ -138,13 +138,20 @@ theorem VacuumSemigroupGapSlope.totalVaryingShiftResolventGraphPoint_tendsto_con
       T hInnerSymmetric tau lambdaNet yNet i hLambdaI]
     rw [hEquation]
     abel
+  have hResidualEq :
+      (fun _ : ι => (0 : P.VacuumOrthogonalHilbert)) =ᶠ[l]
+        (fun i =>
+          T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+              hInnerSymmetric (tau i).1 (u i) - lambdaNet i • u i - yNet i) := by
+    filter_upwards [hResidualEventually] with i hi
+    exact hi.symm
   have hResidual :
       Tendsto
         (fun i =>
           T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
               hInnerSymmetric (tau i).1 (u i) - lambdaNet i • u i - yNet i)
         l (nhds 0) :=
-    tendsto_const_nhds.congr' hResidualEventually.symm
+    tendsto_const_nhds.congr' hResidualEq
   have hGraph :=
     G.approximateShiftedAdmissibleRescaledDefect_varyingShiftRhs_filter_graph_tendsto_continuumResolventGraphPoint
       T hP hInnerSymmetric hSelf l hlambda hTau hLambda hy hResidual
