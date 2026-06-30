@@ -218,6 +218,8 @@ theorem VacuumSemigroupGapSlope.continuumShiftedResolventGraph_subset_fullExactS
       G.totalVaryingShiftResolventGraphPoint_tendsto_continuum
         T hP hInnerSymmetric hSelf l hlambda hTau hLambda
           (tendsto_const_nhds : Tendsto (fun _ : ι => y) l (nhds y))
+  have hConst : Tendsto (fun _ : ι => y) l (nhds y) :=
+    tendsto_const_nhds
   have hRecovery :
       Tendsto recovery l
         (nhds
@@ -227,7 +229,7 @@ theorem VacuumSemigroupGapSlope.continuumShiftedResolventGraph_subset_fullExactS
               T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf
                 (G.vacuumOrthogonalContinuumRealResolventDomainPoint
                   T hP hInnerSymmetric hSelf hlambda y)))) := by
-    simpa [recovery] using tendsto_const_nhds.prodMk hGraphTendsto
+    simpa [recovery] using hConst.prodMk hGraphTendsto
   have hSingleton :
       ∀ᶠ i in l,
         G.exactShiftedDefectGraphFamily
