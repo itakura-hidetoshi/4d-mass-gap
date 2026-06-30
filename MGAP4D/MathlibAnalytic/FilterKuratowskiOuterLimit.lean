@@ -8,7 +8,7 @@ open Filter Set Topology
 
 universe u v
 
-namespace Filter
+namespace FilterSet
 
 variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
@@ -48,7 +48,7 @@ theorem selectionOuterLimit_subset_kuratowskiOuterLimit
   exact ⟨f i, hiU,
     Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨hiA, his⟩⟩⟩
 
-end Filter
+end FilterSet
 
 end MathlibAnalytic
 end MGAP4D
