@@ -180,7 +180,7 @@ The mass-slope input remains visible in every public theorem statement, and no d
 
 ## Milestone 5 — merge graph-core and full strong-resolvent convergence
 
-Status: **implemented through PR #328**
+Status: **implemented through PR #328, CI failing**
 
 - [~] define the canonical vacuum-orthogonal right-Hamiltonian core;
 - [~] prove rescaled OS defects converge to the graph-closed Hamiltonian on the core;
@@ -201,12 +201,18 @@ PR #328 head:
   540cc5848626fce2a69fff6948e14886e9591277
 
 PR Lean Fast Check:
-  run 5141, in progress at the 2026-06-30 snapshot
+  run 5141, failed
+
+failing target:
+  PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean
+
+Lean diagnostic:
+  line 220:10 — No goals to be solved
 ```
 
 Definition of done:
 
-CI is green, the stacked history is rebased and decomposed, and the theorem reaches `main` with the positive mass-slope and self-adjointness hypotheses unchanged.
+The graph-core proof is repaired, CI is green, the stacked history is rebased and decomposed, and the theorem reaches `main` with the positive mass-slope and self-adjointness hypotheses unchanged.
 
 ---
 
@@ -350,7 +356,7 @@ The value `33/20` remains an internal normalized audit value unless a separate p
 
 ## Immediate execution order
 
-1. Complete PR #328 CI.
+1. Repair `PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean` at line 220 and rerun PR #328 CI.
 2. Rebase and decompose the stacked frontier against current `main`.
 3. Merge PR #302's finite explicit theorem.
 4. Merge the native compact Haar heat-bath and uniform finite spectral layers.
