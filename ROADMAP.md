@@ -5,10 +5,10 @@ This roadmap records the active proof-development path of `itakura-hidetoshi/4d-
 ## Snapshot — 2026-06-30
 
 ```text
-main:
+latest mathematical proof checkpoint on main:
   a80a75449a16d07889519c1823595c5244824583
 
-latest merged main proof PR:
+latest merged mathematical proof PR:
   PR #300
 
 current stacked frontier:
@@ -214,10 +214,10 @@ CI is green, the stacked history is rebased and decomposed, and the theorem reac
 
 Status: **required before mathematical promotion**
 
-The current frontier and `main` have diverged.
+Relative to the latest mathematical checkpoint `a80a7544…`, the frontier has diverged:
 
 ```text
-frontier relative to main:
+frontier relative to checkpoint:
   ahead 237
   behind 157
   merge base 929e20583ae368475d4bedb65c060c2d3c4c0fff
@@ -225,17 +225,17 @@ frontier relative to main:
 
 Required work:
 
-- [ ] rebase the frontier onto `a80a75449a16d07889519c1823595c5244824583` or a later `main` head;
+- [ ] rebase the frontier onto the current `main` head;
 - [ ] resolve duplicate or independently evolved theorem files;
 - [ ] split generic functional analysis from Wilson-specific applications;
 - [ ] split finite compact heat-bath theory from continuum OS theory;
 - [ ] retain compile-smoke roots for each merge unit;
 - [ ] run ordinary branch-wide CI after every structural split;
-- [ ] update theorem indexes and documentation after each `main` merge.
+- [ ] update theorem indexes and documentation after each mathematical merge.
 
 Definition of done:
 
-The repository has one replayable dependency graph on `main`, and no authoritative document depends on an unmerged stacked branch.
+The repository has one replayable dependency graph on `main`, and no authoritative theorem claim depends on an unmerged stacked branch.
 
 ---
 
@@ -330,7 +330,7 @@ Status: **next functional-analytic layer after PR #328**
 - [ ] formalize any required Mosco, graph, or form convergence equivalences;
 - [ ] connect the excitation resolvent to physical correlation decay.
 
-These consequences require care: strong-resolvent convergence alone does not automatically provide norm-resolvent convergence or convergence of every spectral projection.
+Strong-resolvent convergence alone does not imply norm-resolvent convergence or convergence of every spectral projection.
 
 ---
 
