@@ -190,8 +190,32 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_sub_continuumR
   have h :=
     G.admissibleRescaledDefectResolvent_tendsto_continuumResolvent
       T hP hInnerSymmetric hSelf hlambda y
-  have hSub := h.sub tendsto_const_nhds
-  simpa using hSub.norm
+  have hConst :
+      Tendsto
+        (fun _ : G.AdmissibleRescaledDefectTime =>
+          G.vacuumOrthogonalContinuumRealResolvent
+            T hP hInnerSymmetric hSelf hlambda y)
+        G.admissibleRescaledDefectTimeFilter
+        (𝓝
+          (G.vacuumOrthogonalContinuumRealResolvent
+            T hP hInnerSymmetric hSelf hlambda y)) :=
+    tendsto_const_nhds
+  have hSub :
+      Tendsto
+        (fun tau : G.AdmissibleRescaledDefectTime =>
+          G.admissibleRescaledDefectResolvent
+              hInnerSymmetric tau hlambda y -
+            G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda y)
+        G.admissibleRescaledDefectTimeFilter
+        (𝓝
+          (G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda y -
+            G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda y)) :=
+    h.sub hConst
+  have hNorm := hSub.norm
+  simpa using hNorm
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
