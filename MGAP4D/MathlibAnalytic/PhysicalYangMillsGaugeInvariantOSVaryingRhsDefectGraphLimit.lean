@@ -34,10 +34,8 @@ theorem VacuumSemigroupGapSlope.approximateShiftedAdmissibleRescaledDefect_varyi
     (hTau : Tendsto tau atTop G.admissibleRescaledDefectTimeFilter)
     (hy : Tendsto ySeq atTop (nhds y))
     (hResidual : Tendsto
-      (fun n =>
-        T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
-              hInnerSymmetric (tau n).1 (u n) -
-            lambda • u n - ySeq n)
+      (fun n => T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+          hInnerSymmetric (tau n).1 (u n) - lambda • u n - ySeq n)
       atTop (nhds 0)) :
     Tendsto
       (fun n =>
@@ -100,15 +98,12 @@ theorem VacuumSemigroupGapSlope.approximateShiftedAdmissibleRescaledDefect_varyi
     (hTau : Tendsto tau atTop G.admissibleRescaledDefectTimeFilter)
     (hy : Tendsto ySeq atTop (nhds y))
     (hResidual : Tendsto
-      (fun n =>
-        T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
-              hInnerSymmetric (tau n).1 (u n) -
-            lambda • u n - ySeq n)
+      (fun n => T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+          hInnerSymmetric (tau n).1 (u n) - lambda • u n - ySeq n)
       atTop (nhds 0))
     (hu : Tendsto u atTop (nhds x))
     (hDefect : Tendsto
-      (fun n =>
-        T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
+      (fun n => T.toPhysicalSemigroup.vacuumOrthogonalRescaledDefect
           hInnerSymmetric (tau n).1 (u n))
       atTop (nhds eta)) :
     ∃ xDomain :
