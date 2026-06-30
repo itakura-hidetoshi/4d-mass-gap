@@ -4,6 +4,7 @@
 **Latest mathematical proof checkpoint on `main`:** `a80a75449a16d07889519c1823595c5244824583`  
 **Latest merged mathematical proof PR:** PR #300  
 **Current stacked frontier:** PR #328, `540cc5848626fce2a69fff6948e14886e9591277`  
+**Frontier CI:** PR Lean Fast Check run 5141 failed  
 **Frontier base carrier:** `formal/real-hilbert-uniform-coercive-strong-limit`, `a846a06aa286f4d0beb624bfd5e461653b797b58`
 
 ## Status boundary
@@ -74,9 +75,25 @@ base commit:
   a846a06aa286f4d0beb624bfd5e461653b797b58
 ```
 
-At this snapshot, PR #328 is open, non-draft, and reported as mergeable.
+At this snapshot, PR #328 is open, non-draft, and reported as mergeable by GitHub's branch analysis, but its required Lean check is failing.
 
-The **PR Lean Fast Check** run 5141 is in progress.
+**PR Lean Fast Check** run 5141 completed with failure in the changed-Lean build step.
+
+The failing target is:
+
+```text
+MGAP4D.MathlibAnalytic.
+  PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation
+```
+
+The concrete diagnostic is:
+
+```text
+PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean:220:10:
+  No goals to be solved
+```
+
+The preceding build reached target 8662 of 8664. The error is a Lean proof-script elaboration failure, not a failure of an external physical hypothesis. PR #328 is not replay-clean and is not merge-ready until the proof script is repaired and CI passes.
 
 Relative to the latest mathematical checkpoint `a80a7544…`, the frontier is reported as:
 
@@ -86,7 +103,7 @@ behind:      157 commits
 merge base:  929e20583ae368475d4bedb65c060c2d3c4c0fff
 ```
 
-The frontier therefore requires rebase, duplicate-file reconciliation, and reviewable decomposition before mathematical promotion to `main`.
+The frontier therefore also requires rebase, duplicate-file reconciliation, and reviewable decomposition before mathematical promotion to `main`.
 
 ## Mathematical state on `main`
 
@@ -438,7 +455,7 @@ For every
 lambda < mass / 2
 ```
 
-and every excitation vector `y`, it proves
+and every excitation vector `y`, the intended theorem states
 
 ```text
 R_tau(lambda) y -> R(lambda) y
@@ -446,7 +463,7 @@ R_tau(lambda) y -> R(lambda) y
 
 where `R_tau(lambda)` is the bounded resolvent of the admissible rescaled semigroup defect and `R(lambda)` is the real resolvent of the graph-closed continuum vacuum-orthogonal Hamiltonian.
 
-It also proves
+The branch also contains the equivalent norm formulation
 
 ```text
 ||R_tau(lambda) y - R(lambda) y|| -> 0.
@@ -466,9 +483,9 @@ full Hamiltonian mass bound
   -> full strong-resolvent convergence.
 ```
 
-This is the present formal frontier.
+The theorem bodies are implemented on the branch, but the branch does not currently replay because run 5141 fails in the graph-core approximation file with `No goals to be solved` at line 220.
 
-It remains conditional on:
+The frontier also remains conditional on:
 
 - a positive `VacuumSemigroupGapSlope`;
 - normalized OS data;
@@ -480,6 +497,13 @@ It remains conditional on:
 It is not on `main` at this snapshot.
 
 ## Current unresolved obligations
+
+### Immediate Lean repair
+
+- remove or restructure the tactic at `PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean:220:10` that is invoked after all goals have already been closed;
+- rerun the changed-Lean fast check;
+- compile the two downstream targets `PhysicalYangMillsGaugeInvariantOSCoreShiftDenseRange` and `PhysicalYangMillsGaugeInvariantOSFullStrongResolvent`;
+- record a green replay receipt before integration.
 
 ### Repository integration
 
@@ -535,7 +559,7 @@ It is not on `main` at this snapshot.
 | Coercive varying-Hilbert strong-limit transport | stacked frontier |
 | OS defect and rescaled-defect spectral gaps | stacked frontier |
 | Hamiltonian core convergence | stacked frontier |
-| Full OS strong-resolvent convergence | PR #328, CI pending at snapshot |
+| Full OS strong-resolvent convergence | PR #328, Lean CI failed at snapshot |
 | Concrete physical carrier and interpolation | open |
 | Physical scaling and coupling trajectory | open |
 | Nontrivial continuum Yang--Mills weak limit | open |
@@ -550,7 +574,7 @@ Accurate formulations:
 
 - “Lean proves the stated finite-volume Wilson and Dobrushin theorems on `main`.”
 - “Lean proves conditional continuum weak-limit, OS Hamiltonian, and mass-gap transfer theorems from explicit hypotheses.”
-- “The stacked frontier proves full strong-resolvent convergence from the supplied positive mass-slope and OS hypotheses.”
+- “PR #328 implements the full strong-resolvent theorem chain, but its current head fails Lean CI in the graph-core approximation proof.”
 - “The physical construction and uniform positive gap hypotheses remain open.”
 
 Inaccurate formulations at the current state:
@@ -560,6 +584,7 @@ Inaccurate formulations at the current state:
 - “The physical mass gap has been derived from Wilson dynamics.”
 - “The value `33/20` is the derived physical Yang--Mills mass gap.”
 - “A stacked-branch merge means the theorem is on `main`.”
+- “PR #328 has a green replay receipt.”
 
 ## Replay meaning
 
