@@ -49,3 +49,5 @@ jobs:
         run: |
           set -euxo pipefail
           lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFullGraphNormApproximation
+
+# Second branch push after workflow registration.
