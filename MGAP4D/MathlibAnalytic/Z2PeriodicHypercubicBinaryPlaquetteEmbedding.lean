@@ -8,13 +8,11 @@ open Filter MeasureTheory
 
 noncomputable section
 
-/-- The selected periodic `Z₂` plaquette energy is always exactly zero or one. -/
 theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_one
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : ℕ)
     (A : (T.system k).Configuration) :
     T.plaquetteObservable k A = 0 ∨ T.plaquetteObservable k A = 1 := by
-  classical
   by_cases hHolonomy :
       (T.system k).plaquetteHolonomy A (T.plaquette k) = 1
   · left
@@ -28,7 +26,6 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_o
       FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable,
       hHolonomy]
 
-/-- Binary encoding of the selected `0/1` plaquette energy. -/
 def Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : ℕ)
@@ -36,8 +33,6 @@ def Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit
   classical
   exact decide (T.plaquetteObservable k A = 1)
 
-/-- The fixed bounded continuous observable on the two-point plaquette-energy
-carrier. -/
 def z2BinaryPlaquetteObservable : BoundedContinuousFunction Bool ℝ :=
   BoundedContinuousFunction.mkOfDiscrete
     (fun b : Bool => if b then 1 else 0) 1 (by
@@ -50,8 +45,6 @@ theorem z2BinaryPlaquetteObservable_apply
     z2BinaryPlaquetteObservable b = if b then 1 else 0 := by
   rfl
 
-/-- The fixed binary observable exactly recovers the selected lattice
-plaquette energy after the canonical binary encoding. -/
 theorem Z2PeriodicHypercubicPlaquetteTrajectory.binaryObservable_pullback
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : ℕ)
@@ -63,9 +56,6 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.binaryObservable_pullback
   · simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit, hZero]
   · simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit, hOne]
 
-/-- Scaling and bounded-coupling data for the canonical two-point observable
-embedding.  The carrier records only the chosen plaquette energy and is not a
-full continuum gauge-field configuration space. -/
 structure Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData where
   trajectory : Z2PeriodicHypercubicPlaquetteTrajectory
   latticeSpacing : ℕ → ℝ
@@ -76,8 +66,6 @@ structure Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData where
   betaUpper : ℝ
   beta_le : ∀ k, trajectory.beta k ≤ betaUpper
 
-/-- Canonical embedding of the selected plaquette-energy laws into the fixed
-binary Polish carrier. -/
 noncomputable def
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.toPhysicalEmbedding
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
@@ -96,8 +84,6 @@ noncomputable def
     betaUpper := D.betaUpper
     beta_le := D.beta_le }
 
-/-- Any supplied weak limit of the canonical binary plaquette-energy laws has
-strictly positive variance for the identity `0/1` observable. -/
 theorem Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.continuum_variance_pos
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData)
     (continuumMeasure : ProbabilityMeasure Bool)
