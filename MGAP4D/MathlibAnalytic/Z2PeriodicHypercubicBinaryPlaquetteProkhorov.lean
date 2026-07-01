@@ -14,6 +14,10 @@ periodic `Z₂` plaquette laws is automatically tight. -/
 theorem Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.embeddedMeasure_isTight
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
     D.toPhysicalEmbedding.toLatticeEmbedding.IsTight := by
+  letI : CompactSpace
+      D.toPhysicalEmbedding.toLatticeEmbedding.PhysicalConfiguration := by
+    change CompactSpace Bool
+    infer_instance
   exact MeasureTheory.IsTightMeasureSet.of_compactSpace
 
 /-- Prokhorov compactness therefore extracts a weakly convergent subsequence of
