@@ -7,40 +7,40 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Center a real observable by its finite oriented Wilson Gibbs expectation. -/
-def FiniteOrientedLatticeWilsonSystem.gibbsCenteredObservable
+/-- Lightweight centered observable used by the variance-domination layer. -/
+def FiniteOrientedLatticeWilsonSystem.varianceCenteredObservable
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
     L.Configuration → ℝ :=
   fun A => f A - L.gibbsExpectationReal f
 
 /-- Gibbs variance is the Gibbs squared norm of the centered observable. -/
-theorem finite_oriented_gibbsVarianceReal_eq_gibbsPairing_centered
+theorem finite_oriented_gibbsVarianceReal_eq_gibbsPairing_varianceCentered
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
     L.gibbsVarianceReal f =
-      L.gibbsPairingReal (L.gibbsCenteredObservable f)
-        (L.gibbsCenteredObservable f) := by
+      L.gibbsPairingReal (L.varianceCenteredObservable f)
+        (L.varianceCenteredObservable f) := by
   classical
   unfold FiniteOrientedLatticeWilsonSystem.gibbsVarianceReal
     FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
-    FiniteOrientedLatticeWilsonSystem.gibbsCenteredObservable
+    FiniteOrientedLatticeWilsonSystem.varianceCenteredObservable
   apply Finset.sum_congr rfl
   intro A _hA
   ring
 
 /-- The one-link fluctuation projection is insensitive to subtracting a constant. -/
-theorem finite_oriented_singleLinkHeatBathFluctuation_centered
+theorem finite_oriented_singleLinkHeatBathFluctuation_varianceCentered
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (e : L.Edge) :
     L.singleLinkHeatBathFluctuationLinearMap e
-        (L.gibbsCenteredObservable f) =
+        (L.varianceCenteredObservable f) =
       L.singleLinkHeatBathFluctuationLinearMap e f := by
   funext A
   rw [finite_oriented_singleLinkHeatBathFluctuationLinearMap_apply]
   rw [finite_oriented_singleLinkHeatBathFluctuationLinearMap_apply]
-  unfold FiniteOrientedLatticeWilsonSystem.gibbsCenteredObservable
+  unfold FiniteOrientedLatticeWilsonSystem.varianceCenteredObservable
   unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjectionLinearMap
     FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
     FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
@@ -59,7 +59,7 @@ theorem finite_oriented_singleLinkHeatBathFluctuation_centered
 
 /-- The Gibbs squared norm of a one-link fluctuation is bounded by the full
 Gibbs squared norm. -/
-theorem finite_oriented_gibbsPairing_fluctuation_le
+theorem finite_oriented_gibbsPairing_singleLinkFluctuation_le
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (e : L.Edge) :
@@ -89,10 +89,10 @@ theorem finite_oriented_averagedSingleLinkVariance_le_gibbsVarianceReal
     (e : L.Edge) :
     L.averagedSingleLinkVariance f e ≤ L.gibbsVarianceReal f := by
   rw [finite_oriented_averagedSingleLinkVariance_eq_gibbsPairing_fluctuation]
-  rw [finite_oriented_gibbsVarianceReal_eq_gibbsPairing_centered]
-  rw [← finite_oriented_singleLinkHeatBathFluctuation_centered L f e]
-  exact finite_oriented_gibbsPairing_fluctuation_le
-    L (L.gibbsCenteredObservable f) e
+  rw [finite_oriented_gibbsVarianceReal_eq_gibbsPairing_varianceCentered]
+  rw [← finite_oriented_singleLinkHeatBathFluctuation_varianceCentered L f e]
+  exact finite_oriented_gibbsPairing_singleLinkFluctuation_le
+    L (L.varianceCenteredObservable f) e
 
 end
 
