@@ -16,27 +16,23 @@ theorem
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData)
     (n : ℕ) :
     D.prokhorovWeakLimit.approximatingObservableVariance n
-        z2BinaryPlaquetteObservable =
+        D.toPhysicalEmbedding.observable =
       D.trajectory.gibbsVariance
         (D.prokhorovSubsequenceLimit.subsequence n) := by
+  let E := D.toPhysicalEmbedding.toLatticeEmbedding
   let k := D.prokhorovSubsequenceLimit.subsequence n
   change
-    (∫ A : Bool,
-        (z2BinaryPlaquetteObservable * z2BinaryPlaquetteObservable) A
-          ∂(D.toPhysicalEmbedding.toLatticeEmbedding.embeddedMeasure k :
-            Measure Bool)) -
-        (∫ A : Bool, z2BinaryPlaquetteObservable A
-          ∂(D.toPhysicalEmbedding.toLatticeEmbedding.embeddedMeasure k :
-            Measure Bool)) ^ 2 =
+    (∫ A, (D.toPhysicalEmbedding.observable * D.toPhysicalEmbedding.observable) A
+          ∂(E.embeddedMeasure k : Measure E.PhysicalConfiguration)) -
+        (∫ A, D.toPhysicalEmbedding.observable A
+          ∂(E.embeddedMeasure k : Measure E.PhysicalConfiguration)) ^ 2 =
       D.trajectory.gibbsVariance k
   calc
-    _ = D.toPhysicalEmbedding.toLatticeEmbedding.latticePullbackObservableVariance
-          k z2BinaryPlaquetteObservable :=
+    _ = E.latticePullbackObservableVariance k D.toPhysicalEmbedding.observable :=
       physical_yang_mills_latticeEmbedding_embeddedMeasure_variance_eq_pullback
-        D.toPhysicalEmbedding.toLatticeEmbedding k z2BinaryPlaquetteObservable
+        E k D.toPhysicalEmbedding.observable
     _ = D.trajectory.gibbsVariance k := by
-      simpa [Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.toPhysicalEmbedding]
-        using D.toPhysicalEmbedding.latticePullbackVariance_eq k
+      exact D.toPhysicalEmbedding.latticePullbackVariance_eq k
 
 /-- The bounded-coupling finite-volume lower bound survives reindexing by the
 canonical Prokhorov subsequence. -/
@@ -44,7 +40,7 @@ noncomputable def
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovObservableNontrivialityCertificate
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
     D.prokhorovWeakLimit.ObservableNontrivialityCertificate :=
-  { observable := z2BinaryPlaquetteObservable
+  { observable := D.toPhysicalEmbedding.observable
     lowerBound := Real.exp (-(6 * D.betaUpper)) / 8
     lowerBound_pos :=
       z2PeriodicHypercubic_boundedCoupling_varianceLower_pos D.betaUpper
@@ -55,44 +51,37 @@ noncomputable def
         D.betaUpper D.beta_le (D.prokhorovSubsequenceLimit.subsequence n) }
 
 /-- The automatically extracted binary plaquette weak limit has strictly
-positive variance for the canonical `0/1` observable. -/
+positive variance for its canonical `0/1` observable. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovContinuumVariance_pos
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
     0 < D.prokhorovWeakLimit.continuumObservableVariance
-      z2BinaryPlaquetteObservable :=
+      D.toPhysicalEmbedding.observable :=
   D.prokhorovObservableNontrivialityCertificate.continuum_variance_pos
 
-/-- The continuum probability law selected by compactness differs from both
-Boolean Dirac probability laws. -/
+/-- The continuum probability law selected by compactness differs from every
+Dirac probability law on its physical carrier. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovContinuumMeasure_ne_dirac
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData)
-    (b : Bool) :
-    (D.prokhorovSubsequenceLimit.continuumMeasure : Measure Bool) ≠
+    (b : D.prokhorovWeakLimit.Configuration) :
+    (D.prokhorovWeakLimit.continuumMeasure :
+        Measure D.prokhorovWeakLimit.Configuration) ≠
       Measure.dirac b := by
   intro hDirac
   have hVariancePos := D.prokhorovContinuumVariance_pos
   unfold PhysicalFourDimensionalYangMillsWeakLimit.continuumObservableVariance at hVariancePos
-  change
-    0 <
-      (∫ A : Bool,
-          (z2BinaryPlaquetteObservable * z2BinaryPlaquetteObservable) A
-            ∂(D.prokhorovSubsequenceLimit.continuumMeasure : Measure Bool)) -
-        (∫ A : Bool, z2BinaryPlaquetteObservable A
-            ∂(D.prokhorovSubsequenceLimit.continuumMeasure : Measure Bool)) ^ 2
-      at hVariancePos
   rw [hDirac] at hVariancePos
-  fin_cases b <;>
-    norm_num [z2BinaryPlaquetteObservable, pow_two] at hVariancePos
+  simp [pow_two] at hVariancePos
 
 /-- The automatically selected continuum binary plaquette law is not a
 one-point probability law. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovContinuumMeasure_not_dirac
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
-    ¬ ∃ b : Bool,
-      (D.prokhorovSubsequenceLimit.continuumMeasure : Measure Bool) =
+    ¬ ∃ b : D.prokhorovWeakLimit.Configuration,
+      (D.prokhorovWeakLimit.continuumMeasure :
+          Measure D.prokhorovWeakLimit.Configuration) =
         Measure.dirac b := by
   rintro ⟨b, hDirac⟩
   exact D.prokhorovContinuumMeasure_ne_dirac b hDirac
