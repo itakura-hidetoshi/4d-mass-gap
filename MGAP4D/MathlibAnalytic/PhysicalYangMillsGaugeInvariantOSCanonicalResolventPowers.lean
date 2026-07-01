@@ -7,7 +7,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 open Filter Set Topology
-open scoped BigOperators InnerProductSpace LinearPMap
+open scoped InnerProductSpace LinearPMap
 
 namespace ContinuousLinearMap
 
@@ -68,9 +68,9 @@ theorem tendsto_finset_sum_smul_pow_apply_of_pointwise_of_uniform_opNorm_le
     (c : ℕ → ℝ)
     (x : E) :
     Tendsto
-      (fun i => ∑ n in s, c n • (((A i) ^ n) x))
+      (fun i => s.sum (fun n => c n • (((A i) ^ n) x)))
       l
-      (𝓝 (∑ n in s, c n • ((R ^ n) x))) := by
+      (𝓝 (s.sum (fun n => c n • ((R ^ n) x))) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -189,14 +189,14 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_finsetPolynomi
     (y : P.VacuumOrthogonalHilbert) :
     Tendsto
       (fun tau : G.AdmissibleRescaledDefectTime =>
-        ∑ n in s, c n •
+        s.sum (fun n => c n •
           (((G.admissibleRescaledDefectResolvent
-            hInnerSymmetric tau hlambda) ^ n) y))
+            hInnerSymmetric tau hlambda) ^ n) y)))
       G.admissibleRescaledDefectTimeFilter
       (𝓝
-        (∑ n in s, c n •
+        (s.sum (fun n => c n •
           (((G.vacuumOrthogonalContinuumRealResolvent
-            T hP hInnerSymmetric hSelf hlambda) ^ n) y))) := by
+            T hP hInnerSymmetric hSelf hlambda) ^ n) y)))) := by
   let A : G.AdmissibleRescaledDefectTime →
       P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
     fun tau => G.admissibleRescaledDefectResolvent
