@@ -28,7 +28,8 @@ theorem Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.continuumMeasure_ne_dir
         (∫ A : Bool, z2BinaryPlaquetteObservable A
             ∂(continuumMeasure : Measure Bool)) ^ 2 at hVariancePos
   rw [hDirac] at hVariancePos
-  simpa [pow_two] using hVariancePos
+  fin_cases b <;>
+    norm_num [z2BinaryPlaquetteObservable, pow_two] at hVariancePos
 
 /-- The continuum binary plaquette law is not any one-point probability law. -/
 theorem Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.continuumMeasure_not_dirac
