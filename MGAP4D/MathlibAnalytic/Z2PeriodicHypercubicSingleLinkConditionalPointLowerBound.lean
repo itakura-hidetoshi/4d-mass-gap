@@ -1,0 +1,126 @@
+import MGAP4D.MathlibAnalytic.FiniteNormalizedExponentialPointLowerBound
+import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonConditionalNormalizedExp
+import MGAP4D.MathlibAnalytic.Z2PeriodicHypercubicOrientedWilsonSystem
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped BigOperators
+
+noncomputable section
+
+/-- Every plaquette energy in the periodic oriented `Z₂` Wilson system is at
+most one. -/
+theorem z2PeriodicHypercubicOrientedWilsonSystem_plaquetteEnergy_le_one
+    (n : ℕ) [NeZero n]
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (g : Z2Gauge) :
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        .plaquetteEnergy g ≤ 1 := by
+  change (if g = 1 then 0 else 1) ≤ 1
+  split_ifs <;> norm_num
+
+/-- The target-local periodic `Z₂` action is nonnegative. -/
+theorem z2PeriodicHypercubic_targetLocalPlaquetteAction_nonneg
+    (n : ℕ) [NeZero n]
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (A : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Configuration)
+    (target : PeriodicHypercubicEdge n) :
+    0 ≤ (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+      .targetLocalPlaquetteAction A target := by
+  classical
+  unfold FiniteOrientedLatticeWilsonSystem.targetLocalPlaquetteAction
+  apply Finset.sum_nonneg
+  intro p _hp
+  by_cases hTouch :
+      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        .PlaquetteTouchesEdge p target
+  · simp only [if_pos hTouch]
+    exact (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+      .plaquetteEnergy_nonneg _
+  · simp [hTouch]
+
+/-- At most six unit-energy plaquettes contribute to the target-local action. -/
+theorem z2PeriodicHypercubic_targetLocalPlaquetteAction_le_six
+    (n : ℕ) [NeZero n]
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (A : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Configuration)
+    (target : PeriodicHypercubicEdge n) :
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        .targetLocalPlaquetteAction A target ≤ 6 := by
+  classical
+  let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
+  unfold FiniteOrientedLatticeWilsonSystem.targetLocalPlaquetteAction
+  calc
+    (∑ p : L.Plaquette,
+        if L.PlaquetteTouchesEdge p target then
+          L.plaquetteEnergy (L.plaquetteHolonomy A p)
+        else 0) ≤
+      ∑ p : L.Plaquette,
+        if L.PlaquetteTouchesEdge p target then (1 : ℝ) else 0 := by
+      apply Finset.sum_le_sum
+      intro p _hp
+      by_cases hTouch : L.PlaquetteTouchesEdge p target
+      · simp only [if_pos hTouch]
+        exact z2PeriodicHypercubicOrientedWilsonSystem_plaquetteEnergy_le_one
+          n beta hBeta _
+      · simp [hTouch]
+    _ = ((periodicHypercubicTouchingPlaquettes n target).card : ℝ) := by
+      simp [L, periodicHypercubicTouchingPlaquettes,
+        z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+    _ ≤ 6 := by
+      exact_mod_cast periodicHypercubicTouchingPlaquettes_card_le_six n target
+
+/-- The target-local log-weight oscillation is at most `6 * beta`, uniformly in
+the periodic volume and exterior configuration. -/
+theorem z2PeriodicHypercubic_targetLocalSingleLinkLogWeight_oscillation
+    (n : ℕ) [NeZero n]
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (A : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Configuration)
+    (target : PeriodicHypercubicEdge n)
+    (g h : Z2Gauge) :
+    (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+          .targetLocalSingleLinkLogWeight A target g -
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+          .targetLocalSingleLinkLogWeight A target h ≤
+      6 * beta := by
+  let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
+  let actionG := L.targetLocalPlaquetteAction (L.replaceLink A target g) target
+  let actionH := L.targetLocalPlaquetteAction (L.replaceLink A target h) target
+  have hActionGNonneg : 0 ≤ actionG :=
+    z2PeriodicHypercubic_targetLocalPlaquetteAction_nonneg
+      n beta hBeta (L.replaceLink A target g) target
+  have hActionHLe : actionH ≤ 6 :=
+    z2PeriodicHypercubic_targetLocalPlaquetteAction_le_six
+      n beta hBeta (L.replaceLink A target h) target
+  have hDifference : actionH - actionG ≤ 6 := by
+    linarith
+  change -beta * actionG - (-beta * actionH) ≤ 6 * beta
+  calc
+    -beta * actionG - (-beta * actionH) = beta * (actionH - actionG) := by
+      ring
+    _ ≤ beta * 6 := mul_le_mul_of_nonneg_left hDifference hBeta
+    _ = 6 * beta := by ring
+
+/-- Every exact periodic `Z₂` one-link conditional atom has the volume-independent
+lower bound `exp(-6 * beta) / 2`. -/
+theorem z2PeriodicHypercubic_singleLinkConditionalPMF_toReal_lower
+    (n : ℕ) [NeZero n]
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (A : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Configuration)
+    (target : PeriodicHypercubicEdge n)
+    (g : Z2Gauge) :
+    Real.exp (-(6 * beta)) / 2 ≤
+      ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        .singleLinkConditionalPMF A target g).toReal := by
+  rw [finite_oriented_singleLinkConditionalPMF_toReal_eq_finiteNormalizedExp]
+  apply z2Gauge_finiteNormalizedExp_lower_of_oscillation
+  intro x y
+  exact z2PeriodicHypercubic_targetLocalSingleLinkLogWeight_oscillation
+    n beta hBeta A target x y
+
+end
+
+end MathlibAnalytic
+end MGAP4D
