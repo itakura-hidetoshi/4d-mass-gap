@@ -23,7 +23,16 @@ theorem finiteLagrangeWeight_insert_insert_left
     finiteLagrangeWeight (insert a (insert b t)) parameter a =
       (parameter a - parameter b)⁻¹ *
         finiteLagrangeWeight (insert a t) parameter a := by
-  simp [finiteLagrangeWeight, hab, hab.symm, ha, hb, Finset.prod_insert]
+  have hEraseFull : (insert a (insert b t)).erase a = insert b t := by
+    ext x
+    simp [hab, ha]
+  have hEraseSmall : (insert a t).erase a = t := by
+    ext x
+    simp [ha]
+  unfold finiteLagrangeWeight
+  rw [hEraseFull, hEraseSmall, Finset.prod_insert hb]
+  simp only [mul_inv_rev₀]
+  ring
 
 /-- The right distinguished-node Lagrange weight factors off the first node
 with the sign dictated by reversing the node difference. -/
@@ -37,7 +46,17 @@ theorem finiteLagrangeWeight_insert_insert_right
     finiteLagrangeWeight (insert a (insert b t)) parameter b =
       -(parameter a - parameter b)⁻¹ *
         finiteLagrangeWeight (insert b t) parameter b := by
-  simp [finiteLagrangeWeight, hab, hab.symm, ha, hb, Finset.prod_insert]
+  have hEraseFull : (insert a (insert b t)).erase b = insert a t := by
+    ext x
+    simp [hab, hb]
+  have hEraseSmall : (insert b t).erase b = t := by
+    ext x
+    simp [hb]
+  unfold finiteLagrangeWeight
+  rw [hEraseFull, hEraseSmall, Finset.prod_insert ha]
+  simp only [mul_inv_rev₀]
+  rw [show parameter b - parameter a = -(parameter a - parameter b) by ring,
+    inv_neg]
   ring
 
 /-- At every remaining node, the full Lagrange weight is the divided
@@ -65,8 +84,28 @@ theorem finiteLagrangeWeight_insert_insert_tail
     intro h
     subst x
     exact hb hx
-  simp [finiteLagrangeWeight, hab, hab.symm, ha, hb, hx,
-    hxa, hxa.symm, hxb, hxb.symm, Finset.prod_insert]
+  have haErase : a ∉ t.erase x := by
+    simp [ha]
+  have hbErase : b ∉ t.erase x := by
+    simp [hb]
+  have haInsert : a ∉ insert b (t.erase x) := by
+    simp [hab, haErase]
+  have hEraseFull :
+      (insert a (insert b t)).erase x =
+        insert a (insert b (t.erase x)) := by
+    ext y
+    simp [hxa, hxb]
+  have hEraseA : (insert a t).erase x = insert a (t.erase x) := by
+    ext y
+    simp [hxa]
+  have hEraseB : (insert b t).erase x = insert b (t.erase x) := by
+    ext y
+    simp [hxb]
+  unfold finiteLagrangeWeight
+  rw [hEraseFull, hEraseA, hEraseB]
+  rw [Finset.prod_insert haInsert, Finset.prod_insert hbErase,
+    Finset.prod_insert haErase, Finset.prod_insert hbErase]
+  simp only [mul_inv_rev₀]
   field_simp [sub_ne_zero.mpr hpa, sub_ne_zero.mpr hpb,
     sub_ne_zero.mpr habp]
   <;> ring
@@ -89,8 +128,8 @@ theorem finiteLagrangeCombination_insert_insert_recursion
           finiteLagrangeCombination (insert b t) parameter A) := by
   have habp : parameter a ≠ parameter b := by
     intro hp
-    have := hInjective (by simp) (by simp) hp
-    exact hab this
+    have hEq := hInjective (by simp) (by simp) hp
+    exact hab hEq
   have hTail :
       ∑ x ∈ t,
           finiteLagrangeWeight (insert a (insert b t)) parameter x • A x =
@@ -124,21 +163,24 @@ theorem finiteLagrangeCombination_insert_insert_recursion
               exact hxb hEq
             rw [finiteLagrangeWeight_insert_insert_tail
               parameter t hab ha hb hx hpa hpb habp]
+      _ = ∑ x ∈ t,
+          (parameter a - parameter b)⁻¹ •
+            (finiteLagrangeWeight (insert a t) parameter x • A x -
+              finiteLagrangeWeight (insert b t) parameter x • A x) := by
+        apply Finset.sum_congr rfl
+        intro x hx
+        module
+      _ = (parameter a - parameter b)⁻¹ •
+          (∑ x ∈ t,
+            (finiteLagrangeWeight (insert a t) parameter x • A x -
+              finiteLagrangeWeight (insert b t) parameter x • A x)) := by
+        rw [Finset.smul_sum]
       _ = (parameter a - parameter b)⁻¹ •
           ((∑ x ∈ t, finiteLagrangeWeight (insert a t) parameter x • A x) -
             ∑ x ∈ t, finiteLagrangeWeight (insert b t) parameter x • A x) := by
-        rw [smul_sub, Finset.smul_sum, Finset.smul_sum]
-        apply congrArg₂ (· - ·)
-        · apply Finset.sum_congr rfl
-          intro x hx
-          rw [smul_smul]
-          rfl
-        · apply Finset.sum_congr rfl
-          intro x hx
-          rw [smul_smul]
-          rfl
+        rw [Finset.sum_sub_distrib]
   rw [finiteLagrangeCombination]
-  rw [Finset.sum_insert (by simp [hab, hb]), Finset.sum_insert hb]
+  rw [Finset.sum_insert (by simp [hab, ha]), Finset.sum_insert hb]
   rw [finiteLagrangeCombination, Finset.sum_insert ha]
   rw [finiteLagrangeCombination, Finset.sum_insert hb]
   rw [finiteLagrangeWeight_insert_insert_left parameter t hab ha hb]
