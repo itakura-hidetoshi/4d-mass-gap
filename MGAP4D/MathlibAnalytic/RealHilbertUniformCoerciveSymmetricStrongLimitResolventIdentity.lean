@@ -72,6 +72,10 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_sub_apply
           D lambda mu xmu
       _ = y + (mu - lambda) • xmu := by rw [hShiftMu]
   have hApply := congrArg (fun z => D.limitResolvent hlambda z) hShiftAtLambda
+  change
+    D.limitResolvent hlambda (D.limitShiftOperator lambda xmu) =
+      D.limitResolvent hlambda (y + (mu - lambda) • xmu)
+    at hApply
   rw [
     realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_apply_shift]
     at hApply
