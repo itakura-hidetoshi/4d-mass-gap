@@ -64,6 +64,12 @@ theorem finite_oriented_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
     using finite_oriented_singleLinkHeatBath_reversible_term
       L A e h f g
 
+/-- Canonical finite enumeration of physical-link configurations. -/
+noncomputable instance finiteOrientedLatticeWilsonConfigurationFintype
+    (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
+  classical
+  exact Fintype.ofFinite L.Configuration
+
 /-- Native forward and backward transition sums coincide. -/
 theorem finite_oriented_singleLinkHeatBath_reversible_product_sum
     (L : FiniteOrientedLatticeWilsonSystem)
