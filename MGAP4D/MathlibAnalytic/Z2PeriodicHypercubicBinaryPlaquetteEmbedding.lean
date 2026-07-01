@@ -13,11 +13,13 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_o
     (k : ℕ)
     (A : (T.system k).Configuration) :
     T.plaquetteObservable k A = 0 ∨ T.plaquetteObservable k A = 1 := by
-  simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable,
+  simpa [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable,
     Z2PeriodicHypercubicPlaquetteTrajectory.system,
     z2PeriodicHypercubicPlaquetteEnergyObservable,
     FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable,
-    z2PeriodicHypercubicOrientedWilsonSystem]
+    z2PeriodicHypercubicOrientedWilsonSystem] using
+    (Classical.em
+      ((T.system k).plaquetteHolonomy A (T.plaquette k) = 1))
 
 def Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
