@@ -31,8 +31,7 @@ theorem finiteLagrangeWeight_insert_insert_left
     simp [ha]
   unfold finiteLagrangeWeight
   rw [hEraseFull, hEraseSmall, Finset.prod_insert hb]
-  simp only [mul_inv_rev₀]
-  ring
+  simp [mul_comm]
 
 /-- The right distinguished-node Lagrange weight factors off the first node
 with the sign dictated by reversing the node difference. -/
@@ -48,16 +47,28 @@ theorem finiteLagrangeWeight_insert_insert_right
         finiteLagrangeWeight (insert b t) parameter b := by
   have hEraseFull : (insert a (insert b t)).erase b = insert a t := by
     ext x
-    simp [hab, hb]
+    simp only [Finset.mem_erase, Finset.mem_insert]
+    constructor
+    · rintro ⟨hxb, hxa | hxbEq | hxt⟩
+      · exact Or.inl hxa
+      · exact False.elim (hxb hxbEq)
+      · exact Or.inr hxt
+    · intro hx
+      rcases hx with hxa | hxt
+      · subst x
+        exact ⟨hab, Or.inl rfl⟩
+      · have hxb : x ≠ b := by
+          intro h
+          subst x
+          exact hb hxt
+        exact ⟨hxb, Or.inr (Or.inr hxt)⟩
   have hEraseSmall : (insert b t).erase b = t := by
     ext x
     simp [hb]
   unfold finiteLagrangeWeight
   rw [hEraseFull, hEraseSmall, Finset.prod_insert ha]
-  simp only [mul_inv_rev₀]
-  rw [show parameter b - parameter a = -(parameter a - parameter b) by ring,
-    inv_neg]
-  ring
+  simp [show parameter b - parameter a = -(parameter a - parameter b) by ring,
+    mul_comm]
 
 /-- At every remaining node, the full Lagrange weight is the divided
 difference of the two one-node-smaller weights. -/
@@ -94,18 +105,46 @@ theorem finiteLagrangeWeight_insert_insert_tail
       (insert a (insert b t)).erase x =
         insert a (insert b (t.erase x)) := by
     ext y
-    simp [hxa, hxb]
+    simp only [Finset.mem_erase, Finset.mem_insert]
+    constructor
+    · rintro ⟨hyx, hya | hyb | hyt⟩
+      · exact Or.inl hya
+      · exact Or.inr (Or.inl hyb)
+      · exact Or.inr (Or.inr ⟨hyx, hyt⟩)
+    · intro hy
+      rcases hy with hya | hyb | ⟨hyx, hyt⟩
+      · subst y
+        exact ⟨Ne.symm hxa, Or.inl rfl⟩
+      · subst y
+        exact ⟨Ne.symm hxb, Or.inr (Or.inl rfl)⟩
+      · exact ⟨hyx, Or.inr (Or.inr hyt)⟩
   have hEraseA : (insert a t).erase x = insert a (t.erase x) := by
     ext y
-    simp [hxa]
+    simp only [Finset.mem_erase, Finset.mem_insert]
+    constructor
+    · rintro ⟨hyx, hya | hyt⟩
+      · exact Or.inl hya
+      · exact Or.inr ⟨hyx, hyt⟩
+    · intro hy
+      rcases hy with hya | ⟨hyx, hyt⟩
+      · subst y
+        exact ⟨Ne.symm hxa, Or.inl rfl⟩
+      · exact ⟨hyx, Or.inr hyt⟩
   have hEraseB : (insert b t).erase x = insert b (t.erase x) := by
     ext y
-    simp [hxb]
+    simp only [Finset.mem_erase, Finset.mem_insert]
+    constructor
+    · rintro ⟨hyx, hyb | hyt⟩
+      · exact Or.inl hyb
+      · exact Or.inr ⟨hyx, hyt⟩
+    · intro hy
+      rcases hy with hyb | ⟨hyx, hyt⟩
+      · subst y
+        exact ⟨Ne.symm hxb, Or.inl rfl⟩
+      · exact ⟨hyx, Or.inr hyt⟩
   unfold finiteLagrangeWeight
   rw [hEraseFull, hEraseA, hEraseB]
-  rw [Finset.prod_insert haInsert, Finset.prod_insert hbErase,
-    Finset.prod_insert haErase, Finset.prod_insert hbErase]
-  simp only [mul_inv_rev₀]
+  simp [Finset.prod_insert, haInsert, hbErase, haErase]
   field_simp [sub_ne_zero.mpr hpa, sub_ne_zero.mpr hpb,
     sub_ne_zero.mpr habp]
   <;> ring
