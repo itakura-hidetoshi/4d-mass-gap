@@ -64,8 +64,8 @@ theorem finite_oriented_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
     using finite_oriented_singleLinkHeatBath_reversible_term
       L A e h f g
 
-/-- Finite enumeration used by the active oriented heat-bath carrier. -/
-noncomputable instance finiteOrientedHeatBathConfigurationFintype
+/-- Finite enumeration used only while elaborating the pairing sums below. -/
+local noncomputable instance finiteOrientedHeatBathConfigurationFintype
     (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
   classical
   exact Fintype.ofFinite L.Configuration
