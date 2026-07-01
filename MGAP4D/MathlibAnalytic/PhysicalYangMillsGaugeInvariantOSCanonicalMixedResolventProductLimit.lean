@@ -57,10 +57,10 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_orderedProduct
       G.vacuumOrthogonalContinuumRealResolvent
         T hP hInnerSymmetric hSelf sigma.property
   let K : G.BelowHalfMassShift → ℝ :=
-    fun sigma => (G.mass / 2 - (sigma : ℝ))⁻¹
+    fun sigma => (G.mass / 2 - sigma.1)⁻¹
   have hNorm : ∀ tau sigma, ‖A tau sigma‖ ≤ K sigma := by
     intro tau sigma
-    exact
+    simpa [A, K, VacuumSemigroupGapSlope.BelowHalfMassShift] using
       realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_norm_le
         (G.admissibleRescaledDefectData hInnerSymmetric tau)
         sigma.property
