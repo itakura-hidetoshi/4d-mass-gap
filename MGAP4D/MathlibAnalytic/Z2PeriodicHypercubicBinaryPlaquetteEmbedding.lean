@@ -15,12 +15,18 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_o
     (A : (T.system k).Configuration) :
     T.plaquetteObservable k A = 0 ∨ T.plaquetteObservable k A = 1 := by
   classical
-  unfold Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable
-    z2PeriodicHypercubicPlaquetteEnergyObservable
-    FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable
-  change (if _ = 1 then (0 : ℝ) else 1) = 0 ∨
-    (if _ = 1 then (0 : ℝ) else 1) = 1
-  split_ifs <;> simp
+  by_cases hHolonomy :
+      (T.system k).plaquetteHolonomy A (T.plaquette k) = 1
+  · left
+    simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable,
+      z2PeriodicHypercubicPlaquetteEnergyObservable,
+      FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable,
+      hHolonomy]
+  · right
+    simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable,
+      z2PeriodicHypercubicPlaquetteEnergyObservable,
+      FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable,
+      hHolonomy]
 
 /-- Binary encoding of the selected `0/1` plaquette energy. -/
 def Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit
