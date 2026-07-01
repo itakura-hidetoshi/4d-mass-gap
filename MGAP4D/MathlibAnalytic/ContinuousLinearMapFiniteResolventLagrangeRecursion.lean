@@ -67,8 +67,20 @@ theorem finiteLagrangeWeight_insert_insert_right
     simp [hb]
   unfold finiteLagrangeWeight
   rw [hEraseFull, hEraseSmall, Finset.prod_insert ha]
-  simp [show parameter b - parameter a = -(parameter a - parameter b) by ring,
-    mul_comm]
+  let P : ℝ := ∏ x ∈ t, (parameter b - parameter x)
+  change ((parameter b - parameter a) * P)⁻¹ =
+    -(parameter a - parameter b)⁻¹ * P⁻¹
+  by_cases hd : parameter a - parameter b = 0
+  · have hd' : parameter b - parameter a = 0 := by linarith
+    simp [hd, hd']
+  · by_cases hP : P = 0
+    · simp [hP]
+    · have hd' : parameter b - parameter a ≠ 0 := by
+        intro h
+        apply hd
+        linarith
+      field_simp [hd, hd', hP]
+      <;> ring
 
 /-- At every remaining node, the full Lagrange weight is the divided
 difference of the two one-node-smaller weights. -/
