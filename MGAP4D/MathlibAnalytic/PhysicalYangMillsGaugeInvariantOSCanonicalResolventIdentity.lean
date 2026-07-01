@@ -16,11 +16,12 @@ namespace ContinuousLinearMap
 variable {E : Type*}
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-/-- Two opposite-order resolvent identities force the corresponding bounded
-operator products to commute. -/
-theorem comp_comm_of_resolvent_identities
+/-- At two distinct parameters, opposite-order resolvent identities force the
+corresponding bounded operator products to commute. -/
+theorem comp_comm_of_resolvent_identities_of_ne
     (Rlambda Rmu : E →L[ℝ] E)
     (lambda mu : ℝ)
+    (hne : lambda ≠ mu)
     (hLambdaMu :
       Rlambda - Rmu =
         (lambda - mu) • (Rlambda.comp Rmu))
@@ -28,9 +29,6 @@ theorem comp_comm_of_resolvent_identities
       Rmu - Rlambda =
         (mu - lambda) • (Rmu.comp Rlambda)) :
     Rlambda.comp Rmu = Rmu.comp Rlambda := by
-  by_cases hEq : lambda = mu
-  · subst mu
-    simpa using hLambdaMu
   have hScale :
       (lambda - mu) • (Rlambda.comp Rmu) =
         (lambda - mu) • (Rmu.comp Rlambda) := by
@@ -54,7 +52,7 @@ theorem comp_comm_of_resolvent_identities
     rw [hScaledZero, norm_zero]
   rw [norm_smul, Real.norm_eq_abs] at hNormZero
   have hScalar : |lambda - mu| ≠ 0 :=
-    abs_ne_zero.mpr (sub_ne_zero.mpr hEq)
+    abs_ne_zero.mpr (sub_ne_zero.mpr hne)
   exact (mul_eq_zero.mp hNormZero).resolve_left hScalar
 
 end ContinuousLinearMap
@@ -138,9 +136,6 @@ theorem VacuumSemigroupGapSlope.vacuumOrthogonalContinuumRealResolvent_identity
       T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint_isSelfAdjoint
         hP hSelf)
     hlambda hmu
-  exact
-    G.vacuumOrthogonalClosedRightHamiltonian_halfGap
-      T hP hInnerSymmetric hSelf
 
 /-- Continuum excitation-Hamiltonian resolvents commute at all real shifts
 below the common half-mass threshold. -/
@@ -161,8 +156,11 @@ theorem VacuumSemigroupGapSlope.vacuumOrthogonalContinuumRealResolvent_comp_comm
         T hP hInnerSymmetric hSelf hmu).comp
         (G.vacuumOrthogonalContinuumRealResolvent
           T hP hInnerSymmetric hSelf hlambda) := by
-  apply ContinuousLinearMap.comp_comm_of_resolvent_identities
-    (lambda := lambda) (mu := mu)
+  by_cases hEq : lambda = mu
+  · subst mu
+    rfl
+  apply ContinuousLinearMap.comp_comm_of_resolvent_identities_of_ne
+    (lambda := lambda) (mu := mu) (hne := hEq)
   · exact
       G.vacuumOrthogonalContinuumRealResolvent_identity
         T hP hInnerSymmetric hSelf hlambda hmu
