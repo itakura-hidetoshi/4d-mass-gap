@@ -82,7 +82,10 @@ theorem finiteLagrangeWeight_ne_zero
   apply Finset.prod_ne_zero_iff.mpr
   intro j hj
   apply sub_ne_zero.mpr
-  exact hInjective hi (Finset.mem_of_mem_erase hj) (Finset.ne_of_mem_erase hj).symm
+  intro hijParameter
+  have hij : i = j :=
+    hInjective hi (Finset.mem_of_mem_erase hj) hijParameter
+  exact (Finset.ne_of_mem_erase hj) hij.symm
 
 /-- Pointwise convergence of a finite operator family passes to its fixed
 Lagrange linear combination. -/
@@ -99,10 +102,32 @@ theorem tendsto_finiteLagrangeCombination_apply
       (fun k => finiteLagrangeCombination s parameter (A k) x)
       l
       (nhds (finiteLagrangeCombination s parameter R x)) := by
-  unfold finiteLagrangeCombination
-  apply Filter.Tendsto.finset_sum
-  intro i hi
-  exact (hPoint i x).const_smul (finiteLagrangeWeight s parameter i)
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simp [finiteLagrangeCombination]
+  | @insert i s hi ih =>
+      have hTerm :=
+        (hPoint i x).const_smul
+          (finiteLagrangeWeight (insert i s) parameter i)
+      have hTail :
+          Filter.Tendsto
+            (fun k =>
+              ∑ j ∈ s,
+                finiteLagrangeWeight (insert i s) parameter j • A k j x)
+            l
+            (nhds
+              (∑ j ∈ s,
+                finiteLagrangeWeight (insert i s) parameter j • R j x)) := by
+        induction s using Finset.induction_on with
+        | empty =>
+            simp
+        | @insert j t hj iht =>
+            have hjTerm :=
+              (hPoint j x).const_smul
+                (finiteLagrangeWeight (insert i (insert j t)) parameter j)
+            simpa [Finset.sum_insert, hj] using hjTerm.add iht
+      simpa [finiteLagrangeCombination, Finset.sum_insert, hi] using hTerm.add hTail
 
 end ContinuousLinearMap
 
