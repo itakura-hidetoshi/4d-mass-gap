@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalOperatorLimitPackage
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFullStrongResolvent
 import Mathlib.Tactic
 
 namespace MGAP4D
