@@ -70,7 +70,7 @@ theorem tendsto_finset_sum_smul_pow_apply_of_pointwise_of_uniform_opNorm_le
     Tendsto
       (fun i => s.sum (fun n => c n • (((A i) ^ n) x)))
       l
-      (𝓝 (s.sum (fun n => c n • ((R ^ n) x))) := by
+      (𝓝 (s.sum (fun n => c n • ((R ^ n) x)))) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
