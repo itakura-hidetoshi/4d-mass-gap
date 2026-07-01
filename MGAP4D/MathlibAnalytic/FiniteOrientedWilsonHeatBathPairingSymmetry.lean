@@ -65,7 +65,7 @@ theorem finite_oriented_singleLinkHeatBath_forwardTerm_eq_backwardTerm_swap
       L A e h f g
 
 /-- Finite enumeration used only while elaborating the pairing sums below. -/
-local noncomputable instance finiteOrientedHeatBathConfigurationFintype
+local instance finiteOrientedHeatBathConfigurationFintype
     (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
   classical
   exact Fintype.ofFinite L.Configuration
