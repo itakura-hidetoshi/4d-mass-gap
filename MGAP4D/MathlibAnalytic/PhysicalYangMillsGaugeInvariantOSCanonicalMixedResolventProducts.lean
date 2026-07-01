@@ -73,6 +73,36 @@ theorem tendsto_orderedProduct_apply_of_pointwise_of_uniform_opNorm_le
       have hSum := hVariable.add hFixed
       simpa [v, map_sub] using hSum
 
+/-- Finite real linear combinations of finite ordered operator words inherit
+pointwise convergence from their factor families. -/
+theorem tendsto_finset_sum_smul_orderedProduct_apply_of_pointwise_of_uniform_opNorm_le
+    {β : Type*}
+    (l : Filter ι)
+    (A : ι → α → E →L[ℝ] E)
+    (R : α → E →L[ℝ] E)
+    (K : α → ℝ)
+    (hA : ∀ i a, ‖A i a‖ ≤ K a)
+    (hPoint : ∀ a x, Tendsto (fun i => A i a x) l (𝓝 (R a x)))
+    (s : Finset β)
+    (word : β → List α)
+    (c : β → ℝ)
+    (x : E) :
+    Tendsto
+      (fun i => s.sum (fun b => c b • orderedProduct (A i) (word b) x))
+      l
+      (𝓝 (s.sum (fun b => c b • orderedProduct R (word b) x))) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simpa using
+        (tendsto_const_nhds : Tendsto (fun _ : ι => (0 : E)) l (𝓝 0))
+  | @insert b s hb ih =>
+      have hWord :=
+        tendsto_orderedProduct_apply_of_pointwise_of_uniform_opNorm_le
+          l A R K hA hPoint (word b) x
+      have hTerm := hWord.const_smul (c b)
+      simpa [Finset.sum_insert, hb] using hTerm.add ih
+
 end ContinuousLinearMap
 
 end
