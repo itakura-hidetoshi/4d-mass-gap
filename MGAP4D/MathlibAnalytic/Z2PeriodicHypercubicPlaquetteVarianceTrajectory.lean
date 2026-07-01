@@ -21,7 +21,9 @@ scale of a periodic `Z₂` trajectory. -/
 def Z2PeriodicHypercubicPlaquetteTrajectory.gibbsVariance
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : ℕ) : ℝ := by
-  letI : NeZero (T.sideLength k) := ⟨by omega⟩
+  have hPos : 0 < T.sideLength k :=
+    lt_of_lt_of_le (by norm_num) (T.sideLength_ge_two k)
+  letI : NeZero (T.sideLength k) := ⟨Nat.ne_of_gt hPos⟩
   let L := z2PeriodicHypercubicOrientedWilsonSystem
     (T.sideLength k) (T.beta k) (T.beta_nonneg k)
   exact L.gibbsVarianceReal
@@ -33,7 +35,9 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.explicit_gibbsVariance_lower
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : ℕ) :
     Real.exp (-(6 * T.beta k)) / 8 ≤ T.gibbsVariance k := by
-  letI : NeZero (T.sideLength k) := ⟨by omega⟩
+  have hPos : 0 < T.sideLength k :=
+    lt_of_lt_of_le (by norm_num) (T.sideLength_ge_two k)
+  letI : NeZero (T.sideLength k) := ⟨Nat.ne_of_gt hPos⟩
   unfold Z2PeriodicHypercubicPlaquetteTrajectory.gibbsVariance
   exact z2PeriodicHypercubicPlaquetteEnergyObservable_gibbsVarianceReal_lower
     (T.sideLength k) (T.sideLength_ge_two k)
@@ -107,7 +111,7 @@ theorem Z2PeriodicHypercubicPlaquetteWeakLimitRealization.observable_not_ae_eq_c
     (R : Z2PeriodicHypercubicPlaquetteWeakLimitRealization S)
     (c : ℝ) :
     ¬ (fun A : S.Configuration => R.observable A) =ᵐ[
-        (S.continuumMeasure : Measure S.Configuration)]
+        (S.continuumMeasure : MeasureTheory.Measure S.Configuration)]
       (fun _ => c) :=
   R.toObservableNontrivialityCertificate.observable_not_ae_eq_const c
 
