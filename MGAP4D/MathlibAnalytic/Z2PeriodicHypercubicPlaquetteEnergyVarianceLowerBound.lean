@@ -14,7 +14,21 @@ theorem z2Gauge_plaquetteEnergy_toggle_sq
     (q : Z2Gauge) :
     ((if q = 1 then (0 : ℝ) else 1) -
         (if z2GaugeNontrivial * q = 1 then (0 : ℝ) else 1)) ^ 2 = 1 := by
-  fin_cases q <;> norm_num [z2GaugeNontrivial]
+  have hNontrivial : z2GaugeNontrivial ≠ 1 := by
+    native_decide
+  have hSquare : z2GaugeNontrivial * z2GaugeNontrivial = 1 := by
+    native_decide
+  have hCases : q = 1 ∨ q = z2GaugeNontrivial := by
+    fin_cases q
+    · left
+      native_decide
+    · right
+      native_decide
+  rcases hCases with hq | hq
+  · rw [hq]
+    simp [hNontrivial]
+  · rw [hq]
+    simp [hNontrivial, hSquare]
 
 /-- Replacing the first physical boundary link of a periodic plaquette factors
 its holonomy into the inserted value and an exterior three-step product. -/
@@ -23,7 +37,7 @@ theorem z2PeriodicHypercubic_plaquetteHolonomy_replace_firstEdge
     (beta : ℝ) (hBeta : 0 ≤ beta)
     (p : PeriodicHypercubicPlaquette n)
     (A : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Configuration)
-    (g : Z2Gauge) :
+    (g : (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Gauge) :
     let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
     let e0 : L.Edge := (p.1, periodicHypercubicPlaquetteFirstAxis p)
     L.plaquetteHolonomy (L.replaceLink A e0 g) p =
@@ -34,6 +48,10 @@ theorem z2PeriodicHypercubic_plaquetteHolonomy_replace_firstEdge
   let mu := periodicHypercubicPlaquetteFirstAxis p
   let nu := periodicHypercubicPlaquetteSecondAxis p
   let e0 : L.Edge := (p.1, mu)
+  change L.plaquetteHolonomy (L.replaceLink A e0 g) p =
+    g * L.stepValue A (L.boundary p 1) *
+      L.stepValue A (L.boundary p 2) *
+      L.stepValue A (L.boundary p 3)
   have hmuNu : mu ≠ nu := periodicHypercubicPlaquette_axes_ne p
   have he1 : (periodicHypercubicShift n p.1 mu, nu) ≠ e0 := by
     intro h
@@ -94,12 +112,24 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_replace_firstEdge_differen
     L.stepValue A (L.boundary p 1) *
       L.stepValue A (L.boundary p 2) *
       L.stepValue A (L.boundary p 3)
+  change (z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
+        (L.replaceLink A e0 1) -
+      z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
+        (L.replaceLink A e0 z2GaugeNontrivial)) ^ 2 = 1
   have hHolonomyIdentity :=
     z2PeriodicHypercubic_plaquetteHolonomy_replace_firstEdge
       n hn beta hBeta p A (1 : Z2Gauge)
+  change L.plaquetteHolonomy (L.replaceLink A e0 1) p =
+    (1 : Z2Gauge) * L.stepValue A (L.boundary p 1) *
+      L.stepValue A (L.boundary p 2) *
+      L.stepValue A (L.boundary p 3) at hHolonomyIdentity
   have hHolonomyNontrivial :=
     z2PeriodicHypercubic_plaquetteHolonomy_replace_firstEdge
       n hn beta hBeta p A z2GaugeNontrivial
+  change L.plaquetteHolonomy (L.replaceLink A e0 z2GaugeNontrivial) p =
+    z2GaugeNontrivial * L.stepValue A (L.boundary p 1) *
+      L.stepValue A (L.boundary p 2) *
+      L.stepValue A (L.boundary p 3) at hHolonomyNontrivial
   have hObservableIdentity :
       z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
           (L.replaceLink A e0 1) =
@@ -145,6 +175,8 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_singleLinkConditionalVaria
   let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
   let e0 : L.Edge := (p.1, periodicHypercubicPlaquetteFirstAxis p)
   let f := z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
+  change Real.exp (-(6 * beta)) / 8 ≤
+    L.singleLinkConditionalVariance f A e0
   have hIdentity :=
     z2PeriodicHypercubic_singleLinkConditionalPMF_toReal_lower
       n beta hBeta A e0 (1 : Z2Gauge)
@@ -158,6 +190,8 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_singleLinkConditionalVaria
   have hDifference :=
     z2PeriodicHypercubicPlaquetteEnergyObservable_replace_firstEdge_difference_sq
       n hn beta hBeta p A
+  change (f (L.replaceLink A e0 1) -
+      f (L.replaceLink A e0 z2GaugeNontrivial)) ^ 2 = 1 at hDifference
   calc
     Real.exp (-(6 * beta)) / 8 =
         (Real.exp (-(6 * beta)) / 2) * ((1 : ℝ) / 4) := by ring
@@ -179,6 +213,9 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_gibbsVarianceReal_lower
         (z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p) := by
   let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
   let e0 : L.Edge := (p.1, periodicHypercubicPlaquetteFirstAxis p)
+  change Real.exp (-(6 * beta)) / 8 ≤
+    L.gibbsVarianceReal
+      (z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p)
   apply finite_oriented_lower_le_gibbsVarianceReal_of_conditional_pointwise
     L (z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p) e0
       (Real.exp (-(6 * beta)) / 8)
