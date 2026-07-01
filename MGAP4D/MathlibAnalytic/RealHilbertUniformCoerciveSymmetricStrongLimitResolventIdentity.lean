@@ -72,6 +72,9 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_sub_apply
           D lambda mu xmu
       _ = y + (mu - lambda) • xmu := by rw [hShiftMu]
   have hApply := congrArg (fun z => D.limitResolvent hlambda z) hShiftAtLambda
+  rw [
+    realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_apply_shift]
+    at hApply
   have hEq :
       xmu = D.limitResolvent hlambda y +
         (mu - lambda) • D.limitResolvent hlambda xmu := by
@@ -79,8 +82,13 @@ theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_sub_apply
   change
     D.limitResolvent hlambda y - xmu =
       (lambda - mu) • D.limitResolvent hlambda xmu
-  rw [hEq]
-  module
+  calc
+    D.limitResolvent hlambda y - xmu =
+        D.limitResolvent hlambda y -
+          (D.limitResolvent hlambda y +
+            (mu - lambda) • D.limitResolvent hlambda xmu) :=
+      congrArg (fun z => D.limitResolvent hlambda y - z) hEq
+    _ = (lambda - mu) • D.limitResolvent hlambda xmu := by module
 
 /-- Resolvent identity as an equality of bounded operators. -/
 theorem realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_identity
