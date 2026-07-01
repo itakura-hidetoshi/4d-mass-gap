@@ -74,6 +74,58 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_finsetWordSum_
     ContinuousLinearMap.tendsto_finset_sum_smul_orderedProduct_apply_of_pointwise_of_uniform_opNorm_le
       G.admissibleRescaledDefectTimeFilter A R K hNorm hPoint s word c y
 
+/-- Norm-to-zero form of convergence for the finite mixed resolvent algebra. -/
+theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_finsetWordSum_sub_continuumResolvent_finsetWordSum_norm_tendsto_zero
+    {β : Type*}
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (s : Finset β)
+    (word : β → List G.BelowHalfMassShift)
+    (c : β → ℝ)
+    (y : P.VacuumOrthogonalHilbert) :
+    Tendsto
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        ‖s.sum (fun b => c b •
+              ContinuousLinearMap.orderedProduct
+                (fun sigma : G.BelowHalfMassShift =>
+                  G.admissibleRescaledDefectResolvent
+                    hInnerSymmetric tau sigma.property)
+                (word b) y) -
+          s.sum (fun b => c b •
+              ContinuousLinearMap.orderedProduct
+                (fun sigma : G.BelowHalfMassShift =>
+                  G.vacuumOrthogonalContinuumRealResolvent
+                    T hP hInnerSymmetric hSelf sigma.property)
+                (word b) y)‖)
+      G.admissibleRescaledDefectTimeFilter
+      (𝓝 0) := by
+  have hSum :=
+    G.admissibleRescaledDefectResolvent_finsetWordSum_tendsto_continuumResolvent_finsetWordSum
+      T hP hInnerSymmetric hSelf s word c y
+  have hConst :
+      Tendsto
+        (fun _ : G.AdmissibleRescaledDefectTime =>
+          s.sum (fun b => c b •
+            ContinuousLinearMap.orderedProduct
+              (fun sigma : G.BelowHalfMassShift =>
+                G.vacuumOrthogonalContinuumRealResolvent
+                  T hP hInnerSymmetric hSelf sigma.property)
+              (word b) y))
+        G.admissibleRescaledDefectTimeFilter
+        (𝓝
+          (s.sum (fun b => c b •
+            ContinuousLinearMap.orderedProduct
+              (fun sigma : G.BelowHalfMassShift =>
+                G.vacuumOrthogonalContinuumRealResolvent
+                  T hP hInnerSymmetric hSelf sigma.property)
+              (word b) y))) :=
+    tendsto_const_nhds
+  have hSub := hSum.sub hConst
+  simpa using hSub.norm
+
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
