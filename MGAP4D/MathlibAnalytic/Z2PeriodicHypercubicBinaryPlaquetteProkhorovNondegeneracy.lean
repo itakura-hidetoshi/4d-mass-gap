@@ -73,6 +73,11 @@ theorem
   unfold PhysicalFourDimensionalYangMillsWeakLimit.continuumObservableVariance at hVariancePos
   rw [hDirac] at hVariancePos
   simp [pow_two] at hVariancePos
+  change
+    D.toPhysicalEmbedding.observable b * D.toPhysicalEmbedding.observable b <
+      D.toPhysicalEmbedding.observable b * D.toPhysicalEmbedding.observable b
+    at hVariancePos
+  exact (lt_irrefl _ hVariancePos)
 
 /-- The automatically selected continuum binary plaquette law is not a
 one-point probability law. -/
