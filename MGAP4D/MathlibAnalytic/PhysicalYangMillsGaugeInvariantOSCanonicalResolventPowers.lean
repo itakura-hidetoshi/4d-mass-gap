@@ -24,7 +24,7 @@ theorem tendsto_pow_apply_of_pointwise_of_uniform_opNorm_le
     (hA : ∀ i, ‖A i‖ ≤ K)
     (hPoint : ∀ x : E, Tendsto (fun i => A i x) l (𝓝 (R x))) :
     ∀ n : ℕ, ∀ x : E,
-      Tendsto (fun i => (A i) ^ n x) l (𝓝 (R ^ n x)) := by
+      Tendsto (fun i => ((A i) ^ n) x) l (𝓝 ((R ^ n) x)) := by
   intro n
   induction n with
   | zero =>
@@ -34,21 +34,21 @@ theorem tendsto_pow_apply_of_pointwise_of_uniform_opNorm_le
   | succ n ih =>
       intro x
       let v : E := (R ^ n) x
-      have hIter : Tendsto (fun i => (A i) ^ n x) l (𝓝 v) := by
+      have hIter : Tendsto (fun i => ((A i) ^ n) x) l (𝓝 v) := by
         simpa [v] using ih x
       have hDiff :
-          Tendsto (fun i => (A i) ^ n x - v) l (𝓝 0) := by
+          Tendsto (fun i => ((A i) ^ n) x - v) l (𝓝 0) := by
         simpa using hIter.sub
           (tendsto_const_nhds : Tendsto (fun _ : ι => v) l (𝓝 v))
       have hMajorant :
-          Tendsto (fun i => K * ‖(A i) ^ n x - v‖) l (𝓝 0) := by
+          Tendsto (fun i => K * ‖((A i) ^ n) x - v‖) l (𝓝 0) := by
         have hK : Tendsto (fun _ : ι => K) l (𝓝 K) := tendsto_const_nhds
         simpa using hK.mul hDiff.norm
       have hVariable :
-          Tendsto (fun i => A i ((A i) ^ n x - v)) l (𝓝 0) := by
+          Tendsto (fun i => A i (((A i) ^ n) x - v)) l (𝓝 0) := by
         apply squeeze_zero_norm'
         · exact Eventually.of_forall fun i =>
-            (A i).le_of_opNorm_le (hA i) ((A i) ^ n x - v)
+            (A i).le_of_opNorm_le (hA i) (((A i) ^ n) x - v)
         · exact hMajorant
       have hFixed : Tendsto (fun i => A i v) l (𝓝 (R v)) :=
         hPoint v
@@ -79,12 +79,12 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_pow_tendsto_co
     (y : P.VacuumOrthogonalHilbert) :
     Tendsto
       (fun tau : G.AdmissibleRescaledDefectTime =>
-        (G.admissibleRescaledDefectResolvent
-          hInnerSymmetric tau hlambda) ^ n y)
+        ((G.admissibleRescaledDefectResolvent
+          hInnerSymmetric tau hlambda) ^ n) y)
       G.admissibleRescaledDefectTimeFilter
       (𝓝
-        ((G.vacuumOrthogonalContinuumRealResolvent
-          T hP hInnerSymmetric hSelf hlambda) ^ n y)) := by
+        (((G.vacuumOrthogonalContinuumRealResolvent
+          T hP hInnerSymmetric hSelf hlambda) ^ n) y)) := by
   let A : G.AdmissibleRescaledDefectTime →
       P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
     fun tau => G.admissibleRescaledDefectResolvent
@@ -123,10 +123,10 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_pow_sub_contin
     (y : P.VacuumOrthogonalHilbert) :
     Tendsto
       (fun tau : G.AdmissibleRescaledDefectTime =>
-        ‖(G.admissibleRescaledDefectResolvent
-              hInnerSymmetric tau hlambda) ^ n y -
-          (G.vacuumOrthogonalContinuumRealResolvent
-              T hP hInnerSymmetric hSelf hlambda) ^ n y‖)
+        ‖((G.admissibleRescaledDefectResolvent
+              hInnerSymmetric tau hlambda) ^ n) y -
+          ((G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda) ^ n) y‖)
       G.admissibleRescaledDefectTimeFilter
       (𝓝 0) := by
   have hPow :=
@@ -135,12 +135,12 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_pow_sub_contin
   have hConst :
       Tendsto
         (fun _ : G.AdmissibleRescaledDefectTime =>
-          (G.vacuumOrthogonalContinuumRealResolvent
-              T hP hInnerSymmetric hSelf hlambda) ^ n y)
+          ((G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda) ^ n) y)
         G.admissibleRescaledDefectTimeFilter
         (𝓝
-          ((G.vacuumOrthogonalContinuumRealResolvent
-              T hP hInnerSymmetric hSelf hlambda) ^ n y)) :=
+          (((G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda) ^ n) y)) :=
     tendsto_const_nhds
   have hSub := hPow.sub hConst
   simpa using hSub.norm
