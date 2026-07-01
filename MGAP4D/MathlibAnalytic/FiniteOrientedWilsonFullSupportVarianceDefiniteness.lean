@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonGibbsHilbertEquivalence
+import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonGibbsRealVariance
 import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonSingleLinkHeatBathProjection
 import Mathlib.Tactic
 
@@ -9,8 +9,19 @@ open scoped BigOperators ENNReal
 
 noncomputable section
 
-/-- Full support makes finite Gibbs variance definite: two configurations with
-unequal observable values force strictly positive variance. -/
+theorem finite_oriented_gibbsAtomProbabilityReal_pos
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A : L.Configuration) :
+    0 < L.gibbsProbabilityReal A := by
+  unfold FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
+  apply ENNReal.toReal_pos
+  · rw [finite_oriented_gibbsPMF_apply]
+    exact mul_ne_zero
+      (finite_oriented_boltzmannWeight_ne_zero L A)
+      (ENNReal.inv_ne_zero.mpr
+        (finite_oriented_partitionFunction_ne_top L))
+  · exact L.gibbsPMF.apply_ne_top A
+
 theorem finite_oriented_gibbsVarianceReal_pos_of_exists_ne
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
@@ -28,7 +39,7 @@ theorem finite_oriented_gibbsVarianceReal_pos_of_exists_ne
   · have hTermPos :
         0 < L.gibbsProbabilityReal A * (f A - m) ^ 2 := by
       exact mul_pos
-        (finite_oriented_gibbsProbabilityReal_pos L A)
+        (finite_oriented_gibbsAtomProbabilityReal_pos L A)
         (sq_pos_of_ne_zero (sub_ne_zero.mpr hA))
     have hTermLe :
         L.gibbsProbabilityReal A * (f A - m) ^ 2 ≤
@@ -43,7 +54,7 @@ theorem finite_oriented_gibbsVarianceReal_pos_of_exists_ne
   · have hTermPos :
         0 < L.gibbsProbabilityReal B * (f B - m) ^ 2 := by
       exact mul_pos
-        (finite_oriented_gibbsProbabilityReal_pos L B)
+        (finite_oriented_gibbsAtomProbabilityReal_pos L B)
         (sq_pos_of_ne_zero (sub_ne_zero.mpr hB))
     have hTermLe :
         L.gibbsProbabilityReal B * (f B - m) ^ 2 ≤
@@ -56,8 +67,6 @@ theorem finite_oriented_gibbsVarianceReal_pos_of_exists_ne
         (Finset.mem_univ B)
     exact lt_of_lt_of_le hTermPos hTermLe
 
-/-- For a full-support finite oriented Wilson law, zero variance is equivalent
-to pointwise constancy of the observable. -/
 theorem finite_oriented_gibbsVarianceReal_eq_zero_iff
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
