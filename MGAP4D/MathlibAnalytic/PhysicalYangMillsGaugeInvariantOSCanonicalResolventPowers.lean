@@ -7,7 +7,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 open Filter Set Topology
-open scoped InnerProductSpace LinearPMap
+open scoped BigOperators InnerProductSpace LinearPMap
 
 namespace ContinuousLinearMap
 
@@ -54,6 +54,35 @@ theorem tendsto_pow_apply_of_pointwise_of_uniform_opNorm_le
         hPoint v
       have hSum := hVariable.add hFixed
       simpa [v, pow_succ', map_sub] using hSum
+
+/-- Finite real linear combinations of operator powers inherit pointwise
+convergence from a uniformly bounded strongly convergent operator family. -/
+theorem tendsto_finset_sum_smul_pow_apply_of_pointwise_of_uniform_opNorm_le
+    (l : Filter ι)
+    (A : ι → E →L[ℝ] E)
+    (R : E →L[ℝ] E)
+    (K : ℝ)
+    (hA : ∀ i, ‖A i‖ ≤ K)
+    (hPoint : ∀ x : E, Tendsto (fun i => A i x) l (𝓝 (R x)))
+    (s : Finset ℕ)
+    (c : ℕ → ℝ)
+    (x : E) :
+    Tendsto
+      (fun i => ∑ n in s, c n • (((A i) ^ n) x))
+      l
+      (𝓝 (∑ n in s, c n • ((R ^ n) x))) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simpa using
+        (tendsto_const_nhds :
+          Tendsto (fun _ : ι => (0 : E)) l (𝓝 0))
+  | @insert n s hn ih =>
+      have hPower :=
+        tendsto_pow_apply_of_pointwise_of_uniform_opNorm_le
+          l A R K hA hPoint n x
+      have hTerm := hPower.const_smul (c n)
+      simpa [Finset.sum_insert, hn] using hTerm.add ih
 
 end ContinuousLinearMap
 
@@ -144,6 +173,54 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_pow_sub_contin
     tendsto_const_nhds
   have hSub := hPow.sub hConst
   simpa using hSub.norm
+
+/-- Every finite real polynomial in the bounded rescaled-defect resolvent
+converges strongly to the same polynomial in the continuum resolvent. -/
+theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_finsetPolynomial_tendsto_continuumResolvent_finsetPolynomial
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {lambda : ℝ}
+    (hlambda : lambda < G.mass / 2)
+    (s : Finset ℕ)
+    (c : ℕ → ℝ)
+    (y : P.VacuumOrthogonalHilbert) :
+    Tendsto
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        ∑ n in s, c n •
+          (((G.admissibleRescaledDefectResolvent
+            hInnerSymmetric tau hlambda) ^ n) y))
+      G.admissibleRescaledDefectTimeFilter
+      (𝓝
+        (∑ n in s, c n •
+          (((G.vacuumOrthogonalContinuumRealResolvent
+            T hP hInnerSymmetric hSelf hlambda) ^ n) y))) := by
+  let A : G.AdmissibleRescaledDefectTime →
+      P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
+    fun tau => G.admissibleRescaledDefectResolvent
+      hInnerSymmetric tau hlambda
+  let R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
+    G.vacuumOrthogonalContinuumRealResolvent
+      T hP hInnerSymmetric hSelf hlambda
+  let K : ℝ := (G.mass / 2 - lambda)⁻¹
+  have hNorm : ∀ tau, ‖A tau‖ ≤ K := by
+    intro tau
+    exact
+      realHilbert_uniformCoerciveSymmetricStrongLimit_limitResolvent_norm_le
+        (G.admissibleRescaledDefectData hInnerSymmetric tau)
+        hlambda
+  have hPoint : ∀ x : P.VacuumOrthogonalHilbert,
+      Tendsto (fun tau => A tau x)
+        G.admissibleRescaledDefectTimeFilter (𝓝 (R x)) := by
+    intro x
+    simpa [A, R] using
+      G.admissibleRescaledDefectResolvent_tendsto_continuumResolvent
+        T hP hInnerSymmetric hSelf hlambda x
+  simpa [A, R] using
+    ContinuousLinearMap.tendsto_finset_sum_smul_pow_apply_of_pointwise_of_uniform_opNorm_le
+      G.admissibleRescaledDefectTimeFilter A R K hNorm hPoint s c y
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
