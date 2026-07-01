@@ -40,8 +40,9 @@ theorem z2PeriodicHypercubicLinkSpinObservable_has_two_values
       z2PeriodicHypercubicLinkSpinObservable n beta hBeta target
           (L.replaceLink A₀ target z2GaugeNontrivial) = -1 := by
   constructor
-  · simp [z2PeriodicHypercubicLinkSpinObservable]
-  · simp [z2PeriodicHypercubicLinkSpinObservable]
+  · exact z2GaugeSpin_one
+  · rw [finite_oriented_replaceLink_same]
+    exact z2GaugeSpin_nontrivial
 
 /-- Every finite periodic oriented `Z₂` Wilson Gibbs law has a genuinely
 fluctuating single-link spin observable.  This is a finite-volume positivity
