@@ -45,10 +45,15 @@ theorem finite_oriented_singleLinkConditionalVariance_twoPoint_lower
             (div_nonneg (sq_nonneg _) (by norm_num))
         _ ≤ probability g * (value g - mean) ^ 2 :=
           mul_le_mul_of_nonneg_left hLeft ENNReal.toReal_nonneg
-    exact hTerm.trans
-      (Finset.single_le_sum
+    have hSingle :
+        probability g * (value g - mean) ^ 2 ≤
+          ∑ k : L.Gauge, probability k * (value k - mean) ^ 2 := by
+      exact Finset.single_le_sum
+        (s := Finset.univ)
+        (f := fun k : L.Gauge => probability k * (value k - mean) ^ 2)
         (fun k _hk => mul_nonneg ENNReal.toReal_nonneg (sq_nonneg _))
-        (Finset.mem_univ g))
+        (Finset.mem_univ g)
+    exact hTerm.trans hSingle
   · have hLeftLt :
         (value g - mean) ^ 2 < (value g - value h) ^ 2 / 4 :=
       lt_of_not_ge hLeft
@@ -65,10 +70,15 @@ theorem finite_oriented_singleLinkConditionalVariance_twoPoint_lower
             (div_nonneg (sq_nonneg _) (by norm_num))
         _ ≤ probability h * (value h - mean) ^ 2 :=
           mul_le_mul_of_nonneg_left hRight ENNReal.toReal_nonneg
-    exact hTerm.trans
-      (Finset.single_le_sum
+    have hSingle :
+        probability h * (value h - mean) ^ 2 ≤
+          ∑ k : L.Gauge, probability k * (value k - mean) ^ 2 := by
+      exact Finset.single_le_sum
+        (s := Finset.univ)
+        (f := fun k : L.Gauge => probability k * (value k - mean) ^ 2)
         (fun k _hk => mul_nonneg ENNReal.toReal_nonneg (sq_nonneg _))
-        (Finset.mem_univ h))
+        (Finset.mem_univ h)
+    exact hTerm.trans hSingle
 
 /-- A pointwise lower bound on one-link conditional variance survives Gibbs
 averaging. -/
