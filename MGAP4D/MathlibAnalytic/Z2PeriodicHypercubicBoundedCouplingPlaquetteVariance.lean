@@ -45,7 +45,8 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_sequence_uniform_variance_
     (hBetaLe : ∀ k, beta k ≤ B)
     (p : ∀ k, PeriodicHypercubicPlaquette (side k)) :
     ∀ k,
-      letI : NeZero (side k) := ⟨by omega⟩
+      letI : NeZero (side k) := ⟨by
+        exact Nat.ne_of_gt (lt_of_lt_of_le Nat.zero_lt_two (hSide k))⟩
       let L := z2PeriodicHypercubicOrientedWilsonSystem
         (side k) (beta k) (hBeta k)
       Real.exp (-(6 * B)) / 8 ≤
@@ -53,7 +54,8 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_sequence_uniform_variance_
           (z2PeriodicHypercubicPlaquetteEnergyObservable
             (side k) (beta k) (hBeta k) (p k)) := by
   intro k
-  letI : NeZero (side k) := ⟨by omega⟩
+  letI : NeZero (side k) := ⟨by
+    exact Nat.ne_of_gt (lt_of_lt_of_le Nat.zero_lt_two (hSide k))⟩
   exact
     z2PeriodicHypercubicPlaquetteEnergyObservable_gibbsVarianceReal_lower_of_beta_le
       (side k) (hSide k) (beta k) B (hBeta k) (hBetaLe k) (p k)
