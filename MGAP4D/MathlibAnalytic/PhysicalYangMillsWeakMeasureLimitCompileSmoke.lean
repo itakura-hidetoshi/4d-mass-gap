@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWeakMeasureLimit
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWeakLimitObservableNontriviality
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -24,6 +24,16 @@ theorem physical_weak_limit_expectation_compile_smoke
       (nhds
         (∫ A, O A ∂(S.continuumMeasure : Measure S.Configuration))) :=
   physical_yang_mills_bounded_observable_expectation_converges S O
+
+/-- Compile gate for bounded-continuous observable variance convergence. -/
+theorem physical_weak_limit_variance_compile_smoke
+    (S : PhysicalFourDimensionalYangMillsWeakLimit)
+    (O : BoundedContinuousFunction S.Configuration ℝ) :
+    Tendsto
+      (fun n : ℕ => S.approximatingObservableVariance n O)
+      atTop
+      (nhds (S.continuumObservableVariance O)) :=
+  physical_yang_mills_bounded_observable_variance_converges S O
 
 /-- Compile gate for automatic symmetry transfer to the weak limit. -/
 theorem physical_weak_limit_symmetry_compile_smoke
