@@ -1,11 +1,12 @@
 # Current proof status
 
-**Updated:** 2026-06-30  
+**Updated:** 2026-07-01  
 **Latest mathematical proof checkpoint on `main`:** `a80a75449a16d07889519c1823595c5244824583`  
-**Latest merged mathematical proof PR:** PR #300  
-**Current stacked frontier:** PR #328, `540cc5848626fce2a69fff6948e14886e9591277`  
-**Frontier CI:** PR Lean Fast Check run 5141 failed  
-**Frontier base carrier:** `formal/real-hilbert-uniform-coercive-strong-limit`, `a846a06aa286f4d0beb624bfd5e461653b797b58`
+**Latest merged mathematical proof PR on `main`:** PR #300  
+**Current `main` documentation head:** `e20a26cc3034c2e5c793d371b034585ab57cc385`  
+**Active proof carrier:** `formal/real-hilbert-uniform-coercive-strong-limit`, `7f1dae659bef10ea1713d57d20a620d1065fbf1d`  
+**Latest integrated proof PR on the carrier:** PR #364  
+**Latest carrier CI:** PR Lean Fast Check run 5205 succeeded
 
 ## Status boundary
 
@@ -24,29 +25,33 @@ The repository currently has two proof surfaces.
 
 ```text
 main
-  authoritative merged source
+  authoritative merged release surface
   replayable finite Wilson mathematics
   conditional continuum and OS theorem generators
 
-stacked proof frontier
-  post-checkpoint finite L2, strong-limit, OS defect,
-  graph-core, and strong-resolvent development
+formal/real-hilbert-uniform-coercive-strong-limit
+  integrated active proof carrier
+  post-main finite L2, strong-limit, OS defect,
+  strong-resolvent, and operator-graph development
 ```
 
-A branch merged into another branch inside the stack is not thereby merged into `main`.
+A theorem merged into the active carrier is not thereby merged into `main`.
 
-A theorem whose hypotheses include a positive mass, a strict Dobrushin coefficient, a scale-uniform Poincare estimate, a coercive compactness estimate, or a physical interpolation package is conditional until those hypotheses are constructed for the actual physical approximation family.
+A theorem whose hypotheses include a positive mass slope, a strict Dobrushin coefficient, a scale-uniform Poincare estimate, a coercive compactness estimate, a physical interpolation package, or self-adjoint OS data remains conditional until those hypotheses are constructed for the intended physical approximation family.
 
-## Stable repository snapshot
+## Repository snapshot
 
-### Latest mathematical checkpoint on `main`
+### Authoritative `main` checkpoint
 
 ```text
-checkpoint:
+mathematical checkpoint:
   a80a75449a16d07889519c1823595c5244824583
 
-latest mathematical proof PR:
+latest mathematical proof PR on main:
   PR #300
+
+current documentation head:
+  e20a26cc3034c2e5c793d371b034585ab57cc385
 
 large physical construction merged earlier:
   PR #282
@@ -57,53 +62,55 @@ PR #282 placed the finite `SU(N)`, weak-limit, reflection-positive, OS Hilbert, 
 
 PR #300 merged the orientation-correct canonical Dobrushin coefficient, compact Wilson coefficient-to-gap route, and related finite heat-bath and resolvent infrastructure.
 
-Documentation-only commits after this checkpoint do not change the mathematical theorem bodies described below.
+Documentation-only commits after the checkpoint do not change the mathematical theorem bodies described below.
 
-### Stacked frontier
+### Active proof carrier
 
 ```text
-frontier PR:
-  PR #328 — Prove full OS strong-resolvent convergence
-
-head:
-  540cc5848626fce2a69fff6948e14886e9591277
-
-base branch:
+branch:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-base commit:
-  a846a06aa286f4d0beb624bfd5e461653b797b58
+head:
+  7f1dae659bef10ea1713d57d20a620d1065fbf1d
+
+latest integrated proof PR:
+  PR #364 — Package canonical strong resolvent and graph convergence
+
+PR #364 source head:
+  67428df16f4057b7956f2b873a90c639572d070d
+
+validation:
+  PR Lean Fast Check run 5205 — success
 ```
 
-At this snapshot, PR #328 is open, non-draft, and reported as mergeable by GitHub's branch analysis, but its required Lean check is failing.
+PR #328's earlier failure in `PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean` has been repaired.
 
-**PR Lean Fast Check** run 5141 completed with failure in the changed-Lean build step.
-
-The failing target is:
+Its final head and validation are:
 
 ```text
-MGAP4D.MathlibAnalytic.
-  PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation
+PR #328 final head:
+  ba8b9e09856dd419e577a6861addd8f0893c7b56
+
+PR Lean Fast Check:
+  run 5151 — success
+
+merge commit on the carrier:
+  c2c5922da6120883b4ad6400cbda8912772e390a
 ```
 
-The concrete diagnostic is:
+The active carrier is therefore replay-clean at its current head.
+
+It has not been promoted to `main`.
+
+Relative to the current `main` documentation head, GitHub reports:
 
 ```text
-PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean:220:10:
-  No goals to be solved
-```
-
-The preceding build reached target 8662 of 8664. The error is a Lean proof-script elaboration failure, not a failure of an external physical hypothesis. PR #328 is not replay-clean and is not merge-ready until the proof script is repaired and CI passes.
-
-Relative to the latest mathematical checkpoint `a80a7544…`, the frontier is reported as:
-
-```text
-ahead:       237 commits
-behind:      157 commits
+ahead:       359 commits
+behind:      169 commits
 merge base:  929e20583ae368475d4bedb65c060c2d3c4c0fff
 ```
 
-The frontier therefore also requires rebase, duplicate-file reconciliation, and reviewable decomposition before mathematical promotion to `main`.
+The carrier requires deliberate reconciliation, duplicate-file review, and dependency-preserving decomposition before promotion.
 
 ## Mathematical state on `main`
 
@@ -133,7 +140,7 @@ E_W(U) = 1 - Re(trace U) / N;
 0 <= E_W(U) <= 2.
 ```
 
-These deterministic finite-volume bounds do not derive the renormalized coupling trajectory of continuum Yang--Mills theory.
+These finite-volume bounds do not derive the renormalized coupling trajectory of continuum Yang--Mills theory.
 
 ## 2. Finite even-periodic reflection positivity
 
@@ -175,17 +182,6 @@ The merged physical-link lane contains:
 - proof-relevant Dobrushin matrix data;
 - active-neighbor coefficient majorants.
 
-Principal merged files include:
-
-```text
-FiniteOrientedLatticeWilsonCanonicalDobrushinInfluence.lean
-FiniteOrientedLatticeWilsonCanonicalInfluenceSupport.lean
-FiniteOrientedLatticeWilsonCanonicalDobrushinCoefficient.lean
-FiniteOrientedLatticeWilsonDobrushinMatrix.lean
-FiniteOrientedLatticeWilsonActiveCoefficientBound.lean
-FiniteOrientedLatticeWilsonFourDimensionalDobrushinCertificate.lean
-```
-
 For periodic four-dimensional geometry with side length at least three, the source supplies:
 
 ```text
@@ -214,7 +210,7 @@ It contains finite Gibbs Hilbert realizations, normalized vacuum sectors, condit
 
 The strict condition remains an input for a physical continuum approximation family.
 
-A finite small-coupling estimate is not automatically uniform along a continuum weak-coupling or asymptotically free trajectory.
+A finite small-coupling estimate is not automatically uniform along a continuum scaling trajectory.
 
 ## 5. Conditional physical weak-limit construction
 
@@ -254,16 +250,7 @@ latticeTime(n,k) = k * latticeSpacing(n)
 
 Joint continuity and exact lattice-time invariance then yield continuum real-parameter time invariance.
 
-The selected physical model must still instantiate:
-
-- the continuum time action;
-- joint continuity;
-- interpolation equivariance;
-- gauge/time commutation;
-- continuum reflection;
-- reflection/time inversion;
-- positive-time observable preservation;
-- identification of the OS state with the continuum weak-limit state.
+The selected physical model must still instantiate the continuum time action, joint continuity, interpolation equivariance, gauge/time commutation, continuum reflection, reflection/time inversion, positive-time observable preservation, and identification of the OS state with the continuum weak-limit state.
 
 ## 7. OS Hilbert space and self-adjoint Hamiltonian
 
@@ -286,7 +273,9 @@ positive-time gauge-invariant observable algebra
 
 It also constructs shift-resolvent packages, coercive lower bounds, closed-range statements, and vacuum-orthogonal restrictions under the stated hypotheses.
 
-These are theorem-generated consequences of explicit OS data. The complete physical construction of those data remains open.
+These are theorem-generated consequences of explicit OS data.
+
+The complete physical construction of those data remains open.
 
 ## 8. Conditional mass-gap transfer on `main`
 
@@ -333,15 +322,15 @@ That lane transports the value through internal Hamiltonian, PVM, spectral, and 
 
 It is separate from the conditional Wilson/OS `mass` parameter.
 
-No theorem on `main` identifies `33/20` with a physically derived four-dimensional Yang--Mills mass gap.
+No theorem on `main` or the active carrier identifies `33/20` with a physically derived four-dimensional Yang--Mills mass gap.
 
 See `docs/exact_gap_layer_separation.md`.
 
-## Stacked proof frontier
+## Integrated active proof carrier
 
 ## 10. Explicit periodic oriented `Z2` theorem
 
-PR #302 adds an explicit finite periodic oriented `Z2` small-coupling package with the sufficient condition
+The active carrier contains an explicit finite periodic oriented `Z2` small-coupling package with the sufficient condition
 
 ```text
 beta < log (19 / 17) / 2.
@@ -350,6 +339,8 @@ beta < log (19 / 17) / 2.
 It also develops an exponent-two unsigned proxy and transports the coefficient estimate to finite random-scan, Poincare, and heat-bath Hamiltonian consequences.
 
 This remains a finite periodic `Z2` theorem, not an `SU(N)` continuum result.
+
+PR #302 remains open against `main` and is not a merged `main` result.
 
 ## 11. Native compact Haar heat-bath `L2` theory
 
@@ -370,9 +361,9 @@ PRs #303--#309 construct:
 - lower real spectral enclosures;
 - a bundled uniform compact Wilson finite-volume spectral certificate.
 
-The stack resolved concrete mathlib issues involving singleton subtype `Fintype` instances, selected-link and off-link Haar products, probability and sigma-finiteness instances, and joint-fiber measurability.
+The carrier resolves the required singleton-subtype `Fintype`, selected-link and off-link Haar-product, probability, sigma-finiteness, joint-fiber measurability, and conditional-expectation interfaces.
 
-Those replay details do not discharge the physical scale-uniform gap assumption.
+These replay details do not discharge the physical scale-uniform gap assumption.
 
 ## 12. Coercive strong-limit transport
 
@@ -391,7 +382,7 @@ uniform quadratic coercivity
   -> inverse-distance resolvent norm estimate.
 ```
 
-The construction is then extended from exact Hilbert identifications to approximation maps and isometric embeddings between varying finite-volume Hilbert spaces and a common carrier.
+The construction extends from exact Hilbert identifications to approximation maps and isometric embeddings between varying finite-volume Hilbert spaces and a common carrier.
 
 Compact-Wilson wrappers apply the generic theorem to uniform Dobrushin families.
 
@@ -423,31 +414,15 @@ for sufficiently small positive `t`.
 
 The rescaled defects therefore have a common half-mass coercive lower bound, lower real spectral enclosure, fixed resolvent half-line, and uniform inverse-distance norm control.
 
-This layer consumes the positive mass slope. It does not derive it from Wilson dynamics.
+This layer consumes the positive mass slope.
 
-## 14. Hamiltonian core and core-resolvent convergence
+It does not derive it from Wilson dynamics.
 
-PR #322 defines the canonical vacuum-orthogonal right-Hamiltonian core and proves convergence of the rescaled defects to the graph-closed excitation Hamiltonian on each core vector.
+## 14. Hamiltonian core and full strong-resolvent convergence
 
-PR #323 proves the exact core resolvent-error identity and uniform estimate, yielding resolvent convergence on shifted core inputs.
+PRs #322--#326 define the canonical vacuum-orthogonal right-Hamiltonian core, prove convergence of the rescaled defects on that core, establish exact core resolvent-error identities, extend uniformly bounded pointwise convergence from a dense range, construct graph-core approximations, and prove dense range of the canonical core shift.
 
-PR #324 proves that uniformly bounded continuous linear maps converging pointwise on the range of a dense map converge pointwise on the whole normed source space.
-
-PR #325 extracts a reusable vacuum-orthogonal graph-core approximation theorem.
-
-PR #326 proves dense range of the canonical Hamiltonian core shift for every real shift below the relevant gap.
-
-## 15. Full OS strong-resolvent convergence
-
-PR #328 combines the preceding ingredients.
-
-The changed files are:
-
-```text
-PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean
-PhysicalYangMillsGaugeInvariantOSCoreShiftDenseRange.lean
-PhysicalYangMillsGaugeInvariantOSFullStrongResolvent.lean
-```
+PR #328 combines these ingredients.
 
 For every
 
@@ -455,15 +430,15 @@ For every
 lambda < mass / 2
 ```
 
-and every excitation vector `y`, the intended theorem states
+and every excitation vector `y`, the carrier proves
 
 ```text
-R_tau(lambda) y -> R(lambda) y
+R_tau(lambda) y -> R(lambda) y,
 ```
 
 where `R_tau(lambda)` is the bounded resolvent of the admissible rescaled semigroup defect and `R(lambda)` is the real resolvent of the graph-closed continuum vacuum-orthogonal Hamiltonian.
 
-The branch also contains the equivalent norm formulation
+It also proves
 
 ```text
 ||R_tau(lambda) y - R(lambda) y|| -> 0.
@@ -483,9 +458,9 @@ full Hamiltonian mass bound
   -> full strong-resolvent convergence.
 ```
 
-The theorem bodies are implemented on the branch, but the branch does not currently replay because run 5141 fails in the graph-core approximation file with `No goals to be solved` at line 220.
+The final PR #328 head passed run 5151 and was merged into the active carrier.
 
-The frontier also remains conditional on:
+This theorem remains conditional on:
 
 - a positive `VacuumSemigroupGapSlope`;
 - normalized OS data;
@@ -494,26 +469,136 @@ The frontier also remains conditional on:
 - the preceding continuum OS construction;
 - the physical approximation data needed to generate those objects.
 
-It is not on `main` at this snapshot.
+## 15. Resolvent-selected graph convergence
+
+PR #332 upgrades full strong-resolvent convergence to convergence of graph pairs.
+
+For the resolvent-selected solutions, it proves simultaneous convergence of
+
+```text
+(R_tau(lambda)y, D_tau R_tau(lambda)y)
+```
+
+to
+
+```text
+(R(lambda)y, H R(lambda)y).
+```
+
+PRs #333--#341 then develop graph approximation of arbitrary continuum Hamiltonian domain points, graph-norm and sum-norm formulations, closure and range characterizations, and sequential closed-graph limits.
+
+These results concern the graph of the closed excitation Hamiltonian generated by the supplied OS data.
+
+They do not construct the physical OS data themselves.
+
+## 16. Approximate and varying shifted-defect graph limits
+
+PRs #342--#349 prove convergence and limit identification for shifted finite-time defect equations.
+
+The formal interfaces allow:
+
+- exact or vanishing residual errors;
+- varying right-hand sides;
+- varying real shifts converging below `mass / 2`;
+- arbitrary nontrivial index filters;
+- reconstruction of the canonical continuum resolvent graph point.
+
+The conclusions retain the relevant small-time and below-gap hypotheses.
+
+They do not assert graph convergence for arbitrary finite times or arbitrary shifts.
+
+## 17. Filter Painleve--Kuratowski convergence
+
+PRs #350--#358 define and connect:
+
+- filter-indexed Painleve--Kuratowski outer limits;
+- convergent-selection outer limits;
+- filter-indexed inner limits;
+- recovery nets;
+- exact shifted-defect graph families;
+- singleton graph representations;
+- equivalences between point convergence and singleton inner/outer limits.
+
+PR #359 was a superseded draft and is not part of the authoritative chain.
+
+PR #360 proves full shifted-graph Painleve--Kuratowski convergence while retaining source and shift coordinates.
+
+PR #361 passes to ordinary operator graphs.
+
+It proves that both filter Painleve--Kuratowski limits of the bounded finite-time rescaled-defect graphs equal the graph of the closed continuum excitation Hamiltonian, with the auxiliary below-gap shift used only in the proof.
+
+PR #362 removes the auxiliary shift from the public theorem statement by selecting the constant shift zero internally.
+
+PR #363 proves that the canonical admissible positive small-time filter is nontrivial and supplies the final canonical theorem with no explicit source, shift, time-net, or filter-nontriviality argument exposed to the theorem user.
+
+The canonical conclusion is:
+
+```text
+KuratowskiInnerLimit(finite-time defect graphs)
+  = graph(H)
+
+KuratowskiOuterLimit(finite-time defect graphs)
+  = graph(H)
+```
+
+on the admissible positive small-time filter.
+
+This is filter-indexed operator-graph convergence.
+
+It is not a theorem that the unrestricted union of all finite-time graphs has closure equal to `graph(H)`.
+
+## 18. Canonical operator-limit package
+
+PR #364 packages the two principal operator-limit conclusions under common assumptions.
+
+The theorem simultaneously supplies:
+
+```text
+for every lambda < mass / 2 and every y:
+  R_tau(lambda)y -> R(lambda)y
+```
+
+and
+
+```text
+both canonical Painleve--Kuratowski graph limits
+  = graph of the closed continuum excitation Hamiltonian.
+```
+
+The package is exported through both `MGAP4D.MathlibAnalytic` and the root `MGAP4D` import surface on the active carrier.
+
+Its validation receipt is:
+
+```text
+PR #364 head:
+  67428df16f4057b7956f2b873a90c639572d070d
+
+PR Lean Fast Check:
+  run 5205 — success
+
+carrier merge commit:
+  7f1dae659bef10ea1713d57d20a620d1065fbf1d
+```
+
+The package does not strengthen or discharge the underlying OS, self-adjointness, or mass-slope assumptions.
+
+It does not establish norm-resolvent convergence.
+
+It does not establish convergence of every spectral projection without additional hypotheses.
 
 ## Current unresolved obligations
 
-### Immediate Lean repair
-
-- remove or restructure the tactic at `PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCoreGraphApproximation.lean:220:10` that is invoked after all goals have already been closed;
-- rerun the changed-Lean fast check;
-- compile the two downstream targets `PhysicalYangMillsGaugeInvariantOSCoreShiftDenseRange` and `PhysicalYangMillsGaugeInvariantOSFullStrongResolvent`;
-- record a green replay receipt before integration.
-
 ### Repository integration
 
-- rebase the frontier onto current `main`;
+- reconcile the active carrier with current `main`;
+- remove the 169-commit backward divergence;
 - reconcile independently evolved or duplicated files;
 - split generic functional analysis from Wilson-specific applications;
 - split finite compact heat-bath theory from continuum OS theory;
+- preserve compile-smoke roots for each merge unit;
 - obtain ordinary green CI for every unit;
 - merge in dependency order;
-- refresh theorem indexes after each mathematical integration.
+- refresh theorem indexes after each mathematical promotion.
 
 ### Physical continuum construction
 
@@ -542,6 +627,14 @@ It is not on `main` at this snapshot.
 - connect the Hamiltonian spectrum to physical observables and units;
 - derive any numerical mass value from the instantiated theory.
 
+### Further operator analysis
+
+- identify the hypotheses needed for bounded functional-calculus convergence;
+- connect strong-resolvent convergence to semigroup convergence using the appropriate theorem;
+- study isolated spectral projections only under sufficient additional assumptions;
+- formalize any required Mosco, graph, or form-convergence equivalences;
+- avoid inferring norm-resolvent convergence from the current results.
+
 ## Theorem-status table
 
 | Surface | Status |
@@ -552,14 +645,20 @@ It is not on `main` at this snapshot.
 | Orientation-correct exact conditional law | proved on `main` |
 | Canonical oriented Dobrushin coefficient | proved on `main` |
 | Finite heat-bath Hamiltonian gap from `alpha < 1` | proved on `main` |
-| Compact finite-volume spectral consequences under strict coefficient | proved on `main` |
-| Explicit periodic oriented `Z2` threshold | PR #302, not on `main` |
-| Native compact Haar heat-bath `L2` projection | stacked frontier |
-| Uniform compact Wilson spectral-gap certificate | stacked frontier |
-| Coercive varying-Hilbert strong-limit transport | stacked frontier |
-| OS defect and rescaled-defect spectral gaps | stacked frontier |
-| Hamiltonian core convergence | stacked frontier |
-| Full OS strong-resolvent convergence | PR #328, Lean CI failed at snapshot |
+| Conditional physical weak-limit constructor | proved on `main` from explicit hypotheses |
+| Conditional OS Hilbert and self-adjoint Hamiltonian | proved on `main` from explicit hypotheses |
+| Conditional continuum mass-gap transfer | proved on `main` from a supplied positive certificate |
+| Explicit periodic oriented `Z2` threshold | active carrier; PR #302 open against `main` |
+| Native compact Haar heat-bath `L2` projection | integrated on active carrier |
+| Uniform compact Wilson spectral-gap certificate | integrated on active carrier |
+| Coercive varying-Hilbert strong-limit transport | integrated on active carrier |
+| OS defect and rescaled-defect spectral gaps | integrated on active carrier |
+| Hamiltonian core convergence | integrated on active carrier |
+| Full OS strong-resolvent convergence | integrated on active carrier; run 5151 succeeded |
+| Resolvent-selected graph convergence | integrated on active carrier |
+| Filter Painleve--Kuratowski ordinary graph convergence | integrated on active carrier |
+| Canonical operator-limit package | PR #364 integrated on active carrier; run 5205 succeeded |
+| Promotion of the active carrier to `main` | not completed |
 | Concrete physical carrier and interpolation | open |
 | Physical scaling and coupling trajectory | open |
 | Nontrivial continuum Yang--Mills weak limit | open |
@@ -573,9 +672,10 @@ It is not on `main` at this snapshot.
 Accurate formulations:
 
 - “Lean proves the stated finite-volume Wilson and Dobrushin theorems on `main`.”
-- “Lean proves conditional continuum weak-limit, OS Hamiltonian, and mass-gap transfer theorems from explicit hypotheses.”
-- “PR #328 implements the full strong-resolvent theorem chain, but its current head fails Lean CI in the graph-core approximation proof.”
-- “The physical construction and uniform positive gap hypotheses remain open.”
+- “Lean proves conditional continuum weak-limit, OS Hamiltonian, and mass-gap transfer theorems from explicit hypotheses on `main`.”
+- “The active proof carrier has green Lean replay receipts through the canonical strong-resolvent and operator-graph convergence package.”
+- “The canonical operator-limit package remains conditional on the supplied mass-slope, normalized OS, symmetry, and self-adjointness hypotheses.”
+- “The physical continuum construction and uniform positive gap remain open.”
 
 Inaccurate formulations at the current state:
 
@@ -583,8 +683,10 @@ Inaccurate formulations at the current state:
 - “A nontrivial continuum `SU(N)` theory has been constructed unconditionally.”
 - “The physical mass gap has been derived from Wilson dynamics.”
 - “The value `33/20` is the derived physical Yang--Mills mass gap.”
-- “A stacked-branch merge means the theorem is on `main`.”
-- “PR #328 has a green replay receipt.”
+- “A carrier-branch merge means the theorem is on `main`.”
+- “Strong-resolvent convergence implies norm-resolvent convergence.”
+- “The current graph theorem identifies the closure of the unrestricted union of all finite-time graphs.”
+- “Every spectral projection converges from the current hypotheses.”
 
 ## Replay meaning
 
@@ -594,6 +696,7 @@ It does not establish that:
 
 - the hypotheses correspond to the intended physical Yang--Mills model;
 - a conditional theorem has had its hypotheses discharged;
+- the active carrier has been reconciled and merged into `main`;
 - the mathematical community has independently audited the argument;
 - a Clay Millennium Prize claim has been accepted.
 
