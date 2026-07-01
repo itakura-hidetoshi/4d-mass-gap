@@ -108,27 +108,25 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_replace_firstEdge_differen
           (L.replaceLink A e0 z2GaugeNontrivial)) ^ 2 = 1 := by
   let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
   let e0 : L.Edge := (p.1, periodicHypercubicPlaquetteFirstAxis p)
-  let s1 : Z2Gauge :=
-    show Z2Gauge from L.stepValue A (L.boundary p 1)
-  let s2 : Z2Gauge :=
-    show Z2Gauge from L.stepValue A (L.boundary p 2)
-  let s3 : Z2Gauge :=
-    show Z2Gauge from L.stepValue A (L.boundary p 3)
-  let q : Z2Gauge := s1 * s2 * s3
+  let z : L.Gauge := z2GaugeNontrivial
+  let s1 : L.Gauge := L.stepValue A (L.boundary p 1)
+  let s2 : L.Gauge := L.stepValue A (L.boundary p 2)
+  let s3 : L.Gauge := L.stepValue A (L.boundary p 3)
+  let q : L.Gauge := s1 * s2 * s3
   change (z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
         (L.replaceLink A e0 1) -
       z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
-        (L.replaceLink A e0 z2GaugeNontrivial)) ^ 2 = 1
+        (L.replaceLink A e0 z)) ^ 2 = 1
   have hHolonomyIdentity :=
     z2PeriodicHypercubic_plaquetteHolonomy_replace_firstEdge
-      n hn beta hBeta p A (1 : Z2Gauge)
+      n hn beta hBeta p A (1 : L.Gauge)
   change L.plaquetteHolonomy (L.replaceLink A e0 1) p =
-    (1 : Z2Gauge) * s1 * s2 * s3 at hHolonomyIdentity
+    (1 : L.Gauge) * s1 * s2 * s3 at hHolonomyIdentity
   have hHolonomyNontrivial :=
     z2PeriodicHypercubic_plaquetteHolonomy_replace_firstEdge
-      n hn beta hBeta p A z2GaugeNontrivial
-  change L.plaquetteHolonomy (L.replaceLink A e0 z2GaugeNontrivial) p =
-    z2GaugeNontrivial * s1 * s2 * s3 at hHolonomyNontrivial
+      n hn beta hBeta p A z
+  change L.plaquetteHolonomy (L.replaceLink A e0 z) p =
+    z * s1 * s2 * s3 at hHolonomyNontrivial
   have hObservableIdentity :
       z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
           (L.replaceLink A e0 1) =
@@ -136,21 +134,21 @@ theorem z2PeriodicHypercubicPlaquetteEnergyObservable_replace_firstEdge_differen
     unfold z2PeriodicHypercubicPlaquetteEnergyObservable
       FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable
     rw [hHolonomyIdentity]
-    change (if (1 : Z2Gauge) * s1 * s2 * s3 = 1 then 0 else 1) =
+    change (if (1 : L.Gauge) * s1 * s2 * s3 = 1 then 0 else 1) =
       if q = 1 then 0 else 1
     simp [q]
   have hObservableNontrivial :
       z2PeriodicHypercubicPlaquetteEnergyObservable n beta hBeta p
-          (L.replaceLink A e0 z2GaugeNontrivial) =
-        if z2GaugeNontrivial * q = 1 then 0 else 1 := by
+          (L.replaceLink A e0 z) =
+        if z * q = 1 then 0 else 1 := by
     unfold z2PeriodicHypercubicPlaquetteEnergyObservable
       FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable
     rw [hHolonomyNontrivial]
-    change (if z2GaugeNontrivial * s1 * s2 * s3 = 1 then 0 else 1) =
-      if z2GaugeNontrivial * q = 1 then 0 else 1
+    change (if z * s1 * s2 * s3 = 1 then 0 else 1) =
+      if z * q = 1 then 0 else 1
     simp [q, mul_assoc]
   rw [hObservableIdentity, hObservableNontrivial]
-  exact z2Gauge_plaquetteEnergy_toggle_sq q
+  simpa [z] using z2Gauge_plaquetteEnergy_toggle_sq (show Z2Gauge from q)
 
 /-- The exact one-link conditional variance of the selected periodic `Z₂`
 plaquette energy has the volume-independent lower bound `exp(-6β) / 8`. -/
