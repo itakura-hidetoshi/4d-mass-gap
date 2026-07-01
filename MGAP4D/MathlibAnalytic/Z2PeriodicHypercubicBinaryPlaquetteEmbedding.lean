@@ -15,7 +15,6 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_o
     (A : (T.system k).Configuration) :
     T.plaquetteObservable k A = 0 ∨ T.plaquetteObservable k A = 1 := by
   unfold Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable
-    Z2PeriodicHypercubicPlaquetteTrajectory.system
     z2PeriodicHypercubicPlaquetteEnergyObservable
     FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable
   change (if _ = 1 then (0 : ℝ) else 1) = 0 ∨
@@ -77,7 +76,7 @@ noncomputable def
   { trajectory := D.trajectory
     PhysicalConfiguration := Bool
     interpolate := D.trajectory.plaquetteBit
-    interpolate_measurable := fun k => measurable_of_finite _
+    interpolate_measurable := fun _ => measurable_of_finite _
     latticeSpacing := D.latticeSpacing
     latticeSpacing_pos := D.latticeSpacing_pos
     latticeSpacing_tendsto_zero := D.latticeSpacing_tendsto_zero
