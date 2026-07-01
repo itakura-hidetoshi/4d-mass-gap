@@ -14,6 +14,7 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_o
     (k : ℕ)
     (A : (T.system k).Configuration) :
     T.plaquetteObservable k A = 0 ∨ T.plaquetteObservable k A = 1 := by
+  classical
   unfold Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable
     z2PeriodicHypercubicPlaquetteEnergyObservable
     FiniteOrientedLatticeWilsonSystem.plaquetteEnergyObservable
@@ -25,8 +26,9 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteObservable_eq_zero_or_o
 def Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : ℕ)
-    (A : (T.system k).Configuration) : Bool :=
-  decide (T.plaquetteObservable k A = 1)
+    (A : (T.system k).Configuration) : Bool := by
+  classical
+  exact decide (T.plaquetteObservable k A = 1)
 
 /-- The fixed bounded continuous observable on the two-point plaquette-energy
 carrier. -/
@@ -50,6 +52,7 @@ theorem Z2PeriodicHypercubicPlaquetteTrajectory.binaryObservable_pullback
     (A : (T.system k).Configuration) :
     z2BinaryPlaquetteObservable (T.plaquetteBit k A) =
       T.plaquetteObservable k A := by
+  classical
   rcases T.plaquetteObservable_eq_zero_or_one k A with hZero | hOne
   · simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit, hZero]
   · simp [Z2PeriodicHypercubicPlaquetteTrajectory.plaquetteBit, hOne]
