@@ -17,6 +17,12 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
+local instance belowHalfMassShiftDecidableEq
+    {T : P.StronglyContinuousPhysicalSemigroup}
+    (G : T.VacuumSemigroupGapSlope) :
+    DecidableEq G.BelowHalfMassShift :=
+  Classical.decEq _
+
 /-- At every admissible positive time, the closed finite Lagrange normal form
 of a parameter-distinct shift list equals its ordered resolvent product. -/
 theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_finiteLagrangeNormalForm_eq_orderedProduct
