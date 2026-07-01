@@ -140,8 +140,8 @@ theorem Z2PeriodicHypercubicPlaquettePhysicalEmbedding.continuum_variance_pos
     (continuumMeasure : ProbabilityMeasure P.PhysicalConfiguration)
     (hWeak : Tendsto P.toLatticeEmbedding.embeddedMeasure atTop
       (nhds continuumMeasure)) :
-    0 < (P.toLatticeEmbedding.toWeakLimit continuumMeasure hWeak)
-      .continuumObservableVariance P.observable :=
+    0 < PhysicalFourDimensionalYangMillsWeakLimit.continuumObservableVariance
+      (P.toLatticeEmbedding.toWeakLimit continuumMeasure hWeak) P.observable :=
   (P.toWeakLimitRealization continuumMeasure hWeak).continuum_variance_pos
 
 end
