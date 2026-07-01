@@ -37,24 +37,51 @@ theorem finite_oriented_singleLinkHeatBathFluctuation_varianceCentered
     L.singleLinkHeatBathFluctuationLinearMap e
         (L.varianceCenteredObservable f) =
       L.singleLinkHeatBathFluctuationLinearMap e f := by
-  funext A
-  rw [finite_oriented_singleLinkHeatBathFluctuationLinearMap_apply]
-  rw [finite_oriented_singleLinkHeatBathFluctuationLinearMap_apply]
-  unfold FiniteOrientedLatticeWilsonSystem.varianceCenteredObservable
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjectionLinearMap
-    FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
-    FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
   classical
+  funext A
   have hMass :
       ∑ g : L.Gauge, (L.singleLinkConditionalPMF A e g).toReal = 1 :=
     finite_oriented_pmf_sum_toReal_eq_one (L.singleLinkConditionalPMF A e)
-  rw [Finset.sum_sub_distrib]
-  have hConst :
-      ∑ g : L.Gauge,
+  have hConditionalCentered :
+      L.singleLinkConditionalExpectation
+          (L.varianceCenteredObservable f) A e =
+        L.singleLinkConditionalExpectation f A e -
+          L.gibbsExpectationReal f := by
+    unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
+      FiniteOrientedLatticeWilsonSystem.varianceCenteredObservable
+    calc
+      (∑ g : L.Gauge,
           (L.singleLinkConditionalPMF A e g).toReal *
-            L.gibbsExpectationReal f = L.gibbsExpectationReal f := by
-    rw [← Finset.sum_mul, hMass, one_mul]
-  rw [hConst]
+            (f (L.replaceLink A e g) - L.gibbsExpectationReal f)) =
+          ∑ g : L.Gauge,
+            ((L.singleLinkConditionalPMF A e g).toReal *
+                f (L.replaceLink A e g) -
+              (L.singleLinkConditionalPMF A e g).toReal *
+                L.gibbsExpectationReal f) := by
+            apply Finset.sum_congr rfl
+            intro g _hg
+            ring
+      _ = (∑ g : L.Gauge,
+            (L.singleLinkConditionalPMF A e g).toReal *
+              f (L.replaceLink A e g)) -
+          ∑ g : L.Gauge,
+            (L.singleLinkConditionalPMF A e g).toReal *
+              L.gibbsExpectationReal f := by
+            rw [Finset.sum_sub_distrib]
+      _ = (∑ g : L.Gauge,
+            (L.singleLinkConditionalPMF A e g).toReal *
+              f (L.replaceLink A e g)) -
+          L.gibbsExpectationReal f := by
+            rw [← Finset.sum_mul, hMass, one_mul]
+  rw [finite_oriented_singleLinkHeatBathFluctuationLinearMap_apply]
+  rw [finite_oriented_singleLinkHeatBathFluctuationLinearMap_apply]
+  change
+    L.varianceCenteredObservable f A -
+        L.singleLinkConditionalExpectation
+          (L.varianceCenteredObservable f) A e =
+      f A - L.singleLinkConditionalExpectation f A e
+  rw [hConditionalCentered]
+  unfold FiniteOrientedLatticeWilsonSystem.varianceCenteredObservable
   ring
 
 /-- The Gibbs squared norm of a one-link fluctuation is bounded by the full
@@ -75,10 +102,12 @@ theorem finite_oriented_gibbsPairing_singleLinkFluctuation_le
         (L.singleLinkHeatBathProjectionLinearMap e f) := by
     classical
     unfold FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
-    exact Finset.sum_nonneg fun A _hA =>
+    apply Finset.sum_nonneg
+    intro A _hA
+    simpa [pow_two, mul_assoc] using
       mul_nonneg
         (finite_oriented_gibbsProbabilityReal_nonneg L A)
-        (mul_self_nonneg _)
+        (sq_nonneg ((L.singleLinkHeatBathProjectionLinearMap e f) A))
   linarith
 
 /-- Law-of-total-variance inequality for one physical link: the Gibbs average
