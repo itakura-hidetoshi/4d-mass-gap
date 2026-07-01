@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSFullStrongResolvent
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalResolventPowers
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSOperatorGraphKuratowskiCanonicalFilter
 import Mathlib.Tactic
 
