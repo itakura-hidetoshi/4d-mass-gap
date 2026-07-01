@@ -51,6 +51,14 @@ theorem z2PeriodicHypercubic_targetLocalPlaquetteAction_le_six
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) A target ≤ 6 := by
   classical
   let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
+  have hTouchingFinset :
+      (Finset.univ.filter fun p : L.Plaquette =>
+          L.PlaquetteTouchesEdge p target) =
+        periodicHypercubicTouchingPlaquettes n target := by
+    apply Finset.ext
+    intro p
+    simp [L, periodicHypercubicTouchingPlaquettes,
+      z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
   unfold FiniteOrientedLatticeWilsonSystem.targetLocalPlaquetteAction
   calc
     (∑ p : L.Plaquette,
@@ -66,9 +74,11 @@ theorem z2PeriodicHypercubic_targetLocalPlaquetteAction_le_six
         exact z2PeriodicHypercubicOrientedWilsonSystem_plaquetteEnergy_le_one
           n beta hBeta _
       · simp [hTouch]
+    _ = ((Finset.univ.filter fun p : L.Plaquette =>
+          L.PlaquetteTouchesEdge p target).card : ℝ) := by
+      simp
     _ = ((periodicHypercubicTouchingPlaquettes n target).card : ℝ) := by
-      simp [L, periodicHypercubicTouchingPlaquettes,
-        z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+      rw [hTouchingFinset]
     _ ≤ 6 := by
       exact_mod_cast periodicHypercubicTouchingPlaquettes_card_le_six n target
 
