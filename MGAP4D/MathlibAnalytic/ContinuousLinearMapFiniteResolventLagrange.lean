@@ -103,31 +103,22 @@ theorem tendsto_finiteLagrangeCombination_apply
       l
       (nhds (finiteLagrangeCombination s parameter R x)) := by
   classical
-  induction s using Finset.induction_on with
-  | empty =>
-      simp [finiteLagrangeCombination]
-  | @insert i s hi ih =>
-      have hTerm :=
-        (hPoint i x).const_smul
-          (finiteLagrangeWeight (insert i s) parameter i)
-      have hTail :
-          Filter.Tendsto
-            (fun k =>
-              ∑ j ∈ s,
-                finiteLagrangeWeight (insert i s) parameter j • A k j x)
-            l
-            (nhds
-              (∑ j ∈ s,
-                finiteLagrangeWeight (insert i s) parameter j • R j x)) := by
-        induction s using Finset.induction_on with
-        | empty =>
-            simp
-        | @insert j t hj iht =>
-            have hjTerm :=
-              (hPoint j x).const_smul
-                (finiteLagrangeWeight (insert i (insert j t)) parameter j)
-            simpa [Finset.sum_insert, hj] using hjTerm.add iht
-      simpa [finiteLagrangeCombination, Finset.sum_insert, hi] using hTerm.add hTail
+  have hWeightedSum : ∀ (t : Finset ι) (c : ι → ℝ),
+      Filter.Tendsto
+        (fun k => ∑ i ∈ t, c i • A k i x)
+        l
+        (nhds (∑ i ∈ t, c i • R i x)) := by
+    intro t c
+    induction t using Finset.induction_on with
+    | empty =>
+        simpa using
+          (tendsto_const_nhds :
+            Filter.Tendsto (fun _ : κ => (0 : E)) l (nhds 0))
+    | @insert i t hi ih =>
+        have hTerm := (hPoint i x).const_smul (c i)
+        simpa [Finset.sum_insert, hi] using hTerm.add ih
+  simpa [finiteLagrangeCombination] using
+    hWeightedSum s (fun i => finiteLagrangeWeight s parameter i)
 
 end ContinuousLinearMap
 
