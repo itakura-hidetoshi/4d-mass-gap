@@ -20,7 +20,7 @@ namespace StronglyContinuousPhysicalSemigroup
 /-- The admissible rescaled-defect time filter is nontrivial.  The admissible
 predicate holds eventually in the positive small-time filter, so every
 small-time filter set contains an admissible time. -/
-theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTimeFilter_neBot
+theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTimeFilter_neBot_of_eventuallyLinearBound
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope) :
     NeBot G.admissibleRescaledDefectTimeFilter := by
@@ -46,17 +46,17 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTimeFilter_neBot
 
 /-- Canonical typeclass instance for the admissible positive small-time
 filter. -/
-instance VacuumSemigroupGapSlope.instNeBotAdmissibleRescaledDefectTimeFilter
+instance VacuumSemigroupGapSlope.instNeBotAdmissibleRescaledDefectTimeFilterFromGapSlope
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope) :
     NeBot G.admissibleRescaledDefectTimeFilter :=
-  G.admissibleRescaledDefectTimeFilter_neBot T
+  G.admissibleRescaledDefectTimeFilter_neBot_of_eventuallyLinearBound T
 
 /-- Final canonical formulation: the ordinary rescaled-defect graphs converge
 in both Painlevé–Kuratowski senses to the graph of the closed continuum
 Hamiltonian, with no shift, source, time-net, or filter-nontriviality argument
 exposed to the theorem user. -/
-theorem VacuumSemigroupGapSlope.canonicalRescaledDefectGraph_kuratowskiLimits_eq_continuumHamiltonianGraph
+theorem VacuumSemigroupGapSlope.canonicalFilter_rescaledDefectGraph_kuratowskiLimits_eq_continuumHamiltonianGraph
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized)
