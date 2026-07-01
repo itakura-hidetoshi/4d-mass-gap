@@ -39,8 +39,11 @@ theorem comp_apply_eq_inv_smul_sub_apply_of_resolvent_identity_of_ne
   have hOperator :=
     comp_eq_inv_smul_sub_of_resolvent_identity_of_ne
       Rlambda Rmu lambda mu hne hIdentity
-  have hApply := congrArg (fun A : E →L[ℝ] E => A x) hOperator
-  simpa only [ContinuousLinearMap.comp_apply, sub_apply, smul_apply] using hApply
+  calc
+    Rlambda (Rmu x) = (Rlambda.comp Rmu) x := rfl
+    _ = ((lambda - mu)⁻¹ • (Rlambda - Rmu)) x := by
+      rw [hOperator]
+    _ = (lambda - mu)⁻¹ • (Rlambda x - Rmu x) := rfl
 
 end ContinuousLinearMap
 
