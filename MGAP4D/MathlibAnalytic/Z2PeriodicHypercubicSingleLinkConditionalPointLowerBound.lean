@@ -51,34 +51,43 @@ theorem z2PeriodicHypercubic_targetLocalPlaquetteAction_le_six
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) A target ≤ 6 := by
   classical
   let L := z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta
+  let targetL : L.Edge := target
   have hTouchingFinset :
       (Finset.univ.filter fun p : L.Plaquette =>
-          L.PlaquetteTouchesEdge p target) =
+          L.PlaquetteTouchesEdge p targetL) =
         periodicHypercubicTouchingPlaquettes n target := by
     apply Finset.ext
     intro p
-    simp [L, periodicHypercubicTouchingPlaquettes,
-      z2PeriodicHypercubicOrientedWilsonSystem_touches_iff]
+    rw [Finset.mem_filter, periodicHypercubic_mem_touchingPlaquettes_iff]
+    simp only [Finset.mem_univ, true_and]
+    change periodicHypercubicPlaquetteTouchesEdge n p target ↔
+      periodicHypercubicPlaquetteTouchesEdge n p target
+    rfl
   unfold FiniteOrientedLatticeWilsonSystem.targetLocalPlaquetteAction
+  change (∑ p : L.Plaquette,
+      if L.PlaquetteTouchesEdge p targetL then
+        L.plaquetteEnergy (L.plaquetteHolonomy A p)
+      else 0) ≤ 6
   calc
     (∑ p : L.Plaquette,
-        if L.PlaquetteTouchesEdge p target then
+        if L.PlaquetteTouchesEdge p targetL then
           L.plaquetteEnergy (L.plaquetteHolonomy A p)
         else 0) ≤
       ∑ p : L.Plaquette,
-        if L.PlaquetteTouchesEdge p target then (1 : ℝ) else 0 := by
+        if L.PlaquetteTouchesEdge p targetL then (1 : ℝ) else 0 := by
       apply Finset.sum_le_sum
       intro p _hp
-      by_cases hTouch : L.PlaquetteTouchesEdge p target
+      by_cases hTouch : L.PlaquetteTouchesEdge p targetL
       · simp only [if_pos hTouch]
         exact z2PeriodicHypercubicOrientedWilsonSystem_plaquetteEnergy_le_one
           n beta hBeta _
       · simp [hTouch]
     _ = ((Finset.univ.filter fun p : L.Plaquette =>
-          L.PlaquetteTouchesEdge p target).card : ℝ) := by
+          L.PlaquetteTouchesEdge p targetL).card : ℝ) := by
       simp
     _ = ((periodicHypercubicTouchingPlaquettes n target).card : ℝ) := by
-      rw [hTouchingFinset]
+      simpa using congrArg
+        (fun s : Finset L.Plaquette => (s.card : ℝ)) hTouchingFinset
     _ ≤ 6 := by
       exact_mod_cast periodicHypercubicTouchingPlaquettes_card_le_six n target
 
