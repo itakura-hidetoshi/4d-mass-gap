@@ -24,7 +24,8 @@ theorem probabilityMeasure_bool_singleton_sum
     (μ : Measure Bool) {false} + (μ : Measure Bool) {true} =
         (μ : Measure Bool) (({false} : Set Bool) ∪ {true}) :=
       hMeasureUnion.symm
-    _ = (μ : Measure Bool) Set.univ := by rw [hUnion]
+    _ = (μ : Measure Bool) Set.univ :=
+      congrArg (fun s : Set Bool => (μ : Measure Bool) s) hUnion
     _ = 1 := by simp
 
 /-- On the two-point Boolean carrier, vanishing of one atom forces the
@@ -34,19 +35,23 @@ theorem probabilityMeasure_bool_eq_dirac_other_of_singleton_eq_zero
     (b : Bool)
     (hZero : (μ : Measure Bool) {b} = 0) :
     (μ : Measure Bool) = Measure.dirac (!b) := by
-  fin_cases b
-  · have hTrue : (μ : Measure Bool) {true} = 1 := by
+  by_cases hb : b = false
+  · subst b
+    have hTrue : (μ : Measure Bool) {true} = 1 := by
       have hSum := probabilityMeasure_bool_singleton_sum μ
       simpa [hZero] using hSum
     apply Measure.ext_of_singleton
     intro x
-    fin_cases x <;> simp [hZero, hTrue]
-  · have hFalse : (μ : Measure Bool) {false} = 1 := by
+    cases x <;> simp [hZero, hTrue]
+  · have hbTrue : b = true := by
+      cases b <;> simp_all
+    subst b
+    have hFalse : (μ : Measure Bool) {false} = 1 := by
       have hSum := probabilityMeasure_bool_singleton_sum μ
       simpa [hZero] using hSum
     apply Measure.ext_of_singleton
     intro x
-    fin_cases x <;> simp [hZero, hFalse]
+    cases x <;> simp [hZero, hFalse]
 
 /-- A non-Dirac probability measure on `Bool` assigns strictly positive mass to
 each of its two atoms. -/
@@ -65,9 +70,8 @@ Boolean carrier. -/
 noncomputable def
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovBoolContinuumMeasure
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
-    ProbabilityMeasure Bool := by
-  change ProbabilityMeasure Bool
-  exact D.prokhorovSubsequenceLimit.continuumMeasure
+    ProbabilityMeasure Bool :=
+  D.prokhorovSubsequenceLimit.continuumMeasure
 
 /-- The concrete Boolean presentation of the automatically extracted continuum
 law remains non-Dirac. -/
