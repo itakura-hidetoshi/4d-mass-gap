@@ -33,7 +33,13 @@ theorem orderedProduct_eq_of_perm_of_pairwise_comm
       rw [ih]
   | swap a b l =>
       simp only [orderedProduct_cons]
-      rw [← mul_assoc, hComm a b, mul_assoc]
+      calc
+        A b * A a * orderedProduct A l =
+            (A b * A a) * orderedProduct A l := rfl
+        _ = (A a * A b) * orderedProduct A l := by
+          rw [hComm b a]
+        _ = A a * (A b * orderedProduct A l) := by
+          rw [mul_assoc]
   | trans hst htu ihst ihtU =>
       exact ihst.trans ihtU
 
