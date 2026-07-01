@@ -30,13 +30,15 @@ termination_by s => s.length
 @[simp] theorem finiteResolventDividedDifference_nil
     (parameter : α → ℝ)
     (A : α → E →L[ℝ] E) :
-    finiteResolventDividedDifference parameter A [] = 1 := rfl
+    finiteResolventDividedDifference parameter A [] = 1 := by
+  simp [finiteResolventDividedDifference]
 
 @[simp] theorem finiteResolventDividedDifference_singleton
     (parameter : α → ℝ)
     (A : α → E →L[ℝ] E)
     (a : α) :
-    finiteResolventDividedDifference parameter A [a] = A a := rfl
+    finiteResolventDividedDifference parameter A [a] = A a := by
+  simp [finiteResolventDividedDifference]
 
 @[simp] theorem finiteResolventDividedDifference_cons_cons
     (parameter : α → ℝ)
@@ -46,7 +48,8 @@ termination_by s => s.length
     finiteResolventDividedDifference parameter A (a :: b :: tail) =
       (parameter a - parameter b)⁻¹ •
         (finiteResolventDividedDifference parameter A (a :: tail) -
-          finiteResolventDividedDifference parameter A (b :: tail)) := rfl
+          finiteResolventDividedDifference parameter A (b :: tail)) := by
+  simp [finiteResolventDividedDifference]
 
 /-- If a bounded operator family satisfies the real resolvent identity, then
 its recursive divided difference over every parameter-distinct finite list is
@@ -62,14 +65,16 @@ theorem finiteResolventDividedDifference_eq_orderedProduct_of_pairwise
     (hPairwise : s.Pairwise fun a b => parameter a ≠ parameter b) :
     finiteResolventDividedDifference parameter A s = orderedProduct A s := by
   cases s with
-  | nil => rfl
+  | nil =>
+      simp [finiteResolventDividedDifference, orderedProduct]
   | cons a rest =>
       cases rest with
-      | nil => rfl
+      | nil =>
+          simp [finiteResolventDividedDifference, orderedProduct]
       | cons b tail =>
           rw [finiteResolventDividedDifference_cons_cons]
           rcases List.pairwise_cons.mp hPairwise with ⟨ha, hBTail⟩
-          rcases List.pairwise_cons.mp hBTail with ⟨hb, hTail⟩
+          rcases List.pairwise_cons.mp hBTail with ⟨_, hTail⟩
           have hab : parameter a ≠ parameter b :=
             ha b (by simp)
           have hATail :
