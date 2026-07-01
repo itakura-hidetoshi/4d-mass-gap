@@ -41,7 +41,10 @@ theorem z2PeriodicHypercubicLinkSpinObservable_has_two_values
           (L.replaceLink A₀ target z2GaugeNontrivial) = -1 := by
   constructor
   · exact z2GaugeSpin_one
-  · rw [finite_oriented_replaceLink_same]
+  · change z2GaugeSpin
+      ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).replaceLink
+        (fun _ => 1) target z2GaugeNontrivial target) = -1
+    rw [finite_oriented_replaceLink_same]
     exact z2GaugeSpin_nontrivial
 
 /-- Every finite periodic oriented `Z₂` Wilson Gibbs law has a genuinely
