@@ -26,10 +26,14 @@ theorem finiteNormalizedExp_lower_of_oscillation
       finiteNormalizedExp (fun _ : X => 0) x =
         (Fintype.card X : ℝ)⁻¹ := by
     simp [finiteNormalizedExp, finiteExpPartition]
+  have hProduct :
+      finiteNormalizedExp (fun _ : X => 0) x ≤
+        finiteNormalizedExp logWeight x * Real.exp R := by
+    simpa [mul_comm] using hCompare.2
   have hDiv :
       finiteNormalizedExp (fun _ : X => 0) x / Real.exp R ≤
         finiteNormalizedExp logWeight x :=
-    (div_le_iff₀ (Real.exp_pos R)).2 hCompare.2
+    (div_le_iff₀ (Real.exp_pos R)).2 hProduct
   rw [hUniform] at hDiv
   simpa [Real.exp_neg, div_eq_mul_inv] using hDiv
 
