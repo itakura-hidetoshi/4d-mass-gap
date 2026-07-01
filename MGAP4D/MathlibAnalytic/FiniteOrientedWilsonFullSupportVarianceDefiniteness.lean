@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonGibbsRealVariance
+import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonGibbsHilbertEquivalence
 import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonSingleLinkHeatBathProjection
 import Mathlib.Tactic
 
@@ -8,20 +8,6 @@ namespace MathlibAnalytic
 open scoped BigOperators ENNReal
 
 noncomputable section
-
-/-- Every finite oriented Wilson Gibbs atom has strictly positive real mass. -/
-theorem finite_oriented_gibbsProbabilityReal_pos
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration) :
-    0 < L.gibbsProbabilityReal A := by
-  unfold FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
-  rw [ENNReal.toReal_pos]
-  constructor
-  · rw [finite_oriented_gibbsPMF_apply]
-    exact mul_ne_zero
-      (finite_oriented_boltzmannWeight_ne_zero L A)
-      (inv_ne_zero (finite_oriented_partitionFunction_ne_top L))
-  · exact (L.gibbsPMF).apply_ne_top A
 
 /-- Full support makes finite Gibbs variance definite: two configurations with
 unequal observable values force strictly positive variance. -/
@@ -102,8 +88,7 @@ theorem finite_oriented_gibbsVarianceReal_eq_zero_iff
     unfold FiniteOrientedLatticeWilsonSystem.gibbsVarianceReal
     apply Finset.sum_eq_zero
     intro A _
-    rw [hPoint A, sub_self, zero_pow]
-    simp
+    simp [hPoint A]
 
 end
 
