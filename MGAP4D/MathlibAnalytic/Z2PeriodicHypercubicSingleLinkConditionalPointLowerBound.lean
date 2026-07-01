@@ -58,11 +58,10 @@ theorem z2PeriodicHypercubic_targetLocalPlaquetteAction_le_six
         periodicHypercubicTouchingPlaquettes n target := by
     apply Finset.ext
     intro p
-    rw [Finset.mem_filter, periodicHypercubic_mem_touchingPlaquettes_iff]
-    simp only [Finset.mem_univ, true_and]
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
     change periodicHypercubicPlaquetteTouchesEdge n p target ↔
-      periodicHypercubicPlaquetteTouchesEdge n p target
-    rfl
+      p ∈ periodicHypercubicTouchingPlaquettes n target
+    exact (periodicHypercubic_mem_touchingPlaquettes_iff n target p).symm
   unfold FiniteOrientedLatticeWilsonSystem.targetLocalPlaquetteAction
   change (∑ p : L.Plaquette,
       if L.PlaquetteTouchesEdge p targetL then
