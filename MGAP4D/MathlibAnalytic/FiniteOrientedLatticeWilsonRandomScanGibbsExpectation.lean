@@ -33,13 +33,6 @@ private theorem randomScanGibbs_pairing_one_right
   intro A _hA
   ring
 
-/-- The real Gibbs probabilities have total mass one. -/
-private theorem randomScanGibbs_probability_sum_eq_one
-    (L : FiniteOrientedLatticeWilsonSystem) :
-    ∑ A : L.Configuration, L.gibbsProbabilityReal A = 1 := by
-  simpa [FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal] using
-    (finite_pmf_sum_toReal_eq_one L.gibbsPMF)
-
 /-- Gibbs expectation commutes with multiplication by a real scalar. -/
 private theorem randomScanGibbs_expectation_const_mul
     (L : FiniteOrientedLatticeWilsonSystem)
@@ -171,7 +164,9 @@ theorem finite_oriented_abs_sub_gibbsExpectationReal_le_of_pairwise
     (hPair : ∀ B : L.Configuration, |g A - g B| ≤ M) :
     |g A - L.gibbsExpectationReal g| ≤ M := by
   classical
-  have hMass := randomScanGibbs_probability_sum_eq_one L
+  have hMass :
+      (∑ B : L.Configuration, (L.gibbsPMF B).toReal) = 1 :=
+    finite_pmf_sum_toReal_eq_one L.gibbsPMF
   have hRewrite :
       g A - L.gibbsExpectationReal g =
         ∑ B : L.Configuration,
@@ -185,8 +180,7 @@ theorem finite_oriented_abs_sub_gibbsExpectationReal_le_of_pairwise
         ring
       _ = (∑ B : L.Configuration, (L.gibbsPMF B).toReal) * g A -
             ∑ B : L.Configuration, (L.gibbsPMF B).toReal * g B := by
-        rw [show (∑ B : L.Configuration, (L.gibbsPMF B).toReal) = 1 by
-          simpa [FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal] using hMass]
+        rw [hMass]
       _ = ∑ B : L.Configuration,
           ((L.gibbsPMF B).toReal * g A -
             (L.gibbsPMF B).toReal * g B) := by
