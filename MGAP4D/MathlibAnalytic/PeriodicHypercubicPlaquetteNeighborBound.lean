@@ -32,13 +32,13 @@ theorem periodicHypercubic_mem_plaquetteNeighbors_iff
     unfold periodicHypercubicPlaquetteNeighbors at hq
     rcases Finset.mem_biUnion.mp hq with ⟨e, he, hqErase⟩
     have hqData := Finset.mem_erase.mp hqErase
-    apply periodicHypercubicPlaquetteAdjacent_of_shared_edge n
-    · exact Ne.symm hqData.1
-    · exact e
-    · unfold periodicHypercubicPlaquetteEdges at he
+    have hpTouch : periodicHypercubicPlaquetteTouchesEdge n p e := by
+      unfold periodicHypercubicPlaquetteEdges at he
       rcases Finset.mem_image.mp he with ⟨k, _hk, hk⟩
       exact ⟨k, hk⟩
-    · exact (periodicHypercubic_mem_touchingPlaquettes_iff n e q).mp hqData.2
+    exact periodicHypercubicPlaquetteAdjacent_of_shared_edge n
+      (Ne.symm hqData.1) e hpTouch
+      ((periodicHypercubic_mem_touchingPlaquettes_iff n e q).mp hqData.2)
   · intro h
     rcases h with ⟨hpq, e, hp, hq⟩
     unfold periodicHypercubicPlaquetteNeighbors
