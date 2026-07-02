@@ -24,7 +24,7 @@ plaquette adjacency. -/
 theorem periodicHypercubic_mem_plaquetteNeighbors_iff
     (n : Nat) [NeZero n]
     (p q : PeriodicHypercubicPlaquette n) :
-    q in periodicHypercubicPlaquetteNeighbors n p <->
+    q ∈ periodicHypercubicPlaquetteNeighbors n p ↔
       periodicHypercubicPlaquetteAdjacent n p q := by
   classical
   constructor
@@ -53,17 +53,17 @@ plaquette neighbors, independently of the side length. -/
 theorem periodicHypercubicPlaquetteNeighbors_card_le_twenty_four
     (n : Nat) [NeZero n]
     (p : PeriodicHypercubicPlaquette n) :
-    (periodicHypercubicPlaquetteNeighbors n p).card <= 24 := by
+    (periodicHypercubicPlaquetteNeighbors n p).card ≤ 24 := by
   classical
   calc
-    (periodicHypercubicPlaquetteNeighbors n p).card <=
-        sum e in periodicHypercubicPlaquetteEdges n p,
+    (periodicHypercubicPlaquetteNeighbors n p).card ≤
+        ∑ e ∈ periodicHypercubicPlaquetteEdges n p,
           ((periodicHypercubicTouchingPlaquettes n e).erase p).card := by
       unfold periodicHypercubicPlaquetteNeighbors
       exact finset_card_biUnion_le_sum_card
         (periodicHypercubicPlaquetteEdges n p)
         (fun e => (periodicHypercubicTouchingPlaquettes n e).erase p)
-    _ <= sum _e in periodicHypercubicPlaquetteEdges n p, 6 := by
+    _ ≤ ∑ _e ∈ periodicHypercubicPlaquetteEdges n p, 6 := by
       apply Finset.sum_le_sum
       intro e _he
       exact
@@ -72,7 +72,7 @@ theorem periodicHypercubicPlaquetteNeighbors_card_le_twenty_four
             (periodicHypercubicTouchingPlaquettes n e))).trans
           (periodicHypercubicTouchingPlaquettes_card_le_six n e)
     _ = (periodicHypercubicPlaquetteEdges n p).card * 6 := by simp
-    _ <= 4 * 6 := Nat.mul_le_mul_right 6
+    _ ≤ 4 * 6 := Nat.mul_le_mul_right 6
       (periodicHypercubicPlaquetteEdges_card_le_four n p)
     _ = 24 := by norm_num
 
