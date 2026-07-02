@@ -74,8 +74,8 @@ theorem embeddedBernoulliParameter_tendsto_prokhorov
     (B : GeometricBetaIncrementBound D) :
     Tendsto D.embeddedBernoulliParameter atTop
       (nhds D.prokhorovBernoulliParameter) :=
-  (L.toBernoulliBetaIncrementLipschitzBound)
-    .embeddedBernoulliParameter_tendsto_prokhorov B
+  BernoulliBetaIncrementLipschitzBound.embeddedBernoulliParameter_tendsto_prokhorov
+    L.toBernoulliBetaIncrementLipschitzBound B
 
 /-- Every strict-subsequence weak limit is canonical under the lattice-level
 Lipschitz estimate and geometric coupling stabilization. -/
