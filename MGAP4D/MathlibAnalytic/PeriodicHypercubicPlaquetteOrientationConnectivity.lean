@@ -57,32 +57,54 @@ private theorem periodicHypercubicAxisPair_cases
       a = periodicHypercubicAxisPair12 ∨
       a = periodicHypercubicAxisPair13 ∨
       a = periodicHypercubicAxisPair23 := by
-  native_decide
+  rcases a with ⟨⟨mu, nu⟩, hlt⟩
+  fin_cases mu <;> fin_cases nu <;>
+    simp_all [periodicHypercubicAxisPair01,
+      periodicHypercubicAxisPair02,
+      periodicHypercubicAxisPair03,
+      periodicHypercubicAxisPair12,
+      periodicHypercubicAxisPair13,
+      periodicHypercubicAxisPair23]
 
 private theorem periodicHypercubicAxisPairGraph_adj_01_02 :
     periodicHypercubicAxisPairGraph.Adj
       periodicHypercubicAxisPair01 periodicHypercubicAxisPair02 := by
-  native_decide
+  refine ⟨by decide, ?_⟩
+  refine ⟨0, ?_, ?_⟩
+  · exact Or.inl rfl
+  · exact Or.inl rfl
 
 private theorem periodicHypercubicAxisPairGraph_adj_01_03 :
     periodicHypercubicAxisPairGraph.Adj
       periodicHypercubicAxisPair01 periodicHypercubicAxisPair03 := by
-  native_decide
+  refine ⟨by decide, ?_⟩
+  refine ⟨0, ?_, ?_⟩
+  · exact Or.inl rfl
+  · exact Or.inl rfl
 
 private theorem periodicHypercubicAxisPairGraph_adj_01_12 :
     periodicHypercubicAxisPairGraph.Adj
       periodicHypercubicAxisPair01 periodicHypercubicAxisPair12 := by
-  native_decide
+  refine ⟨by decide, ?_⟩
+  refine ⟨1, ?_, ?_⟩
+  · exact Or.inr rfl
+  · exact Or.inl rfl
 
 private theorem periodicHypercubicAxisPairGraph_adj_01_13 :
     periodicHypercubicAxisPairGraph.Adj
       periodicHypercubicAxisPair01 periodicHypercubicAxisPair13 := by
-  native_decide
+  refine ⟨by decide, ?_⟩
+  refine ⟨1, ?_, ?_⟩
+  · exact Or.inr rfl
+  · exact Or.inl rfl
 
 private theorem periodicHypercubicAxisPairGraph_adj_02_23 :
     periodicHypercubicAxisPairGraph.Adj
       periodicHypercubicAxisPair02 periodicHypercubicAxisPair23 := by
-  native_decide
+  refine ⟨by decide, ?_⟩
+  refine ⟨2, ?_, ?_⟩
+  · exact Or.inr rfl
+  · exact Or.inl rfl
 
 private theorem periodicHypercubicAxisPairGraph_reachable_from_01
     (a : PeriodicHypercubicAxisPair) :
@@ -91,27 +113,26 @@ private theorem periodicHypercubicAxisPairGraph_reachable_from_01
   rcases periodicHypercubicAxisPair_cases a with
       h | h | h | h | h | h
   · subst a
-    exact ⟨SimpleGraph.Walk.nil⟩
+    exact SimpleGraph.Reachable.rfl
   · subst a
-    exact ⟨periodicHypercubicAxisPairGraph_adj_01_02.toWalk⟩
+    exact periodicHypercubicAxisPairGraph_adj_01_02.reachable
   · subst a
-    exact ⟨periodicHypercubicAxisPairGraph_adj_01_03.toWalk⟩
+    exact periodicHypercubicAxisPairGraph_adj_01_03.reachable
   · subst a
-    exact ⟨periodicHypercubicAxisPairGraph_adj_01_12.toWalk⟩
+    exact periodicHypercubicAxisPairGraph_adj_01_12.reachable
   · subst a
-    exact ⟨periodicHypercubicAxisPairGraph_adj_01_13.toWalk⟩
+    exact periodicHypercubicAxisPairGraph_adj_01_13.reachable
   · subst a
-    exact ⟨SimpleGraph.Walk.cons
-      periodicHypercubicAxisPairGraph_adj_01_02
-      periodicHypercubicAxisPairGraph_adj_02_23.toWalk⟩
+    exact periodicHypercubicAxisPairGraph_adj_01_02.reachable.trans
+      periodicHypercubicAxisPairGraph_adj_02_23.reachable
 
 /-- The six-plane coordinate graph is connected. -/
 theorem periodicHypercubicAxisPairGraph_connected :
     periodicHypercubicAxisPairGraph.Connected := by
+  refine { preconnected := ?_, nonempty := ⟨periodicHypercubicAxisPair01⟩ }
   intro a b
-  rcases periodicHypercubicAxisPairGraph_reachable_from_01 a with ⟨wa⟩
-  rcases periodicHypercubicAxisPairGraph_reachable_from_01 b with ⟨wb⟩
-  exact ⟨wa.reverse.append wb⟩
+  exact (periodicHypercubicAxisPairGraph_reachable_from_01 a).symm.trans
+    (periodicHypercubicAxisPairGraph_reachable_from_01 b)
 
 /-- If an axis belongs to a plaquette plane, the plaquette touches the positive
 physical link based at its base vertex in that axis. -/
@@ -164,8 +185,8 @@ theorem periodicHypercubicPlaquetteGraph_reachable_same_base
     (x : PeriodicHypercubicVertex n)
     (a b : PeriodicHypercubicAxisPair) :
     (periodicHypercubicPlaquetteGraph n).Reachable (x, a) (x, b) := by
-  rcases periodicHypercubicAxisPairGraph_connected a b with ⟨w⟩
-  exact ⟨w.map (periodicHypercubicAxisPairToPlaquetteHom n x)⟩
+  exact (periodicHypercubicAxisPairGraph_connected a b).map
+    (periodicHypercubicAxisPairToPlaquetteHom n x)
 
 end
 
