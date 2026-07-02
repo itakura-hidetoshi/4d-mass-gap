@@ -16,18 +16,31 @@ noncomputable def
     {L : FiniteOrientedLatticeWilsonSystem}
     (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L) :
     ℕ → L.Edge → L.Edge → ℝ
-  | 0, target, source => if target = source then 1 else 0
+  | 0, target, source => by
+      classical
+      exact if target = source then 1 else 0
   | m + 1, target, source =>
       ∑ middle : L.Edge,
         D.influencePathKernel m target middle *
           D.influence middle source
 
-@[simp] theorem finite_oriented_influencePathKernel_zero
+@[simp] theorem finite_oriented_influencePathKernel_zero_same
     {L : FiniteOrientedLatticeWilsonSystem}
     (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
-    (target source : L.Edge) :
-    D.influencePathKernel 0 target source =
-      if target = source then 1 else 0 := rfl
+    (target : L.Edge) :
+    D.influencePathKernel 0 target target = 1 := by
+  classical
+  simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel]
+
+@[simp] theorem finite_oriented_influencePathKernel_zero_of_ne
+    {L : FiniteOrientedLatticeWilsonSystem}
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (target source : L.Edge)
+    (hNe : target ≠ source) :
+    D.influencePathKernel 0 target source = 0 := by
+  classical
+  simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel,
+    hNe]
 
 @[simp] theorem finite_oriented_influencePathKernel_succ
     {L : FiniteOrientedLatticeWilsonSystem}
@@ -48,8 +61,11 @@ theorem finite_oriented_influencePathKernel_nonneg
     0 ≤ D.influencePathKernel m target source := by
   induction m generalizing target source with
   | zero =>
-      simp only [finite_oriented_influencePathKernel_zero]
-      split_ifs <;> norm_num
+      classical
+      by_cases hEq : target = source
+      · subst source
+        simp
+      · simp [hEq]
   | succ m ih =>
       rw [finite_oriented_influencePathKernel_succ]
       exact Finset.sum_nonneg fun middle _hMiddle =>
@@ -72,7 +88,8 @@ noncomputable def
     (target : L.Edge) :
     D.influencePathRowMass 0 target = 1 := by
   classical
-  simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathRowMass]
+  simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathRowMass,
+    FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel]
 
 /-- Influence-path row mass is nonnegative. -/
 theorem finite_oriented_influencePathRowMass_nonneg
@@ -100,7 +117,7 @@ theorem finite_oriented_influencePathRowMass_succ_eq
   classical
   unfold
     FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathRowMass
-  rw [finite_oriented_influencePathKernel_succ]
+  simp_rw [finite_oriented_influencePathKernel_succ]
   calc
     (∑ source : L.Edge,
       ∑ middle : L.Edge,
@@ -201,9 +218,10 @@ theorem finite_oriented_influencePathKernel_eq_zero_of_not_mem_activeBall
   classical
   induction m generalizing target source with
   | zero =>
-      have hNe : target ≠ source := by
+      have hNeSourceTarget : source ≠ target := by
         simpa using hSource
-      simp [hNe]
+      exact finite_oriented_influencePathKernel_zero_of_ne
+        D target source hNeSourceTarget.symm
   | succ m ih =>
       rw [finite_oriented_influencePathKernel_succ]
       apply Finset.sum_eq_zero
