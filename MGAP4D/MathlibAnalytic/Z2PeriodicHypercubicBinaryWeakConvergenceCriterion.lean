@@ -27,10 +27,11 @@ theorem probabilityMeasure_bool_eq_of_trueParameter_eq
       have hν := probabilityMeasure_bool_real_singleton_sum ν
       unfold probabilityMeasure_boolTrueParameter at hParameter
       linarith
-    exact (ENNReal.toReal_eq_toReal (by finiteness) (by finiteness)).mp
+    exact (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
       hFalseReal
-  · exact (ENNReal.toReal_eq_toReal (by finiteness) (by finiteness)).mp
-      (by simpa [probabilityMeasure_boolTrueParameter] using hParameter)
+  · unfold probabilityMeasure_boolTrueParameter at hParameter
+    exact (ENNReal.toReal_eq_toReal_iff' (by finiteness) (by finiteness)).mp
+      hParameter
 
 /-- Every real bounded continuous function on `Bool` is affine in the canonical
 `0/1` observable. Consequently, its expectation depends affinely on the true
@@ -41,18 +42,28 @@ theorem probabilityMeasure_integral_bool_bcf_eq_affine
     (∫ b : Bool, f b ∂(μ : Measure Bool)) =
       f false + probabilityMeasure_boolTrueParameter μ *
         (f true - f false) := by
-  have hDecomposition :
-      f = BoundedContinuousFunction.const Bool (f false) +
-        (f true - f false) • z2BinaryPlaquetteObservable := by
-    ext b
-    cases b <;> simp [z2BinaryPlaquetteObservable_apply]
-  rw [hDecomposition]
-  rw [integral_add]
-  · rw [integral_smul]
-    rw [probabilityMeasure_integral_z2BinaryPlaquetteObservable]
-    simp
-  · exact (BoundedContinuousFunction.const Bool (f false)).integrable _
-  · exact ((f true - f false) • z2BinaryPlaquetteObservable).integrable _
+  calc
+    (∫ b : Bool, f b ∂(μ : Measure Bool)) =
+        ∫ b : Bool,
+          f false + (f true - f false) * z2BinaryPlaquetteObservable b
+            ∂(μ : Measure Bool) := by
+      apply integral_congr_ae
+      filter_upwards [] with b
+      cases b <;> simp [z2BinaryPlaquetteObservable_apply]
+    _ = (∫ _b : Bool, f false ∂(μ : Measure Bool)) +
+        ∫ b : Bool,
+          (f true - f false) * z2BinaryPlaquetteObservable b
+            ∂(μ : Measure Bool) := by
+      apply integral_add
+      · exact integrable_const _
+      · exact
+          (z2BinaryPlaquetteObservable.integrable (μ : Measure Bool)).const_mul _
+    _ = f false + probabilityMeasure_boolTrueParameter μ *
+        (f true - f false) := by
+      rw [integral_const_mul]
+      rw [probabilityMeasure_integral_z2BinaryPlaquetteObservable]
+      simp
+      ring
 
 /-- Weak convergence of probability measures on `Bool` is equivalent to
 ordinary real convergence of their true-atom Bernoulli parameters. -/
