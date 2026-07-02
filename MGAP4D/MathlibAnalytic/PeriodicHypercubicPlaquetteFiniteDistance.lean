@@ -35,7 +35,7 @@ theorem periodicHypercubicPlaquetteDistance_coe_eq_EDistance
 /-- A shortest-path distance in the finite connected plaquette graph is strictly
 smaller than the total number of plaquettes. -/
 theorem periodicHypercubicPlaquetteDistance_lt_card
-    (n : Nat) (hn : 2 ≤ n)
+    (n : Nat) [NeZero n] (hn : 2 ≤ n)
     (selected p : PeriodicHypercubicPlaquette n) :
     periodicHypercubicPlaquetteDistance n selected p <
       Fintype.card (PeriodicHypercubicPlaquette n) := by
@@ -66,7 +66,7 @@ theorem periodicHypercubicPlaquetteDistance_lt_radius
 
 /-- The finite shell at graph distance `m` from a selected periodic plaquette. -/
 noncomputable def periodicHypercubicPlaquetteDistanceShell
-    (n : Nat)
+    (n : Nat) [NeZero n]
     (selected : PeriodicHypercubicPlaquette n)
     (m : Nat) : Finset (PeriodicHypercubicPlaquette n) := by
   classical
@@ -76,7 +76,7 @@ noncomputable def periodicHypercubicPlaquetteDistanceShell
 /-- Membership in the explicit distance shell is exactly equality of the
 natural plaquette distance with the shell index. -/
 @[simp] theorem periodicHypercubic_mem_distanceShell_iff
-    (n : Nat)
+    (n : Nat) [NeZero n]
     (selected p : PeriodicHypercubicPlaquette n)
     (m : Nat) :
     p ∈ periodicHypercubicPlaquetteDistanceShell n selected m ↔
