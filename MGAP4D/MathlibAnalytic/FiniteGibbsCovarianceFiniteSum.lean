@@ -112,42 +112,42 @@ theorem covarianceUnder_finset_sum_right
 covariance is the corresponding finite sum of local covariances. -/
 theorem covariance_eq_finset_sum_covarianceUnder
     {I : Type*} (s : Finset I)
-    (F S : Omega -> Real) (local : I -> Omega -> Real)
+    (F S : Omega -> Real) (term : I -> Omega -> Real)
     (beta : Real)
-    (hS : S = fun omega => Finset.sum s fun i => local i omega) :
+    (hS : S = fun omega => Finset.sum s fun i => term i omega) :
     covariance F S beta =
-      Finset.sum s fun i => covarianceUnder F (local i) S beta := by
+      Finset.sum s fun i => covarianceUnder F (term i) S beta := by
   calc
     covariance F S beta = covarianceUnder F S S beta :=
       covariance_eq_covarianceUnder F S beta
     _ = covarianceUnder F
-        (fun omega => Finset.sum s fun i => local i omega) S beta :=
+        (fun omega => Finset.sum s fun i => term i omega) S beta :=
       congrArg (fun G => covarianceUnder F G S beta) hS
-    _ = Finset.sum s fun i => covarianceUnder F (local i) S beta :=
-      covarianceUnder_finset_sum_right s F local S beta
+    _ = Finset.sum s fun i => covarianceUnder F (term i) S beta :=
+      covarianceUnder_finset_sum_right s F term S beta
 
 /-- Absolute covariance with a finite-sum action is bounded by the sum of the
 absolute local covariances. -/
 theorem abs_covariance_le_sum_abs_covarianceUnder
     {I : Type*} (s : Finset I)
-    (F S : Omega -> Real) (local : I -> Omega -> Real)
+    (F S : Omega -> Real) (term : I -> Omega -> Real)
     (beta : Real)
-    (hS : S = fun omega => Finset.sum s fun i => local i omega) :
+    (hS : S = fun omega => Finset.sum s fun i => term i omega) :
     abs (covariance F S beta) <=
-      Finset.sum s fun i => abs (covarianceUnder F (local i) S beta) := by
-  rw [covariance_eq_finset_sum_covarianceUnder s F S local beta hS]
+      Finset.sum s fun i => abs (covarianceUnder F (term i) S beta) := by
+  rw [covariance_eq_finset_sum_covarianceUnder s F S term beta hS]
   induction s using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha]
       calc
-        abs (covarianceUnder F (local a) S beta +
-            Finset.sum s fun i => covarianceUnder F (local i) S beta) <=
-            abs (covarianceUnder F (local a) S beta) +
-              abs (Finset.sum s fun i => covarianceUnder F (local i) S beta) :=
+        abs (covarianceUnder F (term a) S beta +
+            Finset.sum s fun i => covarianceUnder F (term i) S beta) <=
+            abs (covarianceUnder F (term a) S beta) +
+              abs (Finset.sum s fun i => covarianceUnder F (term i) S beta) :=
           abs_add _ _
-        _ <= abs (covarianceUnder F (local a) S beta) +
-              Finset.sum s fun i => abs (covarianceUnder F (local i) S beta) :=
+        _ <= abs (covarianceUnder F (term a) S beta) +
+              Finset.sum s fun i => abs (covarianceUnder F (term i) S beta) :=
           add_le_add_left ih _
 
 end FiniteGibbsExpectationBetaDerivative
