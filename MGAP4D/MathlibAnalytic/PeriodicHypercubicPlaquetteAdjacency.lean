@@ -34,6 +34,18 @@ theorem periodicHypercubicPlaquetteAdjacent_ne
     Not (p = q) :=
   h.1
 
+/-- Plaquette adjacency through a shared physical link is symmetric. -/
+theorem periodicHypercubicPlaquetteAdjacent_symm
+    (n : Nat)
+    {p q : PeriodicHypercubicPlaquette n}
+    (h : periodicHypercubicPlaquetteAdjacent n p q) :
+    periodicHypercubicPlaquetteAdjacent n q p := by
+  refine And.intro ?_ ?_
+  · intro hqp
+    exact h.1 hqp.symm
+  · exact Exists.elim h.2 (fun e he =>
+      Exists.intro e (And.intro he.2 he.1))
+
 end
 
 end MathlibAnalytic
