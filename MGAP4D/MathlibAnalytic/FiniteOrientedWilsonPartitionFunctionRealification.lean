@@ -9,6 +9,10 @@ open scoped BigOperators ENNReal
 
 noncomputable section
 
+noncomputable local instance finiteOrientedConfigurationFintype
+    (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration :=
+  Fintype.ofFinite L.Configuration
+
 /-- The ENNReal partition function used by the finite Wilson PMF has the same
 real value as the finite-sum partition function used by Gibbs calculus. -/
 theorem finite_oriented_partitionFunction_toReal_eq_finiteGibbs
