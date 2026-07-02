@@ -1,0 +1,3 @@
+import MGAP4D.MathlibAnalytic.FiniteGibbsExpectationBetaDerivative
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Tactic
