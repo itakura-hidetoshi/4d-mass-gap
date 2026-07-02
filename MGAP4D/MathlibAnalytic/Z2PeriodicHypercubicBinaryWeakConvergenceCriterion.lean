@@ -62,10 +62,7 @@ theorem probabilityMeasure_integral_bool_bcf_eq_affine
         (f true - f false) := by
       rw [integral_const_mul]
       rw [probabilityMeasure_integral_z2BinaryPlaquetteObservable]
-      have hBoolUniv : ({false, true} : Set Bool) = Set.univ := by
-        ext b
-        cases b <;> simp
-      rw [hBoolUniv]
+      rw [integral_const]
       simp
       ring
 
