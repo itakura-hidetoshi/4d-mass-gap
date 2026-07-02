@@ -23,21 +23,21 @@ theorem finiteOrientedConditionalAverageUpdatedVariation_sum_eq
   classical
   let s : Finset L.Edge := Finset.univ.erase target
   have hVarErase :
-      (∑ source in s, variation source) =
+      (∑ source ∈ s, variation source) =
         (∑ source : L.Edge, variation source) - variation target := by
     have h := Finset.sum_erase_add
       (s := (Finset.univ : Finset L.Edge))
       (f := variation) (Finset.mem_univ target)
-    change (∑ source in s, variation source) + variation target =
+    change (∑ source ∈ s, variation source) + variation target =
       ∑ source : L.Edge, variation source at h
     linarith
   have hInfluenceErase :
-      (∑ source in s, D.influence target source) =
+      (∑ source ∈ s, D.influence target source) =
         ∑ source : L.Edge, D.influence target source := by
     have h := Finset.sum_erase_add
       (s := (Finset.univ : Finset L.Edge))
       (f := D.influence target) (Finset.mem_univ target)
-    change (∑ source in s, D.influence target source) +
+    change (∑ source ∈ s, D.influence target source) +
       D.influence target target =
         ∑ source : L.Edge, D.influence target source at h
     rw [D.influence_diagonal_zero target, add_zero] at h
@@ -46,7 +46,7 @@ theorem finiteOrientedConditionalAverageUpdatedVariation_sum_eq
     (∑ source : L.Edge,
       finiteOrientedConditionalAverageUpdatedVariation
         D variation target source) =
-      (∑ source in s,
+      (∑ source ∈ s,
         finiteOrientedConditionalAverageUpdatedVariation
           D variation target source) +
         finiteOrientedConditionalAverageUpdatedVariation
@@ -58,7 +58,7 @@ theorem finiteOrientedConditionalAverageUpdatedVariation_sum_eq
           finiteOrientedConditionalAverageUpdatedVariation
             D variation target source)
         (Finset.mem_univ target)
-    _ = ∑ source in s,
+    _ = ∑ source ∈ s,
         (variation source +
           D.influence target source * variation target) := by
       rw [show finiteOrientedConditionalAverageUpdatedVariation
@@ -69,8 +69,8 @@ theorem finiteOrientedConditionalAverageUpdatedVariation_sum_eq
       intro source hsource
       have hne : source ≠ target := Finset.ne_of_mem_erase hsource
       simp [finiteOrientedConditionalAverageUpdatedVariation, hne]
-    _ = (∑ source in s, variation source) +
-        (∑ source in s, D.influence target source) * variation target := by
+    _ = (∑ source ∈ s, variation source) +
+        (∑ source ∈ s, D.influence target source) * variation target := by
       rw [Finset.sum_add_distrib, ← Finset.sum_mul]
     _ = (∑ source : L.Edge, variation source) - variation target +
         (∑ source : L.Edge, D.influence target source) * variation target := by
