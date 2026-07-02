@@ -9,6 +9,12 @@ open scoped BigOperators
 
 noncomputable section
 
+/-- Finite enumeration used only for the Gibbs expectation sums in this file. -/
+local instance randomScanGibbsConfigurationFintype
+    (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
+  classical
+  exact Fintype.ofFinite L.Configuration
+
 /-- The variation-oriented conditional average introduced for the Dobrushin
 chain is definitionally the established one-link heat-bath projection. -/
 private theorem randomScanGibbs_singleLinkAverage_eq_projection
@@ -49,10 +55,17 @@ private theorem randomScanGibbs_expectation_const_mul
       c * L.gibbsExpectationReal f := by
   classical
   unfold FiniteOrientedLatticeWilsonSystem.gibbsExpectationReal
-  rw [← Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro A _hA
-  ring
+  calc
+    (∑ A : L.Configuration,
+      L.gibbsProbabilityReal A * (c * f A)) =
+        ∑ A : L.Configuration,
+          c * (L.gibbsProbabilityReal A * f A) := by
+      apply Finset.sum_congr rfl
+      intro A _hA
+      ring
+    _ = c * ∑ A : L.Configuration,
+        L.gibbsProbabilityReal A * f A := by
+      rw [Finset.mul_sum]
 
 /-- Gibbs expectation commutes with a finite sum of real observables. -/
 private theorem randomScanGibbs_expectation_sum
