@@ -69,10 +69,10 @@ theorem finiteOrientedConditionalAverageRandomScanContractionFactor_lt_one
     finiteOrientedConditionalAverageRandomScanContractionFactor D < 1 := by
   have hCard : 0 < (Fintype.card L.Edge : ℝ) := by
     exact_mod_cast hEdge
-  have hGap : 0 < 1 - D.dobrushinCoefficient := by
-    linarith [D.dobrushinCoefficient_lt_one]
+  have hGap : 0 < 1 - D.dobrushkinCoefficient := by
+    linarith [D.dobrushkinCoefficient_lt_one]
   have hProduct :
-      0 < (1 - D.dobrushinCoefficient) *
+      0 < (1 - D.dobrushkinCoefficient) *
         (Fintype.card L.Edge : ℝ)⁻¹ :=
     mul_pos hGap (inv_pos.mpr hCard)
   unfold finiteOrientedConditionalAverageRandomScanContractionFactor
@@ -118,7 +118,6 @@ theorem finiteOrientedConditionalAverageRandomScanVariation_sum_le
         card * total - gap * total := by
     simp [total, gap, card, Finset.sum_sub_distrib,
       Finset.mul_sum]
-    ring
   have hInvNonneg : 0 ≤ card⁻¹ := by
     exact inv_nonneg.mpr (by
       dsimp [card]
@@ -147,7 +146,6 @@ theorem finiteOrientedConditionalAverageRandomScanVariation_sum_le
       unfold finiteOrientedConditionalAverageRandomScanContractionFactor
       dsimp [card, gap, total]
       field_simp [hCardNe]
-      ring
 
 end
 
