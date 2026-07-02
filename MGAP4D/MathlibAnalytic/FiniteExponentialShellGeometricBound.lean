@@ -113,8 +113,7 @@ noncomputable def toFiniteGeometricShellControl
                   hProductNonneg C.growth_mul_ratio_lt_one C.radius)
                 C.shellPrefactor_nonneg
         _ = C.shellPrefactor / (1 - C.shellGrowth * C.ratio) := by
-          rw [div_eq_mul_inv]
-          rfl }
+          simp [div_eq_mul_inv] }
 
 /-- Explicit exponential shell control bounds the total geometric weight. -/
 theorem sum_pow_distance_le_explicit
