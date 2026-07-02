@@ -89,6 +89,16 @@ theorem
   intro hDirac
   have hpos := D.subsequenceContinuumVariance_pos f hf mu hmu
   unfold PhysicalFourDimensionalYangMillsWeakLimit.continuumObservableVariance at hpos
+  change
+    0 <
+      (∫ A,
+          (D.toPhysicalEmbedding.observable * D.toPhysicalEmbedding.observable) A
+            ∂(mu : Measure
+              D.toPhysicalEmbedding.toLatticeEmbedding.PhysicalConfiguration)) -
+        (∫ A, D.toPhysicalEmbedding.observable A
+            ∂(mu : Measure
+              D.toPhysicalEmbedding.toLatticeEmbedding.PhysicalConfiguration)) ^ 2
+    at hpos
   rw [hDirac] at hpos
   simp [pow_two] at hpos
   change D.toPhysicalEmbedding.observable b * D.toPhysicalEmbedding.observable b <
