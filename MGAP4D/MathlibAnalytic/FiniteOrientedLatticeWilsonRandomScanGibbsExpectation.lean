@@ -9,12 +9,6 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Finite enumeration used only for the Gibbs expectation sums in this file. -/
-local instance randomScanGibbsConfigurationFintype
-    (L : FiniteOrientedLatticeWilsonSystem) : Fintype L.Configuration := by
-  classical
-  exact Fintype.ofFinite L.Configuration
-
 /-- The variation-oriented conditional average introduced for the Dobrushin
 chain is definitionally the established one-link heat-bath projection. -/
 private theorem randomScanGibbs_singleLinkAverage_eq_projection
