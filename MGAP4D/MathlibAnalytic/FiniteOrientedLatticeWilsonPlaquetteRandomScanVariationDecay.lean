@@ -12,7 +12,7 @@ noncomputable section
 of distinct physical links in the periodic plaquette boundary.  This statement
 allows boundary-link identifications at small side lengths. -/
 theorem periodicHypercubicPlaquetteObservableLinkVariation_sum_eq_card
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (p : PeriodicHypercubicPlaquette n) :
     (∑ source : PeriodicHypercubicEdge n,
       periodicHypercubicPlaquetteObservableLinkVariation n p source) =
@@ -33,7 +33,7 @@ theorem periodicHypercubicPlaquetteObservableLinkVariation_sum_eq_card
 its total unit-width variation is at most four without any side-length or
 boundary-edge distinctness assumption. -/
 theorem periodicHypercubicPlaquetteObservableLinkVariation_sum_le_four
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (p : PeriodicHypercubicPlaquette n) :
     (∑ source : PeriodicHypercubicEdge n,
       periodicHypercubicPlaquetteObservableLinkVariation n p source) ≤ 4 := by
