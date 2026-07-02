@@ -69,10 +69,10 @@ theorem finiteOrientedConditionalAverageRandomScanContractionFactor_lt_one
     finiteOrientedConditionalAverageRandomScanContractionFactor D < 1 := by
   have hCard : 0 < (Fintype.card L.Edge : ℝ) := by
     exact_mod_cast hEdge
-  have hGap : 0 < 1 - D.dobrushkinCoefficient := by
-    linarith [D.dobrushkinCoefficient_lt_one]
+  have hGap : 0 < 1 - D.dobrushinCoefficient := by
+    linarith [D.dobrushinCoefficient_lt_one]
   have hProduct :
-      0 < (1 - D.dobrushkinCoefficient) *
+      0 < (1 - D.dobrushinCoefficient) *
         (Fintype.card L.Edge : ℝ)⁻¹ :=
     mul_pos hGap (inv_pos.mpr hCard)
   unfold finiteOrientedConditionalAverageRandomScanContractionFactor
