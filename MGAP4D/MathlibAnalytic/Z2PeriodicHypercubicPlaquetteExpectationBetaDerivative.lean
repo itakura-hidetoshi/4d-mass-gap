@@ -8,6 +8,11 @@ noncomputable section
 
 namespace Z2PeriodicHypercubicPlaquetteTrajectory
 
+noncomputable local instance fixedSystemConfigurationFintypeForDerivative
+    (T : Z2PeriodicHypercubicPlaquetteTrajectory) (k : Nat) :
+    Fintype (T.fixedSystem k).Configuration :=
+  Fintype.ofFinite (T.fixedSystem k).Configuration
+
 noncomputable def fixedPlaquetteActionCovariance
     (T : Z2PeriodicHypercubicPlaquetteTrajectory)
     (k : Nat) (beta : Real) : Real :=
