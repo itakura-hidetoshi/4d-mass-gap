@@ -9,7 +9,6 @@ open Filter MeasureTheory Set
 
 noncomputable section
 
-/-- The two singleton masses of a probability measure on `Bool` sum to one. -/
 theorem probabilityMeasure_bool_singleton_sum
     (μ : ProbabilityMeasure Bool) :
     (μ : Measure Bool) {false} + (μ : Measure Bool) {true} = 1 := by
@@ -26,10 +25,8 @@ theorem probabilityMeasure_bool_singleton_sum
       hMeasureUnion.symm
     _ = (μ : Measure Bool) Set.univ :=
       congrArg (fun s : Set Bool => (μ : Measure Bool) s) hUnion
-    _ = 1 := by simp
+    _ = 1 := by exact measure_univ
 
-/-- On the two-point Boolean carrier, vanishing of one atom forces the
-probability measure to be the Dirac mass at the other point. -/
 theorem probabilityMeasure_bool_eq_dirac_other_of_singleton_eq_zero
     (μ : ProbabilityMeasure Bool)
     (b : Bool)
@@ -53,8 +50,6 @@ theorem probabilityMeasure_bool_eq_dirac_other_of_singleton_eq_zero
     intro x
     cases x <;> simp [hZero, hFalse]
 
-/-- A non-Dirac probability measure on `Bool` assigns strictly positive mass to
-each of its two atoms. -/
 theorem probabilityMeasure_bool_singleton_pos_of_ne_dirac
     (μ : ProbabilityMeasure Bool)
     (hNonDirac : ∀ b : Bool, (μ : Measure Bool) ≠ Measure.dirac b)
@@ -65,16 +60,12 @@ theorem probabilityMeasure_bool_singleton_pos_of_ne_dirac
   exact hNonDirac (!b)
     (probabilityMeasure_bool_eq_dirac_other_of_singleton_eq_zero μ b hZero)
 
-/-- The automatically extracted continuum law, viewed on its canonical concrete
-Boolean carrier. -/
 noncomputable def
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovBoolContinuumMeasure
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
     ProbabilityMeasure Bool :=
   D.prokhorovSubsequenceLimit.continuumMeasure
 
-/-- The concrete Boolean presentation of the automatically extracted continuum
-law remains non-Dirac. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovBoolContinuumMeasure_ne_dirac
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData)
@@ -86,8 +77,6 @@ theorem
   simpa [Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovBoolContinuumMeasure,
     b'] using D.prokhorovContinuumMeasure_ne_dirac b'
 
-/-- Both Boolean atoms of the automatically extracted continuum plaquette law
-have strictly positive probability. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovBoolContinuumMeasure_singleton_pos
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData)
@@ -97,24 +86,18 @@ theorem
     D.prokhorovBoolContinuumMeasure
     D.prokhorovBoolContinuumMeasure_ne_dirac b
 
-/-- In particular, the false plaquette-energy atom has positive continuum
-probability. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovFalseAtom_pos
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
     0 < (D.prokhorovBoolContinuumMeasure : Measure Bool) {false} :=
   D.prokhorovBoolContinuumMeasure_singleton_pos false
 
-/-- Likewise, the true plaquette-energy atom has positive continuum
-probability. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovTrueAtom_pos
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
     0 < (D.prokhorovBoolContinuumMeasure : Measure Bool) {true} :=
   D.prokhorovBoolContinuumMeasure_singleton_pos true
 
-/-- Since every Boolean singleton has positive mass, the automatically extracted
-continuum plaquette law has full topological support. -/
 theorem
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.prokhorovBoolContinuumMeasure_support_eq_univ
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) :
@@ -129,6 +112,5 @@ theorem
     (measure_mono (Set.singleton_subset_iff.mpr hbU))
 
 end
-
 end MathlibAnalytic
 end MGAP4D
