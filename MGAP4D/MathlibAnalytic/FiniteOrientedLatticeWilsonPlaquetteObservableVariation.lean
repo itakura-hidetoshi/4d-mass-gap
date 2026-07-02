@@ -62,8 +62,9 @@ observable. It is one on the four physical boundary links and zero elsewhere. -/
 def FiniteOrientedLatticeWilsonSystem.plaquetteObservableLinkVariation
     (L : FiniteOrientedLatticeWilsonSystem)
     (p : L.Plaquette)
-    (source : L.Edge) : ℝ :=
-  if L.PlaquetteTouchesEdge p source then 1 else 0
+    (source : L.Edge) : ℝ := by
+  classical
+  exact if L.PlaquetteTouchesEdge p source then 1 else 0
 
 /-- The plaquette-observable link-variation profile is nonnegative. -/
 theorem finite_oriented_plaquetteObservableLinkVariation_nonneg
@@ -71,6 +72,7 @@ theorem finite_oriented_plaquetteObservableLinkVariation_nonneg
     (p : L.Plaquette)
     (source : L.Edge) :
     0 ≤ L.plaquetteObservableLinkVariation p source := by
+  classical
   unfold FiniteOrientedLatticeWilsonSystem.plaquetteObservableLinkVariation
   split_ifs <;> norm_num
 
@@ -86,6 +88,7 @@ theorem finite_oriented_plaquetteObservable_variation_bound
     (hAgree : L.AgreeOffLink A B source) :
     |L.plaquetteObservable p A - L.plaquetteObservable p B| ≤
       L.plaquetteObservableLinkVariation p source := by
+  classical
   by_cases hTouch : L.PlaquetteTouchesEdge p source
   · simpa [FiniteOrientedLatticeWilsonSystem.plaquetteObservableLinkVariation,
       hTouch] using
@@ -103,6 +106,7 @@ def z2PeriodicHypercubicOrientedPlaquetteEnergyUnitBound
     FiniteOrientedLatticeWilsonPlaquetteEnergyUnitBound
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) :=
   { le_one := by
+      classical
       intro g
       change (if g = 1 then 0 else 1) ≤ (1 : ℝ)
       split_ifs <;> norm_num }
@@ -111,8 +115,9 @@ def z2PeriodicHypercubicOrientedPlaquetteEnergyUnitBound
 def periodicHypercubicPlaquetteObservableLinkVariation
     (n : ℕ)
     (p : PeriodicHypercubicPlaquette n)
-    (source : PeriodicHypercubicEdge n) : ℝ :=
-  if periodicHypercubicPlaquetteTouchesEdge n p source then 1 else 0
+    (source : PeriodicHypercubicEdge n) : ℝ := by
+  classical
+  exact if periodicHypercubicPlaquetteTouchesEdge n p source then 1 else 0
 
 /-- The concrete variation is supported exactly on the physical four-link
 plaquette boundary. -/
@@ -141,6 +146,7 @@ theorem z2PeriodicHypercubicOriented_plaquetteObservable_variation_bound
     |(z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).plaquetteObservable p A -
         (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).plaquetteObservable p B| ≤
       periodicHypercubicPlaquetteObservableLinkVariation n p source := by
+  classical
   simpa [FiniteOrientedLatticeWilsonSystem.plaquetteObservableLinkVariation,
     periodicHypercubicPlaquetteObservableLinkVariation,
     z2PeriodicHypercubicOrientedWilsonSystem_touches_iff] using
