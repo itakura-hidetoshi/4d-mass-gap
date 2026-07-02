@@ -1,181 +1,19 @@
-import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonPlaquetteLocality
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinLocalExpectationComparison
+import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonDobrushinMatrix
+import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonVariationProfile
 import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped BigOperators ENNReal
+open scoped BigOperators
 
 noncomputable section
 
-/-- Exact single-link Boltzmann weight obtained by varying one physical link. -/
-def FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge)
-    (g : L.Gauge) : ℝ≥0∞ :=
-  ENNReal.ofReal
-    (Real.exp (-L.beta * L.wilsonAction (L.replaceLink A target g)))
-
-/-- Every orientation-correct single-link Boltzmann weight is positive. -/
-theorem finite_oriented_singleLinkBoltzmannWeight_pos
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge)
-    (g : L.Gauge) :
-    0 < L.singleLinkBoltzmannWeight A target g := by
-  rw [FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight,
-    ENNReal.ofReal_pos]
-  exact Real.exp_pos _
-
-/-- Exact single-link conditional partition function. -/
-def FiniteOrientedLatticeWilsonSystem.singleLinkPartitionFunction
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge) : ℝ≥0∞ :=
-  ∑' g : L.Gauge, L.singleLinkBoltzmannWeight A target g
-
-/-- The exact single-link conditional partition function is nonzero. -/
-theorem finite_oriented_singleLinkPartitionFunction_ne_zero
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge) :
-    L.singleLinkPartitionFunction A target ≠ 0 := by
-  intro hZero
-  have hAll :
-      ∀ g : L.Gauge, L.singleLinkBoltzmannWeight A target g = 0 := by
-    simpa [FiniteOrientedLatticeWilsonSystem.singleLinkPartitionFunction] using
-      (ENNReal.tsum_eq_zero.mp hZero)
-  exact
-    (ne_of_gt
-      (finite_oriented_singleLinkBoltzmannWeight_pos
-        L A target default))
-      (hAll default)
-
-/-- The exact single-link conditional partition function is finite. -/
-theorem finite_oriented_singleLinkPartitionFunction_ne_top
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge) :
-    L.singleLinkPartitionFunction A target ≠ ∞ := by
-  classical
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkPartitionFunction
-  rw [tsum_fintype]
-  exact ENNReal.sum_ne_top.2 fun g _hg => by
-    simp [FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight]
-
-/-- Exact single-link conditional law of the orientation-correct Wilson action. -/
-def FiniteOrientedLatticeWilsonSystem.singleLinkConditionalPMF
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge) : PMF L.Gauge :=
-  PMF.normalize (L.singleLinkBoltzmannWeight A target)
-    (finite_oriented_singleLinkPartitionFunction_ne_zero L A target)
-    (finite_oriented_singleLinkPartitionFunction_ne_top L A target)
-
-/-- Pointwise formula for the exact single-link conditional law. -/
-theorem finite_oriented_singleLinkConditionalPMF_apply
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge)
-    (g : L.Gauge) :
-    L.singleLinkConditionalPMF A target g =
-      L.singleLinkBoltzmannWeight A target g *
-        (L.singleLinkPartitionFunction A target)⁻¹ := by
-  rfl
-
-/-- Total variation between two exact oriented single-link conditional laws. -/
-def FiniteOrientedLatticeWilsonSystem.singleLinkConditionalTotalVariation
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (target : L.Edge) : ℝ :=
-  (2 : ℝ)⁻¹ * ∑ g : L.Gauge,
-    |(L.singleLinkConditionalPMF A target g).toReal -
-      (L.singleLinkConditionalPMF B target g).toReal|
-
-/-- Oriented single-link conditional total variation is nonnegative. -/
-theorem finite_oriented_singleLinkConditionalTotalVariation_nonneg
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (target : L.Edge) :
-    0 ≤ L.singleLinkConditionalTotalVariation A B target := by
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalTotalVariation
-  exact mul_nonneg (by positivity)
-    (Finset.sum_nonneg fun g _hg => abs_nonneg _)
-
-/-- Replacing the selected physical link erases differences already confined to
-that link. -/
-theorem finite_oriented_replaceLink_eq_of_agreeOffLink
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (source : L.Edge)
-    (g : L.Gauge)
-    (hAgree : L.AgreeOffLink A B source) :
-    L.replaceLink A source g = L.replaceLink B source g := by
-  classical
-  funext e
-  by_cases h : e = source
-  · subst e
-    simp
-  · simp [FiniteOrientedLatticeWilsonSystem.replaceLink, h, hAgree e h]
-
-/-- Oriented one-link Boltzmann weights depend only on off-link data. -/
-theorem finite_oriented_singleLinkBoltzmannWeight_eq_of_agreeOffLink
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (target : L.Edge)
-    (g : L.Gauge)
-    (hAgree : L.AgreeOffLink A B target) :
-    L.singleLinkBoltzmannWeight A target g =
-      L.singleLinkBoltzmannWeight B target g := by
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight
-  rw [finite_oriented_replaceLink_eq_of_agreeOffLink L A B target g hAgree]
-
-/-- Oriented one-link partition functions are constant on off-link fibers. -/
-theorem finite_oriented_singleLinkPartitionFunction_eq_of_agreeOffLink
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (target : L.Edge)
-    (hAgree : L.AgreeOffLink A B target) :
-    L.singleLinkPartitionFunction A target =
-      L.singleLinkPartitionFunction B target := by
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkPartitionFunction
-  congr 1
-  funext g
-  exact finite_oriented_singleLinkBoltzmannWeight_eq_of_agreeOffLink
-    L A B target g hAgree
-
-/-- The exact oriented conditional law is constant on off-link fibers. -/
-theorem finite_oriented_singleLinkConditionalPMF_eq_of_agreeOffLink
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (target : L.Edge)
-    (hAgree : L.AgreeOffLink A B target) :
-    L.singleLinkConditionalPMF A target =
-      L.singleLinkConditionalPMF B target := by
-  ext g
-  rw [finite_oriented_singleLinkConditionalPMF_apply,
-    finite_oriented_singleLinkConditionalPMF_apply,
-    finite_oriented_singleLinkBoltzmannWeight_eq_of_agreeOffLink
-      L A B target g hAgree,
-    finite_oriented_singleLinkPartitionFunction_eq_of_agreeOffLink
-      L A B target hAgree]
-
-/-- Self-link perturbations have exactly zero conditional total variation. -/
-theorem finite_oriented_singleLinkConditionalTotalVariation_eq_zero_of_agreeOffLink
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (A B : L.Configuration)
-    (target : L.Edge)
-    (hAgree : L.AgreeOffLink A B target) :
-    L.singleLinkConditionalTotalVariation A B target = 0 := by
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalTotalVariation
-  rw [finite_oriented_singleLinkConditionalPMF_eq_of_agreeOffLink
-    L A B target hAgree]
-  simp
-
-/-- Exact conditional expectation obtained by resampling one physical link with
-the orientation-correct Wilson conditional law. -/
-def FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
+/-- Exact one-link conditional average of a real observable under the oriented
+Wilson conditional law. The distinct name avoids changing the established
+single-link conditional probability core. -/
+def FiniteOrientedLatticeWilsonSystem.singleLinkConditionalAverage
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (A : L.Configuration)
@@ -185,36 +23,260 @@ def FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
     (L.singleLinkConditionalPMF A target g).toReal *
       f (L.replaceLink A target g)
 
-/-- Pointwise expansion of the oriented one-link conditional expectation. -/
-theorem finite_oriented_singleLinkConditionalExpectation_apply
+/-- A common centered test function is controlled by twice the oriented
+conditional total variation times its fiber radius. -/
+theorem finite_oriented_conditionalAverage_common_test_abs_le
     (L : FiniteOrientedLatticeWilsonSystem)
-    (f : L.Configuration → ℝ)
-    (A : L.Configuration)
-    (target : L.Edge) :
-    L.singleLinkConditionalExpectation f A target =
+    (A B : L.Configuration)
+    (target : L.Edge)
+    (h : L.Gauge → ℝ)
+    (center radius : ℝ)
+    (hRadius : ∀ g : L.Gauge, |h g - center| ≤ radius) :
+    |(∑ g : L.Gauge,
+        (L.singleLinkConditionalPMF A target g).toReal * h g) -
       ∑ g : L.Gauge,
-        (L.singleLinkConditionalPMF A target g).toReal *
-          f (L.replaceLink A target g) := by
-  rfl
+        (L.singleLinkConditionalPMF B target g).toReal * h g| ≤
+      2 * L.singleLinkConditionalTotalVariation A B target * radius := by
+  calc
+    |(∑ g : L.Gauge,
+        (L.singleLinkConditionalPMF A target g).toReal * h g) -
+      ∑ g : L.Gauge,
+        (L.singleLinkConditionalPMF B target g).toReal * h g| ≤
+      (∑ g : L.Gauge,
+        |(L.singleLinkConditionalPMF A target g).toReal -
+          (L.singleLinkConditionalPMF B target g).toReal|) * radius :=
+      finite_pmf_expectation_difference_abs_le_two_mul_tv_mul_radius
+        (L.singleLinkConditionalPMF A target)
+        (L.singleLinkConditionalPMF B target)
+        h center radius hRadius
+    _ = 2 * L.singleLinkConditionalTotalVariation A B target * radius := by
+      unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalTotalVariation
+      ring
 
-/-- The oriented conditional expectation is constant on every off-target
-configuration fiber. -/
-theorem finite_oriented_singleLinkConditionalExpectation_eq_of_agreeOffLink
+/-- Applying the same target replacement preserves agreement away from a
+separately declared source link. -/
+theorem finite_oriented_replaceLink_agreeOffLink_forConditionalAverage
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A B : L.Configuration)
+    (target source : L.Edge)
+    (g : L.Gauge)
+    (hAgree : L.AgreeOffLink A B source) :
+    L.AgreeOffLink
+      (L.replaceLink A target g)
+      (L.replaceLink B target g)
+      source := by
+  intro e he
+  by_cases ht : e = target
+  · subst e
+    simp
+  · simp [FiniteOrientedLatticeWilsonSystem.replaceLink,
+      ht, hAgree e he]
+
+/-- Replacing the target link erases every difference confined to that target
+link. -/
+theorem finite_oriented_replaceLink_eq_forConditionalAverage
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A B : L.Configuration)
+    (target : L.Edge)
+    (g : L.Gauge)
+    (hAgree : L.AgreeOffLink A B target) :
+    L.replaceLink A target g = L.replaceLink B target g := by
+  funext e
+  by_cases h : e = target
+  · subst e
+    simp
+  · simp [FiniteOrientedLatticeWilsonSystem.replaceLink,
+      h, hAgree e h]
+
+/-- The established oriented conditional PMF is constant on off-target
+configuration fibers. -/
+theorem finite_oriented_conditionalPMF_eq_forConditionalAverage
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (A B : L.Configuration)
+    (target : L.Edge)
+    (hAgree : L.AgreeOffLink A B target) :
+    L.singleLinkConditionalPMF A target =
+      L.singleLinkConditionalPMF B target := by
+  have hWeight : ∀ g : L.Gauge,
+      L.singleLinkBoltzmannWeight A target g =
+        L.singleLinkBoltzmannWeight B target g := by
+    intro g
+    unfold FiniteOrientedLatticeWilsonSystem.singleLinkBoltzmannWeight
+    rw [finite_oriented_replaceLink_eq_forConditionalAverage
+      L A B target g hAgree]
+  have hPartition :
+      L.singleLinkPartitionFunction A target =
+        L.singleLinkPartitionFunction B target := by
+    unfold FiniteOrientedLatticeWilsonSystem.singleLinkPartitionFunction
+    congr 1
+    funext g
+    exact hWeight g
+  ext g
+  rw [finite_oriented_singleLinkConditionalPMF_apply,
+    finite_oriented_singleLinkConditionalPMF_apply,
+    hWeight g, hPartition]
+
+/-- The one-link conditional average is constant on each off-target fiber. -/
+theorem finite_oriented_singleLinkConditionalAverage_eq_of_agreeOffLink
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (A B : L.Configuration)
     (target : L.Edge)
     (hAgree : L.AgreeOffLink A B target) :
-    L.singleLinkConditionalExpectation f A target =
-      L.singleLinkConditionalExpectation f B target := by
+    L.singleLinkConditionalAverage f A target =
+      L.singleLinkConditionalAverage f B target := by
   classical
-  unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalExpectation
+  unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalAverage
   apply Finset.sum_congr rfl
   intro g _hg
-  rw [finite_oriented_singleLinkConditionalPMF_eq_of_agreeOffLink
+  rw [finite_oriented_conditionalPMF_eq_forConditionalAverage
       L A B target hAgree,
-    finite_oriented_replaceLink_eq_of_agreeOffLink
+    finite_oriented_replaceLink_eq_forConditionalAverage
       L A B target g hAgree]
+
+/-- A Dobrushin matrix transports a centered variation profile through one exact
+conditional average. The direct source variation and transported target
+variation remain separated. -/
+theorem finite_oriented_dobrushin_centeredProfile_conditionalAverage_abs_le
+    (L : FiniteOrientedLatticeWilsonSystem)
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (f : L.Configuration → ℝ)
+    (P : FiniteOrientedLatticeWilsonCenteredVariationProfile L f)
+    (target source : L.Edge)
+    (A B : L.Configuration)
+    (hAgree : L.AgreeOffLink A B source) :
+    |L.singleLinkConditionalAverage f A target -
+        L.singleLinkConditionalAverage f B target| ≤
+      P.variation source +
+        D.influence target source * P.variation target := by
+  classical
+  let pA := L.singleLinkConditionalPMF A target
+  let pB := L.singleLinkConditionalPMF B target
+  let hA : L.Gauge → ℝ := fun g => f (L.replaceLink A target g)
+  let hB : L.Gauge → ℝ := fun g => f (L.replaceLink B target g)
+  have hDirect :
+      |∑ g : L.Gauge, (pA g).toReal * (hA g - hB g)| ≤
+        P.variation source := by
+    apply finite_pmf_abs_expectation_le_bound
+    intro g
+    exact P.variation_bound source
+      (L.replaceLink A target g)
+      (L.replaceLink B target g)
+      (finite_oriented_replaceLink_agreeOffLink_forConditionalAverage
+        L A B target source g hAgree)
+  have hLaw :
+      |(∑ g : L.Gauge, (pA g).toReal * hB g) -
+        ∑ g : L.Gauge, (pB g).toReal * hB g| ≤
+        D.influence target source * P.variation target := by
+    have hTV := D.conditionalTotalVariation_le
+      target source A B hAgree
+    calc
+      |(∑ g : L.Gauge, (pA g).toReal * hB g) -
+        ∑ g : L.Gauge, (pB g).toReal * hB g| ≤
+          2 * L.singleLinkConditionalTotalVariation A B target *
+            (P.variation target / 2) := by
+        exact finite_oriented_conditionalAverage_common_test_abs_le
+          L A B target hB (P.fiberCenter B target)
+          (P.variation target / 2)
+          (by
+            intro g
+            exact P.fiber_radius_bound B target g)
+      _ ≤ 2 * D.influence target source *
+            (P.variation target / 2) := by
+        exact mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_left hTV (by norm_num))
+          (div_nonneg (P.variation_nonneg target) (by norm_num))
+      _ = D.influence target source * P.variation target := by ring
+  unfold FiniteOrientedLatticeWilsonSystem.singleLinkConditionalAverage
+  change
+    |(∑ g : L.Gauge, (pA g).toReal * hA g) -
+      ∑ g : L.Gauge, (pB g).toReal * hB g| ≤ _
+  have hSplit :
+      (∑ g : L.Gauge, (pA g).toReal * hA g) -
+          ∑ g : L.Gauge, (pB g).toReal * hB g =
+        (∑ g : L.Gauge, (pA g).toReal * (hA g - hB g)) +
+          ((∑ g : L.Gauge, (pA g).toReal * hB g) -
+            ∑ g : L.Gauge, (pB g).toReal * hB g) := by
+    have hFirst :
+        (∑ g : L.Gauge, (pA g).toReal * hA g) -
+            ∑ g : L.Gauge, (pA g).toReal * hB g =
+          ∑ g : L.Gauge, (pA g).toReal * (hA g - hB g) := by
+      rw [← Finset.sum_sub_distrib]
+      apply Finset.sum_congr rfl
+      intro g _hg
+      ring
+    calc
+      (∑ g : L.Gauge, (pA g).toReal * hA g) -
+          ∑ g : L.Gauge, (pB g).toReal * hB g =
+        ((∑ g : L.Gauge, (pA g).toReal * hA g) -
+          ∑ g : L.Gauge, (pA g).toReal * hB g) +
+          ((∑ g : L.Gauge, (pA g).toReal * hB g) -
+            ∑ g : L.Gauge, (pB g).toReal * hB g) := by ring
+      _ = _ := by rw [hFirst]
+  rw [hSplit]
+  exact le_trans (abs_add_le _ _) (add_le_add hDirect hLaw)
+
+/-- Linkwise variation after one exact target-link conditional average. The
+updated target has zero variation; every other source retains its direct
+variation plus transported target influence. -/
+noncomputable def finiteOrientedConditionalAverageUpdatedVariation
+    {L : FiniteOrientedLatticeWilsonSystem}
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (variation : L.Edge → ℝ)
+    (target source : L.Edge) : ℝ := by
+  classical
+  exact if source = target then 0
+    else variation source + D.influence target source * variation target
+
+/-- The updated variation is nonnegative whenever the original profile is
+nonnegative. -/
+theorem finiteOrientedConditionalAverageUpdatedVariation_nonneg
+    {L : FiniteOrientedLatticeWilsonSystem}
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (variation : L.Edge → ℝ)
+    (hVariation : ∀ e : L.Edge, 0 ≤ variation e)
+    (target source : L.Edge) :
+    0 ≤ finiteOrientedConditionalAverageUpdatedVariation
+      D variation target source := by
+  classical
+  unfold finiteOrientedConditionalAverageUpdatedVariation
+  by_cases h : source = target
+  · simp [h]
+  · simp only [h, if_false]
+    exact add_nonneg (hVariation source)
+      (mul_nonneg (D.influence_nonneg target source)
+        (hVariation target))
+
+/-- Package the one-link Dobrushin update as a proof-relevant variation bound
+for the conditional-average observable. -/
+noncomputable def
+    FiniteOrientedLatticeWilsonCenteredVariationProfile.conditionalAverageVariationBound
+    {L : FiniteOrientedLatticeWilsonSystem}
+    {f : L.Configuration → ℝ}
+    (P : FiniteOrientedLatticeWilsonCenteredVariationProfile L f)
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (target : L.Edge) :
+    FiniteOrientedLatticeWilsonLinkVariationBound L
+      (fun A => L.singleLinkConditionalAverage f A target) := by
+  classical
+  refine
+    { variation := finiteOrientedConditionalAverageUpdatedVariation
+        D P.variation target
+      variation_nonneg :=
+        finiteOrientedConditionalAverageUpdatedVariation_nonneg
+          D P.variation P.variation_nonneg target
+      variation_bound := ?_ }
+  intro source A B hAgree
+  by_cases h : source = target
+  · subst source
+    have hEq :=
+      finite_oriented_singleLinkConditionalAverage_eq_of_agreeOffLink
+        L f A B target hAgree
+    rw [hEq]
+    simp [finiteOrientedConditionalAverageUpdatedVariation]
+  · simpa [finiteOrientedConditionalAverageUpdatedVariation, h] using
+      (finite_oriented_dobrushin_centeredProfile_conditionalAverage_abs_le
+        L D f P target source A B hAgree)
 
 end
 
