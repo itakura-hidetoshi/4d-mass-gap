@@ -19,7 +19,7 @@ the normalized finite-sum Gibbs expectation. -/
 theorem finite_oriented_gibbsIntegral_eq_finiteGibbsExpectation
     (L : FiniteOrientedLatticeWilsonSystem)
     (F : L.Configuration -> Real) :
-    (integral F L.gibbsMeasure) =
+    (integral L.gibbsMeasure F) =
       FiniteGibbsExpectationBetaDerivative.expectation
         F L.wilsonAction L.beta := by
   rw [FiniteOrientedLatticeWilsonSystem.gibbsMeasure, PMF.integral_eq_sum]
