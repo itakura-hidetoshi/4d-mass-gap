@@ -15,11 +15,11 @@ namespace Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData
 Bernoulli coordinate. -/
 structure GeometricBernoulliIncrementBound
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) where
-  /-- Multiplicative constant in the increment estimate. -/
-  constant : ℝ
+  /-- Multiplicative prefactor in the increment estimate. -/
+  prefactor : ℝ
   /-- Geometric contraction ratio. -/
   ratio : ℝ
-  constant_nonneg : 0 ≤ constant
+  prefactor_nonneg : 0 ≤ prefactor
   ratio_nonneg : 0 ≤ ratio
   ratio_lt_one : ratio < 1
   /-- Consecutive Bernoulli parameters contract at a geometric rate. -/
@@ -27,7 +27,7 @@ structure GeometricBernoulliIncrementBound
     ∀ n : ℕ,
       |D.embeddedBernoulliParameter (n + 1) -
           D.embeddedBernoulliParameter n| ≤
-        constant * ratio ^ n
+        prefactor * ratio ^ n
 
 namespace GeometricBernoulliIncrementBound
 
@@ -36,9 +36,9 @@ variable {D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData}
 /-- The geometric majorant is summable. -/
 theorem majorant_summable
     (G : GeometricBernoulliIncrementBound D) :
-    Summable fun n : ℕ => G.constant * G.ratio ^ n := by
+    Summable fun n : ℕ => G.prefactor * G.ratio ^ n := by
   exact (summable_geometric_of_lt_one G.ratio_nonneg G.ratio_lt_one).mul_left
-    G.constant
+    G.prefactor
 
 /-- Geometric inter-scale decay makes the absolute parameter increments
 summable. -/
