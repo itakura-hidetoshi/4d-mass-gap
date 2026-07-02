@@ -37,20 +37,10 @@ noncomputable def toBernoulliGeometryBetaIncrementDecomposition
     geometryError_nonneg := fun n => abs_nonneg _
     abs_parameter_increment_le := by
       intro n
-      calc
-        |D.embeddedBernoulliParameter (n + 1) -
-            D.embeddedBernoulliParameter n| ≤
-            |D.couplingResponseIncrement n| +
-              |D.geometryResponseIncrement n| :=
-          D.abs_embeddedBernoulliParameter_increment_le_responses n
-        _ ≤ L.factor *
-              |D.trajectory.beta (n + 1) - D.trajectory.beta n| +
-            |D.geometryResponseIncrement n| :=
-          add_le_add_right (L.abs_couplingResponse_le n) _
-        _ = |D.geometryResponseIncrement n| +
-              L.factor *
-                |D.trajectory.beta (n + 1) - D.trajectory.beta n| := by
-          ring }
+      have hSplit :=
+        D.abs_embeddedBernoulliParameter_increment_le_responses n
+      have hCoupling := L.abs_couplingResponse_le n
+      linarith }
 
 end ExactCouplingResponseLipschitzBound
 
@@ -122,10 +112,9 @@ theorem embeddedBernoulliParameter_tendsto_prokhorov
     (G : GeometricExactResponseControl D L) :
     Tendsto D.embeddedBernoulliParameter atTop
       (nhds D.prokhorovBernoulliParameter) :=
-  BernoulliGeometryBetaIncrementDecomposition
-    .embeddedBernoulliParameter_tendsto_prokhorov
-      L.toBernoulliGeometryBetaIncrementDecomposition
-      G.toGeometricGeometryBetaControl
+  BernoulliGeometryBetaIncrementDecomposition.embeddedBernoulliParameter_tendsto_prokhorov
+    L.toBernoulliGeometryBetaIncrementDecomposition
+    G.toGeometricGeometryBetaControl
 
 /-- Every convergent strict subsequence has the canonical weak limit under the
 same exact response estimates. -/
