@@ -26,6 +26,14 @@ theorem periodicHypercubicPlaquetteAdjacent_of_shared_edge
     periodicHypercubicPlaquetteAdjacent n p q :=
   And.intro hne (Exists.intro e (And.intro hp hq))
 
+/-- Adjacent periodic plaquettes are distinct. -/
+theorem periodicHypercubicPlaquetteAdjacent_ne
+    (n : Nat)
+    {p q : PeriodicHypercubicPlaquette n}
+    (h : periodicHypercubicPlaquetteAdjacent n p q) :
+    Not (p = q) :=
+  h.1
+
 end
 
 end MathlibAnalytic
