@@ -15,6 +15,17 @@ def periodicHypercubicPlaquetteAdjacent
       And (periodicHypercubicPlaquetteTouchesEdge n p e)
         (periodicHypercubicPlaquetteTouchesEdge n q e))
 
+/-- A shared physical boundary link constructs plaquette adjacency. -/
+theorem periodicHypercubicPlaquetteAdjacent_of_shared_edge
+    (n : Nat)
+    {p q : PeriodicHypercubicPlaquette n}
+    (hne : Not (p = q))
+    (e : PeriodicHypercubicEdge n)
+    (hp : periodicHypercubicPlaquetteTouchesEdge n p e)
+    (hq : periodicHypercubicPlaquetteTouchesEdge n q e) :
+    periodicHypercubicPlaquetteAdjacent n p q :=
+  And.intro hne (Exists.intro e (And.intro hp hq))
+
 end
 
 end MathlibAnalytic
