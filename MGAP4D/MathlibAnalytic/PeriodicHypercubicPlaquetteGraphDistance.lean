@@ -14,9 +14,7 @@ def periodicHypercubicPlaquetteGraph
     SimpleGraph (PeriodicHypercubicPlaquette n) :=
   { Adj := periodicHypercubicPlaquetteAdjacent n
     symm := periodicHypercubicPlaquetteAdjacent_symmetric n
-    loopless := by
-      intro p h
-      exact h.1 rfl }
+    loopless := fun p h => h.1 rfl }
 
 /-- The graph adjacency relation is definitionally the concrete shared-link
 plaquette adjacency relation. -/
