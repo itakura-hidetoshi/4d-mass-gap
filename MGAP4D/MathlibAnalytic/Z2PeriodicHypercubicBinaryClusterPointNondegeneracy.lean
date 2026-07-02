@@ -101,9 +101,6 @@ theorem
     at hpos
   rw [hDirac] at hpos
   simp [pow_two] at hpos
-  change D.toPhysicalEmbedding.observable b * D.toPhysicalEmbedding.observable b <
-    D.toPhysicalEmbedding.observable b * D.toPhysicalEmbedding.observable b at hpos
-  exact lt_irrefl _ hpos
 
 end
 end MathlibAnalytic
