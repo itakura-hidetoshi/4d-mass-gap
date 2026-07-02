@@ -139,25 +139,25 @@ theorem
     (k : ℕ)
     (A B :
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).Configuration) :
-    |(z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-        .randomScanConditionalAverageIterate
-          ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-            .plaquetteObservable p) k A -
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-        .randomScanConditionalAverageIterate
-          ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-            .plaquetteObservable p) k B| ≤
+    |FiniteOrientedLatticeWilsonSystem.randomScanConditionalAverageIterate
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        (FiniteOrientedLatticeWilsonSystem.plaquetteObservable
+          (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) p) k A -
+      FiniteOrientedLatticeWilsonSystem.randomScanConditionalAverageIterate
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        (FiniteOrientedLatticeWilsonSystem.plaquetteObservable
+          (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) p) k B| ≤
       4 *
         (finiteOrientedConditionalAverageRandomScanContractionFactor D) ^ k := by
   calc
-    |(z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-        .randomScanConditionalAverageIterate
-          ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-            .plaquetteObservable p) k A -
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-        .randomScanConditionalAverageIterate
-          ((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-            .plaquetteObservable p) k B| ≤
+    |FiniteOrientedLatticeWilsonSystem.randomScanConditionalAverageIterate
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        (FiniteOrientedLatticeWilsonSystem.plaquetteObservable
+          (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) p) k A -
+      FiniteOrientedLatticeWilsonSystem.randomScanConditionalAverageIterate
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        (FiniteOrientedLatticeWilsonSystem.plaquetteObservable
+          (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) p) k B| ≤
         ∑ source : PeriodicHypercubicEdge n,
           (z2PeriodicHypercubicOrientedPlaquetteCenteredVariationProfile
             n beta hBeta p).randomScanConditionalAverageVariationIterate
