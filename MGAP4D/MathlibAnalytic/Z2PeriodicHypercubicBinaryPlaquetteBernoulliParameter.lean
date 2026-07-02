@@ -45,7 +45,7 @@ theorem probabilityMeasure_bool_real_singleton_sum
       hRealUnion.symm
     _ = (μ : Measure Bool).real Set.univ :=
       congrArg (fun s : Set Bool => (μ : Measure Bool).real s) hUnion
-    _ = 1 := by simp
+    _ = 1 := by exact probReal_univ
 
 /-- A non-Dirac Boolean probability law has Bernoulli parameter strictly below
 one. -/
