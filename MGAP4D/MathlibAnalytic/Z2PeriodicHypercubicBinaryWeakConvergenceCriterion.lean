@@ -63,7 +63,14 @@ theorem probabilityMeasure_integral_bool_bcf_eq_affine
       rw [integral_const_mul]
       rw [probabilityMeasure_integral_z2BinaryPlaquetteObservable]
       rw [integral_const]
-      simp
+      have hSet : ({false, true} : Set Bool) = Set.univ := by
+        ext b
+        cases b <;> simp
+      have hMass :
+          ((μ : Measure Bool) ({false, true} : Set Bool)).toReal = 1 := by
+        rw [hSet, measure_univ]
+        norm_num
+      rw [hMass]
       ring
 
 /-- Weak convergence of probability measures on `Bool` is equivalent to
