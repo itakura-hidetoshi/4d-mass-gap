@@ -146,10 +146,10 @@ theorem abs_covariance_le_sum_abs_covarianceUnder
             Finset.sum s fun i => covarianceUnder F (term i) S beta) <=
             abs (covarianceUnder F (term a) S beta) +
               abs (Finset.sum s fun i => covarianceUnder F (term i) S beta) :=
-          abs_add _ _
+          abs_add_le _ _
         _ <= abs (covarianceUnder F (term a) S beta) +
               Finset.sum s fun i => abs (covarianceUnder F (term i) S beta) :=
-          add_le_add_left ih _
+          add_le_add (le_refl _) ih
 
 end FiniteGibbsExpectationBetaDerivative
 
