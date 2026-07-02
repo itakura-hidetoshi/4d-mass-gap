@@ -66,9 +66,18 @@ noncomputable def toExactCouplingResponseLipschitzBound
             (Set.uIcc (D.trajectory.beta n) (D.trajectory.beta (n + 1))) := by
         unfold Set.uIcc
         exact convex_Icc _ _
+      have hLeft :
+          D.trajectory.beta n ∈
+            Set.uIcc (D.trajectory.beta n) (D.trajectory.beta (n + 1)) := by
+        unfold Set.uIcc
+        exact ⟨min_le_left _ _, le_max_left _ _⟩
+      have hRight :
+          D.trajectory.beta (n + 1) ∈
+            Set.uIcc (D.trajectory.beta n) (D.trajectory.beta (n + 1)) := by
+        unfold Set.uIcc
+        exact ⟨min_le_right _ _, le_max_right _ _⟩
       have h := hConvex.norm_image_sub_le_of_norm_deriv_le
-        hDifferentiable hDerivativeBound
-        (by simp) (by simp)
+        hDifferentiable hDerivativeBound hLeft hRight
       simpa [Real.norm_eq_abs] using h }
 
 end AdjacentTrajectoryPlaquetteActionCovarianceBound
