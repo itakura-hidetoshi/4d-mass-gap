@@ -54,17 +54,6 @@ noncomputable def
     (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L) :
     P.randomScanConditionalAverageCenteredVariationIterate D 0 = P := rfl
 
-@[simp] theorem
-    FiniteOrientedLatticeWilsonCenteredVariationProfile.randomScanConditionalAverageCenteredVariationIterate_succ
-    {L : FiniteOrientedLatticeWilsonSystem}
-    {f : L.Configuration → ℝ}
-    (P : FiniteOrientedLatticeWilsonCenteredVariationProfile L f)
-    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
-    (k : ℕ) :
-    P.randomScanConditionalAverageCenteredVariationIterate D (k + 1) =
-      (P.randomScanConditionalAverageCenteredVariationIterate D k)
-        |>.randomScanConditionalAverageCenteredVariationProfile D := rfl
-
 /-- The linkwise variation sequence carried by the proof-relevant centered
 profile iteration. -/
 noncomputable def
@@ -125,13 +114,17 @@ theorem finiteOrientedConditionalAverageRandomScanContractionFactor_nonneg
     mul_le_mul_of_nonneg_right hGapLeCard hInvNonneg
   have hCardNe : (Fintype.card L.Edge : ℝ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt hEdge)
-  have hCardInv :
-      (Fintype.card L.Edge : ℝ) *
-          (Fintype.card L.Edge : ℝ)⁻¹ = 1 :=
-    mul_inv_cancel₀ hCardNe
+  have hProductLeOne :
+      (1 - D.dobrushinCoefficient) *
+          (Fintype.card L.Edge : ℝ)⁻¹ ≤ 1 := by
+    calc
+      (1 - D.dobrushinCoefficient) *
+          (Fintype.card L.Edge : ℝ)⁻¹ ≤
+        (Fintype.card L.Edge : ℝ) *
+          (Fintype.card L.Edge : ℝ)⁻¹ := hProductLe
+      _ = 1 := mul_inv_cancel₀ hCardNe
   unfold finiteOrientedConditionalAverageRandomScanContractionFactor
-  rw [← hCardInv]
-  exact sub_nonneg.mpr hProductLe
+  exact sub_nonneg.mpr hProductLeOne
 
 /-- One more random-scan step contracts the total variation mass of the
 iterated proof-relevant profile. -/
