@@ -91,8 +91,8 @@ theorem embeddedBernoulliParameter_tendsto_prokhorov
     (B : GeometricBetaIncrementBound D) :
     Tendsto D.embeddedBernoulliParameter atTop
       (nhds D.prokhorovBernoulliParameter) :=
-  (L.toGeometricBernoulliIncrementBound B)
-    .embeddedBernoulliParameter_tendsto_prokhorov
+  GeometricBernoulliIncrementBound.embeddedBernoulliParameter_tendsto_prokhorov
+    (L.toGeometricBernoulliIncrementBound B)
 
 /-- Every supplied strict-subsequence weak limit is canonical under the
 Lipschitz-transfer and geometric-coupling hypotheses. -/
