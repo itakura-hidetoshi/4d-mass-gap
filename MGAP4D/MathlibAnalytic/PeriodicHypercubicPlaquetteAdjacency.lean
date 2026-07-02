@@ -46,6 +46,13 @@ theorem periodicHypercubicPlaquetteAdjacent_symm
   · exact Exists.elim h.2 (fun e he =>
       Exists.intro e (And.intro he.2 he.1))
 
+/-- The concrete periodic plaquette adjacency relation is symmetric. -/
+theorem periodicHypercubicPlaquetteAdjacent_symmetric
+    (n : Nat) :
+    Symmetric (periodicHypercubicPlaquetteAdjacent n) := by
+  intro p q h
+  exact periodicHypercubicPlaquetteAdjacent_symm n h
+
 end
 
 end MathlibAnalytic
