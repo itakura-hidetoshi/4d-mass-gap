@@ -178,9 +178,9 @@ theorem
     (source : PeriodicHypercubicEdge n)
     (hSource :
       source ∉
-        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-          |>.activePlaquetteNeighborBall
-            (periodicHypercubicPlaquetteEdges n p) k) :
+        FiniteOrientedLatticeWilsonSystem.activePlaquetteNeighborBall
+          (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+          (periodicHypercubicPlaquetteEdges n p) k) :
     (z2PeriodicHypercubicOrientedPlaquetteCenteredVariationProfile
       n beta hBeta p).randomScanConditionalAverageVariationIterate
         D k source = 0 := by
@@ -193,7 +193,7 @@ theorem
     rw [
       z2PeriodicHypercubicOrientedPlaquetteCenteredVariationProfile_variation,
       periodicHypercubicPlaquetteObservableLinkVariation_eq]
-    simp [hOutside]
+    exact if_neg hOutside
   · exact hSource
 
 end
