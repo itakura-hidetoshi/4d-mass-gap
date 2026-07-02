@@ -11,7 +11,7 @@ noncomputable section
 
 /-- The variation-oriented conditional average introduced for the Dobrushin
 chain is definitionally the established one-link heat-bath projection. -/
-theorem finite_oriented_singleLinkConditionalAverage_eq_heatBathProjection
+private theorem randomScanGibbs_singleLinkAverage_eq_projection
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (target : L.Edge) :
@@ -21,7 +21,7 @@ theorem finite_oriented_singleLinkConditionalAverage_eq_heatBathProjection
   rfl
 
 /-- Pairing against the constant-one observable is Gibbs expectation. -/
-theorem finite_oriented_gibbsPairingReal_one_right
+private theorem randomScanGibbs_pairing_one_right
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
     L.gibbsPairingReal f (fun _ : L.Configuration => (1 : ℝ)) =
@@ -34,14 +34,14 @@ theorem finite_oriented_gibbsPairingReal_one_right
   ring
 
 /-- The real Gibbs probabilities have total mass one. -/
-theorem finite_oriented_gibbsProbabilityReal_sum_eq_one
+private theorem randomScanGibbs_probability_sum_eq_one
     (L : FiniteOrientedLatticeWilsonSystem) :
     ∑ A : L.Configuration, L.gibbsProbabilityReal A = 1 := by
   simpa [FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal] using
     (finite_pmf_sum_toReal_eq_one L.gibbsPMF)
 
 /-- Gibbs expectation commutes with multiplication by a real scalar. -/
-theorem finite_oriented_gibbsExpectationReal_const_mul
+private theorem randomScanGibbs_expectation_const_mul
     (L : FiniteOrientedLatticeWilsonSystem)
     (c : ℝ)
     (f : L.Configuration → ℝ) :
@@ -55,7 +55,7 @@ theorem finite_oriented_gibbsExpectationReal_const_mul
   ring
 
 /-- Gibbs expectation commutes with a finite sum of real observables. -/
-theorem finite_oriented_gibbsExpectationReal_sum
+private theorem randomScanGibbs_expectation_sum
     (L : FiniteOrientedLatticeWilsonSystem)
     {ι : Type*} [Fintype ι]
     (u : ι → L.Configuration → ℝ) :
@@ -99,8 +99,8 @@ theorem finite_oriented_singleLinkConditionalAverage_gibbsExpectationReal
       L.gibbsPairingReal
         (L.singleLinkHeatBathProjection target f)
         (fun _ : L.Configuration => (1 : ℝ)) := by
-          rw [finite_oriented_singleLinkConditionalAverage_eq_heatBathProjection]
-          exact (finite_oriented_gibbsPairingReal_one_right
+          rw [randomScanGibbs_singleLinkAverage_eq_projection]
+          exact (randomScanGibbs_pairing_one_right
             L (L.singleLinkHeatBathProjection target f)).symm
     _ = L.gibbsPairingReal f
         (L.singleLinkHeatBathProjection target
@@ -111,7 +111,7 @@ theorem finite_oriented_singleLinkConditionalAverage_gibbsExpectationReal
         (fun _ : L.Configuration => (1 : ℝ)) := by
       rw [hOne]
     _ = L.gibbsExpectationReal f :=
-      finite_oriented_gibbsPairingReal_one_right L f
+      randomScanGibbs_pairing_one_right L f
 
 /-- The uniform random-scan conditional average preserves Gibbs expectation on
 a nonempty physical-link carrier. -/
@@ -130,8 +130,8 @@ theorem finite_oriented_randomScanConditionalAverage_gibbsExpectationReal
           ∑ target : L.Edge,
             L.singleLinkConditionalAverage f A target) =
       L.gibbsExpectationReal f
-  rw [finite_oriented_gibbsExpectationReal_const_mul,
-    finite_oriented_gibbsExpectationReal_sum]
+  rw [randomScanGibbs_expectation_const_mul,
+    randomScanGibbs_expectation_sum]
   simp_rw [finite_oriented_singleLinkConditionalAverage_gibbsExpectationReal]
   simp [hCardNeReal]
 
@@ -164,7 +164,7 @@ theorem finite_oriented_abs_sub_gibbsExpectationReal_le_of_pairwise
     (hPair : ∀ B : L.Configuration, |g A - g B| ≤ M) :
     |g A - L.gibbsExpectationReal g| ≤ M := by
   classical
-  have hMass := finite_oriented_gibbsProbabilityReal_sum_eq_one L
+  have hMass := randomScanGibbs_probability_sum_eq_one L
   have hRewrite :
       g A - L.gibbsExpectationReal g =
         ∑ B : L.Configuration,
