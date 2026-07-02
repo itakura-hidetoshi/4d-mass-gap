@@ -13,7 +13,7 @@ noncomputable section
 The consecutive increments decay at a geometric rate. -/
 structure
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.GeometricScaleControl
-    (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) : Prop where
+    (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) where
   prefactor : ℝ
   ratio : ℝ
   prefactor_nonneg : 0 ≤ prefactor
