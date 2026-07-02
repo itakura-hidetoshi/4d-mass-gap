@@ -64,7 +64,7 @@ private theorem periodicHypercubicAxisPair_cases
       periodicHypercubicAxisPair03,
       periodicHypercubicAxisPair12,
       periodicHypercubicAxisPair13,
-      periodicHypercubicAxisPair23]
+      periodicHypercubicAxisPair23] <;> omega
 
 private theorem periodicHypercubicAxisPairGraph_adj_01_02 :
     periodicHypercubicAxisPairGraph.Adj
