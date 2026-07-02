@@ -14,14 +14,14 @@ The consecutive increments decay at a geometric rate. -/
 structure
     Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.GeometricScaleControl
     (D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData) : Prop where
-  constant : ℝ
+  prefactor : ℝ
   ratio : ℝ
-  constant_nonneg : 0 ≤ constant
+  prefactor_nonneg : 0 ≤ prefactor
   ratio_nonneg : 0 ≤ ratio
   ratio_lt_one : ratio < 1
   increment_le : ∀ n : ℕ,
     |D.embeddedBernoulliParameter (n + 1) -
-      D.embeddedBernoulliParameter n| ≤ constant * ratio ^ n
+      D.embeddedBernoulliParameter n| ≤ prefactor * ratio ^ n
 
 namespace Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.GeometricScaleControl
 
@@ -30,11 +30,11 @@ variable {D : Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData}
 /-- The geometric majorant itself is summable. -/
 theorem summable_majorant
     (G : D.GeometricScaleControl) :
-    Summable (fun n : ℕ => G.constant * G.ratio ^ n) := by
+    Summable (fun n : ℕ => G.prefactor * G.ratio ^ n) := by
   have hNorm : ‖G.ratio‖ < 1 := by
     rw [Real.norm_eq_abs, abs_of_nonneg G.ratio_nonneg]
     exact G.ratio_lt_one
-  exact (summable_geometric_of_norm_lt_one hNorm).mul_left G.constant
+  exact (summable_geometric_of_norm_lt_one hNorm).mul_left G.prefactor
 
 /-- Geometric inter-scale control makes the absolute consecutive parameter
 increments summable. -/
