@@ -108,7 +108,8 @@ def z2PeriodicHypercubicOrientedPlaquetteEnergyUnitBound
   { le_one := by
       classical
       intro g
-      simp [z2PeriodicHypercubicOrientedWilsonSystem] }
+      simp only [z2PeriodicHypercubicOrientedWilsonSystem]
+      split_ifs <;> norm_num }
 
 /-- Concrete periodic plaquette-observable link variation. -/
 def periodicHypercubicPlaquetteObservableLinkVariation
