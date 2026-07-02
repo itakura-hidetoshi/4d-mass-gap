@@ -225,7 +225,7 @@ theorem
               (D.dobrushinCoefficient ^ d /
                 (1 - D.dobrushinCoefficient)) *
                     ∑ source : L.Edge, Q.variation source := by
-          rw [Finset.sum_mul]
+          rw [← Finset.sum_mul]
 
 /-- Conditional spatial covariance decay for two selected periodic `Z₂`
 plaquettes.  The only remaining independent input is the explicit
