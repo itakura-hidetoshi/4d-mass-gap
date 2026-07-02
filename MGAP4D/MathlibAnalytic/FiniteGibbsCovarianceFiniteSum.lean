@@ -135,6 +135,7 @@ theorem abs_covariance_le_sum_abs_covarianceUnder
     (hS : S = fun omega => Finset.sum s fun i => term i omega) :
     abs (covariance F S beta) <=
       Finset.sum s fun i => abs (covarianceUnder F (term i) S beta) := by
+  classical
   rw [covariance_eq_finset_sum_covarianceUnder s F S term beta hS]
   induction s using Finset.induction_on with
   | empty => simp
