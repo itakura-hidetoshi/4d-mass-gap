@@ -37,11 +37,21 @@ theorem periodicHypercubicPlaquetteGraph_reachable_shift_of_contains
       (x, pair) (periodicHypercubicShift n x rho, pair) := by
   rcases hrho with hfirst | hsecond
   · subst rho
-    exact (periodicHypercubicPlaquetteAdjacent_shift_first
-      n hn (x, pair)).reachable
+    have hAdj :
+        (periodicHypercubicPlaquetteGraph n).Adj
+          (x, pair)
+          (periodicHypercubicShift n x
+            (periodicHypercubicPlaquetteFirstAxis (x, pair)), pair) := by
+      exact periodicHypercubicPlaquetteAdjacent_shift_first n hn (x, pair)
+    exact hAdj.reachable
   · subst rho
-    exact (periodicHypercubicPlaquetteAdjacent_shift_second
-      n hn (x, pair)).reachable
+    have hAdj :
+        (periodicHypercubicPlaquetteGraph n).Adj
+          (x, pair)
+          (periodicHypercubicShift n x
+            (periodicHypercubicPlaquetteSecondAxis (x, pair)), pair) := by
+      exact periodicHypercubicPlaquetteAdjacent_shift_second n hn (x, pair)
+    exact hAdj.reachable
 
 /-- Every positive unit coordinate shift of a periodic plaquette is reachable.
 The path first changes to a plane containing the requested axis, performs the
