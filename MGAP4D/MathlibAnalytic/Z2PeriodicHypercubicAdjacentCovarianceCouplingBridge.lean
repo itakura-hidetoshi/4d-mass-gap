@@ -61,7 +61,12 @@ noncomputable def toExactCouplingResponseLipschitzBound
         intro beta hBeta
         rw [D.trajectory.deriv_fixedPlaquetteGibbsExpectation_eq_neg_covariance]
         simpa [Real.norm_eq_abs] using C.abs_covariance_le n beta hBeta
-      have h := convex_uIcc.norm_image_sub_le_of_norm_deriv_le
+      have hConvex :
+          Convex Real
+            (Set.uIcc (D.trajectory.beta n) (D.trajectory.beta (n + 1))) := by
+        unfold Set.uIcc
+        exact convex_Icc _ _
+      have h := hConvex.norm_image_sub_le_of_norm_deriv_le
         hDifferentiable hDerivativeBound
         (by simp) (by simp)
       simpa [Real.norm_eq_abs] using h }
