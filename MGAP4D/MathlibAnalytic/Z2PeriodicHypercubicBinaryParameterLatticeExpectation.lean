@@ -58,13 +58,13 @@ theorem
           z2BinaryPlaquetteObservable (D.trajectory.plaquetteBit k A)
           ∂((D.trajectory.system k).gibbsProbabilityMeasure :
             Measure (D.trajectory.system k).Configuration) := by
-      change
-        (∫ b : Bool, z2BinaryPlaquetteObservable b
-          ∂(D.toPhysicalEmbedding.toLatticeEmbedding.embeddedMeasure k :
-            Measure Bool)) = _
-      exact
+      have h :=
         D.toPhysicalEmbedding.toLatticeEmbedding.integral_embeddedMeasure
-          z2BinaryPlaquetteObservable k
+          D.toPhysicalEmbedding.observable k
+      simpa [Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.boolEmbeddedMeasure,
+        Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.boolProbabilityMeasure,
+        Z2PeriodicHypercubicBinaryPlaquetteEmbeddingData.toPhysicalEmbedding]
+        using h
     _ = ∫ A : (D.trajectory.system k).Configuration,
           D.trajectory.plaquetteObservable k A
           ∂((D.trajectory.system k).gibbsProbabilityMeasure :
