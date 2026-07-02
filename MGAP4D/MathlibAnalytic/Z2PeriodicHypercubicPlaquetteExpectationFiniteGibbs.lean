@@ -9,6 +9,12 @@ noncomputable section
 
 namespace Z2PeriodicHypercubicPlaquetteTrajectory
 
+noncomputable local instance trajectorySystemAtBetaConfigurationFintype
+    (T : Z2PeriodicHypercubicPlaquetteTrajectory)
+    (k : Nat) (beta : Real) (hBeta : 0 <= beta) :
+    Fintype (T.systemAtBeta k beta hBeta).Configuration :=
+  Fintype.ofFinite (T.systemAtBeta k beta hBeta).Configuration
+
 /-- The fixed-lattice plaquette expectation at a nonnegative coupling is exactly
 the normalized finite-sum Gibbs expectation. -/
 theorem plaquetteExpectationAtBeta_eq_finiteGibbsExpectation
