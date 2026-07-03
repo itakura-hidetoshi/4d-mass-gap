@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsZ2PeriodicCanonicalCoerciveMomentClustering
+import Mathlib.Data.Countable.Basic
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -16,6 +17,9 @@ abbrev IntegerHypercubicVertex : Type :=
 lattice. -/
 abbrev IntegerHypercubicEdge : Type :=
   IntegerHypercubicVertex × Fin 4
+
+local instance : Countable IntegerHypercubicVertex := inferInstance
+local instance : Countable IntegerHypercubicEdge := inferInstance
 
 /-- A full binary link field on the integer four-dimensional lattice.
 
@@ -86,16 +90,14 @@ noncomputable def z2PeriodicHypercubicInfiniteLatticeEmbedding
     (beta : ℝ)
     (hBeta : 0 < beta) :
     PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding beta hBeta :=
-  (z2PeriodicHypercubicInfiniteLatticeInterpolation beta hBeta)
-    .toCanonicalLatticeEmbedding
+  (z2PeriodicHypercubicInfiniteLatticeInterpolation beta hBeta).toCanonicalLatticeEmbedding
 
 /-- The embedded periodic `Z₂` laws are automatically tight because the common
 binary link-field carrier is compact. -/
 theorem z2PeriodicHypercubicInfiniteLatticeEmbedding_isTight
     (beta : ℝ)
     (hBeta : 0 < beta) :
-    (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
-      .toLatticeEmbedding.IsTight := by
+    (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding.IsTight := by
   exact MeasureTheory.IsTightMeasureSet.of_compactSpace
 
 /-- Prokhorov compactness extracts a weakly convergent subsequence of the actual
@@ -105,11 +107,9 @@ theorem z2PeriodicHypercubicInfiniteLatticeProkhorov_exists
     (hBeta : 0 < beta) :
     Nonempty
       (PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-        (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
-          .toLatticeEmbedding) :=
+        (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding) :=
   physical_yang_mills_prokhorov_subsequence_exists
-    (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
-      .toLatticeEmbedding
+    (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding
     (z2PeriodicHypercubicInfiniteLatticeEmbedding_isTight beta hBeta)
 
 /-- A canonical noncomputable choice of one subsequential infinite-lattice weak
@@ -118,8 +118,7 @@ noncomputable def z2PeriodicHypercubicInfiniteLatticeProkhorovLimit
     (beta : ℝ)
     (hBeta : 0 < beta) :
     PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
-      (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
-        .toLatticeEmbedding :=
+      (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding :=
   (z2PeriodicHypercubicInfiniteLatticeProkhorov_exists beta hBeta).some
 
 /-- The selected Prokhorov subsequence as a physical weak-limit record with the
