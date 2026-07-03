@@ -59,13 +59,13 @@ theorem finite_oriented_influenceGreenTail_zero_eq_kernel_add
   have hTermSummable (middle : L.Edge) :
       Summable (fun b : ℕ => term b middle) := by
     dsimp [term]
-    exact
+    simpa only [Nat.zero_add] using
       (finite_oriented_influenceGreenTail_summable
-        D 0 target middle).mul_right _
+        D 0 target middle).mul_right (D.influence middle source)
   have hExchangeAux (s : Finset L.Edge) :
-      Summable (fun b : ℕ => ∑ middle in s, term b middle) ∧
-        (∑' b : ℕ, ∑ middle in s, term b middle) =
-          ∑ middle in s, ∑' b : ℕ, term b middle := by
+      Summable (fun b : ℕ => ∑ middle ∈ s, term b middle) ∧
+        (∑' b : ℕ, ∑ middle ∈ s, term b middle) =
+          ∑ middle ∈ s, ∑' b : ℕ, term b middle := by
     induction s using Finset.induction_on with
     | empty => simp
     | @insert middle s hmem ih =>
@@ -149,7 +149,13 @@ theorem finite_oriented_weightedInfluenceGreen_eq_add_influence
             variation source := by
         simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel]
       rw [hZero]
-      congr 1
+      apply congrArg (fun x => variation source + x)
+      apply Finset.sum_congr rfl
+      intro target _hTarget
+      rw [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro middle _hMiddle
+      ring
     _ = variation source +
         ∑ middle : L.Edge,
           ∑ target : L.Edge,
