@@ -150,6 +150,8 @@ theorem integerHypercubicPlaquetteBoundaryEdge_toPeriodic
       integerHypercubicPlaquetteToPeriodic,
       integerHypercubicPlaquetteFirstAxis,
       integerHypercubicPlaquetteSecondAxis,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis,
       integerHypercubicEdgeToPeriodic,
       integerHypercubicVertexToPeriodic_shift]
 
