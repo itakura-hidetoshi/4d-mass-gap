@@ -9,7 +9,7 @@ open Filter
 noncomputable section
 
 /-- An all-volume periodic distance hypothesis gives a `Filter.atTop` eventual
-separation statement by `eventually_of_forall`.
+separation statement by `Filter.Eventually.of_forall`.
 
 This is a pure lattice-geometric repackaging of the finite-periodic distance
 hypothesis.  It adds no continuum `ℝ⁴` gauge-field, DLR, reflection-positivity,
@@ -23,7 +23,7 @@ theorem z2PeriodicHypercubicInfiniteLatticePlaquetteFilterEventuallySeparation_o
     z2PeriodicHypercubicInfiniteLatticePlaquetteFilterEventuallySeparation
       distance p q := by
   simpa [z2PeriodicHypercubicInfiniteLatticePlaquetteFilterEventuallySeparation]
-    using (eventually_of_forall hDistance)
+    using (Filter.Eventually.of_forall hDistance)
 
 /-- An all-volume periodic distance hypothesis audits any finite prefix. -/
 theorem z2PeriodicHypercubicInfiniteLatticePlaquetteFinitePrefixAudit_of_distanceHypothesis
