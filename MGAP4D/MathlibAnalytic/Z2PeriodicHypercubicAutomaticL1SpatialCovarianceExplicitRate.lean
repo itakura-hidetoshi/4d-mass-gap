@@ -72,10 +72,10 @@ theorem z2PeriodicHypercubicOriented_exp_two_mul_lt_ratio_of_beta_lt
     (hBetaLt :
       beta < z2PeriodicHypercubicOrientedDobrushinBetaThreshold) :
     Real.exp (beta * 2) < (19 : ℝ) / 17 := by
+  have hBetaLt' := hBetaLt
+  rw [z2PeriodicHypercubicOrientedDobrushinBetaThreshold] at hBetaLt'
   have hArg : beta * 2 < Real.log ((19 : ℝ) / 17) := by
-    simpa [z2PeriodicHypercubicOrientedDobrushinBetaThreshold] using
-      (show beta * 2 < Real.log ((19 : ℝ) / 17) by
-        nlinarith [hBetaLt])
+    nlinarith
   have hRatioPos : 0 < (19 : ℝ) / 17 := by
     norm_num
   calc
