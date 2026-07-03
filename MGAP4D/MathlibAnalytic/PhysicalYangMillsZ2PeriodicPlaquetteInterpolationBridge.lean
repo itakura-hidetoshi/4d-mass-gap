@@ -15,9 +15,11 @@ local instance (k : ℕ) :
     unfold z2PeriodicHypercubicOrientedPlaquetteLimitVolume
     omega⟩
 
+namespace Z2PeriodicPlaquetteInterpolationAux
+
 /-- The finite oriented Gibbs expectation is the Bochner integral against the
 finite oriented Gibbs measure. -/
-theorem finite_oriented_gibbsExpectationReal_eq_integral
+theorem gibbsExpectationReal_eq_integral
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
     L.gibbsExpectationReal f =
@@ -30,7 +32,7 @@ theorem finite_oriented_gibbsExpectationReal_eq_integral
   simp only [smul_eq_mul]
 
 /-- The native Gibbs pairing is expectation of the pointwise product. -/
-theorem finite_oriented_gibbsPairingReal_eq_expectation_mul
+theorem gibbsPairingReal_eq_expectation_mul
     (L : FiniteOrientedLatticeWilsonSystem)
     (f g : L.Configuration → ℝ) :
     L.gibbsPairingReal f g =
@@ -43,7 +45,7 @@ theorem finite_oriented_gibbsPairingReal_eq_expectation_mul
   ring
 
 /-- Finite oriented Gibbs expectation preserves subtraction. -/
-theorem finite_oriented_gibbsExpectationReal_sub
+theorem gibbsExpectationReal_sub
     (L : FiniteOrientedLatticeWilsonSystem)
     (f g : L.Configuration → ℝ) :
     L.gibbsExpectationReal (fun A => f A - g A) =
@@ -65,7 +67,7 @@ theorem finite_oriented_gibbsExpectationReal_sub
       rw [Finset.sum_sub_distrib]
 
 /-- Finite oriented Gibbs expectation preserves right scalar multiplication. -/
-theorem finite_oriented_gibbsExpectationReal_mul_const
+theorem gibbsExpectationReal_mul_const
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (c : ℝ) :
@@ -87,18 +89,17 @@ theorem finite_oriented_gibbsExpectationReal_mul_const
       rw [Finset.sum_mul]
 
 /-- Finite oriented Gibbs expectation preserves left scalar multiplication. -/
-theorem finite_oriented_gibbsExpectationReal_const_mul
+theorem gibbsExpectationReal_const_mul
     (L : FiniteOrientedLatticeWilsonSystem)
     (c : ℝ)
     (f : L.Configuration → ℝ) :
     L.gibbsExpectationReal (fun A => c * f A) =
       c * L.gibbsExpectationReal f := by
-  simpa [mul_comm] using
-    finite_oriented_gibbsExpectationReal_mul_const L f c
+  simpa [mul_comm] using gibbsExpectationReal_mul_const L f c
 
 /-- The expectation of a constant under the normalized finite Gibbs law is the
 constant. -/
-theorem finite_oriented_gibbsExpectationReal_const
+theorem gibbsExpectationReal_const
     (L : FiniteOrientedLatticeWilsonSystem)
     (c : ℝ) :
     L.gibbsExpectationReal (fun _ : L.Configuration => c) = c := by
@@ -116,14 +117,14 @@ theorem finite_oriented_gibbsExpectationReal_const
 
 /-- Static Gibbs covariance is expectation of the product minus the product of
 expectations. -/
-theorem finite_oriented_gibbsCovarianceReal_eq_expectation_mul_sub_mul
+theorem gibbsCovarianceReal_eq_expectation_mul_sub_mul
     (L : FiniteOrientedLatticeWilsonSystem)
     (f g : L.Configuration → ℝ) :
     L.gibbsCovarianceReal f g =
       L.gibbsExpectationReal (fun A => f A * g A) -
         L.gibbsExpectationReal f * L.gibbsExpectationReal g := by
   rw [FiniteOrientedLatticeWilsonSystem.gibbsCovarianceReal,
-    finite_oriented_gibbsPairingReal_eq_expectation_mul]
+    gibbsPairingReal_eq_expectation_mul]
   let Ef : ℝ := L.gibbsExpectationReal f
   let Eg : ℝ := L.gibbsExpectationReal g
   change
@@ -145,16 +146,16 @@ theorem finite_oriented_gibbsCovarianceReal_eq_expectation_mul_sub_mul
           L.gibbsExpectationReal (fun A => f A * Eg)) -
         (L.gibbsExpectationReal (fun A => Ef * g A) -
           L.gibbsExpectationReal (fun _ => Ef * Eg)) := by
-      rw [finite_oriented_gibbsExpectationReal_sub,
-        finite_oriented_gibbsExpectationReal_sub,
-        finite_oriented_gibbsExpectationReal_sub]
+      rw [gibbsExpectationReal_sub,
+        gibbsExpectationReal_sub,
+        gibbsExpectationReal_sub]
     _ =
       (L.gibbsExpectationReal (fun A => f A * g A) -
           L.gibbsExpectationReal f * Eg) -
         (Ef * L.gibbsExpectationReal g - Ef * Eg) := by
-      rw [finite_oriented_gibbsExpectationReal_mul_const,
-        finite_oriented_gibbsExpectationReal_const_mul,
-        finite_oriented_gibbsExpectationReal_const]
+      rw [gibbsExpectationReal_mul_const,
+        gibbsExpectationReal_const_mul,
+        gibbsExpectationReal_const]
     _ =
       L.gibbsExpectationReal (fun A => f A * g A) - Ef * Eg := by
       dsimp [Ef, Eg]
@@ -162,17 +163,19 @@ theorem finite_oriented_gibbsCovarianceReal_eq_expectation_mul_sub_mul
 
 /-- Static finite Gibbs covariance written entirely as integrals against the
 finite Gibbs measure. -/
-theorem finite_oriented_gibbsCovarianceReal_eq_integral_sub_mul_integral
+theorem gibbsCovarianceReal_eq_integral_sub_mul_integral
     (L : FiniteOrientedLatticeWilsonSystem)
     (f g : L.Configuration → ℝ) :
     L.gibbsCovarianceReal f g =
       (∫ A, f A * g A ∂L.gibbsMeasure) -
         (∫ A, f A ∂L.gibbsMeasure) *
           ∫ A, g A ∂L.gibbsMeasure := by
-  rw [finite_oriented_gibbsCovarianceReal_eq_expectation_mul_sub_mul,
-    finite_oriented_gibbsExpectationReal_eq_integral,
-    finite_oriented_gibbsExpectationReal_eq_integral,
-    finite_oriented_gibbsExpectationReal_eq_integral]
+  rw [gibbsCovarianceReal_eq_expectation_mul_sub_mul,
+    gibbsExpectationReal_eq_integral,
+    gibbsExpectationReal_eq_integral,
+    gibbsExpectationReal_eq_integral]
+
+end Z2PeriodicPlaquetteInterpolationAux
 
 /-- Concrete interpolation data identifying periodic finite-volume `Z₂`
 plaquette observables with two bounded continuous observables on a common
@@ -325,7 +328,7 @@ theorem
       (∫ U, sourceFinite U * targetFinite U ∂L.gibbsMeasure) -
         (∫ U, sourceFinite U ∂L.gibbsMeasure) *
           ∫ U, targetFinite U ∂L.gibbsMeasure :=
-      finite_oriented_gibbsCovarianceReal_eq_integral_sub_mul_integral
+      Z2PeriodicPlaquetteInterpolationAux.gibbsCovarianceReal_eq_integral_sub_mul_integral
         L sourceFinite targetFinite
     _ =
       S.approximatingConnectedCorrelation
