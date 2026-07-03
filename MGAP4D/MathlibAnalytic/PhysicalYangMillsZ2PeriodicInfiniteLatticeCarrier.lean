@@ -18,15 +18,31 @@ lattice. -/
 abbrev IntegerHypercubicEdge : Type :=
   IntegerHypercubicVertex × Fin 4
 
-local instance : Countable IntegerHypercubicVertex := inferInstance
-local instance : Countable IntegerHypercubicEdge := inferInstance
+/-- A full binary link field on the integer four-dimensional lattice, stored in
+its canonical countable coordinate representation.
 
-/-- A full binary link field on the integer four-dimensional lattice.
-
-The carrier is a countable product of two-point discrete spaces, hence is a
-compact Polish space. -/
+The coordinate `Encodable.encode e` stores the value at the integer link `e`.
+The carrier `ℕ → Bool` is the standard compact Polish binary sequence space. -/
 abbrev Z2InfiniteHypercubicBinaryConfiguration : Type :=
-  IntegerHypercubicEdge → Bool
+  ℕ → Bool
+
+/-- Read one integer-lattice link from the canonical binary sequence carrier. -/
+def z2InfiniteHypercubicBinaryConfigurationRead
+    (B : Z2InfiniteHypercubicBinaryConfiguration)
+    (e : IntegerHypercubicEdge) : Bool :=
+  B (Encodable.encode e)
+
+/-- Decode one sequence coordinate as an integer-lattice positive link when the
+coordinate belongs to the canonical encoding range. -/
+def integerHypercubicEdgeOfCode
+    (m : ℕ) : Option IntegerHypercubicEdge :=
+  Encodable.decode m
+
+@[simp]
+theorem integerHypercubicEdgeOfCode_encode
+    (e : IntegerHypercubicEdge) :
+    integerHypercubicEdgeOfCode (Encodable.encode e) = some e := by
+  simp [integerHypercubicEdgeOfCode]
 
 /-- Reduce an integer-lattice vertex modulo the periodic side length. -/
 def integerHypercubicVertexToPeriodic
@@ -43,29 +59,35 @@ def integerHypercubicEdgeToPeriodic
   (integerHypercubicVertexToPeriodic n e.1, e.2)
 
 /-- Periodically extend a finite `Z₂` link configuration to the full integer
-lattice and encode each group value by its canonical Boolean representative. -/
+lattice and store it in the canonical binary sequence carrier. -/
 def z2PeriodicHypercubicConfigurationExtend
     (n : ℕ)
     (A : PeriodicHypercubicEdge n → Z2Gauge) :
     Z2InfiniteHypercubicBinaryConfiguration :=
-  fun e => boolEquivZ2Gauge.symm (A (integerHypercubicEdgeToPeriodic n e))
+  fun m =>
+    match integerHypercubicEdgeOfCode m with
+    | some e => boolEquivZ2Gauge.symm (A (integerHypercubicEdgeToPeriodic n e))
+    | none => false
 
+/-- Reading a periodically extended field at an encoded integer link recovers
+exactly the corresponding finite periodic link value. -/
 @[simp]
-theorem z2PeriodicHypercubicConfigurationExtend_apply
+theorem z2InfiniteHypercubicBinaryConfigurationRead_extend
     (n : ℕ)
     (A : PeriodicHypercubicEdge n → Z2Gauge)
     (e : IntegerHypercubicEdge) :
-    z2PeriodicHypercubicConfigurationExtend n A e =
-      boolEquivZ2Gauge.symm (A (integerHypercubicEdgeToPeriodic n e)) :=
-  rfl
+    z2InfiniteHypercubicBinaryConfigurationRead
+        (z2PeriodicHypercubicConfigurationExtend n A) e =
+      boolEquivZ2Gauge.symm (A (integerHypercubicEdgeToPeriodic n e)) := by
+  simp [z2InfiniteHypercubicBinaryConfigurationRead,
+    z2PeriodicHypercubicConfigurationExtend,
+    integerHypercubicEdgeOfCode]
 
 /-- Periodic extension is measurable for the product measurable structures. -/
 theorem z2PeriodicHypercubicConfigurationExtend_measurable
     (n : ℕ) :
     Measurable (z2PeriodicHypercubicConfigurationExtend n) := by
-  exact measurable_pi_lambda _ (fun e =>
-    (measurable_of_finite boolEquivZ2Gauge.symm).comp
-      (measurable_pi_apply (integerHypercubicEdgeToPeriodic n e)))
+  exact measurable_pi_lambda _ (fun _ => measurable_of_finite _)
 
 /-- Concrete common-carrier interpolation of every canonical finite periodic
 `Z₂` Gibbs system into the compact binary link-field carrier.
@@ -93,7 +115,7 @@ noncomputable def z2PeriodicHypercubicInfiniteLatticeEmbedding
   (z2PeriodicHypercubicInfiniteLatticeInterpolation beta hBeta).toCanonicalLatticeEmbedding
 
 /-- The embedded periodic `Z₂` laws are automatically tight because the common
-binary link-field carrier is compact. -/
+binary sequence carrier is compact. -/
 theorem z2PeriodicHypercubicInfiniteLatticeEmbedding_isTight
     (beta : ℝ)
     (hBeta : 0 < beta) :
