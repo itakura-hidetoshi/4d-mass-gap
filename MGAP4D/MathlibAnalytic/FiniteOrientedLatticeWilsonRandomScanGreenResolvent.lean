@@ -53,17 +53,51 @@ theorem finite_oriented_influenceGreenTail_zero_eq_kernel_add
       (finite_oriented_influenceGreenTail_summable
         D 0 target source)
   have hShift := hSummable.tsum_eq_zero_add
+  let term : ℕ → L.Edge → ℝ := fun b middle =>
+    D.influencePathKernel b target middle *
+      D.influence middle source
+  have hTermSummable (middle : L.Edge) :
+      Summable (fun b : ℕ => term b middle) := by
+    dsimp [term]
+    exact
+      (finite_oriented_influenceGreenTail_summable
+        D 0 target middle).mul_right _
+  have hExchangeAux (s : Finset L.Edge) :
+      Summable (fun b : ℕ => ∑ middle in s, term b middle) ∧
+        (∑' b : ℕ, ∑ middle in s, term b middle) =
+          ∑ middle in s, ∑' b : ℕ, term b middle := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert middle s hmem ih =>
+        constructor
+        · simpa [Finset.sum_insert hmem] using
+            (hTermSummable middle).add ih.1
+        · simp only [Finset.sum_insert hmem]
+          rw [(hTermSummable middle).tsum_add ih.1, ih.2]
+  have hExchange :
+      (∑' b : ℕ, ∑ middle : L.Edge, term b middle) =
+        ∑ middle : L.Edge,
+          (∑' b : ℕ, D.influencePathKernel b target middle) *
+            D.influence middle source := by
+    calc
+      (∑' b : ℕ, ∑ middle : L.Edge, term b middle) =
+          ∑ middle : L.Edge, ∑' b : ℕ, term b middle := by
+        simpa using (hExchangeAux (Finset.univ : Finset L.Edge)).2
+      _ = ∑ middle : L.Edge,
+          (∑' b : ℕ, D.influencePathKernel b target middle) *
+            D.influence middle source := by
+        apply Finset.sum_congr rfl
+        intro middle _hMiddle
+        dsimp [term]
+        rw [tsum_mul_right]
   unfold
     FiniteOrientedLatticeWilsonDobrushinMatrixData.influenceGreenTail
   simp only [Nat.zero_add]
   rw [hShift]
   congr 1
   simp_rw [finite_oriented_influencePathKernel_succ]
-  rw [tsum_fintype]
-  apply Finset.sum_congr rfl
-  intro middle _hMiddle
-  rw [tsum_mul_right]
-  rfl
+  change (∑' b : ℕ, ∑ middle : L.Edge, term b middle) = _
+  exact hExchange
 
 /-- The weighted Green profile solves the right resolvent equation
 `Gv = v + (Gv) C`. -/
@@ -116,12 +150,6 @@ theorem finite_oriented_weightedInfluenceGreen_eq_add_influence
         simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel]
       rw [hZero]
       congr 1
-      apply Finset.sum_congr rfl
-      intro target _hTarget
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro middle _hMiddle
-      ring
     _ = variation source +
         ∑ middle : L.Edge,
           ∑ target : L.Edge,
