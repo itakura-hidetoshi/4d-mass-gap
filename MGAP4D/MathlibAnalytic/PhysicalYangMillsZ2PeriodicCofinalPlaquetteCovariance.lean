@@ -68,6 +68,11 @@ theorem
         simpa [L, sourceFinite, targetFinite] using
           congrArg₂ (fun x y : ℝ => x * y)
             (B.source_pullback k U) (B.target_pullback k U))
+  have hProductPointwise :
+      (∫ A, B.sourceObservable A * B.targetObservable A
+        ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+      ∫ U, sourceFinite U * targetFinite U ∂L.gibbsMeasure := by
+    simpa using hProduct
   change L.gibbsCovarianceReal sourceFinite targetFinite =
     S.approximatingConnectedCorrelation
       k B.sourceObservable B.targetObservable
@@ -81,7 +86,7 @@ theorem
     _ = S.approximatingConnectedCorrelation
         k B.sourceObservable B.targetObservable := by
       unfold PhysicalFourDimensionalYangMillsWeakLimit.approximatingConnectedCorrelation
-      rw [hProduct, hSource, hTarget]
+      rw [hProductPointwise, hSource, hTarget]
 
 end
 
