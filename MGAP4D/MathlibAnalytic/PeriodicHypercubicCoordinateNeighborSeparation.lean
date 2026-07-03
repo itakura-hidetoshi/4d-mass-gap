@@ -13,7 +13,7 @@ noncomputable section
 one of the three non-target boundary links of one of the six canonical
 coordinate plaquettes incident to the target. -/
 noncomputable def periodicHypercubicCoordinateNeighbors
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (target : PeriodicHypercubicEdge n) :
     Finset (PeriodicHypercubicEdge n) := by
   classical
@@ -25,7 +25,7 @@ noncomputable def periodicHypercubicCoordinateNeighbors
             n target nu otherSide slot = source
 
 @[simp] theorem periodicHypercubic_mem_coordinateNeighbors_iff
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (target source : PeriodicHypercubicEdge n) :
     source ∈ periodicHypercubicCoordinateNeighbors n target ↔
       ∃ nu : PeriodicHypercubicOtherAxis target.2,
@@ -34,7 +34,8 @@ noncomputable def periodicHypercubicCoordinateNeighbors
             periodicHypercubicIncidentOtherEdge
               n target nu otherSide slot = source := by
   classical
-  simp [periodicHypercubicCoordinateNeighbors]
+  unfold periodicHypercubicCoordinateNeighbors
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
 
 /-- Every active plaquette neighbor is one of the explicitly enumerated
 coordinate neighbors.  This is the local geometric bridge used below. -/
@@ -68,7 +69,7 @@ theorem periodicHypercubicActiveNeighbors_subset_coordinateNeighbors
 
 /-- One coordinate-neighbor support expansion. -/
 noncomputable def periodicHypercubicCoordinateNeighborExpansion
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (seed : Finset (PeriodicHypercubicEdge n)) :
     Finset (PeriodicHypercubicEdge n) := by
   classical
@@ -77,7 +78,7 @@ noncomputable def periodicHypercubicCoordinateNeighborExpansion
 /-- The coordinate-neighbor ball reached from `seed` in at most `m` explicit
 coordinate plaquette steps. -/
 noncomputable def periodicHypercubicCoordinateNeighborBall
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (seed : Finset (PeriodicHypercubicEdge n)) :
     ℕ → Finset (PeriodicHypercubicEdge n)
   | 0 => seed
@@ -86,12 +87,12 @@ noncomputable def periodicHypercubicCoordinateNeighborBall
         (periodicHypercubicCoordinateNeighborBall n seed m)
 
 @[simp] theorem periodicHypercubicCoordinateNeighborBall_zero
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (seed : Finset (PeriodicHypercubicEdge n)) :
     periodicHypercubicCoordinateNeighborBall n seed 0 = seed := rfl
 
 @[simp] theorem periodicHypercubicCoordinateNeighborBall_succ
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (seed : Finset (PeriodicHypercubicEdge n))
     (m : ℕ) :
     periodicHypercubicCoordinateNeighborBall n seed (m + 1) =
@@ -101,7 +102,7 @@ noncomputable def periodicHypercubicCoordinateNeighborBall
 /-- Membership in one coordinate expansion is retained membership or one
 explicit coordinate-neighbor step from a retained link. -/
 theorem periodicHypercubic_mem_coordinateNeighborExpansion_iff
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (seed : Finset (PeriodicHypercubicEdge n))
     (source : PeriodicHypercubicEdge n) :
     source ∈ periodicHypercubicCoordinateNeighborExpansion n seed ↔
@@ -173,9 +174,18 @@ theorem
             (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
             seed m)
           hSource
-      rw [periodicHypercubic_mem_coordinateNeighborExpansion_iff]
-        at hCoordinateStep ⊢
-      rcases hCoordinateStep with hOld | ⟨target, hTarget, hNeighbor⟩
+      have hCases :=
+        (periodicHypercubic_mem_coordinateNeighborExpansion_iff
+          n
+          (FiniteOrientedLatticeWilsonSystem.activePlaquetteNeighborBall
+            (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+            seed m)
+          source).mp hCoordinateStep
+      apply
+        (periodicHypercubic_mem_coordinateNeighborExpansion_iff
+          n (periodicHypercubicCoordinateNeighborBall n seed m)
+          source).2
+      rcases hCases with hOld | ⟨target, hTarget, hNeighbor⟩
       · exact Or.inl (ih hOld)
       · exact Or.inr ⟨target, ih hTarget, hNeighbor⟩
 
@@ -183,7 +193,7 @@ theorem
 `d` when the right support avoids every coordinate ball of radius `m < d`
 centered at the left support. -/
 def periodicHypercubicCoordinateNeighborSeparatedAtLeast
-    (n : ℕ)
+    (n : ℕ) [NeZero n]
     (left right : Finset (PeriodicHypercubicEdge n))
     (d : ℕ) : Prop :=
   ∀ target : PeriodicHypercubicEdge n,
