@@ -25,7 +25,8 @@ noncomputable def
     finiteOrientedLatticeWilsonSystem_gibbsMeasure_isProbabilityMeasure L⟩
 
 @[simp]
-theorem finite_oriented_gibbsProbabilityMeasure_toMeasure
+theorem
+    finite_oriented_gibbsProbabilityMeasure_toMeasure
     (L : FiniteOrientedLatticeWilsonSystem) :
     (L.gibbsProbabilityMeasure : Measure L.Configuration) =
       L.gibbsMeasure :=
@@ -33,7 +34,8 @@ theorem finite_oriented_gibbsProbabilityMeasure_toMeasure
 
 /-- The identity map transports a finite oriented Gibbs measure to its bundled
 probability-measure carrier. -/
-theorem finite_oriented_gibbsProbabilityMeasure_id_measurePreserving
+theorem
+    finite_oriented_gibbsProbabilityMeasure_id_measurePreserving
     (L : FiniteOrientedLatticeWilsonSystem) :
     MeasurePreserving (id : L.Configuration → L.Configuration)
       L.gibbsMeasure
@@ -49,7 +51,8 @@ actual normalized Gibbs probability measure.  The common physical carrier,
 interpolation maps, and physical scaling data remain model-dependent inputs.
 Thus this structure packages the finite laws canonically without asserting weak
 convergence or constructing an infinite-volume state. -/
-structure PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding
+structure
+    PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding
     (beta : ℝ)
     (hBeta : 0 < beta) where
   PhysicalConfiguration : Type
@@ -164,7 +167,8 @@ theorem
 
 /-- The canonical realization of a periodic finite-volume configuration inside
 its own lattice configuration type is the identity map. -/
-def PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding.realize
+def
+    PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding.realize
     {beta : ℝ}
     {hBeta : 0 < beta}
     (E : PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding beta hBeta)
@@ -176,7 +180,8 @@ def PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding.realize
   id
 
 @[simp]
-theorem PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding.realize_apply
+theorem
+    PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding.realize_apply
     {beta : ℝ}
     {hBeta : 0 < beta}
     (E : PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding beta hBeta)
@@ -215,7 +220,8 @@ Only the common-space observables, their plaquette pullbacks, and the fixed
 geometric separation remain as inputs.  The finite configuration sequence,
 finite Gibbs laws, realization map, and realization measure preservation are
 already fixed by `E`. -/
-structure PhysicalYangMillsZ2PeriodicCanonicalPlaquetteData
+structure
+    PhysicalYangMillsZ2PeriodicCanonicalPlaquetteData
     {beta : ℝ}
     {hBeta : 0 < beta}
     (E : PhysicalYangMillsZ2PeriodicCanonicalLatticeEmbedding beta hBeta)
