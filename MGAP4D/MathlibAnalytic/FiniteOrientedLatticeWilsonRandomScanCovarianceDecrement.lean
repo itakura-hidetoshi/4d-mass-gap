@@ -149,6 +149,7 @@ theorem finite_oriented_singleLinkHeatBathProjection_pairing_residual_eq_zero
     L.gibbsPairingReal
         (L.singleLinkHeatBathProjection e f)
         (L.singleLinkHeatBathResidual e g) = 0 := by
+  unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathResidual
   rw [covarianceDecrement_gibbsPairing_sub_right]
   have hProjection :=
     finite_oriented_singleLinkHeatBath_gibbsPairing_projection_symm
@@ -166,8 +167,13 @@ theorem finite_oriented_singleLinkHeatBathResidual_pairing_identity
       L.gibbsPairingReal
         (L.singleLinkHeatBathResidual e f)
         (L.singleLinkHeatBathResidual e g) := by
+  unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathResidual
   rw [covarianceDecrement_gibbsPairing_sub_left]
-  rw [finite_oriented_singleLinkHeatBathProjection_pairing_residual_eq_zero]
+  have hZero :=
+    finite_oriented_singleLinkHeatBathProjection_pairing_residual_eq_zero
+      L e f g
+  unfold FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathResidual at hZero
+  rw [hZero]
   ring
 
 /-- The Gibbs pairing of two one-link heat-bath residuals is bounded by the
@@ -184,14 +190,27 @@ theorem finite_oriented_singleLinkHeatBathResidual_pairing_abs_le
       P.variation e * Q.variation e := by
   unfold FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
     FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
-  apply finite_pmf_abs_expectation_le_bound
-  intro A
-  rw [abs_mul]
-  exact mul_le_mul
-    (P.singleLinkHeatBathResidual_abs_le e A)
-    (Q.singleLinkHeatBathResidual_abs_le e A)
-    (abs_nonneg _)
-    (P.variation_nonneg e)
+  calc
+    |∑ A : L.Configuration,
+        (L.gibbsPMF A).toReal * L.singleLinkHeatBathResidual e f A *
+          L.singleLinkHeatBathResidual e g A| =
+      |∑ A : L.Configuration,
+        (L.gibbsPMF A).toReal *
+          (L.singleLinkHeatBathResidual e f A *
+            L.singleLinkHeatBathResidual e g A)| := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro A _hA
+      ring
+    _ ≤ P.variation e * Q.variation e := by
+      apply finite_pmf_abs_expectation_le_bound
+      intro A
+      rw [abs_mul]
+      exact mul_le_mul
+        (P.singleLinkHeatBathResidual_abs_le e A)
+        (Q.singleLinkHeatBathResidual_abs_le e A)
+        (abs_nonneg _)
+        (P.variation_nonneg e)
 
 /-- The difference between an observable and its uniform random-scan average is
 the average of its one-link heat-bath residuals. -/
@@ -206,9 +225,13 @@ theorem finite_oriented_sub_randomScanConditionalAverage_eq_residual_average
   have hCardNe : (Fintype.card L.Edge : ℝ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt hEdge)
   funext A
-  unfold FiniteOrientedLatticeWilsonSystem.randomScanConditionalAverage
-    FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathResidual
-    FiniteOrientedLatticeWilsonSystem.singleLinkHeatBathProjection
+  change
+    g A - (Fintype.card L.Edge : ℝ)⁻¹ *
+        ∑ target : L.Edge,
+          L.singleLinkConditionalExpectation g A target =
+      (Fintype.card L.Edge : ℝ)⁻¹ *
+        ∑ e : L.Edge,
+          (g A - L.singleLinkConditionalExpectation g A e)
   rw [Finset.sum_sub_distrib]
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hCardNe]
