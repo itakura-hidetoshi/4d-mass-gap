@@ -20,7 +20,8 @@ theorem z2PeriodicHypercubicOriented_uniformPlaquetteEnergyUpperBound_one
     (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).UniformPlaquetteEnergyUpperBound 1 := by
   classical
   intro g
-  simp [z2PeriodicHypercubicOrientedWilsonSystem]
+  simp only [z2PeriodicHypercubicOrientedWilsonSystem]
+  split <;> norm_num
 
 /-- In four periodic dimensions, exact oriented canonical influence satisfies
 the explicit `18 × eta` estimate. -/
