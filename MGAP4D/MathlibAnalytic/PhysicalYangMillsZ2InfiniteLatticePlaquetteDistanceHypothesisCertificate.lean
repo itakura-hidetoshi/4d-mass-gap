@@ -22,8 +22,10 @@ theorem z2PeriodicHypercubicInfiniteLatticePlaquetteFilterEventuallySeparation_o
         distance p q) :
     z2PeriodicHypercubicInfiniteLatticePlaquetteFilterEventuallySeparation
       distance p q := by
-  simpa [z2PeriodicHypercubicInfiniteLatticePlaquetteFilterEventuallySeparation]
-    using (Filter.Eventually.of_forall hDistance)
+  change ∀ᶠ k : ℕ in atTop,
+    z2PeriodicHypercubicInfiniteLatticePlaquettePeriodicDistance p q k =
+      distance
+  exact Filter.Eventually.of_forall hDistance
 
 /-- An all-volume periodic distance hypothesis audits any finite prefix. -/
 theorem z2PeriodicHypercubicInfiniteLatticePlaquetteFinitePrefixAudit_of_distanceHypothesis
