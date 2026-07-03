@@ -312,9 +312,8 @@ theorem
     (hWeak :
       Tendsto E.toLatticeEmbedding.embeddedMeasure atTop
         (nhds continuumMeasure)) :
-    |(E.toLatticeEmbedding.toWeakLimit continuumMeasure hWeak)
-        .continuumConnectedCorrelation
-          D.sourceObservable D.targetObservable| ≤
+    |(E.toLatticeEmbedding.toWeakLimit continuumMeasure hWeak).continuumConnectedCorrelation
+        D.sourceObservable D.targetObservable| ≤
       z2PeriodicHypercubicOrientedExplicitSpatialClusteringPrefactor beta *
         Real.exp
           (-z2PeriodicHypercubicOrientedExplicitSpatialClusteringRate beta *
