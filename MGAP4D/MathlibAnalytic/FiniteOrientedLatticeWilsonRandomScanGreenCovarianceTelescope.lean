@@ -274,10 +274,23 @@ theorem
                 Q.variation source := by
             apply Finset.sum_congr rfl
             intro source _hSource
-            rw [Finset.sum_mul]
-            apply Finset.sum_congr rfl
-            intro k _hk
-            ring
+            calc
+              (∑ k ∈ Finset.range n,
+                (Fintype.card L.Edge : ℝ)⁻¹ *
+                  (P.randomScanConditionalAverageVariationIterate D k source *
+                    Q.variation source)) =
+                ∑ k ∈ Finset.range n,
+                  ((Fintype.card L.Edge : ℝ)⁻¹ *
+                    P.randomScanConditionalAverageVariationIterate D k source) *
+                      Q.variation source := by
+                    apply Finset.sum_congr rfl
+                    intro k _hk
+                    ring
+              _ = ((Fintype.card L.Edge : ℝ)⁻¹ *
+                    (∑ k ∈ Finset.range n,
+                      P.randomScanConditionalAverageVariationIterate D k source)) *
+                    Q.variation source := by
+                    rw [Finset.mul_sum, Finset.sum_mul]
   calc
     |L.randomScanTemporalCovarianceReal g f 0 -
       L.randomScanTemporalCovarianceReal g f n| =
