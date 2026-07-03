@@ -62,8 +62,9 @@ theorem
   have hEventually :
       ∀ᶠ k : ℕ in atTop, C * q ^ k < ε :=
     (tendsto_order.1 hEnvelope).2 ε hε
-  filter_upwards [hEventually] with k hk
-  simpa [Real.dist_eq] using lt_of_le_of_lt (hAbs k) hk
+  rcases eventually_atTop.1 hEventually with ⟨N, hN⟩
+  refine ⟨N, fun k hk => ?_⟩
+  simpa [Real.dist_eq] using lt_of_le_of_lt (hAbs k) (hN k hk)
 
 /-- The finite Green telescope and temporal covariance decay construct the
 proof-relevant Dobrushin Green covariance comparison certificate. -/
