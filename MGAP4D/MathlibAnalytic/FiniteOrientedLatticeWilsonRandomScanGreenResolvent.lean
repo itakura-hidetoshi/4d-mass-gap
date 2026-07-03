@@ -95,9 +95,6 @@ theorem finite_oriented_influenceGreenTail_zero_eq_kernel_add
   simp only [Nat.zero_add]
   rw [hShift]
   congr 1
-  simp_rw [finite_oriented_influencePathKernel_succ]
-  change (∑' b : ℕ, ∑ middle : L.Edge, term b middle) = _
-  exact hExchange
 
 /-- The weighted Green profile solves the right resolvent equation
 `Gv = v + (Gv) C`. -/
@@ -153,9 +150,6 @@ theorem finite_oriented_weightedInfluenceGreen_eq_add_influence
       apply Finset.sum_congr rfl
       intro target _hTarget
       rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro middle _hMiddle
-      ring
     _ = variation source +
         ∑ middle : L.Edge,
           ∑ target : L.Edge,
