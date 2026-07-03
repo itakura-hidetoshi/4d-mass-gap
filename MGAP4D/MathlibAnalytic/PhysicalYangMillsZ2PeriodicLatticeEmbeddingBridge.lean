@@ -243,8 +243,7 @@ theorem
         Real.exp
           (-z2PeriodicHypercubicOrientedExplicitSpatialClusteringRate beta *
             (distance : ℝ)) :=
-  (B.toInterpolationBridge continuumMeasure hWeak)
-    .continuumConnectedCorrelation_abs_le K
+  (B.toInterpolationBridge continuumMeasure hWeak).continuumConnectedCorrelation_abs_le K
 
 end
 
