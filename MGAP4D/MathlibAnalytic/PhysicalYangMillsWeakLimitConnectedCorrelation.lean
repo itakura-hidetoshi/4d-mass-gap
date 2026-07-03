@@ -9,6 +9,12 @@ open Filter MeasureTheory
 
 noncomputable section
 
+local instance (k : ℕ) :
+    NeZero (z2PeriodicHypercubicOrientedPlaquetteLimitVolume k) :=
+  ⟨by
+    unfold z2PeriodicHypercubicOrientedPlaquetteLimitVolume
+    omega⟩
+
 /-- The connected correlation of two bounded continuous observables in one
 approximating probability measure of a physical weak-limit carrier. -/
 def PhysicalFourDimensionalYangMillsWeakLimit.approximatingConnectedCorrelation
@@ -168,8 +174,10 @@ theorem
       z2PeriodicHypercubicOrientedExplicitSpatialClusteringPrefactor beta *
         Real.exp
           (-z2PeriodicHypercubicOrientedExplicitSpatialClusteringRate beta *
-            (distance : ℝ)) :=
-  B.toCovarianceLimitBridge.limitingCovariance_abs_le K
+            (distance : ℝ)) := by
+  exact
+    Z2PeriodicHypercubicOrientedPlaquetteCovarianceLimitBridge.limitingCovariance_abs_le
+      K B.toCovarianceLimitBridge
 
 end
 
