@@ -308,18 +308,58 @@ theorem
   let targetFinite : L.Configuration → ℝ :=
     FiniteOrientedLatticeWilsonSystem.plaquetteObservable
       L (B.targetPlaquette k)
-  have hProduct :=
+  have hProductMap :=
     B.approximatingExpectation_eq_gibbs_pullback
       k (B.sourceObservable * B.targetObservable)
-  have hSource :=
+  have hSourceMap :=
     B.approximatingExpectation_eq_gibbs_pullback
       k B.sourceObservable
-  have hTarget :=
+  have hTargetMap :=
     B.approximatingExpectation_eq_gibbs_pullback
       k B.targetObservable
-  simp_rw [B.source_pullback k, B.target_pullback k] at hProduct
-  simp_rw [B.source_pullback k] at hSource
-  simp_rw [B.target_pullback k] at hTarget
+  have hProduct :
+      (∫ A, B.sourceObservable A * B.targetObservable A
+        ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+        ∫ U, sourceFinite U * targetFinite U ∂L.gibbsMeasure := by
+    calc
+      (∫ A, B.sourceObservable A * B.targetObservable A
+          ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+        ∫ U,
+          (B.sourceObservable * B.targetObservable)
+            (B.interpolate k U) ∂L.gibbsMeasure := by
+          simpa [L] using hProductMap
+      _ = ∫ U, sourceFinite U * targetFinite U ∂L.gibbsMeasure := by
+        apply integral_congr_ae
+        filter_upwards [] with U
+        simpa [sourceFinite, targetFinite, L] using
+          congrArg₂ (fun x y : ℝ => x * y)
+            (B.source_pullback k U) (B.target_pullback k U)
+  have hSource :
+      (∫ A, B.sourceObservable A
+        ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+        ∫ U, sourceFinite U ∂L.gibbsMeasure := by
+    calc
+      (∫ A, B.sourceObservable A
+          ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+        ∫ U, B.sourceObservable (B.interpolate k U) ∂L.gibbsMeasure := by
+          simpa [L] using hSourceMap
+      _ = ∫ U, sourceFinite U ∂L.gibbsMeasure := by
+        apply integral_congr_ae
+        filter_upwards [] with U
+        simpa [sourceFinite, L] using B.source_pullback k U
+  have hTarget :
+      (∫ A, B.targetObservable A
+        ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+        ∫ U, targetFinite U ∂L.gibbsMeasure := by
+    calc
+      (∫ A, B.targetObservable A
+          ∂(S.approximatingMeasure k : Measure S.Configuration)) =
+        ∫ U, B.targetObservable (B.interpolate k U) ∂L.gibbsMeasure := by
+          simpa [L] using hTargetMap
+      _ = ∫ U, targetFinite U ∂L.gibbsMeasure := by
+        apply integral_congr_ae
+        filter_upwards [] with U
+        simpa [targetFinite, L] using B.target_pullback k U
   change L.gibbsCovarianceReal sourceFinite targetFinite =
     S.approximatingConnectedCorrelation
       k B.sourceObservable B.targetObservable
