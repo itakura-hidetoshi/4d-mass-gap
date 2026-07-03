@@ -41,8 +41,11 @@ theorem zmod_natAbs_valMinAbs_one_le_one
     (n : ℕ) [NeZero n] :
     ((1 : ZMod n).valMinAbs.natAbs) ≤ 1 := by
   rw [ZMod.valMinAbs_natAbs_eq_min]
-  exact le_trans (min_le_left _ _) (by
-    simpa using Nat.mod_le 1 n)
+  calc
+    min (ZMod.val (1 : ZMod n)) (n - ZMod.val (1 : ZMod n)) ≤
+        ZMod.val (1 : ZMod n) := min_le_left _ _
+    _ = 1 % n := ZMod.val_one_eq_one_mod n
+    _ ≤ 1 := Nat.mod_le 1 n
 
 /-- A positive unit coordinate translation changes periodic vertex `L¹`
 distance from the original vertex by at most one. -/
@@ -190,9 +193,9 @@ theorem periodicHypercubicEdgeBaseL1Distance_le_two_mul_of_mem_coordinateBall
           n (periodicHypercubicCoordinateNeighborBall n {center} m)
           source).mp hMem
       rcases hCases with hOld | ⟨middle, hMiddle, hNeighbor⟩
-      · have hBound := ih hOld
+      · have hBound := ih source hOld
         omega
-      · have hCenterMiddle := ih hMiddle
+      · have hCenterMiddle := ih middle hMiddle
         have hMiddleSource :=
           periodicHypercubicEdgeBaseL1Distance_le_two_of_coordinateNeighbor
             n middle source hNeighbor
