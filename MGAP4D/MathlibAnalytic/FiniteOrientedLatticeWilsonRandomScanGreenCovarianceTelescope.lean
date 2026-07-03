@@ -138,7 +138,7 @@ private theorem abs_sub_nat_le_sum_range_abs_sub_succ
               ring
         _ ≤ |a 0 - a n| + |a n - a (n + 1)| := abs_add_le _ _
         _ ≤ (∑ k ∈ Finset.range n, |a k - a (k + 1)|) +
-              |a n - a (n + 1)| := add_le_add_right ih _
+              |a n - a (n + 1)| := add_le_add ih (le_refl _)
 
 private theorem finite_oriented_weightedInfluenceGreen_mul_sum_eq
     {L : FiniteOrientedLatticeWilsonSystem}
@@ -274,7 +274,7 @@ theorem
                 Q.variation source := by
             apply Finset.sum_congr rfl
             intro source _hSource
-            rw [Finset.mul_sum]
+            rw [Finset.sum_mul]
             apply Finset.sum_congr rfl
             intro k _hk
             ring
