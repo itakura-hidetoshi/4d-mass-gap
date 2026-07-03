@@ -1,11 +1,13 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsZ2PeriodicCanonicalCoerciveMomentClustering
 import Mathlib.Data.Countable.Basic
+import Mathlib.Topology.UniformSpace.Pi
 import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter MeasureTheory
+open scoped Uniformity
 
 noncomputable section
 
@@ -30,6 +32,11 @@ local instance z2InfiniteHypercubicBinaryConfigurationCompleteSpace :
     CompleteSpace Z2InfiniteHypercubicBinaryConfiguration :=
   Pi.complete (fun _ : ℕ => Bool)
 
+local instance z2InfiniteHypercubicBinaryConfigurationUniformityCountablyGenerated :
+    (uniformity Z2InfiniteHypercubicBinaryConfiguration).IsCountablyGenerated := by
+  rw [Pi.uniformity]
+  infer_instance
+
 local instance z2InfiniteHypercubicBinaryConfigurationCompletelyMetrizableSpace :
     TopologicalSpace.IsCompletelyMetrizableSpace
       Z2InfiniteHypercubicBinaryConfiguration :=
@@ -37,7 +44,9 @@ local instance z2InfiniteHypercubicBinaryConfigurationCompletelyMetrizableSpace 
 
 local instance z2InfiniteHypercubicBinaryConfigurationPolishSpace :
     PolishSpace Z2InfiniteHypercubicBinaryConfiguration := by
-  constructor <;> infer_instance
+  constructor
+  · infer_instance
+  · infer_instance
 
 /-- Read one integer-lattice link from the canonical binary sequence carrier. -/
 def z2InfiniteHypercubicBinaryConfigurationRead
