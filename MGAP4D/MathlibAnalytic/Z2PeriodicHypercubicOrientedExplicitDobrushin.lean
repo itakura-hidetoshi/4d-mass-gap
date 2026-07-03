@@ -18,6 +18,7 @@ theorem z2PeriodicHypercubicOriented_uniformPlaquetteEnergyUpperBound_one
     (beta : ℝ)
     (hBeta : 0 ≤ beta) :
     (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta).UniformPlaquetteEnergyUpperBound 1 := by
+  classical
   intro g
   change (if g = 1 then 0 else 1) ≤ (1 : ℝ)
   by_cases hg : g = 1 <;> simp [hg]
