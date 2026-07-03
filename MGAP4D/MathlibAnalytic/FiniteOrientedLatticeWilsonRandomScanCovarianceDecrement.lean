@@ -188,6 +188,8 @@ theorem finite_oriented_singleLinkHeatBathResidual_pairing_abs_le
         (L.singleLinkHeatBathResidual e f)
         (L.singleLinkHeatBathResidual e g)| ≤
       P.variation e * Q.variation e := by
+  classical
+  letI : Fintype L.Configuration := Fintype.ofFinite L.Configuration
   unfold FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
     FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
   calc
@@ -235,7 +237,6 @@ theorem finite_oriented_sub_randomScanConditionalAverage_eq_residual_average
   rw [Finset.sum_sub_distrib]
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hCardNe]
-  ring
 
 /-- The one-step random-scan Gibbs-pairing decrement is the uniform average of
 single-link residual pairings. -/
