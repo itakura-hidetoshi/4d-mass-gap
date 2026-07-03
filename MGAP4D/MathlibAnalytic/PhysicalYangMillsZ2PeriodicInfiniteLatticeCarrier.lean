@@ -1,13 +1,12 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsZ2PeriodicCanonicalCoerciveMomentClustering
 import Mathlib.Data.Countable.Basic
-import Mathlib.Topology.UniformSpace.Pi
+import Mathlib.Topology.MetricSpace.PiNat
 import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter MeasureTheory
-open scoped Uniformity
 
 noncomputable section
 
@@ -28,25 +27,18 @@ The carrier `ℕ → Bool` is the standard compact Polish binary sequence space.
 abbrev Z2InfiniteHypercubicBinaryConfiguration : Type :=
   ℕ → Bool
 
-local instance z2InfiniteHypercubicBinaryConfigurationCompleteSpace :
-    CompleteSpace Z2InfiniteHypercubicBinaryConfiguration :=
-  Pi.complete (fun _ : ℕ => Bool)
-
-local instance z2InfiniteHypercubicBinaryConfigurationUniformityCountablyGenerated :
-    (uniformity Z2InfiniteHypercubicBinaryConfiguration).IsCountablyGenerated := by
-  rw [Pi.uniformity]
-  infer_instance
-
 local instance z2InfiniteHypercubicBinaryConfigurationCompletelyMetrizableSpace :
     TopologicalSpace.IsCompletelyMetrizableSpace
-      Z2InfiniteHypercubicBinaryConfiguration :=
-  TopologicalSpace.IsCompletelyMetrizableSpace.of_completeSpace_metrizable
+      Z2InfiniteHypercubicBinaryConfiguration where
+  complete :=
+    ⟨PiNat.metricSpace,
+      rfl,
+      PiNat.completeSpace (E := fun _ : ℕ => Bool)⟩
 
 local instance z2InfiniteHypercubicBinaryConfigurationPolishSpace :
-    PolishSpace Z2InfiniteHypercubicBinaryConfiguration := by
-  constructor
-  · infer_instance
-  · infer_instance
+    PolishSpace Z2InfiniteHypercubicBinaryConfiguration :=
+  { toSecondCountableTopology := inferInstance
+    toIsCompletelyMetrizableSpace := inferInstance }
 
 /-- Read one integer-lattice link from the canonical binary sequence carrier. -/
 def z2InfiniteHypercubicBinaryConfigurationRead
