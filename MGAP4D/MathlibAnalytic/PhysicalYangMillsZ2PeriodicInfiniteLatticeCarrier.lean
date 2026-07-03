@@ -30,9 +30,14 @@ local instance z2InfiniteHypercubicBinaryConfigurationCompleteSpace :
     CompleteSpace Z2InfiniteHypercubicBinaryConfiguration :=
   Pi.complete (fun _ : ℕ => Bool)
 
+local instance z2InfiniteHypercubicBinaryConfigurationCompletelyMetrizableSpace :
+    TopologicalSpace.IsCompletelyMetrizableSpace
+      Z2InfiniteHypercubicBinaryConfiguration :=
+  TopologicalSpace.IsCompletelyMetrizableSpace.of_completeSpace_metrizable
+
 local instance z2InfiniteHypercubicBinaryConfigurationPolishSpace :
     PolishSpace Z2InfiniteHypercubicBinaryConfiguration := by
-  infer_instance
+  constructor <;> infer_instance
 
 /-- Read one integer-lattice link from the canonical binary sequence carrier. -/
 def z2InfiniteHypercubicBinaryConfigurationRead
