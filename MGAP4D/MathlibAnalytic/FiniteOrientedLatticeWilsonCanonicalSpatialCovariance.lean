@@ -54,14 +54,14 @@ theorem
     (sourcePlaquette targetPlaquette : PeriodicHypercubicPlaquette n)
     (hEdge : 0 < Fintype.card (PeriodicHypercubicEdge n))
     (hStrict :
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-        |>.canonicalDobrushinCoefficient hEdge < 1)
+      FiniteOrientedLatticeWilsonSystem.canonicalDobrushinCoefficient
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) hEdge < 1)
     (d : ℕ)
     (hSeparated :
-      (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-        |>.activePlaquetteNeighborSeparatedAtLeast
-          (periodicHypercubicPlaquetteEdges n sourcePlaquette)
-          (periodicHypercubicPlaquetteEdges n targetPlaquette) d) :
+      FiniteOrientedLatticeWilsonSystem.activePlaquetteNeighborSeparatedAtLeast
+        (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
+        (periodicHypercubicPlaquetteEdges n sourcePlaquette)
+        (periodicHypercubicPlaquetteEdges n targetPlaquette) d) :
     |FiniteOrientedLatticeWilsonSystem.gibbsCovarianceReal
         (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
         (FiniteOrientedLatticeWilsonSystem.plaquetteObservable
@@ -71,11 +71,11 @@ theorem
           (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
           targetPlaquette)| ≤
       16 *
-        (((z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-          |>.canonicalDobrushinCoefficient hEdge) ^ d /
+        (FiniteOrientedLatticeWilsonSystem.canonicalDobrushinCoefficient
+          (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) hEdge ^ d /
           (1 -
-            (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
-              |>.canonicalDobrushinCoefficient hEdge)) := by
+            FiniteOrientedLatticeWilsonSystem.canonicalDobrushinCoefficient
+              (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta) hEdge)) := by
   let D :=
     finiteOrientedLatticeWilsonCanonicalDobrushinMatrixData
       (z2PeriodicHypercubicOrientedWilsonSystem n beta hBeta)
