@@ -189,7 +189,7 @@ theorem finite_oriented_singleLinkHeatBathResidual_pairing_abs_le
         (L.singleLinkHeatBathResidual e g)| ≤
       P.variation e * Q.variation e := by
   classical
-  letI : Fintype L.Configuration := Fintype.ofFinite L.Configuration
+  letI : Fintype L.Configuration := Pi.instFintype
   unfold FiniteOrientedLatticeWilsonSystem.gibbsPairingReal
     FiniteOrientedLatticeWilsonSystem.gibbsProbabilityReal
   calc
