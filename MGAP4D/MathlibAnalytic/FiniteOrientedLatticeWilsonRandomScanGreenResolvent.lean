@@ -35,14 +35,14 @@ theorem finite_oriented_weightedInfluenceGreen_nonneg
     mul_nonneg (hVariation target)
       (finite_oriented_influenceGreenTail_nonneg D 0 target source)
 
-/-- The full pointwise Green kernel is the identity kernel plus one influence
+/-- The full pointwise Green kernel is its length-zero kernel plus one influence
 step appended on the right. -/
-theorem finite_oriented_influenceGreenTail_zero_eq_identity_add
+theorem finite_oriented_influenceGreenTail_zero_eq_kernel_add
     {L : FiniteOrientedLatticeWilsonSystem}
     (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
     (target source : L.Edge) :
     D.influenceGreenTail 0 target source =
-      (if target = source then 1 else 0) +
+      D.influencePathKernel 0 target source +
         ∑ middle : L.Edge,
           D.influenceGreenTail 0 target middle *
             D.influence middle source := by
@@ -57,13 +57,12 @@ theorem finite_oriented_influenceGreenTail_zero_eq_identity_add
     FiniteOrientedLatticeWilsonDobrushinMatrixData.influenceGreenTail
   rw [hShift]
   congr 1
-  · simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel]
-  · simp_rw [finite_oriented_influencePathKernel_succ]
-    rw [tsum_fintype]
-    apply Finset.sum_congr rfl
-    intro middle _hMiddle
-    rw [tsum_mul_right]
-    rfl
+  simp_rw [finite_oriented_influencePathKernel_succ]
+  rw [tsum_fintype]
+  apply Finset.sum_congr rfl
+  intro middle _hMiddle
+  rw [tsum_mul_right]
+  rfl
 
 /-- The weighted Green profile solves the right resolvent equation
 `Gv = v + (Gv) C`. -/
@@ -80,16 +79,20 @@ theorem finite_oriented_weightedInfluenceGreen_eq_add_influence
   classical
   unfold
     FiniteOrientedLatticeWilsonDobrushinMatrixData.weightedInfluenceGreen
-  simp_rw [finite_oriented_influenceGreenTail_zero_eq_identity_add]
   calc
     (∑ target : L.Edge,
-      variation target *
-        ((if target = source then 1 else 0) +
-          ∑ middle : L.Edge,
-            D.influenceGreenTail 0 target middle *
-              D.influence middle source)) =
-      (∑ target : L.Edge,
-        variation target * (if target = source then 1 else 0)) +
+      variation target * D.influenceGreenTail 0 target source) =
+      ∑ target : L.Edge,
+        variation target *
+          (D.influencePathKernel 0 target source +
+            ∑ middle : L.Edge,
+              D.influenceGreenTail 0 target middle *
+                D.influence middle source) := by
+      apply Finset.sum_congr rfl
+      intro target _hTarget
+      rw [finite_oriented_influenceGreenTail_zero_eq_kernel_add]
+    _ = (∑ target : L.Edge,
+        variation target * D.influencePathKernel 0 target source) +
         ∑ target : L.Edge,
           variation target *
             ∑ middle : L.Edge,
@@ -106,7 +109,7 @@ theorem finite_oriented_weightedInfluenceGreen_eq_add_influence
               (D.influenceGreenTail 0 target middle *
                 D.influence middle source) := by
       congr 1
-      · simp
+      · simp [FiniteOrientedLatticeWilsonDobrushinMatrixData.influencePathKernel]
       · apply Finset.sum_congr rfl
         intro target _hTarget
         rw [Finset.mul_sum]
@@ -135,14 +138,14 @@ theorem finite_oriented_weightedInfluenceGreen_eq_add_influence
       ring
 
 /-- Exact fixed-source expansion of one random-scan variation update. -/
-theorem finiteOrientedConditionalAverageRandomScanVariation_eq_erase
+theorem finiteOrientedConditionalAverageRandomScanVariation_eq
     {L : FiniteOrientedLatticeWilsonSystem}
     (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
     (variation : L.Edge → ℝ)
     (source : L.Edge) :
     finiteOrientedConditionalAverageRandomScanVariation D variation source =
       (Fintype.card L.Edge : ℝ)⁻¹ *
-        (((Finset.univ.erase source).card : ℝ) * variation source +
+        (((Fintype.card L.Edge : ℝ) - 1) * variation source +
           ∑ target : L.Edge,
             D.influence target source * variation target) := by
   classical
@@ -164,13 +167,23 @@ theorem finiteOrientedConditionalAverageRandomScanVariation_eq_erase
       ((Finset.univ.erase source).card : ℝ) * variation source +
         ∑ target ∈ (Finset.univ.erase source),
           D.influence target source * variation target := by
-    simp_rw [finiteOrientedConditionalAverageUpdatedVariation]
-    have hNe : ∀ target ∈ (Finset.univ.erase source), source ≠ target := by
-      intro target hTarget
-      exact (Finset.ne_of_mem_erase hTarget).symm
-    simp_rw [if_neg (hNe _ ‹_›)]
-    rw [Finset.sum_add_distrib]
-    simp
+    calc
+      (∑ target ∈ (Finset.univ.erase source),
+        finiteOrientedConditionalAverageUpdatedVariation
+          D variation target source) =
+        ∑ target ∈ (Finset.univ.erase source),
+          (variation source +
+            D.influence target source * variation target) := by
+          apply Finset.sum_congr rfl
+          intro target hTarget
+          have hNe : source ≠ target :=
+            (Finset.ne_of_mem_erase hTarget).symm
+          simp [finiteOrientedConditionalAverageUpdatedVariation, hNe]
+      _ = ((Finset.univ.erase source).card : ℝ) * variation source +
+          ∑ target ∈ (Finset.univ.erase source),
+            D.influence target source * variation target := by
+        rw [Finset.sum_add_distrib]
+        simp
   have hInfluenceErase :
       (∑ target ∈ (Finset.univ.erase source),
         D.influence target source * variation target) =
@@ -180,9 +193,22 @@ theorem finiteOrientedConditionalAverageRandomScanVariation_eq_erase
       (s := (Finset.univ : Finset L.Edge))
       (f := fun target => D.influence target source * variation target)
       (Finset.mem_univ source)
-    rw [D.influence_diagonal_zero source, zero_mul, add_zero] at h
+    have hDiagTerm :
+        (fun target => D.influence target source * variation target) source = 0 := by
+      simp [D.influence_diagonal_zero]
+    rw [hDiagTerm, add_zero] at h
     exact h
-  rw [← hSplit, hDiag, add_zero, hOff, hInfluenceErase]
+  have hCardNat :
+      (Finset.univ.erase source).card = Fintype.card L.Edge - 1 := by
+    simpa using Finset.card_erase_of_mem (Finset.mem_univ source)
+  have hOneLe : 1 ≤ Fintype.card L.Edge :=
+    Nat.one_le_iff_ne_zero.mpr Fintype.card_ne_zero
+  have hCardReal :
+      ((Finset.univ.erase source).card : ℝ) =
+        (Fintype.card L.Edge : ℝ) - 1 := by
+    rw [hCardNat, Nat.cast_sub hOneLe]
+    norm_num
+  rw [← hSplit, hDiag, add_zero, hOff, hInfluenceErase, hCardReal]
 
 /-- Random-scan variation propagation is monotone. -/
 theorem finiteOrientedConditionalAverageRandomScanVariation_mono
@@ -207,6 +233,30 @@ theorem finiteOrientedConditionalAverageRandomScanVariation_mono
       (mul_le_mul_of_nonneg_left
         (hUV target) (D.influence_nonneg target source))
 
+@[simp] theorem finiteOrientedConditionalAverageRandomScanVariation_zero
+    {L : FiniteOrientedLatticeWilsonSystem}
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (source : L.Edge) :
+    finiteOrientedConditionalAverageRandomScanVariation D
+      (fun _ : L.Edge => 0) source = 0 := by
+  rw [finiteOrientedConditionalAverageRandomScanVariation_eq]
+  simp
+
+/-- Random-scan variation propagation is additive. -/
+theorem finiteOrientedConditionalAverageRandomScanVariation_add
+    {L : FiniteOrientedLatticeWilsonSystem}
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (u v : L.Edge → ℝ)
+    (source : L.Edge) :
+    finiteOrientedConditionalAverageRandomScanVariation D
+        (fun e => u e + v e) source =
+      finiteOrientedConditionalAverageRandomScanVariation D u source +
+        finiteOrientedConditionalAverageRandomScanVariation D v source := by
+  classical
+  simp_rw [finiteOrientedConditionalAverageRandomScanVariation_eq]
+  rw [Finset.sum_add_distrib]
+  ring
+
 /-- Random-scan variation propagation commutes with finite sums of variation
 profiles. -/
 theorem finiteOrientedConditionalAverageRandomScanVariation_finset_sum
@@ -222,19 +272,11 @@ theorem finiteOrientedConditionalAverageRandomScanVariation_finset_sum
         finiteOrientedConditionalAverageRandomScanVariation D
           (variation i) source := by
   classical
-  unfold finiteOrientedConditionalAverageRandomScanVariation
-  rw [Finset.mul_sum]
-  congr 1
-  rw [Finset.sum_comm]
-  apply Finset.sum_congr rfl
-  intro i hi
-  apply Finset.sum_congr rfl
-  intro target _hTarget
-  unfold finiteOrientedConditionalAverageUpdatedVariation
-  by_cases hEq : source = target
-  · simp [hEq]
-  · simp only [hEq, if_false]
-    rw [Finset.sum_add_distrib, Finset.mul_sum]
+  induction s using Finset.induction_on with
+  | empty => simp
+  | @insert i s hi ih =>
+      simp only [Finset.sum_insert hi]
+      rw [finiteOrientedConditionalAverageRandomScanVariation_add, ih]
 
 /-- Multiplying the weighted Green profile by the number of physical links gives
 an exact supersolution for one uniform random-scan variation update. -/
@@ -257,19 +299,12 @@ theorem finite_oriented_randomScanVariation_green_supersolution
   have hN : N ≠ 0 := by
     dsimp [N]
     exact_mod_cast (Nat.ne_of_gt hEdge)
-  have hEraseCardNat :
-      (Finset.univ.erase source).card + 1 = Fintype.card L.Edge := by
-    simpa using Finset.card_erase_add_one (Finset.mem_univ source)
-  have hEraseCardReal :
-      ((Finset.univ.erase source).card : ℝ) = N - 1 := by
-    exact_mod_cast hEraseCardNat
-  rw [finiteOrientedConditionalAverageRandomScanVariation_eq_erase]
+  rw [finiteOrientedConditionalAverageRandomScanVariation_eq]
   change variation source + N⁻¹ *
-      (((Finset.univ.erase source).card : ℝ) * (N * G source) +
+      ((N - 1) * (N * G source) +
         ∑ target : L.Edge,
           D.influence target source * (N * G target)) =
     N * G source
-  rw [hEraseCardReal]
   have hGreen :=
     finite_oriented_weightedInfluenceGreen_eq_add_influence
       D variation source
@@ -294,6 +329,30 @@ theorem finite_oriented_randomScanVariation_green_supersolution
   rw [hSum]
   field_simp [hN]
   nlinarith [hGreen]
+
+/-- A range sum of the iterated variation sequence satisfies the resolvent
+recursion. -/
+theorem
+    FiniteOrientedLatticeWilsonCenteredVariationProfile.randomScanConditionalAverageVariationIterate_sum_range_succ_eq
+    {L : FiniteOrientedLatticeWilsonSystem}
+    {f : L.Configuration → ℝ}
+    (P : FiniteOrientedLatticeWilsonCenteredVariationProfile L f)
+    (D : FiniteOrientedLatticeWilsonDobrushinMatrixData L)
+    (n : ℕ)
+    (source : L.Edge) :
+    (∑ k ∈ Finset.range (n + 1),
+      P.randomScanConditionalAverageVariationIterate D k source) =
+      P.variation source +
+        finiteOrientedConditionalAverageRandomScanVariation D
+          (fun e => ∑ k ∈ Finset.range n,
+            P.randomScanConditionalAverageVariationIterate D k e)
+          source := by
+  classical
+  rw [Finset.sum_range_succ']
+  simp only [
+    FiniteOrientedLatticeWilsonCenteredVariationProfile.randomScanConditionalAverageVariationIterate_zero,
+    FiniteOrientedLatticeWilsonCenteredVariationProfile.randomScanConditionalAverageVariationIterate_succ]
+  rw [finiteOrientedConditionalAverageRandomScanVariation_finset_sum]
 
 /-- Partial sums of the iterated random-scan variation profile are bounded by
 `N` times the weighted Dobrushin Green profile. -/
@@ -325,27 +384,11 @@ theorem
     intro e
     exact finite_oriented_randomScanVariation_green_supersolution
       D hEdge P.variation e
-  induction n with
+  induction n generalizing source with
   | zero =>
       simp [H, hHNonneg source]
   | succ n ih =>
-      have hRec :
-          (∑ k ∈ Finset.range (n + 1),
-            P.randomScanConditionalAverageVariationIterate D k source) =
-          P.variation source +
-            finiteOrientedConditionalAverageRandomScanVariation D
-              (fun e => ∑ k ∈ Finset.range n,
-                P.randomScanConditionalAverageVariationIterate D k e)
-              source := by
-        induction n with
-        | zero => simp
-        | succ n hn =>
-            simp only [Finset.sum_range_succ,
-              FiniteOrientedLatticeWilsonCenteredVariationProfile.randomScanConditionalAverageVariationIterate_succ]
-            rw [hn]
-            rw [finiteOrientedConditionalAverageRandomScanVariation_finset_sum]
-            simp [Finset.sum_range_succ]
-      rw [hRec]
+      rw [P.randomScanConditionalAverageVariationIterate_sum_range_succ_eq]
       calc
         P.variation source +
             finiteOrientedConditionalAverageRandomScanVariation D
@@ -354,10 +397,9 @@ theorem
               source ≤
           P.variation source +
             finiteOrientedConditionalAverageRandomScanVariation D H source := by
-              apply add_le_add_left
-              apply finiteOrientedConditionalAverageRandomScanVariation_mono
-              intro e
-              exact ih e
+              exact add_le_add (le_refl _)
+                (finiteOrientedConditionalAverageRandomScanVariation_mono
+                  D _ H (fun e => ih e) source)
         _ = H source := hSup source
 
 /-- The normalized all-time random-scan variation resolvent is dominated
