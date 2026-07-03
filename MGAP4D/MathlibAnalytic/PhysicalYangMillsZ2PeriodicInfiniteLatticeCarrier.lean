@@ -26,11 +26,9 @@ The carrier `ℕ → Bool` is the standard compact Polish binary sequence space.
 abbrev Z2InfiniteHypercubicBinaryConfiguration : Type :=
   ℕ → Bool
 
-attribute [local instance] PiNat.metricSpace
-
 local instance z2InfiniteHypercubicBinaryConfigurationCompleteSpace :
     CompleteSpace Z2InfiniteHypercubicBinaryConfiguration :=
-  PiNat.completeSpace
+  Pi.complete
 
 local instance z2InfiniteHypercubicBinaryConfigurationPolishSpace :
     PolishSpace Z2InfiniteHypercubicBinaryConfiguration := by
@@ -140,8 +138,8 @@ theorem z2PeriodicHypercubicInfiniteLatticeEmbedding_isTight
     (hBeta : 0 < beta) :
     (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding.IsTight := by
   letI : CompactSpace
-      (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
-        .toLatticeEmbedding.PhysicalConfiguration := by
+      ((z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
+        .toLatticeEmbedding.PhysicalConfiguration) := by
     change CompactSpace Z2InfiniteHypercubicBinaryConfiguration
     infer_instance
   exact MeasureTheory.IsTightMeasureSet.of_compactSpace
