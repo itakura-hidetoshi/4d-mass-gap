@@ -26,6 +26,16 @@ The carrier `ℕ → Bool` is the standard compact Polish binary sequence space.
 abbrev Z2InfiniteHypercubicBinaryConfiguration : Type :=
   ℕ → Bool
 
+attribute [local instance] PiNat.metricSpace
+
+local instance z2InfiniteHypercubicBinaryConfigurationCompleteSpace :
+    CompleteSpace Z2InfiniteHypercubicBinaryConfiguration :=
+  PiNat.completeSpace
+
+local instance z2InfiniteHypercubicBinaryConfigurationPolishSpace :
+    PolishSpace Z2InfiniteHypercubicBinaryConfiguration := by
+  infer_instance
+
 /-- Read one integer-lattice link from the canonical binary sequence carrier. -/
 def z2InfiniteHypercubicBinaryConfigurationRead
     (B : Z2InfiniteHypercubicBinaryConfiguration)
@@ -87,7 +97,16 @@ theorem z2InfiniteHypercubicBinaryConfigurationRead_extend
 theorem z2PeriodicHypercubicConfigurationExtend_measurable
     (n : ℕ) :
     Measurable (z2PeriodicHypercubicConfigurationExtend n) := by
-  exact measurable_pi_lambda _ (fun _ => measurable_of_finite _)
+  apply measurable_pi_lambda
+  intro m
+  rcases hCode : integerHypercubicEdgeOfCode m with _ | e
+  · simpa [z2PeriodicHypercubicConfigurationExtend, hCode] using
+      (measurable_const :
+        Measurable
+          (fun _ : PeriodicHypercubicEdge n → Z2Gauge => false))
+  · simpa [z2PeriodicHypercubicConfigurationExtend, hCode] using
+      (measurable_of_finite boolEquivZ2Gauge.symm).comp
+        (measurable_pi_apply (integerHypercubicEdgeToPeriodic n e))
 
 /-- Concrete common-carrier interpolation of every canonical finite periodic
 `Z₂` Gibbs system into the compact binary link-field carrier.
@@ -120,6 +139,11 @@ theorem z2PeriodicHypercubicInfiniteLatticeEmbedding_isTight
     (beta : ℝ)
     (hBeta : 0 < beta) :
     (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding.IsTight := by
+  letI : CompactSpace
+      (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
+        .toLatticeEmbedding.PhysicalConfiguration := by
+    change CompactSpace Z2InfiniteHypercubicBinaryConfiguration
+    infer_instance
   exact MeasureTheory.IsTightMeasureSet.of_compactSpace
 
 /-- Prokhorov compactness extracts a weakly convergent subsequence of the actual
