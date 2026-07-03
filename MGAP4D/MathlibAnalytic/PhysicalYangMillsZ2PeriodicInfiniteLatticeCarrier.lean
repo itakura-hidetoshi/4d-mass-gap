@@ -28,7 +28,7 @@ abbrev Z2InfiniteHypercubicBinaryConfiguration : Type :=
 
 local instance z2InfiniteHypercubicBinaryConfigurationCompleteSpace :
     CompleteSpace Z2InfiniteHypercubicBinaryConfiguration :=
-  Pi.complete
+  Pi.complete (fun _ : ℕ => Bool)
 
 local instance z2InfiniteHypercubicBinaryConfigurationPolishSpace :
     PolishSpace Z2InfiniteHypercubicBinaryConfiguration := by
@@ -137,9 +137,9 @@ theorem z2PeriodicHypercubicInfiniteLatticeEmbedding_isTight
     (beta : ℝ)
     (hBeta : 0 < beta) :
     (z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta).toLatticeEmbedding.IsTight := by
-  letI : CompactSpace
-      ((z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta)
-        .toLatticeEmbedding.PhysicalConfiguration) := by
+  let E := z2PeriodicHypercubicInfiniteLatticeEmbedding beta hBeta
+  change E.toLatticeEmbedding.IsTight
+  letI : CompactSpace E.toLatticeEmbedding.PhysicalConfiguration := by
     change CompactSpace Z2InfiniteHypercubicBinaryConfiguration
     infer_instance
   exact MeasureTheory.IsTightMeasureSet.of_compactSpace
