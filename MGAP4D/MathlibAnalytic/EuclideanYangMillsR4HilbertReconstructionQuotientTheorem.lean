@@ -23,9 +23,9 @@ def quotientOutputs
     {O : EuclideanYangMillsR4HilbertReconstructionCarrierClosure S K R4 A G H N F C I}
     (M : EuclideanYangMillsR4HilbertReconstructionQuotientModel S K R4 A G H N F C I O) :
     Prop :=
-  M.inputCarrier_eq = rfl ∧
-    M.separationEquivalence =
-      EuclideanYangMillsR4HilbertReconstructionQuotient.separationRelation_equivalence I ∧
+  EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I =
+      Sigma I.inputModel.reconstructionInputCarrier ∧
+    Equivalence (EuclideanYangMillsR4HilbertReconstructionQuotient.separationRelation I) ∧
       (Nonempty (EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I) →
         Nonempty (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientCarrier I)) ∧
         S.measurePackage.reflectionPositive ∧
@@ -47,8 +47,8 @@ theorem quotientOutputs_holds
     {O : EuclideanYangMillsR4HilbertReconstructionCarrierClosure S K R4 A G H N F C I}
     (M : EuclideanYangMillsR4HilbertReconstructionQuotientModel S K R4 A G H N F C I O) :
     M.quotientOutputs :=
-  ⟨by cases M.inputCarrier_eq; rfl,
-    by cases M.separationEquivalence; rfl,
+  ⟨M.inputCarrier_eq,
+    M.separationEquivalence,
     M.quotientNonempty,
     M.reflectionPositive,
     M.euclideanInvariant,
