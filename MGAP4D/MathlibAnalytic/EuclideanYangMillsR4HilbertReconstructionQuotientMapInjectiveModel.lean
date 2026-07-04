@@ -18,30 +18,40 @@ variable {N : EuclideanYangMillsR4SchwingerNPointFamilyClosure S K R4 A G H}
 variable {F : EuclideanYangMillsR4CorrelationFunctionalClosure S K R4 A G H N}
 variable {C : EuclideanYangMillsR4CorrelationStructureClosure S K R4 A G H N F}
 
-/-- The equality quotient map reflects input-carrier equality. -/
-theorem quotientMap_reflects_input_eq
+/-- On the selected section range, quotient-map equality reflects input-carrier equality. -/
+theorem quotientMap_reflects_sectionRange_eq
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C)
+    {O : EuclideanYangMillsR4HilbertReconstructionCarrierClosure S K R4 A G H N F C I}
+    {Q : EuclideanYangMillsR4HilbertReconstructionQuotientClosure S K R4 A G H N F C I O}
+    {P : EuclideanYangMillsR4HilbertReconstructionQuotientProjectionClosure S K R4 A G H N F C I O Q}
+    {R : EuclideanYangMillsR4HilbertReconstructionQuotientRepresentativeClosure S K R4 A G H N F C I O Q P}
+    {U : EuclideanYangMillsR4HilbertReconstructionQuotientSectionClosure S K R4 A G H N F C I O Q P R}
+    {J : EuclideanYangMillsR4HilbertReconstructionQuotientSectionInjectiveClosure S K R4 A G H N F C I O Q P R U}
+    (V : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeClosure S K R4 A G H N F C I O Q P R U J)
     {x y : inputCarrier I} :
-    quotientMap I x = quotientMap I y → x = y := by
-  intro h
-  simpa [separationRelation] using (Quot.exact h)
-
-/-- The equality quotient map is injective on the reconstruction input carrier. -/
-theorem quotientMap_injective
-    (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C) :
-    Function.Injective (quotientMap I) := by
-  intro x y hxy
-  exact quotientMap_reflects_input_eq I hxy
+    x ∈ V.sectionRange → y ∈ V.sectionRange →
+      quotientMap I x = quotientMap I y → x = y := by
+  intro hx hy hxy
+  rcases V.rangeProjectsToWitness hx with ⟨q, hxq, hqx⟩
+  rcases V.rangeProjectsToWitness hy with ⟨r, hyr, hry⟩
+  have hqr : q = r := by
+    calc
+      q = quotientMap I x := hqx.symm
+      _ = quotientMap I y := hxy
+      _ = r := hry
+  calc
+    x = quotientSection I q := hxq
+    _ = quotientSection I r := by rw [hqr]
+    _ = y := hyr.symm
 
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
-/-- Model recording that the current equality quotient map is injective.
+/-- Model recording that the quotient map is faithful on the selected section range.
 
-This is still a carrier-level reconstruction layer.  It fixes that the present
-separation relation is equality, so quotient equality reflects equality of the
-input carrier.  Later norm and inner-product transport layers can use this as a
-faithful quotient interface, without claiming completion of the physical Hilbert
-space. -/
+This is still a carrier-level reconstruction layer.  It uses the already-built
+section range and range-witness projection facts to fix a faithful transport
+surface for later norm and inner-product layers, without claiming completion of
+the physical Hilbert space. -/
 structure EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
     (K : EuclideanYangMillsCompleteConstructionClosure S)
@@ -64,12 +74,13 @@ structure EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel
   sectionRangeUniqueClosure :
     EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeUniqueClosure S K R4 A G H N F C I O Q P R U J V
   sectionRangeUniqueClosure_eq : sectionRangeUniqueClosure = W
-  quotientMapReflectsInputEq :
+  quotientMapReflectsSectionRangeEq :
     ∀ {x y : EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I},
-      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I x =
-        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I y → x = y
-  quotientMapInjective :
-    Function.Injective (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I)
+      x ∈ V.sectionRange → y ∈ V.sectionRange →
+        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I x =
+          EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I y → x = y
+  sectionRange : Set (EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I)
+  sectionRange_eq : sectionRange = V.sectionRange
   sectionInjective :
     Function.Injective (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection I)
   reflectionPositive : S.measurePackage.reflectionPositive
@@ -101,10 +112,10 @@ def ofSectionRangeUniqueClosure
     EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel S K R4 A G H N F C I O Q P R U J V W :=
   { sectionRangeUniqueClosure := W
     sectionRangeUniqueClosure_eq := rfl
-    quotientMapReflectsInputEq :=
-      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap_reflects_input_eq I
-    quotientMapInjective :=
-      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap_injective I
+    quotientMapReflectsSectionRangeEq :=
+      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap_reflects_sectionRange_eq I V
+    sectionRange := V.sectionRange
+    sectionRange_eq := rfl
     sectionInjective := W.sectionInjective
     reflectionPositive := W.reflectionPositive
     euclideanInvariant := W.euclideanInvariant
