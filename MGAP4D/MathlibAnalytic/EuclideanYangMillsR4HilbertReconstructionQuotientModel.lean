@@ -49,24 +49,28 @@ def separationSetoid
   r := separationRelation I
   iseqv := separationRelation_equivalence I
 
-/-- Quotient carrier produced by the equality setoid. -/
+/-- Quotient carrier produced by the separation relation.
+
+The accompanying `separationSetoid` records the equivalence proof.  The carrier
+itself uses Lean's kernel-level `Quot`, whose constructor and soundness theorem
+have a stable explicit relation argument. -/
 def quotientCarrier
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C) :
     Type :=
-  Quotient (separationSetoid I)
+  Quot (separationRelation I)
 
 /-- Canonical map into the quotient carrier. -/
 def quotientMap
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C) :
     inputCarrier I → quotientCarrier I :=
-  Quotient.mk (separationSetoid I)
+  Quot.mk (separationRelation I)
 
 /-- The quotient map respects the separation relation. -/
 theorem quotientMap_respects
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C)
     {x y : inputCarrier I} (hxy : separationRelation I x y) :
     quotientMap I x = quotientMap I y :=
-  Quotient.sound hxy
+  Quot.sound hxy
 
 /-- Nonemptiness passes from the input carrier to the quotient carrier. -/
 theorem quotientCarrier_nonempty_of_input_nonempty
@@ -96,6 +100,10 @@ structure EuclideanYangMillsR4HilbertReconstructionQuotientModel
   inputCarrier_eq :
     EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I =
       Sigma I.inputModel.reconstructionInputCarrier
+  separationSetoidCarrier :
+    Setoid (EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I)
+  separationSetoidCarrier_eq :
+    separationSetoidCarrier = EuclideanYangMillsR4HilbertReconstructionQuotient.separationSetoid I
   separationEquivalence :
     Equivalence (EuclideanYangMillsR4HilbertReconstructionQuotient.separationRelation I)
   quotientNonempty :
@@ -124,6 +132,8 @@ def ofCarrierClosure
   { carrierClosure := O
     carrierClosure_eq := rfl
     inputCarrier_eq := rfl
+    separationSetoidCarrier := EuclideanYangMillsR4HilbertReconstructionQuotient.separationSetoid I
+    separationSetoidCarrier_eq := rfl
     separationEquivalence :=
       EuclideanYangMillsR4HilbertReconstructionQuotient.separationRelation_equivalence I
     quotientNonempty :=
