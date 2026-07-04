@@ -12,7 +12,8 @@ Yang--Mills gauge-invariant closure.
 This layer does not introduce a mass-gap statement.  It records that the
 Schwinger-function carrier and observable carrier are exactly the carriers already
 constructed in the Euclidean measure package, and that the gauge-invariant and
-Euclidean-invariant construction evidence is retained. -/
+Euclidean-invariant construction evidence retained by the preceding closure is
+carried forward without changing its type. -/
 structure EuclideanYangMillsR4GaugeInvariantSchwingerModel
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
     (K : EuclideanYangMillsCompleteConstructionClosure S)
@@ -29,8 +30,8 @@ structure EuclideanYangMillsR4GaugeInvariantSchwingerModel
   schwingerFunctions_eq_measurePackage :
     schwingerFunctions = S.measurePackage.schwingerFunctions
   gaugeInvariantSchwingerFunctionsConstructed :
-    S.gaugeInvariantSchwingerFunctionsConstructed
-  euclideanInvariant : S.measurePackage.euclideanInvariant
+    G.orbitModel.gaugeInvariantConstruction
+  euclideanInvariant : G.orbitModel.euclideanInvariantConstruction
   reflectionPositive : S.measurePackage.reflectionPositive
 
 namespace EuclideanYangMillsR4GaugeInvariantSchwingerModel
