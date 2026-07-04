@@ -72,7 +72,7 @@ theorem orbitCarrier_configuration
   O.orbitCarrier_eq_configuration
 
 /-- Extract the gauge-invariant construction evidence. -/
-theorem gaugeInvariantConstruction
+theorem gaugeInvariantConstruction_holds
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {K : EuclideanYangMillsCompleteConstructionClosure S}
     {R4 : EuclideanYangMillsR4GaugeFieldConstructionClosure S K}
