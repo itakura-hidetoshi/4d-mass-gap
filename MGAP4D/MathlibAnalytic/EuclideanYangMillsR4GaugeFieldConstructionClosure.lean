@@ -48,7 +48,7 @@ def ofSpine
     (EuclideanYangMillsCompleteConstructionClosure.ofSpine S)
 
 /-- Extract the R4 spacetime carrier statement. -/
-theorem spacetimeCarrier
+theorem spacetimeCarrier_eq
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {K : EuclideanYangMillsCompleteConstructionClosure S}
     (C : EuclideanYangMillsR4GaugeFieldConstructionClosure S K) :
@@ -56,7 +56,7 @@ theorem spacetimeCarrier
   C.spacetimeR4
 
 /-- Extract the gauge-field configuration carrier statement. -/
-theorem gaugeFieldConfigurationCarrier
+theorem gaugeFieldConfigurationCarrier_eq
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {K : EuclideanYangMillsCompleteConstructionClosure S}
     (C : EuclideanYangMillsR4GaugeFieldConstructionClosure S K) :
