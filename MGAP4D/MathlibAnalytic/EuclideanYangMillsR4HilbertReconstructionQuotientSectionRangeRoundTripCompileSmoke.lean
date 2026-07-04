@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeRoundTripClosure
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+def euclideanYangMillsR4HilbertReconstructionQuotientSectionRangeRoundTripCompileCheck : Prop := True
+
+theorem euclideanYangMillsR4HilbertReconstructionQuotientSectionRangeRoundTripCompileCheck_holds :
+    euclideanYangMillsR4HilbertReconstructionQuotientSectionRangeRoundTripCompileCheck :=
+  trivial
+
+end
+
+end MathlibAnalytic
+end MGAP4D
