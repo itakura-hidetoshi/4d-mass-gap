@@ -20,8 +20,8 @@ def schwingerOutputs
   M.orbitCarrier = G.orbitModel.orbitCarrier ∧
     M.observableCarrier = R4.model.fieldAlgebra ∧
       M.schwingerFunctions = S.measurePackage.schwingerFunctions ∧
-        S.gaugeInvariantSchwingerFunctionsConstructed ∧
-          S.measurePackage.euclideanInvariant ∧
+        G.orbitModel.gaugeInvariantConstruction ∧
+          G.orbitModel.euclideanInvariantConstruction ∧
             S.measurePackage.reflectionPositive
 
 /-- The R4 gauge-invariant Schwinger-function model proves its bundled outputs. -/
