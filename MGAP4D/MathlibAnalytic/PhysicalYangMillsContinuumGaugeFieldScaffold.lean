@@ -183,8 +183,8 @@ theorem doesNotConstructContinuumGaugeFields_true
     (sourcePlaquette targetPlaquette : IntegerHypercubicPlaquette)
     (E : LatticePlaquetteClusteringEvidenceForContinuum beta hBeta distance
       sourcePlaquette targetPlaquette) :
-    E.doesNotConstructContinuumGaugeFields :=
-  trivial
+    True :=
+  E.doesNotConstructContinuumGaugeFields
 
 end LatticePlaquetteClusteringEvidenceForContinuum
 
