@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveClosure
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+def euclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveCompileCheck : Prop := True
+
+theorem euclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveCompileCheck_holds :
+    euclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveCompileCheck :=
+  trivial
+
+end
+
+end MathlibAnalytic
+end MGAP4D
