@@ -151,10 +151,10 @@ structure LatticePlaquetteClusteringEvidenceForContinuum
     (distance : ℕ)
     (sourcePlaquette targetPlaquette : IntegerHypercubicPlaquette) where
   latticeResult :
-    z2PeriodicHypercubicInfiniteLatticePlaquetteClusteringConstruction.
-      PublicPlaquetteClusteringResult beta hBeta distance sourcePlaquette targetPlaquette
+    z2PeriodicHypercubicInfiniteLatticePlaquetteClusteringConstruction.PublicPlaquetteClusteringResult
+      beta hBeta distance sourcePlaquette targetPlaquette
   continuumUseRequires : Prop
-  doesNotConstructContinuumGaugeFields : Prop := True
+  doesNotConstructContinuumGaugeFields : True := trivial
 
 namespace LatticePlaquetteClusteringEvidenceForContinuum
 
@@ -166,8 +166,8 @@ def ofPublicResult
     (distance : ℕ)
     (sourcePlaquette targetPlaquette : IntegerHypercubicPlaquette)
     (R :
-      z2PeriodicHypercubicInfiniteLatticePlaquetteClusteringConstruction.
-        PublicPlaquetteClusteringResult beta hBeta distance sourcePlaquette targetPlaquette)
+      z2PeriodicHypercubicInfiniteLatticePlaquetteClusteringConstruction.PublicPlaquetteClusteringResult
+        beta hBeta distance sourcePlaquette targetPlaquette)
     (continuumUseRequires : Prop) :
     LatticePlaquetteClusteringEvidenceForContinuum beta hBeta distance
       sourcePlaquette targetPlaquette :=
