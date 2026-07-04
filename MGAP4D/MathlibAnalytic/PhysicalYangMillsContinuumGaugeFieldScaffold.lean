@@ -84,7 +84,7 @@ structure ContinuumYangMillsConstructionAxioms
     (μ : ContinuumGaugeFieldLaw Ω) where
   continuumConfigurationSpaceConstructed : Ω.isContinuumR4GaugeFieldModel
   gaugeSymmetryImplemented : Ω.hasGaugeSymmetry
-  lawNormalized : μ.normalized = rfl
+  lawNormalized : μ.expectation (fun _ => 1) = 1
   lawPositive : μ.positive
   lawEuclideanInvariant : μ.euclideanInvariant
   lawGaugeInvariant : μ.gaugeInvariant
@@ -122,15 +122,21 @@ theorem gaugeSymmetryImplemented
     C.configSpace.hasGaugeSymmetry :=
   C.axioms.gaugeSymmetryImplemented
 
-/-- The continuum certificate exposes reflection positivity as an explicit
+/-- The continuum certificate exposes law normalization. -/
+theorem lawNormalized
+    (C : ContinuumYangMillsConstructionCertificate) :
+    C.law.expectation (fun _ => 1) = 1 :=
+  C.axioms.lawNormalized
+
+/-- The continuum certificate exposes reflection positivity as a named
 obligation. -/
-theorem reflectionPositivity
+def reflectionPositivityObligation
     (C : ContinuumYangMillsConstructionCertificate) : Prop :=
   C.axioms.reflectionPositivity
 
-/-- The continuum certificate exposes the clustering or mass-gap input as an
-explicit obligation rather than deriving it from the lattice API. -/
-theorem clusteringOrMassGapInput
+/-- The continuum certificate exposes the clustering or mass-gap input as a named
+obligation rather than deriving it from the lattice API. -/
+def clusteringOrMassGapInputObligation
     (C : ContinuumYangMillsConstructionCertificate) : Prop :=
   C.axioms.clusteringOrMassGapInput
 
