@@ -53,11 +53,21 @@ theorem spectralGapStatement
     O.spectralGapStatement :=
   L.hasSpectralGapStatement
 
+/-- The ledger exposes the positive-gap obligation as a proof term. -/
+theorem positiveGap
+    {C : ContinuumYangMillsConstructionCertificate}
+    {O : ContinuumOSReconstructionInterface C}
+    {M : ContinuumMassGapHandoffInterface C O}
+    (L : ContinuumMassGapBoundaryLedger C O M) :
+    M.positiveGapObligation :=
+  L.hasPositiveGapObligation
+
 /-- Build the ledger from the continuum certificate, OS interface, and handoff. -/
 def ofHandoff
     (C : ContinuumYangMillsConstructionCertificate)
     (O : ContinuumOSReconstructionInterface C)
     (M : ContinuumMassGapHandoffInterface C O)
+    (hPositiveGap : M.positiveGapObligation)
     (separatesClusteringFromSpectralGap : Prop)
     (noUnconditionalClayClaim : Prop) :
     ContinuumMassGapBoundaryLedger C O M :=
@@ -66,7 +76,7 @@ def ofHandoff
     hasReflectionPositivityCertificate := O.reflectionPositivityDischarged
     hasHamiltonianHandoff := M.hamiltonianDischarged
     hasSpectralGapStatement := M.spectralGapStatementDischarged
-    hasPositiveGapObligation := M.positiveGapObligation
+    hasPositiveGapObligation := hPositiveGap
     separatesClusteringFromSpectralGap := separatesClusteringFromSpectralGap
     noUnconditionalClayClaim := noUnconditionalClayClaim }
 
