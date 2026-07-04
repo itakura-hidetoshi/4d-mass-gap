@@ -64,7 +64,8 @@ def ofHandoff
     (O : ContinuumOSReconstructionInterface C)
     (M : ContinuumMassGapHandoffInterface C O)
     (gapValue : ℝ)
-    (gapPositive : 0 < gapValue) :
+    (gapPositive : 0 < gapValue)
+    (hPositiveGap : M.positiveGapObligation) :
     ContinuumHamiltonianSpectralGapCertificate C O M :=
   { gapValue := gapValue
     gapPositive := gapPositive
@@ -72,7 +73,7 @@ def ofHandoff
     fieldOperatorMapAvailable := M.fieldOperatorMapDischarged
     vacuumAvailable := M.vacuumDischarged
     spectralGapStatement := M.spectralGapStatementDischarged
-    positiveGapDischarged := M.positiveGapObligation }
+    positiveGapDischarged := hPositiveGap }
 
 end ContinuumHamiltonianSpectralGapCertificate
 
