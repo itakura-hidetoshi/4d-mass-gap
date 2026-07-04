@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Closure for injectivity of the equality quotient map in the R4 Hilbert reconstruction route. -/
+/-- Closure for quotient-map faithfulness on the selected section range in the R4 Hilbert reconstruction route. -/
 structure EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveClosure
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
     (K : EuclideanYangMillsCompleteConstructionClosure S)
@@ -29,12 +29,13 @@ structure EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveClosure
   quotientMapInjectiveModel :
     EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel S K R4 A G H N F C I O Q P R U J V W
   quotientMapInjectiveOutputs : quotientMapInjectiveModel.quotientMapInjectiveOutputs
-  quotientMapReflectsInputEq :
+  quotientMapReflectsSectionRangeEq :
     ∀ {x y : EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I},
-      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I x =
-        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I y → x = y
-  quotientMapInjective :
-    Function.Injective (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I)
+      x ∈ V.sectionRange → y ∈ V.sectionRange →
+        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I x =
+          EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I y → x = y
+  sectionRange : Set (EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I)
+  sectionRange_eq : sectionRange = V.sectionRange
   sectionInjective :
     Function.Injective (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection I)
   reflectionPositive : S.measurePackage.reflectionPositive
@@ -43,7 +44,7 @@ structure EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveClosure
 
 namespace EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveClosure
 
-/-- Build the quotient-map injectivity closure from the section-range uniqueness closure. -/
+/-- Build the quotient-map faithfulness closure from the section-range uniqueness closure. -/
 def ofSectionRangeUniqueClosure
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
     (K : EuclideanYangMillsCompleteConstructionClosure S)
@@ -67,14 +68,15 @@ def ofSectionRangeUniqueClosure
   let M := EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel.ofSectionRangeUniqueClosure S K R4 A G H N F C I O Q P R U J V W
   { quotientMapInjectiveModel := M
     quotientMapInjectiveOutputs := EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel.quotientMapInjectiveOutputs_holds M
-    quotientMapReflectsInputEq := M.quotientMapReflectsInputEq
-    quotientMapInjective := M.quotientMapInjective
+    quotientMapReflectsSectionRangeEq := M.quotientMapReflectsSectionRangeEq
+    sectionRange := M.sectionRange
+    sectionRange_eq := M.sectionRange_eq
     sectionInjective := M.sectionInjective
     reflectionPositive := M.reflectionPositive
     euclideanInvariant := M.euclideanInvariant
     gaugeInvariant := M.gaugeInvariant }
 
-/-- Build the quotient-map injectivity closure directly from the construction spine. -/
+/-- Build the quotient-map faithfulness closure directly from the construction spine. -/
 def ofSpine
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
     EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveClosure S
@@ -114,7 +116,7 @@ def ofSpine
     (EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeClosure.ofSpine S)
     (EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeUniqueClosure.ofSpine S)
 
-/-- Extract the bundled quotient-map injectivity outputs. -/
+/-- Extract the bundled quotient-map section-range faithfulness outputs. -/
 theorem quotientMapInjectiveOutputsHeld
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {K : EuclideanYangMillsCompleteConstructionClosure S}
