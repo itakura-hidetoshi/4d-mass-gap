@@ -2,381 +2,306 @@
 
 This roadmap records the active proof-development path of `itakura-hidetoshi/4d-mass-gap`.
 
-## Snapshot — 2026-07-01
+## Snapshot — 2026-07-05
 
 ```text
-latest mathematical proof checkpoint on main:
-  a80a75449a16d07889519c1823595c5244824583
-
-latest merged mathematical proof PR on main:
-  PR #300
-
-current main documentation head:
-  e20a26cc3034c2e5c793d371b034585ab57cc385
-
 active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
-  7f1dae659bef10ea1713d57d20a620d1065fbf1d
 
-latest integrated proof PR on the carrier:
-  PR #364
+latest integrated carrier PR:
+  PR #539 — Add R4 Hilbert reconstruction quotient section range uniqueness layer
 
-latest validation:
-  PR #364 head 67428df16f4057b7956f2b873a90c639572d070d
-  PR Lean Fast Check run 5205 — success
+latest integrated carrier merge commit:
+  1364ddc7f57a98a49482d81ec474e152d962ccee
 
-carrier relative to current main documentation head:
-  ahead 359
-  behind 169
-  merge base 929e20583ae368475d4bedb65c060c2d3c4c0fff
+latest integrated carrier PR head:
+  0de760e4b70749942aac5e61efb189143e6e315a
+
+latest integrated validation:
+  PR Lean Fast Check run 5554 — success
+
+current open draft frontier:
+  PR #540 — Add R4 Hilbert reconstruction quotient map injectivity layer
+  head da05bf98e9c3f87f3d363e189c6a91d45d5ec7ae
+  PR Lean Fast Check run 5555 — failure
 ```
 
-The repository does not yet prove an unconditional interacting four-dimensional continuum Yang--Mills theory or a physical mass gap derived from a concrete continuum scaling trajectory.
+The repository does **not** yet prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a completed physical Hilbert reconstruction, a self-adjoint physical Hamiltonian, or a physical mass gap from one fully instantiated continuum scaling trajectory.
 
 Notation:
 
-- `[x]` merged and replayed on `main`;
-- `[c]` integrated and replayed on the active proof carrier, but not on `main`;
-- `[p]` represented by an open PR against `main`;
-- `[ ]` incomplete or not yet instantiated physically.
+- `[x]` integrated and replayed on the active proof carrier;
+- `[d]` open Draft PR, not integrated;
+- `[r]` requires repair or reconciliation;
+- `[ ]` not yet constructed or not yet physically instantiated.
 
-A carrier merge is not a `main` merge.
+A carrier theorem is not a public final theorem.
 
-## Completed on `main`
+A draft PR is not an integrated layer.
 
-### Finite compact Wilson probability and reflection theory
-
-- [x] positive-physical-link compact gauge configuration space;
-- [x] normalized product Haar probability measure;
-- [x] Wilson Gibbs density and probability measure;
-- [x] finite gauge invariance;
-- [x] periodic translation invariance;
-- [x] standard `SU(N)` Wilson energy with `0 <= E_W <= 2`;
-- [x] exact four-dimensional periodic incidence and plaquette counts;
-- [x] even-periodic reflection geometry;
-- [x] positive, negative, and boundary coordinate sectors;
-- [x] Haar factorization across the reflection boundary;
-- [x] Wilson Gibbs density factorization;
-- [x] local positive-semidefinite crossing kernels;
-- [x] bounded-continuous finite Gibbs reflection positivity.
-
-### Orientation-correct Dobrushin and finite Hamiltonian theory
-
-- [x] exact orientation-correct single-link conditional law;
-- [x] target-local and target-remote action decomposition;
-- [x] exact remote-factor cancellation;
-- [x] exact conditional total-variation influence;
-- [x] plaquette-support locality and zero inactive influence;
-- [x] exact oriented row sums;
-- [x] canonical Dobrushin coefficient;
-- [x] proof-carrying Dobrushin matrix;
-- [x] active-neighbor coefficient majorant;
-- [x] periodic four-dimensional bounds `d_active <= 18` and `m_shared <= 1` for side length at least three;
-- [x] random-scan variation contraction;
-- [x] Gibbs Hilbert realization;
-- [x] Rayleigh and Poincare consequences;
-- [x] normalized finite heat-bath Hamiltonian gap from `alpha < 1`;
-- [x] compact-group finite-volume coercive, spectral, and resolvent packages under the strict coefficient hypothesis.
-
-### Conditional continuum and OS constructors
-
-- [x] common-carrier finite Wilson weak-limit framework;
-- [x] tightness and Prokhorov subsequence constructor from explicit compactness data;
-- [x] gauge and translation invariance transfer from equivariant interpolation;
-- [x] gauge-invariant bounded-continuous observable algebra;
-- [x] normalized positive continuum states and weak-star convergence;
-- [x] finite-to-continuum reflection-positivity transfer interface;
-- [x] OS null quotient, pre-Hilbert carrier, and Hilbert completion;
-- [x] normalized vacuum and dense physical-state map;
-- [x] strongly continuous contraction semigroup constructor;
-- [x] right generator, right Hamiltonian, and graph closure;
-- [x] nonnegative self-adjoint Hamiltonian under the stated symmetry hypotheses;
-- [x] conditional vacuum-orthogonal Rayleigh gap transfer;
-- [x] conditional zero-energy vacuum-line theorem;
-- [x] conditional sub-gap eigenvector exclusion and real resolvent estimates.
-
-These continuum results remain constructors from explicit hypotheses.
-
-The physical model-specific hypotheses are not all discharged.
+A conditional theorem package is not a proof that the physical Yang--Mills approximation family supplies its hypotheses.
 
 ---
 
-## Milestone 1 — reconcile the active proof carrier with `main`
+## Milestone 1 — preserve finite Wilson and conditional OS foundations
 
-Status: **required before mathematical promotion**
+Status: **available as prior theorem infrastructure**
 
-- [ ] rebase or transplant the carrier onto current `main`;
-- [ ] remove the 169-commit backward divergence;
-- [ ] reconcile files independently evolved on both histories;
-- [ ] preserve the latest workflow improvements without duplicating obsolete CI logic;
-- [ ] split generic functional analysis from Wilson-specific applications;
-- [ ] split finite compact heat-bath theory from continuum OS theory;
-- [ ] retain compile-smoke roots for each merge unit;
-- [ ] obtain ordinary green CI after every structural split;
-- [ ] refresh theorem indexes and public documentation after each promotion.
+- [x] finite Wilson Gibbs probability and conditional-law infrastructure;
+- [x] finite heat-bath Hilbert and Hamiltonian theorem generators;
+- [x] Dobrushin, Rayleigh, Poincare, and finite spectral-gap consequences from strict finite certificates;
+- [x] conditional weak-limit, OS reconstruction, Hamiltonian, resolvent, and operator-graph theorem packages;
+- [x] exact internal scalar normalization and audit lanes, including the `33/20` lane;
+- [ ] keep these layers explicitly separated from a final physical mass-gap claim.
 
 Definition of done:
 
-The repository has one replayable dependency graph on `main`, and no authoritative `main` claim depends on an unmerged carrier branch.
+The repository continues to distinguish finite theorem generators, conditional continuum reconstruction packages, internal normalization lanes, and physical theorem claims.
 
 ---
 
-## Milestone 2 — promote the explicit finite `Z2` theorem
+## Milestone 2 — maintain the active proof carrier discipline
 
-Status: **implemented on the carrier; PR #302 remains open against `main`**
+Status: **active workflow requirement**
 
-- [c] exact periodic oriented `Z2` coefficient bound;
-- [c] explicit sufficient condition
+- [x] use `formal/real-hilbert-uniform-coercive-strong-limit` as the current proof carrier;
+- [x] create one focused branch for each theorem layer;
+- [x] open each layer as a Draft PR;
+- [x] require PR Lean Fast Check before treating the layer as integrated;
+- [x] merge only after fixed-head review;
+- [x] start each next layer from the updated carrier head;
+- [ ] do not promote draft or failing PR results into README, roadmap, or theorem-boundary language.
+
+Definition of done:
+
+The branch history remains a sequence of small replayable proof layers, and documentation distinguishes merged carrier facts from open draft work.
+
+---
+
+## Milestone 3 — R4 construction spine through correlation data
+
+Status: **integrated on the active carrier**
+
+- [x] complete construction closure;
+- [x] R4 gauge-field construction;
+- [x] R4 gauge-action construction;
+- [x] R4 gauge-invariant construction;
+- [x] R4 gauge-invariant Schwinger construction;
+- [x] R4 Schwinger n-point family construction;
+- [x] R4 correlation functional construction;
+- [x] R4 correlation structure construction.
+
+Definition of done:
+
+The R4 continuum-measure construction chain carries the data needed to enter reflection-positive reconstruction inputs without claiming that all physical analytic estimates have been discharged.
+
+---
+
+## Milestone 4 — R4 reflection-positive reconstruction input
+
+Status: **integrated on the active carrier**
+
+- [x] reflection-positive reconstruction input closure;
+- [x] propagation of reflection positivity from the measure package;
+- [x] propagation of Euclidean invariance from the orbit model;
+- [x] propagation of gauge invariance from the orbit model;
+- [ ] keep the input layer separate from the completed Hilbert-space structure.
+
+Definition of done:
+
+The reconstruction input surface is available as a formal source of reflection-positive, Euclidean-invariant, and gauge-invariant data for later quotient and Hilbert reconstruction layers.
+
+---
+
+## Milestone 5 — R4 Hilbert reconstruction carrier
+
+Status: **integrated on the active carrier**
+
+- [x] define the reconstruction input carrier;
+- [x] package the Hilbert reconstruction carrier closure;
+- [x] expose the carrier as the domain for quotient construction;
+- [ ] avoid presenting the carrier as a completed Hilbert space.
+
+Definition of done:
+
+The carrier exists as the pre-Hilbert or input side of the reconstruction route, with later quotient, norm, inner-product, and completion layers still visible.
+
+---
+
+## Milestone 6 — R4 equality quotient and projection stack
+
+Status: **integrated on the active carrier through PR #539**
+
+- [x] equality quotient carrier;
+- [x] canonical quotient map;
+- [x] quotient projection layer;
+- [x] representative-choice layer;
+- [x] quotient section layer;
+- [x] proof that projecting the section returns the original quotient class;
+- [x] quotient-section injectivity layer;
+- [x] quotient-section range layer;
+- [x] quotient-section range uniqueness layer.
+
+The latest integrated layer, PR #539, packages:
 
 ```text
-beta < log (19 / 17) / 2;
+witness uniqueness
+projection uniqueness
+full witness uniqueness
+Function.Injective quotientSection
+reflection positivity
+Euclidean invariance
+gauge invariance
 ```
-
-- [c] exponent-two unsigned proxy with matching Wilson action and one-link conditionals;
-- [c] finite random-scan, Poincare, and native heat-bath Hamiltonian consequences;
-- [c] exact finite-volume and side-length scope statement;
-- [p] merge a reconciled and reviewable PR into `main`.
-
-Definition of done:
-
-The finite small-coupling theorem is replayed on `main` and remains explicitly separated from continuum `SU(N)` claims.
-
----
-
-## Milestone 3 — promote native compact Haar heat-bath `L2` theory
-
-Status: **integrated on the carrier through PRs #303--#309**
-
-- [c] canonical single-link Haar coordinates and assembly;
-- [c] exact one-link Gibbs conditional kernel;
-- [c] stationarity and detailed balance;
-- [c] `L2` conditional-expectation projection;
-- [c] idempotence, orthogonality, and fluctuation decomposition;
-- [c] random-scan positive contraction;
-- [c] vacuum and vacuum-orthogonal sector decomposition;
-- [c] compact-group Dobrushin Poincare inequality;
-- [c] finite heat-bath Hamiltonian and restricted energy operator;
-- [c] Lax--Milgram inverse and real resolvent estimates;
-- [c] indexed uniform Dobrushin family;
-- [c] uniform lower spectral enclosure and resolvent norm bound;
-- [c] bundled finite-volume spectral-gap certificate;
-- [ ] transplant the layer onto reconciled `main` in reviewable dependency order.
-
-Definition of done:
-
-The native Haar kernel and `L2` Hamiltonian replace abstract placeholders on `main`, with all measurability, probability-measure, and conditional-expectation assumptions explicit and replayed.
-
----
-
-## Milestone 4 — promote coercive strong-limit transport
-
-Status: **integrated on the carrier through PRs #310--#316**
-
-### Identified common carrier
-
-- [c] uniform quadratic lower bounds pass to a strong limit;
-- [c] symmetry passes to the limit;
-- [c] coercive energy form;
-- [c] Lax--Milgram continuous linear equivalence;
-- [c] all real shifts below the gap are invertible;
-- [c] lower real spectral enclosure;
-- [c] inverse-distance resolvent norm control.
-
-### Varying Hilbert spaces
-
-- [c] exact isometric identification bridge;
-- [c] asymptotic approximation maps and isometric embeddings;
-- [c] transport of finite compact Wilson gap data to a common carrier;
-- [c] compact-Wilson-specific asymptotic strong-limit package;
-- [ ] merge generic analysis before Wilson specialization.
-
-Definition of done:
-
-The common-carrier assumptions are stated independently from the physical interpolation theorem, and the generic strong-limit results are replayed on `main` before their Wilson wrappers.
-
----
-
-## Milestone 5 — promote OS strong-resolvent convergence
-
-Status: **integrated on the carrier through PR #328; CI repaired and green**
-
-- [c] restrict the physical semigroup to the complete vacuum-orthogonal Hilbert sector;
-- [c] prove coercivity and lower spectrum bounds for `I - T(t)`;
-- [c] derive the eventual linear small-time defect estimate from a supplied positive mass slope;
-- [c] define the bounded rescaled defect `t^(-1)(I - T(t))`;
-- [c] obtain the common half-mass lower bound;
-- [c] prove convergence on the canonical Hamiltonian core;
-- [c] prove exact core resolvent-error identities;
-- [c] prove dense range of the Hamiltonian core shift;
-- [c] extend uniformly bounded pointwise convergence from a dense range;
-- [c] construct the graph-closed continuum excitation resolvent for every `lambda < mass / 2`;
-- [c] prove full strong-resolvent convergence on every excitation vector;
-- [c] prove the equivalent norm-to-zero statement;
-- [ ] promote the dependency chain to `main` without hiding the mass-slope or self-adjointness hypotheses.
 
 Validation receipt:
 
 ```text
-PR #328 final head:
-  ba8b9e09856dd419e577a6861addd8f0893c7b56
+PR #539 final head:
+  0de760e4b70749942aac5e61efb189143e6e315a
+
+PR #539 merge commit on the active carrier:
+  1364ddc7f57a98a49482d81ec474e152d962ccee
 
 PR Lean Fast Check:
-  run 5151 — success
+  run 5554 — success
 ```
 
 Definition of done:
 
-The strong-resolvent theorem and its prerequisites are replayed on `main`, with the positive mass-slope and self-adjointness assumptions unchanged and visible.
+The quotient section and its range have uniqueness properties strong enough to support downstream well-definedness proofs for quotient-level analytic structure.
 
 ---
 
-## Milestone 6 — promote operator-graph convergence
+## Milestone 7 — quotient-map injectivity frontier
 
-Status: **integrated on the carrier through PRs #332--#364; CI green**
+Status: **Draft PR #540; not integrated**
 
-- [c] converge resolvent-selected graph pairs;
-- [c] approximate every continuum Hamiltonian graph point;
-- [c] establish graph-norm and sum-norm approximation variants;
-- [c] prove closedness and range characterizations of the continuum graph;
-- [c] identify sequential and filter-indexed graph limits;
-- [c] handle approximate shifted equations;
-- [c] handle varying right-hand sides and varying shifts;
-- [c] define filter Painleve--Kuratowski inner and outer limits;
-- [c] prove recovery and outer-limit containment;
-- [c] identify exact shifted graphs with resolvent graph points;
-- [c] prove ordinary operator-graph convergence without source or shift coordinates in the conclusion;
-- [c] remove the auxiliary shift from the public theorem interface;
-- [c] prove the canonical admissible small-time filter is nontrivial;
-- [c] prove equality of both canonical Painleve--Kuratowski limits with the closed continuum Hamiltonian graph;
-- [c] package canonical graph convergence with below-gap strong-resolvent convergence;
-- [ ] promote the canonical package and its generic filter library to `main`.
+- [d] prove that the current equality quotient map reflects input-carrier equality;
+- [d] prove `Function.Injective quotientMap` for the reconstruction quotient carrier;
+- [d] package model, theorem, closure, and compile-check coverage;
+- [r] repair the current PR Lean Fast Check failure before integration;
+- [ ] after a successful fixed-head replay, merge into the active carrier.
 
-Validation receipt:
+Current receipt:
 
 ```text
-PR #364 head:
-  67428df16f4057b7956f2b873a90c639572d070d
-
-PR #364 merge commit on carrier:
-  7f1dae659bef10ea1713d57d20a620d1065fbf1d
+PR #540 head:
+  da05bf98e9c3f87f3d363e189c6a91d45d5ec7ae
 
 PR Lean Fast Check:
-  run 5205 — success
+  run 5555 — failure
 ```
 
 Definition of done:
 
-The canonical package is replayed from the root `MGAP4D` import surface on `main`, and its limitations are documented: no norm-resolvent conclusion, no unrestricted union-of-graphs closure, and no general spectral-projection convergence without further hypotheses.
+The quotient-map injectivity theorem is replay-clean, merged into the active carrier, and documented as integrated only after the failed draft state is repaired.
 
 ---
 
-## Milestone 7 — instantiate a concrete physical continuum family
+## Milestone 8 — quotient norm and inner-product well-definedness
 
 Status: **open**
 
-- [ ] choose a gauge-compatible Polish or distributional carrier;
-- [ ] define explicit interpolation, smearing, or blocking maps;
-- [ ] specify lattice spacing and physical volume trajectories;
-- [ ] specify the bare or renormalized coupling trajectory;
-- [ ] prove interpolation equivariance for gauge transformations;
-- [ ] prove interpolation equivariance for time translations and reflection;
-- [ ] construct a proper Sobolev-, Besov-, or gauge-invariant compactness functional;
-- [ ] prove compactness of its sublevel sets;
-- [ ] prove the required uniform moment or coercive estimate;
-- [ ] establish tightness for the actual family;
-- [ ] prove nontriviality of the resulting limit;
-- [ ] identify the gauge quotient or gauge-fixing formulation.
+- [ ] define the quotient-level norm or seminorm;
+- [ ] prove representative independence for the norm;
+- [ ] define the quotient-level bilinear form or inner product;
+- [ ] prove representative independence for the inner product;
+- [ ] prove positivity and null-space consistency;
+- [ ] connect reflection positivity to the quotient positivity statement;
+- [ ] preserve Euclidean and gauge invariance through the quotient analytic structure.
 
 Definition of done:
 
-The weak-limit constructor is applied to explicit mathematical objects, and the limit is shown to be nontrivial rather than merely subsequential.
+The quotient carrier supports well-defined analytic data that no longer depend on the selected representative.
 
 ---
 
-## Milestone 8 — derive a uniform physical positive gap
+## Milestone 9 — algebraic and normed-space structure on the quotient
+
+Status: **open**
+
+- [ ] define addition on quotient classes;
+- [ ] define scalar multiplication on quotient classes;
+- [ ] prove well-definedness of addition;
+- [ ] prove well-definedness of scalar multiplication;
+- [ ] construct additive and scalar algebraic instances;
+- [ ] prove norm compatibility with the algebraic operations;
+- [ ] construct the normed-space or seminormed-space layer;
+- [ ] construct the inner-product-space layer once positivity is sufficient.
+
+Definition of done:
+
+The quotient is no longer only a setoid/representative object; it has the algebraic and analytic structure needed for completion.
+
+---
+
+## Milestone 10 — complete the Hilbert space
+
+Status: **open**
+
+- [ ] construct Cauchy sequences or completion data;
+- [ ] build the completed carrier;
+- [ ] prove the completion map is isometric or norm-compatible;
+- [ ] prove density of the image of the quotient carrier;
+- [ ] establish `CompleteSpace` for the completed carrier;
+- [ ] establish the Hilbert-space instance;
+- [ ] define the physical state map into the completed space;
+- [ ] prove density of the physical observable states when required.
+
+Definition of done:
+
+The reconstruction route has a completed real Hilbert space, not merely a quotient carrier with representative bookkeeping.
+
+---
+
+## Milestone 11 — OS semigroup and physical Hamiltonian on the completed space
+
+Status: **open**
+
+- [ ] define the OS contraction semigroup on the completed Hilbert space;
+- [ ] prove strong continuity;
+- [ ] identify the generator;
+- [ ] define the physical Hamiltonian;
+- [ ] prove nonnegativity;
+- [ ] prove symmetry or self-adjointness under explicit hypotheses;
+- [ ] connect the Hamiltonian to the prior conditional OS/operator-limit packages;
+- [ ] expose the exact assumptions needed for a spectral-gap theorem.
+
+Definition of done:
+
+The completed Hilbert space carries a closed self-adjoint physical Hamiltonian with visible hypotheses and replayed Lean interfaces.
+
+---
+
+## Milestone 12 — physical positive-gap certificate
 
 Status: **decisive open mathematical frontier**
 
-The existing finite theorem generator accepts a strict Dobrushin or equivalent coercive certificate.
-
-What remains is to prove a positive estimate uniformly for the actual physical approximation family and scaling trajectory.
-
-Possible formal interfaces include:
-
-- [ ] a uniform Dobrushin coefficient `alpha_n <= alpha_* < 1`;
-- [ ] a uniform Poincare or log-Sobolev inequality;
-- [ ] a block heat-bath or approximate tensorization estimate;
-- [ ] a multiscale or polymer coercivity theorem;
-- [ ] a reflection-positive transfer-operator contraction;
-- [ ] a renormalization-group estimate producing a positive continuum mass slope;
-- [ ] a Mosco or form-convergence theorem preserving the lower bound.
-
-Every route must track lattice spacing, physical volume, coupling trajectory, gauge group, boundary conditions, observable sector, and the distinction between heat-bath Markov time and Euclidean time.
+- [ ] specify one concrete continuum scaling family;
+- [ ] define its gauge group, lattice family, boundary conditions, observable sector, and interpolation maps;
+- [ ] prove tightness or compactness estimates for that family;
+- [ ] prove nontriviality of the resulting continuum limit;
+- [ ] prove a uniform positive gap, mass slope, Poincare/log-Sobolev estimate, transfer contraction, or equivalent physical certificate;
+- [ ] show that the certificate feeds the completed Hamiltonian gap interface.
 
 Definition of done:
 
-A positive lower bound is proved for the actual physical family rather than stored as a structure field or assumed hypothesis.
+A positive mass-gap lower bound is derived from the actual physical approximation family rather than supplied as an abstract input.
 
 ---
 
-## Milestone 9 — complete the instantiated OS reconstruction
+## Milestone 13 — final theorem and external review
 
-Status: **open**
+Status: **not claimed**
 
-- [ ] prove reflection positivity for the full intended continuum observable class;
-- [ ] prove the concrete real-time translation action and joint continuity;
-- [ ] identify the continuum state with the weak limit of the lattice states;
-- [ ] prove clustering or the required vacuum-sector uniqueness statement from physical data;
-- [ ] construct a separating local gauge-invariant observable family;
-- [ ] prove convergence and regularity of the required Schwinger distributions;
-- [ ] complete Euclidean covariance;
-- [ ] discharge the remaining Osterwalder--Schrader axioms;
-- [ ] perform Wightman reconstruction;
-- [ ] relate the reconstructed Hamiltonian to physical observables and units.
+- [ ] assemble a single replayable final theorem path;
+- [ ] remove or discharge all nonphysical placeholders;
+- [ ] document every remaining hypothesis and every theorem dependency;
+- [ ] pass internal review gates;
+- [ ] obtain independent external mathematical review;
+- [ ] only then consider public final theorem language.
 
 Definition of done:
 
-The abstract OS data used by the Hamiltonian, resolvent, and graph-limit theorems are generated from the concrete continuum Yang--Mills construction.
-
----
-
-## Milestone 10 — spectral consequences beyond the current carrier
-
-Status: **future conditional analysis**
-
-- [ ] derive convergence of bounded continuous functional calculi where justified;
-- [ ] connect strong-resolvent convergence to semigroup convergence under the appropriate theorem;
-- [ ] study isolated spectral projections under additional hypotheses;
-- [ ] identify conditions preserving the vacuum projection and positive gap;
-- [ ] formalize needed Mosco, graph, or form-convergence equivalences;
-- [ ] connect excitation resolvents and graph limits to physical correlation decay.
-
-Strong-resolvent and Painleve--Kuratowski graph convergence alone do not imply norm-resolvent convergence or convergence of every spectral projection.
-
----
-
-## Milestone 11 — physical normalization and external review
-
-Status: **open**
-
-- [ ] keep the internal `33/20` lane separate from the physical mass parameter;
-- [ ] derive any numerical mass from the instantiated Hamiltonian and scaling data;
-- [ ] prove dimensional normalization and units;
-- [ ] stabilize theorem names and import roots after carrier promotion;
-- [ ] provide reproducible CI and local replay receipts;
-- [ ] obtain independent mathematical review;
-- [ ] distinguish machine replay, internal review, and external consensus in every public claim.
-
-The value `33/20` remains an internal normalized audit value unless a separate physical derivation is completed.
-
-## Immediate execution order
-
-1. Reconcile `formal/real-hilbert-uniform-coercive-strong-limit` with current `main`.
-2. Split the carrier into finite, generic functional-analytic, and continuum OS merge units.
-3. Promote the explicit finite `Z2` and native compact Haar heat-bath layers.
-4. Promote uniform finite spectral certificates and generic strong-limit transport.
-5. Promote the OS defect, full strong-resolvent, graph-convergence, and canonical package layers.
-6. Instantiate the physical carrier, interpolation, scaling trajectory, and nontrivial weak limit.
-7. Prove a uniform positive physical gap for that family.
-8. Apply the merged OS and operator-limit machinery to the instantiated continuum theory.
-9. Complete reconstruction, physical normalization, and independent review.
+The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, and the actual four-dimensional Yang--Mills mass-gap theorem.
