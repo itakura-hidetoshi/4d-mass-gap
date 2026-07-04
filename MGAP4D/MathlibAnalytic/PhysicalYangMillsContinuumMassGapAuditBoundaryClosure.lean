@@ -16,9 +16,11 @@ structure ContinuumMassGapAuditBoundaryClosure
     (R : ContinuumMassGapRoutePackage C O M S P)
     (A : ContinuumMassGapExternalAuditPacket C O M S P R)
     (Q : ContinuumMassGapAuditCompletionReceipt C O M S P R A) where
-  positiveGapReleased : ContinuumMassGapAuditCompletionReceipt.existsPositiveGap Q
-  auditReadyReleased : Q.auditReadyDischarged
-  boundaryMarkersReleased : Q.retainedBoundaryMarkers
+  positiveGapReleased : ∃ gap : ℝ, 0 < gap
+  auditReadyReleased : A.auditReady
+  boundaryMarkersReleased :
+    R.ledger.separatesClusteringFromSpectralGap ∧
+      R.ledger.noUnconditionalClayClaim
 
 namespace ContinuumMassGapAuditBoundaryClosure
 
@@ -65,6 +67,20 @@ theorem existsPositiveGap
     (B : ContinuumMassGapAuditBoundaryClosure C O M S P R A Q) :
     ∃ gap : ℝ, 0 < gap :=
   B.positiveGapReleased
+
+/-- Extract the audit-readiness proof. -/
+theorem auditReady
+    {C : ContinuumYangMillsConstructionCertificate}
+    {O : ContinuumOSReconstructionInterface C}
+    {M : ContinuumMassGapHandoffInterface C O}
+    {S : ContinuumHamiltonianSpectralGapCertificate C O M}
+    {P : ContinuumPositiveMassGapCertificate C O M S}
+    {R : ContinuumMassGapRoutePackage C O M S P}
+    {A : ContinuumMassGapExternalAuditPacket C O M S P R}
+    {Q : ContinuumMassGapAuditCompletionReceipt C O M S P R A}
+    (B : ContinuumMassGapAuditBoundaryClosure C O M S P R A Q) :
+    A.auditReady :=
+  B.auditReadyReleased
 
 end ContinuumMassGapAuditBoundaryClosure
 
