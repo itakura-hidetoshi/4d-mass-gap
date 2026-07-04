@@ -20,8 +20,8 @@ def nPointFamilyOutputs
   N.nPointFamily = H.schwingerModel.schwingerFunctions ∧
     N.observableCarrier = H.schwingerModel.observableCarrier ∧
       N.orbitCarrier = H.schwingerModel.orbitCarrier ∧
-        H.schwingerModel.gaugeInvariantSchwingerFunctionsConstructed ∧
-          H.schwingerModel.euclideanInvariant ∧
+        G.orbitModel.gaugeInvariantConstruction ∧
+          G.orbitModel.euclideanInvariantConstruction ∧
             S.measurePackage.reflectionPositive
 
 /-- The R4 Schwinger n-point family model proves its bundled outputs. -/
