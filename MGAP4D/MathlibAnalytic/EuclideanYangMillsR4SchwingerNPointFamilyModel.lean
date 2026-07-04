@@ -23,8 +23,8 @@ structure EuclideanYangMillsR4SchwingerNPointFamilyModel
   observableCarrier_eq_model : observableCarrier = H.schwingerModel.observableCarrier
   orbitCarrier : Type
   orbitCarrier_eq_model : orbitCarrier = H.schwingerModel.orbitCarrier
-  gaugeInvariantEvidence : H.schwingerModel.gaugeInvariantSchwingerFunctionsConstructed
-  euclideanInvariantEvidence : H.schwingerModel.euclideanInvariant
+  gaugeInvariantEvidence : G.orbitModel.gaugeInvariantConstruction
+  euclideanInvariantEvidence : G.orbitModel.euclideanInvariantConstruction
   reflectionPositive : S.measurePackage.reflectionPositive
 
 namespace EuclideanYangMillsR4SchwingerNPointFamilyModel
