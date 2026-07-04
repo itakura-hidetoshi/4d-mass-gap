@@ -19,8 +19,8 @@ structure EuclideanYangMillsR4SchwingerNPointFamilyClosure
   nPointFamilyCarrier : familyModel.nPointFamily = H.schwingerModel.schwingerFunctions
   observableCarrier : familyModel.observableCarrier = H.schwingerModel.observableCarrier
   orbitCarrier : familyModel.orbitCarrier = H.schwingerModel.orbitCarrier
-  gaugeInvariantEvidence : familyModel.gaugeInvariantEvidence
-  euclideanInvariantEvidence : familyModel.euclideanInvariantEvidence
+  gaugeInvariantEvidence : G.orbitModel.gaugeInvariantConstruction
+  euclideanInvariantEvidence : G.orbitModel.euclideanInvariantConstruction
   reflectionPositive : S.measurePackage.reflectionPositive
 
 namespace EuclideanYangMillsR4SchwingerNPointFamilyClosure
