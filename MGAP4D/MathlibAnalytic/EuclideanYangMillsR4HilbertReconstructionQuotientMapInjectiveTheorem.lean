@@ -8,7 +8,7 @@ noncomputable section
 
 namespace EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel
 
-/-- Bundled outputs for the quotient-map injectivity stage. -/
+/-- Bundled outputs for the quotient-map section-range faithfulness stage. -/
 def quotientMapInjectiveOutputs
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {K : EuclideanYangMillsCompleteConstructionClosure S}
@@ -31,15 +31,16 @@ def quotientMapInjectiveOutputs
     (M : EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel S K R4 A G H N F C I O Q P R U J V W) :
     Prop :=
   (∀ {x y : EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I},
-      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I x =
-        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I y → x = y) ∧
-    Function.Injective (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I) ∧
+      x ∈ V.sectionRange → y ∈ V.sectionRange →
+        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I x =
+          EuclideanYangMillsR4HilbertReconstructionQuotient.quotientMap I y → x = y) ∧
+    M.sectionRange = V.sectionRange ∧
       Function.Injective (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection I) ∧
         S.measurePackage.reflectionPositive ∧
           G.orbitModel.euclideanInvariantConstruction ∧
             G.orbitModel.gaugeInvariantConstruction
 
-/-- The quotient-map injectivity model proves its bundled outputs. -/
+/-- The quotient-map section-range faithfulness model proves its bundled outputs. -/
 theorem quotientMapInjectiveOutputs_holds
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {K : EuclideanYangMillsCompleteConstructionClosure S}
@@ -61,14 +62,14 @@ theorem quotientMapInjectiveOutputs_holds
     {W : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeUniqueClosure S K R4 A G H N F C I O Q P R U J V}
     (M : EuclideanYangMillsR4HilbertReconstructionQuotientMapInjectiveModel S K R4 A G H N F C I O Q P R U J V W) :
     M.quotientMapInjectiveOutputs :=
-  ⟨M.quotientMapReflectsInputEq,
-    M.quotientMapInjective,
+  ⟨M.quotientMapReflectsSectionRangeEq,
+    M.sectionRange_eq,
     M.sectionInjective,
     M.reflectionPositive,
     M.euclideanInvariant,
     M.gaugeInvariant⟩
 
-/-- The section-range uniqueness closure induces a quotient-map injectivity model. -/
+/-- The section-range uniqueness closure induces a quotient-map section-range faithfulness model. -/
 theorem nonempty_ofSectionRangeUniqueClosure
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine)
     (K : EuclideanYangMillsCompleteConstructionClosure S)
