@@ -25,12 +25,14 @@ def quotientOutputs
     Prop :=
   EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I =
       Sigma I.inputModel.reconstructionInputCarrier ∧
-    Equivalence (EuclideanYangMillsR4HilbertReconstructionQuotient.separationRelation I) ∧
-      (Nonempty (EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I) →
-        Nonempty (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientCarrier I)) ∧
-        S.measurePackage.reflectionPositive ∧
-          G.orbitModel.euclideanInvariantConstruction ∧
-            G.orbitModel.gaugeInvariantConstruction
+    M.separationSetoidCarrier =
+      EuclideanYangMillsR4HilbertReconstructionQuotient.separationSetoid I ∧
+      Equivalence (EuclideanYangMillsR4HilbertReconstructionQuotient.separationRelation I) ∧
+        (Nonempty (EuclideanYangMillsR4HilbertReconstructionQuotient.inputCarrier I) →
+          Nonempty (EuclideanYangMillsR4HilbertReconstructionQuotient.quotientCarrier I)) ∧
+          S.measurePackage.reflectionPositive ∧
+            G.orbitModel.euclideanInvariantConstruction ∧
+              G.orbitModel.gaugeInvariantConstruction
 
 /-- The quotient model proves its bundled outputs. -/
 theorem quotientOutputs_holds
@@ -48,6 +50,7 @@ theorem quotientOutputs_holds
     (M : EuclideanYangMillsR4HilbertReconstructionQuotientModel S K R4 A G H N F C I O) :
     M.quotientOutputs :=
   ⟨M.inputCarrier_eq,
+    M.separationSetoidCarrier_eq,
     M.separationEquivalence,
     M.quotientNonempty,
     M.reflectionPositive,
