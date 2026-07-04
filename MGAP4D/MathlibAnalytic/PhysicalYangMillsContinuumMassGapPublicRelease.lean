@@ -33,8 +33,8 @@ theorem exists_public_positive_gap_with_boundaries
       R.ledger.separatesClusteringFromSpectralGap ∧
         R.ledger.noUnconditionalClayClaim :=
   ⟨exists_public_positive_gap I,
-    I.audit.separatesClusteringFromSpectralGap,
-    I.audit.noUnconditionalClayClaim⟩
+    ⟨I.audit.separatesClusteringFromSpectralGap,
+      I.audit.noUnconditionalClayClaim⟩⟩
 
 /-- Build a route index and expose the conditional positive gap from a route
 package in one theorem. -/
