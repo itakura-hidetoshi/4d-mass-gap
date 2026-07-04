@@ -20,8 +20,8 @@ structure EuclideanYangMillsR4GaugeInvariantSchwingerClosure
   schwingerFunctionsCarrier :
     schwingerModel.schwingerFunctions = S.measurePackage.schwingerFunctions
   gaugeInvariantSchwingerFunctionsConstructed :
-    S.gaugeInvariantSchwingerFunctionsConstructed
-  euclideanInvariant : S.measurePackage.euclideanInvariant
+    G.orbitModel.gaugeInvariantConstruction
+  euclideanInvariant : G.orbitModel.euclideanInvariantConstruction
   reflectionPositive : S.measurePackage.reflectionPositive
 
 namespace EuclideanYangMillsR4GaugeInvariantSchwingerClosure
