@@ -32,8 +32,9 @@ theorem quotientSection_injective
 theorem quotientSection_eq_reflects_class
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C)
     {q r : quotientCarrier I} :
-    quotientSection I q = quotientSection I r → q = r :=
-  quotientSection_injective I
+    quotientSection I q = quotientSection I r → q = r := by
+  intro hqr
+  exact quotientSection_injective I hqr
 
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
@@ -98,8 +99,7 @@ def ofSectionClosure
     sectionClosure_eq := rfl
     sectionInjective := EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection_injective I
     sectionEqReflectsClass :=
-      fun {q} {r} hqr =>
-        EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection_eq_reflects_class I hqr
+      EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection_eq_reflects_class I
     sectionProjects := EuclideanYangMillsR4HilbertReconstructionQuotient.quotientSection_projects I
     reflectionPositive := U.reflectionPositive
     euclideanInvariant := U.euclideanInvariant
