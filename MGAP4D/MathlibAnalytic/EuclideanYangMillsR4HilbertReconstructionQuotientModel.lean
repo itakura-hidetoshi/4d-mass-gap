@@ -38,9 +38,9 @@ theorem separationRelation_equivalence
   · intro x
     rfl
   · intro x y hxy
-    exact hxy.symm
+    simpa [separationRelation] using hxy.symm
   · intro x y z hxy hyz
-    exact hxy.trans hyz
+    simpa [separationRelation] using hxy.trans hyz
 
 /-- Canonical equality setoid on the reconstruction input carrier. -/
 def separationSetoid
@@ -53,20 +53,20 @@ def separationSetoid
 def quotientCarrier
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C) :
     Type :=
-  Quot (separationSetoid I)
+  Quotient (separationSetoid I)
 
 /-- Canonical map into the quotient carrier. -/
 def quotientMap
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C) :
     inputCarrier I → quotientCarrier I :=
-  Quot.mk (separationSetoid I)
+  Quotient.mk (separationSetoid I)
 
 /-- The quotient map respects the separation relation. -/
 theorem quotientMap_respects
     (I : EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure S K R4 A G H N F C)
     {x y : inputCarrier I} (hxy : separationRelation I x y) :
     quotientMap I x = quotientMap I y :=
-  Quot.sound hxy
+  Quotient.sound hxy
 
 /-- Nonemptiness passes from the input carrier to the quotient carrier. -/
 theorem quotientCarrier_nonempty_of_input_nonempty
