@@ -1,6 +1,6 @@
 # MGAP4D
 
-**MGAP4D** is Hidetoshi Itakura's canonical Lean 4 / mathlib repository for a proof-carrying investigation of the four-dimensional Yang--Mills existence and mass-gap problem.
+**MGAP4D** is Hidetoshi Itakura's Lean 4 / mathlib repository for a proof-carrying investigation of the four-dimensional Yang--Mills existence and mass-gap problem.
 
 ```text
 Canonical repository: itakura-hidetoshi/4d-mass-gap
@@ -9,23 +9,42 @@ Reference bridge: docs/kuuos_reference_bridge.md
 Development roadmap: ROADMAP.md
 ```
 
-## Current status — 2026-07-05
+## Current status — 2026-07-06 JST
 
 This repository is a replayable Lean 4 / mathlib formal-development surface.
 
-It does **not** yet establish an unconditional interacting four-dimensional continuum Yang--Mills theory, a complete physical Hilbert-space reconstruction, a self-adjoint physical Hamiltonian, or a physical mass gap derived from one fully instantiated continuum scaling trajectory.
-
-The active mathematical work is being carried on the branch:
+The active proof carrier is:
 
 ```text
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The default branch `main` remains the public repository entry point, but the current proof carrier has advanced beyond the older `main` documentation surface.
+The current integrated R4 Hilbert reconstruction lane has reached a **completed real Hilbert-space API object** and a **completed Hilbert-space handoff API** for downstream OS/operator layers.
 
-A theorem on the active carrier should not be read as a theorem on `main` until it has been reconciled with `main`, merged, and replayed there.
+The completed carrier is exposed as:
 
-A theorem that accepts reflection positivity, Euclidean covariance, gauge invariance, compactness, a positive mass slope, a coercive estimate, a self-adjoint Hamiltonian, or a spectral-gap witness as an input remains conditional until those inputs are constructed from the intended physical Yang--Mills family.
+```lean
+r4HilbertCompletedHilbertSpace
+```
+
+It is identified with the standard mathlib completion of the R4 pre-Hilbert carrier.
+
+The integrated API also exposes:
+
+```text
+NormedAddCommGroup
+InnerProductSpace ℝ
+CompleteSpace
+DenseRange from the pre-Hilbert carrier
+DenseRange from the quotient carrier
+identification with UniformSpace.Completion
+quotient-map factorization through the pre-Hilbert carrier
+completed Hilbert-space handoff theorem
+```
+
+This is a completed Hilbert-space layer for the formal R4 reconstruction route.
+
+It is **not** yet a self-adjoint physical Hamiltonian, a spectral theorem layer for that Hamiltonian, or a four-dimensional Yang--Mills mass-gap theorem.
 
 ## Repository snapshot
 
@@ -33,25 +52,46 @@ A theorem that accepts reflection positivity, Euclidean covariance, gauge invari
 active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-latest integrated carrier PR:
-  PR #539 — Add R4 Hilbert reconstruction quotient section range uniqueness layer
+latest integrated proof checkpoint:
+  PR #600 — Add R4 completed Hilbert space handoff API
 
-latest integrated carrier merge commit:
-  1364ddc7f57a98a49482d81ec474e152d962ccee
+latest integrated proof checkpoint merge commit:
+  4d08c0d0f5be958c223c48c23942f588e4fba8c3
 
-latest integrated carrier PR head:
-  0de760e4b70749942aac5e61efb189143e6e315a
+latest integrated proof checkpoint PR head:
+  b6a3b450bddfca55549653975f5cfa742f7e97f6
 
 latest integrated validation:
-  PR Lean Fast Check run 5554 — success
+  PR Lean Fast Check run 5626 — success
 
-current open draft after that checkpoint:
-  PR #540 — Add R4 Hilbert reconstruction quotient map injectivity layer
-  head da05bf98e9c3f87f3d363e189c6a91d45d5ec7ae
-  PR Lean Fast Check run 5555 — failure
+latest active-carrier documentation sync:
+  PR #602 — Update docs after completed Hilbert handoff merge
+  merge commit 1bd036596942ec1f60b9b9542c1969dc7a896741
+
+current open draft frontier after that checkpoint:
+  none recorded in this README
 ```
 
-PR #540 is therefore documented as an open draft frontier, not as an integrated theorem layer.
+The default branch `main` remains the public repository entry point.
+
+The active proof carrier may be ahead of the older `main` proof surface.
+
+A theorem on the active carrier should not be read as a theorem on `main` until it has been reconciled with `main`, merged, and replayed there.
+
+## Non-claims
+
+The repository does **not** yet establish any of the following as unconditional physical results:
+
+```text
+an interacting four-dimensional continuum Yang--Mills theory;
+a fully instantiated continuum scaling trajectory;
+a physical self-adjoint Yang--Mills Hamiltonian;
+a spectral-gap theorem for that Hamiltonian;
+an unconditional Clay Millennium Yang--Mills mass-gap theorem;
+independent external mathematical consensus.
+```
+
+A theorem that accepts reflection positivity, Euclidean covariance, gauge invariance, compactness, a positive mass slope, a coercive estimate, a self-adjoint Hamiltonian, or a spectral-gap witness as an input remains conditional until those inputs are constructed from the intended physical Yang--Mills family.
 
 ## Proved and packaged layers
 
@@ -85,9 +125,9 @@ See `docs/exact_gap_layer_separation.md` where applicable.
 
 ## Active R4 construction chain
 
-The current active carrier is developing an R4 continuum-measure-to-Hilbert reconstruction chain.
+The current active carrier develops an R4 continuum-measure-to-Hilbert reconstruction chain.
 
-The integrated chain includes the following layers:
+The integrated chain now includes the following layers:
 
 ```text
 EuclideanYangMillsContinuumMeasureConstructionSpine
@@ -104,52 +144,65 @@ EuclideanYangMillsContinuumMeasureConstructionSpine
   -> equality quotient carrier
   -> quotient projection
   -> quotient representative choice
-  -> quotient section
-  -> quotient-section injectivity
-  -> quotient-section range
-  -> quotient-section range uniqueness
+  -> quotient section and range transport stack
+  -> quotient-map injectivity and transport readiness APIs
+  -> completion input and completion object data
+  -> pre-Hilbert structure data
+  -> completed Hilbert structure data
+  -> actual dense-range data
+  -> standard mathlib completion identity API
+  -> quotient-to-standard-completion route
+  -> quotient-dense standard completion data
+  -> standard real Hilbert completion construction theorem
+  -> completed Hilbert space API
+  -> completed Hilbert space handoff API
 ```
 
-As of PR #539, the carrier proves the quotient-section range uniqueness layer.
+As of PR #600, the active carrier has an explicit completed Hilbert-space object and a handoff theorem for downstream layers in the formal R4 reconstruction route.
 
-The bundled outputs include:
+The central object is:
+
+```lean
+r4HilbertCompletedHilbertSpace
+```
+
+The main integrated construction theorem is:
+
+```lean
+r4HilbertCompletedHilbertSpace_constructed
+```
+
+The handoff theorem is:
+
+```lean
+r4HilbertCompletedHilbertSpaceHandoff_constructed
+```
+
+These package the real inner-product structure, completeness, dense pre-Hilbert map, dense quotient map, equality with the standard `UniformSpace.Completion` of the R4 pre-Hilbert carrier, quotient-map factorization, and route readiness.
+
+The quotient map into the completed space still factors through the pre-Hilbert carrier.
+
+This factorization is part of the integrated API and is not a Hamiltonian statement.
+
+## What is still missing after the completed Hilbert-space handoff
+
+The completed Hilbert-space API and handoff API are important reconstruction milestones.
+
+They do not close the physical mass-gap problem.
+
+The remaining formal and mathematical layers include at least:
 
 ```text
-witness uniqueness inside the quotient-section range
-projection uniqueness for selected representatives
-full witness uniqueness
-Function.Injective quotientSection
-reflection positivity carried from the measure package
-Euclidean invariance carried from the orbit model
-gauge invariance carried from the orbit model
+OS contraction semigroup on the completed space;
+strong continuity of that semigroup;
+identification of the generator;
+construction of the physical Hamiltonian;
+closedness and self-adjointness of the Hamiltonian under explicit hypotheses;
+spectral theorem interfaces for that Hamiltonian;
+a positive gap statement for the Hamiltonian;
+one concrete continuum scaling family supplying all physical hypotheses;
+uniform estimates that produce the physical positive gap rather than assume it.
 ```
-
-This is an important algebraic separation step for the reconstruction route.
-
-It is still not the completed physical Hilbert space.
-
-## What is still missing for the completed Hilbert space
-
-The present quotient and section layers organize representatives and equality data.
-
-A completed physical Hilbert reconstruction still requires additional formal layers, including at least:
-
-- a well-defined norm or seminorm on the quotient carrier;
-- a well-defined inner product or bilinear form on quotient classes;
-- proof that quotient representatives do not change the norm and inner product;
-- positivity and null-space consistency;
-- additive and scalar algebraic structure on the quotient;
-- normed-space and inner-product-space instances;
-- Cauchy completion or a complete carrier;
-- a `CompleteSpace` and Hilbert-space instance;
-- a dense physical-state map from the observable input surface;
-- the OS contraction semigroup on the reconstructed space;
-- the physical Hamiltonian as a closed self-adjoint generator;
-- spectral theorem interfaces and a gap statement for the physical Hamiltonian.
-
-PR #540 begins the next equality-reflection step by attempting to prove injectivity of the current quotient map.
-
-Because PR #540 is still draft and its current CI run failed, that result is not counted as integrated.
 
 ## Current theorem boundary
 
@@ -158,14 +211,20 @@ Because PR #540 is still draft and its current CI run failed, that result is not
 | Finite Wilson Gibbs and finite heat-bath theorem generators | present in the repository history |
 | Conditional weak-limit, OS, Hamiltonian, resolvent, and graph-limit packages | present as conditional theorem packages |
 | Exact `33/20` scalar lane | internal normalization and audit lane |
-| R4 continuum construction closure through correlation structure | integrated on the active carrier |
+| R4 continuum construction through correlation structure | integrated on the active carrier |
 | R4 reflection-positive reconstruction input | integrated on the active carrier |
-| R4 Hilbert reconstruction carrier | integrated on the active carrier |
-| R4 quotient projection, representative, and section layers | integrated on the active carrier |
-| R4 quotient-section range uniqueness | integrated by PR #539 |
-| R4 quotient-map injectivity | draft PR #540; not integrated |
-| Completed physical Hilbert space | open |
-| Self-adjoint physical Hamiltonian from the completed Hilbert space | open |
+| R4 quotient, section, range, and transport bookkeeping | integrated on the active carrier |
+| R4 pre-Hilbert structure data | integrated on the active carrier |
+| R4 completed Hilbert structure data | integrated on the active carrier |
+| R4 standard completion identity API | integrated on the active carrier |
+| R4 quotient-to-standard-completion route | integrated on the active carrier |
+| R4 quotient-dense standard completion data | integrated on the active carrier |
+| R4 standard real Hilbert completion construction theorem | integrated on the active carrier |
+| R4 completed Hilbert space API | integrated by PR #599 |
+| R4 completed Hilbert space handoff API | integrated by PR #600 |
+| OS semigroup on the completed Hilbert space | open |
+| Self-adjoint physical Hamiltonian | open |
+| Spectral-gap theorem for the physical Hamiltonian | open |
 | Uniform physical positive gap from a concrete continuum scaling family | open |
 | Unconditional four-dimensional Yang--Mills mass-gap theorem | not claimed |
 | Independent external mathematical consensus | not claimed |
@@ -205,8 +264,12 @@ then start the next layer from the updated carrier head
 
 The documentation must preserve the distinction between:
 
-- finite-volume Markov or Wilson theorem generators;
-- conditional continuum reconstruction packages;
-- exact internal scalar normalization lanes;
-- active R4 Hilbert reconstruction layers;
-- a completed physical Yang--Mills theorem.
+```text
+finite-volume Markov or Wilson theorem generators;
+conditional continuum reconstruction packages;
+exact internal scalar normalization lanes;
+active R4 Hilbert reconstruction layers;
+completed Hilbert-space API layers;
+OS semigroup, Hamiltonian, and spectral-gap layers;
+a completed physical Yang--Mills theorem.
+```
