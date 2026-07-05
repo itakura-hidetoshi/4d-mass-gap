@@ -2,31 +2,35 @@
 
 This roadmap records the active proof-development path of `itakura-hidetoshi/4d-mass-gap`.
 
-## Snapshot — 2026-07-05
+## Snapshot — 2026-07-06 JST
 
 ```text
 active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-latest integrated carrier PR:
-  PR #539 — Add R4 Hilbert reconstruction quotient section range uniqueness layer
+latest integrated proof checkpoint:
+  PR #600 — Add R4 completed Hilbert space handoff API
 
-latest integrated carrier merge commit:
-  1364ddc7f57a98a49482d81ec474e152d962ccee
+latest integrated proof checkpoint merge commit:
+  4d08c0d0f5be958c223c48c23942f588e4fba8c3
 
-latest integrated carrier PR head:
-  0de760e4b70749942aac5e61efb189143e6e315a
+latest integrated proof checkpoint PR head:
+  b6a3b450bddfca55549653975f5cfa742f7e97f6
 
 latest integrated validation:
-  PR Lean Fast Check run 5554 — success
+  PR Lean Fast Check run 5626 — success
+
+latest active-carrier documentation sync:
+  PR #602 — Update docs after completed Hilbert handoff merge
+  merge commit 1bd036596942ec1f60b9b9542c1969dc7a896741
 
 current open draft frontier:
-  PR #540 — Add R4 Hilbert reconstruction quotient map injectivity layer
-  head da05bf98e9c3f87f3d363e189c6a91d45d5ec7ae
-  PR Lean Fast Check run 5555 — failure
+  none recorded in this roadmap
 ```
 
-The repository does **not** yet prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a completed physical Hilbert reconstruction, a self-adjoint physical Hamiltonian, or a physical mass gap from one fully instantiated continuum scaling trajectory.
+The repository now has an integrated completed R4 Hilbert-space API object and an integrated completed Hilbert-space handoff API on the active carrier.
+
+It still does **not** prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a self-adjoint physical Hamiltonian, or a physical mass gap from one fully instantiated continuum scaling trajectory.
 
 Notation:
 
@@ -52,7 +56,7 @@ Status: **available as prior theorem infrastructure**
 - [x] Dobrushin, Rayleigh, Poincare, and finite spectral-gap consequences from strict finite certificates;
 - [x] conditional weak-limit, OS reconstruction, Hamiltonian, resolvent, and operator-graph theorem packages;
 - [x] exact internal scalar normalization and audit lanes, including the `33/20` lane;
-- [ ] keep these layers explicitly separated from a final physical mass-gap claim.
+- [x] keep these layers explicitly separated from a final physical mass-gap claim.
 
 Definition of done:
 
@@ -70,7 +74,7 @@ Status: **active workflow requirement**
 - [x] require PR Lean Fast Check before treating the layer as integrated;
 - [x] merge only after fixed-head review;
 - [x] start each next layer from the updated carrier head;
-- [ ] do not promote draft or failing PR results into README, roadmap, or theorem-boundary language.
+- [x] do not promote draft or failing PR results into README, roadmap, or theorem-boundary language.
 
 Definition of done:
 
@@ -105,7 +109,7 @@ Status: **integrated on the active carrier**
 - [x] propagation of reflection positivity from the measure package;
 - [x] propagation of Euclidean invariance from the orbit model;
 - [x] propagation of gauge invariance from the orbit model;
-- [ ] keep the input layer separate from the completed Hilbert-space structure.
+- [x] keep the input layer separate from the completed Hilbert-space structure.
 
 Definition of done:
 
@@ -113,160 +117,188 @@ The reconstruction input surface is available as a formal source of reflection-p
 
 ---
 
-## Milestone 5 — R4 Hilbert reconstruction carrier
+## Milestone 5 — R4 quotient and transport bookkeeping
 
 Status: **integrated on the active carrier**
 
-- [x] define the reconstruction input carrier;
-- [x] package the Hilbert reconstruction carrier closure;
-- [x] expose the carrier as the domain for quotient construction;
-- [ ] avoid presenting the carrier as a completed Hilbert space.
-
-Definition of done:
-
-The carrier exists as the pre-Hilbert or input side of the reconstruction route, with later quotient, norm, inner-product, and completion layers still visible.
-
----
-
-## Milestone 6 — R4 equality quotient and projection stack
-
-Status: **integrated on the active carrier through PR #539**
-
+- [x] Hilbert reconstruction carrier closure;
 - [x] equality quotient carrier;
 - [x] canonical quotient map;
 - [x] quotient projection layer;
 - [x] representative-choice layer;
 - [x] quotient section layer;
-- [x] proof that projecting the section returns the original quotient class;
 - [x] quotient-section injectivity layer;
 - [x] quotient-section range layer;
-- [x] quotient-section range uniqueness layer.
+- [x] quotient-section range uniqueness layer;
+- [x] quotient-map injectivity and transport-readiness APIs;
+- [x] range-transport pair APIs and round-trip consequences.
 
-The latest integrated layer, PR #539, packages:
+Definition of done:
 
-```text
-witness uniqueness
-projection uniqueness
-full witness uniqueness
-Function.Injective quotientSection
-reflection positivity
-Euclidean invariance
-gauge invariance
-```
+The quotient, section, range, and transport layers provide the bookkeeping needed to route quotient data toward actual analytic structure.
+
+---
+
+## Milestone 6 — completion input, object, and readiness APIs
+
+Status: **integrated on the active carrier**
+
+- [x] R4 completion input data;
+- [x] R4 completion object data;
+- [x] R4 completion map API;
+- [x] R4 completion readiness API;
+- [x] R4 completion transport API;
+- [x] R4 final completion API.
+
+Definition of done:
+
+The completion route exposes its input, object, map, readiness, and transport obligations without asserting the completed Hilbert space before the required analytic data are available.
+
+---
+
+## Milestone 7 — pre-Hilbert and completed-structure data
+
+Status: **integrated on the active carrier**
+
+- [x] pre-completion structure data;
+- [x] quotient-to-pre-Hilbert map;
+- [x] quotient-to-pre-Hilbert injectivity;
+- [x] quotient inner-product well-definedness fields;
+- [x] reflection-positive form descent fields;
+- [x] quotient positive-definiteness fields;
+- [x] completed Hilbert structure data;
+- [x] complete-space field for the completed carrier;
+- [x] dense-range data for the pre-to-completed and quotient-to-completed maps;
+- [x] completed actual API projections.
+
+Definition of done:
+
+The reconstruction route has moved from quotient bookkeeping to actual pre-Hilbert and completed-structure data, while preserving which statements are data fields and which are theorem consequences.
+
+---
+
+## Milestone 8 — standard completion identity and quotient route
+
+Status: **integrated on the active carrier**
+
+- [x] standard completion carrier as `UniformSpace.Completion` of the R4 pre-Hilbert carrier;
+- [x] standard completion map from the pre-Hilbert carrier;
+- [x] real inner-product projection for the standard completion;
+- [x] `CompleteSpace` projection for the standard completion;
+- [x] dense range of the standard completion map;
+- [x] quotient-to-standard-completion route;
+- [x] quotient map factorization through the pre-Hilbert carrier.
+
+Definition of done:
+
+The carrier is definitionally tied to the mathlib completion route rather than only to an abstract completed carrier.
+
+---
+
+## Milestone 9 — quotient-dense standard completion data and theorem API
+
+Status: **integrated on the active carrier**
+
+- [x] data layer carrying actual `DenseRange` for the quotient-to-standard-completion map;
+- [x] theorem API exposing dense range for the original quotient map itself;
+- [x] theorem API exposing pre-density, quotient-density, factorization, and route readiness;
+- [x] construction bundle for the standard real Hilbert completion.
+
+Definition of done:
+
+The quotient-to-completion map itself is available as a dense map into the standard completed carrier.
+
+---
+
+## Milestone 10 — completed R4 Hilbert space API
+
+Status: **integrated by PR #599**
+
+- [x] expose the completed carrier as `r4HilbertCompletedHilbertSpace`;
+- [x] project `NormedAddCommGroup` for the completed space;
+- [x] project real `InnerProductSpace ℝ` for the completed space;
+- [x] project `CompleteSpace` for the completed space;
+- [x] expose the dense pre-Hilbert map;
+- [x] expose the dense quotient map;
+- [x] prove equality with `UniformSpace.Completion` of the R4 pre-Hilbert carrier;
+- [x] expose quotient-map factorization through the pre-Hilbert carrier;
+- [x] bundle the completed Hilbert-space construction theorem.
 
 Validation receipt:
 
 ```text
-PR #539 final head:
-  0de760e4b70749942aac5e61efb189143e6e315a
+PR #599 final head:
+  4c9e3b83f46b59e7a9dac9802824ac707f95a8fa
 
-PR #539 merge commit on the active carrier:
-  1364ddc7f57a98a49482d81ec474e152d962ccee
+PR #599 merge commit on the active carrier:
+  a4beaab42037db3f974574c44bfbb114b1c5d934
 
 PR Lean Fast Check:
-  run 5554 — success
+  run 5625 — success
 ```
 
 Definition of done:
 
-The quotient section and its range have uniqueness properties strong enough to support downstream well-definedness proofs for quotient-level analytic structure.
+The active carrier has a completed real Hilbert-space object for the formal R4 reconstruction route.
 
 ---
 
-## Milestone 7 — quotient-map injectivity frontier
+## Milestone 11 — completed Hilbert-space handoff API
 
-Status: **Draft PR #540; not integrated**
+Status: **integrated by PR #600**
 
-- [d] prove that the current equality quotient map reflects input-carrier equality;
-- [d] prove `Function.Injective quotientMap` for the reconstruction quotient carrier;
-- [d] package model, theorem, closure, and compile-check coverage;
-- [r] repair the current PR Lean Fast Check failure before integration;
-- [ ] after a successful fixed-head replay, merge into the active carrier.
+- [x] expose a handoff carrier for downstream layers;
+- [x] expose handoff pre-Hilbert and quotient maps;
+- [x] bundle dense pre-Hilbert and quotient maps;
+- [x] bundle quotient factorization;
+- [x] bundle route readiness;
+- [x] keep the handoff layer separate from Hamiltonian and spectral-gap claims.
 
-Current receipt:
+Validation receipt:
 
 ```text
-PR #540 head:
-  da05bf98e9c3f87f3d363e189c6a91d45d5ec7ae
+PR #600 final head:
+  b6a3b450bddfca55549653975f5cfa742f7e97f6
+
+PR #600 merge commit on the active carrier:
+  4d08c0d0f5be958c223c48c23942f588e4fba8c3
 
 PR Lean Fast Check:
-  run 5555 — failure
+  run 5626 — success
 ```
 
 Definition of done:
 
-The quotient-map injectivity theorem is replay-clean, merged into the active carrier, and documented as integrated only after the failed draft state is repaired.
+Downstream OS, semigroup, and Hamiltonian layers can import one handoff API for the completed Hilbert space without restating the entire reconstruction bundle.
 
 ---
 
-## Milestone 8 — quotient norm and inner-product well-definedness
+## Milestone 12 — OS semigroup on the completed Hilbert space
 
-Status: **open**
-
-- [ ] define the quotient-level norm or seminorm;
-- [ ] prove representative independence for the norm;
-- [ ] define the quotient-level bilinear form or inner product;
-- [ ] prove representative independence for the inner product;
-- [ ] prove positivity and null-space consistency;
-- [ ] connect reflection positivity to the quotient positivity statement;
-- [ ] preserve Euclidean and gauge invariance through the quotient analytic structure.
-
-Definition of done:
-
-The quotient carrier supports well-defined analytic data that no longer depend on the selected representative.
-
----
-
-## Milestone 9 — algebraic and normed-space structure on the quotient
-
-Status: **open**
-
-- [ ] define addition on quotient classes;
-- [ ] define scalar multiplication on quotient classes;
-- [ ] prove well-definedness of addition;
-- [ ] prove well-definedness of scalar multiplication;
-- [ ] construct additive and scalar algebraic instances;
-- [ ] prove norm compatibility with the algebraic operations;
-- [ ] construct the normed-space or seminormed-space layer;
-- [ ] construct the inner-product-space layer once positivity is sufficient.
-
-Definition of done:
-
-The quotient is no longer only a setoid/representative object; it has the algebraic and analytic structure needed for completion.
-
----
-
-## Milestone 10 — complete the Hilbert space
-
-Status: **open**
-
-- [ ] construct Cauchy sequences or completion data;
-- [ ] build the completed carrier;
-- [ ] prove the completion map is isometric or norm-compatible;
-- [ ] prove density of the image of the quotient carrier;
-- [ ] establish `CompleteSpace` for the completed carrier;
-- [ ] establish the Hilbert-space instance;
-- [ ] define the physical state map into the completed space;
-- [ ] prove density of the physical observable states when required.
-
-Definition of done:
-
-The reconstruction route has a completed real Hilbert space, not merely a quotient carrier with representative bookkeeping.
-
----
-
-## Milestone 11 — OS semigroup and physical Hamiltonian on the completed space
-
-Status: **open**
+Status: **open next frontier**
 
 - [ ] define the OS contraction semigroup on the completed Hilbert space;
 - [ ] prove strong continuity;
-- [ ] identify the generator;
-- [ ] define the physical Hamiltonian;
+- [ ] identify the generator candidate;
+- [ ] connect the completed Hilbert-space object to the prior conditional OS/operator-limit packages;
+- [ ] expose all assumptions needed by the semigroup layer.
+
+Definition of done:
+
+The completed Hilbert space carries a replayed OS semigroup interface with explicit hypotheses.
+
+---
+
+## Milestone 13 — physical Hamiltonian on the completed Hilbert space
+
+Status: **open**
+
+- [ ] define the physical Hamiltonian as the generator of the OS semigroup;
 - [ ] prove nonnegativity;
+- [ ] prove closedness;
 - [ ] prove symmetry or self-adjointness under explicit hypotheses;
-- [ ] connect the Hamiltonian to the prior conditional OS/operator-limit packages;
-- [ ] expose the exact assumptions needed for a spectral-gap theorem.
+- [ ] expose spectral theorem interfaces;
+- [ ] separate Hamiltonian construction from any positive-gap claim.
 
 Definition of done:
 
@@ -274,7 +306,7 @@ The completed Hilbert space carries a closed self-adjoint physical Hamiltonian w
 
 ---
 
-## Milestone 12 — physical positive-gap certificate
+## Milestone 14 — physical positive-gap certificate
 
 Status: **decisive open mathematical frontier**
 
@@ -291,7 +323,7 @@ A positive mass-gap lower bound is derived from the actual physical approximatio
 
 ---
 
-## Milestone 13 — final theorem and external review
+## Milestone 15 — final theorem and external review
 
 Status: **not claimed**
 
@@ -304,4 +336,4 @@ Status: **not claimed**
 
 Definition of done:
 
-The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, and the actual four-dimensional Yang--Mills mass-gap theorem.
+The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, completed Hilbert-space API work, and the actual four-dimensional Yang--Mills mass-gap theorem.
