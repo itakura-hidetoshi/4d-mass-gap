@@ -19,7 +19,7 @@ The active proof carrier is:
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The currently integrated R4 Hilbert reconstruction lane has reached a **completed real Hilbert-space API object**.
+The currently integrated R4 Hilbert reconstruction lane has reached a **completed real Hilbert-space API object** and a **completed Hilbert-space handoff API** for downstream OS/operator layers.
 
 The completed carrier is exposed as:
 
@@ -39,6 +39,7 @@ DenseRange from the pre-Hilbert carrier
 DenseRange from the quotient carrier
 identification with UniformSpace.Completion
 quotient-map factorization through the pre-Hilbert carrier
+completed Hilbert-space handoff theorem
 ```
 
 This is a completed Hilbert-space layer for the formal R4 reconstruction route.
@@ -52,21 +53,19 @@ active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
 latest integrated carrier PR:
-  PR #599 — Add R4 completed Hilbert space API
+  PR #600 — Add R4 completed Hilbert space handoff API
 
 latest integrated carrier merge commit:
-  a4beaab42037db3f974574c44bfbb114b1c5d934
+  4d08c0d0f5be958c223c48c23942f588e4fba8c3
 
 latest integrated carrier PR head:
-  4c9e3b83f46b59e7a9dac9802824ac707f95a8fa
+  b6a3b450bddfca55549653975f5cfa742f7e97f6
 
 latest integrated validation:
-  PR Lean Fast Check run 5625 — success
+  PR Lean Fast Check run 5626 — success
 
 current open draft frontier after that checkpoint:
-  PR #600 — Add R4 completed Hilbert space handoff API
-  head b6a3b450bddfca55549653975f5cfa742f7e97f6
-  not counted as integrated until CI succeeds and the PR is merged
+  none recorded in this README
 ```
 
 The default branch `main` remains the public repository entry point.
@@ -152,9 +151,10 @@ EuclideanYangMillsContinuumMeasureConstructionSpine
   -> quotient-dense standard completion data
   -> standard real Hilbert completion construction theorem
   -> completed Hilbert space API
+  -> completed Hilbert space handoff API
 ```
 
-As of PR #599, the active carrier has an explicit completed Hilbert-space object for the formal R4 reconstruction route.
+As of PR #600, the active carrier has an explicit completed Hilbert-space object and a handoff theorem for downstream layers in the formal R4 reconstruction route.
 
 The central object is:
 
@@ -168,22 +168,27 @@ The main integrated construction theorem is:
 r4HilbertCompletedHilbertSpace_constructed
 ```
 
-It packages the real inner-product structure, completeness, dense pre-Hilbert map, dense quotient map, and equality with the standard `UniformSpace.Completion` of the R4 pre-Hilbert carrier.
+The handoff theorem is:
+
+```lean
+r4HilbertCompletedHilbertSpaceHandoff_constructed
+```
+
+These package the real inner-product structure, completeness, dense pre-Hilbert map, dense quotient map, equality with the standard `UniformSpace.Completion` of the R4 pre-Hilbert carrier, quotient-map factorization, and route readiness.
 
 The quotient map into the completed space still factors through the pre-Hilbert carrier.
 
 This factorization is part of the integrated API and is not a Hamiltonian statement.
 
-## What is still missing after the completed Hilbert space
+## What is still missing after the completed Hilbert-space handoff
 
-The completed Hilbert-space API is an important reconstruction milestone.
+The completed Hilbert-space API and handoff API are important reconstruction milestones.
 
-It does not close the physical mass-gap problem.
+They do not close the physical mass-gap problem.
 
 The remaining formal and mathematical layers include at least:
 
 ```text
-handoff of the completed Hilbert-space object to downstream OS/operator layers;
 OS contraction semigroup on the completed space;
 strong continuity of that semigroup;
 identification of the generator;
@@ -194,10 +199,6 @@ a positive gap statement for the Hamiltonian;
 one concrete continuum scaling family supplying all physical hypotheses;
 uniform estimates that produce the physical positive gap rather than assume it.
 ```
-
-PR #600 is the current open draft frontier for the completed Hilbert-space handoff layer.
-
-It is not counted as integrated in this README until its CI succeeds and it is merged.
 
 ## Current theorem boundary
 
@@ -216,7 +217,7 @@ It is not counted as integrated in this README until its CI succeeds and it is m
 | R4 quotient-dense standard completion data | integrated on the active carrier |
 | R4 standard real Hilbert completion construction theorem | integrated on the active carrier |
 | R4 completed Hilbert space API | integrated by PR #599 |
-| R4 completed Hilbert space handoff API | draft PR #600; not integrated here |
+| R4 completed Hilbert space handoff API | integrated by PR #600 |
 | OS semigroup on the completed Hilbert space | open |
 | Self-adjoint physical Hamiltonian | open |
 | Spectral-gap theorem for the physical Hamiltonian | open |
@@ -265,6 +266,6 @@ conditional continuum reconstruction packages;
 exact internal scalar normalization lanes;
 active R4 Hilbert reconstruction layers;
 completed Hilbert-space API layers;
-Hamiltonian and spectral-gap layers;
+OS semigroup, Hamiltonian, and spectral-gap layers;
 a completed physical Yang--Mills theorem.
 ```
