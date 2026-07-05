@@ -51,48 +51,39 @@ def r4HilbertStandardCompletionMap
     (M : R4HilbertCompletedDenseRangeData I TR) :
     r4HilbertCompletedActualPreCarrier I TR M →
       r4HilbertStandardCompletionCarrier I TR M :=
-  fun x => by
-    unfold r4HilbertStandardCompletionCarrier
-    dsimp
-    letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
-      M.completedData.preCompletionData.instNormedAddCommGroup
-    exact (x : UniformSpace.Completion (r4HilbertCompletedActualPreCarrier I TR M))
+  letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
+    M.completedData.preCompletionData.instNormedAddCommGroup
+  fun x => (x : UniformSpace.Completion (r4HilbertCompletedActualPreCarrier I TR M))
 
 @[implicit_reducible] def r4HilbertStandardCompletionNormedAddCommGroup
     (M : R4HilbertCompletedDenseRangeData I TR) :
-    NormedAddCommGroup (r4HilbertStandardCompletionCarrier I TR M) := by
-  unfold r4HilbertStandardCompletionCarrier
-  dsimp
+    NormedAddCommGroup (r4HilbertStandardCompletionCarrier I TR M) :=
   letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
     M.completedData.preCompletionData.instNormedAddCommGroup
-  exact UniformSpace.Completion.instNormedAddCommGroup
+  UniformSpace.Completion.instNormedAddCommGroup
     (r4HilbertCompletedActualPreCarrier I TR M)
 
 @[implicit_reducible] def r4HilbertStandardCompletionInnerProductSpaceReal
     (M : R4HilbertCompletedDenseRangeData I TR) :
     (letI : NormedAddCommGroup (r4HilbertStandardCompletionCarrier I TR M) :=
       r4HilbertStandardCompletionNormedAddCommGroup I TR M
-    InnerProductSpace ℝ (r4HilbertStandardCompletionCarrier I TR M)) := by
-  unfold r4HilbertStandardCompletionCarrier
-  dsimp
+    InnerProductSpace ℝ (r4HilbertStandardCompletionCarrier I TR M)) :=
   letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
     M.completedData.preCompletionData.instNormedAddCommGroup
   letI : NormedSpace ℝ (r4HilbertCompletedActualPreCarrier I TR M) :=
     M.completedData.preCompletionData.instNormedSpaceReal
   letI : InnerProductSpace ℝ (r4HilbertCompletedActualPreCarrier I TR M) :=
     M.completedData.preCompletionData.instInnerProductSpaceReal
-  exact UniformSpace.Completion.innerProductSpace
+  UniformSpace.Completion.innerProductSpace
 
 @[implicit_reducible] def r4HilbertStandardCompletionCompleteSpace
     (M : R4HilbertCompletedDenseRangeData I TR) :
     (letI : NormedAddCommGroup (r4HilbertStandardCompletionCarrier I TR M) :=
       r4HilbertStandardCompletionNormedAddCommGroup I TR M
-    CompleteSpace (r4HilbertStandardCompletionCarrier I TR M)) := by
-  unfold r4HilbertStandardCompletionCarrier
-  dsimp
+    CompleteSpace (r4HilbertStandardCompletionCarrier I TR M)) :=
   letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
     M.completedData.preCompletionData.instNormedAddCommGroup
-  exact UniformSpace.Completion.completeSpace
+  UniformSpace.Completion.completeSpace
     (r4HilbertCompletedActualPreCarrier I TR M)
 
 theorem r4HilbertStandardCompletion_complete_space
@@ -107,10 +98,12 @@ theorem r4HilbertStandardCompletion_dense
     (letI : NormedAddCommGroup (r4HilbertStandardCompletionCarrier I TR M) :=
       r4HilbertStandardCompletionNormedAddCommGroup I TR M
     DenseRange (r4HilbertStandardCompletionMap I TR M)) := by
-  unfold r4HilbertStandardCompletionMap r4HilbertStandardCompletionCarrier
-  dsimp
+  unfold r4HilbertStandardCompletionMap
   letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
     M.completedData.preCompletionData.instNormedAddCommGroup
+  change DenseRange
+    (fun x : r4HilbertCompletedActualPreCarrier I TR M =>
+      (x : UniformSpace.Completion (r4HilbertCompletedActualPreCarrier I TR M)))
   exact UniformSpace.Completion.denseRange_coe
 
 theorem r4HilbertStandardCompletion_carrier_eq_uniform_completion
@@ -119,16 +112,6 @@ theorem r4HilbertStandardCompletion_carrier_eq_uniform_completion
       (letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
         M.completedData.preCompletionData.instNormedAddCommGroup
       UniformSpace.Completion (r4HilbertCompletedActualPreCarrier I TR M)) :=
-  rfl
-
-theorem r4HilbertStandardCompletion_map_eq_coe
-    (M : R4HilbertCompletedDenseRangeData I TR)
-    (x : r4HilbertCompletedActualPreCarrier I TR M) :
-    r4HilbertStandardCompletionMap I TR M x =
-      (by
-        letI : NormedAddCommGroup (r4HilbertCompletedActualPreCarrier I TR M) :=
-          M.completedData.preCompletionData.instNormedAddCommGroup
-        exact (x : UniformSpace.Completion (r4HilbertCompletedActualPreCarrier I TR M))) :=
   rfl
 
 theorem r4HilbertStandardCompletion_inner_product_nonempty
