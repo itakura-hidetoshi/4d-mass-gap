@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeTransportPairCoordinateRoundTripPropProjectionAPI
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+def r4SectionRangeTransportPairPropProjectionAPISmoke : Prop := True
+
+theorem r4SectionRangeTransportPairPropProjectionAPISmoke_holds :
+    r4SectionRangeTransportPairPropProjectionAPISmoke :=
+  trivial
+
+end
+
+end MathlibAnalytic
+end MGAP4D
