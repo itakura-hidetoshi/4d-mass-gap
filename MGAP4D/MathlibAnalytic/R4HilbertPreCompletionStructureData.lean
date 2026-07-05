@@ -92,10 +92,8 @@ theorem r4HilbertPreCompletion_ready
 theorem r4HilbertPreCompletion_actual_structure_carrier_nonempty
     (M : R4HilbertPreCompletionStructureData I TR) :
     Nonempty M.preHilbertCarrier := by
-  classical
-  exact Classical.choice M.completionObject.objectTargetNonempty ▸
-    Classical.choice M.completionObject.objectTargetNonempty ▸
-      inferInstance
+  letI : NormedAddCommGroup M.preHilbertCarrier := M.instNormedAddCommGroup
+  exact ⟨0⟩
 
 theorem r4HilbertPreCompletion_descent_bundle
     (M : R4HilbertPreCompletionStructureData I TR) :
