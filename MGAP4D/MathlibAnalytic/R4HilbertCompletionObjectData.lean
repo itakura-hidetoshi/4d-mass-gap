@@ -74,10 +74,10 @@ structure R4HilbertCompletionObjectData where
   objectNextLayerReady : Prop
   objectNextLayerReady_holds : objectNextLayerReady
 
-theorem r4HilbertCompletionObject_input_data
+theorem r4HilbertCompletionObject_input_data_nonempty
     (M : R4HilbertCompletionObjectData I TR) :
-    R4HilbertCompletionInputData I TR :=
-  M.inputData
+    Nonempty (R4HilbertCompletionInputData I TR) :=
+  ⟨M.inputData⟩
 
 theorem r4HilbertCompletionObject_carrier_nonempty
     (M : R4HilbertCompletionObjectData I TR) :
