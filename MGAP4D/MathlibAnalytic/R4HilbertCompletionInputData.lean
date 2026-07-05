@@ -39,14 +39,23 @@ structure R4HilbertCompletionInputData where
   completionMap : quotientCarrier I → completedCarrier
   completionTargetNonempty : Nonempty completedCarrier
   completionMetricReady : Prop
+  completionMetricReady_holds : completionMetricReady
   completionUniformReady : Prop
+  completionUniformReady_holds : completionUniformReady
   completionCauchyReady : Prop
+  completionCauchyReady_holds : completionCauchyReady
   completionCompleteReady : Prop
+  completionCompleteReady_holds : completionCompleteReady
   completionDenseRangeReady : Prop
+  completionDenseRangeReady_holds : completionDenseRangeReady
   completionSeparatedReady : Prop
+  completionSeparatedReady_holds : completionSeparatedReady
   completionMapReady : Prop
+  completionMapReady_holds : completionMapReady
   completionMapRespectsQuotientReady : Prop
+  completionMapRespectsQuotientReady_holds : completionMapRespectsQuotientReady
   completionMapHandoffReady : Prop
+  completionMapHandoffReady_holds : completionMapHandoffReady
   quotientDirectComponentsReady : ∀ q,
     quotientPairCoordinateRoundTripProp I TR q →
       TR.inverseTransport (quotientPairRangeCoord I TR q) = quotientPairQuotientCoord I TR q ∧
@@ -88,13 +97,21 @@ structure R4HilbertCompletionInputData where
       TR.inverseTransport (rangePairRangeCoord I TR x) = rangePairQuotientCoord I TR x →
         rangePairCoordinateRoundTripProp I TR x
   completionBoundaryOpen : Prop
+  completionBoundaryOpen_holds : completionBoundaryOpen
   completionHandoffReady : Prop
+  completionHandoffReady_holds : completionHandoffReady
   completionDenseStatementOpen : Prop
+  completionDenseStatementOpen_holds : completionDenseStatementOpen
   completionCompleteStatementOpen : Prop
+  completionCompleteStatementOpen_holds : completionCompleteStatementOpen
   completionMapCanonicalReady : Prop
+  completionMapCanonicalReady_holds : completionMapCanonicalReady
   completionTransportExtensionReady : Prop
+  completionTransportExtensionReady_holds : completionTransportExtensionReady
   completionSectionExtensionReady : Prop
+  completionSectionExtensionReady_holds : completionSectionExtensionReady
   completionNextLayerReady : Prop
+  completionNextLayerReady_holds : completionNextLayerReady
 
 theorem r4HilbertCompletionInput_completedCarrier_nonempty
     (M : R4HilbertCompletionInputData I TR) :
@@ -104,47 +121,47 @@ theorem r4HilbertCompletionInput_completedCarrier_nonempty
 theorem r4HilbertCompletionInput_metric_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionMetricReady :=
-  M.completionMetricReady
+  M.completionMetricReady_holds
 
 theorem r4HilbertCompletionInput_uniform_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionUniformReady :=
-  M.completionUniformReady
+  M.completionUniformReady_holds
 
 theorem r4HilbertCompletionInput_cauchy_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionCauchyReady :=
-  M.completionCauchyReady
+  M.completionCauchyReady_holds
 
 theorem r4HilbertCompletionInput_complete_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionCompleteReady :=
-  M.completionCompleteReady
+  M.completionCompleteReady_holds
 
 theorem r4HilbertCompletionInput_dense_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionDenseRangeReady :=
-  M.completionDenseRangeReady
+  M.completionDenseRangeReady_holds
 
 theorem r4HilbertCompletionInput_separated_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionSeparatedReady :=
-  M.completionSeparatedReady
+  M.completionSeparatedReady_holds
 
 theorem r4HilbertCompletionInput_map_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionMapReady :=
-  M.completionMapReady
+  M.completionMapReady_holds
 
 theorem r4HilbertCompletionInput_map_respects_quotient_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionMapRespectsQuotientReady :=
-  M.completionMapRespectsQuotientReady
+  M.completionMapRespectsQuotientReady_holds
 
 theorem r4HilbertCompletionInput_map_handoff_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionMapHandoffReady :=
-  M.completionMapHandoffReady
+  M.completionMapHandoffReady_holds
 
 theorem r4HilbertCompletionInput_quotient_direct_components
     (M : R4HilbertCompletionInputData I TR) (q : quotientCarrier I)
@@ -227,42 +244,42 @@ theorem r4HilbertCompletionInput_range_of_direct_components
 theorem r4HilbertCompletionInput_boundary_open
     (M : R4HilbertCompletionInputData I TR) :
     M.completionBoundaryOpen :=
-  M.completionBoundaryOpen
+  M.completionBoundaryOpen_holds
 
 theorem r4HilbertCompletionInput_handoff_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionHandoffReady :=
-  M.completionHandoffReady
+  M.completionHandoffReady_holds
 
 theorem r4HilbertCompletionInput_dense_statement_open
     (M : R4HilbertCompletionInputData I TR) :
     M.completionDenseStatementOpen :=
-  M.completionDenseStatementOpen
+  M.completionDenseStatementOpen_holds
 
 theorem r4HilbertCompletionInput_complete_statement_open
     (M : R4HilbertCompletionInputData I TR) :
     M.completionCompleteStatementOpen :=
-  M.completionCompleteStatementOpen
+  M.completionCompleteStatementOpen_holds
 
 theorem r4HilbertCompletionInput_map_canonical_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionMapCanonicalReady :=
-  M.completionMapCanonicalReady
+  M.completionMapCanonicalReady_holds
 
 theorem r4HilbertCompletionInput_transport_extension_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionTransportExtensionReady :=
-  M.completionTransportExtensionReady
+  M.completionTransportExtensionReady_holds
 
 theorem r4HilbertCompletionInput_section_extension_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionSectionExtensionReady :=
-  M.completionSectionExtensionReady
+  M.completionSectionExtensionReady_holds
 
 theorem r4HilbertCompletionInput_next_layer_ready
     (M : R4HilbertCompletionInputData I TR) :
     M.completionNextLayerReady :=
-  M.completionNextLayerReady
+  M.completionNextLayerReady_holds
 
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
