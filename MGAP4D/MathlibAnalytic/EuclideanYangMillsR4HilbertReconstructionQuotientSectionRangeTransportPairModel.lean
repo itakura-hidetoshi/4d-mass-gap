@@ -149,12 +149,12 @@ structure EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeTransport
     (E : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T)
     (D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E)
     (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D) where
-  pairCarrier : Type
-  pairCarrier_eq : pairCarrier = EuclideanYangMillsR4HilbertReconstructionQuotient.selectedSectionRangeTransportPair I X
-  quotientPair : EuclideanYangMillsR4HilbertReconstructionQuotient.quotientCarrier I → pairCarrier
-  rangePair : EuclideanYangMillsR4HilbertReconstructionQuotient.selectedSectionRangeCarrier I X → pairCarrier
-  quotientPair_cancel : ∀ q, TR.inverseTransport ((Eq.ndrec (quotientPair q) pairCarrier_eq).2) = (Eq.ndrec (quotientPair q) pairCarrier_eq).1
-  rangePair_cancel : ∀ x, TR.forwardTransport ((Eq.ndrec (rangePair x) pairCarrier_eq).1) = (Eq.ndrec (rangePair x) pairCarrier_eq).2
+  quotientPair : EuclideanYangMillsR4HilbertReconstructionQuotient.quotientCarrier I →
+    EuclideanYangMillsR4HilbertReconstructionQuotient.selectedSectionRangeTransportPair I X
+  rangePair : EuclideanYangMillsR4HilbertReconstructionQuotient.selectedSectionRangeCarrier I X →
+    EuclideanYangMillsR4HilbertReconstructionQuotient.selectedSectionRangeTransportPair I X
+  quotientPair_cancel : ∀ q, TR.inverseTransport (quotientPair q).2 = (quotientPair q).1
+  rangePair_cancel : ∀ x, TR.forwardTransport (rangePair x).1 = (rangePair x).2
   reflectionPositive : S.measurePackage.reflectionPositive
   euclideanInvariant : G.orbitModel.euclideanInvariantConstruction
   gaugeInvariant : G.orbitModel.gaugeInvariantConstruction
@@ -189,9 +189,7 @@ def ofSectionRangeEquivTransportClosure
     (D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E)
     (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D) :
     EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeTransportPairModel S K R4 A G H N F C I O Q P R U J V W X Y Z T E D TR :=
-  { pairCarrier := EuclideanYangMillsR4HilbertReconstructionQuotient.selectedSectionRangeTransportPair I X
-    pairCarrier_eq := rfl
-    quotientPair := EuclideanYangMillsR4HilbertReconstructionQuotient.quotientToTransportPair I TR
+  { quotientPair := EuclideanYangMillsR4HilbertReconstructionQuotient.quotientToTransportPair I TR
     rangePair := EuclideanYangMillsR4HilbertReconstructionQuotient.rangeToTransportPair I TR
     quotientPair_cancel := EuclideanYangMillsR4HilbertReconstructionQuotient.quotientToTransportPair_cancel I TR
     rangePair_cancel := EuclideanYangMillsR4HilbertReconstructionQuotient.rangeToTransportPair_cancel I TR
