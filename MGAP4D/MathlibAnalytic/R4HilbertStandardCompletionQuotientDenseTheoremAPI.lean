@@ -49,10 +49,10 @@ def r4HilbertStandardCompletionQuotientDenseTheoremPreMap
       r4HilbertStandardCompletionQuotientDenseTheoremCarrier I TR M :=
   r4HilbertStandardCompletionMap I TR M.routeData
 
+/-- The original quotient-to-standard-completion map exposed through theorem API data. -/
 def r4HilbertStandardCompletionQuotientDenseTheoremQuotientMap
     (M : R4HilbertStandardCompletionQuotientDenseData I TR) :
-    quotientCarrier I →
-      r4HilbertStandardCompletionQuotientDenseTheoremCarrier I TR M :=
+    quotientCarrier I → r4HilbertStandardCompletionCarrier I TR M.routeData :=
   r4HilbertStandardCompletionQuotientMap I TR M.routeData
 
 theorem r4HilbertStandardCompletionQuotientDenseTheorem_inner_product_nonempty
@@ -88,16 +88,16 @@ theorem r4HilbertStandardCompletionQuotientDenseTheorem_quotient_dense
     (M : R4HilbertStandardCompletionQuotientDenseData I TR) :
     (letI : NormedAddCommGroup (r4HilbertStandardCompletionCarrier I TR M.routeData) :=
       r4HilbertStandardCompletionNormedAddCommGroup I TR M.routeData
-    DenseRange (r4HilbertStandardCompletionQuotientDenseTheoremQuotientMap I TR M)) :=
+    DenseRange (r4HilbertStandardCompletionQuotientMap I TR M.routeData)) :=
   r4HilbertStandardCompletionQuotientDenseTheorem_quotient_map_dense I TR M
 
 theorem r4HilbertStandardCompletionQuotientDenseTheorem_quotient_factors
     (M : R4HilbertStandardCompletionQuotientDenseData I TR)
     (q : quotientCarrier I) :
-    r4HilbertStandardCompletionQuotientDenseTheoremQuotientMap I TR M q =
+    r4HilbertStandardCompletionQuotientMap I TR M.routeData q =
       r4HilbertStandardCompletionMap I TR M.routeData
         (M.routeData.completedData.preCompletionData.quotientToPreHilbert q) :=
-  rfl
+  r4HilbertStandardCompletion_quotient_map_factors I TR M.routeData q
 
 theorem r4HilbertStandardCompletionQuotientDenseTheorem_route_ready
     (M : R4HilbertStandardCompletionQuotientDenseData I TR) :
