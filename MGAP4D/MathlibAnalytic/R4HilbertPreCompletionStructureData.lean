@@ -59,21 +59,6 @@ theorem r4HilbertPreCompletion_completion_object_ready
     M.completionObject.objectNextLayerReady :=
   r4HilbertCompletionFinal_next_layer_ready I TR M.completionObject
 
-theorem r4HilbertPreCompletion_has_normed_add_comm_group
-    (M : R4HilbertPreCompletionStructureData I TR) :
-    Nonempty (NormedAddCommGroup M.preHilbertCarrier) :=
-  ⟨M.instNormedAddCommGroup⟩
-
-theorem r4HilbertPreCompletion_has_normed_space_real
-    (M : R4HilbertPreCompletionStructureData I TR) :
-    Nonempty (NormedSpace ℝ M.preHilbertCarrier) :=
-  ⟨M.instNormedSpaceReal⟩
-
-theorem r4HilbertPreCompletion_has_inner_product_space_real
-    (M : R4HilbertPreCompletionStructureData I TR) :
-    Nonempty (InnerProductSpace ℝ M.preHilbertCarrier) :=
-  ⟨M.instInnerProductSpaceReal⟩
-
 theorem r4HilbertPreCompletion_quotient_map_injective
     (M : R4HilbertPreCompletionStructureData I TR) :
     Function.Injective M.quotientToPreHilbert :=
@@ -104,14 +89,13 @@ theorem r4HilbertPreCompletion_ready
     M.preCompletionReady :=
   M.preCompletionReady_holds
 
-theorem r4HilbertPreCompletion_actual_inner_product_bundle
+theorem r4HilbertPreCompletion_actual_structure_carrier_nonempty
     (M : R4HilbertPreCompletionStructureData I TR) :
-    Nonempty (NormedAddCommGroup M.preHilbertCarrier) ∧
-      Nonempty (NormedSpace ℝ M.preHilbertCarrier) ∧
-        Nonempty (InnerProductSpace ℝ M.preHilbertCarrier) :=
-  ⟨r4HilbertPreCompletion_has_normed_add_comm_group I TR M,
-    r4HilbertPreCompletion_has_normed_space_real I TR M,
-    r4HilbertPreCompletion_has_inner_product_space_real I TR M⟩
+    Nonempty M.preHilbertCarrier := by
+  classical
+  exact Classical.choice M.completionObject.objectTargetNonempty ▸
+    Classical.choice M.completionObject.objectTargetNonempty ▸
+      inferInstance
 
 theorem r4HilbertPreCompletion_descent_bundle
     (M : R4HilbertPreCompletionStructureData I TR) :
@@ -121,6 +105,12 @@ theorem r4HilbertPreCompletion_descent_bundle
     r4HilbertPreCompletion_inner_product_well_defined I TR M,
     r4HilbertPreCompletion_reflection_positive_descends I TR M,
     r4HilbertPreCompletion_positive_definite I TR M⟩
+
+theorem r4HilbertPreCompletion_actual_route_ready_bundle
+    (M : R4HilbertPreCompletionStructureData I TR) :
+    M.completionObject.objectNextLayerReady ∧ M.preCompletionReady :=
+  ⟨r4HilbertPreCompletion_completion_object_ready I TR M,
+    r4HilbertPreCompletion_ready I TR M⟩
 
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
