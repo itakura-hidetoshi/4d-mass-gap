@@ -9,23 +9,22 @@ active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
 latest integrated carrier PR:
-  PR #599 — Add R4 completed Hilbert space API
+  PR #600 — Add R4 completed Hilbert space handoff API
 
 latest integrated carrier merge commit:
-  a4beaab42037db3f974574c44bfbb114b1c5d934
+  4d08c0d0f5be958c223c48c23942f588e4fba8c3
 
 latest integrated carrier PR head:
-  4c9e3b83f46b59e7a9dac9802824ac707f95a8fa
+  b6a3b450bddfca55549653975f5cfa742f7e97f6
 
 latest integrated validation:
-  PR Lean Fast Check run 5625 — success
+  PR Lean Fast Check run 5626 — success
 
 current open draft frontier:
-  PR #600 — Add R4 completed Hilbert space handoff API
-  head b6a3b450bddfca55549653975f5cfa742f7e97f6
+  none recorded in this roadmap
 ```
 
-The repository now has an integrated completed R4 Hilbert-space API object on the active carrier.
+The repository now has an integrated completed R4 Hilbert-space API object and an integrated completed Hilbert-space handoff API on the active carrier.
 
 It still does **not** prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a self-adjoint physical Hamiltonian, or a physical mass gap from one fully instantiated continuum scaling trajectory.
 
@@ -242,24 +241,26 @@ The active carrier has a completed real Hilbert-space object for the formal R4 r
 
 ## Milestone 11 — completed Hilbert-space handoff API
 
-Status: **Draft PR #600; not integrated in this roadmap**
+Status: **integrated by PR #600**
 
-- [d] expose a handoff carrier for downstream layers;
-- [d] expose handoff pre-Hilbert and quotient maps;
-- [d] bundle dense pre-Hilbert and quotient maps;
-- [d] bundle quotient factorization;
-- [d] bundle route readiness;
-- [d] keep the handoff layer separate from Hamiltonian and spectral-gap claims;
-- [ ] merge only after PR Lean Fast Check succeeds and fixed-head review is complete.
+- [x] expose a handoff carrier for downstream layers;
+- [x] expose handoff pre-Hilbert and quotient maps;
+- [x] bundle dense pre-Hilbert and quotient maps;
+- [x] bundle quotient factorization;
+- [x] bundle route readiness;
+- [x] keep the handoff layer separate from Hamiltonian and spectral-gap claims.
 
-Current receipt:
+Validation receipt:
 
 ```text
-PR #600 head:
+PR #600 final head:
   b6a3b450bddfca55549653975f5cfa742f7e97f6
 
+PR #600 merge commit on the active carrier:
+  4d08c0d0f5be958c223c48c23942f588e4fba8c3
+
 PR Lean Fast Check:
-  run 5626 — in progress at the time of this update
+  run 5626 — success
 ```
 
 Definition of done:
@@ -270,7 +271,7 @@ Downstream OS, semigroup, and Hamiltonian layers can import one handoff API for 
 
 ## Milestone 12 — OS semigroup on the completed Hilbert space
 
-Status: **open**
+Status: **open next frontier**
 
 - [ ] define the OS contraction semigroup on the completed Hilbert space;
 - [ ] prove strong continuity;
