@@ -187,8 +187,8 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_formalAdjoint_inclusions
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
     M.mathlibOperator.IsFormalAdjoint M.mathlibOperator ∧
-      M.mathlibOperator ≤ M.mathlibOperator† ∧
-      M.mathlibOperator† ≤ M.mathlibOperator) := by
+      M.mathlibOperator ≤ (M.mathlibOperator)† ∧
+      (M.mathlibOperator)† ≤ M.mathlibOperator) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -219,8 +219,8 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_toolkit_package
       M.mathlibOperator.graph = M.mathlibOperator.graph.adjoint ∧
       M.mathlibOperator.graph.adjoint.toLinearPMap = M.mathlibOperator ∧
       M.mathlibOperator.IsFormalAdjoint M.mathlibOperator ∧
-      M.mathlibOperator ≤ M.mathlibOperator† ∧
-      M.mathlibOperator† ≤ M.mathlibOperator) := by
+      M.mathlibOperator ≤ (M.mathlibOperator)† ∧
+      (M.mathlibOperator)† ≤ M.mathlibOperator) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
