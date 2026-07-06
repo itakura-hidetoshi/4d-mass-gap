@@ -51,17 +51,7 @@ measure, spectral projection, positive lower bound, or spectral gap.
 
 /-- Actual dense-domain adjoint application formula for the R4 operator. -/
 theorem r4HilbertMathlibSelfAdjointOperator_actual_adjoint_apply_of_dense
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR)
-    (y : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      letI : CompleteSpace
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-      (LinearPMap.adjoint M.mathlibOperator).domain)) :
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -71,9 +61,10 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjoint_apply_of_dense
     letI : CompleteSpace
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    LinearPMap.adjoint M.mathlibOperator y =
-      LinearPMap.adjointAux
-        (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y) := by
+    ∀ y : (LinearPMap.adjoint M.mathlibOperator).domain,
+      LinearPMap.adjoint M.mathlibOperator y =
+        LinearPMap.adjointAux
+          (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -83,30 +74,14 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjoint_apply_of_dense
   letI : CompleteSpace
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
+  intro y
   exact LinearPMapAdjointToolkit.linearPMap_adjoint_apply_of_dense_invoked
     (T := M.mathlibOperator)
     (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y
 
 /-- Actual `adjointAux` inner-product identity for the R4 operator. -/
 theorem r4HilbertMathlibSelfAdjointOperator_actual_adjointAux_inner
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR)
-    (y : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      letI : CompleteSpace
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-      (LinearPMap.adjoint M.mathlibOperator).domain))
-    (x : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      M.mathlibOperator.domain)) :
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -116,11 +91,13 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjointAux_inner
     letI : CompleteSpace
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    inner ℝ
-      (LinearPMap.adjointAux
-        (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y) x =
-      inner ℝ (y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
-        (M.mathlibOperator x)) := by
+    ∀ (y : (LinearPMap.adjoint M.mathlibOperator).domain)
+      (x : M.mathlibOperator.domain),
+      inner ℝ
+        (LinearPMap.adjointAux
+          (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y) x =
+        inner ℝ (y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
+          (M.mathlibOperator x)) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -130,34 +107,14 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjointAux_inner
   letI : CompleteSpace
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
+  intro y x
   exact LinearPMapAdjointToolkit.linearPMap_adjointAux_inner_invoked
     (T := M.mathlibOperator)
     (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y x
 
 /-- Actual `adjointAux` uniqueness criterion for the R4 operator. -/
 theorem r4HilbertMathlibSelfAdjointOperator_actual_adjointAux_unique
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR)
-    (y : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      letI : CompleteSpace
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-      (LinearPMap.adjoint M.mathlibOperator).domain))
-    {x₀ : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData}
-    (hx₀ : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      ∀ x : M.mathlibOperator.domain,
-        inner ℝ x₀ x =
-          inner ℝ (y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
-            (M.mathlibOperator x))) :
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -167,8 +124,14 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjointAux_unique
     letI : CompleteSpace
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    LinearPMap.adjointAux
-        (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y = x₀) := by
+    ∀ (y : (LinearPMap.adjoint M.mathlibOperator).domain)
+      {x₀ : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData},
+      (∀ x : M.mathlibOperator.domain,
+        inner ℝ x₀ x =
+          inner ℝ (y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
+            (M.mathlibOperator x)) →
+      LinearPMap.adjointAux
+          (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y = x₀) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -178,34 +141,14 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjointAux_unique
   letI : CompleteSpace
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
+  intro y x₀ hx₀
   exact LinearPMapAdjointToolkit.linearPMap_adjointAux_unique_invoked
     (T := M.mathlibOperator)
     (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y hx₀
 
 /-- Actual adjoint application equality criterion for the R4 operator. -/
 theorem r4HilbertMathlibSelfAdjointOperator_actual_adjoint_apply_eq
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR)
-    (y : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      letI : CompleteSpace
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-      (LinearPMap.adjoint M.mathlibOperator).domain))
-    {x₀ : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData}
-    (hx₀ : (letI : NormedAddCommGroup
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-      letI : InnerProductSpace ℝ
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-      ∀ x : M.mathlibOperator.domain,
-        inner ℝ x₀ x =
-          inner ℝ (y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
-            (M.mathlibOperator x))) :
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -215,7 +158,13 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjoint_apply_eq
     letI : CompleteSpace
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    LinearPMap.adjoint M.mathlibOperator y = x₀) := by
+    ∀ (y : (LinearPMap.adjoint M.mathlibOperator).domain)
+      {x₀ : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData},
+      (∀ x : M.mathlibOperator.domain,
+        inner ℝ x₀ x =
+          inner ℝ (y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
+            (M.mathlibOperator x)) →
+      LinearPMap.adjoint M.mathlibOperator y = x₀) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
@@ -225,6 +174,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_adjoint_apply_eq
   letI : CompleteSpace
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
     r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
+  intro y x₀ hx₀
   exact LinearPMapAdjointToolkit.linearPMap_adjoint_apply_eq_invoked
     (T := M.mathlibOperator)
     (r4HilbertMathlibSelfAdjointOperator_actual_dense_domain I TR M) y hx₀
