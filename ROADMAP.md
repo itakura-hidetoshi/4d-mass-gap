@@ -2,33 +2,33 @@
 
 This roadmap records the active proof-development path of `itakura-hidetoshi/4d-mass-gap`.
 
-## Snapshot — 2026-07-06 JST
+## Snapshot - 2026-07-07 JST
 
 ```text
 active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
 latest integrated proof checkpoint:
-  PR #625 — Add R4 mathlib self-adjoint operator handoff API
+  PR #641 - Specialize adjoint evaluation to R4 operator
 
 latest integrated proof checkpoint merge commit:
-  787983a5fbed818c8de4ddf95d10d9220f816be8
+  b55bf22b90c3c357c25ee54224b1c7787ace0db3
 
 latest integrated proof checkpoint PR head:
-  5cbc220de2a8dcc68101248a05c8615404ce1478
+  9985976d874ba4c6485eaf4dd552cc27b3561581
 
 latest integrated validation:
-  PR Lean Fast Check run 5649 — success
+  PR Lean Fast Check run 5669 - success
 
 current active draft frontier:
-  PR #626 — Add R4 mathlib spectral theorem input layer
-  head 308b42078499d739dc675d4e434617f13a30f224
-  PR Lean Fast Check run 5650 — in progress when this sync was prepared
+  PR #642 - Specialize adjoint-self identities to R4 operator
+  head 6885ef5654dad36d144fb638d93219193c5e1115
+  PR Lean Fast Check run 5670 - in progress when this sync was prepared
 ```
 
-The active carrier now contains a completed R4 Hilbert-space route, a completed OS semigroup route, an OS generator route, Hamiltonian APIs, self-adjointness APIs, and a mathlib `LinearPMap` / `IsSelfAdjoint` operator handoff API.
+The active carrier now contains a completed R4 Hilbert-space route, a completed OS semigroup route, an OS generator route, Hamiltonian APIs, self-adjointness APIs, a mathlib `LinearPMap` / `IsSelfAdjoint` operator object, mathlib spectral-theorem readiness and boundary layers, a LinearPMap unbounded-operator theorem toolkit, and actual R4-operator specializations through adjoint evaluation.
 
-It still does **not** prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a physical positive mass gap from one fully instantiated continuum scaling family, or a Clay-style final theorem.
+It still does **not** prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a physical spectral resolution for the R4 Yang--Mills Hamiltonian, a physical positive mass gap from one fully instantiated continuum scaling family, or a Clay-style final theorem.
 
 Notation:
 
@@ -41,11 +41,13 @@ A carrier theorem is not a public final theorem.
 
 A draft PR is not an integrated layer.
 
+A finite-dimensional mathlib spectral-theorem boundary check is not a physical R4 spectral theorem application.
+
 A conditional theorem package is not a proof that the physical Yang--Mills approximation family supplies its hypotheses.
 
 ---
 
-## Milestone 1 — preserve finite Wilson and conditional OS foundations
+## Milestone 1 - preserve finite Wilson and conditional OS foundations
 
 Status: **available as prior theorem infrastructure**
 
@@ -62,7 +64,7 @@ The repository continues to distinguish finite theorem generators, conditional c
 
 ---
 
-## Milestone 2 — maintain the active proof carrier discipline
+## Milestone 2 - maintain the active proof carrier discipline
 
 Status: **active workflow requirement**
 
@@ -80,7 +82,7 @@ The branch history remains a sequence of small replayable proof layers, and docu
 
 ---
 
-## Milestone 3 — R4 construction spine through correlation data
+## Milestone 3 - R4 construction spine through correlation data
 
 Status: **integrated on the active carrier**
 
@@ -99,7 +101,7 @@ The R4 continuum-measure construction chain carries the data needed to enter ref
 
 ---
 
-## Milestone 4 — R4 reflection-positive reconstruction input
+## Milestone 4 - R4 reflection-positive reconstruction input
 
 Status: **integrated on the active carrier**
 
@@ -107,7 +109,7 @@ Status: **integrated on the active carrier**
 - [x] propagation of reflection positivity from the measure package;
 - [x] propagation of Euclidean invariance from the orbit model;
 - [x] propagation of gauge invariance from the orbit model;
-- [x] keep the input layer separate from Hilbert-space, Hamiltonian, and spectral-gap claims.
+- [x] keep the input layer separate from Hilbert-space, Hamiltonian, spectral-theorem, and spectral-gap claims.
 
 Definition of done:
 
@@ -115,7 +117,7 @@ The reconstruction input surface is available as a formal source of reflection-p
 
 ---
 
-## Milestone 5 — R4 quotient and transport bookkeeping
+## Milestone 5 - R4 quotient and transport bookkeeping
 
 Status: **integrated on the active carrier**
 
@@ -137,7 +139,7 @@ The quotient, section, range, and transport layers provide the bookkeeping neede
 
 ---
 
-## Milestone 6 — completed R4 Hilbert-space route
+## Milestone 6 - completed R4 Hilbert-space route
 
 Status: **integrated through PR #600**
 
@@ -155,15 +157,15 @@ Status: **integrated through PR #600**
 Validation receipts:
 
 ```text
-PR #599 — Add R4 completed Hilbert space API
+PR #599 - Add R4 completed Hilbert space API
   final head 4c9e3b83f46b59e7a9dac9802824ac707f95a8fa
   merge commit a4beaab42037db3f974574c44bfbb114b1c5d934
-  PR Lean Fast Check run 5625 — success
+  PR Lean Fast Check run 5625 - success
 
-PR #600 — Add R4 completed Hilbert space handoff API
+PR #600 - Add R4 completed Hilbert space handoff API
   final head b6a3b450bddfca55549653975f5cfa742f7e97f6
   merge commit 4d08c0d0f5be958c223c48c23942f588e4fba8c3
-  PR Lean Fast Check run 5626 — success
+  PR Lean Fast Check run 5626 - success
 ```
 
 Definition of done:
@@ -172,7 +174,7 @@ The active carrier has a completed real Hilbert-space object and a handoff API f
 
 ---
 
-## Milestone 7 — completed OS semigroup on the completed Hilbert space
+## Milestone 7 - completed OS semigroup on the completed Hilbert space
 
 Status: **integrated through PR #606**
 
@@ -195,7 +197,7 @@ This remains before the generator, Hamiltonian, spectral theorem application, an
 
 ---
 
-## Milestone 8 — OS generator route
+## Milestone 8 - OS generator route
 
 Status: **integrated through PR #611**
 
@@ -214,11 +216,11 @@ Definition of done:
 
 The active carrier exposes a generator interface downstream of the completed OS semigroup.
 
-This still does not identify the generator as a physical Hamiltonian, assert self-adjointness, invoke a spectral theorem, or assert a spectral gap.
+This still does not identify the generator as a physical Hamiltonian, assert self-adjointness without criterion data, invoke a spectral theorem for the physical R4 operator, or assert a spectral gap.
 
 ---
 
-## Milestone 9 — Hamiltonian route
+## Milestone 9 - Hamiltonian route
 
 Status: **integrated through PR #615**
 
@@ -240,7 +242,7 @@ This is not a physical positive-gap result.
 
 ---
 
-## Milestone 10 — self-adjointness route
+## Milestone 10 - self-adjointness route
 
 Status: **integrated through PR #622**
 
@@ -263,7 +265,7 @@ This does not by itself construct a physical spectral gap or a physical continuu
 
 ---
 
-## Milestone 11 — abstract spectral-theorem interface route
+## Milestone 11 - abstract spectral-theorem interface route
 
 Status: **integrated through PR #621 as an interface layer**
 
@@ -279,11 +281,11 @@ Definition of done:
 
 The active carrier can route data toward a later spectral-theorem layer while keeping spectral resolution, functional calculus, and gap statements separated from the self-adjointness route.
 
-This interface layer is not yet a mathlib spectral theorem application and not a spectral-gap theorem.
+This interface layer is not a mathlib spectral theorem application to the physical R4 operator and not a spectral-gap theorem.
 
 ---
 
-## Milestone 12 — mathlib self-adjoint operator object and handoff
+## Milestone 12 - mathlib self-adjoint operator object and handoff
 
 Status: **integrated through PR #625**
 
@@ -298,59 +300,168 @@ Status: **integrated through PR #625**
 Validation receipt:
 
 ```text
-PR #625 — Add R4 mathlib self-adjoint operator handoff API
+PR #625 - Add R4 mathlib self-adjoint operator handoff API
   final head 5cbc220de2a8dcc68101248a05c8615404ce1478
   merge commit 787983a5fbed818c8de4ddf95d10d9220f816be8
-  PR Lean Fast Check run 5649 — success
+  PR Lean Fast Check run 5649 - success
 ```
 
 Definition of done:
 
-The active carrier exposes a mathlib self-adjoint operator object and a stable handoff API for the next spectral-theorem input layer.
+The active carrier exposes a mathlib self-adjoint operator object and a stable handoff API for later spectral-theorem input and operator-infrastructure layers.
 
 ---
 
-## Milestone 13 — mathlib spectral-theorem input layer
+## Milestone 13 - mathlib spectral-theorem readiness layers
 
-Status: **open Draft PR #626**
+Status: **integrated through PR #632**
 
-- [d] carry the actual mathlib `LinearPMap` / `IsSelfAdjoint` operator object into a spectral-theorem input package;
-- [d] avoid stating or invoking the spectral theorem in this layer;
-- [d] avoid constructing spectral measure, functional calculus, or spectral projections in this layer;
-- [d] avoid spectral-gap and positive-lower-bound claims in this layer;
+- [x] carry the actual mathlib `LinearPMap` / `IsSelfAdjoint` operator object into a spectral-theorem input package;
+- [x] add object-facing readiness API;
+- [x] add object handoff;
+- [x] add invocation input;
+- [x] add invocation readiness API;
+- [x] add invocation handoff;
+- [x] avoid stating or invoking a spectral theorem for the physical R4 operator in these readiness layers;
+- [x] avoid constructing a spectral measure, functional calculus, or spectral projections in these readiness layers;
+- [x] avoid spectral-gap and positive-lower-bound claims.
+
+Validation receipts:
+
+```text
+PR #626 - Add R4 mathlib spectral theorem input layer
+PR #628 - Add R4 mathlib spectral theorem object API
+PR #629 - Add R4 mathlib spectral theorem object handoff
+PR #630 - Add R4 mathlib spectral theorem invocation input
+PR #631 - Add R4 mathlib spectral theorem invocation readiness API
+PR #632 - Add R4 mathlib spectral theorem invocation handoff
+```
+
+Definition of done:
+
+A replayed chain of mathlib spectral-theorem readiness layers exists on the active carrier and is cleanly separated from actual physical R4 spectral theorem invocation and spectral-gap assertions.
+
+---
+
+## Milestone 14 - finite-dimensional mathlib spectral-theorem boundary
+
+Status: **integrated by PR #633**
+
+- [x] import the pinned mathlib spectrum file used for the boundary check;
+- [x] invoke the finite-dimensional diagonalization / spectral-theorem theorem through a project-local boundary file;
+- [x] record that the theorem is finite-dimensional and formulated for `LinearMap.IsSymmetric`;
+- [x] record that the accumulated R4 Hamiltonian object is a self-adjoint `LinearPMap`;
+- [x] make the interface mismatch explicit rather than hiding it;
+- [x] keep this boundary check separate from the R4 physical spectral-resolution layer.
+
+Definition of done:
+
+The repository has a replayed boundary check showing what is currently available from pinned mathlib and where the R4 `LinearPMap` route still needs an appropriate spectral theorem interface.
+
+---
+
+## Milestone 15 - LinearPMap unbounded-operator theorem toolkit
+
+Status: **integrated through PR #639**
+
+- [x] invoke `hA.dense_domain` for self-adjoint `LinearPMap`s;
+- [x] invoke closedness of a self-adjoint `LinearPMap`;
+- [x] invoke graph identities for self-adjoint `LinearPMap`s;
+- [x] invoke the graph-to-operator theorem for adjoints;
+- [x] invoke formal-adjoint theorem wrappers;
+- [x] batch dense-domain, closedness, graph, graph-to-operator, formal-adjoint, and adjoint-evaluation support;
+- [x] keep all of this as unbounded-operator infrastructure rather than a spectral-gap claim.
+
+Validation receipts:
+
+```text
+PR #634 - Invoke LinearPMap dense domain theorem
+PR #635 - Invoke LinearPMap self-adjoint closedness theorem
+PR #636 - Invoke LinearPMap self-adjoint graph theorem
+PR #637 - Invoke LinearPMap graph-to-operator theorem
+PR #638 - Invoke LinearPMap formal-adjoint theorem
+PR #639 - Add batched LinearPMap adjoint toolkit
+```
+
+Definition of done:
+
+Pinned-mathlib `LinearPMap` facts needed by the R4 operator route are available through project-local wrappers and bundled theorem packages.
+
+---
+
+## Milestone 16 - actual R4-operator specialization through adjoint evaluation
+
+Status: **integrated through PR #641**
+
+- [x] specialize the batched `LinearPMap` toolkit to the actual R4 operator `M.mathlibOperator`;
+- [x] record dense domain for the actual R4 operator;
+- [x] record closedness for the actual R4 operator;
+- [x] record graph self-adjointness and graph-to-operator recovery for the actual R4 operator;
+- [x] record formal-adjoint symmetry and mutual inclusion consequences;
+- [x] record the actual dense-domain adjoint application formula;
+- [x] record the actual `adjointAux` inner-product identity;
+- [x] record uniqueness of `adjointAux`;
+- [x] record the actual adjoint application equality criterion;
+- [x] keep this layer separate from spectral measure, spectral projection, positive lower bound, and spectral-gap assertions.
+
+Validation receipt:
+
+```text
+PR #641 - Specialize adjoint evaluation to R4 operator
+  final head 9985976d874ba4c6485eaf4dd552cc27b3561581
+  merge commit b55bf22b90c3c357c25ee54224b1c7787ace0db3
+  PR Lean Fast Check run 5669 - success
+```
+
+Definition of done:
+
+The actual R4 mathlib operator carries the current project-local `LinearPMap` adjoint-evaluation package on the active carrier.
+
+---
+
+## Milestone 17 - actual R4-operator adjoint-self identities
+
+Status: **open Draft PR #642**
+
+- [d] prove `LinearPMap.adjoint M.mathlibOperator = M.mathlibOperator`;
+- [d] prove the reverse equality;
+- [d] prove equality of the adjoint domain and original domain;
+- [d] prove equality of the adjoint graph and original graph;
+- [d] bundle adjoint equality, domain equality, graph equality, and the previous adjoint-evaluation formula;
 - [d] wait for PR Lean Fast Check and fixed-head integration before marking the layer as integrated.
 
 Current draft receipt:
 
 ```text
-PR #626 — Add R4 mathlib spectral theorem input layer
-  head 308b42078499d739dc675d4e434617f13a30f224
-  PR Lean Fast Check run 5650 — in progress when this sync was prepared
+PR #642 - Specialize adjoint-self identities to R4 operator
+  head 6885ef5654dad36d144fb638d93219193c5e1115
+  PR Lean Fast Check run 5670 - in progress when this sync was prepared
 ```
 
 Definition of done:
 
-A replayed mathlib spectral-theorem input layer exists on the active carrier and is cleanly separated from actual spectral theorem invocation and spectral-gap assertions.
+The actual R4 mathlib operator carries the adjoint-equals-self, domain-equality, and graph-equality package on the active carrier.
 
 ---
 
-## Milestone 14 — spectral theorem application and spectral resolution
+## Milestone 18 - physical R4 spectral theorem application and spectral resolution
 
 Status: **open**
 
-- [ ] instantiate the chosen mathlib spectral theorem route;
+- [ ] choose or build the appropriate mathlib route for the self-adjoint unbounded R4 `LinearPMap` operator;
+- [ ] instantiate that route for `M.mathlibOperator`;
 - [ ] construct or expose the relevant spectral measure or spectral projection family;
-- [ ] connect the spectral-resolution layer to the mathlib self-adjoint operator handoff;
+- [ ] connect the spectral-resolution layer to the actual R4 operator infrastructure;
 - [ ] add functional-calculus interfaces only if required by the chosen route;
 - [ ] keep this layer separate from a positive-gap lower-bound claim.
 
 Definition of done:
 
-The active carrier has a replayed spectral theorem application or spectral-resolution layer for the relevant self-adjoint operator.
+The active carrier has a replayed spectral theorem application or spectral-resolution layer for the actual R4 self-adjoint operator.
 
 ---
 
-## Milestone 15 — physical positive-gap certificate
+## Milestone 19 - physical positive-gap certificate
 
 Status: **decisive open mathematical frontier**
 
@@ -367,7 +478,7 @@ A positive mass-gap lower bound is derived from the actual physical approximatio
 
 ---
 
-## Milestone 16 — final theorem and external review
+## Milestone 20 - final theorem and external review
 
 Status: **not claimed**
 
@@ -380,4 +491,4 @@ Status: **not claimed**
 
 Definition of done:
 
-The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, completed Hilbert-space work, operator handoff APIs, spectral theorem input layers, and the actual four-dimensional Yang--Mills mass-gap theorem.
+The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, completed Hilbert-space work, operator handoff APIs, finite-dimensional spectral-boundary checks, actual R4-operator adjoint infrastructure, physical spectral theorem application, positive-gap layers, and the actual four-dimensional Yang--Mills mass-gap theorem.
