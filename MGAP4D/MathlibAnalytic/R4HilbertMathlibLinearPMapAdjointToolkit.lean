@@ -52,6 +52,7 @@ theorem selfAdjoint_linearPMap_self_le_adjoint_invoked
     (hA : IsSelfAdjoint A) :
     A ≤ A† :=
   (LinearPMapSelfAdjointFormalAdjoint.selfAdjoint_linearPMap_isFormalAdjoint_self hA).le_adjoint
+    hA.dense_domain
 
 /-- The reverse inclusion follows from self-adjointness itself. -/
 theorem selfAdjoint_linearPMap_adjoint_le_self
@@ -96,6 +97,7 @@ theorem linearPMap_adjointAux_unique_invoked
   LinearPMap.adjointAux_unique hT y hx₀
 
 /-- Actual invocation of the equality criterion for applying the adjoint. -/
+include hT in
 theorem linearPMap_adjoint_apply_eq_invoked
     (y : T†.domain) {x₀ : E}
     (hx₀ : ∀ x : T.domain, inner 𝕜 x₀ x = inner 𝕜 (y : F) (T x)) :
