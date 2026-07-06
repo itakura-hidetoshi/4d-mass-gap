@@ -121,8 +121,10 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_apply
   have hSelf : M.mathlibOperator = B.adjoint.toPMap ⊤ :=
     r4HilbertMathlibSelfAdjointOperator_actual_bounded_toPMap_self_eq_adjoint_toPMap
       I TR M B p hp hB
-  rw [hSelf]
-  simp only [LinearMap.toPMap_apply]
+  have hTop : x ∈ (B.adjoint.toPMap ⊤).domain := by
+    simp
+  have hApply := (LinearPMap.ext_iff.mp hSelf).2 (hf := hx) (hg := hTop)
+  simpa [LinearMap.toPMap_apply] using hApply
 
 /-- Under a bounded realization, the actual R4 operator acts as the bounded
 adjoint on the canonical full-domain element supplied by the previous theorem. -/
@@ -139,16 +141,14 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_apply_of_
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
     ∀ (B : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData →L[ℝ]
           r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
-      (p : Submodule ℝ (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)),
-      Dense (p : Set (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)) →
-      B.toPMap p = M.mathlibOperator →
-      ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
+      (p : Submodule ℝ (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData))
+      (hp : Dense (p : Set (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)))
+      (hB : B.toPMap p = M.mathlibOperator)
+      (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData),
         M.mathlibOperator
             ⟨x,
               r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_mem_domain
-                I TR M B p ‹Dense (p : Set
-                  (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData))›
-                ‹B.toPMap p = M.mathlibOperator› x⟩ =
+                I TR M B p hp hB x⟩ =
           B.adjoint x) := by
   letI : NormedAddCommGroup
       (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
