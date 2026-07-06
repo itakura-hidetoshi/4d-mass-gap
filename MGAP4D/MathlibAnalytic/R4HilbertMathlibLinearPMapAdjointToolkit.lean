@@ -97,12 +97,12 @@ theorem linearPMap_adjointAux_unique_invoked
   LinearPMap.adjointAux_unique hT y hx₀
 
 /-- Actual invocation of the equality criterion for applying the adjoint. -/
-include hT in
 theorem linearPMap_adjoint_apply_eq_invoked
+    (hT' : Dense (T.domain : Set E))
     (y : T†.domain) {x₀ : E}
     (hx₀ : ∀ x : T.domain, inner 𝕜 x₀ x = inner 𝕜 (y : F) (T x)) :
     T† y = x₀ :=
-  LinearPMap.adjoint_apply_eq hT y hx₀
+  LinearPMap.adjoint_apply_eq hT' y hx₀
 
 end AdjointEvaluation
 
