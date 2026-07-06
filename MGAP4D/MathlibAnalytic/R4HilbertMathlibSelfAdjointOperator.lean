@@ -115,17 +115,6 @@ def r4HilbertMathlibSelfAdjointOperator
       r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
   M.mathlibOperator
 
-def r4HilbertMathlibSelfAdjointOperatorDomain
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
-    (letI : NormedAddCommGroup
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-    letI : InnerProductSpace ℝ
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-    Submodule ℝ (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)) :=
-  (r4HilbertMathlibSelfAdjointOperator I TR M).domain
-
 theorem r4HilbertMathlibSelfAdjointOperator_self_adjoint
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
@@ -137,7 +126,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_self_adjoint
     letI : CompleteSpace
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    IsSelfAdjoint (r4HilbertMathlibSelfAdjointOperator I TR M)) :=
+    IsSelfAdjoint M.mathlibOperator) :=
   M.mathlibOperatorIsSelfAdjoint
 
 theorem r4HilbertMathlibSelfAdjointOperator_criterion_proved
@@ -167,7 +156,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_constructed
     letI : CompleteSpace
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    IsSelfAdjoint (r4HilbertMathlibSelfAdjointOperator I TR M)) ∧
+    IsSelfAdjoint M.mathlibOperator) ∧
       r4HilbertSelfAdjointnessConclusion I TR M.selfAdjointnessData ∧
         M.mathlibOperatorCompatibleWithHamiltonianInput ∧ M.mathlibSelfAdjointObjectReady :=
   ⟨r4HilbertMathlibSelfAdjointOperator_self_adjoint I TR M,
