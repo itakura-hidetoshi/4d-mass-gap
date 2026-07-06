@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedRealizationConsequences
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+def r4HilbertMathlibSelfAdjointOperatorBoundedRealizationConsequencesSmoke : Prop := True
+
+theorem r4HilbertMathlibSelfAdjointOperatorBoundedRealizationConsequencesSmoke_holds :
+    r4HilbertMathlibSelfAdjointOperatorBoundedRealizationConsequencesSmoke :=
+  trivial
+
+end
+
+end MathlibAnalytic
+end MGAP4D
