@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedRealizationAction
 import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedRealizationFullDomainExistsPackage
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Tactic
@@ -86,7 +87,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_exists_bounded_realization_ac
   have hInner := hSelfPackage.2.2.2
   refine ⟨hDomain, B, hTop, hAdjEq, ?_, ?_, hInner⟩
   · intro x
-    simpa [hDomain]
+    simp [hDomain]
   · intro x hx
     have hAdjAction :=
       r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_apply
