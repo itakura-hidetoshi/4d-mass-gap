@@ -64,7 +64,7 @@ def r4HilbertMathlibSelfAdjointOperatorClosedGraphFullDomainToContinuousRepresen
 
 /-- A full-domain actual operator becomes bounded actual data once the closed-graph
 bridge is available. -/
-theorem r4HilbertMathlibSelfAdjointOperator_full_domain_to_bounded_actual_data
+noncomputable def r4HilbertMathlibSelfAdjointOperator_full_domain_to_bounded_actual_data
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR)
     (hBridge : r4HilbertMathlibSelfAdjointOperatorClosedGraphFullDomainToContinuousRepresentativeBridge I TR)
     (hDomain :
@@ -87,10 +87,10 @@ theorem r4HilbertMathlibSelfAdjointOperator_full_domain_to_bounded_actual_data
     r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
   have hClosed : M.mathlibOperator.IsClosed :=
     r4HilbertMathlibSelfAdjointOperator_actual_closed I TR M
-  rcases hBridge M hDomain hClosed with ⟨B, hTop⟩
+  let hRepresentative := hBridge M hDomain hClosed
   exact
-    { continuousRepresentative := B
-      continuousRepresentative_eq_actual := hTop }
+    { continuousRepresentative := Classical.choose hRepresentative
+      continuousRepresentative_eq_actual := Classical.choose_spec hRepresentative }
 
 /-- Full-domain plus the closed-graph bridge yields the full bounded actual package
 without using the old dense-submodule bounded-realization hypothesis. -/
