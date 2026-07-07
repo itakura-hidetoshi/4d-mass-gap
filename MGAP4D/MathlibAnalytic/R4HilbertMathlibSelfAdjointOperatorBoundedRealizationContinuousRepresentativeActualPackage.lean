@@ -107,10 +107,19 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_exists_bounded_realization_co
       hGraphTop, hGraphAdj, hBoundedAdjEq, hAction, hInner⟩
   rcases r4HilbertMathlibSelfAdjointOperator_actual_exists_bounded_realization_continuous_witness_package
       I TR M hExists with
-    ⟨B', _hTop', _hActualTop', _hAdjTop', _hActualAdjTop', _hBoundedAdjEq',
+    ⟨_B', _hTop', _hActualTop', _hAdjTop', _hActualAdjTop', _hBoundedAdjEq',
       _hDomain', hDense, hClosed, hActualAdjEq, hActualSelfEqAdj, hActualAdjDomain,
       hActualAdjGraph, hGraphSelf, hGraphRecover, hFormal, hLeAdj, hAdjLe,
-      _hGraphTop', _hGraphAdj', hMem, _hAction', hActualInner, _hInner'⟩
+      _hGraphTop', _hGraphAdj', hMem, _hAction', _hActualInner', _hInner'⟩
+  have hActualInner :
+      ∀ (x y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
+          (hx : x ∈ M.mathlibOperator.domain),
+        inner ℝ (M.mathlibOperator ⟨x, hx⟩) y = inner ℝ x (B y) := by
+    intro x y hx
+    calc
+      inner ℝ (M.mathlibOperator ⟨x, hx⟩) y = inner ℝ (B x) y := by
+        rw [hAction x hx]
+      _ = inner ℝ x (B y) := hInner x y
   exact ⟨B, hTop, hAdjTop, hTopAdj, hAdjTopEqTop, hBoundedAdjEq,
     hTopDomain, hAdjTopDomain, hDomain, hDense, hClosed,
     hActualAdjEq, hActualSelfEqAdj, hActualAdjDomain, hActualAdjGraph,
