@@ -49,6 +49,9 @@ theorem r4HilbertMathlibSelfAdjointOperator_unconditional_route_continuous_self_
     letI : InnerProductSpace ℝ
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+    letI : CompleteSpace
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
     ∃ (B : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData →L[ℝ]
           r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData),
       B.toPMap ⊤ = M.mathlibOperator ∧
@@ -84,6 +87,9 @@ theorem r4HilbertMathlibSelfAdjointOperator_unconditional_route_continuous_self_
     letI : InnerProductSpace ℝ
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+    letI : CompleteSpace
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
     ∃ (B : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData →L[ℝ]
           r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData),
       B.toPMap ⊤ = M.mathlibOperator ∧
