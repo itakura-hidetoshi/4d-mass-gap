@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedRealizationAction
 import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedRealizationConsequences
 import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedRealizationInnerActionExistsPackage
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
@@ -81,17 +82,43 @@ theorem r4HilbertMathlibSelfAdjointOperator_actual_exists_bounded_realization_gr
     r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
   intro hExists
   rcases hExists with ⟨B, p, hp, hB⟩
-  have hInnerPackage :=
-    r4HilbertMathlibSelfAdjointOperator_actual_exists_bounded_realization_inner_action_package
-      I TR M ⟨B, p, hp, hB⟩
-  rcases hInnerPackage with
-    ⟨hDomain, B, hTop, hAdjEq, hMem, hAction, hActualInner, hInner⟩
+  have hDomain : M.mathlibOperator.domain = ⊤ :=
+    r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_domain_eq_top
+      I TR M B p hp hB
+  have hSelfPackage :=
+    r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_self_adjoint_package
+      I TR M B p hp hB
+  have hTop : B.toPMap ⊤ = M.mathlibOperator := hSelfPackage.2.1
+  have hAdjEq : B.adjoint = B := hSelfPackage.2.2.1
+  have hInner := hSelfPackage.2.2.2
   have hGraphTop : M.mathlibOperator.graph = (B.toPMap ⊤).graph :=
     (congrArg (fun T => T.graph) hTop).symm
-  have hGraphAdj : M.mathlibOperator.graph = (B.adjoint.toPMap ⊤).graph := by
-    simpa using
-      (r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_graph_eq_adjoint_toPMap_graph
-        I TR M B p hp hB)
+  have hGraphAdj : M.mathlibOperator.graph = (B.adjoint.toPMap ⊤).graph :=
+    r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_graph_eq_adjoint_toPMap_graph
+      I TR M B p hp hB
+  have hMem : ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
+      x ∈ M.mathlibOperator.domain := by
+    intro x
+    simp [hDomain]
+  have hAction :
+      ∀ (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
+          (hx : x ∈ M.mathlibOperator.domain),
+        M.mathlibOperator ⟨x, hx⟩ = B x := by
+    intro x hx
+    have hAdjAction :=
+      r4HilbertMathlibSelfAdjointOperator_actual_bounded_realization_apply
+        I TR M B p hp hB x hx
+    have hPoint : B.adjoint x = B x := congrArg (fun T => T x) hAdjEq
+    exact hAdjAction.trans hPoint
+  have hActualInner :
+      ∀ (x y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
+          (hx : x ∈ M.mathlibOperator.domain),
+        inner ℝ (M.mathlibOperator ⟨x, hx⟩) y = inner ℝ x (B y) := by
+    intro x y hx
+    calc
+      inner ℝ (M.mathlibOperator ⟨x, hx⟩) y = inner ℝ (B x) y := by
+        rw [hAction x hx]
+      _ = inner ℝ x (B y) := hInner x y
   exact ⟨hDomain, B, hTop, hAdjEq, hGraphTop, hGraphAdj,
     hMem, hAction, hActualInner, hInner⟩
 
