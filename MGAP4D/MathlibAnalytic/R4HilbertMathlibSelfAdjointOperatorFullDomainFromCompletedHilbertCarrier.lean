@@ -40,8 +40,7 @@ carrier route.
 
 This layer records a completed Hilbert-space handoff carrier point for each
 mathlib self-adjoint carrier vector while inheriting the actual-domain and
-bounded-route path from the completed-OS-carrier route. It is still an internal
-route layer, not a spectral theorem or gap assertion. -/
+bounded-route path from the completed-OS-carrier route. -/
 structure R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) where
   completedOSCarrierData :
@@ -61,66 +60,12 @@ structure R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData
       let _completedHilbertCarrier := completedHilbertCarrierForLift x
       x ∈ M.mathlibOperator.domain)
 
-/-- The completed Hilbert handoff carrier explicitly recorded for a carrier vector. -/
-def r4HilbertMathlibSelfAdjointOperator_completed_hilbert_carrier_from_data
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M)
-    (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :
-    r4HilbertCompletedHilbertSpaceHandoffCarrier I TR
-      hcover.completedOSCarrierData.generatorCarrierData.hamiltonianInput.generatorData.semigroupData.handoffData :=
-  hcover.completedHilbertCarrierForLift x
-
 /-- Completed-Hilbert-carrier coverage gives the completed-OS-carrier coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_completed_hilbert_carrier
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
     (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData I TR M :=
   hcover.completedOSCarrierData
-
-/-- Completed-Hilbert-carrier coverage gives the generator-carrier coverage layer. -/
-def r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_completed_hilbert_carrier
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M) :
-    R4HilbertMathlibSelfAdjointOperatorGeneratorCarrierCoverageData I TR M :=
-  r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_completed_os_carrier I TR
-    (r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_completed_hilbert_carrier I TR
-      hcover)
-
-/-- Completed-Hilbert-carrier coverage gives the previous generator-lift coverage layer. -/
-def r4HilbertMathlibSelfAdjointOperator_generator_lift_from_completed_hilbert_carrier
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M) :
-    R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M :=
-  r4HilbertMathlibSelfAdjointOperator_generator_lift_from_completed_os_carrier I TR
-    (r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_completed_hilbert_carrier I TR
-      hcover)
-
-/-- Completed-Hilbert-carrier coverage gives the element-level Hamiltonian coverage layer. -/
-def r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_completed_hilbert_carrier
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M) :
-    R4HilbertMathlibSelfAdjointOperatorHamiltonianElementCoverageData I TR M :=
-  r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_completed_os_carrier I TR
-    (r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_completed_hilbert_carrier I TR
-      hcover)
-
-/-- Completed-Hilbert-carrier coverage gives pointwise actual-domain coverage. -/
-def r4HilbertMathlibSelfAdjointOperator_hamiltonian_coverage_from_completed_hilbert_carrier
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M) :
-    R4HilbertMathlibSelfAdjointOperatorHamiltonianDomainCoverageData I TR M :=
-  r4HilbertMathlibSelfAdjointOperator_hamiltonian_coverage_from_completed_os_carrier I TR
-    (r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_completed_hilbert_carrier I TR
-      hcover)
-
-/-- Completed-Hilbert-carrier coverage constructs `FullDomainData`. -/
-def r4HilbertMathlibSelfAdjointOperator_full_domain_data_from_completed_hilbert_carrier
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (hcover : R4HilbertMathlibSelfAdjointOperatorCompletedHilbertCarrierCoverageData I TR M) :
-    R4HilbertMathlibSelfAdjointOperatorFullDomainData I TR M :=
-  r4HilbertMathlibSelfAdjointOperator_full_domain_data_from_completed_os_carrier I TR
-    (r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_completed_hilbert_carrier I TR
-      hcover)
 
 /-- A family of completed-Hilbert-carrier coverage data constructs the bounded route family. -/
 def r4HilbertMathlibSelfAdjointOperator_bounded_route_family_from_completed_hilbert_carrier
