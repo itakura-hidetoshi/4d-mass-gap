@@ -45,7 +45,7 @@ structure R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData
     ∀ _x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
       hamiltonianInput.hamiltonianDomain
   generatorLiftForCarrier :
-    ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
+    ∀ _x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
       r4HilbertOSGeneratorHandoffDomain I TR hamiltonianInput.generatorData
   generatorLift_eq_map :
     ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
@@ -64,44 +64,44 @@ structure R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData
 /-- Generator-lift coverage gives the element-level Hamiltonian coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (GL : R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
+    (glift : R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorHamiltonianElementCoverageData I TR M :=
-  { hamiltonianInput := GL.hamiltonianInput
-    hamiltonianInputReady := GL.hamiltonianInputReady
-    compatibleWithActualOperator := GL.compatibleWithActualOperator
-    elementForCarrier := GL.elementForCarrier
-    elementCoversCarrier := fun x => GL.liftCoversActualDomain x }
+  { hamiltonianInput := glift.hamiltonianInput
+    hamiltonianInputReady := glift.hamiltonianInputReady
+    compatibleWithActualOperator := glift.compatibleWithActualOperator
+    elementForCarrier := glift.elementForCarrier
+    elementCoversCarrier := fun x => glift.liftCoversActualDomain x }
 
 /-- Generator-lift coverage gives pointwise actual-domain coverage. -/
 def r4HilbertMathlibSelfAdjointOperator_hamiltonian_coverage_from_generator_lift
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (GL : R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
+    (glift : R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorHamiltonianDomainCoverageData I TR M :=
   r4HilbertMathlibSelfAdjointOperator_hamiltonian_coverage_from_elements I TR
-    (r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift I TR GL)
+    (r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift I TR glift)
 
 /-- Generator-lift coverage constructs `FullDomainData`. -/
 def r4HilbertMathlibSelfAdjointOperator_full_domain_data_from_generator_lift
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (GL : R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
+    (glift : R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorFullDomainData I TR M :=
   r4HilbertMathlibSelfAdjointOperator_full_domain_data_from_hamiltonian_coverage I TR
-    (r4HilbertMathlibSelfAdjointOperator_hamiltonian_coverage_from_generator_lift I TR GL)
+    (r4HilbertMathlibSelfAdjointOperator_hamiltonian_coverage_from_generator_lift I TR glift)
 
 /-- A family of generator-lift coverage data constructs the bounded route family. -/
 def r4HilbertMathlibSelfAdjointOperator_bounded_route_family_from_generator_lift
     (hBridge : r4HilbertMathlibSelfAdjointOperatorClosedGraphFullDomainToContinuousRepresentativeBridge I TR)
-    (GL : ∀ (M : R4HilbertMathlibSelfAdjointOperatorData I TR),
+    (glift : ∀ (M : R4HilbertMathlibSelfAdjointOperatorData I TR),
       R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorBoundedRouteFamily I TR :=
   r4HilbertMathlibSelfAdjointOperator_bounded_route_family_from_hamiltonian_elements I TR
     hBridge
-    (fun M => r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift I TR (GL M))
+    (fun M => r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift I TR (glift M))
 
 /-- Package theorem for the generator-lift route. -/
 theorem r4HilbertMathlibSelfAdjointOperator_generator_lift_bounded_route_family_package
     (hBridge : r4HilbertMathlibSelfAdjointOperatorClosedGraphFullDomainToContinuousRepresentativeBridge I TR)
-    (GL : ∀ (M : R4HilbertMathlibSelfAdjointOperatorData I TR),
+    (glift : ∀ (M : R4HilbertMathlibSelfAdjointOperatorData I TR),
       R4HilbertMathlibSelfAdjointOperatorGeneratorLiftCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorBoundedRouteFamily I TR ∧
       r4HilbertMathlibSelfAdjointOperatorClosedGraphFullDomainToContinuousRepresentativeBridge I TR ∧
@@ -109,7 +109,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_generator_lift_bounded_route_family_
           R4HilbertMathlibSelfAdjointOperatorFullDomainData I TR M) := by
   exact r4HilbertMathlibSelfAdjointOperator_hamiltonian_element_bounded_route_family_package I TR
     hBridge
-    (fun M => r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift I TR (GL M))
+    (fun M => r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_lift I TR (glift M))
 
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
