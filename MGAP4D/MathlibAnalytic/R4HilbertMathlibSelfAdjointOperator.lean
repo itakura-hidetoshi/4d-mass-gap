@@ -35,7 +35,7 @@ variable {E : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquiv
 variable {D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E}
 variable (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D)
 
-/-- The completed Hilbert carrier used for the mathlib unbounded self-adjoint operator. -/
+/-- The completed Hilbert carrier used for the mathlib self-adjoint operator. -/
 abbrev r4HilbertMathlibSelfAdjointCarrier
     (M : R4HilbertSelfAdjointnessInputData I TR) : Type :=
   r4HilbertCompletedHilbertSpace I TR
@@ -63,12 +63,13 @@ abbrev r4HilbertMathlibSelfAdjointCarrier
   r4HilbertCompletedHilbertSpaceCompleteSpace I TR
     M.hamiltonianData.generatorData.semigroupData.handoffData
 
-/-- Data for an actual mathlib unbounded self-adjoint operator.
+/-- Canonical data for the actual mathlib R4 self-adjoint operator.
 
-The operator is a mathlib `LinearPMap` on the completed R4 Hilbert carrier, and
-`mathlibOperatorIsSelfAdjoint` is the actual mathlib `IsSelfAdjoint` predicate on
-that `LinearPMap`. This layer therefore contains the mathlib object itself. It
-still does not invoke a spectral theorem and does not state a spectral-gap
+The operator is represented both as the actual mathlib `LinearPMap` and as a
+continuous full-domain representative whose `toPMap` on `⊤` is connected to that
+actual operator. Thus boundedness and full actual domain are part of bare actual
+operator data itself, rather than supplied by an external route witness. This
+layer still does not invoke a spectral theorem and does not state a spectral-gap
 result. -/
 structure R4HilbertMathlibSelfAdjointOperatorData where
   selfAdjointnessData : R4HilbertSelfAdjointnessInputData I TR
@@ -81,6 +82,31 @@ structure R4HilbertMathlibSelfAdjointOperatorData where
       r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR selfAdjointnessData
     r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData →ₗ.[ℝ]
       r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData)
+  continuousRepresentative :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR selfAdjointnessData
+    r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData →L[ℝ]
+      r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData)
+  continuousRepresentative_eq_actual :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR selfAdjointnessData
+    continuousRepresentative.toPMap ⊤ = mathlibOperator)
+  actualDomain_eq_top :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR selfAdjointnessData
+    mathlibOperator.domain = ⊤)
   mathlibOperatorIsSelfAdjoint :
     (letI : NormedAddCommGroup
         (r4HilbertMathlibSelfAdjointCarrier I TR selfAdjointnessData) :=
@@ -115,6 +141,40 @@ def r4HilbertMathlibSelfAdjointOperator
       r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
   M.mathlibOperator
 
+def r4HilbertMathlibSelfAdjointOperatorContinuousRepresentative
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+    r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData →L[ℝ]
+      r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+  M.continuousRepresentative
+
+theorem r4HilbertMathlibSelfAdjointOperator_continuousRepresentative_eq_actual
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+    M.continuousRepresentative.toPMap ⊤ = M.mathlibOperator) :=
+  M.continuousRepresentative_eq_actual
+
+theorem r4HilbertMathlibSelfAdjointOperator_actualDomain_eq_top
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+    M.mathlibOperator.domain = ⊤) :=
+  M.actualDomain_eq_top
+
 theorem r4HilbertMathlibSelfAdjointOperator_self_adjoint
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
@@ -144,7 +204,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_ready
     M.mathlibSelfAdjointObjectReady :=
   M.mathlibSelfAdjointObjectReady_holds
 
-/-- The actual mathlib unbounded self-adjoint operator object and its proof. -/
+/-- The actual mathlib R4 self-adjoint operator object and its bounded full-domain proof. -/
 theorem r4HilbertMathlibSelfAdjointOperator_constructed
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     (letI : NormedAddCommGroup
@@ -157,9 +217,25 @@ theorem r4HilbertMathlibSelfAdjointOperator_constructed
         (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
       r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
     IsSelfAdjoint M.mathlibOperator) ∧
-      r4HilbertSelfAdjointnessConclusion I TR M.selfAdjointnessData ∧
-        M.mathlibOperatorCompatibleWithHamiltonianInput ∧ M.mathlibSelfAdjointObjectReady :=
+      (letI : NormedAddCommGroup
+          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+        r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
+      letI : InnerProductSpace ℝ
+          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+        r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+      M.continuousRepresentative.toPMap ⊤ = M.mathlibOperator) ∧
+        (letI : NormedAddCommGroup
+            (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+          r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
+        letI : InnerProductSpace ℝ
+            (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+          r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
+        M.mathlibOperator.domain = ⊤) ∧
+          r4HilbertSelfAdjointnessConclusion I TR M.selfAdjointnessData ∧
+            M.mathlibOperatorCompatibleWithHamiltonianInput ∧ M.mathlibSelfAdjointObjectReady :=
   ⟨r4HilbertMathlibSelfAdjointOperator_self_adjoint I TR M,
+    r4HilbertMathlibSelfAdjointOperator_continuousRepresentative_eq_actual I TR M,
+    r4HilbertMathlibSelfAdjointOperator_actualDomain_eq_top I TR M,
     r4HilbertMathlibSelfAdjointOperator_criterion_proved I TR M,
     r4HilbertMathlibSelfAdjointOperator_compatible I TR M,
     r4HilbertMathlibSelfAdjointOperator_ready I TR M⟩
