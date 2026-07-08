@@ -35,65 +35,39 @@ variable {E : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquiv
 variable {D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E}
 variable (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D)
 
-/-- Carrier coverage data with the generator-domain lift rewritten as a completed
-OS semigroup Hilbert carrier point.
+/-- Completed OS semigroup carrier coverage data extending the generator-carrier route.
 
-This is the next internalization step after the generator-carrier route. It makes
-explicit that the carrier produced from a generator-domain lift lives in the
-completed OS semigroup handoff carrier. The final actual-domain membership is
-still recorded as route data. -/
+This layer records, in addition to the generator-carrier route data, a completed
+OS semigroup handoff carrier point for each carrier vector. The final
+actual-domain membership remains inherited from the generator-carrier route. -/
 structure R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) where
-  hamiltonianInput : R4HilbertHamiltonianInputData I TR
-  hamiltonianInputReady : hamiltonianInput.hamiltonianInputReady
-  compatibleWithActualOperator : M.mathlibOperatorCompatibleWithHamiltonianInput
-  elementForCarrier :
-    ∀ _x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      hamiltonianInput.hamiltonianDomain
-  generatorLiftForCarrier :
-    ∀ _x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      r4HilbertOSGeneratorHandoffDomain I TR hamiltonianInput.generatorData
-  generatorLift_eq_map :
-    ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      generatorLiftForCarrier x =
-        hamiltonianInput.hamiltonianDomainToGeneratorDomain (elementForCarrier x)
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) extends
+      R4HilbertMathlibSelfAdjointOperatorGeneratorCarrierCoverageData I TR M where
   completedOSCarrierForLift :
     ∀ _x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
       r4HilbertCompletedOSSemigroupHandoffCarrier I TR hamiltonianInput.generatorData.semigroupData
-  completedOSCarrier_eq_domainMap :
+  completedOSCarrier_eq_generatorCarrier :
     ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      completedOSCarrierForLift x =
-        r4HilbertOSGeneratorHandoffDomainMap I TR hamiltonianInput.generatorData
-          (generatorLiftForCarrier x)
-  completedOSCarrierCoversActualDomain :
-    (letI : NormedAddCommGroup
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-    letI : InnerProductSpace ℝ
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-    ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      let _osCarrier := completedOSCarrierForLift x
-      x ∈ M.mathlibOperator.domain)
+      completedOSCarrierForLift x = generatorCarrierForLift x
 
-/-- The completed OS semigroup carrier obtained from a generator-domain lift. -/
-def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_lift
+/-- The completed OS carrier read directly from the inherited generator carrier. -/
+def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_generator_carrier
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
     (oscover : R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData I TR M)
     (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :
     r4HilbertCompletedOSSemigroupHandoffCarrier I TR
       oscover.hamiltonianInput.generatorData.semigroupData :=
-  r4HilbertOSGeneratorHandoffDomainMap I TR oscover.hamiltonianInput.generatorData
-    (oscover.generatorLiftForCarrier x)
+  oscover.generatorCarrierForLift x
 
-/-- The recorded completed OS carrier agrees with the generator handoff domain-map image. -/
-theorem r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_eq_domain_map
+/-- The recorded completed OS carrier agrees with the inherited generator carrier. -/
+theorem r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_eq_generator_carrier
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
     (oscover : R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData I TR M)
     (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :
     oscover.completedOSCarrierForLift x =
-      r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_lift I TR oscover x := by
-  exact oscover.completedOSCarrier_eq_domainMap x
+      r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_generator_carrier I TR
+        oscover x := by
+  exact oscover.completedOSCarrier_eq_generatorCarrier x
 
 /-- Completed-OS-carrier coverage gives the generator-carrier coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_completed_os_carrier
@@ -106,10 +80,9 @@ def r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_completed_os_carr
     elementForCarrier := oscover.elementForCarrier
     generatorLiftForCarrier := oscover.generatorLiftForCarrier
     generatorLift_eq_map := oscover.generatorLift_eq_map
-    generatorCarrierForLift := oscover.completedOSCarrierForLift
-    generatorCarrier_eq_domainMap := oscover.completedOSCarrier_eq_domainMap
-    generatorCarrierCoversActualDomain := fun x => by
-      exact oscover.completedOSCarrierCoversActualDomain x }
+    generatorCarrierForLift := oscover.generatorCarrierForLift
+    generatorCarrier_eq_domainMap := oscover.generatorCarrier_eq_domainMap
+    generatorCarrierCoversActualDomain := oscover.generatorCarrierCoversActualDomain }
 
 /-- Completed-OS-carrier coverage gives the previous generator-lift coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_generator_lift_from_completed_os_carrier
