@@ -35,54 +35,45 @@ variable {E : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquiv
 variable {D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E}
 variable (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D)
 
-/-- Completed OS semigroup carrier coverage data extending the generator-carrier route.
+/-- Completed OS semigroup carrier coverage data attached to the generator-carrier route.
 
-This layer records, in addition to the generator-carrier route data, a completed
-OS semigroup handoff carrier point for each carrier vector. The final
-actual-domain membership remains inherited from the generator-carrier route. -/
+This layer records a completed OS semigroup handoff carrier point for each
+carrier vector while inheriting the actual-domain and bounded-route path from
+the generator-carrier route. -/
 structure R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) extends
-      R4HilbertMathlibSelfAdjointOperatorGeneratorCarrierCoverageData I TR M where
+    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) where
+  generatorCarrierData :
+    R4HilbertMathlibSelfAdjointOperatorGeneratorCarrierCoverageData I TR M
   completedOSCarrierForLift :
     ∀ _x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      r4HilbertCompletedOSSemigroupHandoffCarrier I TR hamiltonianInput.generatorData.semigroupData
-  completedOSCarrier_eq_generatorCarrier :
+      r4HilbertCompletedOSSemigroupHandoffCarrier I TR
+        generatorCarrierData.hamiltonianInput.generatorData.semigroupData
+  completedOSCarrierCoversActualDomain :
+    (letI : NormedAddCommGroup
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
+    letI : InnerProductSpace ℝ
+        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
+      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
     ∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-      completedOSCarrierForLift x = generatorCarrierForLift x
+      let _osCarrier := completedOSCarrierForLift x
+      x ∈ M.mathlibOperator.domain)
 
-/-- The completed OS carrier read directly from the inherited generator carrier. -/
-def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_generator_carrier
+/-- The completed OS carrier explicitly recorded for a carrier vector. -/
+def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_data
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
     (oscover : R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData I TR M)
     (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :
     r4HilbertCompletedOSSemigroupHandoffCarrier I TR
-      oscover.hamiltonianInput.generatorData.semigroupData :=
-  oscover.generatorCarrierForLift x
-
-/-- The recorded completed OS carrier agrees with the inherited generator carrier. -/
-theorem r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_eq_generator_carrier
-    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
-    (oscover : R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData I TR M)
-    (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :
-    oscover.completedOSCarrierForLift x =
-      r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_from_generator_carrier I TR
-        oscover x := by
-  exact oscover.completedOSCarrier_eq_generatorCarrier x
+      oscover.generatorCarrierData.hamiltonianInput.generatorData.semigroupData :=
+  oscover.completedOSCarrierForLift x
 
 /-- Completed-OS-carrier coverage gives the generator-carrier coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_completed_os_carrier
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
     (oscover : R4HilbertMathlibSelfAdjointOperatorCompletedOSCarrierCoverageData I TR M) :
     R4HilbertMathlibSelfAdjointOperatorGeneratorCarrierCoverageData I TR M :=
-  { hamiltonianInput := oscover.hamiltonianInput
-    hamiltonianInputReady := oscover.hamiltonianInputReady
-    compatibleWithActualOperator := oscover.compatibleWithActualOperator
-    elementForCarrier := oscover.elementForCarrier
-    generatorLiftForCarrier := oscover.generatorLiftForCarrier
-    generatorLift_eq_map := oscover.generatorLift_eq_map
-    generatorCarrierForLift := oscover.generatorCarrierForLift
-    generatorCarrier_eq_domainMap := oscover.generatorCarrier_eq_domainMap
-    generatorCarrierCoversActualDomain := oscover.generatorCarrierCoversActualDomain }
+  oscover.generatorCarrierData
 
 /-- Completed-OS-carrier coverage gives the previous generator-lift coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_generator_lift_from_completed_os_carrier
