@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorUnconditionalBoundedRoutePackage
+import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorBoundedActualData
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Tactic
 
@@ -37,11 +37,12 @@ variable (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEqui
 
 /-! Bare-`M` bounded actual route.
 
-This layer moves the public boundedness entry point from an explicit route-family
-or unconditional-route argument to a bare actual R4 mathlib operator datum
-`M : R4HilbertMathlibSelfAdjointOperatorData I TR`.  The construction witness is
-kept as an implicit route class, so downstream theorem statements can mention
-only the concrete operator datum `M` at the call site. -/
+This layer moves the public boundedness entry point to a bare actual R4 mathlib
+operator datum `M : R4HilbertMathlibSelfAdjointOperatorData I TR`.
+
+The global construction witness is kept as an implicit route class.  The theorem
+entry points below therefore take only the concrete operator datum `M` explicitly,
+while the continuous representative witness is recovered from the route class. -/
 
 /-- Global construction witness that every actual R4 mathlib self-adjoint operator
 carries bounded actual data. -/
@@ -49,14 +50,6 @@ class R4HilbertMathlibSelfAdjointOperatorBareBoundedActualRoute where
   boundedActualData :
     ∀ (M : R4HilbertMathlibSelfAdjointOperatorData I TR),
       R4HilbertMathlibSelfAdjointOperatorBoundedActualData I TR M
-
-/-- An existing unconditional bounded route supplies the bare-`M` route witness. -/
-def r4HilbertMathlibSelfAdjointOperator_bare_bounded_actual_route_from_unconditional
-    (hRoute : r4HilbertMathlibSelfAdjointOperatorUnconditionalBoundedRoute I TR) :
-    R4HilbertMathlibSelfAdjointOperatorBareBoundedActualRoute I TR where
-  boundedActualData := fun M =>
-    r4HilbertMathlibSelfAdjointOperator_unconditional_route_to_bounded_actual_data I TR
-      hRoute M
 
 /-- Bare-`M` access to bounded actual data for the actual R4 operator. -/
 def r4HilbertMathlibSelfAdjointOperator_bare_M_bounded_actual_data
