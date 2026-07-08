@@ -89,58 +89,6 @@ theorem r4HilbertMathlibSelfAdjointOperator_bare_M_bounded_actual_nonempty
     Nonempty (R4HilbertMathlibSelfAdjointOperatorBoundedActualData I TR M) :=
   ⟨r4HilbertMathlibSelfAdjointOperator_bare_M_bounded_actual_data I TR M⟩
 
-/-- Bare-`M` full bounded actual package. -/
-theorem r4HilbertMathlibSelfAdjointOperator_bare_M_bounded_actual_package
-    [bareRoute : R4HilbertMathlibSelfAdjointOperatorBareBoundedActualRoute I TR]
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
-    (letI : NormedAddCommGroup
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-    letI : InnerProductSpace ℝ
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-    letI : CompleteSpace
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierCompleteSpace I TR M.selfAdjointnessData
-    ∃ (B : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData →L[ℝ]
-          r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData),
-      B.toPMap ⊤ = M.mathlibOperator ∧
-        B.adjoint.toPMap ⊤ = M.mathlibOperator ∧
-        B.toPMap ⊤ = B.adjoint.toPMap ⊤ ∧
-        B.adjoint.toPMap ⊤ = B.toPMap ⊤ ∧
-        B.adjoint = B ∧
-        (B.toPMap ⊤).domain = ⊤ ∧
-        (B.adjoint.toPMap ⊤).domain = ⊤ ∧
-        M.mathlibOperator.domain = ⊤ ∧
-        Dense (M.mathlibOperator.domain : Set
-          (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)) ∧
-        M.mathlibOperator.IsClosed ∧
-        LinearPMap.adjoint M.mathlibOperator = M.mathlibOperator ∧
-        M.mathlibOperator = LinearPMap.adjoint M.mathlibOperator ∧
-        (LinearPMap.adjoint M.mathlibOperator).domain = M.mathlibOperator.domain ∧
-        (LinearPMap.adjoint M.mathlibOperator).graph = M.mathlibOperator.graph ∧
-        M.mathlibOperator.graph = M.mathlibOperator.graph.adjoint ∧
-        M.mathlibOperator.graph.adjoint.toLinearPMap = M.mathlibOperator ∧
-        M.mathlibOperator.IsFormalAdjoint M.mathlibOperator ∧
-        M.mathlibOperator ≤ LinearPMap.adjoint M.mathlibOperator ∧
-        LinearPMap.adjoint M.mathlibOperator ≤ M.mathlibOperator ∧
-        (B.toPMap ⊤).graph = M.mathlibOperator.graph ∧
-        (B.adjoint.toPMap ⊤).graph = M.mathlibOperator.graph ∧
-        M.mathlibOperator.graph = (B.toPMap ⊤).graph ∧
-        M.mathlibOperator.graph = (B.adjoint.toPMap ⊤).graph ∧
-        (∀ x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-          x ∈ M.mathlibOperator.domain) ∧
-        (∀ (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
-            (hx : x ∈ M.mathlibOperator.domain),
-          M.mathlibOperator ⟨x, hx⟩ = B x) ∧
-        (∀ (x y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData)
-            (hx : x ∈ M.mathlibOperator.domain),
-          inner ℝ (M.mathlibOperator ⟨x, hx⟩) y = inner ℝ x (B y)) ∧
-        (∀ x y : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData,
-          inner ℝ (B x) y = inner ℝ x (B y))) :=
-  r4HilbertMathlibSelfAdjointOperator_bounded_actual_package I TR M
-    (r4HilbertMathlibSelfAdjointOperator_bare_M_bounded_actual_data I TR M)
-
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
 end
