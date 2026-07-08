@@ -92,8 +92,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_generator_carrier_eq_domain_map
     (x : r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :
     gcover.generatorCarrierForLift x =
       r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_lift I TR gcover x := by
-  simpa [r4HilbertMathlibSelfAdjointOperator_generator_carrier_from_lift] using
-    gcover.generatorCarrier_eq_domainMap x
+  exact gcover.generatorCarrier_eq_domainMap x
 
 /-- Generator-carrier coverage gives the previous generator-lift coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_generator_lift_from_generator_carrier
@@ -107,7 +106,7 @@ def r4HilbertMathlibSelfAdjointOperator_generator_lift_from_generator_carrier
     generatorLiftForCarrier := gcover.generatorLiftForCarrier
     generatorLift_eq_map := gcover.generatorLift_eq_map
     liftCoversActualDomain := fun x => by
-      simpa using gcover.generatorCarrierCoversActualDomain x }
+      exact gcover.generatorCarrierCoversActualDomain x }
 
 /-- Generator-carrier coverage gives the element-level Hamiltonian coverage layer. -/
 def r4HilbertMathlibSelfAdjointOperator_hamiltonian_elements_from_generator_carrier
