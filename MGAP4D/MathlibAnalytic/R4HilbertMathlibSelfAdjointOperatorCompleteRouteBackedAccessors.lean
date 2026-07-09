@@ -62,7 +62,7 @@ def r4HilbertMathlibSelfAdjointOperator_quotient_carrier_accessor_actual_domain_
     r4HilbertMathlibSelfAdjointOperator_central_supply_from_bare_bounded_actual_route I TR
       (r4HilbertMathlibSelfAdjointOperator_bare_bounded_actual_route_from_quotient_carrier I TR
         hBridge qcover)
-  exact R4HilbertMathlibSelfAdjointOperatorData.actualDomain_eq_top I TR M
+  exact M.actualDomain_eq_top
 
 /-- Quotient-carrier coverage gives the field-like full bounded package accessor. -/
 def r4HilbertMathlibSelfAdjointOperator_quotient_carrier_accessor_bounded_actual_package
@@ -113,7 +113,7 @@ def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_accessor_actual_dom
     r4HilbertMathlibSelfAdjointOperator_central_supply_from_bare_bounded_actual_route I TR
       (r4HilbertMathlibSelfAdjointOperator_bare_bounded_actual_route_from_completed_os_carrier I TR
         hBridge oscover)
-  exact R4HilbertMathlibSelfAdjointOperatorData.actualDomain_eq_top I TR M
+  exact M.actualDomain_eq_top
 
 /-- Completed-OS-carrier coverage gives the field-like full bounded package accessor. -/
 def r4HilbertMathlibSelfAdjointOperator_completed_os_carrier_accessor_bounded_actual_package
@@ -164,7 +164,7 @@ def r4HilbertMathlibSelfAdjointOperator_completed_hilbert_carrier_accessor_actua
     r4HilbertMathlibSelfAdjointOperator_central_supply_from_bare_bounded_actual_route I TR
       (r4HilbertMathlibSelfAdjointOperator_bare_bounded_actual_route_from_completed_hilbert_carrier I TR
         hBridge hcover)
-  exact R4HilbertMathlibSelfAdjointOperatorData.actualDomain_eq_top I TR M
+  exact M.actualDomain_eq_top
 
 /-- Completed-Hilbert-carrier coverage gives the field-like full bounded package accessor. -/
 def r4HilbertMathlibSelfAdjointOperator_completed_hilbert_carrier_accessor_bounded_actual_package
@@ -201,7 +201,7 @@ def r4HilbertMathlibSelfAdjointOperator_completed_pre_carrier_accessor_actual_do
     r4HilbertMathlibSelfAdjointOperator_central_supply_from_bare_bounded_actual_route I TR
       (r4HilbertMathlibSelfAdjointOperator_bare_bounded_actual_route_from_completed_pre_carrier I TR
         hBridge pcover)
-  exact R4HilbertMathlibSelfAdjointOperatorData.actualDomain_eq_top I TR M
+  exact M.actualDomain_eq_top
 
 /-- Completed-pre-carrier coverage gives the field-like full bounded package accessor. -/
 def r4HilbertMathlibSelfAdjointOperator_completed_pre_carrier_accessor_bounded_actual_package

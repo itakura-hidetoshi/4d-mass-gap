@@ -81,7 +81,7 @@ theorem r4HilbertMathlibSelfAdjointOperator_generator_carrier_accessor_actual_do
   letI : R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR :=
     r4HilbertMathlibSelfAdjointOperator_central_supply_from_generator_carrier I TR
       hBridge gcover
-  exact R4HilbertMathlibSelfAdjointOperatorData.actualDomain_eq_top I TR M
+  exact M.actualDomain_eq_top
 
 /-- Generator-carrier coverage gives the field-like full bounded package accessor. -/
 def r4HilbertMathlibSelfAdjointOperator_generator_carrier_accessor_bounded_actual_package
