@@ -2,38 +2,39 @@
 
 This roadmap records the active proof-development path of `itakura-hidetoshi/4d-mass-gap`.
 
-## Snapshot — 2026-07-09
+## Snapshot — 2026-07-09 JST
 
 ```text
 active proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-latest integrated carrier PR:
-  PR #717 — Direct boundedness public handoff
-
-latest integrated carrier merge commit:
-  3d33df3b5c4adae03d0347403022d231d89be219
-
-latest integrated carrier PR head:
-  bf6bc9841a9f25c7276ac47bc3b9b158f87e9dcd
-
-latest integrated validation:
-  PR Lean Fast Check run 5770 — success
-
-current open draft frontier:
+latest integrated theorem/certificate checkpoint:
   PR #718 — Complete Yang-Mills direct bounded certificate
 
-current draft frontier validation:
-  PR Lean Fast Check run 5771 — in progress at the time this file was updated
+latest integrated checkpoint merge commit:
+  dd137504ecea43c97097151de5689c41b2121703
+
+latest integrated checkpoint PR head:
+  abe7194274aec8c4e277bcc5165c2156d66b53f8
+
+latest integrated validation:
+  PR Lean Fast Check run 5772 — success
+
+current active mathematical frontier:
+  physical Hamiltonian spectral theorem route
+  physical spectral projection or functional-calculus layer
+  positive-gap certificate from a concrete continuum scaling family
 ```
 
-The active carrier now has a completed R4 Hilbert-space handoff, a completed R4 OS semigroup handoff, an OS generator input/theorem API, a Hamiltonian handoff API, a mathlib self-adjoint operator object/API/handoff, and a direct bounded actual operator public handoff.
+The active carrier now has a completed R4 Hilbert-space handoff, a completed R4 OS semigroup handoff, an OS generator input/theorem API, a Hamiltonian handoff API, a mathlib self-adjoint operator object/API/handoff, route and graph packages, direct bare-`M` boundedness endpoints, a direct boundedness public handoff, and a complete Yang-Mills direct bounded certificate surface.
 
 The preferred current boundedness surface is the direct bare-`M` bundle.
 
-Route-backed boundedness remains available as compatibility-only.
+Route-backed boundedness remains compatibility-only.
 
-The repository still does **not** prove an unconditional interacting four-dimensional continuum Yang--Mills theory, a physical positive spectral gap from one fully instantiated continuum scaling trajectory, or a Clay Millennium mass-gap theorem.
+The latest certificate layer bundles the existing finite-volume/continuum construction certificate with the direct bounded R4 operator public handoff.
+
+It does **not** add a new spectral theorem, spectral projection construction, numerical mass-gap proof, or unconditional Clay Millennium theorem.
 
 Notation:
 
@@ -46,7 +47,7 @@ A carrier theorem is not a public final theorem.
 
 A draft PR is not an integrated layer.
 
-A conditional theorem package is not a proof that the physical Yang--Mills approximation family supplies its hypotheses.
+A conditional theorem package or certificate surface is not a proof that the physical Yang-Mills approximation family supplies every required hypothesis.
 
 ---
 
@@ -77,11 +78,11 @@ Status: **active workflow requirement**
 - [x] require PR Lean Fast Check before treating the layer as integrated;
 - [x] merge only after fixed-head review;
 - [x] start each next layer from the updated carrier head;
-- [x] do not promote draft or failing PR results into README, roadmap, or theorem-boundary language.
+- [x] do not promote draft, stale, closed-unmerged, or failing PR results into README, roadmap, or theorem-boundary language.
 
 Definition of done:
 
-The branch history remains a sequence of small replayable proof layers, and documentation distinguishes merged carrier facts from open draft work.
+The branch history remains a sequence of small replayable proof layers, and documentation distinguishes merged carrier facts from open or stale draft work.
 
 ---
 
@@ -96,11 +97,12 @@ Status: **integrated on the active carrier**
 - [x] R4 gauge-invariant Schwinger construction;
 - [x] R4 Schwinger n-point family construction;
 - [x] R4 correlation functional construction;
-- [x] R4 correlation structure construction.
+- [x] R4 correlation structure construction;
+- [x] construction-spine certificate surface.
 
 Definition of done:
 
-The R4 continuum-measure construction chain carries the data needed to enter reflection-positive reconstruction inputs without claiming that all physical analytic estimates have been discharged.
+The R4 continuum-measure construction chain carries the data needed to enter reflection-positive reconstruction and certificate layers without claiming that all physical analytic estimates have been discharged.
 
 ---
 
@@ -142,27 +144,16 @@ The quotient, section, range, and transport layers provide the bookkeeping neede
 
 ---
 
-## Milestone 6 — completion input, object, and readiness APIs
+## Milestone 6 — completion, completed Hilbert space, and handoff API
 
-Status: **integrated on the active carrier**
+Status: **integrated through PR #600**
 
 - [x] R4 completion input data;
 - [x] R4 completion object data;
 - [x] R4 completion map API;
 - [x] R4 completion readiness API;
 - [x] R4 completion transport API;
-- [x] R4 final completion API.
-
-Definition of done:
-
-The completion route exposes its input, object, map, readiness, and transport obligations without asserting the completed Hilbert space before the required analytic data are available.
-
----
-
-## Milestone 7 — pre-Hilbert, completed structure, and standard completion
-
-Status: **integrated on the active carrier**
-
+- [x] R4 final completion API;
 - [x] pre-completion structure data;
 - [x] quotient-to-pre-Hilbert map;
 - [x] quotient-to-pre-Hilbert injectivity;
@@ -170,114 +161,57 @@ Status: **integrated on the active carrier**
 - [x] reflection-positive form descent fields;
 - [x] quotient positive-definiteness fields;
 - [x] completed Hilbert structure data;
-- [x] complete-space field for the completed carrier;
-- [x] dense-range data for the pre-to-completed and quotient-to-completed maps;
 - [x] standard completion carrier as `UniformSpace.Completion` of the R4 pre-Hilbert carrier;
-- [x] standard completion map from the pre-Hilbert carrier;
-- [x] real inner-product projection for the standard completion;
-- [x] `CompleteSpace` projection for the standard completion;
-- [x] dense range of the standard completion map;
-- [x] quotient-to-standard-completion route;
-- [x] quotient map factorization through the pre-Hilbert carrier.
-
-Definition of done:
-
-The carrier is definitionally tied to the mathlib completion route rather than only to an abstract completed carrier.
-
----
-
-## Milestone 8 — completed R4 Hilbert space and handoff API
-
-Status: **integrated**
-
 - [x] expose the completed carrier as `r4HilbertCompletedHilbertSpace`;
-- [x] project `NormedAddCommGroup` for the completed space;
-- [x] project real `InnerProductSpace ℝ` for the completed space;
-- [x] project `CompleteSpace` for the completed space;
-- [x] expose the dense pre-Hilbert map;
-- [x] expose the dense quotient map;
-- [x] prove equality with `UniformSpace.Completion` of the R4 pre-Hilbert carrier;
-- [x] expose quotient-map factorization through the pre-Hilbert carrier;
-- [x] bundle the completed Hilbert-space construction theorem;
-- [x] expose the completed Hilbert-space handoff API for downstream OS/operator layers.
+- [x] expose the completed Hilbert-space handoff API for downstream OS and operator layers.
 
 Validation receipts:
 
 ```text
-PR #599:
-  completed Hilbert space API
-
-PR #600:
-  completed Hilbert-space handoff API
+PR #599 — completed Hilbert space API
+PR #600 — completed Hilbert-space handoff API
 ```
 
 Definition of done:
 
-Downstream OS, semigroup, and Hamiltonian layers can import one handoff API for the completed Hilbert space without restating the entire reconstruction bundle.
+Downstream OS, semigroup, Hamiltonian, and operator layers can import one handoff API for the completed Hilbert space without restating the entire reconstruction bundle.
 
 ---
 
-## Milestone 9 — completed OS semigroup handoff
+## Milestone 7 — completed OS semigroup, generator, and Hamiltonian route
 
-Status: **integrated by PR #606**
+Status: **integrated through PR #615**
 
-- [x] expose the completed R4 OS semigroup carrier;
-- [x] expose the time carrier, zero time, and time addition;
-- [x] expose the semigroup action;
-- [x] package identity law and semigroup law;
-- [x] package contraction;
-- [x] package strong continuity;
-- [x] package compatibility and readiness;
-- [x] keep the layer before generator, Hamiltonian, spectral theorem, and spectral-gap claims.
+- [x] completed R4 OS semigroup carrier;
+- [x] OS time carrier, zero time, and time addition;
+- [x] semigroup action, identity law, semigroup law, contraction, and strong continuity;
+- [x] completed R4 OS semigroup handoff API;
+- [x] infinitesimal-generator input data;
+- [x] generator graph data and domain;
+- [x] generator domain-to-Hilbert map and generator action;
+- [x] dense-domain and closed-graph obligations;
+- [x] semigroup compatibility and dissipative estimate;
+- [x] generator theorem API;
+- [x] Hamiltonian domain, action, and compatibility with the generator;
+- [x] nonnegative-form, symmetry-on-domain, and closability input;
+- [x] Hamiltonian handoff API.
+
+Validation receipts:
+
+```text
+PR #606 — completed OS semigroup handoff
+PR #608 — OS generator input API
+PR #610 — OS generator theorem API
+PR #615 — Hamiltonian handoff API
+```
 
 Definition of done:
 
-The completed Hilbert space carries a replayed OS semigroup handoff interface with explicit hypotheses and no gap claim.
+The completed Hilbert space carries replayed OS semigroup, generator, and Hamiltonian handoff surfaces with explicit hypotheses and no spectral-gap claim.
 
 ---
 
-## Milestone 10 — OS generator input and theorem API
-
-Status: **integrated by PR #608 and PR #610**
-
-- [x] add infinitesimal-generator input data for the completed R4 OS semigroup;
-- [x] keep the generator as explicit graph data with separate domain;
-- [x] expose the domain-to-Hilbert map and generator action;
-- [x] package dense-domain and closed-graph obligations;
-- [x] package semigroup compatibility and dissipative estimate;
-- [x] re-expose the input surface as a theorem API;
-- [x] avoid identifying the generator with a physical Hamiltonian at this layer.
-
-Definition of done:
-
-The OS generator has a theorem-facing API with explicit graph and domain obligations, without self-adjointness or spectral-gap claims.
-
----
-
-## Milestone 11 — Hamiltonian handoff API
-
-Status: **integrated by PR #615**
-
-- [x] expose generator data;
-- [x] expose the completed carrier;
-- [x] expose Hamiltonian domain;
-- [x] expose domain-to-generator map;
-- [x] expose Hamiltonian action;
-- [x] package upstream generator handoff;
-- [x] package compatibility with the generator;
-- [x] package nonnegative-form input;
-- [x] package symmetry-on-domain input;
-- [x] package closability input;
-- [x] expose readiness and bundled handoff theorem;
-- [x] keep the layer separate from self-adjointness, spectral theorem, and gap claims.
-
-Definition of done:
-
-The Hamiltonian route has a replayable handoff surface, but still requires later self-adjoint, spectral, and gap layers.
-
----
-
-## Milestone 12 — mathlib self-adjoint operator object and API
+## Milestone 8 — mathlib self-adjoint operator object and API
 
 Status: **integrated by PR #623, PR #624, and PR #625**
 
@@ -295,7 +229,7 @@ The R4 Hamiltonian route has a mathlib self-adjoint operator object and handoff 
 
 ---
 
-## Milestone 13 — graph, adjoint-equality, and actual-operator packages
+## Milestone 9 — graph, adjoint-equality, and actual-operator packages
 
 Status: **integrated**
 
@@ -311,11 +245,11 @@ Status: **integrated**
 
 Definition of done:
 
-The operator route can expose actual operator, graph, equality, top-domain, continuous-representative, and inner-action data as stable package surfaces.
+The operator route exposes actual operator, graph, equality, top-domain, continuous-representative, and inner-action data as stable package surfaces.
 
 ---
 
-## Milestone 14 — bounded actual route and direct bare-M endpoint family
+## Milestone 10 — bounded actual route and direct bare-M endpoint family
 
 Status: **integrated through PR #717**
 
@@ -370,32 +304,64 @@ Bounded actual R4 operator data is available through the direct bare-`M` public 
 
 ---
 
-## Milestone 15 — complete Yang-Mills direct bounded certificate
+## Milestone 11 — complete Yang-Mills direct bounded certificate
 
-Status: **open draft frontier in PR #718**
+Status: **integrated by PR #718**
 
-- [d] bundle the existing finite-volume and continuum construction certificate with the direct bounded R4 operator public handoff;
-- [d] expose the construction-spine full spectral package through the new certificate surface;
-- [d] record direct bare-`M` boundedness as primary;
-- [d] keep route-backed names compatibility-only;
-- [d] avoid adding a new spectral theorem;
-- [d] avoid adding spectral projections;
-- [d] avoid adding a numerical mass-gap claim.
+- [x] bundle the existing finite-volume and continuum construction certificate with the direct bounded R4 operator public handoff;
+- [x] expose the construction-spine full spectral package through the new certificate surface;
+- [x] record direct bare-`M` boundedness as primary;
+- [x] keep route-backed names compatibility-only;
+- [x] avoid adding a new spectral theorem;
+- [x] avoid adding spectral projections;
+- [x] avoid adding a numerical mass-gap claim.
+
+Primary certificate surface:
+
+```lean
+EuclideanYangMillsCompleteConstructionDirectBoundedCertificate
+```
+
+Constructor and theorem endpoints:
+
+```lean
+euclideanYangMillsCompleteConstructionDirectBoundedCertificate
+
+euclidean_yang_mills_complete_construction_direct_bounded_full_spectral_package
+
+euclidean_yang_mills_complete_construction_direct_bounded_public_handoff
+
+euclidean_yang_mills_complete_construction_direct_bounded_package
+```
+
+Validation receipt:
+
+```text
+PR #718 final head:
+  abe7194274aec8c4e277bcc5165c2156d66b53f8
+
+PR #718 merge commit on the active carrier:
+  dd137504ecea43c97097151de5689c41b2121703
+
+PR Lean Fast Check:
+  run 5772 — success
+```
 
 Definition of done:
 
-A replayed certificate surface exists for the current direct bounded construction route, with no promotion to physical mass-gap language.
+A replayed certificate surface exists for the current direct bounded construction route, while spectral theorem construction, spectral projections, physical positive-gap derivation, and final theorem language remain separate.
 
 ---
 
-## Milestone 16 — spectral theorem layer for the physical Hamiltonian
+## Milestone 12 — spectral theorem layer for the physical Hamiltonian
 
 Status: **open**
 
-- [ ] invoke or construct the appropriate spectral theorem interface for the mathlib self-adjoint Hamiltonian object;
-- [ ] expose spectral measure or projection-valued interfaces where mathematically justified;
-- [ ] keep spectral theorem use separate from a positive lower-bound claim;
+- [ ] choose or build the appropriate mathlib route for the relevant R4 Hamiltonian/operator surface;
+- [ ] invoke or construct the spectral theorem interface where mathematically justified;
+- [ ] expose spectral measure or projection-valued interfaces only after the route is actually constructed;
 - [ ] connect the spectral interface to the current direct bounded operator route;
+- [ ] keep spectral theorem use separate from a positive lower-bound claim;
 - [ ] document every remaining hypothesis.
 
 Definition of done:
@@ -404,7 +370,7 @@ The physical Hamiltonian route has a replayed spectral theorem surface without c
 
 ---
 
-## Milestone 17 — physical positive-gap certificate
+## Milestone 13 — physical positive-gap certificate
 
 Status: **decisive open mathematical frontier**
 
@@ -421,7 +387,7 @@ A positive mass-gap lower bound is derived from the actual physical approximatio
 
 ---
 
-## Milestone 18 — final theorem and external review
+## Milestone 14 — final theorem and external review
 
 Status: **not claimed**
 
@@ -434,4 +400,4 @@ Status: **not claimed**
 
 Definition of done:
 
-The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, completed Hilbert-space and OS layers, self-adjoint operator API work, boundedness handoff surfaces, and the actual four-dimensional Yang--Mills mass-gap theorem.
+The repository can state a final theorem without conflating finite-volume results, conditional transfer theorems, internal normalization lanes, completed Hilbert-space and OS layers, self-adjoint operator API work, boundedness handoff surfaces, construction-certificate surfaces, and the actual four-dimensional Yang-Mills mass-gap theorem.
