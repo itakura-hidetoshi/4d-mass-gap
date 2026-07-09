@@ -1,6 +1,6 @@
-# Root direct boundedness smoke
+# Direct boundedness smoke
 
-This PR adds a Lean compile smoke confirming that `MGAP4D.MathlibAnalytic` exposes the direct bare-`M` boundedness API.
+This PR adds a Lean compile smoke confirming that the local direct bare-`M` boundedness API is importable without forcing the aggregate `MGAP4D.MathlibAnalytic` root target.
 
 The checked surface is:
 
