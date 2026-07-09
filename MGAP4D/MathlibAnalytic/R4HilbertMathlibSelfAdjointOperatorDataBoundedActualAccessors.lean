@@ -35,83 +35,41 @@ variable {E : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquiv
 variable {D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E}
 variable (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D)
 
-/-! Field-like boundedness accessors on bare actual R4 operator data. -/
+/-! Unconditional boundedness accessors on bare actual R4 operator data. -/
 
 namespace R4HilbertMathlibSelfAdjointOperatorData
 
-/-- Field-like accessor from bare operator data to bounded actual data once the
-central bare bounded actual route supply is installed. -/
+/-- The bounded actual data carried directly by bare actual R4 operator data. -/
 def boundedActualData
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     R4HilbertMathlibSelfAdjointOperatorBoundedActualData I TR M :=
-  r4HilbertMathlibSelfAdjointOperator_central_supply_bare_M_bounded_actual_data I TR M
+  { continuousRepresentative := M.continuousRepresentative
+    continuousRepresentative_eq_actual := M.continuousRepresentative_eq_actual }
 
-/-- Field-like accessor from bare operator data to enriched bounded actual operator data. -/
+/-- Enriched bounded actual operator data obtained unconditionally from bare operator data. -/
 def boundedActualOperatorData
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     R4HilbertMathlibSelfAdjointOperatorDataWithBoundedActual I TR :=
-  r4HilbertMathlibSelfAdjointOperator_enrich_with_bounded_actual_data I TR M
+  { operatorData := M
+    boundedActualData := boundedActualData I TR M }
 
-/-- Field-like accessor from bare operator data to full-domain continuous operator data. -/
+/-- Enriched full-domain continuous operator data obtained unconditionally from bare operator data. -/
 def fullDomainContinuousData
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
     R4HilbertMathlibSelfAdjointOperatorDataWithFullDomainContinuousRepresentative I TR :=
-  r4HilbertMathlibSelfAdjointOperator_enrich_with_full_domain_continuous_representative I TR M
-
-/-- Field-like accessor to the continuous representative carried by the central supply. -/
-def continuousRepresentative
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
-    (letI : NormedAddCommGroup
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-    letI : InnerProductSpace ℝ
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-    r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData →L[ℝ]
-      r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-  (boundedActualData I TR M).continuousRepresentative
-
-/-- The field-like continuous representative realizes the actual operator on `⊤`. -/
-theorem continuousRepresentative_eq_actual
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
-    (letI : NormedAddCommGroup
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-    letI : InnerProductSpace ℝ
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-    (continuousRepresentative I TR M).toPMap ⊤ = M.mathlibOperator) :=
-  (boundedActualData I TR M).continuousRepresentative_eq_actual
-
-/-- Field-like accessor to the full-domain proof for the actual operator. -/
-theorem actualDomain_eq_top
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
-    (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :
-    (letI : NormedAddCommGroup
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierNormedAddCommGroup I TR M.selfAdjointnessData
-    letI : InnerProductSpace ℝ
-        (r4HilbertMathlibSelfAdjointCarrier I TR M.selfAdjointnessData) :=
-      r4HilbertMathlibSelfAdjointCarrierInnerProductSpace I TR M.selfAdjointnessData
-    M.mathlibOperator.domain = ⊤) :=
-  r4HilbertMathlibSelfAdjointOperator_full_domain_continuous_domain_eq_top I TR
-    (fullDomainContinuousData I TR M)
+  { operatorData := M
+    continuousRepresentative := M.continuousRepresentative
+    continuousRepresentative_eq_actual := M.continuousRepresentative_eq_actual
+    actualDomain_eq_top := M.actualDomain_eq_top }
 
 /-- Field-like accessor to the top-domain representative package. -/
 def topRepresentative
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :=
   r4HilbertMathlibSelfAdjointOperator_full_domain_continuous_top_representative I TR
     (fullDomainContinuousData I TR M)
 
 /-- Field-like accessor to the full bounded actual package. -/
 def boundedActualPackage
-    [R4HilbertMathlibSelfAdjointOperatorCentralBareBoundedActualRouteSupply I TR]
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :=
   r4HilbertMathlibSelfAdjointOperator_full_domain_continuous_bounded_actual_package I TR
     (fullDomainContinuousData I TR M)
