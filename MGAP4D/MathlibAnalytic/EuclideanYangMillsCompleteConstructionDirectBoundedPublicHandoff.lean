@@ -108,7 +108,6 @@ theorem euclidean_yang_mills_complete_construction_direct_bounded_public_handoff
 
 /-- Projection of the primary direct bounded route from the complete construction
 package. -/
-@[simp]
 theorem euclidean_yang_mills_complete_construction_direct_bounded_primary_route
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
     _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
@@ -117,7 +116,6 @@ theorem euclidean_yang_mills_complete_construction_direct_bounded_primary_route
 
 /-- Projection of the route-backed compatibility role from the complete
 construction package. -/
-@[simp]
 theorem euclidean_yang_mills_complete_construction_route_backed_bounded_role
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
     _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
