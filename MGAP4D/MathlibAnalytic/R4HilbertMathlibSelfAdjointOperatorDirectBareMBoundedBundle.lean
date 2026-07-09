@@ -45,10 +45,6 @@ structure R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle
     R4HilbertMathlibSelfAdjointOperatorDataWithFullDomainContinuousRepresentative I TR
   boundedActualDomainPackage :
     R4HilbertMathlibSelfAdjointOperatorBoundedActualDomainPackage I TR M
-  actualDomain_eq_top :
-    r4HilbertMathlibSelfAdjointOperator_direct_bare_M_package_actual_domain_eq_top I TR M
-  continuousRepresentative_eq_actual :
-    r4HilbertMathlibSelfAdjointOperator_direct_bare_M_package_continuous_eq_actual I TR M
 
 /-- Bare actual R4 operator data directly gives the complete bounded actual bundle. -/
 def r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bounded_bundle
@@ -59,11 +55,7 @@ def r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bounded_bundle
     fullDomainContinuousData :=
       r4HilbertMathlibSelfAdjointOperator_direct_bare_M_full_domain_continuous_data I TR M
     boundedActualDomainPackage :=
-      r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bounded_actual_domain_package I TR M
-    actualDomain_eq_top :=
-      r4HilbertMathlibSelfAdjointOperator_direct_bare_M_package_actual_domain_eq_top I TR M
-    continuousRepresentative_eq_actual :=
-      r4HilbertMathlibSelfAdjointOperator_direct_bare_M_package_continuous_eq_actual I TR M }
+      r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bounded_actual_domain_package I TR M }
 
 /-- The bundle exposes the concrete bounded-domain package. -/
 def R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle.domainPackage
@@ -82,6 +74,18 @@ def R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle.fullDomainData
     {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
     (B : R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle I TR M) :=
   B.fullDomainContinuousData
+
+/-- The bundle exposes the full actual-domain proof through its concrete package. -/
+def R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle.actualDomain_eq_top
+    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
+    (B : R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle I TR M) :=
+  B.boundedActualDomainPackage.actualDomain_eq_top
+
+/-- The bundle exposes the continuous-representative equality through its concrete package. -/
+def R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle.continuousRepresentative_eq_actual
+    {M : R4HilbertMathlibSelfAdjointOperatorData I TR}
+    (B : R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundle I TR M) :=
+  B.boundedActualDomainPackage.continuousRepresentative_eq_actual
 
 end EuclideanYangMillsR4HilbertReconstructionQuotient
 
