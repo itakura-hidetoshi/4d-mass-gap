@@ -27,21 +27,17 @@ structure EuclideanYangMillsCompleteConstructionDirectBoundedCertificate
   publicHandoffStatus : String
   publicHandoffStatus_eq :
     publicHandoffStatus =
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_handoff_status
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_handoff_status
   primaryBoundedRoute_eq :
-    EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
+    _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
       "bare-M-direct-bundle"
   routeBackedRole_eq :
-    EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
+    _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
       "compatibility-only"
   directEndpointNames : List String
   directEndpointNames_eq :
     directEndpointNames =
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names
   fullSpectralPackage :
     S.definitionBridge.spine.model.hasMassGap ∧
     0 < exactGapValueReal ∧
@@ -63,18 +59,14 @@ def euclideanYangMillsCompleteConstructionDirectBoundedCertificate
   { constructionCertificate :=
       euclideanYangMillsContinuumMeasureConstructionCertificate S
     publicHandoffStatus :=
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_handoff_status
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_handoff_status
     publicHandoffStatus_eq := rfl
     primaryBoundedRoute_eq :=
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route_is_direct
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route_is_direct
     routeBackedRole_eq :=
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_is_compatibility_only
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_is_compatibility_only
     directEndpointNames :=
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names
     directEndpointNames_eq := rfl
     fullSpectralPackage :=
       euclidean_yang_mills_continuum_spine_certificate_full_spectral_package S
@@ -105,11 +97,9 @@ theorem euclidean_yang_mills_complete_construction_direct_bounded_public_handoff
     (C : EuclideanYangMillsCompleteConstructionDirectBoundedCertificate S) :
     C.publicHandoffStatus =
         "direct-bare-M-primary-route-backed-compatibility" ∧
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-          r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
         "bare-M-direct-bundle" ∧
-      EuclideanYangMillsR4HilbertReconstructionQuotient.
-          r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
         "compatibility-only" ∧
       C.directEndpointNames =
         [ "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_actual_data",
@@ -118,14 +108,12 @@ theorem euclidean_yang_mills_complete_construction_direct_bounded_public_handoff
   exact ⟨
     by
       rw [C.publicHandoffStatus_eq]
-      exact EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_handoff_status_eq,
+      exact _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_handoff_status_eq,
     C.primaryBoundedRoute_eq,
     C.routeBackedRole_eq,
     by
       rw [C.directEndpointNames_eq]
-      exact EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names_eq⟩
+      exact _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names_eq⟩
 
 /-- End-to-end complete construction surface: spectral package plus the direct
 bounded R4 operator handoff marker. -/
@@ -142,14 +130,11 @@ theorem euclidean_yang_mills_complete_construction_direct_bounded_package
       ∃ ψ : S.definitionBridge.spine.model.H,
         ψ ∈ S.definitionBridge.spine.model.spectralPVM
           ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ)) ∧
-    EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
+    _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
       "bare-M-direct-bundle" ∧
-    EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
+    _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
       "compatibility-only" ∧
-    EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names =
+    _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names =
       [ "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_actual_data",
         "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_full_domain_data",
         "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_domain_package" ] := by
@@ -159,8 +144,7 @@ theorem euclidean_yang_mills_complete_construction_direct_bounded_package
     C.primaryBoundedRoute_eq,
     C.routeBackedRole_eq,
     by
-      exact EuclideanYangMillsR4HilbertReconstructionQuotient.
-        r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names_eq⟩
+      exact _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_direct_bounded_public_endpoint_names_eq⟩
 
 end
 
