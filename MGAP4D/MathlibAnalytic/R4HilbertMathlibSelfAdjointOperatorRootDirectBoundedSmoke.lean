@@ -1,4 +1,5 @@
-import MGAP4D.MathlibAnalytic
+import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorDirectBareMBoundedBundleEndpoints
+import MGAP4D.MathlibAnalytic.R4HilbertMathlibSelfAdjointOperatorRouteBackedMigrationIndex
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Tactic
 
@@ -35,30 +36,30 @@ variable {E : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquiv
 variable {D : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivDataClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E}
 variable (TR : EuclideanYangMillsR4HilbertReconstructionQuotientSectionRangeEquivTransportClosure S K R4 A G H N F C I O Q P R U J V W X Y Z T E D)
 
-/-! Compile smoke for the root direct boundedness API. -/
+/-! Compile smoke for the direct boundedness API without importing the aggregate root. -/
 
-/-- Root import exposes the direct bare-`M` bundle endpoint. -/
+/-- Local imports expose the direct bare-`M` bundle endpoint. -/
 def r4HilbertMathlibSelfAdjointOperator_root_direct_bare_M_bundle_smoke
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :=
   r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle I TR M
 
-/-- Root import exposes the direct bare-`M` bounded actual data endpoint. -/
+/-- Local imports expose the direct bare-`M` bounded actual data endpoint. -/
 def r4HilbertMathlibSelfAdjointOperator_root_direct_bare_M_actual_data_smoke
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :=
   r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_actual_data I TR M
 
-/-- Root import exposes the direct bare-`M` domain package endpoint. -/
+/-- Local imports expose the direct bare-`M` domain package endpoint. -/
 def r4HilbertMathlibSelfAdjointOperator_root_direct_bare_M_domain_package_smoke
     (M : R4HilbertMathlibSelfAdjointOperatorData I TR) :=
   r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_domain_package I TR M
 
-/-- Root import exposes the migration marker that direct bare-`M` is primary. -/
+/-- Local imports expose the migration marker that direct bare-`M` is primary. -/
 theorem r4HilbertMathlibSelfAdjointOperator_root_direct_boundedness_primary_smoke :
     r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
       "bare-M-direct-bundle" := by
   exact r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route_is_direct
 
-/-- Root import exposes the migration marker that route-backed boundedness is compatibility-only. -/
+/-- Local imports expose the migration marker that route-backed boundedness is compatibility-only. -/
 theorem r4HilbertMathlibSelfAdjointOperator_root_route_backed_compatibility_smoke :
     r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
       "compatibility-only" := by
