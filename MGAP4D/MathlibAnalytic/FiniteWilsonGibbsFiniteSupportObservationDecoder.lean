@@ -154,8 +154,8 @@ theorem
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (D : FiniteWilsonGibbsFiniteSupportObservationDecoder R) :
     euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparationProp
-      (C.toExactGapConstructionSpineOfGlobalObservationLeftInverse
-        D.toGlobalObservationLeftInverse).toConstructionSpine := by
+      (C.toExactGapConstructionSpineOfGlobalObservationSeparation
+        D.toGlobalObservationSeparation).toConstructionSpine := by
   exact C.globalObservationLeftInverse_exactThresholdSeparation
     D.toGlobalObservationLeftInverse
 
