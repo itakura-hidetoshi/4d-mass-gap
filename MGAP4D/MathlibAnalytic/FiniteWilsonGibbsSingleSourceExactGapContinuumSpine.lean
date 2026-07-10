@@ -118,69 +118,96 @@ noncomputable def
     [∀ x, Countable (R.fieldValue x)]
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (A : FiniteWilsonGibbsSingleSourceExactGapContinuumAssembly R) :
-    EuclideanYangMillsContinuumMeasureExactGapConstructionSpine where
-  finiteVolume := W.toFiniteVolumeApproximation
-  measurePackage := A.measurePackage
-  bridge := A.measureBridge
-  definitionBridge := A.definitionBridge
-  measurePackage_identified := A.measureBridge_identified
-  bridge_uses_reduced_axioms := A.definitionBridge_uses_measure_axioms
-  projectiveConsistency :=
-    IsProjectiveMeasureFamily
-      R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal
-  projectiveConsistency_proof :=
-    R.toProjectiveRealization.toProjectiveCylinderFamily.projective
-  tightness :=
-    Nonempty
-      (EuclideanYangMillsCompactTightnessData
-        R.toProjectiveRealization.toProjectiveCylinderFamily)
-  tightness_proof := ⟨R.finiteDiscreteCompactTightnessData⟩
-  weakLimitExists :=
-    Nonempty
-      (EuclideanYangMillsProjectiveLimitMeasure
-        R.toProjectiveRealization.toProjectiveCylinderFamily)
-  weakLimitExists_proof := ⟨R.projectiveLimitMeasure⟩
-  continuumMeasureIdentified :=
-    A.continuumConstruction.limit.continuumMeasure = R.continuumMeasure
-  continuumMeasureIdentified_proof := rfl
-  continuumFourDimensionalYangMillsMeasureConstructed :=
-    IsProbabilityMeasure A.continuumConstruction.limit.continuumMeasure
-  continuumFourDimensionalYangMillsMeasureConstructed_proof :=
-    euclidean_yang_mills_projective_limit_probability
-      A.continuumConstruction.limit
-  nontrivialCompactGaugeGroupConstructed :=
-    CompactSpace A.continuumConstruction.gaugeGroup ∧
-      Nontrivial A.continuumConstruction.gaugeGroup
-  nontrivialCompactGaugeGroupConstructed_proof :=
-    ⟨inferInstance, inferInstance⟩
-  interactingContinuumLimitConstructed :=
-    A.interactingContinuumLimitConstructed
-  interactingContinuumLimitConstructed_proof :=
-    A.interactingContinuumLimitConstructed_proof
-  gaugeInvariantSchwingerFunctionsConstructed :=
-    A.gaugeInvariantSchwingerFunctionsConstructed
-  gaugeInvariantSchwingerFunctionsConstructed_proof :=
-    A.gaugeInvariantSchwingerFunctionsConstructed_proof
-  schwingerFunctionsAreContinuumLimits :=
-    A.schwingerFunctionsAreContinuumLimits
-  schwingerFunctionsAreContinuumLimits_proof :=
-    A.schwingerFunctionsAreContinuumLimits_proof
-  reflectionPositivityPassesToLimit :=
-    A.continuumConstruction.reflectionPositive_proof
-  euclideanInvariancePassesToLimit :=
-    A.continuumConstruction.euclideanInvariant_proof
-  symmetryPassesToLimit :=
-    A.continuumConstruction.symmetric_proof
-  clusterPropertyPassesToLimit :=
-    A.continuumConstruction.clusterProperty_proof
-  regularityPassesToLimit :=
-    A.continuumConstruction.regularity_proof
-  gaugeGroupCompactTheorem := by
-    change CompactSpace A.continuumConstruction.gaugeGroup
-    infer_instance
-  gaugeGroupNontrivialTheorem := by
-    change Nontrivial A.continuumConstruction.gaugeGroup
-    infer_instance
+    EuclideanYangMillsContinuumMeasureExactGapConstructionSpine := by
+  letI : ∀ x, TopologicalSpace (R.fieldValue x) :=
+    fun _ => ⊥
+  letI : ∀ x, DiscreteTopology (R.fieldValue x) :=
+    fun _ => ⟨rfl⟩
+  letI : ∀ x, BorelSpace (R.fieldValue x) :=
+    fun _ => by infer_instance
+  letI : ∀ x, PolishSpace (R.fieldValue x) :=
+    fun _ => by infer_instance
+  letI : ∀ x,
+      TopologicalSpace
+        (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) :=
+    fun x => by
+      change TopologicalSpace (R.fieldValue x)
+      infer_instance
+  letI : ∀ x,
+      OpensMeasurableSpace
+        (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) :=
+    fun x => by
+      change OpensMeasurableSpace (R.fieldValue x)
+      infer_instance
+  letI : ∀ x,
+      SecondCountableTopology
+        (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) :=
+    fun x => by
+      change SecondCountableTopology (R.fieldValue x)
+      infer_instance
+  exact
+    { finiteVolume := W.toFiniteVolumeApproximation
+      measurePackage := A.measurePackage
+      bridge := A.measureBridge
+      definitionBridge := A.definitionBridge
+      measurePackage_identified := A.measureBridge_identified
+      bridge_uses_reduced_axioms := A.definitionBridge_uses_measure_axioms
+      projectiveConsistency :=
+        IsProjectiveMeasureFamily
+          R.toProjectiveRealization.toProjectiveCylinderFamily.finiteMarginal
+      projectiveConsistency_proof :=
+        R.toProjectiveRealization.toProjectiveCylinderFamily.projective
+      tightness :=
+        Nonempty
+          (EuclideanYangMillsCompactTightnessData
+            R.toProjectiveRealization.toProjectiveCylinderFamily)
+      tightness_proof := ⟨R.finiteDiscreteCompactTightnessData⟩
+      weakLimitExists :=
+        Nonempty
+          (EuclideanYangMillsProjectiveLimitMeasure
+            R.toProjectiveRealization.toProjectiveCylinderFamily)
+      weakLimitExists_proof := ⟨R.projectiveLimitMeasure⟩
+      continuumMeasureIdentified :=
+        A.continuumConstruction.limit.continuumMeasure = R.continuumMeasure
+      continuumMeasureIdentified_proof := rfl
+      continuumFourDimensionalYangMillsMeasureConstructed :=
+        IsProbabilityMeasure A.continuumConstruction.limit.continuumMeasure
+      continuumFourDimensionalYangMillsMeasureConstructed_proof :=
+        euclidean_yang_mills_projective_limit_probability
+          A.continuumConstruction.limit
+      nontrivialCompactGaugeGroupConstructed :=
+        CompactSpace A.continuumConstruction.gaugeGroup ∧
+          Nontrivial A.continuumConstruction.gaugeGroup
+      nontrivialCompactGaugeGroupConstructed_proof :=
+        ⟨inferInstance, inferInstance⟩
+      interactingContinuumLimitConstructed :=
+        A.interactingContinuumLimitConstructed
+      interactingContinuumLimitConstructed_proof :=
+        A.interactingContinuumLimitConstructed_proof
+      gaugeInvariantSchwingerFunctionsConstructed :=
+        A.gaugeInvariantSchwingerFunctionsConstructed
+      gaugeInvariantSchwingerFunctionsConstructed_proof :=
+        A.gaugeInvariantSchwingerFunctionsConstructed_proof
+      schwingerFunctionsAreContinuumLimits :=
+        A.schwingerFunctionsAreContinuumLimits
+      schwingerFunctionsAreContinuumLimits_proof :=
+        A.schwingerFunctionsAreContinuumLimits_proof
+      reflectionPositivityPassesToLimit :=
+        A.continuumConstruction.reflectionPositive_proof
+      euclideanInvariancePassesToLimit :=
+        A.continuumConstruction.euclideanInvariant_proof
+      symmetryPassesToLimit :=
+        A.continuumConstruction.symmetric_proof
+      clusterPropertyPassesToLimit :=
+        A.continuumConstruction.clusterProperty_proof
+      regularityPassesToLimit :=
+        A.continuumConstruction.regularity_proof
+      gaugeGroupCompactTheorem := by
+        change CompactSpace A.continuumConstruction.gaugeGroup
+        infer_instance
+      gaugeGroupNontrivialTheorem := by
+        change Nontrivial A.continuumConstruction.gaugeGroup
+        infer_instance }
 
 /-- The conversion uses the actual finite Wilson approximation generated from
 `W`. -/
