@@ -4,51 +4,128 @@
 
 ```text
 Canonical repository: itakura-hidetoshi/4d-mass-gap
+Authoritative proof carrier: formal/real-hilbert-uniform-coercive-strong-limit
+Development roadmap: ROADMAP.md
 KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
-Development roadmap: ROADMAP.md
 ```
 
-## Current status — 2026-07-09 JST
+## Authoritative development status — 2026-07-10 JST
 
-This repository is a replayable Lean 4 / mathlib formal-development surface.
-
-The active proof carrier is:
+The authoritative proof carrier is:
 
 ```text
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The latest integrated theorem/certificate checkpoint on the active carrier is:
+The latest integrated theorem checkpoint is:
 
 ```text
-PR #718 — Complete Yang-Mills direct bounded certificate
-merge commit dd137504ecea43c97097151de5689c41b2121703
-PR head abe7194274aec8c4e277bcc5165c2156d66b53f8
-PR Lean Fast Check run 5772 — success
+PR #746 — Identify direct bounded exact first excitation
+PR head a38aea205dce9fe07b949c2e1b34cb3a160ac927
+merge commit f300370b08736240342cb05885e6ffa7a174ed1b
+PR Lean Fast Check run 5807 — success
+post-merge carrier comparison — identical
 ```
 
-The active carrier is currently centered on a direct bounded R4 operator route.
+The active carrier has advanced beyond the direct bounded operator handoff and the first complete-construction certificate.
 
-The preferred boundedness surface is the **direct bare-`M` bundle**.
+It now contains a theorem and certificate chain that, for a supplied
+`EuclideanYangMillsContinuumMeasureConstructionSpine`, identifies the exact lower spectral structure of the reconstructed model.
 
-Route-backed boundedness names remain available only as compatibility surfaces.
+## Current formal result
 
-The newest integrated certificate layer bundles two already-installed surfaces:
+Every theorem in the current exact-gap layer is parametrized by:
+
+```lean
+S : EuclideanYangMillsContinuumMeasureConstructionSpine
+```
+
+Write:
+
+```lean
+σ := S.definitionBridge.spine.model.energySpectrum
+Δ := exactGapValueReal
+E₁ := S.definitionBridge.spine.model.firstExcitation
+```
+
+The integrated carrier proves the following consequences:
+
+```lean
+HasHamiltonianMassGap σ Δ
+
+σ ⊆ ({0} : Set ℝ) ∪ Set.Ici Δ
+
+Set.Ioo 0 Δ ∩ σ = ∅
+
+Δ ∈ σ
+
+IsLeast (σ \ ({0} : Set ℝ)) Δ
+
+sInf (σ \ ({0} : Set ℝ)) = Δ
+
+σ ∩ Set.Iio Δ = ({0} : Set ℝ)
+
+(σ \ ({0} : Set ℝ)) ∩ Set.Iic Δ = ({Δ} : Set ℝ)
+
+σ ∩ Set.Iic Δ = ({0, Δ} : Set ℝ)
+
+E₁ = Δ
+
+IsLeast (σ \ ({0} : Set ℝ)) E₁
+
+∃! E : ℝ, IsLeast (σ \ ({0} : Set ℝ)) E
+
+∃ ψ : S.definitionBridge.spine.model.H,
+  ψ ∈ S.definitionBridge.spine.model.spectralPVM ({Δ} : Set ℝ)
+```
+
+Thus, inside the supplied construction spine, the exact gap is attained, is the unique least nonzero spectral energy, equals the model first excitation, and separates the vacuum from the remaining spectrum.
+
+These statements are formal Lean theorems on the active carrier.
+
+They do not by themselves construct the required construction spine from a concrete four-dimensional Yang--Mills approximation family.
+
+## Primary exact-spectrum surfaces
+
+The current certificate chain is:
+
+```lean
+EuclideanYangMillsCompleteConstructionDirectBoundedCertificate
+
+EuclideanYangMillsCompleteConstructionDirectBoundedExactGapIntervalCertificate
+
+EuclideanYangMillsCompleteConstructionDirectBoundedExactThresholdSeparationCertificate
+
+EuclideanYangMillsCompleteConstructionDirectBoundedExactFirstExcitationCertificate
+```
+
+The principal compact theorem endpoints are:
+
+```lean
+euclidean_yang_mills_complete_construction_direct_bounded_package
+
+euclideanYangMillsCompleteConstructionDirectBounded_exactGapIntervalCertificate_complete
+
+euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparation_complete
+
+euclideanYangMillsCompleteConstructionDirectBounded_exactFirstExcitation_complete
+```
+
+The latest files are:
 
 ```text
-Euclidean Yang-Mills finite-volume / continuum construction certificate
-  + direct bounded R4 operator public handoff
-  -> complete Yang-Mills direct bounded certificate surface
+MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactGapInterval.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactGapIntervalCertificate.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactThresholdSeparation.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactThresholdSeparationCertificate.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactFirstExcitation.lean
+MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactFirstExcitationCertificate.lean
 ```
 
-This is still a formal construction-certificate and operator-handoff layer.
+## Direct bounded public route
 
-It is **not** a new spectral theorem invocation, not a new spectral projection construction, not a numerical mass-gap proof, and not an unconditional four-dimensional Yang--Mills mass-gap theorem.
-
-## Current public endpoints
-
-The preferred direct boundedness endpoints remain:
+The preferred boundedness surface remains the direct bare-`M` bundle.
 
 ```lean
 r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_actual_data
@@ -56,175 +133,90 @@ r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_full_domain_data
 r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_domain_package
 ```
 
-The complete construction certificate layer exposes:
+Route-backed boundedness names remain compatibility surfaces.
 
-```lean
-EuclideanYangMillsCompleteConstructionDirectBoundedCertificate
+The direct route is exposed through root, downstream, public-consumer, and compact root-consumer APIs integrated by PRs #721 through #743.
 
-euclideanYangMillsCompleteConstructionDirectBoundedCertificate
+Those layers reduce repeated destructuring and provide stable theorem-facing imports.
 
-euclidean_yang_mills_complete_construction_direct_bounded_full_spectral_package
+They do not add new physical hypotheses or independently construct a spectral measure.
 
-euclidean_yang_mills_complete_construction_direct_bounded_public_handoff
+## Exact-gap normalization
 
-euclidean_yang_mills_complete_construction_direct_bounded_package
-```
+`exactGapValueReal` is the public projection of the Hamiltonian/PVM/spectral exact-gap package.
 
-The public handoff marker records:
+It is not defined in `ExactGapReal.lean` by a free-standing real literal.
 
-```text
-primary bounded route: bare-M-direct-bundle
-route-backed role: compatibility-only
-public handoff status: direct-bare-M-primary-route-backed-compatibility
-```
+The exact `33/20` statement belongs to its upstream provenance route.
 
-## Non-claims
+That normalization route is not, by itself, an unconditional derivation of a physical four-dimensional Yang--Mills mass scale.
 
-The repository does **not** yet establish any of the following as unconditional physical results:
+## Integrated proof route
 
 ```text
-an independently completed interacting four-dimensional continuum Yang-Mills theory;
-a fully instantiated continuum scaling trajectory with all analytic estimates discharged;
-a physical spectral theorem application derived from that concrete trajectory;
-a newly constructed physical spectral projection family proving a gap;
-a positive lower bound derived from a uniform physical estimate;
-an unconditional Clay Millennium Yang-Mills mass-gap theorem;
-independent external mathematical consensus.
+finite Wilson and heat-bath theorem generators
+  -> conditional continuum, OS, Hamiltonian, resolvent, and graph-limit packages
+  -> exact-gap normalization and provenance route
+  -> R4 continuum-measure construction spine
+  -> gauge-field, gauge-action, gauge-invariant, Schwinger, and correlation layers
+  -> reflection-positive reconstruction input
+  -> quotient, section, range, and transport layers
+  -> standard real Hilbert completion
+  -> completed Hilbert-space handoff
+  -> completed OS semigroup handoff
+  -> generator and Hamiltonian handoffs
+  -> mathlib self-adjoint LinearPMap operator
+  -> graph, adjoint, actual-operator, and continuous-representative packages
+  -> direct bare-M bounded operator bundle
+  -> complete-construction direct bounded certificate
+  -> downstream and public-consumer API chain
+  -> positive nonzero-spectrum and lower-bound packages
+  -> exact-gap interval certificate
+  -> exact-threshold spectral classification
+  -> exact first-excitation identification
+  -> physical construction-spine instantiation
+  -> independent review and final theorem assessment
 ```
 
-The complete construction certificate imports and packages the existing construction-spine spectral certificate.
+## The theorem boundary
 
-That packaging is not a substitute for proving that one concrete physical Yang-Mills approximation family supplies every required continuum, spectral, and positive-gap input.
-
-A theorem that accepts reflection positivity, Euclidean covariance, gauge invariance, compactness, a positive mass slope, a coercive estimate, a self-adjoint Hamiltonian, boundedness evidence, a spectral package, a PVM field, or a spectral-gap witness as an input remains conditional until those inputs are constructed from the intended physical Yang-Mills family.
-
-The exact `33/20` lane remains an internal normalization and dependency-routing lane.
-
-It is not an independent physical derivation of the four-dimensional Yang-Mills mass gap.
-
-## Integrated active-carrier route
-
-The active carrier now includes:
-
-```text
-finite Wilson and heat-bath theorem-generator infrastructure
-conditional OS, Hamiltonian, resolvent, graph-limit, and spectral-interface packages
-exact 33/20 internal normalization lane
-R4 continuum-measure construction spine
-R4 gauge-field, gauge-action, gauge-invariant, Schwinger, correlation, and reconstruction-input layers
-R4 quotient, section, range, and transport bookkeeping
-R4 standard real Hilbert completion construction theorem
-completed R4 real Hilbert-space API and handoff API
-completed R4 OS semigroup handoff API
-R4 OS generator input and theorem API
-R4 Hamiltonian handoff API
-R4 mathlib self-adjoint LinearPMap operator object, theorem API, and handoff API
-project-local mathlib graph and adjoint-equality wrappers
-actual operator, graph, equality, continuous-representative, and inner-action packages
-bounded actual operator data and bounded route family
-generator, quotient, completed-OS, completed-Hilbert, and completed-pre carrier routes
-bare-M bounded actual route and central route supply
-enriched bounded/full-domain continuous operator data
-direct bare-M bounded-domain package, bundle, and endpoint family
-route-backed boundedness compatibility and migration index
-direct boundedness public handoff
-complete Yang-Mills direct bounded certificate surface
-```
-
-The completed Hilbert carrier remains:
-
-```lean
-r4HilbertCompletedHilbertSpace
-```
-
-The actual mathlib operator object remains:
-
-```lean
-M.mathlibOperator
-```
-
-The integrated self-adjoint predicate remains:
-
-```lean
-IsSelfAdjoint M.mathlibOperator
-```
-
-## Active construction chain
-
-```text
-EuclideanYangMillsContinuumMeasureConstructionSpine
-  -> EuclideanYangMillsCompleteConstructionClosure
-  -> R4 gauge-field construction
-  -> R4 gauge-action construction
-  -> R4 gauge-invariant construction
-  -> R4 gauge-invariant Schwinger construction
-  -> R4 Schwinger n-point family
-  -> R4 correlation functional
-  -> R4 correlation structure
-  -> R4 reflection-positive reconstruction input
-  -> R4 Hilbert reconstruction carrier
-  -> equality quotient carrier
-  -> quotient projection
-  -> quotient representative choice
-  -> quotient section and range transport stack
-  -> quotient-map injectivity and transport readiness APIs
-  -> completion input and completion object data
-  -> pre-Hilbert structure data
-  -> completed Hilbert structure data
-  -> actual dense-range data
-  -> standard mathlib completion identity API
-  -> quotient-to-standard-completion route
-  -> quotient-dense standard completion data
-  -> standard real Hilbert completion construction theorem
-  -> completed Hilbert space API
-  -> completed Hilbert space handoff API
-  -> completed OS semigroup handoff API
-  -> OS generator input and theorem API
-  -> Hamiltonian handoff API
-  -> mathlib self-adjoint operator object/theorem/handoff API
-  -> graph, adjoint-equality, actual-operator, and inner-action packages
-  -> bounded actual operator data
-  -> bounded route surface and route family
-  -> unconditional, actual, continuous, and spectral-representative route packages
-  -> Hamiltonian-domain, generator-lift, generator-carrier, and completed-carrier routes
-  -> quotient-carrier route
-  -> bare-M bounded actual route and central route supply
-  -> enriched bounded/full-domain continuous operator data
-  -> direct bare-M bounded bundle and endpoints
-  -> route-backed compatibility and migration index
-  -> direct boundedness public handoff
-  -> complete Yang-Mills direct bounded certificate
-```
-
-## Current theorem boundary
-
-| Surface | Status |
+| Surface | Status on the active carrier |
 |---|---|
-| Finite Wilson Gibbs and finite heat-bath theorem generators | present in repository history |
-| Conditional weak-limit, OS, Hamiltonian, resolvent, graph-limit, and spectral-interface packages | present as conditional theorem packages |
-| Exact `33/20` scalar lane | internal normalization and audit lane |
-| R4 continuum construction through correlation structure | integrated on the active carrier |
-| R4 reflection-positive reconstruction input | integrated on the active carrier |
-| R4 quotient, section, range, and transport bookkeeping | integrated on the active carrier |
-| R4 standard real Hilbert completion construction theorem | integrated on the active carrier |
-| R4 completed Hilbert space API and handoff API | integrated |
-| R4 completed OS semigroup handoff API | integrated by PR #606 |
-| R4 OS generator input/theorem API | integrated by PR #608 and PR #610 |
-| R4 Hamiltonian handoff API | integrated by PR #615 |
-| R4 mathlib self-adjoint operator object/API/handoff | integrated by PR #623, PR #624, and PR #625 |
-| Mathlib graph, adjoint-equality, actual-operator, and inner-action packages | integrated |
-| Bounded actual operator data and route family | integrated |
-| Direct bare-M bounded actual package, bundle, and endpoints | integrated |
-| Direct boundedness public handoff | integrated by PR #717 |
-| Complete Yang-Mills direct bounded certificate | integrated by PR #718 |
-| Spectral theorem invocation for the physical Hamiltonian | open |
-| New physical spectral projection or functional-calculus layer | open |
-| Positive spectral-gap theorem for the physical Hamiltonian | open |
-| Uniform physical positive gap from a concrete continuum scaling family | open |
-| Unconditional four-dimensional Yang-Mills mass-gap theorem | not claimed |
+| Finite Wilson and finite heat-bath theorem generators | available |
+| Conditional continuum, OS, Hamiltonian, resolvent, graph-limit, and spectral interfaces | available as theorem packages |
+| R4 reconstruction through completed Hilbert space | integrated |
+| OS semigroup, generator, Hamiltonian, and self-adjoint operator APIs | integrated |
+| Direct bare-`M` bounded operator route | integrated through PR #717 |
+| Complete-construction direct bounded certificate | integrated through PR #718 |
+| Stable downstream and public-consumer route | integrated through PR #743 |
+| Positive nonzero-spectrum and lower-bound certificate packages | integrated through PR #739 |
+| Exact-gap interval and attained least nonzero energy | integrated by PR #744 |
+| Exact lower-threshold spectral classification | integrated by PR #745 |
+| First excitation equals the exact gap and is uniquely least | integrated by PR #746 |
+| Concrete physical construction of `EuclideanYangMillsContinuumMeasureConstructionSpine` | open |
+| Discharge of all continuum, nontriviality, spectral, and gap data from one specified physical family | open |
+| Unconditional four-dimensional Yang--Mills existence and mass-gap theorem | not claimed |
 | Independent external mathematical consensus | not claimed |
 
-Legacy or stale open PRs are not active-carrier facts unless they are reconciled, checked, and merged into the active proof carrier.
+## What remains open
+
+The decisive frontier is no longer the packaging of the direct bounded route or the derivation of elementary order consequences from an already supplied spectral package.
+
+The decisive frontier is to construct the required `EuclideanYangMillsContinuumMeasureConstructionSpine` from one concrete physical approximation family and prove that the family supplies every field used by the exact-gap theorem chain.
+
+This includes:
+
+```text
+specifying the gauge group, lattice or regularization family, boundary conditions, and observables;
+proving tightness or compactness and existence of the continuum limit;
+proving nontriviality and the required Euclidean, gauge, and reflection-positive properties;
+constructing the physical Hilbert space and Hamiltonian from that family;
+deriving the spectral/PVM and exact-gap inputs from the physical construction rather than supplying them through the spine;
+showing that the resulting theorem has the intended physical normalization and scope;
+obtaining independent mathematical review.
+```
+
+Until those steps are discharged, the latest exact-spectrum theorems remain construction-spine-parametrized results rather than an unconditional Clay Millennium solution.
 
 ## Replay
 
@@ -234,6 +226,12 @@ Pinned Lean toolchain:
 leanprover/lean4:v4.30.0-rc2
 ```
 
+Pinned mathlib revision:
+
+```text
+5450b53e5ddc75d46418fabb605edbf36bd0beb6
+```
+
 From a fresh clone:
 
 ```bash
@@ -241,34 +239,26 @@ lake update
 lake build
 ```
 
-The repository also uses PR-level Lean fast checks for each focused proof layer.
+The repository also runs a focused PR Lean Fast Check for each theorem layer.
 
-For current carrier work, read the PR base, head SHA, and CI status before treating a theorem layer as integrated.
+Before treating a result as integrated, verify the PR base, fixed head SHA, successful check, merge commit, and post-merge comparison against the active carrier.
 
 ## Development discipline
-
-New theorem layers should remain small, replayable, and reviewable.
 
 The active workflow is:
 
 ```text
-create a focused branch
-open a Draft PR
-do not treat the layer as integrated until PR Lean Fast Check succeeds
-merge into formal/real-hilbert-uniform-coercive-strong-limit after fixed-head review
-then start the next layer from the updated carrier head
+create one focused branch from the current proof carrier;
+open a Draft PR;
+run PR Lean Fast Check;
+mark ready only after the fixed head succeeds;
+merge into formal/real-hilbert-uniform-coercive-strong-limit;
+verify the merge commit is identical to the carrier head;
+start the next theorem layer from the updated carrier.
 ```
 
-The documentation must preserve the distinction between:
+Open, stale, superseded, closed-unmerged, or failing PRs are not active-carrier facts.
 
-```text
-finite-volume Markov or Wilson theorem generators;
-conditional continuum reconstruction packages;
-exact internal scalar normalization lanes;
-active R4 Hilbert reconstruction layers;
-completed Hilbert-space and OS semigroup API layers;
-generator, Hamiltonian, self-adjoint operator, and boundedness route layers;
-construction certificate and public handoff surfaces;
-spectral theorem and spectral-gap layers;
-a completed physical Yang-Mills theorem.
-```
+The default `main` branch is a repository landing surface.
+
+Authoritative theorem integration status is determined by the active proof carrier named above.
