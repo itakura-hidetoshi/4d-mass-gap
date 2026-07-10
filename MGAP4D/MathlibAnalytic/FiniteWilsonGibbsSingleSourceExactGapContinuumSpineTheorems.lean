@@ -64,9 +64,8 @@ theorem FiniteWilsonGibbsSingleSourceExactGapContinuumAssembly.cylinder_eq_Wilso
     (hs : MeasurableSet s) :
     A.continuumConstruction.limit.continuumMeasure (cylinder J s) =
       (W.system R.sourceScale).gibbsMeasure ((R.observe J) ⁻¹' s) := by
-  rw [euclidean_yang_mills_projective_limit_measure_cylinder
-    A.continuumConstruction.limit J hs]
-  rfl
+  exact finite_wilson_gibbs_single_source_projective_limit_cylinder
+    R A.continuumConstruction.limit J hs
 
 /-- The actual finite Wilson family retains probability, gauge invariance,
 reflection positivity, and finite-volume Euclidean covariance. -/
