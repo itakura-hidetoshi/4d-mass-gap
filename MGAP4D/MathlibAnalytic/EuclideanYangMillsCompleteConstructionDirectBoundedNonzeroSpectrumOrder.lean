@@ -97,11 +97,9 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_orde
     euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_subset_nonnegative S,
     by
       intro E hE
-      exact
-        (euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_order_package S hE).1,
-        (euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_order_package S hE).2.1,
-        (euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_order_package S hE).2.2.1,
-        (euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_order_package S hE).2.2.2.1⟩
+      have hpos : 0 < E :=
+        euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_positive S E hE
+      exact ⟨hpos, le_of_lt hpos, ne_of_gt hpos, not_le_of_gt hpos⟩⟩
 
 end
 
