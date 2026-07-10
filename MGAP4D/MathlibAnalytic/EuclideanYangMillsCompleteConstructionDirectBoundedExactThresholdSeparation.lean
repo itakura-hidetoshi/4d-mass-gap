@@ -31,7 +31,9 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_disj
   intro E hE hBelow
   have hLower : exactGapValueReal ≤ E :=
     euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_subset_exactGapRay S hE
-  exact (not_lt_of_ge hLower hBelow).elim
+  have hBelow' : E < exactGapValueReal := by
+    simpa using hBelow
+  exact (not_lt_of_ge hLower hBelow').elim
 
 /-- Strictly below the exact gap, the complete energy spectrum contains only the
 vacuum point. -/
@@ -48,7 +50,9 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_energySpectrum_inter
         hSpectrum
     rcases hUnion with hVacuum | hRay
     · simpa using hVacuum
-    · exact (not_lt_of_ge hRay hBelow).elim
+    · have hBelow' : E < exactGapValueReal := by
+        simpa using hBelow
+      exact (not_lt_of_ge hRay hBelow').elim
   · intro hVacuum
     have hE0 : E = 0 := by
       simpa using hVacuum
@@ -68,10 +72,12 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_inte
   constructor
   · intro hE
     rcases hE with ⟨hNonzeroSpectrum, hUpper⟩
+    have hUpper' : E ≤ exactGapValueReal := by
+      simpa using hUpper
     have hLower : exactGapValueReal ≤ E :=
       (euclideanYangMillsCompleteConstructionDirectBounded_exactGap_isLeast_nonzeroSpectrum S).2
         hNonzeroSpectrum
-    have hEq : E = exactGapValueReal := le_antisymm hUpper hLower
+    have hEq : E = exactGapValueReal := le_antisymm hUpper' hLower
     simpa [hEq]
   · intro hSingleton
     have hEq : E = exactGapValueReal := by
@@ -79,7 +85,7 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_nonzeroSpectrum_inte
     subst E
     exact ⟨
       (euclideanYangMillsCompleteConstructionDirectBounded_exactGap_isLeast_nonzeroSpectrum S).1,
-      le_rfl⟩
+      by simp⟩
 
 /-- The full spectrum at or below the exact threshold consists exactly of the
 vacuum and the attained exact-gap point. -/
@@ -91,6 +97,8 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_energySpectrum_inter
   constructor
   · intro hE
     rcases hE with ⟨hSpectrum, hUpper⟩
+    have hUpper' : E ≤ exactGapValueReal := by
+      simpa using hUpper
     by_cases hE0 : E = 0
     · simp [hE0]
     · have hNonzeroSpectrum :
@@ -99,7 +107,7 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_energySpectrum_inter
       have hLower : exactGapValueReal ≤ E :=
         (euclideanYangMillsCompleteConstructionDirectBounded_exactGap_isLeast_nonzeroSpectrum S).2
           hNonzeroSpectrum
-      have hEq : E = exactGapValueReal := le_antisymm hUpper hLower
+      have hEq : E = exactGapValueReal := le_antisymm hUpper' hLower
       simp [hEq]
   · intro hPair
     have hCases : E = 0 ∨ E = exactGapValueReal := by
@@ -108,12 +116,14 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_energySpectrum_inter
     · subst E
       exact ⟨
         S.definitionBridge.spine.model.vacuumEnergyZero,
-        le_of_lt
-          (euclideanYangMillsCompleteConstructionDirectBounded_exactHamiltonianMassGap S).1⟩
+        by
+          simpa using
+            le_of_lt
+              (euclideanYangMillsCompleteConstructionDirectBounded_exactHamiltonianMassGap S).1⟩
     · subst E
       exact ⟨
         euclideanYangMillsCompleteConstructionDirectBounded_exactGap_mem_energySpectrum S,
-        le_rfl⟩
+        by simp⟩
 
 end
 
