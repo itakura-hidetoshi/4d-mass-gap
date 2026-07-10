@@ -64,7 +64,7 @@ theorem finite_wilson_gibbs_event_indicator_schwinger
     finiteWilsonGibbsCylinderEventIndicator
     finiteWilsonGibbsCylinderEventProbability
   rw [integral_indicator hs]
-  simp
+  simpa [measureReal_def]
 
 /-- Squaring a real event indicator leaves it unchanged. -/
 theorem finite_wilson_gibbs_event_indicator_mul_self
@@ -78,8 +78,8 @@ theorem finite_wilson_gibbs_event_indicator_mul_self
       finiteWilsonGibbsCylinderEventIndicator R J s := by
   funext X
   by_cases hX : X ∈ s
-  · simp [finiteWilsonGibbsCylinderEventIndicator, Set.indicator_of_mem hX]
-  · simp [finiteWilsonGibbsCylinderEventIndicator, Set.indicator_of_not_mem hX]
+  · simp [finiteWilsonGibbsCylinderEventIndicator, hX]
+  · simp [finiteWilsonGibbsCylinderEventIndicator, hX]
 
 /-- The self-connected correlation of an event indicator is `p - p²`. -/
 theorem finite_wilson_gibbs_event_indicator_connected
