@@ -49,6 +49,22 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_lowerBound_firstExci
     euclideanYangMillsCompleteConstructionDirectBoundedSpectralDownstreamPackage_lowerBound S,
     euclideanYangMillsCompleteConstructionDirectBoundedSpectralDownstreamPackage_firstExcitationWitness S⟩
 
+/-- A thin lower-bound order witness for consumers that only need the pointwise
+order consequences. -/
+theorem euclideanYangMillsCompleteConstructionDirectBounded_lowerBound_orderWitnessConsumer
+    (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
+    ∃ δ : ℝ, 0 < δ ∧
+      ∀ E : ℝ,
+        E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+        δ ≤ E ∧ 0 < E ∧ 0 ≤ E ∧ E ≠ 0 := by
+  rcases euclideanYangMillsCompleteConstructionDirectBoundedSpectralDownstreamPackage_lowerBound S with
+    ⟨δ, hδ_pos, hδ_le⟩
+  exact ⟨δ, hδ_pos, by
+    intro E hE
+    have hδE : δ ≤ E := hδ_le E hE
+    have hpos : 0 < E := lt_of_lt_of_le hδ_pos hδE
+    exact ⟨hδE, hpos, le_of_lt hpos, ne_of_gt hpos⟩⟩
+
 /-- A single downstream package containing mass-gap, exact gap, lower-bound, and
 first-excitation witnesses. -/
 theorem euclideanYangMillsCompleteConstructionDirectBounded_firstExcitation_fullConsumerPackage
@@ -72,7 +88,7 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_firstExcitation_full
     euclideanYangMillsCompleteConstructionDirectBounded_exactGapValue_ne_zero S,
     euclideanYangMillsCompleteConstructionDirectBounded_gapInfimum_positive S,
     euclideanYangMillsCompleteConstructionDirectBoundedSpectralDownstreamPackage_gapFormula S,
-    euclideanYangMillsCompleteConstructionDirectBounded_certifiedGapOrder_withLowerBoundWitness S,
+    euclideanYangMillsCompleteConstructionDirectBounded_lowerBound_orderWitnessConsumer S,
     euclideanYangMillsCompleteConstructionDirectBoundedSpectralDownstreamPackage_firstExcitationWitness S⟩
 
 end
