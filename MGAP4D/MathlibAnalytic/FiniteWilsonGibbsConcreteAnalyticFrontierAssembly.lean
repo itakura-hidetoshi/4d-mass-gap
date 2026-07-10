@@ -62,13 +62,7 @@ def FiniteWilsonGibbsSingleSourceExactGapContinuumAssembly.toConcreteAnalyticFro
   definitionBridge_uses_measure_axioms := A.definitionBridge_uses_measure_axioms
 
 /-- Build the exact-gap continuum assembly with concrete interaction and
-Schwinger propositions.
-
-The interacting proposition is the transferred nonzero connected correlation.
-The Schwinger construction proposition is the nonempty domain of gauge-invariant
-cylinder observables on every finite support.  The Schwinger-limit proposition
-is exact equality of all continuum cylinder expectations with their fixed
-Wilson Gibbs source values. -/
+Schwinger propositions. -/
 noncomputable def
     FiniteWilsonGibbsConcreteAnalyticFrontierCore.toExactGapContinuumAssembly
     {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -111,7 +105,7 @@ theorem FiniteWilsonGibbsConcreteAnalyticFrontierCore.interacting_frontier
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (I : FiniteWilsonGibbsCylinderInteractionWitness R) :
-    C.toExactGapContinuumAssembly I.interactingContinuumLimitConstructed := by
+    (C.toExactGapContinuumAssembly I).interactingContinuumLimitConstructed := by
   exact finite_wilson_cylinder_interaction_passes_to_continuum
     R C.limitData I
 
@@ -124,7 +118,7 @@ theorem FiniteWilsonGibbsConcreteAnalyticFrontierCore.schwinger_constructed_fron
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (I : FiniteWilsonGibbsCylinderInteractionWitness R) :
-    C.toExactGapContinuumAssembly I.gaugeInvariantSchwingerFunctionsConstructed := by
+    (C.toExactGapContinuumAssembly I).gaugeInvariantSchwingerFunctionsConstructed := by
   exact finite_wilson_gauge_invariant_cylinder_schwinger_constructed
     R C.limitData
 
@@ -138,7 +132,7 @@ theorem FiniteWilsonGibbsConcreteAnalyticFrontierCore.schwinger_limit_frontier
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (I : FiniteWilsonGibbsCylinderInteractionWitness R) :
-    C.toExactGapContinuumAssembly I.schwingerFunctionsAreContinuumLimits := by
+    (C.toExactGapContinuumAssembly I).schwingerFunctionsAreContinuumLimits := by
   exact finite_wilson_cylinder_schwinger_limit R C.limitData
 
 /-- The rebuilt assembly simultaneously carries all five OS properties, the
@@ -153,9 +147,9 @@ theorem FiniteWilsonGibbsConcreteAnalyticFrontierCore.complete_frontier_package
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (I : FiniteWilsonGibbsCylinderInteractionWitness R) :
     FiniteWilsonExactGapOSFiveLimitProperties C.limitData ∧
-      C.toExactGapContinuumAssembly I.interactingContinuumLimitConstructed ∧
-      C.toExactGapContinuumAssembly I.gaugeInvariantSchwingerFunctionsConstructed ∧
-      C.toExactGapContinuumAssembly I.schwingerFunctionsAreContinuumLimits := by
+      (C.toExactGapContinuumAssembly I).interactingContinuumLimitConstructed ∧
+      (C.toExactGapContinuumAssembly I).gaugeInvariantSchwingerFunctionsConstructed ∧
+      (C.toExactGapContinuumAssembly I).schwingerFunctionsAreContinuumLimits := by
   exact ⟨
     finite_wilson_exact_gap_os_five_limit_properties C.limitData,
     C.interacting_frontier I,
@@ -188,10 +182,10 @@ theorem FiniteWilsonGibbsConcreteAnalyticFrontierCore.exactThresholdSeparation
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (I : FiniteWilsonGibbsCylinderInteractionWitness R) :
     euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparationProp
-      C.toExactGapConstructionSpine I |>.toConstructionSpine := by
+      (C.toExactGapConstructionSpine I).toConstructionSpine := by
   exact
-    euclidean_yang_mills_exact_gap_spine_exact_threshold_separation
-      C.toExactGapConstructionSpine I
+    euclideanYangMillsContinuumMeasureExactGapConstructionSpine_exactThresholdSeparation
+      (C.toExactGapConstructionSpine I)
 
 end
 
