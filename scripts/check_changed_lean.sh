@@ -50,11 +50,10 @@ fi
 changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$\|^MGAP4D\.lean$' || true)"
 changed_scripts="$(printf '%s\n' "${changed_files}" | grep -E '^scripts/.*\.(py|sh)$' || true)"
+changed_lake_inputs="$(printf '%s\n' "${changed_files}" | grep -E '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' || true)"
 
-# Fast lane builds only changed non-aggregate leaf modules.  Aggregate import
-# roots intentionally pull very large historical surfaces, including archived or
-# currently non-fast-safe modules.  Their import text is still audited, but Lake
-# building them belongs to the full/manual integration lane, not the PR fast lane.
+# Fast lane checks only changed non-aggregate leaf modules. Aggregate import roots
+# are text-audited here and belong to the full/manual integration lane.
 aggregate_root_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -E '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' || true)"
 non_root_changed_lean_files="$(printf '%s\n' "${changed_lean_files}" | grep -Ev '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' || true)"
 
@@ -63,6 +62,7 @@ printf '[fast] changed Lean files:\n%s\n' "${changed_lean_files:-<none>}"
 printf '[fast] changed aggregate root Lean files:\n%s\n' "${aggregate_root_lean_files:-<none>}"
 printf '[fast] changed non-root Lean files:\n%s\n' "${non_root_changed_lean_files:-<none>}"
 printf '[fast] changed scripts:\n%s\n' "${changed_scripts:-<none>}"
+printf '[fast] changed Lake inputs:\n%s\n' "${changed_lake_inputs:-<none>}"
 
 run_audit_if_present() {
   local script="$1"
@@ -115,17 +115,12 @@ ensure_mathlib_cache() {
   fi
 }
 
-# Run changed-file static Lean preflight before any global audits or Lake work.
-# This catches common syntax-shape, namespace, import, duplicate declaration,
-# and known hazardous proof-pattern issues without invoking Lean or Lake.
 if [ -n "${changed_lean_files}" ]; then
   echo "[fast] preflight changed Lean static audit"
   # shellcheck disable=SC2086
   python3 scripts/audit_changed_lean_preflight.py ${changed_lean_files}
 fi
 
-# Always keep the hard safety gates. These are Python/text audits and do not
-# require Lake setup.
 echo "[fast] audit Lean forbidden tokens"
 python3 scripts/audit_lean_forbidden_tokens.py
 
@@ -146,14 +141,10 @@ if printf '%s\n' "${changed_scripts}" | grep -qx 'scripts/audit_os_wightman_mass
   audit_sensitive_targets+=(MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionExternalAuditBridge)
 fi
 
-# Root import changes are text-audited in the fast lane.  Building aggregate root
-# modules is intentionally avoided here because they import historical archive
-# surfaces that can contain non-fast-safe import cycles unrelated to the PR.
 if [ -n "${aggregate_root_lean_files}" ]; then
-  echo "[fast] aggregate root imports changed; Lake build is restricted to changed leaf modules"
+  echo "[fast] aggregate root imports changed; Lean execution is restricted to changed leaf modules"
 fi
 
-# Run targeted audits for changed concrete analytic spine files when available.
 if printf '%s\n' "${changed_lean_files}" | grep -q 'ConcreteAnalyticSpineL2HilbertNormOneTarget\.lean'; then
   run_audit_if_present scripts/audit_concrete_analytic_spine_l2_hilbert_norm_one_target.py
 fi
@@ -201,7 +192,7 @@ if [ -z "${changed_lean_files}" ]; then
     lake build "${audit_sensitive_targets[@]}"
     exit 0
   fi
-  echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lake build"
+  echo "[fast] no Lean files changed; skip Lake manifest, Mathlib cache, and Lean execution"
   exit 0
 fi
 
@@ -215,17 +206,43 @@ if [ -z "${non_root_changed_lean_files}" ]; then
     lake build "${audit_sensitive_targets[@]}"
     exit 0
   fi
-  echo "[fast] no non-aggregate Lean leaf files changed; skip Lake build in fast lane"
+  echo "[fast] no non-aggregate Lean leaf files changed; skip Lean execution in fast lane"
   exit 0
 fi
 
 ensure_lake_manifest
 ensure_mathlib_cache
 
-# Build only maximal changed non-aggregate modules. If changed module A imports
-# changed module B, then building A already builds B, so B is removed from the
-# explicit target set.  This preserves local coverage of the changed import
-# frontier without accidentally building aggregate roots such as `MGAP4D`.
+# Directly elaborate each changed leaf against restored project and Mathlib olean
+# caches. This avoids Lake scheduling the full transitive build graph on the
+# common path. Toolchain or manifest changes deliberately retain the Lake build
+# path because their cache compatibility cannot be assumed.
+direct_lean_allowed=true
+if [ -n "${changed_lake_inputs}" ]; then
+  direct_lean_allowed=false
+  echo "[fast] Lake inputs changed; use dependency-aware lake build"
+fi
+
+if [ "${direct_lean_allowed}" = true ]; then
+  direct_lean_ok=true
+  while IFS= read -r file; do
+    [ -z "${file}" ] && continue
+    echo "[fast] direct Lean elaboration: ${file}"
+    if ! lake env lean -DautoImplicit=false "${file}"; then
+      direct_lean_ok=false
+      echo "[fast] direct elaboration failed; retry through lake build for dependency recovery"
+      break
+    fi
+  done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
+
+  if [ "${direct_lean_ok}" = true ] && [ "${#audit_sensitive_targets[@]}" -eq 0 ]; then
+    echo "[fast] direct changed-file Lean elaboration passed"
+    exit 0
+  fi
+fi
+
+# Fallback: build only maximal changed non-aggregate modules. If changed module A
+# imports changed module B, building A already covers B.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
 targets=()
@@ -264,7 +281,7 @@ if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
   maximal_targets+=("${audit_sensitive_targets[@]}")
 fi
 
-printf '[fast] lake build maximal changed non-aggregate targets:'
+printf '[fast] fallback lake build maximal changed non-aggregate targets:'
 printf ' %s' "${maximal_targets[@]}"
 printf '\n'
 lake build "${maximal_targets[@]}"
