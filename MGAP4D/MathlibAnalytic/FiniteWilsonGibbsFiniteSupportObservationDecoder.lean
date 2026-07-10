@@ -49,8 +49,11 @@ noncomputable def
       intro A
       change D.reconstructFinite
         (D.support.restrict (R.globalObserve A)) = A
-      rw [D.restrict_globalObserve A]
-      exact D.reconstruct_observe A }
+      calc
+        D.reconstructFinite (D.support.restrict (R.globalObserve A)) =
+            D.reconstructFinite (R.observe D.support A) :=
+          congrArg D.reconstructFinite (D.restrict_globalObserve A)
+        _ = A := D.reconstruct_observe A }
 
 /-- Finite-support reconstruction implies faithfulness of the global observation. -/
 def FiniteWilsonGibbsFiniteSupportObservationDecoder.toFaithfulGlobalObservation
