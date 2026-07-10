@@ -32,15 +32,16 @@ theorem FiniteWilsonGibbsFiniteObservationSeparation.observe_eq_of_globalObserve
     {A B : (W.system R.sourceScale).Configuration}
     (hAB : R.globalObserve A = R.globalObserve B) :
     R.observe S.support A = R.observe S.support B := by
-  calc
-    R.observe S.support A = S.support.restrict (R.globalObserve A) :=
-      (finite_wilson_gibbs_single_source_globalObserve_restrict
-        R S.support A).symm
-    _ = S.support.restrict (R.globalObserve B) :=
-      congrArg S.support.restrict hAB
-    _ = R.observe S.support B :=
-      finite_wilson_gibbs_single_source_globalObserve_restrict
-        R S.support B
+  have hrestricted :
+      S.support.restrict (R.globalObserve A) =
+        S.support.restrict (R.globalObserve B) :=
+    congrArg (fun φ => S.support.restrict φ) hAB
+  exact
+    (finite_wilson_gibbs_single_source_globalObserve_restrict
+      R S.support A).symm.trans
+      (hrestricted.trans
+        (finite_wilson_gibbs_single_source_globalObserve_restrict
+          R S.support B))
 
 /-- A finite separating observation family proves faithfulness of the complete
 global observation. -/
