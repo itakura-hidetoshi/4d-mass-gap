@@ -62,7 +62,29 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerPackag
 subset-chain theorem. -/
 theorem euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerWithSubsetChain
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) :
-    euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerPackage S ∧
+    (S.definitionBridge.spine.model.hasMassGap ∧
+      0 < exactGapValueReal ∧
+      exactGapValueReal ≠ 0 ∧
+      0 < sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+      exactGapValueReal =
+        sInf (S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ)) ∧
+      (∃ δ : ℝ, 0 < δ ∧
+        ∀ E : ℝ,
+          E ∈ S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) →
+          δ ≤ E ∧ 0 < E ∧ 0 ≤ E ∧ E ≠ 0) ∧
+      (∃ ψ : S.definitionBridge.spine.model.H,
+        ψ ∈ S.definitionBridge.spine.model.spectralPVM
+          ({S.definitionBridge.spine.model.firstExcitation} : Set ℝ)) ∧
+      (euclideanYangMillsCompleteConstructionDirectBoundedDownstreamTheoremPackage S).publicAPI.rootBundle.certificate.publicHandoffStatus =
+        "direct-bare-M-primary-route-backed-compatibility" ∧
+      (euclideanYangMillsCompleteConstructionDirectBoundedDownstreamTheoremPackage S).publicAPI.rootBundle.certificate.directEndpointNames =
+        [ "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_actual_data",
+          "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_full_domain_data",
+          "r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_domain_package" ] ∧
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_boundedness_primary_route =
+        "bare-M-direct-bundle" ∧
+      _root_.MGAP4D.MathlibAnalytic.EuclideanYangMillsR4HilbertReconstructionQuotient.r4HilbertMathlibSelfAdjointOperator_route_backed_boundedness_role =
+        "compatibility-only") ∧
       (∃ δ : ℝ, 0 < δ ∧
         S.definitionBridge.spine.model.energySpectrum \ ({0} : Set ℝ) ⊆
           {E : ℝ | δ ≤ E} ∧
