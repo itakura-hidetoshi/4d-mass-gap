@@ -65,8 +65,10 @@ theorem euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerSubset
 abbrev euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerFullAPIProp
     (S : EuclideanYangMillsContinuumMeasureConstructionSpine) : Prop :=
     euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerSubsetAPIProp S ∧
-      euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerEndpoint_complete S ∧
-      euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerEndpoint_withSubsetChain S
+      (euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerEndpointProp S ∧
+        euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerRouteReceiptsProp S) ∧
+      (euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerEndpointProp S ∧
+        euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerWithSubsetChainProp S)
 
 /-- Full compact downstream API theorem for public consumer users. -/
 theorem euclideanYangMillsCompleteConstructionDirectBounded_publicConsumerFullAPI
