@@ -43,8 +43,7 @@ theorem
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (G : FiniteWilsonGibbsGlobalObservationSeparation R) :
-    (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).
-      interactingContinuumLimitConstructed := by
+    (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).interactingContinuumLimitConstructed := by
   exact C.interacting_frontier G.toInteractionWitness
 
 /-- Gauge-invariant cylinder Schwinger observables are constructed in the
@@ -58,8 +57,7 @@ theorem
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (G : FiniteWilsonGibbsGlobalObservationSeparation R) :
-    (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).
-      gaugeInvariantSchwingerFunctionsConstructed := by
+    (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).gaugeInvariantSchwingerFunctionsConstructed := by
   exact C.schwinger_constructed_frontier G.toInteractionWitness
 
 /-- The exact finite-cylinder Schwinger source identity is carried by the
@@ -73,8 +71,7 @@ theorem
     [∀ x, DiscreteMeasurableSpace (R.fieldValue x)]
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (G : FiniteWilsonGibbsGlobalObservationSeparation R) :
-    (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).
-      schwingerFunctionsAreContinuumLimits := by
+    (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).schwingerFunctionsAreContinuumLimits := by
   exact C.schwinger_limit_frontier G.toInteractionWitness
 
 /-- Global observation separation generates the five OS properties, concrete
@@ -90,12 +87,9 @@ theorem
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (G : FiniteWilsonGibbsGlobalObservationSeparation R) :
     FiniteWilsonExactGapOSFiveLimitProperties C.limitData ∧
-      (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).
-        interactingContinuumLimitConstructed ∧
-      (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).
-        gaugeInvariantSchwingerFunctionsConstructed ∧
-      (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).
-        schwingerFunctionsAreContinuumLimits := by
+      (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).interactingContinuumLimitConstructed ∧
+      (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).gaugeInvariantSchwingerFunctionsConstructed ∧
+      (C.toExactGapContinuumAssemblyOfGlobalObservationSeparation G).schwingerFunctionsAreContinuumLimits := by
   exact finite_wilson_nondegenerate_event_complete_frontier_package
     C G.toNondegenerateEvent
 
@@ -125,8 +119,7 @@ theorem
     (C : FiniteWilsonGibbsConcreteAnalyticFrontierCore R)
     (G : FiniteWilsonGibbsGlobalObservationSeparation R) :
     euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparationProp
-      (C.toExactGapConstructionSpineOfGlobalObservationSeparation G).
-        toConstructionSpine := by
+      (C.toExactGapConstructionSpineOfGlobalObservationSeparation G).toConstructionSpine := by
   exact C.exactThresholdSeparation G.toInteractionWitness
 
 end
