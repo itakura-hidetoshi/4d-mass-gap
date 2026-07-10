@@ -47,6 +47,8 @@ noncomputable def
   { reconstruct := fun φ => D.reconstructFinite (D.support.restrict φ)
     reconstruct_globalObserve := by
       intro A
+      change D.reconstructFinite
+        (D.support.restrict (R.globalObserve A)) = A
       rw [D.restrict_globalObserve A]
       exact D.reconstruct_observe A }
 
