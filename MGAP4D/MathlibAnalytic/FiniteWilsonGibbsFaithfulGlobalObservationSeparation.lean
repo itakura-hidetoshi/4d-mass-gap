@@ -33,8 +33,11 @@ noncomputable def
     (F : FiniteWilsonGibbsFaithfulGlobalObservation R) :
     FiniteWilsonGibbsGlobalObservationSeparation R := by
   classical
-  obtain ⟨A, B, hAB⟩ :=
+  let hex : ∃ A B : (W.system R.sourceScale).Configuration, A ≠ B :=
     exists_pair_ne (W.system R.sourceScale).Configuration
+  let A := Classical.choose hex
+  let B := Classical.choose (Classical.choose_spec hex)
+  have hAB : A ≠ B := Classical.choose_spec (Classical.choose_spec hex)
   exact
     { sourceLeft := A
       sourceRight := B
