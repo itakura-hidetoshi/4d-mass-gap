@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.ExactGapReal
 import MGAP4D.MathlibAnalytic.WightmanOSHamiltonianGapSpectrumTheorems
 
 namespace MGAP4D
