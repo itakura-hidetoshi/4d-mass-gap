@@ -233,8 +233,44 @@ theorem finite_wilson_cylinder_interaction_passes_to_continuum
 symmetry, hold simultaneously for exact-gap finite-Wilson limit data. -/
 abbrev FiniteWilsonExactGapOSFiveLimitProperties
     {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapAnalyticLimitConstructionData W
-      DUMMY_PROJECTIVE_FAMILY DUMMY_PROJECTIVE_LIMIT) : Prop := True
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {L : EuclideanYangMillsProjectiveLimitMeasure F}
+    (D : FiniteWilsonOSAutomaticExactGapAnalyticLimitConstructionData W F L) : Prop :=
+  D.toAutomaticData.reflectionLimit.ContinuumReflectionPositive ∧
+    D.toAutomaticData.euclideanLimit.toEuclideanInvarianceLimitData.ContinuumEuclideanInvariant ∧
+    D.symmetric ∧
+    D.toAutomaticData.clusterLimit.toClusterLimitData.ContinuumClusterProperty ∧
+    D.toAutomaticData.regularityLimit.toRegularityLimitData.ContinuumRegularity
+
+/-- Simultaneous theorem for the full five-property OS limit package. -/
+theorem finite_wilson_exact_gap_os_five_limit_properties
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {L : EuclideanYangMillsProjectiveLimitMeasure F}
+    (D : FiniteWilsonOSAutomaticExactGapAnalyticLimitConstructionData W F L) :
+    FiniteWilsonExactGapOSFiveLimitProperties D := by
+  rcases finite_wilson_os_exact_gap_four_limit_properties D with
+    ⟨hReflection, hEuclidean, hCluster, hRegularity⟩
+  exact ⟨hReflection, hEuclidean, D.symmetric_proof, hCluster, hRegularity⟩
+
+/-- The five OS properties, concrete gauge-invariant Schwinger construction,
+exact cylinder Schwinger limit, and nonzero continuum interaction witness are
+compatible in one theorem package. -/
+theorem finite_wilson_os_five_schwinger_interaction_limit_package
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
+    (D : FiniteWilsonGibbsSingleSourceExactGapOSLimitData R)
+    (I : FiniteWilsonGibbsCylinderInteractionWitness R) :
+    FiniteWilsonExactGapOSFiveLimitProperties D ∧
+      FiniteWilsonGaugeInvariantCylinderSchwingerConstructedProp R D ∧
+      FiniteWilsonCylinderSchwingerLimitProp R D ∧
+      finiteWilsonContinuumCylinderConnectedCorrelation R D I.support
+        I.leftObservable I.rightObservable ≠ 0 := by
+  exact ⟨
+    finite_wilson_exact_gap_os_five_limit_properties D,
+    finite_wilson_gauge_invariant_cylinder_schwinger_constructed R D,
+    finite_wilson_cylinder_schwinger_limit R D,
+    finite_wilson_cylinder_interaction_passes_to_continuum R D I⟩
 
 end
 
