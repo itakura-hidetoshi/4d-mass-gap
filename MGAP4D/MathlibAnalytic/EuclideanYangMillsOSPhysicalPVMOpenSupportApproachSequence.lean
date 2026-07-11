@@ -24,7 +24,7 @@ theorem pvmOpenSupport_arbitrarily_close_above_of_tendsto
   intro ε hε
   have hNeighborhood :
       Set.Iio (exactGapValueReal + ε) ∈ nhds exactGapValueReal :=
-    Set.Iio_mem_nhds (by linarith)
+    Iio_mem_nhds (by linarith)
   have hEventually :
       ∀ᶠ n : ℕ in atTop, energy n < exactGapValueReal + ε :=
     hTendsto.eventually hNeighborhood
