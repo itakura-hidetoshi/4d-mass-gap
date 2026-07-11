@@ -129,7 +129,7 @@ theorem os_physical_hamiltonianDifferenceQuotient_tendsto
             (x : M.observables.PhysicalHilbert))) := by
           rw [smul_neg]
   rw [hPointwise]
-  exact hGenerator
+  simpa using hGenerator
 
 namespace EuclideanYangMillsOSPhysicalFiniteVolumeVacuumGapTransfer
 
@@ -260,30 +260,20 @@ theorem canonical_vacuumOrthogonalHamiltonian_rayleigh
       inner ℝ M.vacuum
         (xAmbient : M.observables.PhysicalHilbert) = 0 := by
     have hxVacuumFirst :
-        inner ℝ M.vacuum
-          (((x : M.toExplicitModel.VacuumOrthogonalHilbert) :
-            M.observables.PhysicalHilbert)) = 0 :=
+        inner ℝ M.vacuum x.1.1 = 0 :=
       (explicit_wightman_os_mem_vacuumOrthogonal_iff
-        M.toExplicitModel
-        (((x : M.toExplicitModel.VacuumOrthogonalHilbert) :
-          M.observables.PhysicalHilbert))).mp
-        (x : M.toExplicitModel.VacuumOrthogonalHilbert).property
+        M.toExplicitModel x.1.1).mp x.1.property
     simpa [xAmbient] using hxVacuumFirst
   have hAmbient :=
     V.hamiltonian_inner_ge_mass_mul_norm_sq
       T G xAmbient hxOrthogonal
   change
-    V.mass *
-        ‖(((x : M.toExplicitModel.VacuumOrthogonalHilbert) :
-          M.observables.PhysicalHilbert))‖ ^ 2 ≤
+    V.mass * ‖x.1.1‖ ^ 2 ≤
       inner ℝ
-        (((M.toExplicitModel.canonicalVacuumOrthogonalHamiltonian x :
-          M.toExplicitModel.VacuumOrthogonalHilbert) :
-            M.observables.PhysicalHilbert))
-        (((x : M.toExplicitModel.VacuumOrthogonalHilbert) :
-          M.observables.PhysicalHilbert))
+        (M.toExplicitModel.canonicalVacuumOrthogonalHamiltonian x).1
+        x.1.1
   rw [canonical_vacuum_orthogonal_hamiltonian_apply]
-  exact hAmbient
+  simpa [xAmbient] using hAmbient
 
 end EuclideanYangMillsOSPhysicalFiniteVolumeVacuumGapTransfer
 
