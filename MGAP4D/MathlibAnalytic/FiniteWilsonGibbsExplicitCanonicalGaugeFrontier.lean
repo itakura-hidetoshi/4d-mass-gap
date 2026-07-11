@@ -131,8 +131,15 @@ theorem finite_wilson_explicit_canonical_gauge_frontier_exactThresholdSeparation
             L.toAutomaticData)).toMeasurePackage)
     (definitionBridge : OSWightmanExactGapDefinitionBridge)
     (definitionBridge_uses_measure_axioms :
-      definitionBridge.spine.axioms = measureBridge.axioms) :=
-  (finiteWilsonExplicitCanonicalGaugeFrontierCore W s L measureBridge
+      definitionBridge.spine.axioms = measureBridge.axioms) :
+    euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparationProp
+      ((finiteWilsonExplicitCanonicalGaugeFrontierCore W s L measureBridge
+          measureBridge_identified definitionBridge
+          definitionBridge_uses_measure_axioms).toExactGapConstructionSpineOfGlobalObservationSeparation
+        (FiniteWilsonGibbsFiniteCoordinateSelector.toGlobalObservationSeparation
+          (finiteWilsonExplicitCanonicalGaugeEdgeObservation W s).toExactLinkObservation.toFiniteCoordinateSelector)).toConstructionSpine := by
+  exact
+    (finiteWilsonExplicitCanonicalGaugeFrontierCore W s L measureBridge
       measureBridge_identified definitionBridge
       definitionBridge_uses_measure_axioms).explicitCanonicalGauge_exactThresholdSeparation W s
 
