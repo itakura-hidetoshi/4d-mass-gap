@@ -93,19 +93,19 @@ noncomputable def
       ⟨P.separatingPoint p, P.separatingPoint_mem_support p⟩
     intro hEq
     apply P.separatingPoint_spec p
-    calc
-      R.globalObserve A (P.separatingPoint p) =
-          P.support.restrict (R.globalObserve A) x := rfl
-      _ = R.observe P.support A x :=
-        congrFun
-          (finite_wilson_gibbs_single_source_globalObserve_restrict
-            R P.support A) x
-      _ = R.observe P.support B x := hEq
-      _ = P.support.restrict (R.globalObserve B) x :=
-        (congrFun
-          (finite_wilson_gibbs_single_source_globalObserve_restrict
-            R P.support B) x).symm
-      _ = R.globalObserve B (P.separatingPoint p) := rfl
+    have hA :
+        R.globalObserve A (P.separatingPoint p) =
+          R.observe P.support A x := by
+      exact congrFun
+        (finite_wilson_gibbs_single_source_globalObserve_restrict
+          R P.support A) x
+    have hB :
+        R.globalObserve B (P.separatingPoint p) =
+          R.observe P.support B x := by
+      exact congrFun
+        (finite_wilson_gibbs_single_source_globalObserve_restrict
+          R P.support B) x
+    exact hA.trans (hEq.trans hB.symm)
 
 /-- The extracted finite support proves faithfulness of the global observation. -/
 def FiniteWilsonGibbsGlobalPointSeparation.toFaithfulGlobalObservation
