@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsExplicitCanonicalGaugeFrontier
+import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsExplicitCanonicalGaugeInteraction
 import MGAP4D.MathlibAnalytic.FiniteWilsonGibbsSingleSourceCoerciveTransferOrbitOSLimitAssembly
 
 namespace MGAP4D
