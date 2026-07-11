@@ -6,6 +6,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open Filter Topology
+
 /-- Compact endpoint in which the Hamiltonian carrying the exact-gap real
 resolvent is simultaneously identified as the negative right generator of the
 reconstructed Euclidean-time contraction semigroup. -/
