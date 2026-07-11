@@ -113,8 +113,8 @@ theorem
     (E : FiniteWilsonGibbsCanonicalEdgeObservation R) :
     euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparationProp
       (C.toExactGapConstructionSpineOfGlobalObservationSeparation
-        E.toExactLinkObservation.toFiniteCoordinateSelector
-          .toGlobalObservationSeparation).toConstructionSpine := by
+        (E.toExactLinkObservation.toFiniteCoordinateSelector
+          .toGlobalObservationSeparation)).toConstructionSpine := by
   exact C.exactLinkObservation_exactThresholdSeparation
     E.toExactLinkObservation
 
