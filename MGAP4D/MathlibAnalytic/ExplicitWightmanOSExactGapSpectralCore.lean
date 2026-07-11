@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.AxiomaticYangMillsExactGapSpectralCore
-import MGAP4D.MathlibAnalytic.WightmanOSQuadraticPVMMeasureConstruction
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -176,53 +175,6 @@ noncomputable def
   M.toExactGapSpectralCore
     (explicit_wightman_os_reconstruction_has_mass_gap M hRelGap)
     hExactSpectrum
-
-section QuadraticPVMSemigroup
-
-variable
-  (C : EuclideanYangMillsConnectedObservableCore)
-  (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity C.explicitModel)
-  (T : ExplicitWightmanOSEuclideanTimeSemigroup C.explicitModel)
-  (E : EuclideanYangMillsConnectedCorrelationSemigroupIdentification C T)
-  (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
-    C.explicitModel A.toScalarSpectralRealization T)
-  (X : EuclideanYangMillsExponentialClusteringEstimate C)
-
-/-- The constructed quadratic PVM scalar measures, OS semigroup spectral
-formula, and Euclidean clustering produce the exact-gap spectral core. -/
-noncomputable def euclideanYangMillsQuadraticPVMExactGapSpectralCore
-    (hExactSpectrum :
-      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
-    FourDimensionalYangMillsExactGapSpectralCore :=
-  C.explicitModel.toExactGapSpectralCore
-    (euclidean_quadratic_pvm_semigroup_clustering_mass_gap C A T E S X)
-    hExactSpectrum
-
-/-- The Euclidean analytic construction retains the actual Hamiltonian
-self-adjointness theorem inside the generated core. -/
-theorem euclideanYangMillsQuadraticPVMExactGapSpectralCore_selfAdjoint
-    (hExactSpectrum :
-      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
-    (euclideanYangMillsQuadraticPVMExactGapSpectralCore
-      C A T E S X hExactSpectrum).hamiltonianSelfAdjoint := by
-  exact C.explicitModel.toExactGapSpectralCore_selfAdjoint
-    (euclidean_quadratic_pvm_semigroup_clustering_mass_gap C A T E S X)
-    hExactSpectrum
-
-/-- The Euclidean analytic construction generates the exact non-vacuum spectral
-threshold identity through the reduced core. -/
-theorem euclideanYangMillsQuadraticPVMExactGapSpectralCore_threshold
-    (hExactSpectrum :
-      exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
-    sInf
-        ((euclideanYangMillsQuadraticPVMExactGapSpectralCore
-          C A T E S X hExactSpectrum).energySpectrum \ ({0} : Set ℝ)) =
-      exactGapValueReal := by
-  exact
-    (euclideanYangMillsQuadraticPVMExactGapSpectralCore
-      C A T E S X hExactSpectrum).sInfNonvacuumEqExactGap
-
-end QuadraticPVMSemigroup
 
 /-- Compact theorem surface recording that the generated core remains tied to the
 actual explicit Hamiltonian, vacuum PVM point, and exact spectral threshold. -/
