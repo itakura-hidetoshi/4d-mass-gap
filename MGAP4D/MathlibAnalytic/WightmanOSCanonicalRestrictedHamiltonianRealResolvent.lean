@@ -21,7 +21,7 @@ of the shifted operator. -/
 def realBijectiveSpectrum
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (A : E →ₗ.[ℝ] E) : Set ℝ :=
-  (A.realBijectiveResolventSet)ᶜ
+  (LinearPMap.realBijectiveResolventSet A)ᶜ
 
 end LinearPMap
 
@@ -88,7 +88,8 @@ theorem canonical_vacuum_orthogonal_Iio_subset_realBijectiveResolventSet
           inner ℝ (M.canonicalVacuumOrthogonalHamiltonian x)
             (x : M.VacuumOrthogonalHilbert)) :
     Set.Iio mass ⊆
-      M.canonicalVacuumOrthogonalHamiltonian.realBijectiveResolventSet := by
+      LinearPMap.realBijectiveResolventSet
+        M.canonicalVacuumOrthogonalHamiltonian := by
   intro lambda hlambda
   exact canonical_vacuum_orthogonal_realShift_bijective
     M B hlambda hRayleigh
@@ -104,13 +105,16 @@ theorem canonical_vacuum_orthogonal_realBijectiveSpectrum_inter_Iio_eq_empty
         mass * ‖(x : M.VacuumOrthogonalHilbert)‖ ^ 2 ≤
           inner ℝ (M.canonicalVacuumOrthogonalHamiltonian x)
             (x : M.VacuumOrthogonalHilbert)) :
-    M.canonicalVacuumOrthogonalHamiltonian.realBijectiveSpectrum ∩
-        Set.Iio mass = ∅ := by
-  rw [Set.eq_empty_iff_forall_not_mem]
-  intro lambda hlambda
-  exact hlambda.1
+    LinearPMap.realBijectiveSpectrum
+        M.canonicalVacuumOrthogonalHamiltonian ∩
+      Set.Iio mass = ∅ := by
+  ext lambda
+  simp only [LinearPMap.realBijectiveSpectrum, Set.mem_inter_iff,
+    Set.mem_compl_iff, Set.mem_Iio, Set.mem_empty_iff_false, iff_false]
+  rintro ⟨hNotResolvent, hBelow⟩
+  exact hNotResolvent
     (canonical_vacuum_orthogonal_Iio_subset_realBijectiveResolventSet
-      M B hRayleigh hlambda.2)
+      M B hRayleigh hBelow)
 
 /-- Complete exact-gap endpoint joining continuous PVM support with the actual
 real resolvent exclusion of the canonical restricted Hamiltonian. -/
@@ -128,8 +132,10 @@ theorem explicit_wightman_os_exact_gap_pvm_support_and_real_resolvent
             (x : M.VacuumOrthogonalHilbert)) :
     IsLeast M.vacuumOrthogonalPVMOpenSupport exactGapValueReal ∧
       Set.Iio exactGapValueReal ⊆
-        M.canonicalVacuumOrthogonalHamiltonian.realBijectiveResolventSet ∧
-      M.canonicalVacuumOrthogonalHamiltonian.realBijectiveSpectrum ∩
+        LinearPMap.realBijectiveResolventSet
+          M.canonicalVacuumOrthogonalHamiltonian ∧
+      LinearPMap.realBijectiveSpectrum
+          M.canonicalVacuumOrthogonalHamiltonian ∩
         Set.Iio exactGapValueReal = ∅ := by
   exact ⟨
     B.exactGap_isLeast_pvmOpenSupport hGap hExactSpectrum,
