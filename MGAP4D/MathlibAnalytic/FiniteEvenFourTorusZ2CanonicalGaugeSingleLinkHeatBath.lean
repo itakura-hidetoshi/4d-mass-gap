@@ -26,6 +26,39 @@ variable
   (finiteVolumeEuclideanCovariant : Prop)
   (finiteVolumeEuclideanCovariant_proof : finiteVolumeEuclideanCovariant)
 
+local instance finiteEvenFourTorusZ2CanonicalGaugeHeatBath_fieldValueFintype
+    (n : ℕ) (x : EuclideanFourSpace) :
+    Fintype
+      ((finiteEvenFourTorusZ2CanonicalGaugeRealization
+        H β energyIdentity energyNontrivial latticeSpacing volumeScale
+        hβ hEnergyIdentity hEnergyNontrivial geometricEnergy
+        finiteVolumeEuclideanCovariant
+        finiteVolumeEuclideanCovariant_proof n).fieldValue x) := by
+  change Fintype Z2Gauge
+  infer_instance
+
+local instance finiteEvenFourTorusZ2CanonicalGaugeHeatBath_fieldValueCountable
+    (n : ℕ) (x : EuclideanFourSpace) :
+    Countable
+      ((finiteEvenFourTorusZ2CanonicalGaugeRealization
+        H β energyIdentity energyNontrivial latticeSpacing volumeScale
+        hβ hEnergyIdentity hEnergyNontrivial geometricEnergy
+        finiteVolumeEuclideanCovariant
+        finiteVolumeEuclideanCovariant_proof n).fieldValue x) := by
+  change Countable Z2Gauge
+  infer_instance
+
+local instance finiteEvenFourTorusZ2CanonicalGaugeHeatBath_fieldValueDiscrete
+    (n : ℕ) (x : EuclideanFourSpace) :
+    DiscreteMeasurableSpace
+      ((finiteEvenFourTorusZ2CanonicalGaugeRealization
+        H β energyIdentity energyNontrivial latticeSpacing volumeScale
+        hβ hEnergyIdentity hEnergyNontrivial geometricEnergy
+        finiteVolumeEuclideanCovariant
+        finiteVolumeEuclideanCovariant_proof n).fieldValue x) := by
+  change DiscreteMeasurableSpace Z2Gauge
+  infer_instance
+
 /-- The concrete single-link heat-bath datum generates the coercive datum for
 the canonical `Z₂` even-four-torus realization. -/
 noncomputable def finiteEvenFourTorusZ2CanonicalGaugeSingleLinkHeatBathCoerciveData
@@ -119,7 +152,9 @@ theorem finiteEvenFourTorusZ2CanonicalGauge_singleLinkHeatBath_interaction_passe
       hβ hEnergyIdentity hEnergyNontrivial geometricEnergy
       finiteVolumeEuclideanCovariant
       finiteVolumeEuclideanCovariant_proof n
-  exact
+  simpa [FiniteEvenFourTorusZ2CanonicalGaugeSingleLinkHeatBathInteractionProp,
+    finiteEvenFourTorusZ2CanonicalGaugeRealization,
+    finiteEvenFourTorusZ2CanonicalGaugeSingleLinkHeatBathCoerciveData] using
     finite_wilson_explicit_canonical_gauge_singleLinkHeatBath_interaction_passes_to_continuum
       (finiteEvenFourTorusZ2AutomaticApproximationFamily
         H β energyIdentity energyNontrivial latticeSpacing volumeScale
