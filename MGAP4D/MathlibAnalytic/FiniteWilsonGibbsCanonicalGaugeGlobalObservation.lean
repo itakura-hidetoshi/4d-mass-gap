@@ -72,8 +72,13 @@ theorem finiteWilsonCanonicalGaugeGlobalObserve_edge
     finiteWilsonCanonicalGaugeGlobalObserve W s A
       (finiteWilsonCanonicalEdgePointAt W s e) = A e := by
   rw [finiteWilsonCanonicalGaugeGlobalObserve]
-  simp only [dif_pos ⟨e, rfl⟩]
-  rw [finiteWilsonCanonicalEdgeAt_edgePoint]
+  split
+  · case isTrue hx =>
+      apply congrArg A
+      apply finiteWilsonCanonicalEdgePointAt_injective W s
+      exact Classical.choose_spec hx
+  · case isFalse hx =>
+      exact False.elim (hx ⟨e, rfl⟩)
 
 /-- Package the explicit global field as canonical gauge-field data. -/
 noncomputable def finiteWilsonCanonicalGaugeFieldData
