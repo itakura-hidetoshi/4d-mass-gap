@@ -116,8 +116,7 @@ theorem
     euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparationProp
       (C.toExactGapConstructionSpineOfGlobalObservationSeparation
         (FiniteWilsonGibbsFiniteCoordinateSelector.toGlobalObservationSeparation
-          (finiteWilsonExplicitCanonicalGaugeEdgeObservation W s).toExactLinkObservation
-            .toFiniteCoordinateSelector)).toConstructionSpine := by
+          (finiteWilsonExplicitCanonicalGaugeEdgeObservation W s).toExactLinkObservation.toFiniteCoordinateSelector)).toConstructionSpine := by
   exact C.canonicalEdgeObservation_exactThresholdSeparation
     (finiteWilsonExplicitCanonicalGaugeEdgeObservation W s)
 
