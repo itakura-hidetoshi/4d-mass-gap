@@ -30,9 +30,10 @@ def ExplicitWightmanOSReconstructedModel.legacyEnergyMomentumSpectrum
 /-- Totalize the actual partially defined Hamiltonian by zero away from its
 Mathlib operator domain.  On the physical domain this is exactly the original
 Hamiltonian action. -/
-def ExplicitWightmanOSReconstructedModel.hamiltonianZeroExtension
-    (M : ExplicitWightmanOSReconstructedModel) : M.H → M.H :=
-  fun ψ =>
+noncomputable def ExplicitWightmanOSReconstructedModel.hamiltonianZeroExtension
+    (M : ExplicitWightmanOSReconstructedModel) : M.H → M.H := by
+  classical
+  exact fun ψ =>
     if hψ : ψ ∈ M.hamiltonian.domain then
       M.hamiltonian ⟨ψ, hψ⟩
     else
@@ -43,6 +44,7 @@ theorem ExplicitWightmanOSReconstructedModel.hamiltonianZeroExtension_of_mem
     (M : ExplicitWightmanOSReconstructedModel)
     (ψ : M.H) (hψ : ψ ∈ M.hamiltonian.domain) :
     M.hamiltonianZeroExtension ψ = M.hamiltonian ⟨ψ, hψ⟩ := by
+  classical
   simp [ExplicitWightmanOSReconstructedModel.hamiltonianZeroExtension, hψ]
 
 @[simp]
@@ -50,6 +52,7 @@ theorem ExplicitWightmanOSReconstructedModel.hamiltonianZeroExtension_of_not_mem
     (M : ExplicitWightmanOSReconstructedModel)
     (ψ : M.H) (hψ : ψ ∉ M.hamiltonian.domain) :
     M.hamiltonianZeroExtension ψ = 0 := by
+  classical
   simp [ExplicitWightmanOSReconstructedModel.hamiltonianZeroExtension, hψ]
 
 /-- Set-valued spectral carrier obtained as the fixed-point range of the actual
