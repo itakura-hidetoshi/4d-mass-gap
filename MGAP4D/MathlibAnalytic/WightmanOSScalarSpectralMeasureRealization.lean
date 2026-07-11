@@ -43,13 +43,13 @@ structure EuclideanYangMillsOSLaplaceSemigroupIdentification
     ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ),
       0 ≤ t →
         Integrable
-          (fun λ : ℝ => Real.exp (-λ * t))
+          (fun energy : ℝ => Real.exp (-energy * t))
           (R.scalarMeasure (C.sourceVector e))
   correlation_eq_laplaceIntegral :
     ∀ (e : C.explicitModel.NonVacuumEnergy) (t : ℝ),
       0 ≤ t →
         C.connectedCorrelation e t =
-          ∫ λ, Real.exp (-λ * t)
+          ∫ energy, Real.exp (-energy * t)
             ∂R.scalarMeasure (C.sourceVector e)
 
 /-- The coherent vector-indexed scalar spectral measure and the OS semigroup
