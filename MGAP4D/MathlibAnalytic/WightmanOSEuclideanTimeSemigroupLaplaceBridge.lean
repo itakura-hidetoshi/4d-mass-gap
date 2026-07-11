@@ -36,7 +36,7 @@ structure EuclideanYangMillsConnectedCorrelationSemigroupIdentification
 
 /-- Spectral-theorem evaluation of the Euclidean semigroup matrix coefficient.
 For each Hilbert vector, the scalar spectral measure of the Hamiltonian turns
-`exp(-tH)` into the Laplace kernel `exp(-λt)`. -/
+`exp(-tH)` into the Laplace kernel `exp(-Et)`. -/
 structure ExplicitWightmanOSSpectralSemigroupLaplaceFormula
     (M : ExplicitWightmanOSReconstructedModel)
     (R : ExplicitWightmanOSScalarSpectralMeasureRealization M)
@@ -44,12 +44,13 @@ structure ExplicitWightmanOSSpectralSemigroupLaplaceFormula
   laplaceIntegrable :
     ∀ (ψ : M.H) (t : ℝ), 0 ≤ t →
       Integrable
-        (fun λ : ℝ => Real.exp (-λ * t))
+        (fun energy : ℝ => Real.exp (-energy * t))
         (R.scalarMeasure ψ)
   matrixCoefficient_eq_laplaceIntegral :
     ∀ (ψ : M.H) (t : ℝ), 0 ≤ t →
       inner ℝ ψ (T.operator t ψ) =
-        ∫ λ : ℝ, Real.exp (-λ * t) ∂R.scalarMeasure ψ
+        MeasureTheory.integral (R.scalarMeasure ψ)
+          (fun energy : ℝ => Real.exp (-energy * t))
 
 /-- The correlation-to-semigroup identification and the spectral theorem formula
 compose to the OS Laplace-semigroup identification used downstream. -/
@@ -71,8 +72,9 @@ def euclideanYangMillsOSLaplaceSemigroupIdentificationOfMatrixCoefficients
             inner ℝ (C.sourceVector e)
               (T.operator t (C.sourceVector e)) :=
           E.correlation_eq_matrixCoefficient e t ht
-        _ = ∫ λ : ℝ, Real.exp (-λ * t)
-              ∂R.scalarMeasure (C.sourceVector e) :=
+        _ = MeasureTheory.integral
+              (R.scalarMeasure (C.sourceVector e))
+              (fun energy : ℝ => Real.exp (-energy * t)) :=
           S.matrixCoefficient_eq_laplaceIntegral
             (C.sourceVector e) t ht }
 

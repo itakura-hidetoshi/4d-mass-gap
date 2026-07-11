@@ -65,9 +65,17 @@ def ExplicitWightmanOSVacuumOrthogonalHamiltonianInvariant.restrictedLinearMap
   map_smul' := by
     intro c x
     apply Subtype.ext
-    simpa [ExplicitWightmanOSReconstructedModel.vacuumOrthogonalAmbientDomainPoint]
-      using M.hamiltonian.toFun.map_smul c
-        (M.vacuumOrthogonalAmbientDomainPoint x)
+    have hDomain :
+        M.vacuumOrthogonalAmbientDomainPoint (c • x) =
+          c • M.vacuumOrthogonalAmbientDomainPoint x := by
+      apply Subtype.ext
+      rfl
+    change
+      M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint (c • x)) =
+        c • M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x)
+    rw [hDomain]
+    exact M.hamiltonian.toFun.map_smul c
+      (M.vacuumOrthogonalAmbientDomainPoint x)
 
 /-- The actual partially-defined Hamiltonian restricted to the physical
 vacuum-orthogonal Hilbert sector. -/
