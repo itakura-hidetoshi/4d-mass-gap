@@ -36,7 +36,8 @@ theorem FiniteWilsonGibbsGlobalObservationData.restrict_measurable
     Measurable (fun A => J.restrict (D.globalObserve A)) := by
   rw [measurable_pi_iff]
   intro x
-  exact (measurable_pi_apply x).comp D.globalObserve_measurable
+  change Measurable (fun A => D.globalObserve A x.1)
+  exact (measurable_pi_apply x.1).comp D.globalObserve_measurable
 
 /-- One global observation canonically generates all compatible finite
 observation maps. -/
