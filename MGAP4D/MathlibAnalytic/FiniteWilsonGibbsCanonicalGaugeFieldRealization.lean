@@ -34,9 +34,9 @@ theorem FiniteWilsonGibbsGlobalObservationData.restrict_measurable
     (D : FiniteWilsonGibbsGlobalObservationData W)
     (J : Finset EuclideanFourSpace) :
     Measurable (fun A => J.restrict (D.globalObserve A)) := by
-  apply Measurable.comp
-  · exact measurable_pi_lambda _ (fun _ => measurable_pi_apply _)
-  · exact D.globalObserve_measurable
+  rw [measurable_pi_iff]
+  intro x
+  exact (measurable_pi_apply x).comp D.globalObserve_measurable
 
 /-- One global observation canonically generates all compatible finite
 observation maps. -/
@@ -68,7 +68,6 @@ coordinates. -/
 structure FiniteWilsonGibbsCanonicalGaugeFieldData
     (W : FiniteWilsonOSAutomaticApproximationFamily) where
   sourceScale : W.index
-  [gaugeMeasurableSpace : MeasurableSpace (W.system sourceScale).Gauge]
   globalObserve :
     (W.system sourceScale).Configuration →
       EuclideanFourSpace → (W.system sourceScale).Gauge
@@ -81,16 +80,13 @@ structure FiniteWilsonGibbsCanonicalGaugeFieldData
           ((Fintype.equivFin (W.system sourceScale).Edge e).val : ℝ)
         else 0) = A e
 
-attribute [instance]
-  FiniteWilsonGibbsCanonicalGaugeFieldData.gaugeMeasurableSpace
-
 /-- Gauge-valued field data as general global-observation data. -/
 noncomputable def FiniteWilsonGibbsCanonicalGaugeFieldData.toGlobalObservationData
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonGibbsCanonicalGaugeFieldData W) :
     FiniteWilsonGibbsGlobalObservationData W where
   fieldValue := fun _ => (W.system D.sourceScale).Gauge
-  fieldValueMeasurableSpace := fun _ => D.gaugeMeasurableSpace
+  fieldValueMeasurableSpace := fun _ => (W.system D.sourceScale).gaugeMeasurableSpace
   sourceScale := D.sourceScale
   globalObserve := D.globalObserve
   globalObserve_measurable := D.globalObserve_measurable
@@ -127,7 +123,7 @@ def FiniteWilsonGibbsCanonicalGaugeFieldData.toFaithfulGlobalObservation
 noncomputable def FiniteWilsonGibbsCanonicalGaugeFieldData.toInteractionWitness
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonGibbsCanonicalGaugeFieldData W)
-    [Nontrivial (W.system D.sourceScale).Configuration]
+    [Nontrivial (W.system D.realization.sourceScale).Configuration]
     [∀ x, DiscreteMeasurableSpace (D.realization.fieldValue x)] :
     FiniteWilsonGibbsCylinderInteractionWitness D.realization :=
   D.toCanonicalEdgeObservation.toInteractionWitness
