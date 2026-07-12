@@ -69,6 +69,16 @@ theorem orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_proj
   rw [hPtPs x, add_zero] at h
   exact h
 
+/-- The reverse composition of two disjoint spectral projections also vanishes. -/
+theorem orthogonalProjectionValuedSetFunction_disjoint_reverse_composition_zero
+    {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (P : OrthogonalProjectionValuedSetFunction H)
+    {s t : Set ℝ} (hst : Disjoint s t) (x : H) :
+    P.projection t (P.projection s x) = 0 := by
+  exact
+    orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
+      P t s hst.symm x
+
 /-- Every nonzero singleton spectral range lies in `Ω⊥` using only the PVM laws
 already stored in the reconstructed model. -/
 theorem explicit_wightman_os_nonzero_pvm_range_mem_vacuumOrthogonal_canonical
