@@ -19,6 +19,9 @@ ROOT = Path.cwd()
 BUILD_LIB = ROOT / ".lake" / "build" / "lib" / "lean"
 
 RECENT_FRONTIER = [
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventClosedRange.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventSurjective.lean"),
+    Path("MGAP4D/MathlibAnalytic/ExplicitWightmanOSExactGapPVMOpenSupportCore.lean"),
     Path("MGAP4D/MathlibAnalytic/WightmanOSCanonicalRestrictedHamiltonianRealResolvent.lean"),
     Path("MGAP4D/MathlibAnalytic/WightmanOSPVMDisjointCompositionFromFiniteAdditivity.lean"),
     Path("MGAP4D/MathlibAnalytic/ExplicitWightmanOSScalarSupportToPVMOpenSupport.lean"),
