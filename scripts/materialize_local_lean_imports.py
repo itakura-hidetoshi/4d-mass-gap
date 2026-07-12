@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Materialize missing local Lean import artifacts before changed-file checks.
+"""Materialize only direct missing local Lean imports for changed leaf files.
 
-The fast lane normally elaborates only changed leaf modules.  A newly merged
-local module may be absent from the restored Lake cache, causing direct
-elaboration to fall back to a much larger transitive build.  This helper walks
-only the local MGAP4D import closure needed by changed files and emits missing
-`.olean` files in dependency order.
+A newly merged leaf may be absent from the restored cache.  Compiling the full
+transitive local closure can exceed the fast-check budget, so this helper emits
+only missing direct MGAP4D imports.  Their older dependencies are expected to be
+present in the restored project cache; the normal changed-file check remains the
+source of truth for the changed modules themselves.
 """
 
 from __future__ import annotations
@@ -28,17 +28,18 @@ def changed_lean_files(base: str) -> list[Path]:
     ]
     for command in commands:
         result = subprocess.run(command, text=True, capture_output=True)
-        if result.returncode == 0:
-            files = []
-            for raw in result.stdout.splitlines():
-                path = Path(raw)
-                if (
-                    path.suffix == ".lean"
-                    and (raw == "MGAP4D.lean" or raw.startswith("MGAP4D/"))
-                    and path not in AGGREGATE_ROOTS
-                ):
-                    files.append(path)
-            return sorted(set(files))
+        if result.returncode != 0:
+            continue
+        files: list[Path] = []
+        for raw in result.stdout.splitlines():
+            path = Path(raw)
+            if (
+                path.suffix == ".lean"
+                and (raw == "MGAP4D.lean" or raw.startswith("MGAP4D/"))
+                and path not in AGGREGATE_ROOTS
+            ):
+                files.append(path)
+        return sorted(set(files))
     raise RuntimeError(f"cannot compute changed files from {base!r} or HEAD^")
 
 
@@ -50,11 +51,11 @@ def output_path(source: Path) -> Path:
     return BUILD_LIB / source.with_suffix(".olean")
 
 
-def local_imports(source: Path) -> list[Path]:
+def direct_local_imports(source: Path) -> list[Path]:
     imports: list[Path] = []
     for line in source.read_text(encoding="utf-8").splitlines():
         match = IMPORT_RE.match(line)
-        if not match:
+        if match is None:
             continue
         module = match.group(1)
         if not module.startswith("MGAP4D"):
@@ -65,65 +66,41 @@ def local_imports(source: Path) -> list[Path]:
     return imports
 
 
-def dependency_order(targets: list[Path]) -> list[Path]:
-    changed = set(targets)
-    permanent: set[Path] = set()
-    temporary: set[Path] = set()
-    ordered: list[Path] = []
-
-    def visit(source: Path, force: bool = False) -> None:
-        if source in permanent:
-            return
-        if source in temporary:
-            raise RuntimeError(f"local Lean import cycle at {source}")
-        if not source.is_file():
-            raise FileNotFoundError(source)
-
-        must_build = force or source in changed or not output_path(source).is_file()
-        if not must_build:
-            permanent.add(source)
-            return
-
-        temporary.add(source)
-        for dependency in local_imports(source):
-            visit(dependency)
-        temporary.remove(source)
-        permanent.add(source)
-        ordered.append(source)
-
-    for target in targets:
-        visit(target, force=True)
-    return ordered
-
-
 def compile_source(source: Path) -> None:
     output = output_path(source)
     output.parent.mkdir(parents=True, exist_ok=True)
-    command = [
-        "lake",
-        "env",
-        "lean",
-        "-DautoImplicit=false",
-        "-o",
-        str(output),
-        str(source),
-    ]
-    print(f"[fast] materialize local Lean artifact: {source}", flush=True)
-    subprocess.run(command, check=True)
+    print(f"[fast] materialize direct local Lean import: {source}", flush=True)
+    subprocess.run(
+        [
+            "lake",
+            "env",
+            "lean",
+            "-DautoImplicit=false",
+            "-o",
+            str(output),
+            str(source),
+        ],
+        check=True,
+    )
 
 
 def main() -> int:
     base = sys.argv[1] if len(sys.argv) > 1 else "origin/main"
     targets = changed_lean_files(base)
-    if not targets:
-        print("[fast] no changed Lean leaf modules to materialize")
+    changed = set(targets)
+    dependencies = sorted(
+        {
+            dependency
+            for target in targets
+            for dependency in direct_local_imports(target)
+            if dependency not in changed and not output_path(dependency).is_file()
+        }
+    )
+    if not dependencies:
+        print("[fast] no missing direct local Lean imports")
         return 0
-    ordered = dependency_order(targets)
-    print("[fast] local Lean materialization order:")
-    for source in ordered:
-        print(f"  {source}")
-    for source in ordered:
-        compile_source(source)
+    for dependency in dependencies:
+        compile_source(dependency)
     return 0
 
 
