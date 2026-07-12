@@ -199,10 +199,9 @@ theorem pvmSimpleFuncSpectralIntegralOperator_zero
     [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (P : OrthogonalProjectionValuedSetFunction H) :
     pvmSimpleFuncSpectralIntegralOperator P (0 : SimpleFunc ℝ ℝ) = 0 := by
-  ext x
-  rw [pvmSimpleFuncSpectralIntegralOperator_apply]
-  unfold pvmFiniteSimpleSpectralIntegral
-  simp
+  simpa using
+    (pvmSimpleFuncSpectralIntegralOperator_sub P
+      (0 : SimpleFunc ℝ ℝ) (0 : SimpleFunc ℝ ℝ))
 
 /-- The constant-one simple function integrates to the identity operator. -/
 theorem pvmSimpleFuncSpectralIntegralOperator_one
@@ -214,7 +213,7 @@ theorem pvmSimpleFuncSpectralIntegralOperator_one
   ext x
   rw [pvmSimpleFuncSpectralIntegralOperator_apply]
   unfold pvmFiniteSimpleSpectralIntegral
-  simp [pvmSimpleFuncFiber, P.univ_apply]
+  simp [SimpleFunc.range_one, pvmSimpleFuncFiber, P.univ_apply]
 
 /-- The measurable indicator as a Mathlib simple real function. -/
 noncomputable def pvmSimpleFuncIndicator
@@ -223,7 +222,8 @@ noncomputable def pvmSimpleFuncIndicator
 
 @[simp] theorem pvmSimpleFuncIndicator_apply
     (s : Set ℝ) (hs : MeasurableSet s) (t : ℝ) :
-    pvmSimpleFuncIndicator s hs t = if t ∈ s then 1 else 0 :=
+    pvmSimpleFuncIndicator s hs t = if t ∈ s then 1 else 0 := by
+  classical
   rfl
 
 /-- The PVM integral of a measurable simple indicator is its spectral
@@ -254,15 +254,34 @@ theorem pvmSimpleFuncSpectralIntegralOperator_indicator
       ext x
       simp [P.univ_apply]
     · have hsNonempty : s.Nonempty := Set.nonempty_iff_ne_empty.mpr hEmpty
-      have hRange : (pvmSimpleFuncIndicator s hs).range = {1, 0} := by
-        simpa [pvmSimpleFuncIndicator] using
-          (SimpleFunc.range_indicator hs hsNonempty hUniv (1 : ℝ) 0)
+      let c1 : (pvmSimpleFuncIndicator s hs).range := by
+        refine ⟨1, ?_⟩
+        apply SimpleFunc.mem_range.mpr
+        rcases hsNonempty with ⟨t, ht⟩
+        refine ⟨t, ?_⟩
+        simp [pvmSimpleFuncIndicator, ht]
       ext x
       rw [pvmSimpleFuncSpectralIntegralOperator_apply]
       unfold pvmFiniteSimpleSpectralIntegral
-      rw [hRange]
-      simp [pvmSimpleFuncIndicator, pvmSimpleFuncFiber,
-        SimpleFunc.piecewise_apply, hs]
+      rw [Finset.sum_eq_single c1]
+      · have hFiber :
+            pvmSimpleFuncFiber (pvmSimpleFuncIndicator s hs) c1 = s := by
+          ext t
+          simp [pvmSimpleFuncFiber, pvmSimpleFuncIndicator, c1]
+        simp [c1, hFiber]
+      · intro c hc hne
+        have hcZero : (c : ℝ) = 0 := by
+          rcases SimpleFunc.mem_range.mp c.property with ⟨t, ht⟩
+          by_cases hts : t ∈ s
+          · have hcOne : (c : ℝ) = 1 := by
+              simpa [pvmSimpleFuncIndicator, hts] using ht.symm
+            exfalso
+            apply hne
+            apply Subtype.ext
+            simpa [c1] using hcOne
+          · simpa [pvmSimpleFuncIndicator, hts] using ht.symm
+        simp [hcZero]
+      · simp
 
 /-- A constant sequence gives an exact uniform simple approximation of a simple
 function. -/
