@@ -68,7 +68,8 @@ theorem ExplicitWightmanOSCanonicalRestrictedPVMCompletedBoundedBorelSpectralInt
     (hZero :
       M.spectralPVM.projection (Metric.ball E ε) (ψ : M.H) = 0) :
     ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
-      M.canonicalVacuumOrthogonalHamiltonian.realShift E x = ψ := by
+      M.canonicalVacuumOrthogonalHamiltonian x -
+          E • (x : M.VacuumOrthogonalHilbert) = ψ := by
   let f := pvmSpectralBallTruncatedReciprocal E ε hε
   let i := pvmBoundedBorelIndicator (Metric.ball E ε)
     Metric.isOpen_ball.measurableSet
@@ -110,7 +111,8 @@ theorem ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph.ballVanis
     (hZero :
       M.spectralPVM.projection (Metric.ball E ε) (ψ : M.H) = 0) :
     ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
-      M.canonicalVacuumOrthogonalHamiltonian.realShift E x = ψ := by
+      M.canonicalVacuumOrthogonalHamiltonian x -
+          E • (x : M.VacuumOrthogonalHilbert) = ψ := by
   exact G.toCompletedBoundedBorelSpectralIntegral.ballVanish_has_preimage
     E ε hε ψ hZero
 
