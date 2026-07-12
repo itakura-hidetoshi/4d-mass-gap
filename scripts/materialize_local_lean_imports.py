@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Materialize the recent local Lean frontier needed by changed leaf files.
 
-The restored cache predates several consecutive PVM and functional-calculus PRs.
-Recursing through the entire repository import graph exceeds the fast-check
-budget, so this helper compiles only the known recent frontier, in dependency
-order, and then lets the normal changed-file check elaborate the changed leaf.
+The restored cache predates consecutive generator, Hamiltonian, PVM, and
+functional-calculus PRs.  Building the whole repository exceeds the fast-check
+budget, so this helper compiles only that bounded frontier in dependency order.
 Compiler diagnostics are mirrored to the standard fast-check artifact path.
 """
 
@@ -19,6 +18,30 @@ ROOT = Path.cwd()
 BUILD_LIB = ROOT / ".lake" / "build" / "lib" / "lean"
 
 RECENT_FRONTIER = [
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSDenseStateMap.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSPositiveTimeContraction.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSStrongContinuity.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSInfinitesimalGenerator.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonian.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteVolumeMassGapTransfer.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSPhysicalOrbitContinuity.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSTimeAverage.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSTimeAverageConvergence.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSTimeAverageGeneratorDomain.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianNonnegative.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianClosable.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianLinearPMapClosure.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianNonnegative.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplacePrimitiveDerivative.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplaceSemigroupAction.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplaceGeneratorValue.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSRightHamiltonianResolventLowerBound.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplaceHamiltonianDomain.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSFiniteLaplaceGeneratorDomain.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSurjectiveCore.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSurjective.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSClosedRightHamiltonianSelfAdjoint.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCore.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalDenseDomain.lean"),
