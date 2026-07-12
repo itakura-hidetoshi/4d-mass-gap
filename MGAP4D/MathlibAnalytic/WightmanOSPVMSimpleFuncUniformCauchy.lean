@@ -226,6 +226,7 @@ def pvmSimpleFuncPairSpectralIntegralOperator
       ∑ c : (f.pair g).range,
         coefficient (c : ℝ × ℝ) •
           P.projection (pvmSimpleFuncPairFiber f g c) x := by
+  unfold pvmSimpleFuncPairSpectralIntegralOperator
   rw [pvmFiniteSimpleSpectralIntegralOperator_apply]
   rfl
 
@@ -480,8 +481,8 @@ theorem pvmSimpleFunc_tendsto_completedOperatorOfUniformCauchy
       atTop
       (𝓝 (pvmSimpleFuncCompletedOperatorOfUniformCauchy P u hu)) := by
   exact
-    (pvmSimpleFuncOperatorCauchyApproximationOfUniformCauchy P u hu).
-      tendsto_completedOperator
+    PVMSimpleFuncOperatorCauchyApproximation.tendsto_completedOperator
+      (pvmSimpleFuncOperatorCauchyApproximationOfUniformCauchy P u hu)
 
 end
 
