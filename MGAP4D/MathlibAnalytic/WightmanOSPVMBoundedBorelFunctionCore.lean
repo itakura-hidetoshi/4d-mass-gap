@@ -8,22 +8,23 @@ open Set
 
 noncomputable section
 
-/-- A real Borel function equipped with an explicit uniform bound. -/
-structure ExplicitBoundedBorelRealFunction where
+/-- A real Borel function equipped with an explicit uniform bound for the
+standalone PVM integration construction. -/
+structure PVMBoundedBorelRealFunction where
   toFun : ℝ → ℝ
   measurable_toFun : Measurable toFun
   bounded_toFun : ∃ C : ℝ, ∀ t : ℝ, ‖toFun t‖ ≤ C
 
 /-- The constant-one bounded Borel function. -/
-def explicitBoundedBorelOne : ExplicitBoundedBorelRealFunction where
+def pvmBoundedBorelOne : PVMBoundedBorelRealFunction where
   toFun := fun _ => 1
   measurable_toFun := measurable_const
   bounded_toFun := ⟨1, by intro t; simp⟩
 
 /-- Indicator of a measurable real set as a bounded Borel function. -/
-def explicitBoundedBorelIndicator
+def pvmBoundedBorelIndicator
     (s : Set ℝ) (hs : MeasurableSet s) :
-    ExplicitBoundedBorelRealFunction := by
+    PVMBoundedBorelRealFunction := by
   classical
   exact
     { toFun := fun t => if t ∈ s then 1 else 0
@@ -35,9 +36,9 @@ def explicitBoundedBorelIndicator
         by_cases ht : t ∈ s <;> simp [ht] }
 
 /-- Difference of two bounded Borel functions. -/
-def explicitBoundedBorelSub
-    (f g : ExplicitBoundedBorelRealFunction) :
-    ExplicitBoundedBorelRealFunction where
+def pvmBoundedBorelSub
+    (f g : PVMBoundedBorelRealFunction) :
+    PVMBoundedBorelRealFunction where
   toFun := fun t => f.toFun t - g.toFun t
   measurable_toFun := f.measurable_toFun.sub g.measurable_toFun
   bounded_toFun := by
