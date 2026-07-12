@@ -92,8 +92,8 @@ noncomputable def realShiftAmbientInverse
         apply (A.realShift_injective_of_surjective_of_selfAdjoint
           hSelf E hSurjective)
         rw [hShiftY]
-        exact A.realShiftLinearEquivOfSurjective_apply_symm_apply
-          hSelf E hSurjective x
+        exact (A.realShiftLinearEquivOfSurjective_apply_symm_apply
+          hSelf E hSurjective x).symm
       change y =
         A.realShiftAmbientInverseLinearMap hSelf E hSurjective x
       calc
@@ -157,12 +157,14 @@ theorem norm_explicitSpectralBallShiftIndicator_le
     {E ε : ℝ} (hε : 0 ≤ ε) (t : ℝ) :
     ‖(explicitSpectralBallShiftIndicator E ε hε).toFun t‖ ≤ ε := by
   by_cases ht : t ∈ Metric.ball E ε
-  · have hdist : |t - E| ≤ ε := by
-      have hdistLt : dist t E < ε := Metric.mem_ball.mp ht
+  · have hdistLt : dist t E < ε := Metric.mem_ball.mp ht
+    have hdist : |t - E| ≤ ε := by
       simpa [Real.dist_eq] using hdistLt.le
-    simpa [explicitSpectralBallShiftIndicator, ht,
+    simpa [explicitSpectralBallShiftIndicator, hdistLt,
       Real.norm_eq_abs] using hdist
-  · simpa [explicitSpectralBallShiftIndicator, ht] using hε
+  · have hdist : ¬dist t E < ε := by
+      simpa only [Metric.mem_ball] using ht
+    simpa [explicitSpectralBallShiftIndicator, hdist] using hε
 
 /-- Bounded Borel spectral integration together with the standard contraction
 estimate and reduction of the shifted Hamiltonian by spectral projections. -/
