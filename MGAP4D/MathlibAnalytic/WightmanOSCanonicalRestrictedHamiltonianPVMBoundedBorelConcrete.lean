@@ -200,7 +200,8 @@ structure ExplicitWightmanOSCanonicalRestrictedPVMCompletedBoundedBorelSpectralI
       ∀ ψ : M.VacuumOrthogonalHilbert,
         ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
           (x : M.VacuumOrthogonalHilbert) = spectralIntegral f ψ ∧
-            M.canonicalVacuumOrthogonalHamiltonian.realShift E x =
+            M.canonicalVacuumOrthogonalHamiltonian x -
+                E • (x : M.VacuumOrthogonalHilbert) =
               spectralIntegral g ψ
 
 /-- The sole residual compatibility needed to attach the actual completed PVM
@@ -214,7 +215,8 @@ structure ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph
         ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
           (x : M.VacuumOrthogonalHilbert) =
               M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral f ψ ∧
-            M.canonicalVacuumOrthogonalHamiltonian.realShift E x =
+            M.canonicalVacuumOrthogonalHamiltonian x -
+                E • (x : M.VacuumOrthogonalHilbert) =
               M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral g ψ
 
 /-- Concrete constructor: identity, subtraction, and indicator laws come from
