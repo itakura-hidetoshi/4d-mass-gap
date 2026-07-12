@@ -19,6 +19,9 @@ ROOT = Path.cwd()
 BUILD_LIB = ROOT / ".lake" / "build" / "lib" / "lean"
 
 RECENT_FRONTIER = [
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCore.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalDenseDomain.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalSelfAdjoint.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolvent.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventClosedRange.lean"),
