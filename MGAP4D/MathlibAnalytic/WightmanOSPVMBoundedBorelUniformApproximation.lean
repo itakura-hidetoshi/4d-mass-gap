@@ -14,7 +14,7 @@ noncomputable section
 /-- Integer floor indices obtained by quantizing a bounded Borel real function at
 mesh size `1 / (n + 1)`.  Boundedness makes the integer range finite. -/
 noncomputable def explicitBoundedBorelFloorIndexSimpleFunc
-    (F : ExplicitBoundedBorelRealFunction) (n : ℕ) : SimpleFunc ℝ ℤ where
+    (F : PVMBoundedBorelRealFunction) (n : ℕ) : SimpleFunc ℝ ℤ where
   toFun := fun t => ⌊(((n : ℝ) + 1) * F.toFun t)⌋
   finite_range' := by
     obtain ⟨C, hC⟩ := F.bounded_toFun
@@ -41,19 +41,19 @@ noncomputable def explicitBoundedBorelFloorIndexSimpleFunc
 
 /-- The canonical lower-grid simple approximation of a bounded Borel function. -/
 noncomputable def explicitBoundedBorelSimpleApproximation
-    (F : ExplicitBoundedBorelRealFunction) (n : ℕ) : SimpleFunc ℝ ℝ :=
+    (F : PVMBoundedBorelRealFunction) (n : ℕ) : SimpleFunc ℝ ℝ :=
   (explicitBoundedBorelFloorIndexSimpleFunc F n).map
     (fun z : ℤ => (z : ℝ) / ((n : ℝ) + 1))
 
 @[simp] theorem explicitBoundedBorelSimpleApproximation_apply
-    (F : ExplicitBoundedBorelRealFunction) (n : ℕ) (t : ℝ) :
+    (F : PVMBoundedBorelRealFunction) (n : ℕ) (t : ℝ) :
     explicitBoundedBorelSimpleApproximation F n t =
       (⌊(((n : ℝ) + 1) * F.toFun t)⌋ : ℝ) / ((n : ℝ) + 1) :=
   rfl
 
 /-- The lower-grid approximation error is strictly smaller than its mesh. -/
 theorem explicitBoundedBorelSimpleApproximation_error_lt
-    (F : ExplicitBoundedBorelRealFunction) (n : ℕ) (t : ℝ) :
+    (F : PVMBoundedBorelRealFunction) (n : ℕ) (t : ℝ) :
     ‖explicitBoundedBorelSimpleApproximation F n t - F.toFun t‖ <
       1 / ((n : ℝ) + 1) := by
   let K : ℝ := (n : ℝ) + 1
@@ -89,7 +89,7 @@ theorem explicitBoundedBorelSimpleApproximation_error_lt
 /-- A sequence of simple functions converging uniformly to one explicit bounded
 Borel function. -/
 structure ExplicitBoundedBorelSimpleUniformApproximation
-    (F : ExplicitBoundedBorelRealFunction) where
+    (F : PVMBoundedBorelRealFunction) where
   simple : ℕ → SimpleFunc ℝ ℝ
   uniform_tendsto :
     ∀ ε : ℝ, 0 < ε →
@@ -98,7 +98,7 @@ structure ExplicitBoundedBorelSimpleUniformApproximation
 
 /-- The floor-grid sequence is a concrete uniform simple approximation. -/
 noncomputable def explicitBoundedBorelCanonicalSimpleUniformApproximation
-    (F : ExplicitBoundedBorelRealFunction) :
+    (F : PVMBoundedBorelRealFunction) :
     ExplicitBoundedBorelSimpleUniformApproximation F where
   simple := explicitBoundedBorelSimpleApproximation F
   uniform_tendsto := by
@@ -119,7 +119,7 @@ noncomputable def explicitBoundedBorelCanonicalSimpleUniformApproximation
 /-- Uniform convergence to one bounded Borel function implies the simple-function
 sequence is uniformly Cauchy. -/
 theorem ExplicitBoundedBorelSimpleUniformApproximation.uniformCauchy
-    {F : ExplicitBoundedBorelRealFunction}
+    {F : PVMBoundedBorelRealFunction}
     (A : ExplicitBoundedBorelSimpleUniformApproximation F) :
     PVMSimpleFuncUniformCauchy A.simple := by
   intro ε hε
@@ -150,7 +150,7 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.uniformCauchy
 noncomputable def ExplicitBoundedBorelSimpleUniformApproximation.completedOperator
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    {F : ExplicitBoundedBorelRealFunction}
+    {F : PVMBoundedBorelRealFunction}
     (P : OrthogonalProjectionValuedSetFunction H)
     (A : ExplicitBoundedBorelSimpleUniformApproximation F) : H →L[ℝ] H :=
   pvmSimpleFuncCompletedOperatorOfUniformCauchy P A.simple A.uniformCauchy
@@ -160,7 +160,7 @@ the completed operator. -/
 theorem ExplicitBoundedBorelSimpleUniformApproximation.tendsto_completedOperator
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    {F : ExplicitBoundedBorelRealFunction}
+    {F : PVMBoundedBorelRealFunction}
     (P : OrthogonalProjectionValuedSetFunction H)
     (A : ExplicitBoundedBorelSimpleUniformApproximation F) :
     Tendsto
@@ -174,7 +174,7 @@ completion. -/
 theorem explicitBoundedBorelSimpleUniformApproximation_completedOperator_eq
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    {F : ExplicitBoundedBorelRealFunction}
+    {F : PVMBoundedBorelRealFunction}
     (P : OrthogonalProjectionValuedSetFunction H)
     (A B : ExplicitBoundedBorelSimpleUniformApproximation F) :
     A.completedOperator P = B.completedOperator P := by
@@ -241,7 +241,7 @@ noncomputable def pvmBoundedBorelSpectralIntegralOperator
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H)
-    (F : ExplicitBoundedBorelRealFunction) : H →L[ℝ] H :=
+    (F : PVMBoundedBorelRealFunction) : H →L[ℝ] H :=
   (explicitBoundedBorelCanonicalSimpleUniformApproximation F).completedOperator P
 
 /-- The canonical floor-grid simple integrals converge in operator norm to the
@@ -250,7 +250,7 @@ theorem pvmSimpleFunc_tendsto_boundedBorelSpectralIntegralOperator
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H)
-    (F : ExplicitBoundedBorelRealFunction) :
+    (F : PVMBoundedBorelRealFunction) :
     Tendsto
       (fun n => pvmSimpleFuncSpectralIntegralOperator P
         (explicitBoundedBorelSimpleApproximation F n))
@@ -263,7 +263,7 @@ completes to the canonical bounded Borel spectral integral. -/
 theorem ExplicitBoundedBorelSimpleUniformApproximation.completedOperator_eq_canonical
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    {F : ExplicitBoundedBorelRealFunction}
+    {F : PVMBoundedBorelRealFunction}
     (P : OrthogonalProjectionValuedSetFunction H)
     (A : ExplicitBoundedBorelSimpleUniformApproximation F) :
     A.completedOperator P = pvmBoundedBorelSpectralIntegralOperator P F := by
