@@ -45,7 +45,8 @@ theorem ExplicitWightmanOSCanonicalRestrictedPVMResolventCompatibility.mem_realS
         ∀ U : Set ℝ, E ∈ U → IsOpen U →
           M.spectralPVM.projection U (ψ : M.H) ≠ 0 := by
   classical
-  simp only [LinearPMap.realBijectiveSpectrum, Set.mem_compl_iff]
+  simp only [LinearPMap.realBijectiveSpectrum,
+    LinearPMap.realBijectiveResolventSet, Set.mem_compl_iff]
   rw [C.realShift_bijective_iff_vectorwise_pvm_localVanish E]
   constructor
   · intro hNotAllLocalVanish
