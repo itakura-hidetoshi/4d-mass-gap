@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Materialize the recent local Lean frontier needed by changed leaf files.
 
-The restored cache predates consecutive generator, Hamiltonian, PVM, and
-functional-calculus PRs.  Building the whole repository exceeds the fast-check
-budget, so this helper compiles only that bounded frontier in dependency order.
-Compiler diagnostics are mirrored to the standard fast-check artifact path.
+The restored cache predates consecutive OS reconstruction, generator,
+Hamiltonian, PVM, and functional-calculus PRs.  Building the whole repository
+exceeds the fast-check budget, so this helper compiles only that bounded frontier
+in dependency order.  Compiler diagnostics are mirrored to the standard
+fast-check artifact path.
 """
 
 from __future__ import annotations
@@ -18,6 +19,10 @@ ROOT = Path.cwd()
 BUILD_LIB = ROOT / ".lake" / "build" / "lib" / "lean"
 
 RECENT_FRONTIER = [
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSBilinearForm.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSHilbertCompletion.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSVacuum.lean"),
+    Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSContinuumVacuum.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSDenseStateMap.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSPositiveTimeContraction.lean"),
     Path("MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSStrongContinuity.lean"),
