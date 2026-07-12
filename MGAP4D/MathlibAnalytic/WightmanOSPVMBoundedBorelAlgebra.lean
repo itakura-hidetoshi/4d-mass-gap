@@ -213,7 +213,23 @@ theorem pvmSimpleFuncSpectralIntegralOperator_one
   ext x
   rw [pvmSimpleFuncSpectralIntegralOperator_apply]
   unfold pvmFiniteSimpleSpectralIntegral
-  simp [SimpleFunc.range_one, pvmSimpleFuncFiber, P.univ_apply]
+  have hSum :=
+    orthogonalProjectionValuedSetFunction_projection_sum_eq_of_iUnion_eq_univ
+      P (pvmSimpleFuncFiber (1 : SimpleFunc ℝ ℝ))
+        (pvmSimpleFuncFiber_pairwise_disjoint (1 : SimpleFunc ℝ ℝ))
+        (pvmSimpleFuncFiber_iUnion_eq_univ (1 : SimpleFunc ℝ ℝ)) x
+  calc
+    (∑ c : (1 : SimpleFunc ℝ ℝ).range,
+        (c : ℝ) • P.projection (pvmSimpleFuncFiber 1 c) x) =
+      ∑ c : (1 : SimpleFunc ℝ ℝ).range,
+        P.projection (pvmSimpleFuncFiber 1 c) x := by
+      apply Finset.sum_congr rfl
+      intro c hc
+      have hcOne : (c : ℝ) = 1 := by
+        rcases SimpleFunc.mem_range.mp c.property with ⟨t, ht⟩
+        simpa using ht.symm
+      simp [hcOne]
+    _ = x := hSum
 
 /-- The measurable indicator as a Mathlib simple real function. -/
 noncomputable def pvmSimpleFuncIndicator
@@ -222,7 +238,8 @@ noncomputable def pvmSimpleFuncIndicator
 
 @[simp] theorem pvmSimpleFuncIndicator_apply
     (s : Set ℝ) (hs : MeasurableSet s) (t : ℝ) :
-    pvmSimpleFuncIndicator s hs t = if t ∈ s then 1 else 0 := by
+    pvmSimpleFuncIndicator s hs t =
+      Set.indicator s (fun _ : ℝ => (1 : ℝ)) t := by
   classical
   rfl
 
@@ -267,7 +284,8 @@ theorem pvmSimpleFuncSpectralIntegralOperator_indicator
       · have hFiber :
             pvmSimpleFuncFiber (pvmSimpleFuncIndicator s hs) c1 = s := by
           ext t
-          simp [pvmSimpleFuncFiber, pvmSimpleFuncIndicator, c1]
+          by_cases ht : t ∈ s <;>
+            simp [pvmSimpleFuncFiber, pvmSimpleFuncIndicator, c1, ht]
         simp [c1, hFiber]
       · intro c hc hne
         have hcZero : (c : ℝ) = 0 := by
