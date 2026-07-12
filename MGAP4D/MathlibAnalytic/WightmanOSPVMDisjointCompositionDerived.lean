@@ -19,10 +19,16 @@ theorem orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_proj
       P.projection s (P.projection t z) +
           P.projection t (P.projection s z) = 0 := by
     have h := P.idempotent (s ∪ t) z
-    simp_rw [P.disjoint_additive s t hst] at h
+    rw [P.disjoint_additive s t hst (P.projection (s ∪ t) z),
+      P.disjoint_additive s t hst z] at h
     simp only [map_add, P.idempotent] at h
-    abel at h
-    exact h
+    calc
+      P.projection s (P.projection t z) +
+          P.projection t (P.projection s z) =
+          (P.projection s z + P.projection s (P.projection t z) +
+              (P.projection t (P.projection s z) + P.projection t z)) -
+            (P.projection s z + P.projection t z) := by abel
+      _ = 0 := by rw [h, sub_self]
   have hPtPs (z : H) :
       P.projection t (P.projection s z) = 0 := by
     let q : H := P.projection t (P.projection s z)
