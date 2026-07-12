@@ -82,16 +82,18 @@ noncomputable def realShiftAmbientInverse
         hSelf.isClosed.isSeqClosed (fun n => A.mem_graph (v n)) hPair
       rcases A.mem_graph_iff.mp hLimit with ⟨yDomain, hyVal, hAy⟩
       have hShiftY : A.realShift E yDomain = x := by
-        rw [A.realShift_apply, hAy, hyVal]
-        abel
+        calc
+          A.realShift E yDomain = A yDomain - E • (yDomain : H) := rfl
+          _ = (x + E • y) - E • y := by rw [hAy, hyVal]
+          _ = x := add_sub_cancel_right x (E • y)
       have hUnique :
           yDomain =
             (A.realShiftLinearEquivOfSurjective hSelf E hSurjective).symm x := by
         apply (A.realShift_injective_of_surjective_of_selfAdjoint
           hSelf E hSurjective)
         rw [hShiftY]
-        exact A.realShiftLinearEquivOfSurjective_apply_symm_apply
-          hSelf E hSurjective x
+        exact (A.realShiftLinearEquivOfSurjective_apply_symm_apply
+          hSelf E hSurjective x).symm
       change y =
         A.realShiftAmbientInverseLinearMap hSelf E hSurjective x
       calc
@@ -155,10 +157,14 @@ theorem norm_explicitSpectralBallShiftIndicator_le
     {E ε : ℝ} (hε : 0 ≤ ε) (t : ℝ) :
     ‖(explicitSpectralBallShiftIndicator E ε hε).toFun t‖ ≤ ε := by
   by_cases ht : t ∈ Metric.ball E ε
-  · have hdist := (Metric.mem_ball.mp ht).le
-    simpa [explicitSpectralBallShiftIndicator, ht,
-      Real.norm_eq_abs, Real.dist_eq] using hdist
-  · simpa [explicitSpectralBallShiftIndicator, ht] using hε
+  · have hdistLt : dist t E < ε := Metric.mem_ball.mp ht
+    have hdist : |t - E| ≤ ε := by
+      simpa [Real.dist_eq] using hdistLt.le
+    simpa [explicitSpectralBallShiftIndicator, hdistLt,
+      Real.norm_eq_abs] using hdist
+  · have hdist : ¬dist t E < ε := by
+      simpa only [Metric.mem_ball] using ht
+    simpa [explicitSpectralBallShiftIndicator, hdist] using hε
 
 /-- Bounded Borel spectral integration together with the standard contraction
 estimate and reduction of the shifted Hamiltonian by spectral projections. -/
