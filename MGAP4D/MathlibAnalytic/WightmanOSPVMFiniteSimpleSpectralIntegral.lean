@@ -274,6 +274,17 @@ theorem pvmFiniteSimpleSpectralIntegralOperator_opNorm_le
   exact pvmFiniteSimpleSpectralIntegral_norm_le
     P coefficients carrier hPairwise hCover C hC hBound x
 
+/-- Zero coefficients give the zero finite simple spectral-integral operator. -/
+theorem pvmFiniteSimpleSpectralIntegralOperator_zero_coefficients
+    {H ι : Type}
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [Fintype ι]
+    (P : OrthogonalProjectionValuedSetFunction H)
+    (carrier : ι → Set ℝ) :
+    pvmFiniteSimpleSpectralIntegralOperator P (fun _ : ι => 0) carrier = 0 := by
+  ext x
+  simp [pvmFiniteSimpleSpectralIntegralOperator]
+
 end
 
 end MathlibAnalytic
