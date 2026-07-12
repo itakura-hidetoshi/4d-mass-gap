@@ -73,16 +73,20 @@ theorem explicitBoundedBorel_one_sub_ballIndicator_eq_shift_mul_truncatedRecipro
         (explicitSpectralBallTruncatedReciprocal E ε hε).toFun t := by
   classical
   by_cases ht : t ∈ Metric.ball E ε
-  · simp [explicitBoundedBorelSub, explicitBoundedBorelOne,
+  · have hdist : dist t E < ε := Metric.mem_ball.mp ht
+    simp [explicitBoundedBorelSub, explicitBoundedBorelOne,
       explicitBoundedBorelIndicator,
-      explicitSpectralBallTruncatedReciprocal, ht,
-      spectralBallTruncatedReciprocal_of_mem ht]
-  · have hCancel :=
+      explicitSpectralBallTruncatedReciprocal,
+      spectralBallTruncatedReciprocal, hdist]
+  · have hdist : ¬ dist t E < ε := by
+      simpa only [Metric.mem_ball] using ht
+    have hCancel :=
       sub_mul_spectralBallTruncatedReciprocal
         (E := E) (ε := ε) (t := t) hε ht
     simpa [explicitBoundedBorelSub, explicitBoundedBorelOne,
       explicitBoundedBorelIndicator,
-      explicitSpectralBallTruncatedReciprocal, ht] using hCancel.symm
+      explicitSpectralBallTruncatedReciprocal,
+      spectralBallTruncatedReciprocal, hdist] using hCancel.symm
 
 /-- Actual bounded Borel spectral integral for the canonical restricted
 Hamiltonian.
