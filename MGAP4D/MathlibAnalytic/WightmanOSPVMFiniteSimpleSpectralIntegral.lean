@@ -135,8 +135,8 @@ theorem pvmFiniteSimpleSpectralIntegral_norm_sq
         (pvmFiniteSimpleSpectralIntegral P coefficients carrier x) =
       ∑ i : ι, ∑ j : ι,
         coefficients i * coefficients j *
-          inner ℝ (P.projection (carrier i) x)
-            (P.projection (carrier j) x) := by
+          inner ℝ (P.projection (carrier j) x)
+            (P.projection (carrier i) x) := by
       simp only [pvmFiniteSimpleSpectralIntegral, sum_inner, inner_sum,
         real_inner_smul_left, real_inner_smul_right]
       apply Finset.sum_congr rfl
@@ -152,9 +152,8 @@ theorem pvmFiniteSimpleSpectralIntegral_norm_sq
       · rw [real_inner_self_eq_norm_sq]
         ring
       · intro j hj hji
-        have hij : i ≠ j := Ne.symm hji
         rw [orthogonalProjectionValuedSetFunction_inner_projection_projection_eq_zero
-          P (hPairwise hij) x]
+          P (hPairwise hji) x]
         ring
       · simp
 
@@ -268,7 +267,8 @@ theorem pvmFiniteSimpleSpectralIntegralOperator_opNorm_le
     (C : ℝ) (hC : 0 ≤ C)
     (hBound : ∀ i : ι, |coefficients i| ≤ C) :
     ‖pvmFiniteSimpleSpectralIntegralOperator P coefficients carrier‖ ≤ C := by
-  apply ContinuousLinearMap.opNorm_le_bound hC
+  apply ContinuousLinearMap.opNorm_le_bound
+    (pvmFiniteSimpleSpectralIntegralOperator P coefficients carrier) hC
   intro x
   rw [pvmFiniteSimpleSpectralIntegralOperator_apply]
   exact pvmFiniteSimpleSpectralIntegral_norm_le
