@@ -19,6 +19,10 @@ ROOT = Path.cwd()
 BUILD_LIB = ROOT / ".lake" / "build" / "lib" / "lean"
 
 RECENT_FRONTIER = [
+    Path("MGAP4D/MathlibAnalytic/WightmanOSCanonicalRestrictedHamiltonianRealResolvent.lean"),
+    Path("MGAP4D/MathlibAnalytic/WightmanOSPVMDisjointCompositionFromFiniteAdditivity.lean"),
+    Path("MGAP4D/MathlibAnalytic/ExplicitWightmanOSScalarSupportToPVMOpenSupport.lean"),
+    Path("MGAP4D/MathlibAnalytic/WightmanOSCanonicalRestrictedHamiltonianPVMSpectralTheorem.lean"),
     Path("MGAP4D/MathlibAnalytic/WightmanOSCanonicalRestrictedHamiltonianPVMResolventLocalVanish.lean"),
     Path("MGAP4D/MathlibAnalytic/WightmanOSCanonicalRestrictedHamiltonianPVMFunctionalCalculusCore.lean"),
     Path("MGAP4D/MathlibAnalytic/WightmanOSCanonicalRestrictedHamiltonianPVMLocalFunctionalCalculus.lean"),
@@ -63,7 +67,7 @@ def compile_source(source: Path) -> None:
 
 def main() -> int:
     diagnostic_path().write_text("", encoding="utf-8")
-    del sys.argv  # The base ref is intentionally irrelevant to this bounded frontier.
+    del sys.argv
     compiled = False
     for source in RECENT_FRONTIER:
         if not source.is_file() or output_path(source).is_file():
