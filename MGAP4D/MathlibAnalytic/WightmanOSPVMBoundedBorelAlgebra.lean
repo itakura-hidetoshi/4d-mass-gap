@@ -9,10 +9,10 @@ open scoped BigOperators InnerProductSpace
 
 noncomputable section
 
-/-- Explicit bounded Borel functions are determined by their underlying function;
+/-- PVM bounded Borel functions are determined by their underlying function;
 the remaining fields are propositions. -/
-@[ext] theorem ExplicitBoundedBorelRealFunction.ext
-    {F G : ExplicitBoundedBorelRealFunction}
+@[ext] theorem PVMBoundedBorelRealFunction.ext
+    {F G : PVMBoundedBorelRealFunction}
     (h : F.toFun = G.toFun) : F = G := by
   cases F with
   | mk f hf hb =>
@@ -21,10 +21,10 @@ the remaining fields are propositions. -/
           cases h
           rfl
 
-/-- A Mathlib simple real function regarded as an explicitly bounded Borel
-function. -/
+/-- A Mathlib simple real function regarded as a bounded Borel function for the
+standalone PVM integral. -/
 noncomputable def explicitBoundedBorelOfSimpleFunc
-    (f : SimpleFunc ℝ ℝ) : ExplicitBoundedBorelRealFunction where
+    (f : SimpleFunc ℝ ℝ) : PVMBoundedBorelRealFunction where
   toFun := f
   measurable_toFun := f.measurable
   bounded_toFun := by
@@ -277,8 +277,7 @@ noncomputable def explicitBoundedBorelSimpleFuncUniformApproximation
     intro n hn t
     simpa [explicitBoundedBorelOfSimpleFunc] using hε
 
-/-- The completed bounded Borel integral agrees with the canonical integral on
-simple functions. -/
+/-- The completed bounded Borel integral agrees with simple functions. -/
 theorem pvmBoundedBorelSpectralIntegralOperator_ofSimpleFunc
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -309,12 +308,12 @@ theorem pvmBoundedBorelSpectralIntegralOperator_one
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H) :
-    pvmBoundedBorelSpectralIntegralOperator P explicitBoundedBorelOne =
+    pvmBoundedBorelSpectralIntegralOperator P pvmBoundedBorelOne =
       ContinuousLinearMap.id ℝ H := by
   have hOne :
-      explicitBoundedBorelOne =
+      pvmBoundedBorelOne =
         explicitBoundedBorelOfSimpleFunc (1 : SimpleFunc ℝ ℝ) := by
-    apply ExplicitBoundedBorelRealFunction.ext
+    apply PVMBoundedBorelRealFunction.ext
     funext t
     rfl
   rw [hOne, pvmBoundedBorelSpectralIntegralOperator_ofSimpleFunc,
@@ -328,12 +327,12 @@ theorem pvmBoundedBorelSpectralIntegralOperator_indicator
     (P : OrthogonalProjectionValuedSetFunction H)
     (s : Set ℝ) (hs : MeasurableSet s) :
     pvmBoundedBorelSpectralIntegralOperator P
-        (explicitBoundedBorelIndicator s hs) =
+        (pvmBoundedBorelIndicator s hs) =
       P.projection s := by
   have hIndicator :
-      explicitBoundedBorelIndicator s hs =
+      pvmBoundedBorelIndicator s hs =
         explicitBoundedBorelOfSimpleFunc (pvmSimpleFuncIndicator s hs) := by
-    apply ExplicitBoundedBorelRealFunction.ext
+    apply PVMBoundedBorelRealFunction.ext
     funext t
     rfl
   rw [hIndicator, pvmBoundedBorelSpectralIntegralOperator_ofSimpleFunc,
@@ -342,11 +341,11 @@ theorem pvmBoundedBorelSpectralIntegralOperator_indicator
 /-- Subtracting two uniform simple approximations gives a uniform approximation
 of the pointwise difference. -/
 noncomputable def explicitBoundedBorelSimpleUniformApproximationSub
-    {F G : ExplicitBoundedBorelRealFunction}
+    {F G : PVMBoundedBorelRealFunction}
     (A : ExplicitBoundedBorelSimpleUniformApproximation F)
     (B : ExplicitBoundedBorelSimpleUniformApproximation G) :
     ExplicitBoundedBorelSimpleUniformApproximation
-      (explicitBoundedBorelSub F G) where
+      (pvmBoundedBorelSub F G) where
   simple := fun n => A.simple n - B.simple n
   uniform_tendsto := by
     intro ε hε
@@ -385,9 +384,9 @@ theorem pvmBoundedBorelSpectralIntegralOperator_sub
     {H : Type}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H)
-    (F G : ExplicitBoundedBorelRealFunction) :
+    (F G : PVMBoundedBorelRealFunction) :
     pvmBoundedBorelSpectralIntegralOperator P
-        (explicitBoundedBorelSub F G) =
+        (pvmBoundedBorelSub F G) =
       pvmBoundedBorelSpectralIntegralOperator P F -
         pvmBoundedBorelSpectralIntegralOperator P G := by
   let A := explicitBoundedBorelCanonicalSimpleUniformApproximation F
@@ -428,7 +427,7 @@ theorem pvmBoundedBorelSpectralIntegralOperator_sub
     tendsto_nhds_unique (C.tendsto_completedOperator P) hTarget
   calc
     pvmBoundedBorelSpectralIntegralOperator P
-        (explicitBoundedBorelSub F G) = C.completedOperator P :=
+        (pvmBoundedBorelSub F G) = C.completedOperator P :=
       (C.completedOperator_eq_canonical P).symm
     _ = pvmBoundedBorelSpectralIntegralOperator P F -
         pvmBoundedBorelSpectralIntegralOperator P G := hCompleted
