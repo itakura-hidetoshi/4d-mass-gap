@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.WightmanOSPVMSimpleFuncUniformCauchy
-import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianPVMLocalFunctionalCalculus
+import MGAP4D.MathlibAnalytic.WightmanOSPVMBoundedBorelFunctionCore
 import Mathlib.MeasureTheory.Function.Floor
 import Mathlib.Tactic
 
