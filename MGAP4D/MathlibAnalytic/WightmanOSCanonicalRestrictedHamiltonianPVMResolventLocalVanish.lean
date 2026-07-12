@@ -46,7 +46,8 @@ theorem ExplicitWightmanOSCanonicalRestrictedPVMResolventCompatibility.mem_realS
           M.spectralPVM.projection U (ψ : M.H) ≠ 0 := by
   classical
   simp only [LinearPMap.realBijectiveSpectrum,
-    LinearPMap.realBijectiveResolventSet, Set.mem_compl_iff]
+    LinearPMap.realBijectiveResolventSet, Set.mem_compl_iff,
+    Set.mem_setOf_eq]
   rw [C.realShift_bijective_iff_vectorwise_pvm_localVanish E]
   constructor
   · intro hNotAllLocalVanish
@@ -143,9 +144,8 @@ theorem explicit_wightman_os_exact_gap_pvm_open_support_of_resolvent_pvm_localVa
       M.vacuumOrthogonalPVMOpenSupport =
         M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) :
     ExplicitWightmanOSExactGapPVMOpenSupportProp M
-      ((C.toCanonicalRestrictedPVMSpectralTheorem hSupport).
-        toCanonicalPVMOpenSupportBridge
-          hSelf D hExactSpectrum (ne_of_gt hGap.1))
+      ((C.toCanonicalRestrictedPVMSpectralTheorem hSupport).toCanonicalPVMOpenSupportBridge
+        hSelf D hExactSpectrum (ne_of_gt hGap.1))
       hGap hExactSpectrum := by
   exact
     explicit_wightman_os_exact_gap_pvm_open_support_of_canonical_spectralTheorem
