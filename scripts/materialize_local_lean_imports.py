@@ -3,13 +3,13 @@
 
 A newly merged leaf may be absent from the restored cache.  Compiling the full
 transitive local closure can exceed the fast-check budget, so this helper emits
-only missing direct MGAP4D imports.  Their older dependencies are expected to be
-present in the restored project cache; the normal changed-file check remains the
-source of truth for the changed modules themselves.
+only missing direct MGAP4D imports.  Compiler diagnostics are mirrored to the
+standard fast-check artifact path.
 """
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
@@ -66,22 +66,33 @@ def direct_local_imports(source: Path) -> list[Path]:
     return imports
 
 
+def diagnostic_path() -> Path:
+    runner_temp = Path(os.environ.get("RUNNER_TEMP", "/tmp"))
+    return runner_temp / "lean-fast.log"
+
+
 def compile_source(source: Path) -> None:
     output = output_path(source)
     output.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        "lake",
+        "env",
+        "lean",
+        "-DautoImplicit=false",
+        "-o",
+        str(output),
+        str(source),
+    ]
     print(f"[fast] materialize direct local Lean import: {source}", flush=True)
-    subprocess.run(
-        [
-            "lake",
-            "env",
-            "lean",
-            "-DautoImplicit=false",
-            "-o",
-            str(output),
-            str(source),
-        ],
-        check=True,
+    result = subprocess.run(command, text=True, capture_output=True)
+    combined = result.stdout + result.stderr
+    if combined:
+        print(combined, end="", flush=True)
+    diagnostic_path().write_text(
+        f"$ {' '.join(command)}\n{combined}", encoding="utf-8"
     )
+    if result.returncode != 0:
+        raise subprocess.CalledProcessError(result.returncode, command)
 
 
 def main() -> int:
