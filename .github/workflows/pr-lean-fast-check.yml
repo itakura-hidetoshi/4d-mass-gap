@@ -176,13 +176,6 @@ jobs:
           echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
           echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
 
-      - name: Materialize local Lean import closure
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        shell: bash
-        run: |
-          set -euxo pipefail
-          python3 scripts/materialize_local_lean_imports.py "${CHECK_CHANGED_LEAN_BASE_REF}"
-
       - name: Run changed Lean fast check
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
