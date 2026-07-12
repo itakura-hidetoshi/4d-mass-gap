@@ -10,7 +10,7 @@ noncomputable section
 orthogonality of disjoint spectral projection ranges.  Thus the disjoint
 composition-zero law is not an independent PVM axiom for the repository's
 projection-valued set-function interface. -/
-theorem OrthogonalProjectionValuedSetFunction.hasDisjointCompositionZero
+theorem orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (P : OrthogonalProjectionValuedSetFunction H) :
     P.HasDisjointCompositionZero := by
@@ -70,7 +70,10 @@ theorem explicit_wightman_os_nonzero_pvm_range_mem_vacuumOrthogonal_canonical
     {E : ℝ} (hE : E ≠ 0) (ψ : M.H) :
     M.spectralPVM.projection ({E} : Set ℝ) ψ ∈ M.vacuumOrthogonal := by
   exact explicit_wightman_os_nonzero_pvm_range_mem_vacuumOrthogonal
-    M M.spectralPVM.hasDisjointCompositionZero hE ψ
+    M
+    (orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
+      M.spectralPVM)
+    hE ψ
 
 /-- The canonical PVM laws and one nonzero spectral vector construct the
 vacuum-orthogonal spectrum bridge without a separate multiplication axiom. -/
@@ -79,7 +82,10 @@ def explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfCanonicalPVM
     (W : ExplicitWightmanOSNonzeroSpectralPVMWitness M) :
     ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M :=
   explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfPVM
-    M M.spectralPVM.hasDisjointCompositionZero W
+    M
+    (orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
+      M.spectralPVM)
+    W
 
 /-- The reconstructed PVM laws turn a relativistic mass gap into the physical
 spectral statement on `Ω⊥`, with no extra disjoint-composition input. -/
@@ -93,7 +99,10 @@ theorem explicit_wightman_os_canonical_pvm_vacuum_orthogonal_spectrum_gap
       (M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) ⊆ Set.Ici m ∧
       sInf (M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) = m := by
   exact explicit_wightman_os_pvm_vacuum_orthogonal_spectrum_gap
-    M M.spectralPVM.hasDisjointCompositionZero W hRelGap hmSpectrum
+    M
+    (orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
+      M.spectralPVM)
+    W hRelGap hmSpectrum
 
 /-- Exact-gap specialization with disjoint PVM orthogonality derived rather than
 assumed. -/
@@ -109,7 +118,10 @@ theorem explicit_wightman_os_canonical_pvm_vacuum_orthogonal_exact_gap_positive
       sInf (M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) =
         exactGapValueReal := by
   exact explicit_wightman_os_pvm_vacuum_orthogonal_exact_gap_positive
-    M M.spectralPVM.hasDisjointCompositionZero W hRelGap hExactSpectrum
+    M
+    (orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
+      M.spectralPVM)
+    W hRelGap hExactSpectrum
 
 /-- Full vacuum-orthogonal gap certificate from the canonical PVM laws and one
 nonzero spectral witness. -/
@@ -122,7 +134,10 @@ def explicitWightmanOSCanonicalPVMVacuumOrthogonalGapCertificate
     ExplicitWightmanOSVacuumOrthogonalGapCertificate M
       (explicitWightmanOSVacuumOrthogonalSpectrumBridgeOfCanonicalPVM M W) m :=
   explicitWightmanOSPVMVacuumOrthogonalGapCertificate
-    M M.spectralPVM.hasDisjointCompositionZero W hRelGap hmSpectrum
+    M
+    (orthogonalProjectionValuedSetFunction_hasDisjointCompositionZero_of_projectionLaws
+      M.spectralPVM)
+    W hRelGap hmSpectrum
 
 end
 
