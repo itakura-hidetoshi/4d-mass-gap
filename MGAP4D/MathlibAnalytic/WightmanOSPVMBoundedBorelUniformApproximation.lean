@@ -28,7 +28,9 @@ noncomputable def explicitBoundedBorelFloorIndexSimpleFunc
     have hLower : -C ≤ F.toFun t := (abs_le.mp hAbs).1
     have hUpper : F.toFun t ≤ C := (abs_le.mp hAbs).2
     constructor
-    · exact Int.floor_mono (mul_le_mul_of_nonneg_left hLower hK)
+    · apply Int.floor_mono
+      have h := mul_le_mul_of_nonneg_left hLower hK
+      simpa [K, mul_neg, neg_mul, mul_assoc] using h
     · exact Int.floor_mono (mul_le_mul_of_nonneg_left hUpper hK)
   measurableSet_fiber' := by
     intro z
@@ -74,7 +76,9 @@ theorem explicitBoundedBorelSimpleApproximation_error_lt
       F.toFun t - (z : ℝ) / K <
           ((z : ℝ) + 1) / K - (z : ℝ) / K :=
         sub_lt_sub_right hScaled _
-      _ = 1 / K := by field_simp
+      _ = 1 / K := by
+        field_simp [hK.ne']
+        ring
   change ‖(z : ℝ) / K - F.toFun t‖ < 1 / K
   calc
     ‖(z : ℝ) / K - F.toFun t‖ = F.toFun t - (z : ℝ) / K := by
@@ -123,16 +127,24 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.uniformCauchy
   obtain ⟨N, hN⟩ := A.uniform_tendsto (ε / 2) hε2
   refine ⟨N, ?_⟩
   intro m hm n hn t
-  calc
-    ‖A.simple m t - A.simple n t‖ ≤
+  have hTriangle :
+      ‖A.simple m t - A.simple n t‖ ≤
         ‖A.simple m t - F.toFun t‖ +
-          ‖F.toFun t - A.simple n t‖ :=
-      norm_sub_le _ _
-    _ = ‖A.simple m t - F.toFun t‖ +
           ‖A.simple n t - F.toFun t‖ := by
-      rw [norm_sub_rev]
-    _ < ε / 2 + ε / 2 := add_lt_add (hN m hm t) (hN n hn t)
-    _ = ε := by ring
+    calc
+      ‖A.simple m t - A.simple n t‖ =
+          ‖(A.simple m t - F.toFun t) -
+            (A.simple n t - F.toFun t)‖ := by
+              congr 1
+              ring
+      _ ≤ ‖A.simple m t - F.toFun t‖ +
+          ‖A.simple n t - F.toFun t‖ := norm_sub_le _ _
+  exact hTriangle.trans_lt <| by
+    calc
+      ‖A.simple m t - F.toFun t‖ +
+          ‖A.simple n t - F.toFun t‖ < ε / 2 + ε / 2 :=
+        add_lt_add (hN m hm t) (hN n hn t)
+      _ = ε := by ring
 
 /-- The completed PVM operator attached to any uniform simple approximation. -/
 noncomputable def ExplicitBoundedBorelSimpleUniformApproximation.completedOperator
@@ -166,7 +178,7 @@ theorem explicitBoundedBorelSimpleUniformApproximation_completedOperator_eq
     (P : OrthogonalProjectionValuedSetFunction H)
     (A B : ExplicitBoundedBorelSimpleUniformApproximation F) :
     A.completedOperator P = B.completedOperator P := by
-  apply tendsto_nhds_unique A.tendsto_completedOperator
+  apply tendsto_nhds_unique (A.tendsto_completedOperator P)
   rw [Metric.tendsto_atTop]
   intro ε hε
   have hε2 : 0 < ε / 2 := half_pos hε
@@ -174,23 +186,36 @@ theorem explicitBoundedBorelSimpleUniformApproximation_completedOperator_eq
   obtain ⟨NA, hNA⟩ := A.uniform_tendsto (ε / 4) hε4
   obtain ⟨NB, hNB⟩ := B.uniform_tendsto (ε / 4) hε4
   obtain ⟨NO, hNO⟩ :=
-    (Metric.tendsto_atTop.1 B.tendsto_completedOperator) (ε / 2) hε2
+    (Metric.tendsto_atTop.1 (B.tendsto_completedOperator P)) (ε / 2) hε2
   refine ⟨max (max NA NB) NO, ?_⟩
   intro n hn
-  have hnA : NA ≤ n := le_trans (le_max_left NA NB) (le_trans (le_max_left _ NO) hn)
-  have hnB : NB ≤ n := le_trans (le_max_right NA NB) (le_trans (le_max_left _ NO) hn)
+  have hnA : NA ≤ n :=
+    le_trans (le_max_left NA NB) (le_trans (le_max_left _ NO) hn)
+  have hnB : NB ≤ n :=
+    le_trans (le_max_right NA NB) (le_trans (le_max_left _ NO) hn)
   have hnO : NO ≤ n := le_trans (le_max_right (max NA NB) NO) hn
   have hPoint : ∀ t : ℝ, ‖A.simple n t - B.simple n t‖ ≤ ε / 2 := by
     intro t
-    calc
-      ‖A.simple n t - B.simple n t‖ ≤
+    have hTriangle :
+        ‖A.simple n t - B.simple n t‖ ≤
           ‖A.simple n t - F.toFun t‖ +
-            ‖F.toFun t - B.simple n t‖ := norm_sub_le _ _
-      _ = ‖A.simple n t - F.toFun t‖ +
-            ‖B.simple n t - F.toFun t‖ := by rw [norm_sub_rev]
-      _ < ε / 4 + ε / 4 := add_lt_add (hNA n hnA t) (hNB n hnB t)
-      _ = ε / 2 := by ring
-      _ ≤ ε / 2 := le_rfl
+            ‖B.simple n t - F.toFun t‖ := by
+      calc
+        ‖A.simple n t - B.simple n t‖ =
+            ‖(A.simple n t - F.toFun t) -
+              (B.simple n t - F.toFun t)‖ := by
+                congr 1
+                ring
+        _ ≤ ‖A.simple n t - F.toFun t‖ +
+            ‖B.simple n t - F.toFun t‖ := norm_sub_le _ _
+    have hStrict : ‖A.simple n t - B.simple n t‖ < ε / 2 :=
+      hTriangle.trans_lt <| by
+        calc
+          ‖A.simple n t - F.toFun t‖ +
+              ‖B.simple n t - F.toFun t‖ < ε / 4 + ε / 4 :=
+            add_lt_add (hNA n hnA t) (hNB n hnB t)
+          _ = ε / 2 := by ring
+    exact hStrict.le
   have hOperators :
       ‖pvmSimpleFuncSpectralIntegralOperator P (A.simple n) -
           pvmSimpleFuncSpectralIntegralOperator P (B.simple n)‖ ≤ ε / 2 :=
