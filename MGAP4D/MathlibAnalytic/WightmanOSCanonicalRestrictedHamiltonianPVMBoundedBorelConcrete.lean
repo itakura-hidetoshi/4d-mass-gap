@@ -1,6 +1,6 @@
-import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianPVMLocalFunctionalCalculus
 import MGAP4D.MathlibAnalytic.WightmanOSPVMBoundedBorelAlgebra
 import MGAP4D.MathlibAnalytic.WightmanOSPVMDisjointCompositionDerived
+import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalHamiltonianInvariance
 import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 import Mathlib.Tactic
 
@@ -13,8 +13,8 @@ open scoped InnerProductSpace
 noncomputable section
 
 /-- Every ambient spectral projection preserves the vacuum-orthogonal Hilbert
-sector.  The proof uses only the existing PVM projection laws and the fact that
-the vacuum is the zero-energy spectral vector. -/
+sector.  This follows from the PVM projection laws and the zero-energy vacuum
+projection, with no Hamiltonian functional-calculus assumption. -/
 theorem ExplicitWightmanOSReconstructedModel.spectralPVM_projection_mem_vacuumOrthogonal
     (M : ExplicitWightmanOSReconstructedModel)
     (s : Set ℝ) {ψ : M.H} (hψ : ψ ∈ M.vacuumOrthogonal) :
@@ -39,7 +39,8 @@ theorem ExplicitWightmanOSReconstructedModel.spectralPVM_projection_mem_vacuumOr
     have hsVacuum : M.spectralPVM.projection s M.vacuum = M.vacuum := by
       have hAdd :=
         M.spectralPVM.disjoint_additive ({0} : Set ℝ) t hDisjoint M.vacuum
-      simpa [hUnion, M.vacuumSpectralProjection, htVacuum] using hAdd
+      rw [hUnion, M.vacuumSpectralProjection, htVacuum, add_zero] at hAdd
+      exact hAdd
     calc
       inner ℝ M.vacuum (M.spectralPVM.projection s ψ) =
           inner ℝ (M.spectralPVM.projection s M.vacuum) ψ :=
@@ -105,96 +106,93 @@ noncomputable def ExplicitWightmanOSReconstructedModel.vacuumOrthogonalSpectralP
           M.spectralPVM.projection t (x : M.H)
     exact M.spectralPVM.disjoint_additive s t hst (x : M.H)
 
-/-- Forget the physical-layer bounded-Borel wrapper into the lightweight
-standalone PVM integration wrapper. -/
-def pvmBoundedBorelOfExplicit
-    (f : ExplicitBoundedBorelRealFunction) : PVMBoundedBorelRealFunction where
-  toFun := f.toFun
-  measurable_toFun := f.measurable_toFun
-  bounded_toFun := f.bounded_toFun
-
-@[simp] theorem pvmBoundedBorelOfExplicit_one :
-    pvmBoundedBorelOfExplicit explicitBoundedBorelOne = pvmBoundedBorelOne := by
-  apply PVMBoundedBorelRealFunction.ext
-  rfl
-
-@[simp] theorem pvmBoundedBorelOfExplicit_sub
-    (f g : ExplicitBoundedBorelRealFunction) :
-    pvmBoundedBorelOfExplicit (explicitBoundedBorelSub f g) =
-      pvmBoundedBorelSub (pvmBoundedBorelOfExplicit f)
-        (pvmBoundedBorelOfExplicit g) := by
-  apply PVMBoundedBorelRealFunction.ext
-  rfl
-
-@[simp] theorem pvmBoundedBorelOfExplicit_indicator
-    (s : Set ℝ) (hs : MeasurableSet s) :
-    pvmBoundedBorelOfExplicit (explicitBoundedBorelIndicator s hs) =
-      pvmBoundedBorelIndicator s hs := by
-  apply PVMBoundedBorelRealFunction.ext
-  rfl
-
-/-- The actual bounded Borel PVM integral on the canonical vacuum-orthogonal
-Hilbert sector, obtained by the simple-function completion constructed in the
-standalone PVM layer. -/
+/-- The completed bounded Borel PVM integral on the canonical
+vacuum-orthogonal Hilbert sector. -/
 noncomputable def ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
     (M : ExplicitWightmanOSReconstructedModel)
-    (f : ExplicitBoundedBorelRealFunction) :
+    (f : PVMBoundedBorelRealFunction) :
     M.VacuumOrthogonalHilbert →L[ℝ] M.VacuumOrthogonalHilbert :=
-  pvmBoundedBorelSpectralIntegralOperator M.vacuumOrthogonalSpectralPVM
-    (pvmBoundedBorelOfExplicit f)
+  pvmBoundedBorelSpectralIntegralOperator M.vacuumOrthogonalSpectralPVM f
 
-/-- The canonical restricted bounded Borel integral sends one to the identity. -/
+/-- The canonical completed integral sends the constant-one function to the
+identity operator. -/
 theorem ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_one
     (M : ExplicitWightmanOSReconstructedModel) :
-    M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-        explicitBoundedBorelOne =
+    M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral pvmBoundedBorelOne =
       ContinuousLinearMap.id ℝ M.VacuumOrthogonalHilbert := by
-  unfold canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-  rw [pvmBoundedBorelOfExplicit_one,
-    pvmBoundedBorelSpectralIntegralOperator_one]
+  exact pvmBoundedBorelSpectralIntegralOperator_one
+    M.vacuumOrthogonalSpectralPVM
 
 @[simp] theorem ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_one_apply
     (M : ExplicitWightmanOSReconstructedModel)
     (ψ : M.VacuumOrthogonalHilbert) :
     M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-        explicitBoundedBorelOne ψ = ψ := by
+        pvmBoundedBorelOne ψ = ψ := by
   rw [M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_one]
   rfl
 
-/-- The canonical restricted bounded Borel integral preserves subtraction. -/
+/-- The canonical completed integral preserves subtraction. -/
 theorem ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_sub
     (M : ExplicitWightmanOSReconstructedModel)
-    (f g : ExplicitBoundedBorelRealFunction) :
+    (f g : PVMBoundedBorelRealFunction) :
     M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-        (explicitBoundedBorelSub f g) =
+        (pvmBoundedBorelSub f g) =
       M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral f -
         M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral g := by
-  unfold canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-  rw [pvmBoundedBorelOfExplicit_sub,
-    pvmBoundedBorelSpectralIntegralOperator_sub]
+  exact pvmBoundedBorelSpectralIntegralOperator_sub
+    M.vacuumOrthogonalSpectralPVM f g
 
-/-- The canonical restricted bounded Borel integral of an indicator is the
-ambient spectral projection after inclusion into the physical Hilbert space. -/
+/-- The canonical completed integral of a measurable indicator is the ambient
+spectral projection after inclusion into the physical Hilbert space. -/
 theorem ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_indicator
     (M : ExplicitWightmanOSReconstructedModel)
     (s : Set ℝ) (hs : MeasurableSet s)
     (ψ : M.VacuumOrthogonalHilbert) :
     ((M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-          (explicitBoundedBorelIndicator s hs) ψ :
+          (pvmBoundedBorelIndicator s hs) ψ :
         M.VacuumOrthogonalHilbert) : M.H) =
       M.spectralPVM.projection s (ψ : M.H) := by
-  unfold canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-  rw [pvmBoundedBorelOfExplicit_indicator,
+  rw [canonicalVacuumOrthogonalBoundedBorelSpectralIntegral,
     pvmBoundedBorelSpectralIntegralOperator_indicator]
   rfl
 
-/-- The single remaining compatibility between the canonical Hamiltonian and its
-PVM functional calculus: multiplication by the shifted coordinate realizes the
-restricted Hamiltonian graph. -/
+/-- Completed bounded Borel spectral integration for the canonical restricted
+Hamiltonian.  Its algebraic and indicator fields are theorem-generated; the
+only operator-level compatibility is the shifted-coordinate graph. -/
+structure ExplicitWightmanOSCanonicalRestrictedPVMCompletedBoundedBorelSpectralIntegral
+    (M : ExplicitWightmanOSReconstructedModel) where
+  spectralIntegral :
+    PVMBoundedBorelRealFunction →
+      M.VacuumOrthogonalHilbert →L[ℝ] M.VacuumOrthogonalHilbert
+  spectralIntegral_one :
+    ∀ ψ : M.VacuumOrthogonalHilbert,
+      spectralIntegral pvmBoundedBorelOne ψ = ψ
+  spectralIntegral_sub :
+    ∀ (f g : PVMBoundedBorelRealFunction)
+      (ψ : M.VacuumOrthogonalHilbert),
+      spectralIntegral (pvmBoundedBorelSub f g) ψ =
+        spectralIntegral f ψ - spectralIntegral g ψ
+  spectralIntegral_indicator :
+    ∀ (s : Set ℝ) (hs : MeasurableSet s)
+      (ψ : M.VacuumOrthogonalHilbert),
+      ((spectralIntegral (pvmBoundedBorelIndicator s hs) ψ :
+          M.VacuumOrthogonalHilbert) : M.H) =
+        M.spectralPVM.projection s (ψ : M.H)
+  shiftedCoordinate_graph :
+    ∀ (E : ℝ) (f g : PVMBoundedBorelRealFunction),
+      (∀ t : ℝ, g.toFun t = (t - E) * f.toFun t) →
+      ∀ ψ : M.VacuumOrthogonalHilbert,
+        ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
+          (x : M.VacuumOrthogonalHilbert) = spectralIntegral f ψ ∧
+            M.canonicalVacuumOrthogonalHamiltonian.realShift E x =
+              spectralIntegral g ψ
+
+/-- The sole residual compatibility needed to attach the actual completed PVM
+integral to the canonical restricted Hamiltonian. -/
 structure ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph
     (M : ExplicitWightmanOSReconstructedModel) where
   shiftedCoordinate_graph :
-    ∀ (E : ℝ) (f g : ExplicitBoundedBorelRealFunction),
+    ∀ (E : ℝ) (f g : PVMBoundedBorelRealFunction),
       (∀ t : ℝ, g.toFun t = (t - E) * f.toFun t) →
       ∀ ψ : M.VacuumOrthogonalHilbert,
         ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
@@ -203,22 +201,22 @@ structure ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph
             M.canonicalVacuumOrthogonalHamiltonian.realShift E x =
               M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral g ψ
 
-/-- Concrete constructor for the physical bounded Borel spectral-integral
-package.  The one, subtraction, and indicator fields are discharged by the
-actual PVM integration construction; only the Hamiltonian graph compatibility
-remains as input. -/
-noncomputable def ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph.toBoundedBorelSpectralIntegral
+/-- Concrete constructor: identity, subtraction, and indicator laws come from
+simple-function approximation and operator-norm completion; only the shifted
+coordinate graph remains as input. -/
+noncomputable def ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph.toCompletedBoundedBorelSpectralIntegral
     {M : ExplicitWightmanOSReconstructedModel}
     (G : ExplicitWightmanOSCanonicalRestrictedPVMShiftedCoordinateGraph M) :
-    ExplicitWightmanOSCanonicalRestrictedPVMBoundedBorelSpectralIntegral M :=
+    ExplicitWightmanOSCanonicalRestrictedPVMCompletedBoundedBorelSpectralIntegral M :=
   { spectralIntegral :=
       M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
     spectralIntegral_one :=
       M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_one_apply
     spectralIntegral_sub := by
       intro f g ψ
-      exact congrArg (fun T :
-          M.VacuumOrthogonalHilbert →L[ℝ] M.VacuumOrthogonalHilbert => T ψ)
+      simpa using congrArg
+        (fun T : M.VacuumOrthogonalHilbert →L[ℝ]
+            M.VacuumOrthogonalHilbert => T ψ)
         (M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_sub f g)
     spectralIntegral_indicator :=
       M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_indicator
