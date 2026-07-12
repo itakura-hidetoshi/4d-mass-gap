@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.WightmanOSPVMFiniteSimpleSpectralIntegral
-import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianPVMLocalFunctionalCalculus
 import Mathlib.Analysis.Normed.Operator.Banach
 import Mathlib.MeasureTheory.Function.SimpleFunc
 import Mathlib.Tactic
@@ -11,23 +10,6 @@ open Set Filter Topology MeasureTheory
 open scoped BigOperators InnerProductSpace
 
 noncomputable section
-
-/-- A Mathlib simple real function, viewed as the repository's explicitly bounded
-Borel function.  Finite range supplies the uniform bound. -/
-def explicitBoundedBorelRealFunctionOfSimpleFunc
-    (f : SimpleFunc ℝ ℝ) : ExplicitBoundedBorelRealFunction where
-  toFun := f
-  measurable_toFun := f.measurable
-  bounded_toFun := by
-    obtain ⟨C, hC⟩ := (f.map fun x : ℝ => ‖x‖).exists_forall_le
-    refine ⟨C, ?_⟩
-    intro t
-    simpa [SimpleFunc.map_apply] using hC t
-
-@[simp] theorem explicitBoundedBorelRealFunctionOfSimpleFunc_apply
-    (f : SimpleFunc ℝ ℝ) (t : ℝ) :
-    (explicitBoundedBorelRealFunctionOfSimpleFunc f).toFun t = f t :=
-  rfl
 
 /-- The canonical spectral carrier belonging to one value in the finite range of
 `f`. -/
@@ -46,6 +28,7 @@ theorem pvmSimpleFuncFiber_pairwise_disjoint
     (f : SimpleFunc ℝ ℝ) :
     Pairwise (Function.onFun Disjoint (pvmSimpleFuncFiber f)) := by
   intro a b hab
+  change Disjoint (pvmSimpleFuncFiber f a) (pvmSimpleFuncFiber f b)
   rw [Set.disjoint_left]
   intro x hxa hxb
   have hfa : f x = (a : ℝ) := by
@@ -144,12 +127,14 @@ theorem pvmSimpleFuncSpectralIntegralOperator_exists_opNorm_bound
     (P : OrthogonalProjectionValuedSetFunction H)
     (f : SimpleFunc ℝ ℝ) :
     ∃ C : ℝ, 0 ≤ C ∧ ‖pvmSimpleFuncSpectralIntegralOperator P f‖ ≤ C := by
-  obtain ⟨C, hC⟩ :=
-    (explicitBoundedBorelRealFunctionOfSimpleFunc f).bounded_toFun
+  obtain ⟨C, hC⟩ := (f.map fun x : ℝ => ‖x‖).exists_forall_le
+  have hBound : ∀ t : ℝ, ‖f t‖ ≤ C := by
+    intro t
+    simpa [SimpleFunc.map_apply] using hC t
   have hC0 : 0 ≤ C :=
-    (norm_nonneg (f 0)).trans (hC 0)
+    (norm_nonneg (f 0)).trans (hBound 0)
   exact ⟨C, hC0,
-    pvmSimpleFuncSpectralIntegralOperator_opNorm_le P f C hC0 hC⟩
+    pvmSimpleFuncSpectralIntegralOperator_opNorm_le P f C hC0 hBound⟩
 
 /-- A Cauchy family of canonical simple-function spectral integrals.  Completeness
 of the continuous-operator space constructs its bounded operator limit. -/
