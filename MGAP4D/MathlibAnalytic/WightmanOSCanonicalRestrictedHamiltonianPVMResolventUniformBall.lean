@@ -79,13 +79,10 @@ noncomputable def realShiftAmbientInverse
             (𝓝 (y, x + E • y)) :=
         hv.prodMk_nhds hA
       have hLimit : (y, x + E • y) ∈ (A.graph : Set (H × H)) :=
-        hSelf.isClosed.isSeqClosed (by
-          intro n
-          exact LinearPMap.mem_graph_iff.mpr ⟨(v n).2, rfl⟩) hPair
-      rcases LinearPMap.mem_graph_iff.mp hLimit with ⟨hyDomain, hAy⟩
-      let yDomain : A.domain := ⟨y, hyDomain⟩
+        hSelf.isClosed.isSeqClosed (fun n => A.mem_graph (v n)) hPair
+      rcases A.mem_graph_iff.mp hLimit with ⟨yDomain, hyVal, hAy⟩
       have hShiftY : A.realShift E yDomain = x := by
-        rw [A.realShift_apply, hAy]
+        rw [A.realShift_apply, hAy, hyVal]
         abel
       have hUnique :
           yDomain =
@@ -97,7 +94,12 @@ noncomputable def realShiftAmbientInverse
           hSelf E hSurjective x
       change y =
         A.realShiftAmbientInverseLinearMap hSelf E hSurjective x
-      simpa [realShiftAmbientInverseLinearMap] using congrArg Subtype.val hUnique)
+      calc
+        y = (yDomain : H) := hyVal.symm
+        _ = ((A.realShiftLinearEquivOfSurjective
+              hSelf E hSurjective).symm x : H) :=
+          congrArg Subtype.val hUnique
+        _ = A.realShiftAmbientInverseLinearMap hSelf E hSurjective x := rfl)
 
 @[simp] theorem realShiftAmbientInverse_apply
     (A : H →ₗ.[ℝ] H)
@@ -152,9 +154,11 @@ theorem explicitSpectralBallShiftIndicator_eq_shift_mul_indicator
 theorem norm_explicitSpectralBallShiftIndicator_le
     {E ε : ℝ} (hε : 0 ≤ ε) (t : ℝ) :
     ‖(explicitSpectralBallShiftIndicator E ε hε).toFun t‖ ≤ ε := by
-  obtain ⟨C, hC⟩ :=
-    (explicitSpectralBallShiftIndicator E ε hε).bounded_toFun
-  exact hC t
+  by_cases ht : t ∈ Metric.ball E ε
+  · have hdist := (Metric.mem_ball.mp ht).le
+    simpa [explicitSpectralBallShiftIndicator, ht,
+      Real.norm_eq_abs, Real.dist_eq] using hdist
+  · simpa [explicitSpectralBallShiftIndicator, ht] using hε
 
 /-- Bounded Borel spectral integration together with the standard contraction
 estimate and reduction of the shifted Hamiltonian by spectral projections. -/
@@ -275,8 +279,7 @@ theorem ExplicitWightmanOSCanonicalRestrictedPVMBoundedBorelSpectralReduction.su
     F.indicator_reduces_realShift E (Metric.ball E ε)
       Metric.isOpen_ball.measurableSet x
   have hIy : F.spectralIntegral i y = y := by
-    dsimp [i]
-    exact F.indicatorIntegral_idempotent
+    simpa [y, i] using F.indicatorIntegral_idempotent
       (Metric.ball E ε) Metric.isOpen_ball.measurableSet ψ
   have hShiftXp :
       M.canonicalVacuumOrthogonalHamiltonian.realShift E xp = y := by
@@ -297,7 +300,8 @@ theorem ExplicitWightmanOSCanonicalRestrictedPVMBoundedBorelSpectralReduction.su
         (x : M.VacuumOrthogonalHilbert) := by
     calc
       (x : M.VacuumOrthogonalHilbert) =
-          (xp : M.VacuumOrthogonalHilbert) := by rw [hxpEq]
+          (xp : M.VacuumOrthogonalHilbert) :=
+        congrArg Subtype.val hxpEq.symm
       _ = F.spectralIntegral i
           (x : M.VacuumOrthogonalHilbert) := by
             simpa [i] using hxpIntegral
