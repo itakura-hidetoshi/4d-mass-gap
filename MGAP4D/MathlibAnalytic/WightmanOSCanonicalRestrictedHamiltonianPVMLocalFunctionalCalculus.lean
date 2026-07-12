@@ -294,6 +294,7 @@ theorem sub_mul_spectralBallTruncatedReciprocal
 theorem measurable_spectralBallTruncatedReciprocal
     (E ε : ℝ) :
     Measurable (spectralBallTruncatedReciprocal E ε) := by
+  classical
   change Measurable fun t : ℝ =>
     if t ∈ Metric.ball E ε then 0 else (t - E)⁻¹
   exact Measurable.ite Metric.isOpen_ball.measurableSet
