@@ -24,8 +24,9 @@ theorem realShift_injective_of_surjective_of_selfAdjoint
   have hShiftFormal (u v : A.domain) :
       inner ℝ (A.realShift lambda u) (v : E) =
         inner ℝ (u : E) (A.realShift lambda v) := by
-    simpa only [LinearPMap.realShift_apply, inner_sub_left, inner_sub_right,
-      real_inner_smul_left, real_inner_smul_right] using hFormal u v
+    simp only [LinearPMap.realShift_apply, inner_sub_left, inner_sub_right,
+      real_inner_smul_left, real_inner_smul_right]
+    rw [hFormal u v]
   intro x y hxy
   let d : A.domain := x - y
   have hdShift : A.realShift lambda d = 0 := by
@@ -146,9 +147,8 @@ noncomputable def ExplicitWightmanOSCanonicalRestrictedPVMLocalFunctionalCalculu
         have hSurjective :=
           F.vectorwise_localVanish_implies_surjective E hLocal
         exact ⟨
-          M.canonicalVacuumOrthogonalHamiltonian.
-            realShift_injective_of_surjective_of_selfAdjoint
-              hSelf E hSurjective,
+          LinearPMap.realShift_injective_of_surjective_of_selfAdjoint
+            M.canonicalVacuumOrthogonalHamiltonian hSelf E hSurjective,
           hSurjective⟩ }
 
 /-- The local functional calculus and physical PVM-support identification now
@@ -161,8 +161,8 @@ noncomputable def ExplicitWightmanOSCanonicalRestrictedPVMLocalFunctionalCalculu
       M.vacuumOrthogonalPVMOpenSupport =
         M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) :
     ExplicitWightmanOSCanonicalRestrictedPVMSpectralTheorem M :=
-  (F.toPVMResolventCompatibility hSelf).
-    toCanonicalRestrictedPVMSpectralTheorem hSupport
+  ExplicitWightmanOSCanonicalRestrictedPVMResolventCompatibility.toCanonicalRestrictedPVMSpectralTheorem
+    (F.toPVMResolventCompatibility hSelf) hSupport
 
 /-- Exact-gap PVM support endpoint generated from local functional calculus,
 without taking the global operator-spectrum/PVM-support equivalence as input. -/
@@ -179,9 +179,7 @@ theorem explicit_wightman_os_exact_gap_pvm_open_support_of_local_functionalCalcu
       M.vacuumOrthogonalPVMOpenSupport =
         M.hamiltonianEnergySpectrum \ ({0} : Set ℝ)) :
     ExplicitWightmanOSExactGapPVMOpenSupportProp M
-      ((F.toCanonicalRestrictedPVMSpectralTheorem hSelf hSupport).
-        toCanonicalPVMOpenSupportBridge
-          hSelf D hExactSpectrum (ne_of_gt hGap.1))
+      ((F.toCanonicalRestrictedPVMSpectralTheorem hSelf hSupport).toCanonicalPVMOpenSupportBridge hSelf D hExactSpectrum (ne_of_gt hGap.1))
       hGap hExactSpectrum := by
   exact
     explicit_wightman_os_exact_gap_pvm_open_support_of_resolvent_pvm_localVanish
