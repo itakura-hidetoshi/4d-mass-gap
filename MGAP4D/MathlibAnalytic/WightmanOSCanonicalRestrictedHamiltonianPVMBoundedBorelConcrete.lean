@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.WightmanOSPVMBoundedBorelAlgebra
 import MGAP4D.MathlibAnalytic.WightmanOSPVMDisjointCompositionDerived
 import MGAP4D.MathlibAnalytic.WightmanOSVacuumOrthogonalHamiltonianInvariance
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -65,14 +64,31 @@ theorem ExplicitWightmanOSReconstructedModel.spectralPVM_projection_mem_vacuumOr
       _ = 0 := by rw [hsVacuum]; simp
 
 /-- The ambient Hamiltonian PVM restricted to the complete physical sector
-`Ω⊥`. -/
+`Ω⊥`.  Continuity is inherited from the ambient projection through its operator
+norm bound, avoiding any separate restriction API. -/
 noncomputable def ExplicitWightmanOSReconstructedModel.vacuumOrthogonalSpectralPVM
     (M : ExplicitWightmanOSReconstructedModel) :
     OrthogonalProjectionValuedSetFunction M.VacuumOrthogonalHilbert where
   projection := fun s =>
-    (M.spectralPVM.projection s).restrict
-      (p := M.vacuumOrthogonal) (q := M.vacuumOrthogonal)
-      (fun x hx => M.spectralPVM_projection_mem_vacuumOrthogonal s hx)
+    let L : M.VacuumOrthogonalHilbert →ₗ[ℝ]
+        M.VacuumOrthogonalHilbert :=
+      { toFun := fun x =>
+          ⟨M.spectralPVM.projection s (x : M.H),
+            M.spectralPVM_projection_mem_vacuumOrthogonal s x.property⟩
+        map_add' := by
+          intro x y
+          apply Subtype.ext
+          exact (M.spectralPVM.projection s).map_add (x : M.H) (y : M.H)
+        map_smul' := by
+          intro c x
+          apply Subtype.ext
+          exact (M.spectralPVM.projection s).map_smul c (x : M.H) }
+    L.mkContinuous ‖M.spectralPVM.projection s‖ (by
+      intro x
+      change
+        ‖M.spectralPVM.projection s (x : M.H)‖ ≤
+          ‖M.spectralPVM.projection s‖ * ‖(x : M.H)‖
+      exact (M.spectralPVM.projection s).le_opNorm (x : M.H))
   empty_apply := by
     intro x
     apply Subtype.ext
