@@ -21,7 +21,7 @@ noncomputable def explicitBoundedBorelFloorIndexSimpleFunc
     let K : ℝ := (n : ℝ) + 1
     have hK : 0 ≤ K := by positivity
     refine Set.Finite.subset
-      (Set.finite_Icc (⌊-K * C⌋ : ℤ) (⌊K * C⌋ : ℤ)) ?_
+      (Set.finite_Icc (⌊-(K * C)⌋ : ℤ) (⌊K * C⌋ : ℤ)) ?_
     rintro z ⟨t, rfl⟩
     have hAbs : |F.toFun t| ≤ C := by
       simpa only [Real.norm_eq_abs] using hC t
@@ -30,7 +30,7 @@ noncomputable def explicitBoundedBorelFloorIndexSimpleFunc
     constructor
     · apply Int.floor_mono
       have h := mul_le_mul_of_nonneg_left hLower hK
-      simpa [K, mul_neg, neg_mul, mul_assoc] using h
+      simpa only [K, mul_neg] using h
     · exact Int.floor_mono (mul_le_mul_of_nonneg_left hUpper hK)
   measurableSet_fiber' := by
     intro z
