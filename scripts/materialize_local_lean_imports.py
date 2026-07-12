@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Materialize only direct missing local Lean imports for changed leaf files.
+"""Materialize a shallow local Lean import closure for changed leaf files.
 
-A newly merged leaf may be absent from the restored cache.  Compiling the full
-transitive local closure can exceed the fast-check budget, so this helper emits
-only missing direct MGAP4D imports.  Compiler diagnostics are mirrored to the
-standard fast-check artifact path.
+The restored cache may omit the most recently merged local modules.  Walking the
+entire repository closure can exceed the fast-check budget, so this helper only
+walks two local import edges below each changed leaf.  This is enough to bridge
+recent consecutive PR layers while leaving older dependencies to the cache.
+Compiler diagnostics are mirrored to the standard fast-check artifact path.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ ROOT = Path.cwd()
 BUILD_LIB = ROOT / ".lake" / "build" / "lib" / "lean"
 IMPORT_RE = re.compile(r"^\s*import\s+([A-Za-z0-9_'.]+)\s*$")
 AGGREGATE_ROOTS = {Path("MGAP4D.lean"), Path("MGAP4D/MathlibAnalytic.lean")}
+MAX_IMPORT_DEPTH = 2
 
 
 def changed_lean_files(base: str) -> list[Path]:
@@ -63,12 +65,11 @@ def direct_local_imports(source: Path) -> list[Path]:
         dependency = module_source(module)
         if dependency.is_file() and dependency not in AGGREGATE_ROOTS:
             imports.append(dependency)
-    return imports
+    return sorted(set(imports))
 
 
 def diagnostic_path() -> Path:
-    runner_temp = Path(os.environ.get("RUNNER_TEMP", "/tmp"))
-    return runner_temp / "lean-fast.log"
+    return Path(os.environ.get("RUNNER_TEMP", "/tmp")) / "lean-fast.log"
 
 
 def compile_source(source: Path) -> None:
@@ -83,35 +84,61 @@ def compile_source(source: Path) -> None:
         str(output),
         str(source),
     ]
-    print(f"[fast] materialize direct local Lean import: {source}", flush=True)
+    print(f"[fast] materialize shallow local Lean import: {source}", flush=True)
     result = subprocess.run(command, text=True, capture_output=True)
     combined = result.stdout + result.stderr
     if combined:
         print(combined, end="", flush=True)
-    diagnostic_path().write_text(
-        f"$ {' '.join(command)}\n{combined}", encoding="utf-8"
-    )
+    with diagnostic_path().open("a", encoding="utf-8") as log:
+        log.write(f"$ {' '.join(command)}\n{combined}")
     if result.returncode != 0:
         raise subprocess.CalledProcessError(result.returncode, command)
 
 
+def shallow_dependency_order(targets: list[Path]) -> list[Path]:
+    changed = set(targets)
+    permanent: set[Path] = set()
+    temporary: set[Path] = set()
+    ordered: list[Path] = []
+
+    def visit(source: Path, depth: int) -> None:
+        if source in permanent or output_path(source).is_file():
+            permanent.add(source)
+            return
+        if source in temporary:
+            raise RuntimeError(f"local Lean import cycle at {source}")
+        if depth > MAX_IMPORT_DEPTH:
+            return
+        temporary.add(source)
+        if depth < MAX_IMPORT_DEPTH:
+            for dependency in direct_local_imports(source):
+                if dependency not in changed:
+                    visit(dependency, depth + 1)
+        temporary.remove(source)
+        permanent.add(source)
+        if source not in changed:
+            ordered.append(source)
+
+    for target in targets:
+        for dependency in direct_local_imports(target):
+            if dependency not in changed:
+                visit(dependency, 1)
+    return ordered
+
+
 def main() -> int:
+    diagnostic_path().write_text("", encoding="utf-8")
     base = sys.argv[1] if len(sys.argv) > 1 else "origin/main"
     targets = changed_lean_files(base)
-    changed = set(targets)
-    dependencies = sorted(
-        {
-            dependency
-            for target in targets
-            for dependency in direct_local_imports(target)
-            if dependency not in changed and not output_path(dependency).is_file()
-        }
-    )
-    if not dependencies:
-        print("[fast] no missing direct local Lean imports")
+    ordered = shallow_dependency_order(targets)
+    if not ordered:
+        print("[fast] no missing shallow local Lean imports")
         return 0
-    for dependency in dependencies:
-        compile_source(dependency)
+    print("[fast] shallow local Lean materialization order:")
+    for source in ordered:
+        print(f"  {source}")
+    for source in ordered:
+        compile_source(source)
     return 0
 
 
