@@ -29,8 +29,8 @@ theorem pvmPositiveSemigroupDifferenceQuotientMultiplier_norm_le_target
       _ = ‖h.toFun energy‖ := by rw [hCoordinate energy]
   · have henergyNeg : energy < 0 := lt_of_not_ge henergy
     rw [pvmPositiveSemigroupDifferenceQuotientMultiplier_apply_of_neg
-      ht f h hCoordinate henergyNeg]
-    exact norm_nonneg _
+      (energy := energy) ht f h hCoordinate henergyNeg]
+    simpa using (norm_nonneg (h.toFun energy))
 
 /-- Restricting a bounded target multiplier to nonnegative energy preserves any
 pointwise uniform bound. -/
