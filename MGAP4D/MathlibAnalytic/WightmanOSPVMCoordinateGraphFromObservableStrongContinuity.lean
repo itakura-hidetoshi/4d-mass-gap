@@ -10,75 +10,21 @@ noncomputable section
 
 namespace EuclideanYangMillsOSPositiveTimeObservableConstruction
 
-/-- The canonical real-linear projection from positive-time observables to the
-separated Osterwalder--Schrader pre-Hilbert quotient. -/
-def osClassLinearMap
+/-- Positive-time observables represent a dense family in the completed OS
+physical Hilbert space.  This factors the canonical dense completion embedding
+through the surjective Osterwalder--Schrader separation quotient, without
+exposing the intentionally opaque physical carrier. -/
+theorem physicalState_denseRange
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.OSSeparatedPreHilbert where
-  toFun := P.osClass
-  map_add' := by
-    intro F G
-    exact SeparationQuotient.mk_add F G
-  map_smul' := by
-    intro r F
-    exact SeparationQuotient.mk_smul r F
-
-@[simp] theorem osClassLinearMap_apply
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
-    (F : P.PositiveTimeObservable) :
-    P.osClassLinearMap F = P.osClass F :=
-  rfl
-
-/-- Every separated OS class has a positive-time observable representative. -/
-theorem osClassLinearMap_surjective
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    Function.Surjective P.osClassLinearMap := by
-  intro x
-  rcases SeparationQuotient.surjective_mk x with ⟨F, rfl⟩
-  exact ⟨F, rfl⟩
-
-/-- Positive-time observables represented in the completed physical Hilbert
-space, bundled as a real-linear map. -/
-noncomputable def physicalStateLinearMap
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.PhysicalHilbert := by
-  change P.PositiveTimeObservable →ₗ[ℝ]
-    UniformSpace.Completion P.OSSeparatedPreHilbert
-  exact
-    (UniformSpace.Completion.toComplₗᵢ
-      (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).toLinearMap.comp
-        P.osClassLinearMap
-
-@[simp] theorem physicalStateLinearMap_apply
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
-    (F : P.PositiveTimeObservable) :
-    P.physicalStateLinearMap F = P.physicalState F := by
-  change
-    ((P.osClass F : P.OSSeparatedPreHilbert) :
-      UniformSpace.Completion P.OSSeparatedPreHilbert) =
-    ((P.osClass F : P.OSSeparatedPreHilbert) :
-      UniformSpace.Completion P.OSSeparatedPreHilbert)
-  rfl
-
-/-- Positive-time observables represent a dense linear family in the completed
-OS physical Hilbert space. -/
-theorem physicalStateLinearMap_denseRange
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    DenseRange P.physicalStateLinearMap := by
-  intro x
+    DenseRange P.physicalState := by
+  intro psi
   exact closure_mono
     (by
-      rintro y ⟨q, rfl⟩
+      rintro phi ⟨q, rfl⟩
       rcases SeparationQuotient.surjective_mk q with ⟨F, rfl⟩
-      refine ⟨F, ?_⟩
-      exact P.physicalStateLinearMap_apply F)
-    ((os_preHilbert_dense_in_physical P) x)
+      exact ⟨F, rfl⟩)
+    ((os_preHilbert_dense_in_physical P) psi)
 
 end EuclideanYangMillsOSPositiveTimeObservableConstruction
 
@@ -113,8 +59,7 @@ theorem stronglyContinuousAtZero
   intro epsilon hepsilon
   have hepsilon3 : 0 < epsilon / 3 := by positivity
   obtain ⟨F, hF⟩ :=
-    M.observables.physicalStateLinearMap_denseRange.exists_dist_lt
-      psi hepsilon3
+    M.observables.physicalState_denseRange.exists_dist_lt psi hepsilon3
   have hpsiF :
       dist psi (M.observables.physicalState F) < epsilon / 3 := by
     simpa using hF
