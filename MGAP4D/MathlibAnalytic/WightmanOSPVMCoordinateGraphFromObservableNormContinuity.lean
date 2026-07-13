@@ -41,7 +41,7 @@ theorem physicalState_isometry
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     Isometry P.physicalState := by
   refine Isometry.of_dist_eq fun F G => ?_
-  rw [edist_dist, edist_dist, P.dist_physicalState_eq F G]
+  exact P.dist_physicalState_eq F G
 
 end EuclideanYangMillsOSPositiveTimeObservableConstruction
 
