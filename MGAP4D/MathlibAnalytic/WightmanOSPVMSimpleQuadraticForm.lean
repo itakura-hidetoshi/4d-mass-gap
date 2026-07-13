@@ -38,18 +38,37 @@ theorem pvmSimpleFuncSpectralIntegralOperator_inner_self_eq_simpleFuncIntegral
           (pvmSimpleFuncFiber f c) ψ
           (M.spectralPVM.projection (pvmSimpleFuncFiber f c) ψ)).symm
       _ = ‖M.spectralPVM.projection (pvmSimpleFuncFiber f c) ψ‖ ^ 2 :=
-        real_inner_self_eq_norm_sq
+        real_inner_self_eq_norm_sq _
   rw [pvmSimpleFuncSpectralIntegralOperator_apply]
   unfold pvmFiniteSimpleSpectralIntegral
   simp only [inner_sum, real_inner_smul_right]
   rw [SimpleFunc.integral_eq]
-  rw [← Finset.sum_attach]
-  apply Finset.sum_congr rfl
-  intro c hc
-  rw [hProjectionQuadratic c]
-  rw [← quadraticPVM_scalarMeasure_real_apply A ψ
-    (pvmSimpleFuncFiber f c) (pvmSimpleFuncFiber_measurable f c)]
-  simp [pvmSimpleFuncFiber]
+  simp only [smul_eq_mul]
+  have hTerm : ∀ c : f.range,
+      (c : ℝ) * inner ℝ ψ
+          (M.spectralPVM.projection (pvmSimpleFuncFiber f c) ψ) =
+        (A.scalarMeasure ψ).real
+            (f ⁻¹' ({(c : ℝ)} : Set ℝ)) * (c : ℝ) := by
+    intro c
+    rw [hProjectionQuadratic c]
+    rw [← quadraticPVM_scalarMeasure_real_apply A ψ
+      (pvmSimpleFuncFiber f c) (pvmSimpleFuncFiber_measurable f c)]
+    simp [pvmSimpleFuncFiber, mul_comm]
+  simp_rw [hTerm]
+  change
+    (∑ c in (Finset.univ : Finset f.range),
+      (A.scalarMeasure ψ).real
+          (f ⁻¹' ({(c : ℝ)} : Set ℝ)) * (c : ℝ)) =
+      ∑ x ∈ f.range,
+        (A.scalarMeasure ψ).real (f ⁻¹' ({x} : Set ℝ)) * x
+  have hUnivAttach :
+      (Finset.univ : Finset f.range) = f.range.attach := by
+    ext c
+    simp
+  rw [hUnivAttach]
+  exact Finset.sum_attach f.range
+    (fun x : ℝ =>
+      (A.scalarMeasure ψ).real (f ⁻¹' ({x} : Set ℝ)) * x)
 
 /-- Equivalent orientation, useful when the completed PVM symmetry theorem is
 used downstream. -/
