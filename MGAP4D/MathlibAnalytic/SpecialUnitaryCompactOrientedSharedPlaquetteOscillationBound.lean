@@ -49,7 +49,9 @@ theorem specialUnitaryCompactOriented_gibbsExponent_sourceResponse_oscillation_a
     compact_oriented_gibbsExponent_sourceResponse_oscillation_abs_le_shared
       L 2 (by norm_num) hEnergy A B target source u v hAgree
   change _ ≤ beta * (4 * (((L.sharedPlaquettes target source).card : ℝ)))
-  convert h using 1 <;> ring
+  change _ ≤ beta *
+    (2 * (((L.sharedPlaquettes target source).card : ℝ)) * 2) at h
+  nlinarith
 
 end
 
