@@ -280,7 +280,7 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
           ((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
               (D.quotientMultiplier t f) ψ :
             M.toExplicitModel.VacuumOrthogonalHilbert) :
-          M.toExplicitModel.H) := by
+          M.toExplicitModel.H)) := by
       filter_upwards [self_mem_nhdsWithin] with t ht
       exact D.rightDifferenceQuotient_eq_spectralIntegral
         t (by simpa using ht) f ψ
