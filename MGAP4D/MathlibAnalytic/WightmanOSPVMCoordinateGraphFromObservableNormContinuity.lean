@@ -42,17 +42,19 @@ noncomputable def physicalStateLinearMap
   map_add' := by
     intro F G
     unfold physicalState PhysicalHilbert osClass
-    simpa using congrArg
-      (fun q : P.OSSeparatedPreHilbert =>
-        (q : UniformSpace.Completion P.OSSeparatedPreHilbert))
-      (SeparationQuotient.mk_add F G)
+    rw [SeparationQuotient.mk_add]
+    simpa only using
+      (UniformSpace.Completion.toComplₗᵢ
+        (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).map_add
+        (SeparationQuotient.mk F) (SeparationQuotient.mk G)
   map_smul' := by
     intro r F
     unfold physicalState PhysicalHilbert osClass
-    simpa using congrArg
-      (fun q : P.OSSeparatedPreHilbert =>
-        (q : UniformSpace.Completion P.OSSeparatedPreHilbert))
-      (SeparationQuotient.mk_smul r F)
+    rw [SeparationQuotient.mk_smul]
+    simpa only using
+      (UniformSpace.Completion.toComplₗᵢ
+        (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).map_smul
+        r (SeparationQuotient.mk F)
 
 @[simp] theorem physicalStateLinearMap_apply
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
