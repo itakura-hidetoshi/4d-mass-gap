@@ -56,7 +56,7 @@ theorem pvmSimpleFuncSpectralIntegralOperator_inner_self_eq_simpleFuncIntegral
     simp [pvmSimpleFuncFiber, mul_comm]
   simp_rw [hTerm]
   change
-    (∑ c in (Finset.univ : Finset f.range),
+    (∑ c ∈ (Finset.univ : Finset f.range),
       (A.scalarMeasure ψ).real
           (f ⁻¹' ({(c : ℝ)} : Set ℝ)) * (c : ℝ)) =
       ∑ x ∈ f.range,
