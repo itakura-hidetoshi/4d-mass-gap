@@ -39,8 +39,9 @@ OS physical states is a Mathlib isometry. -/
 theorem physicalState_isometry
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    Isometry P.physicalState :=
-  Isometry.of_dist_eq fun F G => P.dist_physicalState_eq F G
+    Isometry P.physicalState := by
+  refine Isometry.of_dist_eq fun F G => ?_
+  rw [edist_dist, edist_dist, P.dist_physicalState_eq F G]
 
 end EuclideanYangMillsOSPositiveTimeObservableConstruction
 
