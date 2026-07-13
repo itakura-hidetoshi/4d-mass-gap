@@ -28,19 +28,20 @@ theorem pvmPositiveSemigroupDifferenceQuotientMultiplier_eq_smul_sub_exp_mul
   apply PVMBoundedBorelRealFunction.ext
   funext energy
   by_cases henergy : 0 ≤ energy
-  · simp only [pvmPositiveSemigroupDifferenceQuotientMultiplier_apply_of_pos
-      ht f h hCoordinate henergy,
-      pvmBoundedBorelSMul_apply, pvmBoundedBorelMul_apply]
-    simp [pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
+  · rw [pvmPositiveSemigroupDifferenceQuotientMultiplier_apply_of_pos
+      ht f h hCoordinate henergy]
+    simp [pvmBoundedBorelSMul, pvmBoundedBorelSub, pvmBoundedBorelMul,
+      pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
       pvmPositiveEuclideanSemigroupMultiplier, henergy,
       pvmSemigroupDifferenceQuotientScalar]
     field_simp [ht.ne']
     ring
   · have henergyNeg : energy < 0 := lt_of_not_ge henergy
-    simp [pvmPositiveSemigroupDifferenceQuotientMultiplier_apply_of_neg
-      ht f h hCoordinate henergyNeg,
+    rw [pvmPositiveSemigroupDifferenceQuotientMultiplier_apply_of_neg
+      ht f h hCoordinate henergyNeg]
+    simp [pvmBoundedBorelSMul, pvmBoundedBorelSub, pvmBoundedBorelMul,
       pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
-      pvmPositiveEuclideanSemigroupMultiplier, henergy]
+      pvmPositiveEuclideanSemigroupMultiplier, henergy, ht.ne']
 
 /-- At the operator level, the positive-time difference quotient is obtained by
 subtracting the PVM exponential action from the positive-energy identity action
