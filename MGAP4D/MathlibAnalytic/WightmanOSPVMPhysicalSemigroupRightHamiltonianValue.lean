@@ -24,10 +24,10 @@ theorem ExplicitWightmanOSReconstructedModel.pvmSimpleFuncSpectralIntegralOperat
     pvmSimpleFuncSpectralIntegralOperator_apply]
   unfold pvmFiniteSimpleSpectralIntegral
   change M.vacuumOrthogonal.subtype
-      (∑ c, (c : ℝ) •
+      (∑ c : f.range, (c : ℝ) •
         M.vacuumOrthogonalSpectralPVM.projection
           (pvmSimpleFuncFiber f c) ψ) =
-    ∑ c, (c : ℝ) •
+    ∑ c : f.range, (c : ℝ) •
       M.spectralPVM.projection (pvmSimpleFuncFiber f c) (ψ : M.H)
   rw [map_sum]
   apply Finset.sum_congr rfl
