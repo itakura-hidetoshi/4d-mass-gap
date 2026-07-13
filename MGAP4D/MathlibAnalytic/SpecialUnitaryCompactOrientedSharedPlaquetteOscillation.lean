@@ -329,58 +329,6 @@ theorem compact_oriented_gibbsExponent_sourceResponse_oscillation_abs_le_shared
   rw [hRewrite, abs_mul, abs_neg, abs_of_nonneg L.beta_nonneg]
   exact mul_le_mul_of_nonneg_left hAction L.beta_nonneg
 
-/-- For the canonical `SU(N)` Wilson energy, every shared plaquette contributes
-at most four to the conditional log-weight oscillation before multiplication
-by `beta`. -/
-theorem specialUnitaryCompactOriented_gibbsExponent_sourceResponse_oscillation_abs_le
-    (geometry : FiniteOrientedFourDimensionalPlaquetteGeometry)
-    (N : ℕ)
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta)
-    (A B :
-      (specialUnitaryCompactOrientedGaugeWilsonSystem
-        geometry N hN beta beta_nonneg).Configuration)
-    (target source : geometry.Edge)
-    (u v : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (hAgree :
-      (specialUnitaryCompactOrientedGaugeWilsonSystem
-        geometry N hN beta beta_nonneg).AgreeOffLink A B source) :
-    |((specialUnitaryCompactOrientedGaugeWilsonSystem
-          geometry N hN beta beta_nonneg).gibbsExponent
-          ((specialUnitaryCompactOrientedGaugeWilsonSystem
-            geometry N hN beta beta_nonneg).replaceLink A target u) -
-        (specialUnitaryCompactOrientedGaugeWilsonSystem
-          geometry N hN beta beta_nonneg).gibbsExponent
-          ((specialUnitaryCompactOrientedGaugeWilsonSystem
-            geometry N hN beta beta_nonneg).replaceLink B target u)) -
-      ((specialUnitaryCompactOrientedGaugeWilsonSystem
-          geometry N hN beta beta_nonneg).gibbsExponent
-          ((specialUnitaryCompactOrientedGaugeWilsonSystem
-            geometry N hN beta beta_nonneg).replaceLink A target v) -
-        (specialUnitaryCompactOrientedGaugeWilsonSystem
-          geometry N hN beta beta_nonneg).gibbsExponent
-          ((specialUnitaryCompactOrientedGaugeWilsonSystem
-            geometry N hN beta beta_nonneg).replaceLink B target v))| ≤
-      beta *
-        (4 *
-          (((specialUnitaryCompactOrientedGaugeWilsonSystem
-            geometry N hN beta beta_nonneg).sharedPlaquettes
-              target source).card : ℝ)) := by
-  let L := specialUnitaryCompactOrientedGaugeWilsonSystem
-    geometry N hN beta beta_nonneg
-  have hEnergy : ∀ g : L.Gauge, L.plaquetteEnergy g ≤ (2 : ℝ) := by
-    intro g
-    change specialUnitaryWilsonPlaquetteEnergy N g ≤ 2
-    exact specialUnitaryWilsonPlaquetteEnergy_le_two hN g
-  have h :=
-    compact_oriented_gibbsExponent_sourceResponse_oscillation_abs_le_shared
-      L 2 (by norm_num) hEnergy A B target source u v hAgree
-  change _ ≤ beta *
-    (4 * (((L.sharedPlaquettes target source).card : ℝ)))
-  convert h using 1 <;> ring
-
 end
 
 end MathlibAnalytic
