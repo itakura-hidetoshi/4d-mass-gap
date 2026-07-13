@@ -101,9 +101,9 @@ theorem continuousLinearMap_eq_of_inner_self_eq_of_innerSymmetric
     simp only [map_add, inner_add_left, inner_add_right] at hxy
     rw [← hT y x, ← hU y x] at hxy
     have hTyx : inner ℝ (T y) x = inner ℝ x (T y) := by
-      exact real_inner_comm (T y) x
+      exact (real_inner_comm (T y) x).symm
     have hUyx : inner ℝ (U y) x = inner ℝ x (U y) := by
-      exact real_inner_comm (U y) x
+      exact (real_inner_comm (U y) x).symm
     rw [hTyx, hUyx] at hxy
     nlinarith
   ext x
