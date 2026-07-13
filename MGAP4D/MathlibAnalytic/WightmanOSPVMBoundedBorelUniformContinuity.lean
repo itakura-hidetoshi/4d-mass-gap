@@ -78,15 +78,13 @@ theorem pvmBoundedBorelSpectralIntegralOperator_sub_opNorm_le
     have hAF := hNFA n hnFA energy
     have hBG : ‖G.toFun energy - B.simple n energy‖ < ε / 4 := by
       simpa [norm_sub_rev] using hNFB n hnFB energy
-    calc
-      ‖A.simple n energy - B.simple n energy‖ ≤
-          ‖A.simple n energy - F.toFun energy‖ +
+    have hSumLt :
+        ‖A.simple n energy - F.toFun energy‖ +
             ‖F.toFun energy - G.toFun energy‖ +
-              ‖G.toFun energy - B.simple n energy‖ := hTri
-      _ < ε / 4 + C + ε / 4 := by
-        gcongr
-        exact hBound energy
-      _ = C + ε / 2 := by ring
+              ‖G.toFun energy - B.simple n energy‖ <
+          C + ε / 2 := by
+      nlinarith [hBound energy]
+    exact (hTri.trans_lt hSumLt).le
   have hSimple : ‖SA - SB‖ ≤ C + ε / 2 := by
     dsimp [SA, SB]
     exact pvmSimpleFuncSpectralIntegralOperator_sub_opNorm_le
@@ -150,7 +148,7 @@ def PVMBoundedBorelUniformTendsto
 /-- The completed PVM integral is continuous for uniform convergence of bounded
 Borel multipliers. -/
 theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_of_uniformTendsto
-    {H α : Type*}
+    {H : Type} {α : Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H)
     {l : Filter α}
@@ -210,17 +208,7 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
   spectralIntegral_hasRightHamiltonianValue := by
     intro f h hCoordinate ψ
     unfold EuclideanYangMillsOSPhysicalTimeTranslation.HasRightHamiltonianValue
-    have hOperators :
-        Tendsto
-          (fun t =>
-            M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-              (D.quotientMultiplier t f))
-          (nhdsWithin 0 (Ioi 0))
-          (𝓝 (M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-            h)) := by
-      exact pvmBoundedBorelSpectralIntegralOperator_tendsto_of_uniformTendsto
-        M.toExplicitModel.vacuumOrthogonalSpectralPVM
-        (D.quotient_uniform_tendsto f h hCoordinate)
+    have hUniform := D.quotient_uniform_tendsto f h hCoordinate
     have hSubtype :
         Tendsto
           (fun t =>
@@ -229,7 +217,45 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
           (nhdsWithin 0 (Ioi 0))
           (𝓝 (M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
             h ψ)) := by
-      exact hOperators.clm_apply tendsto_const_nhds
+      rw [Metric.tendsto_iff]
+      intro ε hε
+      by_cases hψZero : ψ = 0
+      · subst ψ
+        simp
+      · have hψNorm : 0 < ‖ψ‖ := norm_pos_iff.mpr hψZero
+        have hεψ : 0 < ε / ‖ψ‖ := div_pos hε hψNorm
+        filter_upwards [hUniform (ε / ‖ψ‖) hεψ] with t ht
+        rw [dist_eq_norm]
+        change
+          ‖(M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                (D.quotientMultiplier t f) -
+              M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                h) ψ‖ < ε
+        have hOperator :
+            ‖M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                  (D.quotientMultiplier t f) -
+                M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                  h‖ ≤ ε / ‖ψ‖ :=
+          pvmBoundedBorelSpectralIntegralOperator_sub_opNorm_le
+            M.toExplicitModel.vacuumOrthogonalSpectralPVM
+            (D.quotientMultiplier t f) h (ε / ‖ψ‖) hεψ.le
+            (fun energy => (ht energy).le)
+        calc
+          ‖(M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                (D.quotientMultiplier t f) -
+              M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                h) ψ‖ ≤
+            ‖M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                  (D.quotientMultiplier t f) -
+                M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                  h‖ * ‖ψ‖ :=
+              (M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                  (D.quotientMultiplier t f) -
+                M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+                  h).le_opNorm ψ
+          _ ≤ (ε / ‖ψ‖) * ‖ψ‖ :=
+            mul_le_mul_of_nonneg_right hOperator (norm_nonneg ψ)
+          _ = ε := by field_simp [ne_of_gt hψNorm]
     have hAmbient :
         Tendsto
           (fun t =>
