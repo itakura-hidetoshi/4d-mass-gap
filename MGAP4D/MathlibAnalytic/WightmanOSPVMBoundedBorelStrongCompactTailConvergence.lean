@@ -12,25 +12,28 @@ noncomputable section
 /-- Restriction of a bounded Borel multiplier to a measurable energy set. -/
 def pvmBoundedBorelRestrict
     (s : Set ℝ) (hs : MeasurableSet s)
-    (f : PVMBoundedBorelRealFunction) : PVMBoundedBorelRealFunction where
-  toFun := fun energy => if energy ∈ s then f.toFun energy else 0
-  measurable_toFun :=
-    Measurable.ite hs f.measurable_toFun measurable_const
-  bounded_toFun := by
-    obtain ⟨C, hC⟩ := f.bounded_toFun
-    have hCnonneg : 0 ≤ C :=
-      le_trans (norm_nonneg (f.toFun 0)) (hC 0)
-    refine ⟨C, ?_⟩
-    intro energy
-    by_cases henergy : energy ∈ s
-    · simpa [pvmBoundedBorelRestrict, henergy] using hC energy
-    · simp [pvmBoundedBorelRestrict, henergy, hCnonneg]
+    (f : PVMBoundedBorelRealFunction) : PVMBoundedBorelRealFunction := by
+  classical
+  exact
+    { toFun := fun energy => if energy ∈ s then f.toFun energy else 0
+      measurable_toFun :=
+        Measurable.ite hs f.measurable_toFun measurable_const
+      bounded_toFun := by
+        obtain ⟨C, hC⟩ := f.bounded_toFun
+        have hCnonneg : 0 ≤ C :=
+          le_trans (norm_nonneg (f.toFun 0)) (hC 0)
+        refine ⟨C, ?_⟩
+        intro energy
+        by_cases henergy : energy ∈ s
+        · simpa [henergy] using hC energy
+        · simpa [henergy] using hCnonneg }
 
 @[simp] theorem pvmBoundedBorelRestrict_apply
     (s : Set ℝ) (hs : MeasurableSet s)
     (f : PVMBoundedBorelRealFunction) (energy : ℝ) :
     (pvmBoundedBorelRestrict s hs f).toFun energy =
-      if energy ∈ s then f.toFun energy else 0 :=
+      if energy ∈ s then f.toFun energy else 0 := by
+  classical
   rfl
 
 /-- Symmetric compact energy window used for the compact/tail decomposition. -/
@@ -48,10 +51,11 @@ theorem pvmBoundedBorelSub_restrict_eq_restrict_compl
     (s : Set ℝ) (hs : MeasurableSet s) :
     pvmBoundedBorelSub f (pvmBoundedBorelRestrict s hs f) =
       pvmBoundedBorelRestrict sᶜ hs.compl f := by
+  classical
   apply PVMBoundedBorelRealFunction.ext
   funext energy
   by_cases henergy : energy ∈ s <;>
-    simp [pvmBoundedBorelSub, pvmBoundedBorelRestrict, henergy]
+    simp [pvmBoundedBorelSub, pvmBoundedBorelRestrict_apply, henergy]
 
 /-- Operator form of the measurable compact/tail decomposition. -/
 theorem pvmBoundedBorelSpectralIntegralOperator_sub_restrict
@@ -87,11 +91,11 @@ theorem pvmBoundedBorelSpectralIntegralOperator_sub_restrict_apply
 /-- Compact-uniform convergence plus small spectral tails at one vector.
 
 This is the strong-convergence replacement for global uniform multiplier
-convergence.  The compact part is controlled pointwise on one finite energy
+convergence. The compact part is controlled pointwise on one finite energy
 window, while both the approximating and target spectral tails are small after
 PVM integration at the selected vector. -/
 def PVMBoundedBorelCompactTailTendstoAtVector
-    {H α : Type*}
+    {H : Type} {α : Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H)
     (l : Filter α)
@@ -119,7 +123,7 @@ def PVMBoundedBorelCompactTailTendstoAtVector
 /-- Compact-uniform multiplier convergence and small integrated spectral tails
 imply strong convergence of the completed PVM integrals at the selected vector. -/
 theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_atVector_of_compactTail
-    {H α : Type*}
+    {H : Type} {α : Type*}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (P : OrthogonalProjectionValuedSetFunction H)
     {l : Filter α}
@@ -132,10 +136,11 @@ theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_atVector_of_compactTail
       (fun a => pvmBoundedBorelSpectralIntegralOperator P (F a) ψ)
       l
       (𝓝 (pvmBoundedBorelSpectralIntegralOperator P G ψ)) := by
+  classical
   refine (Metric.tendsto_nhds).2 ?_
   intro ε hε
   rcases hCompactTail ε hε with
-    ⟨R, hR, hTailF, hTailG, hCompact⟩
+    ⟨R, _hR, hTailF, hTailG, hCompact⟩
   let K : Set ℝ := pvmEnergyWindow R
   have hK : MeasurableSet K := measurableSet_pvmEnergyWindow R
   let δ : ℝ := ε / (8 * (‖ψ‖ + 1))
@@ -166,8 +171,8 @@ theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_atVector_of_compactTail
     intro energy
     by_cases henergy : energy ∈ K
     · have hLocal := haCompact energy (by simpa [K] using henergy)
-      simpa [pvmBoundedBorelRestrict, henergy, δ] using hLocal.le
-    · simp [pvmBoundedBorelRestrict, henergy, hδ.le]
+      simpa [pvmBoundedBorelRestrict_apply, henergy, δ] using hLocal.le
+    · simp [pvmBoundedBorelRestrict_apply, henergy, hδ.le]
   have hOperator :
       ‖pvmBoundedBorelSpectralIntegralOperator P
             (pvmBoundedBorelRestrict K hK (F a)) -
