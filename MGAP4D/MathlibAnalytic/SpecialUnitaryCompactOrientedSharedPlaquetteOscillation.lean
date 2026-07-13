@@ -62,8 +62,15 @@ theorem compact_oriented_plaquetteHolonomy_congr
       A (L.geometry.boundary p k).edge =
         B (L.geometry.boundary p k).edge) :
     L.plaquetteHolonomy A p = L.plaquetteHolonomy B p := by
-  unfold CompactOrientedGaugeWilsonSystem.plaquetteHolonomy
-    FiniteOrientedFourDimensionalPlaquetteGeometry.plaquetteHolonomy
+  change
+    L.stepValue A (L.geometry.boundary p 0) *
+          L.stepValue A (L.geometry.boundary p 1) *
+        L.stepValue A (L.geometry.boundary p 2) *
+      L.stepValue A (L.geometry.boundary p 3) =
+    L.stepValue B (L.geometry.boundary p 0) *
+          L.stepValue B (L.geometry.boundary p 1) *
+        L.stepValue B (L.geometry.boundary p 2) *
+      L.stepValue B (L.geometry.boundary p 3)
   rw [compact_oriented_stepValue_congr L A B
       (L.geometry.boundary p 0) (h 0),
     compact_oriented_stepValue_congr L A B
@@ -221,8 +228,10 @@ private theorem compact_oriented_abs_sum_le_sum_abs
   | empty => simp
   | @insert a s ha ih =>
       rw [Finset.sum_insert ha, Finset.sum_insert ha]
-      exact (abs_add (f a) (∑ i ∈ s, f i)).trans
-        (add_le_add_left ih |f a|)
+      have haBounds := abs_le.mp (le_rfl : |f a| ≤ |f a|)
+      have hsBounds := abs_le.mp ih
+      apply abs_le.mpr
+      constructor <;> linarith
 
 /-- If every plaquette energy lies in `[0, energyBound]`, then one shared
 plaquette contributes at most `2 * energyBound` to the four-term oscillation. -/
@@ -255,7 +264,7 @@ theorem compact_oriented_sourceResponseOscillationTerm_abs_le
   have hd := hEnergy_le
     (L.plaquetteHolonomy (L.replaceLink B target v) p)
   apply abs_le.mpr
-  constructor <;> linarith
+  constructor <;> linarith [hEnergyBound_nonneg]
 
 /-- Shared-plaquette cardinality controls the complete Wilson-action response
 oscillation. -/
