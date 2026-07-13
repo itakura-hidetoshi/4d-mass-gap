@@ -19,65 +19,74 @@ theorem physicalState_smul_sub
     (r : ℝ) (F G : P.PositiveTimeObservable) :
     P.physicalState (r • (F - G)) =
       r • (P.physicalState F - P.physicalState G) := by
+  let X : P.PositiveTimeObservable := F - G
   have hCrossRight :
-      inner ℝ (P.physicalState (r • (F - G)))
+      inner ℝ (P.physicalState (r • X))
           (P.physicalState F - P.physicalState G) =
-        inner ℝ (r • (F - G)) (F - G) := by
+        inner ℝ (r • X) X := by
+    dsimp [X]
     rw [inner_sub_right, P.inner_physicalState_physicalState,
       P.inner_physicalState_physicalState, inner_sub_right]
   have hCrossLeft :
       inner ℝ (P.physicalState F - P.physicalState G)
-          (P.physicalState (r • (F - G))) =
-        inner ℝ (F - G) (r • (F - G)) := by
+          (P.physicalState (r • X)) =
+        inner ℝ X (r • X) := by
+    dsimp [X]
     rw [inner_sub_left, P.inner_physicalState_physicalState,
       P.inner_physicalState_physicalState, inner_sub_left]
+  have hSelfSmul :
+      inner ℝ (r • X) (r • X) =
+        r * (r * inner ℝ X X) := by
+    calc
+      inner ℝ (r • X) (r • X) =
+          r * inner ℝ X (r • X) :=
+        real_inner_smul_left X (r • X) r
+      _ = r * (r * inner ℝ X X) := by
+        rw [real_inner_smul_right X X r]
+  have hCrossSmulLeft :
+      inner ℝ (r • X) X = r * inner ℝ X X :=
+    real_inner_smul_left X X r
+  have hCrossSmulRight :
+      inner ℝ X (r • X) = r * inner ℝ X X :=
+    real_inner_smul_right X X r
   have hNormDiff :
-      ‖P.physicalState F - P.physicalState G‖ = ‖F - G‖ := by
+      ‖P.physicalState F - P.physicalState G‖ = ‖X‖ := by
+    dsimp [X]
     simpa only [dist_eq_norm] using P.dist_physicalState_eq F G
   have hsq :
-      ‖P.physicalState (r • (F - G)) -
+      ‖P.physicalState (r • X) -
           r • (P.physicalState F - P.physicalState G)‖ ^ 2 = 0 := by
     calc
-      ‖P.physicalState (r • (F - G)) -
+      ‖P.physicalState (r • X) -
           r • (P.physicalState F - P.physicalState G)‖ ^ 2 =
           inner ℝ
-            (P.physicalState (r • (F - G)) -
+            (P.physicalState (r • X) -
               r • (P.physicalState F - P.physicalState G))
-            (P.physicalState (r • (F - G)) -
+            (P.physicalState (r • X) -
               r • (P.physicalState F - P.physicalState G)) := by
         symm
         exact real_inner_self_eq_norm_sq _
       _ = 0 := by
-        rw [inner_sub_left]
-        rw [inner_sub_right, inner_sub_right]
-        rw [real_inner_smul_right
-          (P.physicalState (r • (F - G)))
-          (P.physicalState F - P.physicalState G) r]
-        rw [real_inner_smul_left
-          (P.physicalState F - P.physicalState G)
-          (P.physicalState (r • (F - G))) r]
-        rw [real_inner_smul_left
-          (P.physicalState F - P.physicalState G)
-          (r • (P.physicalState F - P.physicalState G)) r]
-        rw [real_inner_smul_right
-          (P.physicalState F - P.physicalState G)
-          (P.physicalState F - P.physicalState G) r]
+        rw [inner_sub_left, inner_sub_right, inner_sub_right]
+        rw [real_inner_smul_right, real_inner_smul_left,
+          real_inner_smul_left, real_inner_smul_right]
         rw [P.inner_physicalState_physicalState, hCrossRight, hCrossLeft]
+        rw [hSelfSmul, hCrossSmulLeft, hCrossSmulRight]
         rw [real_inner_self_eq_norm_sq
           (P.physicalState F - P.physicalState G), hNormDiff]
-        rw [real_inner_smul_left (F - G) (r • (F - G)) r]
-        rw [real_inner_smul_right (F - G) (F - G) r]
-        rw [real_inner_smul_left (F - G) (F - G) r]
-        rw [real_inner_smul_right (F - G) (F - G) r]
-        rw [← real_inner_self_eq_norm_sq (F - G)]
-        ring_nf
+        rw [real_inner_self_eq_norm_sq X]
+        ring
   have hnorm :
-      ‖P.physicalState (r • (F - G)) -
+      ‖P.physicalState (r • X) -
           r • (P.physicalState F - P.physicalState G)‖ = 0 := by
     nlinarith [norm_nonneg
-      (P.physicalState (r • (F - G)) -
+      (P.physicalState (r • X) -
         r • (P.physicalState F - P.physicalState G))]
-  exact sub_eq_zero.mp (norm_eq_zero.mp hnorm)
+  have hEq :
+      P.physicalState (r • X) =
+        r • (P.physicalState F - P.physicalState G) :=
+    sub_eq_zero.mp (norm_eq_zero.mp hnorm)
+  simpa [X] using hEq
 
 end EuclideanYangMillsOSPositiveTimeObservableConstruction
 
