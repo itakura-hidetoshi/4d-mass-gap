@@ -58,8 +58,8 @@ theorem periodicHypercubicPhysical_mem_activeNeighbors_iff
     exact ⟨hNe,
       (periodicHypercubicPhysical_mem_plaquetteEdges_iff n p source).mpr hpSource⟩
 
-/-- The generic compact-oriented shared-plaquette finset of the periodic
-`SU(N)` system is exactly the concrete coordinate shared-plaquette finset. -/
+/-- The compact-oriented shared-plaquette finset used by the exact density-ratio
+system is exactly the concrete coordinate shared-plaquette finset. -/
 theorem periodicHypercubicSpecialUnitary_sharedPlaquettes_eq
     (n N : ℕ) [NeZero n]
     (hN : 0 < N)
@@ -67,15 +67,20 @@ theorem periodicHypercubicSpecialUnitary_sharedPlaquettes_eq
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
     (target source : PeriodicHypercubicEdge n) :
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).base.sharedPlaquettes target source =
+    (specialUnitaryContinuousCompactOrientedDensityRatioSystem
+      (periodicHypercubicFiniteOrientedGeometry n)
+      N hN beta beta_nonneg).base.sharedPlaquettes target source =
         periodicHypercubicSharedPlaquettes n target source := by
   classical
   apply Finset.ext
   intro p
-  rw [compact_oriented_mem_sharedPlaquettes_iff,
-    periodicHypercubic_mem_sharedPlaquettes_iff]
-  rfl
+  rw [compact_oriented_mem_sharedPlaquettes_iff]
+  change
+    (periodicHypercubicPlaquetteTouchesEdge n p target ∧
+      periodicHypercubicPlaquetteTouchesEdge n p source) ↔
+      p ∈ periodicHypercubicSharedPlaquettes n target source
+  exact (periodicHypercubic_mem_sharedPlaquettes_iff
+    n target source p).symm
 
 /-- Active periodic links share exactly one plaquette in the nondegenerate
 periodic regime. -/
@@ -88,8 +93,9 @@ theorem periodicHypercubicSpecialUnitary_sharedPlaquetteCard_eq_one_of_active
     (beta_nonneg : 0 ≤ beta)
     (target source : PeriodicHypercubicEdge n)
     (hActive : source ∈ periodicHypercubicActiveNeighbors n target) :
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).base.sharedPlaquettes target source).card = 1 := by
+    ((specialUnitaryContinuousCompactOrientedDensityRatioSystem
+      (periodicHypercubicFiniteOrientedGeometry n)
+      N hN beta beta_nonneg).base.sharedPlaquettes target source).card = 1 := by
   classical
   have hData :=
     (periodicHypercubicPhysical_mem_activeNeighbors_iff n target source).mp hActive
@@ -134,7 +140,8 @@ theorem periodicHypercubicSpecialUnitary_influence_eq_eta_of_active
       n N hn hN beta beta_nonneg target source hActive
   unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
     periodicHypercubicSpecialUnitaryDobrushinEta
-  rw [if_neg hNe, hCard]
+  simp only [if_neg hNe]
+  rw [hCard]
   norm_num
 
 /-- A source outside the periodic active-neighbor set has exactly zero explicit
@@ -166,8 +173,8 @@ theorem periodicHypercubicSpecialUnitary_influence_eq_zero_of_not_active
         ((periodicHypercubicPhysical_mem_activeNeighbors_iff
           n target source).2 ⟨⟨p, hp.1, hp.2⟩, Ne.symm hEq⟩)
     unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
-    rw [if_neg hEq,
-      periodicHypercubicSpecialUnitary_sharedPlaquettes_eq,
+    simp only [if_neg hEq]
+    rw [periodicHypercubicSpecialUnitary_sharedPlaquettes_eq,
       hSharedEmpty]
     simp [compactHaarOscillationInfluence,
       HaarLikelihoodRatioInfluence.coefficient]
