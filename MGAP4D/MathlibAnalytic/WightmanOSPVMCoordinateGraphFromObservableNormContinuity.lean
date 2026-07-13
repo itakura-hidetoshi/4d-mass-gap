@@ -31,29 +31,34 @@ def osClassLinearMap
     P.osClassLinearMap F = P.osClass F :=
   rfl
 
-/-- The represented physical-state map, bundled as the composition of the OS
-separation quotient with Mathlib's canonical completion isometry. -/
+/-- The represented physical-state map, bundled directly on the intentionally
+opaque physical carrier.  Linearity is proved by unfolding only inside the two
+structure laws, so the public Hilbert type remains opaque. -/
 noncomputable def physicalStateLinearMap
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.PhysicalHilbert := by
-  change P.PositiveTimeObservable →ₗ[ℝ]
-    UniformSpace.Completion P.OSSeparatedPreHilbert
-  exact
-    (UniformSpace.Completion.toComplₗᵢ
-      (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).toLinearMap.comp
-      P.osClassLinearMap
+    P.PositiveTimeObservable →ₗ[ℝ] P.PhysicalHilbert where
+  toFun := P.physicalState
+  map_add' := by
+    intro F G
+    unfold physicalState PhysicalHilbert osClass
+    simpa using congrArg
+      (fun q : P.OSSeparatedPreHilbert =>
+        (q : UniformSpace.Completion P.OSSeparatedPreHilbert))
+      (SeparationQuotient.mk_add F G)
+  map_smul' := by
+    intro r F
+    unfold physicalState PhysicalHilbert osClass
+    simpa using congrArg
+      (fun q : P.OSSeparatedPreHilbert =>
+        (q : UniformSpace.Completion P.OSSeparatedPreHilbert))
+      (SeparationQuotient.mk_smul r F)
 
 @[simp] theorem physicalStateLinearMap_apply
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
     (F : P.PositiveTimeObservable) :
-    P.physicalStateLinearMap F = P.physicalState F := by
-  change
-    ((P.osClass F : P.OSSeparatedPreHilbert) :
-      UniformSpace.Completion P.OSSeparatedPreHilbert) =
-    ((P.osClass F : P.OSSeparatedPreHilbert) :
-      UniformSpace.Completion P.OSSeparatedPreHilbert)
+    P.physicalStateLinearMap F = P.physicalState F :=
   rfl
 
 /-- The OS quotient followed by Hilbert completion preserves the observable
@@ -80,14 +85,16 @@ noncomputable def physicalStateLinearIsometry
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
     P.PositiveTimeObservable →ₗᵢ[ℝ] P.PhysicalHilbert where
   toLinearMap := P.physicalStateLinearMap
-  norm_map' := P.norm_physicalState_eq_observableNorm
+  norm_map' := by
+    intro F
+    simpa using P.norm_physicalState_eq_observableNorm F
 
 @[simp] theorem physicalStateLinearIsometry_apply
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
     (F : P.PositiveTimeObservable) :
     P.physicalStateLinearIsometry F = P.physicalState F :=
-  P.physicalStateLinearMap_apply F
+  rfl
 
 end EuclideanYangMillsOSPositiveTimeObservableConstruction
 
@@ -127,7 +134,9 @@ noncomputable def toStrongContinuityOnObservableStates
           (nhds (M.observables.physicalState F)) := by
       have hMap :=
         M.observables.physicalStateLinearIsometry.continuous.tendsto F
-      simpa using hMap.comp (hT.tendsto_zero_on_observable F)
+      simpa only [Function.comp_apply,
+        EuclideanYangMillsOSPositiveTimeObservableConstruction.physicalStateLinearIsometry_apply]
+        using hMap.comp (hT.tendsto_zero_on_observable F)
     have hEventually :
         (fun t : ℝ => T.operator t (M.observables.physicalState F)) =ᶠ[
           nhdsWithin 0 (Set.Ici 0)]
