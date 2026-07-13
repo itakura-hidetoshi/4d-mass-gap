@@ -50,12 +50,18 @@ theorem physicalState_smul_sub
       _ = 0 := by
         rw [inner_sub_left]
         rw [inner_sub_right, inner_sub_right]
-        simp only [inner_smul_left, inner_smul_right]
+        rw [inner_smul_right]
+        rw [inner_smul_left]
+        rw [inner_smul_left]
+        rw [inner_smul_right]
         rw [P.inner_physicalState_physicalState, hCrossRight, hCrossLeft]
-        simp_rw [inner_smul_left, inner_smul_right]
-        simp_rw [real_inner_self_eq_norm_sq]
-        rw [hNormDiff]
-        simp
+        rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, hNormDiff]
+        rw [← real_inner_self_eq_norm_sq (r • (F - G))]
+        rw [inner_smul_left]
+        rw [inner_smul_right]
+        rw [inner_smul_left]
+        rw [inner_smul_right]
+        rw [real_inner_self_eq_norm_sq]
         ring_nf
   have hnorm :
       ‖P.physicalState (r • (F - G)) -
