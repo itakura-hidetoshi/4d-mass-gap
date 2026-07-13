@@ -73,9 +73,10 @@ theorem continuous_compact_oriented_randomScanHeatBathL2_eq_id_sub_hamiltonian
     abel
   rw [continuous_compact_oriented_randomScanHeatBathL2_apply, hProjection,
     smul_sub, smul_smul]
-  change n⁻¹ • (n • f) - n⁻¹ • C.heatBathHamiltonianL2 f =
+  simp only [one_div]
+  change (n⁻¹ * n) • f - n⁻¹ • C.heatBathHamiltonianL2 f =
     f - n⁻¹ • C.heatBathHamiltonianL2 f
-  rw [smul_smul, inv_mul_cancel₀ hn0, one_smul]
+  rw [inv_mul_cancel₀ hn0, one_smul]
 
 /-- The exact compact-Haar random-scan operator is self-adjoint in the Gibbs
 real `L²` pairing. -/
@@ -207,7 +208,39 @@ theorem continuous_compact_oriented_randomScanRayleigh_iff_heatBathPoincareL2
     have hCard :
         (0 : ℝ) < (Fintype.card C.base.geometry.Edge : ℝ) :=
       Nat.cast_pos.mpr hEdge
-    nlinarith [sq_nonneg ‖q‖]
+    have hInvPos :
+        0 < (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ :=
+      inv_pos.mpr hCard
+    by_contra hGap
+    have hGapLt :
+        inner ℝ (C.heatBathHamiltonianL2 q) q <
+          gap * ‖q‖ ^ 2 :=
+      lt_of_not_ge hGap
+    have hScaled :
+        (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+            inner ℝ (C.heatBathHamiltonianL2 q) q <
+          (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+            (gap * ‖q‖ ^ 2) :=
+      mul_lt_mul_of_pos_left hGapLt hInvPos
+    have hStrict :
+        (1 - gap / (Fintype.card C.base.geometry.Edge : ℝ)) *
+            ‖q‖ ^ 2 <
+          ‖q‖ ^ 2 -
+            (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+              inner ℝ (C.heatBathHamiltonianL2 q) q := by
+      calc
+        (1 - gap / (Fintype.card C.base.geometry.Edge : ℝ)) *
+              ‖q‖ ^ 2 =
+            ‖q‖ ^ 2 -
+              (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+                (gap * ‖q‖ ^ 2) := by
+          rw [div_eq_mul_inv]
+          ring
+        _ < ‖q‖ ^ 2 -
+              (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+                inner ℝ (C.heatBathHamiltonianL2 q) q :=
+          sub_lt_sub_left hScaled (‖q‖ ^ 2)
+    exact (not_lt_of_ge hRandom) hStrict
   · intro hPoincare f
     let q : Lp ℝ 2 C.gibbsMeasure := C.vacuumCenteredL2 f
     have hGap := hPoincare f
@@ -226,7 +259,28 @@ theorem continuous_compact_oriented_randomScanRayleigh_iff_heatBathPoincareL2
     have hCard :
         (0 : ℝ) < (Fintype.card C.base.geometry.Edge : ℝ) :=
       Nat.cast_pos.mpr hEdge
-    nlinarith [sq_nonneg ‖q‖]
+    have hInvNonneg :
+        0 ≤ (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ :=
+      (inv_pos.mpr hCard).le
+    have hScaled :
+        (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+            (gap * ‖q‖ ^ 2) ≤
+          (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+            inner ℝ (C.heatBathHamiltonianL2 q) q :=
+      mul_le_mul_of_nonneg_left hGap hInvNonneg
+    calc
+      ‖q‖ ^ 2 -
+            (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+              inner ℝ (C.heatBathHamiltonianL2 q) q ≤
+          ‖q‖ ^ 2 -
+            (Fintype.card C.base.geometry.Edge : ℝ)⁻¹ *
+              (gap * ‖q‖ ^ 2) :=
+        sub_le_sub_left hScaled (‖q‖ ^ 2)
+      _ =
+          (1 - gap / (Fintype.card C.base.geometry.Edge : ℝ)) *
+            ‖q‖ ^ 2 := by
+        rw [div_eq_mul_inv]
+        ring
 
 end ContinuousCompactRandomScanL2Structure
 
