@@ -23,9 +23,16 @@ theorem ExplicitWightmanOSReconstructedModel.pvmSimpleFuncSpectralIntegralOperat
   rw [pvmSimpleFuncSpectralIntegralOperator_apply,
     pvmSimpleFuncSpectralIntegralOperator_apply]
   unfold pvmFiniteSimpleSpectralIntegral
-  simp only [map_sum, map_smul]
+  change M.vacuumOrthogonal.subtype
+      (∑ c, (c : ℝ) •
+        M.vacuumOrthogonalSpectralPVM.projection
+          (pvmSimpleFuncFiber f c) ψ) =
+    ∑ c, (c : ℝ) •
+      M.spectralPVM.projection (pvmSimpleFuncFiber f c) (ψ : M.H)
+  rw [map_sum]
   apply Finset.sum_congr rfl
   intro c hc
+  rw [map_smul]
   rfl
 
 /-- Completed bounded-Borel PVM integration on `Ω⊥` is exactly the ambient
@@ -91,7 +98,9 @@ theorem ExplicitWightmanOSPositiveSpectralSupport.projection_Ici_zero_apply
       Disjoint (Set.Iio (0 : ℝ)) (Set.Ici (0 : ℝ)) := by
     rw [Set.disjoint_left]
     intro energy hneg hnonneg
-    exact (not_lt_of_ge hnonneg) hneg
+    have hlt : energy < 0 := by simpa using hneg
+    have hge : 0 ≤ energy := by simpa using hnonneg
+    exact (not_lt_of_ge hge) hlt
   have hUnion :
       Set.Iio (0 : ℝ) ∪ Set.Ici (0 : ℝ) = Set.univ := by
     ext energy
@@ -103,7 +112,7 @@ theorem ExplicitWightmanOSPositiveSpectralSupport.projection_Ici_zero_apply
       (Set.Iio (0 : ℝ)) (Set.Ici (0 : ℝ)) hDisjoint ψ
   rw [hUnion, M.spectralPVM.univ_apply,
     S.negativeProjection_zero ψ, zero_add] at hAdd
-  exact hAdd
+  exact hAdd.symm
 
 /-- Under positive spectral support, restricting a bounded multiplier to
 nonnegative energy does not change its ambient completed PVM integral. -/
