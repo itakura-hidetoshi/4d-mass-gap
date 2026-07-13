@@ -13,70 +13,18 @@ namespace EuclideanYangMillsOSPositiveTimeObservableConstruction
 
 variable {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
 
-/-- The canonical real-linear quotient map to the separated OS pre-Hilbert
-space. -/
-def osClassLinearMap
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.OSSeparatedPreHilbert where
-  toFun := P.osClass
-  map_add' := by
-    intro F G
-    exact SeparationQuotient.mk_add F G
-  map_smul' := by
-    intro r F
-    exact SeparationQuotient.mk_smul r F
-
-/-- The canonical completion embedding, bundled against the single transported
-module structure of the opaque physical Hilbert carrier. -/
-noncomputable def separatedToPhysicalLinearMap
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.OSSeparatedPreHilbert →ₗ[ℝ] P.PhysicalHilbert where
-  toFun := fun q => (q : P.PhysicalHilbert)
-  map_add' := by
-    intro x y
-    change
-      ((x + y : P.OSSeparatedPreHilbert) :
-        UniformSpace.Completion P.OSSeparatedPreHilbert) =
-      (x : UniformSpace.Completion P.OSSeparatedPreHilbert) +
-        (y : UniformSpace.Completion P.OSSeparatedPreHilbert)
-    exact
-      (UniformSpace.Completion.toComplₗᵢ
-        (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).map_add x y
-  map_smul' := by
-    intro r x
-    change
-      ((r • x : P.OSSeparatedPreHilbert) :
-        UniformSpace.Completion P.OSSeparatedPreHilbert) =
-      r • (x : UniformSpace.Completion P.OSSeparatedPreHilbert)
-    exact
-      (UniformSpace.Completion.toComplₗᵢ
-        (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).map_smul r x
-
-/-- Positive-time observables map linearly to their represented states in the
-completed OS physical Hilbert space. -/
-noncomputable def physicalStateLinearMap
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.PhysicalHilbert :=
-  P.separatedToPhysicalLinearMap.comp P.osClassLinearMap
-
-@[simp] theorem physicalStateLinearMap_apply
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
-    (F : P.PositiveTimeObservable) :
-    P.physicalStateLinearMap F = P.physicalState F :=
-  rfl
-
 /-- Represented positive-time observable states are dense in the completed OS
-physical Hilbert space. -/
-theorem physicalStateLinearMap_denseRange
+physical Hilbert space.  No linear structure on the opaque completion carrier is
+needed for this density statement. -/
+theorem physicalState_denseRange
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    DenseRange P.physicalStateLinearMap := by
+    DenseRange P.physicalState := by
   intro x
   exact closure_mono
     (by
       rintro y ⟨q, rfl⟩
       rcases SeparationQuotient.surjective_mk q with ⟨F, rfl⟩
-      refine ⟨F, ?_⟩
-      exact P.physicalStateLinearMap_apply F)
+      exact ⟨F, rfl⟩)
     ((os_preHilbert_dense_in_physical P) x)
 
 /-- The completed represented-state inner product is the original OS observable
@@ -143,11 +91,10 @@ theorem ReflectionTimeTranslationExchange.toIsRightInnerSymmetric
     (hExchange : T.ReflectionTimeTranslationExchange) :
     T.IsRightInnerSymmetric := by
   intro t ht ψ φ
-  refine M.observables.physicalStateLinearMap_denseRange.induction_on₂
+  refine M.observables.physicalState_denseRange.induction_on₂
     ?_ ?_ ψ φ
   · exact isClosed_eq (by fun_prop) (by fun_prop)
   · intro F G
-    simp only [M.observables.physicalStateLinearMap_apply]
     rw [T.operator_on_dense_state t F ht,
       T.operator_on_dense_state t G ht,
       M.observables.inner_physicalState_physicalState,
