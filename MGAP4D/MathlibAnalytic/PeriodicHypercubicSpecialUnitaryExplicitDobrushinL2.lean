@@ -80,7 +80,9 @@ noncomputable def
       coefficient_nonneg := D.coefficient_nonneg
       rowSum_le_coefficient := D.rowSum_le_coefficient
       coefficient_lt_one := D.coefficient_lt_one
-      edgeCard_pos := Fintype.card_pos_iff.mpr inferInstance
+      edgeCard_pos := by
+        change 0 < Fintype.card (PeriodicHypercubicEdge n)
+        exact Fintype.card_pos_iff.mpr ⟨(fun _ => 0), 0⟩
       centered_randomScan_rayleigh_le :=
         R.centered_randomScan_rayleigh_le }
 
