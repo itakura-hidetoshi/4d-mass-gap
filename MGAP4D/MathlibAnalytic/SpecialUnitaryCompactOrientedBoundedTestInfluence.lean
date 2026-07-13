@@ -21,8 +21,6 @@ pointwise variation estimate. -/
 theorem abs_sub_le_coefficient_mul_add
     (K p q : ℝ)
     (hK : 1 ≤ K)
-    (hp : 0 ≤ p)
-    (hq : 0 ≤ q)
     (hpq : p ≤ K * q)
     (hqp : q ≤ K * p) :
     |p - q| ≤ coefficient K * (p + q) := by
@@ -63,31 +61,22 @@ theorem boundedTest_integral_difference_abs_le
     apply hpInt.mono
     · exact hphi.aestronglyMeasurable.mul hpInt.aestronglyMeasurable
     · filter_upwards [] with x
-      simp only [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hp0 x)]
-      calc
-        |phi x| * p x ≤ 1 * p x :=
-          mul_le_mul_of_nonneg_right (hphiBound x) (hp0 x)
-        _ = |p x| := by simp [abs_of_nonneg (hp0 x)]
+      simpa [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hp0 x)] using
+        mul_le_mul_of_nonneg_right (hphiBound x) (hp0 x)
   have hphiQInt : Integrable (fun x => phi x * q x) μ := by
     apply hqInt.mono
     · exact hphi.aestronglyMeasurable.mul hqInt.aestronglyMeasurable
     · filter_upwards [] with x
-      simp only [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hq0 x)]
-      calc
-        |phi x| * q x ≤ 1 * q x :=
-          mul_le_mul_of_nonneg_right (hphiBound x) (hq0 x)
-        _ = |q x| := by simp [abs_of_nonneg (hq0 x)]
+      simpa [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hq0 x)] using
+        mul_le_mul_of_nonneg_right (hphiBound x) (hq0 x)
   have hDiffInt : Integrable (fun x =>
       phi x * p x - phi x * q x) μ :=
     hphiPInt.sub' hphiQInt
   have hAbsDiffInt : Integrable (fun x =>
       |phi x * p x - phi x * q x|) μ :=
     hDiffInt.abs
-  have hSumInt : Integrable (fun x => p x + q x) μ :=
-    hpInt.add' hqInt
-  have hCoeffNonneg : 0 ≤ coefficient K := by
-    unfold coefficient
-    exact div_nonneg (sub_nonneg.mpr hK) (by linarith)
+  have hSumInt : Integrable (fun x => p x + q x) μ := by
+    simpa only [Pi.add_apply] using hpInt.add hqInt
   have hRightInt : Integrable (fun x =>
       coefficient K * (p x + q x)) μ :=
     hSumInt.const_mul (coefficient K)
@@ -111,7 +100,7 @@ theorem boundedTest_integral_difference_abs_le
         _ = |p x - q x| := one_mul _
         _ ≤ coefficient K * (p x + q x) :=
           abs_sub_le_coefficient_mul_add K (p x) (q x) hK
-            (hp0 x) (hq0 x) (hRatio x).1 (hRatio x).2
+            (hRatio x).1 (hRatio x).2
     _ = coefficient K * ((∫ x, p x ∂μ) + ∫ x, q x ∂μ) := by
       rw [integral_const_mul, integral_add hpInt hqInt]
     _ = 2 * coefficient K := by rw [hpOne, hqOne]; ring
@@ -133,11 +122,9 @@ theorem compactHaarOscillationInfluence_nonneg
     (sub_nonneg.mpr (Real.one_le_exp hR))
     (by positivity)
 
-/-- Every finite nonnegative oscillation radius gives an influence strictly
-below one. -/
+/-- Every finite oscillation radius gives an influence strictly below one. -/
 theorem compactHaarOscillationInfluence_lt_one
-    {R : ℝ}
-    (hR : 0 ≤ R) :
+    (R : ℝ) :
     compactHaarOscillationInfluence R < 1 := by
   unfold compactHaarOscillationInfluence
     HaarLikelihoodRatioInfluence.coefficient
@@ -226,15 +213,16 @@ theorem continuous_compact_oriented_conditionalIntegral_difference_abs_le_of_den
 
 /-- The explicit off-diagonal `SU(N)` compact-Haar Dobrushin influence obtained
 from shared plaquettes. -/
-def specialUnitaryCompactOrientedSharedPlaquetteInfluence
+noncomputable def specialUnitaryCompactOrientedSharedPlaquetteInfluence
     (geometry : FiniteOrientedFourDimensionalPlaquetteGeometry)
     (N : ℕ)
     (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
-    (target source : geometry.Edge) : ℝ :=
-  if target = source then 0 else
+    (target source : geometry.Edge) : ℝ := by
+  classical
+  exact if target = source then 0 else
     compactHaarOscillationInfluence
       (beta * (4 * (((specialUnitaryContinuousCompactOrientedDensityRatioSystem
         geometry N hN beta beta_nonneg).base.sharedPlaquettes
@@ -251,6 +239,7 @@ theorem specialUnitaryCompactOrientedSharedPlaquetteInfluence_nonneg
     (target source : geometry.Edge) :
     0 ≤ specialUnitaryCompactOrientedSharedPlaquetteInfluence
       geometry N hN beta beta_nonneg target source := by
+  classical
   unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
   split_ifs
   · exact le_rfl
@@ -268,6 +257,7 @@ theorem specialUnitaryCompactOrientedSharedPlaquetteInfluence_diagonal_zero
     (target : geometry.Edge) :
     specialUnitaryCompactOrientedSharedPlaquetteInfluence
       geometry N hN beta beta_nonneg target target = 0 := by
+  classical
   simp [specialUnitaryCompactOrientedSharedPlaquetteInfluence]
 
 /-- The shared-plaquette formula controls every bounded test of the exact
@@ -284,7 +274,8 @@ theorem specialUnitaryContinuousCompactOriented_conditionalIntegral_difference_a
     (target source : geometry.Edge)
     (hAgree : (specialUnitaryContinuousCompactOrientedDensityRatioSystem
       geometry N hN beta beta_nonneg).base.AgreeOffLink A B source)
-    (phi : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ)
+    (phi : (specialUnitaryContinuousCompactOrientedDensityRatioSystem
+      geometry N hN beta beta_nonneg).base.Gauge → ℝ)
     (hphi : StronglyMeasurable phi)
     (hphiBound : ∀ u, |phi u| ≤ 1) :
     let C := specialUnitaryContinuousCompactOrientedDensityRatioSystem
@@ -294,12 +285,22 @@ theorem specialUnitaryContinuousCompactOriented_conditionalIntegral_difference_a
         2 * specialUnitaryCompactOrientedSharedPlaquetteInfluence
           geometry N hN beta beta_nonneg target source := by
   dsimp only
+  classical
   let C := specialUnitaryContinuousCompactOrientedDensityRatioSystem
     geometry N hN beta beta_nonneg
+  change C.base.AgreeOffLink A B source at hAgree
+  change |(∫ u, phi u ∂C.singleLinkConditionalMeasure A target) -
+      (∫ u, phi u ∂C.singleLinkConditionalMeasure B target)| ≤
+        2 * specialUnitaryCompactOrientedSharedPlaquetteInfluence
+          geometry N hN beta beta_nonneg target source
   by_cases hEq : target = source
   · subst source
-    rw [continuous_compact_oriented_conditionalIntegral_eq_of_agreeOffLink
-      C target A B hAgree phi]
+    have hIntEq :
+        (∫ u, phi u ∂C.singleLinkConditionalMeasure A target) =
+          ∫ u, phi u ∂C.singleLinkConditionalMeasure B target :=
+      continuous_compact_oriented_conditionalIntegral_eq_of_agreeOffLink
+        C target A B hAgree phi
+    rw [hIntEq]
     simp [specialUnitaryCompactOrientedSharedPlaquetteInfluence]
   · let R := beta * (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
     have hR : 0 ≤ R := by positivity
