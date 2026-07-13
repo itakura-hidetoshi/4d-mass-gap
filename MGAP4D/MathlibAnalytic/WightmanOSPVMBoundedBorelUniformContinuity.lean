@@ -158,7 +158,7 @@ theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_of_uniformTendsto
     Tendsto
       (fun a => pvmBoundedBorelSpectralIntegralOperator P (F a))
       l (𝓝 (pvmBoundedBorelSpectralIntegralOperator P G)) := by
-  rw [Metric.tendsto_iff]
+  refine (Metric.tendsto_nhds).2 ?_
   intro ε hε
   have hε2 : 0 < ε / 2 := half_pos hε
   filter_upwards [hUniform (ε / 2) hε2] with a ha
@@ -217,7 +217,7 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
           (nhdsWithin 0 (Ioi 0))
           (𝓝 (M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
             h ψ)) := by
-      rw [Metric.tendsto_iff]
+      refine (Metric.tendsto_nhds).2 ?_
       intro ε hε
       by_cases hψZero : ψ = 0
       · subst ψ
@@ -262,7 +262,7 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
             (((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
                 (D.quotientMultiplier t f) ψ :
               M.toExplicitModel.VacuumOrthogonalHilbert) :
-            M.toExplicitModel.H))
+            M.toExplicitModel.H)))
           (nhdsWithin 0 (Ioi 0))
           (𝓝 (((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
               h ψ : M.toExplicitModel.VacuumOrthogonalHilbert) :
