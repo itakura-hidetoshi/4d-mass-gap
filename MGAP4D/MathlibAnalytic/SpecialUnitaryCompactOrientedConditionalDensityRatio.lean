@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.SpecialUnitaryCompactOrientedSharedPlaquetteOscillationBound
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonSingleLinkConditional
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathDensityBalance
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -9,19 +9,20 @@ open MeasureTheory
 
 noncomputable section
 
+namespace HaarNormalizedExponentialRatio
+
 /-- Real normalized exponential density with respect to a base measure. -/
-def normalizedExponentialDensity
+def density
     {α : Type*} [MeasurableSpace α]
     (μ : Measure α)
     (f : α → ℝ)
     (x : α) : ℝ :=
   Real.exp (f x) / ∫ y, Real.exp (f y) ∂μ
 
-/-- Oscillation control of two log weights gives the sharp pointwise mutual
-likelihood-ratio factor after normalization.  No second normalization factor is
-lost: the partition-function comparison is obtained by integrating the same
-cross-multiplied pointwise exponential inequality. -/
-theorem normalizedExponentialDensity_mutual_le_exp_mul_of_difference_oscillation
+/-- Oscillation control of two log weights gives the pointwise mutual
+likelihood-ratio factor after normalization, without a second normalization
+loss. -/
+theorem mutual_le_exp_mul_of_difference_oscillation
     {α : Type*} [MeasurableSpace α]
     (μ : Measure α)
     (f g : α → ℝ)
@@ -31,14 +32,12 @@ theorem normalizedExponentialDensity_mutual_le_exp_mul_of_difference_oscillation
     (hOsc : ∀ x y : α,
       (f x - g x) - (f y - g y) ≤ R)
     (x : α) :
-    normalizedExponentialDensity μ f x ≤
-        Real.exp R * normalizedExponentialDensity μ g x ∧
-      normalizedExponentialDensity μ g x ≤
-        Real.exp R * normalizedExponentialDensity μ f x := by
+    density μ f x ≤ Real.exp R * density μ g x ∧
+      density μ g x ≤ Real.exp R * density μ f x := by
   have hZf : 0 < ∫ y, Real.exp (f y) ∂μ := integral_exp_pos hf
   have hZg : 0 < ∫ y, Real.exp (g y) ∂μ := integral_exp_pos hg
   constructor
-  · unfold normalizedExponentialDensity
+  · unfold density
     rw [show Real.exp R *
         (Real.exp (g x) / ∫ y, Real.exp (g y) ∂μ) =
       (Real.exp R * Real.exp (g x)) /
@@ -63,7 +62,7 @@ theorem normalizedExponentialDensity_mutual_le_exp_mul_of_difference_oscillation
         (hf.const_mul (Real.exp R * Real.exp (g x)))
         (Filter.Eventually.of_forall hPoint)
     simpa using hInt
-  · unfold normalizedExponentialDensity
+  · unfold density
     rw [show Real.exp R *
         (Real.exp (f x) / ∫ y, Real.exp (f y) ∂μ) =
       (Real.exp R * Real.exp (f x)) /
@@ -89,19 +88,12 @@ theorem normalizedExponentialDensity_mutual_le_exp_mul_of_difference_oscillation
         (Filter.Eventually.of_forall hPoint)
     simpa using hInt
 
-/-- Real density of the exact compact-Haar one-link conditional law. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (A : C.base.Configuration)
-    (target : C.base.geometry.Edge)
-    (g : C.base.Gauge) : ℝ :=
-  C.singleLinkBoltzmannFactor A target g /
-    C.singleLinkPartitionFunction A target
+end HaarNormalizedExponentialRatio
 
-/-- A pointwise oscillation radius for the one-link Gibbs exponents gives the
-same exponential mutual likelihood-ratio factor for the exact normalized Haar
+/-- A pointwise oscillation radius for one-link Gibbs exponents gives the same
+exponential mutual likelihood-ratio factor for exact normalized Haar
 conditional densities. -/
-theorem continuous_compact_oriented_singleLinkConditionalDensity_mutual_le
+theorem continuous_compact_oriented_singleLinkConditionalDensityReal_mutual_le
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A B : C.base.Configuration)
     (target : C.base.geometry.Edge)
@@ -112,15 +104,15 @@ theorem continuous_compact_oriented_singleLinkConditionalDensity_mutual_le
       (C.base.gibbsExponent (C.base.replaceLink A target v) -
         C.base.gibbsExponent (C.base.replaceLink B target v)) ≤ R)
     (u : C.base.Gauge) :
-    C.singleLinkConditionalDensity A target u ≤
-        Real.exp R * C.singleLinkConditionalDensity B target u ∧
-      C.singleLinkConditionalDensity B target u ≤
-        Real.exp R * C.singleLinkConditionalDensity A target u := by
-  simpa [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensity,
+    C.singleLinkConditionalDensityReal A target u ≤
+        Real.exp R * C.singleLinkConditionalDensityReal B target u ∧
+      C.singleLinkConditionalDensityReal B target u ≤
+        Real.exp R * C.singleLinkConditionalDensityReal A target u := by
+  simpa [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalDensityReal,
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoltzmannFactor,
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkPartitionFunction,
-    normalizedExponentialDensity] using
-    normalizedExponentialDensity_mutual_le_exp_mul_of_difference_oscillation
+    HaarNormalizedExponentialRatio.density] using
+    HaarNormalizedExponentialRatio.mutual_le_exp_mul_of_difference_oscillation
       (normalizedCompactHaar C.base.Gauge)
       (fun g => C.base.gibbsExponent (C.base.replaceLink A target g))
       (fun g => C.base.gibbsExponent (C.base.replaceLink B target g))
@@ -130,7 +122,7 @@ theorem continuous_compact_oriented_singleLinkConditionalDensity_mutual_le
 
 /-- Short name for the continuous compact-oriented canonical `SU(N)` Wilson
 system used in the conditional-density theorem. -/
-abbrev specialUnitaryContinuousCompactOrientedDensitySystem
+abbrev specialUnitaryContinuousCompactOrientedDensityRatioSystem
     (geometry : FiniteOrientedFourDimensionalPlaquetteGeometry)
     (N : ℕ)
     (hN : 0 < N)
@@ -141,34 +133,31 @@ abbrev specialUnitaryContinuousCompactOrientedDensitySystem
   specialUnitaryContinuousCompactOrientedGaugeWilsonSystem
     geometry N hN beta beta_nonneg
 
-/-- For the canonical non-Abelian `SU(N)` Wilson conditional laws, changing one
-source-link background gives the explicit pointwise likelihood-ratio factor
-`exp (4 * beta * sharedPlaquetteCard)`. -/
-theorem specialUnitaryContinuousCompactOriented_singleLinkConditionalDensity_mutual_le
+/-- Canonical non-Abelian `SU(N)` one-link Haar conditional densities obey the
+explicit pointwise factor `exp (4 * beta * sharedPlaquetteCard)`. -/
+theorem specialUnitaryContinuousCompactOriented_singleLinkConditionalDensityReal_mutual_le
     (geometry : FiniteOrientedFourDimensionalPlaquetteGeometry)
     (N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (beta_nonneg : 0 ≤ beta)
-    (A B : (specialUnitaryContinuousCompactOrientedDensitySystem
+    (A B : (specialUnitaryContinuousCompactOrientedDensityRatioSystem
       geometry N hN beta beta_nonneg).base.Configuration)
     (target source : geometry.Edge)
-    (hAgree : (specialUnitaryContinuousCompactOrientedDensitySystem
+    (hAgree : (specialUnitaryContinuousCompactOrientedDensityRatioSystem
       geometry N hN beta beta_nonneg).base.AgreeOffLink A B source)
     (u : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    let C := specialUnitaryContinuousCompactOrientedDensitySystem
+    let C := specialUnitaryContinuousCompactOrientedDensityRatioSystem
       geometry N hN beta beta_nonneg
-    let R := beta *
-      (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
-    C.singleLinkConditionalDensity A target u ≤
-        Real.exp R * C.singleLinkConditionalDensity B target u ∧
-      C.singleLinkConditionalDensity B target u ≤
-        Real.exp R * C.singleLinkConditionalDensity A target u := by
+    let R := beta * (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
+    C.singleLinkConditionalDensityReal A target u ≤
+        Real.exp R * C.singleLinkConditionalDensityReal B target u ∧
+      C.singleLinkConditionalDensityReal B target u ≤
+        Real.exp R * C.singleLinkConditionalDensityReal A target u := by
   dsimp only
-  let C := specialUnitaryContinuousCompactOrientedDensitySystem
+  let C := specialUnitaryContinuousCompactOrientedDensityRatioSystem
     geometry N hN beta beta_nonneg
-  let R := beta *
-    (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
-  apply continuous_compact_oriented_singleLinkConditionalDensity_mutual_le
+  let R := beta * (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
+  apply continuous_compact_oriented_singleLinkConditionalDensityReal_mutual_le
     C A B target R
   intro x y
   have hAbs :=
