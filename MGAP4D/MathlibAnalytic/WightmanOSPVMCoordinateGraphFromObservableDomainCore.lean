@@ -10,53 +10,39 @@ noncomputable section
 
 namespace EuclideanYangMillsOSPositiveTimeObservableConstruction
 
-/-- The quotient map from positive-time observables to the separated OS
-pre-Hilbert space, bundled as a real-linear map. -/
-def osClassLinearMap
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.OSSeparatedPreHilbert where
-  toFun := P.osClass
-  map_add' := by
-    intro F G
-    exact SeparationQuotient.mk_add F G
-  map_smul' := by
-    intro r F
-    exact SeparationQuotient.mk_smul r F
-
-@[simp] theorem osClassLinearMap_apply
+/-- The canonical represented-state map respects the scalar multiple of a
+difference.  The proof uses only the public OS inner-product identity, so the
+opaque completion and its transported instances remain sealed. -/
+theorem physicalState_smul_sub
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
-    (F : P.PositiveTimeObservable) :
-    P.osClassLinearMap F = P.osClass F :=
-  rfl
-
-/-- The represented-state map into the completed OS Hilbert space, bundled as a
-real-linear map.  Together with `physicalState_isometry`, this exposes exactly
-the Mathlib linear and topological structure needed to transport observable
-right derivatives without opening the opaque completion implementation. -/
-noncomputable def physicalStateLinearMap
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    P.PositiveTimeObservable →ₗ[ℝ] P.PhysicalHilbert := by
-  change P.PositiveTimeObservable →ₗ[ℝ]
-    UniformSpace.Completion P.OSSeparatedPreHilbert
-  exact
-    (UniformSpace.Completion.toComplₗᵢ
-      (𝕜 := ℝ) (E := P.OSSeparatedPreHilbert)).toLinearMap.comp
-        P.osClassLinearMap
-
-@[simp] theorem physicalStateLinearMap_apply
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S)
-    (F : P.PositiveTimeObservable) :
-    P.physicalStateLinearMap F = P.physicalState F := by
-  change
-    ((P.osClass F : P.OSSeparatedPreHilbert) :
-      UniformSpace.Completion P.OSSeparatedPreHilbert) =
-    ((P.osClass F : P.OSSeparatedPreHilbert) :
-      UniformSpace.Completion P.OSSeparatedPreHilbert)
-  rfl
+    (r : ℝ) (F G : P.PositiveTimeObservable) :
+    P.physicalState (r • (F - G)) =
+      r • (P.physicalState F - P.physicalState G) := by
+  have hsq :
+      ‖P.physicalState (r • (F - G)) -
+          r • (P.physicalState F - P.physicalState G)‖ ^ 2 = 0 := by
+    calc
+      ‖P.physicalState (r • (F - G)) -
+          r • (P.physicalState F - P.physicalState G)‖ ^ 2 =
+          inner ℝ
+            (P.physicalState (r • (F - G)) -
+              r • (P.physicalState F - P.physicalState G))
+            (P.physicalState (r • (F - G)) -
+              r • (P.physicalState F - P.physicalState G)) := by
+        symm
+        exact real_inner_self_eq_norm_sq _
+      _ = 0 := by
+        simp only [inner_sub_left, inner_sub_right, inner_smul_left,
+          inner_smul_right, P.inner_physicalState_physicalState]
+        ring
+  have hnorm :
+      ‖P.physicalState (r • (F - G)) -
+          r • (P.physicalState F - P.physicalState G)‖ = 0 := by
+    nlinarith [norm_nonneg
+      (P.physicalState (r • (F - G)) -
+        r • (P.physicalState F - P.physicalState G))]
+  exact sub_eq_zero.mp (norm_eq_zero.mp hnorm)
 
 end EuclideanYangMillsOSPositiveTimeObservableConstruction
 
@@ -118,9 +104,9 @@ structure RightDerivativeOnObservableDomainCore
 
 namespace RightDerivativeOnObservableDomainCore
 
-/-- Observable-norm differentiation passes through the canonical OS linear
-isometry and the dense-state semigroup identity.  This proves the physical
-right-derivative formula on every represented member of the observable core. -/
+/-- Observable-norm differentiation passes through the canonical OS isometry
+and the dense-state semigroup identity.  This proves the physical right
+derivative formula on every represented member of the observable core. -/
 theorem rightDerivativeLimit_on_representedCore
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
@@ -161,8 +147,7 @@ theorem rightDerivativeLimit_on_representedCore
         (nhdsWithin 0 (Set.Ioi 0))
         (nhds
           (M.observables.physicalState (hD.derivativeObservable F))) := by
-    simpa only [← M.observables.physicalStateLinearMap_apply,
-      map_sub, map_smul] using hMapped
+    simpa only [M.observables.physicalState_smul_sub] using hMapped
   have hEventually :
       (fun t : ℝ =>
         t⁻¹ •
@@ -219,7 +204,7 @@ theorem rightDerivativeLimit
     simpa [y, dist_comm] using hHamiltonian
   have hNegHamiltonian :
       dist (-(M.hamiltonian y)) (-(M.hamiltonian x)) < ε / 6 := by
-    simpa using hHamiltonian
+    simpa [y] using hHamiltonian
   calc
     dist
         (t⁻¹ •
@@ -250,21 +235,14 @@ theorem rightDerivativeLimit
                 (T.operator t (y : M.observables.PhysicalHilbert) -
                   (y : M.observables.PhysicalHilbert))) < ε / 3 := by
         linarith
-      simpa [y] using (show
-        dist
-              (t⁻¹ •
-                (T.operator t (x : M.observables.PhysicalHilbert) -
-                  (x : M.observables.PhysicalHilbert)))
-              (t⁻¹ •
-                (T.operator t (y : M.observables.PhysicalHilbert) -
-                  (y : M.observables.PhysicalHilbert))) +
-            dist
+      have hCore' :
+          dist
               (t⁻¹ •
                 (T.operator t (y : M.observables.PhysicalHilbert) -
                   (y : M.observables.PhysicalHilbert)))
-              (-(M.hamiltonian y)) +
-            dist (-(M.hamiltonian y)) (-(M.hamiltonian x)) < ε by
-          linarith)
+              (-(M.hamiltonian y)) < ε / 3 := by
+        simpa [y] using ht
+      linarith
 
 /-- Package the graph-core closure theorem in the pre-existing derivative
 interface consumed by the physical strong-continuity core. -/
