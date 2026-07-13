@@ -95,7 +95,7 @@ noncomputable def explicitBoundedBorelCanonicalMulUniformApproximation
               G.toFun energy‖ := norm_add_le _ _
         _ ≤ CG + r :=
           add_le_add (hCG energy) hGerror.le
-        _ ≤ CG + 1 := add_le_add_left hrle CG
+        _ ≤ CG + 1 := by linarith
     have hProductError :
         ‖explicitBoundedBorelSimpleApproximation F n energy *
               explicitBoundedBorelSimpleApproximation G n energy -
