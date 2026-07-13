@@ -140,8 +140,10 @@ theorem periodicHypercubicSpecialUnitary_influence_eq_eta_of_active
       n N hn hN beta beta_nonneg target source hActive
   unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
     periodicHypercubicSpecialUnitaryDobrushinEta
-  rw [if_neg hNe, hCard]
-  norm_num
+  split_ifs with hSame
+  · exact (hNe hSame).elim
+  · rw [hCard]
+    norm_num
 
 /-- A source outside the periodic active-neighbor set has exactly zero explicit
 `SU(N)` influence. -/
@@ -172,11 +174,12 @@ theorem periodicHypercubicSpecialUnitary_influence_eq_zero_of_not_active
         ((periodicHypercubicPhysical_mem_activeNeighbors_iff
           n target source).2 ⟨⟨p, hp.1, hp.2⟩, Ne.symm hEq⟩)
     unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
-    rw [if_neg hEq,
-      periodicHypercubicSpecialUnitary_sharedPlaquettes_eq,
-      hSharedEmpty]
-    simp [compactHaarOscillationInfluence,
-      HaarLikelihoodRatioInfluence.coefficient]
+    split_ifs with hSame
+    · exact (hEq hSame).elim
+    · rw [periodicHypercubicSpecialUnitary_sharedPlaquettes_eq,
+        hSharedEmpty]
+      simp [compactHaarOscillationInfluence,
+        HaarLikelihoodRatioInfluence.coefficient]
 
 /-- The explicit periodic compact-Haar `SU(N)` influence row is bounded by
 `18` times the common active influence, uniformly in the volume. -/
