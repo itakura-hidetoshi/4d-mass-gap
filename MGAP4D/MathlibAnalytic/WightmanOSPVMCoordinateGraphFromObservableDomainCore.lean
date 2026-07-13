@@ -35,7 +35,7 @@ theorem physicalState_smul_sub
       _ = 0 := by
         simp only [inner_sub_left, inner_sub_right, inner_smul_left,
           inner_smul_right, P.inner_physicalState_physicalState]
-        ring
+        ring_nf
   have hnorm :
       ‖P.physicalState (r • (F - G)) -
           r • (P.physicalState F - P.physicalState G)‖ = 0 := by
