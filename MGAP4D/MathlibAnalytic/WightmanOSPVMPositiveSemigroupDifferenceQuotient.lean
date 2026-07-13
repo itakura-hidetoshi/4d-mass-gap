@@ -34,10 +34,10 @@ theorem pvmSemigroupDifferenceQuotientScalar_nonneg
     nlinarith
   exact div_nonneg (sub_nonneg.mpr hExp) ht.le
 
-/-- The positive-time semigroup difference quotient coefficient is bounded by
-energy on the nonnegative spectral half-line. -/
+/-- The positive-time semigroup difference quotient coefficient is bounded above
+by the energy. -/
 theorem pvmSemigroupDifferenceQuotientScalar_le_energy
-    {t energy : ℝ} (ht : 0 < t) (henergy : 0 ≤ energy) :
+    {t energy : ℝ} (ht : 0 < t) :
     pvmSemigroupDifferenceQuotientScalar t energy ≤ energy := by
   unfold pvmSemigroupDifferenceQuotientScalar
   apply (div_le_iff₀ ht).2
@@ -53,7 +53,7 @@ theorem pvmSemigroupDifferenceQuotientScalar_mul_norm_le
   have hqNonneg :=
     pvmSemigroupDifferenceQuotientScalar_nonneg ht henergy
   have hqLe :=
-    pvmSemigroupDifferenceQuotientScalar_le_energy ht henergy
+    pvmSemigroupDifferenceQuotientScalar_le_energy ht
   calc
     ‖pvmSemigroupDifferenceQuotientScalar t energy * value‖ =
         pvmSemigroupDifferenceQuotientScalar t energy * ‖value‖ := by
@@ -61,7 +61,7 @@ theorem pvmSemigroupDifferenceQuotientScalar_mul_norm_le
     _ ≤ energy * ‖value‖ :=
       mul_le_mul_of_nonneg_right hqLe (norm_nonneg value)
     _ = ‖energy * value‖ := by
-      rw [norm_mul, Real.norm_eq_abs, abs_of_nonneg henergy]
+      rw [norm_mul, norm_of_nonneg henergy]
 
 /-- A second-order exponential remainder gives an explicit first-order error
 bound for the spectral difference quotient. -/
@@ -85,7 +85,6 @@ theorem pvmSemigroupDifferenceQuotientScalar_sub_energy_abs_le
       (div_le_div_iff_of_pos_right ht).2 hTaylor
     _ = t * energy ^ 2 := by
       field_simp [ht.ne']
-      ring
 
 /-- On a fixed nonnegative compact energy window, multiplication by any bounded
 Borel function converges uniformly to the Hamiltonian coordinate multiplier. -/
@@ -132,7 +131,7 @@ theorem pvmSemigroupDifferenceQuotientScalar_mul_uniformOn_nonnegativeWindow
     rw [one_div, inv_mul_eq_div]
     exact (div_le_one hROne).2 (by linarith)
   have hmul : t * energy ≤ a * R := by
-    exact mul_le_mul htA henergyR ht.le hR
+    exact mul_le_mul htA henergyR henergyNonneg ha.le
   have hsmall : |t * energy| ≤ 1 := by
     rw [abs_of_nonneg (mul_nonneg ht.le henergyNonneg)]
     exact hmul.trans hFrac
@@ -285,10 +284,9 @@ theorem pvmPositiveSemigroupDifferenceQuotientMultiplier_eventually_uniformOn_en
     simpa [pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
       pvmPositiveSemigroupDifferenceQuotientMultiplier,
       htPos, henergyNonneg, hCoordinate energy] using hLocal
-  · have henergyNeg : energy < 0 := lt_of_not_ge henergyNonneg
-    simp [pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
+  · simp [pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
       pvmPositiveSemigroupDifferenceQuotientMultiplier,
-      htPos, henergyNonneg, henergyNeg, hε]
+      htPos, henergyNonneg, hε]
 
 end
 
