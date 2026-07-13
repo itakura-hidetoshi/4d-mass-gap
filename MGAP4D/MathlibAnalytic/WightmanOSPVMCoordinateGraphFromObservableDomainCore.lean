@@ -8,6 +8,17 @@ open Function Set Filter Topology
 
 noncomputable section
 
+/-- On the observable carrier, use the normed-space structure canonically
+induced by the OS inner product.  The construction record also exposes a
+separate normed-space field; fixing this local instance makes all scalar actions
+in the derivative layer definitionally identical to those used by Mathlib's
+inner-product linearity theorems. -/
+local instance osObservableInnerNormedSpace
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
+    NormedSpace ℝ P.PositiveTimeObservable :=
+  P.observableInnerProductSpace.toNormedSpace
+
 namespace EuclideanYangMillsOSPositiveTimeObservableConstruction
 
 /-- The canonical represented-state map respects the scalar multiple of a
