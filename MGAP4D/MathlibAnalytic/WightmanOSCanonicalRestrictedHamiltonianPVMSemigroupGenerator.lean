@@ -124,14 +124,23 @@ noncomputable def rightHamiltonian
     intro ψ φ
     apply T.hasRightHamiltonianValue_unique
       (Classical.choose_spec (ψ + φ).property)
-    exact
-      (Classical.choose_spec ψ.property).add
-        (Classical.choose_spec φ.property)
+    have hψ := Classical.choose_spec ψ.property
+    have hφ := Classical.choose_spec φ.property
+    unfold HasRightHamiltonianValue at hψ hφ ⊢
+    simpa only [rightHamiltonianDifferenceQuotient_add] using hψ.add hφ
   map_smul' := by
     intro c ψ
     apply T.hasRightHamiltonianValue_unique
       (Classical.choose_spec (c • ψ).property)
-    exact (Classical.choose_spec ψ.property).smul c
+    have hψ := Classical.choose_spec ψ.property
+    unfold HasRightHamiltonianValue at hψ ⊢
+    simpa only [rightHamiltonianDifferenceQuotient_smul] using
+      (tendsto_const_nhds.smul hψ :
+        Tendsto
+          (fun t : ℝ => c • T.rightHamiltonianDifferenceQuotient
+            (ψ : M.observables.PhysicalHilbert) t)
+          (nhdsWithin 0 (Ioi 0))
+          (nhds (c • Classical.choose ψ.property)))
 
 /-- The selected positive-time Hamiltonian has its defining derivative value. -/
 theorem rightHamiltonian_hasRightHamiltonianValue
@@ -180,12 +189,27 @@ theorem rightHamiltonianLinearPMap_isFormalAdjoint_of_innerSymmetric
   have hψ := T.rightHamiltonian_hasRightHamiltonianValue ψ
   have hφ := T.rightHamiltonian_hasRightHamiltonianValue φ
   unfold HasRightHamiltonianValue at hψ hφ
-  have hleft := hψ.inner (tendsto_const_nhds :
-    Tendsto (fun _ : ℝ => (φ : M.observables.PhysicalHilbert))
-      (nhdsWithin 0 (Ioi 0)) (nhds φ))
-  have hright := (tendsto_const_nhds :
-    Tendsto (fun _ : ℝ => (ψ : M.observables.PhysicalHilbert))
-      (nhdsWithin 0 (Ioi 0)) (nhds ψ)).inner hφ
+  have hleft :
+      Tendsto
+        (fun t : ℝ =>
+          inner ℝ
+            (T.rightHamiltonianDifferenceQuotient
+              (ψ : M.observables.PhysicalHilbert) t)
+            (φ : M.observables.PhysicalHilbert))
+        (nhdsWithin 0 (Ioi 0))
+        (nhds (inner ℝ (T.rightHamiltonian ψ)
+          (φ : M.observables.PhysicalHilbert))) :=
+    hψ.inner tendsto_const_nhds
+  have hright :
+      Tendsto
+        (fun t : ℝ =>
+          inner ℝ (ψ : M.observables.PhysicalHilbert)
+            (T.rightHamiltonianDifferenceQuotient
+              (φ : M.observables.PhysicalHilbert) t))
+        (nhdsWithin 0 (Ioi 0))
+        (nhds (inner ℝ (ψ : M.observables.PhysicalHilbert)
+          (T.rightHamiltonian φ))) :=
+    tendsto_const_nhds.inner hφ
   have hfunctions :
       (fun t : ℝ =>
         inner ℝ
@@ -268,17 +292,19 @@ theorem exists_hamiltonianDomain_eq_of_hasRightHamiltonianValue
     ∃ x : M.hamiltonian.domain,
       (x : M.observables.PhysicalHilbert) = ψ ∧ M.hamiltonian x = η := by
   have hEq := G.hamiltonian_eq_rightHamiltonianLinearPMap hSymmetric
+  have hDomainEq :
+      M.hamiltonian.domain = T.rightHamiltonianLinearPMap.domain :=
+    congrArg LinearPMap.domain hEq
   have hψRight : ψ ∈ T.rightHamiltonianLinearPMap.domain :=
     ⟨η, hValue⟩
   have hψHamiltonian : ψ ∈ M.hamiltonian.domain := by
-    rw [hEq]
+    rw [hDomainEq]
     exact hψRight
   let x : M.hamiltonian.domain := ⟨ψ, hψHamiltonian⟩
   let y : T.rightHamiltonianLinearPMap.domain := ⟨ψ, hψRight⟩
   refine ⟨x, rfl, ?_⟩
-  have hxy : M.hamiltonian x = T.rightHamiltonianLinearPMap y := by
-    rw [hEq]
-    rfl
+  have hxy : M.hamiltonian x = T.rightHamiltonianLinearPMap y :=
+    G.hamiltonian_le_rightHamiltonianLinearPMap.2 rfl
   calc
     M.hamiltonian x = T.rightHamiltonianLinearPMap y := hxy
     _ = T.rightHamiltonian y := rfl
@@ -341,7 +367,7 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralRightHamiltonianValue.toCo
       ((M.toExplicitModel.canonicalVacuumOrthogonalHamiltonian x :
           M.toExplicitModel.VacuumOrthogonalHilbert) : M.toExplicitModel.H) =
         ((vh : M.toExplicitModel.VacuumOrthogonalHilbert) : M.toExplicitModel.H)
-    rw [M.toExplicitModel.canonical_vacuum_orthogonal_hamiltonian_apply]
+    rw [canonical_vacuum_orthogonal_hamiltonian_apply M.toExplicitModel x]
     have hxPoint :
         M.toExplicitModel.vacuumOrthogonalAmbientDomainPoint x = xAmbient := by
       apply Subtype.ext
