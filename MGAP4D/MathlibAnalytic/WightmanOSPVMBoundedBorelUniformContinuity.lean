@@ -221,10 +221,11 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
       intro ε hε
       by_cases hψZero : ψ = 0
       · subst ψ
-        simp
+        simpa using hε
       · have hψNorm : 0 < ‖ψ‖ := norm_pos_iff.mpr hψZero
-        have hεψ : 0 < ε / ‖ψ‖ := div_pos hε hψNorm
-        filter_upwards [hUniform (ε / ‖ψ‖) hεψ] with t ht
+        have hε2 : 0 < ε / 2 := half_pos hε
+        have hεψ : 0 < (ε / 2) / ‖ψ‖ := div_pos hε2 hψNorm
+        filter_upwards [hUniform ((ε / 2) / ‖ψ‖) hεψ] with t ht
         rw [dist_eq_norm]
         change
           ‖(M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
@@ -235,10 +236,10 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
             ‖M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
                   (D.quotientMultiplier t f) -
                 M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
-                  h‖ ≤ ε / ‖ψ‖ :=
+                  h‖ ≤ (ε / 2) / ‖ψ‖ :=
           pvmBoundedBorelSpectralIntegralOperator_sub_opNorm_le
             M.toExplicitModel.vacuumOrthogonalSpectralPVM
-            (D.quotientMultiplier t f) h (ε / ‖ψ‖) hεψ.le
+            (D.quotientMultiplier t f) h ((ε / 2) / ‖ψ‖) hεψ.le
             (fun energy => (ht energy).le)
         calc
           ‖(M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
@@ -253,32 +254,33 @@ noncomputable def EuclideanYangMillsOSPhysicalSpectralUniformDifferenceQuotient.
                   (D.quotientMultiplier t f) -
                 M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
                   h).le_opNorm ψ
-          _ ≤ (ε / ‖ψ‖) * ‖ψ‖ :=
+          _ ≤ ((ε / 2) / ‖ψ‖) * ‖ψ‖ :=
             mul_le_mul_of_nonneg_right hOperator (norm_nonneg ψ)
-          _ = ε := by field_simp [ne_of_gt hψNorm]
+          _ = ε / 2 := by field_simp [ne_of_gt hψNorm]
+          _ < ε := half_lt_self hε
     have hAmbient :
         Tendsto
           (fun t =>
-            (((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+            ((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
                 (D.quotientMultiplier t f) ψ :
               M.toExplicitModel.VacuumOrthogonalHilbert) :
-            M.toExplicitModel.H)))
+            M.toExplicitModel.H))
           (nhdsWithin 0 (Ioi 0))
-          (𝓝 (((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+          (𝓝 ((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
               h ψ : M.toExplicitModel.VacuumOrthogonalHilbert) :
-            M.toExplicitModel.H))) := by
+            M.toExplicitModel.H)) := by
       exact (continuous_subtype_val.tendsto _).comp hSubtype
     have hEventually :
         (fun t =>
           T.rightHamiltonianDifferenceQuotient
-            (((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+            ((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
                 f ψ : M.toExplicitModel.VacuumOrthogonalHilbert) :
-              M.toExplicitModel.H)) t) =ᶠ[nhdsWithin 0 (Ioi 0)]
+              M.toExplicitModel.H) t) =ᶠ[nhdsWithin 0 (Ioi 0)]
         (fun t =>
-          (((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
+          ((M.toExplicitModel.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral
               (D.quotientMultiplier t f) ψ :
             M.toExplicitModel.VacuumOrthogonalHilbert) :
-          M.toExplicitModel.H)) := by
+          M.toExplicitModel.H) := by
       filter_upwards [self_mem_nhdsWithin] with t ht
       exact D.rightDifferenceQuotient_eq_spectralIntegral
         t (by simpa using ht) f ψ
