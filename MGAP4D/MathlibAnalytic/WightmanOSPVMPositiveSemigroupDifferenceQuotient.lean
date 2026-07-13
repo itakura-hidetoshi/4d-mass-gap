@@ -61,8 +61,11 @@ theorem pvmSemigroupDifferenceQuotientScalar_mul_norm_le
       rw [norm_mul, Real.norm_eq_abs, abs_of_nonneg hqNonneg]
     _ ≤ energy * ‖value‖ :=
       mul_le_mul_of_nonneg_right hqLe (norm_nonneg value)
-    _ = ‖energy * value‖ := by
-      rw [norm_mul, norm_of_nonneg henergy]
+    _ = ‖energy‖ * ‖value‖ := by
+      have hnorm : ‖energy‖ = energy := by
+        rw [Real.norm_eq_abs, abs_of_nonneg henergy]
+      rw [hnorm]
+    _ = ‖energy * value‖ := (norm_mul energy value).symm
 
 /-- A second-order exponential remainder gives an explicit first-order error
 bound for the spectral difference quotient. -/
