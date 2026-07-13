@@ -214,7 +214,6 @@ theorem pvmSimpleFuncSpectralIntegralOperator_restrict_apply
     have hInter : carrier ∩ s = carrier :=
       Set.inter_eq_left.mpr hCarrierSubset
     rw [hcOne, mul_one, hInter]
-    rfl
   · have hcZero : (c : ℝ × ℝ).2 = 0 := by
       have hi : indicator energy = 0 := by
         simp [indicator, pvmSimpleFuncIndicator, henergyS]
@@ -234,7 +233,7 @@ theorem pvmSimpleFuncSpectralIntegralOperator_restrict_apply
         norm_num at hiOne
       · intro hy
         simpa using hy
-    rw [hInter, P.empty_apply]
+    simp [hcZero, hInter, P.empty_apply]
 
 /-- Operator-norm convergence of simple PVM integrals implies convergence after
 application to any fixed Hilbert vector. -/
@@ -250,9 +249,8 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.tendsto_completedOperator
   intro ε hε
   by_cases hx : x = 0
   · subst x
-    refine ⟨0, ?_⟩
-    intro n hn
-    simp
+    filter_upwards [] with n
+    simpa using hε
   · have hxNorm : 0 < ‖x‖ := norm_pos_iff.mpr hx
     have hδ : 0 < (ε / 2) / ‖x‖ := div_pos (half_pos hε) hxNorm
     have hEventuallyOperator :
