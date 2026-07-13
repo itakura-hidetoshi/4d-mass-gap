@@ -8,26 +8,6 @@ open Function Set Filter Topology
 
 noncomputable section
 
-namespace EuclideanYangMillsOSPositiveTimeObservableConstruction
-
-/-- Positive-time observables represent a dense family in the completed OS
-physical Hilbert space.  This factors the canonical dense completion embedding
-through the surjective Osterwalder--Schrader separation quotient, without
-exposing the intentionally opaque physical carrier. -/
-theorem physicalState_denseRange
-    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
-    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
-    DenseRange P.physicalState := by
-  intro psi
-  exact closure_mono
-    (by
-      rintro phi ⟨q, rfl⟩
-      rcases SeparationQuotient.surjective_mk q with ⟨F, rfl⟩
-      exact ⟨F, rfl⟩)
-    ((os_preHilbert_dense_in_physical P) psi)
-
-end EuclideanYangMillsOSPositiveTimeObservableConstruction
-
 namespace EuclideanYangMillsOSPhysicalTimeTranslation
 
 /-- Minimal strong-continuity input stated only on actual represented
