@@ -34,6 +34,9 @@ theorem pvmPositiveSemigroupDifferenceQuotientMultiplier_eq_smul_sub_exp_mul
       pvmPositiveEnergyRestrict, pvmBoundedBorelRestrict,
       pvmPositiveEuclideanSemigroupMultiplier, henergy,
       pvmSemigroupDifferenceQuotientScalar]
+    rw [mul_comm t energy]
+    field_simp [ht.ne']
+    ring
   · have henergyNeg : energy < 0 := lt_of_not_ge henergy
     rw [pvmPositiveSemigroupDifferenceQuotientMultiplier_apply_of_neg
       ht f h hCoordinate henergyNeg]
