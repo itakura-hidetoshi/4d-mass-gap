@@ -124,10 +124,19 @@ theorem orthogonalProjectionValuedSetFunction_projection_projection_eq_inter_app
   have hZero : P.projection s (P.projection (t \ s) x) = 0 :=
     orthogonalProjectionValuedSetFunction_disjoint_composition_zero_from_basic_laws_localization
       P s (t \ s) hTailDisjoint x
-  rw [htUnion, P.disjoint_additive (s ∩ t) (t \ s) hDisjoint x, map_add,
-    orthogonalProjectionValuedSetFunction_projection_projection_eq_of_subset_apply
-      P Set.inter_subset_left x,
-    hZero, add_zero]
+  calc
+    P.projection s (P.projection t x) =
+        P.projection s
+          (P.projection ((s ∩ t) ∪ (t \ s)) x) := by rw [htUnion]
+    _ = P.projection s
+          (P.projection (s ∩ t) x + P.projection (t \ s) x) := by
+      rw [P.disjoint_additive (s ∩ t) (t \ s) hDisjoint x]
+    _ = P.projection s (P.projection (s ∩ t) x) +
+          P.projection s (P.projection (t \ s) x) := by rw [map_add]
+    _ = P.projection (s ∩ t) x + 0 := by
+      rw [orthogonalProjectionValuedSetFunction_projection_projection_eq_of_subset_apply
+        P Set.inter_subset_left x, hZero]
+    _ = P.projection (s ∩ t) x := add_zero _
 
 /-- Restriction of a Mathlib simple function to a measurable spectral set. -/
 noncomputable def pvmSimpleFuncRestrict
@@ -142,9 +151,10 @@ noncomputable def pvmSimpleFuncRestrict
     pvmSimpleFuncRestrict s hs f energy =
       if energy ∈ s then f energy else 0 := by
   classical
+  change f energy * pvmSimpleFuncIndicator s hs energy =
+    if energy ∈ s then f energy else 0
   by_cases henergy : energy ∈ s <;>
-    simp [pvmSimpleFuncRestrict, SimpleFunc.map_apply,
-      SimpleFunc.pair_apply, pvmSimpleFuncIndicator, henergy]
+    simp [pvmSimpleFuncIndicator_apply, henergy]
 
 /-- Simple-function spectral integration localizes exactly under a measurable
 indicator. -/
@@ -203,7 +213,8 @@ theorem pvmSimpleFuncSpectralIntegralOperator_restrict_apply
       norm_num at hiZero
     have hInter : carrier ∩ s = carrier :=
       Set.inter_eq_left.mpr hCarrierSubset
-    simp [hcOne, hInter]
+    rw [hcOne, mul_one, hInter]
+    rfl
   · have hcZero : (c : ℝ × ℝ).2 = 0 := by
       have hi : indicator energy = 0 := by
         simp [indicator, pvmSimpleFuncIndicator, henergyS]
@@ -240,14 +251,18 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.tendsto_completedOperator
   intro ε hε
   by_cases hx : x = 0
   · subst x
-    simpa using hε
+    simpa using
+      (Filter.Eventually.of_forall (fun _ : ℕ => hε))
   · have hxNorm : 0 < ‖x‖ := norm_pos_iff.mpr hx
     have hδ : 0 < (ε / 2) / ‖x‖ := div_pos (half_pos hε) hxNorm
-    obtain ⟨N, hN⟩ :=
-      (Metric.tendsto_atTop.1 (A.tendsto_completedOperator P))
+    have hEventuallyOperator :
+        ∀ᶠ n : ℕ in atTop,
+          dist
+            (pvmSimpleFuncSpectralIntegralOperator P (A.simple n))
+            (A.completedOperator P) < (ε / 2) / ‖x‖ :=
+      Metric.tendsto_nhds.1 (A.tendsto_completedOperator P)
         ((ε / 2) / ‖x‖) hδ
-    refine ⟨N, ?_⟩
-    intro n hn
+    filter_upwards [hEventuallyOperator] with n hn
     rw [dist_eq_norm]
     change
       ‖(pvmSimpleFuncSpectralIntegralOperator P (A.simple n) -
@@ -255,7 +270,7 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.tendsto_completedOperator
     have hOperator :
         ‖pvmSimpleFuncSpectralIntegralOperator P (A.simple n) -
             A.completedOperator P‖ < (ε / 2) / ‖x‖ := by
-      simpa [dist_eq_norm] using hN n hn
+      simpa [dist_eq_norm] using hn
     calc
       ‖(pvmSimpleFuncSpectralIntegralOperator P (A.simple n) -
           A.completedOperator P) x‖ ≤
@@ -282,9 +297,10 @@ noncomputable def explicitBoundedBorelSimpleUniformApproximationRestrict
     obtain ⟨N, hN⟩ := A.uniform_tendsto ε hε
     refine ⟨N, ?_⟩
     intro n hn energy
+    rw [pvmSimpleFuncRestrict_apply]
     by_cases henergy : energy ∈ s
     · simpa [pvmBoundedBorelRestrict, henergy] using hN n hn energy
-    · simp [pvmBoundedBorelRestrict, henergy, hε]
+    · simpa [pvmBoundedBorelRestrict, henergy] using hε
 
 /-- Completed bounded-Borel PVM integration commutes with restriction to a
 measurable spectral set. -/
