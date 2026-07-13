@@ -19,6 +19,21 @@ theorem physicalState_smul_sub
     (r : ℝ) (F G : P.PositiveTimeObservable) :
     P.physicalState (r • (F - G)) =
       r • (P.physicalState F - P.physicalState G) := by
+  have hCrossRight :
+      inner ℝ (P.physicalState (r • (F - G)))
+          (P.physicalState F - P.physicalState G) =
+        inner ℝ (r • (F - G)) (F - G) := by
+    rw [inner_sub_right, P.inner_physicalState_physicalState,
+      P.inner_physicalState_physicalState, inner_sub_right]
+  have hCrossLeft :
+      inner ℝ (P.physicalState F - P.physicalState G)
+          (P.physicalState (r • (F - G))) =
+        inner ℝ (F - G) (r • (F - G)) := by
+    rw [inner_sub_left, P.inner_physicalState_physicalState,
+      P.inner_physicalState_physicalState, inner_sub_left]
+  have hNormDiff :
+      ‖P.physicalState F - P.physicalState G‖ = ‖F - G‖ := by
+    simpa only [dist_eq_norm] using P.dist_physicalState_eq F G
   have hsq :
       ‖P.physicalState (r • (F - G)) -
           r • (P.physicalState F - P.physicalState G)‖ ^ 2 = 0 := by
@@ -33,9 +48,13 @@ theorem physicalState_smul_sub
         symm
         exact real_inner_self_eq_norm_sq _
       _ = 0 := by
-        simp_rw [inner_sub_left, inner_sub_right, inner_smul_left,
-          inner_smul_right, P.inner_physicalState_physicalState]
-        simp <;> ring
+        rw [inner_sub_left]
+        rw [inner_sub_right, inner_sub_right]
+        simp only [inner_smul_left, inner_smul_right]
+        rw [P.inner_physicalState_physicalState, hCrossRight, hCrossLeft]
+        simp only [inner_smul_left, inner_smul_right]
+        rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, hNormDiff]
+        ring_nf
   have hnorm :
       ‖P.physicalState (r • (F - G)) -
           r • (P.physicalState F - P.physicalState G)‖ = 0 := by
