@@ -127,7 +127,8 @@ theorem orthogonalProjectionValuedSetFunction_projection_projection_eq_inter_app
   calc
     P.projection s (P.projection t x) =
         P.projection s
-          (P.projection ((s ∩ t) ∪ (t \ s)) x) := by rw [htUnion]
+          (P.projection ((s ∩ t) ∪ (t \ s)) x) :=
+      congrArg (fun r : Set ℝ => P.projection s (P.projection r x)) htUnion
     _ = P.projection s
           (P.projection (s ∩ t) x + P.projection (t \ s) x) := by
       rw [P.disjoint_additive (s ∩ t) (t \ s) hDisjoint x]
@@ -148,11 +149,10 @@ noncomputable def pvmSimpleFuncRestrict
 @[simp] theorem pvmSimpleFuncRestrict_apply
     (s : Set ℝ) (hs : MeasurableSet s)
     (f : SimpleFunc ℝ ℝ) (energy : ℝ) :
-    pvmSimpleFuncRestrict s hs f energy =
-      if energy ∈ s then f energy else 0 := by
+    pvmSimpleFuncRestrict s hs f energy = Set.indicator s f energy := by
   classical
   change f energy * pvmSimpleFuncIndicator s hs energy =
-    if energy ∈ s then f energy else 0
+    Set.indicator s f energy
   by_cases henergy : energy ∈ s <;>
     simp [pvmSimpleFuncIndicator_apply, henergy]
 
@@ -235,7 +235,6 @@ theorem pvmSimpleFuncSpectralIntegralOperator_restrict_apply
       · intro hy
         simpa using hy
     rw [hInter, P.empty_apply]
-    simp [hcZero]
 
 /-- Operator-norm convergence of simple PVM integrals implies convergence after
 application to any fixed Hilbert vector. -/
@@ -251,8 +250,9 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.tendsto_completedOperator
   intro ε hε
   by_cases hx : x = 0
   · subst x
-    simpa using
-      (Filter.Eventually.of_forall (fun _ : ℕ => hε))
+    refine ⟨0, ?_⟩
+    intro n hn
+    simp
   · have hxNorm : 0 < ‖x‖ := norm_pos_iff.mpr hx
     have hδ : 0 < (ε / 2) / ‖x‖ := div_pos (half_pos hε) hxNorm
     have hEventuallyOperator :
