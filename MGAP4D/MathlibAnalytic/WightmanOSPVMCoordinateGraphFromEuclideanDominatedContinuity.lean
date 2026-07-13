@@ -127,10 +127,15 @@ theorem observableTranslate_tendsto_zero
   rw [Metric.tendsto_nhds] at hSquare
   have hEventually := hSquare (ε ^ 2) hεsq
   filter_upwards [hEventually] with t ht
-  have hsqLt : ‖T.observableTranslate t F - F‖ ^ 2 < ε ^ 2 := by
-    simpa [Real.dist_eq, abs_of_nonneg (sq_nonneg _)] using ht
+  let d : ℝ := ‖T.observableTranslate t F - F‖
+  have hd_nonneg : 0 ≤ d := norm_nonneg _
+  have htAbs : |d ^ 2 - 0| < ε ^ 2 := by
+    simpa [d, Real.dist_eq] using ht
+  have hsqLt : d ^ 2 < ε ^ 2 := by
+    simpa [sub_zero, abs_of_nonneg (sq_nonneg d)] using htAbs
   rw [dist_eq_norm]
-  nlinarith [norm_nonneg (T.observableTranslate t F - F)]
+  change d < ε
+  nlinarith
 
 /-- The dominated Euclidean realization package supplies the observable-norm
 strong continuity input used by the OS Hilbert reconstruction. -/
