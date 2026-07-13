@@ -33,19 +33,24 @@ theorem antitone_pvmNatEnergyTail : Antitone pvmNatEnergyTail := by
 theorem iInter_pvmNatEnergyTail :
     (⋂ n : ℕ, pvmNatEnergyTail n) = ∅ := by
   ext energy
-  simp only [Set.mem_iInter, Set.not_mem_empty, iff_false]
-  intro henergy
-  obtain ⟨n, hn⟩ := exists_nat_gt |energy|
-  have hnR : |energy| < (n : ℝ) := by exact_mod_cast hn
-  have hleft : -(n : ℝ) ≤ energy := by
-    have hnegAbs : -|energy| ≤ energy := neg_abs_le energy
-    have hnegN : -(n : ℝ) < -|energy| := neg_lt_neg hnR
-    linarith
-  have hright : energy ≤ (n : ℝ) :=
-    le_trans (le_abs_self energy) hnR.le
-  have hwindow : energy ∈ pvmEnergyWindow (n : ℝ) :=
-    ⟨hleft, hright⟩
-  exact (henergy n) hwindow
+  constructor
+  · intro henergy
+    have hAll : ∀ n : ℕ, energy ∈ pvmNatEnergyTail n :=
+      Set.mem_iInter.mp henergy
+    obtain ⟨n, hn⟩ := exists_nat_gt |energy|
+    have hnR : |energy| < (n : ℝ) := by exact_mod_cast hn
+    have hleft : -(n : ℝ) ≤ energy := by
+      have hnegAbs : -|energy| ≤ energy := neg_abs_le energy
+      have hnegN : -(n : ℝ) < -|energy| := neg_lt_neg hnR
+      linarith
+    have hright : energy ≤ (n : ℝ) :=
+      le_trans (le_abs_self energy) hnR.le
+    have hwindow : energy ∈ pvmEnergyWindow (n : ℝ) :=
+      ⟨hleft, hright⟩
+    have hfalse : False := (hAll n) hwindow
+    exact hfalse.elim
+  · intro henergy
+    simpa using henergy
 
 /-- The scalar spectral mass of the complements of growing finite energy
 windows converges to zero for the scalar measure actually constructed from
