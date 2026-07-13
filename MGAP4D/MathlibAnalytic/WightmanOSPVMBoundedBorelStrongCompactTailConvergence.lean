@@ -28,14 +28,6 @@ def pvmBoundedBorelRestrict
         · simpa [henergy] using hC energy
         · simpa [henergy] using hCnonneg }
 
-@[simp] theorem pvmBoundedBorelRestrict_apply
-    (s : Set ℝ) (hs : MeasurableSet s)
-    (f : PVMBoundedBorelRealFunction) (energy : ℝ) :
-    (pvmBoundedBorelRestrict s hs f).toFun energy =
-      if energy ∈ s then f.toFun energy else 0 := by
-  classical
-  rfl
-
 /-- Symmetric compact energy window used for the compact/tail decomposition. -/
 def pvmEnergyWindow (R : ℝ) : Set ℝ := Set.Icc (-R) R
 
@@ -55,7 +47,7 @@ theorem pvmBoundedBorelSub_restrict_eq_restrict_compl
   apply PVMBoundedBorelRealFunction.ext
   funext energy
   by_cases henergy : energy ∈ s <;>
-    simp [pvmBoundedBorelSub, pvmBoundedBorelRestrict_apply, henergy]
+    simp [pvmBoundedBorelSub, pvmBoundedBorelRestrict, henergy]
 
 /-- Operator form of the measurable compact/tail decomposition. -/
 theorem pvmBoundedBorelSpectralIntegralOperator_sub_restrict
@@ -171,8 +163,8 @@ theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_atVector_of_compactTail
     intro energy
     by_cases henergy : energy ∈ K
     · have hLocal := haCompact energy (by simpa [K] using henergy)
-      simpa [pvmBoundedBorelRestrict_apply, henergy, δ] using hLocal.le
-    · simp [pvmBoundedBorelRestrict_apply, henergy, hδ.le]
+      simpa [pvmBoundedBorelRestrict, henergy, δ] using hLocal.le
+    · simp [pvmBoundedBorelRestrict, henergy, hδ.le]
   have hOperator :
       ‖pvmBoundedBorelSpectralIntegralOperator P
             (pvmBoundedBorelRestrict K hK (F a)) -
@@ -215,7 +207,6 @@ theorem pvmBoundedBorelSpectralIntegralOperator_tendsto_atVector_of_compactTail
         dsimp [δ]
         have hψOne : ‖ψ‖ + 1 ≠ 0 := by positivity
         field_simp [hψOne]
-        ring
       _ < ε / 4 := by linarith
   have hTriangle :
       ‖pvmBoundedBorelSpectralIntegralOperator P (F a) ψ -
