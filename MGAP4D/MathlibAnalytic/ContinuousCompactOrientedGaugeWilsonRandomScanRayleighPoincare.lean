@@ -100,7 +100,7 @@ theorem continuous_compact_oriented_randomScanRayleigh_iff_heatBathPoincareL2
     have hAlgebra :=
       (normalized_defect_le_iff
         (Fintype.card C.base.geometry.Edge : ℝ)
-        gap ‖q‖ ^ 2
+        gap (‖q‖ ^ 2)
         (inner ℝ (C.heatBathHamiltonianL2 q) q)
         (Nat.cast_pos.mpr hEdge)).mp hRandom
     change gap * ‖q‖ ^ 2 ≤
@@ -119,7 +119,7 @@ theorem continuous_compact_oriented_randomScanRayleigh_iff_heatBathPoincareL2
     exact
       (normalized_defect_le_iff
         (Fintype.card C.base.geometry.Edge : ℝ)
-        gap ‖q‖ ^ 2
+        gap (‖q‖ ^ 2)
         (inner ℝ (C.heatBathHamiltonianL2 q) q)
         (Nat.cast_pos.mpr hEdge)).mpr hGap
 
