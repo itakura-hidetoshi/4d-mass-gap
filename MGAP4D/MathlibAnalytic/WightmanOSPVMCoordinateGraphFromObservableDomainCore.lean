@@ -36,8 +36,6 @@ theorem physicalState_smul_sub
         simp_rw [inner_sub_left, inner_sub_right, inner_smul_left,
           inner_smul_right]
         simp_rw [P.inner_physicalState_physicalState]
-        simp_rw [inner_sub_left, inner_sub_right, inner_smul_left,
-          inner_smul_right]
         ring_nf
   have hnorm :
       ‖P.physicalState (r • (F - G)) -
