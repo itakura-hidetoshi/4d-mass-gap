@@ -250,7 +250,13 @@ theorem ExplicitBoundedBorelSimpleUniformApproximation.tendsto_completedOperator
   by_cases hx : x = 0
   · subst x
     filter_upwards [] with n
-    simpa using hε
+    have hSimple :
+        pvmSimpleFuncSpectralIntegralOperator P (A.simple n) (0 : H) = 0 :=
+      (pvmSimpleFuncSpectralIntegralOperator P (A.simple n)).map_zero
+    have hCompleted : A.completedOperator P (0 : H) = 0 :=
+      (A.completedOperator P).map_zero
+    rw [hSimple, hCompleted, dist_self]
+    exact hε
   · have hxNorm : 0 < ‖x‖ := norm_pos_iff.mpr hx
     have hδ : 0 < (ε / 2) / ‖x‖ := div_pos (half_pos hε) hxNorm
     have hEventuallyOperator :
