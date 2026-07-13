@@ -24,7 +24,7 @@ likelihood-ratio factor after normalization, without a second normalization
 loss. -/
 theorem mutual_le_exp_mul_of_difference_oscillation
     {α : Type*} [MeasurableSpace α]
-    (μ : Measure α)
+    (μ : Measure α) [NeZero μ]
     (f g : α → ℝ)
     (hf : Integrable (fun x => Real.exp (f x)) μ)
     (hg : Integrable (fun x => Real.exp (g x)) μ)
@@ -61,7 +61,8 @@ theorem mutual_le_exp_mul_of_difference_oscillation
         (hg.const_mul (Real.exp (f x)))
         (hf.const_mul (Real.exp R * Real.exp (g x)))
         (Filter.Eventually.of_forall hPoint)
-    simpa using hInt
+    rw [integral_const_mul, integral_const_mul] at hInt
+    exact hInt
   · unfold density
     rw [show Real.exp R *
         (Real.exp (f x) / ∫ y, Real.exp (f y) ∂μ) =
@@ -86,7 +87,8 @@ theorem mutual_le_exp_mul_of_difference_oscillation
         (hf.const_mul (Real.exp (g x)))
         (hg.const_mul (Real.exp R * Real.exp (f x)))
         (Filter.Eventually.of_forall hPoint)
-    simpa using hInt
+    rw [integral_const_mul, integral_const_mul] at hInt
+    exact hInt
 
 end HaarNormalizedExponentialRatio
 
