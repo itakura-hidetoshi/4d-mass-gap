@@ -53,7 +53,8 @@ theorem pvmSemigroupDifferenceQuotientScalar_mul_norm_le
   have hqNonneg :=
     pvmSemigroupDifferenceQuotientScalar_nonneg ht henergy
   have hqLe :=
-    pvmSemigroupDifferenceQuotientScalar_le_energy ht
+    pvmSemigroupDifferenceQuotientScalar_le_energy
+      (energy := energy) ht
   calc
     ‖pvmSemigroupDifferenceQuotientScalar t energy * value‖ =
         pvmSemigroupDifferenceQuotientScalar t energy * ‖value‖ := by
