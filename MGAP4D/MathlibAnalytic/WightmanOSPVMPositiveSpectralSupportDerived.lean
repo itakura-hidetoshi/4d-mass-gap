@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.WightmanOSPVMPhysicalSemigroupRightHamiltonianValue
 import MGAP4D.MathlibAnalytic.ExplicitWightmanOSScalarSupportToPVMOpenSupport
+import MGAP4D.MathlibAnalytic.WightmanOSPVMDisjointCompositionFromFiniteAdditivity
 import Mathlib.Tactic
 
 namespace MGAP4D
