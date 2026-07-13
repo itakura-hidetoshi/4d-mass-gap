@@ -8,6 +8,8 @@ open scoped BigOperators
 
 noncomputable section
 
+namespace ContinuousCompactRandomScanL2Structure
+
 /-!
 Operator-theoretic structure of the genuine compact-Haar random-scan heat-bath
 operator. This file proves from exact conditional-expectation projections that
@@ -225,6 +227,8 @@ theorem continuous_compact_oriented_randomScanRayleigh_iff_heatBathPoincareL2
         (0 : ℝ) < (Fintype.card C.base.geometry.Edge : ℝ) :=
       Nat.cast_pos.mpr hEdge
     nlinarith [sq_nonneg ‖q‖]
+
+end ContinuousCompactRandomScanL2Structure
 
 end
 
