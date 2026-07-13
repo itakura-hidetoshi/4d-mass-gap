@@ -8,6 +8,14 @@ open Function Set Filter Topology
 
 noncomputable section
 
+/-- Keep the observable derivative layer on the same OS-inner-product-induced
+normed-space structure used by `RightDerivativeOnObservableDomainCore`. -/
+local instance osObservableInnerNormedSpaceGraph
+    {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
+    (P : EuclideanYangMillsOSPositiveTimeObservableConstruction S) :
+    NormedSpace ℝ P.PositiveTimeObservable :=
+  P.observableInnerProductSpace.toNormedSpace
+
 namespace EuclideanYangMillsOSPhysicalTimeTranslation
 
 /-- Observable Hamiltonian core stated in the canonical graph norm.
@@ -198,7 +206,7 @@ noncomputable def toCanonicalPVMCoordinateGraphOfLaplaceExchangeGapObservableGra
     (hExchange : T.ReflectionTimeTranslationExchange) :
     ExplicitWightmanOSCanonicalRestrictedPVMCoordinateGraph M.toExplicitModel :=
   T.toCanonicalPVMCoordinateGraphOfLaplaceExchangeGapObservableNormContinuityAndDomainCore
-    A B hGap L hContinuous C.toRightDerivativeOnObservableDomainCore Q hExchange
+    A B hGap L hContinuous (C.toRightDerivativeOnObservableDomainCore Q) hExchange
 
 end EuclideanYangMillsOSPhysicalTimeTranslation
 
