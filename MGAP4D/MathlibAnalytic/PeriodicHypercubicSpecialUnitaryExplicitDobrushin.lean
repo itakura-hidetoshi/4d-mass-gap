@@ -140,8 +140,7 @@ theorem periodicHypercubicSpecialUnitary_influence_eq_eta_of_active
       n N hn hN beta beta_nonneg target source hActive
   unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
     periodicHypercubicSpecialUnitaryDobrushinEta
-  simp only [if_neg hNe]
-  rw [hCard]
+  rw [if_neg hNe, hCard]
   norm_num
 
 /-- A source outside the periodic active-neighbor set has exactly zero explicit
@@ -173,8 +172,8 @@ theorem periodicHypercubicSpecialUnitary_influence_eq_zero_of_not_active
         ((periodicHypercubicPhysical_mem_activeNeighbors_iff
           n target source).2 ⟨⟨p, hp.1, hp.2⟩, Ne.symm hEq⟩)
     unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
-    simp only [if_neg hEq]
-    rw [periodicHypercubicSpecialUnitary_sharedPlaquettes_eq,
+    rw [if_neg hEq,
+      periodicHypercubicSpecialUnitary_sharedPlaquettes_eq,
       hSharedEmpty]
     simp [compactHaarOscillationInfluence,
       HaarLikelihoodRatioInfluence.coefficient]
