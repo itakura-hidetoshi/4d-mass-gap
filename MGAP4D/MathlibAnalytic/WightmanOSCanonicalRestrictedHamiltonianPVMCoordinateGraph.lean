@@ -105,7 +105,9 @@ theorem pvmBoundedBorelSpectralIntegralOperator_smul
       Tendsto
         (fun n => pvmSimpleFuncSpectralIntegralOperator P (C.simple n))
         atTop (𝓝 (c • A.completedOperator P)) := by
-    have h := tendsto_const_nhds.smul (A.tendsto_completedOperator P)
+    have hcT : Tendsto (fun _ : ℕ => (c : ℝ)) atTop (𝓝 c) :=
+      tendsto_const_nhds
+    have h := hcT.smul (A.tendsto_completedOperator P)
     simpa only [hTerm] using h
   have hA :
       A.completedOperator P =
@@ -171,19 +173,16 @@ noncomputable def ExplicitWightmanOSCanonicalRestrictedPVMCoordinateGraph.toShif
       ring
     obtain ⟨x, hx, hHx⟩ := G.coordinate_graph f h hh ψ
     refine ⟨x, hx, ?_⟩
-    have hSub :=
-      M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_sub g ef
-    have hSmul :=
-      M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_smul (-E) f
-    have hSubApply := congrArg
-      (fun T : M.VacuumOrthogonalHilbert →L[ℝ]
-          M.VacuumOrthogonalHilbert => T ψ) hSub
-    have hSmulApply := congrArg
-      (fun T : M.VacuumOrthogonalHilbert →L[ℝ]
-          M.VacuumOrthogonalHilbert => T ψ) hSmul
-    dsimp [h, ef] at hHx
-    rw [hSubApply, hSmulApply] at hHx
     rw [hHx, hx]
+    dsimp [h, ef]
+    rw [M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_sub,
+      M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral_smul]
+    change
+      ((M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral g ψ -
+          (-E) •
+            M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral f ψ) -
+        E • M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral f ψ) =
+        M.canonicalVacuumOrthogonalBoundedBorelSpectralIntegral g ψ
     module
 
 /-- Consequently the unshifted coordinate graph already constructs the
