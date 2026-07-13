@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.WightmanOSPVMPhysicalSemigroupRightHamiltonianValue
 import MGAP4D.MathlibAnalytic.ExplicitWightmanOSScalarSupportToPVMOpenSupport
-import MGAP4D.MathlibAnalytic.WightmanOSPVMDisjointCompositionFromFiniteAdditivity
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -43,7 +42,10 @@ noncomputable def
     have hZeroProjection :
         M.spectralPVM.projection ({0} : Set ℝ) y = 0 := by
       dsimp [y]
-      exact M.spectralPVM.disjoint_projection_comp_apply_eq_zero hDisjoint ψ
+      exact
+        (orthogonalProjectionValuedSetFunction_disjoint_composition_zero_from_basic_laws_localization
+          M.spectralPVM)
+          ({0} : Set ℝ) s hDisjoint ψ
     have hyOrthogonal : y ∈ M.vacuumOrthogonal := by
       rw [explicit_wightman_os_mem_vacuumOrthogonal_iff]
       calc
