@@ -50,18 +50,26 @@ theorem physicalState_smul_sub
       _ = 0 := by
         rw [inner_sub_left]
         rw [inner_sub_right, inner_sub_right]
-        rw [inner_smul_right]
-        rw [inner_smul_left]
-        rw [inner_smul_left]
-        rw [inner_smul_right]
+        rw [real_inner_smul_right
+          (P.physicalState (r • (F - G)))
+          (P.physicalState F - P.physicalState G) r]
+        rw [real_inner_smul_left
+          (P.physicalState F - P.physicalState G)
+          (P.physicalState (r • (F - G))) r]
+        rw [real_inner_smul_left
+          (P.physicalState F - P.physicalState G)
+          (r • (P.physicalState F - P.physicalState G)) r]
+        rw [real_inner_smul_right
+          (P.physicalState F - P.physicalState G)
+          (P.physicalState F - P.physicalState G) r]
         rw [P.inner_physicalState_physicalState, hCrossRight, hCrossLeft]
-        rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, hNormDiff]
-        rw [← real_inner_self_eq_norm_sq (r • (F - G))]
-        rw [inner_smul_left]
-        rw [inner_smul_right]
-        rw [inner_smul_left]
-        rw [inner_smul_right]
-        rw [real_inner_self_eq_norm_sq]
+        rw [real_inner_self_eq_norm_sq
+          (P.physicalState F - P.physicalState G), hNormDiff]
+        rw [real_inner_smul_left (F - G) (r • (F - G)) r]
+        rw [real_inner_smul_right (F - G) (F - G) r]
+        rw [real_inner_smul_left (F - G) (F - G) r]
+        rw [real_inner_smul_right (F - G) (F - G) r]
+        rw [← real_inner_self_eq_norm_sq (F - G)]
         ring_nf
   have hnorm :
       ‖P.physicalState (r • (F - G)) -
