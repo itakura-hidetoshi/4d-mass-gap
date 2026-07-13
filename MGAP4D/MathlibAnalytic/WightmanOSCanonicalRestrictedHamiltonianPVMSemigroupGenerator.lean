@@ -127,14 +127,14 @@ noncomputable def rightHamiltonian
     have hψ := Classical.choose_spec ψ.property
     have hφ := Classical.choose_spec φ.property
     unfold HasRightHamiltonianValue at hψ hφ ⊢
-    simpa only [rightHamiltonianDifferenceQuotient_add] using hψ.add hφ
+    simpa [rightHamiltonianDifferenceQuotient_add] using hψ.add hφ
   map_smul' := by
     intro c ψ
     apply T.hasRightHamiltonianValue_unique
       (Classical.choose_spec (c • ψ).property)
     have hψ := Classical.choose_spec ψ.property
     unfold HasRightHamiltonianValue at hψ ⊢
-    simpa only [rightHamiltonianDifferenceQuotient_smul] using
+    simpa [rightHamiltonianDifferenceQuotient_smul] using
       (tendsto_const_nhds.smul hψ :
         Tendsto
           (fun t : ℝ => c • T.rightHamiltonianDifferenceQuotient
