@@ -32,8 +32,9 @@ theorem antitone_pvmNatEnergyTail : Antitone pvmNatEnergyTail := by
 /-- The intersection of all natural energy tails is empty. -/
 theorem iInter_pvmNatEnergyTail :
     (⋂ n : ℕ, pvmNatEnergyTail n) = ∅ := by
-  apply Set.eq_empty_iff_forall_not_mem.mpr
-  intro energy henergy
+  ext energy
+  simp only [Set.mem_iInter, Set.not_mem_empty, iff_false]
+  intro henergy
   obtain ⟨n, hn⟩ := exists_nat_gt |energy|
   have hnR : |energy| < (n : ℝ) := by exact_mod_cast hn
   have hleft : -(n : ℝ) ≤ energy := by
@@ -44,9 +45,7 @@ theorem iInter_pvmNatEnergyTail :
     le_trans (le_abs_self energy) hnR.le
   have hwindow : energy ∈ pvmEnergyWindow (n : ℝ) :=
     ⟨hleft, hright⟩
-  have htail : energy ∈ pvmNatEnergyTail n :=
-    Set.mem_iInter.mp henergy n
-  exact htail hwindow
+  exact (henergy n) hwindow
 
 /-- The scalar spectral mass of the complements of growing finite energy
 windows converges to zero for the scalar measure actually constructed from
@@ -64,7 +63,7 @@ theorem quadraticPVM_scalarMeasure_natEnergyTail_tendsto_zero
     intro n
     exact (measurableSet_pvmNatEnergyTail n).nullMeasurableSet
   have hFinite :
-      ∃ n : ℕ, A.scalarMeasure ψ (pvmNatEnergyTail n) ≠ ∞ := by
+      ∃ n : ℕ, A.scalarMeasure ψ (pvmNatEnergyTail n) ≠ ⊤ := by
     refine ⟨0, ?_⟩
     rw [quadraticPVM_scalarMeasure_apply A ψ
       (pvmNatEnergyTail 0) (measurableSet_pvmNatEnergyTail 0)]
@@ -96,7 +95,6 @@ theorem quadraticPVM_projection_natEnergyTail_tendsto_zero
         A.scalarMeasure ψ (pvmNatEnergyTail n) < ENNReal.ofReal (ε ^ 2) :=
     (tendsto_order.1 hMass).2 _ hBound
   filter_upwards [hEventuallyMass] with n hn
-  rw [dist_zero_right]
   rw [quadraticPVM_scalarMeasure_apply A ψ
     (pvmNatEnergyTail n) (measurableSet_pvmNatEnergyTail n)] at hn
   have hSq :
@@ -104,7 +102,10 @@ theorem quadraticPVM_projection_natEnergyTail_tendsto_zero
     (ENNReal.ofReal_lt_ofReal_iff (sq_pos_of_pos hε)).mp hn
   have hNormNonneg :
       0 ≤ ‖M.spectralPVM.projection (pvmNatEnergyTail n) ψ‖ := norm_nonneg _
-  nlinarith
+  have hNormLt :
+      ‖M.spectralPVM.projection (pvmNatEnergyTail n) ψ‖ < ε := by
+    nlinarith
+  simpa [Real.dist_eq, abs_of_nonneg hNormNonneg] using hNormLt
 
 /-- Epsilon form of strong spectral-tail vanishing. -/
 theorem quadraticPVM_projection_natEnergyTail_eventually_small
@@ -114,7 +115,9 @@ theorem quadraticPVM_projection_natEnergyTail_eventually_small
     ∀ᶠ n : ℕ in atTop,
       ‖M.spectralPVM.projection (pvmNatEnergyTail n) ψ‖ < ε := by
   have h := quadraticPVM_projection_natEnergyTail_tendsto_zero A ψ
-  exact (Metric.tendsto_nhds.1 h ε hε)
+  have hMetric := Metric.tendsto_nhds.1 h ε hε
+  filter_upwards [hMetric] with n hn
+  simpa [Real.dist_eq, abs_of_nonneg (norm_nonneg _)] using hn
 
 end
 
