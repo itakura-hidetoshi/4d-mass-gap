@@ -33,12 +33,8 @@ theorem physicalState_smul_sub
         symm
         exact real_inner_self_eq_norm_sq _
       _ = 0 := by
-        simp only [inner_sub_left, inner_sub_right, inner_smul_left,
-          inner_smul_right]
-        simp only [P.inner_physicalState_physicalState]
-        simp only [inner_sub_left, inner_sub_right, inner_smul_left,
-          inner_smul_right]
-        ring_nf
+        simp [inner_sub_left, inner_sub_right, inner_smul_left,
+          inner_smul_right, P.inner_physicalState_physicalState] <;> ring
   have hnorm :
       ‖P.physicalState (r • (F - G)) -
           r • (P.physicalState F - P.physicalState G)‖ = 0 := by
