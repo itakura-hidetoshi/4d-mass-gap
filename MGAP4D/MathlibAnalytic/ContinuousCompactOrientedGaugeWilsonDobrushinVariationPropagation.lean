@@ -136,7 +136,6 @@ theorem continuous_compact_oriented_conditionalIntegral_direct_difference_abs_le
     (hhA : Continuous hA)
     (hhB : Continuous hB)
     (sourceBound : ℝ)
-    (hSourceNonneg : 0 ≤ sourceBound)
     (hSourceBound : ∀ g : C.base.Gauge, |hA g - hB g| ≤ sourceBound) :
     |(∫ g, hA g ∂C.singleLinkConditionalMeasure A target) -
       (∫ g, hB g ∂C.singleLinkConditionalMeasure A target)| ≤ sourceBound := by
@@ -206,7 +205,8 @@ theorem continuous_compact_oriented_dobrushin_centeredTest_difference_abs_le
       intro g
       unfold phi
       rw [abs_div, abs_of_pos hRadiusPos]
-      exact (div_le_iff₀ hRadiusPos).2 (hRadius g)
+      apply (div_le_iff₀ hRadiusPos).2
+      simpa only [one_mul] using hRadius g
     have hD := D.conditionalIntegral_difference_abs_le
       target source A B hAgree phi hphiContinuous.stronglyMeasurable hphiBound
     have hphiAInt : Integrable phi μA :=
@@ -223,6 +223,7 @@ theorem continuous_compact_oriented_dobrushin_centeredTest_difference_abs_le
           filter_upwards [] with g
           unfold phi
           field_simp [ne_of_gt hRadiusPos]
+          ring
         _ = radius * (∫ g, phi g ∂μA) + center := by
           rw [integral_add (hphiAInt.const_mul radius) (integrable_const center),
             integral_const_mul]
@@ -235,6 +236,7 @@ theorem continuous_compact_oriented_dobrushin_centeredTest_difference_abs_le
           filter_upwards [] with g
           unfold phi
           field_simp [ne_of_gt hRadiusPos]
+          ring
         _ = radius * (∫ g, phi g ∂μB) + center := by
           rw [integral_add (hphiBInt.const_mul radius) (integrable_const center),
             integral_const_mul]
@@ -285,8 +287,7 @@ theorem continuous_compact_oriented_dobrushin_centeredVariation_conditionalExpec
         C.base A B target source g hAgree)
   have hDirect :=
     continuous_compact_oriented_conditionalIntegral_direct_difference_abs_le
-      C A target hA hB hhA hhB (P.variation source)
-      (P.variation_nonneg source) hSourceBound
+      C A target hA hB hhA hhB (P.variation source) hSourceBound
   have hLaw :=
     continuous_compact_oriented_dobrushin_centeredTest_difference_abs_le
       C D target source A B hAgree hB hhB
