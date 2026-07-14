@@ -10,7 +10,7 @@ KuuOS reference repository: itakura-hidetoshi/KuuOS
 Reference bridge: docs/kuuos_reference_bridge.md
 ```
 
-## Authoritative development status — 2026-07-10 JST
+## Authoritative development status — 2026-07-14 JST
 
 The authoritative proof carrier is:
 
@@ -18,30 +18,34 @@ The authoritative proof carrier is:
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The latest integrated theorem checkpoint is:
+The latest integrated checkpoint is:
 
 ```text
-PR #746 — Identify direct bounded exact first excitation
-PR head a38aea205dce9fe07b949c2e1b34cb3a160ac927
-merge commit f300370b08736240342cb05885e6ffa7a174ed1b
-PR Lean Fast Check run 5807 — success
+PR #843 — Prove compact-Haar random-scan variation contraction
+PR head 7d017f297b9b35ab5f88945edc88391dc57ab53d
+merge commit 8138a2fb7ef84794feb40f4d651efa947de34894
+PR Lean Fast Check run #6085 / run id 29305474231 — success
 post-merge carrier comparison — identical
 ```
 
-The active carrier has advanced beyond the direct bounded operator handoff and the first complete-construction certificate.
+The repository has advanced substantially beyond the documentation checkpoint at PR #746. The current proof development has two connected fronts:
 
-It now contains a theorem and certificate chain that, for a supplied
-`EuclideanYangMillsContinuumMeasureConstructionSpine`, identifies the exact lower spectral structure of the reconstructed model.
+1. reducing the exact-gap and Hamiltonian/PVM route to actual Euclidean observable, measure, semigroup, and graph-core data; and
+2. deriving a volume-uniform finite-lattice coercivity mechanism from the explicit periodic compact-Haar `SU(N)` Wilson interaction.
 
-## Current formal result
+The decisive unfinished step is to close the genuine Gibbs `L²` conditional-variance estimate and then transfer the resulting finite-volume lower bound along a physically relevant continuum construction.
 
-Every theorem in the current exact-gap layer is parametrized by:
+## What is formally integrated
+
+### 1. Exact lower-spectrum theorem chain
+
+For every supplied
 
 ```lean
 S : EuclideanYangMillsContinuumMeasureConstructionSpine
 ```
 
-Write:
+write
 
 ```lean
 σ := S.definitionBridge.spine.model.energySpectrum
@@ -49,174 +53,194 @@ Write:
 E₁ := S.definitionBridge.spine.model.firstExcitation
 ```
 
-The integrated carrier proves the following consequences:
+The active carrier proves, among other consequences,
 
 ```lean
 HasHamiltonianMassGap σ Δ
 
 σ ⊆ ({0} : Set ℝ) ∪ Set.Ici Δ
-
 Set.Ioo 0 Δ ∩ σ = ∅
-
 Δ ∈ σ
 
 IsLeast (σ \ ({0} : Set ℝ)) Δ
-
 sInf (σ \ ({0} : Set ℝ)) = Δ
 
 σ ∩ Set.Iio Δ = ({0} : Set ℝ)
-
 (σ \ ({0} : Set ℝ)) ∩ Set.Iic Δ = ({Δ} : Set ℝ)
-
 σ ∩ Set.Iic Δ = ({0, Δ} : Set ℝ)
 
 E₁ = Δ
-
 IsLeast (σ \ ({0} : Set ℝ)) E₁
-
 ∃! E : ℝ, IsLeast (σ \ ({0} : Set ℝ)) E
-
-∃ ψ : S.definitionBridge.spine.model.H,
-  ψ ∈ S.definitionBridge.spine.model.spectralPVM ({Δ} : Set ℝ)
 ```
 
-Thus, inside the supplied construction spine, the exact gap is attained, is the unique least nonzero spectral energy, equals the model first excitation, and separates the vacuum from the remaining spectrum.
+This exact-spectrum layer remains valid and integrated. It is a theorem about every construction spine satisfying the stated fields; it is not by itself a construction of such a spine from a concrete four-dimensional gauge family.
 
-These statements are formal Lean theorems on the active carrier.
+### 2. Exact support through the reconstructed Hamiltonian and PVM
 
-They do not by themselves construct the required construction spine from a concrete four-dimensional Yang--Mills approximation family.
+The later carrier no longer leaves the lower-spectrum endpoint only at the abstract certificate level.
 
-## Primary exact-spectrum surfaces
-
-The current certificate chain is:
-
-```lean
-EuclideanYangMillsCompleteConstructionDirectBoundedCertificate
-
-EuclideanYangMillsCompleteConstructionDirectBoundedExactGapIntervalCertificate
-
-EuclideanYangMillsCompleteConstructionDirectBoundedExactThresholdSeparationCertificate
-
-EuclideanYangMillsCompleteConstructionDirectBoundedExactFirstExcitationCertificate
-```
-
-The principal compact theorem endpoints are:
-
-```lean
-euclidean_yang_mills_complete_construction_direct_bounded_package
-
-euclideanYangMillsCompleteConstructionDirectBounded_exactGapIntervalCertificate_complete
-
-euclideanYangMillsCompleteConstructionDirectBounded_exactThresholdSeparation_complete
-
-euclideanYangMillsCompleteConstructionDirectBounded_exactFirstExcitation_complete
-```
-
-The latest files are:
+PRs #781 and #782 connect the exact-gap core to the actual reconstructed vacuum-orthogonal Hamiltonian sector and prove both
 
 ```text
-MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactGapInterval.lean
-MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactGapIntervalCertificate.lean
-MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactThresholdSeparation.lean
-MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactThresholdSeparationCertificate.lean
-MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactFirstExcitation.lean
-MGAP4D/MathlibAnalytic/EuclideanYangMillsCompleteConstructionDirectBoundedExactFirstExcitationCertificate.lean
+scalar spectral support
+  = non-vacuum exact-gap core spectrum
 ```
 
-## Direct bounded public route
-
-The preferred boundedness surface remains the direct bare-`M` bundle.
-
-```lean
-r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_actual_data
-r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_full_domain_data
-r4HilbertMathlibSelfAdjointOperator_direct_bare_M_bundle_domain_package
-```
-
-Route-backed boundedness names remain compatibility surfaces.
-
-The direct route is exposed through root, downstream, public-consumer, and compact root-consumer APIs integrated by PRs #721 through #743.
-
-Those layers reduce repeated destructuring and provide stable theorem-facing imports.
-
-They do not add new physical hypotheses or independently construct a spectral measure.
-
-## Exact-gap normalization
-
-`exactGapValueReal` is the public projection of the Hamiltonian/PVM/spectral exact-gap package.
-
-It is not defined in `ExactGapReal.lean` by a free-standing real literal.
-
-The exact `33/20` statement belongs to its upstream provenance route.
-
-That normalization route is not, by itself, an unconditional derivation of a physical four-dimensional Yang--Mills mass scale.
-
-## Integrated proof route
+and
 
 ```text
-finite Wilson and heat-bath theorem generators
-  -> conditional continuum, OS, Hamiltonian, resolvent, and graph-limit packages
-  -> exact-gap normalization and provenance route
-  -> R4 continuum-measure construction spine
-  -> gauge-field, gauge-action, gauge-invariant, Schwinger, and correlation layers
-  -> reflection-positive reconstruction input
-  -> quotient, section, range, and transport layers
-  -> standard real Hilbert completion
-  -> completed Hilbert-space handoff
-  -> completed OS semigroup handoff
-  -> generator and Hamiltonian handoffs
-  -> mathlib self-adjoint LinearPMap operator
-  -> graph, adjoint, actual-operator, and continuous-representative packages
-  -> direct bare-M bounded operator bundle
-  -> complete-construction direct bounded certificate
-  -> downstream and public-consumer API chain
-  -> positive nonzero-spectrum and lower-bound packages
-  -> exact-gap interval certificate
-  -> exact-threshold spectral classification
-  -> exact first-excitation identification
-  -> physical construction-spine instantiation
-  -> independent review and final theorem assessment
+pure PVM open support
+  = non-vacuum exact-gap core spectrum.
 ```
+
+Consequently `exactGapValueReal` is identified as the least support point and the support infimum without requiring a nonzero singleton eigenprojection. The route is compatible with continuous spectral support at the threshold.
+
+### 3. Constructed bounded-Borel PVM functional calculus
+
+PRs #803 through #820 construct and prove the required functional-calculus laws rather than storing them as independent physical inputs.
+
+The integrated route includes:
+
+```text
+simple-function PVM integration
+  -> uniform bounded-Borel completion
+  -> zero, one, indicator, subtraction, and real-scalar laws
+  -> quadratic scalar spectral measure and tail continuity
+  -> inner symmetry and real-Hilbert polarization
+  -> simple and bounded-Borel multiplicativity
+  -> operator-norm and vector-level continuity.
+```
+
+In particular, for bounded Borel multipliers `F` and `G`, the completed PVM integral has the theorem-generated algebraic behavior needed downstream, including
+
+```text
+I_P(FG) = I_P(F) ∘ I_P(G).
+```
+
+### 4. Physical semigroup and Hamiltonian coordinate graph
+
+PRs #821 through #829 reduce the PVM/Hamiltonian compatibility boundary to actual OS and observable data.
+
+The active carrier proves the following route:
+
+```text
+scalar Laplace formula + positive PVM support + OS exchange
+  -> T_t = I_P(E ↦ exp(-tE) · 1_[0,∞)(E))
+  -> physical PVM difference-quotient formula
+  -> canonical restricted PVM coordinate graph
+  -> strong continuity from Euclidean observable continuity
+  -> Hamiltonian-domain derivative from an observable graph core
+  -> derivative closure from graph-norm density and contractive generator averages.
+```
+
+The strong-continuity input on the whole completed Hilbert space is generated from continuity on represented Euclidean observables, the OS-state isometry, density, and contractivity. PR #827 further derives the observable-norm continuity from dominated convergence for the actual Euclidean realization integrands.
+
+The right derivative on the Hamiltonian domain is likewise no longer taken as one opaque all-domain field: PRs #828 and #829 derive it from an actual observable graph core, Hamiltonian graph-norm density, and a bounded generator-average factorization.
+
+### 5. Explicit periodic compact-Haar `SU(N)` finite-volume route
+
+PRs #830 through #843 establish the current concrete finite-side frontier on the genuine compact gauge carrier
+
+```lean
+Matrix.specialUnitaryGroup (Fin N) ℂ.
+```
+
+The integrated chain now contains:
+
+```text
+periodic SU(N) Wilson system with normalized Haar--Gibbs measure
+  -> exact one-link compact-Haar conditional expectations
+  -> shared-plaquette localization of the Wilson response
+  -> mutual conditional-density domination
+  -> explicit bounded-test influence coefficients
+  -> periodic shared-plaquette counting for lattice side n ≥ 3
+  -> volume-independent Dobrushin row and column bounds
+  -> symmetric finite influence matrix
+  -> finite Schur ℓ² matrix estimate
+  -> one-link propagation of actual observable variations
+  -> random-scan total-variation contraction.
+```
+
+For the explicit influence profile, the current coefficient is controlled by
+
+```text
+18 * eta_beta,
+eta_beta = (exp (4 * beta) - 1) / (exp (4 * beta) + 1),
+```
+
+and strict contraction follows in the proved region
+
+```text
+beta < log (19 / 17) / 4.
+```
+
+The exact compact-Haar random-scan observable contracts the finite `ℓ¹` link-variation seminorm at the standard rate
+
+```text
+1 - (1 - coefficient) / |Edge|.
+```
+
+The symmetric periodic matrix also satisfies the finite Schur estimate
+
+```text
+sum_target (sum_source c target source * v source)^2
+  <= (18 * eta_beta)^2 * sum_source (v source)^2.
+```
+
+The heat-bath/random-scan operator identity and its Poincaré equivalence are integrated on the genuine Gibbs `L²` space:
+
+```text
+P_scan = I - |Edge|⁻¹ H_HB.
+```
+
+## Current mathematical frontier
+
+The next proof unit is not another wrapper around the exact-gap certificate. It is the analytic bridge from the current pointwise variation theory to the native Gibbs `L²` form.
+
+The immediate sequence is:
+
+```text
+PR #841 finite Schur ℓ² matrix estimate
++ PR #842 one-link observable variation propagation
++ PR #843 random-scan observable variation contraction
+  -> random-scan ℓ² variation-energy contraction
+  -> Gibbs conditional-variance / approximate-tensorization theorem
+  -> centered random-scan L² Rayleigh estimate
+  -> native heat-bath Poincaré inequality
+  -> tail-uniform periodic SU(N) finite-volume coercivity
+  -> continuum OS coercivity and spectral lower-bound transfer.
+```
+
+The crucial missing implication is therefore not matrix algebra alone. The repository must prove that the concrete observable variation energy controls, or can be completed to, the Gibbs `L²` conditional-variance form with the coefficient required by the random-scan theorem.
+
+A second fundamental boundary is physical scaling. The explicit strict Dobrushin estimate currently lies in a small-`beta` region. The repository does not yet prove that this region follows the four-dimensional continuum weak-coupling scaling trajectory. A final construction must either bridge that regime mismatch or supply another volume-uniform gap mechanism valid along the chosen continuum family.
 
 ## The theorem boundary
 
 | Surface | Status on the active carrier |
 |---|---|
-| Finite Wilson and finite heat-bath theorem generators | available |
-| Conditional continuum, OS, Hamiltonian, resolvent, graph-limit, and spectral interfaces | available as theorem packages |
-| R4 reconstruction through completed Hilbert space | integrated |
-| OS semigroup, generator, Hamiltonian, and self-adjoint operator APIs | integrated |
-| Direct bare-`M` bounded operator route | integrated through PR #717 |
-| Complete-construction direct bounded certificate | integrated through PR #718 |
-| Stable downstream and public-consumer route | integrated through PR #743 |
-| Positive nonzero-spectrum and lower-bound certificate packages | integrated through PR #739 |
-| Exact-gap interval and attained least nonzero energy | integrated by PR #744 |
-| Exact lower-threshold spectral classification | integrated by PR #745 |
-| First excitation equals the exact gap and is uniquely least | integrated by PR #746 |
-| Concrete physical construction of `EuclideanYangMillsContinuumMeasureConstructionSpine` | open |
-| Discharge of all continuum, nontriviality, spectral, and gap data from one specified physical family | open |
+| Finite Wilson and compact-Haar conditional-law infrastructure | integrated |
+| R4 OS reconstruction through completed real Hilbert space | integrated as theorem infrastructure |
+| Self-adjoint Hamiltonian and bounded-Borel PVM calculus | integrated |
+| Exact lower-spectrum consequences for a supplied construction spine | integrated |
+| Exact support identification through the reconstructed Hamiltonian/PVM | integrated |
+| Euclidean-observable route to strong continuity and Hamiltonian derivative | integrated through PR #829 |
+| Explicit periodic `SU(N)` Dobrushin matrix and strict row/column bounds | integrated through PR #840 |
+| Finite Schur `ℓ²` matrix contraction | integrated by PR #841 |
+| Actual one-link and random-scan observable variation contraction | integrated by PRs #842–#843 |
+| Gibbs `L²` approximate tensorization / centered random-scan Rayleigh theorem from those variations | open |
+| Unconditional tail-uniform `SU(N)` heat-bath gap generated from the explicit interaction | open at the analytic bridge |
+| Transfer of a uniform finite-volume gap to the continuum OS Hamiltonian | open |
+| Continuum scaling family satisfying the required physical regime and all OS/nontriviality inputs | open |
 | Unconditional four-dimensional Yang--Mills existence and mass-gap theorem | not claimed |
 | Independent external mathematical consensus | not claimed |
 
-## What remains open
+## Exact-gap normalization
 
-The decisive frontier is no longer the packaging of the direct bounded route or the derivation of elementary order consequences from an already supplied spectral package.
+`exactGapValueReal` is the public projection of the current Hamiltonian/PVM/spectral exact-gap package. Its exact `33/20` provenance is an internal normalized theorem route.
 
-The decisive frontier is to construct the required `EuclideanYangMillsContinuumMeasureConstructionSpine` from one concrete physical approximation family and prove that the family supplies every field used by the exact-gap theorem chain.
-
-This includes:
-
-```text
-specifying the gauge group, lattice or regularization family, boundary conditions, and observables;
-proving tightness or compactness and existence of the continuum limit;
-proving nontriviality and the required Euclidean, gauge, and reflection-positive properties;
-constructing the physical Hilbert space and Hamiltonian from that family;
-deriving the spectral/PVM and exact-gap inputs from the physical construction rather than supplying them through the spine;
-showing that the resulting theorem has the intended physical normalization and scope;
-obtaining independent mathematical review.
-```
-
-Until those steps are discharged, the latest exact-spectrum theorems remain construction-spine-parametrized results rather than an unconditional Clay Millennium solution.
+The repository does not yet derive that number as a physical four-dimensional Yang--Mills mass scale from one specified continuum approximation family. Internal normalization, spectral theorem consequences, and physical scale identification remain distinct obligations.
 
 ## Replay
 
@@ -252,13 +276,13 @@ create one focused branch from the current proof carrier;
 open a Draft PR;
 run PR Lean Fast Check;
 mark ready only after the fixed head succeeds;
-merge into formal/real-hilbert-uniform-coercive-strong-limit;
+squash merge into formal/real-hilbert-uniform-coercive-strong-limit;
 verify the merge commit is identical to the carrier head;
 start the next theorem layer from the updated carrier.
 ```
 
 Open, stale, superseded, closed-unmerged, or failing PRs are not active-carrier facts.
 
-The default `main` branch is a repository landing surface.
+Additional aliases, receipts, wrappers, and smoke files count as progress only when they expose a necessary theorem dependency, remove duplicated assumptions, stabilize an actually consumed API, or connect the finite physical construction to the continuum mass-gap route.
 
-Authoritative theorem integration status is determined by the active proof carrier named above.
+The default `main` branch is a repository landing surface. Authoritative theorem integration status is determined by the active proof carrier named above.
