@@ -114,7 +114,6 @@ theorem continuous_compact_oriented_singleLinkBoundaryConditionalPairKernel_appl
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoundaryConditionalPairKernel
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoundaryConditionalPairMeasure
   rw [Kernel.prod_apply,
-    continuous_compact_oriented_singleLinkBoundaryConditionalKernel_apply,
     continuous_compact_oriented_singleLinkBoundaryConditionalKernel_apply]
 
 /-- Markov kernel on the common boundary-target-pair carrier: retain the input
@@ -148,9 +147,9 @@ theorem continuous_compact_oriented_singleLinkBoundaryTargetPairKernel_apply
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoundaryTargetPairKernel
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoundaryTargetPairMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.offTargetBoundaryTargetPairBoundaryInsertMap
-  rw [Kernel.prod_apply,
-    continuous_compact_oriented_singleLinkBoundaryConditionalPairKernel_apply]
-  simp
+  rw [Kernel.prod_apply, Kernel.id_apply,
+    continuous_compact_oriented_singleLinkBoundaryConditionalPairKernel_apply,
+    Measure.dirac_prod]
 
 /-- The original configuration-indexed native joint kernel is the pullback of
 the measurable boundary kernel along boundary restriction. -/
