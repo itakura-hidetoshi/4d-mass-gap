@@ -147,7 +147,7 @@ theorem periodicHypercubicSpecialUnitary_influence_l1_le
             profile source := by
       apply Finset.sum_le_sum
       intro source _hSource
-      rw [Finset.sum_mul]
+      rw [← Finset.sum_mul]
       exact mul_le_mul_of_nonneg_right
         (periodicHypercubicSpecialUnitary_influence_columnSum_le
           n N hn hN beta beta_nonneg source)
