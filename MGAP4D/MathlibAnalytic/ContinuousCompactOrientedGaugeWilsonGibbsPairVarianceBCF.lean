@@ -8,7 +8,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory ProbabilityTheory
-open scoped ProbabilityTheory
+open scoped ProbabilityTheory ENNReal
 
 noncomputable section
 
