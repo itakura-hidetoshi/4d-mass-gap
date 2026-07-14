@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonConditionalVarianceBCF
+import MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonHeatBathPoincareL2
 import Mathlib.Probability.Moments.Variance
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Tactic
@@ -83,7 +84,12 @@ theorem continuous_compact_oriented_inner_gibbsVacuumL2_gibbsL2RepresentativeBCF
       (C.gibbsVacuumL2 : C.base.Configuration → ℝ) =ᵐ[C.gibbsMeasure]
         fun _ => (1 : ℝ) := by
     unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsVacuumL2
-    filter_upwards [indicatorConstLp_coeFn] with A hA
+    filter_upwards [indicatorConstLp_coeFn
+      (μ := C.gibbsMeasure)
+      (p := (2 : ℝ≥0∞))
+      (hs := MeasurableSet.univ)
+      (hμs := measure_ne_top C.gibbsMeasure Set.univ)
+      (c := (1 : ℝ))] with A hA
     simpa using hA
   rw [hRep, MeasureTheory.L2.inner_def]
   apply integral_congr_ae
@@ -107,7 +113,7 @@ theorem continuous_compact_oriented_vacuumCenteredL2_norm_sq
     norm_num
   have hSymm : inner ℝ f v = a := by
     dsimp [a]
-    exact real_inner_comm f v
+    exact (real_inner_comm f v).symm
   unfold ContinuousCompactOrientedGaugeWilsonSystem.vacuumCenteredL2
   change ‖f - a • v‖ ^ 2 = ‖f‖ ^ 2 - a ^ 2
   calc
