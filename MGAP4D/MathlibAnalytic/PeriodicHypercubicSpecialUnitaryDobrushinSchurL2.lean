@@ -28,7 +28,7 @@ theorem row_action_sq_le
       (∑ j, matrix i j * vector j) ^ 2 ≤
         (∑ j, matrix i j) *
           ∑ j, matrix i j * vector j ^ 2 := by
-    apply Finset.sum_sq_le_sum_mul_sum_of_sq_le_mul
+    apply Finset.sum_sq_le_sum_mul_sum_of_sq_eq_mul
     · intro j _hj
       exact matrix_nonneg i j
     · intro j _hj
