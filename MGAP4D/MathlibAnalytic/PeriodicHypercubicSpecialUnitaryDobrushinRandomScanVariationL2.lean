@@ -221,6 +221,7 @@ theorem continuous_compact_oriented_symmetricSchur_randomScanVariationEnergy_le
   have hNOneNat : 1 ≤ Fintype.card C.base.geometry.Edge :=
     Nat.succ_le_iff.mpr hEdge
   have hNOne : 1 ≤ n := by
+    dsimp [n]
     exact_mod_cast hNOneNat
   have hA : 0 ≤ a := by
     have hInvMul : b * n = 1 := by
