@@ -80,10 +80,20 @@ theorem continuous_compact_oriented_inner_gibbsVacuumL2_gibbsL2RepresentativeBCF
     continuous_compact_oriented_bcf_memLp_two C O
   have hRep : C.gibbsL2RepresentativeBCF O = hO.toLp O := by
     rfl
-  unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsVacuumL2
-  rw [hRep, MeasureTheory.L2.inner_indicatorConstLp_one]
-  simp only [MeasureTheory.setIntegral_univ]
-  exact integral_congr_ae hO.coeFn_toLp
+  have hInner :=
+    MeasureTheory.L2.inner_indicatorConstLp_one
+      (μ := C.gibbsMeasure)
+      (s := Set.univ)
+      MeasurableSet.univ
+      (by finiteness)
+      (hO.toLp O)
+  calc
+    inner ℝ C.gibbsVacuumL2 (C.gibbsL2RepresentativeBCF O) =
+        ∫ A, (hO.toLp O : C.base.Configuration → ℝ) A ∂C.gibbsMeasure := by
+      unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsVacuumL2
+      simpa [hRep, MeasureTheory.setIntegral_univ] using hInner
+    _ = ∫ A, O A ∂C.gibbsMeasure :=
+      integral_congr_ae hO.coeFn_toLp
 
 /-- Orthogonal centering away from a unit Gibbs vacuum subtracts exactly the
 squared vacuum coefficient from the squared norm. -/
