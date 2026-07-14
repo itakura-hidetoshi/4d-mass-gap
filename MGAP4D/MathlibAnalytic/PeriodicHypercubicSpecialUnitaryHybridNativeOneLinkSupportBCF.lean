@@ -22,25 +22,25 @@ abbrev periodicHypercubicSpecialUnitaryOneLinkSupportSystem
   periodicHypercubicSpecialUnitaryWilsonSystem
     n N hN beta beta_nonneg
 
+/-- The actual physical-link configuration carrier. -/
 abbrev periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
     (n N : ℕ)
     [NeZero n]
-    (hN : 0 < N)
+    (_hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta) : Type :=
-  (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-    n N hN beta beta_nonneg).base.Configuration
+    (_beta : ℝ)
+    (_beta_nonneg : 0 ≤ _beta) : Type :=
+  PeriodicHypercubicEdge n → Matrix.specialUnitaryGroup (Fin N) ℂ
 
+/-- The actual compact gauge carrier. -/
 abbrev periodicHypercubicSpecialUnitaryOneLinkSupportGauge
-    (n N : ℕ)
-    [NeZero n]
-    (hN : 0 < N)
+    (_n N : ℕ)
+    [NeZero _n]
+    (_hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta) : Type :=
-  (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-    n N hN beta beta_nonneg).base.Gauge
+    (_beta : ℝ)
+    (_beta_nonneg : 0 ≤ _beta) : Type :=
+  Matrix.specialUnitaryGroup (Fin N) ℂ
 
 section PeriodicSpecialUnitary
 
