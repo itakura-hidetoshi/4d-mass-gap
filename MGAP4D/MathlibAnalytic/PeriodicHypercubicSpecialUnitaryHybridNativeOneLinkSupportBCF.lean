@@ -52,6 +52,26 @@ variable
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
 
+local instance : IsTopologicalGroup
+    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance : CompactSpace
+    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance : SecondCountableTopology
+    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance : MeasurableSpace
+    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance : BorelSpace
+    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- Squared disagreement away from one target link, computed in the ambient
 complex matrix carrier of `SU(N)`. -/
 def periodicHypercubicSpecialUnitaryOffTargetPairEnergy
@@ -91,22 +111,52 @@ theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
     intro i _
     apply continuous_finset_sum
     intro j _
+    have hPostSU : Continuous
+        (fun y :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg => y.2 source) :=
+      (continuous_apply source).comp continuous_snd
+    have hPostMatrix : Continuous
+        (fun y :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg =>
+          (y.2 source : Matrix (Fin N) (Fin N) ℂ)) :=
+      continuous_subtype_val.comp hPostSU
     have hPost : Continuous
         (fun y :
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg ×
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg =>
-          ((y.2 source : Matrix (Fin N) (Fin N) ℂ) i j)) := by
-      fun_prop
+          ((y.2 source : Matrix (Fin N) (Fin N) ℂ) i j)) :=
+      (continuous_apply j).comp ((continuous_apply i).comp hPostMatrix)
+    have hPreSU : Continuous
+        (fun y :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg => y.1 source) :=
+      (continuous_apply source).comp continuous_fst
+    have hPreMatrix : Continuous
+        (fun y :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg =>
+          (y.1 source : Matrix (Fin N) (Fin N) ℂ)) :=
+      continuous_subtype_val.comp hPreSU
     have hPre : Continuous
         (fun y :
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg ×
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg =>
-          ((y.1 source : Matrix (Fin N) (Fin N) ℂ) i j)) := by
-      fun_prop
+          ((y.1 source : Matrix (Fin N) (Fin N) ℂ) i j)) :=
+      (continuous_apply j).comp ((continuous_apply i).comp hPreMatrix)
     exact (hPost.sub hPre).norm.pow 2
 
 /-- Agreement away from the target forces the off-target energy to vanish. -/
