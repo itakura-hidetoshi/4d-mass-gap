@@ -10,8 +10,8 @@ noncomputable section
 
 namespace FiniteSchurOneSidedProfile
 
-/-- A nonnegative finite profile satisfying the natural one-sided Dobrushin
-inequality `u ≤ q + C u` obeys the squared coercive estimate. -/
+/-- A nonnegative finite profile satisfying `u ≤ q + C u` obeys the squared
+coercive estimate whenever `C` has `ℓ²` norm at most `alpha < 1`. -/
 theorem global_energy_coercive
     {ι : Type*}
     [Fintype ι]
@@ -310,49 +310,30 @@ theorem periodicHypercubicSpecialUnitary_hybridOneSided_boundedContinuousCorePoi
         C.singleLinkConditionalIndependentPairDifferenceEnergyBCF target O A
         ∂C.gibbsMeasure at hPair
   rw [continuous_compact_oriented_gibbsIndependentPairDifferenceEnergyBCF_eq_two_mul_centered_norm_sq
-        C O,
-      continuous_compact_oriented_sum_integral_singleLinkConditionalIndependentPairDifferenceEnergyBCF_eq_two_mul_hamiltonian
         C O] at hPair
+  have hPair' :
+      periodicHypercubicSpecialUnitaryPairResidualCoreGap beta *
+          (2 * ‖C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)‖ ^ 2) ≤
+        2 * inner ℝ
+          (C.heatBathHamiltonianL2 (C.gibbsL2RepresentativeBCF O))
+          (C.gibbsL2RepresentativeBCF O) := by
+    calc
+      periodicHypercubicSpecialUnitaryPairResidualCoreGap beta *
+          (2 * ‖C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)‖ ^ 2) ≤
+        ∑ target : C.base.geometry.Edge,
+          ∫ A,
+            C.singleLinkConditionalIndependentPairDifferenceEnergyBCF target O A
+            ∂C.gibbsMeasure := hPair
+      _ = 2 * inner ℝ
+          (C.heatBathHamiltonianL2 (C.gibbsL2RepresentativeBCF O))
+          (C.gibbsL2RepresentativeBCF O) :=
+        continuous_compact_oriented_sum_integral_singleLinkConditionalIndependentPairDifferenceEnergyBCF_eq_two_mul_hamiltonian
+          C O
   change periodicHypercubicSpecialUnitaryPairResidualCoreGap beta *
       ‖C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)‖ ^ 2 ≤
     inner ℝ (C.heatBathHamiltonianL2 (C.gibbsL2RepresentativeBCF O))
       (C.gibbsL2RepresentativeBCF O)
-  nlinarith
-
-/-- One-sided coupling data for every bounded continuous observable. -/
-structure PeriodicHypercubicSpecialUnitaryHybridPairOneSidedFamilyDataBCF
-    (n N : ℕ)
-    [NeZero n]
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta) where
-  oneSidedData :
-    ∀ O : BoundedContinuousFunction
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg).base.Configuration ℝ,
-      PeriodicHypercubicSpecialUnitaryHybridPairOneSidedDataBCF
-        n N hN beta beta_nonneg O
-
-/-- Family one-sided estimates generate the explicit positive core Poincaré property. -/
-theorem periodicHypercubicSpecialUnitary_hybridOneSided_family_boundedContinuousCorePoincare
-    (n N : ℕ)
-    [NeZero n]
-    (hn : 3 ≤ n)
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta)
-    (hBetaLt : beta < Real.log ((19 : ℝ) / 17) / 4)
-    (R : PeriodicHypercubicSpecialUnitaryHybridPairOneSidedFamilyDataBCF
-      n N hN beta beta_nonneg) :
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).BoundedContinuousCoreHeatBathPoincare
-        (periodicHypercubicSpecialUnitaryPairResidualCoreGap beta) := by
-  intro O
-  exact
-    periodicHypercubicSpecialUnitary_hybridOneSided_boundedContinuousCorePoincare
-      n N hn hN beta beta_nonneg hBetaLt O (R.oneSidedData O)
+  nlinarith [hPair']
 
 end
 
