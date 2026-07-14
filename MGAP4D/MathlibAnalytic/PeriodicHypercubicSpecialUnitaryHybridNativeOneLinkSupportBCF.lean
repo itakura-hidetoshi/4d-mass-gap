@@ -9,8 +9,8 @@ open scoped BigOperators ProbabilityTheory
 
 noncomputable section
 
-/-- Short explicit name for the periodic compact-Haar `SU(N)` Wilson system used
-by the one-link support certificates below. -/
+/-- Explicit periodic compact-Haar `SU(N)` Wilson system used by the support
+certificates. -/
 abbrev periodicHypercubicSpecialUnitaryOneLinkSupportSystem
     (n N : ℕ)
     [NeZero n]
@@ -22,6 +22,26 @@ abbrev periodicHypercubicSpecialUnitaryOneLinkSupportSystem
   periodicHypercubicSpecialUnitaryWilsonSystem
     n N hN beta beta_nonneg
 
+abbrev periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+    (n N : ℕ)
+    [NeZero n]
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta) : Type :=
+  (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
+    n N hN beta beta_nonneg).base.Configuration
+
+abbrev periodicHypercubicSpecialUnitaryOneLinkSupportGauge
+    (n N : ℕ)
+    [NeZero n]
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta) : Type :=
+  (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
+    n N hN beta beta_nonneg).base.Gauge
+
 section PeriodicSpecialUnitary
 
 variable
@@ -32,22 +52,23 @@ variable
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
 
-/-- Squared configuration-pair disagreement away from one target physical link.
-It vanishes exactly on pairs whose two configurations agree at every source
-other than the target. -/
+/-- Squared disagreement away from one target link, computed in the ambient
+complex matrix carrier of `SU(N)`. -/
 def periodicHypercubicSpecialUnitaryOffTargetPairEnergy
     (target : PeriodicHypercubicEdge n)
     (y :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration ×
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration) : ℝ := by
+      periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+          n N hN beta beta_nonneg ×
+      periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+          n N hN beta beta_nonneg) : ℝ := by
   classical
   exact ∑ source : PeriodicHypercubicEdge n,
     if source = target then 0
-    else dist (y.2 source) (y.1 source) ^ 2
+    else ∑ i : Fin N, ∑ j : Fin N,
+      ‖((y.2 source : Matrix (Fin N) (Fin N) ℂ) i j) -
+        ((y.1 source : Matrix (Fin N) (Fin N) ℂ) i j)‖ ^ 2
 
-/-- The off-target pair energy is continuous on the configuration-pair carrier. -/
+/-- The ambient-matrix off-target pair energy is continuous. -/
 theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
     (target : PeriodicHypercubicEdge n) :
     Continuous
@@ -58,20 +79,44 @@ theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
   apply continuous_finset_sum
   intro source _
   by_cases hSource : source = target
-  · simp [hSource]
+  · simpa [hSource] using
+      (continuous_const : Continuous
+        (fun _ :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg => (0 : ℝ)))
   · simp only [hSource, if_false]
-    exact
-      (((continuous_apply source).comp continuous_snd).dist
-        ((continuous_apply source).comp continuous_fst)).pow 2
+    apply continuous_finset_sum
+    intro i _
+    apply continuous_finset_sum
+    intro j _
+    have hPost : Continuous
+        (fun y :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg =>
+          ((y.2 source : Matrix (Fin N) (Fin N) ℂ) i j)) := by
+      fun_prop
+    have hPre : Continuous
+        (fun y :
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg ×
+          periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+              n N hN beta beta_nonneg =>
+          ((y.1 source : Matrix (Fin N) (Fin N) ℂ) i j)) := by
+      fun_prop
+    exact (hPost.sub hPre).norm.pow 2
 
-/-- Agreement away from the target forces the off-target pair energy to vanish. -/
+/-- Agreement away from the target forces the off-target energy to vanish. -/
 theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_eq_zero_of_agreeOffLink
     (target : PeriodicHypercubicEdge n)
     (y :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration ×
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration)
+      periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+          n N hN beta beta_nonneg ×
+      periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+          n N hN beta beta_nonneg)
     (hAgree :
       (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
         n N hN beta beta_nonneg).base.AgreeOffLink y.2 y.1 target) :
@@ -83,43 +128,39 @@ theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_eq_zero_of_agreeOff
   intro source _
   by_cases hSource : source = target
   · simp [hSource]
-  · simp [hSource, hAgree source hSource]
+  · rw [if_neg hSource, hAgree source hSource]
+    simp
 
 /-- Every canonical hybrid endpoint pair has zero off-target disagreement. -/
 @[simp]
 theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_hybridEndpointPairMap
     (target : PeriodicHypercubicEdge n)
     (z :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration ×
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration) :
+      periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+          n N hN beta beta_nonneg ×
+      periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+          n N hN beta beta_nonneg) :
     periodicHypercubicSpecialUnitaryOffTargetPairEnergy
         n N hN beta beta_nonneg target
         ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
           n N hN beta beta_nonneg).independentPairHybridEndpointPairMap
-            target z) = 0 := by
-  exact
-    periodicHypercubicSpecialUnitary_offTargetPairEnergy_eq_zero_of_agreeOffLink
-      n N hN beta beta_nonneg target
-      ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).independentPairHybridEndpointPairMap target z)
-      (continuous_compact_oriented_independentPairHybridEndpointPairMap_agreeOffLink
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg) target z)
+            target z) = 0 :=
+  periodicHypercubicSpecialUnitary_offTargetPairEnergy_eq_zero_of_agreeOffLink
+    n N hN beta beta_nonneg target _
+    (continuous_compact_oriented_independentPairHybridEndpointPairMap_agreeOffLink
+      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
+        n N hN beta beta_nonneg) target z)
 
-/-- Two native one-link conditional samples from the same background agree away
-from the resampled target link. -/
+/-- Two native conditional samples from one background agree off target. -/
 theorem periodicHypercubicSpecialUnitary_singleLinkConditionalPairConfigurationMap_agreeOffLink
     (target : PeriodicHypercubicEdge n)
-    (A :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration)
+    (A : periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+      n N hN beta beta_nonneg)
     (z :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Gauge ×
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Gauge) :
+      periodicHypercubicSpecialUnitaryOneLinkSupportGauge
+          n N hN beta beta_nonneg ×
+      periodicHypercubicSpecialUnitaryOneLinkSupportGauge
+          n N hN beta beta_nonneg) :
     (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
       n N hN beta beta_nonneg).base.AgreeOffLink
       ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
@@ -127,48 +168,40 @@ theorem periodicHypercubicSpecialUnitary_singleLinkConditionalPairConfigurationM
           A target z).2
       ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
         n N hN beta beta_nonneg).singleLinkConditionalPairConfigurationMap
-          A target z).1
-      target := by
+          A target z).1 target := by
   intro source hSource
   simp [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalPairConfigurationMap,
     CompactOrientedGaugeWilsonSystem.replaceLink, hSource]
 
-/-- Every native conditional-pair generator value has zero off-target
-configuration disagreement. -/
+/-- Every native conditional-pair generator value has zero off-target energy. -/
 @[simp]
 theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_singleLinkConditionalPairConfigurationMap
     (target : PeriodicHypercubicEdge n)
-    (A :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration)
+    (A : periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+      n N hN beta beta_nonneg)
     (z :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Gauge ×
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Gauge) :
+      periodicHypercubicSpecialUnitaryOneLinkSupportGauge
+          n N hN beta beta_nonneg ×
+      periodicHypercubicSpecialUnitaryOneLinkSupportGauge
+          n N hN beta beta_nonneg) :
     periodicHypercubicSpecialUnitaryOffTargetPairEnergy
         n N hN beta beta_nonneg target
         ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
           n N hN beta beta_nonneg).singleLinkConditionalPairConfigurationMap
-            A target z) = 0 := by
-  exact
-    periodicHypercubicSpecialUnitary_offTargetPairEnergy_eq_zero_of_agreeOffLink
-      n N hN beta beta_nonneg target
-      ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).singleLinkConditionalPairConfigurationMap
-          A target z)
-      (periodicHypercubicSpecialUnitary_singleLinkConditionalPairConfigurationMap_agreeOffLink
-        n N hN beta beta_nonneg target A z)
+            A target z) = 0 :=
+  periodicHypercubicSpecialUnitary_offTargetPairEnergy_eq_zero_of_agreeOffLink
+    n N hN beta beta_nonneg target _
+    (periodicHypercubicSpecialUnitary_singleLinkConditionalPairConfigurationMap_agreeOffLink
+      n N hN beta beta_nonneg target A z)
 
-/-- The hybrid endpoint transport plan has exactly zero squared disagreement
-away from its target physical link. -/
+/-- The hybrid endpoint transport plan has zero integrated off-target energy. -/
 theorem periodicHypercubicSpecialUnitary_integral_offTargetPairEnergy_hybridEndpointPairMeasure
     (target : PeriodicHypercubicEdge n) :
     (∫ y :
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration ×
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration,
+        periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+            n N hN beta beta_nonneg ×
+        periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+            n N hN beta beta_nonneg,
         periodicHypercubicSpecialUnitaryOffTargetPairEnergy
           n N hN beta beta_nonneg target y
         ∂(periodicHypercubicSpecialUnitaryOneLinkSupportSystem
@@ -183,71 +216,40 @@ theorem periodicHypercubicSpecialUnitary_integral_offTargetPairEnergy_hybridEndp
       n N hN beta beta_nonneg target).stronglyMeasurable]
   simp
 
-/-- Pointwise in the Gibbs background, the native independent heat-bath pair
-kernel has zero squared disagreement away from the target link. -/
+/-- Pointwise in the Gibbs background, the native pair kernel has zero
+integrated off-target energy. -/
 theorem periodicHypercubicSpecialUnitary_integral_offTargetPairEnergy_singleLinkHeatBathIndependentPairKernel
     (target : PeriodicHypercubicEdge n)
-    (A :
-      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-        n N hN beta beta_nonneg).base.Configuration) :
+    (A : periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+      n N hN beta beta_nonneg) :
     (∫ y :
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration ×
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration,
+        periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+            n N hN beta beta_nonneg ×
+        periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+            n N hN beta beta_nonneg,
         periodicHypercubicSpecialUnitaryOffTargetPairEnergy
           n N hN beta beta_nonneg target y
         ∂(periodicHypercubicSpecialUnitaryOneLinkSupportSystem
           n N hN beta beta_nonneg).singleLinkHeatBathIndependentPairKernel
             target A) = 0 := by
   rw [continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_apply]
-  calc
-    (∫ y :
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration ×
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration,
-        periodicHypercubicSpecialUnitaryOffTargetPairEnergy
-          n N hN beta beta_nonneg target y
-        ∂Measure.map
-          ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-            n N hN beta beta_nonneg).singleLinkConditionalPairConfigurationMap
-              A target)
-          (((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-            n N hN beta beta_nonneg).singleLinkConditionalMeasure A target).prod
-            ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-              n N hN beta beta_nonneg).singleLinkConditionalMeasure A target))) =
-      ∫ z :
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Gauge ×
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Gauge,
-        periodicHypercubicSpecialUnitaryOffTargetPairEnergy
-          n N hN beta beta_nonneg target
-          ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-            n N hN beta beta_nonneg).singleLinkConditionalPairConfigurationMap
-              A target z)
-        ∂(((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).singleLinkConditionalMeasure A target).prod
-          ((periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-            n N hN beta beta_nonneg).singleLinkConditionalMeasure A target)) := by
-      exact MeasureTheory.integral_map
-        (continuous_compact_oriented_singleLinkConditionalPairConfigurationMap_continuous
-          (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-            n N hN beta beta_nonneg) A target).measurable.aemeasurable
-        (periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
-          n N hN beta beta_nonneg target).stronglyMeasurable.aestronglyMeasurable
-    _ = 0 := by simp
+  exact (MeasureTheory.integral_map
+    (continuous_compact_oriented_singleLinkConditionalPairConfigurationMap_continuous
+      (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
+        n N hN beta beta_nonneg) A target).measurable.aemeasurable
+    (periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
+      n N hN beta beta_nonneg target).stronglyMeasurable.aestronglyMeasurable).trans <| by
+        simp
 
-/-- The Gibbs-averaged native conditional-pair reference law also has exactly
-zero squared disagreement away from the target physical link. -/
+/-- The Gibbs-averaged native reference law has zero integrated off-target
+energy. -/
 theorem periodicHypercubicSpecialUnitary_integral_offTargetPairEnergy_singleLinkHeatBathIndependentPairMeasure
     (target : PeriodicHypercubicEdge n) :
     (∫ y :
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration ×
-        (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
-          n N hN beta beta_nonneg).base.Configuration,
+        periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+            n N hN beta beta_nonneg ×
+        periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
+            n N hN beta beta_nonneg,
         periodicHypercubicSpecialUnitaryOffTargetPairEnergy
           n N hN beta beta_nonneg target y
         ∂(periodicHypercubicSpecialUnitaryOneLinkSupportSystem
@@ -288,19 +290,14 @@ theorem periodicHypercubicSpecialUnitary_integral_offTargetPairEnergy_singleLink
         periodicHypercubicSpecialUnitaryOffTargetPairEnergy
           n N hN beta beta_nonneg target y
         ∂C.singleLinkHeatBathIndependentPairMeasure target) =
-      ∫ y : C.base.Configuration × C.base.Configuration,
-        periodicHypercubicSpecialUnitaryOffTargetPairEnergy
-          n N hN beta beta_nonneg target y
-        ∂(((C.singleLinkHeatBathIndependentPairKernel target) ∘ₖ
-          Kernel.const Unit C.gibbsMeasure) ()) := by
-      rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairMeasure,
-        Measure.comp_eq_comp_const_apply]
-    _ = ∫ A,
+      ∫ A,
         ∫ y : C.base.Configuration × C.base.Configuration,
           periodicHypercubicSpecialUnitaryOffTargetPairEnergy
             n N hN beta beta_nonneg target y
           ∂C.singleLinkHeatBathIndependentPairKernel target A
         ∂C.gibbsMeasure := by
+      rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairMeasure,
+        Measure.comp_eq_comp_const_apply]
       simpa [Kernel.const_apply] using
         (ProbabilityTheory.Kernel.integral_comp hIntComp)
     _ = 0 := by
