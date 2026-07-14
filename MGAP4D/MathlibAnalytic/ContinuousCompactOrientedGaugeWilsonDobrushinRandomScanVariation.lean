@@ -203,6 +203,7 @@ theorem continuous_compact_oriented_dobrushinRandomScanUpdatedVariation_total_le
         total := by
       dsimp [n, gap]
       unfold continuousCompactOrientedDobrushinRandomScanRate
+        continuousCompactOrientedDobrushinHeatBathGap
       field_simp [hCardNe]
 
 /-- A centered bounded-observable profile induces a concrete variation bound
@@ -248,8 +249,12 @@ noncomputable def
             C.singleLinkConditionalExpectationBCF O B target)| ≤
         ∑ target,
           |C.singleLinkConditionalExpectationBCF O A target -
-            C.singleLinkConditionalExpectationBCF O B target| :=
-        finite_abs_sum_le_sum_abs Finset.univ _
+            C.singleLinkConditionalExpectationBCF O B target| := by
+        exact Finset.abs_sum_le_sum_abs
+          (fun target : C.base.geometry.Edge =>
+            C.singleLinkConditionalExpectationBCF O A target -
+              C.singleLinkConditionalExpectationBCF O B target)
+          Finset.univ
       _ ≤ ∑ target,
           continuousCompactOrientedGaugeWilsonDobrushinUpdatedVariation
             D P.variation target source := by
