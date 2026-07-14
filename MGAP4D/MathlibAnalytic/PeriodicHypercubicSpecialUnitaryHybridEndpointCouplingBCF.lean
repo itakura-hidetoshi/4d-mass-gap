@@ -24,7 +24,7 @@ theorem continuous_compact_oriented_independentPairHybridPreEndpointRightTargetM
     Continuous (C.independentPairHybridPreEndpointRightTargetMap target) := by
   exact
     (continuous_compact_oriented_independentPairHybridPreEndpointMap_continuous
-      C target).prod
+      C target).prodMk
       ((continuous_apply target).comp continuous_snd)
 
 /-- Joint physical-link replacement is continuous in both the background
