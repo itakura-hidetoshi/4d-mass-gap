@@ -242,9 +242,15 @@ instance continuousCompactOriented_singleLinkHeatBathBoundaryTargetPairKernel_is
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
     IsMarkovKernel (C.singleLinkHeatBathBoundaryTargetPairKernel target) := by
+  refine ⟨fun A => ?_⟩
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathBoundaryTargetPairKernel
-  infer_instance
+  rw [Kernel.map_apply _
+    (continuous_compact_oriented_offTargetBoundaryTargetPairMap_measurable C target)
+    A]
+  exact Measure.isProbabilityMeasure_map
+    (continuous_compact_oriented_offTargetBoundaryTargetPairMap_measurable
+      C target).aemeasurable
 
 /-- Pointwise in the Gibbs background, the native joint kernel is exactly the
 pushforward of two independent conditional target samples beside the fixed
@@ -288,8 +294,13 @@ theorem continuous_compact_oriented_map_fst_singleLinkHeatBathBoundaryTargetPair
   rw [Measure.map_map measurable_fst
     (continuous_compact_oriented_offTargetBoundaryTargetPairInsertMap_measurable
       C target A)]
+  change Measure.map
+      (fun _ : C.base.Gauge × C.base.Gauge =>
+        C.offTargetBoundaryMap target A)
+      ((C.singleLinkConditionalMeasure A target).prod
+        (C.singleLinkConditionalMeasure A target)) =
+    Measure.dirac (C.offTargetBoundaryMap target A)
   simp
-    [ContinuousCompactOrientedGaugeWilsonSystem.offTargetBoundaryTargetPairInsertMap]
 
 /-- The target-pair marginal of the native joint kernel is exactly the product
 of the two native one-link conditional measures. -/
@@ -305,8 +316,13 @@ theorem continuous_compact_oriented_map_snd_singleLinkHeatBathBoundaryTargetPair
   rw [Measure.map_map measurable_snd
     (continuous_compact_oriented_offTargetBoundaryTargetPairInsertMap_measurable
       C target A)]
+  change Measure.map
+      (fun z : C.base.Gauge × C.base.Gauge => z)
+      ((C.singleLinkConditionalMeasure A target).prod
+        (C.singleLinkConditionalMeasure A target)) =
+    (C.singleLinkConditionalMeasure A target).prod
+      (C.singleLinkConditionalMeasure A target)
   simp
-    [ContinuousCompactOrientedGaugeWilsonSystem.offTargetBoundaryTargetPairInsertMap]
 
 /-- The Gibbs-averaged native law on the same boundary-target-pair carrier. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathBoundaryTargetPairMeasure
