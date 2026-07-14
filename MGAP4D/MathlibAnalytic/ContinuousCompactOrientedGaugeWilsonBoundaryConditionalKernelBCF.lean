@@ -143,6 +143,10 @@ theorem continuous_compact_oriented_singleLinkBoundaryTargetPairKernel_apply
     (boundary : C.OffTargetBoundary target) :
     C.singleLinkBoundaryTargetPairKernel target boundary =
       C.singleLinkBoundaryTargetPairMeasure target boundary := by
+  letI : IsProbabilityMeasure
+      (C.singleLinkBoundaryConditionalPairMeasure target boundary) :=
+    continuous_compact_oriented_singleLinkBoundaryConditionalPairMeasure_isProbabilityMeasure
+      C target boundary
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoundaryTargetPairKernel
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkBoundaryTargetPairMeasure
