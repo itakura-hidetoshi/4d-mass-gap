@@ -13,7 +13,7 @@ noncomputable section
 namespace FiniteHybridPath
 
 /-- Replace coordinates of `A` by those of `B` in the order prescribed by
-`order`.  At time `k`, precisely the coordinates whose ranks are strictly below
+`order`. At time `k`, precisely the coordinates whose ranks are strictly below
 `k` have been replaced. -/
 def configuration
     {ι X : Type*}
@@ -74,10 +74,25 @@ theorem endpoint_sub_sq_le_card_mul_sum_increment_sq
           ∑ k ∈ Finset.range (Fintype.card ι),
             (path (k + 1) - path k) ^ 2 := by
     simpa [mul_comm, mul_left_comm, mul_assoc] using hCS
-  rw [Finset.sum_fin_eq_sum_range]
-  dsimp [path] at hPath ⊢
+  dsimp [path] at hPath
   rw [configuration_zero, configuration_card] at hPath
-  nlinarith
+  calc
+    (observable A - observable B) ^ 2 =
+        (observable B - observable A) ^ 2 := by ring
+    _ ≤ (Fintype.card ι : ℝ) *
+        ∑ k ∈ Finset.range (Fintype.card ι),
+          (observable (configuration order A B (k + 1)) -
+            observable (configuration order A B k)) ^ 2 := hPath
+    _ = (Fintype.card ι : ℝ) *
+        ∑ k : Fin (Fintype.card ι),
+          (observable (configuration order A B (k.val + 1)) -
+            observable (configuration order A B k.val)) ^ 2 := by
+      congr 1
+      symm
+      rw [Finset.sum_fin_eq_sum_range]
+      apply Finset.sum_congr rfl
+      intro k hk
+      simp [Finset.mem_range.mp hk]
 
 end FiniteHybridPath
 
