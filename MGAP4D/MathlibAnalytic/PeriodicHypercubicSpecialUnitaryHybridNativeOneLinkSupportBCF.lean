@@ -22,25 +22,25 @@ abbrev periodicHypercubicSpecialUnitaryOneLinkSupportSystem
   periodicHypercubicSpecialUnitaryWilsonSystem
     n N hN beta beta_nonneg
 
-/-- The actual physical-link configuration carrier. -/
 abbrev periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
     (n N : ℕ)
     [NeZero n]
-    (_hN : 0 < N)
+    (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (_beta : ℝ)
-    (_beta_nonneg : 0 ≤ _beta) : Type :=
-  PeriodicHypercubicEdge n → Matrix.specialUnitaryGroup (Fin N) ℂ
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta) : Type :=
+  (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
+    n N hN beta beta_nonneg).base.Configuration
 
-/-- The actual compact gauge carrier. -/
 abbrev periodicHypercubicSpecialUnitaryOneLinkSupportGauge
-    (_n N : ℕ)
-    [NeZero _n]
-    (_hN : 0 < N)
+    (n N : ℕ)
+    [NeZero n]
+    (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (_beta : ℝ)
-    (_beta_nonneg : 0 ≤ _beta) : Type :=
-  Matrix.specialUnitaryGroup (Fin N) ℂ
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta) : Type :=
+  (periodicHypercubicSpecialUnitaryOneLinkSupportSystem
+    n N hN beta beta_nonneg).base.Gauge
 
 section PeriodicSpecialUnitary
 
@@ -52,25 +52,22 @@ variable
     (beta : ℝ)
     (beta_nonneg : 0 ≤ beta)
 
-local instance : IsTopologicalGroup
-    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupIsTopologicalGroup N
+/-- Expose one native gauge value as its actual ambient complex matrix. -/
+def periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+    (g : periodicHypercubicSpecialUnitaryOneLinkSupportGauge
+      n N hN beta beta_nonneg) : Matrix (Fin N) (Fin N) ℂ := by
+  change Matrix.specialUnitaryGroup (Fin N) ℂ at g
+  exact g
 
-local instance : CompactSpace
-    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupCompactSpace N
-
-local instance : SecondCountableTopology
-    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupSecondCountableTopology N
-
-local instance : MeasurableSpace
-    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupMeasurableSpace N
-
-local instance : BorelSpace
-    (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupBorelSpace N
+/-- The native-gauge-to-ambient-matrix map is continuous. -/
+theorem periodicHypercubicSpecialUnitary_oneLinkSupportGaugeMatrix_continuous :
+    Continuous
+      (periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+        n N hN beta beta_nonneg) := by
+  change Continuous
+    ((↑) : Matrix.specialUnitaryGroup (Fin N) ℂ →
+      Matrix (Fin N) (Fin N) ℂ)
+  exact continuous_subtype_val
 
 /-- Squared disagreement away from one target link, computed in the ambient
 complex matrix carrier of `SU(N)`. -/
@@ -85,8 +82,10 @@ def periodicHypercubicSpecialUnitaryOffTargetPairEnergy
   exact ∑ source : PeriodicHypercubicEdge n,
     if source = target then 0
     else ∑ i : Fin N, ∑ j : Fin N,
-      ‖((y.2 source : Matrix (Fin N) (Fin N) ℂ) i j) -
-        ((y.1 source : Matrix (Fin N) (Fin N) ℂ) i j)‖ ^ 2
+      ‖(periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+          n N hN beta beta_nonneg (y.2 source)) i j -
+        (periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+          n N hN beta beta_nonneg (y.1 source)) i j‖ ^ 2
 
 /-- The ambient-matrix off-target pair energy is continuous. -/
 theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
@@ -111,7 +110,7 @@ theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
     intro i _
     apply continuous_finset_sum
     intro j _
-    have hPostSU : Continuous
+    have hPostGauge : Continuous
         (fun y :
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg ×
@@ -124,17 +123,20 @@ theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
               n N hN beta beta_nonneg ×
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg =>
-          (y.2 source : Matrix (Fin N) (Fin N) ℂ)) :=
-      continuous_subtype_val.comp hPostSU
+          periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+            n N hN beta beta_nonneg (y.2 source)) :=
+      (periodicHypercubicSpecialUnitary_oneLinkSupportGaugeMatrix_continuous
+        n N hN beta beta_nonneg).comp hPostGauge
     have hPost : Continuous
         (fun y :
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg ×
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg =>
-          ((y.2 source : Matrix (Fin N) (Fin N) ℂ) i j)) :=
+          (periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+            n N hN beta beta_nonneg (y.2 source)) i j) :=
       (continuous_apply j).comp ((continuous_apply i).comp hPostMatrix)
-    have hPreSU : Continuous
+    have hPreGauge : Continuous
         (fun y :
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg ×
@@ -147,15 +149,18 @@ theorem periodicHypercubicSpecialUnitary_offTargetPairEnergy_continuous
               n N hN beta beta_nonneg ×
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg =>
-          (y.1 source : Matrix (Fin N) (Fin N) ℂ)) :=
-      continuous_subtype_val.comp hPreSU
+          periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+            n N hN beta beta_nonneg (y.1 source)) :=
+      (periodicHypercubicSpecialUnitary_oneLinkSupportGaugeMatrix_continuous
+        n N hN beta beta_nonneg).comp hPreGauge
     have hPre : Continuous
         (fun y :
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg ×
           periodicHypercubicSpecialUnitaryOneLinkSupportConfiguration
               n N hN beta beta_nonneg =>
-          ((y.1 source : Matrix (Fin N) (Fin N) ℂ) i j)) :=
+          (periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
+            n N hN beta beta_nonneg (y.1 source)) i j) :=
       (continuous_apply j).comp ((continuous_apply i).comp hPreMatrix)
     exact (hPost.sub hPre).norm.pow 2
 
@@ -330,11 +335,6 @@ theorem periodicHypercubicSpecialUnitary_integral_offTargetPairEnergy_singleLink
     simpa
       [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairMeasure]
       using hIntReference
-  change
-    (∫ y : C.base.Configuration × C.base.Configuration,
-        periodicHypercubicSpecialUnitaryOffTargetPairEnergy
-          n N hN beta beta_nonneg target y
-        ∂C.singleLinkHeatBathIndependentPairMeasure target) = 0
   calc
     (∫ y : C.base.Configuration × C.base.Configuration,
         periodicHypercubicSpecialUnitaryOffTargetPairEnergy
