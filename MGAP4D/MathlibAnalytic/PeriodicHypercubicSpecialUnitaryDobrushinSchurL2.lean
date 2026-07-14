@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitarySymmetricDobrushin
+import Mathlib.Algebra.Order.BigOperators.Ring.Finset
 import Mathlib.Tactic
 
 namespace MGAP4D
