@@ -84,13 +84,14 @@ theorem continuous_compact_oriented_inner_gibbsVacuumL2_gibbsL2RepresentativeBCF
       (C.gibbsVacuumL2 : C.base.Configuration → ℝ) =ᵐ[C.gibbsMeasure]
         fun _ => (1 : ℝ) := by
     unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsVacuumL2
-    filter_upwards [indicatorConstLp_coeFn
-      (μ := C.gibbsMeasure)
-      (p := (2 : ℝ≥0∞))
-      (hs := MeasurableSet.univ)
-      (hμs := measure_ne_top C.gibbsMeasure Set.univ)
-      (c := (1 : ℝ))] with A hA
-    simpa using hA
+    simpa using
+      (indicatorConstLp_coeFn
+        (μ := C.gibbsMeasure)
+        (p := (2 : ℝ≥0∞))
+        (s := Set.univ)
+        (hs := MeasurableSet.univ)
+        (hμs := by finiteness)
+        (c := (1 : ℝ)))
   rw [hRep, MeasureTheory.L2.inner_def]
   apply integral_congr_ae
   filter_upwards [hVacuum, hO.coeFn_toLp] with A hVacuumA hOA
@@ -143,6 +144,7 @@ theorem continuous_compact_oriented_gibbsVarianceBCF_eq_vacuumCentered_norm_sq
     continuous_compact_oriented_vacuumCenteredL2_norm_sq,
     continuous_compact_oriented_gibbsL2RepresentativeBCF_norm_sq_eq_integral_sq,
     continuous_compact_oriented_inner_gibbsVacuumL2_gibbsL2RepresentativeBCF]
+  simp only [Pi.pow_apply]
 
 /-- The mean-square difference of two independent Gibbs configurations is twice
 the Gibbs variance of the observable. -/
