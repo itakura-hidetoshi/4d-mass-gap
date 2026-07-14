@@ -22,8 +22,7 @@ random-scan contraction rate. -/
 theorem alpha_mul_mix_sq_le
     (a b alpha x y : ℝ)
     (ha : 0 ≤ a)
-    (hb : 0 ≤ b)
-    (hAlpha : 0 ≤ alpha) :
+    (hb : 0 ≤ b) :
     alpha * (a * x + b * y) ^ 2 ≤
       (a + b * alpha) * (a * alpha * x ^ 2 + b * y ^ 2) := by
   have hNonneg :
@@ -79,7 +78,7 @@ theorem mix_l2_sq_le
         apply Finset.sum_congr rfl
         intro i _
         ring
-      _ = (a + b * alpha) ^ 2 * ∑ i, vector i ^ 2 := by
+      _ ≤ (a + b * alpha) ^ 2 * ∑ i, vector i ^ 2 := by
         simp [energy, hAlphaZero]
   · have hAlphaPos : 0 < alpha :=
       lt_of_le_of_ne hAlpha (Ne.symm hAlphaZero)
@@ -89,8 +88,7 @@ theorem mix_l2_sq_le
     have hPointwise (i : ι) :
         alpha * (a * vector i + b * action i) ^ 2 ≤
           rate * (a * alpha * vector i ^ 2 + b * action i ^ 2) := by
-      exact alpha_mul_mix_sq_le a b alpha (vector i) (action i)
-        ha hb hAlpha
+      exact alpha_mul_mix_sq_le a b alpha (vector i) (action i) ha hb
     have hActionEnergy : actionEnergy ≤ alpha ^ 2 * energy := by
       simpa [actionEnergy, action, energy] using hSchur vector
     have hSummed :
@@ -108,12 +106,11 @@ theorem mix_l2_sq_le
           rw [← Finset.mul_sum]
           congr 1
           rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
-          rfl
     have hInside :
         a * alpha * energy + b * actionEnergy ≤
           a * alpha * energy + b * (alpha ^ 2 * energy) := by
-      exact add_le_add_left
-        (mul_le_mul_of_nonneg_left hActionEnergy hb) _
+      exact add_le_add (le_refl _)
+        (mul_le_mul_of_nonneg_left hActionEnergy hb)
     have hScaled :
         alpha *
             (∑ i, (a * vector i + b * action i) ^ 2) ≤
@@ -127,7 +124,16 @@ theorem mix_l2_sq_le
         _ = alpha * ((a + b * alpha) ^ 2 * energy) := by
           dsimp [rate]
           ring
-    have hFinal := (mul_le_mul_left hAlphaPos).mp hScaled
+    have hFinal :
+        (∑ i, (a * vector i + b * action i) ^ 2) ≤
+          (a + b * alpha) ^ 2 * energy := by
+      by_contra hNot
+      have hLt :
+          (a + b * alpha) ^ 2 * energy <
+            ∑ i, (a * vector i + b * action i) ^ 2 :=
+        lt_of_not_ge hNot
+      have hMulLt := mul_lt_mul_of_pos_left hLt hAlphaPos
+      exact (not_lt_of_ge hScaled) hMulLt
     simpa [action, energy] using hFinal
 
 end FiniteRandomScanSchur
@@ -212,8 +218,10 @@ theorem continuous_compact_oriented_symmetricSchur_randomScanVariationEnergy_le
   have hB : 0 ≤ b := by
     dsimp [b]
     exact inv_nonneg.mpr hNPos.le
+  have hNOneNat : 1 ≤ Fintype.card C.base.geometry.Edge :=
+    Nat.succ_le_iff.mpr hEdge
   have hNOne : 1 ≤ n := by
-    exact_mod_cast (Nat.succ_le_iff.mp hEdge)
+    exact_mod_cast hNOneNat
   have hA : 0 ≤ a := by
     have hInvMul : b * n = 1 := by
       dsimp [b]
@@ -236,7 +244,6 @@ theorem continuous_compact_oriented_symmetricSchur_randomScanVariationEnergy_le
       intro source _
       rw [continuous_compact_oriented_dobrushinRandomScanUpdatedVariation_eq_affine
         D hSymm hEdge variation source]
-      rfl
     _ ≤ (a + b * D.coefficient) ^ 2 *
         ∑ source, variation source ^ 2 := hMix
     _ = continuousCompactOrientedDobrushinRandomScanRate C D.coefficient ^ 2 *
@@ -259,6 +266,8 @@ theorem periodicHypercubicSpecialUnitary_randomScanVariationEnergy_le
     (hBetaLt : beta < Real.log ((19 : ℝ) / 17) / 4)
     (variation : PeriodicHypercubicEdge n → ℝ) :
     continuousCompactOrientedGaugeWilsonVariationEnergy
+        (C := periodicHypercubicSpecialUnitaryWilsonSystem
+          n N hN beta beta_nonneg)
         (continuousCompactOrientedGaugeWilsonDobrushinRandomScanUpdatedVariation
           (periodicHypercubicSpecialUnitaryDobrushinMatrixData
             n N hn hN beta beta_nonneg hBetaLt)
@@ -267,7 +276,9 @@ theorem periodicHypercubicSpecialUnitary_randomScanVariationEnergy_le
           (periodicHypercubicSpecialUnitaryWilsonSystem
             n N hN beta beta_nonneg)
           (periodicHypercubicSpecialUnitaryDobrushinCoefficient beta) ^ 2 *
-        continuousCompactOrientedGaugeWilsonVariationEnergy variation := by
+        continuousCompactOrientedGaugeWilsonVariationEnergy
+          (C := periodicHypercubicSpecialUnitaryWilsonSystem
+            n N hN beta beta_nonneg) variation := by
   let D := periodicHypercubicSpecialUnitaryDobrushinMatrixData
     n N hn hN beta beta_nonneg hBetaLt
   have hSymm : ∀ target source, D.influence target source =
@@ -305,6 +316,8 @@ theorem periodicHypercubicSpecialUnitary_randomScanObservableVariationEnergy_le
       (periodicHypercubicSpecialUnitaryWilsonSystem
         n N hN beta beta_nonneg) O) :
     continuousCompactOrientedGaugeWilsonVariationEnergy
+        (C := periodicHypercubicSpecialUnitaryWilsonSystem
+          n N hN beta beta_nonneg)
         (P.randomScanVariationBound
           (periodicHypercubicSpecialUnitaryDobrushinMatrixData
             n N hn hN beta beta_nonneg hBetaLt)).variation ≤
@@ -312,7 +325,9 @@ theorem periodicHypercubicSpecialUnitary_randomScanObservableVariationEnergy_le
           (periodicHypercubicSpecialUnitaryWilsonSystem
             n N hN beta beta_nonneg)
           (periodicHypercubicSpecialUnitaryDobrushinCoefficient beta) ^ 2 *
-        continuousCompactOrientedGaugeWilsonVariationEnergy P.variation := by
+        continuousCompactOrientedGaugeWilsonVariationEnergy
+          (C := periodicHypercubicSpecialUnitaryWilsonSystem
+            n N hN beta beta_nonneg) P.variation := by
   simpa using
     (periodicHypercubicSpecialUnitary_randomScanVariationEnergy_le
       n N hn hN beta beta_nonneg hBetaLt P.variation)
