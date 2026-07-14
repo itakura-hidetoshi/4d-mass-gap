@@ -146,10 +146,10 @@ theorem periodicHypercubicSpecialUnitary_pairResidual_pairEnergy_coercive
             n N hN beta beta_nonneg).gibbsMeasure := by
   unfold periodicHypercubicSpecialUnitaryPairResidualCoreGap
   apply FiniteSchurPairResidual.global_energy_coercive
-    (periodicHypercubicSpecialUnitaryDobrushinInfluence
+    (matrix := periodicHypercubicSpecialUnitaryDobrushinInfluence
       n N hN beta beta_nonneg)
-    (periodicHypercubicSpecialUnitaryDobrushinCoefficient beta)
-    (R.profile)
+    (alpha := periodicHypercubicSpecialUnitaryDobrushinCoefficient beta)
+    (profile := R.profile)
   · unfold periodicHypercubicSpecialUnitaryDobrushinCoefficient
     exact mul_nonneg (by norm_num)
       (compactHaarOscillationInfluence_nonneg (by positivity))
@@ -198,7 +198,11 @@ theorem periodicHypercubicSpecialUnitary_pairResidual_boundedContinuousCorePoinc
         C O,
       continuous_compact_oriented_sum_integral_singleLinkConditionalIndependentPairDifferenceEnergyBCF_eq_two_mul_hamiltonian
         C O] at hPair
-  simpa [C] using (half_le_half hPair)
+  change periodicHypercubicSpecialUnitaryPairResidualCoreGap beta *
+      ‖C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)‖ ^ 2 ≤
+    inner ℝ (C.heatBathHamiltonianL2 (C.gibbsL2RepresentativeBCF O))
+      (C.gibbsL2RepresentativeBCF O)
+  nlinarith
 
 /-- Family pair-residual data generate the bounded-continuous-core Poincaré
 property with one explicit volume-independent positive coefficient. -/
