@@ -24,7 +24,7 @@ theorem continuous_compact_oriented_independentPairHybridPreEndpointRightTargetM
     Continuous (C.independentPairHybridPreEndpointRightTargetMap target) := by
   exact
     (continuous_compact_oriented_independentPairHybridPreEndpointMap_continuous
-      C target).prod_mk
+      C target).prod
       ((continuous_apply target).comp continuous_snd)
 
 /-- Joint physical-link replacement is continuous in both the background
@@ -171,14 +171,13 @@ theorem continuous_compact_oriented_independentPairHybridIncrementEnergyBCF_eq_e
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridIncrementEnergyBCF
   apply integral_congr_ae
   exact Filter.Eventually.of_forall fun z => by
-    rw [continuous_compact_oriented_independentPairHybridIncrementBCF_eq_fluctuation_sub]
-    change
-      (C.singleLinkHeatBathFluctuation target O
-          (C.independentPairHybridPostEndpointMap target z) -
-        C.singleLinkHeatBathFluctuation target O
-          (C.independentPairHybridPreEndpointMap target z)) ^ 2 = _
-    rw [continuous_compact_oriented_independentPairHybridPostEndpointMap_eq_replaceLink_pre_rightTarget]
-    rfl
+    dsimp
+      [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPreEndpointRightTargetMap]
+    rw [← continuous_compact_oriented_independentPairHybridPostEndpointMap_eq_replaceLink_pre_rightTarget
+      C target z]
+    exact congrArg (fun x : ℝ => x ^ 2)
+      (continuous_compact_oriented_independentPairHybridIncrementBCF_eq_fluctuation_sub
+        C target O z.1 z.2).symm
 
 end
 
