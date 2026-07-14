@@ -88,6 +88,7 @@ theorem continuous_compact_oriented_independentPairHybridPreCenteredBCF_sq_integ
       (fun A => by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm A)
       (C.independentPairHybridConfiguration z.1 z.2
         (C.canonicalEdgeOrder target).val)
+  have hBounds := abs_le.mp hAbs
   rw [abs_of_nonneg (sq_nonneg _)]
   dsimp
     [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPreCenteredBCF,
@@ -120,6 +121,7 @@ theorem continuous_compact_oriented_independentPairHybridPostCenteredBCF_sq_inte
       (fun A => by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm A)
       (C.independentPairHybridConfiguration z.1 z.2
         ((C.canonicalEdgeOrder target).val + 1))
+  have hBounds := abs_le.mp hAbs
   rw [abs_of_nonneg (sq_nonneg _)]
   dsimp
     [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPostCenteredBCF,
