@@ -75,7 +75,6 @@ theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_appl
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairKernel
   rw [Kernel.prod_apply,
-    continuous_compact_oriented_singleLinkHeatBathKernel_apply,
     continuous_compact_oriented_singleLinkHeatBathKernel_apply]
   simpa
     [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalPairConfigurationMap,
@@ -120,6 +119,32 @@ theorem continuous_compact_oriented_integral_singleLinkHeatBathIndependentPairKe
           C A target).measurable.aemeasurable
         hSq.aestronglyMeasurable)
 
+/-- Mapping the first component of the native pair kernel recovers the exact
+one-link heat-bath kernel. -/
+theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_map_fst
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge) :
+    (C.singleLinkHeatBathIndependentPairKernel target).map Prod.fst =
+      C.singleLinkHeatBathKernel target := by
+  ext A : 1
+  rw [Kernel.map_apply _ measurable_fst A]
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairKernel
+  rw [Kernel.prod_apply, Measure.map_fst_prod, measure_univ, one_smul]
+
+/-- Mapping the second component of the native pair kernel also recovers the
+exact one-link heat-bath kernel. -/
+theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_map_snd
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge) :
+    (C.singleLinkHeatBathIndependentPairKernel target).map Prod.snd =
+      C.singleLinkHeatBathKernel target := by
+  ext A : 1
+  rw [Kernel.map_apply _ measurable_snd A]
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairKernel
+  rw [Kernel.prod_apply, Measure.map_snd_prod, measure_univ, one_smul]
+
 /-- Gibbs-average the native conditional-pair kernel to obtain the canonical
 reference law on configuration pairs. -/
 noncomputable def
@@ -155,12 +180,8 @@ theorem continuous_compact_oriented_map_fst_singleLinkHeatBathIndependentPairMea
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairMeasure
   rw [Measure.map_comp C.gibbsMeasure
-    (C.singleLinkHeatBathIndependentPairKernel target) measurable_fst]
-  change
-    Kernel.fst (C.singleLinkHeatBathIndependentPairKernel target) ∘ₘ
-        C.gibbsMeasure = C.gibbsMeasure
-  rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairKernel,
-    Kernel.fst_prod,
+    (C.singleLinkHeatBathIndependentPairKernel target) measurable_fst,
+    continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_map_fst,
     continuous_compact_oriented_singleLinkHeatBathKernel_stationary]
 
 /-- The second marginal of the native conditional-pair reference law is also
@@ -176,12 +197,8 @@ theorem continuous_compact_oriented_map_snd_singleLinkHeatBathIndependentPairMea
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairMeasure
   rw [Measure.map_comp C.gibbsMeasure
-    (C.singleLinkHeatBathIndependentPairKernel target) measurable_snd]
-  change
-    Kernel.snd (C.singleLinkHeatBathIndependentPairKernel target) ∘ₘ
-        C.gibbsMeasure = C.gibbsMeasure
-  rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathIndependentPairKernel,
-    Kernel.snd_prod,
+    (C.singleLinkHeatBathIndependentPairKernel target) measurable_snd,
+    continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_map_snd,
     continuous_compact_oriented_singleLinkHeatBathKernel_stationary]
 
 end
