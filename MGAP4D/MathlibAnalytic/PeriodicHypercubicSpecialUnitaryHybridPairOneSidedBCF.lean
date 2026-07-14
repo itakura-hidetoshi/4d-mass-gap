@@ -11,9 +11,7 @@ noncomputable section
 namespace FiniteSchurOneSidedProfile
 
 /-- A nonnegative finite profile satisfying the natural one-sided Dobrushin
-inequality `u ≤ q + C u` obeys the same squared coercive estimate as the
-resolvent route.  Unlike an absolute residual hypothesis, this is the form
-produced directly by a conditional coupling and the `L²` triangle inequality. -/
+inequality `u ≤ q + C u` obeys the squared coercive estimate. -/
 theorem global_energy_coercive
     {ι : Type*}
     [Fintype ι]
@@ -42,10 +40,6 @@ theorem global_energy_coercive
     intro i
     exact Finset.sum_nonneg fun j _ =>
       mul_nonneg (hMatrixNonneg i j) (hProfileNonneg j)
-  have hProfileEnergyNonneg : 0 ≤ profileEnergy := by
-    exact Finset.sum_nonneg fun i _ => sq_nonneg (profile i)
-  have hLocalEnergyNonneg : 0 ≤ localEnergy := by
-    exact Finset.sum_nonneg fun i _ => sq_nonneg (localProfile i)
   have hActionEnergyNonneg : 0 ≤ actionEnergy := by
     exact Finset.sum_nonneg fun i _ => sq_nonneg (action i)
   have hActionEnergy : actionEnergy ≤ alpha ^ 2 * profileEnergy := by
@@ -151,7 +145,6 @@ theorem global_energy_coercive
             (inv_nonneg.mpr hAlphaNonneg)
         _ = alpha * profileEnergy := by
           field_simp [ne_of_gt hAlphaPos]
-          ring
     have hRearranged :
         (1 - alpha) * profileEnergy ≤
           (1 - alpha)⁻¹ * localEnergy := by
@@ -177,9 +170,7 @@ theorem continuous_compact_oriented_independentPairHybridProfileBCF_nonneg
     0 ≤ C.independentPairHybridProfileBCF target O := by
   exact Real.sqrt_nonneg _
 
-/-- The actual one-link coupling input: every canonical hybrid increment profile
-is bounded by the native local conditional-pair profile plus its Dobrushin
-propagation from the other link profiles. -/
+/-- The natural one-link coupling input for the canonical hybrid profile. -/
 structure PeriodicHypercubicSpecialUnitaryHybridPairOneSidedDataBCF
     (n N : ℕ)
     [NeZero n]
@@ -202,38 +193,7 @@ structure PeriodicHypercubicSpecialUnitaryHybridPairOneSidedDataBCF
           (periodicHypercubicSpecialUnitaryWilsonSystem
             n N hN beta beta_nonneg).independentPairHybridProfileBCF source O
 
-/-- The stronger absolute component-residual input from PR #853 implies the
-natural one-sided coupling input. -/
-noncomputable def
-    PeriodicHypercubicSpecialUnitaryHybridPairComponentResidualDataBCF.toOneSidedData
-    {n N : ℕ}
-    [NeZero n]
-    {hN : 0 < N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℝ}
-    {beta_nonneg : 0 ≤ beta}
-    {O : BoundedContinuousFunction
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg).base.Configuration ℝ}
-    (R : PeriodicHypercubicSpecialUnitaryHybridPairComponentResidualDataBCF
-      n N hN beta beta_nonneg O) :
-    PeriodicHypercubicSpecialUnitaryHybridPairOneSidedDataBCF
-      n N hN beta beta_nonneg O := by
-  refine { hybridProfile_le_localPair_add_influence := ?_ }
-  intro target
-  have hAbs := R.componentResidual_abs_le_localPairProfile target
-  have hUpper := le_trans (le_abs_self
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).independentPairHybridProfileBCF target O -
-      ∑ source : PeriodicHypercubicEdge n,
-        periodicHypercubicSpecialUnitaryDobrushinInfluence
-          n N hN beta beta_nonneg target source *
-        (periodicHypercubicSpecialUnitaryWilsonSystem
-          n N hN beta beta_nonneg).independentPairHybridProfileBCF source O)) hAbs
-  linarith
-
-/-- The one-sided canonical hybrid profile estimate yields direct coercivity
-between global and summed conditional independent-pair energies. -/
+/-- The one-sided estimate yields coercivity between global and local pair energies. -/
 theorem periodicHypercubicSpecialUnitary_hybridOneSided_pairEnergy_coercive
     (n N : ℕ)
     [NeZero n]
@@ -310,7 +270,7 @@ theorem periodicHypercubicSpecialUnitary_hybridOneSided_pairEnergy_coercive
           ∂C.gibbsMeasure :=
       continuous_compact_oriented_sum_singleLinkConditionalPairProfileBCF_sq C O
 
-/-- The one-sided coupling estimate produces the native bounded-continuous-core
+/-- The one-sided coupling estimate produces the bounded-continuous-core
 heat-bath Poincaré inequality. -/
 theorem periodicHypercubicSpecialUnitary_hybridOneSided_boundedContinuousCorePoincare
     (n N : ℕ)
@@ -343,6 +303,12 @@ theorem periodicHypercubicSpecialUnitary_hybridOneSided_boundedContinuousCorePoi
   have hPair :=
     periodicHypercubicSpecialUnitary_hybridOneSided_pairEnergy_coercive
       n N hn hN beta beta_nonneg hBetaLt O R
+  change periodicHypercubicSpecialUnitaryPairResidualCoreGap beta *
+      C.gibbsIndependentPairDifferenceEnergyBCF O ≤
+    ∑ target : PeriodicHypercubicEdge n,
+      ∫ A,
+        C.singleLinkConditionalIndependentPairDifferenceEnergyBCF target O A
+        ∂C.gibbsMeasure at hPair
   rw [continuous_compact_oriented_gibbsIndependentPairDifferenceEnergyBCF_eq_two_mul_centered_norm_sq
         C O,
       continuous_compact_oriented_sum_integral_singleLinkConditionalIndependentPairDifferenceEnergyBCF_eq_two_mul_hamiltonian
@@ -368,8 +334,7 @@ structure PeriodicHypercubicSpecialUnitaryHybridPairOneSidedFamilyDataBCF
       PeriodicHypercubicSpecialUnitaryHybridPairOneSidedDataBCF
         n N hN beta beta_nonneg O
 
-/-- Family one-sided coupling estimates generate the explicit positive
-bounded-continuous-core Poincaré property. -/
+/-- Family one-sided estimates generate the explicit positive core Poincaré property. -/
 theorem periodicHypercubicSpecialUnitary_hybridOneSided_family_boundedContinuousCorePoincare
     (n N : ℕ)
     [NeZero n]
