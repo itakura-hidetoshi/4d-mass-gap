@@ -80,6 +80,7 @@ theorem continuous_compact_oriented_singleLinkConditionalVarianceBCF_eq_projecti
   simp only [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathFluctuation,
     Pi.sub_apply]
   rw [hProjection]
+  rfl
 
 /-- Gibbs stationarity of a one-link heat-bath projection, on strongly
 measurable uniformly bounded real observables. -/
@@ -183,7 +184,6 @@ theorem continuous_compact_oriented_integral_singleLinkConditionalVarianceBCF_eq
               C O hOStrong M hM0 hOBound).toLp O := by
         rfl
       rw [hRep, hFluctuation]
-      rfl
 
 /-- On the bounded-continuous observable core, the sum of native conditional
 variances is exactly the quadratic form of the compact-Haar heat-bath
