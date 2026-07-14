@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryHybridCenteredStepBCF
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathContinuity
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -31,42 +30,37 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPostCentered
     (C.independentPairHybridConfiguration z.1 z.2
       ((C.canonicalEdgeOrder target).val + 1))
 
-/-- Native one-link heat-bath fluctuation of a bounded continuous observable is
-continuous on compact configuration space. -/
-theorem continuous_compact_oriented_singleLinkHeatBathFluctuation_continuous
+/-- The pre-step centered hybrid observable is strongly measurable on the
+independent Gibbs-pair carrier. -/
+theorem continuous_compact_oriented_independentPairHybridPreCenteredBCF_stronglyMeasurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    Continuous (C.singleLinkHeatBathFluctuation target O) := by
-  unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathFluctuation
-  exact O.continuous.sub
-    (continuous_compact_oriented_singleLinkHeatBathProjection C O target)
-
-/-- The pre-step centered hybrid observable is continuous on the independent
-Gibbs-pair carrier. -/
-theorem continuous_compact_oriented_independentPairHybridPreCenteredBCF_continuous
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    Continuous (C.independentPairHybridPreCenteredBCF target O) := by
-  exact
-    (continuous_compact_oriented_singleLinkHeatBathFluctuation_continuous
-      C target O).comp
+    StronglyMeasurable (C.independentPairHybridPreCenteredBCF target O) := by
+  have hFluctuation :=
+    continuous_compact_oriented_singleLinkHeatBathFluctuation_stronglyMeasurable
+      C target O O.continuous.stronglyMeasurable
+  simpa
+    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPreCenteredBCF]
+    using hFluctuation.comp_measurable
       (continuous_compact_oriented_independentPairHybridConfiguration
-        C (C.canonicalEdgeOrder target).val)
+        C (C.canonicalEdgeOrder target).val).measurable
 
-/-- The post-step centered hybrid observable is continuous on the independent
-Gibbs-pair carrier. -/
-theorem continuous_compact_oriented_independentPairHybridPostCenteredBCF_continuous
+/-- The post-step centered hybrid observable is strongly measurable on the
+independent Gibbs-pair carrier. -/
+theorem continuous_compact_oriented_independentPairHybridPostCenteredBCF_stronglyMeasurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    Continuous (C.independentPairHybridPostCenteredBCF target O) := by
-  exact
-    (continuous_compact_oriented_singleLinkHeatBathFluctuation_continuous
-      C target O).comp
+    StronglyMeasurable (C.independentPairHybridPostCenteredBCF target O) := by
+  have hFluctuation :=
+    continuous_compact_oriented_singleLinkHeatBathFluctuation_stronglyMeasurable
+      C target O O.continuous.stronglyMeasurable
+  simpa
+    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPostCenteredBCF]
+    using hFluctuation.comp_measurable
       (continuous_compact_oriented_independentPairHybridConfiguration
-        C ((C.canonicalEdgeOrder target).val + 1))
+        C ((C.canonicalEdgeOrder target).val + 1)).measurable
 
 /-- Squared pre-step centered hybrid fluctuations are integrable under the
 independent Gibbs-pair law. -/
@@ -77,11 +71,28 @@ theorem continuous_compact_oriented_independentPairHybridPreCenteredBCF_sq_integ
     Integrable
       (fun z => (C.independentPairHybridPreCenteredBCF target O z) ^ 2)
       (C.gibbsMeasure.prod C.gibbsMeasure) := by
-  letI : IsProbabilityMeasure (C.gibbsMeasure.prod C.gibbsMeasure) := inferInstance
-  exact
-    ((continuous_compact_oriented_independentPairHybridPreCenteredBCF_continuous
-      C target O).pow 2).integrable_of_hasCompactSupport
-        (HasCompactSupport.of_compactSpace _)
+  let M : ℝ := (2 * ‖O‖) ^ 2
+  apply continuous_compact_oriented_integrable_of_uniform_bound
+    (C.gibbsMeasure.prod C.gibbsMeasure)
+    (fun z => (C.independentPairHybridPreCenteredBCF target O z) ^ 2)
+    (by
+      have hStrong :=
+        continuous_compact_oriented_independentPairHybridPreCenteredBCF_stronglyMeasurable
+          C target O
+      simpa [pow_two] using hStrong.mul hStrong)
+    M
+  intro z
+  have hAbs :=
+    continuous_compact_oriented_singleLinkHeatBathFluctuation_abs_le
+      C target O O.continuous.stronglyMeasurable ‖O‖ (norm_nonneg _)
+      (fun A => by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm A)
+      (C.independentPairHybridConfiguration z.1 z.2
+        (C.canonicalEdgeOrder target).val)
+  rw [abs_of_nonneg (sq_nonneg _)]
+  dsimp
+    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPreCenteredBCF,
+      M]
+  nlinarith [norm_nonneg O]
 
 /-- Squared post-step centered hybrid fluctuations are integrable under the
 independent Gibbs-pair law. -/
@@ -92,11 +103,28 @@ theorem continuous_compact_oriented_independentPairHybridPostCenteredBCF_sq_inte
     Integrable
       (fun z => (C.independentPairHybridPostCenteredBCF target O z) ^ 2)
       (C.gibbsMeasure.prod C.gibbsMeasure) := by
-  letI : IsProbabilityMeasure (C.gibbsMeasure.prod C.gibbsMeasure) := inferInstance
-  exact
-    ((continuous_compact_oriented_independentPairHybridPostCenteredBCF_continuous
-      C target O).pow 2).integrable_of_hasCompactSupport
-        (HasCompactSupport.of_compactSpace _)
+  let M : ℝ := (2 * ‖O‖) ^ 2
+  apply continuous_compact_oriented_integrable_of_uniform_bound
+    (C.gibbsMeasure.prod C.gibbsMeasure)
+    (fun z => (C.independentPairHybridPostCenteredBCF target O z) ^ 2)
+    (by
+      have hStrong :=
+        continuous_compact_oriented_independentPairHybridPostCenteredBCF_stronglyMeasurable
+          C target O
+      simpa [pow_two] using hStrong.mul hStrong)
+    M
+  intro z
+  have hAbs :=
+    continuous_compact_oriented_singleLinkHeatBathFluctuation_abs_le
+      C target O O.continuous.stronglyMeasurable ‖O‖ (norm_nonneg _)
+      (fun A => by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm A)
+      (C.independentPairHybridConfiguration z.1 z.2
+        ((C.canonicalEdgeOrder target).val + 1))
+  rw [abs_of_nonneg (sq_nonneg _)]
+  dsimp
+    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridPostCenteredBCF,
+      M]
+  nlinarith [norm_nonneg O]
 
 /-- Mean-square pre-step centered endpoint energy under two independent Gibbs
 configurations. -/
