@@ -55,19 +55,19 @@ variable
 /-- Expose one native gauge value as its actual ambient complex matrix. -/
 def periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
     (g : periodicHypercubicSpecialUnitaryOneLinkSupportGauge
-      n N hN beta beta_nonneg) : Matrix (Fin N) (Fin N) ℂ := by
-  change Matrix.specialUnitaryGroup (Fin N) ℂ at g
-  exact g
+      n N hN beta beta_nonneg) : Matrix (Fin N) (Fin N) ℂ :=
+  ↑(show Matrix.specialUnitaryGroup (Fin N) ℂ from g)
 
 /-- The native-gauge-to-ambient-matrix map is continuous. -/
 theorem periodicHypercubicSpecialUnitary_oneLinkSupportGaugeMatrix_continuous :
     Continuous
       (periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix
         n N hN beta beta_nonneg) := by
-  change Continuous
-    ((↑) : Matrix.specialUnitaryGroup (Fin N) ℂ →
-      Matrix (Fin N) (Fin N) ℂ)
-  exact continuous_subtype_val
+  simpa [periodicHypercubicSpecialUnitaryOneLinkSupportGaugeMatrix] using
+    (continuous_subtype_val :
+      Continuous
+        ((↑) : Matrix.specialUnitaryGroup (Fin N) ℂ →
+          Matrix (Fin N) (Fin N) ℂ))
 
 /-- Squared disagreement away from one target link, computed in the ambient
 complex matrix carrier of `SU(N)`. -/
