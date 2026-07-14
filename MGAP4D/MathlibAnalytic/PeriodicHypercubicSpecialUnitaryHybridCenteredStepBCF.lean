@@ -14,6 +14,7 @@ current configuration with that one coordinate updated from the right endpoint. 
 theorem configuration_rank_succ_eq_update
     {ι X : Type*}
     [Fintype ι]
+    [DecidableEq ι]
     (order : ι ≃ Fin (Fintype.card ι))
     (A B : ι → X)
     (target : ι) :
@@ -21,7 +22,6 @@ theorem configuration_rank_succ_eq_update
       Function.update
         (configuration order A B (order target).val)
         target (B target) := by
-  classical
   funext i
   by_cases hi : i = target
   · subst i
@@ -34,7 +34,7 @@ theorem configuration_rank_succ_eq_update
         (order i).val < (order target).val + 1 ↔
           (order i).val < (order target).val := by
       omega
-    simp [configuration, Function.update, hi, hStep]
+    simp [configuration, hi, hStep]
 
 /-- Before its canonical hybrid step, a coordinate still has its left-endpoint
 value. -/
