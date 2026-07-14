@@ -73,6 +73,7 @@ theorem continuous_compact_oriented_independentPairHybridConfiguration_rank_succ
         (C.independentPairHybridConfiguration A B
           (C.canonicalEdgeOrder target).val)
         target (B target) := by
+  classical
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridConfiguration
   simpa [CompactOrientedGaugeWilsonSystem.replaceLink] using
