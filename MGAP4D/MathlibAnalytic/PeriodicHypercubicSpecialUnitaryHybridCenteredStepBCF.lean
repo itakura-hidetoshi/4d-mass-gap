@@ -76,9 +76,13 @@ theorem continuous_compact_oriented_independentPairHybridConfiguration_rank_succ
   classical
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridConfiguration
-  simpa [CompactOrientedGaugeWilsonSystem.replaceLink] using
-    (FiniteHybridPath.configuration_rank_succ_eq_update
-      C.canonicalEdgeOrder A B target)
+  rw [FiniteHybridPath.configuration_rank_succ_eq_update
+    C.canonicalEdgeOrder A B target]
+  funext source
+  by_cases hSource : source = target
+  · subst source
+    simp [CompactOrientedGaugeWilsonSystem.replaceLink]
+  · simp [CompactOrientedGaugeWilsonSystem.replaceLink, hSource]
 
 /-- The two endpoint configurations of one canonical hybrid step agree away
 from the step's target link. -/
