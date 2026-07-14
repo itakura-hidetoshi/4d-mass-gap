@@ -21,7 +21,6 @@ theorem two_mul_le_alpha_mul_sq_add_inv_mul_sq
       alpha * x ^ 2 + alpha⁻¹ * y ^ 2 =
         (alpha ^ 2 * x ^ 2 + y ^ 2) / alpha := by
     field_simp [hAlphaNe]
-    ring
   rw [hRewrite]
   apply (le_div_iff₀ hAlpha).2
   nlinarith [sq_nonneg (alpha * x - y)]
@@ -88,6 +87,7 @@ theorem residual_l2_sq_lower_bound
       intro i _
       rw [hActionZero]
       ring
+    change (1 - 0) ^ 2 * energy ≤ residualEnergy
     rw [hResidualExpand, hActionEnergyZero, hCrossZero]
     simp
   · have hAlphaPos : 0 < alpha :=
@@ -120,7 +120,9 @@ theorem residual_l2_sq_lower_bound
       have hInvLt : alpha⁻¹ < 1 := lt_of_not_ge hNot
       have hMulLt := mul_lt_mul_of_pos_left hInvLt hAlphaPos
       rw [hAlphaInvMul] at hMulLt
-      exact (not_lt_of_ge hAlphaLtOne.le) hMulLt
+      have hOneLtAlpha : 1 < alpha := by
+        simpa using hMulLt
+      exact (not_lt_of_ge hAlphaLtOne.le) hOneLtAlpha
     have hCoeffNonpos : 1 - alpha⁻¹ ≤ 0 := by
       linarith
     have hScaledAction :
@@ -140,13 +142,12 @@ theorem residual_l2_sq_lower_bound
         field_simp [ne_of_gt hAlphaPos]
         ring
       _ ≤ (1 - alpha) * energy +
-          (1 - alpha⁻¹) * actionEnergy :=
-        add_le_add_left hScaledAction ((1 - alpha) * energy)
+          (1 - alpha⁻¹) * actionEnergy := by
+        linarith
       _ = energy + actionEnergy -
           (alpha * energy + alpha⁻¹ * actionEnergy) := by
         ring
       _ ≤ residualEnergy := hResidualLower
-  simpa [residualEnergy, energy, action] 
 
 end FiniteSchurResolvent
 
@@ -181,7 +182,6 @@ theorem periodicHypercubicSpecialUnitaryDobrushinInfluence_residual_l2_sq_lower_
         beta hBetaLt
   · exact periodicHypercubicSpecialUnitaryDobrushinInfluence_l2_sq_le
       n N hn hN beta beta_nonneg
-  · exact vector
 
 end
 
