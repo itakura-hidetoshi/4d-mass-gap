@@ -21,6 +21,7 @@ theorem configuration_rank_succ_eq_update
       Function.update
         (configuration order A B (order target).val)
         target (B target) := by
+  classical
   funext i
   by_cases hi : i = target
   · subst i
