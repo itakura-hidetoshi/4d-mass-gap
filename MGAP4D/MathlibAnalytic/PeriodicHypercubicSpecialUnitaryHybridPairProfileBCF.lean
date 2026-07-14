@@ -61,6 +61,7 @@ theorem endpoint_sub_sq_le_card_mul_sum_increment_sq
     (Finset.range (Fintype.card ι))
     (fun k => path (k + 1) - path k)
     (fun _ => (1 : ℝ))
+  simp only [mul_one, one_pow] at hCS
   have hTel :
       ∑ k ∈ Finset.range (Fintype.card ι),
           (path (k + 1) - path k) =
