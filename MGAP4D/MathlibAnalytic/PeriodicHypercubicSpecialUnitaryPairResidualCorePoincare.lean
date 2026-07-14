@@ -83,9 +83,8 @@ structure PeriodicHypercubicSpecialUnitaryPairResidualProfileDataBCF
       ∑ target,
         ∫ A,
           (periodicHypercubicSpecialUnitaryWilsonSystem
-            n N hN beta beta_nonneg).
-              singleLinkConditionalIndependentPairDifferenceEnergyBCF
-                target O A
+            n N hN beta beta_nonneg).singleLinkConditionalIndependentPairDifferenceEnergyBCF
+              target O A
           ∂(periodicHypercubicSpecialUnitaryWilsonSystem
             n N hN beta beta_nonneg).gibbsMeasure
 
@@ -134,14 +133,12 @@ theorem periodicHypercubicSpecialUnitary_pairResidual_pairEnergy_coercive
       n N hN beta beta_nonneg O) :
     periodicHypercubicSpecialUnitaryPairResidualCoreGap beta *
         (periodicHypercubicSpecialUnitaryWilsonSystem
-          n N hN beta beta_nonneg).
-            gibbsIndependentPairDifferenceEnergyBCF O ≤
+          n N hN beta beta_nonneg).gibbsIndependentPairDifferenceEnergyBCF O ≤
       ∑ target,
         ∫ A,
           (periodicHypercubicSpecialUnitaryWilsonSystem
-            n N hN beta beta_nonneg).
-              singleLinkConditionalIndependentPairDifferenceEnergyBCF
-                target O A
+            n N hN beta beta_nonneg).singleLinkConditionalIndependentPairDifferenceEnergyBCF
+              target O A
           ∂(periodicHypercubicSpecialUnitaryWilsonSystem
             n N hN beta beta_nonneg).gibbsMeasure := by
   unfold periodicHypercubicSpecialUnitaryPairResidualCoreGap
