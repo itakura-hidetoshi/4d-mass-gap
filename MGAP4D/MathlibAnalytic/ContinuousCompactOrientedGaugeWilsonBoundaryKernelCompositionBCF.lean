@@ -149,6 +149,10 @@ theorem continuous_compact_oriented_boundaryTargetPairKernel_comp_injective
   have hmap := congrArg
     (fun ξ : Measure (C.OffTargetBoundaryTargetPair target) =>
       Measure.map Prod.fst ξ) h
+  change Measure.map Prod.fst
+      (C.singleLinkBoundaryTargetPairKernel target ∘ₘ μ) =
+    Measure.map Prod.fst
+      (C.singleLinkBoundaryTargetPairKernel target ∘ₘ ν) at hmap
   rw [continuous_compact_oriented_map_fst_boundaryTargetPairKernel_comp C target μ,
     continuous_compact_oriented_map_fst_boundaryTargetPairKernel_comp C target ν] at hmap
   exact hmap
@@ -163,9 +167,10 @@ theorem continuous_compact_oriented_boundaryTargetPairKernel_comp_eq_iff
         C.singleLinkBoundaryTargetPairKernel target ∘ₘ ν ↔
       μ = ν := by
   constructor
-  · exact
-      continuous_compact_oriented_boundaryTargetPairKernel_comp_injective
-        C target
+  · intro h
+    exact
+      (continuous_compact_oriented_boundaryTargetPairKernel_comp_injective
+        C target) h
   · intro h
     rw [h]
 
