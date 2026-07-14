@@ -78,6 +78,7 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryTargetPairMeasu
     (continuous_compact_oriented_offTargetBoundaryTargetPairMap_measurable C target)
     (continuous_compact_oriented_independentPairHybridEndpointPairMap_measurable
       C target)]
+  simp only [Function.comp_apply]
 
 /-- The hybrid off-target boundary law is the pushforward of the independent
 Gibbs source pair by the named pre-boundary map. -/
@@ -95,6 +96,7 @@ theorem continuous_compact_oriented_independentPairHybridOffTargetBoundaryMeasur
     (continuous_compact_oriented_offTargetBoundaryMap_measurable C target)
     (continuous_compact_oriented_independentPairHybridPreEndpointMap_measurable
       C target)]
+  simp only [Function.comp_apply]
 
 /-- Given an independent Gibbs source pair, retain its actual hybrid pre-boundary
 and resample two exact native target-link values conditionally on that boundary. -/
@@ -180,17 +182,8 @@ theorem continuous_compact_oriented_map_actual_independentPairHybridBoundaryResa
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingCouplingMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingCouplingKernel
-  rw [Measure.map_comp (C.gibbsMeasure.prod C.gibbsMeasure) _ measurable_fst]
-  change
-    (Kernel.fst
-      (Kernel.deterministic
-          (C.independentPairHybridActualBoundaryTargetPairMap target)
-          (continuous_compact_oriented_independentPairHybridActualBoundaryTargetPairMap_measurable
-            C target) ×ₖ
-        C.independentPairHybridBoundaryResamplingKernel target)) ∘ₘ
-        (C.gibbsMeasure.prod C.gibbsMeasure) =
-      C.independentPairHybridBoundaryTargetPairMeasure target
-  rw [Kernel.fst_prod, Measure.deterministic_comp_eq_map]
+  rw [Measure.map_comp (C.gibbsMeasure.prod C.gibbsMeasure) _ measurable_fst,
+    ← Kernel.fst_eq, Kernel.fst_prod, Measure.deterministic_comp_eq_map]
   exact
     (continuous_compact_oriented_independentPairHybridBoundaryTargetPairMeasure_eq_map_actual
       C target).symm
@@ -206,17 +199,8 @@ theorem continuous_compact_oriented_map_resampled_independentPairHybridBoundaryR
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingCouplingMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingCouplingKernel
-  rw [Measure.map_comp (C.gibbsMeasure.prod C.gibbsMeasure) _ measurable_snd]
-  change
-    (Kernel.snd
-      (Kernel.deterministic
-          (C.independentPairHybridActualBoundaryTargetPairMap target)
-          (continuous_compact_oriented_independentPairHybridActualBoundaryTargetPairMap_measurable
-            C target) ×ₖ
-        C.independentPairHybridBoundaryResamplingKernel target)) ∘ₘ
-        (C.gibbsMeasure.prod C.gibbsMeasure) =
-      C.independentPairHybridBoundaryDrivenTargetPairMeasure target
-  rw [Kernel.snd_prod]
+  rw [Measure.map_comp (C.gibbsMeasure.prod C.gibbsMeasure) _ measurable_snd,
+    ← Kernel.snd_eq, Kernel.snd_prod]
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingKernel
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryDrivenTargetPairMeasure
