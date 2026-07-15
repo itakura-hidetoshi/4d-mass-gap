@@ -85,12 +85,15 @@ theorem continuous_compact_oriented_withDensity_anchoredNormalizedRightResidualD
       if_pos hδ]
     unfold
       ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity
-    simp only [hδ, if_pos, MeasureTheory.withDensity_one]
+    simp only [hδ, if_pos]
+    change (normalizedCompactHaar C.base.Gauge).withDensity
+      (1 : C.base.Gauge → ℝ≥0∞) = normalizedCompactHaar C.base.Gauge
+    exact MeasureTheory.withDensity_one
   · rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
       if_neg hδ]
     unfold
       ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity
-    simp only [hδ, if_neg]
+    simp only [hδ]
     have hRightMeas : Measurable
         (C.configurationPairConditionalRightResidualDensity target w.1) :=
       Measurable.of_uncurry_left
