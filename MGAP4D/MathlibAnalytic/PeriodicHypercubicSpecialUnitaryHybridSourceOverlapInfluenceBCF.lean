@@ -171,7 +171,7 @@ theorem specialUnitaryContinuousCompactOriented_independentPairHybridSourceOverl
   let C := specialUnitaryContinuousCompactOrientedDensityRatioSystem
     geometry N hN beta beta_nonneg
   letI : T2Space C.base.Gauge := by
-    dsimp [C]
+    change T2Space (Matrix.specialUnitaryGroup (Fin N) ℂ)
     infer_instance
   let R := beta *
     (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
