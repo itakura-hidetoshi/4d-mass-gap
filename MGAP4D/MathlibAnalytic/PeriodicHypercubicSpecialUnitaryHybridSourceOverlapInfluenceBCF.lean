@@ -133,7 +133,7 @@ theorem continuous_compact_oriented_independentPairHybridSourceOverlapTransportE
       have hLe :=
         continuous_compact_oriented_singleLinkConditionalOverlapObservableTransportEnergyBCF_le_two_norm_sq
           C (endpointMap z).1 (endpointMap z).2 (endpointMap z).1 target O
-      simpa [Real.norm_eq_abs, abs_of_nonneg hNonneg] using hLe
+      simpa [fiber, Real.norm_eq_abs, abs_of_nonneg hNonneg] using hLe
   rw [continuous_compact_oriented_independentPairHybridSourceOverlapTransportEnergyBCF_eq_integral_endpointMap]
   change (∫ z, fiber (endpointMap z) ∂μ) ≤ c
   calc
@@ -170,6 +170,9 @@ theorem specialUnitaryContinuousCompactOriented_independentPairHybridSourceOverl
   dsimp only
   let C := specialUnitaryContinuousCompactOrientedDensityRatioSystem
     geometry N hN beta beta_nonneg
+  letI : T2Space C.base.Gauge := by
+    dsimp [C]
+    infer_instance
   let R := beta *
     (4 * ((C.base.sharedPlaquettes target source).card : ℝ))
   have hR : 0 ≤ R := by
@@ -212,8 +215,8 @@ theorem periodicHypercubicSpecialUnitary_independentPairHybridSourceOverlapTrans
       (periodicHypercubicSpecialUnitaryWilsonSystem
         n N hN beta beta_nonneg).base.Configuration ℝ) :
     (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).
-        independentPairHybridSourceOverlapTransportEnergyBCF target source O ≤
+      n N hN beta beta_nonneg).independentPairHybridSourceOverlapTransportEnergyBCF
+        target source O ≤
       (2 * ‖O‖) ^ 2 *
         specialUnitaryCompactOrientedSharedPlaquetteInfluence
           (periodicHypercubicFiniteOrientedGeometry n)
@@ -239,16 +242,16 @@ theorem periodicHypercubicSpecialUnitary_independentPairHybridSourceOverlapTrans
       (periodicHypercubicSpecialUnitaryWilsonSystem
         n N hN beta beta_nonneg).base.Configuration ℝ) :
     (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).
-        independentPairHybridSourceOverlapTransportEnergyBCF target source O ≤
+      n N hN beta beta_nonneg).independentPairHybridSourceOverlapTransportEnergyBCF
+        target source O ≤
       (2 * ‖O‖) ^ 2 * periodicHypercubicSpecialUnitaryDobrushinEta beta := by
   have hData :=
     (periodicHypercubicPhysical_mem_activeNeighbors_iff n target source).mp hActive
   have hNe : target ≠ source := Ne.symm hData.2
   calc
     (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).
-        independentPairHybridSourceOverlapTransportEnergyBCF target source O ≤
+      n N hN beta beta_nonneg).independentPairHybridSourceOverlapTransportEnergyBCF
+        target source O ≤
       (2 * ‖O‖) ^ 2 *
         specialUnitaryCompactOrientedSharedPlaquetteInfluence
           (periodicHypercubicFiniteOrientedGeometry n)
