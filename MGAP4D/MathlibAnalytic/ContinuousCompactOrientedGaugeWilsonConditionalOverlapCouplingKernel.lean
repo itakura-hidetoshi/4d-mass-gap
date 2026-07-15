@@ -299,6 +299,15 @@ theorem continuous_compact_oriented_configurationPairConditionalResidualProductK
     continuous_compact_oriented_configurationPairConditionalLeftResidualKernel_apply,
     continuous_compact_oriented_configurationPairConditionalRightResidualKernel_apply]
 
+/-- The residual-product kernel is uniformly finite. -/
+instance continuousCompactOriented_configurationPairConditionalResidualProductKernel_isFinite
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge) :
+    IsFiniteKernel (C.configurationPairConditionalResidualProductKernel target) := by
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalResidualProductKernel
+  infer_instance
+
 /-- The residual product, normalized fiberwise by the common unmatched mass. -/
 noncomputable def
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalNormalizedResidualProductKernel
@@ -364,8 +373,15 @@ theorem continuous_compact_oriented_configurationPairConditionalDiagonalOverlapK
         (C.singleLinkConditionalOverlapMeasure z.1 z.2 target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalDiagonalOverlapKernel
-  rw [Kernel.map_apply _ (measurable_id.prodMk measurable_id) z,
-    continuous_compact_oriented_configurationPairConditionalOverlapKernel_apply]
+  calc
+    ((C.configurationPairConditionalOverlapKernel target).map
+        (fun g : C.base.Gauge => (g, g))) z =
+      Measure.map (fun g : C.base.Gauge => (g, g))
+        (C.configurationPairConditionalOverlapKernel target z) := by
+          exact Kernel.map_apply _ (measurable_id.prodMk measurable_id) z
+    _ = Measure.map (fun g : C.base.Gauge => (g, g))
+        (C.singleLinkConditionalOverlapMeasure z.1 z.2 target) := by
+          rw [continuous_compact_oriented_configurationPairConditionalOverlapKernel_apply]
 
 /-- Measurable exact overlap-coupling kernel indexed by a pair of full
 background configurations. -/
