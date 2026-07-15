@@ -6,6 +6,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Set
+open scoped ENNReal
 
 noncomputable section
 
@@ -15,8 +16,9 @@ theorem continuous_compact_oriented_singleLinkConditionalDensity_measurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
     (target : C.base.geometry.Edge) :
-    Measurable (C.singleLinkConditionalDensity target A) := by
-  exact
+    Measurable (fun g : C.base.Gauge =>
+      C.singleLinkConditionalDensity target A g) := by
+  simpa [Function.uncurry] using
     (measurable_compact_oriented_singleLinkConditionalDensity_uncurry
       C target).comp (measurable_const.prodMk measurable_id)
 
@@ -153,12 +155,18 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapMeasure_add_left
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalLeftResidualMeasure
+  change
+    (normalizedCompactHaar C.base.Gauge).withDensity
+        (C.singleLinkConditionalOverlapDensity A B target) +
+      (normalizedCompactHaar C.base.Gauge).withDensity
+        (C.singleLinkConditionalLeftResidualDensity A B target) =
+    (normalizedCompactHaar C.base.Gauge).withDensity
+      (C.singleLinkConditionalDensity target A)
   rw [← withDensity_add_left
     (continuous_compact_oriented_singleLinkConditionalOverlapDensity_measurable
       C A B target)]
   apply withDensity_congr_ae
-  filter_upwards [] with g
-  exact
+  exact Filter.Eventually.of_forall fun g =>
     continuous_compact_oriented_singleLinkConditionalOverlapDensity_add_leftResidual
       C A B target g
 
@@ -174,12 +182,18 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapMeasure_add_righ
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalRightResidualMeasure
+  change
+    (normalizedCompactHaar C.base.Gauge).withDensity
+        (C.singleLinkConditionalOverlapDensity A B target) +
+      (normalizedCompactHaar C.base.Gauge).withDensity
+        (C.singleLinkConditionalRightResidualDensity A B target) =
+    (normalizedCompactHaar C.base.Gauge).withDensity
+      (C.singleLinkConditionalDensity target B)
   rw [← withDensity_add_left
     (continuous_compact_oriented_singleLinkConditionalOverlapDensity_measurable
       C A B target)]
   apply withDensity_congr_ae
-  filter_upwards [] with g
-  exact
+  exact Filter.Eventually.of_forall fun g =>
     continuous_compact_oriented_singleLinkConditionalOverlapDensity_add_rightResidual
       C A B target g
 
@@ -235,28 +249,30 @@ theorem continuous_compact_oriented_singleLinkConditionalResidualMeasure_univ_eq
   let overlap := C.singleLinkConditionalOverlapMeasure A B target
   let left := C.singleLinkConditionalLeftResidualMeasure A B target
   let right := C.singleLinkConditionalRightResidualMeasure A B target
+  change left univ = right univ
   have hLeft : overlap univ + left univ = 1 := by
-    rw [show overlap + left = C.singleLinkConditionalMeasure A target by
-      simpa [overlap, left] using
-        continuous_compact_oriented_singleLinkConditionalOverlapMeasure_add_leftResidual
-          C A B target]
     letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure A target) :=
       continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
         C A target
-    exact measure_univ
+    have hMeasure :=
+      continuous_compact_oriented_singleLinkConditionalOverlapMeasure_add_leftResidual
+        C A B target
+    have hUniv := congrArg (fun μ : Measure C.base.Gauge => μ univ) hMeasure
+    simpa [overlap, left] using hUniv
   have hRight : overlap univ + right univ = 1 := by
-    rw [show overlap + right = C.singleLinkConditionalMeasure B target by
-      simpa [overlap, right] using
-        continuous_compact_oriented_singleLinkConditionalOverlapMeasure_add_rightResidual
-          C A B target]
     letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure B target) :=
       continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
         C B target
-    exact measure_univ
-  have hOverlapTop : overlap univ ≠ ∞ := by
-    exact measure_ne_top overlap univ
-  apply (add_right_inj_of_ne_top hOverlapTop).mp
-  exact hLeft.trans hRight.symm
+    have hMeasure :=
+      continuous_compact_oriented_singleLinkConditionalOverlapMeasure_add_rightResidual
+        C A B target
+    have hUniv := congrArg (fun μ : Measure C.base.Gauge => μ univ) hMeasure
+    simpa [overlap, right] using hUniv
+  haveI : IsFiniteMeasure overlap := by
+    dsimp [overlap]
+    infer_instance
+  have hOverlapTop : overlap univ ≠ ∞ := measure_ne_top overlap univ
+  exact (add_right_inj_of_ne_top hOverlapTop).mp (hLeft.trans hRight.symm)
 
 /-- Total unmatched mass in the exact conditional overlap decomposition. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalResidualMass
@@ -297,8 +313,10 @@ noncomputable def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkCondition
     (target : C.base.geometry.Edge) : Measure (C.base.Gauge × C.base.Gauge) :=
   Measure.map (fun g : C.base.Gauge => (g, g))
       (C.singleLinkConditionalOverlapMeasure A B target) +
-    if C.singleLinkConditionalResidualMass A B target = 0 then 0 else
-      (C.singleLinkConditionalResidualMass A B target)⁻¹ •
+    if C.singleLinkConditionalResidualMass A B target = 0 then
+      (0 : Measure (C.base.Gauge × C.base.Gauge))
+    else
+      ((C.singleLinkConditionalResidualMass A B target)⁻¹ : ℝ≥0∞) •
         ((C.singleLinkConditionalLeftResidualMeasure A B target).prod
           (C.singleLinkConditionalRightResidualMeasure A B target))
 
@@ -314,12 +332,19 @@ theorem continuous_compact_oriented_map_fst_singleLinkConditionalOverlapCoupling
   let left := C.singleLinkConditionalLeftResidualMeasure A B target
   let right := C.singleLinkConditionalRightResidualMeasure A B target
   let delta := C.singleLinkConditionalResidualMass A B target
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapCouplingMeasure
-  rw [Measure.map_add _ _ measurable_fst,
-    Measure.map_map measurable_fst (measurable_id.prodMk measurable_id)]
-  simp only [Function.comp_apply]
-  rw [Measure.map_id']
+  haveI : IsFiniteMeasure left := by dsimp [left]; infer_instance
+  haveI : IsFiniteMeasure right := by dsimp [right]; infer_instance
+  change Measure.map Prod.fst
+      (Measure.map (fun g : C.base.Gauge => (g, g)) overlap +
+        if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
+          (delta⁻¹ : ℝ≥0∞) • left.prod right) = _
+  rw [Measure.map_add _ _ measurable_fst]
+  have hDiagonal :
+      Measure.map Prod.fst
+          (Measure.map (fun g : C.base.Gauge => (g, g)) overlap) = overlap := by
+    rw [Measure.map_map measurable_fst (measurable_id.prodMk measurable_id)]
+    simpa using (Measure.map_id (μ := overlap))
+  rw [hDiagonal]
   by_cases hdelta : delta = 0
   · rw [if_pos hdelta]
     have hLeftZero : left = 0 := by
@@ -356,12 +381,19 @@ theorem continuous_compact_oriented_map_snd_singleLinkConditionalOverlapCoupling
   let left := C.singleLinkConditionalLeftResidualMeasure A B target
   let right := C.singleLinkConditionalRightResidualMeasure A B target
   let delta := C.singleLinkConditionalResidualMass A B target
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapCouplingMeasure
-  rw [Measure.map_add _ _ measurable_snd,
-    Measure.map_map measurable_snd (measurable_id.prodMk measurable_id)]
-  simp only [Function.comp_apply]
-  rw [Measure.map_id']
+  haveI : IsFiniteMeasure left := by dsimp [left]; infer_instance
+  haveI : IsFiniteMeasure right := by dsimp [right]; infer_instance
+  change Measure.map Prod.snd
+      (Measure.map (fun g : C.base.Gauge => (g, g)) overlap +
+        if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
+          (delta⁻¹ : ℝ≥0∞) • left.prod right) = _
+  rw [Measure.map_add _ _ measurable_snd]
+  have hDiagonal :
+      Measure.map Prod.snd
+          (Measure.map (fun g : C.base.Gauge => (g, g)) overlap) = overlap := by
+    rw [Measure.map_map measurable_snd (measurable_id.prodMk measurable_id)]
+    simpa using (Measure.map_id (μ := overlap))
+  rw [hDiagonal]
   by_cases hdelta : delta = 0
   · rw [if_pos hdelta]
     have hRightZero : right = 0 := by
@@ -421,10 +453,14 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapCouplingMeasure_
   let left := C.singleLinkConditionalLeftResidualMeasure A B target
   let right := C.singleLinkConditionalRightResidualMeasure A B target
   let delta := C.singleLinkConditionalResidualMass A B target
+  haveI : IsFiniteMeasure left := by dsimp [left]; infer_instance
+  haveI : IsFiniteMeasure right := by dsimp [right]; infer_instance
   have hNe : MeasurableSet {z : C.base.Gauge × C.base.Gauge | z.1 ≠ z.2} :=
     (isClosed_eq continuous_fst continuous_snd).isOpen_compl.measurableSet
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapCouplingMeasure
+  change
+    (Measure.map (fun g : C.base.Gauge => (g, g)) overlap +
+      if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
+        (delta⁻¹ : ℝ≥0∞) • left.prod right) {z | z.1 ≠ z.2} ≤ delta
   rw [Measure.add_apply hNe]
   have hDiagonalZero :
       Measure.map (fun g : C.base.Gauge => (g, g)) overlap
