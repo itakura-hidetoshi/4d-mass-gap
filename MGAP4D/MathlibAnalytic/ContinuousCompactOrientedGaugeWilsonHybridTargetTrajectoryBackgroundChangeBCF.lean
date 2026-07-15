@@ -68,6 +68,22 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     C.independentPairHybridTargetTrajectorySourceBackgroundInsertedObservableValueBCF
       backgroundAt target O m (k + 1) x
 
+/-- The fixed-left-background target transport on one genuine adjacent step.
+The range-zero fallback keeps the natural-number index total. -/
+def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (backgroundAt : ℕ → C.base.Configuration)
+    (target : C.base.geometry.Edge)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (m k : ℕ)
+    (x : (i : Finset.Iic m) → C.base.Gauge) : ℝ :=
+  if h : k + 1 ≤ m then
+    C.singleLinkConditionalOverlapObservableTransportBCF
+      (backgroundAt k) target O
+      (x ⟨k, Finset.mem_Iic.2 (k.le_succ.trans h)⟩,
+        x ⟨k + 1, Finset.mem_Iic.2 h⟩)
+  else 0
+
 /-- The residual generated solely by changing the observable background from
 `backgroundAt k` to `backgroundAt (k + 1)`, while keeping the newly sampled
 target-link value fixed. -/
@@ -89,7 +105,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
 existing fixed-left-background overlap transport plus one explicit background
 change residual.  No invariance of the observable under background replacement
 is assumed. -/
-theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundAdjacentTransportBCF_eq_overlap_add_backgroundChange
+theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundAdjacentTransportBCF_eq_fixedLeft_add_backgroundChange
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (backgroundAt : ℕ → C.base.Configuration)
     (target : C.base.geometry.Edge)
@@ -99,10 +115,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
     (x : (i : Finset.Iic m) → C.base.Gauge) :
     C.independentPairHybridTargetTrajectorySourceBackgroundAdjacentTransportBCF
         backgroundAt target O m k x =
-      C.singleLinkConditionalOverlapObservableTransportBCF
-          (backgroundAt k) target O
-          (x ⟨k, Finset.mem_Iic.2 (k.le_succ.trans hkm)⟩,
-            x ⟨k + 1, Finset.mem_Iic.2 hkm⟩) +
+      C.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
+          backgroundAt target O m k x +
         C.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
           backgroundAt target O m k x := by
   unfold
@@ -113,6 +127,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
     continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundInsertedObservableValueBCF_of_le
       C backgroundAt target O m (k + 1) hkm x]
   unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapObservableTransportBCF
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
   simp [hkm]
@@ -150,7 +165,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
 
 /-- The full source-background endpoint transport is exactly the sum of the
 fixed-left overlap transports plus the explicit background-change residuals. -/
-theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF_eq_sum_overlap_add_backgroundChange
+theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF_eq_sum_fixedLeft_add_backgroundChange
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (backgroundAt : ℕ → C.base.Configuration)
     (target : C.base.geometry.Edge)
@@ -160,20 +175,15 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
     C.independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF
         backgroundAt target O m x =
       ∑ k ∈ Finset.range m,
-        (C.singleLinkConditionalOverlapObservableTransportBCF
-            (backgroundAt k) target O
-            (x ⟨k, Finset.mem_Iic.2
-                (k.le_succ.trans
-                  (Nat.succ_le_iff.mpr (Finset.mem_range.mp ‹k ∈ Finset.range m›)))⟩,
-              x ⟨k + 1, Finset.mem_Iic.2
-                (Nat.succ_le_iff.mpr (Finset.mem_range.mp ‹k ∈ Finset.range m›))⟩) +
+        (C.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
+            backgroundAt target O m k x +
           C.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
             backgroundAt target O m k x) := by
   rw [continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF_eq_sum_adjacent]
   apply Finset.sum_congr rfl
   intro k hk
   exact
-    continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundAdjacentTransportBCF_eq_overlap_add_backgroundChange
+    continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundAdjacentTransportBCF_eq_fixedLeft_add_backgroundChange
       C backgroundAt target O m k
       (Nat.succ_le_iff.mpr (Finset.mem_range.mp hk)) x
 
@@ -192,25 +202,14 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
       (m : ℝ) *
         ∑ k ∈ Finset.range m,
           (2 *
-              (C.singleLinkConditionalOverlapObservableTransportBCF
-                (backgroundAt k) target O
-                (x ⟨k, Finset.mem_Iic.2
-                    (k.le_succ.trans
-                      (Nat.succ_le_iff.mpr (Finset.mem_range.mp ‹k ∈ Finset.range m›)))⟩,
-                  x ⟨k + 1, Finset.mem_Iic.2
-                    (Nat.succ_le_iff.mpr (Finset.mem_range.mp ‹k ∈ Finset.range m›))⟩)) ^ 2 +
+              (C.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
+                backgroundAt target O m k x) ^ 2 +
             2 *
               (C.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
                 backgroundAt target O m k x) ^ 2) := by
   let a : ℕ → ℝ := fun k =>
-    if h : k ∈ Finset.range m then
-      C.singleLinkConditionalOverlapObservableTransportBCF
-        (backgroundAt k) target O
-        (x ⟨k, Finset.mem_Iic.2
-            (k.le_succ.trans (Nat.succ_le_iff.mpr (Finset.mem_range.mp h)))⟩,
-          x ⟨k + 1, Finset.mem_Iic.2
-            (Nat.succ_le_iff.mpr (Finset.mem_range.mp h))⟩)
-    else 0
+    C.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
+      backgroundAt target O m k x
   let b : ℕ → ℝ := fun k =>
     C.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
       backgroundAt target O m k x
@@ -218,10 +217,9 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
       C.independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF
           backgroundAt target O m x =
         ∑ k ∈ Finset.range m, (a k + b k) := by
-    rw [continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF_eq_sum_overlap_add_backgroundChange]
-    apply Finset.sum_congr rfl
-    intro k hk
-    simp [a, b, hk]
+    simpa [a, b] using
+      continuous_compact_oriented_independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF_eq_sum_fixedLeft_add_backgroundChange
+        C backgroundAt target O m x
   have hCS :=
     sq_sum_le_card_mul_sum_sq
       (s := Finset.range m)
@@ -242,20 +240,12 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
     _ = (m : ℝ) *
         ∑ k ∈ Finset.range m,
           (2 *
-              (C.singleLinkConditionalOverlapObservableTransportBCF
-                (backgroundAt k) target O
-                (x ⟨k, Finset.mem_Iic.2
-                    (k.le_succ.trans
-                      (Nat.succ_le_iff.mpr (Finset.mem_range.mp ‹k ∈ Finset.range m›)))⟩,
-                  x ⟨k + 1, Finset.mem_Iic.2
-                    (Nat.succ_le_iff.mpr (Finset.mem_range.mp ‹k ∈ Finset.range m›))⟩)) ^ 2 +
+              (C.independentPairHybridTargetTrajectoryFixedLeftOverlapTransportBCF
+                backgroundAt target O m k x) ^ 2 +
             2 *
               (C.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
                 backgroundAt target O m k x) ^ 2) := by
-      congr 1
-      apply Finset.sum_congr rfl
-      intro k hk
-      simp [a, b, hk]
+      rfl
 
 end
 
