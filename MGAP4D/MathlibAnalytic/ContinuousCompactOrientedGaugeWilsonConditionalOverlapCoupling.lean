@@ -103,7 +103,7 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapDensity_add_left
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapDensity
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalLeftResidualDensity
-  exact add_tsub_of_le (min_le_left _ _)
+  exact add_tsub_cancel_of_le (min_le_left _ _)
 
 /-- Common-overlap plus right residual recovers the right conditional density. -/
 theorem continuous_compact_oriented_singleLinkConditionalOverlapDensity_add_rightResidual
@@ -117,7 +117,7 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapDensity_add_righ
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapDensity
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalRightResidualDensity
-  exact add_tsub_of_le (min_le_right _ _)
+  exact add_tsub_cancel_of_le (min_le_right _ _)
 
 /-- Common subprobability measure of two exact conditional laws. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapMeasure
@@ -339,11 +339,19 @@ theorem continuous_compact_oriented_map_fst_singleLinkConditionalOverlapCoupling
         if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
           (delta⁻¹ : ℝ≥0∞) • left.prod right) = _
   rw [Measure.map_add _ _ measurable_fst]
+  have hDiagMeas : Measurable (fun g : C.base.Gauge => (g, g)) :=
+    measurable_id.prodMk measurable_id
   have hDiagonal :
       Measure.map Prod.fst
           (Measure.map (fun g : C.base.Gauge => (g, g)) overlap) = overlap := by
-    rw [Measure.map_map measurable_fst (measurable_id.prodMk measurable_id)]
-    simpa using (Measure.map_id (μ := overlap))
+    calc
+      Measure.map Prod.fst
+          (Measure.map (fun g : C.base.Gauge => (g, g)) overlap) =
+        Measure.map
+          (Prod.fst ∘ fun g : C.base.Gauge => (g, g)) overlap :=
+            Measure.map_map measurable_fst hDiagMeas
+      _ = overlap := by
+        simpa [Function.comp_def] using (Measure.map_id (μ := overlap))
   rw [hDiagonal]
   by_cases hdelta : delta = 0
   · rw [if_pos hdelta]
@@ -388,11 +396,19 @@ theorem continuous_compact_oriented_map_snd_singleLinkConditionalOverlapCoupling
         if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
           (delta⁻¹ : ℝ≥0∞) • left.prod right) = _
   rw [Measure.map_add _ _ measurable_snd]
+  have hDiagMeas : Measurable (fun g : C.base.Gauge => (g, g)) :=
+    measurable_id.prodMk measurable_id
   have hDiagonal :
       Measure.map Prod.snd
           (Measure.map (fun g : C.base.Gauge => (g, g)) overlap) = overlap := by
-    rw [Measure.map_map measurable_snd (measurable_id.prodMk measurable_id)]
-    simpa using (Measure.map_id (μ := overlap))
+    calc
+      Measure.map Prod.snd
+          (Measure.map (fun g : C.base.Gauge => (g, g)) overlap) =
+        Measure.map
+          (Prod.snd ∘ fun g : C.base.Gauge => (g, g)) overlap :=
+            Measure.map_map measurable_snd hDiagMeas
+      _ = overlap := by
+        simpa [Function.comp_def] using (Measure.map_id (μ := overlap))
   rw [hDiagonal]
   by_cases hdelta : delta = 0
   · rw [if_pos hdelta]
@@ -458,10 +474,9 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapCouplingMeasure_
   have hNe : MeasurableSet {z : C.base.Gauge × C.base.Gauge | z.1 ≠ z.2} :=
     (isClosed_eq continuous_fst continuous_snd).isOpen_compl.measurableSet
   change
-    (Measure.map (fun g : C.base.Gauge => (g, g)) overlap +
-      if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
+    Measure.map (fun g : C.base.Gauge => (g, g)) overlap {z | z.1 ≠ z.2} +
+      (if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
         (delta⁻¹ : ℝ≥0∞) • left.prod right) {z | z.1 ≠ z.2} ≤ delta
-  rw [Measure.add_apply hNe]
   have hDiagonalZero :
       Measure.map (fun g : C.base.Gauge => (g, g)) overlap
           {z | z.1 ≠ z.2} = 0 := by
