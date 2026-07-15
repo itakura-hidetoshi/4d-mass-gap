@@ -56,8 +56,7 @@ theorem continuous_compact_oriented_configurationPairHeatBathFluctuationDifferen
     (hFluctuation.comp_measurable measurable_snd).sub
       (hFluctuation.comp_measurable measurable_fst)
 
-/-- The actual-side fluctuation difference is strongly measurable on the
-configuration-level coupling carrier. -/
+/-- The actual-side fluctuation difference is strongly measurable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingActualDifferenceBCF_stronglyMeasurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -70,8 +69,7 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingActua
       (continuous_compact_oriented_configurationPairHeatBathFluctuationDifferenceBCF_stronglyMeasurable
         C target O).comp_measurable measurable_fst
 
-/-- The resampled-side fluctuation difference is strongly measurable on the
-configuration-level coupling carrier. -/
+/-- The resampled-side fluctuation difference is strongly measurable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingResampledDifferenceBCF_stronglyMeasurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -158,57 +156,12 @@ private theorem continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_
     _ ≤ 2 * ‖O‖ + 2 * ‖O‖ := add_le_add hA hB
     _ = 4 * ‖O‖ := by ring
 
-/-- Every configuration-pair heat-bath fluctuation difference is bounded by four
-times the bounded-continuous observable norm. -/
-theorem continuous_compact_oriented_configurationPairHeatBathFluctuationDifferenceBCF_abs_le
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ)
-    (y : C.base.Configuration × C.base.Configuration) :
-    |C.configurationPairHeatBathFluctuationDifferenceBCF target O y| ≤
-      4 * ‖O‖ := by
-  simpa
-    [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairHeatBathFluctuationDifferenceBCF]
-    using
-      continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
-        C target O y.2 y.1
-
-/-- The first transport residual has the same uniform four-norm bound. -/
-theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualBCF_abs_le
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ)
-    (z : (C.base.Configuration × C.base.Configuration) ×
-      (C.base.Configuration × C.base.Configuration)) :
-    |C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z| ≤
-      4 * ‖O‖ := by
-  simpa
-    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstResidualBCF]
-    using
-      continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
-        C target O z.2.1 z.1.1
-
-/-- The second transport residual has the same uniform four-norm bound. -/
-theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualBCF_abs_le
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ)
-    (z : (C.base.Configuration × C.base.Configuration) ×
-      (C.base.Configuration × C.base.Configuration)) :
-    |C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z| ≤
-      4 * ‖O‖ := by
-  simpa
-    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondResidualBCF]
-    using
-      continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
-        C target O z.1.2 z.2.2
-
 private theorem continuous_compact_oriented_sq_integrable_of_abs_le_four_norm
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     {α : Type*}
     [MeasurableSpace α]
     (μ : Measure α)
-    [IsFiniteMeasure μ]
+    [IsProbabilityMeasure μ]
     (f : α → ℝ)
     (hf : StronglyMeasurable f)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
@@ -225,8 +178,7 @@ private theorem continuous_compact_oriented_sq_integrable_of_abs_le_four_norm
   dsimp [M]
   nlinarith [norm_nonneg O]
 
-/-- Squared actual-side fluctuation differences are integrable under the
-configuration-level coupling. -/
+/-- Squared actual-side fluctuation differences are integrable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingActualDifferenceBCF_sq_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -249,13 +201,13 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingActua
       C target O) O
   intro z
   simpa
-    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingActualDifferenceBCF]
+    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingActualDifferenceBCF,
+      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairHeatBathFluctuationDifferenceBCF]
     using
-      continuous_compact_oriented_configurationPairHeatBathFluctuationDifferenceBCF_abs_le
-        C target O z.1
+      continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
+        C target O z.1.2 z.1.1
 
-/-- Squared resampled-side fluctuation differences are integrable under the
-configuration-level coupling. -/
+/-- Squared resampled-side fluctuation differences are integrable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingResampledDifferenceBCF_sq_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -278,13 +230,13 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingResam
       C target O) O
   intro z
   simpa
-    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingResampledDifferenceBCF]
+    [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingResampledDifferenceBCF,
+      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairHeatBathFluctuationDifferenceBCF]
     using
-      continuous_compact_oriented_configurationPairHeatBathFluctuationDifferenceBCF_abs_le
-        C target O z.2
+      continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
+        C target O z.2.2 z.2.1
 
-/-- Squared first endpoint residuals are integrable under the configuration-level
-coupling. -/
+/-- Squared first endpoint residuals are integrable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualBCF_sq_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -304,11 +256,14 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
     (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O)
     (continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualBCF_stronglyMeasurable
       C target O) O
-    (continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualBCF_abs_le
-      C target O)
+    (fun z => by
+      simpa
+        [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstResidualBCF]
+        using
+          continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
+            C target O z.2.1 z.1.1)
 
-/-- Squared second endpoint residuals are integrable under the
-configuration-level coupling. -/
+/-- Squared second endpoint residuals are integrable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualBCF_sq_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -328,12 +283,15 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
     (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O)
     (continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualBCF_stronglyMeasurable
       C target O) O
-    (continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualBCF_abs_le
-      C target O)
+    (fun z => by
+      simpa
+        [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondResidualBCF]
+        using
+          continuous_compact_oriented_heatBathFluctuation_sub_abs_le_four_norm
+            C target O z.1.2 z.2.2)
 
 /-- On every reconstructed common-boundary target pair, the difference of
-heat-bath fluctuations is exactly the observable difference because the two
-projection terms coincide on the common off-target fiber. -/
+heat-bath fluctuations is exactly the observable difference. -/
 theorem continuous_compact_oriented_configurationPairHeatBathFluctuationDifferenceBCF_reconstruct
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -343,16 +301,39 @@ theorem continuous_compact_oriented_configurationPairHeatBathFluctuationDifferen
         (C.offTargetBoundaryTargetPairConfigurationPairMap target z) =
       O (C.offTargetBoundaryTargetPairConfigurationPairMap target z).2 -
         O (C.offTargetBoundaryTargetPairConfigurationPairMap target z).1 := by
+  have hProjectionSecond :
+      C.singleLinkHeatBathProjection target O
+          (C.base.replaceLink
+            (C.offTargetBoundarySection target z.1) target z.2.2) =
+        C.singleLinkHeatBathProjection target O
+          (C.offTargetBoundarySection target z.1) := by
+    change C.singleLinkConditionalExpectation O
+        (C.base.replaceLink
+          (C.offTargetBoundarySection target z.1) target z.2.2) target =
+      C.singleLinkConditionalExpectation O
+        (C.offTargetBoundarySection target z.1) target
+    exact continuous_compact_oriented_singleLinkConditionalExpectation_replaceLink
+      C O (C.offTargetBoundarySection target z.1) target z.2.2
+  have hProjectionFirst :
+      C.singleLinkHeatBathProjection target O
+          (C.base.replaceLink
+            (C.offTargetBoundarySection target z.1) target z.2.1) =
+        C.singleLinkHeatBathProjection target O
+          (C.offTargetBoundarySection target z.1) := by
+    change C.singleLinkConditionalExpectation O
+        (C.base.replaceLink
+          (C.offTargetBoundarySection target z.1) target z.2.1) target =
+      C.singleLinkConditionalExpectation O
+        (C.offTargetBoundarySection target z.1) target
+    exact continuous_compact_oriented_singleLinkConditionalExpectation_replaceLink
+      C O (C.offTargetBoundarySection target z.1) target z.2.1
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairHeatBathFluctuationDifferenceBCF
     ContinuousCompactOrientedGaugeWilsonSystem.offTargetBoundaryTargetPairConfigurationPairMap
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalPairConfigurationMap
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathFluctuation
   simp only [Pi.sub_apply]
-  rw [continuous_compact_oriented_singleLinkHeatBathProjection_replaceLink
-      C O (C.offTargetBoundarySection target z.1) target z.2.2,
-    continuous_compact_oriented_singleLinkHeatBathProjection_replaceLink
-      C O (C.offTargetBoundarySection target z.1) target z.2.1]
+  rw [hProjectionSecond, hProjectionFirst]
   ring
 
 /-- Conditional-pair observable energy under the hybrid boundary input law. -/
@@ -364,15 +345,23 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResa
     (O y.2 - O y.1) ^ 2
     ∂C.independentPairHybridBoundaryResampledConfigurationPairMeasure target
 
-/-- The resampled conditional-pair energy is nonnegative. -/
-theorem continuous_compact_oriented_independentPairHybridBoundaryResampledConditionalPairEnergyBCF_nonneg
+/-- Mean-square first endpoint transport residual. -/
+def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    0 ≤ C.independentPairHybridBoundaryResampledConditionalPairEnergyBCF target O := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResampledConditionalPairEnergyBCF
-  exact integral_nonneg fun _ => sq_nonneg _
+    (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ :=
+  ∫ z,
+    (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z) ^ 2
+    ∂C.independentPairHybridBoundaryResamplingConfigurationCouplingMeasure target
+
+/-- Mean-square second endpoint transport residual. -/
+def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ :=
+  ∫ z,
+    (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2
+    ∂C.independentPairHybridBoundaryResamplingConfigurationCouplingMeasure target
 
 /-- Under the reconstructed boundary-resampled law, fluctuation-difference energy
 is exactly observable conditional-pair energy. -/
@@ -397,56 +386,21 @@ theorem continuous_compact_oriented_integral_independentPairHybridBoundaryResamp
     (((O.continuous.comp continuous_snd).sub
       (O.continuous.comp continuous_fst)).pow 2).stronglyMeasurable
   unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResampledConfigurationPairMeasure
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResampledConditionalPairEnergyBCF
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResampledConfigurationPairMeasure
   rw [MeasureTheory.integral_map
+    (μ := C.independentPairHybridBoundaryDrivenTargetPairMeasure target)
     (continuous_compact_oriented_offTargetBoundaryTargetPairConfigurationPairMap_measurable
       C target).aemeasurable hDiffSq.aestronglyMeasurable]
   rw [MeasureTheory.integral_map
+    (μ := C.independentPairHybridBoundaryDrivenTargetPairMeasure target)
     (continuous_compact_oriented_offTargetBoundaryTargetPairConfigurationPairMap_measurable
       C target).aemeasurable hObservableSq.aestronglyMeasurable]
   apply integral_congr_ae
   filter_upwards [] with z
   rw [continuous_compact_oriented_configurationPairHeatBathFluctuationDifferenceBCF_reconstruct
     C target O z]
-
-/-- Mean-square first endpoint transport residual. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ :=
-  ∫ z,
-    (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z) ^ 2
-    ∂C.independentPairHybridBoundaryResamplingConfigurationCouplingMeasure target
-
-/-- Mean-square second endpoint transport residual. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ :=
-  ∫ z,
-    (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2
-    ∂C.independentPairHybridBoundaryResamplingConfigurationCouplingMeasure target
-
-/-- The first endpoint residual energy is nonnegative. -/
-theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualEnergyBCF_nonneg
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    0 ≤ C.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF target O := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF
-  exact integral_nonneg fun _ => sq_nonneg _
-
-/-- The second endpoint residual energy is nonnegative. -/
-theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualEnergyBCF_nonneg
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    0 ≤ C.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF target O := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF
-  exact integral_nonneg fun _ => sq_nonneg _
 
 /-- The actual-side coupling integral is exactly the canonical hybrid increment
 energy. -/
@@ -477,8 +431,9 @@ theorem continuous_compact_oriented_integral_independentPairHybridBoundaryResamp
       simpa
         [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingActualDifferenceBCF]
         using
-          (MeasureTheory.integral_map measurable_fst.aemeasurable
-            hDiffSq.aestronglyMeasurable)
+          (MeasureTheory.integral_map
+            (μ := C.independentPairHybridBoundaryResamplingConfigurationCouplingMeasure target)
+            measurable_fst.aemeasurable hDiffSq.aestronglyMeasurable)
     _ = ∫ y,
         (C.configurationPairHeatBathFluctuationDifferenceBCF target O y) ^ 2
         ∂C.independentPairHybridEndpointPairMeasure target := by
@@ -519,8 +474,9 @@ theorem continuous_compact_oriented_integral_independentPairHybridBoundaryResamp
       simpa
         [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingResampledDifferenceBCF]
         using
-          (MeasureTheory.integral_map measurable_snd.aemeasurable
-            hDiffSq.aestronglyMeasurable)
+          (MeasureTheory.integral_map
+            (μ := C.independentPairHybridBoundaryResamplingConfigurationCouplingMeasure target)
+            measurable_snd.aemeasurable hDiffSq.aestronglyMeasurable)
     _ = ∫ y,
         (C.configurationPairHeatBathFluctuationDifferenceBCF target O y) ^ 2
         ∂C.independentPairHybridBoundaryResampledConfigurationPairMeasure target := by
@@ -589,12 +545,37 @@ theorem continuous_compact_oriented_independentPairHybridIncrementEnergyBCF_le_t
          (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2) ∂μ :=
       hIntegrated
     _ = 3 *
+        ((∫ z,
+            (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z) ^ 2 ∂μ) +
+         (∫ z,
+            (C.independentPairHybridBoundaryResamplingResampledDifferenceBCF target O z) ^ 2 ∂μ) +
+         (∫ z,
+            (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2 ∂μ)) := by
+      rw [integral_const_mul]
+      congr 1
+      calc
+        (∫ z,
+            (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z) ^ 2 +
+            (C.independentPairHybridBoundaryResamplingResampledDifferenceBCF target O z) ^ 2 +
+            (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2 ∂μ) =
+          (∫ z,
+              (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z) ^ 2 +
+              (C.independentPairHybridBoundaryResamplingResampledDifferenceBCF target O z) ^ 2 ∂μ) +
+            ∫ z,
+              (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2 ∂μ :=
+          integral_add (hFirst.add hResampled) hSecond
+        _ =
+          ((∫ z,
+              (C.independentPairHybridBoundaryResamplingFirstResidualBCF target O z) ^ 2 ∂μ) +
+           (∫ z,
+              (C.independentPairHybridBoundaryResamplingResampledDifferenceBCF target O z) ^ 2 ∂μ)) +
+            ∫ z,
+              (C.independentPairHybridBoundaryResamplingSecondResidualBCF target O z) ^ 2 ∂μ := by
+          rw [integral_add hFirst hResampled]
+    _ = 3 *
         (C.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF target O +
          C.independentPairHybridBoundaryResampledConditionalPairEnergyBCF target O +
          C.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF target O) := by
-      rw [integral_const_mul]
-      rw [integral_add (hFirst.add hResampled) hSecond,
-        integral_add hFirst hResampled]
       rw [continuous_compact_oriented_integral_independentPairHybridBoundaryResamplingResampledDifferenceBCF_sq_eq_conditionalPairEnergy]
       rfl
 
