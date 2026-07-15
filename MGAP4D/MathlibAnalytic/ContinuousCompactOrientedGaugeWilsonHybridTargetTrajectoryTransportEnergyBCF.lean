@@ -7,7 +7,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory ProbabilityTheory Finset Preorder Function Set
+open MeasureTheory ProbabilityTheory Finset Preorder Function
 open scoped ProbabilityTheory BigOperators
 
 noncomputable section
@@ -21,9 +21,9 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m k : ℕ)
-    (x : (i : Iic m) → C.base.Gauge) : ℝ :=
+    (x : (i : Finset.Iic m) → C.base.Gauge) : ℝ :=
   if h : k ≤ m then
-    O (C.base.replaceLink background target x⟨k, mem_Iic.2 h⟩)
+    O (C.base.replaceLink background target x ⟨k, Finset.mem_Iic.2 h⟩)
   else 0
 
 /-- On an index inside the finite trajectory, the total inserted observable value
@@ -36,10 +36,10 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryInserte
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m k : ℕ)
     (hkm : k ≤ m)
-    (x : (i : Iic m) → C.base.Gauge) :
+    (x : (i : Finset.Iic m) → C.base.Gauge) :
     C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
         background target O m k x =
-      O (C.base.replaceLink background target x⟨k, mem_Iic.2 hkm⟩) := by
+      O (C.base.replaceLink background target x ⟨k, Finset.mem_Iic.2 hkm⟩) := by
   simp [
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryInsertedObservableValueBCF,
     hkm]
@@ -70,7 +70,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m : ℕ)
-    (x : (i : Iic m) → C.base.Gauge) : ℝ :=
+    (x : (i : Finset.Iic m) → C.base.Gauge) : ℝ :=
   C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
       background target O m 0 x -
     C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
@@ -83,7 +83,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m k : ℕ)
-    (x : (i : Iic m) → C.base.Gauge) : ℝ :=
+    (x : (i : Finset.Iic m) → C.base.Gauge) : ℝ :=
   C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
       background target O m k x -
     C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
@@ -96,13 +96,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m : ℕ)
-    (x : (i : Iic m) → C.base.Gauge) :
+    (x : (i : Finset.Iic m) → C.base.Gauge) :
     C.independentPairHybridTargetTrajectoryEndpointTransportBCF
         background target O m x =
       C.singleLinkConditionalOverlapObservableTransportBCF
         background target O
-        (x⟨0, mem_Iic.2 (zero_le m)⟩,
-          x⟨m, mem_Iic.2 le_rfl⟩) := by
+        (x ⟨0, Finset.mem_Iic.2 (zero_le m)⟩,
+          x ⟨m, Finset.mem_Iic.2 le_rfl⟩) := by
   simp [
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportBCF,
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapObservableTransportBCF]
@@ -116,13 +116,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacen
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m k : ℕ)
     (hkm : k + 1 ≤ m)
-    (x : (i : Iic m) → C.base.Gauge) :
+    (x : (i : Finset.Iic m) → C.base.Gauge) :
     C.independentPairHybridTargetTrajectoryAdjacentTransportBCF
         background target O m k x =
       C.singleLinkConditionalOverlapObservableTransportBCF
         background target O
-        (x⟨k, mem_Iic.2 (k.le_succ.trans hkm)⟩,
-          x⟨k + 1, mem_Iic.2 hkm⟩) := by
+        (x ⟨k, Finset.mem_Iic.2 (k.le_succ.trans hkm)⟩,
+          x ⟨k + 1, Finset.mem_Iic.2 hkm⟩) := by
   simp [
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentTransportBCF,
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapObservableTransportBCF,
@@ -173,20 +173,27 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m : ℕ)
-    (x : (i : Iic m) → C.base.Gauge) :
+    (x : (i : Finset.Iic m) → C.base.Gauge) :
     C.independentPairHybridTargetTrajectoryEndpointTransportBCF
         background target O m x =
       ∑ k ∈ Finset.range m,
         C.independentPairHybridTargetTrajectoryAdjacentTransportBCF
           background target O m k x := by
-  have hTel := Finset.sum_range_sub
-    (fun k =>
-      -C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
-        background target O m k x) m
-  simpa [
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentTransportBCF]
-    using hTel.symm
+  let v : ℕ → ℝ := fun k =>
+    C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
+      background target O m k x
+  have hTel := Finset.sum_range_sub (fun k => -v k) m
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportBCF
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentTransportBCF
+  change v 0 - v m = ∑ k ∈ Finset.range m, (v k - v (k + 1))
+  calc
+    v 0 - v m = (-v m) - (-v 0) := by ring
+    _ = ∑ k ∈ Finset.range m, ((-v (k + 1)) - (-v k)) := hTel.symm
+    _ = ∑ k ∈ Finset.range m, (v k - v (k + 1)) := by
+      apply Finset.sum_congr rfl
+      intro k _hk
+      ring
 
 /-- Finite Cauchy--Schwarz converts exact telescoping into a pointwise square
 bound by the sum of adjacent square transports. -/
@@ -196,7 +203,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (m : ℕ)
-    (x : (i : Iic m) → C.base.Gauge) :
+    (x : (i : Finset.Iic m) → C.base.Gauge) :
     (C.independentPairHybridTargetTrajectoryEndpointTransportBCF
         background target O m x) ^ 2 ≤
       (m : ℝ) *
@@ -249,8 +256,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
           background target O m x) ^ 2)
       (C.independentPairHybridTargetTrajectoryMeasure A B target m) := by
   exact
-    (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportBCF_continuous
-      C background target O m).pow 2 |>.integrable_of_hasCompactSupport
+    ((continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportBCF_continuous
+      C background target O m).pow 2).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
 
 /-- Every adjacent square transport is integrable under the trajectory law. -/
@@ -266,8 +273,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacen
           background target O m k x) ^ 2)
       (C.independentPairHybridTargetTrajectoryMeasure A B target m) := by
   exact
-    (continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacentTransportBCF_continuous
-      C background target O m k).pow 2 |>.integrable_of_hasCompactSupport
+    ((continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacentTransportBCF_continuous
+      C background target O m k).pow 2).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
 
 /-- The expected square of one genuine adjacent trajectory step is exactly the
@@ -286,21 +293,21 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacen
         (C.independentPairHybridConfiguration A B k)
         (C.independentPairHybridConfiguration A B (k + 1))
         background target O := by
-  let pairMap : ((i : Iic m) → C.base.Gauge) →
+  let pairMap : ((i : Finset.Iic m) → C.base.Gauge) →
       C.base.Gauge × C.base.Gauge :=
     fun x =>
-      (x⟨k, mem_Iic.2 (k.le_succ.trans hkm)⟩,
-        x⟨k + 1, mem_Iic.2 hkm⟩)
+      (x ⟨k, Finset.mem_Iic.2 (k.le_succ.trans hkm)⟩,
+        x ⟨k + 1, Finset.mem_Iic.2 hkm⟩)
   have hPair : Measurable pairMap :=
     (measurable_pi_apply _).prodMk (measurable_pi_apply _)
   have hIntegrand : StronglyMeasurable
       (fun z : C.base.Gauge × C.base.Gauge =>
         (C.singleLinkConditionalOverlapObservableTransportBCF
           background target O z) ^ 2) :=
-    (continuous_compact_oriented_singleLinkConditionalOverlapObservableTransportBCF_continuous
-      C background target O).pow 2 |>.stronglyMeasurable
+    ((continuous_compact_oriented_singleLinkConditionalOverlapObservableTransportBCF_continuous
+      C background target O).pow 2).stronglyMeasurable
   have hAdjacent :
-      (fun x : (i : Iic m) → C.base.Gauge =>
+      (fun x : (i : Finset.Iic m) → C.base.Gauge =>
         (C.independentPairHybridTargetTrajectoryAdjacentTransportBCF
           background target O m k x) ^ 2) =
         fun x =>
@@ -343,7 +350,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
       continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportBCF_sq_integrable
         C A B background target O m
   have hRightContinuous : Continuous
-      (fun x : (i : Iic m) → C.base.Gauge =>
+      (fun x : (i : Finset.Iic m) → C.base.Gauge =>
         (m : ℝ) *
           ∑ k ∈ Finset.range m,
             (C.independentPairHybridTargetTrajectoryAdjacentTransportBCF
@@ -355,7 +362,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
       (continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacentTransportBCF_continuous
         C background target O m k).pow 2
   have hRight : Integrable
-      (fun x : (i : Iic m) → C.base.Gauge =>
+      (fun x : (i : Finset.Iic m) → C.base.Gauge =>
         (m : ℝ) *
           ∑ k ∈ Finset.range m,
             (C.independentPairHybridTargetTrajectoryAdjacentTransportBCF
