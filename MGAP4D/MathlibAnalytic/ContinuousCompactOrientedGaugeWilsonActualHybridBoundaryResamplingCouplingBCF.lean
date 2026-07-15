@@ -78,7 +78,7 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryTargetPairMeasu
     (continuous_compact_oriented_offTargetBoundaryTargetPairMap_measurable C target)
     (continuous_compact_oriented_independentPairHybridEndpointPairMap_measurable
       C target)]
-  simp only [Function.comp_apply]
+  rfl
 
 /-- The hybrid off-target boundary law is the pushforward of the independent
 Gibbs source pair by the named pre-boundary map. -/
@@ -96,7 +96,7 @@ theorem continuous_compact_oriented_independentPairHybridOffTargetBoundaryMeasur
     (continuous_compact_oriented_offTargetBoundaryMap_measurable C target)
     (continuous_compact_oriented_independentPairHybridPreEndpointMap_measurable
       C target)]
-  simp only [Function.comp_apply]
+  rfl
 
 /-- Given an independent Gibbs source pair, retain its actual hybrid pre-boundary
 and resample two exact native target-link values conditionally on that boundary. -/
