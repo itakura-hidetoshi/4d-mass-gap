@@ -131,7 +131,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectorySourceB
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapObservableTransportBCF
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
   simp [hkm]
-  ring
 
 /-- Exact telescoping remains valid with step-dependent backgrounds because the
 coordinate values themselves still form one finite scalar path. -/
