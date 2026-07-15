@@ -6,7 +6,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory ProbabilityTheory Finset Function
+open MeasureTheory ProbabilityTheory Finset Preorder Function
 open scoped ProbabilityTheory
 
 noncomputable section
@@ -65,7 +65,7 @@ noncomputable def
     Kernel ((i : Iic k) → C.base.Gauge) C.base.Gauge :=
   (C.independentPairHybridTargetTransitionKernelAtStep A B target k).comap
     (fun x => x ⟨k, mem_Iic.2 le_rfl⟩)
-    (by fun_prop)
+    (measurable_pi_apply _)
 
 /-- Every history-dependent target kernel is Markov. -/
 instance continuousCompactOriented_independentPairHybridTargetHistoryKernel_isMarkov
@@ -114,6 +114,7 @@ noncomputable def
     (m : ℕ) :
     Measure ((i : Iic m) → C.base.Gauge) :=
   Kernel.partialTraj
+      (X := fun _ => C.base.Gauge)
       (C.independentPairHybridTargetHistoryKernel A B target) 0 m ∘ₘ
     C.independentPairHybridTargetInitialHistoryMeasure A target
 
@@ -147,7 +148,7 @@ theorem continuous_compact_oriented_map_zero_independentPairHybridTargetInitialH
         Measure.map id (C.singleLinkConditionalMeasure A target) =
           C.singleLinkConditionalMeasure A target)
   · fun_prop
-  · fun_prop
+  · exact measurable_pi_apply _
 
 /-- The trajectory law at time `m + 1` is obtained by extending the trajectory
 law at time `m` with one more history-dependent anchored transition. -/
@@ -158,6 +159,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryMeasure
     (m : ℕ) :
     C.independentPairHybridTargetTrajectoryMeasure A B target (m + 1) =
       Kernel.partialTraj
+          (X := fun _ => C.base.Gauge)
           (C.independentPairHybridTargetHistoryKernel A B target) m (m + 1) ∘ₘ
         C.independentPairHybridTargetTrajectoryMeasure A B target m := by
   unfold
@@ -173,7 +175,7 @@ theorem continuous_compact_oriented_map_frestrictLe₂_independentPairHybridTarg
     (target : C.base.geometry.Edge)
     (b m : ℕ)
     (hbm : b ≤ m) :
-    Measure.map (frestrictLe₂ hbm)
+    Measure.map (Preorder.frestrictLe₂ hbm)
         (C.independentPairHybridTargetTrajectoryMeasure A B target m) =
       C.independentPairHybridTargetTrajectoryMeasure A B target b := by
   unfold
@@ -232,17 +234,18 @@ theorem continuous_compact_oriented_map_coordinate_independentPairHybridTargetTr
       Measure.map
         (fun x : (i : Iic k) → C.base.Gauge =>
           x ⟨k, mem_Iic.2 le_rfl⟩)
-        (Measure.map (frestrictLe₂ hkm)
+        (Measure.map (Preorder.frestrictLe₂ hkm)
           (C.independentPairHybridTargetTrajectoryMeasure A B target m)) := by
             rw [Measure.map_map]
             · rfl
-            · fun_prop
-            · fun_prop
+            · exact measurable_frestrictLe₂ hkm
+            · exact measurable_pi_apply _
     _ = Measure.map
         (fun x : (i : Iic k) → C.base.Gauge =>
           x ⟨k, mem_Iic.2 le_rfl⟩)
         (C.independentPairHybridTargetTrajectoryMeasure A B target k) := by
-          rw [continuous_compact_oriented_map_frestrictLe₂_independentPairHybridTargetTrajectoryMeasure]
+          rw [continuous_compact_oriented_map_frestrictLe₂_independentPairHybridTargetTrajectoryMeasure
+            C A B target k m hkm]
     _ = C.singleLinkConditionalMeasure
         (C.independentPairHybridConfiguration A B k) target :=
       continuous_compact_oriented_map_last_independentPairHybridTargetTrajectoryMeasure
@@ -256,6 +259,7 @@ theorem continuous_compact_oriented_map_adjacent_partialTraj_independentPairHybr
     (target : C.base.geometry.Edge)
     (k : ℕ) :
     (Kernel.partialTraj
+        (X := fun _ => C.base.Gauge)
         (C.independentPairHybridTargetHistoryKernel A B target) k (k + 1)).map
       (fun x : (i : Iic (k + 1)) → C.base.Gauge =>
         (x ⟨k, mem_Iic.2 k.le_succ⟩,
@@ -263,7 +267,7 @@ theorem continuous_compact_oriented_map_adjacent_partialTraj_independentPairHybr
       (Kernel.deterministic
           (fun x : (i : Iic k) → C.base.Gauge =>
             x ⟨k, mem_Iic.2 le_rfl⟩)
-          (by fun_prop)) ×ₖ
+          (measurable_pi_apply _)) ×ₖ
         C.independentPairHybridTargetHistoryKernel A B target k := by
   let last : ((i : Iic k) → C.base.Gauge) → C.base.Gauge :=
     fun x => x ⟨k, mem_Iic.2 le_rfl⟩
@@ -272,8 +276,9 @@ theorem continuous_compact_oriented_map_adjacent_partialTraj_independentPairHybr
     fun x =>
       (x ⟨k, mem_Iic.2 k.le_succ⟩,
         x ⟨k + 1, mem_Iic.2 le_rfl⟩)
-  have hLast : Measurable last := by fun_prop
-  have hPair : Measurable pairAt := by fun_prop
+  have hLast : Measurable last := measurable_pi_apply _
+  have hPair : Measurable pairAt :=
+    (measurable_pi_apply _).prodMk (measurable_pi_apply _)
   have hComp :
       pairAt ∘ IicProdIoc k (k + 1) =
         Prod.map last (piSingleton k).symm := by
@@ -283,6 +288,7 @@ theorem continuous_compact_oriented_map_adjacent_partialTraj_independentPairHybr
     · simp [pairAt, _root_.IicProdIoc, piSingleton]
   change
     (Kernel.partialTraj
+        (X := fun _ => C.base.Gauge)
         (C.independentPairHybridTargetHistoryKernel A B target) k (k + 1)).map
       pairAt =
       (Kernel.deterministic last hLast) ×ₖ
@@ -351,18 +357,19 @@ theorem continuous_compact_oriented_map_adjacent_independentPairHybridTargetTraj
         (fun x : (i : Iic (k + 1)) → C.base.Gauge =>
           (x ⟨k, mem_Iic.2 k.le_succ⟩,
             x ⟨k + 1, mem_Iic.2 le_rfl⟩))
-        (Measure.map (frestrictLe₂ hkm)
+        (Measure.map (Preorder.frestrictLe₂ hkm)
           (C.independentPairHybridTargetTrajectoryMeasure A B target m)) := by
             rw [Measure.map_map]
             · rfl
-            · fun_prop
-            · fun_prop
+            · exact measurable_frestrictLe₂ hkm
+            · exact (measurable_pi_apply _).prodMk (measurable_pi_apply _)
     _ = Measure.map
         (fun x : (i : Iic (k + 1)) → C.base.Gauge =>
           (x ⟨k, mem_Iic.2 k.le_succ⟩,
             x ⟨k + 1, mem_Iic.2 le_rfl⟩))
         (C.independentPairHybridTargetTrajectoryMeasure A B target (k + 1)) := by
-          rw [continuous_compact_oriented_map_frestrictLe₂_independentPairHybridTargetTrajectoryMeasure]
+          rw [continuous_compact_oriented_map_frestrictLe₂_independentPairHybridTargetTrajectoryMeasure
+            C A B target (k + 1) m hkm]
     _ = C.singleLinkConditionalAnchoredOverlapCouplingMeasure
         (C.independentPairHybridConfiguration A B k)
         (C.independentPairHybridConfiguration A B (k + 1))
@@ -387,7 +394,8 @@ theorem continuous_compact_oriented_map_adjacent_independentPairHybridTargetTraj
         (C.independentPairHybridConfiguration A B k)
         (C.independentPairHybridConfiguration A B (k + 1))
         target := by
-  rw [continuous_compact_oriented_map_adjacent_independentPairHybridTargetTrajectoryMeasure,
+  rw [continuous_compact_oriented_map_adjacent_independentPairHybridTargetTrajectoryMeasure
+      C A B target k m hkm,
     continuous_compact_oriented_singleLinkConditionalAnchoredOverlapCouplingMeasure_eq_overlapCouplingMeasure]
 
 end
