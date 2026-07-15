@@ -24,14 +24,14 @@ theorem normalizedResidualDensity_measurable
     (hδ : Measurable δ)
     (hr : Measurable (Function.uncurry r)) :
     Measurable (Function.uncurry
-      (fun a b => if δ a = 0 then 1 else δ a⁻¹ * r a b)) := by
+      (fun a b => if δ a = 0 then 1 else (δ a)⁻¹ * r a b)) := by
   have hδInput : Measurable (fun x : α × β => δ x.1) :=
     hδ.comp measurable_fst
   have hZero : MeasurableSet {x : α × β | δ x.1 = 0} :=
     hδInput (measurableSet_singleton 0)
   change Measurable
     (fun x : α × β =>
-      if δ x.1 = 0 then 1 else δ x.1⁻¹ * r x.1 x.2)
+      if δ x.1 = 0 then 1 else (δ x.1)⁻¹ * r x.1 x.2)
   exact Measurable.ite hZero measurable_const (hδInput.inv.mul hr)
 
 end ENNRealAnchoredTransition
@@ -85,12 +85,12 @@ theorem continuous_compact_oriented_withDensity_anchoredNormalizedRightResidualD
       if_pos hδ]
     unfold
       ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity
-    rw [if_pos hδ, MeasureTheory.withDensity_one]
+    simp only [hδ, if_pos, MeasureTheory.withDensity_one]
   · rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
       if_neg hδ]
     unfold
       ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity
-    rw [if_neg hδ]
+    simp only [hδ, if_neg]
     have hRightMeas : Measurable
         (C.configurationPairConditionalRightResidualDensity target w.1) :=
       Measurable.of_uncurry_left
