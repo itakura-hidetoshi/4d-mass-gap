@@ -145,7 +145,8 @@ theorem continuous_compact_oriented_map_zero_independentPairHybridTargetInitialH
   rw [Measure.map_map]
   · simpa only using
       (Measure.map_id :
-        Measure.map id (C.singleLinkConditionalMeasure A target) =
+        Measure.map (id : C.base.Gauge → C.base.Gauge)
+            (C.singleLinkConditionalMeasure A target) =
           C.singleLinkConditionalMeasure A target)
   · fun_prop
   · exact measurable_pi_apply _
@@ -186,7 +187,7 @@ theorem continuous_compact_oriented_map_frestrictLe₂_independentPairHybridTarg
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryMeasure
   rw [Measure.map_comp _ _
-    (measurable_frestrictLe₂ (π := fun _ => C.base.Gauge) hbm)]
+    (measurable_frestrictLe₂ (X := fun _ => C.base.Gauge) hbm)]
   rw [Kernel.partialTraj_map_frestrictLe₂
     (X := fun _ => C.base.Gauge)
     (κ := C.independentPairHybridTargetHistoryKernel A B target)
@@ -249,7 +250,7 @@ theorem continuous_compact_oriented_map_coordinate_independentPairHybridTargetTr
   let evalK : ((i : Iic k) → C.base.Gauge) → C.base.Gauge :=
     fun x => x ⟨k, mem_Iic.2 le_rfl⟩
   have hRestrict : Measurable restrict :=
-    measurable_frestrictLe₂ (π := fun _ => C.base.Gauge) hkm
+    measurable_frestrictLe₂ (X := fun _ => C.base.Gauge) hkm
   have hEvalM : Measurable evalM := measurable_pi_apply _
   have hEvalK : Measurable evalK := measurable_pi_apply _
   have hComp : evalK ∘ restrict = evalM := by
@@ -408,7 +409,7 @@ theorem continuous_compact_oriented_map_adjacent_independentPairHybridTargetTraj
       (x ⟨k, mem_Iic.2 k.le_succ⟩,
         x ⟨k + 1, mem_Iic.2 le_rfl⟩)
   have hRestrict : Measurable restrict :=
-    measurable_frestrictLe₂ (π := fun _ => C.base.Gauge) hkm
+    measurable_frestrictLe₂ (X := fun _ => C.base.Gauge) hkm
   have hPairM : Measurable pairM :=
     (measurable_pi_apply _).prodMk (measurable_pi_apply _)
   have hPairK : Measurable pairK :=
