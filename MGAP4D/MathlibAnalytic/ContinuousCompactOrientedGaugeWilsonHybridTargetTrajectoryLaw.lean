@@ -142,14 +142,19 @@ theorem continuous_compact_oriented_map_zero_independentPairHybridTargetInitialH
       C.singleLinkConditionalMeasure A target := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetInitialHistoryMeasure
-  rw [Measure.map_map]
-  · simpa only using
-      (Measure.map_id :
-        Measure.map (id : C.base.Gauge → C.base.Gauge)
-            (C.singleLinkConditionalMeasure A target) =
-          C.singleLinkConditionalMeasure A target)
-  · fun_prop
-  · exact measurable_pi_apply _
+  have hEmbed : Measurable
+      (fun g : C.base.Gauge => fun _ : Iic 0 => g) := by
+    exact measurable_pi_lambda _ (fun _ => measurable_id)
+  have hEval : Measurable
+      (fun x : (i : Iic 0) → C.base.Gauge =>
+        x ⟨0, mem_Iic.2 le_rfl⟩) :=
+    measurable_pi_apply _
+  rw [Measure.map_map hEval hEmbed]
+  simpa only [Function.comp_apply] using
+    (Measure.map_id :
+      Measure.map (id : C.base.Gauge → C.base.Gauge)
+          (C.singleLinkConditionalMeasure A target) =
+        C.singleLinkConditionalMeasure A target)
 
 /-- The trajectory law at time `m + 1` is obtained by extending the trajectory
 law at time `m` with one more history-dependent anchored transition. -/
