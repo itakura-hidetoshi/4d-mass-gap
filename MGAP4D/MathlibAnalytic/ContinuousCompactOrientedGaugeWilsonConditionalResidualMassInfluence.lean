@@ -142,7 +142,7 @@ theorem continuous_compact_oriented_singleLinkConditionalLeftResidualDensity_eq_
   rw [continuous_compact_oriented_singleLinkConditionalDensity_eq_ofReal_real,
     continuous_compact_oriented_singleLinkConditionalDensity_eq_ofReal_real,
     ← ENNReal.ofReal_min]
-  exact (ENNReal.ofReal_sub p (min_nonneg hp hq)).symm
+  exact (ENNReal.ofReal_sub p (le_min hp hq)).symm
 
 /-- Real conditional densities are integrable against normalized compact Haar. -/
 theorem continuous_compact_oriented_singleLinkConditionalDensityReal_integrable
@@ -201,13 +201,29 @@ theorem continuous_compact_oriented_singleLinkConditionalResidualMass_eq_ofReal_
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalLeftResidualMeasure
   rw [withDensity_apply _ MeasurableSet.univ]
   simp only [Measure.restrict_univ]
-  rw [← ofReal_integral_eq_lintegral_ofReal hResidualInt
-    (Filter.Eventually.of_forall hResidualNonneg)]
-  apply lintegral_congr
-  intro g
-  simpa [μ, p, q] using
-    continuous_compact_oriented_singleLinkConditionalLeftResidualDensity_eq_ofReal
-      C A B target g
+  calc
+    (∫⁻ g, C.singleLinkConditionalLeftResidualDensity A B target g
+        ∂normalizedCompactHaar C.base.Gauge) =
+      ∫⁻ g, ENNReal.ofReal
+        (C.singleLinkConditionalDensityReal A target g -
+          min (C.singleLinkConditionalDensityReal A target g)
+            (C.singleLinkConditionalDensityReal B target g))
+        ∂normalizedCompactHaar C.base.Gauge := by
+          apply lintegral_congr
+          intro g
+          exact
+            continuous_compact_oriented_singleLinkConditionalLeftResidualDensity_eq_ofReal
+              C A B target g
+    _ = ENNReal.ofReal
+        (∫ g,
+          C.singleLinkConditionalDensityReal A target g -
+            min (C.singleLinkConditionalDensityReal A target g)
+              (C.singleLinkConditionalDensityReal B target g)
+          ∂normalizedCompactHaar C.base.Gauge) := by
+          symm
+          simpa [μ, p, q] using
+            ofReal_integral_eq_lintegral_ofReal hResidualInt
+              (Filter.Eventually.of_forall hResidualNonneg)
 
 /-- Mutual pointwise domination of the real exact one-link conditional
 densities bounds the unmatched ENNReal mass by the sharp coefficient. -/
