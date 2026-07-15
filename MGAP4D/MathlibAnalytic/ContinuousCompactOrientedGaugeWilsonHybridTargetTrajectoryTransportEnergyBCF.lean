@@ -23,7 +23,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     (m k : ℕ)
     (x : (i : Finset.Iic m) → C.base.Gauge) : ℝ :=
   if h : k ≤ m then
-    O (C.base.replaceLink background target x ⟨k, Finset.mem_Iic.2 h⟩)
+    O (C.base.replaceLink background target (x ⟨k, Finset.mem_Iic.2 h⟩))
   else 0
 
 /-- On an index inside the finite trajectory, the total inserted observable value
@@ -39,7 +39,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryInserte
     (x : (i : Finset.Iic m) → C.base.Gauge) :
     C.independentPairHybridTargetTrajectoryInsertedObservableValueBCF
         background target O m k x =
-      O (C.base.replaceLink background target x ⟨k, Finset.mem_Iic.2 hkm⟩) := by
+      O (C.base.replaceLink background target (x ⟨k, Finset.mem_Iic.2 hkm⟩)) := by
   simp [
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryInsertedObservableValueBCF,
     hkm]
@@ -59,7 +59,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryInserte
   split_ifs with h
   · exact O.continuous.comp
       ((continuous_compact_oriented_replaceLink_uncurry C target).comp
-        (continuous_const.prodMk (by fun_prop)))
+        (continuous_const.prodMk (continuous_apply _)))
   · exact continuous_const
 
 /-- Fixed-background observable transport between the first and last values of a
@@ -103,9 +103,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         background target O
         (x ⟨0, Finset.mem_Iic.2 (zero_le m)⟩,
           x ⟨m, Finset.mem_Iic.2 le_rfl⟩) := by
-  simp [
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapObservableTransportBCF]
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportBCF
+  rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryInsertedObservableValueBCF_of_le
+      C background target O m 0 (zero_le m) x,
+    continuous_compact_oriented_independentPairHybridTargetTrajectoryInsertedObservableValueBCF_of_le
+      C background target O m m le_rfl x]
+  rfl
 
 /-- An adjacent transport inside the trajectory is exactly the existing
 fixed-background overlap observable transport applied to that coordinate pair. -/
@@ -123,11 +127,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacen
         background target O
         (x ⟨k, Finset.mem_Iic.2 (k.le_succ.trans hkm)⟩,
           x ⟨k + 1, Finset.mem_Iic.2 hkm⟩) := by
-  simp [
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentTransportBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapObservableTransportBCF,
-    hkm,
-    k.le_succ.trans hkm]
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentTransportBCF
+  rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryInsertedObservableValueBCF_of_le
+      C background target O m k (k.le_succ.trans hkm) x,
+    continuous_compact_oriented_independentPairHybridTargetTrajectoryInsertedObservableValueBCF_of_le
+      C background target O m (k + 1) hkm x]
+  rfl
 
 /-- Endpoint transport is continuous on the finite trajectory space. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportBCF_continuous
@@ -392,10 +398,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
       rw [integral_const_mul]
       congr 1
       rw [integral_finset_sum]
-      intro k _hk
-      exact
-        continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacentTransportBCF_sq_integrable
-          C A B background target O m k
+      · apply Finset.sum_congr rfl
+        intro k _hk
+        rfl
+      · intro k _hk
+        exact
+          continuous_compact_oriented_independentPairHybridTargetTrajectoryAdjacentTransportBCF_sq_integrable
+            C A B background target O m k
     _ = (m : ℝ) *
         ∑ k ∈ Finset.range m,
           C.singleLinkConditionalOverlapObservableTransportEnergyBCF
