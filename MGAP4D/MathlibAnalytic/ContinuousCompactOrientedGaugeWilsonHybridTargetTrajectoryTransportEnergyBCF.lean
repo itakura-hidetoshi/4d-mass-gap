@@ -59,7 +59,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryInserte
   split_ifs with h
   · exact O.continuous.comp
       ((continuous_compact_oriented_replaceLink_uncurry C target).comp
-        (continuous_const.prodMk (continuous_apply _)))
+        (continuous_const.prodMk
+          (continuous_apply (⟨k, Finset.mem_Iic.2 h⟩ : Finset.Iic m))))
   · exact continuous_const
 
 /-- Fixed-background observable transport between the first and last values of a
