@@ -6,7 +6,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory ProbabilityTheory Set Function
+open MeasureTheory ProbabilityTheory Finset Function
 open scoped ProbabilityTheory
 
 noncomputable section
@@ -142,8 +142,10 @@ theorem continuous_compact_oriented_map_zero_independentPairHybridTargetInitialH
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetInitialHistoryMeasure
   rw [Measure.map_map]
-  · simpa using
-      (Measure.map_id (C.singleLinkConditionalMeasure A target))
+  · simpa only using
+      (Measure.map_id :
+        Measure.map id (C.singleLinkConditionalMeasure A target) =
+          C.singleLinkConditionalMeasure A target)
   · fun_prop
   · fun_prop
 
@@ -199,8 +201,7 @@ theorem continuous_compact_oriented_map_last_independentPairHybridTargetTrajecto
         continuous_compact_oriented_map_zero_independentPairHybridTargetInitialHistoryMeasure,
         continuous_compact_oriented_independentPairHybridConfiguration_zero]
   | succ m ih =>
-      rw [Nat.succ_eq_add_one,
-        continuous_compact_oriented_independentPairHybridTargetTrajectoryMeasure_succ,
+      rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryMeasure_succ,
         Measure.map_comp,
         Kernel.map_partialTraj_succ_self]
       unfold
