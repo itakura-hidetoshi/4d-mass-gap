@@ -102,6 +102,24 @@ theorem continuous_compact_oriented_configurationPairConditionalAnchoredNormaliz
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalResidualMass
   rfl
 
+/-- The fixed normalized right-residual measure has total mass one. -/
+theorem continuous_compact_oriented_singleLinkConditionalAnchoredNormalizedRightResidualMeasure_univ
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (A B : C.base.Configuration)
+    (target : C.base.geometry.Edge) :
+    C.singleLinkConditionalAnchoredNormalizedRightResidualMeasure
+        A B target univ = 1 := by
+  by_cases hδ : C.singleLinkConditionalResidualMass A B target = 0
+  · rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalAnchoredNormalizedRightResidualMeasure,
+      if_pos hδ]
+    exact measure_univ
+  · rw [ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalAnchoredNormalizedRightResidualMeasure,
+      if_neg hδ, Measure.smul_apply, smul_eq_mul,
+      continuous_compact_oriented_singleLinkConditionalRightResidualMeasure_univ]
+    exact ENNReal.inv_mul_cancel hδ
+      (continuous_compact_oriented_singleLinkConditionalResidualMass_ne_top
+        C A B target)
+
 /-- Diagonal branch of the anchored transition at one fixed pair of background
 configurations. -/
 noncomputable def
@@ -125,26 +143,6 @@ noncomputable def
   (C.configurationPairConditionalAnchoredResidualTransitionKernel target).comap
     (fun g : C.base.Gauge => (z, g))
     (measurable_const.prodMk measurable_id)
-
-instance continuousCompactOriented_configurationPairConditionalAnchoredDiagonalTransitionKernelAt_isSFinite
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (z : C.base.Configuration × C.base.Configuration) :
-    IsSFiniteKernel
-      (C.configurationPairConditionalAnchoredDiagonalTransitionKernelAt target z) := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredDiagonalTransitionKernelAt
-  infer_instance
-
-instance continuousCompactOriented_configurationPairConditionalAnchoredResidualTransitionKernelAt_isSFinite
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (z : C.base.Configuration × C.base.Configuration) :
-    IsSFiniteKernel
-      (C.configurationPairConditionalAnchoredResidualTransitionKernelAt target z) := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredResidualTransitionKernelAt
-  infer_instance
 
 /-- Fixed-background diagonal fibers are the anchored diagonal weight times the
 Dirac mass at the current anchor. -/
@@ -181,6 +179,35 @@ theorem continuous_compact_oriented_configurationPairConditionalAnchoredResidual
   rw [continuous_compact_oriented_configurationPairConditionalAnchoredResidualTransitionKernel_apply,
     continuous_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualMeasure_eq_fixed]
 
+instance continuousCompactOriented_configurationPairConditionalAnchoredDiagonalTransitionKernelAt_isFinite
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (z : C.base.Configuration × C.base.Configuration) :
+    IsFiniteKernel
+      (C.configurationPairConditionalAnchoredDiagonalTransitionKernelAt target z) := by
+  rcases z with ⟨A, B⟩
+  refine ⟨⟨1, ENNReal.one_lt_top, fun g => ?_⟩⟩
+  rw [continuous_compact_oriented_configurationPairConditionalAnchoredDiagonalTransitionKernelAt_apply]
+  simpa [Measure.smul_apply, smul_eq_mul] using
+    continuous_compact_oriented_configurationPairConditionalAnchoredDiagonalWeight_le_one
+      C target ((A, B), g)
+
+instance continuousCompactOriented_configurationPairConditionalAnchoredResidualTransitionKernelAt_isFinite
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (z : C.base.Configuration × C.base.Configuration) :
+    IsFiniteKernel
+      (C.configurationPairConditionalAnchoredResidualTransitionKernelAt target z) := by
+  rcases z with ⟨A, B⟩
+  refine ⟨⟨1, ENNReal.one_lt_top, fun g => ?_⟩⟩
+  rw [continuous_compact_oriented_configurationPairConditionalAnchoredResidualTransitionKernelAt_apply,
+    Measure.smul_apply, smul_eq_mul,
+    continuous_compact_oriented_singleLinkConditionalAnchoredNormalizedRightResidualMeasure_univ,
+    mul_one]
+  exact
+    continuous_compact_oriented_configurationPairConditionalAnchoredResidualWeight_le_one
+      C target ((A, B), g)
+
 /-- The fixed-background full transition is the sum of its diagonal and residual
 branches. -/
 theorem continuous_compact_oriented_configurationPairConditionalAnchoredOverlapTransitionKernelAt_eq_add
@@ -204,11 +231,9 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_compProd_anchor
           target (A, B) =
       Measure.map (fun g : C.base.Gauge => (g, g))
         (C.singleLinkConditionalOverlapMeasure A B target) := by
-  have hWeight : Measurable
-      (fun g : C.base.Gauge =>
-        C.configurationPairConditionalAnchoredDiagonalWeight target ((A, B), g)) :=
-    (measurable_compact_oriented_configurationPairConditionalAnchoredDiagonalWeight
-      C target).comp (measurable_const.prodMk measurable_id)
+  letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure A target) :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C A target
   calc
     C.singleLinkConditionalMeasure A target ⊗ₘ
         C.configurationPairConditionalAnchoredDiagonalTransitionKernelAt
@@ -248,6 +273,15 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_compProd_anchor
             (C.singleLinkConditionalRightResidualMeasure A B target)) := by
   let normalizedRight :=
     C.singleLinkConditionalAnchoredNormalizedRightResidualMeasure A B target
+  letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure A target) :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C A target
+  letI : IsProbabilityMeasure normalizedRight := by
+    constructor
+    dsimp [normalizedRight]
+    exact
+      continuous_compact_oriented_singleLinkConditionalAnchoredNormalizedRightResidualMeasure_univ
+        C A B target
   have hWeight : Measurable
       (fun g : C.base.Gauge =>
         C.configurationPairConditionalAnchoredResidualWeight target ((A, B), g)) :=
