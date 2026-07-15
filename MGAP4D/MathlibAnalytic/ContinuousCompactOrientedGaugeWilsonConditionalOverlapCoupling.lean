@@ -477,11 +477,17 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapCouplingMeasure_
     Measure.map (fun g : C.base.Gauge => (g, g)) overlap {z | z.1 ≠ z.2} +
       (if delta = 0 then (0 : Measure (C.base.Gauge × C.base.Gauge)) else
         (delta⁻¹ : ℝ≥0∞) • left.prod right) {z | z.1 ≠ z.2} ≤ delta
+  have hDiagMeas : Measurable (fun g : C.base.Gauge => (g, g)) :=
+    measurable_id.prodMk measurable_id
   have hDiagonalZero :
       Measure.map (fun g : C.base.Gauge => (g, g)) overlap
           {z | z.1 ≠ z.2} = 0 := by
-    rw [Measure.map_apply (measurable_id.prodMk measurable_id) hNe]
-    simp
+    calc
+      Measure.map (fun g : C.base.Gauge => (g, g)) overlap
+          {z | z.1 ≠ z.2} =
+        overlap ((fun g : C.base.Gauge => (g, g)) ⁻¹' {z | z.1 ≠ z.2}) :=
+          Measure.map_apply hDiagMeas hNe
+      _ = 0 := by simp
   rw [hDiagonalZero, zero_add]
   by_cases hdelta : delta = 0
   · rw [if_pos hdelta]
@@ -491,7 +497,7 @@ theorem continuous_compact_oriented_singleLinkConditionalOverlapCouplingMeasure_
       delta⁻¹ * (left.prod right) {z | z.1 ≠ z.2} ≤
           delta⁻¹ * (left.prod right) univ := by
         gcongr
-        exact measure_mono (subset_univ _)
+        exact subset_univ _
       _ = delta := by
         rw [← univ_prod_univ, Measure.prod_prod,
           show left univ = delta by rfl,
