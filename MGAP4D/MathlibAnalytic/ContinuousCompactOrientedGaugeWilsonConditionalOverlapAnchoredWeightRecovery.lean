@@ -137,6 +137,13 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_withDensity_anc
   rw [continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity]
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalOverlapMeasure
+  change
+    ((normalizedCompactHaar C.base.Gauge).withDensity
+        (fun g : C.base.Gauge => C.singleLinkConditionalDensity target A g)).withDensity
+        (fun g : C.base.Gauge =>
+          C.configurationPairConditionalAnchoredDiagonalWeight target ((A, B), g)) =
+      (normalizedCompactHaar C.base.Gauge).withDensity
+        (C.singleLinkConditionalOverlapDensity A B target)
   rw [← withDensity_mul (normalizedCompactHaar C.base.Gauge) hDensity hWeight]
   apply withDensity_congr_ae
   exact Filter.Eventually.of_forall fun g =>
@@ -165,6 +172,13 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_withDensity_anc
   rw [continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity]
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalLeftResidualMeasure
+  change
+    ((normalizedCompactHaar C.base.Gauge).withDensity
+        (fun g : C.base.Gauge => C.singleLinkConditionalDensity target A g)).withDensity
+        (fun g : C.base.Gauge =>
+          C.configurationPairConditionalAnchoredResidualWeight target ((A, B), g)) =
+      (normalizedCompactHaar C.base.Gauge).withDensity
+        (C.singleLinkConditionalLeftResidualDensity A B target)
   rw [← withDensity_mul (normalizedCompactHaar C.base.Gauge) hDensity hWeight]
   apply withDensity_congr_ae
   exact Filter.Eventually.of_forall fun g =>
