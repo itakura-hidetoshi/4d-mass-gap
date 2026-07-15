@@ -10,18 +10,17 @@ open scoped ProbabilityTheory
 
 noncomputable section
 
-/-- Extract the two off-target boundaries from an actual/resampled
-boundary-target-pair coupling point. -/
+/-- Extract the actual and resampled off-target boundaries from one coupling
+point. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingBoundaryPairMap
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
     (C.OffTargetBoundaryTargetPair target ×
       C.OffTargetBoundaryTargetPair target) →
-      (C.OffTargetBoundary target × C.OffTargetBoundary target) :=
+      C.OffTargetBoundary target × C.OffTargetBoundary target :=
   fun z => (z.1.1, z.2.1)
 
-/-- Boundary-pair extraction from the actual/resampled coupling carrier is
-continuous. -/
+/-- Boundary-pair extraction is continuous. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingBoundaryPairMap_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
@@ -37,8 +36,7 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingBound
         (fun z : C.OffTargetBoundaryTargetPair target => z.1)).comp
         continuous_snd)
 
-/-- Boundary-pair extraction from the actual/resampled coupling carrier is
-measurable. -/
+/-- Boundary-pair extraction is measurable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingBoundaryPairMap_measurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
@@ -48,8 +46,8 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingBound
     C target).measurable
 
 /-- Pointwise in the independent Gibbs source pair, the actual output boundary
-and the boundary used by the exact conditional resampling kernel form the
-same deterministic diagonal pair. -/
+and the boundary retained by exact conditional resampling form the deterministic
+diagonal of the actual hybrid pre-boundary. -/
 theorem continuous_compact_oriented_map_boundaryPair_independentPairHybridBoundaryResamplingCouplingKernel
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
@@ -96,8 +94,8 @@ theorem continuous_compact_oriented_map_boundaryPair_independentPairHybridBounda
   rfl
 
 /-- Averaging the common-boundary coupling kernel preserves the exact diagonal
-boundary support.  The diagonal variable has precisely the actual hybrid
-pre-boundary law. -/
+boundary support.  The diagonal variable has the actual hybrid pre-boundary
+law. -/
 theorem continuous_compact_oriented_map_boundaryPair_independentPairHybridBoundaryResamplingCouplingMeasure
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
@@ -108,10 +106,6 @@ theorem continuous_compact_oriented_map_boundaryPair_independentPairHybridBounda
         (C.independentPairHybridOffTargetBoundaryMeasure target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingCouplingMeasure
-  change
-    (C.independentPairHybridBoundaryResamplingCouplingKernel target ∘ₘ
-      (C.gibbsMeasure.prod C.gibbsMeasure)).map
-        (C.independentPairHybridBoundaryResamplingBoundaryPairMap target) = _
   rw [Measure.map_comp
       (C.gibbsMeasure.prod C.gibbsMeasure)
       (C.independentPairHybridBoundaryResamplingCouplingKernel target)
@@ -127,10 +121,13 @@ theorem continuous_compact_oriented_map_boundaryPair_independentPairHybridBounda
         C target)]
   rfl
 
-/-- Under the actual/resampled boundary-target coupling, the actual and
-resampled off-target boundaries agree almost everywhere. -/
+/-- Under the actual/resampled boundary-target coupling, the two off-target
+boundaries agree almost everywhere.  The explicit Hausdorff assumption is used
+only to make the diagonal measurable; it is available for the actual compact
+`SU(N)` gauge group. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingCoupling_boundary_eq_ae
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge) :
     ∀ᵐ z ∂C.independentPairHybridBoundaryResamplingCouplingMeasure target,
       z.1.1 = z.2.1 := by
@@ -201,8 +198,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuation_replaceLink_su
   rw [hProjectionG, hProjectionH]
   ring
 
-/-- Observable transport difference corresponding to the first endpoint of the
-actual/resampled common-boundary coupling. -/
+/-- Observable transport difference for the first endpoint. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstObservableTransportBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -212,8 +208,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResa
   O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).1 -
     O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).1
 
-/-- Observable transport difference corresponding to the second endpoint of the
-actual/resampled common-boundary coupling. -/
+/-- Observable transport difference for the second endpoint. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondObservableTransportBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -223,8 +218,8 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResa
   O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).2 -
     O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).2
 
-/-- On diagonal boundary support, the first fluctuation residual is exactly the
-first observable transport difference. -/
+/-- On diagonal boundary support, the first fluctuation residual is the first
+observable transport difference. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualBCF_configurationCouplingMap_of_boundary_eq
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -249,8 +244,8 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
       C (C.offTargetBoundarySection target z.1.1) target O
         z.2.2.1 z.1.2.1
 
-/-- On diagonal boundary support, the second fluctuation residual is exactly the
-second observable transport difference. -/
+/-- On diagonal boundary support, the second fluctuation residual is the second
+observable transport difference. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualBCF_configurationCouplingMap_of_boundary_eq
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -275,8 +270,7 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
       C (C.offTargetBoundarySection target z.1.1) target O
         z.1.2.2 z.2.2.2
 
-/-- The first observable transport difference is continuous on the
-boundary-target coupling carrier. -/
+/-- The first observable transport difference is continuous. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -305,8 +299,7 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
   exact (O.continuous.comp hResampledFirst).sub
     (O.continuous.comp hActualFirst)
 
-/-- The second observable transport difference is continuous on the
-boundary-target coupling carrier. -/
+/-- The second observable transport difference is continuous. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -335,6 +328,19 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
   exact (O.continuous.comp hActualSecond).sub
     (O.continuous.comp hResampledSecond)
 
+private theorem continuous_compact_oriented_observable_sub_abs_le_two_norm
+    {C : ContinuousCompactOrientedGaugeWilsonSystem}
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (A B : C.base.Configuration) :
+    |O A - O B| ≤ 2 * ‖O‖ := by
+  calc
+    |O A - O B| ≤ |O A| + |O B| := abs_sub _ _
+    _ ≤ ‖O‖ + ‖O‖ := by
+      exact add_le_add
+        (by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm A)
+        (by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm B)
+    _ = 2 * ‖O‖ := (two_mul ‖O‖).symm
+
 /-- The first observable transport difference is bounded by twice the
 bounded-continuous norm. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_abs_le
@@ -347,21 +353,9 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
         target O z| ≤ 2 * ‖O‖ := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingFirstObservableTransportBCF
-  calc
-    |O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).1 -
-        O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).1| ≤
-      |O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).1| +
-        |O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).1| :=
-      abs_sub _ _
-    _ ≤ ‖O‖ + ‖O‖ := by
-      exact add_le_add
-        (by simpa [Real.norm_eq_abs] using
-          O.norm_coe_le_norm
-            (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).1)
-        (by simpa [Real.norm_eq_abs] using
-          O.norm_coe_le_norm
-            (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).1)
-    _ = 2 * ‖O‖ := (two_mul ‖O‖).symm
+  exact continuous_compact_oriented_observable_sub_abs_le_two_norm O
+    ((C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).1)
+    ((C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).1)
 
 /-- The second observable transport difference is bounded by twice the
 bounded-continuous norm. -/
@@ -375,24 +369,30 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
         target O z| ≤ 2 * ‖O‖ := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridBoundaryResamplingSecondObservableTransportBCF
-  calc
-    |O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).2 -
-        O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).2| ≤
-      |O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).2| +
-        |O (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).2| :=
-      abs_sub _ _
-    _ ≤ ‖O‖ + ‖O‖ := by
-      exact add_le_add
-        (by simpa [Real.norm_eq_abs] using
-          O.norm_coe_le_norm
-            (C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).2)
-        (by simpa [Real.norm_eq_abs] using
-          O.norm_coe_le_norm
-            (C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).2)
-    _ = 2 * ‖O‖ := (two_mul ‖O‖).symm
+  exact continuous_compact_oriented_observable_sub_abs_le_two_norm O
+    ((C.offTargetBoundaryTargetPairConfigurationPairMap target z.1).2)
+    ((C.offTargetBoundaryTargetPairConfigurationPairMap target z.2).2)
 
-/-- Squared first observable transport differences are integrable under the
-actual/resampled boundary-target coupling. -/
+private theorem continuous_compact_oriented_sq_integrable_of_abs_le_two_norm
+    {X : Type*}
+    [MeasurableSpace X]
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (μ : Measure X)
+    [IsProbabilityMeasure μ]
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (f : X → ℝ)
+    (hf : StronglyMeasurable f)
+    (hBound : ∀ x, |f x| ≤ 2 * ‖O‖) :
+    Integrable (fun x => (f x) ^ 2) μ := by
+  apply continuous_compact_oriented_integrable_of_uniform_bound
+    μ (fun x => (f x) ^ 2) (hf.pow 2) ((2 * ‖O‖) ^ 2)
+  intro x
+  have hAbs := hBound x
+  have hBounds := abs_le.mp hAbs
+  rw [abs_of_nonneg (sq_nonneg _)]
+  nlinarith [norm_nonneg O]
+
+/-- Squared first observable transport differences are integrable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_sq_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -406,24 +406,15 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
       (C.independentPairHybridBoundaryResamplingCouplingMeasure target) :=
     continuousCompactOriented_independentPairHybridBoundaryResamplingCouplingMeasure_isProbability
       C target
-  apply continuous_compact_oriented_integrable_of_uniform_bound
-    (C.independentPairHybridBoundaryResamplingCouplingMeasure target)
-    (fun z =>
-      (C.independentPairHybridBoundaryResamplingFirstObservableTransportBCF
-        target O z) ^ 2)
-    ((continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_continuous
-      C target O).pow 2).stronglyMeasurable
-    ((2 * ‖O‖) ^ 2)
-  intro z
-  have hAbs :=
-    continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_abs_le
-      C target O z
-  have hBounds := abs_le.mp hAbs
-  rw [abs_of_nonneg (sq_nonneg _)]
-  nlinarith [norm_nonneg O]
+  exact continuous_compact_oriented_sq_integrable_of_abs_le_two_norm
+    C (C.independentPairHybridBoundaryResamplingCouplingMeasure target) O
+    (C.independentPairHybridBoundaryResamplingFirstObservableTransportBCF target O)
+    (continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_continuous
+      C target O).stronglyMeasurable
+    (continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_abs_le
+      C target O)
 
-/-- Squared second observable transport differences are integrable under the
-actual/resampled boundary-target coupling. -/
+/-- Squared second observable transport differences are integrable. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_sq_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -437,26 +428,19 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
       (C.independentPairHybridBoundaryResamplingCouplingMeasure target) :=
     continuousCompactOriented_independentPairHybridBoundaryResamplingCouplingMeasure_isProbability
       C target
-  apply continuous_compact_oriented_integrable_of_uniform_bound
-    (C.independentPairHybridBoundaryResamplingCouplingMeasure target)
-    (fun z =>
-      (C.independentPairHybridBoundaryResamplingSecondObservableTransportBCF
-        target O z) ^ 2)
-    ((continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_continuous
-      C target O).pow 2).stronglyMeasurable
-    ((2 * ‖O‖) ^ 2)
-  intro z
-  have hAbs :=
-    continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_abs_le
-      C target O z
-  have hBounds := abs_le.mp hAbs
-  rw [abs_of_nonneg (sq_nonneg _)]
-  nlinarith [norm_nonneg O]
+  exact continuous_compact_oriented_sq_integrable_of_abs_le_two_norm
+    C (C.independentPairHybridBoundaryResamplingCouplingMeasure target) O
+    (C.independentPairHybridBoundaryResamplingSecondObservableTransportBCF target O)
+    (continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_continuous
+      C target O).stronglyMeasurable
+    (continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_abs_le
+      C target O)
 
-/-- The first endpoint residual energy is exactly an observable transport energy
-on the original boundary-target coupling carrier. -/
+/-- The first endpoint residual energy is exactly the first observable transport
+energy on the original boundary-target coupling carrier. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualEnergyBCF_eq_observableTransport
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
     C.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF target O =
@@ -484,10 +468,11 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
   rw [continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualBCF_configurationCouplingMap_of_boundary_eq
     C target O z hz]
 
-/-- The second endpoint residual energy is exactly an observable transport energy
-on the original boundary-target coupling carrier. -/
+/-- The second endpoint residual energy is exactly the second observable
+transport energy on the original boundary-target coupling carrier. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualEnergyBCF_eq_observableTransport
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
     C.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF target O =
@@ -515,10 +500,34 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
   rw [continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualBCF_configurationCouplingMap_of_boundary_eq
     C target O z hz]
 
-/-- The first endpoint residual energy obeys the sharp universal
-bounded-observable estimate inherited from its exact transport representation. -/
+private theorem continuous_compact_oriented_integral_sq_le_two_norm_sq
+    {X : Type*}
+    [MeasurableSpace X]
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (μ : Measure X)
+    [IsProbabilityMeasure μ]
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (f : X → ℝ)
+    (hIntegrable : Integrable (fun x => (f x) ^ 2) μ)
+    (hBound : ∀ x, |f x| ≤ 2 * ‖O‖) :
+    (∫ x, (f x) ^ 2 ∂μ) ≤ (2 * ‖O‖) ^ 2 := by
+  have hConst : Integrable (fun _ : X => (2 * ‖O‖) ^ 2) μ :=
+    integrable_const _
+  calc
+    (∫ x, (f x) ^ 2 ∂μ) ≤
+        ∫ _x : X, (2 * ‖O‖) ^ 2 ∂μ := by
+      apply integral_mono hIntegrable hConst
+      intro x
+      have hAbs := hBound x
+      have hBounds := abs_le.mp hAbs
+      nlinarith [norm_nonneg O]
+    _ = (2 * ‖O‖) ^ 2 := by simp
+
+/-- The first endpoint residual energy obeys the universal sharp transport
+bound `(2 * ‖O‖)^2`. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstResidualEnergyBCF_le_two_mul_norm_sq
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
     C.independentPairHybridBoundaryResamplingFirstResidualEnergyBCF target O ≤
@@ -528,37 +537,21 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingFirst
   letI : IsProbabilityMeasure μ :=
     continuousCompactOriented_independentPairHybridBoundaryResamplingCouplingMeasure_isProbability
       C target
-  have hTransport : Integrable
-      (fun z =>
-        (C.independentPairHybridBoundaryResamplingFirstObservableTransportBCF
-          target O z) ^ 2) μ := by
-    simpa [μ] using
+  apply continuous_compact_oriented_integral_sq_le_two_norm_sq
+    C μ O
+    (C.independentPairHybridBoundaryResamplingFirstObservableTransportBCF target O)
+  · simpa [μ] using
       continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_sq_integrable
         C target O
-  have hConst : Integrable
-      (fun _ : C.OffTargetBoundaryTargetPair target ×
-        C.OffTargetBoundaryTargetPair target => (2 * ‖O‖) ^ 2) μ :=
-    integrable_const _
-  calc
-    (∫ z,
-        (C.independentPairHybridBoundaryResamplingFirstObservableTransportBCF
-          target O z) ^ 2 ∂μ) ≤
-      ∫ _z : C.OffTargetBoundaryTargetPair target ×
-        C.OffTargetBoundaryTargetPair target,
-        (2 * ‖O‖) ^ 2 ∂μ := by
-      apply integral_mono hTransport hConst
-      intro z
-      have hAbs :=
-        continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_abs_le
-          C target O z
-      have hBounds := abs_le.mp hAbs
-      nlinarith [norm_nonneg O]
-    _ = (2 * ‖O‖) ^ 2 := by simp
+  · exact
+      continuous_compact_oriented_independentPairHybridBoundaryResamplingFirstObservableTransportBCF_abs_le
+        C target O
 
-/-- The second endpoint residual energy obeys the sharp universal
-bounded-observable estimate inherited from its exact transport representation. -/
+/-- The second endpoint residual energy obeys the universal sharp transport
+bound `(2 * ‖O‖)^2`. -/
 theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondResidualEnergyBCF_le_two_mul_norm_sq
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
     C.independentPairHybridBoundaryResamplingSecondResidualEnergyBCF target O ≤
@@ -568,32 +561,15 @@ theorem continuous_compact_oriented_independentPairHybridBoundaryResamplingSecon
   letI : IsProbabilityMeasure μ :=
     continuousCompactOriented_independentPairHybridBoundaryResamplingCouplingMeasure_isProbability
       C target
-  have hTransport : Integrable
-      (fun z =>
-        (C.independentPairHybridBoundaryResamplingSecondObservableTransportBCF
-          target O z) ^ 2) μ := by
-    simpa [μ] using
+  apply continuous_compact_oriented_integral_sq_le_two_norm_sq
+    C μ O
+    (C.independentPairHybridBoundaryResamplingSecondObservableTransportBCF target O)
+  · simpa [μ] using
       continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_sq_integrable
         C target O
-  have hConst : Integrable
-      (fun _ : C.OffTargetBoundaryTargetPair target ×
-        C.OffTargetBoundaryTargetPair target => (2 * ‖O‖) ^ 2) μ :=
-    integrable_const _
-  calc
-    (∫ z,
-        (C.independentPairHybridBoundaryResamplingSecondObservableTransportBCF
-          target O z) ^ 2 ∂μ) ≤
-      ∫ _z : C.OffTargetBoundaryTargetPair target ×
-        C.OffTargetBoundaryTargetPair target,
-        (2 * ‖O‖) ^ 2 ∂μ := by
-      apply integral_mono hTransport hConst
-      intro z
-      have hAbs :=
-        continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_abs_le
-          C target O z
-      have hBounds := abs_le.mp hAbs
-      nlinarith [norm_nonneg O]
-    _ = (2 * ‖O‖) ^ 2 := by simp
+  · exact
+      continuous_compact_oriented_independentPairHybridBoundaryResamplingSecondObservableTransportBCF_abs_le
+        C target O
 
 end
 
