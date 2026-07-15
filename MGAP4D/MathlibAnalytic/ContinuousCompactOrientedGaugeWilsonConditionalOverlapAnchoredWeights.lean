@@ -28,7 +28,8 @@ the explicitly assigned exceptional fallback. -/
 theorem diagonalWeight_add_residualWeight (common residual : ℝ≥0∞) :
     diagonalWeight common residual + residualWeight common residual = 1 := by
   by_cases hExceptional : common + residual = 0 ∨ common + residual = ∞
-  · simp [diagonalWeight, residualWeight, hExceptional]
+  · rw [diagonalWeight, residualWeight, if_pos hExceptional,
+      if_pos hExceptional, add_zero]
   · have h0 : common + residual ≠ 0 :=
       fun h => hExceptional (Or.inl h)
     have hTop : common + residual ≠ ∞ :=
@@ -163,12 +164,12 @@ theorem measurable_compact_oriented_configurationPairConditionalAnchoredDiagonal
     Measurable (C.configurationPairConditionalAnchoredDiagonalWeight target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredDiagonalWeight
-  exact ENNRealAnchoredOverlap.diagonalWeight_measurable
-    (by simpa [Function.uncurry] using
-      measurable_compact_oriented_configurationPairConditionalOverlapDensity_uncurry
+  apply ENNRealAnchoredOverlap.diagonalWeight_measurable
+  · simpa only [Function.uncurry] using
+      (measurable_compact_oriented_configurationPairConditionalOverlapDensity_uncurry
         C target)
-    (by simpa [Function.uncurry] using
-      measurable_compact_oriented_configurationPairConditionalLeftResidualDensity_uncurry
+  · simpa only [Function.uncurry] using
+      (measurable_compact_oriented_configurationPairConditionalLeftResidualDensity_uncurry
         C target)
 
 /-- The anchored residual branch probability is jointly measurable. -/
@@ -178,12 +179,12 @@ theorem measurable_compact_oriented_configurationPairConditionalAnchoredResidual
     Measurable (C.configurationPairConditionalAnchoredResidualWeight target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredResidualWeight
-  exact ENNRealAnchoredOverlap.residualWeight_measurable
-    (by simpa [Function.uncurry] using
-      measurable_compact_oriented_configurationPairConditionalOverlapDensity_uncurry
+  apply ENNRealAnchoredOverlap.residualWeight_measurable
+  · simpa only [Function.uncurry] using
+      (measurable_compact_oriented_configurationPairConditionalOverlapDensity_uncurry
         C target)
-    (by simpa [Function.uncurry] using
-      measurable_compact_oriented_configurationPairConditionalLeftResidualDensity_uncurry
+  · simpa only [Function.uncurry] using
+      (measurable_compact_oriented_configurationPairConditionalLeftResidualDensity_uncurry
         C target)
 
 /-- The two explicit anchored branch probabilities sum to one pointwise. -/
