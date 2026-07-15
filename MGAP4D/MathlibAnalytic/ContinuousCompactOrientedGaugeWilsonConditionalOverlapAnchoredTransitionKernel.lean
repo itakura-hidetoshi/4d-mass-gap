@@ -11,13 +11,19 @@ open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
+/-- Input of a left-anchored one-link transition: a pair of backgrounds together
+with the current target-link value. -/
+abbrev ContinuousCompactOrientedGaugeWilsonSystem.AnchoredOverlapTransitionInput
+    (C : ContinuousCompactOrientedGaugeWilsonSystem) :=
+  (C.base.Configuration × C.base.Configuration) × C.base.Gauge
+
 /-- Right residual density normalized by the common unmatched mass.  When the
 unmatched mass vanishes, normalized Haar is used as an explicit probability
 fallback. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge)
+    (w : C.AnchoredOverlapTransitionInput)
     (h : C.base.Gauge) : ℝ≥0∞ :=
   if C.configurationPairConditionalResidualMass target w.1 = 0 then 1
   else
@@ -29,36 +35,35 @@ background pair, the left anchor, and the output target value. -/
 theorem measurable_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualDensity_uncurry
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
-    Measurable (Function.uncurry
-      (C.configurationPairConditionalAnchoredNormalizedRightResidualDensity
-        target)) := by
+    Measurable (fun x : C.AnchoredOverlapTransitionInput × C.base.Gauge =>
+      C.configurationPairConditionalAnchoredNormalizedRightResidualDensity
+        target x.1 x.2) := by
   let δ := C.configurationPairConditionalResidualMass target
   have hδ : Measurable δ :=
     continuous_compact_oriented_configurationPairConditionalResidualMass_measurable
       C target
+  have hδAnchor : Measurable
+      (fun w : C.AnchoredOverlapTransitionInput => δ w.1) :=
+    hδ.comp measurable_fst
   have hδInput : Measurable
-      (fun x : (((C.base.Configuration × C.base.Configuration) × C.base.Gauge) ×
-          C.base.Gauge) => δ x.1.1) :=
-    hδ.comp (measurable_fst.comp measurable_fst)
+      (fun x : C.AnchoredOverlapTransitionInput × C.base.Gauge => δ x.1.1) :=
+    hδAnchor.comp measurable_fst
   have hZero : MeasurableSet
-      {x : (((C.base.Configuration × C.base.Configuration) × C.base.Gauge) ×
-          C.base.Gauge) | δ x.1.1 = 0} :=
+      {x : C.AnchoredOverlapTransitionInput × C.base.Gauge | δ x.1.1 = 0} :=
     hδInput (measurableSet_singleton 0)
   have hRightInput : Measurable
-      (fun x : (((C.base.Configuration × C.base.Configuration) × C.base.Gauge) ×
-          C.base.Gauge) => (x.1.1, x.2)) :=
+      (fun x : C.AnchoredOverlapTransitionInput × C.base.Gauge =>
+        (x.1.1, x.2)) :=
     (measurable_fst.comp measurable_fst).prodMk measurable_snd
   have hRight : Measurable
-      (fun x : (((C.base.Configuration × C.base.Configuration) × C.base.Gauge) ×
-          C.base.Gauge) =>
+      (fun x : C.AnchoredOverlapTransitionInput × C.base.Gauge =>
         C.configurationPairConditionalRightResidualDensity target x.1.1 x.2) :=
     (measurable_compact_oriented_configurationPairConditionalRightResidualDensity_uncurry
       C target).comp hRightInput
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity
   change Measurable
-    (fun x : (((C.base.Configuration × C.base.Configuration) × C.base.Gauge) ×
-        C.base.Gauge) =>
+    (fun x : C.AnchoredOverlapTransitionInput × C.base.Gauge =>
       if δ x.1.1 = 0 then 1 else δ x.1.1⁻¹ *
         C.configurationPairConditionalRightResidualDensity target x.1.1 x.2)
   exact Measurable.ite hZero measurable_const (hδInput.inv.mul hRight)
@@ -70,8 +75,7 @@ noncomputable def
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge) :
-    Measure C.base.Gauge :=
+    (w : C.AnchoredOverlapTransitionInput) : Measure C.base.Gauge :=
   if C.configurationPairConditionalResidualMass target w.1 = 0 then
     normalizedCompactHaar C.base.Gauge
   else
@@ -83,41 +87,52 @@ right-residual probability measure. -/
 theorem continuous_compact_oriented_withDensity_anchoredNormalizedRightResidualDensity
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge) :
+    (w : C.AnchoredOverlapTransitionInput) :
     (normalizedCompactHaar C.base.Gauge).withDensity
         (C.configurationPairConditionalAnchoredNormalizedRightResidualDensity
           target w) =
       C.configurationPairConditionalAnchoredNormalizedRightResidualMeasure
         target w := by
-  let δ := C.configurationPairConditionalResidualMass target w.1
-  by_cases hδ : δ = 0
-  · simp [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity,
-      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
-      δ, hδ]
-  · have hRightMeas : Measurable
+  by_cases hδ : C.configurationPairConditionalResidualMass target w.1 = 0
+  · rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
+      if_pos hδ,
+      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity,
+      if_pos hδ,
+      MeasureTheory.withDensity_one]
+  · rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
+      if_neg hδ,
+      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity,
+      if_neg hδ]
+    have hRightMeas : Measurable
         (C.configurationPairConditionalRightResidualDensity target w.1) := by
       simpa [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalRightResidualDensity]
         using continuous_compact_oriented_singleLinkConditionalRightResidualDensity_measurable
           C w.1.1 w.1.2 target
-    have hSmul := MeasureTheory.withDensity_smul
-      (μ := normalizedCompactHaar C.base.Gauge) δ⁻¹ hRightMeas
-    simpa [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualDensity,
-      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
-      ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalRightResidualDensity,
-      ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalRightResidualMeasure,
-      Pi.smul_apply, smul_eq_mul, δ, hδ] using hSmul
+    change
+      (normalizedCompactHaar C.base.Gauge).withDensity
+          (fun h =>
+            (C.configurationPairConditionalResidualMass target w.1)⁻¹ *
+              C.configurationPairConditionalRightResidualDensity target w.1 h) =
+        (C.configurationPairConditionalResidualMass target w.1)⁻¹ •
+          (normalizedCompactHaar C.base.Gauge).withDensity
+            (C.configurationPairConditionalRightResidualDensity target w.1)
+    simpa [Pi.smul_apply, smul_eq_mul] using
+      (MeasureTheory.withDensity_smul
+        (μ := normalizedCompactHaar C.base.Gauge)
+        (C.configurationPairConditionalResidualMass target w.1)⁻¹
+        hRightMeas)
 
 /-- The residual-branch fallback measure has total mass one on every fiber. -/
 theorem continuous_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualMeasure_univ
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge) :
+    (w : C.AnchoredOverlapTransitionInput) :
     C.configurationPairConditionalAnchoredNormalizedRightResidualMeasure
         target w univ = 1 := by
-  let δ := C.configurationPairConditionalResidualMass target w.1
-  by_cases hδ : δ = 0
-  · simp [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
-      δ, hδ]
+  by_cases hδ : C.configurationPairConditionalResidualMass target w.1 = 0
+  · rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
+      if_pos hδ]
+    exact measure_univ
   · rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredNormalizedRightResidualMeasure,
       if_neg hδ, Measure.smul_apply, smul_eq_mul]
     rw [continuous_compact_oriented_singleLinkConditionalRightResidualMeasure_univ
@@ -132,8 +147,7 @@ noncomputable def
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredDiagonalTransitionKernel
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
-    Kernel ((C.base.Configuration × C.base.Configuration) × C.base.Gauge)
-      C.base.Gauge :=
+    Kernel C.AnchoredOverlapTransitionInput C.base.Gauge :=
   Kernel.withDensity
     (Kernel.deterministic (fun w => w.2) measurable_snd)
     (fun w (_ : C.base.Gauge) =>
@@ -145,11 +159,9 @@ noncomputable def
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredResidualTransitionKernel
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
-    Kernel ((C.base.Configuration × C.base.Configuration) × C.base.Gauge)
-      C.base.Gauge :=
+    Kernel C.AnchoredOverlapTransitionInput C.base.Gauge :=
   Kernel.withDensity
-    (Kernel.const
-      ((C.base.Configuration × C.base.Configuration) × C.base.Gauge)
+    (Kernel.const C.AnchoredOverlapTransitionInput
       (normalizedCompactHaar C.base.Gauge))
     (fun w h =>
       C.configurationPairConditionalAnchoredResidualWeight target w *
@@ -161,12 +173,12 @@ anchor. -/
 theorem continuous_compact_oriented_configurationPairConditionalAnchoredDiagonalTransitionKernel_apply
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge) :
+    (w : C.AnchoredOverlapTransitionInput) :
     C.configurationPairConditionalAnchoredDiagonalTransitionKernel target w =
       C.configurationPairConditionalAnchoredDiagonalWeight target w •
         Measure.dirac w.2 := by
   have hWeight : Measurable (Function.uncurry
-      (fun w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge =>
+      (fun w : C.AnchoredOverlapTransitionInput =>
         fun _ : C.base.Gauge =>
           C.configurationPairConditionalAnchoredDiagonalWeight target w)) := by
     simpa [Function.uncurry] using
@@ -182,13 +194,16 @@ normalized right-residual fallback measure. -/
 theorem continuous_compact_oriented_configurationPairConditionalAnchoredResidualTransitionKernel_apply
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge) :
+    (w : C.AnchoredOverlapTransitionInput) :
     C.configurationPairConditionalAnchoredResidualTransitionKernel target w =
       C.configurationPairConditionalAnchoredResidualWeight target w •
         C.configurationPairConditionalAnchoredNormalizedRightResidualMeasure
           target w := by
+  have hNormalizedJoint :=
+    measurable_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualDensity_uncurry
+      C target
   have hDensity : Measurable (Function.uncurry
-      (fun w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge =>
+      (fun w : C.AnchoredOverlapTransitionInput =>
         fun h : C.base.Gauge =>
           C.configurationPairConditionalAnchoredResidualWeight target w *
             C.configurationPairConditionalAnchoredNormalizedRightResidualDensity
@@ -196,14 +211,12 @@ theorem continuous_compact_oriented_configurationPairConditionalAnchoredResidual
     exact
       ((measurable_compact_oriented_configurationPairConditionalAnchoredResidualWeight
           C target).comp measurable_fst).mul
-        (measurable_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualDensity_uncurry
-          C target)
+        (by simpa [Function.uncurry] using hNormalizedJoint)
   have hNormalized : Measurable
       (C.configurationPairConditionalAnchoredNormalizedRightResidualDensity
         target w) :=
     Measurable.of_uncurry_left
-      (measurable_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualDensity_uncurry
-        C target)
+      (by simpa [Function.uncurry] using hNormalizedJoint)
   rw [ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredResidualTransitionKernel,
     Kernel.withDensity_apply _ hDensity, Kernel.const_apply]
   calc
@@ -231,8 +244,7 @@ noncomputable def
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredOverlapTransitionKernel
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge) :
-    Kernel ((C.base.Configuration × C.base.Configuration) × C.base.Gauge)
-      C.base.Gauge :=
+    Kernel C.AnchoredOverlapTransitionInput C.base.Gauge :=
   C.configurationPairConditionalAnchoredDiagonalTransitionKernel target +
     C.configurationPairConditionalAnchoredResidualTransitionKernel target
 
@@ -240,7 +252,7 @@ noncomputable def
 theorem continuous_compact_oriented_configurationPairConditionalAnchoredOverlapTransitionKernel_apply
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
-    (w : (C.base.Configuration × C.base.Configuration) × C.base.Gauge) :
+    (w : C.AnchoredOverlapTransitionInput) :
     C.configurationPairConditionalAnchoredOverlapTransitionKernel target w =
       C.configurationPairConditionalAnchoredDiagonalWeight target w •
           Measure.dirac w.2 +
@@ -260,15 +272,16 @@ instance continuousCompactOriented_configurationPairConditionalAnchoredOverlapTr
     IsMarkovKernel
       (C.configurationPairConditionalAnchoredOverlapTransitionKernel target) :=
   ⟨fun w => by
+    letI : IsProbabilityMeasure
+        (C.configurationPairConditionalAnchoredNormalizedRightResidualMeasure
+          target w) :=
+      ⟨continuous_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualMeasure_univ
+        C target w⟩
     constructor
-    rw [continuous_compact_oriented_configurationPairConditionalAnchoredOverlapTransitionKernel_apply,
-      Measure.add_apply, Measure.smul_apply, Measure.smul_apply,
-      continuous_compact_oriented_configurationPairConditionalAnchoredNormalizedRightResidualMeasure_univ,
-      smul_eq_mul]
-    simp only [Measure.dirac_apply' _ MeasurableSet.univ, Set.mem_univ,
-      Set.indicator_of_mem, mul_one]
-    exact continuous_compact_oriented_configurationPairConditionalAnchoredWeights_add
-      C target w⟩
+    rw [continuous_compact_oriented_configurationPairConditionalAnchoredOverlapTransitionKernel_apply]
+    simpa [Measure.add_apply, Measure.smul_apply, smul_eq_mul] using
+      continuous_compact_oriented_configurationPairConditionalAnchoredWeights_add
+        C target w⟩
 
 end
 
