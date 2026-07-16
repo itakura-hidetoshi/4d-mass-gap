@@ -333,11 +333,17 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       ∫ w, ((d0 w) ^ 2 + (dn w) ^ 2 - 2 * (d0 w * dn w)) ∂μ := by
         apply integral_congr_ae
         exact Filter.Eventually.of_forall fun w => by ring
+    _ = (∫ w, ((d0 w) ^ 2 + (dn w) ^ 2) ∂μ) -
+        ∫ w, 2 * (d0 w * dn w) ∂μ := by
+      exact integral_sub (h0.add hn) (hcross.const_mul 2)
+    _ = ((∫ w, (d0 w) ^ 2 ∂μ) +
+        ∫ w, (dn w) ^ 2 ∂μ) -
+          ∫ w, 2 * (d0 w * dn w) ∂μ := by
+      rw [integral_add h0 hn]
     _ = (∫ w, (d0 w) ^ 2 ∂μ) +
         (∫ w, (dn w) ^ 2 ∂μ) -
           2 * (∫ w, d0 w * dn w ∂μ) := by
-      rw [integral_sub (h0.add hn) (hcross.const_mul 2),
-        integral_add h0 hn, integral_const_mul]
+      rw [integral_const_mul]
     _ = 2 * C.singleLinkHeatBathIndependentPairObservableEnergyBCF target O -
         2 *
           C.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableCrossMomentBCF
