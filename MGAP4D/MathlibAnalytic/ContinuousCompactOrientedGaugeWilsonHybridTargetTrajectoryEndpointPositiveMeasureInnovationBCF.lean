@@ -38,7 +38,10 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
   let T :=
     C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
       target O z
-  (trajectory.prod trajectory) {xy | T xy.1 ≠ T xy.2}
+  (trajectory.prod trajectory)
+    {xy : C.independentPairHybridTargetTrajectoryEndpointFiberCarrier ×
+        C.independentPairHybridTargetTrajectoryEndpointFiberCarrier |
+      T xy.1 ≠ T xy.2}
 
 /-- Fixed-fiber innovation is exactly failure of pairwise almost-everywhere
 equality for the two iid endpoint transports. -/
@@ -51,10 +54,16 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         target O z ↔
       ¬ C.independentPairHybridTargetTrajectoryEndpointFiberTransportPairwiseAEEqualBCF
         target O z := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberTransportPairwiseAEEqualBCF
-  simp only [not_eventually]
+  let trajectory :=
+    C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target
+      (Fintype.card C.base.geometry.Edge)
+  let T :=
+    C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
+      target O z
+  change
+    (∃ᵐ xy ∂trajectory.prod trajectory, T xy.1 ≠ T xy.2) ↔
+      ¬ (∀ᵐ xy ∂trajectory.prod trajectory, T xy.1 = T xy.2)
+  exact Filter.not_eventually.symm
 
 /-- Fixed-fiber innovation is exactly failure of almost-everywhere constancy of
 the single-trajectory endpoint transport. -/
@@ -85,11 +94,25 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         target O z ≠ 0 ↔
       C.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
         target O z := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberInnovationMassBCF
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
-  dsimp only
-  exact frequently_ae_iff.symm
+  let trajectory :=
+    C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target
+      (Fintype.card C.base.geometry.Edge)
+  let T :=
+    C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
+      target O z
+  change
+    (trajectory.prod trajectory)
+        {xy : C.independentPairHybridTargetTrajectoryEndpointFiberCarrier ×
+            C.independentPairHybridTargetTrajectoryEndpointFiberCarrier |
+          T xy.1 ≠ T xy.2} ≠ 0 ↔
+      ∃ᵐ xy ∂trajectory.prod trajectory, T xy.1 ≠ T xy.2
+  exact
+    (frequently_ae_iff
+      (μ := trajectory.prod trajectory)
+      (p := fun xy :
+        C.independentPairHybridTargetTrajectoryEndpointFiberCarrier ×
+          C.independentPairHybridTargetTrajectoryEndpointFiberCarrier =>
+        T xy.1 ≠ T xy.2)).symm
 
 /-- The fixed-fiber innovation mass is positive exactly when the innovation event
 has nonzero product measure. -/
@@ -102,10 +125,16 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         target O z ↔
       C.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
         target O z := by
-  rw [pos_iff_ne_zero]
-  exact
-    continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberInnovationMassBCF_ne_zero_iff_innovation
-      C target O z
+  constructor
+  · intro hPos
+    exact
+      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberInnovationMassBCF_ne_zero_iff_innovation
+        C target O z).1 (ne_of_gt hPos)
+  · intro hInnovation
+    have hNe :=
+      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberInnovationMassBCF_ne_zero_iff_innovation
+        C target O z).2 hInnovation
+    exact lt_of_le_of_ne (zero_le _) (Ne.symm hNe)
 
 /-- Positive fixed-pair conditional variance is exactly positive-measure
 endpoint-transport innovation on the trajectory fiber. -/
@@ -176,7 +205,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ≥0∞ :=
   (C.gibbsMeasure.prod C.gibbsMeasure)
-    {z |
+    {z : C.base.Configuration × C.base.Configuration |
       C.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
         target O z}
 
@@ -190,14 +219,20 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         target O ↔
       ¬ C.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseAEConstantBCF
         target O := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseInnovationBCF
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseAEConstantBCF
-  rw [not_eventually]
+  let μ := C.gibbsMeasure.prod C.gibbsMeasure
+  let P := fun z : C.base.Configuration × C.base.Configuration =>
+    C.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
+      target O z
+  let Q := fun z : C.base.Configuration × C.base.Configuration =>
+    C.independentPairHybridTargetTrajectoryEndpointFiberTransportAEConstantBCF
+      target O z
+  change (∃ᵐ z ∂μ, P z) ↔ ¬ (∀ᵐ z ∂μ, Q z)
+  rw [Filter.not_eventually]
   apply frequently_congr
-  exact Filter.Eventually.of_forall fun z =>
-    (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF_iff_not_transport_ae_constant
-      C target O z).symm
+  exact Filter.Eventually.of_forall fun z => by
+    exact
+      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF_iff_not_transport_ae_constant
+        C target O z).symm
 
 /-- The Gibbs-pair base mass of innovative fibers is nonzero exactly when the
 global fiberwise-innovation predicate holds. -/
@@ -209,10 +244,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         target O ≠ 0 ↔
       C.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseInnovationBCF
         target O := by
-  unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportInnovationBaseMassBCF
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseInnovationBCF
-  exact frequently_ae_iff.symm
+  let μ := C.gibbsMeasure.prod C.gibbsMeasure
+  let P := fun z : C.base.Configuration × C.base.Configuration =>
+    C.independentPairHybridTargetTrajectoryEndpointFiberInnovationBCF
+      target O z
+  change μ {z : C.base.Configuration × C.base.Configuration | P z} ≠ 0 ↔
+    ∃ᵐ z ∂μ, P z
+  exact (frequently_ae_iff (μ := μ) (p := P)).symm
 
 /-- The Gibbs-pair base mass of innovative fibers is positive exactly under
 global fiberwise innovation. -/
@@ -224,10 +262,16 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         target O ↔
       C.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseInnovationBCF
         target O := by
-  rw [pos_iff_ne_zero]
-  exact
-    continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportInnovationBaseMassBCF_ne_zero_iff_fiberwise_innovation
-      C target O
+  constructor
+  · intro hPos
+    exact
+      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportInnovationBaseMassBCF_ne_zero_iff_fiberwise_innovation
+        C target O).1 (ne_of_gt hPos)
+  · intro hInnovation
+    have hNe :=
+      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportInnovationBaseMassBCF_ne_zero_iff_fiberwise_innovation
+        C target O).2 hInnovation
+    exact lt_of_le_of_ne (zero_le _) (Ne.symm hNe)
 
 /-- Positive global conditional variance is exactly positive-measure innovation on
 a non-null family of original Gibbs-pair trajectory fibers. -/
