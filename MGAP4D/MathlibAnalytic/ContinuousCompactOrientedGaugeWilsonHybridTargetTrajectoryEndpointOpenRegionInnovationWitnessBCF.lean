@@ -43,8 +43,7 @@ theorem continuous_compact_oriented_singleLinkConditionalDensityBCF_continuous
   exact
     (continuous_compact_oriented_singleLinkBoltzmannFactor C A target).div_const _
 
-/-- Density representation of the exact single-link conditional law in terms of
-its normalized positive continuous density. -/
+/-- Density representation of the exact single-link conditional law. -/
 theorem continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensityBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -57,7 +56,7 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensityB
   rfl
 
 /-- Every exact single-link conditional law is positive on every nonempty open
-Gauge region.  Equivalently, its density has full normalized-Haar support. -/
+Gauge region. -/
 instance continuousCompactOriented_singleLinkConditionalMeasure_isOpenPosMeasureBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A : C.base.Configuration)
@@ -67,6 +66,9 @@ instance continuousCompactOriented_singleLinkConditionalMeasure_isOpenPosMeasure
   let μ : Measure C.base.Gauge := normalizedCompactHaar C.base.Gauge
   let f : C.base.Gauge → ℝ≥0∞ := fun g =>
     ENNReal.ofReal (C.singleLinkConditionalDensityBCF A target g)
+  letI : Measure.IsHaarMeasure μ := by
+    dsimp [μ, normalizedCompactHaar]
+    infer_instance
   change Measure.IsOpenPosMeasure (μ.withDensity f)
   have hf : Measurable f :=
     (continuous_compact_oriented_singleLinkConditionalDensityBCF_continuous
@@ -106,22 +108,8 @@ theorem continuous_compact_oriented_singleLinkConditionalMeasure_open_posBCF
     0 < C.singleLinkConditionalMeasure A target region := by
   exact hOpen.measure_pos (C.singleLinkConditionalMeasure A target) hNonempty
 
-/-- Every nonempty open Gauge region has nonzero exact conditional mass. -/
-theorem continuous_compact_oriented_singleLinkConditionalMeasure_open_ne_zeroBCF
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (A : C.base.Configuration)
-    (target : C.base.geometry.Edge)
-    (region : Set C.base.Gauge)
-    (hOpen : IsOpen region)
-    (hNonempty : region.Nonempty) :
-    C.singleLinkConditionalMeasure A target region ≠ 0 :=
-  ne_of_gt
-    (continuous_compact_oriented_singleLinkConditionalMeasure_open_posBCF
-      C A target region hOpen hNonempty)
-
-/-- A concrete fixed-fiber endpoint innovation witness using two nonempty open
-Gauge regions at one trajectory rank.  No separate measure-positivity assumptions
-are needed because the exact conditional law has full support. -/
+/-- A fixed-fiber endpoint innovation witness using two nonempty open Gauge
+regions at one trajectory rank. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -131,46 +119,13 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF target O z
   ∃ rank : Finset.Iic (Fintype.card C.base.geometry.Edge),
     ∃ lower upper : Set C.base.Gauge,
-      IsOpen lower ∧
-      lower.Nonempty ∧
-      IsOpen upper ∧
-      upper.Nonempty ∧
+      IsOpen lower ∧ lower.Nonempty ∧
+      IsOpen upper ∧ upper.Nonempty ∧
       ∀ x ∈ C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
             rank lower,
         ∀ y ∈ C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
               rank upper,
           T x ≠ T y
-
-/-- Two nonempty open conditional regions give the same quantitative lower bound
-on endpoint innovation mass as their exact conditional masses. -/
-theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointOpenRegionMassMul_le_innovationMassBCF
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ)
-    (z : C.base.Configuration × C.base.Configuration)
-    (rank : Finset.Iic (Fintype.card C.base.geometry.Edge))
-    (lower upper : Set C.base.Gauge)
-    (hLowerOpen : IsOpen lower)
-    (hUpperOpen : IsOpen upper)
-    (hSeparate :
-      ∀ x ∈ C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
-            rank lower,
-        ∀ y ∈ C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
-              rank upper,
-          C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
-              target O z x ≠
-            C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
-              target O z y) :
-    C.singleLinkConditionalMeasure
-          (C.independentPairHybridConfiguration z.1 z.2 rank.1) target lower *
-        C.singleLinkConditionalMeasure
-          (C.independentPairHybridConfiguration z.1 z.2 rank.1) target upper ≤
-      C.independentPairHybridTargetTrajectoryEndpointFiberInnovationMassBCF
-        target O z := by
-  exact
-    continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointConditionalRegionMassMul_le_innovationMassBCF
-      C target O z rank lower upper hLowerOpen.measurableSet
-        hUpperOpen.measurableSet hSeparate
 
 /-- An open-region witness automatically supplies the exact conditional-region
 witness from the previous layer. -/
@@ -196,14 +151,14 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
   refine
     ⟨rank, lower, upper, hLowerOpen.measurableSet, hUpperOpen.measurableSet,
       ?_, ?_, hSeparate⟩
-  · exact
-      continuous_compact_oriented_singleLinkConditionalMeasure_open_ne_zeroBCF
+  · exact ne_of_gt
+      (continuous_compact_oriented_singleLinkConditionalMeasure_open_posBCF
         C (C.independentPairHybridConfiguration z.1 z.2 rank.1) target
-          lower hLowerOpen hLowerNonempty
-  · exact
-      continuous_compact_oriented_singleLinkConditionalMeasure_open_ne_zeroBCF
+          lower hLowerOpen hLowerNonempty)
+  · exact ne_of_gt
+      (continuous_compact_oriented_singleLinkConditionalMeasure_open_posBCF
         C (C.independentPairHybridConfiguration z.1 z.2 rank.1) target
-          upper hUpperOpen hUpperNonempty
+          upper hUpperOpen hUpperNonempty)
 
 /-- A fixed-fiber open-region witness forces positive endpoint innovation mass. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF_implies_innovationMass_pos
@@ -266,57 +221,8 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     C.independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF
       target O z
 
-/-- Gibbs-pair mass of fibers carrying open-region innovation witnesses. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ≥0∞ :=
-  (C.gibbsMeasure.prod C.gibbsMeasure)
-    {z : C.base.Configuration × C.base.Configuration |
-      C.independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF
-        target O z}
-
-/-- Open-region witness base mass is nonzero exactly when such witnesses occur on
-a non-null Gibbs-pair family. -/
-theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF_ne_zero_iff_fiberwise_witness
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    C.independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF
-        target O ≠ 0 ↔
-      C.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseOpenRegionInnovationWitnessBCF
-        target O := by
-  let μ := C.gibbsMeasure.prod C.gibbsMeasure
-  let P := fun z : C.base.Configuration × C.base.Configuration =>
-    C.independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF
-      target O z
-  change μ {z : C.base.Configuration × C.base.Configuration | P z} ≠ 0 ↔
-    ∃ᵐ z ∂μ, P z
-  exact (frequently_ae_iff (μ := μ) (p := P)).symm
-
-/-- Open-region witness base mass is positive exactly when such witnesses occur on
-a non-null Gibbs-pair family. -/
-theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF_pos_iff_fiberwise_witness
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    0 < C.independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF
-        target O ↔
-      C.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseOpenRegionInnovationWitnessBCF
-        target O := by
-  constructor
-  · intro hPos
-    exact
-      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF_ne_zero_iff_fiberwise_witness
-        C target O).1 (ne_of_gt hPos)
-  · intro hWitness
-    have hNe :=
-      (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportOpenRegionInnovationWitnessBaseMassBCF_ne_zero_iff_fiberwise_witness
-        C target O).2 hWitness
-    exact lt_of_le_of_ne (zero_le _) (Ne.symm hNe)
-
-/-- A non-null family of open-region witnesses produces the exact conditional-region
-witness family from the previous layer. -/
+/-- A non-null family of open-region witnesses produces the exact
+conditional-region witness family. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseOpenRegionInnovationWitnessBCF_implies_fiberwise_conditional_region_witness
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -382,8 +288,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
       (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseOpenRegionInnovationWitnessBCF_implies_fiberwise_conditional_region_witness
         C target O hWitness)
 
-/-- With positive native energy, a non-null family of open-region witnesses produces
-a strict endpoint correlation factor. -/
+/-- With positive native energy, a non-null family of open-region witnesses
+produces a strict endpoint correlation factor. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseOpenRegionInnovationWitnessBCF_implies_exists_strict_correlation_factor
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
