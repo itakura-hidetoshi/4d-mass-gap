@@ -273,7 +273,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryTotalEn
         exact
           continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointConditionalVarianceGapBCF_eq_native_sub_cross
             C target O
-    _ = _ := Finset.sum_sub_distrib
+    _ = _ := by
+      rw [Finset.sum_sub_distrib]
 
 /-- The total endpoint conditional-variance gap is nonnegative. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryTotalEndpointConditionalVarianceGapBCF_nonneg
