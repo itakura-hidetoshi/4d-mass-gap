@@ -55,11 +55,16 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
     exact O.continuous.comp
       ((continuous_compact_oriented_replaceLink_uncurry C target).comp
         (hBackground.prodMk hGauge))
-  simpa [
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointTransportBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectorySourceBackgroundInsertedObservableValueBCF]
-    using (hAt 0 (Nat.zero_le m)).sub (hAt m le_rfl)
+  change Continuous
+    (fun w : (C.base.Configuration × C.base.Configuration) ×
+        ((i : Finset.Iic m) → C.base.Gauge) =>
+      O (C.base.replaceLink
+          (C.independentPairHybridConfiguration w.1.1 w.1.2 0)
+          target (w.2 ⟨0, Finset.mem_Iic.2 (Nat.zero_le m)⟩)) -
+        O (C.base.replaceLink
+          (C.independentPairHybridConfiguration w.1.1 w.1.2 m)
+          target (w.2 ⟨m, Finset.mem_Iic.2 le_rfl⟩)))
+  exact (hAt 0 (Nat.zero_le m)).sub (hAt m le_rfl)
 
 /-- The joint canonical endpoint transport is uniformly bounded by twice the
 bounded-continuous observable norm. -/
@@ -97,16 +102,18 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
           target (w.2 ⟨m, Finset.mem_Iic.2 le_rfl⟩))| := abs_sub _ _
     _ ≤ ‖O‖ + ‖O‖ := by
       exact add_le_add
-        (by simpa [Real.norm_eq_abs] using
-          O.norm_coe_le_norm
-            (C.base.replaceLink
-              (C.independentPairHybridConfiguration w.1.1 w.1.2 0)
-              target (w.2 ⟨0, Finset.mem_Iic.2 (Nat.zero_le m)⟩)))
-        (by simpa [Real.norm_eq_abs] using
-          O.norm_coe_le_norm
-            (C.base.replaceLink
-              (C.independentPairHybridConfiguration w.1.1 w.1.2 m)
-              target (w.2 ⟨m, Finset.mem_Iic.2 le_rfl⟩)))
+        (by
+          simpa [Real.norm_eq_abs] using
+            (O.norm_coe_le_norm
+              (C.base.replaceLink
+                (C.independentPairHybridConfiguration w.1.1 w.1.2 0)
+                target (w.2 ⟨0, Finset.mem_Iic.2 (Nat.zero_le m)⟩))))
+        (by
+          simpa [Real.norm_eq_abs] using
+            (O.norm_coe_le_norm
+              (C.base.replaceLink
+                (C.independentPairHybridConfiguration w.1.1 w.1.2 m)
+                target (w.2 ⟨m, Finset.mem_Iic.2 le_rfl⟩))))
     _ = 2 * ‖O‖ := (two_mul ‖O‖).symm
 
 /-- Pointwise squared endpoint cost on the joint Gibbs-pair/trajectory carrier. -/
@@ -212,6 +219,9 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
           target O m z ∂μ := by
       apply integral_congr_ae
       exact Filter.Eventually.of_forall fun z => by
+        change (∫ x, f (z, x) ∂κ z) =
+          C.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointFiberEnergyBCF
+            target O m z
         rw [show κ z =
           C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target m from
             continuous_compact_oriented_independentPairHybridTargetTrajectoryKernel_apply_of_le
@@ -248,9 +258,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
     simpa [μ, κ, f,
       ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryJointMeasure]
       using hJointNamed
-  have hOuter := hJoint.integral_compProd
+  have hOuter : Integrable (fun z => ∫ x, f (z, x) ∂κ z) μ := by
+    simpa using hJoint.integral_compProd
   apply hOuter.congr
   exact Filter.Eventually.of_forall fun z => by
+    change (∫ x, f (z, x) ∂κ z) =
+      C.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointFiberEnergyBCF
+        target O m z
     rw [show κ z =
       C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target m from
         continuous_compact_oriented_independentPairHybridTargetTrajectoryKernel_apply_of_le
@@ -360,9 +374,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
     simpa [μ, κ, f,
       ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryJointMeasure]
       using hJointNamed
-  have hOuter := hJoint.integral_compProd
+  have hOuter : Integrable (fun z => ∫ x, f (z, x) ∂κ z) μ := by
+    simpa using hJoint.integral_compProd
   apply hOuter.congr
   exact Filter.Eventually.of_forall fun z => by
+    change (∫ x, f (z, x) ∂κ z) =
+      C.independentPairHybridTargetTrajectoryCanonicalFixedLeftOverlapFiberEnergyBCF
+        target O k z
     rw [show κ z =
       C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target m from
         continuous_compact_oriented_independentPairHybridTargetTrajectoryKernel_apply_of_le
