@@ -178,7 +178,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
       Measure.map (Prod.map evalRank evalRank) (trajectory.prod trajectory) =
         (Measure.map evalRank trajectory).prod
           (Measure.map evalRank trajectory) :=
-    Measure.map_prod_map trajectory trajectory hEval hEval
+    (Measure.map_prod_map trajectory trajectory hEval hEval).symm
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleRankConfigurationPairFiberMeasure
   change Measure.map
