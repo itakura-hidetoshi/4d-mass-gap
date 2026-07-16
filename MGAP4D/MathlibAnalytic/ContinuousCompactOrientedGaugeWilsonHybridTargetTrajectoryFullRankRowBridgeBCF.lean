@@ -37,8 +37,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
   simp [hm,
-    continuous_compact_oriented_independentPairHybridConfiguration_rank_succ_eq_replaceLink,
-    CompactOrientedGaugeWilsonSystem.replaceLink]
+    continuous_compact_oriented_independentPairHybridConfiguration_rank_succ_eq_replaceLink]
 
 /-- Consequently, the target-rank background-change square energy vanishes
 exactly. -/
@@ -56,6 +55,10 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeEnergyBCF
   apply integral_eq_zero_of_ae
   exact Filter.Eventually.of_forall fun x => by
+    change
+      (C.independentPairHybridTargetTrajectoryAdjacentBackgroundChangeBCF
+        (fun r => C.independentPairHybridConfiguration A B r)
+        target O m (C.canonicalEdgeOrder target).val x) ^ 2 = (0 : ℝ)
     rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonicalBackgroundChangeBCF_targetRank_eq_zero
       C A B target O m hm x]
     simp
