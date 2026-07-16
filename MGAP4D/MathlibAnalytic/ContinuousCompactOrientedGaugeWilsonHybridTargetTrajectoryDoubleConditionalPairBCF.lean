@@ -48,8 +48,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleK
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleKernel
   rw [Kernel.prod_apply,
     continuous_compact_oriented_independentPairHybridTargetTrajectoryKernel_apply_of_le
-      C target (Fintype.card C.base.geometry.Edge) le_rfl z,
-    continuous_compact_oriented_independentPairHybridTargetTrajectoryKernel_apply_of_le
       C target (Fintype.card C.base.geometry.Edge) le_rfl z]
 
 /-- Joint law of an independent Gibbs configuration pair and two conditionally
@@ -176,6 +174,11 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
     simpa [n, trajectory, evalRank, background] using
       continuous_compact_oriented_map_coordinate_independentPairHybridTargetTrajectoryMeasure
         C z.1 z.2 target r n hr
+  have hMapProd :
+      Measure.map (Prod.map evalRank evalRank) (trajectory.prod trajectory) =
+        (Measure.map evalRank trajectory).prod
+          (Measure.map evalRank trajectory) :=
+    Measure.map_prod_map trajectory trajectory hEval hEval
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleRankConfigurationPairFiberMeasure
   change Measure.map
@@ -185,8 +188,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
   change Measure.map
       (C.singleLinkConditionalPairConfigurationMap background target)
       (Measure.map (Prod.map evalRank evalRank) (trajectory.prod trajectory)) = _
-  rw [Measure.map_prod_map trajectory trajectory hEval hEval]
-  rw [hCoordinate]
+  rw [hMapProd, hCoordinate]
   rw [continuous_compact_oriented_singleLinkHeatBathIndependentPairKernel_apply]
 
 /-- Global rank reconstruction map on the original-pair/double-trajectory
@@ -400,9 +402,10 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
         (continuous_compact_oriented_independentPairHybridConfiguration C 0).measurable
     _ = C.singleLinkHeatBathIndependentPairKernel target ∘ₘ
         Measure.map Prod.fst μ := by
-      congr 2
-      apply Measure.map_congr
-      exact Filter.Eventually.of_forall fun z => by simp
+      rw [show (fun z : C.base.Configuration × C.base.Configuration =>
+          C.independentPairHybridConfiguration z.1 z.2 0) = Prod.fst by
+        funext z
+        simp]
     _ = C.singleLinkHeatBathIndependentPairKernel target ∘ₘ C.gibbsMeasure := by
       unfold μ
       rw [Measure.map_fst_prod, measure_univ, one_smul]
@@ -443,9 +446,11 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
           (Fintype.card C.base.geometry.Edge)).measurable
     _ = C.singleLinkHeatBathIndependentPairKernel target ∘ₘ
         Measure.map Prod.snd μ := by
-      congr 2
-      apply Measure.map_congr
-      exact Filter.Eventually.of_forall fun z => by simp
+      rw [show (fun z : C.base.Configuration × C.base.Configuration =>
+          C.independentPairHybridConfiguration z.1 z.2
+            (Fintype.card C.base.geometry.Edge)) = Prod.snd by
+        funext z
+        simp]
     _ = C.singleLinkHeatBathIndependentPairKernel target ∘ₘ C.gibbsMeasure := by
       unfold μ
       rw [Measure.map_snd_prod, measure_univ, one_smul]
