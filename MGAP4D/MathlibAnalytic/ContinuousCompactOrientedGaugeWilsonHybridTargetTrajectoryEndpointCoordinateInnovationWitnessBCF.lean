@@ -137,6 +137,14 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         (C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
           rank upper) :=
     lt_of_le_of_ne (zero_le _) (Ne.symm hUpper)
+  have hProductNe :
+      trajectory
+          (C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
+            rank lower) *
+        trajectory
+          (C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
+            rank upper) ≠ 0 :=
+    mul_ne_zero hLower hUpper
   have hProductPos :
       0 < trajectory
           (C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
@@ -144,7 +152,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
         trajectory
           (C.independentPairHybridTargetTrajectoryEndpointCoordinateCylinderBCF
             rank upper) :=
-    mul_pos hLowerPos hUpperPos
+    lt_of_le_of_ne (zero_le _) (Ne.symm hProductNe)
   exact lt_of_lt_of_le hProductPos
     (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointCoordinateCylinderMassMul_le_innovationMassBCF
       C target O z rank lower upper hSeparate)
