@@ -27,7 +27,7 @@ instance continuousCompactOriented_independentPairHybridTargetInitialGaugeKernel
     IsMarkovKernel (C.independentPairHybridTargetInitialGaugeKernel target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetInitialGaugeKernel
-  exact IsMarkovKernel.map _ measurable_fst
+  exact Kernel.IsMarkovKernel.map _ measurable_fst
 
 /-- Every fiber of the initial gauge kernel is exactly the left endpoint's
 single-link conditional law. -/
@@ -60,7 +60,7 @@ instance continuousCompactOriented_independentPairHybridTargetInitialHistoryKern
     IsMarkovKernel (C.independentPairHybridTargetInitialHistoryKernel target) := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetInitialHistoryKernel
-  exact IsMarkovKernel.map _ (by fun_prop)
+  exact Kernel.IsMarkovKernel.map _ (by fun_prop)
 
 /-- Every time-zero history-kernel fiber is exactly the fixed-pair initial
 history measure used by the original trajectory construction. -/
@@ -122,6 +122,15 @@ theorem continuous_compact_oriented_independentPairHybridTargetNextGaugeKernel_a
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetHistoryKernel
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTransitionKernelAtStep
     ContinuousCompactOrientedGaugeWilsonSystem.configurationPairConditionalAnchoredOverlapTransitionKernelAt
+  change
+    C.configurationPairConditionalAnchoredOverlapTransitionKernel target
+        (C.independentPairHybridEndpointPairMap
+            (C.hybridTargetTrajectorySourceAtRank target k) z,
+          x ⟨k, Finset.mem_Iic.2 le_rfl⟩) =
+      C.configurationPairConditionalAnchoredOverlapTransitionKernel target
+        ((C.independentPairHybridConfiguration z.1 z.2 k,
+            C.independentPairHybridConfiguration z.1 z.2 (k + 1)),
+          x ⟨k, Finset.mem_Iic.2 le_rfl⟩)
   rw [continuous_compact_oriented_independentPairHybridEndpointPairMap_hybridTargetTrajectorySourceAtRank_of_lt
     C z.1 z.2 target k hk]
 
@@ -148,9 +157,15 @@ instance continuousCompactOriented_independentPairHybridTargetTrajectoryExtensio
     (k : ℕ) :
     IsMarkovKernel
       (C.independentPairHybridTargetTrajectoryExtensionKernel target k) := by
+  letI : IsMarkovKernel
+      ((C.independentPairHybridTargetNextGaugeKernel target k).map
+        (MeasurableEquiv.piSingleton (X := fun _ => C.base.Gauge) k)) :=
+    Kernel.IsMarkovKernel.map _
+      (MeasurableEquiv.piSingleton (X := fun _ => C.base.Gauge) k).measurable
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryExtensionKernel
-  infer_instance
+  exact Kernel.IsMarkovKernel.map _
+    (measurable_IicProdIoc (X := fun _ => C.base.Gauge))
 
 /-- At a genuine rank, the parameterized extension fiber is exactly the
 one-step `partialTraj` kernel of the original fixed-pair history construction. -/
@@ -228,10 +243,10 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryKernel_
       C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target m := by
   induction m with
   | zero =>
-      rw [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryKernel]
-      exact
-        continuous_compact_oriented_independentPairHybridTargetInitialHistoryKernel_apply
-          C target z
+      rw [ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryKernel,
+        continuous_compact_oriented_independentPairHybridTargetInitialHistoryKernel_apply,
+        ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryMeasure,
+        Kernel.partialTraj_self, Measure.id_comp]
   | succ m ih =>
       have hmCard : m < Fintype.card C.base.geometry.Edge :=
         Nat.lt_of_succ_le hm
