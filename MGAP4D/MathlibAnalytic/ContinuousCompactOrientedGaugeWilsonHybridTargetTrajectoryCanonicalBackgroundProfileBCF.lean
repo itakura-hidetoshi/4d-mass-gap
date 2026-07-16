@@ -249,8 +249,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
         have hBackground :=
           continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonicalBackgroundChangeEnergyBCF_le_variation_sq
             C A B target O P m k hkm hkCard
-        apply add_le_add_left
-        exact mul_le_mul_of_nonneg_left hBackground (show (0 : ℝ) ≤ 2 by norm_num)
+        exact add_le_add le_rfl
+          (mul_le_mul_of_nonneg_left hBackground (show (0 : ℝ) ≤ 2 by norm_num))
       · positivity
 
 end
