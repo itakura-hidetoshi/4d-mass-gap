@@ -10,7 +10,7 @@ open scoped ProbabilityTheory BigOperators ENNReal
 noncomputable section
 
 /-- A strict coordinate-profile separation witness on one fixed endpoint-transport
-fiber.  At one trajectory rank, the complete transport range over the fiber above
+fiber. At one trajectory rank, the complete transport range over the fiber above
 `gLower` lies below `a`, while the range over the fiber above `gUpper` lies above
 `b`, with `a < b`. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointCoordinateProfileSeparationWitnessBCF
@@ -29,14 +29,17 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
         (∀ y : C.independentPairHybridTargetTrajectoryEndpointFiberCarrier,
           y rank = gUpper → b ≤ T y)
 
-/-- A strict coordinate-profile gap produces two nonempty open Gauge regions on
-which every cross-cylinder pair has different endpoint transports.
+/-- On a Hausdorff compact Gauge space, a strict coordinate-profile gap produces
+two nonempty open Gauge regions on which every cross-cylinder pair has different
+endpoint transports.
 
 The proof projects the two closed bad-trajectory sets to the selected coordinate.
-The full trajectory carrier is compact, so both projected bad-coordinate sets are
-compact and therefore closed. Their complements are the required open regions. -/
+The full trajectory carrier is compact; the Hausdorff assumption makes both
+projected compact bad-coordinate sets closed. Their complements are the required
+open regions. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointCoordinateProfileSeparationWitnessBCF_implies_open_region_witness
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (z : C.base.Configuration × C.base.Configuration)
@@ -74,10 +77,9 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
   have hcb : c < b := by
     dsimp [c]
     linarith
-  have hT : Continuous T := by
-    exact
-      continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberTransportBCF_continuous
-        C target O z
+  have hT : Continuous T :=
+    continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberTransportBCF_continuous
+      C target O z
   have hBadLowerClosed : IsClosed badLower := by
     dsimp [badLower]
     exact isClosed_le continuous_const hT
@@ -86,12 +88,10 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     exact isClosed_le hT continuous_const
   have hLowerForbiddenCompact : IsCompact lowerForbidden := by
     dsimp [lowerForbidden]
-    exact hBadLowerClosed.isCompact.image
-      (continuous_apply rank).continuousOn
+    exact hBadLowerClosed.isCompact.image (continuous_apply rank)
   have hUpperForbiddenCompact : IsCompact upperForbidden := by
     dsimp [upperForbidden]
-    exact hBadUpperClosed.isCompact.image
-      (continuous_apply rank).continuousOn
+    exact hBadUpperClosed.isCompact.image (continuous_apply rank)
   have hLowerForbiddenClosed : IsClosed lowerForbidden :=
     hLowerForbiddenCompact.isClosed
   have hUpperForbiddenClosed : IsClosed upperForbidden :=
@@ -108,8 +108,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     rcases hg with ⟨x, hxBad, hxRank⟩
     have hxBad' : c ≤ T x := by
       simpa [badLower] using hxBad
-    have hxBound : T x ≤ a := by
-      exact hLowerFiber x hxRank
+    have hxBound : T x ≤ a := hLowerFiber x hxRank
     exact (not_le_of_gt hac) (hxBad'.trans hxBound)
   have hgUpper : gUpper ∈ upper := by
     change gUpper ∉ upperForbidden
@@ -117,8 +116,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     rcases hg with ⟨y, hyBad, hyRank⟩
     have hyBad' : T y ≤ c := by
       simpa [badUpper] using hyBad
-    have hyBound : b ≤ T y := by
-      exact hUpperFiber y hyRank
+    have hyBound : b ≤ T y := hUpperFiber y hyRank
     exact (not_le_of_gt hcb) (hyBound.trans hyBad')
   refine
     ⟨rank, lower, upper, hLowerOpen, ⟨gLower, hgLower⟩,
@@ -148,6 +146,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 innovation mass on the fixed original-pair fiber. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointCoordinateProfileSeparationWitnessBCF_implies_innovationMass_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (z : C.base.Configuration × C.base.Configuration)
@@ -166,6 +165,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 conditional variance. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointCoordinateProfileSeparationWitnessBCF_implies_gap_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (z : C.base.Configuration × C.base.Configuration)
@@ -184,6 +184,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 double endpoint energy. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointCoordinateProfileSeparationWitnessBCF_implies_double_energy_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (z : C.base.Configuration × C.base.Configuration)
@@ -212,6 +213,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
 witness family. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseCoordinateProfileSeparationWitnessBCF_implies_fiberwise_open_region_witness
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hWitness :
@@ -227,6 +229,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 conditional variance. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseCoordinateProfileSeparationWitnessBCF_implies_gap_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hWitness :
@@ -244,6 +247,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 double endpoint energy. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseCoordinateProfileSeparationWitnessBCF_implies_double_energy_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hWitness :
@@ -261,6 +265,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 gaps forces the exact endpoint correlation ratio below one. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseCoordinateProfileSeparationWitnessBCF_implies_correlationRatio_lt_one
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hNative :
@@ -279,6 +284,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
 gaps produces a strict endpoint correlation factor. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointTransportFiberwiseCoordinateProfileSeparationWitnessBCF_implies_exists_strict_correlation_factor
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [T2Space C.base.Gauge]
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hNative :
