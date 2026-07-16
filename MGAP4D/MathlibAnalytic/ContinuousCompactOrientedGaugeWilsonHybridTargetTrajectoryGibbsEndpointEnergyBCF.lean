@@ -55,15 +55,11 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonic
     exact O.continuous.comp
       ((continuous_compact_oriented_replaceLink_uncurry C target).comp
         (hBackground.prodMk hGauge))
-  change Continuous
-    (fun w : (C.base.Configuration × C.base.Configuration) ×
-        ((i : Finset.Iic m) → C.base.Gauge) =>
-      O (C.base.replaceLink
-          (C.independentPairHybridConfiguration w.1.1 w.1.2 0)
-          target (w.2 ⟨0, Finset.mem_Iic.2 (Nat.zero_le m)⟩)) -
-        O (C.base.replaceLink
-          (C.independentPairHybridConfiguration w.1.1 w.1.2 m)
-          target (w.2 ⟨m, Finset.mem_Iic.2 le_rfl⟩)))
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointTransportBCF
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportBCF
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectorySourceBackgroundInsertedObservableValueBCF
+  simp only [Nat.zero_le, le_rfl, dif_pos]
   exact (hAt 0 (Nat.zero_le m)).sub (hAt m le_rfl)
 
 /-- The joint canonical endpoint transport is uniformly bounded by twice the
