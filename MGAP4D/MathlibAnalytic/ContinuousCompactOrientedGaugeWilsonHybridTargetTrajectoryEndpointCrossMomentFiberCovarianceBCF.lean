@@ -503,8 +503,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
         ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportEnergyBCF
         ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberMeanTransportSqBCF
         ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberMeanTransportBCF
-        ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointTransportBCF
       dsimp [T, trajectory]
+      rfl
 
 /-- Dropping the nonnegative conditional-mean square improves the old fixed-pair
 factor four comparison to the sharp iid factor two comparison. -/
