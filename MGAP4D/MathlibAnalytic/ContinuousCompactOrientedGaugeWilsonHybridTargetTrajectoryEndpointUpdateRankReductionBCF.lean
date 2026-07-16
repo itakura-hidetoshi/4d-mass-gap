@@ -65,10 +65,17 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
   have hFinal' :
       C.independentPairHybridTargetTrajectoryEndpointFinalRankBCF ≠ rank :=
     Ne.symm hFinal
-  simp [Function.update,
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointInitialRankBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFinalRankBCF,
-    hInitial', hFinal']
+  have hInitialConcrete :
+      (⟨0, Finset.mem_Iic.2 (Nat.zero_le _)⟩ :
+        Finset.Iic (Fintype.card C.base.geometry.Edge)) ≠ rank := by
+    simpa [
+      ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointInitialRankBCF] using hInitial'
+  have hFinalConcrete :
+      (⟨Fintype.card C.base.geometry.Edge, Finset.mem_Iic.2 le_rfl⟩ :
+        Finset.Iic (Fintype.card C.base.geometry.Edge)) ≠ rank := by
+    simpa [
+      ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFinalRankBCF] using hFinal'
+  simp only [Function.update, hInitialConcrete, hFinalConcrete, if_false]
 
 /-- Exact endpoint-transport formula after replacing the initial trajectory
 coordinate. -/
