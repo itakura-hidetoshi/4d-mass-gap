@@ -103,6 +103,17 @@ theorem continuous_compact_oriented_independentPairHybridSourceOverlapTransportE
           exact Filter.Eventually.of_forall fun z => by
             unfold
               ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryCanonicalFixedLeftOverlapFiberEnergyBCF
+            change
+              C.singleLinkConditionalOverlapObservableTransportEnergyBCF
+                  (C.independentPairHybridEndpointPairMap source z).1
+                  (C.independentPairHybridEndpointPairMap source z).2
+                  (C.independentPairHybridEndpointPairMap source z).1
+                  target O =
+                C.singleLinkConditionalOverlapObservableTransportEnergyBCF
+                  (C.independentPairHybridConfiguration z.1 z.2 k)
+                  (C.independentPairHybridConfiguration z.1 z.2 (k + 1))
+                  (C.independentPairHybridConfiguration z.1 z.2 k)
+                  target O
             rw [show source =
               C.hybridTargetTrajectorySourceAtRank target k from rfl]
             rw [continuous_compact_oriented_independentPairHybridEndpointPairMap_hybridTargetTrajectorySourceAtRank_of_lt
