@@ -353,6 +353,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
           target O z ∂μ := by
       apply integral_congr_ae
       exact Filter.Eventually.of_forall fun z => by
+        dsimp [κ]
         rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleKernel_apply]
         unfold
           ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
@@ -427,6 +428,16 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableIntegrandBCF
     rw [hEq]
     nlinarith [sq_nonneg (transport xy.1 + transport xy.2)]
+  have hFst :
+      (∫ xy, (transport xy.1) ^ 2 ∂trajectory.prod trajectory) =
+        ∫ x, (transport x) ^ 2 ∂trajectory := by
+    rw [MeasureTheory.integral_fun_fst]
+    simp
+  have hSnd :
+      (∫ xy, (transport xy.2) ^ 2 ∂trajectory.prod trajectory) =
+        ∫ x, (transport x) ^ 2 ∂trajectory := by
+    rw [MeasureTheory.integral_fun_snd]
+    simp
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
   dsimp only
@@ -444,8 +455,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
         integral_const_mul, integral_const_mul]
     _ = 2 * (∫ x, (transport x) ^ 2 ∂trajectory) +
         2 * (∫ x, (transport x) ^ 2 ∂trajectory) := by
-      rw [MeasureTheory.integral_fun_fst, MeasureTheory.integral_fun_snd]
-      simp
+      rw [hFst, hSnd]
     _ = 4 *
         C.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointFiberEnergyBCF
           target O n z := by
@@ -481,6 +491,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
     simpa using hJoint.integral_compProd
   apply hOuter.congr
   exact Filter.Eventually.of_forall fun z => by
+    dsimp [κ]
     rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleKernel_apply]
     unfold
       ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
