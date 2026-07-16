@@ -435,7 +435,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
     rw [
       continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF_eq_left_sub_right
         C target O (z, xy)]
-    rfl
   have hFstSq :
       (∫ xy, (T xy.1) ^ 2 ∂trajectory.prod trajectory) =
         ∫ x, (T x) ^ 2 ∂trajectory := by
@@ -504,6 +503,7 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
         ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectorySourceBackgroundEndpointTransportEnergyBCF
         ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberMeanTransportSqBCF
         ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberMeanTransportBCF
+        ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointTransportBCF
       dsimp [T, trajectory]
 
 /-- Dropping the nonnegative conditional-mean square improves the old fixed-pair
