@@ -11,24 +11,18 @@ open scoped ProbabilityTheory BigOperators
 
 noncomputable section
 
-/-- Carrier of two complete target trajectories over one original configuration
-pair. -/
 abbrev
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleCarrier
     (C : ContinuousCompactOrientedGaugeWilsonSystem) :=
   (((i : Finset.Iic (Fintype.card C.base.geometry.Edge)) → C.base.Gauge) ×
     ((i : Finset.Iic (Fintype.card C.base.geometry.Edge)) → C.base.Gauge))
 
-/-- Joint carrier of an original configuration pair and two complete target
-trajectories. -/
 abbrev
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleJointCarrier
     (C : ContinuousCompactOrientedGaugeWilsonSystem) :=
   (C.base.Configuration × C.base.Configuration) ×
     C.independentPairHybridTargetTrajectoryDoubleCarrier
 
-/-- Difference of the two observable values reconstructed at one canonical rank.
-The zero branch only totalizes ranks beyond the complete finite path. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleRankPairObservableBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -64,8 +58,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleRankConfigurationPairFiberMap,
     hr]
 
-/-- Every rankwise pair observable is continuous on the common double-trajectory
-carrier. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleRankPairObservableBCF_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -83,7 +75,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleR
     exact (O.continuous.comp hPair.fst).sub (O.continuous.comp hPair.snd)
   · exact continuous_const
 
-/-- One adjacent increment of the rankwise conditional-pair observable process. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleAdjacentPairObservableTransportBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -95,8 +86,6 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     C.independentPairHybridTargetTrajectoryDoubleRankPairObservableBCF
       target O (k + 1) w
 
-/-- Endpoint transport of the rankwise pair-observable process across the complete
-canonical source path. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -107,7 +96,6 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
     C.independentPairHybridTargetTrajectoryDoubleRankPairObservableBCF
       target O (Fintype.card C.base.geometry.Edge) w
 
-/-- Exact finite telescoping of the double-trajectory pair-observable process. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF_eq_sum_adjacent
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -140,8 +128,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       intro k _hk
       ring
 
-/-- Each genuine adjacent pair-observable increment is the difference of the two
-single-trajectory source-background increments. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleAdjacentPairObservableTransportBCF_eq_left_sub_right
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -181,8 +167,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleA
       target O (Fintype.card C.base.geometry.Edge) (k + 1) hk w.2.2]
   ring
 
-/-- The complete pair-observable endpoint transport is exactly the difference of
-the two complete single-trajectory endpoint transports. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF_eq_left_sub_right
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -221,7 +205,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
         (Fintype.card C.base.geometry.Edge) le_rfl w.2.2]
   ring
 
-/-- The complete double endpoint pair-observable transport is continuous. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -254,8 +237,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
           C target O w]
   exact (hSingle.comp hLeftMap).sub (hSingle.comp hRightMap)
 
-/-- Pointwise square cost of the complete double endpoint pair-observable
-transport. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableIntegrandBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -264,7 +245,6 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
   (C.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF
     target O w) ^ 2
 
-/-- The double endpoint square integrand is continuous. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableIntegrandBCF_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -278,7 +258,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
     (continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF_continuous
       C target O).pow 2
 
-/-- The double endpoint square is integrable on the joint probability carrier. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableIntegrandBCF_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -292,8 +271,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       C target O).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
 
-/-- Jointly averaged square transport of the complete rankwise conditional-pair
-observable process. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableJointEnergyBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -303,7 +280,6 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
       target O w
     ∂C.independentPairHybridTargetTrajectoryDoubleJointMeasure target
 
-/-- Fixed-original-pair version of the double endpoint pair-observable energy. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -317,8 +293,6 @@ def ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajec
       target O (z, xy)
     ∂trajectory.prod trajectory
 
-/-- Exact disintegration of the double endpoint energy over the original
-independent Gibbs pair. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableJointEnergyBCF_eq_integral_fiber
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -359,8 +333,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
           ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
         rfl
 
-/-- The fixed-pair double endpoint energy is at most four times the corresponding
-single-trajectory endpoint energy. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF_le_four_single
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -431,13 +403,25 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
   have hFst :
       (∫ xy, (transport xy.1) ^ 2 ∂trajectory.prod trajectory) =
         ∫ x, (transport x) ^ 2 ∂trajectory := by
-    rw [MeasureTheory.integral_fun_fst]
-    simp
+    calc
+      (∫ xy, (transport xy.1) ^ 2 ∂trajectory.prod trajectory) =
+          trajectory.real Set.univ •
+            ∫ x, (transport x) ^ 2 ∂trajectory := by
+        exact MeasureTheory.integral_fun_fst
+          (μ := trajectory) (ν := trajectory)
+          (f := fun x => (transport x) ^ 2)
+      _ = ∫ x, (transport x) ^ 2 ∂trajectory := by simp
   have hSnd :
       (∫ xy, (transport xy.2) ^ 2 ∂trajectory.prod trajectory) =
         ∫ x, (transport x) ^ 2 ∂trajectory := by
-    rw [MeasureTheory.integral_fun_snd]
-    simp
+    calc
+      (∫ xy, (transport xy.2) ^ 2 ∂trajectory.prod trajectory) =
+          trajectory.real Set.univ •
+            ∫ x, (transport x) ^ 2 ∂trajectory := by
+        exact MeasureTheory.integral_fun_snd
+          (μ := trajectory) (ν := trajectory)
+          (f := fun x => (transport x) ^ 2)
+      _ = ∫ x, (transport x) ^ 2 ∂trajectory := by simp
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
   dsimp only
@@ -465,8 +449,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       dsimp [transport, trajectory, n]
       ring
 
-/-- The fixed-pair double endpoint-energy function is integrable under the
-independent Gibbs-pair law. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF_integrable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -497,8 +479,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
     rfl
 
-/-- The global double endpoint pair-observable energy is at most four times the
-single-trajectory endpoint energy. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableJointEnergyBCF_le_four_single
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
@@ -540,9 +520,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryCanonicalSourceBackgroundEndpointJointEnergyBCF_eq_integral_fiber
         C target O (Fintype.card C.base.geometry.Edge) le_rfl]
 
-/-- At full canonical rank, the double endpoint pair-observable energy is
-controlled by four times the established source-overlap path plus variation
-budget. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableJointEnergyBCF_le_boundaryResidualPath_add_variation
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     [T2Space C.base.Gauge]
