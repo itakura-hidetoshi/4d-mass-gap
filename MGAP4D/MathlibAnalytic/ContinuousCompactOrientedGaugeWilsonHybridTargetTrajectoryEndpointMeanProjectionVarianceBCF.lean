@@ -387,8 +387,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionVarianceBCF_eq_g
         C target O hOStrong M hM0 hOBound
   have hPq : C.singleLinkHeatBathProjectionL2 target q = 0 := by
     dsimp [q]
-    rw [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply,
-      map_sub,
+    rw [map_sub,
       continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply_projection]
     exact sub_self _
   have hpq : inner ℝ p q = 0 := by
@@ -404,7 +403,6 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionVarianceBCF_eq_g
     exact hpq
   have hDecomp : f = p + q := by
     dsimp [p, q]
-    rw [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_apply]
     abel
   have hPythagoras : ‖f‖ ^ 2 = ‖p‖ ^ 2 + ‖q‖ ^ 2 := by
     calc
