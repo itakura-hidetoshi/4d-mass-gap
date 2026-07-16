@@ -58,8 +58,8 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
       (C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target
         (Fintype.card C.base.geometry.Edge)) := by
   exact
-    (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberTransportBCF_continuous
-      C target O z).pow 2 |>.integrable_of_hasCompactSupport
+    ((continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointFiberTransportBCF_continuous
+      C target O z).pow 2).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
 
 /-- The fixed-pair endpoint transport belongs to `L²` of its complete trajectory
@@ -194,9 +194,6 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
             (Fintype.card C.base.geometry.Edge)).prod
           (C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target
             (Fintype.card C.base.geometry.Edge)) := by
-  let trajectory :=
-    C.independentPairHybridTargetTrajectoryMeasure z.1 z.2 target
-      (Fintype.card C.base.geometry.Edge)
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF
   dsimp only
@@ -204,6 +201,13 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
   exact Filter.Eventually.of_forall fun xy => by
     unfold
       ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableIntegrandBCF
+    change
+      C.independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF
+          target O (z, xy) ^ 2 =
+        (C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
+            target O z xy.1 -
+          C.independentPairHybridTargetTrajectoryEndpointFiberTransportBCF
+            target O z xy.2) ^ 2
     rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableTransportBCF_eq_left_sub_right]
     rfl
 
@@ -250,11 +254,23 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleE
       (hTContinuous.comp continuous_snd)).pow 2).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
   rw [continuous_compact_oriented_independentPairHybridTargetTrajectoryDoubleEndpointPairObservableFiberEnergyBCF_eq_integral_pairwise_transport_sq]
-  change (∫ xy, (T xy.1 - T xy.2) ^ 2 ∂trajectory.prod trajectory) = 0 ↔ _
+  unfold
+    ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberTransportPairwiseAEEqualBCF
+  change
+    (∫ xy, (T xy.1 - T xy.2) ^ 2 ∂trajectory.prod trajectory) = 0 ↔
+      ∀ᵐ xy ∂trajectory.prod trajectory, T xy.1 = T xy.2
   rw [integral_eq_zero_iff_of_nonneg]
-  · simpa [
-      ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberTransportPairwiseAEEqualBCF,
-      trajectory, T, sub_eq_zero]
+  · constructor
+    · intro hZero
+      filter_upwards [hZero] with xy hxy
+      have hSq : (T xy.1 - T xy.2) ^ 2 = 0 := by
+        simpa using hxy
+      have hSub : T xy.1 - T xy.2 = 0 := by
+        nlinarith [sq_nonneg (T xy.1 - T xy.2)]
+      exact sub_eq_zero.mp hSub
+    · intro hEqual
+      filter_upwards [hEqual] with xy hxy
+      simp [hxy]
   · exact fun _ => sq_nonneg _
   · exact hIntegrable
 
