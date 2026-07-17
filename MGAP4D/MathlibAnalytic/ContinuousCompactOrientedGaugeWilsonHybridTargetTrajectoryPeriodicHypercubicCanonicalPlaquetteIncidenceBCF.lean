@@ -32,112 +32,44 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at0
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 0).edge = (x, mu)
+      all_goals
         simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 1).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 2).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt,
-          periodicHypercubicShift_ne_self n hn x nu]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 3).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis,
+          hlt, hne,
+          periodicHypercubicShift_ne_self n hn x nu,
+          periodicHypercubicUnshift_ne_self n hn x nu]
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at2
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 0).edge ≠ (x, mu)
+      all_goals
         simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis,
+          hlt, hne,
+          periodicHypercubicShift_ne_self n hn x nu,
           periodicHypercubicUnshift_ne_self n hn x nu]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 1).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 2).edge = (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 3).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at3
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 0).edge ≠ (x, mu)
+      all_goals
         simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 1).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt,
-          periodicHypercubicShift_ne_self n hn x nu]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 2).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ false) 3).edge = (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt]
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis,
+          hlt, hne,
+          periodicHypercubicShift_ne_self n hn x nu,
+          periodicHypercubicUnshift_ne_self n hn x nu]
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at1
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 0).edge ≠ (x, mu)
+      all_goals
         simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 1).edge = (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 2).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt, hne]
-      · change
-          (periodicHypercubicBoundaryStep n
-            (periodicHypercubicIncidentPlaquette n
-              (x, mu) ⟨nu, hne⟩ true) 3).edge ≠ (x, mu)
-        simp [periodicHypercubicIncidentPlaquette,
-          periodicHypercubicAxisPairOfNe, hlt,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis,
+          hlt, hne,
+          periodicHypercubicShift_ne_self n hn x nu,
           periodicHypercubicUnshift_ne_self n hn x nu]
 
 @[simp]
