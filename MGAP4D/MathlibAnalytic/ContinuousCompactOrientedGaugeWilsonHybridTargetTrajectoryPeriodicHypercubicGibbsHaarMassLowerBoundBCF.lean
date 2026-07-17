@@ -148,11 +148,22 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighbor
       periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF_gibbsPair_measure_ge_haarPair_lowerBound with
     ⟨c, hc, hLower⟩
   refine ⟨c, hc, ?_, hLower⟩
-  simpa [Measure.smul_apply] using
-    ENNReal.mul_pos.2
-      ⟨ENNReal.mul_pos.2
-          ⟨ENNReal.ofReal_pos.2 hc, ENNReal.ofReal_pos.2 hc⟩,
-        periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF_haarPair_measure_pos⟩
+  have hDensitySquare :
+      0 < ENNReal.ofReal c * ENNReal.ofReal c :=
+    ENNReal.mul_pos
+      (ne_of_gt (ENNReal.ofReal_pos.2 hc))
+      (ne_of_gt (ENNReal.ofReal_pos.2 hc))
+  have hProduct :
+      0 <
+        (ENNReal.ofReal c * ENNReal.ofReal c) *
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure.prod
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure)
+            periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF :=
+    ENNReal.mul_pos
+      (ne_of_gt hDensitySquare)
+      (ne_of_gt
+        periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF_haarPair_measure_pos)
+  simpa [Measure.smul_apply] using hProduct
 
 /-- In particular there is a named strictly positive extended-nonnegative-real
 lower-bound receipt beneath the actual threshold-six Gibbs-pair mass. -/
