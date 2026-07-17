@@ -91,10 +91,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.
         C.base.stepValue A (C.base.geometry.boundary p 1) *
         C.base.stepValue A (C.base.geometry.boundary p 2)
 
-/-- Orientation-normalized three-link plaquette-complement staple.  A forward
-target incidence uses the cyclic complement itself.  A backward target
-incidence uses its inverse, which is the correct Wilson section after using
-orientation-reversal invariance. -/
+/-- Orientation-normalized three-link plaquette-complement staple. -/
 def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     {target : C.base.geometry.Edge}
@@ -137,10 +134,12 @@ theorem continuous_compact_oriented_stepValue_replaceLink_of_edge_eq
       | .backward => g⁻¹ := by
   cases step with
   | mk edge orientation =>
+      have hEdge : edge = target := hStep
+      subst edge
       cases orientation <;>
         simp [CompactOrientedGaugeWilsonSystem.stepValue,
           FiniteOrientedFourDimensionalPlaquetteGeometry.stepValue,
-          CompactOrientedGaugeWilsonSystem.replaceLink, hStep]
+          CompactOrientedGaugeWilsonSystem.replaceLink]
 
 /-- The raw three-step complement is independent of target-link replacement. -/
 theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawComplement_replaceLink
@@ -153,22 +152,58 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawCompleme
       inc.rawComplement A := by
   cases inc with
   | at0 p h0 h1 h2 h3 =>
-      unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement
+      change
+        C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 1) *
+            C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 2) *
+          C.base.stepValue (C.base.replaceLink A target g)
+            (C.base.geometry.boundary p 3) =
+        C.base.stepValue A (C.base.geometry.boundary p 1) *
+            C.base.stepValue A (C.base.geometry.boundary p 2) *
+          C.base.stepValue A (C.base.geometry.boundary p 3)
       rw [continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h1,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h2,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h3]
   | at1 p h0 h1 h2 h3 =>
-      unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement
+      change
+        C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 2) *
+            C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 3) *
+          C.base.stepValue (C.base.replaceLink A target g)
+            (C.base.geometry.boundary p 0) =
+        C.base.stepValue A (C.base.geometry.boundary p 2) *
+            C.base.stepValue A (C.base.geometry.boundary p 3) *
+          C.base.stepValue A (C.base.geometry.boundary p 0)
       rw [continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h2,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h3,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h0]
   | at2 p h0 h1 h2 h3 =>
-      unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement
+      change
+        C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 3) *
+            C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 0) *
+          C.base.stepValue (C.base.replaceLink A target g)
+            (C.base.geometry.boundary p 1) =
+        C.base.stepValue A (C.base.geometry.boundary p 3) *
+            C.base.stepValue A (C.base.geometry.boundary p 0) *
+          C.base.stepValue A (C.base.geometry.boundary p 1)
       rw [continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h3,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h0,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h1]
   | at3 p h0 h1 h2 h3 =>
-      unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement
+      change
+        C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 0) *
+            C.base.stepValue (C.base.replaceLink A target g)
+              (C.base.geometry.boundary p 1) *
+          C.base.stepValue (C.base.replaceLink A target g)
+            (C.base.geometry.boundary p 2) =
+        C.base.stepValue A (C.base.geometry.boundary p 0) *
+            C.base.stepValue A (C.base.geometry.boundary p 1) *
+          C.base.stepValue A (C.base.geometry.boundary p 2)
       rw [continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h0,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h1,
         continuous_compact_oriented_stepValue_replaceLink_of_edge_ne C A target g _ h2]
@@ -186,96 +221,83 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue
   rw [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawComplement_replaceLink
     C target inc A g]
 
-/-- The three-link complement staple as an actual continuous map on compact
-configuration space. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleContinuousMap
+/-- The cyclic three-step complement as an actual continuous map. -/
+def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplementContinuousMap
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     {target : C.base.geometry.Edge}
     (inc : C.IsolatedTargetPlaquetteIncidence target) :
-    ContinuousMap C.base.Configuration C.base.Gauge where
-  toFun := inc.stapleValue
-  continuous_toFun := by
-    cases inc with
-    | at0 p h0 h1 h2 h3 =>
-        have hRaw : Continuous (fun A : C.base.Configuration =>
+    ContinuousMap C.base.Configuration C.base.Gauge := by
+  cases inc with
+  | at0 p h0 h1 h2 h3 =>
+      exact
+        ⟨fun A =>
             C.base.stepValue A (C.base.geometry.boundary p 1) *
               C.base.stepValue A (C.base.geometry.boundary p 2) *
-              C.base.stepValue A (C.base.geometry.boundary p 3)) :=
+              C.base.stepValue A (C.base.geometry.boundary p 3),
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 1)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 2))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 3))
-        cases hOrientation : (C.base.geometry.boundary p 0).orientation
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using hRaw
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using continuous_inv.comp hRaw
-    | at1 p h0 h1 h2 h3 =>
-        have hRaw : Continuous (fun A : C.base.Configuration =>
+              (C.base.geometry.boundary p 3))⟩
+  | at1 p h0 h1 h2 h3 =>
+      exact
+        ⟨fun A =>
             C.base.stepValue A (C.base.geometry.boundary p 2) *
               C.base.stepValue A (C.base.geometry.boundary p 3) *
-              C.base.stepValue A (C.base.geometry.boundary p 0)) :=
+              C.base.stepValue A (C.base.geometry.boundary p 0),
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 2)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 3))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 0))
-        cases hOrientation : (C.base.geometry.boundary p 1).orientation
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using hRaw
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using continuous_inv.comp hRaw
-    | at2 p h0 h1 h2 h3 =>
-        have hRaw : Continuous (fun A : C.base.Configuration =>
+              (C.base.geometry.boundary p 0))⟩
+  | at2 p h0 h1 h2 h3 =>
+      exact
+        ⟨fun A =>
             C.base.stepValue A (C.base.geometry.boundary p 3) *
               C.base.stepValue A (C.base.geometry.boundary p 0) *
-              C.base.stepValue A (C.base.geometry.boundary p 1)) :=
+              C.base.stepValue A (C.base.geometry.boundary p 1),
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 3)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 0))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 1))
-        cases hOrientation : (C.base.geometry.boundary p 2).orientation
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using hRaw
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using continuous_inv.comp hRaw
-    | at3 p h0 h1 h2 h3 =>
-        have hRaw : Continuous (fun A : C.base.Configuration =>
+              (C.base.geometry.boundary p 1))⟩
+  | at3 p h0 h1 h2 h3 =>
+      exact
+        ⟨fun A =>
             C.base.stepValue A (C.base.geometry.boundary p 0) *
               C.base.stepValue A (C.base.geometry.boundary p 1) *
-              C.base.stepValue A (C.base.geometry.boundary p 2)) :=
+              C.base.stepValue A (C.base.geometry.boundary p 2),
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 0)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 1))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 2))
-        cases hOrientation : (C.base.geometry.boundary p 3).orientation
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using hRaw
-        · simpa [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-            ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-            hOrientation] using continuous_inv.comp hRaw
+              (C.base.geometry.boundary p 2))⟩
+
+@[simp]
+theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawComplementContinuousMap_apply
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (inc : C.IsolatedTargetPlaquetteIncidence target)
+    (A : C.base.Configuration) :
+    inc.rawComplementContinuousMap A = inc.rawComplement A := by
+  cases inc <;> rfl
+
+/-- The orientation-normalized three-link complement staple as an actual
+continuous map on compact configuration space. -/
+def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleContinuousMap
+    {C : ContinuousCompactOrientedGaugeWilsonSystem}
+    {target : C.base.geometry.Edge}
+    (inc : C.IsolatedTargetPlaquetteIncidence target) :
+    ContinuousMap C.base.Configuration C.base.Gauge :=
+  match inc.targetOrientation with
+  | .forward => inc.rawComplementContinuousMap
+  | .backward =>
+      ⟨fun A => (inc.rawComplementContinuousMap A)⁻¹,
+        continuous_inv.comp inc.rawComplementContinuousMap.continuous⟩
 
 @[simp]
 theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleContinuousMap_apply
@@ -284,7 +306,15 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleConti
     (inc : C.IsolatedTargetPlaquetteIncidence target)
     (A : C.base.Configuration) :
     inc.stapleContinuousMap A = inc.stapleValue A := by
-  rfl
+  cases inc with
+  | at0 p h0 h1 h2 h3 =>
+      cases hOrientation : (C.base.geometry.boundary p 0).orientation <;> rfl
+  | at1 p h0 h1 h2 h3 =>
+      cases hOrientation : (C.base.geometry.boundary p 1).orientation <;> rfl
+  | at2 p h0 h1 h2 h3 =>
+      cases hOrientation : (C.base.geometry.boundary p 2).orientation <;> rfl
+  | at3 p h0 h1 h2 h3 =>
+      cases hOrientation : (C.base.geometry.boundary p 3).orientation <;> rfl
 
 /-- A finite family of isolated plaquette-complement staples is a valid
 PR #924 target-independent staple family. -/
@@ -297,8 +327,9 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleFamil
     C.targetIndependentStapleFamilyBCF target
       (fun i => (incidence i).stapleContinuousMap) := by
   intro i A g
-  exact continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue_replaceLink
-    C target (incidence i) A g
+  simpa using
+    (continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue_replaceLink
+      C target (incidence i) A g)
 
 /-- Conjugation invariance makes the energy of a two-factor product invariant
 under cyclic exchange. -/
@@ -466,9 +497,7 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_energy_repl
                 C.base.stepValue A (C.base.geometry.boundary p 1) *
                 C.base.stepValue A (C.base.geometry.boundary p 2)) g⁻¹)
 
-/-- Exact oriented plaquette-complement formula.  Under inversion invariance of
-the plaquette energy, every selected incidence—forward or backward—has the
-common section form `energy (g * staple(A))`. -/
+/-- Exact oriented plaquette-complement formula. -/
 theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_energy_replaceLink_eq_staple
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (hInv : ∀ u : C.base.Gauge,
@@ -537,10 +566,16 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_replace
         (C.base.plaquetteHolonomy
           (C.base.replaceLink A target g) (incidence i).plaquette) := by
   classical
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.isolatedTargetPlaquetteObservableBCF
   rw [continuous_compact_oriented_multiStapleCylinderObservableBCF_apply]
   apply Finset.sum_congr rfl
   intro i _hi
-  rw [continuous_compact_oriented_plaquetteEnergyBCF_apply]
+  change C.base.plaquetteEnergy
+      ((C.base.replaceLink A target g) target *
+        (incidence i).stapleValue (C.base.replaceLink A target g)) =
+    C.base.plaquetteEnergy
+      (C.base.plaquetteHolonomy
+        (C.base.replaceLink A target g) (incidence i).plaquette)
   rw [compact_oriented_replaceLink_same]
   rw [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue_replaceLink
     C target (incidence i) A g]
