@@ -148,9 +148,16 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_eq_
   rw [continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_oscillationMargin_eq]
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_initialStapleFamily,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_finalStapleFamily,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_plaquetteEnergyBCF_eq,
-    specialUnitaryTwoPeriodicSixSameStaple_oscillation_eq_twelve,
-    specialUnitaryTwoPeriodicSixSplitStaple_oscillation_eq_zero]
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_plaquetteEnergyBCF_eq]
+  have hSame :
+      multiRightTranslateSumOscillationBCF specialUnitaryTwoWilsonEnergyBCF
+        specialUnitaryTwoPeriodicSixSameStapleFamily = 12 := by
+    simpa using specialUnitaryTwoPeriodicSixSameStaple_oscillation_eq_twelve
+  have hSplit :
+      multiRightTranslateSumOscillationBCF specialUnitaryTwoWilsonEnergyBCF
+        specialUnitaryTwoPeriodicSixSplitStapleFamily = 0 := by
+    simpa using specialUnitaryTwoPeriodicSixSplitStaple_oscillation_eq_zero
+  rw [hSame, hSplit]
   norm_num
 
 /-- The concrete actual periodic endpoint margin is strictly positive. -/
