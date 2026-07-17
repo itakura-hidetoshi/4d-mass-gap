@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectoryPeriodicHypercubicGibbsHaarMassLowerBoundBCF
-import Mathlib.Topology.MetricSpace.Pseudo.Defs
+import Mathlib.Topology.Metrizable.Uniformity
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -10,10 +10,23 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
-local instance periodicMetricBallEndpointSystemGaugePseudoMetricSpace :
-    PseudoMetricSpace periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
-  change PseudoMetricSpace (SpecialUnitaryMatrixGroup 2)
+local instance periodicMetricBallEndpointSystemGaugePseudoMetrizableSpace :
+    TopologicalSpace.PseudoMetrizableSpace
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
+  change TopologicalSpace.PseudoMetrizableSpace (SpecialUnitaryMatrixGroup 2)
   infer_instance
+
+local instance periodicMetricBallEndpointPairPseudoMetrizableSpace :
+    TopologicalSpace.PseudoMetrizableSpace
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ×
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration) := by
+  infer_instance
+
+local instance periodicMetricBallEndpointPairPseudoMetricSpace :
+    PseudoMetricSpace
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ×
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration) :=
+  TopologicalSpace.pseudoMetrizableSpacePseudoMetric _
 
 /-- The open threshold-six margin neighborhood contains a positive-radius metric
 ball around the concrete identity/far-side-center endpoint pair. -/
