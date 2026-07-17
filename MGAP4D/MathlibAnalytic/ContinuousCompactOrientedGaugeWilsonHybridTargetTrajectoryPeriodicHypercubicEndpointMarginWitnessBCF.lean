@@ -29,6 +29,11 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem :
   periodicHypercubicSpecialUnitaryWilsonSystem
     3 2 (by norm_num) 0 (by norm_num)
 
+local instance periodicEndpointSystemT2Space :
+    T2Space periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
+  change T2Space (SpecialUnitaryMatrixGroup 2)
+  infer_instance
+
 /-- The one concrete configuration pair whose canonical hybrid path starts at the
 identity configuration and ends at the far-side center configuration. -/
 def periodicHypercubicThreeSpecialUnitaryTwoEndpointPair :
@@ -56,8 +61,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_hybrid_card :
         (Fintype.card
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) =
       periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration := by
-  simp [periodicHypercubicThreeSpecialUnitaryTwoEndpointPair,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem]
+  simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointPair] using
+    (continuous_compact_oriented_independentPairHybridConfiguration_card
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
+      periodicHypercubicThreeSpecialUnitaryTwoIdentityConfiguration
+      periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration)
 
 /-- The six actual complement staples at the rank-zero trajectory endpoint are
 six identity staples. -/
@@ -116,8 +124,7 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF :
 /-- The endpoint insertion-profile oscillation margin of the actual periodic
 six-plaquette observable is exactly twelve. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_eq_twelve :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
-        independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
       periodicHypercubicThreeSpecialUnitaryTwoEndpointPair = 12 := by
@@ -132,8 +139,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_eq_
 
 /-- The concrete actual periodic endpoint margin is strictly positive. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_pos :
-    0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
-        independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
+    0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
       periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
@@ -143,11 +149,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_pos
 /-- The concrete actual periodic six-plaquette observable has a genuine
 coordinate-update separation witness along this one canonical hybrid trajectory. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_coordinateUpdateWitness :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
-      independentPairHybridTargetTrajectoryEndpointCoordinateUpdateProfileSeparationWitnessBCF
-        periodicHypercubicThreeOriginAxisZeroTarget
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointCoordinateUpdateProfileSeparationWitnessBCF
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
   exact
     (continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointCoordinateUpdateProfileSeparationWitnessBCF_iff_oscillationMargin_pos
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -159,11 +164,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_coordinate
 /-- The same positive margin produces a nonempty open innovation-region witness
 for this fixed concrete configuration pair. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_openRegionWitness :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
-      independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF
-        periodicHypercubicThreeOriginAxisZeroTarget
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointOpenRegionInnovationWitnessBCF
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
   exact
     continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF_pos_implies_open_region_witness
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -175,11 +179,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_openRegion
 /-- The same positive margin forces a positive fixed-fiber conditional-variance
 gap at the concrete periodic configuration pair. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_fiberGap_pos :
-    0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
-      independentPairHybridTargetTrajectoryEndpointFiberConditionalVarianceGapBCF
-        periodicHypercubicThreeOriginAxisZeroTarget
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
+    0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointFiberConditionalVarianceGapBCF
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointPair := by
   exact
     continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF_pos_implies_gap_pos
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
