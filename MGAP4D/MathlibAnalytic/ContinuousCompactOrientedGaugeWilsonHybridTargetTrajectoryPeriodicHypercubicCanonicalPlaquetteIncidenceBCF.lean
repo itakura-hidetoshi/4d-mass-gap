@@ -51,6 +51,18 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
     periodicHypercubicShift_ne_self n hn x nu
   have hUnshiftNu : periodicHypercubicUnshift n x nu ≠ x :=
     periodicHypercubicUnshift_ne_self n hn x nu
+  have hAxisEdge (y : PeriodicHypercubicVertex n) :
+      (y, nu) ≠ (x, mu) := by
+    intro h
+    exact hAxis (congrArg Prod.snd h)
+  have hShiftNuEdge :
+      (periodicHypercubicShift n x nu, mu) ≠ (x, mu) := by
+    intro h
+    exact hShiftNu (congrArg Prod.fst h)
+  have hUnshiftNuEdge :
+      (periodicHypercubicUnshift n x nu, mu) ≠ (x, mu) := by
+    intro h
+    exact hUnshiftNu (congrArg Prod.fst h)
   by_cases hlt : mu < nu
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at0
@@ -60,7 +72,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
           periodicHypercubicPlaquetteSecondAxis,
-          Prod.mk.injEq, hlt, hAxis, hShiftNu, hUnshiftNu]
+          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at2
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
       all_goals
@@ -68,7 +80,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
           periodicHypercubicPlaquetteSecondAxis,
-          Prod.mk.injEq, hlt, hAxis, hShiftNu, hUnshiftNu]
+          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at3
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
@@ -77,7 +89,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
           periodicHypercubicPlaquetteSecondAxis,
-          Prod.mk.injEq, hlt, hAxis, hShiftNu, hUnshiftNu]
+          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at1
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
       all_goals
@@ -85,7 +97,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
           periodicHypercubicPlaquetteSecondAxis,
-          Prod.mk.injEq, hlt, hAxis, hShiftNu, hUnshiftNu]
+          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
 
 @[simp]
 theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette
