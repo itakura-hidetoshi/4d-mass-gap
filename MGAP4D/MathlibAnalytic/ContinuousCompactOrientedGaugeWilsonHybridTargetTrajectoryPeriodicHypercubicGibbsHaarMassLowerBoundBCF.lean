@@ -53,8 +53,7 @@ theorem continuous_compact_oriented_gibbsMeasure_prod_eq_withDensityBCF
   have hf : Measurable
       (fun A : C.base.Configuration => ENNReal.ofReal (C.gibbsDensityBCF A)) :=
     (continuous_compact_oriented_gibbsDensityBCF_continuous C).measurable.ennreal_ofReal
-  rw [continuous_compact_oriented_gibbsMeasure_eq_withDensityBCF,
-    continuous_compact_oriented_gibbsMeasure_eq_withDensityBCF]
+  rw [continuous_compact_oriented_gibbsMeasure_eq_withDensityBCF]
   exact prod_withDensity hf hf
 
 /-- Squaring the uniform density lower bound gives domination of the independent
@@ -150,9 +149,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighbor
     ⟨c, hc, hLower⟩
   refine ⟨c, hc, ?_, hLower⟩
   simpa [Measure.smul_apply] using
-    mul_pos
-      (mul_pos (ENNReal.ofReal_pos.2 hc) (ENNReal.ofReal_pos.2 hc))
-      periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF_haarPair_measure_pos
+    ENNReal.mul_pos.2
+      ⟨ENNReal.mul_pos.2
+          ⟨ENNReal.ofReal_pos.2 hc, ENNReal.ofReal_pos.2 hc⟩,
+        periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF_haarPair_measure_pos⟩
 
 /-- In particular there is a named strictly positive extended-nonnegative-real
 lower-bound receipt beneath the actual threshold-six Gibbs-pair mass. -/
