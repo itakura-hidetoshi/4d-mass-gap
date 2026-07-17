@@ -183,8 +183,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily_farSideCen
         periodicHypercubicUnit,
         Fin.sum_univ_four,
         zmodThree_one_ne_neg_one] <;>
-      simpa only [inv_one, one_mul, mul_one,
-        specialUnitaryTwoNegativeIdentity_inv]
+      first
+      | exact by group
+      | exact by
+          rw [specialUnitaryTwoNegativeIdentity_inv]
+          group
 
 /-- Six coincident identity staples on the actual canonical index. -/
 def specialUnitaryTwoPeriodicSixSameStapleFamily :
