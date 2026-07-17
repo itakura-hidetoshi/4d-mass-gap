@@ -35,9 +35,9 @@ private theorem compact_continuous_real_range_extrema
   · simpa only [Set.image_univ] using hminEq
   · simpa only [Set.image_univ] using hmaxEq
   · intro x
-    exact hmin x Set.mem_univ
+    exact hmin x (Set.mem_univ x)
   · intro x
-    exact hmax x Set.mem_univ
+    exact hmax x (Set.mem_univ x)
 
 /-- For two continuous real profiles on the same nonempty compact carrier,
 uniform separation obtained by fixing two values of the first profile is
