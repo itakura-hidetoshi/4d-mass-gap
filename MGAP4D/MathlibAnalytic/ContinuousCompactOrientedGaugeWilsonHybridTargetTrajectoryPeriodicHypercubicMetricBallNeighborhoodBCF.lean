@@ -10,6 +10,11 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
+local instance periodicMetricBallEndpointSystemGaugePseudoMetricSpace :
+    PseudoMetricSpace periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
+  change PseudoMetricSpace (SpecialUnitaryMatrixGroup 2)
+  infer_instance
+
 /-- The open threshold-six margin neighborhood contains a positive-radius metric
 ball around the concrete identity/far-side-center endpoint pair. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF_exists_metricBall_subset :
