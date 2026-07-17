@@ -13,9 +13,7 @@ open scoped ProbabilityTheory BigOperators ENNReal
 noncomputable section
 
 /-- In a nondegenerate periodic box, every transverse-axis/two-side datum gives
-an isolated target incidence in the actual periodic `SU(N)` Wilson geometry.
-The four branches retain the genuine cyclic boundary position and traversal
-orientation of the target physical link. -/
+an isolated target incidence in the actual periodic `SU(N)` Wilson geometry. -/
 def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
     (n N : ℕ)
     [NeZero n]
@@ -142,8 +140,6 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicAxisPairOfNe, hlt,
           periodicHypercubicUnshift_ne_self n hn x nu]
 
-/-- The plaquette retained by the canonical isolated incidence is exactly the
-previously constructed periodic incident plaquette. -/
 @[simp]
 theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette
     (n N : ℕ)
@@ -165,8 +161,7 @@ theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaque
       ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.plaquette,
       hlt]
 
-/-- The canonical periodic target-plaquette index has exactly six elements:
-three transverse coordinate axes and two sides. -/
+/-- The canonical target-plaquette index has exactly six elements. -/
 theorem periodicHypercubicCanonicalTargetPlaquetteIndex_card
     (n : ℕ)
     (target : PeriodicHypercubicEdge n) :
@@ -174,8 +169,7 @@ theorem periodicHypercubicCanonicalTargetPlaquetteIndex_card
   rw [Fintype.card_prod, periodicHypercubicOtherAxis_card]
   native_decide
 
-/-- The six canonical periodic complements form a valid target-independent
-multi-staple family. -/
+/-- The six canonical complements form a target-independent staple family. -/
 theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteStapleFamily_targetIndependent
     (n N : ℕ)
     [NeZero n]
@@ -198,8 +192,7 @@ theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteStapleFamily_tar
       (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
         n N hn hN beta beta_nonneg target)
 
-/-- The plaquette image of the six canonical isolated incidences is exactly the
-actual finite set of periodic coordinate plaquettes touching the target link. -/
+/-- The plaquette image is exactly the actual periodic touching set. -/
 theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_image_eq_touching
     (n N : ℕ)
     [NeZero n]
@@ -219,8 +212,7 @@ theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_image_
   unfold periodicHypercubicIncidentPlaquettes
   simp only [periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette]
 
-/-- The actual bounded continuous observable obtained from all six canonical
-periodic target-incident plaquette complements. -/
+/-- The bounded continuous six-slot periodic target-plaquette observable. -/
 def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF
     (n N : ℕ)
     [NeZero n]
@@ -238,9 +230,8 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF
       (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
         n N hn hN beta beta_nonneg target)
 
-/-- After inserting the target value, the canonical periodic observable is
-exactly the six-slot sum of the actual signed periodic Wilson plaquette
-energies. -/
+/-- After target insertion, the observable is the six-slot sum of actual signed
+periodic `SU(N)` Wilson plaquette energies. -/
 theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF_replaceLink_apply
     (n N : ℕ)
     [NeZero n]
@@ -278,107 +269,6 @@ theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF_re
       (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
         n N hn hN beta beta_nonneg target)
       A g)
-
-/-- Exact endpoint oscillation margin for the six canonical periodic Wilson
-plaquette complements. -/
-theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF_oscillationMargin_eq
-    (n N : ℕ)
-    [NeZero n]
-    (hn : 2 ≤ n)
-    (hN : 0 < N)
-    [Nontrivial (SpecialUnitaryMatrixGroup N)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta)
-    (target : PeriodicHypercubicEdge n)
-    (z :
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg).base.Configuration ×
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg).base.Configuration) :
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
-        target
-        (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF
-          n N hn hN beta beta_nonneg target)
-        z =
-      abs
-        (multiRightTranslateSumOscillationBCF
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              n N hN beta beta_nonneg).plaquetteEnergyBCF
-            (fun data : PeriodicHypercubicOtherAxis target.2 × Bool =>
-              (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-                n N hn hN beta beta_nonneg target data).stapleValue
-                ((periodicHypercubicSpecialUnitaryWilsonSystem
-                  n N hN beta beta_nonneg).independentPairHybridConfiguration
-                    z.1 z.2 0)) -
-          multiRightTranslateSumOscillationBCF
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              n N hN beta beta_nonneg).plaquetteEnergyBCF
-            (fun data : PeriodicHypercubicOtherAxis target.2 × Bool =>
-              (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-                n N hn hN beta beta_nonneg target data).stapleValue
-                ((periodicHypercubicSpecialUnitaryWilsonSystem
-                  n N hN beta beta_nonneg).independentPairHybridConfiguration
-                    z.1 z.2
-                    (Fintype.card (PeriodicHypercubicEdge n))))) := by
-  exact
-    continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_oscillationMargin_eq
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg)
-      target
-      (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-        n N hn hN beta beta_nonneg target)
-      z
-
-/-- The coordinate-update witness for the canonical periodic target observable
-is exactly inequality of the two endpoint six-staple oscillations. -/
-theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF_coordinateUpdateWitness_iff
-    (n N : ℕ)
-    [NeZero n]
-    (hn : 2 ≤ n)
-    (hN : 0 < N)
-    [Nontrivial (SpecialUnitaryMatrixGroup N)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta)
-    (target : PeriodicHypercubicEdge n)
-    (z :
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg).base.Configuration ×
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg).base.Configuration) :
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      n N hN beta beta_nonneg).independentPairHybridTargetTrajectoryEndpointCoordinateUpdateProfileSeparationWitnessBCF
-        target
-        (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF
-          n N hn hN beta beta_nonneg target)
-        z ↔
-      multiRightTranslateSumOscillationBCF
-          (periodicHypercubicSpecialUnitaryWilsonSystem
-            n N hN beta beta_nonneg).plaquetteEnergyBCF
-          (fun data : PeriodicHypercubicOtherAxis target.2 × Bool =>
-            (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-              n N hn hN beta beta_nonneg target data).stapleValue
-              ((periodicHypercubicSpecialUnitaryWilsonSystem
-                n N hN beta beta_nonneg).independentPairHybridConfiguration
-                  z.1 z.2 0)) ≠
-        multiRightTranslateSumOscillationBCF
-          (periodicHypercubicSpecialUnitaryWilsonSystem
-            n N hN beta beta_nonneg).plaquetteEnergyBCF
-          (fun data : PeriodicHypercubicOtherAxis target.2 × Bool =>
-            (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-              n N hn hN beta beta_nonneg target data).stapleValue
-              ((periodicHypercubicSpecialUnitaryWilsonSystem
-                n N hN beta beta_nonneg).independentPairHybridConfiguration
-                  z.1 z.2
-                  (Fintype.card (PeriodicHypercubicEdge n))) := by
-  exact
-    continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_coordinateUpdateWitness_iff
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg)
-      target
-      (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-        n N hn hN beta beta_nonneg target)
-      z
 
 end
 
