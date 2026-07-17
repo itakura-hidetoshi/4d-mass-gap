@@ -117,8 +117,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration_incid
         periodicHypercubicUnshift,
         periodicHypercubicUnit,
         Fin.sum_univ_four,
-        zmodThree_one_ne_neg_one] <;>
-      norm_num
+        zmodThree_one_ne_neg_one]
 
 /-- The actual six-slot staple family at the fixed side-three target. -/
 def periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily
@@ -184,7 +183,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily_farSideCen
         periodicHypercubicUnit,
         Fin.sum_univ_four,
         zmodThree_one_ne_neg_one] <;>
-      norm_num
+      simp
 
 /-- Six coincident identity staples on the actual canonical index. -/
 def specialUnitaryTwoPeriodicSixSameStapleFamily :
