@@ -115,8 +115,7 @@ theorem specialUnitaryTwo_sameStaple_section_apply
         specialUnitaryTwoSameStapleFamily g =
       2 * specialUnitaryWilsonPlaquetteEnergy 2 g := by
   rw [multiRightTranslateSumBCF_apply]
-  simp [specialUnitaryTwoSameStapleFamily, Fin.sum_univ_two]
-  ring
+  simp [specialUnitaryTwoSameStapleFamily]
 
 /-- The opposite-center two-staple section is the constant function two. -/
 theorem specialUnitaryTwo_oppositeStaple_section_apply
@@ -156,7 +155,7 @@ theorem specialUnitaryTwo_sameStaple_section_negativeIdentity :
     multiRightTranslateSumBCF specialUnitaryTwoWilsonEnergyBCF
       specialUnitaryTwoSameStapleFamily specialUnitaryTwoNegativeIdentity = 4 := by
   rw [specialUnitaryTwo_sameStaple_section_apply]
-  simp
+  norm_num
 
 /-- The coincident two-staple section has exact oscillation four. -/
 theorem specialUnitaryTwo_sameStaple_oscillation_eq_four :
