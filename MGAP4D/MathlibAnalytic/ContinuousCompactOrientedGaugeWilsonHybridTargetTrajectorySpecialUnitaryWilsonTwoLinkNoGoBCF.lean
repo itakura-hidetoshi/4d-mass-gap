@@ -133,7 +133,8 @@ theorem continuous_compact_oriented_rightTranslateTwoLinkCylinderObservableBCF_n
           (C.rightTranslateKernelBCF f)) z := by
   rw [continuous_compact_oriented_twoLinkCylinderObservableBCF_coordinateUpdateWitness_iff_sectionOscillation_ne
     C target source hSource (C.rightTranslateKernelBCF f) z]
-  exact not_ne_of_eq
+  intro hNe
+  exact hNe
     (continuous_compact_oriented_rightTranslateKernelBCF_targetSectionOscillation_eq_targetSectionOscillation
       C f
       ((C.independentPairHybridConfiguration z.1 z.2 0) source)
@@ -149,8 +150,9 @@ theorem continuous_compact_oriented_rightTranslateTwoLinkCylinderObservableBCF_n
     ¬ C.independentPairHybridTargetTrajectoryTwoLinkCylinderSectionOscillationMismatchBCF
         target source (C.rightTranslateKernelBCF f) := by
   intro hMismatch
-  exact hMismatch (Filter.Eventually.of_forall fun z =>
-    not_ne_of_eq
+  exact hMismatch (Filter.Eventually.of_forall fun z => by
+    intro hNe
+    exact hNe
       (continuous_compact_oriented_rightTranslateKernelBCF_targetSectionOscillation_eq_targetSectionOscillation
         C f
         ((C.independentPairHybridConfiguration z.1 z.2 0) source)
