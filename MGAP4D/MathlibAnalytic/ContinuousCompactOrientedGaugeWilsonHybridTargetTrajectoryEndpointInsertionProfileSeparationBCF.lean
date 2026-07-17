@@ -100,13 +100,14 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointInitialInsertionProfileBCF
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFinalInsertionProfileBCF
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberFinalObservableBCF
-  have hRanks :=
-    continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointInitialRankBCF_ne_finalRankBCF
-      C target
+  have hCard : 0 < Fintype.card C.base.geometry.Edge :=
+    Fintype.card_pos_iff.mpr ⟨target⟩
+  have hCardNe : Fintype.card C.base.geometry.Edge ≠ 0 :=
+    Nat.ne_of_gt hCard
   simp [Function.update,
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointInitialRankBCF,
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFinalRankBCF,
-    hRanks, Ne.symm hRanks]
+    hCardNe, Ne.symm hCardNe]
 
 /-- After updating the full rank, endpoint transport is exactly the initial
 insertion profile at the unchanged initial coordinate minus the final insertion
@@ -132,13 +133,14 @@ theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpoin
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointInitialInsertionProfileBCF
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFinalInsertionProfileBCF
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFiberInitialObservableBCF
-  have hRanks :=
-    continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointInitialRankBCF_ne_finalRankBCF
-      C target
+  have hCard : 0 < Fintype.card C.base.geometry.Edge :=
+    Fintype.card_pos_iff.mpr ⟨target⟩
+  have hCardNe : Fintype.card C.base.geometry.Edge ≠ 0 :=
+    Nat.ne_of_gt hCard
   simp [Function.update,
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointInitialRankBCF,
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointFinalRankBCF,
-    hRanks, Ne.symm hRanks]
+    hCardNe, Ne.symm hCardNe]
 
 /-- Uniform strict separation obtained by fixing two initial insertion values while
 allowing the final insertion value to vary arbitrarily. -/
