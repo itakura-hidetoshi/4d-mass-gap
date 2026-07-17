@@ -12,6 +12,23 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
+/-- The generic compact-system boundary edge is definitionally the physical
+edge of the actual signed periodic boundary incidence. -/
+@[simp]
+theorem periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge
+    (n N : ℕ)
+    [NeZero n]
+    (hN : 0 < N)
+    [Nontrivial (SpecialUnitaryMatrixGroup N)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta)
+    (p : PeriodicHypercubicPlaquette n)
+    (k : Fin 4) :
+    ((periodicHypercubicSpecialUnitaryWilsonSystem
+      n N hN beta beta_nonneg).base.geometry.boundary p k).edge =
+      (periodicHypercubicBoundaryStep n p k).edge := by
+  rfl
+
 /-- In a nondegenerate periodic box, every transverse-axis/two-side datum gives
 an isolated target incidence in the actual periodic `SU(N)` Wilson geometry. -/
 def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
