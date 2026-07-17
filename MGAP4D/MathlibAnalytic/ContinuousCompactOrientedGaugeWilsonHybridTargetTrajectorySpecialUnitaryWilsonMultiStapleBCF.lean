@@ -142,7 +142,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.targetIndependentStapleFamilyBCF
     {ι : Type*}
     [Fintype ι]
     (target : C.base.geometry.Edge)
-    (staple : ι → C.base.Configuration →C C.base.Gauge) : Prop :=
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge) : Prop :=
   ∀ i A g, staple i (C.base.replaceLink A target g) = staple i A
 
 /-- A concrete finite multi-staple cylinder observable. -/
@@ -152,7 +152,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.multiStapleCylinderObservableBCF
     [Fintype ι]
     (target : C.base.geometry.Edge)
     (f : BoundedContinuousFunction C.base.Gauge ℝ)
-    (staple : ι → C.base.Configuration →C C.base.Gauge) :
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge) :
     BoundedContinuousFunction C.base.Configuration ℝ := by
   classical
   let F : C.base.Configuration → ℝ :=
@@ -171,7 +171,7 @@ theorem continuous_compact_oriented_multiStapleCylinderObservableBCF_apply
     [Fintype ι]
     (target : C.base.geometry.Edge)
     (f : BoundedContinuousFunction C.base.Gauge ℝ)
-    (staple : ι → C.base.Configuration →C C.base.Gauge)
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge)
     (A : C.base.Configuration) :
     C.multiStapleCylinderObservableBCF target f staple A =
       ∑ i, f (A target * staple i A) := by
@@ -185,7 +185,7 @@ theorem continuous_compact_oriented_multiStapleCylinderObservableBCF_initialInse
     [Fintype ι]
     (target : C.base.geometry.Edge)
     (f : BoundedContinuousFunction C.base.Gauge ℝ)
-    (staple : ι → C.base.Configuration →C C.base.Gauge)
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge)
     (hStaple : C.targetIndependentStapleFamilyBCF target staple)
     (z : C.base.Configuration × C.base.Configuration) :
     C.independentPairHybridTargetTrajectoryEndpointInitialInsertionProfileBCF
@@ -215,7 +215,7 @@ theorem continuous_compact_oriented_multiStapleCylinderObservableBCF_finalInsert
     [Fintype ι]
     (target : C.base.geometry.Edge)
     (f : BoundedContinuousFunction C.base.Gauge ℝ)
-    (staple : ι → C.base.Configuration →C C.base.Gauge)
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge)
     (hStaple : C.targetIndependentStapleFamilyBCF target staple)
     (z : C.base.Configuration × C.base.Configuration) :
     C.independentPairHybridTargetTrajectoryEndpointFinalInsertionProfileBCF
@@ -247,7 +247,7 @@ theorem continuous_compact_oriented_multiStapleCylinderObservableBCF_oscillation
     [Fintype ι]
     (target : C.base.geometry.Edge)
     (f : BoundedContinuousFunction C.base.Gauge ℝ)
-    (staple : ι → C.base.Configuration →C C.base.Gauge)
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge)
     (hStaple : C.targetIndependentStapleFamilyBCF target staple)
     (z : C.base.Configuration × C.base.Configuration) :
     C.independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
@@ -279,7 +279,7 @@ theorem continuous_compact_oriented_multiStapleCylinderObservableBCF_coordinateU
     [Fintype ι]
     (target : C.base.geometry.Edge)
     (f : BoundedContinuousFunction C.base.Gauge ℝ)
-    (staple : ι → C.base.Configuration →C C.base.Gauge)
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge)
     (hStaple : C.targetIndependentStapleFamilyBCF target staple)
     (z : C.base.Configuration × C.base.Configuration) :
     C.independentPairHybridTargetTrajectoryEndpointCoordinateUpdateProfileSeparationWitnessBCF
