@@ -226,56 +226,42 @@ def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     {target : C.base.geometry.Edge}
     (inc : C.IsolatedTargetPlaquetteIncidence target) :
-    ContinuousMap C.base.Configuration C.base.Gauge := by
-  cases inc with
-  | at0 p h0 h1 h2 h3 =>
-      exact
-        ⟨fun A =>
-            C.base.stepValue A (C.base.geometry.boundary p 1) *
-              C.base.stepValue A (C.base.geometry.boundary p 2) *
-              C.base.stepValue A (C.base.geometry.boundary p 3),
+    ContinuousMap C.base.Configuration C.base.Gauge where
+  toFun := inc.rawComplement
+  continuous_toFun := by
+    cases inc with
+    | at0 p h0 h1 h2 h3 =>
+        exact
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 1)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 2))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 3))⟩
-  | at1 p h0 h1 h2 h3 =>
-      exact
-        ⟨fun A =>
-            C.base.stepValue A (C.base.geometry.boundary p 2) *
-              C.base.stepValue A (C.base.geometry.boundary p 3) *
-              C.base.stepValue A (C.base.geometry.boundary p 0),
+              (C.base.geometry.boundary p 3))
+    | at1 p h0 h1 h2 h3 =>
+        exact
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 2)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 3))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 0))⟩
-  | at2 p h0 h1 h2 h3 =>
-      exact
-        ⟨fun A =>
-            C.base.stepValue A (C.base.geometry.boundary p 3) *
-              C.base.stepValue A (C.base.geometry.boundary p 0) *
-              C.base.stepValue A (C.base.geometry.boundary p 1),
+              (C.base.geometry.boundary p 0))
+    | at2 p h0 h1 h2 h3 =>
+        exact
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 3)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 0))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 1))⟩
-  | at3 p h0 h1 h2 h3 =>
-      exact
-        ⟨fun A =>
-            C.base.stepValue A (C.base.geometry.boundary p 0) *
-              C.base.stepValue A (C.base.geometry.boundary p 1) *
-              C.base.stepValue A (C.base.geometry.boundary p 2),
+              (C.base.geometry.boundary p 1))
+    | at3 p h0 h1 h2 h3 =>
+        exact
           ((continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 0)).mul
             (continuous_compact_oriented_stepValue C
               (C.base.geometry.boundary p 1))).mul
             (continuous_compact_oriented_stepValue C
-              (C.base.geometry.boundary p 2))⟩
+              (C.base.geometry.boundary p 2))
 
 @[simp]
 theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawComplementContinuousMap_apply
@@ -284,7 +270,7 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawCompleme
     (inc : C.IsolatedTargetPlaquetteIncidence target)
     (A : C.base.Configuration) :
     inc.rawComplementContinuousMap A = inc.rawComplement A := by
-  cases inc <;> rfl
+  rfl
 
 /-- The orientation-normalized three-link complement staple as an actual
 continuous map on compact configuration space. -/
@@ -296,8 +282,7 @@ def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.
   toFun := inc.stapleValue
   continuous_toFun := by
     have hRaw : Continuous (fun A : C.base.Configuration => inc.rawComplement A) := by
-      simpa only [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawComplementContinuousMap_apply
-        C target inc] using inc.rawComplementContinuousMap.continuous
+      exact inc.rawComplementContinuousMap.continuous
     unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue
     cases hOrientation : inc.targetOrientation
     · simpa [hOrientation] using hRaw
