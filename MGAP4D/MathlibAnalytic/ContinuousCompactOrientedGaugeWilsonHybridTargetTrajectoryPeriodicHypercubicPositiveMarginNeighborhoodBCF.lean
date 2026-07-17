@@ -12,6 +12,11 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
+local instance periodicPositiveMarginEndpointSystemT2Space :
+    T2Space periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
+  change T2Space (SpecialUnitaryMatrixGroup 2)
+  infer_instance
+
 /-- The rank-zero insertion profile is jointly continuous in the original
 configuration pair and the inserted Gauge value. -/
 theorem continuous_compact_oriented_independentPairHybridTargetTrajectoryEndpointInitialInsertionProfileBCF_joint_continuous
@@ -145,6 +150,9 @@ instance continuousCompactOriented_configurationHaarMeasure_isOpenPosMeasureBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem) :
     Measure.IsOpenPosMeasure C.base.configurationHaarMeasure := by
   unfold CompactOrientedGaugeWilsonSystem.configurationHaarMeasure
+  letI : Measure.IsHaarMeasure (normalizedCompactHaar C.base.Gauge) := by
+    dsimp [normalizedCompactHaar]
+    infer_instance
   infer_instance
 
 /-- The normalized real density of the finite-volume Gibbs law. -/
@@ -268,9 +276,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_fiberwise_
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF := by
   unfold
     ContinuousCompactOrientedGaugeWilsonSystem.independentPairHybridTargetTrajectoryEndpointTransportFiberwiseInsertionProfileOscillationMarginPosBCF
-  simpa only [Filter.frequently_iff, ae_iff, Classical.not_not] using
-    ne_of_gt
-      periodicHypercubicThreeSpecialUnitaryTwoPositiveMarginNeighborhoodBCF_measure_pos
+  rw [frequently_ae_iff]
+  simpa only [periodicHypercubicThreeSpecialUnitaryTwoPositiveMarginNeighborhoodBCF]
+    using
+      ne_of_gt
+        periodicHypercubicThreeSpecialUnitaryTwoPositiveMarginNeighborhoodBCF_measure_pos
 
 /-- The non-null actual positive-margin family forces a positive global endpoint
 conditional-variance gap for the concrete six-plaquette observable. -/
