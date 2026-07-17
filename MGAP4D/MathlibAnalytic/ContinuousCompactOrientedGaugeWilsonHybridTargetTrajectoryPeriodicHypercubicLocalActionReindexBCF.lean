@@ -70,7 +70,7 @@ theorem periodicHypercubic_sum_incidentPlaquette_eq_sum_touching
     (f : PeriodicHypercubicPlaquette n → M) :
     (∑ data : PeriodicHypercubicOtherAxis target.2 × Bool,
         f (periodicHypercubicIncidentPlaquette n target data.1 data.2)) =
-      ∑ p in periodicHypercubicTouchingPlaquettes n target, f p := by
+      (periodicHypercubicTouchingPlaquettes n target).sum f := by
   classical
   rw [← periodicHypercubicCanonicalTargetPlaquette_image_eq_touching]
   rw [Finset.sum_image]
@@ -98,7 +98,7 @@ def periodicHypercubicSpecialUnitaryTargetLocalWilsonAction
     [NeZero n]
     (A : PeriodicHypercubicEdge n → SpecialUnitaryMatrixGroup N)
     (target : PeriodicHypercubicEdge n) : ℝ :=
-  ∑ p in periodicHypercubicTouchingPlaquettes n target,
+  (periodicHypercubicTouchingPlaquettes n target).sum fun p =>
     specialUnitaryWilsonPlaquetteEnergy N
       (periodicHypercubicPlaquetteHolonomy A p)
 
