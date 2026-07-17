@@ -67,37 +67,93 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at0
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
-      all_goals
-        simp [periodicHypercubicIncidentPlaquette,
+      · simp [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
-          periodicHypercubicPlaquetteSecondAxis,
-          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
+          periodicHypercubicPlaquetteSecondAxis, hlt]
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge (periodicHypercubicShift n x mu)
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hShiftNuEdge
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge x
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at2
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
-      all_goals
-        simp [periodicHypercubicIncidentPlaquette,
+      · simpa [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
-          periodicHypercubicPlaquetteSecondAxis,
-          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hUnshiftNuEdge
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge
+            (periodicHypercubicShift n
+              (periodicHypercubicUnshift n x nu) mu)
+      · simp [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt]
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge (periodicHypercubicUnshift n x nu)
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at3
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
-      all_goals
-        simp [periodicHypercubicIncidentPlaquette,
+      · simpa [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
-          periodicHypercubicPlaquetteSecondAxis,
-          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge x
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hShiftNuEdge
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge (periodicHypercubicShift n x mu)
+      · simp [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt]
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at1
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
-      all_goals
-        simp [periodicHypercubicIncidentPlaquette,
+      · simpa [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
           periodicHypercubicPlaquetteFirstAxis,
-          periodicHypercubicPlaquetteSecondAxis,
-          hlt, hAxisEdge, hShiftNuEdge, hUnshiftNuEdge]
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge (periodicHypercubicUnshift n x nu)
+      · simp [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt]
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hAxisEdge
+            (periodicHypercubicShift n
+              (periodicHypercubicUnshift n x nu) mu)
+      · simpa [periodicHypercubicIncidentPlaquette,
+          periodicHypercubicAxisPairOfNe,
+          periodicHypercubicPlaquetteFirstAxis,
+          periodicHypercubicPlaquetteSecondAxis, hlt] using
+          hUnshiftNuEdge
 
 @[simp]
 theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette
