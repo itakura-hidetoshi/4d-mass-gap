@@ -55,9 +55,8 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointPair :
 def periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence
     (data : PeriodicHypercubicOtherAxis
       periodicHypercubicThreeOriginAxisZeroTarget.2 × Bool) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
-      IsolatedTargetPlaquetteIncidence
-        periodicHypercubicThreeOriginAxisZeroTarget :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.IsolatedTargetPlaquetteIncidence
+      periodicHypercubicThreeOriginAxisZeroTarget :=
   periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
     3 2 periodicEndpoint_three_ge_two periodicEndpoint_two_pos
     0 periodicEndpoint_beta_nonneg
