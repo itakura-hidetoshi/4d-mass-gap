@@ -50,6 +50,29 @@ theorem specialUnitaryTwoNegativeIdentity_inv :
     -(1 : Matrix (Fin 2) (Fin 2) ℂ)
   simp
 
+private theorem specialUnitaryTwo_identityComplementProduct_eq_one :
+    (1 : SpecialUnitaryMatrixGroup 2) * 1⁻¹ * 1⁻¹ = 1 := by
+  apply Subtype.ext
+  change
+    (1 : Matrix (Fin 2) (Fin 2) ℂ) *
+          star (1 : Matrix (Fin 2) (Fin 2) ℂ) *
+        star (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+      (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  simp
+
+private theorem specialUnitaryTwo_farCenterComplementProduct_eq_negativeIdentity :
+    ((1 : SpecialUnitaryMatrixGroup 2)⁻¹ *
+        specialUnitaryTwoNegativeIdentity * 1)⁻¹ =
+      specialUnitaryTwoNegativeIdentity := by
+  apply Subtype.ext
+  change
+    star
+        (star (1 : Matrix (Fin 2) (Fin 2) ℂ) *
+            (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) *
+          (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      -(1 : Matrix (Fin 2) (Fin 2) ℂ)
+  simp
+
 /-- The rank-two central negative identity is distinct from the identity. -/
 theorem specialUnitaryTwoNegativeIdentity_ne_one :
     specialUnitaryTwoNegativeIdentity ≠
@@ -184,10 +207,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily_farSideCen
         Fin.sum_univ_four,
         zmodThree_one_ne_neg_one] <;>
       first
-      | exact by group
-      | exact by
-          rw [specialUnitaryTwoNegativeIdentity_inv]
-          group
+      | exact specialUnitaryTwo_identityComplementProduct_eq_one
+      | exact specialUnitaryTwo_farCenterComplementProduct_eq_negativeIdentity
 
 /-- Six coincident identity staples on the actual canonical index. -/
 def specialUnitaryTwoPeriodicSixSameStapleFamily :
