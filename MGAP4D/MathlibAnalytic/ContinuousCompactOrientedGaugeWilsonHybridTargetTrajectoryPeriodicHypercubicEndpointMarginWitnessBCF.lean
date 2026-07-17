@@ -149,16 +149,25 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_eq_
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_initialStapleFamily,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_finalStapleFamily,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_plaquetteEnergyBCF_eq]
-  have hSame :
-      multiRightTranslateSumOscillationBCF specialUnitaryTwoWilsonEnergyBCF
-        specialUnitaryTwoPeriodicSixSameStapleFamily = 12 := by
+  let a := multiRightTranslateSumOscillationBCF specialUnitaryTwoWilsonEnergyBCF
+    specialUnitaryTwoPeriodicSixSameStapleFamily
+  let b := multiRightTranslateSumOscillationBCF specialUnitaryTwoWilsonEnergyBCF
+    specialUnitaryTwoPeriodicSixSplitStapleFamily
+  change |a - b| = 12
+  have ha : a = 12 := by
+    dsimp [a]
     simpa using specialUnitaryTwoPeriodicSixSameStaple_oscillation_eq_twelve
-  have hSplit :
-      multiRightTranslateSumOscillationBCF specialUnitaryTwoWilsonEnergyBCF
-        specialUnitaryTwoPeriodicSixSplitStapleFamily = 0 := by
+  have hb : b = 0 := by
+    dsimp [b]
     simpa using specialUnitaryTwoPeriodicSixSplitStaple_oscillation_eq_zero
-  rw [hSame, hSplit]
-  norm_num
+  have hab : a - b = 12 := by
+    calc
+      a - b = 12 - b := congrArg (fun x : ℝ => x - b) ha
+      _ = 12 - 0 := congrArg (fun x : ℝ => 12 - x) hb
+      _ = 12 := by norm_num
+  calc
+    |a - b| = |(12 : ℝ)| := congrArg abs hab
+    _ = 12 := by norm_num
 
 /-- The concrete actual periodic endpoint margin is strictly positive. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_margin_pos :
