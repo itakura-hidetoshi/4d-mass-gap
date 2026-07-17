@@ -67,7 +67,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
   · cases otherSide
     · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at0
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
-      · simp only [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
+      · simp [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
           periodicHypercubicBoundaryStep_zero,
           periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
@@ -112,7 +112,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           hAxisEdge
             (periodicHypercubicShift n
               (periodicHypercubicUnshift n x nu) mu)
-      · simp only [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
+      · simp [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
           periodicHypercubicBoundaryStep_two,
           periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
@@ -150,7 +150,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicPlaquetteFirstAxis,
           periodicHypercubicPlaquetteSecondAxis, hlt] using
           hAxisEdge (periodicHypercubicShift n x mu)
-      · simp only [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
+      · simp [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
           periodicHypercubicBoundaryStep_three,
           periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
@@ -165,7 +165,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
           periodicHypercubicPlaquetteFirstAxis,
           periodicHypercubicPlaquetteSecondAxis, hlt] using
           hAxisEdge (periodicHypercubicUnshift n x nu)
-      · simp only [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
+      · simp [periodicHypercubicSpecialUnitaryWilsonSystem_boundary_edge,
           periodicHypercubicBoundaryStep_one,
           periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe,
