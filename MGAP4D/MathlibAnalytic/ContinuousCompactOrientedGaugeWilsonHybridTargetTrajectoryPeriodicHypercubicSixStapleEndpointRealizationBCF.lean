@@ -81,7 +81,9 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue
       C.base.stepValue (fun _ => 1) step = 1 := by
     cases step with
     | mk edge orientation =>
-        cases orientation <;> rfl
+        cases orientation <;>
+          simp [CompactOrientedGaugeWilsonSystem.stepValue,
+            FiniteOrientedFourDimensionalPlaquetteGeometry.stepValue]
   cases inc <;>
     simp [ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
       ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
@@ -105,16 +107,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration_incid
         1 := by
   rcases nu with ⟨nu, hnu⟩
   change nu ≠ (0 : Fin 4) at hnu
-  fin_cases nu <;> fin_cases slot <;> cases otherSide <;>
-    simp_all [periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration,
-      periodicHypercubicThreeOriginAxisZeroTarget,
-      periodicHypercubicIncidentOtherEdge,
-      periodicHypercubicShift,
-      periodicHypercubicUnshift,
-      periodicHypercubicUnit,
-      Fin.sum_univ_four,
-      zmodThree_one_ne_neg_one] <;>
-    norm_num
+  fin_cases nu <;> simp at hnu
+  all_goals
+    fin_cases slot <;> cases otherSide <;>
+      simp [periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration,
+        periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicIncidentOtherEdge,
+        periodicHypercubicShift,
+        periodicHypercubicUnshift,
+        periodicHypercubicUnit,
+        Fin.sum_univ_four,
+        zmodThree_one_ne_neg_one] <;>
+      norm_num
 
 /-- The actual six-slot staple family at the fixed side-three target. -/
 def periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily
@@ -152,30 +156,35 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily_farSideCen
   funext data
   rcases data with ⟨⟨nu, hnu⟩, otherSide⟩
   change nu ≠ (0 : Fin 4) at hnu
-  fin_cases nu <;> cases otherSide <;>
-    simp_all [periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily,
-      periodicHypercubicThreeOriginAxisZeroTarget,
-      periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence,
-      ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
-      ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
-      ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
-      CompactOrientedGaugeWilsonSystem.stepValue,
-      FiniteOrientedFourDimensionalPlaquetteGeometry.stepValue,
-      periodicHypercubicSpecialUnitaryWilsonSystem,
-      periodicHypercubicFiniteOrientedGeometry,
-      periodicHypercubicIncidentPlaquette,
-      periodicHypercubicAxisPairOfNe,
-      periodicHypercubicPlaquetteFirstAxis,
-      periodicHypercubicPlaquetteSecondAxis,
-      periodicHypercubicBoundaryStep,
-      periodicBoundaryStepToFinite,
-      periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration,
-      periodicHypercubicShift,
-      periodicHypercubicUnshift,
-      periodicHypercubicUnit,
-      Fin.sum_univ_four,
-      zmodThree_one_ne_neg_one] <;>
-    norm_num
+  fin_cases nu <;> simp at hnu
+  all_goals
+    cases otherSide <;>
+      simp [periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily,
+        periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence,
+        ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue,
+        ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.targetOrientation,
+        ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.rawComplement,
+        CompactOrientedGaugeWilsonSystem.stepValue,
+        FiniteOrientedFourDimensionalPlaquetteGeometry.stepValue,
+        periodicHypercubicSpecialUnitaryWilsonSystem,
+        specialUnitaryContinuousCompactOrientedGaugeWilsonSystem,
+        specialUnitaryCompactOrientedGaugeWilsonSystem,
+        periodicHypercubicFiniteOrientedGeometry,
+        periodicHypercubicIncidentPlaquette,
+        periodicHypercubicAxisPairOfNe,
+        periodicHypercubicPlaquetteFirstAxis,
+        periodicHypercubicPlaquetteSecondAxis,
+        periodicHypercubicBoundaryStep,
+        periodicBoundaryStepToFinite,
+        periodicOrientationToFinite,
+        periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration,
+        periodicHypercubicShift,
+        periodicHypercubicUnshift,
+        periodicHypercubicUnit,
+        Fin.sum_univ_four,
+        zmodThree_one_ne_neg_one] <;>
+      norm_num
 
 /-- Six coincident identity staples on the actual canonical index. -/
 def specialUnitaryTwoPeriodicSixSameStapleFamily :
