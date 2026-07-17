@@ -292,12 +292,14 @@ def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     {target : C.base.geometry.Edge}
     (inc : C.IsolatedTargetPlaquetteIncidence target) :
-    ContinuousMap C.base.Configuration C.base.Gauge :=
-  match inc.targetOrientation with
-  | .forward => inc.rawComplementContinuousMap
-  | .backward =>
-      ⟨fun A => (inc.rawComplementContinuousMap A)⁻¹,
-        continuous_inv.comp inc.rawComplementContinuousMap.continuous⟩
+    ContinuousMap C.base.Configuration C.base.Gauge where
+  toFun := inc.stapleValue
+  continuous_toFun := by
+    unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue
+    cases hOrientation : inc.targetOrientation
+    · simpa [hOrientation] using inc.rawComplementContinuousMap.continuous
+    · simpa [hOrientation] using
+        (continuous_inv.comp inc.rawComplementContinuousMap.continuous)
 
 @[simp]
 theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleContinuousMap_apply
@@ -306,15 +308,7 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleConti
     (inc : C.IsolatedTargetPlaquetteIncidence target)
     (A : C.base.Configuration) :
     inc.stapleContinuousMap A = inc.stapleValue A := by
-  cases inc with
-  | at0 p h0 h1 h2 h3 =>
-      cases hOrientation : (C.base.geometry.boundary p 0).orientation <;> rfl
-  | at1 p h0 h1 h2 h3 =>
-      cases hOrientation : (C.base.geometry.boundary p 1).orientation <;> rfl
-  | at2 p h0 h1 h2 h3 =>
-      cases hOrientation : (C.base.geometry.boundary p 2).orientation <;> rfl
-  | at3 p h0 h1 h2 h3 =>
-      cases hOrientation : (C.base.geometry.boundary p 3).orientation <;> rfl
+  rfl
 
 /-- A finite family of isolated plaquette-complement staples is a valid
 PR #924 target-independent staple family. -/
@@ -327,9 +321,8 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleFamil
     C.targetIndependentStapleFamilyBCF target
       (fun i => (incidence i).stapleContinuousMap) := by
   intro i A g
-  simpa using
-    (continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue_replaceLink
-      C target (incidence i) A g)
+  exact continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue_replaceLink
+    C target (incidence i) A g
 
 /-- Conjugation invariance makes the energy of a two-factor product invariant
 under cyclic exchange. -/
@@ -570,12 +563,8 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_replace
   rw [continuous_compact_oriented_multiStapleCylinderObservableBCF_apply]
   apply Finset.sum_congr rfl
   intro i _hi
-  change C.base.plaquetteEnergy
-      ((C.base.replaceLink A target g) target *
-        (incidence i).stapleValue (C.base.replaceLink A target g)) =
-    C.base.plaquetteEnergy
-      (C.base.plaquetteHolonomy
-        (C.base.replaceLink A target g) (incidence i).plaquette)
+  rw [continuous_compact_oriented_plaquetteEnergyBCF_apply]
+  rw [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleContinuousMap_apply]
   rw [compact_oriented_replaceLink_same]
   rw [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleValue_replaceLink
     C target (incidence i) A g]
@@ -602,11 +591,13 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_oscilla
             (fun i => (incidence i).stapleValue
               (C.independentPairHybridConfiguration z.1 z.2
                 (Fintype.card C.base.geometry.Edge)))) := by
-  exact continuous_compact_oriented_multiStapleCylinderObservableBCF_oscillationMargin_eq
-    C target C.plaquetteEnergyBCF
-      (fun i => (incidence i).stapleContinuousMap)
-      (continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleFamily_targetIndependent
-        C target incidence) z
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.isolatedTargetPlaquetteObservableBCF
+  simpa only [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleContinuousMap_apply] using
+    (continuous_compact_oriented_multiStapleCylinderObservableBCF_oscillationMargin_eq
+      C target C.plaquetteEnergyBCF
+        (fun i => (incidence i).stapleContinuousMap)
+        (continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleFamily_targetIndependent
+          C target incidence) z)
 
 /-- The coordinate-update witness for the actual selected plaquette observable
 is exactly inequality of its two endpoint oriented-complement oscillations. -/
@@ -626,11 +617,13 @@ theorem continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_coordin
           (fun i => (incidence i).stapleValue
             (C.independentPairHybridConfiguration z.1 z.2
               (Fintype.card C.base.geometry.Edge))) := by
-  exact continuous_compact_oriented_multiStapleCylinderObservableBCF_coordinateUpdateWitness_iff_oscillation_ne
-    C target C.plaquetteEnergyBCF
-      (fun i => (incidence i).stapleContinuousMap)
-      (continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleFamily_targetIndependent
-        C target incidence) z
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.isolatedTargetPlaquetteObservableBCF
+  simpa only [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleContinuousMap_apply] using
+    (continuous_compact_oriented_multiStapleCylinderObservableBCF_coordinateUpdateWitness_iff_oscillation_ne
+      C target C.plaquetteEnergyBCF
+        (fun i => (incidence i).stapleContinuousMap)
+        (continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleFamily_targetIndependent
+          C target incidence) z)
 
 /-- The actual `SU(N)` continuous compact oriented Wilson system satisfies the
 inversion-invariance hypothesis required by the backward-incidence formula. -/
