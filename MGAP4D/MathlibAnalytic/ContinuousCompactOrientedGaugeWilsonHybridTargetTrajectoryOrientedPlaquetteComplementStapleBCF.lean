@@ -295,11 +295,13 @@ def ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.
     ContinuousMap C.base.Configuration C.base.Gauge where
   toFun := inc.stapleValue
   continuous_toFun := by
+    have hRaw : Continuous (fun A : C.base.Configuration => inc.rawComplement A) := by
+      simpa only [continuous_compact_oriented_isolatedTargetPlaquetteIncidence_rawComplementContinuousMap_apply
+        C target inc] using inc.rawComplementContinuousMap.continuous
     unfold ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.stapleValue
     cases hOrientation : inc.targetOrientation
-    · simpa [hOrientation] using inc.rawComplementContinuousMap.continuous
-    · simpa [hOrientation] using
-        (continuous_inv.comp inc.rawComplementContinuousMap.continuous)
+    · simpa [hOrientation] using hRaw
+    · simpa [hOrientation] using (continuous_inv.comp hRaw)
 
 @[simp]
 theorem continuous_compact_oriented_isolatedTargetPlaquetteIncidence_stapleContinuousMap_apply
