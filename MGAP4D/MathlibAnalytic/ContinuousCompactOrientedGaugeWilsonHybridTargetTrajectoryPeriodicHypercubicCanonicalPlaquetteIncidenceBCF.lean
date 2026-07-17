@@ -30,7 +30,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
   rcases data with ⟨⟨nu, hne⟩, otherSide⟩
   by_cases hlt : mu < nu
   · cases otherSide
-    · apply .at0
+    · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at0
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
       · change
           (periodicHypercubicBoundaryStep n
@@ -57,7 +57,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
               (x, mu) ⟨nu, hne⟩ false) 3).edge ≠ (x, mu)
         simp [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe, hlt, hne]
-    · apply .at2
+    · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at2
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
       · change
           (periodicHypercubicBoundaryStep n
@@ -85,7 +85,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
         simp [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe, hlt, hne]
   · cases otherSide
-    · apply .at3
+    · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at3
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ false)
       · change
           (periodicHypercubicBoundaryStep n
@@ -112,7 +112,7 @@ def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
               (x, mu) ⟨nu, hne⟩ false) 3).edge = (x, mu)
         simp [periodicHypercubicIncidentPlaquette,
           periodicHypercubicAxisPairOfNe, hlt]
-    · apply .at1
+    · apply ContinuousCompactOrientedGaugeWilsonSystem.IsolatedTargetPlaquetteIncidence.at1
         (periodicHypercubicIncidentPlaquette n (x, mu) ⟨nu, hne⟩ true)
       · change
           (periodicHypercubicBoundaryStep n
@@ -192,25 +192,18 @@ theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteStapleFamily_tar
       (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
         n N hn hN beta beta_nonneg target)
 
-/-- The plaquette image is exactly the actual periodic touching set. -/
-theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_image_eq_touching
-    (n N : ℕ)
+/-- The six canonical periodic plaquettes have exactly the actual touching set
+as their image. -/
+theorem periodicHypercubicCanonicalTargetPlaquette_image_eq_touching
+    (n : ℕ)
     [NeZero n]
-    (hn : 2 ≤ n)
-    (hN : 0 < N)
-    [Nontrivial (SpecialUnitaryMatrixGroup N)]
-    (beta : ℝ)
-    (beta_nonneg : 0 ≤ beta)
     (target : PeriodicHypercubicEdge n) :
     Finset.univ.image
         (fun data : PeriodicHypercubicOtherAxis target.2 × Bool =>
-          (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-            n N hn hN beta beta_nonneg target data).plaquette) =
+          periodicHypercubicIncidentPlaquette n target data.1 data.2) =
       periodicHypercubicTouchingPlaquettes n target := by
-  classical
   rw [periodicHypercubicTouchingPlaquettes_eq_incidentPlaquettes]
-  unfold periodicHypercubicIncidentPlaquettes
-  simp only [periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette]
+  rfl
 
 /-- The bounded continuous six-slot periodic target-plaquette observable. -/
 def periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF
@@ -254,21 +247,21 @@ theorem periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF_re
               n N hN beta beta_nonneg).base.replaceLink A target g)
             (periodicHypercubicIncidentPlaquette
               n target data.1 data.2)) := by
-  simpa [periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF,
-    periodicHypercubicSpecialUnitaryWilsonSystem,
-    specialUnitaryContinuousCompactOrientedGaugeWilsonSystem,
-    specialUnitaryCompactOrientedGaugeWilsonSystem,
-    periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette] using
-    (continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_replaceLink_apply
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        n N hN beta beta_nonneg)
-      (specialUnitaryContinuousCompactOrientedGaugeWilsonSystem_plaquetteEnergy_inv
-        (periodicHypercubicFiniteOrientedGeometry n)
-        N hN beta beta_nonneg)
-      target
-      (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-        n N hn hN beta beta_nonneg target)
-      A g)
+  unfold periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteObservableBCF
+  rw [continuous_compact_oriented_isolatedTargetPlaquetteObservableBCF_replaceLink_apply
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      n N hN beta beta_nonneg)
+    (specialUnitaryContinuousCompactOrientedGaugeWilsonSystem_plaquetteEnergy_inv
+      (periodicHypercubicFiniteOrientedGeometry n)
+      N hN beta beta_nonneg)
+    target
+    (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
+      n N hn hN beta beta_nonneg target)
+    A g]
+  apply Finset.sum_congr rfl
+  intro data _hdata
+  rw [periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence_plaquette]
+  rfl
 
 end
 
