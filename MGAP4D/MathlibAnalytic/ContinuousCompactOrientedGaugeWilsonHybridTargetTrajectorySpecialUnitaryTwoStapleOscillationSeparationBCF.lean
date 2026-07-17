@@ -219,6 +219,35 @@ theorem specialUnitaryTwo_twoStaple_oscillations_ne :
     specialUnitaryTwo_oppositeStaple_oscillation_eq_zero]
   norm_num
 
+/-- Once two endpoint staple families have unequal section oscillations, the
+existing hybrid-trajectory wrapper yields the coordinate-update witness. -/
+theorem continuous_compact_oriented_multiStapleCylinderObservableBCF_coordinateUpdateWitness_of_endpoint_oscillation_ne
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    {ι : Type*}
+    [Fintype ι]
+    (target : C.base.geometry.Edge)
+    (f : BoundedContinuousFunction C.base.Gauge ℝ)
+    (staple : ι → ContinuousMap C.base.Configuration C.base.Gauge)
+    (hStaple : C.targetIndependentStapleFamilyBCF target staple)
+    (z : C.base.Configuration × C.base.Configuration)
+    (sInitial sFinal : ι → C.base.Gauge)
+    (hInitial :
+      (fun i => staple i
+        (C.independentPairHybridConfiguration z.1 z.2 0)) = sInitial)
+    (hFinal :
+      (fun i => staple i
+        (C.independentPairHybridConfiguration z.1 z.2
+          (Fintype.card C.base.geometry.Edge))) = sFinal)
+    (hNe :
+      multiRightTranslateSumOscillationBCF f sInitial ≠
+        multiRightTranslateSumOscillationBCF f sFinal) :
+    C.independentPairHybridTargetTrajectoryEndpointCoordinateUpdateProfileSeparationWitnessBCF
+      target (C.multiStapleCylinderObservableBCF target f staple) z := by
+  rw [continuous_compact_oriented_multiStapleCylinderObservableBCF_coordinateUpdateWitness_iff_oscillation_ne
+    C target f staple hStaple z]
+  rw [hInitial, hFinal]
+  exact hNe
+
 end
 
 end MathlibAnalytic
