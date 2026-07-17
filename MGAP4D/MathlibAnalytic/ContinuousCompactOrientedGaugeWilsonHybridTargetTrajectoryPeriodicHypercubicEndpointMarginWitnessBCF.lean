@@ -23,11 +23,20 @@ local instance periodicEndpointSpecialUnitaryTwoNontrivial :
   ⟨⟨specialUnitaryTwoNegativeIdentity, 1,
     specialUnitaryTwoNegativeIdentity_ne_one⟩⟩
 
+private theorem periodicEndpoint_three_ge_two : 2 ≤ 3 := by
+  norm_num
+
+private theorem periodicEndpoint_two_pos : 0 < 2 := by
+  norm_num
+
+private theorem periodicEndpoint_beta_nonneg : 0 ≤ (0 : ℝ) := by
+  norm_num
+
 /-- The concrete side-three `SU(2)` Wilson system used by the endpoint witness. -/
 def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem :
     ContinuousCompactOrientedGaugeWilsonSystem :=
   periodicHypercubicSpecialUnitaryWilsonSystem
-    3 2 (by norm_num) 0 (by norm_num)
+    3 2 periodicEndpoint_two_pos 0 periodicEndpoint_beta_nonneg
 
 local instance periodicEndpointSystemT2Space :
     T2Space periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
@@ -41,6 +50,18 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointPair :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration :=
   (periodicHypercubicThreeSpecialUnitaryTwoIdentityConfiguration,
     periodicHypercubicThreeSpecialUnitaryTwoFarSideCenterConfiguration)
+
+/-- The one named six-incidence family used by every endpoint statement below. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence
+    (data : PeriodicHypercubicOtherAxis
+      periodicHypercubicThreeOriginAxisZeroTarget.2 × Bool) :
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.
+      IsolatedTargetPlaquetteIncidence
+        periodicHypercubicThreeOriginAxisZeroTarget :=
+  periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
+    3 2 periodicEndpoint_three_ge_two periodicEndpoint_two_pos
+    0 periodicEndpoint_beta_nonneg
+    periodicHypercubicThreeOriginAxisZeroTarget data
 
 /-- The canonical hybrid path at rank zero is exactly the identity endpoint. -/
 @[simp]
@@ -70,36 +91,34 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_hybrid_card :
 /-- The six actual complement staples at the rank-zero trajectory endpoint are
 six identity staples. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_initialStapleFamily :
-    (fun data : PeriodicHypercubicOtherAxis
-          periodicHypercubicThreeOriginAxisZeroTarget.2 × Bool =>
-      (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-        3 2 (by norm_num) (by norm_num) 0 (by norm_num)
-        periodicHypercubicThreeOriginAxisZeroTarget data).stapleValue
-          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridConfiguration
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.1
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.2 0)) =
+    (fun data =>
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence data).stapleValue
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridConfiguration
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.1
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.2 0)) =
       specialUnitaryTwoPeriodicSixSameStapleFamily := by
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_hybrid_zero]
-  simpa [periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily,
+  simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem,
+    periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily,
     specialUnitaryTwoPeriodicSixSameStapleFamily] using
     periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily_identityConfiguration
 
 /-- The six actual complement staples at the full-rank trajectory endpoint are
 three identity/negative-identity pairs. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_finalStapleFamily :
-    (fun data : PeriodicHypercubicOtherAxis
-          periodicHypercubicThreeOriginAxisZeroTarget.2 × Bool =>
-      (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-        3 2 (by norm_num) (by norm_num) 0 (by norm_num)
-        periodicHypercubicThreeOriginAxisZeroTarget data).stapleValue
-          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridConfiguration
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.1
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.2
-            (Fintype.card
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge))) =
+    (fun data =>
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence data).stapleValue
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridConfiguration
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.1
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointPair.2
+          (Fintype.card
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge))) =
       specialUnitaryTwoPeriodicSixSplitStapleFamily := by
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_hybrid_card]
-  simpa [periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily,
+  simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem,
+    periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily,
     specialUnitaryTwoPeriodicSixSplitStapleFamily] using
     periodicHypercubicThreeSpecialUnitaryTwoCanonicalStapleFamily_farSideCenterConfiguration
 
@@ -117,9 +136,7 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ :=
   periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.isolatedTargetPlaquetteObservableBCF
     periodicHypercubicThreeOriginAxisZeroTarget
-    (periodicHypercubicSpecialUnitaryCanonicalTargetPlaquetteIncidence
-      3 2 (by norm_num) (by norm_num) 0 (by norm_num)
-      periodicHypercubicThreeOriginAxisZeroTarget)
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointIncidence
 
 /-- The endpoint insertion-profile oscillation margin of the actual periodic
 six-plaquette observable is exactly twelve. -/
