@@ -12,6 +12,7 @@ noncomputable section
 
 local instance periodicMetricBallAmbientMatrixPseudoMetrizableSpace :
     TopologicalSpace.PseudoMetrizableSpace (Matrix (Fin 2) (Fin 2) ℂ) := by
+  change TopologicalSpace.PseudoMetrizableSpace (Fin 2 → Fin 2 → ℂ)
   infer_instance
 
 local instance periodicMetricBallEndpointSystemGaugePseudoMetrizableSpace :
