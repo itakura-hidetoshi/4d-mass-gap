@@ -119,119 +119,55 @@ noncomputable def
         (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) :=
   rfl
 
-/-- Pairwise commutation lifted to the bounded-continuous packaging. -/
-theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_pairwise_comm
+/-- A zero-coupling coordinate projection preserves constancy on every other
+coordinate fiber. This follows from pairwise commutation and fixed-point
+characterization, without constructing an equality of bounded-continuous
+structures. -/
+theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_preserves_offLinkFiberConstant
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (hBeta : C.base.beta = 0)
     (target source : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target
-        (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O) =
-      C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source
-        (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) := by
-  apply BoundedContinuousFunction.ext
-  intro A
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (hFiber : C.base.OffLinkFiberConstant target O) :
+    C.base.OffLinkFiberConstant target
+      (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O) := by
+  apply
+    (continuous_compact_oriented_singleLinkHeatBathProjection_fixed_iff
+      C target
+      (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)).mp
   change
     C.singleLinkHeatBathProjection target
-        (C.singleLinkHeatBathProjection source O) A =
+        (C.singleLinkHeatBathProjection source O) =
+      C.singleLinkHeatBathProjection source O
+  calc
+    C.singleLinkHeatBathProjection target
+        (C.singleLinkHeatBathProjection source O) =
       C.singleLinkHeatBathProjection source
-        (C.singleLinkHeatBathProjection target O) A
-  exact congrFun
-    (continuous_compact_oriented_singleLinkHeatBathProjection_pairwise_comm_of_beta_eq_zero
-      C hBeta target source O) A
+        (C.singleLinkHeatBathProjection target O) :=
+      continuous_compact_oriented_singleLinkHeatBathProjection_pairwise_comm_of_beta_eq_zero
+        C hBeta target source O
+    _ = C.singleLinkHeatBathProjection source O := by
+      rw [(continuous_compact_oriented_singleLinkHeatBathProjection_fixed_iff
+        C target O).mpr hFiber]
 
-/-- Idempotence lifted to the bounded-continuous packaging. -/
-theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_idempotent
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (hBeta : C.base.beta = 0)
-    (target : C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target
-        (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) =
-      C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O := by
-  apply BoundedContinuousFunction.ext
-  intro A
-  change
-    C.singleLinkHeatBathProjection target
-        (C.singleLinkHeatBathProjection target O) A =
-      C.singleLinkHeatBathProjection target O A
-  exact congrFun
-    (continuous_compact_oriented_singleLinkHeatBathProjection_idempotent
-      C target O) A
-
-/-- A zero-coupling coordinate projection commutes through any finite
-bounded-continuous coordinate sweep. -/
-theorem continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZero_commute
+/-- Constancy on one coordinate fiber is preserved through any finite
+zero-coupling coordinate sweep. -/
+theorem continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZero_preserves_offLinkFiberConstant
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (hBeta : C.base.beta = 0)
     (target : C.base.geometry.Edge)
     (targets : List C.base.geometry.Edge)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    C.singleLinkHeatBathProjection target
-        (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets O) =
-      C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets
-        (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) := by
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (hFiber : C.base.OffLinkFiberConstant target O) :
+    C.base.OffLinkFiberConstant target
+      (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets O) := by
   induction targets generalizing O with
-  | nil => rfl
+  | nil => exact hFiber
   | cons source rest ih =>
-      calc
-        C.singleLinkHeatBathProjection target
-            (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta
-              (source :: rest) O) =
-          C.singleLinkHeatBathProjection target
-            (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta rest
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)) := by
-                rfl
-        _ = C.periodicCoordinateProjectionListBCFOfBetaZero hBeta rest
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target
-                (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)) :=
-          ih (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)
-        _ = C.periodicCoordinateProjectionListBCFOfBetaZero hBeta rest
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source
-                (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O)) := by
-          rw [continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_pairwise_comm
-            C hBeta target source O]
-        _ = C.periodicCoordinateProjectionListBCFOfBetaZero hBeta
-              (source :: rest)
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) := by
-          rfl
-
-/-- If a coordinate occurs in the finite sweep, its Haar projection fixes the
-sweep output pointwise. -/
-theorem continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZero_fixed_of_mem
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (hBeta : C.base.beta = 0)
-    (target : C.base.geometry.Edge)
-    (targets : List C.base.geometry.Edge)
-    (hTarget : target ∈ targets)
-    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
-    C.singleLinkHeatBathProjection target
-        (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets O) =
-      C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets O := by
-  induction targets generalizing O with
-  | nil => simp at hTarget
-  | cons source rest ih =>
-      rcases List.mem_cons.mp hTarget with hEq | hRest
-      · subst source
-        calc
-          C.singleLinkHeatBathProjection target
-              (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta
-                (target :: rest) O) =
-            C.periodicCoordinateProjectionListBCFOfBetaZero hBeta rest
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target
-                (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O)) :=
-            continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZero_commute
-              C hBeta target rest
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O)
-          _ = C.periodicCoordinateProjectionListBCFOfBetaZero hBeta rest
-              (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) := by
-            rw [continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_idempotent
-              C hBeta target O]
-          _ = C.periodicCoordinateProjectionListBCFOfBetaZero hBeta
-              (target :: rest) O := by
-            rfl
-      · exact ih hRest
-          (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)
+      exact ih
+        (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)
+        (continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_preserves_offLinkFiberConstant
+          C hBeta target source O hFiber)
 
 /-- The output of a finite sweep is constant on every coordinate fiber that
 occurs in the sweep. -/
@@ -244,12 +180,19 @@ theorem continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZer
     (O : BoundedContinuousFunction C.base.Configuration ℝ) :
     C.base.OffLinkFiberConstant target
       (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets O) := by
-  exact
-    (continuous_compact_oriented_singleLinkHeatBathProjection_fixed_iff
-      C target
-      (C.periodicCoordinateProjectionListBCFOfBetaZero hBeta targets O)).mp
-      (continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZero_fixed_of_mem
-        C hBeta target targets hTarget O)
+  induction targets generalizing O with
+  | nil => simp at hTarget
+  | cons source rest ih =>
+      rcases List.mem_cons.mp hTarget with hEq | hRest
+      · subst source
+        exact
+          continuous_compact_oriented_periodicCoordinateProjectionListBCFOfBetaZero_preserves_offLinkFiberConstant
+            C hBeta target rest
+            (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O)
+            (continuous_compact_oriented_singleLinkHeatBathProjection_offLinkFiberConstant
+              C target O)
+      · exact ih hRest
+          (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O)
 
 /-- Replace successively the listed coordinates of `A` by their values in `B`. -/
 def CompactOrientedGaugeWilsonSystem.replaceLinksFrom
@@ -274,7 +217,10 @@ theorem compact_oriented_replaceLinksFrom_apply
       rw [CompactOrientedGaugeWilsonSystem.replaceLinksFrom, ih]
       by_cases hRest : edge ∈ rest
       · simp [hRest]
-      · simp [hRest, CompactOrientedGaugeWilsonSystem.replaceLink]
+      · by_cases hEq : edge = target
+        · subst target
+          simp [hRest, CompactOrientedGaugeWilsonSystem.replaceLink]
+        · simp [hRest, hEq, CompactOrientedGaugeWilsonSystem.replaceLink]
 
 /-- Replacing every coordinate in the canonical enumeration recovers the
 right-hand configuration. -/
