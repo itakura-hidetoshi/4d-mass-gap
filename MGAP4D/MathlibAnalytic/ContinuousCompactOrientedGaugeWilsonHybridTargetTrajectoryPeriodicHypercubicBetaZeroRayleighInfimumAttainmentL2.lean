@@ -73,12 +73,9 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_not_offLin
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.AgreeOffLink
         A0 A1 periodicHypercubicThreeOriginAxisZeroTarget := by
     intro edge hEdge
-    simp [A1, CompactOrientedGaugeWilsonSystem.replaceLink, hEdge]
+    simp [A1, hEdge]
   have hEq := hFiber A0 A1 hAgree
-  change
-    specialUnitaryWilsonPlaquetteEnergy 2 (1 : SpecialUnitaryMatrixGroup 2) =
-      specialUnitaryWilsonPlaquetteEnergy 2 specialUnitaryTwoNegativeIdentity at hEq
-  norm_num at hEq
+  norm_num [A0, A1] at hEq
 
 /-- Every other actual one-link heat-bath projection fixes the distinguished
 coordinate observable already on the bounded-continuous core. -/
@@ -110,7 +107,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyL2_projection_
           periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF) =
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsL2RepresentativeBCF
         periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF := by
-  rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero]
+  rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
+    source periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF]
   rw [periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_projection_eq_self_of_ne
     source hSource]
 
@@ -149,17 +149,16 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkFluctuationL2_ne_
           (C.singleLinkHeatBathProjectionBCFOfBetaZero
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero target O) :=
     hSub.trans hProjection
-  have hToLp :
-      BoundedContinuousFunction.toLp 2 C.gibbsMeasure ℝ O =
-        BoundedContinuousFunction.toLp 2 C.gibbsMeasure ℝ
-          (C.singleLinkHeatBathProjectionBCFOfBetaZero
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero target O) := by
-    simpa [ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
-      using hRepresentatives
+  change
+    BoundedContinuousFunction.toLp 2 C.gibbsMeasure ℝ O =
+      BoundedContinuousFunction.toLp 2 C.gibbsMeasure ℝ
+        (C.singleLinkHeatBathProjectionBCFOfBetaZero
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero target O)
+    at hRepresentatives
   have hBCF :
       O = C.singleLinkHeatBathProjectionBCFOfBetaZero
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero target O :=
-    (BoundedContinuousFunction.toLp_injective C.gibbsMeasure) hToLp
+    (BoundedContinuousFunction.toLp_injective C.gibbsMeasure) hRepresentatives
   have hPointwise : C.singleLinkHeatBathProjection target O = O := by
     funext A
     exact congrArg
@@ -289,7 +288,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2
     norm_pos_iff.mpr
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkFluctuationL2_ne_zero
   rw [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2,
-    norm_smul, Real.norm_inv, Real.norm_of_nonneg (norm_nonneg _),
+    norm_smul, norm_inv, Real.norm_of_nonneg (norm_nonneg _),
     inv_mul_cancel₀ (ne_of_gt hNormPos)]
 
 /-- The normalized one-link vector lies in the Gibbs-vacuum orthogonal sector. -/
