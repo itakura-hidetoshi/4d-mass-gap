@@ -166,7 +166,7 @@ theorem continuous_compact_oriented_periodicCoordinateProjectionListL2_tensoriza
       rw [continuous_compact_oriented_periodicCoordinateProjectionListL2_cons_defect_norm_sq_eq_of_beta_eq_zero
         C hBeta target rest f]
       simp only [List.map_cons, List.sum_cons]
-      exact add_le_add_left
+      exact add_le_add_right
         ((ih (C.singleLinkHeatBathProjectionL2 target f)).trans
           (continuous_compact_oriented_periodicCoordinateProjectionListL2_projectedDefectSum_le_of_beta_eq_zero
             C hBeta target rest f)) _
