@@ -101,7 +101,6 @@ theorem continuous_compact_oriented_periodicNormalizedCenteredRayleighVector_qua
         C.gibbsVarianceBCF O
   rw [map_smul, real_inner_smul_left, real_inner_smul_right, hVarEq]
   field_simp [hNormNe]
-  ring
 
 /-- Positive native energy makes the normalized centered vector a strictly
 positive-energy finite-volume state. -/
