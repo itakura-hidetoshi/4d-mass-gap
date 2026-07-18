@@ -96,22 +96,22 @@ theorem continuous_compact_oriented_periodicCoordinateProjectionListL2_fixed_of_
       simp only [List.mem_cons] at hTarget
       rcases hTarget with rfl | hTarget
       · calc
-          C.singleLinkHeatBathProjectionL2 source
-              (C.periodicCoordinateProjectionListL2 (source :: rest) f) =
-            C.singleLinkHeatBathProjectionL2 source
+          C.singleLinkHeatBathProjectionL2 target
+              (C.periodicCoordinateProjectionListL2 (target :: rest) f) =
+            C.singleLinkHeatBathProjectionL2 target
               (C.periodicCoordinateProjectionListL2 rest
-                (C.singleLinkHeatBathProjectionL2 source f)) := by
+                (C.singleLinkHeatBathProjectionL2 target f)) := by
               rfl
           _ = C.periodicCoordinateProjectionListL2 rest
-                (C.singleLinkHeatBathProjectionL2 source
-                  (C.singleLinkHeatBathProjectionL2 source f)) :=
+                (C.singleLinkHeatBathProjectionL2 target
+                  (C.singleLinkHeatBathProjectionL2 target f)) :=
             continuous_compact_oriented_periodicCoordinateProjectionListL2_commute_of_beta_eq_zero
-              C hBeta source rest
-                (C.singleLinkHeatBathProjectionL2 source f)
+              C hBeta target rest
+                (C.singleLinkHeatBathProjectionL2 target f)
           _ = C.periodicCoordinateProjectionListL2 rest
-                (C.singleLinkHeatBathProjectionL2 source f) := by
+                (C.singleLinkHeatBathProjectionL2 target f) := by
             rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_apply_projection]
-          _ = C.periodicCoordinateProjectionListL2 (source :: rest) f := by
+          _ = C.periodicCoordinateProjectionListL2 (target :: rest) f := by
             rfl
       · exact ih hTarget (C.singleLinkHeatBathProjectionL2 source f)
 
@@ -147,7 +147,10 @@ theorem continuous_compact_oriented_periodicPhysicalEdgeEnumeration_mem
     (target : C.base.geometry.Edge) :
     target ∈ C.periodicPhysicalEdgeEnumeration := by
   classical
-  simp [ContinuousCompactOrientedGaugeWilsonSystem.periodicPhysicalEdgeEnumeration]
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.periodicPhysicalEdgeEnumeration
+  rw [List.mem_ofFn]
+  exact ⟨Fintype.equivFin C.base.geometry.Edge target,
+    (Fintype.equivFin C.base.geometry.Edge).symm_apply_apply target⟩
 
 /-- Ordered product of all exact one-link heat-bath projections. -/
 noncomputable def
