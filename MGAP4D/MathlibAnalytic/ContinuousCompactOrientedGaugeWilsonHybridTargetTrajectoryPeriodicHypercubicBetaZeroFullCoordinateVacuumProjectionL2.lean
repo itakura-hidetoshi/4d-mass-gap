@@ -129,10 +129,12 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_pa
         (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source O) =
       C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta source
         (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) := by
-  ext A
-  exact congrFun
-    (continuous_compact_oriented_singleLinkHeatBathProjection_pairwise_comm_of_beta_eq_zero
-      C hBeta target source O) A
+  apply BoundedContinuousFunction.ext
+  intro A
+  simpa only [continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_apply]
+    using congrFun
+      (continuous_compact_oriented_singleLinkHeatBathProjection_pairwise_comm_of_beta_eq_zero
+        C hBeta target source O) A
 
 /-- Idempotence lifted to the bounded-continuous packaging. -/
 theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_idempotent
@@ -143,10 +145,12 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_id
     C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target
         (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) =
       C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O := by
-  ext A
-  exact congrFun
-    (continuous_compact_oriented_singleLinkHeatBathProjection_idempotent
-      C target O) A
+  apply BoundedContinuousFunction.ext
+  intro A
+  simpa only [continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_apply]
+    using congrFun
+      (continuous_compact_oriented_singleLinkHeatBathProjection_idempotent
+        C target O) A
 
 /-- A zero-coupling coordinate projection commutes through any finite
 bounded-continuous coordinate sweep. -/
@@ -256,6 +260,7 @@ theorem compact_oriented_replaceLinksFrom_apply
     (edge : L.geometry.Edge) :
     L.replaceLinksFrom targets A B edge =
       if edge ∈ targets then B edge else A edge := by
+  classical
   induction targets generalizing A with
   | nil => simp [CompactOrientedGaugeWilsonSystem.replaceLinksFrom]
   | cons target rest ih =>
@@ -273,9 +278,10 @@ theorem continuous_compact_oriented_replaceLinksFrom_periodicPhysicalEdgeEnumera
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (A B : C.base.Configuration) :
     C.base.replaceLinksFrom C.periodicPhysicalEdgeEnumeration A B = B := by
+  classical
   funext edge
-  rw [compact_oriented_replaceLinksFrom_apply]
-  simp [continuous_compact_oriented_periodicPhysicalEdgeEnumeration_mem C edge]
+  rw [compact_oriented_replaceLinksFrom_apply,
+    if_pos (continuous_compact_oriented_periodicPhysicalEdgeEnumeration_mem C edge)]
 
 /-- A function that is constant on every coordinate fiber is unchanged by any
 finite sequence of replacements in those coordinates. -/
@@ -298,9 +304,9 @@ theorem compact_oriented_replaceLinksFrom_preserves_of_offLinkFiberConstant
           (fun source hSource => hFiber source (List.mem_cons_of_mem target hSource)) A'
         _ = f A := by
           symm
-          apply hFiber target (List.mem_cons_self target rest) A A'
+          apply hFiber target List.mem_cons_self A A'
           intro edge hEdge
-          simp [A', CompactOrientedGaugeWilsonSystem.replaceLink, hEdge]
+          simp [A', hEdge]
 
 /-- For a finite coordinate product, invariance under all coordinate fibers
 forces pointwise constancy. -/
@@ -381,7 +387,7 @@ theorem continuous_compact_oriented_periodicCoordinateProjectionListL2_gibbsL2Re
   induction targets generalizing O with
   | nil => rfl
   | cons target rest ih =>
-      rw [continuous_compact_oriented_periodicCoordinateProjectionListL2_cons,
+      rw [continuous_compact_oriented_periodicCoordinateProjectionListL2_cons_apply,
         continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
           C hBeta target O]
       exact ih
@@ -414,7 +420,8 @@ theorem continuous_compact_oriented_gibbsL2RepresentativeBCF_constant
     ContinuousCompactOrientedGaugeWilsonSystem.gibbsVacuumL2
   rw [indicatorConstLp_univ]
   change Lp.const 2 C.gibbsMeasure c = c • Lp.const 2 C.gibbsMeasure (1 : ℝ)
-  rfl
+  simpa using
+    ((Lp.constₗ 2 C.gibbsMeasure ℝ).map_smul c (1 : ℝ))
 
 /-- Every finite ordered `L²` coordinate sweep preserves the Gibbs-vacuum
 coefficient. -/
@@ -428,7 +435,7 @@ theorem continuous_compact_oriented_inner_vacuum_periodicCoordinateProjectionLis
   induction targets generalizing f with
   | nil => rfl
   | cons target rest ih =>
-      rw [continuous_compact_oriented_periodicCoordinateProjectionListL2_cons,
+      rw [continuous_compact_oriented_periodicCoordinateProjectionListL2_cons_apply,
         ih]
       calc
         inner ℝ C.gibbsVacuumL2
@@ -470,6 +477,10 @@ theorem continuous_compact_oriented_periodicFullCoordinateProjectionL2_gibbsL2Re
   have hCoefficient :=
     continuous_compact_oriented_inner_vacuum_periodicCoordinateProjectionListL2
       C C.periodicPhysicalEdgeEnumeration (C.gibbsL2RepresentativeBCF O)
+  change
+    inner ℝ C.gibbsVacuumL2
+        (C.periodicFullCoordinateProjectionL2 (C.gibbsL2RepresentativeBCF O)) =
+      inner ℝ C.gibbsVacuumL2 (C.gibbsL2RepresentativeBCF O) at hCoefficient
   have hc : c = inner ℝ C.gibbsVacuumL2 (C.gibbsL2RepresentativeBCF O) := by
     rw [hCore, hQOConstant,
       continuous_compact_oriented_gibbsL2RepresentativeBCF_constant] at hCoefficient
