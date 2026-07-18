@@ -12,7 +12,7 @@ noncomputable section
 
 /-- A nonzero local heat-bath fluctuation forces the Gibbs-vacuum-centered
 component of the original `L²` vector to be nonzero. -/
-theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_ne_zero_implies_vacuumCentered_ne_zero
+theorem continuous_compact_oriented_periodicCenteredRayleighWitness_fluctuation_ne_zero_implies_centered_ne_zero
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (f : Lp ℝ 2 C.gibbsMeasure)
@@ -29,7 +29,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_ne_zero_impl
 
 /-- Positive native one-link conditional-pair energy forces strictly positive
 Gibbs variance of the bounded-continuous observable. -/
-theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_gibbsVarianceBCF_pos
+theorem continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_gibbsVariance_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
@@ -43,7 +43,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableE
       C target O hNative
   have hCentered :
       C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O) ≠ 0 :=
-    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_ne_zero_implies_vacuumCentered_ne_zero
+    continuous_compact_oriented_periodicCenteredRayleighWitness_fluctuation_ne_zero_implies_centered_ne_zero
       C target (C.gibbsL2RepresentativeBCF O) hFluctuation
   rw [continuous_compact_oriented_gibbsVarianceBCF_eq_vacuumCentered_norm_sq]
   have hNorm :
@@ -53,7 +53,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableE
 
 /-- The same positive native one-link energy gives a positive mean-square
 difference under two independent full Gibbs configurations. -/
-theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_gibbsIndependentPairDifferenceEnergyBCF_pos
+theorem continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_gibbsPairDifference_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
@@ -61,14 +61,14 @@ theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableE
       0 < C.singleLinkHeatBathIndependentPairObservableEnergyBCF target O) :
     0 < C.gibbsIndependentPairDifferenceEnergyBCF O := by
   have hVariance :=
-    continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_gibbsVarianceBCF_pos
+    continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_gibbsVariance_pos
       C target O hNative
   rw [continuous_compact_oriented_gibbsIndependentPairDifferenceEnergyBCF_eq_two_mul_variance]
   nlinarith
 
 /-- Removing the Gibbs-vacuum component leaves the heat-bath Hamiltonian
 quadratic form unchanged because the Hamiltonian annihilates the vacuum. -/
-theorem continuous_compact_oriented_heatBathHamiltonianL2_vacuumCentered_quadraticForm
+theorem continuous_compact_oriented_periodicCenteredRayleighWitness_vacuumCentered_quadraticForm
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (f : Lp ℝ 2 C.gibbsMeasure) :
     inner ℝ
@@ -103,7 +103,7 @@ theorem continuous_compact_oriented_heatBathHamiltonianL2_vacuumCentered_quadrat
 
 /-- Centered finite-volume heat-bath Rayleigh quotient of a bounded-continuous
 observable.  Its denominator is the exact Gibbs variance. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.gibbsCenteredHeatBathRayleighQuotientBCF
+def ContinuousCompactOrientedGaugeWilsonSystem.periodicCenteredHeatBathRayleighWitnessBCF
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (O : BoundedContinuousFunction C.base.Configuration ℝ) : ℝ :=
   let centered := C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)
@@ -112,15 +112,15 @@ def ContinuousCompactOrientedGaugeWilsonSystem.gibbsCenteredHeatBathRayleighQuot
 
 /-- Positive native one-link energy produces a strictly positive centered
 finite-volume Rayleigh quotient for that observable. -/
-theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_centeredRayleigh_pos
+theorem continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_quotient_pos
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hNative :
       0 < C.singleLinkHeatBathIndependentPairObservableEnergyBCF target O) :
-    0 < C.gibbsCenteredHeatBathRayleighQuotientBCF O := by
+    0 < C.periodicCenteredHeatBathRayleighWitnessBCF O := by
   have hVariance :=
-    continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_gibbsVarianceBCF_pos
+    continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_gibbsVariance_pos
       C target O hNative
   have hQuadratic :=
     continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_hamiltonian_quadratic_pos
@@ -130,25 +130,25 @@ theorem continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableE
         (C.heatBathHamiltonianL2
           (C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)))
         (C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)) := by
-    rw [continuous_compact_oriented_heatBathHamiltonianL2_vacuumCentered_quadraticForm]
+    rw [continuous_compact_oriented_periodicCenteredRayleighWitness_vacuumCentered_quadraticForm]
     exact hQuadratic
   unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.gibbsCenteredHeatBathRayleighQuotientBCF
+    ContinuousCompactOrientedGaugeWilsonSystem.periodicCenteredHeatBathRayleighWitnessBCF
   exact div_pos hCenteredQuadratic hVariance
 
 /-- The centered Rayleigh quotient exactly recovers the centered Hamiltonian
 quadratic form after multiplication by the positive Gibbs variance. -/
-theorem continuous_compact_oriented_gibbsCenteredHeatBathRayleighQuotientBCF_mul_variance
+theorem continuous_compact_oriented_periodicCenteredRayleighWitness_quotient_mul_variance
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (hVariance : 0 < C.gibbsVarianceBCF O) :
-    C.gibbsCenteredHeatBathRayleighQuotientBCF O * C.gibbsVarianceBCF O =
+    C.periodicCenteredHeatBathRayleighWitnessBCF O * C.gibbsVarianceBCF O =
       inner ℝ
         (C.heatBathHamiltonianL2
           (C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)))
         (C.vacuumCenteredL2 (C.gibbsL2RepresentativeBCF O)) := by
   unfold
-    ContinuousCompactOrientedGaugeWilsonSystem.gibbsCenteredHeatBathRayleighQuotientBCF
+    ContinuousCompactOrientedGaugeWilsonSystem.periodicCenteredHeatBathRayleighWitnessBCF
   exact div_mul_cancel₀ _ (ne_of_gt hVariance)
 
 abbrev periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF :=
@@ -160,7 +160,7 @@ abbrev periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredGibbsL2
     periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF
 
 abbrev periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredRayleighBCF : ℝ :=
-  periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsCenteredHeatBathRayleighQuotientBCF
+  periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.periodicCenteredHeatBathRayleighWitnessBCF
     periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
 
 /-- The actual periodic six-plaquette observable has a nonzero Gibbs-vacuum-
@@ -168,7 +168,7 @@ centered representative. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centered_ne_zero :
     periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredGibbsL2BCF ≠ 0 := by
   exact
-    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_ne_zero_implies_vacuumCentered_ne_zero
+    continuous_compact_oriented_periodicCenteredRayleighWitness_fluctuation_ne_zero_implies_centered_ne_zero
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF
@@ -179,7 +179,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_gibbsVaria
     0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVarianceBCF
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF := by
   exact
-    continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_gibbsVarianceBCF_pos
+    continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_gibbsVariance_pos
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
@@ -191,7 +191,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_gibbsIndep
     0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsIndependentPairDifferenceEnergyBCF
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF := by
   exact
-    continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_gibbsIndependentPairDifferenceEnergyBCF_pos
+    continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_gibbsPairDifference_pos
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
@@ -202,7 +202,7 @@ periodic observable is strictly positive. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRayleigh_pos :
     0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredRayleighBCF := by
   exact
-    continuous_compact_oriented_singleLinkHeatBathIndependentPairObservableEnergyBCF_pos_implies_centeredRayleigh_pos
+    continuous_compact_oriented_periodicCenteredRayleighWitness_nativeEnergy_pos_implies_quotient_pos
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
@@ -231,7 +231,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRa
           periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredGibbsL2BCF)
         periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredGibbsL2BCF := by
       exact
-        continuous_compact_oriented_gibbsCenteredHeatBathRayleighQuotientBCF_mul_variance
+        continuous_compact_oriented_periodicCenteredRayleighWitness_quotient_mul_variance
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
           periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF
           periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_gibbsVariance_pos
@@ -239,7 +239,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRa
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2
           periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF)
         periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF :=
-      continuous_compact_oriented_heatBathHamiltonianL2_vacuumCentered_quadraticForm
+      continuous_compact_oriented_periodicCenteredRayleighWitness_vacuumCentered_quadraticForm
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
         periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF
 
