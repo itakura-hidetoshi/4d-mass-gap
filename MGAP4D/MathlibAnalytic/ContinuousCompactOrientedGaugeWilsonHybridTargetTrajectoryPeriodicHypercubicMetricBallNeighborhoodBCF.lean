@@ -10,10 +10,16 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
+local instance periodicMetricBallAmbientMatrixPseudoMetrizableSpace :
+    TopologicalSpace.PseudoMetrizableSpace (Matrix (Fin 2) (Fin 2) ℂ) := by
+  infer_instance
+
 local instance periodicMetricBallEndpointSystemGaugePseudoMetrizableSpace :
     TopologicalSpace.PseudoMetrizableSpace
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge := by
-  change TopologicalSpace.PseudoMetrizableSpace (SpecialUnitaryMatrixGroup 2)
+  change TopologicalSpace.PseudoMetrizableSpace
+    {U : Matrix (Fin 2) (Fin 2) ℂ |
+      U ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ}
   infer_instance
 
 local instance periodicMetricBallEndpointPairPseudoMetrizableSpace :
