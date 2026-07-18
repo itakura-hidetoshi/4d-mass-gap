@@ -10,7 +10,7 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
-set_option maxRecDepth 2048
+set_option maxRecDepth 8192
 
 /-- A nonzero local heat-bath fluctuation forces the Gibbs-vacuum-centered
 component of the original `L²` vector to be nonzero. -/
@@ -241,10 +241,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRa
     _ = inner ℝ
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2
           periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF)
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF :=
-      continuous_compact_oriented_periodicCenteredRayleighWitness_vacuumCentered_quadraticForm
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF := by
+      simpa only [
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredGibbsL2BCF]
+        using
+          (continuous_compact_oriented_periodicCenteredRayleighWitness_vacuumCentered_quadraticForm
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableGibbsL2BCF)
 
 end
 
