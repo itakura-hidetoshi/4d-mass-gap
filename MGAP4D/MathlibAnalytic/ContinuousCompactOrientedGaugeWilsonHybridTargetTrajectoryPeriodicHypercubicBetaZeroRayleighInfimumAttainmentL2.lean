@@ -76,8 +76,9 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_not_offLin
     simp [A1, hEdge]
   have hEq := hFiber A0 A1 hAgree
   norm_num [A0, A1] at hEq
-  rw [specialUnitaryWilsonPlaquetteEnergy_two_one] at hEq
-  norm_num at hEq
+  have hZeroTwo : (0 : ℝ) = 2 :=
+    specialUnitaryWilsonPlaquetteEnergy_two_one.symm.trans hEq
+  norm_num at hZeroTwo
 
 /-- Every other actual one-link heat-bath projection fixes the distinguished
 coordinate observable already on the bounded-continuous core. -/
