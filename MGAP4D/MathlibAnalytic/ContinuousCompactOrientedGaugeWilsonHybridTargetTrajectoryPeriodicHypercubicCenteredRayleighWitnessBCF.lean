@@ -10,6 +10,8 @@ open scoped ProbabilityTheory BigOperators ENNReal
 
 noncomputable section
 
+set_option maxRecDepth 2048
+
 /-- A nonzero local heat-bath fluctuation forces the Gibbs-vacuum-centered
 component of the original `L²` vector to be nonzero. -/
 theorem continuous_compact_oriented_periodicCenteredRayleighWitness_fluctuation_ne_zero_implies_centered_ne_zero
@@ -212,7 +214,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRa
 /-- The positive centered Rayleigh quotient is an exact one-observable witness:
 multiplied by Gibbs variance, it recovers the already-proved Hamiltonian
 quadratic form. -/
-set_option maxRecDepth 2048 in
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRayleigh_witness :
     0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredRayleighBCF ∧
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredRayleighBCF *
