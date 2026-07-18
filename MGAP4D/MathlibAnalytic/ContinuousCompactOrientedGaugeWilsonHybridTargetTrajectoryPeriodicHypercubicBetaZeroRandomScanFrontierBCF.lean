@@ -88,15 +88,30 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointCenteredRandomScanRaylei
     refine
       { centered_randomScan_rayleigh_le := ?_ }
     intro f
-    have h := hRayleigh f
-    simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem,
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_dobrushinRandomScanRate_zero]
-      using h
+    change
+      inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2
+            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.vacuumCenteredL2 f))
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.vacuumCenteredL2 f) ≤
+        continuousCompactOrientedDobrushinRandomScanRate
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
+            (18 * periodicHypercubicSpecialUnitaryDobrushinEta 0) *
+          ‖periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.vacuumCenteredL2 f‖ ^ 2
+    rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_dobrushinRandomScanRate_zero]
+    exact hRayleigh f
   · intro R f
     have h := R.centered_randomScan_rayleigh_le f
-    simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem,
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_dobrushinRandomScanRate_zero]
-      using h
+    change
+      inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2
+            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.vacuumCenteredL2 f))
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.vacuumCenteredL2 f) ≤
+        continuousCompactOrientedDobrushinRandomScanRate
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
+            (18 * periodicHypercubicSpecialUnitaryDobrushinEta 0) *
+          ‖periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.vacuumCenteredL2 f‖ ^ 2 at h
+    rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_dobrushinRandomScanRate_zero] at h
+    exact h
 
 /-- The explicit centered random-scan estimate yields the standard actual
 heat-bath Poincare inequality with the numerical constant `1`. -/
