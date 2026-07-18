@@ -33,7 +33,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBath
       hHamiltonian,
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_edgeCard_eq_324,
       smul_smul]
-    have hScalar : (324 : ℝ)⁻¹ * lam = lam / 324 := by
+    have hScalar :
+        ((↑(324 : ℕ) : ℝ)⁻¹ * lam) = lam / 324 := by
       rw [div_eq_mul_inv]
       ring
     rw [hScalar, sub_smul, one_smul]
@@ -56,8 +57,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBath
         _ = (lam / 324) • f := by
           rw [sub_smul, one_smul]
           abel
-    have hScaled := congrArg (fun x => (324 : ℝ) • x) hInverseScaled
-    simpa [smul_smul, div_eq_mul_inv] using hScaled
+    change C.heatBathHamiltonianL2 f = lam • f
+    calc
+      C.heatBathHamiltonianL2 f =
+          (324 : ℝ) • ((324 : ℝ)⁻¹ • C.heatBathHamiltonianL2 f) := by
+        norm_num [smul_smul]
+      _ = (324 : ℝ) • ((lam / 324) • f) := by
+        rw [hInverseScaled]
+      _ = lam • f := by
+        rw [smul_smul]
+        congr 1
+        norm_num [div_eq_mul_inv]
+        ring
 
 /-- Every nonzero Hamiltonian point-spectrum value maps to a vacuum-orthogonal
 random-scan point-spectrum value by `lam ↦ 1 - lam / 324`. -/
@@ -68,12 +79,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBath
         ({0} : Set ℝ)) :
     (1 - lam / 324) ∈
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.centeredRandomScanPointSpectrumL2 := by
+  have hPoint := hlam.1
   change ∃ f : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
     f ≠ 0 ∧
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2 f =
-        lam • f at hlam
-  rcases hlam.1 with ⟨f, hf, hHamiltonian⟩
+        lam • f at hPoint
+  rcases hPoint with ⟨f, hf, hHamiltonian⟩
   have hlamNe : lam ≠ 0 := by
     intro hZero
     apply hlam.2
@@ -123,7 +135,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centered
     have hRateLt : (323 : ℝ) / 324 < 1 := by norm_num
     exact lt_of_le_of_lt hrhoLe hRateLt
   have hLamPos : 0 < (324 : ℝ) * (1 - rho) := by
-    positivity
+    nlinarith
   refine ⟨⟨f, hf, hHamiltonian⟩, ?_⟩
   intro hZeroMem
   have hZero : (324 : ℝ) * (1 - rho) = 0 := by
