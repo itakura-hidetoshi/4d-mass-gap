@@ -128,10 +128,11 @@ theorem continuous_compact_oriented_periodicVacuumOrthogonalUnitRayleighInfimum_
         inner ℝ (C.heatBathHamiltonianL2 centered) centered =
           ‖centered‖ ^ 2 *
             inner ℝ (C.heatBathHamiltonianL2 normalized) normalized := by
-      rw [← hRecover]
-      exact
+      have hScaleRaw :=
         continuous_compact_oriented_periodicRayleighInfimumPoincare_quadratic_smul
           C ‖centered‖ normalized
+      rw [hRecover] at hScaleRaw
+      exact hScaleRaw
     have hCenteredEnergy :
         inner ℝ (C.heatBathHamiltonianL2 centered) centered =
           inner ℝ (C.heatBathHamiltonianL2 f) f := by
