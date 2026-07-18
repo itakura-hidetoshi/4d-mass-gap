@@ -24,8 +24,9 @@ theorem continuous_compact_oriented_periodicCenteredRayleighWitness_fluctuation_
     unfold ContinuousCompactOrientedGaugeWilsonSystem.vacuumCenteredL2 at hCentered
     exact sub_eq_zero.mp hCentered
   apply hFluctuation
-  rw [hScalar]
-  simp [continuous_compact_oriented_singleLinkHeatBathFluctuationL2_vacuum]
+  rw [hScalar, map_smul,
+    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_vacuum]
+  simp
 
 /-- Positive native one-link conditional-pair energy forces strictly positive
 Gibbs variance of the bounded-continuous observable. -/
@@ -211,6 +212,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRa
 /-- The positive centered Rayleigh quotient is an exact one-observable witness:
 multiplied by Gibbs variance, it recovers the already-proved Hamiltonian
 quadratic form. -/
+set_option maxRecDepth 2048 in
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF_centeredRayleigh_witness :
     0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredRayleighBCF ∧
       periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableCenteredRayleighBCF *
