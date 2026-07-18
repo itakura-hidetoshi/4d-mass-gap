@@ -24,10 +24,10 @@ theorem compact_oriented_replaceLink_comm_of_ne
   funext edge
   by_cases hTarget : edge = target
   · subst edge
-    simp [CompactOrientedGaugeWilsonSystem.replaceLink, hNe, hNe.symm]
+    simp [CompactOrientedGaugeWilsonSystem.replaceLink, hNe]
   · by_cases hSource : edge = source
     · subst edge
-      simp [CompactOrientedGaugeWilsonSystem.replaceLink, hNe, hNe.symm]
+      simp [CompactOrientedGaugeWilsonSystem.replaceLink, hNe.symm]
     · simp [CompactOrientedGaugeWilsonSystem.replaceLink, hTarget, hSource]
 
 /-- At zero coupling, one-link heat-bath projection is literal normalized Haar
@@ -70,7 +70,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_comm_of_beta_eq
     (continuous_compact_oriented_replaceLink C A target).comp continuous_fst
   have hInput : Continuous (fun z : C.base.Gauge × C.base.Gauge =>
       (C.base.replaceLink A target z.1, z.2)) :=
-    hFirst.prod_mk continuous_snd
+    hFirst.prodMk continuous_snd
   have hReplace : Continuous (fun z : C.base.Gauge × C.base.Gauge =>
       C.base.replaceLink
         (C.base.replaceLink A target z.1) source z.2) :=
@@ -91,7 +91,6 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_comm_of_beta_eq
         filter_upwards [] with g
         rw [continuous_compact_oriented_singleLinkHeatBathProjection_eq_haarIntegral_of_beta_eq_zero
           C hBeta source O (C.base.replaceLink A target g)]
-        rfl
     _ = ∫ h, ∫ g, F (g, h) ∂μ ∂μ := by
       exact integral_integral_swap hFIntegrable
     _ = ∫ h, ∫ g,
