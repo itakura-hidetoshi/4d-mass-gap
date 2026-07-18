@@ -131,10 +131,14 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_pa
         (C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O) := by
   apply BoundedContinuousFunction.ext
   intro A
-  simpa only [continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_apply]
-    using congrFun
-      (continuous_compact_oriented_singleLinkHeatBathProjection_pairwise_comm_of_beta_eq_zero
-        C hBeta target source O) A
+  change
+    C.singleLinkHeatBathProjection target
+        (C.singleLinkHeatBathProjection source O) A =
+      C.singleLinkHeatBathProjection source
+        (C.singleLinkHeatBathProjection target O) A
+  exact congrFun
+    (continuous_compact_oriented_singleLinkHeatBathProjection_pairwise_comm_of_beta_eq_zero
+      C hBeta target source O) A
 
 /-- Idempotence lifted to the bounded-continuous packaging. -/
 theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_idempotent
@@ -147,10 +151,13 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_id
       C.singleLinkHeatBathProjectionBCFOfBetaZero hBeta target O := by
   apply BoundedContinuousFunction.ext
   intro A
-  simpa only [continuous_compact_oriented_singleLinkHeatBathProjectionBCFOfBetaZero_apply]
-    using congrFun
-      (continuous_compact_oriented_singleLinkHeatBathProjection_idempotent
-        C target O) A
+  change
+    C.singleLinkHeatBathProjection target
+        (C.singleLinkHeatBathProjection target O) A =
+      C.singleLinkHeatBathProjection target O A
+  exact congrFun
+    (continuous_compact_oriented_singleLinkHeatBathProjection_idempotent
+      C target O) A
 
 /-- A zero-coupling coordinate projection commutes through any finite
 bounded-continuous coordinate sweep. -/
@@ -255,22 +262,19 @@ def CompactOrientedGaugeWilsonSystem.replaceLinksFrom
 /-- Successive replacement has the expected coordinatewise formula. -/
 theorem compact_oriented_replaceLinksFrom_apply
     (L : CompactOrientedGaugeWilsonSystem)
+    [DecidableEq L.geometry.Edge]
     (targets : List L.geometry.Edge)
     (A B : L.Configuration)
     (edge : L.geometry.Edge) :
     L.replaceLinksFrom targets A B edge =
       if edge ∈ targets then B edge else A edge := by
-  classical
   induction targets generalizing A with
-  | nil => simp [CompactOrientedGaugeWilsonSystem.replaceLinksFrom]
+  | nil => rfl
   | cons target rest ih =>
       rw [CompactOrientedGaugeWilsonSystem.replaceLinksFrom, ih]
       by_cases hRest : edge ∈ rest
       · simp [hRest]
-      · by_cases hEq : edge = target
-        · subst edge
-          simp [hRest]
-        · simp [hRest, hEq, CompactOrientedGaugeWilsonSystem.replaceLink]
+      · simp [hRest, CompactOrientedGaugeWilsonSystem.replaceLink]
 
 /-- Replacing every coordinate in the canonical enumeration recovers the
 right-hand configuration. -/
