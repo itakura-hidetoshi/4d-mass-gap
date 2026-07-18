@@ -39,6 +39,10 @@ theorem continuous_compact_oriented_periodicOffLinkIntersection_projection_eq_se
       f ∈ lpMeas ℝ ℝ (C.base.offLinkMeasurableSpace target)
         2 C.gibbsMeasure := by
   let hm := compact_oriented_offLinkMeasurableSpace_le C.base target
+  letI : Fact
+      (C.base.offLinkMeasurableSpace target ≤
+        (inferInstance : MeasurableSpace C.base.Configuration)) :=
+    ⟨hm⟩
   constructor
   · intro hFixed
     let q : lpMeas ℝ ℝ (C.base.offLinkMeasurableSpace target)
