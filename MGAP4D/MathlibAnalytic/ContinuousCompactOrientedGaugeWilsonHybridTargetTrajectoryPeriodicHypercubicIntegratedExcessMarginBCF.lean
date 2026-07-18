@@ -55,44 +55,49 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF
       (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure.prod
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
 
+/-- Proof-facing package for one compact-core integrated excess-margin lower bound. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginLowerBoundProperty
+    (ε η c : ℝ) : Prop :=
+  0 < ε ∧
+  0 < η ∧
+  0 < c ∧
+  IsCompact (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
+  Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε ⊆
+    periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF ∧
+  (∀ z ∈ Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε,
+    (6 : ℝ) + η ≤
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
+        periodicHypercubicThreeOriginAxisZeroTarget
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF z) ∧
+  0 <
+    ENNReal.ofReal η *
+      ((ENNReal.ofReal c * ENNReal.ofReal c) •
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure.prod
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure))
+        (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
+  ENNReal.ofReal η *
+      ((ENNReal.ofReal c * ENNReal.ofReal c) •
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure.prod
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure))
+        (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ≤
+    ENNReal.ofReal η *
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure.prod
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+        (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
+  ENNReal.ofReal η *
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure.prod
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+        (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ≤
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε ∧
+  0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε
+
 /-- The compact core supplies a strictly positive quantitative lower bound for the
 integrated threshold-six excess margin.  The lower bound is the uniform reserve
 `η` times the already-proved Haar-relative mass bound, and it factors through the
 actual Gibbs-pair mass of the core. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_exists_compact_closedBall_integrated_excess_margin_lowerBound :
     ∃ ε η c : ℝ,
-      0 < ε ∧
-      0 < η ∧
-      0 < c ∧
-      IsCompact (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
-      Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε ⊆
-        periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF ∧
-      (∀ z ∈ Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε,
-        (6 : ℝ) + η ≤
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
-            periodicHypercubicThreeOriginAxisZeroTarget
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF z) ∧
-      0 <
-        ENNReal.ofReal η *
-          ((ENNReal.ofReal c * ENNReal.ofReal c) •
-            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure.prod
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure))
-            (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
-      ENNReal.ofReal η *
-          ((ENNReal.ofReal c * ENNReal.ofReal c) •
-            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure.prod
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.configurationHaarMeasure))
-            (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ≤
-        ENNReal.ofReal η *
-          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure.prod
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-            (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
-      ENNReal.ofReal η *
-          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure.prod
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-            (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ≤
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε ∧
-      0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε := by
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginLowerBoundProperty ε η c := by
   rcases
       periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_exists_compact_closedBall_uniform_margin_and_mass_lowerBound with
     ⟨ε, η, c, hε, hη, hc, hCompact, hSubset, hMargin, hScaledPos, hDom⟩
@@ -140,8 +145,26 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_exists_compact_clos
   have hIntegratedPos :
       0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε :=
     lt_of_lt_of_le hReserveGibbsPos hReserveGibbsLeIntegral
+  refine ⟨ε, η, c, ?_⟩
+  change
+    0 < ε ∧
+    0 < η ∧
+    0 < c ∧
+    IsCompact (Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε) ∧
+    Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε ⊆
+      periodicHypercubicThreeSpecialUnitaryTwoExplicitMarginLowerBoundNeighborhoodBCF ∧
+    (∀ z ∈ Metric.closedBall periodicHypercubicThreeSpecialUnitaryTwoEndpointPair ε,
+      (6 : ℝ) + η ≤
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.independentPairHybridTargetTrajectoryEndpointInsertionProfileOscillationMarginBCF
+          periodicHypercubicThreeOriginAxisZeroTarget
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointObservableBCF z) ∧
+    0 < ENNReal.ofReal η * μH K ∧
+    ENNReal.ofReal η * μH K ≤ ENNReal.ofReal η * μG K ∧
+    ENNReal.ofReal η * μG K ≤
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε ∧
+    0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε
   exact
-    ⟨ε, η, c, hε, hη, hc, hCompact, hSubset, hMargin,
+    ⟨hε, hη, hc, hCompact, hSubset, hMargin,
       hReserveHaarPos, hReserveHaarLeGibbs, hReserveGibbsLeIntegral, hIntegratedPos⟩
 
 /-- In particular, the actual side-three periodic `SU(2)` endpoint observable has
@@ -153,7 +176,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBC
       0 < periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginBCF ε := by
   rcases
       periodicHypercubicThreeSpecialUnitaryTwoEndpointPair_exists_compact_closedBall_integrated_excess_margin_lowerBound with
-    ⟨ε, η, c, hε, hη, hc, hCompact, hSubset, hMargin,
+    ⟨ε, η, c, hData⟩
+  simp only [periodicHypercubicThreeSpecialUnitaryTwoEndpointIntegratedExcessMarginLowerBoundProperty] at hData
+  rcases hData with
+    ⟨hε, hη, hc, hCompact, hSubset, hMargin,
       hReserveHaarPos, hReserveHaarLeGibbs, hReserveGibbsLeIntegral, hIntegratedPos⟩
   exact ⟨ε, hε, hIntegratedPos⟩
 
