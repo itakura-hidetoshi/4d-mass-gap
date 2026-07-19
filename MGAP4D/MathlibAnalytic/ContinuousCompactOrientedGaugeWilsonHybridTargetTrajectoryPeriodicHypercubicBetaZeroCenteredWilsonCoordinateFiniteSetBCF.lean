@@ -34,7 +34,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSe
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF s A =
       ∏ edge ∈ s,
         periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF edge A := by
-  rfl
+  simp [periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF]
 
 @[simp]
 theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF_empty :
@@ -69,7 +69,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSe
   rw [← Finset.insert_erase hEdge]
   exact
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF_insert
-      (s.erase edge) edge (Finset.not_mem_erase edge s)
+      (s.erase edge) edge (Finset.notMem_erase edge s)
 
 /-- The finite-set product is constant along every unselected physical-link
 fiber. -/
@@ -109,6 +109,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSe
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF_eq_mul_erase
       s edge hEdge]
   funext A
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
+        edge
+        (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF edge *
+          periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF
+            (s.erase edge))
+        A = 0
   rw [
     continuous_compact_oriented_singleLinkHeatBathProjection_mul_of_right_offLinkFiberConstant
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -118,7 +125,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSe
       (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF
         (s.erase edge))
       (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF_offLinkFiberConstant_of_not_mem
-        (s.erase edge) edge (Finset.not_mem_erase edge s))
+        (s.erase edge) edge (Finset.notMem_erase edge s))
       A]
   have hZero := congrFun
     (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF_projection_self_eq_zero
