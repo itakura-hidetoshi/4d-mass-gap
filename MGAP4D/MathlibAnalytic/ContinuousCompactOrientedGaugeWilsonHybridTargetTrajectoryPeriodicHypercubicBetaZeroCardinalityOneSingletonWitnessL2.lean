@@ -135,9 +135,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_oneLinkU
     exact
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_target_fluctuation_eq_self
   · intro source hSource
+    have hNe : source ≠ periodicHypercubicThreeOriginAxisZeroTarget := by
+      intro hEq
+      subst source
+      exact hSource (Finset.mem_singleton_self _)
     exact
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_fluctuation_eq_zero_of_ne
-        source (by simpa using hSource)
+        source hNe
 
 /-- The actual cardinality-one projector fixes the normalized one-link mode. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_one_apply_oneLinkUnitEigenvector_eq :
