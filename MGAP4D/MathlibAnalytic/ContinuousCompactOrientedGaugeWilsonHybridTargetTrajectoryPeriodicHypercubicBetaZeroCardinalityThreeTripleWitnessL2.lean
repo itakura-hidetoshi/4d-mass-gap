@@ -11,11 +11,6 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
-local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalityThreeReceiptEdgeDecidableEq :
-    DecidableEq
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
-  Classical.decEq _
-
 /-- There exists a third physical edge outside the canonical two-link pair. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_not_mem_cardinalityTwoPair :
     ∃ third :
@@ -85,19 +80,21 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_o
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget ≠
       periodicHypercubicThreeOriginAxisZeroTarget := by
   intro hEq
-  apply
+  exact
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_not_mem
-  rw [hEq]
-  simp
+      (by
+        rw [hEq]
+        exact Finset.mem_insert_self _ _)
 
 theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget :
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget ≠
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget := by
   intro hEq
-  apply
+  exact
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_not_mem
-  rw [hEq]
-  simp
+      (by
+        rw [hEq]
+        exact Finset.mem_insert_of_mem (Finset.mem_singleton_self _))
 
 /-- The actual cardinality-three projector is nonzero. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_three_ne_zero :
