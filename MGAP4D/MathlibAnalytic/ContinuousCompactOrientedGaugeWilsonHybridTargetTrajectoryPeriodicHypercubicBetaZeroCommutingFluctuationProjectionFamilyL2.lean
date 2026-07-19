@@ -13,7 +13,7 @@ set_option maxRecDepth 8192
 
 /-- At zero Wilson coupling, the complementary one-link heat-bath fluctuation
 projections commute pairwise on the full Gibbs `L²` space. -/
-theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_pairwise_comm_of_beta_eq_zero
+theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_pairwise_comm_for_commuting_family_of_beta_eq_zero
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (hBeta : C.base.beta = 0)
     (target source : C.base.geometry.Edge)
@@ -31,7 +31,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_pairwise_com
   abel
 
 /-- Every one-link heat-bath fluctuation operator is idempotent. -/
-theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent
+theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent_for_commuting_family
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (target : C.base.geometry.Edge)
     (f : Lp ℝ 2 C.gibbsMeasure) :
@@ -44,7 +44,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent
 
 /-- The actual side-three periodic `SU(2)` beta-zero system has a pairwise
 commuting family of one-link fluctuation projections. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_pairwise_comm
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_pairwise_comm_for_commuting_family
     (target source :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge)
     (f : Lp ℝ 2
@@ -58,13 +58,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBat
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
           target f) := by
   exact
-    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_pairwise_comm_of_beta_eq_zero
+    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_pairwise_comm_for_commuting_family_of_beta_eq_zero
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
       target source f
 
 /-- Every actual one-link fluctuation projection is idempotent. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_idempotent
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_idempotent_for_commuting_family
     (target :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge)
     (f : Lp ℝ 2
@@ -76,12 +76,12 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBat
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
         target f := by
   exact
-    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent
+    continuous_compact_oriented_singleLinkHeatBathFluctuationL2_idempotent_for_commuting_family
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem target f
 
 /-- The actual native heat-bath Hamiltonian is the finite sum of the complete
 commuting idempotent one-link fluctuation family. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_heatBathHamiltonianL2_eq_sum_commuting_fluctuations
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_heatBathHamiltonianL2_eq_sum_commuting_fluctuation_family
     (f : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2 f =
@@ -134,9 +134,9 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCommutingFluctuationProj
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCommutingFluctuationProjectionFamilyL2Receipt := by
   exact ⟨
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_edgeCard_eq_324,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_idempotent,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_pairwise_comm,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_heatBathHamiltonianL2_eq_sum_commuting_fluctuations⟩
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_idempotent_for_commuting_family,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_pairwise_comm_for_commuting_family,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_heatBathHamiltonianL2_eq_sum_commuting_fluctuation_family⟩
 
 end
 
