@@ -99,7 +99,7 @@ theorem continuousLinearMap_sum_powerset_partialJointSectorProjectorL2_eq_one
     (Q : ι → V →L[ℝ] V)
     (u : Finset ι)
     (hComm : ∀ i j : ι, ∀ f : V, Q i (Q j f) = Q j (Q i f)) :
-    (∑ s in u.powerset,
+    (∑ s ∈ u.powerset,
       continuousLinearMapJointSectorPartialProjectorL2 Q u s hComm) = 1 := by
   classical
   induction u using Finset.induction with
@@ -124,11 +124,11 @@ theorem continuousLinearMap_sum_powerset_partialJointSectorProjectorL2_eq_one
         have hErase := congrArg (fun r : Finset ι => r.erase a) hst
         simpa [has, hat] using hErase
       have hWithoutA :
-          (∑ s in u.powerset,
+          (∑ s ∈ u.powerset,
             continuousLinearMapJointSectorPartialProjectorL2
               Q (insert a u) s hComm) =
             (1 - Q a) *
-              ∑ s in u.powerset,
+              ∑ s ∈ u.powerset,
                 continuousLinearMapJointSectorPartialProjectorL2
                   Q u s hComm := by
         rw [Finset.mul_sum]
@@ -140,11 +140,11 @@ theorem continuousLinearMap_sum_powerset_partialJointSectorProjectorL2_eq_one
           Q u s a hComm ha]
         simp [continuousLinearMapJointSectorFactorL2, has]
       have hWithA :
-          (∑ s in u.powerset.image (insert a),
+          (∑ s ∈ u.powerset.image (insert a),
             continuousLinearMapJointSectorPartialProjectorL2
               Q (insert a u) s hComm) =
             Q a *
-              ∑ s in u.powerset,
+              ∑ s ∈ u.powerset,
                 continuousLinearMapJointSectorPartialProjectorL2
                   Q u s hComm := by
         rw [Finset.mul_sum, Finset.sum_image hInsertInj]
@@ -168,10 +168,10 @@ theorem continuousLinearMap_sum_powerset_jointSectorProjectorL2_eq_one
     [DecidableEq ι]
     (Q : ι → V →L[ℝ] V)
     (hComm : ∀ i j : ι, ∀ f : V, Q i (Q j f) = Q j (Q i f)) :
-    (∑ s in (Finset.univ : Finset ι).powerset,
+    (∑ s ∈ (Finset.univ : Finset ι).powerset,
       continuousLinearMapJointSectorProjectorL2 Q s hComm) = 1 := by
   change
-    (∑ s in (Finset.univ : Finset ι).powerset,
+    (∑ s ∈ (Finset.univ : Finset ι).powerset,
       continuousLinearMapJointSectorPartialProjectorL2
         Q Finset.univ s hComm) = 1
   exact
@@ -185,7 +185,7 @@ local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_completene
 
 /-- The actual 324-link beta-zero canonical projectors sum to the identity. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_sum_powerset_fluctuationJointSectorProjectorL2_eq_one :
-    (∑ s in
+    (∑ s ∈
       (Finset.univ : Finset
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).powerset,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationJointSectorProjectorL2
@@ -207,7 +207,7 @@ components. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_sum_powerset_fluctuationJointSectorProjectorL2_apply_eq
     (f : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
-    (∑ s in
+    (∑ s ∈
       (Finset.univ : Finset
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).powerset,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationJointSectorProjectorL2
@@ -226,14 +226,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_sum_powe
 resolution of the identity. -/
 def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroJointSectorProjectorCompletenessL2Receipt :
     Prop :=
-  (∑ s in
+  (∑ s ∈
     (Finset.univ : Finset
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).powerset,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationJointSectorProjectorL2
       s) = 1 ∧
   ∀ f : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
-    (∑ s in
+    (∑ s ∈
       (Finset.univ : Finset
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).powerset,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationJointSectorProjectorL2
