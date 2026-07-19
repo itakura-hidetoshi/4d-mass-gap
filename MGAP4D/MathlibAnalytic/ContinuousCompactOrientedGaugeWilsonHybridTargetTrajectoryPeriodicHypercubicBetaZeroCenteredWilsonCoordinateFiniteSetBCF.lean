@@ -66,10 +66,16 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSe
       periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF edge *
         periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF
           (s.erase edge) := by
-  rw [← Finset.insert_erase hEdge]
-  exact
-    periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF_insert
-      (s.erase edge) edge (Finset.notMem_erase edge s)
+  calc
+    periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF s =
+        periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF
+          (insert edge (s.erase edge)) := by
+      rw [Finset.insert_erase hEdge]
+    _ = periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF edge *
+        periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF
+          (s.erase edge) :=
+      periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateFiniteSetBCF_insert
+        (s.erase edge) edge (Finset.notMem_erase edge s)
 
 /-- The finite-set product is constant along every unselected physical-link
 fiber. -/
