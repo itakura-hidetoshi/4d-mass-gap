@@ -136,12 +136,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateTripleBC
       (1 : SpecialUnitaryMatrixGroup 2) = 0
     exact specialUnitaryWilsonPlaquetteEnergy_two_one
   rw [hEnergyOne, zero_sub] at hAt0
-  have hNegMean : -specialUnitaryTwoWilsonEnergyHaarMean = 0 := by
-    rcases mul_eq_zero.mp hAt0 with hTarget | hPair
-    · exact hTarget
-    · rcases mul_eq_zero.mp hPair with hSource | hThird
-      · exact hSource
-      · exact hThird
+  have hNegMean : -specialUnitaryTwoWilsonEnergyHaarMean = 0 := hAt0
   have hMeanZero : specialUnitaryTwoWilsonEnergyHaarMean = 0 :=
     neg_eq_zero.mp hNegMean
   rw [hMeanZero] at hAt1
