@@ -126,16 +126,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_oneLinkU
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.fluctuationJointSectorSubmoduleL2
         {periodicHypercubicThreeOriginAxisZeroTarget} := by
   classical
-  simpa [ContinuousCompactOrientedGaugeWilsonSystem.fluctuationJointSectorSubmoduleL2]
-    using
-      (continuousLinearMap_mem_singleton_jointSectorSubmoduleL2_of_eq_self_of_eq_zero_of_ne
-        (Q := fun edge :
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge =>
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
-              edge)
-        periodicHypercubicThreeOriginAxisZeroTarget
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_target_fluctuation_eq_self
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_fluctuation_eq_zero_of_ne)
+  rw [continuous_compact_oriented_fluctuationJointSectorSubmoduleL2_mem_iff]
+  constructor
+  · intro edge hEdge
+    have hEq : edge = periodicHypercubicThreeOriginAxisZeroTarget :=
+      Finset.mem_singleton.mp hEdge
+    subst edge
+    exact
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_target_fluctuation_eq_self
+  · intro source hSource
+    exact
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_fluctuation_eq_zero_of_ne
+        source (by simpa using hSource)
 
 /-- The actual cardinality-one projector fixes the normalized one-link mode. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_one_apply_oneLinkUnitEigenvector_eq :
@@ -144,7 +146,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuat
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2 := by
   exact
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_apply_eq_self_of_mem_jointSector
-      1 {periodicHypercubicThreeOriginAxisZeroTarget} (by simp)
+      1 {periodicHypercubicThreeOriginAxisZeroTarget}
+      (Finset.card_singleton periodicHypercubicThreeOriginAxisZeroTarget)
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_oneLinkUnitEigenvectorL2_mem_singleton_fluctuationJointSector
 
 /-- The actual cardinality-one projector is nonzero. -/
@@ -157,7 +160,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuat
   exact ⟨
     {periodicHypercubicThreeOriginAxisZeroTarget},
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2,
-    by simp,
+    Finset.card_singleton periodicHypercubicThreeOriginAxisZeroTarget,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_oneLinkUnitEigenvectorL2_mem_singleton_fluctuationJointSector,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneLinkUnitEigenvectorL2_ne_zero⟩
 
