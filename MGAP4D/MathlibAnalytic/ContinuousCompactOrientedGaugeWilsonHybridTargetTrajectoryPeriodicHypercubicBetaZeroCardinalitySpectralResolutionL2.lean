@@ -148,7 +148,7 @@ theorem continuousLinearMap_univ_sum_mul_cardinalitySectorProjectorL2_eq_natCast
       (k : ℝ) • continuousLinearMapCardinalitySectorProjectorL2 Q k hComm := by
   classical
   unfold continuousLinearMapCardinalitySectorProjectorL2
-  rw [Finset.mul_sum]
+  rw [Finset.mul_sum, smul_sum]
   apply Finset.sum_congr rfl
   intro s hs
   have hscard : s.card = k :=
