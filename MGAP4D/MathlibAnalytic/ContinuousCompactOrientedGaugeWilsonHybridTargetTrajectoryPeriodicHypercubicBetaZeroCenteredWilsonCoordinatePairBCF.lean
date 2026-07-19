@@ -232,10 +232,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_
       specialUnitaryWilsonPlaquetteEnergy 2
           (1 : SpecialUnitaryMatrixGroup 2) = 0 :=
     specialUnitaryWilsonPlaquetteEnergy_two_one
-  have hAt0' :
-      -specialUnitaryTwoWilsonEnergyHaarMean = 0 := by
-    nlinarith [hAt0, hEnergyOne]
-  nlinarith
+  rw [hEnergyOne, zero_sub] at hAt0
+  have hMeanZero : specialUnitaryTwoWilsonEnergyHaarMean = 0 :=
+    neg_eq_zero.mp hAt0
+  rw [hMeanZero] at hAt1
+  norm_num at hAt1
 
 /-- A bounded continuous factor that is constant on the target fiber can be
 pulled through the target-coordinate Haar average. -/
