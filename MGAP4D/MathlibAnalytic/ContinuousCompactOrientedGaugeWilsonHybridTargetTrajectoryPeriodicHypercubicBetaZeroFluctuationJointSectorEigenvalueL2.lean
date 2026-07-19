@@ -89,6 +89,7 @@ theorem continuousLinearMap_univ_sum_apply_eq_card_smul_of_mem_jointSectorSubmod
       · simp [his, hFixed i his]
       · simp [his, hZero i his]
     _ = (s.card : ℝ) • f := by
+      rw [Nat.cast_smul_eq_nsmul]
       simp
 
 /-- Every finite joint-sector label has cardinality bounded by the size of the
@@ -103,14 +104,16 @@ theorem continuousLinearMapJointSectorSubmoduleL2_card_le_fintype_card
 
 /-- The actual one-link fluctuation joint sector selected by a finite set of
 physical edges. -/
-def ContinuousCompactOrientedGaugeWilsonSystem.fluctuationJointSectorSubmoduleL2
+noncomputable def ContinuousCompactOrientedGaugeWilsonSystem.fluctuationJointSectorSubmoduleL2
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (s : Finset C.base.geometry.Edge) :
-    Submodule ℝ (Lp ℝ 2 C.gibbsMeasure) :=
-  continuousLinearMapJointSectorSubmoduleL2
-    (fun edge : C.base.geometry.Edge =>
-      C.singleLinkHeatBathFluctuationL2 edge)
-    s
+    Submodule ℝ (Lp ℝ 2 C.gibbsMeasure) := by
+  classical
+  exact
+    continuousLinearMapJointSectorSubmoduleL2
+      (fun edge : C.base.geometry.Edge =>
+        C.singleLinkHeatBathFluctuationL2 edge)
+      s
 
 @[simp]
 theorem continuous_compact_oriented_fluctuationJointSectorSubmoduleL2_mem_iff
@@ -122,7 +125,13 @@ theorem continuous_compact_oriented_fluctuationJointSectorSubmoduleL2_mem_iff
         C.singleLinkHeatBathFluctuationL2 edge f = f) ∧
       (∀ edge, edge ∉ s →
         C.singleLinkHeatBathFluctuationL2 edge f = 0) := by
-  rfl
+  classical
+  simpa [ContinuousCompactOrientedGaugeWilsonSystem.fluctuationJointSectorSubmoduleL2]
+    using
+      (continuousLinearMapJointSectorSubmoduleL2_mem_iff
+        (fun edge : C.base.geometry.Edge =>
+          C.singleLinkHeatBathFluctuationL2 edge)
+        s f)
 
 /-- Every vector in the actual beta-zero fluctuation joint sector indexed by
 `s` is an exact heat-bath Hamiltonian eigenvector of eigenvalue `card s`. -/
@@ -136,6 +145,16 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBath
         s) :
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2 f =
       (s.card : ℝ) • f := by
+  classical
+  have hf' :
+      f ∈ continuousLinearMapJointSectorSubmoduleL2
+        (fun edge :
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge =>
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
+              edge)
+        s := by
+    simpa [ContinuousCompactOrientedGaugeWilsonSystem.fluctuationJointSectorSubmoduleL2]
+      using hf
   calc
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2 f =
         ∑ edge :
@@ -151,7 +170,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBath
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge =>
               periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
                 edge)
-          s hf
+          s hf'
       simpa only [ContinuousLinearMap.sum_apply] using hSum
 
 /-- Every actual joint-sector label has weight at most `324`. -/
@@ -159,6 +178,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuat
     (s : Finset
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) :
     s.card ≤ 324 := by
+  classical
   have hCard :=
     continuousLinearMapJointSectorSubmoduleL2_card_le_fintype_card s
   simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_edgeCard_eq_324]
