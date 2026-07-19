@@ -230,8 +230,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_
     hA1Target, hA1Source] at hAt1
   have hEnergyOne :
       specialUnitaryWilsonPlaquetteEnergy 2
-          (1 : SpecialUnitaryMatrixGroup 2) = 0 :=
-    specialUnitaryWilsonPlaquetteEnergy_two_one
+          (1 : periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Gauge) = 0 := by
+    change specialUnitaryWilsonPlaquetteEnergy 2
+      (1 : SpecialUnitaryMatrixGroup 2) = 0
+    exact specialUnitaryWilsonPlaquetteEnergy_two_one
   rw [hEnergyOne, zero_sub] at hAt0
   have hMeanZero : specialUnitaryTwoWilsonEnergyHaarMean = 0 :=
     neg_eq_zero.mp hAt0
