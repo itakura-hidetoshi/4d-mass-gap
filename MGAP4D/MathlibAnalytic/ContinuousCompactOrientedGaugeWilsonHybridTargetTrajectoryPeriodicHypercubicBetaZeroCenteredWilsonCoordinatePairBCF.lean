@@ -228,9 +228,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_apply,
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF_apply,
     hA1Target, hA1Source] at hAt1
+  have hEnergyOne :
+      specialUnitaryWilsonPlaquetteEnergy 2
+          (1 : SpecialUnitaryMatrixGroup 2) = 0 :=
+    specialUnitaryWilsonPlaquetteEnergy_two_one
   have hAt0' :
       -specialUnitaryTwoWilsonEnergyHaarMean = 0 := by
-    simpa only [specialUnitaryWilsonPlaquetteEnergy_two_one, zero_sub] using hAt0
+    nlinarith [hAt0, hEnergyOne]
   nlinarith
 
 /-- A bounded continuous factor that is constant on the target fiber can be
