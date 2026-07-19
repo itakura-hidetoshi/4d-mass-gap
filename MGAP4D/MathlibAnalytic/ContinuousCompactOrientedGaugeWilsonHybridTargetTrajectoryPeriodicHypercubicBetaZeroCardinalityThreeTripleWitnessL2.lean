@@ -78,7 +78,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_not_m
           ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
             Finset
               periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card + 1 :=
-        Finset.card_insert_of_not_mem hNotMem
+        Finset.card_insert_of_notMem hNotMem
       _ = 2 := by rw [Finset.card_singleton]
   rw [hUnivCard, hPairCard] at hCard
   norm_num at hCard
