@@ -59,10 +59,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_not_m
         Finset
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card =
         2 := by
-    exact finset_pair_card_eq_two
-      periodicHypercubicThreeOriginAxisZeroTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+    have hNe :
+        periodicHypercubicThreeOriginAxisZeroTarget ≠
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget :=
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+    simpa [hNe]
   rw [hUnivCard, hPairCard] at hCard
   norm_num at hCard
 
@@ -152,7 +153,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuat
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_three_ne_zero
 
 /-- The nonzero cardinality-three projector realizes eigenvalue three through
-the cardinality-sector criterion. -/
+    the cardinality-sector criterion. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_three_mem_heatBathPointSpectrumL2_of_cardinalityThreeProjector :
     (3 : ℝ) ∈
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathPointSpectrumL2 := by
