@@ -111,10 +111,12 @@ theorem continuousLinearMapFallingFactorialL2_add_succ_eq_shift_of_left_eq_self
   | zero =>
       rw [continuousLinearMapFallingFactorialL2_succ_apply]
       simp only [continuousLinearMapFallingFactorialL2_zero]
-      change
-        Q (Q f + T f) + T (Q f + T f) -
-            ((1 : ℝ) • (Q f + T f)) =
-          T (T f) + T f
+      have hAddApply (g : V) : (Q + T) g = Q g + T g := by
+        rfl
+      have hShiftApply (g : V) :
+          (T + ContinuousLinearMap.id ℝ V) g = T g + g := by
+        rfl
+      rw [hAddApply ((Q + T) f), hAddApply f, hShiftApply (T f)]
       simp only [map_add, hQf, hComm, one_smul]
       module
   | succ n ih =>
