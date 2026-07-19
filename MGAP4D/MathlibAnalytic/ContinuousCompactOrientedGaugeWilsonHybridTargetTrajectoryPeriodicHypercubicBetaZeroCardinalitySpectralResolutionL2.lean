@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectoryPeriodicHypercubicBetaZeroJointSectorProjectorCompletenessL2
 import Mathlib.Algebra.BigOperators.Group.Finset.Powerset
+import Mathlib.Algebra.Module.BigOperators
 import Mathlib.Tactic
 
 namespace MGAP4D
