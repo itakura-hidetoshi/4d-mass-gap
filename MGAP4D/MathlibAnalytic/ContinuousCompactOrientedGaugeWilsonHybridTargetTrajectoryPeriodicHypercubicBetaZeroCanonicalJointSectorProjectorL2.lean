@@ -57,7 +57,7 @@ theorem continuousLinearMapJointSectorFactorL2_pairwise_comm
     (Q : ι → V →L[ℝ] V)
     (s : Finset ι)
     (hComm : ∀ i j : ι, ∀ f : V, Q i (Q j f) = Q j (Q i f)) :
-    (Finset.univ : Set ι).Pairwise
+    ((Finset.univ : Finset ι) : Set ι).Pairwise
       (Commute on continuousLinearMapJointSectorFactorL2 Q s) := by
   classical
   intro i hi j hj hij
@@ -119,7 +119,7 @@ theorem continuousLinearMap_mul_jointSectorProjectorL2_eq_self_of_mem
   let factor : ι → V →L[ℝ] V :=
     continuousLinearMapJointSectorFactorL2 Q s
   have hFactorComm :
-      (Finset.univ : Set ι).Pairwise (Commute on factor) := by
+      ((Finset.univ : Finset ι) : Set ι).Pairwise (Commute on factor) := by
     exact continuousLinearMapJointSectorFactorL2_pairwise_comm Q s hComm
   have hExtract :=
     Finset.mul_noncommProd_erase
@@ -158,7 +158,7 @@ theorem continuousLinearMap_mul_jointSectorProjectorL2_eq_zero_of_not_mem
   let factor : ι → V →L[ℝ] V :=
     continuousLinearMapJointSectorFactorL2 Q s
   have hFactorComm :
-      (Finset.univ : Set ι).Pairwise (Commute on factor) := by
+      ((Finset.univ : Finset ι) : Set ι).Pairwise (Commute on factor) := by
     exact continuousLinearMapJointSectorFactorL2_pairwise_comm Q s hComm
   have hExtract :=
     Finset.mul_noncommProd_erase
@@ -256,16 +256,18 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationJoi
     (s : Finset
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) :
     Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure →L[ℝ]
-      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
-  continuousLinearMapJointSectorProjectorL2
-    (fun edge :
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge =>
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
-          edge)
-    s
-    (fun target source f =>
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_pairwise_comm_for_commuting_family
-        target source f)
+      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure := by
+  classical
+  exact
+    continuousLinearMapJointSectorProjectorL2
+      (fun edge :
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge =>
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
+            edge)
+      s
+      (fun target source f =>
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_singleLinkHeatBathFluctuationL2_pairwise_comm_for_commuting_family
+          target source f)
 
 /-- Every vector produced by the actual canonical projector belongs to its
 specified fluctuation joint sector. -/
