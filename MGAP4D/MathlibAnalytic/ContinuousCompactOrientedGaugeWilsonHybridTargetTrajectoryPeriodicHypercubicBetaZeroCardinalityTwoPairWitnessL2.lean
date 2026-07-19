@@ -23,7 +23,6 @@ theorem continuousLinearMap_mem_pair_jointSectorSubmoduleL2_of_pair_profile
     [DecidableEq ι]
     (Q : ι → V →L[ℝ] V)
     (target source : ι)
-    (hNe : target ≠ source)
     {f : V}
     (hTarget : Q target f = f)
     (hSource : Q source f = f)
@@ -55,9 +54,7 @@ theorem finset_pair_card_eq_two
     (target source : ι)
     (hNe : target ≠ source) :
     ({target, source} : Finset ι).card = 2 := by
-  rw [Finset.card_insert_of_not_mem]
-  · simp
-  · simpa using hNe
+  simpa [hNe]
 
 /-- The cardinality-two projector fixes every vector with a two-coordinate
 joint-sector profile. -/
@@ -79,7 +76,7 @@ theorem continuousLinearMap_cardinalitySectorProjectorL2_two_apply_eq_self_of_pa
       Q 2 {target, source} hComm
       (finset_pair_card_eq_two target source hNe)
       (continuousLinearMap_mem_pair_jointSectorSubmoduleL2_of_pair_profile
-        Q target source hNe hTarget hSource hOther)
+        Q target source hTarget hSource hOther)
 
 /-- A nonzero two-coordinate profile witnesses nonvanishing of the
 cardinality-two projector. -/
@@ -111,6 +108,14 @@ local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalit
     DecidableEq
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
   Classical.decEq _
+
+local instance periodicCardinalityTwoSpecialUnitaryTwoIsTopologicalGroup :
+    IsTopologicalGroup (SpecialUnitaryMatrixGroup 2) :=
+  specialUnitaryGroupIsTopologicalGroup 2
+
+local instance periodicCardinalityTwoSpecialUnitaryTwoCompactSpace :
+    CompactSpace (SpecialUnitaryMatrixGroup 2) :=
+  specialUnitaryGroupCompactSpace 2
 
 /-- The normalized Haar mean of the rank-two Wilson energy. -/
 noncomputable def specialUnitaryTwoWilsonEnergyHaarMean : ℝ :=
@@ -301,6 +306,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_apply,
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF_apply,
     hA1Target, hA1Source] at hAt1
+  rw [specialUnitaryWilsonPlaquetteEnergy_two_one] at hAt0
   nlinarith
 
 /-- A bounded continuous factor that is constant on the target fiber can be
@@ -333,8 +339,11 @@ theorem continuous_compact_oriented_singleLinkHeatBathProjection_mul_of_right_of
                 (C.base.replaceLink A target g) A target := by
             intro edge hEdge
             simp [CompactOrientedGaugeWilsonSystem.replaceLink, hEdge]
+          change
+            F (C.base.replaceLink A target g) *
+                G (C.base.replaceLink A target g) =
+              F (C.base.replaceLink A target g) * G A
           rw [show G (C.base.replaceLink A target g) = G A from hG _ _ hAgree]
-          rfl
     _ =
       (∫ g : C.base.Gauge,
         F (C.base.replaceLink A target g)
@@ -352,6 +361,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF_
           target source) =
       fun _ => 0 := by
   funext A
+  unfold periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF
   rw [
     continuous_compact_oriented_singleLinkHeatBathProjection_mul_of_right_offLinkFiberConstant
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -482,6 +492,12 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2_target
           target
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
             target source) = 0 := by
+    change
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionL2
+          target
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsL2RepresentativeBCF
+            (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF
+              target source)) = 0
     rw [
       continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -520,6 +536,12 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2_source
           source
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
             target source) = 0 := by
+    change
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionL2
+          source
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsL2RepresentativeBCF
+            (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF
+              target source)) = 0
     rw [
       continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -559,6 +581,15 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2_fluctu
             target source) =
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
           target source := by
+    change
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionL2
+          edge
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsL2RepresentativeBCF
+            (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF
+              target source)) =
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsL2RepresentativeBCF
+          (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinatePairBCF
+            target source)
     rw [
       continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -712,21 +743,25 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_two_mem_
 /-- Compact receipt for the actual beta-zero cardinality-two pair witness. -/
 def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCardinalityTwoPairWitnessL2Receipt :
     Prop :=
-  let source :=
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-  periodicHypercubicThreeOriginAxisZeroTarget ≠ source ∧
+  periodicHypercubicThreeOriginAxisZeroTarget ≠
+    periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ∧
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
-      periodicHypercubicThreeOriginAxisZeroTarget source ≠ 0 ∧
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ≠ 0 ∧
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
-      periodicHypercubicThreeOriginAxisZeroTarget source ∈
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ∈
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.fluctuationJointSectorSubmoduleL2
-      {periodicHypercubicThreeOriginAxisZeroTarget, source} ∧
+      {periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} ∧
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
       2
       (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
-        periodicHypercubicThreeOriginAxisZeroTarget source) =
+        periodicHypercubicThreeOriginAxisZeroTarget
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget) =
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2
-      periodicHypercubicThreeOriginAxisZeroTarget source ∧
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ∧
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
       2 ≠ 0 ∧
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityJointSectorSumSubmoduleL2
@@ -737,20 +772,21 @@ def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCardinalityTwoPairWitnessL2R
 /-- The actual beta-zero cardinality-two pair-witness receipt is proved. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCardinalityTwoPairWitnessL2Receipt_proved :
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCardinalityTwoPairWitnessL2Receipt := by
-  dsimp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCardinalityTwoPairWitnessL2Receipt]
-  let source :=
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
   have hNe :
-      periodicHypercubicThreeOriginAxisZeroTarget ≠ source :=
+      periodicHypercubicThreeOriginAxisZeroTarget ≠
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget :=
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
   exact ⟨
     hNe,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoLinkPairModeL2_ne_zero
-      periodicHypercubicThreeOriginAxisZeroTarget source hNe,
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget hNe,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_twoLinkPairModeL2_mem_pair_fluctuationJointSector
-      periodicHypercubicThreeOriginAxisZeroTarget source hNe,
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget hNe,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_two_apply_twoLinkPairMode_eq
-      periodicHypercubicThreeOriginAxisZeroTarget source hNe,
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget hNe,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_two_ne_zero,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityJointSectorSumSubmoduleL2_two_ne_bot,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_two_mem_heatBathPointSpectrumL2_of_cardinalityTwoProjector⟩
