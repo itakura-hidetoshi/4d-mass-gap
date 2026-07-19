@@ -184,12 +184,17 @@ theorem continuousLinearMap_jointSectorProjectorL2_mul_eq_ite
       if s = t then continuousLinearMapJointSectorProjectorL2 Q s hComm else 0 := by
   by_cases hst : s = t
   · subst t
-    simpa [hst] using
+    simpa using
       continuousLinearMap_jointSectorProjectorL2_mul_self
         Q s hIdempotent hComm
   · simpa [hst] using
       continuousLinearMap_jointSectorProjectorL2_mul_eq_zero_of_ne
         Q s t hIdempotent hComm hst
+
+local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_edgeDecidableEq :
+    DecidableEq
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
+  Classical.decEq _
 
 /-- The actual beta-zero canonical projector is idempotent. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationJointSectorProjectorL2_mul_self
