@@ -110,6 +110,7 @@ theorem continuousLinearMapFallingFactorialL2_add_succ_eq_shift_of_left_eq_self
   induction n with
   | zero =>
       rw [continuousLinearMapFallingFactorialL2_succ_apply]
+      simp only [continuousLinearMapFallingFactorialL2_zero]
       change
         Q (Q f + T f) + T (Q f + T f) -
             ((1 : ℝ) • (Q f + T f)) =
@@ -138,7 +139,7 @@ theorem continuousLinearMapFallingFactorialL2_add_succ_eq_shift_of_left_eq_self
               continuousLinearMapFallingFactorialL2 T n f) =
             T (continuousLinearMapFallingFactorialL2 T n f) +
               continuousLinearMapFallingFactorialL2 T n f
-        rw [map_add, hComm, hQfalling, hQfalling]
+        rw [map_add, hComm, hQfalling]
       calc
         Q ((T + ContinuousLinearMap.id ℝ V)
               (continuousLinearMapFallingFactorialL2 T n f)) +
@@ -214,7 +215,7 @@ theorem continuousLinearMapFallingFactorialL2_add_idempotent_succ_eq_zero
           T Q hComm n fixedPart hFixedPart,
       hAnnihilatesApply]
     simp
-  rw [hKernelZero, hFixedZero, add_zero]
+  simpa [hKernelZero, hFixedZero]
 
 /-- A finite sum of pairwise commuting idempotent continuous linear
 endomorphisms is annihilated by
@@ -229,21 +230,21 @@ theorem continuousLinearMapFallingFactorialL2_finset_sum_commuting_idempotents_e
     (hIdempotent : ∀ i : ι, ∀ f : V, Q i (Q i f) = Q i f)
     (hComm : ∀ i j : ι, ∀ f : V, Q i (Q j f) = Q j (Q i f)) :
     continuousLinearMapFallingFactorialL2
-        (∑ i in s, Q i) s.card = 0 := by
+        (Finset.sum s Q) s.card = 0 := by
   classical
   induction s using Finset.induction_on with
   | empty =>
       simp [continuousLinearMapFallingFactorialL2]
   | @insert a s ha ih =>
       have hCommSum : ∀ f : V,
-          Q a ((∑ i in s, Q i) f) =
-            (∑ i in s, Q i) (Q a f) := by
+          Q a ((Finset.sum s Q) f) =
+            (Finset.sum s Q) (Q a f) := by
         intro f
         simp only [ContinuousLinearMap.sum_apply, map_sum]
         exact Finset.sum_congr rfl fun i hi => hComm a i f
       have hStep :=
         continuousLinearMapFallingFactorialL2_add_idempotent_succ_eq_zero
-          (∑ i in s, Q i) (Q a) hCommSum (hIdempotent a) s.card ih
+          (Finset.sum s Q) (Q a) hCommSum (hIdempotent a) s.card ih
       simpa [ha] using hStep
 
 /-- The actual 324-link beta-zero heat-bath Hamiltonian satisfies the exact
