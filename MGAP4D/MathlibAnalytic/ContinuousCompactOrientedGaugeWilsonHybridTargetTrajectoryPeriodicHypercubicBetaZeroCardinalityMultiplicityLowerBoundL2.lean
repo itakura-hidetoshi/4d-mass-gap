@@ -41,45 +41,47 @@ theorem continuousLinearMap_jointSectorProfileFamily_linearIndependent
   have hLeft :
       P (∑ t, c t • v t) = c s • v s := by
     rw [map_sum]
-    apply Finset.sum_eq_single s
-    · intro t _ht hts
-      rw [map_smul]
-      have hZero : P (v t) = 0 := by
-        dsimp [P]
-        exact
-          continuousLinearMap_jointSectorProjectorL2_apply_eq_zero_of_mem_jointSectorSubmoduleL2_of_ne
-            Q s t hComm hts (hMem t)
-      rw [hZero, smul_zero]
-    · intro hs
-      exact (hs (Finset.mem_univ s)).elim
-    · rw [map_smul]
-      have hSelf : P (v s) = v s := by
-        dsimp [P]
-        exact
-          continuousLinearMap_jointSectorProjectorL2_apply_eq_self_of_mem_jointSectorSubmoduleL2
-            Q s hComm (hMem s)
-      rw [hSelf]
+    calc
+      (∑ t, P (c t • v t)) = P (c s • v s) := by
+        refine Fintype.sum_eq_single s ?_
+        intro t hts
+        rw [map_smul]
+        have hZero : P (v t) = 0 := by
+          dsimp [P]
+          exact
+            continuousLinearMap_jointSectorProjectorL2_apply_eq_zero_of_mem_jointSectorSubmoduleL2_of_ne
+              Q s t hComm (Ne.symm hts) (hMem t)
+        rw [hZero, smul_zero]
+      _ = c s • v s := by
+        rw [map_smul]
+        have hSelf : P (v s) = v s := by
+          dsimp [P]
+          exact
+            continuousLinearMap_jointSectorProjectorL2_apply_eq_self_of_mem_jointSectorSubmoduleL2
+              Q s hComm (hMem s)
+        rw [hSelf]
   have hRight :
       P (∑ t, d t • v t) = d s • v s := by
     rw [map_sum]
-    apply Finset.sum_eq_single s
-    · intro t _ht hts
-      rw [map_smul]
-      have hZero : P (v t) = 0 := by
-        dsimp [P]
-        exact
-          continuousLinearMap_jointSectorProjectorL2_apply_eq_zero_of_mem_jointSectorSubmoduleL2_of_ne
-            Q s t hComm hts (hMem t)
-      rw [hZero, smul_zero]
-    · intro hs
-      exact (hs (Finset.mem_univ s)).elim
-    · rw [map_smul]
-      have hSelf : P (v s) = v s := by
-        dsimp [P]
-        exact
-          continuousLinearMap_jointSectorProjectorL2_apply_eq_self_of_mem_jointSectorSubmoduleL2
-            Q s hComm (hMem s)
-      rw [hSelf]
+    calc
+      (∑ t, P (d t • v t)) = P (d s • v s) := by
+        refine Fintype.sum_eq_single s ?_
+        intro t hts
+        rw [map_smul]
+        have hZero : P (v t) = 0 := by
+          dsimp [P]
+          exact
+            continuousLinearMap_jointSectorProjectorL2_apply_eq_zero_of_mem_jointSectorSubmoduleL2_of_ne
+              Q s t hComm (Ne.symm hts) (hMem t)
+        rw [hZero, smul_zero]
+      _ = d s • v s := by
+        rw [map_smul]
+        have hSelf : P (v s) = v s := by
+          dsimp [P]
+          exact
+            continuousLinearMap_jointSectorProjectorL2_apply_eq_self_of_mem_jointSectorSubmoduleL2
+              Q s hComm (hMem s)
+        rw [hSelf]
   have hCoeff : c s • v s = d s • v s := by
     calc
       c s • v s = P (∑ t, c t • v t) := hLeft.symm
