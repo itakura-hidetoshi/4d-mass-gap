@@ -11,6 +11,11 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
+local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalityThreeReceiptEdgeDecidableEq :
+    DecidableEq
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
+  fun a b => instDecidableEqProd a b
+
 /-- There exists a third physical edge outside the canonical two-link pair. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_not_mem_cardinalityTwoPair :
     ∃ third :
