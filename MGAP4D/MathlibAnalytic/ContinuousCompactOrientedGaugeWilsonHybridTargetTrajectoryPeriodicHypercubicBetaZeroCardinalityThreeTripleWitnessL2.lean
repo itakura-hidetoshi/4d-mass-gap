@@ -63,7 +63,23 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_not_m
         periodicHypercubicThreeOriginAxisZeroTarget ≠
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget :=
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
-    simpa [hNe]
+    have hNotMem :
+        periodicHypercubicThreeOriginAxisZeroTarget ∉
+          ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+            Finset
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
+      intro hMem
+      exact hNe (Finset.mem_singleton.mp hMem)
+    calc
+      ({periodicHypercubicThreeOriginAxisZeroTarget,
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+          Finset
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card =
+          ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+            Finset
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card + 1 :=
+        Finset.card_insert_of_not_mem hNotMem
+      _ = 2 := by rw [Finset.card_singleton]
   rw [hUnivCard, hPairCard] at hCard
   norm_num at hCard
 
