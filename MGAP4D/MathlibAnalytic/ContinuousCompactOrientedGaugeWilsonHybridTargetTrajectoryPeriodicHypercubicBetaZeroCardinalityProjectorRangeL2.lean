@@ -70,14 +70,13 @@ theorem continuousLinearMap_cardinalitySectorProjectorL2_apply_mem_cardinalityJo
       continuousLinearMapCardinalityJointSectorSumSubmoduleL2 Q k := by
   classical
   rw [continuousLinearMap_cardinalitySectorProjectorL2_apply_eq_sum_jointSectorProjectorsL2]
-  apply Finset.sum_mem
-  intro s hs
-  apply
-    continuousLinearMap_jointSectorSubmoduleL2_le_cardinalityJointSectorSumSubmoduleL2
-      Q k s hs
   exact
-    continuousLinearMap_jointSectorProjectorL2_apply_mem_jointSectorSubmoduleL2
-      Q s hIdempotent hComm f
+    (continuousLinearMapCardinalityJointSectorSumSubmoduleL2 Q k).sum_mem
+      (fun s hs =>
+        (continuousLinearMap_jointSectorSubmoduleL2_le_cardinalityJointSectorSumSubmoduleL2
+          Q k s hs)
+          (continuousLinearMap_jointSectorProjectorL2_apply_mem_jointSectorSubmoduleL2
+            Q s hIdempotent hComm f))
 
 /-- The cardinality projector restricts to the identity on every joint sector
 with matching cardinality. -/
