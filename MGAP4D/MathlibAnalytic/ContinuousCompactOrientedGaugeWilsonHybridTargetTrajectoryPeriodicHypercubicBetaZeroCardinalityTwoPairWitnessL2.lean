@@ -50,11 +50,15 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoTargetPair_card_eq
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
       Finset
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 2 := by
-  exact
-    finset_pair_card_eq_two
-      periodicHypercubicThreeOriginAxisZeroTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+  have hNotMem :
+      periodicHypercubicThreeOriginAxisZeroTarget ∉
+        ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+          Finset
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
+    simpa using
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+  rw [Finset.card_insert_of_not_mem hNotMem]
+  simp
 
 /-- The actual cardinality-two projector is nonzero. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_two_ne_zero :
