@@ -780,7 +780,7 @@ theorem
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
           Finset
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) =
-        Finset.insert
+        insert
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
           ({periodicHypercubicThreeOriginAxisZeroTarget,
             periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
