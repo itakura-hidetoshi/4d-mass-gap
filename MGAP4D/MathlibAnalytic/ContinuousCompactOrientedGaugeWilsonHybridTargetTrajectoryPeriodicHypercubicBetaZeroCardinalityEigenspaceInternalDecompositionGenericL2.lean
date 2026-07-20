@@ -48,8 +48,7 @@ theorem continuousLinearMap_cardinalityEigenspaceFamilyL2_iSupIndep
       Function.Injective
         (fun k : Fin (Fintype.card ι + 1) => (k.1 : ℝ)) := by
     intro a b hab
-    have hVal : a.val = b.val := by
-      exact_mod_cast hab
+    have hVal : a.val = b.val := Nat.cast_inj.mp hab
     exact Fin.ext hVal
   simpa only [continuousLinearMapCardinalityEigenspaceFamilyL2,
     Function.comp_apply]
