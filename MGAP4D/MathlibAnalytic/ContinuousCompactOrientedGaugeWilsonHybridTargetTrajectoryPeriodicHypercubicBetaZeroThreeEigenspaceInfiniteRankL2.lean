@@ -18,8 +18,8 @@ linearly independent family, then the product family is linearly independent. -/
 theorem boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recovers
     {X κ W : Type*}
     [TopologicalSpace X]
-    [NormedAddCommGroup W]
-    [NormedSpace ℝ W]
+    [AddCommMonoid W]
+    [Module ℝ W]
     (u : κ → BoundedContinuousFunction X ℝ)
     (g : BoundedContinuousFunction X ℝ)
     (recover : BoundedContinuousFunction X ℝ →ₗ[ℝ] W)
@@ -29,7 +29,7 @@ theorem boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recov
     LinearIndependent ℝ (fun k : κ => u k * g) := by
   apply LinearIndependent.of_comp recover
   have hEq :
-      (fun k : κ => recover (u k * g)) = w := by
+      (⇑recover ∘ fun k : κ => u k * g) = w := by
     funext k
     exact hRecover k
   rw [hEq]
@@ -185,6 +185,23 @@ theorem
     norm_num [specialUnitaryTwoNegativeIdentity,
       specialUnitaryWilsonPlaquetteEnergy, Matrix.trace, Matrix.one_apply,
       Fin.sum_univ_two]
+  have hIdentity :
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (1 : SpecialUnitaryMatrixGroup 2) = 0 :=
+    specialUnitaryWilsonPlaquetteEnergy_two_one
+  have hThirdNegative :
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankThirdNegativeConfiguration
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration)
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget =
+        specialUnitaryTwoNegativeIdentity := by
+    simp [
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankThirdNegativeConfiguration,
+      CompactOrientedGaugeWilsonSystem.replaceLink]
+  have hThirdIdentity :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget =
+        (1 : SpecialUnitaryMatrixGroup 2) := by
+    rfl
   change
     (specialUnitaryWilsonPlaquetteEnergy 2
         ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankThirdNegativeConfiguration
@@ -195,11 +212,8 @@ theorem
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
             periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget) -
         specialUnitaryTwoWilsonEnergyHaarMean) = 2
-  simp [
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankThirdNegativeConfiguration,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration,
-    CompactOrientedGaugeWilsonSystem.replaceLink, hNegative,
-    specialUnitaryWilsonPlaquetteEnergy_two_one]
+  rw [hThirdNegative, hThirdIdentity, hNegative, hIdentity]
+  ring
 
 /-- The eight-point recovery map returns the original positive-power sequence
 from every three-coordinate product-family member. -/
@@ -411,16 +425,30 @@ theorem
   rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero] at hProjectionL2
+  have hToLp :
+      BoundedContinuousFunction.toLp
+          2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure
+          ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionBCFOfBetaZero
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
+            edge
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairBCF n)) =
+        BoundedContinuousFunction.toLp
+          2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure
+          ℝ
+          (0 : BoundedContinuousFunction
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ) := by
+    simpa [ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
+      using hProjectionL2
   have hBCF :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionBCFOfBetaZero
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
           edge
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairBCF n) = 0 := by
-    apply
-      (BoundedContinuousFunction.toLp_injective
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-    simpa [ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
-      using hProjectionL2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairBCF n) = 0 :=
+    (BoundedContinuousFunction.toLp_injective
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) hToLp
   funext A
   have hAt := congrArg
     (fun H : BoundedContinuousFunction
@@ -686,37 +714,37 @@ theorem
   rw [continuous_compact_oriented_fluctuationJointSectorSubmoduleL2_mem_iff]
   constructor
   · intro edge hEdge
-    have hCases :
-        edge = periodicHypercubicThreeOriginAxisZeroTarget ∨
-          edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ∨
-          edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget := by
-      simpa using hEdge
-    rcases hCases with hEq | hEq | hEq
+    rcases Finset.mem_insert.mp hEdge with hEq | hRest
     · subst edge
       exact
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_target_fluctuation_eq_self
           n
-    · subst edge
-      exact
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_source_fluctuation_eq_self
-          n
-    · subst edge
-      exact
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_third_fluctuation_eq_self
-          n
+    · rcases Finset.mem_insert.mp hRest with hEq | hRest
+      · subst edge
+        exact
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_source_fluctuation_eq_self
+            n
+      · have hEq := Finset.mem_singleton.mp hRest
+        subst edge
+        exact
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_third_fluctuation_eq_self
+            n
   · intro edge hEdge
     apply
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_fluctuation_eq_zero_of_ne
         n edge
     · intro hEq
       subst edge
-      exact hEdge (by simp)
+      exact hEdge (Finset.mem_insert_self _ _)
     · intro hEq
       subst edge
-      exact hEdge (by simp)
+      exact hEdge
+        (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
     · intro hEq
       subst edge
-      exact hEdge (by simp)
+      exact hEdge
+        (Finset.mem_insert_of_mem
+          (Finset.mem_insert_of_mem (Finset.mem_singleton_self _)))
 
 /-- The actual beta-zero heat-bath eigenspace at eigenvalue three has Cardinal
 rank at least `aleph0`. -/
@@ -746,16 +774,31 @@ theorem
           target source f)
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_linearIndependent
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_threeInfiniteRankTripleL2_mem_triple_fluctuationJointSector
+  have hSetEq :
+      ({periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
+          Finset
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) =
+        Finset.insert
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
+          ({periodicHypercubicThreeOriginAxisZeroTarget,
+            periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+            Finset
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
+    ext edge
+    simp [or_left_comm, or_comm, or_assoc]
   have hCard :
       ({periodicHypercubicThreeOriginAxisZeroTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
           Finset
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 := by
-    simp [
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne,
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget,
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget]
+    rw [hSetEq,
+      Finset.card_insert_of_notMem
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_not_mem,
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoTargetPair_card_eq_two]
+    norm_num
   rw [hCard] at hGeneric
   simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
