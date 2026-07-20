@@ -1,7 +1,8 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectoryPeriodicHypercubicBetaZeroOneEigenspaceInfiniteRankL2
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathProjectionLaws
 import Mathlib.Algebra.Polynomial.Basis
 import Mathlib.Algebra.Polynomial.Roots
-import Mathlib.RingTheory.Algebraic.Defs
+import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -39,21 +40,17 @@ theorem specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence_positivePowers_li
         specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)) := by
   have hAevalInjective :
       Function.Injective
-        (Polynomial.aeval
-          specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence) := by
-    intro p q hpq
-    apply sub_eq_zero.mp
-    apply
-      (transcendental_iff.mp
-        specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence_transcendental)
-    rw [map_sub, hpq, sub_self]
+        (Polynomial.aeval (R := ℝ)
+          specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence) :=
+    transcendental_iff_injective.mp
+      specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence_transcendental
   have hAll :
       LinearIndependent ℝ
         (fun n : ℕ =>
           specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence ^ n) := by
     have hMapped :=
       (Polynomial.basisMonomials ℝ).linearIndependent.map'
-        (Polynomial.aeval
+        (Polynomial.aeval (R := ℝ)
           specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence).toLinearMap
         (LinearMap.ker_eq_bot.mpr hAevalInjective)
     simpa [Function.comp_def, Polynomial.coe_basisMonomials] using hMapped
@@ -165,10 +162,20 @@ theorem
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPowerFluctuationBCF := by
   apply LinearIndependent.of_comp
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap
-  simpa [Function.comp_def,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap_apply_powerFluctuationBCF]
-    using
-      specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence_positivePowers_linearIndependent
+  have hPointwise :
+      (fun n : ℕ =>
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPowerFluctuationBCF
+            n)) =
+        (fun n : ℕ => fun m : ℕ =>
+          specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)) := by
+    funext n m
+    exact
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap_apply_powerFluctuationBCF
+        n m
+  rw [hPointwise]
+  exact
+    specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence_positivePowers_linearIndependent
 
 end
 
