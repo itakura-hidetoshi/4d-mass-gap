@@ -774,34 +774,19 @@ theorem
           target source f)
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleL2_linearIndependent
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_threeInfiniteRankTripleL2_mem_triple_fluctuationJointSector
-  have hSetEq :
-      ({periodicHypercubicThreeOriginAxisZeroTarget,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
-          Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) =
-        insert
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
-          ({periodicHypercubicThreeOriginAxisZeroTarget,
-            periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
-            Finset
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
-    rw [Finset.insert_comm
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget]
-    rw [Finset.insert_comm
-      periodicHypercubicThreeOriginAxisZeroTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget]
   have hCard :
       ({periodicHypercubicThreeOriginAxisZeroTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
           Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 := by
-    rw [hSetEq,
-      Finset.card_insert_of_notMem
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_not_mem,
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoTargetPair_card_eq_two]
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 :=
+    finset_triple_card_eq_three
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm
   rw [hCard] at hGeneric
   simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
