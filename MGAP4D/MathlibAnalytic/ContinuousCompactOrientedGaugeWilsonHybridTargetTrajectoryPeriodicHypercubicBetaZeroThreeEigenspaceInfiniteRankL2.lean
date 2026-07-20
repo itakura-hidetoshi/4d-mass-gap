@@ -779,14 +779,10 @@ theorem
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
           Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 :=
-    finset_triple_card_eq_three
-      periodicHypercubicThreeOriginAxisZeroTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 := by
+    simp [periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm,
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm,
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm]
   rw [hCard] at hGeneric
   simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
