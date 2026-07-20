@@ -11,6 +11,8 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
+attribute [simp] finset_pair_card_eq_two
+
 local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalityTwoReceiptEdgeDecidableEq :
     DecidableEq
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
