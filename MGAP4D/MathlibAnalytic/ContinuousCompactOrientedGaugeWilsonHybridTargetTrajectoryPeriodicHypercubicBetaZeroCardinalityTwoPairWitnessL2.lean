@@ -11,11 +11,6 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
-local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalityTwoReceiptEdgeDecidableEq :
-    DecidableEq
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
-  Classical.decEq _
-
 /-- There exists a second physical edge distinct from the distinguished edge. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_ne_originAxisZeroTarget :
     ∃ source :
@@ -50,15 +45,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoTargetPair_card_eq
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
       Finset
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 2 := by
-  have hNotMem :
-      periodicHypercubicThreeOriginAxisZeroTarget ∉
-        ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
-          Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
-    simpa using
+  exact
+    Finset.card_pair
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
-  rw [Finset.card_insert_of_not_mem hNotMem]
-  simp
+
+local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalityTwoReceiptEdgeDecidableEq :
+    DecidableEq
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
+  Classical.decEq _
 
 /-- The actual cardinality-two projector is nonzero. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_two_ne_zero :
