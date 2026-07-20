@@ -124,7 +124,7 @@ theorem
       simp [
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankRationalRotationSourceNegativeConfiguration,
         CompactOrientedGaugeWilsonSystem.replaceLink,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne]]
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm]]
     simpa only [periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply] using
       periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankRationalRotationConfiguration
         m
@@ -140,7 +140,7 @@ theorem
       simp [
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankSourceNegativeIdentityConfiguration,
         CompactOrientedGaugeWilsonSystem.replaceLink,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne]]
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm]]
     simpa only [periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply] using
       periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankIdentityConfiguration
   change
@@ -189,13 +189,14 @@ theorem
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
             periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget) -
         specialUnitaryTwoWilsonEnergyHaarMean) = 2
-  simp [
+  norm_num [
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankSourceNegativeIdentityConfiguration,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration,
     CompactOrientedGaugeWilsonSystem.replaceLink,
     specialUnitaryTwoNegativeIdentity,
     specialUnitaryWilsonPlaquetteEnergy,
     Matrix.trace,
+    Matrix.one_apply,
     Fin.sum_univ_two]
 
 /-- Rectangular second-difference evaluation in the target and fixed second
@@ -441,6 +442,16 @@ theorem
   rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero]
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairBCF n) =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankRawPairBCF n) -
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionBCFOfBetaZero
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
+            periodicHypercubicThreeOriginAxisZeroTarget
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankRawPairBCF n))
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairBCF_eq_raw_sub_targetProjection]
   exact map_sub
@@ -485,7 +496,7 @@ theorem
       BoundedContinuousFunction.coe_pow, Pi.pow_apply,
       periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply]
     rw [hAgree periodicHypercubicThreeOriginAxisZeroTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne]
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm]
   have hMul :=
     continuous_compact_oriented_singleLinkHeatBathProjection_mul_of_right_offLinkFiberConstant
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
@@ -499,16 +510,18 @@ theorem
   have hZero := congrFun
     (periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF_projection_self_eq_zero
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget) A
-  change
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-        (fun B =>
-          periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
-              periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget B *
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
-              n B)
-        A = 0
-  rw [hMul, hZero, zero_mul]
+  have hPairComm :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankRawPairBCF n =
+        periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
+            periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget *
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+            n := by
+    ext B
+    simp [
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankRawPairBCF,
+      mul_comm]
+  rw [hPairComm]
+  exact hMul.trans (by rw [hZero, zero_mul])
 
 /-- The second-coordinate fluctuation fixes the uncentered pair representative. -/
 theorem
@@ -650,7 +663,7 @@ theorem
     have hCases :
         edge = periodicHypercubicThreeOriginAxisZeroTarget ∨
           edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget := by
-      simpa using hEdge
+      simpa only [Finset.mem_insert, Finset.mem_singleton] using hEdge
     rcases hCases with hEq | hEq
     · subst edge
       exact
@@ -666,10 +679,11 @@ theorem
         n edge
     · intro hEq
       subst edge
-      exact hEdge (by simp)
+      exact hEdge (Finset.mem_insert_self _ _)
     · intro hEq
       subst edge
-      exact hEdge (by simp)
+      exact hEdge
+        (Finset.mem_insert_of_mem (Finset.mem_singleton_self _))
 
 /-- The actual beta-zero heat-bath eigenspace at eigenvalue two has Cardinal rank
 at least `aleph0`. -/
@@ -698,11 +712,17 @@ theorem
           target source f)
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairL2_linearIndependent
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_twoInfiniteRankPairL2_mem_pair_fluctuationJointSector
-  simpa [Q,
+  have hCard :
+      ({periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+          Finset
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 2 :=
     finset_pair_card_eq_two
       periodicHypercubicThreeOriginAxisZeroTarget
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm,
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+  rw [hCard] at hGeneric
+  simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBathHamiltonianL2_eq_univ_sum_fluctuationL2]
     using hGeneric
