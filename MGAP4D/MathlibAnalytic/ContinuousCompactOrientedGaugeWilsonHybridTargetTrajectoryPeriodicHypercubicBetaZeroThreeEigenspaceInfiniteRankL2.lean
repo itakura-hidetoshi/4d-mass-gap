@@ -787,7 +787,8 @@ theorem
             Finset
               periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
     ext edge
-    simp [or_left_comm, or_comm, or_assoc]
+    simp only [Finset.mem_insert, Finset.mem_singleton]
+    tauto
   have hCard :
       ({periodicHypercubicThreeOriginAxisZeroTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
@@ -798,7 +799,6 @@ theorem
       Finset.card_insert_of_notMem
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_not_mem,
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoTargetPair_card_eq_two]
-    norm_num
   rw [hCard] at hGeneric
   simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
