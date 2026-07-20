@@ -139,6 +139,21 @@ theorem
         m)
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
       hAgree
+  have hRotation :
+      specialUnitaryWilsonPlaquetteEnergy 2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
+            m periodicHypercubicThreeOriginAxisZeroTarget) =
+        specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m := by
+    simpa only [periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply] using
+      periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankRationalRotationConfiguration
+        m
+  have hIdentity :
+      specialUnitaryWilsonPlaquetteEnergy 2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
+            periodicHypercubicThreeOriginAxisZeroTarget) =
+        0 := by
+    simpa only [periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply] using
+      periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankIdentityConfiguration
   change
     ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
         n)
@@ -161,7 +176,8 @@ theorem
       specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)
   rw [hProjection']
   ring_nf
-  simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF]
+  simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF,
+    hRotation, hIdentity, pow_succ, mul_comm]
 
 /-- The centered positive-power bounded-continuous observables are linearly
     independent. -/
