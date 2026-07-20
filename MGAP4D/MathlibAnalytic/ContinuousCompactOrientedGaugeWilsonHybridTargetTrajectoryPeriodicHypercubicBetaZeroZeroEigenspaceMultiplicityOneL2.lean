@@ -21,13 +21,10 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumToZeroEi
     by
       rw [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
         Module.End.mem_genEigenspace_one]
-      simpa only [map_smul, smul_zero, zero_smul] using
-        congrArg
-          (fun f : Lp ℝ 2
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure =>
-            a • f)
-          (continuous_compact_oriented_heatBathHamiltonianL2_vacuum
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem)⟩
+      change
+        a • periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2 = 0
+      rw [continuous_compact_oriented_heatBathHamiltonianL2_vacuum, smul_zero]⟩
   map_add' a b := by
     apply Subtype.ext
     simp [add_smul]
