@@ -17,13 +17,9 @@ noncomputable def
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap :
     BoundedContinuousFunction
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ →ₗ[ℝ]
-      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure where
-  toFun F :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsL2RepresentativeBCF F
-  map_add' F G := by
-    simp [ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
-  map_smul' a F := by
-    simp [ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
+      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+  (BoundedContinuousFunction.toLp
+    2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure ℝ).toLinearMap
 
 /-- The bounded-continuous to Gibbs-`L²` linear map is injective. -/
 theorem
@@ -31,11 +27,6 @@ theorem
     Function.Injective
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap := by
   intro F G hFG
-  change
-    BoundedContinuousFunction.toLp
-        2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure ℝ F =
-      BoundedContinuousFunction.toLp
-        2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure ℝ G at hFG
   exact
     (BoundedContinuousFunction.toLp_injective
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) hFG
@@ -63,7 +54,8 @@ theorem
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap_injective)
   simpa [Function.comp_def,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankOneLinkPowerFluctuationL2,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap]
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap,
+    ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
     using hMapped
 
 /-- The `L²` family is exactly the target-link fluctuation of the corresponding
@@ -81,10 +73,25 @@ theorem
   rw [continuous_compact_oriented_singleLinkHeatBathProjectionL2_gibbsL2RepresentativeBCF_of_beta_eq_zero
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero]
-  simp [
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankOneLinkPowerFluctuationL2,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPowerFluctuationBCF,
-    ContinuousCompactOrientedGaugeWilsonSystem.gibbsL2RepresentativeBCF]
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+            n -
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionBCFOfBetaZero
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
+            periodicHypercubicThreeOriginAxisZeroTarget
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+              n)) =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+            n) -
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankGibbsL2RepresentativeBCFLinearMap
+          (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionBCFOfBetaZero
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
+            periodicHypercubicThreeOriginAxisZeroTarget
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+              n))
+  exact map_sub _ _ _
 
 /-- The distinguished fluctuation projection fixes every member of the countable
     power family. -/
@@ -126,9 +133,9 @@ theorem
     intro A B hAgree
     simp only [
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF,
-      BoundedContinuousFunction.coe_pow]
-    congr 1
-    exact hAgree periodicHypercubicThreeOriginAxisZeroTarget (Ne.symm hSource)
+      BoundedContinuousFunction.coe_pow, Pi.pow_apply,
+      periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply]
+    rw [hAgree periodicHypercubicThreeOriginAxisZeroTarget (Ne.symm hSource)]
   have hBCF :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjectionBCFOfBetaZero
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_beta_eq_zero
@@ -181,6 +188,7 @@ theorem
         n ∈
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.fluctuationJointSectorSubmoduleL2
         {periodicHypercubicThreeOriginAxisZeroTarget} := by
+  classical
   exact
     continuousLinearMap_mem_singleton_jointSectorSubmoduleL2_of_eq_self_of_eq_zero_of_ne
       (Q := fun edge :
@@ -202,6 +210,7 @@ theorem
       Module.rank ℝ
         (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2
           1) := by
+  classical
   let Q := fun edge :
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge =>
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathFluctuationL2
@@ -234,6 +243,7 @@ theorem
         (LinearMap.range
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
             1).toLinearMap) := by
+  classical
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_range_fluctuationCardinalityProjectorL2_eq_heatBathCardinalityEigenspaceL2
       1 (by omega)]
@@ -247,6 +257,7 @@ theorem
       Module.rank ℝ
         (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityJointSectorSumSubmoduleL2
           1) := by
+  classical
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityJointSectorSumSubmoduleL2_eq_heatBathCardinalityEigenspaceL2
       1 (by omega)]
