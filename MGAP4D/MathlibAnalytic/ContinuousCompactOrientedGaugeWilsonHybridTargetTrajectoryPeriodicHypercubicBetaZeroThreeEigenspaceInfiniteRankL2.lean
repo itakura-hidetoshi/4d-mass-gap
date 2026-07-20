@@ -786,9 +786,12 @@ theorem
             periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
             Finset
               periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
-    ext edge
-    simp only [Finset.mem_insert, Finset.mem_singleton]
-    tauto
+    rw [Finset.insert_comm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget]
+    rw [Finset.insert_comm
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget]
   have hCard :
       ({periodicHypercubicThreeOriginAxisZeroTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
