@@ -37,8 +37,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBath
   have hCastInjective :
       Function.Injective (fun k : Fin 325 => (k.1 : ℝ)) := by
     intro a b hab
-    apply Fin.ext
-    exact_mod_cast hab
+    have hVal : a.val = b.val := Nat.cast_inj.mp hab
+    exact Fin.ext hVal
   simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceFamilyL2,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
     H, Function.comp_def]
