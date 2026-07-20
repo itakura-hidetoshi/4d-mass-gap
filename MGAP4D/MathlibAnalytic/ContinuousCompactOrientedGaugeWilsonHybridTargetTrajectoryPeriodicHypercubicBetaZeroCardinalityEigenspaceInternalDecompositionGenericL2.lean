@@ -34,18 +34,25 @@ theorem continuousLinearMap_cardinalityEigenspaceFamilyL2_iSupIndep
     (Q : ι → V →L[ℝ] V) :
     iSupIndep (continuousLinearMapCardinalityEigenspaceFamilyL2 Q) := by
   classical
-  let H : Module.End ℝ V := (∑ i : ι, Q i).toLinearMap
   have hAll :
-      iSupIndep (fun μ : ℝ => Module.End.genEigenspace H μ 1) :=
-    Module.End.independent_genEigenspace H 1
+      iSupIndep
+        (fun μ : ℝ =>
+          Module.End.genEigenspace
+            ((∑ i : ι, Q i).toLinearMap)
+            μ
+            1) :=
+    Module.End.independent_genEigenspace
+      ((∑ i : ι, Q i).toLinearMap)
+      1
   have hCastInjective :
       Function.Injective
         (fun k : Fin (Fintype.card ι + 1) => (k.1 : ℝ)) := by
     intro a b hab
-    apply Fin.ext
-    exact_mod_cast hab
-  simpa [continuousLinearMapCardinalityEigenspaceFamilyL2, H,
-    Function.comp_def]
+    have hVal : a.val = b.val := by
+      exact_mod_cast hab
+    exact Fin.ext hVal
+  simpa only [continuousLinearMapCardinalityEigenspaceFamilyL2,
+    Function.comp_apply]
     using hAll.comp hCastInjective
 
 /-- For a finite commuting idempotent family, the admissible integer
