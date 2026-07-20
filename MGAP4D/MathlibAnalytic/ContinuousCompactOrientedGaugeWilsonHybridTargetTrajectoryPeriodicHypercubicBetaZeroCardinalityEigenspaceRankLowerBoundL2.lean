@@ -147,9 +147,7 @@ theorem continuousLinearMap_range_cardinalitySectorProjectorL2_eq_eigenspace
             continuousLinearMapCardinalitySectorProjectorL2 Q j hComm f := by
         symm
         rw [Finset.sum_eq_single k]
-        · rfl
-        · intro j hj hjk
-          exact hOther j hj hjk
+        · exact hOther
         · intro hkNot
           exact
             (hkNot
