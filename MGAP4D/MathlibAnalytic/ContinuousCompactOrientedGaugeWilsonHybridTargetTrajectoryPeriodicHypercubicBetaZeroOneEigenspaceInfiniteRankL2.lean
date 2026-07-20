@@ -154,14 +154,6 @@ theorem specialUnitaryWilsonPlaquetteEnergy_two_betaZeroOneInfiniteRankRationalR
   field_simp [hDen]
   ring
 
-/-- Wilson energy vanishes at the identity of `SU(2)`. -/
-@[simp]
-theorem specialUnitaryWilsonPlaquetteEnergy_two_one :
-    specialUnitaryWilsonPlaquetteEnergy 2
-        (1 : SpecialUnitaryMatrixGroup 2) = 0 := by
-  unfold specialUnitaryWilsonPlaquetteEnergy
-  norm_num [Matrix.trace, Fin.sum_univ_two]
-
 /-- The identity background used only by the eigenvalue-one infinite-rank
 witness construction. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration :
@@ -188,8 +180,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOn
     periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration =
       0 := by
-  simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration,
-    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply]
+  simp only [periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply]
+  change specialUnitaryWilsonPlaquetteEnergy 2
+      (1 : SpecialUnitaryMatrixGroup 2) = 0
+  unfold specialUnitaryWilsonPlaquetteEnergy
+  norm_num [Matrix.trace, Fin.sum_univ_two]
 
 @[simp]
 theorem periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankRationalRotationConfiguration
