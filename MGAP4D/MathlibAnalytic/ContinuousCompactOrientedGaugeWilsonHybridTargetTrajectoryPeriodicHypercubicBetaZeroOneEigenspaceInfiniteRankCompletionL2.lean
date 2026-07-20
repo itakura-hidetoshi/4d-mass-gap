@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectoryPeriodicHypercubicBetaZeroOneEigenspaceInfiniteRankL2
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathProjectionLaws
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathProjectionCore
 import Mathlib.Algebra.Polynomial.Basis
 import Mathlib.Algebra.Polynomial.Roots
 import Mathlib.RingTheory.AlgebraicIndependent.Transcendental
@@ -109,14 +109,36 @@ theorem
           n)
         m =
       specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1) := by
-  have hProjection :=
-    continuous_compact_oriented_singleLinkHeatBathProjection_replaceLink
+  have hAgree :
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.AgreeOffLink
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
+          m)
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
+        periodicHypercubicThreeOriginAxisZeroTarget := by
+    intro edge hEdge
+    simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration,
+      hEdge]
+  have hProjection' :
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
+          periodicHypercubicThreeOriginAxisZeroTarget
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+            n)
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
+            m) =
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
+          periodicHypercubicThreeOriginAxisZeroTarget
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
+            n)
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration :=
+    continuous_compact_oriented_singleLinkHeatBathProjection_offLinkFiberConstant
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem
+      periodicHypercubicThreeOriginAxisZeroTarget
       (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
         n)
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
+        m)
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
-      periodicHypercubicThreeOriginAxisZeroTarget
-      (specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotation (m : ℝ))
+      hAgree
   change
     ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
         n)
@@ -137,20 +159,6 @@ theorem
             n)
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) =
       specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)
-  have hProjection' :
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
-          periodicHypercubicThreeOriginAxisZeroTarget
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
-            n)
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
-            m) =
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
-          periodicHypercubicThreeOriginAxisZeroTarget
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF
-            n)
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration := by
-    simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration]
-      using hProjection
   rw [hProjection']
   simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF]
 
