@@ -160,7 +160,19 @@ theorem
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) =
       specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)
   rw [hProjection']
-  simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF]
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
+            m) ^
+        (n + 1) -
+      periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration ^
+        (n + 1) =
+      specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)
+  rw [
+    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankRationalRotationConfiguration,
+    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankIdentityConfiguration]
+  simp
 
 /-- The centered positive-power bounded-continuous observables are linearly
     independent. -/
@@ -170,6 +182,12 @@ theorem
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPowerFluctuationBCF := by
   apply LinearIndependent.of_comp
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap
+  change
+    LinearIndependent ℝ
+      (fun n : ℕ =>
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPowerFluctuationBCF
+            n))
   have hPointwise :
       (fun n : ℕ =>
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankDifferenceEvaluationLinearMap
