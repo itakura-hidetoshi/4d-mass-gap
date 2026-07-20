@@ -72,7 +72,7 @@ theorem continuousLinearMap_range_cardinalitySectorProjectorL2_eq_eigenspace
     (hk : k ≤ Fintype.card ι) :
     LinearMap.range
         (continuousLinearMapCardinalitySectorProjectorL2 Q k hComm).toLinearMap =
-      ((∑ i : ι, Q i).toLinearMap).genEigenspace (k : ℝ) 1 := by
+      Module.End.genEigenspace ((∑ i : ι, Q i).toLinearMap) (k : ℝ) 1 := by
   classical
   apply le_antisymm
   · intro f hf
@@ -166,7 +166,8 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardin
     (k : ℕ) :
     Submodule ℝ
       (Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
-  periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2.toLinearMap.genEigenspace
+  Module.End.genEigenspace
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2.toLinearMap
     (k : ℝ) 1
 
 /-- In the actual 324-link beta-zero system, the range of `E_k` is exactly the
