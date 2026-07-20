@@ -11,8 +11,6 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
-attribute [simp] finset_pair_card_eq_two
-
 local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_cardinalityTwoReceiptEdgeDecidableEq :
     DecidableEq
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
@@ -41,6 +39,22 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne :
       periodicHypercubicThreeOriginAxisZeroTarget :=
   Classical.choose_spec
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_exists_edge_ne_originAxisZeroTarget
+
+/-- The canonical target pair has cardinality two, independently of the selected
+`DecidableEq` implementation. -/
+@[simp]
+theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoTargetPair_card_eq_two
+    [DecidableEq
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge] :
+    ({periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
+      Finset
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 2 := by
+  exact
+    finset_pair_card_eq_two
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
 
 /-- The actual cardinality-two projector is nonzero. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_two_ne_zero :
