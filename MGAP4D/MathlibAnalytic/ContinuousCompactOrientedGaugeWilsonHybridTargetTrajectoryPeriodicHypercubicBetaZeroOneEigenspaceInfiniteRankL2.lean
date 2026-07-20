@@ -79,6 +79,20 @@ theorem specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos_sq_add_sin_sq
   field_simp [hDen]
   ring
 
+/-- Complex-coefficient form of the rational unit-circle identity. -/
+@[simp]
+theorem specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos_mul_add_sin_mul_complex
+    (t : ℝ) :
+    ((specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos t : ℝ) : ℂ) *
+          ((specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos t : ℝ) : ℂ) +
+        ((specialUnitaryTwoBetaZeroOneInfiniteRankRationalSin t : ℝ) : ℂ) *
+          ((specialUnitaryTwoBetaZeroOneInfiniteRankRationalSin t : ℝ) : ℂ) =
+      1 := by
+  exact_mod_cast
+    (by
+      simpa [pow_two] using
+        specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos_sq_add_sin_sq t)
+
 /-- The real rational rotation matrix, embedded into complex matrices. -/
 noncomputable def specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix
     (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
@@ -86,6 +100,17 @@ noncomputable def specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix
       ((specialUnitaryTwoBetaZeroOneInfiniteRankRationalSin t : ℝ) : ℂ);
     -((specialUnitaryTwoBetaZeroOneInfiniteRankRationalSin t : ℝ) : ℂ),
       ((specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos t : ℝ) : ℂ)]
+
+/-- The trace of the dedicated rational rotation matrix. -/
+@[simp]
+theorem specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix_trace
+    (t : ℝ) :
+    Matrix.trace
+        (specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix t) =
+      (((2 * specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos t : ℝ) : ℂ)) := by
+  simp [specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix,
+    Matrix.trace, Fin.sum_univ_two]
+  ring
 
 /-- A concrete rational one-parameter curve in `SU(2)`. -/
 noncomputable def specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotation
@@ -97,11 +122,10 @@ noncomputable def specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotation
     ext i j
     fin_cases i <;> fin_cases j <;>
       simp [specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix,
-        Matrix.mul_apply, Fin.sum_univ_two,
-        specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos_sq_add_sin_sq]
+        Matrix.mul_apply, Fin.sum_univ_two, add_comm] <;>
+      ring
   · simp [specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix,
-      Matrix.det_fin_two,
-      specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos_sq_add_sin_sq]
+      Matrix.det_fin_two, add_comm]
 
 @[simp]
 theorem specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotation_coe
@@ -118,12 +142,25 @@ theorem specialUnitaryWilsonPlaquetteEnergy_two_betaZeroOneInfiniteRankRationalR
         (specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotation t) =
       2 * t ^ 2 / (1 + t ^ 2) := by
   have hDen : (1 + t ^ 2 : ℝ) ≠ 0 := by positivity
-  unfold specialUnitaryWilsonPlaquetteEnergy
-  simp [specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix,
-    Matrix.trace, Fin.sum_univ_two,
-    specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos]
+  change
+    1 -
+        (Matrix.trace
+          (specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix t)).re /
+          (2 : ℝ) =
+      2 * t ^ 2 / (1 + t ^ 2)
+  rw [specialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationMatrix_trace]
+  simp only [Complex.ofReal_re]
+  unfold specialUnitaryTwoBetaZeroOneInfiniteRankRationalCos
   field_simp [hDen]
   ring
+
+/-- Wilson energy vanishes at the identity of `SU(2)`. -/
+@[simp]
+theorem specialUnitaryWilsonPlaquetteEnergy_two_one :
+    specialUnitaryWilsonPlaquetteEnergy 2
+        (1 : SpecialUnitaryMatrixGroup 2) = 0 := by
+  unfold specialUnitaryWilsonPlaquetteEnergy
+  norm_num [Matrix.trace, Fin.sum_univ_two]
 
 /-- The identity background used only by the eigenvalue-one infinite-rank
 witness construction. -/
@@ -162,7 +199,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOn
           n) =
       specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence n := by
   simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration,
     periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_apply,
     specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence,
     specialUnitaryWilsonPlaquetteEnergy_two_betaZeroOneInfiniteRankRationalRotation]
