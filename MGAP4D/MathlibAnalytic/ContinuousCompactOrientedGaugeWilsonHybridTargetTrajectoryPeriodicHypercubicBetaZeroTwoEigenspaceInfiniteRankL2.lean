@@ -180,6 +180,23 @@ theorem
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration =
       2 := by
+  have hNegative :
+      specialUnitaryWilsonPlaquetteEnergy 2 specialUnitaryTwoNegativeIdentity = 2 := by
+    norm_num [specialUnitaryTwoNegativeIdentity,
+      specialUnitaryWilsonPlaquetteEnergy, Matrix.trace, Matrix.one_apply,
+      Fin.sum_univ_two]
+  have hSourceNegative :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankSourceNegativeIdentityConfiguration
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget =
+        specialUnitaryTwoNegativeIdentity := by
+    simp [
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankSourceNegativeIdentityConfiguration,
+      CompactOrientedGaugeWilsonSystem.replaceLink]
+  have hSourceIdentity :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
+          periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget =
+        (1 : SpecialUnitaryMatrixGroup 2) := by
+    rfl
   change
     (specialUnitaryWilsonPlaquetteEnergy 2
         (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankSourceNegativeIdentityConfiguration
@@ -189,15 +206,9 @@ theorem
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
             periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget) -
         specialUnitaryTwoWilsonEnergyHaarMean) = 2
-  norm_num [
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankSourceNegativeIdentityConfiguration,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration,
-    CompactOrientedGaugeWilsonSystem.replaceLink,
-    specialUnitaryTwoNegativeIdentity,
-    specialUnitaryWilsonPlaquetteEnergy,
-    Matrix.trace,
-    Matrix.one_apply,
-    Fin.sum_univ_two]
+  rw [hSourceNegative, hSourceIdentity, hNegative,
+    specialUnitaryWilsonPlaquetteEnergy_two_one]
+  ring
 
 /-- Rectangular second-difference evaluation in the target and fixed second
 coordinates.  Division by two normalizes the explicit second-coordinate jump. -/
@@ -660,16 +671,13 @@ theorem
   rw [continuous_compact_oriented_fluctuationJointSectorSubmoduleL2_mem_iff]
   constructor
   · intro edge hEdge
-    have hCases :
-        edge = periodicHypercubicThreeOriginAxisZeroTarget ∨
-          edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget := by
-      simpa only [Finset.mem_insert, Finset.mem_singleton] using hEdge
-    rcases hCases with hEq | hEq
+    rcases Finset.mem_insert.mp hEdge with hEq | hMem
     · subst edge
       exact
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairL2_target_fluctuation_eq_self
           n
-    · subst edge
+    · have hEq := Finset.mem_singleton.mp hMem
+      subst edge
       exact
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroTwoInfiniteRankPairL2_source_fluctuation_eq_self
           n
@@ -716,11 +724,8 @@ theorem
       ({periodicHypercubicThreeOriginAxisZeroTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget} :
           Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 2 :=
-    finset_pair_card_eq_two
-      periodicHypercubicThreeOriginAxisZeroTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 2 := by
+    simp [periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm]
   rw [hCard] at hGeneric
   simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
