@@ -160,19 +160,8 @@ theorem
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) =
       specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)
   rw [hProjection']
-  change
-    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankRationalRotationConfiguration
-            m) ^
-        (n + 1) -
-      periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration ^
-        (n + 1) =
-      specialUnitaryTwoBetaZeroOneInfiniteRankEnergySequence m ^ (n + 1)
-  rw [
-    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankRationalRotationConfiguration,
-    periodicHypercubicThreeSpecialUnitaryTwoTargetWilsonEnergyBCF_betaZeroOneInfiniteRankIdentityConfiguration]
-  simp
+  ring_nf
+  simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankTargetWilsonEnergyPositivePowerBCF]
 
 /-- The centered positive-power bounded-continuous observables are linearly
     independent. -/
