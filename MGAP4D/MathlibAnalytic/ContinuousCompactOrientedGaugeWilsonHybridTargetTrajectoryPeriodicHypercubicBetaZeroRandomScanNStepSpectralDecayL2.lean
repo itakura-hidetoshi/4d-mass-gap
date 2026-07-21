@@ -164,12 +164,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2 n * ‖f‖ := by
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
     k n f hf, norm_smul, Real.norm_eq_abs, abs_pow]
-  let kFin : Fin 325 := ⟨k, by omega⟩
+  let kFin : Fin 325 := ⟨k, Nat.lt_succ_of_le hUpper⟩
+  have hkNe : kFin.1 ≠ 0 := by
+    simpa [kFin] using (Nat.ne_of_gt hLower)
   have hAbs :
       |1 - (k : ℝ) / 324| ≤
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSLEML2 := by
     simpa [kFin, periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSLEML2] using
-      fin_affine_grid_abs_le_second_of_ne_zero 324 (by omega) kFin (by omega)
+      fin_affine_grid_abs_le_second_of_ne_zero 324 (by omega) kFin hkNe
   have hPow := real_pow_le_pow_of_nonneg (abs_nonneg (1 - (k : ℝ) / 324)) hAbs n
   exact mul_le_mul_of_nonneg_right hPow (norm_nonneg f)
 
@@ -183,14 +185,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2 n * ‖f‖ := by
   have hfCard : f ∈
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCardinalityEigenspaceL2 1 := by
-    rw [← periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSecondEigenspaceL2_eq_cardinality_one]
+    rw [← periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSecondEigenspaceL2_eq_cardinalityOne]
     exact hf
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
-    1 n f hfCard, norm_smul, Real.norm_eq_abs]
-  rw [abs_of_nonneg]
-  · rfl
-  · exact
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2_nonneg n
+    1 n f hfCard, norm_smul, Real.norm_eq_abs, abs_pow,
+    abs_of_nonneg (by norm_num : 0 ≤ 1 - (1 : ℝ) / 324)]
+  change (1 - (1 : ℝ) / 324) ^ n * ‖f‖ =
+    (1 - (1 : ℝ) / 324) ^ n * ‖f‖
+  rfl
 
 /-- The stationary cardinality-zero sector is fixed by every random-scan power. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_self_of_mem_stationaryEigenspace
@@ -219,7 +221,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
   have h :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
       324 n f hfCard
-  simpa [zero_pow hn] using h
+  simpa [zero_pow (Nat.ne_of_gt hn)] using h
 
 /-- Compact receipt for exact finite-volume beta-zero random-scan `n`-step
 spectral decay and endpoint-sector dynamics. -/
