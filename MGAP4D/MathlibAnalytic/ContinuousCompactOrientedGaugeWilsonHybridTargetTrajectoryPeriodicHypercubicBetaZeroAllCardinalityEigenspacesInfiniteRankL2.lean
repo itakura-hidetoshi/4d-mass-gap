@@ -401,12 +401,21 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroInfiniteRankSectorWitnes
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroInfiniteRankSectorWitness_family_offLinkFiberConstant_of_not_mem
       W n newEdge hNewEdge
   have hComm :
-      W.family n *
-          periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF newEdge =
-        periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF newEdge *
-          W.family n := by
-    ext A
-    simp [mul_comm]
+      (fun A =>
+        W.family n A *
+          periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF newEdge A) =
+        fun A =>
+          periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF newEdge A *
+            W.family n A := by
+    funext A
+    rw [mul_comm]
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.singleLinkHeatBathProjection
+        newEdge
+        (fun A =>
+          W.family n A *
+            periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF newEdge A) =
+      fun _ => 0
   rw [hComm]
   funext A
   have hMul :=
