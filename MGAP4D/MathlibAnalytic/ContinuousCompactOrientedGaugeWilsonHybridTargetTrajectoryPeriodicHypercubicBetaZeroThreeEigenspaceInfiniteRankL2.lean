@@ -35,6 +35,11 @@ theorem boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recov
   rw [hEq]
   exact hLinearIndependent
 
+local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_threeInfiniteRankEdgeDecidableEq :
+    DecidableEq
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
+  inferInstance
+
 /-- The target-centered two-coordinate family remains constant along every
 physical coordinate outside its target/source pair. -/
 theorem
