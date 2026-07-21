@@ -38,7 +38,7 @@ theorem boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recov
 local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_threeInfiniteRankEdgeDecidableEq :
     DecidableEq
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
-  inferInstance
+  fun a b => instDecidableEqProd a b
 
 /-- The target-centered two-coordinate family remains constant along every
 physical coordinate outside its target/source pair. -/
