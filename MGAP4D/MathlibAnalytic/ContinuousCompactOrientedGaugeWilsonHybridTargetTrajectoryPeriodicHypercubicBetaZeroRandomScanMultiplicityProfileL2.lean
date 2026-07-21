@@ -151,7 +151,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
     rcases hPoint with ⟨k, hk⟩
     refine ⟨k, ?_⟩
     have hScalar :
-        (324 : ℝ) * (1 - rho) = (k.1 : ℝ) := hk
+        (324 : ℝ) * (1 - rho) = (k.1 : ℝ) := hk.symm
     nlinarith
   · rintro ⟨k, rfl⟩
     have hPoint :=
