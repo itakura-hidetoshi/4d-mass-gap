@@ -190,8 +190,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
     1 n f hfCard, norm_smul, Real.norm_eq_abs, abs_pow]
   norm_num only [Nat.cast_one]
-  rw [abs_of_nonneg (by norm_num : 0 ≤ 1 - (1 : ℝ) / 324)]
-  rfl
+  norm_num [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2,
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSLEML2]
 
 /-- The stationary cardinality-zero sector is fixed by every random-scan power. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_self_of_mem_stationaryEigenspace
