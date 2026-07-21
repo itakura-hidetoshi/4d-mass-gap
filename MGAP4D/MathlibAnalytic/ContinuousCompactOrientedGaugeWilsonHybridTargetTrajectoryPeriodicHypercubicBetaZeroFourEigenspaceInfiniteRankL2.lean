@@ -234,8 +234,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCentered
       (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A)
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget =
         (1 : SpecialUnitaryMatrixGroup 2) := by
-    change (1 : SpecialUnitaryMatrixGroup 2) = 1
-    rfl
+    unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration
+    exact compact_oriented_replaceLink_same
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base
+      A periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
+      (1 : SpecialUnitaryMatrixGroup 2)
   change
     (specialUnitaryWilsonPlaquetteEnergy 2
         ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A)
