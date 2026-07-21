@@ -73,7 +73,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
       spectrum ℝ
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 := by
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSpectrumL2_eq_allowed_affine_grid]
-  exact ⟨⟨1, by omega⟩, rfl⟩
+  refine ⟨⟨1, by omega⟩, ?_⟩
+  simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondSpectralValueL2]
 
 /-- The second spectral value is genuinely nonstationary. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSecondSpectralValueL2_ne_one :
@@ -114,9 +115,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
   have hGap :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSpectralGapL2_le_one_sub_of_mem_spectrum_of_ne_one
       rho hRho hNe
-  rw [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSpectralGapL2,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondSpectralValueL2]
-    at hGap ⊢
+  change (1 : ℝ) / 324 ≤ 1 - rho at hGap
+  change rho ≤ 1 - (1 : ℝ) / 324
   linarith
 
 /-- The second spectral value attains the gap `1 / 324`. -/
@@ -167,7 +167,9 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondEigenspaceL2 =
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCardinalityEigenspaceL2
         1 := by
-  rfl
+  simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondEigenspaceL2,
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCardinalityEigenspaceL2,
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondSpectralValueL2]
 
 /-- The eigenspace at the second spectral value has rank at least `aleph0`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_aleph0_le_rank_randomScanSecondEigenspaceL2 :
