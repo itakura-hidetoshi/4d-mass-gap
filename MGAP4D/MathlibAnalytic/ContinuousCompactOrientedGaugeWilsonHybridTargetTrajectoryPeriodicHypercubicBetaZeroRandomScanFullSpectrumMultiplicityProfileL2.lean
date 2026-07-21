@@ -39,7 +39,13 @@ theorem singleton_sub_smul_range_eq_range_one_sub_smul
     (f : ι → ℝ) :
     ({1} : Set ℝ) - c • Set.range f =
       Set.range (fun i => 1 - c • f i) := by
-  rw [← Set.range_smul, Set.singleton_sub, Set.image_range]
+  rw [← Set.range_smul, Set.singleton_sub]
+  ext x
+  constructor
+  · rintro ⟨y, ⟨i, rfl⟩, rfl⟩
+    exact ⟨i, rfl⟩
+  · rintro ⟨i, rfl⟩
+    exact ⟨c • f i, ⟨i, rfl⟩, rfl⟩
 
 /-- The normalized random-scan operator is the affine continuous-linear-map
 expression `I - 324⁻¹ H_HB`. -/
