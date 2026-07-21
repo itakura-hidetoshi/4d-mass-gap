@@ -11,62 +11,6 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
-/-- Multiplication by a fixed bounded-continuous factor preserves linear
-independence whenever a pointwise section leaves the original family unchanged
-and makes that factor a fixed nonzero scalar. -/
-theorem boundedContinuousFunction_mul_right_linearIndependent_of_pointwise_section
-    {X κ : Type*}
-    [TopologicalSpace X]
-    (u : κ → BoundedContinuousFunction X ℝ)
-    (g : BoundedContinuousFunction X ℝ)
-    (section : X → X)
-    (c : ℝ)
-    (hSection : ∀ k : κ, ∀ x : X, u k (section x) = u k x)
-    (hFactor : ∀ x : X, g (section x) = c)
-    (hc : c ≠ 0)
-    (hLinearIndependent : LinearIndependent ℝ u) :
-    LinearIndependent ℝ (fun k : κ => u k * g) := by
-  let recover :
-      BoundedContinuousFunction X ℝ →ₗ[ℝ] (X → ℝ) where
-    toFun H x := H (section x) / c
-    map_add' H K := by
-      funext x
-      simp
-      ring
-    map_smul' a H := by
-      funext x
-      simp
-      ring
-  let coeLinearMap :
-      BoundedContinuousFunction X ℝ →ₗ[ℝ] (X → ℝ) where
-    toFun H x := H x
-    map_add' H K := by
-      funext x
-      rfl
-    map_smul' a H := by
-      funext x
-      rfl
-  have hCoeInjective : Function.Injective coeLinearMap := by
-    intro H K hHK
-    ext x
-    exact congrFun hHK x
-  have hFunctionLinearIndependent :
-      LinearIndependent ℝ (fun k : κ => fun x : X => u k x) := by
-    have hMapped :=
-      hLinearIndependent.map' coeLinearMap
-        (LinearMap.ker_eq_bot.mpr hCoeInjective)
-    simpa [coeLinearMap, Function.comp_def] using hMapped
-  apply
-    boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recovers
-      (u := u) (g := g) (recover := recover)
-      (w := fun k : κ => fun x : X => u k x)
-  · intro k
-    funext x
-    change (u k (section x) * g (section x)) / c = u k x
-    rw [hSection k x, hFactor x]
-    simp [hc]
-  · exact hFunctionLinearIndependent
-
 local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_fourInfiniteRankEdgeDecidableEq :
     DecidableEq
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
@@ -149,25 +93,29 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_o
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget ≠
       periodicHypercubicThreeOriginAxisZeroTarget := by
   intro hEq
-  exact
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem
-      (by simp [hEq])
+  exact periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem
+    (by
+      rw [hEq]
+      exact Finset.mem_insert_self _ _)
 
 theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_secondTarget :
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget ≠
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget := by
   intro hEq
-  exact
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem
-      (by simp [hEq])
+  exact periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem
+    (by
+      rw [hEq]
+      exact Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
 
 theorem periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_thirdTarget :
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget ≠
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget := by
   intro hEq
-  exact
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem
-      (by simp [hEq])
+  exact periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem
+    (by
+      rw [hEq]
+      exact Finset.mem_insert_of_mem
+        (Finset.mem_insert_of_mem (Finset.mem_singleton_self _)))
 
 /-- The canonical four-edge sector. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector :
@@ -184,14 +132,21 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector_c
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector
   rw [Finset.card_insert_of_notMem
     periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_not_mem]
-  rw [finset_triple_card_eq_three
-    periodicHypercubicThreeOriginAxisZeroTarget
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm
-    periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm]
-  norm_num
+  have hTripleCard :
+      ({periodicHypercubicThreeOriginAxisZeroTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
+        Finset
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card =
+        3 :=
+    finset_triple_card_eq_three
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm
+  omega
 
 /-- The three-coordinate family is constant along every coordinate outside its
 canonical triple. -/
@@ -252,85 +207,47 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNe
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration,
     CompactOrientedGaugeWilsonSystem.replaceLink, hEdge]
 
-/-- The centered fourth-coordinate factor is constant on the identity section. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_identitySection_constant
-    (A : periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration) :
-    periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A) =
-      periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) := by
-  apply periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF_eq_of_apply_eq
-  simp [
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration,
-    CompactOrientedGaugeWilsonSystem.replaceLink]
-
-/-- The centered fourth-coordinate factor is constant on the negative section. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_negativeSection_constant
-    (A : periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration) :
-    periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A) =
-      periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) := by
-  apply periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF_eq_of_apply_eq
-  simp [
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration,
-    CompactOrientedGaugeWilsonSystem.replaceLink]
-
 /-- The centered fourth coordinate changes by exactly two between the negative
 and identity sections. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_negative_sub_identity_eq_two :
+theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_negative_sub_identity_eq_two
+    (A : periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration) :
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) -
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A) -
       periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration) =
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A) =
       2 := by
   have hNegative :
       specialUnitaryWilsonPlaquetteEnergy 2 specialUnitaryTwoNegativeIdentity = 2 := by
     norm_num [specialUnitaryTwoNegativeIdentity,
       specialUnitaryWilsonPlaquetteEnergy, Matrix.trace, Matrix.one_apply,
       Fin.sum_univ_two]
-  have hIdentity :
-      specialUnitaryWilsonPlaquetteEnergy 2
-        (1 : SpecialUnitaryMatrixGroup 2) = 0 :=
-    specialUnitaryWilsonPlaquetteEnergy_two_one
   have hFourthNegative :
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration)
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A)
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget =
         specialUnitaryTwoNegativeIdentity := by
-    simp [
+    simpa [
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration,
       CompactOrientedGaugeWilsonSystem.replaceLink]
   have hFourthIdentity :
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration)
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A)
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget =
         (1 : SpecialUnitaryMatrixGroup 2) := by
-    simp [
+    simpa [
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration,
       CompactOrientedGaugeWilsonSystem.replaceLink]
   change
     (specialUnitaryWilsonPlaquetteEnergy 2
-        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration)
+        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A)
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget) -
       specialUnitaryTwoWilsonEnergyHaarMean) -
       (specialUnitaryWilsonPlaquetteEnergy 2
-          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration)
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A)
             periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget) -
         specialUnitaryTwoWilsonEnergyHaarMean) = 2
-  rw [hFourthNegative, hFourthIdentity, hNegative, hIdentity]
+  rw [hFourthNegative, hFourthIdentity, hNegative,
+    specialUnitaryWilsonPlaquetteEnergy_two_one]
   ring
 
 /-- Multiply the countable three-coordinate family by the centered canonical
@@ -343,80 +260,100 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRa
     periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
       periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
 
+/-- The normalized two-section difference used to recover the original
+three-coordinate family. -/
+noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleDifferenceLinearMap :
+    BoundedContinuousFunction
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ →ₗ[ℝ]
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration → ℝ) where
+  toFun H A :=
+    (H (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A) -
+      H (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A)) / 2
+  map_add' H K := by
+    funext A
+    simp
+    ring
+  map_smul' a H := by
+    funext A
+    simp
+    ring
+
+/-- The two-section difference recovers the original three-coordinate family. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleDifferenceLinearMap_apply
+    (n : ℕ)
+    (A : periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleDifferenceLinearMap
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF n)
+        A =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF n A := by
+  let F := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF n
+  let G := periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
+    periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
+  let AN := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A
+  let AI := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A
+  have hFiber :
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.OffLinkFiberConstant
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget F :=
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_offLinkFiberConstant_of_ne
+      n periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_originAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_secondTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_thirdTarget
+  have hFNegative : F AN = F A :=
+    hFiber AN A
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration_agreeOffLink A)
+  have hFIdentity : F AI = F A :=
+    hFiber AI A
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration_agreeOffLink A)
+  have hJump : G AN - G AI = 2 := by
+    simpa [G, AN, AI] using
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_negative_sub_identity_eq_two
+        A
+  change (F AN * G AN - F AI * G AI) / 2 = F A
+  rw [hFNegative, hFIdentity]
+  calc
+    (F A * G AN - F A * G AI) / 2 = F A * (G AN - G AI) / 2 := by ring
+    _ = F A * 2 / 2 := by rw [hJump]
+    _ = F A := by ring
+
 /-- The four-coordinate bounded-continuous family is linearly independent. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF_linearIndependent :
     LinearIndependent ℝ
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF := by
-  let G :=
-    periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
-      periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-  let AI :=
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroOneInfiniteRankIdentityConfiguration
-  by_cases hIdentity :
-      G (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration AI) = 0
-  · have hJump :
-        G (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration AI) -
-            G (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration AI) =
-          2 := by
-      simpa [G, AI] using
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_negative_sub_identity_eq_two
-    have hNegative :
-        G (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration AI) ≠ 0 := by
-      intro hZero
-      rw [hZero, hIdentity] at hJump
-      norm_num at hJump
-    apply
-      boundedContinuousFunction_mul_right_linearIndependent_of_pointwise_section
-        (u := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF)
-        (g := G)
-        (section :=
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration)
-        (c := G
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration AI))
-    · intro n A
-      exact
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_offLinkFiberConstant_of_ne
-          n periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_originAxisZeroTarget
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_secondTarget
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_thirdTarget)
-          _ _
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration_agreeOffLink
-            A)
-    · intro A
-      simpa [G, AI] using
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_negativeSection_constant
-          A
-    · exact hNegative
-    · simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF,
-        G] using
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_linearIndependent
-  · apply
-      boundedContinuousFunction_mul_right_linearIndependent_of_pointwise_section
-        (u := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF)
-        (g := G)
-        (section :=
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration)
-        (c := G
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration AI))
-    · intro n A
-      exact
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_offLinkFiberConstant_of_ne
-          n periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_originAxisZeroTarget
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_secondTarget
-          periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget_ne_thirdTarget)
-          _ _
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration_agreeOffLink
-            A)
-    · intro A
-      simpa [G, AI] using
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCenteredFourthCoordinate_identitySection_constant
-          A
-    · exact hIdentity
-    · simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF,
-        G] using
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_linearIndependent
+  let coeLinearMap :
+      BoundedContinuousFunction
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ →ₗ[ℝ]
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration → ℝ) where
+    toFun H A := H A
+    map_add' H K := rfl
+    map_smul' a H := rfl
+  have hCoeInjective : Function.Injective coeLinearMap := by
+    intro F G hFG
+    ext A
+    exact congrFun hFG A
+  have hFunctionLinearIndependent :
+      LinearIndependent ℝ
+        (fun n : ℕ => fun A =>
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF n A) := by
+    have hMapped :=
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_linearIndependent.map'
+        coeLinearMap (LinearMap.ker_eq_bot.mpr hCoeInjective)
+    simpa [coeLinearMap, Function.comp_def] using hMapped
+  apply
+    boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recovers
+      (u := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF)
+      (g := periodicHypercubicThreeSpecialUnitaryTwoCenteredWilsonCoordinateBCF
+        periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget)
+      (recover :=
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleDifferenceLinearMap)
+      (w := fun n : ℕ => fun A =>
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF n A)
+  · intro n
+    funext A
+    exact
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleDifferenceLinearMap_apply
+        n A
+  · exact hFunctionLinearIndependent
 
 /-- The actual countable four-coordinate Gibbs `L²` family. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2
@@ -720,50 +657,49 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fourInfi
   rw [continuous_compact_oriented_fluctuationJointSectorSubmoduleL2_mem_iff]
   constructor
   · intro edge hEdge
-    have hCases :
-        edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget ∨
-        edge = periodicHypercubicThreeOriginAxisZeroTarget ∨
-        edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ∨
-        edge = periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget := by
-      simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector]
-        using hEdge
-    rcases hCases with hEq | hEq | hEq | hEq
+    unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector at hEdge
+    rcases Finset.mem_insert.mp hEdge with hEq | hTriple
     · subst edge
       exact
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_fourth_fluctuation_eq_self
           n
-    · subst edge
-      exact
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_target_fluctuation_eq_self
-          n
-    · subst edge
-      exact
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_source_fluctuation_eq_self
-          n
-    · subst edge
-      exact
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_third_fluctuation_eq_self
-          n
+    · rcases Finset.mem_insert.mp hTriple with hEq | hRest
+      · subst edge
+        exact
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_target_fluctuation_eq_self
+            n
+      · rcases Finset.mem_insert.mp hRest with hEq | hRest
+        · subst edge
+          exact
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_source_fluctuation_eq_self
+              n
+        · have hEq := Finset.mem_singleton.mp hRest
+          subst edge
+          exact
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_third_fluctuation_eq_self
+              n
   · intro edge hEdge
     apply
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleL2_fluctuation_eq_zero_of_ne
         n edge
     · intro hEq
       subst edge
-      exact hEdge (by
-        simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector])
+      exact hEdge
+        (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _))
     · intro hEq
       subst edge
-      exact hEdge (by
-        simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector])
+      exact hEdge
+        (Finset.mem_insert_of_mem
+          (Finset.mem_insert_of_mem (Finset.mem_insert_self _ _)))
     · intro hEq
       subst edge
-      exact hEdge (by
-        simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector])
+      exact hEdge
+        (Finset.mem_insert_of_mem
+          (Finset.mem_insert_of_mem
+            (Finset.mem_insert_of_mem (Finset.mem_singleton_self _))))
     · intro hEq
       subst edge
-      exact hEdge (by
-        simp [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankSector])
+      exact hEdge (Finset.mem_insert_self _ _)
 
 /-- The actual beta-zero heat-bath eigenspace at eigenvalue four has Cardinal
 rank at least `aleph0`. -/
