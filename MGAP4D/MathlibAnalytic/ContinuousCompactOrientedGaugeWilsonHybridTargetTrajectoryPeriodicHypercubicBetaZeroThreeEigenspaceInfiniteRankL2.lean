@@ -35,11 +35,6 @@ theorem boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recov
   rw [hEq]
   exact hLinearIndependent
 
-local instance periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_threeInfiniteRankEdgeDecidableEq :
-    DecidableEq
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge :=
-  Classical.decEq _
-
 /-- The target-centered two-coordinate family remains constant along every
 physical coordinate outside its target/source pair. -/
 theorem
@@ -779,41 +774,14 @@ theorem
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
         periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
           Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 := by
-    have hOrigin :
-        periodicHypercubicThreeOriginAxisZeroTarget ∉
-          ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
-            periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
-            Finset
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
-      simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
-      exact ⟨
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm⟩
-    have hSecond :
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget ∉
-          ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
-            Finset
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge) := by
-      simpa only [Finset.mem_singleton] using
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm
-    calc
-      ({periodicHypercubicThreeOriginAxisZeroTarget,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
-        periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
-          Finset
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card =
-          ({periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget,
-            periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
-            Finset
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card + 1 :=
-        Finset.card_insert_of_not_mem hOrigin
-      _ =
-          (({periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget} :
-            Finset
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card + 1) + 1 := by
-        rw [Finset.card_insert_of_not_mem hSecond]
-      _ = 3 := by simp
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.geometry.Edge).card = 3 :=
+    finset_triple_card_eq_three
+      periodicHypercubicThreeOriginAxisZeroTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityTwoSecondTarget_ne.symm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_originAxisZeroTarget.symm
+      periodicHypercubicThreeSpecialUnitaryTwoCardinalityThreeThirdTarget_ne_secondTarget.symm
   rw [hCard] at hGeneric
   simpa [Q,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroHeatBathCardinalityEigenspaceL2,
