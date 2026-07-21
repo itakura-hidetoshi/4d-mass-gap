@@ -13,14 +13,14 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
-variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [Nontrivial V]
+variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
-/-- Generic affine spectral mapping for a continuous linear endomorphism:
-the spectrum of `I - cT` is `{1} - c • spectrum T`. -/
+/-- Generic affine spectral mapping for a continuous linear endomorphism and a
+nonzero scalar: the spectrum of `I - cT` is `{1} - c • spectrum T`. -/
 theorem continuousLinearMap_spectrum_one_sub_smul_eq_singleton_sub_smul
     (T : V →L[ℝ] V)
     (c : ℝ)
-    (hSpectrum : (spectrum ℝ T).Nonempty) :
+    (hc : c ≠ 0) :
     spectrum ℝ (1 - c • T) =
       ({1} : Set ℝ) - c • spectrum ℝ T := by
   calc
@@ -28,7 +28,9 @@ theorem continuousLinearMap_spectrum_one_sub_smul_eq_singleton_sub_smul
         ({1} : Set ℝ) - spectrum ℝ (c • T) := by
       simpa using (spectrum.singleton_sub_eq (c • T) (1 : ℝ)).symm
     _ = ({1} : Set ℝ) - c • spectrum ℝ T := by
-      rw [spectrum.smul_eq_smul c T hSpectrum]
+      rw [show spectrum ℝ (c • T) = c • spectrum ℝ T by
+        simpa [Units.smul_def] using
+          (spectrum.unit_smul_eq_smul T (Units.mk0 c hc))]
 
 /-- Pointwise affine transport of a ranged scalar family. -/
 theorem singleton_sub_smul_range_eq_range_one_sub_smul
@@ -37,8 +39,7 @@ theorem singleton_sub_smul_range_eq_range_one_sub_smul
     (f : ι → ℝ) :
     ({1} : Set ℝ) - c • Set.range f =
       Set.range (fun i => 1 - c • f i) := by
-  rw [← Set.range_smul]
-  simp
+  rw [← Set.range_smul, Set.singleton_sub, Set.image_range]
 
 /-- The normalized random-scan operator is the affine continuous-linear-map
 expression `I - 324⁻¹ H_HB`. -/
@@ -50,21 +51,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
   have hEdge : 0 < Fintype.card C.base.geometry.Edge := by
     rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_edgeCard_eq_324]
     norm_num
-  ext f
+  apply ContinuousLinearMap.ext
+  intro f
   change C.randomScanHeatBathL2 f =
     f - (324 : ℝ)⁻¹ • C.heatBathHamiltonianL2 f
   simpa [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_edgeCard_eq_324]
     using
       (continuous_compact_oriented_randomScanHeatBathL2_eq_id_sub_hamiltonian
         C hEdge f)
-
-/-- The actual heat-bath full spectrum is nonempty, as witnessed by its exact
-finite integer-grid description. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBathSpectrumL2_nonempty :
-    (spectrum ℝ
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2).Nonempty := by
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBathSpectrumL2_eq_allowed_integer_grid]
-  exact Set.range_nonempty _
 
 /-- The affine image of the heat-bath integer grid is exactly the allowed
 325-point random-scan grid. -/
@@ -98,7 +92,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
       continuousLinearMap_spectrum_one_sub_smul_eq_singleton_sub_smul
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.heatBathHamiltonianL2
         (324 : ℝ)⁻¹
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBathSpectrumL2_nonempty
+        (by norm_num)
     _ = ({1} : Set ℝ) - (324 : ℝ)⁻¹ •
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroAllowedHeatBathPointSpectrumL2 := by
       rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_heatBathSpectrumL2_eq_allowed_integer_grid]
