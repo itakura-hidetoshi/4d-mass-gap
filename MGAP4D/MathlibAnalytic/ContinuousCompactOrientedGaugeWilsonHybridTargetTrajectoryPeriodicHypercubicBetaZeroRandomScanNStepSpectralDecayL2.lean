@@ -188,8 +188,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
     rw [← periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSecondEigenspaceL2_eq_cardinalityOne]
     exact hf
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
-    1 n f hfCard, norm_smul, Real.norm_eq_abs, abs_pow,
-    abs_of_nonneg (by norm_num : 0 ≤ 1 - (1 : ℝ) / 324)]
+    1 n f hfCard, norm_smul, Real.norm_eq_abs, abs_pow]
+  change |1 - (1 : ℝ) / 324| ^ n * ‖f‖ =
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2 n * ‖f‖
+  rw [abs_of_nonneg (by norm_num : 0 ≤ 1 - (1 : ℝ) / 324)]
   change (1 - (1 : ℝ) / 324) ^ n * ‖f‖ =
     (1 - (1 : ℝ) / 324) ^ n * ‖f‖
   rfl
