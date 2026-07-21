@@ -37,8 +37,9 @@ theorem mem_realVectorLineSubmoduleL2_iff_eq_inner_smul_of_norm_eq_one
       f = inner ℝ omega f • omega := by
   constructor
   · rintro ⟨a, rfl⟩
+    change a • omega = inner ℝ omega (a • omega) • omega
     have hInner : inner ℝ omega (a • omega) = a := by
-      simp [real_inner_smul_right, real_inner_self_eq_norm_sq, hOmega]
+      simp [real_inner_smul_right, hOmega]
     rw [hInner]
   · intro hf
     refine ⟨inner ℝ omega f, ?_⟩
