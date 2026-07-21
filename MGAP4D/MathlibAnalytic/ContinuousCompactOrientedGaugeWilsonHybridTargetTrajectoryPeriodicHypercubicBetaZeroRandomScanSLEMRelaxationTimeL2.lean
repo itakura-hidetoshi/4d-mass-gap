@@ -36,9 +36,10 @@ theorem fin_affine_grid_abs_le_second_of_ne_zero
     |1 - (k.1 : ℝ) / N| ≤ 1 - (1 : ℝ) / N := by
   rw [abs_of_nonneg (fin_affine_grid_nonneg N hN k)]
   have hGap := fin_affine_grid_inv_le_gap_of_ne_zero N hN k hk
-  simpa [one_div] using (show
-    1 - (k.1 : ℝ) / N ≤ 1 - (1 : ℝ) / N by
-      linarith)
+  have hGap' :
+      (1 : ℝ) / N ≤ 1 - (1 - (k.1 : ℝ) / N) := by
+    simpa [one_div] using hGap
+  linarith
 
 /-- The second-largest eigenvalue modulus of the actual finite-volume beta-zero
 random-scan operator. -/
