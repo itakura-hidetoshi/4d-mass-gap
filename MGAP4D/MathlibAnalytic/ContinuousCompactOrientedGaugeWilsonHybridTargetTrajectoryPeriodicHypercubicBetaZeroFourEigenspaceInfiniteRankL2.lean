@@ -234,9 +234,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankCentered
       (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration A)
           periodicHypercubicThreeSpecialUnitaryTwoCardinalityFourFourthTarget =
         (1 : SpecialUnitaryMatrixGroup 2) := by
-    simpa [
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthIdentityConfiguration,
-      CompactOrientedGaugeWilsonSystem.replaceLink]
+    change (1 : SpecialUnitaryMatrixGroup 2) = 1
+    rfl
   change
     (specialUnitaryWilsonPlaquetteEnergy 2
         ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankFourthNegativeConfiguration A)
@@ -316,29 +315,40 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupl
     _ = F A * 2 / 2 := by rw [hJump]
     _ = F A := by ring
 
+/-- Pointwise coercion from bounded-continuous functions to the ambient function
+space. -/
+noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankBCFCoeLinearMap :
+    BoundedContinuousFunction
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ →ₗ[ℝ]
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration → ℝ) where
+  toFun H A := H A
+  map_add' H K := rfl
+  map_smul' a H := rfl
+
+/-- Pointwise coercion of bounded-continuous functions is injective. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankBCFCoeLinearMap_injective :
+    Function.Injective
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankBCFCoeLinearMap := by
+  intro F G hFG
+  ext A
+  exact congrFun hFG A
+
 /-- The four-coordinate bounded-continuous family is linearly independent. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF_linearIndependent :
     LinearIndependent ℝ
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankQuadrupleBCF := by
-  let coeLinearMap :
-      BoundedContinuousFunction
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration ℝ →ₗ[ℝ]
-        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.base.Configuration → ℝ) where
-    toFun H A := H A
-    map_add' H K := rfl
-    map_smul' a H := rfl
-  have hCoeInjective : Function.Injective coeLinearMap := by
-    intro F G hFG
-    ext A
-    exact congrFun hFG A
   have hFunctionLinearIndependent :
       LinearIndependent ℝ
         (fun n : ℕ => fun A =>
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF n A) := by
     have hMapped :=
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF_linearIndependent.map'
-        coeLinearMap (LinearMap.ker_eq_bot.mpr hCoeInjective)
-    simpa [coeLinearMap, Function.comp_def] using hMapped
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankBCFCoeLinearMap
+        (LinearMap.ker_eq_bot.mpr
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankBCFCoeLinearMap_injective)
+    simpa [
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFourInfiniteRankBCFCoeLinearMap,
+      Function.comp_def] using hMapped
   apply
     boundedContinuousFunction_mul_right_linearIndependent_of_linearMap_recovers
       (u := periodicHypercubicThreeSpecialUnitaryTwoBetaZeroThreeInfiniteRankTripleBCF)
