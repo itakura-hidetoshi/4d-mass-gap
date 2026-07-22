@@ -477,6 +477,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
       u
   rw [hCanonicalZero] at hGap
+  have hZeroCoe :
+      ((0 : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+        Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0 := by
+    rfl
+  rw [hZeroCoe, sub_zero] at hGap
   refine ⟨u, huNe, ?_⟩
   calc
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGreenVariationalFunctionalL2
