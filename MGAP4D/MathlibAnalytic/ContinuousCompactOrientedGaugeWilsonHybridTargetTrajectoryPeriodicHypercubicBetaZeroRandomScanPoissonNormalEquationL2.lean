@@ -298,8 +298,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_isProjec
       (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_eq_zero_iff_eq_vacuumProjector
         r).1 hNormal
     change periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringEndL2 r = 0
-    rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringEndL2_apply,
-      hKernelFix, sub_self]
+    rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringEndL2_apply]
+    exact sub_eq_zero.mpr hKernelFix
 
 /-- The projected normal equation is also equivalent to least squares. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_isProjectedNormalEquationSolution_iff_isLeastSquaresSolution
