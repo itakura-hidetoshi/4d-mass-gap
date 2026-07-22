@@ -121,9 +121,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
   have hfEigen := hfSecond
   rw [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondEigenspaceL2,
     Module.End.mem_genEigenspace_one] at hfEigen
+  have hfEigen' :
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 f =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondSpectralValueL2 •
+          f := by
+    simpa using hfEigen
   refine ⟨f, hfNe, hfOrthogonal, ?_⟩
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply,
-    hfEigen]
+    hfEigen']
   calc
     f -
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSecondSpectralValueL2 •
@@ -209,18 +214,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0 := by
     rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_inner_smul_vacuum,
       hOrthogonal, zero_smul]
-  change
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
-          (f : Lp ℝ 2
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) =
-      (f : Lp ℝ 2
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply]
-  simpa [hVacuumZero] using
+  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanGreenVacuumOrthogonalRestrictionL2_apply,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply]
+  have hGreen :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanGreenOperatorL2_sub_randomScanHeatBathL2_apply_eq_centered
       (f : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+  rw [hVacuumZero, sub_zero] at hGreen
+  exact hGreen
 
 /-- The restricted Green operator norm is at most `324`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanGreenVacuumOrthogonalRestrictionL2_le_324 :
