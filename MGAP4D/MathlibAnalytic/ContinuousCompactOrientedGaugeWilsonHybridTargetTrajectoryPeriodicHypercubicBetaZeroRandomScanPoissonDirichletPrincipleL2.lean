@@ -231,7 +231,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
     apply sub_eq_zero.mp
     simpa only [r] using hrZero
   · intro hPoisson v
-    rw [hPoisson, sub_self, zero_inner]
+    rw [hPoisson, sub_self]
+    simp
 
 /-- The centered Poisson equation has exactly the canonical generalized-inverse
 solution on `Ω⊥`. -/
@@ -275,7 +276,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
               periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_vacuum_sub_randomScanCanonicalPoissonSolution_eq_zero
           f u)
-    rw [hADiff, zero_inner] at hLower
+    rw [hADiff] at hLower
+    simp at hLower
     have hNorm :
         ‖(u : Lp ℝ 2
               periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) -
