@@ -290,19 +290,59 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
   have hkSubtype :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_subtype_eq_self
       k
-  have hk := congrArg
-    (fun z : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
-      (z : Lp ℝ 2
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
-    hkSubtype
+  have hk :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0
+          (k : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+        (k : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+    calc
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0
+          (k : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2
+            (k : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) :
+          Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+        rfl
+      _ =
+        (k : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
+        congrArg
+          (fun z : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
+            (z : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+          hkSubtype
   have hoSubtype :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_vacuumOrthogonal_eq_zero
       o
-  have ho := congrArg
-    (fun z : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
-      (z : Lp ℝ 2
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
-    hoSubtype
+  have ho :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0
+          (o : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0 := by
+    calc
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0
+          (o : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2
+            (o : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) :
+          Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+        rfl
+      _ = ((0 : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) :
+          Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
+        congrArg
+          (fun z : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
+            (z : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+          hoSubtype
+      _ = 0 := rfl
   have hProjectorAdd :
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
           0
