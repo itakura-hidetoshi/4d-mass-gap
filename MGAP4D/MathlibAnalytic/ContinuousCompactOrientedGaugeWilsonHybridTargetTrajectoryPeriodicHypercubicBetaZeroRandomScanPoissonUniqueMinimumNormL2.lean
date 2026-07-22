@@ -60,7 +60,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_ra
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_vacuum_randomScanPoissonGeneralizedInverseL2_apply_eq_zero
       f
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_inner_smul_vacuum]
-  simp [real_inner_comm, hOrthogonal]
+  rw [inner_eq_zero_symm]
+  simp [hOrthogonal]
 
 /-- Every ambient Poisson solution is the canonical generalized-inverse
 solution plus its exact cardinality-zero Gibbs-vacuum component. -/
@@ -111,16 +112,37 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_sq_
           0 u‖ *
         ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
           0 u‖ := by
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_eq_randomScanPoissonGeneralizedInverseL2_apply_add_fluctuationCardinalityProjectorL2_zero_apply_of_randomScanPoissonOperatorL2_apply_eq
-    f u hPoisson]
-  exact
-    norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
-        f)
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-        0 u)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_randomScanPoissonGeneralizedInverseL2_apply_fluctuationCardinalityProjectorL2_zero_apply_eq_zero
-        f u)
+  let g : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
+      f
+  let v : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+      0 u
+  have hDecomposition : u = g + v := by
+    simpa only [g, v] using
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_eq_randomScanPoissonGeneralizedInverseL2_apply_add_fluctuationCardinalityProjectorL2_zero_apply_of_randomScanPoissonOperatorL2_apply_eq
+        f u hPoisson
+  have hInner : inner ℝ g v = 0 := by
+    simpa only [g, v] using
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_randomScanPoissonGeneralizedInverseL2_apply_fluctuationCardinalityProjectorL2_zero_apply_eq_zero
+        f u
+  calc
+    ‖u‖ * ‖u‖ = ‖g + v‖ * ‖g + v‖ := by
+      rw [hDecomposition]
+    _ = ‖g‖ * ‖g‖ + ‖v‖ * ‖v‖ :=
+      norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero g v hInner
+    _ =
+      ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
+          f‖ *
+        ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
+          f‖ +
+      ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0 u‖ *
+        ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0 u‖ := by
+      rfl
 
 /-- Equality in the minimum-norm bound occurs exactly when the solution has no
 Gibbs-vacuum component. -/
@@ -135,16 +157,26 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_eq_
           f‖ ↔
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
           0 u = 0 := by
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_eq_randomScanPoissonGeneralizedInverseL2_apply_add_fluctuationCardinalityProjectorL2_zero_apply_of_randomScanPoissonOperatorL2_apply_eq
-    f u hPoisson]
-  exact
-    norm_add_eq_norm_left_iff_of_inner_eq_zero
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
-        f)
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-        0 u)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_randomScanPoissonGeneralizedInverseL2_apply_fluctuationCardinalityProjectorL2_zero_apply_eq_zero
-        f u)
+  let g : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
+      f
+  let v : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+      0 u
+  have hDecomposition : u = g + v := by
+    simpa only [g, v] using
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_eq_randomScanPoissonGeneralizedInverseL2_apply_add_fluctuationCardinalityProjectorL2_zero_apply_of_randomScanPoissonOperatorL2_apply_eq
+        f u hPoisson
+  have hInner : inner ℝ g v = 0 := by
+    simpa only [g, v] using
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_randomScanPoissonGeneralizedInverseL2_apply_fluctuationCardinalityProjectorL2_zero_apply_eq_zero
+        f u
+  have hLocal : ‖u‖ = ‖g‖ ↔ v = 0 := by
+    rw [hDecomposition]
+    exact norm_add_eq_norm_left_iff_of_inner_eq_zero g v hInner
+  simpa only [g, v] using hLocal
 
 /-- Any Poisson solution whose norm is no larger than the canonical solution is
 itself the canonical generalized-inverse solution. -/
