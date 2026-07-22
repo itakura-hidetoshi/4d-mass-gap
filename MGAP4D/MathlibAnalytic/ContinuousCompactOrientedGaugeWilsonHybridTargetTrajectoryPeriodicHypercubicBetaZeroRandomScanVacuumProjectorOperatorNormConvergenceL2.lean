@@ -254,9 +254,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
         atTop
         (𝓝 0) := by
-    rw [tendsto_iff_norm_tendsto_zero]
-    simpa only [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowVacuumProjectorErrorL2_eq_nStepSLEM] using
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanNStepSLEML2_tendsto_zero
+    apply squeeze_zero_norm
+    · intro n
+      exact le_of_eq
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowVacuumProjectorErrorL2_eq_nStepSLEM
+          n)
+    · exact
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanNStepSLEML2_tendsto_zero
   have hAdd := hError.add_const
     (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
       0)
@@ -304,25 +308,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
       (𝓝
         (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
           0 f)) := by
-  have hNorm :
-      Tendsto
-        (fun n : ℕ =>
-          ‖(periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 ^ n)
-                f -
-              periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-                0 f‖)
-        atTop
-        (𝓝 0) := by
-    apply squeeze_zero
-    · intro n
-      exact norm_nonneg _
-    · intro n
-      exact
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowL2_apply_sub_vacuumProjector_le_nStepSLEM_mul_norm
-          n f
-    · exact
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanNStepSLEML2_tendsto_zero.mul_const
-          ‖f‖
   have hError :
       Tendsto
         (fun n : ℕ =>
@@ -332,8 +317,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
               0 f)
         atTop
         (𝓝 0) := by
-    rw [tendsto_iff_norm_tendsto_zero]
-    exact hNorm
+    apply squeeze_zero_norm
+    · intro n
+      exact
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowL2_apply_sub_vacuumProjector_le_nStepSLEM_mul_norm
+          n f
+    · simpa using
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanNStepSLEML2_tendsto_zero.mul_const
+          ‖f‖
   have hAdd := hError.add_const
     (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
       0 f)
