@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectoryPeriodicHypercubicBetaZeroVacuumOrthogonalRandomScanNStepContractionL2
 import MGAP4D.MathlibAnalytic.FiniteWilsonVacuumOrthogonalInvariance
 import Mathlib.Analysis.Normed.Operator.Basic
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 import Mathlib.Tactic
 
 namespace MGAP4D
