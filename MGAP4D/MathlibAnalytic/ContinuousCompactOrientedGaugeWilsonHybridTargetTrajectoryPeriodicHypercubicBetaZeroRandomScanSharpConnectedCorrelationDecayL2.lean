@@ -109,10 +109,12 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_abs_rand
     |periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanConnectedCorrelationL2
         n f g| ≤
       ((323 : ℝ) / 324) ^ n * ‖f‖ * ‖g‖ := by
-  simpa [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSLEML2] using
+  have h :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_abs_randomScanConnectedCorrelationL2_le_nStepSLEM_mul_norm_mul_norm
       n f g
+  norm_num [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2,
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSLEML2] at h
+  exact h
 
 /-- A single nonzero cardinality-one vector attains the connected-correlation
 bound at every time, so the factor `(323 / 324)^n` is sharp. -/
@@ -139,10 +141,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
     rw [←
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanSecondEigenspaceL2_eq_cardinalityOne]
     exact hfSecond
-  have hAction :
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 ^ n)
-          f =
-        (1 - (1 : ℝ) / 324) ^ n • f :=
+  have hAction :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
       1 n f hfCardinalityOne
   have hfOrthogonalReverse :
@@ -153,10 +152,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanConnectedCorrelationL2
   rw [hfOrthogonal, hfOrthogonalReverse, mul_zero, sub_zero, hAction,
     real_inner_smul_right, real_inner_self_eq_norm_sq]
-  have hScalarNonneg :
-      0 ≤ (1 - (1 : ℝ) / 324) ^ n :=
-    pow_nonneg (by norm_num) n
-  rw [abs_of_nonneg (mul_nonneg hScalarNonneg (sq_nonneg ‖f‖))]
+  rw [abs_mul, abs_pow, abs_of_nonneg (sq_nonneg ‖f‖)]
   norm_num [periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanNStepSLEML2,
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanSLEML2]
 
@@ -172,8 +168,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
       (𝓝 0) := by
   apply squeeze_zero_norm
   · intro n
-    rw [Real.norm_eq_abs]
-    exact
+    simpa [Real.norm_eq_abs] using
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_abs_randomScanConnectedCorrelationL2_le_nStepSLEM_mul_norm_mul_norm
         n f g
   · simpa [mul_assoc] using
