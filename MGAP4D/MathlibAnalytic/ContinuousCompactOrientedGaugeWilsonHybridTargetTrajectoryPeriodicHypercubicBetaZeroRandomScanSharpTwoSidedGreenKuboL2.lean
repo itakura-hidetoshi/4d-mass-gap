@@ -167,7 +167,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_abs_rand
           0 f f| +
         |2 *
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPositiveLagGreenKuboL2
-            f f| := abs_add _ _
+            f f| := by
+      simpa [Real.norm_eq_abs] using
+        norm_add_le
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanConnectedCorrelationL2
+            0 f f)
+          (2 *
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPositiveLagGreenKuboL2
+              f f)
     _ =
       |periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanConnectedCorrelationL2
           0 f f| +
