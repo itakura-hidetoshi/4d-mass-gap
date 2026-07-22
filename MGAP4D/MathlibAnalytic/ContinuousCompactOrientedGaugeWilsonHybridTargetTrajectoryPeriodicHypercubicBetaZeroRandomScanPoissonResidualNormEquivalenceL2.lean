@@ -88,14 +88,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
             (((k + 1 : ℕ) : ℝ) / 324) • component
         rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply,
           hRandom]
-        calc
-          component -
-              (1 - (((k + 1 : ℕ) : ℝ) / 324)) • component =
-            (1 - (1 - (((k + 1 : ℕ) : ℝ) / 324))) • component := by
-              rw [sub_smul, one_smul]
-          _ = (((k + 1 : ℕ) : ℝ) / 324) • component := by
-              congr 1
-              ring
+        rw [sub_smul, one_smul]
+        abel
   have hFamilyOrth :
       ∀ i ∈ Finset.range 324, ∀ j ∈ Finset.range 324, i ≠ j →
         inner ℝ
