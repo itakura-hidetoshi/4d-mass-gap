@@ -198,7 +198,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringEndL2_inner_symm
           f g
       _ = inner ℝ f g := by rw [hCenter]
-      _ = inner ℝ g f := real_inner_comm f g
+      _ = inner ℝ g f := (real_inner_comm f g).symm
   have hValue :
       2 * inner ℝ
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringEndL2 f)
@@ -477,7 +477,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
       u
   rw [hCanonicalZero] at hGap
-  simp only [sub_zero] at hGap
   refine ⟨u, huNe, ?_⟩
   calc
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGreenVariationalFunctionalL2
