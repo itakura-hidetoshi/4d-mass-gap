@@ -380,9 +380,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           f u) := by
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonGreenVariationalFunctionalL2_eq_neg_two_mul_dirichletEnergy,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonGreenVariationalFunctionalL2_eq_neg_two_mul_dirichletEnergy,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonDirichletEnergyL2_sub_canonical_eq_half_generalizedInverse_residual_quadraticForm]
-  ring
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonGreenVariationalFunctionalL2_eq_neg_two_mul_dirichletEnergy]
+  have hEnergy :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonDirichletEnergyL2_sub_canonical_eq_half_generalizedInverse_residual_quadraticForm
+      f u
+  linarith
 
 /-- The generalized-inverse residual quadratic form is bounded above by
 `324 ‖r‖²`. -/
@@ -498,6 +500,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
     rw [map_zero, map_zero, hPoisson]
     simp only [zero_sub, norm_neg, norm_smul]
     norm_num
+    ring
 
 /-- Structured receipt for the actual beta-zero residual error representation
 and a posteriori variational bounds. -/
