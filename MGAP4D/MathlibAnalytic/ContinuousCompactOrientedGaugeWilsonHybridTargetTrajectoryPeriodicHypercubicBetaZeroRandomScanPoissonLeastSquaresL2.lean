@@ -64,9 +64,19 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_va
                 0 f) -
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
             u) = 0 := by
+  have hCenteredExpanded :
+      inner ℝ
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2
+          (f -
+            inner ℝ
+                periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2
+                f •
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2) = 0 := by
+    simpa only [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_inner_smul_vacuum] using
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_vacuum_sub_fluctuationCardinalityProjectorL2_zero_apply_eq_zero
+        f
   rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_inner_smul_vacuum,
-    real_inner_smul_left, inner_sub_right,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_vacuum_sub_fluctuationCardinalityProjectorL2_zero_apply_eq_zero,
+    real_inner_smul_left, inner_sub_right, hCenteredExpanded,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_vacuum_randomScanPoissonOperatorL2_apply_eq_zero,
     sub_self, mul_zero]
 
@@ -439,7 +449,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_eq_gener
         f
 
 /-- Among least-squares solutions, equality with the canonical norm is
- equivalent to equality with the canonical generalized-inverse solution. -/
+equivalent to equality with the canonical generalized-inverse solution. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_eq_norm_generalizedInverse_iff_eq_generalizedInverse_of_isLeastSquaresSolution
     (f u : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
