@@ -85,7 +85,17 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           f :
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
         Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
-  have hGeneric :=
+  have hGeneric :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
+                f) :
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) =
+        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
+            f :
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+          Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
     continuousLinearMap_apply_internalRightInverse_eq_projection
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2
@@ -520,77 +530,85 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_gen
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_sub_fluctuationCardinalityProjectorL2_zero_apply_le_norm
       u
 
-/-- Compact receipt for the finite-volume beta-zero Poisson generalized inverse. -/
-def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2Receipt :
-    Prop :=
-  (∀ f : Lp ℝ 2
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
-          f) =
-      f -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-          0 f) ∧
-    (∀ f : Lp ℝ 2
+/-- Structured receipt for the finite-volume beta-zero Poisson generalized
+inverse. -/
+structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2Receipt :
+    Prop where
+  poisson_apply_generalizedInverse_eq :
+    ∀ f : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
+            f) =
+        f -
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+            0 f
+  generalizedInverse_apply_poisson_eq :
+    ∀ f : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
             f) =
         f -
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-            0 f) ∧
-    (∀ f : Lp ℝ 2
+            0 f
+  poisson_generalizedInverse_poisson_eq :
+    ∀ f : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
             (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
               f)) =
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
-          f) ∧
-    (∀ f : Lp ℝ 2
+          f
+  generalizedInverse_poisson_generalizedInverse_eq :
+    ∀ f : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
             (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
               f)) =
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
-          f) ∧
+          f
+  norm_eq_324 :
     ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2‖ =
-      324 ∧
-    (∀ f u : Lp ℝ 2
+      324
+  minimal_norm :
+    ∀ f u : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
           u = f →
         ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
             f‖ ≤
-          ‖u‖)
+          ‖u‖
 
 /-- The finite-volume beta-zero Poisson generalized-inverse receipt is proved. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2Receipt_proved :
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2Receipt := by
-  constructor
+  refine
+    { poisson_apply_generalizedInverse_eq := ?_
+      generalizedInverse_apply_poisson_eq := ?_
+      poisson_generalizedInverse_poisson_eq := ?_
+      generalizedInverse_poisson_generalizedInverse_eq := ?_
+      norm_eq_324 :=
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonGeneralizedInverseL2_eq_324
+      minimal_norm := ?_ }
   · intro f
     exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_generalizedInverse_eq_sub_vacuumProjector
         f
-  constructor
   · intro f
     exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonGeneralizedInverseL2_apply_poisson_eq_sub_vacuumProjector
         f
-  constructor
   · intro f
     exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_generalizedInverse_apply_poisson_eq_self
         f
-  constructor
   · intro f
     exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonGeneralizedInverseL2_apply_poisson_apply_generalizedInverse_eq_self
         f
-  constructor
-  · exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonGeneralizedInverseL2_eq_324
   · intro f u hPoisson
     exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_generalizedInverse_le_norm_of_randomScanPoissonOperatorL2_apply_eq
