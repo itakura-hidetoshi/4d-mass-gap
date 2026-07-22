@@ -178,14 +178,55 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           f) =
       f := by
   apply Subtype.ext
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_apply,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCenteredGreenVacuumOrthogonalEndL2_apply,
-    map_sub,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_fluctuationCardinalityProjectorL2_zero_eq_zero,
-    sub_zero]
-  exact
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_greenVacuumOrthogonalRestrictionL2_eq_subtype
-      f
+  calc
+    (((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+            f) :
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f :
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+          Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) :=
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_apply
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+          f)
+    _ =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
+              (f : Lp ℝ 2
+                periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) -
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              0
+              (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
+                (f : Lp ℝ 2
+                  periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))) := by
+      rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCenteredGreenVacuumOrthogonalEndL2_apply]
+    _ =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
+              (f : Lp ℝ 2
+                periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) -
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              0
+              (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
+                (f : Lp ℝ 2
+                  periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))) := by
+      rw [map_sub]
+    _ =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
+            (f : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) := by
+      rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_fluctuationCardinalityProjectorL2_zero_eq_zero,
+        sub_zero]
+    _ =
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_greenVacuumOrthogonalRestrictionL2_eq_subtype
+        f
 
 /-- Sharp Poisson coercivity makes the internal Poisson endomorphism injective. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_injective :
@@ -242,13 +283,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
       hOrthogonal
   rw [hKernel, norm_zero, mul_zero] at hBound
-  exact norm_eq_zero.mp
-    (le_antisymm hBound
+  have hNormZero :
+      ‖((f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) -
+        (g : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))‖ = 0 :=
+    le_antisymm hBound
       (norm_nonneg
         ((f : Lp ℝ 2
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) -
           (g : Lp ℝ 2
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)))
+  exact norm_eq_zero.mp hNormZero
 
 /-- The centered Green endomorphism composed with the internal Poisson
 endomorphism is also the identity on `Ω⊥`. -/
@@ -352,8 +398,12 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2.le_opNorm
         (f : Lp ℝ 2
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-    _ = 324 * ‖f‖ := by
+    _ = 324 *
+        ‖(f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)‖ := by
       rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanGreenOperatorL2_eq_324]
+    _ = 324 * ‖f‖ := by
+      rfl
 
 /-- A cardinality-one vector attains the norm `324` for the centered Green
 inverse. -/
