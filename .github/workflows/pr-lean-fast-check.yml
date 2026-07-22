@@ -20,6 +20,7 @@ on:
   push:
     branches:
       - main
+      - formal/real-hilbert-uniform-coercive-strong-limit
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
       - "lean-toolchain"
@@ -203,8 +204,8 @@ jobs:
             echo "ready=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Save Lake build cache from main only
-        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
+      - name: Save Lake build cache from trusted branches
+        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit') && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
         uses: actions/cache/save@v5
         with:
           path: |
