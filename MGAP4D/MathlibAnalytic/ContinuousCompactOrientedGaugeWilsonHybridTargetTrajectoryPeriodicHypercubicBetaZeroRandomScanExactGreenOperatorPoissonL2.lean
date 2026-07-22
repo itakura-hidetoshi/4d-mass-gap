@@ -50,7 +50,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable
         n).le_opNorm f
     _ = ((323 : ℝ) / 324) ^ n * M := by
       rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowVacuumProjectorErrorL2_eq_323_div_324_pow]
-      rfl
 
 /-- The pointwise beta-zero Green linear map is the Neumann sum of the
 vacuum-projector error orbit. -/
@@ -62,6 +61,12 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGree
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
         n f
   map_add' f g := by
+    have hf :=
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_randomScanPowVacuumProjectorErrorL2_apply
+        f
+    have hg :=
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_randomScanPowVacuumProjectorErrorL2_apply
+        g
     calc
       (∑' n : ℕ,
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
@@ -80,12 +85,8 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGree
             n f) +
         ∑' n : ℕ,
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
-            n g := by
-          rw [tsum_add
-            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_randomScanPowVacuumProjectorErrorL2_apply
-              f)
-            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_randomScanPowVacuumProjectorErrorL2_apply
-              g)]
+            n g :=
+        (hf.hasSum.add hg.hasSum).tsum_eq
   map_smul' c f := by
     calc
       (∑' n : ℕ,
@@ -114,22 +115,26 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
         f‖ ≤
       324 * ‖f‖ := by
   let M : ℝ := ‖f‖
-  have hApply :
-      Summable
-        (fun n : ℕ =>
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
-            n f) :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_randomScanPowVacuumProjectorErrorL2_apply
-      f
+  have hGeom : Summable (fun n : ℕ => ((323 : ℝ) / 324) ^ n * M) :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_323_div_324_pow.mul_right
+      M
   have hNorm :
       Summable
         (fun n : ℕ =>
           ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
-            n f‖) :=
-    hApply.norm
-  have hGeom : Summable (fun n : ℕ => ((323 : ℝ) / 324) ^ n * M) :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_summable_323_div_324_pow.mul_right
-      M
+            n f‖) := by
+    apply Summable.of_norm_bounded hGeom
+    intro n
+    simpa using
+      (calc
+        ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
+            n f‖ ≤
+          ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
+            n‖ * ‖f‖ :=
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
+            n).le_opNorm f
+        _ = ((323 : ℝ) / 324) ^ n * M := by
+          rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowVacuumProjectorErrorL2_eq_323_div_324_pow])
   calc
     ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenLinearMapL2
         f‖ =
@@ -153,21 +158,27 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_ran
                 (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPowVacuumProjectorErrorL2
                   n).le_opNorm f
               _ = ((323 : ℝ) / 324) ^ n * M := by
-                rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowVacuumProjectorErrorL2_eq_323_div_324_pow]
-                rfl)
+                rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPowVacuumProjectorErrorL2_eq_323_div_324_pow])
           hNorm hGeom
     _ = (∑' n : ℕ, ((323 : ℝ) / 324) ^ n) * M := by
       rw [tsum_mul_right]
     _ = 324 * ‖f‖ := by
       rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_tsum_323_div_324_pow_eq_324]
-      rfl
 
 /-- The beta-zero Green operator, defined as the continuous realization of the
 pointwise Neumann series. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2 :
     Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure →L[ℝ]
       Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
-  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenLinearMapL2.mkContinuous
+  LinearMap.mkContinuous
+    (𝕜 := ℝ)
+    (𝕜₂ := ℝ)
+    (E := Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+    (F := Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+    (σ := RingHom.id ℝ)
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenLinearMapL2
     324
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanGreenLinearMapL2_apply_le_324_mul_norm
 
@@ -350,16 +361,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) -
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
         0 := by
-  ext f
-  change
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
-          f -
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2
-            f) =
-      f -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-          0 f
+  apply ContinuousLinearMap.ext
+  intro f
   exact
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanGreenOperatorL2_sub_randomScanHeatBathL2_apply_eq_centered
       f
