@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectoryPeriodicHypercubicBetaZeroRandomScanPoissonUniqueMinimumNormL2
-import Mathlib.Topology.Algebra.Module.Complement
+import Mathlib.LinearAlgebra.Isomorphisms
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -128,29 +128,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_eq_zero_iff_eq_vacuumProjector
         f
 
-/-- The vacuum-projector range and the Gibbs-vacuum orthogonal submodule are
-topological complements. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_range_fluctuationCardinalityProjectorL2_zero_isTopCompl_vacuumOrthogonalSubmoduleL2 :
-    Submodule.IsTopCompl
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-        0).toLinearMap.range
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2 := by
-  have hTop :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_isIdempotentElem.isTopCompl
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_ker_eq_vacuumOrthogonalSubmoduleL2]
-    at hTop
-  exact hTop
-
-/-- The beta-zero Poisson kernel and the Gibbs-vacuum orthogonal submodule are
-topological complements. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_ker_isTopCompl_vacuumOrthogonalSubmoduleL2 :
-    Submodule.IsTopCompl
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2.toLinearMap.ker
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2 := by
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_ker_eq_range_fluctuationCardinalityProjectorL2_zero]
-  exact
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_range_fluctuationCardinalityProjectorL2_zero_isTopCompl_vacuumOrthogonalSubmoduleL2
-
 /-- Short name for the actual finite-volume beta-zero Poisson kernel. -/
 abbrev periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 :
     Submodule ℝ
@@ -184,30 +161,102 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumPr
         0 f := by
   rfl
 
-/-- Recombine a Poisson-kernel vector and a vacuum-orthogonal vector in the
-ambient Gibbs `L²` space. -/
-noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2 :
-    (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) ≃L[ℝ]
-      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
-  Submodule.prodEquivOfIsTopCompl
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_ker_isTopCompl_vacuumOrthogonalSubmoduleL2
+/-- The exact vacuum projection fixes every Poisson-kernel vector. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_subtype_eq_self
+    (f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+      f := by
+  apply Subtype.ext
+  have hKernel := f.property
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0 at hKernel
+  exact
+    ((periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_eq_zero_iff_eq_vacuumProjector
+      (f : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)).1 hKernel).symm
 
-/-- The ambient Gibbs space decomposes continuously into its exact Poisson
-kernel and Gibbs-vacuum orthogonal sectors. -/
-noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroGibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2 :
-    Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure ≃L[ℝ]
+/-- The exact vacuum projection annihilates every vacuum-orthogonal vector. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_vacuumOrthogonal_eq_zero
+    (f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0 := by
+  apply Subtype.ext
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+        0
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0
+  apply
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_zero_of_inner_vacuum_eq_zero
+  exact
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_mem_vacuumOrthogonalSubmoduleL2_iff
+      (f : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)).1 f.property
+
+/-- Centering annihilates every Poisson-kernel vector. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringToVacuumOrthogonalL2_apply_poissonKernel_eq_zero
+    (f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) = 0 := by
+  apply Subtype.ext
+  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringToVacuumOrthogonalL2_apply]
+  have hFix :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_subtype_eq_self
+      f
+  have hFixCoe := congrArg
+    (fun x : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
+      (x : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+    hFix
+  exact sub_eq_zero.mpr hFixCoe.symm
+
+/-- Split an ambient Gibbs vector into its exact Poisson-kernel and
+vacuum-orthogonal components. -/
+noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2 :
+    Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure →L[ℝ]
       (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :=
-  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2.symm
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2.prod
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
 
-/-- Recombination is ordinary addition in ambient Gibbs `L²`. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2_apply
+/-- Pointwise form of the exact kernel-centered decomposition. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelDecompositionL2_apply
+    (f : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2
+        f =
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2
+          f,
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
+          f) := by
+  rfl
+
+/-- Recombine a Poisson-kernel vector and a vacuum-orthogonal vector by ambient
+addition. -/
+noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2 :
+    (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) →L[ℝ]
+      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2.subtypeL.comp
+      (ContinuousLinearMap.fst ℝ
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) +
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2.subtypeL.comp
+      (ContinuousLinearMap.snd ℝ
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2)
+
+/-- Pointwise form of recombination. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombinationL2_apply
     (x : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2
         x =
       (x.1 : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
@@ -215,8 +264,98 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
   rfl
 
-/-- The decomposition map returns the exact cardinality-zero vacuum component
-and the exact centered component. -/
+/-- Recombining the exact decomposition returns the ambient vector. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombinationL2_apply_decomposition_eq_self
+    (f : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2
+          f) = f := by
+  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelDecompositionL2_apply,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombinationL2_apply,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringToVacuumOrthogonalL2_apply]
+  abel
+
+/-- Decomposing a recombined kernel/centered pair returns the pair. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelDecompositionL2_apply_recombination_eq_self
+    (x : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2
+          x) = x := by
+  rcases x with ⟨k, o⟩
+  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombinationL2_apply,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelDecompositionL2_apply]
+  have hkSubtype :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_subtype_eq_self
+      k
+  have hk := congrArg
+    (fun z : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
+      (z : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+    hkSubtype
+  have hoSubtype :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply_vacuumOrthogonal_eq_zero
+      o
+  have ho := congrArg
+    (fun z : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 =>
+      (z : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+    hoSubtype
+  have hProjectorAdd :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          0
+          ((k : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
+            (o : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) =
+        (k : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+    rw [map_add, hk, ho, add_zero]
+  apply Prod.ext
+  · apply Subtype.ext
+    exact hProjectorAdd
+  · apply Subtype.ext
+    rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringToVacuumOrthogonalL2_apply,
+      hProjectorAdd]
+    abel
+
+/-- The decomposition and recombination maps are mutual inverses. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombination_leftInverse_decomposition :
+    Function.LeftInverse
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2 := by
+  intro f
+  exact
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombinationL2_apply_decomposition_eq_self
+      f
+
+/-- The decomposition and recombination maps are mutual inverses in the other
+direction. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombination_rightInverse_decomposition :
+    Function.RightInverse
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2 := by
+  intro x
+  exact
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelDecompositionL2_apply_recombination_eq_self
+      x
+
+/-- The ambient Gibbs space is continuously linearly equivalent to its exact
+Poisson kernel times the Gibbs-vacuum orthogonal sector. -/
+noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroGibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2 :
+    Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure ≃L[ℝ]
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :=
+  ContinuousLinearEquiv.equivOfInverse
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelDecompositionL2
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelRecombinationL2
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombination_leftInverse_decomposition
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelRecombination_rightInverse_decomposition
+
+/-- The continuous decomposition equivalence has the exact coordinates
+`(E₀ f, f - E₀ f)`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_gibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2_apply
     (f : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
@@ -226,61 +365,41 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_gibbsL2C
           f,
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
           f) := by
-  apply
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2.injective
-  calc
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroGibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2
-          f) = f :=
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2.apply_symm_apply
-        f
-    _ =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-          0 f +
-        (f -
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-            0 f) := by
-      abel
-    _ =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumProjectorToRandomScanPoissonKernelL2
-            f,
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
-            f) := by
-      rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelProdVacuumOrthogonalContinuousLinearEquivL2_apply,
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_vacuumProjectorToRandomScanPoissonKernelL2_apply,
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeringToVacuumOrthogonalL2_apply]
+  rfl
 
-/-- The quotient by the exact Poisson kernel is continuously linearly equivalent
-to the Gibbs-vacuum orthogonal subspace. -/
-noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientContinuousLinearEquivVacuumOrthogonalL2 :
-    ((Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) ⧸
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) ≃L[ℝ]
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 :=
-  Submodule.quotientEquivOfIsTopCompl
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_ker_isTopCompl_vacuumOrthogonalSubmoduleL2
-
-/-- The inverse quotient equivalence inserts the centered representative and
-takes its Poisson-kernel class. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelQuotientContinuousLinearEquivVacuumOrthogonalL2_symm_apply
-    (f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientContinuousLinearEquivVacuumOrthogonalL2.symm
-        f =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2.mkQ
-        (f : Lp ℝ 2
+/-- The inverse continuous equivalence recombines by ordinary addition. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_gibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2_symm_apply
+    (x : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2 ×
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroGibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2.symm
+        x =
+      (x.1 : Lp ℝ 2
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
+        (x.2 : Lp ℝ 2
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
   rfl
 
-/-- The first-isomorphism form of the beta-zero Poisson operator: quotient by
-the vacuum kernel and then apply the internal Poisson automorphism. -/
-noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientPoissonContinuousLinearEquivL2 :
+/-- The first-isomorphism theorem for the actual beta-zero Poisson operator:
+quotient by the exact vacuum kernel and identify the range with `Ω⊥`. -/
+noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientPoissonLinearEquivL2 :
     ((Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) ⧸
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) ≃L[ℝ]
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2) ≃ₗ[ℝ]
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 :=
-  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientContinuousLinearEquivVacuumOrthogonalL2.trans
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonContinuousLinearEquivL2
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2.toLinearMap.quotKerEquivRange.trans
+    (LinearEquiv.ofEq _ _
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_range_eq_vacuumOrthogonalSubmoduleL2)
+
+/-- The quotient first-isomorphism sends the class of `f` to its exact Poisson
+image in `Ω⊥`. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelQuotientPoissonLinearEquivL2_apply_mk
+    (f : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
+    ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientPoissonLinearEquivL2
+        (Submodule.Quotient.mk f) :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+      Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2 f := by
+  rfl
 
 /-- The Poisson operator in kernel-centered coordinates is zero on the kernel
 factor and the exact internal Poisson automorphism on `Ω⊥`. -/
@@ -304,8 +423,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           x.2) := by
   rfl
 
-/-- Conjugating the ambient Poisson operator by the exact decomposition produces
-the block-diagonal operator `0 ⊕ (I-P)|Ω⊥`. -/
+/-- Conjugating the ambient Poisson operator by the exact continuous
+decomposition produces the block-diagonal operator `0 ⊕ (I-P)|Ω⊥`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_gibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2_apply_randomScanPoissonOperatorL2_eq_blockDiagonal
     (f : Lp ℝ 2
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :
@@ -382,10 +501,6 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKerne
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2.toLinearMap.ker =
       (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
         0).toLinearMap.range
-  topological_complement :
-    Submodule.IsTopCompl
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelL2
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalSubmoduleL2
   exact_decomposition :
     ∀ f : Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroGibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2
@@ -394,6 +509,13 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKerne
             f,
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroCenteringToVacuumOrthogonalL2
             f)
+  quotient_first_isomorphism :
+    ∀ f : Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
+      ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelQuotientPoissonLinearEquivL2
+          (Submodule.Quotient.mk f) :
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+        Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2 f
   block_diagonal :
     ∀ f : Lp ℝ 2 periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure,
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroGibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2
@@ -413,10 +535,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonKernelT
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_ker_eq_vacuumOrthogonalSubmoduleL2
       poisson_ker_eq :=
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_ker_eq_range_fluctuationCardinalityProjectorL2_zero
-      topological_complement :=
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_ker_isTopCompl_vacuumOrthogonalSubmoduleL2
       exact_decomposition :=
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_gibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2_apply
+      quotient_first_isomorphism :=
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonKernelQuotientPoissonLinearEquivL2_apply_mk
       block_diagonal :=
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_gibbsL2ContinuousLinearEquivRandomScanPoissonKernelProdVacuumOrthogonalL2_apply_randomScanPoissonOperatorL2_eq_blockDiagonal }
 
