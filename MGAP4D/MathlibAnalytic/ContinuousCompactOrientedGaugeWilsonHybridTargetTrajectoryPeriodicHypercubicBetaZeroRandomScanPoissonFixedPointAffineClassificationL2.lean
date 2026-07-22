@@ -62,7 +62,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
     have hResidualFixed :
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 r =
           r := by
-      dsimp [r]
+      change
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2
+            (f -
+              periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+                0 f) =
+          f -
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              0 f
       rw [map_sub, hFixed, hProjectorFixed]
     have hContraction :=
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanHeatBathL2_apply_le_slem_mul_norm_of_inner_vacuum_eq_zero
@@ -83,7 +90,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 f =
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2
             (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-              0 f) := by rw [hVacuum]
+              0 f) := by
+        exact congrArg
+          (fun x =>
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2 x)
+          hVacuum
       _ =
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
             0 f := by
@@ -215,7 +226,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centered
             0
             (u -
               periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2 f) := by
-      rw [hDifference]
+      exact congrArg
+        (fun z =>
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenOperatorL2 f + z)
+        hDifference
 
 /-- Rank-one explicit form of the affine classification of centered beta-zero
 Poisson solutions. -/
