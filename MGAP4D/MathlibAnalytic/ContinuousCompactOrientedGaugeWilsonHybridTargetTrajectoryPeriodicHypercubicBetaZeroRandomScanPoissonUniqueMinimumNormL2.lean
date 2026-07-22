@@ -59,9 +59,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_ra
   have hOrthogonal :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_vacuum_randomScanPoissonGeneralizedInverseL2_apply_eq_zero
       f
-  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_inner_smul_vacuum]
-  rw [inner_eq_zero_symm]
-  simp [hOrthogonal]
+  have hReverse :
+      inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonGeneralizedInverseL2
+            f)
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2 = 0 :=
+    (inner_eq_zero_symm).1 hOrthogonal
+  rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_zero_apply_eq_inner_smul_vacuum,
+    inner_smul_right, hReverse, mul_zero]
 
 /-- Every ambient Poisson solution is the canonical generalized-inverse
 solution plus its exact cardinality-zero Gibbs-vacuum component. -/
@@ -129,8 +134,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_sq_
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_randomScanPoissonGeneralizedInverseL2_apply_fluctuationCardinalityProjectorL2_zero_apply_eq_zero
         f u
   calc
-    ‖u‖ * ‖u‖ = ‖g + v‖ * ‖g + v‖ := by
-      rw [hDecomposition]
+    ‖u‖ * ‖u‖ = ‖g + v‖ * ‖g + v‖ := by rw [hDecomposition]
     _ = ‖g‖ * ‖g‖ + ‖v‖ * ‖v‖ :=
       norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero g v hInner
     _ =
@@ -141,8 +145,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_sq_
       ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
           0 u‖ *
         ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
-          0 u‖ := by
-      rfl
+          0 u‖ := by rfl
 
 /-- Equality in the minimum-norm bound occurs exactly when the solution has no
 Gibbs-vacuum component. -/
