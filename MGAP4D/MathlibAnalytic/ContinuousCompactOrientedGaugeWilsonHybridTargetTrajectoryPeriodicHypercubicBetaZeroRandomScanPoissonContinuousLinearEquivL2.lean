@@ -224,9 +224,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         sub_zero]
     _ =
         (f : Lp ℝ 2
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_greenVacuumOrthogonalRestrictionL2_eq_subtype
-        f
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+      have hRight :=
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply_greenVacuumOrthogonalRestrictionL2_eq_subtype
+          f
+      rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanGreenVacuumOrthogonalRestrictionL2_apply]
+        at hRight
+      exact hRight
 
 /-- Sharp Poisson coercivity makes the internal Poisson endomorphism injective. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_injective :
