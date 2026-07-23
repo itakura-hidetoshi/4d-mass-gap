@@ -91,6 +91,29 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonSolutionIterateL2]
   unfold
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonSolutionStepL2
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonSolutionIterateL2
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          n
+          0 +
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2 •
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonResidualToVacuumOrthogonalL2
+            (g : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonSolutionIterateL2
+              (g : Lp ℝ 2
+                periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+              n
+              0) =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonSolutionIterateL2
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          n
+          0 +
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2 •
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
+            n g
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonResidualToVacuumOrthogonalL2_optimalRichardsonSolutionIterate_eq_errorIterate,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonResidualToVacuumOrthogonalL2_subtype_zero_eq_self]
@@ -102,7 +125,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
         n g =
-      ∑ k in Finset.range n,
+      ∑ k ∈ Finset.range n,
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2 •
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
             k g := by
@@ -138,8 +161,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centered
       n
       0)
 
-/-- Exact finite truncation residual: the residual of the `n`th Green Neumann
-partial sum is `R_*^n g`. -/
+/-- Exact finite truncation residual: the bundled residual of the `n`th Green
+Neumann partial sum is `R_*^n g`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonResidualToVacuumOrthogonalL2_optimalRichardsonGreenNeumannPartialSum_eq_errorIterate
     (n : ℕ)
     (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
@@ -158,75 +181,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
       n
       0)
-
-/-- Internal Poisson form of the exact truncation residual:
-`g - A N_n g = R_*^n g`. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_sub_randomScanPoissonVacuumOrthogonalEndL2_apply_optimalRichardsonGreenNeumannPartialSum_eq_errorIterate
-    (n : ℕ)
-    (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    g -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-            n g) =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
-        n g := by
-  have hResidualRepresentation :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonResidualToVacuumOrthogonalL2_eq_poissonEnd_apply_canonical_sub
-      (g : Lp ℝ 2
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-        n g)
-  have hExactResidual :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonResidualToVacuumOrthogonalL2_optimalRichardsonGreenNeumannPartialSum_eq_errorIterate
-      n g
-  have hPoissonRemainder :
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-              g -
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-              n g) =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
-          n g := by
-    calc
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-              g -
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-              n g) =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonResidualToVacuumOrthogonalL2
-          (g : Lp ℝ 2
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-            n g) := by
-          rw [
-            hResidualRepresentation,
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCanonicalPoissonSolutionToVacuumOrthogonalL2_apply_subtype_eq_centeredGreen]
-      _ =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
-          n g := hExactResidual
-  calc
-    g -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-            n g) =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g) -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-            n g) := by
-          rw [
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_apply_centeredGreen_eq_self]
-    _ =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g -
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-            n g) := by
-          rw [map_sub]
-    _ =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
-        n g := hPoissonRemainder
 
 /-- Pointwise geometric error bound for the finite Green Neumann approximation. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_centeredGreen_sub_optimalRichardsonGreenNeumannPartialSumL2_le
@@ -335,15 +289,12 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
   have hEnvelope :
       Tendsto
         (fun n : ℕ =>
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n *
-            ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-              g‖)
+          ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              g‖ *
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n)
         atTop
         (nhds 0) := by
-    simpa using
-      hPow.mul_const
-        ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          g‖
+    simpa using (tendsto_const_nhds.mul hPow)
   exact
     squeeze_zero
       (fun n => norm_nonneg
@@ -352,7 +303,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
             g))
       (fun n => by
-        simpa only [norm_sub_rev] using
+        simpa only [norm_sub_rev, mul_comm] using
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_centeredGreen_sub_optimalRichardsonGreenNeumannPartialSumL2_le
             n g)
       hEnvelope
@@ -384,11 +335,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
   have hEnvelope :
       Tendsto
         (fun n : ℕ =>
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n *
-            ‖g‖)
+          ‖g‖ *
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n)
         atTop
         (nhds 0) := by
-    simpa using hPow.mul_const ‖g‖
+    simpa using (tendsto_const_nhds.mul hPow)
   exact
     squeeze_zero
       (fun n => norm_nonneg
@@ -397,9 +348,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
           (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
             n g)))
-      (fun n =>
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonResidualToVacuumOrthogonalL2_optimalRichardsonGreenNeumannPartialSum_le
-          n g)
+      (fun n => by
+        simpa only [mul_comm] using
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonResidualToVacuumOrthogonalL2_optimalRichardsonGreenNeumannPartialSum_le
+            n g)
       hEnvelope
 
 /-- Structured receipt for the finite optimal-Richardson Neumann representation
@@ -411,7 +363,7 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRicha
       (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2),
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
           n g =
-        ∑ k in Finset.range n,
+        ∑ k ∈ Finset.range n,
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2 •
             periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
               k g
@@ -429,10 +381,11 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRicha
   exact_residual :
     ∀ (n : ℕ)
       (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2),
-      g -
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-              n g) =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonResidualToVacuumOrthogonalL2
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
+            n g) =
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
           n g
   uniform_error :
@@ -487,7 +440,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichard
       exact_remainder :=
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_centeredGreen_sub_optimalRichardsonGreenNeumannPartialSumL2_eq_errorIterate
       exact_residual :=
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_sub_randomScanPoissonVacuumOrthogonalEndL2_apply_optimalRichardsonGreenNeumannPartialSum_eq_errorIterate
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonResidualToVacuumOrthogonalL2_optimalRichardsonGreenNeumannPartialSum_eq_errorIterate
       uniform_error :=
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_centeredGreen_sub_optimalRichardsonGreenNeumannPartialSumL2_le_324_mul_pow_mul_norm
       residual_geometric :=
