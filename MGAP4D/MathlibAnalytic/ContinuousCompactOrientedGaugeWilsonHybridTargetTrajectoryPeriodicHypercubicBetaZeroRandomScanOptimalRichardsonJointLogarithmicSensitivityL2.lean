@@ -47,7 +47,7 @@ theorem realGeometricExactStrictLogFloorIterationCount_mul_sensitivity_bracket
         (k + m + 1)).2
     have hProduct :
         (C * q ^ k) * q ^ (m + 1) < epsilon * rho :=
-      mul_lt_mul hInterval.1 hRhoLower
+      mul_lt_mul hInterval.1 hRhoLower.le
         (pow_nonneg hqPos.le (m + 1))
         (mul_nonneg hC.le (pow_nonneg hqPos.le k))
     simpa [pow_add, mul_assoc, mul_left_comm, mul_comm] using hProduct
