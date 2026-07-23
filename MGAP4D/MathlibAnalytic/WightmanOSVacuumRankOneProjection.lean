@@ -74,6 +74,14 @@ theorem real_unit_rankOne_ker
   rw [← real_unit_span_starProjection_eq_rankOne Ω hΩ,
     Submodule.ker_starProjection]
 
+/-- The singleton vacuum line carries the canonical finite-dimensional
+orthogonal-projection instance after unfolding the model-level name. -/
+instance explicitWightmanOSVacuumLineHasOrthogonalProjection
+    (M : ExplicitWightmanOSReconstructedModel) :
+    M.vacuumLine.HasOrthogonalProjection := by
+  change (ℝ ∙ M.vacuum).HasOrthogonalProjection
+  infer_instance
+
 /-- In the reconstructed Wightman OS Hilbert space, projection onto the
 vacuum line is the rank-one vacuum operator. -/
 theorem explicit_wightman_os_vacuumLine_starProjection_eq_rankOne
