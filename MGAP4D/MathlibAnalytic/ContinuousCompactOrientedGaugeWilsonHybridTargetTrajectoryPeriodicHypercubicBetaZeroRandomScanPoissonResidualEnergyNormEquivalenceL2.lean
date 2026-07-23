@@ -100,7 +100,7 @@ theorem finset_norm_sum_smul_sq_le_inner_sum_smul_sum_of_pairwise_inner_eq_zero
   rw [hNorm, hInner]
   apply Finset.sum_le_sum
   intro i hi
-  rw [norm_smul, abs_of_nonneg (hNonneg i hi)]
+  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (hNonneg i hi)]
   have hCoeffSq : a i ^ 2 ≤ a i := by
     have hProduct : 0 ≤ a i * (1 - a i) :=
       mul_nonneg (hNonneg i hi) (sub_nonneg.mpr (hLeOne i hi))
@@ -541,7 +541,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
       continuousLinearMapResidual
     rw [map_zero, hAction, zero_sub]
   refine ⟨u, huNe, ?_⟩
-  rw [hResidual, norm_neg, norm_smul, abs_of_nonneg (by norm_num)]
+  rw [hResidual, norm_neg, norm_smul, Real.norm_eq_abs,
+    abs_of_nonneg (by norm_num)]
   calc
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonDirichletEnergyL2
             (0 : Lp ℝ 2
