@@ -11,6 +11,8 @@ noncomputable section
 
 set_option maxRecDepth 8192
 
+variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+
 /-- Exact quadratic expansion of one Richardson error step for a continuous
 linear endomorphism on a real inner-product space. -/
 theorem continuousLinearMap_norm_sub_smul_apply_sq
@@ -38,34 +40,95 @@ theorem continuousLinearMap_norm_sub_smul_apply_sq
         real_inner_smul_left,
         real_inner_smul_right,
         real_inner_self_eq_norm_sq]
+      rw [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs]
       rw [real_inner_comm x (A x)]
       ring
 
-/-- Generic squared Richardson contraction from a coercive lower quadratic-form
-bound, a one-cocoercive upper estimate, and the scalar balance identity. -/
-theorem continuousLinearMap_richardson_sq_contraction_of_coercive_cocoercive
+/-- A finite orthogonal spectral sum with coefficients in `[m, 1]` satisfies
+the sharp secant inequality for the square function. -/
+theorem finset_norm_sum_smul_sq_le_secant_inner_sub_mul_norm_sum_sq_of_pairwise_inner_eq_zero
+    {ι : Type*}
+    [DecidableEq ι]
+    (s : Finset ι)
+    (v : ι → V)
+    (a : ι → ℝ)
+    (m : ℝ)
+    (hOrth : ∀ i ∈ s, ∀ j ∈ s, i ≠ j → inner ℝ (v i) (v j) = 0)
+    (hNonneg : ∀ i ∈ s, 0 ≤ a i)
+    (hLower : ∀ i ∈ s, m ≤ a i)
+    (hUpper : ∀ i ∈ s, a i ≤ 1) :
+    ‖∑ i ∈ s, a i • v i‖ ^ 2 ≤
+      (1 + m) *
+          inner ℝ (∑ i ∈ s, a i • v i) (∑ i ∈ s, v i) -
+        m * ‖∑ i ∈ s, v i‖ ^ 2 := by
+  have hWeightedOrth :
+      ∀ i ∈ s, ∀ j ∈ s, i ≠ j →
+        inner ℝ (a i • v i) (a j • v j) = 0 := by
+    intro i hi j hj hij
+    rw [real_inner_smul_left, real_inner_smul_right,
+      hOrth i hi j hj hij, mul_zero, mul_zero]
+  have hWeightedNorm :=
+    finset_norm_sum_sq_eq_sum_norm_sq_of_pairwise_inner_eq_zero
+      s (fun i => a i • v i) hWeightedOrth
+  have hInner :=
+    finset_inner_sum_smul_sum_eq_sum_mul_norm_sq_of_pairwise_inner_eq_zero
+      s v a hOrth
+  have hUnweightedNorm :=
+    finset_norm_sum_sq_eq_sum_norm_sq_of_pairwise_inner_eq_zero
+      s v hOrth
+  rw [hWeightedNorm, hInner, hUnweightedNorm]
+  calc
+    ∑ i ∈ s, ‖a i • v i‖ ^ 2 ≤
+        ∑ i ∈ s, (((1 + m) * a i - m) * ‖v i‖ ^ 2) := by
+      apply Finset.sum_le_sum
+      intro i hi
+      rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (hNonneg i hi)]
+      have hCoeff :
+          a i ^ 2 ≤ (1 + m) * a i - m := by
+        have hProduct :
+            0 ≤ (a i - m) * (1 - a i) :=
+          mul_nonneg
+            (sub_nonneg.mpr (hLower i hi))
+            (sub_nonneg.mpr (hUpper i hi))
+        nlinarith
+      calc
+        (a i * ‖v i‖) ^ 2 = a i ^ 2 * ‖v i‖ ^ 2 := by ring
+        _ ≤ ((1 + m) * a i - m) * ‖v i‖ ^ 2 :=
+          mul_le_mul_of_nonneg_right hCoeff (sq_nonneg ‖v i‖)
+    _ =
+        ∑ i ∈ s,
+          ((1 + m) * (a i * ‖v i‖ ^ 2) - m * ‖v i‖ ^ 2) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      ring
+    _ =
+        (1 + m) * (∑ i ∈ s, a i * ‖v i‖ ^ 2) -
+          m * (∑ i ∈ s, ‖v i‖ ^ 2) := by
+      rw [Finset.sum_sub_distrib]
+      simp only [Finset.mul_sum]
+
+/-- Generic squared Richardson contraction from the sharp secant inequality for
+an operator whose spectrum lies in `[m, 1]`. -/
+theorem continuousLinearMap_richardson_sq_contraction_of_secant
     {E : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     (A : E →L[ℝ] E)
     (m tau q : ℝ)
     (hTauSq : 0 ≤ tau ^ 2)
-    (hCoeff : tau ^ 2 - 2 * tau ≤ 0)
-    (hBalance : 1 + (tau ^ 2 - 2 * tau) * m = q ^ 2)
-    (hCoercive :
-      ∀ x : E, m * ‖x‖ ^ 2 ≤ inner ℝ (A x) x)
-    (hCocoercive :
-      ∀ x : E, ‖A x‖ ^ 2 ≤ inner ℝ (A x) x)
+    (hCancel : tau ^ 2 * (1 + m) - 2 * tau = 0)
+    (hBalance : 1 - tau ^ 2 * m = q ^ 2)
+    (hSecant :
+      ∀ x : E,
+        ‖A x‖ ^ 2 ≤
+          (1 + m) * inner ℝ (A x) x - m * ‖x‖ ^ 2)
     (x : E) :
     ‖x - tau • A x‖ ^ 2 ≤ q ^ 2 * ‖x‖ ^ 2 := by
-  have hCocoMul :
+  have hSecantMul :
       tau ^ 2 * ‖A x‖ ^ 2 ≤
-        tau ^ 2 * inner ℝ (A x) x :=
-    mul_le_mul_of_nonneg_left (hCocoercive x) hTauSq
-  have hCoeffMul :
-      (tau ^ 2 - 2 * tau) * inner ℝ (A x) x ≤
-        (tau ^ 2 - 2 * tau) * (m * ‖x‖ ^ 2) :=
-    mul_le_mul_of_nonpos_left (hCoercive x) hCoeff
+        tau ^ 2 *
+          ((1 + m) * inner ℝ (A x) x - m * ‖x‖ ^ 2) :=
+    mul_le_mul_of_nonneg_left (hSecant x) hTauSq
   calc
     ‖x - tau • A x‖ ^ 2 =
         ‖x‖ ^ 2 -
@@ -75,21 +138,15 @@ theorem continuousLinearMap_richardson_sq_contraction_of_coercive_cocoercive
     _ ≤
         ‖x‖ ^ 2 -
           2 * tau * inner ℝ (A x) x +
-          tau ^ 2 * inner ℝ (A x) x := by
-      exact add_le_add_left hCocoMul _
+          tau ^ 2 *
+            ((1 + m) * inner ℝ (A x) x - m * ‖x‖ ^ 2) := by
+      nlinarith
     _ =
-        ‖x‖ ^ 2 +
-          (tau ^ 2 - 2 * tau) * inner ℝ (A x) x := by
-      ring
-    _ ≤
-        ‖x‖ ^ 2 +
-          (tau ^ 2 - 2 * tau) * (m * ‖x‖ ^ 2) :=
-      add_le_add_left hCoeffMul _
-    _ =
-        (1 + (tau ^ 2 - 2 * tau) * m) * ‖x‖ ^ 2 := by
+        (1 - tau ^ 2 * m) * ‖x‖ ^ 2 +
+          (tau ^ 2 * (1 + m) - 2 * tau) * inner ℝ (A x) x := by
       ring
     _ = q ^ 2 * ‖x‖ ^ 2 := by
-      rw [hBalance]
+      rw [hCancel, zero_mul, add_zero, hBalance]
 
 /-- A squared contraction with a nonnegative factor gives the ordinary norm
 contraction. -/
@@ -133,6 +190,151 @@ theorem continuousLinearMap_richardson_apply_eq_smul_of_apply_eq_smul
   rw [hAction, smul_smul]
   module
 
+/-- The actual beta-zero Poisson operator satisfies the sharp square-function
+secant inequality associated with the interval `[1 / 324, 1]`. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonOperatorL2_apply_sq_le_secant_of_inner_vacuum_eq_zero
+    (f : Lp ℝ 2
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+    (hOrthogonal :
+      inner ℝ
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2
+          f = 0) :
+    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+        f‖ ^ 2 ≤
+      ((325 : ℝ) / 324) *
+          inner ℝ
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+              f)
+            f -
+        ((1 : ℝ) / 324) * ‖f‖ ^ 2 := by
+  have hDecomposition :=
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_sum_positive_fluctuationCardinalityProjectorL2_apply_eq_of_inner_vacuum_eq_zero
+      f hOrthogonal
+  have hAction :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          f =
+        ∑ k ∈ Finset.range 324,
+          (((k + 1 : ℕ) : ℝ) / 324) •
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              (k + 1) f := by
+    calc
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          f =
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (∑ k ∈ Finset.range 324,
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              (k + 1) f) := by
+        rw [hDecomposition]
+      _ = ∑ k ∈ Finset.range 324,
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              (k + 1) f) := by
+        simp only [map_sum]
+      _ = ∑ k ∈ Finset.range 324,
+          (((k + 1 : ℕ) : ℝ) / 324) •
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              (k + 1) f := by
+        apply Finset.sum_congr rfl
+        intro k hk
+        have hUpper : k + 1 ≤ 324 := by
+          simp only [Finset.mem_range] at hk
+          omega
+        let component : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure :=
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+            (k + 1) f
+        have hRandomPow :=
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPowL2_apply_eq_smul_of_mem_cardinalityEigenspace
+            (k + 1) 1 component
+            (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_fluctuationCardinalityProjectorL2_apply_mem_randomScanCardinalityEigenspaceL2
+              (k + 1) hUpper f)
+        have hRandom :
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.randomScanHeatBathL2
+                component =
+              (1 - (((k + 1 : ℕ) : ℝ) / 324)) • component := by
+          simpa [component] using hRandomPow
+        change
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+              component =
+            (((k + 1 : ℕ) : ℝ) / 324) • component
+        rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonOperatorL2_apply,
+          hRandom]
+        rw [sub_smul, one_smul]
+        abel
+  have hFamilyOrth :
+      ∀ i ∈ Finset.range 324, ∀ j ∈ Finset.range 324, i ≠ j →
+        inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+            (i + 1) f)
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+            (j + 1) f) = 0 := by
+    intro i _hi j _hj hij
+    exact
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_fluctuationCardinalityProjectorL2_same_input_eq_zero_of_ne
+        (i + 1) (j + 1) (by omega) f
+  have hCoeffNonneg :
+      ∀ k ∈ Finset.range 324,
+        0 ≤ (((k + 1 : ℕ) : ℝ) / 324) := by
+    intro k _hk
+    positivity
+  have hCoeffLower :
+      ∀ k ∈ Finset.range 324,
+        ((1 : ℝ) / 324) ≤ (((k + 1 : ℕ) : ℝ) / 324) := by
+    intro k _hk
+    have hLowerNat : 1 ≤ k + 1 := by omega
+    have hLowerReal : (1 : ℝ) ≤ ((k + 1 : ℕ) : ℝ) := by
+      exact_mod_cast hLowerNat
+    nlinarith
+  have hCoeffUpper :
+      ∀ k ∈ Finset.range 324,
+        (((k + 1 : ℕ) : ℝ) / 324) ≤ 1 := by
+    intro k hk
+    simp only [Finset.mem_range] at hk
+    have hUpperNat : k + 1 ≤ 324 := by omega
+    have hUpperReal : (((k + 1 : ℕ) : ℝ) ≤ 324) := by
+      exact_mod_cast hUpperNat
+    nlinarith
+  have hSecant :=
+    finset_norm_sum_smul_sq_le_secant_inner_sub_mul_norm_sum_sq_of_pairwise_inner_eq_zero
+      (s := Finset.range 324)
+      (v := fun k =>
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+          (k + 1) f)
+      (a := fun k => (((k + 1 : ℕ) : ℝ) / 324))
+      ((1 : ℝ) / 324)
+      hFamilyOrth hCoeffNonneg hCoeffLower hCoeffUpper
+  calc
+    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+        f‖ ^ 2 =
+      ‖∑ k ∈ Finset.range 324,
+        (((k + 1 : ℕ) : ℝ) / 324) •
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+            (k + 1) f‖ ^ 2 :=
+      congrArg (fun g => ‖g‖ ^ 2) hAction
+    _ ≤
+      (1 + ((1 : ℝ) / 324)) *
+          inner ℝ
+            (∑ k ∈ Finset.range 324,
+              (((k + 1 : ℕ) : ℝ) / 324) •
+                periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+                  (k + 1) f)
+            (∑ k ∈ Finset.range 324,
+              periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+                (k + 1) f) -
+        ((1 : ℝ) / 324) *
+          ‖∑ k ∈ Finset.range 324,
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroFluctuationCardinalityProjectorL2
+              (k + 1) f‖ ^ 2 := hSecant
+    _ =
+      ((325 : ℝ) / 324) *
+          inner ℝ
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+              f)
+            f -
+        ((1 : ℝ) / 324) * ‖f‖ ^ 2 := by
+      rw [← hAction, hDecomposition]
+      norm_num
+
 /-- The exact optimal constant step for the beta-zero Poisson Richardson
 iteration. -/
 def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2 :
@@ -168,14 +370,17 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
             e := by
   rfl
 
-/-- Internal sharp coercivity of the actual beta-zero Poisson endomorphism. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inv_324_mul_norm_sq_le_randomScanPoissonVacuumOrthogonalEndL2_inner
+/-- Internal form of the sharp beta-zero Poisson secant inequality. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonVacuumOrthogonalEndL2_apply_sq_le_secant
     (e : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    ((1 : ℝ) / 324) * ‖e‖ ^ 2 ≤
-      inner ℝ
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          e)
-        e := by
+    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
+        e‖ ^ 2 ≤
+      ((325 : ℝ) / 324) *
+          inner ℝ
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
+              e)
+            e -
+        ((1 : ℝ) / 324) * ‖e‖ ^ 2 := by
   have hOrthogonal :
       inner ℝ
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsVacuumL2
@@ -186,21 +391,21 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inv_324_
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)).1
       e.property
   change
-    ((1 : ℝ) / 324) *
-        ‖(e : Lp ℝ 2
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)‖ ^ 2 ≤
-      inner ℝ
-        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-            e :
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-          Lp ℝ 2
-            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
         (e : Lp ℝ 2
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
-  rw [
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_apply]
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)‖ ^ 2 ≤
+      ((325 : ℝ) / 324) *
+          inner ℝ
+            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+              (e : Lp ℝ 2
+                periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+            (e : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) -
+        ((1 : ℝ) / 324) *
+          ‖(e : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)‖ ^ 2
   exact
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inv_324_mul_norm_sq_le_randomScanPoissonOperatorL2_quadraticForm_of_inner_vacuum_eq_zero
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonOperatorL2_apply_sq_le_secant_of_inner_vacuum_eq_zero
       (e : Lp ℝ 2
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
       hOrthogonal
@@ -216,24 +421,24 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
         ‖e‖ ^ 2 := by
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanRichardsonErrorEndL2_apply]
-  apply
-    continuousLinearMap_richardson_sq_contraction_of_coercive_cocoercive
+  exact
+    continuousLinearMap_richardson_sq_contraction_of_secant
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
       ((1 : ℝ) / 324)
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2
-  · norm_num [
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2]
-  · norm_num [
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2]
-  · norm_num [
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2,
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2]
-  · exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inv_324_mul_norm_sq_le_randomScanPoissonVacuumOrthogonalEndL2_inner
-  · exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonVacuumOrthogonalEndL2_apply_sq_le_inner
-  · exact e
+      (by
+        norm_num [
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2])
+      (by
+        norm_num [
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2])
+      (by
+        norm_num [
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2,
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2])
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonVacuumOrthogonalEndL2_apply_sq_le_secant
+      e
 
 /-- The optimal beta-zero Richardson error map contracts every centered error by
 exact factor at most `323 / 325`. -/
