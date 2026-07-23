@@ -85,7 +85,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
     unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2 at hLower
     have hNormPos : 0 < ‖x‖ := norm_pos_iff.mpr hx
     have hNormSqPos : 0 < ‖x‖ ^ 2 := sq_pos_of_pos hNormPos
-    nlinarith
+    exact lt_of_lt_of_le hNormSqPos hLower
 
 /-- Absolute-value form of the intrinsic Green covariance Cauchy--Schwarz
 inequality. -/
@@ -147,28 +147,82 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
   have hCross :
       inner ℝ
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g)
-          f =
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
         inner ℝ
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            f)
-          g := by
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
     calc
       inner ℝ
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g)
-          f =
-        inner ℝ g
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            f) :=
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCenteredGreenVacuumOrthogonalEndL2_inner_symm
-          g f
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+        inner ℝ
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+        exact
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCenteredGreenVacuumOrthogonalEndL2_inner_symm
+            g f
       _ = inner ℝ
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            f)
-          g := real_inner_comm _ _
-  rw [map_add, inner_add_left, inner_add_right, inner_add_right, hCross]
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
+        real_inner_comm _ _
+  change
+    inner ℝ
+        (((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+        ((f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) =
+      inner ℝ
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
+        2 *
+          inner ℝ
+            ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+                f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+              Lp ℝ 2
+                periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+            (g : Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) +
+        inner ℝ
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (g : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+  rw [inner_add_left, inner_add_right, inner_add_right, hCross]
   ring
 
 /-- Quadratic scaling of the centered Green covariance. -/
@@ -181,7 +235,25 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
           f f := by
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
-  rw [map_smul, real_inner_smul_left, real_inner_smul_right]
+  change
+    inner ℝ
+        (a •
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+        (a •
+          (f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)) =
+      a ^ 2 *
+        inner ℝ
+          ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+              f : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+            Lp ℝ 2
+              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+          (f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)
+  rw [real_inner_smul_left, real_inner_smul_right]
   ring
 
 /-- The intrinsic centered Green energy magnitude. -/
@@ -617,15 +689,20 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonEnergyNormL2_sq
       u
   rw [hAction] at hSq
-  have hSq' :
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
-            u ^ 2 =
-        ((1 : ℝ) / 324) * ‖u‖ ^ 2 := by
-    simpa only [real_inner_smul_left, real_inner_self_eq_norm_sq] using hSq
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+          u ^ 2 =
+      inner ℝ
+        (((1 : ℝ) / 324) •
+          (u : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+        (u : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) at hSq
+  rw [real_inner_smul_left, real_inner_self_eq_norm_sq] at hSq
   have hEnergyNonneg :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonEnergyNormL2_nonneg
       u
-  nlinarith [hSq', norm_nonneg u]
+  nlinarith [hSq, norm_nonneg u]
 
 /-- The upper Poisson-energy equivalence constant one is attained. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_randomScanPoissonEnergyNormL2_eq_norm
@@ -750,36 +827,42 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_greenPoi
         u).1
     have hNormPos : 0 < ‖u‖ := norm_pos_iff.mpr huNe
     nlinarith
-  have hProductPos :
-      0 <
+  let p : ℝ :=
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+        f *
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+        u
+  have hpPos : 0 < p := by
+    dsimp [p]
+    exact mul_pos hGreenPos hPoissonPos
+  have hBound' : (1 : ℝ) * p ≤ C * p := by
+    dsimp [p]
+    calc
+      (1 : ℝ) *
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+              f *
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+              u) =
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
             f *
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
-            u :=
-    mul_pos hGreenPos hPoissonPos
-  apply (mul_le_mul_right hProductPos).mp
-  calc
-    (1 : ℝ) *
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
-            f *
+            u := by ring
+      _ ≤
+        C *
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+              f *
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
-            u) =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
-          f *
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
-          u := by ring
-    _ ≤
-      C *
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
-            f *
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
-          u := hBound
-    _ =
-      C *
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
-            f *
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
-            u) := by ring
+            u := hBound
+      _ =
+        C *
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+              f *
+            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+              u) := by ring
+  have hDiv : (1 : ℝ) ≤ (C * p) / p :=
+    (le_div_iff₀ hpPos).2 hBound'
+  have hpNe : p ≠ 0 := ne_of_gt hpPos
+  simpa [hpNe] using hDiv
 
 /-- Structured receipt for the exact Green/Poisson energy norm geometry and
 primal--dual pairing on the actual beta-zero centered sector. -/
