@@ -437,7 +437,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
         norm_num [
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2,
           periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2])
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonVacuumOrthogonalEndL2_apply_sq_le_secant
+      (by
+        intro x
+        have h :=
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_randomScanPoissonVacuumOrthogonalEndL2_apply_sq_le_secant
+            x
+        norm_num at h ⊢
+        exact h)
       e
 
 /-- The optimal beta-zero Richardson error map contracts every centered error by
@@ -463,7 +469,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanRichardsonErrorEndL2_apply] using
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonErrorEndL2_sq_contraction
         x
-  · exact e
 
 /-- Operator-norm upper bound for the optimal Richardson error map. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonErrorEndL2_le :
