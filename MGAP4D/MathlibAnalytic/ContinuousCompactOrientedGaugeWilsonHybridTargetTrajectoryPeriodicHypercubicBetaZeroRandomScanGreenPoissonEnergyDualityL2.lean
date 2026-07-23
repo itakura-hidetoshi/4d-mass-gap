@@ -84,6 +84,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         x
     unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2 at hLower
     have hNormPos : 0 < ‖x‖ := norm_pos_iff.mpr hx
+    have hNormSqPos : 0 < ‖x‖ ^ 2 := sq_pos_of_pos hNormPos
     nlinarith
 
 /-- Absolute-value form of the intrinsic Green covariance Cauchy--Schwarz
@@ -144,13 +145,30 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
           g g := by
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
-  simp only [map_add, inner_add_left, inner_add_right]
-  have hCross :=
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCenteredGreenVacuumOrthogonalEndL2_inner_symm
-      g f
-  rw [hCross, real_inner_comm g
-    (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-      f)]
+  have hCross :
+      inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+            g)
+          f =
+        inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+            f)
+          g := by
+    calc
+      inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+            g)
+          f =
+        inner ℝ g
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+            f) :=
+        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCenteredGreenVacuumOrthogonalEndL2_inner_symm
+          g f
+      _ = inner ℝ
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+            f)
+          g := real_inner_comm _ _
+  rw [map_add, inner_add_left, inner_add_right, inner_add_right, hCross]
   ring
 
 /-- Quadratic scaling of the centered Green covariance. -/
@@ -163,7 +181,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
           f f := by
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
-  simp only [map_smul, real_inner_smul_left, real_inner_smul_right]
+  rw [map_smul, real_inner_smul_left, real_inner_smul_right]
   ring
 
 /-- The intrinsic centered Green energy magnitude. -/
@@ -598,11 +616,16 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
   have hSq :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonEnergyNormL2_sq
       u
-  rw [hAction, real_inner_smul_left, real_inner_self_eq_norm_sq] at hSq
+  rw [hAction] at hSq
+  have hSq' :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+            u ^ 2 =
+        ((1 : ℝ) / 324) * ‖u‖ ^ 2 := by
+    simpa only [real_inner_smul_left, real_inner_self_eq_norm_sq] using hSq
   have hEnergyNonneg :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonEnergyNormL2_nonneg
       u
-  nlinarith [norm_nonneg u]
+  nlinarith [hSq', norm_nonneg u]
 
 /-- The upper Poisson-energy equivalence constant one is attained. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_randomScanPoissonEnergyNormL2_eq_norm
@@ -727,7 +750,36 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_greenPoi
         u).1
     have hNormPos : 0 < ‖u‖ := norm_pos_iff.mpr huNe
     nlinarith
-  nlinarith
+  have hProductPos :
+      0 <
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+            f *
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+            u :=
+    mul_pos hGreenPos hPoissonPos
+  apply (mul_le_mul_right hProductPos).mp
+  calc
+    (1 : ℝ) *
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+            f *
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+            u) =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+          f *
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+          u := by ring
+    _ ≤
+      C *
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+            f *
+        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+          u := hBound
+    _ =
+      C *
+        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanGreenEnergyNormL2
+            f *
+          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+            u) := by ring
 
 /-- Structured receipt for the exact Green/Poisson energy norm geometry and
 primal--dual pairing on the actual beta-zero centered sector. -/
