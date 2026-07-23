@@ -379,12 +379,13 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     ((1 : ℝ) / 2) * PE₀ (Nvec₀ n g - G₀ g) ^ 2 ≤
         ((1 : ℝ) / 2) * (324 * q₀ ^ n * ‖g‖) ^ 2 :=
       mul_le_mul_of_nonneg_left hSq (by norm_num)
+    _ = ((1 : ℝ) / 2) * (324 * ‖g‖) ^ 2 * (q₀ ^ n) ^ 2 := by
+      ring
     _ =
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGapEnvelopeConstant g *
           (q₀ ^ 2) ^ n := by
       rw [hPowSq]
       unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGapEnvelopeConstant
-      ring
 
 /-- The exact Poisson Fenchel gap is strictly below tolerance from its
 closed-form count onwards. -/
@@ -522,6 +523,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
       ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon := by
   intro n hn
+  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousLogCeilingIterationCount at hn
   refine
     ⟨periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_logCeilingIterationCount_spec
         epsilon hEpsilon n (by omega),
