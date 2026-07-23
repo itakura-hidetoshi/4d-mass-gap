@@ -27,8 +27,8 @@ def realHilbertOrthogonalComplementLineDecompositionLinearIsometryEquiv
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (Ω : H) :
     H ≃ₗᵢ[ℝ] WithLp 2 (((ℝ ∙ Ω)ᗮ) × (ℝ ∙ Ω)) := by
-  simpa only [real_hilbert_span_singleton_orthogonal_orthogonal_eq Ω] using
-    (realHilbertOrthogonalDecompositionLinearIsometryEquiv ((ℝ ∙ Ω)ᗮ))
+  exact (real_hilbert_span_singleton_orthogonal_orthogonal_eq Ω) ▸
+    realHilbertOrthogonalDecompositionLinearIsometryEquiv ((ℝ ∙ Ω)ᗮ)
 
 /-- The line-valued orthogonal decomposition preserves the Hilbert norm exactly. -/
 theorem real_hilbert_orthogonal_complement_line_decomposition_norm
@@ -67,7 +67,7 @@ vacuum-orthogonal sector and the vacuum line itself. -/
 def explicitWightmanOSVacuumOrthogonalVacuumLineDecompositionLinearIsometryEquiv
     (M : ExplicitWightmanOSReconstructedModel) :
     M.H ≃ₗᵢ[ℝ] WithLp 2 (M.vacuumOrthogonal × M.vacuumLine) := by
-  simpa only [explicit_wightman_os_vacuumOrthogonal_orthogonal_eq_vacuumLine M] using
+  exact (explicit_wightman_os_vacuumOrthogonal_orthogonal_eq_vacuumLine M) ▸
     explicitWightmanOSVacuumOrthogonalDecompositionLinearIsometryEquiv M
 
 /-- The actual vacuum-line decomposition preserves norm exactly. -/
