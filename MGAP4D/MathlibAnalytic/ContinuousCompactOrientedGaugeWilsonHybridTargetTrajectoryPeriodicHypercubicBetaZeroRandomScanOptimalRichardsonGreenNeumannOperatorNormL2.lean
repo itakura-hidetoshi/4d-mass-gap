@@ -31,7 +31,8 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOpti
     ℕ → E₀ →L[ℝ] E₀
   | 0 => ContinuousLinearMap.id ℝ E₀
   | Nat.succ n =>
-      R₀.comp
+      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
+          τ₀).comp
         (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
           n)
 
@@ -282,7 +283,9 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
 /-- The inverse defect `I - A N_n` of the finite Green-Neumann approximation. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
     (n : ℕ) : E₀ →L[ℝ] E₀ :=
-  ContinuousLinearMap.id ℝ E₀ - A₀.comp (N₀ n)
+  ContinuousLinearMap.id ℝ E₀ -
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2.comp
+      (N₀ n)
 
 local notation "Def₀" =>
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
