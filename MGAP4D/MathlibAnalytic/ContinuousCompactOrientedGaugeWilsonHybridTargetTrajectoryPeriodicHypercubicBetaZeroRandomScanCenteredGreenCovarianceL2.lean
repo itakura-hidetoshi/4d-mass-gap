@@ -291,7 +291,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
   refine ⟨f, hfNe, ?_⟩
   unfold
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
-  rw [hAction, real_inner_smul_left, real_inner_self_eq_norm_sq]
+  rw [hAction]
+  change
+    inner ℝ
+        ((324 : ℝ) •
+          (f : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
+        (f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+      324 *
+        ‖(f : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure)‖ ^ 2
+  rw [real_inner_smul_left, real_inner_self_eq_norm_sq]
 
 /-- The bilinear covariance bound with constant `324` is attained on the
 cardinality-one diagonal. -/
