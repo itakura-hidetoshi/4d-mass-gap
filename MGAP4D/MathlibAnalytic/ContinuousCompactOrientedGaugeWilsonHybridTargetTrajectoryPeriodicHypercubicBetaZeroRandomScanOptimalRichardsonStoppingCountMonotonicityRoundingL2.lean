@@ -156,7 +156,12 @@ theorem realGeometricExactStrictLogFloorIterationCount_le_threshold_add_one
       q C epsilon hqPos hqLtOne hC hEpsilon hEpsilonLeC
   simp only [realGeometricExactStrictLogFloorIterationCount, hNotInitial, if_false,
     Nat.cast_add, Nat.cast_one]
-  exact add_le_add_right (Nat.floor_le hThresholdNonneg) 1
+  calc
+    (⌊realGeometricLogarithmicThreshold q C epsilon⌋₊ : ℝ) + 1 =
+        1 + (⌊realGeometricLogarithmicThreshold q C epsilon⌋₊ : ℝ) := add_comm _ _
+    _ ≤ 1 + realGeometricLogarithmicThreshold q C epsilon :=
+      add_le_add_left (Nat.floor_le hThresholdNonneg) 1
+    _ = realGeometricLogarithmicThreshold q C epsilon + 1 := add_comm _ _
 
 /-- The integer-rounding error of the exact strict count lies in `(0, 1]`. This
 is the explicit bounded `O(1)` remainder around the logarithmic threshold. -/
