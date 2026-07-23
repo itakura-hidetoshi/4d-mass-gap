@@ -63,8 +63,19 @@ theorem naturalLeastTailIndex_not_before
     (hN : N < naturalLeastTailIndex P hP) :
     ¬ naturalTailPredicate P N := by
   classical
-  unfold naturalLeastTailIndex at hN ⊢
+  unfold naturalLeastTailIndex at hN
   exact Nat.find_min hP hN
+
+/-- The canonical least-tail index is the least element of all valid permanent
+starting indices. -/
+theorem naturalLeastTailIndex_isLeast
+    (P : ℕ → Prop)
+    (hP : ∃ N : ℕ, naturalTailPredicate P N) :
+    IsLeast
+      {N : ℕ | naturalTailPredicate P N}
+      (naturalLeastTailIndex P hP) :=
+  ⟨naturalLeastTailIndex_spec P hP,
+    fun _ hN => naturalLeastTailIndex_le P hP hN⟩
 
 /-- An index starts a valid tail exactly when it lies at or after the least tail
 index. -/
@@ -112,64 +123,75 @@ local notation "PE₀" =>
 local notation "Φ₀" =>
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonFenchelValueL2
 
+/-- Pointwise operator-remainder stopping predicate. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate
+    (epsilon : ℝ)
+    (n : ℕ) :
+    Prop :=
+  ‖Rem₀ n‖ < epsilon
+
+/-- The operator-remainder stopping predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate_tail
+    (epsilon : ℝ)
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate
+          epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannRemainderEndL2_norm_lt
+      epsilon hEpsilon
+
 /-- Least permanent stopping index for the Green--Neumann operator remainder. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
     ℕ :=
   naturalLeastTailIndex
-    (fun n : ℕ => ‖Rem₀ n‖ < epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannRemainderEndL2_norm_lt
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate
+      epsilon)
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate_tail
       epsilon hEpsilon)
 
-/-- The operator-remainder condition holds from its minimal stopping index. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex_spec
+/-- The operator-remainder minimal stopping index is the least permanent one. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex_isLeast
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
-    ∀ n ≥
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
-          epsilon hEpsilon,
-      ‖Rem₀ n‖ < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (fun n : ℕ => ‖Rem₀ n‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannRemainderEndL2_norm_lt
+    IsLeast
+      {N : ℕ | ∀ n ≥ N, ‖Rem₀ n‖ < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
+        epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate
+        epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_stoppingPredicate_tail
         epsilon hEpsilon)
 
-/-- Every permanent operator-remainder stopping index is at least the canonical
-minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex_le
+/-- Pointwise inverse-defect stopping predicate. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N, ‖Rem₀ n‖ < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
-        epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (fun n : ℕ => ‖Rem₀ n‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannRemainderEndL2_norm_lt
-        epsilon hEpsilon)
-      hN
+    (n : ℕ) :
+    Prop :=
+  ‖Def₀ n‖ < epsilon
 
-/-- No earlier index starts a permanent operator-remainder stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex_not_before
+/-- The inverse-defect stopping predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate_tail
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
-        epsilon hEpsilon) :
-    ¬ (∀ n ≥ N, ‖Rem₀ n‖ < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (fun n : ℕ => ‖Rem₀ n‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannRemainderEndL2_norm_lt
-        epsilon hEpsilon)
-      hN
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate
+          epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannInverseDefectEndL2_norm_lt
+      epsilon hEpsilon
 
 /-- Least permanent stopping index for the inverse defect. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
@@ -177,58 +199,50 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
     (hEpsilon : 0 < epsilon) :
     ℕ :=
   naturalLeastTailIndex
-    (fun n : ℕ => ‖Def₀ n‖ < epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannInverseDefectEndL2_norm_lt
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate
+      epsilon)
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate_tail
       epsilon hEpsilon)
 
-/-- The inverse-defect condition holds from its minimal stopping index. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex_spec
+/-- The inverse-defect minimal stopping index is the least permanent one. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex_isLeast
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
-    ∀ n ≥
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
-          epsilon hEpsilon,
-      ‖Def₀ n‖ < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (fun n : ℕ => ‖Def₀ n‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannInverseDefectEndL2_norm_lt
+    IsLeast
+      {N : ℕ | ∀ n ≥ N, ‖Def₀ n‖ < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
+        epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate
+        epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_stoppingPredicate_tail
         epsilon hEpsilon)
 
-/-- Every permanent inverse-defect stopping index is at least the canonical
-minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex_le
+/-- Pointwise ambient solution-error stopping predicate. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate
+    (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N, ‖Def₀ n‖ < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
-        epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (fun n : ℕ => ‖Def₀ n‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannInverseDefectEndL2_norm_lt
-        epsilon hEpsilon)
-      hN
+    (n : ℕ) :
+    Prop :=
+  ‖Nvec₀ n g - G₀ g‖ < epsilon
 
-/-- No earlier index starts a permanent inverse-defect stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex_not_before
+/-- The pointwise error predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate_tail
+    (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
-        epsilon hEpsilon) :
-    ¬ (∀ n ≥ N, ‖Def₀ n‖ < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (fun n : ℕ => ‖Def₀ n‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannInverseDefectEndL2_norm_lt
-        epsilon hEpsilon)
-      hN
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate
+          g epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_lt
+      g epsilon hEpsilon
 
 /-- Least permanent stopping index for the pointwise ambient solution error. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
@@ -237,61 +251,51 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
     (hEpsilon : 0 < epsilon) :
     ℕ :=
   naturalLeastTailIndex
-    (fun n : ℕ => ‖Nvec₀ n g - G₀ g‖ < epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_lt
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate
+      g epsilon)
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate_tail
       g epsilon hEpsilon)
 
-/-- The pointwise ambient error condition holds from its minimal stopping index. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex_spec
+/-- The pointwise-error minimal stopping index is the least permanent one. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex_isLeast
     (g : Ω₀)
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
-    ∀ n ≥
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
-          g epsilon hEpsilon,
-      ‖Nvec₀ n g - G₀ g‖ < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (fun n : ℕ => ‖Nvec₀ n g - G₀ g‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_lt
+    IsLeast
+      {N : ℕ | ∀ n ≥ N, ‖Nvec₀ n g - G₀ g‖ < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
+        g epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate
+        g epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_stoppingPredicate_tail
         g epsilon hEpsilon)
 
-/-- Every permanent pointwise-error stopping index is at least the canonical
-minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex_le
+/-- Pointwise residual-norm stopping predicate. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate
     (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N, ‖Nvec₀ n g - G₀ g‖ < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
-        g epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (fun n : ℕ => ‖Nvec₀ n g - G₀ g‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_lt
-        g epsilon hEpsilon)
-      hN
+    (n : ℕ) :
+    Prop :=
+  ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon
 
-/-- No earlier index starts a permanent pointwise-error stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex_not_before
+/-- The residual-norm predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate_tail
     (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
-        g epsilon hEpsilon) :
-    ¬ (∀ n ≥ N, ‖Nvec₀ n g - G₀ g‖ < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (fun n : ℕ => ‖Nvec₀ n g - G₀ g‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_lt
-        g epsilon hEpsilon)
-      hN
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate
+          g epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_lt
+      g epsilon hEpsilon
 
 /-- Least permanent stopping index for the bundled residual norm. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
@@ -300,61 +304,51 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
     (hEpsilon : 0 < epsilon) :
     ℕ :=
   naturalLeastTailIndex
-    (fun n : ℕ => ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_lt
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate
+      g epsilon)
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate_tail
       g epsilon hEpsilon)
 
-/-- The residual condition holds from its minimal stopping index. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex_spec
+/-- The residual minimal stopping index is the least permanent one. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex_isLeast
     (g : Ω₀)
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
-    ∀ n ≥
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
-          g epsilon hEpsilon,
-      ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (fun n : ℕ => ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_lt
+    IsLeast
+      {N : ℕ | ∀ n ≥ N, ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
+        g epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate
+        g epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_stoppingPredicate_tail
         g epsilon hEpsilon)
 
-/-- Every permanent residual stopping index is at least the canonical minimal
-one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex_le
+/-- Pointwise Poisson-energy error stopping predicate. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate
     (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N, ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
-        g epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (fun n : ℕ => ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_lt
-        g epsilon hEpsilon)
-      hN
+    (n : ℕ) :
+    Prop :=
+  PE₀ (Nvec₀ n g - G₀ g) < epsilon
 
-/-- No earlier index starts a permanent residual stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex_not_before
+/-- The Poisson-energy error predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate_tail
     (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
-        g epsilon hEpsilon) :
-    ¬ (∀ n ≥ N, ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (fun n : ℕ => ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_lt
-        g epsilon hEpsilon)
-      hN
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate
+          g epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_lt
+      g epsilon hEpsilon
 
 /-- Least permanent stopping index for the Poisson-energy error. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
@@ -363,61 +357,51 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
     (hEpsilon : 0 < epsilon) :
     ℕ :=
   naturalLeastTailIndex
-    (fun n : ℕ => PE₀ (Nvec₀ n g - G₀ g) < epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_lt
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate
+      g epsilon)
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate_tail
       g epsilon hEpsilon)
 
-/-- The Poisson-energy error condition holds from its minimal stopping index. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex_spec
+/-- The Poisson-energy minimal stopping index is the least permanent one. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex_isLeast
     (g : Ω₀)
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
-    ∀ n ≥
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
-          g epsilon hEpsilon,
-      PE₀ (Nvec₀ n g - G₀ g) < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (fun n : ℕ => PE₀ (Nvec₀ n g - G₀ g) < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_lt
+    IsLeast
+      {N : ℕ | ∀ n ≥ N, PE₀ (Nvec₀ n g - G₀ g) < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
+        g epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate
+        g epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_stoppingPredicate_tail
         g epsilon hEpsilon)
 
-/-- Every permanent Poisson-energy stopping index is at least the canonical
-minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex_le
+/-- Pointwise exact Poisson Fenchel-gap stopping predicate. -/
+def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate
     (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N, PE₀ (Nvec₀ n g - G₀ g) < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
-        g epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (fun n : ℕ => PE₀ (Nvec₀ n g - G₀ g) < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_lt
-        g epsilon hEpsilon)
-      hN
+    (n : ℕ) :
+    Prop :=
+  ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon
 
-/-- No earlier index starts a permanent Poisson-energy stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex_not_before
+/-- The exact Poisson Fenchel-gap predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate_tail
     (g : Ω₀)
     (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
-        g epsilon hEpsilon) :
-    ¬ (∀ n ≥ N, PE₀ (Nvec₀ n g - G₀ g) < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (fun n : ℕ => PE₀ (Nvec₀ n g - G₀ g) < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_lt
-        g epsilon hEpsilon)
-      hN
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate
+          g epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_lt
+      g epsilon hEpsilon
 
 /-- Least permanent stopping index for the exact Poisson Fenchel gap. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
@@ -426,68 +410,29 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
     (hEpsilon : 0 < epsilon) :
     ℕ :=
   naturalLeastTailIndex
-    (fun n : ℕ =>
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_lt
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate
+      g epsilon)
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate_tail
       g epsilon hEpsilon)
 
-/-- The exact Poisson Fenchel-gap condition holds from its minimal stopping
-index. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex_spec
+/-- The Fenchel-gap minimal stopping index is the least permanent one. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex_isLeast
     (g : Ω₀)
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
-    ∀ n ≥
-        periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
-          g epsilon hEpsilon,
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (fun n : ℕ =>
-        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_lt
+    IsLeast
+      {N : ℕ | ∀ n ≥ N,
+        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
+        g epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate
+        g epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_stoppingPredicate_tail
         g epsilon hEpsilon)
-
-/-- Every permanent Fenchel-gap stopping index is at least the canonical
-minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex_le
-    (g : Ω₀)
-    (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N,
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
-        g epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (fun n : ℕ =>
-        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_lt
-        g epsilon hEpsilon)
-      hN
-
-/-- No earlier index starts a permanent Fenchel-gap stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex_not_before
-    (g : Ω₀)
-    (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
-        g epsilon hEpsilon) :
-    ¬ (∀ n ≥ N,
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (fun n : ℕ =>
-        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_lt
-        g epsilon hEpsilon)
-      hN
 
 /-- Residual-only stopping predicate underlying the a posteriori error
 certificate. -/
@@ -526,6 +471,26 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
     (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate_tail
       g epsilon hEpsilon)
 
+/-- The residual-only certified index is the least permanent observable
+certificate index. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex_isLeast
+    (g : Ω₀)
+    (epsilon : ℝ)
+    (hEpsilon : 0 < epsilon) :
+    IsLeast
+      {N : ℕ | ∀ n ≥ N,
+        324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex
+        g epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate
+        g epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate_tail
+        g epsilon hEpsilon)
+
 /-- From the least residual-only stopping index onwards, the observable
 residual threshold holds and certifies the ambient solution error. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex_spec
@@ -538,15 +503,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
         ‖G₀ g - Nvec₀ n g‖ ≤ epsilon := by
   intro n hn
-  have hResidualTail :=
-    naturalLeastTailIndex_spec
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate
-        g epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate_tail
-        g epsilon hEpsilon)
   have hResidualSmall :
-      324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon := by
-    exact hResidualTail n hn
+      324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon :=
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex_isLeast
+      g epsilon hEpsilon).1 n hn
   refine ⟨hResidualSmall, ?_⟩
   have hAmbientCertificate :
       324 *
@@ -572,46 +532,6 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanCanonicalPoissonSolutionToVacuumOrthogonalL2_apply_subtype_eq_centeredGreen] using
     hCertified
 
-/-- Every permanent residual-certificate stopping index is at least the
-canonical minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex_le
-    (g : Ω₀)
-    (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N,
-      324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex
-        g epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate
-        g epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate_tail
-        g epsilon hEpsilon)
-      hN
-
-/-- No earlier index starts a permanent residual-certificate stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex_not_before
-    (g : Ω₀)
-    (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex
-        g epsilon hEpsilon) :
-    ¬ (∀ n ≥ N,
-      324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate
-        g epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumannPartialSumL2_residualCertificatePredicate_tail
-        g epsilon hEpsilon)
-      hN
-
 /-- The six-condition pointwise stopping predicate. -/
 def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
     (g : Ω₀)
@@ -625,6 +545,21 @@ def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRicha
   PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
   ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon
 
+/-- The six-condition simultaneous predicate eventually holds permanently. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate_tail
+    (g : Ω₀)
+    (epsilon : ℝ)
+    (hEpsilon : 0 < epsilon) :
+    ∃ N : ℕ,
+      naturalTailPredicate
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
+          g epsilon)
+        N := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumann_simultaneous_stopping_index
+      g epsilon hEpsilon
+
 /-- Least permanent index satisfying all six stopping conditions
 simultaneously. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
@@ -635,8 +570,33 @@ noncomputable def periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZer
   naturalLeastTailIndex
     (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
       g epsilon)
-    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumann_simultaneous_stopping_index
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate_tail
       g epsilon hEpsilon)
+
+/-- The simultaneous stopping index is the least permanent six-condition
+index. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_isLeast
+    (g : Ω₀)
+    (epsilon : ℝ)
+    (hEpsilon : 0 < epsilon) :
+    IsLeast
+      {N : ℕ | ∀ n ≥ N,
+        ‖Rem₀ n‖ < epsilon ∧
+        ‖Def₀ n‖ < epsilon ∧
+        ‖Nvec₀ n g - G₀ g‖ < epsilon ∧
+        ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
+        PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
+        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon}
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
+        g epsilon hEpsilon) := by
+  simpa only [naturalTailPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate,
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex] using
+    naturalLeastTailIndex_isLeast
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
+        g epsilon)
+      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate_tail
+        g epsilon hEpsilon)
 
 /-- All six conditions hold from the simultaneous minimal stopping index. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_spec
@@ -651,112 +611,64 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       ‖Nvec₀ n g - G₀ g‖ < epsilon ∧
       ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
       PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
-  exact
-    naturalLeastTailIndex_spec
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
-        g epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumann_simultaneous_stopping_index
-        g epsilon hEpsilon)
-
-/-- Every permanent six-condition stopping index is at least the canonical
-simultaneous minimal one. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_le
-    (g : Ω₀)
-    (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : ∀ n ≥ N,
-      ‖Rem₀ n‖ < epsilon ∧
-      ‖Def₀ n‖ < epsilon ∧
-      ‖Nvec₀ n g - G₀ g‖ < epsilon ∧
-      ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
-      PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon) :
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
-        g epsilon hEpsilon ≤ N := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
-  exact
-    naturalLeastTailIndex_le
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
-        g epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumann_simultaneous_stopping_index
-        g epsilon hEpsilon)
-      hN
-
-/-- No earlier index starts a permanent six-condition stopping tail. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_not_before
-    (g : Ω₀)
-    (epsilon : ℝ)
-    (hEpsilon : 0 < epsilon)
-    {N : ℕ}
-    (hN : N <
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
-        g epsilon hEpsilon) :
-    ¬ (∀ n ≥ N,
-      ‖Rem₀ n‖ < epsilon ∧
-      ‖Def₀ n‖ < epsilon ∧
-      ‖Nvec₀ n g - G₀ g‖ < epsilon ∧
-      ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
-      PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
-      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon) := by
-  unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex at hN ⊢
-  exact
-    naturalLeastTailIndex_not_before
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousStoppingPredicate
-        g epsilon)
-      (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_optimalRichardsonGreenNeumann_simultaneous_stopping_index
-        g epsilon hEpsilon)
-      hN
+      ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon :=
+  (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_isLeast
+    g epsilon hEpsilon).1
 
 /-- Structured receipt for canonical least Richardson stopping indices in the
 actual finite beta-zero system. -/
 structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonMinimalStoppingIndicesL2Receipt :
     Prop where
-  generic_least_tail_spec :
+  generic_least_tail :
     ∀ (P : ℕ → Prop) (hP : ∃ N : ℕ, naturalTailPredicate P N),
-      naturalTailPredicate P (naturalLeastTailIndex P hP)
-  generic_least_tail_minimal :
-    ∀ (P : ℕ → Prop) (hP : ∃ N : ℕ, naturalTailPredicate P N)
-      (N : ℕ),
-      naturalTailPredicate P N → naturalLeastTailIndex P hP ≤ N
-  operator_remainder_minimal :
+      IsLeast {N : ℕ | naturalTailPredicate P N}
+        (naturalLeastTailIndex P hP)
+  operator_remainder_least :
     ∀ (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
-            epsilon hEpsilon,
-        ‖Rem₀ n‖ < epsilon
-  inverse_defect_minimal :
+      IsLeast
+        {N : ℕ | ∀ n ≥ N, ‖Rem₀ n‖ < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex
+          epsilon hEpsilon)
+  inverse_defect_least :
     ∀ (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
-            epsilon hEpsilon,
-        ‖Def₀ n‖ < epsilon
-  pointwise_error_minimal :
+      IsLeast
+        {N : ℕ | ∀ n ≥ N, ‖Def₀ n‖ < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex
+          epsilon hEpsilon)
+  pointwise_error_least :
     ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
-            g epsilon hEpsilon,
-        ‖Nvec₀ n g - G₀ g‖ < epsilon
-  residual_minimal :
+      IsLeast
+        {N : ℕ | ∀ n ≥ N, ‖Nvec₀ n g - G₀ g‖ < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex
+          g epsilon hEpsilon)
+  residual_least :
     ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
-            g epsilon hEpsilon,
-        ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon
-  poisson_energy_minimal :
+      IsLeast
+        {N : ℕ | ∀ n ≥ N,
+          ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex
+          g epsilon hEpsilon)
+  poisson_energy_least :
     ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
-            g epsilon hEpsilon,
-        PE₀ (Nvec₀ n g - G₀ g) < epsilon
-  fenchel_gap_minimal :
+      IsLeast
+        {N : ℕ | ∀ n ≥ N,
+          PE₀ (Nvec₀ n g - G₀ g) < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex
+          g epsilon hEpsilon)
+  fenchel_gap_least :
     ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
-            g epsilon hEpsilon,
-        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon
+      IsLeast
+        {N : ℕ | ∀ n ≥ N,
+          ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex
+          g epsilon hEpsilon)
+  residual_only_least :
+    ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
+      IsLeast
+        {N : ℕ | ∀ n ≥ N,
+          324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex
+          g epsilon hEpsilon)
   residual_only_certificate :
     ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
       ∀ n ≥
@@ -764,17 +676,18 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRicha
             g epsilon hEpsilon,
         324 * ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
           ‖G₀ g - Nvec₀ n g‖ ≤ epsilon
-  simultaneous_minimal :
+  simultaneous_least :
     ∀ (g : Ω₀) (epsilon : ℝ) (hEpsilon : 0 < epsilon),
-      ∀ n ≥
-          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
-            g epsilon hEpsilon,
-        ‖Rem₀ n‖ < epsilon ∧
-        ‖Def₀ n‖ < epsilon ∧
-        ‖Nvec₀ n g - G₀ g‖ < epsilon ∧
-        ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
-        PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
-        ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon
+      IsLeast
+        {N : ℕ | ∀ n ≥ N,
+          ‖Rem₀ n‖ < epsilon ∧
+          ‖Def₀ n‖ < epsilon ∧
+          ‖Nvec₀ n g - G₀ g‖ < epsilon ∧
+          ‖Res₀ (g : H₀) (Nvec₀ n g)‖ < epsilon ∧
+          PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
+          ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon}
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex
+          g epsilon hEpsilon)
   claim_boundary :
     True
 
@@ -782,44 +695,46 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRicha
 theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonMinimalStoppingIndicesL2Receipt_proved :
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonMinimalStoppingIndicesL2Receipt := by
   refine
-    { generic_least_tail_spec := ?_
-      generic_least_tail_minimal := ?_
-      operator_remainder_minimal := ?_
-      inverse_defect_minimal := ?_
-      pointwise_error_minimal := ?_
-      residual_minimal := ?_
-      poisson_energy_minimal := ?_
-      fenchel_gap_minimal := ?_
+    { generic_least_tail := ?_
+      operator_remainder_least := ?_
+      inverse_defect_least := ?_
+      pointwise_error_least := ?_
+      residual_least := ?_
+      poisson_energy_least := ?_
+      fenchel_gap_least := ?_
+      residual_only_least := ?_
       residual_only_certificate := ?_
-      simultaneous_minimal := ?_
+      simultaneous_least := ?_
       claim_boundary := trivial }
   · intro P hP
-    exact naturalLeastTailIndex_spec P hP
-  · intro P hP N hN
-    exact naturalLeastTailIndex_le P hP hN
+    exact naturalLeastTailIndex_isLeast P hP
   · intro epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_minimalStoppingIndex_isLeast
         epsilon hEpsilon
   · intro epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_minimalStoppingIndex_isLeast
         epsilon hEpsilon
   · intro g epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_minimalStoppingIndex_isLeast
         g epsilon hEpsilon
   · intro g epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_minimalStoppingIndex_isLeast
         g epsilon hEpsilon
   · intro g epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_minimalStoppingIndex_isLeast
         g epsilon hEpsilon
   · intro g epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_minimalStoppingIndex_isLeast
+        g epsilon hEpsilon
+  · intro g epsilon hEpsilon
+    exact
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualCertified_minimalStoppingIndex_isLeast
         g epsilon hEpsilon
   · intro g epsilon hEpsilon
     exact
@@ -827,7 +742,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichard
         g epsilon hEpsilon
   · intro g epsilon hEpsilon
     exact
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_spec
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousMinimalStoppingIndex_isLeast
         g epsilon hEpsilon
 
 end
