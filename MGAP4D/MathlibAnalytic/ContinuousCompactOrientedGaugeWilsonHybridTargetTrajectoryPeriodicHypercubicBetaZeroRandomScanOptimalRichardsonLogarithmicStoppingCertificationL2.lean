@@ -237,7 +237,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonEnergyNormL2_nonneg
       (Nvec₀ n g - G₀ g)
   have hSqrtSq : Real.sqrt (2 * epsilon) ^ 2 = 2 * epsilon := by
-    rw [sq_sqrt hTwoEpsilonPos.le]
+    rw [Real.sq_sqrt hTwoEpsilonPos.le]
   have hEnergySq : PE₀ (Nvec₀ n g - G₀ g) ^ 2 < 2 * epsilon := by
     nlinarith
   rw [
@@ -349,19 +349,35 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       PE₀ (Nvec₀ n g - G₀ g) < epsilon ∧
       ((1 : ℝ) / 2) * GE₀ g ^ 2 - Φ₀ g (Nvec₀ n g) < epsilon := by
   intro n hn
+  have hComponents :
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_strictLogarithmicIterationCount epsilon ≤ n ∧
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_strictLogarithmicIterationCount epsilon ≤ n ∧
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_logarithmicIterationCount g epsilon ≤ n ∧
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_logarithmicIterationCount g epsilon ≤ n ∧
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_logarithmicIterationCount g epsilon ≤ n := by
+    simpa only [
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumann_simultaneousLogarithmicIterationCount,
+      max_le_iff] using hn
+  rcases hComponents with ⟨hRem, hDef, hError, hResidual, hGap⟩
+  have hEnergy :
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_logarithmicIterationCount
+          g epsilon ≤ n := by
+    simpa only [
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_logarithmicIterationCount] using
+      hError
   exact
     ⟨periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_norm_lt_of_ge_strictLogarithmicIterationCount
-        epsilon hEpsilon n (by omega),
+        epsilon hEpsilon n hRem,
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_norm_lt_of_ge_strictLogarithmicIterationCount
-        epsilon hEpsilon n (by omega),
+        epsilon hEpsilon n hDef,
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_errorNorm_lt_of_ge_logarithmicIterationCount
-        g epsilon hEpsilon n (by omega),
+        g epsilon hEpsilon n hError,
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_residualNorm_lt_of_ge_logarithmicIterationCount
-        g epsilon hEpsilon n (by omega),
+        g epsilon hEpsilon n hResidual,
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonEnergyError_lt_of_ge_logarithmicIterationCount
-        g epsilon hEpsilon n (by omega),
+        g epsilon hEpsilon n hEnergy,
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGap_lt_of_ge_logarithmicIterationCount
-        g epsilon hEpsilon n (by omega)⟩
+        g epsilon hEpsilon n hGap⟩
 
 /-- The canonical least simultaneous stopping index is bounded by the explicit
 single logarithmic index. -/
