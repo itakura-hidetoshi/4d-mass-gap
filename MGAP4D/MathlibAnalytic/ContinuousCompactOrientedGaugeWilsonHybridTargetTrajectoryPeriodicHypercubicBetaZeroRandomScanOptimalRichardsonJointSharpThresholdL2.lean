@@ -131,10 +131,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     (epsilon : ℝ)
     (hEpsilon : 0 < epsilon) :
     0 < NJointExact epsilon ↔ epsilon ≤ (324 : ℝ) := by
-  rw [Nat.pos_iff_ne_zero,
-    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_zero_iff
-      epsilon hEpsilon]
-  exact not_congr not_lt
+  rw [Nat.pos_iff_ne_zero]
+  constructor
+  · intro hNe
+    apply le_of_not_gt
+    intro hLt
+    exact hNe
+      ((periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_zero_iff
+        epsilon hEpsilon).2 hLt)
+  · intro hLe hZero
+    exact (not_lt_of_ge hLe)
+      ((periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_zero_iff
+        epsilon hEpsilon).1 hZero)
 
 /-- In the entire nontrivial tolerance regime, the exact simultaneous count is a
 sharp transition between failure at the predecessor and success at the count. -/
@@ -159,13 +167,13 @@ structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRicha
   generic_interval :
     ∀ (q C epsilon : ℝ), 0 < q → q < 1 → 0 < C → 0 < epsilon →
       ∀ (k : ℕ), 0 < k →
-        realGeometricExactStrictLogFloorIterationCount q C epsilon = k ↔
-          C * q ^ k < epsilon ∧ epsilon ≤ C * q ^ (k - 1)
+        (realGeometricExactStrictLogFloorIterationCount q C epsilon = k ↔
+          C * q ^ k < epsilon ∧ epsilon ≤ C * q ^ (k - 1))
   actual_interval :
     ∀ (epsilon : ℝ), 0 < epsilon → ∀ (k : ℕ), 0 < k →
-      NJointExact epsilon = k ↔
+      (NJointExact epsilon = k ↔
         (324 : ℝ) * ((323 : ℝ) / 325) ^ k < epsilon ∧
-          epsilon ≤ (324 : ℝ) * ((323 : ℝ) / 325) ^ (k - 1)
+          epsilon ≤ (324 : ℝ) * ((323 : ℝ) / 325) ^ (k - 1))
   exact_spec :
     ∀ (epsilon : ℝ), 0 < epsilon →
       ‖Rem₀ (NJointExact epsilon)‖ < epsilon ∧
