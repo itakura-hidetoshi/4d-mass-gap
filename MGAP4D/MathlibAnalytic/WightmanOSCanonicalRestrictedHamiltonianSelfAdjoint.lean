@@ -272,8 +272,9 @@ structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop wher
 theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
     WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt := by
   exact
-    { generic_restriction_selfAdjoint :=
-        RealLinearPMapOrthogonalRestrictionData.isSelfAdjoint
+    { generic_restriction_selfAdjoint := by
+        intro H hNormed hInner hComplete A K hProjection hKComplete B D hA
+        exact D.isSelfAdjoint hA
       actual_restriction_selfAdjoint :=
         explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
       actual_restriction_dense :=
