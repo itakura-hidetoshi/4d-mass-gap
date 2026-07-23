@@ -44,7 +44,8 @@ theorem realGeometricExactStrictLogFloorIterationCount_pow_mul_scale_covariant
   · have hExponent : k + m - 1 = (k - 1) + m := by omega
     rw [hExponent, pow_add]
     have hPowNonneg : 0 ≤ q ^ m := (pow_pos hqPos m).le
-    exact mul_le_mul_of_nonneg_left hInterval.2 hPowNonneg
+    simpa [mul_assoc, mul_left_comm, mul_comm] using
+      (mul_le_mul_of_nonneg_left hInterval.2 hPowNonneg)
 
 /-- One-step form of exact geometric scale covariance. -/
 theorem realGeometricExactStrictLogFloorIterationCount_mul_scale_covariant
@@ -74,6 +75,15 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
     (hEpsilonLe : epsilon ≤ (324 : ℝ))
     (m : ℕ) :
     NJointExact (q₀ ^ m * epsilon) = NJointExact epsilon + m := by
+  have hCountPosJoint : 0 < NJointExact epsilon :=
+    (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_pos_iff
+      epsilon hEpsilon).2 hEpsilonLe
+  have hCountPosRem :
+      0 < realGeometricExactStrictLogFloorIterationCount q₀ 324 epsilon := by
+    rw [←
+      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_remainderExactStrictLogFloorIterationCount
+        epsilon hEpsilon]
+    exact hCountPosJoint
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_remainderExactStrictLogFloorIterationCount
       (q₀ ^ m * epsilon)
@@ -90,10 +100,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       q₀ 324 epsilon
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.1
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.2
-      (by norm_num) hEpsilon
-      ((periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_pos_iff
-        epsilon hEpsilon).2 hEpsilonLe)
-      m
+      (by norm_num) hEpsilon hCountPosRem m
 
 /-- Actual one-step beta-zero simultaneous scale covariance. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_mul_scale_covariant
@@ -115,10 +122,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
       (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_iff_error_interval
         324 (by norm_num) 1 (by norm_num)).2 (by
           constructor
-          · change (324 : ℝ) * q₀ < 324
-            have hqLt :=
-              periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.2
-            nlinarith
+          · norm_num
           · norm_num)
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_pow_mul_scale_covariant
