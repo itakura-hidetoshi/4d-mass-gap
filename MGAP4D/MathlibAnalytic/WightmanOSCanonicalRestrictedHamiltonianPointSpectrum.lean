@@ -35,7 +35,7 @@ This is kept explicit because the current Mathlib `LinearPMap` API does not
 supply an unbounded-operator spectral theorem. -/
 structure ExplicitWightmanOSCanonicalPointSpectrumBridge
     (M : ExplicitWightmanOSReconstructedModel) extends
-      ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M where
+      ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M where
   pointSpectrum_eq_restrictedSpectrum :
     M.canonicalVacuumOrthogonalPointSpectrum = restrictedSpectrum
 
@@ -46,7 +46,7 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_zero_not_mem
     0 ∉ M.canonicalVacuumOrthogonalPointSpectrum := by
   rw [B.pointSpectrum_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_zero_not_mem
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
 
 /-- Every eigenvalue of the actual canonical restriction lies above any proven
 Hamiltonian mass gap. -/
@@ -57,8 +57,7 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_lower_bound
     M.canonicalVacuumOrthogonalPointSpectrum ⊆ Set.Ici m := by
   rw [B.pointSpectrum_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_subset_Ici
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-    hGap
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap
 
 /-- When the lower edge is attained, the infimum of the actual point spectrum is
 the mass-gap value. -/
@@ -70,8 +69,7 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_sInf_eq
     sInf M.canonicalVacuumOrthogonalPointSpectrum = m := by
   rw [B.pointSpectrum_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_sInf_eq
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-    hGap hmSpectrum
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap hmSpectrum
 
 /-- A positive attained lower spectral value produces an actual nonzero
 eigenvector of the canonical restricted Hamiltonian. -/
@@ -156,6 +154,5 @@ theorem euclidean_clustering_exact_gap_eigenvector
     B hGap.1 hExactSpectrum
 
 end
-
 end MathlibAnalytic
 end MGAP4D
