@@ -11,6 +11,7 @@ open scoped BigOperators Function
 noncomputable section
 
 set_option maxRecDepth 8192
+set_option synthInstance.maxHeartbeats 200000
 
 /-- The continuous-linear iterate of the optimal Richardson error endomorphism. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2 :
@@ -210,7 +211,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
   unfold
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-  ext g
+  apply ContinuousLinearMap.ext
+  intro g
   change
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
           g -
@@ -444,7 +446,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
         n =
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
         n := by
-  ext g
+  apply ContinuousLinearMap.ext
+  intro g
   exact
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_apply
       n g
