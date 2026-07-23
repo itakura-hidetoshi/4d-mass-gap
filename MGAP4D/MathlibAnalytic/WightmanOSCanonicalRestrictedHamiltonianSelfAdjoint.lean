@@ -66,6 +66,7 @@ theorem RealLinearPMapOrthogonalRestrictionData.apply_projectedDomainPoint_coe
     ((B (D.projectedDomainPoint x) : K) : H) =
         A ⟨K.starProjection (x : H), D.projection_mem_domain x⟩ := by
       rw [D.apply_coe]
+      congr 1
     _ = K.starProjection (A x) := D.projection_commutes x
 
 /-- Pairing against a vector in the projected subspace is unchanged by
@@ -263,7 +264,7 @@ structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop wher
       LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian
   automatic_bridge :
     ∀ (M : ExplicitWightmanOSReconstructedModel)
-      (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M),
+      (_B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M),
       IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian
   claim_boundary : True
 
@@ -271,7 +272,8 @@ structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop wher
 theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
     WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt := by
   exact
-    { generic_restriction_selfAdjoint := fun A K B D => D.isSelfAdjoint
+    { generic_restriction_selfAdjoint :=
+        RealLinearPMapOrthogonalRestrictionData.isSelfAdjoint
       actual_restriction_selfAdjoint :=
         explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
       actual_restriction_dense :=
