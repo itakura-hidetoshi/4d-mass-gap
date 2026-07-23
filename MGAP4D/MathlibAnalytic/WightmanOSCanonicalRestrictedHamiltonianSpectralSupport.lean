@@ -34,7 +34,7 @@ continuous-spectrum analogue of the optional point-spectrum bridge. -/
 structure ExplicitWightmanOSCanonicalSpectralSupportBridge
     (M : ExplicitWightmanOSReconstructedModel)
     (R : ExplicitWightmanOSScalarSpectralMeasureRealization M) extends
-      ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M where
+      ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M where
   spectralSupport_eq_restrictedSpectrum :
     M.canonicalVacuumOrthogonalSpectralSupport R = restrictedSpectrum
 
@@ -46,7 +46,7 @@ theorem canonical_vacuum_orthogonal_spectralSupport_zero_not_mem
     0 ∉ M.canonicalVacuumOrthogonalSpectralSupport R := by
   rw [B.spectralSupport_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_zero_not_mem
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
 
 /-- Every energy in the full scalar-measure support lies above a proven
 Hamiltonian mass gap. -/
@@ -58,8 +58,7 @@ theorem canonical_vacuum_orthogonal_spectralSupport_lower_bound
     M.canonicalVacuumOrthogonalSpectralSupport R ⊆ Set.Ici m := by
   rw [B.spectralSupport_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_subset_Ici
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-    hGap
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap
 
 /-- If the lower threshold belongs to the Hamiltonian energy spectrum, it is the
 infimum of the full scalar-measure support. -/
@@ -72,8 +71,7 @@ theorem canonical_vacuum_orthogonal_spectralSupport_sInf_eq
     sInf (M.canonicalVacuumOrthogonalSpectralSupport R) = m := by
   rw [B.spectralSupport_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_sInf_eq
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-    hGap hmSpectrum
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap hmSpectrum
 
 /-- Euclidean finite-volume clustering yields a positive lower bound on the full
 continuous spectral support of the actual vacuum-sector Hamiltonian. -/
@@ -122,6 +120,5 @@ theorem euclidean_clustering_canonical_spectralSupport_exact_gap
       B hGap hExactSpectrum⟩
 
 end
-
 end MathlibAnalytic
 end MGAP4D
