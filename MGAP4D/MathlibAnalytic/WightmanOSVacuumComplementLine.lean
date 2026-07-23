@@ -21,14 +21,26 @@ theorem real_hilbert_span_singleton_orthogonal_orthogonal_eq
       (ℝ ∙ Ω).orthogonal_orthogonal_eq_closure
     _ = ℝ ∙ Ω := (ℝ ∙ Ω).topologicalClosure_eq_self
 
+/-- Replace only the orthogonal-complement summand of the canonical decomposition
+along an equality of submodules.  Pattern matching on the equality performs the
+required dependent transport of subtype carriers. -/
+def realHilbertOrthogonalDecompositionLinearIsometryEquivOfComplementEq
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (K L : Submodule ℝ H) [K.HasOrthogonalProjection]
+    (h : Kᗮ = L) :
+    H ≃ₗᵢ[ℝ] WithLp 2 (K × L) := by
+  cases h
+  exact realHilbertOrthogonalDecompositionLinearIsometryEquiv K
+
 /-- The canonical orthogonal decomposition can therefore be presented with its
 second summand as the actual line spanned by the chosen vector. -/
 def realHilbertOrthogonalComplementLineDecompositionLinearIsometryEquiv
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (Ω : H) :
-    H ≃ₗᵢ[ℝ] WithLp 2 (((ℝ ∙ Ω)ᗮ) × (ℝ ∙ Ω)) := by
-  exact (real_hilbert_span_singleton_orthogonal_orthogonal_eq Ω) ▸
-    realHilbertOrthogonalDecompositionLinearIsometryEquiv ((ℝ ∙ Ω)ᗮ)
+    H ≃ₗᵢ[ℝ] WithLp 2 (((ℝ ∙ Ω)ᗮ) × (ℝ ∙ Ω)) :=
+  realHilbertOrthogonalDecompositionLinearIsometryEquivOfComplementEq
+    ((ℝ ∙ Ω)ᗮ) (ℝ ∙ Ω)
+    (real_hilbert_span_singleton_orthogonal_orthogonal_eq Ω)
 
 /-- The line-valued orthogonal decomposition preserves the Hilbert norm exactly. -/
 theorem real_hilbert_orthogonal_complement_line_decomposition_norm
@@ -66,9 +78,10 @@ theorem explicit_wightman_os_vacuumOrthogonal_orthogonal_eq_span_vacuum
 vacuum-orthogonal sector and the vacuum line itself. -/
 def explicitWightmanOSVacuumOrthogonalVacuumLineDecompositionLinearIsometryEquiv
     (M : ExplicitWightmanOSReconstructedModel) :
-    M.H ≃ₗᵢ[ℝ] WithLp 2 (M.vacuumOrthogonal × M.vacuumLine) := by
-  exact (explicit_wightman_os_vacuumOrthogonal_orthogonal_eq_vacuumLine M) ▸
-    explicitWightmanOSVacuumOrthogonalDecompositionLinearIsometryEquiv M
+    M.H ≃ₗᵢ[ℝ] WithLp 2 (M.vacuumOrthogonal × M.vacuumLine) :=
+  realHilbertOrthogonalDecompositionLinearIsometryEquivOfComplementEq
+    M.vacuumOrthogonal M.vacuumLine
+    (explicit_wightman_os_vacuumOrthogonal_orthogonal_eq_vacuumLine M)
 
 /-- The actual vacuum-line decomposition preserves norm exactly. -/
 theorem explicit_wightman_os_vacuum_orthogonal_vacuum_line_decomposition_norm
