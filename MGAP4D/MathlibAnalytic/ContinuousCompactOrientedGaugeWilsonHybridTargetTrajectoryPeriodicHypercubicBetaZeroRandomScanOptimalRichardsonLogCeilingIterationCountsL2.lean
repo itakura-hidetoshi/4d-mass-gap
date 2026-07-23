@@ -386,6 +386,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
           (q₀ ^ 2) ^ n := by
       rw [hPowSq]
       unfold periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannPartialSumL2_poissonFenchelGapEnvelopeConstant
+      rfl
 
 /-- The exact Poisson Fenchel gap is strictly below tolerance from its
 closed-form count onwards. -/
