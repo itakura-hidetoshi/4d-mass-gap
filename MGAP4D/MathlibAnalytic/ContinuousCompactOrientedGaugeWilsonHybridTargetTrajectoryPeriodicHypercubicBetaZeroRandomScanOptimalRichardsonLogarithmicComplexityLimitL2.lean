@@ -86,8 +86,16 @@ theorem realGeometricExactStrictLogFloorIterationCount_exp_neg_div_tendsto
         Tendsto (fun x : ℝ => (1 : ℝ) / x) atTop (𝓝 0) :=
       tendsto_const_nhds.div_atTop tendsto_id
     exact squeeze_zero_norm' hBound hOneDiv
-  have hSum := hThresholdRatio.add hRoundDiv
-  refine (show Tendsto _ atTop (𝓝 (1 / (-Real.log q) + 0)) from hSum).congr' ?_
+  have hSum :
+      Tendsto
+        (fun x : ℝ =>
+          realGeometricLogarithmicThreshold q C (Real.exp (-x)) / x +
+            ((realGeometricExactStrictLogFloorIterationCount q C (Real.exp (-x)) : ℝ) -
+              realGeometricLogarithmicThreshold q C (Real.exp (-x))) / x)
+        atTop
+        (𝓝 (1 / (-Real.log q))) := by
+    simpa only [add_zero] using hThresholdRatio.add hRoundDiv
+  refine hSum.congr' ?_
   filter_upwards [eventually_ne_atTop (0 : ℝ)] with x hx
   field_simp [hx]
   ring
@@ -115,7 +123,7 @@ theorem realGeometricExactStrictLogFloorIterationCount_div_log_oneDiv_tendsto
   have hInvPos : 0 < 1 / epsilon := one_div_pos.mpr hEpsilonPos
   simp only [Function.comp_apply]
   rw [Real.exp_neg, Real.exp_log hInvPos]
-  simp [one_div, hEpsilonPos.ne']
+  simp [one_div]
 
 local notation "q₀" =>
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2
