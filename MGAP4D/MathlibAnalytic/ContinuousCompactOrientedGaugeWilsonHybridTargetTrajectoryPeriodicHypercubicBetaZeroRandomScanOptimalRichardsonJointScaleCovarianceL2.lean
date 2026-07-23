@@ -78,12 +78,10 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
   have hCountPosJoint : 0 < NJointExact epsilon :=
     (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_pos_iff
       epsilon hEpsilon).2 hEpsilonLe
-  have hCountPosRem :
-      0 < realGeometricExactStrictLogFloorIterationCount q₀ 324 epsilon := by
-    rw [←
-      periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_remainderExactStrictLogFloorIterationCount
-        epsilon hEpsilon]
-    exact hCountPosJoint
+  have hCountPosRem := hCountPosJoint
+  rw [
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_remainderExactStrictLogFloorIterationCount
+      epsilon hEpsilon] at hCountPosRem
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannJointEndL2_exactStrictLogFloorIterationCount_eq_remainderExactStrictLogFloorIterationCount
       (q₀ ^ m * epsilon)
