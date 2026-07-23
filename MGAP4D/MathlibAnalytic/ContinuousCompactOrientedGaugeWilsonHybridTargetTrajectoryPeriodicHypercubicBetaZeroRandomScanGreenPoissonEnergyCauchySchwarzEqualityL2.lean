@@ -29,6 +29,26 @@ theorem inv_smul_eq_iff_eq_smul_of_ne
     have hScaled := congrArg (fun z : E => a⁻¹ • z) h
     simpa [smul_smul, ha] using hScaled
 
+/-- For a nonnegative target, an absolute-value equality is exactly the two
+signed scalar equalities. -/
+theorem abs_eq_iff_eq_or_eq_neg_of_nonneg
+    (x c : ℝ)
+    (hc : 0 ≤ c) :
+    |x| = c ↔ x = c ∨ x = -c := by
+  constructor
+  · intro h
+    by_cases hx : 0 ≤ x
+    · left
+      simpa [abs_of_nonneg hx] using h
+    · right
+      have hxlt : x < 0 := lt_of_not_ge hx
+      have hneg : -x = c := by
+        simpa [abs_of_neg hxlt] using h
+      linarith
+  · rintro (rfl | rfl)
+    · exact abs_of_nonneg hc
+    · simpa [abs_of_nonneg hc]
+
 local notation "Ω₀" =>
   periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2
 local notation "H₀" =>
@@ -390,38 +410,33 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_abs_inne
         u)
   constructor
   · intro hAbs
-    by_cases hSign : 0 ≤ inner ℝ (f : H₀) (u : H₀)
+    rcases
+        (abs_eq_iff_eq_or_eq_neg_of_nonneg
+          (inner ℝ f u) (GE₀ f * PE₀ u) hProductNonneg).1 hAbs with
+      hPositive | hNegative
     · left
-      apply
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_greenPositiveCauchySchwarzRayPointL2
-          f u hf hu).1
-      have hEqAmbient : inner ℝ (f : H₀) (u : H₀) = GE₀ f * PE₀ u := by
-        calc
-          inner ℝ (f : H₀) (u : H₀) = |inner ℝ (f : H₀) (u : H₀)| :=
-            (abs_of_nonneg hSign).symm
-          _ = GE₀ f * PE₀ u := hAbs
-      exact hEqAmbient
+          f u hf hu).1 hPositive
     · right
-      have hStrict : inner ℝ (f : H₀) (u : H₀) < 0 := lt_of_not_ge hSign
-      apply
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_neg_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_neg_greenPositiveCauchySchwarzRayPointL2
-          f u hf hu).1
-      have hNegAbs : -inner ℝ (f : H₀) (u : H₀) = GE₀ f * PE₀ u := by
-        calc
-          -inner ℝ (f : H₀) (u : H₀) = |inner ℝ (f : H₀) (u : H₀)| :=
-            (abs_of_neg hStrict).symm
-          _ = GE₀ f * PE₀ u := hAbs
-      linarith
+          f u hf hu).1 hNegative
   · rintro (hPositive | hNegative)
-    · have hPair :=
+    · apply
+        (abs_eq_iff_eq_or_eq_neg_of_nonneg
+          (inner ℝ f u) (GE₀ f * PE₀ u) hProductNonneg).2
+      left
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_greenPositiveCauchySchwarzRayPointL2
           f u hf hu).2 hPositive
-      rw [hPair, abs_of_nonneg hProductNonneg]
-    · have hPair :=
+    · apply
+        (abs_eq_iff_eq_or_eq_neg_of_nonneg
+          (inner ℝ f u) (GE₀ f * PE₀ u) hProductNonneg).2
+      right
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_neg_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_neg_greenPositiveCauchySchwarzRayPointL2
           f u hf hu).2 hNegative
-      rw [hPair]
-      simp [abs_of_nonneg hProductNonneg]
 
 /-- Absolute equality in the exact energy Cauchy--Schwarz inequality occurs
 dually exactly on the two signed Poisson rays. -/
@@ -439,38 +454,33 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_abs_inne
         u)
   constructor
   · intro hAbs
-    by_cases hSign : 0 ≤ inner ℝ (f : H₀) (u : H₀)
+    rcases
+        (abs_eq_iff_eq_or_eq_neg_of_nonneg
+          (inner ℝ f u) (GE₀ f * PE₀ u) hProductNonneg).1 hAbs with
+      hPositive | hNegative
     · left
-      apply
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_poissonPositiveCauchySchwarzRayPointL2
-          f u hf hu).1
-      have hEqAmbient : inner ℝ (f : H₀) (u : H₀) = GE₀ f * PE₀ u := by
-        calc
-          inner ℝ (f : H₀) (u : H₀) = |inner ℝ (f : H₀) (u : H₀)| :=
-            (abs_of_nonneg hSign).symm
-          _ = GE₀ f * PE₀ u := hAbs
-      exact hEqAmbient
+          f u hf hu).1 hPositive
     · right
-      have hStrict : inner ℝ (f : H₀) (u : H₀) < 0 := lt_of_not_ge hSign
-      apply
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_neg_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_neg_poissonPositiveCauchySchwarzRayPointL2
-          f u hf hu).1
-      have hNegAbs : -inner ℝ (f : H₀) (u : H₀) = GE₀ f * PE₀ u := by
-        calc
-          -inner ℝ (f : H₀) (u : H₀) = |inner ℝ (f : H₀) (u : H₀)| :=
-            (abs_of_neg hStrict).symm
-          _ = GE₀ f * PE₀ u := hAbs
-      linarith
+          f u hf hu).1 hNegative
   · rintro (hPositive | hNegative)
-    · have hPair :=
+    · apply
+        (abs_eq_iff_eq_or_eq_neg_of_nonneg
+          (inner ℝ f u) (GE₀ f * PE₀ u) hProductNonneg).2
+      left
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_poissonPositiveCauchySchwarzRayPointL2
           f u hf hu).2 hPositive
-      rw [hPair, abs_of_nonneg hProductNonneg]
-    · have hPair :=
+    · apply
+        (abs_eq_iff_eq_or_eq_neg_of_nonneg
+          (inner ℝ f u) (GE₀ f * PE₀ u) hProductNonneg).2
+      right
+      exact
         (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_inner_eq_neg_greenEnergyNorm_mul_poissonEnergyNorm_iff_eq_neg_poissonPositiveCauchySchwarzRayPointL2
           f u hf hu).2 hNegative
-      rw [hPair]
-      simp [abs_of_nonneg hProductNonneg]
 
 /-- Structured receipt for all signed equality cases in the actual beta-zero
 Green--Poisson energy Cauchy--Schwarz inequality. -/
