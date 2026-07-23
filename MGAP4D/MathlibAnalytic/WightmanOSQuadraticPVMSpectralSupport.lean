@@ -99,7 +99,7 @@ discharged: only equality of the pure open-neighborhood PVM support with the
 physical non-vacuum spectrum remains. -/
 structure ExplicitWightmanOSCanonicalPVMOpenSupportBridge
     (M : ExplicitWightmanOSReconstructedModel) extends
-      ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M where
+      ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M where
   pvmOpenSupport_eq_restrictedSpectrum :
     M.vacuumOrthogonalPVMOpenSupport = restrictedSpectrum
 
@@ -111,8 +111,8 @@ def ExplicitWightmanOSCanonicalPVMOpenSupportBridge.toCanonicalSpectralSupportBr
     (F : ExplicitWightmanOSFullScalarSpectralMeasureRealization M) :
     ExplicitWightmanOSCanonicalSpectralSupportBridge
       M F.toScalarSpectralRealization :=
-  { toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge :=
-      B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
+  { toExplicitWightmanOSVacuumOrthogonalSpectrumBridge :=
+      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
     spectralSupport_eq_restrictedSpectrum := by
       rw [full_scalar_vacuumOrthogonal_support_eq_pvmOpenSupport F]
       exact B.pvmOpenSupport_eq_restrictedSpectrum }
@@ -136,8 +136,7 @@ theorem euclidean_clustering_pvmOpenSupport_lower_bound
   rw [B.pvmOpenSupport_eq_restrictedSpectrum]
   exact ⟨hGap.1,
     vacuum_orthogonal_restrictedSpectrum_subset_Ici
-      B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-      hGap⟩
+      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap⟩
 
 /-- Threshold attainment identifies the infimum of the full PVM open support. -/
 theorem euclidean_clustering_pvmOpenSupport_exact_gap
@@ -161,10 +160,9 @@ theorem euclidean_clustering_pvmOpenSupport_exact_gap
   rw [B.pvmOpenSupport_eq_restrictedSpectrum]
   exact ⟨hGap.1,
     vacuum_orthogonal_restrictedSpectrum_subset_Ici
-      B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-      hGap,
+      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap,
     vacuum_orthogonal_restrictedSpectrum_sInf_eq
-      B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
+      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
       hGap hExactSpectrum⟩
 
 /-- End-to-end certificate combining the actual canonical restricted Hamiltonian
@@ -207,13 +205,15 @@ def euclideanYangMillsCanonicalPVMOpenSupportGapCertificate
   have h := euclidean_clustering_pvmOpenSupport_exact_gap
     C A T E S X B hExactSpectrum
   exact
-    { operatorSelfAdjoint := B.canonicalRestrictedSelfAdjoint
+    { operatorSelfAdjoint :=
+        explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
+          C.explicitModel
       operatorDomainDense :=
-        canonical_vacuum_orthogonal_hamiltonian_dense_domain
-          B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
+        explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
+          C.explicitModel
       operatorClosed :=
-        canonical_vacuum_orthogonal_hamiltonian_isClosed
-          B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
+        explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
+          C.explicitModel
       pvmSupportEqNonvacuum := by
         rw [B.pvmOpenSupport_eq_restrictedSpectrum]
         exact B.restrictedSpectrum_eq_nonvacuum
@@ -222,6 +222,5 @@ def euclideanYangMillsCanonicalPVMOpenSupportGapCertificate
       supportInfimum := h.2.2 }
 
 end
-
 end MathlibAnalytic
 end MGAP4D
