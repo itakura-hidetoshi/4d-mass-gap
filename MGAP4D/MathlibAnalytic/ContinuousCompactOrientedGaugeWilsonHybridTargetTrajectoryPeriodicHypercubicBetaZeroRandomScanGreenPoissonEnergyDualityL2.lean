@@ -186,6 +186,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
           (g : Lp ℝ 2
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
         real_inner_comm _ _
+  rw [map_add]
   change
     inner ℝ
         (((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
@@ -235,6 +236,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomSc
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
           f f := by
   unfold periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenCovarianceL2
+  rw [map_smul]
   change
     inner ℝ
         (a •
@@ -699,10 +701,26 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
         (u : Lp ℝ 2
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) at hSq
   rw [real_inner_smul_left, real_inner_self_eq_norm_sq] at hSq
+  change
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+          u ^ 2 =
+      ((1 : ℝ) / 324) * ‖u‖ ^ 2 at hSq
+  have hRightSq :
+      (((1 : ℝ) / 18) * ‖u‖) ^ 2 =
+        ((1 : ℝ) / 324) * ‖u‖ ^ 2 := by
+    ring
+  have hEqSq :
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonEnergyNormL2
+            u ^ 2 =
+        (((1 : ℝ) / 18) * ‖u‖) ^ 2 :=
+    hSq.trans hRightSq.symm
   have hEnergyNonneg :=
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonEnergyNormL2_nonneg
       u
-  nlinarith [hSq, norm_nonneg u]
+  have hRightNonneg :
+      0 ≤ ((1 : ℝ) / 18) * ‖u‖ :=
+    mul_nonneg (by norm_num) (norm_nonneg u)
+  nlinarith
 
 /-- The upper Poisson-energy equivalence constant one is attained. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_randomScanPoissonEnergyNormL2_eq_norm
