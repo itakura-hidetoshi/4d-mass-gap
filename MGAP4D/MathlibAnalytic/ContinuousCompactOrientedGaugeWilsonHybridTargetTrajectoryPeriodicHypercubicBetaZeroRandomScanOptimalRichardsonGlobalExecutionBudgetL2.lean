@@ -68,8 +68,8 @@ theorem realGeometricExactStrictLogFloorIterationCount_le_globalStrictExecutionB
           q C epsilon hqPos hqLtOne hC hEpsilon hEpsilonLeC
       have hCountLt :
           (realGeometricExactStrictLogFloorIterationCount q C epsilon : ℝ) <
-            K * Real.log (C / epsilon) + 1 :=
-        lt_of_le_of_lt hCountLe (add_lt_add_right hThresholdLt 1)
+            K * Real.log (C / epsilon) + 1 := by
+        linarith only [hCountLe, hThresholdLt]
       have hNatLt :
           realGeometricExactStrictLogFloorIterationCount q C epsilon <
             ⌈K * Real.log (C / epsilon) + 1⌉₊ :=
