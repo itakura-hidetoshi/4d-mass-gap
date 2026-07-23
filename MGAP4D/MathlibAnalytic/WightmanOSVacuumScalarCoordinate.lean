@@ -83,8 +83,11 @@ theorem real_unit_orthogonal_scalar_decomposition_symm_apply
           (WithLp.toLp 2 (φ, a))) =
       (φ : H) + a • Ω
   rw [real_hilbert_orthogonal_complement_line_decomposition_symm_apply]
-  simp [realUnitSpanScalarWithLpProdCongrLinearIsometryEquiv,
-    realUnitSpanScalarLinearIsometryEquiv]
+  change
+    (φ : H) +
+        ((LinearIsometryEquiv.toSpanUnitSingleton Ω hΩ a : ℝ ∙ Ω) : H) =
+      (φ : H) + a • Ω
+  rw [LinearIsometryEquiv.toSpanUnitSingleton_apply]
 
 /-- Reconstruct a vector from the two coordinates returned by the scalar
 orthogonal decomposition. -/
@@ -117,13 +120,16 @@ theorem real_unit_orthogonal_scalar_decomposition_snd
   have horth : inner ℝ Ω (y.fst : H) = 0 :=
     (Submodule.mem_orthogonal_singleton_iff_inner_right
       (𝕜 := ℝ) (u := Ω) (v := (y.fst : H))).mp y.fst.property
+  have hself : inner ℝ Ω Ω = 1 := by
+    rw [inner_self_eq_norm_sq_to_K, hΩ]
+    norm_num
   have hinner : inner ℝ Ω ψ = y.snd := by
     calc
       inner ℝ Ω ψ = inner ℝ Ω ((y.fst : H) + y.snd • Ω) := by rw [hsum]
       _ = inner ℝ Ω (y.fst : H) + inner ℝ Ω (y.snd • Ω) := by
         rw [inner_add_right]
       _ = y.snd := by
-        simp [horth, inner_self_eq_norm_sq_to_K, hΩ]
+        rw [horth, zero_add, inner_smul_right, hself, mul_one]
   exact hinner.symm
 
 /-- The orthogonal coordinate is the vector with its vacuum coefficient removed. -/
