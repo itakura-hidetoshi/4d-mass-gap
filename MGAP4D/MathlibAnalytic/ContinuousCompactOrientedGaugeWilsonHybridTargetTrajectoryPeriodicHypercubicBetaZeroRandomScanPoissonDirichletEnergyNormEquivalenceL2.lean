@@ -231,9 +231,19 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
         (z : Lp ℝ 2
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure))
       hAction
-    rw [periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_apply]
-      at hCoe
-    exact hCoe
+    calc
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonOperatorL2
+          (u : Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) =
+        ((periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
+            u : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
+          Lp ℝ 2
+            periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) :=
+        (periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_apply
+          u).symm
+      _ = (u : Lp ℝ 2
+          periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem.gibbsMeasure) := by
+        exact hCoe
   have hCanonicalZero :
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCanonicalPoissonSolutionToVacuumOrthogonalL2
           (0 : Lp ℝ 2
