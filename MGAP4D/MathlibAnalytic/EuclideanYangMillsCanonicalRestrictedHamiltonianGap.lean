@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.EuclideanYangMillsFiniteVolumeClusteringLimit
-import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianSymmetry
+import MGAP4D.MathlibAnalytic.WightmanOSCanonicalRestrictedHamiltonianSelfAdjoint
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -7,9 +7,9 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- Uniform finite-volume Euclidean clustering produces a strictly positive
-spectral lower edge for the actual canonical restricted Hamiltonian.  This route
-does not use the legacy first-excitation positivity field or a relativistic-gap
-hypothesis. -/
+spectral lower edge for the actual canonical restricted Hamiltonian.  The bridge
+now supplies spectral identification only; self-adjointness, dense domain, and
+closedness are derived from the reconstructed Hamiltonian. -/
 theorem euclidean_clustering_canonical_restricted_hamiltonian_lower_bound
     (C : EuclideanYangMillsConnectedObservableCore)
     (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity C.explicitModel)
@@ -18,8 +18,7 @@ theorem euclidean_clustering_canonical_restricted_hamiltonian_lower_bound
     (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
       C.explicitModel A.toScalarSpectralRealization T)
     (F : EuclideanYangMillsFiniteVolumeClusteringApproximation C)
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      C.explicitModel) :
+    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge C.explicitModel) :
     IsSelfAdjoint C.explicitModel.canonicalVacuumOrthogonalHamiltonian ∧
       Dense ((C.explicitModel.canonicalVacuumOrthogonalHamiltonian.domain :
         Set C.explicitModel.VacuumOrthogonalHilbert)) ∧
@@ -30,12 +29,15 @@ theorem euclidean_clustering_canonical_restricted_hamiltonian_lower_bound
   have hGap : HasHamiltonianMassGap
       C.explicitModel.hamiltonianEnergySpectrum exactGapValueReal :=
     euclidean_finite_volume_clustering_mass_gap C A T E S F
-  exact ⟨B.canonicalRestrictedSelfAdjoint,
-    canonical_vacuum_orthogonal_hamiltonian_dense_domain B,
-    canonical_vacuum_orthogonal_hamiltonian_isClosed B,
-    hGap.1,
-    vacuum_orthogonal_restrictedSpectrum_subset_Ici
-      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap⟩
+  exact
+    ⟨explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
+        C.explicitModel,
+      explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
+        C.explicitModel,
+      explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
+        C.explicitModel,
+      hGap.1,
+      vacuum_orthogonal_restrictedSpectrum_subset_Ici B hGap⟩
 
 /-- If the decay threshold is attained by the Hamiltonian spectrum, the actual
 canonical restricted operator has exact physical gap `exactGapValueReal`. -/
@@ -47,8 +49,7 @@ theorem euclidean_clustering_canonical_restricted_hamiltonian_exact_gap
     (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
       C.explicitModel A.toScalarSpectralRealization T)
     (F : EuclideanYangMillsFiniteVolumeClusteringApproximation C)
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      C.explicitModel)
+    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge C.explicitModel)
     (hExactSpectrum :
       exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
     IsSelfAdjoint C.explicitModel.canonicalVacuumOrthogonalHamiltonian ∧
@@ -62,24 +63,26 @@ theorem euclidean_clustering_canonical_restricted_hamiltonian_exact_gap
   have hGap : HasHamiltonianMassGap
       C.explicitModel.hamiltonianEnergySpectrum exactGapValueReal :=
     euclidean_finite_volume_clustering_mass_gap C A T E S F
-  exact ⟨B.canonicalRestrictedSelfAdjoint,
-    canonical_vacuum_orthogonal_hamiltonian_dense_domain B,
-    canonical_vacuum_orthogonal_hamiltonian_isClosed B,
-    hGap.1,
-    vacuum_orthogonal_restrictedSpectrum_subset_Ici
-      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap,
-    vacuum_orthogonal_restrictedSpectrum_sInf_eq
-      B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-      hGap hExactSpectrum⟩
+  exact
+    ⟨explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
+        C.explicitModel,
+      explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
+        C.explicitModel,
+      explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
+        C.explicitModel,
+      hGap.1,
+      vacuum_orthogonal_restrictedSpectrum_subset_Ici B hGap,
+      vacuum_orthogonal_restrictedSpectrum_sInf_eq B hGap hExactSpectrum⟩
 
 /-- End-to-end certificate for the independent route
 
 `finite-volume Euclidean clustering → continuum correlation → scalar spectral
-measure → Hamiltonian gap → actual self-adjoint H|Ω⊥`. -/
+measure → Hamiltonian gap → actual self-adjoint H|Ω⊥`.
+
+The bridge parameter records only the non-vacuum spectral identification. -/
 structure EuclideanYangMillsCanonicalRestrictedHamiltonianGapCertificate
     (C : EuclideanYangMillsConnectedObservableCore)
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      C.explicitModel) where
+    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge C.explicitModel) where
   operatorSelfAdjoint :
     IsSelfAdjoint C.explicitModel.canonicalVacuumOrthogonalHamiltonian
   operatorDomain :
@@ -100,7 +103,8 @@ structure EuclideanYangMillsCanonicalRestrictedHamiltonianGapCertificate
   spectrumInfimum :
     sInf B.restrictedSpectrum = exactGapValueReal
 
-/-- Construct the end-to-end Euclidean/operator certificate. -/
+/-- Construct the end-to-end Euclidean/operator certificate from spectral data
+alone; the operator properties are theorem-derived. -/
 def euclideanYangMillsCanonicalRestrictedHamiltonianGapCertificate
     (C : EuclideanYangMillsConnectedObservableCore)
     (A : ExplicitWightmanOSQuadraticPVMCountableAdditivity C.explicitModel)
@@ -109,8 +113,7 @@ def euclideanYangMillsCanonicalRestrictedHamiltonianGapCertificate
     (S : ExplicitWightmanOSSpectralSemigroupLaplaceFormula
       C.explicitModel A.toScalarSpectralRealization T)
     (F : EuclideanYangMillsFiniteVolumeClusteringApproximation C)
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      C.explicitModel)
+    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge C.explicitModel)
     (hExactSpectrum :
       exactGapValueReal ∈ C.explicitModel.hamiltonianEnergySpectrum) :
     EuclideanYangMillsCanonicalRestrictedHamiltonianGapCertificate C B := by
