@@ -13,62 +13,55 @@ noncomputable section
 set_option maxRecDepth 8192
 set_option synthInstance.maxHeartbeats 200000
 
+local notation "E₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2
+local notation "A₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
+local notation "G₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+local notation "τ₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
+local notation "q₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2
+local notation "R₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2 τ₀
+
 /-- The continuous-linear iterate of the optimal Richardson error endomorphism. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2 :
-    ℕ →
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 →L[ℝ]
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2
-  | 0 =>
-      ContinuousLinearMap.id ℝ
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2
+    ℕ → E₀ →L[ℝ] E₀
+  | 0 => ContinuousLinearMap.id ℝ E₀
   | Nat.succ n =>
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2).comp
+      R₀.comp
         (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
           n)
+
+local notation "Rpow₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
 
 /-- The continuous-linear iterate acts as the previously defined pointwise error
 iterate. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonErrorEndIterateL2_apply
-    (n : ℕ)
-    (e : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n e =
+    (n : ℕ) (e : E₀) :
+    Rpow₀ n e =
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
         n e := by
   induction n with
-  | zero =>
-      rfl
+  | zero => rfl
   | succ n ih =>
       rw [
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2,
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2]
-      change
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
-            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-              n e) =
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
-            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
-              n e)
+      change R₀ (Rpow₀ n e) =
+        R₀
+          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorIterateL2
+            n e)
       rw [ih]
 
 /-- Repeated application preserves an attained scalar endpoint and raises its
 multiplier to the corresponding power. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonErrorEndIterateL2_apply_eq_pow_factor_smul_of_apply_eq_factor_smul
-    (n : ℕ)
-    (e : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2)
-    (hEndpoint :
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
-          e =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 •
-          e) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n e =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n •
-        e := by
+    (n : ℕ) (e : E₀) (hEndpoint : R₀ e = q₀ • e) :
+    Rpow₀ n e = q₀ ^ n • e := by
   induction n with
   | zero =>
       simp [
@@ -76,25 +69,14 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
   | succ n ih =>
       rw [
         periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2]
-      change
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
-            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-              n e) =
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^
-              Nat.succ n •
-            e
+      change R₀ (Rpow₀ n e) = q₀ ^ Nat.succ n • e
       rw [ih, map_smul, hEndpoint, smul_smul, pow_succ]
 
 /-- Operator-norm upper bound for every finite optimal Richardson error iterate. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonErrorEndIterateL2_le
     (n : ℕ) :
-    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n‖ ≤
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n := by
-  apply
-    (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-      n).opNorm_le_bound
+    ‖Rpow₀ n‖ ≤ q₀ ^ n := by
+  apply (Rpow₀ n).opNorm_le_bound
   · exact
       pow_nonneg
         (le_of_lt
@@ -111,12 +93,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
 factor. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_optimalRichardsonErrorEndIterateL2_apply_eq_pow_factor_smul
     (n : ℕ) :
-    ∃ e : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2,
-      e ≠ 0 ∧
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-          n e =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n •
-          e := by
+    ∃ e : E₀, e ≠ 0 ∧ Rpow₀ n e = q₀ ^ n • e := by
   rcases
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_optimalRichardsonErrorEndL2_apply_eq_factor_smul
     with ⟨e, heNe, hEndpoint⟩
@@ -128,9 +105,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
 /-- Exact operator norm of the `n`th optimal Richardson error iterate. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonErrorEndIterateL2_eq
     (n : ℕ) :
-    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n‖ =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n := by
+    ‖Rpow₀ n‖ = q₀ ^ n := by
   apply le_antisymm
   · exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonErrorEndIterateL2_le
@@ -139,12 +114,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_optimalRichardsonErrorEndIterateL2_apply_eq_pow_factor_smul
         n
       with ⟨e, heNe, hAction⟩
-    have hFundamental :=
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n).le_opNorm e
-    have hPowNonneg :
-        0 ≤
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n :=
+    have hFundamental := (Rpow₀ n).le_opNorm e
+    have hPowNonneg : 0 ≤ q₀ ^ n :=
       pow_nonneg
         (le_of_lt
           periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.1)
@@ -152,38 +123,26 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
     rw [hAction, norm_smul, Real.norm_eq_abs, abs_of_nonneg hPowNonneg]
       at hFundamental
     have hNormPos : 0 < ‖e‖ := norm_pos_iff.mpr heNe
-    nlinarith [
-      ContinuousLinearMap.opNorm_nonneg
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-          n)]
+    nlinarith [ContinuousLinearMap.opNorm_nonneg (Rpow₀ n)]
 
 /-- The finite Green-Neumann approximation, bundled as a continuous linear
 endomorphism. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-    (n : ℕ) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 →L[ℝ]
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 :=
-  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2 -
-    (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-      n).comp
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
+    (n : ℕ) : E₀ →L[ℝ] E₀ :=
+  G₀ - (Rpow₀ n).comp G₀
+
+local notation "N₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
 
 /-- The bundled continuous-linear finite approximation agrees pointwise with the
 zero-start Green-Neumann solver iterate. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannEndL2_apply
-    (n : ℕ)
-    (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-        n g =
+    (n : ℕ) (g : E₀) :
+    N₀ n g =
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
         n g := by
   change
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          g -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-          n
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g) =
+    G₀ g - Rpow₀ n (G₀ g) =
       periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
         n g
   rw [
@@ -193,51 +152,28 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
 
 /-- The Green-Neumann truncation remainder as a continuous linear endomorphism. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-    (n : ℕ) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 →L[ℝ]
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 :=
-  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2 -
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-      n
+    (n : ℕ) : E₀ →L[ℝ] E₀ :=
+  G₀ - N₀ n
+
+local notation "Rem₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
 
 /-- Exact continuous-linear remainder representation. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_eq_errorEndIterate_comp_centeredGreen
     (n : ℕ) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-        n =
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n).comp
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2 := by
+    Rem₀ n = (Rpow₀ n).comp G₀ := by
   unfold
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
     periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
   apply ContinuousLinearMap.ext
   intro g
-  change
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          g -
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g -
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-            n
-            (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-              g)) =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          g)
+  change G₀ g - (G₀ g - Rpow₀ n (G₀ g)) = Rpow₀ n (G₀ g)
   module
 
 /-- Pointwise action of the continuous-linear Green-Neumann remainder. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_apply
-    (n : ℕ)
-    (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-        n g =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          g) := by
+    (n : ℕ) (g : E₀) :
+    Rem₀ n g = Rpow₀ n (G₀ g) := by
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_eq_errorEndIterate_comp_centeredGreen]
   rfl
@@ -245,13 +181,8 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
 /-- Operator-norm upper bound for the Green-Neumann truncation remainder. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonGreenNeumannRemainderEndL2_le
     (n : ℕ) :
-    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-        n‖ ≤
-      324 *
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n := by
-  apply
-    (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-      n).opNorm_le_bound
+    ‖Rem₀ n‖ ≤ 324 * q₀ ^ n := by
+  apply (Rem₀ n).opNorm_le_bound
   · exact
       mul_nonneg (by norm_num)
         (pow_nonneg
@@ -259,14 +190,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
             periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.1)
           n)
   · intro g
-    change
-      ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-            g -
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-            n g‖ ≤
-        (324 *
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n) *
-          ‖g‖
+    change ‖G₀ g - N₀ n g‖ ≤ (324 * q₀ ^ n) * ‖g‖
     rw [
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannEndL2_apply]
     simpa only [mul_assoc] using
@@ -276,23 +200,11 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
 /-- The cardinality-one Poisson endpoint simultaneously gives Green eigenvalue
 `324` and positive Richardson eigenvalue `q_*`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_centeredGreen_apply_eq_324_smul_and_optimalRichardsonErrorEnd_apply_eq_factor_smul :
-    ∃ e : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2,
-      e ≠ 0 ∧
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          e =
-        (324 : ℝ) • e ∧
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
-          e =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 •
-          e := by
+    ∃ e : E₀, e ≠ 0 ∧ G₀ e = (324 : ℝ) • e ∧ R₀ e = q₀ • e := by
   rcases
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_nonzero_randomScanPoissonVacuumOrthogonalEndL2_apply_eq_inv_324_smul
     with ⟨e, heNe, hPoisson⟩
-  have hGreen :
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2
-          e =
-        (324 : ℝ) • e := by
+  have hGreen : G₀ e = (324 : ℝ) • e := by
     apply
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanPoissonVacuumOrthogonalEndL2_injective
     rw [
@@ -301,12 +213,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
       hPoisson,
       smul_smul]
     norm_num
-  have hRichardson :
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanRichardsonErrorEndL2
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonStepSizeL2
-          e =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 •
-          e := by
+  have hRichardson : R₀ e = q₀ • e := by
     rw [
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_randomScanRichardsonErrorEndL2_apply,
       hPoisson]
@@ -319,10 +226,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_exists_n
 /-- The exact Green-Neumann remainder operator norm is `324 q_*^n`. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonGreenNeumannRemainderEndL2_eq
     (n : ℕ) :
-    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-        n‖ =
-      324 *
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n := by
+    ‖Rem₀ n‖ = 324 * q₀ ^ n := by
   apply le_antisymm
   · exact
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonGreenNeumannRemainderEndL2_le
@@ -333,25 +237,15 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
     have hIterate :=
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonErrorEndIterateL2_apply_eq_pow_factor_smul_of_apply_eq_factor_smul
         n e hRichardson
-    have hAction :
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-            n e =
-          (324 *
-              periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n) •
-            e := by
+    have hAction : Rem₀ n e = (324 * q₀ ^ n) • e := by
       rw [
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_apply,
         hGreen,
         map_smul,
         hIterate,
         smul_smul]
-    have hFundamental :=
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-        n).le_opNorm e
-    have hCoeffNonneg :
-        0 ≤
-          324 *
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n :=
+    have hFundamental := (Rem₀ n).le_opNorm e
+    have hCoeffNonneg : 0 ≤ 324 * q₀ ^ n :=
       mul_nonneg (by norm_num)
         (pow_nonneg
           (le_of_lt
@@ -360,72 +254,44 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_opt
     rw [hAction, norm_smul, Real.norm_eq_abs, abs_of_nonneg hCoeffNonneg]
       at hFundamental
     have hNormPos : 0 < ‖e‖ := norm_pos_iff.mpr heNe
-    nlinarith [
-      ContinuousLinearMap.opNorm_nonneg
-        (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-          n)]
+    nlinarith [ContinuousLinearMap.opNorm_nonneg (Rem₀ n)]
 
-/-- The finite Green-Neumann endomorphisms converge to the exact centered Green
-inverse in operator norm. -/
-theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannEndL2_tendsto_centeredGreen_in_operatorNorm :
-    Tendsto
-      (fun n : ℕ =>
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-          n)
-      atTop
-      (nhds
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2) := by
-  rw [tendsto_iff_norm_sub_tendsto_zero]
-  have hPow :
-      Tendsto
-        (fun n : ℕ =>
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n)
-        atTop
-        (nhds 0) :=
+/-- The Green-Neumann remainder tends to zero in operator norm. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_norm_tendsto_zero :
+    Tendsto (fun n : ℕ => ‖Rem₀ n‖) atTop (nhds 0) := by
+  have hPow : Tendsto (fun n : ℕ => q₀ ^ n) atTop (nhds 0) :=
     tendsto_pow_atTop_nhds_zero_of_lt_one
       (le_of_lt
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.1)
       periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.2
   have hEnvelope :
-      Tendsto
-        (fun n : ℕ =>
-          324 *
-            periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n)
-        atTop
-        (nhds 0) := by
+      Tendsto (fun n : ℕ => 324 * q₀ ^ n) atTop (nhds 0) := by
     simpa using (tendsto_const_nhds.mul hPow)
   simpa only [
-    norm_sub_rev,
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonGreenNeumannRemainderEndL2_eq] using
     hEnvelope
 
+/-- Equivalently, the finite Green-Neumann maps converge to the exact centered
+Green inverse in operator norm. -/
+theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannEndL2_tendsto_centeredGreen_in_operatorNorm :
+    Tendsto (fun n : ℕ => ‖G₀ - N₀ n‖) atTop (nhds 0) := by
+  simpa only [
+    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2] using
+    periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannRemainderEndL2_norm_tendsto_zero
+
 /-- The inverse defect `I - A N_n` of the finite Green-Neumann approximation. -/
 noncomputable def periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-    (n : ℕ) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 →L[ℝ]
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 :=
-  ContinuousLinearMap.id ℝ
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2 -
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2.comp
-      (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-        n)
+    (n : ℕ) : E₀ →L[ℝ] E₀ :=
+  ContinuousLinearMap.id ℝ E₀ - A₀.comp (N₀ n)
+
+local notation "Def₀" =>
+  periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
 
 /-- Pointwise, the inverse defect is exactly the `n`th Richardson error iterate. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_apply
-    (n : ℕ)
-    (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-        n g =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n g := by
-  change
-    g -
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanPoissonVacuumOrthogonalEndL2
-          (periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-            n g) =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n g
+    (n : ℕ) (g : E₀) :
+    Def₀ n g = Rpow₀ n g := by
+  change g - A₀ (N₀ n g) = Rpow₀ n g
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannEndL2_apply,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonErrorEndIterateL2_apply]
@@ -442,10 +308,7 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
 /-- The inverse-defect endomorphism is exactly the continuous Richardson iterate. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_eq_errorEndIterate
     (n : ℕ) :
-    periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-        n =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-        n := by
+    Def₀ n = Rpow₀ n := by
   apply ContinuousLinearMap.ext
   intro g
   exact
@@ -455,29 +318,15 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
 /-- Exact operator norm of the finite Green-Neumann inverse defect. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonGreenNeumannInverseDefectEndL2_eq
     (n : ℕ) :
-    ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-        n‖ =
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n := by
+    ‖Def₀ n‖ = q₀ ^ n := by
   rw [
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_eq_errorEndIterate,
     periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_norm_optimalRichardsonErrorEndIterateL2_eq]
 
 /-- The finite Green-Neumann inverse defects converge to zero in operator norm. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonGreenNeumannInverseDefectEndL2_tendsto_zero_in_operatorNorm :
-    Tendsto
-      (fun n : ℕ =>
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-          n)
-      atTop
-      (nhds 0) := by
-  rw [tendsto_iff_norm_sub_tendsto_zero]
-  simp only [sub_zero]
-  have hPow :
-      Tendsto
-        (fun n : ℕ =>
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n)
-        atTop
-        (nhds 0) :=
+    Tendsto (fun n : ℕ => ‖Def₀ n‖) atTop (nhds 0) := by
+  have hPow : Tendsto (fun n : ℕ => q₀ ^ n) atTop (nhds 0) :=
     tendsto_pow_atTop_nhds_zero_of_lt_one
       (le_of_lt
         periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalRichardsonContractionFactorL2_mem_Ioo.1)
@@ -490,50 +339,18 @@ theorem periodicHypercubicThreeSpecialUnitaryTwoEndpointSystem_betaZero_optimalR
 inverse-defect convergence. -/
 structure periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannOperatorNormL2Receipt :
     Prop where
-  continuous_apply :
-    ∀ (n : ℕ)
-      (g : periodicHypercubicThreeSpecialUnitaryTwoBetaZeroVacuumOrthogonalL2),
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-          n g =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
-          n g
-  exact_error_iterate_norm :
-    ∀ n : ℕ,
-      ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-          n‖ =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n
-  exact_green_remainder_norm :
-    ∀ n : ℕ,
-      ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannRemainderEndL2
-          n‖ =
-        324 *
-          periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n
+  continuous_apply : ∀ (n : ℕ) (g : E₀),
+    N₀ n g =
+      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannPartialSumL2
+        n g
+  exact_error_iterate_norm : ∀ n : ℕ, ‖Rpow₀ n‖ = q₀ ^ n
+  exact_green_remainder_norm : ∀ n : ℕ, ‖Rem₀ n‖ = 324 * q₀ ^ n
   green_operator_norm_limit :
-    Tendsto
-      (fun n : ℕ =>
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannEndL2
-          n)
-      atTop
-      (nhds
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanCenteredGreenVacuumOrthogonalEndL2)
-  exact_inverse_defect :
-    ∀ n : ℕ,
-      periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-          n =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonErrorEndIterateL2
-          n
-  exact_inverse_defect_norm :
-    ∀ n : ℕ,
-      ‖periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-          n‖ =
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonContractionFactorL2 ^ n
+    Tendsto (fun n : ℕ => ‖G₀ - N₀ n‖) atTop (nhds 0)
+  exact_inverse_defect : ∀ n : ℕ, Def₀ n = Rpow₀ n
+  exact_inverse_defect_norm : ∀ n : ℕ, ‖Def₀ n‖ = q₀ ^ n
   inverse_defect_operator_norm_limit :
-    Tendsto
-      (fun n : ℕ =>
-        periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannInverseDefectEndL2
-          n)
-      atTop
-      (nhds 0)
+    Tendsto (fun n : ℕ => ‖Def₀ n‖) atTop (nhds 0)
 
 /-- The exact operator-norm Green-Neumann approximation receipt is proved. -/
 theorem periodicHypercubicThreeSpecialUnitaryTwoBetaZeroRandomScanOptimalRichardsonGreenNeumannOperatorNormL2Receipt_proved :
