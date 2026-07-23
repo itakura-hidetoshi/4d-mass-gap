@@ -39,8 +39,9 @@ theorem real_rankOne_linearPMap_apply_eq_zero
         inner ℝ Ω (x : H) • (⟨Ω, hΩDomain⟩ : A.domain) := by
     apply Subtype.ext
     rfl
+  have hAΩ' : A.toFun (⟨Ω, hΩDomain⟩ : A.domain) = 0 := hAΩ
   change A.toFun (realRankOneLinearPMapDomainPoint A Ω hΩDomain x) = 0
-  rw [hPoint, A.toFun.map_smul, hAΩ, smul_zero]
+  rw [hPoint, A.toFun.map_smul, hAΩ', smul_zero]
 
 /-- Formal self-adjointness and `A Ω = 0` imply that the rank-one vacuum
 component of `A x` vanishes. -/
@@ -69,10 +70,12 @@ theorem real_one_sub_rankOne_linearPMap_apply
         x - realRankOneLinearPMapDomainPoint A Ω hΩDomain x := by
     apply Subtype.ext
     rfl
+  have hRankOneZero :
+      A.toFun (realRankOneLinearPMapDomainPoint A Ω hΩDomain x) = 0 :=
+    real_rankOne_linearPMap_apply_eq_zero A Ω hΩDomain hAΩ x
   change A.toFun (realOneSubRankOneLinearPMapDomainPoint A Ω hΩDomain x) =
     A.toFun x
-  rw [hPoint, A.toFun.map_sub,
-    real_rankOne_linearPMap_apply_eq_zero A Ω hΩDomain hAΩ x, sub_zero]
+  rw [hPoint, A.toFun.map_sub, hRankOneZero, sub_zero]
 
 /-- The complementary projection fixes `A x` when the rank-one component of
 `A x` vanishes. -/
