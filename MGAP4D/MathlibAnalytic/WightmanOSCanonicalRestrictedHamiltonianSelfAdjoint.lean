@@ -66,9 +66,6 @@ theorem RealLinearPMapOrthogonalRestrictionData.apply_projectedDomainPoint_coe
     ((B (D.projectedDomainPoint x) : K) : H) =
         A ⟨K.starProjection (x : H), D.projection_mem_domain x⟩ := by
       rw [D.apply_coe]
-      congr 1
-      apply Subtype.ext
-      rfl
     _ = K.starProjection (A x) := D.projection_commutes x
 
 /-- Pairing against a vector in the projected subspace is unchanged by
@@ -78,9 +75,18 @@ theorem real_inner_coe_starProjection_right
     (K : Submodule ℝ H) [K.HasOrthogonalProjection]
     (u : K) (x : H) :
     inner ℝ (u : H) x = inner ℝ (u : H) (K.starProjection x) := by
-  rw [← add_sub_cancel_left (K.starProjection x) x, inner_add_right,
-    Submodule.inner_right_of_mem_orthogonal u.property
-      (K.sub_starProjection_mem_orthogonal x), add_zero]
+  have hx : K.starProjection x + (x - K.starProjection x) = x := by
+    rw [add_comm, sub_add_cancel]
+  calc
+    inner ℝ (u : H) x =
+        inner ℝ (u : H)
+          (K.starProjection x + (x - K.starProjection x)) := by rw [hx]
+    _ = inner ℝ (u : H) (K.starProjection x) +
+        inner ℝ (u : H) (x - K.starProjection x) := by
+      rw [inner_add_right]
+    _ = inner ℝ (u : H) (K.starProjection x) := by
+      rw [Submodule.inner_right_of_mem_orthogonal u.property
+        (K.sub_starProjection_mem_orthogonal x), add_zero]
 
 /-- The domain of a reducing orthogonal restriction of a densely defined
 operator is dense in the subspace. -/
@@ -119,7 +125,9 @@ theorem RealLinearPMapOrthogonalRestrictionData.isFormalAdjoint
     inner ℝ ((B x : K) : H) ((y : K) : H) =
       inner ℝ ((x : K) : H) ((B y : K) : H)
   rw [D.apply_coe, D.apply_coe]
-  exact hFormal _ _
+  exact hFormal
+    ⟨((x : K) : H), (D.domain_iff (x : K)).mp x.property⟩
+    ⟨((y : K) : H), (D.domain_iff (y : K)).mp y.property⟩
 
 /-- A reducing orthogonal restriction of a self-adjoint partial operator is
 self-adjoint.  The proof establishes the maximal adjoint-domain condition
@@ -256,9 +264,7 @@ structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop wher
   automatic_bridge :
     ∀ (M : ExplicitWightmanOSReconstructedModel)
       (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M),
-      IsSelfAdjoint
-        (explicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridgeOfSpectrum
-          M B).canonicalVacuumOrthogonalHamiltonian
+      IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian
   claim_boundary : True
 
 /-- The derived canonical-restriction self-adjointness receipt is inhabited. -/
