@@ -14,7 +14,7 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     {A : H →ₗ.[ℝ] H}
     (K : StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData A)
-    (core : RealHilbertSelfAdjointCore A)
+    (_core : RealHilbertSelfAdjointCore A)
     (x : H) :
     K.inverse x +
         standardRealHilbertSelfAdjointSquareAction A (K.inverseToSquareDomain x) =
@@ -133,9 +133,28 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
             (K.inverseOriginalAction y) := real_inner_comm _ _
   change inner ℝ (K.inverseOriginalAction x) y =
     inner ℝ x (K.inverseOriginalAction y)
-  rw [← K.inverse_shiftedSquare_decomposition core y,
-    ← K.inverse_shiftedSquare_decomposition core x,
-    inner_add_right, inner_add_left, hFirst, hSecond]
+  calc
+    inner ℝ (K.inverseOriginalAction x) y =
+        inner ℝ (K.inverseOriginalAction x)
+          (K.inverse y +
+            standardRealHilbertSelfAdjointSquareAction A (K.inverseToSquareDomain y)) := by
+      rw [K.inverse_shiftedSquare_decomposition core y]
+    _ = inner ℝ (K.inverseOriginalAction x) (K.inverse y) +
+          inner ℝ (K.inverseOriginalAction x)
+            (standardRealHilbertSelfAdjointSquareAction A (K.inverseToSquareDomain y)) := by
+      rw [inner_add_right]
+    _ = inner ℝ (K.inverse x) (K.inverseOriginalAction y) +
+          inner ℝ
+            (standardRealHilbertSelfAdjointSquareAction A (K.inverseToSquareDomain x))
+            (K.inverseOriginalAction y) := by
+      rw [hFirst, hSecond]
+    _ = inner ℝ
+          (K.inverse x +
+            standardRealHilbertSelfAdjointSquareAction A (K.inverseToSquareDomain x))
+          (K.inverseOriginalAction y) := by
+      rw [inner_add_left]
+    _ = inner ℝ x (K.inverseOriginalAction y) := by
+      rw [K.inverse_shiftedSquare_decomposition core x]
 
 /-- Since `A K` is bounded and symmetric on the complete Hilbert space, it is self-adjoint. -/
 theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseNaturalDomainSquareRootData.inverseOriginalActionContinuous_selfAdjoint
@@ -195,23 +214,23 @@ theorem StandardRealHilbertSelfAdjointNaturalDomainCanonicalBoundedTransformComm
     change T (R.squareRoot x) = R.squareRoot (T x) at h
     exact h
   intro x y
-  refine R.toAlgebraicSquareRootData.squareRoot_denseRange.induction_on₂ ?_ ?_
-  · exact isClosed_eq (by fun_prop) (by fun_prop)
-  · intro u v
-    calc
-      inner ℝ
-          (R.canonicalBoundedOperator (R.squareRoot u))
-          (R.squareRoot v) =
-          inner ℝ (T u) (R.squareRoot v) := by
-            rw [R.canonicalBoundedOperator_apply_squareRoot core]
-      _ = inner ℝ u (T (R.squareRoot v)) := hTSymmetric u (R.squareRoot v)
-      _ = inner ℝ u (R.squareRoot (T v)) := by rw [hCommApply]
-      _ = inner ℝ (R.squareRoot u) (T v) :=
-        (hRSymmetric u (T v)).symm
-      _ = inner ℝ
-          (R.squareRoot u)
-          (R.canonicalBoundedOperator (R.squareRoot v)) := by
-            rw [R.canonicalBoundedOperator_apply_squareRoot core]
+  refine R.toAlgebraicSquareRootData.squareRoot_denseRange.induction_on₂
+    (isClosed_eq (by fun_prop) (by fun_prop)) ?_ x y
+  intro u v
+  calc
+    inner ℝ
+        (R.canonicalBoundedOperator (R.squareRoot u))
+        (R.squareRoot v) =
+        inner ℝ (T u) (R.squareRoot v) := by
+          rw [R.canonicalBoundedOperator_apply_squareRoot core]
+    _ = inner ℝ u (T (R.squareRoot v)) := hTSymmetric u (R.squareRoot v)
+    _ = inner ℝ u (R.squareRoot (T v)) := by rw [hCommApply]
+    _ = inner ℝ (R.squareRoot u) (T v) :=
+      (hRSymmetric u (T v)).symm
+    _ = inner ℝ
+        (R.squareRoot u)
+        (R.canonicalBoundedOperator (R.squareRoot v)) := by
+          rw [R.canonicalBoundedOperator_apply_squareRoot core]
 
 /-- The commutation relation generates the previously residual self-adjointness datum. -/
 def StandardRealHilbertSelfAdjointNaturalDomainCanonicalBoundedTransformCommutationData.toSelfAdjointData
