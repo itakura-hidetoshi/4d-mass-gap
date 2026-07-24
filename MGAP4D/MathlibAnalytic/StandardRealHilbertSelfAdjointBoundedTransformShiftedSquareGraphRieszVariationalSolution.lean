@@ -101,8 +101,9 @@ theorem standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph
     (core : RealHilbertSelfAdjointCore A)
     (x : H) :
     WithLp.ofLp
-      (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x) ∈
-        A.graph := by
+      ((standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
+          standardRealHilbertSelfAdjointGraphL2 A) :
+        WithLp 2 (H × H)) ∈ A.graph := by
   exact
     (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x).property
 
@@ -114,8 +115,10 @@ def standardRealHilbertSelfAdjointGraphRieszSolve
     (core : RealHilbertSelfAdjointCore A)
     (x : H) :
     A.domain :=
-  ⟨(standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
-      WithLp 2 (H × H)).fst,
+  ⟨(WithLp.ofLp
+      ((standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
+          standardRealHilbertSelfAdjointGraphL2 A) :
+        WithLp 2 (H × H))).1,
     A.mem_domain_of_mem_graph
       (standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph A core x)⟩
 
@@ -127,8 +130,10 @@ theorem standardRealHilbertSelfAdjointGraphRieszSolve_coe
     (core : RealHilbertSelfAdjointCore A)
     (x : H) :
     (standardRealHilbertSelfAdjointGraphRieszSolve A core x : H) =
-      (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
-        WithLp 2 (H × H)).fst :=
+      (WithLp.ofLp
+        ((standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
+            standardRealHilbertSelfAdjointGraphL2 A) :
+          WithLp 2 (H × H))).1 :=
   rfl
 
 /-- Second-coordinate identification for the recovered operator image. -/
@@ -138,8 +143,10 @@ theorem standardRealHilbertSelfAdjointGraphRieszSolve_image
     (core : RealHilbertSelfAdjointCore A)
     (x : H) :
     A (standardRealHilbertSelfAdjointGraphRieszSolve A core x) =
-      (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
-        WithLp 2 (H × H)).snd := by
+      (WithLp.ofLp
+        ((standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
+            standardRealHilbertSelfAdjointGraphL2 A) :
+          WithLp 2 (H × H))).2 := by
   symm
   apply (A.image_iff
     (standardRealHilbertSelfAdjointGraphRieszSolve A core x).property).mpr
@@ -175,7 +182,7 @@ theorem standardRealHilbertSelfAdjointGraphRieszSolve_variational_identity
           WithLp 2 (H × H)).fst) at h
   rw [WithLp.prod_inner_apply] at h
   simp only [standardRealHilbertSelfAdjointDomainToGraphL2,
-    WithLp.toLp_fst, WithLp.toLp_snd] at h
+    WithLp.toLp_fst] at h
   rw [← standardRealHilbertSelfAdjointGraphRieszSolve_coe A core x,
     ← standardRealHilbertSelfAdjointGraphRieszSolve_image A core x] at h
   exact h
