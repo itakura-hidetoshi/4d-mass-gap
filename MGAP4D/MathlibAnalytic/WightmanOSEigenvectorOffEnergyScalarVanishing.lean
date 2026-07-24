@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.WightmanOSEigenvectorScalarMeasureRestriction
+import MGAP4D.MathlibAnalytic.WightmanOSEigenvectorScalarMeasureRestrictionSupport
 
 namespace MGAP4D
 namespace MathlibAnalytic
