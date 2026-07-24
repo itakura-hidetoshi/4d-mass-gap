@@ -11,7 +11,7 @@ noncomputable section
 open scoped InnerProductSpace
 
 /-- The graph of a partially defined real-Hilbert operator, transported to the `L²`
-product.  Its inherited inner product is exactly
+product. Its inherited inner product is exactly
 
 `⟪u,v⟫ + ⟪Au,Av⟫`.
 
@@ -106,34 +106,21 @@ theorem standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph
   exact
     (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x).property
 
-/-- Recover the domain component of the Riesz graph representative. -/
+/-- Recover the domain component directly as the first coordinate of the Riesz graph
+representative. Graph membership supplies the domain proof. -/
 def standardRealHilbertSelfAdjointGraphRieszSolve
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (A : H →ₗ.[ℝ] H)
     (core : RealHilbertSelfAdjointCore A)
     (x : H) :
     A.domain :=
-  Classical.choose
-    (A.mem_graph_iff'.mp
-      (standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph A core x))
-
-/-- The recovered domain point and its image are exactly the two coordinates of the
-Riesz graph representative. -/
-theorem standardRealHilbertSelfAdjointGraphRieszSolve_graph_eq
-    {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    (A : H →ₗ.[ℝ] H)
-    (core : RealHilbertSelfAdjointCore A)
-    (x : H) :
-    ((standardRealHilbertSelfAdjointGraphRieszSolve A core x : H),
-        A (standardRealHilbertSelfAdjointGraphRieszSolve A core x)) =
-      WithLp.ofLp
-        (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x) := by
-  exact
-    Classical.choose_spec
-      (A.mem_graph_iff'.mp
-        (standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph A core x))
+  ⟨(standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
+      WithLp 2 (H × H)).fst,
+    A.mem_domain_of_mem_graph
+      (standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph A core x)⟩
 
 /-- First-coordinate identification for the recovered domain point. -/
+@[simp]
 theorem standardRealHilbertSelfAdjointGraphRieszSolve_coe
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (A : H →ₗ.[ℝ] H)
@@ -141,10 +128,8 @@ theorem standardRealHilbertSelfAdjointGraphRieszSolve_coe
     (x : H) :
     (standardRealHilbertSelfAdjointGraphRieszSolve A core x : H) =
       (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
-        WithLp 2 (H × H)).fst := by
-  have h := congrArg Prod.fst
-    (standardRealHilbertSelfAdjointGraphRieszSolve_graph_eq A core x)
-  simpa using h
+        WithLp 2 (H × H)).fst :=
+  rfl
 
 /-- Second-coordinate identification for the recovered operator image. -/
 theorem standardRealHilbertSelfAdjointGraphRieszSolve_image
@@ -155,9 +140,11 @@ theorem standardRealHilbertSelfAdjointGraphRieszSolve_image
     A (standardRealHilbertSelfAdjointGraphRieszSolve A core x) =
       (standardRealHilbertSelfAdjointGraphL2RieszRepresentative A core x :
         WithLp 2 (H × H)).snd := by
-  have h := congrArg Prod.snd
-    (standardRealHilbertSelfAdjointGraphRieszSolve_graph_eq A core x)
-  simpa using h
+  symm
+  apply (A.image_iff
+    (standardRealHilbertSelfAdjointGraphRieszSolve A core x).property).mpr
+  exact
+    standardRealHilbertSelfAdjointGraphL2RieszRepresentative_mem_graph A core x
 
 /-- Riesz representation on the closed graph produces the required weak graph-form
 solution for every ambient right-hand side. -/
