@@ -36,7 +36,11 @@ def StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseDa
       (K.inverseToSquareDomain (x : H))) ∈ A.domain
     rw [← standardRealHilbertSelfAdjointSquareAction_apply,
       K.squareAction_inverse_eq_sub core (x : H)]
-    exact A.domain.sub_mem x.property (K.inverseToOriginalDomain (x : H)).property⟩
+    have hKDomain : K.inverse (x : H) ∈ A.domain := by
+      simpa only [
+        StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverseToOriginalDomain_coe]
+        using (K.inverseToOriginalDomain (x : H)).property
+    exact A.domain.sub_mem x.property hKDomain⟩
 
 /-- The second application of `A` to `K x` is `x - K x`, as an equality in `D(A)`. -/
 theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverseOriginalActionToSquareDomain_image
@@ -49,10 +53,11 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
         (K.inverseOriginalActionToSquareDomain core x) =
       x - K.inverseToOriginalDomain (x : H) := by
   apply Subtype.ext
-  change standardRealHilbertSelfAdjointSquareAction A
-      (K.inverseToSquareDomain (x : H)) =
+  change A (standardRealHilbertSelfAdjointSquareToDomain A
+      (K.inverseToSquareDomain (x : H))) =
     (x : H) - K.inverse (x : H)
-  exact K.squareAction_inverse_eq_sub core (x : H)
+  simpa only [standardRealHilbertSelfAdjointSquareAction_apply] using
+    K.squareAction_inverse_eq_sub core (x : H)
 
 /-- Applying `1 + A²` to `A K x` gives `A x` for every `x ∈ D(A)`. -/
 theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.shiftedSquare_inverseOriginalActionToSquareDomain
@@ -85,6 +90,7 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
       K.inverseToShiftedSquareDomain x := by
   dsimp [StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverseToSquareDomain]
   rw [LinearEquiv.apply_symm_apply]
+  rfl
 
 /-- Uniqueness for `1 + A²` proves `K (A x) = A (K x)` on `D(A)`. -/
 theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverse_apply_image_eq_inverseOriginalAction
