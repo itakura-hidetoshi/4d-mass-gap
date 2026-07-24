@@ -78,6 +78,7 @@ theorem StandardRealHilbertSelfAdjointNaturalDomainBoundedTransformBoundedExtens
   change
     A.toFun ((1 / Real.sqrt (1 + E ^ 2)) • x) =
       standardRealHilbertBoundedTransformSpectralCoordinate E • (x : H)
+  change A.toFun x = E • (x : H) at hE
   rw [A.toFun.map_smul, hE,
     standardRealHilbertBoundedTransformSpectralCoordinate_eq_div_sqrt]
   simp [smul_smul, div_eq_mul_inv, mul_comm]
