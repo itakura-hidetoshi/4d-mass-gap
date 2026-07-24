@@ -94,10 +94,10 @@ theorem continuous_complexCfcAux
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
     (T : H →L[ℝ] H) (hT : IsSelfAdjoint T) :
     Continuous (D.complexCfcAux T hT) := by
-  apply (cfcHom_continuous (D.complexify_isSelfAdjoint hT)).comp
-  change Continuous fun f : C(spectrum ℝ T, ℝ) =>
-    f.comp (Homeomorph.setCongr (D.real_spectrum_eq T))
-  exact ContinuousMap.continuous_precomp _
+  simpa only [complexCfcAux, StarAlgHom.coe_comp] using
+    (cfcHom_continuous (D.complexify_isSelfAdjoint hT)).comp
+      (ContinuousMap.continuous_precomp
+        (Homeomorph.setCongr (D.real_spectrum_eq T)))
 
 /-- The auxiliary complex CFC is injective. -/
 theorem complexCfcAux_injective
