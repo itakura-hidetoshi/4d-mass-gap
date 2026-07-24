@@ -23,6 +23,8 @@ theorem standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_injective
   have hzImage :
       standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A z = 0 := by
     dsimp [z]
+    change
+      (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun (x - y) = 0
     rw [map_sub, hxy, sub_self]
   have hzNorm :=
     standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_norm_lower_bound_one
@@ -96,6 +98,10 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveInverseSquareRootData.inv
       standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A candidate =
         (x : H) := by
     dsimp [candidate]
+    change
+      (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun
+          ((1 / lambda) • xAmbient) =
+        (x : H)
     rw [map_smul, hShiftedSquareX]
     simp [smul_smul, hlambdaNe]
   let iterated :
@@ -157,7 +163,7 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveInverseSquareRootData.eig
     eq_neg_of_add_eq_zero_left hPlus
   have hPositive := R.quadraticForm_nonnegative y
   rw [hRy] at hPositive
-  simp only [inner_neg_left, inner_smul_left, real_inner_self_eq_norm_sq] at hPositive
+  simp [real_inner_self_eq_norm_sq] at hPositive
   have hyNorm : ‖y‖ = 0 := by
     nlinarith [sq_nonneg ‖y‖, norm_nonneg y]
   have hy : y = 0 := norm_eq_zero.mp hyNorm
