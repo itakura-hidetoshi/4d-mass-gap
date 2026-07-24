@@ -9,6 +9,8 @@ noncomputable section
 
 open scoped InnerProductSpace ContinuousFunctionalCalculus
 
+set_option maxHeartbeats 400000
+
 /-- Abstract operator-algebra data supplied by a complexification of a real Hilbert space.
 
 The complexification map is required to be an isometric real star-algebra embedding and to preserve
@@ -101,9 +103,11 @@ theorem continuous_complexCfcAux
 theorem complexCfcAux_injective
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
     (T : H →L[ℝ] H) (hT : IsSelfAdjoint T) :
-    Function.Injective (D.complexCfcAux T hT) :=
-  (cfcHom_injective (D.complexify_isSelfAdjoint hT)).comp
-    (D.spectrumContinuousMapEquiv T).injective
+    Function.Injective (D.complexCfcAux T hT) := by
+  intro f g hfg
+  apply (D.spectrumContinuousMapEquiv T).injective
+  apply cfcHom_injective (D.complexify_isSelfAdjoint hT)
+  exact hfg
 
 /-- The complex CFC image lies in the closed range of complexification.
 
@@ -130,7 +134,8 @@ noncomputable def descendedCfcHom
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
     (T : H →L[ℝ] H) (hT : IsSelfAdjoint T) :
     C(spectrum ℝ T, ℝ) →⋆ₐ[ℝ] (H →L[ℝ] H) :=
-  D.complexifyRangeEquiv.symm.toStarAlgHom.comp
+  ((D.complexifyRangeEquiv.symm :
+      D.complexify.range →⋆ₐ[ℝ] (H →L[ℝ] H))).comp
     ((D.complexCfcAux T hT).codRestrict D.complexify.range
       (D.complexCfcAux_mem_range T hT))
 
@@ -140,9 +145,12 @@ theorem complexify_descendedCfcHom
     (T : H →L[ℝ] H) (hT : IsSelfAdjoint T)
     (f : C(spectrum ℝ T, ℝ)) :
     D.complexify (D.descendedCfcHom T hT f) = D.complexCfcAux T hT f := by
+  change D.complexify
+      (D.complexifyRangeEquiv.symm
+        ⟨D.complexCfcAux T hT f, D.complexCfcAux_mem_range T hT f⟩) =
+    D.complexCfcAux T hT f
   let y : D.complexify.range :=
     ⟨D.complexCfcAux T hT f, D.complexCfcAux_mem_range T hT f⟩
-  change D.complexify (D.complexifyRangeEquiv.symm y) = (y : HC →L[ℂ] HC)
   exact congrArg Subtype.val (D.complexifyRangeEquiv.apply_symm_apply y)
 
 /-- Continuity descends because complexification is an isometric embedding. -/
@@ -205,12 +213,17 @@ theorem isSelfAdjoint_descendedCfcHom
 
 /-- An isometric, real-spectrum-preserving complexification embedding generates the complete
 real-Hilbert bounded self-adjoint continuous functional calculus. -/
+@[reducible]
 noncomputable def toContinuousFunctionalCalculus
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC) :
     ContinuousFunctionalCalculus ℝ (H →L[ℝ] H) IsSelfAdjoint where
-  predicate_zero := IsSelfAdjoint.zero
+  predicate_zero := by simp
   compactSpace_spectrum := inferInstance
   spectrum_nonempty T hT := by
+    letI : Nontrivial (HC →L[ℂ] HC) := by
+      obtain ⟨S, U, hSU⟩ := exists_pair_ne (H →L[ℝ] H)
+      exact nontrivial_of_ne (D.complexify S) (D.complexify U)
+        (fun h => hSU (D.complexify_injective h))
     rw [← D.real_spectrum_eq T]
     exact ContinuousFunctionalCalculus.spectrum_nonempty
       (D.complexify T) (D.complexify_isSelfAdjoint hT)
