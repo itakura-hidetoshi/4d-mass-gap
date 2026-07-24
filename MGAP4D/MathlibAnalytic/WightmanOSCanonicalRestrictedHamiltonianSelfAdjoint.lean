@@ -40,7 +40,6 @@ def RealLinearPMapOrthogonalRestrictionData.projectedDomainPoint
   ⟨⟨K.starProjection (x : H), K.starProjection_apply_mem (x : H)⟩,
     (D.domain_iff _).2 (D.projection_mem_domain x)⟩
 
-/-- The projected restricted-domain point has the expected ambient value. -/
 @[simp]
 theorem RealLinearPMapOrthogonalRestrictionData.projectedDomainPoint_coe
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
@@ -52,8 +51,6 @@ theorem RealLinearPMapOrthogonalRestrictionData.projectedDomainPoint_coe
       K.starProjection (x : H) :=
   rfl
 
-/-- Applying the restricted operator to a projected domain point is the
-orthogonal projection of the ambient operator value. -/
 theorem RealLinearPMapOrthogonalRestrictionData.apply_projectedDomainPoint_coe
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     {A : H →ₗ.[ℝ] H} {K : Submodule ℝ H} [K.HasOrthogonalProjection]
@@ -69,8 +66,6 @@ theorem RealLinearPMapOrthogonalRestrictionData.apply_projectedDomainPoint_coe
       congr 1
     _ = K.starProjection (A x) := D.projection_commutes x
 
-/-- Pairing against a vector in the projected subspace is unchanged by
-orthogonally projecting the second argument. -/
 theorem real_inner_coe_starProjection_right
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (K : Submodule ℝ H) [K.HasOrthogonalProjection]
@@ -89,8 +84,6 @@ theorem real_inner_coe_starProjection_right
       rw [Submodule.inner_right_of_mem_orthogonal u.property
         (K.sub_starProjection_mem_orthogonal x), add_zero]
 
-/-- The domain of a reducing orthogonal restriction of a densely defined
-operator is dense in the subspace. -/
 theorem RealLinearPMapOrthogonalRestrictionData.dense_domain
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     {A : H →ₗ.[ℝ] H} {K : Submodule ℝ H} [K.HasOrthogonalProjection]
@@ -112,8 +105,6 @@ theorem RealLinearPMapOrthogonalRestrictionData.dense_domain
   rintro z ⟨x, rfl⟩
   exact (D.projectedDomainPoint x).property
 
-/-- Formal symmetry descends from an ambient operator to an orthogonal
-restriction that agrees pointwise with it. -/
 theorem RealLinearPMapOrthogonalRestrictionData.isFormalAdjoint
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     {A : H →ₗ.[ℝ] H} {K : Submodule ℝ H} [K.HasOrthogonalProjection]
@@ -130,9 +121,6 @@ theorem RealLinearPMapOrthogonalRestrictionData.isFormalAdjoint
     ⟨((x : K) : H), (D.domain_iff (x : K)).mp x.property⟩
     ⟨((y : K) : H), (D.domain_iff (y : K)).mp y.property⟩
 
-/-- A reducing orthogonal restriction of a self-adjoint partial operator is
-self-adjoint.  The proof establishes the maximal adjoint-domain condition
-rather than assuming it as an additional bridge field. -/
 theorem RealLinearPMapOrthogonalRestrictionData.isSelfAdjoint
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     [CompleteSpace H]
@@ -165,8 +153,7 @@ theorem RealLinearPMapOrthogonalRestrictionData.isSelfAdjoint
             inner ℝ (w : H) (K.starProjection (x : H)) :=
           real_inner_coe_starProjection_right K w (x : H)
         _ = inner ℝ (y : H) ((B px : K) : H) := by
-          change inner ℝ (B.adjoint yAdjoint) (px : K) =
-            inner ℝ y (B px)
+          change inner ℝ (B.adjoint yAdjoint) (px : K) = inner ℝ y (B px)
           exact LinearPMap.adjoint_isFormalAdjoint hDenseB yAdjoint px
         _ = inner ℝ (y : H) (K.starProjection (A x)) := by
           rw [D.apply_projectedDomainPoint_coe]
@@ -183,32 +170,20 @@ theorem RealLinearPMapOrthogonalRestrictionData.isSelfAdjoint
   rw [LinearPMap.isSelfAdjoint_def]
   exact le_antisymm hAdjoint_le_B hB_le_adjoint
 
-/-- The actual canonical restriction to the physical vacuum-orthogonal sector
-is a reducing orthogonal restriction of the ambient Hamiltonian. -/
 def explicitWightmanOSCanonicalVacuumOrthogonalRestrictionData
     (M : ExplicitWightmanOSReconstructedModel) :
     RealLinearPMapOrthogonalRestrictionData
       M.hamiltonian M.vacuumOrthogonal
         M.canonicalVacuumOrthogonalHamiltonian where
-  domain_iff := by
-    intro x
-    rfl
-  apply_coe := by
-    intro x
-    rfl
+  domain_iff := by intro x; rfl
+  apply_coe := by intro x; rfl
   projection_mem_domain := by
     intro x
-    exact
-      explicit_wightman_os_vacuumOrthogonal_starProjection_mem_hamiltonianDomain
-        M x
+    exact explicit_wightman_os_vacuumOrthogonal_starProjection_mem_hamiltonianDomain M x
   projection_commutes := by
     intro x
-    exact
-      explicit_wightman_os_vacuumOrthogonal_starProjection_commutes_hamiltonian_on_domain
-        M x
+    exact explicit_wightman_os_vacuumOrthogonal_starProjection_commutes_hamiltonian_on_domain M x
 
-/-- Ambient Hamiltonian self-adjointness derives self-adjointness of the actual
-canonical restriction `H|Ω⊥`; no additional maximality input is required. -/
 theorem explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
     (M : ExplicitWightmanOSReconstructedModel) :
     IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian := by
@@ -216,33 +191,26 @@ theorem explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoi
     (explicitWightmanOSCanonicalVacuumOrthogonalRestrictionData M).isSelfAdjoint
       M.hamiltonianSelfAdjoint
 
-/-- The canonical restricted Hamiltonian has dense domain as a derived
-consequence of ambient self-adjointness and projection reduction. -/
 theorem explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
     (M : ExplicitWightmanOSReconstructedModel) :
     Dense ((M.canonicalVacuumOrthogonalHamiltonian.domain :
       Set M.VacuumOrthogonalHilbert)) :=
   (explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M).dense_domain
 
-/-- The canonical restricted Hamiltonian is closed as a derived consequence. -/
 theorem explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
     (M : ExplicitWightmanOSReconstructedModel) :
     LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian :=
   (explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M).isClosed
 
-/-- Promote a purely spectral vacuum-orthogonal bridge to the legacy canonical
-operator bridge by filling its formerly explicit self-adjointness field with
-the derived theorem. -/
+/-- Compatibility constructor for the former operator bridge.  Since the
+compatibility type is now an abbreviation for pure spectral data, this is the
+identity map. -/
 def explicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridgeOfSpectrum
     (M : ExplicitWightmanOSReconstructedModel)
     (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M) :
     ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M :=
-  { B with
-    canonicalRestrictedSelfAdjoint :=
-      explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M }
+  B
 
-/-- Structured receipt for the derived self-adjointness of the canonical
-vacuum-orthogonal Hamiltonian restriction. -/
 structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop where
   generic_restriction_selfAdjoint :
     ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
@@ -268,7 +236,6 @@ structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop wher
       IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian
   claim_boundary : True
 
-/-- The derived canonical-restriction self-adjointness receipt is inhabited. -/
 theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
     WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt := by
   exact
@@ -283,9 +250,7 @@ theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
         explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
       automatic_bridge := by
         intro M B
-        exact
-          (explicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridgeOfSpectrum
-            M B).canonicalRestrictedSelfAdjoint
+        exact explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M
       claim_boundary := trivial }
 
 end
