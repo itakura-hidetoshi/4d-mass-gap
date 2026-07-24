@@ -7,7 +7,7 @@ noncomputable section
 
 /-- The real point spectrum of a partially-defined real-linear operator: those
 real numbers admitting a nonzero eigenvector in the operator domain. -/
-def LinearPMap.realPointSpectrum
+def realLinearPMapPointSpectrum
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (T : E →ₗ.[ℝ] E) : Set ℝ :=
   {a | ∃ x : T.domain, (x : E) ≠ 0 ∧ T x = a • (x : E)}
@@ -16,7 +16,7 @@ def LinearPMap.realPointSpectrum
 `Ω⊥`. -/
 def ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalPointSpectrum
     (M : ExplicitWightmanOSReconstructedModel) : Set ℝ :=
-  M.canonicalVacuumOrthogonalHamiltonian.realPointSpectrum
+  realLinearPMapPointSpectrum M.canonicalVacuumOrthogonalHamiltonian
 
 /-- Membership in the canonical point spectrum is exactly existence of a
 nonzero domain eigenvector. -/
