@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 /-- A self-adjoint reconstructed Hamiltonian is a formal adjoint of itself on its
-domain. -/
+ domain. -/
 theorem explicit_wightman_os_hamiltonian_isFormalSelfAdjoint
     (M : ExplicitWightmanOSReconstructedModel) :
     M.hamiltonian.IsFormalAdjoint M.hamiltonian := by
@@ -21,7 +21,7 @@ theorem explicit_wightman_os_hamiltonian_isFormalSelfAdjoint
   exact hFormal
 
 /-- Self-adjointness together with the zero-energy vacuum implies that the
-Hamiltonian preserves the physical vacuum-orthogonal sector. -/
+ Hamiltonian preserves the physical vacuum-orthogonal sector. -/
 def explicitWightmanOSVacuumOrthogonalHamiltonianInvariantOfSelfAdjoint
     (M : ExplicitWightmanOSReconstructedModel) :
     ExplicitWightmanOSVacuumOrthogonalHamiltonianInvariant M where
@@ -45,7 +45,7 @@ def explicitWightmanOSVacuumOrthogonalHamiltonianInvariantOfSelfAdjoint
       _ = 0 := by simp
 
 /-- The canonical actual Hamiltonian restriction obtained directly from ambient
-self-adjointness and the zero-energy vacuum. -/
+ self-adjointness and the zero-energy vacuum. -/
 def ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalHamiltonian
     (M : ExplicitWightmanOSReconstructedModel) :
     M.VacuumOrthogonalHilbert →ₗ.[ℝ]
@@ -53,7 +53,7 @@ def ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalHamiltonian
   (explicitWightmanOSVacuumOrthogonalHamiltonianInvariantOfSelfAdjoint M).restrictedHamiltonian
 
 /-- The canonical restriction has exactly the intersection domain
-`D(H) ∩ Ω⊥`. -/
+ `D(H) ∩ Ω⊥`. -/
 theorem canonical_vacuum_orthogonal_hamiltonian_domain
     (M : ExplicitWightmanOSReconstructedModel) :
     M.canonicalVacuumOrthogonalHamiltonian.domain =
@@ -61,7 +61,7 @@ theorem canonical_vacuum_orthogonal_hamiltonian_domain
   rfl
 
 /-- The canonical restriction agrees pointwise with the ambient Hamiltonian after
-inclusion into the physical Hilbert space. -/
+ inclusion into the physical Hilbert space. -/
 theorem canonical_vacuum_orthogonal_hamiltonian_apply
     (M : ExplicitWightmanOSReconstructedModel)
     (x : M.canonicalVacuumOrthogonalHamiltonian.domain) :
@@ -70,29 +70,12 @@ theorem canonical_vacuum_orthogonal_hamiltonian_apply
       M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x) := by
   rfl
 
-/-- Reduced bridge: Hamiltonian invariance is now derived.  Only
-self-adjointness of the canonical restriction and the spectral identification
-remain explicit operator-level inputs. -/
-structure ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-    (M : ExplicitWightmanOSReconstructedModel) extends
-      ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M where
-  canonicalRestrictedSelfAdjoint :
-    IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian
-
-/-- The canonical restricted Hamiltonian has dense intersection domain. -/
-theorem canonical_vacuum_orthogonal_hamiltonian_dense_domain
-    {M : ExplicitWightmanOSReconstructedModel}
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M) :
-    Dense ((M.canonicalVacuumOrthogonalHamiltonian.domain :
-      Set M.VacuumOrthogonalHilbert)) := by
-  exact B.canonicalRestrictedSelfAdjoint.dense_domain
-
-/-- The canonical restricted Hamiltonian is closed. -/
-theorem canonical_vacuum_orthogonal_hamiltonian_isClosed
-    {M : ExplicitWightmanOSReconstructedModel}
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M) :
-    LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian := by
-  exact B.canonicalRestrictedSelfAdjoint.isClosed
+/-- Compatibility name for the former operator bridge.  Canonical restricted
+ self-adjointness is now theorem-derived, so this type contains only the pure
+ vacuum-orthogonal spectral identification data. -/
+abbrev ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
+    (M : ExplicitWightmanOSReconstructedModel) :=
+  ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M
 
 end
 

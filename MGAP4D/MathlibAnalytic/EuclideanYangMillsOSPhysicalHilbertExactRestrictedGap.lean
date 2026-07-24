@@ -8,13 +8,12 @@ noncomputable section
 
 /-- Exact physical certificate for the OS-reconstructed model.  It joins the
 positive-time OS completion, the exported explicit Wightman model, the
-self-adjoint Hamiltonian restricted to the vacuum-orthogonal sector, and the
-exact non-vacuum spectral lower edge. -/
+theorem-derived self-adjoint Hamiltonian restriction to the vacuum-orthogonal
+sector, and the exact non-vacuum spectral lower edge. -/
 structure EuclideanYangMillsOSPhysicalExactRestrictedGapCertificate
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S)
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel) where
+    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel) where
   reconstruction : EuclideanYangMillsOSPhysicalReconstructionCertificate M
   explicitMassGap : M.toExplicitModel.HasMassGap exactGapValueReal
   restrictedHamiltonianGap :
@@ -27,8 +26,7 @@ spectrum. -/
 def euclideanYangMillsOSPhysicalExactRestrictedGapCertificate
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     (M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S)
-    (B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel)
+    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel)
     (hRelGap :
       HasRelativisticMassGap
         M.toExplicitModel.energyMomentumSpectrum exactGapValueReal)
@@ -47,8 +45,7 @@ self-adjoint once the exact restricted-gap certificate has been supplied. -/
 theorem os_physical_exact_restricted_hamiltonian_selfAdjoint
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    {B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel}
+    {B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel}
     (C : EuclideanYangMillsOSPhysicalExactRestrictedGapCertificate M B) :
     IsSelfAdjoint M.toExplicitModel.canonicalVacuumOrthogonalHamiltonian :=
   C.restrictedHamiltonianGap.operatorSelfAdjoint
@@ -58,8 +55,7 @@ space. -/
 theorem os_physical_exact_restricted_hamiltonian_dense_domain
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    {B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel}
+    {B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel}
     (C : EuclideanYangMillsOSPhysicalExactRestrictedGapCertificate M B) :
     Dense
       ((M.toExplicitModel.canonicalVacuumOrthogonalHamiltonian.domain :
@@ -70,8 +66,7 @@ theorem os_physical_exact_restricted_hamiltonian_dense_domain
 theorem os_physical_exact_restricted_hamiltonian_closed
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    {B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel}
+    {B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel}
     (C : EuclideanYangMillsOSPhysicalExactRestrictedGapCertificate M B) :
     LinearPMap.IsClosed
       M.toExplicitModel.canonicalVacuumOrthogonalHamiltonian :=
@@ -82,8 +77,7 @@ carrier. -/
 theorem os_physical_exact_restricted_spectrum_lower_bound
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    {B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel}
+    {B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel}
     (C : EuclideanYangMillsOSPhysicalExactRestrictedGapCertificate M B) :
     B.restrictedSpectrum ⊆ Set.Ici exactGapValueReal :=
   C.restrictedHamiltonianGap.spectrumLowerBound
@@ -93,8 +87,7 @@ normalized exact-gap carrier. -/
 theorem os_physical_exact_restricted_spectrum_infimum
     {S : EuclideanYangMillsContinuumMeasureConstructionSpine}
     {M : EuclideanYangMillsOSPhysicalHilbertReconstructedModel S}
-    {B : ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-      M.toExplicitModel}
+    {B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M.toExplicitModel}
     (C : EuclideanYangMillsOSPhysicalExactRestrictedGapCertificate M B) :
     sInf B.restrictedSpectrum = exactGapValueReal :=
   C.restrictedHamiltonianGap.spectrumInfimum
