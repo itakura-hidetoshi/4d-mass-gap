@@ -105,7 +105,7 @@ theorem standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_norm_lower_
       standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_quadraticForm_identity
         A core y,
       standardRealHilbertSelfAdjointSquareDomainEquivAmbient_coe]
-    positivity
+    nlinarith [sq_nonneg ‖A (y : A.domain)‖]
   have hcs :
       inner ℝ
           (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A x)
