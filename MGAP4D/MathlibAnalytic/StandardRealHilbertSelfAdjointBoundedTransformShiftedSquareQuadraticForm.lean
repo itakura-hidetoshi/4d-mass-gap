@@ -103,7 +103,8 @@ theorem standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_norm_lower_
         (standardRealHilbertSelfAdjointSquareDomainEquivAmbient A) x
     rw [← hx,
       standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_quadraticForm_identity
-        A core y]
+        A core y,
+      standardRealHilbertSelfAdjointSquareDomainEquivAmbient_coe]
     positivity
   have hcs :
       inner ℝ
@@ -115,7 +116,10 @@ theorem standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_norm_lower_
       (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A x)
       (x : H)
   by_cases hpos : 0 < ‖(x : H)‖
-  · exact (mul_le_mul_right hpos).mp <| by
+  · have hmul :
+        ‖(x : H)‖ * ‖(x : H)‖ ≤
+          ‖standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A x‖ *
+            ‖(x : H)‖ := by
       calc
         ‖(x : H)‖ * ‖(x : H)‖ = ‖(x : H)‖ ^ 2 := by ring
         _ ≤ inner ℝ
@@ -123,6 +127,7 @@ theorem standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_norm_lower_
             (x : H) := hquad
         _ ≤ ‖standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A x‖ *
             ‖(x : H)‖ := hcs
+    nlinarith
   · have hxnorm : ‖(x : H)‖ = 0 :=
       le_antisymm (le_of_not_gt hpos) (norm_nonneg _)
     rw [hxnorm]
