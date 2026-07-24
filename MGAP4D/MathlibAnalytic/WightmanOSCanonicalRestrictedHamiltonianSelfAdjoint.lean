@@ -202,41 +202,6 @@ theorem explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
     LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian :=
   (explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M).isClosed
 
-structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop where
-  generic_restriction_selfAdjoint :
-    ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
-      [CompleteSpace H]
-      (A : H →ₗ.[ℝ] H) (K : Submodule ℝ H) [K.HasOrthogonalProjection]
-      [CompleteSpace K]
-      (B : K →ₗ.[ℝ] K)
-      (D : RealLinearPMapOrthogonalRestrictionData A K B),
-      IsSelfAdjoint A → IsSelfAdjoint B
-  actual_restriction_selfAdjoint :
-    ∀ M : ExplicitWightmanOSReconstructedModel,
-      IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian
-  actual_restriction_dense :
-    ∀ M : ExplicitWightmanOSReconstructedModel,
-      Dense ((M.canonicalVacuumOrthogonalHamiltonian.domain :
-        Set M.VacuumOrthogonalHilbert))
-  actual_restriction_closed :
-    ∀ M : ExplicitWightmanOSReconstructedModel,
-      LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian
-  claim_boundary : True
-
-theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
-    WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt := by
-  exact
-    { generic_restriction_selfAdjoint := by
-        intro H hNormed hInner hComplete A K hProjection hKComplete B D hA
-        exact D.isSelfAdjoint hA
-      actual_restriction_selfAdjoint :=
-        explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
-      actual_restriction_dense :=
-        explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
-      actual_restriction_closed :=
-        explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
-      claim_boundary := trivial }
-
 end
 end MathlibAnalytic
 end MGAP4D
