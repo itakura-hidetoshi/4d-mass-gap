@@ -40,9 +40,15 @@ noncomputable def RealHilbertBoundedSelfAdjointContinuousFunctionalCalculusData.
   have hKPositive : K.inverse.IsPositive :=
     (ContinuousLinearMap.isPositive_iff' K.inverse).2
       ⟨K.selfAdjoint, K.quadraticForm_nonnegative⟩
-  obtain ⟨R, hRSelfAdjoint, hRSpectrum, hRSquare⟩ :=
+  let hExists :=
     CFC.exists_sqrt_of_isSelfAdjoint_of_quasispectrumRestricts
       K.selfAdjoint hKPositive.spectrumRestricts
+  let R : H →L[ℝ] H := Classical.choose hExists
+  have hRProperties := Classical.choose_spec hExists
+  have hRSelfAdjoint : IsSelfAdjoint R := hRProperties.1
+  have hRSpectrum : QuasispectrumRestricts R ContinuousMap.realToNNReal :=
+    hRProperties.2.1
+  have hRSquare : R * R = K.inverse := hRProperties.2.2
   have hRNonnegative : 0 ≤ R :=
     nonneg_iff_isSelfAdjoint_and_quasispectrumRestricts.mpr
       ⟨hRSelfAdjoint, hRSpectrum⟩
@@ -84,8 +90,8 @@ def ContinuousFunctionalCalculusFactoredStandardRealHilbertSelfAdjointBoundedTra
     NaturalDomainSquareRootFactoredStandardRealHilbertSelfAdjointBoundedTransformConstructor where
   boundedInverse := P.boundedInverse
   positiveSquareRoot :=
-    P.continuousFunctionalCalculus.toAlgebraicSquareRootDataConstructor
-      .toNaturalDomainSquareRootDataConstructor
+    StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseAlgebraicSquareRootDataConstructor.toNaturalDomainSquareRootDataConstructor
+      P.continuousFunctionalCalculus.toAlgebraicSquareRootDataConstructor
 
 /-- Apply the CFC-factored construction to one real-Hilbert self-adjoint operator. -/
 def ContinuousFunctionalCalculusFactoredStandardRealHilbertSelfAdjointBoundedTransformConstructor.construct
