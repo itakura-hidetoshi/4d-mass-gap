@@ -90,6 +90,17 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
       rw [LinearEquiv.apply_symm_apply]
     _ = K.inverse x := rfl
 
+@[simp]
+theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverseToSquareDomain_coe
+    {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {A : H →ₗ.[ℝ] H}
+    (K : StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData A)
+    (x : H) :
+    (((K.inverseToSquareDomain x : standardRealHilbertSelfAdjointSquareDomain A) : A.domain) : H) =
+      K.inverse x := by
+  change ((K.inverseToOriginalDomain x : A.domain) : H) = K.inverse x
+  exact K.inverseToOriginalDomain_coe x
+
 /-- Apply `A` to the already square-domain-valued bounded inverse. -/
 def StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverseOriginalAction
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -196,6 +207,10 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
       A core y
   rw [hShifted,
     standardRealHilbertSelfAdjointSquareDomainEquivAmbient_coe] at hQuadratic
+  have hyCoe : (((y : A.domain) : H)) = K.inverse x := by
+    dsimp [y]
+    exact K.inverseToSquareDomain_coe x
+  rw [hyCoe] at hQuadratic
   have hQuadratic' :
       inner ℝ x (K.inverse x) =
         ‖K.inverse x‖ ^ 2 + ‖K.inverseOriginalAction x‖ ^ 2 := by
@@ -264,7 +279,7 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
     change IsClosed
       ((fun z : H => (R.squareRoot z, D z)) ⁻¹' (A.graph : Set (H × H)))
     exact core.selfAdjoint.isClosed.preimage
-      (R.squareRoot.continuous.prod_mk D.continuous)
+      (R.squareRoot.continuous.prodMk D.continuous)
   have hGraph : ∀ z : H, (R.squareRoot z, D z) ∈ A.graph := by
     exact R.squareRoot_denseRange.induction
       (fun z hz => by
@@ -298,7 +313,7 @@ structure StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInv
   construct :
     ∀ {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
       (A : H →ₗ.[ℝ] H)
-      (core : RealHilbertSelfAdjointCore A)
+      (_core : RealHilbertSelfAdjointCore A)
       (K : StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData A),
         StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseAlgebraicSquareRootData K
 
