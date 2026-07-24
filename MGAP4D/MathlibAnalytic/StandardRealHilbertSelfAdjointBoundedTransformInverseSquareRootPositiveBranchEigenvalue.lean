@@ -111,9 +111,18 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveInverseSquareRootData.inv
         (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun xAmbient =
           lambda • (x : H) :=
       hShiftedSquareX
-    rw [(standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun.map_smul,
-      hShiftedSquareX']
-    simp [smul_smul, hlambdaNe]
+    calc
+      (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun
+          ((1 / lambda) • xAmbient) =
+          (1 / lambda) •
+            (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun
+              xAmbient := by
+        exact
+          (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun.map_smul
+            (1 / lambda) xAmbient
+      _ = (x : H) := by
+        rw [hShiftedSquareX']
+        simp [smul_smul, hlambdaNe]
   let iterated :
       (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).domain :=
     ⟨R.inverseSquareRoot (R.inverseSquareRoot (x : H)),
