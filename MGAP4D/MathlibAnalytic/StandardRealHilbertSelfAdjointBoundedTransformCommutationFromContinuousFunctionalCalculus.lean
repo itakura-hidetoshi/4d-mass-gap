@@ -53,11 +53,10 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInver
         (K.inverseOriginalActionToSquareDomain core x) =
       x - K.inverseToOriginalDomain (x : H) := by
   apply Subtype.ext
-  change A (standardRealHilbertSelfAdjointSquareToDomain A
-      (K.inverseToSquareDomain (x : H))) =
-    (x : H) - K.inverse (x : H)
-  simpa only [standardRealHilbertSelfAdjointSquareAction_apply] using
-    K.squareAction_inverse_eq_sub core (x : H)
+  simpa [
+    StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.inverseOriginalActionToSquareDomain,
+    standardRealHilbertSelfAdjointSquareAction_apply] using
+      K.squareAction_inverse_eq_sub core (x : H)
 
 /-- Applying `1 + A²` to `A K x` gives `A x` for every `x ∈ D(A)`. -/
 theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareBoundedInverseData.shiftedSquare_inverseOriginalActionToSquareDomain
