@@ -223,15 +223,14 @@ theorem standard_real_hilbert_selfAdjoint_boundedTransform_operatorData_construc
     (B : StandardRealHilbertSelfAdjointBoundedTransformBoundedExtensionDataConstructor)
     (Q : StandardRealHilbertSelfAdjointBoundedTransformAnalyticPropertiesConstructor) :
     Nonempty StandardRealHilbertSelfAdjointBoundedTransformOperatorDataConstructor := by
-  exact ⟨
-    StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor
-      .toOperatorDataConstructor
-      ({ positiveShiftedSquare := S
-         inverseSquareRoot := R
-         domainAction := D
-         boundedExtension := B
-         analyticProperties := Q } :
-        StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor)⟩
+  let P :
+      StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor :=
+    { positiveShiftedSquare := S
+      inverseSquareRoot := R
+      domainAction := D
+      boundedExtension := B
+      analyticProperties := Q }
+  exact ⟨P.toOperatorDataConstructor⟩
 
 /-- The fully analytic factorization followed by measurable pullback and bounded
 Borel resolution. -/
