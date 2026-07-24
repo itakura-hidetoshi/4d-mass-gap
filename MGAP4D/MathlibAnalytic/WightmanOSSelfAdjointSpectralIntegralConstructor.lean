@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalSpectralIntegral
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalSpectralIntegralSpecialization
 
 namespace MGAP4D
 namespace MathlibAnalytic
