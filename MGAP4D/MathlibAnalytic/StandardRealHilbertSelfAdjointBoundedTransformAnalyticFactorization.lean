@@ -10,7 +10,7 @@ open scoped InnerProductSpace
 /-- The positive shifted-square stage representing `1 + A²`.
 
 The pinned Mathlib API does not construct this unbounded operator uniformly from an
-arbitrary real-Hilbert self-adjoint `LinearPMap`.  This certificate records its exact
+arbitrary real-Hilbert self-adjoint `LinearPMap`. This certificate records its exact
 operator-theoretic obligations, including positivity, the lower bound by one, and its
 evaluation on eigenvectors of `A`. -/
 structure StandardRealHilbertSelfAdjointPositiveShiftedSquareData
@@ -198,8 +198,7 @@ structure StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipe
 
 /-- The five analytic constructors produce the operator-data constructor required by
 the factored bounded-transform route. -/
-def StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor
-    .toOperatorDataConstructor
+def StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor.toOperatorDataConstructor
     (P : StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor) :
     StandardRealHilbertSelfAdjointBoundedTransformOperatorDataConstructor where
   construct := fun A core =>
@@ -213,8 +212,7 @@ def StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineCo
        domainAction := D
        boundedExtension := B
        analyticProperties := Q } :
-      StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipeline A)
-      .toOperatorData
+      StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipeline A).toOperatorData
 
 /-- The analytic stages are sufficient for the previously isolated operator-data
 constructor. -/
@@ -226,13 +224,14 @@ theorem standard_real_hilbert_selfAdjoint_boundedTransform_operatorData_construc
     (Q : StandardRealHilbertSelfAdjointBoundedTransformAnalyticPropertiesConstructor) :
     Nonempty StandardRealHilbertSelfAdjointBoundedTransformOperatorDataConstructor := by
   exact ⟨
-    ({ positiveShiftedSquare := S
-       inverseSquareRoot := R
-       domainAction := D
-       boundedExtension := B
-       analyticProperties := Q } :
-      StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor)
-      .toOperatorDataConstructor⟩
+    StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor
+      .toOperatorDataConstructor
+      ({ positiveShiftedSquare := S
+         inverseSquareRoot := R
+         domainAction := D
+         boundedExtension := B
+         analyticProperties := Q } :
+        StandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor)⟩
 
 /-- The fully analytic factorization followed by measurable pullback and bounded
 Borel resolution. -/
@@ -261,8 +260,7 @@ def AnalyticallyFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipel
   P.toFactored.toConstructor
 
 /-- The same route specializes to the reconstructed Wightman OS boundary. -/
-def AnalyticallyFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline
-    .toExplicitWightmanOSConstructor
+def AnalyticallyFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline.toExplicitWightmanOSConstructor
     (P : AnalyticallyFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline) :
     ExplicitWightmanOSSelfAdjointSpectralResolutionConstructor :=
   P.toFactored.toExplicitWightmanOSConstructor
