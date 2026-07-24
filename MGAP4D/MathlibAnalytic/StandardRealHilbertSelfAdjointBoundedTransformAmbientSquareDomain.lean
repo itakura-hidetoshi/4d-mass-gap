@@ -89,8 +89,7 @@ structure StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticDa
 
 /-- The three analytic properties of the canonical operator supply the previous ambient
 extension boundary; its operator, domain lift, and agreement law are now canonical. -/
-def StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticData
-    .toPositiveShiftedSquareExtensionData
+def StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticData.toPositiveShiftedSquareExtensionData
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     {A : H →ₗ.[ℝ] H}
     (X : StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticData A) :
@@ -120,8 +119,7 @@ structure StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticDa
 
 /-- Recover the previous extension constructor from the strictly smaller analytic
 certificate. -/
-def StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticDataConstructor
-    .toPositiveShiftedSquareExtensionDataConstructor
+def StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticDataConstructor.toPositiveShiftedSquareExtensionDataConstructor
     (C : StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareAnalyticDataConstructor) :
     StandardRealHilbertSelfAdjointPositiveShiftedSquareExtensionDataConstructor where
   construct := fun A core =>
@@ -143,8 +141,7 @@ structure AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOpera
 
 /-- Forget the canonical ambient-domain refinement and recover the square-domain
 pipeline from the preceding stage. -/
-def AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor
-    .toSquareDomain
+def AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor.toSquareDomain
     (P : AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor) :
     SquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor where
   positiveShiftedSquareExtension :=
@@ -156,8 +153,7 @@ def AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorCon
 
 /-- The canonical ambient-domain construction supplies the existing bounded-transform
 operator-data constructor. -/
-def AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor
-    .toOperatorDataConstructor
+def AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor.toOperatorDataConstructor
     (P : AmbientSquareDomainStandardRealHilbertSelfAdjointBoundedTransformOperatorConstructionPipelineConstructor) :
     StandardRealHilbertSelfAdjointBoundedTransformOperatorDataConstructor :=
   P.toSquareDomain.toOperatorDataConstructor
@@ -173,8 +169,7 @@ structure AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransf
     RealHilbertBoundedSelfAdjointBorelSpectralResolutionConstructor
 
 /-- Collapse the ambient-domain route to the preceding square-domain factored route. -/
-def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline
-    .toSquareDomainFactored
+def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline.toSquareDomainFactored
     (P : AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline) :
     SquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline where
   operatorConstruction := P.operatorConstruction.toSquareDomain
@@ -183,15 +178,13 @@ def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBor
 
 /-- The ambient-domain-refined route yields the unchanged generic spectral-resolution
 constructor. -/
-def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline
-    .toConstructor
+def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline.toConstructor
     (P : AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline) :
     RealHilbertSelfAdjointSpectralResolutionConstructor :=
   P.toSquareDomainFactored.toConstructor
 
 /-- The same route specializes to the reconstructed Wightman OS boundary. -/
-def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline
-    .toExplicitWightmanOSConstructor
+def AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline.toExplicitWightmanOSConstructor
     (P : AmbientSquareDomainFactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline) :
     ExplicitWightmanOSSelfAdjointSpectralResolutionConstructor :=
   P.toSquareDomainFactored.toExplicitWightmanOSConstructor
