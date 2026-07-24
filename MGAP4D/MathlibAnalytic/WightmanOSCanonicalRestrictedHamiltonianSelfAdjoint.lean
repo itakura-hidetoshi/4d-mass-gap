@@ -202,15 +202,6 @@ theorem explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
     LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian :=
   (explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M).isClosed
 
-/-- Compatibility constructor for the former operator bridge.  Since the
-compatibility type is now an abbreviation for pure spectral data, this is the
-identity map. -/
-def explicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridgeOfSpectrum
-    (M : ExplicitWightmanOSReconstructedModel)
-    (B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M) :
-    ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M :=
-  B
-
 structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop where
   generic_restriction_selfAdjoint :
     ∀ {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
