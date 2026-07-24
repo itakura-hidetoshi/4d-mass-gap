@@ -25,7 +25,12 @@ theorem standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_injective
     dsimp [z]
     change
       (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun (x - y) = 0
-    rw [map_sub, hxy, sub_self]
+    have hxy' :
+        (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun x =
+          (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun y :=
+      hxy
+    rw [(standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun.map_sub,
+      hxy', sub_self]
   have hzNorm :=
     standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare_norm_lower_bound_one
       A core z
@@ -102,7 +107,12 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveInverseSquareRootData.inv
       (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun
           ((1 / lambda) • xAmbient) =
         (x : H)
-    rw [map_smul, hShiftedSquareX]
+    have hShiftedSquareX' :
+        (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun xAmbient =
+          lambda • (x : H) :=
+      hShiftedSquareX
+    rw [(standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).toFun.map_smul,
+      hShiftedSquareX']
     simp [smul_smul, hlambdaNe]
   let iterated :
       (standardRealHilbertSelfAdjointCanonicalPositiveShiftedSquare A).domain :=
@@ -162,10 +172,19 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveInverseSquareRootData.eig
   have hRy : R.inverseSquareRoot y = -(s • y) :=
     eq_neg_of_add_eq_zero_left hPlus
   have hPositive := R.quadraticForm_nonnegative y
-  rw [hRy] at hPositive
-  simp [real_inner_self_eq_norm_sq] at hPositive
+  rw [hRy, inner_neg_left] at hPositive
+  have hNonposInner : inner ℝ (s • y) y ≤ 0 :=
+    neg_nonneg.mp hPositive
+  have hNonpos : s * ‖y‖ ^ 2 ≤ 0 := by
+    calc
+      s * ‖y‖ ^ 2 = inner ℝ (s • y) y := by
+        rw [inner_smul_left, real_inner_self_eq_norm_sq]
+        simp
+      _ ≤ 0 := hNonposInner
+  have hyNormSq : ‖y‖ ^ 2 = 0 := by
+    nlinarith [sq_nonneg ‖y‖]
   have hyNorm : ‖y‖ = 0 := by
-    nlinarith [sq_nonneg ‖y‖, norm_nonneg y]
+    nlinarith [norm_nonneg y]
   have hy : y = 0 := norm_eq_zero.mp hyNorm
   dsimp [y] at hy
   have hResult : R.inverseSquareRoot (x : H) = s • (x : H) :=
