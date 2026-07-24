@@ -8,15 +8,15 @@ open MeasureTheory
 noncomputable section
 
 /-- Indicator functional-calculus evaluation on ambient Hamiltonian eigenvectors:
-for an eigenvector at energy `E`, the spectral projection of a measurable set is
-the vector itself when `E` belongs to the set and zero otherwise. -/
+for an eigenvector at energy `E`, the spectral projection of a measurable set fixes
+the vector when `E` belongs to the set and annihilates it otherwise. -/
 def ExplicitWightmanOSAmbientEigenvectorIndicatorEvaluationLaw
     (M : ExplicitWightmanOSReconstructedModel) : Prop :=
   ∀ {E : ℝ} (x : M.hamiltonian.domain),
     M.hamiltonian x = E • (x : M.H) →
       ∀ (s : Set ℝ), MeasurableSet s →
-        M.spectralPVM.projection s (x : M.H) =
-          if E ∈ s then (x : M.H) else 0
+        (E ∈ s → M.spectralPVM.projection s (x : M.H) = (x : M.H)) ∧
+        (E ∉ s → M.spectralPVM.projection s (x : M.H) = 0)
 
 /-- Indicator evaluation immediately gives annihilation on every measurable set
 disjoint from the eigenvalue singleton. -/
@@ -28,7 +28,7 @@ theorem explicit_wightman_os_ambient_offEnergy_indicator_annihilation_of_evaluat
   have hNotMem : E ∉ s := by
     intro hMem
     exact Set.disjoint_left.1 hDisjoint hMem (by simp)
-  rw [hEvaluation x hEigen s hs, if_neg hNotMem]
+  exact (hEvaluation x hEigen s hs).2 hNotMem
 
 /-- Indicator evaluation and exact ENNReal quadratic realization imply off-energy
 scalar spectral vanishing. -/
