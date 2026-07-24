@@ -10,7 +10,7 @@ real numbers admitting a nonzero eigenvector in the operator domain. -/
 def LinearPMap.realPointSpectrum
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (T : E →ₗ.[ℝ] E) : Set ℝ :=
-  {λ | ∃ x : T.domain, (x : E) ≠ 0 ∧ T x = λ • (x : E)}
+  {a | ∃ x : T.domain, (x : E) ≠ 0 ∧ T x = a • (x : E)}
 
 /-- The point spectrum of the actual canonical Hamiltonian restriction to
 `Ω⊥`. -/
@@ -21,12 +21,12 @@ def ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalPointSpectrum
 /-- Membership in the canonical point spectrum is exactly existence of a
 nonzero domain eigenvector. -/
 theorem mem_canonical_vacuum_orthogonal_pointSpectrum_iff
-    (M : ExplicitWightmanOSReconstructedModel) (λ : ℝ) :
-    λ ∈ M.canonicalVacuumOrthogonalPointSpectrum ↔
+    (M : ExplicitWightmanOSReconstructedModel) (a : ℝ) :
+    a ∈ M.canonicalVacuumOrthogonalPointSpectrum ↔
       ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
         (x : M.VacuumOrthogonalHilbert) ≠ 0 ∧
           M.canonicalVacuumOrthogonalHamiltonian x =
-            λ • (x : M.VacuumOrthogonalHilbert) := by
+            a • (x : M.VacuumOrthogonalHilbert) := by
   rfl
 
 /-- Spectral identification input connecting the actual operator point spectrum
