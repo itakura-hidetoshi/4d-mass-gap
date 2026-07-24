@@ -49,14 +49,15 @@ theorem euclidean_nonatomic_canonical_hamiltonian_support_gap
   have hRestricted : B.restrictedSpectrum ⊆ Set.Ici exactGapValueReal := by
     rw [← B.pvmOpenSupport_eq_restrictedSpectrum]
     exact hSupport
-  exact ⟨B.canonicalRestrictedSelfAdjoint,
-    canonical_vacuum_orthogonal_hamiltonian_dense_domain
-      B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge,
-    canonical_vacuum_orthogonal_hamiltonian_isClosed
-      B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge,
+  exact ⟨
+    explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint
+      C.explicitModel,
+    explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
+      C.explicitModel,
+    explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
+      C.explicitModel,
     hSupport, hRestricted⟩
 
 end
-
 end MathlibAnalytic
 end MGAP4D

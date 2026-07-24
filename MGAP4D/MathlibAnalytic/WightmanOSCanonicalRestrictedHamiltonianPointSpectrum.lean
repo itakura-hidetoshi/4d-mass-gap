@@ -7,26 +7,26 @@ noncomputable section
 
 /-- The real point spectrum of a partially-defined real-linear operator: those
 real numbers admitting a nonzero eigenvector in the operator domain. -/
-def LinearPMap.realPointSpectrum
+def realLinearPMapPointSpectrum
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (T : E →ₗ.[ℝ] E) : Set ℝ :=
-  {λ | ∃ x : T.domain, (x : E) ≠ 0 ∧ T x = λ • (x : E)}
+  {a | ∃ x : T.domain, (x : E) ≠ 0 ∧ T x = a • (x : E)}
 
 /-- The point spectrum of the actual canonical Hamiltonian restriction to
 `Ω⊥`. -/
 def ExplicitWightmanOSReconstructedModel.canonicalVacuumOrthogonalPointSpectrum
     (M : ExplicitWightmanOSReconstructedModel) : Set ℝ :=
-  M.canonicalVacuumOrthogonalHamiltonian.realPointSpectrum
+  realLinearPMapPointSpectrum M.canonicalVacuumOrthogonalHamiltonian
 
 /-- Membership in the canonical point spectrum is exactly existence of a
 nonzero domain eigenvector. -/
 theorem mem_canonical_vacuum_orthogonal_pointSpectrum_iff
-    (M : ExplicitWightmanOSReconstructedModel) (λ : ℝ) :
-    λ ∈ M.canonicalVacuumOrthogonalPointSpectrum ↔
+    (M : ExplicitWightmanOSReconstructedModel) (a : ℝ) :
+    a ∈ M.canonicalVacuumOrthogonalPointSpectrum ↔
       ∃ x : M.canonicalVacuumOrthogonalHamiltonian.domain,
         (x : M.VacuumOrthogonalHilbert) ≠ 0 ∧
           M.canonicalVacuumOrthogonalHamiltonian x =
-            λ • (x : M.VacuumOrthogonalHilbert) := by
+            a • (x : M.VacuumOrthogonalHilbert) := by
   rfl
 
 /-- Spectral identification input connecting the actual operator point spectrum
@@ -35,7 +35,7 @@ This is kept explicit because the current Mathlib `LinearPMap` API does not
 supply an unbounded-operator spectral theorem. -/
 structure ExplicitWightmanOSCanonicalPointSpectrumBridge
     (M : ExplicitWightmanOSReconstructedModel) extends
-      ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge M where
+      ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M where
   pointSpectrum_eq_restrictedSpectrum :
     M.canonicalVacuumOrthogonalPointSpectrum = restrictedSpectrum
 
@@ -46,7 +46,7 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_zero_not_mem
     0 ∉ M.canonicalVacuumOrthogonalPointSpectrum := by
   rw [B.pointSpectrum_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_zero_not_mem
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
 
 /-- Every eigenvalue of the actual canonical restriction lies above any proven
 Hamiltonian mass gap. -/
@@ -57,8 +57,7 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_lower_bound
     M.canonicalVacuumOrthogonalPointSpectrum ⊆ Set.Ici m := by
   rw [B.pointSpectrum_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_subset_Ici
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-    hGap
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap
 
 /-- When the lower edge is attained, the infimum of the actual point spectrum is
 the mass-gap value. -/
@@ -70,8 +69,7 @@ theorem canonical_vacuum_orthogonal_pointSpectrum_sInf_eq
     sInf M.canonicalVacuumOrthogonalPointSpectrum = m := by
   rw [B.pointSpectrum_eq_restrictedSpectrum]
   exact vacuum_orthogonal_restrictedSpectrum_sInf_eq
-    B.toExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge
-    hGap hmSpectrum
+    B.toExplicitWightmanOSVacuumOrthogonalSpectrumBridge hGap hmSpectrum
 
 /-- A positive attained lower spectral value produces an actual nonzero
 eigenvector of the canonical restricted Hamiltonian. -/
@@ -156,6 +154,5 @@ theorem euclidean_clustering_exact_gap_eigenvector
     B hGap.1 hExactSpectrum
 
 end
-
 end MathlibAnalytic
 end MGAP4D
