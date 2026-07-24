@@ -24,8 +24,10 @@ theorem OrthogonalProjectionValuedSetFunction.hasEigenprojectionLaw_of_complemen
     (hComplement : P.HasEigenvectorComplementAnnihilationLaw T) :
     P.HasEigenprojectionLaw T := by
   intro E x hEigen
+  have hDisjoint : Disjoint ({E} : Set ℝ) (({E} : Set ℝ)ᶜ) := by
+    simp
   have hDecomp := P.disjoint_additive
-    ({E} : Set ℝ) (({E} : Set ℝ)ᶜ) Set.disjoint_compl_right (x : H)
+    ({E} : Set ℝ) (({E} : Set ℝ)ᶜ) hDisjoint (x : H)
   rw [Set.union_compl_self, P.univ_apply,
     hComplement x hEigen, add_zero] at hDecomp
   exact hDecomp.symm
