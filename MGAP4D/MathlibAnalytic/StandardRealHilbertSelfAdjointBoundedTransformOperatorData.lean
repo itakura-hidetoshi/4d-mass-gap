@@ -65,7 +65,7 @@ structure StandardRealHilbertSelfAdjointBoundedTransformSpectralPullbackConstruc
   construct :
     ∀ {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
       (A : H →ₗ.[ℝ] H)
-      (core : RealHilbertSelfAdjointCore A)
+      (_core : RealHilbertSelfAdjointCore A)
       (T : StandardRealHilbertSelfAdjointBoundedTransformOperatorData A),
       StandardRealHilbertSelfAdjointBoundedTransformSpectralPullback T
 
@@ -121,8 +121,7 @@ theorem real_hilbert_selfAdjoint_spectralResolution_constructor_nonempty_of_stan
 
 /-- The factored standard route remains directly available at the reconstructed
 OS/Wightman model boundary. -/
-def FactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline
-    .toExplicitWightmanOSConstructor
+def FactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline.toExplicitWightmanOSConstructor
     (P : FactoredStandardRealHilbertSelfAdjointBoundedTransformBorelPipeline) :
     ExplicitWightmanOSSelfAdjointSpectralResolutionConstructor :=
   P.toStandard.toExplicitWightmanOSConstructor
