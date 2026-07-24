@@ -33,11 +33,11 @@ theorem explicit_wightman_os_ambient_indicator_evaluation_of_borelFunctionalCalc
   · intro hMem
     rw [← F.indicator_eq_projection s hs (x : M.H),
       F.eigenvector_evaluation x hEigen]
-    simp [Set.indicator_of_mem hMem]
+    simp [hMem]
   · intro hNotMem
     rw [← F.indicator_eq_projection s hs (x : M.H),
       F.eigenvector_evaluation x hEigen]
-    simp [Set.indicator_of_not_mem hNotMem]
+    simp [hNotMem]
 
 /-- The abstract Borel functional calculus therefore yields off-energy indicator
 annihilation. -/
