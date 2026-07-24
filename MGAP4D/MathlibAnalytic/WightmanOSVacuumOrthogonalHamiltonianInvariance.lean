@@ -70,13 +70,6 @@ theorem canonical_vacuum_orthogonal_hamiltonian_apply
       M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x) := by
   rfl
 
-/-- Compatibility name for the former operator bridge.  Canonical restricted
- self-adjointness is now theorem-derived, so this type contains only the pure
- vacuum-orthogonal spectral identification data. -/
-abbrev ExplicitWightmanOSCanonicalVacuumOrthogonalHamiltonianBridge
-    (M : ExplicitWightmanOSReconstructedModel) :=
-  ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M
-
 end
 
 end MathlibAnalytic
