@@ -221,10 +221,6 @@ structure WightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt : Prop wher
   actual_restriction_closed :
     ∀ M : ExplicitWightmanOSReconstructedModel,
       LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian
-  automatic_bridge :
-    ∀ (M : ExplicitWightmanOSReconstructedModel)
-      (_B : ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M),
-      IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian
   claim_boundary : True
 
 theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
@@ -239,9 +235,6 @@ theorem wightmanOSCanonicalRestrictedHamiltonianSelfAdjointReceipt_proved :
         explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_dense_domain
       actual_restriction_closed :=
         explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isClosed
-      automatic_bridge := by
-        intro M B
-        exact explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M
       claim_boundary := trivial }
 
 end
