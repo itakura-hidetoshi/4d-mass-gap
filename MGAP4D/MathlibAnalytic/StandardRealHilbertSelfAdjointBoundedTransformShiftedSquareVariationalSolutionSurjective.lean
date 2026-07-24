@@ -49,8 +49,9 @@ theorem StandardRealHilbertSelfAdjointCanonicalPositiveShiftedSquareVariationalS
     A (V.solve x) ∈ A.domain := by
   have hAdjointEq : A.adjoint = A :=
     LinearPMap.isSelfAdjoint_def.mp core.selfAdjoint
-  rw [← hAdjointEq]
-  exact V.solve_image_mem_adjoint_domain x
+  have hDomainEq : A.adjoint.domain = A.domain :=
+    congrArg (fun T : H →ₗ.[ℝ] H => T.domain) hAdjointEq
+  exact hDomainEq ▸ V.solve_image_mem_adjoint_domain x
 
 /-- The weak variational identity becomes the strong second-order equation
 `A²u = x - u`. -/
