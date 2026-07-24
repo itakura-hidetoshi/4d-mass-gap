@@ -27,12 +27,12 @@ theorem explicit_wightman_os_ambient_scalarMeasure_localization_of_restriction
       ExplicitWightmanOSAmbientEigenvectorScalarMeasureRestrictionLaw M P) :
     ExplicitWightmanOSAmbientEigenvectorScalarMeasureLocalizationLaw M P := by
   intro E x hEigen
-  have hMeasure := congrArg
-    (fun μ : Measure ℝ => μ (({E} : Set ℝ)ᶜ))
-    (hRestriction x hEigen)
-  rw [Measure.restrict_apply (MeasurableSet.singleton E).compl] at hMeasure
+  have hMass : P.scalarMeasure (x : M.H) (({E} : Set ℝ)ᶜ) = 0 := by
+    simpa [Measure.restrict_apply, (MeasurableSet.singleton E).compl] using
+      congrArg (fun μ : Measure ℝ => μ (({E} : Set ℝ)ᶜ))
+        (hRestriction x hEigen)
   change (P.scalarMeasure (x : M.H) (({E} : Set ℝ)ᶜ)).toReal = 0
-  rw [hMeasure]
+  rw [hMass]
   simp
 
 /-- Support-level restriction localization implies ambient complement
