@@ -28,14 +28,14 @@ theorem explicit_wightman_os_ambient_scalarMeasure_restriction_of_offEnergy_vani
       ExplicitWightmanOSAmbientEigenvectorOffEnergyScalarVanishingLaw M P) :
     ExplicitWightmanOSAmbientEigenvectorScalarMeasureRestrictionLaw M P := by
   intro E x hEigen
-  ext s hs
-  change (P.scalarMeasure (x : M.H)).restrict (({E} : Set ℝ)ᶜ) s = 0
-  rw [Measure.restrict_apply (MeasurableSet.singleton E).compl]
+  apply Measure.ext
+  intro s hs
   have hMeasurable : MeasurableSet (s ∩ ({E} : Set ℝ)ᶜ) :=
     hs.inter (MeasurableSet.singleton E).compl
   have hDisjoint : Disjoint (s ∩ ({E} : Set ℝ)ᶜ) ({E} : Set ℝ) := by
     simp
-  exact hVanishing x hEigen (s ∩ ({E} : Set ℝ)ᶜ) hMeasurable hDisjoint
+  simpa [Measure.restrict_apply, hs, (MeasurableSet.singleton E).compl] using
+    hVanishing x hEigen (s ∩ ({E} : Set ℝ)ᶜ) hMeasurable hDisjoint
 
 /-- Off-eigenvalue scalar vanishing implies the complement real-mass
 localization law. -/
