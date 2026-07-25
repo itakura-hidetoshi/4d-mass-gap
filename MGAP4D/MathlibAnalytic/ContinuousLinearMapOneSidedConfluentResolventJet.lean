@@ -30,7 +30,7 @@ corresponding power times the final operator. -/
     (a b : α)
     (n : ℕ) :
     orderedProduct A (List.replicate n a ++ [b]) = (A a) ^ n * A b := by
-  simp [orderedProduct_append]
+  simp [orderedProduct_append, orderedProduct]
 
 /-- The one-sided confluent resolvent jet normal form.  It treats an arbitrary
 finite multiplicity at `lambda` and one simple node at the distinct parameter
