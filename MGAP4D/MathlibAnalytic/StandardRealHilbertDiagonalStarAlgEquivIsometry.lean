@@ -21,8 +21,8 @@ theorem norm_diagonalComplexificationStarAlgEquiv_apply (T : H →L[ℝ] H) :
 theorem diagonalComplexificationStarAlgEquiv_isometry :
     Isometry (diagonalComplexificationStarAlgEquiv (H := H)) := by
   intro S T
-  change dist (diagonalComplexification S) (diagonalComplexification T) = dist S T
-  exact diagonalComplexification_isometry S T
+  simpa only [diagonalComplexificationStarAlgEquiv_apply] using
+    diagonalComplexification_isometry (H := H) S T
 
 /-- The inverse bundled star-algebra equivalence preserves the operator norm. -/
 @[simp]
