@@ -48,20 +48,37 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectDiagonalComplexification
   have hIm :=
     G.admissibleRescaledDefectResolvent_tendsto_continuumResolvent
       T hP hInnerSymmetric hSelf hlambda z.2
-  change
-    Tendsto
-      (fun tau : G.AdmissibleRescaledDefectTime =>
-        (G.admissibleRescaledDefectResolvent
-            hInnerSymmetric tau hlambda z.1,
-          G.admissibleRescaledDefectResolvent
-            hInnerSymmetric tau hlambda z.2))
-      G.admissibleRescaledDefectTimeFilter
-      (𝓝
-        (G.vacuumOrthogonalContinuumRealResolvent
-            T hP hInnerSymmetric hSelf hlambda z.1,
-          G.vacuumOrthogonalContinuumRealResolvent
-            T hP hInnerSymmetric hSelf hlambda z.2))
-  exact hRe.prodMk_nhds hIm
+  have hReOfReal :
+      Tendsto
+        (fun tau : G.AdmissibleRescaledDefectTime =>
+          ofReal
+            (G.admissibleRescaledDefectResolvent
+              hInnerSymmetric tau hlambda z.1))
+        G.admissibleRescaledDefectTimeFilter
+        (𝓝
+          (ofReal
+            (G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda z.1))) := by
+    simpa only [standardOfRealLinearIsometry_apply] using
+      ((standardOfRealLinearIsometry
+        (H := P.VacuumOrthogonalHilbert)).continuous.tendsto _).comp hRe
+  have hImOfReal :
+      Tendsto
+        (fun tau : G.AdmissibleRescaledDefectTime =>
+          ofReal
+            (G.admissibleRescaledDefectResolvent
+              hInnerSymmetric tau hlambda z.2))
+        G.admissibleRescaledDefectTimeFilter
+        (𝓝
+          (ofReal
+            (G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda z.2))) := by
+    simpa only [standardOfRealLinearIsometry_apply] using
+      ((standardOfRealLinearIsometry
+        (H := P.VacuumOrthogonalHilbert)).continuous.tendsto _).comp hIm
+  have hComplex := hReOfReal.add (hImOfReal.const_smul Complex.I)
+  simpa only [diagonalComplexification_apply, ofReal, I_smul,
+    neg_zero, add_zero, zero_add] using hComplex
 
 /-- The actual continuum resolvent complexification lies in the closed diagonal
 real-form star subalgebra, obtained from the pointwise strong limit of the
@@ -90,6 +107,7 @@ theorem VacuumSemigroupGapSlope.vacuumOrthogonalContinuumDiagonalResolvent_mem_r
   apply
     mem_diagonalComplexificationStarSubalgebra_of_tendsto_apply
       (H := P.VacuumOrthogonalHilbert)
+      (l := G.admissibleRescaledDefectTimeFilter)
       F
       (diagonalComplexification
         (G.vacuumOrthogonalContinuumRealResolvent
@@ -118,6 +136,7 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectDiagonalComplexification
   apply
     tendsto_diagonalComplexification_apply_existsUnique_real_limit
       (H := P.VacuumOrthogonalHilbert)
+      (l := G.admissibleRescaledDefectTimeFilter)
       (f := fun tau : G.AdmissibleRescaledDefectTime =>
         G.admissibleRescaledDefectResolvent
           hInnerSymmetric tau hlambda)
