@@ -72,7 +72,9 @@ theorem diagonalComplexification_eq_zero_iff (T : H →L[ℝ] H) :
     apply norm_eq_zero.mp
     rw [← norm_diagonalComplexification T, h, norm_zero]
   · rintro rfl
-    ext z <;> simp
+    apply ContinuousLinearMap.ext
+    intro z
+    apply Prod.ext <;> simp
 
 end StandardRealHilbertComplexification
 
