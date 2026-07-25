@@ -70,24 +70,26 @@ theorem complex_smul_im [AddCommGroup H] [Module ℝ H]
 
 instance [AddCommGroup H] [Module ℝ H] : Module ℂ (StandardRealHilbertComplexification H) where
   one_smul z := by
-    ext <;> simp
+    apply Prod.ext <;> simp
   mul_smul c d z := by
-    ext <;>
+    apply Prod.ext <;>
       simp only [complex_smul_re, complex_smul_im, Complex.mul_re, Complex.mul_im,
         smul_sub, smul_add, sub_smul, add_smul, mul_smul]
     all_goals module
   smul_add c z w := by
-    ext <;> simp [smul_add]
+    apply Prod.ext <;> simp [smul_add]
   add_smul c d z := by
-    ext <;> simp [add_smul, sub_eq_add_neg]
+    apply Prod.ext <;> simp [add_smul, sub_eq_add_neg]
   zero_smul z := by
-    ext <;> simp
+    apply Prod.ext <;> simp
+  smul_zero c := by
+    apply Prod.ext <;> simp
 
 @[simp]
 theorem I_smul [AddCommGroup H] [Module ℝ H]
     (z : StandardRealHilbertComplexification H) :
     Complex.I • z = (-z.2, z.1) := by
-  ext <;> simp
+  apply Prod.ext <;> simp
 
 /-- The canonical embedding of the real vector space. -/
 def ofReal [Zero H] (x : H) : StandardRealHilbertComplexification H :=
@@ -120,18 +122,18 @@ theorem conjugation_im [Neg H] (z : StandardRealHilbertComplexification H) :
 theorem conjugation_conjugation [AddGroup H]
     (z : StandardRealHilbertComplexification H) :
     conjugation (conjugation z) = z := by
-  ext <;> simp [conjugation]
+  apply Prod.ext <;> simp [conjugation]
 
 @[simp]
 theorem conjugation_ofReal [AddGroup H] (x : H) :
     conjugation (ofReal x) = ofReal x := by
-  ext <;> simp [conjugation, ofReal]
+  apply Prod.ext <;> simp [conjugation, ofReal]
 
 /-- Coordinate form of the canonical real/imaginary decomposition. -/
 theorem decompose [AddCommGroup H] [Module ℝ H]
     (z : StandardRealHilbertComplexification H) :
     z = ofReal z.1 + Complex.I • ofReal z.2 := by
-  ext <;> simp [ofReal]
+  apply Prod.ext <;> simp [ofReal]
 
 end StandardRealHilbertComplexification
 
