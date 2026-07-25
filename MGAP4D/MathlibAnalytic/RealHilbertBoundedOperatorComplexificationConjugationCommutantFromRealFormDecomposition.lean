@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.RealHilbertBoundedOperatorComplexificationInverseClosedRangeFromConjugationCommutant
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.RestrictScalars
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -45,13 +44,24 @@ variable {H HC : Type}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [NormedAddCommGroup HC] [InnerProductSpace ℂ HC] [CompleteSpace HC]
 
+/-- Reinterpret a complex-linear bounded operator as a real-linear bounded operator.  This local
+construction uses the pinned Mathlib `LinearMap.restrictScalars` API and reuses the original
+continuity proof. -/
+def restrictComplexScalarsToReal (X : HC →L[ℂ] HC) : HC →L[ℝ] HC :=
+  ⟨X.toLinearMap.restrictScalars ℝ, X.continuous⟩
+
+@[simp]
+theorem restrictComplexScalarsToReal_apply (X : HC →L[ℂ] HC) (z : HC) :
+    restrictComplexScalarsToReal X z = X z :=
+  rfl
+
 /-- Restrict a complex-linear operator to the embedded real form and project its values back to
 `H`.  When the operator commutes with conjugation, this is the unique real operator from which it
 arises by complexification. -/
 def realRestriction
     (D : RealHilbertBoundedOperatorComplexificationRealFormDecompositionData H HC)
     (X : HC →L[ℂ] HC) : H →L[ℝ] H :=
-  D.realPart.comp ((X.restrictScalars ℝ).comp D.ofReal)
+  D.realPart.comp ((restrictComplexScalarsToReal X).comp D.ofReal)
 
 @[simp]
 theorem realRestriction_apply
