@@ -11,7 +11,7 @@ open Filter Topology
 
 namespace StandardRealHilbertComplexification
 
-variable {H : Type*}
+variable {H : Type}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 /-- The canonical embedding of the real Hilbert space into its standard
@@ -25,7 +25,8 @@ noncomputable def standardOfRealLinearIsometry :
         apply Prod.ext <;> simp [ofReal]
       map_smul' := by
         intro r x
-        apply Prod.ext <;> simp [ofReal] }
+        change (r • x, 0) = (r • x, r • (0 : H))
+        apply Prod.ext <;> simp }
   norm_map' := norm_ofReal
 
 @[simp]
@@ -41,10 +42,14 @@ noncomputable def standardConjugationLinearIsometry :
     { toFun := conjugation
       map_add' := by
         intro z w
-        apply Prod.ext <;> simp [conjugation]
+        apply Prod.ext
+        · simp [conjugation]
+        · change -(z.2 + w.2) = -z.2 + -w.2
+          abel
       map_smul' := by
         intro r z
-        apply Prod.ext <;> simp [conjugation] }
+        change (r • z.1, -(r • z.2)) = (r • z.1, r • (-z.2))
+        apply Prod.ext <;> simp }
   norm_map' := norm_conjugation
 
 @[simp]
@@ -231,7 +236,7 @@ theorem tendsto_diagonalComplexification_apply_existsUnique_real_limit
   refine ⟨T, hT, ?_⟩
   intro U hU
   apply (diagonalComplexificationLinearIsometry (H := H)).injective
-  simpa only [diagonalComplexificationLinearIsometry_apply] using hT.trans hU.symm
+  simpa only [diagonalComplexificationLinearIsometry_apply] using hU.trans hT.symm
 
 end StandardRealHilbertComplexification
 
