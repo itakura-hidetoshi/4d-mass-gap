@@ -81,6 +81,15 @@ theorem range_spectrumContinuousMapEquiv
     exact ⟨(Homeomorph.setCongr (D.real_spectrum_eq T)).symm x, by simp
       [spectrumContinuousMapEquiv]⟩
 
+/-- Spectrum transport is continuous for the uniform topology on continuous functions. -/
+theorem continuous_spectrumContinuousMapEquiv
+    (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
+    (T : H →L[ℝ] H) :
+    Continuous (D.spectrumContinuousMapEquiv T) := by
+  change Continuous fun f : C(spectrum ℝ T, ℝ) =>
+    f.comp (Homeomorph.setCongr (D.real_spectrum_eq T))
+  exact ContinuousMap.continuous_precomp _
+
 /-- Apply the complex-Hilbert real self-adjoint CFC after transporting the spectrum. -/
 noncomputable def complexCfcAux
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
@@ -94,10 +103,9 @@ theorem continuous_complexCfcAux
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
     (T : H →L[ℝ] H) (hT : IsSelfAdjoint T) :
     Continuous (D.complexCfcAux T hT) := by
-  simpa only [complexCfcAux, StarAlgHom.coe_comp] using
+  simpa only [complexCfcAux, StarAlgHom.comp_apply] using
     (cfcHom_continuous (D.complexify_isSelfAdjoint hT)).comp
-      (ContinuousMap.continuous_precomp
-        (Homeomorph.setCongr (D.real_spectrum_eq T)))
+      (D.continuous_spectrumContinuousMapEquiv T)
 
 /-- The auxiliary complex CFC is injective. -/
 theorem complexCfcAux_injective
