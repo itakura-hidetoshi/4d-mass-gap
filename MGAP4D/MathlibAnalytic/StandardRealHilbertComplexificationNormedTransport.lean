@@ -32,7 +32,9 @@ theorem norm_smul_eq
     ‖c • z‖ = ‖c‖ * ‖z‖ := by
   change standardNorm (c • z) = ‖c‖ * standardNorm z
   refine (sq_eq_sq₀ (Real.sqrt_nonneg _) (mul_nonneg (norm_nonneg c) (Real.sqrt_nonneg _))).mp ?_
-  rw [standardNorm_sq, mul_pow, standardNorm_sq]
+  rw [Real.sq_sqrt (standardInner_self_re_nonneg (c • z)), mul_pow,
+    Real.sq_sqrt (standardInner_self_re_nonneg z)]
+  rw [standardInner_self, standardInner_self]
   simp only [complex_smul_re, complex_smul_im, norm_sq_eq_re_inner (𝕜 := ℝ)]
   rw [Complex.sq_norm]
   ring_nf
