@@ -36,11 +36,16 @@ theorem norm_smul_eq
     Real.sq_sqrt (standardInner_self_re_nonneg z)]
   rw [standardInner_self, standardInner_self]
   change
-    ⟪c.re • z.1 - c.im • z.2, c.re • z.1 - c.im • z.2⟫_ℝ +
-        ⟪c.im • z.1 + c.re • z.2, c.im • z.1 + c.re • z.2⟫_ℝ =
-      ⟪c, c⟫_ℝ * (⟪z.1, z.1⟫_ℝ + ⟪z.2, z.2⟫_ℝ)
-  rw [inner_self_eq_norm_sq_to_K (𝕜 := ℝ) c, Complex.sq_norm]
-  simp only [real_inner_add_left, real_inner_sub_left, real_inner_smul_left]
+    ‖(c • z).1‖ ^ 2 + ‖(c • z).2‖ ^ 2 =
+      ‖c‖ ^ 2 * (‖z.1‖ ^ 2 + ‖z.2‖ ^ 2)
+  rw [← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (c • z).1,
+    ← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (c • z).2,
+    ← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) z.1,
+    ← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) z.2,
+    Complex.sq_norm]
+  simp only [complex_smul_re, complex_smul_im,
+    real_inner_sub_sub_self, real_inner_add_add_self,
+    real_inner_smul_left, real_inner_smul_right]
   ring
 
 /-- Complex normed-space structure transported onto the existing complex module instance. -/
