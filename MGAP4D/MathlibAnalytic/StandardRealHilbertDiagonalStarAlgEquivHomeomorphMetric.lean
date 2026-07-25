@@ -17,7 +17,7 @@ theorem dist_diagonalComplexificationStarAlgEquivHomeomorph_apply
     dist (diagonalComplexificationStarAlgEquivHomeomorph (H := H) S)
         (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T) =
       dist S T :=
-  diagonalComplexificationStarAlgEquivHomeomorph_isometry (H := H) S T
+  diagonalComplexificationStarAlgEquivHomeomorph_isometry.dist_eq S T
 
 /-- The inverse diagonal complexification homeomorphism preserves distance. -/
 @[simp]
@@ -26,7 +26,7 @@ theorem dist_diagonalComplexificationStarAlgEquivHomeomorph_symm_apply
     dist ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)
         ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm T) =
       dist S T :=
-  diagonalComplexificationStarAlgEquivHomeomorph_symm_isometry (H := H) S T
+  diagonalComplexificationStarAlgEquivHomeomorph_symm_isometry.dist_eq S T
 
 /-- The diagonal complexification homeomorphism preserves extended distance. -/
 @[simp]
