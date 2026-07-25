@@ -20,7 +20,7 @@ variable {P : D.OSPreHilbertData}
 namespace StronglyContinuousPhysicalSemigroup
 
 /-- The finite-time bounded real operator given by the recursive divided
-+difference of a finite list of admissible rescaled-defect resolvents. -/
+difference of a finite list of admissible rescaled-defect resolvents. -/
 noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectResolventFiniteDividedDifference
     {T : P.StronglyContinuousPhysicalSemigroup}
     (G : T.VacuumSemigroupGapSlope)
