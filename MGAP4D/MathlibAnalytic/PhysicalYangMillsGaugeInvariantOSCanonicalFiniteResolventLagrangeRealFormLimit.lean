@@ -18,7 +18,7 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
-local instance belowHalfMassShiftDecidableEq
+local instance finiteLagrangeRealFormBelowHalfMassShiftDecidableEq
     {T : P.StronglyContinuousPhysicalSemigroup}
     (G : T.VacuumSemigroupGapSlope) :
     DecidableEq G.BelowHalfMassShift :=
