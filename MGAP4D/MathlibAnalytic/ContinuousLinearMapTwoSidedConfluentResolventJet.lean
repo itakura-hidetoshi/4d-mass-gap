@@ -121,15 +121,19 @@ theorem pow_mul_pow_eq_twoSidedConfluentResolventJetNormalForm
               Rlambda ^ (m + 1) * Rmu ^ n -
                     Rlambda ^ m * Rmu ^ (n + 1) =
                   Rlambda ^ m * (Rlambda - Rmu) * Rmu ^ n := by
-                    rw [pow_succ, pow_succ]
+                    rw [pow_succ Rlambda m, pow_succ' Rmu n]
                     noncomm_ring
               _ = Rlambda ^ m *
                     ((lambda - mu) • (Rlambda * Rmu)) * Rmu ^ n := by
                     rw [hIdentity]
               _ = (lambda - mu) •
+                    ((Rlambda ^ m * (Rlambda * Rmu)) * Rmu ^ n) := by
+                    rw [mul_smul_comm, smul_mul_assoc]
+              _ = (lambda - mu) •
                     (Rlambda ^ (m + 1) * Rmu ^ (n + 1)) := by
-                    rw [pow_succ, pow_succ]
-                    module
+                    congr 1
+                    rw [pow_succ Rlambda m, pow_succ' Rmu n]
+                    noncomm_ring
           rw [hDifference, smul_smul]
           rw [inv_mul_cancel₀ (sub_ne_zero.mpr hne), one_smul]
 
