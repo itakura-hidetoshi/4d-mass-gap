@@ -86,9 +86,10 @@ theorem continuous_spectrumContinuousMapEquiv
     (D : RealHilbertBoundedOperatorComplexificationCFCDescentData H HC)
     (T : H →L[ℝ] H) :
     Continuous (D.spectrumContinuousMapEquiv T) := by
-  change Continuous fun f : C(spectrum ℝ T, ℝ) =>
-    f.comp (Homeomorph.setCongr (D.real_spectrum_eq T))
-  exact ContinuousMap.continuous_precomp _
+  simpa only [spectrumContinuousMapEquiv] using
+    ContinuousMap.continuous_precomp
+      ((Homeomorph.setCongr (D.real_spectrum_eq T) :
+        C(spectrum ℝ (D.complexify T), spectrum ℝ T)))
 
 /-- Apply the complex-Hilbert real self-adjoint CFC after transporting the spectrum. -/
 noncomputable def complexCfcAux
