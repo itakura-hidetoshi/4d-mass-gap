@@ -81,7 +81,7 @@ theorem real_spectrum_eq
   have hMap :
       D.complexify (algebraMap ℝ (H →L[ℝ] H) r - T) =
         algebraMap ℝ (HC →L[ℂ] HC) r - D.complexify T := by
-    simp
+    rw [map_sub, D.complexify.commutes r]
   rw [← hMap]
   exact not_congr hUnits
 
