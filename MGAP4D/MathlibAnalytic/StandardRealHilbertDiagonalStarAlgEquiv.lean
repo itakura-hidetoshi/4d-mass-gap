@@ -36,7 +36,7 @@ noncomputable def diagonalComplexificationToStarSubalgebra :
   map_mul' T U := Subtype.ext (map_mul diagonalComplexificationStarAlgHom T U)
   map_zero' := Subtype.ext (map_zero diagonalComplexificationStarAlgHom)
   map_add' T U := Subtype.ext (map_add diagonalComplexificationStarAlgHom T U)
-  commutes' r := Subtype.ext (map_algebraMap diagonalComplexificationStarAlgHom r)
+  commutes' r := Subtype.ext (AlgHomClass.commutes diagonalComplexificationStarAlgHom r)
   map_star' T := Subtype.ext (map_star diagonalComplexificationStarAlgHom T)
 
 @[simp]
