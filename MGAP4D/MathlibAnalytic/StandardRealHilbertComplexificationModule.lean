@@ -153,9 +153,9 @@ theorem conjugation_ofReal [AddGroup H] (x : H) :
 theorem decompose [AddCommGroup H] [Module ℝ H]
     (z : StandardRealHilbertComplexification H) :
     z = ofReal z.1 + Complex.I • ofReal z.2 := by
+  rcases z with ⟨x, y⟩
   rw [I_smul]
-  change (z.1, z.2) = (z.1 + 0, 0 + z.2)
-  simp
+  apply Prod.ext <;> simp [ofReal]
 
 end StandardRealHilbertComplexification
 
