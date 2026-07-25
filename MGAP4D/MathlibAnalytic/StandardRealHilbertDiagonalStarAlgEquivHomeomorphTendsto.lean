@@ -30,7 +30,7 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_iff
     have h' :=
       ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm.continuous.tendsto
         (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T)).comp h
-    simpa using h'
+    simpa only [Function.comp_apply, Equiv.symm_apply_apply] using h'
   · intro h
     exact
       ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).continuous.tendsto T).comp h
@@ -54,7 +54,7 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
     have h' :=
       ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).continuous.tendsto
         ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)).comp h
-    simpa using h'
+    simpa only [Function.comp_apply, Equiv.apply_symm_apply] using h'
   · intro h
     exact
       ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm.continuous.tendsto S).comp h
