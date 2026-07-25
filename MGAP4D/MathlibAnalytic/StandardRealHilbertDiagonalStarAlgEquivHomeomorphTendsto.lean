@@ -20,11 +20,11 @@ limits, and other directed approximation systems.
 @[simp]
 theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_iff
     {ι : Type*} {l : Filter ι} (f : ι → H →L[ℝ] H) (T : H →L[ℝ] H) :
-    Tendsto
+    Filter.Tendsto
         (fun i => diagonalComplexificationStarAlgEquivHomeomorph (H := H) (f i))
         l
         (𝓝 (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T)) ↔
-      Tendsto f l (𝓝 T) := by
+      Filter.Tendsto f l (𝓝 T) := by
   constructor
   · intro h
     have h' :=
@@ -44,11 +44,11 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
     {ι : Type*} {l : Filter ι}
     (f : ι → diagonalComplexificationStarSubalgebra (H := H))
     (S : diagonalComplexificationStarSubalgebra (H := H)) :
-    Tendsto
+    Filter.Tendsto
         (fun i => (diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm (f i))
         l
         (𝓝 ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)) ↔
-      Tendsto f l (𝓝 S) := by
+      Filter.Tendsto f l (𝓝 S) := by
   constructor
   · intro h
     have h' :=
