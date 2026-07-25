@@ -38,11 +38,10 @@ theorem norm_smul_eq
   change
     ‖(c • z).1‖ ^ 2 + ‖(c • z).2‖ ^ 2 =
       ‖c‖ ^ 2 * (‖z.1‖ ^ 2 + ‖z.2‖ ^ 2)
-  rw [← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (c • z).1,
-    ← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (c • z).2,
-    ← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) z.1,
-    ← inner_self_eq_norm_sq_to_K (𝕜 := ℝ) z.2,
-    Complex.sq_norm]
+  have hnorm_self (x : H) : ‖x‖ ^ 2 = ⟪x, x⟫_ℝ := by
+    simpa using (inner_self_eq_norm_sq_to_K (𝕜 := ℝ) x).symm
+  rw [hnorm_self (c • z).1, hnorm_self (c • z).2,
+    hnorm_self z.1, hnorm_self z.2, Complex.sq_norm]
   simp only [complex_smul_re, complex_smul_im,
     real_inner_sub_sub_self, real_inner_add_add_self,
     real_inner_smul_left, real_inner_smul_right]
