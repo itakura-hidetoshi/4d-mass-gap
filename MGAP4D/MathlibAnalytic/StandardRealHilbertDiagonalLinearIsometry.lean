@@ -28,9 +28,8 @@ theorem diagonalComplexification_smul_real (r : ℝ) (T : H →L[ℝ] H) :
   intro z
   change
     ((r • T z.1, r • T z.2) : StandardRealHilbertComplexification H) =
-      (r : ℂ) • ((T z.1, T z.2) : StandardRealHilbertComplexification H)
-  apply Prod.ext <;>
-    simp [complex_smul_re, complex_smul_im]
+      r • ((T z.1, T z.2) : StandardRealHilbertComplexification H)
+  rfl
 
 /-- Diagonal complexification, bundled as a real-linear isometric embedding between operator
 spaces. -/
