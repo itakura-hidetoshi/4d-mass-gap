@@ -23,8 +23,8 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_iff
     Filter.Tendsto
         (fun i => diagonalComplexificationStarAlgEquivHomeomorph (H := H) (f i))
         l
-        (𝓝 (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T)) ↔
-      Filter.Tendsto f l (𝓝 T) := by
+        (nhds (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T)) ↔
+      Filter.Tendsto f l (nhds T) := by
   constructor
   · intro h
     have h' :=
@@ -47,8 +47,8 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
     Filter.Tendsto
         (fun i => (diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm (f i))
         l
-        (𝓝 ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)) ↔
-      Filter.Tendsto f l (𝓝 S) := by
+        (nhds ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)) ↔
+      Filter.Tendsto f l (nhds S) := by
   constructor
   · intro h
     have h' :=
