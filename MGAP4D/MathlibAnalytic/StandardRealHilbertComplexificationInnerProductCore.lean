@@ -115,21 +115,22 @@ theorem standardNorm_eq
     (z : StandardRealHilbertComplexification H) :
     standardNorm z = Real.sqrt (‖z.1‖ ^ 2 + ‖z.2‖ ^ 2) := by
   rw [standardNorm, standardInner_self]
-  rfl
 
 /-- The square of the generated norm is the Euclidean sum of coordinate norm squares. -/
 theorem standardNorm_sq
     (z : StandardRealHilbertComplexification H) :
     standardNorm z ^ 2 = ‖z.1‖ ^ 2 + ‖z.2‖ ^ 2 := by
   rw [standardNorm_eq]
+  exact Real.sq_sqrt (by positivity)
 
 /-- The canonical real embedding preserves the generated norm. -/
 theorem standardNorm_ofReal
     (x : H) :
     standardNorm (ofReal x) = ‖x‖ := by
   rw [standardNorm_eq]
-  simp only [ofReal_re, ofReal_im, norm_zero, zero_pow, add_zero]
-  rw [Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg x)]
+  simp only [ofReal_re, ofReal_im, norm_zero]
+  rw [zero_pow (by norm_num : (2 : ℕ) ≠ 0), add_zero,
+    Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg x)]
 
 /-- Standard conjugation preserves the generated norm. -/
 theorem standardNorm_conjugation
