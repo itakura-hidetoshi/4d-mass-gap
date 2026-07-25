@@ -71,6 +71,7 @@ private theorem leftCoefficient_succ_succ
             q ^ ((m - k) + n + 3) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
     rw [hmk]
+    rw [show (m - k + 1) + (n + 1) = (m - k) + n + 2 by omega]
   have hFirst :
       twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ ((m - k) + 1) *
@@ -78,6 +79,7 @@ private theorem leftCoefficient_succ_succ
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
     rw [hmk]
+    rw [show (m - k + 1) + n = (m - k) + n + 1 by omega]
   have hSecond :
       twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m - k) *
@@ -128,6 +130,7 @@ private theorem rightCoefficient_succ_succ
             q ^ ((n - k) + m + 3) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
     rw [show m + 1 + 1 = m + 2 by omega, hnk]
+    rw [show (n - k + 1) + (m + 1) = (n - k) + m + 2 by omega]
   have hFirst :
       twoSidedConfluentRightBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ (m + 2) *
@@ -135,6 +138,7 @@ private theorem rightCoefficient_succ_succ
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
     rw [show m + 1 + 1 = m + 2 by omega]
+    rw [show (n - k) + (m + 1) = (n - k) + m + 1 by omega]
   have hSecond :
       twoSidedConfluentRightBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m + 1) *
@@ -142,6 +146,7 @@ private theorem rightCoefficient_succ_succ
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
     rw [hnk]
+    rw [show (n - k + 1) + m = (n - k) + m + 1 by omega]
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((n - k) + m + 1) m
   have hCastChoose :
