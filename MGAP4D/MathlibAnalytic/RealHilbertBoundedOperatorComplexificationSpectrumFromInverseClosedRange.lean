@@ -78,10 +78,15 @@ theorem real_spectrum_eq
   ext r
   rw [spectrum.mem_iff, spectrum.mem_iff]
   have hUnits := D.isUnit_complexify_iff (algebraMap ℝ (H →L[ℝ] H) r - T)
+  have hScalar :
+      D.complexify (algebraMap ℝ (H →L[ℝ] H) r) =
+        algebraMap ℝ (HC →L[ℂ] HC) r := by
+    simpa only using D.complexify.commutes r
   have hMap :
       D.complexify (algebraMap ℝ (H →L[ℝ] H) r - T) =
         algebraMap ℝ (HC →L[ℂ] HC) r - D.complexify T := by
-    rw [map_sub, D.complexify.commutes r]
+    rw [map_sub]
+    exact congrArg (fun X => X - D.complexify T) hScalar
   rw [← hMap]
   exact not_congr hUnits
 
