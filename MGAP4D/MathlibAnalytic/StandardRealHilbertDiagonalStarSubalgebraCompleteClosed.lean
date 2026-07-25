@@ -30,7 +30,9 @@ instance diagonalComplexificationStarSubalgebraCompleteSpace :
           (H := H) f).2 hf
     rcases cauchySeq_tendsto_of_complete hsymm with ⟨T, hT⟩
     refine ⟨e T, ?_⟩
-    exact (e.continuous.tendsto T).comp hT
+    have hforward := (e.continuous.tendsto T).comp hT
+    change Tendsto (fun n => e (e.symm (f n))) atTop (nhds (e T)) at hforward
+    simpa only [e.apply_symm_apply] using hforward
 
 /--
 The diagonal complexification star-subalgebra is closed in the ambient complex
@@ -41,9 +43,12 @@ theorem diagonalComplexificationStarSubalgebra_isClosed :
       (diagonalComplexificationStarSubalgebra (H := H) :
         Set (StandardRealHilbertComplexification H →L[ℂ]
           StandardRealHilbertComplexification H)) := by
-  apply IsComplete.isClosed
-  rw [← completeSpace_coe_iff_isComplete]
-  infer_instance
+  exact
+    ((completeSpace_coe_iff_isComplete (s :=
+      (diagonalComplexificationStarSubalgebra (H := H) :
+        Set (StandardRealHilbertComplexification H →L[ℂ]
+          StandardRealHilbertComplexification H)))).1
+      (diagonalComplexificationStarSubalgebraCompleteSpace (H := H))).isClosed
 
 /--
 Every Cauchy sequence in the diagonal complexification range converges to the
@@ -61,7 +66,11 @@ theorem cauchySeq_diagonalComplexificationStarSubalgebra_exists_real_limit
       (cauchySeq_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
         (H := H) f).2 hf
   rcases cauchySeq_tendsto_of_complete hsymm with ⟨T, hT⟩
-  exact ⟨T, (e.continuous.tendsto T).comp hT⟩
+  refine ⟨T, ?_⟩
+  change Tendsto f atTop (nhds (e T))
+  have hforward := (e.continuous.tendsto T).comp hT
+  change Tendsto (fun n => e (e.symm (f n))) atTop (nhds (e T)) at hforward
+  simpa only [e.apply_symm_apply] using hforward
 
 /--
 The real bounded operator represented by a convergent diagonal-range sequence is
