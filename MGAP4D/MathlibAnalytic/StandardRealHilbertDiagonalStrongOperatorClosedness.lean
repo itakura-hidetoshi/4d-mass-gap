@@ -116,10 +116,14 @@ def standardRealRestrictionLinearMap
   map_smul' := by
     intro r x
     have hOfReal : ofReal (r • x) = (r : ℂ) • ofReal x := by
-      apply Prod.ext <;> simp [ofReal]
-    change (X (ofReal (r • x))).1 = r • (X (ofReal x)).1
-    rw [hOfReal, map_smul]
-    simp
+      apply Prod.ext
+      · simp [ofReal, complex_smul_re]
+      · simp [ofReal, complex_smul_im]
+    calc
+      (X (ofReal (r • x))).1 = (X ((r : ℂ) • ofReal x)).1 := by rw [hOfReal]
+      _ = (((r : ℂ) • X (ofReal x))).1 :=
+        congrArg Prod.fst (X.map_smul (r : ℂ) (ofReal x))
+      _ = r • (X (ofReal x)).1 := by simp [complex_smul_re]
 
 @[simp]
 theorem standardRealRestrictionLinearMap_apply
@@ -170,9 +174,16 @@ theorem complexLinearMap_eq_of_eq_on_ofReal
   calc
     X z = X (ofReal z.1 + Complex.I • ofReal z.2) :=
       congrArg X (decompose z)
-    _ = X (ofReal z.1) + Complex.I • X (ofReal z.2) := by simp
-    _ = Y (ofReal z.1) + Complex.I • Y (ofReal z.2) := by rw [h, h]
-    _ = Y (ofReal z.1 + Complex.I • ofReal z.2) := by simp
+    _ = X (ofReal z.1) + X (Complex.I • ofReal z.2) :=
+      X.map_add _ _
+    _ = X (ofReal z.1) + Complex.I • X (ofReal z.2) := by
+      rw [X.map_smul]
+    _ = Y (ofReal z.1) + Complex.I • Y (ofReal z.2) := by
+      rw [h, h]
+    _ = Y (ofReal z.1) + Y (Complex.I • ofReal z.2) := by
+      rw [Y.map_smul]
+    _ = Y (ofReal z.1 + Complex.I • ofReal z.2) :=
+      (Y.map_add _ _).symm
     _ = Y z := congrArg Y (decompose z).symm
 
 /-- A conjugation-commuting complex operator agrees on real vectors with the
