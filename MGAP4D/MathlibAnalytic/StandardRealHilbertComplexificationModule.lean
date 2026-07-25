@@ -70,6 +70,8 @@ theorem complex_smul_im [AddCommGroup H] [Module ℝ H]
 
 instance [AddCommGroup H] [Module ℝ H] : Module ℂ (StandardRealHilbertComplexification H) where
   one_smul z := by
+    change ((1 : ℝ) • z.1 - (0 : ℝ) • z.2,
+      (0 : ℝ) • z.1 + (1 : ℝ) • z.2) = z
     apply Prod.ext <;> simp
   mul_smul c d z := by
     apply Prod.ext <;>
@@ -77,12 +79,28 @@ instance [AddCommGroup H] [Module ℝ H] : Module ℂ (StandardRealHilbertComple
         smul_sub, smul_add, sub_smul, add_smul, mul_smul]
     all_goals module
   smul_add c z w := by
+    change
+      (c.re • (z.1 + w.1) - c.im • (z.2 + w.2),
+        c.im • (z.1 + w.1) + c.re • (z.2 + w.2)) =
+      ((c.re • z.1 - c.im • z.2) + (c.re • w.1 - c.im • w.2),
+        (c.im • z.1 + c.re • z.2) + (c.im • w.1 + c.re • w.2))
     apply Prod.ext <;> simp [smul_add]
   add_smul c d z := by
+    change
+      ((c.re + d.re) • z.1 - (c.im + d.im) • z.2,
+        (c.im + d.im) • z.1 + (c.re + d.re) • z.2) =
+      ((c.re • z.1 - c.im • z.2) + (d.re • z.1 - d.im • z.2),
+        (c.im • z.1 + c.re • z.2) + (d.im • z.1 + d.re • z.2))
     apply Prod.ext <;> simp [add_smul, sub_eq_add_neg]
   zero_smul z := by
+    change
+      ((0 : ℝ) • z.1 - (0 : ℝ) • z.2,
+        (0 : ℝ) • z.1 + (0 : ℝ) • z.2) = (0, 0)
     apply Prod.ext <;> simp
   smul_zero c := by
+    change
+      (c.re • (0 : H) - c.im • 0,
+        c.im • (0 : H) + c.re • 0) = (0, 0)
     apply Prod.ext <;> simp
 
 @[simp]
@@ -133,7 +151,8 @@ theorem conjugation_ofReal [AddGroup H] (x : H) :
 theorem decompose [AddCommGroup H] [Module ℝ H]
     (z : StandardRealHilbertComplexification H) :
     z = ofReal z.1 + Complex.I • ofReal z.2 := by
-  apply Prod.ext <;> simp [ofReal]
+  change z = (z.1, 0) + (0, z.2)
+  apply Prod.ext <;> simp
 
 end StandardRealHilbertComplexification
 
