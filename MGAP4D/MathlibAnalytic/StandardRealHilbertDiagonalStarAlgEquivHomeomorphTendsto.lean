@@ -28,6 +28,7 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_iff
   let e := diagonalComplexificationStarAlgEquivHomeomorph (H := H)
   constructor
   · intro h
+    change Filter.Tendsto (fun i => e (f i)) l (nhds (e T)) at h
     have h' := (e.symm.continuous.tendsto (e T)).comp h
     simpa only [Function.comp_apply, e.symm_apply_apply] using h'
   · intro h
@@ -50,6 +51,7 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
   let e := diagonalComplexificationStarAlgEquivHomeomorph (H := H)
   constructor
   · intro h
+    change Filter.Tendsto (fun i => e.symm (f i)) l (nhds (e.symm S)) at h
     have h' := (e.continuous.tendsto (e.symm S)).comp h
     simpa only [Function.comp_apply, e.apply_symm_apply] using h'
   · intro h
