@@ -30,7 +30,8 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_iff
   · intro h
     change Filter.Tendsto (fun i => e (f i)) l (nhds (e T)) at h
     have h' := (e.symm.continuous.tendsto (e T)).comp h
-    simpa only [Function.comp_apply, e.symm_apply_apply] using h'
+    change Filter.Tendsto (fun i => e.symm (e (f i))) l (nhds (e.symm (e T))) at h'
+    simpa only [e.symm_apply_apply] using h'
   · intro h
     exact (e.continuous.tendsto T).comp h
 
@@ -53,7 +54,8 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
   · intro h
     change Filter.Tendsto (fun i => e.symm (f i)) l (nhds (e.symm S)) at h
     have h' := (e.continuous.tendsto (e.symm S)).comp h
-    simpa only [Function.comp_apply, e.apply_symm_apply] using h'
+    change Filter.Tendsto (fun i => e (e.symm (f i))) l (nhds (e (e.symm S))) at h'
+    simpa only [e.apply_symm_apply] using h'
   · intro h
     exact (e.symm.continuous.tendsto S).comp h
 
