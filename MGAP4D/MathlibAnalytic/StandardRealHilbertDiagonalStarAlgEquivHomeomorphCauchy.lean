@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.StandardRealHilbertDiagonalStarAlgEquivHomeomorphTendsto
-import Mathlib.Topology.Algebra.MetricSpace.Lipschitz
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -21,19 +20,8 @@ theorem cauchySeq_diagonalComplexificationStarAlgEquivHomeomorph_iff
     CauchySeq
         (fun n => diagonalComplexificationStarAlgEquivHomeomorph (H := H) (f n)) ↔
       CauchySeq f := by
-  let e := diagonalComplexificationStarAlgEquivHomeomorph (H := H)
-  constructor
-  · intro h
-    change CauchySeq (fun n => e (f n)) at h
-    have h' :=
-      diagonalComplexificationStarAlgEquivHomeomorph_symm_isometry
-        (H := H) |>.lipschitz.cauchySeq_comp h
-    change CauchySeq (fun n => e.symm (e (f n))) at h'
-    simpa only [e.symm_apply_apply] using h'
-  · intro h
-    exact
-      diagonalComplexificationStarAlgEquivHomeomorph_isometry
-        (H := H) |>.lipschitz.cauchySeq_comp h
+  simp only [Metric.cauchySeq_iff]
+  simp only [dist_diagonalComplexificationStarAlgEquivHomeomorph_apply]
 
 /--
 A sequence in the diagonal star-subalgebra is Cauchy exactly when its inverse image
@@ -45,19 +33,8 @@ theorem cauchySeq_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
     CauchySeq
         (fun n => (diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm (f n)) ↔
       CauchySeq f := by
-  let e := diagonalComplexificationStarAlgEquivHomeomorph (H := H)
-  constructor
-  · intro h
-    change CauchySeq (fun n => e.symm (f n)) at h
-    have h' :=
-      diagonalComplexificationStarAlgEquivHomeomorph_isometry
-        (H := H) |>.lipschitz.cauchySeq_comp h
-    change CauchySeq (fun n => e (e.symm (f n))) at h'
-    simpa only [e.apply_symm_apply] using h'
-  · intro h
-    exact
-      diagonalComplexificationStarAlgEquivHomeomorph_symm_isometry
-        (H := H) |>.lipschitz.cauchySeq_comp h
+  simp only [Metric.cauchySeq_iff]
+  simp only [dist_diagonalComplexificationStarAlgEquivHomeomorph_symm_apply]
 
 end StandardRealHilbertComplexification
 
