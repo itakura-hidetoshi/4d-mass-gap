@@ -19,6 +19,7 @@ noncomputable def coordinatesL2 :
   __ := (WithLp.linearEquiv 2 ℝ (H × H)).symm
   norm_map' z := by
     rw [WithLp.prod_norm_eq_of_L2, norm_eq_standardNorm, standardNorm_eq]
+    rfl
 
 @[simp]
 theorem coordinatesL2_apply
