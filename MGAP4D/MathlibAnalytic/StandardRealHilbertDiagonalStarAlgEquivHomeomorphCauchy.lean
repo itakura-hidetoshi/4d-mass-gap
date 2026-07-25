@@ -20,8 +20,8 @@ theorem cauchySeq_diagonalComplexificationStarAlgEquivHomeomorph_iff
     CauchySeq
         (fun n => diagonalComplexificationStarAlgEquivHomeomorph (H := H) (f n)) ↔
       CauchySeq f := by
-  simp only [Metric.cauchySeq_iff]
-  simp only [dist_diagonalComplexificationStarAlgEquivHomeomorph_apply]
+  simpa only [Metric.cauchySeq_iff,
+    dist_diagonalComplexificationStarAlgEquivHomeomorph_apply]
 
 /--
 A sequence in the diagonal star-subalgebra is Cauchy exactly when its inverse image
@@ -33,8 +33,8 @@ theorem cauchySeq_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
     CauchySeq
         (fun n => (diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm (f n)) ↔
       CauchySeq f := by
-  simp only [Metric.cauchySeq_iff]
-  simp only [dist_diagonalComplexificationStarAlgEquivHomeomorph_symm_apply]
+  simpa only [Metric.cauchySeq_iff,
+    dist_diagonalComplexificationStarAlgEquivHomeomorph_symm_apply]
 
 end StandardRealHilbertComplexification
 
