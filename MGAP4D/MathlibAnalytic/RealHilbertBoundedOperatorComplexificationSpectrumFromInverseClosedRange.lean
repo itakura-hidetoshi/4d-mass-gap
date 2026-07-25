@@ -78,7 +78,12 @@ theorem real_spectrum_eq
   ext r
   rw [spectrum.mem_iff, spectrum.mem_iff]
   have hUnits := D.isUnit_complexify_iff (algebraMap ℝ (H →L[ℝ] H) r - T)
-  simpa only [map_sub, map_algebraMap] using not_congr hUnits
+  have hMap :
+      D.complexify (algebraMap ℝ (H →L[ℝ] H) r - T) =
+        algebraMap ℝ (HC →L[ℂ] HC) r - D.complexify T := by
+    simp
+  rw [← hMap]
+  exact not_congr hUnits
 
 /-- Collapse inverse-closed complexification data to the spectrum-preserving embedding interface
 used by the real-Hilbert continuous-functional-calculus descent theorem. -/
@@ -91,6 +96,7 @@ def toCFCDescentData
 
 /-- An isometric complexification with inverse-closed range therefore generates the complete
 real-Hilbert bounded self-adjoint continuous functional calculus. -/
+@[reducible]
 noncomputable def toContinuousFunctionalCalculus
     (D : RealHilbertBoundedOperatorComplexificationInverseClosedRangeData H HC) :
     ContinuousFunctionalCalculus ℝ (H →L[ℝ] H) IsSelfAdjoint :=
