@@ -84,14 +84,16 @@ instance [AddCommGroup H] [Module ℝ H] : Module ℂ (StandardRealHilbertComple
         c.im • (z.1 + w.1) + c.re • (z.2 + w.2)) =
       ((c.re • z.1 - c.im • z.2) + (c.re • w.1 - c.im • w.2),
         (c.im • z.1 + c.re • z.2) + (c.im • w.1 + c.re • w.2))
-    apply Prod.ext <;> simp [smul_add]
+    apply Prod.ext <;> simp only [smul_add]
+    all_goals module
   add_smul c d z := by
     change
       ((c.re + d.re) • z.1 - (c.im + d.im) • z.2,
         (c.im + d.im) • z.1 + (c.re + d.re) • z.2) =
       ((c.re • z.1 - c.im • z.2) + (d.re • z.1 - d.im • z.2),
         (c.im • z.1 + c.re • z.2) + (d.im • z.1 + d.re • z.2))
-    apply Prod.ext <;> simp [add_smul, sub_eq_add_neg]
+    apply Prod.ext <;> simp only [add_smul, sub_eq_add_neg]
+    all_goals module
   zero_smul z := by
     change
       ((0 : ℝ) • z.1 - (0 : ℝ) • z.2,
@@ -151,8 +153,8 @@ theorem conjugation_ofReal [AddGroup H] (x : H) :
 theorem decompose [AddCommGroup H] [Module ℝ H]
     (z : StandardRealHilbertComplexification H) :
     z = ofReal z.1 + Complex.I • ofReal z.2 := by
-  change z = (z.1, 0) + (0, z.2)
-  apply Prod.ext <;> simp
+  rw [I_smul]
+  apply Prod.ext <;> simp [ofReal]
 
 end StandardRealHilbertComplexification
 
