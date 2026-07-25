@@ -71,8 +71,6 @@ private theorem leftCoefficient_succ_succ
             q ^ ((m - k) + n + 3) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
     rw [hmk]
-    rw [show (m - k + 1) + (n + 1) = (m - k) + n + 2 by omega]
-    rw [show (m - k) + n + 2 + 1 = (m - k) + n + 3 by omega]
   have hFirst :
       twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ ((m - k) + 1) *
@@ -80,8 +78,6 @@ private theorem leftCoefficient_succ_succ
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
     rw [hmk]
-    rw [show (m - k + 1) + n = (m - k) + n + 1 by omega]
-    rw [show (m - k) + n + 1 + 1 = (m - k) + n + 2 by omega]
   have hSecond :
       twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m - k) *
@@ -89,7 +85,6 @@ private theorem leftCoefficient_succ_succ
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
     rw [show (m - k) + (n + 1) = (m - k) + n + 1 by omega]
-    rw [show (m - k) + n + 1 + 1 = (m - k) + n + 2 by omega]
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((m - k) + n + 1) n
   have hCastChoose :
@@ -133,8 +128,6 @@ private theorem rightCoefficient_succ_succ
             q ^ ((n - k) + m + 3) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
     rw [show m + 1 + 1 = m + 2 by omega, hnk]
-    rw [show (n - k + 1) + (m + 1) = (n - k) + m + 2 by omega]
-    rw [show (n - k) + m + 2 + 1 = (n - k) + m + 3 by omega]
   have hFirst :
       twoSidedConfluentRightBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ (m + 2) *
@@ -142,8 +135,6 @@ private theorem rightCoefficient_succ_succ
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
     rw [show m + 1 + 1 = m + 2 by omega]
-    rw [show (n - k) + (m + 1) = (n - k) + m + 1 by omega]
-    rw [show (n - k) + m + 1 + 1 = (n - k) + m + 2 by omega]
   have hSecond :
       twoSidedConfluentRightBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m + 1) *
@@ -151,8 +142,6 @@ private theorem rightCoefficient_succ_succ
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
     rw [hnk]
-    rw [show (n - k + 1) + m = (n - k) + m + 1 by omega]
-    rw [show (n - k) + m + 1 + 1 = (n - k) + m + 2 by omega]
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((n - k) + m + 1) m
   have hCastChoose :
@@ -318,19 +307,16 @@ private theorem leftBinomialSum_succ_succ
           twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) (m + 1) •
             Rlambda ^ (m + 2) := by
     rw [twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ]
-    rfl
   have hFirstDecomp :
       twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) n =
         firstPrefix +
           twoSidedConfluentLeftBinomialCoefficient q (m + 1) n (m + 1) •
             Rlambda ^ (m + 2) := by
     rw [twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ]
-    rfl
   have hSecond :
       twoSidedConfluentLeftBinomialSum Rlambda q m (n + 1) = secondSum := by
     rfl
-  rw [hTargetDecomp, hPrefix, leftCoefficient_top, hFirstDecomp, hSecond,
-    smul_smul]
+  rw [hTargetDecomp, hPrefix, leftCoefficient_top, hFirstDecomp, hSecond]
   module
 
 private theorem rightBinomialSum_succ_succ
@@ -366,19 +352,16 @@ private theorem rightBinomialSum_succ_succ
           twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) (n + 1) •
             Rmu ^ (n + 2) := by
     rw [twoSidedConfluentRightBinomialSum, Finset.sum_range_succ]
-    rfl
   have hSecondDecomp :
       twoSidedConfluentRightBinomialSum Rmu q m (n + 1) =
         secondPrefix +
           twoSidedConfluentRightBinomialCoefficient q m (n + 1) (n + 1) •
             Rmu ^ (n + 2) := by
     rw [twoSidedConfluentRightBinomialSum, Finset.sum_range_succ]
-    rfl
   have hFirst :
       twoSidedConfluentRightBinomialSum Rmu q (m + 1) n = firstSum := by
     rfl
-  rw [hTargetDecomp, hPrefix, rightCoefficient_top, hFirst, hSecondDecomp,
-    smul_smul]
+  rw [hTargetDecomp, hPrefix, rightCoefficient_top, hFirst, hSecondDecomp]
   module
 
 @[simp] theorem twoSidedConfluentResolventBinomialNormalForm_zero_zero
