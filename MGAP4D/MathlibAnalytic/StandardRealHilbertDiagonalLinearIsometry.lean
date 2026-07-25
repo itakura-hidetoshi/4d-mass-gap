@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.StandardRealHilbertDiagonalOperatorNormIsometry
 import Mathlib.Analysis.Normed.Operator.LinearIsometry
+import Mathlib.Data.FunLike.IsApply
 
 namespace MGAP4D
 namespace MathlibAnalytic
