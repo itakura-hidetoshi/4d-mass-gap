@@ -140,8 +140,10 @@ theorem fixed_eq_ofReal_realPart
     D.ofReal (D.realPart z) = z := by
   apply D.coordinates.injective
   have him : D.imagPart z = 0 := D.imagPart_eq_zero_of_conjugation_eq z hz
-  simpa using congrArg (fun p : H × H => (p.1, p.2))
-    (show D.coordinates z = D.coordinates z from rfl)
+  rw [D.coordinates_ofReal]
+  apply Prod.ext
+  · simp
+  · simpa using him.symm
 
 /-- Complexification acts on embedded real vectors by the original real operator. -/
 theorem complexify_apply_ofReal
