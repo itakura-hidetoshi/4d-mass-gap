@@ -63,27 +63,33 @@ private theorem leftCoefficient_succ_succ
       q *
         (twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k -
           twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k) := by
+  have hmk : m + 1 - k = (m - k) + 1 := by omega
   have hTarget :
       twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) k =
         (-1 : ℝ) ^ ((m - k) + 1) *
           (Nat.choose ((m - k) + n + 2) (n + 1) : ℝ) *
             q ^ ((m - k) + n + 3) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
-    congr 3 <;> omega
+    rw [hmk]
+    rw [show (m - k + 1) + (n + 1) = (m - k) + n + 2 by omega]
+    rw [show (m - k) + n + 2 + 1 = (m - k) + n + 3 by omega]
   have hFirst :
       twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ ((m - k) + 1) *
           (Nat.choose ((m - k) + n + 1) n : ℝ) *
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
-    congr 3 <;> omega
+    rw [hmk]
+    rw [show (m - k + 1) + n = (m - k) + n + 1 by omega]
+    rw [show (m - k) + n + 1 + 1 = (m - k) + n + 2 by omega]
   have hSecond :
       twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m - k) *
           (Nat.choose ((m - k) + n + 1) (n + 1) : ℝ) *
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
-    congr 3 <;> omega
+    rw [show (m - k) + (n + 1) = (m - k) + n + 1 by omega]
+    rw [show (m - k) + n + 1 + 1 = (m - k) + n + 2 by omega]
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((m - k) + n + 1) n
   have hCastChoose :
@@ -119,27 +125,34 @@ private theorem rightCoefficient_succ_succ
       q *
         (twoSidedConfluentRightBinomialCoefficient q (m + 1) n k -
           twoSidedConfluentRightBinomialCoefficient q m (n + 1) k) := by
+  have hnk : n + 1 - k = (n - k) + 1 := by omega
   have hTarget :
       twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) k =
         (-1 : ℝ) ^ (m + 2) *
           (Nat.choose ((n - k) + m + 2) (m + 1) : ℝ) *
             q ^ ((n - k) + m + 3) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
-    congr 3 <;> omega
+    rw [show m + 1 + 1 = m + 2 by omega, hnk]
+    rw [show (n - k + 1) + (m + 1) = (n - k) + m + 2 by omega]
+    rw [show (n - k) + m + 2 + 1 = (n - k) + m + 3 by omega]
   have hFirst :
       twoSidedConfluentRightBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ (m + 2) *
           (Nat.choose ((n - k) + m + 1) (m + 1) : ℝ) *
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
-    congr 3 <;> omega
+    rw [show m + 1 + 1 = m + 2 by omega]
+    rw [show (n - k) + (m + 1) = (n - k) + m + 1 by omega]
+    rw [show (n - k) + m + 1 + 1 = (n - k) + m + 2 by omega]
   have hSecond :
       twoSidedConfluentRightBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m + 1) *
           (Nat.choose ((n - k) + m + 1) m : ℝ) *
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
-    congr 3 <;> omega
+    rw [hnk]
+    rw [show (n - k + 1) + m = (n - k) + m + 1 by omega]
+    rw [show (n - k) + m + 1 + 1 = (n - k) + m + 2 by omega]
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((n - k) + m + 1) m
   have hCastChoose :
@@ -237,7 +250,7 @@ private theorem rightBinomialSum_zero_succ
   rw [twoSidedConfluentRightBinomialSum,
     twoSidedConfluentRightBinomialSum, Finset.sum_range_succ]
   rw [hPrefix, rightCoefficient_zero_top]
-  simp [smul_sub, smul_smul]
+  simp [smul_sub]
   module
 
 private theorem leftBinomialSum_succ_zero
@@ -262,7 +275,7 @@ private theorem leftBinomialSum_succ_zero
   rw [twoSidedConfluentLeftBinomialSum,
     twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ]
   rw [hPrefix, leftCoefficient_succ_top]
-  simp [smul_sub, smul_smul]
+  simp [smul_sub]
   module
 
 private theorem rightBinomialSum_succ_zero
@@ -278,17 +291,20 @@ private theorem leftBinomialSum_succ_succ
       q •
         (twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) n -
           twoSidedConfluentLeftBinomialSum Rlambda q m (n + 1)) := by
-  have hPrefix :
-      (Finset.range (m + 1)).sum (fun k =>
-          twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) k •
-            Rlambda ^ (k + 1)) =
-        q •
-          ((Finset.range (m + 1)).sum (fun k =>
-              twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k •
-                Rlambda ^ (k + 1)) -
-            (Finset.range (m + 1)).sum (fun k =>
-              twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k •
-                Rlambda ^ (k + 1))) := by
+  let targetPrefix :=
+    (Finset.range (m + 1)).sum (fun k =>
+      twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) k •
+        Rlambda ^ (k + 1))
+  let firstPrefix :=
+    (Finset.range (m + 1)).sum (fun k =>
+      twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k •
+        Rlambda ^ (k + 1))
+  let secondSum :=
+    (Finset.range (m + 1)).sum (fun k =>
+      twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k •
+        Rlambda ^ (k + 1))
+  have hPrefix : targetPrefix = q • (firstPrefix - secondSum) := by
+    dsimp [targetPrefix, firstPrefix, secondSum]
     rw [smul_sub, Finset.smul_sum, Finset.smul_sum,
       ← Finset.sum_sub_distrib]
     apply Finset.sum_congr rfl
@@ -296,12 +312,25 @@ private theorem leftBinomialSum_succ_succ
     have hk' : k ≤ m := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
     rw [leftCoefficient_succ_succ q m n k hk', smul_smul, smul_smul]
     module
-  rw [twoSidedConfluentLeftBinomialSum,
-    twoSidedConfluentLeftBinomialSum,
-    twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ,
-    Finset.sum_range_succ]
-  rw [hPrefix, leftCoefficient_top]
-  simp [smul_sub, smul_add, smul_smul]
+  have hTargetDecomp :
+      twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) (n + 1) =
+        targetPrefix +
+          twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) (m + 1) •
+            Rlambda ^ (m + 2) := by
+    rw [twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ]
+    rfl
+  have hFirstDecomp :
+      twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) n =
+        firstPrefix +
+          twoSidedConfluentLeftBinomialCoefficient q (m + 1) n (m + 1) •
+            Rlambda ^ (m + 2) := by
+    rw [twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ]
+    rfl
+  have hSecond :
+      twoSidedConfluentLeftBinomialSum Rlambda q m (n + 1) = secondSum := by
+    rfl
+  rw [hTargetDecomp, hPrefix, leftCoefficient_top, hFirstDecomp, hSecond,
+    smul_smul]
   module
 
 private theorem rightBinomialSum_succ_succ
@@ -310,17 +339,20 @@ private theorem rightBinomialSum_succ_succ
       q •
         (twoSidedConfluentRightBinomialSum Rmu q (m + 1) n -
           twoSidedConfluentRightBinomialSum Rmu q m (n + 1)) := by
-  have hPrefix :
-      (Finset.range (n + 1)).sum (fun k =>
-          twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) k •
-            Rmu ^ (k + 1)) =
-        q •
-          ((Finset.range (n + 1)).sum (fun k =>
-              twoSidedConfluentRightBinomialCoefficient q (m + 1) n k •
-                Rmu ^ (k + 1)) -
-            (Finset.range (n + 1)).sum (fun k =>
-              twoSidedConfluentRightBinomialCoefficient q m (n + 1) k •
-                Rmu ^ (k + 1))) := by
+  let targetPrefix :=
+    (Finset.range (n + 1)).sum (fun k =>
+      twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) k •
+        Rmu ^ (k + 1))
+  let firstSum :=
+    (Finset.range (n + 1)).sum (fun k =>
+      twoSidedConfluentRightBinomialCoefficient q (m + 1) n k •
+        Rmu ^ (k + 1))
+  let secondPrefix :=
+    (Finset.range (n + 1)).sum (fun k =>
+      twoSidedConfluentRightBinomialCoefficient q m (n + 1) k •
+        Rmu ^ (k + 1))
+  have hPrefix : targetPrefix = q • (firstSum - secondPrefix) := by
+    dsimp [targetPrefix, firstSum, secondPrefix]
     rw [smul_sub, Finset.smul_sum, Finset.smul_sum,
       ← Finset.sum_sub_distrib]
     apply Finset.sum_congr rfl
@@ -328,12 +360,25 @@ private theorem rightBinomialSum_succ_succ
     have hk' : k ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
     rw [rightCoefficient_succ_succ q m n k hk', smul_smul, smul_smul]
     module
-  rw [twoSidedConfluentRightBinomialSum,
-    twoSidedConfluentRightBinomialSum,
-    twoSidedConfluentRightBinomialSum, Finset.sum_range_succ,
-    Finset.sum_range_succ]
-  rw [hPrefix, rightCoefficient_top]
-  simp [smul_sub, smul_add, smul_smul]
+  have hTargetDecomp :
+      twoSidedConfluentRightBinomialSum Rmu q (m + 1) (n + 1) =
+        targetPrefix +
+          twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) (n + 1) •
+            Rmu ^ (n + 2) := by
+    rw [twoSidedConfluentRightBinomialSum, Finset.sum_range_succ]
+    rfl
+  have hSecondDecomp :
+      twoSidedConfluentRightBinomialSum Rmu q m (n + 1) =
+        secondPrefix +
+          twoSidedConfluentRightBinomialCoefficient q m (n + 1) (n + 1) •
+            Rmu ^ (n + 2) := by
+    rw [twoSidedConfluentRightBinomialSum, Finset.sum_range_succ]
+    rfl
+  have hFirst :
+      twoSidedConfluentRightBinomialSum Rmu q (m + 1) n = firstSum := by
+    rfl
+  rw [hTargetDecomp, hPrefix, rightCoefficient_top, hFirst, hSecondDecomp,
+    smul_smul]
   module
 
 @[simp] theorem twoSidedConfluentResolventBinomialNormalForm_zero_zero
