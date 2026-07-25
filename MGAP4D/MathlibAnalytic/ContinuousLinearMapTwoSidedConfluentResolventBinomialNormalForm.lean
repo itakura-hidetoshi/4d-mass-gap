@@ -27,6 +27,26 @@ noncomputable def twoSidedConfluentRightBinomialCoefficient
     (Nat.choose (n - k + m) m : ℝ) *
       q ^ (n - k + m + 1)
 
+/-- The left-node finite power sum in the closed two-node confluent normal
+form. -/
+noncomputable def twoSidedConfluentLeftBinomialSum
+    (Rlambda : E →L[ℝ] E)
+    (q : ℝ)
+    (m n : ℕ) : E →L[ℝ] E :=
+  (Finset.range (m + 1)).sum (fun k =>
+    twoSidedConfluentLeftBinomialCoefficient q m n k •
+      Rlambda ^ (k + 1))
+
+/-- The right-node finite power sum in the closed two-node confluent normal
+form. -/
+noncomputable def twoSidedConfluentRightBinomialSum
+    (Rmu : E →L[ℝ] E)
+    (q : ℝ)
+    (m n : ℕ) : E →L[ℝ] E :=
+  (Finset.range (n + 1)).sum (fun k =>
+    twoSidedConfluentRightBinomialCoefficient q m n k •
+      Rmu ^ (k + 1))
+
 /-- Closed binomial-coefficient normal form for two distinct resolvent nodes.
 The parameters `m` and `n` encode the positive multiplicities `m + 1` and
 `n + 1`. -/
@@ -34,12 +54,8 @@ noncomputable def twoSidedConfluentResolventBinomialNormalForm
     (Rlambda Rmu : E →L[ℝ] E)
     (q : ℝ)
     (m n : ℕ) : E →L[ℝ] E :=
-  (Finset.range (m + 1)).sum (fun k =>
-      twoSidedConfluentLeftBinomialCoefficient q m n k •
-        Rlambda ^ (k + 1)) +
-    (Finset.range (n + 1)).sum (fun k =>
-      twoSidedConfluentRightBinomialCoefficient q m n k •
-        Rmu ^ (k + 1))
+  twoSidedConfluentLeftBinomialSum Rlambda q m n +
+    twoSidedConfluentRightBinomialSum Rmu q m n
 
 private theorem leftCoefficient_succ_succ
     (q : ℝ) (m n k : ℕ) (hk : k ≤ m) :
@@ -47,34 +63,27 @@ private theorem leftCoefficient_succ_succ
       q *
         (twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k -
           twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k) := by
-  have hs : m + 1 - k = (m - k) + 1 := by omega
-  have ht : (m + 1 - k) + (n + 1) = (m - k) + n + 2 := by omega
-  have he : (m + 1 - k) + (n + 1) + 1 = (m - k) + n + 3 := by omega
-  have hft : (m + 1 - k) + n = (m - k) + n + 1 := by omega
-  have hfe : (m + 1 - k) + n + 1 = (m - k) + n + 2 := by omega
-  have hst : (m - k) + (n + 1) = (m - k) + n + 1 := by omega
-  have hse : (m - k) + (n + 1) + 1 = (m - k) + n + 2 := by omega
   have hTarget :
       twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) k =
         (-1 : ℝ) ^ ((m - k) + 1) *
           (Nat.choose ((m - k) + n + 2) (n + 1) : ℝ) *
             q ^ ((m - k) + n + 3) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
-    rw [hs, ht, he]
+    congr 3 <;> omega
   have hFirst :
       twoSidedConfluentLeftBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ ((m - k) + 1) *
           (Nat.choose ((m - k) + n + 1) n : ℝ) *
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
-    rw [hs, hft, hfe]
+    congr 3 <;> omega
   have hSecond :
       twoSidedConfluentLeftBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m - k) *
           (Nat.choose ((m - k) + n + 1) (n + 1) : ℝ) *
             q ^ ((m - k) + n + 2) := by
     simp only [twoSidedConfluentLeftBinomialCoefficient]
-    rw [hst, hse]
+    congr 3 <;> omega
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((m - k) + n + 1) n
   have hCastChoose :
@@ -110,34 +119,27 @@ private theorem rightCoefficient_succ_succ
       q *
         (twoSidedConfluentRightBinomialCoefficient q (m + 1) n k -
           twoSidedConfluentRightBinomialCoefficient q m (n + 1) k) := by
-  have hs : n + 1 - k = (n - k) + 1 := by omega
-  have ht : (n + 1 - k) + (m + 1) = (n - k) + m + 2 := by omega
-  have he : (n + 1 - k) + (m + 1) + 1 = (n - k) + m + 3 := by omega
-  have hft : (n - k) + (m + 1) = (n - k) + m + 1 := by omega
-  have hfe : (n - k) + (m + 1) + 1 = (n - k) + m + 2 := by omega
-  have hst : (n + 1 - k) + m = (n - k) + m + 1 := by omega
-  have hse : (n + 1 - k) + m + 1 = (n - k) + m + 2 := by omega
   have hTarget :
       twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) k =
         (-1 : ℝ) ^ (m + 2) *
           (Nat.choose ((n - k) + m + 2) (m + 1) : ℝ) *
             q ^ ((n - k) + m + 3) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
-    rw [ht, he]
+    congr 3 <;> omega
   have hFirst :
       twoSidedConfluentRightBinomialCoefficient q (m + 1) n k =
         (-1 : ℝ) ^ (m + 2) *
           (Nat.choose ((n - k) + m + 1) (m + 1) : ℝ) *
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
-    rw [hft, hfe]
+    congr 3 <;> omega
   have hSecond :
       twoSidedConfluentRightBinomialCoefficient q m (n + 1) k =
         (-1 : ℝ) ^ (m + 1) *
           (Nat.choose ((n - k) + m + 1) m : ℝ) *
             q ^ ((n - k) + m + 2) := by
     simp only [twoSidedConfluentRightBinomialCoefficient]
-    rw [hs, hst, hse]
+    congr 3 <;> omega
   rw [hTarget, hFirst, hSecond]
   have hChoose := Nat.choose_succ_succ' ((n - k) + m + 1) m
   have hCastChoose :
@@ -206,24 +208,20 @@ private theorem rightCoefficient_succ_zero
   simp [twoSidedConfluentRightBinomialCoefficient, pow_succ]
   ring
 
-@[simp] theorem twoSidedConfluentResolventBinomialNormalForm_zero_zero
-    (Rlambda Rmu : E →L[ℝ] E)
-    (q : ℝ) :
-    twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q 0 0 =
-      q • (Rlambda - Rmu) := by
-  simp [twoSidedConfluentResolventBinomialNormalForm,
-    twoSidedConfluentLeftBinomialCoefficient,
-    twoSidedConfluentRightBinomialCoefficient]
-  module
+private theorem leftBinomialSum_zero_succ
+    (Rlambda : E →L[ℝ] E) (q : ℝ) (n : ℕ) :
+    twoSidedConfluentLeftBinomialSum Rlambda q 0 (n + 1) =
+      q • twoSidedConfluentLeftBinomialSum Rlambda q 0 n := by
+  simp [twoSidedConfluentLeftBinomialSum, leftCoefficient_zero_succ,
+    smul_smul]
 
-private theorem binomialNormalForm_zero_succ
-    (Rlambda Rmu : E →L[ℝ] E)
-    (q : ℝ) (n : ℕ) :
-    twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q 0 (n + 1) =
+private theorem rightBinomialSum_zero_succ
+    (Rmu : E →L[ℝ] E) (q : ℝ) (n : ℕ) :
+    twoSidedConfluentRightBinomialSum Rmu q 0 (n + 1) =
       q •
-        (twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q 0 n -
+        (twoSidedConfluentRightBinomialSum Rmu q 0 n -
           Rmu ^ (n + 2)) := by
-  have hRightPrefix :
+  have hPrefix :
       (Finset.range (n + 1)).sum (fun k =>
           twoSidedConfluentRightBinomialCoefficient q 0 (n + 1) k •
             Rmu ^ (k + 1)) =
@@ -234,25 +232,21 @@ private theorem binomialNormalForm_zero_succ
     rw [Finset.smul_sum]
     apply Finset.sum_congr rfl
     intro k hk
-    have hk' : k ≤ n := by
-      exact Nat.le_of_lt_succ (Finset.mem_range.mp hk)
+    have hk' : k ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
     rw [rightCoefficient_zero_succ q n k hk', smul_smul]
-  rw [twoSidedConfluentResolventBinomialNormalForm,
-    twoSidedConfluentResolventBinomialNormalForm]
-  rw [Finset.sum_range_succ]
-  rw [hRightPrefix, leftCoefficient_zero_succ]
-  rw [rightCoefficient_zero_top]
-  simp [Finset.smul_sum, smul_add, smul_sub, smul_smul]
+  rw [twoSidedConfluentRightBinomialSum,
+    twoSidedConfluentRightBinomialSum, Finset.sum_range_succ]
+  rw [hPrefix, rightCoefficient_zero_top]
+  simp [smul_sub, smul_smul]
   module
 
-private theorem binomialNormalForm_succ_zero
-    (Rlambda Rmu : E →L[ℝ] E)
-    (q : ℝ) (m : ℕ) :
-    twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q (m + 1) 0 =
+private theorem leftBinomialSum_succ_zero
+    (Rlambda : E →L[ℝ] E) (q : ℝ) (m : ℕ) :
+    twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) 0 =
       q •
         (Rlambda ^ (m + 2) -
-          twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q m 0) := by
-  have hLeftPrefix :
+          twoSidedConfluentLeftBinomialSum Rlambda q m 0) := by
+  have hPrefix :
       (Finset.range (m + 1)).sum (fun k =>
           twoSidedConfluentLeftBinomialCoefficient q (m + 1) 0 k •
             Rlambda ^ (k + 1)) =
@@ -263,27 +257,28 @@ private theorem binomialNormalForm_succ_zero
     rw [Finset.smul_sum]
     apply Finset.sum_congr rfl
     intro k hk
-    have hk' : k ≤ m := by
-      exact Nat.le_of_lt_succ (Finset.mem_range.mp hk)
+    have hk' : k ≤ m := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
     rw [leftCoefficient_succ_zero q m k hk', smul_smul]
-  rw [twoSidedConfluentResolventBinomialNormalForm,
-    twoSidedConfluentResolventBinomialNormalForm]
-  rw [Finset.sum_range_succ]
-  rw [hLeftPrefix, leftCoefficient_succ_top, rightCoefficient_succ_zero]
-  simp [Finset.smul_sum, smul_add, smul_sub, smul_smul]
+  rw [twoSidedConfluentLeftBinomialSum,
+    twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ]
+  rw [hPrefix, leftCoefficient_succ_top]
+  simp [smul_sub, smul_smul]
   module
 
-private theorem binomialNormalForm_succ_succ
-    (Rlambda Rmu : E →L[ℝ] E)
-    (q : ℝ) (m n : ℕ) :
-    twoSidedConfluentResolventBinomialNormalForm
-        Rlambda Rmu q (m + 1) (n + 1) =
+private theorem rightBinomialSum_succ_zero
+    (Rmu : E →L[ℝ] E) (q : ℝ) (m : ℕ) :
+    twoSidedConfluentRightBinomialSum Rmu q (m + 1) 0 =
+      -q • twoSidedConfluentRightBinomialSum Rmu q m 0 := by
+  simp [twoSidedConfluentRightBinomialSum, rightCoefficient_succ_zero,
+    smul_smul]
+
+private theorem leftBinomialSum_succ_succ
+    (Rlambda : E →L[ℝ] E) (q : ℝ) (m n : ℕ) :
+    twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) (n + 1) =
       q •
-        (twoSidedConfluentResolventBinomialNormalForm
-            Rlambda Rmu q (m + 1) n -
-          twoSidedConfluentResolventBinomialNormalForm
-            Rlambda Rmu q m (n + 1)) := by
-  have hLeftPrefix :
+        (twoSidedConfluentLeftBinomialSum Rlambda q (m + 1) n -
+          twoSidedConfluentLeftBinomialSum Rlambda q m (n + 1)) := by
+  have hPrefix :
       (Finset.range (m + 1)).sum (fun k =>
           twoSidedConfluentLeftBinomialCoefficient q (m + 1) (n + 1) k •
             Rlambda ^ (k + 1)) =
@@ -298,11 +293,24 @@ private theorem binomialNormalForm_succ_succ
       ← Finset.sum_sub_distrib]
     apply Finset.sum_congr rfl
     intro k hk
-    have hk' : k ≤ m := by
-      exact Nat.le_of_lt_succ (Finset.mem_range.mp hk)
+    have hk' : k ≤ m := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
     rw [leftCoefficient_succ_succ q m n k hk', smul_smul, smul_smul]
     module
-  have hRightPrefix :
+  rw [twoSidedConfluentLeftBinomialSum,
+    twoSidedConfluentLeftBinomialSum,
+    twoSidedConfluentLeftBinomialSum, Finset.sum_range_succ,
+    Finset.sum_range_succ]
+  rw [hPrefix, leftCoefficient_top]
+  simp [smul_sub, smul_add, smul_smul]
+  module
+
+private theorem rightBinomialSum_succ_succ
+    (Rmu : E →L[ℝ] E) (q : ℝ) (m n : ℕ) :
+    twoSidedConfluentRightBinomialSum Rmu q (m + 1) (n + 1) =
+      q •
+        (twoSidedConfluentRightBinomialSum Rmu q (m + 1) n -
+          twoSidedConfluentRightBinomialSum Rmu q m (n + 1)) := by
+  have hPrefix :
       (Finset.range (n + 1)).sum (fun k =>
           twoSidedConfluentRightBinomialCoefficient q (m + 1) (n + 1) k •
             Rmu ^ (k + 1)) =
@@ -317,17 +325,67 @@ private theorem binomialNormalForm_succ_succ
       ← Finset.sum_sub_distrib]
     apply Finset.sum_congr rfl
     intro k hk
-    have hk' : k ≤ n := by
-      exact Nat.le_of_lt_succ (Finset.mem_range.mp hk)
+    have hk' : k ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hk)
     rw [rightCoefficient_succ_succ q m n k hk', smul_smul, smul_smul]
     module
+  rw [twoSidedConfluentRightBinomialSum,
+    twoSidedConfluentRightBinomialSum,
+    twoSidedConfluentRightBinomialSum, Finset.sum_range_succ,
+    Finset.sum_range_succ]
+  rw [hPrefix, rightCoefficient_top]
+  simp [smul_sub, smul_add, smul_smul]
+  module
+
+@[simp] theorem twoSidedConfluentResolventBinomialNormalForm_zero_zero
+    (Rlambda Rmu : E →L[ℝ] E)
+    (q : ℝ) :
+    twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q 0 0 =
+      q • (Rlambda - Rmu) := by
+  simp [twoSidedConfluentResolventBinomialNormalForm,
+    twoSidedConfluentLeftBinomialSum,
+    twoSidedConfluentRightBinomialSum,
+    twoSidedConfluentLeftBinomialCoefficient,
+    twoSidedConfluentRightBinomialCoefficient]
+  module
+
+private theorem binomialNormalForm_zero_succ
+    (Rlambda Rmu : E →L[ℝ] E)
+    (q : ℝ) (n : ℕ) :
+    twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q 0 (n + 1) =
+      q •
+        (twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q 0 n -
+          Rmu ^ (n + 2)) := by
   rw [twoSidedConfluentResolventBinomialNormalForm,
     twoSidedConfluentResolventBinomialNormalForm,
-    twoSidedConfluentResolventBinomialNormalForm]
-  rw [Finset.sum_range_succ, Finset.sum_range_succ,
-    Finset.sum_range_succ, Finset.sum_range_succ]
-  rw [hLeftPrefix, hRightPrefix, leftCoefficient_top, rightCoefficient_top]
-  simp [smul_add, smul_sub, smul_smul]
+    leftBinomialSum_zero_succ, rightBinomialSum_zero_succ]
+  module
+
+private theorem binomialNormalForm_succ_zero
+    (Rlambda Rmu : E →L[ℝ] E)
+    (q : ℝ) (m : ℕ) :
+    twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q (m + 1) 0 =
+      q •
+        (Rlambda ^ (m + 2) -
+          twoSidedConfluentResolventBinomialNormalForm Rlambda Rmu q m 0) := by
+  rw [twoSidedConfluentResolventBinomialNormalForm,
+    twoSidedConfluentResolventBinomialNormalForm,
+    leftBinomialSum_succ_zero, rightBinomialSum_succ_zero]
+  module
+
+private theorem binomialNormalForm_succ_succ
+    (Rlambda Rmu : E →L[ℝ] E)
+    (q : ℝ) (m n : ℕ) :
+    twoSidedConfluentResolventBinomialNormalForm
+        Rlambda Rmu q (m + 1) (n + 1) =
+      q •
+        (twoSidedConfluentResolventBinomialNormalForm
+            Rlambda Rmu q (m + 1) n -
+          twoSidedConfluentResolventBinomialNormalForm
+            Rlambda Rmu q m (n + 1)) := by
+  rw [twoSidedConfluentResolventBinomialNormalForm,
+    twoSidedConfluentResolventBinomialNormalForm,
+    twoSidedConfluentResolventBinomialNormalForm,
+    leftBinomialSum_succ_succ, rightBinomialSum_succ_succ]
   module
 
 /-- The recursively defined two-sided confluent jet is exactly the closed
