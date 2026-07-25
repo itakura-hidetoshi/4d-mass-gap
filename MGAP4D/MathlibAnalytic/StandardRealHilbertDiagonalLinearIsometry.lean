@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.StandardRealHilbertDiagonalOperatorNormIsometry
 import Mathlib.Analysis.Normed.Operator.LinearIsometry
-import Mathlib.Data.FunLike.IsApply
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -28,7 +27,11 @@ theorem diagonalComplexification_smul_real (r : ℝ) (T : H →L[ℝ] H) :
   rw [← Complex.coe_smul r (diagonalComplexification T)]
   apply ContinuousLinearMap.ext
   intro z
-  rw [smul_apply]
+  have hsmul :
+      (((r : ℂ) • diagonalComplexification T) z) =
+        (r : ℂ) • diagonalComplexification T z :=
+    rfl
+  rw [hsmul]
   apply Prod.ext <;>
     simp [complex_smul_re, complex_smul_im]
 
