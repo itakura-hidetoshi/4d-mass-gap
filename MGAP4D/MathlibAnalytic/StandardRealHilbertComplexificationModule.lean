@@ -32,6 +32,18 @@ instance [AddCommGroup H] [Module ℝ H] : SMul ℝ (StandardRealHilbertComplexi
 instance [AddCommGroup H] [Module ℝ H] : Module ℝ (StandardRealHilbertComplexification H) :=
   inferInstanceAs (Module ℝ (H × H))
 
+@[simp]
+theorem add_re [Add H]
+    (z w : StandardRealHilbertComplexification H) :
+    (z + w).1 = z.1 + w.1 :=
+  rfl
+
+@[simp]
+theorem add_im [Add H]
+    (z w : StandardRealHilbertComplexification H) :
+    (z + w).2 = z.2 + w.2 :=
+  rfl
+
 /-- Real coordinates of the standard complexification. -/
 def coordinates (H : Type*) : StandardRealHilbertComplexification H ≃ H × H :=
   Equiv.refl _
