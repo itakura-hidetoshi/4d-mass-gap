@@ -26,7 +26,7 @@ theorem diagonalComplexification_smul_real (r : ℝ) (T : H →L[ℝ] H) :
     diagonalComplexification (r • T) = r • diagonalComplexification T := by
   apply ContinuousLinearMap.ext
   intro z
-  rw [← Complex.coe_smul r (diagonalComplexification T)]
+  rw [← Complex.coe_smul r (diagonalComplexification T), smul_apply]
   apply Prod.ext <;>
     simp [complex_smul_re, complex_smul_im]
 
