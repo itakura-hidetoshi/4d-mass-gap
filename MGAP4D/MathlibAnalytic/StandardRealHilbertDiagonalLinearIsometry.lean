@@ -32,8 +32,11 @@ theorem diagonalComplexification_smul_real (r : ℝ) (T : H →L[ℝ] H) :
         (r : ℂ) • diagonalComplexification T z :=
     rfl
   rw [hsmul]
-  apply Prod.ext <;>
-    simp [complex_smul_re, complex_smul_im]
+  apply Prod.ext
+  · rw [complex_smul_re]
+    simp
+  · rw [complex_smul_im]
+    simp
 
 /-- Diagonal complexification, bundled as a real-linear isometric embedding between operator
 spaces. -/
