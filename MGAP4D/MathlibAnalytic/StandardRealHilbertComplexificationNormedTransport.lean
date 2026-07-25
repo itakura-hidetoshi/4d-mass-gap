@@ -31,8 +31,8 @@ theorem norm_smul_eq
     (c : ℂ) (z : StandardRealHilbertComplexification H) :
     ‖c • z‖ = ‖c‖ * ‖z‖ := by
   rw [norm_eq_standardNorm, norm_eq_standardNorm]
-  refine (sq_eq_sq₀ (by positivity) (by positivity)).mp ?_
-  rw [standardNorm_sq, standardNorm_sq, mul_pow]
+  refine (sq_eq_sq₀ (Real.sqrt_nonneg _) (mul_nonneg (norm_nonneg c) (Real.sqrt_nonneg _))).mp ?_
+  rw [standardNorm_sq, mul_pow, standardNorm_sq]
   simp only [complex_smul_re, complex_smul_im, norm_sq_eq_re_inner (𝕜 := ℝ)]
   rw [Complex.sq_norm]
   ring_nf
