@@ -115,15 +115,18 @@ def standardRealRestrictionLinearMap
     rfl
   map_smul' := by
     intro r x
-    have hOfReal : ofReal (r • x) = (r : ℂ) • ofReal x := by
-      apply Prod.ext
-      · simp [ofReal, complex_smul_re]
-      · simp [ofReal, complex_smul_im]
+    have hReal : ofReal (r • x) = r • ofReal x := by
+      change (r • x, 0) = (r • x, r • (0 : H))
+      apply Prod.ext <;> simp
+    have hOfReal : ofReal (r • x) = (r : ℂ) • ofReal x :=
+      hReal.trans (Complex.coe_smul r (ofReal x)).symm
     calc
       (X (ofReal (r • x))).1 = (X ((r : ℂ) • ofReal x)).1 := by rw [hOfReal]
       _ = (((r : ℂ) • X (ofReal x))).1 :=
         congrArg Prod.fst (X.map_smul (r : ℂ) (ofReal x))
-      _ = r • (X (ofReal x)).1 := by simp [complex_smul_re]
+      _ = ((r • X (ofReal x))).1 :=
+        congrArg Prod.fst (Complex.coe_smul r (X (ofReal x)))
+      _ = r • (X (ofReal x)).1 := rfl
 
 @[simp]
 theorem standardRealRestrictionLinearMap_apply
