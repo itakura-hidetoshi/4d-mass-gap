@@ -44,11 +44,18 @@ variable {H HC : Type}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [NormedAddCommGroup HC] [InnerProductSpace ℂ HC] [CompleteSpace HC]
 
-/-- Reinterpret a complex-linear bounded operator as a real-linear bounded operator.  This local
-construction uses the pinned Mathlib `LinearMap.restrictScalars` API and reuses the original
-continuity proof. -/
+/-- Reinterpret a complex-linear bounded operator as a real-linear bounded operator.  The real
+scalar law is proved directly from complex linearity, avoiding any additional scalar-compatibility
+instance beyond the pinned Mathlib revision. -/
 def restrictComplexScalarsToReal (X : HC →L[ℂ] HC) : HC →L[ℝ] HC :=
-  ⟨X.toLinearMap.restrictScalars ℝ, X.continuous⟩
+  ⟨
+    { toFun := X
+      map_add' := X.map_add
+      map_smul' := by
+        intro r z
+        change X ((r : ℂ) • z) = (r : ℂ) • X z
+        exact X.map_smul (r : ℂ) z },
+    X.continuous⟩
 
 @[simp]
 theorem restrictComplexScalarsToReal_apply (X : HC →L[ℂ] HC) (z : HC) :
@@ -101,8 +108,7 @@ theorem complexify_realRestriction_apply_ofReal
     calc
       D.conjugation (X (D.ofReal x)) = X (D.conjugation (D.ofReal x)) := hX _
       _ = X (D.ofReal x) := by rw [D.conjugation_ofReal]
-  rw [D.complexify_apply_ofReal]
-  change D.ofReal (D.realPart (X (D.ofReal x))) = X (D.ofReal x)
+  rw [D.complexify_apply_ofReal, D.realRestriction_apply]
   exact D.fixed_eq_ofReal_realPart _ hFixed
 
 /-- A conjugation-commuting complex operator is exactly the complexification of its real
@@ -124,8 +130,10 @@ theorem range_iff_commutes
       ∀ z : HC, D.conjugation (X z) = X (D.conjugation z) := by
   constructor
   · rintro ⟨T, hT⟩ z
-    have h := D.complexify_commutes T z
-    simpa only [hT] using h
+    have hT' : D.complexify T = X := by
+      simpa only using hT
+    rw [← hT']
+    exact D.complexify_commutes T z
   · intro hX
     refine ⟨D.realRestriction X, ?_⟩
     simpa only using D.complexify_realRestriction_eq X hX
