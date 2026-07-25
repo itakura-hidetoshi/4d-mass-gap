@@ -101,14 +101,16 @@ theorem inverse_closed_range
       D.complexify T * D.complexify S = 1 := by
   obtain ⟨S, hS⟩ := D.inverse_mem_range hT
   let Y : HC →L[ℂ] HC := (↑hT.unit⁻¹ : HC →L[ℂ] HC)
+  have hS' : D.complexify S = Y := by
+    simpa [Y] using hS
   have hYX : Y * D.complexify T = 1 := by
     simpa [Y, hT.unit_spec] using hT.unit.inv_val
   have hXY : D.complexify T * Y = 1 := by
     simpa [Y, hT.unit_spec] using hT.unit.val_inv
   refine ⟨S, ?_, ?_⟩
-  · rw [hS]
+  · rw [hS']
     exact hYX
-  · rw [hS]
+  · rw [hS']
     exact hXY
 
 /-- Collapse conjugation-commutant complexification data to the inverse-closed range interface. -/
