@@ -77,8 +77,35 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectDiagonalComplexification
       ((standardOfRealLinearIsometry
         (H := P.VacuumOrthogonalHilbert)).continuous.tendsto _).comp hIm
   have hComplex := hReOfReal.add (hImOfReal.const_smul Complex.I)
-  simpa only [diagonalComplexification_apply, ofReal, I_smul,
-    neg_zero, add_zero, zero_add] using hComplex
+  have hSource :
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        diagonalComplexification
+          (G.admissibleRescaledDefectResolvent
+            hInnerSymmetric tau hlambda) z) =
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        ofReal
+            (G.admissibleRescaledDefectResolvent
+              hInnerSymmetric tau hlambda z.1) +
+          Complex.I • ofReal
+            (G.admissibleRescaledDefectResolvent
+              hInnerSymmetric tau hlambda z.2)) := by
+    funext tau
+    rw [diagonalComplexification_apply]
+    exact decompose _
+  have hTarget :
+      diagonalComplexification
+          (G.vacuumOrthogonalContinuumRealResolvent
+            T hP hInnerSymmetric hSelf hlambda) z =
+        ofReal
+            (G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda z.1) +
+          Complex.I • ofReal
+            (G.vacuumOrthogonalContinuumRealResolvent
+              T hP hInnerSymmetric hSelf hlambda z.2) := by
+    rw [diagonalComplexification_apply]
+    exact decompose _
+  rw [hSource, hTarget]
+  exact hComplex
 
 /-- The actual continuum resolvent complexification lies in the closed diagonal
 real-form star subalgebra, obtained from the pointwise strong limit of the
