@@ -74,7 +74,8 @@ theorem standardInner_smul_left
     (z w : StandardRealHilbertComplexification H) (c : ℂ) :
     standardInner (c • z) w = starRingEnd ℂ c * standardInner z w := by
   apply Complex.ext <;>
-    simp [standardInner, Complex.mul_re, Complex.mul_im, real_inner_smul_left]
+    simp [standardInner, Complex.mul_re, Complex.mul_im,
+      inner_sub_left, inner_add_left, real_inner_smul_left]
   all_goals ring
 
 /-- The standard complex inner product is positive definite. -/
@@ -128,7 +129,6 @@ theorem standardNorm_ofReal
     (x : H) :
     standardNorm (ofReal x) = ‖x‖ := by
   rw [standardNorm_eq]
-  simp [ofReal]
 
 /-- Standard conjugation preserves the generated norm. -/
 theorem standardNorm_conjugation
