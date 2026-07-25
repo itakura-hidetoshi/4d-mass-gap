@@ -25,15 +25,13 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_iff
         l
         (nhds (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T)) ↔
       Filter.Tendsto f l (nhds T) := by
+  let e := diagonalComplexificationStarAlgEquivHomeomorph (H := H)
   constructor
   · intro h
-    have h' :=
-      ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm.continuous.tendsto
-        (diagonalComplexificationStarAlgEquivHomeomorph (H := H) T)).comp h
-    simpa only [Function.comp_apply, Equiv.symm_apply_apply] using h'
+    have h' := (e.symm.continuous.tendsto (e T)).comp h
+    simpa only [Function.comp_apply, e.symm_apply_apply] using h'
   · intro h
-    exact
-      ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).continuous.tendsto T).comp h
+    exact (e.continuous.tendsto T).comp h
 
 /--
 Convergence through the inverse diagonal complexification homeomorphism is equivalent to
@@ -49,15 +47,13 @@ theorem tendsto_diagonalComplexificationStarAlgEquivHomeomorph_symm_iff
         l
         (nhds ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)) ↔
       Filter.Tendsto f l (nhds S) := by
+  let e := diagonalComplexificationStarAlgEquivHomeomorph (H := H)
   constructor
   · intro h
-    have h' :=
-      ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).continuous.tendsto
-        ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm S)).comp h
-    simpa only [Function.comp_apply, Equiv.apply_symm_apply] using h'
+    have h' := (e.continuous.tendsto (e.symm S)).comp h
+    simpa only [Function.comp_apply, e.apply_symm_apply] using h'
   · intro h
-    exact
-      ((diagonalComplexificationStarAlgEquivHomeomorph (H := H)).symm.continuous.tendsto S).comp h
+    exact (e.symm.continuous.tendsto S).comp h
 
 end StandardRealHilbertComplexification
 
