@@ -154,7 +154,8 @@ theorem decompose [AddCommGroup H] [Module ℝ H]
     (z : StandardRealHilbertComplexification H) :
     z = ofReal z.1 + Complex.I • ofReal z.2 := by
   rw [I_smul]
-  apply Prod.ext <;> simp [ofReal]
+  change (z.1, z.2) = (z.1 + 0, 0 + z.2)
+  simp
 
 end StandardRealHilbertComplexification
 
