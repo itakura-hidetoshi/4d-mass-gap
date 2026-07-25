@@ -31,8 +31,8 @@ theorem norm_smul_eq
     (c : ℂ) (z : StandardRealHilbertComplexification H) :
     ‖c • z‖ = ‖c‖ * ‖z‖ := by
   rw [norm_eq_standardNorm, norm_eq_standardNorm]
-  apply sq_eq_sq₀ (by positivity) (mul_nonneg (norm_nonneg c) (norm_nonneg z))
-  rw [standardNorm_sq, mul_pow]
+  refine (sq_eq_sq₀ (by positivity) (by positivity)).mp ?_
+  rw [standardNorm_sq, standardNorm_sq, mul_pow]
   simp only [complex_smul_re, complex_smul_im, norm_sq_eq_re_inner (𝕜 := ℝ)]
   rw [Complex.sq_norm]
   ring_nf
@@ -51,6 +51,8 @@ noncomputable instance instInnerProductSpace :
   inner := standardInner
   norm_sq_eq_re_inner z := by
     rw [norm_eq_standardNorm, standardNorm_sq, standardInner_self]
+    change ‖z.1‖ ^ 2 + ‖z.2‖ ^ 2 = ‖z.1‖ ^ 2 + ‖z.2‖ ^ 2
+    rfl
   conj_inner_symm := standardInner_conj_symm
   add_left := standardInner_add_left
   smul_left := standardInner_smul_left
