@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.StandardRealHilbertDiagonalStarSubalgebraCompleteClosed
-import MGAP4D.MathlibAnalytic.RealHilbertBoundedOperatorComplexificationConjugationCommutantFromRealFormDecomposition
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -11,7 +10,7 @@ open Filter Topology
 
 namespace StandardRealHilbertComplexification
 
-variable {H : Type}
+variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 /-- The canonical embedding of the real Hilbert space into its standard
@@ -64,19 +63,6 @@ theorem continuous_standardConjugation :
       StandardRealHilbertComplexification H) :=
   (standardConjugationLinearIsometry (H := H)).continuous
 
-/-- The real-coordinate projection as a real-linear map. -/
-def standardRealPartLinearMap :
-    StandardRealHilbertComplexification H →ₗ[ℝ] H where
-  toFun z := z.1
-  map_add' _ _ := rfl
-  map_smul' _ _ := rfl
-
-@[simp]
-theorem standardRealPartLinearMap_apply
-    (z : StandardRealHilbertComplexification H) :
-    standardRealPartLinearMap (H := H) z = z.1 :=
-  rfl
-
 /-- The real-coordinate norm is bounded by the standard complexification norm. -/
 theorem norm_standardRealPart_le
     (z : StandardRealHilbertComplexification H) :
@@ -85,18 +71,6 @@ theorem norm_standardRealPart_le
     rw [norm_eq_standardNorm, standardNorm_sq]
     nlinarith [sq_nonneg ‖z.2‖]
   exact (sq_le_sq₀ (norm_nonneg z.1) (norm_nonneg z)).mp hsq
-
-/-- The real-coordinate projection as a bounded real-linear map. -/
-noncomputable def standardRealPartContinuousLinearMap :
-    StandardRealHilbertComplexification H →L[ℝ] H :=
-  (standardRealPartLinearMap (H := H)).mkContinuous 1 fun z => by
-    simpa using norm_standardRealPart_le (H := H) z
-
-@[simp]
-theorem standardRealPartContinuousLinearMap_apply
-    (z : StandardRealHilbertComplexification H) :
-    standardRealPartContinuousLinearMap (H := H) z = z.1 :=
-  rfl
 
 /-- A vector fixed by standard conjugation has zero imaginary coordinate. -/
 theorem imag_eq_zero_of_conjugation_eq
@@ -124,34 +98,109 @@ theorem ofReal_realPart_eq_of_conjugation_eq
   · simp [ofReal]
   · simpa [ofReal] using (imag_eq_zero_of_conjugation_eq (H := H) z hz).symm
 
-/-- The concrete standard complexification supplies the generic real-form
-operator-complexification interface. -/
-noncomputable def standardRealFormDecompositionData :
-    RealHilbertBoundedOperatorComplexificationRealFormDecompositionData
-      H (StandardRealHilbertComplexification H) where
-  complexify := diagonalComplexificationStarAlgHom
-  isometry_complexify := by
-    simpa only [diagonalComplexificationStarAlgHom_apply] using
-      diagonalComplexification_isometry (H := H)
-  conjugation := conjugation
-  ofReal := (standardOfRealLinearIsometry (H := H)).toContinuousLinearMap
-  realPart := standardRealPartContinuousLinearMap (H := H)
-  imagPart := fun z => z.2
-  decompose := by
-    intro z
-    simpa using decompose z
-  conjugation_ofReal := by
-    intro x
-    simpa using conjugation_ofReal x
-  fixed_eq_ofReal_realPart := by
-    intro z hz
-    simpa using ofReal_realPart_eq_of_conjugation_eq (H := H) z hz
-  complexify_apply_ofReal := by
-    intro T x
-    simpa using diagonalComplexification_ofReal T x
-  complexify_commutes := by
-    intro T z
-    simpa using (diagonalComplexification_conjugation T z).symm
+/-- Restrict a bounded complex-linear operator to the embedded real form and
+project to its real coordinate. -/
+def standardRealRestrictionLinearMap
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H) :
+    H →ₗ[ℝ] H where
+  toFun x := (X (ofReal x)).1
+  map_add' := by
+    intro x y
+    have hOfReal : ofReal (x + y) = ofReal x + ofReal y := by
+      apply Prod.ext <;> simp [ofReal]
+    change (X (ofReal (x + y))).1 =
+      (X (ofReal x)).1 + (X (ofReal y)).1
+    rw [hOfReal, map_add]
+    rfl
+  map_smul' := by
+    intro r x
+    have hOfReal : ofReal (r • x) = (r : ℂ) • ofReal x := by
+      apply Prod.ext <;> simp [ofReal]
+    change (X (ofReal (r • x))).1 = r • (X (ofReal x)).1
+    rw [hOfReal, map_smul]
+    simp
+
+@[simp]
+theorem standardRealRestrictionLinearMap_apply
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H)
+    (x : H) :
+    standardRealRestrictionLinearMap X x = (X (ofReal x)).1 :=
+  rfl
+
+/-- The real restriction is bounded by the operator norm of the complex
+operator. -/
+theorem standardRealRestrictionLinearMap_norm_bound
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H)
+    (x : H) :
+    ‖standardRealRestrictionLinearMap X x‖ ≤ ‖X‖ * ‖x‖ := by
+  change ‖(X (ofReal x)).1‖ ≤ ‖X‖ * ‖x‖
+  calc
+    ‖(X (ofReal x)).1‖ ≤ ‖X (ofReal x)‖ :=
+      norm_standardRealPart_le (H := H) _
+    _ ≤ ‖X‖ * ‖ofReal x‖ := X.le_opNorm _
+    _ = ‖X‖ * ‖x‖ := by rw [norm_ofReal]
+
+/-- The real restriction of a bounded complex operator. -/
+noncomputable def standardRealRestriction
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H) :
+    H →L[ℝ] H :=
+  (standardRealRestrictionLinearMap X).mkContinuous ‖X‖
+    (standardRealRestrictionLinearMap_norm_bound X)
+
+@[simp]
+theorem standardRealRestriction_apply
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H)
+    (x : H) :
+    standardRealRestriction X x = (X (ofReal x)).1 :=
+  rfl
+
+/-- Complex-linear operators are determined by their values on the embedded
+real form. -/
+theorem complexLinearMap_eq_of_eq_on_ofReal
+    {X Y : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H}
+    (h : ∀ x : H, X (ofReal x) = Y (ofReal x)) :
+    X = Y := by
+  ext z
+  calc
+    X z = X (ofReal z.1 + Complex.I • ofReal z.2) :=
+      congrArg X (decompose z)
+    _ = X (ofReal z.1) + Complex.I • X (ofReal z.2) := by simp
+    _ = Y (ofReal z.1) + Complex.I • Y (ofReal z.2) := by rw [h, h]
+    _ = Y (ofReal z.1 + Complex.I • ofReal z.2) := by simp
+    _ = Y z := congrArg Y (decompose z).symm
+
+/-- A conjugation-commuting complex operator agrees on real vectors with the
+diagonal complexification of its real restriction. -/
+theorem diagonalComplexification_standardRealRestriction_apply_ofReal
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H)
+    (hX : ∀ z : StandardRealHilbertComplexification H,
+      conjugation (X z) = X (conjugation z))
+    (x : H) :
+    diagonalComplexification (standardRealRestriction X) (ofReal x) =
+      X (ofReal x) := by
+  rw [diagonalComplexification_ofReal, standardRealRestriction_apply]
+  apply ofReal_realPart_eq_of_conjugation_eq
+  calc
+    conjugation (X (ofReal x)) = X (conjugation (ofReal x)) := hX _
+    _ = X (ofReal x) := by rw [conjugation_ofReal]
+
+/-- A conjugation-commuting bounded complex operator is exactly the diagonal
+complexification of its real restriction. -/
+theorem diagonalComplexification_standardRealRestriction_eq
+    (X : StandardRealHilbertComplexification H →L[ℂ]
+      StandardRealHilbertComplexification H)
+    (hX : ∀ z : StandardRealHilbertComplexification H,
+      conjugation (X z) = X (conjugation z)) :
+    diagonalComplexification (standardRealRestriction X) = X := by
+  apply complexLinearMap_eq_of_eq_on_ofReal
+  exact diagonalComplexification_standardRealRestriction_apply_ofReal X hX
 
 /-- A complex bounded operator belongs to the diagonal real-form range exactly
 when it commutes with standard conjugation. -/
@@ -169,12 +218,9 @@ theorem mem_diagonalComplexificationStarSubalgebra_iff_commutes
     rw [← hT]
     exact (diagonalComplexification_conjugation T z).symm
   · intro hX
-    have hrange :
-        X ∈ (diagonalComplexificationStarAlgHom (H := H)).range :=
-      ((standardRealFormDecompositionData (H := H)).range_iff_commutes X).2 hX
-    rcases hrange with ⟨T, hT⟩
     exact (mem_diagonalComplexificationStarSubalgebra_iff (H := H) X).2
-      ⟨T, by simpa only [diagonalComplexificationStarAlgHom_apply] using hT⟩
+      ⟨standardRealRestriction X,
+        diagonalComplexification_standardRealRestriction_eq X hX⟩
 
 /-- The diagonal real-form range is closed under pointwise strong-operator
 limits along any nontrivial filter.  No uniform operator-norm bound is needed
