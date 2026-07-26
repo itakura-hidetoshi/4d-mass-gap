@@ -157,7 +157,7 @@ noncomputable def toEmbeddedFiniteDistinctEigenpairStrongLimitData
       (nodes.card * orderCap) :=
   { FiniteState := fun _ => F.StateSpace
     finiteNormedAddCommGroup := fun _ => F.stateNormedAddCommGroup
-    finiteNormedSpace := fun _ => F.stateInnerProductSpace.toNormedSpace
+    finiteInnerProductSpace := fun _ => F.stateInnerProductSpace
     finiteOperator := F.hamiltonian
     finiteEigenpair := fun n => (R.finiteWitness n).toFiniteDistinctEigenpairData
     SpectralIndex := R.SpectralIndex
