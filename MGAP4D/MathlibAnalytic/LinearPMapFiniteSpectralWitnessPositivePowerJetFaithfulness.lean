@@ -34,13 +34,17 @@ theorem realResolvent_apply_eigenvector
   let c : ℝ := (mu - lambda)⁻¹
   change A.toFun x = mu • (x : E) at hEigen
   have hCoe : ((c • x : A.domain) : E) = c • (x : E) := rfl
+  have hCoefficient :
+      (mu - lambda)⁻¹ * mu - lambda * (mu - lambda)⁻¹ = 1 := by
+    calc
+      (mu - lambda)⁻¹ * mu - lambda * (mu - lambda)⁻¹ =
+          (mu - lambda)⁻¹ * (mu - lambda) := by ring
+      _ = 1 := inv_mul_cancel₀ (sub_ne_zero.mpr hmu)
   have hShift : A.realShift lambda (c • x) = (x : E) := by
     change A.toFun (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
     rw [map_smul, hEigen, hCoe, smul_smul, smul_smul]
-    rw [← sub_smul]
-    convert one_smul ℝ (x : E) using 1
     dsimp [c]
-    rw [div_self (sub_ne_zero.mpr hmu)]
+    rw [hCoefficient, one_smul]
   have hPreimage :
       (A.realShiftLinearEquiv hSelf hlambda hgap).symm (x : E) =
         c • x := by
@@ -137,9 +141,8 @@ theorem PositivePowerJetCoefficientMap.FiniteSpectralWitnessData.linearIndepende
       simpa [eval] using congrArg eval hEquality
     simp_rw [D.operatorPower_apply_witness, smul_smul] at hApply
     simp only [Finset.sum_apply, Pi.smul_apply]
-    apply smul_left_injective ℝ (D.witnessVector_ne_zero w)
-    rw [Finset.sum_smul, Finset.sum_smul]
-    exact hApply
+    exact smul_left_injective ℝ (D.witnessVector_ne_zero w) (by
+      simpa only [Finset.sum_smul] using hApply)
   exact (Fintype.linearIndependent_iffₛ.mp D.scalarLinearIndependent)
     left right hScalarEquality p
 
