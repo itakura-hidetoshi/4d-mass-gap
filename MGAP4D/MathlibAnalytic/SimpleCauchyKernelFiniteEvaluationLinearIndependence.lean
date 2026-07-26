@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-open Set
+open Set Polynomial
 open scoped BigOperators Polynomial
 
 namespace ContinuousLinearMap
@@ -31,7 +31,8 @@ noncomputable def simpleCauchyNodePolynomial
     (x : ℝ) :
     (simpleCauchyNodePolynomial value i).eval x =
       ∏ j ∈ (Finset.univ : Finset ι).erase i, (x - value j) := by
-  simp [simpleCauchyNodePolynomial]
+  rw [simpleCauchyNodePolynomial, eval_prod]
+  simp
 
 /-- Every deleted-factor node polynomial has degree exactly one less than the
 number of nodes. -/
@@ -115,7 +116,10 @@ noncomputable def simpleCauchyNumeratorPolynomial
     (simpleCauchyNumeratorPolynomial value coefficient).eval x =
       ∑ i : ι,
         coefficient i * (simpleCauchyNodePolynomial value i).eval x := by
-  simp [simpleCauchyNumeratorPolynomial]
+  rw [simpleCauchyNumeratorPolynomial, eval_finset_sum]
+  apply Finset.sum_congr rfl
+  intro i hi
+  simp
 
 /-- A simple Cauchy numerator has degree strictly below the number of nodes. -/
 theorem simpleCauchyNumeratorPolynomial_degree_lt_card
