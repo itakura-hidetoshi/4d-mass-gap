@@ -13,7 +13,8 @@ noncomputable def
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W)
     (n : ℕ) (t : NNReal) : D.StateSpace →L[ℝ] D.StateSpace :=
-  (D.hamiltonianSymmetric n).exponentialOperator D.stateFinrank (t : ℝ)
+  LinearMap.IsSymmetric.exponentialOperator
+    (D.hamiltonianSymmetric n) D.stateFinrank (t : ℝ)
 
 /-- Every selected finite Wilson Hamiltonian eigenvector has the expected
 `exp (-E t)` action under the generated continuous-time exponential operator. -/
@@ -33,15 +34,16 @@ theorem finite_wilson_hamiltonianExponentialOperator_apply_spectralVector
     D.hamiltonianExponentialOperator n t (R.spectralVector k) =
       Real.exp (-R.spectralValue k * (t : ℝ)) • R.spectralVector k := by
   change
-    (D.hamiltonianSymmetric n).exponentialOperator D.stateFinrank (t : ℝ)
+    LinearMap.IsSymmetric.exponentialOperator
+        (D.hamiltonianSymmetric n) D.stateFinrank (t : ℝ)
         ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank k.1) =
       Real.exp
           (-((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank k.1) *
             (t : ℝ)) •
         (D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank k.1
   exact
-    (D.hamiltonianSymmetric n).exponentialOperator_apply_eigenvectorBasis
-      D.stateFinrank (t : ℝ) k.1
+    LinearMap.IsSymmetric.exponentialOperator_apply_eigenvectorBasis
+      (D.hamiltonianSymmetric n) D.stateFinrank (t : ℝ) k.1
 
 end
 
