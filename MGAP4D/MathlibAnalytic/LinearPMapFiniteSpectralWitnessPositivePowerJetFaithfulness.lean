@@ -32,6 +32,7 @@ theorem realResolvent_apply_eigenvector
     A.realResolvent hSelf hlambda hgap (x : E) =
       (mu - lambda)⁻¹ • (x : E) := by
   let c : ℝ := (mu - lambda)⁻¹
+  change A.toFun x = mu • (x : E) at hEigen
   have hShift : A.realShift lambda (c • x) = (x : E) := by
     change A.toFun (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
     rw [map_smul, hEigen]
@@ -124,10 +125,19 @@ theorem PositivePowerJetCoefficientMap.FiniteSpectralWitnessData.linearIndepende
     funext w
     have hApply := congrArg
       (fun L : E →L[ℝ] E => L (D.witnessVector w)) hEquality
-    simp only [Finset.sum_apply, smul_apply,
-      D.operatorPower_apply_witness, smul_smul] at hApply
-    rw [← Finset.sum_smul, ← Finset.sum_smul] at hApply
-    exact smul_left_injective ℝ (D.witnessVector_ne_zero w) hApply
+    change
+      (∑ q, left q •
+        positivePowerJetOperatorFamily A (q.1.1, q.2.1)
+          (D.witnessVector w)) =
+      ∑ q, right q •
+        positivePowerJetOperatorFamily A (q.1.1, q.2.1)
+          (D.witnessVector w) at hApply
+    simp_rw [D.operatorPower_apply_witness, smul_smul] at hApply
+    change (∑ q, left q * D.scalar q w) =
+      ∑ q, right q * D.scalar q w
+    apply smul_left_injective ℝ (D.witnessVector_ne_zero w)
+    rw [Finset.sum_smul, Finset.sum_smul]
+    exact hApply
   exact (Fintype.linearIndependent_iffₛ.mp D.scalarLinearIndependent)
     left right hScalarEquality p
 
