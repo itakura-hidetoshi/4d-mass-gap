@@ -209,8 +209,10 @@ theorem embeddedFiniteSemigroup_eigenaction
           (-R.approximateValue n k *
             (((R.width n : NNReal) : ℝ))) •
         R.ambientEmbeddedVector n k := by
-  rw [R.finiteSemigroup_eigenaction n k, map_smul]
-  rfl
+  have h := congrArg (fun psi => A.embed n psi)
+    (R.finiteSemigroup_eigenaction n k)
+  simpa [finiteVector, approximateValue, ambientEmbeddedVector, embeddedVector]
+    using h
 
 /-- The supplied scaled common-carrier defect is the generic exponential-model
 defect. -/
@@ -228,9 +230,31 @@ theorem exponentialModelDefect_tendsto_zero
               (R.ambientEmbeddedVector n k)))
       atTop (nhds 0) := by
   have h := R.scaledCommonCarrierSemigroupDefect_tendsto_zero k
-  convert h using 1
-  funext n
-  rw [R.embeddedFiniteSemigroup_eigenaction n k]
+  have hfunction :
+      (fun n =>
+        (((R.width n : NNReal) : ℝ))⁻¹ •
+          (Real.exp
+                (-R.approximateValue n k *
+                  (((R.width n : NNReal) : ℝ))) •
+              R.ambientEmbeddedVector n k -
+            T.toPhysicalSemigroup.operator (R.width n)
+              (R.ambientEmbeddedVector n k))) =
+      (fun n =>
+        let phi :=
+          (R.finiteWitness n).spectralVector (R.finiteIndexEquiv n k)
+        let ambient :=
+          ((R.realization.excitationEmbed n phi : P.VacuumOrthogonalHilbert) :
+            P.PhysicalHilbert)
+        (((R.width n : NNReal) : ℝ))⁻¹ •
+          (A.embed n
+              (C.finiteOperator n (R.width n)
+                (R.realization.finiteRealization n phi)) -
+            T.toPhysicalSemigroup.operator (R.width n) ambient)) := by
+    funext n
+    dsimp [approximateValue, ambientEmbeddedVector, embeddedVector, finiteVector]
+    rw [R.embeddedFiniteSemigroup_eigenaction n k]
+  rw [hfunction]
+  exact h
 
 /-- The finite Hamiltonian eigen-equation transported to the ambient carrier. -/
 theorem ambientEmbed_hamiltonian_finiteVector
