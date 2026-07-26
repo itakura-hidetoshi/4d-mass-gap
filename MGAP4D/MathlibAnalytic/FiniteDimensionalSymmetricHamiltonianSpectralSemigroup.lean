@@ -73,6 +73,7 @@ theorem finiteDimensionalSymmetricHamiltonian_apply_eq_sum
   apply Finset.sum_congr rfl
   intro i hi
   rw [hH.apply_eigenvectorBasis hDimension i]
+  simp [b, smul_smul]
 
 /-- The finite spectral-semigroup right Hamiltonian difference quotient is the
 finite sum of the scalar exponential slopes in the Hamiltonian eigenbasis. -/
@@ -114,11 +115,35 @@ theorem finiteDimensionalSymmetricHamiltonianSpectralSemigroup_differenceQuotien
     (t : ℝ)⁻¹ •
         (x - finiteDimensionalSymmetricHamiltonianSpectralSemigroup
           H hH dimension hDimension t x) = _
-  conv_lhs => rw [hx, hsemigroup]
-  rw [← Finset.sum_sub_distrib, Finset.smul_sum]
-  apply Finset.sum_congr rfl
-  intro i hi
-  module
+  calc
+    (t : ℝ)⁻¹ •
+        (x - finiteDimensionalSymmetricHamiltonianSpectralSemigroup
+          H hH dimension hDimension t x) =
+      (t : ℝ)⁻¹ •
+        ((∑ i : Fin dimension, inner ℝ (b i) x • b i) -
+          finiteDimensionalSymmetricHamiltonianSpectralSemigroup
+            H hH dimension hDimension t x) :=
+      congrArg
+        (fun y : E =>
+          (t : ℝ)⁻¹ •
+            (y - finiteDimensionalSymmetricHamiltonianSpectralSemigroup
+              H hH dimension hDimension t x)) hx
+    _ =
+      (t : ℝ)⁻¹ •
+        ((∑ i : Fin dimension, inner ℝ (b i) x • b i) -
+          ∑ i : Fin dimension,
+            inner ℝ (b i) x •
+              (Real.exp (-(hH.eigenvalues hDimension i) * (t : ℝ)) • b i)) :=
+      congrArg
+        (fun y : E =>
+          (t : ℝ)⁻¹ •
+            ((∑ i : Fin dimension, inner ℝ (b i) x • b i) - y))
+        hsemigroup
+    _ = _ := by
+      rw [← Finset.sum_sub_distrib, Finset.smul_sum]
+      apply Finset.sum_congr rfl
+      intro i hi
+      module
 
 /-- The theorem-generated finite spectral semigroup has right derivative `-H`,
 or equivalently its right Hamiltonian difference quotient converges to `H`, on
