@@ -35,28 +35,27 @@ theorem HasRightHamiltonianValue.tendsto_rightHamiltonianDifferenceQuotient
 isometric realization of the finite Hamiltonian sector intertwines its right
 Hamiltonian with the abstract finite-dimensional Wilson Hamiltonian.
 
-This is a generator-level structural input.  It is strictly local at time zero
+This is a generator-level structural input. It is strictly local at time zero
 and does not assume a finite-semigroup exponential eigenaction. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGeneratorIntertwiningData
     {halfExtent : ℕ → ℕ}
     {N : ℕ}
     {hN : 0 < N}
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℕ → ℝ}
-    {hbeta : ∀ n m, 0 ≤ beta n m}
+    {beta : ℕ → ℝ}
+    {hbeta : ∀ n, 0 ≤ beta n}
     {B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n)}
+      S D halfExtent N hN beta hbeta}
     {hInvariant : ∀ n,
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
     {T : P.StronglyContinuousPhysicalSemigroup}
     {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n) B hInvariant}
+      S D halfExtent N hN beta hbeta B hInvariant}
     {Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingVacuumGapCertificate
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n) B hInvariant C}
+      S D halfExtent N hN beta hbeta B hInvariant C}
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n)
-        B hInvariant P T C Q)
+      S D halfExtent N hN beta hbeta B hInvariant P T C Q)
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W) where
   strongContinuity :
@@ -83,28 +82,26 @@ variable
     {N : ℕ}
     {hN : 0 < N}
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℕ → ℝ}
-    {hbeta : ∀ n m, 0 ≤ beta n m}
+    {beta : ℕ → ℝ}
+    {hbeta : ∀ n, 0 ≤ beta n}
     {B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n)}
+      S D halfExtent N hN beta hbeta}
     {hInvariant : ∀ n,
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
     {T : P.StronglyContinuousPhysicalSemigroup}
     {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n) B hInvariant}
+      S D halfExtent N hN beta hbeta B hInvariant}
     {Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingVacuumGapCertificate
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n) B hInvariant C}
+      S D halfExtent N hN beta hbeta B hInvariant C}
     {A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n)
-        B hInvariant P T C Q}
+      S D halfExtent N hN beta hbeta B hInvariant P T C Q}
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     {F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W}
 
 abbrev GeneratorIntertwiningData
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
-      S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n)
-        B hInvariant P T C Q)
+      S D halfExtent N hN beta hbeta B hInvariant P T C Q)
     (F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W) :=
   PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGeneratorIntertwiningData
     A F
@@ -129,8 +126,7 @@ noncomputable def realizedDomainPoint
     (n : ℕ) (phi : F.StateSpace) :
     (R.realizedDomainPoint n phi :
       PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
-        S D halfExtent N hN (fun n => beta n n) (fun n => hbeta n n)
-          B hInvariant n) =
+        S D halfExtent N hN beta hbeta B hInvariant n) =
       R.realization.finiteRealization n phi :=
   rfl
 
@@ -202,8 +198,9 @@ theorem rightHamiltonianDifferenceQuotient_tendsto_spectralVector
       (nhds
         (V.spectralValue k •
           R.realization.finiteRealization n (V.spectralVector k))) :=
-  (R.hasRightHamiltonianValue_spectralVector n value nodes orderCap V k).tendsto_rightHamiltonianDifferenceQuotient
+  HasRightHamiltonianValue.tendsto_rightHamiltonianDifferenceQuotient
     (R.finiteStrongSemigroup n)
+    (R.hasRightHamiltonianValue_spectralVector n value nodes orderCap V k)
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGeneratorIntertwiningData
 
