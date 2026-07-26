@@ -442,13 +442,41 @@ theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileProductRealF
     G.PositiveMultiplicityProfileProductRealFormStatement
       T hP hInnerSymmetric hSelf first tail := by
   unfold VacuumSemigroupGapSlope.PositiveMultiplicityProfileProductRealFormStatement
-  rw [← G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm_eq_product
-    T hInnerSymmetric _ first tail hCompatible]
-  rw [← G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product
-    T hP hInnerSymmetric hSelf first tail hCompatible]
-  simpa [VacuumSemigroupGapSlope.PositiveMultiplicityProfileRealFormStatement] using
-    (G.canonicalPositiveMultiplicityProfileRealFormStrongLimitPackage
-      T hP hInnerSymmetric hSelf first tail)
+  rcases G.canonicalPositiveMultiplicityProfileRealFormStrongLimitPackage
+      T hP hInnerSymmetric hSelf first tail with
+    ⟨hTendsto, hMem, hUnique⟩
+  constructor
+  · intro z
+    have hSource :
+        (fun tau : G.AdmissibleRescaledDefectTime =>
+          diagonalComplexification
+            (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm
+              hInnerSymmetric tau first tail) z) =
+        (fun tau : G.AdmissibleRescaledDefectTime =>
+          diagonalComplexification
+            (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileProduct
+              hInnerSymmetric tau first tail) z) := by
+      funext tau
+      rw [G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm_eq_product
+        T hInnerSymmetric tau first tail hCompatible]
+    have hTarget :
+        diagonalComplexification
+            (G.continuumResolventPositiveMultiplicityProfileNormalForm
+              T hP hInnerSymmetric hSelf first tail) z =
+          diagonalComplexification
+            (G.continuumResolventPositiveMultiplicityProfileProduct
+              T hP hInnerSymmetric hSelf first tail) z := by
+      rw [G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product
+        T hP hInnerSymmetric hSelf first tail hCompatible]
+    rw [← hSource, ← hTarget]
+    exact hTendsto z
+  constructor
+  · rw [← G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product
+      T hP hInnerSymmetric hSelf first tail hCompatible]
+    exact hMem
+  · rw [← G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product
+      T hP hInnerSymmetric hSelf first tail hCompatible]
+    exact hUnique
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
