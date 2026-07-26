@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSTimeAverageGeneratorDomain
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianLinearPMapClosure
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCore
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -91,10 +92,17 @@ theorem timeAverage_mem_vacuumOrthogonal
       intro s hs
       change inner ℝ P.vacuum
           (T.toPhysicalSemigroup.operator s.toNNReal psi) = 0
-      rw [real_inner_comm,
-        T.toPhysicalSemigroup.operator_inner_vacuum_eq
-          hInnerSymmetric s.toNNReal psi]
-      exact hpsiRight
+      calc
+        inner ℝ P.vacuum
+            (T.toPhysicalSemigroup.operator s.toNNReal psi) =
+            inner ℝ (T.toPhysicalSemigroup.operator s.toNNReal psi)
+              P.vacuum := real_inner_comm _ _
+        _ = inner ℝ psi
+            (T.toPhysicalSemigroup.operator s.toNNReal P.vacuum) :=
+          hInnerSymmetric s.toNNReal psi P.vacuum
+        _ = inner ℝ psi P.vacuum := by
+          rw [T.toPhysicalSemigroup.fixes_vacuum]
+        _ = 0 := hpsiRight
     _ = 0 := by simp
 
 /-- If vectors converge strongly while positive averaging widths converge to
