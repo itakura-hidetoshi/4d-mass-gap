@@ -33,10 +33,10 @@ theorem realResolvent_apply_eigenvector
       (mu - lambda)⁻¹ • (x : E) := by
   let c : ℝ := (mu - lambda)⁻¹
   change A.toFun x = mu • (x : E) at hEigen
+  have hCoe : ((c • x : A.domain) : E) = c • (x : E) := rfl
   have hShift : A.realShift lambda (c • x) = (x : E) := by
     change A.toFun (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
-    rw [map_smul, hEigen]
-    change (c * mu) • (x : E) - (lambda * c) • (x : E) = (x : E)
+    rw [map_smul, hEigen, hCoe, smul_smul, smul_smul]
     rw [← sub_smul]
     convert one_smul ℝ (x : E) using 1
     dsimp [c]
@@ -123,15 +123,18 @@ theorem PositivePowerJetCoefficientMap.FiniteSpectralWitnessData.linearIndepende
       (∑ q, left q • D.scalar q) =
         ∑ q, right q • D.scalar q := by
     funext w
-    have hApply := congrArg
-      (fun L : E →L[ℝ] E => L (D.witnessVector w)) hEquality
-    change
-      (∑ q, left q •
-        positivePowerJetOperatorFamily A (q.1.1, q.2.1)
-          (D.witnessVector w)) =
-      ∑ q, right q •
-        positivePowerJetOperatorFamily A (q.1.1, q.2.1)
-          (D.witnessVector w) at hApply
+    let eval : (E →L[ℝ] E) →ₗ[ℝ] E :=
+      { toFun := fun L => L (D.witnessVector w)
+        map_add' := by intro L R; rfl
+        map_smul' := by intro r L; rfl }
+    have hApply :
+        (∑ q, left q •
+          positivePowerJetOperatorFamily A (q.1.1, q.2.1)
+            (D.witnessVector w)) =
+        ∑ q, right q •
+          positivePowerJetOperatorFamily A (q.1.1, q.2.1)
+            (D.witnessVector w) := by
+      simpa [eval] using congrArg eval hEquality
     simp_rw [D.operatorPower_apply_witness, smul_smul] at hApply
     change (∑ q, left q * D.scalar q w) =
       ∑ q, right q * D.scalar q w
