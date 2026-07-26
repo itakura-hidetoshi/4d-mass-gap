@@ -24,13 +24,14 @@ continuum excitation carrier and lifted into the target closed-Hamiltonian
 domain.
 
 The common spectral index explicitly tracks the selected eigenpair at every
-scale.  Isometric embedding and strong convergence make nonvanishing of the
-continuum limiting vectors automatic.  Pairwise distinct limiting energies
+scale. Isometric embedding and strong convergence make nonvanishing of the
+continuum limiting vectors automatic. Pairwise distinct limiting energies
 remain an explicit field; finite-scale injectivity alone is not used to infer
 injectivity after passage to the limit. -/
 structure VacuumSemigroupGapSlope.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
+    [DecidableEq G.BelowHalfMassShift]
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W)
@@ -88,6 +89,7 @@ namespace VacuumSemigroupGapSlope.EmbeddedFiniteWilsonApproximateEigenpairStrong
 
 variable {T : P.StronglyContinuousPhysicalSemigroup}
 variable {G : T.VacuumSemigroupGapSlope}
+variable [DecidableEq G.BelowHalfMassShift]
 variable {hSelf : IsSelfAdjoint T.closedRightHamiltonian}
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 variable {F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W}
