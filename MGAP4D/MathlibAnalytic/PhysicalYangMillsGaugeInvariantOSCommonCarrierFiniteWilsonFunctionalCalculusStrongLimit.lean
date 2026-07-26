@@ -180,10 +180,14 @@ theorem finiteSemigroup_eigenaction
           (Real.exp
               (-R.approximateValue n k * (((R.width n : NNReal) : ℝ))) •
             R.finiteVector n k) := by
-      rw [finite_wilson_hamiltonianExponentialOperator_apply_spectralVector
-        F n
-        (fun sigma : A.toVacuumSemigroupGapSlope.BelowHalfMassShift => sigma.1)
-        nodes orderCap (R.finiteWitness n) (R.width n) (R.finiteIndexEquiv n k)]
+      have h := congrArg
+        (fun psi : F.StateSpace => R.realization.finiteRealization n psi)
+        (finite_wilson_hamiltonianExponentialOperator_apply_spectralVector
+          F n
+          (fun sigma : A.toVacuumSemigroupGapSlope.BelowHalfMassShift => sigma.1)
+          nodes orderCap (R.finiteWitness n) (R.width n)
+          (R.finiteIndexEquiv n k))
+      simpa [finiteVector, approximateValue] using h
     _ = Real.exp
           (-R.approximateValue n k * (((R.width n : NNReal) : ℝ))) •
         R.realization.finiteRealization n (R.finiteVector n k) := by
