@@ -17,7 +17,7 @@ variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 label type is existentially packaged, so one adjoin step may refine the labels
 without changing the outer data type. -/
 structure FinitePositivePowerJetData (α : Type u) where
-  label : Type u
+  label : Type
   support : Finset label
   node : label → α
   order : label → ℕ
@@ -46,6 +46,18 @@ noncomputable def FinitePositivePowerJetData.singleton
       node := fun _ => a
       order := fun _ => m
       coefficient := fun _ => c }
+
+/-- Evaluation of singleton jet data. -/
+@[simp] theorem FinitePositivePowerJetData.eval_singleton
+    (A : α → E →L[ℝ] E)
+    (a : α) (m : ℕ) (c : ℝ) :
+    (FinitePositivePowerJetData.singleton a m c).eval A =
+      c • (A a) ^ (m + 1) := by
+  classical
+  simp [FinitePositivePowerJetData.eval,
+    FinitePositivePowerJetData.singleton,
+    finitePositivePowerJetCombination,
+    finitePowerJetCombination]
 
 /-- Exact scalar distinctness condition for adjoining one new node to packaged
 finite positive jet data. -/
@@ -119,7 +131,7 @@ theorem FinitePositivePowerJetData.eval_adjoin_eq_normalForm
     twoSidedConfluentResolventBinomialNormalForm,
     twoSidedConfluentLeftBinomialSum,
     twoSidedConfluentRightBinomialSum,
-    smul_smul, mul_assoc]
+    Finset.sum_add_distrib, Finset.smul_sum, smul_smul]
 
 /-- One flattened adjoin step evaluates to right multiplication by the new
 positive resolvent power. -/
@@ -253,11 +265,12 @@ theorem positiveMultiplicityProfileData_eval_eq_product
       A a - A b = (value a - value b) • (A a * A b)) :
     (positiveMultiplicityProfileData value first tail).eval A =
       positiveMultiplicityProfileProduct A first tail := by
-  exact
-    positiveMultiplicityProfileDataFrom_eval_eq_productFrom
+  simpa [positiveMultiplicityProfileData,
+    positiveMultiplicityProfileProduct] using
+    (positiveMultiplicityProfileDataFrom_eval_eq_productFrom
       A value
       (FinitePositivePowerJetData.singleton first.node first.order)
-      tail hCompatible hIdentity
+      tail hCompatible hIdentity)
 
 /-- Pointwise arbitrary-length profile normal-form identity. -/
 theorem positiveMultiplicityProfileData_eval_apply_eq_product_apply
