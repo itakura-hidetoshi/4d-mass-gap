@@ -246,6 +246,14 @@ theorem graphObservableHamiltonianDerivative_tendsto
       (nhdsWithin 0 (Ioi 0))
       (nhds (R.graphObservableHamiltonianDerivative n k m)) := by
   rw [P.physicalState_isometry.tendsto_nhds_iff]
+  change Tendsto
+    (P.physicalState ∘
+      O.observableCarrierRightHamiltonianDifferenceQuotient
+        (R.graphObservable n k m))
+    (nhdsWithin 0 (Ioi 0))
+    (nhds
+      (P.physicalState
+        (P.carrierOfPositiveTime (R.graphHamiltonianObservable n k m))))
   rw [R.graphHamiltonianObservableState_eq_embeddedHamiltonian n k m]
   have hfinite :=
     finiteDimensionalSymmetricHamiltonianSpectralSemigroup_differenceQuotient_tendsto
@@ -356,7 +364,14 @@ theorem graphValueCompatibility_tendsto_zero
               (F.hamiltonian n (R.finiteVector n k)) :
             P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) = 0 := by
     intro n
-    rfl
+    change
+      R.realization.ambientEmbed n
+          (F.hamiltonian n (R.finiteVector n k)) -
+        (((R.realization.excitationEmbed n
+            (F.hamiltonian n (R.finiteVector n k)) :
+          P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) = 0
+    rw [R.realization.coe_excitationEmbed]
+    exact sub_self _
   convert
     (tendsto_const_nhds :
       Tendsto (fun _ : ℕ => (0 : P.PhysicalHilbert)) atTop (nhds 0)) using 1
