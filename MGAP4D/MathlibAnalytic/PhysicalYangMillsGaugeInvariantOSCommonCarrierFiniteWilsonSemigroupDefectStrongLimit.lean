@@ -252,7 +252,7 @@ theorem exponentialModelDefect_tendsto_zero
             T.toPhysicalSemigroup.operator (R.width n) ambient)) := by
     funext n
     dsimp [approximateValue, ambientEmbeddedVector, embeddedVector, finiteVector]
-    rw [R.embeddedFiniteSemigroup_eigenaction n k]
+    rw [R.finiteSemigroup_eigenaction n k, map_smul]
   rw [hfunction]
   exact h
 
