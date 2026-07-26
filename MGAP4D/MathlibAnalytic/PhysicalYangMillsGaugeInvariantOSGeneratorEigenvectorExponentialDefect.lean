@@ -43,6 +43,7 @@ theorem tendsto_nnreal_inv_mul_one_sub_exp_neg_fixed
         (nhdsWithin 0 (Ioi 0))
         (nhdsWithin 0 (Ioi 0)) :=
     tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
+      (fun t : NNReal => (((t : NNReal) : ℝ)) * energy)
       hproduct_nhds hproduct_pos
   have hratio :
       Tendsto
