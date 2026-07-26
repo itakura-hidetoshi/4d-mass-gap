@@ -103,7 +103,7 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonObservab
         (nhds
           (((realization.excitationEmbed n
               ((finiteWitness n).spectralVector (finiteIndexEquiv n k)) :
-            P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
+            P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)))
 
 attribute [instance]
   PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonObservableEigenactionClosedGraphTransportData.spectralFintype
@@ -222,16 +222,24 @@ theorem graphObservableHamiltonianState_tendsto_graphValue
       (fun m =>
         P.physicalState (R.graphObservableHamiltonianDerivative n k m))
       atTop (nhds (R.graphValue n k)) := by
+  change Tendsto
+    (fun m =>
+      P.physicalState
+        (R.finiteEnergy n k •
+          P.carrierOfPositiveTime (R.graphObservable n k m)))
+    atTop
+    (nhds (R.finiteEnergy n k • R.ambientEmbeddedVector n k))
   have hmass :
       Tendsto
         (fun _ : ℕ => R.finiteEnergy n k)
         atTop (nhds (R.finiteEnergy n k)) :=
     tendsto_const_nhds
   have hsmul := hmass.smul (R.graphObservableState_tendsto_embedded n k)
-  simpa [graphObservableHamiltonianDerivative, graphValue,
-    ambientEmbeddedVector,
-    ← P.physicalStateLinearMap_apply, map_smul,
-    P.physicalStateLinearMap_apply] using hsmul
+  apply hsmul.congr'
+  exact Filter.Eventually.of_forall fun m => by
+    symm
+    rw [← P.physicalStateLinearMap_apply, map_smul,
+      P.physicalStateLinearMap_apply]
 
 /-- The theorem-generated graph value is exactly the embedded finite Wilson
 Hamiltonian action because the selected finite vector is an eigenvector. -/
@@ -243,9 +251,21 @@ theorem graphValue_eq_embeddedHamiltonian
       (((R.realization.excitationEmbed n
           (F.hamiltonian n (R.finiteVector n k)) :
         P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) := by
-  rw [(R.finiteWitness n).hamiltonian_apply_spectralVector
-    (R.finiteIndexEquiv n k)]
-  simp [graphValue, ambientEmbeddedVector, finiteEnergy, finiteVector]
+  have hEigen :
+      F.hamiltonian n (R.finiteVector n k) =
+        R.finiteEnergy n k • R.finiteVector n k := by
+    simpa [finiteVector, finiteEnergy] using
+      (R.finiteWitness n).hamiltonian_apply_spectralVector
+        (R.finiteIndexEquiv n k)
+  change
+    R.finiteEnergy n k •
+        (((R.realization.excitationEmbed n (R.finiteVector n k) :
+          P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)) =
+      (((R.realization.excitationEmbed n
+          (F.hamiltonian n (R.finiteVector n k)) :
+        P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
+  rw [hEigen, map_smul]
+  rfl
 
 /-- Hence scale-wise graph-value compatibility with the finite Hamiltonian is
 identically zero rather than an asymptotic input. -/
