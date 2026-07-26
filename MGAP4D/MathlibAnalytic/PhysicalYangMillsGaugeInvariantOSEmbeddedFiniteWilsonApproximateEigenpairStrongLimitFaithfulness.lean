@@ -11,6 +11,8 @@ noncomputable section
 open Filter Set Topology
 open scoped InnerProductSpace LinearPMap
 
+universe u
+
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
@@ -41,7 +43,7 @@ structure VacuumSemigroupGapSlope.EmbeddedFiniteWilsonApproximateEigenpairStrong
     (n : ℕ) →
       FiniteWilsonFiniteDimensionalHamiltonianConfluentSpectralWitnessData
         F n (fun sigma : G.BelowHalfMassShift => sigma.1) nodes orderCap
-  SpectralIndex : Type*
+  SpectralIndex : Type u
   [spectralFintype : Fintype SpectralIndex]
   finiteIndexEquiv :
     ∀ n, SpectralIndex ≃ (finiteWitness n).SpectralIndex
@@ -98,21 +100,21 @@ variable {orderCap : ℕ}
 
 /-- The finite Wilson energy tracked by the common spectral index. -/
 def approximateValue
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : ℝ :=
   (R.finiteWitness n).spectralValue (R.finiteIndexEquiv n k)
 
 /-- The finite Wilson eigenvector tracked by the common spectral index. -/
 def finiteVector
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : F.StateSpace :=
   (R.finiteWitness n).spectralVector (R.finiteIndexEquiv n k)
 
 /-- Every embedded lifted finite eigenvector has unit norm. -/
 theorem approximateVector_norm
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) :
     ‖(R.approximateVector n k : P.VacuumOrthogonalHilbert)‖ = 1 := by
@@ -125,7 +127,7 @@ theorem approximateVector_norm
 /-- Strong convergence of unit embedded vectors preserves unit norm at the
 continuum limit. -/
 theorem spectralVector_norm
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     ‖R.spectralVector k‖ = 1 := by
@@ -139,7 +141,7 @@ theorem spectralVector_norm
 /-- Nonvanishing of limiting continuum vectors is automatic from norm
 preservation and strong convergence. -/
 theorem spectralVector_ne_zero
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     R.spectralVector k ≠ 0 := by
@@ -152,7 +154,7 @@ theorem spectralVector_ne_zero
 Hamiltonians, common-carrier embeddings, graph-compatible lifts, and vanishing
 operator compatibility defect. -/
 noncomputable def toEmbeddedFiniteDistinctEigenpairStrongLimitData
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap) :
     EmbeddedFiniteDistinctEigenpairStrongLimitData
       (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
@@ -191,7 +193,7 @@ noncomputable def toEmbeddedFiniteDistinctEigenpairStrongLimitData
 /-- Embedded finite Wilson spectra construct the exact strong-limit transport
 package consumed by the continuum resolvent faithfulness layer. -/
 noncomputable def toContinuumResolventApproximateEigenpairStrongLimitData
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap) :
     G.ContinuumResolventApproximateEigenpairStrongLimitData
       T hSelf nodes orderCap :=
@@ -201,7 +203,7 @@ noncomputable def toContinuumResolventApproximateEigenpairStrongLimitData
 /-- Embedded finite Wilson selected spectra with graph-compatible strong limits
 supply continuum confluent resolvent linear independence. -/
 theorem continuumResolventConfluentCauchy_linearIndependent
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (hP : P.IsNormalized)
     (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric) :
@@ -220,7 +222,7 @@ theorem continuumResolventConfluentCauchy_linearIndependent
 /-- The same embedded finite Wilson transport gives support-local continuum
 positive-power jet coefficient-map faithfulness. -/
 theorem continuumResolventPositivePowerJetCoefficientMapsIndependent
-    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
+    (R : G.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.{u}
       T hSelf F nodes orderCap)
     (hP : P.IsNormalized)
     (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
