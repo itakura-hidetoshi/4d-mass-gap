@@ -237,6 +237,13 @@ theorem graphObservableHamiltonianState_tendsto_graphValue
   have hsmul := hmass.smul (R.graphObservableState_tendsto_embedded n k)
   apply hsmul.congr'
   exact Filter.Eventually.of_forall fun m => by
+    change
+      R.finiteEnergy n k •
+          P.physicalState
+            (P.carrierOfPositiveTime (R.graphObservable n k m)) =
+        P.physicalState
+          (R.finiteEnergy n k •
+            P.carrierOfPositiveTime (R.graphObservable n k m))
     symm
     rw [← P.physicalStateLinearMap_apply, map_smul,
       P.physicalStateLinearMap_apply]
