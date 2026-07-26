@@ -67,7 +67,18 @@ theorem FinitePositivePowerJetData.coefficientMap_apply
       d.support.sum (fun b =>
         if (d.node b, d.order b) = p then d.coefficient b else 0) := by
   classical
-  simp [FinitePositivePowerJetData.coefficientMap]
+  change
+    d.support.sum (fun b =>
+      (Finsupp.single (d.node b, d.order b) (d.coefficient b)) p) =
+      d.support.sum (fun b =>
+        if (d.node b, d.order b) = p then d.coefficient b else 0)
+  apply Finset.sum_congr rfl
+  intro b hb
+  by_cases h : (d.node b, d.order b) = p
+  · subst p
+    simp
+  · rw [Finsupp.single_eq_of_ne h]
+    simp [h]
 
 /-- Canonical aggregation preserves the operator evaluation exactly, including
 zero coefficients and arbitrarily repeated internal labels. -/
