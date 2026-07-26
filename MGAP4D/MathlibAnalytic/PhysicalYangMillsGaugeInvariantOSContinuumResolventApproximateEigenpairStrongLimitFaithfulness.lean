@@ -23,8 +23,9 @@ excitation Hamiltonian.  In a finite-volume application the domain points are
 graph-compatible lifts of finite-volume eigenvectors. -/
 abbrev VacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpairStrongLimitData
     (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.VacuumSemigroupGapSlope)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (nodes : Finset ℝ)
+    (nodes : Finset G.BelowHalfMassShift)
     (orderCap : ℕ) :=
   ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
     (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
@@ -40,9 +41,8 @@ noncomputable def VacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpair
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (nodes : Finset G.BelowHalfMassShift)
     (orderCap : ℕ)
-    (R : ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
-      (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (nodes.card * orderCap)) :
+    (R : G.ContinuumResolventApproximateEigenpairStrongLimitData
+      T hSelf nodes orderCap) :
     G.ContinuumResolventConfluentSpectralWitnessData
       T hP hInnerSymmetric hSelf nodes orderCap := by
   let exactData := R.toFiniteDistinctClosedEigenpairData
@@ -68,9 +68,8 @@ theorem VacuumSemigroupGapSlope.continuumResolventConfluentCauchy_linearIndepend
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (nodes : Finset G.BelowHalfMassShift)
     (orderCap : ℕ)
-    (R : ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
-      (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (nodes.card * orderCap)) :
+    (R : G.ContinuumResolventApproximateEigenpairStrongLimitData
+      T hSelf nodes orderCap) :
     LinearIndependent ℝ
       (fun p : nodes × Fin orderCap =>
         ContinuousLinearMap.positivePowerJetOperatorFamily
@@ -93,9 +92,8 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositivePowerJetCoefficientMap
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (nodes : Finset G.BelowHalfMassShift)
     (orderCap : ℕ)
-    (R : ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
-      (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (nodes.card * orderCap))
+    (R : G.ContinuumResolventApproximateEigenpairStrongLimitData
+      T hSelf nodes orderCap)
     (left right : ContinuousLinearMap.PositivePowerJetCoefficientMap
       G.BelowHalfMassShift)
     (hFit : G.PositivePowerJetCoefficientMapsFitWindow
@@ -118,9 +116,8 @@ theorem VacuumSemigroupGapSlope.resolventPositiveMultiplicityProfileCoefficientM
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (nodes : Finset G.BelowHalfMassShift)
     (orderCap : ℕ)
-    (R : ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
-      (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (nodes.card * orderCap))
+    (R : G.ContinuumResolventApproximateEigenpairStrongLimitData
+      T hSelf nodes orderCap)
     (first₁ first₂ : ContinuousLinearMap.PositiveMultiplicityProfileEntry
       G.BelowHalfMassShift)
     (tail₁ tail₂ : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
@@ -149,9 +146,8 @@ theorem VacuumSemigroupGapSlope.resolventPositiveMultiplicityProfilePermutationC
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (nodes : Finset G.BelowHalfMassShift)
     (orderCap : ℕ)
-    (R : ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
-      (T.vacuumOrthogonalClosedRightHamiltonianOfSelfAdjoint hSelf)
-      (nodes.card * orderCap))
+    (R : G.ContinuumResolventApproximateEigenpairStrongLimitData
+      T hSelf nodes orderCap)
     (first : ContinuousLinearMap.PositiveMultiplicityProfileEntry
       G.BelowHalfMassShift)
     (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
