@@ -40,7 +40,7 @@ theorem realResolvent_apply_eigenvector
     rw [← sub_smul]
     convert one_smul ℝ (x : E) using 1
     dsimp [c]
-    field_simp [hmu]
+    rw [div_self (sub_ne_zero.mpr hmu)]
   have hPreimage :
       (A.realShiftLinearEquiv hSelf hlambda hgap).symm (x : E) =
         c • x := by
@@ -136,8 +136,7 @@ theorem PositivePowerJetCoefficientMap.FiniteSpectralWitnessData.linearIndepende
             (D.witnessVector w) := by
       simpa [eval] using congrArg eval hEquality
     simp_rw [D.operatorPower_apply_witness, smul_smul] at hApply
-    change (∑ q, left q * D.scalar q w) =
-      ∑ q, right q * D.scalar q w
+    simp only [Finset.sum_apply, Pi.smul_apply]
     apply smul_left_injective ℝ (D.witnessVector_ne_zero w)
     rw [Finset.sum_smul, Finset.sum_smul]
     exact hApply
