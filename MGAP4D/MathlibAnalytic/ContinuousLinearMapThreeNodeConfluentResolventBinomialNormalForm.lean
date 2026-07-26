@@ -22,6 +22,13 @@ product of powers. -/
       ((A a) ^ m * (A b) ^ n) * (A c) ^ p := by
   simp [orderedProduct_append, mul_assoc]
 
+/-- Canonical right association for a product of three operator powers. -/
+@[simp] theorem pow_mul_pow_mul_pow_assoc
+    (A B C : E →L[ℝ] E)
+    (m n p : ℕ) :
+    (A ^ m * B ^ n) * C ^ p = A ^ m * (B ^ n * C ^ p) := by
+  rw [mul_assoc]
+
 /-- Iterated closed binomial normal form for positive multiplicities at three
 pairwise-distinct resolvent nodes.  First the `lambda`/`mu` product is expanded;
 each resulting pure power is then expanded against the `nu` block. -/
