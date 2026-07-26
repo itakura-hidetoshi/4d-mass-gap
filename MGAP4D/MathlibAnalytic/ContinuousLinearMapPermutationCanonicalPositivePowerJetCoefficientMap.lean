@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapCanonicalPositivePowerJetCoefficientMap
 import Mathlib.Data.List.Sort
+import Mathlib.Data.Prod.Lex
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -14,15 +15,15 @@ universe u
 variable {α E : Type u}
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-/-- A globally injective ordering key for a multiplicity-profile entry.  The
-scalar value is the primary key; the physical node and multiplicity order are
-included only to make the ordering globally antisymmetric, even outside the
-pairwise-distinct regime. -/
+/-- A globally injective lexicographic ordering key for a multiplicity-profile
+entry.  The scalar value is primary; node and multiplicity order provide a
+global tie-break outside the pairwise-distinct regime. -/
 def PositiveMultiplicityProfileEntry.sortKey
     [LinearOrder α]
     (value : α → ℝ)
-    (e : PositiveMultiplicityProfileEntry α) : ℝ × α × ℕ :=
-  (value e.node, e.node, e.order)
+    (e : PositiveMultiplicityProfileEntry α) :
+    ℝ ×ₗ (α ×ₗ ℕ) :=
+  toLex (value e.node, toLex (e.node, e.order))
 
 /-- The profile-entry sorting key is injective. -/
 theorem PositiveMultiplicityProfileEntry.sortKey_injective
@@ -31,12 +32,17 @@ theorem PositiveMultiplicityProfileEntry.sortKey_injective
     Function.Injective
       (PositiveMultiplicityProfileEntry.sortKey value) := by
   intro left right h
+  have hOuter := congrArg
+    (fun x : ℝ ×ₗ (α ×ₗ ℕ) => ofLex x) h
+  have hInnerLex := congrArg Prod.snd hOuter
+  have hInner := congrArg
+    (fun x : α ×ₗ ℕ => ofLex x) hInnerLex
   cases left with
   | mk leftNode leftOrder =>
       cases right with
       | mk rightNode rightOrder =>
-          simp [PositiveMultiplicityProfileEntry.sortKey] at h
-          simp [h]
+          cases hInner
+          rfl
 
 /-- Canonical total ordering relation used to select one representative of a
 multiplicity-profile permutation class. -/
@@ -66,7 +72,7 @@ instance positiveMultiplicityProfileEntrySortLEAntisymm
     [LinearOrder α]
     (value : α → ℝ) :
     Std.Antisymm (PositiveMultiplicityProfileEntry.sortLE value) :=
-  ⟨fun left right h₁ h₂ =>
+  ⟨fun _ _ h₁ h₂ =>
     PositiveMultiplicityProfileEntry.sortKey_injective value
       (le_antisymm h₁ h₂)⟩
 
@@ -97,12 +103,13 @@ theorem pairwise_of_perm_of_symmetric
           | cons hA hTail =>
               constructor
               · intro x hx
+                simp only [List.mem_cons] at hx
                 rcases hx with rfl | hx
                 · exact hSymm b a (hB a (by simp))
                 · exact hA x hx
               · constructor
                 · intro x hx
-                  exact hB x (by simp [hx])
+                  exact hB x (List.mem_cons.mpr (Or.inr hx))
                 · exact hTail
   | @trans entries₁ entries₂ entries₃ hPerm₁ hPerm₂ ih₁ ih₂ =>
       exact ih₂ (ih₁ hPairwise)
@@ -123,7 +130,8 @@ noncomputable def positiveMultiplicityProfileSortedEntries
     (tail : List (PositiveMultiplicityProfileEntry α)) :
     List (PositiveMultiplicityProfileEntry α) :=
   List.mergeSort (first :: tail)
-    (PositiveMultiplicityProfileEntry.sortLE value)
+    (fun left right =>
+      decide (PositiveMultiplicityProfileEntry.sortLE value left right))
 
 /-- Sorting preserves the original multiplicity-profile multiset. -/
 theorem positiveMultiplicityProfileSortedEntries_perm
@@ -134,7 +142,10 @@ theorem positiveMultiplicityProfileSortedEntries_perm
     (positiveMultiplicityProfileSortedEntries value first tail).Perm
       (first :: tail) := by
   classical
-  exact List.mergeSort_perm _ _
+  simpa [positiveMultiplicityProfileSortedEntries] using
+    (List.mergeSort_perm (first :: tail)
+      (fun left right =>
+        decide (PositiveMultiplicityProfileEntry.sortLE value left right)))
 
 /-- The selected representative is sorted by the canonical entry order. -/
 theorem positiveMultiplicityProfileSortedEntries_pairwise
@@ -145,8 +156,9 @@ theorem positiveMultiplicityProfileSortedEntries_pairwise
     (positiveMultiplicityProfileSortedEntries value first tail).Pairwise
       (PositiveMultiplicityProfileEntry.sortLE value) := by
   classical
-  exact List.pairwise_mergeSort'
-    (PositiveMultiplicityProfileEntry.sortLE value) (first :: tail)
+  simpa [positiveMultiplicityProfileSortedEntries] using
+    (List.pairwise_mergeSort'
+      (PositiveMultiplicityProfileEntry.sortLE value) (first :: tail))
 
 /-- Two permutations have exactly the same deterministically sorted entry list. -/
 theorem positiveMultiplicityProfileSortedEntries_eq_of_perm
@@ -185,7 +197,7 @@ theorem positiveMultiplicityProfileSortedEntries_ne_nil
   exact List.not_perm_nil_cons first tail hPerm
 
 /-- A genuinely permutation-canonical coefficient-map representative: sort the
-profile by its scalar value (with an injective tie-break key) and then run the
+profile by its scalar value with an injective tie-break key, then run the
 existing confluent/binomial coefficient aggregation on that unique ordering. -/
 noncomputable def positiveMultiplicityProfilePermutationCanonicalCoefficientMap
     [LinearOrder α]
