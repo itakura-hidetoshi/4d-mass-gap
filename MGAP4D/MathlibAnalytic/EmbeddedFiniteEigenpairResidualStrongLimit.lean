@@ -8,37 +8,28 @@ namespace MathlibAnalytic
 noncomputable section
 
 open Filter Set Topology
-open scoped LinearPMap
+open scoped InnerProductSpace LinearPMap
 
 /-- Finite exact eigenpairs embedded scale-by-scale into the domain of one target
-partially defined operator.
-
-A common finite spectral index tracks the selected finite eigenpairs across
-scales.  The target residual is not postulated directly: it is derived from the
-finite eigenvalue equation and convergence to zero of the operator-embedding
-compatibility defect. -/
+partially defined operator. A common finite spectral index tracks the selected
+finite eigenpairs across scales. The target residual is derived from the finite
+eigenvalue equation and convergence to zero of the operator-embedding defect. -/
 structure EmbeddedFiniteDistinctEigenpairStrongLimitData
     {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     (A : E →ₗ.[ℝ] E)
     (witnessCount : ℕ) where
   FiniteState : ℕ → Type*
-  [finiteNormedAddCommGroup :
-    ∀ n, NormedAddCommGroup (FiniteState n)]
-  [finiteNormedSpace :
-    ∀ n, NormedSpace ℝ (FiniteState n)]
-  finiteOperator :
-    (n : ℕ) → FiniteState n →ₗ[ℝ] FiniteState n
+  [finiteNormedAddCommGroup : ∀ n, NormedAddCommGroup (FiniteState n)]
+  [finiteInnerProductSpace : ∀ n, InnerProductSpace ℝ (FiniteState n)]
+  finiteOperator : (n : ℕ) → FiniteState n →ₗ[ℝ] FiniteState n
   finiteEigenpair :
     (n : ℕ) → FiniteDistinctEigenpairData (finiteOperator n) witnessCount
   SpectralIndex : Type*
   [spectralFintype : Fintype SpectralIndex]
-  finiteIndexEquiv :
-    ∀ n, SpectralIndex ≃ (finiteEigenpair n).SpectralIndex
-  embed :
-    (n : ℕ) → FiniteState n →L[ℝ] E
-  approximateVector :
-    ℕ → SpectralIndex → A.domain
+  finiteIndexEquiv : ∀ n, SpectralIndex ≃ (finiteEigenpair n).SpectralIndex
+  embed : (n : ℕ) → FiniteState n →L[ℝ] E
+  approximateVector : ℕ → SpectralIndex → A.domain
   approximateVector_coe :
     ∀ n k,
       (approximateVector n k : E) =
@@ -69,7 +60,7 @@ structure EmbeddedFiniteDistinctEigenpairStrongLimitData
 
 attribute [instance]
   EmbeddedFiniteDistinctEigenpairStrongLimitData.finiteNormedAddCommGroup
-  EmbeddedFiniteDistinctEigenpairStrongLimitData.finiteNormedSpace
+  EmbeddedFiniteDistinctEigenpairStrongLimitData.finiteInnerProductSpace
   EmbeddedFiniteDistinctEigenpairStrongLimitData.spectralFintype
 
 namespace EmbeddedFiniteDistinctEigenpairStrongLimitData
@@ -91,7 +82,6 @@ def finiteVector
     (n : ℕ) (k : D.SpectralIndex) : D.FiniteState n :=
   (D.finiteEigenpair n).spectralVector (D.finiteIndexEquiv n k)
 
-/-- Every tracked finite vector satisfies its scale Hamiltonian eigen-equation. -/
 @[simp] theorem finiteOperator_apply_finiteVector
     (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
     (n : ℕ) (k : D.SpectralIndex) :
@@ -99,8 +89,6 @@ def finiteVector
       D.approximateValue n k • D.finiteVector n k := by
   exact (D.finiteEigenpair n).apply_spectralVector (D.finiteIndexEquiv n k)
 
-/-- The target-domain lift has the prescribed embedded finite vector as its
-ambient value. -/
 @[simp] theorem coe_approximateVector
     (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
     (n : ℕ) (k : D.SpectralIndex) :
@@ -117,8 +105,8 @@ theorem spectralCard
       Fintype.card_congr (D.finiteIndexEquiv 0)
     _ = witnessCount := (D.finiteEigenpair 0).spectralCard
 
-/-- Finite exact eigen-equations turn convergence of the operator-embedding
-defect into convergence of the target approximate-eigenpair residual. -/
+/-- Finite exact eigen-equations turn the operator-embedding defect into the
+target approximate-eigenpair residual. -/
 theorem residual_tendsto_zero
     (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
     (k : D.SpectralIndex) :
@@ -131,8 +119,6 @@ theorem residual_tendsto_zero
     D.coe_approximateVector] using
     D.operatorCompatibility_tendsto_zero k
 
-/-- Embedded finite exact eigenpairs with vanishing compatibility defect produce
-the closed-target approximate-eigenpair strong-limit package. -/
 noncomputable def toClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
     (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount) :
     ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData A witnessCount :=
