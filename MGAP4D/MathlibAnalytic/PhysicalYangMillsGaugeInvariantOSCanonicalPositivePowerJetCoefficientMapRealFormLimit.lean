@@ -43,7 +43,8 @@ noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectResolventPosit
     (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
       G.BelowHalfMassShift)) :
     P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
-  (G.resolventPositiveMultiplicityProfileCoefficientMap first tail).eval
+  ContinuousLinearMap.PositivePowerJetCoefficientMap.eval
+    (G.resolventPositiveMultiplicityProfileCoefficientMap first tail)
     (fun sigma : G.BelowHalfMassShift =>
       G.admissibleRescaledDefectResolvent
         hInnerSymmetric tau sigma.property)
@@ -60,7 +61,8 @@ noncomputable def VacuumSemigroupGapSlope.continuumResolventPositiveMultiplicity
     (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
       G.BelowHalfMassShift)) :
     P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
-  (G.resolventPositiveMultiplicityProfileCoefficientMap first tail).eval
+  ContinuousLinearMap.PositivePowerJetCoefficientMap.eval
+    (G.resolventPositiveMultiplicityProfileCoefficientMap first tail)
     (fun sigma : G.BelowHalfMassShift =>
       G.vacuumOrthogonalContinuumRealResolvent
         T hP hInnerSymmetric hSelf sigma.property)
@@ -139,17 +141,11 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolventPositiveMultipl
         hInnerSymmetric tau first tail =
       G.admissibleRescaledDefectResolventPositiveMultiplicityProfileProduct
         hInnerSymmetric tau first tail := by
-  calc
-    G.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-        hInnerSymmetric tau first tail =
-      G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm
-        hInnerSymmetric tau first tail :=
-      G.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm_eq_normalForm
-        hInnerSymmetric tau first tail
-    _ = G.admissibleRescaledDefectResolventPositiveMultiplicityProfileProduct
-        hInnerSymmetric tau first tail :=
-      G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm_eq_product_of_pairwise
-        T hInnerSymmetric tau first tail hPairwise
+  rw [G.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm_eq_normalForm
+    hInnerSymmetric tau first tail]
+  exact
+    G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm_eq_product_of_pairwise
+      T hInnerSymmetric tau first tail hPairwise
 
 /-- In the continuum, pairwise scalar distinctness identifies the canonical
 coefficient-map normal form with the mixed resolvent product. -/
@@ -169,17 +165,11 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositiveMultiplicityProfileCan
         T hP hInnerSymmetric hSelf first tail =
       G.continuumResolventPositiveMultiplicityProfileProduct
         T hP hInnerSymmetric hSelf first tail := by
-  calc
-    G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-        T hP hInnerSymmetric hSelf first tail =
-      G.continuumResolventPositiveMultiplicityProfileNormalForm
-        T hP hInnerSymmetric hSelf first tail :=
-      G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm_eq_normalForm
-        T hP hInnerSymmetric hSelf first tail
-    _ = G.continuumResolventPositiveMultiplicityProfileProduct
-        T hP hInnerSymmetric hSelf first tail :=
-      G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product_of_pairwise
-        T hP hInnerSymmetric hSelf first tail hPairwise
+  rw [G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm_eq_normalForm
+    T hP hInnerSymmetric hSelf first tail]
+  exact
+    G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product_of_pairwise
+      T hP hInnerSymmetric hSelf first tail hPairwise
 
 /-- Canonical coefficient-map normal forms converge pointwise strongly after
 diagonal complexification. -/
@@ -233,30 +223,8 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositiveMultiplicityProfileCan
     G.continuumResolventPositiveMultiplicityProfileNormalFormDiagonalComplexification_mem_realForm
       T hP hInnerSymmetric hSelf first tail
 
-/-- The real bounded operator underlying the canonical coefficient-map complex
-strong limit exists uniquely. -/
-theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalFormDiagonalComplexification_existsUnique_real_limit
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.VacuumSemigroupGapSlope)
-    (hP : P.IsNormalized)
-    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (first : ContinuousLinearMap.PositiveMultiplicityProfileEntry
-      G.BelowHalfMassShift)
-    (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
-      G.BelowHalfMassShift)) :
-    ∃! R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
-      diagonalComplexification R =
-        diagonalComplexification
-          (G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-            T hP hInnerSymmetric hSelf first tail) := by
-  rw [G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm_eq_normalForm
-    T hP hInnerSymmetric hSelf first tail]
-  exact
-    G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalFormDiagonalComplexification_existsUnique_real_limit
-      T hP hInnerSymmetric hSelf first tail
-
-/-- Result proposition for the canonical coefficient-map real-form package. -/
+/-- The canonical coefficient-map package is the existing arbitrary-profile
+real-form package transported through the exact canonical aggregation equalities. -/
 def VacuumSemigroupGapSlope.PositiveMultiplicityProfileCanonicalCoefficientRealFormStatement
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
@@ -267,30 +235,11 @@ def VacuumSemigroupGapSlope.PositiveMultiplicityProfileCanonicalCoefficientRealF
       G.BelowHalfMassShift)
     (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
       G.BelowHalfMassShift)) : Prop :=
-  (∀ z : StandardRealHilbertComplexification P.VacuumOrthogonalHilbert,
-    Tendsto
-      (fun tau : G.AdmissibleRescaledDefectTime =>
-        diagonalComplexification
-          (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-            hInnerSymmetric tau first tail) z)
-      G.admissibleRescaledDefectTimeFilter
-      (𝓝
-        (diagonalComplexification
-          (G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-            T hP hInnerSymmetric hSelf first tail) z))) ∧
-  diagonalComplexification
-      (G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-        T hP hInnerSymmetric hSelf first tail) ∈
-    diagonalComplexificationStarSubalgebra
-      (H := P.VacuumOrthogonalHilbert) ∧
-  ∃! R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
-    diagonalComplexification R =
-      diagonalComplexification
-        (G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalForm
-          T hP hInnerSymmetric hSelf first tail)
+  G.PositiveMultiplicityProfileRealFormStatement
+    T hP hInnerSymmetric hSelf first tail
 
 /-- Full actual OS real-form strong-limit package for the canonical aggregated
-node-order coefficient-map normal form. -/
+node-order coefficient-map representation. -/
 theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileCoefficientMapRealFormStrongLimitPackage
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
@@ -303,18 +252,9 @@ theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileCoefficientM
       G.BelowHalfMassShift)) :
     G.PositiveMultiplicityProfileCanonicalCoefficientRealFormStatement
       T hP hInnerSymmetric hSelf first tail := by
-  constructor
-  · intro z
-    exact
-      G.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalFormDiagonalComplexification_tendsto_continuum
-        T hP hInnerSymmetric hSelf first tail z
-  constructor
-  · exact
-      G.continuumResolventPositiveMultiplicityProfileCanonicalCoefficientNormalFormDiagonalComplexification_mem_realForm
-        T hP hInnerSymmetric hSelf first tail
-  · exact
-      G.admissibleRescaledDefectResolventPositiveMultiplicityProfileCanonicalCoefficientNormalFormDiagonalComplexification_existsUnique_real_limit
-        T hP hInnerSymmetric hSelf first tail
+  exact
+    G.canonicalPositiveMultiplicityProfileRealFormStrongLimitPackage
+      T hP hInnerSymmetric hSelf first tail
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
