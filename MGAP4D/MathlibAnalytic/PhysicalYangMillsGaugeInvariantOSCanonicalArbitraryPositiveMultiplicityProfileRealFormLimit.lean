@@ -331,6 +331,39 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolventPositiveMultipl
       T hP hInnerSymmetric hSelf d.support d.node
       (fun b => d.order b + 1) d.coefficient R hR
 
+/-- Result proposition for the arbitrary-profile normal-form real-limit package. -/
+def VacuumSemigroupGapSlope.PositiveMultiplicityProfileRealFormStatement
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (first : ContinuousLinearMap.PositiveMultiplicityProfileEntry
+      G.BelowHalfMassShift)
+    (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
+      G.BelowHalfMassShift)) : Prop :=
+  (∀ z : StandardRealHilbertComplexification P.VacuumOrthogonalHilbert,
+    Tendsto
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        diagonalComplexification
+          (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm
+            hInnerSymmetric tau first tail) z)
+      G.admissibleRescaledDefectTimeFilter
+      (𝓝
+        (diagonalComplexification
+          (G.continuumResolventPositiveMultiplicityProfileNormalForm
+            T hP hInnerSymmetric hSelf first tail) z))) ∧
+  diagonalComplexification
+      (G.continuumResolventPositiveMultiplicityProfileNormalForm
+        T hP hInnerSymmetric hSelf first tail) ∈
+    diagonalComplexificationStarSubalgebra
+      (H := P.VacuumOrthogonalHilbert) ∧
+  ∃! R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
+    diagonalComplexification R =
+      diagonalComplexification
+        (G.continuumResolventPositiveMultiplicityProfileNormalForm
+          T hP hInnerSymmetric hSelf first tail)
+
 /-- Actual OS real-form strong-limit package for arbitrary nonempty positive
 multiplicity profiles. -/
 theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileRealFormStrongLimitPackage
@@ -343,27 +376,8 @@ theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileRealFormStro
       G.BelowHalfMassShift)
     (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
       G.BelowHalfMassShift)) :
-    (∀ z : StandardRealHilbertComplexification P.VacuumOrthogonalHilbert,
-      Tendsto
-        (fun tau : G.AdmissibleRescaledDefectTime =>
-          diagonalComplexification
-            (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm
-              hInnerSymmetric tau first tail) z)
-        G.admissibleRescaledDefectTimeFilter
-        (𝓝
-          (diagonalComplexification
-            (G.continuumResolventPositiveMultiplicityProfileNormalForm
-              T hP hInnerSymmetric hSelf first tail) z))) ∧
-    diagonalComplexification
-        (G.continuumResolventPositiveMultiplicityProfileNormalForm
-          T hP hInnerSymmetric hSelf first tail) ∈
-      diagonalComplexificationStarSubalgebra
-        (H := P.VacuumOrthogonalHilbert) ∧
-    ∃! R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
-      diagonalComplexification R =
-        diagonalComplexification
-          (G.continuumResolventPositiveMultiplicityProfileNormalForm
-            T hP hInnerSymmetric hSelf first tail) := by
+    G.PositiveMultiplicityProfileRealFormStatement
+      T hP hInnerSymmetric hSelf first tail := by
   constructor
   · intro z
     exact
@@ -376,6 +390,39 @@ theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileRealFormStro
   · exact
       G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalFormDiagonalComplexification_existsUnique_real_limit
         T hP hInnerSymmetric hSelf first tail
+
+/-- Result proposition for compatible arbitrary-profile mixed products. -/
+def VacuumSemigroupGapSlope.PositiveMultiplicityProfileProductRealFormStatement
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (first : ContinuousLinearMap.PositiveMultiplicityProfileEntry
+      G.BelowHalfMassShift)
+    (tail : List (ContinuousLinearMap.PositiveMultiplicityProfileEntry
+      G.BelowHalfMassShift)) : Prop :=
+  (∀ z : StandardRealHilbertComplexification P.VacuumOrthogonalHilbert,
+    Tendsto
+      (fun tau : G.AdmissibleRescaledDefectTime =>
+        diagonalComplexification
+          (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileProduct
+            hInnerSymmetric tau first tail) z)
+      G.admissibleRescaledDefectTimeFilter
+      (𝓝
+        (diagonalComplexification
+          (G.continuumResolventPositiveMultiplicityProfileProduct
+            T hP hInnerSymmetric hSelf first tail) z))) ∧
+  diagonalComplexification
+      (G.continuumResolventPositiveMultiplicityProfileProduct
+        T hP hInnerSymmetric hSelf first tail) ∈
+    diagonalComplexificationStarSubalgebra
+      (H := P.VacuumOrthogonalHilbert) ∧
+  ∃! R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
+    diagonalComplexification R =
+      diagonalComplexification
+        (G.continuumResolventPositiveMultiplicityProfileProduct
+          T hP hInnerSymmetric hSelf first tail)
 
 /-- Compatible arbitrary-length mixed products inherit the same full actual OS
 real-form strong-limit package through exact normal-form identification. -/
@@ -392,27 +439,8 @@ theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileProductRealF
     (hCompatible :
       ContinuousLinearMap.positiveMultiplicityProfileCompatible
         (fun sigma : G.BelowHalfMassShift => sigma.1) first tail) :
-    (∀ z : StandardRealHilbertComplexification P.VacuumOrthogonalHilbert,
-      Tendsto
-        (fun tau : G.AdmissibleRescaledDefectTime =>
-          diagonalComplexification
-            (G.admissibleRescaledDefectResolventPositiveMultiplicityProfileProduct
-              hInnerSymmetric tau first tail) z)
-        G.admissibleRescaledDefectTimeFilter
-        (𝓝
-          (diagonalComplexification
-            (G.continuumResolventPositiveMultiplicityProfileProduct
-              T hP hInnerSymmetric hSelf first tail) z))) ∧
-    diagonalComplexification
-        (G.continuumResolventPositiveMultiplicityProfileProduct
-          T hP hInnerSymmetric hSelf first tail) ∈
-      diagonalComplexificationStarSubalgebra
-        (H := P.VacuumOrthogonalHilbert) ∧
-    ∃! R : P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert,
-      diagonalComplexification R =
-        diagonalComplexification
-          (G.continuumResolventPositiveMultiplicityProfileProduct
-            T hP hInnerSymmetric hSelf first tail) := by
+    G.PositiveMultiplicityProfileProductRealFormStatement
+      T hP hInnerSymmetric hSelf first tail := by
   rw [← G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm_eq_product
     T hInnerSymmetric _ first tail hCompatible]
   rw [← G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product
