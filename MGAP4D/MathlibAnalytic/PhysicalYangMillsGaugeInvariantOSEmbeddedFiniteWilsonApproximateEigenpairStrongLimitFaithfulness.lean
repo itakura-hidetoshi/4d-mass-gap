@@ -214,7 +214,8 @@ theorem continuumResolventConfluentCauchy_linearIndependent
           (p.1.1, p.2.1)) :=
   G.continuumResolventConfluentCauchy_linearIndependent_of_approximateEigenpairStrongLimit
     T hP hInnerSymmetric hSelf nodes orderCap
-    R.toContinuumResolventApproximateEigenpairStrongLimitData
+    (VacuumSemigroupGapSlope.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.toContinuumResolventApproximateEigenpairStrongLimitData
+      R)
 
 /-- The same embedded finite Wilson transport gives support-local continuum
 positive-power jet coefficient-map faithfulness. -/
@@ -231,7 +232,9 @@ theorem continuumResolventPositivePowerJetCoefficientMapsIndependent
       T hP hInnerSymmetric hSelf left right :=
   G.continuumResolventPositivePowerJetCoefficientMapsIndependent_of_approximateEigenpairStrongLimit
     T hP hInnerSymmetric hSelf nodes orderCap
-    R.toContinuumResolventApproximateEigenpairStrongLimitData left right hFit
+    (VacuumSemigroupGapSlope.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData.toContinuumResolventApproximateEigenpairStrongLimitData
+      R)
+    left right hFit
 
 end VacuumSemigroupGapSlope.EmbeddedFiniteWilsonApproximateEigenpairStrongLimitData
 
