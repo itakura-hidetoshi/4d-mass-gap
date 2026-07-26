@@ -86,12 +86,18 @@ theorem localDifferenceQuotientResidual_tendsto_zero
         (nhdsWithin 0 (Ioi 0))
         (nhds (T.rightHamiltonian (R.domainPoint n i))) := by
     simpa [domainPoint] using hneg
+  have hconstant :
+      Tendsto
+        (fun _ : NNReal => T.rightHamiltonian (R.domainPoint n i))
+        (nhdsWithin 0 (Ioi 0))
+        (nhds (T.rightHamiltonian (R.domainPoint n i))) :=
+    tendsto_const_nhds
   change Tendsto
     (fun t : NNReal =>
       T.rightHamiltonianDifferenceQuotient (psi n i) t -
         T.rightHamiltonian (R.domainPoint n i))
     (nhdsWithin 0 (Ioi 0)) (nhds 0)
-  simpa only [sub_self] using hquotient.sub tendsto_const_nhds
+  simpa only [sub_self] using hquotient.sub hconstant
 
 /-- Simultaneous positive diagonal selection for the local continuum generator
 residuals of the complete finite moving family. -/
