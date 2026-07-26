@@ -37,17 +37,16 @@ theorem FinitePositivePowerJetData.adjoin_node_eq_old_or_new
       (d.adjoin value newNode newOrder).node x = newNode := by
   classical
   rcases x with ⟨b, k⟩
-  have hxSigma :
-      (⟨b, k⟩ : Σ _b : d.label, Sum ℕ ℕ) ∈
-        d.support.sigma (fun b =>
-          (Finset.range (d.order b + 1)).disjSum
-            (Finset.range (newOrder + 1))) := by
-    simpa [FinitePositivePowerJetData.adjoin] using hx
+  change
+    (⟨b, k⟩ : Σ _b : d.label, Sum ℕ ℕ) ∈
+      d.support.sigma (fun b =>
+        (Finset.range (d.order b + 1)).disjSum
+          (Finset.range (newOrder + 1))) at hx
   have hbk :
       b ∈ d.support ∧
         k ∈ (Finset.range (d.order b + 1)).disjSum
           (Finset.range (newOrder + 1)) :=
-    Finset.mem_sigma.mp hxSigma
+    Finset.mem_sigma.mp hx
   rcases hbk with ⟨hb, _hk⟩
   cases k with
   | inl n =>
