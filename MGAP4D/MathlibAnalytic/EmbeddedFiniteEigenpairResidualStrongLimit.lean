@@ -123,9 +123,23 @@ theorem residual_tendsto_zero
         A (D.approximateVector n k) -
           D.approximateValue n k • (D.approximateVector n k : E))
       atTop (nhds 0) := by
-  simpa only [D.finiteOperator_apply_finiteVector, map_smul,
-    D.coe_approximateVector] using
-    D.operatorCompatibility_tendsto_zero k
+  have hFunction :
+      (fun n =>
+        A (D.approximateVector n k) -
+          D.embed n
+            (D.finiteOperator n
+              ((D.finiteEigenpair n).spectralVector
+                (D.finiteIndexEquiv n k)))) =
+      (fun n =>
+        A (D.approximateVector n k) -
+          D.approximateValue n k • (D.approximateVector n k : E)) := by
+    funext n
+    rw [(D.finiteEigenpair n).apply_spectralVector
+      (D.finiteIndexEquiv n k), map_smul,
+      D.approximateVector_coe n k]
+    rfl
+  rw [← hFunction]
+  exact D.operatorCompatibility_tendsto_zero k
 
 noncomputable def toClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
     (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
