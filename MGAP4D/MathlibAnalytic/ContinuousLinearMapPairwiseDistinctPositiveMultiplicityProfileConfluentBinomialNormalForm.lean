@@ -37,11 +37,17 @@ theorem FinitePositivePowerJetData.adjoin_node_eq_old_or_new
       (d.adjoin value newNode newOrder).node x = newNode := by
   classical
   rcases x with ⟨b, k⟩
+  have hxSigma :
+      (⟨b, k⟩ : Σ _b : d.label, Sum ℕ ℕ) ∈
+        d.support.sigma (fun b =>
+          (Finset.range (d.order b + 1)).disjSum
+            (Finset.range (newOrder + 1))) := by
+    simpa [FinitePositivePowerJetData.adjoin] using hx
   have hbk :
       b ∈ d.support ∧
         k ∈ (Finset.range (d.order b + 1)).disjSum
-          (Finset.range (newOrder + 1)) := by
-    simpa [FinitePositivePowerJetData.adjoin] using hx
+          (Finset.range (newOrder + 1)) :=
+    Finset.mem_sigma.mp hxSigma
   rcases hbk with ⟨hb, _hk⟩
   cases k with
   | inl n =>
@@ -150,8 +156,8 @@ theorem FinitePositivePowerJetData.singleton_isValueDistinctFromEntries
     (value : α → ℝ)
     (entries : List (PositiveMultiplicityProfileEntry α))
     (h : ∀ e ∈ entries, value a ≠ value e.node) :
-    (FinitePositivePowerJetData.singleton a m c).
-      IsValueDistinctFromEntries value entries := by
+    FinitePositivePowerJetData.IsValueDistinctFromEntries
+      (FinitePositivePowerJetData.singleton a m c) value entries := by
   intro b hb e he
   rw [FinitePositivePowerJetData.node_eq_singleton_of_mem_support
     a m c b hb]
@@ -167,8 +173,8 @@ theorem FinitePositivePowerJetData.isValueDistinctFromEntries_adjoin
     (entries : List (PositiveMultiplicityProfileEntry α))
     (hOld : d.IsValueDistinctFromEntries value entries)
     (hNew : ∀ e ∈ entries, value newNode ≠ value e.node) :
-    (d.adjoin value newNode newOrder).
-      IsValueDistinctFromEntries value entries := by
+    FinitePositivePowerJetData.IsValueDistinctFromEntries
+      (d.adjoin value newNode newOrder) value entries := by
   intro x hx e he
   rcases d.adjoin_node_eq_old_or_new value newNode newOrder x hx with
     hOrigin | hNewNode
