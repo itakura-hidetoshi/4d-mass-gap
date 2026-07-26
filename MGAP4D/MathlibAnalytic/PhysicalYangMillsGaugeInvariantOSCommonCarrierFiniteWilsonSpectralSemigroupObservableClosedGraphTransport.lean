@@ -298,26 +298,43 @@ theorem graphObservableHamiltonianDerivative_tendsto
           (O.observableCarrierRightHamiltonianDifferenceQuotient
             (R.graphObservable n k m) t)
     rw [O.observableCarrierRightHamiltonianDifferenceQuotient_eq]
-    change
-      R.realization.ambientEmbed n
-          ((t : ℝ)⁻¹ •
-            (R.finiteApproximation n k m -
-              finiteDimensionalSymmetricHamiltonianSpectralSemigroup
-                (F.hamiltonian n)
-                (F.hamiltonianSymmetric n)
-                F.StateDimension
-                F.stateFinrank
-                t
-                (R.finiteApproximation n k m))) =
-        P.physicalStateLinearMap
-          ((t : ℝ)⁻¹ •
-            (P.carrierOfPositiveTime (R.graphObservable n k m) -
-              P.carrierOfPositiveTime
-                (O.translate t (R.graphObservable n k m))))
-    rw [map_smul, map_sub]
-    simp only [P.physicalStateLinearMap_apply]
-    rw [R.graphObservableState_eq_embeddedFiniteApproximation n k m,
-      R.graphObservableTranslationState_eq_embeddedFiniteSemigroup n k m t]
+    have hmap :
+        P.physicalState
+            ((t : ℝ)⁻¹ •
+              (P.carrierOfPositiveTime (R.graphObservable n k m) -
+                P.carrierOfPositiveTime
+                  (O.translate t (R.graphObservable n k m)))) =
+          (t : ℝ)⁻¹ •
+            (P.physicalState
+                (P.carrierOfPositiveTime (R.graphObservable n k m)) -
+              P.physicalState
+                (P.carrierOfPositiveTime
+                  (O.translate t (R.graphObservable n k m)))) := by
+      calc
+        P.physicalState
+            ((t : ℝ)⁻¹ •
+              (P.carrierOfPositiveTime (R.graphObservable n k m) -
+                P.carrierOfPositiveTime
+                  (O.translate t (R.graphObservable n k m)))) =
+          P.physicalStateLinearMap
+            ((t : ℝ)⁻¹ •
+              (P.carrierOfPositiveTime (R.graphObservable n k m) -
+                P.carrierOfPositiveTime
+                  (O.translate t (R.graphObservable n k m)))) :=
+            (P.physicalStateLinearMap_apply _ _).symm
+        _ =
+          (t : ℝ)⁻¹ •
+            (P.physicalState
+                (P.carrierOfPositiveTime (R.graphObservable n k m)) -
+              P.physicalState
+                (P.carrierOfPositiveTime
+                  (O.translate t (R.graphObservable n k m)))) := by
+            rw [map_smul, map_sub]
+            simp only [P.physicalStateLinearMap_apply]
+    rw [hmap,
+      R.graphObservableState_eq_embeddedFiniteApproximation n k m,
+      R.graphObservableTranslationState_eq_embeddedFiniteSemigroup n k m t,
+      map_smul, map_sub]
 
 /-- Continuity of the finite Hamiltonian and common-carrier embedding generates
 convergence of the Hamiltonian-observable states to the exact graph value. -/
