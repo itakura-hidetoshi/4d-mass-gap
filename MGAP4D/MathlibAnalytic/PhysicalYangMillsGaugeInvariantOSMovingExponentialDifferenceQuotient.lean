@@ -58,6 +58,8 @@ theorem tendsto_nnreal_inv_mul_one_sub_exp_neg_moving
     rw [nhdsWithin]
     refine le_inf hproduct ?_
     rw [le_principal_iff]
+    change ∀ᶠ n : ℕ in atTop,
+      0 < (((width n : NNReal) : ℝ)) * energy n
     exact Filter.Eventually.of_forall fun n =>
       mul_pos (by exact_mod_cast hwidth_pos n) (henergy_pos n)
   have hratio :
@@ -79,7 +81,11 @@ theorem tendsto_nnreal_inv_mul_one_sub_exp_neg_moving
     have hw : (((width n : NNReal) : ℝ)) ≠ 0 :=
       ne_of_gt (by exact_mod_cast hwidth_pos n)
     have he : energy n ≠ 0 := ne_of_gt (henergy_pos n)
-    rw [mul_comm (energy n) (((width n : NNReal) : ℝ))]
+    have hexponent :
+        -energy n * (((width n : NNReal) : ℝ)) =
+          -((((width n : NNReal) : ℝ)) * energy n) := by
+      ring
+    rw [hexponent]
     field_simp [hw, he]
   rw [hfunction]
   simpa using henergy.mul hratio
