@@ -48,17 +48,15 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonObservab
       S D halfExtent N hN beta hbeta B hInvariant P
         (O.carrierStronglyContinuousPhysicalSemigroup hContinuous) C Q)
     (hSelf : IsSelfAdjoint
-      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-        |>.closedRightHamiltonian)
+      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).closedRightHamiltonian)
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W)
     [DecidableEq A.toVacuumSemigroupGapSlope.BelowHalfMassShift]
     (nodes : Finset A.toVacuumSemigroupGapSlope.BelowHalfMassShift)
     (orderCap : ℕ) where
   realization :
-    StronglyContinuousPhysicalSemigroup
-      .PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExcitationRealizationData
-        A F
+    StronglyContinuousPhysicalSemigroup.PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExcitationRealizationData
+      A F
   finiteWitness :
     (n : ℕ) →
       FiniteWilsonFiniteDimensionalHamiltonianConfluentSpectralWitnessData
@@ -152,8 +150,7 @@ variable
       S D halfExtent N hN beta hbeta B hInvariant P
         (O.carrierStronglyContinuousPhysicalSemigroup hContinuous) C Q}
     {hSelf : IsSelfAdjoint
-      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-        |>.closedRightHamiltonian}
+      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).closedRightHamiltonian}
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     {F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W}
     [DecidableEq A.toVacuumSemigroupGapSlope.BelowHalfMassShift]
@@ -167,8 +164,7 @@ abbrev ObservableClosedGraphTransportData
       S D halfExtent N hN beta hbeta B hInvariant P
         (O.carrierStronglyContinuousPhysicalSemigroup hContinuous) C Q)
     (hSelf : IsSelfAdjoint
-      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-        |>.closedRightHamiltonian)
+      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).closedRightHamiltonian)
     (F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W)
     [DecidableEq A.toVacuumSemigroupGapSlope.BelowHalfMassShift]
     (nodes : Finset A.toVacuumSemigroupGapSlope.BelowHalfMassShift)
@@ -181,8 +177,7 @@ continuum right-Hamiltonian domain. -/
 noncomputable def graphDomainPoint
     (R : ObservableClosedGraphTransportData O hContinuous A hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) (m : ℕ) :
-    (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-      |>.rightGeneratorDomain :=
+    (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).rightGeneratorDomain :=
   O.rightHamiltonianDomainPointOfObservableDerivative hContinuous
     (R.graphObservable n k m)
     (R.graphObservableHamiltonianDerivative n k m)
@@ -192,10 +187,10 @@ noncomputable def graphDomainPoint
     (R : ObservableClosedGraphTransportData O hContinuous A hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) (m : ℕ) :
     ((R.graphDomainPoint n k m :
-        (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-          |>.rightGeneratorDomain) : P.PhysicalHilbert) =
-      P.physicalState
-        (P.carrierOfPositiveTime (R.graphObservable n k m)) :=
+        (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).rightGeneratorDomain) :
+      P.PhysicalHilbert) =
+        P.physicalState
+          (P.carrierOfPositiveTime (R.graphObservable n k m)) :=
   rfl
 
 /-- The continuum right Hamiltonian of a graph-observable point is its
@@ -203,8 +198,8 @@ represented OS carrier derivative. -/
 theorem rightHamiltonian_graphDomainPoint
     (R : ObservableClosedGraphTransportData O hContinuous A hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) (m : ℕ) :
-    (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-        |>.rightHamiltonian (R.graphDomainPoint n k m) =
+    (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).rightHamiltonian
+        (R.graphDomainPoint n k m) =
       P.physicalState (R.graphObservableHamiltonianDerivative n k m) := by
   exact O.rightHamiltonian_rightHamiltonianDomainPointOfObservableDerivative
     hContinuous
@@ -216,9 +211,8 @@ theorem rightHamiltonian_graphDomainPoint
 canonical graph approximations required by closed-graph transport. -/
 noncomputable def toClosedGraphTransportData
     (R : ObservableClosedGraphTransportData O hContinuous A hSelf F nodes orderCap) :
-    StronglyContinuousPhysicalSemigroup
-      .PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonClosedGraphTransportData
-        A hSelf F nodes orderCap :=
+    StronglyContinuousPhysicalSemigroup.PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonClosedGraphTransportData
+      A hSelf F nodes orderCap :=
   { realization := R.realization
     finiteWitness := R.finiteWitness
     SpectralIndex := R.SpectralIndex
@@ -260,8 +254,7 @@ theorem continuumResolventConfluentCauchy_linearIndependent
     (R : ObservableClosedGraphTransportData O hContinuous A hSelf F nodes orderCap)
     (hP : P.IsNormalized)
     (hInnerSymmetric :
-      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-        |>.toPhysicalSemigroup.IsInnerSymmetric) :
+      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).toPhysicalSemigroup.IsInnerSymmetric) :
     LinearIndependent ℝ
       (fun p : nodes × Fin orderCap =>
         ContinuousLinearMap.positivePowerJetOperatorFamily
@@ -279,8 +272,7 @@ theorem continuumResolventPositivePowerJetCoefficientMapsIndependent
     (R : ObservableClosedGraphTransportData O hContinuous A hSelf F nodes orderCap)
     (hP : P.IsNormalized)
     (hInnerSymmetric :
-      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous)
-        |>.toPhysicalSemigroup.IsInnerSymmetric)
+      (O.carrierStronglyContinuousPhysicalSemigroup hContinuous).toPhysicalSemigroup.IsInnerSymmetric)
     (left right : ContinuousLinearMap.PositivePowerJetCoefficientMap
       A.toVacuumSemigroupGapSlope.BelowHalfMassShift)
     (hFit : A.toVacuumSemigroupGapSlope.PositivePowerJetCoefficientMapsFitWindow
