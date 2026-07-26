@@ -37,7 +37,7 @@ def PositivePowerJetCoefficientMap.AreOperatorIndependentOnSupport
     (c d : PositivePowerJetCoefficientMap α)
     (A : α → E →L[ℝ] E) : Prop :=
   LinearIndepOn ℝ (positivePowerJetOperatorFamily A)
-    (↑(c.support ∪ d.support) : Set (α × ℕ))
+    ((↑c.support : Set (α × ℕ)) ∪ ↑d.support)
 
 /-- Positive-power jet evaluation is the standard finitely supported linear
 combination of the node-order operator family. -/
@@ -90,13 +90,13 @@ theorem PositivePowerJetCoefficientMap.eq_of_eval_eq_of_areOperatorIndependentOn
       PositivePowerJetCoefficientMap.eval d A) :
     c = d := by
   have hc : c ∈ Finsupp.supported ℝ ℝ
-      (↑(c.support ∪ d.support) : Set (α × ℕ)) := by
+      ((↑c.support : Set (α × ℕ)) ∪ ↑d.support) := by
     rw [Finsupp.mem_supported]
-    exact Finset.coe_subset.mpr Finset.subset_union_left
+    exact Set.subset_union_left
   have hd : d ∈ Finsupp.supported ℝ ℝ
-      (↑(c.support ∪ d.support) : Set (α × ℕ)) := by
+      ((↑c.support : Set (α × ℕ)) ∪ ↑d.support) := by
     rw [Finsupp.mem_supported]
-    exact Finset.coe_subset.mpr Finset.subset_union_right
+    exact Set.subset_union_right
   apply (linearIndepOn_iffₛ.mp hIndependent) c hc d hd
   simpa only [PositivePowerJetCoefficientMap.eval_eq_linearCombination] using hEval
 
@@ -126,9 +126,9 @@ theorem positiveMultiplicityProfileCoefficientMap_eq_of_perm_of_pairwise_of_supp
     (hIdentity : ∀ a b : α,
       A a - A b = (value a - value b) • (A a * A b))
     (hIndependent :
-      (positiveMultiplicityProfileCoefficientMap value first₁ tail₁).
-        AreOperatorIndependentOnSupport
-          (positiveMultiplicityProfileCoefficientMap value first₂ tail₂) A) :
+      PositivePowerJetCoefficientMap.AreOperatorIndependentOnSupport
+        (positiveMultiplicityProfileCoefficientMap value first₁ tail₁)
+        (positiveMultiplicityProfileCoefficientMap value first₂ tail₂) A) :
     positiveMultiplicityProfileCoefficientMap value first₁ tail₁ =
       positiveMultiplicityProfileCoefficientMap value first₂ tail₂ := by
   have hPairwise₂ :
@@ -178,8 +178,9 @@ theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eq_coeffic
     (hIdentity : ∀ a b : α,
       A a - A b = (value a - value b) • (A a * A b))
     (hIndependent :
-      (positiveMultiplicityProfilePermutationCanonicalCoefficientMap
-          value first tail).AreOperatorIndependentOnSupport
+      PositivePowerJetCoefficientMap.AreOperatorIndependentOnSupport
+        (positiveMultiplicityProfilePermutationCanonicalCoefficientMap
+          value first tail)
         (positiveMultiplicityProfileCoefficientMap value first tail) A) :
     positiveMultiplicityProfilePermutationCanonicalCoefficientMap
         value first tail =
