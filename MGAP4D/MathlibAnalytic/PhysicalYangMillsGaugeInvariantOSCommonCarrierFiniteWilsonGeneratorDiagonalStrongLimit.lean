@@ -165,8 +165,11 @@ theorem finiteScaledExponentialDefectNorm_tendsto_zero
       (fun sigma : A.toVacuumSemigroupGapSlope.BelowHalfMassShift => sigma.1)
       nodes orderCap (R.finiteWitness n) (R.finiteIndexEquiv n k)
   have hnorm := (continuous_norm.tendsto 0).comp h
-  simpa [finiteScaledExponentialDefectNorm, finiteScaledExponentialDefect,
-    finiteVector, approximateValue] using hnorm
+  change Tendsto
+    (fun t : NNReal => ‖R.finiteScaledExponentialDefect n k t‖)
+    (nhdsWithin 0 (Ioi 0)) (nhds 0)
+  simpa [Function.comp_def, finiteScaledExponentialDefect, finiteVector,
+    approximateValue] using hnorm
 
 /-- Canonical simultaneous shrinking-time selection for all selected spectral
 indices. -/
