@@ -80,8 +80,8 @@ theorem VacuumSemigroupGapSlope.continuumResolventConfluentCauchy_linearIndepend
           (p.1.1, p.2.1)) :=
   G.continuumResolventConfluentCauchy_linearIndependent_of_confluentSpectralWitness
     T hP hInnerSymmetric hSelf nodes orderCap
-    (R.toContinuumResolventConfluentSpectralWitnessData
-      T G hP hInnerSymmetric hSelf nodes orderCap)
+    (VacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpairStrongLimitData.toContinuumResolventConfluentSpectralWitnessData
+      T G hP hInnerSymmetric hSelf nodes orderCap R)
 
 /-- Strong approximate eigenpair transport supplies support-local coefficient
 faithfulness for every coefficient map fitting the selected node-order window. -/
@@ -104,8 +104,8 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositivePowerJetCoefficientMap
       T hP hInnerSymmetric hSelf left right :=
   G.continuumResolventPositivePowerJetCoefficientMapsIndependent_of_confluentSpectralWitness
     T hP hInnerSymmetric hSelf nodes orderCap
-    (R.toContinuumResolventConfluentSpectralWitnessData
-      T G hP hInnerSymmetric hSelf nodes orderCap)
+    (VacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpairStrongLimitData.toContinuumResolventConfluentSpectralWitnessData
+      T G hP hInnerSymmetric hSelf nodes orderCap R)
     left right hFit
 
 /-- Strong approximate eigenpair transport upgrades profile permutation
@@ -135,8 +135,8 @@ theorem VacuumSemigroupGapSlope.resolventPositiveMultiplicityProfileCoefficientM
       G.resolventPositiveMultiplicityProfileCoefficientMap first₂ tail₂ :=
   G.resolventPositiveMultiplicityProfileCoefficientMap_eq_of_perm_of_pairwise_of_continuumConfluentSpectralWitness
     T hP hInnerSymmetric hSelf nodes orderCap
-    (R.toContinuumResolventConfluentSpectralWitnessData
-      T G hP hInnerSymmetric hSelf nodes orderCap)
+    (VacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpairStrongLimitData.toContinuumResolventConfluentSpectralWitnessData
+      T G hP hInnerSymmetric hSelf nodes orderCap R)
     first₁ first₂ tail₁ tail₂ hPerm hPairwise₁ hFit
 
 /-- Strong approximate eigenpair transport identifies the permutation-canonical
@@ -167,8 +167,8 @@ theorem VacuumSemigroupGapSlope.resolventPositiveMultiplicityProfilePermutationC
       G.resolventPositiveMultiplicityProfileCoefficientMap first tail :=
   G.resolventPositiveMultiplicityProfilePermutationCanonicalCoefficientMap_eq_coefficientMap_of_pairwise_of_continuumConfluentSpectralWitness
     T hP hInnerSymmetric hSelf nodes orderCap
-    (R.toContinuumResolventConfluentSpectralWitnessData
-      T G hP hInnerSymmetric hSelf nodes orderCap)
+    (VacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpairStrongLimitData.toContinuumResolventConfluentSpectralWitnessData
+      T G hP hInnerSymmetric hSelf nodes orderCap R)
     first tail hPairwise hFit
 
 end StronglyContinuousPhysicalSemigroup
