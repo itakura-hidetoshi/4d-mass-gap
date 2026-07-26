@@ -10,12 +10,12 @@ open Filter Set Topology
 
 /-- A canonical positive comparison width shrinking to zero. -/
 def reciprocalPositiveWidth (n : ℕ) : NNReal :=
-  1 / ((n : NNReal) + 1)
+  ((n : NNReal) + 1)⁻¹
 
 /-- Every canonical reciprocal width is strictly positive. -/
 theorem reciprocalPositiveWidth_pos (n : ℕ) :
     0 < reciprocalPositiveWidth n := by
-  positivity
+  exact inv_pos.mpr (by positivity)
 
 /-- The canonical reciprocal widths converge to zero in the ordinary topology. -/
 theorem reciprocalPositiveWidth_tendsto_zero_nhds :
