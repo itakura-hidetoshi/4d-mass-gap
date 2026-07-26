@@ -15,46 +15,45 @@ universe u
 variable {α E : Type u}
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-/-- A globally injective lexicographic ordering key for a multiplicity-profile
-entry.  The scalar value is primary; node and multiplicity order provide a
-global tie-break outside the pairwise-distinct regime. -/
+/-- Scalar-first lexicographic ordering key for a multiplicity-profile entry.
+The multiplicity order breaks ties at one scalar node. -/
 def PositiveMultiplicityProfileEntry.sortKey
-    [LinearOrder α]
     (value : α → ℝ)
     (e : PositiveMultiplicityProfileEntry α) :
-    ℝ ×ₗ (α ×ₗ ℕ) :=
-  toLex (value e.node, toLex (e.node, e.order))
+    ℝ ×ₗ ℕ :=
+  toLex (value e.node, e.order)
 
-/-- The profile-entry sorting key is injective. -/
+/-- The profile-entry sorting key is injective whenever the scalar-value map is
+injective on physical nodes. -/
 theorem PositiveMultiplicityProfileEntry.sortKey_injective
-    [LinearOrder α]
-    (value : α → ℝ) :
+    (value : α → ℝ)
+    (hValueInjective : Function.Injective value) :
     Function.Injective
       (PositiveMultiplicityProfileEntry.sortKey value) := by
   intro left right h
-  have hOuter := congrArg
-    (fun x : ℝ ×ₗ (α ×ₗ ℕ) => ofLex x) h
-  have hInnerLex := congrArg Prod.snd hOuter
-  have hInner := congrArg
-    (fun x : α ×ₗ ℕ => ofLex x) hInnerLex
+  have hPair := congrArg
+    (fun x : ℝ ×ₗ ℕ => ofLex x) h
   cases left with
   | mk leftNode leftOrder =>
       cases right with
       | mk rightNode rightOrder =>
-          cases hInner
+          have hNode : leftNode = rightNode :=
+            hValueInjective (congrArg Prod.fst hPair)
+          have hOrder : leftOrder = rightOrder :=
+            congrArg Prod.snd hPair
+          cases hNode
+          cases hOrder
           rfl
 
 /-- Canonical total ordering relation used to select one representative of a
 multiplicity-profile permutation class. -/
 def PositiveMultiplicityProfileEntry.sortLE
-    [LinearOrder α]
     (value : α → ℝ)
     (left right : PositiveMultiplicityProfileEntry α) : Prop :=
   PositiveMultiplicityProfileEntry.sortKey value left ≤
     PositiveMultiplicityProfileEntry.sortKey value right
 
 instance positiveMultiplicityProfileEntrySortLETotal
-    [LinearOrder α]
     (value : α → ℝ) :
     Std.Total (PositiveMultiplicityProfileEntry.sortLE value) :=
   ⟨fun left right => le_total
@@ -62,19 +61,10 @@ instance positiveMultiplicityProfileEntrySortLETotal
     (PositiveMultiplicityProfileEntry.sortKey value right)⟩
 
 instance positiveMultiplicityProfileEntrySortLETrans
-    [LinearOrder α]
     (value : α → ℝ) :
     IsTrans (PositiveMultiplicityProfileEntry α)
       (PositiveMultiplicityProfileEntry.sortLE value) :=
   ⟨fun _ _ _ h₁ h₂ => h₁.trans h₂⟩
-
-instance positiveMultiplicityProfileEntrySortLEAntisymm
-    [LinearOrder α]
-    (value : α → ℝ) :
-    Std.Antisymm (PositiveMultiplicityProfileEntry.sortLE value) :=
-  ⟨fun _ _ h₁ h₂ =>
-    PositiveMultiplicityProfileEntry.sortKey_injective value
-      (le_antisymm h₁ h₂)⟩
 
 /-- Pairwiseness for a symmetric relation is invariant under list
 permutations. -/
@@ -125,7 +115,6 @@ theorem PositiveMultiplicityProfileEntry.valueDistinct_symmetric
 
 /-- The deterministically sorted entry list of a nonempty multiplicity profile. -/
 noncomputable def positiveMultiplicityProfileSortedEntries
-    [LinearOrder α]
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
@@ -137,7 +126,6 @@ noncomputable def positiveMultiplicityProfileSortedEntries
 
 /-- Sorting preserves the original multiplicity-profile multiset. -/
 theorem positiveMultiplicityProfileSortedEntries_perm
-    [LinearOrder α]
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
@@ -151,7 +139,6 @@ theorem positiveMultiplicityProfileSortedEntries_perm
 
 /-- The selected representative is sorted by the canonical entry order. -/
 theorem positiveMultiplicityProfileSortedEntries_pairwise
-    [LinearOrder α]
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
@@ -162,16 +149,22 @@ theorem positiveMultiplicityProfileSortedEntries_pairwise
     (List.pairwise_mergeSort'
       (PositiveMultiplicityProfileEntry.sortLE value) (first :: tail))
 
-/-- Two permutations have exactly the same deterministically sorted entry list. -/
+/-- Two permutations have exactly the same deterministically sorted entry list
+when scalar values determine physical nodes. -/
 theorem positiveMultiplicityProfileSortedEntries_eq_of_perm
-    [LinearOrder α]
     (value : α → ℝ)
     (first₁ first₂ : PositiveMultiplicityProfileEntry α)
     (tail₁ tail₂ : List (PositiveMultiplicityProfileEntry α))
+    (hValueInjective : Function.Injective value)
     (hPerm : (first₁ :: tail₁).Perm (first₂ :: tail₂)) :
     positiveMultiplicityProfileSortedEntries value first₁ tail₁ =
       positiveMultiplicityProfileSortedEntries value first₂ tail₂ := by
   classical
+  letI : Std.Antisymm
+      (PositiveMultiplicityProfileEntry.sortLE value) :=
+    ⟨fun _ _ h₁ h₂ =>
+      PositiveMultiplicityProfileEntry.sortKey_injective
+        value hValueInjective (le_antisymm h₁ h₂)⟩
   have hSortedPerm :
       (positiveMultiplicityProfileSortedEntries value first₁ tail₁).Perm
         (positiveMultiplicityProfileSortedEntries value first₂ tail₂) :=
@@ -187,7 +180,6 @@ theorem positiveMultiplicityProfileSortedEntries_eq_of_perm
 
 /-- The sorted representative of a nonempty profile is nonempty. -/
 theorem positiveMultiplicityProfileSortedEntries_ne_nil
-    [LinearOrder α]
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
@@ -199,10 +191,9 @@ theorem positiveMultiplicityProfileSortedEntries_ne_nil
   exact List.not_perm_nil_cons first tail hPerm
 
 /-- A genuinely permutation-canonical coefficient-map representative: sort the
-profile by its scalar value with an injective tie-break key, then run the
-existing confluent/binomial coefficient aggregation on that unique ordering. -/
+profile by scalar value and multiplicity order, then run the existing
+confluent/binomial coefficient aggregation on that unique ordering. -/
 noncomputable def positiveMultiplicityProfilePermutationCanonicalCoefficientMap
-    [LinearOrder α]
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
@@ -213,13 +204,13 @@ noncomputable def positiveMultiplicityProfilePermutationCanonicalCoefficientMap
       positiveMultiplicityProfileCoefficientMap
         value sortedFirst sortedTail
 
-/-- The canonical coefficient Finsupp is definitionally independent of the
-input ordering. -/
+/-- The canonical coefficient Finsupp is independent of the input ordering
+when the scalar-value map is injective. -/
 theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eq_of_perm
-    [LinearOrder α]
     (value : α → ℝ)
     (first₁ first₂ : PositiveMultiplicityProfileEntry α)
     (tail₁ tail₂ : List (PositiveMultiplicityProfileEntry α))
+    (hValueInjective : Function.Injective value)
     (hPerm : (first₁ :: tail₁).Perm (first₂ :: tail₂)) :
     positiveMultiplicityProfilePermutationCanonicalCoefficientMap
         value first₁ tail₁ =
@@ -228,12 +219,11 @@ theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eq_of_perm
   rw [positiveMultiplicityProfilePermutationCanonicalCoefficientMap,
     positiveMultiplicityProfilePermutationCanonicalCoefficientMap,
     positiveMultiplicityProfileSortedEntries_eq_of_perm
-      value first₁ first₂ tail₁ tail₂ hPerm]
+      value first₁ first₂ tail₁ tail₂ hValueInjective hPerm]
 
 /-- Pairwise scalar distinctness is inherited by the selected sorted
 representative. -/
 theorem positiveMultiplicityProfileSortedEntries_pairwiseDistinct
-    [LinearOrder α]
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α))
@@ -250,7 +240,6 @@ theorem positiveMultiplicityProfileSortedEntries_pairwiseDistinct
 /-- Under pairwise scalar distinctness, the permutation-canonical coefficient
 map evaluates to the original mixed operator product. -/
 theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eval_eq_product_of_pairwise
-    [LinearOrder α]
     (A : α → E →L[ℝ] E)
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
@@ -301,7 +290,6 @@ theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eval_eq_pr
 /-- The selected canonical representative and the original recursively
 aggregated coefficient map have identical operator semantics. -/
 theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eval_eq_coefficientMap_eval_of_pairwise
-    [LinearOrder α]
     (A : α → E →L[ℝ] E)
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
@@ -322,7 +310,6 @@ theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eval_eq_co
 
 /-- Pointwise form of the canonical representative identity. -/
 theorem positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eval_apply_eq_product_apply_of_pairwise
-    [LinearOrder α]
     (A : α → E →L[ℝ] E)
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
