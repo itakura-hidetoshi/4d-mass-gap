@@ -12,6 +12,8 @@ universe u v
 
 namespace ContinuousLinearMap
 
+section Normed
+
 variable {E : Type u} {F : Type v}
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -56,10 +58,17 @@ noncomputable def toLinearIsometry
 
 end IsometricSubmoduleRangeData
 
+end Normed
+
+section Inner
+
+variable {E : Type u} {F : Type v}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+variable [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+
 /-- A norm-preserving continuous real-linear map preserves the real inner
 product. -/
 theorem inner_map_map_of_norm_map
-    [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
     (f : E →L[ℝ] F)
     (hNorm : ∀ x, ‖f x‖ = ‖x‖)
     (x y : E) :
@@ -68,6 +77,8 @@ theorem inner_map_map_of_norm_map
     { toLinearMap := f.toLinearMap
       norm_map' := hNorm }
   exact e.inner_map_map x y
+
+end Inner
 
 end ContinuousLinearMap
 
