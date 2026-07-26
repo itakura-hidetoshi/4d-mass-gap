@@ -22,9 +22,8 @@ namespace StronglyContinuousPhysicalSemigroup
 averages in the continuum common carrier.
 
 Time averaging puts every embedded vector in the canonical right-Hamiltonian
-core.  The only operator compatibility input is therefore the semigroup
-finite-difference quotient, rather than prior membership in the generator or
-closed-Hamiltonian domain. -/
+core. The remaining operator input is the semigroup finite-difference quotient,
+rather than prior membership in the generator or closed-Hamiltonian domain. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonTimeAverageApproximateEigenpairStrongLimitData
     {halfExtent : ℕ → ℕ}
     {N : ℕ}
@@ -152,6 +151,15 @@ noncomputable def embeddedVector
       A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : P.VacuumOrthogonalHilbert :=
   R.realization.excitationEmbed n (R.finiteVector n k)
+
+/-- The structure field restated through the named embedded-vector definition. -/
+theorem embeddedVector_tendsto_named
+    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonTimeAverageApproximateEigenpairStrongLimitData
+      A hInnerSymmetric hSelf F nodes orderCap)
+    (k : R.SpectralIndex) :
+    Tendsto (fun n => R.embeddedVector n k) atTop
+      (nhds (R.spectralVector k)) := by
+  simpa [embeddedVector, finiteVector] using R.embeddedVector_tendsto k
 
 /-- The embedded selected vector in the ambient physical Hilbert space. -/
 noncomputable def ambientEmbeddedVector
@@ -296,11 +304,16 @@ theorem spectralVector_norm
       A hInnerSymmetric hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     ‖R.spectralVector k‖ = 1 := by
-  have hNormTendsto := (R.embeddedVector_tendsto k).norm
+  have hNormTendsto := (R.embeddedVector_tendsto_named k).norm
+  have hFunction :
+      (fun n : ℕ => ‖R.embeddedVector n k‖) = fun _ : ℕ => (1 : ℝ) := by
+    funext n
+    exact R.embeddedVector_norm n k
   have hConstant :
       Tendsto (fun _ : ℕ => (1 : ℝ)) atTop
         (nhds ‖R.spectralVector k‖) := by
-    simpa only [R.embeddedVector_norm] using hNormTendsto
+    rw [← hFunction]
+    exact hNormTendsto
   exact tendsto_nhds_unique hConstant tendsto_const_nhds
 
 /-- Limiting continuum spectral vectors are nonzero. -/
@@ -323,7 +336,7 @@ theorem ambientEmbeddedVector_tendsto
       (nhds (((R.spectralVector k : P.VacuumOrthogonalHilbert) :
         P.PhysicalHilbert))) := by
   exact (continuous_subtype_val.tendsto (R.spectralVector k)).comp
-    (R.embeddedVector_tendsto k)
+    (R.embeddedVector_tendsto_named k)
 
 /-- Shrinking time averages converge to the same continuum spectral vector as
 the unsmoothed embedded finite eigenvectors. -/
@@ -349,7 +362,7 @@ theorem timeAveragedVector_sub_embeddedVector_tendsto_zero
       (fun n => R.timeAveragedVector n k - R.embeddedVector n k)
       atTop (nhds 0) := by
   simpa only [sub_self] using
-    (R.timeAveragedVector_tendsto k).sub (R.embeddedVector_tendsto k)
+    (R.timeAveragedVector_tendsto k).sub (R.embeddedVector_tendsto_named k)
 
 /-- The finite Hamiltonian eigen-equation survives the continuum excitation
 embedding. -/
@@ -360,8 +373,16 @@ theorem excitationEmbed_hamiltonian_finiteVector
     R.realization.excitationEmbed n
         (F.hamiltonian n (R.finiteVector n k)) =
       R.approximateValue n k • R.embeddedVector n k := by
+  change R.realization.excitationEmbed n
+      (F.hamiltonian n
+        ((R.finiteWitness n).spectralVector (R.finiteIndexEquiv n k))) =
+    (R.finiteWitness n).spectralValue (R.finiteIndexEquiv n k) •
+      R.realization.excitationEmbed n
+        ((R.finiteWitness n).spectralVector (R.finiteIndexEquiv n k))
   rw [(R.finiteWitness n).hamiltonian_apply_spectralVector]
-  rfl
+  exact (R.realization.excitationEmbed n).map_smul
+    ((R.finiteWitness n).spectralValue (R.finiteIndexEquiv n k))
+    ((R.finiteWitness n).spectralVector (R.finiteIndexEquiv n k))
 
 /-- Semigroup difference-quotient compatibility lifts from the ambient Hilbert
 space to the complete excitation carrier. -/
@@ -392,18 +413,18 @@ theorem embeddedHamiltonian_sub_value_timeAverage_tendsto_zero
             (F.hamiltonian n (R.finiteVector n k)) -
           R.approximateValue n k • R.timeAveragedVector n k)
       atTop (nhds 0) := by
+  have hDifference :
+      Tendsto
+        (fun n => R.embeddedVector n k - R.timeAveragedVector n k)
+        atTop (nhds 0) := by
+    simpa only [sub_self] using
+      (R.embeddedVector_tendsto_named k).sub (R.timeAveragedVector_tendsto k)
   have hScaled :
       Tendsto
         (fun n =>
           R.approximateValue n k •
             (R.embeddedVector n k - R.timeAveragedVector n k))
         atTop (nhds 0) := by
-    have hDifference :
-        Tendsto
-          (fun n => R.embeddedVector n k - R.timeAveragedVector n k)
-          atTop (nhds 0) := by
-      simpa only [neg_sub] using
-        (R.timeAveragedVector_sub_embeddedVector_tendsto_zero k).neg
     simpa only [smul_zero] using
       (R.approximateValue_tendsto k).smul hDifference
   simpa [R.excitationEmbed_hamiltonian_finiteVector, smul_sub] using hScaled
@@ -425,7 +446,7 @@ theorem residual_tendsto_zero
     (R.differenceQuotientCompatibility_tendsto_zero_excitation k).add
       (R.embeddedHamiltonian_sub_value_timeAverage_tendsto_zero k)
   simpa only [R.restrictedHamiltonian_approximateVector,
-    R.approximateVector_coe, sub_add_sub_cancel] using hsum
+    R.approximateVector_coe, sub_add_sub_cancel, zero_add] using hsum
 
 /-- Shrinking-time semigroup difference quotients construct the exact continuum
 approximate-eigenpair strong-limit package. -/
