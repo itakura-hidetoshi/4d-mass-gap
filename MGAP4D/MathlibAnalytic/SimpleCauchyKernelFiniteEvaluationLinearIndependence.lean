@@ -7,7 +7,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 open Set
-open scoped Polynomial
+open scoped BigOperators Polynomial
 
 namespace ContinuousLinearMap
 
@@ -136,13 +136,13 @@ theorem simpleCauchyNumeratorPolynomial_degree_lt_card
             (simpleCauchyNodePolynomial value i).natDegree :=
         Polynomial.natDegree_mul_le
       _ ≤ 0 + (Fintype.card ι - 1) := by
-        exact Nat.add_le_add Polynomial.natDegree_C_le
+        exact Nat.add_le_add (by simp)
           (le_of_eq (simpleCauchyNodePolynomial_natDegree value i))
       _ = Fintype.card ι - 1 := Nat.zero_add _
   by_cases hzero : simpleCauchyNumeratorPolynomial value coefficient = 0
   · simp [hzero]
-  · rw [Polynomial.degree_eq_natDegree hzero, WithBot.coe_lt_coe]
-    exact lt_of_le_of_lt hNatDegree
+  · rw [Polynomial.degree_eq_natDegree hzero]
+    exact_mod_cast lt_of_le_of_lt hNatDegree
       (Nat.pred_lt (Fintype.card_pos_iff.mpr inferInstance))
 
 /-- Equality of two simple Cauchy kernel combinations on sufficiently many
@@ -188,10 +188,15 @@ theorem simpleCauchyNumeratorPolynomial_eq_of_eval_eq
             rw [Finset.mul_sum]
             apply Finset.sum_congr rfl
             intro i hi
-            rw [mul_assoc,
-              simpleCauchyCommonDenominator_mul_inv_sub
-                value (sample k) i (hNonpole k i)]
-            ring
+            calc
+              left i * (simpleCauchyNodePolynomial value i).eval (sample k) =
+                  left i *
+                    (simpleCauchyCommonDenominator value (sample k) *
+                      (sample k - value i)⁻¹) := by
+                rw [simpleCauchyCommonDenominator_mul_inv_sub
+                  value (sample k) i (hNonpole k i)]
+              _ = simpleCauchyCommonDenominator value (sample k) *
+                    (left i * (sample k - value i)⁻¹) := by ring
           _ = simpleCauchyCommonDenominator value (sample k) *
                 ∑ i : ι, right i * (sample k - value i)⁻¹ := by
             rw [hPoint]
@@ -200,10 +205,16 @@ theorem simpleCauchyNumeratorPolynomial_eq_of_eval_eq
             rw [Finset.mul_sum]
             apply Finset.sum_congr rfl
             intro i hi
-            rw [mul_assoc,
-              simpleCauchyCommonDenominator_mul_inv_sub
-                value (sample k) i (hNonpole k i)]
-            ring
+            calc
+              simpleCauchyCommonDenominator value (sample k) *
+                    (right i * (sample k - value i)⁻¹) =
+                  right i *
+                    (simpleCauchyCommonDenominator value (sample k) *
+                      (sample k - value i)⁻¹) := by ring
+              _ = right i *
+                    (simpleCauchyNodePolynomial value i).eval (sample k) := by
+                rw [simpleCauchyCommonDenominator_mul_inv_sub
+                  value (sample k) i (hNonpole k i)]
 
 /-- For equally many distinct nodes and non-pole distinct samples, the ordinary
 Cauchy kernel columns are linearly independent.  This is the simple-pole base
