@@ -50,9 +50,8 @@ theorem shiftedLinearPolynomial_isCoprime
         (Polynomial.C left - Polynomial.C right) := by ring
     _ = Polynomial.C delta⁻¹ * Polynomial.C delta := by
       rw [← Polynomial.C_sub]
-      rfl
-    _ = Polynomial.C (delta⁻¹ * delta) :=
-      (Polynomial.C_mul _ _).symm
+    _ = Polynomial.C (delta⁻¹ * delta) := by
+      rw [← Polynomial.C_mul]
     _ = 1 := by simp [hdelta]
 
 /-- The rational function carrying one positive shifted-resolvent power. -/
