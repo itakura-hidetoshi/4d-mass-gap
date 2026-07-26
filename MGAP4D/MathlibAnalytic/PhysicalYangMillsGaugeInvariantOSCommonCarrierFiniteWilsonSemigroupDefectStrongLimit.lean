@@ -136,8 +136,17 @@ variable
     {nodes : Finset A.toVacuumSemigroupGapSlope.BelowHalfMassShift}
     {orderCap : ℕ}
 
-abbrev DefectData :=
+abbrev DefectData
+    (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
+      S D halfExtent N hN beta hbeta B hInvariant P T C Q)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (F : FiniteWilsonOSAutomaticExactGapFiniteDimensionalHamiltonianContractionData W)
+    [DecidableEq A.toVacuumSemigroupGapSlope.BelowHalfMassShift]
+    (nodes : Finset A.toVacuumSemigroupGapSlope.BelowHalfMassShift)
+    (orderCap : ℕ) :=
   PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
+    A hInnerSymmetric hSelf F nodes orderCap
 
 /-- The selected finite Wilson energy. -/
 def approximateValue
