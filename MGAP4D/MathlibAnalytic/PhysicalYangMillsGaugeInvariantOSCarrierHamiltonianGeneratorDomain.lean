@@ -20,6 +20,7 @@ through the null quotient and completion without any separate compatibility
 assumption. -/
 theorem physicalState_isometry (P : D.OSPreHilbertData) :
     Isometry P.physicalState := by
+  apply Isometry.of_dist_eq
   intro F G
   rw [dist_eq_norm, dist_eq_norm]
   have hmap :
@@ -32,6 +33,14 @@ theorem physicalState_isometry (P : D.OSPreHilbertData) :
 namespace PositiveTimeContractionSemigroup
 
 variable {P : D.OSPreHilbertData}
+
+/-- The canonical strongly continuous physical semigroup generated from a
+carrier contraction semigroup and dense-state continuity. -/
+noncomputable abbrev stronglyContinuousPhysicalSemigroup
+    (T : P.PositiveTimeContractionSemigroup)
+    (hT : T.StrongContinuityOnDenseStates) :
+    P.StronglyContinuousPhysicalSemigroup :=
+  StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT
 
 /-- The right Hamiltonian difference quotient before the OS null quotient and
 Hilbert completion.  Its sign matches `rightHamiltonianDifferenceQuotient` on
@@ -48,8 +57,8 @@ theorem physicalState_carrierRightHamiltonianDifferenceQuotient
     (hT : T.StrongContinuityOnDenseStates)
     (F : P.Carrier) (t : NNReal) :
     P.physicalState (T.carrierRightHamiltonianDifferenceQuotient F t) =
-      (StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT)
-        |>.rightHamiltonianDifferenceQuotient (P.physicalState F) t := by
+      (T.stronglyContinuousPhysicalSemigroup hT)
+        .rightHamiltonianDifferenceQuotient (P.physicalState F) t := by
   change
     P.physicalState ((t : ℝ)⁻¹ • (F - T.translate t F)) = _
   have hmap :
@@ -77,10 +86,9 @@ theorem hasRightHamiltonianValue_physicalState_of_carrierDifferenceQuotient_tend
     (hDerivative :
       Tendsto (T.carrierRightHamiltonianDifferenceQuotient F)
         (nhdsWithin 0 (Ioi 0)) (nhds G)) :
-    (StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT)
-      |>.HasRightHamiltonianValue (P.physicalState F) (P.physicalState G) := by
-  let Tphys :=
-    StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT
+    (T.stronglyContinuousPhysicalSemigroup hT)
+      .HasRightHamiltonianValue (P.physicalState F) (P.physicalState G) := by
+  let Tphys := T.stronglyContinuousPhysicalSemigroup hT
   have hPhysical :
       Tendsto
         (fun t : NNReal =>
@@ -113,8 +121,7 @@ noncomputable def rightHamiltonianDomainPointOfCarrierDerivative
     (hDerivative :
       Tendsto (T.carrierRightHamiltonianDifferenceQuotient F)
         (nhdsWithin 0 (Ioi 0)) (nhds G)) :
-    (StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT)
-      |>.rightGeneratorDomain :=
+    (T.stronglyContinuousPhysicalSemigroup hT).rightGeneratorDomain :=
   ⟨P.physicalState F,
     ⟨-(P.physicalState G),
       T.hasRightHamiltonianValue_physicalState_of_carrierDifferenceQuotient_tendsto
@@ -128,9 +135,9 @@ noncomputable def rightHamiltonianDomainPointOfCarrierDerivative
       Tendsto (T.carrierRightHamiltonianDifferenceQuotient F)
         (nhdsWithin 0 (Ioi 0)) (nhds G)) :
     ((T.rightHamiltonianDomainPointOfCarrierDerivative hT F G hDerivative :
-        (StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT)
-          |>.rightGeneratorDomain) : P.PhysicalHilbert) =
-      P.physicalState F :=
+        (T.stronglyContinuousPhysicalSemigroup hT).rightGeneratorDomain) :
+      P.PhysicalHilbert) =
+        P.physicalState F :=
   rfl
 
 /-- The canonical right Hamiltonian on the constructed domain point is the
@@ -142,12 +149,10 @@ theorem rightHamiltonian_rightHamiltonianDomainPointOfCarrierDerivative
     (hDerivative :
       Tendsto (T.carrierRightHamiltonianDifferenceQuotient F)
         (nhdsWithin 0 (Ioi 0)) (nhds G)) :
-    (StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT)
-        |>.rightHamiltonian
-          (T.rightHamiltonianDomainPointOfCarrierDerivative hT F G hDerivative) =
+    (T.stronglyContinuousPhysicalSemigroup hT).rightHamiltonian
+        (T.rightHamiltonianDomainPointOfCarrierDerivative hT F G hDerivative) =
       P.physicalState G := by
-  let Tphys :=
-    StrongContinuityOnDenseStates.toStronglyContinuousPhysicalSemigroup T hT
+  let Tphys := T.stronglyContinuousPhysicalSemigroup hT
   apply Tphys.hasRightHamiltonianValue_unique
     (Tphys.rightHamiltonian_hasRightHamiltonianValue
       (T.rightHamiltonianDomainPointOfCarrierDerivative hT F G hDerivative))
@@ -167,9 +172,8 @@ noncomputable abbrev carrierStronglyContinuousPhysicalSemigroup
     (T : P.PositiveTimeObservableContractionSemigroup)
     (hT : T.StrongContinuityOnObservableStates) :
     P.StronglyContinuousPhysicalSemigroup :=
-  PositiveTimeContractionSemigroup.StrongContinuityOnDenseStates
-    |>.toStronglyContinuousPhysicalSemigroup
-      T.toCarrierSemigroup hT.toCarrierStrongContinuity
+  T.toCarrierSemigroup.stronglyContinuousPhysicalSemigroup
+    hT.toCarrierStrongContinuity
 
 /-- The carrier Hamiltonian difference quotient written directly in terms of an
 actual positive-time observable translation. -/
@@ -236,9 +240,10 @@ theorem rightHamiltonian_rightHamiltonianDomainPointOfObservableDerivative
         (T.rightHamiltonianDomainPointOfObservableDerivative hT F G hDerivative) =
       P.physicalState G := by
   exact
-    T.toCarrierSemigroup
-      |>.rightHamiltonian_rightHamiltonianDomainPointOfCarrierDerivative
-        hT.toCarrierStrongContinuity (P.carrierOfPositiveTime F) G
+    PositiveTimeContractionSemigroup
+      .rightHamiltonian_rightHamiltonianDomainPointOfCarrierDerivative
+        T.toCarrierSemigroup hT.toCarrierStrongContinuity
+        (P.carrierOfPositiveTime F) G
         (by
           simpa [observableCarrierRightHamiltonianDifferenceQuotient] using
             hDerivative)
