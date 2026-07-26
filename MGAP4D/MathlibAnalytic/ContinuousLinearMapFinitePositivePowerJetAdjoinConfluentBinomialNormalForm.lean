@@ -112,7 +112,7 @@ theorem finitePositivePowerJetAdjoinConfluentBinomialNormalForm_eq_finset_sum_sm
         Finset.sum_mul]
       apply Finset.sum_congr rfl
       intro b hb
-      simp [orderedProduct_append, smul_mul_assoc]
+      simp [orderedProduct_append]
 
 /-- Pointwise form of the finite-jet adjoin identity. -/
 theorem finitePositivePowerJetCombination_apply_pow_succ_eq_adjoinConfluentBinomialNormalForm_apply
@@ -131,7 +131,7 @@ theorem finitePositivePowerJetCombination_apply_pow_succ_eq_adjoinConfluentBinom
           (A (node b) * A newNode))
     (x : E) :
     finitePositivePowerJetCombination A s node order c
-        ((A newNode) ^ (newOrder + 1) x) =
+        (((A newNode) ^ (newOrder + 1)) x) =
       finitePositivePowerJetAdjoinConfluentBinomialNormalForm
         A value s node order c newNode newOrder x := by
   have hOperator :=
