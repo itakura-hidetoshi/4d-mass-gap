@@ -354,8 +354,10 @@ theorem confluentCauchyNodeOrderPolynomial_algebraMap
   have hAlgebra :
       g ^ (orderCap - (j.1 + 1)) * rest =
         (g ^ orderCap * rest) * (g⁻¹) ^ (j.1 + 1) := by
-    rw [hpow]
-    ring
+    calc
+      g ^ (orderCap - (j.1 + 1)) * rest =
+          (g ^ orderCap * (g⁻¹) ^ (j.1 + 1)) * rest := by rw [hpow]
+      _ = (g ^ orderCap * rest) * (g⁻¹) ^ (j.1 + 1) := by ring
   simpa [g, rest, hShifted] using hAlgebra
 
 /-- Mapping a confluent numerator polynomial to rational functions factors out
