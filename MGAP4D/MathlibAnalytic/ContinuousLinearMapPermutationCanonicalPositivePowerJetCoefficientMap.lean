@@ -104,8 +104,9 @@ theorem pairwise_of_perm_of_symmetric
               constructor
               · intro x hx
                 simp only [List.mem_cons] at hx
-                rcases hx with rfl | hx
-                · exact hSymm b a (hB a (by simp))
+                rcases hx with hxb | hx
+                · rw [hxb]
+                  exact hSymm b a (hB a (by simp))
                 · exact hA x hx
               · constructor
                 · intro x hx
@@ -128,8 +129,9 @@ noncomputable def positiveMultiplicityProfileSortedEntries
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
-    List (PositiveMultiplicityProfileEntry α) :=
-  List.mergeSort (first :: tail)
+    List (PositiveMultiplicityProfileEntry α) := by
+  classical
+  exact List.mergeSort (first :: tail)
     (fun left right =>
       decide (PositiveMultiplicityProfileEntry.sortLE value left right))
 
