@@ -51,8 +51,8 @@ theorem shiftedLinearPolynomial_isCoprime
     _ = Polynomial.C delta⁻¹ * Polynomial.C delta := by
       rw [← Polynomial.C_sub]
       rfl
-    _ = Polynomial.C (delta⁻¹ * delta) := by
-      rw [Polynomial.C_mul]
+    _ = Polynomial.C (delta⁻¹ * delta) :=
+      (Polynomial.C_mul _ _).symm
     _ = 1 := by simp [hdelta]
 
 /-- The rational function carrying one positive shifted-resolvent power. -/
@@ -101,18 +101,22 @@ theorem shiftedInversePowerRatFunc_coefficients_unique
           algebraMap (Polynomial ℝ) (RatFunc ℝ) (denominator i) = 1 := by
     intro i _
     apply inv_mul_cancel₀
-    apply map_ne_zero_of_injective
-      (FaithfulSMul.algebraMap_injective
-        (Polynomial ℝ) (RatFunc ℝ))
+    intro hzero
     exact (hMonic i (Finset.mem_univ i)).ne_zero
+      ((FaithfulSMul.algebraMap_injective
+        (Polynomial ℝ) (RatFunc ℝ)) (by simpa using hzero))
   have hLeftDegree : ∀ i ∈ (Finset.univ : Finset ι),
       ∀ j, (leftRemainder i j).degree < (denominator i).degree := by
     intro i _ j
-    simp [leftRemainder, denominator, shiftedLinearPolynomial]
+    dsimp [leftRemainder]
+    exact lt_of_le_of_lt Polynomial.degree_C_le (by
+      simp [denominator, shiftedLinearPolynomial])
   have hRightDegree : ∀ i ∈ (Finset.univ : Finset ι),
       ∀ j, (rightRemainder i j).degree < (denominator i).degree := by
     intro i _ j
-    simp [rightRemainder, denominator, shiftedLinearPolynomial]
+    dsimp [rightRemainder]
+    exact lt_of_le_of_lt Polynomial.degree_C_le (by
+      simp [denominator, shiftedLinearPolynomial])
   have hPartialFractionEquality :
       algebraMap (Polynomial ℝ) (RatFunc ℝ) 0 +
           ∑ i ∈ (Finset.univ : Finset ι), ∑ j,
@@ -189,6 +193,7 @@ theorem FiniteShiftedInversePowerLinearRealization.linearIndependent
       family value nodes orderCap) :
     LinearIndependent ℝ
       (fun p : nodes × Fin orderCap => family p.1.1 p.2.1) := by
+  classical
   have hValueInjective : Function.Injective
       (fun a : nodes => value a.1) := by
     intro left right hvalue
