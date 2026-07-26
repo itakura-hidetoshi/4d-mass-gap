@@ -49,7 +49,7 @@ theorem VacuumSemigroupGapSlope.resolventPositiveMultiplicityProfilePermutationC
   exact
     ContinuousLinearMap.positiveMultiplicityProfilePermutationCanonicalCoefficientMap_eq_of_perm
       (fun sigma : G.BelowHalfMassShift => sigma.1)
-      first₁ first₂ tail₁ tail₂ hPerm
+      first₁ first₂ tail₁ tail₂ Subtype.val_injective hPerm
 
 /-- Finite-time evaluation of the permutation-canonical coefficient Finsupp. -/
 noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectResolventPositiveMultiplicityProfilePermutationCanonicalCoefficientNormalForm
