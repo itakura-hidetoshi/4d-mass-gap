@@ -10,22 +10,24 @@ noncomputable section
 open Filter Set Topology
 open scoped InnerProductSpace LinearPMap
 
+universe u v w
+
 /-- Finite exact eigenpairs embedded scale-by-scale into the domain of one target
 partially defined operator. A common finite spectral index tracks the selected
 finite eigenpairs across scales. The target residual is derived from the finite
 eigenvalue equation and convergence to zero of the operator-embedding defect. -/
 structure EmbeddedFiniteDistinctEigenpairStrongLimitData
-    {E : Type*}
+    {E : Type u}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     (A : E →ₗ.[ℝ] E)
     (witnessCount : ℕ) where
-  FiniteState : ℕ → Type*
+  FiniteState : ℕ → Type v
   [finiteNormedAddCommGroup : ∀ n, NormedAddCommGroup (FiniteState n)]
   [finiteInnerProductSpace : ∀ n, InnerProductSpace ℝ (FiniteState n)]
   finiteOperator : (n : ℕ) → FiniteState n →ₗ[ℝ] FiniteState n
   finiteEigenpair :
-    (n : ℕ) → FiniteDistinctEigenpairData (finiteOperator n) witnessCount
-  SpectralIndex : Type*
+    (n : ℕ) → FiniteDistinctEigenpairData.{v, w} (finiteOperator n) witnessCount
+  SpectralIndex : Type w
   [spectralFintype : Fintype SpectralIndex]
   finiteIndexEquiv : ∀ n, SpectralIndex ≃ (finiteEigenpair n).SpectralIndex
   embed : (n : ℕ) → FiniteState n →L[ℝ] E
@@ -65,39 +67,44 @@ attribute [instance]
 
 namespace EmbeddedFiniteDistinctEigenpairStrongLimitData
 
-variable {E : Type*}
+variable {E : Type u}
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 variable {A : E →ₗ.[ℝ] E}
 variable {witnessCount : ℕ}
 
 /-- The finite spectral value tracked by the common spectral index. -/
 def approximateValue
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount)
     (n : ℕ) (k : D.SpectralIndex) : ℝ :=
   (D.finiteEigenpair n).spectralValue (D.finiteIndexEquiv n k)
 
 /-- The finite exact eigenvector tracked by the common spectral index. -/
 def finiteVector
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount)
     (n : ℕ) (k : D.SpectralIndex) : D.FiniteState n :=
   (D.finiteEigenpair n).spectralVector (D.finiteIndexEquiv n k)
 
 @[simp] theorem finiteOperator_apply_finiteVector
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount)
     (n : ℕ) (k : D.SpectralIndex) :
     D.finiteOperator n (D.finiteVector n k) =
       D.approximateValue n k • D.finiteVector n k := by
   exact (D.finiteEigenpair n).apply_spectralVector (D.finiteIndexEquiv n k)
 
 @[simp] theorem coe_approximateVector
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount)
     (n : ℕ) (k : D.SpectralIndex) :
     (D.approximateVector n k : E) = D.embed n (D.finiteVector n k) := by
   exact D.approximateVector_coe n k
 
 /-- Tracking by equivalences preserves the requested finite witness count. -/
 theorem spectralCard
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount) :
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount) :
     Fintype.card D.SpectralIndex = witnessCount := by
   calc
     Fintype.card D.SpectralIndex =
@@ -108,7 +115,8 @@ theorem spectralCard
 /-- Finite exact eigen-equations turn the operator-embedding defect into the
 target approximate-eigenpair residual. -/
 theorem residual_tendsto_zero
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount)
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount)
     (k : D.SpectralIndex) :
     Tendsto
       (fun n =>
@@ -120,7 +128,8 @@ theorem residual_tendsto_zero
     D.operatorCompatibility_tendsto_zero k
 
 noncomputable def toClosedLinearPMapFiniteApproximateEigenpairStrongLimitData
-    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData A witnessCount) :
+    (D : EmbeddedFiniteDistinctEigenpairStrongLimitData.{u, v, w}
+      A witnessCount) :
     ClosedLinearPMapFiniteApproximateEigenpairStrongLimitData A witnessCount :=
   { SpectralIndex := D.SpectralIndex
     spectralFintype := D.spectralFintype
