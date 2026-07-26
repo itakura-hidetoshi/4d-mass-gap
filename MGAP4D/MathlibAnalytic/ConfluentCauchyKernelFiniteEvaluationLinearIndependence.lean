@@ -22,12 +22,12 @@ theorem pow_mul_inv_pow_eq_pow_sub
     {K : Type*} [CommGroupWithZero K]
     {x : K} (hx : x ≠ 0) {n m : ℕ} (hnm : n ≤ m) :
     x ^ m * (x⁻¹) ^ n = x ^ (m - n) := by
-  rw [← Nat.sub_add_cancel hnm, pow_add]
+  have hdecomp : m - n + n = m := Nat.sub_add_cancel hnm
   calc
-    x ^ (m - n) * x ^ n * (x⁻¹) ^ n =
-        x ^ (m - n) * (x ^ n * (x⁻¹) ^ n) := by ac_rfl
-    _ = x ^ (m - n) * ((x * x⁻¹) ^ n) := by
-      rw [mul_pow]
+    x ^ m * (x⁻¹) ^ n = x ^ (m - n + n) * (x⁻¹) ^ n := by rw [hdecomp]
+    _ = (x ^ (m - n) * x ^ n) * (x⁻¹) ^ n := by rw [pow_add]
+    _ = x ^ (m - n) * (x ^ n * (x⁻¹) ^ n) := by ac_rfl
+    _ = x ^ (m - n) * ((x * x⁻¹) ^ n) := by rw [mul_pow]
     _ = x ^ (m - n) := by simp [hx]
 
 /-- The common polynomial denominator for a finite confluent Cauchy family. -/
@@ -142,10 +142,8 @@ theorem confluentCauchyNodeOrderPolynomial_natDegree_lt
       exact (Polynomial.monic_X_sub_C (value l)).pow orderCap
   have hCardPos : 0 < Fintype.card ι :=
     Fintype.card_pos_iff.mpr ⟨i⟩
-  have hFirstLt : orderCap - (j.1 + 1) < orderCap := by
-    omega
-  have hCardDecomp : Fintype.card ι = (Fintype.card ι - 1) + 1 := by
-    omega
+  have hFirstLt : orderCap - (j.1 + 1) < orderCap := by omega
+  have hCardDecomp : Fintype.card ι = (Fintype.card ι - 1) + 1 := by omega
   calc
     (confluentCauchyNodeOrderPolynomial value orderCap i j).natDegree ≤
         ((Polynomial.X - Polynomial.C (value i)) ^
@@ -157,9 +155,8 @@ theorem confluentCauchyNodeOrderPolynomial_natDegree_lt
           (Fintype.card ι - 1) * orderCap := by rw [hFirst, hRest]
     _ < orderCap + (Fintype.card ι - 1) * orderCap := by
       exact Nat.add_lt_add_right hFirstLt _
-    _ = Fintype.card ι * orderCap := by
-      rw [hCardDecomp]
-      ring
+    _ = ((Fintype.card ι - 1) + 1) * orderCap := by ring
+    _ = Fintype.card ι * orderCap := by rw [← hCardDecomp]
 
 /-- The polynomial numerator associated with a finite linear combination of
 confluent Cauchy kernels. -/
@@ -221,19 +218,18 @@ theorem confluentCauchyNumeratorPolynomial_degree_lt
       _ = Fintype.card ι * orderCap - 1 := Nat.zero_add _
   by_cases hzero :
       confluentCauchyNumeratorPolynomial value orderCap coefficient = 0
-  · simp [hzero]
+  · rw [hzero, Polynomial.degree_zero]
+    simpa using (WithBot.bot_lt_coe (Fintype.card ι * orderCap))
   · rw [Polynomial.degree_eq_natDegree hzero]
     have hPred :
-        Fintype.card ι * orderCap - 1 < Fintype.card ι * orderCap := by
-      omega
+        Fintype.card ι * orderCap - 1 < Fintype.card ι * orderCap := by omega
     exact_mod_cast lt_of_le_of_lt hNatDegree hPred
 
 /-- Equality of two confluent Cauchy combinations on sufficiently many distinct
 non-pole samples implies equality of their cleared numerator polynomials. -/
 theorem confluentCauchyNumeratorPolynomial_eq_of_eval_eq
     [Fintype ι] [DecidableEq ι]
-    [Fintype κ]
-    [Nonempty ι]
+    [Fintype κ] [Nonempty ι]
     (value : ι → ℝ)
     (orderCap : ℕ)
     (hOrderCap : 0 < orderCap)
@@ -251,14 +247,11 @@ theorem confluentCauchyNumeratorPolynomial_eq_of_eval_eq
       confluentCauchyNumeratorPolynomial value orderCap right := by
   classical
   apply Polynomial.eq_of_degrees_lt_of_eval_index_eq
-    (s := (Finset.univ : Finset κ))
-    hSampleInjective.injOn
+    (s := (Finset.univ : Finset κ)) hSampleInjective.injOn
   · simpa [hCard] using
-      confluentCauchyNumeratorPolynomial_degree_lt
-        value orderCap hOrderCap left
+      confluentCauchyNumeratorPolynomial_degree_lt value orderCap hOrderCap left
   · simpa [hCard] using
-      confluentCauchyNumeratorPolynomial_degree_lt
-        value orderCap hOrderCap right
+      confluentCauchyNumeratorPolynomial_degree_lt value orderCap hOrderCap right
   · intro k hk
     have hPoint := congrFun hEquality k
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] at hPoint
@@ -287,8 +280,7 @@ theorem confluentCauchyNumeratorPolynomial_eq_of_eval_eq
               (left p * ((sample k - value p.1)⁻¹ ^ (p.2.1 + 1))) := by ring
       _ = confluentCauchyCommonDenominator value orderCap (sample k) *
           ∑ p : ι × Fin orderCap,
-            right p * ((sample k - value p.1)⁻¹ ^ (p.2.1 + 1)) := by
-        rw [hPoint]
+            right p * ((sample k - value p.1)⁻¹ ^ (p.2.1 + 1)) := by rw [hPoint]
       _ = ∑ p : ι × Fin orderCap,
           right p *
             (confluentCauchyNodeOrderPolynomial
@@ -340,13 +332,18 @@ theorem confluentCauchyNodeOrderPolynomial_algebraMap
       algebraMap (Polynomial ℝ) (RatFunc ℝ)
         ((Polynomial.X - Polynomial.C (value l)) ^ orderCap)
   have hg : g ≠ 0 := by
-    exact (FaithfulSMul.algebraMap_injective
-      (Polynomial ℝ) (RatFunc ℝ))
-        (Polynomial.X_sub_C_ne_zero (value i))
+    intro hzero
+    apply Polynomial.X_sub_C_ne_zero (value i)
+    apply FaithfulSMul.algebraMap_injective (Polynomial ℝ) (RatFunc ℝ)
+    simpa [g] using hzero
   have horder : j.1 + 1 ≤ orderCap := Nat.succ_le_iff.mpr j.2
   have hpow : g ^ orderCap * (g⁻¹) ^ (j.1 + 1) =
       g ^ (orderCap - (j.1 + 1)) :=
     pow_mul_inv_pow_eq_pow_sub hg horder
+  have hShifted :
+      shiftedInversePowerRatFunc (-value i) j.1 =
+        (g⁻¹) ^ (j.1 + 1) := by
+    simp [shiftedInversePowerRatFunc, shiftedLinearPolynomial, g, sub_eq_add_neg]
   rw [confluentCauchyNodeOrderPolynomial,
     confluentCauchyCommonDenominatorPolynomial]
   rw [← Finset.mul_prod_erase
@@ -354,10 +351,12 @@ theorem confluentCauchyNodeOrderPolynomial_algebraMap
     (f := fun l => (Polynomial.X - Polynomial.C (value l)) ^ orderCap)
     (Finset.mem_univ i)]
   simp only [map_mul, map_pow, map_prod]
-  change g ^ (orderCap - (j.1 + 1)) * rest =
-    (g ^ orderCap * rest) * (g⁻¹) ^ (j.1 + 1)
-  rw [hpow]
-  ring
+  have hAlgebra :
+      g ^ (orderCap - (j.1 + 1)) * rest =
+        (g ^ orderCap * rest) * (g⁻¹) ^ (j.1 + 1) := by
+    rw [hpow]
+    ring
+  simpa [g, rest, hShifted] using hAlgebra
 
 /-- Mapping a confluent numerator polynomial to rational functions factors out
 the common denominator from the associated inverse-power combination. -/
@@ -420,11 +419,11 @@ theorem confluentCauchyKernel_linearIndependent
         confluentCauchyNumeratorPolynomial_algebraMap] at hMapped
       have hDenominator :
           algebraMap (Polynomial ℝ) (RatFunc ℝ)
-            (confluentCauchyCommonDenominatorPolynomial value orderCap) ≠ 0 :=
-        (FaithfulSMul.algebraMap_injective
-          (Polynomial ℝ) (RatFunc ℝ))
-            (confluentCauchyCommonDenominatorPolynomial_ne_zero
-              value orderCap)
+            (confluentCauchyCommonDenominatorPolynomial value orderCap) ≠ 0 := by
+        intro hzero
+        apply confluentCauchyCommonDenominatorPolynomial_ne_zero value orderCap
+        apply FaithfulSMul.algebraMap_injective (Polynomial ℝ) (RatFunc ℝ)
+        simpa using hzero
       have hRatFunc :
           (∑ q : ι × Fin orderCap,
               left q • shiftedInversePowerRatFunc (-value q.1) q.2.1) =
@@ -434,8 +433,8 @@ theorem confluentCauchyKernel_linearIndependent
       have hNegInjective : Function.Injective (fun i => -value i) := by
         intro i j hneg
         apply hValueInjective
-        have := congrArg Neg.neg hneg
-        simpa using this
+        have h := congrArg Neg.neg hneg
+        simpa using h
       have hCoefficients := shiftedInversePowerRatFunc_coefficients_unique
         (fun i => -value i) orderCap hNegInjective
         (fun i j => left (i, j))
