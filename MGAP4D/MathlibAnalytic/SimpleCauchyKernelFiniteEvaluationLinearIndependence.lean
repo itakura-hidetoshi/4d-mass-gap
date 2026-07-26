@@ -21,7 +21,7 @@ noncomputable def simpleCauchyNodePolynomial
     [Fintype ι] [DecidableEq ι]
     (value : ι → ℝ)
     (i : ι) : Polynomial ℝ :=
-  ∏ j in (Finset.univ : Finset ι).erase i,
+  ∏ j ∈ (Finset.univ : Finset ι).erase i,
     (Polynomial.X - Polynomial.C (value j))
 
 @[simp] theorem simpleCauchyNodePolynomial_eval
@@ -30,7 +30,7 @@ noncomputable def simpleCauchyNodePolynomial
     (i : ι)
     (x : ℝ) :
     (simpleCauchyNodePolynomial value i).eval x =
-      ∏ j in (Finset.univ : Finset ι).erase i, (x - value j) := by
+      ∏ j ∈ (Finset.univ : Finset ι).erase i, (x - value j) := by
   simp [simpleCauchyNodePolynomial]
 
 /-- Every deleted-factor node polynomial has degree exactly one less than the
@@ -142,8 +142,11 @@ theorem simpleCauchyNumeratorPolynomial_degree_lt_card
   by_cases hzero : simpleCauchyNumeratorPolynomial value coefficient = 0
   · simp [hzero]
   · rw [Polynomial.degree_eq_natDegree hzero]
-    exact_mod_cast lt_of_le_of_lt hNatDegree
-      (Nat.pred_lt (Fintype.card_pos_iff.mpr inferInstance))
+    have hCardPos : 0 < Fintype.card ι :=
+      Fintype.card_pos_iff.mpr inferInstance
+    have hPred : Fintype.card ι - 1 < Fintype.card ι := by
+      omega
+    exact_mod_cast lt_of_le_of_lt hNatDegree hPred
 
 /-- Equality of two simple Cauchy kernel combinations on sufficiently many
 injectively indexed non-pole samples implies equality of their numerator
