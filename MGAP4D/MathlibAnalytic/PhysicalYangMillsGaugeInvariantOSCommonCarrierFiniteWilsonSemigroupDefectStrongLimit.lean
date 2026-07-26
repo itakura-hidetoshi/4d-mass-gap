@@ -18,12 +18,8 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
-/-- Selected finite Wilson eigenvectors whose finite semigroup has the expected
-exponential eigenaction and whose common-carrier semigroup intertwining defect is
-small compared with the shrinking time width.
-
-These hypotheses imply the full semigroup difference-quotient compatibility used
-by the time-average strong-limit transport. -/
+/-- Selected finite Wilson eigenvectors with exact finite-semigroup exponential
+eigenaction and an `o(h)` common-carrier semigroup intertwining defect. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
     {halfExtent : ℕ → ℕ}
     {N : ℕ}
@@ -84,29 +80,28 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponent
         atTop (nhds (spectralVector k))
   finiteSemigroup_eigenaction :
     ∀ n k,
+      let phi :=
+        (finiteWitness n).spectralVector (finiteIndexEquiv n k)
+      let energy :=
+        (finiteWitness n).spectralValue (finiteIndexEquiv n k)
       C.finiteOperator n (width n)
-          (realization.finiteRealization n
-            ((finiteWitness n).spectralVector (finiteIndexEquiv n k))) =
-        Real.exp
-            (-((finiteWitness n).spectralValue (finiteIndexEquiv n k)) *
-              (((width n : NNReal) : ℝ))) •
-          realization.finiteRealization n
-            ((finiteWitness n).spectralVector (finiteIndexEquiv n k))
+          (realization.finiteRealization n phi) =
+        Real.exp (-energy * (((width n : NNReal) : ℝ))) •
+          realization.finiteRealization n phi
   scaledCommonCarrierSemigroupDefect_tendsto_zero :
     ∀ k,
       Tendsto
         (fun n =>
+          let phi :=
+            (finiteWitness n).spectralVector (finiteIndexEquiv n k)
+          let ambient :=
+            ((realization.excitationEmbed n phi : P.VacuumOrthogonalHilbert) :
+              P.PhysicalHilbert)
           (((width n : NNReal) : ℝ))⁻¹ •
             (A.embed n
                 (C.finiteOperator n (width n)
-                  (realization.finiteRealization n
-                    ((finiteWitness n).spectralVector
-                      (finiteIndexEquiv n k)))) -
-              T.toPhysicalSemigroup.operator (width n)
-                ((((realization.excitationEmbed n
-                      ((finiteWitness n).spectralVector
-                        (finiteIndexEquiv n k)) :
-                    P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))))
+                  (realization.finiteRealization n phi)) -
+              T.toPhysicalSemigroup.operator (width n) ambient))
         atTop (nhds 0)
 
 attribute [instance]
@@ -141,39 +136,36 @@ variable
     {nodes : Finset A.toVacuumSemigroupGapSlope.BelowHalfMassShift}
     {orderCap : ℕ}
 
+abbrev DefectData :=
+  PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
+
 /-- The selected finite Wilson energy. -/
 def approximateValue
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : ℝ :=
   (R.finiteWitness n).spectralValue (R.finiteIndexEquiv n k)
 
 /-- The selected finite Wilson eigenvector. -/
 def finiteVector
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : F.StateSpace :=
   (R.finiteWitness n).spectralVector (R.finiteIndexEquiv n k)
 
 /-- The selected vector embedded in the continuum excitation carrier. -/
 noncomputable def embeddedVector
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : P.VacuumOrthogonalHilbert :=
   R.realization.excitationEmbed n (R.finiteVector n k)
 
 /-- The selected embedded vector in the ambient continuum Hilbert space. -/
 noncomputable def ambientEmbeddedVector
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) : P.PhysicalHilbert :=
   ((R.embeddedVector n k : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert)
 
-/-- Selected finite Wilson energies are strictly positive by the finite exact-gap
-lower bound. -/
+/-- Selected finite Wilson energies are strictly positive. -/
 theorem approximateValue_pos
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) :
     0 < R.approximateValue n k :=
   lt_of_lt_of_le exactGapValueReal_pos
@@ -181,17 +173,15 @@ theorem approximateValue_pos
 
 /-- The named embedded-vector sequence has the supplied strong limit. -/
 theorem embeddedVector_tendsto_named
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     Tendsto (fun n => R.embeddedVector n k) atTop
       (nhds (R.spectralVector k)) := by
   simpa [embeddedVector, finiteVector] using R.embeddedVector_tendsto k
 
-/-- Ambient strong convergence of the common-carrier selected vectors. -/
+/-- Ambient strong convergence of the selected vectors. -/
 theorem ambientEmbeddedVector_tendsto
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     Tendsto (fun n => R.ambientEmbeddedVector n k) atTop
       (nhds (((R.spectralVector k : P.VacuumOrthogonalHilbert) :
@@ -199,11 +189,9 @@ theorem ambientEmbeddedVector_tendsto
   exact (continuous_subtype_val.tendsto (R.spectralVector k)).comp
     (R.embeddedVector_tendsto_named k)
 
-/-- The finite semigroup exponential eigenaction survives common-carrier
-embedding. -/
+/-- The finite exponential eigenaction survives common-carrier embedding. -/
 theorem embeddedFiniteSemigroup_eigenaction
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) :
     A.embed n
         (C.finiteOperator n (R.width n)
@@ -215,11 +203,10 @@ theorem embeddedFiniteSemigroup_eigenaction
   rw [R.finiteSemigroup_eigenaction n k, map_smul]
   rfl
 
-/-- The scaled common-carrier defect is exactly the exponential-model defect
-required by the generic difference-quotient theorem. -/
+/-- The supplied scaled common-carrier defect is the generic exponential-model
+defect. -/
 theorem exponentialModelDefect_tendsto_zero
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     Tendsto
       (fun n =>
@@ -236,11 +223,9 @@ theorem exponentialModelDefect_tendsto_zero
   funext n
   rw [R.embeddedFiniteSemigroup_eigenaction n k]
 
-/-- The finite Hamiltonian eigen-equation transported to the ambient common
-carrier. -/
+/-- The finite Hamiltonian eigen-equation transported to the ambient carrier. -/
 theorem ambientEmbed_hamiltonian_finiteVector
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (n : ℕ) (k : R.SpectralIndex) :
     (((R.realization.excitationEmbed n
           (F.hamiltonian n (R.finiteVector n k)) :
@@ -258,10 +243,9 @@ theorem ambientEmbed_hamiltonian_finiteVector
   rw [(R.finiteWitness n).hamiltonian_apply_spectralVector, map_smul, map_smul]
 
 /-- Exponential finite-semigroup eigenaction plus an `o(h)` common-carrier defect
-produce the full Hamiltonian difference-quotient compatibility. -/
+produce full Hamiltonian difference-quotient compatibility. -/
 theorem semigroupDifferenceQuotientCompatibility_tendsto_zero
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (k : R.SpectralIndex) :
     Tendsto
       (fun n =>
@@ -294,11 +278,10 @@ theorem semigroupDifferenceQuotientCompatibility_tendsto_zero
   rw [hfunction]
   exact hgeneric
 
-/-- Forget the exponential semigroup presentation only after deriving the full
-shrinking-time difference-quotient compatibility. -/
+/-- Forget the exponential semigroup presentation after deriving the previous
+shrinking-time package. -/
 noncomputable def toTimeAverageApproximateEigenpairStrongLimitData
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap) :
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap) :
     PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonTimeAverageApproximateEigenpairStrongLimitData
       A hInnerSymmetric hSelf F nodes orderCap :=
   { realization := R.realization
@@ -322,18 +305,16 @@ noncomputable def toTimeAverageApproximateEigenpairStrongLimitData
 /-- Quantitative semigroup defects construct the continuum approximate-eigenpair
 strong-limit package. -/
 noncomputable def toContinuumResolventApproximateEigenpairStrongLimitData
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap) :
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap) :
     A.toVacuumSemigroupGapSlope.ContinuumResolventApproximateEigenpairStrongLimitData
       T hSelf nodes orderCap :=
   R.toTimeAverageApproximateEigenpairStrongLimitData
     |>.toContinuumResolventApproximateEigenpairStrongLimitData
 
-/-- Quantitative common-carrier semigroup defects supply continuum confluent
-resolvent linear independence. -/
+/-- Quantitative semigroup defects supply continuum confluent-resolvent linear
+independence. -/
 theorem continuumResolventConfluentCauchy_linearIndependent
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (hP : P.IsNormalized) :
     LinearIndependent ℝ
       (fun p : nodes × Fin orderCap =>
@@ -345,11 +326,9 @@ theorem continuumResolventConfluentCauchy_linearIndependent
   R.toTimeAverageApproximateEigenpairStrongLimitData
     |>.continuumResolventConfluentCauchy_linearIndependent hP
 
-/-- The same semigroup-defect transport yields positive-power jet coefficient-map
-faithfulness. -/
+/-- The same transport yields positive-power jet coefficient-map faithfulness. -/
 theorem continuumResolventPositivePowerJetCoefficientMapsIndependent
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExponentialSemigroupDefectStrongLimitData
-      A hInnerSymmetric hSelf F nodes orderCap)
+    (R : DefectData A hInnerSymmetric hSelf F nodes orderCap)
     (hP : P.IsNormalized)
     (left right : ContinuousLinearMap.PositivePowerJetCoefficientMap
       A.toVacuumSemigroupGapSlope.BelowHalfMassShift)
