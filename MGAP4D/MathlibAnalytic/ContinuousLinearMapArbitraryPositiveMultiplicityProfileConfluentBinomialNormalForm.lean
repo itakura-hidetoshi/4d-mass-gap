@@ -152,33 +152,37 @@ theorem FinitePositivePowerJetData.eval_adjoin_eq_mul_pow_succ
 /-- Fold a list of right-adjoined positive-multiplicity nodes through packaged
 finite jet data. -/
 noncomputable def positiveMultiplicityProfileDataFrom
-    (value : α → ℝ) :
-    FinitePositivePowerJetData α →
-      List (PositiveMultiplicityProfileEntry α) →
-        FinitePositivePowerJetData α
-  | d, [] => d
-  | d, e :: es =>
+    (value : α → ℝ)
+    (d : FinitePositivePowerJetData α)
+    (entries : List (PositiveMultiplicityProfileEntry α)) :
+    FinitePositivePowerJetData α :=
+  match entries with
+  | [] => d
+  | e :: es =>
       positiveMultiplicityProfileDataFrom value
         (d.adjoin value e.node e.order) es
 
 /-- The corresponding left-associated operator product fold. -/
 noncomputable def positiveMultiplicityProfileProductFrom
-    (A : α → E →L[ℝ] E) :
-    (E →L[ℝ] E) → List (PositiveMultiplicityProfileEntry α) →
-      E →L[ℝ] E
-  | T, [] => T
-  | T, e :: es =>
+    (A : α → E →L[ℝ] E)
+    (T : E →L[ℝ] E)
+    (entries : List (PositiveMultiplicityProfileEntry α)) :
+    E →L[ℝ] E :=
+  match entries with
+  | [] => T
+  | e :: es =>
       positiveMultiplicityProfileProductFrom A
         (T * (A e.node) ^ (e.order + 1)) es
 
 /-- Recursive exact compatibility condition for the successive flattened
 adjoin steps of a positive multiplicity profile. -/
 def positiveMultiplicityProfileCompatibleFrom
-    (value : α → ℝ) :
-    FinitePositivePowerJetData α →
-      List (PositiveMultiplicityProfileEntry α) → Prop
-  | _, [] => True
-  | d, e :: es =>
+    (value : α → ℝ)
+    (d : FinitePositivePowerJetData α)
+    (entries : List (PositiveMultiplicityProfileEntry α)) : Prop :=
+  match entries with
+  | [] => True
+  | e :: es =>
       d.IsCompatibleWith value e.node ∧
         positiveMultiplicityProfileCompatibleFrom value
           (d.adjoin value e.node e.order) es
