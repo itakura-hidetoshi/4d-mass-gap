@@ -64,11 +64,22 @@ theorem observableCarrierRightHamiltonianDifferenceQuotient_tendsto_of_exponenti
         (nhds (P.physicalState (P.carrierOfPositiveTime F))) :=
     tendsto_const_nhds
   have hsmul := hscalar.smul hstate
-  simpa only [Function.comp_apply,
-    T.physicalState_observableCarrierRightHamiltonianDifferenceQuotient_eq_exponentialSlope_smul
-      mass F hEigenaction,
-    ← P.physicalStateLinearMap_apply, map_smul,
-    P.physicalStateLinearMap_apply] using hsmul
+  have hlimit :
+      P.physicalState (mass • P.carrierOfPositiveTime F) =
+        mass • P.physicalState (P.carrierOfPositiveTime F) := by
+    rw [← P.physicalStateLinearMap_apply, map_smul,
+      P.physicalStateLinearMap_apply]
+  rw [hlimit]
+  apply hsmul.congr'
+  exact Filter.Eventually.of_forall fun t => by
+    change
+      P.physicalState
+          (T.observableCarrierRightHamiltonianDifferenceQuotient F t) =
+        ((t : ℝ)⁻¹ * (1 - Real.exp (-mass * (t : ℝ)))) •
+          P.physicalState (P.carrierOfPositiveTime F)
+    exact
+      T.physicalState_observableCarrierRightHamiltonianDifferenceQuotient_eq_exponentialSlope_smul
+        mass F hEigenaction t
 
 /-- Bundle an exponentially translating observable in the canonical continuum
 right-Hamiltonian domain.  No independent carrier derivative is supplied. -/
