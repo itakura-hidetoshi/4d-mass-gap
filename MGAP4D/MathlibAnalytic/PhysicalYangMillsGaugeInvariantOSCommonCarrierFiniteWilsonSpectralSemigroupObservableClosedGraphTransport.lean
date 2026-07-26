@@ -321,7 +321,7 @@ theorem graphObservableHamiltonianDerivative_tendsto
               (P.carrierOfPositiveTime (R.graphObservable n k m) -
                 P.carrierOfPositiveTime
                   (O.translate t (R.graphObservable n k m)))) :=
-            (P.physicalStateLinearMap_apply _ _).symm
+            (P.physicalStateLinearMap_apply _).symm
         _ =
           (t : ℝ)⁻¹ •
             (P.physicalState
