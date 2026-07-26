@@ -74,11 +74,13 @@ theorem pow_succ_mul_pow_succ_mul_pow_succ_eq_threeNodeConfluentResolventBinomia
     rw [smul_mul_assoc]
     rw [pow_succ_mul_pow_succ_eq_twoSidedConfluentResolventBinomialNormalForm
       Rlambda Rnu lambda nu hneLambdaNu hLambdaNu k p]
+    rfl
   · apply Finset.sum_congr rfl
     intro k hk
     rw [smul_mul_assoc]
     rw [pow_succ_mul_pow_succ_eq_twoSidedConfluentResolventBinomialNormalForm
       Rmu Rnu mu nu hneMuNu hMuNu k p]
+    rfl
 
 /-- Pointwise three-node closed confluent partial-fraction expansion. -/
 theorem pow_succ_apply_pow_succ_apply_pow_succ_eq_threeNodeConfluentResolventBinomialNormalForm_apply
