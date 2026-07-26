@@ -77,35 +77,33 @@ noncomputable def FinitePositivePowerJetData.adjoin
     (newOrder : ℕ) :
     FinitePositivePowerJetData α := by
   classical
-  let OldLabel := {b : d.label // b ∈ d.support}
-  let LeftIndex :=
-    Σ b : OldLabel, {k : ℕ // k ∈ Finset.range (d.order b.1 + 1)}
-  let RightIndex :=
-    Σ b : OldLabel, {k : ℕ // k ∈ Finset.range (newOrder + 1)}
-  let NewLabel := Sum LeftIndex RightIndex
-  let node : NewLabel → α := fun i =>
-    match i with
-    | Sum.inl x => d.node x.1.1
+  let NewLabel := Σ _b : d.label, Sum ℕ ℕ
+  let fiber : d.label → Finset (Sum ℕ ℕ) := fun b =>
+    (Finset.range (d.order b + 1)).disjSum
+      (Finset.range (newOrder + 1))
+  let node : NewLabel → α := fun x =>
+    match x.2 with
+    | Sum.inl _ => d.node x.1
     | Sum.inr _ => newNode
-  let order : NewLabel → ℕ := fun i =>
-    match i with
-    | Sum.inl x => x.2.1
-    | Sum.inr x => x.2.1
-  let coefficient : NewLabel → ℝ := fun i =>
-    match i with
-    | Sum.inl x =>
-        d.coefficient x.1.1 *
+  let order : NewLabel → ℕ := fun x =>
+    match x.2 with
+    | Sum.inl k => k
+    | Sum.inr k => k
+  let coefficient : NewLabel → ℝ := fun x =>
+    match x.2 with
+    | Sum.inl k =>
+        d.coefficient x.1 *
           twoSidedConfluentLeftBinomialCoefficient
-            (value (d.node x.1.1) - value newNode)⁻¹
-            (d.order x.1.1) newOrder x.2.1
-    | Sum.inr x =>
-        d.coefficient x.1.1 *
+            (value (d.node x.1) - value newNode)⁻¹
+            (d.order x.1) newOrder k
+    | Sum.inr k =>
+        d.coefficient x.1 *
           twoSidedConfluentRightBinomialCoefficient
-            (value (d.node x.1.1) - value newNode)⁻¹
-            (d.order x.1.1) newOrder x.2.1
+            (value (d.node x.1) - value newNode)⁻¹
+            (d.order x.1) newOrder k
   exact
     { label := NewLabel
-      support := Finset.univ
+      support := d.support.sigma fiber
       node := node
       order := order
       coefficient := coefficient }
@@ -131,7 +129,8 @@ theorem FinitePositivePowerJetData.eval_adjoin_eq_normalForm
     twoSidedConfluentResolventBinomialNormalForm,
     twoSidedConfluentLeftBinomialSum,
     twoSidedConfluentRightBinomialSum,
-    Finset.sum_add_distrib, Finset.smul_sum, smul_smul]
+    Finset.sum_sigma, Finset.sum_disjSum, Finset.sum_add_distrib,
+    Finset.smul_sum, smul_smul]
 
 /-- One flattened adjoin step evaluates to right multiplication by the new
 positive resolvent power. -/
