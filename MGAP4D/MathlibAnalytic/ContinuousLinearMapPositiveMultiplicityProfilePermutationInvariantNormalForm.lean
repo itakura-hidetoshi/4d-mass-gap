@@ -60,9 +60,9 @@ theorem PositiveMultiplicityProfileEntry.operatorFactor_commute
     (hIdentity : ∀ x y : α,
       A x - A y = (value x - value y) • (A x * A y)) :
     Commute (left.operatorFactor A) (right.operatorFactor A) := by
-  exact
-    (commute_of_resolvent_identity A value left.node right.node hne hIdentity).
-      pow_pow (left.order + 1) (right.order + 1)
+  exact Commute.pow_pow
+    (commute_of_resolvent_identity A value left.node right.node hne hIdentity)
+    (left.order + 1) (right.order + 1)
 
 /-- Pairwise scalar-distinct profile entries map to pairwise commuting operator
  power factors. -/
