@@ -25,9 +25,11 @@ observable decoder.
 At every scale, a linear equivalence identifies the abstract finite state space
 with the concrete Euclidean Gibbs Hilbert carrier.  Division by `sqrt(mu)` then
 recovers a finite Wilson observable, and one linear map realizes that observable
-inside the actual positive-time algebra.  Exact represented-state realization
-and observable-level time-translation intertwining generate all pointwise graph
-observable fields required by the preceding transport layer. -/
+inside the explicit OS carrier.  The carrier is converted back to its actual
+positive-time observable only when observable translation is applied.  Exact
+represented-state realization and observable-level time-translation
+intertwining generate all pointwise graph-observable fields required by the
+preceding transport layer. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGibbsHilbertObservableClosedGraphTransportData
     {halfExtent : ℕ → ℕ}
     {N : ℕ}
@@ -97,32 +99,32 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGibbsHil
     ∀ n,
       F.StateSpace ≃ₗ[ℝ]
         (W.system (F.scale n)).GibbsHilbertSpace
-  positiveTimeObservableMap :
+  positiveTimeCarrierMap :
     ∀ n,
-      ((W.system (F.scale n)).Configuration → ℝ) →ₗ[ℝ]
-        D.positiveTimeSubalgebra
-  positiveTimeObservableState_eq_embeddedGibbs :
+      ((W.system (F.scale n)).Configuration → ℝ) →ₗ[ℝ] P.Carrier
+  positiveTimeCarrierState_eq_embeddedGibbs :
     ∀ n f,
-      P.physicalState
-          (P.carrierOfPositiveTime (positiveTimeObservableMap n f)) =
+      P.physicalState (positiveTimeCarrierMap n f) =
         realization.ambientEmbed n
           ((gibbsStateEquiv n).symm
             ((W.system (F.scale n)).gibbsHilbertEmbedLinearMap f))
   positiveTimeObservableTranslationIntertwining :
     ∀ n x t,
       O.translate t
-          (positiveTimeObservableMap n
+          (P.positiveTimeElement
+            (positiveTimeCarrierMap n
+              ((W.system (F.scale n)).gibbsHilbertObserveLinearMap
+                (gibbsStateEquiv n x)))) =
+        P.positiveTimeElement
+          (positiveTimeCarrierMap n
             ((W.system (F.scale n)).gibbsHilbertObserveLinearMap
-              (gibbsStateEquiv n x))) =
-        positiveTimeObservableMap n
-          ((W.system (F.scale n)).gibbsHilbertObserveLinearMap
-            (gibbsStateEquiv n
-              (finiteDimensionalSymmetricHamiltonianSpectralSemigroup
-                (F.hamiltonian n)
-                (F.hamiltonianSymmetric n)
-                F.StateDimension
-                F.stateFinrank
-                t x)))
+              (gibbsStateEquiv n
+                (finiteDimensionalSymmetricHamiltonianSpectralSemigroup
+                  (F.hamiltonian n)
+                  (F.hamiltonianSymmetric n)
+                  F.StateDimension
+                  F.stateFinrank
+                  t x))))
 
 attribute [instance]
   PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGibbsHilbertObservableClosedGraphTransportData.spectralFintype
@@ -174,28 +176,57 @@ abbrev GibbsHilbertObservableClosedGraphTransportData
     O hContinuous A hSelf F nodes orderCap
 
 /-- Decode a finite state through the concrete Gibbs Hilbert carrier and realize
-it as one actual positive-time observable. -/
-noncomputable def stateObservableRealization
+it as one explicit OS carrier vector. -/
+noncomputable def stateCarrierRealization
     (R : GibbsHilbertObservableClosedGraphTransportData
       O hContinuous A hSelf F nodes orderCap)
-    (n : ℕ) : F.StateSpace →ₗ[ℝ] D.positiveTimeSubalgebra :=
+    (n : ℕ) : F.StateSpace →ₗ[ℝ] P.Carrier :=
   decodedObservableRealization
     (R.gibbsStateEquiv n)
     ((W.system (F.scale n)).gibbsHilbertObserveLinearMap)
-    (R.positiveTimeObservableMap n)
+    (R.positiveTimeCarrierMap n)
 
-@[simp] theorem stateObservableRealization_apply
+@[simp] theorem stateCarrierRealization_apply
     (R : GibbsHilbertObservableClosedGraphTransportData
       O hContinuous A hSelf F nodes orderCap)
     (n : ℕ) (x : F.StateSpace) :
-    R.stateObservableRealization n x =
-      R.positiveTimeObservableMap n
+    R.stateCarrierRealization n x =
+      R.positiveTimeCarrierMap n
         ((W.system (F.scale n)).gibbsHilbertObserveLinearMap
           (R.gibbsStateEquiv n x)) :=
   rfl
 
-/-- The decoded positive-time observable represents the original finite state
-exactly in the common continuum carrier. -/
+/-- The decoded carrier realization represents the original finite state exactly
+in the common continuum carrier. -/
+theorem stateCarrierRealization_state_eq_ambientEmbed
+    (R : GibbsHilbertObservableClosedGraphTransportData
+      O hContinuous A hSelf F nodes orderCap)
+    (n : ℕ) (x : F.StateSpace) :
+    P.physicalState (R.stateCarrierRealization n x) =
+      R.realization.ambientEmbed n x := by
+  exact state_decodedObservableRealization_eq
+    (e := R.gibbsStateEquiv n)
+    (decode := (W.system (F.scale n)).gibbsHilbertObserveLinearMap)
+    (encode := (W.system (F.scale n)).gibbsHilbertEmbedLinearMap)
+    (realize := R.positiveTimeCarrierMap n)
+    (state := P.physicalState)
+    (embed := fun y => R.realization.ambientEmbed n y)
+    (hEncodeDecode := fun y =>
+      finite_lattice_gibbsHilbert_embed_observe
+        (W.system (F.scale n)) y)
+    (hState := fun f =>
+      R.positiveTimeCarrierState_eq_embeddedGibbs n f)
+    x
+
+/-- Reinterpret the decoded carrier vector as its actual positive-time observable. -/
+noncomputable def stateObservableRealization
+    (R : GibbsHilbertObservableClosedGraphTransportData
+      O hContinuous A hSelf F nodes orderCap)
+    (n : ℕ) (x : F.StateSpace) : D.positiveTimeSubalgebra :=
+  P.positiveTimeElement (R.stateCarrierRealization n x)
+
+/-- Repackaging through the positive-time observable leaves the represented state
+unchanged. -/
 theorem stateObservableRealization_state_eq_ambientEmbed
     (R : GibbsHilbertObservableClosedGraphTransportData
       O hContinuous A hSelf F nodes orderCap)
@@ -203,19 +234,9 @@ theorem stateObservableRealization_state_eq_ambientEmbed
     P.physicalState
         (P.carrierOfPositiveTime (R.stateObservableRealization n x)) =
       R.realization.ambientEmbed n x := by
-  exact state_decodedObservableRealization_eq
-    (e := R.gibbsStateEquiv n)
-    (decode := (W.system (F.scale n)).gibbsHilbertObserveLinearMap)
-    (encode := (W.system (F.scale n)).gibbsHilbertEmbedLinearMap)
-    (realize := R.positiveTimeObservableMap n)
-    (state := fun G => P.physicalState (P.carrierOfPositiveTime G))
-    (embed := fun y => R.realization.ambientEmbed n y)
-    (hEncodeDecode := fun y =>
-      finite_lattice_gibbsHilbert_embed_observe
-        (W.system (F.scale n)) y)
-    (hState := fun f =>
-      R.positiveTimeObservableState_eq_embeddedGibbs n f)
-    x
+  rw [stateObservableRealization,
+    P.carrierOfPositiveTime_positiveTimeElement]
+  exact R.stateCarrierRealization_state_eq_ambientEmbed n x
 
 /-- Observable-level time-translation intertwining descends to exact represented
 state intertwining with the finite spectral semigroup. -/
@@ -233,34 +254,19 @@ theorem stateObservableRealization_translationState_eq_ambientSemigroup
           F.StateDimension
           F.stateFinrank
           t x) := by
-  exact state_translate_decodedObservableRealization_eq
-    (e := R.gibbsStateEquiv n)
-    (decode := (W.system (F.scale n)).gibbsHilbertObserveLinearMap)
-    (encode := (W.system (F.scale n)).gibbsHilbertEmbedLinearMap)
-    (realize := R.positiveTimeObservableMap n)
-    (state := fun G => P.physicalState (P.carrierOfPositiveTime G))
-    (embed := fun y => R.realization.ambientEmbed n y)
-    (translate := fun s G => O.translate s G)
-    (evolve := fun s y =>
-      finiteDimensionalSymmetricHamiltonianSpectralSemigroup
-        (F.hamiltonian n)
-        (F.hamiltonianSymmetric n)
-        F.StateDimension
-        F.stateFinrank
-        s y)
-    (hEncodeDecode := fun y =>
-      finite_lattice_gibbsHilbert_embed_observe
-        (W.system (F.scale n)) y)
-    (hState := fun f =>
-      R.positiveTimeObservableState_eq_embeddedGibbs n f)
-    (hTranslate := by
-      intro s y
-      simpa [stateObservableRealization] using
-        R.positiveTimeObservableTranslationIntertwining n y s)
-    t x
+  rw [stateObservableRealization,
+    R.positiveTimeObservableTranslationIntertwining n x t,
+    P.carrierOfPositiveTime_positiveTimeElement]
+  exact R.stateCarrierRealization_state_eq_ambientEmbed n
+    (finiteDimensionalSymmetricHamiltonianSpectralSemigroup
+      (F.hamiltonian n)
+      (F.hamiltonianSymmetric n)
+      F.StateDimension
+      F.stateFinrank
+      t x)
 
-/-- Graph observables are generated by applying the single linear realization to
-the finite approximation sequence. -/
+/-- Graph observables are generated by applying the single decoded realization
+to the finite approximation sequence. -/
 noncomputable def graphObservable
     (R : GibbsHilbertObservableClosedGraphTransportData
       O hContinuous A hSelf F nodes orderCap)
@@ -268,8 +274,8 @@ noncomputable def graphObservable
     D.positiveTimeSubalgebra :=
   R.stateObservableRealization n (R.finiteApproximation n k m)
 
-/-- The Hamiltonian graph observable is generated by the same linear realization
-applied to the finite Hamiltonian image. -/
+/-- The Hamiltonian graph observable is generated by the same realization applied
+to the finite Hamiltonian image. -/
 noncomputable def graphHamiltonianObservable
     (R : GibbsHilbertObservableClosedGraphTransportData
       O hContinuous A hSelf F nodes orderCap)
