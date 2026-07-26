@@ -85,12 +85,11 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolventPositivePowerJe
     G.AdmissibleRescaledDefectResolventPositivePowerJetCoefficientMapsIndependent
       hInnerSymmetric tau c d := by
   exact
-    ContinuousLinearMap.PositivePowerJetCoefficientMap.
-      areOperatorIndependentOnSupport_of_isOperatorIndependent
-        (fun sigma : G.BelowHalfMassShift =>
-          G.admissibleRescaledDefectResolvent
-            hInnerSymmetric tau sigma.property)
-        hIndependent c d
+    ContinuousLinearMap.PositivePowerJetCoefficientMap.areOperatorIndependentOnSupport_of_isOperatorIndependent
+      (fun sigma : G.BelowHalfMassShift =>
+        G.admissibleRescaledDefectResolvent
+          hInnerSymmetric tau sigma.property)
+      hIndependent c d
 
 /-- Global continuum independence implies every support-local comparison. -/
 theorem VacuumSemigroupGapSlope.continuumResolventPositivePowerJetCoefficientMapsIndependent_of_operatorIndependent
@@ -107,12 +106,11 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositivePowerJetCoefficientMap
     G.ContinuumResolventPositivePowerJetCoefficientMapsIndependent
       T hP hInnerSymmetric hSelf c d := by
   exact
-    ContinuousLinearMap.PositivePowerJetCoefficientMap.
-      areOperatorIndependentOnSupport_of_isOperatorIndependent
-        (fun sigma : G.BelowHalfMassShift =>
-          G.vacuumOrthogonalContinuumRealResolvent
-            T hP hInnerSymmetric hSelf sigma.property)
-        hIndependent c d
+    ContinuousLinearMap.PositivePowerJetCoefficientMap.areOperatorIndependentOnSupport_of_isOperatorIndependent
+      (fun sigma : G.BelowHalfMassShift =>
+        G.vacuumOrthogonalContinuumRealResolvent
+          T hP hInnerSymmetric hSelf sigma.property)
+      hIndependent c d
 
 /-- At one faithful finite time, pairwise-distinct permutations have exactly the
 same recursively aggregated OS coefficient Finsupp. -/
