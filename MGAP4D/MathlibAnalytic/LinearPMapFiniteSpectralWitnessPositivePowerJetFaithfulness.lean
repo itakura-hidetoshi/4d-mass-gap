@@ -33,7 +33,7 @@ theorem realResolvent_apply_eigenvector
       (mu - lambda)⁻¹ • (x : E) := by
   let c : ℝ := (mu - lambda)⁻¹
   have hShift : A.realShift lambda (c • x) = (x : E) := by
-    change A (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
+    change A.toFun (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
     rw [map_smul, hEigen]
     change (c * mu) • (x : E) - (lambda * c) • (x : E) = (x : E)
     rw [← sub_smul]
@@ -124,7 +124,7 @@ theorem PositivePowerJetCoefficientMap.FiniteSpectralWitnessData.linearIndepende
     funext w
     have hApply := congrArg
       (fun L : E →L[ℝ] E => L (D.witnessVector w)) hEquality
-    simp_rw [Finset.sum_apply, Pi.smul_apply,
+    simp only [Finset.sum_apply, smul_apply,
       D.operatorPower_apply_witness, smul_smul] at hApply
     rw [← Finset.sum_smul, ← Finset.sum_smul] at hApply
     exact smul_left_injective ℝ (D.witnessVector_ne_zero w) hApply
