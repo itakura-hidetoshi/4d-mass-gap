@@ -74,7 +74,7 @@ theorem FinitePositivePowerJetData.coefficientMap_apply
   by_cases h : (d.node b, d.order b) = p
   · subst p
     simp
-  · rw [Finsupp.single_eq_of_ne h]
+  · rw [Finsupp.single_eq_of_ne' h]
     simp [h]
 
 /-- Canonical aggregation preserves the operator evaluation exactly, including
