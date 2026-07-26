@@ -298,11 +298,26 @@ theorem graphObservableHamiltonianDerivative_tendsto
           (O.observableCarrierRightHamiltonianDifferenceQuotient
             (R.graphObservable n k m) t)
     rw [O.observableCarrierRightHamiltonianDifferenceQuotient_eq]
-    rw [← P.physicalStateLinearMap_apply, map_smul, map_sub,
-      P.physicalStateLinearMap_apply, P.physicalStateLinearMap_apply]
+    change
+      R.realization.ambientEmbed n
+          ((t : ℝ)⁻¹ •
+            (R.finiteApproximation n k m -
+              finiteDimensionalSymmetricHamiltonianSpectralSemigroup
+                (F.hamiltonian n)
+                (F.hamiltonianSymmetric n)
+                F.StateDimension
+                F.stateFinrank
+                t
+                (R.finiteApproximation n k m))) =
+        P.physicalStateLinearMap
+          ((t : ℝ)⁻¹ •
+            (P.carrierOfPositiveTime (R.graphObservable n k m) -
+              P.carrierOfPositiveTime
+                (O.translate t (R.graphObservable n k m))))
+    rw [map_smul, map_sub]
+    simp only [P.physicalStateLinearMap_apply]
     rw [R.graphObservableState_eq_embeddedFiniteApproximation n k m,
       R.graphObservableTranslationState_eq_embeddedFiniteSemigroup n k m t]
-    rw [map_smul, map_sub]
 
 /-- Continuity of the finite Hamiltonian and common-carrier embedding generates
 convergence of the Hamiltonian-observable states to the exact graph value. -/
