@@ -57,8 +57,8 @@ theorem physicalState_carrierRightHamiltonianDifferenceQuotient
     (hT : T.StrongContinuityOnDenseStates)
     (F : P.Carrier) (t : NNReal) :
     P.physicalState (T.carrierRightHamiltonianDifferenceQuotient F t) =
-      (T.stronglyContinuousPhysicalSemigroup hT)
-        .rightHamiltonianDifferenceQuotient (P.physicalState F) t := by
+      StronglyContinuousPhysicalSemigroup.rightHamiltonianDifferenceQuotient
+        (T.stronglyContinuousPhysicalSemigroup hT) (P.physicalState F) t := by
   change
     P.physicalState ((t : ℝ)⁻¹ • (F - T.translate t F)) = _
   have hmap :
@@ -86,8 +86,9 @@ theorem hasRightHamiltonianValue_physicalState_of_carrierDifferenceQuotient_tend
     (hDerivative :
       Tendsto (T.carrierRightHamiltonianDifferenceQuotient F)
         (nhdsWithin 0 (Ioi 0)) (nhds G)) :
-    (T.stronglyContinuousPhysicalSemigroup hT)
-      .HasRightHamiltonianValue (P.physicalState F) (P.physicalState G) := by
+    StronglyContinuousPhysicalSemigroup.HasRightHamiltonianValue
+      (T.stronglyContinuousPhysicalSemigroup hT)
+      (P.physicalState F) (P.physicalState G) := by
   let Tphys := T.stronglyContinuousPhysicalSemigroup hT
   have hPhysical :
       Tendsto
@@ -240,13 +241,12 @@ theorem rightHamiltonian_rightHamiltonianDomainPointOfObservableDerivative
         (T.rightHamiltonianDomainPointOfObservableDerivative hT F G hDerivative) =
       P.physicalState G := by
   exact
-    PositiveTimeContractionSemigroup
-      .rightHamiltonian_rightHamiltonianDomainPointOfCarrierDerivative
-        T.toCarrierSemigroup hT.toCarrierStrongContinuity
-        (P.carrierOfPositiveTime F) G
-        (by
-          simpa [observableCarrierRightHamiltonianDifferenceQuotient] using
-            hDerivative)
+    PositiveTimeContractionSemigroup.rightHamiltonian_rightHamiltonianDomainPointOfCarrierDerivative
+      T.toCarrierSemigroup hT.toCarrierStrongContinuity
+      (P.carrierOfPositiveTime F) G
+      (by
+        simpa [observableCarrierRightHamiltonianDifferenceQuotient] using
+          hDerivative)
 
 end PositiveTimeObservableContractionSemigroup
 
