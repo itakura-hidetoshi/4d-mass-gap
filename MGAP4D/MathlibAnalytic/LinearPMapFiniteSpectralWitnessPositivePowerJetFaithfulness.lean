@@ -44,7 +44,7 @@ theorem realResolvent_apply_eigenvector
     change A.toFun (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
     rw [map_smul, hEigen, hCoe, smul_smul, smul_smul]
     dsimp [c]
-    rw [hCoefficient, one_smul]
+    rw [← sub_smul, hCoefficient, one_smul]
   have hPreimage :
       (A.realShiftLinearEquiv hSelf hlambda hgap).symm (x : E) =
         c • x := by
