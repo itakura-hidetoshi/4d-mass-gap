@@ -441,13 +441,14 @@ theorem VacuumSemigroupGapSlope.canonicalPositiveMultiplicityProfileProductRealF
         (fun sigma : G.BelowHalfMassShift => sigma.1) first tail) :
     G.PositiveMultiplicityProfileProductRealFormStatement
       T hP hInnerSymmetric hSelf first tail := by
+  unfold VacuumSemigroupGapSlope.PositiveMultiplicityProfileProductRealFormStatement
   rw [← G.admissibleRescaledDefectResolventPositiveMultiplicityProfileNormalForm_eq_product
     T hInnerSymmetric _ first tail hCompatible]
   rw [← G.continuumResolventPositiveMultiplicityProfileNormalForm_eq_product
     T hP hInnerSymmetric hSelf first tail hCompatible]
-  exact
-    G.canonicalPositiveMultiplicityProfileRealFormStrongLimitPackage
-      T hP hInnerSymmetric hSelf first tail
+  simpa [VacuumSemigroupGapSlope.PositiveMultiplicityProfileRealFormStatement] using
+    (G.canonicalPositiveMultiplicityProfileRealFormStrongLimitPackage
+      T hP hInnerSymmetric hSelf first tail)
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
