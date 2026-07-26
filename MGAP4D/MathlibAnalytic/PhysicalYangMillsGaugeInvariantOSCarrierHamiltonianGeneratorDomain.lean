@@ -104,8 +104,9 @@ theorem hasRightHamiltonianValue_physicalState_of_carrierDifferenceQuotient_tend
         (nhdsWithin 0 (Ioi 0))
         (nhds (P.physicalState G)) := by
     apply hPhysical.congr'
-    exact Filter.Eventually.of_forall fun t =>
-      (T.physicalState_carrierRightHamiltonianDifferenceQuotient hT F t).symm
+    exact Filter.Eventually.of_forall fun t => by
+      simpa [Tphys] using
+        T.physicalState_carrierRightHamiltonianDifferenceQuotient hT F t
   unfold StronglyContinuousPhysicalSemigroup.HasRightHamiltonianValue
   unfold StronglyContinuousPhysicalSemigroup.HasRightGeneratorValue
   have hneg := hHamiltonian.neg
