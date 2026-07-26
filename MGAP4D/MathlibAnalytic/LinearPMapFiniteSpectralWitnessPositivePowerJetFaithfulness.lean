@@ -33,8 +33,9 @@ theorem realResolvent_apply_eigenvector
       (mu - lambda)⁻¹ • (x : E) := by
   let c : ℝ := (mu - lambda)⁻¹
   have hShift : A.realShift lambda (c • x) = (x : E) := by
-    rw [A.realShift_apply]
-    simp only [map_smul, hEigen, Subtype.coe_smul, smul_smul]
+    change A (c • x) - lambda • ((c • x : A.domain) : E) = (x : E)
+    rw [map_smul, hEigen]
+    change (c * mu) • (x : E) - (lambda * c) • (x : E) = (x : E)
     rw [← sub_smul]
     convert one_smul ℝ (x : E) using 1
     dsimp [c]
@@ -69,17 +70,18 @@ theorem realResolvent_pow_apply_eigenvector
   | succ n ih =>
       rw [pow_succ']
       simp only [ContinuousLinearMap.mul_apply, ih, map_smul]
-      rw [A.realResolvent_apply_eigenvector hSelf hlambda hgap x hEigen hmu]
+      rw [LinearPMap.realResolvent_apply_eigenvector
+        A hSelf hlambda hgap x hEigen hmu]
       simp [pow_succ, smul_smul, mul_comm]
 
 end LinearPMap
 
 namespace ContinuousLinearMap
 
-universe u v
+universe u
 
-variable {α : Type u}
-variable {E : Type v} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {α E : Type u}
+variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Finite spectral witnesses for one selected node-order window.  Each witness
 vector diagonalizes every selected operator power, and the resulting scalar
