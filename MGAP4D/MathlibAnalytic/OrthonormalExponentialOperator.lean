@@ -36,7 +36,7 @@ Mathlib-generated orthonormal eigenbasis vector. -/
     (hFinrank : Module.finrank ℝ E = dimension)
     (t : ℝ)
     (i : Fin dimension) :
-    hA.exponentialOperator hFinrank t
+    LinearMap.IsSymmetric.exponentialOperator hA hFinrank t
         (hA.eigenvectorBasis hFinrank i) =
       Real.exp (-(hA.eigenvalues hFinrank i) * t) •
         hA.eigenvectorBasis hFinrank i :=
