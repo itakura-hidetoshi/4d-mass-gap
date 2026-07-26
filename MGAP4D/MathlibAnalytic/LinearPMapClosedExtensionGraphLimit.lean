@@ -44,7 +44,7 @@ theorem mem_graph_of_tendsto_of_isClosed_extension
             B (domainPointOfLE hAB (u n))))
         atTop (nhds (x, y)) :=
     hx'.prodMk_nhds hy'
-  have hClosedGraph : IsClosed (B.graph : Set (E × E)) := hB
+  have hClosedGraph : _root_.IsClosed (B.graph : Set (E × E)) := hB
   exact hClosedGraph.isSeqClosed
     (fun n => B.mem_graph (domainPointOfLE hAB (u n))) hpair
 
