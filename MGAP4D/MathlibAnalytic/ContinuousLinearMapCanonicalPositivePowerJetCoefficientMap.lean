@@ -36,14 +36,16 @@ noncomputable def PositivePowerJetCoefficientMap.eval
 
 @[simp] theorem PositivePowerJetCoefficientMap.eval_zero
     (A : α → E →L[ℝ] E) :
-    (0 : PositivePowerJetCoefficientMap α).eval A = 0 := by
+    PositivePowerJetCoefficientMap.eval
+      (0 : PositivePowerJetCoefficientMap α) A = 0 := by
   simp [PositivePowerJetCoefficientMap.eval]
 
 @[simp] theorem PositivePowerJetCoefficientMap.eval_single
     (A : α → E →L[ℝ] E)
     (p : α × ℕ)
     (c : ℝ) :
-    (Finsupp.single p c : PositivePowerJetCoefficientMap α).eval A =
+    PositivePowerJetCoefficientMap.eval
+        (Finsupp.single p c : PositivePowerJetCoefficientMap α) A =
       c • (A p.1) ^ (p.2 + 1) := by
   simp [PositivePowerJetCoefficientMap.eval,
     positivePowerJetCoefficientTerm]
@@ -58,21 +60,21 @@ noncomputable def FinitePositivePowerJetData.coefficientMap
 
 /-- Pointwise formula for the aggregated coefficient at one node-order key. -/
 theorem FinitePositivePowerJetData.coefficientMap_apply
+    [DecidableEq α]
     (d : FinitePositivePowerJetData α)
     (p : α × ℕ) :
     d.coefficientMap p =
       d.support.sum (fun b =>
         if (d.node b, d.order b) = p then d.coefficient b else 0) := by
   classical
-  simp [FinitePositivePowerJetData.coefficientMap,
-    Finsupp.finsetSum_apply]
+  simp [FinitePositivePowerJetData.coefficientMap]
 
 /-- Canonical aggregation preserves the operator evaluation exactly, including
 zero coefficients and arbitrarily repeated internal labels. -/
 theorem FinitePositivePowerJetData.coefficientMap_eval_eq
     (d : FinitePositivePowerJetData α)
     (A : α → E →L[ℝ] E) :
-    d.coefficientMap.eval A = d.eval A := by
+    PositivePowerJetCoefficientMap.eval d.coefficientMap A = d.eval A := by
   classical
   simp [FinitePositivePowerJetData.coefficientMap,
     PositivePowerJetCoefficientMap.eval,
@@ -107,7 +109,8 @@ theorem positiveMultiplicityProfileCoefficientMap_eval_eq_data
     (value : α → ℝ)
     (first : PositiveMultiplicityProfileEntry α)
     (tail : List (PositiveMultiplicityProfileEntry α)) :
-    (positiveMultiplicityProfileCoefficientMap value first tail).eval A =
+    PositivePowerJetCoefficientMap.eval
+        (positiveMultiplicityProfileCoefficientMap value first tail) A =
       (positiveMultiplicityProfileData value first tail).eval A := by
   exact
     (positiveMultiplicityProfileData value first tail).coefficientMap_eval_eq A
@@ -123,13 +126,15 @@ theorem positiveMultiplicityProfileCoefficientMap_eval_eq_product
       positiveMultiplicityProfileCompatible value first tail)
     (hIdentity : ∀ a b : α,
       A a - A b = (value a - value b) • (A a * A b)) :
-    (positiveMultiplicityProfileCoefficientMap value first tail).eval A =
+    PositivePowerJetCoefficientMap.eval
+        (positiveMultiplicityProfileCoefficientMap value first tail) A =
       positiveMultiplicityProfileProduct A first tail := by
   calc
-    (positiveMultiplicityProfileCoefficientMap value first tail).eval A =
-        (positiveMultiplicityProfileData value first tail).eval A :=
-      positiveMultiplicityProfileCoefficientMap_eval_eq_data
-        A value first tail
+    PositivePowerJetCoefficientMap.eval
+        (positiveMultiplicityProfileCoefficientMap value first tail) A =
+      (positiveMultiplicityProfileData value first tail).eval A :=
+        positiveMultiplicityProfileCoefficientMap_eval_eq_data
+          A value first tail
     _ = positiveMultiplicityProfileProduct A first tail :=
       positiveMultiplicityProfileData_eval_eq_product
         A value first tail hCompatible hIdentity
@@ -145,7 +150,8 @@ theorem positiveMultiplicityProfileCoefficientMap_eval_eq_product_of_pairwise
       positiveMultiplicityProfilePairwiseDistinct value first tail)
     (hIdentity : ∀ a b : α,
       A a - A b = (value a - value b) • (A a * A b)) :
-    (positiveMultiplicityProfileCoefficientMap value first tail).eval A =
+    PositivePowerJetCoefficientMap.eval
+        (positiveMultiplicityProfileCoefficientMap value first tail) A =
       positiveMultiplicityProfileProduct A first tail := by
   exact positiveMultiplicityProfileCoefficientMap_eval_eq_product
     A value first tail
@@ -164,7 +170,8 @@ theorem positiveMultiplicityProfileCoefficientMap_eval_apply_eq_product_apply_of
     (hIdentity : ∀ a b : α,
       A a - A b = (value a - value b) • (A a * A b))
     (x : E) :
-    (positiveMultiplicityProfileCoefficientMap value first tail).eval A x =
+    PositivePowerJetCoefficientMap.eval
+        (positiveMultiplicityProfileCoefficientMap value first tail) A x =
       positiveMultiplicityProfileProduct A first tail x := by
   exact DFunLike.congr_fun
     (positiveMultiplicityProfileCoefficientMap_eval_eq_product_of_pairwise
