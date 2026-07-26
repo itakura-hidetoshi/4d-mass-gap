@@ -91,7 +91,7 @@ theorem VacuumSemigroupGapSlope.ContinuumResolventFiniteSpectralWitnessData.spec
     R.spectralValue k ≠ sigma.1 := by
   exact ne_of_gt
     (lt_of_lt_of_le sigma.property
-      (R.spectralValue_ge_halfMass T hP hInnerSymmetric hSelf k))
+      (R.spectralValue_ge_halfMass T G hP hInnerSymmetric hSelf k))
 
 /-- Closed-Hamiltonian spectral witnesses generate the generic finite spectral
 witness package for the selected continuum resolvent powers. -/
@@ -135,7 +135,7 @@ noncomputable def VacuumSemigroupGapSlope.ContinuumResolventFiniteSpectralWitnes
             T hP hInnerSymmetric hSelf)
           (R.spectralVector k)
           (R.hamiltonian_apply_spectralVector k)
-          (R.spectralValue_ne_shift T hP hInnerSymmetric hSelf k p.1.1)
+          (R.spectralValue_ne_shift T G hP hInnerSymmetric hSelf k p.1.1)
           (p.2.1 + 1)) }
 
 /-- The selected continuum below-half-mass resolvent powers are linearly
@@ -159,7 +159,7 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositivePowerJet_linearIndepen
               T hP hInnerSymmetric hSelf sigma.property)
           (p.1.1, p.2.1)) :=
   R.toPositivePowerJetFiniteSpectralWitnessData
-    T hP hInnerSymmetric hSelf |>.linearIndependent
+    T G hP hInnerSymmetric hSelf |>.linearIndependent
 
 /-- Finite closed-Hamiltonian spectral witnesses supply the exact continuum
 support-local independence condition used by coefficient semantic uniqueness. -/
@@ -188,7 +188,7 @@ theorem VacuumSemigroupGapSlope.continuumResolventPositivePowerJetCoefficientMap
           T hP hInnerSymmetric hSelf sigma.property)
       nodes orderCap
       (R.toPositivePowerJetFiniteSpectralWitnessData
-        T hP hInnerSymmetric hSelf)
+        T G hP hInnerSymmetric hSelf)
       left right hNodes hOrders)
 
 /-- Finite continuum Hamiltonian spectral witnesses upgrade operator-level
