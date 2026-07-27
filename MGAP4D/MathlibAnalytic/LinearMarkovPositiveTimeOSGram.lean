@@ -35,7 +35,8 @@ def linearMarkovPositiveTimeFutureProbabilityReal
   (linearMarkovPositiveTimeFuturePMF transition n boundary future).toReal
 
 /-- Conditional future amplitude of a finite future observable given the time-zero
-boundary state. -/
+boundary state.  The observable-first order agrees directly with the Gram
+feature convention used below. -/
 def linearMarkovPositiveTimeBoundaryAmplitude
     {Ω : Type*} [Fintype Ω]
     (transition : Ω → PMF Ω)
@@ -43,8 +44,8 @@ def linearMarkovPositiveTimeBoundaryAmplitude
     (F : LinearMarkovPositiveTimeFuturePath Ω n → ℝ)
     (boundary : Ω) : ℝ :=
   ∑ future : LinearMarkovPositiveTimeFuturePath Ω n,
-    linearMarkovPositiveTimeFutureProbabilityReal transition n boundary future *
-      F future
+    F future *
+      linearMarkovPositiveTimeFutureProbabilityReal transition n boundary future
 
 /-- The boundary amplitude is ordinary finite-PMF expectation under the
 conditional future law. -/
@@ -57,7 +58,13 @@ theorem linearMarkovPositiveTimeBoundaryAmplitude_eq_expectation
     linearMarkovPositiveTimeBoundaryAmplitude transition n F boundary =
       finitePMFExpectationReal
         (linearMarkovPositiveTimeFuturePMF transition n boundary) F := by
-  rfl
+  classical
+  unfold linearMarkovPositiveTimeBoundaryAmplitude
+    linearMarkovPositiveTimeFutureProbabilityReal
+    finitePMFExpectationReal
+  apply Finset.sum_congr rfl
+  intro future _hfuture
+  ring
 
 /-- Time reflection on a pair of conditionally independent positive-time
 futures.  The first component represents the reflected copy and the second the
@@ -284,7 +291,11 @@ theorem linearMarkovPositiveTimePathProduct_eq_finiteFuturePrefix
       linearMarkovFinitePathProduct fs
         (linearMarkovInfinitePathFinPrefix n
           (linearMarkovPathShift path)) := by
-  rfl
+  simp [linearMarkovPositiveTimePathProduct,
+    linearMarkovPositiveTimeCoordinate,
+    linearMarkovFinitePathProduct,
+    linearMarkovInfinitePathFinPrefix,
+    linearMarkovPathShift]
 
 /-- The conditional boundary amplitude of a positive-time product cylinder is
 exactly the existing backward Markov cylinder moment started from the one-step
