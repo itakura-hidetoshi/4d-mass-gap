@@ -49,7 +49,10 @@ theorem linearMarkovFinitePathPMF_map_prefix
       simp only [Nat.add_zero, linearMarkovFinitePathPrefix_zero]
       exact PMF.map_id _
   | succ k ih =>
-      rw [Nat.add_succ]
+      change
+        (linearMarkovFinitePathPMF initial transition ((m + k) + 1)).map
+            (linearMarkovFinitePathPrefix m (k + 1)) =
+          linearMarkovFinitePathPMF initial transition m
       calc
         (linearMarkovFinitePathPMF initial transition ((m + k) + 1)).map
             (linearMarkovFinitePathPrefix m (k + 1)) =
@@ -81,7 +84,14 @@ theorem linearMarkovCylinderMoment_append_replicate_one
   | zero =>
       simp
   | succ k ih =>
-      rw [List.replicate_succ, ← List.append_assoc]
+      rw [List.replicate_succ]
+      have hList :
+          fs ++ (fun _ : Ω => (1 : ℝ)) ::
+              List.replicate k (fun _ : Ω => (1 : ℝ)) =
+            (fs ++ [fun _ : Ω => (1 : ℝ)]) ++
+              List.replicate k (fun _ : Ω => (1 : ℝ)) := by
+        simp [List.append_assoc]
+      rw [hList]
       rw [ih (fs := fs ++ [fun _ : Ω => (1 : ℝ)])]
       exact linearMarkovCylinderMoment_append_one state P hPone fs
 
