@@ -13,7 +13,7 @@ def linearMarkovAppendFinitePath
     (past : Fin (m + 1) → Ω)
     (future : Fin (n + 1) → Ω) :
     Fin (((m + 1) + n) + 1) → Ω :=
-  Fin.append past future
+  Fin.append (m := m + 1) (n := n + 1) past future
 
 /-- Appending a one-coordinate future is the ordinary terminal `snoc`. -/
 @[simp] theorem linearMarkovAppendFinitePath_zero
@@ -21,7 +21,8 @@ def linearMarkovAppendFinitePath
     (past : Fin (m + 1) → Ω) (y : Ω) :
     linearMarkovAppendFinitePath past (fun _ : Fin 1 => y) =
       (Fin.snoc past y : Fin ((m + 1) + 1) → Ω) := by
-  exact Fin.append_right_eq_snoc past (fun _ : Fin 1 => y)
+  simpa [linearMarkovAppendFinitePath] using
+    (Fin.append_right_eq_snoc past (fun _ : Fin 1 => y))
 
 /-- Extending the future and then concatenating equals extending the already
 concatenated path. -/
@@ -32,7 +33,8 @@ concatenated path. -/
     (y : Ω) :
     linearMarkovAppendFinitePath past (Fin.snoc future y) =
       Fin.snoc (linearMarkovAppendFinitePath past future) y := by
-  exact Fin.append_snoc past future y
+  simpa [linearMarkovAppendFinitePath] using
+    (Fin.append_snoc past future y)
 
 /-- The terminal state of a concatenated path is the terminal state of its
 strictly-positive future. -/
@@ -97,11 +99,12 @@ theorem linearMarkovFinitePathSplitPMF_succ
       (linearMarkovFinitePathPMF
         (transition (past (Fin.last m))) transition n))
   funext future
+  rw [linearMarkovAppendFinitePath_last]
   rw [PMF.map_comp]
   simp only [Function.comp_apply]
   congr 1
   funext y
-  simp
+  exact linearMarkovAppendFinitePath_snoc past future y
 
 /-- Exact Markov concatenation: sampling a prefix and then its conditional
 future gives the same PMF as sampling the entire finite path at once. -/
@@ -132,7 +135,7 @@ theorem linearMarkovFinitePathSplitPMF_eq_finitePathPMF
       simp only [Function.comp_apply]
       congr 1
       funext y
-      simp
+      exact linearMarkovAppendFinitePath_zero past y
   | succ n ih =>
       rw [linearMarkovFinitePathSplitPMF_succ, ih]
       rfl
@@ -149,6 +152,7 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_singleChain
   unfold linearMarkovCenteredFinitePathToChronologicalSum
     linearMarkovSingleChainCenteredFinitePath
   rw [linearMarkovSingleChainPastOfCenteredSplit]
+  change Fin.append past positive = linearMarkovAppendFinitePath past positive
   rfl
 
 /-- The sum-indexed chronological law before arithmetic normalization. -/
@@ -215,9 +219,10 @@ theorem linearMarkovFinitePathPMF_map_reindex
     (linearMarkovFinitePathPMF initial transition a).map
         (linearMarkovFinitePathReindex h) =
       linearMarkovFinitePathPMF initial transition b := by
-  subst b
-  simpa [linearMarkovFinitePathReindex, Function.comp_def] using
-    PMF.map_id (linearMarkovFinitePathPMF initial transition a)
+  cases h
+  change (linearMarkovFinitePathPMF initial transition a).map id =
+    linearMarkovFinitePathPMF initial transition a
+  exact PMF.map_id (linearMarkovFinitePathPMF initial transition a)
 
 /-- The explicit chronological centered law is exactly one ordinary finite
 Markov path law.  Detailed balance is not needed for this identity. -/
@@ -240,12 +245,26 @@ theorem linearMarkovChronologicalCenteredFinitePathPMF_eq_finitePathPMF
             rfl
     _ = (linearMarkovFinitePathPMF initial transition ((n + 2) + n)).map
           linearMarkovChronologicalSumToExplicit := by
-            rw [linearMarkovChronologicalCenteredFinitePathSumPMF_eq_finitePathPMF]
+            change
+              (linearMarkovChronologicalCenteredFinitePathSumPMF
+                initial transition n).map
+                  linearMarkovChronologicalSumToExplicit =
+              (linearMarkovFinitePathPMF initial transition ((n + 2) + n)).map
+                linearMarkovChronologicalSumToExplicit
+            exact congrArg
+              (fun p => p.map linearMarkovChronologicalSumToExplicit)
+              (linearMarkovChronologicalCenteredFinitePathSumPMF_eq_finitePathPMF
+                initial transition n)
     _ = linearMarkovFinitePathPMF initial transition (2 * n + 2) := by
-          simpa [linearMarkovChronologicalSumToExplicit,
-            linearMarkovFinitePathReindex] using
-            (linearMarkovFinitePathPMF_map_reindex
-              initial transition h)
+          have hreindex :
+              (linearMarkovChronologicalSumToExplicit :
+                LinearMarkovChronologicalCenteredFinitePathSum Ω n →
+                  LinearMarkovChronologicalCenteredFinitePath Ω n) =
+                linearMarkovFinitePathReindex h := by
+            funext path i
+            rfl
+          rw [hreindex]
+          exact linearMarkovFinitePathPMF_map_reindex initial transition h
 
 end
 
