@@ -65,6 +65,7 @@ theorem linearMarkovFinitePathPMF_apply_succ
     by_cases hold : old = Fin.init path
     · subst old
       rw [← Fin.snoc_init_self path]
+      simp only [Fin.snoc_inj, true_and]
       simp
     · have hsnoc : ∀ y : Ω, path ≠ Fin.snoc old y := by
         intro y hy
@@ -72,18 +73,18 @@ theorem linearMarkovFinitePathPMF_apply_succ
         exact (by simpa using (congrArg Fin.init hy).symm)
       simp [hold, hsnoc]
   calc
-    ∑ old : Fin (n + 1) → Ω,
+    (∑ old : Fin (n + 1) → Ω,
         linearMarkovFinitePathPMF initial transition n old *
-          ∑ y : Ω,
+          (∑ y : Ω,
             if path = Fin.snoc old y then
               transition (old (Fin.last n)) y
-            else 0 =
-      ∑ old : Fin (n + 1) → Ω,
+            else 0)) =
+      (∑ old : Fin (n + 1) → Ω,
         linearMarkovFinitePathPMF initial transition n old *
           (if old = Fin.init path then
             transition ((Fin.init path) (Fin.last n))
               (path (Fin.last (n + 1)))
-          else 0) := by
+          else 0)) := by
             apply Finset.sum_congr rfl
             intro old _hold
             rw [hinner old]
@@ -225,7 +226,15 @@ theorem linearMarkovFinitePathProbabilityReal_reverse_eq_backward
         ∏ i : Fin n,
           (transition (path i.succ) (path i.castSucc)).toReal := by
   unfold linearMarkovFinitePathProbabilityReal
+  have hfirst :
+      linearMarkovFinitePathReverse path 0 = path (Fin.last n) := by
+    simp [linearMarkovFinitePathReverse]
+  rw [hfirst]
+  apply congrArg
+    (fun r : ℝ => (initial (path (Fin.last n))).toReal * r)
   rw [← Equiv.prod_comp (Fin.revPerm : Equiv.Perm (Fin n))]
+  apply Finset.prod_congr rfl
+  intro i _hi
   simp [linearMarkovFinitePathReverse]
 
 /-- Detailed balance makes every explicit finite path probability invariant under
@@ -290,8 +299,14 @@ theorem linearMarkovFinitePathPMF_expectation_reverse_of_detailedBalance
             rw [← Equiv.sum_comp e]
             apply Finset.sum_congr rfl
             intro path _hpath
-            simp [e, linearMarkovFinitePathReverseEquiv,
-              Function.comp_def]
+            change
+              (linearMarkovFinitePathPMF initial transition n
+                  (linearMarkovFinitePathReverse path)).toReal *
+                    H (linearMarkovFinitePathReverse
+                      (linearMarkovFinitePathReverse path)) =
+                (linearMarkovFinitePathPMF initial transition n
+                  (linearMarkovFinitePathReverse path)).toReal * H path
+            rw [linearMarkovFinitePathReverse_involutive (Ω := Ω) n path]
     _ = ∑ path : Fin (n + 1) → Ω,
         (linearMarkovFinitePathPMF initial transition n path).toReal * H path := by
           apply Finset.sum_congr rfl
