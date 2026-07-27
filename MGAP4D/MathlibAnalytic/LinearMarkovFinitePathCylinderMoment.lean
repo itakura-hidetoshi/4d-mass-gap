@@ -58,10 +58,9 @@ theorem finitePMFTransitionExpectationLinearMap_one
       fun _ : Ω => 1 := by
   classical
   funext x
-  unfold finitePMFTransitionExpectationLinearMap finitePMFExpectationReal
-  have hsum : ∑ y : Ω, transition x y = 1 := by
-    rw [← tsum_fintype]
-    exact (transition x).property.tsum_eq
+  change (∑ y : Ω, (transition x y).toReal) = 1
+  have hsum : ∑ y : Ω, transition x y = (1 : ℝ≥0∞) := by
+    simpa only [tsum_fintype] using (PMF.tsum_coe (transition x))
   calc
     ∑ y : Ω, (transition x y).toReal =
         (∑ y : Ω, transition x y).toReal := by
