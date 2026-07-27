@@ -69,7 +69,9 @@ theorem linearMarkovFinitePathPMF_succ_map_tail_of_expectation_stationary
         rw [hLast]
         congr 1
         funext y i
-        rfl
+        refine Fin.lastCases ?_ (fun j => ?_) i
+        · simp [linearMarkovFinitePathTail]
+        · simp [linearMarkovFinitePathTail, Fin.tail]
       rw [hKernel]
       let k : (Fin (n + 1) → Ω) → PMF (Fin (n + 2) → Ω) :=
         fun path =>
