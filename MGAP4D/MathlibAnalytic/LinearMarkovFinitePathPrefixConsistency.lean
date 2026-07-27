@@ -61,7 +61,6 @@ theorem linearMarkovFinitePathPMF_map_prefix
             (linearMarkovFinitePathPrefix m k) := by
               rw [PMF.map_comp]
               congr 1
-              exact linearMarkovFinitePathPrefix_succ m k
         _ =
           (linearMarkovFinitePathPMF initial transition (m + k)).map
               (linearMarkovFinitePathPrefix m k) := by
