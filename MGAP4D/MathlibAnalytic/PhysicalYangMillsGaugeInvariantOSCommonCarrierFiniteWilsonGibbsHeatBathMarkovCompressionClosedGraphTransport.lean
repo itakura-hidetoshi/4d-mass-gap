@@ -303,7 +303,8 @@ noncomputable def finiteRealization
     (by
       intro x
       rw [one_mul, R.finiteStateRealizationLinearMap_apply,
-        R.finiteCarrierRealization_apply, R.finiteState_norm n x])
+        R.finiteCarrierRealization_apply, R.positiveTimeCarrierMap_apply,
+        R.finiteState_norm n x])
 
 @[simp] theorem finiteRealization_apply
     (R : MarkovCompressionClosedGraphTransportData
@@ -322,7 +323,7 @@ noncomputable def finiteRealization
     (n : ℕ) (x : F.StateSpace) :
     ‖R.finiteRealization n x‖ = ‖x‖ := by
   rw [R.finiteRealization_apply, R.finiteCarrierRealization_apply,
-    R.finiteState_norm n x]
+    R.positiveTimeCarrierMap_apply, R.finiteState_norm n x]
 
 /-- The Markov-compressed lift constructs the complete finite excitation
 realization. -/
