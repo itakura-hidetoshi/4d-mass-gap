@@ -12,13 +12,21 @@ namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
 variable {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
 
+/-- Repackage a positive-time submodule element as the original positive-time
+subalgebra element. -/
+def positiveTimeSubalgebraOfSubmodule
+    (F : D.positiveTimeSubalgebra.toSubmodule) :
+    D.positiveTimeSubalgebra :=
+  ⟨F.1, F.2⟩
+
 /-- Repackage positive-time observables in an OS carrier, bundled as a real-linear
-map.  This is canonical for every OS state on the same positive-time observable
-algebra. -/
+map through the explicit positive-time submodule.  This is canonical for every
+OS state on the same positive-time observable algebra. -/
 noncomputable def carrierOfPositiveTimeLinearMap
     (P : D.OSPreHilbertData) :
-    D.positiveTimeSubalgebra →ₗ[ℝ] P.Carrier where
-  toFun := P.carrierOfPositiveTime
+    D.positiveTimeSubalgebra.toSubmodule →ₗ[ℝ] P.Carrier where
+  toFun := fun F =>
+    P.carrierOfPositiveTime (positiveTimeSubalgebraOfSubmodule F)
   map_add' := by
     intro F G
     apply Carrier.observable_injective P
@@ -30,8 +38,9 @@ noncomputable def carrierOfPositiveTimeLinearMap
 
 @[simp] theorem carrierOfPositiveTimeLinearMap_apply
     (P : D.OSPreHilbertData)
-    (F : D.positiveTimeSubalgebra) :
-    P.carrierOfPositiveTimeLinearMap F = P.carrierOfPositiveTime F :=
+    (F : D.positiveTimeSubalgebra.toSubmodule) :
+    P.carrierOfPositiveTimeLinearMap F =
+      P.carrierOfPositiveTime (positiveTimeSubalgebraOfSubmodule F) :=
   rfl
 
 namespace PositiveTimeObservableContractionSemigroup
@@ -48,10 +57,13 @@ The carrier-valued lift used by graph transport is generated canonically below. 
 structure FiniteGibbsHeatBathPositiveTimeObservableDilation
     (L : FiniteLatticeWilsonSystem)
     (O : P.PositiveTimeObservableContractionSemigroup) where
-  lift : (L.Configuration → ℝ) →ₗ[ℝ] D.positiveTimeSubalgebra
+  lift :
+    (L.Configuration → ℝ) →ₗ[ℝ] D.positiveTimeSubalgebra.toSubmodule
   translate_lift : ∀ (t : NNReal) (f : L.Configuration → ℝ),
-    O.translate t (lift f) =
-      lift (L.gibbsObservableHeatBathSpectralSemigroup t f)
+    O.translate t
+        (positiveTimeSubalgebraOfSubmodule (lift f)) =
+      positiveTimeSubalgebraOfSubmodule
+        (lift (L.gibbsObservableHeatBathSpectralSemigroup t f))
 
 namespace FiniteGibbsHeatBathPositiveTimeObservableDilation
 
@@ -68,7 +80,9 @@ noncomputable def carrierMap
 @[simp] theorem carrierMap_apply
     (K : FiniteGibbsHeatBathPositiveTimeObservableDilation L O)
     (f : L.Configuration → ℝ) :
-    K.carrierMap f = P.carrierOfPositiveTime (K.lift f) :=
+    K.carrierMap f =
+      P.carrierOfPositiveTime
+        (positiveTimeSubalgebraOfSubmodule (K.lift f)) :=
   rfl
 
 /-- The generated carrier map represents exactly the positive-time observable
@@ -76,7 +90,8 @@ supplied by the dilation. -/
 @[simp] theorem positiveTimeElement_carrierMap
     (K : FiniteGibbsHeatBathPositiveTimeObservableDilation L O)
     (f : L.Configuration → ℝ) :
-    P.positiveTimeElement (K.carrierMap f) = K.lift f := by
+    P.positiveTimeElement (K.carrierMap f) =
+      positiveTimeSubalgebraOfSubmodule (K.lift f) := by
   rw [carrierMap_apply, P.positiveTimeElement_carrierOfPositiveTime]
 
 /-- Dilation covariance theorem-generates the carrier-side observable
@@ -86,10 +101,22 @@ theorem translate_positiveTimeElement_carrierMap
     (t : NNReal) (f : L.Configuration → ℝ) :
     O.translate t (P.positiveTimeElement (K.carrierMap f)) =
       P.positiveTimeElement
-        (K.carrierMap (L.gibbsObservableHeatBathSpectralSemigroup t f)) := by
-  rw [K.positiveTimeElement_carrierMap,
-    K.positiveTimeElement_carrierMap,
-    K.translate_lift]
+        (K.carrierMap
+          (L.gibbsObservableHeatBathSpectralSemigroup t f)) := by
+  calc
+    O.translate t (P.positiveTimeElement (K.carrierMap f)) =
+        O.translate t
+          (positiveTimeSubalgebraOfSubmodule (K.lift f)) := by
+      rw [K.positiveTimeElement_carrierMap]
+    _ = positiveTimeSubalgebraOfSubmodule
+          (K.lift
+            (L.gibbsObservableHeatBathSpectralSemigroup t f)) :=
+      K.translate_lift t f
+    _ = P.positiveTimeElement
+          (K.carrierMap
+            (L.gibbsObservableHeatBathSpectralSemigroup t f)) := by
+      symm
+      exact K.positiveTimeElement_carrierMap _
 
 end FiniteGibbsHeatBathPositiveTimeObservableDilation
 end PositiveTimeObservableContractionSemigroup
