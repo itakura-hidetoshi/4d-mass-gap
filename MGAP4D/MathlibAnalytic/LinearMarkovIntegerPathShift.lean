@@ -102,10 +102,10 @@ theorem linearMarkovFinitePathPMF_bind_transition_initial
   induction n with
   | zero =>
       rw [linearMarkovFinitePathPMF]
-      rw [PMF.bind_map]
+      rw [PMF.map_bind]
   | succ n ih =>
       rw [linearMarkovFinitePathPMF]
-      rw [PMF.bind_bind]
+      rw [← PMF.bind_bind]
       rw [ih]
 
 /-- Deleting the first coordinate of a finite Markov path advances its initial
