@@ -42,6 +42,41 @@ def linearMarkovIntegerCenteredFinitePathCast
   simp [linearMarkovIntegerCenteredIndexEmbed]
   omega
 
+/-- Before arithmetic normalization, packing after deleting the two terminal
+future coordinates reads the central block of the original packed path. -/
+theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
+    {Ω : Type*} (n : ℕ)
+    (path : LinearMarkovCenteredFinitePath Ω (n + 1))
+    (i : Fin ((n + 2) + (n + 1))) :
+    linearMarkovCenteredFinitePathToChronologicalSum
+        (linearMarkovCenteredFinitePathInit path) i =
+      linearMarkovCenteredFinitePathToChronologicalSum path
+        ⟨i.1 + 1, by omega⟩ := by
+  rcases path with ⟨negative, boundary, positive⟩
+  unfold linearMarkovCenteredFinitePathToChronologicalSum
+    linearMarkovCenteredFinitePathInit
+  refine Fin.addCases ?_ ?_ i
+  · intro a
+    rw [Fin.append_left]
+    have hk :
+        (⟨(Fin.castAdd (n + 1) a).1 + 1, by omega⟩ :
+          Fin ((n + 3) + (n + 2))) =
+          Fin.castAdd (n + 2) a.succ := by
+      apply Fin.ext
+      rfl
+    rw [hk, Fin.append_left]
+    simp [linearMarkovFinitePathReverse]
+  · intro b
+    rw [Fin.append_right]
+    have hk :
+        (⟨(Fin.natAdd (n + 2) b).1 + 1, by omega⟩ :
+          Fin ((n + 3) + (n + 2))) =
+          Fin.natAdd (n + 3) b := by
+      apply Fin.ext
+      rfl
+    rw [hk, Fin.append_right]
+    rfl
+
 /-- One outer-coordinate cut reads the central subtuple of the original path. -/
 theorem linearMarkovChronologicalCenteredFinitePathInit_apply
     {Ω : Type*} (n : ℕ)
@@ -49,17 +84,16 @@ theorem linearMarkovChronologicalCenteredFinitePathInit_apply
     (i : Fin (2 * n + 3)) :
     linearMarkovChronologicalCenteredFinitePathInit path i =
       path (linearMarkovIntegerCenteredIndexEmbed n 1 i) := by
-  rw [← linearMarkovCenteredFinitePathToChronological_unpack path]
-  rw [linearMarkovChronologicalCenteredFinitePathInit_pack]
   let centered := linearMarkovChronologicalToCenteredFinitePath path
-  rcases centered with ⟨negative, boundary, positive⟩
+  have hpath :
+      linearMarkovCenteredFinitePathToChronological centered = path :=
+    linearMarkovCenteredFinitePathToChronological_unpack path
+  rw [← hpath]
+  rw [linearMarkovChronologicalCenteredFinitePathInit_pack]
   unfold linearMarkovCenteredFinitePathToChronological
     linearMarkovChronologicalSumToExplicit
-    linearMarkovCenteredFinitePathToChronologicalSum
-    linearMarkovCenteredFinitePathInit
-    linearMarkovIntegerCenteredIndexEmbed
-  simp [linearMarkovFinitePathReverse, Function.comp_def]
-  split <;> omega
+  exact linearMarkovCenteredFinitePathToChronologicalSum_init_apply
+    n centered (Fin.cast (by omega) i)
 
 /-- Iterated outer-coordinate restriction is exactly central-block coordinate
 restriction `i ↦ i + d`. -/
@@ -81,7 +115,6 @@ theorem linearMarkovIntegerCenteredFinitePathRestrictBy_apply
       congr 1
       apply Fin.ext
       simp [linearMarkovIntegerCenteredIndexEmbed]
-      omega
 
 end
 
