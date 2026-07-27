@@ -59,7 +59,6 @@ theorem finitePMFTransitionExpectationLinearMap_one
   classical
   funext x
   unfold finitePMFTransitionExpectationLinearMap finitePMFExpectationReal
-  simp only [mul_one]
   exact finite_pmf_sum_toReal_eq_one (transition x)
 
 /-- Real expectation under a finite PMF commutes with multiplication by a real
@@ -117,7 +116,7 @@ theorem linearMarkovCylinderCondition_ofFn_contractLast
   induction n with
   | zero =>
       funext x
-      simp [List.ofFn_succ', linearMarkovFiniteCylinderContractLast,
+      simp [linearMarkovFiniteCylinderContractLast,
         linearMarkovCylinderCondition, hPone]
   | succ n ih =>
       rw [← Fin.cons_self_tail fs]
@@ -143,13 +142,30 @@ theorem linearMarkovFinitePathProduct_contractLast
   induction n with
   | zero =>
       simp [linearMarkovFinitePathProduct,
-        linearMarkovFiniteCylinderContractLast, Fin.prod_univ_succ]
+        linearMarkovFiniteCylinderContractLast]
   | succ n ih =>
-      rw [← Fin.cons_self_tail fs, ← Fin.cons_self_tail path]
-      simp only [linearMarkovFinitePathProduct, Fin.prod_univ_succ,
-        linearMarkovFiniteCylinderContractLast, Fin.cons_zero,
-        Fin.cons_succ, Fin.tail_cons]
-      rw [ih (Fin.tail fs) (Fin.tail path)]
+      have hleft :
+          linearMarkovFinitePathProduct
+              (linearMarkovFiniteCylinderContractLast P (n + 1) fs) path =
+            fs 0 (path 0) *
+              linearMarkovFinitePathProduct
+                (linearMarkovFiniteCylinderContractLast P n (Fin.tail fs))
+                (Fin.tail path) := by
+        unfold linearMarkovFinitePathProduct
+        rw [Fin.prod_univ_succ]
+        simp [linearMarkovFiniteCylinderContractLast, Fin.tail]
+      have hright :
+          linearMarkovFinitePathProduct
+              (fun i : Fin (n + 2) => fs i.castSucc) path =
+            fs 0 (path 0) *
+              linearMarkovFinitePathProduct
+                (fun i : Fin (n + 1) => (Fin.tail fs) i.castSucc)
+                (Fin.tail path) := by
+        unfold linearMarkovFinitePathProduct
+        rw [Fin.prod_univ_succ]
+        simp [Fin.tail]
+      rw [hleft, ih (Fin.tail fs) (Fin.tail path), hright]
+      simp [Fin.tail]
       ring
 
 /-- The honest arbitrary finite Markov path PMF realizes exactly the existing
@@ -168,6 +184,12 @@ theorem linearMarkovFinitePathPMF_product_expectation_eq_cylinderMoment
         (finitePMFTransitionExpectationLinearMap transition)
         (List.ofFn fs) := by
   let P := finitePMFTransitionExpectationLinearMap transition
+  change
+    finitePMFExpectationReal
+        (linearMarkovFinitePathPMF initial transition n)
+        (linearMarkovFinitePathProduct fs) =
+      linearMarkovCylinderMoment
+        (finitePMFExpectationReal initial) P (List.ofFn fs)
   have hPone : P (fun _ : Ω => (1 : ℝ)) = fun _ : Ω => 1 :=
     finitePMFTransitionExpectationLinearMap_one transition
   induction n with
@@ -177,7 +199,7 @@ theorem linearMarkovFinitePathPMF_product_expectation_eq_cylinderMoment
         linearMarkovCylinderCondition_singleton P hPone]
       congr 1
       funext x
-      simp [linearMarkovFinitePathProduct, Fin.prod_univ_succ]
+      simp [linearMarkovFinitePathProduct]
   | succ n ih =>
       rw [linearMarkovFinitePathPMF, finite_pmfExpectationReal_bind]
       simp_rw [finite_pmfExpectationReal_map]
