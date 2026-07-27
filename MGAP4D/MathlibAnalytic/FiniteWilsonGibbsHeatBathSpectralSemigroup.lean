@@ -156,8 +156,8 @@ theorem
     (finite_lattice_gibbsHeatBathSpectralSemigroup_differenceQuotient_tendsto
       L (L.gibbsHilbertEmbedLinearMap f)).congr'
   exact Filter.Eventually.of_forall fun t =>
-    finite_lattice_gibbsObservableHeatBathSpectralSemigroup_differenceQuotient_embed
-      L f t
+    (finite_lattice_gibbsObservableHeatBathSpectralSemigroup_differenceQuotient_embed
+      L f t).symm
 
 /-- On every canonical Gibbs-Hilbert Hamiltonian eigenvector, the decoded
 finite Wilson observable evolves with the expected exponential energy factor. -/
