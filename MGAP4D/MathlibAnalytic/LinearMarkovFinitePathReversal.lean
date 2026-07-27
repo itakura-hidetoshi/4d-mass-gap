@@ -76,7 +76,22 @@ theorem linearMarkovFinitePathPMF_apply_succ
           subst y
           exact (Fin.snoc_init_self path).symm
       simp_rw [heq]
-      simp
+      calc
+        (∑ y : Ω,
+          if y = path (Fin.last (n + 1)) then
+            transition ((Fin.init path) (Fin.last n)) y
+          else 0) =
+          (if path (Fin.last (n + 1)) = path (Fin.last (n + 1)) then
+            transition ((Fin.init path) (Fin.last n))
+              (path (Fin.last (n + 1)))
+          else 0) := by
+            apply Finset.sum_eq_single (path (Fin.last (n + 1)))
+            · intro y _hy hne
+              simp [hne]
+            · simp
+        _ = transition ((Fin.init path) (Fin.last n))
+              (path (Fin.last (n + 1))) := by
+              simp
     · have hsnoc : ∀ y : Ω, path ≠ Fin.snoc old y := by
         intro y hy
         apply hold
