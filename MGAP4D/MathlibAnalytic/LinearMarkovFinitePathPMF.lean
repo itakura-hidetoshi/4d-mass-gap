@@ -34,9 +34,11 @@ theorem linearMarkovFinitePathPMF_succ_map_init
       linearMarkovFinitePathPMF initial transition n := by
   rw [linearMarkovFinitePathPMF, PMF.map_bind]
   have hKernel :
-      (fun path =>
-        ((transition (path (Fin.last n))).map fun y =>
-          Fin.snoc path y).map Fin.init) =
+      (fun path : Fin (n + 1) → Ω =>
+        ((transition (path (Fin.last n))).map
+          (fun y => (Fin.snoc path y : Fin (n + 2) → Ω))).map
+            (Fin.init :
+              (Fin (n + 2) → Ω) → (Fin (n + 1) → Ω))) =
         PMF.pure := by
     funext path
     rw [PMF.map_comp]
@@ -133,8 +135,7 @@ theorem linearMarkovFinitePathPMF_map_eval_of_expectation_stationary
       initial := by
   induction n with
   | zero =>
-      have hi : i = 0 := Subsingleton.elim _ _
-      subst i
+      fin_cases i
       exact linearMarkovFinitePathPMF_map_zero initial transition 0
   | succ n ih =>
       refine Fin.lastCases ?_ (fun j => ?_) i
