@@ -116,8 +116,8 @@ theorem linearMarkovFinitePathSplitPMF_eq_finitePathPMF
   | succ n ih =>
       rw [linearMarkovFinitePathSplitPMF_succ]
       rw [ih]
-      simpa only [Nat.add_assoc] using
-        (linearMarkovFinitePathPMF initial transition (m + n + 2)).symm
+      rw [show m + (n + 1) + 1 = (m + n + 1) + 1 by omega]
+      rw [linearMarkovFinitePathPMF]
 
 /-- Packing a single-chain centered decomposition simply concatenates its
 chronological past segment with its positive continuation. -/
