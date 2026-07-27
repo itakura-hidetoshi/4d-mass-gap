@@ -30,6 +30,10 @@ theorem finite_lattice_randomScanTransitionExpectationLinearMap_eq
     finitePMFTransitionExpectationLinearMap L.randomScanTransitionPMF =
       L.randomScanHeatBathSweepLinearMap := by
   ext f A
+  change
+    finitePMFExpectationReal (L.randomScanTransitionPMF A) f =
+      L.randomScanHeatBathSweepLinearMap f A
+  rw [finite_lattice_randomScanHeatBathSweepLinearMap_apply]
   exact finite_lattice_randomScanTransitionPMF_expectation L A f
 
 /-- The honest finite Wilson path PMF and the previously constructed backward
@@ -62,11 +66,12 @@ theorem finite_lattice_randomScanFinitePathProductMoment_succ_one
       L.randomScanFinitePathProductMoment n fs := by
   rw [finite_lattice_randomScanFinitePathProductMoment_eq_cylinderMoment,
     finite_lattice_randomScanFinitePathProductMoment_eq_cylinderMoment]
-  rw [List.ofFn_succ']
-  change
-    L.randomScanCylinderMoment
-        (List.ofFn fs ++ [fun _ : L.Configuration => (1 : ℝ)]) =
-      L.randomScanCylinderMoment (List.ofFn fs)
+  have hList :
+      List.ofFn (Fin.snoc fs (fun _ : L.Configuration => (1 : ℝ))) =
+        List.ofFn fs ++ [fun _ : L.Configuration => (1 : ℝ)] := by
+    rw [List.ofFn_succ']
+    simp
+  rw [hList]
   exact finite_lattice_randomScanCylinderMoment_append_one L (List.ofFn fs)
 
 end
