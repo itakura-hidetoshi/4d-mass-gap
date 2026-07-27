@@ -62,7 +62,7 @@ theorem linearMarkovFinitePathTailBy_succ
   funext i
   apply congrArg path
   apply Fin.ext
-  simp [linearMarkovFinitePathTailBy]
+  simp
   omega
 
 /-- Deleting any finite number of terminal coordinates recovers the shorter
@@ -79,13 +79,18 @@ theorem linearMarkovFinitePathPMF_map_initBy
       simpa using PMF.map_id
         (linearMarkovFinitePathPMF initial transition n)
   | succ d ih =>
-      rw [show n + (d + 1) = (n + d) + 1 by omega]
       rw [show linearMarkovFinitePathInitBy n (d + 1) =
           linearMarkovFinitePathInitBy n d ∘ Fin.init by
         funext path
         exact linearMarkovFinitePathInitBy_succ n d path]
       rw [← PMF.map_comp]
-      rw [linearMarkovFinitePathPMF_succ_map_init]
+      have hstep :
+          (linearMarkovFinitePathPMF initial transition (n + (d + 1))).map Fin.init =
+            linearMarkovFinitePathPMF initial transition (n + d) := by
+        simpa only [Nat.add_succ] using
+          linearMarkovFinitePathPMF_succ_map_init
+            initial transition (n + d)
+      rw [hstep]
       exact ih
 
 /-- Under detailed balance, deleting any finite number of initial coordinates
@@ -103,14 +108,21 @@ theorem linearMarkovFinitePathPMF_map_tailBy_of_detailedBalanceReal
       simpa using PMF.map_id
         (linearMarkovFinitePathPMF initial transition n)
   | succ d ih =>
-      rw [show n + (d + 1) = (n + d) + 1 by omega]
       rw [show linearMarkovFinitePathTailBy n (d + 1) =
           linearMarkovFinitePathTailBy n d ∘ Fin.tail by
         funext path
         exact linearMarkovFinitePathTailBy_succ n d path]
       rw [← PMF.map_comp]
-      rw [linearMarkovFinitePathPMF_succ_map_tail_of_detailedBalanceReal
-        initial transition hdb (n + d)]
+      have hstep :
+          (linearMarkovFinitePathPMF initial transition (n + (d + 1))).map
+              (Fin.tail :
+                (Fin (n + (d + 1) + 1) → Ω) →
+                  (Fin (n + d + 1) → Ω)) =
+            linearMarkovFinitePathPMF initial transition (n + d) := by
+        simpa only [Nat.add_succ] using
+          linearMarkovFinitePathPMF_succ_map_tail_of_detailedBalanceReal
+            initial transition hdb (n + d)
+      rw [hstep]
       exact ih
 
 end
