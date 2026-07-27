@@ -296,14 +296,24 @@ noncomputable def finiteRealization
       rw [one_mul, R.finiteStateRealizationLinearMap_apply,
         R.finiteCarrierRealization_apply, R.finiteState_norm n x])
 
+@[simp] theorem finiteRealization_apply
+    (R : ObservableLiftClosedGraphTransportData
+      O hContinuous A hSelf F nodes orderCap)
+    (n : ℕ) (x : F.StateSpace) :
+    R.finiteRealization n x =
+      (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant n).physicalState
+        (R.finiteCarrierRealization n x) := by
+  change R.finiteStateRealizationLinearMap n x = _
+  exact R.finiteStateRealizationLinearMap_apply n x
+
 @[simp] theorem finiteRealization_norm
     (R : ObservableLiftClosedGraphTransportData
       O hContinuous A hSelf F nodes orderCap)
     (n : ℕ) (x : F.StateSpace) :
     ‖R.finiteRealization n x‖ = ‖x‖ := by
-  change ‖R.finiteStateRealizationLinearMap n x‖ = ‖x‖
-  rw [R.finiteStateRealizationLinearMap_apply,
-    R.finiteCarrierRealization_apply, R.finiteState_norm n x]
+  rw [R.finiteRealization_apply, R.finiteCarrierRealization_apply,
+    R.finiteState_norm n x]
 
 /-- The common observable lift constructs the complete finite excitation
 realization required by the preceding transport layers. -/
@@ -316,15 +326,25 @@ noncomputable def toExcitationRealizationData
     finiteRealization_norm := R.finiteRealization_norm
     finiteRealization_orthogonal := by
       intro n x
-      change inner ℝ
-        ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S D halfExtent N hN beta hbeta B hInvariant n).physicalState
-          (R.finiteCarrierRealization n x))
-        (physical_yang_mills_evenPeriodicWilsonOS_approximating_vacuum
-          S D halfExtent N hN beta hbeta B hInvariant n) = 0
-      rw [R.finiteCarrierRealization_apply]
+      rw [R.finiteRealization_apply, R.finiteCarrierRealization_apply]
       exact R.finiteState_orthogonal n x
     embed_vacuum := R.embed_vacuum }
+
+/-- The generated excitation embedding has the same ambient representative as
+the common lifted observable. -/
+@[simp] theorem coe_toExcitationRealizationData_excitationEmbed
+    (R : ObservableLiftClosedGraphTransportData
+      O hContinuous A hSelf F nodes orderCap)
+    (n : ℕ) (x : F.StateSpace) :
+    ((R.toExcitationRealizationData.excitationEmbed n x :
+        P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) =
+      A.embed n
+        ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+          S D halfExtent N hN beta hbeta B hInvariant n).physicalState
+          (R.finiteCarrierRealization n x)) := by
+  rw [StronglyContinuousPhysicalSemigroup.PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExcitationRealizationData.coe_excitationEmbed]
+  change A.embed n (R.finiteRealization n x) = _
+  rw [R.finiteRealization_apply]
 
 /-- Compatibility of the common-carrier embedding with the same lifted
 observable generates the represented-state identity required by PR #1173. -/
@@ -383,9 +403,9 @@ noncomputable def toGibbsHeatBathObservableClosedGraphTransportData
     approximateValue_tendsto := R.approximateValue_tendsto
     embeddedVector_tendsto := by
       intro k
-      simpa [StronglyContinuousPhysicalSemigroup.PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonExcitationRealizationData.coe_excitationEmbed,
-        toExcitationRealizationData, finiteRealization,
-        finiteStateRealizationLinearMap, finiteCarrierRealization] using
+      rw [tendsto_subtype_rng]
+      simpa only [coe_toExcitationRealizationData_excitationEmbed,
+        finiteCarrierRealization_apply] using
         R.embeddedVector_tendsto k
     finiteApproximation := R.finiteApproximation
     finiteApproximation_tendsto_selected :=
