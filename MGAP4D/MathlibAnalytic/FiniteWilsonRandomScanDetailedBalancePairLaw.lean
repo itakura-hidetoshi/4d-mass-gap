@@ -118,17 +118,25 @@ theorem finite_lattice_randomScanHeatBathSweep_gibbsPairing_symm
   exact finite_lattice_singleLinkHeatBath_gibbsPairing_projection_symm
     L e f g
 
+/-- The real point-indicator observable of one finite Wilson configuration.
+Classical decidable equality is confined inside this noncomputable definition. -/
+noncomputable def FiniteLatticeWilsonSystem.configurationPointIndicator
+    (L : FiniteLatticeWilsonSystem)
+    (A : L.Configuration) : L.Configuration → ℝ := by
+  classical
+  exact fun C => if C = A then 1 else 0
+
 /-- Pairing against a point indicator in the second slot evaluates the first
 observable at that point. -/
 theorem finite_lattice_gibbsPairingReal_indicator_right
     (L : FiniteLatticeWilsonSystem)
     (f : L.Configuration → ℝ)
     (A : L.Configuration) :
-    L.gibbsPairingReal f
-        (fun C => if C = A then (1 : ℝ) else 0) =
+    L.gibbsPairingReal f (L.configurationPointIndicator A) =
       L.gibbsProbabilityReal A * f A := by
   classical
   unfold FiniteLatticeWilsonSystem.gibbsPairingReal
+    FiniteLatticeWilsonSystem.configurationPointIndicator
   simp [mul_assoc]
 
 /-- Pairing a point indicator in the first slot evaluates the second observable
@@ -137,11 +145,11 @@ theorem finite_lattice_gibbsPairingReal_indicator_left
     (L : FiniteLatticeWilsonSystem)
     (A : L.Configuration)
     (g : L.Configuration → ℝ) :
-    L.gibbsPairingReal
-        (fun C => if C = A then (1 : ℝ) else 0) g =
+    L.gibbsPairingReal (L.configurationPointIndicator A) g =
       L.gibbsProbabilityReal A * g A := by
   classical
   unfold FiniteLatticeWilsonSystem.gibbsPairingReal
+    FiniteLatticeWilsonSystem.configurationPointIndicator
   simp [mul_assoc]
 
 /-- Applying the random-scan sweep to a point indicator recovers the point mass
@@ -150,11 +158,12 @@ theorem finite_lattice_randomScanHeatBathSweep_indicator
     (L : FiniteLatticeWilsonSystem)
     [Nonempty L.Edge]
     (A B : L.Configuration) :
-    L.randomScanHeatBathSweep
-        (fun C => if C = B then (1 : ℝ) else 0) A =
+    L.randomScanHeatBathSweep (L.configurationPointIndicator B) A =
       (L.randomScanTransitionPMF A B).toReal := by
+  classical
   rw [← finite_lattice_randomScanTransitionPMF_expectation]
   unfold finitePMFExpectationReal
+    FiniteLatticeWilsonSystem.configurationPointIndicator
   simp
 
 /-- Pointwise real detailed balance for the actual finite Wilson random-scan
@@ -169,9 +178,8 @@ theorem finite_lattice_randomScanTransitionPMF_detailedBalance_real
         (L.randomScanTransitionPMF B A).toReal := by
   have hsym :=
     finite_lattice_randomScanHeatBathSweep_gibbsPairing_symm
-      L
-      (fun C : L.Configuration => if C = B then (1 : ℝ) else 0)
-      (fun C : L.Configuration => if C = A then (1 : ℝ) else 0)
+      L (L.configurationPointIndicator B)
+        (L.configurationPointIndicator A)
   rw [finite_lattice_gibbsPairingReal_indicator_right,
     finite_lattice_gibbsPairingReal_indicator_left] at hsym
   rw [finite_lattice_randomScanHeatBathSweep_indicator,
