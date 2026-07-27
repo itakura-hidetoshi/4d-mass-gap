@@ -99,15 +99,19 @@ theorem linearMarkovFinitePathPMF_apply_succ
         have hinit := congrArg Fin.init hy
         rw [Fin.init_snoc] at hinit
         exact hinit.symm
-      have hleft :
-          (∑ y : Ω,
-            if path = Fin.snoc old y then
-              transition (old (Fin.last n)) y
-            else 0) = 0 := by
-        apply Finset.sum_eq_zero
-        intro y _hy
-        rw [if_neg (hsnoc y)]
-      rw [hleft, if_neg hold]
+      calc
+        (∑ y : Ω,
+          @ite ℝ≥0∞ (path = Fin.snoc old y)
+            (Classical.propDecidable (path = Fin.snoc old y))
+            (transition (old (Fin.last n)) y) 0) = 0 := by
+              apply Finset.sum_eq_zero
+              intro y _hy
+              rw [if_neg (hsnoc y)]
+        _ = (if old = Fin.init path then
+              transition ((Fin.init path) (Fin.last n))
+                (path (Fin.last (n + 1)))
+            else 0) := by
+              rw [if_neg hold]
   rw [linearMarkovFinitePathPMF, PMF.bind_apply, tsum_fintype]
   simp_rw [PMF.map_apply, tsum_fintype]
   change
