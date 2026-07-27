@@ -63,7 +63,7 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
           Fin ((n + 3) + (n + 2))) =
           Fin.castAdd (n + 2) a.succ := by
       apply Fin.ext
-      omega
+      rfl
     rw [hk, Fin.append_left]
     unfold linearMarkovFinitePathReverse
     have hrev : a.succ.rev = a.rev.castSucc := by
@@ -73,7 +73,7 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
     refine Fin.cases ?_ ?_ a.rev
     · simp
     · intro j
-      simp
+      rfl
   · intro b
     rw [Fin.append_right]
     have hk :
@@ -81,6 +81,7 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
           Fin ((n + 3) + (n + 2))) =
           Fin.natAdd (n + 3) b.castSucc := by
       apply Fin.ext
+      change (n + 2 + b.1) + 1 = n + 3 + b.1
       omega
     rw [hk, Fin.append_right]
     rfl
