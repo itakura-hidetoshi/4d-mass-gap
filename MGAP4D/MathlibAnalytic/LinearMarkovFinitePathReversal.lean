@@ -102,7 +102,15 @@ theorem linearMarkovFinitePathPMF_apply_succ
         have hinit := congrArg Fin.init hy
         rw [Fin.init_snoc] at hinit
         exact hinit.symm
-      simp [hold, hsnoc]
+      have hleft :
+          (∑ y : Ω,
+            if path = Fin.snoc old y then
+              transition (old (Fin.last n)) y
+            else 0) = 0 := by
+        apply Finset.sum_eq_zero
+        intro y _hy
+        rw [if_neg (hsnoc y)]
+      rw [hleft, if_neg hold]
   simp_rw [hinner]
   calc
     (∑ old : Fin (n + 1) → Ω,
