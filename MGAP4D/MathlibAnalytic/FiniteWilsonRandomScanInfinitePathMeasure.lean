@@ -5,7 +5,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Set MeasureTheory
+open Finset MeasureTheory Preorder
 
 noncomputable section
 
@@ -22,7 +22,7 @@ random-scan chain, indexed by natural times at most `n`. -/
 def FiniteLatticeWilsonSystem.randomScanFiniteIicPathMeasure
     (L : FiniteLatticeWilsonSystem)
     [Nonempty L.Edge]
-    (n : ℕ) : Measure (Iic n → L.Configuration) :=
+    (n : ℕ) : Measure (Finset.Iic n → L.Configuration) :=
   linearMarkovFiniteIicPathMeasure
     L.gibbsPMF L.randomScanTransitionPMF n
 
