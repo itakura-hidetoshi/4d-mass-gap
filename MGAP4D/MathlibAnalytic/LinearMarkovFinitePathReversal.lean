@@ -50,6 +50,11 @@ theorem linearMarkovFinitePathPMF_apply_succ
       linearMarkovFinitePathPMF initial transition n (Fin.init path) *
         transition ((Fin.init path) (Fin.last n))
           (path (Fin.last (n + 1))) := by
+  letI : DecidableEq Ω := Classical.decEq Ω
+  letI : DecidableEq (Fin (n + 1) → Ω) :=
+    Fintype.decidablePiFintype
+  letI : DecidableEq (Fin (n + 2) → Ω) :=
+    Fintype.decidablePiFintype
   rw [linearMarkovFinitePathPMF, PMF.bind_apply, tsum_fintype]
   simp_rw [PMF.map_apply, tsum_fintype]
   have hinner (old : Fin (n + 1) → Ω) :
