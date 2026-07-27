@@ -32,8 +32,15 @@ theorem linearMarkovFinitePathTail_snoc
   · have hIndex : j.castSucc.succ = j.succ.castSucc := by
       ext
       rfl
-    rw [hIndex]
-    exact Fin.snoc_castSucc path y j.succ
+    calc
+      Fin.tail (Fin.snoc path y) j.castSucc =
+          Fin.snoc path y j.castSucc.succ := rfl
+      _ = Fin.snoc path y j.succ.castSucc :=
+        congrArg (Fin.snoc path y) hIndex
+      _ = path j.succ := Fin.snoc_castSucc path y j.succ
+      _ = Fin.tail path j := rfl
+      _ = Fin.snoc (Fin.tail path) y j.castSucc :=
+        (Fin.snoc_castSucc (Fin.tail path) y j).symm
 
 /-- Under stationarity of the initial law, deleting the initial coordinate of a
 finite Markov path gives exactly the preceding finite path law. -/
