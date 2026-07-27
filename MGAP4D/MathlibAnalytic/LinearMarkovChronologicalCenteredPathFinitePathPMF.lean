@@ -102,7 +102,6 @@ theorem linearMarkovFinitePathSplitPMF_succ
   simp only [Function.comp_apply]
   rw [linearMarkovAppendFinitePath_last]
   rw [PMF.map_comp]
-  simp only [Function.comp_apply]
   apply congrArg (fun f => (transition (future (Fin.last n))).map f)
   funext y
   exact linearMarkovAppendFinitePath_snoc past future y
@@ -133,7 +132,6 @@ theorem linearMarkovFinitePathSplitPMF_eq_finitePathPMF
       apply congrArg (PMF.bind (linearMarkovFinitePathPMF initial transition m))
       funext past
       rw [PMF.map_comp]
-      simp only [Function.comp_apply]
       apply congrArg (fun f => (transition (past (Fin.last m))).map f)
       funext y
       exact linearMarkovAppendFinitePath_zero past y
@@ -183,7 +181,6 @@ theorem linearMarkovChronologicalCenteredFinitePathSumPMF_eq_split
     (PMF.bind (linearMarkovFinitePathPMF initial transition (n + 1)))
   funext past
   rw [PMF.map_comp]
-  simp only [Function.comp_apply]
   apply congrArg
     (fun f =>
       (linearMarkovPositiveTimeFuturePMF transition n
