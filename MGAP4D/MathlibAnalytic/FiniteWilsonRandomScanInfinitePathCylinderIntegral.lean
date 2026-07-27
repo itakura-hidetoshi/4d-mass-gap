@@ -41,6 +41,15 @@ theorem finite_lattice_randomScanInfinitePathMeasure_cylinder_one
             fun _ : L.Configuration => (1 : ℝ)) path
       ∂L.randomScanInfinitePathMeasure) = 1 := by
   rw [finite_lattice_randomScanInfinitePathMeasure_cylinder_integral]
+  have hList :
+      List.ofFn
+          (fun _ : Fin (n + 1) =>
+            fun _ : L.Configuration => (1 : ℝ)) =
+        List.replicate (n + 1)
+          (fun _ : L.Configuration => (1 : ℝ)) := by
+    ext i
+    simp
+  rw [hList]
   exact finite_lattice_randomScanCylinderMoment_replicate_one L (n + 1)
 
 end
