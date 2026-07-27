@@ -60,6 +60,7 @@ theorem linearMarkovCenteredFinitePathConditionalPMF_succ_map_init
   rw [PMF.bind_map]
   apply congrArg (PMF.bind qBig)
   funext negative
+  simp only [Function.comp_apply]
   rw [PMF.map_comp]
   rfl
 
