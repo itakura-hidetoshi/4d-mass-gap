@@ -45,7 +45,7 @@ theorem finite_lattice_randomScanCylinderMoment_singleton
   linearMarkovCylinderMoment_singleton
     L.gibbsExpectationReal
     L.randomScanHeatBathSweepLinearMap
-    (finite_lattice_randomScanHeatBathSweepLinearMap_one L)
+    (finite_lattice_randomScanHeatBathSweepLinearMap_one L inferInstance)
     f
 
 /-- A two-coordinate finite Wilson cylinder is the Gibbs expectation of the
@@ -61,7 +61,7 @@ theorem finite_lattice_randomScanCylinderMoment_pair
     linearMarkovCylinderMoment_pair
       L.gibbsExpectationReal
       L.randomScanHeatBathSweepLinearMap
-      (finite_lattice_randomScanHeatBathSweepLinearMap_one L)]
+      (finite_lattice_randomScanHeatBathSweepLinearMap_one L inferInstance)]
   congr 1
   funext A
   rw [finite_lattice_randomScanHeatBathSweepLinearMap_apply]
@@ -78,7 +78,7 @@ theorem finite_lattice_randomScanCylinderMoment_append_one
   linearMarkovCylinderMoment_append_one
     L.gibbsExpectationReal
     L.randomScanHeatBathSweepLinearMap
-    (finite_lattice_randomScanHeatBathSweepLinearMap_one L)
+    (finite_lattice_randomScanHeatBathSweepLinearMap_one L inferInstance)
     fs
 
 /-- Every all-one finite Wilson cylinder has normalized moment one. -/
@@ -92,7 +92,7 @@ theorem finite_lattice_randomScanCylinderMoment_replicate_one
     linearMarkovCylinderMoment]
   rw [linearMarkovCylinderCondition_replicate_one
     L.randomScanHeatBathSweepLinearMap
-    (finite_lattice_randomScanHeatBathSweepLinearMap_one L)]
+    (finite_lattice_randomScanHeatBathSweepLinearMap_one L inferInstance)]
   exact finite_lattice_gibbsExpectationReal_one L
 
 end
