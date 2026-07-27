@@ -110,14 +110,14 @@ theorem linearMarkovFinitePathPMF_bind_transition_initial
       change
         initial.bind (fun x =>
           (linearMarkovFinitePathPMF (transition x) transition n).bind
-            (fun path =>
-              (transition (path (Fin.last n))).map fun y =>
-                Fin.snoc path y)) =
+            (fun path : Fin (n + 1) → Ω =>
+              (transition (path (Fin.last n))).map fun y : Ω =>
+                (Fin.snoc path y : Fin (n + 2) → Ω))) =
         (linearMarkovFinitePathPMF
           (initial.bind transition) transition n).bind
-            (fun path =>
-              (transition (path (Fin.last n))).map fun y =>
-                Fin.snoc path y)
+            (fun path : Fin (n + 1) → Ω =>
+              (transition (path (Fin.last n))).map fun y : Ω =>
+                (Fin.snoc path y : Fin (n + 2) → Ω))
       rw [← PMF.bind_bind]
       rw [ih]
 
