@@ -18,6 +18,20 @@ def linearMarkovIntegerCenteredIndexEmbed
     (linearMarkovIntegerCenteredIndexEmbed n d i).1 = i.1 + d :=
   rfl
 
+/-- Reindex a centered finite path along an equality of radii. -/
+def linearMarkovIntegerCenteredFinitePathCast
+    {Ω : Type*} {a b : ℕ} (h : a = b)
+    (path : LinearMarkovIntegerCenteredFinitePath Ω a) :
+    LinearMarkovIntegerCenteredFinitePath Ω b := by
+  subst b
+  exact path
+
+@[simp] theorem linearMarkovIntegerCenteredFinitePathCast_rfl
+    {Ω : Type*} {a : ℕ}
+    (path : LinearMarkovIntegerCenteredFinitePath Ω a) :
+    linearMarkovIntegerCenteredFinitePathCast rfl path = path :=
+  rfl
+
 /-- Centered coordinate embedding preserves the represented integer time. -/
 @[simp] theorem linearMarkovIntegerCenteredTime_indexEmbed
     (n d : ℕ) (i : Fin (2 * n + 3)) :
