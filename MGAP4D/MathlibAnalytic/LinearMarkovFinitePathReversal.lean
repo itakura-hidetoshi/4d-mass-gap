@@ -50,7 +50,6 @@ theorem linearMarkovFinitePathPMF_apply_succ
       linearMarkovFinitePathPMF initial transition n (Fin.init path) *
         transition ((Fin.init path) (Fin.last n))
           (path (Fin.last (n + 1))) := by
-  classical
   rw [linearMarkovFinitePathPMF, PMF.bind_apply, tsum_fintype]
   simp_rw [PMF.map_apply, tsum_fintype]
   have hinner (old : Fin (n + 1) → Ω) :
