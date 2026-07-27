@@ -95,7 +95,9 @@ theorem linearMarkovFinitePathPMF_apply_succ
     · have hsnoc : ∀ y : Ω, path ≠ Fin.snoc old y := by
         intro y hy
         apply hold
-        exact (by simpa using (congrArg Fin.init hy).symm)
+        have hinit := congrArg Fin.init hy
+        rw [Fin.init_snoc] at hinit
+        exact hinit.symm
       simp [hold, hsnoc]
   simp_rw [hinner]
   calc
