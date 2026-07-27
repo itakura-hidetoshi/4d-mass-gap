@@ -103,7 +103,7 @@ theorem linearMarkovFiniteIicPathPMF_map_frestrictLe₂
     (a b : ℕ)
     (hab : a ≤ b) :
     (linearMarkovFiniteIicPathPMF initial transition b).map
-        (frestrictLe₂ (X := fun _ : ℕ => Ω) hab) =
+        (frestrictLe₂ (α := ℕ) (π := fun _ : ℕ => Ω) hab) =
       linearMarkovFiniteIicPathPMF initial transition a := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hab
   convert linearMarkovFiniteIicPathPMF_map_prefix
@@ -140,16 +140,17 @@ theorem linearMarkovFiniteIicPathMeasure_map_frestrictLe₂
     (a b : ℕ)
     (hab : a ≤ b) :
     (linearMarkovFiniteIicPathMeasure initial transition b).map
-        (frestrictLe₂ (X := fun _ : ℕ => Ω) hab) =
+        (frestrictLe₂ (α := ℕ) (π := fun _ : ℕ => Ω) hab) =
       linearMarkovFiniteIicPathMeasure initial transition a := by
   unfold linearMarkovFiniteIicPathMeasure
   calc
     (linearMarkovFiniteIicPathPMF initial transition b).toMeasure.map
-        (frestrictLe₂ (X := fun _ : ℕ => Ω) hab) =
+        (frestrictLe₂ (α := ℕ) (π := fun _ : ℕ => Ω) hab) =
       ((linearMarkovFiniteIicPathPMF initial transition b).map
-        (frestrictLe₂ (X := fun _ : ℕ => Ω) hab)).toMeasure :=
+        (frestrictLe₂ (α := ℕ) (π := fun _ : ℕ => Ω) hab)).toMeasure :=
           PMF.toMeasure_map _
-            (measurable_frestrictLe₂ (X := fun _ : ℕ => Ω) hab)
+            (measurable_frestrictLe₂
+              (α := ℕ) (π := fun _ : ℕ => Ω) hab)
     _ = (linearMarkovFiniteIicPathPMF initial transition a).toMeasure :=
       congrArg PMF.toMeasure
         (linearMarkovFiniteIicPathPMF_map_frestrictLe₂
@@ -225,7 +226,7 @@ theorem linearMarkovInfinitePathMeasure_map_frestrictLe
     (transition : Ω → PMF Ω)
     (n : ℕ) :
     (linearMarkovInfinitePathMeasure initial transition).map
-        (frestrictLe (X := fun _ : ℕ => Ω) n) =
+        (frestrictLe (α := ℕ) (π := fun _ : ℕ => Ω) n) =
       linearMarkovFiniteIicPathMeasure initial transition n := by
   let P := linearMarkovFinitePathProjectiveFamily initial transition
   have hP :
@@ -234,7 +235,7 @@ theorem linearMarkovInfinitePathMeasure_map_frestrictLe
   change
     (standardBorelKolmogorovProjectiveLimit
       (α := fun _ : ℕ => Ω) P hP).map
-        (frestrictLe (X := fun _ : ℕ => Ω) n) =
+        (frestrictLe (α := ℕ) (π := fun _ : ℕ => Ω) n) =
       linearMarkovFiniteIicPathMeasure initial transition n
   have hLimit :
       IsProjectiveLimit
@@ -247,11 +248,12 @@ theorem linearMarkovInfinitePathMeasure_map_frestrictLe
   calc
     (standardBorelKolmogorovProjectiveLimit
         (α := fun _ : ℕ => Ω) P hP).map
-        (frestrictLe (X := fun _ : ℕ => Ω) n) =
+        (frestrictLe (α := ℕ) (π := fun _ : ℕ => Ω) n) =
       P (Finset.Iic n) := hn
     _ = linearMarkovFiniteIicPathMeasure initial transition n := by
       unfold P linearMarkovFinitePathProjectiveFamily
       exact MeasureTheory.inducedFamily_Iic
+        (X := fun _ : ℕ => Ω)
         (linearMarkovFiniteIicPathMeasure initial transition) n
 
 /-- Restrict an infinite path to its first `n + 1` coordinates in the original
@@ -284,7 +286,7 @@ theorem linearMarkovInfinitePathMeasure_map_finPrefix
   have hPrefix :
       linearMarkovInfinitePathFinPrefix (Ω := Ω) n =
         (linearMarkovFinIicPathEquiv (Ω := Ω) n).symm ∘
-          frestrictLe (X := fun _ : ℕ => Ω) n := by
+          frestrictLe (α := ℕ) (π := fun _ : ℕ => Ω) n := by
     funext path i
     rfl
   have hEquivMeasurable :
@@ -294,13 +296,14 @@ theorem linearMarkovInfinitePathMeasure_map_finPrefix
   calc
     (linearMarkovInfinitePathMeasure initial transition).map
         ((linearMarkovFinIicPathEquiv n).symm ∘
-          frestrictLe (X := fun _ : ℕ => Ω) n) =
+          frestrictLe (α := ℕ) (π := fun _ : ℕ => Ω) n) =
       ((linearMarkovInfinitePathMeasure initial transition).map
-        (frestrictLe (X := fun _ : ℕ => Ω) n)).map
+        (frestrictLe (α := ℕ) (π := fun _ : ℕ => Ω) n)).map
           (linearMarkovFinIicPathEquiv n).symm := by
             symm
             exact Measure.map_map hEquivMeasurable
-              (measurable_frestrictLe (X := fun _ : ℕ => Ω) n)
+              (measurable_frestrictLe
+                (α := ℕ) (π := fun _ : ℕ => Ω) n)
     _ = (linearMarkovFiniteIicPathMeasure initial transition n).map
         (linearMarkovFinIicPathEquiv n).symm := by
           rw [linearMarkovInfinitePathMeasure_map_frestrictLe]
