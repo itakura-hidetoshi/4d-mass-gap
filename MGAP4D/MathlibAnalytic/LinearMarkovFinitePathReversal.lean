@@ -65,33 +65,15 @@ theorem linearMarkovFinitePathPMF_apply_succ
     by_cases hold : old = Fin.init path
     · subst old
       rw [← Fin.snoc_init_self path]
-      simp only [Fin.snoc_inj, true_and]
+      simp only [Fin.snoc_inj]
       simp
     · have hsnoc : ∀ y : Ω, path ≠ Fin.snoc old y := by
         intro y hy
         apply hold
         exact (by simpa using (congrArg Fin.init hy).symm)
       simp [hold, hsnoc]
-  calc
-    (∑ old : Fin (n + 1) → Ω,
-        linearMarkovFinitePathPMF initial transition n old *
-          (∑ y : Ω,
-            if path = Fin.snoc old y then
-              transition (old (Fin.last n)) y
-            else 0)) =
-      (∑ old : Fin (n + 1) → Ω,
-        linearMarkovFinitePathPMF initial transition n old *
-          (if old = Fin.init path then
-            transition ((Fin.init path) (Fin.last n))
-              (path (Fin.last (n + 1)))
-          else 0)) := by
-            apply Finset.sum_congr rfl
-            intro old _hold
-            rw [hinner old]
-    _ = linearMarkovFinitePathPMF initial transition n (Fin.init path) *
-        transition ((Fin.init path) (Fin.last n))
-          (path (Fin.last (n + 1))) := by
-          simp
+  simp_rw [hinner]
+  simp
 
 /-- The zero-transition finite path PMF evaluates to the initial point mass. -/
 theorem linearMarkovFinitePathPMF_apply_zero
@@ -235,7 +217,7 @@ theorem linearMarkovFinitePathProbabilityReal_reverse_eq_backward
   rw [← Equiv.prod_comp (Fin.revPerm : Equiv.Perm (Fin n))]
   apply Finset.prod_congr rfl
   intro i _hi
-  simp [linearMarkovFinitePathReverse]
+  rw [Fin.rev_castSucc, Fin.rev_succ, Fin.rev_rev, Fin.rev_rev]
 
 /-- Detailed balance makes every explicit finite path probability invariant under
 complete path reversal. -/
