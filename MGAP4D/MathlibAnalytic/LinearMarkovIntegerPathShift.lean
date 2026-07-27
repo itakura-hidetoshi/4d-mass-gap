@@ -101,27 +101,43 @@ theorem linearMarkovFinitePathPMF_bind_transition_initial
       linearMarkovFinitePathPMF (initial.bind transition) transition n := by
   induction n with
   | zero =>
-      rw [linearMarkovFinitePathPMF]
+      change
+        initial.bind (fun x =>
+          (transition x).map (fun y => fun _ : Fin 1 => y)) =
+        (initial.bind transition).map (fun y => fun _ : Fin 1 => y)
       rw [PMF.map_bind]
   | succ n ih =>
-      rw [linearMarkovFinitePathPMF]
+      change
+        initial.bind (fun x =>
+          (linearMarkovFinitePathPMF (transition x) transition n).bind
+            (fun path =>
+              (transition (path (Fin.last n))).map fun y =>
+                Fin.snoc path y)) =
+        (linearMarkovFinitePathPMF
+          (initial.bind transition) transition n).bind
+            (fun path =>
+              (transition (path (Fin.last n))).map fun y =>
+                Fin.snoc path y)
       rw [← PMF.bind_bind]
       rw [ih]
 
 /-- Deleting the first coordinate of a finite Markov path advances its initial
 law by one application of the transition kernel. -/
 theorem linearMarkovFinitePathPMF_succ_map_tail
-    {Ω : Type*}
+    {Ω : Type*} [Fintype Ω]
     (initial : PMF Ω) (transition : Ω → PMF Ω)
     (n : ℕ) :
-    (linearMarkovFinitePathPMF initial transition (n + 1)).map Fin.tail =
+    (linearMarkovFinitePathPMF initial transition (n + 1)).map
+        (Fin.tail : (Fin (n + 2) → Ω) → (Fin (n + 1) → Ω)) =
       linearMarkovFinitePathPMF (initial.bind transition) transition n := by
   rw [linearMarkovFinitePathPMF_eq_initial_bind_positiveTimeFuture]
   rw [PMF.map_bind]
   change
     initial.bind (fun boundary =>
       ((linearMarkovFinitePathPMF (transition boundary) transition n).map
-          (fun future => Fin.cons boundary future)).map Fin.tail) =
+          (fun future : Fin (n + 1) → Ω =>
+            (Fin.cons boundary future : Fin (n + 2) → Ω))).map
+        (Fin.tail : (Fin (n + 2) → Ω) → (Fin (n + 1) → Ω))) =
       linearMarkovFinitePathPMF (initial.bind transition) transition n
   calc
     _ = initial.bind
@@ -146,7 +162,8 @@ theorem linearMarkovFinitePathPMF_succ_map_tail_of_detailedBalanceReal
     (initial : PMF Ω) (transition : Ω → PMF Ω)
     (hdb : LinearMarkovDetailedBalanceReal initial transition)
     (n : ℕ) :
-    (linearMarkovFinitePathPMF initial transition (n + 1)).map Fin.tail =
+    (linearMarkovFinitePathPMF initial transition (n + 1)).map
+        (Fin.tail : (Fin (n + 2) → Ω) → (Fin (n + 1) → Ω)) =
       linearMarkovFinitePathPMF initial transition n := by
   rw [linearMarkovFinitePathPMF_succ_map_tail]
   rw [linearMarkovInitialPMF_bind_transition_of_detailedBalanceReal
