@@ -6,7 +6,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Set MeasureTheory
+open Finset MeasureTheory Preorder
 open scoped ENNReal
 
 noncomputable section
@@ -16,11 +16,11 @@ natural times at most `n`. -/
 def linearMarkovFinIicPathEquiv
     {Ω : Type*}
     (n : ℕ) :
-    (Fin (n + 1) → Ω) ≃ (Iic n → Ω) where
+    (Fin (n + 1) → Ω) ≃ (Finset.Iic n → Ω) where
   toFun path i :=
-    path ⟨i.1, Nat.lt_succ_of_le (mem_Iic.mp i.2)⟩
+    path ⟨i.1, Nat.lt_succ_of_le (Finset.mem_Iic.mp i.2)⟩
   invFun path i :=
-    path ⟨i.1, mem_Iic.mpr (Nat.le_of_lt_succ i.2)⟩
+    path ⟨i.1, Finset.mem_Iic.mpr (Nat.le_of_lt_succ i.2)⟩
   left_inv path := by
     funext i
     rfl
@@ -33,10 +33,10 @@ def linearMarkovFinIicPathEquiv
 def linearMarkovIicPathPrefix
     {Ω : Type*}
     (m k : ℕ) :
-    (Iic (m + k) → Ω) → (Iic m → Ω) :=
+    (Finset.Iic (m + k) → Ω) → (Finset.Iic m → Ω) :=
   fun path i => path ⟨i.1, by
-    apply mem_Iic.mpr
-    exact (mem_Iic.mp i.2).trans (Nat.le_add_right m k)⟩
+    apply Finset.mem_Iic.mpr
+    exact (Finset.mem_Iic.mp i.2).trans (Nat.le_add_right m k)⟩
 
 /-- The `Iic` prefix map is exactly the transport of the finite-tuple prefix map
 through the canonical `Fin`/`Iic` equivalences. -/
@@ -56,7 +56,7 @@ def linearMarkovFiniteIicPathPMF
     {Ω : Type*}
     (initial : PMF Ω)
     (transition : Ω → PMF Ω)
-    (n : ℕ) : PMF (Iic n → Ω) :=
+    (n : ℕ) : PMF (Finset.Iic n → Ω) :=
   (linearMarkovFinitePathPMF initial transition n).map
     (linearMarkovFinIicPathEquiv n)
 
@@ -105,13 +105,9 @@ theorem linearMarkovFiniteIicPathPMF_map_frestrictLe₂
     (linearMarkovFiniteIicPathPMF initial transition b).map
         (frestrictLe₂ hab) =
       linearMarkovFiniteIicPathPMF initial transition a := by
-  let k := b - a
-  have habk : a + k = b := Nat.add_sub_of_le hab
-  have h :=
-    linearMarkovFiniteIicPathPMF_map_prefix
-      initial transition a k
-  rw [habk] at h
-  convert h using 1
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hab
+  convert linearMarkovFiniteIicPathPMF_map_prefix
+    initial transition a k using 1
   funext path i
   rfl
 
@@ -121,7 +117,7 @@ def linearMarkovFiniteIicPathMeasure
     {Ω : Type*} [MeasurableSpace Ω]
     (initial : PMF Ω)
     (transition : Ω → PMF Ω)
-    (n : ℕ) : Measure (Iic n → Ω) :=
+    (n : ℕ) : Measure (Finset.Iic n → Ω) :=
   (linearMarkovFiniteIicPathPMF initial transition n).toMeasure
 
 instance linearMarkovFiniteIicPathMeasure_isProbabilityMeasure
@@ -147,10 +143,16 @@ theorem linearMarkovFiniteIicPathMeasure_map_frestrictLe₂
         (frestrictLe₂ hab) =
       linearMarkovFiniteIicPathMeasure initial transition a := by
   unfold linearMarkovFiniteIicPathMeasure
-  rw [PMF.toMeasure_map _ (by fun_prop)]
-  exact congrArg PMF.toMeasure
-    (linearMarkovFiniteIicPathPMF_map_frestrictLe₂
-      initial transition a b hab)
+  calc
+    (linearMarkovFiniteIicPathPMF initial transition b).toMeasure.map
+        (frestrictLe₂ hab) =
+      ((linearMarkovFiniteIicPathPMF initial transition b).map
+        (frestrictLe₂ hab)).toMeasure :=
+          PMF.toMeasure_map _ (measurable_frestrictLe₂ hab)
+    _ = (linearMarkovFiniteIicPathPMF initial transition a).toMeasure :=
+      congrArg PMF.toMeasure
+        (linearMarkovFiniteIicPathPMF_map_frestrictLe₂
+          initial transition a b hab)
 
 /-- The full finite-dimensional projective family generated from the natural
 prefix laws. -/
@@ -160,6 +162,7 @@ def linearMarkovFinitePathProjectiveFamily
     (transition : Ω → PMF Ω)
     (J : Finset ℕ) : Measure (J → Ω) :=
   MeasureTheory.inducedFamily
+    (X := fun _ : ℕ => Ω)
     (linearMarkovFiniteIicPathMeasure initial transition) J
 
 instance linearMarkovFinitePathProjectiveFamily_isProbabilityMeasure
@@ -180,8 +183,10 @@ theorem linearMarkovFinitePathProjectiveFamily_projective
     (initial : PMF Ω)
     (transition : Ω → PMF Ω) :
     IsProjectiveMeasureFamily
+      (α := fun _ : ℕ => Ω)
       (linearMarkovFinitePathProjectiveFamily initial transition) := by
-  exact MeasureTheory.isProjectiveMeasureFamily_inducedFamily _
+  exact MeasureTheory.isProjectiveMeasureFamily_inducedFamily
+    (X := fun _ : ℕ => Ω) _
     (fun a b hab =>
       linearMarkovFiniteIicPathMeasure_map_frestrictLe₂
         initial transition a b hab)
@@ -222,14 +227,17 @@ theorem linearMarkovInfinitePathMeasure_map_frestrictLe
         (frestrictLe n) =
       linearMarkovFiniteIicPathMeasure initial transition n := by
   let P := linearMarkovFinitePathProjectiveFamily initial transition
-  have hP : IsProjectiveMeasureFamily P :=
+  have hP :
+      IsProjectiveMeasureFamily (α := fun _ : ℕ => Ω) P :=
     linearMarkovFinitePathProjectiveFamily_projective initial transition
   have hLimit :
       IsProjectiveLimit
         (standardBorelKolmogorovProjectiveLimit
           (α := fun _ : ℕ => Ω) P hP) P :=
     isProjectiveLimit_standardBorelKolmogorovProjectiveLimit hP
-  have hn := (MeasureTheory.isProjectiveLimit_nat_iff hP _).mp hLimit n
+  have hn :=
+    (MeasureTheory.isProjectiveLimit_nat_iff
+      (X := fun _ : ℕ => Ω) hP _).mp hLimit n
   simpa [linearMarkovInfinitePathMeasure, P,
     linearMarkovFinitePathProjectiveFamily] using hn
 
@@ -240,6 +248,14 @@ def linearMarkovInfinitePathFinPrefix
     (n : ℕ) :
     (ℕ → Ω) → (Fin (n + 1) → Ω) :=
   fun path i => path i.1
+
+/-- The finite-tuple prefix map is measurable. -/
+theorem measurable_linearMarkovInfinitePathFinPrefix
+    {Ω : Type*} [MeasurableSpace Ω]
+    (n : ℕ) :
+    Measurable (linearMarkovInfinitePathFinPrefix (Ω := Ω) n) := by
+  unfold linearMarkovInfinitePathFinPrefix
+  fun_prop
 
 /-- Every original `Fin`-indexed finite path PMF is recovered exactly as a
 marginal of the infinite path probability measure. -/
@@ -258,14 +274,24 @@ theorem linearMarkovInfinitePathMeasure_map_finPrefix
           frestrictLe n := by
     funext path i
     rfl
-  rw [hPrefix, ← Measure.map_map (by fun_prop) (by fun_prop)]
+  have hEquivMeasurable :
+      Measurable (linearMarkovFinIicPathEquiv (Ω := Ω) n).symm :=
+    measurable_of_finite _
+  rw [hPrefix, ← Measure.map_map (measurable_frestrictLe n) hEquivMeasurable]
   rw [linearMarkovInfinitePathMeasure_map_frestrictLe]
-  unfold linearMarkovFiniteIicPathMeasure
-  rw [PMF.toMeasure_map _ (by fun_prop)]
-  unfold linearMarkovFiniteIicPathPMF
-  rw [PMF.map_comp]
-  simpa [Function.comp_def] using
-    PMF.map_id (linearMarkovFinitePathPMF initial transition n)
+  calc
+    (linearMarkovFiniteIicPathMeasure initial transition n).map
+        (linearMarkovFinIicPathEquiv n).symm =
+      ((linearMarkovFiniteIicPathPMF initial transition n).map
+        (linearMarkovFinIicPathEquiv n).symm).toMeasure := by
+          unfold linearMarkovFiniteIicPathMeasure
+          exact PMF.toMeasure_map _ hEquivMeasurable
+    _ = (linearMarkovFinitePathPMF initial transition n).toMeasure := by
+      congr 1
+      unfold linearMarkovFiniteIicPathPMF
+      rw [PMF.map_comp]
+      simpa [Function.comp_def] using
+        PMF.map_id (linearMarkovFinitePathPMF initial transition n)
 
 /-- Under expectation stationarity, every coordinate of the infinite Markov
 path has the initial probability law. -/
@@ -288,11 +314,24 @@ theorem linearMarkovInfinitePathMeasure_map_eval_of_expectation_stationary
           linearMarkovInfinitePathFinPrefix i := by
     funext path
     rfl
-  rw [hEval, ← Measure.map_map (by fun_prop) (by fun_prop)]
+  have hPrefixMeasurable :
+      Measurable (linearMarkovInfinitePathFinPrefix (Ω := Ω) i) :=
+    measurable_linearMarkovInfinitePathFinPrefix i
+  have hEvalMeasurable :
+      Measurable (fun path : Fin (i + 1) → Ω => path (Fin.last i)) :=
+    measurable_of_finite _
+  rw [hEval, ← Measure.map_map hPrefixMeasurable hEvalMeasurable]
   rw [linearMarkovInfinitePathMeasure_map_finPrefix]
-  rw [PMF.toMeasure_map _ (by fun_prop)]
-  rw [linearMarkovFinitePathPMF_map_last_of_expectation_stationary
-    initial transition hstationary]
+  calc
+    (linearMarkovFinitePathPMF initial transition i).toMeasure.map
+        (fun path => path (Fin.last i)) =
+      ((linearMarkovFinitePathPMF initial transition i).map
+        (fun path => path (Fin.last i))).toMeasure :=
+          PMF.toMeasure_map _ hEvalMeasurable
+    _ = initial.toMeasure :=
+      congrArg PMF.toMeasure
+        (linearMarkovFinitePathPMF_map_last_of_expectation_stationary
+          initial transition hstationary i)
 
 end
 
