@@ -16,6 +16,21 @@ def linearMarkovFinitePathTail
     (Fin (n + 2) → Ω) → (Fin (n + 1) → Ω) :=
   Fin.tail
 
+/-- Deleting the first coordinate commutes with appending a new terminal
+coordinate. -/
+theorem linearMarkovFinitePathTail_snoc
+    {Ω : Type*}
+    (n : ℕ)
+    (path : Fin (n + 2) → Ω)
+    (y : Ω) :
+    linearMarkovFinitePathTail (n := n + 1) (Fin.snoc path y) =
+      Fin.snoc (linearMarkovFinitePathTail (n := n) path) y := by
+  funext i
+  unfold linearMarkovFinitePathTail
+  refine Fin.lastCases ?_ (fun j => ?_) i
+  · simp [Fin.tail]
+  · simp [Fin.tail]
+
 /-- Under stationarity of the initial law, deleting the initial coordinate of a
 finite Markov path gives exactly the preceding finite path law. -/
 theorem linearMarkovFinitePathPMF_succ_map_tail_of_expectation_stationary
@@ -68,12 +83,8 @@ theorem linearMarkovFinitePathPMF_succ_map_tail_of_expectation_stationary
           rfl
         rw [hLast]
         congr 1
-        funext y i
-        refine Fin.lastCases ?_ (fun j => ?_) i
-        · change (Fin.snoc path y : Fin (n + 3) → Ω) (Fin.last (n + 2)) = y
-          exact Fin.snoc_last path y
-        · change (Fin.snoc path y : Fin (n + 3) → Ω) (j.succ.castSucc) = path j.succ
-          exact Fin.snoc_castSucc path y j.succ
+        funext y
+        exact linearMarkovFinitePathTail_snoc n path y
       rw [hKernel]
       let k : (Fin (n + 1) → Ω) → PMF (Fin (n + 2) → Ω) :=
         fun path =>
