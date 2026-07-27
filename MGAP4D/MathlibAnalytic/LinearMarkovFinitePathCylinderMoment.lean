@@ -59,7 +59,17 @@ theorem finitePMFTransitionExpectationLinearMap_one
   classical
   funext x
   unfold finitePMFTransitionExpectationLinearMap finitePMFExpectationReal
-  exact finite_pmf_sum_toReal_eq_one (transition x)
+  have hsum : ∑ y : Ω, transition x y = 1 := by
+    rw [← tsum_fintype]
+    exact (transition x).property.tsum_eq
+  calc
+    ∑ y : Ω, (transition x y).toReal =
+        (∑ y : Ω, transition x y).toReal := by
+          symm
+          rw [ENNReal.toReal_sum]
+          intro y _hy
+          exact (transition x).apply_ne_top y
+    _ = 1 := by rw [hsum]; simp
 
 /-- Real expectation under a finite PMF commutes with multiplication by a real
 constant. -/
@@ -195,8 +205,11 @@ theorem linearMarkovFinitePathPMF_product_expectation_eq_cylinderMoment
   induction n with
   | zero =>
       rw [linearMarkovFinitePathPMF, finite_pmfExpectationReal_map]
-      rw [linearMarkovCylinderMoment,
-        linearMarkovCylinderCondition_singleton P hPone]
+      unfold linearMarkovCylinderMoment
+      have hfs : List.ofFn fs = [fs 0] := by
+        rw [List.ofFn_succ']
+        simp
+      rw [hfs, linearMarkovCylinderCondition_singleton P hPone]
       congr 1
       funext x
       simp [linearMarkovFinitePathProduct]
