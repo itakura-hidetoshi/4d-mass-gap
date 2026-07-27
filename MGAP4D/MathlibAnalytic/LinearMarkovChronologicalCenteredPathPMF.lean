@@ -44,10 +44,16 @@ def linearMarkovChronologicalSumToCenteredFinitePath
     linearMarkovChronologicalSumToCenteredFinitePath
         (linearMarkovCenteredFinitePathToChronologicalSum path) = path := by
   rcases path with ⟨negative, boundary, positive⟩
-  simpa [linearMarkovChronologicalSumToCenteredFinitePath,
-    linearMarkovCenteredFinitePathToChronologicalSum] using
-      (linearMarkovSingleChainCenteredFinitePath_reverse_cons
-        boundary negative positive)
+  unfold linearMarkovChronologicalSumToCenteredFinitePath
+    linearMarkovCenteredFinitePathToChronologicalSum
+  simp only [Fin.append_left, Fin.append_right]
+  change
+    linearMarkovSingleChainCenteredFinitePath
+        (linearMarkovFinitePathReverse (Fin.cons boundary negative)) positive =
+      (⟨negative, boundary, positive⟩ :
+        LinearMarkovCenteredFinitePath Ω n)
+  exact linearMarkovSingleChainCenteredFinitePath_reverse_cons
+    boundary negative positive
 
 /-- Reversing the boundary/reflected-past reconstruction recovers the original
 chronological past segment. -/
