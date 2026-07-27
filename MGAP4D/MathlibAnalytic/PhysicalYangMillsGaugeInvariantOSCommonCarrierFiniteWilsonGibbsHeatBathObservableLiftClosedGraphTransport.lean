@@ -22,7 +22,7 @@ namespace PositiveTimeObservableContractionSemigroup
 observable lift.
 
 The lift lands in the continuum OS carrier, but carrier rebasing presents the
-same observable in every approximating Wilson OS seminorm.  Exact finite-state
+same observable in every approximating Wilson OS seminorm. Exact finite-state
 norm preservation, finite-vacuum orthogonality, and compatibility of the common
 carrier embedding then construct the finite excitation realization rather than
 accepting it as an independent structure. -/
@@ -72,22 +72,6 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGibbsHea
       Tendsto
         (fun n => (finiteWitness n).spectralValue (finiteIndexEquiv n k))
         atTop (nhds (spectralValue k))
-  embeddedVector_tendsto :
-    ∀ k,
-      Tendsto
-        (fun n =>
-          A.embed n
-            ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-              S D halfExtent N hN beta hbeta B hInvariant n).physicalState
-              (P.carrierRebase
-                (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-                  S D halfExtent N hN beta hbeta B hInvariant n)
-                (positiveTimeCarrierMap n
-                  ((W.system (F.scale n)).gibbsHilbertObserveLinearMap
-                    (gibbsStateEquiv n
-                      ((finiteWitness n).spectralVector
-                        (finiteIndexEquiv n k))))))))
-        atTop (nhds ((spectralVector k : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
   finiteApproximation :
     ℕ → SpectralIndex → ℕ → F.StateSpace
   finiteApproximation_tendsto_selected :
@@ -120,6 +104,24 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierFiniteWilsonGibbsHea
   positiveTimeCarrierMap :
     ∀ n,
       ((W.system (F.scale n)).Configuration → ℝ) →ₗ[ℝ] P.Carrier
+  embeddedVector_tendsto :
+    ∀ k,
+      Tendsto
+        (fun n =>
+          A.embed n
+            ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+              S D halfExtent N hN beta hbeta B hInvariant n).physicalState
+              (P.carrierRebase
+                (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+                  S D halfExtent N hN beta hbeta B hInvariant n)
+                (positiveTimeCarrierMap n
+                  ((W.system (F.scale n)).gibbsHilbertObserveLinearMap
+                    (gibbsStateEquiv n
+                      ((finiteWitness n).spectralVector
+                        (finiteIndexEquiv n k))))))))
+        atTop
+        (nhds
+          ((spectralVector k : P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
   finiteState_norm :
     ∀ n x,
       ‖(physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
