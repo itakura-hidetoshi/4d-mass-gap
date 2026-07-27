@@ -42,17 +42,6 @@ def linearMarkovIntegerCenteredFinitePathCast
   simp [linearMarkovIntegerCenteredIndexEmbed]
   omega
 
-/-- `Fin.cons` commutes with deleting the terminal coordinate of its tail. -/
-theorem fin_cons_init_apply_eq_cons_castSucc
-    {Ω : Type*} {n : ℕ} (boundary : Ω)
-    (future : Fin (n + 1) → Ω) (i : Fin (n + 1)) :
-    Fin.cons boundary (Fin.init future) i =
-      Fin.cons boundary future i.castSucc := by
-  refine Fin.cases ?_ ?_ i
-  · simp
-  · intro j
-    simp
-
 /-- Before arithmetic normalization, packing after deleting the two terminal
 future coordinates reads the central block of the original packed path. -/
 theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
@@ -74,15 +63,17 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
           Fin ((n + 3) + (n + 2))) =
           Fin.castAdd (n + 2) a.succ := by
       apply Fin.ext
-      rfl
+      omega
     rw [hk, Fin.append_left]
     unfold linearMarkovFinitePathReverse
     have hrev : a.succ.rev = a.rev.castSucc := by
       apply Fin.ext
       simp
-      omega
     rw [hrev]
-    exact fin_cons_init_apply_eq_cons_castSucc boundary negative a.rev
+    refine Fin.cases ?_ ?_ a.rev
+    · simp
+    · intro j
+      simp
   · intro b
     rw [Fin.append_right]
     have hk :
@@ -90,7 +81,7 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
           Fin ((n + 3) + (n + 2))) =
           Fin.natAdd (n + 3) b.castSucc := by
       apply Fin.ext
-      rfl
+      omega
     rw [hk, Fin.append_right]
     rfl
 
