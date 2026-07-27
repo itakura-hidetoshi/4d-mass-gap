@@ -41,7 +41,7 @@ theorem linearMarkovIntegerCenteredFinitePathPMF_map_observeAt
   let d := r - rJ
   have hr : rJ ≤ r := hJ
   have hrd : rJ + d = r := Nat.add_sub_of_le hr
-  rw [← hrd]
+  cases hrd
   unfold linearMarkovIntegerFiniteMarginalPMF
   rw [← linearMarkovIntegerCenteredFinitePathPMF_map_restrictBy_of_detailedBalance
     initial transition hdb rJ d]
@@ -142,7 +142,7 @@ theorem linearMarkovIntegerCenteredFinitePathPMF_map_natShiftObserveAt
     _ = big.map
         (linearMarkovIntegerFiniteSetObserveAt J r hJ ∘
           linearMarkovFinitePathTailBy n d) := by
-          apply congrArg (PMF.map big)
+          apply congrArg (fun f => big.map f)
           funext path t
           rw [Function.comp_apply, Function.comp_apply]
           rw [linearMarkovIntegerFiniteSetNatShiftObserveAt_apply]
