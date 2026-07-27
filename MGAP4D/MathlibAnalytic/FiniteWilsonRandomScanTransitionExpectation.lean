@@ -40,6 +40,7 @@ expectation functional. -/
   unfold finitePMFExpectationReal
     FiniteLatticeWilsonSystem.gibbsExpectationReal
     FiniteLatticeWilsonSystem.gibbsProbabilityReal
+  rfl
 
 /-- Gibbs expectation is homogeneous. -/
 theorem finite_lattice_gibbsExpectationReal_smul
