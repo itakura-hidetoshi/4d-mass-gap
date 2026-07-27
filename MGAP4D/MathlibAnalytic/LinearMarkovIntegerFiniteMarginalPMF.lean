@@ -90,6 +90,33 @@ def linearMarkovIntegerFiniteSetObserve
   linearMarkovIntegerFiniteSetObserveAt J
     (linearMarkovIntegerFiniteSetRadius J) le_rfl
 
+/-- Casting a containing path to the canonical radius and observing it is the
+same as observing it directly at the original radius. -/
+theorem linearMarkovIntegerFiniteSetObserve_cast
+    {Ω : Type*} (I : Finset ℤ) {r : ℕ}
+    (h : r = linearMarkovIntegerFiniteSetRadius I)
+    (path : LinearMarkovIntegerCenteredFinitePath Ω r) :
+    linearMarkovIntegerFiniteSetObserve I
+        (linearMarkovIntegerCenteredFinitePathCast h path) =
+      linearMarkovIntegerFiniteSetObserveAt I r h.symm.le path := by
+  cases h
+  rfl
+
+/-- Reindexing the centered path PMF along an equality of radii changes only its
+carrier representation. -/
+theorem linearMarkovIntegerCenteredFinitePathPMF_map_cast
+    {Ω : Type*} [Fintype Ω]
+    (initial : PMF Ω) (transition : Ω → PMF Ω)
+    {a b : ℕ} (h : a = b) :
+    (linearMarkovIntegerCenteredFinitePathPMF initial transition a).map
+        (linearMarkovIntegerCenteredFinitePathCast h) =
+      linearMarkovIntegerCenteredFinitePathPMF initial transition b := by
+  cases h
+  change
+    (linearMarkovIntegerCenteredFinitePathPMF initial transition a).map id =
+      linearMarkovIntegerCenteredFinitePathPMF initial transition a
+  exact PMF.map_id _
+
 /-- Coordinate restriction between finite constant products. -/
 def linearMarkovIntegerFiniteSetRestrict
     {Ω : Type*} {I J : Finset ℤ} (hJI : J ⊆ I) :
@@ -170,19 +197,27 @@ theorem linearMarkovIntegerFiniteMarginalPMF_projective_restrict
       linearMarkovIntegerFiniteSetRadius I := by
     simpa [rJ, rI] using hrd
   have hI : linearMarkovIntegerFiniteSetRadius I ≤
-      linearMarkovIntegerFiniteSetRadius J + d := by
-    exact hrd'.symm.le
+      linearMarkovIntegerFiniteSetRadius J + d := hrd'.symm.le
   unfold linearMarkovIntegerFiniteMarginalPMF
   rw [← linearMarkovIntegerCenteredFinitePathPMF_map_restrictBy_of_detailedBalance
     initial transition hdb rJ d]
-  rw [PMF.map_comp, PMF.map_comp]
-  cases hrd'
+  rw [← linearMarkovIntegerCenteredFinitePathPMF_map_cast
+    initial transition hrd']
+  rw [PMF.map_comp, PMF.map_comp, PMF.map_comp]
   apply congrArg
     (fun f =>
       (linearMarkovIntegerCenteredFinitePathPMF initial transition (rJ + d)).map f)
   funext path
   have hobs := linearMarkovIntegerFiniteSetObserve_restrictBy
     (Ω := Ω) hJI d hI path
+  have hcast := linearMarkovIntegerFiniteSetObserve_cast I hrd' path
+  change
+    linearMarkovIntegerFiniteSetObserve J
+        (linearMarkovIntegerCenteredFinitePathRestrictBy rJ d path) =
+      linearMarkovIntegerFiniteSetRestrict hJI
+        (linearMarkovIntegerFiniteSetObserve I
+          (linearMarkovIntegerCenteredFinitePathCast hrd' path))
+  rw [hcast]
   simpa [rJ, rI, hrd] using hobs
 
 /-- Arbitrary finite integer-time marginals satisfy Mathlib's standard
