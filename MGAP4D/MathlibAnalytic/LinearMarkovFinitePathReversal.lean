@@ -53,8 +53,44 @@ theorem linearMarkovFinitePathPMF_apply_succ
   classical
   rw [linearMarkovFinitePathPMF, PMF.bind_apply, tsum_fintype]
   simp_rw [PMF.map_apply, tsum_fintype]
-  rw [← Fin.snoc_init_self path]
-  simp [Fin.snoc_inj]
+  have hinner (old : Fin (n + 1) → Ω) :
+      (∑ y : Ω,
+        if path = Fin.snoc old y then
+          transition (old (Fin.last n)) y
+        else 0) =
+      if old = Fin.init path then
+        transition ((Fin.init path) (Fin.last n))
+          (path (Fin.last (n + 1)))
+      else 0 := by
+    by_cases hold : old = Fin.init path
+    · subst old
+      rw [← Fin.snoc_init_self path]
+      simp
+    · have hsnoc : ∀ y : Ω, path ≠ Fin.snoc old y := by
+        intro y hy
+        apply hold
+        exact (by simpa using (congrArg Fin.init hy).symm)
+      simp [hold, hsnoc]
+  calc
+    ∑ old : Fin (n + 1) → Ω,
+        linearMarkovFinitePathPMF initial transition n old *
+          ∑ y : Ω,
+            if path = Fin.snoc old y then
+              transition (old (Fin.last n)) y
+            else 0 =
+      ∑ old : Fin (n + 1) → Ω,
+        linearMarkovFinitePathPMF initial transition n old *
+          (if old = Fin.init path then
+            transition ((Fin.init path) (Fin.last n))
+              (path (Fin.last (n + 1)))
+          else 0) := by
+            apply Finset.sum_congr rfl
+            intro old _hold
+            rw [hinner old]
+    _ = linearMarkovFinitePathPMF initial transition n (Fin.init path) *
+        transition ((Fin.init path) (Fin.last n))
+          (path (Fin.last (n + 1))) := by
+          simp
 
 /-- The zero-transition finite path PMF evaluates to the initial point mass. -/
 theorem linearMarkovFinitePathPMF_apply_zero
@@ -189,7 +225,7 @@ theorem linearMarkovFinitePathProbabilityReal_reverse_eq_backward
         ∏ i : Fin n,
           (transition (path i.succ) (path i.castSucc)).toReal := by
   unfold linearMarkovFinitePathProbabilityReal
-  rw [Equiv.prod_comp (Fin.revPerm : Equiv.Perm (Fin n))]
+  rw [← Equiv.prod_comp (Fin.revPerm : Equiv.Perm (Fin n))]
   simp [linearMarkovFinitePathReverse]
 
 /-- Detailed balance makes every explicit finite path probability invariant under
@@ -251,7 +287,7 @@ theorem linearMarkovFinitePathPMF_expectation_reverse_of_detailedBalance
       ∑ path : Fin (n + 1) → Ω,
         (linearMarkovFinitePathPMF initial transition n
           (linearMarkovFinitePathReverse path)).toReal * H path := by
-            rw [Equiv.sum_comp e]
+            rw [← Equiv.sum_comp e]
             apply Finset.sum_congr rfl
             intro path _hpath
             simp [e, linearMarkovFinitePathReverseEquiv,
