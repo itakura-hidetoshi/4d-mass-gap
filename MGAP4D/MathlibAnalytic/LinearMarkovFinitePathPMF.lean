@@ -42,10 +42,13 @@ theorem linearMarkovFinitePathPMF_succ_map_init
         PMF.pure := by
     funext path
     rw [PMF.map_comp]
-    simpa [Function.comp_def] using
-      (PMF.map_const
+    change
+      (transition (path (Fin.last n))).map (Function.const Ω path) =
+        PMF.pure path
+    exact
+      PMF.map_const
         (p := transition (path (Fin.last n)))
-        (b := path))
+        (b := path)
   rw [hKernel, PMF.bind_pure]
 
 /-- The time-zero marginal of every finite Markov path PMF is the initial PMF. -/
