@@ -64,8 +64,18 @@ theorem linearMarkovFinitePathPMF_apply_succ
       else 0 := by
     by_cases hold : old = Fin.init path
     · subst old
-      rw [← Fin.snoc_init_self path]
-      simp only [Fin.snoc_inj]
+      have heq : ∀ y : Ω,
+          path = Fin.snoc (Fin.init path) y ↔
+            y = path (Fin.last (n + 1)) := by
+        intro y
+        constructor
+        · intro h
+          have hlast := congrArg (fun q => q (Fin.last (n + 1))) h
+          simpa using hlast.symm
+        · intro h
+          subst y
+          exact (Fin.snoc_init_self path).symm
+      simp_rw [heq]
       simp
     · have hsnoc : ∀ y : Ω, path ≠ Fin.snoc old y := by
         intro y hy
@@ -237,7 +247,7 @@ theorem linearMarkovFinitePathProbabilityReal_reverse_eq_backward
   apply Finset.prod_congr rfl
   intro i _hi
   simp only [Fin.revPerm_apply, linearMarkovFinitePathReverse_apply]
-  rw [Fin.rev_castSucc, Fin.rev_succ, Fin.rev_rev, Fin.rev_rev]
+  simp only [Fin.rev_castSucc, Fin.rev_succ, Fin.rev_rev]
 
 /-- Detailed balance makes every explicit finite path probability invariant under
 complete path reversal. -/
