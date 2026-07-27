@@ -42,6 +42,17 @@ def linearMarkovIntegerCenteredFinitePathCast
   simp [linearMarkovIntegerCenteredIndexEmbed]
   omega
 
+/-- `Fin.cons` commutes with deleting the terminal coordinate of its tail. -/
+theorem fin_cons_init_apply_eq_cons_castSucc
+    {Ω : Type*} {n : ℕ} (boundary : Ω)
+    (future : Fin (n + 1) → Ω) (i : Fin (n + 1)) :
+    Fin.cons boundary (Fin.init future) i =
+      Fin.cons boundary future i.castSucc := by
+  refine Fin.cases ?_ ?_ i
+  · simp
+  · intro j
+    simp
+
 /-- Before arithmetic normalization, packing after deleting the two terminal
 future coordinates reads the central block of the original packed path. -/
 theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
@@ -65,13 +76,19 @@ theorem linearMarkovCenteredFinitePathToChronologicalSum_init_apply
       apply Fin.ext
       rfl
     rw [hk, Fin.append_left]
-    simp [linearMarkovFinitePathReverse]
+    unfold linearMarkovFinitePathReverse
+    have hrev : a.succ.rev = a.rev.castSucc := by
+      apply Fin.ext
+      simp
+      omega
+    rw [hrev]
+    exact fin_cons_init_apply_eq_cons_castSucc boundary negative a.rev
   · intro b
     rw [Fin.append_right]
     have hk :
         (⟨(Fin.natAdd (n + 2) b).1 + 1, by omega⟩ :
           Fin ((n + 3) + (n + 2))) =
-          Fin.natAdd (n + 3) b := by
+          Fin.natAdd (n + 3) b.castSucc := by
       apply Fin.ext
       rfl
     rw [hk, Fin.append_right]
@@ -112,9 +129,9 @@ theorem linearMarkovIntegerCenteredFinitePathRestrictBy_apply
           path (linearMarkovIntegerCenteredIndexEmbed n (d + 1) i)
       rw [ih]
       rw [linearMarkovChronologicalCenteredFinitePathInit_apply (n + d)]
-      congr 1
+      apply congrArg path
       apply Fin.ext
-      simp [linearMarkovIntegerCenteredIndexEmbed]
+      rfl
 
 end
 
