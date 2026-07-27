@@ -14,6 +14,7 @@ noncomputable section
 finite Wilson random-scan chain given the time-zero configuration. -/
 abbrev FiniteLatticeWilsonSystem.randomScanPositiveTimeFuturePMF
     (L : FiniteLatticeWilsonSystem)
+    [Nonempty L.Edge]
     (n : ℕ)
     (boundary : L.Configuration) :
     PMF (LinearMarkovPositiveTimeFuturePath L.Configuration n) :=
@@ -143,8 +144,15 @@ theorem finite_lattice_randomScanPositiveTimeOSForm_product_eq_gibbs_boundary_sq
             n fs boundary) ^ 2) := by
   unfold FiniteLatticeWilsonSystem.randomScanPositiveTimeOSForm
   rw [linearMarkovPositiveTimeOSForm_product_eq_boundaryMoment_sq]
-  rw [finite_lattice_finitePMFExpectationReal_gibbsPMF]
-  rfl
+  change finitePMFExpectationReal L.gibbsPMF
+      (fun boundary =>
+        (L.randomScanPositiveTimeBoundaryCylinderAmplitude
+          n fs boundary) ^ 2) =
+    L.gibbsExpectationReal
+      (fun boundary =>
+        (L.randomScanPositiveTimeBoundaryCylinderAmplitude
+          n fs boundary) ^ 2)
+  exact finite_lattice_finitePMFExpectationReal_gibbsPMF L _
 
 /-- Every concrete finite Wilson positive-time product cylinder therefore has a
 nonnegative temporal OS quadratic expectation. -/
