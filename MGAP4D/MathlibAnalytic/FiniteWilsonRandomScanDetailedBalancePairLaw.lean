@@ -20,6 +20,8 @@ theorem finite_lattice_gibbsPairingReal_randomScanHeatBathSweep_left
         ∑ e : L.Edge,
           L.gibbsPairingReal (L.singleLinkHeatBathProjection e f) g := by
   classical
+  letI : Fintype L.Configuration :=
+    finiteLatticeWilsonConfigurationFintype L
   unfold FiniteLatticeWilsonSystem.gibbsPairingReal
     FiniteLatticeWilsonSystem.randomScanHeatBathSweep
     FiniteLatticeWilsonSystem.singleLinkHeatBathOperator
@@ -67,6 +69,8 @@ theorem finite_lattice_gibbsPairingReal_randomScanHeatBathSweep_right
         ∑ e : L.Edge,
           L.gibbsPairingReal f (L.singleLinkHeatBathProjection e g) := by
   classical
+  letI : Fintype L.Configuration :=
+    finiteLatticeWilsonConfigurationFintype L
   unfold FiniteLatticeWilsonSystem.gibbsPairingReal
     FiniteLatticeWilsonSystem.randomScanHeatBathSweep
     FiniteLatticeWilsonSystem.singleLinkHeatBathOperator
@@ -131,6 +135,8 @@ theorem finite_lattice_randomScanTransitionPMF_detailedBalance_real
       L.gibbsProbabilityReal B *
         (L.randomScanTransitionPMF B A).toReal := by
   classical
+  letI : Fintype L.Configuration :=
+    finiteLatticeWilsonConfigurationFintype L
   have hsym :=
     finite_lattice_randomScanHeatBathSweep_gibbsPairing_symm
       L
