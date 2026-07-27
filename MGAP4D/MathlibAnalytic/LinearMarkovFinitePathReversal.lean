@@ -50,22 +50,19 @@ theorem linearMarkovFinitePathPMF_apply_succ
       linearMarkovFinitePathPMF initial transition n (Fin.init path) *
         transition ((Fin.init path) (Fin.last n))
           (path (Fin.last (n + 1))) := by
-  letI : DecidableEq Ω := Classical.decEq Ω
-  letI : DecidableEq (Fin (n + 1) → Ω) :=
-    Fintype.decidablePiFintype
-  letI : DecidableEq (Fin (n + 2) → Ω) :=
-    Fintype.decidablePiFintype
-  rw [linearMarkovFinitePathPMF, PMF.bind_apply, tsum_fintype]
-  simp_rw [PMF.map_apply, tsum_fintype]
+  classical
+  let inner (old : Fin (n + 1) → Ω) : ℝ≥0∞ :=
+    ∑ y : Ω,
+      @ite ℝ≥0∞ (path = Fin.snoc old y)
+        (Classical.propDecidable (path = Fin.snoc old y))
+        (transition (old (Fin.last n)) y) 0
   have hinner (old : Fin (n + 1) → Ω) :
-      (∑ y : Ω,
-        if path = Fin.snoc old y then
-          transition (old (Fin.last n)) y
-        else 0) =
-      if old = Fin.init path then
-        transition ((Fin.init path) (Fin.last n))
-          (path (Fin.last (n + 1)))
-      else 0 := by
+      inner old =
+        if old = Fin.init path then
+          transition ((Fin.init path) (Fin.last n))
+            (path (Fin.last (n + 1)))
+        else 0 := by
+    unfold inner
     by_cases hold : old = Fin.init path
     · subst old
       have heq : ∀ y : Ω,
@@ -111,23 +108,17 @@ theorem linearMarkovFinitePathPMF_apply_succ
         intro y _hy
         rw [if_neg (hsnoc y)]
       rw [hleft, if_neg hold]
+  rw [linearMarkovFinitePathPMF, PMF.bind_apply, tsum_fintype]
+  simp_rw [PMF.map_apply, tsum_fintype]
   change
     (∑ old : Fin (n + 1) → Ω,
-      linearMarkovFinitePathPMF initial transition n old *
-        (∑ y : Ω,
-          if path = Fin.snoc old y then
-            transition (old (Fin.last n)) y
-          else 0)) =
+      linearMarkovFinitePathPMF initial transition n old * inner old) =
       linearMarkovFinitePathPMF initial transition n (Fin.init path) *
         transition ((Fin.init path) (Fin.last n))
           (path (Fin.last (n + 1)))
   calc
     (∑ old : Fin (n + 1) → Ω,
-      linearMarkovFinitePathPMF initial transition n old *
-        (∑ y : Ω,
-          if path = Fin.snoc old y then
-            transition (old (Fin.last n)) y
-          else 0)) =
+      linearMarkovFinitePathPMF initial transition n old * inner old) =
       (∑ old : Fin (n + 1) → Ω,
         linearMarkovFinitePathPMF initial transition n old *
           (if old = Fin.init path then
