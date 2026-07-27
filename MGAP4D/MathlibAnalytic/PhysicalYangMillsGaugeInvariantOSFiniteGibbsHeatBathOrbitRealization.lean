@@ -54,12 +54,19 @@ noncomputable def toPositiveTimeMarkovCompression
       condition_lift := by
         intro f
         rw [LinearMap.comp_apply, R.condition_realize]
-        simp
+        simpa only [
+          finite_lattice_gibbsObservableHeatBathOrbitMarkovCompression_condition_apply]
+          using
+            L.gibbsObservableHeatBathOrbitMarkovCompression.condition_lift f
       condition_translate_lift := by
         intro t f
         rw [LinearMap.comp_apply, R.translate_realize,
           R.condition_realize]
-        simp }
+        simpa only [
+          finite_lattice_gibbsObservableHeatBathOrbitMarkovCompression_condition_apply]
+          using
+            L.gibbsObservableHeatBathOrbitMarkovCompression
+              |>.condition_translate_lift t f }
 
 @[simp] theorem toPositiveTimeMarkovCompression_lift_apply
     (R : FiniteGibbsHeatBathPositiveTimeOrbitRealization L O)
@@ -73,16 +80,6 @@ noncomputable def toPositiveTimeMarkovCompression
     (R : FiniteGibbsHeatBathPositiveTimeOrbitRealization L O)
     (F : D.positiveTimeSubalgebra.toSubmodule) :
     R.toPositiveTimeMarkovCompression.condition F = R.condition F :=
-  rfl
-
-/-- The generated positive-time lift is the realization of the concrete finite
-Gibbs semigroup orbit. -/
-@[simp] theorem toPositiveTimeMarkovCompression_lift_orbit_apply
-    (R : FiniteGibbsHeatBathPositiveTimeOrbitRealization L O)
-    (f : L.Configuration → ℝ)
-    (s : NNReal) :
-    L.gibbsObservableHeatBathOrbitMarkovCompression.lift f s =
-      L.gibbsObservableHeatBathSpectralSemigroup s f :=
   rfl
 
 /-- Time-zero conditioning of the generated OS-positive-time lift returns the
