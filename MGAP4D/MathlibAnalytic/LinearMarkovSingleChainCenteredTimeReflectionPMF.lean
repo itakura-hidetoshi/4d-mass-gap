@@ -27,7 +27,9 @@ tail. -/
     linearMarkovSingleChainReflectedPast
         (linearMarkovFinitePathReverse path) =
       Fin.tail path := by
-  simp [linearMarkovSingleChainReflectedPast]
+  unfold linearMarkovSingleChainReflectedPast
+  exact congrArg Fin.tail
+    (linearMarkovFinitePathReverse_involutive (Ω := Ω) (n + 1) path)
 
 /-- The terminal coordinate of a reversed finite segment is its original first
 coordinate. -/
@@ -71,15 +73,17 @@ theorem linearMarkovFinitePathPMF_eq_initial_bind_positiveTimeFuture
     linearMarkovFinitePathPMF initial transition (n + 1) =
       initial.bind fun boundary =>
         (linearMarkovPositiveTimeFuturePMF transition n boundary).map
-          (Fin.cons boundary) := by
+          (fun future => Fin.cons boundary future) := by
   induction n with
   | zero =>
       change
         ((initial.map fun x => (fun _ : Fin 1 => x)).bind fun path =>
-            (transition (path (Fin.last 0))).map fun y => Fin.snoc path y) =
+            (transition (path (Fin.last 0))).map fun y =>
+              (Fin.snoc path y : Fin 2 → Ω)) =
           initial.bind fun boundary =>
             ((transition boundary).map fun x => (fun _ : Fin 1 => x)).map
-              (Fin.cons boundary)
+              (fun future : Fin 1 → Ω =>
+                (Fin.cons boundary future : Fin 2 → Ω))
       rw [PMF.bind_map]
       apply congrArg (PMF.bind initial)
       funext boundary
@@ -101,13 +105,20 @@ theorem linearMarkovFinitePathPMF_eq_initial_bind_positiveTimeFuture
       apply congrArg
         (PMF.bind (linearMarkovFinitePathPMF (transition boundary) transition n))
       funext future
-      simp only [Function.comp_apply]
-      rw [PMF.map_comp]
       have hlast :
           (Fin.cons boundary future) (Fin.last (n + 1)) =
             future (Fin.last n) := by
         simp
       rw [hlast]
+      change
+        (transition (future (Fin.last n))).map
+            (fun y =>
+              (Fin.snoc (Fin.cons boundary future) y : Fin (n + 3) → Ω)) =
+          ((transition (future (Fin.last n))).map
+              (fun y => (Fin.snoc future y : Fin (n + 2) → Ω))).map
+            (fun path : Fin (n + 2) → Ω =>
+              (Fin.cons boundary path : Fin (n + 3) → Ω))
+      rw [PMF.map_comp]
       congr 1
       funext y
       exact (Fin.cons_snoc_eq_snoc_cons boundary future y).symm
@@ -172,6 +183,7 @@ theorem linearMarkovSingleChainCenteredFinitePathPMF_eq_centered_of_detailedBala
           unfold linearMarkovSingleChainCenteredFinitePathPMF
           rw [finite_pmfExpectationReal_bind]
           simp_rw [finite_pmfExpectationReal_map]
+          rfl
     _ = finitePMFExpectationReal
         (linearMarkovFinitePathPMF initial transition (n + 1))
         (K ∘ linearMarkovFinitePathReverse) := by
@@ -195,7 +207,7 @@ theorem linearMarkovSingleChainCenteredFinitePathPMF_eq_centered_of_detailedBala
             (finitePMFExpectationReal
               (linearMarkovPositiveTimeFuturePMF transition n boundary))
           funext negative
-          simp [K, Function.comp_def]
+          simp [K]
     _ = finitePMFExpectationReal
         (linearMarkovCenteredFinitePathPMF initial transition n) H := by
           unfold linearMarkovCenteredFinitePathPMF
@@ -218,11 +230,8 @@ theorem linearMarkovSingleChainCenteredFinitePathPMF_map_reflection
         linearMarkovCenteredFinitePathReflection =
       linearMarkovSingleChainCenteredFinitePathPMF initial transition n := by
   rw [linearMarkovSingleChainCenteredFinitePathPMF_eq_centered_of_detailedBalance
-    initial transition hdb n]
-  rw [linearMarkovCenteredFinitePathPMF_map_reflection]
-  symm
-  exact linearMarkovSingleChainCenteredFinitePathPMF_eq_centered_of_detailedBalance
-    initial transition hdb n
+      initial transition hdb n,
+    linearMarkovCenteredFinitePathPMF_map_reflection]
 
 /-- The temporal OS bilinear form is therefore a reflected-product expectation
 under the past/boundary/future law of one reversible finite chain. -/
