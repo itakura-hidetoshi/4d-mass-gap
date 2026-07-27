@@ -26,10 +26,18 @@ noncomputable def carrierRebase
     P.carrierOfPositiveTime (Q.positiveTimeElement G)
   left_inv := by
     intro F
+    change
+      P.carrierOfPositiveTime
+          (Q.positiveTimeElement
+            (Q.carrierOfPositiveTime (P.positiveTimeElement F))) = F
     rw [Q.positiveTimeElement_carrierOfPositiveTime,
       P.carrierOfPositiveTime_positiveTimeElement]
   right_inv := by
     intro G
+    change
+      Q.carrierOfPositiveTime
+          (P.positiveTimeElement
+            (P.carrierOfPositiveTime (Q.positiveTimeElement G))) = G
     rw [P.positiveTimeElement_carrierOfPositiveTime,
       Q.carrierOfPositiveTime_positiveTimeElement]
   map_add' := by
