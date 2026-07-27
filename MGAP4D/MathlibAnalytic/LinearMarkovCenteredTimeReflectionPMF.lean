@@ -187,9 +187,19 @@ theorem linearMarkovCenteredFinitePathPMF_reflectedProduct_expectation_eq_OSForm
   rw [linearMarkovPositiveTimeOSForm_eq_boundaryPairing]
   unfold linearMarkovCenteredFinitePathPMF
   rw [finite_pmfExpectationReal_bind]
+  change
+    finitePMFExpectationReal initial
+        (fun boundary =>
+          finitePMFExpectationReal
+            (linearMarkovCenteredFinitePathConditionalPMF transition n boundary)
+            (fun path => F path.negative * G path.positive)) =
+      finitePMFExpectationReal initial
+        (fun boundary =>
+          linearMarkovPositiveTimeBoundaryAmplitude transition n F boundary *
+            linearMarkovPositiveTimeBoundaryAmplitude transition n G boundary)
   apply congrArg (finitePMFExpectationReal initial)
   funext boundary
-  simpa using
+  exact
     linearMarkovCenteredFinitePathConditionalPMF_reflectedProduct_expectation
       transition n boundary F G
 
