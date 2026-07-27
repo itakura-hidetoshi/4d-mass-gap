@@ -52,8 +52,10 @@ theorem finite_lattice_randomScanInfinitePathMeasure_cylinder_one
     induction m with
     | zero => simp
     | succ m ih =>
-        rw [List.ofFn_succ']
-        simp [List.replicate_succ, ih]
+        rw [List.ofFn_succ', ih]
+        simpa using
+          (List.replicate_add m 1
+            (fun _ : L.Configuration => (1 : ℝ))).symm
   rw [hList (n + 1)]
   exact finite_lattice_randomScanCylinderMoment_replicate_one L (n + 1)
 
