@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.LinearMarkovFinitePathEndpointRestriction
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check linearMarkovFinitePathInitBy
+#check linearMarkovFinitePathTailBy
+#check linearMarkovFinitePathPMF_map_initBy
+#check linearMarkovFinitePathPMF_map_tailBy_of_detailedBalanceReal
+
+end MathlibAnalytic
+end MGAP4D
