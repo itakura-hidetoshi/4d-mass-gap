@@ -187,21 +187,32 @@ theorem linearMarkovCenteredFinitePathPMF_reflectedProduct_expectation_eq_OSForm
   rw [linearMarkovPositiveTimeOSForm_eq_boundaryPairing]
   unfold linearMarkovCenteredFinitePathPMF
   rw [finite_pmfExpectationReal_bind]
-  change
+  calc
     finitePMFExpectationReal initial
         (fun boundary =>
           finitePMFExpectationReal
             (linearMarkovCenteredFinitePathConditionalPMF transition n boundary)
-            (fun path => F path.negative * G path.positive)) =
+            (fun path =>
+              linearMarkovCenteredFinitePathPositiveLift F
+                  (linearMarkovCenteredFinitePathReflection path) *
+                linearMarkovCenteredFinitePathPositiveLift G path)) =
       finitePMFExpectationReal initial
         (fun boundary =>
           linearMarkovPositiveTimeBoundaryAmplitude transition n F boundary *
-            linearMarkovPositiveTimeBoundaryAmplitude transition n G boundary)
-  apply congrArg (finitePMFExpectationReal initial)
-  funext boundary
-  exact
-    linearMarkovCenteredFinitePathConditionalPMF_reflectedProduct_expectation
-      transition n boundary F G
+            linearMarkovPositiveTimeBoundaryAmplitude transition n G boundary) := by
+              apply congrArg (finitePMFExpectationReal initial)
+              funext boundary
+              simpa [linearMarkovCenteredFinitePathPositiveLift] using
+                linearMarkovCenteredFinitePathConditionalPMF_reflectedProduct_expectation
+                  transition n boundary F G
+    _ = ∑ boundary : Ω,
+        (initial boundary).toReal *
+          linearMarkovPositiveTimeBoundaryAmplitude transition n F boundary *
+          linearMarkovPositiveTimeBoundaryAmplitude transition n G boundary := by
+            unfold finitePMFExpectationReal
+            apply Finset.sum_congr rfl
+            intro boundary _hboundary
+            ring
 
 /-- In particular, the temporal OS quadratic form is the reflected square
 expectation under the centered finite path law. -/
