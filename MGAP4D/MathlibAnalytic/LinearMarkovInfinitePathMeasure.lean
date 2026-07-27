@@ -108,8 +108,6 @@ theorem linearMarkovFiniteIicPathPMF_map_frestrictLe₂
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hab
   convert linearMarkovFiniteIicPathPMF_map_prefix
     initial transition a k using 1
-  funext path i
-  rfl
 
 /-- The finite-prefix probability measure obtained from the honest finite path
 PMF. -/
@@ -148,9 +146,10 @@ theorem linearMarkovFiniteIicPathMeasure_map_frestrictLe₂
         (frestrictLe₂ (α := ℕ) (π := fun _ : ℕ => Ω) hab) =
       ((linearMarkovFiniteIicPathPMF initial transition b).map
         (frestrictLe₂ (α := ℕ) (π := fun _ : ℕ => Ω) hab)).toMeasure :=
-          PMF.toMeasure_map _
+          PMF.toMeasure_map
+            (p := linearMarkovFiniteIicPathPMF initial transition b)
             (measurable_frestrictLe₂
-              (α := ℕ) (π := fun _ : ℕ => Ω) hab)
+              (X := fun _ : ℕ => Ω) hab)
     _ = (linearMarkovFiniteIicPathPMF initial transition a).toMeasure :=
       congrArg PMF.toMeasure
         (linearMarkovFiniteIicPathPMF_map_frestrictLe₂
@@ -303,14 +302,16 @@ theorem linearMarkovInfinitePathMeasure_map_finPrefix
             symm
             exact Measure.map_map hEquivMeasurable
               (measurable_frestrictLe
-                (α := ℕ) (π := fun _ : ℕ => Ω) n)
+                (X := fun _ : ℕ => Ω) n)
     _ = (linearMarkovFiniteIicPathMeasure initial transition n).map
         (linearMarkovFinIicPathEquiv n).symm := by
           rw [linearMarkovInfinitePathMeasure_map_frestrictLe]
     _ = ((linearMarkovFiniteIicPathPMF initial transition n).map
         (linearMarkovFinIicPathEquiv n).symm).toMeasure := by
           unfold linearMarkovFiniteIicPathMeasure
-          exact PMF.toMeasure_map _ hEquivMeasurable
+          exact PMF.toMeasure_map
+            (p := linearMarkovFiniteIicPathPMF initial transition n)
+            hEquivMeasurable
     _ = (linearMarkovFinitePathPMF initial transition n).toMeasure := by
       congr 1
       unfold linearMarkovFiniteIicPathPMF
@@ -360,7 +361,9 @@ theorem linearMarkovInfinitePathMeasure_map_eval_of_expectation_stationary
           rw [linearMarkovInfinitePathMeasure_map_finPrefix]
     _ = ((linearMarkovFinitePathPMF initial transition i).map
         (fun path => path (Fin.last i))).toMeasure :=
-          PMF.toMeasure_map _ hEvalMeasurable
+          PMF.toMeasure_map
+            (p := linearMarkovFinitePathPMF initial transition i)
+            hEvalMeasurable
     _ = initial.toMeasure :=
       congrArg PMF.toMeasure
         (linearMarkovFinitePathPMF_map_last_of_expectation_stationary
