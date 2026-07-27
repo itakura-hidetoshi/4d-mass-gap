@@ -50,22 +50,26 @@ theorem linearMarkovFinitePathPMF_succ_map_tail_of_expectation_stationary
           rfl
   | succ n ih =>
       rw [linearMarkovFinitePathPMF, PMF.map_bind]
+      simp_rw [PMF.map_comp]
       have hKernel :
           (fun path : Fin (n + 2) → Ω =>
             (transition (path (Fin.last (n + 1)))).map
-              (fun y =>
-                linearMarkovFinitePathTail (n := n + 1)
-                  (Fin.snoc path y))) =
+              (linearMarkovFinitePathTail (n := n + 1) ∘
+                fun y => Fin.snoc path y)) =
             (fun path : Fin (n + 2) → Ω =>
               (transition ((linearMarkovFinitePathTail (n := n) path)
                 (Fin.last n))).map
                 (fun y => Fin.snoc
                   (linearMarkovFinitePathTail (n := n) path) y)) := by
         funext path
-        congr 1
-        · rfl
-        · funext y i
+        have hLast :
+            path (Fin.last (n + 1)) =
+              (linearMarkovFinitePathTail (n := n) path) (Fin.last n) := by
           rfl
+        rw [hLast]
+        congr 1
+        funext y i
+        rfl
       rw [hKernel]
       let k : (Fin (n + 1) → Ω) → PMF (Fin (n + 2) → Ω) :=
         fun path =>
