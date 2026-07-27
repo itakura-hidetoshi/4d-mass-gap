@@ -44,8 +44,10 @@ def linearMarkovChronologicalSumToCenteredFinitePath
     linearMarkovChronologicalSumToCenteredFinitePath
         (linearMarkovCenteredFinitePathToChronologicalSum path) = path := by
   rcases path with ⟨negative, boundary, positive⟩
-  simp [linearMarkovChronologicalSumToCenteredFinitePath,
-    linearMarkovCenteredFinitePathToChronologicalSum]
+  simpa [linearMarkovChronologicalSumToCenteredFinitePath,
+    linearMarkovCenteredFinitePathToChronologicalSum] using
+      (linearMarkovSingleChainCenteredFinitePath_reverse_cons
+        boundary negative positive)
 
 /-- Reversing the boundary/reflected-past reconstruction recovers the original
 chronological past segment. -/
@@ -84,7 +86,8 @@ chronological past segment. -/
             (linearMarkovSingleChainReflectedPast past)))
         positive = path
   rw [linearMarkovSingleChainPastOfCenteredSplit]
-  exact Fin.append_castAdd_natAdd path
+  simpa [past, positive] using
+    (Fin.append_castAdd_natAdd (f := path))
 
 /-- Centered paths and chronological sum-indexed paths are equivalent. -/
 def linearMarkovCenteredChronologicalSumEquiv
