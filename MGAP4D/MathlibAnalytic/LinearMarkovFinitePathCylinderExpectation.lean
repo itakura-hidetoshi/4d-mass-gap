@@ -65,7 +65,7 @@ def finitePMFTransitionExpectationLinearMap
     classical
     funext x
     unfold finitePMFExpectationReal
-    simp only [Pi.smul_apply, smul_eq_mul]
+    simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro a _ha
@@ -123,10 +123,9 @@ theorem linearMarkovFinitePathCylinderProduct_snoc_expectation
         path := by
   classical
   unfold linearMarkovFinitePathCylinderProduct
-  rw [Fin.prod_univ_castSucc]
-  simp only [Fin.snoc_castSucc, Fin.snoc_last]
+  simp_rw [Fin.prod_univ_castSucc]
+  simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.init_def]
   rw [finite_pmfExpectationReal_const_mul]
-  simp only [Fin.init_def]
   ring
 
 /-- In backward cylinder conditioning, the final pair `[g, h]` contracts to the
@@ -181,9 +180,11 @@ theorem linearMarkovFinitePathPMF_terminalCylinder_expectation
         (finitePMFExpectationReal initial)
         (finitePMFTransitionExpectationLinearMap transition)
         (List.ofFn fs ++ [h]) := by
-  induction n generalizing fs h with
+  induction n generalizing h with
   | zero =>
-      rw [linearMarkovFinitePathPMF, finite_pmfExpectationReal_map]
+      have hfs : List.ofFn fs = [] := by simp
+      rw [linearMarkovFinitePathPMF, finite_pmfExpectationReal_map,
+        hfs, List.nil_append]
       rw [linearMarkovCylinderMoment_singleton
         (finitePMFExpectationReal initial)
         (finitePMFTransitionExpectationLinearMap transition)
@@ -222,7 +223,7 @@ theorem linearMarkovFinitePathPMF_terminalCylinder_expectation
             (finitePMFTransitionExpectationLinearMap transition)
             (List.ofFn fs ++ [h]) := by
               rw [List.ofFn_succ_last]
-              rfl
+              simp only [Fin.init_def, List.append_assoc]
 
 /-- For every finite tuple of observables, its product expectation under the
 honest finite path PMF is exactly the pre-existing cylinder moment. -/
@@ -242,8 +243,29 @@ theorem linearMarkovFinitePathPMF_cylinderProduct_expectation
   have h :=
     linearMarkovFinitePathPMF_terminalCylinder_expectation
       initial transition n (Fin.init fs) (fs (Fin.last n))
-  simpa [linearMarkovFinitePathCylinderProduct,
-    Fin.prod_univ_castSucc, List.ofFn_succ_last] using h
+  calc
+    finitePMFExpectationReal
+        (linearMarkovFinitePathPMF initial transition n)
+        (fun path => ∏ i : Fin (n + 1), fs i (path i)) =
+      finitePMFExpectationReal
+        (linearMarkovFinitePathPMF initial transition n)
+        (linearMarkovFinitePathCylinderProduct n
+          (Fin.init fs) (fs (Fin.last n))) := by
+            congr 1
+            funext path
+            unfold linearMarkovFinitePathCylinderProduct
+            rw [Fin.prod_univ_castSucc]
+            simp only [Fin.init_def]
+    _ = linearMarkovCylinderMoment
+        (finitePMFExpectationReal initial)
+        (finitePMFTransitionExpectationLinearMap transition)
+        (List.ofFn (Fin.init fs) ++ [fs (Fin.last n)]) := h
+    _ = linearMarkovCylinderMoment
+        (finitePMFExpectationReal initial)
+        (finitePMFTransitionExpectationLinearMap transition)
+        (List.ofFn fs) := by
+          rw [List.ofFn_succ_last]
+          simp only [Fin.init_def]
 
 end
 
