@@ -79,21 +79,21 @@ def linearMarkovIntegerFiniteSetIndex
 def linearMarkovIntegerFiniteSetObserveAt
     {Ω : Type*} (J : Finset ℤ) (r : ℕ)
     (hJ : linearMarkovIntegerFiniteSetRadius J ≤ r) :
-    LinearMarkovIntegerCenteredFinitePath Ω r → (∀ t : J, Ω) :=
+    LinearMarkovIntegerCenteredFinitePath Ω r → (∀ _t : J, Ω) :=
   fun path t => path (linearMarkovIntegerFiniteSetIndexAt J r hJ t)
 
 /-- Observe a finite set of integer times in its canonical symmetric interval. -/
 def linearMarkovIntegerFiniteSetObserve
     {Ω : Type*} (J : Finset ℤ) :
     LinearMarkovIntegerCenteredFinitePath Ω
-        (linearMarkovIntegerFiniteSetRadius J) → (∀ t : J, Ω) :=
+        (linearMarkovIntegerFiniteSetRadius J) → (∀ _t : J, Ω) :=
   linearMarkovIntegerFiniteSetObserveAt J
     (linearMarkovIntegerFiniteSetRadius J) le_rfl
 
 /-- Coordinate restriction between finite constant products. -/
 def linearMarkovIntegerFiniteSetRestrict
     {Ω : Type*} {I J : Finset ℤ} (hJI : J ⊆ I) :
-    (∀ t : I, Ω) → (∀ t : J, Ω) :=
+    (∀ _t : I, Ω) → (∀ _t : J, Ω) :=
   fun values t => values ⟨t.1, hJI t.2⟩
 
 /-- The explicit constant-product restriction is the standard dependent-product
@@ -101,8 +101,8 @@ restriction. -/
 theorem linearMarkovIntegerFiniteSetRestrict_eq_finsetRestrict
     {Ω : Type*} {I J : Finset ℤ} (hJI : J ⊆ I) :
     (linearMarkovIntegerFiniteSetRestrict hJI :
-      (∀ t : I, Ω) → (∀ t : J, Ω)) =
-      Finset.restrict₂ hJI := by
+      (∀ _t : I, Ω) → (∀ _t : J, Ω)) =
+      (@Finset.restrict₂ ℤ (fun _ => Ω) J I hJI) := by
   rfl
 
 /-- Canonical radius is monotone under inclusion of finite time sets. -/
@@ -132,10 +132,10 @@ theorem linearMarkovIntegerFiniteSetObserve_restrictBy
         (linearMarkovIntegerFiniteSetObserveAt I
           (linearMarkovIntegerFiniteSetRadius J + d) hI path) := by
   funext t
-  rw [linearMarkovIntegerCenteredFinitePathRestrictBy_apply]
   unfold linearMarkovIntegerFiniteSetObserve
     linearMarkovIntegerFiniteSetObserveAt
     linearMarkovIntegerFiniteSetRestrict
+  rw [linearMarkovIntegerCenteredFinitePathRestrictBy_apply]
   apply congrArg path
   apply linearMarkovIntegerCenteredTime_injective
     (linearMarkovIntegerFiniteSetRadius J + d)
@@ -146,21 +146,21 @@ theorem linearMarkovIntegerFiniteSetObserve_restrictBy
 def linearMarkovIntegerFiniteMarginalPMF
     {Ω : Type*} [Fintype Ω]
     (initial : PMF Ω) (transition : Ω → PMF Ω)
-    (J : Finset ℤ) : PMF (∀ t : J, Ω) :=
+    (J : Finset ℤ) : PMF (∀ _t : J, Ω) :=
   (linearMarkovIntegerCenteredFinitePathPMF initial transition
     (linearMarkovIntegerFiniteSetRadius J)).map
       (linearMarkovIntegerFiniteSetObserve J)
 
-/-- Arbitrary finite integer-time marginals are projectively compatible. -/
-theorem linearMarkovIntegerFiniteMarginalPMF_projective
+/-- Projectivity first expressed through the explicit constant-product
+restriction. -/
+theorem linearMarkovIntegerFiniteMarginalPMF_projective_restrict
     {Ω : Type*} [Fintype Ω]
     (initial : PMF Ω) (transition : Ω → PMF Ω)
     (hdb : LinearMarkovDetailedBalanceReal initial transition)
     (I J : Finset ℤ) (hJI : J ⊆ I) :
     linearMarkovIntegerFiniteMarginalPMF initial transition J =
       (linearMarkovIntegerFiniteMarginalPMF initial transition I).map
-        (Finset.restrict₂ hJI :
-          (∀ t : I, Ω) → (∀ t : J, Ω)) := by
+        (linearMarkovIntegerFiniteSetRestrict hJI) := by
   let rJ := linearMarkovIntegerFiniteSetRadius J
   let rI := linearMarkovIntegerFiniteSetRadius I
   let d := rI - rJ
@@ -179,8 +179,21 @@ theorem linearMarkovIntegerFiniteMarginalPMF_projective
   funext path
   have hobs := linearMarkovIntegerFiniteSetObserve_restrictBy
     (Ω := Ω) hJI d hI path
-  rw [linearMarkovIntegerFiniteSetRestrict_eq_finsetRestrict] at hobs
   simpa [rJ, rI, hrd] using hobs
+
+/-- Arbitrary finite integer-time marginals satisfy Mathlib's standard
+projective-family restriction equation. -/
+theorem linearMarkovIntegerFiniteMarginalPMF_projective
+    {Ω : Type*} [Fintype Ω]
+    (initial : PMF Ω) (transition : Ω → PMF Ω)
+    (hdb : LinearMarkovDetailedBalanceReal initial transition)
+    (I J : Finset ℤ) (hJI : J ⊆ I) :
+    linearMarkovIntegerFiniteMarginalPMF initial transition J =
+      (linearMarkovIntegerFiniteMarginalPMF initial transition I).map
+        (@Finset.restrict₂ ℤ (fun _ => Ω) J I hJI) := by
+  rw [← linearMarkovIntegerFiniteSetRestrict_eq_finsetRestrict hJI]
+  exact linearMarkovIntegerFiniteMarginalPMF_projective_restrict
+    initial transition hdb I J hJI
 
 end
 
