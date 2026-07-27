@@ -42,30 +42,68 @@ def linearMarkovIntegerCenteredIndexOfBound
   have hnonneg : 0 ≤ t + ((r + 1 : ℕ) : ℤ) := by omega
   unfold linearMarkovIntegerCenteredIndexOfBound
     linearMarkovIntegerCenteredTime
-  simp [Int.toNat_of_nonneg hnonneg]
+  simp
   omega
 
-/-- Coordinate of a member of `J` in the canonical symmetric interval for `J`. -/
+/-- Coordinate of a member of `J` in any symmetric interval whose radius contains
+`J`. -/
+def linearMarkovIntegerFiniteSetIndexAt
+    (J : Finset ℤ) (r : ℕ)
+    (hJ : linearMarkovIntegerFiniteSetRadius J ≤ r)
+    (t : J) : Fin (2 * r + 3) :=
+  linearMarkovIntegerCenteredIndexOfBound r t.1
+    ((linearMarkovIntegerFiniteSet_natAbs_le_radius J t.2).trans hJ)
+
+@[simp] theorem linearMarkovIntegerCenteredTime_finiteSetIndexAt
+    (J : Finset ℤ) (r : ℕ)
+    (hJ : linearMarkovIntegerFiniteSetRadius J ≤ r)
+    (t : J) :
+    linearMarkovIntegerCenteredTime
+        (linearMarkovIntegerFiniteSetIndexAt J r hJ t) = t.1 := by
+  exact linearMarkovIntegerCenteredTime_indexOfBound _ _ _
+
+/-- Coordinate of a member of `J` in its canonical symmetric interval. -/
 def linearMarkovIntegerFiniteSetIndex
     (J : Finset ℤ) (t : J) :
     Fin (2 * linearMarkovIntegerFiniteSetRadius J + 3) :=
-  linearMarkovIntegerCenteredIndexOfBound
-    (linearMarkovIntegerFiniteSetRadius J) t.1
-    (linearMarkovIntegerFiniteSet_natAbs_le_radius J t.2)
+  linearMarkovIntegerFiniteSetIndexAt J
+    (linearMarkovIntegerFiniteSetRadius J) le_rfl t
 
 @[simp] theorem linearMarkovIntegerCenteredTime_finiteSetIndex
     (J : Finset ℤ) (t : J) :
     linearMarkovIntegerCenteredTime
         (linearMarkovIntegerFiniteSetIndex J t) = t.1 := by
-  exact linearMarkovIntegerCenteredTime_indexOfBound _ _ _
+  exact linearMarkovIntegerCenteredTime_finiteSetIndexAt _ _ _ _
 
-/-- Observe a finite set of integer times in its canonical symmetric path. -/
+/-- Observe a finite set of integer times in any containing symmetric interval. -/
+def linearMarkovIntegerFiniteSetObserveAt
+    {Ω : Type*} (J : Finset ℤ) (r : ℕ)
+    (hJ : linearMarkovIntegerFiniteSetRadius J ≤ r) :
+    LinearMarkovIntegerCenteredFinitePath Ω r → (∀ t : J, Ω) :=
+  fun path t => path (linearMarkovIntegerFiniteSetIndexAt J r hJ t)
+
+/-- Observe a finite set of integer times in its canonical symmetric interval. -/
 def linearMarkovIntegerFiniteSetObserve
     {Ω : Type*} (J : Finset ℤ) :
     LinearMarkovIntegerCenteredFinitePath Ω
-        (linearMarkovIntegerFiniteSetRadius J) →
-      (∀ t : J, Ω) :=
-  fun path t => path (linearMarkovIntegerFiniteSetIndex J t)
+        (linearMarkovIntegerFiniteSetRadius J) → (∀ t : J, Ω) :=
+  linearMarkovIntegerFiniteSetObserveAt J
+    (linearMarkovIntegerFiniteSetRadius J) le_rfl
+
+/-- Coordinate restriction between finite constant products. -/
+def linearMarkovIntegerFiniteSetRestrict
+    {Ω : Type*} {I J : Finset ℤ} (hJI : J ⊆ I) :
+    (∀ t : I, Ω) → (∀ t : J, Ω) :=
+  fun values t => values ⟨t.1, hJI t.2⟩
+
+/-- The explicit constant-product restriction is the standard dependent-product
+restriction. -/
+theorem linearMarkovIntegerFiniteSetRestrict_eq_finsetRestrict
+    {Ω : Type*} {I J : Finset ℤ} (hJI : J ⊆ I) :
+    (linearMarkovIntegerFiniteSetRestrict hJI :
+      (∀ t : I, Ω) → (∀ t : J, Ω)) =
+      Finset.restrict₂ hJI := by
+  rfl
 
 /-- Canonical radius is monotone under inclusion of finite time sets. -/
 theorem linearMarkovIntegerFiniteSetRadius_mono
@@ -77,44 +115,32 @@ theorem linearMarkovIntegerFiniteSetRadius_mono
   intro t ht
   exact Finset.le_sup (f := Int.natAbs) (hJI ht)
 
-/-- The coordinate selected for a time in `J` embeds into any larger canonical
-interval at the same integer time. -/
-theorem linearMarkovIntegerFiniteSetIndex_embed
-    {J I : Finset ℤ} (hJI : J ⊆ I) (t : J) :
-    linearMarkovIntegerCenteredIndexEmbed
-        (linearMarkovIntegerFiniteSetRadius J)
-        (linearMarkovIntegerFiniteSetRadius I -
-          linearMarkovIntegerFiniteSetRadius J)
-        (linearMarkovIntegerFiniteSetIndex J t) =
-      linearMarkovIntegerFiniteSetIndex I ⟨t.1, hJI t.2⟩ := by
-  apply linearMarkovIntegerCenteredTime_injective
-    (linearMarkovIntegerFiniteSetRadius I)
-  rw [linearMarkovIntegerCenteredTime_indexEmbed]
-  simp
-
-/-- Observing `J` after restricting the canonical `I`-interval agrees pointwise
-with restricting the `I`-observation to `J`. -/
-theorem linearMarkovIntegerFiniteSetObserve_restrict
+/-- Restricting a containing symmetric path to the canonical `J`-interval and
+then observing `J` agrees with observing `I` in the same containing interval and
+forgetting the coordinates outside `J`. -/
+theorem linearMarkovIntegerFiniteSetObserve_restrictBy
     {Ω : Type*} {J I : Finset ℤ} (hJI : J ⊆ I)
+    (d : ℕ)
+    (hI : linearMarkovIntegerFiniteSetRadius I ≤
+      linearMarkovIntegerFiniteSetRadius J + d)
     (path : LinearMarkovIntegerCenteredFinitePath Ω
-      (linearMarkovIntegerFiniteSetRadius J +
-        (linearMarkovIntegerFiniteSetRadius I -
-          linearMarkovIntegerFiniteSetRadius J))) :
+      (linearMarkovIntegerFiniteSetRadius J + d)) :
     linearMarkovIntegerFiniteSetObserve J
         (linearMarkovIntegerCenteredFinitePathRestrictBy
-          (linearMarkovIntegerFiniteSetRadius J)
-          (linearMarkovIntegerFiniteSetRadius I -
-            linearMarkovIntegerFiniteSetRadius J) path) =
-      Finset.restrict₂ hJI
-        (linearMarkovIntegerFiniteSetObserve I
-          (linearMarkovIntegerCenteredFinitePathCast
-            (Nat.add_sub_of_le
-              (linearMarkovIntegerFiniteSetRadius_mono hJI)) path)) := by
+          (linearMarkovIntegerFiniteSetRadius J) d path) =
+      linearMarkovIntegerFiniteSetRestrict hJI
+        (linearMarkovIntegerFiniteSetObserveAt I
+          (linearMarkovIntegerFiniteSetRadius J + d) hI path) := by
   funext t
   rw [linearMarkovIntegerCenteredFinitePathRestrictBy_apply]
   unfold linearMarkovIntegerFiniteSetObserve
-  rw [linearMarkovIntegerFiniteSetIndex_embed hJI]
-  rfl
+    linearMarkovIntegerFiniteSetObserveAt
+    linearMarkovIntegerFiniteSetRestrict
+  apply congrArg path
+  apply linearMarkovIntegerCenteredTime_injective
+    (linearMarkovIntegerFiniteSetRadius J + d)
+  rw [linearMarkovIntegerCenteredTime_indexEmbed]
+  simp
 
 /-- The finite-dimensional law on an arbitrary finite set of integer times. -/
 def linearMarkovIntegerFiniteMarginalPMF
@@ -129,17 +155,20 @@ def linearMarkovIntegerFiniteMarginalPMF
 theorem linearMarkovIntegerFiniteMarginalPMF_projective
     {Ω : Type*} [Fintype Ω]
     (initial : PMF Ω) (transition : Ω → PMF Ω)
-    (hdb : LinearMarkovDetailedBalanceReal initial transition) :
-    ∀ (I J : Finset ℤ) (hJI : J ⊆ I),
-      linearMarkovIntegerFiniteMarginalPMF initial transition J =
-        (linearMarkovIntegerFiniteMarginalPMF initial transition I).map
-          (Finset.restrict₂ hJI) := by
-  intro I J hJI
+    (hdb : LinearMarkovDetailedBalanceReal initial transition)
+    (I J : Finset ℤ) (hJI : J ⊆ I) :
+    linearMarkovIntegerFiniteMarginalPMF initial transition J =
+      (linearMarkovIntegerFiniteMarginalPMF initial transition I).map
+        (Finset.restrict₂ hJI :
+          (∀ t : I, Ω) → (∀ t : J, Ω)) := by
   let rJ := linearMarkovIntegerFiniteSetRadius J
   let rI := linearMarkovIntegerFiniteSetRadius I
   let d := rI - rJ
   have hr : rJ ≤ rI := linearMarkovIntegerFiniteSetRadius_mono hJI
   have hrd : rJ + d = rI := Nat.add_sub_of_le hr
+  have hI : linearMarkovIntegerFiniteSetRadius I ≤
+      linearMarkovIntegerFiniteSetRadius J + d := by
+    simpa [rJ, rI] using hrd.symm.le
   unfold linearMarkovIntegerFiniteMarginalPMF
   rw [← linearMarkovIntegerCenteredFinitePathPMF_map_restrictBy_of_detailedBalance
     initial transition hdb rJ d]
@@ -148,9 +177,10 @@ theorem linearMarkovIntegerFiniteMarginalPMF_projective
     (fun f =>
       (linearMarkovIntegerCenteredFinitePathPMF initial transition (rJ + d)).map f)
   funext path
-  have hobs := linearMarkovIntegerFiniteSetObserve_restrict
-    (Ω := Ω) hJI path
-  simpa [rJ, rI, d, hrd] using hobs
+  have hobs := linearMarkovIntegerFiniteSetObserve_restrictBy
+    (Ω := Ω) hJI d hI path
+  rw [linearMarkovIntegerFiniteSetRestrict_eq_finsetRestrict] at hobs
+  simpa [rJ, rI, hrd] using hobs
 
 end
 
