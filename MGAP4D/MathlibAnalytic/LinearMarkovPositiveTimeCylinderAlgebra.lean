@@ -83,16 +83,20 @@ theorem linearMarkovPositiveTimeCylinderSubalgebra_shift_closed
   change F ∈
     (linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)).comap
       linearMarkovPathShiftPullbackAlgHom
-  apply (Algebra.adjoin_le (S :=
-    (linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)).comap
-      linearMarkovPathShiftPullbackAlgHom))
-  intro G hG
-  rcases hG with ⟨time, f, rfl⟩
-  change linearMarkovPathShiftPullbackAlgHom
-      (linearMarkovPositiveTimeCoordinate time f) ∈
-    linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)
-  rw [linearMarkovPathShiftPullbackAlgHom_positiveTimeCoordinate]
-  exact linearMarkovPositiveTimeCoordinate_mem (time + 1) f
+  exact
+    (Algebra.adjoin_le
+      (s := linearMarkovPositiveTimeCoordinateSet (Ω := Ω))
+      (S :=
+        (linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)).comap
+          linearMarkovPathShiftPullbackAlgHom)
+      (by
+        intro G hG
+        rcases hG with ⟨time, f, rfl⟩
+        change linearMarkovPathShiftPullbackAlgHom
+            (linearMarkovPositiveTimeCoordinate time f) ∈
+          linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)
+        rw [linearMarkovPathShiftPullbackAlgHom_positiveTimeCoordinate]
+        exact linearMarkovPositiveTimeCoordinate_mem (time + 1) f)) hF
 
 /-- The concrete one-step positive-time translation endomorphism. -/
 def linearMarkovPositiveTimeShiftAlgHom
@@ -242,13 +246,14 @@ theorem linearMarkovPositiveTimeCylinder_integral_shift
         finitePMFExpectationReal initial f)
     (F : linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)) :
     (∫ path,
-        (linearMarkovPositiveTimeShiftAlgHom F :
-          linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)) path
+        (((linearMarkovPositiveTimeShiftAlgHom F :
+          linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)) :
+            (ℕ → Ω) → ℝ) path)
       ∂linearMarkovInfinitePathMeasure initial transition) =
-      ∫ path, F path
+      ∫ path, ((F : (ℕ → Ω) → ℝ) path)
         ∂linearMarkovInfinitePathMeasure initial transition := by
   exact linearMarkovInfinitePathMeasure_integral_shiftPullback_of_expectation_stationary
-    initial transition hstationary F
+    initial transition hstationary (F : (ℕ → Ω) → ℝ)
     (measurable_linearMarkovPositiveTimeCylinder F).stronglyMeasurable
 
 /-- Every consecutive positive-time product has the same expectation as the
