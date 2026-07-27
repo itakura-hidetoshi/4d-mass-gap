@@ -37,7 +37,9 @@ expectation functional. -/
     finitePMFExpectationReal L.gibbsPMF f =
       L.gibbsExpectationReal f := by
   classical
-  rfl
+  unfold finitePMFExpectationReal
+    FiniteLatticeWilsonSystem.gibbsExpectationReal
+    FiniteLatticeWilsonSystem.gibbsProbabilityReal
 
 /-- Gibbs expectation is homogeneous. -/
 theorem finite_lattice_gibbsExpectationReal_smul
