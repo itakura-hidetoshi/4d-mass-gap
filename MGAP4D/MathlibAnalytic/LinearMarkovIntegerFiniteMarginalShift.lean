@@ -53,6 +53,19 @@ theorem linearMarkovIntegerCenteredFinitePathPMF_map_observeAt_add
     (Nat.le_add_right _ _) path
   simpa [linearMarkovIntegerFiniteSetRestrict] using hobs.symm
 
+/-- Observing a finite time set commutes with reindexing a centered path along
+an equality of radii. -/
+theorem linearMarkovIntegerFiniteSetObserveAt_cast
+    {Ω : Type*} (J : Finset ℤ) {a b : ℕ} (h : a = b)
+    (ha : linearMarkovIntegerFiniteSetRadius J ≤ a)
+    (hb : linearMarkovIntegerFiniteSetRadius J ≤ b)
+    (path : LinearMarkovIntegerCenteredFinitePath Ω a) :
+    linearMarkovIntegerFiniteSetObserveAt J b hb
+        (linearMarkovIntegerCenteredFinitePathCast h path) =
+      linearMarkovIntegerFiniteSetObserveAt J a ha path := by
+  subst b
+  rfl
+
 /-- Every arbitrary finite marginal can be computed inside any larger symmetric
 integer interval. -/
 theorem linearMarkovIntegerCenteredFinitePathPMF_map_observeAt
@@ -67,9 +80,34 @@ theorem linearMarkovIntegerCenteredFinitePathPMF_map_observeAt
   let d := r - linearMarkovIntegerFiniteSetRadius J
   have hrd : linearMarkovIntegerFiniteSetRadius J + d = r :=
     Nat.add_sub_of_le hJ
-  have h := linearMarkovIntegerCenteredFinitePathPMF_map_observeAt_add
-    initial transition hdb J d
-  simpa only [hrd] using h
+  calc
+    (linearMarkovIntegerCenteredFinitePathPMF initial transition r).map
+        (linearMarkovIntegerFiniteSetObserveAt J r hJ) =
+      ((linearMarkovIntegerCenteredFinitePathPMF initial transition
+          (linearMarkovIntegerFiniteSetRadius J + d)).map
+        (linearMarkovIntegerCenteredFinitePathCast hrd)).map
+          (linearMarkovIntegerFiniteSetObserveAt J r hJ) := by
+            rw [linearMarkovIntegerCenteredFinitePathPMF_map_cast]
+    _ = (linearMarkovIntegerCenteredFinitePathPMF initial transition
+          (linearMarkovIntegerFiniteSetRadius J + d)).map
+        (linearMarkovIntegerFiniteSetObserveAt J r hJ ∘
+          linearMarkovIntegerCenteredFinitePathCast hrd) := by
+            rw [PMF.map_comp]
+    _ = (linearMarkovIntegerCenteredFinitePathPMF initial transition
+          (linearMarkovIntegerFiniteSetRadius J + d)).map
+        (linearMarkovIntegerFiniteSetObserveAt J
+          (linearMarkovIntegerFiniteSetRadius J + d)
+          (Nat.le_add_right _ _)) := by
+            apply congrArg
+              (fun f =>
+                (linearMarkovIntegerCenteredFinitePathPMF initial transition
+                  (linearMarkovIntegerFiniteSetRadius J + d)).map f)
+            funext path
+            exact linearMarkovIntegerFiniteSetObserveAt_cast J hrd
+              (Nat.le_add_right _ _) hJ path
+    _ = linearMarkovIntegerFiniteMarginalPMF initial transition J :=
+      linearMarkovIntegerCenteredFinitePathPMF_map_observeAt_add
+        initial transition hdb J d
 
 /-- In a common centered interval, the coordinate representing `t + d` is the
 coordinate representing `t`, shifted forward by exactly `d` positions. -/
@@ -173,7 +211,7 @@ theorem linearMarkovIntegerCenteredFinitePathPMF_map_natShiftObserveAt
               (linearMarkovIntegerFiniteSet_mem_natShift J d t)).trans hShift
           have hindex := linearMarkovIntegerCenteredIndexOfBound_natShift
             r d t.1 ht htd
-          exact congrArg Fin.val hindex
+          simpa using congrArg Fin.val hindex
     _ = (big.map (linearMarkovFinitePathTailBy n d)).map
         (linearMarkovIntegerFiniteSetObserveAt J r hJ) := by
           rw [PMF.map_comp]
