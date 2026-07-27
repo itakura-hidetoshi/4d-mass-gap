@@ -59,23 +59,16 @@ theorem linearMarkovCylinderCondition_pair
   funext x
   simp [linearMarkovCylinderCondition, hPone]
 
-/-- Appending one future coordinate is exactly one more backward Markov
-conditioning step. -/
-theorem linearMarkovCylinderCondition_append_singleton
+/-- The three-coordinate cylinder is the two-step backward Markov recursion. -/
+theorem linearMarkovCylinderCondition_triple
     {Ω : Type*}
     (P : (Ω → ℝ) →ₗ[ℝ] (Ω → ℝ))
-    (fs : List (Ω → ℝ))
-    (g : Ω → ℝ) :
-    linearMarkovCylinderCondition P (fs ++ [g]) =
-      linearMarkovCylinderCondition P
-        (fs ++ [fun x => P g x]) := by
-  induction fs with
-  | nil =>
-      rfl
-  | cons f fs ih =>
-      funext x
-      simp only [List.cons_append, linearMarkovCylinderCondition_cons]
-      rw [ih]
+    (hPone : P (fun _ => 1) = fun _ => 1)
+    (f g h : Ω → ℝ) :
+    linearMarkovCylinderCondition P [f, g, h] =
+      fun x => f x * P (fun y => g y * P h y) x := by
+  funext x
+  simp [linearMarkovCylinderCondition, hPone]
 
 /-- If the transition preserves constants, every all-one finite cylinder has
 conditional value one. -/
