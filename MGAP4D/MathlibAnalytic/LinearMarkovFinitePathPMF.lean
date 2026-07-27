@@ -48,7 +48,11 @@ theorem linearMarkovFinitePathPMF_succ_map_init
           fun y : Ω => (Fin.snoc path y : Fin (n + 2) → Ω)) =
           Function.const Ω path := by
       funext y
-      exact Fin.init_snoc y path
+      exact
+        Fin.init_snoc
+          (n := n + 1)
+          (α := fun _ : Fin (n + 2) => Ω)
+          y path
     rw [hconst]
     exact
       PMF.map_const
