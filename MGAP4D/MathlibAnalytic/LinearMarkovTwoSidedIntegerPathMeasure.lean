@@ -50,7 +50,7 @@ probability measures. -/
 theorem linearMarkovIntegerFiniteMarginalMeasure_projective
     (initial : PMF Ω) (transition : Ω → PMF Ω)
     (hdb : LinearMarkovDetailedBalanceReal initial transition) :
-    IsProjectiveMeasureFamily
+    IsProjectiveMeasureFamily (α := fun _ : ℤ => Ω)
       (linearMarkovIntegerFiniteMarginalMeasure initial transition) := by
   intro I J hJI
   have hpmf := linearMarkovIntegerFiniteMarginalPMF_projective_restrict
@@ -72,7 +72,7 @@ noncomputable def linearMarkovTwoSidedIntegerPathMeasure
     (initial : PMF Ω) (transition : Ω → PMF Ω)
     (hdb : LinearMarkovDetailedBalanceReal initial transition) :
     Measure (ℤ → Ω) :=
-  kolmogorovProjectiveLimit
+  kolmogorovProjectiveLimit (α := fun _ : ℤ => Ω)
     (linearMarkovIntegerFiniteMarginalMeasure initial transition)
     (linearMarkovIntegerFiniteMarginalMeasure_projective
       initial transition hdb)
@@ -82,10 +82,11 @@ two-sided path measure. -/
 theorem linearMarkovTwoSidedIntegerPathMeasure_isProjectiveLimit
     (initial : PMF Ω) (transition : Ω → PMF Ω)
     (hdb : LinearMarkovDetailedBalanceReal initial transition) :
-    IsProjectiveLimit
+    IsProjectiveLimit (α := fun _ : ℤ => Ω)
       (linearMarkovTwoSidedIntegerPathMeasure initial transition hdb)
       (linearMarkovIntegerFiniteMarginalMeasure initial transition) := by
   exact isProjectiveLimit_kolmogorovProjectiveLimit
+    (α := fun _ : ℤ => Ω)
     (linearMarkovIntegerFiniteMarginalMeasure_projective
       initial transition hdb)
 
