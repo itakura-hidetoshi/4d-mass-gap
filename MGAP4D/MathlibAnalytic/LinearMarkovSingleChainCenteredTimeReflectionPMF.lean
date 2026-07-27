@@ -105,6 +105,7 @@ theorem linearMarkovFinitePathPMF_eq_initial_bind_positiveTimeFuture
       apply congrArg
         (PMF.bind (linearMarkovFinitePathPMF (transition boundary) transition n))
       funext future
+      simp only [Function.comp_apply]
       have hlast :
           (Fin.cons boundary future : Fin (n + 2) → Ω) (Fin.last (n + 1)) =
             future (Fin.last n) := by
