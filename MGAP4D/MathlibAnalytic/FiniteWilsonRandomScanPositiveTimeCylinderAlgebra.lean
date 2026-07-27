@@ -43,10 +43,12 @@ theorem finite_lattice_randomScanPositiveTimeCylinder_integral_shift
     [Nonempty L.Edge]
     (F : L.randomScanPositiveTimeCylinderSubalgebra) :
     (∫ path,
-        (L.randomScanPositiveTimeShiftAlgHom F :
-          L.randomScanPositiveTimeCylinderSubalgebra) path
+        (((L.randomScanPositiveTimeShiftAlgHom F :
+          L.randomScanPositiveTimeCylinderSubalgebra) :
+            (ℕ → L.Configuration) → ℝ) path)
       ∂L.randomScanInfinitePathMeasure) =
-      ∫ path, F path ∂L.randomScanInfinitePathMeasure := by
+      ∫ path, ((F : (ℕ → L.Configuration) → ℝ) path)
+        ∂L.randomScanInfinitePathMeasure := by
   unfold FiniteLatticeWilsonSystem.randomScanInfinitePathMeasure
   exact linearMarkovPositiveTimeCylinder_integral_shift
     L.gibbsPMF L.randomScanTransitionPMF
