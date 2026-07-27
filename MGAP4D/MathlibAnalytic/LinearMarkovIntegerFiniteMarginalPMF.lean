@@ -176,14 +176,14 @@ theorem linearMarkovIntegerFiniteMarginalPMF_projective_restrict
   rw [← linearMarkovIntegerCenteredFinitePathPMF_map_restrictBy_of_detailedBalance
     initial transition hdb rJ d]
   rw [PMF.map_comp, PMF.map_comp]
-  rw [← hrd']
+  cases hrd'
   apply congrArg
     (fun f =>
       (linearMarkovIntegerCenteredFinitePathPMF initial transition (rJ + d)).map f)
   funext path
   have hobs := linearMarkovIntegerFiniteSetObserve_restrictBy
     (Ω := Ω) hJI d hI path
-  simpa [rJ, rI, hrd, hrd'] using hobs
+  simpa [rJ, rI, hrd] using hobs
 
 /-- Arbitrary finite integer-time marginals satisfy Mathlib's standard
 projective-family restriction equation. -/
