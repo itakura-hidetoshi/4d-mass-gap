@@ -64,7 +64,7 @@ theorem linearMarkovIntegerFiniteMarginalMeasure_projective
     (PMF.toMeasure_map
       (p := linearMarkovIntegerFiniteMarginalPMF initial transition I)
       (f := linearMarkovIntegerFiniteSetRestrict hJI)
-      (linearMarkovIntegerFiniteSetRestrict_measurable hJI))
+      (linearMarkovIntegerFiniteSetRestrict_measurable hJI)).symm
 
 /-- The countably additive two-sided integer-time path law supplied by the Polish
 Kolmogorov extension theorem. -/
