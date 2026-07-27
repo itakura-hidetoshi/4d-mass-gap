@@ -43,8 +43,8 @@ theorem linearMarkovPairPMF_map_fst
         PMF.pure := by
     funext x
     rw [PMF.map_comp]
-    simpa [Function.comp_def] using
-      (PMF.map_const (p := transition x) (b := x))
+    change (transition x).map (Function.const Ω x) = PMF.pure x
+    exact PMF.map_const
   rw [hKernel, PMF.bind_pure]
 
 /-- Deleting the unobserved terminal coordinate of the two-step law recovers the
@@ -71,8 +71,10 @@ theorem linearMarkovTriplePMF_map_dropLast
   apply congrArg (fun k => (transition x).bind k)
   funext y
   rw [PMF.map_comp]
-  simpa [linearMarkovTripleDropLast, Function.comp_def] using
-    (PMF.map_const (p := transition y) (b := (x, y)))
+  change
+    (transition y).map (Function.const Ω (x, y)) =
+      PMF.pure (x, y)
+  exact PMF.map_const
 
 /-- Every point probability of the one-step Markov joint law is nonnegative. -/
 theorem linearMarkovPairPMF_nonneg
