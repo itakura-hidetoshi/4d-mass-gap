@@ -25,12 +25,9 @@ theorem linearMarkovFinitePathTail_snoc
     (y : Ω) :
     linearMarkovFinitePathTail (n := n + 1) (Fin.snoc path y) =
       Fin.snoc (linearMarkovFinitePathTail (n := n) path) y := by
-  funext i
-  unfold linearMarkovFinitePathTail
-  refine Fin.lastCases ?_ (fun j => ?_) i
-  · simp [Fin.tail]
-  · change path j.succ = path j.succ
-    rfl
+  simpa [linearMarkovFinitePathTail] using
+    congrArg Fin.tail
+      (Fin.cons_snoc_eq_snoc_cons (path 0) (Fin.tail path) y).symm
 
 /-- Under stationarity of the initial law, deleting the initial coordinate of a
 finite Markov path gives exactly the preceding finite path law. -/
