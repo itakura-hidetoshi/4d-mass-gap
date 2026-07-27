@@ -111,15 +111,33 @@ theorem linearMarkovFinitePathPMF_apply_succ
         intro y _hy
         rw [if_neg (hsnoc y)]
       rw [hleft, if_neg hold]
-  simp_rw [hinner]
+  change
+    (∑ old : Fin (n + 1) → Ω,
+      linearMarkovFinitePathPMF initial transition n old *
+        (∑ y : Ω,
+          if path = Fin.snoc old y then
+            transition (old (Fin.last n)) y
+          else 0)) =
+      linearMarkovFinitePathPMF initial transition n (Fin.init path) *
+        transition ((Fin.init path) (Fin.last n))
+          (path (Fin.last (n + 1)))
   calc
     (∑ old : Fin (n + 1) → Ω,
       linearMarkovFinitePathPMF initial transition n old *
-        (if old = Fin.init path then
-          transition ((Fin.init path) (Fin.last n))
-            (path (Fin.last (n + 1)))
-        else 0)) =
-      linearMarkovFinitePathPMF initial transition n (Fin.init path) *
+        (∑ y : Ω,
+          if path = Fin.snoc old y then
+            transition (old (Fin.last n)) y
+          else 0)) =
+      (∑ old : Fin (n + 1) → Ω,
+        linearMarkovFinitePathPMF initial transition n old *
+          (if old = Fin.init path then
+            transition ((Fin.init path) (Fin.last n))
+              (path (Fin.last (n + 1)))
+          else 0)) := by
+            apply Finset.sum_congr rfl
+            intro old _hold
+            rw [hinner old]
+    _ = linearMarkovFinitePathPMF initial transition n (Fin.init path) *
         (if Fin.init path = Fin.init path then
           transition ((Fin.init path) (Fin.last n))
             (path (Fin.last (n + 1)))
