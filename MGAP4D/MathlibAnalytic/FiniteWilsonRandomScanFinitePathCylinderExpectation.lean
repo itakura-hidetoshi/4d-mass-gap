@@ -19,6 +19,8 @@ theorem finite_lattice_randomScanTransitionExpectationLinearMap_eq
     finitePMFTransitionExpectationLinearMap L.randomScanTransitionPMF =
       L.randomScanHeatBathSweepLinearMap := by
   ext f A
+  rw [finitePMFTransitionExpectationLinearMap_apply,
+    finite_lattice_randomScanHeatBathSweepLinearMap_apply]
   exact finite_lattice_randomScanTransitionPMF_expectation L A f
 
 /-- For every finite tuple of actual finite Wilson observables, expectation of
