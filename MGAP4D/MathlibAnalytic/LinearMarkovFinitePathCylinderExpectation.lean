@@ -223,7 +223,7 @@ theorem linearMarkovFinitePathPMF_terminalCylinder_expectation
             (finitePMFTransitionExpectationLinearMap transition)
             (List.ofFn fs ++ [h]) := by
               rw [List.ofFn_succ_last]
-              simp only [Fin.init_def, List.append_assoc]
+              simp [Fin.init_def]
 
 /-- For every finite tuple of observables, its product expectation under the
 honest finite path PMF is exactly the pre-existing cylinder moment. -/
