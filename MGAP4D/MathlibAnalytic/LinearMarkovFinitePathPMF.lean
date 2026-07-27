@@ -42,9 +42,14 @@ theorem linearMarkovFinitePathPMF_succ_map_init
         PMF.pure := by
     funext path
     rw [PMF.map_comp]
-    change
-      (transition (path (Fin.last n))).map (Function.const Ω path) =
-        PMF.pure path
+    have hconst :
+        ((Fin.init :
+            (Fin (n + 2) → Ω) → (Fin (n + 1) → Ω)) ∘
+          fun y : Ω => (Fin.snoc path y : Fin (n + 2) → Ω)) =
+          Function.const Ω path := by
+      funext y
+      exact Fin.init_snoc y path
+    rw [hconst]
     exact
       PMF.map_const
         (p := transition (path (Fin.last n)))
