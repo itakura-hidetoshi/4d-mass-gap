@@ -43,7 +43,7 @@ def linearMarkovChronologicalSumToCenteredFinitePath
     (path : LinearMarkovCenteredFinitePath Ω n) :
     linearMarkovChronologicalSumToCenteredFinitePath
         (linearMarkovCenteredFinitePathToChronologicalSum path) = path := by
-  rintro ⟨negative, boundary, positive⟩
+  rcases path with ⟨negative, boundary, positive⟩
   simp [linearMarkovChronologicalSumToCenteredFinitePath,
     linearMarkovCenteredFinitePathToChronologicalSum]
 
@@ -73,9 +73,16 @@ chronological past segment. -/
     (path : LinearMarkovChronologicalCenteredFinitePathSum Ω n) :
     linearMarkovCenteredFinitePathToChronologicalSum
         (linearMarkovChronologicalSumToCenteredFinitePath path) = path := by
-  unfold linearMarkovChronologicalSumToCenteredFinitePath
-    linearMarkovCenteredFinitePathToChronologicalSum
-    linearMarkovSingleChainCenteredFinitePath
+  let past : Fin (n + 2) → Ω :=
+    fun i => path (Fin.castAdd (n + 1) i)
+  let positive : Fin (n + 1) → Ω :=
+    fun i => path (Fin.natAdd (n + 2) i)
+  change
+    Fin.append
+        (linearMarkovFinitePathReverse
+          (Fin.cons (past (Fin.last (n + 1)))
+            (linearMarkovSingleChainReflectedPast past)))
+        positive = path
   rw [linearMarkovSingleChainPastOfCenteredSplit]
   exact Fin.append_castAdd_natAdd path
 
