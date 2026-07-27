@@ -29,7 +29,11 @@ theorem linearMarkovFinitePathTail_snoc
   unfold linearMarkovFinitePathTail
   refine Fin.lastCases ?_ (fun j => ?_) i
   · simp [Fin.tail]
-  · simp [Fin.tail]
+  · have hIndex : j.castSucc.succ = j.succ.castSucc := by
+      ext
+      rfl
+    rw [hIndex]
+    exact Fin.snoc_castSucc path y j.succ
 
 /-- Under stationarity of the initial law, deleting the initial coordinate of a
 finite Markov path gives exactly the preceding finite path law. -/
