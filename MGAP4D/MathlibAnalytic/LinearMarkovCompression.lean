@@ -1,5 +1,4 @@
-import Mathlib.Data.Real.NNReal
-import Mathlib.LinearAlgebra.Basic
+import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
