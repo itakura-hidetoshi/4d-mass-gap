@@ -166,20 +166,24 @@ theorem linearMarkovIntegerFiniteMarginalPMF_projective_restrict
   let d := rI - rJ
   have hr : rJ ≤ rI := linearMarkovIntegerFiniteSetRadius_mono hJI
   have hrd : rJ + d = rI := Nat.add_sub_of_le hr
+  have hrd' : linearMarkovIntegerFiniteSetRadius J + d =
+      linearMarkovIntegerFiniteSetRadius I := by
+    simpa [rJ, rI] using hrd
   have hI : linearMarkovIntegerFiniteSetRadius I ≤
       linearMarkovIntegerFiniteSetRadius J + d := by
-    simpa [rJ, rI] using hrd.symm.le
+    exact hrd'.symm.le
   unfold linearMarkovIntegerFiniteMarginalPMF
   rw [← linearMarkovIntegerCenteredFinitePathPMF_map_restrictBy_of_detailedBalance
     initial transition hdb rJ d]
   rw [PMF.map_comp, PMF.map_comp]
+  rw [← hrd']
   apply congrArg
     (fun f =>
       (linearMarkovIntegerCenteredFinitePathPMF initial transition (rJ + d)).map f)
   funext path
   have hobs := linearMarkovIntegerFiniteSetObserve_restrictBy
     (Ω := Ω) hJI d hI path
-  simpa [rJ, rI, hrd] using hobs
+  simpa [rJ, rI, hrd, hrd'] using hobs
 
 /-- Arbitrary finite integer-time marginals satisfy Mathlib's standard
 projective-family restriction equation. -/
