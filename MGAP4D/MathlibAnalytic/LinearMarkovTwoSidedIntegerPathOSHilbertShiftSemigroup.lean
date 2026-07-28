@@ -78,7 +78,9 @@ theorem hilbertShiftSemigroup_add
       (D.hilbertShiftSemigroup m).comp (D.hilbertShiftSemigroup n) := by
   induction m with
   | zero =>
-      simp
+      rw [Nat.zero_add]
+      ext x
+      rfl
   | succ m ih =>
       rw [Nat.succ_add]
       simp only [Nat.succ_eq_add_one, D.hilbertShiftSemigroup_succ]
