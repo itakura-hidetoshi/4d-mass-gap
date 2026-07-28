@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.RealTensorComplexificationLinearMap
-import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathOSHilbertShiftSemigroup
+import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathOSHilbertSymmetricContractionSemigroup
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -120,8 +120,7 @@ theorem hilbertShiftSemigroupAlgebraicComplexification_eq_pow
   induction n with
   | zero => simp
   | succ n ih =>
-      rw [Nat.succ_eq_add_one,
-        D.hilbertShiftSemigroupAlgebraicComplexification_succ,
+      rw [D.hilbertShiftSemigroupAlgebraicComplexification_succ,
         ih,
         pow_succ']
 
