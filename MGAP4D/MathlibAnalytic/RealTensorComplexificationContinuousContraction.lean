@@ -44,10 +44,15 @@ variable {E : Type u} {F : Type v}
 /-- The tensor norm is the `L²` sum of the real and imaginary coordinate norms. -/
 theorem norm_sq_eq_realPart_add_imagPart (x : Space E) :
     ‖x‖ ^ 2 = ‖realPart x‖ ^ 2 + ‖imagPart x‖ ^ 2 := by
-  simpa [realImagLinearIsometryEquiv_apply, toRealImagLinear,
-    toRealImagProdLinear] using
-    (WithLp.prod_norm_sq_eq_of_L2
-      (realImagLinearIsometryEquiv (H := E) x))
+  calc
+    ‖x‖ ^ 2 =
+        ‖realImagLinearIsometryEquiv (H := E) x‖ ^ 2 := by
+          rw [(realImagLinearIsometryEquiv (H := E)).norm_map]
+    _ = ‖realPart x‖ ^ 2 + ‖imagPart x‖ ^ 2 := by
+      simpa [realImagLinearIsometryEquiv_apply, toRealImagLinear,
+        toRealImagProdLinear] using
+        (WithLp.prod_norm_sq_eq_of_L2
+          (realImagLinearIsometryEquiv (H := E) x))
 
 /-- Scalar extension preserves the contraction bound of a bounded real-linear map. -/
 theorem norm_ofContinuousLinearMap_le
