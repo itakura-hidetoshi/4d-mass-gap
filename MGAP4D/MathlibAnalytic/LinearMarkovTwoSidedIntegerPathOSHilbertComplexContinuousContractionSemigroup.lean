@@ -150,8 +150,7 @@ theorem hilbertShiftSemigroupComplexContinuousLinearMap_eq_pow
   induction n with
   | zero => simp
   | succ n ih =>
-      rw [Nat.succ_eq_add_one,
-        D.hilbertShiftSemigroupComplexContinuousLinearMap_succ,
+      rw [D.hilbertShiftSemigroupComplexContinuousLinearMap_succ,
         ih,
         pow_succ']
       rfl
