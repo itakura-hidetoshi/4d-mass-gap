@@ -32,7 +32,7 @@ theorem inner_hilbertShiftSemigroup_add_self_nonneg
     (x : D.Hilbert) :
     0 ≤ inner ℝ (D.hilbertShiftSemigroup (n + n) x) x := by
   rw [D.inner_hilbertShiftSemigroup_add_self_eq]
-  exact inner_self_nonneg ℝ (D.hilbertShiftSemigroup n x)
+  exact real_inner_self_nonneg
 
 end LinearMarkovTwoSidedIntegerPathOSPreHilbertData
 
