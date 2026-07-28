@@ -12,7 +12,6 @@ namespace RealTensorComplexification
 universe u
 
 variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
-  [CompleteSpace H]
 
 /-- The continuous complex contraction wrapper of a symmetric real contraction is
 symmetric in Mathlib's bundled `LinearMap.IsSymmetric` sense. -/
@@ -24,6 +23,10 @@ theorem isSymmetric_ofContinuousLinearMapContraction
   intro x y
   exact inner_ofContinuousLinearMapContraction_left_eq_right
     T hcontraction hsymmetric x y
+
+section Complete
+
+variable [CompleteSpace H]
 
 /-- The Hilbert-space adjoint of the continuous complexification is the operator
 itself. -/
@@ -46,6 +49,8 @@ theorem isSelfAdjoint_ofContinuousLinearMapContraction
     IsSelfAdjoint (ofContinuousLinearMapContraction T hcontraction) :=
   (isSymmetric_ofContinuousLinearMapContraction
     T hcontraction hsymmetric).isSelfAdjoint
+
+end Complete
 
 end RealTensorComplexification
 
