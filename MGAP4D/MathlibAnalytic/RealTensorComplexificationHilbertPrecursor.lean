@@ -24,24 +24,21 @@ def realInner (x y : Space H) : ℝ :=
 
 @[simp] theorem realInner_zero_left (x : Space H) :
     realInner 0 x = 0 := by
-  unfold realInner
-  exact inner_zero_left
+  simp [realInner]
 
 @[simp] theorem realInner_zero_right (x : Space H) :
     realInner x 0 = 0 := by
-  unfold realInner
-  exact inner_zero_right
+  simp [realInner]
 
 @[simp] theorem realInner_neg_right (x y : Space H) :
     realInner x (-y) = -realInner x y := by
-  unfold realInner
-  exact inner_neg_right
+  simp [realInner]
 
 /-- Symmetry of the canonical real tensor inner product. -/
 theorem realInner_comm (x y : Space H) :
     realInner x y = realInner y x := by
   unfold realInner
-  exact real_inner_comm x y
+  exact (real_inner_comm x y).symm
 
 /-- Additivity of the canonical real tensor inner product in the first
 argument. -/
@@ -207,7 +204,7 @@ theorem complexInner_star_symm (x y : Space H) :
 theorem complexInner_add_left (x y z : Space H) :
     complexInner (x + y) z = complexInner x z + complexInner y z := by
   simp only [complexInner, map_add, realInner_add_left]
-  ring
+  ring_nf
 
 /-- Every complex-linear map between algebraic complexifications commutes with
 the canonical complex structure. -/
