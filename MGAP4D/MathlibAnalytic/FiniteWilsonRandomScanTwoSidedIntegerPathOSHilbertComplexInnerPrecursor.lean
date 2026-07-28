@@ -28,7 +28,7 @@ def FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertAlgebraicCom
     [Nonempty L.Edge]
     (x y : L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexification) :
     (L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexificationComplexInner x y).re =
-      inner ℝ x y :=
+      RealTensorComplexification.realInner x y :=
   L.randomScanTwoSidedIntegerPathOSPreHilbertData.hilbertAlgebraicComplexificationComplexInner_re x y
 
 @[simp] theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexificationComplexInner_self
@@ -36,7 +36,7 @@ def FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertAlgebraicCom
     [Nonempty L.Edge]
     (x : L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexification) :
     L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexificationComplexInner x x =
-      (inner ℝ x x : ℂ) :=
+      (RealTensorComplexification.realInner x x : ℂ) :=
   L.randomScanTwoSidedIntegerPathOSPreHilbertData.hilbertAlgebraicComplexificationComplexInner_self x
 
 /-- The algebraically complexified actual finite Wilson one-step temporal OS
