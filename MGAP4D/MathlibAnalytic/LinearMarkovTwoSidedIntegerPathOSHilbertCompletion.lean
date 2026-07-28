@@ -12,31 +12,35 @@ variable {Ω : Type*} [Fintype Ω]
 
 /-- The complete real Hilbert space obtained by completing the separated temporal
 Osterwalder--Schrader pre-Hilbert space. -/
-abbrev Hilbert
+def Hilbert
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :=
   UniformSpace.Completion D.Separated
 
 noncomputable instance hilbertNormedAddCommGroup
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     NormedAddCommGroup D.Hilbert := by
-  infer_instance
+  change NormedAddCommGroup (UniformSpace.Completion D.Separated)
+  exact UniformSpace.Completion.instNormedAddCommGroup D.Separated
 
 noncomputable instance hilbertInnerProductSpace
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     InnerProductSpace ℝ D.Hilbert := by
-  infer_instance
+  change InnerProductSpace ℝ (UniformSpace.Completion D.Separated)
+  exact UniformSpace.Completion.innerProductSpace
 
 noncomputable instance hilbertCompleteSpace
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     CompleteSpace D.Hilbert := by
-  infer_instance
+  change CompleteSpace (UniformSpace.Completion D.Separated)
+  exact UniformSpace.Completion.completeSpace D.Separated
 
 /-- The canonical dense embedding of the separated OS pre-Hilbert space into its
 Hilbert completion. -/
 def completedClass
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
-    (x : D.Separated) : D.Hilbert :=
-  (x : UniformSpace.Completion D.Separated)
+    (x : D.Separated) : D.Hilbert := by
+  change UniformSpace.Completion D.Separated
+  exact x
 
 /-- The completed Hilbert vector represented by a positive-time cylinder
 observable. -/
@@ -49,6 +53,9 @@ def completedObservableClass
 theorem separated_dense_in_hilbert
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     DenseRange D.completedClass := by
+  change DenseRange
+    (fun x : D.Separated =>
+      (x : UniformSpace.Completion D.Separated))
   exact UniformSpace.Completion.denseRange_coe
 
 /-- Completion preserves the inner product of separated OS vectors. -/
@@ -56,6 +63,9 @@ theorem separated_dense_in_hilbert
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (x y : D.Separated) :
     inner ℝ (D.completedClass x) (D.completedClass y) = inner ℝ x y := by
+  change inner ℝ
+      (x : UniformSpace.Completion D.Separated)
+      (y : UniformSpace.Completion D.Separated) = inner ℝ x y
   exact UniformSpace.Completion.inner_coe x y
 
 /-- The inner product of completed positive-time observable classes is exactly the
