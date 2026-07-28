@@ -1,0 +1,100 @@
+import MGAP4D.MathlibAnalytic.ComplexContinuousSymmetricContractionLoewnerInterval
+import Mathlib.Analysis.InnerProductSpace.StarOrder
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+open scoped ComplexOrder
+
+namespace ComplexContinuousPositiveContraction
+
+universe u
+
+variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+  [CompleteSpace H]
+
+/-- A pointwise complex contraction has operator norm at most one. -/
+theorem opNorm_le_one
+    (T : H →L[ℂ] H)
+    (hcontract : ∀ x, ‖T x‖ ≤ ‖x‖) :
+    ‖T‖ ≤ 1 :=
+  T.opNorm_le_bound zero_le_one fun x => by
+    simpa using hcontract x
+
+/-- The identity operator has norm at most one, including on a degenerate
+Hilbert space. -/
+theorem identity_opNorm_le_one :
+    ‖(1 : H →L[ℂ] H)‖ ≤ 1 :=
+  (1 : H →L[ℂ] H).opNorm_le_bound zero_le_one fun x => by
+    simp
+
+/-- Every real spectral value of a positive complex continuous linear map is
+nonnegative. -/
+theorem real_spectrum_nonneg
+    (T : H →L[ℂ] H)
+    (hpositive : T.IsPositive)
+    {r : ℝ}
+    (hr : r ∈ spectrum ℝ T) :
+    0 ≤ r :=
+  SpectrumRestricts.nnreal_iff.mp hpositive.spectrumRestricts r hr
+
+/-- Every real spectral value of a pointwise complex contraction is at most
+one. -/
+theorem real_spectrum_le_one
+    (T : H →L[ℂ] H)
+    (hcontract : ∀ x, ‖T x‖ ≤ ‖x‖)
+    {r : ℝ}
+    (hr : r ∈ spectrum ℝ T) :
+    r ≤ 1 := by
+  calc
+    r ≤ ‖r‖ := Real.le_norm_self r
+    _ ≤ ‖T‖ * ‖(1 : H →L[ℂ] H)‖ :=
+      spectrum.norm_le_norm_mul_of_mem hr
+    _ ≤ 1 * 1 :=
+      mul_le_mul
+        (opNorm_le_one T hcontract)
+        identity_opNorm_le_one
+        (norm_nonneg _)
+        zero_le_one
+    _ = 1 := by norm_num
+
+/-- Every complex spectral value of a positive complex contraction belongs to
+`[0, 1]` in the complex order. -/
+theorem complex_spectrum_mem_Icc
+    (T : H →L[ℂ] H)
+    (hpositive : T.IsPositive)
+    (hcontract : ∀ x, ‖T x‖ ≤ ‖x‖)
+    {c : ℂ}
+    (hc : c ∈ spectrum ℂ T) :
+    c ∈ Set.Icc (0 : ℂ) 1 := by
+  rw [← hpositive.isSelfAdjoint.spectrumRestricts.algebraMap_image] at hc
+  obtain ⟨r, hr, rfl⟩ := hc
+  have hr0 : 0 ≤ r := real_spectrum_nonneg T hpositive hr
+  have hr1 : r ≤ 1 := real_spectrum_le_one T hcontract hr
+  constructor
+  · refine (RCLike.le_iff_re_im).2 ⟨?_, ?_⟩
+    · simpa using hr0
+    · simp
+  · refine (RCLike.le_iff_re_im).2 ⟨?_, ?_⟩
+    · simpa using hr1
+    · simp
+
+/-- The complex spectrum of a positive complex contraction is contained in the
+closed unit interval. -/
+theorem complex_spectrum_subset_Icc
+    (T : H →L[ℂ] H)
+    (hpositive : T.IsPositive)
+    (hcontract : ∀ x, ‖T x‖ ≤ ‖x‖) :
+    spectrum ℂ T ⊆ Set.Icc (0 : ℂ) 1 := by
+  intro c hc
+  exact complex_spectrum_mem_Icc T hpositive hcontract hc
+
+end ComplexContinuousPositiveContraction
+
+end
+
+end MathlibAnalytic
+end MGAP4D
