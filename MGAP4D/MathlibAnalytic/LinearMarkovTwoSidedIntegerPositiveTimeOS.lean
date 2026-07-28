@@ -69,6 +69,7 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_negative
           (linearMarkovIntegerPathReflection path)) := by
   funext i
   have hi := i.2
+  have hin : i.1 ≤ n := Nat.le_of_lt_succ i.2
   unfold linearMarkovChronologicalToCenteredFinitePath
     linearMarkovChronologicalExplicitToSum
     linearMarkovChronologicalSumToCenteredFinitePath
