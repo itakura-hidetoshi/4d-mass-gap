@@ -122,7 +122,8 @@ theorem hilbertShiftSemigroupAlgebraicComplexification_eq_pow
   | succ n ih =>
       rw [D.hilbertShiftSemigroupAlgebraicComplexification_succ,
         ih,
-        pow_succ']
+        pow_succ',
+        Module.End.mul_eq_comp]
 
 end LinearMarkovTwoSidedIntegerPathOSPreHilbertData
 
