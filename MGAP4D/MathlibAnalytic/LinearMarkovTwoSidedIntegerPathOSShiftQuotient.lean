@@ -108,14 +108,18 @@ noncomputable def separatedShiftLinearMap
     intro F
     refine Quotient.inductionOn y ?_
     intro G
-    simp only [D.separatedShift_osClass, D.osClass_add]
-    rw [map_add]
+    change D.separatedShift (D.osClass (F + G)) =
+      D.separatedShift (D.osClass F) + D.separatedShift (D.osClass G)
+    rw [D.separatedShift_osClass, D.separatedShift_osClass,
+      D.separatedShift_osClass, map_add, D.osClass_add]
   map_smul' := by
     intro r x
     refine Quotient.inductionOn x ?_
     intro F
-    simp only [D.separatedShift_osClass, D.osClass_smul]
-    rw [map_smul]
+    change D.separatedShift (D.osClass (r • F)) =
+      r • D.separatedShift (D.osClass F)
+    rw [D.separatedShift_osClass, D.separatedShift_osClass,
+      map_smul, D.osClass_smul]
 
 @[simp] theorem separatedShiftLinearMap_osClass
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
@@ -147,6 +151,8 @@ theorem inner_separatedShiftLinearMap_left_eq_right
   intro F
   refine Quotient.inductionOn y ?_
   intro G
+  change inner ℝ (D.separatedShiftLinearMap (D.osClass F)) (D.osClass G) =
+    inner ℝ (D.osClass F) (D.separatedShiftLinearMap (D.osClass G))
   rw [D.separatedShiftLinearMap_osClass,
     D.separatedShiftLinearMap_osClass]
   rw [D.separated_inner_osClass_osClass,
