@@ -49,7 +49,7 @@ theorem inner_hilbertShiftSemigroup_left_eq_right
     (x y : D.Hilbert) :
     inner ℝ (D.hilbertShiftSemigroup n x) y =
       inner ℝ x (D.hilbertShiftSemigroup n y) := by
-  induction n with
+  induction n generalizing y with
   | zero => rfl
   | succ n ih =>
       rw [D.hilbertShiftSemigroup_succ_apply,
