@@ -27,7 +27,7 @@ def ofLinearMap
     [AddCommMonoid F] [Module ℝ F]
     (T : E →ₗ[ℝ] F) :
     Space E →ₗ[ℂ] Space F :=
-  TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ T
+  T.baseChange ℂ
 
 @[simp] theorem ofLinearMap_tmul
     {E : Type u} {F : Type v}
@@ -37,36 +37,30 @@ def ofLinearMap
     (z : ℂ)
     (x : E) :
     ofLinearMap T (z ⊗ₜ[ℝ] x) = z ⊗ₜ[ℝ] T x :=
-  rfl
+  LinearMap.baseChange_tmul T z x
 
 @[simp] theorem ofLinearMap_id
     {E : Type u}
     [AddCommMonoid E] [Module ℝ E] :
     ofLinearMap (LinearMap.id : E →ₗ[ℝ] E) =
-      (LinearMap.id : Space E →ₗ[ℂ] Space E) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+      (LinearMap.id : Space E →ₗ[ℂ] Space E) :=
+  LinearMap.baseChange_id
 
 @[simp] theorem ofLinearMap_zero
     {E : Type u} {F : Type v}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F] :
     ofLinearMap (0 : E →ₗ[ℝ] F) =
-      (0 : Space E →ₗ[ℂ] Space F) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  simp
+      (0 : Space E →ₗ[ℂ] Space F) :=
+  LinearMap.baseChange_zero
 
 @[simp] theorem ofLinearMap_add
     {E : Type u} {F : Type v}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F]
     (S T : E →ₗ[ℝ] F) :
-    ofLinearMap (S + T) = ofLinearMap S + ofLinearMap T := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  simp
+    ofLinearMap (S + T) = ofLinearMap S + ofLinearMap T :=
+  LinearMap.baseChange_add S T
 
 /-- Scalar extension preserves composition. -/
 theorem ofLinearMap_comp
@@ -77,10 +71,8 @@ theorem ofLinearMap_comp
     (S : F →ₗ[ℝ] G)
     (T : E →ₗ[ℝ] F) :
     ofLinearMap (S.comp T) =
-      (ofLinearMap S).comp (ofLinearMap T) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+      (ofLinearMap S).comp (ofLinearMap T) :=
+  LinearMap.baseChange_comp T S
 
 /-- Forget continuity, then extend scalars algebraically. -/
 def ofContinuousLinearMap
@@ -100,16 +92,14 @@ def ofContinuousLinearMap
     (x : E) :
     ofContinuousLinearMap T (z ⊗ₜ[ℝ] x) =
       z ⊗ₜ[ℝ] T x :=
-  rfl
+  ofLinearMap_tmul T.toLinearMap z x
 
 @[simp] theorem ofContinuousLinearMap_one
     {E : Type u}
     [NormedAddCommGroup E] [NormedSpace ℝ E] :
     ofContinuousLinearMap (1 : E →L[ℝ] E) =
       (1 : Space E →ₗ[ℂ] Space E) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+  simpa [ofContinuousLinearMap] using (ofLinearMap_id (E := E))
 
 @[simp] theorem ofContinuousLinearMap_zero
     {E : Type u} {F : Type v}
@@ -117,9 +107,7 @@ def ofContinuousLinearMap
     [NormedAddCommGroup F] [NormedSpace ℝ F] :
     ofContinuousLinearMap (0 : E →L[ℝ] F) =
       (0 : Space E →ₗ[ℂ] Space F) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  simp
+  simpa [ofContinuousLinearMap] using (ofLinearMap_zero (E := E) (F := F))
 
 /-- Algebraic scalar extension preserves composition of bounded real
 operators. -/
@@ -133,9 +121,8 @@ theorem ofContinuousLinearMap_comp
     ofContinuousLinearMap (S.comp T) =
       (ofContinuousLinearMap S).comp
         (ofContinuousLinearMap T) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+  simpa [ofContinuousLinearMap] using
+    (ofLinearMap_comp S.toLinearMap T.toLinearMap)
 
 end RealTensorComplexification
 
