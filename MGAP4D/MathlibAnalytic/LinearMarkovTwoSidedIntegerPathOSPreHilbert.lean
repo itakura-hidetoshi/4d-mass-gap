@@ -26,36 +26,36 @@ structure Carrier
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) where
   observable : linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)
 
-protected def carrierZero
+def carrierZero
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) : D.Carrier :=
   ⟨0⟩
 
-protected def carrierAdd
+def carrierAdd
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F G : D.Carrier) : D.Carrier :=
   ⟨F.observable + G.observable⟩
 
-protected def carrierNeg
+def carrierNeg
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F : D.Carrier) : D.Carrier :=
   ⟨-F.observable⟩
 
-protected def carrierSub
+def carrierSub
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F G : D.Carrier) : D.Carrier :=
   ⟨F.observable - G.observable⟩
 
-protected def carrierNSMul
+def carrierNSMul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (n : ℕ) (F : D.Carrier) : D.Carrier :=
   ⟨n • F.observable⟩
 
-protected def carrierZSMul
+def carrierZSMul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (n : ℤ) (F : D.Carrier) : D.Carrier :=
   ⟨n • F.observable⟩
 
-protected def carrierSMul
+def carrierSMul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (r : ℝ) (F : D.Carrier) : D.Carrier :=
   ⟨r • F.observable⟩
@@ -283,7 +283,7 @@ theorem norm_eq_zero_iff_mem_carrierNullSubmodule
 /-- The separated temporal OS pre-Hilbert carrier.  Mathlib's separation quotient
 identifies exactly the algebraic OS null submodule. -/
 abbrev Separated
-    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) : Type :=
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :=
   SeparationQuotient D.Carrier
 
 /-- The separated OS class of a datum-dependent carrier observable. -/
