@@ -13,8 +13,8 @@ noncomputable def FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSShift
     [Nonempty L.Edge] :
     L.RandomScanTwoSidedIntegerPathOSPreHilbert →L[ℝ]
       L.RandomScanTwoSidedIntegerPathOSPreHilbert :=
-  L.randomScanTwoSidedIntegerPathOSPreHilbertData
-    .separatedShiftContinuousLinearMap
+  LinearMarkovTwoSidedIntegerPathOSPreHilbertData.separatedShiftContinuousLinearMap
+    L.randomScanTwoSidedIntegerPathOSPreHilbertData
 
 /-- The actual finite Wilson temporal shift is norm nonincreasing. -/
 theorem FiniteLatticeWilsonSystem.norm_randomScanTwoSidedIntegerPathOSShift_le
@@ -23,8 +23,8 @@ theorem FiniteLatticeWilsonSystem.norm_randomScanTwoSidedIntegerPathOSShift_le
     (x : L.RandomScanTwoSidedIntegerPathOSPreHilbert) :
     ‖L.randomScanTwoSidedIntegerPathOSShiftContinuousLinearMap x‖ ≤ ‖x‖ := by
   exact
-    L.randomScanTwoSidedIntegerPathOSPreHilbertData
-      .norm_separatedShiftLinearMap_le x
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData.norm_separatedShiftLinearMap_le
+      L.randomScanTwoSidedIntegerPathOSPreHilbertData x
 
 /-- The continuous actual Wilson shift sends an observable class to the class of
 its positive-time translate. -/
@@ -38,9 +38,8 @@ its positive-time translate. -/
       L.randomScanTwoSidedIntegerPathOSClass
         (linearMarkovPositiveTimeShiftAlgHom F) := by
   exact
-    LinearMarkovTwoSidedIntegerPathOSPreHilbertData
-      .separatedShiftContinuousLinearMap_observableClass
-        L.randomScanTwoSidedIntegerPathOSPreHilbertData F
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData.separatedShiftContinuousLinearMap_observableClass
+      L.randomScanTwoSidedIntegerPathOSPreHilbertData F
 
 /-- The continuous actual Wilson temporal shift remains symmetric for the
 separated OS inner product. -/
@@ -53,9 +52,8 @@ theorem FiniteLatticeWilsonSystem.inner_randomScanTwoSidedIntegerPathOSShiftCont
       inner ℝ x
         (L.randomScanTwoSidedIntegerPathOSShiftContinuousLinearMap y) := by
   exact
-    LinearMarkovTwoSidedIntegerPathOSPreHilbertData
-      .inner_separatedShiftContinuousLinearMap_left_eq_right
-        L.randomScanTwoSidedIntegerPathOSPreHilbertData x y
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData.inner_separatedShiftContinuousLinearMap_left_eq_right
+      L.randomScanTwoSidedIntegerPathOSPreHilbertData x y
 
 end
 
