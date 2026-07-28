@@ -158,8 +158,13 @@ theorem realImagLinearEquiv_inner_map_map (x y : Space H) :
         WithLp.prod_inner_apply, inner_smul_left, inner_smul_right]
       unfold realInner
       rw [TensorProduct.inner_tmul, Complex.inner, Complex.mul_re]
-      rw [RCLike.star_def]
-      rw [Complex.conj_re, Complex.conj_im]
+      have hzre : ((starRingEnd ℂ) z).re = z.re := by
+        change (star z).re = z.re
+        rw [RCLike.star_def, Complex.conj_re]
+      have hzim : ((starRingEnd ℂ) z).im = -z.im := by
+        change (star z).im = -z.im
+        rw [RCLike.star_def, Complex.conj_im]
+      rw [hzre, hzim]
       simp only [starRingEnd_apply, star_trivial]
       ring
     · intro y₁ y₂ hy₁ hy₂
