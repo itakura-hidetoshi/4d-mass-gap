@@ -64,8 +64,7 @@ theorem separated_dense_in_hilbert
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (x y : D.Separated) :
     inner ℝ (D.completedClass x) (D.completedClass y) = inner ℝ x y := by
-  simpa [completedClass, Hilbert] using
-    (UniformSpace.Completion.inner_coe (𝕜 := ℝ) x y)
+  exact UniformSpace.Completion.inner_coe x y
 
 /-- The inner product of completed positive-time observable classes is exactly the
 full two-sided path-space temporal OS form. -/
