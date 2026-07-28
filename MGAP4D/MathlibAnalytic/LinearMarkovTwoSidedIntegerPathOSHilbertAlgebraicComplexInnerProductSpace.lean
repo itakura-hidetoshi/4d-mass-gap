@@ -41,7 +41,7 @@ theorem hilbertAlgebraicComplexification_norm_sq_eq_re_inner
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (x : D.HilbertAlgebraicComplexification) :
     ‖x‖ ^ 2 = (inner ℂ x x).re :=
-  InnerProductSpace.norm_sq_eq_re_inner x
+  InnerProductSpace.norm_sq_eq_re_inner (𝕜 := ℂ) x
 
 /-- The canonical orthogonal complex structure is exactly multiplication by
 `i` in the installed complex inner-product space. -/
