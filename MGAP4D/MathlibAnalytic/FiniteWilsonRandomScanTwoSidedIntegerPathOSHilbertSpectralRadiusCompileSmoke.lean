@@ -5,6 +5,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open scoped ENNReal NNReal
+
 example
     (L : FiniteLatticeWilsonSystem)
     [Nonempty L.Edge]
