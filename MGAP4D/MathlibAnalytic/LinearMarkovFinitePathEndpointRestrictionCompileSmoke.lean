@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.LinearMarkovIntegerFiniteMarginalShift
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check linearMarkovFinitePathInitBy
+#check linearMarkovFinitePathTailBy
+#check linearMarkovFinitePathPMF_map_initBy
+#check linearMarkovFinitePathPMF_map_tailBy_of_detailedBalanceReal
+#check linearMarkovIntegerFiniteSetNatShift
+#check linearMarkovIntegerFiniteSetNatShiftReindex
+#check linearMarkovIntegerCenteredFinitePathPMF_map_observeAt
+#check linearMarkovIntegerCenteredFinitePathPMF_map_natShiftObserveAt
+#check linearMarkovIntegerFiniteMarginalPMF_map_natShiftReindex
+
+end MathlibAnalytic
+end MGAP4D
