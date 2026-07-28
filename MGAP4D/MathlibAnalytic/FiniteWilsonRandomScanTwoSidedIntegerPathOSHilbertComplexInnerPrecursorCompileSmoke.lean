@@ -15,7 +15,7 @@ example (L : FiniteLatticeWilsonSystem) [Nonempty L.Edge]
 example (L : FiniteLatticeWilsonSystem) [Nonempty L.Edge]
     (x : L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexification) :
     L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexificationComplexInner x x =
-      (inner ℝ x x : ℂ) :=
+      (RealTensorComplexification.realInner x x : ℂ) :=
   L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexificationComplexInner_self x
 
 example (L : FiniteLatticeWilsonSystem) [Nonempty L.Edge]
