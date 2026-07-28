@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonRandomScanTwoSidedIntegerPositiveTimeOS
-import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathOSForm
+import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathOSNull
 
 namespace MGAP4D
 namespace MathlibAnalytic
