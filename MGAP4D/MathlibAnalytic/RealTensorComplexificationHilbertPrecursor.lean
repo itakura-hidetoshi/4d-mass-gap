@@ -204,7 +204,8 @@ theorem complexInner_star_symm (x y : Space H) :
 theorem complexInner_add_left (x y z : Space H) :
     complexInner (x + y) z = complexInner x z + complexInner y z := by
   simp only [complexInner, map_add, realInner_add_left]
-  ring_nf
+  push_cast
+  ring
 
 /-- Every complex-linear map between algebraic complexifications commutes with
 the canonical complex structure. -/
