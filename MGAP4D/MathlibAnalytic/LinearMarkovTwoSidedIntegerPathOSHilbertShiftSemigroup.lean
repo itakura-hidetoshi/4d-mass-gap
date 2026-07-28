@@ -78,15 +78,12 @@ theorem hilbertShiftSemigroup_add
       (D.hilbertShiftSemigroup m).comp (D.hilbertShiftSemigroup n) := by
   induction m with
   | zero =>
-      ext x
-      rfl
+      simp
   | succ m ih =>
-      ext x
-      change D.hilbertShiftContinuousLinearMap
-          (D.hilbertShiftSemigroup (m + n) x) =
-        D.hilbertShiftContinuousLinearMap
-          (D.hilbertShiftSemigroup m (D.hilbertShiftSemigroup n x))
+      rw [Nat.succ_add]
+      simp only [Nat.succ_eq_add_one, D.hilbertShiftSemigroup_succ]
       rw [ih]
+      ext x
       rfl
 
 /-- Every discrete-time member remains norm nonincreasing. -/
