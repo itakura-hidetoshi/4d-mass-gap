@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.Complex.Module
 import Mathlib.LinearAlgebra.TensorProduct.Tower
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Tactic
@@ -7,19 +8,21 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Algebraic complexification of a real module by scalar extension.
+/- Algebraic complexification of a real module by scalar extension.
 
 This is deliberately the uncompleted tensor product.  It supplies the functorial
 algebraic layer needed before introducing a Hilbert norm and completion. -/
 namespace RealTensorComplexification
 
-abbrev Space (E : Type*) [AddCommMonoid E] [Module ℝ E] :=
+universe u v w
+
+abbrev Space (E : Type u) [AddCommMonoid E] [Module ℝ E] :=
   ℂ ⊗[ℝ] E
 
 /-- Extend a real-linear map to a complex-linear map on algebraic
 complexifications. -/
 def ofLinearMap
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F]
     (T : E →ₗ[ℝ] F) :
@@ -27,7 +30,7 @@ def ofLinearMap
   TensorProduct.AlgebraTensorModule.lTensor ℂ ℂ T
 
 @[simp] theorem ofLinearMap_tmul
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F]
     (T : E →ₗ[ℝ] F)
@@ -37,7 +40,7 @@ def ofLinearMap
   rfl
 
 @[simp] theorem ofLinearMap_id
-    {E : Type*}
+    {E : Type u}
     [AddCommMonoid E] [Module ℝ E] :
     ofLinearMap (LinearMap.id : E →ₗ[ℝ] E) =
       (LinearMap.id : Space E →ₗ[ℂ] Space E) := by
@@ -46,7 +49,7 @@ def ofLinearMap
   rfl
 
 @[simp] theorem ofLinearMap_zero
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F] :
     ofLinearMap (0 : E →ₗ[ℝ] F) =
@@ -56,7 +59,7 @@ def ofLinearMap
   simp
 
 @[simp] theorem ofLinearMap_add
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F]
     (S T : E →ₗ[ℝ] F) :
@@ -67,7 +70,7 @@ def ofLinearMap
 
 /-- Scalar extension preserves composition. -/
 theorem ofLinearMap_comp
-    {E F G : Type*}
+    {E : Type u} {F : Type v} {G : Type w}
     [AddCommMonoid E] [Module ℝ E]
     [AddCommMonoid F] [Module ℝ F]
     [AddCommMonoid G] [Module ℝ G]
@@ -81,7 +84,7 @@ theorem ofLinearMap_comp
 
 /-- Forget continuity, then extend scalars algebraically. -/
 def ofContinuousLinearMap
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (T : E →L[ℝ] F) :
@@ -89,7 +92,7 @@ def ofContinuousLinearMap
   ofLinearMap T.toLinearMap
 
 @[simp] theorem ofContinuousLinearMap_tmul
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (T : E →L[ℝ] F)
@@ -100,7 +103,7 @@ def ofContinuousLinearMap
   rfl
 
 @[simp] theorem ofContinuousLinearMap_one
-    {E : Type*}
+    {E : Type u}
     [NormedAddCommGroup E] [NormedSpace ℝ E] :
     ofContinuousLinearMap (1 : E →L[ℝ] E) =
       (1 : Space E →ₗ[ℂ] Space E) := by
@@ -109,7 +112,7 @@ def ofContinuousLinearMap
   rfl
 
 @[simp] theorem ofContinuousLinearMap_zero
-    {E F : Type*}
+    {E : Type u} {F : Type v}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] :
     ofContinuousLinearMap (0 : E →L[ℝ] F) =
@@ -121,7 +124,7 @@ def ofContinuousLinearMap
 /-- Algebraic scalar extension preserves composition of bounded real
 operators. -/
 theorem ofContinuousLinearMap_comp
-    {E F G : Type*}
+    {E : Type u} {F : Type v} {G : Type w}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     [NormedAddCommGroup G] [NormedSpace ℝ G]
