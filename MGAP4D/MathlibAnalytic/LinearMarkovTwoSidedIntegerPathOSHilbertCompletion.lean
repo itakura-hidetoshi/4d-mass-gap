@@ -38,9 +38,9 @@ noncomputable instance hilbertCompleteSpace
 Hilbert completion. -/
 def completedClass
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
-    (x : D.Separated) : D.Hilbert := by
-  change UniformSpace.Completion D.Separated
-  exact x
+    (x : D.Separated) : D.Hilbert :=
+  show UniformSpace.Completion D.Separated from
+    (x : UniformSpace.Completion D.Separated)
 
 /-- The completed Hilbert vector represented by a positive-time cylinder
 observable. -/
@@ -53,20 +53,19 @@ def completedObservableClass
 theorem separated_dense_in_hilbert
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     DenseRange D.completedClass := by
-  change DenseRange
-    (fun x : D.Separated =>
-      (x : UniformSpace.Completion D.Separated))
-  exact UniformSpace.Completion.denseRange_coe
+  simpa [completedClass, Hilbert] using
+    (UniformSpace.Completion.denseRange_coe :
+      DenseRange
+        (fun x : D.Separated =>
+          (x : UniformSpace.Completion D.Separated)))
 
 /-- Completion preserves the inner product of separated OS vectors. -/
 @[simp] theorem inner_completedClass_completedClass
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (x y : D.Separated) :
     inner ℝ (D.completedClass x) (D.completedClass y) = inner ℝ x y := by
-  change inner ℝ
-      (x : UniformSpace.Completion D.Separated)
-      (y : UniformSpace.Completion D.Separated) = inner ℝ x y
-  exact UniformSpace.Completion.inner_coe x y
+  simpa [completedClass, Hilbert] using
+    (UniformSpace.Completion.inner_coe (𝕜 := ℝ) x y)
 
 /-- The inner product of completed positive-time observable classes is exactly the
 full two-sided path-space temporal OS form. -/
