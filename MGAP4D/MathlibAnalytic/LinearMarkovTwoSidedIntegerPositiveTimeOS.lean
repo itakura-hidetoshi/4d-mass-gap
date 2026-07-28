@@ -70,6 +70,9 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_negative
   funext i
   have hi := i.2
   have hin : i.1 ≤ n := Nat.le_of_lt_succ i.2
+  have hisucc : i.succ.1 ≤ n + 1 := Nat.le_of_lt_succ i.succ.2
+  have hrev : n + 1 - i.succ.1 + i.succ.1 = n + 1 :=
+    Nat.sub_add_cancel hisucc
   unfold linearMarkovChronologicalToCenteredFinitePath
     linearMarkovChronologicalExplicitToSum
     linearMarkovChronologicalSumToCenteredFinitePath
