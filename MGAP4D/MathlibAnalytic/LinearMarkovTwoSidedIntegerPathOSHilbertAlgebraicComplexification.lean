@@ -41,7 +41,8 @@ def hilbertShiftSemigroupAlgebraicComplexification
     (x : D.Hilbert) :
     D.hilbertShiftAlgebraicComplexification (z ⊗ₜ[ℝ] x) =
       z ⊗ₜ[ℝ] D.hilbertShiftContinuousLinearMap x :=
-  rfl
+  RealTensorComplexification.ofContinuousLinearMap_tmul
+    D.hilbertShiftContinuousLinearMap z x
 
 @[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_tmul
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
@@ -50,22 +51,23 @@ def hilbertShiftSemigroupAlgebraicComplexification
     (x : D.Hilbert) :
     D.hilbertShiftSemigroupAlgebraicComplexification n (z ⊗ₜ[ℝ] x) =
       z ⊗ₜ[ℝ] D.hilbertShiftSemigroup n x :=
-  rfl
+  RealTensorComplexification.ofContinuousLinearMap_tmul
+    (D.hilbertShiftSemigroup n) z x
 
 @[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_zero
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     D.hilbertShiftSemigroupAlgebraicComplexification 0 = 1 := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    D.hilbertShiftSemigroup_zero]
+  exact RealTensorComplexification.ofContinuousLinearMap_one
 
 @[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_one
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     D.hilbertShiftSemigroupAlgebraicComplexification 1 =
       D.hilbertShiftAlgebraicComplexification := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftAlgebraicComplexification,
+    D.hilbertShiftSemigroup_one]
 
 @[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_succ
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
@@ -73,9 +75,12 @@ def hilbertShiftSemigroupAlgebraicComplexification
     D.hilbertShiftSemigroupAlgebraicComplexification (n + 1) =
       D.hilbertShiftAlgebraicComplexification.comp
         (D.hilbertShiftSemigroupAlgebraicComplexification n) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  rfl
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftAlgebraicComplexification,
+    hilbertShiftSemigroupAlgebraicComplexification,
+    D.hilbertShiftSemigroup_succ]
+  exact RealTensorComplexification.ofContinuousLinearMap_comp
+    D.hilbertShiftContinuousLinearMap (D.hilbertShiftSemigroup n)
 
 /-- The algebraically complexified temporal OS operators retain the additive
 semigroup law. -/
@@ -85,12 +90,12 @@ theorem hilbertShiftSemigroupAlgebraicComplexification_add
     D.hilbertShiftSemigroupAlgebraicComplexification (m + n) =
       (D.hilbertShiftSemigroupAlgebraicComplexification m).comp
         (D.hilbertShiftSemigroupAlgebraicComplexification n) := by
-  apply TensorProduct.AlgebraTensorModule.ext
-  intro z x
-  simp only [hilbertShiftSemigroupAlgebraicComplexification_tmul,
-    LinearMap.comp_apply]
-  rw [D.hilbertShiftSemigroup_add]
-  rfl
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftSemigroupAlgebraicComplexification,
+    D.hilbertShiftSemigroup_add]
+  exact RealTensorComplexification.ofContinuousLinearMap_comp
+    (D.hilbertShiftSemigroup m) (D.hilbertShiftSemigroup n)
 
 /-- Any two members of the algebraically complexified temporal OS semigroup
 commute. -/
