@@ -204,9 +204,9 @@ theorem norm_separatedShiftLinearMap_le
       D.separated_inner_osClass_osClass]
     exact hform
   rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq] at hinner
-  nlinarith [norm_nonneg
-      (D.separatedShiftLinearMap (D.osClass F)),
-    norm_nonneg (D.osClass F)]
+  exact (sq_le_sq₀
+    (norm_nonneg (D.separatedShiftLinearMap (D.osClass F)))
+    (norm_nonneg (D.osClass F))).mp hinner
 
 /-- The contractive positive-time shift as a continuous real-linear endomorphism
 of the separated temporal OS pre-Hilbert space. -/
