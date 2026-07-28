@@ -100,7 +100,7 @@ theorem fromRealImagLinear_toRealImagLinear (x : Space H) :
   · intro z y
     rw [toRealImagLinear_tmul, fromRealImagLinear_toLp]
     rw [TensorProduct.tmul_smul, TensorProduct.tmul_smul]
-    simp only [Complex.real_smul, mul_one]
+    rw [Complex.real_smul, Complex.real_smul, mul_one]
     rw [← TensorProduct.add_tmul, Complex.re_add_im]
   · intro x y hx hy
     rw [map_add, map_add, hx, hy]
@@ -147,14 +147,12 @@ theorem realImagLinearEquiv_inner_map_map (x y : Space H) :
     · simp [realInner]
     · intro w v
       simp only [realImagLinearEquiv_apply, toRealImagLinear_tmul,
-        WithLp.prod_inner_apply, WithLp.ofLp_toLp, Prod.fst, Prod.snd,
-        inner_smul_left, inner_smul_right]
+        WithLp.prod_inner_apply, inner_smul_left, inner_smul_right]
       unfold realInner
       rw [TensorProduct.inner_tmul]
-      change (z.re * w.re + z.im * w.im) * inner ℝ u v =
-        inner ℝ z w * inner ℝ u v
-      congr 1
-      rfl
+      rw [show inner ℝ z w = z.re * w.re + z.im * w.im by rfl]
+      simp only [starRingEnd_apply, star_trivial]
+      ring
     · intro y₁ y₂ hy₁ hy₂
       rw [map_add, inner_add_right, realInner_add_right, hy₁, hy₂]
   · intro x₁ x₂ hx₁ hx₂
