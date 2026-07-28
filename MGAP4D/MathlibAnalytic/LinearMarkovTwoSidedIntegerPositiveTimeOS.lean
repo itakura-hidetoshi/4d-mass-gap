@@ -31,6 +31,7 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_positive
       linearMarkovPositiveTimeFuturePrefix n
         (linearMarkovIntegerPathNonnegativeRestriction path) := by
   funext i
+  have hi := i.2
   unfold linearMarkovChronologicalToCenteredFinitePath
     linearMarkovChronologicalExplicitToSum
     linearMarkovChronologicalSumToCenteredFinitePath
@@ -40,6 +41,7 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_positive
     linearMarkovIntegerPathNonnegativeRestriction
     linearMarkovIntegerCenteredTime
   simp
+  apply congrArg path
   omega
 
 /-- The boundary unpacked from a centered full-path restriction is the time-zero
@@ -55,7 +57,6 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_boundary
     linearMarkovIntegerCenteredPathRestriction
     linearMarkovIntegerCenteredTime
   simp
-  omega
 
 /-- The reflected past unpacked from a centered full-path restriction is exactly
 the strictly-positive prefix of the globally reflected path. -/
@@ -67,6 +68,7 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_negative
         (linearMarkovIntegerPathNonnegativeRestriction
           (linearMarkovIntegerPathReflection path)) := by
   funext i
+  have hi := i.2
   unfold linearMarkovChronologicalToCenteredFinitePath
     linearMarkovChronologicalExplicitToSum
     linearMarkovChronologicalSumToCenteredFinitePath
@@ -79,6 +81,7 @@ theorem linearMarkovChronologicalToCentered_centeredRestriction_negative
     linearMarkovIntegerPathReflection
     linearMarkovIntegerCenteredTime
   simp
+  apply congrArg path
   omega
 
 /-- The full-path reflected product of finite future observables is exactly the
