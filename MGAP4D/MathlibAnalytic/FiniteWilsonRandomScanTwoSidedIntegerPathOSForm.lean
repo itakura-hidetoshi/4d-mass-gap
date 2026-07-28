@@ -37,6 +37,7 @@ theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSForm_eq_integra
   unfold FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSForm
     linearMarkovTwoSidedIntegerPathOSForm
     FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathMeasure
+  rfl
 
 /-- Symmetry of the actual finite Wilson full path-space OS form. -/
 theorem finite_lattice_randomScanTwoSidedIntegerPathOSForm_symmetric
