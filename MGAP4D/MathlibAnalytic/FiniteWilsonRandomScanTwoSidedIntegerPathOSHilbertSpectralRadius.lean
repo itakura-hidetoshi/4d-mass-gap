@@ -6,6 +6,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open scoped ENNReal NNReal
+
 /-- The real spectral radius of every natural-time actual finite Wilson
 random-scan temporal OS operator equals its operator `nnnorm`. -/
 theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroup_spectralRadius_eq_nnnorm
