@@ -45,7 +45,9 @@ theorem complex_smul_eq_re_add_im
       rw [add_smul]
     _ = c.re • x + c.im • (Complex.I • x) := by
       rw [mul_smul]
-      simp
+      change c.re • x + c.im • (Complex.I • x) =
+        c.re • x + c.im • (Complex.I • x)
+      rfl
 
 /-- Real scalar multiplication is linear for the candidate complex inner
 product. -/
@@ -73,8 +75,8 @@ theorem complexInner_smul_left
     complexInner_real_smul_left, complexInner_real_smul_left,
     complexInner_imaginaryUnit_left]
   have hc : star c = (c.re : ℂ) - (c.im : ℂ) * Complex.I := by
-    change Complex.conj c = _
-    exact RCLike.conj_eq_re_sub_im c
+    simpa [RCLike.star_def] using
+      (RCLike.conj_eq_re_sub_im c)
   rw [hc]
   ring
 
@@ -113,9 +115,10 @@ theorem norm_complex_smul_sq
   change (((star c * c) * (realInner x x : ℂ)).re) =
     (‖c‖ * ‖x‖) ^ 2
   rw [show star c * c = (‖c‖ ^ 2 : ℂ) by
-    change Complex.conj c * c = _
-    exact RCLike.conj_mul c]
-  simp [← norm_sq_eq_realInner x]
+    simpa [RCLike.star_def] using (RCLike.conj_mul c)]
+  change ‖c‖ ^ 2 * realInner x x =
+    (‖c‖ * ‖x‖) ^ 2
+  rw [← norm_sq_eq_realInner x]
   ring
 
 /-- The existing tensor norm is exactly homogeneous for the ambient complex
@@ -131,13 +134,14 @@ theorem norm_complex_smul
 
 /-- Complex normed-space structure using the already existing real tensor
 norm.  No replacement norm is introduced. -/
-noncomputable def complexNormedSpace : NormedSpace ℂ (Space H) where
+@[reducible] noncomputable def complexNormedSpace :
+    NormedSpace ℂ (Space H) where
   norm_smul_le c x := by
     rw [norm_complex_smul]
 
 /-- Complex inner-product-space structure on the algebraic tensor
 complexification, compatible with the pre-existing real tensor norm. -/
-noncomputable def complexInnerProductSpace :
+@[reducible] noncomputable def complexInnerProductSpace :
     InnerProductSpace ℂ (Space H) where
   toNormedSpace := complexNormedSpace
   toInner := ⟨complexInner⟩
