@@ -20,6 +20,14 @@ theorem hilbertShiftSemigroup_opNorm_le_one
   (D.hilbertShiftSemigroup n).opNorm_le_bound zero_le_one fun x => by
     simpa using D.norm_hilbertShiftSemigroup_le n x
 
+/-- The identity on the completed temporal OS Hilbert space has operator norm at
+most one, including in the degenerate subsingleton case. -/
+theorem hilbertIdentity_opNorm_le_one
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
+    ‖(1 : D.Hilbert →L[ℝ] D.Hilbert)‖ ≤ 1 :=
+  (1 : D.Hilbert →L[ℝ] D.Hilbert).opNorm_le_bound zero_le_one fun x => by
+    simp
+
 /-- Every real spectral value of a natural-time temporal OS operator is
 nonnegative. -/
 theorem hilbertShiftSemigroup_spectrum_nonneg
@@ -42,8 +50,16 @@ theorem hilbertShiftSemigroup_spectrum_le_one
     c ≤ 1 := by
   calc
     c ≤ ‖c‖ := Real.le_norm_self c
-    _ ≤ ‖D.hilbertShiftSemigroup n‖ := spectrum.norm_le_norm_of_mem hc
-    _ ≤ 1 := D.hilbertShiftSemigroup_opNorm_le_one n
+    _ ≤ ‖D.hilbertShiftSemigroup n‖ *
+        ‖(1 : D.Hilbert →L[ℝ] D.Hilbert)‖ :=
+      spectrum.norm_le_norm_mul_of_mem hc
+    _ ≤ 1 * 1 :=
+      mul_le_mul
+        (D.hilbertShiftSemigroup_opNorm_le_one n)
+        D.hilbertIdentity_opNorm_le_one
+        (norm_nonneg _)
+        zero_le_one
+    _ = 1 := by norm_num
 
 /-- The real spectrum of every natural-time temporal OS operator is contained
 in the closed unit interval. -/
