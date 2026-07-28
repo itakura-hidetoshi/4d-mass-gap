@@ -102,6 +102,19 @@ theorem norm_hilbertShiftSemigroupComplexContinuousLinearMap_le
     D.hilbertShiftAlgebraicComplexification x
   rw [D.hilbertShiftSemigroupAlgebraicComplexification_one]
 
+@[simp] theorem hilbertShiftSemigroupComplexContinuousLinearMap_succ
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (n : ℕ) :
+    D.hilbertShiftSemigroupComplexContinuousLinearMap (n + 1) =
+      D.hilbertShiftComplexContinuousLinearMap.comp
+        (D.hilbertShiftSemigroupComplexContinuousLinearMap n) := by
+  ext x
+  change D.hilbertShiftSemigroupAlgebraicComplexification (n + 1) x =
+    D.hilbertShiftAlgebraicComplexification
+      (D.hilbertShiftSemigroupAlgebraicComplexification n x)
+  rw [D.hilbertShiftSemigroupAlgebraicComplexification_succ]
+  rfl
+
 /-- The continuous complex temporal OS operators retain the additive semigroup law. -/
 theorem hilbertShiftSemigroupComplexContinuousLinearMap_add
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
@@ -134,10 +147,14 @@ theorem hilbertShiftSemigroupComplexContinuousLinearMap_eq_pow
     (n : ℕ) :
     D.hilbertShiftSemigroupComplexContinuousLinearMap n =
       D.hilbertShiftComplexContinuousLinearMap ^ n := by
-  ext x
-  change D.hilbertShiftSemigroupAlgebraicComplexification n x =
-    (D.hilbertShiftAlgebraicComplexification ^ n) x
-  rw [D.hilbertShiftSemigroupAlgebraicComplexification_eq_pow]
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [Nat.succ_eq_add_one,
+        D.hilbertShiftSemigroupComplexContinuousLinearMap_succ,
+        ih,
+        pow_succ']
+      rfl
 
 end LinearMarkovTwoSidedIntegerPathOSPreHilbertData
 
