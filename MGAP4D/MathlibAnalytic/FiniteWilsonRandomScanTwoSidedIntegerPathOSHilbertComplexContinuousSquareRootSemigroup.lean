@@ -18,16 +18,6 @@ noncomputable def FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbe
       L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexification :=
   L.randomScanTwoSidedIntegerPathOSPreHilbertData.hilbertShiftSemigroupComplexContinuousSquareRoot n
 
-@[simp]
-theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousSquareRoot_eq_cfc_sqrt
-    (L : FiniteLatticeWilsonSystem)
-    [Nonempty L.Edge]
-    (n : ℕ) :
-    L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousSquareRoot n =
-      CFC.sqrt
-        (L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap n) :=
-  rfl
-
 /-- Every actual finite Wilson temporal OS CFC square root is nonnegative. -/
 theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousSquareRoot_nonneg
     (L : FiniteLatticeWilsonSystem)
