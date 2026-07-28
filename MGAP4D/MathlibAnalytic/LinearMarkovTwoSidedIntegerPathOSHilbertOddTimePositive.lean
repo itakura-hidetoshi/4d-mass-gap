@@ -109,12 +109,22 @@ theorem linearMarkovTwoSidedIntegerPathOSForm_shift_self_eq_transitionQuadratic
     _ = finitePMFExpectationReal initial
         (fun boundary =>
           finitePMFExpectationReal (transition boundary) f * f boundary) := by
-      unfold finitePMFExpectationReal
+      change
+        (∑ boundary : Ω,
+          (initial boundary).toReal *
+            linearMarkovPositiveTimeBoundaryAmplitude transition (n + 1)
+              shiftedH boundary *
+            linearMarkovPositiveTimeBoundaryAmplitude transition (n + 1)
+              unshiftedH boundary) =
+          ∑ boundary : Ω,
+            (initial boundary).toReal *
+              (finitePMFExpectationReal (transition boundary) f * f boundary)
       apply Finset.sum_congr rfl
       intro boundary _hboundary
       rw [linearMarkovPositiveTimeBoundaryAmplitude_tail,
         linearMarkovPositiveTimeBoundaryAmplitude_init]
-      rfl
+      dsimp only [f]
+      ring
 
 /-- A nonnegative stationary transition quadratic form makes the time-one OS
 quadratic form nonnegative on cylinder observables. -/
@@ -180,6 +190,9 @@ theorem inner_hilbertShiftSemigroup_add_self_add_one_eq
         (D.hilbertShiftSemigroup n x) := by
   rw [show n + n + 1 = n + (n + 1) by omega,
     D.hilbertShiftSemigroup_add]
+  change inner ℝ
+      (D.hilbertShiftSemigroup n
+        (D.hilbertShiftSemigroup (n + 1) x)) x = _
   rw [D.inner_hilbertShiftSemigroup_left_eq_right n]
   rw [D.hilbertShiftSemigroup_succ_apply]
 
