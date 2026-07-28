@@ -7,6 +7,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open scoped ENNReal NNReal
+
 namespace LinearMarkovTwoSidedIntegerPathOSPreHilbertData
 
 variable {Ω : Type*} [Fintype Ω]
