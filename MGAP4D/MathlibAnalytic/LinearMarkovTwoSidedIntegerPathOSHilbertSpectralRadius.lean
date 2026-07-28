@@ -23,6 +23,7 @@ theorem hilbertShiftSemigroup_spectralRadius_eq_nnnorm
     spectralRadius ℝ (D.hilbertShiftSemigroup n) =
       (‖D.hilbertShiftSemigroup n‖₊ : ℝ≥0∞) :=
   ContinuousLinearMap.spectralRadius_eq_nnnorm
+    (D.hilbertShiftSemigroup n)
     (D.hilbertShiftSemigroup_isSelfAdjoint hquad n)
 
 /-- Every natural-time temporal OS operator has `nnnorm` at most one. -/
