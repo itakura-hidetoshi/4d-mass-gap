@@ -20,18 +20,35 @@ def linearMarkovPositiveTimeFuturePrefix
 
 /-- Restrict a longer strictly-positive-time future to its first `n+1`
 coordinates. -/
-def linearMarkovPositiveTimeFutureRestrict
-    {Ω : Type*} (n d : ℕ) :
-    LinearMarkovPositiveTimeFuturePath Ω (n + d) →
+def linearMarkovPositiveTimeFutureRestrictLeft
+    {Ω : Type*} (n m : ℕ) :
+    LinearMarkovPositiveTimeFuturePath Ω (n + m) →
       LinearMarkovPositiveTimeFuturePath Ω n :=
   fun future i => future ⟨i.1, by omega⟩
 
-/-- Restricting a longer positive-time prefix recovers the shorter prefix. -/
-@[simp] theorem linearMarkovPositiveTimeFutureRestrict_prefix
-    {Ω : Type*} (n d : ℕ) (path : ℕ → Ω) :
-    linearMarkovPositiveTimeFutureRestrict n d
-        (linearMarkovPositiveTimeFuturePrefix (n + d) path) =
+/-- Read the first `m+1` coordinates of the same common `n+m` horizon. -/
+def linearMarkovPositiveTimeFutureRestrictRight
+    {Ω : Type*} (n m : ℕ) :
+    LinearMarkovPositiveTimeFuturePath Ω (n + m) →
+      LinearMarkovPositiveTimeFuturePath Ω m :=
+  fun future i => future ⟨i.1, by omega⟩
+
+/-- Restricting a common positive-time prefix to the left horizon recovers the
+shorter prefix. -/
+@[simp] theorem linearMarkovPositiveTimeFutureRestrictLeft_prefix
+    {Ω : Type*} (n m : ℕ) (path : ℕ → Ω) :
+    linearMarkovPositiveTimeFutureRestrictLeft n m
+        (linearMarkovPositiveTimeFuturePrefix (n + m) path) =
       linearMarkovPositiveTimeFuturePrefix n path := by
+  rfl
+
+/-- Restricting the same common prefix to the right horizon recovers the second
+shorter prefix without any carrier cast. -/
+@[simp] theorem linearMarkovPositiveTimeFutureRestrictRight_prefix
+    {Ω : Type*} (n m : ℕ) (path : ℕ → Ω) :
+    linearMarkovPositiveTimeFutureRestrictRight n m
+        (linearMarkovPositiveTimeFuturePrefix (n + m) path) =
+      linearMarkovPositiveTimeFuturePrefix m path := by
   rfl
 
 /-- A natural-time observable depends on finitely many strictly-positive
@@ -69,11 +86,8 @@ theorem LinearMarkovPositiveTimeFiniteRepresentable.add
   rcases hG with ⟨m, K, rfl⟩
   refine ⟨n + m,
     fun future =>
-      H (linearMarkovPositiveTimeFutureRestrict n m future) +
-        K (linearMarkovPositiveTimeFutureRestrict m n
-          (by
-            have h : n + m = m + n := Nat.add_comm n m
-            exact h ▸ future)), ?_⟩
+      H (linearMarkovPositiveTimeFutureRestrictLeft n m future) +
+        K (linearMarkovPositiveTimeFutureRestrictRight n m future), ?_⟩
   funext path
   simp [Pi.add_apply, Function.comp_apply]
 
@@ -87,11 +101,8 @@ theorem LinearMarkovPositiveTimeFiniteRepresentable.mul
   rcases hG with ⟨m, K, rfl⟩
   refine ⟨n + m,
     fun future =>
-      H (linearMarkovPositiveTimeFutureRestrict n m future) *
-        K (linearMarkovPositiveTimeFutureRestrict m n
-          (by
-            have h : n + m = m + n := Nat.add_comm n m
-            exact h ▸ future)), ?_⟩
+      H (linearMarkovPositiveTimeFutureRestrictLeft n m future) *
+        K (linearMarkovPositiveTimeFutureRestrictRight n m future), ?_⟩
   funext path
   simp [Pi.mul_apply, Function.comp_apply]
 
