@@ -43,15 +43,15 @@ def linearMarkovIntegerCenteredPathRestriction
 /-- Centered restriction factors through ordinary finite-set restriction. -/
 theorem linearMarkovIntegerCenteredPathRestriction_eq_reindex_comp_restrict
     (n : ℕ) :
-    (@linearMarkovIntegerCenteredPathRestriction Ω n) =
-      linearMarkovIntegerCenteredTimeSetReindex n ∘
+    (linearMarkovIntegerCenteredPathRestriction (Ω := Ω) n) =
+      linearMarkovIntegerCenteredTimeSetReindex (Ω := Ω) n ∘
         (linearMarkovIntegerCenteredTimeSet n).restrict := by
   rfl
 
 /-- Reindexing the finite centered time set is measurable. -/
 theorem linearMarkovIntegerCenteredTimeSetReindex_measurable
     (n : ℕ) :
-    Measurable (@linearMarkovIntegerCenteredTimeSetReindex Ω _ _ _ n) := by
+    Measurable (linearMarkovIntegerCenteredTimeSetReindex (Ω := Ω) n) := by
   exact measurable_pi_lambda _ (fun i =>
     measurable_pi_apply
       (⟨linearMarkovIntegerCenteredTime i,
@@ -61,7 +61,7 @@ theorem linearMarkovIntegerCenteredTimeSetReindex_measurable
 /-- Restriction to a centered chronological window is measurable. -/
 theorem linearMarkovIntegerCenteredPathRestriction_measurable
     (n : ℕ) :
-    Measurable (@linearMarkovIntegerCenteredPathRestriction Ω _ _ _ n) := by
+    Measurable (linearMarkovIntegerCenteredPathRestriction (Ω := Ω) n) := by
   exact measurable_pi_lambda _ (fun i =>
     measurable_pi_apply (linearMarkovIntegerCenteredTime i))
 
@@ -75,9 +75,10 @@ theorem linearMarkovIntegerCenteredTimeSet_radius_le
   apply Finset.sup_le
   intro t ht
   rcases Finset.mem_image.mp ht with ⟨i, _hi, rfl⟩
-  rw [Int.natAbs_le]
-  exact ⟨linearMarkovIntegerCenteredTime_lower i,
-    linearMarkovIntegerCenteredTime_upper i⟩
+  unfold linearMarkovIntegerCenteredTime
+  rw [← Nat.cast_le (α := ℤ), Int.natCast_natAbs, abs_le]
+  have hi := i.2
+  constructor <;> omega
 
 /-- Observing every centered time in the next larger projective window and
 reindexing gives exactly the one-step central restriction. -/
@@ -85,10 +86,10 @@ theorem linearMarkovIntegerCenteredTimeSetReindex_observeAt
     (n : ℕ)
     (hJ : linearMarkovIntegerFiniteSetRadius
       (linearMarkovIntegerCenteredTimeSet n) ≤ n + 1) :
-    linearMarkovIntegerCenteredTimeSetReindex n ∘
-        linearMarkovIntegerFiniteSetObserveAt
-          (linearMarkovIntegerCenteredTimeSet n) (n + 1) hJ =
-      linearMarkovIntegerCenteredFinitePathRestrictBy n 1 := by
+    (linearMarkovIntegerCenteredTimeSetReindex (Ω := Ω) n) ∘
+        (linearMarkovIntegerFiniteSetObserveAt (Ω := Ω)
+          (linearMarkovIntegerCenteredTimeSet n) (n + 1) hJ) =
+      (@linearMarkovIntegerCenteredFinitePathRestrictBy Ω n 1) := by
   funext path i
   unfold linearMarkovIntegerCenteredTimeSetReindex
     linearMarkovIntegerFiniteSetObserveAt
@@ -107,13 +108,13 @@ theorem linearMarkovIntegerFiniteMarginalPMF_map_centeredTimeSetReindex
     (n : ℕ) :
     (linearMarkovIntegerFiniteMarginalPMF initial transition
         (linearMarkovIntegerCenteredTimeSet n)).map
-      (linearMarkovIntegerCenteredTimeSetReindex n) =
+      (linearMarkovIntegerCenteredTimeSetReindex (Ω := Ω) n) =
         linearMarkovIntegerCenteredFinitePathPMF initial transition n := by
   let hJ := linearMarkovIntegerCenteredTimeSet_radius_le n
   rw [← linearMarkovIntegerCenteredFinitePathPMF_map_observeAt
     initial transition hdb (linearMarkovIntegerCenteredTimeSet n) (n + 1) hJ]
   rw [PMF.map_comp]
-  rw [linearMarkovIntegerCenteredTimeSetReindex_observeAt n hJ]
+  rw [linearMarkovIntegerCenteredTimeSetReindex_observeAt (Ω := Ω) n hJ]
   exact linearMarkovIntegerCenteredFinitePathPMF_map_restrictBy_of_detailedBalance
     initial transition hdb n 1
 
@@ -124,14 +125,14 @@ theorem linearMarkovIntegerFiniteMarginalMeasure_map_centeredTimeSetReindex
     (n : ℕ) :
     (linearMarkovIntegerFiniteMarginalMeasure initial transition
         (linearMarkovIntegerCenteredTimeSet n)).map
-      (linearMarkovIntegerCenteredTimeSetReindex n) =
+      (linearMarkovIntegerCenteredTimeSetReindex (Ω := Ω) n) =
         (linearMarkovIntegerCenteredFinitePathPMF initial transition n).toMeasure := by
   unfold linearMarkovIntegerFiniteMarginalMeasure
   rw [PMF.toMeasure_map
     (p := linearMarkovIntegerFiniteMarginalPMF initial transition
       (linearMarkovIntegerCenteredTimeSet n))
-    (f := linearMarkovIntegerCenteredTimeSetReindex n)
-    (linearMarkovIntegerCenteredTimeSetReindex_measurable n)]
+    (f := linearMarkovIntegerCenteredTimeSetReindex (Ω := Ω) n)
+    (linearMarkovIntegerCenteredTimeSetReindex_measurable (Ω := Ω) n)]
   exact congrArg PMF.toMeasure
     (linearMarkovIntegerFiniteMarginalPMF_map_centeredTimeSetReindex
       initial transition hdb n)
@@ -143,7 +144,7 @@ theorem linearMarkovTwoSidedIntegerPathMeasure_map_centeredRestriction
     (hdb : LinearMarkovDetailedBalanceReal initial transition)
     (n : ℕ) :
     (linearMarkovTwoSidedIntegerPathMeasure initial transition hdb).map
-        (linearMarkovIntegerCenteredPathRestriction n) =
+        (linearMarkovIntegerCenteredPathRestriction (Ω := Ω) n) =
       (linearMarkovIntegerCenteredFinitePathPMF initial transition n).toMeasure := by
   let J := linearMarkovIntegerCenteredTimeSet n
   let reindex : (∀ _t : J, Ω) →
@@ -152,13 +153,13 @@ theorem linearMarkovTwoSidedIntegerPathMeasure_map_centeredRestriction
   have hJ : Measurable (J.restrict : (ℤ → Ω) → (∀ _t : J, Ω)) :=
     J.measurable_restrict
   have hreindex : Measurable reindex :=
-    linearMarkovIntegerCenteredTimeSetReindex_measurable n
+    linearMarkovIntegerCenteredTimeSetReindex_measurable (Ω := Ω) n
   have hprojective :=
     linearMarkovTwoSidedIntegerPathMeasure_isProjectiveLimit
       initial transition hdb
   calc
     (linearMarkovTwoSidedIntegerPathMeasure initial transition hdb).map
-        (linearMarkovIntegerCenteredPathRestriction n) =
+        (linearMarkovIntegerCenteredPathRestriction (Ω := Ω) n) =
       (linearMarkovTwoSidedIntegerPathMeasure initial transition hdb).map
         (reindex ∘ J.restrict) := by
           rw [linearMarkovIntegerCenteredPathRestriction_eq_reindex_comp_restrict]
