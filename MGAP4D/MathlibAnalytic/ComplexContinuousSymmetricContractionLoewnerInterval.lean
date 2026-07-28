@@ -27,7 +27,9 @@ theorem re_inner_apply_self_le
     _ ≤ ‖x‖ * ‖x‖ :=
       mul_le_mul_of_nonneg_right (hcontract x) (norm_nonneg x)
     _ = ‖x‖ ^ 2 := by ring
-    _ = (inner ℂ x x).re := by rw [norm_sq_eq_re_inner (𝕜 := ℂ)]
+    _ = (inner ℂ x x).re := by
+      rw [inner_self_eq_norm_sq_to_K (𝕜 := ℂ)]
+      simp [pow_two]
 
 /-- The complement of a symmetric complex contraction is positive. -/
 theorem one_sub_isPositive
