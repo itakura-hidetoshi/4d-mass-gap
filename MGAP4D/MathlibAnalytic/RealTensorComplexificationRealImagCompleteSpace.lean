@@ -100,8 +100,7 @@ theorem fromRealImagLinear_toRealImagLinear (x : Space H) :
   · intro z y
     rw [toRealImagLinear_tmul, fromRealImagLinear_toLp]
     rw [TensorProduct.tmul_smul, TensorProduct.tmul_smul]
-    change (z.re : ℂ) ⊗ₜ[ℝ] y + ((z.im : ℂ) * Complex.I) ⊗ₜ[ℝ] y =
-      z ⊗ₜ[ℝ] y
+    simp only [Complex.real_smul, mul_one]
     rw [← TensorProduct.add_tmul, Complex.re_add_im]
   · intro x y hx hy
     rw [map_add, map_add, hx, hy]
@@ -119,18 +118,14 @@ theorem toRealImagLinear_fromRealImagLinear (p : RealImagProduct H) :
     one_smul, Complex.I_re, zero_smul, add_zero, Complex.one_im,
     Complex.I_im, zero_add]
   change WithLp.toLp 2 (WithLp.ofLp p) = p
-  exact WithLp.toLp_ofLp p
+  exact WithLp.toLp_ofLp (p := 2) p
 
 /-- Linear equivalence between the algebraic complexification and its real and
 imaginary `L²` coordinates. -/
 def realImagLinearEquiv : Space H ≃ₗ[ℝ] RealImagProduct H :=
   LinearEquiv.ofLinear toRealImagLinear fromRealImagLinear
-    (by
-      ext p
-      exact toRealImagLinear_fromRealImagLinear p)
-    (by
-      ext x
-      exact fromRealImagLinear_toRealImagLinear x)
+    (LinearMap.ext fun p => toRealImagLinear_fromRealImagLinear p)
+    (LinearMap.ext fun x => fromRealImagLinear_toRealImagLinear x)
 
 @[simp] theorem realImagLinearEquiv_apply (x : Space H) :
     realImagLinearEquiv x = toRealImagLinear x :=
@@ -146,17 +141,20 @@ theorem realImagLinearEquiv_inner_map_map (x y : Space H) :
     inner ℝ (realImagLinearEquiv x) (realImagLinearEquiv y) =
       realInner x y := by
   refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  · simp [realInner]
   · intro z u
     refine TensorProduct.induction_on y ?_ ?_ ?_
-    · simp
+    · simp [realInner]
     · intro w v
       simp only [realImagLinearEquiv_apply, toRealImagLinear_tmul,
-        WithLp.prod_inner_apply, inner_smul_left, inner_smul_right]
+        WithLp.prod_inner_apply, WithLp.ofLp_toLp, Prod.fst, Prod.snd,
+        inner_smul_left, inner_smul_right]
       unfold realInner
       rw [TensorProduct.inner_tmul]
-      simp
-      ring
+      change (z.re * w.re + z.im * w.im) * inner ℝ u v =
+        inner ℝ z w * inner ℝ u v
+      congr 1
+      rfl
     · intro y₁ y₂ hy₁ hy₂
       rw [map_add, inner_add_right, realInner_add_right, hy₁, hy₂]
   · intro x₁ x₂ hx₁ hx₂
@@ -167,21 +165,23 @@ product. -/
 def realImagLinearIsometryEquiv :
     Space H ≃ₗᵢ[ℝ] RealImagProduct H :=
   realImagLinearEquiv.isometryOfInner fun x y => by
-    exact realImagLinearEquiv_inner_map_map x y
+    simpa [realInner] using realImagLinearEquiv_inner_map_map x y
 
 @[simp] theorem realImagLinearIsometryEquiv_apply (x : Space H) :
-    realImagLinearIsometryEquiv x = toRealImagLinear x :=
+    realImagLinearIsometryEquiv x = toRealImagLinear x := by
   rfl
 
 @[simp] theorem realImagLinearIsometryEquiv_symm_apply
     (p : RealImagProduct H) :
-    realImagLinearIsometryEquiv.symm p = fromRealImagLinear p :=
+    realImagLinearIsometryEquiv.symm p = fromRealImagLinear p := by
   rfl
 
-/-- The algebraic complexification is already complete: because the scalar
-factor is the two-dimensional real Hilbert space `ℂ`, it is isometrically the
-`L²` product `H × H`. -/
-noncomputable instance instCompleteSpace : CompleteSpace (Space H) := by
+/-- The algebraic complexification is already complete when the original real
+inner-product space is complete. Because the scalar factor is the
+two-dimensional real Hilbert space `ℂ`, the complexification is isometrically
+the `L²` product `H × H`. -/
+noncomputable instance instCompleteSpace [CompleteSpace H] :
+    CompleteSpace (Space H) := by
   apply (completeSpace_congr
     (e := (realImagLinearIsometryEquiv (H := H)).toLinearEquiv.toEquiv)
     (realImagLinearIsometryEquiv (H := H)).isometry.isUniformEmbedding).mpr
