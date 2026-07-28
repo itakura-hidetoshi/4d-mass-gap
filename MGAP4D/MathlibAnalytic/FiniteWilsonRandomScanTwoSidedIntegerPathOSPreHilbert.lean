@@ -73,7 +73,7 @@ submodule. -/
       F ∈ L.randomScanTwoSidedIntegerPathOSNull
   simpa [FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSNull,
     FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSPreHilbertData] using
-    observableClass_eq_zero_iff
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData.observableClass_eq_zero_iff
       L.randomScanTwoSidedIntegerPathOSPreHilbertData F
 
 /-- Two actual finite Wilson positive-time observables represent the same
@@ -92,8 +92,9 @@ theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSClass_eq_class_
       F - G ∈ L.randomScanTwoSidedIntegerPathOSNull
   simpa [FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSNull,
     FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSPreHilbertData] using
-    observableClass_eq_observableClass_iff
-      L.randomScanTwoSidedIntegerPathOSPreHilbertData F G
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData
+      .observableClass_eq_observableClass_iff
+        L.randomScanTwoSidedIntegerPathOSPreHilbertData F G
 
 /-- The actual finite Wilson temporal OS quotient is positive definite. -/
 theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSPreHilbert_inner_self_eq_zero_iff
@@ -101,8 +102,9 @@ theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSPreHilbert_inne
     [Nonempty L.Edge]
     (x : L.RandomScanTwoSidedIntegerPathOSPreHilbert) :
     inner ℝ x x = 0 ↔ x = 0 :=
-  separated_inner_self_eq_zero_iff
-    L.randomScanTwoSidedIntegerPathOSPreHilbertData x
+  LinearMarkovTwoSidedIntegerPathOSPreHilbertData
+    .separated_inner_self_eq_zero_iff
+      L.randomScanTwoSidedIntegerPathOSPreHilbertData x
 
 end
 
