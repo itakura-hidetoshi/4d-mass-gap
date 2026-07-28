@@ -99,7 +99,8 @@ def ofContinuousLinearMap
     [NormedAddCommGroup E] [NormedSpace ℝ E] :
     ofContinuousLinearMap (1 : E →L[ℝ] E) =
       (1 : Space E →ₗ[ℂ] Space E) := by
-  simpa [ofContinuousLinearMap] using (ofLinearMap_id (E := E))
+  change (1 : Module.End ℝ E).baseChange ℂ = 1
+  exact LinearMap.baseChange_one ℝ E
 
 @[simp] theorem ofContinuousLinearMap_zero
     {E : Type u} {F : Type v}
