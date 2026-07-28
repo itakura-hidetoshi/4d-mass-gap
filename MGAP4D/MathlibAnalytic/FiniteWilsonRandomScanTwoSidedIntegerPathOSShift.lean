@@ -27,9 +27,8 @@ positive-time translate. -/
       L.randomScanTwoSidedIntegerPathOSClass
         (linearMarkovPositiveTimeShiftAlgHom F) := by
   exact
-    LinearMarkovTwoSidedIntegerPathOSPreHilbertData
-      .separatedShiftLinearMap_observableClass
-        L.randomScanTwoSidedIntegerPathOSPreHilbertData F
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData.separatedShiftLinearMap_observableClass
+      L.randomScanTwoSidedIntegerPathOSPreHilbertData F
 
 /-- The actual finite Wilson positive-time shift preserves the temporal OS null
 submodule. -/
@@ -54,9 +53,8 @@ theorem FiniteLatticeWilsonSystem.inner_randomScanTwoSidedIntegerPathOSShift_lef
     inner ℝ (L.randomScanTwoSidedIntegerPathOSShiftLinearMap x) y =
       inner ℝ x (L.randomScanTwoSidedIntegerPathOSShiftLinearMap y) := by
   exact
-    LinearMarkovTwoSidedIntegerPathOSPreHilbertData
-      .inner_separatedShiftLinearMap_left_eq_right
-        L.randomScanTwoSidedIntegerPathOSPreHilbertData x y
+    LinearMarkovTwoSidedIntegerPathOSPreHilbertData.inner_separatedShiftLinearMap_left_eq_right
+      L.randomScanTwoSidedIntegerPathOSPreHilbertData x y
 
 end
 
