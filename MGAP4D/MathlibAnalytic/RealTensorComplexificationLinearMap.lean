@@ -17,7 +17,7 @@ namespace RealTensorComplexification
 universe u v w
 
 abbrev Space (E : Type u) [AddCommMonoid E] [Module ℝ E] :=
-  ℂ ⊗[ℝ] E
+  TensorProduct ℝ ℂ E
 
 /-- Extend a real-linear map to a complex-linear map on algebraic
 complexifications. -/
