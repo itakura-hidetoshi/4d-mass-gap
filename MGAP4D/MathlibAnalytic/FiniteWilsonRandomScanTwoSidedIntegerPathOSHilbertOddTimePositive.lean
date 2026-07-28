@@ -70,20 +70,8 @@ theorem finite_lattice_randomScanHeatBathSweep_gibbsPairing_self_nonneg
         ∑ e : L.Edge,
           L.gibbsPairingReal (L.singleLinkHeatBathProjection e f) f := by
     unfold FiniteLatticeWilsonSystem.gibbsPairingReal
-    calc
-      (∑ A : L.Configuration,
-          L.gibbsProbabilityReal A *
-            (∑ e : L.Edge, L.singleLinkHeatBathProjection e f A) * f A) =
-        ∑ A : L.Configuration, ∑ e : L.Edge,
-          L.gibbsProbabilityReal A *
-            L.singleLinkHeatBathProjection e f A * f A := by
-              apply Finset.sum_congr rfl
-              intro A _hA
-              rw [Finset.mul_sum, Finset.sum_mul]
-      _ = ∑ e : L.Edge, ∑ A : L.Configuration,
-          L.gibbsProbabilityReal A *
-            L.singleLinkHeatBathProjection e f A * f A := by
-              rw [Finset.sum_comm]
+    simp_rw [Finset.mul_sum, Finset.sum_mul]
+    rw [Finset.sum_comm]
   rw [hSweep, finite_lattice_gibbsPairingReal_smul_left, hSum]
   exact mul_nonneg
     (inv_nonneg.mpr (Nat.cast_nonneg _))
@@ -101,7 +89,16 @@ theorem finite_lattice_randomScanTransitionQuadraticNonnegative
   intro f
   rw [finite_lattice_finitePMFExpectationReal_gibbsPMF]
   simp_rw [finite_lattice_randomScanTransitionPMF_expectation]
-  change 0 ≤ L.gibbsPairingReal (L.randomScanHeatBathSweep f) f
+  have hPairing :
+      L.gibbsExpectationReal
+          (fun A => L.randomScanHeatBathSweep f A * f A) =
+        L.gibbsPairingReal (L.randomScanHeatBathSweep f) f := by
+    unfold FiniteLatticeWilsonSystem.gibbsExpectationReal
+      FiniteLatticeWilsonSystem.gibbsPairingReal
+    apply Finset.sum_congr rfl
+    intro A _hA
+    ring
+  rw [hPairing]
   exact finite_lattice_randomScanHeatBathSweep_gibbsPairing_self_nonneg L f
 
 /-- The actual finite Wilson completed time-one temporal OS shift has
