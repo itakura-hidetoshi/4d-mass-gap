@@ -19,7 +19,7 @@ example (L : FiniteLatticeWilsonSystem) [Nonempty L.Edge]
     (c : ℂ)
     (x y : L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexification) :
     inner ℂ (c • x) y = star c * inner ℂ x y := by
-  exact inner_smul_left x y
+  exact inner_smul_left (𝕜 := ℂ) x y
 
 example (L : FiniteLatticeWilsonSystem) [Nonempty L.Edge]
     (c : ℂ)
