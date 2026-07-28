@@ -103,15 +103,16 @@ noncomputable def separatedShiftLinearMap
     D.Separated →ₗ[ℝ] D.Separated where
   toFun := D.separatedShift
   map_add' := by
-    apply (SeparationQuotient.forall).2
+    intro x y
+    refine Quotient.inductionOn x ?_
     intro F
-    apply (SeparationQuotient.forall).2
+    refine Quotient.inductionOn y ?_
     intro G
     simp only [D.separatedShift_osClass, D.osClass_add]
     rw [map_add]
   map_smul' := by
-    intro r
-    apply (SeparationQuotient.forall).2
+    intro r x
+    refine Quotient.inductionOn x ?_
     intro F
     simp only [D.separatedShift_osClass, D.osClass_smul]
     rw [map_smul]
@@ -142,10 +143,9 @@ theorem inner_separatedShiftLinearMap_left_eq_right
     (x y : D.Separated) :
     inner ℝ (D.separatedShiftLinearMap x) y =
       inner ℝ x (D.separatedShiftLinearMap y) := by
-  revert y
-  apply (SeparationQuotient.forall).2
+  refine Quotient.inductionOn x ?_
   intro F
-  apply (SeparationQuotient.forall).2
+  refine Quotient.inductionOn y ?_
   intro G
   rw [D.separatedShiftLinearMap_osClass,
     D.separatedShiftLinearMap_osClass]
