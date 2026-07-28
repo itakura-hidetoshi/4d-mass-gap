@@ -26,43 +26,43 @@ structure Carrier
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) where
   observable : linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)
 
-protected def Carrier.zero
+protected def carrierZero
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) : D.Carrier :=
   ⟨0⟩
 
-protected def Carrier.add
+protected def carrierAdd
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F G : D.Carrier) : D.Carrier :=
   ⟨F.observable + G.observable⟩
 
-protected def Carrier.neg
+protected def carrierNeg
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F : D.Carrier) : D.Carrier :=
   ⟨-F.observable⟩
 
-protected def Carrier.sub
+protected def carrierSub
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F G : D.Carrier) : D.Carrier :=
   ⟨F.observable - G.observable⟩
 
-protected def Carrier.nsmul
+protected def carrierNSMul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (n : ℕ) (F : D.Carrier) : D.Carrier :=
   ⟨n • F.observable⟩
 
-protected def Carrier.zsmul
+protected def carrierZSMul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (n : ℤ) (F : D.Carrier) : D.Carrier :=
   ⟨n • F.observable⟩
 
-protected def Carrier.smul
+protected def carrierSMul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (r : ℝ) (F : D.Carrier) : D.Carrier :=
   ⟨r • F.observable⟩
 
 /-- The observable projection is injective because the OS carrier only changes
 the geometric structure, not the underlying positive-time observable. -/
-theorem Carrier.observable_injective
+theorem carrierObservable_injective
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     Function.Injective (fun F : D.Carrier => F.observable) := by
   intro F G h
@@ -74,15 +74,15 @@ theorem Carrier.observable_injective
 instance carrierAddCommGroup
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     AddCommGroup D.Carrier := by
-  letI : Zero D.Carrier := ⟨Carrier.zero D⟩
-  letI : Add D.Carrier := ⟨Carrier.add⟩
-  letI : Neg D.Carrier := ⟨Carrier.neg⟩
-  letI : Sub D.Carrier := ⟨Carrier.sub⟩
-  letI : SMul ℕ D.Carrier := ⟨Carrier.nsmul⟩
-  letI : SMul ℤ D.Carrier := ⟨Carrier.zsmul⟩
+  letI : Zero D.Carrier := ⟨carrierZero D⟩
+  letI : Add D.Carrier := ⟨carrierAdd⟩
+  letI : Neg D.Carrier := ⟨carrierNeg⟩
+  letI : Sub D.Carrier := ⟨carrierSub⟩
+  letI : SMul ℕ D.Carrier := ⟨carrierNSMul⟩
+  letI : SMul ℤ D.Carrier := ⟨carrierZSMul⟩
   refine Function.Injective.addCommGroup
     (fun F : D.Carrier => F.observable)
-    (Carrier.observable_injective D) ?_ ?_ ?_ ?_ ?_ ?_
+    (carrierObservable_injective D) ?_ ?_ ?_ ?_ ?_ ?_
   · rfl
   · intro F G
     rfl
@@ -98,56 +98,56 @@ instance carrierAddCommGroup
 instance carrierRealSMul
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     SMul ℝ D.Carrier :=
-  ⟨Carrier.smul⟩
+  ⟨carrierSMul⟩
 
 instance carrierModule
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     Module ℝ D.Carrier := by
   refine Function.Injective.module ℝ
     ⟨⟨fun F : D.Carrier => F.observable, ?_⟩, ?_⟩
-    (Carrier.observable_injective D) ?_
+    (carrierObservable_injective D) ?_
   · rfl
   · intro F G
     rfl
   · intro r F
     rfl
 
-@[simp] theorem Carrier.observable_zero
+@[simp] theorem carrierObservable_zero
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
     (0 : D.Carrier).observable = 0 :=
   rfl
 
-@[simp] theorem Carrier.observable_add
+@[simp] theorem carrierObservable_add
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F G : D.Carrier) :
     (F + G).observable = F.observable + G.observable :=
   rfl
 
-@[simp] theorem Carrier.observable_neg
+@[simp] theorem carrierObservable_neg
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F : D.Carrier) :
     (-F).observable = -F.observable :=
   rfl
 
-@[simp] theorem Carrier.observable_sub
+@[simp] theorem carrierObservable_sub
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (F G : D.Carrier) :
     (F - G).observable = F.observable - G.observable :=
   rfl
 
-@[simp] theorem Carrier.observable_nsmul
+@[simp] theorem carrierObservable_nsmul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (n : ℕ) (F : D.Carrier) :
     (n • F).observable = n • F.observable :=
   rfl
 
-@[simp] theorem Carrier.observable_zsmul
+@[simp] theorem carrierObservable_zsmul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (n : ℤ) (F : D.Carrier) :
     (n • F).observable = n • F.observable :=
   rfl
 
-@[simp] theorem Carrier.observable_smul
+@[simp] theorem carrierObservable_smul
     {D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω}
     (r : ℝ) (F : D.Carrier) :
     (r • F).observable = r • F.observable :=
@@ -155,15 +155,15 @@ instance carrierModule
 
 /-- Embed a generated positive-time cylinder observable into the datum-dependent
 OS carrier. -/
-def Carrier.ofObservable
+def carrierOfObservable
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (F : linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)) : D.Carrier :=
   ⟨F⟩
 
-@[simp] theorem Carrier.observable_ofObservable
+@[simp] theorem carrierObservable_ofObservable
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (F : linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)) :
-    (Carrier.ofObservable D F).observable = F :=
+    (carrierOfObservable D F).observable = F :=
   rfl
 
 /-- The observable projection as a real linear map. -/
@@ -296,7 +296,7 @@ def osClass
 def observableClass
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (F : linearMarkovPositiveTimeCylinderSubalgebra (Ω := Ω)) : D.Separated :=
-  D.osClass (Carrier.ofObservable D F)
+  D.osClass (carrierOfObservable D F)
 
 /-- A carrier observable represents zero in the separated quotient exactly when
 it belongs to the OS null submodule. -/
@@ -316,7 +316,7 @@ it lies in the full path-space OS null submodule. -/
     D.observableClass F = 0 ↔
       F ∈ linearMarkovTwoSidedIntegerPathOSNull
         D.initial D.transition D.detailedBalance := by
-  change D.osClass (Carrier.ofObservable D F) = 0 ↔ _
+  change D.osClass (carrierOfObservable D F) = 0 ↔ _
   rw [D.osClass_eq_zero_iff, D.mem_carrierNullSubmodule_iff]
   rfl
 
@@ -343,9 +343,9 @@ theorem observableClass_eq_observableClass_iff
     D.observableClass F = D.observableClass G ↔
       F - G ∈ linearMarkovTwoSidedIntegerPathOSNull
         D.initial D.transition D.detailedBalance := by
-  simpa [observableClass, Carrier.ofObservable] using
+  simpa [observableClass, carrierOfObservable] using
     D.osClass_eq_osClass_iff
-      (Carrier.ofObservable D F) (Carrier.ofObservable D G)
+      (carrierOfObservable D F) (carrierOfObservable D G)
 
 /-- The inner product of separated representative classes is the original full
 path-space temporal OS form. -/
@@ -368,10 +368,10 @@ OS form without any representative ambiguity. -/
       linearMarkovTwoSidedIntegerPathOSForm
         D.initial D.transition D.detailedBalance F G := by
   change inner ℝ
-      (D.osClass (Carrier.ofObservable D F))
-      (D.osClass (Carrier.ofObservable D G)) = _
+      (D.osClass (carrierOfObservable D F))
+      (D.osClass (carrierOfObservable D G)) = _
   simpa using D.separated_inner_osClass_osClass
-    (Carrier.ofObservable D F) (Carrier.ofObservable D G)
+    (carrierOfObservable D F) (carrierOfObservable D G)
 
 /-- The separated quotient is positive definite: its inner square vanishes only
 at the zero class. -/
