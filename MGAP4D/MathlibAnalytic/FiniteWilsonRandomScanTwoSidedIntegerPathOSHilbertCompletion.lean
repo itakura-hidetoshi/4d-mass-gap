@@ -53,8 +53,7 @@ full random-scan two-sided path-space OS form. -/
         (L.randomScanTwoSidedIntegerPathOSHilbertClass G) =
       L.randomScanTwoSidedIntegerPathOSForm F G := by
   unfold FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertClass
-  rw [LinearMarkovTwoSidedIntegerPathOSPreHilbertData
-    .inner_completedObservableClass_completedObservableClass]
+  rw [LinearMarkovTwoSidedIntegerPathOSPreHilbertData.inner_completedObservableClass_completedObservableClass]
   rfl
 
 /-- The actual finite Wilson temporal OS Hilbert space is positive definite. -/
