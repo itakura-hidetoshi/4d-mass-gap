@@ -22,8 +22,9 @@ theorem linearMarkovIntegerFiniteSetNatShiftReindex_measurable
           (∀ _t : J, Ω)) := by
   exact measurable_pi_lambda _ (fun t =>
     measurable_pi_apply
-      ⟨t.1 + ((d : ℕ) : ℤ),
-        linearMarkovIntegerFiniteSet_mem_natShift J d t⟩)
+      (⟨t.1 + ((d : ℕ) : ℤ),
+        linearMarkovIntegerFiniteSet_mem_natShift J d t⟩ :
+          linearMarkovIntegerFiniteSetNatShift J d))
 
 /-- Restricting a naturally shifted full path to `J` equals restricting the
 original path to `J + d` and reindexing back to `J`. -/
@@ -116,8 +117,11 @@ theorem linearMarkovTwoSidedIntegerPathMeasure_map_natShift_isProjectiveLimit
         reindex := by
       rw [hprojective K]
     _ = linearMarkovIntegerFiniteMarginalMeasure initial transition J := by
-      rw [show K = linearMarkovIntegerFiniteSetNatShift J d by rfl]
-      rw [show reindex = linearMarkovIntegerFiniteSetNatShiftReindex J d by rfl]
+      change
+        (linearMarkovIntegerFiniteMarginalMeasure initial transition
+          (linearMarkovIntegerFiniteSetNatShift J d)).map
+            (linearMarkovIntegerFiniteSetNatShiftReindex J d) =
+          linearMarkovIntegerFiniteMarginalMeasure initial transition J
       exact linearMarkovIntegerFiniteMarginalMeasure_map_natShiftReindex
         initial transition hdb J d
 
