@@ -55,6 +55,7 @@ theorem inner_hilbertShiftSemigroup_left_eq_right
       rw [D.hilbertShiftSemigroup_succ_apply,
         D.inner_hilbertShiftContinuousLinearMap_left_eq_right,
         ih]
+      rw [← D.hilbertShiftSemigroup_one]
       rw [D.hilbertShiftSemigroup_apply_comm n 1]
       rfl
 
