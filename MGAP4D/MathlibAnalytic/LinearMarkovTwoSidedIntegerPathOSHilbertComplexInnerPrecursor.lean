@@ -30,14 +30,14 @@ def hilbertAlgebraicComplexificationComplexInner
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (x y : D.HilbertAlgebraicComplexification) :
     (D.hilbertAlgebraicComplexificationComplexInner x y).re =
-      inner ℝ x y :=
+      RealTensorComplexification.realInner x y :=
   RealTensorComplexification.complexInner_re x y
 
 @[simp] theorem hilbertAlgebraicComplexificationComplexInner_self
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
     (x : D.HilbertAlgebraicComplexification) :
     D.hilbertAlgebraicComplexificationComplexInner x x =
-      (inner ℝ x x : ℂ) :=
+      (RealTensorComplexification.realInner x x : ℂ) :=
   RealTensorComplexification.complexInner_self x
 
 /-- The algebraically complexified one-step temporal OS shift commutes with the
