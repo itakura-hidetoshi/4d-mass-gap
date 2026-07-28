@@ -51,6 +51,8 @@ theorem norm_hilbertShiftContinuousLinearMap_le
       (continuous_norm.comp D.hilbertShiftContinuousLinearMap.continuous)
       continuous_norm) ?_
   intro y
+  change ‖D.hilbertShiftContinuousLinearMap (D.completedClass y)‖ ≤
+    ‖D.completedClass y‖
   rw [D.hilbertShiftContinuousLinearMap_completedClass,
     UniformSpace.Completion.norm_coe,
     UniformSpace.Completion.norm_coe]
@@ -69,6 +71,8 @@ theorem hilbertShiftContinuousLinearMap_unique
   refine UniformSpace.Completion.induction_on z
     (isClosed_eq T.continuous D.hilbertShiftContinuousLinearMap.continuous) ?_
   intro x
+  change T (D.completedClass x) =
+    D.hilbertShiftContinuousLinearMap (D.completedClass x)
   rw [hT x, D.hilbertShiftContinuousLinearMap_completedClass]
 
 /-- Symmetry of the separated temporal shift extends to the complete temporal OS
@@ -81,6 +85,11 @@ theorem inner_hilbertShiftContinuousLinearMap_left_eq_right
   refine UniformSpace.Completion.induction_on₂ x y
     (isClosed_eq (by fun_prop) (by fun_prop)) ?_
   intro u v
+  change inner ℝ
+      (D.hilbertShiftContinuousLinearMap (D.completedClass u))
+      (D.completedClass v) =
+    inner ℝ (D.completedClass u)
+      (D.hilbertShiftContinuousLinearMap (D.completedClass v))
   rw [D.hilbertShiftContinuousLinearMap_completedClass,
     D.hilbertShiftContinuousLinearMap_completedClass,
     D.inner_completedClass_completedClass,
