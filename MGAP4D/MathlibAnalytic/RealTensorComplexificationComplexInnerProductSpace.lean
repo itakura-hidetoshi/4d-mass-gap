@@ -116,8 +116,7 @@ theorem norm_complex_smul_sq
     (‖c‖ * ‖x‖) ^ 2
   rw [show star c * c = (‖c‖ ^ 2 : ℂ) by
     simpa [RCLike.star_def] using (RCLike.conj_mul c)]
-  change ‖c‖ ^ 2 * realInner x x =
-    (‖c‖ * ‖x‖) ^ 2
+  norm_num
   rw [← norm_sq_eq_realInner x]
   ring
 
