@@ -27,14 +27,14 @@ example (n : ℕ) :
 example (z : ℂ) (x : L.RandomScanTwoSidedIntegerPathOSHilbert) :
     L.randomScanTwoSidedIntegerPathOSHilbertShiftComplexContinuousLinearMap
         (z ⊗ₜ[ℝ] x) =
-      z ⊗ₜ[ℝ] L.randomScanTwoSidedIntegerPathOSHilbertShift x := by
-  simp
+      z ⊗ₜ[ℝ] L.randomScanTwoSidedIntegerPathOSHilbertShift x :=
+  L.randomScanTwoSidedIntegerPathOSHilbertShiftComplexContinuousLinearMap_tmul z x
 
 example (n : ℕ) (z : ℂ) (x : L.RandomScanTwoSidedIntegerPathOSHilbert) :
     L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap n
         (z ⊗ₜ[ℝ] x) =
-      z ⊗ₜ[ℝ] L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroup n x := by
-  simp
+      z ⊗ₜ[ℝ] L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroup n x :=
+  L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap_tmul n z x
 
 example
     (x : L.randomScanTwoSidedIntegerPathOSHilbertAlgebraicComplexification) :
@@ -47,8 +47,8 @@ example (n : ℕ)
   L.norm_randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap_le n x
 
 example :
-    L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap 0 = 1 := by
-  simp
+    L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap 0 = 1 :=
+  L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap_zero
 
 example (m n : ℕ) :
     L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroupComplexContinuousLinearMap (m + n) =
