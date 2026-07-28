@@ -24,14 +24,6 @@ noncomputable def hilbertShiftSemigroupComplexContinuousSquareRoot
   ComplexContinuousPositiveContraction.squareRoot
     (D.hilbertShiftSemigroupComplexContinuousLinearMap n)
 
-@[simp]
-theorem hilbertShiftSemigroupComplexContinuousSquareRoot_eq_cfc_sqrt
-    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
-    (n : ℕ) :
-    D.hilbertShiftSemigroupComplexContinuousSquareRoot n =
-      CFC.sqrt (D.hilbertShiftSemigroupComplexContinuousLinearMap n) :=
-  rfl
-
 /-- Every natural-time temporal OS CFC square root is nonnegative. -/
 theorem hilbertShiftSemigroupComplexContinuousSquareRoot_nonneg
     (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
