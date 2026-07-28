@@ -53,10 +53,8 @@ theorem norm_hilbertShiftContinuousLinearMap_le
   intro y
   change ‖D.hilbertShiftContinuousLinearMap (D.completedClass y)‖ ≤
     ‖D.completedClass y‖
-  rw [D.hilbertShiftContinuousLinearMap_completedClass,
-    UniformSpace.Completion.norm_coe,
-    UniformSpace.Completion.norm_coe]
-  exact D.norm_separatedShiftLinearMap_le y
+  rw [D.hilbertShiftContinuousLinearMap_completedClass]
+  simpa [completedClass] using D.norm_separatedShiftLinearMap_le y
 
 /-- The Hilbert-space extension is uniquely determined by its action on the dense
  separated OS subspace. -/
