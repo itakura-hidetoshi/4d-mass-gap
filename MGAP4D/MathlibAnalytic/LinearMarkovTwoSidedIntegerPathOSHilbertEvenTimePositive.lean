@@ -20,10 +20,7 @@ theorem inner_hilbertShiftSemigroup_add_self_eq
     inner ℝ (D.hilbertShiftSemigroup (n + n) x) x =
       inner ℝ (D.hilbertShiftSemigroup n x)
         (D.hilbertShiftSemigroup n x) := by
-  have hadd := congrArg
-    (fun T : D.Hilbert →L[ℝ] D.Hilbert => T x)
-    (D.hilbertShiftSemigroup_add n n)
-  rw [hadd]
+  rw [D.hilbertShiftSemigroup_add]
   exact D.inner_hilbertShiftSemigroup_left_eq_right n
     (D.hilbertShiftSemigroup n x) x
 
@@ -35,7 +32,7 @@ theorem inner_hilbertShiftSemigroup_add_self_nonneg
     (x : D.Hilbert) :
     0 ≤ inner ℝ (D.hilbertShiftSemigroup (n + n) x) x := by
   rw [D.inner_hilbertShiftSemigroup_add_self_eq]
-  exact inner_self_nonneg
+  exact inner_self_nonneg ℝ (D.hilbertShiftSemigroup n x)
 
 end LinearMarkovTwoSidedIntegerPathOSPreHilbertData
 
