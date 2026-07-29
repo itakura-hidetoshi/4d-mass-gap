@@ -125,7 +125,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
   have hforcing :=
     intervalIntegral_exp_neg_sub_mul_le_uniform_gain
       δ M t₀ t hδpos ht (fun s : ℝ => ‖F s‖) hF.norm hFM
-  exact hmass.trans (add_le_add_left hforcing _)
+  exact hmass.trans (add_le_add (le_refl _) hforcing)
 
 /-- Input-to-state gain for the right operator-valued Hamiltonian equation under
 a uniformly bounded forcing term, with no Hamiltonian-commutation assumption. -/
@@ -159,7 +159,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
   have hforcing :=
     intervalIntegral_exp_neg_sub_mul_le_uniform_gain
       δ M t₀ t hδpos ht (fun s : ℝ => ‖F s‖) hF.norm hFM
-  exact hmass.trans (add_le_add_left hforcing _)
+  exact hmass.trans (add_le_add (le_refl _) hforcing)
 
 /-- The left equation is bounded by an exponentially decaying transient plus the
 static input gain `M / δ`. -/
@@ -197,7 +197,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
       ((1 - Real.exp (-((t - t₀) * δ))) / δ) * M ≤ (1 / δ) * M :=
         mul_le_mul_of_nonneg_right hratio hM
       _ = M / δ := by ring
-  exact hgain.trans (add_le_add_left hweighted _)
+  exact hgain.trans (add_le_add (le_refl _) hweighted)
 
 /-- The right equation has the same static input gain `M / δ`. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_ultimate_bound_right
@@ -234,7 +234,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
       ((1 - Real.exp (-((t - t₀) * δ))) / δ) * M ≤ (1 / δ) * M :=
         mul_le_mul_of_nonneg_right hratio hM
       _ = M / δ := by ring
-  exact hgain.trans (add_le_add_left hweighted _)
+  exact hgain.trans (add_le_add (le_refl _) hweighted)
 
 end
 
