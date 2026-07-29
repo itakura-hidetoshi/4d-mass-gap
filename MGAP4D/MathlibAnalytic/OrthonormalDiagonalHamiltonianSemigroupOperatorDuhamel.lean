@@ -45,7 +45,8 @@ private noncomputable def operatorRightMul
         ext x
         simp }
     ‖A‖
-    (fun B => norm_mul_le B A)
+    (fun B => by
+      simpa [mul_comm] using norm_mul_le B A)
 
 /-- Operator-valued variation of constants for the left finite real diagonal
 Hamiltonian equation. For continuous forcing `F`, every operator-norm solution
