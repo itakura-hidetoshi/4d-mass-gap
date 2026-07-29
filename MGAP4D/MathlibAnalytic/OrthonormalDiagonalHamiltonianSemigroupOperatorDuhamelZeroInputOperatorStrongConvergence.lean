@@ -53,7 +53,7 @@ theorem continuousLinearMap_tendsto_apply_zero_of_tendsto_zero
     have hmul : ‖U a‖ * ‖x‖ < ε := by
       exact (lt_div_iff₀ hxpos).mp hop
     have happ : ‖U a x‖ < ε :=
-      lt_of_le_of_lt (U a).le_opNorm hmul
+      lt_of_le_of_lt ((U a).le_opNorm x) hmul
     simpa [dist_eq_norm] using happ
 
 /-- Operator-space convergence to zero is uniform on the closed unit ball. -/
