@@ -1,11 +1,17 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapConstructedComplexSpectralHamiltonianSemigroupContinuity
 import MGAP4D.MathlibAnalytic.OrthonormalComplexDiagonalHamiltonianSemigroupGenerator
-import Mathlib.LinearAlgebra.Complex.Module
+import Mathlib.Analysis.Normed.Module.RCLike.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
+
+local instance constructedComplexSpectralNormedSpaceReal
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W) :
+    NormedSpace ℝ D.complexSpectralStateSpace :=
+  NormedSpace.restrictScalars ℝ ℂ D.complexSpectralStateSpace
 
 /-- On every constructed complex spectral state, the strong derivative at time
 zero is the negative explicit Hamiltonian action. -/
