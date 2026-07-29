@@ -71,13 +71,18 @@ theorem normedSpace_exp_apply_of_complex_eigenvector
         (fun m : ℕ => (((Nat.factorial m : ℂ)⁻¹) * z ^ m) • v)
         ((NormedSpace.exp z) • v) :=
     hzsum.smul_const v
-  have hseries :
-      NormedSpace.exp T v = (NormedSpace.exp z) • v := by
-    apply HasSum.unique hTsum_apply
-    refine hzsum_smul.congr fun m => ?_
+  have hterms :
+      (fun m : ℕ => (((Nat.factorial m : ℂ)⁻¹) * z ^ m) • v) =
+        (fun m : ℕ => (((Nat.factorial m : ℂ)⁻¹) • T ^ m) v) := by
+    funext m
     rw [ContinuousLinearMap.smul_apply,
       complexContinuousLinearMap_pow_apply_of_apply_eq_smul T v z hTv]
     simp [smul_smul]
+  have hseries :
+      NormedSpace.exp T v = (NormedSpace.exp z) • v := by
+    apply HasSum.unique hTsum_apply
+    rw [← hterms]
+    exact hzsum_smul
   rw [Complex.exp_eq_exp_ℂ]
   exact hseries
 
