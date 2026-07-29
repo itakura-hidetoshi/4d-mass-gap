@@ -7,15 +7,17 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-local instance vacuumComplexScalarTowerContinuousSMulReal
+local instance vacuumComplexModuleContinuousSMulReal
     {E : Type*}
     [TopologicalSpace E]
     [MulAction ℂ E]
     [SMul ℝ E]
     [IsScalarTower ℝ ℂ E]
     [ContinuousSMul ℂ E] :
-    ContinuousSMul ℝ E :=
-  IsScalarTower.continuousSMul ℂ
+    ContinuousSMul ℝ E where
+  continuous_smul := by
+    simpa only [Complex.coe_smul] using
+      (continuous_ofReal.comp continuous_fst).smul continuous_snd
 
 /-- On every vacuum-orthogonal complex spectral excitation state, the strong
 derivative at time zero is the negative explicit Hamiltonian action. -/
