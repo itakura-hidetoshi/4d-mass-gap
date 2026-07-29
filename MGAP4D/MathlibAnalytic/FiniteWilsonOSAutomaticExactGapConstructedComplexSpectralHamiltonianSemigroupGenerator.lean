@@ -15,8 +15,11 @@ theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDeriv
     (n : ℕ)
     (x : EuclideanSpace ℂ (Fin D.StateDimension)) :
     HasDerivAt
-      (fun t : ℝ => D.complexSpectralHamiltonianSemigroup n t x)
-      (-(D.complexSpectralHamiltonian n x)) 0 := by
+      (fun t : ℝ =>
+        (D.complexSpectralHamiltonianSemigroup n t x :
+          EuclideanSpace ℂ (Fin D.StateDimension)))
+      ((-(D.complexSpectralHamiltonian n x)) :
+        EuclideanSpace ℂ (Fin D.StateDimension)) 0 := by
   unfold FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.complexSpectralHamiltonianSemigroup
   unfold FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.complexSpectralHamiltonian
   exact orthonormalComplexDiagonalHamiltonianSemigroup_hasDerivAt_zero
@@ -32,8 +35,11 @@ theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDeriv
     (n : ℕ)
     (x : EuclideanSpace ℂ (Fin D.StateDimension)) :
     HasDerivAt
-      (fun t : ℝ => D.complexSpectralHamiltonianSemigroup n t x)
-      (-(D.complexSpectralLogHamiltonian n x)) 0 := by
+      (fun t : ℝ =>
+        (D.complexSpectralHamiltonianSemigroup n t x :
+          EuclideanSpace ℂ (Fin D.StateDimension)))
+      ((-(D.complexSpectralLogHamiltonian n x)) :
+        EuclideanSpace ℂ (Fin D.StateDimension)) 0 := by
   rw [finite_wilson_constructed_complex_spectral_logHamiltonian_eq_hamiltonian D n]
   exact finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDerivAt_zero
     D n x
@@ -44,8 +50,13 @@ theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_deriv_ze
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (x : EuclideanSpace ℂ (Fin D.StateDimension)) :
-    deriv (fun t : ℝ => D.complexSpectralHamiltonianSemigroup n t x) 0 =
-      -(D.complexSpectralLogHamiltonian n x) :=
+    deriv
+        (fun t : ℝ =>
+          (D.complexSpectralHamiltonianSemigroup n t x :
+            EuclideanSpace ℂ (Fin D.StateDimension)))
+        0 =
+      ((-(D.complexSpectralLogHamiltonian n x)) :
+        EuclideanSpace ℂ (Fin D.StateDimension)) :=
   (finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDerivAt_zero_logHamiltonian
     D n x).deriv
 
