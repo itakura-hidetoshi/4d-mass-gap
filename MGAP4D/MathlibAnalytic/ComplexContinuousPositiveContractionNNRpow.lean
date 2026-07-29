@@ -107,9 +107,14 @@ theorem nnrpow_le_one
   rcases eq_zero_or_pos p with hp0 | hp0
   · subst p
     simp
-  · change ((1 : H →L[ℂ] H) ^ p) ≤ 1
-    rw [CFC.nnrpow_eq_rpow hp0]
-    simp
+  · have hconvert :
+        CFC.nnrpow (1 : H →L[ℂ] H) p =
+          CFC.rpow (1 : H →L[ℂ] H) (p : ℝ) := by
+      exact CFC.nnrpow_eq_rpow hp0
+    have hone :
+        CFC.rpow (1 : H →L[ℂ] H) (p : ℝ) = 1 := by
+      exact CFC.one_rpow
+    rw [nnrpow, hconvert, hone]
 
 /-- For an exponent in `[0,1]`, the CFC nonnegative power of an operator in
 `[0,I]` again belongs to `[0,I]`. -/
