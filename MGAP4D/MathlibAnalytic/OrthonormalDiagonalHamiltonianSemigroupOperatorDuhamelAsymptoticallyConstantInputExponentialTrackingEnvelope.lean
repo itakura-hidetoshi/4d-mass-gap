@@ -84,10 +84,7 @@ theorem mul_exp_tail_le_two_div_mul_exp_half_rate
 `min δ μ`. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_exponentialTrackingEnvelope_nonresonant_left
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ μ : ℝ)
@@ -148,10 +145,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 commutation hypothesis. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_exponentialTrackingEnvelope_nonresonant_right
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ μ : ℝ)
@@ -211,10 +205,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 /-- The non-resonant left envelope yields an explicit logarithmic tracking time. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_nonresonant_left
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ μ : ℝ)
@@ -286,10 +277,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 /-- The non-resonant right envelope has the identical explicit tracking time. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_nonresonant_right
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ μ : ℝ)
@@ -361,10 +349,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 /-- Resonant left tracking is controlled by a single exponential with rate `δ / 2`. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_exponentialTrackingEnvelope_resonant_left
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ : ℝ)
@@ -424,10 +409,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 /-- Resonant right tracking has the same half-rate envelope. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_exponentialTrackingEnvelope_resonant_right
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ : ℝ)
@@ -487,10 +469,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 /-- The resonant left half-rate envelope yields an explicit logarithmic tracking time. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_resonant_left
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ : ℝ)
@@ -560,10 +539,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
 /-- The resonant right half-rate envelope has the identical explicit tracking time. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_resonant_right
     {ι E : Type*}
-    [Fintype ι]
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (δ : ℝ)
