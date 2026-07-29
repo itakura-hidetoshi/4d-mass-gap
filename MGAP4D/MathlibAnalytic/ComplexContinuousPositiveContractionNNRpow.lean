@@ -29,8 +29,7 @@ theorem nnrpow_nonneg
     (T : H →L[ℂ] H)
     (p : ℝ≥0) :
     0 ≤ nnrpow T p := by
-  simpa [nnrpow] using
-    (CFC.nnrpow_nonneg (a := T) (x := p))
+  simp [nnrpow]
 
 /-- Every CFC nonnegative power is positive in the bundled
 `ContinuousLinearMap.IsPositive` sense. -/
@@ -53,8 +52,7 @@ theorem nnrpow_isSelfAdjoint
 theorem nnrpow_zero
     (T : H →L[ℂ] H) :
     nnrpow T 0 = 0 := by
-  simpa [nnrpow] using
-    (CFC.nnrpow_zero (A := H →L[ℂ] H) (a := T))
+  simp [nnrpow]
 
 /-- Exponent one recovers a positive operator. -/
 theorem nnrpow_one
@@ -80,8 +78,7 @@ theorem nnrpow_nnrpow
     (T : H →L[ℂ] H)
     (p q : ℝ≥0) :
     nnrpow (nnrpow T p) q = nnrpow T (p * q) := by
-  simpa [nnrpow] using
-    (CFC.nnrpow_nnrpow (a := T) (x := p) (y := q))
+  simp [nnrpow]
 
 /-- The exponent `1 / 2` nonnegative power is the canonical CFC square root. -/
 theorem nnrpow_one_div_two_eq_squareRoot
