@@ -28,7 +28,7 @@ theorem orthonormalDiagonalOperator_mul
   rw [orthonormalDiagonalOperator_apply]
   apply Finset.sum_congr rfl
   intro i hi
-  simp [smul_smul, mul_comm, mul_left_comm, mul_assoc]
+  simp [smul_smul, mul_comm, mul_assoc]
 
 /-- The diagonal operator with constant coefficient one is the identity. -/
 theorem orthonormalDiagonalOperator_one
