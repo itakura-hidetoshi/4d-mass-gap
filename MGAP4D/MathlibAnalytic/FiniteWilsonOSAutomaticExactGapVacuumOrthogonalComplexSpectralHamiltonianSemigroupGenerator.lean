@@ -9,7 +9,7 @@ noncomputable section
 
 local instance vacuumOrthogonalComplexSpectralNormedSpaceReal
     {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W) :
+    {D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W} :
     NormedSpace ℝ D.vacuumOrthogonalComplexSpectralStateSpace :=
   NormedSpace.restrictScalars ℝ ℂ D.vacuumOrthogonalComplexSpectralStateSpace
 
