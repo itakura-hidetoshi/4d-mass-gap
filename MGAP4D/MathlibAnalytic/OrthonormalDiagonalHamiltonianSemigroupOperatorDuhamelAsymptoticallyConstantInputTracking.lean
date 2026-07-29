@@ -8,8 +8,6 @@ noncomputable section
 
 open Filter
 
-/-- The inverse of a finite real orthonormal diagonal operator, obtained by
-inverting every diagonal coefficient. -/
 noncomputable def orthonormalDiagonalInverseOperator
     {ι E : Type*}
     [Fintype ι]
@@ -33,7 +31,6 @@ theorem orthonormalDiagonalInverseOperator_apply_basis
     orthonormalDiagonalInverseOperator b a (b i) = (a i)⁻¹ • b i := by
   simp [orthonormalDiagonalInverseOperator]
 
-/-- A positive lower diagonal bound makes the reciprocal operator a right inverse. -/
 theorem orthonormalDiagonalOperator_mul_inverseOperator
     {ι E : Type*}
     [Fintype ι]
@@ -54,7 +51,6 @@ theorem orthonormalDiagonalOperator_mul_inverseOperator
   rw [← b.sum_repr' x]
   simp [orthonormalDiagonalInverseOperator, ha]
 
-/-- The reciprocal diagonal operator is also a left inverse. -/
 theorem orthonormalDiagonalInverseOperator_mul_operator
     {ι E : Type*}
     [Fintype ι]
@@ -75,7 +71,6 @@ theorem orthonormalDiagonalInverseOperator_mul_operator
   rw [← b.sum_repr' x]
   simp [orthonormalDiagonalInverseOperator, ha]
 
-/-- The stationary response for left Hamiltonian multiplication. -/
 noncomputable def orthonormalDiagonalHamiltonian_leftSteadyState
     {ι E : Type*}
     [Fintype ι]
@@ -87,7 +82,6 @@ noncomputable def orthonormalDiagonalHamiltonian_leftSteadyState
     (F_lim : E →L[ℝ] E) : E →L[ℝ] E :=
   orthonormalDiagonalInverseOperator b a * F_lim
 
-/-- The stationary response for right Hamiltonian multiplication. -/
 noncomputable def orthonormalDiagonalHamiltonian_rightSteadyState
     {ι E : Type*}
     [Fintype ι]
@@ -99,7 +93,6 @@ noncomputable def orthonormalDiagonalHamiltonian_rightSteadyState
     (F_lim : E →L[ℝ] E) : E →L[ℝ] E :=
   F_lim * orthonormalDiagonalInverseOperator b a
 
-/-- The explicit left steady state solves `H * S = F_lim`. -/
 theorem orthonormalDiagonalHamiltonian_leftSteadyState_stationary
     {ι E : Type*}
     [Fintype ι]
@@ -118,7 +111,6 @@ theorem orthonormalDiagonalHamiltonian_leftSteadyState_stationary
     orthonormalDiagonalOperator_mul_inverseOperator b a δ hδ hδpos,
     one_mul]
 
-/-- The explicit right steady state solves `S * H = F_lim`. -/
 theorem orthonormalDiagonalHamiltonian_rightSteadyState_stationary
     {ι E : Type*}
     [Fintype ι]
@@ -137,7 +129,6 @@ theorem orthonormalDiagonalHamiltonian_rightSteadyState_stationary
     orthonormalDiagonalInverseOperator_mul_operator b a δ hδ hδpos,
     mul_one]
 
-/-- The left stationary response is unique. -/
 theorem orthonormalDiagonalHamiltonian_leftSteadyState_unique
     {ι E : Type*}
     [Fintype ι]
@@ -161,7 +152,6 @@ theorem orthonormalDiagonalHamiltonian_leftSteadyState_unique
         one_mul]
     _ = orthonormalDiagonalInverseOperator b a * F_lim := by rw [hS]
 
-/-- The right stationary response is unique. -/
 theorem orthonormalDiagonalHamiltonian_rightSteadyState_unique
     {ι E : Type*}
     [Fintype ι]
@@ -185,7 +175,6 @@ theorem orthonormalDiagonalHamiltonian_rightSteadyState_unique
         mul_one]
     _ = F_lim * orthonormalDiagonalInverseOperator b a := by rw [hS]
 
-/-- Norm convergence of `f - y` to zero implies convergence of `f` to `y`. -/
 theorem tendsto_of_tendsto_norm_sub_zero
     {α X : Type*}
     [SeminormedAddCommGroup X]
@@ -199,7 +188,6 @@ theorem tendsto_of_tendsto_norm_sub_zero
   have hconst : Tendsto (fun _ : α => y) l (nhds y) := tendsto_const_nhds
   simpa using hdiff.add hconst
 
-/-- Norm convergence of operator error gives statewise convergence. -/
 theorem continuousLinearMap_tendsto_apply_of_tendsto_norm_sub_zero
     {α E F : Type*}
     [NormedAddCommGroup E]
@@ -218,7 +206,6 @@ theorem continuousLinearMap_tendsto_apply_of_tendsto_norm_sub_zero
   have hconst : Tendsto (fun _ : α => S x) l (nhds (S x)) := tendsto_const_nhds
   simpa using happ.add hconst
 
-/-- Norm convergence of operator error is uniform on the closed unit ball. -/
 theorem continuousLinearMap_eventually_uniform_unitBall_of_tendsto_norm_sub_zero
     {α E F : Type*}
     [NormedAddCommGroup E]
@@ -236,8 +223,6 @@ theorem continuousLinearMap_eventually_uniform_unitBall_of_tendsto_norm_sub_zero
   simpa using
     continuousLinearMap_eventually_uniform_unitBall_zero_of_tendsto_zero hdiff
 
-/-- Left evolution tracks the unique steady response when the forcing converges
-to a constant limit in operator space. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
     {ι E : Type*}
     [Fintype ι]
@@ -288,18 +273,12 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
             (F r - F_lim) := by
       rw [← hS]
       noncomm_ring
-    change HasDerivAt (fun t : ℝ => U t - S)
-      ((-orthonormalDiagonalOperator b a) * (U r - S) +
-        (F r - F_lim)) r
-    rw [← hderiv]
-    simpa using hsub
+    convert hsub using 1 <;> simp [V, G, hderiv]
   have htrack :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_vanishingInput_tendsto_norm_zero_left
       b a δ hδ hδpos G V hG hG0 hV
   simpa [V, S] using htrack
 
-/-- Right evolution tracks the unique steady response without a commutation
-hypothesis on the forcing limit. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
     {ι E : Type*}
     [Fintype ι]
@@ -350,17 +329,12 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
             (F r - F_lim) := by
       rw [← hS]
       noncomm_ring
-    change HasDerivAt (fun t : ℝ => U t - S)
-      ((U r - S) * (-orthonormalDiagonalOperator b a) +
-        (F r - F_lim)) r
-    rw [← hderiv]
-    simpa using hsub
+    convert hsub using 1 <;> simp [V, G, hderiv]
   have htrack :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_vanishingInput_tendsto_norm_zero_right
       b a δ hδ hδpos G V hG hG0 hV
   simpa [V, S] using htrack
 
-/-- Left evolution converges in operator space to its unique stationary response. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_leftSteadyState_left
     {ι E : Type*}
     [Fintype ι]
@@ -384,7 +358,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     (orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
       b a δ hδ hδpos F U F_lim hF hF_lim hU)
 
-/-- Right evolution converges in operator space to its unique stationary response. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_rightSteadyState_right
     {ι E : Type*}
     [Fintype ι]
@@ -408,7 +381,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     (orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
       b a δ hδ hδpos F U F_lim hF hF_lim hU)
 
-/-- Left tracking holds strongly on every fixed state. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_apply_left
     {ι E : Type*}
     [Fintype ι]
@@ -433,7 +405,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     (orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
       b a δ hδ hδpos F U F_lim hF hF_lim hU) x
 
-/-- Right tracking holds strongly on every fixed state. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_apply_right
     {ι E : Type*}
     [Fintype ι]
@@ -458,7 +429,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     (orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
       b a δ hδ hδpos F U F_lim hF hF_lim hU) x
 
-/-- Left tracking is uniform on the closed unit ball. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_eventually_uniform_unitBall_left
     {ι E : Type*}
     [Fintype ι]
@@ -483,7 +453,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     (orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
       b a δ hδ hδpos F U F_lim hF hF_lim hU)
 
-/-- Right tracking is uniform on the closed unit ball. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_eventually_uniform_unitBall_right
     {ι E : Type*}
     [Fintype ι]
