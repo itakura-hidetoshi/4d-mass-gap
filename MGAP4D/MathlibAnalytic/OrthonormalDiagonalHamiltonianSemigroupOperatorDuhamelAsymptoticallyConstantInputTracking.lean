@@ -273,7 +273,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
             (F r - F_lim) := by
       rw [← hS]
       noncomm_ring
-    convert hsub using 1 <;> simp [V, G, hderiv]
+    convert hsub using 1 <;> simp [V, G]
+    simpa only [neg_mul] using hderiv.symm
   have htrack :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_vanishingInput_tendsto_norm_zero_left
       b a δ hδ hδpos G V hG hG0 hV
@@ -329,7 +330,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
             (F r - F_lim) := by
       rw [← hS]
       noncomm_ring
-    convert hsub using 1 <;> simp [V, G, hderiv]
+    convert hsub using 1 <;> simp [V, G]
+    simpa only [mul_neg] using hderiv.symm
   have htrack :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_vanishingInput_tendsto_norm_zero_right
       b a δ hδ hδpos G V hG hG0 hV
