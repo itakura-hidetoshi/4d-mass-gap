@@ -30,8 +30,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_eq_of_hasDerivAt_operator_left
       HasDerivAt (fun r : ℝ => S (-r)) (H * S (-s)) s := by
     have h :=
       (orthonormalDiagonalHamiltonianSemigroup_hasDerivAt_operator_left
-        b a (-s)).comp s ((hasDerivAt_id' s).neg)
-    simpa [S, H] using h
+        b a (-s)).scomp s ((hasDerivAt_id' s).neg)
+    simpa [Function.comp_def, S, H] using h
   have hprod (s : ℝ) :
       HasDerivAt (fun r : ℝ => S (-r) * U r) 0 s := by
     convert (hSneg s).mul (hU s) using 1
@@ -48,7 +48,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_eq_of_hasDerivAt_operator_left
   calc
     U t = (S t * S (-t)) * U t := by
       rw [← orthonormalDiagonalHamiltonianSemigroup_add b a t (-t)]
-      simp [S]
+      simp
     _ = S t * (S (-t) * U t) := by rw [mul_assoc]
     _ = S t := by rw [hintegrating, mul_one]
     _ = orthonormalDiagonalHamiltonianSemigroup b a t := rfl
