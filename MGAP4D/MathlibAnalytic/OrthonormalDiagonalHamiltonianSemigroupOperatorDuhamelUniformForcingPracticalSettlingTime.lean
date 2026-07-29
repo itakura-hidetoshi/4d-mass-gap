@@ -62,7 +62,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
         δ ε ‖A‖ (t - t₀) hδpos hε hAnorm htime
     calc
       ‖U t‖ ≤ Real.exp (-((t - t₀) * δ)) * ‖A‖ + M / δ := hultimate
-      _ ≤ ε + M / δ := add_le_add_right htransient _
+      _ ≤ ε + M / δ := add_le_add htransient (le_refl _)
       _ = M / δ + ε := add_comm _ _
 
 /-- Under the same uniformly bounded future forcing term, right operator-valued
@@ -120,7 +120,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
         δ ε ‖A‖ (t - t₀) hδpos hε hAnorm htime
     calc
       ‖U t‖ ≤ Real.exp (-((t - t₀) * δ)) * ‖A‖ + M / δ := hultimate
-      _ ≤ ε + M / δ := add_le_add_right htransient _
+      _ ≤ ε + M / δ := add_le_add htransient (le_refl _)
       _ = M / δ + ε := add_comm _ _
 
 end
