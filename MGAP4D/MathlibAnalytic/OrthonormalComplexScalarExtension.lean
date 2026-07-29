@@ -60,7 +60,85 @@ theorem orthonormalComplexScalarExtensionEquiv_one_tmul_basis
   rw [← Algebra.TensorProduct.basis_apply (A := ℂ) bR.toBasis i]
   exact Basis.equiv_apply
     (Algebra.TensorProduct.basis ℂ bR.toBasis)
-    bC.toBasis (Equiv.refl ι) i
+    i bC.toBasis (Equiv.refl ι)
+
+/-- The equivalence sends a general complex multiple of a base-changed real
+basis vector to the same complex multiple of the chosen complex basis vector. -/
+@[simp]
+theorem orthonormalComplexScalarExtensionEquiv_tmul_basis
+    {ι E F : Type*}
+    [Fintype ι]
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [NormedAddCommGroup F]
+    [InnerProductSpace ℂ F]
+    (bR : OrthonormalBasis ι ℝ E)
+    (bC : OrthonormalBasis ι ℂ F)
+    (z : ℂ)
+    (i : ι) :
+    orthonormalComplexScalarExtensionEquiv bR bC
+        (z ⊗ₜ[ℝ] bR i) =
+      z • bC i := by
+  calc
+    orthonormalComplexScalarExtensionEquiv bR bC
+        (z ⊗ₜ[ℝ] bR i) =
+      orthonormalComplexScalarExtensionEquiv bR bC
+        (z • (1 ⊗ₜ[ℝ] bR i)) := by
+          congr 1
+          simp [TensorProduct.smul_tmul']
+    _ = z • orthonormalComplexScalarExtensionEquiv bR bC
+        (1 ⊗ₜ[ℝ] bR i) := by
+          rw [map_smul]
+    _ = z • bC i := by
+          rw [orthonormalComplexScalarExtensionEquiv_one_tmul_basis]
+
+/-- Balancing a real scalar across the tensor product turns it into the
+corresponding complex coefficient on the left factor. -/
+@[simp]
+theorem one_tmul_real_smul
+    {E : Type*}
+    [AddCommMonoid E]
+    [Module ℝ E]
+    (r : ℝ)
+    (x : E) :
+    (1 : ℂ) ⊗ₜ[ℝ] (r • x) =
+      (r : ℂ) ⊗ₜ[ℝ] x := by
+  rw [TensorProduct.tmul_smul]
+  simp
+
+/-- The real diagonal linear map has the prescribed action on each real
+orthonormal basis vector. -/
+@[simp]
+theorem orthonormalDiagonalLinearMap_apply_basis_scalarExtension
+    {ι E : Type*}
+    [Fintype ι]
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (b : OrthonormalBasis ι ℝ E)
+    (a : ι → ℝ)
+    (i : ι) :
+    orthonormalDiagonalLinearMap b a (b i) =
+      a i • b i := by
+  change (b.toBasis.constr ℝ (fun j => a j • b j)) (b i) =
+    a i • b i
+  simpa using b.toBasis.constr_basis ℝ (fun j => a j • b j) i
+
+/-- The complex diagonal linear map has the prescribed real coefficient on
+each chosen complex basis vector. -/
+@[simp]
+theorem orthonormalComplexDiagonalLinearMap_apply_basis_scalarExtension
+    {ι F : Type*}
+    [Fintype ι]
+    [NormedAddCommGroup F]
+    [InnerProductSpace ℂ F]
+    (b : OrthonormalBasis ι ℂ F)
+    (a : ι → ℝ)
+    (i : ι) :
+    orthonormalComplexDiagonalLinearMap b a (b i) =
+      (a i : ℂ) • b i := by
+  change (b.toBasis.constr ℂ (fun j => (a j : ℂ) • b j)) (b i) =
+    (a i : ℂ) • b i
+  simpa using b.toBasis.constr_basis ℂ (fun j => (a j : ℂ) • b j) i
 
 /-- Conversely, each chosen complex basis vector is represented by the pure
 tensor `1 ⊗ eᵢ`. -/
@@ -108,8 +186,12 @@ theorem orthonormalComplexScalarExtensionEquiv_intertwines_diagonalLinearMap
   rw [show orthonormalComplexScalarExtensionBasis bR i =
       1 ⊗ₜ[ℝ] bR i by
     simp [orthonormalComplexScalarExtensionBasis]]
-  simp [orthonormalDiagonalLinearMap,
-    orthonormalComplexDiagonalLinearMap]
+  rw [LinearMap.baseChange_tmul,
+    orthonormalDiagonalLinearMap_apply_basis_scalarExtension,
+    one_tmul_real_smul,
+    orthonormalComplexScalarExtensionEquiv_tmul_basis,
+    orthonormalComplexScalarExtensionEquiv_one_tmul_basis,
+    orthonormalComplexDiagonalLinearMap_apply_basis_scalarExtension]
 
 /-- Continuous diagonal operators satisfy the same scalar-extension
 intertwining identity after forgetting continuity. -/
@@ -148,8 +230,11 @@ theorem symmetric_eq_orthonormalDiagonalLinearMap
       (hT.eigenvectorBasis hn) (hT.eigenvalues hn) := by
   apply (hT.eigenvectorBasis hn).toBasis.ext
   intro i
-  simpa [orthonormalDiagonalLinearMap]
-    using hT.apply_eigenvectorBasis hn i
+  rw [show (hT.eigenvectorBasis hn).toBasis i =
+      hT.eigenvectorBasis hn i by rfl]
+  rw [hT.apply_eigenvectorBasis hn i]
+  exact (orthonormalDiagonalLinearMap_apply_basis_scalarExtension
+    (hT.eigenvectorBasis hn) (hT.eigenvalues hn) i).symm
 
 /-- The literal scalar extension of a symmetric real operator is identified
 with the complex diagonal operator having the same eigenvalue list. -/
