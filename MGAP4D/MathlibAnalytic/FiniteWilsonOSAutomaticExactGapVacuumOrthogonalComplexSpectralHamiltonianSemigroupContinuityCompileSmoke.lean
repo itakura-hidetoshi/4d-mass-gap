@@ -6,15 +6,17 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-local instance compileSmokeComplexScalarTowerContinuousSMulReal
+local instance compileSmokeComplexModuleContinuousSMulReal
     {E : Type*}
     [TopologicalSpace E]
     [MulAction ℂ E]
     [SMul ℝ E]
     [IsScalarTower ℝ ℂ E]
     [ContinuousSMul ℂ E] :
-    ContinuousSMul ℝ E :=
-  IsScalarTower.continuousSMul ℂ
+    ContinuousSMul ℝ E where
+  continuous_smul := by
+    simpa only [Complex.coe_smul] using
+      (continuous_ofReal.comp continuous_fst).smul continuous_snd
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 variable
