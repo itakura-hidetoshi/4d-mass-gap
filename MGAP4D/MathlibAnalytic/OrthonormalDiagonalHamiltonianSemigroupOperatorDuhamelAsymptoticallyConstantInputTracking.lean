@@ -269,9 +269,11 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   have hG : Continuous G := by
     dsimp [G]
     exact hF.sub continuous_const
+  have hconstF : Tendsto (fun _ : ℝ => F_lim) atTop (nhds F_lim) :=
+    tendsto_const_nhds
   have hGop : Tendsto G atTop (nhds 0) := by
     dsimp [G]
-    simpa using hF_lim.sub tendsto_const_nhds
+    simpa using hF_lim.sub hconstF
   have hG0 : Tendsto (fun t : ℝ => ‖G t‖) atTop (nhds 0) := by
     simpa using hGop.norm
   have hV : ∀ r : ℝ,
@@ -286,7 +288,11 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
             (F r - F_lim) := by
       rw [← hS]
       noncomm_ring
-    simpa [V, G, hderiv] using hsub
+    change HasDerivAt (fun t : ℝ => U t - S)
+      ((-orthonormalDiagonalOperator b a) * (U r - S) +
+        (F r - F_lim)) r
+    rw [← hderiv]
+    simpa using hsub
   have htrack :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_vanishingInput_tendsto_norm_zero_left
       b a δ hδ hδpos G V hG hG0 hV
@@ -325,9 +331,11 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   have hG : Continuous G := by
     dsimp [G]
     exact hF.sub continuous_const
+  have hconstF : Tendsto (fun _ : ℝ => F_lim) atTop (nhds F_lim) :=
+    tendsto_const_nhds
   have hGop : Tendsto G atTop (nhds 0) := by
     dsimp [G]
-    simpa using hF_lim.sub tendsto_const_nhds
+    simpa using hF_lim.sub hconstF
   have hG0 : Tendsto (fun t : ℝ => ‖G t‖) atTop (nhds 0) := by
     simpa using hGop.norm
   have hV : ∀ r : ℝ,
@@ -342,7 +350,11 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
             (F r - F_lim) := by
       rw [← hS]
       noncomm_ring
-    simpa [V, G, hderiv] using hsub
+    change HasDerivAt (fun t : ℝ => U t - S)
+      ((U r - S) * (-orthonormalDiagonalOperator b a) +
+        (F r - F_lim)) r
+    rw [← hderiv]
+    simpa using hsub
   have htrack :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_vanishingInput_tendsto_norm_zero_right
       b a δ hδ hδpos G V hG hG0 hV
