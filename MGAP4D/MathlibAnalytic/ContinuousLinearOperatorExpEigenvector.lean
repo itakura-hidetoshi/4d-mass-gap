@@ -9,7 +9,7 @@ noncomputable section
 
 /-- Powers of a continuous complex-linear operator preserve an eigenvector and
 raise its eigenvalue to the matching natural power. -/
-theorem continuousLinearMap_pow_apply_of_apply_eq_smul
+theorem complexContinuousLinearMap_pow_apply_of_apply_eq_smul
     {E : Type*}
     [NormedAddCommGroup E]
     [NormedSpace ℂ E]
@@ -29,7 +29,7 @@ theorem continuousLinearMap_pow_apply_of_apply_eq_smul
 
 /-- The Banach-algebra exponential of a continuous complex-linear operator acts
 on an eigenvector by the scalar complex exponential of the eigenvalue. -/
-theorem normedSpace_exp_apply_of_apply_eq_smul
+theorem normedSpace_exp_apply_of_complex_eigenvector
     {E : Type*}
     [NormedAddCommGroup E]
     [NormedSpace ℂ E]
@@ -73,7 +73,7 @@ theorem normedSpace_exp_apply_of_apply_eq_smul
   have hseries :
       NormedSpace.exp T v = (NormedSpace.exp z) • v := by
     apply HasSum.unique hTsum_apply
-    simpa [continuousLinearMap_pow_apply_of_apply_eq_smul T v z hTv,
+    simpa [complexContinuousLinearMap_pow_apply_of_apply_eq_smul T v z hTv,
       smul_smul] using hzsum_smul
   rw [Complex.exp_eq_exp_ℂ]
   exact hseries
