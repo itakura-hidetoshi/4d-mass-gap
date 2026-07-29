@@ -1,10 +1,25 @@
 import MGAP4D.MathlibAnalytic.OrthonormalDiagonalHamiltonianSemigroupGenerator
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapConstructedComplexSpectralScalarExtension
+import Mathlib.Analysis.Complex.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
+
+local instance euclideanComplexContinuousSMulRealForScalarExtension
+    {ι : Type*}
+    [Fintype ι] :
+    ContinuousSMul ℝ (EuclideanSpace ℂ ι) where
+  continuous_smul := by
+    have hcoe : Continuous
+        (fun p : ℝ × EuclideanSpace ℂ ι => (p.1 : ℂ) • p.2) :=
+      (Complex.continuous_ofReal.comp
+        (continuous_fst : Continuous
+          (fun p : ℝ × EuclideanSpace ℂ ι => p.1))).smul
+            (continuous_snd : Continuous
+              (fun p : ℝ × EuclideanSpace ℂ ι => p.2))
+    simpa only [Complex.coe_smul] using hcoe
 
 /-- The constructed real spectral semigroup is smooth in operator norm. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_contDiff
