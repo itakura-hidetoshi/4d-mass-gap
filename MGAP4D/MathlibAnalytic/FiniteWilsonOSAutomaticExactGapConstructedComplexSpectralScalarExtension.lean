@@ -67,10 +67,16 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_zero
     (n : ℕ) :
     D.realSpectralHamiltonianSemigroup n 0 = 1 := by
   unfold FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.realSpectralHamiltonianSemigroup
-  convert orthonormalDiagonalOperator_one
-    ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank) using 1
-  funext i
-  simp
+  have hcoeff :
+      (fun i : Fin D.StateDimension =>
+        Real.exp (-(0 *
+          (D.hamiltonianSymmetric n).eigenvalues D.stateFinrank i))) =
+        (fun _ : Fin D.StateDimension => (1 : ℝ)) := by
+    funext i
+    simp
+  rw [hcoeff]
+  exact orthonormalDiagonalOperator_one
+    ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
 
 /-- The real spectral time slices satisfy the semigroup law. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_add
@@ -83,11 +89,20 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_add
         D.realSpectralHamiltonianSemigroup n t := by
   unfold FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.realSpectralHamiltonianSemigroup
   rw [orthonormalDiagonalOperator_mul]
-  congr 1
-  funext i
-  rw [← Real.exp_add]
-  congr 1
-  ring
+  have hcoeff :
+      (fun i : Fin D.StateDimension =>
+        Real.exp (-((s + t) *
+          (D.hamiltonianSymmetric n).eigenvalues D.stateFinrank i))) =
+        (fun i : Fin D.StateDimension =>
+          Real.exp (-(s *
+            (D.hamiltonianSymmetric n).eigenvalues D.stateFinrank i)) *
+          Real.exp (-(t *
+            (D.hamiltonianSymmetric n).eigenvalues D.stateFinrank i))) := by
+    funext i
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  rw [hcoeff]
 
 /-- Time one recovers the real constructed transfer operator. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_one
@@ -97,9 +112,15 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_one
     D.realSpectralHamiltonianSemigroup n 1 = D.transferOperator n := by
   unfold FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.realSpectralHamiltonianSemigroup
   unfold FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.transferOperator
-  congr 1
-  funext i
-  simp
+  have hcoeff :
+      (fun i : Fin D.StateDimension =>
+        Real.exp (-(1 *
+          (D.hamiltonianSymmetric n).eigenvalues D.stateFinrank i))) =
+        (fun i : Fin D.StateDimension =>
+          Real.exp (-((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank i))) := by
+    funext i
+    simp
+  rw [hcoeff]
 
 /-- The real spectral semigroup acts modewise by `exp (-tEᵢ)`. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_on_basis
