@@ -8,6 +8,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open InnerProductSpace
+
 /-- The finite complex diagonal Hamiltonian semigroup is smooth in operator norm. -/
 theorem orthonormalComplexDiagonalHamiltonianSemigroup_contDiff
     {ι E : Type*}
