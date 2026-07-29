@@ -91,7 +91,10 @@ theorem one_tmul_real_smul
     (r : ℝ)
     (x : E) :
     (1 : ℂ) ⊗ₜ[ℝ] (r • x) = (r : ℂ) ⊗ₜ[ℝ] x := by
-  rw [TensorProduct.tmul_smul, Complex.real_smul, mul_one]
+  rw [TensorProduct.tmul_smul]
+  rw [show r • (1 : ℂ) = (r : ℂ) by
+    change (r : ℂ) * 1 = (r : ℂ)
+    exact mul_one _]
 
 @[simp]
 theorem orthonormalDiagonalLinearMap_apply_basis_scalarExtension
