@@ -40,25 +40,24 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     mul_le_mul_of_nonneg_right hexp (norm_nonneg _)
   have hlinear :=
     mul_exp_tail_le_one_div_exp_one_mul_sub_mul_exp_rate δ ν (t - t₀) hνδ
+  have hforcing₀ := mul_le_mul_of_nonneg_right hlinear hC
   have hforcing :
       ((t - t₀) * Real.exp (-((t - t₀) * δ))) * C ≤
-        ((1 / (Real.exp 1 * (δ - ν))) *
-          Real.exp (-((t - t₀) * ν))) * C :=
-    mul_le_mul_of_nonneg_right hlinear hC
+        (C / (Real.exp 1 * (δ - ν))) * Real.exp (-((t - t₀) * ν)) := by
+    simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hforcing₀
   calc
     ‖U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ ≤
         Real.exp (-((t - t₀) * δ)) *
             ‖A - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ +
           ((t - t₀) * Real.exp (-((t - t₀) * δ))) * C := hclosed
     _ ≤ Real.exp (-((t - t₀) * ν)) * ‖A - S‖ +
-          ((1 / (Real.exp 1 * (δ - ν))) *
-            Real.exp (-((t - t₀) * ν))) * C := by
+          (C / (Real.exp 1 * (δ - ν))) * Real.exp (-((t - t₀) * ν)) := by
       simpa [S] using add_le_add hinitial hforcing
     _ = (‖A - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ +
           C / (Real.exp 1 * (δ - ν))) *
         Real.exp (-((t - t₀) * ν)) := by
-      simp [S]
-      ring
+      dsimp [S]
+      rw [add_mul, mul_comm (Real.exp (-((t - t₀) * ν)))]
 
 /-- Resonant right tracking at any prescribed slower positive rate `ν < δ`, with the
 same sharp forcing constant for that rate. -/
@@ -94,25 +93,24 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
     mul_le_mul_of_nonneg_right hexp (norm_nonneg _)
   have hlinear :=
     mul_exp_tail_le_one_div_exp_one_mul_sub_mul_exp_rate δ ν (t - t₀) hνδ
+  have hforcing₀ := mul_le_mul_of_nonneg_right hlinear hC
   have hforcing :
       ((t - t₀) * Real.exp (-((t - t₀) * δ))) * C ≤
-        ((1 / (Real.exp 1 * (δ - ν))) *
-          Real.exp (-((t - t₀) * ν))) * C :=
-    mul_le_mul_of_nonneg_right hlinear hC
+        (C / (Real.exp 1 * (δ - ν))) * Real.exp (-((t - t₀) * ν)) := by
+    simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hforcing₀
   calc
     ‖U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ ≤
         Real.exp (-((t - t₀) * δ)) *
             ‖A - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ +
           ((t - t₀) * Real.exp (-((t - t₀) * δ))) * C := hclosed
     _ ≤ Real.exp (-((t - t₀) * ν)) * ‖A - S‖ +
-          ((1 / (Real.exp 1 * (δ - ν))) *
-            Real.exp (-((t - t₀) * ν))) * C := by
+          (C / (Real.exp 1 * (δ - ν))) * Real.exp (-((t - t₀) * ν)) := by
       simpa [S] using add_le_add hinitial hforcing
     _ = (‖A - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ +
           C / (Real.exp 1 * (δ - ν))) *
         Real.exp (-((t - t₀) * ν)) := by
-      simp [S]
-      ring
+      dsimp [S]
+      rw [add_mul, mul_comm (Real.exp (-((t - t₀) * ν)))]
 
 end
 
