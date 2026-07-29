@@ -46,12 +46,12 @@ theorem normedSpace_exp_apply_of_complex_eigenvector
     exact edist_lt_top _ _
   have hTsum :
       HasSum
-        (fun m : ℕ => (m !⁻¹ : ℂ) • T ^ m)
+        (fun m : ℕ => ((m ! : ℂ)⁻¹) • T ^ m)
         (NormedSpace.exp T) :=
     NormedSpace.expSeries_hasSum_exp_of_mem_ball' T hTmem
   have hTsum_apply :
       HasSum
-        (fun m : ℕ => ((m !⁻¹ : ℂ) • T ^ m) v)
+        (fun m : ℕ => (((m ! : ℂ)⁻¹) • T ^ m) v)
         (NormedSpace.exp T v) :=
     hTsum.map (fun S : E →L[ℂ] E => S v) (by fun_prop)
   have hzmem :
@@ -61,13 +61,13 @@ theorem normedSpace_exp_apply_of_complex_eigenvector
     exact edist_lt_top _ _
   have hzsum :
       HasSum
-        (fun m : ℕ => (m !⁻¹ : ℂ) * z ^ m)
+        (fun m : ℕ => ((m ! : ℂ)⁻¹) * z ^ m)
         (NormedSpace.exp z) := by
     simpa [smul_eq_mul] using
       (NormedSpace.expSeries_hasSum_exp_of_mem_ball' z hzmem)
   have hzsum_smul :
       HasSum
-        (fun m : ℕ => ((m !⁻¹ : ℂ) * z ^ m) • v)
+        (fun m : ℕ => (((m ! : ℂ)⁻¹) * z ^ m) • v)
         ((NormedSpace.exp z) • v) :=
     hzsum.smul_const v
   have hseries :
