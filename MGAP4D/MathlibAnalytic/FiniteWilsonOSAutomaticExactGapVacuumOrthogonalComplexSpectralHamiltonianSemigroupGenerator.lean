@@ -13,7 +13,7 @@ theorem finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_ha
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
     (n : ℕ)
-    (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
+    (x : EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) :
     HasDerivAt
       (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
       (-(D.vacuumOrthogonalComplexSpectralHamiltonian n x)) 0 :=
@@ -26,7 +26,7 @@ theorem finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_ha
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
     (n : ℕ)
-    (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
+    (x : EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) :
     HasDerivAt
       (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
       (-(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x)) 0 :=
@@ -39,7 +39,7 @@ theorem finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_de
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
     (n : ℕ)
-    (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
+    (x : EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) :
     deriv
         (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
         0 =
