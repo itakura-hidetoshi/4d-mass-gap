@@ -40,7 +40,7 @@ theorem tendsto_exp_neg_sub_mul_atTop_zero
 plus a constant has limsup at most that constant. -/
 theorem limsup_norm_le_of_eventually_le_exp_transient
     {X : Type*}
-    [Norm X]
+    [SeminormedAddGroup X]
     (U : ℝ → X)
     (t₀ δ B c : ℝ)
     (hδ : 0 < δ)
