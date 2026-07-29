@@ -90,10 +90,13 @@ theorem orthonormalDiagonalHamiltonianSemigroup_duhamel_eq_of_hasDerivAt
     rw [← orthonormalDiagonalHamiltonianSemigroup_add
       b a (t - t₀) (-(t - t₀))]
     simp
-  have happly := congrArg (fun y : E => S (t - t₀) y) hftc
   have hrelation :
       (∫ s in t₀..t, S (t - s) (f s)) = u t - S (t - t₀) x := by
-    rw [← hpush, happly, map_sub, hrecover]
+    calc
+      (∫ s in t₀..t, S (t - s) (f s)) =
+          S (t - t₀) (∫ s in t₀..t, S (-(s - t₀)) (f s)) := hpush.symm
+      _ = S (t - t₀) (S (-(t - t₀)) (u t) - x) := by rw [hftc]
+      _ = u t - S (t - t₀) x := by rw [map_sub, hrecover]
   calc
     u t = S (t - t₀) x + (u t - S (t - t₀) x) := by abel
     _ = S (t - t₀) x + ∫ s in t₀..t, S (t - s) (f s) := by rw [← hrelation]
