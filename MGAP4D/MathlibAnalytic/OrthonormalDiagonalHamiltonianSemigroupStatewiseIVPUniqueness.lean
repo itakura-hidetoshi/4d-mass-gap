@@ -36,9 +36,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_apply_eq_of_hasDerivAt
   have hprod (s : ℝ) :
       HasDerivAt (fun r : ℝ => S (-r) (u r)) 0 s := by
     convert (hSneg s).clm_apply (hu s) using 1
-    change S (-s) (H (u s)) + S (-s) (-(H (u s))) = 0
+    change 0 = S (-s) (H (u s)) + S (-s) (-(H (u s)))
     rw [map_neg]
-    exact add_neg_cancel _
+    exact (add_neg_cancel _).symm
   have hdiff : Differentiable ℝ (fun r : ℝ => S (-r) (u r)) :=
     fun s => (hprod s).differentiableAt
   have hzero : ∀ s : ℝ, deriv (fun r : ℝ => S (-r) (u r)) s = 0 :=
