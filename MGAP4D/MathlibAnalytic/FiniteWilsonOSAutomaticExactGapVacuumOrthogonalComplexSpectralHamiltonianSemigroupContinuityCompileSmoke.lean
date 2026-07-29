@@ -13,7 +13,7 @@ variable (n : ℕ)
 
 local instance vacuumOrthogonalComplexSpectralCompileSmokeNormedSpaceReal
     {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W) :
+    {D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W} :
     NormedSpace ℝ D.vacuumOrthogonalComplexSpectralStateSpace :=
   NormedSpace.restrictScalars ℝ ℂ D.vacuumOrthogonalComplexSpectralStateSpace
 
