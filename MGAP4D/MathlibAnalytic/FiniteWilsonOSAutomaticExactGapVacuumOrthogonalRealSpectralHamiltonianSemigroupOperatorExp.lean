@@ -6,6 +6,14 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
+local instance finiteWilsonVacuumOrthogonalExcitedStateCompleteSpace
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W) :
+    CompleteSpace D.gapData.ExcitedStateSpace :=
+  FiniteDimensional.complete ℝ D.gapData.ExcitedStateSpace
+
 /-- Ordinary operator-norm derivative form of the physical left evolution
 equation. -/
 theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_deriv_operator_left
