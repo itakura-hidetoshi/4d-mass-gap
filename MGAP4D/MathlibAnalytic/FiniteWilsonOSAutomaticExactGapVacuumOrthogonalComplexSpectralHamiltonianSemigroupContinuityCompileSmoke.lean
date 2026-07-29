@@ -6,6 +6,16 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+local instance compileSmokeComplexScalarTowerContinuousSMulReal
+    {E : Type*}
+    [TopologicalSpace E]
+    [MulAction ℂ E]
+    [SMul ℝ E]
+    [IsScalarTower ℝ ℂ E]
+    [ContinuousSMul ℂ E] :
+    ContinuousSMul ℝ E :=
+  IsScalarTower.continuousSMul ℂ
+
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 variable
   (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
