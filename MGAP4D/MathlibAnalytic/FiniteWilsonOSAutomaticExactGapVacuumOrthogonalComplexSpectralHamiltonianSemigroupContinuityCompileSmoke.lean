@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapVacuumOrthogonalComplexSpectralHamiltonianSemigroupGenerator
+import Mathlib.Analysis.Normed.Module.RCLike.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -9,6 +10,12 @@ variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 variable
   (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
 variable (n : ℕ)
+
+local instance vacuumOrthogonalComplexSpectralCompileSmokeNormedSpaceReal
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W) :
+    NormedSpace ℝ D.vacuumOrthogonalComplexSpectralStateSpace :=
+  NormedSpace.restrictScalars ℝ ℂ D.vacuumOrthogonalComplexSpectralStateSpace
 
 example :
     ContDiff ℝ ⊤ (D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n) :=
