@@ -1,5 +1,5 @@
+import MGAP4D.MathlibAnalytic.ComplexContinuousPositiveContractionRpowInverse
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
-import Mathlib.Analysis.InnerProductSpace.Positive
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -25,6 +25,7 @@ noncomputable def logHamiltonian
   -CFC.log T
 
 /-- Bundled positivity together with invertibility gives strict positivity. -/
+omit [CompleteSpace H] in
 theorem isStrictlyPositive_of_isPositive_isUnit
     (T : H →L[ℂ] H)
     (hpositive : T.IsPositive)
@@ -38,7 +39,7 @@ theorem logHamiltonian_isSelfAdjoint
     (T : H →L[ℂ] H) :
     IsSelfAdjoint (logHamiltonian T) := by
   unfold logHamiltonian
-  exact IsSelfAdjoint.log.neg
+  exact (IsSelfAdjoint.log (a := T)).neg
 
 /-- Exponentiating the negative logarithmic Hamiltonian reconstructs the
 original strictly positive transfer operator. -/
