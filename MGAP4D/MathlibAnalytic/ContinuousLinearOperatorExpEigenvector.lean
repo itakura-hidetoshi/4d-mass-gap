@@ -53,7 +53,7 @@ theorem normedSpace_exp_apply_of_complex_eigenvector
       HasSum
         (fun m : ℕ => (((Nat.factorial m : ℂ)⁻¹) • T ^ m) v)
         (NormedSpace.exp T v) :=
-    hTsum.map (fun S : E →L[ℂ] E => S v) (by fun_prop)
+    (ContinuousLinearMap.apply ℂ E v).hasSum hTsum
   have hzmem :
       z ∈ Metric.eball (0 : ℂ)
         (NormedSpace.expSeries ℂ ℂ).radius := by
@@ -73,8 +73,10 @@ theorem normedSpace_exp_apply_of_complex_eigenvector
   have hseries :
       NormedSpace.exp T v = (NormedSpace.exp z) • v := by
     apply HasSum.unique hTsum_apply
-    simpa [complexContinuousLinearMap_pow_apply_of_apply_eq_smul T v z hTv,
-      smul_smul] using hzsum_smul
+    refine hzsum_smul.congr fun m => ?_
+    rw [ContinuousLinearMap.smul_apply,
+      complexContinuousLinearMap_pow_apply_of_apply_eq_smul T v z hTv]
+    simp [smul_smul]
   rw [Complex.exp_eq_exp_ℂ]
   exact hseries
 
