@@ -5,10 +5,18 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 variable
   (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
 variable (n : ℕ)
+
+local instance finiteWilsonVacuumOrthogonalOperatorExpSmokeCompleteSpace
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W) :
+    CompleteSpace D.gapData.ExcitedStateSpace :=
+  FiniteDimensional.complete ℝ D.gapData.ExcitedStateSpace
 
 example (t : ℝ) :
     deriv (D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n) t =
