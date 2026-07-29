@@ -9,7 +9,7 @@ noncomputable section
 
 local instance constructedComplexSpectralNormedSpaceReal
     {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W) :
+    {D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W} :
     NormedSpace ℝ D.complexSpectralStateSpace :=
   NormedSpace.restrictScalars ℝ ℂ D.complexSpectralStateSpace
 
