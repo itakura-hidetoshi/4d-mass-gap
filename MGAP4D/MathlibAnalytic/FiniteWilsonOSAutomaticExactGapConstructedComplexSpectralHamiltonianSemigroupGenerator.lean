@@ -13,7 +13,7 @@ theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDeriv
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (x : D.complexSpectralStateSpace) :
+    (x : EuclideanSpace ℂ (Fin D.StateDimension)) :
     HasDerivAt
       (fun t : ℝ => D.complexSpectralHamiltonianSemigroup n t x)
       (-(D.complexSpectralHamiltonian n x)) 0 := by
@@ -30,7 +30,7 @@ theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDeriv
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (x : D.complexSpectralStateSpace) :
+    (x : EuclideanSpace ℂ (Fin D.StateDimension)) :
     HasDerivAt
       (fun t : ℝ => D.complexSpectralHamiltonianSemigroup n t x)
       (-(D.complexSpectralLogHamiltonian n x)) 0 := by
@@ -43,7 +43,7 @@ theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_deriv_ze
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (x : D.complexSpectralStateSpace) :
+    (x : EuclideanSpace ℂ (Fin D.StateDimension)) :
     deriv (fun t : ℝ => D.complexSpectralHamiltonianSemigroup n t x) 0 =
       -(D.complexSpectralLogHamiltonian n x) :=
   (finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDerivAt_zero_logHamiltonian
