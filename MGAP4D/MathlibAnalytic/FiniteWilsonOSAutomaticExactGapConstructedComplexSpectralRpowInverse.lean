@@ -26,9 +26,7 @@ noncomputable def
     OrthonormalBasis (Fin D.StateDimension) ℂ D.complexSpectralStateSpace :=
   (stdOrthonormalBasis ℂ D.complexSpectralStateSpace).reindex
     (finCongr (by
-      simpa [FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.complexSpectralStateSpace]
-        using
-          (finrank_euclideanSpace_fin (𝕜 := ℂ) (n := D.StateDimension))))
+      simp [FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData.complexSpectralStateSpace]))
 
 /-- The complex spectral transfer operator with the same mode coefficients
 `exp (-Eᵢ)` as the constructed real transfer operator. -/
