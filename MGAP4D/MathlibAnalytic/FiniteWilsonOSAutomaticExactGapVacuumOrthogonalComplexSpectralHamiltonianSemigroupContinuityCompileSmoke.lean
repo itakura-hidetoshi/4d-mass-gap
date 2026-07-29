@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapVacuumOrthogonalComplexSpectralHamiltonianSemigroupContinuity
+import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapVacuumOrthogonalComplexSpectralHamiltonianSemigroupGenerator
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -22,6 +22,21 @@ example (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
     Continuous (fun t : ℝ =>
       D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x) :=
   finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_stronglyContinuous
+    D n x
+
+example (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
+    HasDerivAt
+      (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
+      (-(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x)) 0 :=
+  finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_hasDerivAt_zero_logHamiltonian
+    D n x
+
+example (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
+    deriv
+        (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
+        0 =
+      -(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x) :=
+  finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_deriv_zero
     D n x
 
 end
