@@ -45,7 +45,7 @@ theorem orthonormalComplexDiagonalHamiltonianSemigroup_hasDerivAt_zero
     apply Finset.sum_congr rfl
     intro i hi
     rw [Complex.coe_smul]
-    exact smul_comm (inner ℂ (b i) x) (Real.exp (-(t * a i))) (b i)
+    exact (smul_comm (Real.exp (-(t * a i))) (inner ℂ (b i) x) (b i)).symm
   rw [hrepr]
   have hsum :
       HasDerivAt
