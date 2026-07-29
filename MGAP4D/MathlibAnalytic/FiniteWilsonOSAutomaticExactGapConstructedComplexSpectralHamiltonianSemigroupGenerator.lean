@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapConstructedComplexSpectralHamiltonianSemigroupContinuity
 import MGAP4D.MathlibAnalytic.OrthonormalComplexDiagonalHamiltonianSemigroupGenerator
+import Mathlib.LinearAlgebra.Complex.Module
 
 namespace MGAP4D
 namespace MathlibAnalytic
