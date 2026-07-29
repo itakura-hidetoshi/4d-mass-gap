@@ -23,6 +23,23 @@ theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_eq_of
     finite_wilson_constructed_real_spectral_hamiltonianSemigroup_eq_of_hasDerivAt_operator_left
       D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData n U hU0 hU
 
+/-- On the physical excitation sector `Ω⊥`, the real spectral semigroup is the
+unique operator-norm solution of the restricted-Hamiltonian right initial-value
+problem `U' = U (-H)`, `U 0 = 1`. -/
+theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_eq_of_hasDerivAt_operator_right
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
+    (n : ℕ)
+    (U : ℝ → (D.gapData.ExcitedStateSpace →L[ℝ] D.gapData.ExcitedStateSpace))
+    (hU0 : U 0 = 1)
+    (hU : ∀ t : ℝ,
+      HasDerivAt U
+        (U t * (-LinearMap.toContinuousLinearMap (D.gapData.restrictedHamiltonian n))) t) :
+    U = D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n := by
+  exact
+    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_eq_of_hasDerivAt_operator_right
+      D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData n U hU0 hU
+
 end
 
 end MathlibAnalytic
