@@ -22,18 +22,18 @@ noncomputable def finiteWilsonConstructedHamiltonianLeftSteadyState
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace) :
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace) :
     D.StateSpace →L[ℝ] D.StateSpace :=
-  finiteWilsonConstructedHamiltonianInverseOperator D n * F∞
+  finiteWilsonConstructedHamiltonianInverseOperator D n * F_lim
 
 /-- Constructed finite Wilson right stationary response. -/
 noncomputable def finiteWilsonConstructedHamiltonianRightSteadyState
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace) :
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace) :
     D.StateSpace →L[ℝ] D.StateSpace :=
-  F∞ * finiteWilsonConstructedHamiltonianInverseOperator D n
+  F_lim * finiteWilsonConstructedHamiltonianInverseOperator D n
 
 /-- The constructed Hamiltonian inverse is a right inverse. -/
 theorem finite_wilson_constructed_hamiltonian_mul_inverse
@@ -72,9 +72,9 @@ theorem finite_wilson_constructed_hamiltonian_leftSteadyState_stationary
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace) :
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace) :
     LinearMap.toContinuousLinearMap (D.hamiltonian n) *
-        finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞ = F∞ := by
+        finiteWilsonConstructedHamiltonianLeftSteadyState D n F_lim = F_lim := by
   rw [finiteWilsonConstructedHamiltonianLeftSteadyState, ← mul_assoc,
     finite_wilson_constructed_hamiltonian_mul_inverse D n, one_mul]
 
@@ -83,9 +83,9 @@ theorem finite_wilson_constructed_hamiltonian_rightSteadyState_stationary
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace) :
-    finiteWilsonConstructedHamiltonianRightSteadyState D n F∞ *
-        LinearMap.toContinuousLinearMap (D.hamiltonian n) = F∞ := by
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace) :
+    finiteWilsonConstructedHamiltonianRightSteadyState D n F_lim *
+        LinearMap.toContinuousLinearMap (D.hamiltonian n) = F_lim := by
   rw [finiteWilsonConstructedHamiltonianRightSteadyState, mul_assoc,
     finite_wilson_constructed_inverse_mul_hamiltonian D n, mul_one]
 
@@ -94,48 +94,48 @@ theorem finite_wilson_constructed_hamiltonian_leftSteadyState_unique
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (F∞ S : D.StateSpace →L[ℝ] D.StateSpace)
-    (hS : LinearMap.toContinuousLinearMap (D.hamiltonian n) * S = F∞) :
-    S = finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞ := by
+    (F_lim S : D.StateSpace →L[ℝ] D.StateSpace)
+    (hS : LinearMap.toContinuousLinearMap (D.hamiltonian n) * S = F_lim) :
+    S = finiteWilsonConstructedHamiltonianLeftSteadyState D n F_lim := by
   rw [finiteWilsonConstructedHamiltonianLeftSteadyState]
   calc
     S = finiteWilsonConstructedHamiltonianInverseOperator D n *
         (LinearMap.toContinuousLinearMap (D.hamiltonian n) * S) := by
       rw [← mul_assoc, finite_wilson_constructed_inverse_mul_hamiltonian D n,
         one_mul]
-    _ = finiteWilsonConstructedHamiltonianInverseOperator D n * F∞ := by rw [hS]
+    _ = finiteWilsonConstructedHamiltonianInverseOperator D n * F_lim := by rw [hS]
 
 /-- The constructed right stationary response is unique. -/
 theorem finite_wilson_constructed_hamiltonian_rightSteadyState_unique
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
-    (F∞ S : D.StateSpace →L[ℝ] D.StateSpace)
-    (hS : S * LinearMap.toContinuousLinearMap (D.hamiltonian n) = F∞) :
-    S = finiteWilsonConstructedHamiltonianRightSteadyState D n F∞ := by
+    (F_lim S : D.StateSpace →L[ℝ] D.StateSpace)
+    (hS : S * LinearMap.toContinuousLinearMap (D.hamiltonian n) = F_lim) :
+    S = finiteWilsonConstructedHamiltonianRightSteadyState D n F_lim := by
   rw [finiteWilsonConstructedHamiltonianRightSteadyState]
   calc
     S = (S * LinearMap.toContinuousLinearMap (D.hamiltonian n)) *
         finiteWilsonConstructedHamiltonianInverseOperator D n := by
       rw [mul_assoc, finite_wilson_constructed_hamiltonian_mul_inverse D n,
         mul_one]
-    _ = F∞ * finiteWilsonConstructedHamiltonianInverseOperator D n := by rw [hS]
+    _ = F_lim * finiteWilsonConstructedHamiltonianInverseOperator D n := by rw [hS]
 
-/-- Constructed finite Wilson left evolution tracks its unique steady response in
-operator norm. -/
+/-- Constructed finite Wilson left evolution tracks its steady response in norm. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         ((-LinearMap.toContinuousLinearMap (D.hamiltonian n)) * U r + F r) r) :
     Tendsto
-      (fun t : ℝ => ‖U t - finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞‖)
+      (fun t : ℝ => ‖U t -
+        finiteWilsonConstructedHamiltonianLeftSteadyState D n F_lim‖)
       atTop (nhds 0) := by
   have hUdiag : ∀ r : ℝ,
       HasDerivAt U
@@ -154,23 +154,23 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
       exactGapValueReal
       (D.hamiltonianEigenvalues_ge_exactGap n)
       exactGapValueReal_pos
-      F U F∞ hF hF∞ hUdiag
+      F U F_lim hF hF_lim hUdiag
 
-/-- Constructed finite Wilson right evolution tracks its unique steady response
-in operator norm. -/
+/-- Constructed finite Wilson right evolution tracks its steady response in norm. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         (U r * (-LinearMap.toContinuousLinearMap (D.hamiltonian n)) + F r) r) :
     Tendsto
-      (fun t : ℝ => ‖U t - finiteWilsonConstructedHamiltonianRightSteadyState D n F∞‖)
+      (fun t : ℝ => ‖U t -
+        finiteWilsonConstructedHamiltonianRightSteadyState D n F_lim‖)
       atTop (nhds 0) := by
   have hUdiag : ∀ r : ℝ,
       HasDerivAt U
@@ -189,7 +189,7 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
       exactGapValueReal
       (D.hamiltonianEigenvalues_ge_exactGap n)
       exactGapValueReal_pos
-      F U F∞ hF hF∞ hUdiag
+      F U F_lim hF hF_lim hUdiag
 
 /-- Constructed left evolution converges in operator space to the steady state. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_leftSteadyState_left
@@ -197,22 +197,17 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         ((-LinearMap.toContinuousLinearMap (D.hamiltonian n)) * U r + F r) r) :
     Tendsto U atTop
-      (nhds (finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞)) := by
-  let S := finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
-      D n F U F∞ hF hF∞ hU
-  have hdiff : Tendsto (fun t : ℝ => U t - S) atTop (nhds 0) :=
-    tendsto_zero_of_tendsto_norm_zero (by simpa [S] using hnorm)
-  have hconst : Tendsto (fun _ : ℝ => S) atTop (nhds S) := tendsto_const_nhds
-  simpa [S] using hdiff.add hconst
+      (nhds (finiteWilsonConstructedHamiltonianLeftSteadyState D n F_lim)) :=
+  tendsto_of_tendsto_norm_sub_zero
+    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
+      D n F U F_lim hF hF_lim hU)
 
 /-- Constructed right evolution converges in operator space to the steady state. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_rightSteadyState_right
@@ -220,22 +215,17 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         (U r * (-LinearMap.toContinuousLinearMap (D.hamiltonian n)) + F r) r) :
     Tendsto U atTop
-      (nhds (finiteWilsonConstructedHamiltonianRightSteadyState D n F∞)) := by
-  let S := finiteWilsonConstructedHamiltonianRightSteadyState D n F∞
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
-      D n F U F∞ hF hF∞ hU
-  have hdiff : Tendsto (fun t : ℝ => U t - S) atTop (nhds 0) :=
-    tendsto_zero_of_tendsto_norm_zero (by simpa [S] using hnorm)
-  have hconst : Tendsto (fun _ : ℝ => S) atTop (nhds S) := tendsto_const_nhds
-  simpa [S] using hdiff.add hconst
+      (nhds (finiteWilsonConstructedHamiltonianRightSteadyState D n F_lim)) :=
+  tendsto_of_tendsto_norm_sub_zero
+    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
+      D n F U F_lim hF hF_lim hU)
 
 /-- Constructed left tracking holds strongly on every fixed state. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_apply_left
@@ -243,24 +233,18 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         ((-LinearMap.toContinuousLinearMap (D.hamiltonian n)) * U r + F r) r)
     (x : D.StateSpace) :
     Tendsto (fun t : ℝ => U t x) atTop
-      (nhds (finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞ x)) := by
-  let S := finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
-      D n F U F∞ hF hF∞ hU
-  have hdiff : Tendsto (fun t : ℝ => U t - S) atTop (nhds 0) :=
-    tendsto_zero_of_tendsto_norm_zero (by simpa [S] using hnorm)
-  have happ := continuousLinearMap_tendsto_apply_zero_of_tendsto_zero hdiff x
-  have hconst : Tendsto (fun _ : ℝ => S x) atTop (nhds (S x)) := tendsto_const_nhds
-  simpa [S] using happ.add hconst
+      (nhds (finiteWilsonConstructedHamiltonianLeftSteadyState D n F_lim x)) :=
+  continuousLinearMap_tendsto_apply_of_tendsto_norm_sub_zero
+    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
+      D n F U F_lim hF hF_lim hU) x
 
 /-- Constructed right tracking holds strongly on every fixed state. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_apply_right
@@ -268,24 +252,18 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         (U r * (-LinearMap.toContinuousLinearMap (D.hamiltonian n)) + F r) r)
     (x : D.StateSpace) :
     Tendsto (fun t : ℝ => U t x) atTop
-      (nhds (finiteWilsonConstructedHamiltonianRightSteadyState D n F∞ x)) := by
-  let S := finiteWilsonConstructedHamiltonianRightSteadyState D n F∞
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
-      D n F U F∞ hF hF∞ hU
-  have hdiff : Tendsto (fun t : ℝ => U t - S) atTop (nhds 0) :=
-    tendsto_zero_of_tendsto_norm_zero (by simpa [S] using hnorm)
-  have happ := continuousLinearMap_tendsto_apply_zero_of_tendsto_zero hdiff x
-  have hconst : Tendsto (fun _ : ℝ => S x) atTop (nhds (S x)) := tendsto_const_nhds
-  simpa [S] using happ.add hconst
+      (nhds (finiteWilsonConstructedHamiltonianRightSteadyState D n F_lim x)) :=
+  continuousLinearMap_tendsto_apply_of_tendsto_norm_sub_zero
+    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
+      D n F U F_lim hF hF_lim hU) x
 
 /-- Constructed left tracking is uniform on the closed unit ball. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_eventually_uniform_unitBall_left
@@ -293,23 +271,18 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         ((-LinearMap.toContinuousLinearMap (D.hamiltonian n)) * U r + F r) r) :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ t : ℝ in atTop,
       ∀ x : D.StateSpace, ‖x‖ ≤ 1 →
-        ‖U t x - finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞ x‖ < ε := by
-  let S := finiteWilsonConstructedHamiltonianLeftSteadyState D n F∞
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
-      D n F U F∞ hF hF∞ hU
-  have hdiff : Tendsto (fun t : ℝ => U t - S) atTop (nhds 0) :=
-    tendsto_zero_of_tendsto_norm_zero (by simpa [S] using hnorm)
-  simpa [S] using
-    continuousLinearMap_eventually_uniform_unitBall_zero_of_tendsto_zero hdiff
+        ‖U t x - finiteWilsonConstructedHamiltonianLeftSteadyState D n F_lim x‖ < ε :=
+  continuousLinearMap_eventually_uniform_unitBall_of_tendsto_norm_sub_zero
+    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_left
+      D n F U F_lim hF hF_lim hU)
 
 /-- Constructed right tracking is uniform on the closed unit ball. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_eventually_uniform_unitBall_right
@@ -317,23 +290,18 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_du
     (D : FiniteWilsonOSAutomaticExactGapConstructedTransferOrbitContractionData W)
     (n : ℕ)
     (F U : ℝ → (D.StateSpace →L[ℝ] D.StateSpace))
-    (F∞ : D.StateSpace →L[ℝ] D.StateSpace)
+    (F_lim : D.StateSpace →L[ℝ] D.StateSpace)
     (hF : Continuous F)
-    (hF∞ : Tendsto F atTop (nhds F∞))
+    (hF_lim : Tendsto F atTop (nhds F_lim))
     (hU : ∀ r : ℝ,
       HasDerivAt U
         (U r * (-LinearMap.toContinuousLinearMap (D.hamiltonian n)) + F r) r) :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ t : ℝ in atTop,
       ∀ x : D.StateSpace, ‖x‖ ≤ 1 →
-        ‖U t x - finiteWilsonConstructedHamiltonianRightSteadyState D n F∞ x‖ < ε := by
-  let S := finiteWilsonConstructedHamiltonianRightSteadyState D n F∞
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
-      D n F U F∞ hF hF∞ hU
-  have hdiff : Tendsto (fun t : ℝ => U t - S) atTop (nhds 0) :=
-    tendsto_zero_of_tendsto_norm_zero (by simpa [S] using hnorm)
-  simpa [S] using
-    continuousLinearMap_eventually_uniform_unitBall_zero_of_tendsto_zero hdiff
+        ‖U t x - finiteWilsonConstructedHamiltonianRightSteadyState D n F_lim x‖ < ε :=
+  continuousLinearMap_eventually_uniform_unitBall_of_tendsto_norm_sub_zero
+    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_tendsto_norm_sub_right
+      D n F U F_lim hF hF_lim hU)
 
 end
 
