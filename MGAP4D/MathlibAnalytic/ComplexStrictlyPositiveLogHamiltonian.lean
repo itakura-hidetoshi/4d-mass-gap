@@ -16,16 +16,15 @@ universe u
 variable {H : Type u}
   [NormedAddCommGroup H]
   [InnerProductSpace ℂ H]
-  [CompleteSpace H]
 
 /-- The canonical logarithmic Hamiltonian associated with a strictly positive
 complex transfer operator. -/
 noncomputable def logHamiltonian
+    [CompleteSpace H]
     (T : H →L[ℂ] H) : H →L[ℂ] H :=
   -CFC.log T
 
 /-- Bundled positivity together with invertibility gives strict positivity. -/
-omit [CompleteSpace H] in
 theorem isStrictlyPositive_of_isPositive_isUnit
     (T : H →L[ℂ] H)
     (hpositive : T.IsPositive)
@@ -36,6 +35,7 @@ theorem isStrictlyPositive_of_isPositive_isUnit
 
 /-- A logarithmic Hamiltonian is self-adjoint. -/
 theorem logHamiltonian_isSelfAdjoint
+    [CompleteSpace H]
     (T : H →L[ℂ] H) :
     IsSelfAdjoint (logHamiltonian T) := by
   unfold logHamiltonian
@@ -44,6 +44,7 @@ theorem logHamiltonian_isSelfAdjoint
 /-- Exponentiating the negative logarithmic Hamiltonian reconstructs the
 original strictly positive transfer operator. -/
 theorem exp_neg_logHamiltonian
+    [CompleteSpace H]
     (T : H →L[ℂ] H)
     (hstrict : IsStrictlyPositive T) :
     NormedSpace.exp (-logHamiltonian T) = T := by
@@ -54,6 +55,7 @@ theorem exp_neg_logHamiltonian
 /-- An exponential scalar upper bound on a strictly positive transfer operator
 becomes the matching lower bound on its logarithmic Hamiltonian. -/
 theorem algebraMap_le_logHamiltonian_of_le_exp_neg_algebraMap
+    [CompleteSpace H]
     (T : H →L[ℂ] H)
     (δ : ℝ)
     (hstrict : IsStrictlyPositive T)
@@ -72,6 +74,7 @@ theorem algebraMap_le_logHamiltonian_of_le_exp_neg_algebraMap
 /-- A positive scalar lower bound makes the logarithmic Hamiltonian
 nonnegative. -/
 theorem logHamiltonian_nonneg_of_pos_lower_bound
+    [CompleteSpace H]
     (T : H →L[ℂ] H)
     (δ : ℝ)
     (hδ : 0 < δ)
