@@ -27,6 +27,7 @@ theorem complexContinuousLinearMap_pow_apply_of_apply_eq_smul
       rw [hTv, map_smul, ih]
       simp [pow_succ, smul_smul, mul_comm]
 
+set_option maxHeartbeats 1000000 in
 /-- The Banach-algebra exponential of a continuous complex-linear operator acts
 on an eigenvector by the scalar complex exponential of the eigenvalue. -/
 theorem normedSpace_exp_apply_of_complex_eigenvector
