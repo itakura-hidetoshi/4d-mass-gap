@@ -27,16 +27,22 @@ example (x : D.vacuumOrthogonalComplexSpectralStateSpace) :
 
 example (x : EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) :
     HasDerivAt
-      (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
-      (-(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x)) 0 :=
+      (fun t : ℝ =>
+        (D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x :
+          EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)))
+      ((-(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x)) :
+        EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) 0 :=
   finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_hasDerivAt_zero_logHamiltonian
     D n x
 
 example (x : EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) :
     deriv
-        (fun t : ℝ => D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x)
+        (fun t : ℝ =>
+          (D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t x :
+            EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)))
         0 =
-      -(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x) :=
+      ((-(D.vacuumOrthogonalComplexSpectralLogHamiltonian n x)) :
+        EuclideanSpace ℂ (Fin D.gapData.ExcitedDimension)) :=
   finite_wilson_vacuum_orthogonal_complex_spectral_hamiltonianSemigroup_deriv_zero
     D n x
 
