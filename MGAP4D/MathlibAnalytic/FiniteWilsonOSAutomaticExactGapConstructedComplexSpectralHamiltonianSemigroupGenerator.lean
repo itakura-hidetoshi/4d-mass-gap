@@ -7,19 +7,18 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-local instance complexModuleContinuousSMulReal
-    {E : Type*}
-    [TopologicalSpace E]
-    [MulAction ℂ E]
-    [SMul ℝ E]
-    [IsScalarTower ℝ ℂ E]
-    [ContinuousSMul ℂ E] :
-    ContinuousSMul ℝ E where
+local instance euclideanComplexContinuousSMulReal
+    {ι : Type*}
+    [Fintype ι] :
+    ContinuousSMul ℝ (EuclideanSpace ℂ ι) where
   continuous_smul := by
-    have hcoe : Continuous (fun p : ℝ × E => (p.1 : ℂ) • p.2) :=
+    have hcoe : Continuous
+        (fun p : ℝ × EuclideanSpace ℂ ι => (p.1 : ℂ) • p.2) :=
       (Complex.continuous_ofReal.comp
-        (continuous_fst : Continuous (fun p : ℝ × E => p.1))).smul
-          (continuous_snd : Continuous (fun p : ℝ × E => p.2))
+        (continuous_fst : Continuous
+          (fun p : ℝ × EuclideanSpace ℂ ι => p.1))).smul
+            (continuous_snd : Continuous
+              (fun p : ℝ × EuclideanSpace ℂ ι => p.2))
     simpa only [Complex.coe_smul] using hcoe
 
 /-- On every constructed complex spectral state, the strong derivative at time
