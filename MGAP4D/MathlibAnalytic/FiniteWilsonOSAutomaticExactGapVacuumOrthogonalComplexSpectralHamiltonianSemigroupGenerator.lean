@@ -1,17 +1,11 @@
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapConstructedComplexSpectralHamiltonianSemigroupGenerator
 import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapVacuumOrthogonalComplexSpectralHamiltonianSemigroupContinuity
-import Mathlib.Analysis.Normed.Module.RCLike.Basic
+import Mathlib.Analysis.Complex.Basic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
-
-local instance vacuumOrthogonalComplexSpectralNormedSpaceReal
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    {D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W} :
-    NormedSpace ℝ D.vacuumOrthogonalComplexSpectralStateSpace :=
-  NormedSpace.restrictScalars ℝ ℂ D.vacuumOrthogonalComplexSpectralStateSpace
 
 /-- On every vacuum-orthogonal complex spectral excitation state, the strong
 derivative at time zero is the negative explicit Hamiltonian action. -/
