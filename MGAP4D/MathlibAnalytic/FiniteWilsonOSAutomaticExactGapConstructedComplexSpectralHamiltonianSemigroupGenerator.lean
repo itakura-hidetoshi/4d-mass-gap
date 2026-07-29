@@ -7,6 +7,16 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+local instance complexScalarTowerContinuousSMulReal
+    {E : Type*}
+    [TopologicalSpace E]
+    [MulAction ℂ E]
+    [SMul ℝ E]
+    [IsScalarTower ℝ ℂ E]
+    [ContinuousSMul ℂ E] :
+    ContinuousSMul ℝ E :=
+  IsScalarTower.continuousSMul ℂ
+
 /-- On every constructed complex spectral state, the strong derivative at time
 zero is the negative explicit Hamiltonian action. -/
 theorem finite_wilson_constructed_complex_spectral_hamiltonianSemigroup_hasDerivAt_zero
