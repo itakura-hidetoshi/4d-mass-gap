@@ -122,6 +122,11 @@ theorem finite_wilson_constructed_complex_scalarExtension_generator_compatible
     finite_wilson_constructed_complex_spectral_scalarExtension_intertwines_hamiltonian
       D n
   have happ := LinearMap.congr_fun hinter y
+  change
+    D.complexSpectralScalarExtensionEquiv n
+        ((D.hamiltonian n).baseChange ℂ y) =
+      D.complexSpectralHamiltonian n
+        (D.complexSpectralScalarExtensionEquiv n y) at happ
   convert hgen using 1
   rw [map_neg, happ]
 
