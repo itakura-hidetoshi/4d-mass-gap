@@ -32,19 +32,14 @@ theorem intervalIntegral_exp_memory_mul_exp_tail_eq_div
     ring
   rw [hrewrite] at hchange
   have hupper :
-      (δ - μ) * t + (-δ * t + μ * t₀) = -((t - t₀) * μ) := by
+      (δ - μ) * t + (-(δ * t) + μ * t₀) = -((t - t₀) * μ) := by
     ring
   have hlower :
-      (δ - μ) * t₀ + (-δ * t + μ * t₀) = -((t - t₀) * δ) := by
+      (δ - μ) * t₀ + (-(δ * t) + μ * t₀) = -((t - t₀) * δ) := by
     ring
-  have hmul :
-      (δ - μ) *
-          (∫ s in t₀..t,
-            Real.exp (-((t - s) * δ)) * Real.exp (-((s - t₀) * μ))) =
-        Real.exp (-((t - t₀) * μ)) - Real.exp (-((t - t₀) * δ)) := by
-    simpa [hupper, hlower] using hchange
+  rw [hupper, hlower] at hchange
   apply (eq_div_iff (sub_ne_zero.mpr hδμ)).2
-  simpa [mul_comm] using hmul
+  simpa [mul_comm] using hchange
 
 /-- At resonance, the exponential convolution acquires the linear prefactor
 `t - t₀`. -/
