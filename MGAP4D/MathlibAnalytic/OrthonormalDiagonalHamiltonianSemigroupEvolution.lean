@@ -70,8 +70,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_hasDerivAt_operator_left
     unfold orthonormalDiagonalHamiltonianSemigroup
     rw [orthonormalDiagonalOperator_mul,
       orthonormalDiagonalOperator_eq_sum_rankOne]
-  rw [← hderiv]
-  exact hsum
+  convert hsum using 1
+  exact hderiv
 
 /-- The same derivative also satisfies the right evolution equation
 `S'_t = S_t (-H)`. -/
