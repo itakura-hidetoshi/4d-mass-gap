@@ -395,7 +395,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   calc
     ‖U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ ≤
         (δ * (ε / 2)) / δ + ε / 2 := hsettle
-    _ = ε := by field_simp [hδpos.ne']
+    _ = ε := by
+      field_simp [hδpos.ne']
+      norm_num
 
 /-- The same half-budget tail condition gives an explicit right tracking time. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_tail_settlingTime_right
@@ -436,7 +438,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   calc
     ‖U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ ≤
         (δ * (ε / 2)) / δ + ε / 2 := hsettle
-    _ = ε := by field_simp [hδpos.ne']
+    _ = ε := by
+      field_simp [hδpos.ne']
+      norm_num
 
 end
 
