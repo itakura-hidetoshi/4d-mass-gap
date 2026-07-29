@@ -21,9 +21,8 @@ noncomputable def orthonormalComplexScalarExtensionBasis
     Basis ι ℂ (ℂ ⊗[ℝ] E) :=
   Algebra.TensorProduct.basis ℂ b.toBasis
 
-/-- A literal complex scalar-extension equivalence obtained by sending the
-base-changed real orthonormal basis to a chosen complex orthonormal basis with
-the same index type. -/
+/-- A literal complex scalar-extension equivalence obtained by matching the
+base-changed real orthonormal basis with a complex orthonormal basis. -/
 noncomputable def orthonormalComplexScalarExtensionEquiv
     {ι E F : Type*}
     [Fintype ι]
@@ -36,8 +35,6 @@ noncomputable def orthonormalComplexScalarExtensionEquiv
     (ℂ ⊗[ℝ] E) ≃ₗ[ℂ] F :=
   (orthonormalComplexScalarExtensionBasis bR).equiv bC.toBasis (Equiv.refl ι)
 
-/-- The scalar-extension equivalence sends `1 ⊗ eᵢ` to the corresponding
-complex basis vector. -/
 @[simp]
 theorem orthonormalComplexScalarExtensionEquiv_one_tmul_basis
     {ι E F : Type*}
@@ -50,20 +47,16 @@ theorem orthonormalComplexScalarExtensionEquiv_one_tmul_basis
     (bC : OrthonormalBasis ι ℂ F)
     (i : ι) :
     orthonormalComplexScalarExtensionEquiv bR bC
-        (1 ⊗ₜ[ℝ] bR i) =
-      bC i := by
+        (1 ⊗ₜ[ℝ] bR i) = bC i := by
   change
     ((Algebra.TensorProduct.basis ℂ bR.toBasis).equiv
         bC.toBasis (Equiv.refl ι))
-        (1 ⊗ₜ[ℝ] bR.toBasis i) =
-      bC.toBasis i
+        (1 ⊗ₜ[ℝ] bR.toBasis i) = bC.toBasis i
   rw [← Algebra.TensorProduct.basis_apply (A := ℂ) bR.toBasis i]
   exact Basis.equiv_apply
     (Algebra.TensorProduct.basis ℂ bR.toBasis)
     i bC.toBasis (Equiv.refl ι)
 
-/-- The equivalence sends a general complex multiple of a base-changed real
-basis vector to the same complex multiple of the chosen complex basis vector. -/
 @[simp]
 theorem orthonormalComplexScalarExtensionEquiv_tmul_basis
     {ι E F : Type*}
@@ -77,8 +70,7 @@ theorem orthonormalComplexScalarExtensionEquiv_tmul_basis
     (z : ℂ)
     (i : ι) :
     orthonormalComplexScalarExtensionEquiv bR bC
-        (z ⊗ₜ[ℝ] bR i) =
-      z • bC i := by
+        (z ⊗ₜ[ℝ] bR i) = z • bC i := by
   calc
     orthonormalComplexScalarExtensionEquiv bR bC
         (z ⊗ₜ[ℝ] bR i) =
@@ -87,13 +79,10 @@ theorem orthonormalComplexScalarExtensionEquiv_tmul_basis
           congr 1
           simp [TensorProduct.smul_tmul']
     _ = z • orthonormalComplexScalarExtensionEquiv bR bC
-        (1 ⊗ₜ[ℝ] bR i) := by
-          rw [map_smul]
+        (1 ⊗ₜ[ℝ] bR i) := by rw [map_smul]
     _ = z • bC i := by
-          rw [orthonormalComplexScalarExtensionEquiv_one_tmul_basis]
+      rw [orthonormalComplexScalarExtensionEquiv_one_tmul_basis]
 
-/-- Balancing a real scalar across the tensor product turns it into the
-corresponding complex coefficient on the left factor. -/
 @[simp]
 theorem one_tmul_real_smul
     {E : Type*}
@@ -101,13 +90,9 @@ theorem one_tmul_real_smul
     [Module ℝ E]
     (r : ℝ)
     (x : E) :
-    (1 : ℂ) ⊗ₜ[ℝ] (r • x) =
-      (r : ℂ) ⊗ₜ[ℝ] x := by
-  rw [TensorProduct.tmul_smul]
-  simp
+    (1 : ℂ) ⊗ₜ[ℝ] (r • x) = (r : ℂ) ⊗ₜ[ℝ] x := by
+  rw [TensorProduct.tmul_smul, Complex.real_smul, mul_one]
 
-/-- The real diagonal linear map has the prescribed action on each real
-orthonormal basis vector. -/
 @[simp]
 theorem orthonormalDiagonalLinearMap_apply_basis_scalarExtension
     {ι E : Type*}
@@ -117,14 +102,10 @@ theorem orthonormalDiagonalLinearMap_apply_basis_scalarExtension
     (b : OrthonormalBasis ι ℝ E)
     (a : ι → ℝ)
     (i : ι) :
-    orthonormalDiagonalLinearMap b a (b i) =
-      a i • b i := by
-  change (b.toBasis.constr ℝ (fun j => a j • b j)) (b i) =
-    a i • b i
+    orthonormalDiagonalLinearMap b a (b i) = a i • b i := by
+  change (b.toBasis.constr ℝ (fun j => a j • b j)) (b i) = a i • b i
   simpa using b.toBasis.constr_basis ℝ (fun j => a j • b j) i
 
-/-- The complex diagonal linear map has the prescribed real coefficient on
-each chosen complex basis vector. -/
 @[simp]
 theorem orthonormalComplexDiagonalLinearMap_apply_basis_scalarExtension
     {ι F : Type*}
@@ -140,8 +121,6 @@ theorem orthonormalComplexDiagonalLinearMap_apply_basis_scalarExtension
     (a i : ℂ) • b i
   simpa using b.toBasis.constr_basis ℂ (fun j => (a j : ℂ) • b j) i
 
-/-- Conversely, each chosen complex basis vector is represented by the pure
-tensor `1 ⊗ eᵢ`. -/
 @[simp]
 theorem orthonormalComplexScalarExtensionEquiv_symm_basis
     {ι E F : Type*}
@@ -193,8 +172,8 @@ theorem orthonormalComplexScalarExtensionEquiv_intertwines_diagonalLinearMap
     orthonormalComplexScalarExtensionEquiv_one_tmul_basis,
     orthonormalComplexDiagonalLinearMap_apply_basis_scalarExtension]
 
-/-- Continuous diagonal operators satisfy the same scalar-extension
-intertwining identity after forgetting continuity. -/
+/-- The same identity for the finite-dimensional continuous diagonal
+operators, after forgetting continuity. -/
 theorem orthonormalComplexScalarExtensionEquiv_intertwines_diagonalOperator
     {ι E F : Type*}
     [Fintype ι]
@@ -215,8 +194,8 @@ theorem orthonormalComplexScalarExtensionEquiv_intertwines_diagonalOperator
     using orthonormalComplexScalarExtensionEquiv_intertwines_diagonalLinearMap
       bR bC a
 
-/-- A finite-dimensional symmetric real operator is exactly the diagonal
-operator reconstructed from its eigenvector basis and eigenvalue list. -/
+/-- A symmetric finite-dimensional real operator is the diagonal operator
+reconstructed from its eigenbasis and eigenvalue list. -/
 theorem symmetric_eq_orthonormalDiagonalLinearMap
     {E : Type*}
     [NormedAddCommGroup E]
@@ -236,8 +215,8 @@ theorem symmetric_eq_orthonormalDiagonalLinearMap
   exact (orthonormalDiagonalLinearMap_apply_basis_scalarExtension
     (hT.eigenvectorBasis hn) (hT.eigenvalues hn) i).symm
 
-/-- The literal scalar extension of a symmetric real operator is identified
-with the complex diagonal operator having the same eigenvalue list. -/
+/-- The scalar extension of a symmetric real operator is identified with the
+complex diagonal operator carrying the same eigenvalue list. -/
 theorem orthonormalComplexScalarExtensionEquiv_intertwines_symmetric
     {E F : Type*}
     [NormedAddCommGroup E]
