@@ -70,8 +70,14 @@ theorem orthonormalDiagonalHamiltonianSemigroup_hasDerivAt_operator_left
     unfold orthonormalDiagonalHamiltonianSemigroup
     rw [orthonormalDiagonalOperator_mul,
       orthonormalDiagonalOperator_eq_sum_rankOne]
+  have hpoint :
+      (fun s : ℝ =>
+        ∑ i : ι, Real.exp (-(s * a i)) • rankOne ℝ (b i) (b i)) t =
+        orthonormalDiagonalHamiltonianSemigroup b a t :=
+    congrFun hrepr.symm t
   convert hsum using 1
-  exact hderiv
+  rw [hpoint]
+  exact hderiv.symm
 
 /-- The same derivative also satisfies the right evolution equation
 `S'_t = S_t (-H)`. -/
