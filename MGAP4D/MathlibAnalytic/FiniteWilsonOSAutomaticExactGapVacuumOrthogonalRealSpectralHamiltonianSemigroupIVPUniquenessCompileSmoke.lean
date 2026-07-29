@@ -3,7 +3,7 @@ import MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapVacuumOrthogonalRea
 namespace MGAP4D
 namespace MathlibAnalytic
 
--- Compile-smoke import for the generic, constructed, and physical
+-- Compile-smoke import for the generic, constructed, and physical left/right
 -- operator-norm initial-value uniqueness chain.
 
 end MathlibAnalytic
