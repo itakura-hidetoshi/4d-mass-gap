@@ -67,7 +67,8 @@ theorem orthonormalComplexDiagonalOperator_const_eq_algebraMap
     (r : ℂ) • x
   rw [← b.sum_repr' x]
   simp only [map_sum, map_smul,
-    orthonormalComplexDiagonalOperator_apply_basis, smul_sum]
+    orthonormalComplexDiagonalOperator_apply_basis]
+  rw [Finset.smul_sum]
   apply Finset.sum_congr rfl
   intro i hi
   module
