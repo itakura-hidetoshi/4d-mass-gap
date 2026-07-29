@@ -88,7 +88,10 @@ theorem orthonormalComplexDiagonalOperator_mul
   rw [orthonormalComplexDiagonalOperator_apply]
   apply Finset.sum_congr rfl
   intro i hi
-  simp [smul_smul, mul_comm, mul_assoc]
+  rw [smul_smul]
+  congr 1
+  push_cast
+  ring
 
 /-- The complex diagonal operator with constant coefficient one is the identity. -/
 theorem orthonormalComplexDiagonalOperator_one
@@ -124,7 +127,9 @@ theorem orthonormalComplexDiagonalOperator_eq_sum_rankOne
     rankOne_apply]
   apply Finset.sum_congr rfl
   intro i hi
-  simp [smul_smul, mul_comm, mul_assoc]
+  rw [smul_smul]
+  congr 1
+  ring
 
 /-- Nonnegative real diagonal coefficients produce a positive complex operator. -/
 theorem orthonormalComplexDiagonalOperator_isPositive
