@@ -30,8 +30,8 @@ theorem intervalIntegral_exp_neg_sub_mul_eq_one_sub_exp_div
     congr 1
     ring
   rw [hrewrite] at hchange
-  have hupper : δ * t + -δ * t = 0 := by ring
-  have hlower : δ * t₀ + -δ * t = -((t - t₀) * δ) := by ring
+  have hupper : δ * t + -(δ * t) = 0 := by ring
+  have hlower : δ * t₀ + -(δ * t) = -((t - t₀) * δ) := by ring
   have hmul :
       δ * (∫ s in t₀..t, Real.exp (-((t - s) * δ))) =
         1 - Real.exp (-((t - t₀) * δ)) := by
@@ -50,25 +50,31 @@ theorem intervalIntegral_exp_neg_sub_mul_le_uniform_gain
     (hgM : ∀ s ∈ Set.Icc t₀ t, g s ≤ M) :
     (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * g s) ≤
       ((1 - Real.exp (-((t - t₀) * δ))) / δ) * M := by
+  have hleftContinuous :
+      Continuous (fun s : ℝ => Real.exp (-((t - s) * δ)) * g s) := by
+    fun_prop
   have hleftIntegrable :
       IntervalIntegrable
         (fun s : ℝ => Real.exp (-((t - s) * δ)) * g s)
-        volume t₀ t := by
+        volume t₀ t :=
+    hleftContinuous.intervalIntegrable t₀ t
+  have hrightContinuous :
+      Continuous (fun s : ℝ => Real.exp (-((t - s) * δ)) * M) := by
     fun_prop
   have hrightIntegrable :
       IntervalIntegrable
         (fun s : ℝ => Real.exp (-((t - s) * δ)) * M)
-        volume t₀ t := by
-    fun_prop
+        volume t₀ t :=
+    hrightContinuous.intervalIntegrable t₀ t
   have hmono :
       (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * g s) ≤
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * M) := by
+        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * M := by
     apply intervalIntegral.integral_mono_on ht hleftIntegrable hrightIntegrable
     intro s hs
     exact mul_le_mul_of_nonneg_left (hgM s hs) (Real.exp_pos _).le
   calc
     (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * g s) ≤
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * M) := hmono
+        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * M := hmono
     _ = (∫ s in t₀..t, Real.exp (-((t - s) * δ))) * M := by
       rw [intervalIntegral.integral_mul_const]
     _ = ((1 - Real.exp (-((t - t₀) * δ))) / δ) * M := by
@@ -82,6 +88,9 @@ theorem one_sub_exp_neg_mul_div_le_inv
     (1 - Real.exp (-(τ * δ))) / δ ≤ 1 / δ := by
   apply (div_le_div_iff_of_pos_right hδ).2
   have hexp : 0 ≤ Real.exp (-(τ * δ)) := (Real.exp_pos _).le
+  have hexp_le_one : Real.exp (-(τ * δ)) ≤ 1 := by
+    rw [← Real.exp_zero]
+    exact Real.exp_le_exp.mpr (neg_nonpos.mpr (mul_nonneg hτ hδ.le))
   linarith
 
 /-- Input-to-state gain for the left operator-valued Hamiltonian equation under
@@ -101,6 +110,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
     (ht : t₀ ≤ t)
     (A : E →L[ℝ] E)
     (F U : ℝ → (E →L[ℝ] E))
+    (M : ℝ)
     (hF : Continuous F)
     (hFM : ∀ s ∈ Set.Icc t₀ t, ‖F s‖ ≤ M)
     (hU0 : U t₀ = A)
@@ -134,6 +144,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
     (ht : t₀ ≤ t)
     (A : E →L[ℝ] E)
     (F U : ℝ → (E →L[ℝ] E))
+    (M : ℝ)
     (hF : Continuous F)
     (hFM : ∀ s ∈ Set.Icc t₀ t, ‖F s‖ ≤ M)
     (hU0 : U t₀ = A)
@@ -177,7 +188,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
     ‖U t‖ ≤ Real.exp (-((t - t₀) * δ)) * ‖A‖ + M / δ := by
   have hgain :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_gain_bound_left
-      b a δ hδ hδpos t₀ t ht A F U hF hFM hU0 hU
+      b a δ hδ hδpos t₀ t ht A F U M hF hFM hU0 hU
   have hratio :=
     one_sub_exp_neg_mul_div_le_inv δ (t - t₀) hδpos (sub_nonneg.mpr ht)
   have hweighted :
@@ -214,7 +225,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_
     ‖U t‖ ≤ Real.exp (-((t - t₀) * δ)) * ‖A‖ + M / δ := by
   have hgain :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_uniformForcing_gain_bound_right
-      b a δ hδ hδpos t₀ t ht A F U hF hFM hU0 hU
+      b a δ hδ hδpos t₀ t ht A F U M hF hFM hU0 hU
   have hratio :=
     one_sub_exp_neg_mul_div_le_inv δ (t - t₀) hδpos (sub_nonneg.mpr ht)
   have hweighted :
