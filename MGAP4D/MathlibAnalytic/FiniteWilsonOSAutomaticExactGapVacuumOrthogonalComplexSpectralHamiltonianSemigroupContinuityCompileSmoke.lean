@@ -15,8 +15,11 @@ local instance compileSmokeComplexModuleContinuousSMulReal
     [ContinuousSMul ℂ E] :
     ContinuousSMul ℝ E where
   continuous_smul := by
-    simpa only [Complex.coe_smul] using
-      (Complex.continuous_ofReal.comp continuous_fst).smul continuous_snd
+    have hcoe : Continuous (fun p : ℝ × E => (p.1 : ℂ) • p.2) :=
+      (Complex.continuous_ofReal.comp
+        (continuous_fst : Continuous (fun p : ℝ × E => p.1))).smul
+          (continuous_snd : Continuous (fun p : ℝ × E => p.2))
+    simpa only [Complex.coe_smul] using hcoe
 
 variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 variable
