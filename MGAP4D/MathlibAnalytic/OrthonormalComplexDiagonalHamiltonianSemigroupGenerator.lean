@@ -45,7 +45,7 @@ theorem orthonormalComplexDiagonalHamiltonianSemigroup_hasDerivAt_zero
     apply Finset.sum_congr rfl
     intro i hi
     rw [Complex.coe_smul]
-    module
+    exact smul_comm (inner ℂ (b i) x) (Real.exp (-(t * a i))) (b i)
   rw [hrepr]
   have hsum :
       HasDerivAt
@@ -68,7 +68,16 @@ theorem orthonormalComplexDiagonalHamiltonianSemigroup_hasDerivAt_zero
     rw [orthonormalComplexDiagonalOperator_apply, ← Finset.sum_neg_distrib]
     apply Finset.sum_congr rfl
     intro i hi
-    module
+    calc
+      (-a i) • (inner ℂ (b i) x • b i) =
+          inner ℂ (b i) x • ((-a i) • b i) :=
+        smul_comm (-a i) (inner ℂ (b i) x) (b i)
+      _ = inner ℂ (b i) x • (-(a i • b i)) := by
+        rw [neg_smul]
+      _ = -(inner ℂ (b i) x • (a i • b i)) := by
+        rw [smul_neg]
+      _ = -(inner ℂ (b i) x • ((a i : ℂ) • b i)) := by
+        rw [Complex.coe_smul]
   rw [← hderiv]
   exact hsum
 
