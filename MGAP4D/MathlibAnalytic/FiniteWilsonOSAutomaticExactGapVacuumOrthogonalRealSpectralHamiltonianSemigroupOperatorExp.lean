@@ -8,37 +8,16 @@ noncomputable section
 
 set_option maxHeartbeats 1000000
 
-local instance finiteWilsonVacuumOrthogonalExcitedStateCompleteSpace
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W) :
-    CompleteSpace D.gapData.ExcitedStateSpace :=
-  FiniteDimensional.complete ℝ D.gapData.ExcitedStateSpace
-
-/-- Ordinary operator-norm derivative form of the physical left evolution
-equation. -/
-theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_deriv_operator_left
+/-- Along the established coercive-to-constructed route, the Hamiltonian is
+definitionally the physical Hamiltonian restricted to `Ω⊥`. -/
+@[simp]
+theorem finite_wilson_vacuum_orthogonal_constructed_hamiltonian_eq_restrictedHamiltonian
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
-    (n : ℕ)
-    (t : ℝ) :
-    deriv (D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n) t =
-      (-LinearMap.toContinuousLinearMap (D.gapData.restrictedHamiltonian n)) *
-        D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n t :=
-  (finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_hasDerivAt_operator_left
-    D n t).deriv
-
-/-- Ordinary operator-norm derivative form of the physical right evolution
-equation. -/
-theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_deriv_operator_right
-    {W : FiniteWilsonOSAutomaticApproximationFamily}
-    (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
-    (n : ℕ)
-    (t : ℝ) :
-    deriv (D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n) t =
-      D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n t *
-        (-LinearMap.toContinuousLinearMap (D.gapData.restrictedHamiltonian n)) :=
-  (finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_hasDerivAt_operator_right
-    D n t).deriv
+    (n : ℕ) :
+    D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData.hamiltonian n =
+      D.gapData.restrictedHamiltonian n :=
+  rfl
 
 /-- The restricted physical real Hamiltonian commutes with every
 vacuum-orthogonal spectral time slice. -/
@@ -55,7 +34,10 @@ theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_commu
     D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData n t
 
 /-- The physical vacuum-orthogonal real spectral semigroup is exactly the
-operator exponential of the negative time-scaled restricted Hamiltonian. -/
+operator exponential of the negative time-scaled restricted Hamiltonian.  The
+argument is written through the established constructed route so that Lean uses
+its canonical continuous-operator topology; the preceding simp theorem
+identifies it definitionally with `gapData.restrictedHamiltonian`. -/
 theorem finite_wilson_vacuum_orthogonal_normedSpace_exp_neg_restrictedHamiltonian_eq_real_spectralSemigroup
     {W : FiniteWilsonOSAutomaticApproximationFamily}
     (D : FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContractionData W)
@@ -63,12 +45,12 @@ theorem finite_wilson_vacuum_orthogonal_normedSpace_exp_neg_restrictedHamiltonia
     (t : ℝ) :
     NormedSpace.exp
         (-(t • LinearMap.toContinuousLinearMap
-          (D.gapData.restrictedHamiltonian n))) =
+          (D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData.hamiltonian n))) =
       D.vacuumOrthogonalRealSpectralHamiltonianSemigroup n t :=
   finite_wilson_constructed_normedSpace_exp_neg_hamiltonian_eq_real_spectralSemigroup
     D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData n t
 
-/-- Literal complex scalar extension intertwines the physical real restricted
+/-- Literal complex scalar extension intertwines the physical restricted
 Hamiltonian exponential with the complex spectral excitation semigroup. -/
 theorem finite_wilson_vacuum_orthogonal_complex_spectral_scalarExtension_intertwines_real_operatorExp
     {W : FiniteWilsonOSAutomaticApproximationFamily}
@@ -78,7 +60,7 @@ theorem finite_wilson_vacuum_orthogonal_complex_spectral_scalarExtension_intertw
     (D.vacuumOrthogonalComplexSpectralScalarExtensionEquiv n).toLinearMap.comp
         ((NormedSpace.exp
           (-(t • LinearMap.toContinuousLinearMap
-            (D.gapData.restrictedHamiltonian n)))).toLinearMap.baseChange ℂ) =
+            (D.toCoerciveTransferOrbitData.toConstructedTransferOrbitData.hamiltonian n)))).toLinearMap.baseChange ℂ) =
       (D.vacuumOrthogonalComplexSpectralHamiltonianSemigroup n t).toLinearMap.comp
         (D.vacuumOrthogonalComplexSpectralScalarExtensionEquiv n).toLinearMap :=
   finite_wilson_constructed_complex_spectral_scalarExtension_intertwines_real_operatorExp
