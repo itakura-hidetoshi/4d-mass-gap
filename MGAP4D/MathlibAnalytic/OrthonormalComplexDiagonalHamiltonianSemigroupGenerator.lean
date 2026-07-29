@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.OrthonormalComplexDiagonalHamiltonianSemigroupContinuity
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.Analysis.Complex.RealDeriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Tactic
 
@@ -38,32 +37,35 @@ theorem orthonormalComplexDiagonalHamiltonianSemigroup_hasDerivAt_zero
   have hrepr :
       (fun t : ℝ => orthonormalComplexDiagonalHamiltonianSemigroup b a t x) =
         fun t : ℝ =>
-          ∑ i : ι, inner ℂ (b i) x •
-            ((Real.exp (-(t * a i)) : ℂ) • b i) := by
+          ∑ i : ι, Real.exp (-(t * a i)) •
+            (inner ℂ (b i) x • b i) := by
     funext t
     unfold orthonormalComplexDiagonalHamiltonianSemigroup
-    exact orthonormalComplexDiagonalOperator_apply b
-      (fun i => Real.exp (-(t * a i))) x
+    rw [orthonormalComplexDiagonalOperator_apply]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [Complex.coe_smul]
+    module
   rw [hrepr]
   have hsum :
       HasDerivAt
         (fun t : ℝ =>
-          ∑ i : ι, inner ℂ (b i) x •
-            ((Real.exp (-(t * a i)) : ℂ) • b i))
-        (∑ i : ι, inner ℂ (b i) x • (((-a i : ℝ) : ℂ) • b i)) 0 := by
+          ∑ i : ι, Real.exp (-(t * a i)) •
+            (inner ℂ (b i) x • b i))
+        (∑ i : ι, (-a i) • (inner ℂ (b i) x • b i)) 0 := by
     simpa using
       (HasDerivAt.fun_sum (u := Finset.univ) (x := (0 : ℝ))
         (A := fun i t =>
-          inner ℂ (b i) x • ((Real.exp (-(t * a i)) : ℂ) • b i))
+          Real.exp (-(t * a i)) • (inner ℂ (b i) x • b i))
         (A' := fun i =>
-          inner ℂ (b i) x • (((-a i : ℝ) : ℂ) • b i))
+          (-a i) • (inner ℂ (b i) x • b i))
         (fun i hi =>
-          ((real_exp_neg_mul_hasDerivAt_zero (a i)).ofReal_comp.smul_const (b i)).const_smul
-            (inner ℂ (b i) x)))
+          (real_exp_neg_mul_hasDerivAt_zero (a i)).smul_const
+            (inner ℂ (b i) x • b i)))
   have hderiv :
-      (∑ i : ι, inner ℂ (b i) x • (((-a i : ℝ) : ℂ) • b i)) =
+      (∑ i : ι, (-a i) • (inner ℂ (b i) x • b i)) =
         -(orthonormalComplexDiagonalOperator b a x) := by
-    rw [orthonormalComplexDiagonalOperator_apply, Finset.neg_sum]
+    rw [orthonormalComplexDiagonalOperator_apply, ← Finset.sum_neg_distrib]
     apply Finset.sum_congr rfl
     intro i hi
     module
