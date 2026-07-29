@@ -17,7 +17,7 @@ local instance complexModuleContinuousSMulReal
     ContinuousSMul ℝ E where
   continuous_smul := by
     simpa only [Complex.coe_smul] using
-      (continuous_ofReal.comp continuous_fst).smul continuous_snd
+      (Complex.continuous_ofReal.comp continuous_fst).smul continuous_snd
 
 /-- On every constructed complex spectral state, the strong derivative at time
 zero is the negative explicit Hamiltonian action. -/
