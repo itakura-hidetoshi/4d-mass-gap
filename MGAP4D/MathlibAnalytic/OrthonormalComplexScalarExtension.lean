@@ -7,6 +7,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open Module
 open scoped TensorProduct
 
 /-- The canonical complex basis on the literal scalar extension `ℂ ⊗[ℝ] E`
@@ -51,9 +52,8 @@ theorem orthonormalComplexScalarExtensionEquiv_one_tmul_basis
     orthonormalComplexScalarExtensionEquiv bR bC
         (1 ⊗ₜ[ℝ] bR i) =
       bC i := by
-  rw [← Algebra.TensorProduct.basis_apply (A := ℂ) bR.toBasis i]
-  exact Basis.equiv_apply
-    (orthonormalComplexScalarExtensionBasis bR) bC.toBasis (Equiv.refl ι) i
+  simp [orthonormalComplexScalarExtensionEquiv,
+    orthonormalComplexScalarExtensionBasis]
 
 /-- Conversely, each chosen complex basis vector is represented by the pure
 tensor `1 ⊗ eᵢ`. -/
@@ -121,35 +121,36 @@ theorem orthonormalComplexScalarExtensionEquiv_intertwines_diagonalOperator
 /-- A finite-dimensional symmetric real operator is exactly the diagonal
 operator reconstructed from its eigenvector basis and eigenvalue list. -/
 theorem symmetric_eq_orthonormalDiagonalLinearMap
-    {ι E : Type*}
-    [Fintype ι]
+    {E : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [FiniteDimensional ℝ E]
+    {n : ℕ}
     (T : E →ₗ[ℝ] E)
     (hT : T.IsSymmetric)
-    (hn : Module.finrank ℝ E = Fintype.card ι) :
+    (hn : Module.finrank ℝ E = n) :
     T = orthonormalDiagonalLinearMap
       (hT.eigenvectorBasis hn) (hT.eigenvalues hn) := by
   apply (hT.eigenvectorBasis hn).toBasis.ext
   intro i
-  rw [hT.apply_eigenvectorBasis hn i]
-  simp [orthonormalDiagonalLinearMap]
+  change T (hT.eigenvectorBasis hn i) =
+    (hT.eigenvalues hn i) • hT.eigenvectorBasis hn i
+  exact hT.apply_eigenvectorBasis hn i
 
 /-- The literal scalar extension of a symmetric real operator is identified
 with the complex diagonal operator having the same eigenvalue list. -/
 theorem orthonormalComplexScalarExtensionEquiv_intertwines_symmetric
-    {ι E F : Type*}
-    [Fintype ι]
+    {E F : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [FiniteDimensional ℝ E]
     [NormedAddCommGroup F]
     [InnerProductSpace ℂ F]
+    {n : ℕ}
     (T : E →ₗ[ℝ] E)
     (hT : T.IsSymmetric)
-    (hn : Module.finrank ℝ E = Fintype.card ι)
-    (bC : OrthonormalBasis ι ℂ F) :
+    (hn : Module.finrank ℝ E = n)
+    (bC : OrthonormalBasis (Fin n) ℂ F) :
     (orthonormalComplexScalarExtensionEquiv
         (hT.eigenvectorBasis hn) bC).toLinearMap.comp
         (T.baseChange ℂ) =
