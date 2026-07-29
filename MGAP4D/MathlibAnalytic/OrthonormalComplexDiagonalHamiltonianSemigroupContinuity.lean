@@ -23,11 +23,12 @@ theorem orthonormalComplexDiagonalHamiltonianSemigroup_contDiff
   have hrepr :
       orthonormalComplexDiagonalHamiltonianSemigroup b a =
         fun t : ℝ =>
-          ∑ i : ι, (Real.exp (-(t * a i)) : ℂ) •
+          ∑ i : ι, Real.exp (-(t * a i)) •
             rankOne ℂ (b i) (b i) := by
     funext t
-    exact orthonormalComplexDiagonalOperator_eq_sum_rankOne b
-      (fun i => Real.exp (-(t * a i)))
+    simpa only [Complex.coe_smul] using
+      (orthonormalComplexDiagonalOperator_eq_sum_rankOne b
+        (fun i => Real.exp (-(t * a i))))
   rw [hrepr]
   fun_prop
 
