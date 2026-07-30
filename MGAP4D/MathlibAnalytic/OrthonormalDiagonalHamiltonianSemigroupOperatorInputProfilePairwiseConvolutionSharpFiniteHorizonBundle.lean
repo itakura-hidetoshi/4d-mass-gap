@@ -217,7 +217,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_inputProfile_pairwise_m
   calc
     |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := hcs
     _ ≤ ‖x‖ * ((Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖) * ‖y‖ :=
+        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖) * ‖y‖) :=
       mul_le_mul_of_nonneg_left hpoint (norm_nonneg x)
     _ = (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
         ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖) * ‖x‖ * ‖y‖ := by ring
@@ -248,7 +248,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_inputProfile_pairwise_m
   calc
     |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := hcs
     _ ≤ ‖x‖ * ((Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖) * ‖y‖ :=
+        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖) * ‖y‖) :=
       mul_le_mul_of_nonneg_left hpoint (norm_nonneg x)
     _ = (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
         ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖) * ‖x‖ * ‖y‖ := by ring
@@ -373,7 +373,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have hforcing :=
     intervalIntegral_exp_memory_norm_sub_le_finiteHorizonGain
       δ C t₀ t ht hδpos F G hF hG hFG
-  exact hconv.trans (add_le_add_left hforcing _)
+  exact hconv.trans (add_le_add (le_refl _) hforcing)
 
 /-- Uniformly bounded right input mismatch has the same sharp finite-horizon gain. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_sharp_finiteHorizon_bound_right
@@ -399,7 +399,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have hforcing :=
     intervalIntegral_exp_memory_norm_sub_le_finiteHorizonGain
       δ C t₀ t ht hδpos F G hF hG hFG
-  exact hconv.trans (add_le_add_left hforcing _)
+  exact hconv.trans (add_le_add (le_refl _) hforcing)
 
 /-- With equal initial operators, the left trajectory difference is purely the finite-horizon input gain. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_equalInitial_sharp_finiteHorizon_gain_left
