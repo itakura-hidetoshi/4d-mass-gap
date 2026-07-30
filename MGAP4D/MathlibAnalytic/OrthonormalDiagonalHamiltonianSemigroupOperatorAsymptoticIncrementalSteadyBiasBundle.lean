@@ -142,7 +142,7 @@ private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_left_deriv
   convert hshift using 1
   have heq := orthonormalDiagonalHamiltonianSteadyResponseLeft_equilibrium
     b a δ hδ hδpos Qinf
-  noncomm_ring_nf
+  noncomm_ring
   rw [heq]
 
 private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_right_deriv
@@ -173,7 +173,7 @@ private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_right_deriv
   convert hshift using 1
   have heq := orthonormalDiagonalHamiltonianSteadyResponseRight_equilibrium
     b a δ hδ hδpos Qinf
-  noncomm_ring_nf
+  noncomm_ring
   rw [heq]
 
 private theorem tendsto_real_inner_const_of_tendsto
