@@ -35,9 +35,10 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   have hKnonneg : 0 ≤ K := by
     dsimp [K]
     exact add_nonneg (norm_nonneg _) (div_nonneg (mul_nonneg (by norm_num) hC) hmaxpos.le)
-  have ht₀ : t₀ ≤ t := by
-    have : 0 ≤ max 0 (Real.log (K / ε) / ν) := le_max_left _ _
-    simpa [S, K, ν] using show t₀ ≤ t from by linarith
+  have hthreshold : t₀ + max 0 (Real.log (K / ε) / ν) ≤ t := by
+    simpa [S, K, ν] using ht
+  have hwait_nonneg : 0 ≤ max 0 (Real.log (K / ε) / ν) := le_max_left _ _
+  have ht₀ : t₀ ≤ t := by linarith
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_exponentialTrackingEnvelope_uniform_halfMin_simplified_left
       b a δ μ hδ hδpos hμpos t₀ t ht₀ A F U F_lim C hC hF
@@ -46,13 +47,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   · have hzero : ‖U t - S‖ ≤ 0 := by simpa [S, K, hK, ν] using henv
     simpa [S] using hzero.trans hε.le
   · have hKpos : 0 < K := lt_of_le_of_ne hKnonneg (Ne.symm hK)
-    have hwait : Real.log (K / ε) / ν ≤ t - t₀ := by
-      have hmaxle : max 0 (Real.log (K / ε) / ν) ≤ t - t₀ := by
-        simpa [S, K, ν] using show max 0
-          (Real.log
-            ((‖A - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ +
-                2 * C / max δ μ) / ε) / (min δ μ / 2)) ≤ t - t₀ from by linarith
-      exact (le_max_right _ _).trans hmaxle
+    have hmaxle : max 0 (Real.log (K / ε) / ν) ≤ t - t₀ := by linarith
+    have hwait : Real.log (K / ε) / ν ≤ t - t₀ :=
+      (le_max_right _ _).trans hmaxle
     have hdecay := exp_neg_mul_mul_le_of_log_div_div_le ν ε K (t - t₀) hνpos hε hKpos hwait
     calc
       ‖U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ ≤ K * Real.exp (-((t - t₀) * ν)) := by simpa [S, K, ν] using henv
@@ -88,9 +85,10 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   have hKnonneg : 0 ≤ K := by
     dsimp [K]
     exact add_nonneg (norm_nonneg _) (div_nonneg (mul_nonneg (by norm_num) hC) hmaxpos.le)
-  have ht₀ : t₀ ≤ t := by
-    have : 0 ≤ max 0 (Real.log (K / ε) / ν) := le_max_left _ _
-    simpa [S, K, ν] using show t₀ ≤ t from by linarith
+  have hthreshold : t₀ + max 0 (Real.log (K / ε) / ν) ≤ t := by
+    simpa [S, K, ν] using ht
+  have hwait_nonneg : 0 ≤ max 0 (Real.log (K / ε) / ν) := le_max_left _ _
+  have ht₀ : t₀ ≤ t := by linarith
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_exponentialTrackingEnvelope_uniform_halfMin_simplified_right
       b a δ μ hδ hδpos hμpos t₀ t ht₀ A F U F_lim C hC hF
@@ -99,13 +97,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
   · have hzero : ‖U t - S‖ ≤ 0 := by simpa [S, K, hK, ν] using henv
     simpa [S] using hzero.trans hε.le
   · have hKpos : 0 < K := lt_of_le_of_ne hKnonneg (Ne.symm hK)
-    have hwait : Real.log (K / ε) / ν ≤ t - t₀ := by
-      have hmaxle : max 0 (Real.log (K / ε) / ν) ≤ t - t₀ := by
-        simpa [S, K, ν] using show max 0
-          (Real.log
-            ((‖A - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ +
-                2 * C / max δ μ) / ε) / (min δ μ / 2)) ≤ t - t₀ from by linarith
-      exact (le_max_right _ _).trans hmaxle
+    have hmaxle : max 0 (Real.log (K / ε) / ν) ≤ t - t₀ := by linarith
+    have hwait : Real.log (K / ε) / ν ≤ t - t₀ :=
+      (le_max_right _ _).trans hmaxle
     have hdecay := exp_neg_mul_mul_le_of_log_div_div_le ν ε K (t - t₀) hνpos hε hKpos hwait
     calc
       ‖U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ ≤ K * Real.exp (-((t - t₀) * ν)) := by simpa [S, K, ν] using henv
