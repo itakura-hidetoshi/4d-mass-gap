@@ -28,7 +28,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_constantInput_matrixEle
       |inner ℝ x ((U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim) y)| ≤
         ‖x‖ * ‖(U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim) y‖ := by
     simpa only [Real.norm_eq_abs] using
-      (norm_inner_le_norm x
+      (norm_inner_le_norm (𝕜 := ℝ) x
         ((U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim) y))
   calc
     |inner ℝ x ((U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim) y)| ≤
@@ -64,7 +64,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_constantInput_matrixEle
       |inner ℝ x ((U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim) y)| ≤
         ‖x‖ * ‖(U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim) y‖ := by
     simpa only [Real.norm_eq_abs] using
-      (norm_inner_le_norm x
+      (norm_inner_le_norm (𝕜 := ℝ) x
         ((U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim) y))
   calc
     |inner ℝ x ((U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim) y)| ≤
