@@ -45,14 +45,13 @@ theorem resolventTaylorClosedBall_errorEnvelope_tendsto_zero
       Tendsto (fun N : ℕ => (r * (delta - lambda)⁻¹) ^ N)
         atTop (𝓝 0) :=
     tendsto_pow_atTop_nhds_zero_of_lt_one hq0 hq1
+  let C : ℝ := (delta - lambda - r)⁻¹
   have hmul :
       Tendsto
-        (fun N : ℕ =>
-          (delta - lambda - r)⁻¹ *
-            (r * (delta - lambda)⁻¹) ^ N)
-        atTop (𝓝 0) :=
+        (fun N : ℕ => C * (r * (delta - lambda)⁻¹) ^ N)
+        atTop (𝓝 (C * 0)) :=
     tendsto_const_nhds.mul hpow
-  simpa [mul_comm] using hmul
+  simpa [C, mul_comm] using hmul
 
 /-- On every strict closed subball, all exact-derivative Taylor truncation errors
 obey one center-radius geometric envelope. -/
