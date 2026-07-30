@@ -28,14 +28,12 @@ noncomputable def basisValuesToContinuousLinearMap
     { toFun := fun f => v.constrL f
       map_add' := by
         intro f g
-        ext x
-        simp only [Basis.constrL_apply, Pi.add_apply, smul_add,
-          Finset.sum_add_distrib]
+        refine v.ext fun i => ?_
+        simp
       map_smul' := by
         intro c f
-        ext x
-        simp only [Basis.constrL_apply, Pi.smul_apply, smul_smul,
-          Finset.smul_sum] }
+        refine v.ext fun i => ?_
+        simp }
 
 @[simp]
 theorem basisValuesToContinuousLinearMap_apply_basis
@@ -89,7 +87,8 @@ theorem continuousLinearMap_tendsto_of_tendsto_apply_basis
     (basisValuesToContinuousLinearMap v).continuous.tendsto
       (fun i : ι => S (v i))
   have hcomp := hmap.comp hPi
-  simpa only [basisValuesToContinuousLinearMap_reconstruct] using hcomp
+  simpa only [Function.comp_apply,
+    basisValuesToContinuousLinearMap_reconstruct] using hcomp
 
 /-- Statewise strong convergence of continuous linear maps upgrades to
 operator-norm convergence in finite dimension. -/
