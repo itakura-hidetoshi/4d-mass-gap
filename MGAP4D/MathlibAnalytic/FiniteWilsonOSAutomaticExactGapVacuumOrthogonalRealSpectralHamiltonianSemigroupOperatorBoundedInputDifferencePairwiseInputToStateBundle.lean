@@ -23,6 +23,8 @@ variable (hV : ∀ r : ℝ,
   HasDerivAt V ((-LinearMap.toContinuousLinearMap
     (D.gapData.restrictedHamiltonian n)) * V r + G r) r)
 
+include n F G hC hF hG hFG hU0 hV0 hU hV
+
 /-- On `Ω⊥`, left trajectories with uniformly bounded input mismatch satisfy
     the exact-gap input-to-state estimate. -/
 theorem finite_wilson_vacuum_orthogonal_real_spectral_hamiltonianSemigroup_operator_boundedInputDifference_pairwise_inputToState_bound_left
@@ -129,6 +131,8 @@ variable (hU : ∀ r : ℝ,
 variable (hV : ∀ r : ℝ,
   HasDerivAt V (V r * (-LinearMap.toContinuousLinearMap
     (D.gapData.restrictedHamiltonian n)) + G r) r)
+
+include n F G hC hF hG hFG hU0 hV0 hU hV
 
 /-- On `Ω⊥`, right trajectories with uniformly bounded input mismatch satisfy
     the exact-gap input-to-state estimate. -/
