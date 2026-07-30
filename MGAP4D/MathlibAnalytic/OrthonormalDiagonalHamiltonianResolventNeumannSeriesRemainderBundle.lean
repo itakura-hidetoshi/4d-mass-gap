@@ -124,15 +124,15 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_neumann_partialSum_eq
   let Rlambda := orthonormalDiagonalHamiltonianResolvent b a lambda
   let Rmu := orthonormalDiagonalHamiltonianResolvent b a mu
   let perturb : E →L[ℝ] E := (mu - lambda) • Rlambda
-  let partial := (∑ k ∈ Finset.range N, perturb ^ k) * Rlambda
-  change Rmu - partial = perturb ^ N * Rmu
-  have h : Rmu = partial + perturb ^ N * Rmu := by
-    simpa [Rlambda, Rmu, perturb, partial] using
+  let partialSum := (∑ k ∈ Finset.range N, perturb ^ k) * Rlambda
+  change Rmu - partialSum = perturb ^ N * Rmu
+  have h : Rmu = partialSum + perturb ^ N * Rmu := by
+    simpa [Rlambda, Rmu, perturb, partialSum] using
       (orthonormalDiagonalHamiltonianResolvent_neumann_nth_order_of_norm_sub_lt
         b a delta hdelta N hlambda hdist)
   calc
-    Rmu - partial = (partial + perturb ^ N * Rmu) - partial :=
-      congrArg (fun A : E →L[ℝ] E => A - partial) h
+    Rmu - partialSum = (partialSum + perturb ^ N * Rmu) - partialSum :=
+      congrArg (fun A : E →L[ℝ] E => A - partialSum) h
     _ = perturb ^ N * Rmu := by abel
 
 /-- The truncation error is bounded by the norm of the exact ordered remainder
