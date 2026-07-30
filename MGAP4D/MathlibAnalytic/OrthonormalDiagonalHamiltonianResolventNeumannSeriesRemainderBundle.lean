@@ -235,43 +235,31 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_neumann_partialSum_norm_le_e
 /-- Operator-norm Neumann summation, convergence of partial sums, exact ordered
 remainders, and the explicit geometric truncation estimate as one package. -/
 theorem orthonormalDiagonalHamiltonianResolventNeumannSeriesRemainder_package
-    {ι E : Type*}
-    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [FiniteDimensional ℝ E]
+    {ι E : Type*} [Fintype ι] [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (delta : ℝ)
     (hdelta : ∀ i : ι, delta ≤ a i) :
     ∀ {lambda mu : ℝ} (hlambda : lambda < delta)
         (hdist : ‖mu - lambda‖ < delta - lambda),
-      HasSum
-          (fun k : ℕ =>
-            (((mu - lambda) •
-              orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
-                orthonormalDiagonalHamiltonianResolvent b a lambda)
-          (orthonormalDiagonalHamiltonianResolvent b a mu) ∧
-        Tendsto
-          (fun N : ℕ =>
-            (∑ k ∈ Finset.range N,
-              ((mu - lambda) •
-                orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
-              orthonormalDiagonalHamiltonianResolvent b a lambda)
-          atTop
-          (𝓝 (orthonormalDiagonalHamiltonianResolvent b a mu)) ∧
-        ∀ N : ℕ,
-          orthonormalDiagonalHamiltonianResolvent b a mu -
-              (∑ k ∈ Finset.range N,
-                ((mu - lambda) •
-                  orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
-                orthonormalDiagonalHamiltonianResolvent b a lambda =
-            ((mu - lambda) •
-              orthonormalDiagonalHamiltonianResolvent b a lambda) ^ N *
-              orthonormalDiagonalHamiltonianResolvent b a mu ∧
-          ‖orthonormalDiagonalHamiltonianResolvent b a mu -
-              (∑ k ∈ Finset.range N,
-                ((mu - lambda) •
-                  orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
-                orthonormalDiagonalHamiltonianResolvent b a lambda‖ ≤
-            (‖mu - lambda‖ * (delta - lambda)⁻¹) ^ N *
-              (delta - mu)⁻¹ := by
+      HasSum (fun k : ℕ => (((mu - lambda) •
+        orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
+        orthonormalDiagonalHamiltonianResolvent b a lambda)
+        (orthonormalDiagonalHamiltonianResolvent b a mu) ∧
+      Tendsto (fun N : ℕ => (∑ k ∈ Finset.range N, ((mu - lambda) •
+        orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
+        orthonormalDiagonalHamiltonianResolvent b a lambda) atTop
+        (𝓝 (orthonormalDiagonalHamiltonianResolvent b a mu)) ∧
+      ∀ N : ℕ, orthonormalDiagonalHamiltonianResolvent b a mu -
+        (∑ k ∈ Finset.range N, ((mu - lambda) •
+          orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
+          orthonormalDiagonalHamiltonianResolvent b a lambda =
+        ((mu - lambda) • orthonormalDiagonalHamiltonianResolvent b a lambda) ^ N *
+          orthonormalDiagonalHamiltonianResolvent b a mu ∧
+        ‖orthonormalDiagonalHamiltonianResolvent b a mu -
+          (∑ k ∈ Finset.range N, ((mu - lambda) •
+            orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
+            orthonormalDiagonalHamiltonianResolvent b a lambda‖ ≤
+          (‖mu - lambda‖ * (delta - lambda)⁻¹) ^ N * (delta - mu)⁻¹ := by
   intro lambda mu hlambda hdist
   refine ⟨orthonormalDiagonalHamiltonianResolvent_neumann_hasSum_of_norm_sub_lt
       b a delta hdelta hlambda hdist,
