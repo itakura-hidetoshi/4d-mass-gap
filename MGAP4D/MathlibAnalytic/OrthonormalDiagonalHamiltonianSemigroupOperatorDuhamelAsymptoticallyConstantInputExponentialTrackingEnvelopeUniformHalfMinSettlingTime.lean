@@ -1,0 +1,78 @@
+import MGAP4D.MathlibAnalytic.OrthonormalDiagonalHamiltonianSemigroupOperatorDuhamelAsymptoticallyConstantInputExponentialTrackingEnvelopeUniformSubcriticalSettlingTime
+import MGAP4D.MathlibAnalytic.OrthonormalDiagonalHamiltonianSemigroupOperatorDuhamelAsymptoticallyConstantInputExponentialTrackingEnvelopeUniformHalfMin
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+/-- Canonical half-min-rate left tracking has an explicit logarithmic settling time. -/
+theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_uniform_halfMin_left
+    {ι E : Type*}
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ μ : ℝ)
+    (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (hμpos : 0 < μ)
+    (t₀ : ℝ) (A : E →L[ℝ] E) (F U : ℝ → (E →L[ℝ] E))
+    (F_lim : E →L[ℝ] E) (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F)
+    (hFC : ∀ s : ℝ, t₀ ≤ s →
+      ‖F s - F_lim‖ ≤ C * Real.exp (-((s - t₀) * μ)))
+    (hU0 : U t₀ = A)
+    (hU : ∀ r : ℝ,
+      HasDerivAt U ((-orthonormalDiagonalOperator b a) * U r + F r) r)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∀ t : ℝ,
+      t₀ + max 0
+          (Real.log
+            ((‖A - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ +
+                C / (max δ μ - min δ μ / 2)) / ε) / (min δ μ / 2)) ≤ t →
+        ‖U t - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖ ≤ ε := by
+  have hminpos : 0 < min δ μ := lt_min hδpos hμpos
+  have hνpos : 0 < min δ μ / 2 := by linarith
+  have hνδ : min δ μ / 2 < δ := by
+    have hminδ : min δ μ ≤ δ := min_le_left _ _
+    linarith
+  have hνμ : min δ μ / 2 < μ := by
+    have hminμ : min δ μ ≤ μ := min_le_right _ _
+    linarith
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_uniform_subcritical_left
+      b a δ μ (min δ μ / 2) hδ hδpos hνpos hνδ hνμ
+      t₀ A F U F_lim C hC hF hFC hU0 hU ε hε
+
+/-- Canonical half-min-rate right tracking has the same explicit settling time. -/
+theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_uniform_halfMin_right
+    {ι E : Type*}
+    [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ μ : ℝ)
+    (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (hμpos : 0 < μ)
+    (t₀ : ℝ) (A : E →L[ℝ] E) (F U : ℝ → (E →L[ℝ] E))
+    (F_lim : E →L[ℝ] E) (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F)
+    (hFC : ∀ s : ℝ, t₀ ≤ s →
+      ‖F s - F_lim‖ ≤ C * Real.exp (-((s - t₀) * μ)))
+    (hU0 : U t₀ = A)
+    (hU : ∀ r : ℝ,
+      HasDerivAt U (U r * (-orthonormalDiagonalOperator b a) + F r) r)
+    (ε : ℝ) (hε : 0 < ε) :
+    ∀ t : ℝ,
+      t₀ + max 0
+          (Real.log
+            ((‖A - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ +
+                C / (max δ μ - min δ μ / 2)) / ε) / (min δ μ / 2)) ≤ t →
+        ‖U t - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖ ≤ ε := by
+  have hminpos : 0 < min δ μ := lt_min hδpos hμpos
+  have hνpos : 0 < min δ μ / 2 := by linarith
+  have hνδ : min δ μ / 2 < δ := by
+    have hminδ : min δ μ ≤ δ := min_le_left _ _
+    linarith
+  have hνμ : min δ μ / 2 < μ := by
+    have hminμ : min δ μ ≤ μ := min_le_right _ _
+    linarith
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyConstantInput_norm_sub_le_epsilon_after_exponentialTrackingEnvelope_uniform_subcritical_right
+      b a δ μ (min δ μ / 2) hδ hδpos hνpos hνδ hνμ
+      t₀ A F U F_lim C hC hF hFC hU0 hU ε hε
+
+end
+
+end MathlibAnalytic
+end MGAP4D
