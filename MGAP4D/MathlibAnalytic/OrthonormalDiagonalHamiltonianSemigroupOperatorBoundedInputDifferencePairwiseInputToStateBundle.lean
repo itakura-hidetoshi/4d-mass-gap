@@ -25,7 +25,7 @@ theorem intervalIntegral_exp_memory_mul_le_inputFloor
     fun_prop
   have hmono :
       (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * g s) ≤
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * C) := by
+        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * C := by
     apply intervalIntegral.integral_mono_on ht
       (hleftContinuous.intervalIntegrable t₀ t)
       (hrightContinuous.intervalIntegrable t₀ t)
@@ -88,7 +88,16 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       (by
         intro s hs
         exact hFG s hs.1)
-  exact hmass.trans (add_le_add_left hforcing _)
+  calc
+    ‖U t - V t‖ ≤
+        Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
+          ∫ s in t₀..t,
+            Real.exp (-((t - s) * δ)) * ‖(fun r : ℝ => F r - G r) s‖ := hmass
+    _ = Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
+          ∫ s in t₀..t,
+            Real.exp (-((t - s) * δ)) * ‖F s - G s‖ := by rfl
+    _ ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ :=
+      add_le_add (le_refl _) hforcing
 
 /-- Right Hamiltonian trajectories satisfy the same input-to-state estimate
     without a commutation hypothesis. -/
@@ -131,7 +140,16 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       (by
         intro s hs
         exact hFG s hs.1)
-  exact hmass.trans (add_le_add_left hforcing _)
+  calc
+    ‖U t - V t‖ ≤
+        Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
+          ∫ s in t₀..t,
+            Real.exp (-((t - s) * δ)) * ‖(fun r : ℝ => F r - G r) s‖ := hmass
+    _ = Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
+          ∫ s in t₀..t,
+            Real.exp (-((t - s) * δ)) * ‖F s - G s‖ := by rfl
+    _ ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ :=
+      add_le_add (le_refl _) hforcing
 
 /-- After the full-gap logarithmic waiting time, the left operator distance is
     within `ε` of the invariant input floor `C / δ`. -/
@@ -174,7 +192,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   calc
     ‖U t - V t‖ ≤
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ := henv
-    _ ≤ ε + C / δ := add_le_add_right hdecay _
+    _ ≤ ε + C / δ := add_le_add hdecay (le_refl _)
     _ = C / δ + ε := by ring
 
 /-- The right operator distance has the identical ultimate-bound waiting time. -/
@@ -217,7 +235,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   calc
     ‖U t - V t‖ ≤
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ := henv
-    _ ≤ ε + C / δ := add_le_add_right hdecay _
+    _ ≤ ε + C / δ := add_le_add hdecay (le_refl _)
     _ = C / δ + ε := by ring
 
 /-- The left input-to-state estimate acts pointwise on every vector. -/
@@ -417,10 +435,10 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖)
       (by
         intro t ht
-        rw [abs_of_nonneg
-          (mul_nonneg
-            (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))
-            (mul_nonneg (norm_nonneg x) (norm_nonneg y)))]
+        have hnonneg :
+            0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
+          positivity
+        rw [abs_of_nonneg hnonneg]
         ring)
   intro t ht
   have ht₀ : t₀ ≤ t := by
@@ -433,16 +451,18 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       x y hU0 hV0 hU hV
   have hdecay :
       Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ ≤ ε := by
-    simpa [abs_of_nonneg
-      (mul_nonneg
-        (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))
-        (mul_nonneg (norm_nonneg x) (norm_nonneg y)))] using htransient t ht
+    have hraw := htransient t ht
+    have hnonneg :
+        0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
+      positivity
+    rw [abs_of_nonneg hnonneg] at hraw
+    simpa [mul_comm, mul_left_comm, mul_assoc] using hraw
   calc
     |inner ℝ x (U t y) - inner ℝ x (V t y)| ≤
         (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖x‖ * ‖y‖ := henv
     _ = Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ +
         (C / δ) * ‖x‖ * ‖y‖ := by ring
-    _ ≤ ε + (C / δ) * ‖x‖ * ‖y‖ := add_le_add_right hdecay _
+    _ ≤ ε + (C / δ) * ‖x‖ * ‖y‖ := add_le_add hdecay (le_refl _)
     _ = (C / δ) * ‖x‖ * ‖y‖ + ε := by ring
 
 /-- The right fixed matrix element has the identical ultimate-bound waiting time. -/
@@ -475,10 +495,10 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖)
       (by
         intro t ht
-        rw [abs_of_nonneg
-          (mul_nonneg
-            (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))
-            (mul_nonneg (norm_nonneg x) (norm_nonneg y)))]
+        have hnonneg :
+            0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
+          positivity
+        rw [abs_of_nonneg hnonneg]
         ring)
   intro t ht
   have ht₀ : t₀ ≤ t := by
@@ -491,16 +511,18 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       x y hU0 hV0 hU hV
   have hdecay :
       Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ ≤ ε := by
-    simpa [abs_of_nonneg
-      (mul_nonneg
-        (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))
-        (mul_nonneg (norm_nonneg x) (norm_nonneg y)))] using htransient t ht
+    have hraw := htransient t ht
+    have hnonneg :
+        0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
+      positivity
+    rw [abs_of_nonneg hnonneg] at hraw
+    simpa [mul_comm, mul_left_comm, mul_assoc] using hraw
   calc
     |inner ℝ x (U t y) - inner ℝ x (V t y)| ≤
         (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖x‖ * ‖y‖ := henv
     _ = Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ +
         (C / δ) * ‖x‖ * ‖y‖ := by ring
-    _ ≤ ε + (C / δ) * ‖x‖ * ‖y‖ := add_le_add_right hdecay _
+    _ ≤ ε + (C / δ) * ‖x‖ * ‖y‖ := add_le_add hdecay (le_refl _)
     _ = (C / δ) * ‖x‖ * ‖y‖ + ε := by ring
 
 /-- A single full-gap waiting time controls every left matrix element on both
