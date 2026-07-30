@@ -183,11 +183,16 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianResolventNeumannSerie
             finite_wilson_constructed_real_spectral_hamiltonianResolvent D n lambda‖ ≤
           (‖mu - lambda‖ * (exactGapValueReal - lambda)⁻¹) ^ N *
             (exactGapValueReal - mu)⁻¹ := by
-  simpa only [finite_wilson_constructed_real_spectral_hamiltonianResolvent] using
-    (orthonormalDiagonalHamiltonianResolventNeumannSeriesRemainder_package
-      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
-      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
-      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n))
+  intro lambda mu hlambda hdist
+  refine ⟨finite_wilson_constructed_real_spectral_hamiltonianResolvent_neumann_hasSum_of_norm_sub_lt
+      D n hlambda hdist,
+    finite_wilson_constructed_real_spectral_hamiltonianResolvent_neumann_partialSum_tendsto_of_norm_sub_lt
+      D n hlambda hdist, ?_⟩
+  intro N
+  exact ⟨finite_wilson_constructed_real_spectral_hamiltonianResolvent_sub_neumann_partialSum_eq
+      D n N hlambda hdist,
+    finite_wilson_constructed_real_spectral_hamiltonianResolvent_sub_neumann_partialSum_norm_le_explicit
+      D n N hlambda hdist⟩
 
 end MathlibAnalytic
 end MGAP4D
