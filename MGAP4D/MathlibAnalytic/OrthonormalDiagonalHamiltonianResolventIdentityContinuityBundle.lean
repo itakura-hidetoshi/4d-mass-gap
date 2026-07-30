@@ -77,7 +77,7 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_eq_smul_mul
     _ = (lambda - mu) •
         (orthonormalDiagonalHamiltonianResolvent b a lambda *
           orthonormalDiagonalHamiltonianResolvent b a mu) := by
-          module
+          simp [mul_smul_comm, smul_mul_assoc]
 
 /-- Exact two-parameter operator-norm control from the resolvent identity. -/
 theorem orthonormalDiagonalHamiltonianResolvent_sub_norm_le
