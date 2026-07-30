@@ -54,7 +54,7 @@ theorem continuousLinearMapTaylorPartialSum_tendsto_atTop
       atTop
       (𝓝 (continuousLinearMapTaylorPartialSum L.limitResolvent lambda mu N)) := by
   unfold continuousLinearMapTaylorPartialSum
-  apply tendsto_finsetSum (Finset.range N)
+  apply tendsto_finset_sum (Finset.range N)
   intro k hk
   exact tendsto_const_nhds.smul (L.iteratedDeriv_tendsto k lambda)
 
