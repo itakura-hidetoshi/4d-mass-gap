@@ -99,7 +99,6 @@ theorem orthonormalDiagonalHamiltonianResolvent_hasDerivWithinAt
     orthonormalDiagonalHamiltonianResolvent_sub_eq_smul_mul
       b a delta hdelta hmuDelta hlambda,
     inv_smul_smul₀ hne]
-  rfl
 
 /-- Since the sub-gap interval is open, the within-derivative is the ordinary
 operator-norm derivative. -/
