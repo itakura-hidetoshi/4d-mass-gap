@@ -58,8 +58,11 @@ theorem orthonormalDiagonalHamiltonianShiftedOperator_eq_sub_smul_id
   change orthonormalDiagonalOperator b (fun i => a i - lambda) x =
     orthonormalDiagonalOperator b a x - lambda • x
   rw [orthonormalDiagonalOperator_apply b (fun i => a i - lambda) x,
-    orthonormalDiagonalOperator_apply b a x, ← b.sum_repr' x,
-    smul_sum, ← Finset.sum_sub_distrib]
+    orthonormalDiagonalOperator_apply b a x]
+  conv_rhs =>
+    rhs
+    rw [← b.sum_repr' x]
+  rw [Finset.smul_sum, ← Finset.sum_sub_distrib]
   apply Finset.sum_congr rfl
   intro i hi
   module
