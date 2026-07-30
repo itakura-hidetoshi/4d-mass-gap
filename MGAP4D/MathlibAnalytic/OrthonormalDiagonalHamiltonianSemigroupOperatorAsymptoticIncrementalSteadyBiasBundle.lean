@@ -144,6 +144,7 @@ private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_left_deriv
     b a δ hδ hδpos Qinf
   noncomm_ring
   rw [heq]
+  noncomm_ring
 
 private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_right_deriv
     {ι E : Type*}
@@ -175,6 +176,7 @@ private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_right_deriv
     b a δ hδ hδpos Qinf
   noncomm_ring
   rw [heq]
+  noncomm_ring
 
 private theorem tendsto_real_inner_const_of_tendsto
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
