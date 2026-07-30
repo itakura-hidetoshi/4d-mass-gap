@@ -5,7 +5,7 @@ import Mathlib.Tactic
 
 noncomputable section
 
-open Set Filter Topology ContinuousLinearMap
+open Set Filter Topology ContinuousLinearMap Module
 open scoped InnerProductSpace LinearPMap ContDiff Ring
 
 namespace MGAP4D
@@ -103,7 +103,7 @@ theorem continuousLinearMap_tendsto_of_tendsto_apply_finiteDimensional
     {T : α → E →L[ℝ] F} {S : E →L[ℝ] F}
     (h : ∀ x : E, Tendsto (fun a => T a x) l (𝓝 (S x))) :
     Tendsto T l (𝓝 S) := by
-  let v := FiniteDimensional.finBasis ℝ E
+  let v := Module.finBasis ℝ E
   exact continuousLinearMap_tendsto_of_tendsto_apply_basis v
     (fun i => h (v i))
 
