@@ -75,8 +75,11 @@ theorem geometricDecaySharpTruncationOrder_le_iff
       have hlogratio : Real.log (epsilon / C) ≤ 0 :=
         Real.log_nonpos hratioPos.le hratioLe
       have ht0 :
-          0 ≤ Real.log (epsilon / C) / Real.log q :=
-        div_nonneg_of_nonpos_of_nonpos hlogratio hlogq.le
+          0 ≤ Real.log (epsilon / C) / Real.log q := by
+        rw [div_eq_mul_inv]
+        exact
+          mul_nonneg_of_nonpos_of_nonpos hlogratio
+            (inv_nonpos.mpr hlogq.le)
       constructor
       · intro hN
         have horder :
@@ -256,9 +259,9 @@ theorem geometricDecayExplicitTruncationOrder_le_sharp_add_one
           Nat.ceil (Real.log (epsilon / C) / Real.log q) ≤
             Nat.floor (Real.log (epsilon / C) / Real.log q) + 1 :=
         Nat.ceil_le_floor_add_one _
-      simp [geometricDecayExplicitTruncationOrder,
-        geometricDecaySharpTruncationOrder, hCe, hq]
-      omega
+      have hadd := Nat.add_le_add_right hceil 1
+      simpa [geometricDecayExplicitTruncationOrder,
+        geometricDecaySharpTruncationOrder, hCe, hq] using hadd
 
 /-- Increasing the tolerance cannot increase the sharp truncation degree. -/
 theorem geometricDecaySharpTruncationOrder_antitone_epsilon
