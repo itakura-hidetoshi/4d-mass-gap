@@ -67,42 +67,70 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_va
       ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
       exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
       exactGapValueReal_pos F G U V hF hG hFG0
-      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal D n F U hU)
-      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal D n G V hV)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV)
 
 /-- The constructed left operator difference converges to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_sub_zero_left :
-    Tendsto (fun t : ℝ => U t - V t) atTop (nhds 0) :=
-  tendsto_zero_of_tendsto_norm_zero
-    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_norm_sub_zero_left
-      D n F G U V hF hG hFG0 hU hV)
+    Tendsto (fun t : ℝ => U t - V t) atTop (nhds 0) := by
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_sub_zero_left
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV)
 
 /-- The constructed left operator difference converges strongly on each state. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_sub_zero_left
     (y : D.StateSpace) :
-    Tendsto (fun t : ℝ => (U t - V t) y) atTop (nhds 0) :=
-  continuousLinearMap_tendsto_apply_zero_of_tendsto_zero
-    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_sub_zero_left
-      D n F G U V hF hG hFG0 hU hV) y
+    Tendsto (fun t : ℝ => (U t - V t) y) atTop (nhds 0) := by
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_sub_zero_left
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV) y
 
 /-- Direct constructed left action differences converge to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_difference_zero_left
     (y : D.StateSpace) :
     Tendsto (fun t : ℝ => U t y - V t y) atTop (nhds 0) := by
-  simpa using
-    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_sub_zero_left
-      D n F G U V hF hG hFG0 hU hV y)
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_difference_zero_left
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV) y
 
 /-- Every fixed constructed left matrix-element difference converges to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_matrixElement_difference_zero_left
     (x y : D.StateSpace) :
     Tendsto (fun t : ℝ => inner ℝ x (U t y) - inner ℝ x (V t y))
       atTop (nhds 0) := by
-  have happ :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_difference_zero_left
-      D n F G U V hF hG hFG0 hU hV y
-  have hinner := tendsto_const_nhds.inner happ
-  simpa [inner_sub_right] using hinner
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_matrixElement_difference_zero_left
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV) x y
 
 /-- Absolute constructed left matrix-element differences converge to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_abs_matrixElement_difference_zero_left
@@ -110,27 +138,32 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_va
     Tendsto
       (fun t : ℝ => |inner ℝ x (U t y) - inner ℝ x (V t y)|)
       atTop (nhds 0) := by
-  have hscalar :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_matrixElement_difference_zero_left
-      D n F G U V hF hG hFG0 hU hV x y
-  simpa [Real.norm_eq_abs] using hscalar.norm
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_abs_matrixElement_difference_zero_left
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV) x y
 
 /-- One eventual time controls all constructed left matrix elements on both unit balls. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_eventually_uniform_unitBall_matrixElement_difference_zero_left :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ t : ℝ in atTop,
       ∀ x y : D.StateSpace, ‖x‖ ≤ 1 → ‖y‖ ≤ 1 →
         |inner ℝ x (U t y) - inner ℝ x (V t y)| < ε := by
-  intro ε hε
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_norm_sub_zero_left
-      D n F G U V hF hG hFG0 hU hV
-  have hsmall : ∀ᶠ t : ℝ in atTop, ‖U t - V t‖ < ε :=
-    hnorm.eventually_lt_const hε
-  filter_upwards [hsmall] with t ht
-  intro x y hx hy
-  exact lt_of_le_of_lt
-    (continuousLinearMap_abs_inner_apply_sub_inner_apply_le_norm_of_norm_le_one
-      (U t) (V t) x y hx hy) ht
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_eventually_uniform_unitBall_matrixElement_difference_zero_left
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_left_deriv_diagonal
+        D n G V hV)
 
 end Left
 
@@ -161,42 +194,70 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_va
       ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
       exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
       exactGapValueReal_pos F G U V hF hG hFG0
-      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal D n F U hU)
-      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal D n G V hV)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV)
 
 /-- The constructed right operator difference converges to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_sub_zero_right :
-    Tendsto (fun t : ℝ => U t - V t) atTop (nhds 0) :=
-  tendsto_zero_of_tendsto_norm_zero
-    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_norm_sub_zero_right
-      D n F G U V hF hG hFG0 hU hV)
+    Tendsto (fun t : ℝ => U t - V t) atTop (nhds 0) := by
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_sub_zero_right
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV)
 
 /-- The constructed right operator difference converges strongly on each state. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_sub_zero_right
     (y : D.StateSpace) :
-    Tendsto (fun t : ℝ => (U t - V t) y) atTop (nhds 0) :=
-  continuousLinearMap_tendsto_apply_zero_of_tendsto_zero
-    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_sub_zero_right
-      D n F G U V hF hG hFG0 hU hV) y
+    Tendsto (fun t : ℝ => (U t - V t) y) atTop (nhds 0) := by
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_sub_zero_right
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV) y
 
 /-- Direct constructed right action differences converge to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_difference_zero_right
     (y : D.StateSpace) :
     Tendsto (fun t : ℝ => U t y - V t y) atTop (nhds 0) := by
-  simpa using
-    (finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_sub_zero_right
-      D n F G U V hF hG hFG0 hU hV y)
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_difference_zero_right
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV) y
 
 /-- Every fixed constructed right matrix-element difference converges to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_matrixElement_difference_zero_right
     (x y : D.StateSpace) :
     Tendsto (fun t : ℝ => inner ℝ x (U t y) - inner ℝ x (V t y))
       atTop (nhds 0) := by
-  have happ :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_apply_difference_zero_right
-      D n F G U V hF hG hFG0 hU hV y
-  have hinner := tendsto_const_nhds.inner happ
-  simpa [inner_sub_right] using hinner
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_matrixElement_difference_zero_right
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV) x y
 
 /-- Absolute constructed right matrix-element differences converge to zero. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_abs_matrixElement_difference_zero_right
@@ -204,27 +265,32 @@ theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_va
     Tendsto
       (fun t : ℝ => |inner ℝ x (U t y) - inner ℝ x (V t y)|)
       atTop (nhds 0) := by
-  have hscalar :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_matrixElement_difference_zero_right
-      D n F G U V hF hG hFG0 hU hV x y
-  simpa [Real.norm_eq_abs] using hscalar.norm
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_abs_matrixElement_difference_zero_right
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV) x y
 
 /-- One eventual time controls all constructed right matrix elements on both unit balls. -/
 theorem finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_eventually_uniform_unitBall_matrixElement_difference_zero_right :
     ∀ ε : ℝ, 0 < ε → ∀ᶠ t : ℝ in atTop,
       ∀ x y : D.StateSpace, ‖x‖ ≤ 1 → ‖y‖ ≤ 1 →
         |inner ℝ x (U t y) - inner ℝ x (V t y)| < ε := by
-  intro ε hε
-  have hnorm :=
-    finite_wilson_constructed_real_spectral_hamiltonianSemigroup_operator_vanishingInputDifference_pairwise_tendsto_norm_sub_zero_right
-      D n F G U V hF hG hFG0 hU hV
-  have hsmall : ∀ᶠ t : ℝ in atTop, ‖U t - V t‖ < ε :=
-    hnorm.eventually_lt_const hε
-  filter_upwards [hsmall] with t ht
-  intro x y hx hy
-  exact lt_of_le_of_lt
-    (continuousLinearMap_abs_inner_apply_sub_inner_apply_le_norm_of_norm_le_one
-      (U t) (V t) x y hx hy) ht
+  exact
+    orthonormalDiagonalHamiltonianSemigroup_operator_vanishingInputDifference_pairwise_eventually_uniform_unitBall_matrixElement_difference_zero_right
+      ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+      ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
+      exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
+      exactGapValueReal_pos F G U V hF hG hFG0
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n F U hU)
+      (finite_wilson_constructed_vanishingInputDifference_right_deriv_diagonal
+        D n G V hV)
 
 end Right
 
