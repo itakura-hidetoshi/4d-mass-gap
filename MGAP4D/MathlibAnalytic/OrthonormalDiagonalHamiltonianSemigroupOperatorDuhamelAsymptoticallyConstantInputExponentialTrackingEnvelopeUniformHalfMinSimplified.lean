@@ -10,7 +10,7 @@ noncomputable section
 theorem max_sub_half_min_ge_half_max
     (δ μ : ℝ) :
     max δ μ / 2 ≤ max δ μ - min δ μ / 2 := by
-  have hminmax : min δ μ ≤ max δ μ := min_le_max δ μ
+  have hminmax : min δ μ ≤ max δ μ := min_le_max
   linarith
 
 /-- The half-min forcing coefficient is bounded by the simpler coefficient
@@ -23,7 +23,7 @@ theorem div_max_sub_half_min_le_two_mul_div_max
     have hminpos : 0 < min δ μ := lt_min hδpos hμpos
     have hhalfminpos : 0 < min δ μ / 2 := div_pos hminpos (by norm_num)
     have hhalfmin_lt_max : min δ μ / 2 < max δ μ := by
-      have hmin_le_max : min δ μ ≤ max δ μ := min_le_max δ μ
+      have hmin_le_max : min δ μ ≤ max δ μ := min_le_max
       nlinarith
     linarith
   apply (div_le_div_iff₀ hdenpos hmaxpos).2
@@ -54,7 +54,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
       b a δ μ hδ hδpos hμpos t₀ t ht A F U F_lim C hC hF hFC hU0 hU
   have hcoeff := div_max_sub_half_min_le_two_mul_div_max δ μ C hδpos hμpos hC
   exact henv.trans <|
-    mul_le_mul_of_nonneg_right (add_le_add_left hcoeff _)
+    mul_le_mul_of_nonneg_right
+      (add_le_add_right hcoeff ‖A - orthonormalDiagonalHamiltonian_leftSteadyState b a F_lim‖)
       (Real.exp_pos _).le
 
 /-- Canonical resonance-free right tracking at half the slower rate, with the
@@ -81,7 +82,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_duhamel_asymptoticallyC
       b a δ μ hδ hδpos hμpos t₀ t ht A F U F_lim C hC hF hFC hU0 hU
   have hcoeff := div_max_sub_half_min_le_two_mul_div_max δ μ C hδpos hμpos hC
   exact henv.trans <|
-    mul_le_mul_of_nonneg_right (add_le_add_left hcoeff _)
+    mul_le_mul_of_nonneg_right
+      (add_le_add_right hcoeff ‖A - orthonormalDiagonalHamiltonian_rightSteadyState b a F_lim‖)
       (Real.exp_pos _).le
 
 end
