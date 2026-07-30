@@ -16,16 +16,16 @@ theorem intervalIntegral_exp_tail_from_start_le_inv
   have hβne : β ≠ 0 := ne_of_gt hβpos
   have hclosed :=
     intervalIntegral_exp_memory_mul_exp_tail_eq_div 0 β t₀ t (by linarith)
-  have hformula :
-      (Real.exp (-((t - t₀) * β)) - Real.exp (-((t - t₀) * 0))) / (0 - β) =
-        (1 - Real.exp (-((t - t₀) * β))) / β := by
-    rw [mul_zero, neg_zero, Real.exp_zero]
-    field_simp [hβne]
-    ring
   have htail :
       (∫ s in t₀..t, Real.exp (-((s - t₀) * β))) =
         (1 - Real.exp (-((t - t₀) * β))) / β := by
-    simpa [hformula] using hclosed
+    calc
+      (∫ s in t₀..t, Real.exp (-((s - t₀) * β))) =
+          (Real.exp (-((t - t₀) * β)) - 1) / (-β) := by
+        simpa using hclosed
+      _ = (1 - Real.exp (-((t - t₀) * β))) / β := by
+        field_simp [hβne]
+        ring
   rw [htail]
   apply (div_le_div_iff₀ hβpos hβpos).2
   nlinarith [Real.exp_pos (-((t - t₀) * β))]
@@ -35,17 +35,12 @@ by the inverse decay rate. -/
 theorem intervalIntegral_exp_memory_to_end_le_inv
     (α t₀ t : ℝ) (ht : t₀ ≤ t) (hαpos : 0 < α) :
     (∫ s in t₀..t, Real.exp (-((t - s) * α))) ≤ 1 / α := by
-  have hαne : α ≠ 0 := ne_of_gt hαpos
   have hclosed :=
     intervalIntegral_exp_memory_mul_exp_tail_eq_div α 0 t₀ t (by linarith)
-  have hformula :
-      (Real.exp (-((t - t₀) * 0)) - Real.exp (-((t - t₀) * α))) / (α - 0) =
-        (1 - Real.exp (-((t - t₀) * α))) / α := by
-    simp [hαne]
   have hmemory :
       (∫ s in t₀..t, Real.exp (-((t - s) * α))) =
         (1 - Real.exp (-((t - t₀) * α))) / α := by
-    simpa [hformula] using hclosed
+    simpa using hclosed
   rw [hmemory]
   apply (div_le_div_iff₀ hαpos hαpos).2
   nlinarith [Real.exp_pos (-((t - t₀) * α))]
@@ -85,7 +80,7 @@ theorem intervalIntegral_exp_memory_mul_exp_tail_le_uniform_subcritical
             Real.exp (-((t - t₀) * ν)) *
               Real.exp (-((t - s) * (δ - ν))) *
                 Real.exp (-((s - t₀) * (μ - ν))) := by
-        rw [← Real.exp_add, ← Real.exp_add]
+        rw [← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
         congr 1
         ring
       rw [hfactor]
@@ -143,7 +138,7 @@ theorem intervalIntegral_exp_memory_mul_exp_tail_le_uniform_subcritical
             Real.exp (-((t - t₀) * ν)) *
               Real.exp (-((t - s) * (δ - ν))) *
                 Real.exp (-((s - t₀) * (μ - ν))) := by
-        rw [← Real.exp_add, ← Real.exp_add]
+        rw [← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
         congr 1
         ring
       rw [hfactor]
