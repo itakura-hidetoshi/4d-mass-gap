@@ -75,15 +75,21 @@ theorem orthonormalDiagonalHamiltonianResolvent_hasDerivWithinAt
     hres.mono_left <| nhdsWithin_mono _ <| by
       intro mu hmu
       exact hmu.1
-  have hcomp :
+  have hmul :
       Tendsto
         (fun mu =>
-          (orthonormalDiagonalHamiltonianResolvent b a mu).comp Rlambda)
+          orthonormalDiagonalHamiltonianResolvent b a mu * Rlambda)
+        (𝓝[Set.Iio delta \ {lambda}] lambda)
+        (𝓝 (Rlambda * Rlambda)) :=
+    hres'.mul tendsto_const_nhds
+  have hproduct :
+      Tendsto
+        (fun mu =>
+          orthonormalDiagonalHamiltonianResolvent b a mu * Rlambda)
         (𝓝[Set.Iio delta \ {lambda}] lambda)
         (𝓝 (Rlambda.comp Rlambda)) := by
-    exact
-      (continuous_id.clm_comp_const Rlambda).continuousAt.tendsto.comp hres'
-  apply hcomp.congr'
+    simpa using hmul
+  apply hproduct.congr'
   filter_upwards [self_mem_nhdsWithin] with mu hmu
   rcases hmu with ⟨hmuDelta, hmuNe⟩
   have hne : mu - lambda ≠ 0 := by
@@ -93,6 +99,7 @@ theorem orthonormalDiagonalHamiltonianResolvent_hasDerivWithinAt
     orthonormalDiagonalHamiltonianResolvent_sub_eq_smul_mul
       b a delta hdelta hmuDelta hlambda,
     inv_smul_smul₀ hne]
+  rfl
 
 /-- Since the sub-gap interval is open, the within-derivative is the ordinary
 operator-norm derivative. -/
