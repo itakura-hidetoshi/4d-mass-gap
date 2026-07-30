@@ -93,10 +93,10 @@ theorem orthonormalDiagonalHamiltonianResolvent_taylor_partialSum_eq_neumann_par
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (delta : ℝ)
     (hdelta : ∀ i : ι, delta ≤ a i)
     (N : ℕ) {lambda mu : ℝ} (hlambda : lambda < delta) :
-    (∑ k in Finset.range N,
+    (∑ k ∈ Finset.range N,
         ((mu - lambda) ^ k * (k.factorial : ℝ)⁻¹) •
           iteratedDeriv k (orthonormalDiagonalHamiltonianResolvent b a) lambda) =
-      (∑ k in Finset.range N,
+      (∑ k ∈ Finset.range N,
         ((mu - lambda) •
           orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
         orthonormalDiagonalHamiltonianResolvent b a lambda := by
@@ -172,7 +172,7 @@ theorem orthonormalDiagonalHamiltonianResolvent_taylor_partialSum_tendsto_of_nor
     (hdist : ‖mu - lambda‖ < delta - lambda) :
     Tendsto
       (fun N : ℕ =>
-        ∑ k in Finset.range N,
+        ∑ k ∈ Finset.range N,
           ((mu - lambda) ^ k * (k.factorial : ℝ)⁻¹) •
             iteratedDeriv k (orthonormalDiagonalHamiltonianResolvent b a) lambda)
       atTop
@@ -190,7 +190,7 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_taylor_partialSum_eq
     (N : ℕ) {lambda mu : ℝ} (hlambda : lambda < delta)
     (hdist : ‖mu - lambda‖ < delta - lambda) :
     orthonormalDiagonalHamiltonianResolvent b a mu -
-        (∑ k in Finset.range N,
+        (∑ k ∈ Finset.range N,
           ((mu - lambda) ^ k * (k.factorial : ℝ)⁻¹) •
             iteratedDeriv k (orthonormalDiagonalHamiltonianResolvent b a) lambda) =
       ((mu - lambda) •
@@ -212,7 +212,7 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_taylor_partialSum_norm_le
     (N : ℕ) {lambda mu : ℝ} (hlambda : lambda < delta)
     (hdist : ‖mu - lambda‖ < delta - lambda) :
     ‖orthonormalDiagonalHamiltonianResolvent b a mu -
-        (∑ k in Finset.range N,
+        (∑ k ∈ Finset.range N,
           ((mu - lambda) ^ k * (k.factorial : ℝ)⁻¹) •
             iteratedDeriv k (orthonormalDiagonalHamiltonianResolvent b a) lambda)‖ ≤
       (‖mu - lambda‖ * (delta - lambda)⁻¹) ^ N *
