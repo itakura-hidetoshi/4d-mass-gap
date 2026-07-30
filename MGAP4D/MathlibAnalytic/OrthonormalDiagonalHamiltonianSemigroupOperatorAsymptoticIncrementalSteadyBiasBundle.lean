@@ -140,9 +140,10 @@ private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_left_deriv
     (hasDerivAt_const (x := r)
       (c := orthonormalDiagonalHamiltonianSteadyResponseLeft b a Qinf))
   convert hshift using 1
-  rw [← orthonormalDiagonalHamiltonianSteadyResponseLeft_equilibrium
-    b a δ hδ hδpos Qinf]
-  noncomm_ring
+  have heq := orthonormalDiagonalHamiltonianSteadyResponseLeft_equilibrium
+    b a δ hδ hδpos Qinf
+  noncomm_ring_nf
+  rw [heq]
 
 private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_right_deriv
     {ι E : Type*}
@@ -170,9 +171,10 @@ private theorem orthonormalDiagonal_asymptoticIncrementalSteadyBias_right_deriv
     (hasDerivAt_const (x := r)
       (c := orthonormalDiagonalHamiltonianSteadyResponseRight b a Qinf))
   convert hshift using 1
-  rw [← orthonormalDiagonalHamiltonianSteadyResponseRight_equilibrium
-    b a δ hδ hδpos Qinf]
-  noncomm_ring
+  have heq := orthonormalDiagonalHamiltonianSteadyResponseRight_equilibrium
+    b a δ hδ hδpos Qinf
+  noncomm_ring_nf
+  rw [heq]
 
 private theorem tendsto_real_inner_const_of_tendsto
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
