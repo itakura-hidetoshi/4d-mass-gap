@@ -121,11 +121,22 @@ theorem orthonormalDiagonalHamiltonianResolvent_taylor_hasSum_of_norm_sub_lt
         ((mu - lambda) ^ k * (k.factorial : ℝ)⁻¹) •
           iteratedDeriv k (orthonormalDiagonalHamiltonianResolvent b a) lambda)
       (orthonormalDiagonalHamiltonianResolvent b a mu) := by
-  refine (orthonormalDiagonalHamiltonianResolvent_neumann_hasSum_of_norm_sub_lt
-    b a delta hdelta hlambda hdist).congr ?_
-  intro k
-  exact (orthonormalDiagonalHamiltonianResolvent_taylor_term_eq_neumann_term
-    b a delta hdelta k hlambda).symm
+  have hneumann :=
+    orthonormalDiagonalHamiltonianResolvent_neumann_hasSum_of_norm_sub_lt
+      b a delta hdelta hlambda hdist
+  have hterms :
+      (fun k : ℕ =>
+        ((mu - lambda) ^ k * (k.factorial : ℝ)⁻¹) •
+          iteratedDeriv k (orthonormalDiagonalHamiltonianResolvent b a) lambda) =
+      (fun k : ℕ =>
+        (((mu - lambda) •
+          orthonormalDiagonalHamiltonianResolvent b a lambda) ^ k) *
+            orthonormalDiagonalHamiltonianResolvent b a lambda) := by
+    funext k
+    exact orthonormalDiagonalHamiltonianResolvent_taylor_term_eq_neumann_term
+      b a delta hdelta k hlambda
+  rw [hterms]
+  exact hneumann
 
 /-- The exact derivative Taylor series is summable in operator norm. -/
 theorem orthonormalDiagonalHamiltonianResolvent_taylor_summable_of_norm_sub_lt
