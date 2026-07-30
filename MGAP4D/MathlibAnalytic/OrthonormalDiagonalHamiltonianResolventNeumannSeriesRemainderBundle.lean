@@ -121,11 +121,19 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_neumann_partialSum_eq
       ((mu - lambda) •
         orthonormalDiagonalHamiltonianResolvent b a lambda) ^ N *
         orthonormalDiagonalHamiltonianResolvent b a mu := by
-  have h :=
-    orthonormalDiagonalHamiltonianResolvent_neumann_nth_order_of_norm_sub_lt
-      b a delta hdelta N hlambda hdist
-  rw [h]
-  abel
+  let Rlambda := orthonormalDiagonalHamiltonianResolvent b a lambda
+  let Rmu := orthonormalDiagonalHamiltonianResolvent b a mu
+  let perturb : E →L[ℝ] E := (mu - lambda) • Rlambda
+  let partial := (∑ k ∈ Finset.range N, perturb ^ k) * Rlambda
+  change Rmu - partial = perturb ^ N * Rmu
+  have h : Rmu = partial + perturb ^ N * Rmu := by
+    simpa [Rlambda, Rmu, perturb, partial] using
+      (orthonormalDiagonalHamiltonianResolvent_neumann_nth_order_of_norm_sub_lt
+        b a delta hdelta N hlambda hdist)
+  calc
+    Rmu - partial = (partial + perturb ^ N * Rmu) - partial :=
+      congrArg (fun A : E →L[ℝ] E => A - partial) h
+    _ = perturb ^ N * Rmu := by abel
 
 /-- The truncation error is bounded by the norm of the exact ordered remainder
 and the target resolvent gap bound. -/
@@ -150,27 +158,30 @@ theorem orthonormalDiagonalHamiltonianResolvent_sub_neumann_partialSum_norm_le
   have hmu : mu < delta := by
     have hle : mu - lambda ≤ |mu - lambda| := le_abs_self (mu - lambda)
     linarith
-  rw [orthonormalDiagonalHamiltonianResolvent_sub_neumann_partialSum_eq
-    b a delta hdelta N hlambda hdist]
   have hRmu :=
     orthonormalDiagonalHamiltonianResolvent_norm_le_inv_sub
       b a delta mu hdelta hmu
-  calc
-    ‖((mu - lambda) •
-        orthonormalDiagonalHamiltonianResolvent b a lambda) ^ N *
-        orthonormalDiagonalHamiltonianResolvent b a mu‖ ≤
-      ‖((mu - lambda) •
-        orthonormalDiagonalHamiltonianResolvent b a lambda) ^ N‖ *
-        ‖orthonormalDiagonalHamiltonianResolvent b a mu‖ :=
-      norm_mul_le _ _
-    _ = ‖(mu - lambda) •
-          orthonormalDiagonalHamiltonianResolvent b a lambda‖ ^ N *
-        ‖orthonormalDiagonalHamiltonianResolvent b a mu‖ := by
-      rw [norm_pow]
-    _ ≤ ‖(mu - lambda) •
-          orthonormalDiagonalHamiltonianResolvent b a lambda‖ ^ N *
-        (delta - mu)⁻¹ :=
-      mul_le_mul_of_nonneg_left hRmu (pow_nonneg (norm_nonneg _) N)
+  cases N with
+  | zero =>
+      simpa using hRmu
+  | succ N =>
+      rw [orthonormalDiagonalHamiltonianResolvent_sub_neumann_partialSum_eq
+        b a delta hdelta (N + 1) hlambda hdist]
+      let Rlambda := orthonormalDiagonalHamiltonianResolvent b a lambda
+      let Rmu := orthonormalDiagonalHamiltonianResolvent b a mu
+      let perturb : E →L[ℝ] E := (mu - lambda) • Rlambda
+      change ‖perturb ^ (N + 1) * Rmu‖ ≤ ‖perturb‖ ^ (N + 1) * (delta - mu)⁻¹
+      calc
+        ‖perturb ^ (N + 1) * Rmu‖ ≤
+            ‖perturb ^ (N + 1)‖ * ‖Rmu‖ := by
+          simpa only [ContinuousLinearMap.mul_def] using
+            (perturb ^ (N + 1)).opNorm_comp_le Rmu
+        _ ≤ ‖perturb‖ ^ (N + 1) * ‖Rmu‖ :=
+          mul_le_mul_of_nonneg_right
+            (norm_pow_le' perturb (by omega)) (norm_nonneg Rmu)
+        _ ≤ ‖perturb‖ ^ (N + 1) * (delta - mu)⁻¹ :=
+          mul_le_mul_of_nonneg_left hRmu
+            (pow_nonneg (norm_nonneg perturb) (N + 1))
 
 /-- Explicit geometric truncation bound in terms of the parameter displacement
 and both distances to the spectral gap. -/
