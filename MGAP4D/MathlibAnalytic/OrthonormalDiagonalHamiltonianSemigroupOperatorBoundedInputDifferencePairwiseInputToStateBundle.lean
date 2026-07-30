@@ -23,7 +23,9 @@ private theorem nonnegativeCoefficient_mul_exp_le_epsilon_after
         intro t ht
         rw [abs_of_nonneg (mul_nonneg hK (Real.exp_pos _).le)])
   intro t ht
-  exact hsettle t ht
+  have hraw := hsettle t ht
+  rw [abs_of_nonneg (mul_nonneg hK (Real.exp_pos _).le)] at hraw
+  exact hraw
 
 /-- A uniformly bounded forcing mismatch contributes at most the input-to-state
     floor `C / δ` through the exponential memory kernel. -/
