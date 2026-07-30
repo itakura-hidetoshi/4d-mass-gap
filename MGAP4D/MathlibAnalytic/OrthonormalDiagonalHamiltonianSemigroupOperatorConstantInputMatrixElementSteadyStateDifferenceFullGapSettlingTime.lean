@@ -13,7 +13,9 @@ theorem continuousLinearMap_abs_inner_apply_sub_inner_apply_eq_abs_inner_sub_app
     (U S : E →L[ℝ] E) (x y : E) :
     |inner ℝ x (U y) - inner ℝ x (S y)| =
       |inner ℝ x ((U - S) y)| := by
-  simp
+  change |inner ℝ x (U y) - inner ℝ x (S y)| =
+    |inner ℝ x (U y - S y)|
+  rw [inner_sub_right]
 
 /-- Every left matrix element approaches its steady-state matrix element within a
     prescribed tolerance after the explicit full-gap logarithmic waiting time. -/
