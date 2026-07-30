@@ -194,14 +194,18 @@ theorem eq_finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseLeft
     (n : ℕ) (Qinf X : D.StateSpace →L[ℝ] D.StateSpace)
     (hX : LinearMap.toContinuousLinearMap (D.hamiltonian n) * X = Qinf) :
     X = finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseLeft D n Qinf := by
+  have hXdiag :
+      orthonormalDiagonalOperator
+          ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+          ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank) * X = Qinf := by
+    simpa [finite_wilson_constructed_eigenDiagonalOperator_eq_hamiltonian D n] using hX
   simpa [finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseLeft,
-    finite_wilson_constructed_real_spectral_hamiltonianInverse,
-    finite_wilson_constructed_eigenDiagonalOperator_eq_hamiltonian D n] using
+    finite_wilson_constructed_real_spectral_hamiltonianInverse] using
     (eq_orthonormalDiagonalHamiltonianSteadyResponseLeft_of_equilibrium
       ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
       ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
       exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
-      exactGapValueReal_pos Qinf X hX)
+      exactGapValueReal_pos Qinf X hXdiag)
 
 /-- Every constructed right equilibrium is `Qinf H⁻¹`, without commutation. -/
 theorem eq_finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseRight_of_equilibrium
@@ -210,14 +214,18 @@ theorem eq_finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseRigh
     (n : ℕ) (Qinf X : D.StateSpace →L[ℝ] D.StateSpace)
     (hX : X * LinearMap.toContinuousLinearMap (D.hamiltonian n) = Qinf) :
     X = finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseRight D n Qinf := by
+  have hXdiag :
+      X * orthonormalDiagonalOperator
+          ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
+          ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank) = Qinf := by
+    simpa [finite_wilson_constructed_eigenDiagonalOperator_eq_hamiltonian D n] using hX
   simpa [finite_wilson_constructed_real_spectral_hamiltonianSteadyResponseRight,
-    finite_wilson_constructed_real_spectral_hamiltonianInverse,
-    finite_wilson_constructed_eigenDiagonalOperator_eq_hamiltonian D n] using
+    finite_wilson_constructed_real_spectral_hamiltonianInverse] using
     (eq_orthonormalDiagonalHamiltonianSteadyResponseRight_of_equilibrium
       ((D.hamiltonianSymmetric n).eigenvectorBasis D.stateFinrank)
       ((D.hamiltonianSymmetric n).eigenvalues D.stateFinrank)
       exactGapValueReal (D.hamiltonianEigenvalues_ge_exactGap n)
-      exactGapValueReal_pos Qinf X hX)
+      exactGapValueReal_pos Qinf X hXdiag)
 
 end
 
