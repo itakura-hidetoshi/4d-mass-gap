@@ -166,7 +166,8 @@ theorem orthonormalDiagonalHamiltonianResolvent_neumann_nth_order_of_norm_sub_lt
     Rmu = Ring.inverse (1 - perturb) * Rlambda := hlocal
     _ = ((∑ i ∈ Finset.range N, perturb ^ i) +
           perturb ^ N * Ring.inverse (1 - perturb)) * Rlambda := by
-      rw [NormedRing.inverse_one_sub_nth_order' N hsmall]
+      exact congrArg (fun A : E →L[ℝ] E => A * Rlambda)
+        (NormedRing.inverse_one_sub_nth_order' N hsmall)
     _ = (∑ i ∈ Finset.range N, perturb ^ i) * Rlambda +
         perturb ^ N * (Ring.inverse (1 - perturb) * Rlambda) := by
       noncomm_ring
