@@ -10,6 +10,21 @@ noncomputable section
 
 open MeasureTheory
 
+private theorem nonnegativeCoefficient_mul_exp_le_epsilon_after
+    (δ ε K t₀ : ℝ) (hδpos : 0 < δ) (hε : 0 < ε) (hK : 0 ≤ K) :
+    ∀ t : ℝ,
+      t₀ + max 0 (Real.log (K / ε) / δ) ≤ t →
+        K * Real.exp (-((t - t₀) * δ)) ≤ ε := by
+  have hsettle :=
+    realFunction_abs_le_epsilon_after_exponentialBound
+      δ ε K t₀ hδpos hε hK
+      (fun t : ℝ => K * Real.exp (-((t - t₀) * δ)))
+      (by
+        intro t ht
+        rw [abs_of_nonneg (mul_nonneg hK (Real.exp_pos _).le)])
+  intro t ht
+  exact hsettle t ht
+
 /-- A uniformly bounded forcing mismatch contributes at most the input-to-state
     floor `C / δ` through the exponential memory kernel. -/
 theorem intervalIntegral_exp_memory_mul_le_inputFloor
@@ -23,28 +38,19 @@ theorem intervalIntegral_exp_memory_mul_le_inputFloor
   have hrightContinuous : Continuous (fun s : ℝ =>
       Real.exp (-((t - s) * δ)) * C) := by
     fun_prop
-  have hmono :
-      (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * g s) ≤
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * C := by
-    apply intervalIntegral.integral_mono_on ht
-      (hleftContinuous.intervalIntegrable t₀ t)
-      (hrightContinuous.intervalIntegrable t₀ t)
-    intro s hs
-    exact mul_le_mul_of_nonneg_left (hgC s hs) (Real.exp_pos _).le
-  have hfactor :
-      (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * C) =
-        (∫ s in t₀..t, Real.exp (-((t - s) * δ))) * C := by
-    rw [intervalIntegral.integral_mul_const]
-  have hmemory :=
-    intervalIntegral_exp_memory_to_end_le_inv δ t₀ t ht hδpos
-  have hscaled :
-      (∫ s in t₀..t, Real.exp (-((t - s) * δ))) * C ≤ (1 / δ) * C :=
-    mul_le_mul_of_nonneg_right hmemory hC
   calc
     (∫ s in t₀..t, Real.exp (-((t - s) * δ)) * g s) ≤
-        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * C := hmono
-    _ = (∫ s in t₀..t, Real.exp (-((t - s) * δ))) * C := hfactor
-    _ ≤ (1 / δ) * C := hscaled
+        ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * C := by
+      apply intervalIntegral.integral_mono_on ht
+        (hleftContinuous.intervalIntegrable t₀ t)
+        (hrightContinuous.intervalIntegrable t₀ t)
+      intro s hs
+      exact mul_le_mul_of_nonneg_left (hgC s hs) (Real.exp_pos _).le
+    _ = (∫ s in t₀..t, Real.exp (-((t - s) * δ))) * C := by
+      rw [intervalIntegral.integral_mul_const]
+    _ ≤ (1 / δ) * C :=
+      mul_le_mul_of_nonneg_right
+        (intervalIntegral_exp_memory_to_end_le_inv δ t₀ t ht hδpos) hC
     _ = C / δ := by ring
 
 /-- Left Hamiltonian trajectories driven by inputs with uniformly bounded
@@ -55,8 +61,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -66,9 +71,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       HasDerivAt V ((-orthonormalDiagonalOperator b a) * V r + G r) r) :
     ‖U t - V t‖ ≤
       Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ := by
+  have hQ : Continuous (fun r : ℝ => F r - G r) := hF.sub hG
   have hW0 : (fun r : ℝ => U r - V r) t₀ = A - B := by
     simp [hU0, hV0]
-  have hQ : Continuous (fun r : ℝ => F r - G r) := hF.sub hG
   have hW : ∀ r : ℝ,
       HasDerivAt (fun s : ℝ => U s - V s)
         ((-orthonormalDiagonalOperator b a) * (U r - V r) + (F r - G r)) r := by
@@ -91,11 +96,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   calc
     ‖U t - V t‖ ≤
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
-          ∫ s in t₀..t,
-            Real.exp (-((t - s) * δ)) * ‖(fun r : ℝ => F r - G r) s‖ := hmass
-    _ = Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
-          ∫ s in t₀..t,
-            Real.exp (-((t - s) * δ)) * ‖F s - G s‖ := by rfl
+          ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖ := by
+      simpa using hmass
     _ ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ :=
       add_le_add (le_refl _) hforcing
 
@@ -107,8 +109,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -118,9 +119,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       HasDerivAt V (V r * (-orthonormalDiagonalOperator b a) + G r) r) :
     ‖U t - V t‖ ≤
       Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ := by
+  have hQ : Continuous (fun r : ℝ => F r - G r) := hF.sub hG
   have hW0 : (fun r : ℝ => U r - V r) t₀ = A - B := by
     simp [hU0, hV0]
-  have hQ : Continuous (fun r : ℝ => F r - G r) := hF.sub hG
   have hW : ∀ r : ℝ,
       HasDerivAt (fun s : ℝ => U s - V s)
         ((U r - V r) * (-orthonormalDiagonalOperator b a) + (F r - G r)) r := by
@@ -143,11 +144,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   calc
     ‖U t - V t‖ ≤
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
-          ∫ s in t₀..t,
-            Real.exp (-((t - s) * δ)) * ‖(fun r : ℝ => F r - G r) s‖ := hmass
-    _ = Real.exp (-((t - t₀) * δ)) * ‖A - B‖ +
-          ∫ s in t₀..t,
-            Real.exp (-((t - s) * δ)) * ‖F s - G s‖ := by rfl
+          ∫ s in t₀..t, Real.exp (-((t - s) * δ)) * ‖F s - G s‖ := by
+      simpa using hmass
     _ ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ :=
       add_le_add (le_refl _) hforcing
 
@@ -158,8 +156,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (t₀ : ℝ)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -171,14 +168,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     ∀ t : ℝ,
       t₀ + max 0 (Real.log (‖A - B‖ / ε) / δ) ≤ t →
         ‖U t - V t‖ ≤ C / δ + ε := by
-  have htransient :=
-    realFunction_abs_le_epsilon_after_exponentialBound
-      δ ε ‖A - B‖ t₀ hδpos hε (norm_nonneg _)
-      (fun t : ℝ => Real.exp (-((t - t₀) * δ)) * ‖A - B‖)
-      (by
-        intro t ht
-        rw [abs_of_nonneg (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))]
-        simpa [mul_comm])
   intro t ht
   have ht₀ : t₀ ≤ t := by
     have hnonneg : 0 ≤ max 0 (Real.log (‖A - B‖ / ε) / δ) := le_max_left _ _
@@ -186,9 +175,11 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_inputToState_bound_left
       b a δ hδ hδpos t₀ t ht₀ A B F G U V C hC hF hG hFG hU0 hV0 hU hV
+  have hdecayK :=
+    nonnegativeCoefficient_mul_exp_le_epsilon_after
+      δ ε ‖A - B‖ t₀ hδpos hε (norm_nonneg _) t ht
   have hdecay : Real.exp (-((t - t₀) * δ)) * ‖A - B‖ ≤ ε := by
-    simpa [abs_of_nonneg (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))] using
-      htransient t ht
+    simpa [mul_comm] using hdecayK
   calc
     ‖U t - V t‖ ≤
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ := henv
@@ -201,8 +192,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (t₀ : ℝ)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -214,14 +204,6 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     ∀ t : ℝ,
       t₀ + max 0 (Real.log (‖A - B‖ / ε) / δ) ≤ t →
         ‖U t - V t‖ ≤ C / δ + ε := by
-  have htransient :=
-    realFunction_abs_le_epsilon_after_exponentialBound
-      δ ε ‖A - B‖ t₀ hδpos hε (norm_nonneg _)
-      (fun t : ℝ => Real.exp (-((t - t₀) * δ)) * ‖A - B‖)
-      (by
-        intro t ht
-        rw [abs_of_nonneg (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))]
-        simpa [mul_comm])
   intro t ht
   have ht₀ : t₀ ≤ t := by
     have hnonneg : 0 ≤ max 0 (Real.log (‖A - B‖ / ε) / δ) := le_max_left _ _
@@ -229,9 +211,11 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_inputToState_bound_right
       b a δ hδ hδpos t₀ t ht₀ A B F G U V C hC hF hG hFG hU0 hV0 hU hV
+  have hdecayK :=
+    nonnegativeCoefficient_mul_exp_le_epsilon_after
+      δ ε ‖A - B‖ t₀ hδpos hε (norm_nonneg _) t ht
   have hdecay : Real.exp (-((t - t₀) * δ)) * ‖A - B‖ ≤ ε := by
-    simpa [abs_of_nonneg (mul_nonneg (Real.exp_pos _).le (norm_nonneg _))] using
-      htransient t ht
+    simpa [mul_comm] using hdecayK
   calc
     ‖U t - V t‖ ≤
         Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ := henv
@@ -245,8 +229,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -259,10 +242,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_inputToState_bound_left
       b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG hU0 hV0 hU hV
-  calc
-    ‖(U t - V t) y‖ ≤ ‖U t - V t‖ * ‖y‖ := (U t - V t).le_opNorm y
-    _ ≤ (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖y‖ :=
-      mul_le_mul_of_nonneg_right henv (norm_nonneg y)
+  exact (U t - V t).le_opNorm y |>.trans
+    (mul_le_mul_of_nonneg_right henv (norm_nonneg y))
 
 /-- The right input-to-state estimate has the same pointwise form. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_pointwise_inputToState_bound_right
@@ -271,8 +252,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -285,10 +265,8 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_inputToState_bound_right
       b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG hU0 hV0 hU hV
-  calc
-    ‖(U t - V t) y‖ ≤ ‖U t - V t‖ * ‖y‖ := (U t - V t).le_opNorm y
-    _ ≤ (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖y‖ :=
-      mul_le_mul_of_nonneg_right henv (norm_nonneg y)
+  exact (U t - V t).le_opNorm y |>.trans
+    (mul_le_mul_of_nonneg_right henv (norm_nonneg y))
 
 /-- Every left matrix element inherits the input-to-state envelope. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_inputToState_bound_left
@@ -297,8 +275,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (x y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -311,17 +288,14 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have hpoint :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_pointwise_inputToState_bound_left
       b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG y hU0 hV0 hU hV
-  have hcs :
-      |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := by
+  have hcs : |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := by
     simpa only [Real.norm_eq_abs] using
       (norm_inner_le_norm (𝕜 := ℝ) x ((U t - V t) y))
   calc
     |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := hcs
-    _ ≤ ‖x‖ *
-        ((Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖y‖) :=
+    _ ≤ ‖x‖ * ((Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖y‖) :=
       mul_le_mul_of_nonneg_left hpoint (norm_nonneg x)
-    _ = (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) *
-          ‖x‖ * ‖y‖ := by ring
+    _ = (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖x‖ * ‖y‖ := by ring
 
 /-- Every right matrix element has the identical input-to-state envelope. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_inputToState_bound_right
@@ -330,8 +304,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (x y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -344,17 +317,14 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   have hpoint :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_pointwise_inputToState_bound_right
       b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG y hU0 hV0 hU hV
-  have hcs :
-      |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := by
+  have hcs : |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := by
     simpa only [Real.norm_eq_abs] using
       (norm_inner_le_norm (𝕜 := ℝ) x ((U t - V t) y))
   calc
     |inner ℝ x ((U t - V t) y)| ≤ ‖x‖ * ‖(U t - V t) y‖ := hcs
-    _ ≤ ‖x‖ *
-        ((Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖y‖) :=
+    _ ≤ ‖x‖ * ((Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖y‖) :=
       mul_le_mul_of_nonneg_left hpoint (norm_nonneg x)
-    _ = (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) *
-          ‖x‖ * ‖y‖ := by ring
+    _ = (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖x‖ * ‖y‖ := by ring
 
 /-- Direct left matrix-element differences satisfy the same input-to-state envelope. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_sub_inputToState_bound_left
@@ -363,8 +333,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (x y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -377,8 +346,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   rw [continuousLinearMap_abs_inner_apply_sub_inner_apply_eq_abs_inner_sub_apply]
   exact
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_inputToState_bound_left
-      b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG
-      x y hU0 hV0 hU hV
+      b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG x y hU0 hV0 hU hV
 
 /-- Direct right matrix-element differences satisfy the identical envelope. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_sub_inputToState_bound_right
@@ -387,8 +355,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ)
     (t₀ t : ℝ) (ht : t₀ ≤ t)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (x y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -401,8 +368,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
   rw [continuousLinearMap_abs_inner_apply_sub_inner_apply_eq_abs_inner_sub_apply]
   exact
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_inputToState_bound_right
-      b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG
-      x y hU0 hV0 hU hV
+      b a δ hδ hδpos t₀ t ht A B F G U V C hC hF hG hFG x y hU0 hV0 hU hV
 
 /-- A fixed left matrix element enters an `ε`-neighborhood of its input floor
     after the vector-dependent full-gap waiting time. -/
@@ -411,8 +377,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (t₀ : ℝ)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (x y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -422,24 +387,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       HasDerivAt V ((-orthonormalDiagonalOperator b a) * V r + G r) r)
     (ε : ℝ) (hε : 0 < ε) :
     ∀ t : ℝ,
-      t₀ + max 0
-          (Real.log ((‖A - B‖ * ‖x‖ * ‖y‖) / ε) / δ) ≤ t →
+      t₀ + max 0 (Real.log ((‖A - B‖ * ‖x‖ * ‖y‖) / ε) / δ) ≤ t →
         |inner ℝ x (U t y) - inner ℝ x (V t y)| ≤
           (C / δ) * ‖x‖ * ‖y‖ + ε := by
-  have hcoeff : 0 ≤ ‖A - B‖ * ‖x‖ * ‖y‖ :=
-    mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg x)) (norm_nonneg y)
-  have htransient :=
-    realFunction_abs_le_epsilon_after_exponentialBound
-      δ ε (‖A - B‖ * ‖x‖ * ‖y‖) t₀ hδpos hε hcoeff
-      (fun t : ℝ =>
-        Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖)
-      (by
-        intro t ht
-        have hnonneg :
-            0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
-          positivity
-        rw [abs_of_nonneg hnonneg]
-        exact le_of_eq (by ring))
   intro t ht
   have ht₀ : t₀ ≤ t := by
     have hnonneg : 0 ≤ max 0
@@ -447,16 +397,15 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     linarith
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_sub_inputToState_bound_left
-      b a δ hδ hδpos t₀ t ht₀ A B F G U V C hC hF hG hFG
-      x y hU0 hV0 hU hV
+      b a δ hδ hδpos t₀ t ht₀ A B F G U V C hC hF hG hFG x y hU0 hV0 hU hV
+  have hcoeff : 0 ≤ ‖A - B‖ * ‖x‖ * ‖y‖ :=
+    mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg x)) (norm_nonneg y)
+  have hdecayK :=
+    nonnegativeCoefficient_mul_exp_le_epsilon_after
+      δ ε (‖A - B‖ * ‖x‖ * ‖y‖) t₀ hδpos hε hcoeff t ht
   have hdecay :
       Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ ≤ ε := by
-    have hraw := htransient t ht
-    have hnonneg :
-        0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
-      positivity
-    rw [abs_of_nonneg hnonneg] at hraw
-    simpa [mul_comm, mul_left_comm, mul_assoc] using hraw
+    simpa [mul_comm, mul_left_comm, mul_assoc] using hdecayK
   calc
     |inner ℝ x (U t y) - inner ℝ x (V t y)| ≤
         (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖x‖ * ‖y‖ := henv
@@ -471,8 +420,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (t₀ : ℝ)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (x y : E) (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -482,24 +430,9 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       HasDerivAt V (V r * (-orthonormalDiagonalOperator b a) + G r) r)
     (ε : ℝ) (hε : 0 < ε) :
     ∀ t : ℝ,
-      t₀ + max 0
-          (Real.log ((‖A - B‖ * ‖x‖ * ‖y‖) / ε) / δ) ≤ t →
+      t₀ + max 0 (Real.log ((‖A - B‖ * ‖x‖ * ‖y‖) / ε) / δ) ≤ t →
         |inner ℝ x (U t y) - inner ℝ x (V t y)| ≤
           (C / δ) * ‖x‖ * ‖y‖ + ε := by
-  have hcoeff : 0 ≤ ‖A - B‖ * ‖x‖ * ‖y‖ :=
-    mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg x)) (norm_nonneg y)
-  have htransient :=
-    realFunction_abs_le_epsilon_after_exponentialBound
-      δ ε (‖A - B‖ * ‖x‖ * ‖y‖) t₀ hδpos hε hcoeff
-      (fun t : ℝ =>
-        Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖)
-      (by
-        intro t ht
-        have hnonneg :
-            0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
-          positivity
-        rw [abs_of_nonneg hnonneg]
-        exact le_of_eq (by ring))
   intro t ht
   have ht₀ : t₀ ≤ t := by
     have hnonneg : 0 ≤ max 0
@@ -507,16 +440,15 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     linarith
   have henv :=
     orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_matrixElement_sub_inputToState_bound_right
-      b a δ hδ hδpos t₀ t ht₀ A B F G U V C hC hF hG hFG
-      x y hU0 hV0 hU hV
+      b a δ hδ hδpos t₀ t ht₀ A B F G U V C hC hF hG hFG x y hU0 hV0 hU hV
+  have hcoeff : 0 ≤ ‖A - B‖ * ‖x‖ * ‖y‖ :=
+    mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg x)) (norm_nonneg y)
+  have hdecayK :=
+    nonnegativeCoefficient_mul_exp_le_epsilon_after
+      δ ε (‖A - B‖ * ‖x‖ * ‖y‖) t₀ hδpos hε hcoeff t ht
   have hdecay :
       Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ ≤ ε := by
-    have hraw := htransient t ht
-    have hnonneg :
-        0 ≤ Real.exp (-((t - t₀) * δ)) * ‖A - B‖ * ‖x‖ * ‖y‖ := by
-      positivity
-    rw [abs_of_nonneg hnonneg] at hraw
-    simpa [mul_comm, mul_left_comm, mul_assoc] using hraw
+    simpa [mul_comm, mul_left_comm, mul_assoc] using hdecayK
   calc
     |inner ℝ x (U t y) - inner ℝ x (V t y)| ≤
         (Real.exp (-((t - t₀) * δ)) * ‖A - B‖ + C / δ) * ‖x‖ * ‖y‖ := henv
@@ -532,8 +464,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (t₀ : ℝ)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -552,8 +483,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       (U t) (V t) x y hx hy
   exact hmatrix.trans
     (orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_norm_sub_le_floor_add_epsilon_after_inputToState_left
-      b a δ hδ hδpos t₀ A B F G U V C hC hF hG hFG
-      hU0 hV0 hU hV ε hε t ht)
+      b a δ hδ hδpos t₀ A B F G U V C hC hF hG hFG hU0 hV0 hU hV ε hε t ht)
 
 /-- The right unit-ball result has the identical common waiting time. -/
 theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_unitBall_matrixElement_sub_le_floor_add_epsilon_after_inputToState_right
@@ -561,8 +491,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
     [Fintype ι] [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     (b : OrthonormalBasis ι ℝ E) (a : ι → ℝ) (δ : ℝ)
     (hδ : ∀ i : ι, δ ≤ a i) (hδpos : 0 < δ) (t₀ : ℝ)
-    (A B : E →L[ℝ] E)
-    (F G U V : ℝ → (E →L[ℝ] E))
+    (A B : E →L[ℝ] E) (F G U V : ℝ → (E →L[ℝ] E))
     (C : ℝ) (hC : 0 ≤ C) (hF : Continuous F) (hG : Continuous G)
     (hFG : ∀ s : ℝ, t₀ ≤ s → ‖F s - G s‖ ≤ C)
     (hU0 : U t₀ = A) (hV0 : V t₀ = B)
@@ -581,8 +510,7 @@ theorem orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_
       (U t) (V t) x y hx hy
   exact hmatrix.trans
     (orthonormalDiagonalHamiltonianSemigroup_operator_boundedInputDifference_pairwise_norm_sub_le_floor_add_epsilon_after_inputToState_right
-      b a δ hδ hδpos t₀ A B F G U V C hC hF hG hFG
-      hU0 hV0 hU hV ε hε t ht)
+      b a δ hδ hδpos t₀ A B F G U V C hC hF hG hFG hU0 hV0 hU hV ε hε t ht)
 
 end
 
