@@ -152,6 +152,40 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_spect
           T hP hInnerSymmetric hSelf)
         rfl rfl J Q momentOrder k K hKcompact hKu hu
 
+/-- Finite canonical OS Taylor jets and finite spectral-moment jets converge
+simultaneously on compact strict half-mass spectral sets. -/
+theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_continuum_uniformOn_compact_jet
+    (T : P.StronglyContinuousPhysicalSemigroup) (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (J : V →L[ℝ] P.VacuumOrthogonalHilbert)
+    (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
+    (momentOrder taylorOrder : ℕ)
+    (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < G.mass / 2) :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
+        ∀ k ≤ taylorOrder, ∀ lambda ∈ K,
+          ‖continuousLinearMapSpectralMomentJet momentOrder
+              (continuousLinearMapCompression J Q
+                (_root_.iteratedDeriv k
+                  (G.admissibleRescaledDefectTaylorResolvent
+                    T hInnerSymmetric tau) lambda)) -
+            continuousLinearMapSpectralMomentJet momentOrder
+              (continuousLinearMapCompression J Q
+                (_root_.iteratedDeriv k
+                  (G.vacuumOrthogonalContinuumTaylorResolvent
+                    T hP hInnerSymmetric hSelf) lambda))‖ < epsilon := by
+  exact
+    (G.canonicalRescaledDefectTaylorStrongLimitData
+      T hP hInnerSymmetric hSelf).iteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_uniformOn_compact_jet
+        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData
+          T hInnerSymmetric)
+        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData
+          T hP hInnerSymmetric hSelf)
+        rfl rfl J Q momentOrder taylorOrder K hKcompact hKu hu
+
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
