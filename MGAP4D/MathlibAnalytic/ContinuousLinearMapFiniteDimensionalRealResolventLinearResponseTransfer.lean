@@ -80,8 +80,9 @@ theorem finiteDimensional_linearResponseFamilyPair_tendsto_uniformOn
     _ ≤ ‖Phi r‖ * ‖P a q i - P0 q i‖ := hdual
     _ ≤ L * ‖P a q i - P0 q i‖ :=
       mul_le_mul_of_nonneg_right (hPhi r) (norm_nonneg _)
-    _ < (L + 1) * eta := by
-      exact mul_lt_mul hcomponent (by linarith) (norm_nonneg _) hL1
+    _ ≤ (L + 1) * ‖P a q i - P0 q i‖ :=
+      mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
+    _ < (L + 1) * eta := mul_lt_mul_of_pos_left hcomponent hL1
     _ = epsilon := by
       dsimp [eta]
       field_simp [ne_of_gt hL1]
