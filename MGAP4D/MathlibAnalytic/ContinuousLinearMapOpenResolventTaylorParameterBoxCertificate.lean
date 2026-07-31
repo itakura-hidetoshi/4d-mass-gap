@@ -359,10 +359,9 @@ theorem taylorPartialSum_tendsto_apply
       l
       (𝓝 ((continuousLinearMapTaylorPartialSum
         S.limitResolvent lambda mu N) x)) := by
-  unfold continuousLinearMapTaylorPartialSum
   have hsum := tendsto_finset_sum (Finset.range N)
     (fun k hk => S.taylorTerm_tendsto_apply k hlambda mu x)
-  simpa only [Finset.sum_apply] using hsum
+  simpa [continuousLinearMapTaylorPartialSum, div_eq_mul_inv] using hsum
 
 /-- Consequently the Taylor remainder applied to every fixed vector converges
 to the corresponding remainder of the limit resolvent. -/
