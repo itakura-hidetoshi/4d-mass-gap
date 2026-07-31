@@ -70,7 +70,7 @@ theorem ringInverse_mul_of_isUnit
     {x : R} (hx : IsUnit x) :
     Ring.inverse x * x = 1 := by
   rcases hx with ⟨u, rfl⟩
-  simp [Ring.inverse_unit]
+  simp
 
 /-- The ring inverse is a right inverse at every unit. -/
 theorem mul_ringInverse_of_isUnit
@@ -78,7 +78,7 @@ theorem mul_ringInverse_of_isUnit
     {x : R} (hx : IsUnit x) :
     x * Ring.inverse x = 1 := by
   rcases hx with ⟨u, rfl⟩
-  simp [Ring.inverse_unit]
+  simp
 
 /-- A nonzero characteristic determinant gives the left resolvent identity. -/
 theorem continuousLinearMapRealResolvent_mul_shift
@@ -190,7 +190,7 @@ theorem continuousLinearMap_ringInverse_neumann_stability
     have hs := tsum_geometric_le_of_norm_lt_one D hD
     rw [show Ring.inverse (1 - D) = ∑' n : ℕ, D ^ n by
       exact NormedRing.inverse_one_sub D hD]
-    exact hs
+    simpa only [norm_one, sub_self, zero_add] using hs
   have hden : (1 - ‖D‖)⁻¹ ≤ (2 : ℝ) :=
     inv_le_of_inv_le₀ (by norm_num) (by linarith)
   have hUinvNorm : ‖(↑U⁻¹ : V →L[ℝ] V)‖ ≤ 2 := by
@@ -295,7 +295,7 @@ theorem finiteDimensional_realResolvent_eventually_stable
   have hCeta : C * eta ≤ (1 : ℝ) / 4 := by
     calc
       C * eta ≤ C * (4 * C)⁻¹ := by gcongr
-      _ = (1 : ℝ) / 4 := by field_simp; ring
+      _ = (1 : ℝ) / 4 := by field_simp
   have hsmall : ‖R0 * (B0 - B)‖ < (1 : ℝ) / 2 := by
     calc
       ‖R0 * (B0 - B)‖ ≤ ‖R0‖ * ‖B0 - B‖ := norm_mul_le _ _
