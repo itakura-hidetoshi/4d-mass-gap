@@ -32,7 +32,7 @@ noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorResolven
     (tau : G.AdmissibleRescaledDefectTime) :
     ℝ → P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
   belowGapContinuousLinearMapFamily (G.mass / 2)
-    (fun lambda hlambda =>
+    (fun _ hlambda =>
       G.admissibleRescaledDefectResolvent
         hInnerSymmetric tau hlambda)
 
@@ -59,7 +59,7 @@ noncomputable def VacuumSemigroupGapSlope.vacuumOrthogonalContinuumTaylorResolve
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
     ℝ → P.VacuumOrthogonalHilbert →L[ℝ] P.VacuumOrthogonalHilbert :=
   belowGapContinuousLinearMapFamily (G.mass / 2)
-    (fun lambda hlambda =>
+    (fun _ hlambda =>
       G.vacuumOrthogonalContinuumRealResolvent
         T hP hInnerSymmetric hSelf hlambda)
 
@@ -107,7 +107,10 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectResolvent_sub_norm_le
   rw [G.admissibleRescaledDefectResolvent_identity
     T hInnerSymmetric tau hlambda hmu]
   apply ContinuousLinearMap.opNorm_le_bound
-  · positivity
+  · exact mul_nonneg (abs_nonneg _)
+      (mul_nonneg
+        (inv_nonneg.mpr (sub_nonneg.mpr hlambda.le))
+        (inv_nonneg.mpr (sub_nonneg.mpr hmu.le)))
   · intro y
     change ‖(lambda - mu) • Rlambda (Rmu y)‖ ≤
       (|lambda - mu| *
@@ -171,7 +174,7 @@ noncomputable def VacuumSemigroupGapSlope.admissibleRescaledDefectOpenResolventD
     ContinuousLinearMapOpenResolventData P.VacuumOrthogonalHilbert :=
   ContinuousLinearMapOpenResolventData.ofBelowGapFamily
     (G.mass / 2)
-    (fun lambda hlambda =>
+    (fun _ hlambda =>
       G.admissibleRescaledDefectResolvent hInnerSymmetric tau hlambda)
     (G.admissibleRescaledDefectResolvent_sub_norm_le
       T hInnerSymmetric tau)
@@ -188,7 +191,7 @@ noncomputable def VacuumSemigroupGapSlope.vacuumOrthogonalContinuumOpenResolvent
     ContinuousLinearMapOpenResolventData P.VacuumOrthogonalHilbert :=
   ContinuousLinearMapOpenResolventData.ofBelowGapFamily
     (G.mass / 2)
-    (fun lambda hlambda =>
+    (fun _ hlambda =>
       G.vacuumOrthogonalContinuumRealResolvent
         T hP hInnerSymmetric hSelf hlambda)
     (G.vacuumOrthogonalContinuumRealResolvent_sub_norm_le
@@ -249,28 +252,35 @@ noncomputable def VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorStrongLim
   ContinuousLinearMapOpenTaylorStrongLimitData.of_resolventPowers
     (R := G.vacuumOrthogonalContinuumTaylorResolvent
       T hP hInnerSymmetric hSelf)
-    (fun hmu x => by
+    (by
+      intro mu hmu x
       simpa only [
         G.admissibleRescaledDefectTaylorResolvent_of_lt
-          T hInnerSymmetric _ hmu,
+          T hInnerSymmetric _ (lambda := mu) hmu,
         G.vacuumOrthogonalContinuumTaylorResolvent_of_lt
-          T hP hInnerSymmetric hSelf hmu] using
+          T hP hInnerSymmetric hSelf (lambda := mu) hmu] using
         G.admissibleRescaledDefectResolvent_tendsto_continuumResolvent
           T hP hInnerSymmetric hSelf hmu x)
-    (fun k hlambda x => by
+    (by
+      intro k lambda hlambda x
       simpa only [
         G.admissibleRescaledDefectTaylorResolvent_of_lt
-          T hInnerSymmetric _ hlambda,
+          T hInnerSymmetric _ (lambda := lambda) hlambda,
         G.vacuumOrthogonalContinuumTaylorResolvent_of_lt
-          T hP hInnerSymmetric hSelf hlambda] using
+          T hP hInnerSymmetric hSelf (lambda := lambda) hlambda] using
         G.admissibleRescaledDefectResolvent_pow_tendsto_continuumResolvent_pow
-          T hP hInnerSymmetric hSelf hlambda (k + 1) x)
-    (fun tau k lambda hlambda =>
-      G.admissibleRescaledDefectTaylorResolvent_iteratedDeriv
-        T hInnerSymmetric tau k hlambda)
-    (fun k lambda hlambda =>
-      G.vacuumOrthogonalContinuumTaylorResolvent_iteratedDeriv
-        T hP hInnerSymmetric hSelf k hlambda)
+          T hP hInnerSymmetric hSelf (lambda := lambda)
+          hlambda (k + 1) x)
+    (by
+      intro tau k lambda hlambda
+      exact
+        G.admissibleRescaledDefectTaylorResolvent_iteratedDeriv
+          T hInnerSymmetric tau k hlambda)
+    (by
+      intro k lambda hlambda
+      exact
+        G.vacuumOrthogonalContinuumTaylorResolvent_iteratedDeriv
+          T hP hInnerSymmetric hSelf k hlambda)
 
 /-- Direct physical statement: every actual iterated derivative of the
 finite-time resolvents converges strongly to the corresponding derivative of
@@ -295,7 +305,7 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorResolvent_iterated
             T hP hInnerSymmetric hSelf) lambda) x)) :=
   (G.canonicalRescaledDefectTaylorStrongLimitData
     T hP hInnerSymmetric hSelf).iteratedDeriv_tendsto_apply
-      k hlambda x
+      k (lambda := lambda) hlambda x
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
