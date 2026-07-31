@@ -71,7 +71,8 @@ theorem continuousLinearMapOrderedProduct_norm_le
     ‖continuousLinearMapOrderedProduct n R‖ ≤ M ^ n := by
   induction n with
   | zero =>
-      simpa using (norm_one_le : ‖(1 : V →L[ℝ] V)‖ ≤ 1)
+      change ‖ContinuousLinearMap.id ℝ V‖ ≤ 1
+      exact ContinuousLinearMap.norm_id_le
   | succ n ih =>
       rw [continuousLinearMapOrderedProduct_succ]
       calc
@@ -80,7 +81,7 @@ theorem continuousLinearMapOrderedProduct_norm_le
           norm_mul_le _ _
         _ ≤ M * M ^ n := by
           exact mul_le_mul (hR 0)
-            (ih (fun i => R i.succ) (fun i => hR i.succ) hM)
+            (ih (fun i => R i.succ) (fun i => hR i.succ))
             (norm_nonneg _) hM
         _ = M ^ (n + 1) := by
           rw [pow_succ']
@@ -222,14 +223,16 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_one_smul
       continuousLinearMapRealResolvent A z -
         continuousLinearMapRealResolvent A w := by
   rw [continuousLinearMapRealResolvent_sub_eq_smul_mul A hz hw]
-  change
-    (z - w) • ((-1 : ℝ) •
-      (continuousLinearMapRealResolvent A z *
-        continuousLinearMapRealResolvent A w)) =
-    (w - z) •
-      (continuousLinearMapRealResolvent A z *
-        continuousLinearMapRealResolvent A w)
-  rw [smul_smul]
+  have hcoeff :
+      continuousLinearMapRealResolventHermiteCoefficient 1 A
+          (Fin.cases z (fun _ => w)) =
+        (-1 : ℝ) •
+          (continuousLinearMapRealResolvent A z *
+            continuousLinearMapRealResolvent A w) := by
+    simp [continuousLinearMapRealResolventHermiteCoefficient,
+      continuousLinearMapRealResolventHermiteObservable,
+      continuousLinearMapOrderedProduct]
+  rw [hcoeff, smul_smul]
   congr 1
   ring
 
