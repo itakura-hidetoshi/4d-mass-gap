@@ -96,6 +96,27 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_polynom
       (continuousLinearMapPolynomial coeff polynomialDegree)
       (continuous_continuousLinearMapPolynomial coeff polynomialDegree)
 
+/-- Diagonal finite spectral-moment-vector convergence on the complete box. -/
+theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_spectralMomentJet_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree
+    (momentOrder : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
+        ∀ p, box.Contains p →
+          ‖continuousLinearMapSpectralMomentJet momentOrder
+              (continuousLinearMapCompression J Q
+                (continuousLinearMapTaylorPartialSum
+                  (G.admissibleRescaledDefectTaylorResolvent
+                    T hInnerSymmetric tau) p.center p.target (degree tau))) -
+            continuousLinearMapSpectralMomentJet momentOrder
+              (continuousLinearMapCompression J Q
+                (G.vacuumOrthogonalContinuumTaylorResolvent
+                  T hP hInnerSymmetric hSelf p.target))‖ < epsilon := by
+  exact
+    G.admissibleRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree
+      T hP hInnerSymmetric hSelf J Q degree hdegree box
+      (continuousLinearMapSpectralMomentJet momentOrder)
+      (continuous_continuousLinearMapSpectralMomentJet momentOrder)
+
 end DiagonalClosedBox
 
 end StronglyContinuousPhysicalSemigroup
