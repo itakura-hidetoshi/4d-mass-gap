@@ -32,6 +32,7 @@ theorem continuousLinearMap_pow_succ_sub_pow_succ_norm_le
             mul_le_mul hm hA (norm_nonneg A) (pow_nonneg hq (m + 1))
           _ = q ^ (Nat.succ m + 1) := by
             rw [show Nat.succ m + 1 = (m + 1) + 1 by omega, pow_succ]
+            ring
   induction n with
   | zero => simpa using (le_refl ‖A - B‖)
   | succ n ih =>
