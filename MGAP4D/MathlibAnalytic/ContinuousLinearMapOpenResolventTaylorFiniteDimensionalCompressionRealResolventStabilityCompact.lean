@@ -30,35 +30,17 @@ theorem iteratedDeriv_realResolvent_finiteDimensionalCompression_eventually_stab
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (k : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (k : ℕ)
     (K : Set ℝ) (hKcompact : IsCompact K)
-    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
-    (Z : Set ℝ)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon →
-      ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
-        IsUnit (continuousLinearMapRealShift
-          (continuousLinearMapCompression J Q
-            (_root_.iteratedDeriv k (F a) lambda)) z) ∧
-        continuousLinearMapRealResolventNorm
-          (continuousLinearMapCompression J Q
-            (_root_.iteratedDeriv k (F a) lambda)) z ≤ 2 * (M + 1) ∧
-        ‖continuousLinearMapRealResolvent
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) z -
-          continuousLinearMapRealResolvent
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) z‖ < epsilon := by
+    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
+      IsUnit (continuousLinearMapRealShift (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z) ∧
+      continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z ≤ 2 * (M + 1) ∧
+      ‖continuousLinearMapRealResolvent (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z - continuousLinearMapRealResolvent (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z‖ < epsilon := by
   have hoperator :=
     S.iteratedDeriv_tendsto_uniformOn_compact_finiteDimensionalCompression
       B L hLgap hLresolvent J Q k K hKcompact hKu hu
@@ -78,29 +60,15 @@ theorem iteratedDeriv_realResolvent_finiteDimensionalCompression_tendsto_uniform
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (k : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (k : ℕ)
     (K : Set ℝ) (hKcompact : IsCompact K)
-    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
-    (Z : Set ℝ)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon →
-      ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
-        ‖continuousLinearMapRealResolvent
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) z -
-          continuousLinearMapRealResolvent
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) z‖ < epsilon := by
+    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
+      ‖continuousLinearMapRealResolvent (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z - continuousLinearMapRealResolvent (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z‖ < epsilon := by
   intro epsilon hepsilon
   have h := S.iteratedDeriv_realResolvent_finiteDimensionalCompression_eventually_stable_uniformOn_compact_product
     B L hLgap hLresolvent J Q k K hKcompact hKu hu Z
@@ -116,25 +84,15 @@ theorem iteratedDeriv_finiteDimensionalCompression_eventually_mem_realResolventS
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (k : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (k : ℕ)
     (K : Set ℝ) (hKcompact : IsCompact K)
-    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
-    (Z : Set ℝ)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
     ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
-      z ∈ resolventSet ℝ
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k (F a) lambda)) := by
+      z ∈ resolventSet ℝ (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) := by
   have h := S.iteratedDeriv_realResolvent_finiteDimensionalCompression_eventually_stable_uniformOn_compact_product
     B L hLgap hLresolvent J Q k K hKcompact hKu hu Z
     margin hmargin hlimitMargin M hM hlimitResolventNorm 1 zero_lt_one
@@ -151,25 +109,15 @@ theorem iteratedDeriv_finiteDimensionalCompression_eventually_not_mem_realPseudo
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (k : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (k : ℕ)
     (K : Set ℝ) (hKcompact : IsCompact K)
-    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
-    (Z : Set ℝ)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    (hlimitResolventNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
     ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
-      z ∉ continuousLinearMapRealPseudospectrum (2 * (M + 1))
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k (F a) lambda)) := by
+      z ∉ continuousLinearMapRealPseudospectrum (2 * (M + 1)) (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) := by
   have h := S.iteratedDeriv_realResolvent_finiteDimensionalCompression_eventually_stable_uniformOn_compact_product
     B L hLgap hLresolvent J Q k K hKcompact hKu hu Z
     margin hmargin hlimitMargin M hM hlimitResolventNorm 1 zero_lt_one
@@ -186,35 +134,17 @@ theorem iteratedDeriv_realResolvent_finiteDimensionalCompression_eventually_stab
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (order : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (order : ℕ)
     (K : Set ℝ) (hKcompact : IsCompact K)
-    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
-    (Z : Set ℝ)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ k ≤ order, ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ k ≤ order, ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitResolventNorm : ∀ k ≤ order, ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon →
-      ∀ᶠ a in l, ∀ k ≤ order, ∀ lambda ∈ K, ∀ z ∈ Z,
-        IsUnit (continuousLinearMapRealShift
-          (continuousLinearMapCompression J Q
-            (_root_.iteratedDeriv k (F a) lambda)) z) ∧
-        continuousLinearMapRealResolventNorm
-          (continuousLinearMapCompression J Q
-            (_root_.iteratedDeriv k (F a) lambda)) z ≤ 2 * (M + 1) ∧
-        ‖continuousLinearMapRealResolvent
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) z -
-          continuousLinearMapRealResolvent
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) z‖ < epsilon := by
+    (hlimitResolventNorm : ∀ k ≤ order, ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ k ≤ order, ∀ lambda ∈ K, ∀ z ∈ Z,
+      IsUnit (continuousLinearMapRealShift (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z) ∧
+      continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z ≤ 2 * (M + 1) ∧
+      ‖continuousLinearMapRealResolvent (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) z - continuousLinearMapRealResolvent (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z‖ < epsilon := by
   intro epsilon hepsilon
   have hk : ∀ k ∈ Finset.range (order + 1),
       ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
