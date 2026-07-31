@@ -13,7 +13,7 @@ namespace MathlibAnalytic
 set_option maxHeartbeats 5000000
 
 /-- Finite vector of scalar Newton weights through a fixed interpolation
-degree.  The final entry is exposed recursively. -/
+order. -/
 def continuousLinearMapRealResolventNewtonWeightVector :
     (degree : ℕ) → (Fin (degree + 1) → ℝ) → ℝ → Fin (degree + 1) → ℝ
   | 0, _, _ => fun _ => 1
@@ -40,7 +40,7 @@ theorem continuousLinearMapRealResolventNewtonWeightVector_succ
         (continuousLinearMapRealResolventNewtonNodeProduct
           (n + 1) (Fin.init nodes) z) := rfl
 
-/-- Recursive common bound for a complete finite Newton-weight vector. -/
+/-- Recursive common bound for a finite Newton-weight vector. -/
 def continuousLinearMapRealResolventNewtonWeightEnvelope : ℕ → ℝ → ℝ
   | 0, _ => 1
   | n + 1, D =>
@@ -69,7 +69,7 @@ theorem continuousLinearMapRealResolventNewtonWeightEnvelope_nonneg
       exact add_nonneg ih (pow_nonneg hD (n + 1))
 
 /-- A common displacement bound controls the product-supremum norm of the
-complete finite Newton-weight vector. -/
+complete Newton-weight vector. -/
 theorem continuousLinearMapRealResolventNewtonWeightVector_norm_le
     (degree : ℕ) (nodes : Fin (degree + 1) → ℝ) (z D : ℝ)
     (hD : 0 ≤ D) (hnodes : ∀ i, |z - nodes i| ≤ D) :
@@ -77,6 +77,8 @@ theorem continuousLinearMapRealResolventNewtonWeightVector_norm_le
       continuousLinearMapRealResolventNewtonWeightEnvelope degree D := by
   induction degree with
   | zero =>
+      simp only [continuousLinearMapRealResolventNewtonWeightVector_zero,
+        continuousLinearMapRealResolventNewtonWeightEnvelope_zero]
       rw [pi_norm_le_iff_of_nonneg (by norm_num : (0 : ℝ) ≤ 1)]
       intro i
       fin_cases i
@@ -103,7 +105,8 @@ theorem continuousLinearMapRealResolventNewtonWeightVector_norm_le
         rw [pi_norm_le_iff_of_nonneg hEnv] at hih
         exact (hih j).trans (le_add_of_nonneg_right hPow)
 
-/-- Newton-Hermite interpolation with an explicit finite scalar-weight vector. -/
+/-- Newton-Hermite interpolation with an explicit finite scalar-weight
+vector. -/
 def continuousLinearMapRealResolventWeightedNewtonHermiteInterpolantObservable
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] :
     (degree : ℕ) → (Fin (degree + 1) → ℝ) →
@@ -134,8 +137,8 @@ theorem continuousLinearMapRealResolventWeightedNewtonHermiteInterpolantObservab
         weight (Fin.last (n + 1)) •
           continuousLinearMapRealResolventHermiteObservable (n + 1) R := rfl
 
-/-- The weighted interpolant is continuous jointly in its finite scalar and
-operator tuples. -/
+/-- The weighted interpolant is continuous jointly in its scalar and operator
+tuples. -/
 theorem continuous_continuousLinearMapRealResolventWeightedNewtonHermiteInterpolantObservable
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] :
     ∀ degree : ℕ,
@@ -149,28 +152,16 @@ theorem continuous_continuousLinearMapRealResolventWeightedNewtonHermiteInterpol
         (Fin 1 → (V →L[ℝ] V)) => x.1 0 • x.2 0)
       fun_prop
   | n + 1 => by
-      have hweightInit : Continuous
-          (fun x : (Fin (n + 2) → ℝ) ×
-              (Fin (n + 2) → (V →L[ℝ] V)) => Fin.init x.1) := by
-        apply continuous_pi
-        intro i
-        exact (continuous_apply i.castSucc).comp continuous_fst
-      have hoperatorInit : Continuous
-          (fun x : (Fin (n + 2) → ℝ) ×
-              (Fin (n + 2) → (V →L[ℝ] V)) => Fin.init x.2) := by
-        apply continuous_pi
-        intro i
-        exact (continuous_apply i.castSucc).comp continuous_snd
       have hinit : Continuous
           (fun x : (Fin (n + 2) → ℝ) ×
               (Fin (n + 2) → (V →L[ℝ] V)) =>
-            (Fin.init x.1, Fin.init x.2)) :=
-        hweightInit.prod_mk hoperatorInit
+            (Fin.init x.1, Fin.init x.2)) := by
+        fun_prop
       have hlast : Continuous
           (fun x : (Fin (n + 2) → ℝ) ×
               (Fin (n + 2) → (V →L[ℝ] V)) =>
-            x.1 (Fin.last (n + 1))) :=
-        (continuous_apply (Fin.last (n + 1))).comp continuous_fst
+            x.1 (Fin.last (n + 1))) := by
+        fun_prop
       have hHermite : Continuous
           (fun x : (Fin (n + 2) → ℝ) ×
               (Fin (n + 2) → (V →L[ℝ] V)) =>
@@ -181,8 +172,8 @@ theorem continuous_continuousLinearMapRealResolventWeightedNewtonHermiteInterpol
         ((continuous_continuousLinearMapRealResolventWeightedNewtonHermiteInterpolantObservable
           n).comp hinit).add (hlast.smul hHermite)
 
-/-- The recursive Newton weights recover the original Newton-Hermite
-interpolant observable exactly. -/
+/-- Recursive Newton weights recover the original Newton-Hermite interpolant
+observable. -/
 theorem continuousLinearMapRealResolventWeightedNewtonHermiteInterpolantObservable_weightVector
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] :
     ∀ degree : ℕ, ∀ nodes : Fin (degree + 1) → ℝ, ∀ z : ℝ,
@@ -215,8 +206,7 @@ def continuousLinearMapRealResolventWeightedNewtonHermitePairObservable
     x.1 (Fin.last (degree + 1)) •
       continuousLinearMapRealResolventHermiteObservable (degree + 1) x.2]
 
-/-- The weighted interpolant/remainder pair is continuous jointly in all
-finite scalar and operator coordinates. -/
+/-- The weighted interpolant/remainder pair is jointly continuous. -/
 theorem continuous_continuousLinearMapRealResolventWeightedNewtonHermitePairObservable
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (degree : ℕ) :
@@ -226,28 +216,21 @@ theorem continuous_continuousLinearMapRealResolventWeightedNewtonHermitePairObse
   apply continuous_pi
   intro i
   refine Fin.cases ?_ (fun j => ?_) i
-  · have hweightInit : Continuous
+  · have hinit : Continuous
         (fun x : (Fin (degree + 2) → ℝ) ×
-            (Fin (degree + 2) → (V →L[ℝ] V)) => Fin.init x.1) := by
-      apply continuous_pi
-      intro k
-      exact (continuous_apply k.castSucc).comp continuous_fst
-    have hoperatorInit : Continuous
-        (fun x : (Fin (degree + 2) → ℝ) ×
-            (Fin (degree + 2) → (V →L[ℝ] V)) => Fin.init x.2) := by
-      apply continuous_pi
-      intro k
-      exact (continuous_apply k.castSucc).comp continuous_snd
+            (Fin (degree + 2) → (V →L[ℝ] V)) =>
+          (Fin.init x.1, Fin.init x.2)) := by
+      fun_prop
     simpa [continuousLinearMapRealResolventWeightedNewtonHermitePairObservable]
       using
         (continuous_continuousLinearMapRealResolventWeightedNewtonHermiteInterpolantObservable
-          (V := V) degree).comp (hweightInit.prod_mk hoperatorInit)
+          (V := V) degree).comp hinit
   · refine Fin.cases ?_ (fun j => Fin.elim0 j) j
     have hlast : Continuous
         (fun x : (Fin (degree + 2) → ℝ) ×
             (Fin (degree + 2) → (V →L[ℝ] V)) =>
-          x.1 (Fin.last (degree + 1))) :=
-      (continuous_apply (Fin.last (degree + 1))).comp continuous_fst
+          x.1 (Fin.last (degree + 1))) := by
+      fun_prop
     have hHermite : Continuous
         (fun x : (Fin (degree + 2) → ℝ) ×
             (Fin (degree + 2) → (V →L[ℝ] V)) =>
@@ -258,7 +241,7 @@ theorem continuous_continuousLinearMapRealResolventWeightedNewtonHermitePairObse
       using hlast.smul hHermite
 
 /-- Recursive Newton weights specialize the weighted pair to the original
-fixed-node interpolant/remainder pair observable. -/
+interpolant/remainder pair observable. -/
 theorem continuousLinearMapRealResolventWeightedNewtonHermitePairObservable_weightVector
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (degree : ℕ) (nodes : Fin (degree + 1) → ℝ) (z : ℝ)
@@ -283,10 +266,8 @@ theorem continuousLinearMapRealResolventWeightedNewtonHermitePairObservable_weig
       continuousLinearMapRealResolventNewtonHermiteRemainderObservable,
       continuousLinearMapRealResolventNewtonWeightVector_succ]
 
-/-- Uniform componentwise convergence of node-plus-evaluation resolvent tuples
-transfers to Newton-Hermite interpolant/remainder pairs even when the node and
-evaluation values vary across the family.  A common displacement bound is the
-only additional scalar control. -/
+/-- Uniform componentwise convergence transfers to Newton-Hermite pairs even
+when nodes and evaluation points vary across the family. -/
 theorem finiteDimensional_realResolventNewtonHermitePair_variable_tendsto_uniformOn_of_componentwise
     {α ι V : Type*}
     [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
@@ -366,9 +347,20 @@ theorem finiteDimensional_realResolventNewtonHermitePair_variable_tendsto_unifor
   filter_upwards [h] with a ha
   intro i hi
   have ha' := ha i hi
-  simpa [A, A0, weight,
-    continuousLinearMapRealResolventWeightedNewtonHermitePairObservable_weightVector]
-    using ha'
+  change
+    ‖continuousLinearMapRealResolventWeightedNewtonHermitePairObservable degree
+        (continuousLinearMapRealResolventNewtonWeightVector
+            (degree + 1) (continuousLinearMapFinAppend (nodes i) (eval i))
+            (eval i), R a i) -
+      continuousLinearMapRealResolventWeightedNewtonHermitePairObservable degree
+        (continuousLinearMapRealResolventNewtonWeightVector
+            (degree + 1) (continuousLinearMapFinAppend (nodes i) (eval i))
+            (eval i), R0 i)‖ < epsilon at ha'
+  rw [continuousLinearMapRealResolventWeightedNewtonHermitePairObservable_weightVector
+        degree (nodes i) (eval i) (R a i),
+      continuousLinearMapRealResolventWeightedNewtonHermitePairObservable_weightVector
+        degree (nodes i) (eval i) (R0 i)] at ha'
+  exact ha'
 
 end MathlibAnalytic
 end MGAP4D
