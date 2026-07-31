@@ -116,6 +116,37 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_det_f
           T hP hInnerSymmetric hSelf)
         rfl rfl J Q k K hKcompact hKu hu
 
+/-- Every finite canonical OS Taylor jet has simultaneous compact-uniform
+determinant convergence. -/
+theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_det_finiteDimensionalCompression_tendsto_continuum_uniformOn_compact_jet
+    (T : P.StronglyContinuousPhysicalSemigroup) (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (J : V →L[ℝ] P.VacuumOrthogonalHilbert)
+    (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
+    (order : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < G.mass / 2) :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
+        ∀ k ≤ order, ∀ lambda ∈ K,
+          |(continuousLinearMapCompression J Q
+                (_root_.iteratedDeriv k
+                  (G.admissibleRescaledDefectTaylorResolvent
+                    T hInnerSymmetric tau) lambda)).det -
+            (continuousLinearMapCompression J Q
+                (_root_.iteratedDeriv k
+                  (G.vacuumOrthogonalContinuumTaylorResolvent
+                    T hP hInnerSymmetric hSelf) lambda)).det| < epsilon := by
+  exact
+    (G.canonicalRescaledDefectTaylorStrongLimitData
+      T hP hInnerSymmetric hSelf).iteratedDeriv_det_finiteDimensionalCompression_tendsto_uniformOn_compact_jet
+        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData
+          T hInnerSymmetric)
+        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData
+          T hP hInnerSymmetric hSelf)
+        rfl rfl J Q order K hKcompact hKu hu
+
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
