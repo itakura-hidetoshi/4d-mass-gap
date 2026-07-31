@@ -45,15 +45,31 @@ theorem belowGapContinuousLinearMapFamily_continuousOn
     ContinuousOn (belowGapContinuousLinearMapFamily gap R) (Set.Iio gap) := by
   intro lambda hlambda
   let F := belowGapContinuousLinearMapFamily gap R
+  have hSubFull :
+      Tendsto (fun mu : ℝ => mu - lambda) (𝓝 lambda) (𝓝 0) := by
+    simpa using
+      (tendsto_id.sub
+        (tendsto_const_nhds : Tendsto (fun _ : ℝ => lambda) (𝓝 lambda) (𝓝 lambda)))
+  have hAbsFull :
+      Tendsto (fun mu : ℝ => |mu - lambda|) (𝓝 lambda) (𝓝 0) := by
+    simpa [Real.norm_eq_abs] using hSubFull.norm
   have hAbs :
       Tendsto (fun mu : ℝ => |mu - lambda|)
-        (𝓝[Set.Iio gap] lambda) (𝓝 0) := by
-    have h := (continuousWithinAt_id.sub continuousWithinAt_const).norm
-    simpa [Real.norm_eq_abs] using h
+        (𝓝[Set.Iio gap] lambda) (𝓝 0) :=
+    hAbsFull.mono_left inf_le_left
+  have hGapSubFull :
+      Tendsto (fun mu : ℝ => gap - mu) (𝓝 lambda) (𝓝 (gap - lambda)) :=
+    tendsto_const_nhds.sub tendsto_id
+  have hGapNe : gap - lambda ≠ 0 :=
+    sub_ne_zero.mpr (ne_of_gt hlambda)
+  have hInvFull :
+      Tendsto (fun mu : ℝ => (gap - mu)⁻¹)
+        (𝓝 lambda) (𝓝 ((gap - lambda)⁻¹)) :=
+    hGapSubFull.inv₀ hGapNe
   have hInv :
       Tendsto (fun mu : ℝ => (gap - mu)⁻¹)
-        (𝓝[Set.Iio gap] lambda) (𝓝 ((gap - lambda)⁻¹)) := by
-    exact (continuousWithinAt_const.sub continuousWithinAt_id).inv₀ (by linarith)
+        (𝓝[Set.Iio gap] lambda) (𝓝 ((gap - lambda)⁻¹)) :=
+    hInvFull.mono_left inf_le_left
   have hConstInv :
       Tendsto (fun _ : ℝ => (gap - lambda)⁻¹)
         (𝓝[Set.Iio gap] lambda) (𝓝 ((gap - lambda)⁻¹)) :=
@@ -70,9 +86,9 @@ theorem belowGapContinuousLinearMapFamily_continuousOn
         (𝓝[Set.Iio gap] lambda) (𝓝 0) := by
     apply squeeze_zero_norm'
     · filter_upwards [self_mem_nhdsWithin] with mu hmu
-      have h := hsub hmu hlambda
-      simpa [F, belowGapContinuousLinearMapFamily_of_lt,
-        mul_comm, mul_left_comm, mul_assoc] using h
+      change ‖R mu hmu - R lambda hlambda‖ ≤
+        |mu - lambda| * ((gap - mu)⁻¹ * (gap - lambda)⁻¹)
+      exact hsub hmu hlambda
     · exact hMajor
   have hAdd := hDiff.add
     (tendsto_const_nhds :
@@ -100,8 +116,9 @@ noncomputable def ContinuousLinearMapOpenResolventData.ofBelowGapFamily
   continuousOn := belowGapContinuousLinearMapFamily_continuousOn gap R hsub
   resolvent_identity := by
     intro lambda mu hlambda hmu
-    simpa only [belowGapContinuousLinearMapFamily_of_lt] using
-      hidentity hlambda hmu
+    change R lambda hlambda - R mu hmu =
+      (lambda - mu) • ((R lambda hlambda).comp (R mu hmu))
+    exact hidentity hlambda hmu
 
 end MathlibAnalytic
 end MGAP4D
