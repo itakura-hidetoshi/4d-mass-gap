@@ -41,7 +41,7 @@ theorem abs_continuousLinearMapRealResolventNewtonNodeProduct_le
   induction n with
   | zero => simp [continuousLinearMapRealResolventNewtonNodeProduct]
   | succ n ih =>
-      rw [continuousLinearMapRealResolventNewtonNodeProduct_succ, abs_mul, pow_succ']
+      rw [continuousLinearMapRealResolventNewtonNodeProduct_succ, abs_mul, pow_succ]
       exact mul_le_mul
         (ih (Fin.init nodes) (fun i => hnodes i.castSucc))
         (hnodes (Fin.last n)) (abs_nonneg _) (pow_nonneg hD n)
@@ -148,7 +148,7 @@ theorem continuousLinearMapRealResolventNewtonHermiteInterpolantObservable_norm_
         continuousLinearMapRealResolventNewtonHermiteEnvelope_succ]
       apply le_trans (norm_add_le _ _)
       apply add_le_add
-      · exact ih (Fin.init nodes) z M D hM hD (Fin.init R)
+      · exact ih (Fin.init nodes) (Fin.init R)
           (fun i => hR i.castSucc) (fun i => hnodes i.castSucc)
       · rw [norm_smul, Real.norm_eq_abs]
         exact mul_le_mul
