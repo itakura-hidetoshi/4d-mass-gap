@@ -58,6 +58,23 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_continu
           T hP hInnerSymmetric hSelf)
         rfl rfl J Q Phi hPhi degree hdegree box
 
+/-- Diagonal determinant convergence on the complete closed half-mass box. -/
+theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_det_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
+        ∀ p, box.Contains p →
+          |(continuousLinearMapCompression J Q
+                (continuousLinearMapTaylorPartialSum
+                  (G.admissibleRescaledDefectTaylorResolvent
+                    T hInnerSymmetric tau) p.center p.target (degree tau))).det -
+            (continuousLinearMapCompression J Q
+                (G.vacuumOrthogonalContinuumTaylorResolvent
+                  T hP hInnerSymmetric hSelf p.target)).det| < epsilon := by
+  simpa [Real.norm_eq_abs] using
+    G.admissibleRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree
+      T hP hInnerSymmetric hSelf J Q degree hdegree box
+      (fun A : V →L[ℝ] V => A.det) ContinuousLinearMap.continuous_det
+
 end DiagonalClosedBox
 
 end StronglyContinuousPhysicalSemigroup
