@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventNewtonHermiteTransfer
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventNewtonHermiteVariableTransfer
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventStabilityCompact
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic
@@ -39,10 +39,19 @@ theorem continuousLinearMapRealResolventNewtonHermitePairObservable_eq
         degree A nodes z := by
   funext i
   refine Fin.cases ?_ (fun j => ?_) i
-  · simp [continuousLinearMapRealResolventNewtonHermitePairObservable,
-      continuousLinearMapRealResolventNewtonHermitePair,
-      continuousLinearMapRealResolventNewtonHermiteInterpolant,
-      continuousLinearMapFinAppend, Fin.init]
+  · change
+      continuousLinearMapRealResolventNewtonHermiteInterpolantObservable
+          degree nodes z
+          (Fin.init (fun i => continuousLinearMapRealResolvent A
+            (continuousLinearMapFinAppend nodes z i))) =
+        continuousLinearMapRealResolventNewtonHermiteInterpolantObservable
+          degree nodes z
+          (fun i => continuousLinearMapRealResolvent A (nodes i))
+    rw [show Fin.init (fun i => continuousLinearMapRealResolvent A
+        (continuousLinearMapFinAppend nodes z i)) =
+      (fun i => continuousLinearMapRealResolvent A (nodes i)) by
+        funext k
+        simp [Fin.init]]
   · refine Fin.cases ?_ (fun j => Fin.elim0 j) j
     rfl
 
@@ -54,7 +63,8 @@ variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable [FiniteDimensional ℝ V]
 
 /-- Compact-uniform simultaneous convergence of Newton-Hermite interpolants
-and their exact remainders for arbitrary finite node/evaluation families. -/
+and their exact remainders for arbitrary finite node/evaluation families with
+a common node-to-evaluation displacement bound. -/
 theorem iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     (S : ContinuousLinearMapOpenTaylorStrongLimitData l gap F)
@@ -67,6 +77,7 @@ theorem iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompressio
     (nodes : κ → Fin (degree + 1) → ℝ) (eval : κ → ℝ)
     (T : Set κ) (Z : Set ℝ)
     (hnodes : ∀ q ∈ T, ∀ j, nodes q j ∈ Z) (heval : ∀ q ∈ T, eval q ∈ Z)
+    (D : ℝ) (hD : 0 ≤ D) (hdist : ∀ q ∈ T, ∀ j, |eval q - nodes q j| ≤ D)
     (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z,
       margin ≤ |continuousLinearMapCharacteristicDeterminant
@@ -116,18 +127,15 @@ theorem iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompressio
     simpa [R, R0] using
       ha p.1 hp.1 (spectral p.2 j) (hspectral p.2 hp.2 j)
   have hpair :=
-    finiteDimensional_realResolventNewtonHermitePair_tendsto_uniformOn_of_componentwise
-      degree (fun _ => 0) 0 R R0 M hM hR0 hR
+    finiteDimensional_realResolventNewtonHermitePair_variable_tendsto_uniformOn_of_componentwise
+      degree (fun p : ℝ × κ => nodes p.2) (fun p : ℝ × κ => eval p.2)
+      D hD (fun p hp j => hdist p.2 hp.2 j)
+      R R0 M hM hR0 hR
   intro epsilon hepsilon
   have h := hpair epsilon hepsilon
   filter_upwards [h] with a ha
   intro lambda hlambda q hq
   have ha' := ha (lambda, q) ⟨hlambda, hq⟩
-  change
-    ‖continuousLinearMapRealResolventNewtonHermitePairObservable degree
-        (nodes q) (eval q) (R a (lambda, q)) -
-      continuousLinearMapRealResolventNewtonHermitePairObservable degree
-        (nodes q) (eval q) (R0 (lambda, q))‖ < epsilon
   simpa [R, R0, spectral,
     continuousLinearMapRealResolventNewtonHermitePairObservable_eq] using ha'
 
