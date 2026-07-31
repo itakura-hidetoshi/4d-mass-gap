@@ -320,13 +320,8 @@ theorem taylorPartialSum_tendsto_limitResolvent_apply_uniform_parameterBox_of_jo
           ‖(F (a b) mu -
             continuousLinearMapTaylorPartialSum
               (F (a b)) lambda mu (degree b)) x‖ := by
-            rw [show
-              (continuousLinearMapTaylorPartialSum
-                  (F (a b)) lambda mu (degree b)) x - F (a b) mu x =
-                -(F (a b) mu x -
-                  (continuousLinearMapTaylorPartialSum
-                    (F (a b)) lambda mu (degree b)) x) by abel,
-              norm_neg]
+            simp only [ContinuousLinearMap.sub_apply]
+            exact norm_sub_rev _ _
         _ ≤ ‖F (a b) mu -
               continuousLinearMapTaylorPartialSum
                 (F (a b)) lambda mu (degree b)‖ * ‖x‖ :=
