@@ -9,6 +9,8 @@ open scoped ContDiff Ring
 namespace MGAP4D
 namespace MathlibAnalytic
 
+/- This module is part of the unified continuous spectral-observable package. -/
+
 namespace ContinuousLinearMapOpenTaylorStrongLimitData
 
 variable {α E V : Type*}
