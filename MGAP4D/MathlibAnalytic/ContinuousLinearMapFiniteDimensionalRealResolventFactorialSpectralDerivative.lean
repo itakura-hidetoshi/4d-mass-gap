@@ -38,8 +38,7 @@ theorem continuousLinearMapRealResolventSpectralCoefficient_succ (n : ℕ) :
 theorem continuousLinearMapRealResolventSpectralCoefficient_norm (n : ℕ) :
     ‖continuousLinearMapRealResolventSpectralCoefficient n‖ =
       (n.factorial : ℝ) := by
-  simp [continuousLinearMapRealResolventSpectralCoefficient, norm_mul,
-    Real.norm_natCast]
+  simp [continuousLinearMapRealResolventSpectralCoefficient, norm_mul]
 
 /-- The spectral derivative of the `k`-th composition power of a true real
 resolvent is `-k R^(k+1)` throughout any common real resolvent region. -/
@@ -225,7 +224,10 @@ theorem continuousLinearMapRealResolvent_iteratedDerivWithin
         simp [derivativeValue]
       rw [hscaledDeriv]
       rw [continuousLinearMapRealResolventSpectralCoefficient_succ]
-      simp [derivativeValue, smul_smul, Nat.add_assoc]
+      simp only [derivativeValue, smul_neg, smul_smul, Nat.add_assoc]
+      rw [← neg_smul]
+      congr 1
+      ring
 
 /-- Explicit ordinary all-order spectral derivative formula on an open common
 real resolvent region. -/
