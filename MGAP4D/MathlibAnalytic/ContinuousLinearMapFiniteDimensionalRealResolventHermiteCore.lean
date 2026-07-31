@@ -63,6 +63,7 @@ theorem continuousLinearMapOrderedProduct_snoc
         funext i
         rfl
       rw [hmiddle]
+      simp [Fin.init, Fin.tail, mul_assoc]
 
 /-- An endomorphism commuting with every factor commutes with their ordered
 finite product. -/
