@@ -140,7 +140,7 @@ theorem contDiffOn_nat (D : ContinuousLinearMapOpenResolventData E) (n : ℕ) :
       refine ⟨D.differentiableOn, ?_, ?_⟩
       · simp
       · exact (ih.clm_comp ih).congr fun lambda hlambda =>
-          (D.hasDerivAt (lambda := lambda) hlambda).deriv.symm
+          (D.hasDerivAt (lambda := lambda) hlambda).deriv
 
 /-- The abstract resolvent is smooth on the whole open half-line. -/
 theorem contDiffOn_infty (D : ContinuousLinearMapOpenResolventData E) :
