@@ -36,6 +36,8 @@ variable (htau : Tendsto tau m G.admissibleRescaledDefectTimeFilter)
 variable (hdegree : Tendsto degree m atTop)
 variable (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
 
+include htau hdegree
+
 /-- Canonical OS finite operator polynomials converge uniformly on every full
 closed half-mass Taylor box. -/
 theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_polynomial_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
