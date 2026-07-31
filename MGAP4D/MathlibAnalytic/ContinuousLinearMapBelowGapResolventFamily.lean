@@ -90,9 +90,11 @@ theorem belowGapContinuousLinearMapFamily_continuousOn
       ?_ hMajor
     filter_upwards [self_mem_nhdsWithin] with mu hmu
     have hFmu : F mu = R mu hmu := by
-      simp [F, belowGapContinuousLinearMapFamily, hmu]
+      dsimp [F]
+      exact belowGapContinuousLinearMapFamily_of_lt gap R hmu
     have hFlambda : F lambda = R lambda hlambda := by
-      simp [F, belowGapContinuousLinearMapFamily, hlambda]
+      dsimp [F]
+      exact belowGapContinuousLinearMapFamily_of_lt gap R hlambda
     rw [hFmu, hFlambda]
     exact hsub hmu hlambda
   have hAdd := hDiff.add
