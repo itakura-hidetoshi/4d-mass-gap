@@ -123,6 +123,24 @@ theorem taylorPartialSum_polynomial_finiteDimensionalCompression_tendsto_uniform
     (continuous_continuousLinearMapPolynomial coeff polynomialDegree)
     a degree ha hdegree box
 
+/-- Polynomial traces converge uniformly on the full closed box. -/
+theorem taylorPartialSum_polynomialTrace_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+    (coeff : ℕ → ℝ) (polynomialDegree : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
+      |continuousLinearMapPolynomialTrace coeff polynomialDegree
+          (continuousLinearMapCompression J Q
+            (continuousLinearMapTaylorPartialSum
+              (F (a b)) p.center p.target (degree b))) -
+        continuousLinearMapPolynomialTrace coeff polynomialDegree
+          (continuousLinearMapCompression J Q
+            (S.limitResolvent p.target))| < epsilon := by
+  simpa [Real.norm_eq_abs] using
+    S.taylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+      B L hLgap hLresolvent J Q
+      (continuousLinearMapPolynomialTrace coeff polynomialDegree)
+      (continuous_continuousLinearMapPolynomialTrace coeff polynomialDegree)
+      a degree ha hdegree box
+
 end ClosedBoxConsequences
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
