@@ -70,7 +70,8 @@ theorem continuousLinearMapOrderedProduct_norm_le
     (hM : 0 ≤ M) (hR : ∀ i, ‖R i‖ ≤ M) :
     ‖continuousLinearMapOrderedProduct n R‖ ≤ M ^ n := by
   induction n with
-  | zero => simp
+  | zero =>
+      simpa using (norm_one_le : ‖(1 : V →L[ℝ] V)‖ ≤ 1)
   | succ n ih =>
       rw [continuousLinearMapOrderedProduct_succ]
       calc
@@ -79,7 +80,7 @@ theorem continuousLinearMapOrderedProduct_norm_le
           norm_mul_le _ _
         _ ≤ M * M ^ n := by
           exact mul_le_mul (hR 0)
-            (ih (fun i => R i.succ) hM (fun i => hR i.succ))
+            (ih (fun i => R i.succ) (fun i => hR i.succ) hM)
             (norm_nonneg _) hM
         _ = M ^ (n + 1) := by
           rw [pow_succ']
@@ -100,7 +101,9 @@ def continuousLinearMapRealResolventHermiteJet
     (order : ℕ) (R : Fin (order + 1) → (V →L[ℝ] V)) :
     Fin (order + 1) → (V →L[ℝ] V) :=
   fun n => continuousLinearMapRealResolventHermiteObservable n.1
-    (fun i => R ⟨i.1, Nat.lt_of_lt_of_le i.2 (Nat.succ_le_succ n.2)⟩)
+    (fun i => R ⟨i.1,
+      Nat.lt_of_lt_of_le i.2
+        (Nat.succ_le_succ (Nat.lt_succ_iff.mp n.2))⟩)
 
 /-- Every fixed normalized Hermite observable is continuous. -/
 theorem continuous_continuousLinearMapRealResolventHermiteObservable
@@ -124,7 +127,9 @@ theorem continuous_continuousLinearMapRealResolventHermiteJet
   apply (continuous_continuousLinearMapRealResolventHermiteObservable n.1).comp
   apply continuous_pi
   intro i
-  exact continuous_apply ⟨i.1, Nat.lt_of_lt_of_le i.2 (Nat.succ_le_succ n.2)⟩
+  exact continuous_apply
+    (⟨i.1, Nat.lt_of_lt_of_le i.2
+      (Nat.succ_le_succ (Nat.lt_succ_iff.mp n.2))⟩ : Fin (order + 1))
 
 /-- Norm control for the normalized Hermite observable. -/
 theorem continuousLinearMapRealResolventHermiteObservable_norm_le
@@ -154,8 +159,8 @@ theorem continuousLinearMapRealResolventHermiteObservable_const
     (order : ℕ) (R : V →L[ℝ] V) :
     continuousLinearMapRealResolventHermiteObservable order (fun _ => R) =
       (-1 : ℝ) ^ order • R ^ (order + 1) := by
-  simp [continuousLinearMapRealResolventHermiteObservable,
-    continuousLinearMapOrderedProduct_const]
+  unfold continuousLinearMapRealResolventHermiteObservable
+  rw [continuousLinearMapOrderedProduct_const]
 
 /-- Multiplication by `order!` identifies the diagonal Hermite coefficient
 with the algebraic spectral jet. -/
@@ -165,10 +170,12 @@ theorem factorial_smul_continuousLinearMapRealResolventHermiteObservable_const
     (order.factorial : ℝ) •
         continuousLinearMapRealResolventHermiteObservable order (fun _ => R) =
       continuousLinearMapRealResolventSpectralJet order R := by
-  simp [continuousLinearMapRealResolventHermiteObservable,
-    continuousLinearMapOrderedProduct_const,
-    continuousLinearMapRealResolventSpectralJet,
-    continuousLinearMapRealResolventSpectralCoefficient, smul_smul]
+  rw [continuousLinearMapRealResolventHermiteObservable_const]
+  unfold continuousLinearMapRealResolventSpectralJet
+  rw [smul_smul]
+  congr 1
+  simp [continuousLinearMapRealResolventSpectralCoefficient]
+  ring
 
 /-- The full-diagonal Hermite coefficient of a true resolvent is the spectral
 jet divided by the factorial, expressed without division. -/
@@ -215,10 +222,16 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_one_smul
       continuousLinearMapRealResolvent A z -
         continuousLinearMapRealResolvent A w := by
   rw [continuousLinearMapRealResolvent_sub_eq_smul_mul A hz hw]
-  simp [continuousLinearMapRealResolventHermiteCoefficient,
-    continuousLinearMapRealResolventHermiteObservable,
-    continuousLinearMapOrderedProduct]
-  module
+  change
+    (z - w) • ((-1 : ℝ) •
+      (continuousLinearMapRealResolvent A z *
+        continuousLinearMapRealResolvent A w)) =
+    (w - z) •
+      (continuousLinearMapRealResolvent A z *
+        continuousLinearMapRealResolvent A w)
+  rw [smul_smul]
+  congr 1
+  ring
 
 end MathlibAnalytic
 end MGAP4D
