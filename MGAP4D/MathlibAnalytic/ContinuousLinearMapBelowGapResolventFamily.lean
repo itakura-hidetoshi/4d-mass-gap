@@ -84,12 +84,17 @@ theorem belowGapContinuousLinearMapFamily_continuousOn
   have hDiff :
       Tendsto (fun mu : ℝ => F mu - F lambda)
         (𝓝[Set.Iio gap] lambda) (𝓝 0) := by
-    apply squeeze_zero_norm'
-    · filter_upwards [self_mem_nhdsWithin] with mu hmu
-      change ‖R mu hmu - R lambda hlambda‖ ≤
-        |mu - lambda| * ((gap - mu)⁻¹ * (gap - lambda)⁻¹)
-      exact hsub hmu hlambda
-    · exact hMajor
+    refine squeeze_zero_norm'
+      (a := fun mu : ℝ =>
+        |mu - lambda| * ((gap - mu)⁻¹ * (gap - lambda)⁻¹))
+      ?_ hMajor
+    filter_upwards [self_mem_nhdsWithin] with mu hmu
+    have hFmu : F mu = R mu hmu := by
+      simp [F, belowGapContinuousLinearMapFamily, hmu]
+    have hFlambda : F lambda = R lambda hlambda := by
+      simp [F, belowGapContinuousLinearMapFamily, hlambda]
+    rw [hFmu, hFlambda]
+    exact hsub hmu hlambda
   have hAdd := hDiff.add
     (tendsto_const_nhds :
       Tendsto (fun _ : ℝ => F lambda)
@@ -116,8 +121,13 @@ noncomputable def ContinuousLinearMapOpenResolventData.ofBelowGapFamily
   continuousOn := belowGapContinuousLinearMapFamily_continuousOn gap R hsub
   resolvent_identity := by
     intro lambda mu hlambda hmu
-    change R lambda hlambda - R mu hmu =
-      (lambda - mu) • ((R lambda hlambda).comp (R mu hmu))
+    have hLambda :
+        belowGapContinuousLinearMapFamily gap R lambda = R lambda hlambda :=
+      belowGapContinuousLinearMapFamily_of_lt gap R hlambda
+    have hMu :
+        belowGapContinuousLinearMapFamily gap R mu = R mu hmu :=
+      belowGapContinuousLinearMapFamily_of_lt gap R hmu
+    rw [hLambda, hMu]
     exact hidentity hlambda hmu
 
 end MathlibAnalytic
