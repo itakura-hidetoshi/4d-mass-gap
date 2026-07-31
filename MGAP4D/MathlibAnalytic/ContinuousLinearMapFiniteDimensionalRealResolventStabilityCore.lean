@@ -190,7 +190,11 @@ theorem continuousLinearMap_ringInverse_neumann_stability
     have hs := tsum_geometric_le_of_norm_lt_one D hD
     rw [show Ring.inverse (1 - D) = ∑' n : ℕ, D ^ n by
       exact NormedRing.inverse_one_sub D hD]
-    simpa only [norm_one, sub_self, zero_add] using hs
+    calc
+      ‖∑' n : ℕ, D ^ n‖ ≤ ‖(1 : V →L[ℝ] V)‖ - 1 + (1 - ‖D‖)⁻¹ := hs
+      _ ≤ (1 - ‖D‖)⁻¹ := by
+        have hOne : ‖(1 : V →L[ℝ] V)‖ ≤ 1 := norm_one_le
+        linarith
   have hden : (1 - ‖D‖)⁻¹ ≤ (2 : ℝ) :=
     inv_le_of_inv_le₀ (by norm_num) (by linarith)
   have hUinvNorm : ‖(↑U⁻¹ : V →L[ℝ] V)‖ ≤ 2 := by
