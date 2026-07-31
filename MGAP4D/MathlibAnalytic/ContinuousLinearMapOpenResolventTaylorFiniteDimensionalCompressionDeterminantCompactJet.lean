@@ -62,6 +62,32 @@ theorem iteratedDeriv_det_finiteDimensionalCompression_tendsto_uniformOn_compact
       (fun _ => ContinuousLinearMap.continuous_det)
       order K hKcompact hKu hu
 
+section AlgebraicConsequences
+
+variable {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
+variable (S : ContinuousLinearMapOpenTaylorStrongLimitData l gap F)
+variable (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
+variable (L : ContinuousLinearMapOpenResolventNormBoundData E)
+variable (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
+variable (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
+
+/-- Finite operator polynomials converge compact-uniformly in operator norm. -/
+theorem iteratedDeriv_polynomial_finiteDimensionalCompression_tendsto_uniformOn_compact
+    (coeff : ℕ → ℝ) (degree k : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K,
+      ‖continuousLinearMapPolynomial coeff degree
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) -
+        continuousLinearMapPolynomial coeff degree
+          (continuousLinearMapCompression J Q
+            (_root_.iteratedDeriv k S.limitResolvent lambda))‖ < epsilon :=
+  S.iteratedDeriv_continuousObservable_finiteDimensionalCompression_tendsto_uniformOn_compact
+    B L hLgap hLresolvent J Q (continuousLinearMapPolynomial coeff degree)
+    (continuous_continuousLinearMapPolynomial coeff degree)
+    k K hKcompact hKu hu
+
+end AlgebraicConsequences
+
 end ContinuousLinearMapOpenTaylorStrongLimitData
 
 end MathlibAnalytic
