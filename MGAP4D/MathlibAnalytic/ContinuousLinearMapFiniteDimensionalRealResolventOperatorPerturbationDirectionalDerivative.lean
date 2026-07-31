@@ -33,12 +33,13 @@ theorem continuousLinearMapRealResolventOperatorLine_sub_eq_smul_mul
       (t - s) •
         (continuousLinearMapRealResolventOperatorLine A H z t * H *
           continuousLinearMapRealResolventOperatorLine A H z s) := by
+  unfold continuousLinearMapRealResolventOperatorLine
   rw [continuousLinearMapRealResolvent_sub_eq_mul_operator_sub_mul
     (A + s • H) (A + t • H) z hs ht]
   have hdiff : (A + t • H) - (A + s • H) = (t - s) • H := by
     module
   rw [hdiff]
-  simp [continuousLinearMapRealResolventOperatorLine, mul_assoc]
+  simp [mul_assoc]
 
 /-- Uniform inverse bounds give a quantitative Lipschitz estimate along the
 operator line. -/
@@ -260,15 +261,22 @@ theorem continuousLinearMapRealResolventOperatorDysonCoefficient_hasDerivWithinA
         let Rt := continuousLinearMapRealResolventOperatorLine A H z t
         let P := Rt * H
         change
-          (((((n + 1 : ℕ) : ℝ) • P ^ (n + 1) * Rt) * H) * Rt +
+          (((((n + 1 : ℕ) : ℝ) • (P ^ (n + 1) * Rt)) * H) * Rt +
             (P ^ n * Rt * H) * (Rt * H * Rt)) =
-          (((n + 2 : ℕ) : ℝ) • P ^ (n + 2) * Rt)
-        rw [show P ^ (n + 1) * Rt * H * Rt = P ^ (n + 2) * Rt by
-          rw [pow_succ, pow_succ]
-          simp [P, mul_assoc]]
-        rw [show (P ^ n * Rt * H) * (Rt * H * Rt) = P ^ (n + 2) * Rt by
-          rw [pow_succ, pow_succ]
-          simp [P, mul_assoc]]
+          (((n + 2 : ℕ) : ℝ) • (P ^ (n + 2) * Rt))
+        have hfirst :
+            (P ^ (n + 1) * Rt) * H * Rt = P ^ (n + 2) * Rt := by
+          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+          simp [P, mul_assoc]
+        have hsecond :
+            (P ^ n * Rt * H) * (Rt * H * Rt) = P ^ (n + 2) * Rt := by
+          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ, pow_succ]
+          simp [P, mul_assoc]
+        have hsmul :
+            (((((n + 1 : ℕ) : ℝ) • (P ^ (n + 1) * Rt)) * H) * Rt) =
+              (((n + 1 : ℕ) : ℝ) • (P ^ (n + 2) * Rt)) := by
+          rw [Algebra.smul_mul_assoc, Algebra.smul_mul_assoc, hfirst]
+        rw [hsmul, hsecond]
         rw [Nat.cast_add, Nat.cast_ofNat]
         module
       rw [hderiv] at hraw
