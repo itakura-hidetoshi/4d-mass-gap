@@ -154,7 +154,7 @@ theorem taylorPartialSum_characteristicDeterminant_finiteDimensionalCompression_
   have hyx : |y| ≤ |x - y| + |x| := by
     calc
       |y| = |(y - x) + x| := by ring_nf
-      _ ≤ |y - x| + |x| := abs_add _ _
+      _ ≤ |y - x| + |x| := abs_add_le _ _
       _ = |x - y| + |x| := by rw [abs_sub_comm]
   linarith
 
