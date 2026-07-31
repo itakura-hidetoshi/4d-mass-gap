@@ -24,6 +24,7 @@ structure ContinuousLinearMapOpenResolventNormBoundData
 namespace ContinuousLinearMapOpenResolventNormBoundData
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable [CompleteSpace E]
 
 /-- A proof-indexed below-gap family with the reciprocal gap bound canonically
 determines norm-bounded open-resolvent data. -/
@@ -40,13 +41,19 @@ noncomputable def ofBelowGapFamily
     (hnorm : ∀ {lambda : ℝ} (hlambda : lambda < gap),
       ‖R lambda hlambda‖ ≤ (gap - lambda)⁻¹) :
     ContinuousLinearMapOpenResolventNormBoundData E where
-  toContinuousLinearMapOpenResolventData :=
-    ContinuousLinearMapOpenResolventData.ofBelowGapFamily
-      gap R hsub hidentity
+  gap := gap
+  resolvent := belowGapContinuousLinearMapFamily gap R
+  continuousOn :=
+    belowGapContinuousLinearMapFamily_continuousOn gap R hsub
+  resolvent_identity := by
+    intro lambda mu hlambda hmu
+    rw [belowGapContinuousLinearMapFamily_of_lt gap R hlambda,
+      belowGapContinuousLinearMapFamily_of_lt gap R hmu]
+    exact hidentity hlambda hmu
   resolvent_norm_le := by
     intro lambda hlambda
-    simpa only [belowGapContinuousLinearMapFamily_of_lt gap R hlambda] using
-      hnorm hlambda
+    rw [belowGapContinuousLinearMapFamily_of_lt gap R hlambda]
+    exact hnorm hlambda
 
 /-- The normalized local perturbation is strictly contractive throughout the
 full distance-to-gap ball. -/
@@ -162,8 +169,14 @@ theorem taylorPartialSum_eq_neumann
   apply Finset.sum_congr rfl
   intro k hk
   rw [D.iteratedDeriv k hlambda]
-  simp [ContinuousLinearMap.mul_def, pow_succ, smul_smul,
-    Algebra.smul_mul_assoc, Nat.cast_ne_zero]
+  have hfactorial : (k.factorial : ℝ) ≠ 0 := by positivity
+  have hscalar :
+      (mu - lambda) ^ k * (k.factorial : ℝ)⁻¹ *
+          (k.factorial : ℝ) =
+        (mu - lambda) ^ k := by
+    rw [mul_assoc, inv_mul_cancel₀ hfactorial, mul_one]
+  rw [smul_smul, hscalar, smul_pow, Algebra.smul_mul_assoc]
+  simp only [ContinuousLinearMap.mul_def, pow_succ]
 
 /-- Closed-ball geometric operator-norm remainder estimate for every
 norm-bounded open resolvent. -/
@@ -220,13 +233,10 @@ theorem sub_taylorPartialSum_norm_le_closedBall
       ‖(mu - lambda) • D.resolvent lambda‖ ≤
           ‖mu - lambda‖ * ‖D.resolvent lambda‖ :=
         ContinuousLinearMap.opNorm_smul_le _ _
-      _ ≤ r * (D.gap - lambda)⁻¹ := by
-        exact mul_le_mul hmu hRlambda (norm_nonneg _)
-          (inv_nonneg.mpr (sub_pos.mpr hlambda).le)
-  have hPow :
-      ‖(mu - lambda) • D.resolvent lambda‖ ^ N ≤
-        (r * (D.gap - lambda)⁻¹) ^ N :=
-    pow_le_pow_left₀ (norm_nonneg _) hPerturb N
+      _ ≤ r * ‖D.resolvent lambda‖ :=
+        mul_le_mul_of_nonneg_right hmu (norm_nonneg _)
+      _ ≤ r * (D.gap - lambda)⁻¹ :=
+        mul_le_mul_of_nonneg_left hRlambda hr0
   have hMargin : D.gap - lambda - r ≤ D.gap - mu := by
     have hle : mu - lambda ≤ r := by
       exact le_trans (by
@@ -236,28 +246,36 @@ theorem sub_taylorPartialSum_norm_le_closedBall
     have hMarginPos : 0 < D.gap - lambda - r := sub_pos.mpr hrlt
     simpa only [one_div] using
       one_div_le_one_div_of_le hMarginPos hMargin
-  calc
-    ‖((mu - lambda) • D.resolvent lambda) ^ N * D.resolvent mu‖ ≤
-        ‖((mu - lambda) • D.resolvent lambda) ^ N‖ *
-          ‖D.resolvent mu‖ := by
-      simpa only [ContinuousLinearMap.mul_def] using
-        (((mu - lambda) • D.resolvent lambda) ^ N).opNorm_comp_le
-          (D.resolvent mu)
-    _ ≤ ‖(mu - lambda) • D.resolvent lambda‖ ^ N *
-          ‖D.resolvent mu‖ :=
-      mul_le_mul_of_nonneg_right (norm_pow_le _ N) (norm_nonneg _)
-    _ ≤ (r * (D.gap - lambda)⁻¹) ^ N *
-          (D.gap - lambda - r)⁻¹ :=
+  cases N with
+  | zero =>
+      simpa only [pow_zero, one_mul] using le_trans hRmu hInv
+  | succ N =>
+      let perturb : E →L[ℝ] E :=
+        (mu - lambda) • D.resolvent lambda
+      let q : ℝ := r * (D.gap - lambda)⁻¹
+      have hPerturb' : ‖perturb‖ ≤ q := by
+        simpa [perturb, q] using hPerturb
+      have hq0 : 0 ≤ q := by
+        exact mul_nonneg hr0
+          (inv_nonneg.mpr (sub_pos.mpr hlambda).le)
+      have hPow : ‖perturb‖ ^ (N + 1) ≤ q ^ (N + 1) :=
+        pow_le_pow_left₀ (norm_nonneg perturb) hPerturb' (N + 1)
+      change ‖perturb ^ (N + 1) * D.resolvent mu‖ ≤
+        q ^ (N + 1) * (D.gap - lambda - r)⁻¹
       calc
-        _ ≤ (r * (D.gap - lambda)⁻¹) ^ N *
-              (D.gap - mu)⁻¹ :=
-          mul_le_mul hPow hRmu (pow_nonneg (norm_nonneg _) N)
-            (inv_nonneg.mpr (sub_pos.mpr hmuGap).le)
-        _ ≤ (r * (D.gap - lambda)⁻¹) ^ N *
-              (D.gap - lambda - r)⁻¹ :=
-          mul_le_mul_of_nonneg_left hInv
-            (pow_nonneg (mul_nonneg hr0
-              (inv_nonneg.mpr (sub_pos.mpr hlambda).le)) N)
+        ‖perturb ^ (N + 1) * D.resolvent mu‖ ≤
+            ‖perturb ^ (N + 1)‖ * ‖D.resolvent mu‖ := by
+          simpa only [ContinuousLinearMap.mul_def] using
+            (perturb ^ (N + 1)).opNorm_comp_le (D.resolvent mu)
+        _ ≤ ‖perturb‖ ^ (N + 1) * ‖D.resolvent mu‖ :=
+          mul_le_mul_of_nonneg_right
+            (norm_pow_le' perturb (by omega)) (norm_nonneg _)
+        _ ≤ q ^ (N + 1) * ‖D.resolvent mu‖ :=
+          mul_le_mul_of_nonneg_right hPow (norm_nonneg _)
+        _ ≤ q ^ (N + 1) * (D.gap - mu)⁻¹ :=
+          mul_le_mul_of_nonneg_left hRmu (pow_nonneg hq0 (N + 1))
+        _ ≤ q ^ (N + 1) * (D.gap - lambda - r)⁻¹ :=
+          mul_le_mul_of_nonneg_left hInv (pow_nonneg hq0 (N + 1))
 
 /-- A single worst-corner degree controls the operator-norm Taylor remainder
 throughout a valid parameter box. -/
@@ -342,9 +360,9 @@ theorem taylorPartialSum_tendsto_apply
       (𝓝 ((continuousLinearMapTaylorPartialSum
         S.limitResolvent lambda mu N) x)) := by
   unfold continuousLinearMapTaylorPartialSum
-  apply tendsto_finset_sum (Finset.range N)
-  intro k hk
-  exact S.taylorTerm_tendsto_apply k hlambda mu x
+  have hsum := tendsto_finset_sum (Finset.range N)
+    (fun k hk => S.taylorTerm_tendsto_apply k hlambda mu x)
+  simpa only [Finset.sum_apply] using hsum
 
 /-- Consequently the Taylor remainder applied to every fixed vector converges
 to the corresponding remainder of the limit resolvent. -/
