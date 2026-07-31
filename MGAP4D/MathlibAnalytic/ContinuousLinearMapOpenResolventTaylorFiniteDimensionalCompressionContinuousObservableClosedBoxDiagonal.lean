@@ -50,6 +50,8 @@ variable (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
 variable (degree : α → ℕ) (hdegree : Tendsto degree l atTop)
 variable (box : ContinuousLinearMapClosedTaylorParameterBox gap)
 
+include B L hLgap hLresolvent hdegree
+
 /-- Diagonal determinant convergence on the full closed box. -/
 theorem taylorPartialSum_det_finiteDimensionalCompression_tendsto_uniform_closedBox_of_tendsto_degree :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ p, box.Contains p →
