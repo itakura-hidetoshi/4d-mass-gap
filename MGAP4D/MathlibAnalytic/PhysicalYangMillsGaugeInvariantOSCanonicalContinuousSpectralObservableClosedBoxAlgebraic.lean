@@ -57,6 +57,27 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_polynomi
       (continuous_continuousLinearMapPolynomial coeff polynomialDegree)
       tau degree htau hdegree box
 
+/-- Canonical OS polynomial traces converge uniformly on every full closed
+half-mass Taylor box. -/
+theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_polynomialTrace_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
+    (coeff : ℕ → ℝ) (polynomialDegree : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
+      |continuousLinearMapPolynomialTrace coeff polynomialDegree
+          (continuousLinearMapCompression J Q
+            (continuousLinearMapTaylorPartialSum
+              (G.admissibleRescaledDefectTaylorResolvent
+                T hInnerSymmetric (tau b)) p.center p.target (degree b))) -
+        continuousLinearMapPolynomialTrace coeff polynomialDegree
+          (continuousLinearMapCompression J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent
+              T hP hInnerSymmetric hSelf p.target))| < epsilon := by
+  simpa [Real.norm_eq_abs] using
+    G.canonicalRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
+      T hP hInnerSymmetric hSelf J Q
+      (continuousLinearMapPolynomialTrace coeff polynomialDegree)
+      (continuous_continuousLinearMapPolynomialTrace coeff polynomialDegree)
+      tau degree htau hdegree box
+
 end JointClosedBoxAlgebraic
 
 end StronglyContinuousPhysicalSemigroup
