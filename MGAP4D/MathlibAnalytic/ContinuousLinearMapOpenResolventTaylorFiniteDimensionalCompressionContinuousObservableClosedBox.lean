@@ -106,6 +106,23 @@ theorem taylorPartialSum_det_finiteDimensionalCompression_tendsto_uniform_closed
       B L hLgap hLresolvent J Q (fun A : V →L[ℝ] V => A.det)
       ContinuousLinearMap.continuous_det a degree ha hdegree box
 
+/-- Finite operator polynomials converge uniformly on the full closed box. -/
+theorem taylorPartialSum_polynomial_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+    (coeff : ℕ → ℝ) (polynomialDegree : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
+      ‖continuousLinearMapPolynomial coeff polynomialDegree
+          (continuousLinearMapCompression J Q
+            (continuousLinearMapTaylorPartialSum
+              (F (a b)) p.center p.target (degree b))) -
+        continuousLinearMapPolynomial coeff polynomialDegree
+          (continuousLinearMapCompression J Q
+            (S.limitResolvent p.target))‖ < epsilon :=
+  S.taylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+    B L hLgap hLresolvent J Q
+    (continuousLinearMapPolynomial coeff polynomialDegree)
+    (continuous_continuousLinearMapPolynomial coeff polynomialDegree)
+    a degree ha hdegree box
+
 end ClosedBoxConsequences
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
