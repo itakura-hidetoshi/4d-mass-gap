@@ -48,15 +48,20 @@ noncomputable def of_resolventPowers
         (k.factorial : ℝ) • (R lambda) ^ (k + 1)) :
     ContinuousLinearMapOpenTaylorStrongLimitData l gap F where
   limitResolvent := R
-  value_tendsto_apply hmu x := hValue hmu x
-  iteratedDeriv_tendsto_apply k hlambda x := by
-    have hp := (hPower k hlambda x).const_smul (k.factorial : ℝ)
-    rw [hDerivR k hlambda]
+  value_tendsto_apply := by
+    intro mu hmu x
+    exact hValue (mu := mu) hmu x
+  iteratedDeriv_tendsto_apply := by
+    intro k lambda hlambda x
+    have hp :=
+      (hPower k (lambda := lambda) hlambda x).const_smul
+        (k.factorial : ℝ)
+    rw [hDerivR k (lambda := lambda) hlambda]
     have hsource :
         (fun a => (_root_.iteratedDeriv k (F a) lambda) x) =
           (fun a => (k.factorial : ℝ) • (((F a lambda) ^ (k + 1)) x)) := by
       funext a
-      rw [hDerivF a k hlambda]
+      rw [hDerivF a k (lambda := lambda) hlambda]
       rfl
     rw [hsource]
     simpa only [ContinuousLinearMap.smul_apply] using hp
@@ -77,7 +82,8 @@ theorem taylorTerm_tendsto_apply
       (𝓝
         ((((mu - lambda) ^ k / (k.factorial : ℝ)) •
           (_root_.iteratedDeriv k S.limitResolvent lambda)) x)) := by
-  have h := S.iteratedDeriv_tendsto_apply k hlambda x
+  have h :=
+    S.iteratedDeriv_tendsto_apply k (lambda := lambda) hlambda x
   simpa only [ContinuousLinearMap.smul_apply] using
     h.const_smul ((mu - lambda) ^ k / (k.factorial : ℝ))
 
