@@ -19,7 +19,6 @@ theorem continuousLinearMapRealShift_sub_realShift_operator
     (A B : V →L[ℝ] V) (z : ℝ) :
     continuousLinearMapRealShift A z - continuousLinearMapRealShift B z = B - A := by
   simp [continuousLinearMapRealShift]
-  abel
 
 /-- Exact fixed-spectral-parameter resolvent identity under an operator
 perturbation. -/
@@ -76,7 +75,7 @@ theorem continuousLinearMapRealResolvent_sub_norm_le_operatorPerturbation_of_bou
     [FiniteDimensional ℝ V] (A B : V →L[ℝ] V) (z MA MB : ℝ)
     (hA : IsUnit (continuousLinearMapRealShift A z))
     (hB : IsUnit (continuousLinearMapRealShift B z))
-    (hMA : 0 ≤ MA) (hMB : 0 ≤ MB)
+    (_hMA : 0 ≤ MA) (hMB : 0 ≤ MB)
     (hnormA : ‖continuousLinearMapRealResolvent A z‖ ≤ MA)
     (hnormB : ‖continuousLinearMapRealResolvent B z‖ ≤ MB) :
     ‖continuousLinearMapRealResolvent B z - continuousLinearMapRealResolvent A z‖ ≤
@@ -102,7 +101,8 @@ theorem continuousLinearMapRealShift_add_eq_mul_one_sub_resolvent_mul
   calc
     continuousLinearMapRealShift (A + H) z =
         continuousLinearMapRealShift A z - H := by
-      simp [continuousLinearMapRealShift]
+      unfold continuousLinearMapRealShift
+      abel
     _ = continuousLinearMapRealShift A z *
         (1 - continuousLinearMapRealResolvent A z * H) := by
       rw [mul_sub, mul_one, ← mul_assoc, hAR, one_mul]
@@ -116,7 +116,12 @@ theorem continuousLinearMapRealShift_add_isUnit_of_resolvent_mul_norm_lt_one
     (hsmall : ‖continuousLinearMapRealResolvent A z * H‖ < 1) :
     IsUnit (continuousLinearMapRealShift (A + H) z) := by
   rw [continuousLinearMapRealShift_add_eq_mul_one_sub_resolvent_mul A H z hA]
-  exact hA.mul (Units.isUnit_oneSub _ hsmall)
+  let U : (V →L[ℝ] V)ˣ :=
+    Units.oneSub (continuousLinearMapRealResolvent A z * H) hsmall
+  have hU : IsUnit (1 - continuousLinearMapRealResolvent A z * H) := by
+    refine ⟨U, ?_⟩
+    simp [U]
+  exact hA.mul hU
 
 /-- Exact local inverse representation for an operator perturbation. -/
 theorem continuousLinearMapRealResolvent_add_eq_inverse_one_sub_mul
@@ -138,15 +143,6 @@ theorem continuousLinearMapRealResolvent_add_eq_inverse_one_sub_mul
   have hshift : continuousLinearMapRealShift (A + H) z = X * (1 - P) := by
     simpa [X, R, P] using
       continuousLinearMapRealShift_add_eq_mul_one_sub_resolvent_mul A H z hA
-  have hSleft : S * continuousLinearMapRealShift (A + H) z = 1 := by
-    rw [hshift]
-    dsimp [S]
-    calc
-      ((↑U⁻¹ : V →L[ℝ] V) * R) * (X * (1 - P)) =
-          (↑U⁻¹ : V →L[ℝ] V) * (R * X) * (1 - P) := by simp [mul_assoc]
-      _ = (↑U⁻¹ : V →L[ℝ] V) * (1 - P) := by rw [hRX, mul_one]
-      _ = (↑U⁻¹ : V →L[ℝ] V) * (↑U : V →L[ℝ] V) := by rw [hUval]
-      _ = 1 := by simp
   have hSright : continuousLinearMapRealShift (A + H) z * S = 1 := by
     rw [hshift]
     dsimp [S]
@@ -173,7 +169,8 @@ theorem continuousLinearMapRealResolvent_add_eq_inverse_one_sub_mul
   rw [hEq]
   have hInv : Ring.inverse (1 - P) = (↑U⁻¹ : V →L[ℝ] V) := by
     simpa [U] using NormedRing.inverse_one_sub P (by simpa [P] using hsmall)
-  simpa [S, R, P] using congrArg (fun T : V →L[ℝ] V => T * R) hInv
+  simpa [S, R, P] using
+    (congrArg (fun T : V →L[ℝ] V => T * R) hInv).symm
 
 /-- The `n`-th noncommutative Dyson coefficient around a reference operator. -/
 def continuousLinearMapRealResolventOperatorDysonCoefficient
@@ -250,14 +247,23 @@ theorem continuousLinearMapRealResolventOperatorDysonRemainder_norm_le
     (hnew : ‖continuousLinearMapRealResolvent (A + H) z‖ ≤ M) :
     ‖continuousLinearMapRealResolventOperatorDysonRemainder N A H z‖ ≤ q ^ N * M := by
   unfold continuousLinearMapRealResolventOperatorDysonRemainder
+  let P := continuousLinearMapRealResolvent A z * H
+  have hpow : ‖P ^ N‖ ≤ ‖P‖ ^ N := by
+    induction N with
+    | zero => simp
+    | succ n ih =>
+        rw [pow_succ]
+        calc
+          ‖P ^ n * P‖ ≤ ‖P ^ n‖ * ‖P‖ := norm_mul_le _ _
+          _ ≤ ‖P‖ ^ n * ‖P‖ :=
+            mul_le_mul_of_nonneg_right ih (norm_nonneg P)
+          _ = ‖P‖ ^ (n + 1) := by rw [pow_succ]
+  change ‖P ^ N * continuousLinearMapRealResolvent (A + H) z‖ ≤ q ^ N * M
   calc
-    ‖(continuousLinearMapRealResolvent A z * H) ^ N *
-        continuousLinearMapRealResolvent (A + H) z‖ ≤
-      ‖(continuousLinearMapRealResolvent A z * H) ^ N‖ *
-        ‖continuousLinearMapRealResolvent (A + H) z‖ := norm_mul_le _ _
-    _ ≤ ‖continuousLinearMapRealResolvent A z * H‖ ^ N *
-        ‖continuousLinearMapRealResolvent (A + H) z‖ :=
-      mul_le_mul_of_nonneg_right (norm_pow_le' _ (by omega)) (norm_nonneg _)
+    ‖P ^ N * continuousLinearMapRealResolvent (A + H) z‖ ≤
+      ‖P ^ N‖ * ‖continuousLinearMapRealResolvent (A + H) z‖ := norm_mul_le _ _
+    _ ≤ ‖P‖ ^ N * ‖continuousLinearMapRealResolvent (A + H) z‖ :=
+      mul_le_mul_of_nonneg_right hpow (norm_nonneg _)
     _ ≤ q ^ N * M := by
       exact mul_le_mul
         (pow_le_pow_left₀ (norm_nonneg _) hperturb N) hnew
