@@ -58,6 +58,28 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_continuo
           T hP hInnerSymmetric hSelf)
         rfl rfl J Q Phi hPhi tau degree htau hdegree box
 
+/-- Canonical OS compressed Taylor determinants converge uniformly on every
+complete closed half-mass Taylor box. -/
+theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_det_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
+    {β : Type*} {m : Filter β}
+    (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
+    (htau : Tendsto tau m G.admissibleRescaledDefectTimeFilter)
+    (hdegree : Tendsto degree m atTop)
+    (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2)) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
+      |(continuousLinearMapCompression J Q
+            (continuousLinearMapTaylorPartialSum
+              (G.admissibleRescaledDefectTaylorResolvent
+                T hInnerSymmetric (tau b)) p.center p.target (degree b))).det -
+        (continuousLinearMapCompression J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent
+              T hP hInnerSymmetric hSelf p.target)).det| < epsilon := by
+  simpa [Real.norm_eq_abs] using
+    G.canonicalRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
+      T hP hInnerSymmetric hSelf J Q
+      (fun A : V →L[ℝ] V => A.det) ContinuousLinearMap.continuous_det
+      tau degree htau hdegree box
+
 end JointClosedBox
 
 end StronglyContinuousPhysicalSemigroup
