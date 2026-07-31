@@ -44,6 +44,35 @@ theorem continuousLinearMapOrderedProduct_const
       rw [continuousLinearMapOrderedProduct_succ, ih]
       exact (pow_succ' R n).symm
 
+/-- The ordered product can also be split at its last factor. -/
+theorem continuousLinearMapOrderedProduct_snoc
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (n : ℕ) (R : Fin (n + 1) → (V →L[ℝ] V)) :
+    continuousLinearMapOrderedProduct (n + 1) R =
+      continuousLinearMapOrderedProduct n (Fin.init R) * R (Fin.last n) := by
+  induction n with
+  | zero =>
+      simp [continuousLinearMapOrderedProduct]
+  | succ n ih =>
+      rw [continuousLinearMapOrderedProduct_succ,
+        ih (Fin.tail R), continuousLinearMapOrderedProduct_succ,
+        Fin.tail_init_eq_init_tail]
+      simp [Fin.init, Fin.tail, mul_assoc]
+
+/-- An endomorphism commuting with every factor commutes with their ordered
+finite product. -/
+theorem continuousLinearMap_mul_orderedProduct_eq_orderedProduct_mul
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (n : ℕ) (A : V →L[ℝ] V) (R : Fin n → (V →L[ℝ] V))
+    (hcomm : ∀ i, A * R i = R i * A) :
+    A * continuousLinearMapOrderedProduct n R =
+      continuousLinearMapOrderedProduct n R * A := by
+  induction n with
+  | zero => simp [continuousLinearMapOrderedProduct]
+  | succ n ih =>
+      rw [continuousLinearMapOrderedProduct_succ, mul_assoc, hcomm 0,
+        ← mul_assoc, ih (fun i => R i.succ) (fun i => hcomm i.succ), mul_assoc]
+
 /-- Ordered finite multiplication is continuous in the product supremum norm. -/
 theorem continuous_continuousLinearMapOrderedProduct
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] :
@@ -153,6 +182,104 @@ def continuousLinearMapRealResolventHermiteCoefficient
     V →L[ℝ] V :=
   continuousLinearMapRealResolventHermiteObservable order
     (fun i => continuousLinearMapRealResolvent A (nodes i))
+
+/-- Real resolvents of the same finite-dimensional endomorphism commute at
+any two points of their common resolvent set. -/
+theorem continuousLinearMapRealResolvent_commute
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V]
+    (A : V →L[ℝ] V) {z w : ℝ}
+    (hz : IsUnit (continuousLinearMapRealShift A z))
+    (hw : IsUnit (continuousLinearMapRealShift A w)) :
+    continuousLinearMapRealResolvent A z * continuousLinearMapRealResolvent A w =
+      continuousLinearMapRealResolvent A w * continuousLinearMapRealResolvent A z := by
+  by_cases hzw : w = z
+  · subst w
+    rfl
+  · have hne : w - z ≠ 0 := sub_ne_zero.mpr hzw
+    have hforward := continuousLinearMapRealResolvent_sub_eq_smul_mul A hz hw
+    have hbackward := continuousLinearMapRealResolvent_sub_eq_smul_mul A hw hz
+    have hbackward' :
+        continuousLinearMapRealResolvent A z - continuousLinearMapRealResolvent A w =
+          (w - z) • (continuousLinearMapRealResolvent A w *
+            continuousLinearMapRealResolvent A z) := by
+      calc
+        continuousLinearMapRealResolvent A z - continuousLinearMapRealResolvent A w =
+            -(continuousLinearMapRealResolvent A w -
+              continuousLinearMapRealResolvent A z) := by abel
+        _ = -((z - w) • (continuousLinearMapRealResolvent A w *
+              continuousLinearMapRealResolvent A z)) := by rw [hbackward]
+        _ = (w - z) • (continuousLinearMapRealResolvent A w *
+              continuousLinearMapRealResolvent A z) := by module
+    calc
+      continuousLinearMapRealResolvent A z * continuousLinearMapRealResolvent A w =
+          (w - z)⁻¹ • ((w - z) •
+            (continuousLinearMapRealResolvent A z *
+              continuousLinearMapRealResolvent A w)) :=
+        (inv_smul_smul₀ hne _).symm
+      _ = (w - z)⁻¹ •
+          (continuousLinearMapRealResolvent A z -
+            continuousLinearMapRealResolvent A w) := by rw [hforward]
+      _ = (w - z)⁻¹ • ((w - z) •
+          (continuousLinearMapRealResolvent A w *
+            continuousLinearMapRealResolvent A z)) := by rw [hbackward']
+      _ = continuousLinearMapRealResolvent A w *
+          continuousLinearMapRealResolvent A z := inv_smul_smul₀ hne _
+
+/-- The normalized multipoint coefficient satisfies the full divided-difference
+recursion. Repeated endpoints are allowed; no division by their difference is
+used. -/
+theorem continuousLinearMapRealResolventHermiteCoefficient_succ_smul
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V]
+    (n : ℕ) (A : V →L[ℝ] V) (nodes : Fin (n + 2) → ℝ)
+    (hunit : ∀ i, IsUnit (continuousLinearMapRealShift A (nodes i))) :
+    (nodes 0 - nodes (Fin.last (n + 1))) •
+        continuousLinearMapRealResolventHermiteCoefficient (n + 1) A nodes =
+      continuousLinearMapRealResolventHermiteCoefficient n A (Fin.init nodes) -
+        continuousLinearMapRealResolventHermiteCoefficient n A (Fin.tail nodes) := by
+  let R : Fin (n + 2) → (V →L[ℝ] V) :=
+    fun i => continuousLinearMapRealResolvent A (nodes i)
+  let P : V →L[ℝ] V :=
+    continuousLinearMapOrderedProduct n (Fin.init (Fin.tail R))
+  have hlastP : R (Fin.last (n + 1)) * P = P * R (Fin.last (n + 1)) := by
+    apply continuousLinearMap_mul_orderedProduct_eq_orderedProduct_mul
+    intro i
+    simpa [R, Fin.init, Fin.tail] using
+      continuousLinearMapRealResolvent_commute A
+        (hunit (Fin.last (n + 1))) (hunit i.castSucc.succ)
+  have hinit :
+      continuousLinearMapOrderedProduct (n + 1) (Fin.init R) = R 0 * P := by
+    rw [continuousLinearMapOrderedProduct_succ]
+    change R 0 * continuousLinearMapOrderedProduct n (Fin.tail (Fin.init R)) =
+      R 0 * P
+    rw [Fin.tail_init_eq_init_tail]
+    rfl
+  have htail :
+      continuousLinearMapOrderedProduct (n + 1) (Fin.tail R) =
+        P * R (Fin.last (n + 1)) := by
+    simpa [P, Fin.init, Fin.tail] using
+      continuousLinearMapOrderedProduct_snoc n (Fin.tail R)
+  have hfull :
+      continuousLinearMapOrderedProduct (n + 2) R =
+        R 0 * (P * R (Fin.last (n + 1))) := by
+    rw [continuousLinearMapOrderedProduct_succ, htail]
+  have hdiff :
+      R 0 - R (Fin.last (n + 1)) =
+        (nodes (Fin.last (n + 1)) - nodes 0) •
+          (R 0 * R (Fin.last (n + 1))) := by
+    simpa [R] using continuousLinearMapRealResolvent_sub_eq_smul_mul A
+      (hunit 0) (hunit (Fin.last (n + 1)))
+  change (nodes 0 - nodes (Fin.last (n + 1))) •
+      continuousLinearMapRealResolventHermiteObservable (n + 1) R =
+    continuousLinearMapRealResolventHermiteObservable n (Fin.init R) -
+      continuousLinearMapRealResolventHermiteObservable n (Fin.tail R)
+  unfold continuousLinearMapRealResolventHermiteObservable
+  rw [hfull, hinit, htail, ← smul_sub, ← hlastP, ← sub_mul, hdiff,
+    smul_mul_assoc, mul_assoc, hlastP, smul_smul, smul_smul]
+  congr 1
+  rw [pow_succ]
+  ring
 
 /-- On the full diagonal, the normalized Hermite coefficient is the signed
 resolvent power. -/
