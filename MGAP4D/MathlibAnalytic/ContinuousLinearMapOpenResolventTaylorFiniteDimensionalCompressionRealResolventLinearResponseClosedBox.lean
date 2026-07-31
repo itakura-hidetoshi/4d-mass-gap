@@ -54,32 +54,51 @@ theorem taylorPartialSum_realResolventNewtonHermiteLinearResponseFamilyPair_fini
             (continuousLinearMapCompression J Q (S.limitResolvent p.target))
             (nodes q) (eval q))‖ < epsilon := by
   intro epsilon hepsilon
-  have htransfer :=
-    finiteDimensional_linearResponseFamilyPair_tendsto_uniformOn
-      (l := m) (s := {q | box.Contains q.1 ∧ q.2 ∈ T}) Phi
-      (fun b q => continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
-        (continuousLinearMapCompression J Q
-          (continuousLinearMapTaylorPartialSum
-            (F (a b)) q.1.center q.1.target (taylorDegree b)))
-        (nodes q.2) (eval q.2))
-      (fun q => continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
-        (continuousLinearMapCompression J Q (S.limitResolvent q.1.target))
-        (nodes q.2) (eval q.2))
-      responseBound hresponseBound hPhi
-      (by
-        intro eta heta
-        have h :=
-          S.taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
-            B L hLgap hLresolvent J Q interpolationDegree a taylorDegree
-            ha hdegree box nodes eval T Z hnodes heval D hD hdist
-            margin hmargin hlimitMargin M hM hlimitNorm eta heta
-        filter_upwards [h] with b hb
-        intro q hq
-        exact hb q.1 hq.1 q.2 hq.2)
-      epsilon hepsilon
-  filter_upwards [htransfer] with b hb
+  let eta : ℝ := epsilon / (responseBound + 1)
+  have hbound1 : 0 < responseBound + 1 := by linarith
+  have heta : 0 < eta := div_pos hepsilon hbound1
+  have hpair :=
+    S.taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+      B L hLgap hLresolvent J Q interpolationDegree a taylorDegree
+      ha hdegree box nodes eval T Z hnodes heval D hD hdist
+      margin hmargin hlimitMargin M hM hlimitNorm eta heta
+  filter_upwards [hpair] with b hb
   intro p hp q hq
-  exact hb (p, q) ⟨hp, hq⟩
+  let PA : Fin 2 → (V →L[ℝ] V) :=
+    continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
+      (continuousLinearMapCompression J Q (continuousLinearMapTaylorPartialSum
+        (F (a b)) p.center p.target (taylorDegree b))) (nodes q) (eval q)
+  let P0 : Fin 2 → (V →L[ℝ] V) :=
+    continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
+      (continuousLinearMapCompression J Q (S.limitResolvent p.target))
+      (nodes q) (eval q)
+  have hpairAt : ‖PA - P0‖ < eta := by
+    simpa [PA, P0] using hb p hp q hq
+  rw [pi_norm_lt_iff hepsilon]
+  intro r
+  rw [pi_norm_lt_iff hepsilon]
+  intro i
+  have hi : ‖PA i - P0 i‖ < eta := by
+    rw [pi_norm_lt_iff heta] at hpairAt
+    simpa only [Pi.sub_apply] using hpairAt i
+  have hdual := (Phi r).le_opNorm (PA i - P0 i)
+  rw [Real.norm_eq_abs] at hdual
+  calc
+    ‖(continuousLinearMapRealResolventLinearResponseFamilyPair Phi PA -
+        continuousLinearMapRealResolventLinearResponseFamilyPair Phi P0) r i‖ =
+        |Phi r (PA i - P0 i)| := by
+          simp [continuousLinearMapRealResolventLinearResponseFamilyPair,
+            Real.norm_eq_abs]
+    _ ≤ ‖Phi r‖ * ‖PA i - P0 i‖ := hdual
+    _ ≤ responseBound * ‖PA i - P0 i‖ :=
+      mul_le_mul_of_nonneg_right (hPhi r) (norm_nonneg _)
+    _ ≤ (responseBound + 1) * ‖PA i - P0 i‖ :=
+      mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
+    _ < (responseBound + 1) * eta :=
+      mul_lt_mul_of_pos_left hi hbound1
+    _ = epsilon := by
+      dsimp [eta]
+      field_simp [ne_of_gt hbound1]
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
 
