@@ -54,12 +54,11 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_realReso
           (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent
             T hP hInnerSymmetric hSelf p.target)) (nodes q) (eval q)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q interpolationDegree tau degree htau hdegree box nodes eval C Z
-        hnodes heval R hR hdist margin hmargin hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q interpolationDegree tau degree htau hdegree box nodes eval C Z
+      hnodes heval R hR hdist margin hmargin hlimitMargin M hM hlimitNorm
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
