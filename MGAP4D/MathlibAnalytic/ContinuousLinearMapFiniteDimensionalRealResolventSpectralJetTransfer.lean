@@ -103,19 +103,5 @@ theorem finiteDimensional_realResolventSpectralJetVector_tendsto_uniformOn
     (continuous_continuousLinearMapRealResolventSpectralJetVector order)
     M hM hR0 hR
 
-/-- Pointwise extraction of every component from a convergent finite spectral
-jet vector. -/
-theorem continuousLinearMapRealResolventSpectralJet_norm_le_vector_norm
-    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    (order : ℕ) (n : Fin (order + 1))
-    (R S : V →L[ℝ] V) :
-    ‖continuousLinearMapRealResolventSpectralJet n.1 R -
-        continuousLinearMapRealResolventSpectralJet n.1 S‖ ≤
-      ‖continuousLinearMapRealResolventSpectralJetVector order R -
-        continuousLinearMapRealResolventSpectralJetVector order S‖ := by
-  exact norm_apply_le_norm
-    (continuousLinearMapRealResolventSpectralJetVector order R -
-      continuousLinearMapRealResolventSpectralJetVector order S) n
-
 end MathlibAnalytic
 end MGAP4D
