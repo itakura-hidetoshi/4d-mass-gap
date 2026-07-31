@@ -31,7 +31,7 @@ theorem continuousLinearMapCompression_apply
     (x : V) :
     continuousLinearMapCompression J Q A x = Q (A (J x)) := rfl
 
-/-- A basis estimate for the norm of a finite-dimensional compression.
+/-- A finite basis controls the norm of a compressed operator difference.
 The ambient space `E` may remain infinite dimensional. -/
 theorem continuousLinearMapCompression_sub_norm_le_basis
     {ι E V : Type*}
@@ -44,49 +44,26 @@ theorem continuousLinearMapCompression_sub_norm_le_basis
     (A B : E →L[ℝ] E) :
     ‖continuousLinearMapCompression J Q A -
         continuousLinearMapCompression J Q B‖ ≤
-      ‖basisValuesToContinuousLinearMap v‖ * ‖Q‖ *
-        ‖fun i => (A - B) (J (v i))‖ := by
-  have hpi :
-      ‖fun i =>
+      ‖basisValuesToContinuousLinearMap (F := V) v‖ *
+        ‖fun i =>
           (continuousLinearMapCompression J Q A -
-            continuousLinearMapCompression J Q B) (v i)‖ ≤
-        ‖Q‖ * ‖fun i => (A - B) (J (v i))‖ := by
-    apply (pi_norm_le_iff_of_nonneg
-      (mul_nonneg (norm_nonneg Q)
-        (norm_nonneg (fun i => (A - B) (J (v i)))))).2
-    intro i
-    calc
-      ‖(continuousLinearMapCompression J Q A -
-          continuousLinearMapCompression J Q B) (v i)‖ =
-          ‖Q ((A - B) (J (v i)))‖ := by
-            simp [continuousLinearMapCompression]
-      _ ≤ ‖Q‖ * ‖(A - B) (J (v i))‖ := Q.le_opNorm _
-      _ ≤ ‖Q‖ * ‖fun j => (A - B) (J (v j))‖ :=
-        mul_le_mul_of_nonneg_left
-          (norm_apply_le_norm (fun j => (A - B) (J (v j))) i)
-          (norm_nonneg Q)
+            continuousLinearMapCompression J Q B) (v i)‖ := by
   calc
     ‖continuousLinearMapCompression J Q A -
         continuousLinearMapCompression J Q B‖ =
-      ‖basisValuesToContinuousLinearMap v
+      ‖basisValuesToContinuousLinearMap (F := V) v
         (fun i =>
           (continuousLinearMapCompression J Q A -
             continuousLinearMapCompression J Q B) (v i))‖ := by
         rw [basisValuesToContinuousLinearMap_reconstruct]
-    _ ≤ ‖basisValuesToContinuousLinearMap v‖ *
+    _ ≤ ‖basisValuesToContinuousLinearMap (F := V) v‖ *
         ‖fun i =>
           (continuousLinearMapCompression J Q A -
             continuousLinearMapCompression J Q B) (v i)‖ :=
-      (basisValuesToContinuousLinearMap v).le_opNorm _
-    _ ≤ ‖basisValuesToContinuousLinearMap v‖ *
-        (‖Q‖ * ‖fun i => (A - B) (J (v i))‖) :=
-      mul_le_mul_of_nonneg_left hpi
-        (norm_nonneg (basisValuesToContinuousLinearMap v))
-    _ = ‖basisValuesToContinuousLinearMap v‖ * ‖Q‖ *
-        ‖fun i => (A - B) (J (v i))‖ := by ring
+      (basisValuesToContinuousLinearMap (F := V) v).le_opNorm _
 
-/-- Coordinatewise control on one finite basis gives a strict operator-norm
-bound for the compressed difference. -/
+/-- Coordinatewise control before compression on one finite basis gives a
+strict operator-norm bound for the compressed difference. -/
 theorem continuousLinearMapCompression_sub_norm_lt_of_apply_basis
     {ι E V : Type*}
     [Fintype ι]
@@ -101,42 +78,64 @@ theorem continuousLinearMapCompression_sub_norm_lt_of_apply_basis
       ∀ i,
         ‖(A - B) (J (v i))‖ <
           epsilon /
-            ((‖basisValuesToContinuousLinearMap v‖ + 1) *
+            ((‖basisValuesToContinuousLinearMap (F := V) v‖ + 1) *
               (‖Q‖ + 1))) :
     ‖continuousLinearMapCompression J Q A -
         continuousLinearMapCompression J Q B‖ < epsilon := by
-  let eta : ℝ :=
-    epsilon /
-      ((‖basisValuesToContinuousLinearMap v‖ + 1) * (‖Q‖ + 1))
-  have hc1 : 0 < ‖basisValuesToContinuousLinearMap v‖ + 1 := by positivity
-  have hq1 : 0 < ‖Q‖ + 1 := by positivity
+  let c : ℝ := ‖basisValuesToContinuousLinearMap (F := V) v‖
+  let q : ℝ := ‖Q‖
+  let eta : ℝ := epsilon / ((c + 1) * (q + 1))
+  have hc0 : 0 ≤ c := by dsimp [c]; positivity
+  have hq0 : 0 ≤ q := by dsimp [q]; positivity
+  have hc1 : 0 < c + 1 := by linarith
+  have hq1 : 0 < q + 1 := by linarith
   have heta : 0 < eta := div_pos hepsilon (mul_pos hc1 hq1)
-  have hpi :
-      ‖fun i => (A - B) (J (v i))‖ < eta := by
-    apply (pi_norm_lt_iff heta).2
+  have hcompressed :
+      ∀ i,
+        ‖(continuousLinearMapCompression J Q A -
+            continuousLinearMapCompression J Q B) (v i)‖ <
+          epsilon / (c + 1) := by
     intro i
-    simpa [eta] using h i
-  have hcoef :
-      ‖basisValuesToContinuousLinearMap v‖ * ‖Q‖ ≤
-        (‖basisValuesToContinuousLinearMap v‖ + 1) * (‖Q‖ + 1) := by
-    nlinarith [norm_nonneg (basisValuesToContinuousLinearMap v), norm_nonneg Q]
+    have hraw : ‖(A - B) (J (v i))‖ < eta := by
+      simpa [c, q, eta] using h i
+    calc
+      ‖(continuousLinearMapCompression J Q A -
+          continuousLinearMapCompression J Q B) (v i)‖ =
+          ‖Q ((A - B) (J (v i)))‖ := by
+            simp [continuousLinearMapCompression]
+      _ ≤ q * ‖(A - B) (J (v i))‖ := by
+        simpa [q] using Q.le_opNorm ((A - B) (J (v i)))
+      _ ≤ (q + 1) * ‖(A - B) (J (v i))‖ :=
+        mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
+      _ < (q + 1) * eta := mul_lt_mul_of_pos_left hraw hq1
+      _ = epsilon / (c + 1) := by
+        dsimp [eta]
+        field_simp [ne_of_gt hc1, ne_of_gt hq1]
+  have hpi :
+      ‖fun i =>
+          (continuousLinearMapCompression J Q A -
+            continuousLinearMapCompression J Q B) (v i)‖ <
+        epsilon / (c + 1) := by
+    apply (pi_norm_lt_iff (div_pos hepsilon hc1)).2
+    exact hcompressed
   calc
     ‖continuousLinearMapCompression J Q A -
         continuousLinearMapCompression J Q B‖ ≤
-      ‖basisValuesToContinuousLinearMap v‖ * ‖Q‖ *
-        ‖fun i => (A - B) (J (v i))‖ :=
-      continuousLinearMapCompression_sub_norm_le_basis v J Q A B
-    _ ≤
-      ((‖basisValuesToContinuousLinearMap v‖ + 1) * (‖Q‖ + 1)) *
-        ‖fun i => (A - B) (J (v i))‖ :=
-      mul_le_mul_of_nonneg_right hcoef
-        (norm_nonneg (fun i => (A - B) (J (v i))))
-    _ <
-      ((‖basisValuesToContinuousLinearMap v‖ + 1) * (‖Q‖ + 1)) * eta :=
-      mul_lt_mul_of_pos_left hpi (mul_pos hc1 hq1)
+      c *
+        ‖fun i =>
+          (continuousLinearMapCompression J Q A -
+            continuousLinearMapCompression J Q B) (v i)‖ := by
+      simpa [c] using
+        continuousLinearMapCompression_sub_norm_le_basis v J Q A B
+    _ ≤ (c + 1) *
+        ‖fun i =>
+          (continuousLinearMapCompression J Q A -
+            continuousLinearMapCompression J Q B) (v i)‖ :=
+      mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
+    _ < (c + 1) * (epsilon / (c + 1)) :=
+      mul_lt_mul_of_pos_left hpi hc1
     _ = epsilon := by
-      dsimp [eta]
-      field_simp [ne_of_gt hc1, ne_of_gt hq1]
+      field_simp [ne_of_gt hc1]
 
 namespace ContinuousLinearMapOpenTaylorStrongLimitData
 
@@ -167,7 +166,7 @@ theorem iteratedDeriv_tendsto_uniformOn_compact_finiteDimensionalCompression
   let v := Module.finBasis ℝ V
   let eta : ℝ :=
     epsilon /
-      ((‖basisValuesToContinuousLinearMap v‖ + 1) * (‖Q‖ + 1))
+      ((‖basisValuesToContinuousLinearMap (F := V) v‖ + 1) * (‖Q‖ + 1))
   have heta : 0 < eta := by
     dsimp [eta]
     positivity
@@ -304,7 +303,7 @@ theorem taylorPartialSum_tendsto_limitResolvent_finiteDimensionalCompression_uni
   let v := Module.finBasis ℝ V
   let eta : ℝ :=
     epsilon /
-      ((‖basisValuesToContinuousLinearMap v‖ + 1) * (‖Q‖ + 1))
+      ((‖basisValuesToContinuousLinearMap (F := V) v‖ + 1) * (‖Q‖ + 1))
   have heta : 0 < eta := by
     dsimp [eta]
     positivity
