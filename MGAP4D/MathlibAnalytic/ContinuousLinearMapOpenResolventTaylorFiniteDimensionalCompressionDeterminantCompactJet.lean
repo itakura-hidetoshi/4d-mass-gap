@@ -120,6 +120,22 @@ theorem iteratedDeriv_polynomialDet_finiteDimensionalCompression_tendsto_uniform
       (continuous_continuousLinearMapPolynomialDet coeff degree)
       k K hKcompact hKu hu
 
+/-- Every finite vector of spectral moments converges compact-uniformly. -/
+theorem iteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_uniformOn_compact
+    (momentOrder k : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K,
+      ‖continuousLinearMapSpectralMomentJet momentOrder
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) -
+        continuousLinearMapSpectralMomentJet momentOrder
+          (continuousLinearMapCompression J Q
+            (_root_.iteratedDeriv k S.limitResolvent lambda))‖ < epsilon :=
+  S.iteratedDeriv_continuousObservable_finiteDimensionalCompression_tendsto_uniformOn_compact
+    B L hLgap hLresolvent J Q
+    (continuousLinearMapSpectralMomentJet momentOrder)
+    (continuous_continuousLinearMapSpectralMomentJet momentOrder)
+    k K hKcompact hKu hu
+
 end AlgebraicConsequences
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
