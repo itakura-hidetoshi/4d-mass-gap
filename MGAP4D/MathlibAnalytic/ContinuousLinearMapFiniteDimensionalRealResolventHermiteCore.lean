@@ -223,6 +223,8 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_one_smul
       continuousLinearMapRealResolvent A z -
         continuousLinearMapRealResolvent A w := by
   rw [continuousLinearMapRealResolvent_sub_eq_smul_mul A hz hw]
+  have hnode : (Fin.cases z (fun _ => w)) (1 : Fin 2) = w := by
+    rfl
   have hcoeff :
       continuousLinearMapRealResolventHermiteCoefficient 1 A
           (Fin.cases z (fun _ => w)) =
@@ -231,7 +233,7 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_one_smul
             continuousLinearMapRealResolvent A w) := by
     simp [continuousLinearMapRealResolventHermiteCoefficient,
       continuousLinearMapRealResolventHermiteObservable,
-      continuousLinearMapOrderedProduct]
+      continuousLinearMapOrderedProduct, hnode]
   rw [hcoeff, smul_smul]
   congr 1
   ring
