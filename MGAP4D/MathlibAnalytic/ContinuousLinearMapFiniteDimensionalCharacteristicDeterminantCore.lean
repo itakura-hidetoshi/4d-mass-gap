@@ -37,8 +37,7 @@ theorem continuous_continuousLinearMapCharacteristicDeterminant_fixed
     [FiniteDimensional ℝ V] (z : ℝ) :
     Continuous (fun A : V →L[ℝ] V =>
       continuousLinearMapCharacteristicDeterminant A z) := by
-  exact continuous_continuousLinearMapCharacteristicDeterminant.comp
-    (continuous_id.prod_mk continuous_const)
+  exact continuous_continuousLinearMapCharacteristicDeterminant.comp (by fun_prop)
 
 /-- A finite vector of characteristic determinant samples. -/
 def continuousLinearMapCharacteristicDeterminantSampleJet
@@ -168,7 +167,7 @@ theorem finiteDimensional_characteristicDeterminant_eventually_abs_gt_half_margi
   have hyx : |y| ≤ |x - y| + |x| := by
     calc
       |y| = |(y - x) + x| := by ring_nf
-      _ ≤ |y - x| + |x| := abs_add _ _
+      _ ≤ |y - x| + |x| := abs_add_le _ _
       _ = |x - y| + |x| := by rw [abs_sub_comm]
   linarith
 
