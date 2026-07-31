@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventSpectralJetTransfer
+import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic
 
 noncomputable section
@@ -218,22 +219,18 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_one_smul
     (hz : IsUnit (continuousLinearMapRealShift A z))
     (hw : IsUnit (continuousLinearMapRealShift A w)) :
     (z - w) •
-        continuousLinearMapRealResolventHermiteCoefficient 1 A
-          (Fin.cases z (fun _ => w)) =
+        continuousLinearMapRealResolventHermiteCoefficient 1 A ![z, w] =
       continuousLinearMapRealResolvent A z -
         continuousLinearMapRealResolvent A w := by
   rw [continuousLinearMapRealResolvent_sub_eq_smul_mul A hz hw]
-  have hnode : (Fin.cases z (fun _ => w)) (1 : Fin 2) = w := by
-    rfl
   have hcoeff :
-      continuousLinearMapRealResolventHermiteCoefficient 1 A
-          (Fin.cases z (fun _ => w)) =
+      continuousLinearMapRealResolventHermiteCoefficient 1 A ![z, w] =
         (-1 : ℝ) •
           (continuousLinearMapRealResolvent A z *
             continuousLinearMapRealResolvent A w) := by
     simp [continuousLinearMapRealResolventHermiteCoefficient,
       continuousLinearMapRealResolventHermiteObservable,
-      continuousLinearMapOrderedProduct, hnode]
+      continuousLinearMapOrderedProduct]
   rw [hcoeff, smul_smul]
   congr 1
   ring
