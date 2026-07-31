@@ -63,7 +63,8 @@ theorem continuous_continuousLinearMapRealResolventHermiteResponseJet
   apply continuous_pi
   intro n
   exact phi.continuous.comp
-    ((continuous_continuousLinearMapRealResolventHermiteJet order).eval n)
+    ((continuous_apply n).comp
+      (continuous_continuousLinearMapRealResolventHermiteJet order))
 
 /-- Dual-norm control of a normalized Hermite response. -/
 theorem abs_continuousLinearMapRealResolventHermiteResponseObservable_le
