@@ -93,6 +93,8 @@ variable {m : Filter β} (a : β → α) (degree : β → ℕ)
 variable (ha : Tendsto a m l) (hdegree : Tendsto degree m atTop)
 variable (box : ContinuousLinearMapClosedTaylorParameterBox gap)
 
+include B L hLgap hLresolvent ha hdegree
+
 /-- Closed-box determinant convergence is fully uniform. -/
 theorem taylorPartialSum_det_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
