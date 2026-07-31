@@ -50,16 +50,17 @@ theorem taylorPartialSum_realResolventSpectralJet_finiteDimensionalCompression_t
             (continuousLinearMapRealResolvent
               (continuousLinearMapCompression J Q
                 (S.limitResolvent p.target)) z)‖ < epsilon := by
-  let R := fun b q =>
-    continuousLinearMapRealResolvent
+  let R : β → (ContinuousLinearMapTaylorParameterPoint × ℝ) → (V →L[ℝ] V) :=
+    fun b q => continuousLinearMapRealResolvent
       (continuousLinearMapCompression J Q
         (continuousLinearMapTaylorPartialSum
           (F (a b)) q.1.center q.1.target (degree b))) q.2
-  let R0 := fun q =>
-    continuousLinearMapRealResolvent
+  let R0 : (ContinuousLinearMapTaylorParameterPoint × ℝ) → (V →L[ℝ] V) :=
+    fun q => continuousLinearMapRealResolvent
       (continuousLinearMapCompression J Q
         (S.limitResolvent q.1.target)) q.2
-  let T := {q | box.Contains q.1 ∧ q.2 ∈ Z}
+  let T : Set (ContinuousLinearMapTaylorParameterPoint × ℝ) :=
+    {q | box.Contains q.1 ∧ q.2 ∈ Z}
   have hR0 : ∀ q ∈ T, ‖R0 q‖ ≤ M := by
     intro q hq
     exact hlimitNorm q.1 hq.1 q.2 hq.2
@@ -112,16 +113,17 @@ theorem taylorPartialSum_realResolventSpectralJetVector_finiteDimensionalCompres
             (continuousLinearMapRealResolvent
               (continuousLinearMapCompression J Q
                 (S.limitResolvent p.target)) z)‖ < epsilon := by
-  let R := fun b q =>
-    continuousLinearMapRealResolvent
+  let R : β → (ContinuousLinearMapTaylorParameterPoint × ℝ) → (V →L[ℝ] V) :=
+    fun b q => continuousLinearMapRealResolvent
       (continuousLinearMapCompression J Q
         (continuousLinearMapTaylorPartialSum
           (F (a b)) q.1.center q.1.target (degree b))) q.2
-  let R0 := fun q =>
-    continuousLinearMapRealResolvent
+  let R0 : (ContinuousLinearMapTaylorParameterPoint × ℝ) → (V →L[ℝ] V) :=
+    fun q => continuousLinearMapRealResolvent
       (continuousLinearMapCompression J Q
         (S.limitResolvent q.1.target)) q.2
-  let T := {q | box.Contains q.1 ∧ q.2 ∈ Z}
+  let T : Set (ContinuousLinearMapTaylorParameterPoint × ℝ) :=
+    {q | box.Contains q.1 ∧ q.2 ∈ Z}
   have hR0 : ∀ q ∈ T, ‖R0 q‖ ≤ M := by
     intro q hq
     exact hlimitNorm q.1 hq.1 q.2 hq.2
