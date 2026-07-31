@@ -35,6 +35,8 @@ variable (degree : G.AdmissibleRescaledDefectTime → ℕ)
 variable (hdegree : Tendsto degree G.admissibleRescaledDefectTimeFilter atTop)
 variable (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
 
+include hdegree
+
 /-- Diagonal canonical OS form for every continuous observable: the Taylor
 degree may depend arbitrarily on admissible time with no speed relation. -/
 theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree
