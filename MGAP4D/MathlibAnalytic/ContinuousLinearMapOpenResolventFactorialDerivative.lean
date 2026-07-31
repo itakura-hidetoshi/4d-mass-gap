@@ -65,6 +65,7 @@ theorem hasDerivWithinAt (D : ContinuousLinearMapOpenResolventData E)
     simpa only [mem_singleton_iff] using hmuNe
   rw [slope_def_module, D.resolvent_identity hmuGap hlambda,
     inv_smul_smul₀ hne]
+  rfl
 
 /-- Ordinary first derivative formula on the open half-line. -/
 theorem hasDerivAt (D : ContinuousLinearMapOpenResolventData E)
@@ -92,7 +93,8 @@ theorem pow_hasDerivWithinAt (D : ContinuousLinearMapOpenResolventData E)
   | succ k ih =>
       have hR : HasDerivWithinAt D.resolvent
           ((D.resolvent lambda) ^ 2) (Set.Iio D.gap) lambda := by
-        simpa [pow_two, ContinuousLinearMap.mul_def] using D.hasDerivWithinAt hlambda
+        simpa [pow_two, ContinuousLinearMap.mul_def] using
+          D.hasDerivWithinAt hlambda
       have hmul := HasDerivWithinAt.mul
         (𝕜 := ℝ) (𝔸 := E →L[ℝ] E) ih hR
       have hmul' : HasDerivWithinAt
@@ -137,26 +139,28 @@ theorem contDiffOn_nat (D : ContinuousLinearMapOpenResolventData E) (n : ℕ) :
         (n := (n : ℕ∞ω)) isOpen_Iio).2
       refine ⟨D.differentiableOn, ?_, ?_⟩
       · intro lambda hlambda
-        simpa [pow_two, ContinuousLinearMap.mul_def] using
-          (D.hasDerivAt hlambda).deriv
-      · exact ih.clm_comp ih
+        exact (D.hasDerivAt (lambda := lambda) hlambda).deriv
+      · exact (ih.clm_comp ih).congr fun lambda hlambda => by
+          symm
+          exact (D.hasDerivAt (lambda := lambda) hlambda).deriv
 
 /-- The abstract resolvent is smooth on the whole open half-line. -/
 theorem contDiffOn_infty (D : ContinuousLinearMapOpenResolventData E) :
     ContDiffOn ℝ ∞ D.resolvent (Set.Iio D.gap) :=
-  contDiffOn_infty.2 fun n => D.contDiffOn_nat n
+  _root_.contDiffOn_infty.2 fun n => D.contDiffOn_nat n
 
 /-- Exact factorial formula for all within-derivatives. -/
 theorem iteratedDerivWithin (D : ContinuousLinearMapOpenResolventData E)
     (n : ℕ) {lambda : ℝ} (hlambda : lambda < D.gap) :
-    iteratedDerivWithin n D.resolvent (Set.Iio D.gap) lambda =
+    _root_.iteratedDerivWithin n D.resolvent (Set.Iio D.gap) lambda =
       (n.factorial : ℝ) • (D.resolvent lambda) ^ (n + 1) := by
   induction n generalizing lambda with
   | zero => simp
   | succ n ih =>
-      rw [iteratedDerivWithin_succ]
+      rw [_root_.iteratedDerivWithin_succ]
       have hcongr :
-          derivWithin (iteratedDerivWithin n D.resolvent (Set.Iio D.gap))
+          derivWithin
+              (_root_.iteratedDerivWithin n D.resolvent (Set.Iio D.gap))
               (Set.Iio D.gap) lambda =
             derivWithin (fun mu =>
               (n.factorial : ℝ) • (D.resolvent mu) ^ (n + 1))
@@ -206,46 +210,11 @@ theorem iteratedDeriv (D : ContinuousLinearMapOpenResolventData E)
       (n.factorial : ℝ) • (D.resolvent lambda) ^ (n + 1) := by
   calc
     _root_.iteratedDeriv n D.resolvent lambda =
-        iteratedDerivWithin n D.resolvent (Set.Iio D.gap) lambda :=
+        _root_.iteratedDerivWithin n D.resolvent (Set.Iio D.gap) lambda :=
       (iteratedDerivWithin_of_isOpen
         (n := n) (f := D.resolvent) isOpen_Iio hlambda).symm
     _ = (n.factorial : ℝ) • (D.resolvent lambda) ^ (n + 1) :=
       D.iteratedDerivWithin n hlambda
-
-/-- Filter-indexed Taylor strong-limit data.  This generalizes the sequence-only
-interface used by the finite Wilson Taylor layer. -/
-structure TaylorStrongLimitDataOn
-    {α : Type*} (l : Filter α)
-    (F : α → ℝ → E →L[ℝ] E) where
-  limitResolvent : ℝ → E →L[ℝ] E
-  value_tendsto_apply : ∀ mu : ℝ, ∀ x : E,
-    Tendsto (fun a => F a mu x) l (𝓝 (limitResolvent mu x))
-  iteratedDeriv_tendsto_apply : ∀ k : ℕ, ∀ lambda : ℝ, ∀ x : E,
-    Tendsto (fun a => (_root_.iteratedDeriv k (F a) lambda) x) l
-      (𝓝 ((_root_.iteratedDeriv k limitResolvent lambda) x))
-
-/-- Exact factorial derivative formulas and strong convergence of every
-resolvent power construct full Taylor strong-limit data. -/
-noncomputable def TaylorStrongLimitDataOn.of_resolventPowers
-    {α : Type*} {l : Filter α}
-    {F : α → ℝ → E →L[ℝ] E} {R : ℝ → E →L[ℝ] E}
-    (hValue : ∀ mu : ℝ, ∀ x : E,
-      Tendsto (fun a => F a mu x) l (𝓝 (R mu x)))
-    (hPower : ∀ k : ℕ, ∀ lambda : ℝ, ∀ x : E,
-      Tendsto (fun a => ((F a lambda) ^ (k + 1)) x) l
-        (𝓝 (((R lambda) ^ (k + 1)) x)))
-    (hDerivF : ∀ a : α, ∀ k : ℕ, ∀ lambda : ℝ,
-      _root_.iteratedDeriv k (F a) lambda =
-        (k.factorial : ℝ) • (F a lambda) ^ (k + 1))
-    (hDerivR : ∀ k : ℕ, ∀ lambda : ℝ,
-      _root_.iteratedDeriv k R lambda =
-        (k.factorial : ℝ) • (R lambda) ^ (k + 1)) :
-    TaylorStrongLimitDataOn l F where
-  limitResolvent := R
-  value_tendsto_apply := hValue
-  iteratedDeriv_tendsto_apply k lambda x := by
-    have hp := (hPower k lambda x).const_smul (k.factorial : ℝ)
-    simpa only [hDerivF, hDerivR, ContinuousLinearMap.smul_apply] using hp
 
 end ContinuousLinearMapOpenResolventData
 
