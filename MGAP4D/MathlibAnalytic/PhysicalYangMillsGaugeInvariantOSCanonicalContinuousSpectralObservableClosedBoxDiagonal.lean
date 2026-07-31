@@ -75,6 +75,27 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_det_fin
       T hP hInnerSymmetric hSelf J Q degree hdegree box
       (fun A : V →L[ℝ] V => A.det) ContinuousLinearMap.continuous_det
 
+/-- Diagonal finite operator-polynomial convergence on the complete box. -/
+theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_polynomial_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree
+    (coeff : ℕ → ℝ) (polynomialDegree : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
+        ∀ p, box.Contains p →
+          ‖continuousLinearMapPolynomial coeff polynomialDegree
+              (continuousLinearMapCompression J Q
+                (continuousLinearMapTaylorPartialSum
+                  (G.admissibleRescaledDefectTaylorResolvent
+                    T hInnerSymmetric tau) p.center p.target (degree tau))) -
+            continuousLinearMapPolynomial coeff polynomialDegree
+              (continuousLinearMapCompression J Q
+                (G.vacuumOrthogonalContinuumTaylorResolvent
+                  T hP hInnerSymmetric hSelf p.target))‖ < epsilon := by
+  exact
+    G.admissibleRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_tendsto_degree
+      T hP hInnerSymmetric hSelf J Q degree hdegree box
+      (continuousLinearMapPolynomial coeff polynomialDegree)
+      (continuous_continuousLinearMapPolynomial coeff polynomialDegree)
+
 end DiagonalClosedBox
 
 end StronglyContinuousPhysicalSemigroup
