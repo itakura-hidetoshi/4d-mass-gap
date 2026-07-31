@@ -50,24 +50,31 @@ theorem iteratedDeriv_realResolventNewtonHermiteLinearResponseFamilyPair_finiteD
           (continuousLinearMapRealResolventNewtonHermitePair degree
             (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda))
             (nodes q) (eval q))‖ < epsilon := by
-  apply finiteDimensional_linearResponseFamilyPair_tendsto_uniformOn
-    Phi
-    (fun a p => continuousLinearMapRealResolventNewtonHermitePair degree
-      (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k (F a) p.1)) (nodes p.2) (eval p.2))
-    (fun p => continuousLinearMapRealResolventNewtonHermitePair degree
-      (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k S.limitResolvent p.1)) (nodes p.2) (eval p.2))
-    responseBound hresponseBound hPhi
-  intro eta heta
-  have h :=
-    S.iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product
-      B L hLgap hLresolvent J Q k degree K hKcompact hKu hu
-      nodes eval T Z hnodes heval D hD hdist margin hmargin
-      hlimitMargin M hM hlimitNorm eta heta
-  filter_upwards [h] with a ha
-  intro p hp
-  exact ha p.1 hp.1 p.2 hp.2
+  intro epsilon hepsilon
+  have htransfer :=
+    finiteDimensional_linearResponseFamilyPair_tendsto_uniformOn
+      (l := l) (s := K ×ˢ T) Phi
+      (fun a p => continuousLinearMapRealResolventNewtonHermitePair degree
+        (continuousLinearMapCompression J Q
+          (_root_.iteratedDeriv k (F a) p.1)) (nodes p.2) (eval p.2))
+      (fun p => continuousLinearMapRealResolventNewtonHermitePair degree
+        (continuousLinearMapCompression J Q
+          (_root_.iteratedDeriv k S.limitResolvent p.1)) (nodes p.2) (eval p.2))
+      responseBound hresponseBound hPhi
+      (by
+        intro eta heta
+        have h :=
+          S.iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product
+            B L hLgap hLresolvent J Q k degree K hKcompact hKu hu
+            nodes eval T Z hnodes heval D hD hdist margin hmargin
+            hlimitMargin M hM hlimitNorm eta heta
+        filter_upwards [h] with a ha
+        intro p hp
+        exact ha p.1 hp.1 p.2 hp.2)
+      epsilon hepsilon
+  filter_upwards [htransfer] with a ha
+  intro lambda hlambda q hq
+  exact ha (lambda, q) ⟨hlambda, hq⟩
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
 
