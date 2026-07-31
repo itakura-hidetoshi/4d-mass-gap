@@ -27,10 +27,9 @@ theorem iteratedDeriv_realResolventHermiteJet_finiteDimensionalCompression_tends
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (taylorOrder hermiteOrder : ℕ)
-    (K : Set ℝ) (hKcompact : IsCompact K)
-    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (taylorOrder hermiteOrder : ℕ)
+    (K : Set ℝ) (hKcompact : IsCompact K) {u : ℝ}
+    (hKu : K ⊆ Set.Iic u) (hu : u < gap)
     (nodes : κ → Fin (hermiteOrder + 1) → ℝ) (T : Set κ) (Z : Set ℝ)
     (hnodes : ∀ q ∈ T, ∀ j, nodes q j ∈ Z)
     (margin : ℝ) (hmargin : 0 < margin)
@@ -40,19 +39,16 @@ theorem iteratedDeriv_realResolventHermiteJet_finiteDimensionalCompression_tends
           (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ k ≤ taylorOrder, ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+      continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
+        (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
       ∀ k ≤ taylorOrder, ∀ lambda ∈ K, ∀ q ∈ T,
-        ‖continuousLinearMapRealResolventHermiteJet hermiteOrder
-            (fun j => continuousLinearMapRealResolvent
-              (continuousLinearMapCompression J Q
-                (_root_.iteratedDeriv k (F a) lambda)) (nodes q j)) -
-          continuousLinearMapRealResolventHermiteJet hermiteOrder
-            (fun j => continuousLinearMapRealResolvent
-              (continuousLinearMapCompression J Q
-                (_root_.iteratedDeriv k S.limitResolvent lambda)) (nodes q j))‖ < epsilon := by
+        ‖continuousLinearMapRealResolventHermiteJet hermiteOrder (fun j =>
+            continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
+              (_root_.iteratedDeriv k (F a) lambda)) (nodes q j)) -
+          continuousLinearMapRealResolventHermiteJet hermiteOrder (fun j =>
+            continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
+              (_root_.iteratedDeriv k S.limitResolvent lambda)) (nodes q j))‖ < epsilon := by
   intro epsilon hepsilon
   have hk : ∀ k ∈ Finset.range (taylorOrder + 1),
       ∀ᶠ a in l, ∀ lambda ∈ K, ∀ q ∈ T,
