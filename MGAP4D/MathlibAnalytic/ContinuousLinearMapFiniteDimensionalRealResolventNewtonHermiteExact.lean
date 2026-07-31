@@ -52,7 +52,6 @@ theorem continuousLinearMapRealResolvent_sub_newtonHermiteInterpolant_eq_remaind
               continuousLinearMapRealResolvent A z) := by
           simp [continuousLinearMapRealResolventNewtonHermiteInterpolant,
             continuousLinearMapRealResolventNewtonHermiteInterpolantObservable]
-          abel
         _ = -((z - nodes 0) •
               (continuousLinearMapRealResolvent A (nodes 0) *
                 continuousLinearMapRealResolvent A z)) := by
@@ -62,7 +61,7 @@ theorem continuousLinearMapRealResolvent_sub_newtonHermiteInterpolant_eq_remaind
           unfold continuousLinearMapRealResolventNewtonHermiteRemainder
           rw [continuousLinearMapRealResolventHermiteCoefficient_finAppend]
           simp [continuousLinearMapRealResolventNewtonNodeProduct,
-            continuousLinearMapOrderedProduct, smul_smul]
+            continuousLinearMapOrderedProduct]
   | n + 1, A, nodes, z, hnodes, hz => by
       have hprefix :
           ∀ i, IsUnit
