@@ -54,9 +54,11 @@ theorem continuousLinearMapOrderedProduct_snoc
   | zero =>
       simp [continuousLinearMapOrderedProduct]
   | succ n ih =>
-      rw [continuousLinearMapOrderedProduct_succ,
-        ih (Fin.tail R), continuousLinearMapOrderedProduct_succ,
-        Fin.tail_init_eq_init_tail]
+      rw [continuousLinearMapOrderedProduct_succ]
+      change R 0 * continuousLinearMapOrderedProduct (n + 1) (Fin.tail R) =
+        continuousLinearMapOrderedProduct (n + 1) (Fin.init R) *
+          R (Fin.last (n + 1))
+      rw [ih (Fin.tail R), continuousLinearMapOrderedProduct_succ]
       simp [Fin.init, Fin.tail, mul_assoc]
 
 /-- An endomorphism commuting with every factor commutes with their ordered
@@ -70,8 +72,19 @@ theorem continuousLinearMap_mul_orderedProduct_eq_orderedProduct_mul
   induction n with
   | zero => simp [continuousLinearMapOrderedProduct]
   | succ n ih =>
-      rw [continuousLinearMapOrderedProduct_succ, mul_assoc, hcomm 0,
-        ← mul_assoc, ih (fun i => R i.succ) (fun i => hcomm i.succ), mul_assoc]
+      rw [continuousLinearMapOrderedProduct_succ]
+      calc
+        A * (R 0 * continuousLinearMapOrderedProduct n (fun i => R i.succ)) =
+            (A * R 0) * continuousLinearMapOrderedProduct n (fun i => R i.succ) :=
+          (mul_assoc _ _ _).symm
+        _ = (R 0 * A) * continuousLinearMapOrderedProduct n (fun i => R i.succ) := by
+          rw [hcomm 0]
+        _ = R 0 * (A * continuousLinearMapOrderedProduct n (fun i => R i.succ)) :=
+          mul_assoc _ _ _
+        _ = R 0 * (continuousLinearMapOrderedProduct n (fun i => R i.succ) * A) := by
+          rw [ih (fun i => R i.succ) (fun i => hcomm i.succ)]
+        _ = (R 0 * continuousLinearMapOrderedProduct n (fun i => R i.succ)) * A :=
+          (mul_assoc _ _ _).symm
 
 /-- Ordered finite multiplication is continuous in the product supremum norm. -/
 theorem continuous_continuousLinearMapOrderedProduct
@@ -254,7 +267,6 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_succ_smul
     change R 0 * continuousLinearMapOrderedProduct n (Fin.tail (Fin.init R)) =
       R 0 * P
     rw [Fin.tail_init_eq_init_tail]
-    rfl
   have htail :
       continuousLinearMapOrderedProduct (n + 1) (Fin.tail R) =
         P * R (Fin.last (n + 1)) := by
@@ -270,13 +282,33 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_succ_smul
           (R 0 * R (Fin.last (n + 1))) := by
     simpa [R] using continuousLinearMapRealResolvent_sub_eq_smul_mul A
       (hunit 0) (hunit (Fin.last (n + 1)))
+  have hprodDiff :
+      continuousLinearMapOrderedProduct (n + 1) (Fin.init R) -
+          continuousLinearMapOrderedProduct (n + 1) (Fin.tail R) =
+        (nodes (Fin.last (n + 1)) - nodes 0) •
+          continuousLinearMapOrderedProduct (n + 2) R := by
+    rw [hinit, htail, hfull]
+    calc
+      R 0 * P - P * R (Fin.last (n + 1)) =
+          R 0 * P - R (Fin.last (n + 1)) * P := by
+        rw [hlastP]
+      _ = (R 0 - R (Fin.last (n + 1))) * P := by
+        rw [sub_mul]
+      _ = ((nodes (Fin.last (n + 1)) - nodes 0) •
+          (R 0 * R (Fin.last (n + 1)))) * P := by
+        rw [hdiff]
+      _ = (nodes (Fin.last (n + 1)) - nodes 0) •
+          ((R 0 * R (Fin.last (n + 1))) * P) := by
+        rw [smul_mul_assoc]
+      _ = (nodes (Fin.last (n + 1)) - nodes 0) •
+          (R 0 * (P * R (Fin.last (n + 1)))) := by
+        rw [mul_assoc, hlastP]
   change (nodes 0 - nodes (Fin.last (n + 1))) •
       continuousLinearMapRealResolventHermiteObservable (n + 1) R =
     continuousLinearMapRealResolventHermiteObservable n (Fin.init R) -
       continuousLinearMapRealResolventHermiteObservable n (Fin.tail R)
   unfold continuousLinearMapRealResolventHermiteObservable
-  rw [hfull, hinit, htail, ← smul_sub, ← hlastP, ← sub_mul, hdiff,
-    smul_mul_assoc, mul_assoc, hlastP, smul_smul, smul_smul]
+  rw [← smul_sub, hprodDiff, smul_smul, smul_smul]
   congr 1
   rw [pow_succ]
   ring
