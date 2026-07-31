@@ -29,16 +29,15 @@ theorem iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompressio
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (taylorOrder interpolationOrder : ℕ)
     (K : Set ℝ) (hKcompact : IsCompact K) {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap)
     (nodes : ∀ d : Fin (interpolationOrder + 1), κ → Fin (d.1 + 1) → ℝ)
-    (eval : Fin (interpolationOrder + 1) → κ → ℝ) (T Z : Set κ)
-    (hnodes : ∀ d q, q ∈ T → ∀ j, nodes d q j ∈ (show Set ℝ from Z))
-    (heval : ∀ d q, q ∈ T → eval d q ∈ (show Set ℝ from Z))
+    (eval : Fin (interpolationOrder + 1) → κ → ℝ) (T : Set κ) (Z : Set ℝ)
+    (hnodes : ∀ d q, q ∈ T → ∀ j, nodes d q j ∈ Z) (heval : ∀ d q, q ∈ T → eval d q ∈ Z)
     (D : ℝ) (hD : 0 ≤ D) (hdist : ∀ d q, q ∈ T → ∀ j, |eval d q - nodes d q j| ≤ D)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ (show Set ℝ from Z),
+    (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       margin ≤ |continuousLinearMapCharacteristicDeterminant
         (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ (show Set ℝ from Z),
+    (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm
         (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
