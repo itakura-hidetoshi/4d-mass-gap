@@ -37,7 +37,8 @@ theorem continuous_continuousLinearMapCharacteristicDeterminant_fixed
     [FiniteDimensional ℝ V] (z : ℝ) :
     Continuous (fun A : V →L[ℝ] V =>
       continuousLinearMapCharacteristicDeterminant A z) := by
-  exact continuous_continuousLinearMapCharacteristicDeterminant.comp (by fun_prop)
+  exact continuous_continuousLinearMapCharacteristicDeterminant.comp
+    (continuous_id.prodMk continuous_const)
 
 /-- A finite vector of characteristic determinant samples. -/
 def continuousLinearMapCharacteristicDeterminantSampleJet
