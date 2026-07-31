@@ -193,7 +193,11 @@ theorem continuousLinearMap_ringInverse_neumann_stability
     calc
       ‖∑' n : ℕ, D ^ n‖ ≤ ‖(1 : V →L[ℝ] V)‖ - 1 + (1 - ‖D‖)⁻¹ := hs
       _ ≤ (1 - ‖D‖)⁻¹ := by
-        have hOne : ‖(1 : V →L[ℝ] V)‖ ≤ 1 := norm_one_le
+        have hOne : ‖(1 : V →L[ℝ] V)‖ ≤ 1 := by
+          apply ContinuousLinearMap.opNorm_le_bound
+          · norm_num
+          intro x
+          simp
         linarith
   have hden : (1 - ‖D‖)⁻¹ ≤ (2 : ℝ) :=
     inv_le_of_inv_le₀ (by norm_num) (by linarith)
