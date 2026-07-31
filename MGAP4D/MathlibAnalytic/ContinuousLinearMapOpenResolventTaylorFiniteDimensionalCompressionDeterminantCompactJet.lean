@@ -86,6 +86,23 @@ theorem iteratedDeriv_polynomial_finiteDimensionalCompression_tendsto_uniformOn_
     (continuous_continuousLinearMapPolynomial coeff degree)
     k K hKcompact hKu hu
 
+/-- Polynomial traces converge compact-uniformly. -/
+theorem iteratedDeriv_polynomialTrace_finiteDimensionalCompression_tendsto_uniformOn_compact
+    (coeff : ℕ → ℝ) (degree k : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K,
+      |continuousLinearMapPolynomialTrace coeff degree
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) -
+        continuousLinearMapPolynomialTrace coeff degree
+          (continuousLinearMapCompression J Q
+            (_root_.iteratedDeriv k S.limitResolvent lambda))| < epsilon := by
+  simpa [Real.norm_eq_abs] using
+    S.iteratedDeriv_continuousObservable_finiteDimensionalCompression_tendsto_uniformOn_compact
+      B L hLgap hLresolvent J Q
+      (continuousLinearMapPolynomialTrace coeff degree)
+      (continuous_continuousLinearMapPolynomialTrace coeff degree)
+      k K hKcompact hKu hu
+
 end AlgebraicConsequences
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
