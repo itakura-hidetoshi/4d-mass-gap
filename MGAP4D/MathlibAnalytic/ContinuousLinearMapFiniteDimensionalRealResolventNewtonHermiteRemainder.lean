@@ -142,7 +142,7 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_finAppend_sub
   calc
     (-1 : ℝ) ^ n • (P * Rz) - (-1 : ℝ) ^ n • (P * Rw) =
         (-1 : ℝ) ^ n • (P * (Rz - Rw)) := by
-      rw [smul_sub, mul_sub]
+      rw [← smul_sub, ← mul_sub]
     _ = (-1 : ℝ) ^ n • ((w - z) • (P * (Rz * Rw))) := by
       rw [hres, mul_smul_comm]
     _ = ((-1 : ℝ) ^ n * (w - z)) • (P * (Rz * Rw)) := by
