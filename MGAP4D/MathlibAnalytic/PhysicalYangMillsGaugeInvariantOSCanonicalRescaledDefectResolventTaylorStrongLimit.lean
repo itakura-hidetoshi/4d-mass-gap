@@ -297,56 +297,6 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorResolvent_iterated
     T hP hInnerSymmetric hSelf).iteratedDeriv_tendsto_apply
       k hlambda x
 
-/-- Physical package combining all-order Taylor strong convergence with the
-already established canonical Hamiltonian graph limit. -/
-theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorAndGraphLimitPackage
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.VacuumSemigroupGapSlope)
-    (hP : P.IsNormalized)
-    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
-    (∀ tau : G.AdmissibleRescaledDefectTime,
-      ContDiffOn ℝ ∞
-        (G.admissibleRescaledDefectTaylorResolvent
-          T hInnerSymmetric tau) (Set.Iio (G.mass / 2))) ∧
-    ContDiffOn ℝ ∞
-      (G.vacuumOrthogonalContinuumTaylorResolvent
-        T hP hInnerSymmetric hSelf) (Set.Iio (G.mass / 2)) ∧
-    (∀ k : ℕ, ∀ {lambda : ℝ}, lambda < G.mass / 2 →
-      ∀ x : P.VacuumOrthogonalHilbert,
-        Tendsto
-          (fun tau : G.AdmissibleRescaledDefectTime =>
-            (iteratedDeriv k
-              (G.admissibleRescaledDefectTaylorResolvent
-                T hInnerSymmetric tau) lambda) x)
-          G.admissibleRescaledDefectTimeFilter
-          (𝓝
-            ((iteratedDeriv k
-              (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf) lambda) x))) ∧
-    (FilterSet.kuratowskiInnerLimit G.admissibleRescaledDefectTimeFilter
-          (G.rescaledDefectGraphFamily T hInnerSymmetric
-            (fun tau : G.AdmissibleRescaledDefectTime => tau)) =
-        G.continuumHamiltonianGraph T hSelf ∧
-      FilterSet.kuratowskiOuterLimit G.admissibleRescaledDefectTimeFilter
-          (G.rescaledDefectGraphFamily T hInnerSymmetric
-            (fun tau : G.AdmissibleRescaledDefectTime => tau)) =
-        G.continuumHamiltonianGraph T hSelf) := by
-  refine ⟨?_, ?_, ?_,
-    (G.canonicalRescaledDefectOperatorLimitPackage
-      T hP hInnerSymmetric hSelf).2⟩
-  · intro tau
-    exact
-      (G.admissibleRescaledDefectOpenResolventData
-        T hInnerSymmetric tau).contDiffOn_infty
-  · exact
-      (G.vacuumOrthogonalContinuumOpenResolventData
-        T hP hInnerSymmetric hSelf).contDiffOn_infty
-  · intro k lambda hlambda x
-    exact
-      G.admissibleRescaledDefectTaylorResolvent_iteratedDeriv_tendsto_continuum
-        T hP hInnerSymmetric hSelf k hlambda x
-
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
