@@ -59,7 +59,10 @@ theorem continuousLinearMapOrderedProduct_snoc
         continuousLinearMapOrderedProduct (n + 1) (Fin.init R) *
           R (Fin.last (n + 1))
       rw [ih (Fin.tail R), continuousLinearMapOrderedProduct_succ]
-      simp [Fin.init, Fin.tail, mul_assoc]
+      have hmiddle : Fin.init (Fin.tail R) = fun i => R i.castSucc.succ := by
+        funext i
+        rfl
+      rw [hmiddle]
 
 /-- An endomorphism commuting with every factor commutes with their ordered
 finite product. -/
@@ -275,7 +278,10 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_succ_smul
   have hfull :
       continuousLinearMapOrderedProduct (n + 2) R =
         R 0 * (P * R (Fin.last (n + 1))) := by
-    rw [continuousLinearMapOrderedProduct_succ, htail]
+    rw [continuousLinearMapOrderedProduct_succ]
+    change R 0 * continuousLinearMapOrderedProduct (n + 1) (Fin.tail R) =
+      R 0 * (P * R (Fin.last (n + 1)))
+    rw [htail]
   have hdiff :
       R 0 - R (Fin.last (n + 1)) =
         (nodes (Fin.last (n + 1)) - nodes 0) •
