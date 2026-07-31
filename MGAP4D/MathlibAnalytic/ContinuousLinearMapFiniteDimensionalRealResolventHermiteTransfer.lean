@@ -18,9 +18,10 @@ theorem finiteDimensional_realResolventHermiteObservable_tendsto_uniformOn
     {α ι V : Type*}
     [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
     {l : Filter α} {s : Set ι}
+    (order : ℕ)
     (R : α → ι → Fin (order + 1) → (V →L[ℝ] V))
     (R0 : ι → Fin (order + 1) → (V →L[ℝ] V))
-    (order : ℕ) (M : ℝ) (hM : 0 ≤ M)
+    (M : ℝ) (hM : 0 ≤ M)
     (hR0 : ∀ i ∈ s, ‖R0 i‖ ≤ M)
     (hR : ∀ eta : ℝ, 0 < eta →
       ∀ᶠ a in l, ∀ i ∈ s, ‖R a i - R0 i‖ < eta) :
@@ -39,9 +40,10 @@ theorem finiteDimensional_realResolventHermiteJet_tendsto_uniformOn
     {α ι V : Type*}
     [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
     {l : Filter α} {s : Set ι}
+    (order : ℕ)
     (R : α → ι → Fin (order + 1) → (V →L[ℝ] V))
     (R0 : ι → Fin (order + 1) → (V →L[ℝ] V))
-    (order : ℕ) (M : ℝ) (hM : 0 ≤ M)
+    (M : ℝ) (hM : 0 ≤ M)
     (hR0 : ∀ i ∈ s, ‖R0 i‖ ≤ M)
     (hR : ∀ eta : ℝ, 0 < eta →
       ∀ᶠ a in l, ∀ i ∈ s, ‖R a i - R0 i‖ < eta) :
