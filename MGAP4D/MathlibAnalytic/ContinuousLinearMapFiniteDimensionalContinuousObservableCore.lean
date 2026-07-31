@@ -179,8 +179,8 @@ theorem continuousLinearMap_pow_succ_norm_le
         _ ≤ ‖A ^ (n + 1)‖ * ‖A‖ := norm_mul_le _ _
         _ ≤ q ^ (n + 1) * q :=
           mul_le_mul ih hA (norm_nonneg A) (pow_nonneg hq (n + 1))
-        _ = q ^ (Nat.succ n + 1) := by
-          rw [show Nat.succ n + 1 = (n + 1) + 1 by omega, pow_succ]
+        _ = q ^ ((n + 1) + 1) := (pow_succ q (n + 1)).symm
+        _ = q ^ (Nat.succ n + 1) := by congr 1 <;> omega
 
 /-- Uniform convergence in a finite-dimensional normed domain passes through
 any continuous observable once the limit family has a common bound. -/
