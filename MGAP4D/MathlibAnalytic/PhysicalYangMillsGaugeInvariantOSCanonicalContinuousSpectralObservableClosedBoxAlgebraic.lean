@@ -99,6 +99,27 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_polynomi
       (continuous_continuousLinearMapPolynomialDet coeff polynomialDegree)
       tau degree htau hdegree box
 
+/-- Every finite canonical OS spectral-moment vector converges uniformly on
+every full closed half-mass Taylor box. -/
+theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorPartialSum_spectralMomentJet_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
+    (momentOrder : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
+      ‖continuousLinearMapSpectralMomentJet momentOrder
+          (continuousLinearMapCompression J Q
+            (continuousLinearMapTaylorPartialSum
+              (G.admissibleRescaledDefectTaylorResolvent
+                T hInnerSymmetric (tau b)) p.center p.target (degree b))) -
+        continuousLinearMapSpectralMomentJet momentOrder
+          (continuousLinearMapCompression J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent
+              T hP hInnerSymmetric hSelf p.target))‖ < epsilon := by
+  exact
+    G.canonicalRescaledDefectTaylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_continuum_uniform_closedBox_of_joint
+      T hP hInnerSymmetric hSelf J Q
+      (continuousLinearMapSpectralMomentJet momentOrder)
+      (continuous_continuousLinearMapSpectralMomentJet momentOrder)
+      tau degree htau hdegree box
+
 end JointClosedBoxAlgebraic
 
 end StronglyContinuousPhysicalSemigroup
