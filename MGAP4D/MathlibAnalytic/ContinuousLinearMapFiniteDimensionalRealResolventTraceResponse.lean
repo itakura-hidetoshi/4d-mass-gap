@@ -167,8 +167,9 @@ theorem finiteDimensional_tracePair_tendsto_uniformOn
     ‖(continuousLinearMapTrace : (V →L[ℝ] V) →L[ℝ] ℝ)‖
   let eta : ℝ := epsilon / (c + 1)
   have hc0 : 0 ≤ c := by
-    dsimp [c]
-    exact norm_nonneg _
+    simpa only [c] using
+      (norm_nonneg
+        (continuousLinearMapTrace : (V →L[ℝ] V) →L[ℝ] ℝ))
   have hc1 : 0 < c + 1 := by linarith
   have heta : 0 < eta := div_pos hepsilon hc1
   have hpair := hP eta heta
