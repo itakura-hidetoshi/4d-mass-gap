@@ -56,12 +56,11 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_realR
               (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda))
             (nodes q) (eval q)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q k interpolationDegree K hKcompact hKu hu nodes eval C Z
-        hnodes heval R hR hdist margin hmargin hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q k interpolationDegree K hKcompact hKu hu nodes eval C Z
+      hnodes heval R hR hdist margin hmargin hlimitMargin M hM hlimitNorm
 
 /-- Canonical OS simultaneous convergence on the finite Taylor-order by
 finite Newton-Hermite interpolation-degree rectangle. -/
@@ -97,13 +96,12 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_realR
               (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda))
             (nodes d q) (eval d q)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product_rectangular
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q taylorOrder interpolationOrder K hKcompact hKu hu
-        nodes eval C Z hnodes heval R hR hdist margin hmargin
-        hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).iteratedDeriv_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniformOn_compact_product_rectangular
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q taylorOrder interpolationOrder K hKcompact hKu hu
+      nodes eval C Z hnodes heval R hR hdist margin hmargin
+      hlimitMargin M hM hlimitNorm
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
