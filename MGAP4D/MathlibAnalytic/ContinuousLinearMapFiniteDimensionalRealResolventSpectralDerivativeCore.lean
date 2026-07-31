@@ -72,7 +72,7 @@ theorem continuousLinearMapRealResolvent_sub_eq_smul_mul
     _ = (w - z) •
         (continuousLinearMapRealResolvent A z *
           continuousLinearMapRealResolvent A w) := by
-          simp [mul_smul_comm, smul_mul_assoc]
+          simp
 
 /-- Determinant nonvanishing gives the two-parameter real resolvent identity. -/
 theorem continuousLinearMapRealResolvent_sub_eq_smul_mul_of_det_ne_zero
@@ -115,7 +115,12 @@ theorem continuousLinearMapRealResolvent_sub_norm_le
           ‖continuousLinearMapRealResolvent A w‖) :=
         mul_le_mul_of_nonneg_left (norm_mul_le _ _) (abs_nonneg _)
     _ ≤ |z - w| * (M * M) := by
-      gcongr
+      apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+      exact mul_le_mul
+        (by simpa [continuousLinearMapRealResolventNorm] using hzNorm)
+        (by simpa [continuousLinearMapRealResolventNorm] using hwNorm)
+        (norm_nonneg _)
+        hM
 
 /-- Uniformly bounded real resolvents are Lipschitz on any common real
 resolvent region. -/
@@ -141,7 +146,7 @@ theorem continuousLinearMapRealResolvent_lipschitzOn
       rw [Real.dist_eq]
       ring
     _ = (Real.toNNReal (M * M) : ℝ) * dist z w := by
-      rw [Real.coe_toNNReal (mul_nonneg hM hM)]
+      rw [Real.coe_toNNReal, max_eq_left (mul_nonneg hM hM)]
 
 /-- Uniformly bounded real resolvents depend continuously on the spectral
 parameter throughout a common real resolvent region. -/
@@ -212,7 +217,6 @@ theorem continuousLinearMapRealResolvent_hasDerivWithinAt
   rw [slope_def_module,
     continuousLinearMapRealResolvent_sub_eq_smul_mul
       A (hunit w hwU) (hunit z hz)]
-  simp only [zsmul_eq_mul, one_mul]
   rw [show z - w = -(w - z) by ring, neg_smul]
   rw [inv_smul_smul₀ hne]
 
@@ -276,9 +280,11 @@ theorem continuousLinearMapRealResolvent_deriv_norm_le
     A U M hU hM hunit hnorm hz, norm_neg]
   calc
     ‖continuousLinearMapRealResolvent A z ^ 2‖ ≤
-        ‖continuousLinearMapRealResolvent A z‖ ^ 2 := norm_pow_le _ _
+        ‖continuousLinearMapRealResolvent A z‖ ^ 2 :=
+      norm_pow_le' (continuousLinearMapRealResolvent A z) (by omega)
     _ ≤ M ^ 2 := by
-      exact pow_le_pow_left₀ (norm_nonneg _) (hnorm z hz) 2
+      exact pow_le_pow_left₀ (norm_nonneg _)
+        (by simpa [continuousLinearMapRealResolventNorm] using hnorm z hz) 2
 
 end MathlibAnalytic
 end MGAP4D
