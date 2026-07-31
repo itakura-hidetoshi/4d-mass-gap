@@ -71,6 +71,8 @@ variable (L : ContinuousLinearMapOpenResolventNormBoundData E)
 variable (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
 variable (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
 
+include B L hLgap hLresolvent
+
 /-- Finite operator polynomials converge compact-uniformly in operator norm. -/
 theorem iteratedDeriv_polynomial_finiteDimensionalCompression_tendsto_uniformOn_compact
     (coeff : ℕ → ℝ) (degree k : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
