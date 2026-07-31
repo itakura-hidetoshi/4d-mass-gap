@@ -19,17 +19,19 @@ theorem continuousLinearMap_pow_succ_sub_pow_succ_norm_le
     (hA : ‖A‖ ≤ q) (hB : ‖B‖ ≤ q) (n : ℕ) :
     ‖A ^ (n + 1) - B ^ (n + 1)‖ ≤
       ((n : ℝ) + 1) * q ^ n * ‖A - B‖ := by
-  have hpowA : ∀ m : ℕ, ‖A ^ m‖ ≤ q ^ m := by
+  have hpowA : ∀ m : ℕ, ‖A ^ (m + 1)‖ ≤ q ^ (m + 1) := by
     intro m
     induction m with
-    | zero => simp
+    | zero => simpa using hA
     | succ m hm =>
         calc
-          ‖A ^ Nat.succ m‖ = ‖A ^ m * A‖ := by rw [pow_succ]
-          _ ≤ ‖A ^ m‖ * ‖A‖ := norm_mul_le _ _
-          _ ≤ q ^ m * q :=
-            mul_le_mul hm hA (norm_nonneg A) (pow_nonneg hq m)
-          _ = q ^ Nat.succ m := by rw [pow_succ]
+          ‖A ^ (Nat.succ m + 1)‖ = ‖A ^ (m + 1) * A‖ := by
+            rw [show Nat.succ m + 1 = (m + 1) + 1 by omega, pow_succ]
+          _ ≤ ‖A ^ (m + 1)‖ * ‖A‖ := norm_mul_le _ _
+          _ ≤ q ^ (m + 1) * q :=
+            mul_le_mul hm hA (norm_nonneg A) (pow_nonneg hq (m + 1))
+          _ = q ^ (Nat.succ m + 1) := by
+            rw [show Nat.succ m + 1 = (m + 1) + 1 by omega, pow_succ]
   induction n with
   | zero => simpa using (le_refl ‖A - B‖)
   | succ n ih =>
@@ -54,7 +56,7 @@ theorem continuousLinearMap_pow_succ_sub_pow_succ_norm_le
               (((n : ℝ) + 1) * q ^ n * ‖A - B‖) * q := by
           apply add_le_add
           · exact mul_le_mul_of_nonneg_right
-              (hpowA (n + 1)) (norm_nonneg (A - B))
+              (hpowA n) (norm_nonneg (A - B))
           · exact mul_le_mul ih hB (norm_nonneg B) (by positivity)
         _ = ((Nat.succ n : ℝ) + 1) * q ^ Nat.succ n * ‖A - B‖ := by
           rw [Nat.cast_succ, pow_succ]
