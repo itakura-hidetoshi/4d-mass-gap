@@ -74,22 +74,20 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_realR
     (hKu : K ⊆ Set.Iic u) (hu : u < G.mass / 2)
     (nodes : ∀ d : Fin (interpolationOrder + 1), κ → Fin (d.1 + 1) → ℝ)
     (eval : Fin (interpolationOrder + 1) → κ → ℝ) (C : Set κ) (Z : Set ℝ)
-    (hnodes : ∀ d q, q ∈ C → ∀ j, nodes d q j ∈ Z)
-    (heval : ∀ d q, q ∈ C → eval d q ∈ Z) (R : ℝ) (hR : 0 ≤ R)
-    (hdist : ∀ d q, q ∈ C → ∀ j, |eval d q - nodes d q j| ≤ R)
+    (hnodes : ∀ d q, q ∈ C → ∀ j, nodes d q j ∈ Z) (heval : ∀ d q, q ∈ C → eval d q ∈ Z)
+    (R : ℝ) (hR : 0 ≤ R) (hdist : ∀ d q, q ∈ C → ∀ j, |eval d q - nodes d q j| ≤ R)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1
-          (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z|)
+    (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤
+      |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
+          T hP hInnerSymmetric hSelf) lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1
-          (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
+          T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
-      ∀ k : Fin (taylorOrder + 1), ∀ d : Fin (interpolationOrder + 1),
-      ∀ lambda ∈ K, ∀ q ∈ C,
+      ∀ k : Fin (taylorOrder + 1), ∀ d : Fin (interpolationOrder + 1), ∀ lambda ∈ K, ∀ q ∈ C,
         ‖continuousLinearMapRealResolventNewtonHermitePair d.1
             (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1
               (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) lambda))
