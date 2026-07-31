@@ -53,26 +53,33 @@ theorem taylorPartialSum_realResolventNewtonHermiteLinearResponseFamilyPair_fini
           (continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
             (continuousLinearMapCompression J Q (S.limitResolvent p.target))
             (nodes q) (eval q))‖ < epsilon := by
-  apply finiteDimensional_linearResponseFamilyPair_tendsto_uniformOn
-    Phi
-    (fun b q => continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
-      (continuousLinearMapCompression J Q
-        (continuousLinearMapTaylorPartialSum
-          (F (a b)) q.1.center q.1.target (taylorDegree b)))
-      (nodes q.2) (eval q.2))
-    (fun q => continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
-      (continuousLinearMapCompression J Q (S.limitResolvent q.1.target))
-      (nodes q.2) (eval q.2))
-    responseBound hresponseBound hPhi
-  intro eta heta
-  have h :=
-    S.taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
-      B L hLgap hLresolvent J Q interpolationDegree a taylorDegree
-      ha hdegree box nodes eval T Z hnodes heval D hD hdist
-      margin hmargin hlimitMargin M hM hlimitNorm eta heta
-  filter_upwards [h] with b hb
-  intro q hq
-  exact hb q.1 hq.1 q.2 hq.2
+  intro epsilon hepsilon
+  have htransfer :=
+    finiteDimensional_linearResponseFamilyPair_tendsto_uniformOn
+      (l := m) (s := {q | box.Contains q.1 ∧ q.2 ∈ T}) Phi
+      (fun b q => continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
+        (continuousLinearMapCompression J Q
+          (continuousLinearMapTaylorPartialSum
+            (F (a b)) q.1.center q.1.target (taylorDegree b)))
+        (nodes q.2) (eval q.2))
+      (fun q => continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
+        (continuousLinearMapCompression J Q (S.limitResolvent q.1.target))
+        (nodes q.2) (eval q.2))
+      responseBound hresponseBound hPhi
+      (by
+        intro eta heta
+        have h :=
+          S.taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+            B L hLgap hLresolvent J Q interpolationDegree a taylorDegree
+            ha hdegree box nodes eval T Z hnodes heval D hD hdist
+            margin hmargin hlimitMargin M hM hlimitNorm eta heta
+        filter_upwards [h] with b hb
+        intro q hq
+        exact hb q.1 hq.1 q.2 hq.2)
+      epsilon hepsilon
+  filter_upwards [htransfer] with b hb
+  intro p hp q hq
+  exact hb (p, q) ⟨hp, hq⟩
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
 
