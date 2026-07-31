@@ -159,6 +159,23 @@ theorem taylorPartialSum_polynomialDet_finiteDimensionalCompression_tendsto_unif
       (continuous_continuousLinearMapPolynomialDet coeff polynomialDegree)
       a degree ha hdegree box
 
+/-- Finite spectral-moment vectors converge uniformly on the full closed box. -/
+theorem taylorPartialSum_spectralMomentJet_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+    (momentOrder : ℕ) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in m, ∀ p, box.Contains p →
+      ‖continuousLinearMapSpectralMomentJet momentOrder
+          (continuousLinearMapCompression J Q
+            (continuousLinearMapTaylorPartialSum
+              (F (a b)) p.center p.target (degree b))) -
+        continuousLinearMapSpectralMomentJet momentOrder
+          (continuousLinearMapCompression J Q
+            (S.limitResolvent p.target))‖ < epsilon :=
+  S.taylorPartialSum_continuousObservable_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+    B L hLgap hLresolvent J Q
+    (continuousLinearMapSpectralMomentJet momentOrder)
+    (continuous_continuousLinearMapSpectralMomentJet momentOrder)
+    a degree ha hdegree box
+
 end ClosedBoxConsequences
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
