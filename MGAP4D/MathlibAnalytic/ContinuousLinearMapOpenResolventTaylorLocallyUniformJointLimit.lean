@@ -169,7 +169,6 @@ theorem value_tendsto_uniformOn_compact_apply
       _ = epsilon / 3 := by
         dsimp [eta]
         field_simp [ne_of_gt hc1]
-        <;> ring
   let U : K → Set ℝ := fun y => Metric.ball y.1 eta
   have hUopen : ∀ y : K, IsOpen (U y) := fun y => Metric.isOpen_ball
   have hcover : K ⊆ ⋃ y : K, U y := by
@@ -188,16 +187,15 @@ theorem value_tendsto_uniformOn_compact_apply
     simpa [dist_eq_norm] using hyEventually
   have hfinite : ∀ᶠ a in l, ∀ y ∈ t,
       ‖F a y.1 x - S.limitResolvent y.1 x‖ < epsilon / 3 := by
-    classical
-    induction t using Finset.induction_on with
-    | empty => simp
-    | @insert y t hy ih =>
-        filter_upwards [hcenter y, ih] with a hay hat
-        intro z hz
-        simp only [Finset.mem_insert] at hz
-        rcases hz with hzy | hzt
-        · simpa [hzy] using hay
-        · exact hat z hzt
+    change {a | ∀ y ∈ t,
+      ‖F a y.1 x - S.limitResolvent y.1 x‖ < epsilon / 3} ∈ l
+    rw [show {a | ∀ y ∈ t,
+        ‖F a y.1 x - S.limitResolvent y.1 x‖ < epsilon / 3} =
+      ⋂ y ∈ t,
+        {a | ‖F a y.1 x - S.limitResolvent y.1 x‖ < epsilon / 3} by
+      ext a
+      simp]
+    exact (Filter.biInter_finset_mem t).2 fun y hy => hcenter y
   filter_upwards [hfinite] with a ha
   intro mu hmuK
   have hmuCover := ht hmuK
@@ -246,7 +244,7 @@ theorem value_tendsto_uniformOn_compact_apply
         ‖F a y.1 x - S.limitResolvent y.1 x‖ +
           ‖S.limitResolvent y.1 x - S.limitResolvent mu x‖ := by
       exact le_trans (norm_add_le _ _)
-        (add_le_add_right (norm_add_le _ _) _)
+        (add_le_add (norm_add_le _ _) le_rfl)
     _ < epsilon := by
       have hcenterSmall := ha y hyt
       linarith
@@ -322,12 +320,13 @@ theorem taylorPartialSum_tendsto_limitResolvent_apply_uniform_parameterBox_of_jo
           ‖(F (a b) mu -
             continuousLinearMapTaylorPartialSum
               (F (a b)) lambda mu (degree b)) x‖ := by
-            rw [show continuousLinearMapTaylorPartialSum
-                (F (a b)) lambda mu (degree b) - F (a b) mu =
-              -(F (a b) mu -
-                continuousLinearMapTaylorPartialSum
-                  (F (a b)) lambda mu (degree b)) by abel]
-            simp
+            rw [show
+              (continuousLinearMapTaylorPartialSum
+                  (F (a b)) lambda mu (degree b)) x - F (a b) mu x =
+                -(F (a b) mu x -
+                  (continuousLinearMapTaylorPartialSum
+                    (F (a b)) lambda mu (degree b)) x) by abel,
+              norm_neg]
         _ ≤ ‖F (a b) mu -
               continuousLinearMapTaylorPartialSum
                 (F (a b)) lambda mu (degree b)‖ * ‖x‖ :=
@@ -338,9 +337,9 @@ theorem taylorPartialSum_tendsto_limitResolvent_apply_uniform_parameterBox_of_jo
     calc
       ‖F (a b) mu -
           continuousLinearMapTaylorPartialSum
-            (F (a b)) lambda mu (degree b)‖ * ‖x‖ <
+            (F (a b)) lambda mu (degree b)‖ * ‖x‖ ≤
         opEpsilon * ‖x‖ :=
-          mul_lt_mul_of_pos_right hOpSmall (by positivity)
+          mul_le_mul_of_nonneg_right (le_of_lt hOpSmall) (norm_nonneg x)
       _ < epsilon / 2 := by
         dsimp [opEpsilon]
         have hxlt : ‖x‖ < ‖x‖ + 1 := lt_add_one _
@@ -348,7 +347,8 @@ theorem taylorPartialSum_tendsto_limitResolvent_apply_uniform_parameterBox_of_jo
           (div_lt_one hx1).2 hxlt
         calc
           epsilon / (2 * (‖x‖ + 1)) * ‖x‖ =
-              (epsilon / 2) * (‖x‖ / (‖x‖ + 1)) := by field_simp; ring
+              (epsilon / 2) * (‖x‖ / (‖x‖ + 1)) := by
+            field_simp [ne_of_gt hx1]
           _ < (epsilon / 2) * 1 :=
             mul_lt_mul_of_pos_left hratio (half_pos hepsilon)
           _ = epsilon / 2 := mul_one _
