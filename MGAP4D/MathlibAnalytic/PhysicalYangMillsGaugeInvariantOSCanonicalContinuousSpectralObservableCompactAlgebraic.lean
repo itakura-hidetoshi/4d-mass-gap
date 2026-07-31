@@ -120,6 +120,38 @@ theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_polyn
           T hP hInnerSymmetric hSelf)
         rfl rfl J Q coeff degree k K hKcompact hKu hu
 
+/-- Every finite spectral-moment vector of a compressed canonical OS Taylor
+derivative converges compact-uniformly. -/
+theorem VacuumSemigroupGapSlope.canonicalRescaledDefectTaylorIteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_continuum_uniformOn_compact
+    (T : P.StronglyContinuousPhysicalSemigroup) (G : T.VacuumSemigroupGapSlope)
+    (hP : P.IsNormalized)
+    (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    (J : V →L[ℝ] P.VacuumOrthogonalHilbert)
+    (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
+    (momentOrder k : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < G.mass / 2) :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter, ∀ lambda ∈ K,
+        ‖continuousLinearMapSpectralMomentJet momentOrder
+            (continuousLinearMapCompression J Q
+              (_root_.iteratedDeriv k
+                (G.admissibleRescaledDefectTaylorResolvent
+                  T hInnerSymmetric tau) lambda)) -
+          continuousLinearMapSpectralMomentJet momentOrder
+            (continuousLinearMapCompression J Q
+              (_root_.iteratedDeriv k
+                (G.vacuumOrthogonalContinuumTaylorResolvent
+                  T hP hInnerSymmetric hSelf) lambda))‖ < epsilon := by
+  exact
+    (G.canonicalRescaledDefectTaylorStrongLimitData
+      T hP hInnerSymmetric hSelf).iteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_uniformOn_compact
+        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData
+          T hInnerSymmetric)
+        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData
+          T hP hInnerSymmetric hSelf)
+        rfl rfl J Q momentOrder k K hKcompact hKu hu
+
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
