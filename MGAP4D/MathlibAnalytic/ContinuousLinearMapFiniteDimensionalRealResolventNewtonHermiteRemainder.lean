@@ -44,6 +44,16 @@ theorem continuousLinearMapFinAppend_init_last
   · simp
   · simp [Fin.init]
 
+/-- Mapping a function over a final-entry append is again final-entry append. -/
+theorem continuousLinearMapFinAppend_map
+    {X Y : Type*} {n : ℕ} (f : X → Y) (xs : Fin n → X) (x : X) :
+    (fun i => f (continuousLinearMapFinAppend xs x i)) =
+      continuousLinearMapFinAppend (fun i => f (xs i)) (f x) := by
+  funext i
+  refine Fin.lastCases ?_ (fun j => ?_) i
+  · simp
+  · simp
+
 /-- Ordered operator products respect final-entry append. -/
 theorem continuousLinearMapOrderedProduct_finAppend
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -54,6 +64,20 @@ theorem continuousLinearMapOrderedProduct_finAppend
   simpa using
     continuousLinearMapOrderedProduct_snoc n
       (continuousLinearMapFinAppend R A)
+
+/-- Ordered products of real resolvents respect final spectral-node append. -/
+theorem continuousLinearMapRealResolventOrderedProduct_finAppend
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V]
+    (n : ℕ) (A : V →L[ℝ] V) (nodes : Fin n → ℝ) (z : ℝ) :
+    continuousLinearMapOrderedProduct (n + 1)
+        (fun i => continuousLinearMapRealResolvent A
+          (continuousLinearMapFinAppend nodes z i)) =
+      continuousLinearMapOrderedProduct n
+          (fun i => continuousLinearMapRealResolvent A (nodes i)) *
+        continuousLinearMapRealResolvent A z := by
+  rw [continuousLinearMapFinAppend_map]
+  exact continuousLinearMapOrderedProduct_finAppend n _ _
 
 /-- Scalar Newton products respect final-node append. -/
 theorem continuousLinearMapRealResolventNewtonNodeProduct_finAppend
@@ -78,8 +102,7 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_finAppend
           continuousLinearMapRealResolvent A z) := by
   unfold continuousLinearMapRealResolventHermiteCoefficient
   unfold continuousLinearMapRealResolventHermiteObservable
-  rw [continuousLinearMapOrderedProduct_finAppend]
-  rfl
+  rw [continuousLinearMapRealResolventOrderedProduct_finAppend]
 
 /-- Replacing the final spectral node gives the exact next-order confluent
 divided difference.  Repeated prefix nodes and equal endpoints are allowed. -/
@@ -112,6 +135,7 @@ theorem continuousLinearMapRealResolventHermiteCoefficient_finAppend_sub
   rw [continuousLinearMapRealResolventHermiteCoefficient_finAppend,
     continuousLinearMapRealResolventHermiteCoefficient_finAppend]
   rw [continuousLinearMapRealResolventHermiteCoefficient_finAppend]
+  rw [continuousLinearMapRealResolventOrderedProduct_finAppend]
   change
     (-1 : ℝ) ^ n • (P * Rz) - (-1 : ℝ) ^ n • (P * Rw) =
       (z - w) • ((-1 : ℝ) ^ (n + 1) • ((P * Rw) * Rz))
@@ -160,7 +184,7 @@ theorem continuousLinearMapRealResolventNewtonNodeProduct_eq_zero_of_eq
         simp [hlast]
       · intro hcast
         rw [continuousLinearMapRealResolventNewtonNodeProduct_succ]
-        rw [ih (Fin.init nodes) z j (by simpa [Fin.init] using hcast)]
+        rw [ih (Fin.init nodes) j (by simpa [Fin.init] using hcast)]
         simp
 
 /-- The exact Newton-Hermite remainder vanishes at every interpolation node. -/
