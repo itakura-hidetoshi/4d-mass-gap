@@ -145,8 +145,6 @@ theorem continuousLinearMapRealResolvent_lipschitzOn
     _ = (M * M) * dist z w := by
       rw [Real.dist_eq]
       ring
-    _ = (Real.toNNReal (M * M) : ℝ) * dist z w := by
-      rw [Real.coe_toNNReal, max_eq_left (mul_nonneg hM hM)]
 
 /-- Uniformly bounded real resolvents depend continuously on the spectral
 parameter throughout a common real resolvent region. -/
@@ -218,6 +216,7 @@ theorem continuousLinearMapRealResolvent_hasDerivWithinAt
     continuousLinearMapRealResolvent_sub_eq_smul_mul
       A (hunit w hwU) (hunit z hz)]
   rw [show z - w = -(w - z) by ring, neg_smul]
+  simp only [Rz, smul_neg]
   rw [inv_smul_smul₀ hne]
 
 /-- On an open real resolvent region, the within derivative is the ordinary
