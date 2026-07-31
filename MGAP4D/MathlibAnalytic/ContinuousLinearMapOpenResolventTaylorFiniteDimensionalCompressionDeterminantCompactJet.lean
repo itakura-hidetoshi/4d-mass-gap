@@ -136,6 +136,23 @@ theorem iteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_uni
     (continuous_continuousLinearMapSpectralMomentJet momentOrder)
     k K hKcompact hKu hu
 
+/-- Finite Taylor jets and finite moment jets converge simultaneously. -/
+theorem iteratedDeriv_spectralMomentJet_finiteDimensionalCompression_tendsto_uniformOn_compact_jet
+    (momentOrder taylorOrder : ℕ) (K : Set ℝ) (hKcompact : IsCompact K)
+    {u : ℝ} (hKu : K ⊆ Set.Iic u) (hu : u < gap) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
+      ∀ k ≤ taylorOrder, ∀ lambda ∈ K,
+        ‖continuousLinearMapSpectralMomentJet momentOrder
+            (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) -
+          continuousLinearMapSpectralMomentJet momentOrder
+            (continuousLinearMapCompression J Q
+              (_root_.iteratedDeriv k S.limitResolvent lambda))‖ < epsilon :=
+  S.iteratedDeriv_continuousObservable_finiteDimensionalCompression_tendsto_uniformOn_compact_jet
+    B L hLgap hLresolvent J Q
+    (fun _ => continuousLinearMapSpectralMomentJet momentOrder)
+    (fun _ => continuous_continuousLinearMapSpectralMomentJet momentOrder)
+    taylorOrder K hKcompact hKu hu
+
 end AlgebraicConsequences
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
