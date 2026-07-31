@@ -30,36 +30,29 @@ theorem VacuumSemigroupGapSlope.admissibleRescaledDefectTaylorPartialSum_realRes
     (hP : P.IsNormalized) (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
-    (interpolationDegree : ℕ)
-    (degree : G.AdmissibleRescaledDefectTime → ℕ)
+    (interpolationDegree : ℕ) (degree : G.AdmissibleRescaledDefectTime → ℕ)
     (hdegree : Tendsto degree G.admissibleRescaledDefectTimeFilter atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
-    (nodes : κ → Fin (interpolationDegree + 1) → ℝ) (eval : κ → ℝ)
-    (C : Set κ) (Z : Set ℝ) (hnodes : ∀ q ∈ C, ∀ j, nodes q j ∈ Z)
-    (heval : ∀ q ∈ C, eval q ∈ Z) (R : ℝ) (hR : 0 ≤ R)
-    (hdist : ∀ q ∈ C, ∀ j, |eval q - nodes q j| ≤ R)
+    (nodes : κ → Fin (interpolationDegree + 1) → ℝ) (eval : κ → ℝ) (C : Set κ) (Z : Set ℝ)
+    (hnodes : ∀ q ∈ C, ∀ j, nodes q j ∈ Z) (heval : ∀ q ∈ C, eval q ∈ Z)
+    (R : ℝ) (hR : 0 ≤ R) (hdist : ∀ q ∈ C, ∀ j, |eval q - nodes q j| ≤ R)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z|)
+    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
+      |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
+        (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
-        (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon →
-      ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
+        (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ p, box.Contains p → ∀ q ∈ C,
         ‖continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
             (continuousLinearMapCompression J Q (continuousLinearMapTaylorPartialSum
               (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau)
               p.center p.target (degree tau))) (nodes q) (eval q) -
           continuousLinearMapRealResolventNewtonHermitePair interpolationDegree
-            (continuousLinearMapCompression J Q
-              (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf p.target)) (nodes q) (eval q)‖ < epsilon := by
+            (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent
+              T hP hInnerSymmetric hSelf p.target)) (nodes q) (eval q)‖ < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
       taylorPartialSum_realResolventNewtonHermitePair_finiteDimensionalCompression_tendsto_uniform_closedBox_of_tendsto_degree
