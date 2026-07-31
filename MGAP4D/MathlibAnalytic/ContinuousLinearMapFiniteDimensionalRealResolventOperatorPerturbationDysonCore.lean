@@ -250,7 +250,12 @@ theorem continuousLinearMapRealResolventOperatorDysonRemainder_norm_le
   let P := continuousLinearMapRealResolvent A z * H
   have hpow : ‖P ^ N‖ ≤ ‖P‖ ^ N := by
     induction N with
-    | zero => simp
+    | zero =>
+        simp only [pow_zero]
+        apply ContinuousLinearMap.opNorm_le_bound
+        · norm_num
+        intro x
+        simp
     | succ n ih =>
         rw [pow_succ]
         calc
