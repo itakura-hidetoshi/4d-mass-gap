@@ -53,7 +53,8 @@ theorem continuous_continuousLinearMapJointSpectralOperatorDirectionSynthesis
     Continuous (fun H : Fin m → (V →L[ℝ] V) =>
       continuousLinearMapFiniteParameterDirectionSynthesis (m + 1)
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)) := by
-  simpa using
+  simpa only [Function.comp_apply,
+    continuousLinearMapFiniteParameterDirectionSynthesisFamily_apply] using
     (continuousLinearMapFiniteParameterDirectionSynthesisFamily
       (V := V) (m + 1)).continuous.comp
         (continuous_continuousLinearMapJointSpectralOperatorDirectionFamily
@@ -88,7 +89,7 @@ theorem continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilin
       compose (fun _ : Fin n =>
         continuousLinearMapFiniteParameterDirectionSynthesis (m + 1)
           (continuousLinearMapJointSpectralOperatorDirectionFamily m p.2))) :=
-    compose.continuous.comp hinner
+    compose.coe_continuous.comp hinner
   have houter : Continuous (fun p :
       (V →L[ℝ] V) × (Fin m → (V →L[ℝ] V)) =>
       continuousLinearMapRealResolventSymmetricDysonMultilinear n p.1) :=
