@@ -20,7 +20,11 @@ variable {V : Type*}
 variable [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
 /-- Canonical compact sharp-certificate data.  Its generic gap parameter is
-definitionally the physical half-mass threshold `G.mass / 2`. -/
+definitionally the physical half-mass threshold `G.mass / 2`.
+
+Because this is an abbreviation of the generic sharp-certificate structure,
+its carrier, arbitrary Banach-response, and basis-independent trace eventual
+smallness theorems are available directly by dot notation. -/
 abbrev VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
@@ -64,45 +68,11 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.o
   hlimitPerturb := hlimitPerturb
   hlimitEnd := hlimitEnd
 
-/-- Canonical compact carrier certificate at exactly the half-mass gap. -/
-def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_carrier_norm_lt
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope}
-    {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
-    {taylorOrder directions : ℕ}
-    (C : G.CanonicalJointRemainderCompactSharpCertificateData
-      (V := V) T hInnerSymmetric taylorOrder directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.eventually_carrier_norm_lt tailOrder epsilon hepsilon
-
-variable {W : Type*}
-variable [NormedAddCommGroup W] [NormedSpace ℝ W]
-
-/-- Canonical compact arbitrary-response certificate. -/
-def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_response_norm_lt
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope}
-    {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
-    {taylorOrder directions : ℕ}
-    (C : G.CanonicalJointRemainderCompactSharpCertificateData
-      (V := V) T hInnerSymmetric taylorOrder directions)
-    (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.eventually_response_norm_lt φ tailOrder epsilon hepsilon
-
-/-- Canonical compact basis-independent trace certificate. -/
-def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_trace_norm_lt
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope}
-    {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
-    {taylorOrder directions : ℕ}
-    (C : G.CanonicalJointRemainderCompactSharpCertificateData
-      (V := V) T hInnerSymmetric taylorOrder directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.eventually_trace_norm_lt tailOrder epsilon hepsilon
-
 /-- Canonical arbitrary-joint-net closed-box sharp-certificate data.  The gap
-is again definitionally exactly `G.mass / 2`. -/
+is definitionally exactly `G.mass / 2`.
+
+Its carrier, arbitrary Banach-response, and trace eventual smallness theorems
+are inherited directly from the generic closed-box sharp-certificate layer. -/
 abbrev VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
@@ -145,40 +115,6 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData
   hM := hM
   hlimitPerturb := hlimitPerturb
   hlimitEnd := hlimitEnd
-
-/-- Canonical closed-box carrier certificate for arbitrary joint nets. -/
-def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_carrier_norm_lt
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope}
-    {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
-    {β : Type*} {n : Filter β} {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
-      (V := V) T hInnerSymmetric n directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.eventually_carrier_norm_lt tailOrder epsilon hepsilon
-
-/-- Canonical closed-box arbitrary-response certificate. -/
-def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_response_norm_lt
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope}
-    {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
-    {β : Type*} {n : Filter β} {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
-      (V := V) T hInnerSymmetric n directions)
-    (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.eventually_response_norm_lt φ tailOrder epsilon hepsilon
-
-/-- Canonical closed-box basis-independent trace certificate. -/
-def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_trace_norm_lt
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope}
-    {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
-    {β : Type*} {n : Filter β} {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
-      (V := V) T hInnerSymmetric n directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.eventually_trace_norm_lt tailOrder epsilon hepsilon
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
