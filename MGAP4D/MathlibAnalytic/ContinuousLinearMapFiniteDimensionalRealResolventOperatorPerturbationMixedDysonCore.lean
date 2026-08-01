@@ -104,10 +104,8 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_const
           exact hterm
         _ = (Nat.factorial (n + 1) : ℝ) •
               continuousLinearMapRealResolventOperatorDysonCoefficient (n + 1) A H z := by
-          rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-          simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, smul_smul]
-          congr 1
-          ring
+          rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+            ← Nat.cast_smul_eq_nsmul ℝ, Nat.factorial_succ, Nat.cast_mul, smul_smul]
 
 /-- The finite mixed-direction polarization jet through order `N - 1`. -/
 def continuousLinearMapRealResolventOperatorMixedDysonJet
