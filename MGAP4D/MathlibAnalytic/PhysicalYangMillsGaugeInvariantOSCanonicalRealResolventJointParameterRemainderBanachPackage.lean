@@ -87,8 +87,8 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.toGeneric
     (C : G.CanonicalJointRemainderCompactData (V := V)
       T taylorOrder directions) :
     ContinuousLinearMapOpenTaylorStrongLimitData.JointRemainderCompactData
-      (α := G.AdmissibleRescaledDefectTime)
-      (E := P.VacuumOrthogonalHilbert) (V := V)
+      (V := V) (α := G.AdmissibleRescaledDefectTime)
+      (E := P.VacuumOrthogonalHilbert)
       (l := G.admissibleRescaledDefectTimeFilter) (gap := G.mass / 2)
       (F := G.admissibleRescaledDefectTaylorResolvent T C.hInnerSymmetric)
       taylorOrder directions where
@@ -190,8 +190,8 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.toGeneric
     (C : G.CanonicalJointRemainderClosedBoxData (V := V)
       T n directions) :
     ContinuousLinearMapOpenTaylorStrongLimitData.JointRemainderClosedBoxData
-      (α := G.AdmissibleRescaledDefectTime) (β := β)
-      (E := P.VacuumOrthogonalHilbert) (V := V)
+      (V := V) (α := G.AdmissibleRescaledDefectTime) (β := β)
+      (E := P.VacuumOrthogonalHilbert)
       (l := G.admissibleRescaledDefectTimeFilter) (gap := G.mass / 2)
       (F := G.admissibleRescaledDefectTaylorResolvent T C.hInnerSymmetric)
       (n := n) directions where
