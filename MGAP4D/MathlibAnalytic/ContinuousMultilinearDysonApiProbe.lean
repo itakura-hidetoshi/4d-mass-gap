@@ -1,0 +1,16 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventOperatorPerturbationSymmetricMultilinearDysonCore
+import Mathlib.Analysis.Normed.Module.Multilinear.Curry
+import Mathlib.Analysis.Normed.Operator.Mul
+
+#check MultilinearMap.mkPiAlgebra
+#check ContinuousMultilinearMap.mkPiAlgebra
+#check MultilinearMap.domDomCongr
+#check ContinuousMultilinearMap.domDomCongr
+#check ContinuousLinearMap.uncurryMid
+#check ContinuousMultilinearMap.curryMid
+#check ContinuousLinearMap.mul
+#check ContinuousLinearMap.mulLeftRight
+#check ContinuousLinearMap.compContinuousMultilinearMap
+#check ContinuousMultilinearMap.compContinuousLinearMap
+#check ContinuousMultilinearMap.constOfIsEmpty
+#check MultilinearMap.mkContinuous
