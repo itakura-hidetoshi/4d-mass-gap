@@ -135,13 +135,13 @@ theorem continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair_eq_joi
             m H ds h) z) j =
       continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonRemainder
         (baseOrder + j.1) m A H z 0 ds 0 h := by
-  simp [continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair,
-    continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonRemainder,
-    continuousLinearMapFiniteParameterRealResolventTaylorDysonRemainder,
-    continuousLinearMapRealResolventOperatorDysonRemainder,
-    continuousLinearMapJointSpectralOperatorRemainderIncrement,
-    continuousLinearMapJointSpectralOperatorRealResolventChart_apply,
-    continuousLinearMapJointSpectralOperatorIncrement_eq]
+  unfold continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair
+  unfold continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonRemainder
+  unfold continuousLinearMapFiniteParameterRealResolventTaylorDysonRemainder
+  rw [continuousLinearMapJointSpectralOperatorIncrement_eq]
+  unfold continuousLinearMapRealResolventOperatorDysonRemainder
+  simp [continuousLinearMapJointSpectralOperatorRemainderIncrement,
+    continuousLinearMapFiniteParameterOperatorChart]
 
 /-- Under the usual local resolvent hypotheses, every component of the new
 Banach rectangle is the exact endpoint defect of the genuine joint Fréchet
@@ -165,14 +165,25 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_sub_frechetTa
         (continuousLinearMapRealResolvent
           (A + continuousLinearMapJointSpectralOperatorRemainderIncrement
             m H ds h) z) j := by
-  rw [continuousLinearMapJointSpectralOperatorRealResolventChart_add_eq_frechetTaylor_add_remainder
-    (baseOrder + j.1) m A H z 0 ds 0 h]
-  · rw [continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair_eq_jointRemainder]
-    abel
-  · simpa using hunit
-  · simpa [continuousLinearMapFiniteParameterRealResolventChart,
-      continuousLinearMapFiniteParameterOperatorChart,
-      continuousLinearMapJointSpectralOperatorRemainderIncrement] using hsmall
+  have hformula :=
+    continuousLinearMapJointSpectralOperatorRealResolventChart_add_eq_frechetTaylor_add_remainder
+      (baseOrder + j.1) m A H z 0 ds 0 h
+      (by simpa [continuousLinearMapFiniteParameterOperatorChart] using hunit)
+      (by simpa [continuousLinearMapFiniteParameterRealResolventChart,
+          continuousLinearMapFiniteParameterOperatorChart,
+          continuousLinearMapJointSpectralOperatorRemainderIncrement] using hsmall)
+  have hformula' :
+      continuousLinearMapJointSpectralOperatorRealResolventChart m A H z
+          (continuousLinearMapJointSpectralOperatorParameter m ds h) =
+        continuousLinearMapJointSpectralOperatorRealResolventFrechetTaylorPartialSum
+            (baseOrder + j.1) m A H z 0 ds 0 h +
+          continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonRemainder
+            (baseOrder + j.1) m A H z 0 ds 0 h := by
+    simpa using hformula
+  rw [hformula',
+    ← continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair_eq_jointRemainder
+      baseOrder tailOrder m A H z ds h j]
+  abel
 
 /-- The genuine iterated finite-product norm is below a positive threshold iff
 every ambient-order/remainder-order component is. -/
@@ -220,15 +231,20 @@ theorem continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair_norm_l
     ‖continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair
         baseOrder tailOrder m H ds h Rbase Rend j‖ ≤
       q ^ (baseOrder + j.1) * M := by
+  let X : V →L[ℝ] V :=
+    Rbase * continuousLinearMapJointSpectralOperatorRemainderIncrement m H ds h
+  have hpow : ‖X ^ (baseOrder + j.1)‖ ≤ q ^ (baseOrder + j.1) := by
+    calc
+      ‖X ^ (baseOrder + j.1)‖ ≤ ‖X‖ ^ (baseOrder + j.1) :=
+        norm_pow_le X (baseOrder + j.1)
+      _ ≤ q ^ (baseOrder + j.1) :=
+        pow_le_pow_left₀ (norm_nonneg X) hperturb (baseOrder + j.1)
   unfold continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair
-  calc
-    ‖(Rbase * continuousLinearMapJointSpectralOperatorRemainderIncrement
-        m H ds h) ^ (baseOrder + j.1) * Rend‖ ≤
-      ‖(Rbase * continuousLinearMapJointSpectralOperatorRemainderIncrement
-        m H ds h) ^ (baseOrder + j.1)‖ * ‖Rend‖ := norm_mul_le _ _
-    _ ≤ q ^ (baseOrder + j.1) * M := by
-      gcongr
-      exact norm_pow_le _ _
+  change ‖X ^ (baseOrder + j.1) * Rend‖ ≤
+    q ^ (baseOrder + j.1) * M
+  exact mul_le_mul (norm_mul_le _ _ |>.trans ?_) hend
+    (norm_nonneg Rend) (pow_nonneg hq _)
+  exact hpow
 
 /-- Joint continuity of the complete exact remainder-tail carrier rectangle in
 both resolvent families and the moving operator-direction family. -/
@@ -285,9 +301,11 @@ theorem continuous_continuousLinearMapJointTaylorDysonRemainderTailResponseRecta
   intro k
   apply continuous_pi
   intro j
+  have hcarrier :=
+    continuous_continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
+      (V := V) baseOrder taylorOrder tailOrder m ds h
   exact φ.continuous.comp
-    ((continuous_continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
-      (V := V) baseOrder taylorOrder tailOrder m ds h).apply_apply k j)
+    ((continuous_apply j).comp ((continuous_apply k).comp hcarrier))
 
 /-- Joint continuity of the complete basis-independent trace remainder-tail
 rectangle. -/
