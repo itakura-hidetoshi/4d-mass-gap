@@ -42,17 +42,31 @@ theorem continuousLinearMapRealResolventRightMultiplication_apply
   rfl
 
 /-- The explicit noncommutative power series of the operator-variable real
-resolvent at `A`.  It is obtained by composing the geometric series with left
-multiplication by the base resolvent and then right multiplication by that
-resolvent. -/
+resolvent at `A`.  It is obtained by precomposing the geometric series with
+left multiplication by the base resolvent and then postcomposing with right
+multiplication by that resolvent. -/
 def continuousLinearMapRealResolventOperatorFPowerSeries
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A : V →L[ℝ] V) (z : ℝ) :
     FormalMultilinearSeries ℝ (V →L[ℝ] V) (V →L[ℝ] V) :=
   let R := continuousLinearMapRealResolvent A z
   (continuousLinearMapRealResolventRightMultiplication R).compFormalMultilinearSeries
-    ((formalMultilinearSeries_geometric ℝ (V →L[ℝ] V)).comp
-      ((continuousLinearMapRealResolventLeftPerturbation R).fpowerSeries 0))
+    ((formalMultilinearSeries_geometric ℝ (V →L[ℝ] V)).compContinuousLinearMap
+      (continuousLinearMapRealResolventLeftPerturbation R))
+
+/-- The `n`-th coefficient of the explicit resolvent power series is exactly
+the ordered noncommutative Dyson word. -/
+@[simp]
+theorem continuousLinearMapRealResolventOperatorFPowerSeries_apply
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] (A : V →L[ℝ] V) (z : ℝ)
+    (n : ℕ) (H : Fin n → (V →L[ℝ] V)) :
+    continuousLinearMapRealResolventOperatorFPowerSeries A z n H =
+      continuousLinearMapRealResolventOrderedDysonMultilinear n
+        (continuousLinearMapRealResolvent A z) H := by
+  rw [continuousLinearMapRealResolventOrderedDysonMultilinear_apply]
+  simp [continuousLinearMapRealResolventOperatorFPowerSeries,
+    formalMultilinearSeries_geometric, Function.comp_def]
 
 /-- The local geometric resolvent formula has the explicit operator-variable
 power series above at the zero perturbation. -/
@@ -72,13 +86,11 @@ theorem continuousLinearMapRealResolventOperatorFPowerSeries_hasFPowerSeriesAt_l
       (fun X : V →L[ℝ] V => Ring.inverse (1 - X))
       (formalMultilinearSeries_geometric ℝ (V →L[ℝ] V)) 0 :=
     (hasFPowerSeriesOnBall_inverse_one_sub ℝ (V →L[ℝ] V)).hasFPowerSeriesAt
-  have hlinear : HasFPowerSeriesAt L (L.fpowerSeries 0) 0 :=
-    L.hasFPowerSeriesAt 0
   have hgeomAtLinearZero : HasFPowerSeriesAt
       (fun X : V →L[ℝ] V => Ring.inverse (1 - X))
       (formalMultilinearSeries_geometric ℝ (V →L[ℝ] V)) (L 0) := by
     simpa using hgeom
-  have hcomp := hgeomAtLinearZero.comp hlinear
+  have hcomp := hgeomAtLinearZero.compContinuousLinearMap
   rcases hcomp with ⟨r, hr⟩
   refine ⟨r, ?_⟩
   simpa [continuousLinearMapRealResolventOperatorFPowerSeries,
@@ -178,6 +190,49 @@ theorem continuousLinearMapRealResolventOperator_analyticAt
     AnalyticAt ℝ
       (fun B : V →L[ℝ] V => continuousLinearMapRealResolvent B z) A :=
   (continuousLinearMapRealResolventOperator_hasFPowerSeriesAt A z hunit).analyticAt
+
+/-- The genuine `n`-th Fréchet derivative of the operator-variable real
+resolvent is the fully symmetrized noncommutative Dyson word. -/
+theorem continuousLinearMapRealResolventOperator_iteratedFDeriv_apply
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] (A : V →L[ℝ] V) (z : ℝ)
+    (hunit : IsUnit (continuousLinearMapRealShift A z))
+    (n : ℕ) (H : Fin n → (V →L[ℝ] V)) :
+    iteratedFDeriv ℝ n
+        (fun B : V →L[ℝ] V => continuousLinearMapRealResolvent B z) A H =
+      continuousLinearMapRealResolventOperatorSymmetricDerivative n A z H := by
+  rcases continuousLinearMapRealResolventOperator_hasFPowerSeriesAt A z hunit with
+    ⟨r, hr⟩
+  rw [continuousLinearMapRealResolventOperatorSymmetricDerivative_apply]
+  calc
+    iteratedFDeriv ℝ n
+        (fun B : V →L[ℝ] V => continuousLinearMapRealResolvent B z) A H =
+      ∑ σ : Equiv.Perm (Fin n),
+        continuousLinearMapRealResolventOperatorFPowerSeries A z n
+          (fun i => H (σ i)) :=
+      hr.iteratedFDeriv_eq_sum_of_completeSpace H
+    _ = ∑ σ : Equiv.Perm (Fin n),
+        continuousLinearMapRealResolventOrderedDysonMultilinear n
+          (continuousLinearMapRealResolvent A z) (fun i => H (σ i)) := by
+      apply Finset.sum_congr rfl
+      intro σ _hσ
+      exact continuousLinearMapRealResolventOperatorFPowerSeries_apply
+        A z n (fun i => H (σ i))
+
+/-- Equality of continuous multilinear maps: the actual iterated Fréchet
+derivative is exactly the symmetric resolvent derivative map constructed from
+all direction permutations. -/
+theorem continuousLinearMapRealResolventOperator_iteratedFDeriv
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] (A : V →L[ℝ] V) (z : ℝ)
+    (hunit : IsUnit (continuousLinearMapRealShift A z)) (n : ℕ) :
+    iteratedFDeriv ℝ n
+        (fun B : V →L[ℝ] V => continuousLinearMapRealResolvent B z) A =
+      continuousLinearMapRealResolventOperatorSymmetricDerivative n A z := by
+  apply ContinuousMultilinearMap.ext
+  intro H
+  exact continuousLinearMapRealResolventOperator_iteratedFDeriv_apply
+    A z hunit n H
 
 end MathlibAnalytic
 end MGAP4D
