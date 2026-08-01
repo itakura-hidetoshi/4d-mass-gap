@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachCore
-import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalZeroFreeCharacteristicCalculusCore
+import Mathlib.Topology.UniformSpace.HeineCantor
 import Mathlib.Tactic
 
 noncomputable section
@@ -31,12 +31,53 @@ def continuousLinearMapJointTaylorDysonRemainderInput
     ContinuousLinearMapJointTaylorDysonRemainderInput V taylorOrder m :=
   ((Rbase, Rend), H)
 
-noncomputable instance continuousLinearMapJointTaylorDysonRemainderInputCompleteSpace
-    (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V]
-    (taylorOrder m : ℕ) :
-    CompleteSpace
-      (ContinuousLinearMapJointTaylorDysonRemainderInput V taylorOrder m) :=
-  inferInstance
+/-- Uniform convergence in a finite-dimensional normed space passes through
+any continuous observable, uniformly over an arbitrary index set. -/
+theorem finiteDimensional_continuousObservable_tendsto_uniform
+    {α ι X Y : Type*}
+    [NormedAddCommGroup X] [NormedSpace ℝ X] [FiniteDimensional ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
+    {l : Filter α} {s : Set ι}
+    (A : α → ι → X) (A0 : ι → X)
+    (Phi : X → Y) (hPhi : Continuous Phi)
+    (R : ℝ) (hR : 0 ≤ R)
+    (hA0 : ∀ i ∈ s, ‖A0 i‖ ≤ R)
+    (hA : ∀ eta : ℝ, 0 < eta →
+      ∀ᶠ a in l, ∀ i ∈ s, ‖A a i - A0 i‖ < eta) :
+    ∀ epsilon : ℝ, 0 < epsilon →
+      ∀ᶠ a in l, ∀ i ∈ s,
+        ‖Phi (A a i) - Phi (A0 i)‖ < epsilon := by
+  intro epsilon hepsilon
+  let C : Set X := Metric.closedBall 0 (R + 1)
+  have hCcompact : IsCompact C := isCompact_closedBall 0 (R + 1)
+  have hUniform : UniformContinuousOn Phi C :=
+    hCcompact.uniformContinuousOn_of_continuous hPhi.continuousOn
+  rcases (Metric.uniformContinuousOn_iff.mp hUniform) epsilon hepsilon with
+    ⟨delta, hdelta, hmodulus⟩
+  let eta : ℝ := min delta 1
+  have heta : 0 < eta := lt_min hdelta zero_lt_one
+  filter_upwards [hA eta heta] with a ha
+  intro i hi
+  have hdiffDelta : ‖A a i - A0 i‖ < delta :=
+    lt_of_lt_of_le (ha i hi) (min_le_left delta 1)
+  have hdiffOne : ‖A a i - A0 i‖ < 1 :=
+    lt_of_lt_of_le (ha i hi) (min_le_right delta 1)
+  have hA0C : A0 i ∈ C := by
+    have hnorm : ‖A0 i‖ ≤ R + 1 :=
+      (hA0 i hi).trans (by linarith [hR])
+    simpa [C, Metric.mem_closedBall, dist_zero_right] using hnorm
+  have hAnorm : ‖A a i‖ ≤ R + 1 := by
+    calc
+      ‖A a i‖ = ‖A a i - A0 i + A0 i‖ := by rw [sub_add_cancel]
+      _ ≤ ‖A a i - A0 i‖ + ‖A0 i‖ := norm_add_le _ _
+      _ ≤ 1 + R := add_le_add (le_of_lt hdiffOne) (hA0 i hi)
+      _ = R + 1 := by ring
+  have hAC : A a i ∈ C := by
+    simpa [C, Metric.mem_closedBall, dist_zero_right] using hAnorm
+  have hdist : dist (A a i) (A0 i) < delta := by
+    simpa [dist_eq_norm] using hdiffDelta
+  have hout := hmodulus (A a i) hAC (A0 i) hA0C hdist
+  simpa [dist_eq_norm] using hout
 
 /-- Componentwise uniform convergence of the two resolvent families and
 ordinary convergence of the finite direction family combine into uniform
@@ -70,9 +111,9 @@ theorem continuousLinearMapJointTaylorDysonRemainderInput_tendsto_uniform_of_com
     Prod.dist_eq, dist_eq_norm, max_lt_iff] using
     And.intro (And.intro (ha i hi) (hb i hi)) hc
 
-/-- A jointly continuous finite-dimensional remainder observable transfers
-uniform convergence of complete remainder inputs to uniform convergence in the
-actual remainder-rectangle Banach norm. -/
+/-- A continuous finite-dimensional remainder observable transfers uniform
+convergence of complete remainder inputs to uniform convergence in the actual
+remainder-rectangle Banach norm. -/
 theorem finiteDimensional_jointTaylorDysonRemainderTailRectangularJet_tendsto_uniform
     {α ι V : Type*}
     [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
@@ -94,23 +135,16 @@ theorem finiteDimensional_jointTaylorDysonRemainderTailRectangularJet_tendsto_un
         continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
           baseOrder taylorOrder tailOrder m (X0 i).2 ds h
             (X0 i).1.1 (X0 i).1.2‖ < epsilon := by
-  intro epsilon hepsilon
   let Phi := fun x : ContinuousLinearMapJointTaylorDysonRemainderInput
-      V taylorOrder m => fun _p : PUnit =>
+      V taylorOrder m =>
     continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
       baseOrder taylorOrder tailOrder m x.2 ds h x.1.1 x.1.2
-  have hPhi : Continuous (fun p :
-      (ContinuousLinearMapJointTaylorDysonRemainderInput V taylorOrder m) × PUnit =>
-      Phi p.1 p.2) :=
-    (continuous_continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
-      (V := V) baseOrder taylorOrder tailOrder m ds h).comp continuous_fst
-  have htransfer :=
-    finiteDimensional_jointContinuousObservable_tendsto_uniformOn_compactParameter
-      X X0 Phi hPhi R hR hX0 hX ({PUnit.unit} : Set PUnit)
-        isCompact_singleton epsilon hepsilon
-  filter_upwards [htransfer] with a ha
-  intro i hi
-  simpa [Phi] using ha i hi PUnit.unit (by simp)
+  have hPhi : Continuous Phi := by
+    simpa [Phi] using
+      continuous_continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
+        (V := V) baseOrder taylorOrder tailOrder m ds h
+  exact finiteDimensional_continuousObservable_tendsto_uniform
+    X X0 Phi hPhi R hR hX0 hX
 
 /-- The same complete-input transfer holds for every arbitrary Banach-valued
 continuous-linear observation of the exact remainder rectangle. -/
@@ -137,23 +171,16 @@ theorem finiteDimensional_jointTaylorDysonRemainderTailResponseRectangularJet_te
         continuousLinearMapJointTaylorDysonRemainderTailResponseRectangularJetFromResolventFamilies
           φ baseOrder taylorOrder tailOrder m (X0 i).2 ds h
             (X0 i).1.1 (X0 i).1.2‖ < epsilon := by
-  intro epsilon hepsilon
   let Phi := fun x : ContinuousLinearMapJointTaylorDysonRemainderInput
-      V taylorOrder m => fun _p : PUnit =>
+      V taylorOrder m =>
     continuousLinearMapJointTaylorDysonRemainderTailResponseRectangularJetFromResolventFamilies
       φ baseOrder taylorOrder tailOrder m x.2 ds h x.1.1 x.1.2
-  have hPhi : Continuous (fun p :
-      (ContinuousLinearMapJointTaylorDysonRemainderInput V taylorOrder m) × PUnit =>
-      Phi p.1 p.2) :=
-    (continuous_continuousLinearMapJointTaylorDysonRemainderTailResponseRectangularJetFromResolventFamilies
-      φ baseOrder taylorOrder tailOrder m ds h).comp continuous_fst
-  have htransfer :=
-    finiteDimensional_jointContinuousObservable_tendsto_uniformOn_compactParameter
-      X X0 Phi hPhi R hR hX0 hX ({PUnit.unit} : Set PUnit)
-        isCompact_singleton epsilon hepsilon
-  filter_upwards [htransfer] with a ha
-  intro i hi
-  simpa [Phi] using ha i hi PUnit.unit (by simp)
+  have hPhi : Continuous Phi := by
+    simpa [Phi] using
+      continuous_continuousLinearMapJointTaylorDysonRemainderTailResponseRectangularJetFromResolventFamilies
+        φ baseOrder taylorOrder tailOrder m ds h
+  exact finiteDimensional_continuousObservable_tendsto_uniform
+    X X0 Phi hPhi R hR hX0 hX
 
 /-- Basis-independent traces inherit the complete finite-dimensional remainder
 input transfer in the true finite-product norm. -/
