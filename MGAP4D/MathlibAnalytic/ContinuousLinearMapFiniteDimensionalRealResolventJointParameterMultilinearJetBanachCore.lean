@@ -15,7 +15,8 @@ set_option synthInstance.maxHeartbeats 200000
 
 /-- The complete finite dependent joint multilinear jet inherits the canonical
 finite-product CompleteSpace structure whenever its value space is complete. -/
-noncomputable def continuousLinearMapJointMultilinearCarrierJetCompleteSpace
+@[implicit_reducible]
+noncomputable instance continuousLinearMapJointMultilinearCarrierJetCompleteSpace
     (V W : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
     (m order : ℕ) :
@@ -24,7 +25,8 @@ noncomputable def continuousLinearMapJointMultilinearCarrierJetCompleteSpace
 
 /-- The finite Taylor-order by joint-order rectangular jet inherits the
 canonical iterated finite-product CompleteSpace structure. -/
-noncomputable def continuousLinearMapJointMultilinearCarrierRectangularJetCompleteSpace
+@[implicit_reducible]
+noncomputable instance continuousLinearMapJointMultilinearCarrierRectangularJetCompleteSpace
     (V W : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
     (m taylorOrder mixedOrder : ℕ) :
@@ -166,7 +168,7 @@ private theorem continuous_resolventFamily_directionFamily_eval
     Continuous (fun p :
       (Fin (taylorOrder + 1) → (V →L[ℝ] V)) ×
         (Fin m → (V →L[ℝ] V)) => (p.1 k, p.2)) :=
-  ((continuous_apply k).comp continuous_fst).prod_mk continuous_snd
+  ((continuous_apply k).comp continuous_fst).prodMk continuous_snd
 
 /-- The complete carrier jet is jointly continuous as a map into its genuine
 finite-product normed space. -/
