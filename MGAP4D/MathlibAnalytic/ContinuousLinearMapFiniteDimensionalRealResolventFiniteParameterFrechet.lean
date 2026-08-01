@@ -82,19 +82,22 @@ theorem continuousLinearMapFiniteParameterRealResolventChart_hasFPowerSeriesAt
   have hparamZero :=
     hzeroAtLinearZero.compContinuousLinearMap (u := L) (x := (0 : Fin m → ℝ))
   have hparamRaw := hparamZero.comp_sub t₀
+  have hparamExpanded : HasFPowerSeriesAt
+      (fun t : Fin m → ℝ => continuousLinearMapRealResolvent (B + L (t - t₀)) z)
+      (p.compContinuousLinearMap L) t₀ := by
+    simpa [Function.comp_def] using hparamRaw
   have hfun :
       (fun t : Fin m → ℝ =>
         continuousLinearMapRealResolvent (B + L (t - t₀)) z) =
       continuousLinearMapFiniteParameterRealResolventChart m A H z := by
     funext t
     congr 1
-    simp only [continuousLinearMapFiniteParameterRealResolventChart,
-      continuousLinearMapFiniteParameterOperatorChart, B, L]
+    simp only [continuousLinearMapFiniteParameterOperatorChart, B, L]
     rw [map_sub]
     abel
-  rw [hfun] at hparamRaw
-  simpa [continuousLinearMapFiniteParameterRealResolventFPowerSeries, B, L, p,
-    Function.comp_def] using hparamRaw
+  rw [hfun] at hparamExpanded
+  simpa [continuousLinearMapFiniteParameterRealResolventFPowerSeries, B, L, p]
+    using hparamExpanded
 
 /-- The finite-parameter resolvent chart is analytic at every parameter point
 lying in the real resolvent set. -/
