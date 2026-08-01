@@ -68,6 +68,61 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_norm_le
             Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, pow_succ]
           ring
 
+/-- Sharp product form of the mixed-direction Dyson bound.  This is the
+bound required to package the coefficient as a continuous multilinear map. -/
+theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_norm_le_prod
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] (n : ℕ) (A : V →L[ℝ] V)
+    (H : Fin n → (V →L[ℝ] V)) (z M : ℝ)
+    (hM : 0 ≤ M)
+    (hR : ‖continuousLinearMapRealResolvent A z‖ ≤ M) :
+    ‖continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A H z‖ ≤
+      (n.factorial : ℝ) * M ^ (n + 1) * ∏ i, ‖H i‖ := by
+  induction n with
+  | zero =>
+      simpa [continuousLinearMapRealResolventOperatorMixedDysonCoefficient] using hR
+  | succ n ih =>
+      rw [continuousLinearMapRealResolventOperatorMixedDysonCoefficient_succ]
+      calc
+        ‖∑ i : Fin (n + 1),
+            continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                (fun j => H (i.succAbove j)) z *
+              H i * continuousLinearMapRealResolvent A z‖ ≤
+            ∑ i : Fin (n + 1),
+              ‖continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                  (fun j => H (i.succAbove j)) z *
+                H i * continuousLinearMapRealResolvent A z‖ := by
+          simpa using
+            norm_sum_le (Finset.univ : Finset (Fin (n + 1)))
+              (fun i =>
+                continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                    (fun j => H (i.succAbove j)) z *
+                  H i * continuousLinearMapRealResolvent A z)
+        _ ≤ ∑ _i : Fin (n + 1),
+              (n.factorial : ℝ) * M ^ (n + 2) * ∏ j, ‖H j‖ := by
+          apply Finset.sum_le_sum
+          intro i _hi
+          calc
+            ‖continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                  (fun j => H (i.succAbove j)) z *
+                H i * continuousLinearMapRealResolvent A z‖ ≤
+                (‖continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                    (fun j => H (i.succAbove j)) z‖ * ‖H i‖) *
+                  ‖continuousLinearMapRealResolvent A z‖ := by
+              exact (norm_mul_le _ _).trans
+                (mul_le_mul_of_nonneg_right (norm_mul_le _ _) (norm_nonneg _))
+            _ ≤ (((n.factorial : ℝ) * M ^ (n + 1) *
+                  ∏ j, ‖H (i.succAbove j)‖) * ‖H i‖) * M := by
+              gcongr
+              exact ih (fun j => H (i.succAbove j))
+            _ = (n.factorial : ℝ) * M ^ (n + 2) * ∏ j, ‖H j‖ := by
+              rw [Fin.prod_univ_succAbove (fun j => ‖H j‖) i, pow_succ]
+              ring
+        _ = (Nat.factorial (n + 1) : ℝ) * M ^ (n + 2) * ∏ j, ‖H j‖ := by
+          rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+            Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ]
+          ring
+
 /-- The factorial envelope used for the operator norm of the symmetric
 mixed-direction Dyson carrier. -/
 def continuousLinearMapRealResolventMixedDysonMultilinearBound
