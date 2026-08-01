@@ -42,6 +42,7 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearCarrierJet_tendsto_unif
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := V →L[ℝ] V)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierJetFromResolvent
           m (mixedOrder + 1) H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
             (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b) z))
@@ -76,6 +77,7 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearResponseCarrierJet_tend
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := W)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent
           φ m mixedOrder H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
             (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b) z))
@@ -110,6 +112,7 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearTraceCarrierJet_tendsto
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := ℝ)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierCompleteJetFromResolvent
           V m mixedOrder H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
             (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b) z))
