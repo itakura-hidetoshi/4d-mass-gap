@@ -91,9 +91,16 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponse
             m n H R -
           continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
             m n H S‖ := by
-  simpa [continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierFromResolvent,
-    map_sub] using
-    φ.norm_compContinuousMultilinearMap_le
+  change
+    ‖continuousLinearMapPostcomposeContinuousMultilinearMap n φ
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
+          m n H R) -
+      continuousLinearMapPostcomposeContinuousMultilinearMap n φ
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
+          m n H S)‖ ≤ _
+  rw [← (continuousLinearMapPostcomposeContinuousMultilinearMap n φ).map_sub]
+  exact
+    continuousLinearMapPostcomposeContinuousMultilinearMap_norm_le n φ
       (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
           m n H R -
         continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
