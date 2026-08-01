@@ -268,12 +268,18 @@ theorem continuousLinearMapRealResolventOperatorDysonCoefficient_hasDerivWithinA
             (P ^ (n + 1) * Rt) * H * Rt = P ^ (n + 2) * Rt := by
           rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
           simp [P, mul_assoc]
+        have hpow : P ^ (n + 2) * Rt = ((P ^ n * P) * P) * Rt := by
+          calc
+            P ^ (n + 2) * Rt = (P ^ (n + 1) * P) * Rt := by
+              rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+            _ = ((P ^ n * P) * P) * Rt := by rw [pow_succ]
         have hsecond :
             (P ^ n * Rt * H) * (Rt * H * Rt) = P ^ (n + 2) * Rt := by
-          rw [← mul_assoc (P ^ n) Rt H]
-          change (P ^ n * P) * (P * Rt) = P ^ (n + 2) * Rt
-          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ, pow_succ]
-          simp [mul_assoc]
+          calc
+            (P ^ n * Rt * H) * (Rt * H * Rt) = ((P ^ n * P) * P) * Rt := by
+              dsimp [P]
+              noncomm_ring
+            _ = P ^ (n + 2) * Rt := hpow.symm
         have hsmul :
             (((((n + 1 : ℕ) : ℝ) • (P ^ (n + 1) * Rt)) * H) * Rt) =
               (((n + 1 : ℕ) : ℝ) • (P ^ (n + 2) * Rt)) := by
