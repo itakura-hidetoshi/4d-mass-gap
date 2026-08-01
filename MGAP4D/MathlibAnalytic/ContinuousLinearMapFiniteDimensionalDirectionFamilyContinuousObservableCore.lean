@@ -39,7 +39,9 @@ theorem finiteDimensional_continuousObservable_tendsto_uniformOn_prod_const
   have hC0 : ∀ i ∈ s, ‖C0 i‖ ≤ R0 := by
     intro i hi
     simp only [C0, Prod.norm_def, max_le_iff, R0]
-    exact ⟨hA0 i hi, le_rfl⟩
+    exact
+      ⟨(hA0 i hi).trans (le_max_left R ‖B0‖),
+        le_max_right R ‖B0‖⟩
   have hBmetric : ∀ eta : ℝ, 0 < eta →
       ∀ᶠ a in l, ‖B a - B0‖ < eta := by
     rw [Metric.tendsto_nhds] at hB
