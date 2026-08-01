@@ -67,17 +67,20 @@ structure JointRemainderClosedBoxData
           directions H0 ds h) z ≤ Mend
 
 private abbrev ExplicitJointRemainderClosedBoxData
-    {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
-    {n : Filter β} (directions : ℕ) :=
+    (l : Filter α) (gap : ℝ) (F : α → ℝ → E →L[ℝ] E)
+    (n : Filter β) (directions : ℕ) :=
   JointRemainderClosedBoxData (α := α) (β := β) (E := E) (V := V)
     (l := l) (gap := gap) (F := F) (n := n) directions
+
+private abbrev ClosedBoxRemainderIndex :=
+  ContinuousLinearMapTaylorParameterPoint × ℝ
 
 /-- The one-level true base-resolvent family of an approximating Taylor
 partial sum. -/
 def closedBoxJointRemainderApproxBaseFamily
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
     (G : ℝ → E →L[ℝ] E) (degree : ℕ)
-    (p : ContinuousLinearMapTaylorParameter) (z : ℝ) :
+    (p : ContinuousLinearMapTaylorParameterPoint) (z : ℝ) :
     Fin 1 → (V →L[ℝ] V) :=
   fun _ => continuousLinearMapRealResolvent (V := V)
     (continuousLinearMapCompression J Q
@@ -87,7 +90,7 @@ def closedBoxJointRemainderApproxBaseFamily
 def closedBoxJointRemainderLimitBaseFamily
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
     (G0 : ℝ → E →L[ℝ] E)
-    (p : ContinuousLinearMapTaylorParameter) (z : ℝ) :
+    (p : ContinuousLinearMapTaylorParameterPoint) (z : ℝ) :
     Fin 1 → (V →L[ℝ] V) :=
   fun _ => continuousLinearMapRealResolvent (V := V)
     (continuousLinearMapCompression J Q (G0 p.target)) z
@@ -97,7 +100,7 @@ sum after the simultaneous spectral/operator increment. -/
 def closedBoxJointRemainderApproxEndpointFamily
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (directions : ℕ)
     (G : ℝ → E →L[ℝ] E) (degree : ℕ)
-    (p : ContinuousLinearMapTaylorParameter) (z : ℝ)
+    (p : ContinuousLinearMapTaylorParameterPoint) (z : ℝ)
     (H : Fin directions → (V →L[ℝ] V))
     (ds : ℝ) (h : Fin directions → ℝ) : Fin 1 → (V →L[ℝ] V) :=
   fun _ => continuousLinearMapRealResolvent (V := V)
@@ -110,7 +113,7 @@ def closedBoxJointRemainderApproxEndpointFamily
 def closedBoxJointRemainderLimitEndpointFamily
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (directions : ℕ)
     (G0 : ℝ → E →L[ℝ] E)
-    (p : ContinuousLinearMapTaylorParameter) (z : ℝ)
+    (p : ContinuousLinearMapTaylorParameterPoint) (z : ℝ)
     (H0 : Fin directions → (V →L[ℝ] V))
     (ds : ℝ) (h : Fin directions → ℝ) : Fin 1 → (V →L[ℝ] V) :=
   fun _ => continuousLinearMapRealResolvent (V := V)
@@ -122,7 +125,7 @@ def closedBoxJointRemainderLimitEndpointFamily
 def closedBoxJointRemainderApproxInput
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (directions : ℕ)
     (G : ℝ → E →L[ℝ] E) (degree : ℕ)
-    (p : ContinuousLinearMapTaylorParameter) (z : ℝ)
+    (p : ContinuousLinearMapTaylorParameterPoint) (z : ℝ)
     (H : Fin directions → (V →L[ℝ] V))
     (ds : ℝ) (h : Fin directions → ℝ) :
     ContinuousLinearMapJointTaylorDysonRemainderInput V 0 directions :=
@@ -135,7 +138,7 @@ def closedBoxJointRemainderApproxInput
 def closedBoxJointRemainderLimitInput
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (directions : ℕ)
     (G0 : ℝ → E →L[ℝ] E)
-    (p : ContinuousLinearMapTaylorParameter) (z : ℝ)
+    (p : ContinuousLinearMapTaylorParameterPoint) (z : ℝ)
     (H0 : Fin directions → (V →L[ℝ] V))
     (ds : ℝ) (h : Fin directions → ℝ) :
     ContinuousLinearMapJointTaylorDysonRemainderInput V 0 directions :=
@@ -148,7 +151,7 @@ def closedBoxJointRemainderLimitInput
 theorem JointRemainderClosedBoxData.baseFamily_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖closedBoxJointRemainderApproxBaseFamily D.J D.Q
@@ -171,7 +174,7 @@ theorem JointRemainderClosedBoxData.baseFamily_tendsto
 theorem JointRemainderClosedBoxData.endpointOperator_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (eta : ℝ) (heta : 0 < eta) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p →
       ‖(continuousLinearMapCompression D.J D.Q
@@ -245,20 +248,20 @@ theorem JointRemainderClosedBoxData.endpointOperator_tendsto
 theorem JointRemainderClosedBoxData.endpointFamily_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖closedBoxJointRemainderApproxEndpointFamily D.J D.Q directions
           (F (D.time b)) (D.degree b) p z (D.H b) D.ds D.h -
         closedBoxJointRemainderLimitEndpointFamily D.J D.Q directions
           D.S.limitResolvent p z D.H0 D.ds D.h‖ < epsilon := by
-  let A := fun b : β => fun p : ContinuousLinearMapTaylorParameter =>
+  let A := fun b : β => fun p : ContinuousLinearMapTaylorParameterPoint =>
     continuousLinearMapCompression D.J D.Q
         (continuousLinearMapTaylorPartialSum
           (F (D.time b)) p.center p.target (D.degree b)) +
       continuousLinearMapJointSpectralOperatorRemainderIncrement
         directions (D.H b) D.ds D.h
-  let A0 := fun p : ContinuousLinearMapTaylorParameter =>
+  let A0 := fun p : ContinuousLinearMapTaylorParameterPoint =>
     continuousLinearMapCompression D.J D.Q (D.S.limitResolvent p.target) +
       continuousLinearMapJointSpectralOperatorRemainderIncrement
         directions D.H0 D.ds D.h
@@ -284,9 +287,9 @@ theorem JointRemainderClosedBoxData.endpointFamily_tendsto
 theorem JointRemainderClosedBoxData.input_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (eta : ℝ) (heta : 0 < eta) :
-    ∀ᶠ b in n, ∀ q ∈ {q : ContinuousLinearMapTaylorParameter × ℝ |
+    ∀ᶠ b in n, ∀ q ∈ {q : ClosedBoxRemainderIndex |
       D.box.Contains q.1 ∧ q.2 ∈ D.Z},
       ‖closedBoxJointRemainderApproxInput D.J D.Q directions
           (F (D.time b)) (D.degree b) q.1 q.2 (D.H b) D.ds D.h -
@@ -294,7 +297,7 @@ theorem JointRemainderClosedBoxData.input_tendsto
           D.S.limitResolvent q.1 q.2 D.H0 D.ds D.h‖ < eta := by
   exact
     (continuousLinearMapJointTaylorDysonRemainderInput_tendsto_uniform_of_components
-      (s := {q : ContinuousLinearMapTaylorParameter × ℝ |
+      (s := {q : ClosedBoxRemainderIndex |
         D.box.Contains q.1 ∧ q.2 ∈ D.Z})
       (fun b q => closedBoxJointRemainderApproxBaseFamily
         D.J D.Q (F (D.time b)) (D.degree b) q.1 q.2)
@@ -320,8 +323,8 @@ theorem JointRemainderClosedBoxData.input_tendsto
 theorem JointRemainderClosedBoxData.limitInput_norm_le
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
-    (q : ContinuousLinearMapTaylorParameter × ℝ)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (q : ClosedBoxRemainderIndex)
     (hq : D.box.Contains q.1 ∧ q.2 ∈ D.Z) :
     ‖closedBoxJointRemainderLimitInput D.J D.Q directions
         D.S.limitResolvent q.1 q.2 D.H0 D.ds D.h‖ ≤
@@ -354,7 +357,7 @@ tail in the genuine finite-product norm. -/
 theorem JointRemainderClosedBoxData.carrier_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
@@ -369,13 +372,13 @@ theorem JointRemainderClosedBoxData.carrier_tendsto
             D.J D.Q D.S.limitResolvent p z)
           (closedBoxJointRemainderLimitEndpointFamily D.J D.Q directions
             D.S.limitResolvent p z D.H0 D.ds D.h)‖ < epsilon := by
-  let X := fun b : β => fun q : ContinuousLinearMapTaylorParameter × ℝ =>
+  let X := fun b : β => fun q : ClosedBoxRemainderIndex =>
     closedBoxJointRemainderApproxInput D.J D.Q directions
       (F (D.time b)) (D.degree b) q.1 q.2 (D.H b) D.ds D.h
-  let X0 := fun q : ContinuousLinearMapTaylorParameter × ℝ =>
+  let X0 := fun q : ClosedBoxRemainderIndex =>
     closedBoxJointRemainderLimitInput D.J D.Q directions
       D.S.limitResolvent q.1 q.2 D.H0 D.ds D.h
-  let s := {q : ContinuousLinearMapTaylorParameter × ℝ |
+  let s := {q : ClosedBoxRemainderIndex |
     D.box.Contains q.1 ∧ q.2 ∈ D.Z}
   let R : ℝ := max (max D.Mbase D.Mend) ‖D.H0‖
   have hR : 0 ≤ R := le_trans D.hMbase
@@ -400,7 +403,7 @@ exact remainder tail. -/
 theorem JointRemainderClosedBoxData.response_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (φ : (V →L[ℝ] V) →L[ℝ] W) (baseOrder tailOrder : ℕ)
     (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
@@ -416,13 +419,13 @@ theorem JointRemainderClosedBoxData.response_tendsto
             D.J D.Q D.S.limitResolvent p z)
           (closedBoxJointRemainderLimitEndpointFamily D.J D.Q directions
             D.S.limitResolvent p z D.H0 D.ds D.h)‖ < epsilon := by
-  let X := fun b : β => fun q : ContinuousLinearMapTaylorParameter × ℝ =>
+  let X := fun b : β => fun q : ClosedBoxRemainderIndex =>
     closedBoxJointRemainderApproxInput D.J D.Q directions
       (F (D.time b)) (D.degree b) q.1 q.2 (D.H b) D.ds D.h
-  let X0 := fun q : ContinuousLinearMapTaylorParameter × ℝ =>
+  let X0 := fun q : ClosedBoxRemainderIndex =>
     closedBoxJointRemainderLimitInput D.J D.Q directions
       D.S.limitResolvent q.1 q.2 D.H0 D.ds D.h
-  let s := {q : ContinuousLinearMapTaylorParameter × ℝ |
+  let s := {q : ClosedBoxRemainderIndex |
     D.box.Contains q.1 ∧ q.2 ∈ D.Z}
   let R : ℝ := max (max D.Mbase D.Mend) ‖D.H0‖
   have hR : 0 ≤ R := le_trans D.hMbase
@@ -444,7 +447,7 @@ exact remainder tail. -/
 theorem JointRemainderClosedBoxData.trace_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData directions)
+    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
     (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖continuousLinearMapJointTaylorDysonRemainderTailTraceRectangularJetFromResolventFamilies
