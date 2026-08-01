@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterMultilinearJetOperatorNormCore
-import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalTrace
 import Mathlib.Tactic
 
 noncomputable section
