@@ -70,8 +70,10 @@ theorem continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilin
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierFromResolvent
         φ m n H R) := by
-  unfold continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierFromResolvent
-  fun_prop
+  simpa [continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierFromResolvent] using
+    (continuousLinearMapPostcomposeContinuousMultilinearMap n φ).continuous.comp
+      (continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
+        m n H)
 
 /-- Postcomposition controls the operator-norm difference of two complete
 joint Fréchet carriers. -/
