@@ -27,39 +27,27 @@ theorem iteratedDeriv_realResolventFiniteParameterSymmetricDerivative_finiteDime
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (k parameterDimension mixedOrder : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (k parameterDimension mixedOrder : ℕ)
     (H : Fin parameterDimension → (V →L[ℝ] V))
     (u : Fin mixedOrder → (Fin parameterDimension → ℝ))
     (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z,
-      margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        ‖continuousLinearMapFiniteParameterRealResolventSymmetricDerivative
-            parameterDimension mixedOrder
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) H z u -
-          continuousLinearMapFiniteParameterRealResolventSymmetricDerivative
-            parameterDimension mixedOrder
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) H z u‖ < epsilon := by
+    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
+      ‖continuousLinearMapFiniteParameterRealResolventSymmetricDerivative parameterDimension mixedOrder
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) H z u -
+        continuousLinearMapFiniteParameterRealResolventSymmetricDerivative parameterDimension mixedOrder
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) H z u‖ < epsilon := by
   simpa only [continuousLinearMapFiniteParameterRealResolventSymmetricDerivative_apply] using
     S.iteratedDeriv_realResolventOperatorSymmetricDerivative_finiteDimensionalCompression_tendsto_uniformOn_compact_product
       B L hLgap hLresolvent J Q k mixedOrder
-      (continuousLinearMapFiniteParameterDirectionTuple
-        parameterDimension mixedOrder H u)
-      K hKcompact hKupper hupper Z margin hmargin hlimitMargin
-      M hM hlimitNorm
+      (continuousLinearMapFiniteParameterDirectionTuple parameterDimension mixedOrder H u)
+      K hKcompact hKupper hupper Z margin hmargin hlimitMargin M hM hlimitNorm
 
 /-- Simultaneous compact-uniform convergence on the finite rectangle of
 Taylor derivative orders and finite-parameter mixed derivative orders. -/
@@ -69,41 +57,30 @@ theorem iteratedDeriv_realResolventFiniteParameterSymmetricDerivative_finiteDime
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (parameterDimension taylorOrder mixedOrder : ℕ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (parameterDimension taylorOrder mixedOrder : ℕ)
     (H : Fin parameterDimension → (V →L[ℝ] V))
-    (u : ∀ n : Fin (mixedOrder + 1),
-      Fin n.1 → (Fin parameterDimension → ℝ))
+    (u : ∀ n : Fin (mixedOrder + 1), Fin n.1 → (Fin parameterDimension → ℝ))
     (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       margin ≤ |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z|)
+        (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
-      ∀ k : Fin (taylorOrder + 1), ∀ n : Fin (mixedOrder + 1),
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        ‖continuousLinearMapFiniteParameterRealResolventSymmetricDerivative
-            parameterDimension n.1
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (F a) lambda)) H z (u n) -
-          continuousLinearMapFiniteParameterRealResolventSymmetricDerivative
-            parameterDimension n.1
-            (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) H z (u n)‖ < epsilon := by
+        (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ k : Fin (taylorOrder + 1),
+      ∀ n : Fin (mixedOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
+        ‖continuousLinearMapFiniteParameterRealResolventSymmetricDerivative parameterDimension n.1
+            (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 (F a) lambda)) H z (u n) -
+          continuousLinearMapFiniteParameterRealResolventSymmetricDerivative parameterDimension n.1
+            (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) H z (u n)‖ < epsilon := by
   simpa only [continuousLinearMapFiniteParameterRealResolventSymmetricDerivative_apply] using
     S.iteratedDeriv_realResolventOperatorSymmetricDerivative_finiteDimensionalCompression_tendsto_uniformOn_compact_product_rectangular
       B L hLgap hLresolvent J Q taylorOrder mixedOrder
-      (fun n => continuousLinearMapFiniteParameterDirectionTuple
-        parameterDimension n.1 H (u n))
-      K hKcompact hKupper hupper Z margin hmargin hlimitMargin
-      M hM hlimitNorm
+      (fun n => continuousLinearMapFiniteParameterDirectionTuple parameterDimension n.1 H (u n))
+      K hKcompact hKupper hupper Z margin hmargin hlimitMargin M hM hlimitNorm
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
 
