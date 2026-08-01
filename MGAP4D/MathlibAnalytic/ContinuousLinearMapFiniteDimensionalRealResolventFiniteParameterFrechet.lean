@@ -75,7 +75,12 @@ theorem continuousLinearMapFiniteParameterRealResolventChart_hasFPowerSeriesAt
       abel
     rw [hfun] at hzeroRaw
     simpa using hzeroRaw
-  have hparamZero := hzero.compContinuousLinearMap (u := L) (x := (0 : Fin m → ℝ))
+  have hzeroAtLinearZero : HasFPowerSeriesAt
+      (fun X : V →L[ℝ] V => continuousLinearMapRealResolvent (B + X) z)
+      p (L 0) := by
+    simpa using hzero
+  have hparamZero :=
+    hzeroAtLinearZero.compContinuousLinearMap (u := L) (x := (0 : Fin m → ℝ))
   have hparamRaw := hparamZero.comp_sub t₀
   have hfun :
       (fun t : Fin m → ℝ =>
