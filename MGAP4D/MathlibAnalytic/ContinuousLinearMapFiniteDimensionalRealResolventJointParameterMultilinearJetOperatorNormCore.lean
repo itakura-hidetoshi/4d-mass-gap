@@ -18,27 +18,33 @@ theorem continuous_continuousLinearMapRealResolventOrderedDysonMultilinearCarrie
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] (n : ℕ) :
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapRealResolventOrderedDysonMultilinear n R) := by
-  let A := V →L[ℝ] V
-  have houter : Continuous (fun R : A =>
-      (ContinuousLinearMap.mul ℝ A).flip R) :=
-    (ContinuousLinearMap.mul ℝ A).flip.continuous
-  have hfamily : Continuous (fun R : A =>
-      fun _ : Fin n => (ContinuousLinearMap.mul ℝ A) R) := by
-    exact continuous_pi fun _ => (ContinuousLinearMap.mul ℝ A).continuous
-  have hinner : Continuous (fun R : A =>
-      (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n A).compContinuousLinearMap
-        (fun _ => (ContinuousLinearMap.mul ℝ A) R)) := by
+  have houter : Continuous (fun R : V →L[ℝ] V =>
+      (ContinuousLinearMap.mul ℝ (V →L[ℝ] V)).flip R) :=
+    (ContinuousLinearMap.mul ℝ (V →L[ℝ] V)).flip.continuous
+  have hfamily : Continuous (fun R : V →L[ℝ] V =>
+      fun _ : Fin n =>
+        (ContinuousLinearMap.mul ℝ (V →L[ℝ] V)) R) := by
+    exact continuous_pi fun _ =>
+      (ContinuousLinearMap.mul ℝ (V →L[ℝ] V)).continuous
+  have hinner : Continuous (fun R : V →L[ℝ] V =>
+      (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n
+        (V →L[ℝ] V)).compContinuousLinearMap
+          (fun _ => (ContinuousLinearMap.mul ℝ (V →L[ℝ] V)) R)) := by
     exact
       (ContinuousMultilinearMap.compContinuousLinearMapLRight
-        (E := fun _ : Fin n => A)
-        (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n A)).cont.comp hfamily
-  have hpost : Continuous (fun R : A =>
+        (E := fun _ : Fin n => (V →L[ℝ] V))
+        (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n
+          (V →L[ℝ] V))).cont.comp hfamily
+  have hpost : Continuous (fun R : V →L[ℝ] V =>
       ContinuousLinearMap.compContinuousMultilinearMapL ℝ
-        (fun _ : Fin n => A) A A ((ContinuousLinearMap.mul ℝ A).flip R)) :=
+        (fun _ : Fin n => (V →L[ℝ] V))
+        (V →L[ℝ] V) (V →L[ℝ] V)
+        ((ContinuousLinearMap.mul ℝ (V →L[ℝ] V)).flip R)) :=
     (ContinuousLinearMap.compContinuousMultilinearMapL ℝ
-      (fun _ : Fin n => A) A A).continuous.comp houter
-  simpa [A, continuousLinearMapRealResolventOrderedDysonMultilinear] using
-    hpost.eval hinner
+      (fun _ : Fin n => (V →L[ℝ] V))
+      (V →L[ℝ] V) (V →L[ℝ] V)).continuous.comp houter
+  simpa [continuousLinearMapRealResolventOrderedDysonMultilinear] using
+    hpost.clm_apply hinner
 
 /-- Every permuted ordered Dyson carrier is continuous in full multilinear-map
 operator norm. -/
@@ -47,10 +53,16 @@ theorem continuous_continuousLinearMapRealResolventPermutedDysonMultilinearCarri
     (n : ℕ) (σ : Equiv.Perm (Fin n)) :
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapRealResolventPermutedDysonMultilinear n R σ) := by
-  simpa [continuousLinearMapRealResolventPermutedDysonMultilinear] using
-    (ContinuousMultilinearMap.domDomCongrₗᵢ ℝ (V →L[ℝ] V) (V →L[ℝ] V) σ).continuous.comp
-      (continuous_continuousLinearMapRealResolventOrderedDysonMultilinearCarrier
-        (V := V) n)
+  change Continuous
+    ((ContinuousMultilinearMap.domDomCongrₗᵢ ℝ
+        (V →L[ℝ] V) (V →L[ℝ] V) σ) ∘
+      fun R : V →L[ℝ] V =>
+        continuousLinearMapRealResolventOrderedDysonMultilinear n R)
+  exact
+    (ContinuousMultilinearMap.domDomCongrₗᵢ ℝ
+      (V →L[ℝ] V) (V →L[ℝ] V) σ).continuous.comp
+        (continuous_continuousLinearMapRealResolventOrderedDysonMultilinearCarrier
+          (V := V) n)
 
 /-- The complete symmetric Dyson derivative carrier is continuous in the
 resolvent operator for the operator norm on continuous multilinear maps. -/
