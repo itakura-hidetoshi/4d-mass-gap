@@ -56,7 +56,7 @@ theorem taylorPartialSum_realResolventJointMultilinearCarrierJet_finiteDimension
   filter_upwards [h] with b hb
   intro p hp z hz
   apply (continuousLinearMapJointMultilinearCarrierJet_norm_sub_lt_iff_supDistance_lt
-    _ _ hepsilon).2
+    (V := V) (W := V →L[ℝ] V) _ _ hepsilon).2
   exact hb p hp z hz
 
 variable {W : Type*}
@@ -101,7 +101,7 @@ theorem taylorPartialSum_realResolventJointMultilinearResponseCarrierJet_finiteD
   filter_upwards [h] with b hb
   intro p hp z hz
   apply (continuousLinearMapJointMultilinearCarrierJet_norm_sub_lt_iff_supDistance_lt
-    _ _ hepsilon).2
+    (V := V) (W := W) _ _ hepsilon).2
   exact hb p hp z hz
 
 /-- Complete closed-box convergence of the basis-independent trace jet in its
@@ -143,7 +143,7 @@ theorem taylorPartialSum_realResolventJointMultilinearTraceCarrierJet_finiteDime
   filter_upwards [h] with b hb
   intro p hp z hz
   apply (continuousLinearMapJointMultilinearCarrierJet_norm_sub_lt_iff_supDistance_lt
-    _ _ hepsilon).2
+    (V := V) (W := ℝ) _ _ hepsilon).2
   exact hb p hp z hz
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
