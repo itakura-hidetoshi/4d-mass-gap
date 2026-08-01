@@ -65,21 +65,21 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.o
   hlimitEnd := hlimitEnd
 
 /-- Canonical compact carrier certificate at exactly the half-mass gap. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_carrier_norm_lt
+def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_carrier_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
     {taylorOrder directions : ℕ}
     (C : G.CanonicalJointRemainderCompactSharpCertificateData
       (V := V) T hInnerSymmetric taylorOrder directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
   C.eventually_carrier_norm_lt tailOrder epsilon hepsilon
 
 variable {W : Type*}
 variable [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Canonical compact arbitrary-response certificate. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_response_norm_lt
+def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_response_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
@@ -87,18 +87,18 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateDa
     (C : G.CanonicalJointRemainderCompactSharpCertificateData
       (V := V) T hInnerSymmetric taylorOrder directions)
     (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
   C.eventually_response_norm_lt φ tailOrder epsilon hepsilon
 
 /-- Canonical compact basis-independent trace certificate. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_trace_norm_lt
+def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_trace_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
     {taylorOrder directions : ℕ}
     (C : G.CanonicalJointRemainderCompactSharpCertificateData
       (V := V) T hInnerSymmetric taylorOrder directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
   C.eventually_trace_norm_lt tailOrder epsilon hepsilon
 
 /-- Canonical arbitrary-joint-net closed-box sharp-certificate data.  The gap
@@ -147,18 +147,18 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData
   hlimitEnd := hlimitEnd
 
 /-- Canonical closed-box carrier certificate for arbitrary joint nets. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_carrier_norm_lt
+def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_carrier_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
     {β : Type*} {n : Filter β} {directions : ℕ}
     (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
       (V := V) T hInnerSymmetric n directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
   C.eventually_carrier_norm_lt tailOrder epsilon hepsilon
 
 /-- Canonical closed-box arbitrary-response certificate. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_response_norm_lt
+def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_response_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
@@ -166,18 +166,18 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificate
     (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
       (V := V) T hInnerSymmetric n directions)
     (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
   C.eventually_response_norm_lt φ tailOrder epsilon hepsilon
 
 /-- Canonical closed-box basis-independent trace certificate. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_trace_norm_lt
+def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_trace_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
     {β : Type*} {n : Filter β} {directions : ℕ}
     (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
       (V := V) T hInnerSymmetric n directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
   C.eventually_trace_norm_lt tailOrder epsilon hepsilon
 
 end StronglyContinuousPhysicalSemigroup
