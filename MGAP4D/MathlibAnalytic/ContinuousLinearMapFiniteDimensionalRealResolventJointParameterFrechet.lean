@@ -257,8 +257,7 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_pureSpectral
   have hscalar :
       (n.factorial : ℝ) * (-1 : ℝ) ^ n =
         continuousLinearMapRealResolventSpectralCoefficient n := by
-    unfold continuousLinearMapRealResolventSpectralCoefficient
-    ring
+    simpa [continuousLinearMapRealResolventSpectralCoefficient, mul_comm]
   rw [hmul, smul_pow, smul_mul_assoc, smul_smul, ← pow_succ, hscalar]
 
 end MathlibAnalytic
