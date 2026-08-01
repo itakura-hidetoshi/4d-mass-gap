@@ -151,8 +151,8 @@ theorem JointRemainderCompactData.endpointOperatorFamily_tendsto
         m (D.H a) D.ds D.h) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRemainderIncrement
         m D.H0 D.ds D.h)) :=
-    (continuous_continuousLinearMapJointSpectralOperatorRemainderIncrement
-      (V := V) m D.ds D.h).tendsto D.H0 |>.comp D.hH
+    ((continuous_continuousLinearMapJointSpectralOperatorRemainderIncrement
+      (V := V) m D.ds D.h).tendsto D.H0).comp D.hH
   have hincrement : ∀ᶠ a in l,
       ‖continuousLinearMapJointSpectralOperatorRemainderIncrement m (D.H a) D.ds D.h -
         continuousLinearMapJointSpectralOperatorRemainderIncrement m D.H0 D.ds D.h‖ < eta / 2 := by
@@ -208,9 +208,10 @@ theorem JointRemainderCompactData.endpointResolventFamily_tendsto
   have hA : ∀ eta : ℝ, 0 < eta → ∀ᶠ a in l, ∀ i ∈ s,
       ‖A a i - A0 i‖ < eta := by
     intro eta heta
-    filter_upwards [D.endpointOperatorFamily_tendsto eta heta] with a ha
+    filter_upwards [JointRemainderCompactData.endpointOperatorFamily_tendsto D eta heta]
+      with a ha
     intro i hi
-    exact ha i.1 i.2 hi.2
+    simpa [A, A0] using ha i.1 i.2 hi.2
   have hres := finiteDimensional_realResolvent_tendsto_uniformOn_set
     A A0 hA D.Z D.endMargin D.hendMargin
     (fun i hi z hz => D.hlimitEndMargin i.1 i.2 hi.2 z hz)
@@ -233,25 +234,26 @@ theorem JointRemainderCompactData.input_tendsto
           (F a) p.1 p.2 (D.H a) D.ds D.h -
         compressedJointRemainderInput D.J D.Q taylorOrder m
           D.S.limitResolvent p.1 p.2 D.H0 D.ds D.h‖ < eta := by
-  have hb := D.baseResolventFamily_tendsto
-  have he := D.endpointResolventFamily_tendsto
-  exact continuousLinearMapJointTaylorDysonRemainderInput_tendsto_uniform_of_components
-    (fun a p => compressedJointRemainderBaseResolventFamily
-      D.J D.Q taylorOrder (F a) p.1 p.2)
-    (fun p => compressedJointRemainderBaseResolventFamily
-      D.J D.Q taylorOrder D.S.limitResolvent p.1 p.2)
-    (fun a p => compressedJointRemainderEndpointResolventFamily
-      D.J D.Q taylorOrder m (F a) p.1 p.2 (D.H a) D.ds D.h)
-    (fun p => compressedJointRemainderEndpointResolventFamily
-      D.J D.Q taylorOrder m D.S.limitResolvent p.1 p.2 D.H0 D.ds D.h)
-    D.H D.H0
-    (fun e hepos => by
-      filter_upwards [hb e hepos] with a ha
-      exact fun p hp => ha p.1 hp.1 p.2 hp.2)
-    (fun e hepos => by
-      filter_upwards [he e hepos] with a ha
-      exact fun p hp => ha p.1 hp.1 p.2 hp.2)
-    D.hH eta heta
+  exact
+    (continuousLinearMapJointTaylorDysonRemainderInput_tendsto_uniform_of_components
+      (fun a p => compressedJointRemainderBaseResolventFamily
+        D.J D.Q taylorOrder (F a) p.1 p.2)
+      (fun p => compressedJointRemainderBaseResolventFamily
+        D.J D.Q taylorOrder D.S.limitResolvent p.1 p.2)
+      (fun a p => compressedJointRemainderEndpointResolventFamily
+        D.J D.Q taylorOrder m (F a) p.1 p.2 (D.H a) D.ds D.h)
+      (fun p => compressedJointRemainderEndpointResolventFamily
+        D.J D.Q taylorOrder m D.S.limitResolvent p.1 p.2 D.H0 D.ds D.h)
+      D.H D.H0
+      (fun e hepos => by
+        filter_upwards [JointRemainderCompactData.baseResolventFamily_tendsto
+          D e hepos] with a ha
+        exact fun p hp => ha p.1 hp.1 p.2 hp.2)
+      (fun e hepos => by
+        filter_upwards [JointRemainderCompactData.endpointResolventFamily_tendsto
+          D e hepos] with a ha
+        exact fun p hp => ha p.1 hp.1 p.2 hp.2)
+      D.hH) eta heta
 
 /-- The continuum complete input is bounded by the explicit common radius. -/
 theorem JointRemainderCompactData.limitInput_norm_le
@@ -261,19 +263,28 @@ theorem JointRemainderCompactData.limitInput_norm_le
     ‖compressedJointRemainderInput D.J D.Q taylorOrder m
         D.S.limitResolvent p.1 p.2 D.H0 D.ds D.h‖ ≤
       max (max D.Mbase D.Mend) ‖D.H0‖ := by
-  rw [norm_prod_le_iff]
-  constructor
-  · rw [norm_prod_le_iff]
-    constructor
-    · exact le_trans
-        ((pi_norm_le_iff_of_nonneg D.hMbase).2
-          (fun k => D.hlimitBaseNorm k p.1 hp.1 p.2 hp.2))
-        (le_trans (le_max_left D.Mbase D.Mend) (le_max_left _ _))
-    · exact le_trans
-        ((pi_norm_le_iff_of_nonneg D.hMend).2
-          (fun k => D.hlimitEndNorm k p.1 hp.1 p.2 hp.2))
-        (le_trans (le_max_right D.Mbase D.Mend) (le_max_left _ _))
-  · exact le_max_right _ _
+  have hb :
+      ‖compressedJointRemainderBaseResolventFamily
+        D.J D.Q taylorOrder D.S.limitResolvent p.1 p.2‖ ≤ D.Mbase :=
+    (pi_norm_le_iff_of_nonneg D.hMbase).2
+      (fun k => D.hlimitBaseNorm k p.1 hp.1 p.2 hp.2)
+  have he :
+      ‖compressedJointRemainderEndpointResolventFamily
+        D.J D.Q taylorOrder m D.S.limitResolvent p.1 p.2 D.H0 D.ds D.h‖ ≤ D.Mend :=
+    (pi_norm_le_iff_of_nonneg D.hMend).2
+      (fun k => D.hlimitEndNorm k p.1 hp.1 p.2 hp.2)
+  change max
+      (max
+        ‖compressedJointRemainderBaseResolventFamily
+          D.J D.Q taylorOrder D.S.limitResolvent p.1 p.2‖
+        ‖compressedJointRemainderEndpointResolventFamily
+          D.J D.Q taylorOrder m D.S.limitResolvent p.1 p.2 D.H0 D.ds D.h‖)
+      ‖D.H0‖ ≤ max (max D.Mbase D.Mend) ‖D.H0‖
+  exact max_le
+    (max_le
+      (hb.trans ((le_max_left D.Mbase D.Mend).trans (le_max_left _ _)))
+      (he.trans ((le_max_right D.Mbase D.Mend).trans (le_max_left _ _))))
+    (le_max_right _ _)
 
 /-- Compact-uniform convergence of the complete carrier exact-remainder tail
 in the genuine finite-product norm. -/
@@ -304,11 +315,11 @@ theorem JointRemainderCompactData.carrier_tendsto
     (le_trans (le_max_left D.Mbase D.Mend) (le_max_left _ _))
   have hX0 : ∀ p ∈ D.K ×ˢ D.Z, ‖X0 p‖ ≤ R := by
     intro p hp
-    exact D.limitInput_norm_le p hp
+    exact JointRemainderCompactData.limitInput_norm_le D p hp
   simpa [X, X0, compressedJointRemainderInput] using
     finiteDimensional_jointTaylorDysonRemainderTailRectangularJet_tendsto_uniform
       baseOrder taylorOrder tailOrder m D.ds D.h X X0 R hR hX0
-      D.input_tendsto epsilon hepsilon
+      (JointRemainderCompactData.input_tendsto D) epsilon hepsilon
 
 variable {W : Type*}
 variable [NormedAddCommGroup W] [NormedSpace ℝ W]
@@ -343,11 +354,11 @@ theorem JointRemainderCompactData.response_tendsto
     (le_trans (le_max_left D.Mbase D.Mend) (le_max_left _ _))
   have hX0 : ∀ p ∈ D.K ×ˢ D.Z, ‖X0 p‖ ≤ R := by
     intro p hp
-    exact D.limitInput_norm_le p hp
+    exact JointRemainderCompactData.limitInput_norm_le D p hp
   simpa [X, X0, compressedJointRemainderInput] using
     finiteDimensional_jointTaylorDysonRemainderTailResponseRectangularJet_tendsto_uniform
       φ baseOrder taylorOrder tailOrder m D.ds D.h X X0 R hR hX0
-      D.input_tendsto epsilon hepsilon
+      (JointRemainderCompactData.input_tendsto D) epsilon hepsilon
 
 /-- Compact-uniform convergence of the basis-independent trace of the
 complete exact-remainder tail. -/
@@ -368,8 +379,8 @@ theorem JointRemainderCompactData.trace_tendsto
           (compressedJointRemainderEndpointResolventFamily
             D.J D.Q taylorOrder m D.S.limitResolvent lambda z D.H0 D.ds D.h)‖ < epsilon := by
   simpa [continuousLinearMapJointTaylorDysonRemainderTailTraceRectangularJetFromResolventFamilies] using
-    D.response_tendsto (continuousLinearMapTrace (V := V))
-      baseOrder tailOrder epsilon hepsilon
+    JointRemainderCompactData.response_tendsto D
+      (continuousLinearMapTrace (V := V)) baseOrder tailOrder epsilon hepsilon
 
 end ContinuousLinearMapOpenTaylorStrongLimitData
 end MathlibAnalytic
