@@ -9,6 +9,8 @@ open scoped BigOperators ContDiff Ring
 namespace MGAP4D
 namespace MathlibAnalytic
 
+set_option maxHeartbeats 5000000
+
 /-- Joint convergence of a finite resolvent family and a finite direction
 family induces convergence of the complete carrier rectangle in its genuine
 finite dependent-product norm topology. -/
