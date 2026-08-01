@@ -84,7 +84,8 @@ map, with the gap definitionally equal to `G.mass / 2`. -/
 def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.toGeneric
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope} {taylorOrder directions : ℕ}
-    (C : G.CanonicalJointRemainderCompactData T taylorOrder directions) :
+    (C : G.CanonicalJointRemainderCompactData (V := V)
+      T taylorOrder directions) :
     ContinuousLinearMapOpenTaylorStrongLimitData.JointRemainderCompactData
       (α := G.AdmissibleRescaledDefectTime)
       (E := P.VacuumOrthogonalHilbert) (V := V)
@@ -186,7 +187,8 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.toGeneric
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope} {β : Type*} {n : Filter β}
     {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxData T n directions) :
+    (C : G.CanonicalJointRemainderClosedBoxData (V := V)
+      T n directions) :
     ContinuousLinearMapOpenTaylorStrongLimitData.JointRemainderClosedBoxData
       (α := G.AdmissibleRescaledDefectTime) (β := β)
       (E := P.VacuumOrthogonalHilbert) (V := V)
