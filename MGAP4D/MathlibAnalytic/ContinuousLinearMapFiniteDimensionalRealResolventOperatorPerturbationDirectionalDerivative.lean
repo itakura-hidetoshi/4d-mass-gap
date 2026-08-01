@@ -16,13 +16,11 @@ namespace MathlibAnalytic
 
 set_option maxHeartbeats 5000000
 
-/-- The true real resolvent along the affine operator line `A + tH`. -/
 def continuousLinearMapRealResolventOperatorLine
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z t : ℝ) : V →L[ℝ] V :=
   continuousLinearMapRealResolvent (A + t • H) z
 
-/-- Exact two-parameter identity along an affine operator line. -/
 theorem continuousLinearMapRealResolventOperatorLine_sub_eq_smul_mul
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ) {s t : ℝ}
@@ -36,13 +34,10 @@ theorem continuousLinearMapRealResolventOperatorLine_sub_eq_smul_mul
   unfold continuousLinearMapRealResolventOperatorLine
   rw [continuousLinearMapRealResolvent_sub_eq_mul_operator_sub_mul
     (A + s • H) (A + t • H) z hs ht]
-  have hdiff : (A + t • H) - (A + s • H) = (t - s) • H := by
-    module
+  have hdiff : (A + t • H) - (A + s • H) = (t - s) • H := by module
   rw [hdiff]
   simp [mul_assoc]
 
-/-- Uniform inverse bounds give a quantitative Lipschitz estimate along the
-operator line. -/
 theorem continuousLinearMapRealResolventOperatorLine_sub_norm_le
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ) {s t M : ℝ}
@@ -68,7 +63,6 @@ theorem continuousLinearMapRealResolventOperatorLine_sub_norm_le
         mul_le_mul_of_nonneg_right (norm_mul_le _ _) (norm_nonneg _)
     _ ≤ |t - s| * (M * ‖H‖ * M) := by gcongr
 
-/-- Uniformly bounded resolvents are Lipschitz along an affine operator line. -/
 theorem continuousLinearMapRealResolventOperatorLine_lipschitzOn
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -87,16 +81,12 @@ theorem continuousLinearMapRealResolventOperatorLine_lipschitzOn
     ‖continuousLinearMapRealResolventOperatorLine A H z s -
         continuousLinearMapRealResolventOperatorLine A H z t‖ =
       ‖continuousLinearMapRealResolventOperatorLine A H z t -
-        continuousLinearMapRealResolventOperatorLine A H z s‖ := by
-      rw [norm_sub_rev]
+        continuousLinearMapRealResolventOperatorLine A H z s‖ := by rw [norm_sub_rev]
     _ ≤ |t - s| * (M * ‖H‖ * M) := hbound
     _ = (M * ‖H‖ * M) * dist s t := by
-      rw [Real.dist_eq]
-      rw [abs_sub_comm]
+      rw [Real.dist_eq, abs_sub_comm]
       ring
 
-/-- Uniformly bounded resolvents depend continuously on the operator-line
-parameter. -/
 theorem continuousLinearMapRealResolventOperatorLine_continuousOn
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -108,7 +98,6 @@ theorem continuousLinearMapRealResolventOperatorLine_continuousOn
   (continuousLinearMapRealResolventOperatorLine_lipschitzOn
     A H z U M hM hunit hnorm).continuousOn
 
-/-- The operator-direction derivative of a true real resolvent is `R H R`. -/
 theorem continuousLinearMapRealResolventOperatorLine_hasDerivWithinAt
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -154,8 +143,6 @@ theorem continuousLinearMapRealResolventOperatorLine_hasDerivWithinAt
       A H z (hunit t ht) (hunit w hwU)]
   rw [inv_smul_smul₀ hne]
 
-/-- On an open operator-line resolvent region the within derivative is the
-ordinary derivative. -/
 theorem continuousLinearMapRealResolventOperatorLine_hasDerivAt
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -171,7 +158,6 @@ theorem continuousLinearMapRealResolventOperatorLine_hasDerivAt
   (continuousLinearMapRealResolventOperatorLine_hasDerivWithinAt
     A H z U M hM hunit hnorm ht).hasDerivAt (hU.mem_nhds ht)
 
-/-- Explicit ordinary operator-direction derivative formula. -/
 theorem continuousLinearMapRealResolventOperatorLine_deriv
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -186,7 +172,6 @@ theorem continuousLinearMapRealResolventOperatorLine_deriv
   (continuousLinearMapRealResolventOperatorLine_hasDerivAt
     A H z U M hU hM hunit hnorm ht).deriv
 
-/-- Dyson coefficients satisfy the recursion `C_(n+1) = C_n H R`. -/
 @[simp]
 theorem continuousLinearMapRealResolventOperatorDysonCoefficient_succ
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -206,7 +191,6 @@ theorem continuousLinearMapRealResolventOperatorDysonCoefficient_zero
       continuousLinearMapRealResolvent A z := by
   simp [continuousLinearMapRealResolventOperatorDysonCoefficient]
 
-/-- The derivative of the `n`-th Dyson coefficient is `(n+1) C_(n+1)`. -/
 theorem continuousLinearMapRealResolventOperatorDysonCoefficient_hasDerivWithinAt
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -264,15 +248,18 @@ theorem continuousLinearMapRealResolventOperatorDysonCoefficient_hasDerivWithinA
           (((((n + 1 : ℕ) : ℝ) • (P ^ (n + 1) * Rt)) * H) * Rt +
             (P ^ n * Rt * H) * (Rt * H * Rt)) =
           (((n + 2 : ℕ) : ℝ) • (P ^ (n + 2) * Rt))
+        have hpow1 : P ^ (n + 2) = P ^ (n + 1) * P := by
+          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+        have hpow2 : P ^ (n + 2) = (P ^ n * P) * P := by
+          rw [hpow1, pow_succ]
         have hfirst :
             (P ^ (n + 1) * Rt) * H * Rt = P ^ (n + 2) * Rt := by
-          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
-          simp [P, mul_assoc]
-        have hpow : P ^ (n + 2) * Rt = ((P ^ n * P) * P) * Rt := by
           calc
-            P ^ (n + 2) * Rt = (P ^ (n + 1) * P) * Rt := by
-              rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
-            _ = ((P ^ n * P) * P) * Rt := by rw [pow_succ]
+            (P ^ (n + 1) * Rt) * H * Rt =
+                (P ^ (n + 1) * (Rt * H)) * Rt := by
+              rw [mul_assoc (P ^ (n + 1)) Rt H]
+            _ = (P ^ (n + 1) * P) * Rt := by rfl
+            _ = P ^ (n + 2) * Rt := by rw [hpow1]
         have hsecond :
             (P ^ n * Rt * H) * (Rt * H * Rt) = P ^ (n + 2) * Rt := by
           calc
@@ -280,8 +267,8 @@ theorem continuousLinearMapRealResolventOperatorDysonCoefficient_hasDerivWithinA
                 (P ^ n * (Rt * H)) * ((Rt * H) * Rt) := by
               rw [mul_assoc (P ^ n) Rt H]
             _ = (P ^ n * P) * (P * Rt) := by rfl
-            _ = ((P ^ n * P) * P) * Rt := by rw [mul_assoc]
-            _ = P ^ (n + 2) * Rt := hpow.symm
+            _ = ((P ^ n * P) * P) * Rt := by rw [← mul_assoc]
+            _ = P ^ (n + 2) * Rt := by rw [hpow2]
         have hsmul :
             (((((n + 1 : ℕ) : ℝ) • (P ^ (n + 1) * Rt)) * H) * Rt) =
               (((n + 1 : ℕ) : ℝ) • (P ^ (n + 2) * Rt)) := by
@@ -295,8 +282,6 @@ theorem continuousLinearMapRealResolventOperatorDysonCoefficient_hasDerivWithinA
       rw [hderiv] at hraw
       exact hraw
 
-/-- Every iterated operator-direction derivative is the factorial multiple of
-the corresponding Dyson coefficient. -/
 theorem continuousLinearMapRealResolventOperatorLine_iteratedDerivWithin
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -371,7 +356,6 @@ theorem continuousLinearMapRealResolventOperatorLine_iteratedDerivWithin
       congr 1
       ring
 
-/-- Explicit ordinary all-order operator-direction derivative formula. -/
 theorem continuousLinearMapRealResolventOperatorLine_iteratedDeriv
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -397,7 +381,6 @@ theorem continuousLinearMapRealResolventOperatorLine_iteratedDeriv
       continuousLinearMapRealResolventOperatorLine_iteratedDerivWithin
         A H z U M hU hM hunit hnorm n ht
 
-/-- Factorial Cauchy-type bound for all operator-direction derivatives. -/
 theorem continuousLinearMapRealResolventOperatorLine_iteratedDeriv_norm_le
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (A H : V →L[ℝ] V) (z : ℝ)
@@ -444,7 +427,6 @@ theorem continuousLinearMapRealResolventOperatorLine_iteratedDeriv_norm_le
       · exact hnorm t ht
     _ = (n.factorial : ℝ) * (M * ‖H‖) ^ n * M := by ring
 
-/-- The finite all-order operator-direction derivative jet. -/
 def continuousLinearMapRealResolventOperatorDirectionalJet
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V] (N : ℕ) (A H : V →L[ℝ] V) (z t : ℝ) :
