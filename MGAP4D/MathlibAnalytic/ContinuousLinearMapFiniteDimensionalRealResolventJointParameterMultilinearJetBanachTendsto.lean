@@ -26,9 +26,9 @@ theorem tendsto_continuousLinearMapJointSpectralOperatorRealResolventMultilinear
         m taylorOrder mixedOrder (H a) (R a)) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily
         m taylorOrder mixedOrder H0 R0)) := by
-  exact
-    (continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily_directionFamily
-      (V := V) m taylorOrder mixedOrder).continuousAt.comp (hR.prodMk hH)
+  simpa only [Function.comp_apply] using
+    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily_directionFamily
+      (V := V) m taylorOrder mixedOrder).tendsto (R0, H0)).comp (hR.prodMk hH)
 
 /-- Joint convergence of a finite resolvent family and a finite direction
 family induces convergence of every Banach-valued complete response rectangle
@@ -47,9 +47,9 @@ theorem tendsto_continuousLinearMapJointSpectralOperatorRealResolventMultilinear
         φ m taylorOrder mixedOrder (H a) (R a)) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily
         φ m taylorOrder mixedOrder H0 R0)) := by
-  exact
-    (continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily_directionFamily
-      φ m taylorOrder mixedOrder).continuousAt.comp (hR.prodMk hH)
+  simpa only [Function.comp_apply] using
+    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily_directionFamily
+      φ m taylorOrder mixedOrder).tendsto (R0, H0)).comp (hR.prodMk hH)
 
 /-- Joint convergence of a finite resolvent family and a finite direction
 family induces convergence of the complete basis-independent trace rectangle
@@ -67,9 +67,9 @@ theorem tendsto_continuousLinearMapJointSpectralOperatorRealResolventMultilinear
         V m taylorOrder mixedOrder (H a) (R a)) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily
         V m taylorOrder mixedOrder H0 R0)) := by
-  exact
-    (continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily_directionFamily
-      V m taylorOrder mixedOrder).continuousAt.comp (hR.prodMk hH)
+  simpa only [Function.comp_apply] using
+    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily_directionFamily
+      V m taylorOrder mixedOrder).tendsto (R0, H0)).comp (hR.prodMk hH)
 
 end MathlibAnalytic
 end MGAP4D
