@@ -39,6 +39,7 @@ theorem continuousLinearMapFiniteParameterOperatorChart_add
         continuousLinearMapFiniteParameterOperatorIncrement m H h := by
   simp [continuousLinearMapFiniteParameterOperatorChart,
     continuousLinearMapFiniteParameterOperatorIncrement, map_add]
+  abel
 
 /-- The operator at an endpoint is the operator at the base parameter plus the
 synthesized endpoint difference. -/
