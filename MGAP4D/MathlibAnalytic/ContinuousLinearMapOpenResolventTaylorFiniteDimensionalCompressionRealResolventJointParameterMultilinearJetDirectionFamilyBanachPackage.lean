@@ -1,0 +1,14 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterMultilinearJetBanachTendsto
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterMultilinearJetDirectionFamilyBanachCompact
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterMultilinearJetDirectionFamilyBanachClosedBox
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterMultilinearJetDirectionFamilyBanachClosedBoxDiagonal
+
+/-!
+# Complete joint Fréchet jet Banach-topology package
+
+This aggregate closes the generic finite-dimensional layer in the actual finite
+dependent-product normed and complete spaces: exact norm/component formulas,
+complete-space structure, joint continuity and Tendsto, compact-uniform moving-
+direction convergence, arbitrary joint-net closed-box convergence, and diagonal
+no-rate convergence for carrier, Banach-valued response, and trace jets.
+-/
