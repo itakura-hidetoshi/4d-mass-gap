@@ -45,9 +45,7 @@ theorem continuousLinearMapRealResolventSymmetricDysonMultilinear_apply_perm
       continuousLinearMapRealResolventOrderedDysonMultilinear n R
         (fun i => H (σ i)))
     (fun σ => by
-      congr 1
-      funext i
-      rfl)
+      congr 1)
 
 /-- The bundled symmetric derivative is fixed by reindexing its domain with
 an arbitrary permutation. -/
@@ -57,8 +55,9 @@ theorem continuousLinearMapRealResolventSymmetricDysonMultilinear_domDomCongr
     ContinuousMultilinearMap.domDomCongr τ
         (continuousLinearMapRealResolventSymmetricDysonMultilinear n R) =
       continuousLinearMapRealResolventSymmetricDysonMultilinear n R := by
-  ext H
-  simpa using
+  apply ContinuousMultilinearMap.ext
+  intro H
+  exact
     continuousLinearMapRealResolventSymmetricDysonMultilinear_apply_perm
       n R τ H
 
