@@ -151,7 +151,7 @@ def closedBoxJointRemainderLimitInput
 theorem JointRemainderClosedBoxData.baseFamily_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖closedBoxJointRemainderApproxBaseFamily D.J D.Q
@@ -174,7 +174,7 @@ theorem JointRemainderClosedBoxData.baseFamily_tendsto
 theorem JointRemainderClosedBoxData.endpointOperator_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (eta : ℝ) (heta : 0 < eta) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p →
       ‖(continuousLinearMapCompression D.J D.Q
@@ -248,7 +248,7 @@ theorem JointRemainderClosedBoxData.endpointOperator_tendsto
 theorem JointRemainderClosedBoxData.endpointFamily_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖closedBoxJointRemainderApproxEndpointFamily D.J D.Q directions
@@ -287,7 +287,7 @@ theorem JointRemainderClosedBoxData.endpointFamily_tendsto
 theorem JointRemainderClosedBoxData.input_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (eta : ℝ) (heta : 0 < eta) :
     ∀ᶠ b in n, ∀ q ∈ {q : ClosedBoxRemainderIndex |
       D.box.Contains q.1 ∧ q.2 ∈ D.Z},
@@ -323,7 +323,7 @@ theorem JointRemainderClosedBoxData.input_tendsto
 theorem JointRemainderClosedBoxData.limitInput_norm_le
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (q : ClosedBoxRemainderIndex)
     (hq : D.box.Contains q.1 ∧ q.2 ∈ D.Z) :
     ‖closedBoxJointRemainderLimitInput D.J D.Q directions
@@ -357,7 +357,7 @@ tail in the genuine finite-product norm. -/
 theorem JointRemainderClosedBoxData.carrier_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖continuousLinearMapJointTaylorDysonRemainderTailRectangularJetFromResolventFamilies
@@ -403,7 +403,7 @@ exact remainder tail. -/
 theorem JointRemainderClosedBoxData.response_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (φ : (V →L[ℝ] V) →L[ℝ] W) (baseOrder tailOrder : ℕ)
     (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
@@ -447,7 +447,7 @@ exact remainder tail. -/
 theorem JointRemainderClosedBoxData.trace_tendsto
     {l : Filter α} {gap : ℝ} {F : α → ℝ → E →L[ℝ] E}
     {n : Filter β} {directions : ℕ}
-    (D : ExplicitJointRemainderClosedBoxData l gap F n directions)
+    (D : ExplicitJointRemainderClosedBoxData (V := V) l gap F n directions)
     (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :
     ∀ᶠ b in n, ∀ p, D.box.Contains p → ∀ z ∈ D.Z,
       ‖continuousLinearMapJointTaylorDysonRemainderTailTraceRectangularJetFromResolventFamilies
