@@ -58,10 +58,16 @@ theorem continuousLinearMapFiniteParameterRealResolventSymmetricDerivative_perm
         m n A H z (fun i => u (sigma i)) =
       continuousLinearMapFiniteParameterRealResolventSymmetricDerivative
         m n A H z u := by
-  rw [continuousLinearMapFiniteParameterRealResolventSymmetricDerivative_apply,
-    continuousLinearMapFiniteParameterRealResolventSymmetricDerivative_apply]
-  exact continuousLinearMapRealResolventOperatorSymmetricDerivative_perm
-    n A z (continuousLinearMapFiniteParameterDirectionTuple m n H u) sigma
+  change
+    continuousLinearMapRealResolventSymmetricDysonMultilinear n
+        (continuousLinearMapRealResolvent A z)
+        (fun i => continuousLinearMapFiniteParameterDirectionTuple m n H u (sigma i)) =
+      continuousLinearMapRealResolventSymmetricDysonMultilinear n
+        (continuousLinearMapRealResolvent A z)
+        (continuousLinearMapFiniteParameterDirectionTuple m n H u)
+  exact continuousLinearMapRealResolventSymmetricDysonMultilinear_apply_perm
+    n (continuousLinearMapRealResolvent A z) sigma
+      (continuousLinearMapFiniteParameterDirectionTuple m n H u)
 
 /-- The full diagonal in parameter space recovers the operator-variable
 symmetric derivative in the synthesized direction. -/
