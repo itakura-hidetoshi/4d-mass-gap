@@ -9,7 +9,6 @@ open scoped BigOperators ContDiff Ring
 
 namespace MGAP4D
 namespace MathlibAnalytic
-
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
@@ -31,30 +30,24 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearCarrierJet_tendsto_unif
     (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
     (mixedOrder m : ℕ) (H : Fin m → (V →L[ℝ] V)) {β : Type*} {f : Filter β}
     (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
-    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter)
-    (hdegree : Tendsto degree f atTop)
+    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter) (hdegree : Tendsto degree f atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
       |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
+    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierJetFromResolvent
-          m (mixedOrder + 1) H
-          (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-            (continuousLinearMapTaylorPartialSum
-              (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b))
-              p.center p.target (degree b))) z))
+          m (mixedOrder + 1) H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b) z))
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierJetFromResolvent
-          m (mixedOrder + 1) H
-          (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-            (G.vacuumOrthogonalContinuumTaylorResolvent
-              T hP hInnerSymmetric hSelf p.target)) z)) < epsilon := by
+          m (mixedOrder + 1) H (continuousLinearMapCompressedRealResolventAt J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target) z)) < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearCarrierJet_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint_sup
       (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
@@ -69,33 +62,26 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearResponseCarrierJet_tend
     (hP : P.IsNormalized) (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
-    (φ : (V →L[ℝ] V) →L[ℝ] W) (mixedOrder m : ℕ)
-    (H : Fin m → (V →L[ℝ] V)) {β : Type*} {f : Filter β}
-    (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
-    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter)
-    (hdegree : Tendsto degree f atTop)
+    (φ : (V →L[ℝ] V) →L[ℝ] W) (mixedOrder m : ℕ) (H : Fin m → (V →L[ℝ] V))
+    {β : Type*} {f : Filter β} (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
+    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter) (hdegree : Tendsto degree f atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
       |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
+    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent
-          φ m mixedOrder H
-          (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-            (continuousLinearMapTaylorPartialSum
-              (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b))
-              p.center p.target (degree b))) z))
+          φ m mixedOrder H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b) z))
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent
-          φ m mixedOrder H
-          (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-            (G.vacuumOrthogonalContinuumTaylorResolvent
-              T hP hInnerSymmetric hSelf p.target)) z)) < epsilon := by
+          φ m mixedOrder H (continuousLinearMapCompressedRealResolventAt J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target) z)) < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearResponseCarrierJet_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint_sup
       (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
@@ -112,30 +98,24 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearTraceCarrierJet_tendsto
     (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
     (mixedOrder m : ℕ) (H : Fin m → (V →L[ℝ] V)) {β : Type*} {f : Filter β}
     (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
-    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter)
-    (hdegree : Tendsto degree f atTop)
+    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter) (hdegree : Tendsto degree f atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
       |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
+    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q
         (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierCompleteJetFromResolvent
-          V m mixedOrder H
-          (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-            (continuousLinearMapTaylorPartialSum
-              (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b))
-              p.center p.target (degree b))) z))
+          V m mixedOrder H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b) z))
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierCompleteJetFromResolvent
-          V m mixedOrder H
-          (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-            (G.vacuumOrthogonalContinuumTaylorResolvent
-              T hP hInnerSymmetric hSelf p.target)) z)) < epsilon := by
+          V m mixedOrder H (continuousLinearMapCompressedRealResolventAt J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target) z)) < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearTraceCarrierJet_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint_sup
       (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
@@ -145,6 +125,5 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearTraceCarrierJet_tendsto
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-
 end MathlibAnalytic
 end MGAP4D
