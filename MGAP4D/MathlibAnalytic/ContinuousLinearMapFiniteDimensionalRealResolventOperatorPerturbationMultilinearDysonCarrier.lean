@@ -56,15 +56,40 @@ theorem continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent_ap
   | succ n ih =>
       rw [continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent,
         continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent]
-      change
-        (∑ i : Fin (n + 1),
-          continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent n R
-              (i.removeNth H) * H i * R) =
+      let F : Fin (n + 1) →
+          MultilinearMap ℝ (fun _ : Fin (n + 1) => (V →L[ℝ] V)) (V →L[ℝ] V) :=
+        fun i =>
+          LinearMap.uncurryMid i
+            { toFun := fun h =>
+                { toFun := fun K =>
+                    continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent
+                        n R K * h * R
+                  map_update_add' := by
+                    intros
+                    simp [add_mul]
+                  map_update_smul' := by
+                    intros
+                    simp }
+              map_add' := by
+                intro x y
+                ext K
+                simp [mul_add, add_mul]
+              map_smul' := by
+                intro c x
+                ext K
+                simp }
+      change (∑ i, F i) H =
         ∑ i : Fin (n + 1),
           continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent n R
               (fun j => H (i.succAbove j)) * H i * R
+      rw [show (∑ i, F i) H = ∑ i, F i H by
+        simpa using (MultilinearMap.sum_apply F H (s := Finset.univ))]
       apply Finset.sum_congr rfl
       intro i _hi
+      rw [show F i H =
+          continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent n R
+              (i.removeNth H) * H i * R by
+        simp [F, LinearMap.uncurryMid_apply]]
       rw [ih]
       rfl
 
