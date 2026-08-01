@@ -72,7 +72,7 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateDa
     {taylorOrder directions : ℕ}
     (C : G.CanonicalJointRemainderCompactSharpCertificateData
       (V := V) T hInnerSymmetric taylorOrder directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
   C.eventually_carrier_norm_lt tailOrder epsilon hepsilon
 
 variable {W : Type*}
@@ -87,7 +87,7 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateDa
     (C : G.CanonicalJointRemainderCompactSharpCertificateData
       (V := V) T hInnerSymmetric taylorOrder directions)
     (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
   C.eventually_response_norm_lt φ tailOrder epsilon hepsilon
 
 /-- Canonical compact basis-independent trace certificate. -/
@@ -98,7 +98,7 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateDa
     {taylorOrder directions : ℕ}
     (C : G.CanonicalJointRemainderCompactSharpCertificateData
       (V := V) T hInnerSymmetric taylorOrder directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
   C.eventually_trace_norm_lt tailOrder epsilon hepsilon
 
 /-- Canonical arbitrary-joint-net closed-box sharp-certificate data.  The gap
@@ -154,7 +154,7 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificate
     {β : Type*} {n : Filter β} {directions : ℕ}
     (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
       (V := V) T hInnerSymmetric n directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
   C.eventually_carrier_norm_lt tailOrder epsilon hepsilon
 
 /-- Canonical closed-box arbitrary-response certificate. -/
@@ -166,7 +166,7 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificate
     (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
       (V := V) T hInnerSymmetric n directions)
     (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
   C.eventually_response_norm_lt φ tailOrder epsilon hepsilon
 
 /-- Canonical closed-box basis-independent trace certificate. -/
@@ -177,7 +177,7 @@ theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificate
     {β : Type*} {n : Filter β} {directions : ℕ}
     (C : G.CanonicalJointRemainderClosedBoxSharpCertificateData
       (V := V) T hInnerSymmetric n directions)
-    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
+    (tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) : _ :=
   C.eventually_trace_norm_lt tailOrder epsilon hepsilon
 
 end StronglyContinuousPhysicalSemigroup
