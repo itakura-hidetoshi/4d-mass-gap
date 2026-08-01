@@ -252,8 +252,12 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_pureSpectral
     (continuousLinearMapFiniteParameterOperatorChart m A H t) (z + s)
   change (n.factorial : ℝ) • ((R * (-(1 : V →L[ℝ] V))) ^ n * R) =
     continuousLinearMapRealResolventSpectralCoefficient n • R ^ (n + 1)
-  simp only [mul_neg, mul_one, neg_pow, pow_succ]
-  simp [continuousLinearMapRealResolventSpectralCoefficient, smul_smul]
+  have hmul : R * (-(1 : V →L[ℝ] V)) = (-1 : ℝ) • R := by
+    module
+  rw [hmul, smul_pow, smul_mul_assoc, smul_smul, pow_succ]
+  unfold continuousLinearMapRealResolventSpectralCoefficient
+  congr 1
+  ring
 
 end MathlibAnalytic
 end MGAP4D
