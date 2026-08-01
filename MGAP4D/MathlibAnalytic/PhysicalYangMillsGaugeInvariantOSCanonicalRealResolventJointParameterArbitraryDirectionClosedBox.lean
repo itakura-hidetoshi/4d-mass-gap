@@ -28,39 +28,23 @@ theorem VacuumSemigroupGapSlope.canonicalJointArbitraryDirectionResponse_tendsto
     (T : P.StronglyContinuousPhysicalSemigroup) (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized) (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (J : V →L[ℝ] P.VacuumOrthogonalHilbert)
-    (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
-    (φ : (V →L[ℝ] V) →L[ℝ] W) (m n : ℕ)
-    (H : Fin m → (V →L[ℝ] V)) (u : Fin n → (Fin (m + 1) → ℝ))
-    {β : Type*} {f : Filter β}
+    (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
+    (φ : (V →L[ℝ] V) →L[ℝ] W) (m n : ℕ) (H : Fin m → (V →L[ℝ] V))
+    (u : Fin n → (Fin (m + 1) → ℝ)) {β : Type*} {f : Filter β}
     (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
-    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter)
-    (hdegree : Tendsto degree f atTop)
+    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter) (hdegree : Tendsto degree f atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
-      |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z|)
+    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f,
-      ∀ p, box.Contains p → ∀ z ∈ Z,
-        ‖continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse
-            φ m n (continuousLinearMapCompression J Q
-              (continuousLinearMapTaylorPartialSum
-                (G.admissibleRescaledDefectTaylorResolvent
-                  T hInnerSymmetric (tau b)) p.center p.target (degree b)))
-            H z 0 0 u -
-          continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse
-            φ m n (continuousLinearMapCompression J Q
-              (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf p.target)) H z 0 0 u‖ < epsilon := by
+    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
+      ‖continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse φ m n
+          (continuousLinearMapCompression J Q (continuousLinearMapTaylorPartialSum
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b))) H z 0 0 u -
+        continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse φ m n
+          (continuousLinearMapCompression J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) H z 0 0 u‖ < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse,
     continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivative] using
     G.canonicalFiniteParameterMixedResponse_tendsto_uniform_closedBox_of_joint
@@ -74,40 +58,25 @@ theorem VacuumSemigroupGapSlope.canonicalJointArbitraryDirectionResponse_tendsto
     (T : P.StronglyContinuousPhysicalSemigroup) (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized) (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (J : V →L[ℝ] P.VacuumOrthogonalHilbert)
-    (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
+    (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
     (φ : (V →L[ℝ] V) →L[ℝ] W) (mixedOrder m : ℕ)
     (H : Fin m → (V →L[ℝ] V))
     (u : ∀ n : Fin (mixedOrder + 1), Fin n.1 → (Fin (m + 1) → ℝ))
-    {β : Type*} {f : Filter β}
-    (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
-    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter)
-    (hdegree : Tendsto degree f atTop)
+    {β : Type*} {f : Filter β} (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
+    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter) (hdegree : Tendsto degree f atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
-      |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z|)
+    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f,
-      ∀ n : Fin (mixedOrder + 1), ∀ p, box.Contains p → ∀ z ∈ Z,
-        ‖continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse
-            φ m n.1 (continuousLinearMapCompression J Q
-              (continuousLinearMapTaylorPartialSum
-                (G.admissibleRescaledDefectTaylorResolvent
-                  T hInnerSymmetric (tau b)) p.center p.target (degree b)))
-            H z 0 0 (u n) -
-          continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse
-            φ m n.1 (continuousLinearMapCompression J Q
-              (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf p.target)) H z 0 0 (u n)‖ < epsilon := by
+    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ n : Fin (mixedOrder + 1),
+      ∀ p, box.Contains p → ∀ z ∈ Z,
+        ‖continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse φ m n.1
+            (continuousLinearMapCompression J Q (continuousLinearMapTaylorPartialSum
+              (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b))) H z 0 0 (u n) -
+          continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse φ m n.1
+            (continuousLinearMapCompression J Q
+              (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) H z 0 0 (u n)‖ < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivativeLinearResponse,
     continuousLinearMapJointSpectralOperatorRealResolventSymmetricDerivative] using
     G.canonicalFiniteParameterMixedResponse_tendsto_uniform_closedBox_of_joint_rectangular
@@ -121,38 +90,22 @@ theorem VacuumSemigroupGapSlope.canonicalJointArbitraryDirectionTrace_tendsto_un
     (T : P.StronglyContinuousPhysicalSemigroup) (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized) (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
-    (J : V →L[ℝ] P.VacuumOrthogonalHilbert)
-    (Q : P.VacuumOrthogonalHilbert →L[ℝ] V) (m n : ℕ)
-    (H : Fin m → (V →L[ℝ] V)) (u : Fin n → (Fin (m + 1) → ℝ))
-    {β : Type*} {f : Filter β}
-    (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
-    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter)
-    (hdegree : Tendsto degree f atTop)
+    (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
+    (m n : ℕ) (H : Fin m → (V →L[ℝ] V)) (u : Fin n → (Fin (m + 1) → ℝ))
+    {β : Type*} {f : Filter β} (tau : β → G.AdmissibleRescaledDefectTime) (degree : β → ℕ)
+    (htau : Tendsto tau f G.admissibleRescaledDefectTimeFilter) (hdegree : Tendsto degree f atTop)
     (box : ContinuousLinearMapClosedTaylorParameterBox (G.mass / 2))
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤
-      |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z|)
+    (hlimitMargin : ∀ p, box.Contains p → ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (G.vacuumOrthogonalContinuumTaylorResolvent
-            T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f,
-      ∀ p, box.Contains p → ∀ z ∈ Z,
-        |continuousLinearMapJointSpectralOperatorRealResolventSymmetricTraceDerivative
-            V m n (continuousLinearMapCompression J Q
-              (continuousLinearMapTaylorPartialSum
-                (G.admissibleRescaledDefectTaylorResolvent
-                  T hInnerSymmetric (tau b)) p.center p.target (degree b)))
-            H z 0 0 u -
-          continuousLinearMapJointSpectralOperatorRealResolventSymmetricTraceDerivative
-            V m n (continuousLinearMapCompression J Q
-              (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf p.target)) H z 0 0 u| < epsilon := by
+    (hlimitNorm : ∀ p, box.Contains p → ∀ z ∈ Z, continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ b in f, ∀ p, box.Contains p → ∀ z ∈ Z,
+      |continuousLinearMapJointSpectralOperatorRealResolventSymmetricTraceDerivative V m n
+          (continuousLinearMapCompression J Q (continuousLinearMapTaylorPartialSum
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric (tau b)) p.center p.target (degree b))) H z 0 0 u -
+        continuousLinearMapJointSpectralOperatorRealResolventSymmetricTraceDerivative V m n
+          (continuousLinearMapCompression J Q
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf p.target)) H z 0 0 u| < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventSymmetricTraceDerivative,
     Real.norm_eq_abs] using
     G.canonicalJointArbitraryDirectionResponse_tendsto_uniform_closedBox_of_joint
