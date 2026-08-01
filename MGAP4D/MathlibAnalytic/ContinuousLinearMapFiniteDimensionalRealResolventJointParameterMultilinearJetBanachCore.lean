@@ -15,7 +15,6 @@ set_option synthInstance.maxHeartbeats 200000
 
 /-- The complete finite dependent joint multilinear jet inherits the canonical
 finite-product CompleteSpace structure whenever its value space is complete. -/
-@[implicit_reducible]
 noncomputable instance continuousLinearMapJointMultilinearCarrierJetCompleteSpace
     (V W : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
@@ -25,7 +24,6 @@ noncomputable instance continuousLinearMapJointMultilinearCarrierJetCompleteSpac
 
 /-- The finite Taylor-order by joint-order rectangular jet inherits the
 canonical iterated finite-product CompleteSpace structure. -/
-@[implicit_reducible]
 noncomputable instance continuousLinearMapJointMultilinearCarrierRectangularJetCompleteSpace
     (V W : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup W] [NormedSpace ℝ W] [CompleteSpace W]
