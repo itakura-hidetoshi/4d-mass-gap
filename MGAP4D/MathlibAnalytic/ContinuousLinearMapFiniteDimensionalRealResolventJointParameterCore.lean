@@ -160,8 +160,9 @@ theorem continuousLinearMapJointSpectralOperatorCoordinateDirectionTuple_synthes
         | none => -(1 : V →L[ℝ] V)
         | some j => H j := by
   funext i
-  rw [continuousLinearMapFiniteParameterDirectionTuple]
-  rw [continuousLinearMapFiniteParameterDirectionSynthesis_single]
+  unfold continuousLinearMapJointSpectralOperatorCoordinateDirectionTuple
+  rw [continuousLinearMapFiniteParameterDirectionTuple,
+    continuousLinearMapFiniteParameterDirectionSynthesis_single]
   cases hκ : κ i with
   | none => simp [continuousLinearMapJointSpectralOperatorCoordinate, hκ]
   | some j => simp [continuousLinearMapJointSpectralOperatorCoordinate, hκ]
