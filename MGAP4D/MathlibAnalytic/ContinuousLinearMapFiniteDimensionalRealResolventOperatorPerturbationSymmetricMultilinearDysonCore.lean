@@ -59,10 +59,9 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_norm_le
                 (mul_le_mul_of_nonneg_right (norm_mul_le _ _) (norm_nonneg _))
             _ ≤ ((n.factorial : ℝ) * (M * h) ^ n * M * h) * M := by
               gcongr
-              · exact ih A (fun j => H (i.succAbove j)) z M h hM hh hR
+              · exact ih (fun j => H (i.succAbove j))
                   (fun j => hH (i.succAbove j))
               · exact hH i
-              · exact hR
             _ = (n.factorial : ℝ) * (M * h) ^ n * M * h * M := by ring
         _ = (Nat.factorial (n + 1) : ℝ) * (M * h) ^ (n + 1) * M := by
           rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
