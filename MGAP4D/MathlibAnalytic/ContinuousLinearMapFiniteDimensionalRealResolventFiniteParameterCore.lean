@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventOperatorPerturbationSymmetricMultilinearFrechet
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
 import Mathlib.Tactic
 
 noncomputable section
