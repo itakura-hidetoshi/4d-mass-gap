@@ -37,6 +37,7 @@ theorem taylorPartialSum_realResolventJointMultilinearCarrierJet_finiteDimension
         (continuousLinearMapCompression J Q (S.limitResolvent p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := V →L[ℝ] V)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierJetFromResolvent
           m (mixedOrder + 1) H
           (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
@@ -72,6 +73,7 @@ theorem taylorPartialSum_realResolventJointMultilinearResponseCarrierJet_finiteD
         (continuousLinearMapCompression J Q (S.limitResolvent p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := W)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent
           φ m mixedOrder H
           (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
@@ -106,6 +108,7 @@ theorem taylorPartialSum_realResolventJointMultilinearTraceCarrierJet_finiteDime
         (continuousLinearMapCompression J Q (S.limitResolvent p.target)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := ℝ)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierCompleteJetFromResolvent
           V m mixedOrder H
           (continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
