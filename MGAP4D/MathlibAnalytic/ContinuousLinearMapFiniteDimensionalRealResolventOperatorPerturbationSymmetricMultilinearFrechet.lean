@@ -74,7 +74,11 @@ theorem continuousLinearMapRealResolventOperatorFPowerSeries_hasFPowerSeriesAt_l
     (hasFPowerSeriesOnBall_inverse_one_sub ℝ (V →L[ℝ] V)).hasFPowerSeriesAt
   have hlinear : HasFPowerSeriesAt L (L.fpowerSeries 0) 0 :=
     L.hasFPowerSeriesAt 0
-  have hcomp := hgeom.comp hlinear
+  have hgeomAtLinearZero : HasFPowerSeriesAt
+      (fun X : V →L[ℝ] V => Ring.inverse (1 - X))
+      (formalMultilinearSeries_geometric ℝ (V →L[ℝ] V)) (L 0) := by
+    simpa using hgeom
+  have hcomp := hgeomAtLinearZero.comp hlinear
   rcases hcomp with ⟨r, hr⟩
   refine ⟨r, ?_⟩
   simpa [continuousLinearMapRealResolventOperatorFPowerSeries,
@@ -97,7 +101,8 @@ theorem continuousLinearMapRealResolventOperator_hasFPowerSeriesAt
   have hsmall : ∀ᶠ H : V →L[ℝ] V in 𝓝 0, ‖R * H‖ < 1 := by
     have hball : Metric.ball (0 : V →L[ℝ] V) 1 ∈ 𝓝 0 :=
       Metric.ball_mem_nhds _ one_pos
-    have hpre := L.continuous.continuousAt hball
+    have hpre : L ⁻¹' Metric.ball (0 : V →L[ℝ] V) 1 ∈ 𝓝 0 :=
+      L.continuous.continuousAt (by simpa using hball)
     filter_upwards [hpre] with H hH
     simpa [Metric.mem_ball, dist_zero_right, L] using hH
   have heq :
@@ -110,14 +115,12 @@ theorem continuousLinearMapRealResolventOperator_hasFPowerSeriesAt
     have hSR : S * R = 1 := by
       simpa [S, R, continuousLinearMapRealResolvent] using
         mul_ringInverse_of_isUnit hunit
-    have hRS : R * S = 1 := by
-      simpa [S, R, continuousLinearMapRealResolvent] using
-        ringInverse_mul_of_isUnit hunit
     have hfactor :
         continuousLinearMapRealShift (A + H) z = S * (1 - R * H) := by
       calc
         continuousLinearMapRealShift (A + H) z = S - H := by
-          simp [continuousLinearMapRealShift, S]
+          simp only [continuousLinearMapRealShift, S]
+          abel
         _ = S * (1 - R * H) := by
           rw [mul_sub, mul_one, ← mul_assoc, hSR, one_mul]
     have hshiftUnit : IsUnit (continuousLinearMapRealShift (A + H) z) := by
@@ -156,7 +159,15 @@ theorem continuousLinearMapRealResolventOperator_hasFPowerSeriesAt
       (continuousLinearMapRealResolventOperatorFPowerSeries A z) 0 := by
     simpa [R] using hlocal.congr heq
   have htranslated := hzero.comp_sub A
-  simpa only [zero_add, add_sub_cancel_left] using htranslated
+  have hfun :
+      (fun B : V →L[ℝ] V =>
+        continuousLinearMapRealResolvent (A + (B - A)) z) =
+      (fun B : V →L[ℝ] V => continuousLinearMapRealResolvent B z) := by
+    funext B
+    congr 1
+    abel
+  rw [hfun] at htranslated
+  simpa using htranslated
 
 /-- The actual finite-dimensional real resolvent is analytic as a function of
 the operator at every point of its resolvent set. -/
