@@ -70,14 +70,6 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_const
         continuousLinearMapRealResolventOperatorDysonCoefficient]
   | succ n ih =>
       rw [continuousLinearMapRealResolventOperatorMixedDysonCoefficient_succ]
-      have hremove : ∀ i : Fin (n + 1),
-          continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
-              (fun j => (fun _ : Fin (n + 1) => H) (i.succAbove j)) z =
-            (n.factorial : ℝ) •
-              continuousLinearMapRealResolventOperatorDysonCoefficient n A H z := by
-        intro i
-        exact ih
-      simp_rw [hremove]
       have hterm :
           (((n.factorial : ℝ) •
               continuousLinearMapRealResolventOperatorDysonCoefficient n A H z) * H) *
@@ -86,10 +78,36 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_const
               continuousLinearMapRealResolventOperatorDysonCoefficient (n + 1) A H z := by
         rw [Algebra.smul_mul_assoc, Algebra.smul_mul_assoc,
           ← continuousLinearMapRealResolventOperatorDysonCoefficient_succ]
-      rw [hterm, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-      simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, smul_smul]
-      congr 1
-      ring
+      calc
+        (∑ i : Fin (n + 1),
+            continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                (fun j => (fun _ : Fin (n + 1) => H) (i.succAbove j)) z *
+              H * continuousLinearMapRealResolvent A z) =
+            ∑ _i : Fin (n + 1),
+              (((n.factorial : ℝ) •
+                  continuousLinearMapRealResolventOperatorDysonCoefficient n A H z) * H) *
+                continuousLinearMapRealResolvent A z := by
+          apply Finset.sum_congr rfl
+          intro i _hi
+          change
+            continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A
+                (fun _ : Fin n => H) z * H * continuousLinearMapRealResolvent A z =
+              (((n.factorial : ℝ) •
+                  continuousLinearMapRealResolventOperatorDysonCoefficient n A H z) * H) *
+                continuousLinearMapRealResolvent A z
+          rw [ih]
+        _ = ∑ _i : Fin (n + 1),
+              (n.factorial : ℝ) •
+                continuousLinearMapRealResolventOperatorDysonCoefficient (n + 1) A H z := by
+          apply Finset.sum_congr rfl
+          intro i _hi
+          exact hterm
+        _ = (Nat.factorial (n + 1) : ℝ) •
+              continuousLinearMapRealResolventOperatorDysonCoefficient (n + 1) A H z := by
+          rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
+          simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, smul_smul]
+          congr 1
+          ring
 
 /-- The finite mixed-direction polarization jet through order `N - 1`. -/
 def continuousLinearMapRealResolventOperatorMixedDysonJet
