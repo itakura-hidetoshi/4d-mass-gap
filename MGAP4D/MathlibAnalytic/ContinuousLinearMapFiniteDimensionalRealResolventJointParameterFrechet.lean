@@ -24,6 +24,22 @@ theorem continuousLinearMapRealResolvent_sub_smul_one_eq_spectralShift
   congr 1
   module
 
+/-- The augmented real shift is exactly the original operator chart evaluated
+at the shifted real spectral parameter. -/
+theorem continuousLinearMapJointSpectralOperatorRealShift_eq
+    {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (m : ℕ) (A : V →L[ℝ] V) (H : Fin m → (V →L[ℝ] V))
+    (z s : ℝ) (t : Fin m → ℝ) :
+    continuousLinearMapRealShift
+        (continuousLinearMapFiniteParameterOperatorChart (m + 1) A
+          (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
+          (continuousLinearMapJointSpectralOperatorParameter m s t)) z =
+      continuousLinearMapRealShift
+        (continuousLinearMapFiniteParameterOperatorChart m A H t) (z + s) := by
+  rw [continuousLinearMapJointSpectralOperatorOperatorChart_eq]
+  unfold continuousLinearMapRealShift
+  module
+
 /-- Every symmetric operator derivative is unchanged when an operator shift by
 `-sI` is transferred to the real spectral parameter. -/
 theorem continuousLinearMapRealResolventOperatorSymmetricDerivative_sub_smul_one
@@ -72,8 +88,8 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_hasFPowerSeri
       (continuousLinearMapFiniteParameterOperatorChart (m + 1) A
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
         (continuousLinearMapJointSpectralOperatorParameter m s t)) z) := by
-    simpa [continuousLinearMapJointSpectralOperatorOperatorChart_eq,
-      continuousLinearMapRealShift] using hunit
+    rw [continuousLinearMapJointSpectralOperatorRealShift_eq]
+    exact hunit
   exact continuousLinearMapFiniteParameterRealResolventChart_hasFPowerSeriesAt
     (m + 1) A (continuousLinearMapJointSpectralOperatorDirectionFamily m H) z
     (continuousLinearMapJointSpectralOperatorParameter m s t) hunit'
@@ -115,8 +131,9 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_iteratedFDeri
       (continuousLinearMapFiniteParameterOperatorChart (m + 1) A
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
         (continuousLinearMapJointSpectralOperatorParameter m s t)) z) := by
-    simpa [continuousLinearMapJointSpectralOperatorOperatorChart_eq,
-      continuousLinearMapRealShift] using hunit
+    rw [continuousLinearMapJointSpectralOperatorRealShift_eq]
+    exact hunit
+  unfold continuousLinearMapJointSpectralOperatorRealResolventChart
   rw [continuousLinearMapFiniteParameterRealResolventChart_iteratedFDeriv_apply
     (m + 1) A (continuousLinearMapJointSpectralOperatorDirectionFamily m H) z
     (continuousLinearMapJointSpectralOperatorParameter m s t) hunit' n u]
@@ -145,7 +162,9 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_coordinateMix
           | some j => H j) := by
   rw [continuousLinearMapJointSpectralOperatorRealResolventChart_iteratedFDeriv_apply
     m A H z s t hunit n]
-  rw [continuousLinearMapJointSpectralOperatorCoordinateDirectionTuple_synthesis]
+  congr 1
+  exact continuousLinearMapJointSpectralOperatorCoordinateDirectionTuple_synthesis
+    m n H κ
 
 /-- Joint coordinate mixed partials are invariant under every permutation of
 spectral and operator slots. -/
@@ -179,7 +198,12 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_coordinateMix
         | none => -(1 : V →L[ℝ] V)
         | some j => H j))
   exact continuousLinearMapRealResolventSymmetricDysonMultilinear_apply_perm
-    n _ σ _
+    (V := V) n
+    (continuousLinearMapRealResolvent
+      (continuousLinearMapFiniteParameterOperatorChart m A H t) (z + s))
+    σ (fun i => match κ i with
+      | none => -(1 : V →L[ℝ] V)
+      | some j => H j)
 
 /-- A pure operator-coordinate word recovers the established finite-parameter
 operator mixed partial at the shifted spectral point. -/
@@ -224,9 +248,12 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_pureSpectral
   rw [continuousLinearMapJointSpectralOperatorRealResolventChart_coordinateMixedPartial
     m A H z s t hunit n (fun _ => none)]
   rw [continuousLinearMapRealResolventOperatorSymmetricDerivative_const]
-  simp [continuousLinearMapRealResolventOperatorDysonCoefficient,
-    continuousLinearMapRealResolventSpectralCoefficient, pow_succ]
-  module
+  let R := continuousLinearMapRealResolvent
+    (continuousLinearMapFiniteParameterOperatorChart m A H t) (z + s)
+  change (n.factorial : ℝ) • ((R * (-(1 : V →L[ℝ] V))) ^ n * R) =
+    continuousLinearMapRealResolventSpectralCoefficient n • R ^ (n + 1)
+  simp only [mul_neg, mul_one, neg_pow, pow_succ]
+  simp [continuousLinearMapRealResolventSpectralCoefficient, smul_smul]
 
 end MathlibAnalytic
 end MGAP4D
