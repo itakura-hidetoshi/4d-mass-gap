@@ -76,7 +76,7 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_const
             (n.factorial : ℝ) •
               continuousLinearMapRealResolventOperatorDysonCoefficient n A H z := by
         intro i
-        simpa using ih
+        exact ih
       simp_rw [hremove]
       have hterm :
           (((n.factorial : ℝ) •
