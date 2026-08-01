@@ -67,11 +67,17 @@ theorem continuousLinearMapRealResolventDysonFormalMultilinearSeries_apply
     (n : ℕ) (R : V →L[ℝ] V) (H : Fin n → (V →L[ℝ] V)) :
     continuousLinearMapRealResolventDysonFormalMultilinearSeries R n H =
       continuousLinearMapRealResolventOrderedDysonCoefficientFromResolvent n R H := by
-  simp [continuousLinearMapRealResolventDysonFormalMultilinearSeries,
+  simp only [continuousLinearMapRealResolventDysonFormalMultilinearSeries,
     continuousLinearMapRealResolventOrderedDysonCoefficientFromResolvent,
     ContinuousLinearMap.compFormalMultilinearSeries_apply,
     FormalMultilinearSeries.compContinuousLinearMap_apply,
-    ContinuousMultilinearMap.compContinuousLinearMap_apply]
+    ContinuousLinearMap.compContinuousMultilinearMap_apply]
+  change
+    (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n (V →L[ℝ] V))
+        (fun i => continuousLinearMapOperatorLeftMultiplication R (H i)) * R =
+      (List.ofFn (fun i => R * H i)).prod * R
+  rw [ContinuousMultilinearMap.mkPiAlgebraFin_apply]
+  simp
 
 /-- Explicit Neumann power series for `H ↦ (1 - R H)⁻¹ R`. -/
 theorem hasFPowerSeriesOnBall_continuousLinearMapRealResolvent_neumann
@@ -81,10 +87,15 @@ theorem hasFPowerSeriesOnBall_continuousLinearMapRealResolvent_neumann
       (fun H : V →L[ℝ] V => Ring.inverse (1 - R * H) * R)
       (continuousLinearMapRealResolventDysonFormalMultilinearSeries R) 0
       (1 / ‖continuousLinearMapOperatorLeftMultiplication R‖ₑ) := by
-  have hin :=
-    (hasFPowerSeriesOnBall_inverse_one_sub ℝ (V →L[ℝ] V)).compContinuousLinearMap
-      (u := continuousLinearMapOperatorLeftMultiplication R)
-      (x := (0 : V →L[ℝ] V))
+  have hgeom :
+      HasFPowerSeriesOnBall
+        (fun X : V →L[ℝ] V => Ring.inverse (1 - X))
+        (formalMultilinearSeries_geometric ℝ (V →L[ℝ] V))
+        (continuousLinearMapOperatorLeftMultiplication R (0 : V →L[ℝ] V)) 1 := by
+    simpa using hasFPowerSeriesOnBall_inverse_one_sub ℝ (V →L[ℝ] V)
+  have hin := hgeom.compContinuousLinearMap
+    (u := continuousLinearMapOperatorLeftMultiplication R)
+    (x := (0 : V →L[ℝ] V))
   have hout :=
     (continuousLinearMapOperatorRightMultiplication R).comp_hasFPowerSeriesOnBall hin
   simpa [continuousLinearMapRealResolventDysonFormalMultilinearSeries,
