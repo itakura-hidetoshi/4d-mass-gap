@@ -120,8 +120,8 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventFrechetTaylorCoeffi
       (continuousLinearMapFiniteParameterOperatorChart (m + 1) A
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
         (continuousLinearMapJointSpectralOperatorParameter m s t)) z) := by
-    simpa [continuousLinearMapJointSpectralOperatorOperatorChart_eq,
-      continuousLinearMapRealShift] using hunit
+    rw [continuousLinearMapJointSpectralOperatorRealShift_eq]
+    exact hunit
   exact continuousLinearMapFiniteParameterRealResolventFrechetTaylorCoefficient_eq_taylorDysonCoefficient
     n (m + 1) A (continuousLinearMapJointSpectralOperatorDirectionFamily m H) z
     (continuousLinearMapJointSpectralOperatorParameter m s t)
@@ -143,8 +143,8 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventFrechetTaylorPartia
   unfold continuousLinearMapJointSpectralOperatorRealResolventFrechetTaylorPartialSum
   unfold continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonPartialSum
   apply continuousLinearMapFiniteParameterRealResolventFrechetTaylorPartialSum_eq_taylorDysonPartialSum
-  simpa [continuousLinearMapJointSpectralOperatorOperatorChart_eq,
-    continuousLinearMapRealShift] using hunit
+  rw [continuousLinearMapJointSpectralOperatorRealShift_eq]
+  exact hunit
 
 /-- Exact joint Fréchet Taylor formula for simultaneous spectral and operator
 increments. -/
@@ -168,23 +168,29 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_add_eq_freche
       (continuousLinearMapFiniteParameterOperatorChart (m + 1) A
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
         (continuousLinearMapJointSpectralOperatorParameter m s t)) z) := by
-    simpa [continuousLinearMapJointSpectralOperatorOperatorChart_eq,
-      continuousLinearMapRealShift] using hunit
+    rw [continuousLinearMapJointSpectralOperatorRealShift_eq]
+    exact hunit
   have hsmall' : ‖continuousLinearMapFiniteParameterRealResolventChart (m + 1) A
       (continuousLinearMapJointSpectralOperatorDirectionFamily m H) z
       (continuousLinearMapJointSpectralOperatorParameter m s t) *
       continuousLinearMapFiniteParameterOperatorIncrement (m + 1)
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
         (continuousLinearMapJointSpectralOperatorParameter m ds h)‖ < 1 := by
-    simpa [continuousLinearMapJointSpectralOperatorRealResolventChart_apply,
-      continuousLinearMapJointSpectralOperatorIncrement_eq] using hsmall
-  have h :=
+    change ‖continuousLinearMapJointSpectralOperatorRealResolventChart m A H z
+      (continuousLinearMapJointSpectralOperatorParameter m s t) *
+      continuousLinearMapFiniteParameterOperatorIncrement (m + 1)
+        (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
+        (continuousLinearMapJointSpectralOperatorParameter m ds h)‖ < 1
+    rw [continuousLinearMapJointSpectralOperatorRealResolventChart_apply,
+      continuousLinearMapJointSpectralOperatorIncrement_eq]
+    exact hsmall
+  have hformula :=
     continuousLinearMapFiniteParameterRealResolventChart_add_eq_frechetTaylorPartialSum_add_remainder
       N (m + 1) A (continuousLinearMapJointSpectralOperatorDirectionFamily m H) z
       (continuousLinearMapJointSpectralOperatorParameter m s t)
       (continuousLinearMapJointSpectralOperatorParameter m ds h) hunit' hsmall'
-  rw [continuousLinearMapJointSpectralOperatorParameter_add] at h
-  exact h
+  rw [continuousLinearMapJointSpectralOperatorParameter_add] at hformula
+  exact hformula
 
 /-- Endpoint form of the exact joint Fréchet Taylor formula. -/
 theorem continuousLinearMapJointSpectralOperatorRealResolventChart_eq_frechetTaylor_add_remainder
@@ -226,11 +232,19 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonRemainde
     N (m + 1) A (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
     z q M (continuousLinearMapJointSpectralOperatorParameter m s t)
     (continuousLinearMapJointSpectralOperatorParameter m ds h) hq hM
-  · simpa [continuousLinearMapJointSpectralOperatorRealResolventChart_apply,
-      continuousLinearMapJointSpectralOperatorIncrement_eq] using hperturb
+  · change ‖continuousLinearMapJointSpectralOperatorRealResolventChart m A H z
+      (continuousLinearMapJointSpectralOperatorParameter m s t) *
+      continuousLinearMapFiniteParameterOperatorIncrement (m + 1)
+        (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
+        (continuousLinearMapJointSpectralOperatorParameter m ds h)‖ ≤ q
+    rw [continuousLinearMapJointSpectralOperatorRealResolventChart_apply,
+      continuousLinearMapJointSpectralOperatorIncrement_eq]
+    exact hperturb
   · rw [continuousLinearMapJointSpectralOperatorParameter_add]
-    simpa [continuousLinearMapJointSpectralOperatorRealResolventChart_apply,
-      add_assoc] using hnew
+    change ‖continuousLinearMapJointSpectralOperatorRealResolventChart m A H z
+      (continuousLinearMapJointSpectralOperatorParameter m (s + ds) (t + h))‖ ≤ M
+    rw [continuousLinearMapJointSpectralOperatorRealResolventChart_apply]
+    simpa [add_assoc] using hnew
 
 /-- Finite jet of normalized joint Fréchet Taylor coefficients. -/
 def continuousLinearMapJointSpectralOperatorRealResolventFrechetTaylorJet
