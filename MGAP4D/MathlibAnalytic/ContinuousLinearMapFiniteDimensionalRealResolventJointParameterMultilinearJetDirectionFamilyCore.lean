@@ -10,6 +10,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 set_option maxHeartbeats 5000000
+set_option synthInstance.maxHeartbeats 200000
 
 /-- Direction synthesis bundled as a continuous linear map in the entire finite
 operator-direction family. -/
@@ -53,8 +54,22 @@ theorem continuous_continuousLinearMapJointSpectralOperatorDirectionSynthesis
     Continuous (fun H : Fin m → (V →L[ℝ] V) =>
       continuousLinearMapFiniteParameterDirectionSynthesis (m + 1)
         (continuousLinearMapJointSpectralOperatorDirectionFamily m H)) := by
-  simpa only [Function.comp_apply,
-    continuousLinearMapFiniteParameterDirectionSynthesisFamily_apply] using
+  have hfun :
+      (fun H : Fin m → (V →L[ℝ] V) =>
+        continuousLinearMapFiniteParameterDirectionSynthesis (m + 1)
+          (continuousLinearMapJointSpectralOperatorDirectionFamily m H)) =
+      (continuousLinearMapFiniteParameterDirectionSynthesisFamily
+        (V := V) (m + 1)) ∘
+        (fun H : Fin m → (V →L[ℝ] V) =>
+          continuousLinearMapJointSpectralOperatorDirectionFamily m H) := by
+    funext H
+    symm
+    exact
+      continuousLinearMapFiniteParameterDirectionSynthesisFamily_apply
+        (V := V) (m + 1)
+        (continuousLinearMapJointSpectralOperatorDirectionFamily m H)
+  rw [hfun]
+  exact
     (continuousLinearMapFiniteParameterDirectionSynthesisFamily
       (V := V) (m + 1)).continuous.comp
         (continuous_continuousLinearMapJointSpectralOperatorDirectionFamily
