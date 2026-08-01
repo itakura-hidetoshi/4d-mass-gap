@@ -26,9 +26,18 @@ theorem tendsto_continuousLinearMapJointSpectralOperatorRealResolventMultilinear
         m taylorOrder mixedOrder (H a) (R a)) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily
         m taylorOrder mixedOrder H0 R0)) := by
-  simpa only [Function.comp_apply] using
-    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily_directionFamily
-      (V := V) m taylorOrder mixedOrder).tendsto (R0, H0)).comp (hR.prodMk hH)
+  apply tendsto_pi_nhds.2
+  intro k
+  apply tendsto_pi_nhds.2
+  intro n
+  have hRk : Tendsto (fun a => R a k) l (𝓝 (R0 k)) :=
+    (tendsto_pi_nhds.1 hR) k
+  simpa only [
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily,
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierJetFromResolvent,
+      Function.comp_apply] using
+    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent_directionFamily
+      (V := V) m n.1).tendsto (R0 k, H0)).comp (hRk.prodMk hH)
 
 /-- Joint convergence of a finite resolvent family and a finite direction
 family induces convergence of every Banach-valued complete response rectangle
@@ -47,9 +56,18 @@ theorem tendsto_continuousLinearMapJointSpectralOperatorRealResolventMultilinear
         φ m taylorOrder mixedOrder (H a) (R a)) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily
         φ m taylorOrder mixedOrder H0 R0)) := by
-  simpa only [Function.comp_apply] using
-    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily_directionFamily
-      φ m taylorOrder mixedOrder).tendsto (R0, H0)).comp (hR.prodMk hH)
+  apply tendsto_pi_nhds.2
+  intro k
+  apply tendsto_pi_nhds.2
+  intro n
+  have hRk : Tendsto (fun a => R a k) l (𝓝 (R0 k)) :=
+    (tendsto_pi_nhds.1 hR) k
+  simpa only [
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily,
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent,
+      Function.comp_apply] using
+    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierFromResolvent_directionFamily
+      φ m n.1).tendsto (R0 k, H0)).comp (hRk.prodMk hH)
 
 /-- Joint convergence of a finite resolvent family and a finite direction
 family induces convergence of the complete basis-independent trace rectangle
@@ -67,9 +85,20 @@ theorem tendsto_continuousLinearMapJointSpectralOperatorRealResolventMultilinear
         V m taylorOrder mixedOrder (H a) (R a)) l
       (𝓝 (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily
         V m taylorOrder mixedOrder H0 R0)) := by
-  simpa only [Function.comp_apply] using
-    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily_directionFamily
-      V m taylorOrder mixedOrder).tendsto (R0, H0)).comp (hR.prodMk hH)
+  apply tendsto_pi_nhds.2
+  intro k
+  apply tendsto_pi_nhds.2
+  intro n
+  have hRk : Tendsto (fun a => R a k) l (𝓝 (R0 k)) :=
+    (tendsto_pi_nhds.1 hR) k
+  simpa only [
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily,
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily,
+      continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent,
+      Function.comp_apply] using
+    ((continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierFromResolvent_directionFamily
+      (continuousLinearMapTrace (V := V)) m n.1).tendsto (R0 k, H0)).comp
+        (hRk.prodMk hH)
 
 end MathlibAnalytic
 end MGAP4D
