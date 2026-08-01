@@ -231,20 +231,25 @@ theorem continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair_norm_l
     ‖continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair
         baseOrder tailOrder m H ds h Rbase Rend j‖ ≤
       q ^ (baseOrder + j.1) * M := by
-  let X : V →L[ℝ] V :=
-    Rbase * continuousLinearMapJointSpectralOperatorRemainderIncrement m H ds h
-  have hpow : ‖X ^ (baseOrder + j.1)‖ ≤ q ^ (baseOrder + j.1) := by
+  by_cases hn : baseOrder + j.1 = 0
+  · simpa [continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair,
+      hn] using hend
+  · let X : V →L[ℝ] V :=
+      Rbase * continuousLinearMapJointSpectralOperatorRemainderIncrement m H ds h
+    have hX : ‖X‖ ≤ q := by
+      simpa [X] using hperturb
+    have hpow : ‖X ^ (baseOrder + j.1)‖ ≤ q ^ (baseOrder + j.1) :=
+      (norm_pow_le' X (Nat.pos_of_ne_zero hn)).trans
+        (pow_le_pow_left₀ (norm_nonneg X) hX (baseOrder + j.1))
+    unfold continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair
+    change ‖X ^ (baseOrder + j.1) * Rend‖ ≤
+      q ^ (baseOrder + j.1) * M
     calc
-      ‖X ^ (baseOrder + j.1)‖ ≤ ‖X‖ ^ (baseOrder + j.1) :=
-        norm_pow_le X (baseOrder + j.1)
-      _ ≤ q ^ (baseOrder + j.1) :=
-        pow_le_pow_left₀ (norm_nonneg X) hperturb (baseOrder + j.1)
-  unfold continuousLinearMapJointTaylorDysonRemainderTailFromResolventPair
-  change ‖X ^ (baseOrder + j.1) * Rend‖ ≤
-    q ^ (baseOrder + j.1) * M
-  exact mul_le_mul (norm_mul_le _ _ |>.trans ?_) hend
-    (norm_nonneg Rend) (pow_nonneg hq _)
-  exact hpow
+      ‖X ^ (baseOrder + j.1) * Rend‖ ≤
+          ‖X ^ (baseOrder + j.1)‖ * ‖Rend‖ := norm_mul_le _ _
+      _ ≤ q ^ (baseOrder + j.1) * M :=
+        mul_le_mul hpow hend (norm_nonneg Rend)
+          (pow_nonneg hq (baseOrder + j.1))
 
 /-- Joint continuity of the complete exact remainder-tail carrier rectangle in
 both resolvent families and the moving operator-direction family. -/
