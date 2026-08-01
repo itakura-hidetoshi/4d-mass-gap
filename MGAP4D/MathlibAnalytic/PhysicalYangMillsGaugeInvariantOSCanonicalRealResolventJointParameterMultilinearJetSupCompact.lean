@@ -36,26 +36,20 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearCarrierRectangularJet_t
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf) lambda)) z|)
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ lambda ∈ K, ∀ z ∈ Z,
-        continuousLinearMapJointMultilinearCarrierRectangularJetSupDistance
-          (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily
-            m taylorOrder mixedOrder H
-            (fun k => continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (G.admissibleRescaledDefectTaylorResolvent
-                T hInnerSymmetric tau) lambda)) z))
-          (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily
-            m taylorOrder mixedOrder H
-            (fun k => continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf) lambda)) z)) < epsilon := by
+      continuousLinearMapJointMultilinearCarrierRectangularJetSupDistance
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily
+          m taylorOrder mixedOrder H (continuousLinearMapCompressedIteratedDerivRealResolventFamily J Q taylorOrder
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) lambda z))
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierRectangularJetFromResolventFamily
+          m taylorOrder mixedOrder H (continuousLinearMapCompressedIteratedDerivRealResolventFamily J Q taylorOrder
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda z)) < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).iteratedDeriv_realResolventJointMultilinearCarrierRectangularJet_finiteDimensionalCompression_tendsto_uniformOn_compact_product_sup
       (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
@@ -71,32 +65,25 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearResponseCarrierRectangu
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     (J : V →L[ℝ] P.VacuumOrthogonalHilbert) (Q : P.VacuumOrthogonalHilbert →L[ℝ] V)
     (φ : (V →L[ℝ] V) →L[ℝ] W) (taylorOrder mixedOrder m : ℕ)
-    (H : Fin m → (V →L[ℝ] V))
-    (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
+    (H : Fin m → (V →L[ℝ] V)) (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < G.mass / 2)
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf) lambda)) z|)
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ lambda ∈ K, ∀ z ∈ Z,
-        continuousLinearMapJointMultilinearCarrierRectangularJetSupDistance
-          (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily
-            φ m taylorOrder mixedOrder H
-            (fun k => continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (G.admissibleRescaledDefectTaylorResolvent
-                T hInnerSymmetric tau) lambda)) z))
-          (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily
-            φ m taylorOrder mixedOrder H
-            (fun k => continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf) lambda)) z)) < epsilon := by
+      continuousLinearMapJointMultilinearCarrierRectangularJetSupDistance
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily
+          φ m taylorOrder mixedOrder H (continuousLinearMapCompressedIteratedDerivRealResolventFamily J Q taylorOrder
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) lambda z))
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierRectangularJetFromResolventFamily
+          φ m taylorOrder mixedOrder H (continuousLinearMapCompressedIteratedDerivRealResolventFamily J Q taylorOrder
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda z)) < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).iteratedDeriv_realResolventJointMultilinearResponseCarrierRectangularJet_finiteDimensionalCompression_tendsto_uniformOn_compact_product_sup
       (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
@@ -117,26 +104,20 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearTraceCarrierRectangular
     (Z : Set ℝ) (margin : ℝ) (hmargin : 0 < margin)
     (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       margin ≤ |continuousLinearMapCharacteristicDeterminant (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf) lambda)) z|)
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
     (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
       continuousLinearMapRealResolventNorm (continuousLinearMapCompression J Q
-        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-          T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
+        (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda)) z ≤ M) :
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ lambda ∈ K, ∀ z ∈ Z,
-        continuousLinearMapJointMultilinearCarrierRectangularJetSupDistance
-          (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily
-            V m taylorOrder mixedOrder H
-            (fun k => continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (G.admissibleRescaledDefectTaylorResolvent
-                T hInnerSymmetric tau) lambda)) z))
-          (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily
-            V m taylorOrder mixedOrder H
-            (fun k => continuousLinearMapRealResolvent (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (G.vacuumOrthogonalContinuumTaylorResolvent
-                T hP hInnerSymmetric hSelf) lambda)) z)) < epsilon := by
+      continuousLinearMapJointMultilinearCarrierRectangularJetSupDistance
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily
+          V m taylorOrder mixedOrder H (continuousLinearMapCompressedIteratedDerivRealResolventFamily J Q taylorOrder
+            (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) lambda z))
+        (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierRectangularJetFromResolventFamily
+          V m taylorOrder mixedOrder H (continuousLinearMapCompressedIteratedDerivRealResolventFamily J Q taylorOrder
+            (G.vacuumOrthogonalContinuumTaylorResolvent T hP hInnerSymmetric hSelf) lambda z)) < epsilon := by
   exact
     (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).iteratedDeriv_realResolventJointMultilinearTraceCarrierRectangularJet_finiteDimensionalCompression_tendsto_uniformOn_compact_product_sup
       (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
