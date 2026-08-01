@@ -83,8 +83,8 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonContinuousMultilinearT
         V n A z M hM hR H =
       continuousLinearMapRealResolventOperatorMixedDysonTraceCoefficient
         V n A H z := by
-  simp [continuousLinearMapRealResolventOperatorMixedDysonContinuousMultilinearTrace,
-    continuousLinearMapRealResolventOperatorMixedDysonTraceCoefficient]
+  rw [continuousLinearMapRealResolventOperatorMixedDysonContinuousMultilinearResponse_apply]
+  rfl
 
 /-- The trace carrier recovers the factorial one-direction trace coefficient
 on the full diagonal. -/
