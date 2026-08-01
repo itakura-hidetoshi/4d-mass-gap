@@ -78,7 +78,9 @@ structure VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData
         continuousLinearMapJointSpectralOperatorRemainderIncrement
           directions H0 ds h) z ≤ Mend
 
-/-- Forget the canonical provenance while retaining the exact half-mass gap. -/
+/-- Exact embedding of canonical compact data into the generic remainder
+package.  All carrier, response, and trace theorems are inherited through this
+map, with the gap definitionally equal to `G.mass / 2`. -/
 def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.toGeneric
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope} {taylorOrder directions : ℕ}
@@ -123,34 +125,8 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.toGeneric
   hlimitBaseNorm := C.hlimitBaseNorm
   hlimitEndNorm := C.hlimitEndNorm
 
-/-- Canonical OS compact carrier exact-remainder stability. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.carrier_tendsto
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope} {taylorOrder directions : ℕ}
-    (C : G.CanonicalJointRemainderCompactData T taylorOrder directions)
-    (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.toGeneric.carrier_tendsto baseOrder tailOrder epsilon hepsilon
-
-/-- Canonical OS compact arbitrary Banach-valued exact-remainder stability. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.response_tendsto
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope} {taylorOrder directions : ℕ}
-    {W : Type*} [NormedAddCommGroup W] [NormedSpace ℝ W]
-    (C : G.CanonicalJointRemainderCompactData T taylorOrder directions)
-    (φ : (V →L[ℝ] V) →L[ℝ] W) (baseOrder tailOrder : ℕ)
-    (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.toGeneric.response_tendsto φ baseOrder tailOrder epsilon hepsilon
-
-/-- Canonical OS compact basis-independent trace exact-remainder stability. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactData.trace_tendsto
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope} {taylorOrder directions : ℕ}
-    (C : G.CanonicalJointRemainderCompactData T taylorOrder directions)
-    (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.toGeneric.trace_tendsto baseOrder tailOrder epsilon hepsilon
-
-/-- Canonical OS arbitrary joint-net closed-box data, again with the analytic
-gap fixed to exactly `G.mass / 2`. -/
+/-- Canonical OS arbitrary joint-net closed-box data, with the analytic gap
+again fixed to exactly `G.mass / 2`. -/
 structure VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope) {β : Type*} (n : Filter β)
@@ -204,8 +180,8 @@ structure VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData
         continuousLinearMapJointSpectralOperatorRemainderIncrement
           directions H0 ds h) z ≤ Mend
 
-/-- Forget canonical provenance of a closed-box package while preserving the
-half-mass gap and the complete no-rate joint net. -/
+/-- Exact embedding of canonical closed-box data into the generic arbitrary
+joint-net and diagonal no-rate package. -/
 def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.toGeneric
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope} {β : Type*} {n : Filter β}
@@ -250,34 +226,6 @@ def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.toGeneric
   hMend := C.hMend
   hlimitBaseNorm := C.hlimitBaseNorm
   hlimitEndNorm := C.hlimitEndNorm
-
-/-- Canonical OS arbitrary joint-net and diagonal no-rate carrier stability. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.carrier_tendsto
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope} {β : Type*} {n : Filter β}
-    {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxData T n directions)
-    (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.toGeneric.carrier_diagonal_noRate baseOrder tailOrder epsilon hepsilon
-
-/-- Canonical OS arbitrary Banach-valued joint-net and diagonal stability. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.response_tendsto
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope} {β W : Type*} {n : Filter β}
-    [NormedAddCommGroup W] [NormedSpace ℝ W] {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxData T n directions)
-    (φ : (V →L[ℝ] V) →L[ℝ] W) (baseOrder tailOrder : ℕ)
-    (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.toGeneric.response_diagonal_noRate φ baseOrder tailOrder epsilon hepsilon
-
-/-- Canonical OS basis-independent trace joint-net and diagonal stability. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxData.trace_tendsto
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {G : T.VacuumSemigroupGapSlope} {β : Type*} {n : Filter β}
-    {directions : ℕ}
-    (C : G.CanonicalJointRemainderClosedBoxData T n directions)
-    (baseOrder tailOrder : ℕ) (epsilon : ℝ) (hepsilon : 0 < epsilon) :=
-  C.toGeneric.trace_diagonal_noRate baseOrder tailOrder epsilon hepsilon
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
