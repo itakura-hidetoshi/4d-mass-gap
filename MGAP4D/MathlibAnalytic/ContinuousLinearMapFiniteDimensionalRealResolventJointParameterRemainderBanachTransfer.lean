@@ -75,7 +75,7 @@ theorem finiteDimensional_continuousObservable_tendsto_uniform
   have hAC : A a i ∈ C := by
     simpa [C, Metric.mem_closedBall, dist_zero_right] using hAnorm
   have hdist : dist (A a i) (A0 i) < delta := by
-    change ‖A a i - A0 i‖ < delta
+    rw [dist_eq_norm]
     exact hdiffDelta
   have hout := hmodulus (A a i) hAC (A0 i) hA0C hdist
   rw [dist_eq_norm] at hout
