@@ -11,6 +11,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 set_option maxHeartbeats 5000000
+set_option synthInstance.maxHeartbeats 200000
 
 /-- The ordered noncommutative Dyson carrier is continuous in the resolvent
 operator for the operator norm on the full continuous multilinear-map space. -/
@@ -43,8 +44,22 @@ theorem continuous_continuousLinearMapRealResolventOrderedDysonMultilinearCarrie
     (ContinuousLinearMap.compContinuousMultilinearMapL ℝ
       (fun _ : Fin n => (V →L[ℝ] V))
       (V →L[ℝ] V) (V →L[ℝ] V)).continuous.comp houter
-  simpa [continuousLinearMapRealResolventOrderedDysonMultilinear] using
-    hpost.clm_apply hinner
+  have hcombined : Continuous (fun R : V →L[ℝ] V =>
+      (ContinuousLinearMap.compContinuousMultilinearMapL ℝ
+        (fun _ : Fin n => (V →L[ℝ] V))
+        (V →L[ℝ] V) (V →L[ℝ] V)
+        ((ContinuousLinearMap.mul ℝ (V →L[ℝ] V)).flip R))
+      ((ContinuousMultilinearMap.mkPiAlgebraFin ℝ n
+        (V →L[ℝ] V)).compContinuousLinearMap
+          (fun _ => (ContinuousLinearMap.mul ℝ (V →L[ℝ] V)) R))) :=
+    Continuous.clm_apply
+      (𝕜 := ℝ)
+      (E := ContinuousMultilinearMap ℝ
+        (fun _ : Fin n => (V →L[ℝ] V)) (V →L[ℝ] V))
+      (F := ContinuousMultilinearMap ℝ
+        (fun _ : Fin n => (V →L[ℝ] V)) (V →L[ℝ] V))
+      hpost hinner
+  simpa [continuousLinearMapRealResolventOrderedDysonMultilinear] using hcombined
 
 /-- Every permuted ordered Dyson carrier is continuous in full multilinear-map
 operator norm. -/
