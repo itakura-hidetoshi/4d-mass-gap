@@ -50,7 +50,7 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonCoefficient_eq_fromRes
     continuousLinearMapRealResolventOperatorMixedDysonCoefficient n A H z =
       continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent n
         (continuousLinearMapRealResolvent A z) H := by
-  induction n generalizing H with
+  induction n with
   | zero => rfl
   | succ n ih =>
       rw [continuousLinearMapRealResolventOperatorMixedDysonCoefficient_succ,
@@ -66,7 +66,7 @@ theorem continuous_continuousLinearMapRealResolventMixedDysonCoefficientFromReso
     (n : ℕ) (H : Fin n → (V →L[ℝ] V)) :
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent n R H) := by
-  induction n generalizing H with
+  induction n with
   | zero =>
       simpa [continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent] using
         (continuous_id : Continuous (fun R : V →L[ℝ] V => R))
