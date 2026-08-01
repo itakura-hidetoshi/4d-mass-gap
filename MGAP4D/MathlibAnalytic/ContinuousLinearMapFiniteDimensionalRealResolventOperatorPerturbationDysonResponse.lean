@@ -36,8 +36,8 @@ theorem tendsto_continuousLinearMapRealResolventDysonCoefficientFromPair
     Tendsto (fun a => continuousLinearMapRealResolventDysonCoefficientFromPair
       n (R a) (H a)) l
       (𝓝 (continuousLinearMapRealResolventDysonCoefficientFromPair n R0 H0)) := by
-  exact (continuous_continuousLinearMapRealResolventDysonCoefficientFromPair n).continuousAt.tendsto.comp
-    (hR.prodMk_nhds hH)
+  simpa [continuousLinearMapRealResolventDysonCoefficientFromPair] using
+    ((hR.mul hH).pow n).mul hR
 
 /-- A continuous-linear scalar observation of the `n`-th operator Dyson
 coefficient. -/
@@ -184,7 +184,7 @@ def continuousLinearMapRealResolventOperatorDysonTraceCoefficient
     (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V]
     (n : ℕ) (A H : V →L[ℝ] V) (z : ℝ) : ℝ :=
-  continuousLinearMapTrace V
+  continuousLinearMapTrace
     (continuousLinearMapRealResolventOperatorDysonCoefficient n A H z)
 
 /-- Basis-independent trace of the finite Dyson partial sum. -/
@@ -192,7 +192,7 @@ def continuousLinearMapRealResolventOperatorDysonTracePartialSum
     (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V]
     (N : ℕ) (A H : V →L[ℝ] V) (z : ℝ) : ℝ :=
-  continuousLinearMapTrace V
+  continuousLinearMapTrace
     (continuousLinearMapRealResolventOperatorDysonPartialSum N A H z)
 
 /-- Basis-independent trace of the exact Dyson remainder. -/
@@ -200,7 +200,7 @@ def continuousLinearMapRealResolventOperatorDysonTraceRemainder
     (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V]
     (N : ℕ) (A H : V →L[ℝ] V) (z : ℝ) : ℝ :=
-  continuousLinearMapTrace V
+  continuousLinearMapTrace
     (continuousLinearMapRealResolventOperatorDysonRemainder N A H z)
 
 /-- Exact basis-independent trace Dyson expansion. -/
@@ -210,14 +210,14 @@ theorem continuousLinearMapRealResolventTraceResponse_add_eq_dysonTracePartialSu
     (N : ℕ) (A H : V →L[ℝ] V) (z : ℝ)
     (hA : IsUnit (continuousLinearMapRealShift A z))
     (hsmall : ‖continuousLinearMapRealResolvent A z * H‖ < 1) :
-    continuousLinearMapRealResolventTraceResponse V (A + H) z =
+    continuousLinearMapRealResolventTraceResponse (A + H) z =
       continuousLinearMapRealResolventOperatorDysonTracePartialSum V N A H z +
         continuousLinearMapRealResolventOperatorDysonTraceRemainder V N A H z := by
   simpa [continuousLinearMapRealResolventTraceResponse,
     continuousLinearMapRealResolventOperatorDysonTracePartialSum,
     continuousLinearMapRealResolventOperatorDysonTraceRemainder] using
     continuousLinearMapRealResolvent_add_linearResponse_eq_dysonPartialSum_add_remainder
-      (continuousLinearMapTrace V) N A H z hA hsmall
+      (continuousLinearMapTrace (V := V)) N A H z hA hsmall
 
 /-- Explicit trace-norm bound for the exact Dyson remainder. -/
 theorem continuousLinearMapRealResolventOperatorDysonTraceRemainder_abs_le
@@ -228,11 +228,11 @@ theorem continuousLinearMapRealResolventOperatorDysonTraceRemainder_abs_le
     (hperturb : ‖continuousLinearMapRealResolvent A z * H‖ ≤ q)
     (hnew : ‖continuousLinearMapRealResolvent (A + H) z‖ ≤ M) :
     |continuousLinearMapRealResolventOperatorDysonTraceRemainder V N A H z| ≤
-      ‖continuousLinearMapTrace V‖ * (q ^ N * M) := by
+      ‖continuousLinearMapTrace (V := V)‖ * (q ^ N * M) := by
   simpa [continuousLinearMapRealResolventOperatorDysonTraceRemainder,
     continuousLinearMapRealResolventOperatorDysonRemainderLinearResponse] using
     continuousLinearMapRealResolventOperatorDysonRemainderLinearResponse_abs_le
-      (continuousLinearMapTrace V) N A H z q M hq hM hperturb hnew
+      (continuousLinearMapTrace (V := V)) N A H z q M hq hM hperturb hnew
 
 /-- Trace of the operator directional derivative jet equals the factorial trace
 Dyson jet. -/
@@ -245,7 +245,7 @@ theorem continuousLinearMapRealResolventOperatorLine_iteratedDeriv_trace
     (hnorm : ∀ t ∈ U,
       ‖continuousLinearMapRealResolventOperatorLine A H z t‖ ≤ M)
     (n : ℕ) {t : ℝ} (ht : t ∈ U) :
-    continuousLinearMapTrace V
+    continuousLinearMapTrace
         (iteratedDeriv n (continuousLinearMapRealResolventOperatorLine A H z) t) =
       (n.factorial : ℝ) *
         continuousLinearMapRealResolventOperatorDysonTraceCoefficient
@@ -253,7 +253,7 @@ theorem continuousLinearMapRealResolventOperatorLine_iteratedDeriv_trace
   simpa [continuousLinearMapRealResolventOperatorDysonTraceCoefficient,
     continuousLinearMapRealResolventOperatorDysonLinearResponse] using
     continuousLinearMapRealResolventOperatorLine_iteratedDeriv_linearResponse
-      (continuousLinearMapTrace V) A H z U M hU hM hunit hnorm n ht
+      (continuousLinearMapTrace (V := V)) A H z U M hU hM hunit hnorm n ht
 
 end MathlibAnalytic
 end MGAP4D
