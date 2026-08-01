@@ -42,6 +42,7 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearCarrierJet_tendsto_unif
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := V →L[ℝ] V)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierJetFromResolvent
           m (mixedOrder + 1) H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
             (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) p.center p.target (degree tau) z))
@@ -74,6 +75,7 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearResponseCarrierJet_tend
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := W)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearResponseCarrierCompleteJetFromResolvent
           φ m mixedOrder H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
             (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) p.center p.target (degree tau) z))
@@ -106,6 +108,7 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearTraceCarrierJet_tendsto
     ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ tau in G.admissibleRescaledDefectTimeFilter,
       ∀ p, box.Contains p → ∀ z ∈ Z,
       continuousLinearMapJointMultilinearCarrierJetSupDistance
+        (V := V) (W := ℝ)
         (continuousLinearMapJointSpectralOperatorRealResolventMultilinearTraceCarrierCompleteJetFromResolvent
           V m mixedOrder H (continuousLinearMapCompressedTaylorPartialSumRealResolventAt J Q
             (G.admissibleRescaledDefectTaylorResolvent T hInnerSymmetric tau) p.center p.target (degree tau) z))
