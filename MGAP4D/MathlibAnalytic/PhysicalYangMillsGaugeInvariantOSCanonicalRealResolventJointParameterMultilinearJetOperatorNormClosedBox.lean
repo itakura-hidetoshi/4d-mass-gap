@@ -53,12 +53,11 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearCarrier_tendsto_uniform
             (G.vacuumOrthogonalContinuumTaylorResolvent
               T hP hInnerSymmetric hSelf p.target)) z)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      taylorPartialSum_realResolventJointMultilinearCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q m n H tau degree htau hdegree box Z margin hmargin
-        hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q m n H tau degree htau hdegree box Z margin hmargin
+      hlimitMargin M hM hlimitNorm
 
 /-- Canonical OS complete closed-box convergence of the finite full-carrier jet
 for arbitrary joint nets. -/
@@ -92,12 +91,11 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearCarrier_tendsto_uniform
               (G.vacuumOrthogonalContinuumTaylorResolvent
                 T hP hInnerSymmetric hSelf p.target)) z)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      taylorPartialSum_realResolventJointMultilinearCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint_rectangular
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q mixedOrder m H tau degree htau hdegree box Z margin
-        hmargin hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint_rectangular
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q mixedOrder m H tau degree htau hdegree box Z margin
+      hmargin hlimitMargin M hM hlimitNorm
 
 /-- Canonical OS complete closed-box convergence of a Banach-valued full
 multilinear response carrier. -/
@@ -130,12 +128,11 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearResponseCarrier_tendsto
             (G.vacuumOrthogonalContinuumTaylorResolvent
               T hP hInnerSymmetric hSelf p.target)) z)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      taylorPartialSum_realResolventJointMultilinearResponseCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q φ m n H tau degree htau hdegree box Z margin hmargin
-        hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearResponseCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q φ m n H tau degree htau hdegree box Z margin hmargin
+      hlimitMargin M hM hlimitNorm
 
 /-- Canonical OS complete closed-box convergence of the basis-independent full
 trace carrier. -/
@@ -168,12 +165,11 @@ theorem VacuumSemigroupGapSlope.canonicalJointMultilinearTraceCarrier_tendsto_un
             (G.vacuumOrthogonalContinuumTaylorResolvent
               T hP hInnerSymmetric hSelf p.target)) z)‖ < epsilon := by
   exact
-    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).
-      taylorPartialSum_realResolventJointMultilinearTraceCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
-        (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
-        (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
-        rfl rfl J Q m n H tau degree htau hdegree box Z margin hmargin
-        hlimitMargin M hM hlimitNorm
+    (G.canonicalRescaledDefectTaylorStrongLimitData T hP hInnerSymmetric hSelf).taylorPartialSum_realResolventJointMultilinearTraceCarrier_finiteDimensionalCompression_tendsto_uniform_closedBox_of_joint
+      (G.admissibleRescaledDefectOpenResolventNormBoundFamilyData T hInnerSymmetric)
+      (G.vacuumOrthogonalContinuumOpenResolventNormBoundData T hP hInnerSymmetric hSelf)
+      rfl rfl J Q m n H tau degree htau hdegree box Z margin hmargin
+      hlimitMargin M hM hlimitNorm
 
 end StronglyContinuousPhysicalSemigroup
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
