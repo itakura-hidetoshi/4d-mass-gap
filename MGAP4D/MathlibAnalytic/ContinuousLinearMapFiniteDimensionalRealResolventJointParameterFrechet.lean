@@ -253,7 +253,7 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_pureSpectral
   change (n.factorial : ℝ) • ((R * (-(1 : V →L[ℝ] V))) ^ n * R) =
     continuousLinearMapRealResolventSpectralCoefficient n • R ^ (n + 1)
   have hmul : R * (-(1 : V →L[ℝ] V)) = (-1 : ℝ) • R := by
-    module
+    simp
   have hscalar :
       (n.factorial : ℝ) * (-1 : ℝ) ^ n =
         continuousLinearMapRealResolventSpectralCoefficient n := by
