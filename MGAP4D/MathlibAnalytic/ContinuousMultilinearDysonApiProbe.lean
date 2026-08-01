@@ -15,7 +15,10 @@ import Mathlib.Analysis.Normed.Operator.Mul
 #check Fin.removeNth
 #check Fin.insertNth
 #check Fin.prod_univ_succAbove
+#check LinearMap.uncurryMid_apply
 #check ContinuousLinearMap.uncurryMid_apply
+#check Finset.sum_apply
+#check MultilinearMap.sum_apply
 #check ContinuousLinearMap.mul
 #check ContinuousLinearMap.mulLeftRight
 #check ContinuousLinearMap.compContinuousMultilinearMap
