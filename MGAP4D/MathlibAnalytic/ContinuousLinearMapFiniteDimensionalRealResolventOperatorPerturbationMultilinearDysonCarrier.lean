@@ -33,7 +33,7 @@ def continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent :
                   simp [add_mul]
                 map_update_smul' := by
                   intros
-                  simp [smul_mul_assoc] }
+                  simp }
             map_add' := by
               intro x y
               ext K
@@ -41,7 +41,7 @@ def continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent :
             map_smul' := by
               intro c x
               ext K
-              simp [mul_smul_comm, smul_mul_assoc] }
+              simp }
 
 /-- Evaluation of the algebraic multilinear carrier is exactly the mixed
 Dyson polynomial in the resolvent variable. -/
@@ -54,8 +54,12 @@ theorem continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent_ap
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent,
-        continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent, ih]
+      simp only [continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent,
+        continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent,
+        Finset.sum_apply, LinearMap.uncurryMid_apply, ih]
+      apply Finset.sum_congr rfl
+      intro i _hi
+      rfl
 
 /-- The operator mixed Dyson coefficient as an algebraic multilinear map in
 all perturbation directions. -/
