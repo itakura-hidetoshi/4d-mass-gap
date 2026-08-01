@@ -1,0 +1,16 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachCore
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachTransfer
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachCompact
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachClosedBox
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachClosedBoxDiagonal
+
+/-!
+# Complete joint Fréchet--Taylor exact-remainder Banach stability package
+
+This aggregate closes the generic finite-dimensional layer for consecutive
+exact joint Taylor-Dyson remainders in genuine finite dependent-product Banach
+spaces.  It includes endpoint-defect identities, geometric bounds, moving
+direction families, carrier/response/trace continuity, compact-uniform
+stability, arbitrary joint-net closed-box convergence, and diagonal no-rate
+convergence.
+-/
