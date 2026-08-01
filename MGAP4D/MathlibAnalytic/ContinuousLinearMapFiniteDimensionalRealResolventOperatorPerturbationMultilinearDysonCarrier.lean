@@ -54,11 +54,18 @@ theorem continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent_ap
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp only [continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent,
-        continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent,
-        Finset.sum_apply, LinearMap.uncurryMid_apply, ih]
+      rw [continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent,
+        continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent]
+      change
+        (∑ i : Fin (n + 1),
+          continuousLinearMapRealResolventMixedDysonMultilinearMapFromResolvent n R
+              (i.removeNth H) * H i * R) =
+        ∑ i : Fin (n + 1),
+          continuousLinearMapRealResolventMixedDysonCoefficientFromResolvent n R
+              (fun j => H (i.succAbove j)) * H i * R
       apply Finset.sum_congr rfl
       intro i _hi
+      rw [ih]
       rfl
 
 /-- The operator mixed Dyson coefficient as an algebraic multilinear map in
