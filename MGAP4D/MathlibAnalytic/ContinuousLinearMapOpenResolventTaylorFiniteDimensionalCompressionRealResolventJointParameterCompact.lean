@@ -41,28 +41,20 @@ theorem iteratedDeriv_realResolventJointCoordinateMixedResponse_tendsto_uniformO
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (k m n : ℕ) (H : Fin m → (V →L[ℝ] V))
-    (κ : Fin n → Option (Fin m))
+    (k m n : ℕ) (H : Fin m → (V →L[ℝ] V)) (κ : Fin n → Option (Fin m))
     (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤
-      |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        ‖continuousLinearMapJointSpectralOperatorRealResolventCoordinateMixedResponse
-            φ m n (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) H z κ -
-          continuousLinearMapJointSpectralOperatorRealResolventCoordinateMixedResponse
-            φ m n (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) H z κ‖ < epsilon := by
+    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
+      ‖continuousLinearMapJointSpectralOperatorRealResolventCoordinateMixedResponse φ m n
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) H z κ -
+        continuousLinearMapJointSpectralOperatorRealResolventCoordinateMixedResponse φ m n
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) H z κ‖ < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventCoordinateMixedResponse] using
     S.iteratedDeriv_realResolventFiniteParameterMixedResponse_tendsto_uniformOn_compact
       B L hLgap hLresolvent J Q φ k (m + 1) n
@@ -79,28 +71,20 @@ theorem iteratedDeriv_realResolventJointTaylorResponse_tendsto_uniformOn_compact
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (φ : (V →L[ℝ] V) →L[ℝ] W)
-    (k parameterOrder m : ℕ) (H : Fin m → (V →L[ℝ] V))
-    (ds : ℝ) (h : Fin m → ℝ)
-    (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
+    (k parameterOrder m : ℕ) (H : Fin m → (V →L[ℝ] V)) (ds : ℝ)
+    (h : Fin m → ℝ) (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤
-      |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        ‖continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse
-            φ parameterOrder m (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) H z 0 ds 0 h -
-          continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse
-            φ parameterOrder m (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) H z 0 ds 0 h‖ < epsilon := by
+    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
+      ‖continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse φ parameterOrder m
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) H z 0 ds 0 h -
+        continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse φ parameterOrder m
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) H z 0 ds 0 h‖ < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse,
     continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonCoefficient] using
     S.iteratedDeriv_realResolventFiniteParameterTaylorResponse_tendsto_uniformOn_compact
@@ -119,30 +103,22 @@ theorem iteratedDeriv_realResolventJointTaylorResponse_tendsto_uniformOn_compact
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
     (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (φ : (V →L[ℝ] V) →L[ℝ] W)
     (taylorOrder parameterOrder m : ℕ) (H : Fin m → (V →L[ℝ] V))
-    (ds : ℝ) (h : Fin m → ℝ)
-    (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
+    (ds : ℝ) (h : Fin m → ℝ) (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ k : Fin (taylorOrder + 1),
-      ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤
-        |continuousLinearMapCharacteristicDeterminant
-          (continuousLinearMapCompression J Q
-            (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
+      margin ≤ |continuousLinearMapCharacteristicDeterminant
+        (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ k : Fin (taylorOrder + 1),
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        continuousLinearMapRealResolventNorm
-          (continuousLinearMapCompression J Q
-            (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
-      ∀ k : Fin (taylorOrder + 1), ∀ n : Fin (parameterOrder + 1),
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        ‖continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse
-            φ n.1 m (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 (F a) lambda)) H z 0 ds 0 h -
-          continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse
-            φ n.1 m (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) H z 0 ds 0 h‖ < epsilon := by
+    (hlimitNorm : ∀ k : Fin (taylorOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
+      continuousLinearMapRealResolventNorm
+        (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ k : Fin (taylorOrder + 1),
+      ∀ n : Fin (parameterOrder + 1), ∀ lambda ∈ K, ∀ z ∈ Z,
+        ‖continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse φ n.1 m
+            (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 (F a) lambda)) H z 0 ds 0 h -
+          continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse φ n.1 m
+            (continuousLinearMapCompression J Q (_root_.iteratedDeriv k.1 S.limitResolvent lambda)) H z 0 ds 0 h‖ < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonResponse,
     continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonCoefficient] using
     S.iteratedDeriv_realResolventFiniteParameterTaylorResponse_tendsto_uniformOn_compact_rectangular
@@ -159,29 +135,21 @@ theorem iteratedDeriv_realResolventJointTaylorTrace_tendsto_uniformOn_compact
     (B : ContinuousLinearMapOpenResolventNormBoundFamilyData gap F)
     (L : ContinuousLinearMapOpenResolventNormBoundData E)
     (hLgap : L.gap = gap) (hLresolvent : L.resolvent = S.limitResolvent)
-    (J : V →L[ℝ] E) (Q : E →L[ℝ] V)
-    (k parameterOrder m : ℕ) (H : Fin m → (V →L[ℝ] V))
-    (ds : ℝ) (h : Fin m → ℝ)
+    (J : V →L[ℝ] E) (Q : E →L[ℝ] V) (k parameterOrder m : ℕ)
+    (H : Fin m → (V →L[ℝ] V)) (ds : ℝ) (h : Fin m → ℝ)
     (K : Set ℝ) (hKcompact : IsCompact K) {upper : ℝ}
     (hKupper : K ⊆ Set.Iic upper) (hupper : upper < gap) (Z : Set ℝ)
     (margin : ℝ) (hmargin : 0 < margin)
-    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤
-      |continuousLinearMapCharacteristicDeterminant
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
+    (hlimitMargin : ∀ lambda ∈ K, ∀ z ∈ Z, margin ≤ |continuousLinearMapCharacteristicDeterminant
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z|)
     (M : ℝ) (hM : 0 ≤ M)
-    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z,
-      continuousLinearMapRealResolventNorm
-        (continuousLinearMapCompression J Q
-          (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
-    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l,
-      ∀ lambda ∈ K, ∀ z ∈ Z,
-        |continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonTraceCoefficient
-            V parameterOrder m (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k (F a) lambda)) H z 0 ds 0 h -
-          continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonTraceCoefficient
-            V parameterOrder m (continuousLinearMapCompression J Q
-              (_root_.iteratedDeriv k S.limitResolvent lambda)) H z 0 ds 0 h| < epsilon := by
+    (hlimitNorm : ∀ lambda ∈ K, ∀ z ∈ Z, continuousLinearMapRealResolventNorm
+      (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) z ≤ M) :
+    ∀ epsilon : ℝ, 0 < epsilon → ∀ᶠ a in l, ∀ lambda ∈ K, ∀ z ∈ Z,
+      |continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonTraceCoefficient V parameterOrder m
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k (F a) lambda)) H z 0 ds 0 h -
+        continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonTraceCoefficient V parameterOrder m
+          (continuousLinearMapCompression J Q (_root_.iteratedDeriv k S.limitResolvent lambda)) H z 0 ds 0 h| < epsilon := by
   simpa [continuousLinearMapJointSpectralOperatorRealResolventTaylorDysonTraceCoefficient,
     Real.norm_eq_abs] using
     S.iteratedDeriv_realResolventJointTaylorResponse_tendsto_uniformOn_compact
