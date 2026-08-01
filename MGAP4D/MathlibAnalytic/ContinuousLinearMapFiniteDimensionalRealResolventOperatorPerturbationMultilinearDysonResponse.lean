@@ -83,6 +83,10 @@ theorem continuousLinearMapRealResolventOperatorMixedDysonContinuousMultilinearT
         V n A z M hM hR H =
       continuousLinearMapRealResolventOperatorMixedDysonTraceCoefficient
         V n A H z := by
+  change
+    continuousLinearMapRealResolventOperatorMixedDysonContinuousMultilinearResponse
+        (continuousLinearMapTrace (V := V)) n A z M hM hR H =
+      continuousLinearMapRealResolventOperatorMixedDysonTraceCoefficient V n A H z
   rw [continuousLinearMapRealResolventOperatorMixedDysonContinuousMultilinearResponse_apply]
   rfl
 
