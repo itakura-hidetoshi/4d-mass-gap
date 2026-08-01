@@ -18,8 +18,27 @@ theorem continuous_continuousLinearMapRealResolventOrderedDysonMultilinearCarrie
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] (n : ℕ) :
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapRealResolventOrderedDysonMultilinear n R) := by
-  unfold continuousLinearMapRealResolventOrderedDysonMultilinear
-  fun_prop
+  let A := V →L[ℝ] V
+  have houter : Continuous (fun R : A =>
+      (ContinuousLinearMap.mul ℝ A).flip R) :=
+    (ContinuousLinearMap.mul ℝ A).flip.continuous
+  have hfamily : Continuous (fun R : A =>
+      fun _ : Fin n => (ContinuousLinearMap.mul ℝ A) R) := by
+    exact continuous_pi fun _ => (ContinuousLinearMap.mul ℝ A).continuous
+  have hinner : Continuous (fun R : A =>
+      (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n A).compContinuousLinearMap
+        (fun _ => (ContinuousLinearMap.mul ℝ A) R)) := by
+    exact
+      (ContinuousMultilinearMap.compContinuousLinearMapLRight
+        (E := fun _ : Fin n => A)
+        (ContinuousMultilinearMap.mkPiAlgebraFin ℝ n A)).cont.comp hfamily
+  have hpost : Continuous (fun R : A =>
+      ContinuousLinearMap.compContinuousMultilinearMapL ℝ
+        (fun _ : Fin n => A) A A ((ContinuousLinearMap.mul ℝ A).flip R)) :=
+    (ContinuousLinearMap.compContinuousMultilinearMapL ℝ
+      (fun _ : Fin n => A) A A).continuous.comp houter
+  simpa [A, continuousLinearMapRealResolventOrderedDysonMultilinear] using
+    hpost.eval hinner
 
 /-- Every permuted ordered Dyson carrier is continuous in full multilinear-map
 operator norm. -/
@@ -28,8 +47,10 @@ theorem continuous_continuousLinearMapRealResolventPermutedDysonMultilinearCarri
     (n : ℕ) (σ : Equiv.Perm (Fin n)) :
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapRealResolventPermutedDysonMultilinear n R σ) := by
-  unfold continuousLinearMapRealResolventPermutedDysonMultilinear
-  fun_prop
+  simpa [continuousLinearMapRealResolventPermutedDysonMultilinear] using
+    (ContinuousMultilinearMap.domDomCongrₗᵢ ℝ (V →L[ℝ] V) (V →L[ℝ] V) σ).continuous.comp
+      (continuous_continuousLinearMapRealResolventOrderedDysonMultilinearCarrier
+        (V := V) n)
 
 /-- The complete symmetric Dyson derivative carrier is continuous in the
 resolvent operator for the operator norm on continuous multilinear maps. -/
@@ -38,7 +59,11 @@ theorem continuous_continuousLinearMapRealResolventSymmetricDysonMultilinearCarr
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapRealResolventSymmetricDysonMultilinear n R) := by
   unfold continuousLinearMapRealResolventSymmetricDysonMultilinear
-  fun_prop
+  apply continuous_finset_sum
+  intro σ _hσ
+  exact
+    continuous_continuousLinearMapRealResolventPermutedDysonMultilinearCarrier
+      (V := V) n σ
 
 /-- Operator-norm convergence of resolvents transfers to operator-norm
 convergence of the complete symmetric Dyson derivative carrier. -/
@@ -72,8 +97,12 @@ theorem continuous_continuousLinearMapJointSpectralOperatorRealResolventMultilin
     Continuous (fun R : V →L[ℝ] V =>
       continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
         m n H R) := by
-  unfold continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent
-  fun_prop
+  simpa [continuousLinearMapJointSpectralOperatorRealResolventMultilinearCarrierFromResolvent] using
+    (ContinuousMultilinearMap.compContinuousLinearMapL
+      (fun _ => continuousLinearMapFiniteParameterDirectionSynthesis (m + 1)
+        (continuousLinearMapJointSpectralOperatorDirectionFamily m H))).continuous.comp
+      (continuous_continuousLinearMapRealResolventSymmetricDysonMultilinearCarrier
+        (V := V) n)
 
 /-- At every joint base point, the existing genuine joint Fréchet derivative
 carrier is exactly the globally continuous pullback carrier evaluated at the
