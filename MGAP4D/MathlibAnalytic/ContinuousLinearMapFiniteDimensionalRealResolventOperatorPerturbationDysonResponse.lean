@@ -24,7 +24,8 @@ theorem continuous_continuousLinearMapRealResolventDysonCoefficientFromPair
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] (n : ℕ) :
     Continuous (fun p : (V →L[ℝ] V) × (V →L[ℝ] V) =>
       continuousLinearMapRealResolventDysonCoefficientFromPair n p.1 p.2) := by
-  fun_prop
+  simpa [continuousLinearMapRealResolventDysonCoefficientFromPair] using
+    (((continuous_fst.mul continuous_snd).pow n).mul continuous_fst)
 
 /-- Joint convergence of resolvents and directions transfers to every fixed
 Dyson coefficient. -/
