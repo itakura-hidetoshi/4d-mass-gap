@@ -254,10 +254,12 @@ theorem continuousLinearMapJointSpectralOperatorRealResolventChart_pureSpectral
     continuousLinearMapRealResolventSpectralCoefficient n • R ^ (n + 1)
   have hmul : R * (-(1 : V →L[ℝ] V)) = (-1 : ℝ) • R := by
     module
-  rw [hmul, smul_pow, smul_mul_assoc, smul_smul, pow_succ]
-  unfold continuousLinearMapRealResolventSpectralCoefficient
-  congr 1
-  ring
+  have hscalar :
+      (n.factorial : ℝ) * (-1 : ℝ) ^ n =
+        continuousLinearMapRealResolventSpectralCoefficient n := by
+    unfold continuousLinearMapRealResolventSpectralCoefficient
+    ring
+  rw [hmul, smul_pow, smul_mul_assoc, smul_smul, ← pow_succ, hscalar]
 
 end MathlibAnalytic
 end MGAP4D
