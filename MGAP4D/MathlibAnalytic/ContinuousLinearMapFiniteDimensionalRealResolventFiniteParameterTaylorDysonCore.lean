@@ -39,7 +39,6 @@ theorem continuousLinearMapFiniteParameterOperatorChart_add
         continuousLinearMapFiniteParameterOperatorIncrement m H h := by
   simp [continuousLinearMapFiniteParameterOperatorChart,
     continuousLinearMapFiniteParameterOperatorIncrement, map_add]
-  abel
 
 /-- The operator at an endpoint is the operator at the base parameter plus the
 synthesized endpoint difference. -/
@@ -52,7 +51,6 @@ theorem continuousLinearMapFiniteParameterOperatorChart_eq_add_sub
         continuousLinearMapFiniteParameterOperatorIncrement m H (t - s) := by
   simp [continuousLinearMapFiniteParameterOperatorChart,
     continuousLinearMapFiniteParameterOperatorIncrement, map_sub]
-  abel
 
 /-- The `n`-th finite-parameter Taylor-Dyson coefficient at `t` in increment
 `h`. -/
