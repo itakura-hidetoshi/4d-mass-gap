@@ -75,9 +75,11 @@ theorem finiteDimensional_continuousObservable_tendsto_uniform
   have hAC : A a i ∈ C := by
     simpa [C, Metric.mem_closedBall, dist_zero_right] using hAnorm
   have hdist : dist (A a i) (A0 i) < delta := by
-    simpa [dist_eq_norm] using hdiffDelta
+    change ‖A a i - A0 i‖ < delta
+    exact hdiffDelta
   have hout := hmodulus (A a i) hAC (A0 i) hA0C hdist
-  simpa [dist_eq_norm] using hout
+  rw [dist_eq_norm] at hout
+  exact hout
 
 /-- Componentwise uniform convergence of the two resolvent families and
 ordinary convergence of the finite direction family combine into uniform
@@ -106,10 +108,9 @@ theorem continuousLinearMapJointTaylorDysonRemainderInput_tendsto_uniform_of_com
     simpa [dist_eq_norm] using hH eta heta
   filter_upwards [hbase eta heta, hend eta heta, hHeta] with a ha hb hc
   intro i hi
-  rw [← dist_eq_norm]
-  simpa [continuousLinearMapJointTaylorDysonRemainderInput,
-    Prod.dist_eq, dist_eq_norm, max_lt_iff] using
-    And.intro (And.intro (ha i hi) (hb i hi)) hc
+  change ‖((Rbase a i - Rbase0 i, Rend a i - Rend0 i), H a - H0)‖ < eta
+  simp only [Prod.norm_mk, max_lt_iff]
+  exact ⟨⟨ha i hi, hb i hi⟩, hc⟩
 
 /-- A continuous finite-dimensional remainder observable transfers uniform
 convergence of complete remainder inputs to uniform convergence in the actual
