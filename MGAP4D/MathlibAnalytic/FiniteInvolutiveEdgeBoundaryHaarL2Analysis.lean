@@ -45,6 +45,12 @@ theorem boundaryHaarProjection_measurePreserving
     MeasurePreserving (P.boundaryHaarProjection Value)
       (Measure.pi (fun _ : Edge => μ))
       (P.boundaryPiMeasure μ) := by
+  letI : SFinite (P.openHalfPiMeasure μ) := by
+    unfold openHalfPiMeasure
+    infer_instance
+  letI : IsProbabilityMeasure (P.openHalfPiMeasure μ) := by
+    unfold openHalfPiMeasure
+    infer_instance
   have hcoordinates :=
     P.boundaryFiberedPiMeasurableEquiv_measurePreserving μ
   have hprojection :
@@ -61,7 +67,7 @@ partition and a one-edge probability law. -/
 abbrev BoundaryHaarL2
     (P : FiniteInvolutiveEdgeOrbitPartition Edge)
     {Value : Type v} [MeasurableSpace Value]
-    (μ : Measure Value) : Type :=
+    (μ : Measure Value) : Type v :=
   Lp ℝ 2 (P.boundaryPiMeasure μ)
 
 /-- The standard real full-configuration `L²` space for a finite product edge
@@ -69,7 +75,7 @@ law. -/
 abbrev ConfigurationHaarL2
     (Edge : Type) [Fintype Edge]
     {Value : Type v} [MeasurableSpace Value]
-    (μ : Measure Value) : Type :=
+    (μ : Measure Value) : Type v :=
   Lp ℝ 2 (Measure.pi (fun _ : Edge => μ))
 
 /-- Pullback along the genuine boundary projection gives a canonical linear
