@@ -41,7 +41,7 @@ theorem realHilbertAdjointSynthesis_opNorm_le_one
     (A : F →ₗᵢ[ℝ] E)
     (x : E) :
     realHilbertAdjointSynthesis A x =
-      (A.toContinuousLinearMap)† x :=
+      ((A.toContinuousLinearMap)†) x :=
   rfl
 
 end
