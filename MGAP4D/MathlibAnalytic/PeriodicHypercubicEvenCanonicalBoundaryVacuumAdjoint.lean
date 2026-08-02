@@ -72,10 +72,10 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2Isometry_vacuum
           H N hN beta hbeta) (1 : ℝ))
   filter_upwards [htransport, hvacuum, hone] with b ht hv ho
   change
-    ↑↑(periodicHypercubicEvenBoundaryHaarToMarginalL2
+    (periodicHypercubicEvenBoundaryHaarToMarginalL2
       H N hN beta hbeta
       (periodicHypercubicEvenBoundaryVacuumL2 H N hN beta hbeta)) b =
-      ↑↑(Lp.const 2
+      (Lp.const 2
         (periodicHypercubicEvenBoundaryMarginalMeasure
           H N hN beta hbeta) (1 : ℝ)) b
   rw [ht, ho]
