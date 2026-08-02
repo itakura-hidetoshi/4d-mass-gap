@@ -57,7 +57,7 @@ noncomputable def
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (t : NNReal) :
     Lp ℝ 2 C.gibbsMeasure →L[ℝ] Lp ℝ 2 C.gibbsMeasure :=
-  NormedSpace.exp ℝ
+  NormedSpace.exp
     ((-((t : ℝ) / 2)) • C.heatBathHamiltonianL2)
 
 /-- The actual centered heat-bath evolution: first remove the normalized Gibbs
