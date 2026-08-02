@@ -5,7 +5,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-open scoped InnerProductSpace
+open scoped InnerProduct
 
 variable {E F : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
