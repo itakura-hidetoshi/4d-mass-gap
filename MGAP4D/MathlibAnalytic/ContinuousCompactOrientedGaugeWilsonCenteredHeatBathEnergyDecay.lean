@@ -118,7 +118,9 @@ theorem continuous_compact_oriented_centeredHeatBathOrbitL2_hasDerivAt
   have hconst :
       HasFDerivAt
         (fun _ : ℝ => C.vacuumCenteringL2 f) 0 s :=
-    hasFDerivAt_const (C.vacuumCenteringL2 f) s
+    hasFDerivAt_const
+      (𝕜 := ℝ) (E := ℝ) (F := Lp ℝ 2 C.gibbsMeasure)
+      (C.vacuumCenteringL2 f) s
   have happ := hop.hasFDerivAt.clm_apply hconst
   simpa [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathOrbitL2,
     B] using happ.hasDerivAt
