@@ -271,7 +271,8 @@ theorem continuousLinearMapJointRemainder_norm_dependentPiBlockBundleObservable_
       (continuousLinearMapJointRemainderDependentPiBlockAssembleMap_comp_bundle
         (W := W) φ blockOf)
   apply le_antisymm
-  · rw [← hd]
+  · change ‖g‖ ≤ ‖f‖
+    rw [← hd]
     calc
       ‖d.comp f‖ ≤ ‖d‖ * ‖f‖ := d.opNorm_comp_le f
       _ ≤ 1 * ‖f‖ := mul_le_mul_of_nonneg_right
@@ -279,7 +280,8 @@ theorem continuousLinearMapJointRemainder_norm_dependentPiBlockBundleObservable_
           (continuousLinearMapJointRemainder_norm_dependentPiBlockDecomposeMap_le_one
             (W := W) blockOf)) (norm_nonneg f)
       _ = ‖f‖ := by rw [one_mul]
-  · rw [← ha]
+  · change ‖f‖ ≤ ‖g‖
+    rw [← ha]
     calc
       ‖a.comp g‖ ≤ ‖a‖ * ‖g‖ := a.opNorm_comp_le g
       _ ≤ 1 * ‖g‖ := mul_le_mul_of_nonneg_right
