@@ -40,8 +40,12 @@ theorem realContinuousLinearOperatorExponentialSemigroup_add
         realContinuousLinearOperatorExponentialSemigroup G t := by
   unfold realContinuousLinearOperatorExponentialSemigroup
   rw [add_smul]
-  exact NormedSpace.exp_add_of_commute (𝕂 := ℝ)
+  exact NormedSpace.exp_add_of_commute_of_mem_ball (𝕂 := ℝ)
     (((Commute.refl G).smul_left s).smul_right t)
+    ((NormedSpace.expSeries_radius_eq_top ℝ (E →L[ℝ] E)).symm ▸
+      edist_lt_top _ _)
+    ((NormedSpace.expSeries_radius_eq_top ℝ (E →L[ℝ] E)).symm ▸
+      edist_lt_top _ _)
 
 /-- The exponential family is continuous in operator norm. -/
 theorem continuous_realContinuousLinearOperatorExponentialSemigroup
@@ -51,7 +55,7 @@ theorem continuous_realContinuousLinearOperatorExponentialSemigroup
     [CompleteSpace E]
     (G : E →L[ℝ] E) :
     Continuous (realContinuousLinearOperatorExponentialSemigroup G) := by
-  exact (NormedSpace.differentiable_exp_smul_const ℝ G).continuous
+  exact (differentiable_exp_smul_const ℝ G).continuous
 
 /-- The operator-norm derivative of the exponential family is multiplication
 by its bounded generator. -/
