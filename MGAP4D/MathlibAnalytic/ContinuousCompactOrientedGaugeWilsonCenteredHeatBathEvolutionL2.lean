@@ -82,6 +82,7 @@ noncomputable def
 @[simp] theorem continuous_compact_oriented_centeredHeatBathEvolutionL2_zero
     (C : ContinuousCompactOrientedGaugeWilsonSystem) :
     C.centeredHeatBathEvolutionL2 0 = C.vacuumCenteringL2 := by
+  ext f
   simp [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathEvolutionL2,
     ContinuousCompactOrientedGaugeWilsonSystem.heatBathEvolutionL2]
 
