@@ -46,8 +46,8 @@ theorem realHilbert_boundedGenerator_halfTime_norm_decay
     intro s
     have hexp :
         HasDerivAt (fun r => Real.exp (gap * r))
-          (Real.exp (gap * s) * gap) s :=
-      ((hasDerivAt_id s).const_mul gap).exp
+          (Real.exp (gap * s) * gap) s := by
+      simpa using ((hasDerivAt_id s).const_mul gap).exp
     convert hexp.mul (hnorm_sq s) using 1 <;>
       simp only [energy, energy'] <;> ring
   have henergy_nonpos : energy' ≤ 0 := by
@@ -69,7 +69,7 @@ theorem realHilbert_boundedGenerator_halfTime_norm_decay
       ‖u t‖ ^ 2 ≤ ‖f‖ ^ 2 / Real.exp (gap * t) := hdiv
       _ = Real.exp (-gap * t) * ‖f‖ ^ 2 := by
         rw [div_eq_mul_inv, ← Real.exp_neg]
-        ring
+        ring_nf
   calc
     ‖u t‖ = Real.sqrt (‖u t‖ ^ 2) := by
       rw [Real.sqrt_sq (norm_nonneg _)]
