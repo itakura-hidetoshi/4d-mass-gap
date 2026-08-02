@@ -214,6 +214,7 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2Function_memLp
           H N hN beta hbeta b ^ 2) * f b ^ 2 := by ring
     _ = f b ^ 2 := by
       rw [periodicHypercubicEvenBoundaryMarginalDensityNNReal_mul_weight_sq]
+      simp only [one_mul]
 
 end
 
