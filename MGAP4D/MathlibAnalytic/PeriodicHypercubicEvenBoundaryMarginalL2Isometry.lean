@@ -231,6 +231,19 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2_inner
       inner ℝ f g := by
   rw [L2.inner_def, L2.inner_def]
   unfold periodicHypercubicEvenBoundaryMarginalMeasure
+  change
+    (∫ b,
+      inner ℝ
+        (periodicHypercubicEvenBoundaryHaarToMarginalL2
+          H N hN beta hbeta f b)
+        (periodicHypercubicEvenBoundaryHaarToMarginalL2
+          H N hN beta hbeta g b)
+      ∂(periodicHypercubicEvenBoundaryHaarMeasure H N).withDensity
+        (fun b =>
+          (periodicHypercubicEvenBoundaryMarginalDensityNNReal
+            H N hN beta hbeta b : ℝ≥0∞))) =
+      ∫ b, inner ℝ (f b) (g b)
+        ∂periodicHypercubicEvenBoundaryHaarMeasure H N
   rw [integral_withDensity_eq_integral_smul₀
     (periodicHypercubicEvenBoundaryMarginalDensityNNReal_measurable
       H N hN beta hbeta).aemeasurable]
