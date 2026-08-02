@@ -29,6 +29,7 @@ theorem measure_map_fst_prod_withDensity
   rw [← lintegral_indicator (hs.preimage measurable_fst)]
   rw [← lintegral_indicator hs]
   rw [MeasureTheory.lintegral_prod
+    ((Prod.fst ⁻¹' s).indicator ρ)
     ((hρ.indicator (hs.preimage measurable_fst)).aemeasurable)]
   apply lintegral_congr
   intro x
