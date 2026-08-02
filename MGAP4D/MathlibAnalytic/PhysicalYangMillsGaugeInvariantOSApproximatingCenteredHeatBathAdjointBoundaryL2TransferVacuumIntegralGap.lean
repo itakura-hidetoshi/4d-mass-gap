@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonCenteredHeatBathEvolutionL2
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonCenteredHeatBathEnergyDecay
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingUniformDobrushinGibbsBoundaryL2TransferVacuumIntegralGap
 
 noncomputable section
@@ -112,15 +112,6 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjo
           (PeriodicHypercubicEvenSideLength (halfExtent n))
           N hN (beta n) (hbeta n)).gibbsVacuumL2
         (boundaryAnalysis n v) = 0
-  centeredHeatBathEvolution_opNorm_le :
-    ∀ n t,
-      ‖(periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength (halfExtent n))
-          N hN (beta n) (hbeta n)).centeredHeatBathEvolutionL2 t‖ ≤
-        Real.sqrt
-          (Real.exp
-            (-continuousCompactOrientedDobrushinHeatBathGap coefficientBound *
-              (t : ℝ)))
   boundaryMoment_intertwining :
     ∀ (n : ℕ) (t : NNReal),
       let Pn :=
@@ -200,6 +191,33 @@ theorem heatBathHamiltonian_coercive
         Q.coefficientBound Q.coefficientBound_nonneg Q.coefficientBound_lt_one
         (Q.coefficient_le_bound n))
       f hf
+
+/-- The actual finite Wilson centered heat-bath exponential contraction is
+now generated at every scale from the common Dobrushin Poincaré gap. -/
+theorem centeredHeatBathEvolution_opNorm_le
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjointBoundaryL2TransferGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C)
+    (n : ℕ)
+    (t : NNReal) :
+    ‖(periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength (halfExtent n))
+        N hN (beta n) (hbeta n)).centeredHeatBathEvolutionL2 t‖ ≤
+      Real.sqrt
+        (Real.exp
+          (-continuousCompactOrientedDobrushinHeatBathGap Q.coefficientBound *
+            (t : ℝ))) := by
+  let W := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength (halfExtent n))
+    N hN (beta n) (hbeta n)
+  exact
+    continuous_compact_oriented_centeredHeatBathEvolutionL2_opNorm_le
+      W
+      (continuousCompactOrientedDobrushinHeatBathGap Q.coefficientBound)
+      (continuous_compact_oriented_dobrushinCoefficientBoundHeatBathPoincareL2
+        W (Q.dobrushinMatrix n)
+        Q.coefficientBound Q.coefficientBound_nonneg Q.coefficientBound_lt_one
+        (Q.coefficient_le_bound n))
+      t
 
 /-- Convert the isometry/adjoint/explicit-centered-exponential package into
 the previous uniform Gibbs/shared-boundary transfer certificate. -/
