@@ -33,7 +33,7 @@ theorem continuous_compact_oriented_vacuumCenteringL2_norm_le
     unfold ContinuousCompactOrientedGaugeWilsonSystem.vacuumCenteredL2
     rw [norm_sub_sq_real, real_inner_smul_right, real_inner_comm,
       norm_smul, continuous_compact_oriented_gibbsVacuumL2_norm]
-    simp only [mul_one, sq_abs]
+    simp only [mul_one, Real.norm_eq_abs, sq_abs]
     nlinarith [sq_nonneg (inner ℝ C.gibbsVacuumL2 f)]
   exact le_of_sq_le_sq hsquare (norm_nonneg _)
 
@@ -118,7 +118,7 @@ theorem continuous_compact_oriented_centeredHeatBathOrbitL2_hasDerivAt
   have hconst :
       HasFDerivAt
         (fun _ : ℝ => C.vacuumCenteringL2 f) 0 s :=
-    hasFDerivAt_const s _
+    hasFDerivAt_const (C.vacuumCenteringL2 f) s
   have happ := hop.hasFDerivAt.clm_apply hconst
   simpa [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathOrbitL2,
     B] using happ.hasDerivAt
