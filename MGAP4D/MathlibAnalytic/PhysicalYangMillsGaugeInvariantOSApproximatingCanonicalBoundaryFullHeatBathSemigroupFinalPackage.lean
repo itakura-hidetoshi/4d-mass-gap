@@ -103,18 +103,20 @@ theorem
           H N hN beta hbeta
           (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
             H N hN beta hbeta t f) =
-        (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-            fullHeatBathEvolutionRealL2 t
-            (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
-              H N hN beta hbeta f)) ∧
+        ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+          t
+          (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+            H N hN beta hbeta f)) ∧
     (∀ (t : ℝ)
       (B : PeriodicHypercubicEvenBoundaryHaarL2 H N →L[ℝ]
         PeriodicHypercubicEvenBoundaryHaarL2 H N),
       (∀ f,
-        (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-            fullHeatBathEvolutionRealL2 t
+        ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+            (periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+            t
             (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
               H N hN beta hbeta f) =
           periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
