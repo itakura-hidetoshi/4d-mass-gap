@@ -112,6 +112,7 @@ theorem realHilbertIsometricAdjointCompressionGeneratorDefect_eq_zero_iff
     intro x
     rw [realHilbertIsometricAdjointCompressionGeneratorDefect_apply,
       hintertwine x, sub_self]
+    rfl
 
 /-- Generator-level invariance of the analyzed range. -/
 def realHilbertIsometricAdjointCompressionGeneratorRangeInvariant
@@ -137,6 +138,7 @@ theorem
         A T x y hy
     rw [realHilbertIsometricAdjointCompressionGeneratorDefect_apply,
       hy, hK, sub_self]
+    rfl
   · intro hD x
     refine ⟨realHilbertIsometricAdjointCompression A T x, ?_⟩
     exact
@@ -184,7 +186,7 @@ theorem realHilbertIsometricAdjointCompression_pow_analysis_apply_of_defect_eq_z
     (realHilbertIsometricAdjointCompressionGeneratorDefect_eq_zero_iff
       A T).mp hD
   induction n with
-  | zero => simp [K]
+  | zero => simp
   | succ n ih =>
       rw [pow_succ', ContinuousLinearMap.mul_apply, ih, hintertwine,
         pow_succ', ContinuousLinearMap.mul_apply]
