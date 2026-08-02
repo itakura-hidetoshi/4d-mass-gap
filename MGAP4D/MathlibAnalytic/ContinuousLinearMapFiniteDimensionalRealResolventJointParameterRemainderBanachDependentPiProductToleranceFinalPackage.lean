@@ -1,0 +1,8 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiProductToleranceCertificatePackage
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventJointParameterRemainderBanachDependentPiProductToleranceFinalPackage
+
+/-!
+# Final dependent Pi-product vector-tolerance package
+
+Closes the generic and canonical certificate roots in one import target.
+-/
