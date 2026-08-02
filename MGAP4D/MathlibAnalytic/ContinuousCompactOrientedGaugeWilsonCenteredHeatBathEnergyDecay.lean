@@ -117,7 +117,8 @@ theorem continuous_compact_oriented_centeredHeatBathOrbitL2_hasDerivAt
   have hop := hasDerivAt_exp_smul_const' B s
   have hconst :
       HasFDerivAt
-        (fun _ : ℝ => C.vacuumCenteringL2 f) 0 s :=
+        (fun _ : ℝ => C.vacuumCenteringL2 f)
+        (0 : ℝ →L[ℝ] Lp ℝ 2 C.gibbsMeasure) s :=
     hasFDerivAt_const
       (𝕜 := ℝ) (E := ℝ) (F := Lp ℝ 2 C.gibbsMeasure)
       (C.vacuumCenteringL2 f) s
