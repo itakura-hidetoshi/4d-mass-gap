@@ -153,7 +153,7 @@ noncomputable def periodicHypercubicEvenCanonicalBoundarySynthesisL2
         (periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure →L[ℝ]
       PeriodicHypercubicEvenBoundaryHaarL2 H N :=
-  realHilbertBoundarySynthesis
+  realHilbertAdjointSynthesis
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta)
 
@@ -174,7 +174,7 @@ theorem periodicHypercubicEvenCanonicalBoundarySynthesisL2_vacuum
   apply ext_inner_right ℝ
   intro f
   unfold periodicHypercubicEvenCanonicalBoundarySynthesisL2
-  unfold realHilbertBoundarySynthesis
+  unfold realHilbertAdjointSynthesis
   rw [ContinuousLinearMap.adjoint_inner_left]
   rw [← periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry_vacuum
     H N hN beta hbeta]
@@ -196,7 +196,7 @@ theorem periodicHypercubicEvenCanonicalBoundarySynthesisL2_analysis
   apply ext_inner_right ℝ
   intro g
   unfold periodicHypercubicEvenCanonicalBoundarySynthesisL2
-  unfold realHilbertBoundarySynthesis
+  unfold realHilbertAdjointSynthesis
   rw [ContinuousLinearMap.adjoint_inner_left]
   exact A.inner_map_map f g
 
