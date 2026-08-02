@@ -142,6 +142,7 @@ theorem continuous_compact_oriented_haarToGibbsL2Function_memLp
   have hZ := hf.const_mul C.base.partitionFunction
   apply hZ.congr
   filter_upwards with A
+  symm
   change
     Real.exp (C.base.gibbsExponent A) *
         ((C.haarToGibbsL2Weight A * f A) ^ 2) =
