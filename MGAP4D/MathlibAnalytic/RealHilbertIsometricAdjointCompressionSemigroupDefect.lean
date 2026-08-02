@@ -287,7 +287,7 @@ theorem
       (realHilbertIsometricAdjointCompression_smul_pow_analysis_apply_of_generatorDefect_eq_zero
         A T hD t m x)
   apply HasSum.unique hAmbientApply
-  exact hBoundaryAnalysis.congr fun m => (hTerms m).symm
+  simpa only [hTerms] using hBoundaryAnalysis
 
 /-- Under zero generator leakage, compressing the ambient exponential gives
 exactly the exponential of the compressed generator. -/
