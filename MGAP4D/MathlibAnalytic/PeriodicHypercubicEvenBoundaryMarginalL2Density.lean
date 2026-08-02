@@ -55,7 +55,7 @@ noncomputable def periodicHypercubicEvenBoundaryMarginalDensityNNReal
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N) : ℝ≥0 :=
-  NNReal.ofReal
+  Real.toNNReal
     (periodicHypercubicEvenBoundaryVacuumMoment
       H N hN beta hbeta b ^ 2)
 
@@ -71,7 +71,7 @@ theorem periodicHypercubicEvenBoundaryMarginalDensityNNReal_coe
         H N hN beta hbeta b := by
   unfold periodicHypercubicEvenBoundaryMarginalDensityNNReal
   unfold periodicHypercubicEvenBoundaryMarginalDensity
-  simp
+  rfl
 
 /-- The NNReal marginal density is measurable. -/
 theorem periodicHypercubicEvenBoundaryMarginalDensityNNReal_measurable
@@ -82,9 +82,9 @@ theorem periodicHypercubicEvenBoundaryMarginalDensityNNReal_measurable
       (periodicHypercubicEvenBoundaryMarginalDensityNNReal
         H N hN beta hbeta) := by
   unfold periodicHypercubicEvenBoundaryMarginalDensityNNReal
-  exact NNReal.continuous_ofReal.measurable.comp
+  exact
     ((periodicHypercubicEvenBoundaryVacuumMoment_measurable
-      H N hN beta hbeta).pow_const 2)
+      H N hN beta hbeta).pow_const 2).real_toNNReal
 
 /-- The marginal measure can be written with the NNReal density. -/
 theorem periodicHypercubicEvenBoundaryMarginalMeasure_eq_withDensity_nnreal
@@ -139,7 +139,7 @@ theorem periodicHypercubicEvenBoundaryMarginalDensityNNReal_mul_weight_sq
           H N hN beta hbeta b ^ 2 = 1 := by
   unfold periodicHypercubicEvenBoundaryMarginalDensityNNReal
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
-  rw [NNReal.coe_ofReal]
+  rw [Real.coe_toNNReal]
   · change
       periodicHypercubicEvenBoundaryVacuumMoment
           H N hN beta hbeta b ^ 2 *
@@ -205,7 +205,6 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2Function_memLp
     (Lp.memLp f).integrable_sq
   apply hf.congr
   filter_upwards with b
-  simp only [smul_eq_mul]
   change
     (periodicHypercubicEvenBoundaryMarginalDensityNNReal
       H N hN beta hbeta b : ℝ) *
