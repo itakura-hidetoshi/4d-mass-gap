@@ -152,11 +152,11 @@ noncomputable def toApproximatingHalfQuadraticGapCertificate
       Pn.osQuadraticValue (Tn.carrierTranslation (t / 2) Fc) =
           ‖Pn.physicalState (Tn.carrierTranslation (t / 2) Fc)‖ ^ 2 := by
         rw [Pn.osQuadraticValue_eq_norm_sq, Pn.norm_physicalState]
-      _ = ‖C.finiteOperator n (t / 2) (Pn.physicalState Fc)‖ ^ 2 := by
-        change
-          ‖Tn.toCarrierSemigroup.physicalOperator (t / 2)
-            (Pn.physicalState Fc)‖ ^ 2 = _
+      _ = ‖Tn.toCarrierSemigroup.physicalOperator (t / 2)
+            (Pn.physicalState Fc)‖ ^ 2 := by
         rw [Tn.toCarrierSemigroup.physicalOperator_on_physicalState]
+      _ = ‖C.finiteOperator n (t / 2) (Pn.physicalState Fc)‖ ^ 2 := by
+        rfl
       _ ≤ (Q.decayFactor (t / 2) * ‖Pn.physicalState Fc‖) ^ 2 := hsq
       _ = Q.quadraticDecayFactor t * Pn.osQuadraticValue Fc := by
         rw [quadraticDecayFactor, Pn.osQuadraticValue_eq_norm_sq,
