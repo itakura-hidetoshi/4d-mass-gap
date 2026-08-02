@@ -8,6 +8,8 @@ open scoped InnerProduct
 
 noncomputable section
 
+universe u
+
 /-- The finite Wilson product Haar law is also absolutely continuous with
 respect to the strictly positive Gibbs tilt. -/
 theorem continuous_compact_oriented_configurationHaarMeasure_absolutelyContinuous_gibbsMeasure
@@ -22,9 +24,10 @@ theorem continuous_compact_oriented_configurationHaarMeasure_absolutelyContinuou
 the finite Wilson Gibbs law. -/
 theorem continuous_compact_oriented_ae_haar_to_gibbs
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    {p q : C.base.Configuration → Prop}
-    (h : ∀ᶠ A ∂C.base.configurationHaarMeasure, p A ↔ q A) :
-    ∀ᶠ A ∂C.gibbsMeasure, p A ↔ q A :=
+    {α : Type u}
+    {f g : C.base.Configuration → α}
+    (h : f =ᵐ[C.base.configurationHaarMeasure] g) :
+    f =ᵐ[C.gibbsMeasure] g :=
   h.filter_mono
     (Measure.ae_le_iff_absolutelyContinuous.mpr
       (continuous_compact_oriented_gibbsMeasure_absolutelyContinuous C))
@@ -33,9 +36,10 @@ theorem continuous_compact_oriented_ae_haar_to_gibbs
 under product Haar because the Wilson density is strictly positive. -/
 theorem continuous_compact_oriented_ae_gibbs_to_haar
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    {p q : C.base.Configuration → Prop}
-    (h : ∀ᶠ A ∂C.gibbsMeasure, p A ↔ q A) :
-    ∀ᶠ A ∂C.base.configurationHaarMeasure, p A ↔ q A :=
+    {α : Type u}
+    {f g : C.base.Configuration → α}
+    (h : f =ᵐ[C.gibbsMeasure] g) :
+    f =ᵐ[C.base.configurationHaarMeasure] g :=
   h.filter_mono
     (Measure.ae_le_iff_absolutelyContinuous.mpr
       (continuous_compact_oriented_configurationHaarMeasure_absolutelyContinuous_gibbsMeasure C))
@@ -118,6 +122,12 @@ theorem continuous_compact_oriented_haarToGibbsL2_inner
   unfold ContinuousCompactOrientedGaugeWilsonSystem.gibbsMeasure
   unfold CompactOrientedGaugeWilsonSystem.gibbsMeasure
   rw [integral_tilted]
+  change
+    (∫ A,
+      (Real.exp (C.base.gibbsExponent A) / C.base.partitionFunction) •
+        inner ℝ (C.haarToGibbsL2 f A) (C.haarToGibbsL2 g A)
+      ∂C.base.configurationHaarMeasure) =
+      ∫ A, inner ℝ (f A) (g A) ∂C.base.configurationHaarMeasure
   have hf := continuous_compact_oriented_ae_gibbs_to_haar C
     (continuous_compact_oriented_haarToGibbsL2_coeFn C f)
   have hg := continuous_compact_oriented_ae_gibbs_to_haar C
