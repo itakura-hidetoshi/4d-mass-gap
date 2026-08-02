@@ -35,6 +35,11 @@ local instance boundaryVacuumMomentBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance boundaryVacuumMomentOpenHalfSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+  unfold periodicHypercubicEvenOpenHalfHaarMeasure
+  infer_instance
+
 /-- The boundary Gram moment of the constant positive-half observable.
 
 This is the finite Wilson OS vacuum wavefunction on the reflection-fixed
