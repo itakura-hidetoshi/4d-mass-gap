@@ -40,7 +40,7 @@ theorem realContinuousLinearOperatorExponentialSemigroup_add
         realContinuousLinearOperatorExponentialSemigroup G t := by
   unfold realContinuousLinearOperatorExponentialSemigroup
   rw [add_smul]
-  exact NormedSpace.exp_add_of_commute
+  exact NormedSpace.exp_add_of_commute (𝕂 := ℝ)
     (((Commute.refl G).smul_left s).smul_right t)
 
 /-- The exponential family is continuous in operator norm. -/
@@ -51,9 +51,7 @@ theorem continuous_realContinuousLinearOperatorExponentialSemigroup
     [CompleteSpace E]
     (G : E →L[ℝ] E) :
     Continuous (realContinuousLinearOperatorExponentialSemigroup G) := by
-  unfold realContinuousLinearOperatorExponentialSemigroup
-  exact NormedSpace.exp_continuous.comp
-    (continuous_id.smul continuous_const)
+  exact (NormedSpace.differentiable_exp_smul_const ℝ G).continuous
 
 /-- The operator-norm derivative of the exponential family is multiplication
 by its bounded generator. -/
@@ -68,7 +66,7 @@ theorem realContinuousLinearOperatorExponentialSemigroup_hasDerivAt
       (realContinuousLinearOperatorExponentialSemigroup G)
       (realContinuousLinearOperatorExponentialSemigroup G t * G) t := by
   simpa [realContinuousLinearOperatorExponentialSemigroup] using
-    (NormedSpace.hasDerivAt_exp_smul_const G t)
+    (hasDerivAt_exp_smul_const G t)
 
 /-- The strong derivative on every state is the generator action transported
 by the exponential time slice. -/
@@ -104,7 +102,6 @@ theorem realContinuousLinearOperatorExponentialSemigroup_apply_eigenvector
   unfold realContinuousLinearOperatorExponentialSemigroup
   apply normedSpace_exp_apply_of_real_eigenvector
   rw [ContinuousLinearMap.smul_apply, hGv, smul_smul]
-  rfl
 
 end
 
