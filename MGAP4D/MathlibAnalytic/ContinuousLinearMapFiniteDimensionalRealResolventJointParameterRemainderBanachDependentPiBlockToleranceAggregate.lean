@@ -1,0 +1,9 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiBlockToleranceCertificateCore
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiBlockTolerancePackage
+
+/-!
+# Dependent Pi block-tolerance aggregate
+
+Generic order, decomposition, fixed-parameter certificate, compact, and
+closed-box roots for finite block response calculus.
+-/
