@@ -61,6 +61,7 @@ theorem realHilbertIsometricAdjointCompression_inner
     inner ℝ (((A.toContinuousLinearMap)†) (T (A x))) y =
       inner ℝ (T (A x)) (A y)
   rw [ContinuousLinearMap.adjoint_inner_left]
+  rfl
 
 /-- If one analyzed vector is carried to another analyzed vector, adjoint
 compression recovers the unique boundary vector exactly. -/
