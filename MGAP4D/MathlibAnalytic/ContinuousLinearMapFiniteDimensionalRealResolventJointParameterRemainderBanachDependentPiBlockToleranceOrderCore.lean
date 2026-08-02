@@ -311,6 +311,11 @@ theorem continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrde
             (fun c => continuousLinearMapJointRemainderDependentPiBlockObservable
               φ blockOf c) b hq0 hq1 hM hProduct)
           (by
+            change continuousLinearMapJointRemainderResponseSafeOrder
+              (continuousLinearMapJointRemainderDependentPiBlockBundleObservable
+                φ blockOf) q M epsilonProduct ≤
+              continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
+                φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace
             rw [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
               (W := W) φ blockOf q M epsilonProduct]
             exact continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_le_toleranceMaster
