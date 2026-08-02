@@ -45,11 +45,10 @@ theorem periodicHypercubicEvenBoundaryMarginalDensity_ne_zero
     periodicHypercubicEvenBoundaryMarginalDensity
       H N hN beta hbeta b ≠ 0 := by
   unfold periodicHypercubicEvenBoundaryMarginalDensity
-  rw [ENNReal.ofReal_ne_zero]
-  exact not_le.mpr
-    (sq_pos_of_pos
-      (periodicHypercubicEvenBoundaryVacuumMoment_pos
-        H N hN beta hbeta b))
+  rw [ENNReal.ofReal_ne_zero_iff]
+  exact sq_pos_of_pos
+    (periodicHypercubicEvenBoundaryVacuumMoment_pos
+      H N hN beta hbeta b)
 
 /-- Boundary Haar measure is absolutely continuous with respect to the
 strictly positive interacting boundary marginal. -/
@@ -61,7 +60,7 @@ theorem periodicHypercubicEvenBoundaryHaarMeasure_absolutelyContinuous_marginalM
       periodicHypercubicEvenBoundaryMarginalMeasure
         H N hN beta hbeta := by
   unfold periodicHypercubicEvenBoundaryMarginalMeasure
-  refine AbsolutelyContinuous.mk fun s hs hzero => ?_
+  refine Measure.AbsolutelyContinuous.mk fun s hs hzero => ?_
   have hset :=
     (withDensity_apply_eq_zero'
       (periodicHypercubicEvenBoundaryMarginalDensity_measurable
@@ -231,8 +230,7 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2_inner
         H N hN beta hbeta g) =
       inner ℝ f g := by
   rw [L2.inner_def, L2.inner_def]
-  rw [periodicHypercubicEvenBoundaryMarginalMeasure_eq_withDensity_nnreal
-    H N hN beta hbeta]
+  unfold periodicHypercubicEvenBoundaryMarginalMeasure
   rw [integral_withDensity_eq_integral_smul₀
     (periodicHypercubicEvenBoundaryMarginalDensityNNReal_measurable
       H N hN beta hbeta).aemeasurable]
