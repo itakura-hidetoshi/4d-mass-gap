@@ -123,8 +123,16 @@ theorem continuous_compact_oriented_centeredHeatBathOrbitL2_hasDerivAt
       (𝕜 := ℝ) (E := ℝ) (F := Lp ℝ 2 C.gibbsMeasure)
       (C.vacuumCenteringL2 f) s
   have happ := hop.hasFDerivAt.clm_apply hconst
-  simpa [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathOrbitL2,
-    B] using happ.hasDerivAt
+  change HasDerivAt
+    (fun y : ℝ =>
+      NormedSpace.exp
+        (y • ((-(1 / 2 : ℝ)) • C.heatBathHamiltonianL2))
+        (C.vacuumCenteringL2 f))
+    ((-(1 / 2 : ℝ)) • C.heatBathHamiltonianL2
+      (NormedSpace.exp
+        (s • ((-(1 / 2 : ℝ)) • C.heatBathHamiltonianL2))
+        (C.vacuumCenteringL2 f))) s
+  simpa [B] using happ.hasDerivAt
 
 /-- Every centered heat-bath orbit remains orthogonal to the normalized Gibbs
 vacuum. -/
