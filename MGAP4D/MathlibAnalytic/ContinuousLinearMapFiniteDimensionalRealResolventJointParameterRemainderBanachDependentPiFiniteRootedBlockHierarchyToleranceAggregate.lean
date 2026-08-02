@@ -1,0 +1,9 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiFiniteRootedBlockHierarchyToleranceCertificateCore
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiFiniteRootedBlockHierarchyTolerancePackage
+
+/-!
+# Dependent Pi finite rooted block hierarchy tolerance aggregate
+
+Generic rooted refinement, ancestor contraction, hierarchy order, fixed-parameter
+certificate, compact, and closed-box roots for arbitrary finite depth.
+-/
