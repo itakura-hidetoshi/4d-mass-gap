@@ -67,8 +67,7 @@ theorem periodicHypercubicEvenCanonicalBoundary_centeredHeatBath_zero_roundTrip
     periodicHypercubicEvenCanonicalBoundarySynthesisL2
         H N hN beta hbeta
         ((periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-            centeredHeatBathEvolutionL2 0
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).centeredHeatBathEvolutionL2 0
           (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
             H N hN beta hbeta f)) = f := by
   let W := periodicHypercubicSpecialUnitaryWilsonSystem
