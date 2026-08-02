@@ -245,8 +245,11 @@ theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyTo
     {epsilonBundle : τ → ℝ} {epsilonBlock : τ → β → ℝ}
     (epsilonCoordinate : ι → ℝ)
     (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    (hCarrier : 0 < epsilonCarrier)
     (hBundle : ∀ t, 0 < epsilonBundle t)
     (hBlock : ∀ t b, 0 < epsilonBlock t b)
+    (hCoordinate : ∀ i, 0 < epsilonCoordinate i)
+    (hTrace : 0 < epsilonTrace)
     (hBundleRelax : ∀ t, epsilonBundle H.root ≤ epsilonBundle t)
     (hBlockRelax : ∀ t b,
       epsilonBlock H.root (H.blockMapAlong (H.depth t) t b) ≤
@@ -270,9 +273,9 @@ theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyTo
       exact
         continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder_antitone
           φ (H.blockOf t) hq0 hq1 hM
-          (by positivity) (by positivity) (hBundle H.root) (hBundle t)
-          (hBlock t) (hBlock t) (fun _ => by positivity) (fun _ => by positivity)
-          (by positivity) (by positivity) le_rfl (hBundleRelax t)
+          hCarrier hCarrier (hBundle H.root) (hBundle t)
+          (hBlock t) (hBlock t) hCoordinate hCoordinate
+          hTrace hTrace le_rfl (hBundleRelax t)
           (fun _ => le_rfl) (fun _ => le_rfl) le_rfl
     exact hrelax.trans
       (continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder_fine_le_coarse
@@ -295,9 +298,12 @@ theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyTo
     (epsilonBundle : τ → ℝ) (epsilonBlock : τ → β → ℝ)
     (epsilonCoordinate : ι → ℝ)
     (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    (hCarrier : 0 < epsilonCarrier)
     (hProduct : 0 < epsilonProduct)
     (hBundle : ∀ t, 0 < epsilonBundle t)
     (hBlock : ∀ t b, 0 < epsilonBlock t b)
+    (hCoordinate : ∀ i, 0 < epsilonCoordinate i)
+    (hTrace : 0 < epsilonTrace)
     (hRootBundle : epsilonBundle H.root = epsilonProduct)
     (hBundleRelax : ∀ t, epsilonProduct ≤ epsilonBundle t)
     (hBlockRelax : ∀ t b, epsilonProduct ≤ epsilonBlock t b) :
@@ -319,26 +325,31 @@ theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyTo
       exact
         continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder_antitone
           φ (H.blockOf t) hq0 hq1 hM
-          (by positivity) (by positivity) hProduct (hBundle t)
-          (hBlock t) (hBlock t) (fun _ => by positivity) (fun _ => by positivity)
-          (by positivity) (by positivity) le_rfl (hBundleRelax t)
+          hCarrier hCarrier hProduct (hBundle t)
+          (hBlock t) (hBlock t) hCoordinate hCoordinate
+          hTrace hTrace le_rfl (hBundleRelax t)
           (fun _ => le_rfl) (fun _ => le_rfl) le_rfl
     exact hrelax.trans
       (le_of_eq
         (continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder_eq_productMaster
           φ (H.blockOf t) (epsilonBlock t) epsilonCoordinate
           hq0 hq1 hM hProduct (hBlock t) (hBlockRelax t)))
-  · rw [← hRootBundle]
-    exact
-      (le_of_eq
-        (continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder_eq_productMaster
+  · have hEqRoot :
+        continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
+            φ (H.blockOf H.root) q M epsilonCarrier (epsilonBundle H.root)
+            (epsilonBlock H.root) epsilonCoordinate epsilonTrace =
+          continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
+            φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
+      rw [hRootBundle]
+      exact
+        continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder_eq_productMaster
           φ (H.blockOf H.root) (epsilonBlock H.root) epsilonCoordinate
-          hq0 hq1 hM (hBundle H.root) (hBlock H.root)
-          (by intro b; simpa [hRootBundle] using hBlockRelax H.root b))).trans
-      (continuousLinearMapJointRemainder_le_finiteMaximum
-        (fun t => continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
-          φ (H.blockOf t) q M epsilonCarrier (epsilonBundle t)
-          (epsilonBlock t) epsilonCoordinate epsilonTrace) H.root)
+          hq0 hq1 hM hProduct (hBlock H.root) (hBlockRelax H.root)
+    rw [← hEqRoot]
+    exact continuousLinearMapJointRemainder_le_finiteMaximum
+      (fun t => continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
+        φ (H.blockOf t) q M epsilonCarrier (epsilonBundle t)
+        (epsilonBlock t) epsilonCoordinate epsilonTrace) H.root
 
 /-- A finite maximum over two hierarchy nodes is exactly an ordinary maximum. -/
 theorem continuousLinearMapJointRemainderFiniteMaximum_bool_eq_max
@@ -352,16 +363,14 @@ theorem continuousLinearMapJointRemainderFiniteMaximum_bool_eq_max
       (continuousLinearMapJointRemainder_le_finiteMaximum f false)
       (continuousLinearMapJointRemainder_le_finiteMaximum f true)
 
-/-- The two-node specialization is definitionally the merged coarse/fine
+/-- The homogeneous two-node specialization is exactly the merged coarse/fine
 hierarchy master from the preceding package. -/
 theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyToleranceMasterSafeOrder_bool_eq_blockHierarchyMaster
-    {κ σ : Type*} [Fintype κ] [Fintype σ]
-    [DecidableEq κ] [DecidableEq σ]
     (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
     (H : ContinuousLinearMapJointDependentPiFiniteRootedBlockHierarchy ι Bool β)
-    (fineOf : ι → κ) (coarseOf : ι → σ)
+    (fineOf coarseOf : ι → β)
     (q M epsilonCarrier epsilonBundle : ℝ)
-    (epsilonFine : κ → ℝ) (epsilonCoarse : σ → ℝ)
+    (epsilonFine epsilonCoarse : β → ℝ)
     (epsilonNodeBundle : Bool → ℝ) (epsilonNodeBlock : Bool → β → ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ)
     (hCoarse : H.blockOf false = coarseOf)
