@@ -101,8 +101,8 @@ theorem boundaryHaarL2Analysis_coeFn
       fun A => f (P.boundaryFiberedCoordinates Value A).1 := by
   filter_upwards [MeasureTheory.Lp.coeFn_compMeasurePreserving
     f (P.boundaryHaarProjection_measurePreserving μ)] with A hA
-  rw [hA, Function.comp_apply,
-    P.boundaryHaarProjection_eq_boundaryFiberedCoordinates_fst Value A]
+  simpa [boundaryHaarL2Analysis, Function.comp_apply,
+    P.boundaryHaarProjection_eq_boundaryFiberedCoordinates_fst Value A] using hA
 
 end FiniteInvolutiveEdgeOrbitPartition
 
