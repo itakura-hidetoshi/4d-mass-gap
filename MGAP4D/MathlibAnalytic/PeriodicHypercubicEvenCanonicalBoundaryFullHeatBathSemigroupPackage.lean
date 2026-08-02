@@ -289,7 +289,8 @@ theorem
         H N hN beta hbeta t f),
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analysis_apply
       H N hN beta hbeta hRange t f,
-    continuous_compact_oriented_fullHeatBathEvolutionRealL2_add]
+    continuous_compact_oriented_fullHeatBathEvolutionRealL2_add,
+    ContinuousLinearMap.mul_apply]
 
 /-- Exact intertwining also uniquely characterizes the canonical full boundary
 semigroup among bounded boundary operator families. -/
