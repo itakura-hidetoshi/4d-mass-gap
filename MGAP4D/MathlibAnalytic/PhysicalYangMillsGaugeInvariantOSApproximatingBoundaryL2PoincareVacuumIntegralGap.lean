@@ -34,8 +34,8 @@ noncomputable def toApproximatingFiniteIntegralGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
     PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C :=
-  Q.toApproximatingBoundaryMomentGapCertificate
-    |>.toApproximatingFiniteIntegralGapCertificate
+  PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryMomentGapCertificate.toApproximatingFiniteIntegralGapCertificate
+    Q.toApproximatingBoundaryMomentGapCertificate
 
 /-- The same Poincaré estimate generates a completed vacuum norm-decay
 certificate whose decay factor is explicitly nonnegative. -/
@@ -44,8 +44,8 @@ noncomputable def toApproximatingNonnegativeVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
     PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C :=
-  Q.toApproximatingFiniteIntegralGapCertificate
-    |>.toApproximatingNonnegativeVacuumGapCertificate
+  PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate.toApproximatingNonnegativeVacuumGapCertificate
+    Q.toApproximatingFiniteIntegralGapCertificate
 
 /-- The boundary Poincaré route preserves the physical mass parameter exactly. -/
 @[simp] theorem toApproximatingNonnegativeVacuumGapCertificate_mass
@@ -60,9 +60,8 @@ certificate. -/
 @[simp] theorem nonnegativeVacuum_finiteIntegral_roundTrip_mass
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
-    Q.toApproximatingNonnegativeVacuumGapCertificate
-        |>.toApproximatingFiniteIntegralGapCertificate
-        |>.mass = Q.mass :=
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
+      Q.toApproximatingNonnegativeVacuumGapCertificate).mass = Q.mass :=
   rfl
 
 /-- The Poincaré quadratic decay factor is unchanged by the finite-integral to
@@ -71,19 +70,17 @@ nonnegative-vacuum to finite-integral round trip. -/
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (t : NNReal) :
-    Q.toApproximatingNonnegativeVacuumGapCertificate
-        |>.toApproximatingFiniteIntegralGapCertificate
-        |>.quadraticDecayFactor t =
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
+      Q.toApproximatingNonnegativeVacuumGapCertificate).quadraticDecayFactor t =
       1 - Q.defectFactor t := by
-  simpa only [toApproximatingNonnegativeVacuumGapCertificate,
-    toApproximatingFiniteIntegralGapCertificate,
-    toApproximatingBoundaryMomentGapCertificate,
-    toApproximatingBoundaryL2QuadraticGapCertificate,
-    PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2QuadraticGapCertificate.toApproximatingBoundaryMomentGapCertificate,
-    PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2TransferGapCertificate.toApproximatingBoundaryMomentGapCertificate]
-    using
-      PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate.nonnegativeVacuum_roundTrip_quadraticDecayFactor
-        Q.toApproximatingFiniteIntegralGapCertificate t
+  calc
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
+      Q.toApproximatingNonnegativeVacuumGapCertificate).quadraticDecayFactor t =
+        Q.toApproximatingFiniteIntegralGapCertificate.quadraticDecayFactor t := by
+      exact
+        PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate.nonnegativeVacuum_roundTrip_quadraticDecayFactor
+          Q.toApproximatingFiniteIntegralGapCertificate t
+    _ = 1 - Q.defectFactor t := rfl
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2PoincareGapCertificate
 
@@ -139,12 +136,12 @@ variable
 /-- Recover the actual finite periodic Wilson reflected-integral certificate
 from the shared-boundary Poincaré input. -/
 noncomputable def finiteIntegralGapCertificate
-    (A : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryL2PoincareCommonCarrierGapTransfer
+    (_A : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryL2PoincareCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C Q) :
     PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C :=
-  Q.toApproximatingNonnegativeVacuumGapCertificate
-    |>.toApproximatingFiniteIntegralGapCertificate
+  PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
+    Q.toApproximatingNonnegativeVacuumGapCertificate
 
 @[simp] theorem finiteIntegralGapCertificate_mass
     (A : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryL2PoincareCommonCarrierGapTransfer
