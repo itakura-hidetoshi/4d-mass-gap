@@ -33,7 +33,9 @@ theorem continuous_compact_oriented_haarToGibbsL2Weight_continuous
     (C : ContinuousCompactOrientedGaugeWilsonSystem) :
     Continuous C.haarToGibbsL2Weight := by
   unfold ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Weight
-  fun_prop
+  exact continuous_const.mul
+    (Real.continuous_exp.comp
+      ((continuous_compact_oriented_gibbsExponent C).neg.div_const 2))
 
 /-- The Wilson Haar-to-Gibbs `L²` weight is strictly positive. -/
 theorem continuous_compact_oriented_haarToGibbsL2Weight_pos
@@ -72,8 +74,15 @@ theorem continuous_compact_oriented_exp_mul_haarToGibbsL2Weight_sq
       (le_of_lt (compact_oriented_partitionFunction_pos C.base
         (continuous_compact_oriented_boltzmannIntegrable C))),
     continuous_compact_oriented_halfDensityExp_sq]
-  rw [mul_assoc, ← Real.exp_add]
-  simp
+  calc
+    Real.exp (C.base.gibbsExponent A) *
+        (C.base.partitionFunction * Real.exp (-C.base.gibbsExponent A)) =
+      C.base.partitionFunction *
+        (Real.exp (C.base.gibbsExponent A) *
+          Real.exp (-C.base.gibbsExponent A)) := by ring
+    _ = C.base.partitionFunction := by
+      rw [← Real.exp_add]
+      simp
 
 /-- The normalized Gibbs density times the weight squared is exactly one. -/
 theorem continuous_compact_oriented_normalizedDensity_mul_haarToGibbsL2Weight_sq
@@ -110,7 +119,8 @@ theorem continuous_compact_oriented_haarToGibbsL2Function_aestronglyMeasurable
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (f : C.configurationHaarL2) :
     AEStronglyMeasurable (C.haarToGibbsL2Function f) C.gibbsMeasure := by
-  apply continuous_compact_oriented_gibbsMeasure_absolutelyContinuous C |>.mono_ac
+  apply AEStronglyMeasurable.mono_ac
+    (continuous_compact_oriented_gibbsMeasure_absolutelyContinuous C)
   exact
     (continuous_compact_oriented_haarToGibbsL2Weight_continuous C).aestronglyMeasurable.mul
       (Lp.aestronglyMeasurable f)
@@ -130,10 +140,20 @@ theorem continuous_compact_oriented_haarToGibbsL2Function_memLp
   have hf : Integrable (fun A => (f A) ^ 2) C.base.configurationHaarMeasure :=
     (Lp.memLp f).integrable_sq
   have hZ := hf.const_mul C.base.partitionFunction
-  simpa only [ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Function,
-    smul_eq_mul, mul_pow,
-    continuous_compact_oriented_exp_mul_haarToGibbsL2Weight_sq,
-    mul_assoc] using hZ
+  apply hZ.congr
+  filter_upwards with A
+  change
+    Real.exp (C.base.gibbsExponent A) *
+        ((C.haarToGibbsL2Weight A * f A) ^ 2) =
+      C.base.partitionFunction * f A ^ 2
+  rw [mul_pow]
+  calc
+    Real.exp (C.base.gibbsExponent A) *
+        (C.haarToGibbsL2Weight A ^ 2 * f A ^ 2) =
+      (Real.exp (C.base.gibbsExponent A) *
+        C.haarToGibbsL2Weight A ^ 2) * f A ^ 2 := by ring
+    _ = C.base.partitionFunction * f A ^ 2 := by
+      rw [continuous_compact_oriented_exp_mul_haarToGibbsL2Weight_sq]
 
 end
 
