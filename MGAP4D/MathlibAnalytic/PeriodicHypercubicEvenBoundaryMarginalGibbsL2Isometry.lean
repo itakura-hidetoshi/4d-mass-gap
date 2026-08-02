@@ -81,6 +81,7 @@ noncomputable def periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
   LinearIsometry.mk
     (U.toLinearMap.comp J.toLinearMap)
     (fun f => by
+      change ‖U (J f)‖ = ‖f‖
       rw [U.norm_map, J.norm_map])
 
 @[simp] theorem periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry_apply
