@@ -115,8 +115,8 @@ theorem periodicHypercubicEvenBoundaryVacuumMoment_pos
           H N hN beta hbeta b x)
     rw [hsupport]
     have hne :
-        periodicHypercubicEvenOpenHalfHaarMeasure H N Set.univ ≠ 0 := by
-      simpa only [measure_univ_eq_zero] using
+        periodicHypercubicEvenOpenHalfHaarMeasure H N Set.univ ≠ 0 :=
+      MeasureTheory.measure_univ_ne_zero.mpr
         (NeZero.ne (periodicHypercubicEvenOpenHalfHaarMeasure H N))
     exact lt_of_le_of_ne (zero_le _) hne.symm
   · exact fun x => le_of_lt
