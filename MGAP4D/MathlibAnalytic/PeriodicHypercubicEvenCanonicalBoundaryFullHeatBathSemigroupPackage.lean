@@ -50,9 +50,10 @@ noncomputable def
   realHilbertIsometricAdjointCompression
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta)
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-        fullHeatBathEvolutionRealL2 t)
+    (ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      t)
 
 @[simp] theorem
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_apply
@@ -65,9 +66,10 @@ noncomputable def
         H N hN beta hbeta t f =
       periodicHypercubicEvenCanonicalBoundarySynthesisL2
         H N hN beta hbeta
-        ((periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-            fullHeatBathEvolutionRealL2 t
+        (ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+          t
           (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
             H N hN beta hbeta f)) :=
   rfl
@@ -85,9 +87,10 @@ theorem
         (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
           H N hN beta hbeta t f) g =
       inner ℝ
-        ((periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-            fullHeatBathEvolutionRealL2 t
+        (ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+          t
           (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
             H N hN beta hbeta f))
         (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
@@ -95,9 +98,10 @@ theorem
   exact realHilbertIsometricAdjointCompression_inner
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta)
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-        fullHeatBathEvolutionRealL2 t)
+    (ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      t)
     f g
 
 /-- The full boundary compression starts from the identity on the complete
@@ -133,6 +137,7 @@ theorem
 
 /-- The strong time-zero derivative of the full boundary evolution is exactly
 minus one half of the canonical compressed boundary Hamiltonian. -/
+set_option maxHeartbeats 1000000 in
 theorem
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_hasDerivAt_zero
     (H N : ℕ) (hN : 0 < N)
@@ -180,11 +185,28 @@ theorem
         H N hN beta hbeta t f := by
   rw [periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_apply,
     periodicHypercubicEvenCanonicalBoundaryCompressedHeatBathEvolutionL2_apply]
-  congr 1
-  rw [continuous_compact_oriented_centeredHeatBathEvolutionL2_eq_full_of_orthogonal]
-  · rw [← continuous_compact_oriented_fullHeatBathEvolutionRealL2_nnreal]
-  · simpa [periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry_vacuum_inner]
-      using hf
+  apply congrArg
+    (periodicHypercubicEvenCanonicalBoundarySynthesisL2
+      H N hN beta hbeta)
+  have hfA :
+      inner ℝ
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsVacuumL2
+        (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+          H N hN beta hbeta f) = 0 := by
+    rw [periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry_vacuum_inner]
+    exact hf
+  rw [continuous_compact_oriented_centeredHeatBathEvolutionL2_eq_full_of_orthogonal
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      t
+      (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+        H N hN beta hbeta f)
+      hfA]
+  exact continuous_compact_oriented_fullHeatBathEvolutionRealL2_nnreal
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+    t
 
 /-- Global invariance of the analyzed boundary range under the full real-time
 heat-bath semigroup.  This is the exact model-specific condition needed for
@@ -195,9 +217,10 @@ def periodicHypercubicEvenCanonicalBoundaryFullHeatBathRangeInvariant
     (beta : ℝ) (hbeta : 0 ≤ beta) : Prop :=
   ∀ t : ℝ, ∀ f : PeriodicHypercubicEvenBoundaryHaarL2 H N,
     ∃ g : PeriodicHypercubicEvenBoundaryHaarL2 H N,
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-          fullHeatBathEvolutionRealL2 t
+      ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+          t
           (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
             H N hN beta hbeta f) =
         periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
@@ -218,17 +241,19 @@ theorem
         H N hN beta hbeta
         (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
           H N hN beta hbeta t f) =
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-          fullHeatBathEvolutionRealL2 t
-          (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
-            H N hN beta hbeta f) := by
+      ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+        t
+        (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+          H N hN beta hbeta f) := by
   exact realHilbertIsometricAdjointCompression_analysis_apply_of_range
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta)
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-        fullHeatBathEvolutionRealL2 t)
+    (ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      t)
     (hRange t) f
 
 /-- Under the exact model-specific range-invariance condition, the canonical
@@ -247,33 +272,20 @@ theorem
           H N hN beta hbeta s *
         periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
           H N hN beta hbeta t := by
-  let A := periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
-    H N hN beta hbeta
-  apply A.injective
   ext f
-  rw [ContinuousLinearMap.mul_apply]
+  apply
+    (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+      H N hN beta hbeta).injective
   rw [periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analysis_apply
       H N hN beta hbeta hRange (s + t) f,
+    ContinuousLinearMap.mul_apply,
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analysis_apply
       H N hN beta hbeta hRange s
       (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
         H N hN beta hbeta t f),
+    periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analysis_apply
+      H N hN beta hbeta hRange t f,
     continuous_compact_oriented_fullHeatBathEvolutionRealL2_add]
-  change
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-        fullHeatBathEvolutionRealL2 s)
-      (((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-          fullHeatBathEvolutionRealL2 t) (A f)) =
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-        fullHeatBathEvolutionRealL2 s)
-      (A
-        (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-          H N hN beta hbeta t f))
-  rw [periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analysis_apply
-    H N hN beta hbeta hRange t f]
 
 /-- Exact intertwining also uniquely characterizes the canonical full boundary
 semigroup among bounded boundary operator families. -/
@@ -286,9 +298,10 @@ theorem
     (B : PeriodicHypercubicEvenBoundaryHaarL2 H N →L[ℝ]
       PeriodicHypercubicEvenBoundaryHaarL2 H N)
     (hintertwine : ∀ f,
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-          fullHeatBathEvolutionRealL2 t
+      ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+          t
           (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
             H N hN beta hbeta f) =
         periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
@@ -298,9 +311,10 @@ theorem
   exact realHilbertIsometricAdjointCompression_eq_of_intertwines
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta)
-    ((periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-        fullHeatBathEvolutionRealL2 t)
+    (ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      t)
     B hintertwine
 
 end
