@@ -31,7 +31,7 @@ theorem continuous_compact_oriented_vacuumCenteringL2_norm_le
   have hsquare : ‖C.vacuumCenteringL2 f‖ ^ 2 ≤ ‖f‖ ^ 2 := by
     rw [continuous_compact_oriented_vacuumCenteringL2_apply]
     unfold ContinuousCompactOrientedGaugeWilsonSystem.vacuumCenteredL2
-    rw [norm_sub_sq, real_inner_smul_right, real_inner_comm,
+    rw [norm_sub_sq_real, real_inner_smul_right, real_inner_comm,
       norm_smul, continuous_compact_oriented_gibbsVacuumL2_norm]
     simp only [mul_one, sq_abs]
     nlinarith [sq_nonneg (inner ℝ C.gibbsVacuumL2 f)]
@@ -78,7 +78,8 @@ theorem continuous_compact_oriented_heatBathHamiltonianL2_commute_vacuumCenterin
     Commute C.heatBathHamiltonianL2 C.vacuumCenteringL2 := by
   show C.heatBathHamiltonianL2 * C.vacuumCenteringL2 =
     C.vacuumCenteringL2 * C.heatBathHamiltonianL2
-  ext f
+  apply ContinuousLinearMap.ext
+  intro f
   change C.heatBathHamiltonianL2 (C.vacuumCenteringL2 f) =
     C.vacuumCenteringL2 (C.heatBathHamiltonianL2 f)
   rw [continuous_compact_oriented_heatBathHamiltonianL2_vacuumCenteringL2,
@@ -114,8 +115,11 @@ theorem continuous_compact_oriented_centeredHeatBathOrbitL2_hasDerivAt
       (Lp ℝ 2 C.gibbsMeasure →L[ℝ] Lp ℝ 2 C.gibbsMeasure) :=
     (-(1 / 2 : ℝ)) • C.heatBathHamiltonianL2
   have hop := hasDerivAt_exp_smul_const' B s
-  have happ := hop.hasFDerivAt.clm_apply
-    (hasFDerivAt_const s (C.vacuumCenteringL2 f))
+  have hconst :
+      HasFDerivAt
+        (fun _ : ℝ => C.vacuumCenteringL2 f) 0 s :=
+    hasFDerivAt_const s _
+  have happ := hop.hasFDerivAt.clm_apply hconst
   simpa [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathOrbitL2,
     B] using happ.hasDerivAt
 
@@ -197,12 +201,22 @@ theorem continuous_compact_oriented_centeredHeatBathEvolutionL2_apply_norm_le
       ‖C.centeredHeatBathOrbitL2 f (t : ℝ)‖ ≤
         Real.sqrt (Real.exp (-gap * (t : ℝ))) * ‖f‖ :=
     horbit.trans (mul_le_mul_of_nonneg_left hcenter hfactor)
-  convert hbound using 1
-  · simp [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathEvolutionL2,
+  have hscale :
+      (t : ℝ) • ((-(1 / 2 : ℝ)) • C.heatBathHamiltonianL2) =
+        (-((t : ℝ) / 2)) • C.heatBathHamiltonianL2 := by
+    rw [smul_smul]
+    congr 1
+    ring
+  have horbit_eq :
+      C.centeredHeatBathOrbitL2 f (t : ℝ) =
+        C.centeredHeatBathEvolutionL2 t f := by
+    simp only [ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathOrbitL2,
+      ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathEvolutionL2,
       ContinuousCompactOrientedGaugeWilsonSystem.heatBathEvolutionL2,
-      ContinuousCompactOrientedGaugeWilsonSystem.centeredHeatBathOrbitL2]
-    congr 2
-    module
+      ContinuousLinearMap.comp_apply]
+    rw [hscale]
+  rw [← horbit_eq]
+  exact hbound
 
 /-- The centered finite Wilson heat-bath operator norm is generated from the
 native Poincaré/coercivity theorem, rather than supplied as independent data. -/
