@@ -41,8 +41,9 @@ noncomputable def
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenBoundaryHaarL2 H N →L[ℝ]
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).GibbsRealL2 :=
+      Lp ℝ 2
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure :=
   realHilbertIsometricAdjointCompressionGeneratorDefect
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta)
