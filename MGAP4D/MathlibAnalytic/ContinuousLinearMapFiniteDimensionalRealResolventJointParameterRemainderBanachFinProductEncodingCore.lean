@@ -59,7 +59,8 @@ theorem continuousLinearMapJointRemainder_norm_proj_le_one
     (ContinuousLinearMap.proj i : (Fin n → W) →L[ℝ] W)
     zero_le_one
     (fun x => by
-      simpa using norm_apply_le_norm x i)
+      simpa using
+        ((pi_norm_le_iff_of_nonneg (x := x) (r := ‖x‖) (norm_nonneg x)).1 le_rfl i))
 
 /-- The safe order of every coordinate observable is below the safe order of
 the single finite-product observable. -/
