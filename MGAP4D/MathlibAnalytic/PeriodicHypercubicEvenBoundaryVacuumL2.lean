@@ -41,10 +41,12 @@ noncomputable instance periodicHypercubicEvenBoundaryMarginal_isProbabilityMeasu
     IsProbabilityMeasure
       (periodicHypercubicEvenBoundaryMarginalMeasure
         H N hN beta hbeta) := by
-  let W := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
-  letI : IsProbabilityMeasure W.gibbsMeasure :=
-    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure W
+  letI : IsProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
   rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
     H N hN beta hbeta]
   exact
