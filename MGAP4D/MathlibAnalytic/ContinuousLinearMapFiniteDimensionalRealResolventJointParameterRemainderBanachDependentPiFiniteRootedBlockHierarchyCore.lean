@@ -32,7 +32,7 @@ theorem continuousLinearMapJointFiniteRootedAncestor_trans
     ContinuousLinearMapJointFiniteRootedAncestor parent d r := by
   rcases hda with ⟨n, hn⟩
   rcases har with ⟨m, hm⟩
-  refine ⟨n + m, ?_⟩
+  refine ⟨m + n, ?_⟩
   rw [Function.iterate_add_apply, hn, hm]
 
 /-- A finite rooted hierarchy of finite coordinate partitions. Every hierarchy
