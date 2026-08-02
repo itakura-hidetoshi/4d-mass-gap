@@ -47,12 +47,17 @@ noncomputable instance periodicHypercubicEvenBoundaryMarginal_isProbabilityMeasu
     continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
       (periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-  rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
-    H N hN beta hbeta]
-  exact
-    Measure.isProbabilityMeasure_map
-      ((periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
-        H N hN beta hbeta).measurable.aemeasurable)
+  let hmp :=
+    periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
+      H N hN beta hbeta
+  refine ⟨?_⟩
+  have hpre := hmp.measure_preimage MeasurableSet.univ
+  exact hpre.symm.trans (by
+    simpa only [Set.preimage_univ] using
+      (measure_univ :
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
+            Set.univ = 1))
 
 /-- The finite Wilson OS boundary vacuum wavefunction belongs to boundary Haar
 `L²`.  Its squared norm density is precisely the interacting boundary
