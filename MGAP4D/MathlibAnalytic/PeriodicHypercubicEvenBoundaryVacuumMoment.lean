@@ -37,7 +37,7 @@ local instance boundaryVacuumMomentBorelSpace (N : ℕ) :
 /-- The boundary Gram moment of the constant positive-half observable.
 
 This is the finite Wilson OS vacuum wavefunction on the reflection-fixed
-boundary.  Its square is the boundary marginal density of the Gibbs law. -/
+boundary. Its square is the boundary marginal density of the Gibbs law. -/
 noncomputable def periodicHypercubicEvenBoundaryVacuumMoment
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -123,7 +123,14 @@ theorem periodicHypercubicEvenBoundaryVacuumGramFeature_integrable
   have h :=
     periodicHypercubicEvenBoundaryObservableGramFeature_integrable_of_boundedContinuous
       H N hN beta hbeta one b
-  simpa [one, periodicHypercubicEvenBoundaryObservableGramFeature] using h
+  have heq :
+      periodicHypercubicEvenBoundaryObservableGramFeature
+          H N hN beta hbeta one b =
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H N hN beta hbeta b := by
+    funext x
+    simp [one, periodicHypercubicEvenBoundaryObservableGramFeature]
+  rwa [heq] at h
 
 /-- The Wilson boundary vacuum moment is measurable. -/
 theorem periodicHypercubicEvenBoundaryVacuumMoment_measurable
@@ -136,7 +143,7 @@ theorem periodicHypercubicEvenBoundaryVacuumMoment_measurable
   unfold periodicHypercubicEvenBoundaryVacuumMoment
   exact
     (periodicHypercubicEvenBoundaryVacuumGramFeature_measurable
-      H N hN beta hbeta).integral_prod_right
+      H N hN beta hbeta).stronglyMeasurable.integral_prod_right'.measurable
 
 /-- The Wilson boundary vacuum moment is nonnegative. -/
 theorem periodicHypercubicEvenBoundaryVacuumMoment_nonneg
@@ -183,11 +190,25 @@ theorem periodicHypercubicEvenBoundaryFiberedGibbsDensity_integral_eq_vacuumMome
     simpa using
       (periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_original
         H N hN beta hbeta (fun _ => (1 : ℝ)) b x)
+  have hone :
+      Integrable
+        (periodicHypercubicEvenBoundaryObservableGramFeature
+          H N hN beta hbeta (fun _ => (1 : ℝ)) b)
+        (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    have h :=
+      periodicHypercubicEvenBoundaryVacuumGramFeature_integrable
+        H N hN beta hbeta b
+    have heq :
+        periodicHypercubicEvenBoundaryObservableGramFeature
+            H N hN beta hbeta (fun _ => (1 : ℝ)) b =
+          periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+            H N hN beta hbeta b := by
+      funext x
+      simp [periodicHypercubicEvenBoundaryObservableGramFeature]
+    rwa [heq]
   have hgram :=
     periodicHypercubicEvenBoundaryObservable_corrected_iteratedIntegral_eq_norm_sq
-      H N hN beta hbeta (fun _ => (1 : ℝ)) b
-      (periodicHypercubicEvenBoundaryVacuumGramFeature_integrable
-        H N hN beta hbeta b)
+      H N hN beta hbeta (fun _ => (1 : ℝ)) b hone
   rw [← htransport]
   simpa [periodicHypercubicEvenBoundaryVacuumMoment,
     periodicHypercubicEvenBoundaryObservableGramFeature,
