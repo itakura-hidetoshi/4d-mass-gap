@@ -31,9 +31,10 @@ local instance boundaryVacuumPositivityBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance boundaryVacuumPositivityOpenHalfProbability (H N : ℕ) :
-    IsProbabilityMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+local instance boundaryVacuumPositivityOpenHalfNeZero (H N : ℕ) :
+    NeZero (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
   unfold periodicHypercubicEvenOpenHalfHaarMeasure
+  unfold FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure
   infer_instance
 
 /-- The boundary-only coefficient in the reflected Wilson Gram kernel is
@@ -92,7 +93,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_pos
       H N beta b x)
 
 /-- The finite Wilson OS boundary vacuum wavefunction is pointwise strictly
-positive.  Hence division by it is available on the full boundary Haar space,
+positive. Hence division by it is available on the full boundary Haar space,
 not merely almost everywhere under the interacting marginal. -/
 theorem periodicHypercubicEvenBoundaryVacuumMoment_pos
     (H N : ℕ) (hN : 0 < N)
@@ -113,7 +114,7 @@ theorem periodicHypercubicEvenBoundaryVacuumMoment_pos
         (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_pos
           H N hN beta hbeta b x)
     rw [hsupport]
-    simp
+    exact measure_univ_pos
   · exact fun x => le_of_lt
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_pos
         H N hN beta hbeta b x)
