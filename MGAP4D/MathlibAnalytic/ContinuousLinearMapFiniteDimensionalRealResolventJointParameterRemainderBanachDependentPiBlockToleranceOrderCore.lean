@@ -296,10 +296,10 @@ theorem continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrde
       ?_, ?_, ?_,
       continuousLinearMapJointRemainderTraceSafeOrder_le_dependentPiProductToleranceMaster
         φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace⟩
-    · simpa [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
-        (W := W) φ blockOf q M epsilonProduct] using
-        (continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_le_toleranceMaster
-          φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace)
+    · rw [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
+        (W := W) φ blockOf q M epsilonProduct]
+      exact continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_le_toleranceMaster
+        φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace
     · intro b
       exact le_trans
         (continuousLinearMapJointRemainderResponseSafeOrder_antitone_epsilon
@@ -311,10 +311,10 @@ theorem continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrde
             (fun c => continuousLinearMapJointRemainderDependentPiBlockObservable
               φ blockOf c) b hq0 hq1 hM hProduct)
           (by
-            simpa [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
-              (W := W) φ blockOf q M epsilonProduct] using
-              (continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_le_toleranceMaster
-                φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace)))
+            rw [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
+              (W := W) φ blockOf q M epsilonProduct]
+            exact continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_le_toleranceMaster
+              φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace))
     · intro i
       exact continuousLinearMapJointRemainderResponseSafeOrder_coord_le_dependentPiProductToleranceMaster
         φ i q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace
@@ -328,11 +328,11 @@ theorem continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrde
       continuousLinearMapJointRemainderTraceSafeOrder_le_dependentPiBlockToleranceMaster
         φ blockOf q M epsilonCarrier epsilonProduct epsilonBlock
         epsilonCoordinate epsilonTrace⟩
-    · simpa [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
-        (W := W) φ blockOf q M epsilonProduct] using
-        (continuousLinearMapJointRemainderResponseSafeOrder_blockBundle_le_toleranceMaster
-          φ blockOf q M epsilonCarrier epsilonProduct epsilonBlock
-          epsilonCoordinate epsilonTrace)
+    · rw [← continuousLinearMapJointRemainderResponseSafeOrder_dependentPiBlockBundle_eq
+        (W := W) φ blockOf q M epsilonProduct]
+      exact continuousLinearMapJointRemainderResponseSafeOrder_blockBundle_le_toleranceMaster
+        φ blockOf q M epsilonCarrier epsilonProduct epsilonBlock
+        epsilonCoordinate epsilonTrace
     · intro i
       exact continuousLinearMapJointRemainderResponseSafeOrder_coord_le_dependentPiBlockToleranceMaster
         φ blockOf i q M epsilonCarrier epsilonProduct epsilonBlock
