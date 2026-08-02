@@ -139,18 +139,33 @@ theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyLe
       continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
         φ (H.blockOf H.root) q M epsilonCarrier (epsilonBundle H.root)
         (epsilonBlock H.root) epsilonCoordinate epsilonTrace := by
+  let rootMaster : ℕ :=
+    continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
+      φ (H.blockOf H.root) q M epsilonCarrier (epsilonBundle H.root)
+      (epsilonBlock H.root) epsilonCoordinate epsilonTrace
+  change continuousLinearMapJointRemainderFiniteMaximum
+      (fun t =>
+        continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
+          φ (H.blockOf ((.root H).node t)) q M epsilonCarrier
+          (epsilonBundle ((.root H).node t))
+          (epsilonBlock ((.root H).node t)) epsilonCoordinate epsilonTrace) = rootMaster
+  have hfun :
+      (fun t : τ =>
+        continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
+          φ (H.blockOf ((.root H).node t)) q M epsilonCarrier
+          (epsilonBundle ((.root H).node t))
+          (epsilonBlock ((.root H).node t)) epsilonCoordinate epsilonTrace) =
+        fun _ : τ => rootMaster := by
+    funext t
+    simp [rootMaster]
+  rw [hfun]
   apply le_antisymm
   · apply (continuousLinearMapJointRemainderFiniteMaximum_le_iff _ _).2
     intro t
-    simp
-  · simpa using
-      (continuousLinearMapJointRemainder_le_finiteMaximum
-        (fun t =>
-          continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
-            φ (H.blockOf ((.root H).node t)) q M epsilonCarrier
-            (epsilonBundle ((.root H).node t))
-            (epsilonBlock ((.root H).node t))
-            epsilonCoordinate epsilonTrace) H.root)
+    exact le_rfl
+  · exact
+      continuousLinearMapJointRemainder_le_finiteMaximum
+        (fun _ : τ => rootMaster) H.root
 
 /-- A finite maximum is invariant under a surjective reindexing. -/
 theorem continuousLinearMapJointRemainderFiniteMaximum_comp_surjective_eq
