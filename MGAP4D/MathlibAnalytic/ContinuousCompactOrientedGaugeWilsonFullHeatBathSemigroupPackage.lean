@@ -112,12 +112,18 @@ theorem continuous_compact_oriented_fullHeatBathEvolutionRealL2_vacuum
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
     (t : ℝ) :
     C.fullHeatBathEvolutionRealL2 t C.gibbsVacuumL2 = C.gibbsVacuumL2 := by
-  apply realContinuousLinearOperatorExponentialSemigroup_apply_eigenvector
-    C.fullHeatBathGeneratorL2 C.gibbsVacuumL2 0 t
-  unfold ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathGeneratorL2
-  rw [ContinuousLinearMap.smul_apply,
-    continuous_compact_oriented_heatBathHamiltonianL2_vacuum]
-  simp
+  have hgen :
+      C.fullHeatBathGeneratorL2 C.gibbsVacuumL2 =
+        (0 : ℝ) • C.gibbsVacuumL2 := by
+    unfold ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathGeneratorL2
+    rw [ContinuousLinearMap.smul_apply,
+      continuous_compact_oriented_heatBathHamiltonianL2_vacuum]
+    simp
+  have h :=
+    realContinuousLinearOperatorExponentialSemigroup_apply_eigenvector
+      C.fullHeatBathGeneratorL2 C.gibbsVacuumL2 0 t hgen
+  simpa [ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2]
+    using h
 
 @[simp] theorem continuous_compact_oriented_heatBathEvolutionL2_zero
     (C : ContinuousCompactOrientedGaugeWilsonSystem) :
