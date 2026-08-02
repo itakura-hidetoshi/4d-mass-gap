@@ -33,7 +33,7 @@ noncomputable def toApproximatingNonnegativeVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C where
   toPhysicalYangMillsEvenPeriodicWilsonOSApproximatingVacuumGapCertificate :=
     Q.toApproximatingVacuumGapCertificate
-  decayFactor_nonneg := fun t => Real.sqrt_nonneg _
+  decayFactor_nonneg := fun _ => Real.sqrt_nonneg _
 
 /-- Passing from a finite integral certificate to completed norm decay and back
 recovers the original quadratic decay factor exactly. -/
@@ -50,15 +50,17 @@ recovers the original quadratic decay factor exactly. -/
     PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.quadraticDecayFactor
     toApproximatingNonnegativeVacuumGapCertificate
   dsimp only
+  change
+    (Real.sqrt (Q.quadraticDecayFactor (t / 2 + t / 2))) ^ 2 =
+      Q.quadraticDecayFactor t
   rw [hhalf, Real.sq_sqrt (Q.quadraticDecayFactor_nonneg t)]
 
 /-- The round-trip finite-integral certificate preserves its mass parameter. -/
 @[simp] theorem nonnegativeVacuum_roundTrip_mass
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
-    Q.toApproximatingNonnegativeVacuumGapCertificate
-        |>.toApproximatingFiniteIntegralGapCertificate
-        |>.mass = Q.mass :=
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
+      Q.toApproximatingNonnegativeVacuumGapCertificate).mass = Q.mass := by
   rfl
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate
@@ -89,9 +91,9 @@ factor exactly. -/
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (t : NNReal) :
-    Q.toApproximatingFiniteIntegralGapCertificate
-        |>.toApproximatingVacuumGapCertificate
-        |>.decayFactor t = Q.decayFactor t := by
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate.toApproximatingVacuumGapCertificate
+      Q.toApproximatingFiniteIntegralGapCertificate).decayFactor t =
+        Q.decayFactor t := by
   change Real.sqrt (Q.quadraticDecayFactor (t + t)) = Q.decayFactor t
   exact Q.sqrt_quadraticDecayFactor_add_self t
 
@@ -99,9 +101,8 @@ factor exactly. -/
 @[simp] theorem finiteIntegral_roundTrip_mass
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
-    Q.toApproximatingFiniteIntegralGapCertificate
-        |>.toApproximatingVacuumGapCertificate
-        |>.mass = Q.mass :=
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingFiniteIntegralGapCertificate.toApproximatingVacuumGapCertificate
+      Q.toApproximatingFiniteIntegralGapCertificate).mass = Q.mass := by
   rfl
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate
