@@ -125,48 +125,6 @@ theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyTo
         φ H C q M epsilonCarrier epsilonBundle epsilonBlock
         epsilonCoordinate epsilonTrace
 
-/-- The root cut is a finite maximum of one repeated root master, hence equals
-that root master exactly. -/
-theorem continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyLevelCutToleranceMasterSafeOrder_root
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
-    (H : ContinuousLinearMapJointDependentPiFiniteRootedBlockHierarchy ι τ β)
-    (q M epsilonCarrier : ℝ)
-    (epsilonBundle : τ → ℝ) (epsilonBlock : τ → β → ℝ)
-    (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) :
-    continuousLinearMapJointRemainderDependentPiFiniteRootedBlockHierarchyLevelCutToleranceMasterSafeOrder
-        φ H (.root H) q M epsilonCarrier epsilonBundle epsilonBlock
-        epsilonCoordinate epsilonTrace =
-      continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
-        φ (H.blockOf H.root) q M epsilonCarrier (epsilonBundle H.root)
-        (epsilonBlock H.root) epsilonCoordinate epsilonTrace := by
-  let rootMaster : ℕ :=
-    continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
-      φ (H.blockOf H.root) q M epsilonCarrier (epsilonBundle H.root)
-      (epsilonBlock H.root) epsilonCoordinate epsilonTrace
-  change continuousLinearMapJointRemainderFiniteMaximum
-      (fun t =>
-        continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
-          φ (H.blockOf ((.root H).node t)) q M epsilonCarrier
-          (epsilonBundle ((.root H).node t))
-          (epsilonBlock ((.root H).node t)) epsilonCoordinate epsilonTrace) = rootMaster
-  have hfun :
-      (fun t : τ =>
-        continuousLinearMapJointRemainderDependentPiBlockToleranceMasterSafeOrder
-          φ (H.blockOf ((.root H).node t)) q M epsilonCarrier
-          (epsilonBundle ((.root H).node t))
-          (epsilonBlock ((.root H).node t)) epsilonCoordinate epsilonTrace) =
-        fun _ : τ => rootMaster := by
-    funext t
-    simp [rootMaster]
-  rw [hfun]
-  apply le_antisymm
-  · apply (continuousLinearMapJointRemainderFiniteMaximum_le_iff _ _).2
-    intro t
-    exact le_rfl
-  · exact
-      continuousLinearMapJointRemainder_le_finiteMaximum
-        (fun _ : τ => rootMaster) H.root
-
 /-- A finite maximum is invariant under a surjective reindexing. -/
 theorem continuousLinearMapJointRemainderFiniteMaximum_comp_surjective_eq
     {δ : Type*} [Fintype δ]
