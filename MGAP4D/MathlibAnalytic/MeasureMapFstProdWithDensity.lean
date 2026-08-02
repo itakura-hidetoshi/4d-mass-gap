@@ -34,10 +34,13 @@ theorem measure_map_fst_prod_withDensity
   apply lintegral_congr
   intro x
   by_cases hx : x ∈ s
-  · apply lintegral_congr
+  · rw [Set.indicator_of_mem hx]
+    apply lintegral_congr
     intro y
+    rw [Set.indicator_of_mem]
+    exact hx
+  · rw [Set.indicator_of_not_mem hx]
     simp [Set.indicator, hx]
-  · simp [Set.indicator, hx]
 
 end
 
