@@ -134,8 +134,8 @@ theorem continuousLinearMapJointRemainderResponseSafeOrder_mono_norm
     mul_pos (by linarith [norm_nonneg φ]) hM
   have hθC : 0 < (‖θ‖ + 1) * M :=
     mul_pos (by linarith [norm_nonneg θ]) hM
-  have hC : (‖φ‖ + 1) * M ≤ (‖θ‖ + 1) * M :=
-    mul_le_mul_of_nonneg_right (add_le_add_right hnorm 1) hM.le
+  have hC : (‖φ‖ + 1) * M ≤ (‖θ‖ + 1) * M := by
+    exact mul_le_mul_of_nonneg_right (by linarith) hM.le
   simpa [continuousLinearMapJointRemainderResponseSafeOrder] using
     geometricDecaySharpTruncationOrder_mono_constant
       hq0 hq1 hφC hθC hC hepsilon
