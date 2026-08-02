@@ -1,0 +1,9 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiBlockHierarchyToleranceCompact
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiBlockHierarchyToleranceClosedBox
+
+/-!
+# Dependent Pi block hierarchy tolerance package
+
+Compact-uniform and arbitrary-joint-net closed-box calculus for compatible
+coarse and fine finite block assignments of dependent Banach-valued responses.
+-/

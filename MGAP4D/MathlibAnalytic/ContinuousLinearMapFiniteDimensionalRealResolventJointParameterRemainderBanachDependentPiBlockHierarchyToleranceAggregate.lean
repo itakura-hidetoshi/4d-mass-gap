@@ -1,0 +1,9 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiBlockHierarchyToleranceCertificateCore
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiBlockHierarchyTolerancePackage
+
+/-!
+# Dependent Pi block hierarchy tolerance aggregate
+
+Generic refinement, hierarchy order, fixed-parameter certificate, compact, and
+closed-box roots for two-level finite block response calculus.
+-/
