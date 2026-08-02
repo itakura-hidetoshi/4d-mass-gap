@@ -69,8 +69,8 @@ theorem
             (periodicHypercubicSpecialUnitaryWilsonSystem
               (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.geometry.Edge,
           ‖(periodicHypercubicSpecialUnitaryWilsonSystem
-              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-                singleLinkHeatBathFluctuationL2 target
+              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkHeatBathFluctuationL2
+              target
               (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
                 H N hN beta hbeta f)‖ ^ 2) ∧
     (∀ f : PeriodicHypercubicEvenBoundaryHaarL2 H N,
@@ -106,8 +106,7 @@ theorem
     (gap : ℝ)
     (hPoincare :
       (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).
-          HeatBathPoincareL2 gap) :
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).HeatBathPoincareL2 gap) :
     (∀ f : PeriodicHypercubicEvenBoundaryHaarL2 H N,
       gap * ‖periodicHypercubicEvenCanonicalBoundaryVacuumCenteredL2
         H N hN beta hbeta f‖ ^ 2 ≤
