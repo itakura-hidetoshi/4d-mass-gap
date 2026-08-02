@@ -39,8 +39,7 @@ theorem measure_map_fst_prod_withDensity
     intro y
     rw [Set.indicator_of_mem]
     exact hx
-  · rw [Set.indicator_of_not_mem hx]
-    simp [Set.indicator, hx]
+  · simp [Set.indicator, hx]
 
 end
 
