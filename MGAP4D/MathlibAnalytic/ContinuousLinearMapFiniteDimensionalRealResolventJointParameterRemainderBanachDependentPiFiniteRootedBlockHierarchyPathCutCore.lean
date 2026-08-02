@@ -23,9 +23,10 @@ theorem ContinuousLinearMapJointDependentPiFiniteRootedBlockHierarchy.blockMapAl
   induction n generalizing t with
   | zero => simp
   | succ n ih =>
-      funext b
-      simp [Nat.add_succ, Function.iterate_succ_apply, ih,
-        Function.comp_apply, Function.comp_assoc]
+      rw [Nat.add_succ]
+      simp only [H.blockMapAlong_succ, Function.iterate_succ_apply]
+      rw [ih (t := H.parent t)]
+      simp only [Function.comp_assoc]
 
 /-- Parent iteration itself splits at every intermediate point. -/
 theorem ContinuousLinearMapJointDependentPiFiniteRootedBlockHierarchy.parent_iterate_add
@@ -176,8 +177,8 @@ theorem continuousLinearMapJointRemainder_norm_dependentPiFiniteRootedDescendant
   · have h :=
       continuousLinearMapJointRemainder_norm_dependentPiFiniteRootedDescendantObservable_le_ancestorObservable
         (W := W) φ H m ((H.parent^[n]) t) (H.blockMapAlong n t b)
-    simpa [H.parent_iterate_add m n t, H.blockMapAlong_add m n t,
-      Function.comp_apply] using h
+    rw [H.parent_iterate_add m n t, H.blockMapAlong_add m n t]
+    simpa only [Function.comp_apply] using h
 
 /-- Response-safe-order domination factors through every intermediate ancestor
 at one common positive tolerance. -/
@@ -212,8 +213,8 @@ theorem continuousLinearMapJointRemainderResponseSafeOrder_finiteRooted_path_cha
       continuousLinearMapJointRemainderResponseSafeOrder_finiteRootedDescendant_le_ancestor
         (W := W) φ H m ((H.parent^[n]) t) (H.blockMapAlong n t b)
         hq0 hq1 hM hepsilon
-    simpa [H.parent_iterate_add m n t, H.blockMapAlong_add m n t,
-      Function.comp_apply] using h
+    rw [H.parent_iterate_add m n t, H.blockMapAlong_add m n t]
+    simpa only [Function.comp_apply] using h
 
 end MathlibAnalytic
 end MGAP4D
