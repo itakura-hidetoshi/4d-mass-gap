@@ -32,35 +32,21 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- The Gibbs-vacuum orthogonal Hilbert carrier of one actual finite
-periodic `SU(N)` Wilson system. -/
-abbrev PeriodicHypercubicEvenSpecialUnitaryCenteredGibbsL2
-    (H N : ℕ)
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) : Type :=
-  (periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).VacuumOrthogonalL2
-
 /-- A centered, adjoint-factorized finite Wilson bridge.
 
-Compared with the previous three-map package, this structure removes the
-independent full-Gibbs-space analysis, synthesis, and evolution choices.
-Instead:
+The full Gibbs heat-bath evolution fixes the normalized Gibbs vacuum, so it
+cannot contract below one on the full Hilbert space.  The actual dynamic map
+used here is therefore
 
-* boundary analysis is one linear isometry into the actual Gibbs-vacuum
-  orthogonal Hilbert space;
-* boundary synthesis is generated canonically as its Hilbert adjoint;
-* Gibbs evolution is the bounded-operator exponential of the actual native
-  heat-bath Hamiltonian restricted to the centered sector;
-* orthogonal projection and subtype inclusion generate the corresponding
-  full Gibbs-space maps automatically.
+`exp (-(t / 2) H_HB) ∘ P_vacuum⊥`,
 
-Thus the only remaining Gibbs dynamic estimate is the operator-norm decay of
-that explicit centered heat-bath exponential.  The heat-bath and OS
-Hamiltonians are still not identified: the exact OS relation remains the
-boundary-moment intertwining field. -/
+where the vacuum-centering projection is the explicit rank-one formula
+`f ↦ f - ⟪Ω,f⟫ Ω`.  Boundary analysis is one linear isometry into the actual
+finite Wilson Gibbs `L²` carrier, and synthesis is generated canonically as
+its Hilbert adjoint.
+
+The heat-bath and OS Hamiltonians remain distinct.  Their exact relation is
+kept in the boundary-moment intertwining field. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjointBoundaryL2TransferGapCertificate
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
@@ -117,8 +103,15 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjo
   boundaryAnalysis :
     ∀ n,
       PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →ₗᵢ[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryCenteredGibbsL2
+        PeriodicHypercubicEvenSpecialUnitaryGibbsL2
           (halfExtent n) N hN (beta n) (hbeta n)
+  boundaryAnalysis_centered :
+    ∀ n v,
+      inner ℝ
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (halfExtent n))
+          N hN (beta n) (hbeta n)).gibbsVacuumL2
+        (boundaryAnalysis n v) = 0
   centeredHeatBathEvolution_opNorm_le :
     ∀ n t,
       ‖(periodicHypercubicSpecialUnitaryWilsonSystem
@@ -135,7 +128,7 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjo
           S D halfExtent N hN beta hbeta B hInvariant n
       let Tn := C.toPositiveTimeObservableContractionSemigroup n
       ∀ F : Pn.Carrier,
-        ((boundaryAnalysis n).toContinuousLinearMap†)
+        (((boundaryAnalysis n).toContinuousLinearMap)†)
             ((periodicHypercubicSpecialUnitaryWilsonSystem
               (PeriodicHypercubicEvenSideLength (halfExtent n))
               N hN (beta n) (hbeta n)).centeredHeatBathEvolutionL2 t
@@ -177,20 +170,24 @@ theorem uniformGap_pos
   unfold continuousCompactOrientedDobrushinHeatBathGap
   exact sub_pos.mpr Q.coefficientBound_lt_one
 
-/-- At every scale, the restricted actual heat-bath Hamiltonian is coercive on
-its whole centered Gibbs Hilbert carrier. -/
-theorem centeredHeatBathHamiltonian_coercive
+/-- At every scale, the actual finite Wilson heat-bath Hamiltonian is coercive
+on the Gibbs-vacuum orthogonal sector with the common coefficient-bound gap. -/
+theorem heatBathHamiltonian_coercive
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjointBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (n : ℕ)
-    (f : PeriodicHypercubicEvenSpecialUnitaryCenteredGibbsL2
-      (halfExtent n) N hN (beta n) (hbeta n)) :
+    (f : PeriodicHypercubicEvenSpecialUnitaryGibbsL2
+      (halfExtent n) N hN (beta n) (hbeta n))
+    (hf : inner ℝ
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength (halfExtent n))
+        N hN (beta n) (hbeta n)).gibbsVacuumL2 f = 0) :
     continuousCompactOrientedDobrushinHeatBathGap Q.coefficientBound *
         ‖f‖ ^ 2 ≤
       inner ℝ
         ((periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength (halfExtent n))
-          N hN (beta n) (hbeta n)).centeredHeatBathHamiltonianL2 f) f := by
+          N hN (beta n) (hbeta n)).heatBathHamiltonianL2 f) f := by
   let W := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength (halfExtent n))
     N hN (beta n) (hbeta n)
@@ -202,10 +199,10 @@ theorem centeredHeatBathHamiltonian_coercive
         W (Q.dobrushinMatrix n)
         Q.coefficientBound Q.coefficientBound_nonneg Q.coefficientBound_lt_one
         (Q.coefficient_le_bound n))
-      f
+      f hf
 
-/-- Convert the centered isometry/adjoint/exponential package into the previous
-uniform three-factor Gibbs/shared-boundary transfer certificate. -/
+/-- Convert the isometry/adjoint/explicit-centered-exponential package into
+the previous uniform Gibbs/shared-boundary transfer certificate. -/
 noncomputable def toUniformDobrushinGibbsBoundaryL2TransferGapCertificate
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingCenteredHeatBathAdjointBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C) :
@@ -220,53 +217,27 @@ noncomputable def toUniformDobrushinGibbsBoundaryL2TransferGapCertificate
   gram_integrable := Q.gram_integrable
   boundaryMoment_memLp := Q.boundaryMoment_memLp
   boundaryAnalysis := fun n _t =>
-    realHilbertAnalysisAmbient
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n))
-        N hN (beta n) (hbeta n)).VacuumOrthogonalL2
-      (Q.boundaryAnalysis n)
+    (Q.boundaryAnalysis n).toContinuousLinearMap
   gibbsEvolution := fun n t =>
-    realHilbertCenteredLift
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n))
-        N hN (beta n) (hbeta n)).VacuumOrthogonalL2
-      ((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n))
-        N hN (beta n) (hbeta n)).centeredHeatBathEvolutionL2 t)
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength (halfExtent n))
+      N hN (beta n) (hbeta n)).centeredHeatBathEvolutionL2 t
   boundarySynthesis := fun n _t =>
-    realHilbertAdjointSynthesis
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n))
-        N hN (beta n) (hbeta n)).VacuumOrthogonalL2
-      (Q.boundaryAnalysis n)
+    realHilbertAdjointSynthesis (Q.boundaryAnalysis n)
   boundaryAnalysis_opNorm_le_one := by
     intro n t
-    exact realHilbertAnalysisAmbient_opNorm_le_one _ (Q.boundaryAnalysis n)
+    exact realHilbertLinearIsometry_opNorm_le_one (Q.boundaryAnalysis n)
   gibbsEvolution_opNorm_le := by
     intro n t
-    exact realHilbertCenteredLift_opNorm_le
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n))
-        N hN (beta n) (hbeta n)).VacuumOrthogonalL2
-      ((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n))
-        N hN (beta n) (hbeta n)).centeredHeatBathEvolutionL2 t)
-      (Real.sqrt
-        (Real.exp
-          (-continuousCompactOrientedDobrushinHeatBathGap Q.coefficientBound *
-            (t : ℝ))))
-      (Real.sqrt_nonneg _)
-      (Q.centeredHeatBathEvolution_opNorm_le n t)
+    exact Q.centeredHeatBathEvolution_opNorm_le n t
   boundarySynthesis_opNorm_le_one := by
     intro n t
-    exact realHilbertAdjointSynthesis_opNorm_le_one _ (Q.boundaryAnalysis n)
+    exact realHilbertAdjointSynthesis_opNorm_le_one (Q.boundaryAnalysis n)
   boundaryMoment_intertwining := by
     intro n t
     dsimp
     intro F
-    simpa [realHilbertAnalysisAmbient, realHilbertCenteredLift,
-      realHilbertAdjointSynthesis] using
-      Q.boundaryMoment_intertwining n t F
+    exact Q.boundaryMoment_intertwining n t F
 
 /-- The centered package generates the exponential actual shared-boundary
 transfer contraction. -/
