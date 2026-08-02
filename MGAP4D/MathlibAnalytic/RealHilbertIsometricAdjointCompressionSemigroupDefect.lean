@@ -23,10 +23,10 @@ theorem realHilbertIsometricAdjointCompression_smul
       r • realHilbertIsometricAdjointCompression A T := by
   apply ContinuousLinearMap.ext
   intro x
-  rw [realHilbertIsometricAdjointCompression_apply,
-    realHilbertIsometricAdjointCompression_apply,
-    ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.smul_apply, map_smul]
+  change realHilbertAdjointSynthesis A ((r • T) (A x)) =
+    (r • realHilbertIsometricAdjointCompression A T) x
+  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply,
+    map_smul, realHilbertIsometricAdjointCompression_apply]
 
 /-- The generator leakage scales linearly with the ambient operator. -/
 theorem realHilbertIsometricAdjointCompressionGeneratorDefect_smul
@@ -38,11 +38,11 @@ theorem realHilbertIsometricAdjointCompressionGeneratorDefect_smul
   apply ContinuousLinearMap.ext
   intro x
   rw [realHilbertIsometricAdjointCompressionGeneratorDefect_apply,
-    realHilbertIsometricAdjointCompressionGeneratorDefect_apply,
     realHilbertIsometricAdjointCompression_smul,
     ContinuousLinearMap.smul_apply,
     ContinuousLinearMap.smul_apply,
     ContinuousLinearMap.smul_apply,
+    realHilbertIsometricAdjointCompressionGeneratorDefect_apply,
     map_smul, smul_sub]
 
 /-- Failure of adjoint compression to preserve a product of two ambient
@@ -72,7 +72,8 @@ leakage of the right operator. -/
     realHilbertIsometricAdjointCompression_apply,
     realHilbertIsometricAdjointCompression_apply,
     realHilbertIsometricAdjointCompressionGeneratorDefect_apply,
-    ContinuousLinearMap.mul_apply, map_sub, map_sub]
+    ContinuousLinearMap.mul_apply, map_sub, map_sub,
+    realHilbertIsometricAdjointCompression_apply]
 
 /-- If the right ambient operator preserves the analyzed range, compression
 is multiplicative against every left operator. -/
@@ -202,7 +203,29 @@ theorem
   rw [realHilbertIsometricAdjointCompressionGeneratorDefect_smul, hD,
     smul_zero]
 
-set_option maxHeartbeats 1000000 in
+/-- Zero generator leakage intertwines every power after arbitrary real-time
+scaling of the ambient and compressed generators. -/
+theorem
+    realHilbertIsometricAdjointCompression_smul_pow_analysis_apply_of_generatorDefect_eq_zero
+    (A : F →ₗᵢ[ℝ] E)
+    (T : E →L[ℝ] E)
+    (hD : realHilbertIsometricAdjointCompressionGeneratorDefect A T = 0)
+    (t : ℝ)
+    (m : ℕ)
+    (x : F) :
+    ((t • T) ^ m) (A x) =
+      A (((t • realHilbertIsometricAdjointCompression A T) ^ m) x) := by
+  have hScaled :
+      realHilbertIsometricAdjointCompressionGeneratorDefect A (t • T) = 0 :=
+    realHilbertIsometricAdjointCompressionGeneratorDefect_smul_eq_zero
+      A T hD t
+  have hPow :=
+    realHilbertIsometricAdjointCompression_pow_analysis_apply_of_defect_eq_zero
+      A (t • T) hScaled m x
+  rw [realHilbertIsometricAdjointCompression_smul A T t] at hPow
+  exact hPow
+
+set_option maxHeartbeats 2000000 in
 /-- Vanishing generator leakage upgrades all natural-power intertwining to
 exact operator-exponential intertwining at every real time. -/
 theorem
@@ -216,13 +239,6 @@ theorem
       A (NormedSpace.exp
         (t • realHilbertIsometricAdjointCompression A T) x) := by
   let K := realHilbertIsometricAdjointCompression A T
-  have hScaled :
-      realHilbertIsometricAdjointCompressionGeneratorDefect A (t • T) = 0 :=
-    realHilbertIsometricAdjointCompressionGeneratorDefect_smul_eq_zero
-      A T hD t
-  have hScaledCompression :
-      realHilbertIsometricAdjointCompression A (t • T) = t • K := by
-    exact realHilbertIsometricAdjointCompression_smul A T t
   have hAmbientMem :
       t • T ∈ Metric.eball (0 : E →L[ℝ] E)
         (NormedSpace.expSeries ℝ (E →L[ℝ] E)).radius := by
@@ -261,21 +277,17 @@ theorem
           A ((((Nat.factorial m : ℝ)⁻¹) • (t • K) ^ m) x))
         (A (NormedSpace.exp (t • K) x)) :=
     A.toContinuousLinearMap.hasSum hBoundaryApply
-  have hTerms :
-      (fun m : ℕ =>
-        (((Nat.factorial m : ℝ)⁻¹) • (t • T) ^ m) (A x)) =
-      (fun m : ℕ =>
-        A ((((Nat.factorial m : ℝ)⁻¹) • (t • K) ^ m) x)) := by
-    funext m
-    rw [ContinuousLinearMap.smul_apply, map_smul,
-      ← hScaledCompression]
+  have hTerms (m : ℕ) :
+      (((Nat.factorial m : ℝ)⁻¹) • (t • T) ^ m) (A x) =
+        A ((((Nat.factorial m : ℝ)⁻¹) • (t • K) ^ m) x) := by
+    rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply,
+      map_smul]
     exact congrArg
       (fun y : E => (Nat.factorial m : ℝ)⁻¹ • y)
-      (realHilbertIsometricAdjointCompression_pow_analysis_apply_of_defect_eq_zero
-        A (t • T) hScaled m x)
+      (realHilbertIsometricAdjointCompression_smul_pow_analysis_apply_of_generatorDefect_eq_zero
+        A T hD t m x)
   apply HasSum.unique hAmbientApply
-  rw [hTerms]
-  exact hBoundaryAnalysis
+  exact hBoundaryAnalysis.congr fun m => (hTerms m).symm
 
 /-- Under zero generator leakage, compressing the ambient exponential gives
 exactly the exponential of the compressed generator. -/
