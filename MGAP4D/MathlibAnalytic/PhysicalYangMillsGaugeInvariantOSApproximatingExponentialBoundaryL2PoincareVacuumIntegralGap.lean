@@ -62,9 +62,16 @@ through completed nonnegative vacuum decay and back to finite integrals. -/
     (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
       Q.toApproximatingNonnegativeVacuumGapCertificate).quadraticDecayFactor t =
       Real.exp (-Q.mass * (t : ℝ)) := by
-  simpa only [sub_sub_cancel] using
-    PhysicalYangMillsEvenPeriodicWilsonOSApproximatingMeasurableBoundaryL2PoincareGapCertificate.nonnegativeVacuum_finiteIntegral_roundTrip_quadraticDecayFactor
-      Q.toApproximatingMeasurableBoundaryL2PoincareGapCertificate t
+  calc
+    (PhysicalYangMillsEvenPeriodicWilsonOSApproximatingNonnegativeVacuumGapCertificate.toApproximatingFiniteIntegralGapCertificate
+      Q.toApproximatingNonnegativeVacuumGapCertificate).quadraticDecayFactor t =
+        1 - Q.toApproximatingMeasurableBoundaryL2PoincareGapCertificate.defectFactor t := by
+      simpa only [toApproximatingNonnegativeVacuumGapCertificate] using
+        PhysicalYangMillsEvenPeriodicWilsonOSApproximatingMeasurableBoundaryL2PoincareGapCertificate.nonnegativeVacuum_finiteIntegral_roundTrip_quadraticDecayFactor
+          Q.toApproximatingMeasurableBoundaryL2PoincareGapCertificate t
+    _ = Real.exp (-Q.mass * (t : ℝ)) := by
+      simp only [toApproximatingMeasurableBoundaryL2PoincareGapCertificate,
+        sub_sub_cancel]
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingExponentialBoundaryL2PoincareGapCertificate
 
