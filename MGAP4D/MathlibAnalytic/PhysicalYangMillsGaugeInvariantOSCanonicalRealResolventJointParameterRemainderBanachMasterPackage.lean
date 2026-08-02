@@ -34,9 +34,9 @@ noncomputable def VacuumSemigroupGapSlope.CanonicalJointRemainderCompactMasterOr
     (φ : (V →L[ℝ] V) →L[ℝ] W) (epsilon : ℝ) : ℕ :=
   C.masterOrder φ epsilon
 
-/-- Canonical compact master-certificate theorem.  Through the canonical data
+/-- Canonical compact master certificate. Through the canonical data
 abbreviation, the generic gap is definitionally exactly `G.mass / 2`. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_master_norm_lt
+abbrev VacuumSemigroupGapSlope.CanonicalJointRemainderCompactSharpCertificateData.eventually_master_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
@@ -60,9 +60,9 @@ noncomputable def VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxMaster
     (φ : (V →L[ℝ] V) →L[ℝ] W) (epsilon : ℝ) : ℕ :=
   C.masterOrder φ epsilon
 
-/-- Canonical closed-box master-certificate theorem for arbitrary joint nets.
-The underlying generic gap is definitionally exactly `G.mass / 2`. -/
-theorem VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_master_norm_lt
+/-- Canonical closed-box master certificate for arbitrary joint nets. The
+underlying generic gap is definitionally exactly `G.mass / 2`. -/
+abbrev VacuumSemigroupGapSlope.CanonicalJointRemainderClosedBoxSharpCertificateData.eventually_master_norm_lt
     {T : P.StronglyContinuousPhysicalSemigroup}
     {G : T.VacuumSemigroupGapSlope}
     {hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric}
