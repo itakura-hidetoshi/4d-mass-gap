@@ -347,25 +347,21 @@ theorem continuousLinearMapJointRemainder_norm_dependentPiProductObservable_subf
     ‖continuousLinearMapJointRemainderDependentPiProductObservable
         (fun i : {i // i ∈ s} => φ i.1)‖ ≤
       ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ := by
-  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
-  intro A
+  rw [← continuousLinearMapJointRemainderDependentPiRestrictionMap_comp_observable
+    φ s]
   calc
-    ‖continuousLinearMapJointRemainderDependentPiProductObservable
-        (fun i : {i // i ∈ s} => φ i.1) A‖ ≤
-      ‖continuousLinearMapJointRemainderDependentPiProductObservable φ A‖ := by
-        apply (pi_norm_le_iff_of_nonneg
-          (x := continuousLinearMapJointRemainderDependentPiProductObservable
-            (fun i : {i // i ∈ s} => φ i.1) A)
-          (r := ‖continuousLinearMapJointRemainderDependentPiProductObservable φ A‖)
-          (norm_nonneg _)).2
-        intro i
-        simpa using
-          ((pi_norm_le_iff_of_nonneg
-            (x := continuousLinearMapJointRemainderDependentPiProductObservable φ A)
-            (r := ‖continuousLinearMapJointRemainderDependentPiProductObservable φ A‖)
-            (norm_nonneg _)).1 le_rfl i.1)
-    _ ≤ ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ * ‖A‖ :=
-      (continuousLinearMapJointRemainderDependentPiProductObservable φ).le_opNorm A
+    ‖(continuousLinearMapJointRemainderDependentPiRestrictionMap s).comp
+        (continuousLinearMapJointRemainderDependentPiProductObservable φ)‖ ≤
+      ‖continuousLinearMapJointRemainderDependentPiRestrictionMap s‖ *
+        ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ :=
+      (continuousLinearMapJointRemainderDependentPiRestrictionMap s).opNorm_comp_le
+        (continuousLinearMapJointRemainderDependentPiProductObservable φ)
+    _ ≤ 1 * ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ :=
+      mul_le_mul_of_nonneg_right
+        (continuousLinearMapJointRemainder_norm_dependentPiRestrictionMap_le_one s)
+        (norm_nonneg _)
+    _ = ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ := by
+      rw [one_mul]
 
 /-- Coordinate-tolerance order of a subfamily is below the full order. -/
 theorem continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_subfamily_le
