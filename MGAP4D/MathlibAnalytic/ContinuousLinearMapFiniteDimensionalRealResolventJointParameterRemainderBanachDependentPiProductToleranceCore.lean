@@ -60,7 +60,8 @@ theorem continuousLinearMapJointRemainderFiniteMaximum_mono
       continuousLinearMapJointRemainderFiniteMaximum g := by
   apply (continuousLinearMapJointRemainderFiniteMaximum_le_iff f _).2
   intro i
-  exact le_trans (hfg i) (continuousLinearMapJointRemainder_le_finiteMaximum g i)
+  exact le_trans (hfg i)
+    (continuousLinearMapJointRemainder_le_finiteMaximum g i)
 
 /-- A finite maximum is invariant under an index equivalence. -/
 theorem continuousLinearMapJointRemainderFiniteMaximum_reindex_eq
@@ -82,127 +83,171 @@ noncomputable def continuousLinearMapJointRemainderDependentPiCoordinateToleranc
     {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
     (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M : ℝ) (epsilon : ι → ℝ) : ℕ :=
   continuousLinearMapJointRemainderFiniteMaximum
-    (fun i => continuousLinearMapJointRemainderResponseSafeOrder (φ i) q M (epsilon i))
+    (fun i => continuousLinearMapJointRemainderResponseSafeOrder
+      (φ i) q M (epsilon i))
 
 /-- Exact threshold characterization of the coordinate-tolerance order. -/
 theorem continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_le_iff
     {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fintype ι]
     {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M : ℝ) (epsilon : ι → ℝ) (N : ℕ) :
-    continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder φ q M epsilon ≤ N ↔
-      ∀ i, continuousLinearMapJointRemainderResponseSafeOrder (φ i) q M (epsilon i) ≤ N := by
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M : ℝ)
+    (epsilon : ι → ℝ) (N : ℕ) :
+    continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+        φ q M epsilon ≤ N ↔
+      ∀ i, continuousLinearMapJointRemainderResponseSafeOrder
+        (φ i) q M (epsilon i) ≤ N := by
   exact continuousLinearMapJointRemainderFiniteMaximum_le_iff _ _
 
 /-- One order controls carrier, dependent product, coordinate-vector, and trace tolerances. -/
 noncomputable def continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M epsilonCarrier epsilonProduct : ℝ)
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    (q M epsilonCarrier epsilonProduct : ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) : ℕ :=
   max (continuousLinearMapJointRemainderCarrierSharpOrder q M epsilonCarrier)
     (max (continuousLinearMapJointRemainderResponseSafeOrder
-        (continuousLinearMapJointRemainderDependentPiProductObservable φ) q M epsilonProduct)
-      (max (continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+        (continuousLinearMapJointRemainderDependentPiProductObservable φ)
+        q M epsilonProduct)
+      (max
+        (continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
           φ q M epsilonCoordinate)
         (continuousLinearMapJointRemainderTraceSafeOrder V q M epsilonTrace)))
 
 /-- Exact threshold characterization of the vector-tolerance master. -/
 theorem continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder_le_iff
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M epsilonCarrier epsilonProduct : ℝ)
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    (q M epsilonCarrier epsilonProduct : ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) (N : ℕ) :
     continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
         φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace ≤ N ↔
       continuousLinearMapJointRemainderCarrierSharpOrder q M epsilonCarrier ≤ N ∧
       continuousLinearMapJointRemainderResponseSafeOrder
-          (continuousLinearMapJointRemainderDependentPiProductObservable φ) q M epsilonProduct ≤ N ∧
+          (continuousLinearMapJointRemainderDependentPiProductObservable φ)
+          q M epsilonProduct ≤ N ∧
       (∀ i, continuousLinearMapJointRemainderResponseSafeOrder
           (φ i) q M (epsilonCoordinate i) ≤ N) ∧
-      continuousLinearMapJointRemainderTraceSafeOrder V q M epsilonTrace ≤ N := by
+      continuousLinearMapJointRemainderTraceSafeOrder
+          V q M epsilonTrace ≤ N := by
   unfold continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
   simp only [max_le_iff]
   rw [continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_le_iff]
 
 /-- Carrier order is below the vector-tolerance master. -/
 theorem continuousLinearMapJointRemainderCarrierSharpOrder_le_dependentPiProductToleranceMaster
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M epsilonCarrier epsilonProduct : ℝ)
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    (q M epsilonCarrier epsilonProduct : ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) :
     continuousLinearMapJointRemainderCarrierSharpOrder q M epsilonCarrier ≤
       continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
-        φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := le_max_left _ _
+        φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
+  exact le_max_left _ _
 
 /-- Encoded product response order is below the vector-tolerance master. -/
 theorem continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_le_toleranceMaster
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M epsilonCarrier epsilonProduct : ℝ)
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    (q M epsilonCarrier epsilonProduct : ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) :
     continuousLinearMapJointRemainderResponseSafeOrder
-        (continuousLinearMapJointRemainderDependentPiProductObservable φ) q M epsilonProduct ≤
+        (continuousLinearMapJointRemainderDependentPiProductObservable φ)
+        q M epsilonProduct ≤
       continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
-        φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace :=
-  le_trans (le_max_left _ _) (le_max_right _ _)
+        φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
+  exact le_trans (le_max_left _ _) (le_max_right _ _)
 
 /-- Each coordinate order is below the vector-tolerance master. -/
 theorem continuousLinearMapJointRemainderResponseSafeOrder_coord_le_dependentPiProductToleranceMaster
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (i : ι) (q M epsilonCarrier epsilonProduct : ℝ)
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (i : ι)
+    (q M epsilonCarrier epsilonProduct : ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) :
-    continuousLinearMapJointRemainderResponseSafeOrder (φ i) q M (epsilonCoordinate i) ≤
+    continuousLinearMapJointRemainderResponseSafeOrder
+        (φ i) q M (epsilonCoordinate i) ≤
       continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
         φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
-  exact le_trans (continuousLinearMapJointRemainder_le_finiteMaximum _ i)
-    (le_trans (le_max_left _ _) (le_trans (le_max_right _ _) (le_max_right _ _)))
+  have hcoord :
+      continuousLinearMapJointRemainderResponseSafeOrder
+          (φ i) q M (epsilonCoordinate i) ≤
+        continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+          φ q M epsilonCoordinate := by
+    exact continuousLinearMapJointRemainder_le_finiteMaximum
+      (fun j => continuousLinearMapJointRemainderResponseSafeOrder
+        (φ j) q M (epsilonCoordinate j)) i
+  exact hcoord.trans
+    ((le_max_left _ _).trans
+      ((le_max_right _ _).trans (le_max_right _ _)))
 
 /-- Trace order is below the vector-tolerance master. -/
 theorem continuousLinearMapJointRemainderTraceSafeOrder_le_dependentPiProductToleranceMaster
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (q M epsilonCarrier epsilonProduct : ℝ)
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    (q M epsilonCarrier epsilonProduct : ℝ)
     (epsilonCoordinate : ι → ℝ) (epsilonTrace : ℝ) :
     continuousLinearMapJointRemainderTraceSafeOrder V q M epsilonTrace ≤
       continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
         φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
-  exact le_trans (le_max_right _ _)
-    (le_trans (le_max_right _ _) (le_max_right _ _))
+  exact (le_max_right _ _).trans
+    ((le_max_right _ _).trans (le_max_right _ _))
 
 /-- Increasing response tolerance cannot increase safe order. -/
 theorem continuousLinearMapJointRemainderResponseSafeOrder_antitone_epsilon
     {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    [NormedAddCommGroup W] [NormedSpace ℝ W] (φ : (V →L[ℝ] V) →L[ℝ] W)
-    {q M epsilon₁ epsilon₂ : ℝ} (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
-    (hepsilon₁ : 0 < epsilon₁) (hepsilon₂ : 0 < epsilon₂) (hepsilon : epsilon₁ ≤ epsilon₂) :
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    (φ : (V →L[ℝ] V) →L[ℝ] W)
+    {q M epsilon₁ epsilon₂ : ℝ}
+    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    (hepsilon₁ : 0 < epsilon₁) (hepsilon₂ : 0 < epsilon₂)
+    (hepsilon : epsilon₁ ≤ epsilon₂) :
     continuousLinearMapJointRemainderResponseSafeOrder φ q M epsilon₂ ≤
       continuousLinearMapJointRemainderResponseSafeOrder φ q M epsilon₁ := by
   unfold continuousLinearMapJointRemainderResponseSafeOrder
-  exact geometricDecaySharpTruncationOrder_antitone_epsilon hq0 hq1
-    (mul_pos (by linarith [norm_nonneg φ]) hM) hepsilon₁ hepsilon₂ hepsilon
+  exact geometricDecaySharpTruncationOrder_antitone_epsilon
+    hq0 hq1 (mul_pos (by linarith [norm_nonneg φ]) hM)
+    hepsilon₁ hepsilon₂ hepsilon
 
 /-- Increasing trace tolerance cannot increase safe order. -/
 theorem continuousLinearMapJointRemainderTraceSafeOrder_antitone_epsilon
-    (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    {q M epsilon₁ epsilon₂ : ℝ} (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
-    (hepsilon₁ : 0 < epsilon₁) (hepsilon₂ : 0 < epsilon₂) (hepsilon : epsilon₁ ≤ epsilon₂) :
+    (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V]
+    {q M epsilon₁ epsilon₂ : ℝ}
+    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    (hepsilon₁ : 0 < epsilon₁) (hepsilon₂ : 0 < epsilon₂)
+    (hepsilon : epsilon₁ ≤ epsilon₂) :
     continuousLinearMapJointRemainderTraceSafeOrder V q M epsilon₂ ≤
       continuousLinearMapJointRemainderTraceSafeOrder V q M epsilon₁ := by
   simpa [continuousLinearMapJointRemainderTraceSafeOrder] using
     continuousLinearMapJointRemainderResponseSafeOrder_antitone_epsilon
-      (continuousLinearMapTrace (V := V)) hq0 hq1 hM hepsilon₁ hepsilon₂ hepsilon
+      (continuousLinearMapTrace (V := V)) hq0 hq1 hM
+      hepsilon₁ hepsilon₂ hepsilon
 
 /-- Coordinatewise tolerance relaxation cannot increase the coordinate order. -/
 theorem continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_antitone
     {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fintype ι]
     {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) {q M : ℝ} {epsilon₁ epsilon₂ : ι → ℝ}
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    {q M : ℝ} {epsilon₁ epsilon₂ : ι → ℝ}
     (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
-    (hepsilon₁ : ∀ i, 0 < epsilon₁ i) (hepsilon₂ : ∀ i, 0 < epsilon₂ i)
+    (hepsilon₁ : ∀ i, 0 < epsilon₁ i)
+    (hepsilon₂ : ∀ i, 0 < epsilon₂ i)
     (hepsilon : ∀ i, epsilon₁ i ≤ epsilon₂ i) :
-    continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder φ q M epsilon₂ ≤
-      continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder φ q M epsilon₁ := by
+    continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+        φ q M epsilon₂ ≤
+      continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+        φ q M epsilon₁ := by
   apply continuousLinearMapJointRemainderFiniteMaximum_mono
   intro i
   exact continuousLinearMapJointRemainderResponseSafeOrder_antitone_epsilon
@@ -210,16 +255,21 @@ theorem continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
 
 /-- Relaxing any tolerance channel cannot increase the master order. -/
 theorem continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder_antitone
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
     (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
-    {q M epsilonCarrier₁ epsilonCarrier₂ epsilonProduct₁ epsilonProduct₂ epsilonTrace₁ epsilonTrace₂ : ℝ}
-    {epsilonCoordinate₁ epsilonCoordinate₂ : ι → ℝ} (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    {q M epsilonCarrier₁ epsilonCarrier₂ epsilonProduct₁ epsilonProduct₂
+      epsilonTrace₁ epsilonTrace₂ : ℝ}
+    {epsilonCoordinate₁ epsilonCoordinate₂ : ι → ℝ}
+    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
     (hCarrier₁ : 0 < epsilonCarrier₁) (hCarrier₂ : 0 < epsilonCarrier₂)
     (hProduct₁ : 0 < epsilonProduct₁) (hProduct₂ : 0 < epsilonProduct₂)
-    (hCoordinate₁ : ∀ i, 0 < epsilonCoordinate₁ i) (hCoordinate₂ : ∀ i, 0 < epsilonCoordinate₂ i)
+    (hCoordinate₁ : ∀ i, 0 < epsilonCoordinate₁ i)
+    (hCoordinate₂ : ∀ i, 0 < epsilonCoordinate₂ i)
     (hTrace₁ : 0 < epsilonTrace₁) (hTrace₂ : 0 < epsilonTrace₂)
-    (hCarrier : epsilonCarrier₁ ≤ epsilonCarrier₂) (hProduct : epsilonProduct₁ ≤ epsilonProduct₂)
+    (hCarrier : epsilonCarrier₁ ≤ epsilonCarrier₂)
+    (hProduct : epsilonProduct₁ ≤ epsilonProduct₂)
     (hCoordinate : ∀ i, epsilonCoordinate₁ i ≤ epsilonCoordinate₂ i)
     (hTrace : epsilonTrace₁ ≤ epsilonTrace₂) :
     continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
@@ -242,32 +292,40 @@ theorem continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOr
 
 /-- Restrict a dependent Pi-product to a finite coordinate subfamily. -/
 noncomputable def continuousLinearMapJointRemainderDependentPiRestrictionMap
-    {ι : Type*} [Fintype ι] {W : ι → Type*}
-    [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)] (s : Finset ι) :
+    {ι : Type*} [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (s : Finset ι) :
     (∀ i, W i) →L[ℝ] (∀ i : {i // i ∈ s}, W i.1) :=
   ContinuousLinearMap.pi (fun i =>
     (ContinuousLinearMap.proj i.1 : (∀ j, W j) →L[ℝ] W i.1))
 
 @[simp] theorem continuousLinearMapJointRemainderDependentPiRestrictionMap_apply
-    {ι : Type*} [Fintype ι] {W : ι → Type*}
-    [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    {ι : Type*} [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
     (s : Finset ι) (x : ∀ i, W i) (i : {i // i ∈ s}) :
-    continuousLinearMapJointRemainderDependentPiRestrictionMap s x i = x i.1 := rfl
+    continuousLinearMapJointRemainderDependentPiRestrictionMap s x i = x i.1 := by
+  rfl
 
 /-- Finite dependent-product restriction is a contraction. -/
 theorem continuousLinearMapJointRemainder_norm_dependentPiRestrictionMap_le_one
-    {ι : Type*} [Fintype ι] {W : ι → Type*}
-    [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)] (s : Finset ι) :
+    {ι : Type*} [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (s : Finset ι) :
     ‖(continuousLinearMapJointRemainderDependentPiRestrictionMap s :
       (∀ i, W i) →L[ℝ] (∀ i : {i // i ∈ s}, W i.1))‖ ≤ 1 := by
-  exact ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun x => by
-    simp only [one_mul]
-    rw [pi_norm_le_iff_of_nonneg
-      (x := continuousLinearMapJointRemainderDependentPiRestrictionMap s x)
-      (r := ‖x‖) (norm_nonneg x)]
-    intro i
-    simpa using ((pi_norm_le_iff_of_nonneg (x := x) (r := ‖x‖)
-      (norm_nonneg x)).1 le_rfl i.1))
+  exact ContinuousLinearMap.opNorm_le_bound
+    (continuousLinearMapJointRemainderDependentPiRestrictionMap s :
+      (∀ i, W i) →L[ℝ] (∀ i : {i // i ∈ s}, W i.1))
+    zero_le_one
+    (fun x => by
+      simp only [one_mul]
+      rw [pi_norm_le_iff_of_nonneg
+        (x := continuousLinearMapJointRemainderDependentPiRestrictionMap s x)
+        (r := ‖x‖) (norm_nonneg x)]
+      intro i
+      simpa using
+        ((pi_norm_le_iff_of_nonneg (x := x) (r := ‖x‖)
+          (norm_nonneg x)).1 le_rfl i.1))
 
 /-- Subfamily encoding is postcomposition by the restriction contraction. -/
 @[simp] theorem continuousLinearMapJointRemainderDependentPiRestrictionMap_comp_observable
@@ -281,69 +339,113 @@ theorem continuousLinearMapJointRemainder_norm_dependentPiRestrictionMap_le_one
   ext A i
   rfl
 
+/-- The subfamily Pi-product observable has no larger operator norm. -/
+theorem continuousLinearMapJointRemainder_norm_dependentPiProductObservable_subfamily_le
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (s : Finset ι) :
+    ‖continuousLinearMapJointRemainderDependentPiProductObservable
+        (fun i : {i // i ∈ s} => φ i.1)‖ ≤
+      ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ := by
+  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _)
+  intro A
+  calc
+    ‖continuousLinearMapJointRemainderDependentPiProductObservable
+        (fun i : {i // i ∈ s} => φ i.1) A‖ ≤
+      ‖continuousLinearMapJointRemainderDependentPiProductObservable φ A‖ := by
+        apply (pi_norm_le_iff_of_nonneg
+          (x := continuousLinearMapJointRemainderDependentPiProductObservable
+            (fun i : {i // i ∈ s} => φ i.1) A)
+          (r := ‖continuousLinearMapJointRemainderDependentPiProductObservable φ A‖)
+          (norm_nonneg _)).2
+        intro i
+        simpa using
+          ((pi_norm_le_iff_of_nonneg
+            (x := continuousLinearMapJointRemainderDependentPiProductObservable φ A)
+            (r := ‖continuousLinearMapJointRemainderDependentPiProductObservable φ A‖)
+            (norm_nonneg _)).1 le_rfl i.1)
+    _ ≤ ‖continuousLinearMapJointRemainderDependentPiProductObservable φ‖ * ‖A‖ :=
+      (continuousLinearMapJointRemainderDependentPiProductObservable φ).le_opNorm A
+
 /-- Coordinate-tolerance order of a subfamily is below the full order. -/
 theorem continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_subfamily_le
     {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fintype ι]
     {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
-    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (s : Finset ι) (q M : ℝ) (epsilon : ι → ℝ) :
+    (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i)
+    (s : Finset ι) (q M : ℝ) (epsilon : ι → ℝ) :
     continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
         (fun i : {i // i ∈ s} => φ i.1) q M (fun i => epsilon i.1) ≤
-      continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder φ q M epsilon := by
+      continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+        φ q M epsilon := by
   apply (continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_le_iff
     (fun i : {i // i ∈ s} => φ i.1) q M (fun i => epsilon i.1) _).2
   intro i
   exact continuousLinearMapJointRemainder_le_finiteMaximum
-    (fun j => continuousLinearMapJointRemainderResponseSafeOrder (φ j) q M (epsilon j)) i.1
+    (fun j => continuousLinearMapJointRemainderResponseSafeOrder
+      (φ j) q M (epsilon j)) i.1
 
 /-- Finite subfamily restriction cannot increase the vector-tolerance master. -/
 theorem continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder_subfamily_le
-    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [Fintype ι] {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
+    {V ι : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [Fintype ι]
+    {W : ι → Type*} [∀ i, NormedAddCommGroup (W i)] [∀ i, NormedSpace ℝ (W i)]
     (φ : ∀ i, (V →L[ℝ] V) →L[ℝ] W i) (s : Finset ι)
-    {q M epsilonCarrier epsilonProduct epsilonTrace : ℝ} (epsilonCoordinate : ι → ℝ)
-    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M) (hProduct : 0 < epsilonProduct) :
+    {q M epsilonCarrier epsilonProduct epsilonTrace : ℝ}
+    (epsilonCoordinate : ι → ℝ)
+    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    (hProduct : 0 < epsilonProduct) :
     continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
-        (fun i : {i // i ∈ s} => φ i.1) q M epsilonCarrier epsilonProduct
-        (fun i => epsilonCoordinate i.1) epsilonTrace ≤
+        (fun i : {i // i ∈ s} => φ i.1)
+        q M epsilonCarrier epsilonProduct (fun i => epsilonCoordinate i.1)
+        epsilonTrace ≤
       continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
         φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
   unfold continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
   apply max_le_max le_rfl
   apply max_le_max
-  · rw [← continuousLinearMapJointRemainderDependentPiRestrictionMap_comp_observable φ s]
-    exact continuousLinearMapJointRemainderResponseSafeOrder_comp_le_of_norm_le_one
-      (continuousLinearMapJointRemainderDependentPiRestrictionMap s)
+  · exact continuousLinearMapJointRemainderResponseSafeOrder_mono_norm
+      (continuousLinearMapJointRemainderDependentPiProductObservable
+        (fun i : {i // i ∈ s} => φ i.1))
       (continuousLinearMapJointRemainderDependentPiProductObservable φ)
-      (continuousLinearMapJointRemainder_norm_dependentPiRestrictionMap_le_one s)
       hq0 hq1 hM hProduct
+      (continuousLinearMapJointRemainder_norm_dependentPiProductObservable_subfamily_le
+        φ s)
   · exact max_le_max
       (continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_subfamily_le
-        φ s q M epsilonCoordinate) le_rfl
+        φ s q M epsilonCoordinate)
+      le_rfl
 
 /-- Coordinate-tolerance aggregate is invariant under simultaneous reindexing. -/
 theorem continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder_reindex_eq
     {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     [NormedAddCommGroup W] [NormedSpace ℝ W] {n : ℕ}
-    (φ : Fin n → ((V →L[ℝ] V) →L[ℝ] W)) (epsilon : Fin n → ℝ)
-    (e : Fin n ≃ Fin n) (q M : ℝ) :
+    (φ : Fin n → ((V →L[ℝ] V) →L[ℝ] W))
+    (epsilon : Fin n → ℝ) (e : Fin n ≃ Fin n) (q M : ℝ) :
     continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
         (fun i => φ (e i)) q M (fun i => epsilon (e i)) =
-      continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder φ q M epsilon := by
+      continuousLinearMapJointRemainderDependentPiCoordinateToleranceSafeOrder
+        φ q M epsilon := by
   exact continuousLinearMapJointRemainderFiniteMaximum_reindex_eq
-    (fun i => continuousLinearMapJointRemainderResponseSafeOrder (φ i) q M (epsilon i)) e
+    (fun i => continuousLinearMapJointRemainderResponseSafeOrder
+      (φ i) q M (epsilon i)) e
 
 /-- Homogeneous vector-tolerance master is invariant under simultaneous reindexing. -/
 theorem continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder_reindex_eq
-    {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
-    [NormedAddCommGroup W] [NormedSpace ℝ W] {n : ℕ}
-    (φ : Fin n → ((V →L[ℝ] V) →L[ℝ] W)) (epsilonCoordinate : Fin n → ℝ)
-    (e : Fin n ≃ Fin n) {q M epsilonCarrier epsilonProduct epsilonTrace : ℝ}
-    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M) (hProduct : 0 < epsilonProduct) :
+    {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [FiniteDimensional ℝ V] [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {n : ℕ}
+    (φ : Fin n → ((V →L[ℝ] V) →L[ℝ] W))
+    (epsilonCoordinate : Fin n → ℝ) (e : Fin n ≃ Fin n)
+    {q M epsilonCarrier epsilonProduct epsilonTrace : ℝ}
+    (hq0 : 0 ≤ q) (hq1 : q < 1) (hM : 0 < M)
+    (hProduct : 0 < epsilonProduct) :
     continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
-        (W := fun _ : Fin n => W) (fun i => φ (e i)) q M epsilonCarrier epsilonProduct
-        (fun i => epsilonCoordinate (e i)) epsilonTrace =
+        (W := fun _ : Fin n => W) (fun i => φ (e i))
+        q M epsilonCarrier epsilonProduct (fun i => epsilonCoordinate (e i))
+        epsilonTrace =
       continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
-        (W := fun _ : Fin n => W) φ q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
+        (W := fun _ : Fin n => W) φ
+        q M epsilonCarrier epsilonProduct epsilonCoordinate epsilonTrace := by
   unfold continuousLinearMapJointRemainderDependentPiProductToleranceMasterSafeOrder
   rw [continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_reindex_eq
     φ e hq0 hq1 hM hProduct]
