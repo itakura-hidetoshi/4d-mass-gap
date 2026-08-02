@@ -116,7 +116,7 @@ theorem periodicHypercubicEvenBoundaryVacuumMoment_pos
     rw [hsupport]
     have hne :
         periodicHypercubicEvenOpenHalfHaarMeasure H N Set.univ ≠ 0 :=
-      MeasureTheory.measure_univ_ne_zero.mpr
+      Measure.measure_univ_ne_zero.mpr
         (NeZero.ne (periodicHypercubicEvenOpenHalfHaarMeasure H N))
     exact lt_of_le_of_ne (zero_le _) hne.symm
   · exact fun x => le_of_lt
