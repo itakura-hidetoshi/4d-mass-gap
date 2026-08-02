@@ -114,7 +114,11 @@ theorem periodicHypercubicEvenBoundaryVacuumMoment_pos
         (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_pos
           H N hN beta hbeta b x)
     rw [hsupport]
-    exact measure_univ_pos
+    have hne :
+        periodicHypercubicEvenOpenHalfHaarMeasure H N Set.univ ≠ 0 := by
+      simpa only [measure_univ_eq_zero] using
+        (NeZero.ne (periodicHypercubicEvenOpenHalfHaarMeasure H N))
+    exact lt_of_le_of_ne (zero_le _) hne.symm
   · exact fun x => le_of_lt
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_pos
         H N hN beta hbeta b x)
