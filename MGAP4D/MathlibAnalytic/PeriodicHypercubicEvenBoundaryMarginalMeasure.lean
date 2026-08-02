@@ -162,9 +162,9 @@ theorem periodicHypercubicEvenBoundaryFiberedGibbsDensity_fiberLIntegral_eq_marg
       periodicHypercubicEvenBoundaryFiberedGibbsDensity_toReal_fiber_integrable
         H N hN beta hbeta b
   have hnonneg :
-      0 ≤ᵐ[((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
-        (periodicHypercubicEvenOpenHalfHaarMeasure H N))],
-        fun z => (rho z).toReal :=
+      ∀ᵐ z ∂((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
+        (periodicHypercubicEvenOpenHalfHaarMeasure H N)),
+        0 ≤ (rho z).toReal :=
     Filter.Eventually.of_forall fun z => ENNReal.toReal_nonneg
   calc
     (∫⁻ z, rho z
