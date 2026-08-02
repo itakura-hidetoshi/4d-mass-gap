@@ -44,6 +44,16 @@ theorem continuous_compact_oriented_ae_gibbs_to_haar
     (Measure.ae_le_iff_absolutelyContinuous.mpr
       (continuous_compact_oriented_configurationHaarMeasure_absolutelyContinuous_gibbsMeasure C))
 
+/-- The canonical real inner product on scalar values is multiplication. -/
+theorem continuous_compact_oriented_real_inner_eq_mul
+    (x y : ℝ) :
+    inner ℝ x y = x * y := by
+  calc
+    inner ℝ x y = inner ℝ (x • (1 : ℝ)) (y • (1 : ℝ)) := by simp
+    _ = x * (y * inner ℝ (1 : ℝ) 1) := by
+      rw [real_inner_smul_left, real_inner_smul_right]
+    _ = x * y := by simp
+
 /-- Inverse-square-root density transport as an actual Gibbs `L²` vector. -/
 noncomputable def
     ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2
@@ -77,9 +87,12 @@ theorem continuous_compact_oriented_haarToGibbsL2_add
       continuous_compact_oriented_haarToGibbsL2_coeFn C g,
       Lp.coeFn_add (C.haarToGibbsL2 f) (C.haarToGibbsL2 g),
       hsource] with A hsum hf hg htarget hsrc
-  rw [hsum, htarget, hf, hg]
-  simp only [ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Function,
-    Pi.add_apply, hsrc]
+  rw [hsum, htarget]
+  simp only [Pi.add_apply]
+  rw [hf, hg]
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Function
+  rw [hsrc]
+  simp only [Pi.add_apply]
   ring
 
 /-- Inverse-square-root density transport preserves real scalar
@@ -97,9 +110,12 @@ theorem continuous_compact_oriented_haarToGibbsL2_smul
       continuous_compact_oriented_haarToGibbsL2_coeFn C f,
       Lp.coeFn_smul r (C.haarToGibbsL2 f),
       hsource] with A hsmul hf htarget hsrc
-  rw [hsmul, htarget, hf]
-  simp only [ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Function,
-    Pi.smul_apply, hsrc, smul_eq_mul]
+  rw [hsmul, htarget]
+  simp only [Pi.smul_apply]
+  rw [hf]
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Function
+  rw [hsrc]
+  simp only [Pi.smul_apply, smul_eq_mul]
   ring
 
 /-- Inverse-square-root Wilson density transport as a real linear map. -/
@@ -136,12 +152,7 @@ theorem continuous_compact_oriented_haarToGibbsL2_inner
   filter_upwards [hf, hg] with A hfA hgA
   rw [hfA, hgA]
   simp only [ContinuousCompactOrientedGaugeWilsonSystem.haarToGibbsL2Function,
-    smul_eq_mul]
-  change
-    (Real.exp (C.base.gibbsExponent A) / C.base.partitionFunction) *
-        ((C.haarToGibbsL2Weight A * f A) *
-          (C.haarToGibbsL2Weight A * g A)) =
-      f A * g A
+    smul_eq_mul, continuous_compact_oriented_real_inner_eq_mul]
   calc
     (Real.exp (C.base.gibbsExponent A) / C.base.partitionFunction) *
         ((C.haarToGibbsL2Weight A * f A) *
