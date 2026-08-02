@@ -327,6 +327,7 @@ theorem continuousLinearMapJointRemainder_norm_finProductReindexMap_le_one
       (Fin n → W) →L[ℝ] (Fin n → W))
     zero_le_one
     (fun x => by
+      simp only [one_mul]
       rw [pi_norm_le_iff_of_nonneg (x :=
         continuousLinearMapJointRemainderFinProductReindexMap e x)
         (r := ‖x‖) (norm_nonneg x)]
@@ -350,6 +351,23 @@ postcomposition by the finite-product reindexing contraction. -/
         (W := fun _ : Fin n => W) (fun i => φ (e i)) := by
   ext A i
   rfl
+
+/-- Inverse reindexing of the permuted homogeneous product observable recovers
+the original product observable. -/
+@[simp] theorem continuousLinearMapJointRemainderFinProductReindexMap_symm_comp_reindexed_observable
+    {V W : Type*}
+    [NormedAddCommGroup V] [NormedSpace ℝ V]
+    [NormedAddCommGroup W] [NormedSpace ℝ W]
+    {n : ℕ}
+    (φ : Fin n → ((V →L[ℝ] V) →L[ℝ] W))
+    (e : Fin n ≃ Fin n) :
+    (continuousLinearMapJointRemainderFinProductReindexMap e.symm).comp
+        (continuousLinearMapJointRemainderDependentPiProductObservable
+          (W := fun _ : Fin n => W) (fun i => φ (e i))) =
+      continuousLinearMapJointRemainderDependentPiProductObservable
+        (W := fun _ : Fin n => W) φ := by
+  ext A i
+  simp
 
 /-- Homogeneous finite-product response safe order is invariant under any
 permutation of the finite coordinate type. -/
@@ -380,15 +398,15 @@ theorem continuousLinearMapJointRemainderResponseSafeOrder_dependentPiProduct_re
           (W := fun _ : Fin n => W) φ)
         (continuousLinearMapJointRemainder_norm_finProductReindexMap_le_one e)
         hq0 hq1 hM hepsilon
-  · have h :=
+  · rw [← continuousLinearMapJointRemainderFinProductReindexMap_symm_comp_reindexed_observable
+      φ e]
+    exact
       continuousLinearMapJointRemainderResponseSafeOrder_comp_le_of_norm_le_one
         (continuousLinearMapJointRemainderFinProductReindexMap e.symm)
         (continuousLinearMapJointRemainderDependentPiProductObservable
           (W := fun _ : Fin n => W) (fun i => φ (e i)))
         (continuousLinearMapJointRemainder_norm_finProductReindexMap_le_one e.symm)
         hq0 hq1 hM hepsilon
-    rw [continuousLinearMapJointRemainderFinProductReindexMap_comp_observable] at h
-    simpa using h
 
 /-- The homogeneous dependent Pi-product master order is permutation
 invariant. -/
