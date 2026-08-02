@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundedContinuousReflectionPositivity
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryObservableIntegralTransport
+import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasureInstances
 import Mathlib.Tactic
 
 namespace MGAP4D
