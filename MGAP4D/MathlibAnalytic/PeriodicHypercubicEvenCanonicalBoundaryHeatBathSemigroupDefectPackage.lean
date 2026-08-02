@@ -191,6 +191,7 @@ theorem
   unfold ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathGeneratorL2
   unfold periodicHypercubicEvenCanonicalBoundaryFullHeatBathGeneratorL2
   rw [realHilbertIsometricAdjointCompression_smul]
+  rfl
 
 /-- Zero Hamiltonian leakage implies zero leakage for the normalized full
 heat-bath generator. -/
@@ -287,8 +288,10 @@ theorem
   have hExp :=
     realHilbertIsometricAdjointCompression_exponential_analysis_apply_of_generatorDefect_eq_zero
       A C.fullHeatBathGeneratorL2 hGeneratorDefect t f
+  rw [
+    periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_eq_boundaryExponential_of_generatorDefect_eq_zero
+      H N hN beta hbeta hDefect t]
   simpa [C, A,
-    periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2,
     ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2,
     realContinuousLinearOperatorExponentialSemigroup,
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathGeneratorL2_compression]
