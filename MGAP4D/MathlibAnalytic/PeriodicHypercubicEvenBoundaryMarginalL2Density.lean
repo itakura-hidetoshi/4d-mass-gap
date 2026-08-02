@@ -7,7 +7,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter MeasureTheory
-open scoped InnerProduct ENNReal
+open scoped InnerProduct ENNReal NNReal
 
 noncomputable section
 
@@ -126,7 +126,7 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2Weight_measurable
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
   exact
     (periodicHypercubicEvenBoundaryVacuumMoment_measurable
-      H N hN beta hbeta).inv₀
+      H N hN beta hbeta).inv
 
 /-- The marginal density cancels the reciprocal boundary-vacuum weight
 squared. -/
