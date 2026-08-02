@@ -97,12 +97,7 @@ theorem periodicHypercubicEvenBoundaryMarginalMeasure_eq_withDensity_nnreal
         (fun b =>
           (periodicHypercubicEvenBoundaryMarginalDensityNNReal
             H N hN beta hbeta b : ℝ≥0∞)) := by
-  unfold periodicHypercubicEvenBoundaryMarginalMeasure
-  congr 1
-  funext b
-  exact
-    (periodicHypercubicEvenBoundaryMarginalDensityNNReal_coe
-      H N hN beta hbeta b).symm
+  rfl
 
 /-- The reciprocal OS boundary vacuum wavefunction. -/
 noncomputable def periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
@@ -140,12 +135,7 @@ theorem periodicHypercubicEvenBoundaryMarginalDensityNNReal_mul_weight_sq
   unfold periodicHypercubicEvenBoundaryMarginalDensityNNReal
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
   rw [Real.coe_toNNReal]
-  · change
-      periodicHypercubicEvenBoundaryVacuumMoment
-          H N hN beta hbeta b ^ 2 *
-        (periodicHypercubicEvenBoundaryVacuumMoment
-          H N hN beta hbeta b)⁻¹ ^ 2 = 1
-    field_simp [ne_of_gt
+  · field_simp [ne_of_gt
       (periodicHypercubicEvenBoundaryVacuumMoment_pos
         H N hN beta hbeta b)]
   · exact sq_nonneg _
@@ -205,6 +195,7 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2Function_memLp
     (Lp.memLp f).integrable_sq
   apply hf.congr
   filter_upwards with b
+  symm
   change
     (periodicHypercubicEvenBoundaryMarginalDensityNNReal
       H N hN beta hbeta b : ℝ) *
