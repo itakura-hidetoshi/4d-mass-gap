@@ -65,9 +65,19 @@ theorem periodicHypercubicEvenBoundaryHaarToMarginalL2Isometry_vacuum
           (1 : ℝ) =ᵐ[
         periodicHypercubicEvenBoundaryMarginalMeasure
           H N hN beta hbeta]
-        (fun _ => (1 : ℝ)) :=
-    Lp.coeFn_const
+        (fun _ => (1 : ℝ)) := by
+    simpa only [Function.const_apply] using
+      (Lp.coeFn_const 2
+        (periodicHypercubicEvenBoundaryMarginalMeasure
+          H N hN beta hbeta) (1 : ℝ))
   filter_upwards [htransport, hvacuum, hone] with b ht hv ho
+  change
+    ↑↑(periodicHypercubicEvenBoundaryHaarToMarginalL2
+      H N hN beta hbeta
+      (periodicHypercubicEvenBoundaryVacuumL2 H N hN beta hbeta)) b =
+      ↑↑(Lp.const 2
+        (periodicHypercubicEvenBoundaryMarginalMeasure
+          H N hN beta hbeta) (1 : ℝ)) b
   rw [ht, ho]
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Function
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
@@ -115,13 +125,17 @@ theorem periodicHypercubicEvenBoundaryMarginalToGibbsL2Isometry_vacuum
           (1 : ℝ) =ᵐ[
         periodicHypercubicEvenBoundaryMarginalMeasure
           H N hN beta hbeta]
-        (fun _ => (1 : ℝ)) :=
-    Lp.coeFn_const
+        (fun _ => (1 : ℝ)) := by
+    simpa only [Function.const_apply] using
+      (Lp.coeFn_const 2
+        (periodicHypercubicEvenBoundaryMarginalMeasure
+          H N hN beta hbeta) (1 : ℝ))
   have hmarginal_pull := hmp.quasiMeasurePreserving.ae hmarginal
   have hgibbs :
       Lp.const 2 W.gibbsMeasure (1 : ℝ) =ᵐ[W.gibbsMeasure]
-        (fun _ => (1 : ℝ)) :=
-    Lp.coeFn_const
+        (fun _ => (1 : ℝ)) := by
+    simpa only [Function.const_apply] using
+      (Lp.coeFn_const 2 W.gibbsMeasure (1 : ℝ))
   filter_upwards [hpull, hmarginal_pull, hgibbs] with A hp hm hg
   rw [hp, hg]
   exact hm
