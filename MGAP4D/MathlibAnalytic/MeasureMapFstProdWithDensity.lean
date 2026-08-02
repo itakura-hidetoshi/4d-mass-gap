@@ -28,12 +28,15 @@ theorem measure_map_fst_prod_withDensity
   rw [withDensity_apply _ hs]
   rw [← lintegral_indicator (hs.preimage measurable_fst)]
   rw [← lintegral_indicator hs]
-  rw [MeasureTheory.lintegral_prod]
+  rw [MeasureTheory.lintegral_prod
+    ((hρ.indicator (hs.preimage measurable_fst)).aemeasurable)]
   apply lintegral_congr
   intro x
   by_cases hx : x ∈ s
-  · simp [Set.indicator_of_mem hx]
-  · simp [Set.indicator_of_not_mem hx]
+  · apply lintegral_congr
+    intro y
+    simp [Set.indicator, hx]
+  · simp [Set.indicator, hx]
 
 end
 
