@@ -137,7 +137,6 @@ theorem
 
 /-- The strong time-zero derivative of the full boundary evolution is exactly
 minus one half of the canonical compressed boundary Hamiltonian. -/
-set_option maxHeartbeats 1000000 in
 theorem
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_hasDerivAt_zero
     (H N : ℕ) (hN : 0 < N)
@@ -203,10 +202,14 @@ theorem
       (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
         H N hN beta hbeta f)
       hfA]
-  exact continuous_compact_oriented_fullHeatBathEvolutionRealL2_nnreal
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-    t
+  exact congrArg
+    (fun T => T
+      (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
+        H N hN beta hbeta f))
+    (continuous_compact_oriented_fullHeatBathEvolutionRealL2_nnreal
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      t)
 
 /-- Global invariance of the analyzed boundary range under the full real-time
 heat-bath semigroup.  This is the exact model-specific condition needed for
@@ -272,7 +275,8 @@ theorem
           H N hN beta hbeta s *
         periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
           H N hN beta hbeta t := by
-  ext f
+  apply ContinuousLinearMap.ext
+  intro f
   apply
     (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
       H N hN beta hbeta).injective
