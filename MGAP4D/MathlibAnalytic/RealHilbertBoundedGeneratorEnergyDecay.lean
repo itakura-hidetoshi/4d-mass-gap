@@ -1,6 +1,5 @@
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.InnerProductSpace.Calculus
-import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 namespace MGAP4D
