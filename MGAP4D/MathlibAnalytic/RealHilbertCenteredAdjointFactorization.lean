@@ -1,6 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 
 namespace MGAP4D
 namespace MathlibAnalytic
