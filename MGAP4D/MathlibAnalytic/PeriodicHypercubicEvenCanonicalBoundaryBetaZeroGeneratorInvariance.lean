@@ -157,8 +157,11 @@ theorem periodicHypercubicEvenBoundaryRestriction_replaceLink_eq_self_of_ne_fixe
     intro heq
     subst target
     exact hTarget e.2
-  simp [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction,
-    CompactOrientedGaugeWilsonSystem.replaceLink, hne]
+  unfold FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction
+  exact compact_oriented_replaceLink_other
+    (L := (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).base)
+    (A := A) (target := target) (e := e.1) (g := g) hne
 
 /-- If two full configurations have the same shared boundary, replacing the
 same fixed boundary link by the same group element preserves that equality. -/
@@ -183,14 +186,20 @@ theorem periodicHypercubicEvenBoundaryRestriction_replaceLink_eq_of_eq
           (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).base.replaceLink
           B target g) := by
   funext e
-  have hab : A e.1 = B e.1 := by
+  unfold FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction
+  by_cases he : e.1 = target
+  · subst target
+    simp
+  · rw [compact_oriented_replaceLink_other
+      (L := (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).base)
+      (A := A) (target := target) (e := e.1) (g := g) he,
+      compact_oriented_replaceLink_other
+      (L := (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).base)
+      (A := B) (target := target) (e := e.1) (g := g) he]
     simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction] using
       congrFun hAB e
-  by_cases he : e.1 = target
-  · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction,
-      CompactOrientedGaugeWilsonSystem.replaceLink, he]
-  · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction,
-      CompactOrientedGaugeWilsonSystem.replaceLink, he, hab]
 
 /-- Boundary representative obtained after applying one concrete beta-zero
 one-link heat-bath projection to the full pullback and evaluating on the
