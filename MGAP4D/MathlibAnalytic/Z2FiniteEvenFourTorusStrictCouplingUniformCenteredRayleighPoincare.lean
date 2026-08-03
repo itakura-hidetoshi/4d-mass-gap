@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteDimensionalUniqueGroundCenteredRayleigh
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusStrictCouplingUniformSpectralCap
-import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugePerronGroundSpectrum
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -11,7 +10,7 @@ open scoped InnerProduct
 noncomputable section
 
 /-- A volume-independent, basis-free Rayleigh contraction on the actual
-strict-coupling `Z₂` transfer after removing its unique ground coordinate. -/
+strict-coupling `Z₂` transfer after removing its ground coordinates. -/
 structure Z2UnfixedGaugeStrictCouplingUniformCenteredRayleighCertificate
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
@@ -50,41 +49,12 @@ noncomputable def toSpectralCapCertificate :
     intro H i
     let D := finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
       H β energyIdentity energyNontrivial hβ.le hEnergy.le
-    letI : Nonempty D.GroundSpectralIndex :=
-      finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_nonempty
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le
-    have hcenter : D.groundCoordinates (D.eigenbasis i.1) = 0 := by
-      ext j
-      change D.eigenbasis.repr (D.eigenbasis i.1) j.1 = 0
-      have hne : j.1 ≠ i.1 := by
-        intro hji
-        have hground : D.eigenvalue i.1 = 1 := by
-          simpa [hji] using j.2
-        exact (ne_of_lt i.2.2) hground
-      simp [hne]
-    have hRayleigh := R.centeredRayleigh H (D.eigenbasis i.1) (by
-      change D.groundCoordinates (D.eigenbasis i.1) = 0
-      exact hcenter)
-    change
-      inner ℝ (D.operator (D.eigenbasis i.1)) (D.eigenbasis i.1) ≤
-        R.rate * ‖D.eigenbasis i.1‖ ^ 2 at hRayleigh
-    exact D.excited_eigenvalue_le_of_operator_quadraticForm_le_on_canonicalGroundOrthogonal
-      R.rate (by
-        intro x hx
-        apply R.centeredRayleigh H x
-        change D.groundCoordinates x = 0
-        ext j
-        have hground :
-            (⟨j.1, j.2⟩ : D.GroundSpectralIndex) =
-              D.canonicalGroundIndex :=
-          Subsingleton.elim _ _
-        have hindex : j.1 = D.canonicalGroundIndex.1 :=
-          congrArg Subtype.val hground
-        have hx' := hx
-        change inner ℝ (D.eigenbasis D.canonicalGroundIndex.1) x = 0 at hx'
-        change D.eigenbasis.repr x j.1 = 0
-        rw [D.eigenbasis.repr_apply, hindex]
-        exact hx') i
+    change D.eigenvalue i.1 ≤ R.rate
+    exact
+      D.excited_eigenvalue_le_of_operator_quadraticForm_le_of_groundCoordinates_eq_zero
+        R.rate (by
+          intro x hx
+          exact R.centeredRayleigh H x hx) i
 
 /-- The spectral cap generated from centered Rayleigh data retains the supplied
 rate exactly. -/
@@ -115,26 +85,15 @@ noncomputable def toCenteredRayleighCertificate :
     intro H x hx
     let D := finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
       H β energyIdentity energyNontrivial hβ.le hEnergy.le
-    letI : Nonempty D.GroundSpectralIndex :=
-      finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_nonempty
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le
-    letI : Subsingleton D.GroundSpectralIndex :=
-      finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_subsingleton
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le
     have hnull : ¬ Nonempty D.NullSpectralIndex :=
       finiteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex_not_nonempty_strict
         H β energyIdentity energyNontrivial hβ hEnergy
-    have hxorth : inner ℝ D.canonicalGroundVector x = 0 := by
-      have hcoord := congrArg
-        (fun y : D.GroundSpectralSpace => y D.canonicalGroundIndex) hx
-      change D.eigenbasis.repr x D.canonicalGroundIndex.1 = 0 at hcoord
-      simpa [FiniteDimensionalSymmetricPositiveContractionData.canonicalGroundVector]
-        using hcoord
     change inner ℝ (D.operator x) x ≤ C.rate * ‖x‖ ^ 2
     exact
-      D.operator_quadraticForm_le_on_canonicalGroundOrthogonal_of_excited_cap
-        hnull C.rate C.rate_pos.le
-        (fun i => C.excitedEigenvalue_le_rate H i) x hxorth
+      D.operator_quadraticForm_le_of_groundCoordinates_eq_zero_of_excited_cap
+        hnull C.rate (fun i => C.excitedEigenvalue_le_rate H i) x (by
+          change D.groundCoordinates x = 0
+          exact hx)
 
 /-- The centered Rayleigh certificate generated from a spectral cap retains the
 same rate. -/
@@ -145,7 +104,7 @@ theorem toCenteredRayleighCertificate_rate_eq :
 end Z2UnfixedGaugeStrictCouplingUniformSpectralCapCertificate
 
 /-- A volume-independent Poincare/Dirichlet coercivity estimate for the actual
-one-step transfer defect `I - T_H` on the unique-ground-centered sector. -/
+one-step transfer defect `I - T_H` on the ground-centered sector. -/
 structure Z2UnfixedGaugeStrictCouplingUniformCenteredPoincareCertificate
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
