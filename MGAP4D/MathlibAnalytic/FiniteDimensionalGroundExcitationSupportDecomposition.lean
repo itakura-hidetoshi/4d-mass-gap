@@ -81,13 +81,18 @@ noncomputable def positiveExcitedCoordinates :
     (x : D.GroundSpectralSpace) :
     D.positiveGroundCoordinates (D.groundPositiveExtension x) = x := by
   ext i
-  simp [positiveGroundCoordinates, groundPositiveExtension, i.2]
+  change (if h : D.eigenvalue i.1 = 1 then x ⟨i.1, h⟩ else 0) = x i
+  rw [dif_pos i.2]
 
 @[simp] theorem positiveExcitedCoordinates_excitedPositiveExtension
     (x : D.ExcitedSpectralSpace) :
     D.positiveExcitedCoordinates (D.excitedPositiveExtension x) = x := by
   ext i
-  simp [positiveExcitedCoordinates, excitedPositiveExtension, i.2]
+  change
+    (if h : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 then
+        x ⟨i.1, h⟩
+      else 0) = x i
+  rw [dif_pos i.2]
 
 /-- Every positive-support vector is the exact sum of its ground and excited
 coordinate sectors. -/
@@ -99,12 +104,32 @@ theorem positiveSpectral_ground_add_excited
   by_cases hg : D.eigenvalue i.1 = 1
   · have hne : ¬(0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1) :=
       D.ground_not_excited i.1 hg
-    simp [groundPositiveExtension, excitedPositiveExtension,
-      positiveGroundCoordinates, positiveExcitedCoordinates, hg, hne]
-  · have he : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 := by
-      exact ⟨i.2, lt_of_le_of_ne (D.eigenvalue_le_one i.1) hg⟩
-    simp [groundPositiveExtension, excitedPositiveExtension,
-      positiveGroundCoordinates, positiveExcitedCoordinates, hg, he]
+    change
+      (if h : D.eigenvalue i.1 = 1 then
+          x (GroundSpectralIndex.toPositive D ⟨i.1, h⟩)
+        else 0) +
+        (if h : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 then
+          x (ExcitedSpectralIndex.toPositive D ⟨i.1, h⟩)
+        else 0) = x i
+    rw [dif_pos hg, dif_neg hne]
+    have hidx :
+        GroundSpectralIndex.toPositive D ⟨i.1, hg⟩ = i :=
+      Subtype.ext rfl
+    simpa only [hidx, add_zero]
+  · have he : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 :=
+      ⟨i.2, lt_of_le_of_ne (D.eigenvalue_le_one i.1) hg⟩
+    change
+      (if h : D.eigenvalue i.1 = 1 then
+          x (GroundSpectralIndex.toPositive D ⟨i.1, h⟩)
+        else 0) +
+        (if h : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 then
+          x (ExcitedSpectralIndex.toPositive D ⟨i.1, h⟩)
+        else 0) = x i
+    rw [dif_neg hg, dif_pos he]
+    have hidx :
+        ExcitedSpectralIndex.toPositive D ⟨i.1, he⟩ = i :=
+      Subtype.ext rfl
+    simpa only [hidx, zero_add]
 
 /-- The ground and excited coordinate ranges are orthogonal inside the positive
 spectral support. -/
@@ -158,7 +183,8 @@ theorem positiveSpectralTransfer_eq_self_iff
   constructor
   · intro h i
     have hi := congrArg (fun z : D.PositiveSpectralSpace => z i.toPositive) h
-    rw [D.positiveSpectralTransfer_apply] at hi
+    change
+      D.positiveEigenvalue i.toPositive * x i.toPositive = x i.toPositive at hi
     change D.eigenvalue i.1 * x i.toPositive = x i.toPositive at hi
     nlinarith [i.2.2]
   · intro h
@@ -168,7 +194,13 @@ theorem positiveSpectralTransfer_eq_self_iff
     · have he : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 :=
         ⟨i.2, lt_of_le_of_ne (D.eigenvalue_le_one i.1) hg⟩
       have hz := h ⟨i.1, he⟩
-      simpa [D.positiveSpectralTransfer_apply, positiveEigenvalue, hz]
+      have hidx :
+          ExcitedSpectralIndex.toPositive D ⟨i.1, he⟩ = i :=
+        Subtype.ext rfl
+      have hz' : x i = 0 := by
+        simpa only [hidx] using hz
+      change D.eigenvalue i.1 * x i = x i
+      simp [hz']
 
 /-- The kernel of the support Hamiltonian consists exactly of vectors with no
 excited coordinates. -/
@@ -179,9 +211,10 @@ theorem positiveSpectralHamiltonian_eq_zero_iff
   constructor
   · intro h i
     have hi := congrArg (fun z : D.PositiveSpectralSpace => z i.toPositive) h
-    rw [D.positiveSpectralHamiltonian_apply] at hi
-    change D.positiveSpectralEnergy i.toPositive * x i.toPositive = 0 at hi
-    exact (mul_eq_zero.mp hi).resolve_left (ne_of_gt (D.excitedSpectralEnergy_pos i))
+    change
+      D.positiveSpectralEnergy i.toPositive * x i.toPositive = 0 at hi
+    exact (mul_eq_zero.mp hi).resolve_left
+      (ne_of_gt (D.excitedSpectralEnergy_pos i))
   · intro h
     ext i
     by_cases hg : D.eigenvalue i.1 = 1
@@ -190,7 +223,13 @@ theorem positiveSpectralHamiltonian_eq_zero_iff
     · have he : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1 :=
         ⟨i.2, lt_of_le_of_ne (D.eigenvalue_le_one i.1) hg⟩
       have hz := h ⟨i.1, he⟩
-      simpa [D.positiveSpectralHamiltonian_apply, hz]
+      have hidx :
+          ExcitedSpectralIndex.toPositive D ⟨i.1, he⟩ = i :=
+        Subtype.ext rfl
+      have hz' : x i = 0 := by
+        simpa only [hidx] using hz
+      change D.positiveSpectralEnergy i * x i = 0
+      simp [hz']
 
 /-- Fixed points of the positive-support transfer are precisely zero-energy
 vectors of the support Hamiltonian. -/
