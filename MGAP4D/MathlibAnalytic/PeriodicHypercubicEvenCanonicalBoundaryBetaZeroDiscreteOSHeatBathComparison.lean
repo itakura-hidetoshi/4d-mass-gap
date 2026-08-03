@@ -98,8 +98,7 @@ theorem
       simp [periodicHypercubicEvenCanonicalBoundaryBetaZeroSampledHeatBathEvolutionL2,
         periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_zero]
   | succ n ih =>
-      rw [Nat.succ_eq_add_one,
-        periodicHypercubicEvenCanonicalBoundaryBetaZeroSampledHeatBathEvolutionL2_add,
+      rw [periodicHypercubicEvenCanonicalBoundaryBetaZeroSampledHeatBathEvolutionL2_add,
         ih, pow_succ]
       simp [periodicHypercubicEvenCanonicalBoundaryBetaZeroSampledHeatBathEvolutionL2]
 
