@@ -64,9 +64,8 @@ theorem eigenvalue_nonneg (i : Fin D.dimension) :
     0 ≤ D.eigenvalue i := by
   apply symmetric_eigenvalue_ge_of_quadratic_form_lower_bound
     D.symmetric (by rfl) 0
-  · intro x
-    simpa using D.quadratic_nonneg x
-  · exact i
+  intro x
+  simpa using D.quadratic_nonneg x
 
 /-- Contractivity forces every nonnegative transfer eigenvalue to be at most
 one. -/
@@ -88,8 +87,9 @@ def PositiveSpectralIndex : Type :=
   {i : Fin D.dimension // 0 < D.eigenvalue i}
 
 noncomputable instance positiveSpectralIndexFintype :
-    Fintype D.PositiveSpectralIndex :=
-  Fintype.ofFinite _
+    Fintype D.PositiveSpectralIndex := by
+  classical
+  infer_instance
 
 noncomputable instance positiveSpectralIndexDecidableEq :
     DecidableEq D.PositiveSpectralIndex :=
@@ -126,7 +126,10 @@ noncomputable def positiveSpectralTransfer :
       map_smul' := by
         intro c x
         ext i
-        simp [mul_assoc] }
+        change
+          D.positiveEigenvalue i * (c * x i) =
+            c * (D.positiveEigenvalue i * x i)
+        ring }
 
 @[simp] theorem positiveSpectralTransfer_apply
     (x : D.PositiveSpectralSpace)
@@ -149,7 +152,10 @@ noncomputable def positiveSpectralSemigroup (n : ℕ) :
       map_smul' := by
         intro c x
         ext i
-        simp [mul_assoc] }
+        change
+          (D.positiveEigenvalue i) ^ n * (c * x i) =
+            c * ((D.positiveEigenvalue i) ^ n * x i)
+        ring }
 
 @[simp] theorem positiveSpectralSemigroup_apply
     (n : ℕ)
