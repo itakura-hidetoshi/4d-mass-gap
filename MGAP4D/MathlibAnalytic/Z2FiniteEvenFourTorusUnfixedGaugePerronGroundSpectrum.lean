@@ -51,7 +51,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_subsingleton
     D.eigenbasis_orthonormal.linearIndependent
       |>.eq_of_smul_apply_eq_smul_apply
         a b j.1 i.1 hane hrelation
-  exact Subtype.ext hindex
+  exact Subtype.ext hindex.symm
 
 /-- The actual canonical ground spectral index is inhabited and unique. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_unique
@@ -113,18 +113,20 @@ noncomputable def finiteEvenFourTorusZ2UnfixedGaugePerronGroundCompletePackage
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     Z2UnfixedGaugePerronGroundCompletePackage
       H β energyIdentity energyNontrivial hβ hEnergy := by
-  obtain ⟨p, hpne, hppos, hpfix, hpgen⟩ :=
+  let hground :=
     finiteEvenFourTorusZ2UnfixedGaugeInvariant_fixed_space_generated_by_positiveGround
       H β energyIdentity energyNontrivial hβ hEnergy
+  let p := Classical.choose hground
+  have hp := Classical.choose_spec hground
   exact
     { fullSpectralPackage :=
         finiteEvenFourTorusZ2UnfixedGaugeFullSpectralCompletePackage
           β energyIdentity energyNontrivial hβ hEnergy
       positiveGround := p
-      positiveGround_ne_zero := hpne
-      positiveGround_pointwisePositive := hppos
-      positiveGround_fixed := hpfix
-      fixed_space_generated := hpgen
+      positiveGround_ne_zero := hp.1
+      positiveGround_pointwisePositive := hp.2.1
+      positiveGround_fixed := hp.2.2.1
+      fixed_space_generated := hp.2.2.2
       canonicalGroundIndex_nonempty :=
         finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_nonempty
           H β energyIdentity energyNontrivial hβ hEnergy
