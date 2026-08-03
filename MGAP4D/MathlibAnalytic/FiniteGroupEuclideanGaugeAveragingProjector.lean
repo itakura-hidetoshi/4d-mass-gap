@@ -194,8 +194,20 @@ theorem finiteGroupAveragingProjector_eq_self_of_mem
   ext x
   change
     (Fintype.card G : ℝ)⁻¹ * ∑ g : G, f (g • x) = f x
-  simp_rw [hf]
-  simp [hcard]
+  calc
+    (Fintype.card G : ℝ)⁻¹ * ∑ g : G, f (g • x) =
+        (Fintype.card G : ℝ)⁻¹ *
+          ((Fintype.card G : ℝ) * f x) := by
+      congr 1
+      calc
+        (∑ g : G, f (g • x)) = ∑ _g : G, f x := by
+          apply Finset.sum_congr rfl
+          intro g _hg
+          exact hf g x
+        _ = (Fintype.card G : ℝ) * f x := by
+          simp
+    _ = f x := by
+      rw [inv_mul_cancel₀ hcard, one_mul]
 
 /-- The finite gauge average is idempotent. -/
 theorem finiteGroupAveragingProjector_idempotent
