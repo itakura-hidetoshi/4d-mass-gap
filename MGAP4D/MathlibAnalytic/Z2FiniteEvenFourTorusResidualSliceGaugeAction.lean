@@ -37,11 +37,25 @@ instance finiteEvenFourTorusZ2ResidualSliceMulAction (H : ℕ) :
       (FiniteEvenFourTorusZ2SliceConfiguration H) where
   smul := finiteEvenFourTorusZ2ResidualSliceGaugeTransform H
   one_smul A := by
+    change finiteEvenFourTorusZ2ResidualSliceGaugeTransform H 1 A = A
     funext e
-    simp [finiteEvenFourTorusZ2ResidualSliceGaugeTransform]
+    change (1 : Z2Gauge) * A e * (1 : Z2Gauge)⁻¹ = A e
+    simp
   mul_smul g h A := by
+    change
+      finiteEvenFourTorusZ2ResidualSliceGaugeTransform H (g * h) A =
+        finiteEvenFourTorusZ2ResidualSliceGaugeTransform H g
+          (finiteEvenFourTorusZ2ResidualSliceGaugeTransform H h A)
     funext e
-    simp [finiteEvenFourTorusZ2ResidualSliceGaugeTransform, mul_assoc]
+    change
+      (g e.1 * h e.1) * A e *
+          (g (finiteEvenFourTorusSpatialVertexStep H e.1 e.2) *
+            h (finiteEvenFourTorusSpatialVertexStep H e.1 e.2))⁻¹ =
+        g e.1 *
+          (h e.1 * A e *
+            (h (finiteEvenFourTorusSpatialVertexStep H e.1 e.2))⁻¹) *
+          (g (finiteEvenFourTorusSpatialVertexStep H e.1 e.2))⁻¹
+    simp [mul_assoc, mul_comm, mul_left_comm]
 
 @[simp] theorem finiteEvenFourTorusZ2ResidualSlice_smul_apply
     (H : ℕ)
@@ -82,9 +96,9 @@ theorem finiteEvenFourTorusZ2SpatialPlaquetteHolonomy_smul
   rcases p with ⟨v, ⟨⟨μ, ν⟩, hμν⟩⟩
   unfold finiteEvenFourTorusZ2SpatialPlaquetteHolonomy
   dsimp only
+  simp only [finiteEvenFourTorusZ2ResidualSlice_smul_apply]
   rw [finiteEvenFourTorusSpatialVertexStep_commute H v μ ν]
-  simp [finiteEvenFourTorusZ2ResidualSliceGaugeTransform,
-    mul_assoc, mul_comm, mul_left_comm]
+  simp [mul_assoc, mul_comm, mul_left_comm]
 
 /-- The complete spatial Wilson action is residual-gauge invariant. -/
 theorem finiteEvenFourTorusZ2SpatialWilsonAction_smul
@@ -113,22 +127,6 @@ theorem finiteEvenFourTorusZ2SpatialHalfWeight_smul
         H β energyIdentity energyNontrivial A := by
   unfold finiteEvenFourTorusZ2SpatialHalfWeight
   rw [finiteEvenFourTorusZ2SpatialWilsonAction_smul]
-
-/-- On the one-site spatial torus every residual gauge transformation acts
-trivially on spatial links.  This supplies a completely explicit invariant
-sector used later for a nontriviality witness. -/
-theorem finiteEvenFourTorusZ2ResidualSlice_smul_zero
-    (g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup 0)
-    (A : FiniteEvenFourTorusZ2SliceConfiguration 0) :
-    g • A = A := by
-  funext e
-  rcases e with ⟨v, μ⟩
-  have hstep : finiteEvenFourTorusSpatialVertexStep 0 v μ = v := by
-    apply Subtype.ext
-    funext i
-    exact Subsingleton.elim _ _
-  simp [finiteEvenFourTorusZ2ResidualSliceGaugeTransform, hstep,
-    mul_assoc, mul_comm, mul_left_comm]
 
 end
 
