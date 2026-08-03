@@ -1,11 +1,16 @@
-import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTemporalGaugeOneSlabTransferFinalPackage
+import MGAP4D.MathlibAnalytic.FiniteOSGramKernelComap
+import MGAP4D.MathlibAnalytic.FiniteOSGramKernelEuclideanTransfer
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusSpatialSlice
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTemporalGaugeOneSlabKernel
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTemporalGaugeOneSlabTransfer
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTemporalGaugeOneSlabNontriviality
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTemporalGaugeOneSlabTimeTranslationBridge
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-/-- Complete public import surface from actual torus time translation geometry
-to the nontrivial normalized one-slab Wilson transfer semigroup. -/
+/-- Complete public import surface from actual torus time-translation geometry
+to the nontrivial normalized temporal-gauge one-slab Wilson transfer semigroup. -/
 theorem z2FiniteEvenFourTorusTemporalGaugeOneSlabCompletePackage_loaded : True :=
   trivial
 
