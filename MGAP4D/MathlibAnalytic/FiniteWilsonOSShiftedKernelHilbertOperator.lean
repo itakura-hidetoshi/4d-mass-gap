@@ -45,8 +45,12 @@ noncomputable def separatedShiftLinearMap
         C.separatedShift (P.oneLayerClass G)
     rw [C.separatedShift_oneLayerClass,
       C.separatedShift_oneLayerClass,
-      C.separatedShift_oneLayerClass,
-      map_add, SeparationQuotient.mk_add]
+      C.separatedShift_oneLayerClass, map_add]
+    change SeparationQuotient.mk
+        (C.carrierShiftLinearMap F + C.carrierShiftLinearMap G) =
+      SeparationQuotient.mk (C.carrierShiftLinearMap F) +
+        SeparationQuotient.mk (C.carrierShiftLinearMap G)
+    exact SeparationQuotient.mk_add _ _
   map_smul' := by
     intro r x
     refine Quotient.inductionOn x ?_
@@ -54,8 +58,11 @@ noncomputable def separatedShiftLinearMap
     change C.separatedShift (P.oneLayerClass (r • F)) =
       r • C.separatedShift (P.oneLayerClass F)
     rw [C.separatedShift_oneLayerClass,
-      C.separatedShift_oneLayerClass,
-      map_smul, SeparationQuotient.mk_smul]
+      C.separatedShift_oneLayerClass, map_smul]
+    change SeparationQuotient.mk
+        (r • C.carrierShiftLinearMap F) =
+      r • SeparationQuotient.mk (C.carrierShiftLinearMap F)
+    exact SeparationQuotient.mk_smul r _
 
 @[simp] theorem separatedShiftLinearMap_oneLayerClass
     (C : P.OneLayerShiftedKernelCertificate)
@@ -116,6 +123,11 @@ theorem inner_separatedShiftContinuousLinearMap_left_eq_right
   intro F
   refine Quotient.inductionOn y ?_
   intro G
+  change inner ℝ
+      (C.separatedShiftContinuousLinearMap (P.oneLayerClass F))
+      (P.oneLayerClass G) =
+    inner ℝ (P.oneLayerClass F)
+      (C.separatedShiftContinuousLinearMap (P.oneLayerClass G))
   rw [C.separatedShiftContinuousLinearMap_apply,
     C.separatedShiftContinuousLinearMap_apply,
     C.separatedShiftLinearMap_oneLayerClass,
@@ -136,6 +148,9 @@ theorem separatedShiftContinuousLinearMap_quadratic_nonneg
     0 ≤ inner ℝ (C.separatedShiftContinuousLinearMap x) x := by
   refine Quotient.inductionOn x ?_
   intro F
+  change 0 ≤ inner ℝ
+    (C.separatedShiftContinuousLinearMap (P.oneLayerClass F))
+    (P.oneLayerClass F)
   rw [C.separatedShiftContinuousLinearMap_apply,
     C.separatedShiftLinearMap_oneLayerClass]
   change 0 ≤ inner ℝ
@@ -209,9 +224,9 @@ theorem inner_hilbertShiftContinuousLinearMap_left_eq_right
     (isClosed_eq (by fun_prop) (by fun_prop)) ?_
   intro u v
   rw [C.hilbertShiftContinuousLinearMap_completedClass,
-    C.hilbertShiftContinuousLinearMap_completedClass,
-    UniformSpace.Completion.inner_coe,
-    UniformSpace.Completion.inner_coe]
+    C.hilbertShiftContinuousLinearMap_completedClass]
+  change inner ℝ (C.separatedShiftContinuousLinearMap u) v =
+    inner ℝ u (C.separatedShiftContinuousLinearMap v)
   exact C.inner_separatedShiftContinuousLinearMap_left_eq_right u v
 
 /-- Positivity extends to the complete Hilbert carrier. -/
@@ -222,8 +237,8 @@ theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
   refine UniformSpace.Completion.induction_on x
     (isClosed_le continuous_const (by fun_prop)) ?_
   intro u
-  rw [C.hilbertShiftContinuousLinearMap_completedClass,
-    UniformSpace.Completion.inner_coe]
+  rw [C.hilbertShiftContinuousLinearMap_completedClass]
+  change 0 ≤ inner ℝ (C.separatedShiftContinuousLinearMap u) u
   exact C.separatedShiftContinuousLinearMap_quadratic_nonneg u
 
 /-- The completed operator realizes the independent shifted kernel exactly on
