@@ -118,16 +118,67 @@ theorem finiteFunctionKernelQuadratic_succ
           (finiteZ2NormalizedProductKernel q n)
           (finiteZ2HeadDifference f)) := by
       unfold finiteFunctionKernelQuadratic
-      simp_rw [mul_add, Finset.sum_add_distrib]
-      rw [mul_add, Finset.mul_sum, Finset.mul_sum]
-      congr 1 <;>
-        rw [Finset.mul_sum] <;>
-        apply Finset.sum_congr rfl <;>
-        intro A _hA <;>
-        rw [Finset.mul_sum] <;>
-        apply Finset.sum_congr rfl <;>
-        intro B _hB <;>
-        ring
+      calc
+        (∑ A : Fin n → Bool,
+            ∑ B : Fin n → Bool,
+              2 * (finiteZ2HeadAverage f A * finiteZ2HeadAverage f B +
+                  q * finiteZ2HeadDifference f A * finiteZ2HeadDifference f B) *
+                finiteZ2NormalizedProductKernel q n A B) =
+          (∑ A : Fin n → Bool,
+              ∑ B : Fin n → Bool,
+                2 * (finiteZ2HeadAverage f A * finiteZ2HeadAverage f B) *
+                  finiteZ2NormalizedProductKernel q n A B) +
+            ∑ A : Fin n → Bool,
+              ∑ B : Fin n → Bool,
+                2 * (q * finiteZ2HeadDifference f A * finiteZ2HeadDifference f B) *
+                  finiteZ2NormalizedProductKernel q n A B := by
+            rw [← Finset.sum_add_distrib]
+            apply Finset.sum_congr rfl
+            intro A _hA
+            rw [← Finset.sum_add_distrib]
+            apply Finset.sum_congr rfl
+            intro B _hB
+            ring
+        _ = 2 *
+              (∑ A : Fin n → Bool,
+                ∑ B : Fin n → Bool,
+                  finiteZ2HeadAverage f A *
+                    finiteZ2NormalizedProductKernel q n A B *
+                    finiteZ2HeadAverage f B) +
+            2 * q *
+              (∑ A : Fin n → Bool,
+                ∑ B : Fin n → Bool,
+                  finiteZ2HeadDifference f A *
+                    finiteZ2NormalizedProductKernel q n A B *
+                    finiteZ2HeadDifference f B) := by
+            congr 1
+            · rw [Finset.mul_sum]
+              apply Finset.sum_congr rfl
+              intro A _hA
+              rw [Finset.mul_sum]
+              apply Finset.sum_congr rfl
+              intro B _hB
+              ring
+            · rw [Finset.mul_sum]
+              apply Finset.sum_congr rfl
+              intro A _hA
+              rw [Finset.mul_sum]
+              apply Finset.sum_congr rfl
+              intro B _hB
+              ring
+        _ = 2 *
+            ((∑ A : Fin n → Bool,
+                ∑ B : Fin n → Bool,
+                  finiteZ2HeadAverage f A *
+                    finiteZ2NormalizedProductKernel q n A B *
+                    finiteZ2HeadAverage f B) +
+              q *
+                (∑ A : Fin n → Bool,
+                  ∑ B : Fin n → Bool,
+                    finiteZ2HeadDifference f A *
+                      finiteZ2NormalizedProductKernel q n A B *
+                      finiteZ2HeadDifference f B)) := by
+            ring
 
 /-- Squared finite-function norms are nonnegative. -/
 theorem finiteFunctionNormSq_nonneg
@@ -150,11 +201,13 @@ theorem finiteZ2NormalizedProductKernel_quadratic_mem_normInterval
         finiteFunctionNormSq f := by
   induction n with
   | zero =>
-      simp [finiteFunctionKernelQuadratic, finiteFunctionNormSq,
-        finiteZ2NormalizedProductKernel, finiteTensorKernelMatrix]
-      constructor
-      · exact mul_self_nonneg _
-      · exact le_rfl
+      have hbase :
+          0 ≤ (f default : ℝ) ^ 2 ∧
+            (f default : ℝ) ^ 2 ≤ (f default : ℝ) ^ 2 :=
+        ⟨sq_nonneg _, le_refl _⟩
+      simpa [finiteFunctionKernelQuadratic, finiteFunctionNormSq,
+        finiteZ2NormalizedProductKernel, finiteTensorKernelMatrix,
+        pow_two] using hbase
   | succ n ih =>
       rw [finiteFunctionKernelQuadratic_succ,
         finiteFunctionNormSq_succ]
