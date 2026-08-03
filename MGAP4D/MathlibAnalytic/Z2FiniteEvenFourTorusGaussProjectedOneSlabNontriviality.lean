@@ -8,6 +8,8 @@ open scoped BigOperators InnerProduct
 
 noncomputable section
 
+local instance (p : Prop) : Decidable p := Classical.propComplete p
+
 /-- Indicator of the finite gauge orbit containing a boundary configuration. -/
 noncomputable def finiteGroupOrbitIndicator
     (G α : Type) [Group G] [Fintype α] [MulAction G α]
