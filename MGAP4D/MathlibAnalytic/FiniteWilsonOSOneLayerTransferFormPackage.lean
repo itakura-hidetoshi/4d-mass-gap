@@ -106,7 +106,6 @@ theorem finite_lattice_wilson_os_oneLayerTransferForm_smul_left
   simp only [Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro x _hx
-  rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro y _hy
   ring
