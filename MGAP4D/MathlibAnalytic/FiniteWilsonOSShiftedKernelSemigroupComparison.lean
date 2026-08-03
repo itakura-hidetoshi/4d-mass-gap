@@ -65,7 +65,6 @@ theorem hilbertShiftSemigroup_add_apply
   | succ m ih =>
       simp only [Nat.succ_add, hilbertShiftSemigroup_succ_apply]
       rw [ih]
-      rfl
 
 /-- Bundled additive semigroup law. -/
 theorem hilbertShiftSemigroup_add
