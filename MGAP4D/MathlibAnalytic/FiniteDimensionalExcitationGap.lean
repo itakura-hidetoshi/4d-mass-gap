@@ -55,7 +55,8 @@ theorem excitationGap_pos
   have hmem : D.excitationGap ∈ D.excitedEnergyValues := by
     unfold excitationGap
     exact Finset.min'_mem _ _
-  rcases Finset.mem_image.mp hmem with ⟨i, _hi, rfl⟩
+  rcases Finset.mem_image.mp hmem with ⟨i, _hi, hi⟩
+  rw [← hi]
   exact D.excitedSpectralEnergy_pos i
 
 /-- One-step Hamiltonian weight of every excited mode is bounded by the exact
@@ -81,8 +82,8 @@ theorem excitedSemigroup_coordinate_abs_le_gap
   have hp :
       (Real.exp (-D.positiveSpectralEnergy i.toPositive)) ^ n ≤
         (Real.exp (-D.excitationGap)) ^ n := by
-    gcongr
-    exact D.exp_neg_excitedEnergy_le_exp_neg_gap i
+    exact pow_le_pow_left₀ (Real.exp_pos _).le
+      (D.exp_neg_excitedEnergy_le_exp_neg_gap i)
   exact mul_le_mul_of_nonneg_right hp (abs_nonneg _)
 
 /-- The exact gap weight is strictly below one at every positive natural time. -/
