@@ -77,7 +77,15 @@ theorem carrierShiftIterate_observable
             F.observable
       rw [ih]
       funext x
-      simp [positiveConfigurationObservableShift, shiftIterate, pow_succ']
+      change
+        F.observable ((C.shift ^ n).symm (C.shift.symm x)) =
+          F.observable ((C.shift * C.shift ^ n).symm x)
+      have hx :
+          (C.shift ^ n).symm (C.shift.symm x) =
+            (C.shift * C.shift ^ n).symm x := by
+        apply (C.shift * C.shift ^ n).injective
+        simp
+      exact congrArg F.observable hx
 
 /-- The completed natural-time semigroup has exact matrix elements given by the
 iterated concrete Wilson kernel. -/
