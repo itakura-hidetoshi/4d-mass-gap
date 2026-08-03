@@ -93,7 +93,7 @@ theorem finiteMulActionPullbackOperator_inner
       inner ℝ f h := by
   classical
   rw [PiLp.inner_apply, PiLp.inner_apply]
-  refine Fintype.sum_equiv (finiteMulActionEquiv G α g) _ _ ?_
+  refine Fintype.sum_equiv (finiteMulActionEquiv G α g⁻¹) _ _ ?_
   intro x
   simp [finiteMulActionEquiv]
 
@@ -103,9 +103,11 @@ theorem finiteMulActionPullbackOperator_norm
     (g : G)
     (f : FiniteBoundaryHilbert α) :
     ‖finiteMulActionPullbackOperator G α g f‖ = ‖f‖ := by
-  apply sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)
-  simpa [real_inner_self_eq_norm_sq] using
-    finiteMulActionPullbackOperator_inner G α g f f
+  have hsquare :
+      ‖finiteMulActionPullbackOperator G α g f‖ ^ 2 = ‖f‖ ^ 2 := by
+    simpa [real_inner_self_eq_norm_sq] using
+      finiteMulActionPullbackOperator_inner G α g f f
+  exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp hsquare
 
 /-- Pointwise finite-group average on the Euclidean boundary Hilbert space. -/
 noncomputable def finiteGroupAveragingLinearMap
@@ -154,12 +156,14 @@ def finiteGroupInvariantSubmodule
   zero_mem' := by
     intro g x
     rfl
-  add_mem' f h hf hh := by
-    intro g x
-    simp [hf g x, hh g x]
-  smul_mem' c f hf := by
-    intro g x
-    simp [hf g x]
+  add_mem' := by
+    intro f h hf hh g x
+    change f (g • x) + h (g • x) = f x + h x
+    rw [hf g x, hh g x]
+  smul_mem' := by
+    intro c f hf g x
+    change c * f (g • x) = c * f x
+    rw [hf g x]
 
 /-- The finite gauge average is gauge invariant. -/
 theorem finiteGroupAveragingProjector_mem_invariant
@@ -189,7 +193,7 @@ theorem finiteGroupAveragingProjector_eq_self_of_mem
   ext x
   change
     (Fintype.card G : ℝ)⁻¹ * ∑ g : G, f (g • x) = f x
-  simp_rw [hf g x]
+  simp_rw [hf]
   simp [hcard]
 
 /-- The finite gauge average is idempotent. -/
@@ -198,7 +202,12 @@ theorem finiteGroupAveragingProjector_idempotent
     (finiteGroupAveragingProjector G α).comp
         (finiteGroupAveragingProjector G α) =
       finiteGroupAveragingProjector G α := by
-  ext f
+  apply ContinuousLinearMap.ext
+  intro f
+  change
+    finiteGroupAveragingProjector G α
+        (finiteGroupAveragingProjector G α f) =
+      finiteGroupAveragingProjector G α f
   exact finiteGroupAveragingProjector_eq_self_of_mem G α _
     (finiteGroupAveragingProjector_mem_invariant G α f)
 
@@ -212,9 +221,9 @@ theorem finiteMulAction_sum_against_invariant
     (∑ x : α, h x * f (g • x)) =
       ∑ x : α, h x * f x := by
   classical
-  refine Fintype.sum_equiv (finiteMulActionEquiv G α g⁻¹) _ _ ?_
+  refine Fintype.sum_equiv (finiteMulActionEquiv G α g) _ _ ?_
   intro x
-  simp [finiteMulActionEquiv, hh]
+  rw [hh g x]
 
 /-- Gauge averaging preserves pairing with every invariant vector. -/
 theorem finiteGroupAveragingProjector_inner_invariant
@@ -238,7 +247,7 @@ theorem finiteGroupAveragingProjector_inner_invariant
           (Fintype.card G : ℝ)⁻¹ * (h x * f (g • x)) := by
       apply Finset.sum_congr rfl
       intro x _hx
-      rw [Finset.mul_sum]
+      rw [← mul_assoc, Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro g _hg
       ring
