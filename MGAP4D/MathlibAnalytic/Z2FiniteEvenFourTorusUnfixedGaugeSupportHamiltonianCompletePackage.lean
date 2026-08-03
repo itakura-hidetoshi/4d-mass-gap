@@ -83,8 +83,8 @@ structure Z2UnfixedGaugeSupportHamiltonianCompletePackage
     ∀ (n : ℕ)
       (x : FiniteEvenFourTorusZ2UnfixedGaugePositiveSpectralSpace
         0 β energyIdentity energyNontrivial hβ hEnergy),
-      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ hEnergy) ^ n
+      ((finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+          0 β energyIdentity energyNontrivial hβ hEnergy) ^ n)
           (finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralSynthesis
             0 β energyIdentity energyNontrivial hβ hEnergy x) =
         finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralSynthesis
