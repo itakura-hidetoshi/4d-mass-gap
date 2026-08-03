@@ -139,15 +139,26 @@ noncomputable def toCenteredPoincareCertificate :
   coercivity_lt_one := by linarith [R.rate_pos]
   centeredPoincare := by
     intro H x hx
-    have hRayleigh := R.centeredRayleigh H x hx
+    let T :=
+      finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le
+    have hRayleigh : inner ℝ (T x) x ≤ R.rate * ‖x‖ ^ 2 :=
+      R.centeredRayleigh H x hx
     have hExpanded :
         (1 - R.rate) * ‖x‖ ^ 2 ≤
-          ‖x‖ ^ 2 -
-            inner ℝ
-              (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x := by
+          ‖x‖ ^ 2 - inner ℝ (T x) x := by
       linarith
-    simpa only [inner_sub_right, real_inner_self_eq_norm_sq] using hExpanded
+    have hDefect :
+        inner ℝ (x - T x) x =
+          ‖x‖ ^ 2 - inner ℝ (T x) x := by
+      calc
+        inner ℝ (x - T x) x =
+            inner ℝ x x - inner ℝ (T x) x :=
+          inner_sub_left x (T x) x
+        _ = ‖x‖ ^ 2 - inner ℝ (T x) x := by
+          rw [real_inner_self_eq_norm_sq]
+    rw [hDefect]
+    exact hExpanded
 
 @[simp] theorem toCenteredPoincareCertificate_coercivity :
     R.toCenteredPoincareCertificate.coercivity = 1 - R.rate :=
@@ -174,14 +185,22 @@ noncomputable def toCenteredRayleighCertificate :
   rate_lt_one := by linarith [P.coercivity_pos]
   centeredRayleigh := by
     intro H x hx
-    have hPoincare := P.centeredPoincare H x hx
-    have hExpanded :
-        P.coercivity * ‖x‖ ^ 2 ≤
-          ‖x‖ ^ 2 -
-            inner ℝ
-              (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x := by
-      simpa only [inner_sub_right, real_inner_self_eq_norm_sq] using hPoincare
+    let T :=
+      finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le
+    have hPoincare :
+        P.coercivity * ‖x‖ ^ 2 ≤ inner ℝ (x - T x) x :=
+      P.centeredPoincare H x hx
+    have hDefect :
+        inner ℝ (x - T x) x =
+          ‖x‖ ^ 2 - inner ℝ (T x) x := by
+      calc
+        inner ℝ (x - T x) x =
+            inner ℝ x x - inner ℝ (T x) x :=
+          inner_sub_left x (T x) x
+        _ = ‖x‖ ^ 2 - inner ℝ (T x) x := by
+          rw [real_inner_self_eq_norm_sq]
+    rw [hDefect] at hPoincare
     linarith
 
 /-- Poincare coercivity therefore generates the common excited spectral cap. -/
