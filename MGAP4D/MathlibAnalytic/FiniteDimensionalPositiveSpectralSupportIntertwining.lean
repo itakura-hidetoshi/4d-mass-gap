@@ -85,11 +85,11 @@ theorem operator_positiveSpectralSynthesis_intertwining
   rw [hdiag]
   by_cases h : 0 < D.eigenvalue j
   · simp [D.eigenbasis_repr_positiveSpectralSynthesis,
-      positiveSpectralExtension, h]
+      positiveSpectralExtension, positiveEigenvalue, h]
   · have hz : D.eigenvalue j = 0 :=
       le_antisymm (le_of_not_gt h) (D.eigenvalue_nonneg j)
     simp [D.eigenbasis_repr_positiveSpectralSynthesis,
-      positiveSpectralExtension, h, hz]
+      positiveSpectralExtension, hz]
 
 /-- All natural powers of the original transfer intertwine with the exact
 diagonal support semigroup. -/
