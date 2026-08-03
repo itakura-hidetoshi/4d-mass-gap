@@ -83,7 +83,7 @@ theorem excitedSemigroup_coordinate_abs_le_gap
       (Real.exp (-D.positiveSpectralEnergy i.toPositive)) ^ n ≤
         (Real.exp (-D.excitationGap)) ^ n := by
     exact pow_le_pow_left₀ (Real.exp_pos _).le
-      (D.exp_neg_excitedEnergy_le_exp_neg_gap i)
+      (D.exp_neg_excitedEnergy_le_exp_neg_gap i) n
   exact mul_le_mul_of_nonneg_right hp (abs_nonneg _)
 
 /-- The exact gap weight is strictly below one at every positive natural time. -/
