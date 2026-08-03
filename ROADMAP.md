@@ -1,636 +1,652 @@
 # MGAP4D Roadmap
 
-This roadmap records the authoritative proof-development path of `itakura-hidetoshi/4d-mass-gap`.
+This document records the authoritative proof-development path of `itakura-hidetoshi/4d-mass-gap`.
 
-## Snapshot — 2026-07-15 JST
+It separates:
+
+- theorem infrastructure already replayed on the authoritative carrier;
+- concrete finite-volume Wilson results;
+- model-specific geometric Osterwalder--Schrader obligations;
+- finite-to-continuum analytic obligations; and
+- claims that are explicitly not made.
+
+## Snapshot — 2026-08-03 JST
 
 ```text
-active proof carrier:
+authoritative proof carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
 latest integrated theorem checkpoint:
-  PR #881 — Sum periodic SU(N) hybrid source overlap transport rows
+  PR #1365 — Construct shifted geometric Wilson OS kernel operator semigroup
 
-latest integrated PR head:
-  15b21a6bdb8237161749f018a149322efc550980
+fixed integrated PR head:
+  9d275aee4cfaf8c0a056b8e17c466cbc45b9dee5
 
-latest integrated merge commit:
-  96a4650e4bf34eb89c36720b14966fb83a049991
+latest authoritative carrier / squash integration:
+  4600dc1488a0b80576d247075ce2afdafd48edfa
 
-latest validation:
-  PR Lean Fast Check #6175
-  run id 29405234819
-  success
+latest completed validation:
+  PR Lean Fast Check #8625
+  run id 30780128446
+  job id 91582993004
+  completed / success
+
+terminal build:
+  Build completed successfully (8758 jobs)
 
 post-merge comparison:
-  96a4650e4bf34eb89c36720b14966fb83a049991
+  4600dc1488a0b80576d247075ce2afdafd48edfa
   versus formal/real-hilbert-uniform-coercive-strong-limit
-  identical
+  identical / ahead 0 / behind 0
 ```
 
-The repository has two converging proof lanes.
+Open, Draft, stale, superseded, and closed-unmerged pull requests are not part of the authoritative theorem state.
+
+## Proof architecture
+
+The repository now has four converging lanes.
 
 ```text
-A. reconstructed OS/PVM/Hamiltonian lane
+A. continuum reconstruction and spectral infrastructure
 
-Euclidean observables and measure
-  -> OS physical Hilbert space
-  -> strong semigroup continuity
-  -> self-adjoint Hamiltonian
-  -> constructed bounded-Borel PVM calculus
-  -> canonical coordinate graph
-  -> exact spectral-support and exact-gap endpoints
-  -> continuum construction and coercivity inputs [still required]
+Euclidean / OS input
+  -> reflection-positive quotient
+  -> real Hilbert completion
+  -> semigroup and generator
+  -> self-adjoint Hamiltonian interfaces
+  -> PVM and bounded-Borel calculus
+  -> exact lower-spectrum consequences from a supplied spine
+  -> concrete continuum Yang--Mills construction [open]
 
-B. explicit finite periodic SU(N) Wilson lane
 
-compact-Haar one-link conditionals
-  -> explicit periodic Dobrushin matrix
-  -> random-scan l1 and squared-l2 variation contraction
-  -> native Gibbs conditional-variance and pair-energy identities
-  -> finite Schur/resolvent and conditional core-Poincare generator
-  -> canonical hybrid path and endpoint transport laws
-  -> off-target boundary kernels and common-boundary resampling
-  -> exact overlap coupling and source transport rows
-  -> observable-specific one-sided hybrid profile inequality [active]
-  -> unconditional finite core Poincare [open at that input]
-  -> full Gibbs L2 closure [open]
-  -> tail-uniform finite-volume coercivity [open]
-  -> continuum coercivity transfer [open]
+B. finite periodic compact-Haar SU(N) dynamics
+
+Wilson Gibbs measure
+  -> exact one-link conditional laws
+  -> heat-bath projections and Hamiltonian
+  -> explicit Dobrushin influence matrix
+  -> genuine centered random-scan Rayleigh certificate
+  -> finite Gibbs L2 Poincare/coercivity
+  -> centered heat-bath exponential decay
+  -> physical scaling family with uniform estimates [open]
+
+
+C. canonical boundary transfer
+
+boundary Haar L2
+  -> canonical boundary-to-Gibbs analysis isometry
+  -> adjoint synthesis
+  -> compressed Hamiltonian and semigroup
+  -> generator leakage / curvature calculus
+  -> exact beta-zero closure
+  -> nonzero-beta range invariance and OS moment intertwining [open]
+
+
+D. geometric OS transfer
+
+one-layer Wilson reflection form
+  -> OS Hilbert completion
+  -> identity-transfer obstruction
+  -> independent shifted-kernel certificate
+  -> completed positive contraction
+  -> discrete natural-time semigroup
+  -> exact geometric / unshifted / heat-bath defects
+  -> shifted kernel from actual Wilson time geometry [open].
 ```
 
-The immediate mathematical frontier is:
+The lanes meet only when one concrete approximation family supplies all of the following compatibly:
 
 ```text
-u_target(O)
-  <= q_target(O)
-     + sum_source C(target, source) * u_source(O).
+finite Wilson probability models
+geometric time-separated OS kernels
+uniform quantitative estimates
+a continuum Euclidean measure
+operator or closed-form convergence
+Hamiltonian identification
+spectral transfer
+physical-unit normalization.
 ```
-
-Here `u` is the canonical independent-Gibbs hybrid increment profile, `q` is the exact native conditional-pair profile, and `C` is the explicit periodic `SU(N)` Dobrushin matrix.
-
-PR #854 proves all finite Schur and bounded-continuous-core Poincaré consequences once this one-sided inequality is supplied. PRs #855–#881 construct the actual coupling and transport machinery needed to prove it. The latest row theorem still uses the global amplitude `(2 * ‖O‖)^2`; it does not yet replace that amplitude by the source hybrid profile or identify the source-row transport sum with the endpoint residual energies.
-
-The final frontier remains construction of a nontrivial four-dimensional continuum Yang--Mills theory along a physically relevant scaling family and transfer of a positive lower spectral bound to its reconstructed Hamiltonian.
 
 ## Status notation
 
-- `[x]` means integrated and replayed on the active proof carrier.
-- `[>]` means the next active theorem unit.
-- `[ ]` means open or not yet physically instantiated.
-- A conditional theorem package is marked integrated only as a theorem from its stated inputs; the unresolved input remains separately open.
+- `[x]` — integrated and replayed on the authoritative carrier.
+- `[>]` — immediate active mathematical frontier.
+- `[~]` — proposed or Draft work; not an authoritative fact.
+- `[ ]` — open.
+- `[!]` — explicit claim boundary or anti-goal.
 
-A merged theorem parametrized by a construction spine does not prove that a concrete physical family supplies that spine. A finite-volume core Poincaré theorem does not automatically extend to the full closed Gibbs `L²` form. A uniform finite gap does not automatically survive a continuum limit. A small-`beta` Dobrushin region is not automatically the four-dimensional weak-coupling continuum trajectory.
+A theorem parametrized by a certificate or construction spine does not construct that certificate or spine. A finite-volume heat-bath gap is not automatically a geometric Euclidean-time gap. A uniform finite-volume theorem is not automatically a continuum theorem. An internal exact normalization is not automatically a physical mass.
 
 ---
 
-## Milestone 1 — preserve finite, continuum, OS, and exact-spectrum foundations
+## Milestone 0 — authoritative carrier and replay discipline
+
+Status: **integrated operational invariant**
+
+- [x] maintain `formal/real-hilbert-uniform-coercive-strong-limit` as the theorem carrier;
+- [x] start theorem PRs from the exact current carrier SHA;
+- [x] keep ordinary theorem PRs Draft until fixed-head validation is complete;
+- [x] use completed workflow, job, step, artifact, and log evidence;
+- [x] squash-integrate with the expected head SHA fixed;
+- [x] verify post-merge identity with the carrier;
+- [x] distinguish integrated facts from stale or superseded branches;
+- [!] do not infer theorem status from the default `main` branch alone.
+
+Definition of done:
+
+Every public status statement can be traced to a merged carrier commit and completed validation evidence.
+
+---
+
+## Milestone 1 — OS quotient, real Hilbert completion, semigroup, and Hamiltonian infrastructure
 
 Status: **integrated theorem infrastructure**
 
-- [x] preserve finite Wilson Gibbs probability and conditional-law infrastructure;
-- [x] preserve finite heat-bath Hilbert and Hamiltonian theorem generators;
-- [x] preserve conditional weak-limit, OS reconstruction, Hamiltonian, resolvent, graph-limit, and spectral-interface packages;
-- [x] preserve R4 gauge-field, gauge-action, gauge-invariant, Schwinger, correlation, and reflection-positive reconstruction surfaces;
-- [x] preserve quotient, section, transport, pre-Hilbert, and completed real Hilbert-space routes;
-- [x] preserve completed OS semigroup, generator, Hamiltonian, and self-adjoint operator APIs;
-- [x] preserve stable downstream and public-consumer theorem surfaces;
-- [x] preserve the distinction between formal theorem packages, physical instantiation, and a final Yang--Mills theorem.
-
-Definition of done:
-
-The repository retains a replayable formal backbone without treating conditional packages, supplied spectral fields, or normalized internal values as an unconditional physical result.
-
----
-
-## Milestone 2 — exact lower-spectrum theorem chain
-
-Status: **integrated by PRs #744–#746**
-
-For every supplied
-
-```lean
-S : EuclideanYangMillsContinuumMeasureConstructionSpine
-```
-
-- [x] prove `HasHamiltonianMassGap` at `exactGapValueReal`;
-- [x] prove the spectrum lies in `{0} ∪ [exactGapValueReal,∞)`;
-- [x] prove `(0, exactGapValueReal)` is spectrally empty;
-- [x] prove exact-gap attainment;
-- [x] prove leastness and the nonzero-spectrum infimum identity;
-- [x] classify the full spectrum below and at the exact threshold;
-- [x] identify the model first excitation with `exactGapValueReal`;
-- [x] prove uniqueness of the least nonzero spectral energy;
-- [x] retain exact-gap interval, threshold-separation, and first-excitation certificate surfaces.
-
-Boundary:
-
-This milestone does not construct the complete physical spine or derive its exact-gap fields from a concrete gauge approximation family.
-
----
-
-## Milestone 3 — replace abstract spectral support by reconstructed support
-
-Status: **integrated through PR #782**
-
-- [x] connect the explicit Wightman/OS exact-gap core to scalar spectral support;
-- [x] identify scalar support with the non-vacuum exact-gap core spectrum;
-- [x] prove threshold support membership, leastness, and support-infimum identity without a singleton PVM eigenprojection;
-- [x] connect the same exact-gap core to the pure open-neighborhood support of the actual bounded PVM on `Ω⊥`;
-- [x] identify pure PVM open support with the non-vacuum exact-gap core spectrum;
-- [x] retain the canonical restricted Hamiltonian with self-adjointness, dense domain, and closedness;
-- [x] remove scalar-measure realization choices from the final pure-PVM support endpoint.
-
-Definition of done:
-
-The exact threshold is detected by support of the actual reconstructed spectral object, including continuous-spectrum-compatible formulations.
-
----
-
-## Milestone 4 — construct the bounded-Borel PVM calculus
-
-Status: **integrated through PR #820**
-
-- [x] construct canonical simple-function PVM integration;
-- [x] prove presentation invariance under common refinements;
-- [x] construct uniform simple approximation of bounded Borel real functions;
-- [x] complete the simple integrals in operator norm;
-- [x] prove zero, one, measurable-indicator, subtraction, and real-scalar laws;
-- [x] prove the completed indicator law recovers the PVM projection;
-- [x] prove one-Lipschitz continuity in uniform norm;
-- [x] construct the quadratic scalar spectral measure from actual PVM countable additivity;
-- [x] prove scalar and projection tail continuity;
-- [x] prove quadratic-form integral identities;
-- [x] prove inner symmetry and real-Hilbert polarization;
-- [x] prove simple-function multiplicativity;
-- [x] lift multiplicativity to all bounded Borel multipliers.
-
-Definition of done:
-
-The PVM functional calculus consumed by the physical semigroup route is theorem-generated rather than stored as independent algebraic fields.
-
----
-
-## Milestone 5 — identify the physical semigroup and Hamiltonian coordinate graph
-
-Status: **integrated through PR #829**
-
-- [x] prove positive PVM support from the exact-gap support route;
-- [x] identify the positive Euclidean semigroup with the bounded PVM exponential operator;
-- [x] prove the physical PVM difference-quotient formula;
-- [x] derive the canonical restricted PVM coordinate graph;
-- [x] derive the physical generator from a strong-continuity core;
-- [x] reduce all-vector strong continuity to represented Euclidean observable states plus density and contractivity;
-- [x] prove the OS physical-state map is an isometry on the observable norm;
-- [x] derive observable-norm continuity from dominated convergence of actual Euclidean realization integrands;
-- [x] transport observable continuity to strong continuity on the completed Hilbert space;
-- [x] derive Hamiltonian-domain right derivatives from an observable graph core;
-- [x] replace coordinatewise graph closure assumptions by Hamiltonian graph-norm density;
-- [x] derive the graph estimate from a contractive generator-average factorization.
+- [x] reflection-positive OS seminorm and null-space handling;
+- [x] separation quotient and real pre-Hilbert structure;
+- [x] complete real Hilbert-space construction;
+- [x] represented Euclidean observables and vacuum;
+- [x] physical semigroup interfaces;
+- [x] strong-continuity routes;
+- [x] generator-domain and graph-closure infrastructure;
+- [x] self-adjoint Hamiltonian interfaces;
+- [x] explicit distinction between supplied analytic data and constructed objects.
 
 Remaining boundary:
 
-This lane still depends on a physical continuum model and its gap/support inputs. It reduces dependency opacity; it does not independently create a nontrivial four-dimensional continuum theory.
+- [ ] instantiate the complete route from one nontrivial interacting four-dimensional continuum gauge measure.
 
 ---
 
-## Milestone 6 — derive the explicit periodic `SU(N)` Dobrushin system
+## Milestone 2 — reconstructed PVM, bounded-Borel calculus, and exact lower spectrum
 
-Status: **integrated through PR #845**
+Status: **integrated from supplied construction data**
 
-- [x] specialize the compact-Haar heat-bath Hilbert space and Hamiltonian to periodic `SU(N)` Wilson systems;
-- [x] expose the normalized Haar--Gibbs vacuum, nonnegative form, and vacuum-orthogonal coercivity consequence of Poincaré data;
-- [x] formulate scale-uniform and tail-uniform heat-bath gap data;
-- [x] prove the exact Gibbs `L²` operator identity
+- [x] simple-function PVM integration;
+- [x] presentation and refinement invariance;
+- [x] bounded-Borel operator-norm completion;
+- [x] indicator, scalar, subtraction, and multiplicative laws;
+- [x] quadratic scalar spectral measures;
+- [x] real-Hilbert polarization and symmetry;
+- [x] reconstructed scalar and pure-PVM support identification;
+- [x] support-based threshold characterization;
+- [x] exact-gap theorem package from
+  `EuclideanYangMillsContinuumMeasureConstructionSpine`;
+- [x] least nonzero spectral value and nonzero-spectrum infimum;
+- [x] first-excitation and uniqueness statements.
+
+Claim boundary:
+
+- [!] `exactGapValueReal = 33/20` is an internal normalized theorem route;
+- [!] this milestone does not build the physical continuum spine;
+- [!] it does not derive `33/20` as a physical Yang--Mills mass.
+
+---
+
+## Milestone 3 — exact finite compact-Haar Wilson conditional dynamics
+
+Status: **integrated**
+
+- [x] finite periodic compact-Haar Wilson Gibbs probability;
+- [x] exact one-link conditional probability measures;
+- [x] measurable one-link Markov kernels;
+- [x] Gibbs reversibility;
+- [x] one-link conditional expectation as an `L²` projection;
+- [x] heat-bath fluctuation projections and Hamiltonian;
+- [x] native Gibbs variance and conditional-pair identities;
+- [x] exact Dirichlet-form representation;
+- [x] shared-plaquette localization;
+- [x] active-neighbor support;
+- [x] exact diagonal and inactive-source zero statements;
+- [x] symmetric volume-independent Dobrushin matrix.
+
+Explicit coefficient:
 
 ```text
-P_scan = I - |Edge|⁻¹ H_HB;
-```
-
-- [x] prove equivalence of centered random-scan Rayleigh and native heat-bath Poincaré estimates;
-- [x] restrict the periodic geometry to the nondegenerate tail `n >= 3`;
-- [x] localize conditional oscillations to shared plaquettes;
-- [x] derive mutual normalized Haar-density domination;
-- [x] derive the sharp bounded-test influence coefficient;
-- [x] prove exact active-neighbor support and the volume-independent row bound;
-- [x] prove symmetry and the matching column bound;
-- [x] prove the finite Schur `l2` matrix estimate;
-- [x] prove one-link observable variation propagation;
-- [x] prove random-scan `l1` total-variation contraction;
-- [x] prove random-scan squared-`l2` variation-energy contraction.
-
-The explicit coefficients are:
-
-```text
-eta_beta = (exp (4 * beta) - 1) / (exp (4 * beta) + 1)
+eta_beta   = (exp (4 * beta) - 1) / (exp (4 * beta) + 1)
 alpha_beta = 18 * eta_beta
 ```
 
-with
+Proved strict region:
 
 ```text
-beta < log (19 / 17) / 4
+beta < log (19 / 17) / 4.
 ```
 
-implying `alpha_beta < 1`.
+Claim boundary:
 
-Boundary:
-
-Observable oscillation contraction is not the Gibbs conditional-variance theorem. No such identification is claimed.
+- [!] bounded-test / total-variation influence control is not an `L²` Rayleigh theorem.
 
 ---
 
-## Milestone 7 — identify the native Gibbs variance and local Dirichlet form
+## Milestone 4 — finite Gibbs `L²` Poincare, coercivity, and heat-bath decay
 
-Status: **integrated through PR #850**
+Status: **integrated as a certificate-generated theorem route**
 
-- [x] define the canonical Gibbs `L²` representative of bounded continuous observables;
-- [x] define native one-link conditional variance on the actual continuous compact gauge carrier;
-- [x] identify the Gibbs average of fiber variance with the squared one-link projection defect;
-- [x] identify the sum of local variances with the native heat-bath Hamiltonian quadratic form;
-- [x] identify global Gibbs variance with half the independent global-pair difference energy;
-- [x] define native conditional independent-pair energy;
-- [x] prove conditional pair energy is exactly twice fiber conditional variance;
-- [x] identify the summed averaged conditional-pair energy with twice the heat-bath quadratic form.
+- [x] package scale-wise genuine centered random-scan Rayleigh certificates;
+- [x] combine them with explicit Dobrushin matrices;
+- [x] replace scale-dependent coefficients by one strict common upper bound;
+- [x] derive finite and tail-uniform Gibbs `L²` Poincare inequalities;
+- [x] derive vacuum-orthogonal heat-bath coercivity;
+- [x] characterize the Gibbs-vacuum kernel;
+- [x] construct the full and centered bounded heat-bath exponentials;
+- [x] prove the generator orbit equation;
+- [x] derive centered exponential norm decay from coercivity;
+- [x] propagate decay to finite reflected-integral and vacuum packages.
+
+Integrated quantitative route:
+
+```text
+coercivity with gap g
+  -> ||exp (-(t/2) H_HB) P_perp f||
+       <= sqrt(exp(-g*t)) ||f||.
+```
+
+Immediate finite-side obligation:
+
+- [>] generate the centered random-scan Rayleigh theorem directly from the explicit Wilson interaction in the scaling regime of interest, or replace it with a stronger intrinsic `L²` argument;
+- [ ] prove a usable common lower bound along an explicitly specified physical lattice trajectory.
+
+---
+
+## Milestone 5 — canonical boundary Haar-to-Gibbs analysis
+
+Status: **integrated**
+
+- [x] construct the reflection-fixed boundary projection;
+- [x] prove its product-Haar pushforward law;
+- [x] construct boundary-Haar `L²` pullback;
+- [x] construct the inverse-square-root Wilson density transport;
+- [x] prove exact `L²` inner-product preservation;
+- [x] construct the canonical boundary-to-Gibbs linear isometry;
+- [x] construct canonical synthesis as its Hilbert adjoint;
+- [x] construct the interacting boundary marginal density;
+- [x] construct the boundary vacuum moment;
+- [x] prove exact vacuum transport;
+- [x] prove zero-time analysis/synthesis round trips;
+- [x] preserve type separation between boundary Haar and Gibbs carriers.
 
 Definition of done:
 
-Global variance and local conditional variance are represented by exact pair-energy integrals on genuine compact-Haar carriers.
+The boundary maps are built from actual measure geometry rather than accepted as arbitrary Hilbert-space fields.
 
 ---
 
-## Milestone 8 — reduce finite Poincaré to one one-sided profile theorem
+## Milestone 6 — boundary Hamiltonian, compression, leakage, and semigroup calculus
 
-Status: **conditional theorem route integrated through PR #854**
+Status: **integrated**
 
-- [x] prove periodic `SU(N)` Dobrushin `L²` resolvent coercivity
+### Structural compression
 
-```text
-(1 - alpha)^2 * ‖v‖₂² <= ‖(I - C)v‖₂²;
-```
+- [x] define `H_boundary = A* H_HB A`;
+- [x] prove quadratic-form transport, symmetry, and nonnegativity;
+- [x] prove boundary-vacuum annihilation;
+- [x] construct compressed full and centered heat-bath evolutions;
+- [x] prove matrix-coefficient identities;
+- [x] prove zero-time identity and centered-sector compatibility.
 
-- [x] define the canonical finite hybrid path by sequential physical-link replacement;
-- [x] prove the telescoping global-pair energy majorant;
-- [x] define the canonical hybrid increment energy and profile `u`;
-- [x] define the native conditional-pair square-root profile `q`;
-- [x] prove `sum q_e^2` is the exact local pair-energy sum;
-- [x] prove a reusable one-sided Schur theorem from
+### Generator leakage
 
-```text
-u_i <= q_i + sum_j C(i,j) * u_j;
-```
-
-- [x] connect that theorem to global/local pair-energy coercivity;
-- [x] generate the bounded-continuous-core heat-bath Poincaré inequality with coefficient `(1 - alpha_beta)^2` from the one-sided profile input.
-
-Unfinished input:
+For an isometric analysis `A`, ambient generator `T`, and compression `K = A* T A`, define
 
 ```text
-u_target(O)
-  <= q_target(O)
-     + sum_source C(target, source) * u_source(O).
+D = T A - A K.
 ```
+
+- [x] prove exact orthogonal decomposition through `D`;
+- [x] prove synthesis annihilates the leakage;
+- [x] prove the ambient/compressed energy decomposition;
+- [x] prove `D = 0` iff exact generator intertwining;
+- [x] prove `D = 0` iff analyzed-range invariance;
+- [x] prove uniqueness of an exactly intertwined boundary generator.
+
+### Second-moment curvature and semigroup closure
+
+Define
+
+```text
+Q = A* T^2 A - K^2.
+```
+
+- [x] prove `Q` has nonnegative quadratic form for symmetric `T`;
+- [x] prove `<Qx,x> = ||Dx||^2`;
+- [x] prove `Q = 0` iff `D = 0`;
+- [x] prove zero leakage propagates to every natural power;
+- [x] prove zero leakage propagates through the operator exponential;
+- [x] prove exact all-time compression, range invariance, and semigroup laws.
+
+General nonzero-coupling frontier:
+
+- [>] prove or quantitatively control the concrete Wilson boundary leakage;
+- [>] connect the resulting boundary evolution to geometric OS time.
+
+---
+
+## Milestone 7 — complete beta-zero boundary heat-bath closure
+
+Status: **integrated through PR #1362**
+
+At `beta = 0`:
+
+- [x] prove the Wilson Gibbs density is one;
+- [x] prove the boundary marginal is boundary Haar;
+- [x] identify canonical analysis with boundary-restriction pullback;
+- [x] prove every one-link projection preserves the analyzed range;
+- [x] prove every local fluctuation and the full heat-bath Hamiltonian preserve the range;
+- [x] prove the concrete generator leakage vanishes;
+- [x] prove second-moment curvature vanishes;
+- [x] prove sharp boundary Poincare/coercivity constant one;
+- [x] exclude nonzero vacuum-orthogonal zero modes;
+- [x] construct the exact all-real-time compressed semigroup;
+- [x] prove ambient/boundary intertwining;
+- [x] prove operator-norm continuity and derivative formulas.
+
+Claim boundary:
+
+- [!] beta-zero heat-bath dynamics is not automatically geometric Euclidean-time translation;
+- [!] beta zero is not the interacting continuum Yang--Mills regime.
+
+---
+
+## Milestone 8 — geometric one-layer OS Hilbert completion
+
+Status: **integrated through PR #1364**
+
+- [x] construct an opaque positive-half observable carrier;
+- [x] install the actual one-layer Wilson reflection form as a pre-inner-product core;
+- [x] identify OS nullity with zero Wilson quadratic form;
+- [x] form the separation quotient;
+- [x] complete the geometric OS Hilbert space;
+- [x] construct a dense raw-observable embedding;
+- [x] prove its inner product is exactly the Wilson one-layer form;
+- [x] construct the canonical identity transfer;
+- [x] prove exact reproduction of all unshifted matrix elements;
+- [x] prove global uniqueness from dense matrix elements;
+- [x] prove every nonidentity candidate has a nonzero matrix-element witness.
+
+Central obstruction:
+
+```text
+all unshifted Wilson one-layer matrix elements are reproduced
+  iff
+the bounded transfer operator is identity.
+```
+
+Therefore:
+
+- [!] a nontrivial geometric transfer requires shifted-kernel information not contained in the unshifted reflection form.
+
+---
+
+## Milestone 9 — independent shifted geometric OS operator and discrete semigroup
+
+Status: **integrated through PR #1365**
+
+From an independent shifted-kernel certificate:
+
+- [x] require exact raw-carrier matrix-element realization;
+- [x] require contraction;
+- [x] require OS symmetry and nonnegative quadratic form;
+- [x] derive OS-null preservation;
+- [x] descend the shift to the separation quotient;
+- [x] extend uniquely to the completed OS Hilbert space;
+- [x] prove the completed operator is symmetric, positive, and contractive;
+- [x] define natural-number iterates;
+- [x] prove the additive discrete semigroup law;
+- [x] prove exact represented-state action;
+- [x] prove exact iterated shifted-kernel matrix elements.
+
+Claim boundary:
+
+- [!] the shifted-kernel certificate remains independent input;
+- [!] no continuous-time logarithm or unbounded generator is constructed here;
+- [!] no continuum limit follows from the discrete semigroup alone.
+
+---
+
+## Milestone 10 — exact comparison defects among the three dynamics
+
+Status: **integrated**
+
+The repository keeps distinct:
+
+```text
+geometric Wilson shifted time
+random-scan path-space Markov time
+canonical beta-zero boundary heat-bath time.
+```
+
+- [x] define the geometric matrix-element defect;
+- [x] prove zero matrix defect iff exact realization;
+- [x] define same-carrier natural-power defects;
+- [x] prove all-time equality iff one-step equality;
+- [x] define cross-carrier isometric intertwining defects;
+- [x] prove zero defect propagates to every natural power;
+- [x] prove zero defect gives exact adjoint-compression equality;
+- [x] prove nonzero defect supplies an exact no-go witness;
+- [x] classify simultaneous realization of the unshifted form and beta-zero heat-bath step;
+- [x] prove simultaneous realization forces identity transfer and identity heat-bath step.
+
+Anti-identification theorem:
+
+A common exponential or semigroup shape does not identify the underlying dynamics. Equality must be proved through the explicit zero-defect theorem.
+
+---
+
+## Milestone 11 — construct the actual nonzero-coupling geometric Wilson shift
+
+Status: **immediate active frontier**
+
+- [>] define a time-separated finite-volume Wilson kernel from actual gauge configurations and reflection geometry;
+- [>] prove measurability and integrability of the shifted kernel;
+- [>] prove exact realization by a raw positive-half shift;
+- [>] prove contraction on the one-layer OS seminorm;
+- [>] prove OS symmetry and positivity;
+- [>] prove OS-null preservation;
+- [>] instantiate the integrated shifted-kernel certificate;
+- [>] compute the unshifted matrix defect;
+- [>] compute the boundary heat-bath bridge defect;
+- [>] identify a regime in which the relevant defect vanishes or is quantitatively controlled.
 
 Definition of done:
 
-Once the one-sided profile inequality is proved for every bounded continuous observable, no further finite Schur or pair-energy bookkeeping is required to generate core Poincaré.
+The shifted operator is generated from actual Wilson time geometry rather than supplied as abstract certificate data.
 
-Anti-goal:
-
-Do not replace the one-sided profile inequality by a package field with no theorem connecting it to the actual hybrid path and exact conditional laws.
+Failure is also mathematically informative: an explicit nonzero defect or failed positivity condition should be recorded as a no-go theorem rather than hidden by changing the meaning of time.
 
 ---
 
-## Milestone 9 — construct the actual hybrid/native transport comparison
-
-Status: **integrated through PR #874**
-
-### Hybrid endpoint and pair carriers
-
-- [x] prove one hybrid step is exactly one physical-link replacement;
-- [x] decompose the hybrid increment into pre/post native heat-bath fluctuations;
-- [x] define and identify pre/post endpoint pushforward laws;
-- [x] construct the explicit endpoint transport coupling;
-- [x] construct the native conditional-pair reference law on the same configuration-pair carrier;
-- [x] identify its square-difference energy with `q_target(O)^2`;
-- [x] prove hybrid and native pair laws have one-link support.
-
-### Off-target boundary kernels
-
-- [x] define the exact off-target boundary carrier and restriction maps;
-- [x] identify diagonal boundary support for hybrid and native pair laws;
-- [x] retain the boundary and two target values on one common carrier;
-- [x] factor exact conditional laws through the off-target boundary;
-- [x] construct measurable boundary-indexed conditional and conditional-pair Markov kernels;
-- [x] compose those kernels with arbitrary boundary input laws;
-- [x] prove equality and absolute-continuity reflection through the boundary-retaining kernel;
-- [x] identify the exact Radon--Nikodym derivative as the boundary derivative pulled back by `Prod.fst`.
-
-### Common-boundary resampling
-
-- [x] couple the actual hybrid boundary-target law with exact native resampling at the same boundary;
-- [x] reconstruct the resulting target pairs to full configurations;
-- [x] prove the pointwise three-term fluctuation decomposition;
-- [x] integrate the square estimate;
-- [x] define the hybrid-boundary central conditional-pair energy and both endpoint residual energies;
-- [x] disintegrate the central term over the hybrid boundary law;
-- [x] prove exact diagonal boundary support;
-- [x] identify both endpoint residual energies with observable transport energies;
-- [x] sharpen universal residual bounds to `(2 * ‖O‖)^2`.
-
-Integrated inequality:
-
-```text
-hybridIncrementEnergy
-  <= 3 * (
-       firstResidualEnergy
-       + hybridBoundaryResampledConditionalPairEnergy
-       + secondResidualEnergy).
-```
-
-Boundary:
-
-The central term is not yet bounded by `q_target(O)^2` through a theorem valid for the actual hybrid boundary law, and the endpoint residual energies are not yet bounded by influence-weighted source hybrid energies.
-
----
-
-## Milestone 10 — construct exact overlap couplings and source transport rows
-
-Status: **integrated through PR #881**
-
-- [x] define common overlap and residual densities for two exact one-link conditional laws;
-- [x] construct the exact overlap/residual coupling and prove both marginals;
-- [x] identify the common residual mass;
-- [x] prove the sharp residual-mass bound from mutual likelihood-ratio domination;
-- [x] specialize the bound to `compactHaarOscillationInfluence`;
-- [x] convert mismatch probability into fixed-background `L²` observable transport energy;
-- [x] construct the measurable background-pair-indexed overlap-coupling kernel;
-- [x] integrate the target coupling over one canonical source-link hybrid endpoint law;
-- [x] disintegrate the source-to-target transport energy into fixed-background energies;
-- [x] specialize the oscillation bound to the actual periodic `SU(N)` shared-plaquette influence;
-- [x] prove exact zero for the diagonal source;
-- [x] prove exact zero outside the active-neighbor set;
-- [x] sum the full periodic source row;
-- [x] prove
-
-```text
-sourceOverlapTransportRowEnergy target O
-  <= (2 * ‖O‖)^2 * alpha_beta.
-```
-
-What this closes:
-
-The exact likelihood-ratio/Dobrushin coefficient now controls a genuine measurable `L²` transport coupling on the actual periodic compact-Haar `SU(N)` source path.
-
-What remains:
-
-The global amplitude `(2 * ‖O‖)^2` is too coarse for the one-sided hybrid profile theorem. The row energy is not yet identified with either endpoint residual energy and is not yet controlled by the source hybrid increment energies.
-
----
-
-## Milestone 11 — close the observable-specific one-sided hybrid profile inequality
-
-Status: **immediate active mathematical frontier**
-
-- [>] define the exact coupling/decomposition that expresses each target endpoint residual through source-step target-conditional transports;
-- [ ] prove the endpoint residual transport sum is supported on the actual periodic active-neighbor set;
-- [ ] replace the universal amplitude bound
-
-```text
-(2 * ‖O‖)^2
-```
-
-by an observable-specific source term derived from the canonical hybrid increment at `source`;
-- [ ] prove an energy-level estimate of the schematic form
-
-```text
-targetResidualEnergy
-  <= sum_source C(target, source) * sourceHybridEnergy;
-```
-
-or the sharper squared-profile form required after square-root conversion;
-
-- [ ] control the hybrid-boundary central conditional-pair energy by the native target profile `q_target(O)^2`, without assuming equality of hybrid and Gibbs boundary laws;
-- [ ] combine the two endpoint residuals and the central term without losing volume-uniformity;
-- [ ] perform the square-root/Minkowski or weighted Young step needed to obtain
-
-```text
-u_target(O)
-  <= q_target(O)
-     + sum_source C(target, source) * u_source(O);
-```
-
-- [ ] specialize to the periodic `SU(N)` influence matrix with `alpha_beta < 1`;
-- [ ] feed the theorem directly into PR #854's one-sided Schur/Poincaré generator.
-
-Preferred theorem order:
-
-```text
-endpoint residual = source-path transport sum
-  -> source-observable transport amplitude
-  -> influence-weighted residual-energy estimate
-  -> central native-profile estimate
-  -> square-root one-sided profile inequality
-  -> finite Schur
-  -> core Poincare.
-```
-
-Definition of done:
-
-The actual Wilson interaction and exact compact-Haar conditional laws prove the one-sided hybrid profile inequality for every bounded continuous observable, with no independent profile assumption.
-
-Anti-goals:
-
-- do not identify global sup-norm amplitude with a source hybrid increment;
-- do not infer equality of hybrid and Gibbs boundary laws;
-- do not replace the theorem by a receipt, alias, or constructor;
-- do not absorb edge-cardinality growth into an allegedly volume-uniform constant.
-
----
-
-## Milestone 12 — obtain unconditional finite-volume Gibbs coercivity
-
-Status: **open after Milestone 11**
-
-### Bounded-continuous core
-
-- [ ] instantiate PR #854's core Poincaré generator from the proved one-sided profile theorem;
-- [ ] state the resulting periodic `SU(N)` core inequality explicitly:
-
-```text
-(1 - alpha_beta)^2 * Var_mu(O)
-  <= <H_HB O, O>;
-```
-
-- [ ] prove positivity of the coefficient throughout the explicit strict region;
-- [ ] derive vacuum-orthogonal core coercivity and core zero-kernel uniqueness.
-
-### Full Gibbs `L²` and closed form
-
-- [ ] prove density of the bounded-continuous observable core in the relevant Gibbs `L²` sector;
-- [ ] identify the closure of the core conditional-variance form with the native heat-bath Hamiltonian form;
-- [ ] extend the core Poincaré inequality by lower semicontinuity or form closure;
-- [ ] obtain the full centered random-scan Rayleigh theorem;
-- [ ] instantiate the finite gap package without externally supplied Rayleigh or Poincaré data;
-- [ ] prove the full zero-kernel statement in the native Gibbs Hilbert space.
-
-Definition of done:
-
-For every nondegenerate periodic finite lattice in the proved region, the explicit Wilson interaction alone generates a positive heat-bath gap on the full native Gibbs `L²` space.
-
----
-
-## Milestone 13 — obtain a tail-uniform finite-volume gap
-
-Status: **open after Milestone 12**
-
-- [ ] choose a scale family `beta n` and a common tail coefficient bound;
-- [ ] verify `alpha_(beta n) <= coefficientBound < 1` for every tail scale;
-- [ ] instantiate the existing tail-uniform gap package with theorem-generated scale-wise Poincaré data;
-- [ ] prove one common vacuum-orthogonal coercivity constant across the tail;
-- [ ] prove tail-uniform zero-kernel uniqueness;
-- [ ] preserve explicit dependence on lattice side, physical volume, coupling, rank, and normalization.
-
-Definition of done:
-
-The explicit periodic `SU(N)` Wilson family supplies one positive finite-volume heat-bath lower bound uniformly across the chosen nondegenerate tail.
-
----
-
-## Milestone 14 — transfer finite-volume coercivity into the continuum OS Hamiltonian
-
-Status: **open after Milestone 13**
-
-- [ ] choose a concrete periodic `SU(N)` approximation sequence and continuum scaling parameterization;
-- [ ] connect the finite Hilbert spaces and Hamiltonians to the existing OS continuum approximation spine;
-- [ ] prove compatibility of vacuum centering and vacuum-orthogonal sectors;
-- [ ] prove the required strong, resolvent, form, or graph convergence of finite Hamiltonians;
-- [ ] prove the common finite lower bound survives the selected limit mode;
-- [ ] exclude collapse of the non-vacuum sector or loss of the lower spectral estimate;
-- [ ] identify the limiting lower bound with the reconstructed continuum Hamiltonian spectrum;
-- [ ] connect the continuum coercivity theorem to the exact-gap support and PVM coordinate-graph route.
-
-Key warning:
-
-Uniform finite gaps do not pass automatically through an arbitrary weak measure limit. The operator/form convergence and vacuum-sector identifications must be explicit.
-
----
-
-## Milestone 15 — reconcile the Dobrushin region with physical continuum scaling
-
-Status: **fundamental open physical/analytic frontier**
-
-- [ ] state the convention for `beta`, lattice spacing, bare coupling, and group rank;
-- [ ] determine the scaling trajectory required for the intended four-dimensional continuum Yang--Mills theory;
-- [ ] prove whether
-
-```text
-beta < log (19 / 17) / 4
-```
-
-can hold along that trajectory;
-
-- [ ] if it cannot, extend the finite-gap method beyond the current region or replace it with another quantitative mechanism;
-- [ ] avoid identifying a strong-coupling lattice gap with a weak-coupling continuum mass gap without a theorem connecting the regimes;
-- [ ] preserve explicit dependence on all physical and normalization parameters.
-
-Definition of done:
-
-The finite quantitative gap mechanism applies along the same approximation family used to construct the claimed four-dimensional continuum theory.
-
-This milestone is logically independent of completing the finite `L²` estimate. Both are required.
-
----
-
-## Milestone 16 — construct a concrete nontrivial continuum Yang--Mills spine
-
-Status: **decisive open construction frontier**
-
-- [ ] fix the compact gauge group and one concrete approximation family;
-- [ ] specify boundary conditions, lattice sequence, interpolation maps, observable algebra, and physical-volume scaling;
-- [ ] prove gauge invariance and finite-volume consistency;
-- [ ] prove tightness, compactness, or another continuum-existence mechanism;
-- [ ] prove nontriviality of the continuum limit;
-- [ ] prove Euclidean covariance and reflection positivity for the limiting Schwinger family;
-- [ ] prove connected-correlation nondegeneracy from explicit gauge-invariant observables;
-- [ ] construct the physical Hilbert space, vacuum, semigroup, generator, and Hamiltonian from that family;
-- [ ] construct the spectral PVM and support from the resulting Hamiltonian;
-- [ ] replace every remaining supplied field of `EuclideanYangMillsContinuumMeasureConstructionSpine` by a theorem from the chosen family;
-- [ ] instantiate the exact-spectrum theorem chain with the resulting construction.
-
-Definition of done:
-
-One concrete approximation family supplies the complete OS/Hamiltonian/PVM construction spine and nontriviality data without importing the desired continuum spectral conclusion as a field.
-
----
-
-## Milestone 17 — physical normalization and exact mass-gap identification
+## Milestone 12 — exact OS boundary-moment intertwining
 
 Status: **open**
 
-- [ ] separate dimensionless lattice and internal theorem normalizations from a physical mass scale;
-- [ ] explain and prove the role of the internal `33/20` provenance route;
-- [ ] identify the continuum Hamiltonian units and renormalization convention;
-- [ ] prove that the transferred lower spectral value is positive in physical units;
-- [ ] determine whether the physical gap is exactly `exactGapValueReal` or whether the public endpoint must be reparameterized;
-- [ ] prove the continuum theory is interacting and not a trivial or Gaussian limit;
-- [ ] state the gauge group and theorem scope without hidden generalization.
+For the canonical boundary analysis `A`, adjoint synthesis `A*`, and a genuine geometric OS transfer `T_OS`, prove an exact relation of the form
 
-Definition of done:
+```text
+A* (finite Gibbs evolution) A
+  = geometric OS transfer
+```
 
-The exact-gap value in the final theorem has a derived mathematical and physical interpretation in the instantiated continuum theory.
+on a dense boundary-observable core, or prove the corresponding matrix elements agree.
+
+Tasks:
+
+- [ ] identify the correct time normalization and half-time convention;
+- [ ] prove boundary observables represent the intended time-zero OS states;
+- [ ] prove the shifted Wilson kernel gives the required boundary moments;
+- [ ] prove equality with the compressed finite Gibbs evolution, or quantify the defect;
+- [ ] extend from the dense observable image to the completed carrier;
+- [ ] preserve vacuum centering and the exact decay rate.
+
+Claim boundary:
+
+- [!] random-scan or heat-bath time must not be renamed as Euclidean time;
+- [!] the theorem must arise from the model's reflection/translation geometry.
 
 ---
 
-## Milestone 18 — final theorem and independent review
+## Milestone 13 — tail-uniform finite-volume control in a physical scaling regime
 
-Status: **not claimed**
+Status: **open**
 
-- [ ] assemble one replayable theorem path from the explicit approximation family to the final existence and mass-gap statement;
-- [ ] document every hypothesis and dependency;
-- [ ] ensure no essential physical conclusion is stored as an input field;
-- [ ] replay the complete Lean dependency path from a fresh clone;
-- [ ] obtain independent expert review of the mathematical argument and formalization;
-- [ ] reconcile the result with the precise Clay problem statement;
-- [ ] only then consider unconditional final-theorem language.
+Specify one concrete approximation trajectory:
+
+```text
+lattice spacing a_n -> 0
+physical volume or torus size L_n
+coupling beta_n
+gauge group SU(N)
+boundary and time-step conventions.
+```
+
+Then prove:
+
+- [ ] nondegenerate periodic geometry on the tail;
+- [ ] a genuine scale-wise `L²` Rayleigh theorem;
+- [ ] one positive common gap or a controlled renormalized gap;
+- [ ] compatibility of the Dobrushin/spectral region with the chosen `beta_n`;
+- [ ] uniform boundary-transfer estimates;
+- [ ] uniform geometric shifted-kernel estimates;
+- [ ] tightness or compactness estimates for the Euclidean measures;
+- [ ] uniform regularity and reflection-positive correlation bounds.
+
+The current strict Dobrushin region is a valid finite small-coupling theorem. It is not automatically compatible with the asymptotically free four-dimensional continuum trajectory.
+
+---
+
+## Milestone 14 — continuum Euclidean Yang--Mills construction
+
+Status: **open**
+
+- [ ] construct a projectively or weakly convergent family of finite gauge measures;
+- [ ] identify a nontrivial continuum Euclidean field law;
+- [ ] prove Euclidean covariance in the required form;
+- [ ] prove reflection positivity of the limiting Schwinger functions;
+- [ ] prove regularity and clustering;
+- [ ] construct gauge-invariant continuum observables;
+- [ ] prove nontriviality and interaction;
+- [ ] instantiate the existing OS reconstruction interfaces.
 
 Definition of done:
 
-The repository can state a final theorem without conflating finite-volume coercivity, conditional continuum packages, supplied spectral certificates, internal normalization, formal replay, or external review.
+A concrete continuum probability/Schwinger system supplies the currently abstract construction spine.
 
-## Current priority order
+---
+
+## Milestone 15 — operator/form convergence and Hamiltonian identification
+
+Status: **open**
+
+- [ ] place finite and continuum carriers on compatible comparison maps;
+- [ ] prove strong resolvent, graph, Mosco, or another adequate closed-form convergence theorem;
+- [ ] transfer finite coercivity without losing the vacuum sector;
+- [ ] identify the limiting semigroup with reconstructed Euclidean time translation;
+- [ ] identify its self-adjoint generator as the physical Hamiltonian;
+- [ ] prove the normalized vacuum is the complete zero-energy kernel;
+- [ ] exclude spectral pollution below the proposed threshold.
+
+No uncompressed operator-norm convergence is required unless a theorem specifically needs it. The convergence topology must be strong enough for the claimed spectral conclusion and no stronger than justified by the model.
+
+---
+
+## Milestone 16 — spectral transfer and physical mass normalization
+
+Status: **open**
+
+- [ ] transfer a positive lower spectral bound to the continuum Hamiltonian;
+- [ ] prove the nonzero spectrum is nonempty;
+- [ ] identify whether the threshold is continuous support or an eigenvalue;
+- [ ] prove positive spectral weight for a concrete gauge-invariant observable if required;
+- [ ] relate lattice time units to physical units;
+- [ ] determine the renormalized physical mass scale;
+- [ ] distinguish a lower bound, an attained threshold, and an exact eigenvalue;
+- [ ] compare the result with `exactGapValueReal` only after normalization is proved.
+
+Claim boundary:
+
+- [!] the internal value `33/20` is not a physical prediction without this milestone.
+
+---
+
+## Milestone 17 — final theorem and independent review
+
+Status: **open**
+
+A final existence-and-mass-gap theorem would require a single dependency chain proving:
 
 ```text
-1. express target endpoint residual energies through the integrated source-step overlap couplings;
-2. replace the global 2*norm amplitude by source hybrid increment/profile control;
-3. prove the hybrid-boundary central term is controlled by the native target conditional-pair profile;
-4. close u_target <= q_target + sum_source C(target,source) u_source;
-5. instantiate the bounded-continuous-core periodic SU(N) Poincare theorem;
-6. extend the core inequality to the full closed Gibbs L2 form;
-7. instantiate the tail-uniform finite gap without external Rayleigh/Poincare inputs;
-8. define and prove finite-to-continuum coercivity transfer;
-9. resolve the small-beta versus continuum-scaling regime boundary;
-10. complete the nontrivial continuum OS construction and exact-gap instantiation;
-11. obtain independent mathematical review before any final claim.
+nontrivial four-dimensional continuum Yang--Mills existence
+OS/Wightman reconstruction
+physical Hilbert space and Hamiltonian
+unique vacuum sector
+strict positive mass gap
+all model-specific finite-to-continuum hypotheses
+physical normalization.
 ```
 
-Additional wrappers, aliases, smoke files, receipts, and handoff structures are secondary. They are justified only when they expose an actual dependency, eliminate a supplied theorem field, stabilize a theorem surface consumed by the next proof, or connect the explicit finite interaction to the continuum Hamiltonian.
+Final review requirements:
 
-## Non-claims at the current checkpoint
+- [ ] complete theorem dependency index;
+- [ ] replay from a fresh pinned environment;
+- [ ] no hidden supplied field equivalent to the target theorem;
+- [ ] no conflation of finite heat-bath and geometric Euclidean time;
+- [ ] no inference of `L²` coercivity from total variation alone;
+- [ ] no stale-branch theorem counted as integrated;
+- [ ] independent mathematical review of the model construction and analytic transfer;
+- [ ] independent Lean review of the principal theorem chain.
 
-The active carrier does not yet establish:
+Until then:
 
 ```text
-the one-sided hybrid profile inequality from the actual overlap/source transport construction;
-an unconditional periodic SU(N) bounded-continuous-core Poincare theorem;
-the full closed-form Gibbs L2 Poincare theorem from the explicit interaction;
-a tail-uniform finite gap generated without supplied scale-wise Rayleigh/Poincare data;
-transfer of that gap to a continuum OS Hamiltonian;
-compatibility of the current strict Dobrushin region with the physical continuum scaling trajectory;
-a complete nontrivial interacting four-dimensional continuum Yang--Mills construction;
-a physical derivation of exactGapValueReal or 33/20 from that family;
-an unconditional Clay Millennium Yang--Mills existence and mass-gap theorem;
-independent external mathematical consensus.
+unconditional Clay Millennium theorem: not claimed
+independent external mathematical consensus: not claimed.
 ```
 
-The integrated results are substantial formal progress. The repository now contains exact native variance/Dirichlet identities, the complete finite Schur/Poincaré consequence chain from one one-sided profile theorem, actual hybrid/native common carriers, boundary-indexed Markov kernels, common-boundary resampling, exact overlap couplings, sharp residual-mass influence bounds, measurable `L²` transport energies, and a volume-uniform periodic source-row estimate. The next decisive theorem must make that transport estimate observable-specific enough to close the one-sided profile inequality; the continuum construction and physical scaling obligations remain separate and indispensable.
+---
+
+## Immediate next theorem units
+
+The preferred mathematical order is:
+
+```text
+1. define the concrete finite Wilson shifted geometric kernel;
+2. prove or refute its OS positivity, contraction, and null preservation;
+3. instantiate the completed shifted OS operator;
+4. evaluate the geometric/unshifted matrix defect;
+5. evaluate the geometric/beta-zero heat-bath bridge defect;
+6. extend the comparison to nonzero coupling;
+7. prove the actual boundary-moment intertwining or a quantitative substitute;
+8. generate the scale-wise L2 Rayleigh theorem from the explicit interaction;
+9. specify a physical continuum scaling trajectory;
+10. prove tail-uniform finite and geometric transfer estimates;
+11. construct the continuum Euclidean measure;
+12. prove operator/form convergence and spectral transfer.
+```
+
+Each integration unit should close a mathematically coherent package. Small wrappers, aliases, receipts, or smoke files count as progress only when they eliminate an actual supplied assumption, expose a necessary invariant, or connect two previously distinct theorem carriers.
+
+## Permanent anti-goals
+
+- [!] do not weaken theorem statements, physical assumptions, mass values, or decay rates to obtain compilation;
+- [!] do not identify random-scan Markov time with geometric Euclidean time by notation;
+- [!] do not infer `L²` Poincare from total-variation Dobrushin control alone;
+- [!] do not treat a supplied construction spine as a constructed continuum model;
+- [!] do not treat the beta-zero product theory as the interacting continuum theory;
+- [!] do not treat `exactGapValueReal = 33/20` as a physical mass before normalization;
+- [!] do not use open, Draft, stale, or superseded branches as authoritative theorem evidence;
+- [!] do not replace a concrete model theorem by an opaque certificate whose fields restate the desired conclusion.
+
+## Final definition of done
+
+The project reaches its mathematical objective only when the authoritative carrier contains a replayable, concrete, non-circular chain
+
+```text
+finite Wilson gauge models
+  -> geometric OS time transfer
+  -> uniform quantitative finite estimates
+  -> nontrivial continuum Euclidean Yang--Mills measure
+  -> reconstructed physical Hamiltonian
+  -> strict positive spectral gap
+```
+
+with every model-specific assumption discharged by definitions and theorems for one explicit approximation family.
