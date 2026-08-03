@@ -58,7 +58,7 @@ def finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
 /-- Temporal Wilson action of the one-slab temporal-gauge configuration. -/
 def finiteEvenFourTorusZ2TemporalGaugeCrossingAction
     (H : ℕ)
-    (energyIdentity energyNontrivial : ℝ)
+    (_β energyIdentity energyNontrivial : ℝ)
     (A B : FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ :=
   (Finset.univ.toList.map fun e : FiniteEvenFourTorusSpatialLink H =>
     if (A e)⁻¹ * B e = 1 then energyIdentity else energyNontrivial).sum
@@ -75,7 +75,7 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann
       H β energyIdentity energyNontrivial hβ hEnergy).kernel A B =
       Real.exp (-β *
         finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-          H energyIdentity energyNontrivial A B) := by
+          H β energyIdentity energyNontrivial A B) := by
   unfold finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
   rw [finite_os_gram_kernel_listProduct_apply]
   simp only [List.map_map, Function.comp_apply]
@@ -101,13 +101,13 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann
 each boundary plus the complete temporal crossing action. -/
 def finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
     (H : ℕ)
-    (energyIdentity energyNontrivial : ℝ)
+    (β energyIdentity energyNontrivial : ℝ)
     (A B : FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ :=
   (1 / 2 : ℝ) *
       finiteEvenFourTorusZ2SpatialWilsonAction
         H energyIdentity energyNontrivial A +
     finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-      H energyIdentity energyNontrivial A B +
+      H β energyIdentity energyNontrivial A B +
     (1 / 2 : ℝ) *
       finiteEvenFourTorusZ2SpatialWilsonAction
         H energyIdentity energyNontrivial B
@@ -137,7 +137,7 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann
       H β energyIdentity energyNontrivial hβ hEnergy).kernel A B =
       Real.exp (-β *
         finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-          H energyIdentity energyNontrivial A B) := by
+          H β energyIdentity energyNontrivial A B) := by
   unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
   rw [finite_os_gram_kernel_sandwich_apply,
     finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann]
