@@ -177,6 +177,7 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_eq_diagonal_congru
       finiteEvenFourTorusZ2SpatialHalfWeight
         H β energyIdentity energyNontrivial B = _
   simp only [Matrix.mul_diagonal, Matrix.diagonal_mul]
+  rfl
 
 /-- Strict coupling makes the full temporal-gauge one-slab kernel matrix
 positive definite at every finite side parameter. -/
@@ -202,15 +203,16 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_posDef
     intro x y hxy
     funext A
     have hA := congrFun hxy A
-    change
-      finiteEvenFourTorusZ2SpatialHalfWeight
-          H β energyIdentity energyNontrivial A * x A =
+    have hA' :
         finiteEvenFourTorusZ2SpatialHalfWeight
-          H β energyIdentity energyNontrivial A * y A at hA
+            H β energyIdentity energyNontrivial A * x A =
+          finiteEvenFourTorusZ2SpatialHalfWeight
+            H β energyIdentity energyNontrivial A * y A := by
+      simpa [D] using hA
     exact mul_left_cancel₀
       (ne_of_gt
         (finiteEvenFourTorusZ2SpatialHalfWeight_pos
-          H β energyIdentity energyNontrivial A)) hA
+          H β energyIdentity energyNontrivial A)) hA'
   have hC :=
     finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix_posDef
       H β energyIdentity energyNontrivial hβ hEnergy
@@ -355,12 +357,11 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex_not_nonempty_strict
     ¬ Nonempty
       (FiniteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex
         H β energyIdentity energyNontrivial hβ.le hEnergy.le) :=
-  FiniteDimensionalSymmetricPositiveContractionData
-    .not_nonempty_nullSpectralIndex_of_operator_injective
-      (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_injective_strict
-        H β energyIdentity energyNontrivial hβ hEnergy)
+  FiniteDimensionalSymmetricPositiveContractionData.not_nonempty_nullSpectralIndex_of_operator_injective
+    (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le)
+    (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_injective_strict
+      H β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- Combining side-two nonidentity with strict-coupling null-sector absence
 makes the strictly excited spectral sector unconditionally inhabited. -/
