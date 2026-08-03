@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.Z2SinglePlaquetteOSKernel
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusStrictCouplingWitnessMinor
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -27,18 +27,6 @@ def z2WilsonTemporalCrossingCoercivity
   1 - z2WilsonTemporalCrossingRate
     β energyIdentity energyNontrivial
 
-/-- The nontrivial local Boltzmann weight is strictly smaller at strict
-coupling. -/
-theorem z2WilsonWeightNontrivial_lt_identity
-    {β energyIdentity energyNontrivial : ℝ}
-    (hβ : 0 < β)
-    (hEnergy : energyIdentity < energyNontrivial) :
-    z2WilsonWeightNontrivial β energyNontrivial <
-      z2WilsonWeightIdentity β energyIdentity := by
-  unfold z2WilsonWeightNontrivial z2WilsonWeightIdentity
-  apply Real.exp_lt_exp.mpr
-  nlinarith
-
 /-- The local Wilson weight sum is strictly positive. -/
 theorem z2WilsonTemporalCrossingWeightSum_pos
     (β energyIdentity energyNontrivial : ℝ) :
@@ -58,7 +46,9 @@ theorem z2WilsonTemporalCrossingRate_pos
       β energyIdentity energyNontrivial := by
   unfold z2WilsonTemporalCrossingRate
   exact div_pos
-    (sub_pos.mpr (z2WilsonWeightNontrivial_lt_identity hβ hEnergy))
+    (sub_pos.mpr
+      (z2WilsonWeightNontrivial_lt_identity
+        β energyIdentity energyNontrivial hβ hEnergy))
     (z2WilsonTemporalCrossingWeightSum_pos
       β energyIdentity energyNontrivial)
 
