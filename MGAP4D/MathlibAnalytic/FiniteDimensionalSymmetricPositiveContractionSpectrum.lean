@@ -89,6 +89,7 @@ def PositiveSpectralIndex : Type :=
 noncomputable instance positiveSpectralIndexFintype :
     Fintype D.PositiveSpectralIndex := by
   classical
+  unfold PositiveSpectralIndex
   infer_instance
 
 noncomputable instance positiveSpectralIndexDecidableEq :
