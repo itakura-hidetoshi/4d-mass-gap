@@ -31,6 +31,9 @@ theorem iSup_rayleighQuotient_nonzero_eq_norm
     [Nontrivial E] :
     (⨆ x : {x : E // x ≠ 0}, D.operator.rayleighQuotient x.1) =
       ‖D.operator‖ := by
+  letI : Nonempty {x : E // x ≠ 0} := by
+    obtain ⟨y, hy⟩ := exists_ne (0 : E)
+    exact ⟨⟨y, hy⟩⟩
   have hBddAll :
       BddAbove (Set.range fun x : E => D.operator.rayleighQuotient x) := by
     refine ⟨‖D.operator‖, ?_⟩
@@ -51,11 +54,11 @@ theorem iSup_rayleighQuotient_nonzero_eq_norm
     · refine ciSup_le ?_
       intro x
       by_cases hx : x = 0
-      · rw [hx]
-        simp only [ContinuousLinearMap.rayleighQuotient_apply_zero]
-        obtain ⟨y, hy⟩ := exists_ne (0 : E)
-        exact (D.rayleighQuotient_nonneg y).trans
-          (le_ciSup hBddNonzero ⟨y, hy⟩)
+      · subst x
+        rw [ContinuousLinearMap.rayleighQuotient_apply_zero]
+        let y : {x : E // x ≠ 0} := Classical.choice inferInstance
+        exact (D.rayleighQuotient_nonneg y.1).trans
+          (le_ciSup hBddNonzero y)
       · exact le_ciSup hBddNonzero ⟨x, hx⟩
     · refine ciSup_le ?_
       intro x
@@ -82,7 +85,8 @@ theorem nonempty_groundSpectralIndex_of_norm_eq_one
     rw [D.iSup_rayleighQuotient_nonzero_eq_norm, hnorm]
   have heigen : Module.End.HasEigenvalue D.operator.toLinearMap (1 : ℝ) := by
     have h := D.symmetric.hasEigenvalue_iSup_of_finiteDimensional
-    simpa [htop] using h
+    rw [htop] at h
+    exact h
   obtain ⟨i, hi⟩ :=
     D.symmetric.exists_eigenvalues_eq (by rfl) heigen
   exact ⟨⟨i, by simpa [eigenvalue] using hi⟩⟩
@@ -100,7 +104,10 @@ theorem exists_nonzero_groundSpectralSynthesis_of_norm_eq_one
     WithLp.toLp 2 (Pi.single i (1 : ℝ))
   refine ⟨x, ?_⟩
   intro hx
-  have hzero := D.groundSpectralSynthesis_injective hx
+  have hzero : x = 0 :=
+    D.groundSpectralSynthesis_injective
+      (show D.groundSpectralSynthesis x = D.groundSpectralSynthesis 0 by
+        simpa using hx)
   have hi := congrArg (fun z : D.GroundSpectralSpace => z i) hzero
   simpa [x] using hi
 
