@@ -16,9 +16,9 @@ theorem finiteEvenFourTorusSpatialModulus_one_ne_zero
     (H : ℕ) :
     (1 : ZMod ((2 * H + 1) + 1)) ≠ 0 := by
   intro h
-  have hval := congrArg ZMod.val h
-  have hlt : 1 < (2 * H + 1) + 1 := by omega
-  rw [ZMod.val_natCast_of_lt hlt, ZMod.val_zero] at hval
+  have horder := congrArg addOrderOf h
+  have hmod : (2 * H + 1) + 1 = 1 := by
+    simpa using horder
   omega
 
 /-- Canonical time-zero vertex used uniformly at every finite side parameter. -/
@@ -58,46 +58,6 @@ theorem finiteEvenFourTorusZ2AllVolumeWitnessVertex_step_two_ne
       finiteEvenFourTorusZ2AllVolumeWitnessVertex] using hcoord
   exact finiteEvenFourTorusSpatialModulus_one_ne_zero H hone
 
-/-- The upper edge in the second direction is not the distinguished first
-edge, because their directions differ. -/
-theorem finiteEvenFourTorusZ2AllVolumeWitness_upper_two_ne_link
-    (H : ℕ) :
-    (finiteEvenFourTorusSpatialVertexStep H
-        (finiteEvenFourTorusZ2AllVolumeWitnessVertex H)
-        finiteEvenFourTorusZ2GaussWitnessDirectionOne,
-      finiteEvenFourTorusZ2GaussWitnessDirectionTwo) ≠
-      finiteEvenFourTorusZ2AllVolumeWitnessLink H := by
-  intro h
-  have hdir := congrArg Prod.snd h
-  exact (by decide :
-    finiteEvenFourTorusZ2GaussWitnessDirectionTwo ≠
-      finiteEvenFourTorusZ2GaussWitnessDirectionOne) hdir
-
-/-- The translated first-direction edge is not the distinguished edge because
-its source vertex has moved in the second direction. -/
-theorem finiteEvenFourTorusZ2AllVolumeWitness_translated_one_ne_link
-    (H : ℕ) :
-    (finiteEvenFourTorusSpatialVertexStep H
-        (finiteEvenFourTorusZ2AllVolumeWitnessVertex H)
-        finiteEvenFourTorusZ2GaussWitnessDirectionTwo,
-      finiteEvenFourTorusZ2GaussWitnessDirectionOne) ≠
-      finiteEvenFourTorusZ2AllVolumeWitnessLink H := by
-  intro h
-  have hsource := congrArg Prod.fst h
-  exact finiteEvenFourTorusZ2AllVolumeWitnessVertex_step_two_ne H hsource
-
-/-- The final second-direction edge differs from the distinguished first edge. -/
-theorem finiteEvenFourTorusZ2AllVolumeWitness_lower_two_ne_link
-    (H : ℕ) :
-    (finiteEvenFourTorusZ2AllVolumeWitnessVertex H,
-      finiteEvenFourTorusZ2GaussWitnessDirectionTwo) ≠
-      finiteEvenFourTorusZ2AllVolumeWitnessLink H := by
-  intro h
-  have hdir := congrArg Prod.snd h
-  exact (by decide :
-    finiteEvenFourTorusZ2GaussWitnessDirectionTwo ≠
-      finiteEvenFourTorusZ2GaussWitnessDirectionOne) hdir
-
 /-- The identity slice has trivial witness-plaquette holonomy at every finite
 side parameter. -/
 theorem finiteEvenFourTorusZ2AllVolumeWitness_identity_holonomy
@@ -106,8 +66,7 @@ theorem finiteEvenFourTorusZ2AllVolumeWitness_identity_holonomy
       (finiteEvenFourTorusZ2IdentitySlice H)
       (finiteEvenFourTorusZ2AllVolumeWitnessPlaquette H) = 1 := by
   simp [finiteEvenFourTorusZ2SpatialPlaquetteHolonomy,
-    finiteEvenFourTorusZ2IdentitySlice,
-    finiteEvenFourTorusZ2AllVolumeWitnessPlaquette]
+    finiteEvenFourTorusZ2IdentitySlice]
 
 /-- Exciting the first edge changes the witness plaquette holonomy at every
 finite side parameter. -/
@@ -118,13 +77,16 @@ theorem finiteEvenFourTorusZ2AllVolumeWitness_excitation_holonomy
         (finiteEvenFourTorusZ2AllVolumeWitnessLink H))
       (finiteEvenFourTorusZ2AllVolumeWitnessPlaquette H) =
         z2GaugeNontrivial := by
+  have hdir :
+      finiteEvenFourTorusZ2GaussWitnessDirectionTwo ≠
+        finiteEvenFourTorusZ2GaussWitnessDirectionOne := by decide
+  have hstep :=
+    finiteEvenFourTorusZ2AllVolumeWitnessVertex_step_two_ne H
   simp [finiteEvenFourTorusZ2SpatialPlaquetteHolonomy,
     finiteEvenFourTorusZ2SingleLinkExcitation,
     finiteEvenFourTorusZ2AllVolumeWitnessPlaquette,
     finiteEvenFourTorusZ2AllVolumeWitnessLink,
-    finiteEvenFourTorusZ2AllVolumeWitness_upper_two_ne_link,
-    finiteEvenFourTorusZ2AllVolumeWitness_translated_one_ne_link,
-    finiteEvenFourTorusZ2AllVolumeWitness_lower_two_ne_link]
+    hdir, hstep]
 
 /-- The identity slice and the one-edge excitation lie in distinct residual
 slice-gauge orbits for every finite side parameter. -/
