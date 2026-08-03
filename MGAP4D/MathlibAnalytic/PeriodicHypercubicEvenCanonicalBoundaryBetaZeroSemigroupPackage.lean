@@ -39,17 +39,17 @@ theorem periodicHypercubicEvenCanonicalBoundaryHeatBathSecondMoment_betaZero
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)] :
     realHilbertIsometricAdjointCompression
         (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
-          H N hN 0 (by norm_num))
+          H N hN 0 le_rfl)
         ((periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).heatBathHamiltonianL2 *
+          (PeriodicHypercubicEvenSideLength H) N hN 0 le_rfl).heatBathHamiltonianL2 *
         (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).heatBathHamiltonianL2) =
+          (PeriodicHypercubicEvenSideLength H) N hN 0 le_rfl).heatBathHamiltonianL2) =
       periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2
-          H N hN 0 (by norm_num) *
+          H N hN 0 le_rfl *
         periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2
-          H N hN 0 (by norm_num) := by
+          H N hN 0 le_rfl := by
   have h := periodicHypercubicEvenCanonicalBoundaryHeatBathSecondMoment_decomposition
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
   rw [periodicHypercubicEvenCanonicalBoundaryHeatBathSecondMomentDefectL2_betaZero]
     at h
   simpa using h
@@ -61,18 +61,18 @@ theorem periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2_poincare_on
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (f : PeriodicHypercubicEvenBoundaryHaarL2 H N) :
     ‖periodicHypercubicEvenCanonicalBoundaryVacuumCenteredL2
-      H N hN 0 (by norm_num) f‖ ^ 2 ≤
+      H N hN 0 le_rfl f‖ ^ 2 ≤
       inner ℝ
         (periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2
-          H N hN 0 (by norm_num) f) f := by
+          H N hN 0 le_rfl f) f := by
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)
+    (PeriodicHypercubicEvenSideLength H) N hN 0 le_rfl
   have hPoincare : C.HeatBathPoincareL2 1 :=
     continuous_compact_oriented_heatBathPoincareL2_one_of_beta_eq_zero
-      C (by rfl)
+      C rfl
   simpa using
     periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2_poincare
-      H N hN 0 (by norm_num) 1 hPoincare f
+      H N hN 0 le_rfl 1 hPoincare f
 
 /-- The canonical beta-zero boundary Hamiltonian is coercive with constant one
 on the concrete boundary-vacuum orthogonal sector. -/
@@ -82,19 +82,19 @@ theorem periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2_coercive_on
     (f : PeriodicHypercubicEvenBoundaryHaarL2 H N)
     (hf : inner ℝ
       (periodicHypercubicEvenBoundaryVacuumL2
-        H N hN 0 (by norm_num)) f = 0) :
+        H N hN 0 le_rfl) f = 0) :
     ‖f‖ ^ 2 ≤
       inner ℝ
         (periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2
-          H N hN 0 (by norm_num) f) f := by
+          H N hN 0 le_rfl f) f := by
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)
+    (PeriodicHypercubicEvenSideLength H) N hN 0 le_rfl
   have hPoincare : C.HeatBathPoincareL2 1 :=
     continuous_compact_oriented_heatBathPoincareL2_one_of_beta_eq_zero
-      C (by rfl)
+      C rfl
   simpa using
     periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2_coercive
-      H N hN 0 (by norm_num) 1 hPoincare f hf
+      H N hN 0 le_rfl 1 hPoincare f hf
 
 /-- No nonzero vacuum-orthogonal beta-zero boundary vector can have zero
 heat-bath energy. -/
@@ -104,18 +104,18 @@ theorem periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2_kernel_eq_z
     (f : PeriodicHypercubicEvenBoundaryHaarL2 H N)
     (hfOrth : inner ℝ
       (periodicHypercubicEvenBoundaryVacuumL2
-        H N hN 0 (by norm_num)) f = 0)
+        H N hN 0 le_rfl) f = 0)
     (hfZero : periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2
-      H N hN 0 (by norm_num) f = 0) :
+      H N hN 0 le_rfl f = 0) :
     f = 0 := by
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)
+    (PeriodicHypercubicEvenSideLength H) N hN 0 le_rfl
   have hPoincare : C.HeatBathPoincareL2 1 :=
     continuous_compact_oriented_heatBathPoincareL2_one_of_beta_eq_zero
-      C (by rfl)
+      C rfl
   exact
     periodicHypercubicEvenCanonicalBoundaryHeatBathHamiltonianL2_kernel_eq_zero
-      H N hN 0 (by norm_num) 1 (by norm_num) hPoincare f hfOrth hfZero
+      H N hN 0 le_rfl 1 (by norm_num) hPoincare f hfOrth hfZero
 
 /-- The compressed full beta-zero heat-bath evolution is exactly the bounded
 operator exponential of the canonical boundary generator at every real time. -/
@@ -124,12 +124,12 @@ theorem periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_eq_bo
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (t : ℝ) :
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-        H N hN 0 (by norm_num) t =
+        H N hN 0 le_rfl t =
       realContinuousLinearOperatorExponentialSemigroup
         (periodicHypercubicEvenCanonicalBoundaryFullHeatBathGeneratorL2
-          H N hN 0 (by norm_num)) t :=
+          H N hN 0 le_rfl) t :=
   periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_eq_boundaryExponential_of_generatorDefect_eq_zero
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
     (periodicHypercubicEvenCanonicalBoundaryHeatBathGeneratorDefectL2_betaZero
       H N hN) t
 
@@ -140,16 +140,16 @@ theorem periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analy
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (t : ℝ) (f : PeriodicHypercubicEvenBoundaryHaarL2 H N) :
     periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
-        H N hN 0 (by norm_num)
+        H N hN 0 le_rfl
         (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-          H N hN 0 (by norm_num) t f) =
+          H N hN 0 le_rfl t f) =
       ContinuousCompactOrientedGaugeWilsonSystem.fullHeatBathEvolutionRealL2
         (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)) t
+          (PeriodicHypercubicEvenSideLength H) N hN 0 le_rfl) t
         (periodicHypercubicEvenCanonicalBoundaryAnalysisL2Isometry
-          H N hN 0 (by norm_num) f) :=
+          H N hN 0 le_rfl f) :=
   periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_analysis_apply_of_generatorDefect_eq_zero
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
     (periodicHypercubicEvenCanonicalBoundaryHeatBathGeneratorDefectL2_betaZero
       H N hN) t f
 
@@ -159,9 +159,9 @@ theorem periodicHypercubicEvenCanonicalBoundaryFullHeatBathRangeInvariant_betaZe
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)] :
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathRangeInvariant
-      H N hN 0 (by norm_num) :=
+      H N hN 0 le_rfl :=
   periodicHypercubicEvenCanonicalBoundaryFullHeatBathRangeInvariant_of_generatorDefect_eq_zero
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
     (periodicHypercubicEvenCanonicalBoundaryHeatBathGeneratorDefectL2_betaZero
       H N hN)
 
@@ -172,13 +172,13 @@ theorem periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_add_b
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (s t : ℝ) :
     periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-        H N hN 0 (by norm_num) (s + t) =
+        H N hN 0 le_rfl (s + t) =
       periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-          H N hN 0 (by norm_num) s *
+          H N hN 0 le_rfl s *
         periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-          H N hN 0 (by norm_num) t :=
+          H N hN 0 le_rfl t :=
   periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_add_of_generatorDefect_eq_zero
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
     (periodicHypercubicEvenCanonicalBoundaryHeatBathGeneratorDefectL2_betaZero
       H N hN) s t
 
@@ -188,9 +188,9 @@ theorem periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_conti
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)] :
     Continuous
       (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-        H N hN 0 (by norm_num)) :=
+        H N hN 0 le_rfl) :=
   periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_continuous_of_generatorDefect_eq_zero
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
     (periodicHypercubicEvenCanonicalBoundaryHeatBathGeneratorDefectL2_betaZero
       H N hN)
 
@@ -202,13 +202,13 @@ theorem periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_hasDe
     (t : ℝ) :
     HasDerivAt
       (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-        H N hN 0 (by norm_num))
+        H N hN 0 le_rfl)
       (periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2
-          H N hN 0 (by norm_num) t *
+          H N hN 0 le_rfl t *
         periodicHypercubicEvenCanonicalBoundaryFullHeatBathGeneratorL2
-          H N hN 0 (by norm_num)) t :=
+          H N hN 0 le_rfl) t :=
   periodicHypercubicEvenCanonicalBoundaryFullHeatBathEvolutionRealL2_hasDerivAt_of_generatorDefect_eq_zero
-    H N hN 0 (by norm_num)
+    H N hN 0 le_rfl
     (periodicHypercubicEvenCanonicalBoundaryHeatBathGeneratorDefectL2_betaZero
       H N hN) t
 
