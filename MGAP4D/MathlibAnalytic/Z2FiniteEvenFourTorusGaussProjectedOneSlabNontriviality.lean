@@ -30,8 +30,11 @@ theorem finiteGroupOrbitIndicator_nonneg
     (G α : Type) [Group G] [Fintype α] [MulAction G α]
     (A X : α) :
     0 ≤ finiteGroupOrbitIndicator G α A X := by
-  classical
-  simp [finiteGroupOrbitIndicator]
+  rw [finiteGroupOrbitIndicator_apply]
+  by_cases h : ∃ g : G, g • X = A
+  · rw [if_pos h]
+    exact zero_le_one
+  · rw [if_neg h]
 
 /-- An orbit indicator takes value one at its defining configuration. -/
 theorem finiteGroupOrbitIndicator_self
