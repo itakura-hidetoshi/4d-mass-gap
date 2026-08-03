@@ -201,13 +201,9 @@ theorem finiteZ2NormalizedProductKernel_quadratic_mem_normInterval
         finiteFunctionNormSq f := by
   induction n with
   | zero =>
-      have hbase :
-          0 ≤ (f default : ℝ) ^ 2 ∧
-            (f default : ℝ) ^ 2 ≤ (f default : ℝ) ^ 2 :=
-        ⟨sq_nonneg _, le_refl _⟩
-      simpa [finiteFunctionKernelQuadratic, finiteFunctionNormSq,
+      simp [finiteFunctionKernelQuadratic, finiteFunctionNormSq,
         finiteZ2NormalizedProductKernel, finiteTensorKernelMatrix,
-        pow_two] using hbase
+        pow_two, mul_self_nonneg]
   | succ n ih =>
       rw [finiteFunctionKernelQuadratic_succ,
         finiteFunctionNormSq_succ]
