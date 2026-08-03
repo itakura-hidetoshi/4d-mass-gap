@@ -112,7 +112,9 @@ theorem finiteKernelNormalizedOperator_commutes_groupAveraging
   congr 1
   have hcomm :=
     finiteKernelOperator_commutes_groupAveraging G α kernel hinv
-  exact ContinuousLinearMap.congr_fun hcomm f
+  simpa using congrArg
+    (fun T : FiniteBoundaryHilbert α →L[ℝ] FiniteBoundaryHilbert α => T f)
+    hcomm
 
 /-- The normalized invariant kernel transfer preserves the invariant
 subspace. -/
