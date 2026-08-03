@@ -29,7 +29,8 @@ def finiteEvenFourTorusSpatialVertexStep
     (μ : FiniteEvenFourTorusSpatialDirection) :
     FiniteEvenFourTorusSpatialVertex H :=
   ⟨finiteFourTorusStep (2 * H + 1) v.1 μ.1, by
-    simp [finiteFourTorusStep, finiteFourTorusUnitStep, v.2, μ.2]⟩
+    have h0μ : (0 : Fin 4) ≠ μ.1 := Ne.symm μ.2
+    simp [finiteFourTorusStep, finiteFourTorusUnitStep, v.2, h0μ]⟩
 
 @[simp] theorem finiteEvenFourTorusSpatialVertexStep_coe
     (H : ℕ)
