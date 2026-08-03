@@ -119,10 +119,9 @@ theorem hilbertShiftContinuousLinearMap_eq_identity_of_shift_pow_eq_refl
     (hperiod : C.shift ^ q = Equiv.refl _) :
     C.toOneLayerShiftedKernelCertificate.hilbertShiftContinuousLinearMap =
       P.oneLayerIdentityTransfer := by
-  apply
-    C.toOneLayerShiftedKernelCertificate.hilbertShiftContinuousLinearMap_eq_identity_of_semigroup_period
-      q hq
-  exact C.hilbertShiftSemigroup_eq_identity_of_shift_pow_eq_refl q hperiod
+  exact hilbertShiftContinuousLinearMap_eq_identity_of_semigroup_period
+    C.toOneLayerShiftedKernelCertificate q hq
+    (C.hilbertShiftSemigroup_eq_identity_of_shift_pow_eq_refl q hperiod)
 
 /-- Consequently, a finite-order permutation certificate cannot also carry a
 nonidentity Wilson action witness. -/
