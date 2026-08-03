@@ -36,8 +36,8 @@ single-link nontrivial crossing whenever the two plaquette energies differ and
 `β ≠ 0`. -/
 theorem finiteEvenFourTorusZ2TemporalLinkWeight_ne_of_energy_ne
     (β energyIdentity energyNontrivial : ℝ)
-    (hβ : 0 ≤ β)
-    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (_hβ : 0 ≤ β)
+    (_hEnergy : energyIdentity ≤ energyNontrivial)
     (hβ0 : β ≠ 0)
     (hE : energyIdentity ≠ energyNontrivial) :
     Real.exp (-β * energyIdentity) ≠
@@ -64,6 +64,12 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_not_scalar_identity
         c • (1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
           FiniteEvenFourTorusZ2SliceHilbert H) := by
   intro c hscalar
+  have horth :
+      inner ℝ (finiteBoundaryPointVector A)
+        (finiteBoundaryPointVector B) = 0 := by
+    classical
+    rw [PiLp.inner_apply]
+    simp [finiteBoundaryPointVector, hAB]
   have hoff :
       0 < inner ℝ
         (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
@@ -72,15 +78,21 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_not_scalar_identity
         (finiteBoundaryPointVector B) := by
     rw [finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_point_matrixElement]
     exact Real.exp_pos _
-  rw [hscalar, ContinuousLinearMap.smul_apply,
-    one_apply, real_inner_smul_left] at hoff
-  have horth :
-      inner ℝ (finiteBoundaryPointVector A)
+  have hscalarMatrix := congrArg
+    (fun T : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+        FiniteEvenFourTorusZ2SliceHilbert H =>
+      inner ℝ (T (finiteBoundaryPointVector A))
+        (finiteBoundaryPointVector B)) hscalar
+  have hscalarZero :
+      inner ℝ
+        ((c • (1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+          FiniteEvenFourTorusZ2SliceHilbert H))
+          (finiteBoundaryPointVector A))
         (finiteBoundaryPointVector B) = 0 := by
-    classical
-    rw [PiLp.inner_apply]
-    simp [finiteBoundaryPointVector, hAB]
-  rw [horth, mul_zero] at hoff
+    change inner ℝ (c • finiteBoundaryPointVector A)
+      (finiteBoundaryPointVector B) = 0
+    rw [real_inner_smul_left, horth, mul_zero]
+  rw [hscalarMatrix, hscalarZero] at hoff
   exact (lt_irrefl 0) hoff
 
 /-- The normalized actual one-slab transfer is nonidentity whenever the spatial
@@ -95,12 +107,19 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer_ne_identity
     finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
         H β energyIdentity energyNontrivial hβ hEnergy ≠ 1 := by
   intro hId
+  have horth :
+      inner ℝ (finiteBoundaryPointVector A)
+        (finiteBoundaryPointVector B) = 0 := by
+    classical
+    rw [PiLp.inner_apply]
+    simp [finiteBoundaryPointVector, hAB]
   have hoff :
       0 < inner ℝ
         (finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
           H β energyIdentity energyNontrivial hβ hEnergy
           (finiteBoundaryPointVector A))
         (finiteBoundaryPointVector B) := by
+    unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
     rw [finiteKernelNormalizedOperator_matrixElement]
     apply mul_pos
     · exact inv_pos.mpr
@@ -118,14 +137,21 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer_ne_identity
           simp [finiteBoundaryPointVector]]
       exact finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_pos
         H β energyIdentity energyNontrivial hβ hEnergy A B
-  rw [hId, one_apply] at hoff
-  have horth :
-      inner ℝ (finiteBoundaryPointVector A)
+  have hIdMatrix := congrArg
+    (fun T : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+        FiniteEvenFourTorusZ2SliceHilbert H =>
+      inner ℝ (T (finiteBoundaryPointVector A))
+        (finiteBoundaryPointVector B)) hId
+  have hidentityZero :
+      inner ℝ
+        ((1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+          FiniteEvenFourTorusZ2SliceHilbert H)
+          (finiteBoundaryPointVector A))
         (finiteBoundaryPointVector B) = 0 := by
-    classical
-    rw [PiLp.inner_apply]
-    simp [finiteBoundaryPointVector, hAB]
-  rw [horth] at hoff
+    change inner ℝ (finiteBoundaryPointVector A)
+      (finiteBoundaryPointVector B) = 0
+    exact horth
+  rw [hIdMatrix, hidentityZero] at hoff
   exact (lt_irrefl 0) hoff
 
 end
