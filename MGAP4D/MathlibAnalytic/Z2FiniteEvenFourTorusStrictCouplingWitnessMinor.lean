@@ -203,16 +203,12 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_posDef
     intro x y hxy
     funext A
     have hA := congrFun hxy A
-    have hA' :
-        finiteEvenFourTorusZ2SpatialHalfWeight
-            H β energyIdentity energyNontrivial A * x A =
-          finiteEvenFourTorusZ2SpatialHalfWeight
-            H β energyIdentity energyNontrivial A * y A := by
-      simpa [D] using hA
+    dsimp only [D] at hA
+    rw [Matrix.mulVec_diagonal, Matrix.mulVec_diagonal] at hA
     exact mul_left_cancel₀
       (ne_of_gt
         (finiteEvenFourTorusZ2SpatialHalfWeight_pos
-          H β energyIdentity energyNontrivial A)) hA'
+          H β energyIdentity energyNontrivial A)) hA
   have hC :=
     finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix_posDef
       H β energyIdentity energyNontrivial hβ hEnergy
