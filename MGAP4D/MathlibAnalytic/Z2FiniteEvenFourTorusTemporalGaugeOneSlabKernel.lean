@@ -79,18 +79,13 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann
   unfold finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
   rw [finite_os_gram_kernel_listProduct_apply]
   unfold finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-  let es : List (FiniteEvenFourTorusSpatialLink H) := Finset.univ.toList
-  change
-    (es.map fun e =>
-      (finiteEvenFourTorusZ2TemporalLinkGramKernel
-        H β energyIdentity energyNontrivial hβ hEnergy e).kernel A B).prod =
-      Real.exp (-β *
-        (es.map fun e =>
-          if (A e)⁻¹ * B e = 1 then energyIdentity else energyNontrivial).sum)
+  rw [List.map_map]
+  generalize Finset.univ.toList = es
   induction es with
   | nil => simp
   | cons e es ih =>
-      simp only [List.map_cons, List.prod_cons, List.sum_cons]
+      simp only [List.map_cons, List.prod_cons, List.sum_cons,
+        Function.comp_apply]
       rw [finiteEvenFourTorusZ2TemporalLinkGramKernel_apply,
         ih, ← Real.exp_add]
       congr 1
