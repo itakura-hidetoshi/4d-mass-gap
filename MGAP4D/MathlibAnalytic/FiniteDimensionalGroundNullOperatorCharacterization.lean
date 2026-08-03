@@ -64,7 +64,10 @@ theorem exists_nonzero_fixedVector_of_nonempty_ground
     WithLp.toLp 2 (Pi.single i (1 : ℝ))
   refine ⟨D.groundSpectralSynthesis x, ?_, D.operator_groundSpectralSynthesis x⟩
   intro hx
-  have hzero := D.groundSpectralSynthesis_injective hx
+  have hzero : x = 0 :=
+    D.groundSpectralSynthesis_injective
+      (show D.groundSpectralSynthesis x = D.groundSpectralSynthesis 0 by
+        simpa using hx)
   have hi := congrArg (fun z : D.GroundSpectralSpace => z i) hzero
   simpa [x] using hi
 
@@ -103,9 +106,12 @@ theorem nonempty_excited_or_null_of_operator_ne_one
     (hne : D.operator ≠ 1) :
     Nonempty D.ExcitedSpectralIndex ∨
       Nonempty D.NullSpectralIndex := by
-  by_contra h
-  push Not at h
-  exact hne (D.operator_eq_one_of_no_excited_no_null h.1 h.2)
+  by_cases hExcited : Nonempty D.ExcitedSpectralIndex
+  · exact Or.inl hExcited
+  by_cases hNull : Nonempty D.NullSpectralIndex
+  · exact Or.inr hNull
+  exact False.elim
+    (hne (D.operator_eq_one_of_no_excited_no_null hExcited hNull))
 
 end FiniteDimensionalSymmetricPositiveContractionData
 
