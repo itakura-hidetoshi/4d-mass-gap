@@ -44,11 +44,10 @@ noncomputable def toSpectralCapCertificate :
     have hgapEnergy :
         W.gap ≤ D.positiveSpectralEnergy i.toPositive :=
       le_trans (W.gap_le_atVolume H)
-        (Z2UnfixedGaugeStrictCouplingUniformSpectralCapCertificate.
-          finiteEvenFourTorusZ2UnfixedGaugeStrictExcitationGapAt_le_excitedEnergy
-            (β := β) (energyIdentity := energyIdentity)
-            (energyNontrivial := energyNontrivial)
-            (hβ := hβ) (hEnergy := hEnergy) H i)
+        (Z2UnfixedGaugeStrictCouplingUniformSpectralCapCertificate.finiteEvenFourTorusZ2UnfixedGaugeStrictExcitationGapAt_le_excitedEnergy
+          (β := β) (energyIdentity := energyIdentity)
+          (energyNontrivial := energyNontrivial)
+          (hβ := hβ) (hEnergy := hEnergy) H i)
     change D.positiveEigenvalue i.toPositive ≤ Real.exp (-W.gap)
     rw [← D.exp_neg_positiveSpectralEnergy i.toPositive]
     exact Real.exp_le_exp.mpr (neg_le_neg hgapEnergy)
