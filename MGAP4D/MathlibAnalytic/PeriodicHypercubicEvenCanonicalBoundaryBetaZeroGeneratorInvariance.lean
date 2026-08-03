@@ -74,8 +74,9 @@ noncomputable def periodicHypercubicEvenCanonicalBoundarySection
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N) :
     PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ :=
-  (periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
-    b (fun _ => 1) (fun _ => 1)
+  ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedPiMeasurableEquiv
+    (Matrix.specialUnitaryGroup (Fin N) ℂ)).symm
+      (b, (fun _ => 1, fun _ => 1))
 
 /-- The canonical section has exactly the prescribed boundary restriction. -/
 @[simp] theorem periodicHypercubicEvenCanonicalBoundarySection_boundaryRestriction
@@ -83,9 +84,19 @@ noncomputable def periodicHypercubicEvenCanonicalBoundarySection
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N) :
     (periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction
         (periodicHypercubicEvenCanonicalBoundarySection H N b) = b := by
-  exact
-    (periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction_boundaryFiberedAssemble
-      b (fun _ => 1) (fun _ => 1)
+  let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
+  let P := periodicHypercubicEvenEdgeOrbitPartition H
+  let z : P.BoundaryConfiguration Gauge ×
+      (P.OpenHalfConfiguration Gauge × P.OpenHalfConfiguration Gauge) :=
+    (b, (fun _ => 1, fun _ => 1))
+  have hcoords :
+      P.boundaryFiberedCoordinates Gauge
+          ((P.boundaryFiberedPiMeasurableEquiv Gauge).symm z) = z := by
+    rw [← P.boundaryFiberedPiMeasurableEquiv_apply]
+    exact (P.boundaryFiberedPiMeasurableEquiv Gauge).apply_symm_apply z
+  have hfirst := congrArg Prod.fst hcoords
+  simpa [periodicHypercubicEvenCanonicalBoundarySection, z, P, Gauge,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using hfirst
 
 /-- The canonical boundary section is measurable. -/
 theorem periodicHypercubicEvenCanonicalBoundarySection_measurable
@@ -101,16 +112,8 @@ theorem periodicHypercubicEvenCanonicalBoundarySection_measurable
     measurable_id.prodMk (measurable_const.prodMk measurable_const)
   have hmeasurable :=
     (P.boundaryFiberedPiMeasurableEquiv Gauge).symm.measurable.comp hembed
-  have hfun :
-      periodicHypercubicEvenCanonicalBoundarySection H N =
-        fun b => (P.boundaryFiberedPiMeasurableEquiv Gauge).symm (embed b) := by
-    funext b
-    apply (P.boundaryFiberedPiMeasurableEquiv Gauge).injective
-    rw [P.boundaryFiberedPiMeasurableEquiv_apply]
-    simp [periodicHypercubicEvenCanonicalBoundarySection, embed, P, Gauge,
-      FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates]
-  rw [hfun]
-  exact hmeasurable
+  simpa [periodicHypercubicEvenCanonicalBoundarySection, P, Gauge, embed,
+    Function.comp_def] using hmeasurable
 
 /-- Pull a bounded continuous boundary observable back to the full finite
 configuration space. -/
@@ -158,10 +161,8 @@ theorem periodicHypercubicEvenBoundaryRestriction_replaceLink_eq_self_of_ne_fixe
     intro heq
     subst target
     exact hTarget e.2
-  by_cases he : e.1 = target
-  · exact (hne he).elim
-  · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction,
-      CompactOrientedGaugeWilsonSystem.replaceLink, he]
+  change (if e.1 = target then g else A e.1) = A e.1
+  rw [if_neg hne]
 
 /-- If two full configurations have the same shared boundary, replacing the
 same fixed boundary link by the same group element preserves that equality. -/
@@ -186,12 +187,12 @@ theorem periodicHypercubicEvenBoundaryRestriction_replaceLink_eq_of_eq
           (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).base.replaceLink
           B target g) := by
   funext e
+  change (if e.1 = target then g else A e.1) =
+    if e.1 = target then g else B e.1
   by_cases he : e.1 = target
-  · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction,
-      CompactOrientedGaugeWilsonSystem.replaceLink, he]
-  · have hab := congrFun hAB e
-    simp [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction,
-      CompactOrientedGaugeWilsonSystem.replaceLink, he, hab]
+  · rw [if_pos he, if_pos he]
+  · rw [if_neg he, if_neg he]
+    exact congrFun hAB e
 
 /-- Boundary representative obtained after applying one concrete beta-zero
 one-link heat-bath projection to the full pullback and evaluating on the
@@ -287,10 +288,14 @@ theorem periodicHypercubicEven_singleLinkHeatBathProjection_boundaryBCFPullback
       periodicHypercubicEvenBoundaryProjectedBCFFunction
         H N hN target f
         ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction A) := by
+  dsimp only
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)
   let P := periodicHypercubicEvenEdgeOrbitPartition H
   let O := periodicHypercubicEvenBoundaryBCFPullback H N f
+  change C.singleLinkHeatBathProjection target O A =
+    periodicHypercubicEvenBoundaryProjectedBCFFunction
+      H N hN target f (P.boundaryRestriction A)
   by_cases hTarget : P.side target = ReflectionEdgeSide.fixed
   · rw [continuous_compact_oriented_singleLinkHeatBathProjection_eq_haarIntegral_of_beta_eq_zero
       C (by rfl) target O A]
@@ -376,8 +381,11 @@ theorem periodicHypercubicEven_singleLinkHeatBathProjectionL2_analysis_toLp_mem_
       (periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
         H N hN 0 (by norm_num)).quasiMeasurePreserving.ae hbfBoundary
     filter_upwards [hA, hbf, hOLp.coeFn_toLp] with X hAX hbX hOX
-    rw [hAX, hOX]
-    exact hbX
+    calc
+      (A bf : _) X = bf ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction X) := hAX
+      _ = f ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction X) := hbX
+      _ = O X := rfl
+      _ = (hOLp.toLp O : _) X := hOX.symm
   let q := periodicHypercubicEvenBoundaryProjectedBCFFunction H N hN target f
   let hqLp := memLp_two_of_stronglyMeasurable_uniform_bound
     (periodicHypercubicEvenBoundaryHaarMeasure H N) q
@@ -408,9 +416,17 @@ theorem periodicHypercubicEven_singleLinkHeatBathProjectionL2_analysis_toLp_mem_
       (periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
         H N hN 0 (by norm_num)).quasiMeasurePreserving.ae hqBoundary
     filter_upwards [hPLp.coeFn_toLp, hA, hq] with X hPX hAX hqX
-    rw [hPX, hAX, hqX]
-    exact periodicHypercubicEven_singleLinkHeatBathProjection_boundaryBCFPullback
-      H N hN target f X
+    calc
+      (hPLp.toLp (C.singleLinkHeatBathProjection target O) : _) X =
+          C.singleLinkHeatBathProjection target O X := hPX
+      _ = q ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction X) :=
+        periodicHypercubicEven_singleLinkHeatBathProjection_boundaryBCFPullback
+          H N hN target f X
+      _ = (hqLp.toLp q : _)
+          ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction X) := hqX.symm
+      _ = ((hqLp.toLp q : _) ∘
+          (periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction) X := rfl
+      _ = (A (hqLp.toLp q) : _) X := hAX.symm
   change C.singleLinkHeatBathProjectionL2 target (A bf) =
     A (periodicHypercubicEvenBoundaryProjectedBCFL2 H N hN target f)
   rw [hAnalysis]
