@@ -244,8 +244,23 @@ theorem inner_hilbertShiftContinuousLinearMap_left_eq_right
         (v : UniformSpace.Completion P.OneLayerSeparated))
   rw [C.hilbertShiftContinuousLinearMap_completedClass,
     C.hilbertShiftContinuousLinearMap_completedClass]
-  simpa only [UniformSpace.Completion.inner_coe] using
-    C.inner_separatedShiftContinuousLinearMap_left_eq_right u v
+  have hleft :
+      inner ℝ
+          ((C.separatedShiftContinuousLinearMap u : P.OneLayerSeparated) :
+            UniformSpace.Completion P.OneLayerSeparated)
+          (v : UniformSpace.Completion P.OneLayerSeparated) =
+        inner ℝ (C.separatedShiftContinuousLinearMap u) v :=
+    UniformSpace.Completion.inner_coe _ _
+  have hright :
+      inner ℝ
+          (u : UniformSpace.Completion P.OneLayerSeparated)
+          ((C.separatedShiftContinuousLinearMap v : P.OneLayerSeparated) :
+            UniformSpace.Completion P.OneLayerSeparated) =
+        inner ℝ u (C.separatedShiftContinuousLinearMap v) :=
+    UniformSpace.Completion.inner_coe _ _
+  exact hleft.trans
+    ((C.inner_separatedShiftContinuousLinearMap_left_eq_right u v).trans
+      hright.symm)
 
 /-- Positivity extends to the complete Hilbert carrier. -/
 theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
@@ -260,8 +275,15 @@ theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
       (u : UniformSpace.Completion P.OneLayerSeparated))
     (u : UniformSpace.Completion P.OneLayerSeparated)
   rw [C.hilbertShiftContinuousLinearMap_completedClass]
-  simpa only [UniformSpace.Completion.inner_coe] using
-    C.separatedShiftContinuousLinearMap_quadratic_nonneg u
+  have hinner :
+      inner ℝ
+          ((C.separatedShiftContinuousLinearMap u : P.OneLayerSeparated) :
+            UniformSpace.Completion P.OneLayerSeparated)
+          (u : UniformSpace.Completion P.OneLayerSeparated) =
+        inner ℝ (C.separatedShiftContinuousLinearMap u) u :=
+    UniformSpace.Completion.inner_coe _ _
+  rw [hinner]
+  exact C.separatedShiftContinuousLinearMap_quadratic_nonneg u
 
 /-- The completed operator realizes the independent shifted kernel exactly on
 the dense raw-observable image. -/
