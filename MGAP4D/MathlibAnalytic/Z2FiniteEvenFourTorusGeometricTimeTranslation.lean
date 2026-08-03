@@ -94,11 +94,13 @@ def finiteEvenFourTorusConfigurationTimeTranslationEquiv
   left_inv := by
     intro A
     funext e
-    simp
+    exact congrArg A
+      ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).symm_apply_apply e)
   right_inv := by
     intro A
     funext e
-    simp
+    exact congrArg A
+      ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).apply_symm_apply e)
 
 /-- The actual positive-configuration permutation induced by geometric time
 translation on the concrete even-torus edge carrier. -/
@@ -113,11 +115,13 @@ def finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv
   left_inv := by
     intro x
     funext e
-    simp
+    exact congrArg x
+      ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).symm_apply_apply e)
   right_inv := by
     intro x
     funext e
-    simp
+    exact congrArg x
+      ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).apply_symm_apply e)
 
 /-- Iterating vertex time translation adds the corresponding natural-number
 amount to the periodic time coordinate and leaves the spatial coordinates
@@ -126,11 +130,11 @@ theorem finiteEvenFourTorusVertexTimeTranslationEquiv_pow_apply
     (H n : ℕ) (v : FiniteEvenFourTorusVertex H) (i : Fin 4) :
     ((finiteEvenFourTorusVertexTimeTranslationEquiv H) ^ n) v i =
       v i + if i = 0 then
-        (n : ZMod (finiteEvenFourTorusTimePeriod H))
+        (n : ZMod ((2 * H + 1) + 1))
       else 0 := by
   induction n with
   | zero =>
-      simp [finiteEvenFourTorusTimePeriod]
+      simp
   | succ n ih =>
       rw [pow_succ']
       change finiteEvenFourTorusVertexTimeTranslationEquiv H
@@ -139,9 +143,8 @@ theorem finiteEvenFourTorusVertexTimeTranslationEquiv_pow_apply
       by_cases hi : i = 0
       · subst i
         simp [finiteFourTorusStep, finiteFourTorusUnitStep,
-          finiteEvenFourTorusTimePeriod, ih, Nat.cast_succ, add_assoc]
-      · simp [finiteFourTorusStep, finiteFourTorusUnitStep,
-          finiteEvenFourTorusTimePeriod, ih, hi]
+          ih, Nat.cast_succ, add_assoc]
+      · simp [finiteFourTorusStep, finiteFourTorusUnitStep, ih, hi]
 
 /-- One-step vertex translation has exactly the torus time circumference as a
 period. -/
@@ -158,6 +161,28 @@ theorem finiteEvenFourTorusVertexTimeTranslationEquiv_pow_period
     simp [finiteEvenFourTorusTimePeriod]
   · simp [hi]
 
+/-- Powers of endpoint-wise edge translation are the endpoint-wise powers of
+vertex translation. -/
+theorem finiteEvenFourTorusEdgeTimeTranslationEquiv_pow_apply
+    (H n : ℕ) (e : FiniteEvenFourTorusEdge H) :
+    ((finiteEvenFourTorusEdgeTimeTranslationEquiv H) ^ n) e =
+      (((finiteEvenFourTorusVertexTimeTranslationEquiv H) ^ n) e.1,
+        ((finiteEvenFourTorusVertexTimeTranslationEquiv H) ^ n) e.2) := by
+  induction n with
+  | zero =>
+      rfl
+  | succ n ih =>
+      simp only [pow_succ']
+      change
+        finiteEvenFourTorusEdgeTimeTranslationEquiv H
+            (((finiteEvenFourTorusEdgeTimeTranslationEquiv H) ^ n) e) =
+          (finiteEvenFourTorusVertexTimeTranslationEquiv H
+              (((finiteEvenFourTorusVertexTimeTranslationEquiv H) ^ n) e.1),
+            finiteEvenFourTorusVertexTimeTranslationEquiv H
+              (((finiteEvenFourTorusVertexTimeTranslationEquiv H) ^ n) e.2))
+      rw [ih]
+      rfl
+
 /-- Endpoint-wise edge translation has the same geometric period. -/
 theorem finiteEvenFourTorusEdgeTimeTranslationEquiv_pow_period
     (H : ℕ) :
@@ -165,19 +190,29 @@ theorem finiteEvenFourTorusEdgeTimeTranslationEquiv_pow_period
         finiteEvenFourTorusTimePeriod H = Equiv.refl _ := by
   apply Equiv.ext
   intro e
-  rcases e with ⟨s, t⟩
-  apply Prod.ext <;>
-    simp only [Equiv.refl_apply]
-  · have h := congrFun
-      (congrArg (fun q : FiniteEvenFourTorusVertex H ≃
-        FiniteEvenFourTorusVertex H => q s)
-        (finiteEvenFourTorusVertexTimeTranslationEquiv_pow_period H))
-    simpa using h
-  · have h := congrFun
-      (congrArg (fun q : FiniteEvenFourTorusVertex H ≃
-        FiniteEvenFourTorusVertex H => q t)
-        (finiteEvenFourTorusVertexTimeTranslationEquiv_pow_period H))
-    simpa using h
+  rw [finiteEvenFourTorusEdgeTimeTranslationEquiv_pow_apply,
+    finiteEvenFourTorusVertexTimeTranslationEquiv_pow_period]
+  rfl
+
+/-- Powers of the positive-configuration pullback are pullback by the inverse
+power of the geometric edge translation. -/
+theorem finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv_pow_apply
+    (H n : ℕ)
+    (x : (finiteEvenFourTorusEdgeOrbitPartition H).PositiveConfiguration)
+    (e : FiniteEvenFourTorusEdge H) :
+    (((finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv H) ^ n) x) e =
+      x ((((finiteEvenFourTorusEdgeTimeTranslationEquiv H) ^ n).symm) e) := by
+  induction n with
+  | zero =>
+      rfl
+  | succ n ih =>
+      simp only [pow_succ']
+      change
+        (((finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv H) ^ n) x)
+            ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).symm e) =
+          x ((((finiteEvenFourTorusEdgeTimeTranslationEquiv H) ^ n).symm)
+            ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).symm e))
+      exact ih ((finiteEvenFourTorusEdgeTimeTranslationEquiv H).symm e)
 
 /-- Pullback along a finite-period edge translation has the same period on the
 positive-configuration function space. -/
@@ -188,17 +223,9 @@ theorem finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv_pow_period
   apply Equiv.ext
   intro x
   funext e
-  induction finiteEvenFourTorusTimePeriod H with
-  | zero => simp
-  | succ n ih =>
-      simp only [pow_succ', Equiv.mul_apply,
-        finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv]
-      rw [ih]
-      have hedge := finiteEvenFourTorusEdgeTimeTranslationEquiv_pow_period H
-      have happly := congrArg
-        (fun q : FiniteEvenFourTorusEdge H ≃ FiniteEvenFourTorusEdge H =>
-          q.symm e) hedge
-      simpa using congrArg x happly
+  rw [finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv_pow_apply,
+    finiteEvenFourTorusEdgeTimeTranslationEquiv_pow_period]
+  rfl
 
 end
 
