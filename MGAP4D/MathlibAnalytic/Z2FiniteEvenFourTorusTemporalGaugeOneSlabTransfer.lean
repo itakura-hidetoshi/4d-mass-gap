@@ -69,6 +69,7 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_point_matrixElement
       Real.exp (-β *
         finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
           H β energyIdentity energyNontrivial A B) := by
+  unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
   rw [finiteKernelOperator_point_matrixElement]
   exact
     finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann
