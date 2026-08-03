@@ -202,7 +202,7 @@ theorem finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv_pow_apply
     (e : FiniteEvenFourTorusEdge H) :
     (((finiteEvenFourTorusPositiveConfigurationTimeTranslationEquiv H) ^ n) x) e =
       x ((((finiteEvenFourTorusEdgeTimeTranslationEquiv H) ^ n).symm) e) := by
-  induction n with
+  induction n generalizing e with
   | zero =>
       rfl
   | succ n ih =>
