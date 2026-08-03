@@ -114,13 +114,24 @@ theorem inner_positiveConfigurationShiftCarrierLinearMap_left_eq_right
     inner ℝ (positiveConfigurationShiftCarrierLinearMap P C.shift F) G =
       inner ℝ F
         (positiveConfigurationShiftCarrierLinearMap P C.shift G) := by
-  rw [← positiveConfigurationShiftedKernelForm_eq_inner P C.shift
-      F.observable G.observable]
-  rw [real_inner_comm F
-    (positiveConfigurationShiftCarrierLinearMap P C.shift G)]
-  rw [← positiveConfigurationShiftedKernelForm_eq_inner P C.shift
-      G.observable F.observable]
-  exact C.shiftedKernelForm_symmetric F.observable G.observable
+  calc
+    inner ℝ (positiveConfigurationShiftCarrierLinearMap P C.shift F) G =
+        finiteWilsonOSShiftedKernelForm P
+          (positiveConfigurationShiftedKernel P C.shift)
+          F.observable G.observable :=
+      (positiveConfigurationShiftedKernelForm_eq_inner
+        P C.shift F.observable G.observable).symm
+    _ = finiteWilsonOSShiftedKernelForm P
+          (positiveConfigurationShiftedKernel P C.shift)
+          G.observable F.observable :=
+      C.shiftedKernelForm_symmetric F.observable G.observable
+    _ = inner ℝ
+          (positiveConfigurationShiftCarrierLinearMap P C.shift G) F :=
+      positiveConfigurationShiftedKernelForm_eq_inner
+        P C.shift G.observable F.observable
+    _ = inner ℝ F
+          (positiveConfigurationShiftCarrierLinearMap P C.shift G) :=
+      real_inner_comm _ _
 
 /-- The raw shift has nonnegative Wilson OS quadratic form. -/
 theorem positiveConfigurationShiftCarrierLinearMap_quadratic_nonneg
