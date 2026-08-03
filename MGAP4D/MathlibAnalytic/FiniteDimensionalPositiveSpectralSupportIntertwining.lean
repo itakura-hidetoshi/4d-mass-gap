@@ -74,7 +74,15 @@ theorem operator_positiveSpectralSynthesis_intertwining
       D.positiveSpectralSynthesis (D.positiveSpectralTransfer x) := by
   apply D.eigenbasis.repr.injective
   ext j
-  rw [D.symmetric.eigenvectorBasis_apply_self_apply (by rfl)]
+  have hdiag :
+      D.eigenbasis.repr
+          (D.operator (D.positiveSpectralSynthesis x)) j =
+        D.eigenvalue j *
+          D.eigenbasis.repr (D.positiveSpectralSynthesis x) j := by
+    simpa [eigenbasis, eigenvalue] using
+      D.symmetric.eigenvectorBasis_apply_self_apply
+        (by rfl) (D.positiveSpectralSynthesis x) j
+  rw [hdiag]
   by_cases h : 0 < D.eigenvalue j
   · simp [D.eigenbasis_repr_positiveSpectralSynthesis,
       positiveSpectralExtension, h]
@@ -104,7 +112,8 @@ theorem operator_pow_positiveSpectralSynthesis_intertwining
       congr 1
       ext i
       simp [positiveSpectralSemigroup_apply, positiveSpectralTransfer_apply,
-        pow_succ, mul_assoc]
+        pow_succ]
+      ring
 
 /-- The support semigroup embedded in the original Hilbert space has exact
 Hamiltonian spectral weights at every natural time. -/
@@ -117,7 +126,7 @@ theorem operator_pow_positiveSpectralSynthesis_hamiltonian_weight
       (Real.exp (-D.positiveSpectralEnergy i)) ^ n * x i := by
   rw [D.operator_pow_positiveSpectralSynthesis_intertwining]
   simp [D.eigenbasis_repr_positiveSpectralSynthesis,
-    D.positiveSpectralSemigroup_eq_exp_neg_energy_pow_apply, i.2]
+    D.positiveSpectralSemigroup_eq_exp_neg_energy_pow_apply]
 
 end FiniteDimensionalSymmetricPositiveContractionData
 
