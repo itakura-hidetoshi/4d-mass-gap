@@ -21,10 +21,15 @@ theorem finiteKernelOperator_maps_groupInvariant
   classical
   intro g y
   rw [finiteKernelOperator_apply, finiteKernelOperator_apply]
-  refine Fintype.sum_equiv (finiteMulActionEquiv G α g) _ _ ?_
+  refine Fintype.sum_equiv (finiteMulActionEquiv G α g⁻¹) _ _ ?_
   intro x
-  simp only [finiteMulActionEquiv]
-  rw [hinv g x y, f.2 g x]
+  change
+    kernel x (g • y) * f.1 x =
+      kernel (g⁻¹ • x) y * f.1 (g⁻¹ • x)
+  have hk :
+      kernel x (g • y) = kernel (g⁻¹ • x) y := by
+    simpa using hinv g (g⁻¹ • x) y
+  rw [hk, f.2 g⁻¹ x]
 
 /-- Raw finite kernel transfer commutes with the finite gauge-averaging
 projector whenever the kernel is diagonally invariant. -/
@@ -38,7 +43,9 @@ theorem finiteKernelOperator_commutes_groupAveraging
       (finiteGroupAveragingProjector G α).comp
         (finiteKernelOperator kernel) := by
   classical
-  ext f y
+  apply ContinuousLinearMap.ext
+  intro f
+  ext y
   change
     (∑ x : α, kernel x y *
       ((Fintype.card G : ℝ)⁻¹ * ∑ g : G, f (g • x))) =
@@ -52,7 +59,7 @@ theorem finiteKernelOperator_commutes_groupAveraging
             (kernel x y * f (g • x)) := by
       apply Finset.sum_congr rfl
       intro x _hx
-      rw [Finset.mul_sum]
+      rw [← mul_assoc, Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro g _hg
       ring
@@ -72,13 +79,12 @@ theorem finiteKernelOperator_commutes_groupAveraging
       apply Finset.sum_congr rfl
       intro g _hg
       congr 1
-      refine Fintype.sum_equiv (finiteMulActionEquiv G α g⁻¹) _ _ ?_
+      refine Fintype.sum_equiv (finiteMulActionEquiv G α g) _ _ ?_
       intro x
-      simp only [finiteMulActionEquiv]
-      have h := hinv g (g⁻¹ • x) y
-      simp at h
-      rw [← h]
-      simp
+      change
+        kernel x y * f (g • x) =
+          kernel (g • x) (g • y) * f (g • x)
+      rw [hinv g x y]
     _ = (Fintype.card G : ℝ)⁻¹ *
         ∑ g : G, ∑ x : α, kernel x (g • y) * f x := by
       rw [Finset.mul_sum]
@@ -93,7 +99,8 @@ theorem finiteKernelNormalizedOperator_commutes_groupAveraging
         (finiteGroupAveragingProjector G α) =
       (finiteGroupAveragingProjector G α).comp
         (finiteKernelNormalizedOperator kernel) := by
-  ext f
+  apply ContinuousLinearMap.ext
+  intro f
   change
     ‖finiteKernelOperator kernel‖⁻¹ •
         finiteKernelOperator kernel
