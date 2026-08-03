@@ -1,0 +1,153 @@
+import MGAP4D.MathlibAnalytic.FiniteZ2GaugeConfigurationUniformPoincare
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusTemporalGaugeOneSlabKernel
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped InnerProduct
+
+noncomputable section
+
+/-- The explicit normalized temporal-crossing tensor kernel on the actual
+finite four-torus spatial-link configuration carrier. -/
+def finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ) :
+    FiniteEvenFourTorusZ2SliceConfiguration H →
+      FiniteEvenFourTorusZ2SliceConfiguration H → ℝ :=
+  finiteZ2GaugeNormalizedProductKernel
+    (z2WilsonTemporalCrossingRate
+      β energyIdentity energyNontrivial)
+    (FiniteEvenFourTorusSpatialLink H)
+
+/-- Symmetry of the normalized actual-carrier temporal crossing kernel. -/
+theorem finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel_symmetric
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (A B : FiniteEvenFourTorusZ2SliceConfiguration H) :
+    finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+        H β energyIdentity energyNontrivial A B =
+      finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+        H β energyIdentity energyNontrivial B A :=
+  finiteZ2GaugeNormalizedProductKernel_symmetric
+    (z2WilsonTemporalCrossingRate
+      β energyIdentity energyNontrivial)
+    (FiniteEvenFourTorusSpatialLink H) A B
+
+/-- The normalized temporal-crossing operator on every finite four-torus has
+the same strict-coupling Rayleigh contraction on the constant-orthogonal
+sector. -/
+theorem finiteEvenFourTorusZ2NormalizedTemporalCrossing_rayleigh_le
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial)
+    (f : FiniteBoundaryHilbert
+      (FiniteEvenFourTorusZ2SliceConfiguration H))
+    (hmass : finiteFunctionMass f = 0) :
+    inner ℝ
+        (finiteKernelOperator
+          (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+            H β energyIdentity energyNontrivial) f) f ≤
+      z2WilsonTemporalCrossingRate
+          β energyIdentity energyNontrivial * ‖f‖ ^ 2 := by
+  exact finiteZ2GaugeNormalizedProductKernel_operator_rayleigh_le
+    (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy).le
+    (FiniteEvenFourTorusSpatialLink H) f hmass
+
+/-- Explicit volume-independent Poincare coercivity of the normalized temporal
+crossing transfer on every finite four-torus. -/
+theorem finiteEvenFourTorusZ2NormalizedTemporalCrossing_poincare
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial)
+    (f : FiniteBoundaryHilbert
+      (FiniteEvenFourTorusZ2SliceConfiguration H))
+    (hmass : finiteFunctionMass f = 0) :
+    z2WilsonTemporalCrossingCoercivity
+          β energyIdentity energyNontrivial * ‖f‖ ^ 2 ≤
+      inner ℝ
+        (f - finiteKernelOperator
+          (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+            H β energyIdentity energyNontrivial) f) f := by
+  rw [z2WilsonTemporalCrossingCoercivity]
+  exact finiteZ2GaugeNormalizedProductKernel_operator_poincare
+    (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy).le
+    (FiniteEvenFourTorusSpatialLink H) f hmass
+
+/-- Complete all-volume theorem bundle for the normalized temporal-crossing
+backbone.  It exposes the exact strict-coupling rate and Poincare constant and
+retains both basis-free estimates uniformly in the finite side parameter. -/
+structure Z2FiniteEvenFourTorusTemporalCrossingUniformPoincarePackage
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) where
+  rate : ℝ
+  coercivity : ℝ
+  rate_eq :
+    rate = z2WilsonTemporalCrossingRate
+      β energyIdentity energyNontrivial
+  coercivity_eq :
+    coercivity = z2WilsonTemporalCrossingCoercivity
+      β energyIdentity energyNontrivial
+  rate_pos : 0 < rate
+  rate_lt_one : rate < 1
+  coercivity_pos : 0 < coercivity
+  coercivity_lt_one : coercivity < 1
+  rate_eq_one_sub_coercivity : rate = 1 - coercivity
+  rayleigh :
+    ∀ (H : ℕ)
+      (f : FiniteBoundaryHilbert
+        (FiniteEvenFourTorusZ2SliceConfiguration H)),
+      finiteFunctionMass f = 0 →
+        inner ℝ
+            (finiteKernelOperator
+              (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+                H β energyIdentity energyNontrivial) f) f ≤
+          rate * ‖f‖ ^ 2
+  poincare :
+    ∀ (H : ℕ)
+      (f : FiniteBoundaryHilbert
+        (FiniteEvenFourTorusZ2SliceConfiguration H)),
+      finiteFunctionMass f = 0 →
+        coercivity * ‖f‖ ^ 2 ≤
+          inner ℝ
+            (f - finiteKernelOperator
+              (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+                H β energyIdentity energyNontrivial) f) f
+
+/-- Canonical complete normalized temporal-crossing package generated by the
+strict local Wilson weights. -/
+noncomputable def finiteEvenFourTorusZ2TemporalCrossingUniformPoincarePackage
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :
+    Z2FiniteEvenFourTorusTemporalCrossingUniformPoincarePackage
+      β energyIdentity energyNontrivial hβ hEnergy :=
+  { rate := z2WilsonTemporalCrossingRate
+      β energyIdentity energyNontrivial
+    coercivity := z2WilsonTemporalCrossingCoercivity
+      β energyIdentity energyNontrivial
+    rate_eq := rfl
+    coercivity_eq := rfl
+    rate_pos := z2WilsonTemporalCrossingRate_pos hβ hEnergy
+    rate_lt_one := z2WilsonTemporalCrossingRate_lt_one hβ hEnergy
+    coercivity_pos := z2WilsonTemporalCrossingCoercivity_pos hβ hEnergy
+    coercivity_lt_one := z2WilsonTemporalCrossingCoercivity_lt_one hβ hEnergy
+    rate_eq_one_sub_coercivity :=
+      z2WilsonTemporalCrossingRate_eq_one_sub_coercivity
+        β energyIdentity energyNontrivial
+    rayleigh := fun H f hmass =>
+      finiteEvenFourTorusZ2NormalizedTemporalCrossing_rayleigh_le
+        H β energyIdentity energyNontrivial hβ hEnergy f hmass
+    poincare := fun H f hmass =>
+      finiteEvenFourTorusZ2NormalizedTemporalCrossing_poincare
+        H β energyIdentity energyNontrivial hβ hEnergy f hmass }
+
+end
+
+end MathlibAnalytic
+end MGAP4D
