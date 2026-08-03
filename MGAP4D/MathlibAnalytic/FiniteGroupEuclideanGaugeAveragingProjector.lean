@@ -207,7 +207,7 @@ theorem finiteGroupAveragingProjector_eq_self_of_mem
         _ = (Fintype.card G : ℝ) * f x := by
           simp
     _ = f x := by
-      rw [inv_mul_cancel₀ hcard, one_mul]
+      rw [← mul_assoc, inv_mul_cancel₀ hcard, one_mul]
 
 /-- The finite gauge average is idempotent. -/
 theorem finiteGroupAveragingProjector_idempotent
