@@ -121,7 +121,9 @@ theorem uniformExcitationGap_le_strictExcitationGapAt
 
 /-- The spectral cap therefore closes the precise family-level existential
 uniform-gap statement. -/
-theorem exists_uniformExcitationGap :
+theorem exists_uniformExcitationGap
+    (C : Z2UnfixedGaugeStrictCouplingUniformSpectralCapCertificate
+      β energyIdentity energyNontrivial hβ hEnergy) :
     ∃ Δstar : ℝ,
       0 < Δstar ∧
       ∀ H : ℕ,
@@ -148,10 +150,16 @@ theorem excitedSemigroup_coordinate_abs_le_rate
   change
     |D.positiveSpectralSemigroup n x i.toPositive| ≤
       C.rate ^ n * |x i.toPositive|
-  rw [D.positiveSpectralSemigroup_apply, abs_mul, abs_pow,
-    abs_of_pos i.2.1]
+  rw [D.positiveSpectralSemigroup_apply, abs_mul, abs_pow]
+  have hpos : 0 < D.positiveEigenvalue i.toPositive := by
+    exact i.2.1
+  rw [abs_of_pos hpos]
+  have hcap : D.positiveEigenvalue i.toPositive ≤ C.rate := by
+    simpa [D,
+      FiniteDimensionalSymmetricPositiveContractionData.positiveEigenvalue] using
+        C.excitedEigenvalue_le_rate H i
   exact mul_le_mul_of_nonneg_right
-    (pow_le_pow_left₀ i.2.1.le (C.excitedEigenvalue_le_rate H i) n)
+    (pow_le_pow_left₀ hpos.le hcap n)
     (abs_nonneg _)
 
 /-- Equivalent common-gap notation for the uniform coordinate decay. -/
