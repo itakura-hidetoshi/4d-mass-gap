@@ -147,7 +147,7 @@ noncomputable def toCenteredPoincareCertificate :
               (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
                 H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x := by
       linarith
-    simpa only [inner_sub_left, real_inner_self_eq_norm_sq] using hExpanded
+    simpa only [inner_sub_right, real_inner_self_eq_norm_sq] using hExpanded
 
 @[simp] theorem toCenteredPoincareCertificate_coercivity :
     R.toCenteredPoincareCertificate.coercivity = 1 - R.rate :=
@@ -181,7 +181,7 @@ noncomputable def toCenteredRayleighCertificate :
             inner ℝ
               (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
                 H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x := by
-      simpa only [inner_sub_left, real_inner_self_eq_norm_sq] using hPoincare
+      simpa only [inner_sub_right, real_inner_self_eq_norm_sq] using hPoincare
     linarith
 
 /-- Poincare coercivity therefore generates the common excited spectral cap. -/
