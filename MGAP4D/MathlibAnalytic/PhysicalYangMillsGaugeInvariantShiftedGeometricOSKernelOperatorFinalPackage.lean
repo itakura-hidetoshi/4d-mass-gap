@@ -180,6 +180,7 @@ theorem shiftedKernelReflectionHeatBathRealization_iff
           P H N hN a boundaryToGeometricOS).2 hHeatBath
       rw [periodicHypercubicEvenCanonicalBoundaryBetaZeroGeometricOSIdentityDefectL2]
         at hIdentityDefect
+      unfold shiftedKernelHeatBathDefectL2
       rw [hOperator]
       exact hIdentityDefect
 
