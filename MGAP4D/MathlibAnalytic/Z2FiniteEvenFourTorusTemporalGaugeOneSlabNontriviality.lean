@@ -48,6 +48,23 @@ theorem finiteEvenFourTorusZ2TemporalLinkWeight_ne_of_energy_ne
   apply mul_left_cancel₀ hβ0
   linarith
 
+/-- Distinct finite boundary point states are orthogonal. -/
+theorem finiteEvenFourTorusZ2BoundaryPointVector_inner_eq_zero_of_ne
+    (H : ℕ)
+    (A B : FiniteEvenFourTorusZ2SliceConfiguration H)
+    (hAB : A ≠ B) :
+    inner ℝ (finiteBoundaryPointVector A)
+      (finiteBoundaryPointVector B) = 0 := by
+  classical
+  rw [PiLp.inner_apply]
+  apply Finset.sum_eq_zero
+  intro X _hX
+  rw [finiteBoundaryPointVector_apply, finiteBoundaryPointVector_apply]
+  by_cases hXA : X = A
+  · subst X
+    simp [hAB]
+  · simp [hXA]
+
 /-- Exact point-state criterion showing that the raw one-slab transfer is not a
 scalar multiple of the identity: every off-diagonal kernel entry is strictly
 positive. -/
@@ -64,12 +81,8 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_not_scalar_identity
         c • (1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
           FiniteEvenFourTorusZ2SliceHilbert H) := by
   intro c hscalar
-  have horth :
-      inner ℝ (finiteBoundaryPointVector A)
-        (finiteBoundaryPointVector B) = 0 := by
-    classical
-    rw [PiLp.inner_apply]
-    simp [finiteBoundaryPointVector, hAB]
+  have horth :=
+    finiteEvenFourTorusZ2BoundaryPointVector_inner_eq_zero_of_ne H A B hAB
   have hoff :
       0 < inner ℝ
         (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
@@ -78,11 +91,22 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_not_scalar_identity
         (finiteBoundaryPointVector B) := by
     rw [finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_point_matrixElement]
     exact Real.exp_pos _
-  have hscalarMatrix := congrArg
-    (fun T : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
-        FiniteEvenFourTorusZ2SliceHilbert H =>
-      inner ℝ (T (finiteBoundaryPointVector A))
-        (finiteBoundaryPointVector B)) hscalar
+  have hscalarMatrix :
+      inner ℝ
+          (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
+            H β energyIdentity energyNontrivial hβ hEnergy
+            (finiteBoundaryPointVector A))
+          (finiteBoundaryPointVector B) =
+        inner ℝ
+          ((c • (1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+            FiniteEvenFourTorusZ2SliceHilbert H))
+            (finiteBoundaryPointVector A))
+          (finiteBoundaryPointVector B) := by
+    exact congrArg
+      (fun T : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+          FiniteEvenFourTorusZ2SliceHilbert H =>
+        inner ℝ (T (finiteBoundaryPointVector A))
+          (finiteBoundaryPointVector B)) hscalar
   have hscalarZero :
       inner ℝ
         ((c • (1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
@@ -92,7 +116,14 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_not_scalar_identity
     change inner ℝ (c • finiteBoundaryPointVector A)
       (finiteBoundaryPointVector B) = 0
     rw [real_inner_smul_left, horth, mul_zero]
-  rw [hscalarMatrix, hscalarZero] at hoff
+  have hrawZero :
+      inner ℝ
+        (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
+          H β energyIdentity energyNontrivial hβ hEnergy
+          (finiteBoundaryPointVector A))
+        (finiteBoundaryPointVector B) = 0 :=
+    hscalarMatrix.trans hscalarZero
+  rw [hrawZero] at hoff
   exact (lt_irrefl 0) hoff
 
 /-- The normalized actual one-slab transfer is nonidentity whenever the spatial
@@ -107,12 +138,8 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer_ne_identity
     finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
         H β energyIdentity energyNontrivial hβ hEnergy ≠ 1 := by
   intro hId
-  have horth :
-      inner ℝ (finiteBoundaryPointVector A)
-        (finiteBoundaryPointVector B) = 0 := by
-    classical
-    rw [PiLp.inner_apply]
-    simp [finiteBoundaryPointVector, hAB]
+  have horth :=
+    finiteEvenFourTorusZ2BoundaryPointVector_inner_eq_zero_of_ne H A B hAB
   have hoff :
       0 < inner ℝ
         (finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
@@ -120,28 +147,32 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer_ne_identity
           (finiteBoundaryPointVector A))
         (finiteBoundaryPointVector B) := by
     unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
-    rw [finiteKernelNormalizedOperator_matrixElement]
+      finiteKernelNormalizedOperator
+    rw [ContinuousLinearMap.smul_apply, real_inner_smul_left]
     apply mul_pos
     · exact inv_pos.mpr
         (norm_pos_iff.mpr
           (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_ne_zero
             H β energyIdentity energyNontrivial hβ hEnergy))
-    · rw [show (∑ x, ∑ y,
-          finiteBoundaryPointVector A x *
-            (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-              H β energyIdentity energyNontrivial hβ hEnergy).kernel x y *
-            finiteBoundaryPointVector B y) =
-          (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-            H β energyIdentity energyNontrivial hβ hEnergy).kernel A B by
-          classical
-          simp [finiteBoundaryPointVector]]
-      exact finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_pos
-        H β energyIdentity energyNontrivial hβ hEnergy A B
-  have hIdMatrix := congrArg
-    (fun T : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
-        FiniteEvenFourTorusZ2SliceHilbert H =>
-      inner ℝ (T (finiteBoundaryPointVector A))
-        (finiteBoundaryPointVector B)) hId
+    · rw [finiteKernelOperator_point_matrixElement,
+        finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann]
+      exact Real.exp_pos _
+  have hIdMatrix :
+      inner ℝ
+          (finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
+            H β energyIdentity energyNontrivial hβ hEnergy
+            (finiteBoundaryPointVector A))
+          (finiteBoundaryPointVector B) =
+        inner ℝ
+          ((1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+            FiniteEvenFourTorusZ2SliceHilbert H)
+            (finiteBoundaryPointVector A))
+          (finiteBoundaryPointVector B) := by
+    exact congrArg
+      (fun T : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
+          FiniteEvenFourTorusZ2SliceHilbert H =>
+        inner ℝ (T (finiteBoundaryPointVector A))
+          (finiteBoundaryPointVector B)) hId
   have hidentityZero :
       inner ℝ
         ((1 : FiniteEvenFourTorusZ2SliceHilbert H →L[ℝ]
@@ -151,7 +182,14 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer_ne_identity
     change inner ℝ (finiteBoundaryPointVector A)
       (finiteBoundaryPointVector B) = 0
     exact horth
-  rw [hIdMatrix, hidentityZero] at hoff
+  have hnormalizedZero :
+      inner ℝ
+        (finiteEvenFourTorusZ2TemporalGaugeOneSlabTransfer
+          H β energyIdentity energyNontrivial hβ hEnergy
+          (finiteBoundaryPointVector A))
+        (finiteBoundaryPointVector B) = 0 :=
+    hIdMatrix.trans hidentityZero
+  rw [hnormalizedZero] at hoff
   exact (lt_irrefl 0) hoff
 
 end
