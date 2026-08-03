@@ -282,8 +282,7 @@ theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
           (u : UniformSpace.Completion P.OneLayerSeparated) =
         inner ℝ (C.separatedShiftContinuousLinearMap u) u :=
     UniformSpace.Completion.inner_coe _ _
-  rw [hinner]
-  exact C.separatedShiftContinuousLinearMap_quadratic_nonneg u
+  exact hinner.symm ▸ C.separatedShiftContinuousLinearMap_quadratic_nonneg u
 
 /-- The completed operator realizes the independent shifted kernel exactly on
 the dense raw-observable image. -/
