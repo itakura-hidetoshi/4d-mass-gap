@@ -80,7 +80,7 @@ theorem positiveShift_identity_or_pointObservable_witness
   · exact Or.inl hIdentity
   · right
     by_contra hPoint
-    push_neg at hPoint
+    push Not at hPoint
     apply hIdentity
     apply
       (C.toOneLayerShiftedKernelCertificate.shiftedKernelForm_eq_unshiftedReflectionForm_iff).mp
@@ -94,7 +94,11 @@ theorem positiveShift_identity_or_pointObservable_witness
     have hxy := hPoint x y
     rw [positiveConfigurationShiftedKernelForm_pointObservable,
       wilsonOneLayerTransferForm_pointObservable] at hxy
-    rw [hxy]
+    have hxy' :
+        C.toOneLayerShiftedKernelCertificate.shiftedKernel x y =
+          P.reflectionData.kernel x y := by
+      simpa only [toOneLayerShiftedKernelCertificate_shiftedKernel] using hxy
+    rw [hxy']
 
 end PositiveConfigurationShiftCertificate
 end FiniteWilsonOSReflectionPositivityCertificate
