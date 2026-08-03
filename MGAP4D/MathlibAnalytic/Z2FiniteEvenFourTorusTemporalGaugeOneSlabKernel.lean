@@ -60,8 +60,8 @@ def finiteEvenFourTorusZ2TemporalGaugeCrossingAction
     (H : ℕ)
     (energyIdentity energyNontrivial : ℝ)
     (A B : FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ :=
-  ∑ e : FiniteEvenFourTorusSpatialLink H,
-    if (A e)⁻¹ * B e = 1 then energyIdentity else energyNontrivial
+  (Finset.univ.toList.map fun e : FiniteEvenFourTorusSpatialLink H =>
+    if (A e)⁻¹ * B e = 1 then energyIdentity else energyNontrivial).sum
 
 /-- The full crossing kernel is exactly the exponential of the temporal
 one-slab Wilson action. -/
@@ -76,23 +76,32 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann
       Real.exp (-β *
         finiteEvenFourTorusZ2TemporalGaugeCrossingAction
           H energyIdentity energyNontrivial A B) := by
+  unfold finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
   rw [finite_os_gram_kernel_listProduct_apply]
   simp only [List.map_map, Function.comp_apply]
-  rw [List.prod_eq_finset_prod]
   simp_rw [finiteEvenFourTorusZ2TemporalLinkGramKernel_apply]
-  rw [← Real.exp_sum]
-  congr 1
   unfold finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-  rw [Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro e _he
-  ring
+  let es := Finset.univ.toList
+  change
+    (es.map fun e : FiniteEvenFourTorusSpatialLink H =>
+      Real.exp (-β *
+        (if (A e)⁻¹ * B e = 1 then energyIdentity else energyNontrivial))).prod =
+      Real.exp (-β *
+        (es.map fun e : FiniteEvenFourTorusSpatialLink H =>
+          if (A e)⁻¹ * B e = 1 then energyIdentity else energyNontrivial).sum)
+  induction es with
+  | nil => simp
+  | cons e es ih =>
+      simp only [List.map_cons, List.prod_cons, List.sum_cons]
+      rw [ih, ← Real.exp_add]
+      congr 1
+      ring
 
 /-- Symmetric temporal-gauge one-slab Wilson action: half the spatial action on
 each boundary plus the complete temporal crossing action. -/
 def finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
     (H : ℕ)
-    (β energyIdentity energyNontrivial : ℝ)
+    (energyIdentity energyNontrivial : ℝ)
     (A B : FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ :=
   (1 / 2 : ℝ) *
       finiteEvenFourTorusZ2SpatialWilsonAction
@@ -128,7 +137,8 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann
       H β energyIdentity energyNontrivial hβ hEnergy).kernel A B =
       Real.exp (-β *
         finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-          H β energyIdentity energyNontrivial A B) := by
+          H energyIdentity energyNontrivial A B) := by
+  unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
   rw [finite_os_gram_kernel_sandwich_apply,
     finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann]
   unfold finiteEvenFourTorusZ2SpatialHalfWeight
