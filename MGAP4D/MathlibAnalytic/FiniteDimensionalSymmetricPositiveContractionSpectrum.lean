@@ -29,10 +29,13 @@ variable
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [FiniteDimensional ℝ E]
-    (D : FiniteDimensionalSymmetricPositiveContractionData E)
 
 /-- The Mathlib spectral dimension of the finite transfer-state Hilbert space. -/
-def dimension : ℕ := Module.finrank ℝ E
+def dimension
+    (D : FiniteDimensionalSymmetricPositiveContractionData E) : ℕ :=
+  Module.finrank ℝ E
+
+variable (D : FiniteDimensionalSymmetricPositiveContractionData E)
 
 /-- The canonical Mathlib orthonormal eigenbasis of the symmetric transfer. -/
 noncomputable def eigenbasis :
@@ -70,8 +73,8 @@ one. -/
 theorem eigenvalue_le_one (i : Fin D.dimension) :
     D.eigenvalue i ≤ 1 := by
   have hcontract := D.norm_apply_le (D.eigenbasis i)
-  rw [D.operator_apply_eigenbasis i, norm_smul,
-    D.eigenbasis.norm_eq_one, mul_one] at hcontract
+  have hbasis : ‖D.eigenbasis i‖ = 1 := by simp
+  rw [D.operator_apply_eigenbasis i, norm_smul, hbasis, mul_one] at hcontract
   simpa [Real.norm_eq_abs, abs_of_nonneg (D.eigenvalue_nonneg i)] using hcontract
 
 /-- Every finite transfer eigenvalue lies in the closed unit interval. -/
@@ -84,11 +87,13 @@ of the positive transfer. -/
 def PositiveSpectralIndex : Type :=
   {i : Fin D.dimension // 0 < D.eigenvalue i}
 
-instance positiveSpectralIndexFintype : Fintype D.PositiveSpectralIndex :=
-  inferInstance
+noncomputable instance positiveSpectralIndexFintype :
+    Fintype D.PositiveSpectralIndex :=
+  Fintype.ofFinite _
 
-instance positiveSpectralIndexDecidableEq : DecidableEq D.PositiveSpectralIndex :=
-  inferInstance
+noncomputable instance positiveSpectralIndexDecidableEq :
+    DecidableEq D.PositiveSpectralIndex :=
+  Classical.decEq _
 
 /-- Euclidean Hilbert space of positive spectral coordinates. -/
 abbrev PositiveSpectralSpace : Type :=
@@ -112,7 +117,8 @@ theorem positiveEigenvalue_le_one (i : D.PositiveSpectralIndex) :
 noncomputable def positiveSpectralTransfer :
     D.PositiveSpectralSpace →L[ℝ] D.PositiveSpectralSpace :=
   LinearMap.toContinuousLinearMap
-    { toFun := fun x i => D.positiveEigenvalue i * x i
+    { toFun := fun x =>
+        WithLp.toLp 2 (fun i => D.positiveEigenvalue i * x i)
       map_add' := by
         intro x y
         ext i
@@ -126,7 +132,7 @@ noncomputable def positiveSpectralTransfer :
     (x : D.PositiveSpectralSpace)
     (i : D.PositiveSpectralIndex) :
     D.positiveSpectralTransfer x i =
-      D.positiveEigenvalue i * x i :=
+      D.positiveEigenvalue i * x i := by
   rfl
 
 /-- Natural-time powers of the positive-support transfer, written directly in
@@ -134,7 +140,8 @@ its diagonal spectral coordinates. -/
 noncomputable def positiveSpectralSemigroup (n : ℕ) :
     D.PositiveSpectralSpace →L[ℝ] D.PositiveSpectralSpace :=
   LinearMap.toContinuousLinearMap
-    { toFun := fun x i => (D.positiveEigenvalue i) ^ n * x i
+    { toFun := fun x =>
+        WithLp.toLp 2 (fun i => (D.positiveEigenvalue i) ^ n * x i)
       map_add' := by
         intro x y
         ext i
@@ -149,7 +156,7 @@ noncomputable def positiveSpectralSemigroup (n : ℕ) :
     (x : D.PositiveSpectralSpace)
     (i : D.PositiveSpectralIndex) :
     D.positiveSpectralSemigroup n x i =
-      (D.positiveEigenvalue i) ^ n * x i :=
+      (D.positiveEigenvalue i) ^ n * x i := by
   rfl
 
 /-- Zero natural time is the identity on the support space. -/
