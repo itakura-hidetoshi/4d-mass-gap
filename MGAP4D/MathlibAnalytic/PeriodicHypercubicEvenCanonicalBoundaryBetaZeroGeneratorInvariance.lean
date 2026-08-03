@@ -102,18 +102,14 @@ noncomputable def periodicHypercubicEvenCanonicalBoundarySection
 theorem periodicHypercubicEvenCanonicalBoundarySection_measurable
     (H N : ℕ) :
     Measurable (periodicHypercubicEvenCanonicalBoundarySection H N) := by
-  let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
-  let P := periodicHypercubicEvenEdgeOrbitPartition H
-  let embed : P.BoundaryConfiguration Gauge →
-      P.BoundaryConfiguration Gauge ×
-        (P.OpenHalfConfiguration Gauge × P.OpenHalfConfiguration Gauge) :=
-    fun b => (b, (fun _ => 1, fun _ => 1))
-  have hembed : Measurable embed :=
-    measurable_id.prodMk (measurable_const.prodMk measurable_const)
-  have hmeasurable :=
-    (P.boundaryFiberedPiMeasurableEquiv Gauge).symm.measurable.comp hembed
-  simpa [periodicHypercubicEvenCanonicalBoundarySection, P, Gauge, embed,
-    Function.comp_def] using hmeasurable
+  change Measurable (fun b =>
+    ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedPiMeasurableEquiv
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)).symm
+        (b, (fun _ => 1, fun _ => 1)))
+  exact
+    ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedPiMeasurableEquiv
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)).symm.measurable.comp
+        (measurable_id.prodMk (measurable_const.prodMk measurable_const))
 
 /-- Pull a bounded continuous boundary observable back to the full finite
 configuration space. -/
@@ -161,8 +157,8 @@ theorem periodicHypercubicEvenBoundaryRestriction_replaceLink_eq_self_of_ne_fixe
     intro heq
     subst target
     exact hTarget e.2
-  change (if e.1 = target then g else A e.1) = A e.1
-  rw [if_neg hne]
+  unfold FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction
+  exact compact_oriented_replaceLink_other _ A target e.1 g hne
 
 /-- If two full configurations have the same shared boundary, replacing the
 same fixed boundary link by the same group element preserves that equality. -/
@@ -187,12 +183,14 @@ theorem periodicHypercubicEvenBoundaryRestriction_replaceLink_eq_of_eq
           (PeriodicHypercubicEvenSideLength H) N hN 0 (by norm_num)).base.replaceLink
           B target g) := by
   funext e
-  change (if e.1 = target then g else A e.1) =
-    if e.1 = target then g else B e.1
+  unfold FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction
   by_cases he : e.1 = target
-  · rw [if_pos he, if_pos he]
-  · rw [if_neg he, if_neg he]
-    exact congrFun hAB e
+  · subst target
+    simp
+  · rw [compact_oriented_replaceLink_other _ A target e.1 g he,
+      compact_oriented_replaceLink_other _ B target e.1 g he]
+    simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryRestriction] using
+      congrFun hAB e
 
 /-- Boundary representative obtained after applying one concrete beta-zero
 one-link heat-bath projection to the full pullback and evaluating on the
