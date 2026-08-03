@@ -243,10 +243,9 @@ theorem inner_hilbertShiftContinuousLinearMap_left_eq_right
       (C.hilbertShiftContinuousLinearMap
         (v : UniformSpace.Completion P.OneLayerSeparated))
   rw [C.hilbertShiftContinuousLinearMap_completedClass,
-    C.hilbertShiftContinuousLinearMap_completedClass,
-    inner_completedSeparatedClass P,
-    inner_completedSeparatedClass P]
-  exact C.inner_separatedShiftContinuousLinearMap_left_eq_right u v
+    C.hilbertShiftContinuousLinearMap_completedClass]
+  simpa only [UniformSpace.Completion.inner_coe] using
+    C.inner_separatedShiftContinuousLinearMap_left_eq_right u v
 
 /-- Positivity extends to the complete Hilbert carrier. -/
 theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
@@ -260,9 +259,9 @@ theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
     (C.hilbertShiftContinuousLinearMap
       (u : UniformSpace.Completion P.OneLayerSeparated))
     (u : UniformSpace.Completion P.OneLayerSeparated)
-  rw [C.hilbertShiftContinuousLinearMap_completedClass,
-    inner_completedSeparatedClass P]
-  exact C.separatedShiftContinuousLinearMap_quadratic_nonneg u
+  rw [C.hilbertShiftContinuousLinearMap_completedClass]
+  simpa only [UniformSpace.Completion.inner_coe] using
+    C.separatedShiftContinuousLinearMap_quadratic_nonneg u
 
 /-- The completed operator realizes the independent shifted kernel exactly on
 the dense raw-observable image. -/
