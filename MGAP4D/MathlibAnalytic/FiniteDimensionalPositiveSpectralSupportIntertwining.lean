@@ -19,8 +19,9 @@ variable
 noncomputable def positiveSpectralExtension :
     D.PositiveSpectralSpace →ₗ[ℝ]
       EuclideanSpace ℝ (Fin D.dimension) where
-  toFun := fun x j =>
-    if h : 0 < D.eigenvalue j then x ⟨j, h⟩ else 0
+  toFun := fun x =>
+    WithLp.toLp 2 (fun j =>
+      if h : 0 < D.eigenvalue j then x ⟨j, h⟩ else 0)
   map_add' := by
     intro x y
     ext j
