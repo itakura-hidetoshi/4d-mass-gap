@@ -11,26 +11,26 @@ noncomputable section
 /-- Pointwise nonnegative vectors in a finite Euclidean boundary Hilbert
 space. -/
 def FiniteBoundaryPointwiseNonnegative
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) : Prop :=
   ∀ x : α, 0 ≤ f x
 
 /-- Pointwise strictly positive vectors in a finite Euclidean boundary Hilbert
 space. -/
 def FiniteBoundaryPointwisePositive
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) : Prop :=
   ∀ x : α, 0 < f x
 
 /-- Coordinatewise absolute value on a finite Euclidean boundary Hilbert
 space. -/
 noncomputable def finiteBoundaryAbs
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) : FiniteBoundaryHilbert α :=
   WithLp.toLp 2 fun x : α => |f x|
 
 @[simp] theorem finiteBoundaryAbs_apply
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α)
     (x : α) :
     finiteBoundaryAbs f x = |f x| :=
@@ -38,16 +38,16 @@ noncomputable def finiteBoundaryAbs
 
 /-- Coordinatewise absolute value is pointwise nonnegative. -/
 theorem finiteBoundaryAbs_pointwiseNonnegative
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) :
     FiniteBoundaryPointwiseNonnegative (finiteBoundaryAbs f) := by
   intro x
-  simp [finiteBoundaryAbs]
+  exact abs_nonneg _
 
 /-- Coordinatewise absolute value vanishes exactly when the original vector
 vanishes. -/
 theorem finiteBoundaryAbs_eq_zero_iff
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) :
     finiteBoundaryAbs f = 0 ↔ f = 0 := by
   constructor
@@ -57,13 +57,13 @@ theorem finiteBoundaryAbs_eq_zero_iff
     change |f x| = 0 at hx
     exact abs_eq_zero.mp hx
   · intro h
-    subst f
+    rw [h]
     ext x
-    simp [finiteBoundaryAbs]
+    simp
 
 /-- Coordinatewise absolute value preserves the Euclidean norm. -/
 theorem norm_finiteBoundaryAbs
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) :
     ‖finiteBoundaryAbs f‖ = ‖f‖ := by
   have hsquare : ‖finiteBoundaryAbs f‖ ^ 2 = ‖f‖ ^ 2 := by
@@ -71,13 +71,13 @@ theorem norm_finiteBoundaryAbs
       EuclideanSpace.real_norm_sq_eq]
     apply Finset.sum_congr rfl
     intro x _hx
-    simp [finiteBoundaryAbs, sq_abs]
+    simp [sq_abs]
   nlinarith [norm_nonneg (finiteBoundaryAbs f), norm_nonneg f]
 
 /-- A nonzero pointwise nonnegative finite vector has a strictly positive
 coordinate. -/
 theorem exists_pos_coordinate_of_pointwiseNonnegative
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α)
     (hf : FiniteBoundaryPointwiseNonnegative f)
     (hne : f ≠ 0) :
@@ -91,7 +91,7 @@ theorem exists_pos_coordinate_of_pointwiseNonnegative
 /-- A kernel with every entry strictly positive sends every nonzero
 pointwise-nonnegative vector to a pointwise-strictly-positive vector. -/
 theorem finiteKernelOperator_pointwisePositive
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (kernel : α → α → ℝ)
     (hkernel : ∀ x y : α, 0 < kernel x y)
     (f : FiniteBoundaryHilbert α)
@@ -112,16 +112,16 @@ theorem finiteKernelOperator_pointwisePositive
 /-- A strictly-positive finite kernel operator is nonzero as soon as it is
 applied to one nonzero nonnegative vector. -/
 theorem finiteKernelOperator_ne_zero_of_strictlyPositive
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (kernel : α → α → ℝ)
     (hkernel : ∀ x y : α, 0 < kernel x y)
     (f : FiniteBoundaryHilbert α)
     (hf : FiniteBoundaryPointwiseNonnegative f)
     (hne : f ≠ 0) :
     finiteKernelOperator kernel ≠ 0 := by
+  intro hzero
   obtain ⟨y, _hy⟩ :=
     exists_pos_coordinate_of_pointwiseNonnegative f hf hne
-  intro hzero
   have hpos := finiteKernelOperator_pointwisePositive
     kernel hkernel f hf hne y
   rw [hzero] at hpos
@@ -129,7 +129,7 @@ theorem finiteKernelOperator_ne_zero_of_strictlyPositive
 
 /-- Operator-norm normalization preserves strict positivity improvement. -/
 theorem finiteKernelNormalizedOperator_pointwisePositive
-    {α : Type*} [Fintype α]
+    {α : Type} [Fintype α]
     (kernel : α → α → ℝ)
     (hkernel : ∀ x y : α, 0 < kernel x y)
     (f : FiniteBoundaryHilbert α)
