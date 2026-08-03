@@ -50,8 +50,8 @@ theorem shiftedKernel_symmetric
         P.reflectionData.kernel x (C.shift y) :=
       C.kernel_shift_adjoint x y
     _ = P.reflectionData.kernel (C.shift y) x :=
-      (finite_lattice_wilson_os_reflection_kernel_symmetric
-        P.reflectionData x (C.shift y)).symm
+      finite_lattice_wilson_os_reflection_kernel_symmetric
+        P.reflectionData x (C.shift y)
     _ = positiveConfigurationShiftedKernel P C.shift y x :=
       rfl
 
@@ -115,11 +115,12 @@ theorem inner_positiveConfigurationShiftCarrierLinearMap_left_eq_right
       inner ℝ F
         (positiveConfigurationShiftCarrierLinearMap P C.shift G) := by
   rw [← positiveConfigurationShiftedKernelForm_eq_inner P C.shift
-      F.observable G.observable,
-    ← positiveConfigurationShiftedKernelForm_eq_inner P C.shift
+      F.observable G.observable]
+  rw [real_inner_comm F
+    (positiveConfigurationShiftCarrierLinearMap P C.shift G)]
+  rw [← positiveConfigurationShiftedKernelForm_eq_inner P C.shift
       G.observable F.observable]
-  rw [C.shiftedKernelForm_symmetric]
-  exact real_inner_comm _ _
+  exact C.shiftedKernelForm_symmetric F.observable G.observable
 
 /-- The raw shift has nonnegative Wilson OS quadratic form. -/
 theorem positiveConfigurationShiftCarrierLinearMap_quadratic_nonneg
