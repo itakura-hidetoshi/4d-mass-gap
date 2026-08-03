@@ -170,11 +170,17 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex_nonempty
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     Nonempty
       (FiniteEvenFourTorusZ2UnfixedGaugeGroundSpectralIndex
-        H β energyIdentity energyNontrivial hβ hEnergy) :=
-  (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
-    H β energyIdentity energyNontrivial hβ hEnergy).nonempty_groundSpectralIndex_of_norm_eq_one
-      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_norm_eq_one
-        H β energyIdentity energyNontrivial hβ hEnergy)
+        H β energyIdentity energyNontrivial hβ hEnergy) := by
+  obtain ⟨f, hf, _hfix⟩ :=
+    finiteEvenFourTorusZ2UnfixedGaugeInvariant_exists_nonzero_fixedVector
+      H β energyIdentity energyNontrivial hβ hEnergy
+  letI : Nontrivial (FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H) :=
+    ⟨⟨f, 0, hf⟩⟩
+  exact
+    (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
+      H β energyIdentity energyNontrivial hβ hEnergy).nonempty_groundSpectralIndex_of_norm_eq_one
+        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_norm_eq_one
+          H β energyIdentity energyNontrivial hβ hEnergy)
 
 end
 
