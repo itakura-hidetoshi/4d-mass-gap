@@ -65,7 +65,7 @@ theorem oneLayerOperator_fixes_observableEmbedding_of_matrixDefect_eq_zero
       P.oneLayerObservableEmbedding F
   have horth : ∀ y : P.OneLayerHilbert, inner ℝ d y = 0 := by
     intro y
-    refine P.oneLayerObservableEmbedding_denseRange.induction_on ?_ ?_ y
+    refine P.oneLayerObservableEmbedding_denseRange.induction_on y ?_ ?_
     · exact isClosed_eq (by fun_prop) continuous_const
     · intro G
       change
@@ -100,7 +100,7 @@ theorem oneLayerOperator_eq_identityTransfer_of_matrixDefect_eq_zero
     candidate = P.oneLayerIdentityTransfer := by
   apply ContinuousLinearMap.ext
   intro x
-  refine P.oneLayerObservableEmbedding_denseRange.induction_on ?_ ?_ x
+  refine P.oneLayerObservableEmbedding_denseRange.induction_on x ?_ ?_
   · exact isClosed_eq candidate.continuous P.oneLayerIdentityTransfer.continuous
   · intro F
     rw [P.oneLayerIdentityTransfer_apply]
