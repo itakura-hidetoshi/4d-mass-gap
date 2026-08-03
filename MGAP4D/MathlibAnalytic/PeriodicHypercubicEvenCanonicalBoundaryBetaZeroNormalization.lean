@@ -78,6 +78,11 @@ theorem periodicHypercubicEvenBoundaryVacuumMoment_betaZero
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N) :
     periodicHypercubicEvenBoundaryVacuumMoment
         H N hN 0 (by norm_num) b = 1 := by
+  letI : IsProbabilityMeasure
+      (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    unfold periodicHypercubicEvenOpenHalfHaarMeasure
+    unfold FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure
+    infer_instance
   unfold periodicHypercubicEvenBoundaryVacuumMoment
   simp_rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_betaZero]
   simp
