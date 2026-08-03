@@ -11,14 +11,16 @@ noncomputable section
 /-- Indicator of the finite gauge orbit containing a boundary configuration. -/
 noncomputable def finiteGroupOrbitIndicator
     (G α : Type) [Group G] [Fintype α] [MulAction G α]
-    (A : α) : FiniteBoundaryHilbert α :=
-  WithLp.toLp 2 fun X : α => if ∃ g : G, g • X = A then 1 else 0
+    (A : α) : FiniteBoundaryHilbert α := by
+  classical
+  exact WithLp.toLp 2 fun X : α => if ∃ g : G, g • X = A then 1 else 0
 
 @[simp] theorem finiteGroupOrbitIndicator_apply
     (G α : Type) [Group G] [Fintype α] [MulAction G α]
     (A X : α) :
     finiteGroupOrbitIndicator G α A X =
-      if ∃ g : G, g • X = A then 1 else 0 :=
+      if ∃ g : G, g • X = A then 1 else 0 := by
+  classical
   rfl
 
 /-- Orbit indicators are pointwise nonnegative. -/
@@ -26,6 +28,7 @@ theorem finiteGroupOrbitIndicator_nonneg
     (G α : Type) [Group G] [Fintype α] [MulAction G α]
     (A X : α) :
     0 ≤ finiteGroupOrbitIndicator G α A X := by
+  classical
   simp [finiteGroupOrbitIndicator]
 
 /-- An orbit indicator takes value one at its defining configuration. -/
@@ -33,6 +36,7 @@ theorem finiteGroupOrbitIndicator_self
     (G α : Type) [Group G] [Fintype α] [MulAction G α]
     (A : α) :
     finiteGroupOrbitIndicator G α A A = 1 := by
+  classical
   rw [finiteGroupOrbitIndicator_apply, if_pos]
   exact ⟨1, one_smul G A⟩
 
@@ -42,6 +46,7 @@ theorem finiteGroupOrbitIndicator_mem_invariant
     (A : α) :
     finiteGroupOrbitIndicator G α A ∈
       finiteGroupInvariantSubmodule G α := by
+  classical
   intro a X
   rw [finiteGroupOrbitIndicator_apply, finiteGroupOrbitIndicator_apply]
   have horbit :
@@ -53,8 +58,9 @@ theorem finiteGroupOrbitIndicator_mem_invariant
     · rintro ⟨h, hh⟩
       refine ⟨h * a⁻¹, ?_⟩
       simpa [mul_smul, mul_assoc] using hh
-  rw [show (∃ g : G, g • (a • X) = A) =
-      (∃ h : G, h • X = A) from propext horbit]
+  by_cases hX : ∃ h : G, h • X = A
+  · rw [if_pos (horbit.mpr hX), if_pos hX]
+  · rw [if_neg (fun h => hX (horbit.mp h)), if_neg hX]
 
 /-- Canonical orbit-indicator vector in the invariant Hilbert subspace. -/
 noncomputable def finiteGroupInvariantOrbitIndicator
@@ -105,26 +111,35 @@ theorem finiteKernelNormalizedOperator_orbitIndicator_matrixElement_pos
   rw [finiteKernelNormalizedOperator_matrixElement]
   apply mul_pos
   · exact inv_pos.mpr (norm_pos_iff.mpr hne)
-  · apply (Finset.sum_pos_iff_of_nonneg ?_).2
-    · intro X _hX
+  · have houter_nonneg :
+        ∀ X ∈ Finset.univ,
+          0 ≤ ∑ Y,
+            (finiteGroupOrbitIndicator G α A).ofLp X * kernel X Y *
+              (finiteGroupOrbitIndicator G α B).ofLp Y := by
+      intro X _hX
       exact Finset.sum_nonneg fun Y _hY =>
         mul_nonneg
           (mul_nonneg
             (finiteGroupOrbitIndicator_nonneg G α A X)
             (le_of_lt (hpos X Y)))
           (finiteGroupOrbitIndicator_nonneg G α B Y)
-    · refine ⟨A, Finset.mem_univ A, ?_⟩
-      apply (Finset.sum_pos_iff_of_nonneg ?_).2
-      · intro Y _hY
-        exact mul_nonneg
-          (mul_nonneg
-            (finiteGroupOrbitIndicator_nonneg G α A A)
-            (le_of_lt (hpos A Y)))
-          (finiteGroupOrbitIndicator_nonneg G α B Y)
-      · refine ⟨B, Finset.mem_univ B, ?_⟩
-        rw [finiteGroupOrbitIndicator_self,
-          finiteGroupOrbitIndicator_self]
-        simpa using hpos A B
+    apply (Finset.sum_pos_iff_of_nonneg houter_nonneg).2
+    refine ⟨A, Finset.mem_univ A, ?_⟩
+    have hinner_nonneg :
+        ∀ Y ∈ Finset.univ,
+          0 ≤ (finiteGroupOrbitIndicator G α A).ofLp A * kernel A Y *
+            (finiteGroupOrbitIndicator G α B).ofLp Y := by
+      intro Y _hY
+      exact mul_nonneg
+        (mul_nonneg
+          (finiteGroupOrbitIndicator_nonneg G α A A)
+          (le_of_lt (hpos A Y)))
+        (finiteGroupOrbitIndicator_nonneg G α B Y)
+    apply (Finset.sum_pos_iff_of_nonneg hinner_nonneg).2
+    refine ⟨B, Finset.mem_univ B, ?_⟩
+    rw [finiteGroupOrbitIndicator_self,
+      finiteGroupOrbitIndicator_self]
+    simpa using hpos A B
 
 /-- Canonical time-zero vertex on the side-two spatial torus (`H = 0`). -/
 def finiteEvenFourTorusZ2GaussWitnessVertex :
@@ -181,6 +196,14 @@ theorem finiteEvenFourTorusZ2GaussWitness_not_gauge_related :
     (fun A : FiniteEvenFourTorusZ2SliceConfiguration 0 =>
       finiteEvenFourTorusZ2SpatialPlaquetteHolonomy 0 A
         finiteEvenFourTorusZ2GaussWitnessPlaquette) h
+  change
+    finiteEvenFourTorusZ2SpatialPlaquetteHolonomy 0
+        (g • finiteEvenFourTorusZ2IdentitySlice 0)
+        finiteEvenFourTorusZ2GaussWitnessPlaquette =
+      finiteEvenFourTorusZ2SpatialPlaquetteHolonomy 0
+        (finiteEvenFourTorusZ2SingleLinkExcitation 0
+          finiteEvenFourTorusZ2GaussWitnessLink)
+        finiteEvenFourTorusZ2GaussWitnessPlaquette at hhol
   rw [finiteEvenFourTorusZ2SpatialPlaquetteHolonomy_smul,
     finiteEvenFourTorusZ2GaussWitness_identity_holonomy,
     finiteEvenFourTorusZ2GaussWitness_excitation_holonomy] at hhol
