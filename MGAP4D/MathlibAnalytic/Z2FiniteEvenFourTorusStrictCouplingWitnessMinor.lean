@@ -1,334 +1,328 @@
-import MGAP4D.MathlibAnalytic.FiniteDimensionalPrincipalMinorExcitationNonempty
+import MGAP4D.MathlibAnalytic.FiniteTensorProductKernelPosDef
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugePerronGroundSpectrum
 import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped BigOperators InnerProduct
+open scoped BigOperators InnerProduct Matrix
 
 noncomputable section
 
-/-- Pointwise comparison of two real-valued functions on a finite list implies
-comparison of their sums. -/
-theorem list_sum_map_le_of_forall_le
-    {ι : Type}
-    (l : List ι)
-    (f g : ι → ℝ)
-    (hle : ∀ x ∈ l, f x ≤ g x) :
-    (l.map f).sum ≤ (l.map g).sum := by
-  induction l with
-  | nil => simp
-  | cons a l ih =>
-      have ha : f a ≤ g a := hle a (by simp)
-      have ht : ∀ x ∈ l, f x ≤ g x := by
-        intro x hx
-        exact hle x (by simp [hx])
-      simp only [List.map_cons, List.sum_cons]
-      linarith [ih ht]
-
-/-- If one term is strictly smaller and all remaining terms are no larger,
-the finite list sum is strictly smaller. -/
-theorem list_sum_map_lt_of_forall_le_of_exists_lt
-    {ι : Type}
-    (l : List ι)
-    (f g : ι → ℝ)
-    (hle : ∀ x ∈ l, f x ≤ g x)
-    (hex : ∃ x ∈ l, f x < g x) :
-    (l.map f).sum < (l.map g).sum := by
-  induction l with
-  | nil => simp at hex
-  | cons a l ih =>
-      have ha : f a ≤ g a := hle a (by simp)
-      have ht : ∀ x ∈ l, f x ≤ g x := by
-        intro x hx
-        exact hle x (by simp [hx])
-      by_cases hstrict : f a < g a
-      · have htail := list_sum_map_le_of_forall_le l f g ht
-        simp only [List.map_cons, List.sum_cons]
-        linarith
-      · have htailExists : ∃ x ∈ l, f x < g x := by
-          obtain ⟨x, hxmem, hxlt⟩ := hex
-          simp only [List.mem_cons] at hxmem
-          rcases hxmem with hxa | hxl
-          · subst x
-            exact False.elim (hstrict hxlt)
-          · exact ⟨x, hxl, hxlt⟩
-        have htail := ih ht htailExists
-        simp only [List.map_cons, List.sum_cons]
-        linarith
-
-/-- The unique nonidentity element of the actual `Z₂` gauge group is not the
-identity. -/
-theorem z2GaugeNontrivial_ne_one : z2GaugeNontrivial ≠ (1 : Z2Gauge) := by
-  native_decide
-
-/-- The side-two spatial slice has only one spatial vertex. -/
-instance finiteEvenFourTorusSpatialVertex_zero_subsingleton :
-    Subsingleton (FiniteEvenFourTorusSpatialVertex 0) := by
-  constructor
-  intro v w
-  apply Subtype.ext
-  funext μ
-  exact Subsingleton.elim _ _
-
-/-- Every side-two spatial unit step returns to the same unique spatial
-vertex. -/
-theorem finiteEvenFourTorusSpatialVertexStep_zero
-    (v : FiniteEvenFourTorusSpatialVertex 0)
-    (μ : FiniteEvenFourTorusSpatialDirection) :
-    finiteEvenFourTorusSpatialVertexStep 0 v μ = v :=
-  Subsingleton.elim _ _
-
-/-- Residual gauge transformations act trivially on the side-two spatial
-slice: every spatial link is a loop at the unique vertex and `Z₂` is abelian. -/
-theorem finiteEvenFourTorusZ2ResidualSlice_smul_zero
-    (g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup 0)
-    (A : FiniteEvenFourTorusZ2SliceConfiguration 0) :
-    g • A = A := by
-  funext e
-  rw [finiteEvenFourTorusZ2ResidualSlice_smul_apply,
-    finiteEvenFourTorusSpatialVertexStep_zero]
-  simp [mul_assoc, mul_comm, mul_left_comm]
-
-/-- Every side-two point state is automatically residual-Gauss invariant. -/
-noncomputable def finiteEvenFourTorusZ2InvariantPointState
-    (A : FiniteEvenFourTorusZ2SliceConfiguration 0) :
-    FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert 0 :=
-  ⟨finiteBoundaryPointVector A, by
-    intro g X
-    rw [finiteEvenFourTorusZ2ResidualSlice_smul_zero]
-  ⟩
-
-/-- Identity point state in the side-two invariant Hilbert space. -/
-noncomputable def finiteEvenFourTorusZ2StrictWitnessIdentityState :
-    FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert 0 :=
-  finiteEvenFourTorusZ2InvariantPointState
-    (finiteEvenFourTorusZ2IdentitySlice 0)
-
-/-- One-link point state in the side-two invariant Hilbert space. -/
-noncomputable def finiteEvenFourTorusZ2StrictWitnessExcitationState :
-    FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert 0 :=
-  finiteEvenFourTorusZ2InvariantPointState
-    (finiteEvenFourTorusZ2SingleLinkExcitation 0
-      finiteEvenFourTorusZ2GaussWitnessLink)
-
-/-- Every temporal-gauge crossing action on equal boundaries is the same:
-each temporal plaquette carries the identity energy. -/
-theorem finiteEvenFourTorusZ2TemporalGaugeCrossingAction_self_eq
-    (H : ℕ)
-    (β energyIdentity energyNontrivial : ℝ)
-    (A B : FiniteEvenFourTorusZ2SliceConfiguration H) :
-    finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-        H β energyIdentity energyNontrivial A A =
-      finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-        H β energyIdentity energyNontrivial B B := by
-  unfold finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-  simp
-
-/-- Under strict coupling, changing one temporal crossing link from identity to
-nontrivial strictly raises the crossing action. -/
-theorem finiteEvenFourTorusZ2TemporalGaugeCrossingAction_identity_lt_singleLink
-    (β energyIdentity energyNontrivial : ℝ)
-    (hEnergy : energyIdentity < energyNontrivial) :
-    finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-        0 β energyIdentity energyNontrivial
-        (finiteEvenFourTorusZ2IdentitySlice 0)
-        (finiteEvenFourTorusZ2IdentitySlice 0) <
-      finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-        0 β energyIdentity energyNontrivial
-        (finiteEvenFourTorusZ2IdentitySlice 0)
-        (finiteEvenFourTorusZ2SingleLinkExcitation 0
-          finiteEvenFourTorusZ2GaussWitnessLink) := by
-  unfold finiteEvenFourTorusZ2TemporalGaugeCrossingAction
-  apply list_sum_map_lt_of_forall_le_of_exists_lt
-  · intro e _he
-    by_cases hlink : e = finiteEvenFourTorusZ2GaussWitnessLink
-    · subst e
-      simp [finiteEvenFourTorusZ2IdentitySlice,
-        finiteEvenFourTorusZ2SingleLinkExcitation,
-        z2GaugeNontrivial_ne_one, hEnergy.le]
-    · simp [finiteEvenFourTorusZ2IdentitySlice,
-        finiteEvenFourTorusZ2SingleLinkExcitation, hlink]
-  · refine ⟨finiteEvenFourTorusZ2GaussWitnessLink, by simp, ?_⟩
-    simpa [finiteEvenFourTorusZ2IdentitySlice,
-      finiteEvenFourTorusZ2SingleLinkExcitation,
-      z2GaugeNontrivial_ne_one] using hEnergy
-
-/-- The strict crossing-action increase is exactly the strict midpoint
-inequality needed for the two-state one-slab kernel determinant; all spatial
-half-actions cancel. -/
-theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabAction_witness_midpoint_strict
-    (β energyIdentity energyNontrivial : ℝ)
-    (hEnergy : energyIdentity < energyNontrivial) :
-    finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-        0 β energyIdentity energyNontrivial
-        (finiteEvenFourTorusZ2IdentitySlice 0)
-        (finiteEvenFourTorusZ2IdentitySlice 0) +
-      finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-        0 β energyIdentity energyNontrivial
-        (finiteEvenFourTorusZ2SingleLinkExcitation 0
-          finiteEvenFourTorusZ2GaussWitnessLink)
-        (finiteEvenFourTorusZ2SingleLinkExcitation 0
-          finiteEvenFourTorusZ2GaussWitnessLink) <
-      2 * finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-        0 β energyIdentity energyNontrivial
-        (finiteEvenFourTorusZ2IdentitySlice 0)
-        (finiteEvenFourTorusZ2SingleLinkExcitation 0
-          finiteEvenFourTorusZ2GaussWitnessLink) := by
-  have hcross :=
-    finiteEvenFourTorusZ2TemporalGaugeCrossingAction_identity_lt_singleLink
-      β energyIdentity energyNontrivial hEnergy
-  have hdiag :=
-    finiteEvenFourTorusZ2TemporalGaugeCrossingAction_self_eq
-      0 β energyIdentity energyNontrivial
-      (finiteEvenFourTorusZ2IdentitySlice 0)
-      (finiteEvenFourTorusZ2SingleLinkExcitation 0
-        finiteEvenFourTorusZ2GaussWitnessLink)
-  unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-  nlinarith
-
-/-- The raw temporal-gauge one-slab kernel has a strictly positive principal
-minor on the identity/one-link witness sector whenever `β > 0` and the
-nontrivial plaquette energy is strictly larger. -/
-theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabKernel_witness_minor_pos
+/-- Strict coupling separates the two local `Z₂` Wilson weights. -/
+theorem z2WilsonWeightNontrivial_lt_identity
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
     (hEnergy : energyIdentity < energyNontrivial) :
-    0 <
-      (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-        0 β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel
-          (finiteEvenFourTorusZ2IdentitySlice 0)
-          (finiteEvenFourTorusZ2IdentitySlice 0) *
-      (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-        0 β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel
-          (finiteEvenFourTorusZ2SingleLinkExcitation 0
-            finiteEvenFourTorusZ2GaussWitnessLink)
-          (finiteEvenFourTorusZ2SingleLinkExcitation 0
-            finiteEvenFourTorusZ2GaussWitnessLink) -
-      (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-        0 β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel
-          (finiteEvenFourTorusZ2IdentitySlice 0)
-          (finiteEvenFourTorusZ2SingleLinkExcitation 0
-            finiteEvenFourTorusZ2GaussWitnessLink) *
-      (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-        0 β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel
-          (finiteEvenFourTorusZ2SingleLinkExcitation 0
-            finiteEvenFourTorusZ2GaussWitnessLink)
-          (finiteEvenFourTorusZ2IdentitySlice 0) := by
-  let K := finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-    0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-  let A := finiteEvenFourTorusZ2IdentitySlice 0
-  let B := finiteEvenFourTorusZ2SingleLinkExcitation 0
-    finiteEvenFourTorusZ2GaussWitnessLink
-  have hsymm : K.kernel B A = K.kernel A B :=
-    finite_os_reflection_kernel_symmetric K.toCertificate B A
-  have haction :=
-    finiteEvenFourTorusZ2TemporalGaugeOneSlabAction_witness_midpoint_strict
-      β energyIdentity energyNontrivial hEnergy
-  change 0 < K.kernel A A * K.kernel B B - K.kernel A B * K.kernel B A
-  rw [hsymm]
-  rw [finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann,
-    finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann,
-    finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel_eq_boltzmann]
-  apply sub_pos.mpr
-  rw [← Real.exp_add, ← Real.exp_add]
+    z2WilsonWeightNontrivial β energyNontrivial <
+      z2WilsonWeightIdentity β energyIdentity := by
+  unfold z2WilsonWeightNontrivial z2WilsonWeightIdentity
   apply Real.exp_lt_exp.mpr
   nlinarith
 
-/-- Exact normalized matrix element of the actual invariant unfixed transfer on
-side-two invariant point states. -/
-theorem finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_point_matrixElement
-    (β energyIdentity energyNontrivial : ℝ)
-    (hβ : 0 ≤ β)
-    (hEnergy : energyIdentity ≤ energyNontrivial)
-    (A B : FiniteEvenFourTorusZ2SliceConfiguration 0) :
-    inner ℝ
-      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-        0 β energyIdentity energyNontrivial hβ hEnergy
-        (finiteEvenFourTorusZ2InvariantPointState A))
-      (finiteEvenFourTorusZ2InvariantPointState B) =
-      ‖finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
-        0 β energyIdentity energyNontrivial hβ hEnergy‖⁻¹ *
-      (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-        0 β energyIdentity energyNontrivial hβ hEnergy).kernel A B := by
-  change inner ℝ
-    (finiteEvenFourTorusZ2UnfixedGaugeOneSlabTransfer
-      0 β energyIdentity energyNontrivial hβ hEnergy
-      (finiteBoundaryPointVector A))
-    (finiteBoundaryPointVector B) = _
-  unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabTransfer
-    finiteKernelNormalizedOperator
-  rw [ContinuousLinearMap.smul_apply, real_inner_smul_left]
-  congr 1
-  change inner ℝ
-    (finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
-      0 β energyIdentity energyNontrivial hβ hEnergy
-      (finiteBoundaryPointVector A))
-    (finiteBoundaryPointVector B) = _
-  rw [finiteEvenFourTorusZ2UnfixedGaugeRawTransfer_apply_invariant
-    0 β energyIdentity energyNontrivial hβ hEnergy
-    (finiteEvenFourTorusZ2InvariantPointState A)]
-  unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
-  exact finiteKernelOperator_point_matrixElement
-    (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-      0 β energyIdentity energyNontrivial hβ hEnergy).kernel A B
+/-- The explicit local two-state kernel matrix. -/
+noncomputable def z2PlaquetteKernelMatrix
+    (w₀ w₁ : ℝ) : Matrix Bool Bool ℝ :=
+  Matrix.of fun x y => z2PlaquetteKernel w₀ w₁ x y
 
-/-- The normalized actual invariant unfixed transfer retains a strictly
-positive two-state principal minor under strict coupling. -/
-theorem finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_witness_minor_pos
+/-- A two-state kernel with `0 < w₁ < w₀` is positive definite. -/
+theorem z2PlaquetteKernelMatrix_posDef
+    (w₀ w₁ : ℝ)
+    (hw₁ : 0 < w₁)
+    (hstrict : w₁ < w₀) :
+    (z2PlaquetteKernelMatrix w₀ w₁).PosDef := by
+  rw [Matrix.posDef_iff_dotProduct_mulVec]
+  constructor
+  · ext x y
+    cases x <;> cases y <;>
+      simp [z2PlaquetteKernelMatrix, z2PlaquetteKernel,
+        Matrix.conjTranspose_apply]
+  · intro x hx
+    have hcoord : x false ≠ 0 ∨ x true ≠ 0 := by
+      by_contra h
+      push Not at h
+      apply hx
+      funext b
+      cases b <;> simp [h]
+    simp [z2PlaquetteKernelMatrix, z2PlaquetteKernel,
+      dotProduct, Matrix.mulVec]
+    rcases hcoord with hfalse | htrue
+    · nlinarith [mul_self_pos.mpr hfalse,
+        sq_nonneg (x false + x true)]
+    · nlinarith [mul_self_pos.mpr htrue,
+        sq_nonneg (x false + x true)]
+
+/-- Strict physical coupling makes the actual local `Z₂` Wilson matrix
+positive definite. -/
+theorem z2GaugeWilsonPlaquetteKernelMatrix_posDef
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
     (hEnergy : energyIdentity < energyNontrivial) :
-    0 <
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessIdentityState)
-        finiteEvenFourTorusZ2StrictWitnessIdentityState *
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessExcitationState)
-        finiteEvenFourTorusZ2StrictWitnessExcitationState -
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessIdentityState)
-        finiteEvenFourTorusZ2StrictWitnessExcitationState *
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessExcitationState)
-        finiteEvenFourTorusZ2StrictWitnessIdentityState := by
-  let c := ‖finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
-    0 β energyIdentity energyNontrivial hβ.le hEnergy.le‖⁻¹
-  let K := finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-    0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-  let A := finiteEvenFourTorusZ2IdentitySlice 0
-  let B := finiteEvenFourTorusZ2SingleLinkExcitation 0
-    finiteEvenFourTorusZ2GaussWitnessLink
-  have hc : 0 < c := by
-    exact inv_pos.mpr (norm_pos_iff.mpr
-      (finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer_ne_zero
-        0 β energyIdentity energyNontrivial hβ.le hEnergy.le))
-  have hraw :=
-    finiteEvenFourTorusZ2TemporalGaugeOneSlabKernel_witness_minor_pos
-      β energyIdentity energyNontrivial hβ hEnergy
-  have hscaled :
-      0 < (c * c) *
-        (K.kernel A A * K.kernel B B - K.kernel A B * K.kernel B A) :=
-    mul_pos (mul_pos hc hc) hraw
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_point_matrixElement,
-    finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_point_matrixElement,
-    finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_point_matrixElement,
-    finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_point_matrixElement]
-  change 0 < (c * K.kernel A A) * (c * K.kernel B B) -
-    (c * K.kernel A B) * (c * K.kernel B A)
-  nlinarith
+    (Matrix.of fun x y : Z2Gauge =>
+      (z2GaugeWilsonPlaquetteGramKernel
+        β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel x y).PosDef := by
+  let w₀ := z2WilsonWeightIdentity β energyIdentity
+  let w₁ := z2WilsonWeightNontrivial β energyNontrivial
+  have hbool : (z2PlaquetteKernelMatrix w₀ w₁).PosDef :=
+    z2PlaquetteKernelMatrix_posDef w₀ w₁
+      (z2WilsonWeightNontrivial_pos β energyNontrivial)
+      (z2WilsonWeightNontrivial_lt_identity
+        β energyIdentity energyNontrivial hβ hEnergy)
+  have hsub := hbool.submatrix boolEquivZ2Gauge.symm.injective
+  simpa [z2PlaquetteKernelMatrix,
+    z2GaugeWilsonPlaquetteGramKernel,
+    FiniteOSGramKernelOn.transport] using hsub
 
-/-- Under strict coupling, the actual side-two compressed unfixed transfer has
-an unconditionally inhabited strictly excited spectral sector. -/
+/-- Matrix of the temporal crossing kernel on the complete finite spatial-link
+configuration space. -/
+noncomputable def finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial) :
+    Matrix
+      (FiniteEvenFourTorusZ2SliceConfiguration H)
+      (FiniteEvenFourTorusZ2SliceConfiguration H) ℝ :=
+  Matrix.of fun A B =>
+    (finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
+      H β energyIdentity energyNontrivial hβ hEnergy).kernel A B
+
+/-- The temporal crossing matrix is exactly the finite tensor product of the
+local actual `Z₂` matrix over all spatial links. -/
+theorem finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix_eq_product
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial) :
+    finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix
+        H β energyIdentity energyNontrivial hβ hEnergy =
+      finiteProductKernelMatrix
+        (FiniteEvenFourTorusSpatialLink H) Z2Gauge
+        (Matrix.of fun x y : Z2Gauge =>
+          (z2GaugeWilsonPlaquetteGramKernel
+            β energyIdentity energyNontrivial hβ hEnergy).kernel x y) := by
+  ext A B
+  rw [finiteProductKernelMatrix_apply]
+  unfold finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix
+    finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
+  rw [finite_os_gram_kernel_listProduct_apply]
+  simp [finiteEvenFourTorusZ2TemporalLinkGramKernel,
+    FiniteOSGramKernelOn.comap]
+
+/-- Under strict coupling the complete temporal crossing matrix is positive
+definite at every finite side parameter. -/
+theorem finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix_posDef
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :
+    (finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le).PosDef := by
+  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix_eq_product]
+  exact finiteProductKernelMatrix_posDef
+    (FiniteEvenFourTorusSpatialLink H) Z2Gauge _
+    (z2GaugeWilsonPlaquetteKernelMatrix_posDef
+      β energyIdentity energyNontrivial hβ hEnergy)
+
+/-- Matrix of the complete temporal-gauge one-slab kernel. -/
+noncomputable def finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial) :
+    Matrix
+      (FiniteEvenFourTorusZ2SliceConfiguration H)
+      (FiniteEvenFourTorusZ2SliceConfiguration H) ℝ :=
+  Matrix.of fun A B =>
+    (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
+      H β energyIdentity energyNontrivial hβ hEnergy).kernel A B
+
+/-- The full one-slab matrix is the positive diagonal congruence of the
+crossing tensor matrix by the spatial half-weight. -/
+theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_eq_diagonal_congruence
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial) :
+    finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix
+        H β energyIdentity energyNontrivial hβ hEnergy =
+      Matrix.diagonal
+          (finiteEvenFourTorusZ2SpatialHalfWeight
+            H β energyIdentity energyNontrivial) *
+        finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix
+          H β energyIdentity energyNontrivial hβ hEnergy *
+      Matrix.diagonal
+        (finiteEvenFourTorusZ2SpatialHalfWeight
+          H β energyIdentity energyNontrivial) := by
+  classical
+  ext A B
+  simp [finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix,
+    finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix,
+    finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel,
+    Matrix.mul_apply]
+
+/-- Strict coupling makes the full temporal-gauge one-slab kernel matrix
+positive definite at every finite side parameter. -/
+theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_posDef
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :
+    (finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le).PosDef := by
+  classical
+  let D : Matrix
+      (FiniteEvenFourTorusZ2SliceConfiguration H)
+      (FiniteEvenFourTorusZ2SliceConfiguration H) ℝ :=
+    Matrix.diagonal
+      (finiteEvenFourTorusZ2SpatialHalfWeight
+        H β energyIdentity energyNontrivial)
+  have hD : D.PosDef :=
+    Matrix.PosDef.diagonal fun A =>
+      finiteEvenFourTorusZ2SpatialHalfWeight_pos
+        H β energyIdentity energyNontrivial A
+  have hC :=
+    finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix_posDef
+      H β energyIdentity energyNontrivial hβ hEnergy
+  have hcongr :
+      (Dᴴ *
+        finiteEvenFourTorusZ2TemporalGaugeCrossingKernelMatrix
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le * D).PosDef :=
+    hC.conjTranspose_mul_mul_same
+      (Matrix.isLeftRegular_iff_mulVec_injective.mp hD.isUnit.isLeftRegular)
+  have hDstar : Dᴴ = D := hD.isHermitian.eq
+  rw [hDstar] at hcongr
+  rw [finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_eq_diagonal_congruence]
+  exact hcongr
+
+/-- Positive definiteness of the column-oriented kernel matrix implies
+injectivity of the associated finite Euclidean kernel operator. -/
+theorem finiteKernelOperator_injective_of_columnMatrix_posDef
+    {α : Type} [Fintype α]
+    (kernel : α → α → ℝ)
+    (hpos : (Matrix.of fun y x => kernel x y).PosDef) :
+    Function.Injective (finiteKernelOperator kernel) := by
+  intro f g hfg
+  apply sub_eq_zero.mp
+  by_contra hne
+  let z : FiniteBoundaryHilbert α := f - g
+  have hzfun : (fun x : α => z x) ≠ 0 := by
+    intro hz
+    apply hne
+    ext x
+    exact congrFun hz x
+  have hzop : finiteKernelOperator kernel z = 0 := by
+    dsimp [z]
+    rw [map_sub, hfg, sub_self]
+  have hmul :
+      (Matrix.of fun y x => kernel x y).mulVec (fun x => z x) = 0 := by
+    funext y
+    have hy := congrArg
+      (fun w : FiniteBoundaryHilbert α => w y) hzop
+    simpa [finiteKernelOperator_apply, Matrix.mulVec] using hy
+  have hquad := hpos.dotProduct_mulVec_pos hzfun
+  rw [hmul] at hquad
+  simp at hquad
+
+/-- The raw temporal-gauge one-slab transfer is injective under strict coupling
+at every finite side parameter. -/
+theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_injective_strict
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :
+    Function.Injective
+      (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le) := by
+  unfold finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
+  apply finiteKernelOperator_injective_of_columnMatrix_posDef
+  have hpos :=
+    finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix_posDef
+      H β energyIdentity energyNontrivial hβ hEnergy
+  simpa [finiteEvenFourTorusZ2TemporalGaugeOneSlabKernelMatrix,
+    Matrix.transpose_apply] using hpos.transpose
+
+/-- The normalized actual unfixed transfer is injective after compression to
+the residual-Gauss-invariant Hilbert space in the strict-coupling regime. -/
+theorem finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_injective_strict
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :
+    Function.Injective
+      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le) := by
+  intro f g hfg
+  apply Subtype.ext
+  apply finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_injective_strict
+    H β energyIdentity energyNontrivial hβ hEnergy
+  have hambient := congrArg
+    (fun x : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H => x.1) hfg
+  change
+    ‖finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le‖⁻¹ •
+        finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le f.1 =
+      ‖finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le‖⁻¹ •
+        finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le g.1 at hambient
+  have hc :
+      ‖finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le‖⁻¹ ≠ 0 :=
+    inv_ne_zero
+      (norm_ne_zero_iff.mpr
+        (finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer_ne_zero
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le))
+  have hraw := smul_left_cancel₀ hc hambient
+  rw [finiteEvenFourTorusZ2UnfixedGaugeRawTransfer_apply_invariant
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le f,
+    finiteEvenFourTorusZ2UnfixedGaugeRawTransfer_apply_invariant
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le g] at hraw
+  exact hraw
+
+namespace FiniteDimensionalSymmetricPositiveContractionData
+
+variable
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [FiniteDimensional ℝ E]
+    (D : FiniteDimensionalSymmetricPositiveContractionData E)
+
+/-- Injectivity of a finite symmetric positive contraction excludes every null
+spectral index. -/
+theorem not_nonempty_nullSpectralIndex_of_operator_injective
+    (hinj : Function.Injective D.operator) :
+    ¬ Nonempty D.NullSpectralIndex := by
+  rintro ⟨i⟩
+  have hzero : D.operator (D.eigenbasis i.1) = 0 := by
+    rw [D.operator_apply_eigenbasis i.1, i.2, zero_smul]
+  have heq : D.eigenbasis i.1 = 0 := by
+    apply hinj
+    simpa using hzero
+  exact D.eigenbasis_orthonormal.ne_zero i.1 heq
+
+end FiniteDimensionalSymmetricPositiveContractionData
+
+/-- Strict coupling removes the null spectral sector of the actual compressed
+unfixed-gauge transfer at every finite side parameter. -/
+theorem finiteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex_not_nonempty_strict
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :
+    ¬ Nonempty
+      (FiniteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le) :=
+  (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
+    H β energyIdentity energyNontrivial hβ.le hEnergy.le)
+      .not_nonempty_nullSpectralIndex_of_operator_injective
+        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_injective_strict
+          H β energyIdentity energyNontrivial hβ hEnergy)
+
+/-- Combining side-two nonidentity with strict-coupling null-sector absence
+makes the strictly excited spectral sector unconditionally inhabited. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex_nonempty_strict
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
@@ -336,17 +330,12 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex_nonempty_strict
     Nonempty
       (FiniteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex
         0 β energyIdentity energyNontrivial hβ.le hEnergy.le) := by
-  let D := finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
-    0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-  obtain ⟨p, _hpne, _hppos, _hpfix, hpgen⟩ :=
-    finiteEvenFourTorusZ2UnfixedGaugeInvariant_fixed_space_generated_by_positiveGround
-      0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-  exact D.nonempty_excitedSpectralIndex_of_fixed_space_generated_and_minor_pos
-    p hpgen
-    finiteEvenFourTorusZ2StrictWitnessIdentityState
-    finiteEvenFourTorusZ2StrictWitnessExcitationState
-    (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_witness_minor_pos
-      β energyIdentity energyNontrivial hβ hEnergy)
+  rcases finiteEvenFourTorusZ2UnfixedGaugeExcitedOrNullSpectralIndex_nonempty
+      β energyIdentity energyNontrivial hβ.le hEnergy.le with hexc | hnull
+  · exact hexc
+  · exact False.elim
+      (finiteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex_not_nonempty_strict
+        0 β energyIdentity energyNontrivial hβ hEnergy hnull)
 
 end
 
