@@ -27,24 +27,16 @@ theorem finiteFunctionMass_eq_inner_constantOne
     (f : FiniteBoundaryHilbert α) :
     finiteFunctionMass f =
       inner ℝ f finiteBoundaryConstantOne := by
-  unfold finiteFunctionMass finiteBoundaryConstantOne
-  rw [PiLp.inner_apply]
-  apply Finset.sum_congr rfl
-  intro x _hx
-  change f x = f x * 1
-  ring
+  rw [RCLike.inner_eq_wInner_one]
+  simp [finiteFunctionMass, RCLike.wInner, finiteBoundaryConstantOne]
 
 /-- The explicit finite squared sum is the Hilbert norm squared. -/
 theorem finiteFunctionNormSq_eq_norm_sq
     {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) :
     finiteFunctionNormSq f = ‖f‖ ^ 2 := by
-  unfold finiteFunctionNormSq
-  rw [← real_inner_self_eq_norm_sq, PiLp.inner_apply]
-  apply Finset.sum_congr rfl
-  intro x _hx
-  change (f x) ^ 2 = f x * f x
-  ring
+  rw [← real_inner_self_eq_norm_sq, RCLike.inner_eq_wInner_one]
+  simp [finiteFunctionNormSq, RCLike.wInner, pow_two]
 
 /-- The finite-function kernel quadratic form is exactly the Euclidean
 transfer Rayleigh form. -/
