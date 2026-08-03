@@ -79,16 +79,22 @@ theorem positiveShift_identity_or_pointObservable_witness
         P.oneLayerIdentityTransfer
   · exact Or.inl hIdentity
   · right
-    obtain ⟨F, G, hFG⟩ :=
-      C.toOneLayerShiftedKernelCertificate.exists_shiftedKernelForm_ne_unshifted_of_operator_ne_identity
-        hIdentity
     by_contra hPoint
     push_neg at hPoint
-    apply hFG
-    funext
-    exact False.elim (by
-      have hAll := hPoint
-      contradiction)
+    apply hIdentity
+    apply
+      (C.toOneLayerShiftedKernelCertificate.shiftedKernelForm_eq_unshiftedReflectionForm_iff).mp
+    intro F G
+    unfold finiteWilsonOSShiftedKernelForm
+      FiniteLatticeWilsonOSReflectionCertificate.wilsonOneLayerTransferForm
+    apply Finset.sum_congr rfl
+    intro x _hx
+    apply Finset.sum_congr rfl
+    intro y _hy
+    have hxy := hPoint x y
+    rw [positiveConfigurationShiftedKernelForm_pointObservable,
+      wilsonOneLayerTransferForm_pointObservable] at hxy
+    rw [hxy]
 
 end PositiveConfigurationShiftCertificate
 end FiniteWilsonOSReflectionPositivityCertificate
