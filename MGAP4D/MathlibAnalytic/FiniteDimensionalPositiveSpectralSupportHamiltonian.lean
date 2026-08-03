@@ -29,7 +29,7 @@ theorem positiveSpectralEnergy_nonneg
     0 ≤ D.positiveSpectralEnergy i := by
   unfold positiveSpectralEnergy
   exact neg_nonneg.mpr
-    (Real.log_nonpos (D.positiveEigenvalue_pos i)
+    (Real.log_nonpos (le_of_lt (D.positiveEigenvalue_pos i))
       (D.positiveEigenvalue_le_one i))
 
 /-- Hamiltonian diagonalized in the positive transfer spectral coordinates. -/
@@ -45,7 +45,10 @@ noncomputable def positiveSpectralHamiltonian :
       map_smul' := by
         intro c x
         ext i
-        simp [mul_assoc] }
+        change
+          D.positiveSpectralEnergy i * (c * x i) =
+            c * (D.positiveSpectralEnergy i * x i)
+        ring }
 
 @[simp] theorem positiveSpectralHamiltonian_apply
     (x : D.PositiveSpectralSpace)
@@ -101,10 +104,17 @@ theorem positiveSpectralHamiltonian_isSymmetric :
   rw [PiLp.inner_apply, PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro i _hi
-  change
-    y i * (D.positiveSpectralEnergy i * x i) =
-      x i * (D.positiveSpectralEnergy i * y i)
-  ring
+  rw [D.positiveSpectralHamiltonian_apply,
+    D.positiveSpectralHamiltonian_apply]
+  calc
+    inner ℝ (D.positiveSpectralEnergy i * x i) (y i) =
+        D.positiveSpectralEnergy i * inner ℝ (x i) (y i) := by
+      simpa only [smul_eq_mul] using
+        real_inner_smul_left (x i) (y i) (D.positiveSpectralEnergy i)
+    _ = inner ℝ (x i) (D.positiveSpectralEnergy i * y i) := by
+      symm
+      simpa only [smul_eq_mul] using
+        real_inner_smul_right (x i) (y i) (D.positiveSpectralEnergy i)
 
 /-- The positive-support transfer is symmetric. -/
 theorem positiveSpectralTransfer_isSymmetric :
@@ -113,10 +123,17 @@ theorem positiveSpectralTransfer_isSymmetric :
   rw [PiLp.inner_apply, PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro i _hi
-  change
-    y i * (D.positiveEigenvalue i * x i) =
-      x i * (D.positiveEigenvalue i * y i)
-  ring
+  rw [D.positiveSpectralTransfer_apply,
+    D.positiveSpectralTransfer_apply]
+  calc
+    inner ℝ (D.positiveEigenvalue i * x i) (y i) =
+        D.positiveEigenvalue i * inner ℝ (x i) (y i) := by
+      simpa only [smul_eq_mul] using
+        real_inner_smul_left (x i) (y i) (D.positiveEigenvalue i)
+    _ = inner ℝ (x i) (D.positiveEigenvalue i * y i) := by
+      symm
+      simpa only [smul_eq_mul] using
+        real_inner_smul_right (x i) (y i) (D.positiveEigenvalue i)
 
 /-- The positive-support transfer is positive in quadratic form. -/
 theorem positiveSpectralTransfer_quadratic_nonneg
