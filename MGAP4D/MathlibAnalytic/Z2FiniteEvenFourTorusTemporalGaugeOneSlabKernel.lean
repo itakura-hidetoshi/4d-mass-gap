@@ -80,7 +80,8 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_boltzmann
   rw [finite_os_gram_kernel_listProduct_apply]
   unfold finiteEvenFourTorusZ2TemporalGaugeCrossingAction
   rw [List.map_map]
-  generalize Finset.univ.toList = es
+  generalize
+    (Finset.univ : Finset (FiniteEvenFourTorusSpatialLink H)).toList = es
   induction es with
   | nil => simp
   | cons e es ih =>
