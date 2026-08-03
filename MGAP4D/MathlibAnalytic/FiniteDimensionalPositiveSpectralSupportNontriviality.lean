@@ -31,8 +31,13 @@ theorem operator_eq_zero_of_not_nonempty_positiveSpectralIndex
   intro x
   apply D.eigenbasis.repr.injective
   ext i
-  rw [D.symmetric.eigenvectorBasis_apply_self_apply (by rfl)]
-  simp [hzero i]
+  have hdiag :
+      D.eigenbasis.repr (D.operator x) i =
+        D.eigenvalue i * D.eigenbasis.repr x i := by
+    simpa [eigenbasis, eigenvalue] using
+      D.symmetric.eigenvectorBasis_apply_self_apply (by rfl) x i
+  rw [hdiag, hzero i]
+  simp
 
 /-- Every nonzero finite-dimensional positive symmetric contraction has at
 least one strictly positive transfer eigenvalue. -/
@@ -63,7 +68,10 @@ theorem exists_nonzero_positiveSpectralSynthesis_of_operator_ne_zero
   obtain ⟨x, hx⟩ := D.exists_nonzero_positiveSpectralSpace_of_operator_ne_zero hne
   refine ⟨x, ?_⟩
   intro hsynth
-  exact hx (D.positiveSpectralSynthesis_injective hsynth)
+  have hsynth_zero :
+      D.positiveSpectralSynthesis x = D.positiveSpectralSynthesis 0 := by
+    simpa using hsynth
+  exact hx (D.positiveSpectralSynthesis_injective hsynth_zero)
 
 end FiniteDimensionalSymmetricPositiveContractionData
 
