@@ -399,7 +399,6 @@ one-layer form exactly as its Hilbert inner product. -/
     P.oneLayerObservableEmbedding_apply,
     P.inner_oneLayerState_oneLayerState,
     P.inner_eq_wilsonOneLayerTransferForm]
-  rfl
 
 /-- Public completion receipt: quotienting the exact OS null space and then
 completing gives a real Hilbert space with a dense observable embedding whose
