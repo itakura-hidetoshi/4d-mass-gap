@@ -94,19 +94,7 @@ theorem commGroupPlaquetteGaugeCancellation
         (g00 * d * g01⁻¹)⁻¹ =
       a * b * c⁻¹ * d⁻¹ := by
   simp only [mul_inv_rev, inv_inv]
-  calc
-    (g00 * a * g10⁻¹) *
-          (g10 * b * g11⁻¹) *
-          (g11 * c⁻¹ * g01⁻¹) *
-          (g01 * d⁻¹ * g00⁻¹) =
-        (g00 * g00⁻¹) *
-          (g10⁻¹ * g10) *
-          (g11⁻¹ * g11) *
-          (g01⁻¹ * g01) *
-          (a * b * c⁻¹ * d⁻¹) := by
-      ac_rfl
-    _ = a * b * c⁻¹ * d⁻¹ := by
-      simp
+  simp [mul_assoc, mul_comm, mul_left_comm]
 
 /-- Spatial plaquette holonomy is invariant under residual slice gauge
 transformations. -/
