@@ -61,11 +61,11 @@ def positiveConfigurationShiftCarrierLinearMap
     ⟨positiveConfigurationObservableShift shift F.observable⟩
   map_add' := by
     intro F G
-    apply P.OneLayerCarrier.observable_injective
+    apply OneLayerCarrier.observable_injective P
     rfl
   map_smul' := by
     intro r F
-    apply P.OneLayerCarrier.observable_injective
+    apply OneLayerCarrier.observable_injective P
     rfl
 
 @[simp] theorem positiveConfigurationShiftCarrierLinearMap_observable
@@ -103,11 +103,12 @@ theorem positiveConfigurationShiftedKernelForm_eq_inner
   simp only [Equiv.symm_apply_apply]
 
 /-- Point-mass observable at a positive-half configuration. -/
-def positiveConfigurationPointObservable
+noncomputable def positiveConfigurationPointObservable
     {P : FiniteWilsonOSReflectionPositivityCertificate L}
     (x : P.reflectionData.PositiveConfiguration) :
-    P.reflectionData.PositiveConfiguration → ℝ :=
-  fun z => if z = x then 1 else 0
+    P.reflectionData.PositiveConfiguration → ℝ := by
+  classical
+  exact fun z => if z = x then 1 else 0
 
 /-- Point-mass observables recover an arbitrary shifted-kernel entry exactly. -/
 theorem positiveConfigurationShiftedKernelForm_pointObservable
