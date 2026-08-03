@@ -8,7 +8,7 @@ noncomputable section
 
 /-- The actual side-two excitation gap in the strict-coupling regime.  Unlike
 the earlier conditional definition, the required nonempty excited-sector
-instance is supplied by the strict two-state principal-minor theorem. -/
+instance is supplied by strict tensor positivity and null-sector absence. -/
 noncomputable def finiteEvenFourTorusZ2UnfixedGaugeStrictExcitationGap
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
@@ -87,14 +87,15 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeStrict_excited_extendedEnergy_finite_po
 
 This integrates, in one mathematical unit:
 
-* the strictly positive two-state principal minor;
+* strict local two-state positive definiteness;
+* positive definiteness of the complete finite tensor crossing kernel;
+* preservation under the positive spatial sandwich;
+* injectivity of the temporal and compressed invariant transfers;
+* absence of all null spectral modes at every finite side parameter;
 * Perron uniqueness of the ground ray;
-* unconditional nonemptiness of the strictly excited sector;
+* unconditional nonemptiness of the side-two strictly excited sector;
 * a positive finite-volume excitation gap and exact exponential decay;
-* the complete ground/excited/null decomposition, natural time, and extended
-  energy classification.
-
-It deliberately does not assert that the null sector is empty. -/
+* the complete ground/excited/null natural-time and extended-energy package. -/
 structure Z2UnfixedGaugeStrictCouplingSpectralGapCompletePackage
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
@@ -105,28 +106,18 @@ structure Z2UnfixedGaugeStrictCouplingSpectralGapCompletePackage
   fullSpectralPackage :
     Z2UnfixedGaugeFullSpectralCompletePackage
       β energyIdentity energyNontrivial hβ.le hEnergy.le
-  witnessPrincipalMinor_pos :
-    0 <
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessIdentityState)
-        finiteEvenFourTorusZ2StrictWitnessIdentityState *
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessExcitationState)
-        finiteEvenFourTorusZ2StrictWitnessExcitationState -
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessIdentityState)
-        finiteEvenFourTorusZ2StrictWitnessExcitationState *
-      inner ℝ
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-          0 β energyIdentity energyNontrivial hβ.le hEnergy.le
-          finiteEvenFourTorusZ2StrictWitnessExcitationState)
-        finiteEvenFourTorusZ2StrictWitnessIdentityState
+  temporalRawTransfer_injective :
+    Function.Injective
+      (finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
+        0 β energyIdentity energyNontrivial hβ.le hEnergy.le)
+  invariantTransfer_injective :
+    Function.Injective
+      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+        0 β energyIdentity energyNontrivial hβ.le hEnergy.le)
+  null_not_nonempty :
+    ¬ Nonempty
+      (FiniteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex
+        0 β energyIdentity energyNontrivial hβ.le hEnergy.le)
   excited_nonempty :
     Nonempty
       (FiniteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex
@@ -170,9 +161,15 @@ noncomputable def finiteEvenFourTorusZ2UnfixedGaugeStrictCouplingSpectralGapComp
     fullSpectralPackage :=
       finiteEvenFourTorusZ2UnfixedGaugeFullSpectralCompletePackage
         β energyIdentity energyNontrivial hβ.le hEnergy.le
-    witnessPrincipalMinor_pos :=
-      finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_witness_minor_pos
-        β energyIdentity energyNontrivial hβ hEnergy
+    temporalRawTransfer_injective :=
+      finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_injective_strict
+        0 β energyIdentity energyNontrivial hβ hEnergy
+    invariantTransfer_injective :=
+      finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_injective_strict
+        0 β energyIdentity energyNontrivial hβ hEnergy
+    null_not_nonempty :=
+      finiteEvenFourTorusZ2UnfixedGaugeNullSpectralIndex_not_nonempty_strict
+        0 β energyIdentity energyNontrivial hβ hEnergy
     excited_nonempty :=
       finiteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex_nonempty_strict
         β energyIdentity energyNontrivial hβ hEnergy
