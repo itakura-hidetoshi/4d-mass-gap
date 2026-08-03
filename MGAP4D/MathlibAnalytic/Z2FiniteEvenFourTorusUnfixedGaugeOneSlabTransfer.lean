@@ -120,6 +120,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeRawTransfer_apply_invariant
         (finiteEvenFourTorusZ2GaussProjector H f.1) =
       finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer
         H β energyIdentity energyNontrivial hβ hEnergy f.1
+  unfold finiteEvenFourTorusZ2GaussProjector
   rw [finiteGroupAveragingProjector_eq_self_of_mem
     (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
     (FiniteEvenFourTorusZ2SliceConfiguration H) f.1 f.2]
