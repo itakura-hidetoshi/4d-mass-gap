@@ -91,9 +91,7 @@ noncomputable def toCenteredRayleighCertificate :
     change inner ℝ (D.operator x) x ≤ C.rate * ‖x‖ ^ 2
     exact
       D.operator_quadraticForm_le_of_groundCoordinates_eq_zero_of_excited_cap
-        hnull C.rate (fun i => C.excitedEigenvalue_le_rate H i) x (by
-          change D.groundCoordinates x = 0
-          exact hx)
+        hnull C.rate (fun i => C.excitedEigenvalue_le_rate H i) x hx
 
 /-- The centered Rayleigh certificate generated from a spectral cap retains the
 same rate. -/
@@ -142,8 +140,14 @@ noncomputable def toCenteredPoincareCertificate :
   centeredPoincare := by
     intro H x hx
     have hRayleigh := R.centeredRayleigh H x hx
-    rw [inner_sub_left, real_inner_self_eq_norm_sq]
-    linarith
+    have hExpanded :
+        (1 - R.rate) * ‖x‖ ^ 2 ≤
+          ‖x‖ ^ 2 -
+            inner ℝ
+              (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+                H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x := by
+      linarith
+    simpa only [inner_sub_left, real_inner_self_eq_norm_sq] using hExpanded
 
 @[simp] theorem toCenteredPoincareCertificate_coercivity :
     R.toCenteredPoincareCertificate.coercivity = 1 - R.rate :=
@@ -171,7 +175,13 @@ noncomputable def toCenteredRayleighCertificate :
   centeredRayleigh := by
     intro H x hx
     have hPoincare := P.centeredPoincare H x hx
-    rw [inner_sub_left, real_inner_self_eq_norm_sq] at hPoincare
+    have hExpanded :
+        P.coercivity * ‖x‖ ^ 2 ≤
+          ‖x‖ ^ 2 -
+            inner ℝ
+              (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+                H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x := by
+      simpa only [inner_sub_left, real_inner_self_eq_norm_sq] using hPoincare
     linarith
 
 /-- Poincare coercivity therefore generates the common excited spectral cap. -/
