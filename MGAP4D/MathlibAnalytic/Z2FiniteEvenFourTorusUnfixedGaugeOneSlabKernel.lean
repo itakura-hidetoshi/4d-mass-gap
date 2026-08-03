@@ -163,40 +163,50 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel_pos
       Finset.mem_univ _, ?_⟩
     exact Real.exp_pos _
 
+/-- Exact proposition collected by the finite temporal-link summation kernel
+package. -/
+def finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelClaimBoundary
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial) : Prop :=
+  (∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
+    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy A B =
+      finiteGroupRightAveragedKernel
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H)
+        (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
+          H β energyIdentity energyNontrivial hβ hEnergy).kernel A B) ∧
+  (∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
+    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy A B =
+      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy B A) ∧
+  (∀ g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H,
+    ∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
+    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy (g • A) B =
+      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy A B) ∧
+  (∀ g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H,
+    ∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
+    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy A (g • B) =
+      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+        H β energyIdentity energyNontrivial hβ hEnergy A B) ∧
+  (∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
+    0 < finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+      H β energyIdentity energyNontrivial hβ hEnergy A B)
+
 /-- Public exact-kernel receipt for finite temporal-link summation. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelPackage
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β)
     (hEnergy : energyIdentity ≤ energyNontrivial) :
-    (∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
-      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy A B =
-        finiteGroupRightAveragedKernel
-          (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-          (FiniteEvenFourTorusZ2SliceConfiguration H)
-          (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
-            H β energyIdentity energyNontrivial hβ hEnergy).kernel A B) ∧
-    (∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
-      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy A B =
-        finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy B A) ∧
-    (∀ g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H,
-      ∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
-      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy (g • A) B =
-        finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy A B) ∧
-    (∀ g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H,
-      ∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
-      finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy A (g • B) =
-        finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-          H β energyIdentity energyNontrivial hβ hEnergy A B) ∧
-    (∀ A B : FiniteEvenFourTorusZ2SliceConfiguration H,
-      0 < finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
-        H β energyIdentity energyNontrivial hβ hEnergy A B) := by
+    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelClaimBoundary
+      H β energyIdentity energyNontrivial hβ hEnergy := by
   exact ⟨
     finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel_eq_rightAverage
       H β energyIdentity energyNontrivial hβ hEnergy,
