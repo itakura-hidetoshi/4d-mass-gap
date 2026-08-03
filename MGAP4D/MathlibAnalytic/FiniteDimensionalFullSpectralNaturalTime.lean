@@ -144,7 +144,7 @@ theorem fullSpectralNaturalTime_add (m n : ℕ) :
   by_cases hn : n = 0
   · subst n
     simp [D.fullSpectralNaturalTime_zero]
-  have hmn : m + n ≠ 0 := Nat.add_ne_zero.mpr ⟨hm, hn⟩
+  have hmn : m + n ≠ 0 := by omega
   simp [fullSpectralNaturalTime, hm, hn, hmn,
     D.groundCoordinates_fullSpectralNaturalTime,
     D.excitedCoordinates_fullSpectralNaturalTime,
