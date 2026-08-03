@@ -114,6 +114,46 @@ def finiteFunctionKernelQuadratic
     (f : α → ℝ) : ℝ :=
   ∑ x : α, ∑ y : α, f x * kernel x y * f y
 
+/-- Finite total mass is invariant under reindexing by an equivalence. -/
+theorem finiteFunctionMass_equiv
+    {α β : Type} [Fintype α] [Fintype β]
+    (e : α ≃ β) (f : α → ℝ) :
+    finiteFunctionMass f =
+      finiteFunctionMass (fun y : β => f (e.symm y)) := by
+  unfold finiteFunctionMass
+  refine Fintype.sum_equiv e _ _ ?_
+  intro x
+  simp
+
+/-- Finite squared norm is invariant under reindexing by an equivalence. -/
+theorem finiteFunctionNormSq_equiv
+    {α β : Type} [Fintype α] [Fintype β]
+    (e : α ≃ β) (f : α → ℝ) :
+    finiteFunctionNormSq f =
+      finiteFunctionNormSq (fun y : β => f (e.symm y)) := by
+  unfold finiteFunctionNormSq
+  refine Fintype.sum_equiv e _ _ ?_
+  intro x
+  simp
+
+/-- Finite kernel quadratic forms are invariant under simultaneous
+reindexing of the carrier. -/
+theorem finiteFunctionKernelQuadratic_equiv
+    {α β : Type} [Fintype α] [Fintype β]
+    (e : α ≃ β)
+    (kernel : α → α → ℝ)
+    (f : α → ℝ) :
+    finiteFunctionKernelQuadratic kernel f =
+      finiteFunctionKernelQuadratic
+        (fun x y : β => kernel (e.symm x) (e.symm y))
+        (fun x : β => f (e.symm x)) := by
+  unfold finiteFunctionKernelQuadratic
+  refine Fintype.sum_equiv e _ _ ?_
+  intro x
+  refine Fintype.sum_equiv e _ _ ?_
+  intro y
+  simp
+
 /-- False-head restriction of a Boolean-cube function. -/
 def finiteZ2HeadFalse
     {n : ℕ}
@@ -163,6 +203,60 @@ theorem finiteZ2HeadTrue_eq_average_sub_difference
   simp [finiteZ2HeadFalse, finiteZ2HeadTrue,
     finiteZ2HeadAverage, finiteZ2HeadDifference]
   ring
+
+/-- Total mass of a cube function is twice the mass of its even head part. -/
+theorem finiteFunctionMass_succ
+    {n : ℕ}
+    (f : (Fin (n + 1) → Bool) → ℝ) :
+    finiteFunctionMass f =
+      2 * finiteFunctionMass (finiteZ2HeadAverage f) := by
+  rw [finiteFunctionMass_equiv (finSuccFunctionEquiv Bool n) f]
+  unfold finiteFunctionMass
+  rw [Fintype.sum_prod_type, Finset.sum_comm]
+  calc
+    (∑ A : Fin n → Bool,
+        ∑ a : Bool,
+          f ((finSuccFunctionEquiv Bool n).symm (a, A))) =
+      ∑ A : Fin n → Bool,
+        (finiteZ2HeadFalse f A + finiteZ2HeadTrue f A) := by
+      apply Finset.sum_congr rfl
+      intro A _hA
+      simp [finSuccFunctionEquiv, finiteZ2HeadFalse, finiteZ2HeadTrue]
+    _ = 2 * ∑ A : Fin n → Bool, finiteZ2HeadAverage f A := by
+      rw [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro A _hA
+      simp [finiteZ2HeadAverage]
+      ring
+
+/-- Pythagorean head decomposition of the squared Euclidean norm. -/
+theorem finiteFunctionNormSq_succ
+    {n : ℕ}
+    (f : (Fin (n + 1) → Bool) → ℝ) :
+    finiteFunctionNormSq f =
+      2 * (finiteFunctionNormSq (finiteZ2HeadAverage f) +
+        finiteFunctionNormSq (finiteZ2HeadDifference f)) := by
+  rw [finiteFunctionNormSq_equiv (finSuccFunctionEquiv Bool n) f]
+  unfold finiteFunctionNormSq
+  rw [Fintype.sum_prod_type, Finset.sum_comm]
+  calc
+    (∑ A : Fin n → Bool,
+        ∑ a : Bool,
+          (f ((finSuccFunctionEquiv Bool n).symm (a, A))) ^ 2) =
+      ∑ A : Fin n → Bool,
+        ((finiteZ2HeadFalse f A) ^ 2 +
+          (finiteZ2HeadTrue f A) ^ 2) := by
+      apply Finset.sum_congr rfl
+      intro A _hA
+      simp [finSuccFunctionEquiv, finiteZ2HeadFalse, finiteZ2HeadTrue]
+    _ = 2 *
+        ((∑ A : Fin n → Bool, (finiteZ2HeadAverage f A) ^ 2) +
+          ∑ A : Fin n → Bool, (finiteZ2HeadDifference f A) ^ 2) := by
+      rw [mul_add, Finset.mul_sum, Finset.mul_sum, ← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro A _hA
+      simp [finiteZ2HeadAverage, finiteZ2HeadDifference]
+      ring
 
 end
 
