@@ -221,7 +221,7 @@ theorem finiteFunctionMass_succ
         (finiteZ2HeadFalse f A + finiteZ2HeadTrue f A) := by
       apply Finset.sum_congr rfl
       intro A _hA
-      simp [finSuccFunctionEquiv, finiteZ2HeadFalse, finiteZ2HeadTrue]
+      simp [finSuccFunctionEquiv, finiteZ2HeadFalse, finiteZ2HeadTrue, add_comm]
     _ = 2 * ∑ A : Fin n → Bool, finiteZ2HeadAverage f A := by
       rw [Finset.mul_sum]
       apply Finset.sum_congr rfl
@@ -248,7 +248,7 @@ theorem finiteFunctionNormSq_succ
           (finiteZ2HeadTrue f A) ^ 2) := by
       apply Finset.sum_congr rfl
       intro A _hA
-      simp [finSuccFunctionEquiv, finiteZ2HeadFalse, finiteZ2HeadTrue]
+      simp [finSuccFunctionEquiv, finiteZ2HeadFalse, finiteZ2HeadTrue, add_comm]
     _ = 2 *
         ((∑ A : Fin n → Bool, (finiteZ2HeadAverage f A) ^ 2) +
           ∑ A : Fin n → Bool, (finiteZ2HeadDifference f A) ^ 2) := by
