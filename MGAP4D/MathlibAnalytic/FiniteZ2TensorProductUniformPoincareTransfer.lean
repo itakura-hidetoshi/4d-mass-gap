@@ -31,7 +31,8 @@ theorem finiteFunctionMass_eq_inner_constantOne
   rw [PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro x _hx
-  simp
+  change f x = f x * 1
+  ring
 
 /-- The explicit finite squared sum is the Hilbert norm squared. -/
 theorem finiteFunctionNormSq_eq_norm_sq
