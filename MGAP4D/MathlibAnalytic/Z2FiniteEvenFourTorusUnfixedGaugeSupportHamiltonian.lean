@@ -147,8 +147,8 @@ theorem finiteEvenFourTorusZ2UnfixedGauge_supportSemigroup_intertwining
     (n : ℕ)
     (x : FiniteEvenFourTorusZ2UnfixedGaugePositiveSpectralSpace
       H β energyIdentity energyNontrivial hβ hEnergy) :
-    (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-        H β energyIdentity energyNontrivial hβ hEnergy) ^ n
+    ((finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+        H β energyIdentity energyNontrivial hβ hEnergy) ^ n)
         (finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralSynthesis
           H β energyIdentity energyNontrivial hβ hEnergy x) =
       finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralSynthesis
