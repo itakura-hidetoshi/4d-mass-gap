@@ -42,12 +42,12 @@ theorem operator_canonicalGroundVector
     D.canonicalGroundIndex.2, one_smul]
 
 /-- Exact Rayleigh expansion of a finite-dimensional symmetric positive
-contraction in its canonical orthonormal eigenbasis. -/
-theorem operator_rayleigh_eigenbasis
+contraction in the coordinate system of its canonical orthonormal eigenbasis. -/
+theorem operator_rayleigh_eigenbasis_coordinates
     (x : E) :
     inner ℝ (D.operator x) x =
       ∑ i : Fin D.dimension,
-        (inner ℝ (D.eigenbasis i) x) ^ 2 * D.eigenvalue i := by
+        D.eigenvalue i * (D.eigenbasis.repr x i) ^ 2 := by
   have hDiagonal (i : Fin D.dimension) :
       D.eigenbasis.repr (D.operator x) i =
         D.eigenvalue i * D.eigenbasis.repr x i := by
@@ -69,81 +69,71 @@ theorem operator_rayleigh_eigenbasis
             (D.eigenvalue i * D.eigenbasis.repr x i) =
           D.eigenvalue i * (D.eigenbasis.repr x i) ^ 2
       ring
-    _ = ∑ i : Fin D.dimension,
-        (inner ℝ (D.eigenbasis i) x) ^ 2 * D.eigenvalue i := by
-      apply Finset.sum_congr rfl
-      intro i _hi
-      rw [D.eigenbasis.repr_apply]
-      ring
 
-/-- Parseval identity for the canonical eigenbasis, in the coefficient form
-used by the centered Rayleigh comparison. -/
-theorem sum_sq_inner_eigenbasis
+/-- Parseval identity for the canonical eigenbasis in coordinate form. -/
+theorem sum_sq_eigenbasis_coordinates
     (x : E) :
-    ∑ i : Fin D.dimension,
-        (inner ℝ (D.eigenbasis i) x) ^ 2 = ‖x‖ ^ 2 := by
-  simpa using OrthonormalBasis.sum_sq_inner_right D.eigenbasis x
+    ∑ i : Fin D.dimension, (D.eigenbasis.repr x i) ^ 2 = ‖x‖ ^ 2 := by
+  rw [← EuclideanSpace.real_norm_sq_eq]
+  rw [D.eigenbasis.repr.norm_map]
 
-/-- A common upper bound on all strictly excited eigenvalues implies the
-basis-free Rayleigh contraction on the orthogonal complement of the unique
-ground vector, provided the null sector is absent. -/
-theorem operator_quadraticForm_le_on_canonicalGroundOrthogonal_of_excited_cap
-    [Nonempty D.GroundSpectralIndex]
-    [Subsingleton D.GroundSpectralIndex]
+/-- A common upper bound on all strictly excited eigenvalues implies a
+basis-free Rayleigh contraction on states with vanishing ground coordinates,
+provided the null sector is absent. -/
+theorem operator_quadraticForm_le_of_groundCoordinates_eq_zero_of_excited_cap
     (hnull : ¬ Nonempty D.NullSpectralIndex)
     (rate : ℝ)
-    (hrate_nonneg : 0 ≤ rate)
     (hcap : ∀ i : D.ExcitedSpectralIndex,
       D.eigenvalue i.1 ≤ rate)
     (x : E)
-    (hx : inner ℝ D.canonicalGroundVector x = 0) :
+    (hx : D.groundCoordinates x = 0) :
     inner ℝ (D.operator x) x ≤ rate * ‖x‖ ^ 2 := by
-  rw [D.operator_rayleigh_eigenbasis x]
+  rw [D.operator_rayleigh_eigenbasis_coordinates x]
   calc
     (∑ i : Fin D.dimension,
-        (inner ℝ (D.eigenbasis i) x) ^ 2 * D.eigenvalue i) ≤
+        D.eigenvalue i * (D.eigenbasis.repr x i) ^ 2) ≤
       ∑ i : Fin D.dimension,
-        rate * (inner ℝ (D.eigenbasis i) x) ^ 2 := by
+        rate * (D.eigenbasis.repr x i) ^ 2 := by
       apply Finset.sum_le_sum
       intro i _hi
       rcases D.eigenvalue_trichotomy i with hz | he | hg
       · exact False.elim (hnull ⟨⟨i, hz⟩⟩)
-      · have hi := hcap ⟨i, he⟩
-        nlinarith [sq_nonneg (inner ℝ (D.eigenbasis i) x)]
-      · have hground :
-            (⟨i, hg⟩ : D.GroundSpectralIndex) =
-              D.canonicalGroundIndex :=
-          Subsingleton.elim _ _
-        have hindex : i = D.canonicalGroundIndex.1 :=
-          congrArg Subtype.val hground
-        have hcoeff : inner ℝ (D.eigenbasis i) x = 0 := by
-          simpa [canonicalGroundVector, hindex] using hx
-        simp [hcoeff, hrate_nonneg]
+      · exact mul_le_mul_of_nonneg_right
+          (hcap ⟨i, he⟩) (sq_nonneg _)
+      · have hcoord := congrArg
+          (fun y : D.GroundSpectralSpace => y ⟨i, hg⟩) hx
+        change D.eigenbasis.repr x i = 0 at hcoord
+        simp [hg, hcoord]
     _ = rate * ‖x‖ ^ 2 := by
-      rw [← Finset.mul_sum, D.sum_sq_inner_eigenbasis x]
+      rw [← Finset.mul_sum, D.sum_sq_eigenbasis_coordinates x]
 
-/-- Conversely, a basis-free Rayleigh contraction on the canonical
-vacuum-orthogonal sector bounds every strictly excited transfer eigenvalue by
-the same rate. -/
-theorem excited_eigenvalue_le_of_operator_quadraticForm_le_on_canonicalGroundOrthogonal
-    [Nonempty D.GroundSpectralIndex]
+/-- Conversely, a basis-free Rayleigh contraction on the zero-ground-coordinate
+sector bounds every strictly excited transfer eigenvalue by the same rate. -/
+theorem excited_eigenvalue_le_of_operator_quadraticForm_le_of_groundCoordinates_eq_zero
     (rate : ℝ)
     (hRayleigh : ∀ x : E,
-      inner ℝ D.canonicalGroundVector x = 0 →
+      D.groundCoordinates x = 0 →
         inner ℝ (D.operator x) x ≤ rate * ‖x‖ ^ 2)
     (i : D.ExcitedSpectralIndex) :
     D.eigenvalue i.1 ≤ rate := by
-  have hne : D.canonicalGroundIndex.1 ≠ i.1 := by
-    intro h
-    have hground : D.eigenvalue i.1 = 1 := by
-      simpa [h] using D.canonicalGroundIndex.2
-    exact (ne_of_lt i.2.2) hground
-  have horth :
-      inner ℝ D.canonicalGroundVector (D.eigenbasis i.1) = 0 := by
-    simp [canonicalGroundVector, hne]
-  have hbound := hRayleigh (D.eigenbasis i.1) horth
-  rw [D.operator_apply_eigenbasis i.1] at hbound
-  simpa using hbound
+  have hcenter : D.groundCoordinates (D.eigenbasis i.1) = 0 := by
+    ext j
+    change D.eigenbasis.repr (D.eigenbasis i.1) j.1 = 0
+    have hne : j.1 ≠ i.1 := by
+      intro hji
+      have hground : D.eigenvalue i.1 = 1 := by
+        simpa [hji] using j.2
+      exact (ne_of_lt i.2.2) hground
+    simp [hne]
+  have hbound := hRayleigh (D.eigenbasis i.1) hcenter
+  calc
+    D.eigenvalue i.1 =
+        inner ℝ (D.operator (D.eigenbasis i.1)) (D.eigenbasis i.1) := by
+      rw [D.operator_apply_eigenbasis i.1, inner_smul_left,
+        real_inner_self_eq_norm_sq]
+      simp
+    _ ≤ rate * ‖D.eigenbasis i.1‖ ^ 2 := hbound
+    _ = rate := by simp
 
 end FiniteDimensionalSymmetricPositiveContractionData
 
