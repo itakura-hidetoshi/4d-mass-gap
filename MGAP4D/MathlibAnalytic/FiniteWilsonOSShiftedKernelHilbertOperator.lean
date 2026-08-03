@@ -178,6 +178,17 @@ quotient image. -/
   exact ContinuousLinearMap.completion_apply_coe
     C.separatedShiftContinuousLinearMap x
 
+/-- Inner products of completed separated classes reduce to the separated
+inner product. -/
+@[simp] theorem inner_completedSeparatedClass
+    (P : FiniteWilsonOSReflectionPositivityCertificate L)
+    (x y : P.OneLayerSeparated) :
+    inner ℝ
+        (x : UniformSpace.Completion P.OneLayerSeparated)
+        (y : UniformSpace.Completion P.OneLayerSeparated) =
+      inner ℝ x y := by
+  exact UniformSpace.Completion.inner_coe x y
+
 /-- On represented carrier states, the completed operator is the original raw
 carrier shift. -/
 @[simp] theorem hilbertShiftContinuousLinearMap_oneLayerState
@@ -223,10 +234,18 @@ theorem inner_hilbertShiftContinuousLinearMap_left_eq_right
   refine UniformSpace.Completion.induction_on₂ x y
     (isClosed_eq (by fun_prop) (by fun_prop)) ?_
   intro u v
+  change inner ℝ
+      (C.hilbertShiftContinuousLinearMap
+        (u : UniformSpace.Completion P.OneLayerSeparated))
+      (v : UniformSpace.Completion P.OneLayerSeparated) =
+    inner ℝ
+      (u : UniformSpace.Completion P.OneLayerSeparated)
+      (C.hilbertShiftContinuousLinearMap
+        (v : UniformSpace.Completion P.OneLayerSeparated))
   rw [C.hilbertShiftContinuousLinearMap_completedClass,
-    C.hilbertShiftContinuousLinearMap_completedClass]
-  change inner ℝ (C.separatedShiftContinuousLinearMap u) v =
-    inner ℝ u (C.separatedShiftContinuousLinearMap v)
+    C.hilbertShiftContinuousLinearMap_completedClass,
+    P.inner_completedSeparatedClass,
+    P.inner_completedSeparatedClass]
   exact C.inner_separatedShiftContinuousLinearMap_left_eq_right u v
 
 /-- Positivity extends to the complete Hilbert carrier. -/
@@ -237,8 +256,12 @@ theorem hilbertShiftContinuousLinearMap_quadratic_nonneg
   refine UniformSpace.Completion.induction_on x
     (isClosed_le continuous_const (by fun_prop)) ?_
   intro u
-  rw [C.hilbertShiftContinuousLinearMap_completedClass]
-  change 0 ≤ inner ℝ (C.separatedShiftContinuousLinearMap u) u
+  change 0 ≤ inner ℝ
+    (C.hilbertShiftContinuousLinearMap
+      (u : UniformSpace.Completion P.OneLayerSeparated))
+    (u : UniformSpace.Completion P.OneLayerSeparated)
+  rw [C.hilbertShiftContinuousLinearMap_completedClass,
+    P.inner_completedSeparatedClass]
   exact C.separatedShiftContinuousLinearMap_quadratic_nonneg u
 
 /-- The completed operator realizes the independent shifted kernel exactly on
