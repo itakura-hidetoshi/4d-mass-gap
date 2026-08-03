@@ -36,7 +36,8 @@ theorem positiveSpectralEnergy_nonneg
 noncomputable def positiveSpectralHamiltonian :
     D.PositiveSpectralSpace →L[ℝ] D.PositiveSpectralSpace :=
   LinearMap.toContinuousLinearMap
-    { toFun := fun x i => D.positiveSpectralEnergy i * x i
+    { toFun := fun x =>
+        WithLp.toLp 2 (fun i => D.positiveSpectralEnergy i * x i)
       map_add' := by
         intro x y
         ext i
@@ -50,7 +51,7 @@ noncomputable def positiveSpectralHamiltonian :
     (x : D.PositiveSpectralSpace)
     (i : D.PositiveSpectralIndex) :
     D.positiveSpectralHamiltonian x i =
-      D.positiveSpectralEnergy i * x i :=
+      D.positiveSpectralEnergy i * x i := by
   rfl
 
 /-- On every positive spectral mode, exponentiating minus the support energy
