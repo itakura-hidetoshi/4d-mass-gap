@@ -83,9 +83,14 @@ theorem nonempty_groundSpectralIndex_of_norm_eq_one
   have htop :
       (⨆ x : {x : E // x ≠ 0}, D.operator.rayleighQuotient x.1) = 1 := by
     rw [D.iSup_rayleighQuotient_nonzero_eq_norm, hnorm]
+  have htopUnfolded :
+      (⨆ x : {x : E // x ≠ 0},
+        RCLike.re (inner ℝ (D.operator x.1) x.1) / ‖(x.1 : E)‖ ^ 2 : ℝ) = 1 := by
+    simpa only [ContinuousLinearMap.rayleighQuotient,
+      ContinuousLinearMap.reApplyInnerSelf_apply] using htop
   have heigen : Module.End.HasEigenvalue D.operator.toLinearMap (1 : ℝ) := by
     have h := D.symmetric.hasEigenvalue_iSup_of_finiteDimensional
-    rw [htop] at h
+    rw [htopUnfolded] at h
     exact h
   obtain ⟨i, hi⟩ :=
     D.symmetric.exists_eigenvalues_eq (by rfl) heigen
