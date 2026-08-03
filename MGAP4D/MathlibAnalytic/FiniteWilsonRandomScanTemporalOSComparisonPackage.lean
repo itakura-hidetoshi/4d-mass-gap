@@ -20,8 +20,7 @@ theorem FiniteLatticeWilsonSystem.randomScanTwoSidedIntegerPathOSHilbertShiftSem
   | zero =>
       simp
   | succ n ih =>
-      rw [Nat.succ_eq_add_one,
-        L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroup_succ,
+      rw [L.randomScanTwoSidedIntegerPathOSHilbertShiftSemigroup_succ,
         ih, pow_succ']
       rfl
 
@@ -193,7 +192,7 @@ theorem
       ‖L.randomScanTwoSidedIntegerPathOSHilbertShift x‖ ≤ ‖x‖) := by
   exact ⟨
     L.inner_randomScanTwoSidedIntegerPathOSHilbertShift_left_eq_right,
-    L.inner_randomScanTwoSidedIntegerPathOSHilbertShift_nonneg,
+    L.inner_randomScanTwoSidedIntegerPathOSHilbertShift_self_nonneg,
     L.norm_randomScanTwoSidedIntegerPathOSHilbertShift_le⟩
 
 end
