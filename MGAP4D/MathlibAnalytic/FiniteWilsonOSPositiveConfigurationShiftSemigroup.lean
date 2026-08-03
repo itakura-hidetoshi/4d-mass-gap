@@ -25,13 +25,16 @@ def shiftIterate
 @[simp] theorem shiftIterate_zero
     (C : P.PositiveConfigurationShiftCertificate) :
     C.shiftIterate 0 = Equiv.refl _ := by
-  simp [shiftIterate]
+  ext x
+  rfl
 
 @[simp] theorem shiftIterate_succ_apply
     (C : P.PositiveConfigurationShiftCertificate)
     (n : ℕ) (x : P.reflectionData.PositiveConfiguration) :
     C.shiftIterate (n + 1) x = C.shift (C.shiftIterate n x) := by
-  simp [shiftIterate, pow_succ]
+  change (C.shift ^ (n + 1)) x = C.shift ((C.shift ^ n) x)
+  rw [pow_succ']
+  rfl
 
 /-- The actual natural-time Wilson kernel obtained by iterating the positive
 configuration translation. -/
@@ -74,7 +77,7 @@ theorem carrierShiftIterate_observable
             F.observable
       rw [ih]
       funext x
-      simp [positiveConfigurationObservableShift, shiftIterate, pow_succ]
+      simp [positiveConfigurationObservableShift, shiftIterate, pow_succ']
 
 /-- The completed natural-time semigroup has exact matrix elements given by the
 iterated concrete Wilson kernel. -/
@@ -89,14 +92,24 @@ theorem hilbertShiftSemigroup_matrixElement_eq_iteratedShiftedKernelForm
       finiteWilsonOSShiftedKernelForm P
         (C.iteratedShiftedKernel n) F G := by
   rw [C.toOneLayerShiftedKernelCertificate.hilbertShiftSemigroup_matrixElement]
-  rw [C.carrierShiftIterate_observable]
-  change
-    P.reflectionData.wilsonOneLayerTransferForm
-        (positiveConfigurationObservableShift (C.shiftIterate n) F) G =
-      finiteWilsonOSShiftedKernelForm P (C.iteratedShiftedKernel n) F G
-  symm
-  exact positiveConfigurationShiftedKernelForm_eq_inner
-    P (C.shiftIterate n) F G
+  calc
+    inner ℝ
+        (C.toOneLayerShiftedKernelCertificate.carrierShiftIterate n
+          (⟨F⟩ : P.OneLayerCarrier))
+        (⟨G⟩ : P.OneLayerCarrier) =
+      P.reflectionData.wilsonOneLayerTransferForm
+        (C.toOneLayerShiftedKernelCertificate.carrierShiftIterate n
+          (⟨F⟩ : P.OneLayerCarrier)).observable G :=
+        P.inner_eq_wilsonOneLayerTransferForm _ _
+    _ = P.reflectionData.wilsonOneLayerTransferForm
+        (positiveConfigurationObservableShift (C.shiftIterate n) F) G := by
+          rw [C.carrierShiftIterate_observable]
+    _ = finiteWilsonOSShiftedKernelForm P
+        (C.iteratedShiftedKernel n) F G := by
+      have h := positiveConfigurationShiftedKernelForm_eq_inner
+        P (C.shiftIterate n) F G
+      rw [P.inner_eq_wilsonOneLayerTransferForm] at h
+      exact h.symm
 
 /-- Every iterated concrete kernel is the Wilson Boltzmann weight of the
 assembled configuration whose first half has been translated `n` times. -/
@@ -171,9 +184,18 @@ theorem hilbertShiftContinuousLinearMap_ne_identity_of_wilsonAction_ne
   have hPoint := hForms
     (positiveConfigurationPointObservable x)
     (positiveConfigurationPointObservable y)
+  have hPoint' :
+      finiteWilsonOSShiftedKernelForm P
+          (positiveConfigurationShiftedKernel P C.shift)
+          (positiveConfigurationPointObservable x)
+          (positiveConfigurationPointObservable y) =
+        P.reflectionData.wilsonOneLayerTransferForm
+          (positiveConfigurationPointObservable x)
+          (positiveConfigurationPointObservable y) := by
+    simpa only [toOneLayerShiftedKernelCertificate_shiftedKernel] using hPoint
   rw [positiveConfigurationShiftedKernelForm_pointObservable,
-    wilsonOneLayerTransferForm_pointObservable] at hPoint
-  exact hPoint
+    wilsonOneLayerTransferForm_pointObservable] at hPoint'
+  exact hPoint'
 
 /-- Public natural-time configuration-shift semigroup receipt. -/
 theorem finiteWilsonOSPositiveConfigurationShiftSemigroupPackage
