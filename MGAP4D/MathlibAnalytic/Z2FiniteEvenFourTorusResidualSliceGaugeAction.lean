@@ -93,7 +93,7 @@ theorem commGroupPlaquetteGaugeCancellation
         (g01 * c * g11⁻¹)⁻¹ *
         (g00 * d * g01⁻¹)⁻¹ =
       a * b * c⁻¹ * d⁻¹ := by
-  simp [mul_inv_rev, mul_assoc, mul_comm, mul_left_comm]
+  group
 
 /-- Spatial plaquette holonomy is invariant under residual slice gauge
 transformations. -/
@@ -114,7 +114,7 @@ theorem finiteEvenFourTorusZ2SpatialPlaquetteHolonomy_smul
     (g (finiteEvenFourTorusSpatialVertexStep H v μ))
     (g (finiteEvenFourTorusSpatialVertexStep H v ν))
     (g (finiteEvenFourTorusSpatialVertexStep H
-      (finiteEvenFourTorusSpatialVertexStep H v μ) ν))
+      (finiteEvenFourTorusSpatialVertexStep H v ν) μ))
     (A (v, μ))
     (A (finiteEvenFourTorusSpatialVertexStep H v μ, ν))
     (A (finiteEvenFourTorusSpatialVertexStep H v ν, μ))
