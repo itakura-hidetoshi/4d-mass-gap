@@ -152,7 +152,7 @@ theorem realHilbertIsometricDiscreteStepComparison_pow_apply_of_defect_eq_zero
   have hOne : ∀ y : F, T (A y) = A (S y) :=
     (realHilbertIsometricDiscreteStepComparisonDefect_eq_zero_iff
       A T S).mp hD
-  induction n with
+  induction n generalizing x with
   | zero =>
       simp
   | succ n ih =>
