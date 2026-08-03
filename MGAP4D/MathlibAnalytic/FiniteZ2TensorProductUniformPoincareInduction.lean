@@ -96,16 +96,10 @@ theorem finiteFunctionKernelQuadratic_succ
                 finiteZ2NormalizedLocalKernel q a b *
                 (if b = false then finiteZ2HeadFalse f B
                   else finiteZ2HeadTrue f B)) := by
-            apply Finset.sum_congr rfl
-            intro a _ha
-            rw [Finset.mul_sum]
-            apply Finset.sum_congr rfl
-            intro b _hb
-            cases a <;> cases b <;>
-              simp [finSuccFunctionEquiv,
-                finiteZ2HeadFalse, finiteZ2HeadTrue,
-                finiteZ2NormalizedProductKernel_succ_apply] <;>
-              ring
+            norm_num [finSuccFunctionEquiv,
+              finiteZ2HeadFalse, finiteZ2HeadTrue,
+              finiteZ2NormalizedProductKernel_succ_apply]
+            ring
         _ = finiteZ2NormalizedProductKernel q n A B *
             (2 * (((finiteZ2HeadFalse f A + finiteZ2HeadTrue f A) / 2) *
                 ((finiteZ2HeadFalse f B + finiteZ2HeadTrue f B) / 2) +
@@ -115,7 +109,7 @@ theorem finiteFunctionKernelQuadratic_succ
         _ = 2 * (finiteZ2HeadAverage f A * finiteZ2HeadAverage f B +
               q * finiteZ2HeadDifference f A * finiteZ2HeadDifference f B) *
             finiteZ2NormalizedProductKernel q n A B := by
-            simp [finiteZ2HeadAverage, finiteZ2HeadDifference]
+            unfold finiteZ2HeadAverage finiteZ2HeadDifference
             ring
     _ = 2 * (finiteFunctionKernelQuadratic
           (finiteZ2NormalizedProductKernel q n)
@@ -158,6 +152,9 @@ theorem finiteZ2NormalizedProductKernel_quadratic_mem_normInterval
   | zero =>
       simp [finiteFunctionKernelQuadratic, finiteFunctionNormSq,
         finiteZ2NormalizedProductKernel, finiteTensorKernelMatrix]
+      constructor
+      · exact mul_self_nonneg _
+      · ring
   | succ n ih =>
       rw [finiteFunctionKernelQuadratic_succ,
         finiteFunctionNormSq_succ]
