@@ -87,8 +87,9 @@ theorem extendedSpectralEnergy_excited
       ExtendedSpectralEnergy.finite
         (D.positiveSpectralEnergy i.toPositive) := by
   have hnz : D.eigenvalue i.1 ≠ 0 := ne_of_gt i.2.1
-  simp [extendedSpectralEnergy, positiveSpectralEnergy,
-    positiveEigenvalue, hnz]
+  change D.extendedSpectralEnergy i.1 =
+    ExtendedSpectralEnergy.finite (-Real.log (D.eigenvalue i.1))
+  simp [extendedSpectralEnergy, hnz]
 
 /-- The finite extended energy of every strictly excited mode is strictly
 positive. -/
