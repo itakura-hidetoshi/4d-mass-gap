@@ -288,9 +288,12 @@ theorem finiteKernelNormalizedOperator_isSymmetric_of_kernel_symmetric
     (finiteKernelNormalizedOperator kernel).toLinearMap.IsSymmetric := by
   intro f h
   unfold finiteKernelNormalizedOperator
-  rw [ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.smul_apply,
-    real_inner_smul_left, real_inner_smul_right]
+  change
+    inner ℝ
+        (‖finiteKernelOperator kernel‖⁻¹ • finiteKernelOperator kernel f) h =
+      inner ℝ f
+        (‖finiteKernelOperator kernel‖⁻¹ • finiteKernelOperator kernel h)
+  rw [real_inner_smul_left, real_inner_smul_right]
   congr 1
   exact finiteKernelOperator_isSymmetric kernel hsymm f h
 
