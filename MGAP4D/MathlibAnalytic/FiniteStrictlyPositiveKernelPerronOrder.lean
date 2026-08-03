@@ -103,7 +103,8 @@ theorem finiteKernelOperator_pointwisePositive
     exists_pos_coordinate_of_pointwiseNonnegative f hf hne
   intro y
   rw [finiteKernelOperator_apply]
-  refine (Finset.sum_pos_iff_of_nonneg ?_).2 ?_
+  change 0 < ∑ x in (Finset.univ : Finset α), kernel x y * f x
+  apply Finset.sum_pos'
   · intro x _hx
     exact mul_nonneg (le_of_lt (hkernel x y)) (hf x)
   · exact ⟨x₀, Finset.mem_univ x₀,
