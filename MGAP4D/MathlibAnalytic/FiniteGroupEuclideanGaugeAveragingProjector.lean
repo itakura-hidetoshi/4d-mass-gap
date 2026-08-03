@@ -179,7 +179,8 @@ theorem finiteGroupAveragingProjector_mem_invariant
   congr 1
   refine Fintype.sum_equiv (finiteGroupActionRightMulEquiv G a) _ _ ?_
   intro g
-  simp [finiteGroupActionRightMulEquiv, mul_smul]
+  change f (g • (a • x)) = f ((g * a) • x)
+  rw [mul_smul]
 
 /-- Gauge averaging fixes every invariant vector. -/
 theorem finiteGroupAveragingProjector_eq_self_of_mem
@@ -223,6 +224,7 @@ theorem finiteMulAction_sum_against_invariant
   classical
   refine Fintype.sum_equiv (finiteMulActionEquiv G α g) _ _ ?_
   intro x
+  change h x * f (g • x) = h (g • x) * f (g • x)
   rw [hh g x]
 
 /-- Gauge averaging preserves pairing with every invariant vector. -/
