@@ -281,11 +281,7 @@ theorem finiteKernelNormalizedSemigroup_add
     finiteKernelNormalizedSemigroup kernel (m + n) =
       (finiteKernelNormalizedSemigroup kernel m).comp
         (finiteKernelNormalizedSemigroup kernel n) := by
-  ext f
-  change
-    ((finiteKernelNormalizedOperator kernel) ^ (m + n)) f =
-      ((finiteKernelNormalizedOperator kernel) ^ m)
-        (((finiteKernelNormalizedOperator kernel) ^ n) f)
+  unfold finiteKernelNormalizedSemigroup
   rw [pow_add]
   rfl
 
