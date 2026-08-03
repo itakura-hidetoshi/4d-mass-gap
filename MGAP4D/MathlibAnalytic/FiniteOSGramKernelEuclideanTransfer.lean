@@ -88,19 +88,22 @@ theorem finiteKernelOperator_isSymmetric
     (hsymm : ∀ x y, kernel x y = kernel y x) :
     (finiteKernelOperator kernel).toLinearMap.IsSymmetric := by
   intro f g
-  rw [finiteKernelOperator_matrixElement,
-    finiteKernelOperator_matrixElement]
   calc
-    (∑ x : α, ∑ y : α, f x * kernel x y * g y) =
-        ∑ y : α, ∑ x : α, f x * kernel x y * g y := by
+    inner ℝ (finiteKernelOperator kernel f) g =
+        ∑ x : α, ∑ y : α, f x * kernel x y * g y :=
+      finiteKernelOperator_matrixElement kernel f g
+    _ = ∑ x : α, ∑ y : α, g x * kernel x y * f y := by
       rw [Finset.sum_comm]
-    _ = ∑ y : α, ∑ x : α, g y * kernel y x * f x := by
-      apply Finset.sum_congr rfl
-      intro y _hy
       apply Finset.sum_congr rfl
       intro x _hx
+      apply Finset.sum_congr rfl
+      intro y _hy
       rw [hsymm]
       ring
+    _ = inner ℝ (finiteKernelOperator kernel g) f :=
+      (finiteKernelOperator_matrixElement kernel g f).symm
+    _ = inner ℝ f (finiteKernelOperator kernel g) :=
+      real_inner_comm _ _
 
 /-- A finite nonnegative Gram kernel gives a positive Euclidean transfer
 operator. -/
@@ -215,21 +218,27 @@ theorem finiteGramKernelNormalizedOperator_isSymmetric
     (K : FiniteOSGramKernelOn α) :
     (finiteKernelNormalizedOperator K.kernel).toLinearMap.IsSymmetric := by
   intro f g
-  rw [finiteKernelNormalizedOperator_matrixElement,
-    finiteKernelNormalizedOperator_matrixElement]
-  congr 1
-  exact K.toCertificate |> finite_os_reflection_kernel_symmetric |> fun h => by
-    calc
-      (∑ x : α, ∑ y : α, f x * K.kernel x y * g y) =
-          ∑ y : α, ∑ x : α, f x * K.kernel x y * g y := by
-        rw [Finset.sum_comm]
-      _ = ∑ y : α, ∑ x : α, g y * K.kernel y x * f x := by
-        apply Finset.sum_congr rfl
-        intro y _hy
-        apply Finset.sum_congr rfl
-        intro x _hx
-        rw [h x y]
-        ring
+  have hsymm : ∀ x y, K.kernel x y = K.kernel y x := fun x y =>
+    finite_os_reflection_kernel_symmetric K.toCertificate x y
+  calc
+    inner ℝ (finiteKernelNormalizedOperator K.kernel f) g =
+        ‖finiteKernelOperator K.kernel‖⁻¹ *
+          (∑ x : α, ∑ y : α, f x * K.kernel x y * g y) :=
+      finiteKernelNormalizedOperator_matrixElement K.kernel f g
+    _ = ‖finiteKernelOperator K.kernel‖⁻¹ *
+          (∑ x : α, ∑ y : α, g x * K.kernel x y * f y) := by
+      congr 1
+      rw [Finset.sum_comm]
+      apply Finset.sum_congr rfl
+      intro x _hx
+      apply Finset.sum_congr rfl
+      intro y _hy
+      rw [hsymm]
+      ring
+    _ = inner ℝ (finiteKernelNormalizedOperator K.kernel g) f :=
+      (finiteKernelNormalizedOperator_matrixElement K.kernel g f).symm
+    _ = inner ℝ f (finiteKernelNormalizedOperator K.kernel g) :=
+      real_inner_comm _ _
 
 /-- Positivity survives operator-norm normalization. -/
 theorem finiteGramKernelNormalizedOperator_quadratic_nonneg
@@ -272,7 +281,13 @@ theorem finiteKernelNormalizedSemigroup_add
     finiteKernelNormalizedSemigroup kernel (m + n) =
       (finiteKernelNormalizedSemigroup kernel m).comp
         (finiteKernelNormalizedSemigroup kernel n) := by
-  simp [finiteKernelNormalizedSemigroup, pow_add]
+  ext f
+  change
+    ((finiteKernelNormalizedOperator kernel) ^ (m + n)) f =
+      ((finiteKernelNormalizedOperator kernel) ^ m)
+        (((finiteKernelNormalizedOperator kernel) ^ n) f)
+  rw [pow_add]
+  rfl
 
 /-- Every natural-time normalized transfer is contractive. -/
 theorem finiteKernelNormalizedSemigroup_norm_apply_le
@@ -282,20 +297,19 @@ theorem finiteKernelNormalizedSemigroup_norm_apply_le
     (n : ℕ)
     (f : FiniteBoundaryHilbert α) :
     ‖finiteKernelNormalizedSemigroup kernel n f‖ ≤ ‖f‖ := by
-  have hop : ‖finiteKernelNormalizedOperator kernel‖ = 1 :=
-    finiteKernelNormalizedOperator_norm_eq_one kernel hne
-  calc
-    ‖finiteKernelNormalizedSemigroup kernel n f‖ ≤
-        ‖finiteKernelNormalizedSemigroup kernel n‖ * ‖f‖ :=
-      (finiteKernelNormalizedSemigroup kernel n).le_opNorm f
-    _ ≤ ‖f‖ := by
-      have hpow : ‖finiteKernelNormalizedSemigroup kernel n‖ ≤ 1 := by
-        unfold finiteKernelNormalizedSemigroup
-        calc
-          ‖finiteKernelNormalizedOperator kernel ^ n‖ ≤
-              ‖finiteKernelNormalizedOperator kernel‖ ^ n := norm_pow_le _ _
-          _ = 1 := by rw [hop, one_pow]
-      simpa using mul_le_mul_of_nonneg_right hpow (norm_nonneg f)
+  induction n with
+  | zero =>
+      simp [finiteKernelNormalizedSemigroup]
+  | succ n ih =>
+      change
+        ‖((finiteKernelNormalizedOperator kernel) ^ (n + 1)) f‖ ≤ ‖f‖
+      rw [pow_succ']
+      change
+        ‖finiteKernelNormalizedOperator kernel
+          (((finiteKernelNormalizedOperator kernel) ^ n) f)‖ ≤ ‖f‖
+      exact
+        (finiteKernelNormalizedOperator_norm_apply_le kernel hne
+          (((finiteKernelNormalizedOperator kernel) ^ n) f)).trans ih
 
 /-- Public finite Gram-kernel Euclidean transfer package. -/
 theorem finiteOSGramKernelEuclideanTransferPackage
