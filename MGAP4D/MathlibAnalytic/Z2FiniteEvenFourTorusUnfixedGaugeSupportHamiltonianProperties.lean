@@ -82,13 +82,12 @@ theorem finiteEvenFourTorusZ2UnfixedGauge_supportSemigroup_hamiltonian_weight
       H β energyIdentity energyNontrivial hβ hEnergy)
     (i : FiniteEvenFourTorusZ2UnfixedGaugePositiveSpectralIndex
       H β energyIdentity energyNontrivial hβ hEnergy) :
-    finiteEvenFourTorusZ2UnfixedGaugeInvariantEigenbasis
-        H β energyIdentity energyNontrivial hβ hEnergy
-        |>.repr
-          (((finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
-            H β energyIdentity energyNontrivial hβ hEnergy) ^ n)
-            (finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralSynthesis
-              H β energyIdentity energyNontrivial hβ hEnergy x)) i.1 =
+    (finiteEvenFourTorusZ2UnfixedGaugeInvariantEigenbasis
+      H β energyIdentity energyNontrivial hβ hEnergy).repr
+        (((finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer
+          H β energyIdentity energyNontrivial hβ hEnergy) ^ n)
+          (finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralSynthesis
+            H β energyIdentity energyNontrivial hβ hEnergy x)) i.1 =
       (Real.exp
         (-finiteEvenFourTorusZ2UnfixedGaugePositiveSpectralEnergy
           H β energyIdentity energyNontrivial hβ hEnergy i)) ^ n * x i :=
