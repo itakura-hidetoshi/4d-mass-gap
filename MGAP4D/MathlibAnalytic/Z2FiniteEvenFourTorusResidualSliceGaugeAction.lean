@@ -84,6 +84,17 @@ theorem finiteEvenFourTorusSpatialVertexStep_commute
         finiteFourTorusUnitStep (2 * H + 1) μ.1
   abel
 
+/-- Algebraic cancellation behind abelian plaquette gauge invariance. -/
+theorem commGroupPlaquetteGaugeCancellation
+    {G : Type} [CommGroup G]
+    (g00 g10 g01 g11 a b c d : G) :
+    (g00 * a * g10⁻¹) *
+        (g10 * b * g11⁻¹) *
+        (g01 * c * g11⁻¹)⁻¹ *
+        (g00 * d * g01⁻¹)⁻¹ =
+      a * b * c⁻¹ * d⁻¹ := by
+  simp [mul_inv_rev, mul_assoc, mul_comm, mul_left_comm]
+
 /-- Spatial plaquette holonomy is invariant under residual slice gauge
 transformations. -/
 theorem finiteEvenFourTorusZ2SpatialPlaquetteHolonomy_smul
@@ -98,7 +109,16 @@ theorem finiteEvenFourTorusZ2SpatialPlaquetteHolonomy_smul
   dsimp only
   simp only [finiteEvenFourTorusZ2ResidualSlice_smul_apply]
   rw [finiteEvenFourTorusSpatialVertexStep_commute H v μ ν]
-  simp [mul_assoc, mul_comm, mul_left_comm]
+  exact commGroupPlaquetteGaugeCancellation
+    (g v)
+    (g (finiteEvenFourTorusSpatialVertexStep H v μ))
+    (g (finiteEvenFourTorusSpatialVertexStep H v ν))
+    (g (finiteEvenFourTorusSpatialVertexStep H
+      (finiteEvenFourTorusSpatialVertexStep H v μ) ν))
+    (A (v, μ))
+    (A (finiteEvenFourTorusSpatialVertexStep H v μ, ν))
+    (A (finiteEvenFourTorusSpatialVertexStep H v ν, μ))
+    (A (v, ν))
 
 /-- The complete spatial Wilson action is residual-gauge invariant. -/
 theorem finiteEvenFourTorusZ2SpatialWilsonAction_smul
