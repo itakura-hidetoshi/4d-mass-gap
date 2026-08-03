@@ -117,7 +117,7 @@ theorem finiteFunctionKernelQuadratic_succ
         q * finiteFunctionKernelQuadratic
           (finiteZ2NormalizedProductKernel q n)
           (finiteZ2HeadDifference f)) := by
-      simp only [finiteFunctionKernelQuadratic]
+      unfold finiteFunctionKernelQuadratic
       simp_rw [mul_add, Finset.sum_add_distrib]
       rw [mul_add, Finset.mul_sum, Finset.mul_sum]
       congr 1 <;>
@@ -154,7 +154,7 @@ theorem finiteZ2NormalizedProductKernel_quadratic_mem_normInterval
         finiteZ2NormalizedProductKernel, finiteTensorKernelMatrix]
       constructor
       · exact mul_self_nonneg _
-      · ring
+      · exact le_rfl
   | succ n ih =>
       rw [finiteFunctionKernelQuadratic_succ,
         finiteFunctionNormSq_succ]
