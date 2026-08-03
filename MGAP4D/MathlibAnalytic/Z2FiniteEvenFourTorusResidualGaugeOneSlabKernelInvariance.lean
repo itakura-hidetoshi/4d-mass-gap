@@ -17,6 +17,12 @@ theorem finiteEvenFourTorusZ2TemporalRelativeLink_smul
     ((g • A) e)⁻¹ * (g • B) e = (A e)⁻¹ * B e := by
   simp [finiteEvenFourTorusZ2ResidualSliceGaugeTransform,
     mul_assoc, mul_comm, mul_left_comm]
+  calc
+    g e.1 * (B e * ((g e.1)⁻¹ * (A e)⁻¹)) =
+        (g e.1 * (g e.1)⁻¹) * (B e * (A e)⁻¹) := by
+      ac_rfl
+    _ = B e * (A e)⁻¹ := by
+      simp
 
 /-- The complete temporal crossing action is simultaneously residual-gauge
 invariant. -/
