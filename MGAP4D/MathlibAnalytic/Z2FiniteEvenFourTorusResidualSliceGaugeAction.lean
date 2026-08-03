@@ -94,11 +94,14 @@ theorem commGroupPlaquetteGaugeCancellation
         (g00 * d * g01⁻¹)⁻¹ =
       a * b * c⁻¹ * d⁻¹ := by
   simp only [mul_inv_rev, inv_inv]
+  change
+    g00 * a * g10⁻¹ *
+        (g10 * b * g11⁻¹) *
+        (g11 * (c⁻¹ * g01⁻¹)) *
+        (g01 * (d⁻¹ * g00⁻¹)) =
+      a * b * c⁻¹ * d⁻¹
   calc
-    g00 * (g10 * (g01 * (g11 *
-        (a * (b * (g00⁻¹ * (g10⁻¹ *
-          (g01⁻¹ * (g11⁻¹ * (c⁻¹ * d⁻¹)))))))))) =
-      (g00 * g00⁻¹) *
+    _ = (g00 * g00⁻¹) *
         (g10 * g10⁻¹) *
         (g01 * g01⁻¹) *
         (g11 * g11⁻¹) *
