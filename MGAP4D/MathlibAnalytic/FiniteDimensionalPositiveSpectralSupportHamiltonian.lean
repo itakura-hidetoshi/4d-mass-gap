@@ -104,8 +104,9 @@ theorem positiveSpectralHamiltonian_isSymmetric :
   rw [PiLp.inner_apply, PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro i _hi
-  rw [D.positiveSpectralHamiltonian_apply,
-    D.positiveSpectralHamiltonian_apply]
+  change
+    inner ℝ (D.positiveSpectralEnergy i * x i) (y i) =
+      inner ℝ (x i) (D.positiveSpectralEnergy i * y i)
   calc
     inner ℝ (D.positiveSpectralEnergy i * x i) (y i) =
         D.positiveSpectralEnergy i * inner ℝ (x i) (y i) := by
@@ -123,8 +124,9 @@ theorem positiveSpectralTransfer_isSymmetric :
   rw [PiLp.inner_apply, PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro i _hi
-  rw [D.positiveSpectralTransfer_apply,
-    D.positiveSpectralTransfer_apply]
+  change
+    inner ℝ (D.positiveEigenvalue i * x i) (y i) =
+      inner ℝ (x i) (D.positiveEigenvalue i * y i)
   calc
     inner ℝ (D.positiveEigenvalue i * x i) (y i) =
         D.positiveEigenvalue i * inner ℝ (x i) (y i) := by
