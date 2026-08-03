@@ -158,10 +158,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel_pos
   apply mul_pos (inv_pos.mpr hcardReal)
   apply Finset.sum_pos
   · intro U _hU
-    exact (Real.exp_pos _).le
-  · refine ⟨(1 : FiniteEvenFourTorusZ2TemporalLinkField H),
-      Finset.mem_univ _, ?_⟩
     exact Real.exp_pos _
+  · exact ⟨1, Finset.mem_univ _⟩
 
 /-- Exact proposition collected by the finite temporal-link summation kernel
 package. -/
