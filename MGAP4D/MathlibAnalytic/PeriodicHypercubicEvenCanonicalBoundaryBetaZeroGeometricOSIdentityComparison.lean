@@ -109,7 +109,11 @@ theorem
     rw [hFixed f]
     rfl
   · intro hOperator f
-    have hf := ContinuousLinearMap.congr_fun hOperator f
+    have hf := congrArg
+      (fun T :
+        PeriodicHypercubicEvenBoundaryHaarL2 H N →L[ℝ]
+          PeriodicHypercubicEvenBoundaryHaarL2 H N => T f)
+      hOperator
     simpa using hf
 
 /-- A genuinely nonidentity beta-zero heat-bath step cannot be identified with
