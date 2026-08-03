@@ -83,6 +83,9 @@ noncomputable def positiveExcitedCoordinates :
   ext i
   change (if h : D.eigenvalue i.1 = 1 then x ⟨i.1, h⟩ else 0) = x i
   rw [dif_pos i.2]
+  exact congrArg
+    (fun j : D.GroundSpectralIndex => x j)
+    (Subtype.ext rfl)
 
 @[simp] theorem positiveExcitedCoordinates_excitedPositiveExtension
     (x : D.ExcitedSpectralSpace) :
@@ -93,6 +96,9 @@ noncomputable def positiveExcitedCoordinates :
         x ⟨i.1, h⟩
       else 0) = x i
   rw [dif_pos i.2]
+  exact congrArg
+    (fun j : D.ExcitedSpectralIndex => x j)
+    (Subtype.ext rfl)
 
 /-- Every positive-support vector is the exact sum of its ground and excited
 coordinate sectors. -/
