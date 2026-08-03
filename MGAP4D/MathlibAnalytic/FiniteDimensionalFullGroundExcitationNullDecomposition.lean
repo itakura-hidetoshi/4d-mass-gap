@@ -96,8 +96,9 @@ noncomputable def fullNullCoordinates :
     (x : D.GroundSpectralSpace) :
     D.fullExcitedCoordinates (D.groundSpectralExtension x) = 0 := by
   ext i
-  have hne := D.ground_not_excited i.1 i.2
-  simp [fullExcitedCoordinates, groundSpectralExtension, hne]
+  by_cases hg : D.eigenvalue i.1 = 1
+  · exact False.elim ((D.ground_not_excited i.1 hg) i.2)
+  · simp [fullExcitedCoordinates, groundSpectralExtension, hg]
 
 @[simp] theorem fullExcitedCoordinates_nullSpectralExtension
     (x : D.NullSpectralSpace) :
@@ -110,15 +111,17 @@ noncomputable def fullNullCoordinates :
     (x : D.GroundSpectralSpace) :
     D.fullNullCoordinates (D.groundSpectralExtension x) = 0 := by
   ext i
-  have hne := D.ground_not_null i.1 i.2
-  simp [fullNullCoordinates, groundSpectralExtension, hne]
+  by_cases hg : D.eigenvalue i.1 = 1
+  · exact False.elim ((D.ground_not_null i.1 hg) i.2)
+  · simp [fullNullCoordinates, groundSpectralExtension, hg]
 
 @[simp] theorem fullNullCoordinates_excitedSpectralExtension
     (x : D.ExcitedSpectralSpace) :
     D.fullNullCoordinates (D.excitedSpectralExtension x) = 0 := by
   ext i
-  have hne := D.excited_not_null i.1 i.2
-  simp [fullNullCoordinates, excitedSpectralExtension, hne]
+  by_cases he : 0 < D.eigenvalue i.1 ∧ D.eigenvalue i.1 < 1
+  · exact False.elim ((D.excited_not_null i.1 he) i.2)
+  · simp [fullNullCoordinates, excitedSpectralExtension, he]
 
 /-- Every complete canonical coordinate vector is exactly the sum of its
 three mutually disjoint spectral sectors. -/
@@ -466,7 +469,7 @@ theorem operator_eq_self_iff_eq_groundSynthesis
     rw [hx] at he
     have he0 : D.excitedCoordinates x = 0 :=
       (D.excitedSpectralTransfer_eq_self_iff
-        (D.excitedCoordinates x)).mp he
+        (D.excitedCoordinates x)).mp he.symm
     have hn := D.nullCoordinates_operator x
     rw [hx] at hn
     have hn0 : D.nullCoordinates x = 0 := by
