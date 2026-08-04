@@ -183,9 +183,13 @@ theorem one_le_finiteEvenFourTorusZ2SpatialHalfWeightOscillationRatio
       H β energyIdentity energyNontrivial := by
   rw [finiteEvenFourTorusZ2SpatialHalfWeightOscillationRatio_eq_exp]
   apply Real.one_le_exp
+  have hcount :
+      0 ≤ finiteEvenFourTorusSpatialPlaquetteCountReal H := by
+    unfold finiteEvenFourTorusSpatialPlaquetteCountReal
+    exact_mod_cast
+      (Nat.zero_le (Fintype.card (FiniteEvenFourTorusSpatialPlaquette H)))
   exact mul_nonneg
-    (mul_nonneg (by positivity)
-      (by positivity : 0 ≤ finiteEvenFourTorusSpatialPlaquetteCountReal H))
+    (mul_nonneg (div_nonneg hβ (by norm_num)) hcount)
     (sub_nonneg.mpr hEnergy)
 
 end
