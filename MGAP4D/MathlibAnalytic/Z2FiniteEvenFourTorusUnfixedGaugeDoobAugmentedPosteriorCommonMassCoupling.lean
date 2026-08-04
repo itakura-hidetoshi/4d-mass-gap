@@ -81,17 +81,20 @@ theorem one_le_z2UnfixedGaugeDoobAugmentedStateSourceRatio
     1 ≤ z2UnfixedGaugeDoobAugmentedStateSourceRatio
       β energyIdentity energyNontrivial := by
   have hExponent :
-      0 ≤ 7 * β * (energyNontrivial - energyIdentity) := by
-    positivity
+      0 ≤ 7 * β * (energyNontrivial - energyIdentity) :=
+    mul_nonneg
+      (mul_nonneg (by norm_num) hβ)
+      (sub_nonneg.mpr hEnergy)
   have hBase :
       1 ≤ z2UnfixedGaugeDoobAugmentedBoundaryRatio
         β energyIdentity energyNontrivial := by
     unfold z2UnfixedGaugeDoobAugmentedBoundaryRatio
-    exact Real.one_le_exp.mpr hExponent
+    have hMonotone := Real.exp_monotone hExponent
+    simpa using hMonotone
   unfold z2UnfixedGaugeDoobAugmentedStateSourceRatio
   nlinarith [sq_nonneg
     (z2UnfixedGaugeDoobAugmentedBoundaryRatio
-      β energyIdentity energyNontrivial - 1)]
+      β energyIdentity energyNontrivial)]
 
 /-- Upper boundaries agreeing away from one source link satisfy the same
 pointwise augmented-state likelihood-ratio bound proved for an explicit
@@ -123,21 +126,23 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_le_sourceRatio
 
 /-- The explicit common-mass coupling of the two augmented posterior state
 weights. -/
-def finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateCommonMassCoupling
+noncomputable def finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateCommonMassCoupling
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β)
     (hEnergy : energyIdentity ≤ energyNontrivial)
     (A B : FiniteEvenFourTorusZ2SliceConfiguration H)
-    (s t : Z2UnfixedGaugeDoobAugmentedState H) : ℝ :=
-  finiteProbabilityLikelihoodRatioCoupling
-    (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
-      H β energyIdentity energyNontrivial hβ hEnergy A)
-    (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
-      H β energyIdentity energyNontrivial hβ hEnergy B)
-    (z2UnfixedGaugeDoobAugmentedStateSourceRatio
-      β energyIdentity energyNontrivial)
-    s t
+    (s t : Z2UnfixedGaugeDoobAugmentedState H) : ℝ := by
+  classical
+  exact
+    finiteProbabilityLikelihoodRatioCoupling
+      (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
+        H β energyIdentity energyNontrivial hβ hEnergy A)
+      (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
+        H β energyIdentity energyNontrivial hβ hEnergy B)
+      (z2UnfixedGaugeDoobAugmentedStateSourceRatio
+        β energyIdentity energyNontrivial)
+      s t
 
 /-- Expanded form of the common-mass coupling on temporal-link fields and
 lower boundary slices. -/
@@ -171,17 +176,26 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_nonneg
     (Y : FiniteEvenFourTorusZ2SliceConfiguration H) :
     0 ≤ finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling
       H β energyIdentity energyNontrivial hβ hEnergy source A B U X V Y := by
-  apply finiteProbabilityLikelihoodRatioCoupling_nonneg
-  · intro s
-    exact
-      finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_nonneg
-        H β energyIdentity energyNontrivial hβ hEnergy A s
-  · exact z2UnfixedGaugeDoobAugmentedStateSourceRatio_pos
-      β energyIdentity energyNontrivial
-  · intro s
-    exact
-      finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_le_sourceRatio_mul_of_agreeOff
-        H β energyIdentity energyNontrivial hβ hEnergy source A B hAgree s
+  classical
+  unfold finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling
+  unfold finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateCommonMassCoupling
+  exact
+    finiteProbabilityLikelihoodRatioCoupling_nonneg
+      (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
+        H β energyIdentity energyNontrivial hβ hEnergy A)
+      (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
+        H β energyIdentity energyNontrivial hβ hEnergy B)
+      (z2UnfixedGaugeDoobAugmentedStateSourceRatio
+        β energyIdentity energyNontrivial)
+      (fun s =>
+        finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_nonneg
+          H β energyIdentity energyNontrivial hβ hEnergy A s)
+      (z2UnfixedGaugeDoobAugmentedStateSourceRatio_pos
+        β energyIdentity energyNontrivial)
+      (fun s =>
+        finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_le_sourceRatio_mul_of_agreeOff
+          H β energyIdentity energyNontrivial hβ hEnergy source A B hAgree s)
+      (U, X) (V, Y)
 
 /-- The first augmented posterior is the left marginal of the common-mass
 coupling. -/
@@ -200,8 +214,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_leftMar
           H β energyIdentity energyNontrivial hβ hEnergy source A B U X V Y) =
       finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior
         H β energyIdentity energyNontrivial hβ hEnergy U X A := by
-  rw [← Fintype.sum_prod_type]
-  exact
+  classical
+  have h :=
     finiteProbabilityLikelihoodRatioCoupling_leftMarginal
       (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
         H β energyIdentity energyNontrivial hβ hEnergy A)
@@ -214,6 +228,10 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_leftMar
       (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_sum_eq_one
         H β energyIdentity energyNontrivial hβ hEnergy B)
       (U, X)
+  simpa [Fintype.sum_prod_type,
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling,
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateCommonMassCoupling,
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight] using h
 
 /-- The second augmented posterior is the right marginal of the common-mass
 coupling. -/
@@ -232,8 +250,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_rightMa
           H β energyIdentity energyNontrivial hβ hEnergy source A B U X V Y) =
       finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior
         H β energyIdentity energyNontrivial hβ hEnergy V Y B := by
-  rw [← Fintype.sum_prod_type]
-  exact
+  classical
+  have h :=
     finiteProbabilityLikelihoodRatioCoupling_rightMarginal
       (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
         H β energyIdentity energyNontrivial hβ hEnergy A)
@@ -244,6 +262,10 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_rightMa
       (finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight_sum_eq_one
         H β energyIdentity energyNontrivial hβ hEnergy A)
       (V, Y)
+  simpa [Fintype.sum_prod_type,
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling,
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateCommonMassCoupling,
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight] using h
 
 /-- Every lower-slice coordinate mismatch under the common-mass coupling is
 bounded by the same global residual mass `1 - R_aug⁻²`. -/
@@ -265,6 +287,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_mismatc
               finiteProductMismatchIndicator X Y target) ≤
       1 - (z2UnfixedGaugeDoobAugmentedStateSourceRatio
         β energyIdentity energyNontrivial)⁻¹ := by
+  classical
   let μ := finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
     H β energyIdentity energyNontrivial hβ hEnergy A
   let ν := finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateWeight
@@ -290,15 +313,13 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_mismatc
       (fun s t => finiteProductMismatchIndicator_nonneg s.2 t.2 target)
       (by
         intro s t
-        unfold finiteProductMismatchIndicator
-        split <;> norm_num)
+        simp [finiteProductMismatchIndicator])
       (by
         intro s
         simp [finiteProductMismatchIndicator])
-  simpa [μ, ν, R,
+  simpa [μ, ν, R, Fintype.sum_prod_type,
     finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedStateCommonMassCoupling,
-    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling,
-    Fintype.sum_prod_type] using hCost
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling] using hCost
 
 /-- The global residual disagreement coefficient is nonnegative in the
 physical parameter sector. -/
