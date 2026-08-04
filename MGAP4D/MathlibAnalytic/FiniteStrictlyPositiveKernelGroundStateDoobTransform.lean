@@ -161,6 +161,7 @@ theorem doobKernel_sum_eq_one
           D.ground y := by
       unfold doobKernel
       rw [← Finset.sum_div, Finset.mul_sum]
+      apply congrArg (fun z : ℝ => z / D.ground y)
       apply Finset.sum_congr rfl
       intro x _hx
       ring
@@ -190,7 +191,6 @@ theorem doobKernel_detailedBalance
   unfold doobKernel
   rw [D.kernel_symmetric x y]
   field_simp [ne_of_gt (D.ground_pos x), ne_of_gt (D.ground_pos y)]
-  ring
 
 /-- Exact ground-state intertwining: multiplication by the Perron ground
 conjugates the Doob operator to the original normalized transfer. -/
@@ -212,7 +212,6 @@ theorem weightedVector_doobOperator
   apply Finset.sum_congr rfl
   intro x _hx
   field_simp [ne_of_gt (D.ground_pos y)]
-  ring
 
 /-- The weighted Doob quadratic form is exactly the original normalized
 transfer quadratic form after ground multiplication. -/
