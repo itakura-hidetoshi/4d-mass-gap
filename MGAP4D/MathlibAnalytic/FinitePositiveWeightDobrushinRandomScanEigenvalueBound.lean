@@ -72,7 +72,7 @@ theorem finitePositiveWeightRandomScan_eigenvalue_abs_le_rate
     lt_of_le_of_ne
       (finiteProductCanonicalTotalVariation_nonneg f)
       (Ne.symm hVariation)
-  exact (mul_le_mul_right hVariationPos).mp hContract
+  nlinarith
 
 /-- Every nonzero positive-weight-centered eigenobservable has eigenvalue
 bounded in modulus by the same strict Dobrushin rate. -/
