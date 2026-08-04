@@ -219,8 +219,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy_mixedDiff
         intro hEq
         subst coordinate
         exact hSource hCoordinate
-      symm
-      exact hAgree coordinate hNeSource
+      simp [Function.update, hTarget, hAgree coordinate hNeSource]
   unfold finitePositiveWeightMixedActionDifference
   rw [hEqG, hEqH]
   ring
@@ -322,11 +321,12 @@ def finiteEvenFourTorusZ2TemporalTargetCrossingLinks
 
 /-- Exact augmented-coordinate neighborhood sharing at least one crossing link
 with a temporal target. -/
-def finiteEvenFourTorusZ2TemporalCrossingInteractionNeighborhood
+noncomputable def finiteEvenFourTorusZ2TemporalCrossingInteractionNeighborhood
     (H : ℕ)
     (target : FiniteEvenFourTorusSpatialVertex H) :
-    Finset (FiniteEvenFourTorusZ2AugmentedCoordinate H) :=
-  Finset.univ.filter fun source =>
+    Finset (FiniteEvenFourTorusZ2AugmentedCoordinate H) := by
+  classical
+  exact Finset.univ.filter fun source =>
     ∃ e : FiniteEvenFourTorusSpatialLink H,
       Sum.inl target ∈
           finiteEvenFourTorusZ2AugmentedCrossingLinkSupport H e ∧
@@ -342,6 +342,7 @@ def finiteEvenFourTorusZ2TemporalCrossingInteractionNeighborhood
         Sum.inl target ∈
             finiteEvenFourTorusZ2AugmentedCrossingLinkSupport H e ∧
           source ∈ finiteEvenFourTorusZ2AugmentedCrossingLinkSupport H e := by
+  classical
   simp [finiteEvenFourTorusZ2TemporalCrossingInteractionNeighborhood]
 
 /-- Only crossing links incident to the temporal target contribute to its
@@ -357,7 +358,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction_temporal_mixe
         (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction
           H β energyIdentity energyNontrivial B)
         X Y (Sum.inl target) g h =
-      ∑ e in finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
+      ∑ e ∈ finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
         finitePositiveWeightMixedActionDifference
           (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy
             H energyIdentity energyNontrivial B e)
@@ -387,7 +388,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction_temporal_mixe
           finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy_mixedDifference_eq_zero_of_target_not_mem
             H energyIdentity energyNontrivial B e X Y
             (Sum.inl target) g h hTarget]
-    _ = ∑ e in finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
+    _ = ∑ e ∈ finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
         finitePositiveWeightMixedActionDifference
           (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy
             H energyIdentity energyNontrivial B e)
@@ -448,18 +449,18 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction_temporal_mixe
         (energyNontrivial - energyIdentity) := by
   rw [finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction_temporal_mixedDifference_eq_incident_sum]
   calc
-    |∑ e in finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
+    |∑ e ∈ finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
         finitePositiveWeightMixedActionDifference
           (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy
             H energyIdentity energyNontrivial B e)
           X Y (Sum.inl target) g h| ≤
-      ∑ e in finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
+      ∑ e ∈ finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
         |finitePositiveWeightMixedActionDifference
           (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy
             H energyIdentity energyNontrivial B e)
           X Y (Sum.inl target) g h| :=
       Finset.abs_sum_le_sum_abs _ _
-    _ ≤ ∑ _e in finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
+    _ ≤ ∑ _e ∈ finiteEvenFourTorusZ2TemporalTargetCrossingLinks H target,
         2 * (energyNontrivial - energyIdentity) := by
       apply Finset.sum_le_sum
       intro e _he
