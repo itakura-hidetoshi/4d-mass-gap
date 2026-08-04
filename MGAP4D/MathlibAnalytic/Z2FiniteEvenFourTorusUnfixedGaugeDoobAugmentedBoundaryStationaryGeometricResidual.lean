@@ -90,18 +90,18 @@ noncomputable def partialThreeCoordinateSource
     ℕ → ℝ
   | 0 => 0
   | n + 1 =>
-      D.partialThreeCoordinateSource P n +
+      partialThreeCoordinateSource P D n +
         finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryThreeCoordinateError
           H β energyIdentity energyNontrivial source
-          (FinitePositiveWeightStationaryRandomScanComparisonData
-            .rightRandomScanIterateVariationBound P D.toGeneric n).variation
+          (FinitePositiveWeightStationaryRandomScanComparisonData.rightRandomScanIterateVariationBound
+            P D.toGeneric n).variation
 
 @[simp] theorem partialThreeCoordinateSource_zero
     {f : FiniteEvenFourTorusZ2AugmentedConfiguration H → ℝ}
     (P : FiniteProductVariationBound f)
     (D : Z2AugmentedBoundaryStationaryDobrushinData
       H β energyIdentity energyNontrivial hβ hEnergy source g B) :
-    D.partialThreeCoordinateSource P 0 = 0 :=
+    partialThreeCoordinateSource P D 0 = 0 :=
   rfl
 
 @[simp] theorem partialThreeCoordinateSource_succ
@@ -110,31 +110,30 @@ noncomputable def partialThreeCoordinateSource
     (D : Z2AugmentedBoundaryStationaryDobrushinData
       H β energyIdentity energyNontrivial hβ hEnergy source g B)
     (n : ℕ) :
-    D.partialThreeCoordinateSource P (n + 1) =
-      D.partialThreeCoordinateSource P n +
+    partialThreeCoordinateSource P D (n + 1) =
+      partialThreeCoordinateSource P D n +
         finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryThreeCoordinateError
           H β energyIdentity energyNontrivial source
-          (FinitePositiveWeightStationaryRandomScanComparisonData
-            .rightRandomScanIterateVariationBound P D.toGeneric n).variation :=
+          (FinitePositiveWeightStationaryRandomScanComparisonData.rightRandomScanIterateVariationBound
+            P D.toGeneric n).variation :=
   rfl
 
-/-- The actual recursive three-coordinate source is definitionally the generic
-partial stationary source after source-functional specialization. -/
+/-- The actual recursive three-coordinate source is the generic partial
+stationary source after source-functional specialization. -/
 theorem partialThreeCoordinateSource_eq_partialStationarySource
     {f : FiniteEvenFourTorusZ2AugmentedConfiguration H → ℝ}
     (P : FiniteProductVariationBound f)
     (D : Z2AugmentedBoundaryStationaryDobrushinData
       H β energyIdentity energyNontrivial hβ hEnergy source g B)
     (n : ℕ) :
-    D.partialThreeCoordinateSource P n =
-      FinitePositiveWeightStationaryRandomScanComparisonData
-        .partialStationarySource P D.toGeneric n := by
+    partialThreeCoordinateSource P D n =
+      FinitePositiveWeightStationaryRandomScanComparisonData.partialStationarySource
+        P D.toGeneric n := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      rw [D.partialThreeCoordinateSource_succ,
-        FinitePositiveWeightStationaryRandomScanComparisonData
-          .partialStationarySource_succ,
+      rw [partialThreeCoordinateSource_succ,
+        FinitePositiveWeightStationaryRandomScanComparisonData.partialStationarySource_succ,
         ih, D.toGeneric_sourceError_eq_threeCoordinateError]
 
 /-- Actual stationary upper-boundary comparison with exact accumulated
@@ -152,16 +151,14 @@ theorem boundaryExpectation_difference_abs_le_partialSource_add_geometricResidua
         finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
           H β energyIdentity energyNontrivial hβ hEnergy
           (finiteZ2GaugeReplaceCoordinate B source g) f| ≤
-      D.partialThreeCoordinateSource P n +
+      partialThreeCoordinateSource P D n +
         2 * finitePositiveWeightDobrushinRandomScanRate D.rightDobrushin ^ n *
           finiteProductVariationTotal P.variation := by
   have hGeneric :=
-    FinitePositiveWeightStationaryRandomScanComparisonData
-      .expectationDiscrepancy_le_partialSource_add_geometricResidual
-        P D.toGeneric n
-  rw [← D.partialThreeCoordinateSource_eq_partialStationarySource P n]
-  simpa [FinitePositiveWeightStationaryRandomScanComparisonData
-      .expectationDiscrepancy,
+    FinitePositiveWeightStationaryRandomScanComparisonData.expectationDiscrepancy_le_partialSource_add_geometricResidual
+      P D.toGeneric n
+  rw [partialThreeCoordinateSource_eq_partialStationarySource P D n]
+  simpa [FinitePositiveWeightStationaryRandomScanComparisonData.expectationDiscrepancy,
     finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation,
     toGeneric] using hGeneric
 
