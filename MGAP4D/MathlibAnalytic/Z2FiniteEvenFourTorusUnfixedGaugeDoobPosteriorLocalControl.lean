@@ -45,8 +45,19 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel_eq_posterior
               H β energyIdentity energyNontrivial hβ hEnergy X B *
             finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
               H β energyIdentity energyNontrivial hβ hEnergy X) := by
-  simpa [finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel,
-    FiniteKernelGroundStateDoobData.groundWeightedColumnMass] using
+  change
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ hEnergy).doobKernel A B =
+      ((finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+          H β energyIdentity energyNontrivial hβ hEnergy).kernel A B *
+        (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+          H β energyIdentity energyNontrivial hβ hEnergy).ground A) /
+        (∑ X : FiniteEvenFourTorusZ2SliceConfiguration H,
+          (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+              H β energyIdentity energyNontrivial hβ hEnergy).kernel X B *
+            (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+              H β energyIdentity energyNontrivial hβ hEnergy).ground X)
+  exact
     (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
       H β energyIdentity energyNontrivial hβ hEnergy).doobKernel_eq_groundPosterior A B
 
@@ -119,9 +130,10 @@ theorem finiteEvenFourTorusZ2UnfixedGauge_weightedDirichlet_eq_jointDifference
             finiteEvenFourTorusZ2UnfixedGaugeDoobJointWeight
                 H β energyIdentity energyNontrivial hβ hEnergy A B *
               (f A - f B) ^ 2 :=
-  (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-    H β energyIdentity energyNontrivial hβ hEnergy).
-      weightedNormSq_sub_weightedDoobQuadratic_eq_jointDifference f
+  FiniteKernelGroundStateDoobData.
+    weightedNormSq_sub_weightedDoobQuadratic_eq_jointDifference
+      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ hEnergy) f
 
 /-- The previously proved Perron local ratio also holds in the reverse
 direction after restoring the original link value. -/
