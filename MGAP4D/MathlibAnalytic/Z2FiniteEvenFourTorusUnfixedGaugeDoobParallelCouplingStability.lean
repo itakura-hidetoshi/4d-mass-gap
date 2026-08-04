@@ -7,6 +7,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 /-- The finite-volume coordinate-coupling data type for the actual Perron Doob
 kernel, with the finite-product coordinate and spin types fixed explicitly so
 that elaboration does not unfold the full lattice carrier while inferring them. -/
