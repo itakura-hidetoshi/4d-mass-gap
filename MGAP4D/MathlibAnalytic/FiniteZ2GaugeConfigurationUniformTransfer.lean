@@ -68,6 +68,23 @@ theorem finiteZ2GaugeNormalizedProductKernel_row_sum
     _ = 1 :=
       finiteZ2NormalizedProductKernel_row_sum q (Fintype.card ι) (e B)
 
+/-- Symmetry converts the column-stochastic identity into the corresponding
+row-stochastic identity. -/
+theorem finiteZ2GaugeNormalizedProductKernel_second_sum
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι]
+    (A : ι → Z2Gauge) :
+    ∑ B : ι → Z2Gauge,
+      finiteZ2GaugeNormalizedProductKernel q ι A B = 1 := by
+  calc
+    (∑ B : ι → Z2Gauge,
+        finiteZ2GaugeNormalizedProductKernel q ι A B) =
+      ∑ B : ι → Z2Gauge,
+        finiteZ2GaugeNormalizedProductKernel q ι B A := by
+      apply Finset.sum_congr rfl
+      intro B _hB
+      exact finiteZ2GaugeNormalizedProductKernel_symmetric q ι A B
+    _ = 1 := finiteZ2GaugeNormalizedProductKernel_row_sum q ι A
+
 /-- The transported product transfer fixes the actual-carrier constant mode. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_constantOne
     (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι] :
@@ -78,6 +95,32 @@ theorem finiteZ2GaugeNormalizedProductKernel_operator_constantOne
   rw [finiteKernelOperator_apply]
   simp only [finiteBoundaryConstantOne_apply, mul_one]
   exact finiteZ2GaugeNormalizedProductKernel_row_sum q ι B
+
+/-- The normalized product transfer preserves total finite mass exactly. -/
+theorem finiteZ2GaugeNormalizedProductKernel_operator_mass
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι]
+    (f : FiniteBoundaryHilbert (ι → Z2Gauge)) :
+    finiteFunctionMass
+        (finiteKernelOperator
+          (finiteZ2GaugeNormalizedProductKernel q ι) f) =
+      finiteFunctionMass f := by
+  unfold finiteFunctionMass
+  simp_rw [finiteKernelOperator_apply]
+  rw [Finset.sum_comm]
+  calc
+    (∑ A : ι → Z2Gauge,
+        ∑ B : ι → Z2Gauge,
+          finiteZ2GaugeNormalizedProductKernel q ι A B * f A) =
+      ∑ A : ι → Z2Gauge,
+        (∑ B : ι → Z2Gauge,
+          finiteZ2GaugeNormalizedProductKernel q ι A B) * f A := by
+      apply Finset.sum_congr rfl
+      intro A _hA
+      rw [Finset.sum_mul]
+    _ = ∑ A : ι → Z2Gauge, f A := by
+      apply Finset.sum_congr rfl
+      intro A _hA
+      rw [finiteZ2GaugeNormalizedProductKernel_second_sum, one_mul]
 
 /-- The transported product transfer has operator norm at most one. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_norm_le_one
