@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteZ2GaugeProductKernelLikelihoodRatio
+import MGAP4D.MathlibAnalytic.FiniteLatticeWilsonDobrushinLocalExpectationComparison
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusSpatialSlice
 import Mathlib.Tactic
 
@@ -61,7 +62,7 @@ theorem finiteEvenFourTorusZ2SpatialPlaquetteHolonomy_congr
   have h2 := hBoundary 2
   have h3 := hBoundary 3
   simp [finiteEvenFourTorusSpatialPlaquetteBoundary] at h0 h1 h2 h3
-  unfold finiteEvenFourTorusZ2SpatialPlaquetteHolonomy
+  dsimp [finiteEvenFourTorusZ2SpatialPlaquetteHolonomy]
   rw [h0, h1, h2, h3]
 
 /-- Replacing a link outside a plaquette boundary leaves that plaquette's
@@ -257,6 +258,7 @@ theorem finiteEvenFourTorusZ2SpatialWilsonAction_sub_replace_abs_le_touchingCard
     _ = ((finiteEvenFourTorusSpatialPlaquettesTouchingLink H e).card : ℝ) *
         (energyNontrivial - energyIdentity) := by
       simp [nsmul_eq_mul]
+      ring
 
 /-- Consequently the actual spatial half-weight changes by at most an explicit
 local exponential factor under one-link replacement. -/
@@ -277,30 +279,25 @@ theorem finiteEvenFourTorusZ2SpatialHalfWeight_le_exp_touchingCard_mul_replace
         finiteEvenFourTorusZ2SpatialHalfWeight
           H β energyIdentity energyNontrivial
           (finiteZ2GaugeReplaceCoordinate A e g) := by
-  let S := finiteEvenFourTorusZ2SpatialWilsonAction
-    H energyIdentity energyNontrivial A
-  let S' := finiteEvenFourTorusZ2SpatialWilsonAction
-    H energyIdentity energyNontrivial
-      (finiteZ2GaugeReplaceCoordinate A e g)
-  let b :=
-    ((finiteEvenFourTorusSpatialPlaquettesTouchingLink H e).card : ℝ) *
-      (energyNontrivial - energyIdentity)
-  have habs : |S - S'| ≤ b := by
-    simpa [S, S', b] using
-      finiteEvenFourTorusZ2SpatialWilsonAction_sub_replace_abs_le_touchingCard
-        H energyIdentity energyNontrivial hEnergy A e g
-  have hdiff : S' - S ≤ b := by
+  have habs :=
+    finiteEvenFourTorusZ2SpatialWilsonAction_sub_replace_abs_le_touchingCard
+      H energyIdentity energyNontrivial hEnergy A e g
+  have hdiff :
+      finiteEvenFourTorusZ2SpatialWilsonAction
+            H energyIdentity energyNontrivial
+            (finiteZ2GaugeReplaceCoordinate A e g) -
+          finiteEvenFourTorusZ2SpatialWilsonAction
+            H energyIdentity energyNontrivial A ≤
+        ((finiteEvenFourTorusSpatialPlaquettesTouchingLink H e).card : ℝ) *
+          (energyNontrivial - energyIdentity) := by
     have hlow := (abs_le.mp habs).1
     linarith
   have hcoef : 0 ≤ β / 2 := by positivity
-  have hmul : (β / 2) * (S' - S) ≤ (β / 2) * b :=
-    mul_le_mul_of_nonneg_left hdiff hcoef
+  have hmul := mul_le_mul_of_nonneg_left hdiff hcoef
   unfold finiteEvenFourTorusZ2SpatialHalfWeight
-  change Real.exp (-(β / 2) * S) ≤
-    Real.exp ((β / 2) * b) * Real.exp (-(β / 2) * S')
   rw [← Real.exp_add]
   apply Real.exp_monotone
-  linarith
+  nlinarith
 
 end
 
