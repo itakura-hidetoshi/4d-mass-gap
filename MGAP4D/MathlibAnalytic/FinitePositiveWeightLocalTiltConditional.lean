@@ -1,0 +1,369 @@
+import MGAP4D.MathlibAnalytic.FinitePositiveWeightDobrushinInfluence
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped BigOperators
+
+noncomputable section
+
+/-- Multiplication of a finite product weight by a positive state-dependent
+tilt. -/
+def finitePositiveWeightMultiplicativeTilt
+    {ι G : Type}
+    (weight tilt : (ι → G) → ℝ)
+    (A : ι → G) : ℝ :=
+  tilt A * weight A
+
+/-- A finite-product function is supported on `support` when agreement on that
+finite coordinate set forces equality of its values. -/
+def FiniteProductFunctionSupportedOn
+    {ι G : Type}
+    (support : Finset ι)
+    (f : (ι → G) → ℝ) : Prop :=
+  ∀ A B : ι → G,
+    (∀ i : ι, i ∈ support → A i = B i) →
+      f A = f B
+
+/-- Updating a coordinate outside the declared support does not change a
+supported function. -/
+theorem FiniteProductFunctionSupportedOn.update_eq_of_not_mem
+    {ι G : Type}
+    [DecidableEq ι]
+    {support : Finset ι}
+    {f : (ι → G) → ℝ}
+    (hf : FiniteProductFunctionSupportedOn support f)
+    (A : ι → G)
+    (target : ι)
+    (g : G)
+    (htarget : target ∉ support) :
+    f (Function.update A target g) = f A := by
+  apply hf
+  intro i hi
+  have hit : i ≠ target := by
+    intro h
+    subst i
+    exact htarget hi
+  simp [Function.update, hit]
+
+/-- A positive tilt preserves strict positivity of a positive weight. -/
+theorem finitePositiveWeightMultiplicativeTilt_pos
+    {ι G : Type}
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (htilt : ∀ A : ι → G, 0 < tilt A)
+    (A : ι → G) :
+    0 < finitePositiveWeightMultiplicativeTilt weight tilt A := by
+  exact mul_pos (htilt A) (hweight A)
+
+/-- A global lower bound on the tilt gives the same lower comparison for every
+one-site partition function. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSitePartition_lower
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (lower : ℝ)
+    (htiltLower : ∀ A : ι → G, lower ≤ tilt A)
+    (A : ι → G)
+    (target : ι) :
+    lower * finitePositiveWeightSingleSitePartition weight A target ≤
+      finitePositiveWeightSingleSitePartition
+        (finitePositiveWeightMultiplicativeTilt weight tilt) A target := by
+  unfold finitePositiveWeightSingleSitePartition
+    finitePositiveWeightMultiplicativeTilt
+  rw [Finset.mul_sum]
+  apply Finset.sum_le_sum
+  intro g _hg
+  exact mul_le_mul_of_nonneg_right
+    (htiltLower (Function.update A target g))
+    (le_of_lt (hweight (Function.update A target g)))
+
+/-- A global upper bound on the tilt gives the same upper comparison for every
+one-site partition function. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSitePartition_upper
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (upper : ℝ)
+    (htiltUpper : ∀ A : ι → G, tilt A ≤ upper)
+    (A : ι → G)
+    (target : ι) :
+    finitePositiveWeightSingleSitePartition
+        (finitePositiveWeightMultiplicativeTilt weight tilt) A target ≤
+      upper * finitePositiveWeightSingleSitePartition weight A target := by
+  unfold finitePositiveWeightSingleSitePartition
+    finitePositiveWeightMultiplicativeTilt
+  rw [Finset.mul_sum]
+  apply Finset.sum_le_sum
+  intro g _hg
+  exact mul_le_mul_of_nonneg_right
+    (htiltUpper (Function.update A target g))
+    (le_of_lt (hweight (Function.update A target g)))
+
+/-- Outside the support of the tilt, the tilted one-site partition function is
+exactly a common scalar times the original one. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSitePartition_eq_of_not_mem
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    (weight tilt : (ι → G) → ℝ)
+    (support : Finset ι)
+    (htiltSupport : FiniteProductFunctionSupportedOn support tilt)
+    (A : ι → G)
+    (target : ι)
+    (htarget : target ∉ support) :
+    finitePositiveWeightSingleSitePartition
+        (finitePositiveWeightMultiplicativeTilt weight tilt) A target =
+      tilt A * finitePositiveWeightSingleSitePartition weight A target := by
+  unfold finitePositiveWeightSingleSitePartition
+    finitePositiveWeightMultiplicativeTilt
+  simp_rw [htiltSupport.update_eq_of_not_mem A target _ htarget]
+  rw [Finset.mul_sum]
+
+/-- Outside the support of the tilt, normalization cancels the common tilt
+factor and the one-site conditional law is unchanged exactly. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSiteProbability_eq_of_not_mem
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    [Nonempty G]
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (htilt : ∀ A : ι → G, 0 < tilt A)
+    (support : Finset ι)
+    (htiltSupport : FiniteProductFunctionSupportedOn support tilt)
+    (A : ι → G)
+    (target : ι)
+    (htarget : target ∉ support) :
+    finitePositiveWeightSingleSiteProbability
+        (finitePositiveWeightMultiplicativeTilt weight tilt) A target =
+      finitePositiveWeightSingleSiteProbability weight A target := by
+  funext g
+  unfold finitePositiveWeightSingleSiteProbability
+  rw [finitePositiveWeightMultiplicativeTilt_singleSitePartition_eq_of_not_mem
+      weight tilt support htiltSupport A target htarget]
+  unfold finitePositiveWeightMultiplicativeTilt
+  rw [htiltSupport.update_eq_of_not_mem A target g htarget]
+  have ht : tilt A ≠ 0 := ne_of_gt (htilt A)
+  have hZ : finitePositiveWeightSingleSitePartition weight A target ≠ 0 :=
+    ne_of_gt
+      (finitePositiveWeightSingleSitePartition_pos weight hweight A target)
+  field_simp [ht, hZ]
+
+/-- A one-sided pointwise probability ratio controls the full real `L¹`
+distance.  The normalization here is twice total variation. -/
+theorem finiteRealProbabilityL1_le_two_mul_one_sub_inv
+    {Ω : Type}
+    [Fintype Ω]
+    (p q : Ω → ℝ)
+    (hpNonneg : ∀ x : Ω, 0 ≤ p x)
+    (hpSum : ∑ x : Ω, p x = 1)
+    (hqSum : ∑ x : Ω, q x = 1)
+    (R : ℝ)
+    (hR : 1 ≤ R)
+    (hRatio : ∀ x : Ω, p x ≤ R * q x) :
+    (∑ x : Ω, |p x - q x|) ≤
+      2 * (1 - R⁻¹) := by
+  have hRpos : 0 < R := lt_of_lt_of_le zero_lt_one hR
+  have hInvLeOne : R⁻¹ ≤ 1 := by
+    rw [inv_le_one₀ hRpos]
+    exact hR
+  calc
+    (∑ x : Ω, |p x - q x|) ≤
+        ∑ x : Ω, (p x + q x - 2 * (p x / R)) := by
+      apply Finset.sum_le_sum
+      intro x _hx
+      by_cases hpq : p x ≤ q x
+      · rw [abs_of_nonpos (sub_nonpos.mpr hpq)]
+        have hpInv : p x * R⁻¹ ≤ p x :=
+          mul_le_mul_of_nonneg_left hInvLeOne (hpNonneg x)
+        rw [div_eq_mul_inv]
+        linarith
+      · have hqp : q x < p x := lt_of_not_ge hpq
+        rw [abs_of_pos (sub_pos.mpr hqp)]
+        have hpDivLeQ : p x / R ≤ q x := by
+          apply (div_le_iff₀ hRpos).2
+          simpa [mul_comm] using hRatio x
+        linarith
+    _ = 2 * (1 - R⁻¹) := by
+      rw [Finset.sum_sub_distrib, Finset.sum_add_distrib,
+        ← Finset.mul_sum, ← Finset.sum_div, hpSum, hqSum]
+      ring
+
+/-- A positive multiplicative tilt bounded between `lower` and `upper`
+changes each one-site conditional atom by at most the normalized ratio
+`upper / lower`. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSiteProbability_le_ratio_mul
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    [Nonempty G]
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (htilt : ∀ A : ι → G, 0 < tilt A)
+    (lower upper : ℝ)
+    (hLower : 0 < lower)
+    (hUpper : 0 < upper)
+    (htiltLower : ∀ A : ι → G, lower ≤ tilt A)
+    (htiltUpper : ∀ A : ι → G, tilt A ≤ upper)
+    (A : ι → G)
+    (target : ι)
+    (g : G) :
+    finitePositiveWeightSingleSiteProbability
+        (finitePositiveWeightMultiplicativeTilt weight tilt) A target g ≤
+      (upper / lower) *
+        finitePositiveWeightSingleSiteProbability weight A target g := by
+  let tiltedWeight := finitePositiveWeightMultiplicativeTilt weight tilt
+  let Z := finitePositiveWeightSingleSitePartition weight A target
+  let Zt := finitePositiveWeightSingleSitePartition tiltedWeight A target
+  let updated := Function.update A target g
+  have hZ : 0 < Z := by
+    exact finitePositiveWeightSingleSitePartition_pos weight hweight A target
+  have hTiltedWeight : ∀ X : ι → G, 0 < tiltedWeight X := by
+    intro X
+    exact finitePositiveWeightMultiplicativeTilt_pos
+      weight tilt hweight htilt X
+  have hZt : 0 < Zt := by
+    exact finitePositiveWeightSingleSitePartition_pos
+      tiltedWeight hTiltedWeight A target
+  have hZlower : lower * Z ≤ Zt := by
+    exact finitePositiveWeightMultiplicativeTilt_singleSitePartition_lower
+      weight tilt hweight lower htiltLower A target
+  have hCore : tilt updated * Z ≤ (upper / lower) * Zt := by
+    calc
+      tilt updated * Z ≤ upper * Z :=
+        mul_le_mul_of_nonneg_right (htiltUpper updated) (le_of_lt hZ)
+      _ = (upper / lower) * (lower * Z) := by
+        field_simp [ne_of_gt hLower]
+      _ ≤ (upper / lower) * Zt := by
+        exact mul_le_mul_of_nonneg_left hZlower
+          (div_nonneg hUpper.le hLower.le)
+  unfold finitePositiveWeightSingleSiteProbability
+  change tilt updated * weight updated / Zt ≤
+    (upper / lower) * (weight updated / Z)
+  rw [show (upper / lower) * (weight updated / Z) =
+      ((upper / lower) * weight updated) / Z by ring]
+  apply (div_le_div_iff₀ hZt hZ).2
+  have hw : 0 ≤ weight updated := le_of_lt (hweight updated)
+  nlinarith [mul_le_mul_of_nonneg_right hCore hw]
+
+/-- The bounded positive tilt gives a uniform one-site conditional `L¹`
+source bound. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSiteConditionalL1_le
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    [Nonempty G]
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (htilt : ∀ A : ι → G, 0 < tilt A)
+    (lower upper : ℝ)
+    (hLower : 0 < lower)
+    (hUpper : 0 < upper)
+    (hLowerUpper : lower ≤ upper)
+    (htiltLower : ∀ A : ι → G, lower ≤ tilt A)
+    (htiltUpper : ∀ A : ι → G, tilt A ≤ upper)
+    (A : ι → G)
+    (target : ι) :
+    finitePositiveWeightSingleSiteConditionalL1
+        (finitePositiveWeightMultiplicativeTilt weight tilt)
+        A A target ≤
+      2 * (1 - (upper / lower)⁻¹) := by
+  let p := finitePositiveWeightSingleSiteProbability
+    (finitePositiveWeightMultiplicativeTilt weight tilt) A target
+  let q := finitePositiveWeightSingleSiteProbability weight A target
+  have hTiltedWeight :
+      ∀ X : ι → G,
+        0 < finitePositiveWeightMultiplicativeTilt weight tilt X := by
+    intro X
+    exact finitePositiveWeightMultiplicativeTilt_pos
+      weight tilt hweight htilt X
+  have hpNonneg : ∀ g : G, 0 ≤ p g := by
+    intro g
+    exact le_of_lt
+      (finitePositiveWeightSingleSiteProbability_pos
+        (finitePositiveWeightMultiplicativeTilt weight tilt)
+        hTiltedWeight A target g)
+  have hpSum : ∑ g : G, p g = 1 := by
+    simpa [p] using
+      finitePositiveWeightSingleSiteProbability_sum_eq_one
+        (finitePositiveWeightMultiplicativeTilt weight tilt)
+        hTiltedWeight A target
+  have hqSum : ∑ g : G, q g = 1 := by
+    simpa [q] using
+      finitePositiveWeightSingleSiteProbability_sum_eq_one
+        weight hweight A target
+  have hRatioOne : 1 ≤ upper / lower := by
+    exact (le_div_iff₀ hLower).2 (by simpa using hLowerUpper)
+  have hRatio : ∀ g : G, p g ≤ (upper / lower) * q g := by
+    intro g
+    exact
+      finitePositiveWeightMultiplicativeTilt_singleSiteProbability_le_ratio_mul
+        weight tilt hweight htilt lower upper hLower hUpper
+        htiltLower htiltUpper A target g
+  unfold finitePositiveWeightSingleSiteConditionalL1
+  change (∑ g : G, |p g - q g|) ≤ _
+  exact finiteRealProbabilityL1_le_two_mul_one_sub_inv
+    p q hpNonneg hpSum hqSum (upper / lower) hRatioOne hRatio
+
+/-- Explicit finite-support source vector for a bounded local multiplicative
+tilt. -/
+def finitePositiveWeightLocalTiltConditionalSourceBound
+    {ι : Type}
+    [DecidableEq ι]
+    (support : Finset ι)
+    (lower upper : ℝ)
+    (target : ι) : ℝ :=
+  if target ∈ support then
+    2 * (1 - (upper / lower)⁻¹)
+  else 0
+
+/-- The one-site conditional discrepancy generated by a bounded local tilt is
+zero outside its support and obeys the explicit likelihood-ratio bound on the
+support. -/
+theorem finitePositiveWeightMultiplicativeTilt_singleSiteConditionalL1_le_sourceBound
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    [Nonempty G]
+    (weight tilt : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (htilt : ∀ A : ι → G, 0 < tilt A)
+    (support : Finset ι)
+    (htiltSupport : FiniteProductFunctionSupportedOn support tilt)
+    (lower upper : ℝ)
+    (hLower : 0 < lower)
+    (hUpper : 0 < upper)
+    (hLowerUpper : lower ≤ upper)
+    (htiltLower : ∀ A : ι → G, lower ≤ tilt A)
+    (htiltUpper : ∀ A : ι → G, tilt A ≤ upper)
+    (A : ι → G)
+    (target : ι) :
+    finitePositiveWeightSingleSiteConditionalL1
+        (finitePositiveWeightMultiplicativeTilt weight tilt)
+        A A target ≤
+      finitePositiveWeightLocalTiltConditionalSourceBound
+        support lower upper target := by
+  by_cases htarget : target ∈ support
+  · simp only [finitePositiveWeightLocalTiltConditionalSourceBound,
+      htarget, if_true]
+    exact
+      finitePositiveWeightMultiplicativeTilt_singleSiteConditionalL1_le
+        weight tilt hweight htilt lower upper hLower hUpper hLowerUpper
+        htiltLower htiltUpper A target
+  · have hProbability :=
+      finitePositiveWeightMultiplicativeTilt_singleSiteProbability_eq_of_not_mem
+        weight tilt hweight htilt support htiltSupport A target htarget
+    unfold finitePositiveWeightSingleSiteConditionalL1
+    rw [hProbability]
+    simp [finitePositiveWeightLocalTiltConditionalSourceBound, htarget]
+
+end
+
+end MathlibAnalytic
+end MGAP4D
