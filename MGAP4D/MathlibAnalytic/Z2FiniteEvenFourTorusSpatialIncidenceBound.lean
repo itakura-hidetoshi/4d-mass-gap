@@ -73,64 +73,62 @@ theorem finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceCode_injective
           (⟨(p', k), hp'⟩ :
             FiniteEvenFourTorusSpatialPlaquetteBoundaryOccurrence H e) :=
     congrArg Prod.snd hcode
-  apply Subtype.ext
-  apply Prod.ext
-  · fin_cases k
+  have hpEq : p = p' := by
+    fin_cases k
     · simp [finiteEvenFourTorusSpatialPlaquetteBoundary,
         finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceOtherDirection] at hp hp' hother
       have hb : (p.1, p.2.1.1) = (p'.1, p'.2.1.1) := hp.trans hp'.symm
-      apply Subtype.ext
-      apply Prod.ext
-      · exact congrArg Prod.fst hb
-      · apply Subtype.ext
-        apply Prod.ext
-        · exact congrArg Prod.snd hb
-        · exact hother
+      have hbase : p.1 = p'.1 := congrArg Prod.fst hb
+      have hμ : p.2.1.1 = p'.2.1.1 := congrArg Prod.snd hb
+      have hpair : p.2 = p'.2 := by
+        apply Subtype.ext
+        exact Prod.ext hμ hother
+      exact Prod.ext hbase hpair
     · simp [finiteEvenFourTorusSpatialPlaquetteBoundary,
         finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceOtherDirection] at hp hp' hother
       have hb :
           (finiteEvenFourTorusSpatialVertexStep H p.1 p.2.1.1, p.2.1.2) =
             (finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.1, p'.2.1.2) :=
         hp.trans hp'.symm
-      apply Subtype.ext
-      apply Prod.ext
-      · have hstep :
-            finiteEvenFourTorusSpatialVertexStep H p.1 p'.2.1.1 =
-              finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.1 := by
-          simpa only [hother] using congrArg Prod.fst hb
-        exact finiteEvenFourTorusSpatialVertexStep_injective H p'.2.1.1 hstep
-      · apply Subtype.ext
-        apply Prod.ext
-        · exact hother
-        · exact congrArg Prod.snd hb
+      have hstep :
+          finiteEvenFourTorusSpatialVertexStep H p.1 p'.2.1.1 =
+            finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.1 := by
+        simpa only [hother] using congrArg Prod.fst hb
+      have hbase : p.1 = p'.1 :=
+        finiteEvenFourTorusSpatialVertexStep_injective H p'.2.1.1 hstep
+      have hν : p.2.1.2 = p'.2.1.2 := congrArg Prod.snd hb
+      have hpair : p.2 = p'.2 := by
+        apply Subtype.ext
+        exact Prod.ext hother hν
+      exact Prod.ext hbase hpair
     · simp [finiteEvenFourTorusSpatialPlaquetteBoundary,
         finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceOtherDirection] at hp hp' hother
       have hb :
           (finiteEvenFourTorusSpatialVertexStep H p.1 p.2.1.2, p.2.1.1) =
             (finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.2, p'.2.1.1) :=
         hp.trans hp'.symm
-      apply Subtype.ext
-      apply Prod.ext
-      · have hstep :
-            finiteEvenFourTorusSpatialVertexStep H p.1 p'.2.1.2 =
-              finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.2 := by
-          simpa only [hother] using congrArg Prod.fst hb
-        exact finiteEvenFourTorusSpatialVertexStep_injective H p'.2.1.2 hstep
-      · apply Subtype.ext
-        apply Prod.ext
-        · exact congrArg Prod.snd hb
-        · exact hother
+      have hstep :
+          finiteEvenFourTorusSpatialVertexStep H p.1 p'.2.1.2 =
+            finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.2 := by
+        simpa only [hother] using congrArg Prod.fst hb
+      have hbase : p.1 = p'.1 :=
+        finiteEvenFourTorusSpatialVertexStep_injective H p'.2.1.2 hstep
+      have hμ : p.2.1.1 = p'.2.1.1 := congrArg Prod.snd hb
+      have hpair : p.2 = p'.2 := by
+        apply Subtype.ext
+        exact Prod.ext hμ hother
+      exact Prod.ext hbase hpair
     · simp [finiteEvenFourTorusSpatialPlaquetteBoundary,
         finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceOtherDirection] at hp hp' hother
       have hb : (p.1, p.2.1.2) = (p'.1, p'.2.1.2) := hp.trans hp'.symm
-      apply Subtype.ext
-      apply Prod.ext
-      · exact congrArg Prod.fst hb
-      · apply Subtype.ext
-        apply Prod.ext
-        · exact hother
-        · exact congrArg Prod.snd hb
-  · rfl
+      have hbase : p.1 = p'.1 := congrArg Prod.fst hb
+      have hν : p.2.1.2 = p'.2.1.2 := congrArg Prod.snd hb
+      have hpair : p.2 = p'.2 := by
+        apply Subtype.ext
+        exact Prod.ext hother hν
+      exact Prod.ext hbase hpair
+  apply Subtype.ext
+  exact Prod.ext hpEq rfl
 
 /-- There are exactly three non-time directions. -/
 theorem finiteEvenFourTorusSpatialDirection_card :
