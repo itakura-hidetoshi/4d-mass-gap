@@ -37,30 +37,43 @@ theorem z2GaugeWilsonPlaquetteGramKernel_eq_weightSum_mul_normalized
             β energyIdentity energyNontrivial)
           (boolEquivZ2Gauge.symm x)
           (boolEquivZ2Gauge.symm y) := by
+  have hden :
+      z2WilsonWeightIdentity β energyIdentity +
+          z2WilsonWeightNontrivial β energyNontrivial ≠ 0 := by
+    exact ne_of_gt <| add_pos
+      (z2WilsonWeightIdentity_pos β energyIdentity)
+      (z2WilsonWeightNontrivial_pos β energyNontrivial)
+  have hdiag :
+      z2WilsonWeightIdentity β energyIdentity =
+        z2WilsonTemporalCrossingWeightSum
+            β energyIdentity energyNontrivial *
+          ((1 + z2WilsonTemporalCrossingRate
+            β energyIdentity energyNontrivial) / 2) := by
+    unfold z2WilsonTemporalCrossingWeightSum
+      z2WilsonTemporalCrossingRate
+    field_simp [hden]
+    ring
+  have hoff :
+      z2WilsonWeightNontrivial β energyNontrivial =
+        z2WilsonTemporalCrossingWeightSum
+            β energyIdentity energyNontrivial *
+          ((1 - z2WilsonTemporalCrossingRate
+            β energyIdentity energyNontrivial) / 2) := by
+    unfold z2WilsonTemporalCrossingWeightSum
+      z2WilsonTemporalCrossingRate
+    field_simp [hden]
+    ring
   rw [z2GaugeWilsonPlaquetteGramKernel_apply]
-  have hsum :
-      z2WilsonTemporalCrossingWeightSum
-        β energyIdentity energyNontrivial ≠ 0 :=
-    ne_of_gt (z2WilsonTemporalCrossingWeightSum_pos
-      β energyIdentity energyNontrivial)
   by_cases hxy : x = y
-  · have hb : boolEquivZ2Gauge.symm x = boolEquivZ2Gauge.symm y := by
-      exact congrArg boolEquivZ2Gauge.symm hxy
-    rw [if_pos hxy]
-    simp [finiteZ2NormalizedLocalKernel, hb,
-      z2WilsonTemporalCrossingRate,
-      z2WilsonTemporalCrossingWeightSum]
-    field_simp [hsum]
-    ring
-  · have hb : boolEquivZ2Gauge.symm x ≠ boolEquivZ2Gauge.symm y := by
+  · rw [if_pos hxy]
+    have hb : boolEquivZ2Gauge.symm x = boolEquivZ2Gauge.symm y :=
+      congrArg boolEquivZ2Gauge.symm hxy
+    simpa [finiteZ2NormalizedLocalKernel, hb] using hdiag
+  · rw [if_neg hxy]
+    have hb : boolEquivZ2Gauge.symm x ≠ boolEquivZ2Gauge.symm y := by
       intro h
-      exact hxy (boolEquivZ2Gauge.symm.injective h)
-    rw [if_neg hxy]
-    simp [finiteZ2NormalizedLocalKernel, hb,
-      z2WilsonTemporalCrossingRate,
-      z2WilsonTemporalCrossingWeightSum]
-    field_simp [hsum]
-    ring
+      exact hxy ((boolEquivZ2Gauge.symm).injective h)
+    simpa [finiteZ2NormalizedLocalKernel, hb] using hoff
 
 /-- The temporal-link kernel has the same scalar-times-normalized local form. -/
 theorem finiteEvenFourTorusZ2TemporalLinkGramKernel_eq_weightSum_mul_normalized
@@ -133,8 +146,8 @@ theorem finiteKernelOperator_const_mul
     finiteKernelOperator (fun x y => c * kernel x y) =
       c • finiteKernelOperator kernel := by
   ext f y
-  rw [ContinuousLinearMap.smul_apply,
-    finiteKernelOperator_apply, finiteKernelOperator_apply]
+  change (∑ x : α, (c * kernel x y) * f x) =
+    c * ∑ x : α, kernel x y * f x
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro x _hx
@@ -154,7 +167,11 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_eq_scale_smul_normali
         finiteKernelOperator
           (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
             H β energyIdentity energyNontrivial) := by
-  rw [← finiteKernelOperator_const_mul]
+  rw [← finiteKernelOperator_const_mul
+    (finiteEvenFourTorusZ2TemporalCrossingScale
+      H β energyIdentity energyNontrivial)
+    (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
+      H β energyIdentity energyNontrivial)]
   congr 1
   funext A B
   exact finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_scale_mul_normalized
@@ -171,13 +188,18 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_norm_eq_scale
           H β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel‖ =
       finiteEvenFourTorusZ2TemporalCrossingScale
         H β energyIdentity energyNontrivial := by
-  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_eq_scale_smul_normalized]
+  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_eq_scale_smul_normalized
+    H β energyIdentity energyNontrivial hβ.le hEnergy.le]
   rw [norm_smul, Real.norm_eq_abs,
     abs_of_pos (finiteEvenFourTorusZ2TemporalCrossingScale_pos
       H β energyIdentity energyNontrivial)]
+  unfold finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
   rw [finiteZ2GaugeNormalizedProductKernel_operator_norm_eq_one
+    (q := z2WilsonTemporalCrossingRate
+      β energyIdentity energyNontrivial)
     (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy).le]
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy).le
+    (FiniteEvenFourTorusSpatialLink H)]
   ring
 
 /-- Operator-norm normalization of the existing raw crossing kernel is exactly
@@ -194,8 +216,10 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingNormalizedOperator_eq
         (finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
           H β energyIdentity energyNontrivial) := by
   unfold finiteKernelNormalizedOperator
-  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_norm_eq_scale,
-    finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_eq_scale_smul_normalized,
+  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_norm_eq_scale
+      H β energyIdentity energyNontrivial hβ hEnergy,
+    finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_eq_scale_smul_normalized
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le,
     smul_smul]
   rw [inv_mul_cancel₀
     (ne_of_gt (finiteEvenFourTorusZ2TemporalCrossingScale_pos
@@ -252,7 +276,8 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingNormalizedOperator_poincare
         (f - finiteKernelNormalizedOperator
           (finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
             H β energyIdentity energyNontrivial hβ.le hEnergy.le).kernel f) f := by
-  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingNormalizedOperator_eq]
+  rw [finiteEvenFourTorusZ2TemporalGaugeCrossingNormalizedOperator_eq
+    H β energyIdentity energyNontrivial hβ hEnergy]
   exact finiteEvenFourTorusZ2NormalizedTemporalCrossing_poincare
     H β energyIdentity energyNontrivial hβ hEnergy f hmass
 
