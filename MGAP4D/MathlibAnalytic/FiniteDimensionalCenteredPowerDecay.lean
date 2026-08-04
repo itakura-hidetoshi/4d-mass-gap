@@ -84,7 +84,7 @@ theorem finiteCenteredRestriction_norm_le
   apply ciSup_le
   intro x
   by_cases hx : x = 0
-  · simp [hx]
+  · simpa [hx] using hq0
   · have hden : 0 < ‖x‖ ^ 2 :=
       sq_pos_of_pos (norm_pos_iff.mpr hx)
     have hnonneg : 0 ≤ R.rayleighQuotient x := by
@@ -117,7 +117,7 @@ theorem finiteCenteredRestriction_pow_norm_apply_le
         inner ℝ (T x.1) x.1 ≤ q * ‖x‖ ^ 2)
     (n : ℕ)
     (x : finiteLinearFunctionalCenteredSubspace mass) :
-    ‖(finiteCenteredRestriction T mass hmass) ^ n x‖ ≤
+    ‖((finiteCenteredRestriction T mass hmass) ^ n) x‖ ≤
       q ^ n * ‖x‖ := by
   let R := finiteCenteredRestriction T mass hmass
   have hnorm : ‖R‖ ≤ q :=
@@ -127,15 +127,15 @@ theorem finiteCenteredRestriction_pow_norm_apply_le
   | zero =>
       simp
   | succ n ih =>
-      change ‖R ^ (n + 1) x‖ ≤ q ^ (n + 1) * ‖x‖
+      change ‖(R ^ (n + 1)) x‖ ≤ q ^ (n + 1) * ‖x‖
       rw [pow_succ']
       calc
-        ‖R (R ^ n x)‖ ≤ ‖R‖ * ‖R ^ n x‖ :=
-          R.le_opNorm (R ^ n x)
+        ‖R ((R ^ n) x)‖ ≤ ‖R‖ * ‖(R ^ n) x‖ :=
+          R.le_opNorm ((R ^ n) x)
         _ ≤ q * (q ^ n * ‖x‖) :=
           mul_le_mul hnorm ih (norm_nonneg _) hq0
         _ = q ^ (n + 1) * ‖x‖ := by
-          rw [pow_succ']
+          rw [pow_succ]
           ring
 
 end
