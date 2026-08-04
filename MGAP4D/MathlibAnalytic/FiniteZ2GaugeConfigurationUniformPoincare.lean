@@ -12,18 +12,15 @@ open scoped BigOperators InnerProduct
 noncomputable section
 
 /-- The actual two-point gauge group inherits one canonical finite enumeration
-from `Bool`.  Every configuration carrier then uses Mathlib's single
-`Pi.instFintype` construction, avoiding non-definitionally-equal competing
-function-space enumerations. -/
+from `Bool`. -/
 noncomputable instance z2GaugeFintype : Fintype Z2Gauge :=
   Fintype.ofEquiv Bool boolEquivZ2Gauge
 
 /-- Canonical finite relabelling of a `Z₂` configuration space as a Boolean
 cube. -/
 noncomputable def finiteZ2GaugeConfigurationEquiv
-    (ι : Type) [Fintype ι] :
-    (ι → Z2Gauge) ≃
-      (Fin (Fintype.card ι) → Bool) where
+    (ι : Type) [Fintype ι] [DecidableEq ι] :
+    (ι → Z2Gauge) ≃ (Fin (Fintype.card ι) → Bool) where
   toFun A i := boolEquivZ2Gauge.symm (A ((Fintype.equivFin ι).symm i))
   invFun b e := boolEquivZ2Gauge (b (Fintype.equivFin ι e))
   left_inv := by
@@ -38,7 +35,7 @@ noncomputable def finiteZ2GaugeConfigurationEquiv
 /-- The dimension-free normalized crossing kernel on an arbitrary finite set
 of actual `Z₂` gauge links. -/
 def finiteZ2GaugeNormalizedProductKernel
-    (q : ℝ) (ι : Type) [Fintype ι] :
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι] :
     (ι → Z2Gauge) → (ι → Z2Gauge) → ℝ :=
   fun A B =>
     finiteZ2NormalizedProductKernel q (Fintype.card ι)
@@ -47,7 +44,7 @@ def finiteZ2GaugeNormalizedProductKernel
 
 /-- The transported actual-carrier kernel remains symmetric. -/
 theorem finiteZ2GaugeNormalizedProductKernel_symmetric
-    (q : ℝ) (ι : Type) [Fintype ι]
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι]
     (A B : ι → Z2Gauge) :
     finiteZ2GaugeNormalizedProductKernel q ι A B =
       finiteZ2GaugeNormalizedProductKernel q ι B A := by
@@ -56,7 +53,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_symmetric
 /-- Reindexing identifies the actual-carrier quadratic form with the Boolean
 cube quadratic form exactly. -/
 theorem finiteZ2GaugeNormalizedProductKernel_quadratic_equiv
-    (q : ℝ) (ι : Type) [Fintype ι]
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : (ι → Z2Gauge) → ℝ) :
     finiteFunctionKernelQuadratic
         (finiteZ2GaugeNormalizedProductKernel q ι) f =
@@ -75,7 +72,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_quadratic_equiv
 
 /-- Reindexing identifies total mass exactly. -/
 theorem finiteZ2GaugeConfiguration_mass_equiv
-    (ι : Type) [Fintype ι]
+    (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : (ι → Z2Gauge) → ℝ) :
     finiteFunctionMass f =
       finiteFunctionMass
@@ -84,7 +81,7 @@ theorem finiteZ2GaugeConfiguration_mass_equiv
 
 /-- Reindexing identifies the squared Euclidean norm exactly. -/
 theorem finiteZ2GaugeConfiguration_normSq_equiv
-    (ι : Type) [Fintype ι]
+    (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : (ι → Z2Gauge) → ℝ) :
     finiteFunctionNormSq f =
       finiteFunctionNormSq
@@ -95,7 +92,7 @@ theorem finiteZ2GaugeConfiguration_normSq_equiv
 local sign-mode rate, independently of the finite link set. -/
 theorem finiteZ2GaugeNormalizedProductKernel_quadratic_le_q_mul_of_mass_zero
     {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
-    (ι : Type) [Fintype ι]
+    (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : (ι → Z2Gauge) → ℝ)
     (hmass : finiteFunctionMass f = 0) :
     finiteFunctionKernelQuadratic
@@ -117,7 +114,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_quadratic_le_q_mul_of_mass_zero
 configuration space. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_rayleigh_le
     {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
-    (ι : Type) [Fintype ι]
+    (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : FiniteBoundaryHilbert (ι → Z2Gauge))
     (hmass : finiteFunctionMass f = 0) :
     inner ℝ
@@ -133,7 +130,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_operator_rayleigh_le
 configuration space. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_poincare
     {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
-    (ι : Type) [Fintype ι]
+    (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : FiniteBoundaryHilbert (ι → Z2Gauge))
     (hmass : finiteFunctionMass f = 0) :
     (1 - q) * ‖f‖ ^ 2 ≤
