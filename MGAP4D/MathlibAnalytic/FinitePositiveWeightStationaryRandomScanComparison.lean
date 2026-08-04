@@ -145,11 +145,11 @@ theorem finitePositiveWeightGlobalExpectation_abs_le
     (hBound : ∀ A : ι → G, |f A| ≤ bound) :
     |finitePositiveWeightGlobalExpectation weight f| ≤ bound := by
   unfold finitePositiveWeightGlobalExpectation
-  exact finiteRealProbability_abs_expectation_le
+  apply finiteRealProbability_abs_expectation_le
     (finitePositiveWeightGlobalProbability weight)
     (finitePositiveWeightGlobalProbability_nonneg weight hweight)
     (finitePositiveWeightGlobalProbability_sum_eq_one weight hweight)
-    hBound
+  exact hBound
 
 /-- The normalized positive-weight expectation is stationary for its exact
 uniform random-scan heat-bath operator. -/
@@ -200,7 +200,6 @@ theorem FiniteProductVariationBound.globalExpectation_crossWeight_le_oneStep
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (sourceBound : ι → ℝ)
-    (hSourceBound : ∀ target : ι, 0 ≤ sourceBound target)
     (hCrossL1 :
       ∀ (A : ι → G) (target : ι),
         finitePositiveWeightSingleSiteConditionalCrossL1
