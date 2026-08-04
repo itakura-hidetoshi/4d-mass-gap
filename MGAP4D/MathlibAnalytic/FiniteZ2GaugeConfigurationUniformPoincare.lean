@@ -69,7 +69,12 @@ theorem finiteZ2GaugeNormalizedProductKernel_quadratic_equiv
   rw [finiteFunctionKernelQuadratic_equiv
     (finiteZ2GaugeConfigurationEquiv ι)
     (finiteZ2GaugeNormalizedProductKernel q ι) f]
-  rfl
+  apply congrArg
+    (fun kernel =>
+      finiteFunctionKernelQuadratic kernel
+        (fun x => f ((finiteZ2GaugeConfigurationEquiv ι).symm x)))
+  funext x y
+  simp [finiteZ2GaugeNormalizedProductKernel]
 
 /-- Reindexing identifies total mass exactly. -/
 theorem finiteZ2GaugeConfiguration_mass_equiv
@@ -108,8 +113,8 @@ theorem finiteZ2GaugeNormalizedProductKernel_quadratic_le_q_mul_of_mass_zero
     finiteZ2NormalizedProductKernel_quadratic_le_q_mul_of_mass_zero
       hq0 hq1 (Fintype.card ι) g hmassg
   rw [finiteZ2GaugeNormalizedProductKernel_quadratic_equiv]
-  rw [finiteZ2GaugeConfiguration_normSq_equiv] at hbound ⊢
-  exact hbound
+  rw [finiteZ2GaugeConfiguration_normSq_equiv ι f]
+  simpa [g] using hbound
 
 /-- Hilbert-space Rayleigh contraction on an arbitrary finite actual `Z₂`
 configuration space. -/
