@@ -141,7 +141,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior_sum_temporal
       finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel
         H β energyIdentity energyNontrivial hβ hEnergy A B := by
   unfold finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior
-  rw [Finset.sum_div]
+  rw [← Finset.sum_div]
   rw [finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedWeight_sum_temporal]
   exact
     (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel_eq_posterior
