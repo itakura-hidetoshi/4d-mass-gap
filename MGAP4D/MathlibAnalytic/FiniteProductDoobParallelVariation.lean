@@ -56,13 +56,32 @@ theorem doobWeight_pos
     (x : α) :
     0 < D.doobWeight x := by
   unfold doobWeight
-  positivity
+  exact sq_pos_of_pos (D.ground_pos x)
+
+/-- Stochasticity of the Doob kernel fixes the constant-one observable. -/
+theorem doobObservableLinearMap_one
+    (D : FiniteKernelGroundStateDoobData α) :
+    D.doobObservableLinearMap (fun _ : α => (1 : ℝ)) =
+      (fun _ : α => (1 : ℝ)) := by
+  funext y
+  unfold doobObservableLinearMap
+  simpa using D.doobKernel_sum_eq_one y
+
+end FiniteKernelGroundStateDoobData
+
+namespace FiniteKernelGroundStateDoobData
+
+variable {ι G : Type}
+  [DecidableEq ι]
+  [Fintype ι]
+  [Fintype G]
+  [Nonempty G]
 
 /-- Detailed balance makes the ordinary-observable Doob operator symmetric for
-its ground-square weight. -/
+its ground-square weight on a finite product configuration space. -/
 theorem doobObservableLinearMap_pairing_symm
-    (D : FiniteKernelGroundStateDoobData α)
-    (f g : α → ℝ) :
+    (D : FiniteKernelGroundStateDoobData (ι → G))
+    (f g : (ι → G) → ℝ) :
     finitePositiveWeightPairing D.doobWeight
         (D.doobObservableLinearMap f) g =
       finitePositiveWeightPairing D.doobWeight f
@@ -71,7 +90,7 @@ theorem doobObservableLinearMap_pairing_symm
   calc
     finitePositiveWeightPairing D.doobWeight
         (D.doobObservableLinearMap f) g =
-      ∑ y : α, ∑ x : α,
+      ∑ y : ι → G, ∑ x : ι → G,
         D.ground y ^ 2 * D.doobKernel x y * f x * g y := by
       unfold finitePositiveWeightPairing doobWeight
       apply Finset.sum_congr rfl
@@ -80,10 +99,10 @@ theorem doobObservableLinearMap_pairing_symm
       apply Finset.sum_congr rfl
       intro x _hx
       ring
-    _ = ∑ x : α, ∑ y : α,
+    _ = ∑ x : ι → G, ∑ y : ι → G,
         D.ground y ^ 2 * D.doobKernel x y * f x * g y := by
       rw [Finset.sum_comm]
-    _ = ∑ x : α, ∑ y : α,
+    _ = ∑ x : ι → G, ∑ y : ι → G,
         D.ground x ^ 2 * f x * D.doobKernel y x * g y := by
       apply Finset.sum_congr rfl
       intro x _hx
@@ -101,48 +120,53 @@ theorem doobObservableLinearMap_pairing_symm
       intro y _hy
       ring
 
-/-- Stochasticity of the Doob kernel fixes the constant-one observable. -/
-theorem doobObservableLinearMap_one
-    (D : FiniteKernelGroundStateDoobData α) :
-    D.doobObservableLinearMap (fun _ : α => (1 : ℝ)) =
-      (fun _ : α => (1 : ℝ)) := by
-  funext y
-  unfold doobObservableLinearMap
-  simpa using D.doobKernel_sum_eq_one y
-
-/-- The generic positive-weight pairing is definitionally the existing Doob
-weighted inner product on ordinary coordinate functions. -/
+/-- On product configurations, the generic positive-weight pairing is exactly
+the existing Doob weighted inner product. -/
 theorem weightedInner_eq_positiveWeightPairing
-    (D : FiniteKernelGroundStateDoobData α)
-    (f g : FiniteBoundaryHilbert α) :
+    (D : FiniteKernelGroundStateDoobData (ι → G))
+    (f g : FiniteBoundaryHilbert (ι → G)) :
     D.weightedInner f g =
       finitePositiveWeightPairing D.doobWeight
-        (fun x => f x) (fun x => g x) := by
+        (fun A : ι → G => f A) (fun A : ι → G => g A) := by
   rfl
 
 /-- The plain-observable Doob action agrees pointwise with the existing finite
-kernel operator. -/
+kernel operator on product configurations. -/
 theorem doobObservableLinearMap_eq_finiteKernelOperator
-    (D : FiniteKernelGroundStateDoobData α)
-    (f : FiniteBoundaryHilbert α) :
-    D.doobObservableLinearMap (fun x => f x) =
-      (fun y => finiteKernelOperator D.doobKernel f y) := by
-  funext y
+    (D : FiniteKernelGroundStateDoobData (ι → G))
+    (f : FiniteBoundaryHilbert (ι → G)) :
+    D.doobObservableLinearMap (fun A : ι → G => f A) =
+      (fun B : ι → G => finiteKernelOperator D.doobKernel f B) := by
+  funext B
   simp [doobObservableLinearMap, finiteKernelOperator_apply]
 
 /-- The generic positive-weight quadratic form of the plain Doob map is the
-existing weighted Doob quadratic form. -/
+existing weighted Doob quadratic form on product configurations. -/
 theorem weightedDoobQuadratic_eq_positiveWeightPairing
-    (D : FiniteKernelGroundStateDoobData α)
-    (f : FiniteBoundaryHilbert α) :
+    (D : FiniteKernelGroundStateDoobData (ι → G))
+    (f : FiniteBoundaryHilbert (ι → G)) :
     D.weightedDoobQuadratic f =
       finitePositiveWeightPairing D.doobWeight
-        (D.doobObservableLinearMap (fun x => f x))
-        (fun x => f x) := by
+        (D.doobObservableLinearMap (fun A : ι → G => f A))
+        (fun A : ι → G => f A) := by
   unfold weightedDoobQuadratic
   rw [D.weightedInner_eq_positiveWeightPairing]
-  congr 1
-  exact D.doobObservableLinearMap_eq_finiteKernelOperator f
+  apply congrArg
+    (fun h : (ι → G) → ℝ =>
+      finitePositiveWeightPairing D.doobWeight h
+        (fun A : ι → G => f A))
+  exact (D.doobObservableLinearMap_eq_finiteKernelOperator f).symm
+
+/-- The existing weighted squared norm is the generic positive-weight
+self-pairing on product configurations. -/
+theorem weightedNormSq_eq_positiveWeightPairing
+    (D : FiniteKernelGroundStateDoobData (ι → G))
+    (f : FiniteBoundaryHilbert (ι → G)) :
+    D.weightedNormSq f =
+      finitePositiveWeightPairing D.doobWeight
+        (fun A : ι → G => f A) (fun A : ι → G => f A) := by
+  unfold weightedNormSq
+  exact D.weightedInner_eq_positiveWeightPairing f f
 
 end FiniteKernelGroundStateDoobData
 
@@ -191,15 +215,35 @@ theorem finiteProductDoob_centered_parallel_rayleigh_le
     D.weightedDoobQuadratic f ≤
       C.variationData.coefficient * D.weightedNormSq f := by
   have hCenter :
-      finitePositiveWeightSum D.doobWeight (fun A => f A) = 0 := by
-    exact hMean
-  have hRayleigh :=
-    finitePositiveWeight_centered_parallel_rayleigh_le
-      D.doobWeight D.doobWeight_pos D.doobObservableLinearMap
-      C.toParallelReversibleData (fun A => f A) hCenter
-  rw [← D.weightedDoobQuadratic_eq_positiveWeightPairing,
-    ← D.weightedInner_eq_positiveWeightPairing] at hRayleigh
-  exact hRayleigh
+      finitePositiveWeightSum D.doobWeight
+        (fun A : ι → G => f A) = 0 := by
+    simpa [FiniteKernelGroundStateDoobData.weightedMean,
+      FiniteKernelGroundStateDoobData.doobWeight,
+      finitePositiveWeightSum] using hMean
+  have hRayleigh :
+      finitePositiveWeightPairing D.doobWeight
+          (D.doobObservableLinearMap (fun A : ι → G => f A))
+          (fun A : ι → G => f A) ≤
+        C.variationData.coefficient *
+          finitePositiveWeightPairing D.doobWeight
+            (fun A : ι → G => f A) (fun A : ι → G => f A) := by
+    simpa [FiniteProductDoobParallelVariationCertificate.toParallelReversibleData]
+      using
+        (finitePositiveWeight_centered_parallel_rayleigh_le
+          D.doobWeight D.doobWeight_pos D.doobObservableLinearMap
+          C.toParallelReversibleData (fun A : ι → G => f A) hCenter)
+  calc
+    D.weightedDoobQuadratic f =
+        finitePositiveWeightPairing D.doobWeight
+          (D.doobObservableLinearMap (fun A : ι → G => f A))
+          (fun A : ι → G => f A) :=
+      D.weightedDoobQuadratic_eq_positiveWeightPairing f
+    _ ≤ C.variationData.coefficient *
+        finitePositiveWeightPairing D.doobWeight
+          (fun A : ι → G => f A) (fun A : ι → G => f A) :=
+      hRayleigh
+    _ = C.variationData.coefficient * D.weightedNormSq f := by
+      rw [← D.weightedNormSq_eq_positiveWeightPairing f]
 
 /-- The direct parallel Doob rate is strictly below one. -/
 theorem finiteProductDoob_parallel_rate_lt_one
