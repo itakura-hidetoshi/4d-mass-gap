@@ -101,7 +101,6 @@ theorem finitePositiveWeightSingleSiteProbability_eq_of_agreeOff
     finitePositiveWeightSingleSiteProbability weight A target =
       finitePositiveWeightSingleSiteProbability weight B target := by
   funext g
-  unfold finitePositiveWeightSingleSiteProbability
   have hUpdate :
       ∀ h : G,
         Function.update A target h = Function.update B target h := by
@@ -111,7 +110,15 @@ theorem finitePositiveWeightSingleSiteProbability_eq_of_agreeOff
     · subst i
       simp
     · simp [Function.update, hit, hAgree i hit]
-  simp_rw [hUpdate]
+  have hPartition :
+      finitePositiveWeightSingleSitePartition weight A target =
+        finitePositiveWeightSingleSitePartition weight B target := by
+    unfold finitePositiveWeightSingleSitePartition
+    apply Finset.sum_congr rfl
+    intro h _hh
+    rw [hUpdate h]
+  unfold finitePositiveWeightSingleSiteProbability
+  rw [hUpdate g, hPartition]
 
 /-- Consequently the self-environment conditional `L¹` distance vanishes. -/
 theorem finitePositiveWeightSingleSiteConditionalL1_eq_zero_of_agreeOff
@@ -123,9 +130,10 @@ theorem finitePositiveWeightSingleSiteConditionalL1_eq_zero_of_agreeOff
     (target : ι)
     (hAgree : FiniteProductAgreeOff A B target) :
     finitePositiveWeightSingleSiteConditionalL1 weight A B target = 0 := by
+  unfold finitePositiveWeightSingleSiteConditionalL1
   rw [finitePositiveWeightSingleSiteProbability_eq_of_agreeOff
     weight A B target hAgree]
-  simp [finitePositiveWeightSingleSiteConditionalL1]
+  simp
 
 /-- Proof-relevant Dobrushin `L¹` influence data for an arbitrary strictly
 positive finite product weight.  `influence target source` bounds the change of
@@ -192,7 +200,10 @@ theorem finiteProductSingleSiteDifferenceValues_nonempty
   let A0 : ι → G := Classical.choice inferInstance
   let g0 : G := Classical.choice inferInstance
   refine ⟨0, ?_⟩
-  simp [finiteProductSingleSiteDifferenceValues, A0, g0]
+  unfold finiteProductSingleSiteDifferenceValues
+  simp only [Finset.mem_image, Finset.mem_univ, true_and]
+  refine ⟨(A0, (g0, g0)), ?_⟩
+  simp
 
 /-- Canonical global one-coordinate oscillation of a finite product
 observable. -/
@@ -313,6 +324,7 @@ expectation difference bound. -/
 theorem finiteRealProbability_expectation_difference_abs_le_l1_mul
     {G : Type}
     [Fintype G]
+    [Nonempty G]
     (p q : G → ℝ)
     (u : G → ℝ)
     (M : ℝ)
@@ -323,6 +335,9 @@ theorem finiteRealProbability_expectation_difference_abs_le_l1_mul
       (∑ g : G, |p g - q g|) * M := by
   classical
   let g0 : G := Classical.choice inferInstance
+  have hzero : ∑ g : G, (p g - q g) = 0 := by
+    rw [Finset.sum_sub_distrib, hp_sum, hq_sum]
+    ring
   have hcenter :
       (∑ g : G, p g * u g) - ∑ g : G, q g * u g =
         ∑ g : G, (p g - q g) * (u g - u g0) := by
@@ -334,11 +349,22 @@ theorem finiteRealProbability_expectation_difference_abs_le_l1_mul
         intro g _hg
         ring
       _ = ∑ g : G, (p g - q g) * (u g - u g0) := by
-        rw [Finset.sum_sub_distrib]
-        have hzero : ∑ g : G, (p g - q g) = 0 := by
-          rw [Finset.sum_sub_distrib, hp_sum, hq_sum]
-          ring
-        rw [← Finset.sum_mul, hzero, zero_mul, sub_zero]
+        symm
+        calc
+          (∑ g : G, (p g - q g) * (u g - u g0)) =
+              ∑ g : G,
+                ((p g - q g) * u g - (p g - q g) * u g0) := by
+            apply Finset.sum_congr rfl
+            intro g _hg
+            ring
+          _ = (∑ g : G, (p g - q g) * u g) -
+              ∑ g : G, (p g - q g) * u g0 := by
+            rw [Finset.sum_sub_distrib]
+          _ = (∑ g : G, (p g - q g) * u g) -
+              (∑ g : G, (p g - q g)) * u g0 := by
+            rw [Finset.sum_mul]
+          _ = ∑ g : G, (p g - q g) * u g := by
+            rw [hzero, zero_mul, sub_zero]
   rw [hcenter]
   calc
     |∑ g : G, (p g - q g) * (u g - u g0)| ≤
