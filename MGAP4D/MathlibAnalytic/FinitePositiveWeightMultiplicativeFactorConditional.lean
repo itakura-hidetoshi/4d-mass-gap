@@ -40,7 +40,7 @@ theorem finitePositiveWeightProduct_singleSitePartition_eq
   classical
   unfold finitePositiveWeightSingleSitePartition finitePositiveWeightProduct
   simp_rw [hRight A]
-  exact Finset.sum_mul.symm
+  rw [Finset.sum_mul]
 
 /-- Multiplication by a strictly positive factor independent of the updated
 coordinate leaves the one-site conditional law exactly unchanged. -/
@@ -109,7 +109,7 @@ theorem finiteProductFunctionIndependentOfCoordinate_crossRatio_one
       factor A B target 1 := by
   intro g h
   rw [hFactor A g, hFactor B h, hFactor B g, hFactor A h]
-  ring
+  exact le_rfl
 
 /-- Four-point cross-ratio bounds multiply under pointwise products of
 nonnegative weights. -/
