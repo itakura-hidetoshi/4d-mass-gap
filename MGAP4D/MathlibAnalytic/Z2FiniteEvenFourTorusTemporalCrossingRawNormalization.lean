@@ -131,10 +131,28 @@ theorem finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel_eq_scale_mul_normal
         finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
           H β energyIdentity energyNontrivial A B := by
   unfold finiteEvenFourTorusZ2TemporalGaugeCrossingGramKernel
-  rw [finite_os_gram_kernel_listProduct_apply]
-  simp only [List.map_map, Function.comp_apply]
-  simp_rw [finiteEvenFourTorusZ2TemporalLinkGramKernel_eq_weightSum_mul_normalized]
-  rw [list_prod_map_const_mul]
+  rw [finite_os_gram_kernel_listProduct_apply, List.map_map]
+  change
+    (((Finset.univ : Finset (FiniteEvenFourTorusSpatialLink H)).toList.map
+      (fun e =>
+        (finiteEvenFourTorusZ2TemporalLinkGramKernel
+          H β energyIdentity energyNontrivial hβ hEnergy e).kernel A B)).prod) = _
+  have hkernel :
+      (fun e : FiniteEvenFourTorusSpatialLink H =>
+        (finiteEvenFourTorusZ2TemporalLinkGramKernel
+          H β energyIdentity energyNontrivial hβ hEnergy e).kernel A B) =
+      (fun e =>
+        z2WilsonTemporalCrossingWeightSum
+            β energyIdentity energyNontrivial *
+          finiteZ2NormalizedLocalKernel
+            (z2WilsonTemporalCrossingRate
+              β energyIdentity energyNontrivial)
+            (boolEquivZ2Gauge.symm (A e))
+            (boolEquivZ2Gauge.symm (B e))) := by
+    funext e
+    exact finiteEvenFourTorusZ2TemporalLinkGramKernel_eq_weightSum_mul_normalized
+      H β energyIdentity energyNontrivial hβ hEnergy e A B
+  rw [hkernel, list_prod_map_const_mul]
   simp [finiteEvenFourTorusZ2TemporalCrossingScale,
     finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel,
     finiteZ2GaugeNormalizedProductKernel_apply]
