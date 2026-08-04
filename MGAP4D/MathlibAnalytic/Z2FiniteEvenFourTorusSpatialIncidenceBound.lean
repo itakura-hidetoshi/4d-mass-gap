@@ -79,6 +79,7 @@ theorem finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceCode_injective
     · simp [finiteEvenFourTorusSpatialPlaquetteBoundary,
         finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceOtherDirection] at hp hp' hother
       have hb : (p.1, p.2.1.1) = (p'.1, p'.2.1.1) := hp.trans hp'.symm
+      apply Subtype.ext
       apply Prod.ext
       · exact congrArg Prod.fst hb
       · apply Subtype.ext
@@ -91,6 +92,7 @@ theorem finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceCode_injective
           (finiteEvenFourTorusSpatialVertexStep H p.1 p.2.1.1, p.2.1.2) =
             (finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.1, p'.2.1.2) :=
         hp.trans hp'.symm
+      apply Subtype.ext
       apply Prod.ext
       · have hstep :
             finiteEvenFourTorusSpatialVertexStep H p.1 p'.2.1.1 =
@@ -107,6 +109,7 @@ theorem finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceCode_injective
           (finiteEvenFourTorusSpatialVertexStep H p.1 p.2.1.2, p.2.1.1) =
             (finiteEvenFourTorusSpatialVertexStep H p'.1 p'.2.1.2, p'.2.1.1) :=
         hp.trans hp'.symm
+      apply Subtype.ext
       apply Prod.ext
       · have hstep :
             finiteEvenFourTorusSpatialVertexStep H p.1 p'.2.1.2 =
@@ -120,6 +123,7 @@ theorem finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceCode_injective
     · simp [finiteEvenFourTorusSpatialPlaquetteBoundary,
         finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceOtherDirection] at hp hp' hother
       have hb : (p.1, p.2.1.2) = (p'.1, p'.2.1.2) := hp.trans hp'.symm
+      apply Subtype.ext
       apply Prod.ext
       · exact congrArg Prod.fst hb
       · apply Subtype.ext
@@ -150,7 +154,7 @@ theorem finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrence_card_le_twelve
           (finiteEvenFourTorusSpatialPlaquetteBoundaryOccurrenceCode_injective
             H e)
     _ = 12 := by
-      simp [finiteEvenFourTorusSpatialDirection_card]
+      simp
 
 /-- Choose one boundary occurrence for every plaquette touching a fixed link. -/
 noncomputable def finiteEvenFourTorusSpatialTouchingPlaquetteToOccurrence
