@@ -24,9 +24,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceB
       2 *
           (1 - Real.exp
             (-2 * β * (energyNontrivial - energyIdentity))) *
-        ∑ target in
-          finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
-            variation target := by
+        ∑ target in finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
+          variation target := by
   classical
   unfold
     finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound
@@ -53,8 +52,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceB
             finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source
       · simp [hmem]
       · simp [hmem]
-    _ = ∑ target in
-        finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
+    _ = ∑ target in finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
           2 *
               (1 - Real.exp
                 (-2 * β * (energyNontrivial - energyIdentity))) *
@@ -64,9 +62,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceB
     _ = 2 *
           (1 - Real.exp
             (-2 * β * (energyNontrivial - energyIdentity))) *
-        ∑ target in
-          finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
-            variation target := by
+        ∑ target in finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
+          variation target := by
       rw [Finset.mul_sum]
 
 /-- Actual cross-boundary random-scan comparison on the encoded augmented
@@ -141,9 +138,8 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
         (2 *
             (1 - Real.exp
               (-2 * β * (energyNontrivial - energyIdentity))) *
-          ∑ target in
-            finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
-              P.variation target) := by
+          ∑ target in finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
+            P.variation target) := by
   rw [←
     finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound_pairing_eq
       H β energyIdentity energyNontrivial source P.variation]
