@@ -55,7 +55,9 @@ variable {W : FiniteWilsonOSAutomaticApproximationFamily}
 theorem margin_pos (i : W.index) :
     0 < finiteWilsonFourDimensionalDobrushinMargin (W.system i) :=
   finite_wilson_fourDimensionalDobrushinMargin_pos
-    (W.system i) (D.influenceMajorant_lt_inv_eighteen i)
+    (W.system i)
+    (FiniteWilsonFourDimensionalIncidenceHighTemperatureFamilyData.
+      influenceMajorant_lt_inv_eighteen D i)
 
 /-- Four-dimensional incidence and the explicit high-temperature threshold
 produce strict exact canonical Dobrushin coefficients at all finite scales. -/
@@ -64,7 +66,8 @@ noncomputable def strictFamilyData :
   { edgeCard_pos := fun i => (D.incidence i).edgeCard_pos
     coefficient_lt_one := fun i =>
       (D.incidence i).canonicalDobrushinCoefficient_lt_one
-        (D.influenceMajorant_lt_inv_eighteen i) }
+        (FiniteWilsonFourDimensionalIncidenceHighTemperatureFamilyData.
+          influenceMajorant_lt_inv_eighteen D i) }
 
 /-- The complete proof-relevant canonical Dobrushin matrix family generated
 from the four-dimensional incidence package. -/
