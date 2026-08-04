@@ -32,10 +32,11 @@ theorem finitePositiveWeightSingleSitePartition_pos
     (e : ι) :
     0 < finitePositiveWeightSingleSitePartition weight A e := by
   classical
+  let g₀ : G := Classical.choice (inferInstance : Nonempty G)
   unfold finitePositiveWeightSingleSitePartition
   exact Finset.sum_pos
     (fun g _hg => hweight (Function.update A e g))
-    ⟨default, Finset.mem_univ _⟩
+    ⟨g₀, Finset.mem_univ g₀⟩
 
 /-- Real conditional probability obtained by normalizing a positive finite
 weight on one coordinate fiber. -/
@@ -110,8 +111,16 @@ theorem finitePositiveWeightSingleSiteProbability_le_ratio_mul
   have hZ :
       0 < finitePositiveWeightSingleSitePartition weight A e :=
     finitePositiveWeightSingleSitePartition_pos weight hweight A e
-  rw [mul_div_assoc]
-  exact (div_le_div_iff_of_pos_right hZ).2 (hRatio g h)
+  calc
+    weight (Function.update A e g) /
+          finitePositiveWeightSingleSitePartition weight A e ≤
+        (ratio * weight (Function.update A e h)) /
+          finitePositiveWeightSingleSitePartition weight A e :=
+      (div_le_div_iff_of_pos_right hZ).2 (hRatio g h)
+    _ = ratio *
+        (weight (Function.update A e h) /
+          finitePositiveWeightSingleSitePartition weight A e) := by
+      ring
 
 /-- Conditional expectation along one coordinate fiber for a positive finite
 weight. -/
