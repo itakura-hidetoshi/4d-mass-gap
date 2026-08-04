@@ -58,8 +58,8 @@ theorem fullRate_pos : 0 < S.fullRate := by
 /-- The strict stability margin keeps the full rate below one. -/
 theorem fullRate_lt_one : S.fullRate < 1 := by
   unfold fullRate
-  unfold z2WilsonTemporalCrossingCoercivity at
-    S.degradation_lt_crossingCoercivity
+  have hdeg := S.degradation_lt_crossingCoercivity
+  unfold z2WilsonTemporalCrossingCoercivity at hdeg
   linarith
 
 /-- The corresponding full-transfer coercivity is the crossing coercivity
@@ -111,10 +111,9 @@ noncomputable def toUniformCenteredPoincareCertificate :
 
 @[simp] theorem toUniformCenteredPoincareCertificate_coercivity :
     S.toUniformCenteredPoincareCertificate.coercivity = S.fullCoercivity := by
-  unfold toUniformCenteredPoincareCertificate
-  rw [Z2UnfixedGaugeStrictCouplingUniformCenteredRayleighCertificate.toCenteredPoincareCertificate_coercivity]
-  rw [toUniformCenteredRayleighCertificate_rate]
-  exact S.fullRate_eq_one_sub_fullCoercivity ▸ by ring
+  change 1 - S.fullRate = S.fullCoercivity
+  rw [S.fullRate_eq_one_sub_fullCoercivity]
+  ring
 
 /-- The stability certificate therefore generates the complete actual
 full-transfer uniform-gap package already established by the spectral layer. -/
@@ -124,6 +123,26 @@ noncomputable def toUniformCenteredPoincareCompletePackage :
   finiteEvenFourTorusZ2UnfixedGaugeStrictCouplingUniformCenteredPoincareCompletePackage
     β energyIdentity energyNontrivial hβ hEnergy
       S.toUniformCenteredPoincareCertificate
+
+@[simp] theorem
+    toUniformCenteredPoincareCompletePackage_centeredPoincare_coercivity :
+    S.toUniformCenteredPoincareCompletePackage.centeredPoincare.coercivity =
+      S.fullCoercivity := by
+  unfold toUniformCenteredPoincareCompletePackage
+  rw [finiteEvenFourTorusZ2UnfixedGaugeStrictCouplingUniformCenteredPoincareCompletePackage_coercivity_eq]
+  exact S.toUniformCenteredPoincareCertificate_coercivity
+
+@[simp] theorem
+    toUniformCenteredPoincareCompletePackage_centeredRayleigh_rate :
+    S.toUniformCenteredPoincareCompletePackage.centeredRayleigh.rate =
+      S.fullRate := by
+  calc
+    S.toUniformCenteredPoincareCompletePackage.centeredRayleigh.rate =
+        1 - S.toUniformCenteredPoincareCompletePackage.centeredPoincare.coercivity :=
+      S.toUniformCenteredPoincareCompletePackage.rate_eq_one_sub_coercivity
+    _ = 1 - S.fullCoercivity := by
+      rw [S.toUniformCenteredPoincareCompletePackage_centeredPoincare_coercivity]
+    _ = S.fullRate := S.fullRate_eq_one_sub_fullCoercivity.symm
 
 end Z2UnfixedGaugeSpatialSandwichUniformStabilityCertificate
 
@@ -187,11 +206,12 @@ noncomputable def finiteEvenFourTorusZ2SpatialSandwichStabilityCompletePackage
       β energyIdentity energyNontrivial hβ hEnergy :=
   { stability := S
     uniformFullTransfer := S.toUniformCenteredPoincareCompletePackage
-    uniformFullTransfer_rate_eq := rfl
+    uniformFullTransfer_rate_eq :=
+      S.toUniformCenteredPoincareCompletePackage_centeredRayleigh_rate
     uniformFullTransfer_coercivity_eq :=
-      S.toUniformCenteredPoincareCertificate_coercivity
+      S.toUniformCenteredPoincareCompletePackage_centeredPoincare_coercivity
     uniformFullTransfer_coercivity_pos := by
-      rw [S.toUniformCenteredPoincareCertificate_coercivity]
+      rw [S.toUniformCenteredPoincareCompletePackage_centeredPoincare_coercivity]
       exact S.fullCoercivity_pos
     rawSpatialSandwich := fun H =>
       finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_eq_spatialSandwich
