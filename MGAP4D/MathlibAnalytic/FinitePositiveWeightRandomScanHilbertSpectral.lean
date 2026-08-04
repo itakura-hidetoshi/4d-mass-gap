@@ -85,7 +85,8 @@ theorem finitePositiveWeightHilbertRandomScanRestricted_eigenvalue_abs_le_rate
             finitePositiveWeightHilbertObserveLinearMap weight y)
           hEmbeddedEigen
       _ = r • f := by
-        rw [map_smul, finitePositiveWeightHilbert_observe_embed]
+        rw [map_smul,
+          finitePositiveWeightHilbert_observe_embed weight hweight]
   exact finitePositiveWeight_centered_randomScan_eigenvalue_abs_le_rate
     weight hweight f D hCard r hCenter hf hObservableEigen
 
