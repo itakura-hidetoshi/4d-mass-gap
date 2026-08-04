@@ -61,7 +61,7 @@ theorem finitePositiveWeightSingleSiteProbability_le_ratio_mul_of_crossRatio
   rw [Finset.mul_sum, Finset.mul_sum]
   apply Finset.sum_le_sum
   intro h _hh
-  exact hCross g h
+  simpa [mul_assoc] using hCross g h
 
 /-- The cross-ratio condition is symmetric in the two environments. -/
 theorem finitePositiveWeightSingleSiteCrossRatioBound_symm
@@ -150,10 +150,10 @@ structure FinitePositiveWeightCrossRatioDobrushinData
   coefficient_nonneg : 0 ≤ coefficient
   rowSum_le_coefficient :
     ∀ target : ι,
-      ∑ source : ι,
+      (∑ source : ι,
         if target = source then 0 else
           2 * ((Real.exp (radius target source) - 1) /
-            (Real.exp (radius target source) + 1)) ≤
+            (Real.exp (radius target source) + 1))) ≤
         coefficient
   coefficient_lt_one : coefficient < 1
 
@@ -270,10 +270,10 @@ theorem finitePositiveWeight_crossRatio_approximateTensorization
     (f : (ι → G) → ℝ)
     (hCenter : finitePositiveWeightSum weight f = 0) :
     finitePositiveWeightPairing weight f f ≤
-      (finitePositiveWeightDobrushinGap
+      (finitePositiveWeightDobrushinHeatBathGap
         (D.toDobrushinL1MatrixData hweight))⁻¹ *
         finitePositiveWeightTotalSingleSiteVariance weight f :=
-  finitePositiveWeight_centered_dobrushin_approximateTensorization_inv_gap
+  finitePositiveWeightDobrushin_pairing_le_inv_gap_mul_totalVariance
     weight hweight (D.toDobrushinL1MatrixData hweight)
       hCard f hCenter
 
