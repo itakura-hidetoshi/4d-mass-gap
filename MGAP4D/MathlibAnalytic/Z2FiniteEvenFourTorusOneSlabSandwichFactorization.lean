@@ -122,8 +122,7 @@ theorem finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_eq_crossingScale_sm
   rw [finiteEvenFourTorusZ2TemporalGaugeOneSlabRawTransfer_eq_spatialSandwich,
     finiteEvenFourTorusZ2TemporalGaugeCrossingOperator_eq_scale_smul_normalized]
   ext f A
-  simp [ContinuousLinearMap.comp_apply]
-  ring
+  simp
 
 /-- Exact scalar-weighted stochastic crossing representation of the full raw
 quadratic form. -/
