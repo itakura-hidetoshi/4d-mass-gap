@@ -7,6 +7,20 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- The finite-volume coordinate-coupling data type for the actual Perron Doob
+kernel, with the finite-product coordinate and spin types fixed explicitly so
+that elaboration does not unfold the full lattice carrier while inferring them. -/
+abbrev Z2UnfixedGaugeDoobParallelVolumeCouplingData
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial) :=
+  @FiniteProductKernelCouplingVariationData
+    (FiniteEvenFourTorusSpatialLink H) Z2Gauge
+    inferInstance inferInstance inferInstance inferInstance
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobKernel
+
 /-- A proof-relevant all-volume coordinate-coupling package for the actual
 Perron Doob kernels.  For every finite volume it supplies genuine couplings
 with the correct Doob marginals, coordinatewise output-mismatch bounds, and a
@@ -21,9 +35,8 @@ structure Z2UnfixedGaugeDoobParallelUniformCouplingCertificate
         β energyIdentity energyNontrivial ≤ rate
   rate_lt_one : rate < 1
   couplingData : ∀ H : ℕ,
-    FiniteProductKernelCouplingVariationData
-      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobKernel
+    Z2UnfixedGaugeDoobParallelVolumeCouplingData
+      H β energyIdentity energyNontrivial hβ hEnergy
   coefficient_le_rate : ∀ H : ℕ,
     (couplingData H).coefficient ≤ rate
 
@@ -43,7 +56,9 @@ noncomputable def variationCertificate
     FiniteProductDoobParallelVariationCertificate
       (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
         H β energyIdentity energyNontrivial hβ.le hEnergy.le) :=
-  FiniteProductKernelCouplingVariationData.toDoobParallelVariationCertificate
+  @FiniteProductKernelCouplingVariationData.toDoobParallelVariationCertificate
+    (FiniteEvenFourTorusSpatialLink H) Z2Gauge
+    inferInstance inferInstance inferInstance inferInstance
     (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
       H β energyIdentity energyNontrivial hβ.le hEnergy.le)
     (C.couplingData H)
