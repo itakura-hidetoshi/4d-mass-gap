@@ -120,6 +120,86 @@ theorem finitePositiveWeightPairing_symm
   intro A _hA
   ring
 
+/-- The positive-weight pairing is linear in its first observable. -/
+noncomputable def finitePositiveWeightPairingLeftLinearMap
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [Fintype G]
+    (weight : (ι → G) → ℝ)
+    (g : (ι → G) → ℝ) :
+    ((ι → G) → ℝ) →ₗ[ℝ] ℝ where
+  toFun := fun f => finitePositiveWeightPairing weight f g
+  map_add' := by
+    intro f h
+    classical
+    unfold finitePositiveWeightPairing
+    simp only [Pi.add_apply]
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro A _hA
+    ring
+  map_smul' := by
+    intro c f
+    classical
+    unfold finitePositiveWeightPairing
+    simp only [Pi.smul_apply, smul_eq_mul]
+    rw [← Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro A _hA
+    ring
+
+@[simp] theorem finitePositiveWeightPairingLeftLinearMap_apply
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [Fintype G]
+    (weight : (ι → G) → ℝ)
+    (g f : (ι → G) → ℝ) :
+    finitePositiveWeightPairingLeftLinearMap weight g f =
+      finitePositiveWeightPairing weight f g :=
+  rfl
+
+/-- The positive-weight pairing is linear in its second observable. -/
+noncomputable def finitePositiveWeightPairingRightLinearMap
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [Fintype G]
+    (weight : (ι → G) → ℝ)
+    (f : (ι → G) → ℝ) :
+    ((ι → G) → ℝ) →ₗ[ℝ] ℝ where
+  toFun := fun g => finitePositiveWeightPairing weight f g
+  map_add' := by
+    intro g h
+    classical
+    unfold finitePositiveWeightPairing
+    simp only [Pi.add_apply]
+    rw [← Finset.sum_add_distrib]
+    apply Finset.sum_congr rfl
+    intro A _hA
+    ring
+  map_smul' := by
+    intro c g
+    classical
+    unfold finitePositiveWeightPairing
+    simp only [Pi.smul_apply, smul_eq_mul]
+    rw [← Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro A _hA
+    ring
+
+@[simp] theorem finitePositiveWeightPairingRightLinearMap_apply
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [Fintype G]
+    (weight : (ι → G) → ℝ)
+    (f g : (ι → G) → ℝ) :
+    finitePositiveWeightPairingRightLinearMap weight f g =
+      finitePositiveWeightPairing weight f g :=
+  rfl
+
 /-- One-site conditional expectation is real-linear in the observable. -/
 noncomputable def finitePositiveWeightSingleSiteExpectationLinearMap
     {ι G : Type}
@@ -171,7 +251,7 @@ noncomputable def finitePositiveWeightSingleSiteExpectationLinearMap
     (e : ι)
     (f : (ι → G) → ℝ) :
     finitePositiveWeightSingleSiteExpectationLinearMap weight e f =
-      finitePositiveWeightSingleSiteExpectation weight f · e :=
+      (fun A => finitePositiveWeightSingleSiteExpectation weight f A e) :=
   rfl
 
 /-- Forward weighted transition term for one exact coordinate resampling. -/
@@ -214,9 +294,14 @@ theorem finitePositiveWeightSingleSite_forwardTerm_eq_backwardTerm_swap
       finitePositiveWeightSingleSiteBackwardTerm weight e f g
         (finitePositiveWeightSingleSiteUpdateSwapEquiv e x) := by
   rcases x with ⟨A, h⟩
-  unfold finitePositiveWeightSingleSiteForwardTerm
-    finitePositiveWeightSingleSiteBackwardTerm
-    finitePositiveWeightSingleSiteUpdateSwapEquiv
+  change
+    weight A * finitePositiveWeightSingleSiteProbability weight A e h *
+        f (Function.update A e h) * g A =
+      weight (Function.update A e h) *
+        finitePositiveWeightSingleSiteProbability weight
+          (Function.update A e h) e (A e) *
+        f (Function.update A e h) *
+        g (Function.update (Function.update A e h) e (A e))
   rw [finitePositiveWeightSingleSiteUpdate_roundTrip]
   rw [← finitePositiveWeightSingleSite_detailedBalance weight A e h]
 
@@ -262,7 +347,7 @@ theorem finitePositiveWeightSingleSite_forward_sum_eq_pairing
     (∑ x : (ι → G) × G,
       finitePositiveWeightSingleSiteForwardTerm weight e f g x) =
       finitePositiveWeightPairing weight
-        (finitePositiveWeightSingleSiteExpectation weight f · e) g := by
+        (fun A => finitePositiveWeightSingleSiteExpectation weight f A e) g := by
   classical
   rw [Fintype.sum_prod_type]
   unfold finitePositiveWeightSingleSiteForwardTerm
@@ -288,7 +373,7 @@ theorem finitePositiveWeightSingleSite_backward_sum_eq_pairing
     (∑ x : (ι → G) × G,
       finitePositiveWeightSingleSiteBackwardTerm weight e f g x) =
       finitePositiveWeightPairing weight f
-        (finitePositiveWeightSingleSiteExpectation weight g · e) := by
+        (fun A => finitePositiveWeightSingleSiteExpectation weight g A e) := by
   classical
   rw [Fintype.sum_prod_type]
   unfold finitePositiveWeightSingleSiteBackwardTerm
@@ -312,12 +397,12 @@ theorem finitePositiveWeightSingleSiteExpectation_pairing_symm
     (e : ι)
     (f g : (ι → G) → ℝ) :
     finitePositiveWeightPairing weight
-        (finitePositiveWeightSingleSiteExpectation weight f · e) g =
+        (fun A => finitePositiveWeightSingleSiteExpectation weight f A e) g =
       finitePositiveWeightPairing weight f
-        (finitePositiveWeightSingleSiteExpectation weight g · e) := by
+        (fun A => finitePositiveWeightSingleSiteExpectation weight g A e) := by
   calc
     finitePositiveWeightPairing weight
-        (finitePositiveWeightSingleSiteExpectation weight f · e) g =
+        (fun A => finitePositiveWeightSingleSiteExpectation weight f A e) g =
       ∑ x : (ι → G) × G,
         finitePositiveWeightSingleSiteForwardTerm weight e f g x :=
       (finitePositiveWeightSingleSite_forward_sum_eq_pairing
@@ -327,61 +412,21 @@ theorem finitePositiveWeightSingleSiteExpectation_pairing_symm
       finitePositiveWeightSingleSite_forward_sum_eq_backward_sum
         weight e f g
     _ = finitePositiveWeightPairing weight f
-        (finitePositiveWeightSingleSiteExpectation weight g · e) :=
+        (fun A => finitePositiveWeightSingleSiteExpectation weight g A e) :=
       finitePositiveWeightSingleSite_backward_sum_eq_pairing
         weight e f g
 
-/-- Uniform random-scan conditional expectation is real-linear. -/
+/-- Uniform random-scan conditional expectation is the normalized finite sum
+of the exact one-site conditional-expectation linear maps. -/
 noncomputable def finitePositiveWeightRandomScanLinearMap
     {ι G : Type}
     [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ) :
-    ((ι → G) → ℝ) →ₗ[ℝ] ((ι → G) → ℝ) where
-  toFun := finitePositiveWeightRandomScanConditionalExpectation weight
-  map_add' := by
-    intro f g
-    funext A
-    classical
-    unfold finitePositiveWeightRandomScanConditionalExpectation
-    simp only [Pi.add_apply]
-    rw [← Finset.sum_add_distrib, mul_add]
-    apply congrArg
-    apply Finset.sum_congr rfl
-    intro e _he
-    unfold finitePositiveWeightSingleSiteExpectation
-    rw [← Finset.sum_add_distrib]
-    apply Finset.sum_congr rfl
-    intro h _hh
-    ring
-  map_smul' := by
-    intro c f
-    funext A
-    classical
-    unfold finitePositiveWeightRandomScanConditionalExpectation
-    simp only [Pi.smul_apply, smul_eq_mul]
-    calc
-      (Fintype.card ι : ℝ)⁻¹ *
-          ∑ e : ι,
-            finitePositiveWeightSingleSiteExpectation weight (c • f) A e =
-        (Fintype.card ι : ℝ)⁻¹ *
-          ∑ e : ι,
-            c * finitePositiveWeightSingleSiteExpectation weight f A e := by
-          apply congrArg
-          apply Finset.sum_congr rfl
-          intro e _he
-          unfold finitePositiveWeightSingleSiteExpectation
-          simp only [Pi.smul_apply, smul_eq_mul]
-          rw [← Finset.mul_sum]
-          apply Finset.sum_congr rfl
-          intro h _hh
-          ring
-      _ = c *
-          ((Fintype.card ι : ℝ)⁻¹ *
-            ∑ e : ι,
-              finitePositiveWeightSingleSiteExpectation weight f A e) := by
-          ring
+    ((ι → G) → ℝ) →ₗ[ℝ] ((ι → G) → ℝ) :=
+  (Fintype.card ι : ℝ)⁻¹ •
+    ∑ e : ι, finitePositiveWeightSingleSiteExpectationLinearMap weight e
 
 @[simp] theorem finitePositiveWeightRandomScanLinearMap_apply
     {ι G : Type}
@@ -391,7 +436,15 @@ noncomputable def finitePositiveWeightRandomScanLinearMap
     (weight : (ι → G) → ℝ)
     (f : (ι → G) → ℝ) :
     finitePositiveWeightRandomScanLinearMap weight f =
-      finitePositiveWeightRandomScanConditionalExpectation weight f :=
+      finitePositiveWeightRandomScanConditionalExpectation weight f := by
+  funext A
+  change
+    (Fintype.card ι : ℝ)⁻¹ *
+        ∑ e : ι,
+          finitePositiveWeightSingleSiteExpectation weight f A e =
+      (Fintype.card ι : ℝ)⁻¹ *
+        ∑ e : ι,
+          finitePositiveWeightSingleSiteExpectation weight f A e
   rfl
 
 /-- Uniform random scan is symmetric for the unnormalized positive-weight
@@ -407,50 +460,34 @@ theorem finitePositiveWeightRandomScan_pairing_symm
         (finitePositiveWeightRandomScanConditionalExpectation weight f) g =
       finitePositiveWeightPairing weight f
         (finitePositiveWeightRandomScanConditionalExpectation weight g) := by
-  classical
-  unfold finitePositiveWeightRandomScanConditionalExpectation
-    finitePositiveWeightPairing
+  let leftPair := finitePositiveWeightPairingLeftLinearMap weight g
+  let rightPair := finitePositiveWeightPairingRightLinearMap weight f
   calc
-    (∑ A : ι → G,
-      weight A *
-        ((Fintype.card ι : ℝ)⁻¹ *
-          ∑ e : ι,
-            finitePositiveWeightSingleSiteExpectation weight f A e) *
-        g A) =
-      (Fintype.card ι : ℝ)⁻¹ *
+    finitePositiveWeightPairing weight
+        (finitePositiveWeightRandomScanConditionalExpectation weight f) g =
+      leftPair (finitePositiveWeightRandomScanLinearMap weight f) := by
+        rw [finitePositiveWeightRandomScanLinearMap_apply]
+        rfl
+    _ = (Fintype.card ι : ℝ)⁻¹ *
         ∑ e : ι,
           finitePositiveWeightPairing weight
-            (finitePositiveWeightSingleSiteExpectation weight f · e) g := by
-      rw [Finset.mul_sum]
-      rw [← Finset.sum_mul]
-      apply Finset.sum_congr rfl
-      intro A _hA
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro e _he
-      ring
+            (finitePositiveWeightSingleSiteExpectationLinearMap weight e f) g := by
+      simp [leftPair, finitePositiveWeightRandomScanLinearMap]
     _ = (Fintype.card ι : ℝ)⁻¹ *
         ∑ e : ι,
           finitePositiveWeightPairing weight f
-            (finitePositiveWeightSingleSiteExpectation weight g · e) := by
+            (finitePositiveWeightSingleSiteExpectationLinearMap weight e g) := by
       apply congrArg
       apply Finset.sum_congr rfl
       intro e _he
       exact finitePositiveWeightSingleSiteExpectation_pairing_symm
         weight e f g
-    _ = ∑ A : ι → G,
-      weight A * f A *
-        ((Fintype.card ι : ℝ)⁻¹ *
-          ∑ e : ι,
-            finitePositiveWeightSingleSiteExpectation weight g A e) := by
-      rw [Finset.mul_sum]
-      rw [← Finset.sum_mul]
-      apply Finset.sum_congr rfl
-      intro A _hA
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro e _he
-      ring
+    _ = rightPair (finitePositiveWeightRandomScanLinearMap weight g) := by
+      simp [rightPair, finitePositiveWeightRandomScanLinearMap]
+    _ = finitePositiveWeightPairing weight f
+        (finitePositiveWeightRandomScanConditionalExpectation weight g) := by
+      rw [finitePositiveWeightRandomScanLinearMap_apply]
+      rfl
 
 end
 
