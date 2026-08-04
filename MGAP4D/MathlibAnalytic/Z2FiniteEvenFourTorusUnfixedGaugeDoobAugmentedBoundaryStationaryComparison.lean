@@ -109,6 +109,37 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
       finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryConditionalCrossL1_le_sourceBound
         H β energyIdentity energyNontrivial hβ hEnergy source g B X target
 
+/-- Exact three-coordinate source contribution in the stationary comparison. -/
+def finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryThreeCoordinateError
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (source : FiniteEvenFourTorusSpatialLink H)
+    (variation : FiniteEvenFourTorusZ2AugmentedCoordinate H → ℝ) : ℝ :=
+  (Fintype.card (FiniteEvenFourTorusZ2AugmentedCoordinate H) : ℝ)⁻¹ *
+    (2 * (1 - Real.exp
+      (-2 * β * (energyNontrivial - energyIdentity))) *
+      ∑ target ∈
+        finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
+          variation target)
+
+/-- Residual expectation discrepancy after one random-scan step for the right
+boundary weight. -/
+def finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScanResidual
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (B B' : FiniteEvenFourTorusZ2SliceConfiguration H)
+    (f : FiniteEvenFourTorusZ2AugmentedConfiguration H → ℝ) : ℝ :=
+  |finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+        H β energyIdentity energyNontrivial hβ hEnergy B
+        (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
+          H β energyIdentity energyNontrivial hβ hEnergy B' f) -
+    finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+        H β energyIdentity energyNontrivial hβ hEnergy B'
+        (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
+          H β energyIdentity energyNontrivial hβ hEnergy B' f)|
+
 /-- Exact three-coordinate form of the actual stationary one-step comparison
 source. -/
 theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryExpectation_difference_abs_le_threeCoordinateSource_add_randomScanResidual
@@ -126,23 +157,14 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
         finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
           H β energyIdentity energyNontrivial hβ hEnergy
           (finiteZ2GaugeReplaceCoordinate B source g) f| ≤
-      (Fintype.card (FiniteEvenFourTorusZ2AugmentedCoordinate H) : ℝ)⁻¹ *
-          (2 * (1 - Real.exp
-            (-2 * β * (energyNontrivial - energyIdentity))) *
-            ∑ target ∈
-              finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
-                P.variation target) +
-        |finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
-              H β energyIdentity energyNontrivial hβ hEnergy B
-              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
-                H β energyIdentity energyNontrivial hβ hEnergy
-                (finiteZ2GaugeReplaceCoordinate B source g) f) -
-          finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
-              H β energyIdentity energyNontrivial hβ hEnergy
-              (finiteZ2GaugeReplaceCoordinate B source g)
-              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
-                H β energyIdentity energyNontrivial hβ hEnergy
-                (finiteZ2GaugeReplaceCoordinate B source g) f)| := by
+      finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryThreeCoordinateError
+          H β energyIdentity energyNontrivial source P.variation +
+        finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScanResidual
+          H β energyIdentity energyNontrivial hβ hEnergy B
+          (finiteZ2GaugeReplaceCoordinate B source g) f := by
+  unfold
+    finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryThreeCoordinateError
+    finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScanResidual
   rw [←
     finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound_pairing_eq
       H β energyIdentity energyNontrivial source P.variation]
