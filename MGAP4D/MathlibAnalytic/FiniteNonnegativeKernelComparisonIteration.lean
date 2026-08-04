@@ -24,11 +24,12 @@ def finiteNonnegativeKernelPowerApply
     {ι : Type}
     [Fintype ι]
     (kernel : ι → ι → ℝ)
-    (v : ι → ℝ) : ℕ → ι → ℝ
-  | 0 => v
-  | n + 1 =>
-      finiteNonnegativeKernelApply kernel
-        (finiteNonnegativeKernelPowerApply kernel v n)
+    (v : ι → ℝ)
+    (n : ℕ) : ι → ℝ :=
+  Nat.rec v
+    (fun _ previous =>
+      finiteNonnegativeKernelApply kernel previous)
+    n
 
 /-- Finite partial comparison resolvent.  The recursion is
 `R_{n+1} b = b + C (R_n b)`. -/
@@ -36,21 +37,20 @@ def finiteNonnegativeKernelPartialResolvent
     {ι : Type}
     [Fintype ι]
     (kernel : ι → ι → ℝ)
-    (b : ι → ℝ) : ℕ → ι → ℝ
-  | 0 => fun _ => 0
-  | n + 1 => fun target =>
-      b target +
-        finiteNonnegativeKernelApply kernel
-          (finiteNonnegativeKernelPartialResolvent kernel b n) target
+    (b : ι → ℝ)
+    (n : ℕ) : ι → ℝ :=
+  Nat.rec (fun _ => 0)
+    (fun _ previous target =>
+      b target + finiteNonnegativeKernelApply kernel previous target)
+    n
 
 /-- Scalar majorant for a finite partial comparison resolvent. -/
 def finiteNonnegativeKernelScalarPartialResolvent
-    (coefficient sourceBound : ℝ) : ℕ → ℝ
-  | 0 => 0
-  | n + 1 =>
-      sourceBound + coefficient *
-        finiteNonnegativeKernelScalarPartialResolvent
-          coefficient sourceBound n
+    (coefficient sourceBound : ℝ)
+    (n : ℕ) : ℝ :=
+  Nat.rec 0
+    (fun _ previous => sourceBound + coefficient * previous)
+    n
 
 @[simp] theorem finiteNonnegativeKernelPowerApply_zero
     {ι : Type}
