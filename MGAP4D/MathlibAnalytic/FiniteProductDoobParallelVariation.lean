@@ -95,10 +95,21 @@ theorem doobObservableLinearMap_pairing_symm
       unfold finitePositiveWeightPairing doobWeight
       apply Finset.sum_congr rfl
       intro y _hy
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro x _hx
-      ring
+      rw [doobObservableLinearMap_apply]
+      calc
+        D.ground y ^ 2 *
+              (∑ x : ι → G, D.doobKernel x y * f x) * g y =
+            (∑ x : ι → G,
+              D.ground y ^ 2 * (D.doobKernel x y * f x)) * g y := by
+          rw [Finset.mul_sum]
+        _ = ∑ x : ι → G,
+            (D.ground y ^ 2 * (D.doobKernel x y * f x)) * g y := by
+          rw [Finset.sum_mul]
+        _ = ∑ x : ι → G,
+            D.ground y ^ 2 * D.doobKernel x y * f x * g y := by
+          apply Finset.sum_congr rfl
+          intro x _hx
+          ring
     _ = ∑ x : ι → G, ∑ y : ι → G,
         D.ground y ^ 2 * D.doobKernel x y * f x * g y := by
       rw [Finset.sum_comm]
@@ -115,10 +126,18 @@ theorem doobObservableLinearMap_pairing_symm
       unfold finitePositiveWeightPairing doobWeight
       apply Finset.sum_congr rfl
       intro x _hx
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro y _hy
-      ring
+      rw [doobObservableLinearMap_apply]
+      calc
+        (∑ y : ι → G,
+            D.ground x ^ 2 * f x * D.doobKernel y x * g y) =
+          ∑ y : ι → G,
+            (D.ground x ^ 2 * f x) * (D.doobKernel y x * g y) := by
+          apply Finset.sum_congr rfl
+          intro y _hy
+          ring
+        _ = (D.ground x ^ 2 * f x) *
+            ∑ y : ι → G, D.doobKernel y x * g y := by
+          rw [Finset.mul_sum]
 
 /-- On product configurations, the generic positive-weight pairing is exactly
 the existing Doob weighted inner product. -/
