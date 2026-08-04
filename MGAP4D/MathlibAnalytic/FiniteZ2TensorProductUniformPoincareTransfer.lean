@@ -21,6 +21,13 @@ noncomputable def finiteBoundaryConstantOne
     finiteBoundaryConstantOne x = 1 :=
   rfl
 
+/-- Scalar real inner product against one. -/
+theorem real_inner_one (a : ℝ) :
+    inner ℝ a 1 = a := by
+  change inner ℝ (a • (1 : ℝ)) 1 = a
+  rw [inner_smul_left]
+  norm_num [real_inner_self_eq_norm_sq]
+
 /-- Finite function mass is the inner product against the constant vector. -/
 theorem finiteFunctionMass_eq_inner_constantOne
     {α : Type} [Fintype α]
@@ -31,7 +38,10 @@ theorem finiteFunctionMass_eq_inner_constantOne
     finiteFunctionMass f =
         RCLike.wInner (𝕜 := ℝ) (fun _ : α => 1)
           f.ofLp (finiteBoundaryConstantOne : FiniteBoundaryHilbert α).ofLp := by
-      simp [finiteFunctionMass, RCLike.wInner, finiteBoundaryConstantOne]
+      unfold finiteFunctionMass RCLike.wInner
+      apply Finset.sum_congr rfl
+      intro x _hx
+      simp [finiteBoundaryConstantOne, real_inner_one]
     _ = inner ℝ f finiteBoundaryConstantOne := by
       exact (RCLike.inner_eq_wInner_one f finiteBoundaryConstantOne).symm
 
@@ -46,7 +56,7 @@ theorem finiteFunctionNormSq_eq_norm_sq
       simp [finiteFunctionNormSq, RCLike.wInner, pow_two]
     _ = inner ℝ f f := by
       exact (RCLike.inner_eq_wInner_one f f).symm
-    _ = ‖f‖ ^ 2 := real_inner_self_eq_norm_sq
+    _ = ‖f‖ ^ 2 := real_inner_self_eq_norm_sq f
 
 /-- The finite-function kernel quadratic form is exactly the Euclidean
 transfer Rayleigh form. -/
