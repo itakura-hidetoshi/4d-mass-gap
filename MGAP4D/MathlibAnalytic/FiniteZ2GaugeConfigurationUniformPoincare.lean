@@ -11,16 +11,6 @@ open scoped BigOperators InnerProduct
 
 noncomputable section
 
-/-- Every finite actual `Z₂` configuration carrier is finite.  The gauge-group
-enumeration is transported explicitly from `Bool`, then Mathlib's pi-fintype
-construction enumerates the full configuration space. -/
-instance finiteZ2GaugeConfigurationFintype
-    (ι : Type) [Fintype ι] :
-    Fintype (ι → Z2Gauge) := by
-  classical
-  letI : Fintype Z2Gauge := Fintype.ofEquiv Bool boolEquivZ2Gauge
-  infer_instance
-
 /-- Canonical finite relabelling of a `Z₂` configuration space as a Boolean
 cube. -/
 noncomputable def finiteZ2GaugeConfigurationEquiv
