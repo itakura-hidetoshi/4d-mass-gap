@@ -586,7 +586,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior_eq_localTilt
         H β energyIdentity energyNontrivial hβ hEnergy
         (finiteZ2GaugeReplaceCoordinate B source g))
   field_simp [hLeft, hRight]
-  ring
 
 end
 
