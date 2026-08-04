@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.FiniteZ2TensorProductUniformPoincareTransfer
 import MGAP4D.MathlibAnalytic.Z2WilsonTemporalCrossingUniformConstants
 import Mathlib.Data.Fintype.EquivFin
+import Mathlib.Data.Fintype.Pi
 import Mathlib.Tactic
 
 namespace MGAP4D
