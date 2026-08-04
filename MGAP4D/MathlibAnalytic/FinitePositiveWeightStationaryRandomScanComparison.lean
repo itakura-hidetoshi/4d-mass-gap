@@ -12,6 +12,7 @@ noncomputable section
 /-- Total mass of a finite product weight. -/
 def finitePositiveWeightTotalMass
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ) : ℝ :=
@@ -21,6 +22,7 @@ def finitePositiveWeightTotalMass
 mass. -/
 theorem finitePositiveWeightTotalMass_pos
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     [Nonempty G]
@@ -39,6 +41,7 @@ theorem finitePositiveWeightTotalMass_pos
 weight. -/
 def finitePositiveWeightGlobalProbability
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ)
@@ -48,6 +51,7 @@ def finitePositiveWeightGlobalProbability
 /-- Every normalized global atom is nonnegative. -/
 theorem finitePositiveWeightGlobalProbability_nonneg
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     [Nonempty G]
@@ -61,6 +65,7 @@ theorem finitePositiveWeightGlobalProbability_nonneg
 /-- The normalized global atoms have total mass one. -/
 theorem finitePositiveWeightGlobalProbability_sum_eq_one
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     [Nonempty G]
@@ -78,6 +83,7 @@ theorem finitePositiveWeightGlobalProbability_sum_eq_one
 weight. -/
 def finitePositiveWeightGlobalExpectation
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ)
@@ -109,6 +115,7 @@ theorem finitePositiveWeightGlobalExpectation_eq_inv_mul_pairing
 /-- Global expectation is additive under subtraction of observables. -/
 theorem finitePositiveWeightGlobalExpectation_sub
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ)
@@ -127,6 +134,7 @@ theorem finitePositiveWeightGlobalExpectation_sub
 same uniform constant. -/
 theorem finitePositiveWeightGlobalExpectation_abs_le
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     [Nonempty G]
@@ -189,7 +197,7 @@ theorem FiniteProductVariationBound.globalExpectation_crossWeight_le_oneStep
     (hLeftWeight : ∀ A : ι → G, 0 < leftWeight A)
     (hRightWeight : ∀ A : ι → G, 0 < rightWeight A)
     (hCard : 0 < Fintype.card ι)
-    {f : (ι → G) → ℝ)
+    {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (sourceBound : ι → ℝ)
     (hSourceBound : ∀ target : ι, 0 ≤ sourceBound target)
@@ -212,10 +220,6 @@ theorem FiniteProductVariationBound.globalExpectation_crossWeight_le_oneStep
   let error : ℝ :=
     (Fintype.card ι : ℝ)⁻¹ *
       ∑ target : ι, sourceBound target * P.variation target
-  have hErrorNonneg : 0 ≤ error := by
-    exact mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg _))
-      (Finset.sum_nonneg fun target _htarget =>
-        mul_nonneg (hSourceBound target) (P.variation_nonneg target))
   have hPointwise (A : ι → G) :
       |finitePositiveWeightRandomScanConditionalExpectation leftWeight f A -
           finitePositiveWeightRandomScanConditionalExpectation rightWeight f A| ≤
