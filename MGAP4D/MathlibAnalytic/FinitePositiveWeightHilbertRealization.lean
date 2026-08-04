@@ -227,7 +227,7 @@ theorem finitePositiveWeightHilbert_inner_vacuum_embed
         (finitePositiveWeightHilbertEmbedLinearMap weight f) =
       finitePositiveWeightSum weight f := by
   rw [finitePositiveWeightHilbertVacuum,
-    finitePositiveWeightHilbert_inner_embed,
+    finitePositiveWeightHilbert_inner_embed weight hweight,
     finitePositiveWeightPairing_one_left]
 
 /-- Exact one-site conditional expectation fixes the constant-one observable. -/
@@ -335,7 +335,7 @@ theorem finitePositiveWeightHilbertRandomScanLinearMap_isSymmetric
             (finitePositiveWeightHilbertObserveLinearMap weight x)))
         (finitePositiveWeightHilbertEmbedLinearMap weight
           (finitePositiveWeightHilbertObserveLinearMap weight y)) := by
-      rw [finitePositiveWeightHilbertRandomScanLinearMap_embed]
+      rw [finitePositiveWeightHilbertRandomScanLinearMap_embed weight hweight]
     _ = finitePositiveWeightPairing weight
         (finitePositiveWeightRandomScanConditionalExpectation weight
           (finitePositiveWeightHilbertObserveLinearMap weight x))
@@ -359,7 +359,7 @@ theorem finitePositiveWeightHilbertRandomScanLinearMap_isSymmetric
         (finitePositiveWeightHilbertRandomScanLinearMap weight
           (finitePositiveWeightHilbertEmbedLinearMap weight
             (finitePositiveWeightHilbertObserveLinearMap weight y))) := by
-      rw [finitePositiveWeightHilbertRandomScanLinearMap_embed]
+      rw [finitePositiveWeightHilbertRandomScanLinearMap_embed weight hweight]
     _ = inner ℝ x
         (finitePositiveWeightHilbertRandomScanLinearMap weight y) := by
       rw [finitePositiveWeightHilbert_embed_observe weight hweight x,
@@ -379,7 +379,7 @@ theorem finitePositiveWeightHilbertRandomScanLinearMap_vacuum
         (finitePositiveWeightHilbertVacuum weight) =
       finitePositiveWeightHilbertVacuum weight := by
   rw [finitePositiveWeightHilbertVacuum,
-    finitePositiveWeightHilbertRandomScanLinearMap_embed,
+    finitePositiveWeightHilbertRandomScanLinearMap_embed weight hweight,
     finitePositiveWeightRandomScan_one weight hweight hCard]
 
 /-- Symmetry and vacuum preservation imply invariance of the weighted-centered
