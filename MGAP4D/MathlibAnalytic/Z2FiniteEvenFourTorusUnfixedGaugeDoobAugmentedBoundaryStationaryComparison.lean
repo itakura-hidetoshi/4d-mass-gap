@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FinitePositiveWeightStationaryCrossWeightComparison
+import MGAP4D.MathlibAnalytic.FinitePositiveWeightStationaryRandomScanComparison
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeDoobAugmentedBoundaryComparisonIteration
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeDoobAugmentedBoundaryRandomScanComparison
 import Mathlib.Tactic
@@ -10,8 +10,50 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Actual stationary comparison for the two encoded reduced augmented
-positive weights associated with upper boundaries differing at one source
+/-- Encoded reduced augmented weight at one fixed upper boundary. -/
+abbrev finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryWeight
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (B : FiniteEvenFourTorusZ2SliceConfiguration H) :=
+  finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+    H β energyIdentity energyNontrivial hβ hEnergy B
+
+/-- Normalized expectation for the encoded reduced augmented weight at one
+fixed upper boundary. -/
+def finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (B : FiniteEvenFourTorusZ2SliceConfiguration H)
+    (f : FiniteEvenFourTorusZ2AugmentedConfiguration H → ℝ) : ℝ :=
+  finitePositiveWeightGlobalExpectation
+    (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryWeight
+      H β energyIdentity energyNontrivial hβ hEnergy B) f
+
+/-- Auxiliary exact Gibbs random-scan operator at one fixed upper boundary. -/
+def finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (B : FiniteEvenFourTorusZ2SliceConfiguration H)
+    (f : FiniteEvenFourTorusZ2AugmentedConfiguration H → ℝ) :
+    FiniteEvenFourTorusZ2AugmentedConfiguration H → ℝ :=
+  finitePositiveWeightRandomScanConditionalExpectation
+    (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryWeight
+      H β energyIdentity energyNontrivial hβ hEnergy B) f
+
+/-- The actual encoded augmented coordinate type is nonempty. -/
+theorem finiteEvenFourTorusZ2AugmentedCoordinate_card_pos
+    (H : ℕ) :
+    0 < Fintype.card (FiniteEvenFourTorusZ2AugmentedCoordinate H) := by
+  let v : FiniteEvenFourTorusSpatialVertex H := ⟨0, by simp⟩
+  exact Fintype.card_pos_iff.mpr ⟨Sum.inl v⟩
+
+/-- Actual stationary comparison for upper boundaries differing at one source
 link.  The residual is the expectation discrepancy after one auxiliary Gibbs
 random-scan step for the replaced boundary. -/
 theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryExpectation_difference_abs_le_sourcePairing_add_randomScanResidual
@@ -24,40 +66,30 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
     (source : FiniteEvenFourTorusSpatialLink H)
     (g : Z2Gauge)
     (B : FiniteEvenFourTorusZ2SliceConfiguration H) :
-    |finitePositiveWeightExpectation
-          (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
-            H β energyIdentity energyNontrivial hβ hEnergy B)
-          f -
-        finitePositiveWeightExpectation
-          (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
-            H β energyIdentity energyNontrivial hβ hEnergy
-            (finiteZ2GaugeReplaceCoordinate B source g))
-          f| ≤
-      (Fintype.card
-          (FiniteEvenFourTorusZ2AugmentedCoordinate H) : ℝ)⁻¹ *
+    |finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+          H β energyIdentity energyNontrivial hβ hEnergy B f -
+        finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+          H β energyIdentity energyNontrivial hβ hEnergy
+          (finiteZ2GaugeReplaceCoordinate B source g) f| ≤
+      (Fintype.card (FiniteEvenFourTorusZ2AugmentedCoordinate H) : ℝ)⁻¹ *
           ∑ target : FiniteEvenFourTorusZ2AugmentedCoordinate H,
             finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound
                 H β energyIdentity energyNontrivial source target *
               P.variation target +
-        |finitePositiveWeightExpectation
-            (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
-              H β energyIdentity energyNontrivial hβ hEnergy B)
-            (finitePositiveWeightRandomScanConditionalExpectation
-              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+        |finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+              H β energyIdentity energyNontrivial hβ hEnergy B
+              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
                 H β energyIdentity energyNontrivial hβ hEnergy
-                (finiteZ2GaugeReplaceCoordinate B source g))
-              f) -
-          finitePositiveWeightExpectation
-            (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+                (finiteZ2GaugeReplaceCoordinate B source g) f) -
+          finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
               H β energyIdentity energyNontrivial hβ hEnergy
-              (finiteZ2GaugeReplaceCoordinate B source g))
-            (finitePositiveWeightRandomScanConditionalExpectation
-              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+              (finiteZ2GaugeReplaceCoordinate B source g)
+              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
                 H β energyIdentity energyNontrivial hβ hEnergy
-                (finiteZ2GaugeReplaceCoordinate B source g))
-              f)| := by
-  apply
-    P.expectation_crossWeight_difference_abs_le_sourcePairing_add_randomScanResidual
+                (finiteZ2GaugeReplaceCoordinate B source g) f)| := by
+  unfold finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+    finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
+  apply P.globalExpectation_crossWeight_le_oneStep
   · intro X
     exact
       finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight_pos
@@ -67,6 +99,7 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
       finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight_pos
         H β energyIdentity energyNontrivial hβ hEnergy
         (finiteZ2GaugeReplaceCoordinate B source g) X
+  · exact finiteEvenFourTorusZ2AugmentedCoordinate_card_pos H
   · intro target
     exact
       finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound_nonneg
@@ -88,40 +121,28 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
     (source : FiniteEvenFourTorusSpatialLink H)
     (g : Z2Gauge)
     (B : FiniteEvenFourTorusZ2SliceConfiguration H) :
-    |finitePositiveWeightExpectation
-          (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
-            H β energyIdentity energyNontrivial hβ hEnergy B)
-          f -
-        finitePositiveWeightExpectation
-          (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
-            H β energyIdentity energyNontrivial hβ hEnergy
-            (finiteZ2GaugeReplaceCoordinate B source g))
-          f| ≤
-      (Fintype.card
-          (FiniteEvenFourTorusZ2AugmentedCoordinate H) : ℝ)⁻¹ *
-          (2 *
-              (1 - Real.exp
-                (-2 * β * (energyNontrivial - energyIdentity))) *
+    |finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+          H β energyIdentity energyNontrivial hβ hEnergy B f -
+        finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+          H β energyIdentity energyNontrivial hβ hEnergy
+          (finiteZ2GaugeReplaceCoordinate B source g) f| ≤
+      (Fintype.card (FiniteEvenFourTorusZ2AugmentedCoordinate H) : ℝ)⁻¹ *
+          (2 * (1 - Real.exp
+            (-2 * β * (energyNontrivial - energyIdentity))) *
             ∑ target ∈
               finiteEvenFourTorusZ2AugmentedBoundarySourceSupport H source,
                 P.variation target) +
-        |finitePositiveWeightExpectation
-            (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
-              H β energyIdentity energyNontrivial hβ hEnergy B)
-            (finitePositiveWeightRandomScanConditionalExpectation
-              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+        |finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
+              H β energyIdentity energyNontrivial hβ hEnergy B
+              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
                 H β energyIdentity energyNontrivial hβ hEnergy
-                (finiteZ2GaugeReplaceCoordinate B source g))
-              f) -
-          finitePositiveWeightExpectation
-            (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+                (finiteZ2GaugeReplaceCoordinate B source g) f) -
+          finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryExpectation
               H β energyIdentity energyNontrivial hβ hEnergy
-              (finiteZ2GaugeReplaceCoordinate B source g))
-            (finitePositiveWeightRandomScanConditionalExpectation
-              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedReducedAugmentedWeight
+              (finiteZ2GaugeReplaceCoordinate B source g)
+              (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryRandomScan
                 H β energyIdentity energyNontrivial hβ hEnergy
-                (finiteZ2GaugeReplaceCoordinate B source g))
-              f)| := by
+                (finiteZ2GaugeReplaceCoordinate B source g) f)| := by
   rw [←
     finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound_pairing_eq
       H β energyIdentity energyNontrivial source P.variation]
