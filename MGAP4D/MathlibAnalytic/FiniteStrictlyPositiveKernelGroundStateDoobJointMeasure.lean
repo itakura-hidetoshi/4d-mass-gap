@@ -120,7 +120,8 @@ theorem jointWeight_totalMass
   rw [← real_inner_self_eq_norm_sq, PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro y _hy
-  rw [pow_two]
+  simpa [Real.norm_eq_abs, sq_abs] using
+    (real_inner_self_eq_norm_sq (D.ground.ofLp y)).symm
 
 /-- The weighted Doob quadratic form is the two-layer correlation quadratic
 form under the symmetric joint weight. -/
