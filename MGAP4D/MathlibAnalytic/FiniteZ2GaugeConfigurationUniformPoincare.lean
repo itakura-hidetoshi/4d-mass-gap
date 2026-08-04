@@ -11,11 +11,6 @@ open scoped BigOperators InnerProduct
 
 noncomputable section
 
-/-- The actual two-point gauge group inherits one canonical finite enumeration
-from `Bool`. -/
-noncomputable instance z2GaugeFintype : Fintype Z2Gauge :=
-  Fintype.ofEquiv Bool boolEquivZ2Gauge
-
 /-- Canonical finite relabelling of a `Z₂` configuration space as a Boolean
 cube. -/
 noncomputable def finiteZ2GaugeConfigurationEquiv
