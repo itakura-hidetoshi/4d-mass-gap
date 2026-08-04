@@ -211,8 +211,8 @@ theorem finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer_pow_norm_appl
     (hEnergy : energyIdentity < energyNontrivial)
     (n : ℕ)
     (f : FiniteEvenFourTorusZ2GaussCenteredTemporalCrossingHilbert H) :
-    ‖(finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
-        H β energyIdentity energyNontrivial hβ hEnergy) ^ n f‖ ≤
+    ‖((finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
+        H β energyIdentity energyNontrivial hβ hEnergy) ^ n) f‖ ≤
       z2WilsonTemporalCrossingRate
           β energyIdentity energyNontrivial ^ n * ‖f‖ := by
   exact finiteCenteredRestriction_pow_norm_apply_le
@@ -273,8 +273,8 @@ theorem finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer_exp_decay
     (hEnergy : energyIdentity < energyNontrivial)
     (n : ℕ)
     (f : FiniteEvenFourTorusZ2GaussCenteredTemporalCrossingHilbert H) :
-    ‖(finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
-        H β energyIdentity energyNontrivial hβ hEnergy) ^ n f‖ ≤
+    ‖((finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
+        H β energyIdentity energyNontrivial hβ hEnergy) ^ n) f‖ ≤
       Real.exp (-(n : ℝ) *
           z2WilsonTemporalCrossingGap
             β energyIdentity energyNontrivial) * ‖f‖ := by
@@ -313,14 +313,14 @@ structure Z2FiniteEvenFourTorusTemporalCrossingGaussUniformGapPackage
   centeredPowerDecay :
     ∀ (H n : ℕ)
       (f : FiniteEvenFourTorusZ2GaussCenteredTemporalCrossingHilbert H),
-      ‖(finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
-          H β energyIdentity energyNontrivial hβ hEnergy) ^ n f‖ ≤
+      ‖((finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
+          H β energyIdentity energyNontrivial hβ hEnergy) ^ n) f‖ ≤
         rate ^ n * ‖f‖
   centeredExponentialDecay :
     ∀ (H n : ℕ)
       (f : FiniteEvenFourTorusZ2GaussCenteredTemporalCrossingHilbert H),
-      ‖(finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
-          H β energyIdentity energyNontrivial hβ hEnergy) ^ n f‖ ≤
+      ‖((finiteEvenFourTorusZ2GaussCenteredTemporalCrossingTransfer
+          H β energyIdentity energyNontrivial hβ hEnergy) ^ n) f‖ ≤
         Real.exp (-(n : ℝ) * gap) * ‖f‖
 
 /-- Canonical complete Gauss-compressed temporal-crossing uniform-gap package. -/
