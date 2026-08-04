@@ -12,7 +12,7 @@ noncomputable section
 /-- Pointwise product formula for the normalized kernel on an arbitrary finite
 actual `Z₂` configuration carrier. -/
 theorem finiteZ2GaugeNormalizedProductKernel_apply
-    (q : ℝ) (ι : Type) [Fintype ι]
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι]
     (A B : ι → Z2Gauge) :
     finiteZ2GaugeNormalizedProductKernel q ι A B =
       ∏ e : ι,
@@ -29,7 +29,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_apply
 kernel, not merely on the centered sector. -/
 theorem finiteZ2GaugeNormalizedProductKernel_quadratic_mem_normInterval
     {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
-    (ι : Type) [Fintype ι]
+    (ι : Type) [Fintype ι] [DecidableEq ι]
     (f : (ι → Z2Gauge) → ℝ) :
     0 ≤ finiteFunctionKernelQuadratic
         (finiteZ2GaugeNormalizedProductKernel q ι) f ∧
@@ -47,7 +47,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_quadratic_mem_normInterval
 
 /-- Every column of the actual-carrier normalized product kernel has mass one. -/
 theorem finiteZ2GaugeNormalizedProductKernel_row_sum
-    (q : ℝ) (ι : Type) [Fintype ι]
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι]
     (B : ι → Z2Gauge) :
     ∑ A : ι → Z2Gauge,
       finiteZ2GaugeNormalizedProductKernel q ι A B = 1 := by
@@ -70,7 +70,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_row_sum
 
 /-- The transported product transfer fixes the actual-carrier constant mode. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_constantOne
-    (q : ℝ) (ι : Type) [Fintype ι] :
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι] :
     finiteKernelOperator (finiteZ2GaugeNormalizedProductKernel q ι)
         finiteBoundaryConstantOne =
       finiteBoundaryConstantOne := by
@@ -82,7 +82,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_operator_constantOne
 /-- The transported product transfer has operator norm at most one. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_norm_le_one
     {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
-    (ι : Type) [Fintype ι] :
+    (ι : Type) [Fintype ι] [DecidableEq ι] :
     ‖finiteKernelOperator (finiteZ2GaugeNormalizedProductKernel q ι)‖ ≤ 1 := by
   let T := finiteKernelOperator (finiteZ2GaugeNormalizedProductKernel q ι)
   have hsymm : T.toLinearMap.IsSymmetric :=
@@ -117,7 +117,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_operator_norm_le_one
 
 /-- The transported product transfer has operator norm at least one. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_one_le_norm
-    (q : ℝ) (ι : Type) [Fintype ι] :
+    (q : ℝ) (ι : Type) [Fintype ι] [DecidableEq ι] :
     1 ≤ ‖finiteKernelOperator (finiteZ2GaugeNormalizedProductKernel q ι)‖ := by
   let T := finiteKernelOperator (finiteZ2GaugeNormalizedProductKernel q ι)
   let one : FiniteBoundaryHilbert (ι → Z2Gauge) := finiteBoundaryConstantOne
@@ -137,7 +137,7 @@ theorem finiteZ2GaugeNormalizedProductKernel_operator_one_le_norm
 norm one. -/
 theorem finiteZ2GaugeNormalizedProductKernel_operator_norm_eq_one
     {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1)
-    (ι : Type) [Fintype ι] :
+    (ι : Type) [Fintype ι] [DecidableEq ι] :
     ‖finiteKernelOperator (finiteZ2GaugeNormalizedProductKernel q ι)‖ = 1 :=
   le_antisymm
     (finiteZ2GaugeNormalizedProductKernel_operator_norm_le_one hq0 hq1 ι)
