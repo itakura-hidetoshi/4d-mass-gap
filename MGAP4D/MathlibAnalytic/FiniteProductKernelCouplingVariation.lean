@@ -77,7 +77,7 @@ theorem FiniteProductVariationBound.difference_abs_le_patch_sum
           ring
 
 /-- Indicator that two configurations disagree at one coordinate. -/
-def finiteProductMismatchIndicator
+noncomputable def finiteProductMismatchIndicator
     {ι G : Type}
     (A B : ι → G)
     (e : ι) : ℝ :=
@@ -89,8 +89,10 @@ theorem finiteProductMismatchIndicator_nonneg
     (A B : ι → G)
     (e : ι) :
     0 ≤ finiteProductMismatchIndicator A B e := by
-  unfold finiteProductMismatchIndicator
-  split <;> norm_num
+  classical
+  by_cases hEq : A e = B e
+  · simp [finiteProductMismatchIndicator, hEq]
+  · simp [finiteProductMismatchIndicator, hEq]
 
 /-- A finite patch telescoping bound can be written as a sum of coordinate
 variations weighted by exact mismatch indicators. -/
