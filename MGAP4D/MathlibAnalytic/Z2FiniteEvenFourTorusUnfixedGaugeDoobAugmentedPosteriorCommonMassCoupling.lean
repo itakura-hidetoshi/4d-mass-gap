@@ -313,7 +313,9 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedCommonMassCoupling_mismatc
       (fun s t => finiteProductMismatchIndicator_nonneg s.2 t.2 target)
       (by
         intro s t
-        simp [finiteProductMismatchIndicator])
+        by_cases htarget : s.2 target = t.2 target
+        · simp [finiteProductMismatchIndicator, htarget]
+        · simp [finiteProductMismatchIndicator, htarget])
       (by
         intro s
         simp [finiteProductMismatchIndicator])
