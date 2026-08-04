@@ -74,21 +74,24 @@ theorem finitePositiveWeightSingleSiteVariance_eq_secondMoment_sub_mean_sq
     (∑ g : G, prob g * (f (Function.update A e g) - mean) ^ 2) = _
   calc
     (∑ g : G, prob g * (f (Function.update A e g) - mean) ^ 2) =
-        (∑ g : G, prob g * f (Function.update A e g) ^ 2) -
+        ∑ g : G,
+          (prob g * f (Function.update A e g) ^ 2 -
+            2 * mean *
+              (prob g * f (Function.update A e g)) +
+            mean ^ 2 * prob g) := by
+      apply Finset.sum_congr rfl
+      intro g _hg
+      ring
+    _ = (∑ g : G, prob g * f (Function.update A e g) ^ 2) -
+          (∑ g : G,
+            2 * mean * (prob g * f (Function.update A e g))) +
+          (∑ g : G, mean ^ 2 * prob g) := by
+      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+    _ = (∑ g : G, prob g * f (Function.update A e g) ^ 2) -
           2 * mean *
             (∑ g : G, prob g * f (Function.update A e g)) +
           mean ^ 2 * (∑ g : G, prob g) := by
-      simp_rw [sub_sq]
-      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
-      congr 1
-      · rw [Finset.mul_sum]
-        apply Finset.sum_congr rfl
-        intro g _hg
-        ring
-      · rw [Finset.mul_sum]
-        apply Finset.sum_congr rfl
-        intro g _hg
-        ring
+      rw [← Finset.mul_sum, ← Finset.mul_sum]
     _ = (∑ g : G, prob g * f (Function.update A e g) ^ 2) -
         mean ^ 2 := by
       rw [hMean, hMass]
@@ -135,35 +138,129 @@ theorem finitePositiveWeightSingleSiteVariance_eq_pairDirichlet
           prob g * prob h *
             (f (Function.update A e g) -
               f (Function.update A e h)) ^ 2
+  have hFirst :
+      (∑ g : G, ∑ h : G,
+        prob g * prob h * f (Function.update A e g) ^ 2) =
+        (∑ g : G, prob g * f (Function.update A e g) ^ 2) *
+          (∑ h : G, prob h) := by
+    calc
+      (∑ g : G, ∑ h : G,
+        prob g * prob h * f (Function.update A e g) ^ 2) =
+          ∑ g : G,
+            (prob g * f (Function.update A e g) ^ 2) *
+              (∑ h : G, prob h) := by
+        apply Finset.sum_congr rfl
+        intro g _hg
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro h _hh
+        ring
+      _ = _ := by
+        rw [Finset.sum_mul]
+  have hCross :
+      (∑ g : G, ∑ h : G,
+        prob g * prob h *
+          f (Function.update A e g) *
+          f (Function.update A e h)) =
+        (∑ g : G, prob g * f (Function.update A e g)) *
+          (∑ h : G, prob h * f (Function.update A e h)) := by
+    calc
+      (∑ g : G, ∑ h : G,
+        prob g * prob h *
+          f (Function.update A e g) *
+          f (Function.update A e h)) =
+          ∑ g : G,
+            (prob g * f (Function.update A e g)) *
+              (∑ h : G,
+                prob h * f (Function.update A e h)) := by
+        apply Finset.sum_congr rfl
+        intro g _hg
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro h _hh
+        ring
+      _ = _ := by
+        rw [Finset.sum_mul]
+  have hCrossTwo :
+      (∑ g : G, ∑ h : G,
+        2 * (prob g * f (Function.update A e g) *
+          (prob h * f (Function.update A e h)))) =
+        2 *
+          ((∑ g : G, prob g * f (Function.update A e g)) *
+            (∑ h : G, prob h * f (Function.update A e h))) := by
+    calc
+      (∑ g : G, ∑ h : G,
+        2 * (prob g * f (Function.update A e g) *
+          (prob h * f (Function.update A e h)))) =
+          2 *
+            (∑ g : G, ∑ h : G,
+              prob g * prob h *
+                f (Function.update A e g) *
+                f (Function.update A e h)) := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro g _hg
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro h _hh
+        ring
+      _ = _ := by rw [hCross]
+  have hLast :
+      (∑ g : G, ∑ h : G,
+        prob g * prob h * f (Function.update A e h) ^ 2) =
+        (∑ g : G, prob g) *
+          (∑ h : G, prob h * f (Function.update A e h) ^ 2) := by
+    calc
+      (∑ g : G, ∑ h : G,
+        prob g * prob h * f (Function.update A e h) ^ 2) =
+          ∑ g : G, prob g *
+            (∑ h : G, prob h * f (Function.update A e h) ^ 2) := by
+        apply Finset.sum_congr rfl
+        intro g _hg
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro h _hh
+        ring
+      _ = _ := by
+        rw [Finset.sum_mul]
+  have hExpanded :
+      (∑ g : G, ∑ h : G,
+        prob g * prob h *
+          (f (Function.update A e g) -
+            f (Function.update A e h)) ^ 2) =
+        (∑ g : G, ∑ h : G,
+          prob g * prob h * f (Function.update A e g) ^ 2) -
+        (∑ g : G, ∑ h : G,
+          2 * (prob g * f (Function.update A e g) *
+            (prob h * f (Function.update A e h)))) +
+        (∑ g : G, ∑ h : G,
+          prob g * prob h * f (Function.update A e h) ^ 2) := by
+    calc
+      (∑ g : G, ∑ h : G,
+        prob g * prob h *
+          (f (Function.update A e g) -
+            f (Function.update A e h)) ^ 2) =
+          ∑ g : G, ∑ h : G,
+            (prob g * prob h * f (Function.update A e g) ^ 2 -
+              2 * (prob g * f (Function.update A e g) *
+                (prob h * f (Function.update A e h))) +
+              prob g * prob h * f (Function.update A e h) ^ 2) := by
+        apply Finset.sum_congr rfl
+        intro g _hg
+        apply Finset.sum_congr rfl
+        intro h _hh
+        ring
+      _ = _ := by
+        simp_rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
   have hPairExpansion :
       (∑ g : G, ∑ h : G,
         prob g * prob h *
           (f (Function.update A e g) -
             f (Function.update A e h)) ^ 2) =
         2 * second - 2 * mean ^ 2 := by
-    calc
-      (∑ g : G, ∑ h : G,
-        prob g * prob h *
-          (f (Function.update A e g) -
-            f (Function.update A e h)) ^ 2) =
-          (∑ g : G, prob g * f (Function.update A e g) ^ 2) *
-              (∑ h : G, prob h) -
-            2 *
-              ((∑ g : G, prob g * f (Function.update A e g)) *
-                (∑ h : G, prob h * f (Function.update A e h))) +
-            (∑ g : G, prob g) *
-              (∑ h : G, prob h * f (Function.update A e h) ^ 2) := by
-        rw [Finset.mul_sum, Finset.sum_mul]
-        simp_rw [Finset.mul_sum, Finset.sum_mul]
-        apply Finset.sum_congr rfl
-        intro g _hg
-        apply Finset.sum_congr rfl
-        intro h _hh
-        ring
-      _ = 2 * second - 2 * mean ^ 2 := by
-        rw [hMass, hMean]
-        change second * 1 - 2 * (mean * mean) + 1 * second = _
-        ring
+    rw [hExpanded, hFirst, hCrossTwo, hLast, hMass, hMean]
+    change second * 1 - 2 * (mean * mean) + 1 * second = _
+    ring
   rw [hPairExpansion]
   ring
 
