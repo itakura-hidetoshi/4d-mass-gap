@@ -204,10 +204,11 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSingleLinkProbability_lower
     simpa [z2Gauge_card_eq_two, mul_assoc] using hSum
   have hR : 0 < R := z2UnfixedGaugePerronSingleLinkRatio_pos hβ hEnergy
   have hDen : 0 < 2 * R ^ 2 := by positivity
+  have hCancel :
+      (2 * R ^ 2) * (2 * R ^ 2)⁻¹ = 1 :=
+    mul_inv_cancel₀ (ne_of_gt hDen)
   have hLower : (2 * R ^ 2)⁻¹ ≤ prob g := by
-    apply (mul_le_mul_left hDen).mp
-    rw [mul_inv_cancel₀ (ne_of_gt hDen)]
-    exact hBound
+    nlinarith
   simpa [R, prob] using hLower
 
 /-- Actual conditional expectation for one-link Perron-density heat-bath
