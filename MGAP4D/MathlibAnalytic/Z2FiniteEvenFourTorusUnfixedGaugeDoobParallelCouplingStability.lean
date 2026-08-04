@@ -9,6 +9,8 @@ open scoped BigOperators
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 /-- Actual finite-volume coordinate-coupling data written with the named
 Perron Doob kernel in its marginal equations. Keeping this model-facing
 structure independent of the generic kernel-indexed structure prevents Lean
@@ -79,7 +81,6 @@ variable
 
 /-- The model-facing actual coupling package is exactly the generic coupling
 package for the actual Perron Doob kernel. -/
-set_option maxHeartbeats 1000000 in
 noncomputable def toGeneric
     (C : Z2UnfixedGaugeDoobParallelVolumeCouplingData
       H β energyIdentity energyNontrivial hβ hEnergy) :
@@ -136,7 +137,6 @@ variable
 
 /-- Every actual finite-volume coupling certificate produces the corresponding
 direct parallel Doob variation certificate, with no loss in its coefficient. -/
-set_option maxHeartbeats 1000000 in
 noncomputable def variationCertificate
     (C : Z2UnfixedGaugeDoobParallelUniformCouplingCertificate
       β energyIdentity energyNontrivial hβ hEnergy)
