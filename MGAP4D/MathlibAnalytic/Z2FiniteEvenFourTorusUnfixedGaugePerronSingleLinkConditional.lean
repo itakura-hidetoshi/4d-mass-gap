@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FinitePositiveWeightSingleSiteConditional
-import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugePerronLocalRatio
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeDoobPosteriorLocalControl
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -8,16 +8,6 @@ namespace MathlibAnalytic
 open scoped BigOperators
 
 noncomputable section
-
-/-- Unnormalized reversible density of the actual Perron Doob chain. -/
-def finiteEvenFourTorusZ2UnfixedGaugePerronDensity
-    (H : ℕ)
-    (β energyIdentity energyNontrivial : ℝ)
-    (hβ : 0 ≤ β)
-    (hEnergy : energyIdentity ≤ energyNontrivial)
-    (A : FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ :=
-  (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
-    H β energyIdentity energyNontrivial hβ hEnergy A) ^ 2
 
 /-- The actual Perron density is pointwise strictly positive. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugePerronDensity_pos
@@ -111,9 +101,9 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSingleLinkProbability_sum_eq_one
       H β energyIdentity energyNontrivial hβ hEnergy)
     A e
 
-/-- Squaring the actual positive-ground one-link ratio gives the corresponding
-all-volume ratio for the reversible Perron density. -/
-theorem finiteEvenFourTorusZ2UnfixedGaugePerronDensity_le_singleLinkRatio_sq_mul
+/-- The existing two-sided Perron-density ratio compares every pair of atoms
+in one actual link fiber. -/
+theorem finiteEvenFourTorusZ2UnfixedGaugePerronDensity_fiber_le_sqRatio_mul
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
@@ -129,36 +119,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronDensity_le_singleLinkRatio_sq_mul
         finiteEvenFourTorusZ2UnfixedGaugePerronDensity
           H β energyIdentity energyNontrivial hβ.le hEnergy.le
           (finiteZ2GaugeReplaceCoordinate A e h) := by
-  let R := z2UnfixedGaugePerronSingleLinkRatio
-    β energyIdentity energyNontrivial
-  let p := finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
-    H β energyIdentity energyNontrivial hβ.le hEnergy.le
-  let Ag := finiteZ2GaugeReplaceCoordinate A e g
-  let Ah := finiteZ2GaugeReplaceCoordinate A e h
-  have hp : p Ag ≤ R * p Ah := by
-    simpa [p, R, Ag, Ah, finiteZ2GaugeReplaceCoordinate,
-      Function.update_update] using
-      finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround_le_singleLinkRatio_mul_replace
-        H β energyIdentity energyNontrivial hβ hEnergy Ag e h
-  have hpg : 0 ≤ p Ag :=
-    le_of_lt
-      (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround_pos
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le Ag)
-  have hph : 0 ≤ p Ah :=
-    le_of_lt
-      (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround_pos
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le Ah)
-  have hR : 0 ≤ R :=
-    le_of_lt (z2UnfixedGaugePerronSingleLinkRatio_pos hβ hEnergy)
-  have hfactor :
-      0 ≤ (R * p Ah - p Ag) * (R * p Ah + p Ag) :=
-    mul_nonneg (sub_nonneg.mpr hp)
-      (add_nonneg (mul_nonneg hR hph) hpg)
-  change p Ag ^ 2 ≤ R ^ 2 * p Ah ^ 2
-  nlinarith
+  have hLocal :=
+    finiteEvenFourTorusZ2UnfixedGaugePerronDensity_le_sqRatio_mul_replace
+      H β energyIdentity energyNontrivial hβ hEnergy
+      (finiteZ2GaugeReplaceCoordinate A e g) e h
+  simpa [finiteZ2GaugeReplaceCoordinate, Function.update_update] using hLocal
 
-/-- The same explicit squared ratio controls all normalized actual Perron
-one-link conditional probabilities. -/
+/-- The explicit squared ratio controls all normalized actual Perron one-link
+conditional probabilities. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugePerronSingleLinkProbability_le_ratio_sq_mul
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
@@ -181,7 +149,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSingleLinkProbability_le_ratio_sq
     A e
     ((z2UnfixedGaugePerronSingleLinkRatio
       β energyIdentity energyNontrivial) ^ 2)
-    (finiteEvenFourTorusZ2UnfixedGaugePerronDensity_le_singleLinkRatio_sq_mul
+    (finiteEvenFourTorusZ2UnfixedGaugePerronDensity_fiber_le_sqRatio_mul
       H β energyIdentity energyNontrivial hβ hEnergy A e)
     g h
 
