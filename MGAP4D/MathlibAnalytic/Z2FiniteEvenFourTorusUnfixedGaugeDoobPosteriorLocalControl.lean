@@ -130,10 +130,9 @@ theorem finiteEvenFourTorusZ2UnfixedGauge_weightedDirichlet_eq_jointDifference
             finiteEvenFourTorusZ2UnfixedGaugeDoobJointWeight
                 H β energyIdentity energyNontrivial hβ hEnergy A B *
               (f A - f B) ^ 2 :=
-  FiniteKernelGroundStateDoobData.
-    weightedNormSq_sub_weightedDoobQuadratic_eq_jointDifference
-      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ hEnergy) f
+  FiniteKernelGroundStateDoobData.weightedNormSq_sub_weightedDoobQuadratic_eq_jointDifference
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+      H β energyIdentity energyNontrivial hβ hEnergy) f
 
 /-- The previously proved Perron local ratio also holds in the reverse
 direction after restoring the original link value. -/
