@@ -227,21 +227,24 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround_le_singleLinkRati
         H β energyIdentity energyNontrivial hβ.le hEnergy.le :=
     finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale_pos
       H β energyIdentity energyNontrivial hβ.le hEnergy.le
-  apply (mul_le_mul_left hρ).mp
-  calc
-    finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le * p B ≤
-      (E * R) *
-        (finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le * p B') := hScaled
-    _ = finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le *
-        ((E * R) * p B') := by ring
-    _ = finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le *
-        (z2UnfixedGaugePerronSingleLinkRatio
-          β energyIdentity energyNontrivial * p B') := by
-      rfl
+  have hCancelled : p B ≤ (E * R) * p B' := by
+    have hScaled' :
+        finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
+              H β energyIdentity energyNontrivial hβ.le hEnergy.le * p B ≤
+          finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
+              H β energyIdentity energyNontrivial hβ.le hEnergy.le *
+            ((E * R) * p B') := by
+      calc
+        finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
+              H β energyIdentity energyNontrivial hβ.le hEnergy.le * p B ≤
+          (E * R) *
+            (finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
+              H β energyIdentity energyNontrivial hβ.le hEnergy.le * p B') := hScaled
+        _ = finiteEvenFourTorusZ2UnfixedGaugeRawPerronScale
+              H β energyIdentity energyNontrivial hβ.le hEnergy.le *
+            ((E * R) * p B') := by ring
+    nlinarith
+  simpa [p, E, R, B', z2UnfixedGaugePerronSingleLinkRatio] using hCancelled
 
 end
 
