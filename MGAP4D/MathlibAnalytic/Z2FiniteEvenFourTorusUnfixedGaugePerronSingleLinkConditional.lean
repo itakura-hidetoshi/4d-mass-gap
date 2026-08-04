@@ -123,7 +123,17 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronDensity_fiber_le_sqRatio_mul
     finiteEvenFourTorusZ2UnfixedGaugePerronDensity_le_sqRatio_mul_replace
       H β energyIdentity energyNontrivial hβ hEnergy
       (finiteZ2GaugeReplaceCoordinate A e g) e h
-  simpa [finiteZ2GaugeReplaceCoordinate, Function.update_update] using hLocal
+  have hReplace :
+      finiteZ2GaugeReplaceCoordinate
+          (finiteZ2GaugeReplaceCoordinate A e g) e h =
+        finiteZ2GaugeReplaceCoordinate A e h := by
+    funext i
+    by_cases hie : i = e
+    · subst i
+      simp
+    · simp [finiteZ2GaugeReplaceCoordinate, hie]
+  rw [hReplace] at hLocal
+  exact hLocal
 
 /-- The explicit squared ratio controls all normalized actual Perron one-link
 conditional probabilities. -/
@@ -191,11 +201,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSingleLinkProbability_lower
         H β energyIdentity energyNontrivial hβ.le hEnergy.le A e
   have hBound : 1 ≤ 2 * R ^ 2 * prob g := by
     rw [hMass] at hSum
-    simpa [z2Gauge_card_eq_two] using hSum
+    simpa [z2Gauge_card_eq_two, mul_assoc] using hSum
   have hR : 0 < R := z2UnfixedGaugePerronSingleLinkRatio_pos hβ hEnergy
   have hDen : 0 < 2 * R ^ 2 := by positivity
-  rw [inv_le_iff₀ hDen]
-  simpa [mul_assoc] using hBound
+  have hLower : (2 * R ^ 2)⁻¹ ≤ prob g := by
+    apply (mul_le_mul_left hDen).mp
+    rw [mul_inv_cancel₀ (ne_of_gt hDen)]
+    exact hBound
+  simpa [R, prob] using hLower
 
 /-- Actual conditional expectation for one-link Perron-density heat-bath
 resampling. -/
