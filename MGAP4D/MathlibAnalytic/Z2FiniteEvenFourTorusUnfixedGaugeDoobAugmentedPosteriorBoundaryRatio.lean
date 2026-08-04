@@ -128,7 +128,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_sub_replace_eq_linkEnerg
     finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_eq_sum_linkEnergy,
     ← Finset.sum_sub_distrib]
   rw [Finset.sum_eq_single e]
-  · rfl
   · intro i _hi hie
     rw [finiteEvenFourTorusZ2UnfixedGaugeCrossingLinkEnergy_replace_eq_of_ne
       H energyIdentity energyNontrivial U A B e i g hie]
@@ -477,9 +476,10 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior_le_boundaryRatio
       finiteEvenFourTorusZ2UnfixedGaugeDoobPosteriorNormalizer_replace_le_boundaryRatio_mul
         H β energyIdentity energyNontrivial hβ hEnergy B e g
   have hInverse : Z⁻¹ ≤ R * Z'⁻¹ := by
-    change 1 / Z ≤ R / Z'
-    rw [div_le_div_iff₀ hZpos hZ'pos]
-    simpa using hZreverse
+    have hDiv : 1 / Z ≤ R / Z' := by
+      rw [div_le_div_iff₀ hZpos hZ'pos]
+      simpa using hZreverse
+    simpa [one_div, div_eq_mul_inv] using hDiv
   unfold finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedPosterior
   change W / Z ≤ R ^ 2 * (W' / Z')
   rw [div_eq_mul_inv, div_eq_mul_inv]
