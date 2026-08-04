@@ -109,7 +109,10 @@ theorem finiteProductFunctionIndependentOfCoordinate_crossRatio_one
       factor A B target 1 := by
   intro g h
   rw [hFactor A g, hFactor B h, hFactor B g, hFactor A h]
-  exact le_rfl
+  have hRefl :
+      factor A * factor B ≤ factor A * factor B :=
+    le_refl (factor A * factor B)
+  simpa [mul_comm] using hRefl
 
 /-- Four-point cross-ratio bounds multiply under pointwise products of
 nonnegative weights. -/
