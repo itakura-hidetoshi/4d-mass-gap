@@ -80,8 +80,9 @@ theorem FiniteProductVariationBound.difference_abs_le_patch_sum
 noncomputable def finiteProductMismatchIndicator
     {ι G : Type}
     (A B : ι → G)
-    (e : ι) : ℝ :=
-  if A e = B e then 0 else 1
+    (e : ι) : ℝ := by
+  classical
+  exact if A e = B e then 0 else 1
 
 /-- The mismatch indicator is nonnegative. -/
 theorem finiteProductMismatchIndicator_nonneg
