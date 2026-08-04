@@ -49,8 +49,8 @@ theorem z2GaugeWilsonPlaquetteGramKernel_eq_weightSum_mul_normalized
             β energyIdentity energyNontrivial *
           ((1 + z2WilsonTemporalCrossingRate
             β energyIdentity energyNontrivial) / 2) := by
-    unfold z2WilsonTemporalCrossingWeightSum
-      z2WilsonTemporalCrossingRate
+    unfold z2WilsonTemporalCrossingRate
+      z2WilsonTemporalCrossingWeightSum
     field_simp [hden]
     ring
   have hoff :
@@ -59,8 +59,8 @@ theorem z2GaugeWilsonPlaquetteGramKernel_eq_weightSum_mul_normalized
             β energyIdentity energyNontrivial *
           ((1 - z2WilsonTemporalCrossingRate
             β energyIdentity energyNontrivial) / 2) := by
-    unfold z2WilsonTemporalCrossingWeightSum
-      z2WilsonTemporalCrossingRate
+    unfold z2WilsonTemporalCrossingRate
+      z2WilsonTemporalCrossingWeightSum
     field_simp [hden]
     ring
   rw [z2GaugeWilsonPlaquetteGramKernel_apply]
