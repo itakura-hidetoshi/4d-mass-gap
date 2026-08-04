@@ -144,10 +144,17 @@ noncomputable def finitePositiveWeightPairingLeftLinearMap
     classical
     unfold finitePositiveWeightPairing
     simp only [Pi.smul_apply, smul_eq_mul]
-    rw [← Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro A _hA
-    ring
+    change
+      (∑ A : ι → G, weight A * (c * f A) * g A) =
+        c * ∑ A : ι → G, weight A * f A * g A
+    calc
+      (∑ A : ι → G, weight A * (c * f A) * g A) =
+          ∑ A : ι → G, c * (weight A * f A * g A) := by
+        apply Finset.sum_congr rfl
+        intro A _hA
+        ring
+      _ = c * ∑ A : ι → G, weight A * f A * g A := by
+        rw [Finset.mul_sum]
 
 @[simp] theorem finitePositiveWeightPairingLeftLinearMap_apply
     {ι G : Type}
@@ -184,10 +191,17 @@ noncomputable def finitePositiveWeightPairingRightLinearMap
     classical
     unfold finitePositiveWeightPairing
     simp only [Pi.smul_apply, smul_eq_mul]
-    rw [← Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro A _hA
-    ring
+    change
+      (∑ A : ι → G, weight A * f A * (c * g A)) =
+        c * ∑ A : ι → G, weight A * f A * g A
+    calc
+      (∑ A : ι → G, weight A * f A * (c * g A)) =
+          ∑ A : ι → G, c * (weight A * f A * g A) := by
+        apply Finset.sum_congr rfl
+        intro A _hA
+        ring
+      _ = c * ∑ A : ι → G, weight A * f A * g A := by
+        rw [Finset.mul_sum]
 
 @[simp] theorem finitePositiveWeightPairingRightLinearMap_apply
     {ι G : Type}
@@ -437,15 +451,9 @@ noncomputable def finitePositiveWeightRandomScanLinearMap
     (f : (ι → G) → ℝ) :
     finitePositiveWeightRandomScanLinearMap weight f =
       finitePositiveWeightRandomScanConditionalExpectation weight f := by
-  funext A
-  change
-    (Fintype.card ι : ℝ)⁻¹ *
-        ∑ e : ι,
-          finitePositiveWeightSingleSiteExpectation weight f A e =
-      (Fintype.card ι : ℝ)⁻¹ *
-        ∑ e : ι,
-          finitePositiveWeightSingleSiteExpectation weight f A e
-  rfl
+  ext A
+  simp [finitePositiveWeightRandomScanLinearMap,
+    finitePositiveWeightRandomScanConditionalExpectation]
 
 /-- Uniform random scan is symmetric for the unnormalized positive-weight
 pairing. -/
