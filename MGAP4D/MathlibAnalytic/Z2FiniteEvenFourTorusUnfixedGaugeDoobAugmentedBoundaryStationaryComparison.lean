@@ -100,10 +100,6 @@ theorem FiniteProductVariationBound.finiteEvenFourTorusZ2UnfixedGaugeDoobAugment
         H β energyIdentity energyNontrivial hβ hEnergy
         (finiteZ2GaugeReplaceCoordinate B source g) X
   · exact finiteEvenFourTorusZ2AugmentedCoordinate_card_pos H
-  · intro target
-    exact
-      finiteEvenFourTorusZ2UnfixedGaugeDoobAugmentedBoundaryConditionalSourceBound_nonneg
-        H β energyIdentity energyNontrivial hβ hEnergy source target
   · intro X target
     exact
       finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedBoundaryConditionalCrossL1_le_sourceBound
