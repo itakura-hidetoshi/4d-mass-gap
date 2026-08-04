@@ -9,19 +9,23 @@ noncomputable section
 
 set_option maxHeartbeats 1000000
 
-/-- The finite-volume coordinate-coupling data type for the actual Perron Doob
-kernel, with the finite-product coordinate and spin types fixed explicitly so
-that elaboration does not unfold the full lattice carrier while inferring them. -/
-abbrev Z2UnfixedGaugeDoobParallelVolumeCouplingData
+/-- One finite-volume actual Perron-Doob coordinate-coupling certificate,
+wrapped behind a model-specific head constant.  The common rate is carried as
+a parameter, so the all-volume package never needs to unfold the full generic
+coupling structure while checking its dependent family field. -/
+structure Z2UnfixedGaugeDoobParallelVolumeCouplingCertificate
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 < β)
-    (hEnergy : energyIdentity < energyNontrivial) :=
-  @FiniteProductKernelCouplingVariationData
-    (FiniteEvenFourTorusSpatialLink H) Z2Gauge
-    inferInstance inferInstance inferInstance inferInstance
-    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-      H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobKernel
+    (hEnergy : energyIdentity < energyNontrivial)
+    (rate : ℝ) where
+  couplingData :
+    @FiniteProductKernelCouplingVariationData
+      (FiniteEvenFourTorusSpatialLink H) Z2Gauge
+      inferInstance inferInstance inferInstance inferInstance
+      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobKernel
+  coefficient_le_rate : couplingData.coefficient ≤ rate
 
 /-- A proof-relevant all-volume coordinate-coupling package for the actual
 Perron Doob kernels.  For every finite volume it supplies genuine couplings
@@ -36,11 +40,9 @@ structure Z2UnfixedGaugeDoobParallelUniformCouplingCertificate
     z2WilsonTemporalCrossingRate
         β energyIdentity energyNontrivial ≤ rate
   rate_lt_one : rate < 1
-  couplingData : ∀ H : ℕ,
-    Z2UnfixedGaugeDoobParallelVolumeCouplingData
-      H β energyIdentity energyNontrivial hβ hEnergy
-  coefficient_le_rate : ∀ H : ℕ,
-    (couplingData H).coefficient ≤ rate
+  volumeCertificate : ∀ H : ℕ,
+    Z2UnfixedGaugeDoobParallelVolumeCouplingCertificate
+      H β energyIdentity energyNontrivial hβ hEnergy rate
 
 namespace Z2UnfixedGaugeDoobParallelUniformCouplingCertificate
 
@@ -63,7 +65,7 @@ noncomputable def variationCertificate
     inferInstance inferInstance inferInstance inferInstance
     (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
       H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-    (C.couplingData H)
+    (C.volumeCertificate H).couplingData
 
 /-- The common coupling column-sum bound gives the existing all-volume direct
 parallel variation package for the actual Perron Doob operators. -/
@@ -78,7 +80,8 @@ noncomputable def toUniformVariationCertificate
     variationCertificate := C.variationCertificate
     coefficient_le_rate := by
       intro H
-      simpa [variationCertificate] using C.coefficient_le_rate H }
+      simpa [variationCertificate] using
+        (C.volumeCertificate H).coefficient_le_rate }
 
 /-- The actual coupling package directly yields the common weighted Doob
 Rayleigh estimate. -/
