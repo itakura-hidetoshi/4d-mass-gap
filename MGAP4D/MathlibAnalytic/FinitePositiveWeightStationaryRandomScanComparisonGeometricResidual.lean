@@ -136,10 +136,16 @@ theorem expectationDiscrepancy_le_two_mul_totalVariation
   rw [hTranslate]
   calc
     |finitePositiveWeightGlobalExpectation leftWeight centered -
-        finitePositiveWeightGlobalExpectation rightWeight centered| ≤
-      |finitePositiveWeightGlobalExpectation leftWeight centered| +
-        |finitePositiveWeightGlobalExpectation rightWeight centered| :=
-      abs_sub_le _ _
+        finitePositiveWeightGlobalExpectation rightWeight centered| =
+      |finitePositiveWeightGlobalExpectation leftWeight centered +
+        (-finitePositiveWeightGlobalExpectation rightWeight centered)| := by
+          ring
+    _ ≤ |finitePositiveWeightGlobalExpectation leftWeight centered| +
+        |-finitePositiveWeightGlobalExpectation rightWeight centered| :=
+      abs_add_le _ _
+    _ = |finitePositiveWeightGlobalExpectation leftWeight centered| +
+        |finitePositiveWeightGlobalExpectation rightWeight centered| := by
+      rw [abs_neg]
     _ ≤ finiteProductVariationTotal P.variation +
         finiteProductVariationTotal P.variation :=
       add_le_add hLeft hRight
