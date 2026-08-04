@@ -234,7 +234,7 @@ theorem expectationDiscrepancy_le_partialSource_add_iterateResidual
                 (rightRandomScanIterateVariationBound P C n).variation +
               C.expectationDiscrepancy
                 (C.rightRandomScanObservableIterate f (n + 1))) :=
-          add_le_add_left hStep _
+          add_le_add (le_refl (partialStationarySource P C n)) hStep
         _ = partialStationarySource P C (n + 1) +
             C.expectationDiscrepancy
               (C.rightRandomScanObservableIterate f (n + 1)) := by
