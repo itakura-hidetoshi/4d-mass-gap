@@ -24,9 +24,14 @@ noncomputable def finiteBoundaryConstantOne
 /-- Scalar real inner product against one. -/
 theorem real_inner_one (a : ℝ) :
     inner ℝ a 1 = a := by
-  change inner ℝ (a • (1 : ℝ)) 1 = a
-  rw [inner_smul_left]
-  norm_num [real_inner_self_eq_norm_sq]
+  calc
+    inner ℝ a 1 = inner ℝ (a • (1 : ℝ)) 1 := by simp
+    _ = a * inner ℝ (1 : ℝ) 1 := by
+      rw [inner_smul_left]
+      simp
+    _ = a := by
+      rw [real_inner_self_eq_norm_sq (1 : ℝ)]
+      norm_num
 
 /-- Finite function mass is the inner product against the constant vector. -/
 theorem finiteFunctionMass_eq_inner_constantOne
