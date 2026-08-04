@@ -260,6 +260,7 @@ theorem finiteProductCanonicalVariation_eq_zero_of_total_eq_zero
 /-- Unnormalized total mass of a strictly positive finite product weight. -/
 def finitePositiveWeightTotal
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ) : ℝ :=
@@ -269,6 +270,7 @@ def finitePositiveWeightTotal
 mass. -/
 theorem finitePositiveWeightTotal_pos
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     [Nonempty G]
@@ -284,6 +286,7 @@ theorem finitePositiveWeightTotal_pos
 /-- Unnormalized weighted first moment of an observable. -/
 def finitePositiveWeightSum
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ)
@@ -293,6 +296,7 @@ def finitePositiveWeightSum
 /-- Weighted first moment of a constant observable. -/
 theorem finitePositiveWeightSum_const
     {ι G : Type}
+    [DecidableEq ι]
     [Fintype ι]
     [Fintype G]
     (weight : (ι → G) → ℝ)
