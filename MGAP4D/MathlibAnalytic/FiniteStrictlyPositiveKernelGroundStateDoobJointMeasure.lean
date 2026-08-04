@@ -89,7 +89,6 @@ theorem jointWeight_eq_normalizedKernel_mul_ground
         D.kernel x y * D.ground x * D.ground y := by
   unfold jointWeight doobKernel
   field_simp [ne_of_gt (D.ground_pos y)]
-  ring
 
 /-- The right marginal of the joint weight is the reversible Perron density
 `ground²`.  No normalization of the chosen Perron vector is required. -/
@@ -123,7 +122,6 @@ theorem jointWeight_totalMass
   apply Finset.sum_congr rfl
   intro y _hy
   change D.ground y ^ 2 = D.ground y * D.ground y
-  ring
 
 /-- The weighted Doob quadratic form is the two-layer correlation quadratic
 form under the symmetric joint weight. -/
@@ -197,10 +195,22 @@ theorem weightedNormSq_sub_weightedDoobQuadratic_eq_jointDifference
         ∑ y : α, ∑ x : α,
           D.jointWeight x y * (f x - f y) ^ 2 := by
       congr 1
-      simp_rw [sub_sq]
-      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib,
-        Finset.sum_add_distrib, Finset.sum_sub_distrib]
-      simp_rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+      have hTwo :
+          2 * (∑ y : α, ∑ x : α,
+              D.jointWeight x y * f x * f y) =
+            ∑ y : α, ∑ x : α,
+              2 * (D.jointWeight x y * f x * f y) := by
+        rw [Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro y _hy
+        rw [Finset.mul_sum]
+      rw [hTwo]
+      rw [← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro y _hy
+      rw [← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro x _hx
       ring
 
 end FiniteKernelGroundStateDoobData
