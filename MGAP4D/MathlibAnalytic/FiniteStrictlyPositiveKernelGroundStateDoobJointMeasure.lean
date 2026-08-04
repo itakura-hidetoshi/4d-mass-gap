@@ -57,7 +57,6 @@ theorem doobKernel_eq_groundPosterior
       (D.kernel x y * D.ground x) /
         D.groundWeightedColumnMass y
   field_simp [ne_of_gt hNorm, ne_of_gt hMass]
-  ring
 
 /-- Symmetric two-layer weight associated with the reversible Doob chain. -/
 def jointWeight
@@ -121,7 +120,7 @@ theorem jointWeight_totalMass
   rw [← real_inner_self_eq_norm_sq, PiLp.inner_apply]
   apply Finset.sum_congr rfl
   intro y _hy
-  change D.ground y ^ 2 = D.ground y * D.ground y
+  rw [pow_two]
 
 /-- The weighted Doob quadratic form is the two-layer correlation quadratic
 form under the symmetric joint weight. -/
