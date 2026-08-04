@@ -183,7 +183,7 @@ theorem finiteNonnegativeKernelPowerApply_mono
     (target : ι) :
     finiteNonnegativeKernelPowerApply kernel v n target ≤
       finiteNonnegativeKernelPowerApply kernel w n target := by
-  induction n with
+  induction n generalizing target with
   | zero =>
       exact hvw target
   | succ n ih =>
@@ -201,7 +201,7 @@ theorem finiteNonnegativeKernelPowerApply_nonneg
     (n : ℕ)
     (target : ι) :
     0 ≤ finiteNonnegativeKernelPowerApply kernel v n target := by
-  induction n with
+  induction n generalizing target with
   | zero =>
       exact hv target
   | succ n ih =>
@@ -222,7 +222,7 @@ theorem finiteNonnegativeKernelPartialResolvent_nonneg
     (n : ℕ)
     (target : ι) :
     0 ≤ finiteNonnegativeKernelPartialResolvent kernel b n target := by
-  induction n with
+  induction n generalizing target with
   | zero =>
       simp
   | succ n ih =>
@@ -251,7 +251,7 @@ theorem finiteNonnegativeKernelComparison_iterate
     d target ≤
       finiteNonnegativeKernelPartialResolvent kernel b n target +
         finiteNonnegativeKernelPowerApply kernel d n target := by
-  induction n with
+  induction n generalizing target with
   | zero =>
       simp
   | succ n ih =>
@@ -271,8 +271,10 @@ theorem finiteNonnegativeKernelComparison_iterate
             (b target)
         _ = finiteNonnegativeKernelPartialResolvent kernel b (n + 1) target +
             finiteNonnegativeKernelPowerApply kernel d (n + 1) target := by
-          rw [finiteNonnegativeKernelApply_add]
-          rfl
+          rw [finiteNonnegativeKernelApply_add,
+            finiteNonnegativeKernelPartialResolvent_succ,
+            finiteNonnegativeKernelPowerApply_succ]
+          ring
 
 /-- A row-sum coefficient bounds the action of a nonnegative comparison kernel
 on every vector with a common pointwise upper bound. -/
@@ -324,7 +326,7 @@ theorem finiteNonnegativeKernelPowerApply_le_coefficient_pow_mul
     (target : ι) :
     finiteNonnegativeKernelPowerApply kernel v n target ≤
       coefficient ^ n * bound := by
-  induction n with
+  induction n generalizing target with
   | zero =>
       simpa using hv target
   | succ n ih =>
@@ -381,7 +383,7 @@ theorem finiteNonnegativeKernelPartialResolvent_le_scalar
     finiteNonnegativeKernelPartialResolvent kernel b n target ≤
       finiteNonnegativeKernelScalarPartialResolvent
         coefficient sourceBound n := by
-  induction n with
+  induction n generalizing target with
   | zero =>
       simp
   | succ n ih =>
