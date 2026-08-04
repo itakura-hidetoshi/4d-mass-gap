@@ -86,8 +86,7 @@ def sourceError
 
 /-- Iterated proof-relevant variation bound along the right-weight random-scan
 orbit of an observable. -/
-noncomputable def
-    FiniteProductVariationBound.rightRandomScanIterateVariationBound
+noncomputable def rightRandomScanIterateVariationBound
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
@@ -96,47 +95,45 @@ noncomputable def
       FiniteProductVariationBound (C.rightRandomScanObservableIterate f n)
   | 0 => P
   | n + 1 =>
-      (P.rightRandomScanIterateVariationBound C n).randomScanVariationBound
+      (rightRandomScanIterateVariationBound P C n).randomScanVariationBound
         C.rightWeight_pos C.rightDobrushin
 
-@[simp] theorem
-    FiniteProductVariationBound.rightRandomScanIterateVariationBound_zero
+@[simp] theorem rightRandomScanIterateVariationBound_zero
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight) :
-    P.rightRandomScanIterateVariationBound C 0 = P :=
+    rightRandomScanIterateVariationBound P C 0 = P :=
   rfl
 
-@[simp] theorem
-    FiniteProductVariationBound.rightRandomScanIterateVariationBound_succ
+@[simp] theorem rightRandomScanIterateVariationBound_succ
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight)
     (n : ℕ) :
-    P.rightRandomScanIterateVariationBound C (n + 1) =
-      (P.rightRandomScanIterateVariationBound C n).randomScanVariationBound
+    rightRandomScanIterateVariationBound P C (n + 1) =
+      (rightRandomScanIterateVariationBound P C n).randomScanVariationBound
         C.rightWeight_pos C.rightDobrushin :=
   rfl
 
 /-- Total declared variation of the iterated observable contracts at the
 standard right-weight Dobrushin random-scan rate. -/
-theorem FiniteProductVariationBound.rightRandomScanIterate_totalVariation_le_rate_pow
+theorem rightRandomScanIterate_totalVariation_le_rate_pow
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight)
     (n : ℕ) :
     finiteProductVariationTotal
-        (P.rightRandomScanIterateVariationBound C n).variation ≤
+        (rightRandomScanIterateVariationBound P C n).variation ≤
       finitePositiveWeightDobrushinRandomScanRate C.rightDobrushin ^ n *
         finiteProductVariationTotal P.variation := by
   induction n with
   | zero => simp
   | succ n ih =>
       have hStep :=
-        (P.rightRandomScanIterateVariationBound C n).randomScan_totalVariation_le_rate_mul
+        (rightRandomScanIterateVariationBound P C n).randomScan_totalVariation_le_rate_mul
           C.rightWeight_pos C.rightDobrushin C.coordinateCard_pos
       have hRateNonneg :
           0 ≤ finitePositiveWeightDobrushinRandomScanRate C.rightDobrushin :=
@@ -144,10 +141,10 @@ theorem FiniteProductVariationBound.rightRandomScanIterate_totalVariation_le_rat
           C.rightDobrushin C.coordinateCard_pos
       calc
         finiteProductVariationTotal
-            (P.rightRandomScanIterateVariationBound C (n + 1)).variation ≤
+            (rightRandomScanIterateVariationBound P C (n + 1)).variation ≤
           finitePositiveWeightDobrushinRandomScanRate C.rightDobrushin *
             finiteProductVariationTotal
-              (P.rightRandomScanIterateVariationBound C n).variation := by
+              (rightRandomScanIterateVariationBound P C n).variation := by
                 simpa using hStep
         _ ≤ finitePositiveWeightDobrushinRandomScanRate C.rightDobrushin *
             (finitePositiveWeightDobrushinRandomScanRate C.rightDobrushin ^ n *
@@ -160,39 +157,39 @@ theorem FiniteProductVariationBound.rightRandomScanIterate_totalVariation_le_rat
 
 /-- Accumulated exact source contribution through the first `n` right-weight
 random-scan variation profiles. -/
-noncomputable def FiniteProductVariationBound.partialStationarySource
+noncomputable def partialStationarySource
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight) : ℕ → ℝ
   | 0 => 0
   | n + 1 =>
-      P.partialStationarySource C n +
+      partialStationarySource P C n +
         C.sourceError
-          (P.rightRandomScanIterateVariationBound C n).variation
+          (rightRandomScanIterateVariationBound P C n).variation
 
-@[simp] theorem FiniteProductVariationBound.partialStationarySource_zero
+@[simp] theorem partialStationarySource_zero
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight) :
-    P.partialStationarySource C 0 = 0 :=
+    partialStationarySource P C 0 = 0 :=
   rfl
 
-@[simp] theorem FiniteProductVariationBound.partialStationarySource_succ
+@[simp] theorem partialStationarySource_succ
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight)
     (n : ℕ) :
-    P.partialStationarySource C (n + 1) =
-      P.partialStationarySource C n +
+    partialStationarySource P C (n + 1) =
+      partialStationarySource P C n +
         C.sourceError
-          (P.rightRandomScanIterateVariationBound C n).variation :=
+          (rightRandomScanIterateVariationBound P C n).variation :=
   rfl
 
 /-- One comparison step at the `n`th right-weight random-scan iterate. -/
-theorem FiniteProductVariationBound.expectationDiscrepancy_iterate_le_oneStep
+theorem expectationDiscrepancy_iterate_le_oneStep
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
@@ -200,12 +197,12 @@ theorem FiniteProductVariationBound.expectationDiscrepancy_iterate_le_oneStep
     (n : ℕ) :
     C.expectationDiscrepancy (C.rightRandomScanObservableIterate f n) ≤
       C.sourceError
-          (P.rightRandomScanIterateVariationBound C n).variation +
+          (rightRandomScanIterateVariationBound P C n).variation +
         C.expectationDiscrepancy
           (C.rightRandomScanObservableIterate f (n + 1)) := by
   unfold expectationDiscrepancy sourceError
   simpa using
-    (P.rightRandomScanIterateVariationBound C n).globalExpectation_crossWeight_le_oneStep
+    (rightRandomScanIterateVariationBound P C n).globalExpectation_crossWeight_le_oneStep
       leftWeight rightWeight C.leftWeight_pos C.rightWeight_pos
       C.coordinateCard_pos C.sourceBound
       C.conditionalCrossL1_le_sourceBound
@@ -213,35 +210,35 @@ theorem FiniteProductVariationBound.expectationDiscrepancy_iterate_le_oneStep
 /-- Exact finite stationary comparison iteration.  The local source pairing is
 retained at every stage, and the only remainder is the expectation discrepancy
 of the `n`th right-weight random-scan iterate. -/
-theorem FiniteProductVariationBound.expectationDiscrepancy_le_partialSource_add_iterateResidual
+theorem expectationDiscrepancy_le_partialSource_add_iterateResidual
     {f : (ι → G) → ℝ}
     (P : FiniteProductVariationBound f)
     (C : FinitePositiveWeightStationaryRandomScanComparisonData
       leftWeight rightWeight)
     (n : ℕ) :
     C.expectationDiscrepancy f ≤
-      P.partialStationarySource C n +
+      partialStationarySource P C n +
         C.expectationDiscrepancy
           (C.rightRandomScanObservableIterate f n) := by
   induction n with
   | zero => simp
   | succ n ih =>
-      have hStep := P.expectationDiscrepancy_iterate_le_oneStep C n
+      have hStep := expectationDiscrepancy_iterate_le_oneStep P C n
       calc
         C.expectationDiscrepancy f ≤
-            P.partialStationarySource C n +
+            partialStationarySource P C n +
               C.expectationDiscrepancy
                 (C.rightRandomScanObservableIterate f n) := ih
-        _ ≤ P.partialStationarySource C n +
+        _ ≤ partialStationarySource P C n +
             (C.sourceError
-                (P.rightRandomScanIterateVariationBound C n).variation +
+                (rightRandomScanIterateVariationBound P C n).variation +
               C.expectationDiscrepancy
                 (C.rightRandomScanObservableIterate f (n + 1))) :=
           add_le_add_left hStep _
-        _ = P.partialStationarySource C (n + 1) +
+        _ = partialStationarySource P C (n + 1) +
             C.expectationDiscrepancy
               (C.rightRandomScanObservableIterate f (n + 1)) := by
-          rw [P.partialStationarySource_succ]
+          rw [partialStationarySource_succ]
           ring
 
 end FinitePositiveWeightStationaryRandomScanComparisonData
