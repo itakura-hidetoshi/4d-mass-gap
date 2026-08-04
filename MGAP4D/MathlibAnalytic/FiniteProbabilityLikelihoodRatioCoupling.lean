@@ -39,7 +39,9 @@ theorem finiteProbabilityLikelihoodRatioResidual_nonneg
     (y : Ω) :
     0 ≤ finiteProbabilityLikelihoodRatioResidual μ ν R y := by
   unfold finiteProbabilityLikelihoodRatioResidual
-  exact sub_nonneg.mpr ((div_le_iff₀ hR).2 (hRatio y))
+  apply sub_nonneg.mpr
+  apply (div_le_iff₀ hR).2
+  simpa [mul_comm] using hRatio y
 
 /-- The explicit likelihood-ratio coupling is nonnegative. -/
 theorem finiteProbabilityLikelihoodRatioCoupling_nonneg
@@ -55,7 +57,9 @@ theorem finiteProbabilityLikelihoodRatioCoupling_nonneg
   unfold finiteProbabilityLikelihoodRatioCoupling
   apply add_nonneg
   · by_cases hxy : x = y
-    · simp [hxy, div_nonneg (hμ x) hR.le]
+    · subst y
+      simp only [if_pos rfl]
+      exact div_nonneg (hμ x) hR.le
     · simp [hxy]
   · exact mul_nonneg (hμ x)
       (finiteProbabilityLikelihoodRatioResidual_nonneg
