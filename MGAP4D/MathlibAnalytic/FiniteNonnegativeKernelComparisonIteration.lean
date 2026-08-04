@@ -8,9 +8,8 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Action of a finite nonnegative comparison kernel on a real vector.
-The orientation is `kernel target source`, matching the existing Dobrushin
-influence matrices. -/
+/-- Action of a finite comparison kernel on a real vector.  The orientation is
+`kernel target source`, matching the existing Dobrushin influence matrices. -/
 def finiteNonnegativeKernelApply
     {ι : Type}
     [Fintype ι]
@@ -27,12 +26,11 @@ def finiteNonnegativeKernelPowerApply
     (v : ι → ℝ)
     (n : ℕ) : ι → ℝ :=
   Nat.rec v
-    (fun _ previous =>
-      finiteNonnegativeKernelApply kernel previous)
+    (fun _ previous => finiteNonnegativeKernelApply kernel previous)
     n
 
-/-- Finite partial comparison resolvent.  The recursion is
-`R_{n+1} b = b + C (R_n b)`. -/
+/-- Finite partial comparison resolvent.  Its recursion is
+`R_(n+1) b = b + C (R_n b)`. -/
 def finiteNonnegativeKernelPartialResolvent
     {ι : Type}
     [Fintype ι]
@@ -42,14 +40,6 @@ def finiteNonnegativeKernelPartialResolvent
   Nat.rec (fun _ => 0)
     (fun _ previous target =>
       b target + finiteNonnegativeKernelApply kernel previous target)
-    n
-
-/-- Scalar majorant for a finite partial comparison resolvent. -/
-def finiteNonnegativeKernelScalarPartialResolvent
-    (coefficient sourceBound : ℝ)
-    (n : ℕ) : ℝ :=
-  Nat.rec 0
-    (fun _ previous => sourceBound + coefficient * previous)
     n
 
 @[simp] theorem finiteNonnegativeKernelPowerApply_zero
@@ -92,22 +82,6 @@ def finiteNonnegativeKernelScalarPartialResolvent
             (finiteNonnegativeKernelPartialResolvent kernel b n) target := by
   rfl
 
-@[simp] theorem finiteNonnegativeKernelScalarPartialResolvent_zero
-    (coefficient sourceBound : ℝ) :
-    finiteNonnegativeKernelScalarPartialResolvent
-      coefficient sourceBound 0 = 0 := by
-  rfl
-
-@[simp] theorem finiteNonnegativeKernelScalarPartialResolvent_succ
-    (coefficient sourceBound : ℝ)
-    (n : ℕ) :
-    finiteNonnegativeKernelScalarPartialResolvent
-        coefficient sourceBound (n + 1) =
-      sourceBound + coefficient *
-        finiteNonnegativeKernelScalarPartialResolvent
-          coefficient sourceBound n := by
-  rfl
-
 /-- The finite kernel action is additive. -/
 theorem finiteNonnegativeKernelApply_add
     {ι : Type}
@@ -115,27 +89,12 @@ theorem finiteNonnegativeKernelApply_add
     (kernel : ι → ι → ℝ)
     (v w : ι → ℝ)
     (target : ι) :
-    finiteNonnegativeKernelApply kernel (fun source => v source + w source) target =
+    finiteNonnegativeKernelApply kernel
+        (fun source => v source + w source) target =
       finiteNonnegativeKernelApply kernel v target +
         finiteNonnegativeKernelApply kernel w target := by
   unfold finiteNonnegativeKernelApply
   rw [← Finset.sum_add_distrib]
-  apply Finset.sum_congr rfl
-  intro source _hsource
-  ring
-
-/-- The finite kernel action is homogeneous. -/
-theorem finiteNonnegativeKernelApply_const_mul
-    {ι : Type}
-    [Fintype ι]
-    (kernel : ι → ι → ℝ)
-    (a : ℝ)
-    (v : ι → ℝ)
-    (target : ι) :
-    finiteNonnegativeKernelApply kernel (fun source => a * v source) target =
-      a * finiteNonnegativeKernelApply kernel v target := by
-  unfold finiteNonnegativeKernelApply
-  rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro source _hsource
   ring
@@ -234,8 +193,8 @@ theorem finiteNonnegativeKernelPartialResolvent_nonneg
           (fun source => ih source) target)
 
 /-- Finite Dobrushin comparison iteration.  A pointwise inequality
-`d ≤ b + C d` unfolds into a partial resolvent plus an explicit residual
-`C^n d`. -/
+`d ≤ b + C d` unfolds into a finite partial resolvent plus the explicit
+residual `C^n d`. -/
 theorem finiteNonnegativeKernelComparison_iterate
     {ι : Type}
     [Fintype ι]
@@ -265,7 +224,7 @@ theorem finiteNonnegativeKernelComparison_iterate
                 finiteNonnegativeKernelPartialResolvent kernel b n source +
                   finiteNonnegativeKernelPowerApply kernel d n source)
               target := by
-          exact add_le_add_left
+          exact add_le_add_right
             (finiteNonnegativeKernelApply_mono
               kernel hKernel (fun source => ih source) target)
             (b target)
@@ -277,7 +236,7 @@ theorem finiteNonnegativeKernelComparison_iterate
           ring
 
 /-- A row-sum coefficient bounds the action of a nonnegative comparison kernel
-on every vector with a common pointwise upper bound. -/
+on every vector with a common nonnegative upper bound. -/
 theorem finiteNonnegativeKernelApply_le_coefficient_mul
     {ι : Type}
     [Fintype ι]
@@ -307,7 +266,7 @@ theorem finiteNonnegativeKernelApply_le_coefficient_mul
     _ ≤ coefficient * bound :=
       mul_le_mul_of_nonneg_right (hRowSum target) hBound
 
-/-- The row-sum coefficient controls every iterated residual. -/
+/-- A row-sum coefficient controls every iterated residual geometrically. -/
 theorem finiteNonnegativeKernelPowerApply_le_coefficient_pow_mul
     {ι : Type}
     [Fintype ι]
@@ -346,61 +305,9 @@ theorem finiteNonnegativeKernelPowerApply_le_coefficient_pow_mul
           rw [pow_succ]
           ring
 
-/-- The scalar partial resolvent is nonnegative under nonnegative coefficient
-and source bound. -/
-theorem finiteNonnegativeKernelScalarPartialResolvent_nonneg
-    (coefficient sourceBound : ℝ)
-    (hCoefficient : 0 ≤ coefficient)
-    (hSourceBound : 0 ≤ sourceBound)
-    (n : ℕ) :
-    0 ≤ finiteNonnegativeKernelScalarPartialResolvent
-      coefficient sourceBound n := by
-  induction n with
-  | zero =>
-      simp
-  | succ n ih =>
-      rw [finiteNonnegativeKernelScalarPartialResolvent_succ]
-      exact add_nonneg hSourceBound (mul_nonneg hCoefficient ih)
-
-/-- A row-sum coefficient and a uniform source bound majorize the finite
-partial comparison resolvent. -/
-theorem finiteNonnegativeKernelPartialResolvent_le_scalar
-    {ι : Type}
-    [Fintype ι]
-    (kernel : ι → ι → ℝ)
-    (hKernel : ∀ target source : ι, 0 ≤ kernel target source)
-    (coefficient : ℝ)
-    (hCoefficient : 0 ≤ coefficient)
-    (hRowSum :
-      ∀ target : ι,
-        ∑ source : ι, kernel target source ≤ coefficient)
-    (b : ι → ℝ)
-    (sourceBound : ℝ)
-    (hSourceBound : 0 ≤ sourceBound)
-    (hb : ∀ target : ι, b target ≤ sourceBound)
-    (n : ℕ)
-    (target : ι) :
-    finiteNonnegativeKernelPartialResolvent kernel b n target ≤
-      finiteNonnegativeKernelScalarPartialResolvent
-        coefficient sourceBound n := by
-  induction n generalizing target with
-  | zero =>
-      simp
-  | succ n ih =>
-      rw [finiteNonnegativeKernelPartialResolvent_succ,
-        finiteNonnegativeKernelScalarPartialResolvent_succ]
-      exact add_le_add (hb target)
-        (finiteNonnegativeKernelApply_le_coefficient_mul
-          kernel hKernel coefficient hRowSum
-          (finiteNonnegativeKernelPartialResolvent kernel b n)
-          (finiteNonnegativeKernelScalarPartialResolvent
-            coefficient sourceBound n)
-          (finiteNonnegativeKernelScalarPartialResolvent_nonneg
-            coefficient sourceBound hCoefficient hSourceBound n)
-          (fun source => ih source) target)
-
-/-- Combined finite comparison estimate with an explicit geometric residual. -/
-theorem finiteNonnegativeKernelComparison_iterate_le_scalar_add_residual
+/-- Finite comparison with the residual already reduced to its geometric
+row-sum majorant. -/
+theorem finiteNonnegativeKernelComparison_iterate_le_partial_add_geometricResidual
     {ι : Type}
     [Fintype ι]
     (kernel : ι → ι → ℝ)
@@ -411,10 +318,8 @@ theorem finiteNonnegativeKernelComparison_iterate_le_scalar_add_residual
       ∀ target : ι,
         ∑ source : ι, kernel target source ≤ coefficient)
     (b d : ι → ℝ)
-    (sourceBound distanceBound : ℝ)
-    (hSourceBound : 0 ≤ sourceBound)
+    (distanceBound : ℝ)
     (hDistanceBound : 0 ≤ distanceBound)
-    (hb : ∀ target : ι, b target ≤ sourceBound)
     (hd : ∀ target : ι, d target ≤ distanceBound)
     (hComparison :
       ∀ target : ι,
@@ -423,19 +328,16 @@ theorem finiteNonnegativeKernelComparison_iterate_le_scalar_add_residual
     (n : ℕ)
     (target : ι) :
     d target ≤
-      finiteNonnegativeKernelScalarPartialResolvent
-          coefficient sourceBound n +
+      finiteNonnegativeKernelPartialResolvent kernel b n target +
         coefficient ^ n * distanceBound := by
   exact le_trans
     (finiteNonnegativeKernelComparison_iterate
       kernel hKernel b d hComparison n target)
-    (add_le_add
-      (finiteNonnegativeKernelPartialResolvent_le_scalar
-        kernel hKernel coefficient hCoefficient hRowSum
-        b sourceBound hSourceBound hb n target)
+    (add_le_add_right
       (finiteNonnegativeKernelPowerApply_le_coefficient_pow_mul
         kernel hKernel coefficient hCoefficient hRowSum
-        d distanceBound hDistanceBound hd n target))
+        d distanceBound hDistanceBound hd n target)
+      (finiteNonnegativeKernelPartialResolvent kernel b n target))
 
 end
 
