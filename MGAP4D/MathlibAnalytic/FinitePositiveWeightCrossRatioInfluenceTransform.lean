@@ -117,7 +117,7 @@ theorem finitePositiveWeightCrossRatioInfluenceTransform_two_mul_le
   have h :=
     finitePositiveWeightCrossRatioInfluenceTransform_add_le
       radius radius hRadius hRadius
-  convert h using 1 <;> ring
+  simpa [two_mul] using h
 
 /-- Exact elementary form of the transform on a logarithmic residual
 coefficient. -/
@@ -130,8 +130,7 @@ theorem finitePositiveWeightCrossRatioInfluenceTransform_log_one_add
   unfold finitePositiveWeightCrossRatioInfluenceTransform
   rw [Real.exp_log hPos]
   congr 1
-  · ring
-  · ring
+  ring
 
 /-- A logarithmic multiplicative residual contributes at most its underlying
 nonnegative additive error.  This is the key linearization used to avoid a
