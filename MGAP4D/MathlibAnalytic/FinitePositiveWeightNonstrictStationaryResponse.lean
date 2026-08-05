@@ -583,7 +583,7 @@ def finitePositiveWeightLocalTiltStationaryNonstrictComparisonData
       unfold finitePositiveWeightLocalTiltConditionalSourceBound
       split
       · have hRatioOne : 1 ≤ upper / lower :=
-          (le_div_iff₀ hLower).2 hLowerUpper
+          (le_div_iff₀ hLower).2 (by simpa using hLowerUpper)
         have hRatioPos : 0 < upper / lower := div_pos hUpper hLower
         have hInvLeOne : (upper / lower)⁻¹ ≤ 1 :=
           (inv_le_one₀ hRatioPos).2 hRatioOne
