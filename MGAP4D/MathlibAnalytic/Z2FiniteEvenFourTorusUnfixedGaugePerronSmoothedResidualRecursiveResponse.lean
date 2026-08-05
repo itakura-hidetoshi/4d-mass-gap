@@ -234,12 +234,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight_update_ta
     finitePositiveWeightMultiplicativeTilt
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
     finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel at *
-  simpa [finiteZ2GaugeReplaceCoordinate] using
-    congrArg
-      (fun x : ℝ =>
-        x * finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedHiddenWeight
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le hidden)
-      hRelation
+  rw [hRelation]
+  ring
 
 /-- Singleton variation profile for a source-local residual boundary tilt. -/
 def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation
@@ -274,7 +270,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_nonne
         (finiteZ2CrossingLikelihoodRatio
           (z2WilsonTemporalCrossingRate
             β energyIdentity energyNontrivial))⁻¹ ≤ 1 := by
-      exact inv_le_one₀ (by positivity) hR1
+      exact (inv_le_one₀).2 hR1
     linarith
   · exact le_rfl
 
@@ -317,8 +313,17 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
           finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt_le_ratio
             H β energyIdentity energyNontrivial hβ hEnergy
             base source replacement B
-        rw [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation]
-        simp only [if_pos rfl]
+        change
+          |finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
+              H β energyIdentity energyNontrivial base source replacement A -
+            finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
+              H β energyIdentity energyNontrivial base source replacement B| ≤
+            finiteZ2CrossingLikelihoodRatio
+                (z2WilsonTemporalCrossingRate
+                  β energyIdentity energyNontrivial) -
+              (finiteZ2CrossingLikelihoodRatio
+                (z2WilsonTemporalCrossingRate
+                  β energyIdentity energyNontrivial))⁻¹
         rw [abs_le]
         constructor <;> linarith
       · have hEq :
@@ -335,7 +340,7 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
           exact hAgree source (Ne.symm hCoordinate)
         rw [hEq, sub_self, abs_zero]
         simp [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation,
-          hCoordinate]
+          hCoordinate] }
 
 /-- Total mass of the singleton source-tilt variation profile. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_total
@@ -409,10 +414,7 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedRecursiveResponseError
         (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
         (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy))
       (le_trans
-        (inv_le_one₀
-          (finiteZ2CrossingLikelihoodRatio_pos
-            (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-            (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy))
+        ((inv_le_one₀).2
           (one_le_finiteZ2CrossingLikelihoodRatio
             (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
             (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
@@ -492,10 +494,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpecta
         (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
         (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy))
       (le_trans
-        (inv_le_one₀
-          (finiteZ2CrossingLikelihoodRatio_pos
-            (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-            (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy))
+        ((inv_le_one₀).2
           (one_le_finiteZ2CrossingLikelihoodRatio
             (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
             (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
@@ -598,7 +597,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual_crossRatio_of_re
   rw [
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpectation_eq_globalExpectation,
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpectation_eq_globalExpectation]
-  simpa [rightWeight, sourceTilt, div_inv, mul_comm, mul_left_comm,
+  simpa [rightWeight, sourceTilt, div_eq_mul_inv, mul_comm, mul_left_comm,
     mul_assoc] using hOneSided
 
 end
