@@ -64,7 +64,11 @@ theorem coefficients_add_le
           columnCoefficient ((C.startStage + offset) + 1) ≤ C.barrier :=
         (C.column_succ_le (C.startStage + offset)).trans
           (hColumnMap.trans C.stepMap_barrier_le)
-      simpa [Nat.add_succ] using And.intro hRow hColumn
+      constructor
+      · rw [Nat.add_succ]
+        exact hRow
+      · rw [Nat.add_succ]
+        exact hColumn
 
 /-- The row coefficient remains below the barrier. -/
 theorem rowCoefficient_add_le
