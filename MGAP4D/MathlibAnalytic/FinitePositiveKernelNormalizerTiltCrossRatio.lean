@@ -145,7 +145,6 @@ theorem finitePositiveKernelNormalizer_eq_mul_tiltExpectation
   intro hidden _hHidden
   rw [hRelation hidden]
   field_simp [hNormalizerNe]
-  ring
 
 /-- A rowwise comparison of posterior tilt expectations implies the exact
 four-point cross-ratio bound for the corresponding kernel normalizer.  This
