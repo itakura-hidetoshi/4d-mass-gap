@@ -292,10 +292,19 @@ theorem finiteInfluenceKernelSourceError_singletonEnvelope_sum_target
     _ = (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
         finiteProductVariationTotal variation := by
       unfold finiteProductVariationTotal
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro coordinate _
-      ring
+      calc
+        (Fintype.card ι : ℝ)⁻¹ *
+            ∑ coordinate : ι, envelopeMagnitude * variation coordinate =
+          ∑ coordinate : ι,
+            ((Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude) *
+              variation coordinate := by
+            rw [Finset.mul_sum]
+            apply Finset.sum_congr rfl
+            intro coordinate _
+            ring
+        _ = ((Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude) *
+            ∑ coordinate : ι, variation coordinate := by
+              rw [Finset.mul_sum]
 
 /-- Target-summed finite accumulated response controlled by a row coefficient.
 No strict contraction is assumed. -/
