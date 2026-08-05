@@ -365,7 +365,7 @@ theorem finiteKernelPerronAnchorMatrix_mulVec_canonical
             (finiteKernelPerronAnchorMatrix kernel))
         (1 : α → ℝ) =
       Matrix.mulVec (1 : Matrix α α ℝ) (1 : α → ℝ) at hApply
-  rw [Matrix.mulVec_mulVec, Matrix.one_mulVec] at hApply
+  rw [← Matrix.mulVec_mulVec, Matrix.one_mulVec] at hApply
   simpa [finiteKernelCanonicalPerronGround] using hApply
 
 /-- The canonical selector is the unique positive fixed vector whose coordinate
