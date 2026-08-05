@@ -200,8 +200,9 @@ theorem finiteZ2GaugeNormalizedProductKernel_boundaryTiltRelation_of_agreeOff
         base source coordinate (updated source) hCoordinate]
       exact (hAgree coordinate hCoordinate).symm
   rw [hUpdated]
-  exact finiteZ2GaugeNormalizedProductKernel_boundaryTiltRelation
-    hq0 hq1 ι base source (updated source)
+  simpa [finiteZ2GaugeReplaceCoordinate_same] using
+    finiteZ2GaugeNormalizedProductKernel_boundaryTiltRelation
+      hq0 hq1 ι base source (updated source)
 
 end
 
