@@ -102,11 +102,10 @@ theorem finiteEvenFourTorusZ2PerronPosteriorActualSpatialSandwichStability
             β hβ hβCutoff).barrier) *
           (interior.card : ℝ) := by
   exact
-    Z2PerronPosteriorActualHighTemperatureContinuationData.
-      parallelSpatialSandwichStability
-        (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
-          energyIdentity energyNontrivial hEnergy)
-        β hβ hβCutoff H environment leftHidden rightHidden interior hOutside
+    Z2PerronPosteriorActualHighTemperatureContinuationData.parallelSpatialSandwichStability
+      (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
+        energyIdentity energyNontrivial hEnergy)
+      β hβ hβCutoff H environment leftHidden rightHidden interior hOutside
 
 end
 
