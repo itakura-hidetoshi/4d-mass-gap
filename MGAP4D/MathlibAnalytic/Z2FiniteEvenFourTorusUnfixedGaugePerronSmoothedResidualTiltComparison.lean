@@ -167,10 +167,26 @@ theorem finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel_boundaryTiltRelati
       (Function.update A target value)
       (Function.update C target value)
       source hAgreeUpdated
-  unfold finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel
-    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt
-  simpa [finiteZ2GaugeNormalizedProductKernelBoundaryTilt,
-    Function.update, hNe, Ne.symm hNe] using hRelation
+  have hUpdatedSource :
+      Function.update C target value source = C source := by
+    simp [Function.update, hNe, Ne.symm hNe]
+  rw [hUpdatedSource] at hRelation
+  have hTiltEq :
+      finiteZ2GaugeNormalizedProductKernelBoundaryTilt
+          (z2WilsonTemporalCrossingRate
+            β energyIdentity energyNontrivial)
+          (Function.update A target value) source (C source) =
+        finiteZ2GaugeNormalizedProductKernelBoundaryTilt
+          (z2WilsonTemporalCrossingRate
+            β energyIdentity energyNontrivial)
+          A source (C source) := by
+    funext hidden
+    unfold finiteZ2GaugeNormalizedProductKernelBoundaryTilt
+    simp [Function.update, hNe, Ne.symm hNe]
+  rw [hTiltEq] at hRelation
+  simpa [finiteEvenFourTorusZ2NormalizedTemporalCrossingKernel,
+    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt] using
+    hRelation
 
 /-- The actual smoothed-residual cross-ratio row is reduced exactly to a
 comparison of one-source local-tilt expectations under two target-fiber hidden
