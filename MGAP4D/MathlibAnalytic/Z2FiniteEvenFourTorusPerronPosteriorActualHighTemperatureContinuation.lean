@@ -250,6 +250,7 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
     finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap,
     finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient,
     finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier,
+    finiteEvenFourTorusZ2PerronPosteriorCrossingRateFamily,
     finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily,
     finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily,
     finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily,
@@ -309,6 +310,38 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
   simpa [F, finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier]
     using hUpper
 
+/-- Canonical common cutoff selected from zero-coupling continuity. -/
+noncomputable def finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+    (energyIdentity energyNontrivial : ℝ) : ℝ :=
+  Classical.choose
+    (exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+      energyIdentity energyNontrivial)
+
+/-- The selected common cutoff is strictly positive. -/
+theorem finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff_pos
+    (energyIdentity energyNontrivial : ℝ) :
+    0 < finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+      energyIdentity energyNontrivial :=
+  (Classical.choose_spec
+    (exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+      energyIdentity energyNontrivial)).1
+
+/-- The selected cutoff realizes the strict half-barrier inequality. -/
+theorem finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff_map_lt
+    (energyIdentity energyNontrivial : ℝ)
+    (parameter : ℝ)
+    (hParameter : 0 < parameter)
+    (hParameterCutoff :
+      parameter ≤ finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+        energyIdentity energyNontrivial) :
+    finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
+        energyIdentity energyNontrivial parameter <
+      finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier :=
+  (Classical.choose_spec
+    (exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+      energyIdentity energyNontrivial)).2
+    parameter hParameter hParameterCutoff
+
 /-- Concrete Type-valued package for the common actual high-temperature
 continuation interval. -/
 structure Z2PerronPosteriorActualHighTemperatureContinuationData
@@ -335,13 +368,16 @@ noncomputable def finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureConti
     (hEnergy : energyIdentity < energyNontrivial) :
     Z2PerronPosteriorActualHighTemperatureContinuationData
       energyIdentity energyNontrivial hEnergy := by
-  obtain ⟨couplingCutoff, hCutoffPos, hMap⟩ :=
-    exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
-      energyIdentity energyNontrivial
   refine
-    { couplingCutoff := couplingCutoff
-      couplingCutoff_pos := hCutoffPos
-      halfBarrierMap_lt := hMap
+    { couplingCutoff :=
+        finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+          energyIdentity energyNontrivial
+      couplingCutoff_pos :=
+        finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff_pos
+          energyIdentity energyNontrivial
+      halfBarrierMap_lt :=
+        finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff_map_lt
+          energyIdentity energyNontrivial
       continuationFamily := ?_ }
   intro β hβ hβCutoff
   refine
@@ -384,10 +420,16 @@ noncomputable def finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureConti
             H parameter energyIdentity energyNontrivial hParameter.1 hEnergy
       asymptoticBootstrapMap_lt := by
         intro parameter hParameter
-        have hParameterCutoff : parameter ≤ couplingCutoff :=
+        have hParameterCutoff :
+            parameter ≤
+              finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
+                energyIdentity energyNontrivial :=
           le_trans hParameter.2 hβCutoff
         simpa [finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap]
-          using hMap parameter hParameter.1 hParameterCutoff }
+          using
+            finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff_map_lt
+              energyIdentity energyNontrivial parameter
+              hParameter.1 hParameterCutoff }
 
 namespace Z2PerronPosteriorActualHighTemperatureContinuationData
 
