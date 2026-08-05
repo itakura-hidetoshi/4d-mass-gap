@@ -116,8 +116,7 @@ theorem finitePositiveWeightCanonicalNonstrictInfluence_const_mul
   · simp [finitePositiveWeightCanonicalNonstrictInfluence, hEq]
   · rw [finitePositiveWeightCanonicalNonstrictInfluence, if_neg hEq]
     rw [finitePositiveWeightCanonicalNonstrictInfluence, if_neg hEq]
-    rw [finitePositiveWeightConditionalL1SourceValues_const_mul
-      c hc weight target source]
+    simp only [finitePositiveWeightConditionalL1SourceValues_const_mul c hc]
 
 /-- Every one-site conditional `L¹` distance of a configuration-independent
 weight is exactly zero. -/
@@ -131,13 +130,9 @@ weight is exactly zero. -/
     finitePositiveWeightSingleSiteConditionalL1
         (fun _configuration : ι → G => c) A B target = 0 := by
   classical
-  unfold finitePositiveWeightSingleSiteConditionalL1
-  apply Finset.sum_eq_zero
-  intro g _hg
-  congr 1
-  unfold finitePositiveWeightSingleSiteProbability
-    finitePositiveWeightSingleSitePartition
-  rfl
+  simp [finitePositiveWeightSingleSiteConditionalL1,
+    finitePositiveWeightSingleSiteProbability,
+    finitePositiveWeightSingleSitePartition]
 
 /-- A configuration-independent finite product weight has exact zero canonical
 non-strict influence at every ordered pair of coordinates. -/
