@@ -58,6 +58,16 @@ def finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
     parameter energyIdentity energyNontrivial
     finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier
 
+/-- The canonical cross-ratio influence transform is continuous on the whole
+real line. -/
+theorem continuous_finitePositiveWeightCrossRatioInfluenceTransform :
+    Continuous finitePositiveWeightCrossRatioInfluenceTransform := by
+  unfold finitePositiveWeightCrossRatioInfluenceTransform
+  exact continuous_const.mul
+    ((Real.continuous_exp.sub continuous_const).div
+      (Real.continuous_exp.add continuous_const)
+      (fun radius => by positivity))
+
 @[simp] theorem finiteEvenFourTorusZ2PerronPosteriorCrossingRateFamily_zero
     (energyIdentity energyNontrivial : ℝ) :
     finiteEvenFourTorusZ2PerronPosteriorCrossingRateFamily
@@ -97,6 +107,7 @@ def finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
       energyIdentity energyNontrivial 0 = 0 := by
   norm_num [finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily,
     finiteEvenFourTorusZ2PerronPosteriorLocalCoefficient,
+    finiteEvenFourTorusZ2PerronPosteriorLocalInfluenceMajorant,
     finitePositiveWeightCrossRatioInfluenceTransform]
 
 /-- The local crossing rate is continuous at zero coupling. -/
@@ -108,7 +119,19 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorCrossingRateFamily
   unfold finiteEvenFourTorusZ2PerronPosteriorCrossingRateFamily
     z2WilsonTemporalCrossingRate z2WilsonTemporalCrossingWeightSum
     z2WilsonWeightIdentity z2WilsonWeightNontrivial
-  fun_prop
+  have hNumerator :
+      Continuous (fun parameter : ℝ =>
+        Real.exp (-parameter * energyIdentity) -
+          Real.exp (-parameter * energyNontrivial)) := by
+    fun_prop
+  have hDenominator :
+      Continuous (fun parameter : ℝ =>
+        Real.exp (-parameter * energyIdentity) +
+          Real.exp (-parameter * energyNontrivial)) := by
+    fun_prop
+  exact
+    (hNumerator.div hDenominator
+      (fun parameter => by positivity)).continuousAt
 
 /-- The likelihood-ratio family is continuous at zero coupling. -/
 theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily
@@ -174,8 +197,15 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily
         energyIdentity energyNontrivial) 0 := by
   unfold finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily
     finiteEvenFourTorusZ2PerronPosteriorLocalCoefficient
-    finitePositiveWeightCrossRatioInfluenceTransform
-  fun_prop
+    finiteEvenFourTorusZ2PerronPosteriorLocalInfluenceMajorant
+  have hRadius :
+      Continuous (fun parameter : ℝ =>
+        12 * parameter * (energyNontrivial - energyIdentity)) := by
+    fun_prop
+  exact
+    (continuous_const.mul
+      (continuous_finitePositiveWeightCrossRatioInfluenceTransform.comp
+        hRadius)).continuousAt
 
 /-- The actual asymptotic map at barrier `1/2` is continuous at zero coupling. -/
 theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
@@ -183,33 +213,37 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
     ContinuousAt
       (finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
         energyIdentity energyNontrivial) 0 := by
-  let ratio := finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily
-    energyIdentity energyNontrivial
-  let source := finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily
-    energyIdentity energyNontrivial
-  let target := finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily
-    energyIdentity energyNontrivial
-  let local := finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily
-    energyIdentity energyNontrivial
-  have hRatio : ContinuousAt ratio 0 :=
+  let ratioFamily :=
+    finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily
+      energyIdentity energyNontrivial
+  let sourceFamily :=
+    finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily
+      energyIdentity energyNontrivial
+  let targetFamily :=
+    finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily
+      energyIdentity energyNontrivial
+  let localFamily :=
+    finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily
+      energyIdentity energyNontrivial
+  have hRatio : ContinuousAt ratioFamily 0 :=
     continuousAt_finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily
       energyIdentity energyNontrivial
-  have hSource : ContinuousAt source 0 :=
+  have hSource : ContinuousAt sourceFamily 0 :=
     continuousAt_finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily
       energyIdentity energyNontrivial
-  have hTarget : ContinuousAt target 0 :=
+  have hTarget : ContinuousAt targetFamily 0 :=
     continuousAt_finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily
       energyIdentity energyNontrivial
-  have hLocal : ContinuousAt local 0 :=
+  have hLocal : ContinuousAt localFamily 0 :=
     continuousAt_finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily
       energyIdentity energyNontrivial
   have hResponse : ContinuousAt (fun parameter =>
-      target parameter * source parameter *
+      targetFamily parameter * sourceFamily parameter *
         (1 - finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier)⁻¹) 0 :=
     (hTarget.mul hSource).mul continuousAt_const
   have hMap : ContinuousAt (fun parameter =>
-      2 * local parameter + ratio parameter *
-        (target parameter * source parameter *
+      2 * localFamily parameter + ratioFamily parameter *
+        (targetFamily parameter * sourceFamily parameter *
           (1 - finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier)⁻¹)) 0 :=
     (continuousAt_const.mul hLocal).add (hRatio.mul hResponse)
   simpa [finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap,
@@ -219,7 +253,8 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
     finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily,
     finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily,
     finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily,
-    finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily]
+    finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily,
+    ratioFamily, sourceFamily, targetFamily, localFamily]
     using hMap
 
 /-- The half-barrier asymptotic map starts exactly at zero. -/
@@ -227,17 +262,18 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
     (energyIdentity energyNontrivial : ℝ) :
     finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
       energyIdentity energyNontrivial 0 = 0 := by
-  norm_num [finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap,
-    finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap,
-    finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient,
-    finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier,
-    finiteEvenFourTorusZ2PerronPosteriorLocalCoefficient,
-    finitePositiveWeightCrossRatioInfluenceTransform,
-    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceAmplitude,
-    finiteZ2CrossingLikelihoodRatio,
-    z2WilsonTemporalCrossingRate,
-    z2WilsonTemporalCrossingWeightSum,
-    z2WilsonWeightIdentity, z2WilsonWeightNontrivial]
+  change
+    2 * finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily
+          energyIdentity energyNontrivial 0 +
+      finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily
+          energyIdentity energyNontrivial 0 *
+        finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient
+          finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier
+          (finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily
+            energyIdentity energyNontrivial 0)
+          (finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily
+            energyIdentity energyNontrivial 0) = 0
+  simp [finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient]
 
 /-- Continuity at the exactly decoupled seed produces a strictly positive,
 volume-independent coupling interval on which the actual asymptotic map sends
@@ -273,21 +309,40 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
   simpa [F, finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier]
     using hUpper
 
-/-- The exact concrete continuation family exists throughout one common
-positive high-temperature interval, with numerical barrier `1/2`. -/
-theorem exists_finiteEvenFourTorusZ2PerronPosteriorActualContinuationFamily
+/-- Concrete Type-valued package for the common actual high-temperature
+continuation interval. -/
+structure Z2PerronPosteriorActualHighTemperatureContinuationData
+    (energyIdentity energyNontrivial : ℝ)
+    (hEnergy : energyIdentity < energyNontrivial) where
+  couplingCutoff : ℝ
+  couplingCutoff_pos : 0 < couplingCutoff
+  halfBarrierMap_lt :
+    ∀ parameter : ℝ,
+      0 < parameter → parameter ≤ couplingCutoff →
+        finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
+          energyIdentity energyNontrivial parameter <
+            finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier
+  continuationFamily :
+    ∀ (β : ℝ) (hβ : 0 < β),
+      β ≤ couplingCutoff →
+        Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
+          β energyIdentity energyNontrivial hβ hEnergy
+
+/-- Canonical actual continuation data obtained from the decoupled seed and
+the fixed numerical barrier `1/2`. -/
+noncomputable def finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
-    ∃ couplingCutoff : ℝ,
-      0 < couplingCutoff ∧
-      ∀ (β : ℝ) (hβ : 0 < β),
-        β ≤ couplingCutoff →
-          Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
-            β energyIdentity energyNontrivial hβ hEnergy := by
+    Z2PerronPosteriorActualHighTemperatureContinuationData
+      energyIdentity energyNontrivial hEnergy := by
   obtain ⟨couplingCutoff, hCutoffPos, hMap⟩ :=
     exists_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierCutoff
       energyIdentity energyNontrivial
-  refine ⟨couplingCutoff, hCutoffPos, ?_⟩
+  refine
+    { couplingCutoff := couplingCutoff
+      couplingCutoff_pos := hCutoffPos
+      halfBarrierMap_lt := hMap
+      continuationFamily := ?_ }
   intro β hβ hβCutoff
   refine
     { barrier := finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier
@@ -334,29 +389,56 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorActualContinuationFamily
         simpa [finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap]
           using hMap parameter hParameter.1 hParameterCutoff }
 
-/-- Unconditional actual strict posterior Dobrushin data at every finite side
-and every boundary environment throughout the common high-temperature
-interval. -/
-theorem exists_finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureDobrushin
+namespace Z2PerronPosteriorActualHighTemperatureContinuationData
+
+/-- Actual strict posterior Dobrushin data at every coupling below the common
+cutoff, every finite side, and every boundary environment. -/
+noncomputable def toDobrushinData
+    {energyIdentity energyNontrivial : ℝ}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorActualHighTemperatureContinuationData
+      energyIdentity energyNontrivial hEnergy)
+    (β : ℝ)
+    (hβ : 0 < β)
+    (hβCutoff : β ≤ C.couplingCutoff)
+    (H : ℕ)
+    (environment : FiniteEvenFourTorusZ2SliceConfiguration H) :
+    FinitePositiveWeightDobrushinL1MatrixData
+      (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le environment) :=
+  (C.continuationFamily β hβ hβCutoff).toDobrushinData H environment
+
+end Z2PerronPosteriorActualHighTemperatureContinuationData
+
+/-- The canonical common high-temperature cutoff is strictly positive. -/
+theorem finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureCouplingCutoff_pos
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
-    ∃ couplingCutoff : ℝ,
-      0 < couplingCutoff ∧
-      ∀ (β : ℝ) (hβ : 0 < β),
-        β ≤ couplingCutoff →
-        ∀ (H : ℕ)
-          (environment : FiniteEvenFourTorusZ2SliceConfiguration H),
-          FinitePositiveWeightDobrushinL1MatrixData
-            (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
-              H β energyIdentity energyNontrivial hβ.le hEnergy.le
-              environment) := by
-  obtain ⟨couplingCutoff, hCutoffPos, hFamily⟩ :=
-    exists_finiteEvenFourTorusZ2PerronPosteriorActualContinuationFamily
-      energyIdentity energyNontrivial hEnergy
-  refine ⟨couplingCutoff, hCutoffPos, ?_⟩
-  intro β hβ hβCutoff H environment
-  exact
-    (hFamily β hβ hβCutoff).toDobrushinData H environment
+    0 <
+      (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
+        energyIdentity energyNontrivial hEnergy).couplingCutoff :=
+  (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
+    energyIdentity energyNontrivial hEnergy).couplingCutoff_pos
+
+/-- Canonical unconditional actual strict posterior Dobrushin data throughout
+the constructed common high-temperature interval. -/
+noncomputable def finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureDobrushinData
+    (energyIdentity energyNontrivial : ℝ)
+    (hEnergy : energyIdentity < energyNontrivial)
+    (β : ℝ)
+    (hβ : 0 < β)
+    (hβCutoff :
+      β ≤
+        (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
+          energyIdentity energyNontrivial hEnergy).couplingCutoff)
+    (H : ℕ)
+    (environment : FiniteEvenFourTorusZ2SliceConfiguration H) :
+    FinitePositiveWeightDobrushinL1MatrixData
+      (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le environment) :=
+  (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
+      energyIdentity energyNontrivial hEnergy).toDobrushinData
+    β hβ hβCutoff H environment
 
 end
 
