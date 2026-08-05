@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.FinitePositiveWeightConditionalScaleZeroInfluence
-import Mathlib.Topology.Algebra.Order
+import Mathlib.Topology.Order.Lattice
 import Mathlib.Tactic
 
 namespace MGAP4D
