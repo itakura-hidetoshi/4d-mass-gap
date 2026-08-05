@@ -334,8 +334,8 @@ theorem finiteEvenFourTorusZ2PerronPosteriorBootstrapRowCoefficient_succ_le
         (finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnCoefficient
           H β energyIdentity energyNontrivial hβ hEnergy
           responseIterations stage) := by
-  rw [finiteEvenFourTorusZ2PerronPosteriorCanonicalKernelBootstrap_succ]
   unfold finiteEvenFourTorusZ2PerronPosteriorBootstrapRowCoefficient
+  rw [finiteEvenFourTorusZ2PerronPosteriorCanonicalKernelBootstrap_succ]
   apply finiteInfluenceKernelMaximumRowSum_le_of_forall
   intro target
   exact finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapNext_rowSum_le
@@ -371,8 +371,8 @@ theorem finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnCoefficient_succ_le
         (finiteEvenFourTorusZ2PerronPosteriorBootstrapRowCoefficient
           H β energyIdentity energyNontrivial hβ hEnergy
           responseIterations stage) := by
-  rw [finiteEvenFourTorusZ2PerronPosteriorCanonicalKernelBootstrap_succ]
   unfold finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnCoefficient
+  rw [finiteEvenFourTorusZ2PerronPosteriorCanonicalKernelBootstrap_succ]
   apply finiteInfluenceKernelMaximumColumnSum_le_of_forall
   intro source
   exact finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapNext_columnSum_le
