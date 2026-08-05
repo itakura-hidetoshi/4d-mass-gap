@@ -187,6 +187,7 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_exist
         if_neg hEq]
       unfold finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeValues
       rw [Finset.max'_eq_sup', Finset.sup'_image]
+      simp [Function.comp_def]
     rw [finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence,
       if_neg hEq]
     rw [hSupEq, ← hOldSup]
