@@ -32,11 +32,11 @@ theorem
   unfold
     finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexCouplingData
   exact
-    (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexProbabilityData
-      C β hβ hβCutoff H left).
-        overlapCouplingData_disagreementMass_eq_half_mul_l1Distance
-          (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexProbabilityData
-            C β hβ hβCutoff H right)
+    FiniteRealProbabilityData.overlapCouplingData_disagreementMass_eq_half_mul_l1Distance
+      (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexProbabilityData
+        C β hβ hβCutoff H left)
+      (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexProbabilityData
+        C β hβ hβCutoff H right)
 
 /-- Same-residual-gauge-index contribution to the actual geometric Doob
 mixture expected Hamming cost. -/
