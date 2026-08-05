@@ -65,7 +65,7 @@ theorem finitePositiveWeightCanonicalNonstrictInfluence_le_universalTwoKernel
       (finiteUniversalTwoInfluenceKernel ι).influence target source := by
   by_cases hEq : target = source
   · subst source
-    simp
+    simp [finiteUniversalTwoInfluenceKernel]
   · simp only [finiteUniversalTwoInfluenceKernel, hEq, if_false]
     exact finitePositiveWeightCanonicalNonstrictInfluence_le_two
       weight hweight target source
@@ -198,7 +198,10 @@ theorem finiteInfluenceKernelReciprocalRandomScanRate_lt_one
     finiteInfluenceKernelReciprocalRandomScanRate
       ι columnCoefficient < 1 := by
   let n : ℝ := Fintype.card ι
-  have hn : 0 < n := by exact_mod_cast hCard
+  have hnRaw : 0 < (Fintype.card ι : ℝ) := by
+    exact_mod_cast hCard
+  have hn : 0 < n := by
+    simpa [n] using hnRaw
   have hNumerator : n - 1 + columnCoefficient < n := by linarith
   unfold finiteInfluenceKernelReciprocalRandomScanRate
   change n⁻¹ * (n - 1 + columnCoefficient) < 1
@@ -244,8 +247,14 @@ theorem finiteInfluenceKernelRandomScanUpdatedVariation_le_rate_mul
       finiteInfluenceKernelReciprocalRandomScanRate
         ι columnCoefficient * bound := by
   let n : ℝ := Fintype.card ι
-  have hn : 0 < n := by exact_mod_cast hCard
-  have hnOne : 1 ≤ n := by exact_mod_cast hCard
+  have hnRaw : 0 < (Fintype.card ι : ℝ) := by
+    exact_mod_cast hCard
+  have hn : 0 < n := by
+    simpa [n] using hnRaw
+  have hnOneRaw : (1 : ℝ) ≤ (Fintype.card ι : ℝ) := by
+    exact_mod_cast hCard
+  have hnOne : 1 ≤ n := by
+    simpa [n] using hnOneRaw
   have hWeighted :
       (∑ target : ι,
         K.influence target source * variation target) ≤
@@ -299,7 +308,7 @@ def finiteInfluenceKernelRandomScanVariationIterate
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
-    (variation : ι → ℝ) : ℕ → (ι → ℝ) where
+    (variation : ι → ℝ) : ℕ → (ι → ℝ)
   | 0 => variation
   | n + 1 =>
       finiteInfluenceKernelRandomScanUpdatedVariation
@@ -337,11 +346,12 @@ theorem finiteInfluenceKernelRandomScanVariationIterate_nonneg
     (source : ι) :
     0 ≤ finiteInfluenceKernelRandomScanVariationIterate
       K variation n source := by
-  induction n with
+  induction n generalizing source with
   | zero => exact hVariation source
   | succ n ih =>
+      rw [finiteInfluenceKernelRandomScanVariationIterate_succ]
       exact finiteInfluenceKernelRandomScanUpdatedVariation_nonneg
-        K _ ih source
+        K _ (fun e => ih e) source
 
 /-- Iterated reciprocal column contraction. -/
 theorem finiteInfluenceKernelRandomScanVariationIterate_le_rate_pow_mul
@@ -370,7 +380,7 @@ theorem finiteInfluenceKernelRandomScanVariationIterate_le_rate_pow_mul
   have hRateNonneg : 0 ≤ rate :=
     finiteInfluenceKernelReciprocalRandomScanRate_nonneg
       hCard columnCoefficient hColumnNonneg
-  induction n with
+  induction n generalizing source with
   | zero => simpa [rate] using hVariationBound source
   | succ n ih =>
       have hIterNonneg :
@@ -385,8 +395,19 @@ theorem finiteInfluenceKernelRandomScanVariationIterate_le_rate_pow_mul
           (finiteInfluenceKernelRandomScanVariationIterate K variation n)
           hIterNonneg (rate ^ n * bound)
           (mul_nonneg (pow_nonneg hRateNonneg n) hBoundNonneg)
-          ih source
-      simpa [rate, pow_succ, mul_assoc] using hStep
+          (fun e => ih e) source
+      rw [finiteInfluenceKernelRandomScanVariationIterate_succ]
+      change finiteInfluenceKernelRandomScanUpdatedVariation
+          K (finiteInfluenceKernelRandomScanVariationIterate K variation n)
+          source ≤ rate ^ (n + 1) * bound
+      calc
+        finiteInfluenceKernelRandomScanUpdatedVariation
+            K (finiteInfluenceKernelRandomScanVariationIterate K variation n)
+            source ≤
+          rate * (rate ^ n * bound) := hStep
+        _ = rate ^ (n + 1) * bound := by
+          rw [pow_succ]
+          ring
 
 /-- Kernel random-scan updating is monotone. -/
 theorem finiteInfluenceKernelRandomScanUpdatedVariation_mono
@@ -452,13 +473,39 @@ def finitePositiveWeightNonstrictRandomScanVariationIterate
     [Fintype G]
     {weight : (ι → G) → ℝ}
     (D : FinitePositiveWeightNonstrictL1MatrixData weight)
-    (variation : ι → ℝ) : ℕ → (ι → ℝ) where
+    (variation : ι → ℝ) : ℕ → (ι → ℝ)
   | 0 => variation
   | n + 1 =>
       finitePositiveWeightNonstrictRandomScanUpdatedVariation
         D
         (finitePositiveWeightNonstrictRandomScanVariationIterate
           D variation n)
+
+@[simp] theorem finitePositiveWeightNonstrictRandomScanVariationIterate_zero
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [Fintype G]
+    {weight : (ι → G) → ℝ}
+    (D : FinitePositiveWeightNonstrictL1MatrixData weight)
+    (variation : ι → ℝ) :
+    finitePositiveWeightNonstrictRandomScanVariationIterate D variation 0 =
+      variation := rfl
+
+@[simp] theorem finitePositiveWeightNonstrictRandomScanVariationIterate_succ
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [Fintype G]
+    {weight : (ι → G) → ℝ}
+    (D : FinitePositiveWeightNonstrictL1MatrixData weight)
+    (variation : ι → ℝ)
+    (n : ℕ) :
+    finitePositiveWeightNonstrictRandomScanVariationIterate
+        D variation (n + 1) =
+      finitePositiveWeightNonstrictRandomScanUpdatedVariation
+        D (finitePositiveWeightNonstrictRandomScanVariationIterate
+          D variation n) := rfl
 
 /-- Iterated non-strict profiles remain nonnegative. -/
 theorem finitePositiveWeightNonstrictRandomScanVariationIterate_nonneg
@@ -474,11 +521,12 @@ theorem finitePositiveWeightNonstrictRandomScanVariationIterate_nonneg
     (source : ι) :
     0 ≤ finitePositiveWeightNonstrictRandomScanVariationIterate
       D variation n source := by
-  induction n with
+  induction n generalizing source with
   | zero => exact hVariation source
   | succ n ih =>
+      rw [finitePositiveWeightNonstrictRandomScanVariationIterate_succ]
       exact finitePositiveWeightNonstrictRandomScanUpdatedVariation_nonneg
-        D _ ih source
+        D _ (fun e => ih e) source
 
 /-- Kernel domination propagates through every finite iterate. -/
 theorem finitePositiveWeightNonstrictRandomScanVariationIterate_le_kernel
@@ -499,7 +547,7 @@ theorem finitePositiveWeightNonstrictRandomScanVariationIterate_le_kernel
         D variation n source ≤
       finiteInfluenceKernelRandomScanVariationIterate
         K variation n source := by
-  induction n with
+  induction n generalizing source with
   | zero => exact le_rfl
   | succ n ih =>
       have hIterNonneg :
@@ -526,7 +574,7 @@ theorem finitePositiveWeightNonstrictRandomScanVariationIterate_le_kernel
             (finiteInfluenceKernelRandomScanVariationIterate
               K variation n) source :=
           finiteInfluenceKernelRandomScanUpdatedVariation_mono
-            K _ _ ih source
+            K _ _ (fun e => ih e) source
         _ = finiteInfluenceKernelRandomScanVariationIterate
             K variation (n + 1) source := rfl
 
@@ -550,9 +598,9 @@ theorem
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp only [
+      rw [
         FinitePositiveWeightStationaryNonstrictComparisonData.rightRandomScanIterateVariationBound_succ,
-        finitePositiveWeightNonstrictRandomScanVariationIterate]
+        finitePositiveWeightNonstrictRandomScanVariationIterate_succ]
       change
         finitePositiveWeightNonstrictRandomScanUpdatedVariation
             C.rightInfluence
@@ -613,18 +661,38 @@ theorem finiteInfluenceKernelRandomScanVariationIterate_sum
       ∑ k : κ,
         finiteInfluenceKernelRandomScanVariationIterate
           K (family k) n source := by
-  induction n with
+  induction n generalizing source with
   | zero => rfl
   | succ n ih =>
       simp only [finiteInfluenceKernelRandomScanVariationIterate_succ]
-      rw [finiteInfluenceKernelRandomScanUpdatedVariation_sum]
-      apply Finset.sum_congr rfl
-      intro k _
-      apply congrArg
-        (fun profile : ι → ℝ =>
-          finiteInfluenceKernelRandomScanUpdatedVariation K profile source)
-      funext e
-      exact ih e
+      calc
+        finiteInfluenceKernelRandomScanUpdatedVariation
+            K
+            (finiteInfluenceKernelRandomScanVariationIterate
+              K (fun e => ∑ k : κ, family k e) n)
+            source =
+          finiteInfluenceKernelRandomScanUpdatedVariation
+            K
+            (fun e => ∑ k : κ,
+              finiteInfluenceKernelRandomScanVariationIterate
+                K (family k) n e)
+            source := by
+          apply congrArg
+            (fun profile : ι → ℝ =>
+              finiteInfluenceKernelRandomScanUpdatedVariation
+                K profile source)
+          funext e
+          exact ih e
+        _ = ∑ k : κ,
+            finiteInfluenceKernelRandomScanUpdatedVariation
+              K
+              (finiteInfluenceKernelRandomScanVariationIterate
+                K (family k) n)
+              source :=
+          finiteInfluenceKernelRandomScanUpdatedVariation_sum
+            K (fun k =>
+              finiteInfluenceKernelRandomScanVariationIterate
+                K (family k) n) source
 
 /-- Singleton variation profile. -/
 def finiteInfluenceKernelSingletonVariation
@@ -777,12 +845,32 @@ def finiteInfluenceKernelPartialSource
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
-    (sourceEnvelope variation : ι → ℝ) : ℕ → ℝ where
+    (sourceEnvelope variation : ι → ℝ) : ℕ → ℝ
   | 0 => 0
   | n + 1 =>
       finiteInfluenceKernelPartialSource K sourceEnvelope variation n +
         finiteInfluenceKernelSourceError sourceEnvelope
           (finiteInfluenceKernelRandomScanVariationIterate K variation n)
+
+@[simp] theorem finiteInfluenceKernelPartialSource_zero
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (sourceEnvelope variation : ι → ℝ) :
+    finiteInfluenceKernelPartialSource K sourceEnvelope variation 0 = 0 := rfl
+
+@[simp] theorem finiteInfluenceKernelPartialSource_succ
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (sourceEnvelope variation : ι → ℝ)
+    (n : ℕ) :
+    finiteInfluenceKernelPartialSource K sourceEnvelope variation (n + 1) =
+      finiteInfluenceKernelPartialSource K sourceEnvelope variation n +
+        finiteInfluenceKernelSourceError sourceEnvelope
+          (finiteInfluenceKernelRandomScanVariationIterate K variation n) := rfl
 
 /-- Concrete source pairing is bounded by a kernel envelope. -/
 theorem
@@ -861,8 +949,9 @@ theorem
         (finiteInfluenceKernelRandomScanVariationIterate
           K P.variation n)
         hEnvelopeNonneg hEnvelope hActualNonneg hProfile
-      rw [partialStationarySource_succ]
-      unfold finiteInfluenceKernelPartialSource
+      rw [
+        FinitePositiveWeightStationaryNonstrictComparisonData.partialStationarySource_succ,
+        finiteInfluenceKernelPartialSource_succ]
       exact add_le_add ih hSource
 
 /-- Finite geometric series. -/
@@ -905,7 +994,10 @@ theorem finiteRealGeometricSeries_le_inv_one_sub
       finiteRealGeometricSeries rate n * (1 - rate) ≤ 1 := by
     rw [mul_comm, one_sub_mul_finiteRealGeometricSeries]
     exact sub_le_self 1 (pow_nonneg hRateNonneg n)
-  exact (le_div_iff₀ hGap).2 (by simpa [div_eq_mul_inv] using hProduct)
+  have hDiv :
+      finiteRealGeometricSeries rate n ≤ 1 / (1 - rate) :=
+    (le_div_iff₀ hGap).2 hProduct
+  simpa [div_eq_mul_inv] using hDiv
 
 /-- Summed source error at one iteration. -/
 theorem finiteInfluenceKernelSourceError_singleton_iterate_sum_source_le
@@ -934,41 +1026,74 @@ theorem finiteInfluenceKernelSourceError_singleton_iterate_sum_source_le
             ι columnCoefficient ^ n * magnitude) := by
   have hInvNonneg : 0 ≤ (Fintype.card ι : ℝ)⁻¹ :=
     inv_nonneg.mpr (Nat.cast_nonneg _)
-  unfold finiteInfluenceKernelSourceError
-  rw [← Finset.mul_sum, Finset.sum_comm]
-  apply mul_le_mul_of_nonneg_left _ hInvNonneg
-  calc
-    (∑ target : ι,
-      ∑ source : ι,
-        sourceEnvelope target *
-          finiteInfluenceKernelRandomScanVariationIterate
-            K (finiteInfluenceKernelSingletonVariation magnitude source)
-            n target) =
-      ∑ target : ι,
-        sourceEnvelope target *
-          (∑ source : ι,
+  have hInner :
+      (∑ target : ι,
+        ∑ source : ι,
+          sourceEnvelope target *
             finiteInfluenceKernelRandomScanVariationIterate
               K (finiteInfluenceKernelSingletonVariation magnitude source)
-              n target) := by
-      apply Finset.sum_congr rfl
-      intro target _
-      rw [Finset.mul_sum]
-    _ ≤ ∑ target : ι,
-        sourceEnvelope target *
+              n target) ≤
+        finiteProductVariationTotal sourceEnvelope *
           (finiteInfluenceKernelReciprocalRandomScanRate
             ι columnCoefficient ^ n * magnitude) := by
-      apply Finset.sum_le_sum
-      intro target _
-      exact mul_le_mul_of_nonneg_left
-        (finiteInfluenceKernelSingletonVariation_iterate_sum_source_le
-          K hCard columnCoefficient hColumnNonneg hColumnSum
-          magnitude hMagnitude n target)
-        (hEnvelopeNonneg target)
-    _ = finiteProductVariationTotal sourceEnvelope *
-        (finiteInfluenceKernelReciprocalRandomScanRate
-          ι columnCoefficient ^ n * magnitude) := by
-      unfold finiteProductVariationTotal
-      rw [Finset.sum_mul]
+    calc
+      (∑ target : ι,
+        ∑ source : ι,
+          sourceEnvelope target *
+            finiteInfluenceKernelRandomScanVariationIterate
+              K (finiteInfluenceKernelSingletonVariation magnitude source)
+              n target) =
+        ∑ target : ι,
+          sourceEnvelope target *
+            (∑ source : ι,
+              finiteInfluenceKernelRandomScanVariationIterate
+                K (finiteInfluenceKernelSingletonVariation magnitude source)
+                n target) := by
+        apply Finset.sum_congr rfl
+        intro target _
+        rw [Finset.mul_sum]
+      _ ≤ ∑ target : ι,
+          sourceEnvelope target *
+            (finiteInfluenceKernelReciprocalRandomScanRate
+              ι columnCoefficient ^ n * magnitude) := by
+        apply Finset.sum_le_sum
+        intro target _
+        exact mul_le_mul_of_nonneg_left
+          (finiteInfluenceKernelSingletonVariation_iterate_sum_source_le
+            K hCard columnCoefficient hColumnNonneg hColumnSum
+            magnitude hMagnitude n target)
+          (hEnvelopeNonneg target)
+      _ = finiteProductVariationTotal sourceEnvelope *
+          (finiteInfluenceKernelReciprocalRandomScanRate
+            ι columnCoefficient ^ n * magnitude) := by
+        unfold finiteProductVariationTotal
+        rw [Finset.sum_mul]
+  unfold finiteInfluenceKernelSourceError
+  calc
+    (∑ source : ι,
+      (Fintype.card ι : ℝ)⁻¹ *
+        ∑ target : ι,
+          sourceEnvelope target *
+            finiteInfluenceKernelRandomScanVariationIterate
+              K (finiteInfluenceKernelSingletonVariation magnitude source)
+              n target) =
+      (Fintype.card ι : ℝ)⁻¹ *
+        (∑ target : ι,
+          ∑ source : ι,
+            sourceEnvelope target *
+              finiteInfluenceKernelRandomScanVariationIterate
+                K (finiteInfluenceKernelSingletonVariation magnitude source)
+                n target) := by
+      rw [← Finset.mul_sum, Finset.sum_comm]
+    _ ≤ (Fintype.card ι : ℝ)⁻¹ *
+        (finiteProductVariationTotal sourceEnvelope *
+          (finiteInfluenceKernelReciprocalRandomScanRate
+            ι columnCoefficient ^ n * magnitude)) :=
+      mul_le_mul_of_nonneg_left hInner hInvNonneg
+    _ = (Fintype.card ι : ℝ)⁻¹ *
+        finiteProductVariationTotal sourceEnvelope *
+          (finiteInfluenceKernelReciprocalRandomScanRate
+            ι columnCoefficient ^ n * magnitude) := by ring
 
 /-- Source-summed finite kernel response. -/
 theorem finiteInfluenceKernelPartialSource_singleton_sum_source_le
@@ -997,9 +1122,10 @@ theorem finiteInfluenceKernelPartialSource_singleton_sum_source_le
             (finiteInfluenceKernelReciprocalRandomScanRate
               ι columnCoefficient) n := by
   induction n with
-  | zero => simp
+  | zero =>
+      simp [finiteInfluenceKernelPartialSource, finiteRealGeometricSeries]
   | succ n ih =>
-      simp only [finiteInfluenceKernelPartialSource,
+      simp only [finiteInfluenceKernelPartialSource_succ,
         Finset.sum_add_distrib, finiteRealGeometricSeries_succ]
       have hStep :=
         finiteInfluenceKernelSourceError_singleton_iterate_sum_source_le
@@ -1097,6 +1223,11 @@ theorem finiteInfluenceKernelPartialSource_singleton_sum_source_le_resolvent
       (mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg _))
         (Finset.sum_nonneg fun e _ => hEnvelopeNonneg e))
       hMagnitude
+  have hCancel :
+      (Fintype.card ι : ℝ)⁻¹ * (1 - rate)⁻¹ =
+        (1 - columnCoefficient)⁻¹ := by
+    exact inv_card_mul_inv_one_sub_reciprocalRate
+      hCard columnCoefficient hColumnLtOne
   calc
     (∑ source : ι,
       finiteInfluenceKernelPartialSource
@@ -1109,14 +1240,13 @@ theorem finiteInfluenceKernelPartialSource_singleton_sum_source_le_resolvent
         finiteProductVariationTotal sourceEnvelope * magnitude *
           (1 - rate)⁻¹ :=
       mul_le_mul_of_nonneg_left hGeom hFactorNonneg
+    _ = ((Fintype.card ι : ℝ)⁻¹ * (1 - rate)⁻¹) *
+        finiteProductVariationTotal sourceEnvelope * magnitude := by ring
+    _ = (1 - columnCoefficient)⁻¹ *
+        finiteProductVariationTotal sourceEnvelope * magnitude := by
+      rw [hCancel]
     _ = finiteProductVariationTotal sourceEnvelope * magnitude *
-        (1 - columnCoefficient)⁻¹ := by
-      rw [show
-        (Fintype.card ι : ℝ)⁻¹ * (1 - rate)⁻¹ =
-          (1 - columnCoefficient)⁻¹ by
-        exact inv_card_mul_inv_one_sub_reciprocalRate
-          hCard columnCoefficient hColumnLtOne]
-      ring
+        (1 - columnCoefficient)⁻¹ := by ring
 
 end
 
