@@ -12,6 +12,10 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance finiteEvenFourTorusSpatialLinkNonemptyForCanonicalPosteriorContinuity
+    (H : ℕ) : Nonempty (FiniteEvenFourTorusSpatialLink H) :=
+  ⟨(⟨0, by simp⟩, ⟨1, by norm_num⟩)⟩
+
 /-- Proof-independent actual posterior weight obtained directly from the full
 one-slab kernel and the continuously normalized Perron ground. -/
 def finiteEvenFourTorusZ2CanonicalPerronPosteriorWeight
@@ -320,7 +324,9 @@ coupling. -/
     unfold finiteInfluenceKernelRowSum
     simp [finiteEvenFourTorusZ2CanonicalPerronPosteriorInfluence_zero
       H energyIdentity energyNontrivial hEnergy environment]
-  · exact finiteInfluenceKernelMaximumRowSum_nonneg _
+  · exact finiteInfluenceKernelMaximumRowSum_nonneg
+      (finiteEvenFourTorusZ2CanonicalPerronPosteriorInfluenceKernel
+        H energyIdentity energyNontrivial ⟨0, by norm_num⟩ environment)
 
 /-- The maximum column coefficient is exactly zero at zero coupling. -/
 @[simp] theorem finiteEvenFourTorusZ2CanonicalPerronPosteriorMaximumColumn_zero
@@ -337,7 +343,9 @@ coupling. -/
     unfold finiteInfluenceKernelColumnSum
     simp [finiteEvenFourTorusZ2CanonicalPerronPosteriorInfluence_zero
       H energyIdentity energyNontrivial hEnergy environment]
-  · exact finiteInfluenceKernelMaximumColumnSum_nonneg _
+  · exact finiteInfluenceKernelMaximumColumnSum_nonneg
+      (finiteEvenFourTorusZ2CanonicalPerronPosteriorInfluenceKernel
+        H energyIdentity energyNontrivial ⟨0, by norm_num⟩ environment)
 
 /-- The combined actual posterior envelope is exactly zero at zero coupling. -/
 @[simp] theorem finiteEvenFourTorusZ2CanonicalPerronPosteriorEnvelope_zero
