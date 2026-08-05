@@ -116,30 +116,21 @@ theorem finitePositiveKernelPosteriorWeight_eq_multiplicativeTilt
 cross-weight single-site conditional source bound for the two hidden
 posterior weights. -/
 theorem finitePositiveKernelPosteriorWeight_singleSiteConditionalCrossL1_le_sourceBound
-    {ι G E : Type}
-    [DecidableEq ι]
-    [Fintype G]
-    [Nonempty G]
-    (kernel : (ι → G) → E → ℝ)
-    (hiddenWeight : (ι → G) → ℝ)
+    {ι G E : Type} [DecidableEq ι] [Fintype G] [Nonempty G]
+    (kernel : (ι → G) → E → ℝ) (hiddenWeight : (ι → G) → ℝ)
     (hKernel : ∀ hidden environment, 0 < kernel hidden environment)
     (hHiddenWeight : ∀ hidden, 0 < hiddenWeight hidden)
-    (base updated : E)
-    (tilt : (ι → G) → ℝ)
-    (hRelation :
-      FinitePositiveKernelBoundaryTiltRelation
-        kernel base updated tilt)
+    (base updated : E) (tilt : (ι → G) → ℝ)
+    (hRelation : FinitePositiveKernelBoundaryTiltRelation
+      kernel base updated tilt)
     (htilt : ∀ hidden, 0 < tilt hidden)
     (support : Finset ι)
     (htiltSupport : FiniteProductFunctionSupportedOn support tilt)
-    (lower upper : ℝ)
-    (hLower : 0 < lower)
-    (hUpper : 0 < upper)
+    (lower upper : ℝ) (hLower : 0 < lower) (hUpper : 0 < upper)
     (hLowerUpper : lower ≤ upper)
     (htiltLower : ∀ hidden, lower ≤ tilt hidden)
     (htiltUpper : ∀ hidden, tilt hidden ≤ upper)
-    (environment : ι → G)
-    (target : ι) :
+    (environment : ι → G) (target : ι) :
     finitePositiveWeightSingleSiteConditionalCrossL1
         (finitePositiveKernelPosteriorWeight
           kernel hiddenWeight updated)
