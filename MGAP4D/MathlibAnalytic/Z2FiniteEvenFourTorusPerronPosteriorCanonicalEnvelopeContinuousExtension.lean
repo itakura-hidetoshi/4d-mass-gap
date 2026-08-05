@@ -187,18 +187,8 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_exist
       if_neg hEq]
     unfold finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeValues
     rw [Finset.max'_eq_sup', Finset.sup'_image]
-  change
-    max 0
-        (Finset.univ.sup' Finset.univ_nonempty
-          (fun parameter :
-              FiniteEvenFourTorusZ2PerronPosteriorEnvelopeParameter H =>
-            finitePositiveWeightCanonicalNonstrictInfluence
-              (finiteEvenFourTorusZ2CanonicalPerronSmoothedPosteriorWeight
-                H energyIdentity energyNontrivial ⟨β, hβ.le⟩
-                (Function.update parameter.1.1 parameter.1.2 parameter.2))
-              target source)) =
-      finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence
-        H β energyIdentity energyNontrivial hβ hEnergy target source
+  rw [finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence,
+    if_neg hEq]
   rw [hSupEq, ← hOldSup]
   exact max_eq_right
     (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence_nonneg
@@ -232,11 +222,10 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeKernel_eq_existing
         H energyIdentity energyNontrivial ⟨β, hβ.le⟩ =
       finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel
         H β energyIdentity energyNontrivial hβ hEnergy := by
-  refine finiteNonnegativeInfluenceKernelData_ext_influence _ _ ?_
-  intro target source
   exact
-    finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_existing
-      H β energyIdentity energyNontrivial hβ hEnergy target source
+    finiteNonnegativeInfluenceKernelData_ext_influence _ _
+      (finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_existing
+        H β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- Maximum row coefficient of the closed-half-line environment-uniform
 extension. -/
