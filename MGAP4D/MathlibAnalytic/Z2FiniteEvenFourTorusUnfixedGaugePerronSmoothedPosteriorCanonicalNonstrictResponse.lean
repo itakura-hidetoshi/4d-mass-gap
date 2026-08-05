@@ -58,7 +58,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope_
   have hLowerUpper : ratio⁻¹ ≤ ratio :=
     le_trans hInvLeOne hRatioOne
   have hQuotientOne : 1 ≤ ratio / ratio⁻¹ := by
-    exact (le_div_iff₀ (inv_pos.mpr hRatioPos)).2 hLowerUpper
+    exact (le_div_iff₀ (inv_pos.mpr hRatioPos)).2
+      (by simpa using hLowerUpper)
   have hQuotientPos : 0 < ratio / ratio⁻¹ :=
     div_pos hRatioPos (inv_pos.mpr hRatioPos)
   have hInverseLeOne : (ratio / ratio⁻¹)⁻¹ ≤ 1 :=
@@ -67,7 +68,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope_
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope
     finitePositiveWeightLocalTiltConditionalSourceBound
   split
-  · dsimp [ratio]
+  · change 0 ≤ 2 * (1 - (ratio / ratio⁻¹)⁻¹)
     nlinarith
   · exact le_rfl
 
@@ -137,7 +138,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltAmplitude_nonne
       (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
   have hInvLeOne : ratio⁻¹ ≤ 1 :=
     (inv_le_one₀ hRatioPos).2 hRatioOne
-  dsimp [ratio]
+  change 0 ≤ ratio - ratio⁻¹
   linarith
 
 /-- Canonical non-strict influence matrix of one fixed hidden posterior. -/
@@ -311,7 +312,7 @@ theorem
   induction C.iterations with
   | zero => exact le_rfl
   | succ n ih =>
-      unfold finiteInfluenceKernelPartialSource
+      rw [finiteInfluenceKernelPartialSource_succ]
       exact add_nonneg ih
         (mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg _))
           (Finset.sum_nonneg fun e _he =>
@@ -409,7 +410,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpecta
     exact le_rfl
   have hPartial :=
     comparison.partialStationarySource_le_kernel
-      P comparison C.kernel hDomination
+      P C.kernel hDomination
       (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope
         H β energyIdentity energyNontrivial target)
       hEnvelopeNonneg hEnvelope C.iterations
@@ -492,28 +493,43 @@ theorem
   have hTargetAmplitude :
       0 ≤ finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceAmplitude
         β energyIdentity energyNontrivial := by
-    let target := Classical.choice
-      (Fintype.card_pos_iff.mp
-        (Fintype.card_pos_iff.mpr
-          ⟨Classical.choice
-            (inferInstance : Nonempty (FiniteEvenFourTorusSpatialLink H))⟩)) :
-        Nonempty (FiniteEvenFourTorusSpatialLink H))
-    rw [←
-      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope_total
-        H β energyIdentity energyNontrivial target]
-    exact Finset.sum_nonneg fun e _he =>
-      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope_nonneg
-        H β energyIdentity energyNontrivial hβ hEnergy target e
+    let ratio := finiteZ2CrossingLikelihoodRatio
+      (z2WilsonTemporalCrossingRate
+        β energyIdentity energyNontrivial)
+    have hRatioPos : 0 < ratio :=
+      finiteZ2CrossingLikelihoodRatio_pos
+        (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+        (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
+    have hRatioOne : 1 ≤ ratio :=
+      one_le_finiteZ2CrossingLikelihoodRatio
+        (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+        (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
+    have hInvLeOne : ratio⁻¹ ≤ 1 :=
+      (inv_le_one₀ hRatioPos).2 hRatioOne
+    have hLowerUpper : ratio⁻¹ ≤ ratio :=
+      le_trans hInvLeOne hRatioOne
+    have hQuotientOne : 1 ≤ ratio / ratio⁻¹ := by
+      exact (le_div_iff₀ (inv_pos.mpr hRatioPos)).2
+        (by simpa using hLowerUpper)
+    have hQuotientPos : 0 < ratio / ratio⁻¹ :=
+      div_pos hRatioPos (inv_pos.mpr hRatioPos)
+    have hInverseLeOne : (ratio / ratio⁻¹)⁻¹ ≤ 1 :=
+      (inv_le_one₀ hQuotientPos).2 hQuotientOne
+    unfold
+      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceAmplitude
+    change 0 ≤ 2 * (1 - (ratio / ratio⁻¹)⁻¹)
+    nlinarith
   have hGapInv : 0 ≤ (1 - C.columnCoefficient)⁻¹ :=
     le_of_lt (inv_pos.mpr (sub_pos.mpr C.columnCoefficient_lt_one))
   have hRate :
       0 ≤ finiteInfluenceKernelReciprocalRandomScanRate
-        (FiniteEvenFourTorusSpatialLink H) C.columnCoefficient :=
-    finiteInfluenceKernelReciprocalRandomScanRate_nonneg
-      (Fintype.card_pos_iff.mpr
-        ⟨Classical.choice
-          (inferInstance : Nonempty (FiniteEvenFourTorusSpatialLink H))⟩)
-      C.columnCoefficient C.columnCoefficient_nonneg
+        (FiniteEvenFourTorusSpatialLink H) C.columnCoefficient := by
+    by_cases hCardZero :
+        Fintype.card (FiniteEvenFourTorusSpatialLink H) = 0
+    · simp [finiteInfluenceKernelReciprocalRandomScanRate, hCardZero]
+    · exact finiteInfluenceKernelReciprocalRandomScanRate_nonneg
+        (Nat.pos_of_ne_zero hCardZero)
+        C.columnCoefficient C.columnCoefficient_nonneg
   unfold
     FiniteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorReciprocalKernelCertificate.responseRowCoefficient
   exact add_nonneg
@@ -567,7 +583,7 @@ theorem
     finiteInfluenceKernelSingletonVariation_iterate_total_sum_source_le
       C.kernel hCard C.columnCoefficient C.columnCoefficient_nonneg
       C.columnSum_le sourceMagnitude hMagnitude C.iterations
-  rw [←
+  rw [
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope_total
       H β energyIdentity energyNontrivial target] at hPartial
   unfold
