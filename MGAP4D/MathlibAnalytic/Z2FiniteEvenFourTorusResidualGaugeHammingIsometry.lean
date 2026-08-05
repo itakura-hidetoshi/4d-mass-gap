@@ -23,7 +23,7 @@ preserves equality at each individual spatial link. -/
           g (finiteEvenFourTorusSpatialVertexStep H e.1 e.2)) hEq
     simpa [finiteEvenFourTorusZ2ResidualSlice_smul_apply, mul_assoc] using hCancel
   · intro hEq
-    rw [hEq]
+    simp [finiteEvenFourTorusZ2ResidualSlice_smul_apply, hEq]
 
 /-- Applying the same residual gauge transformation preserves linkwise
 disagreement. -/
