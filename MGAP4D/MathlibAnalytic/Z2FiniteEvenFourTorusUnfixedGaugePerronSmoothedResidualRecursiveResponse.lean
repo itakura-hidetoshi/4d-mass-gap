@@ -329,25 +329,26 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
         unfold
           finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt at ⊢
         unfold finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt at hLowerA hUpperA hLowerB hUpperB
-        change
-          |finiteZ2GaugeNormalizedProductKernelBoundaryTilt
-                (z2WilsonTemporalCrossingRate
-                  β energyIdentity energyNontrivial)
-                base source replacement A -
-              finiteZ2GaugeNormalizedProductKernelBoundaryTilt
-                (z2WilsonTemporalCrossingRate
-                  β energyIdentity energyNontrivial)
-                base source replacement B| ≤
-            finiteZ2CrossingLikelihoodRatio
-                (z2WilsonTemporalCrossingRate
-                  β energyIdentity energyNontrivial) -
-              (finiteZ2CrossingLikelihoodRatio
-                (z2WilsonTemporalCrossingRate
-                  β energyIdentity energyNontrivial))⁻¹
-        rw [abs_le]
-        constructor
-        · linarith [hLowerA, hUpperB]
-        · linarith [hUpperA, hLowerB]
+        have hAbs :
+            |finiteZ2GaugeNormalizedProductKernelBoundaryTilt
+                  (z2WilsonTemporalCrossingRate
+                    β energyIdentity energyNontrivial)
+                  base source replacement A -
+                finiteZ2GaugeNormalizedProductKernelBoundaryTilt
+                  (z2WilsonTemporalCrossingRate
+                    β energyIdentity energyNontrivial)
+                  base source replacement B| ≤
+              finiteZ2CrossingLikelihoodRatio
+                  (z2WilsonTemporalCrossingRate
+                    β energyIdentity energyNontrivial) -
+                (finiteZ2CrossingLikelihoodRatio
+                  (z2WilsonTemporalCrossingRate
+                    β energyIdentity energyNontrivial))⁻¹ := by
+          rw [abs_le]
+          constructor
+          · linarith [hLowerA, hUpperB]
+          · linarith [hUpperA, hLowerB]
+        simpa [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation] using hAbs
       · have hEq :
           finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt
               H β energyIdentity energyNontrivial base source replacement A =
