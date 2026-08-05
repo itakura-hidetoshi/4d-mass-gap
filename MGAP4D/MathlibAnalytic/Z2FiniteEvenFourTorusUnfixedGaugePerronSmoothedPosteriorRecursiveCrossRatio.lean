@@ -158,7 +158,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight_eq_factor
     finitePositiveWeightProduct
   rw [
     finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround_eq_localFactor_mul_smoothedResidual]
-  ring
 
 /-- A residual four-point coefficient combines with the two exact local
 half-weight rows; the coordinatewise crossing kernel contributes exactly one. -/
