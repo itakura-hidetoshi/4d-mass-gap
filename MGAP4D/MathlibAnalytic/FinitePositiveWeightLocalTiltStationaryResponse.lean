@@ -53,27 +53,19 @@ def finitePositiveWeightLocalTiltStationaryComparisonData
 is controlled by its exact accumulated source pairing and the geometric
 right-weight Dobrushin terminal residual. -/
 theorem finitePositiveWeightLocalTilt_globalExpectation_discrepancy_le
-    {ι G : Type}
-    [DecidableEq ι]
-    [Fintype ι]
-    [Fintype G]
-    [Nonempty G]
+    {ι G : Type} [DecidableEq ι] [Fintype ι] [Fintype G] [Nonempty G]
     (weight tilt : (ι → G) → ℝ)
     (hweight : ∀ A : ι → G, 0 < weight A)
     (htilt : ∀ A : ι → G, 0 < tilt A)
     (support : Finset ι)
     (htiltSupport : FiniteProductFunctionSupportedOn support tilt)
-    (lower upper : ℝ)
-    (hLower : 0 < lower)
-    (hUpper : 0 < upper)
+    (lower upper : ℝ) (hLower : 0 < lower) (hUpper : 0 < upper)
     (hLowerUpper : lower ≤ upper)
     (htiltLower : ∀ A : ι → G, lower ≤ tilt A)
     (htiltUpper : ∀ A : ι → G, tilt A ≤ upper)
     (hCard : 0 < Fintype.card ι)
     (D : FinitePositiveWeightDobrushinL1MatrixData weight)
-    {f : (ι → G) → ℝ}
-    (P : FiniteProductVariationBound f)
-    (n : ℕ) :
+    {f : (ι → G) → ℝ} (P : FiniteProductVariationBound f) (n : ℕ) :
     |finitePositiveWeightGlobalExpectation
           (finitePositiveWeightMultiplicativeTilt weight tilt) f -
         finitePositiveWeightGlobalExpectation weight f| ≤
