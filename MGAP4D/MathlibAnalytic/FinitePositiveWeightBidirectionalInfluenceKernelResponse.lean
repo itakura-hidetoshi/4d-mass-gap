@@ -43,8 +43,8 @@ theorem finiteInfluenceKernelUpdatedVariation_sum_source_eq
         finiteInfluenceKernelRowSum K target * variation target := by
       unfold finiteProductVariationTotal finiteInfluenceKernelRowSum
       rw [Finset.sum_sub_distrib, Finset.sum_add_distrib]
-      simp [nsmul_eq_mul]
-      ring
+      simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      rw [← Finset.sum_mul]
 
 /-- A uniform row bound contracts total variation under one random-scan
 kernel update. -/
@@ -104,14 +104,15 @@ theorem finiteInfluenceKernelRandomScanUpdatedVariation_total_le_rate_mul
             finiteInfluenceKernelRowSum K target * variation target) := by
       congr 1
       unfold finiteProductVariationTotal
-      simp [nsmul_eq_mul]
+      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+      simp only [Finset.sum_const, nsmul_eq_mul]
       ring
     _ ≤ (Fintype.card ι : ℝ)⁻¹ *
         (((Fintype.card ι : ℝ) - 1) *
             finiteProductVariationTotal variation +
           rowCoefficient * finiteProductVariationTotal variation) :=
       mul_le_mul_of_nonneg_left
-        (add_le_add_left hWeighted _)
+        (add_le_add (le_refl _) hWeighted)
         hInvNonneg
     _ = finiteInfluenceKernelReciprocalRandomScanRate
         ι rowCoefficient * finiteProductVariationTotal variation := by
@@ -144,7 +145,7 @@ theorem finiteInfluenceKernelRandomScanVariationIterate_total_le_rate_pow_mul
     finiteInfluenceKernelReciprocalRandomScanRate_nonneg
       hCard rowCoefficient hRowNonneg
   induction n with
-  | zero => simp [rate]
+  | zero => simp
   | succ n ih =>
       have hIterNonneg :
           ∀ e : ι,
@@ -219,7 +220,10 @@ theorem finiteInfluenceKernelSingletonVariation_iterate_total_sum_target_le
       ∀ e : ι,
         0 ≤ finiteInfluenceKernelSingletonVariation magnitude source e := by
     intro e
-    simp [finiteInfluenceKernelSingletonVariation, hMagnitude]
+    unfold finiteInfluenceKernelSingletonVariation
+    split
+    · exact hMagnitude
+    · exact le_rfl
   have hIter :=
     finiteInfluenceKernelRandomScanVariationIterate_total_le_rate_pow_mul
       K hCard rowCoefficient hRowNonneg hRowSum
@@ -288,7 +292,6 @@ theorem finiteInfluenceKernelSourceError_singletonEnvelope_sum_target
         finiteProductVariationTotal variation := by
       unfold finiteProductVariationTotal
       rw [Finset.mul_sum]
-      ring
 
 /-- Target-summed finite accumulated response controlled by a row coefficient.
 No strict contraction is assumed. -/
