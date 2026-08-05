@@ -39,8 +39,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor_e
     finiteProductCoordinatewiseFactor
   rw [finiteZ2GaugeNormalizedProductKernel_apply]
 
-/-- Hence the complete normalized crossing factor cancels exactly from every
-hidden four-point cross ratio. -/
+/-- The complete normalized crossing factor cancels exactly from every hidden
+four-point cross ratio. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor_crossRatio_one
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
@@ -81,8 +81,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor_p
     (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
     (FiniteEvenFourTorusSpatialLink H) hidden environment
 
-/-- The spatial half-weight is the unscaled exponential of the already
-extracted slice half-action. -/
+/-- The spatial half-weight is the unscaled exponential of the extracted slice
+half-action. -/
 theorem finiteEvenFourTorusZ2SpatialHalfWeight_eq_perronSliceExponential
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ) :
@@ -99,9 +99,8 @@ theorem finiteEvenFourTorusZ2SpatialHalfWeight_eq_perronSliceExponential
   congr 1
   ring
 
-/-- The additional spatial half-weight in the hidden Perron input contributes
-the same exact shared-plaquette cross-ratio row as the extracted Perron local
-factor. -/
+/-- The additional spatial half-weight contributes the same exact
+shared-plaquette row as the extracted Perron local factor. -/
 theorem finiteEvenFourTorusZ2SpatialHalfWeight_crossRatio
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
@@ -195,6 +194,12 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight_crossRati
   let localRadius :=
     finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalCrossRatioRadius
       H β energyIdentity energyNontrivial target source
+  let localFactor :=
+    finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le
+  let residual :=
+    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le
   have hCrossing :
       FinitePositiveWeightSingleSiteCrossRatioBound
         (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor
@@ -213,128 +218,90 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight_crossRati
         A C target source hNe hAgree
   have hLocal :
       FinitePositiveWeightSingleSiteCrossRatioBound
-        (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-        A C target (Real.exp localRadius) := by
-    simpa [localRadius] using
+        localFactor A C target (Real.exp localRadius) := by
+    simpa [localFactor, localRadius] using
       finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor_crossRatio
         H β energyIdentity energyNontrivial hβ.le hEnergy.le
         A C target source hNe hAgree
+  have hLocalNonneg : ∀ X, 0 ≤ localFactor X := by
+    intro X
+    exact le_of_lt
+      (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor_pos
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le X)
+  have hResidualNonneg : ∀ X, 0 ≤ residual X := by
+    intro X
+    exact le_of_lt
+      (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual_pos
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le X)
+  have hLocalResidualNonneg :
+      ∀ X, 0 ≤ finitePositiveWeightProduct localFactor residual X := by
+    intro X
+    change 0 ≤ localFactor X * residual X
+    exact mul_nonneg (hLocalNonneg X) (hResidualNonneg X)
+  have hHiddenNonneg :
+      ∀ X, 0 ≤
+        finitePositiveWeightProduct
+          (finiteEvenFourTorusZ2SpatialHalfWeight
+            H β energyIdentity energyNontrivial)
+          (finitePositiveWeightProduct localFactor residual) X := by
+    intro X
+    change 0 ≤
+      finiteEvenFourTorusZ2SpatialHalfWeight
+          H β energyIdentity energyNontrivial X *
+        (localFactor X * residual X)
+    exact mul_nonneg
+      (le_of_lt
+        (finiteEvenFourTorusZ2SpatialHalfWeight_pos
+          H β energyIdentity energyNontrivial X))
+      (mul_nonneg (hLocalNonneg X) (hResidualNonneg X))
   have hLocalResidual :
       FinitePositiveWeightSingleSiteCrossRatioBound
-        (finitePositiveWeightProduct
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-            H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
-            H β energyIdentity energyNontrivial hβ.le hEnergy.le))
+        (finitePositiveWeightProduct localFactor residual)
         A C target (Real.exp localRadius * residualRatio) := by
-    exact
-      finitePositiveWeightProduct_singleSiteCrossRatioBound
-        (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-        (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-        (fun X => le_of_lt
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor_pos
-            H β energyIdentity energyNontrivial hβ.le hEnergy.le X))
-        (fun X => le_of_lt
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual_pos
-            H β energyIdentity energyNontrivial hβ.le hEnergy.le X))
-        A C target (Real.exp localRadius) residualRatio
-        (le_of_lt (Real.exp_pos _)) hResidualRatio hLocal hResidual
+    exact finitePositiveWeightProduct_singleSiteCrossRatioBound
+      localFactor residual hLocalNonneg hResidualNonneg
+      A C target (Real.exp localRadius) residualRatio
+      (le_of_lt (Real.exp_pos _)) hResidualRatio hLocal hResidual
   have hHidden :
       FinitePositiveWeightSingleSiteCrossRatioBound
         (finitePositiveWeightProduct
           (finiteEvenFourTorusZ2SpatialHalfWeight
             H β energyIdentity energyNontrivial)
-          (finitePositiveWeightProduct
-            (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-              H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-            (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
-              H β energyIdentity energyNontrivial hβ.le hEnergy.le)))
+          (finitePositiveWeightProduct localFactor residual))
         A C target
         (Real.exp localRadius * (Real.exp localRadius * residualRatio)) := by
-    exact
-      finitePositiveWeightProduct_singleSiteCrossRatioBound
+    exact finitePositiveWeightProduct_singleSiteCrossRatioBound
+      (finiteEvenFourTorusZ2SpatialHalfWeight
+        H β energyIdentity energyNontrivial)
+      (finitePositiveWeightProduct localFactor residual)
+      (fun X => le_of_lt
+        (finiteEvenFourTorusZ2SpatialHalfWeight_pos
+          H β energyIdentity energyNontrivial X))
+      hLocalResidualNonneg
+      A C target (Real.exp localRadius)
+      (Real.exp localRadius * residualRatio)
+      (le_of_lt (Real.exp_pos _))
+      (mul_nonneg (le_of_lt (Real.exp_pos _)) hResidualRatio)
+      hSpatial hLocalResidual
+  have hAll :=
+    finitePositiveWeightProduct_singleSiteCrossRatioBound
+      (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor
+        H β energyIdentity energyNontrivial environment)
+      (finitePositiveWeightProduct
         (finiteEvenFourTorusZ2SpatialHalfWeight
           H β energyIdentity energyNontrivial)
-        (finitePositiveWeightProduct
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-            H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
-            H β energyIdentity energyNontrivial hβ.le hEnergy.le))
-        (fun X => le_of_lt
-          (finiteEvenFourTorusZ2SpatialHalfWeight_pos
-            H β energyIdentity energyNontrivial X))
-        (fun X => by
-          unfold finitePositiveWeightProduct
-          exact mul_nonneg
-            (le_of_lt
-              (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor_pos
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le X))
-            (le_of_lt
-              (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual_pos
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le X)))
-        A C target (Real.exp localRadius)
-        (Real.exp localRadius * residualRatio)
-        (le_of_lt (Real.exp_pos _))
-        (mul_nonneg (le_of_lt (Real.exp_pos _)) hResidualRatio)
-        hSpatial hLocalResidual
-  have hAll :
-      FinitePositiveWeightSingleSiteCrossRatioBound
-        (finitePositiveWeightProduct
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor
-            H β energyIdentity energyNontrivial environment)
-          (finitePositiveWeightProduct
-            (finiteEvenFourTorusZ2SpatialHalfWeight
-              H β energyIdentity energyNontrivial)
-            (finitePositiveWeightProduct
-              (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-              (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le))))
-        A C target
-        (1 *
-          (Real.exp localRadius *
-            (Real.exp localRadius * residualRatio))) := by
-    exact
-      finitePositiveWeightProduct_singleSiteCrossRatioBound
-        (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor
-          H β energyIdentity energyNontrivial environment)
-        (finitePositiveWeightProduct
-          (finiteEvenFourTorusZ2SpatialHalfWeight
-            H β energyIdentity energyNontrivial)
-          (finitePositiveWeightProduct
-            (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor
-              H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-            (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual
-              H β energyIdentity energyNontrivial hβ.le hEnergy.le)))
-        (fun X => le_of_lt
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor_pos
-            H β energyIdentity energyNontrivial hβ hEnergy environment X))
-        (fun X => by
-          unfold finitePositiveWeightProduct
-          exact mul_nonneg
-            (le_of_lt
-              (finiteEvenFourTorusZ2SpatialHalfWeight_pos
-                H β energyIdentity energyNontrivial X))
-            (by
-              unfold finitePositiveWeightProduct
-              exact mul_nonneg
-                (le_of_lt
-                  (finiteEvenFourTorusZ2UnfixedGaugePerronSandwichLocalFactor_pos
-                    H β energyIdentity energyNontrivial hβ.le hEnergy.le X))
-                (le_of_lt
-                  (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidual_pos
-                    H β energyIdentity energyNontrivial hβ.le hEnergy.le X))))
-        A C target 1
-        (Real.exp localRadius *
-          (Real.exp localRadius * residualRatio))
-        (by norm_num)
-        (mul_nonneg (le_of_lt (Real.exp_pos _))
-          (mul_nonneg (le_of_lt (Real.exp_pos _)) hResidualRatio))
-        hCrossing hHidden
-  simpa [localRadius] using hAll
+        (finitePositiveWeightProduct localFactor residual))
+      (fun X => le_of_lt
+        (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorCrossingFactor_pos
+          H β energyIdentity energyNontrivial hβ hEnergy environment X))
+      hHiddenNonneg
+      A C target 1
+      (Real.exp localRadius * (Real.exp localRadius * residualRatio))
+      (by norm_num)
+      (mul_nonneg (le_of_lt (Real.exp_pos _))
+        (mul_nonneg (le_of_lt (Real.exp_pos _)) hResidualRatio))
+      hCrossing hHidden
+  simpa [localFactor, residual, localRadius] using hAll
 
 /-- The exact logarithmic hidden-posterior radius obtained from one recursive
 residual response coefficient. -/
