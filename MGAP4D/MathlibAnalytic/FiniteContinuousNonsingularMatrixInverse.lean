@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Topology.Instances.Matrix
 import Mathlib.Tactic
 
@@ -26,9 +27,8 @@ theorem finiteRealNonsingularMatrixInverse_mul
     (hdet : A.det ≠ 0) :
     finiteRealNonsingularMatrixInverse A * A = 1 := by
   unfold finiteRealNonsingularMatrixInverse
-  rw [Matrix.mul_mul_left, Matrix.adjugate_mul]
-  ext i j
-  simp [hdet]
+  rw [Matrix.smul_mul_assoc, Matrix.adjugate_mul,
+    smul_smul, inv_mul_cancel₀ hdet, one_smul]
 
 /-- The explicit inverse is a right inverse whenever the determinant is
 nonzero. -/
@@ -40,9 +40,8 @@ theorem mul_finiteRealNonsingularMatrixInverse
     (hdet : A.det ≠ 0) :
     A * finiteRealNonsingularMatrixInverse A = 1 := by
   unfold finiteRealNonsingularMatrixInverse
-  rw [Matrix.mul_mul_right, Matrix.mul_adjugate]
-  ext i j
-  simp [hdet]
+  rw [Matrix.mul_smul_comm, Matrix.mul_adjugate,
+    smul_smul, inv_mul_cancel₀ hdet, one_smul]
 
 /-- A continuous finite real matrix family with everywhere nonzero determinant
 has a continuous explicit nonsingular inverse. -/
