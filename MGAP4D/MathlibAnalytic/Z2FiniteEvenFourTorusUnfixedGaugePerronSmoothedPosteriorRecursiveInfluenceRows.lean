@@ -215,16 +215,16 @@ theorem
       exact Real.log_nonneg (by nlinarith)
     unfold
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluence
-    rw [finitePositiveWeightCrossRatioEntryInfluence_eq_transform,
-      if_neg hEq]
-    change
-      finitePositiveWeightCrossRatioInfluenceTransform
-          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceRadius
-            H β energyIdentity energyNontrivial hβ hEnergy C target source) ≤
-        2 *
-            finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence
-              H β energyIdentity energyNontrivial target source +
-          ratio * error
+    rw [finitePositiveWeightCrossRatioEntryInfluence_eq_transform]
+    simp only [hEq, if_false]
+    have hRadiusProjection :
+        (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceEntryData
+          H β energyIdentity energyNontrivial hβ hEnergy environment C).radius
+            target source =
+          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceRadius
+            H β energyIdentity energyNontrivial hβ hEnergy C target source := by
+      rfl
+    rw [hRadiusProjection]
     simp only [
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceRadius,
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence,
