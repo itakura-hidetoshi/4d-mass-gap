@@ -460,7 +460,10 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorReciprocalInflue
       apply Finset.sum_le_sum
       intro source _hSource
       by_cases hEq : target = source
-      · simp [hEq, K.responseError_nonneg target source, hRatio]
+      · subst source
+        have hResponse : 0 ≤ ratio * K.responseError target target :=
+          mul_nonneg hRatio (K.responseError_nonneg target target)
+        simpa using hResponse
       · simp [hEq]
     _ = 2 *
           (∑ source : FiniteEvenFourTorusSpatialLink H,
