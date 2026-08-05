@@ -187,8 +187,19 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_exist
       if_neg hEq]
     unfold finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeValues
     rw [Finset.max'_eq_sup', Finset.sup'_image]
-  unfold finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence
-  rw [if_neg hEq, hSupEq, ← hOldSup]
+  change
+    max 0
+        (Finset.univ.sup' Finset.univ_nonempty
+          (fun parameter :
+              FiniteEvenFourTorusZ2PerronPosteriorEnvelopeParameter H =>
+            finitePositiveWeightCanonicalNonstrictInfluence
+              (finiteEvenFourTorusZ2CanonicalPerronSmoothedPosteriorWeight
+                H energyIdentity energyNontrivial ⟨β, hβ.le⟩
+                (Function.update parameter.1.1 parameter.1.2 parameter.2))
+              target source)) =
+      finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence
+        H β energyIdentity energyNontrivial hβ hEnergy target source
+  rw [hSupEq, ← hOldSup]
   exact max_eq_right
     (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence_nonneg
       H β energyIdentity energyNontrivial hβ hEnergy target source)
@@ -221,7 +232,7 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeKernel_eq_existing
         H energyIdentity energyNontrivial ⟨β, hβ.le⟩ =
       finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel
         H β energyIdentity energyNontrivial hβ hEnergy := by
-  apply finiteNonnegativeInfluenceKernelData_ext_influence
+  refine finiteNonnegativeInfluenceKernelData_ext_influence _ _ ?_
   intro target source
   exact
     finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_existing
@@ -347,13 +358,13 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeColumnCoefficient_
 half-line. -/
 def finiteEvenFourTorusNonnegativeCouplingProjection
     (parameter : ℝ) : Set.Ici (0 : ℝ) :=
-  ⟨max 0 parameter, le_max_left _ _⟩
+  ⟨max 0 parameter, by exact le_max_left 0 parameter⟩
 
 /-- The nonnegative coupling projection is continuous. -/
 theorem continuous_finiteEvenFourTorusNonnegativeCouplingProjection :
     Continuous finiteEvenFourTorusNonnegativeCouplingProjection := by
   unfold finiteEvenFourTorusNonnegativeCouplingProjection
-  fun_prop
+  exact (continuous_const.max continuous_id).subtype_mk _
 
 /-- Globally continuous real extension of the exact maximum row coefficient. -/
 noncomputable def finiteEvenFourTorusZ2PerronPosteriorEnvelopeRowCoefficientExtension
@@ -409,10 +420,16 @@ theorem continuous_finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficient
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     finiteEvenFourTorusZ2PerronPosteriorEnvelopeRowCoefficientExtension
       H energyIdentity energyNontrivial 0 = 0 := by
-  simp [finiteEvenFourTorusZ2PerronPosteriorEnvelopeRowCoefficientExtension,
-    finiteEvenFourTorusNonnegativeCouplingProjection,
+  have hProjection :
+      finiteEvenFourTorusNonnegativeCouplingProjection 0 =
+        ⟨0, by norm_num⟩ := by
+    apply Subtype.ext
+    simp [finiteEvenFourTorusNonnegativeCouplingProjection]
+  unfold finiteEvenFourTorusZ2PerronPosteriorEnvelopeRowCoefficientExtension
+  rw [hProjection]
+  exact
     finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeRowCoefficient_zero
-      H energyIdentity energyNontrivial hEnergy]
+      H energyIdentity energyNontrivial hEnergy
 
 /-- The real column extension starts exactly at zero. -/
 @[simp] theorem finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficientExtension_zero
@@ -421,10 +438,16 @@ theorem continuous_finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficient
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficientExtension
       H energyIdentity energyNontrivial 0 = 0 := by
-  simp [finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficientExtension,
-    finiteEvenFourTorusNonnegativeCouplingProjection,
+  have hProjection :
+      finiteEvenFourTorusNonnegativeCouplingProjection 0 =
+        ⟨0, by norm_num⟩ := by
+    apply Subtype.ext
+    simp [finiteEvenFourTorusNonnegativeCouplingProjection]
+  unfold finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficientExtension
+  rw [hProjection]
+  exact
     finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeColumnCoefficient_zero
-      H energyIdentity energyNontrivial hEnergy]
+      H energyIdentity energyNontrivial hEnergy
 
 /-- On every positive real coupling, the row extension is the existing exact
 envelope coefficient. -/
@@ -441,8 +464,8 @@ theorem finiteEvenFourTorusZ2PerronPosteriorEnvelopeRowCoefficientExtension_eq_e
       finiteEvenFourTorusNonnegativeCouplingProjection parameter =
         ⟨parameter, hParameter.le⟩ := by
     apply Subtype.ext
-    simp [finiteEvenFourTorusNonnegativeCouplingProjection,
-      max_eq_right hParameter.le]
+    change max 0 parameter = parameter
+    exact max_eq_right hParameter.le
   unfold finiteEvenFourTorusZ2PerronPosteriorEnvelopeRowCoefficientExtension
   rw [hProjection]
   exact
@@ -464,8 +487,8 @@ theorem finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficientExtension_e
       finiteEvenFourTorusNonnegativeCouplingProjection parameter =
         ⟨parameter, hParameter.le⟩ := by
     apply Subtype.ext
-    simp [finiteEvenFourTorusNonnegativeCouplingProjection,
-      max_eq_right hParameter.le]
+    change max 0 parameter = parameter
+    exact max_eq_right hParameter.le
   unfold finiteEvenFourTorusZ2PerronPosteriorEnvelopeColumnCoefficientExtension
   rw [hProjection]
   exact
