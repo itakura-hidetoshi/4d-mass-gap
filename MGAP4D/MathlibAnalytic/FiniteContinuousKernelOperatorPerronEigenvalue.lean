@@ -109,12 +109,15 @@ theorem continuous_finiteKernelNormalizedOperator_apply
     (f : FiniteBoundaryHilbert α)
     (a : α) :
     Continuous (fun x => finiteKernelNormalizedOperator (kernel x) f a) := by
-  have hNormalized :=
-    continuous_finiteKernelNormalizedOperator kernel hkernel hraw
-  exact
-    (ContinuousLinearMap.apply ℝ
-      (FiniteBoundaryHilbert α)).continuous.comp
-      ((hNormalized.prodMk continuous_const).prodMk continuous_const)
+  have hNorm := continuous_finiteKernelOperator_norm kernel hkernel
+  have hInv : Continuous (fun x => ‖finiteKernelOperator (kernel x)‖⁻¹) :=
+    hNorm.inv₀ (fun x => norm_ne_zero_iff.mpr (hraw x))
+  have hSum : Continuous (fun x => ∑ b : α, kernel x b a * f b) := by
+    apply continuous_finset_sum
+    intro b _hb
+    exact (hkernel b a).mul continuous_const
+  simpa [finiteKernelNormalizedOperator, finiteKernelOperator_apply] using
+    hInv.mul hSum
 
 end
 
