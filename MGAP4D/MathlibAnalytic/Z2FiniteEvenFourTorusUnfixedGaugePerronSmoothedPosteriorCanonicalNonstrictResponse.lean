@@ -583,6 +583,39 @@ theorem
     finiteInfluenceKernelSingletonVariation_iterate_total_sum_source_le
       C.kernel hCard C.columnCoefficient C.columnCoefficient_nonneg
       C.columnSum_le sourceMagnitude hMagnitude C.iterations
+  have hTerminalScaled :
+      2 *
+          (∑ source : FiniteEvenFourTorusSpatialLink H,
+            finiteProductVariationTotal
+              (finiteInfluenceKernelRandomScanVariationIterate
+                C.kernel
+                (finiteInfluenceKernelSingletonVariation
+                  sourceMagnitude source)
+                C.iterations)) ≤
+        2 * (Fintype.card (FiniteEvenFourTorusSpatialLink H) : ℝ) *
+          (finiteInfluenceKernelReciprocalRandomScanRate
+              (FiniteEvenFourTorusSpatialLink H) C.columnCoefficient ^
+            C.iterations * sourceMagnitude) := by
+    calc
+      2 *
+          (∑ source : FiniteEvenFourTorusSpatialLink H,
+            finiteProductVariationTotal
+              (finiteInfluenceKernelRandomScanVariationIterate
+                C.kernel
+                (finiteInfluenceKernelSingletonVariation
+                  sourceMagnitude source)
+                C.iterations)) ≤
+        2 *
+          ((Fintype.card (FiniteEvenFourTorusSpatialLink H) : ℝ) *
+            (finiteInfluenceKernelReciprocalRandomScanRate
+                (FiniteEvenFourTorusSpatialLink H) C.columnCoefficient ^
+              C.iterations * sourceMagnitude)) :=
+        mul_le_mul_of_nonneg_left hTerminal (by norm_num)
+      _ = 2 * (Fintype.card (FiniteEvenFourTorusSpatialLink H) : ℝ) *
+          (finiteInfluenceKernelReciprocalRandomScanRate
+              (FiniteEvenFourTorusSpatialLink H) C.columnCoefficient ^
+            C.iterations * sourceMagnitude) := by
+        ring
   rw [
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceEnvelope_total
       H β energyIdentity energyNontrivial target] at hPartial
@@ -593,8 +626,7 @@ theorem
   rw [Finset.sum_add_distrib, ← Finset.mul_sum]
   unfold
     FiniteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorReciprocalKernelCertificate.responseRowCoefficient
-  exact add_le_add hPartial
-    (mul_le_mul_of_nonneg_left hTerminal (by norm_num))
+  exact add_le_add hPartial hTerminalScaled
 
 end
 
