@@ -88,7 +88,9 @@ theorem continuous_finitePositiveWeightConditionalL1SourceCandidate
     {X ι G : Type}
     [TopologicalSpace X]
     [DecidableEq ι]
+    [Fintype ι]
     [Fintype G]
+    [DecidableEq G]
     [Nonempty G]
     (weight : X → (ι → G) → ℝ)
     (hweight : ∀ configuration : ι → G,
@@ -101,7 +103,6 @@ theorem continuous_finitePositiveWeightConditionalL1SourceCandidate
         finitePositiveWeightSingleSiteConditionalL1
           (weight x) pair.1 pair.2 target
       else 0) := by
-  classical
   by_cases hAgree : FiniteProductAgreeOff pair.1 pair.2 source
   · simpa [hAgree] using
       continuous_finitePositiveWeightSingleSiteConditionalL1
