@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.FiniteContinuousBidirectionalSelfBootstrapBarrier
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusPerronPosteriorAsymptoticBootstrapMap
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusPerronPosteriorPersistentBootstrapBarrierClosure
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -49,23 +50,21 @@ structure Z2PerronPosteriorCanonicalEnvelopeContinuationData
             hParameter.1 hEnergy
   asymptoticBootstrapMap_lt :
     ∀ parameter : ℝ,
-      ∀ hParameter : parameter ∈ Set.Ioc 0 β,
+      ∀ _hParameter : parameter ∈ Set.Ioc 0 β,
         finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap
           parameter energyIdentity energyNontrivial barrier < barrier
 
 namespace Z2PerronPosteriorCanonicalEnvelopeContinuationData
 
-variable
+/-- At every positive continuation parameter, some finite response depth sends
+the common barrier strictly inside itself. -/
+theorem exists_responseIterations
     {H : ℕ}
     {β energyIdentity energyNontrivial barrier : ℝ}
     {hβ : 0 < β}
     {hEnergy : energyIdentity < energyNontrivial}
     (C : Z2PerronPosteriorCanonicalEnvelopeContinuationData
       H β energyIdentity energyNontrivial hβ hEnergy barrier)
-
-/-- At every positive continuation parameter, some finite response depth sends
-the common barrier strictly inside itself. -/
-theorem exists_responseIterations
     (parameter : ℝ)
     (hParameter : parameter ∈ Set.Ioc 0 β)
     (hBarrierNonneg : 0 ≤ barrier)
@@ -81,34 +80,52 @@ theorem exists_responseIterations
 
 /-- Canonical finite response-depth selector along the continuation path. -/
 noncomputable def responseIterations
+    {H : ℕ}
+    {β energyIdentity energyNontrivial barrier : ℝ}
+    {hβ : 0 < β}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorCanonicalEnvelopeContinuationData
+      H β energyIdentity energyNontrivial hβ hEnergy barrier)
     (hBarrierNonneg : 0 ≤ barrier)
     (hBarrierLtOne : barrier < 1)
     (parameter : ℝ) : ℕ :=
   if hParameter : parameter ∈ Set.Ioc 0 β then
     Classical.choose
-      (C.exists_responseIterations parameter hParameter
+      (exists_responseIterations C parameter hParameter
         hBarrierNonneg hBarrierLtOne)
   else 0
 
 /-- The selected response depth realizes the strict map inequality at every
 positive continuation parameter. -/
 theorem bootstrapMap_barrier_lt
+    {H : ℕ}
+    {β energyIdentity energyNontrivial barrier : ℝ}
+    {hβ : 0 < β}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorCanonicalEnvelopeContinuationData
+      H β energyIdentity energyNontrivial hβ hEnergy barrier)
     (hBarrierNonneg : 0 ≤ barrier)
     (hBarrierLtOne : barrier < 1)
     (parameter : ℝ)
     (hParameter : parameter ∈ Set.Ioc 0 β) :
     finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap
         H parameter energyIdentity energyNontrivial
-        (C.responseIterations hBarrierNonneg hBarrierLtOne parameter)
+        (responseIterations C hBarrierNonneg hBarrierLtOne parameter)
         barrier < barrier := by
   simp only [responseIterations, dif_pos hParameter]
   exact Classical.choose_spec
-    (C.exists_responseIterations parameter hParameter
+    (exists_responseIterations C parameter hParameter
       hBarrierNonneg hBarrierLtOne)
 
 /-- Specialization of the generic continuous first-exit theorem to the exact
 actual Perron posterior envelope. -/
 noncomputable def toContinuousSelfBootstrapBarrier
+    {H : ℕ}
+    {β energyIdentity energyNontrivial barrier : ℝ}
+    {hβ : 0 < β}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorCanonicalEnvelopeContinuationData
+      H β energyIdentity energyNontrivial hβ hEnergy barrier)
     (hBarrierNonneg : 0 ≤ barrier)
     (hBarrierLtOne : barrier < 1) :
     FiniteContinuousBidirectionalSelfBootstrapBarrierData :=
@@ -125,7 +142,7 @@ noncomputable def toContinuousSelfBootstrapBarrier
     stepMap := fun parameter coefficient =>
       finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap
         H parameter energyIdentity energyNontrivial
-        (C.responseIterations hBarrierNonneg hBarrierLtOne parameter)
+        (responseIterations C hBarrierNonneg hBarrierLtOne parameter)
         coefficient
     rowCoefficient_nonneg := by
       intro parameter hParameter
@@ -145,11 +162,11 @@ noncomputable def toContinuousSelfBootstrapBarrier
         finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap_mono
           H parameter energyIdentity energyNontrivial
           hParameter.1 hEnergy
-          (C.responseIterations hBarrierNonneg hBarrierLtOne parameter)
+          (responseIterations C hBarrierNonneg hBarrierLtOne parameter)
           hLeft hLeftRight
     stepMap_barrier_lt := by
       intro parameter hParameter
-      exact C.bootstrapMap_barrier_lt
+      exact bootstrapMap_barrier_lt C
         hBarrierNonneg hBarrierLtOne parameter hParameter
     row_self_le := by
       intro parameter hParameter
@@ -159,7 +176,7 @@ noncomputable def toContinuousSelfBootstrapBarrier
         finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeRowCoefficient_le_bootstrapMap
           H parameter energyIdentity energyNontrivial
           hParameter.1 hEnergy
-          (C.responseIterations hBarrierNonneg hBarrierLtOne parameter)
+          (responseIterations C hBarrierNonneg hBarrierLtOne parameter)
     column_self_le := by
       intro parameter hParameter
       rw [C.columnCoefficient_eq_envelope parameter hParameter,
@@ -168,20 +185,27 @@ noncomputable def toContinuousSelfBootstrapBarrier
         finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeColumnCoefficient_le_bootstrapMap
           H parameter energyIdentity energyNontrivial
           hParameter.1 hEnergy
-          (C.responseIterations hBarrierNonneg hBarrierLtOne parameter) }
+          (responseIterations C hBarrierNonneg hBarrierLtOne parameter) }
 
 /-- The actual endpoint envelope row and column coefficients lie strictly below
 the continuation barrier. -/
 theorem endpoint_envelopeCoefficients_lt
+    {H : ℕ}
+    {β energyIdentity energyNontrivial barrier : ℝ}
+    {hβ : 0 < β}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorCanonicalEnvelopeContinuationData
+      H β energyIdentity energyNontrivial hβ hEnergy barrier)
     (hBarrierNonneg : 0 ≤ barrier)
     (hBarrierLtOne : barrier < 1) :
     finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeRowCoefficient
           H β energyIdentity energyNontrivial hβ hEnergy < barrier ∧
       finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeColumnCoefficient
           H β energyIdentity energyNontrivial hβ hEnergy < barrier := by
+  let B := toContinuousSelfBootstrapBarrier C
+    hBarrierNonneg hBarrierLtOne
   have hEndpoint :=
-    (C.toContinuousSelfBootstrapBarrier
-      hBarrierNonneg hBarrierLtOne).endpoint_coefficients_lt_barrier
+    FiniteContinuousBidirectionalSelfBootstrapBarrierData.endpoint_coefficients_lt_barrier B
   have hMembership : β ∈ Set.Ioc 0 β := ⟨hβ, le_rfl⟩
   rw [C.rowCoefficient_eq_envelope β hMembership,
     C.columnCoefficient_eq_envelope β hMembership] at hEndpoint
@@ -190,6 +214,12 @@ theorem endpoint_envelopeCoefficients_lt
 /-- Every endpoint posterior weight receives strict Dobrushin data directly
 from the exact environment-uniform envelope. -/
 noncomputable def toDobrushinData
+    {H : ℕ}
+    {β energyIdentity energyNontrivial barrier : ℝ}
+    {hβ : 0 < β}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorCanonicalEnvelopeContinuationData
+      H β energyIdentity energyNontrivial hβ hEnergy barrier)
     (hBarrierNonneg : 0 ≤ barrier)
     (hBarrierLtOne : barrier < 1)
     (environment : FiniteEvenFourTorusZ2SliceConfiguration H) :
@@ -204,7 +234,7 @@ noncomputable def toDobrushinData
     finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel
       H β energyIdentity energyNontrivial hβ hEnergy
   have hEnvelopeStrict :=
-    (C.endpoint_envelopeCoefficients_lt
+    (endpoint_envelopeCoefficients_lt C
       hBarrierNonneg hBarrierLtOne).1
   refine D.toDobrushinL1MatrixData
     barrier hBarrierNonneg ?_ hBarrierLtOne
@@ -255,33 +285,36 @@ structure Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
 
 namespace Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
 
-variable
+/-- Uniform strict endpoint row and column bounds at every finite side. -/
+theorem endpoint_envelopeCoefficients_lt
     {β energyIdentity energyNontrivial : ℝ}
     {hβ : 0 < β}
     {hEnergy : energyIdentity < energyNontrivial}
     (C : Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
       β energyIdentity energyNontrivial hβ hEnergy)
-
-/-- Uniform strict endpoint row and column bounds at every finite side. -/
-theorem endpoint_envelopeCoefficients_lt
     (H : ℕ) :
     finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeRowCoefficient
           H β energyIdentity energyNontrivial hβ hEnergy < C.barrier ∧
       finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeColumnCoefficient
           H β energyIdentity energyNontrivial hβ hEnergy < C.barrier :=
-  (C.atVolume H).endpoint_envelopeCoefficients_lt
-    C.barrier_nonneg C.barrier_lt_one
+  Z2PerronPosteriorCanonicalEnvelopeContinuationData.endpoint_envelopeCoefficients_lt
+    (C.atVolume H) C.barrier_nonneg C.barrier_lt_one
 
 /-- Actual strict posterior Dobrushin data at every finite side and every
 boundary environment. -/
 noncomputable def toDobrushinData
+    {β energyIdentity energyNontrivial : ℝ}
+    {hβ : 0 < β}
+    {hEnergy : energyIdentity < energyNontrivial}
+    (C : Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
+      β energyIdentity energyNontrivial hβ hEnergy)
     (H : ℕ)
     (environment : FiniteEvenFourTorusZ2SliceConfiguration H) :
     FinitePositiveWeightDobrushinL1MatrixData
       (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
         H β energyIdentity energyNontrivial hβ.le hEnergy.le environment) :=
-  (C.atVolume H).toDobrushinData
-    C.barrier_nonneg C.barrier_lt_one environment
+  Z2PerronPosteriorCanonicalEnvelopeContinuationData.toDobrushinData
+    (C.atVolume H) C.barrier_nonneg C.barrier_lt_one environment
 
 end Z2PerronPosteriorCanonicalEnvelopeContinuationFamilyData
 
