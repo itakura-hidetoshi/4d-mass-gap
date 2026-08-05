@@ -111,9 +111,10 @@ theorem
           (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexCouplingData
             C β hβ hβCutoff H left right).joint g h * bound g h := by
   unfold
-    finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobMixtureExpectedHamming
     finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureComponentExpectedHamming
-      at hBound ⊢
+      at hBound
+  unfold
+    finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobMixtureExpectedHamming
   change
     (finiteRealProbabilityMixtureCouplingData
       (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexCouplingData
