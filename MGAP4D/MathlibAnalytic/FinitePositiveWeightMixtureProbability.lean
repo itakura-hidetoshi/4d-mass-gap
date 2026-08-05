@@ -20,8 +20,8 @@ theorem finiteRealWeightPartition_pos_of_pos
   let x0 : α := Classical.choice inferInstance
   unfold finiteRealWeightPartition
   exact Finset.sum_pos
-    (fun x _hx => le_of_lt (hweight x))
-    ⟨x0, Finset.mem_univ x0, hweight x0⟩
+    (fun x _hx => hweight x)
+    ⟨x0, Finset.mem_univ x0⟩
 
 /-- Raw finite mixture of component weights with positive external scales. -/
 def finitePositiveWeightMixtureRaw
@@ -48,8 +48,8 @@ theorem finitePositiveWeightMixtureRaw_pos
   let i0 : ι := Classical.choice inferInstance
   unfold finitePositiveWeightMixtureRaw
   exact Finset.sum_pos
-    (fun i _hi => le_of_lt (mul_pos (hscale i) (hweight i x)))
-    ⟨i0, Finset.mem_univ i0, mul_pos (hscale i0) (hweight i0 x)⟩
+    (fun i _hi => mul_pos (hscale i) (hweight i x))
+    ⟨i0, Finset.mem_univ i0⟩
 
 /-- Partition of one mixture component. -/
 def finitePositiveWeightMixtureComponentPartition
@@ -218,29 +218,41 @@ theorem finitePositiveWeightMixtureProbability_eq_sum
           scale weight hscale hweight).probability i *
         (finitePositiveWeightMixtureComponentProbabilityData
           weight hweight i).probability x := by
-  let S := finitePositiveWeightMixtureIndexPartition scale weight
-  have hS : S ≠ 0 := ne_of_gt
-    (finitePositiveWeightMixtureIndexPartition_pos
-      scale weight hscale hweight)
+  have hS :
+      finitePositiveWeightMixtureIndexPartition scale weight ≠ 0 :=
+    ne_of_gt
+      (finitePositiveWeightMixtureIndexPartition_pos
+        scale weight hscale hweight)
   have hZi (i : ι) :
       finitePositiveWeightMixtureComponentPartition weight i ≠ 0 :=
     ne_of_gt
       (finitePositiveWeightMixtureComponentPartition_pos weight hweight i)
+  simp only [finitePositiveWeightMixtureProbabilityData,
+    finitePositiveWeightMixtureIndexProbabilityData,
+    finitePositiveWeightMixtureComponentProbabilityData,
+    finiteRealWeightProbabilityData, finiteRealWeightProbability]
+  rw [finitePositiveWeightMixtureRaw_partition]
   change
-    finitePositiveWeightMixtureRaw scale weight x / S =
+    finitePositiveWeightMixtureRaw scale weight x /
+        finitePositiveWeightMixtureIndexPartition scale weight =
       ∑ i : ι,
-        (finitePositiveWeightMixtureIndexWeight scale weight i / S) *
-          (weight i x /
-            finitePositiveWeightMixtureComponentPartition weight i)
+        (finitePositiveWeightMixtureIndexWeight scale weight i /
+          finitePositiveWeightMixtureIndexPartition scale weight) *
+        (weight i x /
+          finitePositiveWeightMixtureComponentPartition weight i)
   calc
-    finitePositiveWeightMixtureRaw scale weight x / S =
-        ∑ i : ι, (scale i * weight i x) / S := by
+    finitePositiveWeightMixtureRaw scale weight x /
+        finitePositiveWeightMixtureIndexPartition scale weight =
+      ∑ i : ι,
+        (scale i * weight i x) /
+          finitePositiveWeightMixtureIndexPartition scale weight := by
       unfold finitePositiveWeightMixtureRaw
       rw [Finset.sum_div]
     _ = ∑ i : ι,
-        (finitePositiveWeightMixtureIndexWeight scale weight i / S) *
-          (weight i x /
-            finitePositiveWeightMixtureComponentPartition weight i) := by
+        (finitePositiveWeightMixtureIndexWeight scale weight i /
+          finitePositiveWeightMixtureIndexPartition scale weight) *
+        (weight i x /
+          finitePositiveWeightMixtureComponentPartition weight i) := by
       apply Finset.sum_congr rfl
       intro i _hi
       unfold finitePositiveWeightMixtureIndexWeight
