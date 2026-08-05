@@ -116,10 +116,10 @@ theorem
             β hβ hβCutoff).barrier) *
           finiteProductHammingDistanceReal leftHidden rightHidden := by
   exact
-    (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
-      energyIdentity energyNontrivial hEnergy).
-        parallelTotalCoordinateDisagreement_le_halfBarrier_mul_hamming
-          β hβ hβCutoff H environment leftHidden rightHidden
+    parallelTotalCoordinateDisagreement_le_halfBarrier_mul_hamming
+      (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
+        energyIdentity energyNontrivial hEnergy)
+      β hβ hβCutoff H environment leftHidden rightHidden
 
 end Z2PerronPosteriorActualHighTemperatureContinuationData
 
