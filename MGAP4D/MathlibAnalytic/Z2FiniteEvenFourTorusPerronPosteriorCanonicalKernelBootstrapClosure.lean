@@ -9,6 +9,10 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance finiteEvenFourTorusSpatialLinkNonempty (H : ℕ) :
+    Nonempty (FiniteEvenFourTorusSpatialLink H) :=
+  ⟨(⟨0, by simp⟩, ⟨1, by norm_num⟩)⟩
+
 /-- Canonical finite kernel bootstrap.  Stage zero is the universal full-`L¹`
 top kernel; every successor is the exact finite-response bootstrap map. -/
 noncomputable def finiteEvenFourTorusZ2PerronPosteriorCanonicalKernelBootstrap
@@ -117,8 +121,9 @@ theorem finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnCoefficient_nonneg
     (responseIterations stage : ℕ) :
     0 ≤ finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnCoefficient
       H β energyIdentity energyNontrivial hβ hEnergy
-      responseIterations stage :=
-  finiteInfluenceKernelMaximumColumnSum_nonneg _
+      responseIterations stage := by
+  unfold finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnCoefficient
+  exact finiteInfluenceKernelMaximumColumnSum_nonneg _
 
 /-- Every column at a canonical stage is bounded by its exact maximum. -/
 theorem finiteEvenFourTorusZ2PerronPosteriorBootstrapColumnSum_le
