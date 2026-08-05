@@ -59,8 +59,12 @@ def maximumCoefficient
 theorem maximumCoefficient_continuousOn
     (C : FiniteContinuousBidirectionalSelfBootstrapBarrierData) :
     ContinuousOn C.maximumCoefficient
-      (Set.Icc 0 C.upperParameter) :=
-  C.rowCoefficient_continuousOn.max C.columnCoefficient_continuousOn
+      (Set.Icc 0 C.upperParameter) := by
+  intro parameter hParameter
+  unfold maximumCoefficient
+  exact
+    (C.rowCoefficient_continuousOn parameter hParameter).max
+      (C.columnCoefficient_continuousOn parameter hParameter)
 
 /-- The maximum coefficient starts strictly inside the barrier. -/
 theorem maximumCoefficient_zero_lt
@@ -108,8 +112,6 @@ theorem coefficients_lt_barrier
     (hParameter : parameter ∈ Set.Icc 0 C.upperParameter) :
     C.rowCoefficient parameter < C.barrier ∧
       C.columnCoefficient parameter < C.barrier := by
-  have hUpperNonneg : 0 ≤ C.upperParameter :=
-    le_of_lt C.upperParameter_pos
   have hMaxParameter :
       C.maximumCoefficient parameter < C.barrier := by
     by_contra hNot
