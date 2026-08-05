@@ -139,7 +139,8 @@ theorem probability_eq_of_residualMass_eq_zero
     P.probability g = Q.probability g := by
   have hLeft := P.leftResidual_eq_zero_of_residualMass_eq_zero Q hMass g
   have hRight := P.rightResidual_eq_zero_of_residualMass_eq_zero Q hMass g
-  unfold leftResidual rightResidual at hLeft hRight
+  change P.probability g - P.overlap Q g = 0 at hLeft
+  change Q.probability g - P.overlap Q g = 0 at hRight
   linarith
 
 /-- Diagonal common-mass contribution to the overlap coupling. -/
@@ -154,7 +155,7 @@ If the residual mass vanishes, the common law is coupled diagonally. -/
 def overlapCoupling
     (P Q : FiniteRealProbabilityData G)
     (g h : G) : ℝ :=
-  if hMass : P.residualMass Q = 0 then
+  if _hMass : P.residualMass Q = 0 then
     if g = h then P.probability g else 0
   else
     P.overlapDiagonal Q g h +
@@ -168,7 +169,7 @@ theorem overlapDiagonal_nonneg
     0 ≤ P.overlapDiagonal Q g h := by
   unfold overlapDiagonal overlap
   split_ifs
-  · exact min_nonneg (P.probability_nonneg g) (Q.probability_nonneg g)
+  · exact le_min (P.probability_nonneg g) (Q.probability_nonneg g)
   · exact le_rfl
 
 /-- The overlap coupling is nonnegative. -/
