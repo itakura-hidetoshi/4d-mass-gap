@@ -16,58 +16,6 @@ def finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient
     (coefficient envelopeMagnitude sourceMagnitude : ℝ) : ℝ :=
   envelopeMagnitude * sourceMagnitude * (1 - coefficient)⁻¹
 
-/-- The reciprocal random-scan rate lies strictly below one whenever the
-underlying row or column coefficient does. -/
-theorem finiteInfluenceKernelReciprocalRandomScanRate_lt_one
-    {ι : Type}
-    [Fintype ι]
-    (hCard : 0 < Fintype.card ι)
-    {coefficient : ℝ}
-    (hCoefficient : coefficient < 1) :
-    finiteInfluenceKernelReciprocalRandomScanRate ι coefficient < 1 := by
-  have hCardReal : 0 < (Fintype.card ι : ℝ) := by
-    exact_mod_cast hCard
-  unfold finiteInfluenceKernelReciprocalRandomScanRate
-  calc
-    ((Fintype.card ι : ℝ) - 1 + coefficient) *
-        (Fintype.card ι : ℝ)⁻¹ <
-      (Fintype.card ι : ℝ) * (Fintype.card ι : ℝ)⁻¹ := by
-        apply mul_lt_mul_of_pos_right
-        · linarith
-        · exact inv_pos.mpr hCardReal
-    _ = 1 := by
-      exact mul_inv_cancel₀ (ne_of_gt hCardReal)
-
-/-- Exact complement of the reciprocal random-scan rate. -/
-theorem one_sub_finiteInfluenceKernelReciprocalRandomScanRate
-    {ι : Type}
-    [Fintype ι]
-    (coefficient : ℝ) :
-    1 - finiteInfluenceKernelReciprocalRandomScanRate ι coefficient =
-      (1 - coefficient) * (Fintype.card ι : ℝ)⁻¹ := by
-  unfold finiteInfluenceKernelReciprocalRandomScanRate
-  ring
-
-/-- Finite geometric-series identity in the convention used by the response
-kernel. -/
-theorem one_sub_mul_finiteRealGeometricSeries
-    (rate : ℝ)
-    (iterations : ℕ) :
-    (1 - rate) * finiteRealGeometricSeries rate iterations =
-      1 - rate ^ iterations := by
-  induction iterations with
-  | zero => simp [finiteRealGeometricSeries]
-  | succ iterations ih =>
-      rw [finiteRealGeometricSeries_succ, pow_succ]
-      calc
-        (1 - rate) *
-            (finiteRealGeometricSeries rate iterations + rate ^ iterations) =
-          (1 - rate) * finiteRealGeometricSeries rate iterations +
-            (1 - rate) * rate ^ iterations := by ring
-        _ = (1 - rate ^ iterations) +
-            (1 - rate) * rate ^ iterations := by rw [ih]
-        _ = 1 - rate ^ iterations * rate := by ring
-
 /-- After the averaging factor `|ι|⁻¹`, every finite geometric prefix is
 bounded by the exact infinite response denominator `(1-a)⁻¹`. -/
 theorem inv_card_mul_finiteRealGeometricSeries_le_one_sub_inv
@@ -85,16 +33,10 @@ theorem inv_card_mul_finiteRealGeometricSeries_le_one_sub_inv
       (1 - coefficient)⁻¹ := by
   let rate :=
     finiteInfluenceKernelReciprocalRandomScanRate ι coefficient
-  have hCardReal : 0 < (Fintype.card ι : ℝ) := by
-    exact_mod_cast hCard
   have hRateNonneg : 0 ≤ rate :=
     finiteInfluenceKernelReciprocalRandomScanRate_nonneg
       hCard coefficient hCoefficientNonneg
   have hOneSubCoefficient : 0 < 1 - coefficient := by linarith
-  have hSeriesNonneg :
-      0 ≤ finiteRealGeometricSeries rate iterations := by
-    unfold finiteRealGeometricSeries
-    exact Finset.sum_nonneg fun k _hk => pow_nonneg hRateNonneg k
   have hIdentity :=
     one_sub_mul_finiteRealGeometricSeries rate iterations
   have hRatePowNonneg : 0 ≤ rate ^ iterations :=
@@ -114,7 +56,8 @@ theorem inv_card_mul_finiteRealGeometricSeries_le_one_sub_inv
           finiteRealGeometricSeries rate iterations) *
         (1 - coefficient) =
       (1 - rate) * finiteRealGeometricSeries rate iterations := by
-        rw [one_sub_finiteInfluenceKernelReciprocalRandomScanRate]
+        rw [one_sub_finiteInfluenceKernelReciprocalRandomScanRate
+          hCard coefficient]
         ring
     _ ≤ 1 := hProductLeOne
 
@@ -220,7 +163,7 @@ theorem exists_finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_lt
       hCard coefficient hCoefficientNonneg
   have hRateLtOne : rate < 1 :=
     finiteInfluenceKernelReciprocalRandomScanRate_lt_one
-      hCard hCoefficientLtOne
+      hCard coefficient hCoefficientLtOne
   have hAmplitude : 0 ≤ amplitude :=
     mul_nonneg
       (mul_nonneg (by norm_num) (Nat.cast_nonneg _))
