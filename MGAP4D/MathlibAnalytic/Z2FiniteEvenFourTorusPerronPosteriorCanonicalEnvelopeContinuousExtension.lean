@@ -172,27 +172,27 @@ theorem finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence_eq_exist
           H energyIdentity energyNontrivial hEnergy.le ⟨β, hβ.le⟩
           (Function.update parameter.1.1 parameter.1.2 parameter.2)
           target source
-  have hOldSup :
-      finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence
-          H β energyIdentity energyNontrivial hβ hEnergy target source =
-        Finset.univ.sup' Finset.univ_nonempty
-          (fun parameter :
-              FiniteEvenFourTorusZ2PerronPosteriorEnvelopeParameter H =>
-            finitePositiveWeightCanonicalNonstrictInfluence
-              (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le
-                (Function.update parameter.1.1 parameter.1.2 parameter.2))
-              target source) := by
-    rw [finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence,
+    have hOldSup :
+        finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence
+            H β energyIdentity energyNontrivial hβ hEnergy target source =
+          Finset.univ.sup' Finset.univ_nonempty
+            (fun parameter :
+                FiniteEvenFourTorusZ2PerronPosteriorEnvelopeParameter H =>
+              finitePositiveWeightCanonicalNonstrictInfluence
+                (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
+                  H β energyIdentity energyNontrivial hβ.le hEnergy.le
+                  (Function.update parameter.1.1 parameter.1.2 parameter.2))
+                target source) := by
+      rw [finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence,
+        if_neg hEq]
+      unfold finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeValues
+      rw [Finset.max'_eq_sup', Finset.sup'_image]
+    rw [finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence,
       if_neg hEq]
-    unfold finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeValues
-    rw [Finset.max'_eq_sup', Finset.sup'_image]
-  rw [finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeInfluence,
-    if_neg hEq]
-  rw [hSupEq, ← hOldSup]
-  exact max_eq_right
-    (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence_nonneg
-      H β energyIdentity energyNontrivial hβ hEnergy target source)
+    rw [hSupEq, ← hOldSup]
+    exact max_eq_right
+      (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeInfluence_nonneg
+        H β energyIdentity energyNontrivial hβ hEnergy target source)
 
 /-- Closed-half-line exact environment-uniform influence kernel. -/
 noncomputable def finiteEvenFourTorusZ2PerronPosteriorContinuousEnvelopeKernel
