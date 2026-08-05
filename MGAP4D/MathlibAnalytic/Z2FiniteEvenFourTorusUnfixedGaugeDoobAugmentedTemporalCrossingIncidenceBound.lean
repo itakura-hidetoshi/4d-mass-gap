@@ -46,11 +46,16 @@ theorem finiteEvenFourTorusZ2TemporalTargetCrossingLinkOccurrenceCode_injective
         (H := H) (target := target)) := by
   rintro ⟨e, he⟩ ⟨f, hf⟩ hCode
   apply Subtype.ext
-  have hDirection : e.2 = f.2 := congrArg Prod.snd hCode
+  have hDirection : e.2 = f.2 :=
+    congrArg
+      (fun p : Bool × FiniteEvenFourTorusSpatialDirection => p.2)
+      hCode
   have hSide :
       (if e.1 = target then false else true) =
         (if f.1 = target then false else true) :=
-    congrArg Prod.fst hCode
+    congrArg
+      (fun p : Bool × FiniteEvenFourTorusSpatialDirection => p.1)
+      hCode
   by_cases heTail : e.1 = target
   · by_cases hfTail : f.1 = target
     · exact Prod.ext (heTail.trans hfTail.symm) hDirection
@@ -100,7 +105,7 @@ theorem finiteEvenFourTorusZ2TemporalTargetCrossingLinks_card_le_six
         (finiteEvenFourTorusZ2TemporalTargetCrossingLinkOccurrenceCode_injective
           H target)
     _ = 6 := by
-      simp [finiteEvenFourTorusSpatialDirection_card]
+      simp
 
 end
 
