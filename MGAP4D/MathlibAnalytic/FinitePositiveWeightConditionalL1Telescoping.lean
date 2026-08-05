@@ -80,7 +80,7 @@ theorem finitePositiveWeightSingleSiteConditionalL1_triangle
               finitePositiveWeightSingleSiteProbability weight C target g) := by
         ring
       rw [hDecompose]
-      exact abs_add _ _
+      exact abs_add_le _ _
     _ =
         (∑ g : G,
           |finitePositiveWeightSingleSiteProbability weight A target g -
@@ -203,7 +203,7 @@ theorem FinitePositiveWeightBidirectionalDobrushinL1MatrixData.halfCoefficient_n
     {weight : (ι → G) → ℝ}
     (B : FinitePositiveWeightBidirectionalDobrushinL1MatrixData weight) :
     0 ≤ (2 : ℝ)⁻¹ * B.coefficient := by
-  positivity
+  exact mul_nonneg (inv_nonneg.mpr (by norm_num)) B.coefficient_nonneg
 
 /-- The half-scaled bidirectional coefficient is strictly below one. -/
 theorem FinitePositiveWeightBidirectionalDobrushinL1MatrixData.halfCoefficient_lt_one
