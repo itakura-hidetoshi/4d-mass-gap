@@ -44,9 +44,9 @@ theorem finitePairHammingCost_eq_finiteProductHammingDistanceReal
   calc
     ((Finset.univ.filter fun i : ι =>
         (output i).1 ≠ (output i).2).card : ℝ) =
-      ∑ i in Finset.univ.filter (fun i : ι =>
+      ∑ i ∈ Finset.univ.filter (fun i : ι =>
         (output i).1 ≠ (output i).2), (1 : ℝ) := by simp
-    _ = ∑ i in (Finset.univ : Finset ι),
+    _ = ∑ i ∈ (Finset.univ : Finset ι),
         if (output i).1 ≠ (output i).2 then (1 : ℝ) else 0 := by
       rw [Finset.sum_filter]
     _ = ∑ i : ι,
@@ -136,13 +136,24 @@ theorem finiteRealCouplingProductJoint_sum_eq_one
       Fintype.piFinset
         (fun _ : ι => (Finset.univ : Finset (G × G))) by
     exact Fintype.piFinset_univ.symm]
-  rw [Finset.sum_prod_piFinset]
-  have hLocal (target : ι) :
-      ∑ z : G × G, (C target).joint z.1 z.2 = 1 := by
-    rw [Fintype.sum_prod_type]
-    exact (C target).totalMass_eq_one
-  simp_rw [hLocal]
-  exact Finset.prod_const_one
+  calc
+    (∑ output ∈ Fintype.piFinset
+        (fun _ : ι => (Finset.univ : Finset (G × G))),
+      ∏ target : ι,
+        (C target).joint (output target).1 (output target).2) =
+        ∏ target : ι, ∑ z : G × G,
+          (C target).joint z.1 z.2 := by
+      simpa using
+        (Finset.sum_prod_piFinset
+          (s := (Finset.univ : Finset (G × G)))
+          (g := fun target z => (C target).joint z.1 z.2))
+    _ = 1 := by
+      have hLocal (target : ι) :
+          ∑ z : G × G, (C target).joint z.1 z.2 = 1 := by
+        rw [Fintype.sum_prod_type]
+        exact (C target).totalMass_eq_one
+      simp_rw [hLocal]
+      exact Finset.prod_const_one
 
 /-- At one target coordinate, expectation under the product joint law reduces
 to expectation under that target's coupling. -/
@@ -191,7 +202,10 @@ theorem finiteRealCouplingProduct_coordinateDisagreementExpectation
     rw [← hIndicatorProd output, ← Finset.prod_mul_distrib]
     apply Finset.prod_congr rfl
     intro i _hi
-    by_cases hit : i = target <;> simp [modified, hit]
+    by_cases hit : i = target
+    · subst i
+      simp [modified]
+    · simp [modified, hit]
   calc
     (∑ output : ι → G × G,
       finiteRealCouplingProductJoint C output *
@@ -209,7 +223,10 @@ theorem finiteRealCouplingProduct_coordinateDisagreementExpectation
           Fintype.piFinset
             (fun _ : ι => (Finset.univ : Finset (G × G))) by
         exact Fintype.piFinset_univ.symm]
-      rw [Finset.sum_prod_piFinset]
+      simpa using
+        (Finset.sum_prod_piFinset
+          (s := (Finset.univ : Finset (G × G)))
+          (g := fun i z => modified i z))
     _ = ∏ i : ι,
         if i = target then (C i).disagreementMass else 1 := by
       apply Finset.prod_congr rfl

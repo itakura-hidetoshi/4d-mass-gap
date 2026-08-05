@@ -17,9 +17,10 @@ def finiteEvenFourTorusZ2UnfixedGaugeGroundPosteriorWeight
     (hβ : 0 ≤ β)
     (hEnergy : energyIdentity ≤ energyNontrivial)
     (environment hidden : FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ :=
-  (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-    H β energyIdentity energyNontrivial hβ hEnergy).
-      groundPosteriorWeight environment hidden
+  FiniteKernelGroundStateDoobData.groundPosteriorWeight
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+      H β energyIdentity energyNontrivial hβ hEnergy)
+    environment hidden
 
 /-- Pointwise expansion of the actual ground posterior. -/
 @[simp] theorem finiteEvenFourTorusZ2UnfixedGaugeGroundPosteriorWeight_eq
@@ -32,8 +33,8 @@ def finiteEvenFourTorusZ2UnfixedGaugeGroundPosteriorWeight
         H β energyIdentity energyNontrivial hβ hEnergy environment hidden =
       finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
           H β energyIdentity energyNontrivial hβ hEnergy hidden environment *
-        finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
-          H β energyIdentity energyNontrivial hβ hEnergy hidden := by
+        (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
+          H β energyIdentity energyNontrivial hβ hEnergy).ofLp hidden := by
   rfl
 
 /-- The normalized actual ground posterior probability law. -/
@@ -45,9 +46,10 @@ noncomputable def finiteEvenFourTorusZ2UnfixedGaugeGroundPosteriorProbabilityDat
     (environment : FiniteEvenFourTorusZ2SliceConfiguration H) :
     FiniteRealProbabilityData
       (FiniteEvenFourTorusZ2SliceConfiguration H) :=
-  (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-    H β energyIdentity energyNontrivial hβ hEnergy).
-      groundPosteriorProbabilityData environment
+  FiniteKernelGroundStateDoobData.groundPosteriorProbabilityData
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+      H β energyIdentity energyNontrivial hβ hEnergy)
+    environment
 
 /-- Normalizing the actual unfixed-gauge ground posterior gives exactly the
 geometric one-slab Perron Doob row. -/
@@ -58,15 +60,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundPosteriorProbability_eq_doobKerne
     (hEnergy : energyIdentity ≤ energyNontrivial)
     (environment hidden : FiniteEvenFourTorusZ2SliceConfiguration H) :
     (finiteEvenFourTorusZ2UnfixedGaugeGroundPosteriorProbabilityData
-      H β energyIdentity energyNontrivial hβ hEnergy environment).
-        probability hidden =
+      H β energyIdentity energyNontrivial hβ hEnergy environment).probability hidden =
       finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel
         H β energyIdentity energyNontrivial hβ hEnergy hidden environment := by
   exact
-    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-      H β energyIdentity energyNontrivial hβ hEnergy).
-        groundPosteriorProbabilityData_probability_eq_doobKernel
-          environment hidden
+    FiniteKernelGroundStateDoobData.groundPosteriorProbabilityData_probability_eq_doobKernel
+      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ hEnergy)
+      environment hidden
 
 /-- Temporal-gauge raw ground posterior before residual-gauge averaging. -/
 def finiteEvenFourTorusZ2TemporalGaugeGroundPosteriorWeight
@@ -78,8 +79,8 @@ def finiteEvenFourTorusZ2TemporalGaugeGroundPosteriorWeight
   (finiteEvenFourTorusZ2TemporalGaugeOneSlabGramKernel
       H β energyIdentity energyNontrivial hβ hEnergy).kernel
       hidden environment *
-    finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
-      H β energyIdentity energyNontrivial hβ hEnergy hidden
+    (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
+      H β energyIdentity energyNontrivial hβ hEnergy).ofLp hidden
 
 /-- The actual unfixed-gauge ground posterior is exactly the normalized
 residual-gauge average of temporal-gauge raw ground posteriors. -/
@@ -113,15 +114,18 @@ noncomputable def finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCouplingDat
     (hEnergy : energyIdentity ≤ energyNontrivial)
     (left right : FiniteEvenFourTorusZ2SliceConfiguration H) :
     FiniteRealCouplingData
-      ((finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ hEnergy).
-          doobRowProbabilityData left)
-      ((finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ hEnergy).
-          doobRowProbabilityData right) :=
-  (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-    H β energyIdentity energyNontrivial hβ hEnergy).
-      doobRowOverlapCouplingData left right
+      (FiniteKernelGroundStateDoobData.doobRowProbabilityData
+        (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+          H β energyIdentity energyNontrivial hβ hEnergy)
+        left)
+      (FiniteKernelGroundStateDoobData.doobRowProbabilityData
+        (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+          H β energyIdentity energyNontrivial hβ hEnergy)
+        right) :=
+  FiniteKernelGroundStateDoobData.doobRowOverlapCouplingData
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+      H β energyIdentity energyNontrivial hβ hEnergy)
+    left right
 
 /-- The left marginal of the actual geometric Doob-row coupling is exact. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCoupling_leftMarginal
@@ -132,14 +136,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCoupling_leftMarginal
     (left right hidden : FiniteEvenFourTorusZ2SliceConfiguration H) :
     ∑ output : FiniteEvenFourTorusZ2SliceConfiguration H,
       (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCouplingData
-        H β energyIdentity energyNontrivial hβ hEnergy left right).
-          joint hidden output =
+        H β energyIdentity energyNontrivial hβ hEnergy left right).joint hidden output =
       finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel
         H β energyIdentity energyNontrivial hβ hEnergy hidden left := by
   exact
-    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-      H β energyIdentity energyNontrivial hβ hEnergy).
-        doobRowOverlapCouplingData_leftMarginal left right hidden
+    FiniteKernelGroundStateDoobData.doobRowOverlapCouplingData_leftMarginal
+      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ hEnergy)
+      left right hidden
 
 /-- The right marginal of the actual geometric Doob-row coupling is exact. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCoupling_rightMarginal
@@ -150,14 +154,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCoupling_rightMargina
     (left right hidden : FiniteEvenFourTorusZ2SliceConfiguration H) :
     ∑ output : FiniteEvenFourTorusZ2SliceConfiguration H,
       (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobRowCouplingData
-        H β energyIdentity energyNontrivial hβ hEnergy left right).
-          joint output hidden =
+        H β energyIdentity energyNontrivial hβ hEnergy left right).joint output hidden =
       finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobKernel
         H β energyIdentity energyNontrivial hβ hEnergy hidden right := by
   exact
-    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-      H β energyIdentity energyNontrivial hβ hEnergy).
-        doobRowOverlapCouplingData_rightMarginal left right hidden
+    FiniteKernelGroundStateDoobData.doobRowOverlapCouplingData_rightMarginal
+      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ hEnergy)
+      left right hidden
 
 end
 
