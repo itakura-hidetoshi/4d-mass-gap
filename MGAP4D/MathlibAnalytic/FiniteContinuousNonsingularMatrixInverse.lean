@@ -27,7 +27,7 @@ theorem finiteRealNonsingularMatrixInverse_mul
     (hdet : A.det ≠ 0) :
     finiteRealNonsingularMatrixInverse A * A = 1 := by
   unfold finiteRealNonsingularMatrixInverse
-  rw [Matrix.smul_mul_assoc, Matrix.adjugate_mul,
+  rw [Matrix.smul_mul, Matrix.adjugate_mul,
     smul_smul, inv_mul_cancel₀ hdet, one_smul]
 
 /-- The explicit inverse is a right inverse whenever the determinant is
@@ -40,7 +40,7 @@ theorem mul_finiteRealNonsingularMatrixInverse
     (hdet : A.det ≠ 0) :
     A * finiteRealNonsingularMatrixInverse A = 1 := by
   unfold finiteRealNonsingularMatrixInverse
-  rw [Matrix.mul_smul_comm, Matrix.mul_adjugate,
+  rw [Matrix.mul_smul, Matrix.mul_adjugate,
     smul_smul, inv_mul_cancel₀ hdet, one_smul]
 
 /-- A continuous finite real matrix family with everywhere nonzero determinant
