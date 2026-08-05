@@ -246,17 +246,11 @@ theorem continuousAt_finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap
         (targetFamily parameter * sourceFamily parameter *
           (1 - finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier)⁻¹)) 0 :=
     (continuousAt_const.mul hLocal).add (hRatio.mul hResponse)
-  simpa [finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap,
-    finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap,
-    finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient,
-    finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier,
-    finiteEvenFourTorusZ2PerronPosteriorCrossingRateFamily,
-    finiteEvenFourTorusZ2PerronPosteriorLikelihoodRatioFamily,
-    finiteEvenFourTorusZ2PerronPosteriorSourceMagnitudeFamily,
-    finiteEvenFourTorusZ2PerronPosteriorTargetMagnitudeFamily,
-    finiteEvenFourTorusZ2PerronPosteriorLocalCoefficientFamily,
-    ratioFamily, sourceFamily, targetFamily, localFamily]
-    using hMap
+  change ContinuousAt (fun parameter =>
+    2 * localFamily parameter + ratioFamily parameter *
+      (targetFamily parameter * sourceFamily parameter *
+        (1 - finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier)⁻¹)) 0
+  exact hMap
 
 /-- The half-barrier asymptotic map starts exactly at zero. -/
 @[simp] theorem finiteEvenFourTorusZ2PerronPosteriorHalfBarrierMap_zero
