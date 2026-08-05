@@ -107,10 +107,11 @@ theorem finiteEvenFourTorusZ2PerronPosteriorLocalSourceCode_injective
       ↥(finiteEvenFourTorusSpatialPlaquettesTouchingLink H target) × Fin 4 =>
       finiteEvenFourTorusSpatialPlaquetteBoundary H code.1.1 code.2)
     hCode
-  rw [
-    finiteEvenFourTorusZ2PerronPosteriorLocalSourceCode_boundary,
-    finiteEvenFourTorusZ2PerronPosteriorLocalSourceCode_boundary] at hBoundary
-  exact hBoundary
+  have hBoundary' : source.1 = other.1 := by
+    simpa only [
+      finiteEvenFourTorusZ2PerronPosteriorLocalSourceCode_boundary]
+      using hBoundary
+  exact hBoundary'
 
 /-- Every local source neighborhood contains at most forty-eight links,
 uniformly in the finite side parameter. -/
@@ -180,11 +181,18 @@ theorem finiteEvenFourTorusZ2PerronPosteriorLocalInfluence_le_majorant
       else 0 := by
   by_cases hEq : target = source
   · subst source
-    simp [
+    simp only [
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence,
-      finiteEvenFourTorusZ2PerronPosteriorLocalInfluenceMajorant,
-      finitePositiveWeightCrossRatioInfluenceTransform_nonneg,
-      mul_nonneg, hβ, sub_nonneg.mpr hEnergy]
+      if_pos rfl]
+    by_cases hMem :
+        target ∈
+          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalSourceNeighborhood
+            H target
+    · rw [if_pos hMem]
+      exact
+        finiteEvenFourTorusZ2PerronPosteriorLocalInfluenceMajorant_nonneg
+          β energyIdentity energyNontrivial hβ hEnergy
+    · rw [if_neg hMem]
   · by_cases hMem :
       source ∈
         finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalSourceNeighborhood
@@ -201,8 +209,7 @@ theorem finiteEvenFourTorusZ2PerronPosteriorLocalInfluence_le_majorant
             finiteEvenFourTorusZ2LowerSpatialInteractionNeighborhood H target := by
         simpa using hMem
       rw [if_neg hEq, if_pos hAugmented]
-      congr 1
-      ring
+      exact le_rfl
     · rw [if_neg hMem]
       exact le_of_eq
         (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence_eq_zero_of_not_mem
@@ -241,7 +248,11 @@ theorem finiteEvenFourTorusZ2PerronPosteriorLocalInfluence_symmetric
         Sum.inr source ∈
           finiteEvenFourTorusZ2LowerSpatialInteractionNeighborhood H target
     · rw [if_pos hMem, if_pos (hNeighborhood.mp hMem)]
-    · rw [if_neg hMem, if_neg (not_congr hNeighborhood).mp hMem]
+    · have hMem' :
+          Sum.inr target ∉
+            finiteEvenFourTorusZ2LowerSpatialInteractionNeighborhood H source :=
+        (not_congr hNeighborhood).mp hMem
+      rw [if_neg hMem, if_neg hMem']
 
 /-- One local half-action row has a volume-independent coefficient
 `48 * majorant`. -/
