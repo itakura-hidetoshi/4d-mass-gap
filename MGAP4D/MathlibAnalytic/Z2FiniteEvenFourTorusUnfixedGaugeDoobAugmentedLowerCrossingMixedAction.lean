@@ -58,7 +58,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction_lower_mixedDi
     intro hMem
     exact hNe
       ((finiteEvenFourTorusZ2_lower_mem_augmentedCrossingLinkSupport_iff
-        H target e).1 hMem)
+        H target e).1 hMem).symm
   · simp
 
 /-- If the changed source is outside the target crossing-link support, the
