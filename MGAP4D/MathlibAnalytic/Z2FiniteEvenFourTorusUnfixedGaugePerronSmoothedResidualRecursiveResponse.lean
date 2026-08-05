@@ -262,7 +262,7 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation
           β energyIdentity energyNontrivial))⁻¹
   else 0
 
-/-- The singleton source-tilt variation profile is nonnegative. -/
+/-- The singleton variation profile is nonnegative. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_nonneg
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
@@ -327,8 +327,9 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
             H β energyIdentity energyNontrivial hβ hEnergy
             base source replacement B
         unfold
-          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt
-          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt at hLowerA hUpperA hLowerB hUpperB ⊢
+          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt at ⊢
+        unfold finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt at
+          hLowerA hUpperA hLowerB hUpperB
         rw [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation]
         simp only [if_pos rfl]
         rw [abs_le]
@@ -346,9 +347,8 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
           subst link
           exact hAgree source (Ne.symm hCoordinate)
         rw [hEq, sub_self, abs_zero]
-        exact
-          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_nonneg
-            H β energyIdentity energyNontrivial hβ hEnergy source source
+        unfold finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation
+        simp [hCoordinate]
   }
 
 /-- Total mass of the singleton source-tilt variation profile. -/
