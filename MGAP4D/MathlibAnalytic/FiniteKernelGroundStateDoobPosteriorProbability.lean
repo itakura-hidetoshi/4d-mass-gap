@@ -92,9 +92,15 @@ theorem groundPosteriorProbabilityData_probability_eq_doobKernel
     (y x : α) :
     (D.groundPosteriorProbabilityData y).probability x =
       D.doobKernel x y := by
-  unfold groundPosteriorProbabilityData finiteRealWeightProbabilityData
-    finiteRealWeightProbability groundPosteriorWeight
-  rw [D.groundPosteriorWeight_partition]
+  change
+    D.kernel x y * D.ground x /
+        finiteRealWeightPartition
+          (fun z : α => D.kernel z y * D.ground z) =
+      D.doobKernel x y
+  rw [show
+    finiteRealWeightPartition
+        (fun z : α => D.kernel z y * D.ground z) =
+      D.groundWeightedColumnMass y by rfl]
   exact (D.doobKernel_eq_groundPosterior x y).symm
 
 /-- The Doob row itself, packaged directly as a finite probability law. -/
@@ -106,20 +112,14 @@ noncomputable def doobRowProbabilityData
     probability_nonneg := fun x => D.doobKernel_nonneg x y
     probability_sum_eq_one := D.doobKernel_sum_eq_one y }
 
-/-- The direct Doob-row package and the normalized-posterior package coincide. -/
-theorem doobRowProbabilityData_eq_groundPosteriorProbabilityData
+/-- The normalized posterior package has the same probability function as the
+direct Doob-row package. -/
+theorem groundPosteriorProbabilityData_probability_eq_doobRowProbabilityData
     (D : FiniteKernelGroundStateDoobData α)
-    (y : α) :
-    D.doobRowProbabilityData y = D.groundPosteriorProbabilityData y := by
-  cases D.doobRowProbabilityData y with
-  | mk p hp hsum =>
-      cases D.groundPosteriorProbabilityData y with
-      | mk q hq qsum =>
-          simp only [doobRowProbabilityData, groundPosteriorProbabilityData]
-          congr 1
-          funext x
-          exact
-            (D.groundPosteriorProbabilityData_probability_eq_doobKernel y x).symm
+    (y x : α) :
+    (D.groundPosteriorProbabilityData y).probability x =
+      (D.doobRowProbabilityData y).probability x := by
+  exact D.groundPosteriorProbabilityData_probability_eq_doobKernel y x
 
 /-- Canonical full-state overlap coupling between two geometric Doob rows. -/
 noncomputable def doobRowOverlapCouplingData
