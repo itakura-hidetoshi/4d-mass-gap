@@ -45,6 +45,7 @@ theorem finiteInfluenceKernelUpdatedVariation_sum_source_eq
       rw [Finset.sum_sub_distrib, Finset.sum_add_distrib]
       simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
       rw [← Finset.sum_mul]
+      ring
 
 /-- A uniform row bound contracts total variation under one random-scan
 kernel update. -/
@@ -105,7 +106,7 @@ theorem finiteInfluenceKernelRandomScanUpdatedVariation_total_le_rate_mul
       congr 1
       unfold finiteProductVariationTotal
       rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
-      simp only [Finset.sum_const, nsmul_eq_mul]
+      simp only [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
       ring
     _ ≤ (Fintype.card ι : ℝ)⁻¹ *
         (((Fintype.card ι : ℝ) - 1) *
@@ -292,6 +293,9 @@ theorem finiteInfluenceKernelSourceError_singletonEnvelope_sum_target
         finiteProductVariationTotal variation := by
       unfold finiteProductVariationTotal
       rw [Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro coordinate _
+      ring
 
 /-- Target-summed finite accumulated response controlled by a row coefficient.
 No strict contraction is assumed. -/
