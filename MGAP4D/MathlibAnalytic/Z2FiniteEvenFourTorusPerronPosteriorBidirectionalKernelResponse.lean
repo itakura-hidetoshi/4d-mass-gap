@@ -264,7 +264,10 @@ theorem finiteEvenFourTorusZ2PerronPosteriorKernelResponseErrorColumnSum_le
       ∀ e : FiniteEvenFourTorusSpatialLink H,
         0 ≤ finiteInfluenceKernelSingletonVariation sourceMagnitude source e := by
     intro e
-    simp [finiteInfluenceKernelSingletonVariation, hMagnitude]
+    unfold finiteInfluenceKernelSingletonVariation
+    split
+    · exact hMagnitude
+    · exact le_rfl
   have hPartial :=
     finiteInfluenceKernelPartialSource_singletonEnvelope_sum_target_le
       kernel hCard rowCoefficient hRowNonneg hRowSum
