@@ -181,7 +181,7 @@ theorem finiteEvenFourTorusZ2PerronPosteriorLocalInfluence_le_majorant
       else 0 := by
   by_cases hEq : target = source
   · subst source
-    simp only [
+    rw [
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence,
       if_pos rfl]
     by_cases hMem :
@@ -209,7 +209,11 @@ theorem finiteEvenFourTorusZ2PerronPosteriorLocalInfluence_le_majorant
             finiteEvenFourTorusZ2LowerSpatialInteractionNeighborhood H target := by
         simpa using hMem
       rw [if_neg hEq, if_pos hAugmented]
-      exact le_rfl
+      have hRadius :
+          β * (12 * (energyNontrivial - energyIdentity)) =
+            12 * β * (energyNontrivial - energyIdentity) := by
+        ring
+      rw [hRadius]
     · rw [if_neg hMem]
       exact le_of_eq
         (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence_eq_zero_of_not_mem
