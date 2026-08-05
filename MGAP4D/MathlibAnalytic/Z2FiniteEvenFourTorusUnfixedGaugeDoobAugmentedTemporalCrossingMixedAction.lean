@@ -393,7 +393,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingAction_temporal_mixe
           (finiteEvenFourTorusZ2UnfixedGaugeDoobEncodedCrossingLinkEnergy
             H energyIdentity energyNontrivial B e)
           X Y (Sum.inl target) g h := by
-      simp [finiteEvenFourTorusZ2TemporalTargetCrossingLinks]
+      rw [finiteEvenFourTorusZ2TemporalTargetCrossingLinks, Finset.sum_filter]
 
 /-- Outside the exact crossing interaction neighborhood, the temporal-target
 mixed crossing-action difference vanishes. -/
