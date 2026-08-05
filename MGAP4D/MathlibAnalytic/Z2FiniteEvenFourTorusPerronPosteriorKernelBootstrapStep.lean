@@ -413,6 +413,7 @@ theorem finiteEvenFourTorusZ2PerronPosteriorBootstrapInfluence_le_next
       finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapEntryData,
       finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapRadius,
       finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapNext,
+      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence,
       hEq, if_false]
     unfold
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveCrossRatioRadius
@@ -489,8 +490,11 @@ theorem finiteEvenFourTorusZ2PerronPosteriorCanonicalDominatedBy_next
             H β energyIdentity energyNontrivial hβ hEnergy
             (Function.update environment boundaryTarget g)
             kernel iterations hDomination target source)
-    · simp [hAgree,
-        finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapNext]
+    · simp only [hAgree, if_false]
+      exact
+        (finiteEvenFourTorusZ2PerronPosteriorKernelBootstrapNext
+          H β energyIdentity energyNontrivial hβ hEnergy
+          kernel iterations).influence_nonneg target source
 
 end
 
