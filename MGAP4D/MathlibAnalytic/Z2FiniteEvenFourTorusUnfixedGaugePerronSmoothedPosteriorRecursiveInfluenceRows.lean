@@ -254,10 +254,10 @@ theorem
             localRadius hLocal) _
       _ ≤
         2 * finitePositiveWeightCrossRatioInfluenceTransform localRadius +
-          ratio * error :=
-        add_le_add_left
+          ratio * error := by
+        exact add_le_add (le_refl _)
           (finitePositiveWeightCrossRatioInfluenceTransform_log_one_add_le
-            (ratio * error) hProduct) _
+            (ratio * error) hProduct)
 
 /-- The complete actual recursive influence row is bounded by twice the exact
 finite-incidence local row plus the crossing likelihood ratio times the
