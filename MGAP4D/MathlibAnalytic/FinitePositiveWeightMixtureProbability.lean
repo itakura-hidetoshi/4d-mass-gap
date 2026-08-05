@@ -257,7 +257,6 @@ theorem finitePositiveWeightMixtureProbability_eq_sum
       intro i _hi
       unfold finitePositiveWeightMixtureIndexWeight
       field_simp [hZi i, hS]
-      ring
 
 end
 
