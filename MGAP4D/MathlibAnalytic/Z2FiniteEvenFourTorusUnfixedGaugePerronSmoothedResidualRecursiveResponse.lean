@@ -230,6 +230,16 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight_update_ta
       (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
       (FiniteEvenFourTorusSpatialLink H)
       (Function.update environment target g) target h hidden
+  have hReplace :
+      finiteZ2GaugeReplaceCoordinate
+          (Function.update environment target g) target h =
+        Function.update environment target h := by
+    funext coordinate
+    by_cases hCoordinate : coordinate = target
+    · subst coordinate
+      simp [finiteZ2GaugeReplaceCoordinate]
+    · simp [finiteZ2GaugeReplaceCoordinate, Function.update, hCoordinate]
+  rw [hReplace] at hRelation
   unfold finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorWeight
     finitePositiveWeightMultiplicativeTilt
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
@@ -266,11 +276,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_nonne
   · have hR1 := one_le_finiteZ2CrossingLikelihoodRatio
       (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
       (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
+    have hRpos := finiteZ2CrossingLikelihoodRatio_pos
+      (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+      (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
     have hInv :
         (finiteZ2CrossingLikelihoodRatio
           (z2WilsonTemporalCrossingRate
             β energyIdentity energyNontrivial))⁻¹ ≤ 1 := by
-      exact (inv_le_one₀).2 hR1
+      exact (inv_le_one₀ hRpos).2 hR1
     linarith
   · exact le_rfl
 
@@ -313,17 +326,12 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
           finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt_le_ratio
             H β energyIdentity energyNontrivial hβ hEnergy
             base source replacement B
-        change
-          |finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
-              H β energyIdentity energyNontrivial base source replacement A -
-            finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
-              H β energyIdentity energyNontrivial base source replacement B| ≤
-            finiteZ2CrossingLikelihoodRatio
-                (z2WilsonTemporalCrossingRate
-                  β energyIdentity energyNontrivial) -
-              (finiteZ2CrossingLikelihoodRatio
-                (z2WilsonTemporalCrossingRate
-                  β energyIdentity energyNontrivial))⁻¹
+        unfold
+          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt
+          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt at
+          hLowerA hUpperA hLowerB hUpperB ⊢
+        rw [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation]
+        simp only [if_pos rfl]
         rw [abs_le]
         constructor <;> linarith
       · have hEq :
@@ -383,9 +391,6 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedRecursiveResponseError
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt
       H β energyIdentity energyNontrivial
       (Function.update environment target g) target h
-  let sourceObservable :=
-    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt
-      H β energyIdentity energyNontrivial environment source replacement
   let P :=
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
       H β energyIdentity energyNontrivial hβ hEnergy
@@ -393,6 +398,12 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedRecursiveResponseError
   let R := finiteZ2CrossingLikelihoodRatio
     (z2WilsonTemporalCrossingRate
       β energyIdentity energyNontrivial)
+  let hRpos : 0 < R := finiteZ2CrossingLikelihoodRatio_pos
+    (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
+  let hRone : 1 ≤ R := one_le_finiteZ2CrossingLikelihoodRatio
+    (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
   let C :=
     finitePositiveWeightLocalTiltStationaryComparisonData
       rightWeight targetTilt
@@ -407,20 +418,9 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedRecursiveResponseError
         H β energyIdentity energyNontrivial
         (Function.update environment target g) target h)
       R⁻¹ R
-      (inv_pos.mpr (finiteZ2CrossingLikelihoodRatio_pos
-        (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-        (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
-      (finiteZ2CrossingLikelihoodRatio_pos
-        (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-        (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy))
-      (le_trans
-        ((inv_le_one₀).2
-          (one_le_finiteZ2CrossingLikelihoodRatio
-            (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-            (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
-        (one_le_finiteZ2CrossingLikelihoodRatio
-          (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-          (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
+      (inv_pos.mpr hRpos)
+      hRpos
+      (le_trans ((inv_le_one₀ hRpos).2 hRone) hRone)
       (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt_ratio_inv_le
         H β energyIdentity energyNontrivial hβ hEnergy
         (Function.update environment target g) target h)
@@ -458,6 +458,14 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpecta
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedRecursiveResponseError
         H β energyIdentity energyNontrivial hβ hEnergy
         environment target source g h replacement D n := by
+  let R := finiteZ2CrossingLikelihoodRatio
+    (z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial)
+  have hRpos : 0 < R := finiteZ2CrossingLikelihoodRatio_pos
+    (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
+  have hRone : 1 ≤ R := one_le_finiteZ2CrossingLikelihoodRatio
+    (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
+    (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)
   rw [
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpectation_eq_globalExpectation,
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpectation_eq_globalExpectation,
@@ -481,26 +489,10 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTiltExpecta
       (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt_supportedOn_target
         H β energyIdentity energyNontrivial
         (Function.update environment target g) target h)
-      (finiteZ2CrossingLikelihoodRatio
-        (z2WilsonTemporalCrossingRate
-          β energyIdentity energyNontrivial))⁻¹
-      (finiteZ2CrossingLikelihoodRatio
-        (z2WilsonTemporalCrossingRate
-          β energyIdentity energyNontrivial))
-      (inv_pos.mpr (finiteZ2CrossingLikelihoodRatio_pos
-        (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-        (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
-      (finiteZ2CrossingLikelihoodRatio_pos
-        (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-        (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy))
-      (le_trans
-        ((inv_le_one₀).2
-          (one_le_finiteZ2CrossingLikelihoodRatio
-            (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-            (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
-        (one_le_finiteZ2CrossingLikelihoodRatio
-          (z2WilsonTemporalCrossingRate_pos hβ hEnergy).le
-          (z2WilsonTemporalCrossingRate_lt_one hβ hEnergy)))
+      R⁻¹ R
+      (inv_pos.mpr hRpos)
+      hRpos
+      (le_trans ((inv_le_one₀ hRpos).2 hRone) hRone)
       (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt_ratio_inv_le
         H β energyIdentity energyNontrivial hβ hEnergy
         (Function.update environment target g) target h)
