@@ -248,10 +248,11 @@ theorem
       _ ≤
         2 * finitePositiveWeightCrossRatioInfluenceTransform localRadius +
           finitePositiveWeightCrossRatioInfluenceTransform
-            (Real.log (1 + ratio * error)) :=
-        add_le_add_right
+            (Real.log (1 + ratio * error)) := by
+        exact add_le_add
           (finitePositiveWeightCrossRatioInfluenceTransform_two_mul_le
-            localRadius hLocal) _
+            localRadius hLocal)
+          (le_refl _)
       _ ≤
         2 * finitePositiveWeightCrossRatioInfluenceTransform localRadius +
           ratio * error := by
