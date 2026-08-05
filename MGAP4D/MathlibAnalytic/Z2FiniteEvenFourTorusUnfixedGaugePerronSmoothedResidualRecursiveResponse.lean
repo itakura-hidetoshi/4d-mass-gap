@@ -328,8 +328,7 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
             base source replacement B
         unfold
           finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedResidualSourceTilt at ⊢
-        unfold finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt at
-          hLowerA hUpperA hLowerB hUpperB
+        unfold finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTilt at hLowerA hUpperA hLowerB hUpperB
         rw [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation]
         simp only [if_pos rfl]
         rw [abs_le]
