@@ -121,17 +121,11 @@ theorem
   unfold
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluenceRowSum
   symm
-  rw [Finset.sum_filter]
-  apply Finset.sum_congr rfl
-  intro source _hSource
-  by_cases hMem :
-      source ∈
-        finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalSourceNeighborhood
-          H target
-  · simp [hMem]
-  · rw [if_neg hMem,
-      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence_eq_zero_of_not_mem
-        H β energyIdentity energyNontrivial target source hMem]
+  apply Finset.sum_subset (Finset.subset_univ _)
+  intro source _hSource hNotMem
+  exact
+    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence_eq_zero_of_not_mem
+      H β energyIdentity energyNontrivial target source hNotMem
 
 /-- Off-diagonal source-summed recursive response error. -/
 noncomputable def
@@ -219,14 +213,22 @@ theorem
     have hProduct : 0 ≤ ratio * error := mul_nonneg hRatio hError
     have hResidualRadius : 0 ≤ Real.log (1 + ratio * error) := by
       exact Real.log_nonneg (by nlinarith)
-    rw [
-      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluence,
-      finitePositiveWeightCrossRatioEntryInfluence_eq_transform,
-      if_neg hEq,
-      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence,
-      if_neg hEq,
-      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceRadius,
+    unfold
+      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluence
+    rw [finitePositiveWeightCrossRatioEntryInfluence_eq_transform,
       if_neg hEq]
+    change
+      finitePositiveWeightCrossRatioInfluenceTransform
+          (finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceRadius
+            H β energyIdentity energyNontrivial hβ hEnergy C target source) ≤
+        2 *
+            finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence
+              H β energyIdentity energyNontrivial target source +
+          ratio * error
+    simp only [
+      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveInfluenceRadius,
+      finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorLocalInfluence,
+      hEq, if_false]
     unfold
       finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedPosteriorRecursiveCrossRatioRadius
     change
@@ -317,12 +319,22 @@ theorem
             if target = source then 0 else C.errorBound target source) := by
       rw [Finset.sum_add_distrib, ← Finset.mul_sum]
       congr 1
-      rw [← Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro source _hSource
-      by_cases hEq : target = source
-      · simp [hEq]
-      · simp [hEq]
+      calc
+        (∑ source : FiniteEvenFourTorusSpatialLink H,
+            if target = source then 0 else
+              ratio * C.errorBound target source) =
+          ∑ source : FiniteEvenFourTorusSpatialLink H,
+            ratio *
+              (if target = source then 0 else C.errorBound target source) := by
+          apply Finset.sum_congr rfl
+          intro source _hSource
+          by_cases hEq : target = source
+          · simp [hEq]
+          · simp [hEq]
+        _ = ratio *
+            (∑ source : FiniteEvenFourTorusSpatialLink H,
+              if target = source then 0 else C.errorBound target source) := by
+          rw [Finset.mul_sum]
 
 /-- A source-summed row certificate separates the exact local incidence row
 from the genuinely recursive residual row.  It does not assume the desired
