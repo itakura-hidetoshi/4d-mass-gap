@@ -347,8 +347,10 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariationBound
           subst link
           exact hAgree source (Ne.symm hCoordinate)
         rw [hEq, sub_self, abs_zero]
-        simp [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation,
-          hCoordinate] }
+        exact
+          finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_nonneg
+            H β energyIdentity energyNontrivial hβ hEnergy source coordinate
+  }
 
 /-- Total mass of the singleton source-tilt variation profile. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_total
