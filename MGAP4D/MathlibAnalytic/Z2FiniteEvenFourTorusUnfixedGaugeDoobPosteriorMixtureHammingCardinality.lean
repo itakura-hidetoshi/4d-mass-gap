@@ -29,9 +29,9 @@ theorem
   unfold
     finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureComponentExpectedHamming
   exact
-    (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureComponentCouplingData
-      C β hβ hβCutoff H left right g h).
-        expectedFiniteProductHamming_le_card
+    FiniteRealCouplingData.expectedFiniteProductHamming_le_card
+      (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureComponentCouplingData
+        C β hβ hβCutoff H left right g h)
 
 /-- Same-index component bounds and the universal spatial-cardinality bound
 for different residual-gauge indices give an explicit actual geometric Doob
