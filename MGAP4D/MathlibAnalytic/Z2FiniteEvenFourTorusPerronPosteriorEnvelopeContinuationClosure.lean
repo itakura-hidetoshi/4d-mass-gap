@@ -206,6 +206,8 @@ theorem endpoint_envelopeCoefficients_lt
     hBarrierNonneg hBarrierLtOne
   have hEndpoint :=
     FiniteContinuousBidirectionalSelfBootstrapBarrierData.endpoint_coefficients_lt_barrier B
+  change C.rowCoefficient β < barrier ∧
+    C.columnCoefficient β < barrier at hEndpoint
   have hMembership : β ∈ Set.Ioc 0 β := ⟨hβ, le_rfl⟩
   rw [C.rowCoefficient_eq_envelope β hMembership,
     C.columnCoefficient_eq_envelope β hMembership] at hEndpoint
@@ -251,7 +253,7 @@ noncomputable def toDobrushinData
         H β energyIdentity energyNontrivial hβ hEnergy
         environment boundaryTarget (environment boundaryTarget)
         target source
-    simpa [weight, kernel, Function.update_same] using hDominates
+    simpa [weight, kernel] using hDominates
   calc
     finitePositiveWeightNonstrictInfluenceRowSum D target ≤
         finiteInfluenceKernelRowSum kernel target := by
@@ -262,9 +264,9 @@ noncomputable def toDobrushinData
       exact hEntry source
     _ ≤ finiteInfluenceKernelMaximumRowSum kernel :=
       finiteInfluenceKernelRowSum_le_maximum kernel target
-    _ < barrier := by
+    _ ≤ barrier := le_of_lt (by
       simpa [finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeRowCoefficient,
-        kernel] using hEnvelopeStrict
+        kernel] using hEnvelopeStrict)
 
 end Z2PerronPosteriorCanonicalEnvelopeContinuationData
 
