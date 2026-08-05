@@ -103,25 +103,25 @@ theorem finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_le_asymptoti
       envelopeMagnitude * sourceMagnitude * (1 - coefficient)⁻¹ +
         2 * (Fintype.card ι : ℝ) *
           (rate ^ iterations * sourceMagnitude)
-  apply add_le_add_right _ _
-  calc
-    (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude * sourceMagnitude *
-        finiteRealGeometricSeries rate iterations =
-      envelopeMagnitude * sourceMagnitude *
-        ((Fintype.card ι : ℝ)⁻¹ *
-          finiteRealGeometricSeries rate iterations) := by ring
-    _ ≤ envelopeMagnitude * sourceMagnitude * (1 - coefficient)⁻¹ :=
-      hPrefixScaled
+  apply add_le_add
+  · calc
+      (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude * sourceMagnitude *
+          finiteRealGeometricSeries rate iterations =
+        envelopeMagnitude * sourceMagnitude *
+          ((Fintype.card ι : ℝ)⁻¹ *
+            finiteRealGeometricSeries rate iterations) := by ring
+      _ ≤ envelopeMagnitude * sourceMagnitude * (1 - coefficient)⁻¹ :=
+        hPrefixScaled
+  · exact le_rfl
 
-/-- A nonnegative geometric terminal residual with strict ratio can be made
+/-- A geometric terminal residual with strict ratio can be made strictly
 smaller than any positive tolerance at a finite iteration depth. -/
-theorem exists_finite_geometric_terminal_le
+theorem exists_finite_geometric_terminal_lt
     (amplitude rate tolerance : ℝ)
-    (hAmplitude : 0 ≤ amplitude)
     (hRateNonneg : 0 ≤ rate)
     (hRateLtOne : rate < 1)
     (hTolerance : 0 < tolerance) :
-    ∃ iterations : ℕ, amplitude * rate ^ iterations ≤ tolerance := by
+    ∃ iterations : ℕ, amplitude * rate ^ iterations < tolerance := by
   have hTendsto :
       Tendsto (fun n : ℕ => amplitude * rate ^ n) atTop (nhds 0) := by
     have hRateTendsto :
@@ -132,7 +132,7 @@ theorem exists_finite_geometric_terminal_le
       ∀ᶠ n : ℕ in atTop, amplitude * rate ^ n < tolerance :=
     (tendsto_order.1 hTendsto).2 tolerance hTolerance
   rcases (eventually_atTop.1 hEventually) with ⟨iterations, hIterations⟩
-  exact ⟨iterations, le_of_lt (hIterations iterations le_rfl)⟩
+  exact ⟨iterations, hIterations iterations le_rfl⟩
 
 /-- Finite-depth realization of any strict asymptotic response margin. -/
 theorem exists_finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_lt
@@ -164,15 +164,11 @@ theorem exists_finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_lt
   have hRateLtOne : rate < 1 :=
     finiteInfluenceKernelReciprocalRandomScanRate_lt_one
       hCard coefficient hCoefficientLtOne
-  have hAmplitude : 0 ≤ amplitude :=
-    mul_nonneg
-      (mul_nonneg (by norm_num) (Nat.cast_nonneg _))
-      hSourceMagnitude
   have hTolerance : 0 < tolerance := by
     simpa [tolerance, asymptotic] using sub_pos.mpr hAsymptotic
   obtain ⟨iterations, hTerminal⟩ :=
-    exists_finite_geometric_terminal_le
-      amplitude rate tolerance hAmplitude hRateNonneg hRateLtOne hTolerance
+    exists_finite_geometric_terminal_lt
+      amplitude rate tolerance hRateNonneg hRateLtOne hTolerance
   refine ⟨iterations, ?_⟩
   have hFinite :=
     finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_le_asymptotic_add_terminal
@@ -180,8 +176,14 @@ theorem exists_finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_lt
       hEnvelopeMagnitude hSourceMagnitude
   have hTerminal' :
       2 * (Fintype.card ι : ℝ) *
-          (rate ^ iterations * sourceMagnitude) ≤ tolerance := by
-    simpa [amplitude] using hTerminal
+          (rate ^ iterations * sourceMagnitude) < tolerance := by
+    calc
+      2 * (Fintype.card ι : ℝ) *
+          (rate ^ iterations * sourceMagnitude) =
+        amplitude * rate ^ iterations := by
+          dsimp [amplitude]
+          ring
+      _ < tolerance := hTerminal
   calc
     finiteInfluenceKernelBidirectionalFiniteResponseCoefficient
         ι iterations coefficient envelopeMagnitude sourceMagnitude ≤
@@ -189,7 +191,7 @@ theorem exists_finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_lt
         2 * (Fintype.card ι : ℝ) *
           (rate ^ iterations * sourceMagnitude) := by
             simpa [asymptotic, rate] using hFinite
-    _ ≤ asymptotic + tolerance := add_le_add_left hTerminal' asymptotic
+    _ < asymptotic + tolerance := by linarith
     _ = bound := by simp [tolerance]
 
 end
