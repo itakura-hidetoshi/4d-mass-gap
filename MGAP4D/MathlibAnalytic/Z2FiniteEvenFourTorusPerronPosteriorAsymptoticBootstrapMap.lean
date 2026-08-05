@@ -29,13 +29,12 @@ noncomputable def finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap
           β energyIdentity energyNontrivial)
         sourceMagnitude
 
-/-- The asymptotic Perron bootstrap map is nonnegative on a nonnegative strict
+/-- The asymptotic Perron bootstrap map is nonnegative on a strict
 coefficient. -/
 theorem finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap_nonneg
     (β energyIdentity energyNontrivial coefficient : ℝ)
     (hβ : 0 < β)
     (hEnergy : energyIdentity < energyNontrivial)
-    (hCoefficientNonneg : 0 ≤ coefficient)
     (hCoefficientLtOne : coefficient < 1) :
     0 ≤ finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap
       β energyIdentity energyNontrivial coefficient := by
@@ -93,10 +92,10 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap_lt
     finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedTargetTiltSourceAmplitude
       β energyIdentity energyNontrivial
   let sourceMagnitude := ratio - ratio⁻¹
-  let local :=
+  let localTerm :=
     2 * finiteEvenFourTorusZ2PerronPosteriorLocalCoefficient
       β energyIdentity energyNontrivial
-  let responseBound := (bound - local) / ratio
+  let responseBound := (bound - localTerm) / ratio
   have hCard :
       0 < Fintype.card (FiniteEvenFourTorusSpatialLink H) :=
     Fintype.card_pos_iff.mpr
@@ -117,11 +116,11 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap_lt
           coefficient envelopeMagnitude sourceMagnitude < responseBound := by
     apply (lt_div_iff₀ hRatioPos).2
     have hAsymptotic' :
-        local + ratio *
+        localTerm + ratio *
             finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient
               coefficient envelopeMagnitude sourceMagnitude < bound := by
       simpa [finiteEvenFourTorusZ2PerronPosteriorAsymptoticBootstrapMap,
-        local, ratio, envelopeMagnitude, sourceMagnitude] using hAsymptotic
+        localTerm, ratio, envelopeMagnitude, sourceMagnitude] using hAsymptotic
     linarith
   obtain ⟨responseIterations, hResponse⟩ :=
     exists_finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_lt
@@ -135,22 +134,22 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap_lt
             responseIterations coefficient envelopeMagnitude sourceMagnitude <
         ratio * responseBound :=
     mul_lt_mul_of_pos_left hResponse hRatioPos
-  have hBoundIdentity : local + ratio * responseBound = bound := by
-    unfold responseBound
+  have hBoundIdentity :
+      localTerm + ratio * responseBound = bound := by
+    dsimp [responseBound]
     field_simp [ne_of_gt hRatioPos]
-    ring
   unfold finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap
     finiteEvenFourTorusZ2PerronPosteriorKernelFiniteResponseCoefficient
-  change local + ratio *
+  change localTerm + ratio *
       finiteInfluenceKernelBidirectionalFiniteResponseCoefficient
         (FiniteEvenFourTorusSpatialLink H)
         responseIterations coefficient envelopeMagnitude sourceMagnitude < bound
   calc
-    local + ratio *
+    localTerm + ratio *
         finiteInfluenceKernelBidirectionalFiniteResponseCoefficient
           (FiniteEvenFourTorusSpatialLink H)
           responseIterations coefficient envelopeMagnitude sourceMagnitude <
-      local + ratio * responseBound := add_lt_add_left hScaled local
+      localTerm + ratio * responseBound := by linarith
     _ = bound := hBoundIdentity
 
 /-- A volume-independent strict asymptotic barrier, together with its physical
