@@ -366,9 +366,15 @@ theorem finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation_total
         (finiteZ2CrossingLikelihoodRatio
           (z2WilsonTemporalCrossingRate
             β energyIdentity energyNontrivial))⁻¹ := by
+  classical
   unfold finiteProductVariationTotal
-    finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation
-  simp
+  rw [Finset.sum_eq_single source]
+  · simp [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation]
+  · intro coordinate _hCoordinate hCoordinateSource
+    simp [finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedSourceTiltVariation,
+      hCoordinateSource]
+  · intro hSource
+    exact False.elim (hSource (Finset.mem_univ source))
 
 /-- Recursive finite-step response error for one source-local residual tilt
 under a target-local change of the observed boundary. -/
@@ -430,7 +436,8 @@ def finiteEvenFourTorusZ2UnfixedGaugePerronSmoothedRecursiveResponseError
         H β energyIdentity energyNontrivial hβ hEnergy
         (Function.update environment target g) target h)
       (Fintype.card_pos_iff.mpr ⟨target⟩) D
-  C.partialStationarySource P n +
+  FinitePositiveWeightStationaryRandomScanComparisonData.partialStationarySource
+      P C n +
     2 * finitePositiveWeightDobrushinRandomScanRate D ^ n *
       finiteProductVariationTotal P.variation
 
