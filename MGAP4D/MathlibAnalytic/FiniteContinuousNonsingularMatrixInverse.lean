@@ -26,7 +26,7 @@ theorem finiteRealNonsingularMatrixInverse_mul
     (hdet : A.det ≠ 0) :
     finiteRealNonsingularMatrixInverse A * A = 1 := by
   unfold finiteRealNonsingularMatrixInverse
-  rw [smul_mul, Matrix.adjugate_mul]
+  rw [Matrix.mul_mul_left, Matrix.adjugate_mul]
   ext i j
   simp [hdet]
 
@@ -40,7 +40,7 @@ theorem mul_finiteRealNonsingularMatrixInverse
     (hdet : A.det ≠ 0) :
     A * finiteRealNonsingularMatrixInverse A = 1 := by
   unfold finiteRealNonsingularMatrixInverse
-  rw [mul_smul_comm, Matrix.mul_adjugate]
+  rw [Matrix.mul_mul_right, Matrix.mul_adjugate]
   ext i j
   simp [hdet]
 
