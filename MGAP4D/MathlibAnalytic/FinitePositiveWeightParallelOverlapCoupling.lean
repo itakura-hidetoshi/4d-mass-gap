@@ -62,16 +62,8 @@ theorem finitePositiveWeightParallelKernel_sum_eq_one
           weight environment target (output target) = 1
   rw [← Fintype.piFinset_univ]
   rw [Finset.sum_prod_piFinset]
-  simp only [Finset.sum_const_zero, Finset.sum_const, Finset.card_univ]
-  have hCoordinate :
-      ∀ target : ι,
-        ∑ g : G,
-          finitePositiveWeightSingleSiteProbability
-            weight environment target g = 1 :=
-    fun target =>
-      finitePositiveWeightSingleSiteProbability_sum_eq_one
-        weight hweight environment target
-  simp_rw [hCoordinate]
+  simp_rw [finitePositiveWeightSingleSiteProbability_sum_eq_one
+    weight hweight environment]
   exact Finset.prod_const_one
 
 /-- The parallel kernel packaged as a finite real probability law. -/
@@ -153,16 +145,9 @@ theorem finitePositiveWeightParallelOverlapCoupling_leftMarginal
   classical
   unfold finitePositiveWeightParallelOverlapCoupling
     finitePositiveWeightParallelKernel
-  change
-    ∑ rightOutput ∈ (Finset.univ : Finset (ι → G)),
-      ∏ target : ι,
-        (finitePositiveWeightSingleSiteOverlapCouplingData
-          weight hweight leftEnvironment rightEnvironment target).joint
-          (leftOutput target) (rightOutput target) =
-      ∏ target : ι,
-        finitePositiveWeightSingleSiteProbability
-          weight leftEnvironment target (leftOutput target)
-  rw [← Fintype.piFinset_univ]
+  rw [show (Finset.univ : Finset (ι → G)) =
+      Fintype.piFinset (fun _ : ι => (Finset.univ : Finset G)) by
+    exact Fintype.piFinset_univ.symm]
   rw [Finset.sum_prod_piFinset]
   simp_rw [finitePositiveWeightSingleSiteOverlapCoupling_leftMarginal]
 
@@ -188,18 +173,35 @@ theorem finitePositiveWeightParallelOverlapCoupling_rightMarginal
   classical
   unfold finitePositiveWeightParallelOverlapCoupling
     finitePositiveWeightParallelKernel
-  change
-    ∑ leftOutput ∈ (Finset.univ : Finset (ι → G)),
+  rw [show (Finset.univ : Finset (ι → G)) =
+      Fintype.piFinset (fun _ : ι => (Finset.univ : Finset G)) by
+    exact Fintype.piFinset_univ.symm]
+  calc
+    (∑ leftOutput ∈ Fintype.piFinset
+        (fun _ : ι => (Finset.univ : Finset G)),
       ∏ target : ι,
         (finitePositiveWeightSingleSiteOverlapCouplingData
           weight hweight leftEnvironment rightEnvironment target).joint
-          (leftOutput target) (rightOutput target) =
-      ∏ target : ι,
+          (leftOutput target) (rightOutput target)) =
+        ∏ target : ι, ∑ g : G,
+          (finitePositiveWeightSingleSiteOverlapCouplingData
+            weight hweight leftEnvironment rightEnvironment target).joint
+            g (rightOutput target) := by
+      simpa using
+        (Finset.sum_prod_piFinset
+          (s := (Finset.univ : Finset G))
+          (g := fun target g =>
+            (finitePositiveWeightSingleSiteOverlapCouplingData
+              weight hweight leftEnvironment rightEnvironment target).joint
+              g (rightOutput target)))
+    _ = ∏ target : ι,
         finitePositiveWeightSingleSiteProbability
-          weight rightEnvironment target (rightOutput target)
-  rw [← Fintype.piFinset_univ]
-  rw [Finset.sum_prod_piFinset]
-  simp_rw [finitePositiveWeightSingleSiteOverlapCoupling_rightMarginal]
+          weight rightEnvironment target (rightOutput target) := by
+      apply Finset.prod_congr rfl
+      intro target _hTarget
+      exact finitePositiveWeightSingleSiteOverlapCoupling_rightMarginal
+        weight hweight leftEnvironment rightEnvironment target
+          (rightOutput target)
 
 /-- The canonical correct-marginal coupling of the two parallel conditional
 kernels. -/
