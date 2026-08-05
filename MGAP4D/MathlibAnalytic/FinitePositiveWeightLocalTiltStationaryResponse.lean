@@ -162,7 +162,7 @@ theorem finitePositiveWeightGlobalExpectation_le_one_add_error_div_lower_mul
     _ ≤ finitePositiveWeightGlobalExpectation rightWeight f +
         (error / lower) *
           finitePositiveWeightGlobalExpectation rightWeight f :=
-      add_le_add_left hScale _
+      add_le_add_right hScale _
     _ = (1 + error / lower) *
         finitePositiveWeightGlobalExpectation rightWeight f := by ring
 
