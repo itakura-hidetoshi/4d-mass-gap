@@ -81,6 +81,23 @@ theorem continuous_finitePositiveWeightSingleSiteConditionalL1
     (continuous_finitePositiveWeightSingleSiteProbability
       weight hweight hweightPos B target g)).abs
 
+/-- The fixed environment-pair candidate whose finite maximum defines the
+canonical non-strict source influence.  Classical decidability is deliberately
+sealed inside this value, so later continuity statements do not expose a
+proof-relevant `Decidable` instance in their types. -/
+noncomputable def finitePositiveWeightConditionalL1SourceCandidateValue
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype G]
+    (weight : (ι → G) → ℝ)
+    (target source : ι)
+    (pair : (ι → G) × (ι → G)) : ℝ := by
+  classical
+  exact if FiniteProductAgreeOff pair.1 pair.2 source then
+    finitePositiveWeightSingleSiteConditionalL1
+      weight pair.1 pair.2 target
+  else 0
+
 /-- Each finite source-replacement candidate appearing before the canonical
 maximum is a continuous scalar function of a pointwise continuous positive
 weight family. -/
@@ -88,9 +105,7 @@ theorem continuous_finitePositiveWeightConditionalL1SourceCandidate
     {X ι G : Type}
     [TopologicalSpace X]
     [DecidableEq ι]
-    [Fintype ι]
     [Fintype G]
-    [DecidableEq G]
     [Nonempty G]
     (weight : X → (ι → G) → ℝ)
     (hweight : ∀ configuration : ι → G,
@@ -99,10 +114,10 @@ theorem continuous_finitePositiveWeightConditionalL1SourceCandidate
     (target source : ι)
     (pair : (ι → G) × (ι → G)) :
     Continuous (fun x =>
-      if FiniteProductAgreeOff pair.1 pair.2 source then
-        finitePositiveWeightSingleSiteConditionalL1
-          (weight x) pair.1 pair.2 target
-      else 0) := by
+      finitePositiveWeightConditionalL1SourceCandidateValue
+        (weight x) target source pair) := by
+  classical
+  unfold finitePositiveWeightConditionalL1SourceCandidateValue
   by_cases hAgree : FiniteProductAgreeOff pair.1 pair.2 source
   · simpa [hAgree] using
       continuous_finitePositiveWeightSingleSiteConditionalL1
