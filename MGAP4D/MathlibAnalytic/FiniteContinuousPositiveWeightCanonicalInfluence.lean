@@ -44,7 +44,7 @@ theorem finitePositiveWeightCanonicalNonstrictInfluence_eq_univ_sup'
           weight target source) := by
   classical
   rw [finitePositiveWeightCanonicalNonstrictInfluence, if_neg hNe]
-  rw [finitePositiveWeightConditionalL1SourceValues_eq_candidate_image]
+  simp only [finitePositiveWeightConditionalL1SourceValues_eq_candidate_image]
   rw [Finset.max'_eq_sup', Finset.sup'_image]
   rfl
 
@@ -69,7 +69,7 @@ theorem continuous_finitePositiveWeightCanonicalNonstrictInfluence
   classical
   by_cases hEq : target = source
   · subst source
-    simp
+    simpa using (continuous_const : Continuous (fun _x : X => (0 : ℝ)))
   · have hSup :
         Continuous (fun x =>
           Finset.univ.sup' Finset.univ_nonempty
@@ -83,8 +83,8 @@ theorem continuous_finitePositiveWeightCanonicalNonstrictInfluence
     convert hSup using 1
     funext x
     exact
-      (finitePositiveWeightCanonicalNonstrictInfluence_eq_univ_sup'
-        (weight x) target source hEq).symm
+      finitePositiveWeightCanonicalNonstrictInfluence_eq_univ_sup'
+        (weight x) target source hEq
 
 /-- Pointwise continuous finite influence kernels have continuous row sums. -/
 theorem continuous_finiteInfluenceKernelRowSum
@@ -175,7 +175,7 @@ theorem continuous_finiteInfluenceKernelMaximumRowSum
     exact continuous_finiteInfluenceKernelRowSum K hK target
   convert hSup using 1
   funext x
-  exact (finiteInfluenceKernelMaximumRowSum_eq_univ_sup' (K x)).symm
+  exact finiteInfluenceKernelMaximumRowSum_eq_univ_sup' (K x)
 
 /-- The maximum column coefficient of a pointwise continuous finite influence
 kernel family is continuous. -/
@@ -199,7 +199,7 @@ theorem continuous_finiteInfluenceKernelMaximumColumnSum
     exact continuous_finiteInfluenceKernelColumnSum K hK source
   convert hSup using 1
   funext x
-  exact (finiteInfluenceKernelMaximumColumnSum_eq_univ_sup' (K x)).symm
+  exact finiteInfluenceKernelMaximumColumnSum_eq_univ_sup' (K x)
 
 end
 
