@@ -126,7 +126,6 @@ theorem
                 H β energyIdentity energyNontrivial
                 kernel iterations target P.variation := by
           rw [Finset.sum_insert hSource]
-      simpa [next]
 
 /-- Arbitrary boundary environments are compared by summing response errors
 only over the coordinates on which they actually disagree. -/
