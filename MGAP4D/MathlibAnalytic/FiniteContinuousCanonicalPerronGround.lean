@@ -95,6 +95,16 @@ theorem finiteKernelPerronAnchorMatrix_mulVec_apply
           (if output = input then 1 else 0) * v input) -
           Matrix.mulVec (finiteKernelNormalizedMatrix kernel) v output +
           ∑ input : α, v input := by
+            change
+              (∑ input : α,
+                (((if output = input then 1 else 0) -
+                    finiteKernelNormalizedMatrix kernel output input + 1) *
+                  v input)) =
+                (∑ input : α,
+                  (if output = input then 1 else 0) * v input) -
+                  (∑ input : α,
+                    finiteKernelNormalizedMatrix kernel output input * v input) +
+                  ∑ input : α, v input
             rw [← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
             apply Finset.sum_congr rfl
             intro input _hInput
@@ -102,7 +112,7 @@ theorem finiteKernelPerronAnchorMatrix_mulVec_apply
     _ = v output -
           Matrix.mulVec (finiteKernelNormalizedMatrix kernel) v output +
           ∑ input : α, v input := by
-            simp [eq_comm]
+            simp
     _ = v output -
           finiteKernelNormalizedOperator kernel (WithLp.toLp 2 v) output +
           ∑ input : α, v input := by
@@ -144,10 +154,12 @@ theorem continuous_finiteKernelPerronAnchorMatrix
   intro output
   apply continuous_pi
   intro input
-  exact
-    (continuous_const.sub
-      ((continuous_finiteKernelNormalizedMatrix kernel hkernel hraw).apply
-        output input)).add continuous_const
+  have hMatrix :=
+    continuous_finiteKernelNormalizedMatrix kernel hkernel hraw
+  have hEntry : Continuous (fun x =>
+      finiteKernelNormalizedMatrix (kernel x) output input) :=
+    (continuous_apply input).comp ((continuous_apply output).comp hMatrix)
+  exact (continuous_const.sub hEntry).add continuous_const
 
 /-- A pointwise strictly-positive finite vector has strictly-positive total
 coordinate mass. -/
@@ -215,9 +227,13 @@ theorem finiteKernelPerronAnchorMatrix_mulVec_eq_zero_imp
     change
       g output - finiteKernelNormalizedOperator kernel g output + s * 1 = 0
     simpa using hpoint output
+  have hsymm_gp :
+      inner ℝ (finiteKernelNormalizedOperator kernel g) p =
+        inner ℝ g (finiteKernelNormalizedOperator kernel p) :=
+    hSymm g p
   have hcancel :
       inner ℝ (g - finiteKernelNormalizedOperator kernel g) p = 0 := by
-    rw [inner_sub_left, hSymm g p, hpfix, sub_self]
+    rw [inner_sub_left, hsymm_gp, hpfix, sub_self]
   have hinner :
       inner ℝ
           (g - finiteKernelNormalizedOperator kernel g +
@@ -287,11 +303,23 @@ theorem finiteKernelPerronAnchorMatrix_det_ne_zero
         (∑ input : α,
           finiteKernelPerronAnchorMatrix kernel output input *
             (u input - v input)) = 0
-      rw [Finset.sum_sub_distrib]
-      change
-        Matrix.mulVec (finiteKernelPerronAnchorMatrix kernel) u output -
-          Matrix.mulVec (finiteKernelPerronAnchorMatrix kernel) v output = 0
-      rw [congrFun huv output, sub_self]
+      calc
+        (∑ input : α,
+          finiteKernelPerronAnchorMatrix kernel output input *
+            (u input - v input)) =
+            (∑ input : α,
+              finiteKernelPerronAnchorMatrix kernel output input * u input) -
+            ∑ input : α,
+              finiteKernelPerronAnchorMatrix kernel output input * v input := by
+                rw [← Finset.sum_sub_distrib]
+                apply Finset.sum_congr rfl
+                intro input _hInput
+                ring
+        _ = 0 := by
+          change
+            Matrix.mulVec (finiteKernelPerronAnchorMatrix kernel) u output -
+              Matrix.mulVec (finiteKernelPerronAnchorMatrix kernel) v output = 0
+          rw [congrFun huv output, sub_self]
     have huvZero :=
       finiteKernelPerronAnchorMatrix_mulVec_eq_zero_imp
         kernel hSymm p hp hpfix hline (u - v) hzero
@@ -330,6 +358,13 @@ theorem finiteKernelPerronAnchorMatrix_mulVec_canonical
       (finiteKernelPerronAnchorMatrix kernel) hdet
   have hApply := congrArg
     (fun A : Matrix α α ℝ => Matrix.mulVec A (1 : α → ℝ)) hInverse
+  change
+    Matrix.mulVec
+        (finiteKernelPerronAnchorMatrix kernel *
+          finiteRealNonsingularMatrixInverse
+            (finiteKernelPerronAnchorMatrix kernel))
+        (1 : α → ℝ) =
+      Matrix.mulVec (1 : Matrix α α ℝ) (1 : α → ℝ) at hApply
   rw [Matrix.mulVec_mulVec, Matrix.one_mulVec] at hApply
   simpa [finiteKernelCanonicalPerronGround] using hApply
 
@@ -377,9 +412,13 @@ theorem finiteKernelCanonicalPerronGround_spec
     change
       g output - finiteKernelNormalizedOperator kernel g output + s * 1 = 1
     simpa using hpoint output
+  have hsymm_gp :
+      inner ℝ (finiteKernelNormalizedOperator kernel g) p =
+        inner ℝ g (finiteKernelNormalizedOperator kernel p) :=
+    hSymm g p
   have hcancel :
       inner ℝ (g - finiteKernelNormalizedOperator kernel g) p = 0 := by
-    rw [inner_sub_left, hSymm g p, hpfix, sub_self]
+    rw [inner_sub_left, hsymm_gp, hpfix, sub_self]
   have hsumPos : 0 < ∑ x : α, p x :=
     finiteBoundaryCoordinateSum_pos p hp
   have hsProd : s * (∑ x : α, p x) = ∑ x : α, p x := by
@@ -395,8 +434,7 @@ theorem finiteKernelCanonicalPerronGround_spec
         rw [hvec]
       _ = ∑ x : α, p x := finiteBoundaryOneVector_inner p
   have hs : s = 1 := by
-    apply (mul_left_cancel₀ (ne_of_gt hsumPos))
-    simpa using hsProd
+    nlinarith
   have hgfix : finiteKernelNormalizedOperator kernel g = g := by
     ext output
     have hOutput := hpoint output
