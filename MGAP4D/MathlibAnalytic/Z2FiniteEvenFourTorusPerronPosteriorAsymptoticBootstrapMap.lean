@@ -138,6 +138,7 @@ theorem exists_finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap_lt
       localTerm + ratio * responseBound = bound := by
     dsimp [responseBound]
     field_simp [ne_of_gt hRatioPos]
+    ring
   unfold finiteEvenFourTorusZ2PerronPosteriorFiniteBootstrapMap
     finiteEvenFourTorusZ2PerronPosteriorKernelFiniteResponseCoefficient
   change localTerm + ratio *
