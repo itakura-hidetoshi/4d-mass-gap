@@ -8,6 +8,23 @@ namespace MathlibAnalytic
 open scoped BigOperators
 noncomputable section
 
+/-- Probability-data wrapper for a single full-configuration update row. -/
+noncomputable def finitePositiveWeightSingleSiteUpdateProbabilityData
+    {ι G : Type} [DecidableEq ι] [DecidableEq G]
+    [Fintype ι] [Fintype G] [Nonempty G]
+    (weight : (ι → G) → ℝ)
+    (hweight : ∀ A : ι → G, 0 < weight A)
+    (input : ι → G) (target : ι) :
+    FiniteRealProbabilityData (ι → G) :=
+  { probability := finitePositiveWeightSingleSiteUpdateKernel
+      weight input target
+    probability_nonneg :=
+      finitePositiveWeightSingleSiteUpdateKernel_nonneg
+        weight hweight input target
+    probability_sum_eq_one :=
+      finitePositiveWeightSingleSiteUpdateKernel_sum_eq_one
+        weight hweight input target }
+
 /-- Push-forward of a cross-weight one-site overlap coupling to a joint law on
 full configurations after updating the same target coordinate. -/
 def finitePositiveWeightsSingleSiteJointUpdateKernel
@@ -134,7 +151,7 @@ theorem finitePositiveWeightsSingleSiteJointUpdateKernel_rightMarginal
       if Function.update leftInput target g = leftOutput ∧
           Function.update rightInput target h = rightOutput then
         C.joint g h else 0) =
-      ∑ h : G, ∑ g : G, ∑ leftOutput : ι → G,
+      ∑ g : G, ∑ h : G, ∑ leftOutput : ι → G,
         if Function.update leftInput target g = leftOutput ∧
             Function.update rightInput target h = rightOutput then
           C.joint g h else 0 := by
@@ -142,17 +159,20 @@ theorem finitePositiveWeightsSingleSiteJointUpdateKernel_rightMarginal
       apply Finset.sum_congr rfl
       intro g _
       rw [Finset.sum_comm]
-      rw [Finset.sum_comm]
-    _ = ∑ h : G, ∑ g : G,
+    _ = ∑ g : G, ∑ h : G,
         if Function.update rightInput target h = rightOutput then
           C.joint g h else 0 := by
       apply Finset.sum_congr rfl
-      intro h _
-      apply Finset.sum_congr rfl
       intro g _
+      apply Finset.sum_congr rfl
+      intro h _
       by_cases hh : Function.update rightInput target h = rightOutput
       · simp [hh]
       · simp [hh]
+    _ = ∑ h : G, ∑ g : G,
+        if Function.update rightInput target h = rightOutput then
+          C.joint g h else 0 := by
+      rw [Finset.sum_comm]
     _ = ∑ h : G,
         if Function.update rightInput target h = rightOutput then
           finitePositiveWeightSingleSiteProbability
