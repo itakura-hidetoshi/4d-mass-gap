@@ -28,12 +28,28 @@ theorem observable_difference_abs_le_responseProfile_of_agreeOff
       C.envelopeKernel C.iterations
       (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel_dominates
         C.H C.β C.energyIdentity C.energyNontrivial C.hβ C.hEnergy)
+  have hBoundExpanded :
+      |(finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+            C.H C.β C.energyIdentity C.energyNontrivial
+            C.hβ.le C.hEnergy.le).doobObservableLinearMap f right -
+          (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+            C.H C.β C.energyIdentity C.energyNontrivial
+            C.hβ.le C.hEnergy.le).doobObservableLinearMap f left| ≤
+        finiteEvenFourTorusZ2PerronPosteriorObservableKernelResponseError
+          C.H C.β C.energyIdentity C.energyNontrivial
+          (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel
+            C.H C.β C.energyIdentity C.energyNontrivial C.hβ C.hEnergy)
+          (finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
+            C.energyIdentity C.energyNontrivial C.hEnergy
+            C.β C.hβ C.hβCutoff C.H)
+          target P.variation := by
+    simpa [envelopeKernel, iterations] using hBound
   rw [finiteEvenFourTorusZ2PerronPosteriorObservableKernelResponseError_eq_directResponseMatrix
     C.energyIdentity C.energyNontrivial C.hEnergy
-    C.β C.hβ C.hβCutoff C.H target P.variation] at hBound
+    C.β C.hβ C.hβCutoff C.H target P.variation] at hBoundExpanded
   simpa [observable, responseProfile, influence,
     P, finiteEvenFourTorusZ2CanonicalInputVariationBound,
-    envelopeKernel, iterations, abs_sub_comm] using hBound
+    abs_sub_comm] using hBoundExpanded
 
 /-- The compact strict response profile is a declared variation bound for the
 exact geometric Perron--Doob observable output. -/
