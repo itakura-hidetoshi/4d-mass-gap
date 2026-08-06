@@ -122,7 +122,12 @@ def fullRate
       β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
     K.fullRate = K.rate := by
   unfold fullRate
-  rfl
+  change
+    z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial +
+        (K.rate -
+          z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial) =
+      K.rate
+  ring
 
 /-- The resulting full-transfer coercivity is exactly `1 - rate`. -/
 def fullCoercivity
@@ -135,10 +140,13 @@ def fullCoercivity
       β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
     K.fullCoercivity = 1 - K.rate := by
   unfold fullCoercivity
-  have hDual :=
-    K.toSpatialSandwichCertificate.fullRate_eq_one_sub_fullCoercivity
-  rw [K.fullRate_eq_rate] at hDual
-  linarith
+  change
+    z2WilsonTemporalCrossingCoercivity β energyIdentity energyNontrivial -
+        (K.rate -
+          z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial) =
+      1 - K.rate
+  unfold z2WilsonTemporalCrossingCoercivity
+  ring
 
 /-- The full geometric coercivity is positive. -/
 theorem fullCoercivity_pos
@@ -165,8 +173,7 @@ noncomputable def toSpatialSandwichStabilityCompletePackage
       β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
     K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer.centeredPoincare.coercivity =
       1 - K.rate := by
-  rw [
-    Z2UnfixedGaugeSpatialSandwichUniformStabilityCertificate.toUniformCenteredPoincareCompletePackage_centeredPoincare_coercivity]
+  change K.fullCoercivity = 1 - K.rate
   exact K.fullCoercivity_eq_one_sub_rate
 
 end Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
