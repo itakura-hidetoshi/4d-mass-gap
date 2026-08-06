@@ -75,8 +75,9 @@ abbrev FiniteEvenFourTorusZ2SpectralProbabilityL2
     (β energyIdentity energyNontrivial : ℝ)
     (hβ : 0 ≤ β)
     (hEnergy : energyIdentity ≤ energyNontrivial) : Type :=
-  (finiteEvenFourTorusZ2SpectralProbabilityL2Data
-    H β energyIdentity energyNontrivial hβ hEnergy).Carrier
+  FiniteProbabilityL2Carrier
+    (Fin (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralDimension
+      H β energyIdentity energyNontrivial hβ hEnergy))
 
 /-- Canonical isometric identification of the actual finite Gauss-invariant
 Hilbert carrier with its uniform spectral probability `L²` coordinates. -/
@@ -282,9 +283,16 @@ structure Z2FiniteEvenFourTorusSpectralProbabilityL2RealizationPackage
   identification :
     RealHilbertLinearIsometricIdentification
       (FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H)
-      probability.Carrier
+      (FiniteProbabilityL2Carrier
+        (Fin (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralDimension
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le)))
   coordinateDefect :
-    probability.Carrier →L[ℝ] probability.Carrier
+    FiniteProbabilityL2Carrier
+        (Fin (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralDimension
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le)) →L[ℝ]
+      FiniteProbabilityL2Carrier
+        (Fin (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralDimension
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le))
   exactIntertwining :
     ∀ x : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H,
       coordinateDefect (identification.forward x) =
@@ -293,7 +301,9 @@ structure Z2FiniteEvenFourTorusSpectralProbabilityL2RealizationPackage
             H β energyIdentity energyNontrivial hβ.le hEnergy.le x)
   symmetric : coordinateDefect.toLinearMap.IsSymmetric
   halfCoercive :
-    ∀ x : probability.Carrier,
+    ∀ x : FiniteProbabilityL2Carrier
+      (Fin (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralDimension
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le)),
       (1 / 2 : ℝ) * ‖x‖ ^ 2 ≤
         inner ℝ (coordinateDefect x) x
 
