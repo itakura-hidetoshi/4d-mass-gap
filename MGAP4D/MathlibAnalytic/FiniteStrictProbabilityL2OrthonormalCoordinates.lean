@@ -106,6 +106,24 @@ theorem observableEmbed_coordinateObserve
     P.coordinateObserveLinearMap_apply]
   field_simp [P.sqrt_weight_ne_zero i]
 
+/-- The square-root-density embedding is a bijective linear coordinate map. -/
+theorem observableEmbedLinearMap_bijective :
+    Function.Bijective P.observableEmbedLinearMap := by
+  constructor
+  · exact
+      Function.LeftInverse.injective
+        P.coordinateObserve_observableEmbed
+  · exact
+      Function.RightInverse.surjective
+        P.observableEmbed_coordinateObserve
+
+/-- Canonical bundled linear equivalence between finite observables and their
+square-root-density probability `L²` coordinates. -/
+noncomputable def observableLinearEquiv :
+    (ι → ℝ) ≃ₗ[ℝ] FiniteProbabilityL2Carrier ι :=
+  LinearEquiv.ofBijective P.observableEmbedLinearMap
+    P.observableEmbedLinearMap_bijective
+
 /-- The Euclidean inner product of square-root-density coordinates is exactly
 the finite probability `L²` pairing. -/
 theorem inner_observableEmbed
