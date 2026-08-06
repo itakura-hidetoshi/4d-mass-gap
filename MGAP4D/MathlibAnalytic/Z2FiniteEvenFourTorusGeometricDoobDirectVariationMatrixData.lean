@@ -9,17 +9,24 @@ noncomputable section
 
 namespace Z2GeometricDoobDirectVariationContext
 
-/-- For boundary configurations agreeing away from one target link, the exact
-geometric Doob observable difference is bounded by the compact strict response
-profile. -/
-theorem observable_difference_abs_le_responseProfile_of_agreeOff
+/-- Compact proposition asserting that the exact geometric Doob observable has
+the declared one-link response profile.  The large dependent inequality is
+kept in the body rather than exposed as a theorem declaration type. -/
+def ObservableResponseVariationBound
     (C : Z2GeometricDoobDirectVariationContext)
-    (f : FiniteEvenFourTorusZ2SliceConfiguration C.H → ℝ)
-    (target : FiniteEvenFourTorusSpatialLink C.H)
-    (left right : FiniteEvenFourTorusZ2SliceConfiguration C.H)
-    (hAgree : FiniteProductAgreeOff left right target) :
-    |C.observable f left - C.observable f right| ≤
-      C.responseProfile f target := by
+    (f : FiniteEvenFourTorusZ2SliceConfiguration C.H → ℝ) : Prop :=
+  ∀ (target : FiniteEvenFourTorusSpatialLink C.H)
+    (left right : FiniteEvenFourTorusZ2SliceConfiguration C.H),
+    FiniteProductAgreeOff left right target →
+      |C.observable f left - C.observable f right| ≤
+        C.responseProfile f target
+
+/-- Proof of the compact one-link response proposition. -/
+noncomputable def observableResponseVariationBoundProof
+    (C : Z2GeometricDoobDirectVariationContext)
+    (f : FiniteEvenFourTorusZ2SliceConfiguration C.H → ℝ) :
+    C.ObservableResponseVariationBound f := by
+  intro target left right hAgree
   let P := finiteEvenFourTorusZ2CanonicalInputVariationBound C.H f
   have hBound :=
     finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobObservable_difference_abs_le_observableKernelResponse_of_agreeOff
@@ -47,8 +54,8 @@ theorem observable_difference_abs_le_responseProfile_of_agreeOff
   rw [finiteEvenFourTorusZ2PerronPosteriorObservableKernelResponseError_eq_directResponseMatrix
     C.energyIdentity C.energyNontrivial C.hEnergy
     C.β C.hβ C.hβCutoff C.H target P.variation] at hBoundExpanded
-  simpa [observable, responseProfile, influence,
-    P, finiteEvenFourTorusZ2CanonicalInputVariationBound,
+  simpa [ObservableResponseVariationBound, observable, responseProfile,
+    influence, P, finiteEvenFourTorusZ2CanonicalInputVariationBound,
     abs_sub_comm] using hBoundExpanded
 
 /-- The compact strict response profile is a declared variation bound for the
@@ -59,21 +66,7 @@ noncomputable def outputVariationBound
     FiniteProductVariationBound (C.observable f) where
   variation := C.responseProfile f
   variation_nonneg := C.responseProfile_nonneg f
-  variation_bound := by
-    intro target left right hAgree
-    exact C.observable_difference_abs_le_responseProfile_of_agreeOff
-      f target left right hAgree
-
-/-- Canonical variation of the exact geometric Doob observable map is bounded
-by the compact strict response profile. -/
-theorem observable_canonicalVariation_le_responseProfile
-    (C : Z2GeometricDoobDirectVariationContext)
-    (f : FiniteEvenFourTorusZ2SliceConfiguration C.H → ℝ)
-    (target : FiniteEvenFourTorusSpatialLink C.H) :
-    finiteProductCanonicalVariation (C.observable f) target ≤
-      C.responseProfile f target := by
-  exact finiteProductCanonicalVariation_le_variationBound
-    (C.outputVariationBound f) target
+  variation_bound := C.observableResponseVariationBoundProof f
 
 /-- Proof-relevant strict variation matrix for the exact geometric Perron--Doob
 observable map at one finite side. -/
@@ -91,7 +84,8 @@ noncomputable def variationMatrixData
     intro f target
     change finiteProductCanonicalVariation (C.observable f) target ≤
       C.responseProfile f target
-    exact C.observable_canonicalVariation_le_responseProfile f target
+    exact finiteProductCanonicalVariation_le_variationBound
+      (C.outputVariationBound f) target
   coefficient := 1 / 2
   coefficient_nonneg := by norm_num
   columnSum_le_coefficient := by
