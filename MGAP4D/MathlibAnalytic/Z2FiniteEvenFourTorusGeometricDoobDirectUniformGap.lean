@@ -28,6 +28,10 @@ theorem finiteDimensionalSymmetricPositiveContraction_eigenbasis_inner_fixed_eq_
         inner ℝ (D.eigenbasis i) (D.operator q) :=
     D.symmetric (D.eigenbasis i) q
   rw [D.operator_apply_eigenbasis i, hq, inner_smul_left] at hSymm
+  have hScalar :
+      D.eigenvalue i * inner ℝ (D.eigenbasis i) q =
+        inner ℝ (D.eigenbasis i) q := by
+    simpa using hSymm
   nlinarith
 
 /-- The Rayleigh value of a normalized canonical eigenbasis vector is exactly
