@@ -18,10 +18,13 @@ noncomputable def finiteRealProbabilityKernelPushforwardData
 /-- Iterate a finite probability kernel on an initial finite law. -/
 noncomputable def finiteRealProbabilityKernelIterateData
     {G : Type} [Fintype G]
-    (kernel : G → FiniteRealProbabilityData G) :
-    ℕ → FiniteRealProbabilityData G → FiniteRealProbabilityData G
-  | 0, law => law
-  | n + 1, law =>
+    (kernel : G → FiniteRealProbabilityData G)
+    (n : ℕ)
+    (law : FiniteRealProbabilityData G) :
+    FiniteRealProbabilityData G :=
+  match n with
+  | 0 => law
+  | n + 1 =>
       finiteRealProbabilityKernelPushforwardData
         (finiteRealProbabilityKernelIterateData kernel n law) kernel
 
@@ -48,11 +51,12 @@ noncomputable def finiteRealProbabilityKernelCouplingIterateData
       FiniteRealCouplingData
         (leftKernel left) (rightKernel right))
     {leftLaw rightLaw : FiniteRealProbabilityData G}
-    (initial : FiniteRealCouplingData leftLaw rightLaw) :
-    (n : ℕ) →
-      FiniteRealCouplingData
-        (finiteRealProbabilityKernelIterateData leftKernel n leftLaw)
-        (finiteRealProbabilityKernelIterateData rightKernel n rightLaw)
+    (initial : FiniteRealCouplingData leftLaw rightLaw)
+    (n : ℕ) :
+    FiniteRealCouplingData
+      (finiteRealProbabilityKernelIterateData leftKernel n leftLaw)
+      (finiteRealProbabilityKernelIterateData rightKernel n rightLaw) :=
+  match n with
   | 0 => initial
   | n + 1 =>
       finiteRealProbabilityKernelCouplingStepData
