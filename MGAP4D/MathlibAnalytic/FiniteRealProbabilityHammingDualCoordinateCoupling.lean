@@ -36,10 +36,10 @@ theorem positiveDifferenceIndicator_expectation_sub_eq_totalVariationDistance
     by_cases h : Q.probability x ≤ P.probability x
     · simp [positiveDifferenceIndicator, h,
         abs_of_nonneg (sub_nonneg.mpr h)]
+      ring
     · have hlt : P.probability x < Q.probability x := lt_of_not_ge h
       simp [positiveDifferenceIndicator, h,
         abs_of_neg (sub_neg.mpr hlt)]
-      ring
   have hDifferenceSum :
       (∑ x : G, (P.probability x - Q.probability x)) = 0 := by
     rw [Finset.sum_sub_distrib,
