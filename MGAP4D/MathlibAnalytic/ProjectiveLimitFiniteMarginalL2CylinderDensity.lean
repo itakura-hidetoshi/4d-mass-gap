@@ -19,7 +19,9 @@ product configuration space. -/
 theorem measurableCylinders_isSetAlgebra :
     IsSetAlgebra (measurableCylinders α) where
   empty_mem := empty_mem_measurableCylinders α
-  compl_mem := compl_mem_measurableCylinders
+  compl_mem := by
+    intro s hs
+    exact compl_mem_measurableCylinders (α := α) hs
   union_mem := by
     intro s t hs ht
     exact union_mem_measurableCylinders (α := α) hs ht
