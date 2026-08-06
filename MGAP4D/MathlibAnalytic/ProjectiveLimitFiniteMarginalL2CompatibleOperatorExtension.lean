@@ -62,8 +62,7 @@ set_option backward.isDefEq.respectTransparency false in
     (h : K i ≤ ⨆ j, K j) :
     directedSubmoduleISupLift K dir f hf (Submodule.inclusion h x) = f i x := by
   dsimp [directedSubmoduleISupLift]
-  exact Set.iUnionLift_inclusion
-    (Submodule.coe_iSup_of_directed K dir) x h
+  exact Set.iUnionLift_inclusion x h
 
 set_option backward.isDefEq.respectTransparency false in
 theorem directedSubmoduleISupLift_of_mem
@@ -78,8 +77,7 @@ theorem directedSubmoduleISupLift_of_mem
     (hx : (x : M) ∈ K i) :
     directedSubmoduleISupLift K dir f hf x = f i ⟨x, hx⟩ := by
   dsimp [directedSubmoduleISupLift]
-  exact Set.iUnionLift_of_mem
-    (Submodule.coe_iSup_of_directed K dir) x hx
+  exact Set.iUnionLift_of_mem x hx
 
 end DirectedSubmoduleLift
 
@@ -89,7 +87,7 @@ variable
     [∀ i, MeasurableSpace (α i)]
 
 /-- A uniformly bounded compatible family of bounded operators on all finite
-marginal `L²` spaces of a projective system.  Compatibility is exact under the
+marginal `L²` spaces of a projective system. Compatibility is exact under the
 canonical finite-coordinate transition isometries. -/
 structure ProjectiveLimitFiniteMarginalL2OperatorSystem
     (μ : Measure (∀ i, α i))
@@ -267,10 +265,8 @@ theorem finiteCylinderOperator_agree_on_overlap
         S.finiteCylinderOperator K
           (Submodule.inclusion hSubI ⟨x, hxI⟩) := hEqI
     _ = S.finiteCylinderOperator K
-          (Submodule.inclusion hSubJ ⟨x, hxJ⟩) := by
-      congr 1
-      apply Subtype.ext
-      rfl
+          (Submodule.inclusion hSubJ ⟨x, hxJ⟩) :=
+      congrArg (S.finiteCylinderOperator K) (Subtype.ext (by rfl))
     _ = S.finiteCylinderOperator J ⟨x, hxJ⟩ := hEqJ.symm
 
 /-- The compatible finite operators glue to one linear operator on the algebraic
@@ -310,8 +306,14 @@ noncomputable def cylinderCoreOperator :
           (projectiveLimitFiniteMarginalL2CylinderSubspace_le_total
             μ Q hLimit J)
           ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f)) = _
-  rw [directedSubmoduleISupLift_inclusion]
-  exact S.finiteCylinderOperator_apply J f
+  calc
+    _ = S.finiteCylinderOperator J
+          ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f) :=
+      directedSubmoduleISupLift_inclusion
+        ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f)
+        (projectiveLimitFiniteMarginalL2CylinderSubspace_le_total
+          μ Q hLimit J)
+    _ = _ := S.finiteCylinderOperator_apply J f
 
 /-- Evaluate the glued cylinder-core operator using any finite cylinder range
 that contains the given vector. -/
@@ -331,15 +333,7 @@ theorem cylinderCoreOperator_of_mem
         (fun K => (S.finiteCylinderOperator K).toLinearMap)
         (fun I K y hyI hyK =>
           S.finiteCylinderOperator_agree_on_overlap I K y hyI hyK) x = _
-  exact directedSubmoduleISupLift_of_mem
-    (K := fun K : Finset ι =>
-      projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit K)
-    (dir := projectiveLimitFiniteMarginalL2CylinderSubspace_directed
-      (μ := μ) (Q := Q) (hLimit := hLimit) hProjective)
-    (f := fun K => (S.finiteCylinderOperator K).toLinearMap)
-    (hf := fun I K y hyI hyK =>
-      S.finiteCylinderOperator_agree_on_overlap I K y hyI hyK)
-    x hx
+  exact directedSubmoduleISupLift_of_mem x hx
 
 /-- The glued algebraic cylinder-core operator inherits the same uniform norm
 bound as every finite marginal operator. -/
@@ -391,7 +385,8 @@ theorem continuumOperator_apply_core
       (f := S.cylinderCoreOperator)
       (e := (projectiveLimitFiniteMarginalL2CylinderTotalSubspace
         μ Q hLimit).subtype)
-      S.cylinderCoreSubtype_denseRange
+      (cylinderCoreSubtype_denseRange
+        (μ := μ) (Q := Q) (hLimit := hLimit))
       ⟨S.bound, S.cylinderCoreOperator_norm_le⟩ x)
 
 /-- Exact finite-to-continuum intertwining: applying the continuum operator to
@@ -427,8 +422,9 @@ theorem continuumOperator_norm_le
       (f := S.cylinderCoreOperator)
       (e := (projectiveLimitFiniteMarginalL2CylinderTotalSubspace
         μ Q hLimit).subtype)
-      S.cylinderCoreSubtype_denseRange S.bound
-      S.cylinderCoreOperator_norm_le x)
+      (cylinderCoreSubtype_denseRange
+        (μ := μ) (Q := Q) (hLimit := hLimit))
+      S.bound S.cylinderCoreOperator_norm_le x)
 
 /-- The operator norm of the continuum extension is bounded by the same common
 finite-marginal constant. -/
@@ -440,8 +436,9 @@ theorem continuumOperator_opNorm_le
       (f := S.cylinderCoreOperator)
       (e := (projectiveLimitFiniteMarginalL2CylinderTotalSubspace
         μ Q hLimit).subtype)
-      S.cylinderCoreSubtype_denseRange S.bound_nonneg
-      S.cylinderCoreOperator_norm_le)
+      (cylinderCoreSubtype_denseRange
+        (μ := μ) (Q := Q) (hLimit := hLimit))
+      S.bound_nonneg S.cylinderCoreOperator_norm_le)
 
 /-- Any bounded continuum operator satisfying all finite-marginal intertwining
 equalities already agrees with the glued operator on the entire dense cylinder
@@ -507,8 +504,9 @@ theorem continuumOperator_unique
       (f := S.cylinderCoreOperator)
       (e := (projectiveLimitFiniteMarginalL2CylinderTotalSubspace
         μ Q hLimit).subtype)
-      S.cylinderCoreSubtype_denseRange S.bound
-      S.cylinderCoreOperator_norm_le g
+      (cylinderCoreSubtype_denseRange
+        (μ := μ) (Q := Q) (hLimit := hLimit))
+      S.bound S.cylinderCoreOperator_norm_le g
       (S.toLinearMap_comp_coreSubtype_eq_of_intertwining g hg))
 
 end ProjectiveLimitFiniteMarginalL2OperatorSystem
