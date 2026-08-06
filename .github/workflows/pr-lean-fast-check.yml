@@ -20,7 +20,7 @@ on:
   push:
     branches:
       - main
-      - formal/real-hilbert-uniform-coercive-strong-limit
+      - "formal/**"
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
       - "lean-toolchain"
@@ -31,7 +31,7 @@ on:
       - "scripts/**/*.sh"
 
 concurrency:
-  group: pr-lean-fast-check-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: pr-lean-fast-check-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 permissions:
@@ -39,8 +39,7 @@ permissions:
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
-  CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  CANONICAL_BRANCH: formal/real-hilbert-uniform-coercive-strong-limit
 
 jobs:
   pr-lean-fast-check:
@@ -53,6 +52,35 @@ jobs:
         with:
           fetch-depth: 2
           show-progress: false
+
+      - name: Resolve changed Lean base
+        shell: bash
+        run: |
+          set -euxo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            base_ref="${{ github.event.pull_request.base.sha }}"
+            cache_ref="${{ github.event.pull_request.base.sha }}"
+          elif [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            base_ref="${{ inputs.base_ref }}"
+            cache_ref="$(git rev-parse HEAD)"
+          elif [[ "${GITHUB_REF}" == "refs/heads/main" || \
+                  "${GITHUB_REF}" == "refs/heads/${CANONICAL_BRANCH}" ]]; then
+            base_ref="${{ github.event.before }}"
+            cache_ref="$(git rev-parse HEAD)"
+          else
+            git fetch --no-tags --depth=1 origin \
+              "${CANONICAL_BRANCH}:refs/remotes/origin/${CANONICAL_BRANCH}"
+            base_ref="origin/${CANONICAL_BRANCH}"
+            cache_ref="$(git rev-parse "${base_ref}")"
+          fi
+
+          echo "CHECK_CHANGED_LEAN_BASE_REF=${base_ref}" >> "${GITHUB_ENV}"
+          echo "LAKE_CACHE_REF_SHA=${cache_ref}" >> "${GITHUB_ENV}"
+          echo "[fast] event=${GITHUB_EVENT_NAME}"
+          echo "[fast] ref=${GITHUB_REF}"
+          echo "[fast] base=${base_ref}"
+          echo "[fast] cache-ref=${cache_ref}"
 
       - name: Preflight changed Lean static audit
         shell: bash
