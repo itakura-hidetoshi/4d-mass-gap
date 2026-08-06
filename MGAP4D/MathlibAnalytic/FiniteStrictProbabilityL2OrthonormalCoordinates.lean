@@ -9,33 +9,33 @@ open scoped BigOperators InnerProduct
 
 noncomputable section
 
-/-- Strictly positive probability weights on a finite index type.  The
-associated Hilbert carrier below uses square-root-density coordinates, so its
-standard Euclidean inner product is exactly the weighted `L²` pairing of
-observables. -/
+/-- Strictly positive probability weights on a finite index type. -/
 structure FiniteStrictProbabilityL2Data
-    (ι : Type*)
+    (ι : Type)
     [Fintype ι] where
   weight : ι → ℝ
   weight_pos : ∀ i : ι, 0 < weight i
   weight_sum : ∑ i : ι, weight i = 1
 
+/-- Square-root-density coordinate carrier of a finite probability `L²`
+space.  The underlying finite-dimensional Hilbert space depends only on the
+index type; the probability weights determine how observables are embedded. -/
+abbrev FiniteProbabilityL2Carrier
+    (ι : Type)
+    [Fintype ι] : Type :=
+  EuclideanSpace ℝ ι
+
 namespace FiniteStrictProbabilityL2Data
 
 variable
-    {ι : Type*}
+    {ι : Type}
     [Fintype ι]
     (P : FiniteStrictProbabilityL2Data ι)
-
-/-- Square-root-density coordinate carrier of a finite probability `L²`
-space. -/
-abbrev Carrier : Type :=
-  EuclideanSpace ℝ ι
 
 /-- Send an observable `f` to the Euclidean coordinate
 `sqrt(weight i) * f i`. -/
 noncomputable def observableEmbedLinearMap :
-    (ι → ℝ) →ₗ[ℝ] P.Carrier where
+    (ι → ℝ) →ₗ[ℝ] FiniteProbabilityL2Carrier ι where
   toFun f :=
     WithLp.toLp 2 fun i : ι => Real.sqrt (P.weight i) * f i
   map_add' f g := by
@@ -59,7 +59,7 @@ noncomputable def observableEmbedLinearMap :
 
 /-- Recover the observable represented by square-root-density coordinates. -/
 noncomputable def coordinateObserveLinearMap :
-    P.Carrier →ₗ[ℝ] (ι → ℝ) where
+    FiniteProbabilityL2Carrier ι →ₗ[ℝ] (ι → ℝ) where
   toFun x := fun i : ι => x i / Real.sqrt (P.weight i)
   map_add' x y := by
     funext i
@@ -74,7 +74,7 @@ noncomputable def coordinateObserveLinearMap :
     ring
 
 @[simp] theorem coordinateObserveLinearMap_apply
-    (x : P.Carrier)
+    (x : FiniteProbabilityL2Carrier ι)
     (i : ι) :
     P.coordinateObserveLinearMap x i =
       x i / Real.sqrt (P.weight i) :=
@@ -98,7 +98,7 @@ theorem coordinateObserve_observableEmbed
 
 /-- Embedding the recovered observable returns the original coordinate vector. -/
 theorem observableEmbed_coordinateObserve
-    (x : P.Carrier) :
+    (x : FiniteProbabilityL2Carrier ι) :
     P.observableEmbedLinearMap
         (P.coordinateObserveLinearMap x) = x := by
   ext i
@@ -152,7 +152,7 @@ end FiniteStrictProbabilityL2Data
 
 /-- Uniform probability weights on a finite nonempty type. -/
 noncomputable def finiteUniformProbabilityL2Data
-    (ι : Type*)
+    (ι : Type)
     [Fintype ι]
     [Nonempty ι] :
     FiniteStrictProbabilityL2Data ι where
@@ -167,7 +167,7 @@ noncomputable def finiteUniformProbabilityL2Data
     simp [hcard]
 
 @[simp] theorem finiteUniformProbabilityL2Data_weight
-    (ι : Type*)
+    (ι : Type)
     [Fintype ι]
     [Nonempty ι]
     (i : ι) :
@@ -179,13 +179,15 @@ noncomputable def finiteUniformProbabilityL2Data
 with the square-root coordinate carrier of any strict finite probability on
 the same index type. -/
 noncomputable def orthonormalBasisProbabilityL2Identification
-    {ι E : Type*}
+    {ι : Type}
+    {E : Type*}
     [Fintype ι]
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     (P : FiniteStrictProbabilityL2Data ι)
     (b : OrthonormalBasis ι ℝ E) :
-    RealHilbertLinearIsometricIdentification E P.Carrier where
+    RealHilbertLinearIsometricIdentification E
+      (FiniteProbabilityL2Carrier ι) where
   forward := b.repr.toLinearIsometry
   inverse := b.repr.symm.toLinearIsometry
   forward_inverse := b.repr.apply_symm_apply
@@ -194,17 +196,19 @@ noncomputable def orthonormalBasisProbabilityL2Identification
 /-- Pointwise multiplication on finite probability `L²` square-root
 coordinates. -/
 noncomputable def finiteProbabilityCoordinateMultiplicationOperator
-    {ι : Type*}
+    {ι : Type}
     [Fintype ι]
     (P : FiniteStrictProbabilityL2Data ι)
     (a : ι → ℝ) :
-    P.Carrier →L[ℝ] P.Carrier :=
+    FiniteProbabilityL2Carrier ι →L[ℝ]
+      FiniteProbabilityL2Carrier ι :=
   LinearMap.toContinuousLinearMap
     { toFun := fun x => WithLp.toLp 2 fun i : ι => a i * x i
       map_add' := by
         intro x y
         ext i
-        simp [mul_add]
+        change a i * (x i + y i) = a i * x i + a i * y i
+        ring
       map_smul' := by
         intro c x
         ext i
@@ -212,11 +216,11 @@ noncomputable def finiteProbabilityCoordinateMultiplicationOperator
         ring }
 
 @[simp] theorem finiteProbabilityCoordinateMultiplicationOperator_apply
-    {ι : Type*}
+    {ι : Type}
     [Fintype ι]
     (P : FiniteStrictProbabilityL2Data ι)
     (a : ι → ℝ)
-    (x : P.Carrier)
+    (x : FiniteProbabilityL2Carrier ι)
     (i : ι) :
     finiteProbabilityCoordinateMultiplicationOperator P a x i =
       a i * x i :=
@@ -225,7 +229,8 @@ noncomputable def finiteProbabilityCoordinateMultiplicationOperator
 /-- Conjugating a diagonal operator through its orthonormal-basis probability
 coordinates gives literal pointwise multiplication. -/
 theorem orthonormalBasisProbabilityL2Identification_transport_diagonal
-    {ι E : Type*}
+    {ι : Type}
+    {E : Type*}
     [Fintype ι]
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
@@ -265,7 +270,8 @@ theorem orthonormalBasisProbabilityL2Identification_transport_diagonal
 /-- Audit-visible receipt for a finite probability `L²` coordinate
 realization and a diagonal operator transported to pointwise multiplication. -/
 structure FiniteProbabilityL2OrthonormalCoordinatePackage
-    (ι E : Type*)
+    (ι : Type)
+    (E : Type*)
     [Fintype ι]
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
@@ -274,12 +280,14 @@ structure FiniteProbabilityL2OrthonormalCoordinatePackage
   basis : OrthonormalBasis ι ℝ E
   coefficient : ι → ℝ
   identification :
-    RealHilbertLinearIsometricIdentification E probability.Carrier
+    RealHilbertLinearIsometricIdentification E
+      (FiniteProbabilityL2Carrier ι)
   identification_eq_basis :
     identification =
       orthonormalBasisProbabilityL2Identification probability basis
   coordinateOperator :
-    probability.Carrier →L[ℝ] probability.Carrier
+    FiniteProbabilityL2Carrier ι →L[ℝ]
+      FiniteProbabilityL2Carrier ι
   coordinateOperator_eq_pointwise :
     coordinateOperator =
       finiteProbabilityCoordinateMultiplicationOperator
@@ -291,7 +299,8 @@ structure FiniteProbabilityL2OrthonormalCoordinatePackage
 
 /-- Construct the generic finite-probability coordinate receipt. -/
 noncomputable def finiteProbabilityL2OrthonormalCoordinatePackage
-    (ι E : Type*)
+    (ι : Type)
+    (E : Type*)
     [Fintype ι]
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
