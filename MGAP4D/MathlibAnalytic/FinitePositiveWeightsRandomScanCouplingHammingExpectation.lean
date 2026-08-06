@@ -112,7 +112,6 @@ theorem finitePositiveWeightsRandomScanJointCoupling_expectedCost_eq_average
           leftWeight rightWeight hLeftWeight hRightWeight
           leftInput rightInput target).expectedCost cost := by
       congr 1
-      apply Finset.sum_congr rfl
 
 /-- Exact expected Hamming cost of the common-target uniform random-scan
 coupling: average the exact one-site away-cost plus overlap disagreement. -/
