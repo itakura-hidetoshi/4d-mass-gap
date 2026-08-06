@@ -62,7 +62,10 @@ set_option backward.isDefEq.respectTransparency false in
     (h : K i ≤ ⨆ j, K j) :
     directedSubmoduleISupLift K dir f hf (Submodule.inclusion h x) = f i x := by
   dsimp [directedSubmoduleISupLift]
-  exact Set.iUnionLift_inclusion x h
+  exact Set.iUnionLift_inclusion
+    (S := fun j => (K j : Set M))
+    (f := fun j y => f j y)
+    (hf := hf) x h
 
 set_option backward.isDefEq.respectTransparency false in
 theorem directedSubmoduleISupLift_of_mem
@@ -77,7 +80,10 @@ theorem directedSubmoduleISupLift_of_mem
     (hx : (x : M) ∈ K i) :
     directedSubmoduleISupLift K dir f hf x = f i ⟨x, hx⟩ := by
   dsimp [directedSubmoduleISupLift]
-  exact Set.iUnionLift_of_mem x hx
+  exact Set.iUnionLift_of_mem
+    (S := fun j => (K j : Set M))
+    (f := fun j y => f j y)
+    (hf := hf) x hx
 
 end DirectedSubmoduleLift
 
@@ -311,8 +317,9 @@ noncomputable def cylinderCoreOperator :
           ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f) :=
       directedSubmoduleISupLift_inclusion
         ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f)
-        (projectiveLimitFiniteMarginalL2CylinderSubspace_le_total
-          μ Q hLimit J)
+        (le_iSup
+          (fun K : Finset ι =>
+            projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit K) J)
     _ = _ := S.finiteCylinderOperator_apply J f
 
 /-- Evaluate the glued cylinder-core operator using any finite cylinder range
