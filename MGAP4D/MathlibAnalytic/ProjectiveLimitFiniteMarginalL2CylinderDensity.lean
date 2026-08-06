@@ -19,8 +19,8 @@ product configuration space. -/
 theorem measurableCylinders_isSetAlgebra :
     IsSetAlgebra (measurableCylinders α) where
   empty_mem := empty_mem_measurableCylinders α
-  compl_mem := fun hs => compl_mem_measurableCylinders hs
-  union_mem := fun hs ht => union_mem_measurableCylinders hs ht
+  compl_mem := compl_mem_measurableCylinders
+  union_mem := union_mem_measurableCylinders
 
 /-- For every finite measure on a product measurable space, measurable
 finite-coordinate cylinders are dense for symmetric-difference measure. -/
@@ -137,6 +137,8 @@ theorem projectiveLimitFiniteMarginalL2CylinderTotalSubspace_indicatorConstLp_me
     (c : ℝ) :
     indicatorConstLp 2 hs (measure_ne_top μ s) c ∈
       (projectiveLimitFiniteMarginalL2CylinderTotalSubspace μ Q hLimit).topologicalClosure := by
+  letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
+  letI : Fact ((2 : ℝ≥0∞) ≠ ∞) := ⟨by norm_num⟩
   let hCyl : μ.MeasureDense (measurableCylinders α) :=
     measureDense_measurableCylinders_finite μ
   have hIndicators :=
@@ -154,7 +156,7 @@ theorem projectiveLimitFiniteMarginalL2CylinderTotalSubspace_indicatorConstLp_me
         Set (Lp ℝ 2 μ))
   refine closure_mono ?_ hClosure
   rintro f ⟨t, ht, hμt, rfl⟩
-  rcases (mem_measurableCylinders α t).1 ht with ⟨J, u, hu, rfl⟩
+  rcases (mem_measurableCylinders (α := α) t).1 ht with ⟨J, u, hu, rfl⟩
   simpa using
     (projectiveLimitFiniteMarginalL2CylinderTotalSubspace_indicatorConstLp_mem
       μ Q hLimit J hu c)
@@ -213,8 +215,8 @@ structure ProjectiveLimitFiniteMarginalL2CylinderDensityPackage
       projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J ≤
         projectiveLimitFiniteMarginalL2CylinderTotalSubspace μ Q hLimit
   indicator_mem_topologicalClosure :
-    ∀ {s : Set (∀ i, α i)}, MeasurableSet s → ∀ c : ℝ,
-      indicatorConstLp 2 ‹MeasurableSet s› (measure_ne_top μ s) c ∈
+    ∀ {s : Set (∀ i, α i)} (hs : MeasurableSet s) (c : ℝ),
+      indicatorConstLp 2 hs (measure_ne_top μ s) c ∈
         (projectiveLimitFiniteMarginalL2CylinderTotalSubspace μ Q hLimit).topologicalClosure
   topologicalClosure_eq_top :
     (projectiveLimitFiniteMarginalL2CylinderTotalSubspace μ Q hLimit).topologicalClosure = ⊤
