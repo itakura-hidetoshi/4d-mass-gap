@@ -36,7 +36,6 @@ theorem positiveDifferenceIndicator_expectation_sub_eq_totalVariationDistance
     by_cases h : Q.probability x ≤ P.probability x
     · simp [positiveDifferenceIndicator, h,
         abs_of_nonneg (sub_nonneg.mpr h)]
-      ring
     · have hlt : P.probability x < Q.probability x := lt_of_not_ge h
       simp [positiveDifferenceIndicator, h,
         abs_of_neg (sub_neg.mpr hlt)]
@@ -97,21 +96,31 @@ theorem positiveDifferenceIndicator_hammingOneLipschitz
     (P Q : FiniteRealProbabilityData (ι → A)) :
     FiniteProductHammingOneLipschitz
       (P.positiveDifferenceIndicator Q) := by
+  classical
   intro left right
   by_cases hEq : left = right
   · subst right
-    simp
+    simp [finiteProductHammingDistanceReal,
+      finiteProductDisagreementFinset]
   · have hAbs :
         |P.positiveDifferenceIndicator Q left -
           P.positiveDifferenceIndicator Q right| ≤ 1 := by
       unfold positiveDifferenceIndicator
       split_ifs <;> norm_num
+    have hExists : ∃ i : ι, left i ≠ right i := by
+      by_contra hNo
+      apply hEq
+      funext i
+      by_contra hi
+      exact hNo ⟨i, hi⟩
+    obtain ⟨i, hi⟩ := hExists
+    have hMem : i ∈ finiteProductDisagreementFinset left right := by
+      simp [finiteProductDisagreementFinset, hi]
     have hOne :
         (1 : ℝ) ≤ finiteProductHammingDistanceReal left right := by
-      have h :=
-        finiteDiscreteDisagreementCost_le_finiteProductHammingDistanceReal
-          left right
-      simpa [finiteDiscreteDisagreementCost, hEq] using h
+      unfold finiteProductHammingDistanceReal
+      exact_mod_cast
+        (Finset.one_le_card.mpr ⟨i, hMem⟩)
     exact hAbs.trans hOne
 
 /-- Any Hamming dual bound controls the standard total-variation distance. -/
@@ -133,14 +142,17 @@ end FiniteRealProbabilityData
 disagreement. -/
 theorem finiteProductMismatchIndicator_le_finiteDiscreteDisagreementCost
     {ι A : Type}
+    [Fintype ι]
     [DecidableEq A]
     (left right : ι → A)
     (source : ι) :
     finiteProductMismatchIndicator left right source ≤
       finiteDiscreteDisagreementCost left right := by
+  classical
   by_cases hCoordinate : left source = right source
-  · simp [finiteProductMismatchIndicator, hCoordinate,
-      finiteDiscreteDisagreementCost]
+  · simp only [finiteProductMismatchIndicator, hCoordinate, if_pos]
+    unfold finiteDiscreteDisagreementCost
+    split <;> norm_num
   · have hConfiguration : left ≠ right := by
       intro hEq
       exact hCoordinate (congrFun hEq source)
