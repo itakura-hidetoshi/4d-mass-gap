@@ -6,56 +6,43 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open scoped BigOperators
-
 noncomputable section
 
 /-- Full-configuration kernel obtained by resampling one coordinate. -/
 def finitePositiveWeightSingleSiteUpdateKernel
-    {ι G : Type} [DecidableEq ι] [DecidableEq G] [Fintype G]
+    {ι G : Type} [DecidableEq ι] [DecidableEq G]
+    [Fintype ι] [Fintype G]
     (weight : (ι → G) → ℝ) (input : ι → G) (target : ι)
     (output : ι → G) : ℝ :=
   ∑ g : G, if Function.update input target g = output then
     finitePositiveWeightSingleSiteProbability weight input target g else 0
 
 theorem finitePositiveWeightSingleSiteUpdateKernel_nonneg
-    {ι G : Type} [DecidableEq ι] [DecidableEq G] [Fintype G]
-    (weight : (ι → G) → ℝ)
-    (hweight : ∀ A : ι → G, 0 < weight A)
+    {ι G : Type} [DecidableEq ι] [DecidableEq G]
+    [Fintype ι] [Fintype G]
+    (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (input : ι → G) (target : ι) (output : ι → G) :
-    0 ≤ finitePositiveWeightSingleSiteUpdateKernel
-      weight input target output := by
+    0 ≤ finitePositiveWeightSingleSiteUpdateKernel weight input target output := by
   unfold finitePositiveWeightSingleSiteUpdateKernel
-  exact Finset.sum_nonneg fun g _ => by
-    split_ifs
-    · exact le_of_lt
-        (finitePositiveWeightSingleSiteProbability_pos
-          weight hweight input target g)
-    · exact le_rfl
+  apply Finset.sum_nonneg
+  intro g _
+  by_cases h : Function.update input target g = output
+  · simp [h, le_of_lt (finitePositiveWeightSingleSiteProbability_pos
+      weight hweight input target g)]
+  · simp [h]
 
 theorem finitePositiveWeightSingleSiteUpdateKernel_sum_eq_one
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
     [Fintype ι] [Fintype G] [Nonempty G]
-    (weight : (ι → G) → ℝ)
-    (hweight : ∀ A : ι → G, 0 < weight A)
+    (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (input : ι → G) (target : ι) :
     ∑ output : ι → G,
-      finitePositiveWeightSingleSiteUpdateKernel
-        weight input target output = 1 := by
+      finitePositiveWeightSingleSiteUpdateKernel weight input target output = 1 := by
   classical
   unfold finitePositiveWeightSingleSiteUpdateKernel
   rw [Finset.sum_comm]
-  calc
-    (∑ g : G, ∑ output : ι → G,
-      if Function.update input target g = output then
-        finitePositiveWeightSingleSiteProbability weight input target g
-      else 0) =
-        ∑ g : G,
-          finitePositiveWeightSingleSiteProbability weight input target g := by
-      apply Finset.sum_congr rfl
-      intro g _
-      simp
-    _ = 1 := finitePositiveWeightSingleSiteProbability_sum_eq_one
-      weight hweight input target
+  simp [finitePositiveWeightSingleSiteProbability_sum_eq_one
+    weight hweight input target]
 
 theorem finitePositiveWeightSingleSiteUpdateKernel_expectation
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
@@ -63,34 +50,17 @@ theorem finitePositiveWeightSingleSiteUpdateKernel_expectation
     (weight : (ι → G) → ℝ) (input : ι → G) (target : ι)
     (f : (ι → G) → ℝ) :
     (∑ output : ι → G,
-      finitePositiveWeightSingleSiteUpdateKernel
-        weight input target output * f output) =
+      finitePositiveWeightSingleSiteUpdateKernel weight input target output *
+        f output) =
       finitePositiveWeightSingleSiteExpectation weight f input target := by
   classical
   unfold finitePositiveWeightSingleSiteUpdateKernel
     finitePositiveWeightSingleSiteExpectation
-  calc
-    (∑ output : ι → G,
-      (∑ g : G, if Function.update input target g = output then
-        finitePositiveWeightSingleSiteProbability weight input target g
-      else 0) * f output) =
-        ∑ output : ι → G, ∑ g : G,
-          (if Function.update input target g = output then
-            finitePositiveWeightSingleSiteProbability weight input target g
-          else 0) * f output := by
-      apply Finset.sum_congr rfl
-      intro output _
-      rw [Finset.sum_mul]
-    _ = ∑ g : G, ∑ output : ι → G,
-          (if Function.update input target g = output then
-            finitePositiveWeightSingleSiteProbability weight input target g
-          else 0) * f output := by rw [Finset.sum_comm]
-    _ = ∑ g : G,
-          finitePositiveWeightSingleSiteProbability weight input target g *
-            f (Function.update input target g) := by
-      apply Finset.sum_congr rfl
-      intro g _
-      simp
+  simp_rw [Finset.sum_mul]
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro g _
+  simp
 
 /-- Uniform random-scan full-configuration kernel. -/
 def finitePositiveWeightRandomScanKernel
@@ -103,8 +73,7 @@ def finitePositiveWeightRandomScanKernel
 theorem finitePositiveWeightRandomScanKernel_nonneg
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
     [Fintype ι] [Fintype G]
-    (weight : (ι → G) → ℝ)
-    (hweight : ∀ A : ι → G, 0 < weight A)
+    (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (input output : ι → G) :
     0 ≤ finitePositiveWeightRandomScanKernel weight input output := by
   unfold finitePositiveWeightRandomScanKernel
@@ -116,8 +85,7 @@ theorem finitePositiveWeightRandomScanKernel_nonneg
 theorem finitePositiveWeightRandomScanKernel_sum_eq_one
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
     [Fintype ι] [Fintype G] [Nonempty G]
-    (weight : (ι → G) → ℝ)
-    (hweight : ∀ A : ι → G, 0 < weight A)
+    (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (hCard : 0 < Fintype.card ι) (input : ι → G) :
     ∑ output : ι → G,
       finitePositiveWeightRandomScanKernel weight input output = 1 := by
@@ -125,26 +93,10 @@ theorem finitePositiveWeightRandomScanKernel_sum_eq_one
   have hn : (Fintype.card ι : ℝ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt hCard)
   unfold finitePositiveWeightRandomScanKernel
-  calc
-    (∑ output : ι → G, (Fintype.card ι : ℝ)⁻¹ *
-      ∑ target : ι,
-        finitePositiveWeightSingleSiteUpdateKernel
-          weight input target output) =
-        (Fintype.card ι : ℝ)⁻¹ *
-          ∑ output : ι → G, ∑ target : ι,
-            finitePositiveWeightSingleSiteUpdateKernel
-              weight input target output := by rw [Finset.mul_sum]
-    _ = (Fintype.card ι : ℝ)⁻¹ *
-          ∑ target : ι, ∑ output : ι → G,
-            finitePositiveWeightSingleSiteUpdateKernel
-              weight input target output := by rw [Finset.sum_comm]
-    _ = (Fintype.card ι : ℝ)⁻¹ * ∑ _target : ι, (1 : ℝ) := by
-      congr 1
-      apply Finset.sum_congr rfl
-      intro target _
-      exact finitePositiveWeightSingleSiteUpdateKernel_sum_eq_one
-        weight hweight input target
-    _ = 1 := by simp [hn]
+  rw [← Finset.mul_sum, Finset.sum_comm]
+  simp_rw [finitePositiveWeightSingleSiteUpdateKernel_sum_eq_one
+    weight hweight input]
+  simp [hn]
 
 theorem finitePositiveWeightRandomScanKernel_expectation
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
@@ -160,32 +112,25 @@ theorem finitePositiveWeightRandomScanKernel_expectation
   calc
     (∑ output : ι → G,
       ((Fintype.card ι : ℝ)⁻¹ * ∑ target : ι,
-        finitePositiveWeightSingleSiteUpdateKernel
-          weight input target output) * f output) =
-        ∑ output : ι → G, (Fintype.card ι : ℝ)⁻¹ *
-          ((∑ target : ι, finitePositiveWeightSingleSiteUpdateKernel
-            weight input target output) * f output) := by
+        finitePositiveWeightSingleSiteUpdateKernel weight input target output) *
+        f output) =
+      (Fintype.card ι : ℝ)⁻¹ * ∑ output : ι → G,
+        (∑ target : ι,
+          finitePositiveWeightSingleSiteUpdateKernel weight input target output) *
+          f output := by
+      rw [Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro output _
       ring
-    _ = (Fintype.card ι : ℝ)⁻¹ *
-        ∑ output : ι → G,
-          ((∑ target : ι, finitePositiveWeightSingleSiteUpdateKernel
-            weight input target output) * f output) := by rw [Finset.mul_sum]
-    _ = (Fintype.card ι : ℝ)⁻¹ *
-        ∑ output : ι → G, ∑ target : ι,
-          finitePositiveWeightSingleSiteUpdateKernel
-            weight input target output * f output := by
-      congr 1
-      apply Finset.sum_congr rfl
-      intro output _
-      rw [Finset.sum_mul]
-    _ = (Fintype.card ι : ℝ)⁻¹ *
-        ∑ target : ι, ∑ output : ι → G,
-          finitePositiveWeightSingleSiteUpdateKernel
-            weight input target output * f output := by rw [Finset.sum_comm]
     _ = (Fintype.card ι : ℝ)⁻¹ * ∑ target : ι,
-          finitePositiveWeightSingleSiteExpectation weight f input target := by
+        ∑ output : ι → G,
+          finitePositiveWeightSingleSiteUpdateKernel weight input target output *
+            f output := by
+      congr 1
+      simp_rw [Finset.sum_mul]
+      rw [Finset.sum_comm]
+    _ = (Fintype.card ι : ℝ)⁻¹ * ∑ target : ι,
+        finitePositiveWeightSingleSiteExpectation weight f input target := by
       congr 1
       apply Finset.sum_congr rfl
       intro target _
@@ -195,8 +140,7 @@ theorem finitePositiveWeightRandomScanKernel_expectation
 noncomputable def finitePositiveWeightRandomScanProbabilityData
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
     [Fintype ι] [Fintype G] [Nonempty G]
-    (weight : (ι → G) → ℝ)
-    (hweight : ∀ A : ι → G, 0 < weight A)
+    (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (hCard : 0 < Fintype.card ι) (input : ι → G) :
     FiniteRealProbabilityData (ι → G) :=
   { probability := finitePositiveWeightRandomScanKernel weight input
@@ -210,22 +154,19 @@ noncomputable def finitePositiveWeightRandomScanProbabilityData
 theorem finitePositiveWeightGlobalProbability_randomScan_stationary
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
     [Fintype ι] [Fintype G] [Nonempty G]
-    (weight : (ι → G) → ℝ)
-    (hweight : ∀ A : ι → G, 0 < weight A)
+    (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (hCard : 0 < Fintype.card ι) (output : ι → G) :
     (∑ input : ι → G,
       finitePositiveWeightGlobalProbability weight input *
         finitePositiveWeightRandomScanKernel weight input output) =
       finitePositiveWeightGlobalProbability weight output := by
   classical
-  let indicator : (ι → G) → ℝ :=
-    fun A => if A = output then 1 else 0
+  let indicator : (ι → G) → ℝ := fun A => if A = output then 1 else 0
   have h := finitePositiveWeightGlobalExpectation_randomScan
     weight hweight hCard indicator
   unfold finitePositiveWeightGlobalExpectation at h
   have hAction (input : ι → G) :
-      finitePositiveWeightRandomScanConditionalExpectation
-          weight indicator input =
+      finitePositiveWeightRandomScanConditionalExpectation weight indicator input =
         ∑ A : ι → G,
           finitePositiveWeightRandomScanKernel weight input A * indicator A :=
     (finitePositiveWeightRandomScanKernel_expectation
@@ -234,6 +175,5 @@ theorem finitePositiveWeightGlobalProbability_randomScan_stationary
   simpa [indicator] using h
 
 end
-
 end MathlibAnalytic
 end MGAP4D
