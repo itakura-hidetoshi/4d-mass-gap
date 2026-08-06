@@ -10,6 +10,40 @@ open scoped InnerProduct
 
 noncomputable section
 
+/-- An eigenbasis vector with eigenvalue strictly below one is orthogonal to
+every fixed vector of a finite-dimensional real symmetric contraction. -/
+theorem finiteDimensionalSymmetricPositiveContraction_eigenbasis_inner_fixed_eq_zero
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [FiniteDimensional ℝ E]
+    (D : FiniteDimensionalSymmetricPositiveContractionData E)
+    (i : Fin D.dimension)
+    (q : E)
+    (hq : D.operator q = q)
+    (hi : D.eigenvalue i < 1) :
+    inner ℝ (D.eigenbasis i) q = 0 := by
+  have hSymm :
+      inner ℝ (D.operator (D.eigenbasis i)) q =
+        inner ℝ (D.eigenbasis i) (D.operator q) :=
+    D.symmetric (D.eigenbasis i) q
+  rw [D.operator_apply_eigenbasis i, hq, inner_smul_left] at hSymm
+  nlinarith
+
+/-- The Rayleigh value of a normalized canonical eigenbasis vector is exactly
+its eigenvalue. -/
+theorem finiteDimensionalSymmetricPositiveContraction_eigenbasis_rayleigh_eq_eigenvalue
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [FiniteDimensional ℝ E]
+    (D : FiniteDimensionalSymmetricPositiveContractionData E)
+    (i : Fin D.dimension) :
+    inner ℝ (D.operator (D.eigenbasis i)) (D.eigenbasis i) =
+      D.eigenvalue i := by
+  rw [D.operator_apply_eigenbasis i, inner_smul_left]
+  simp
+
 /-- The compact direct-variation context at one finite side, with all physical
 parameters and cutoff evidence inherited unchanged. -/
 noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectVariationContextAt
@@ -87,15 +121,10 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirect_excitedEigenvalue_le_half
     apply Subtype.ext
     exact finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround_fixed
       H β energyIdentity energyNontrivial hβ.le hEnergy.le
-  have hSymm :
-      inner ℝ (D.operator x) q = inner ℝ x (D.operator q) :=
-    D.symmetric x q
   have hOrthogonal : inner ℝ x q = 0 := by
-    rw [D.operator_apply_eigenbasis i.1, hqFixed] at hSymm
-    have hScalar :
-        D.eigenvalue i.1 * inner ℝ x q = inner ℝ x q := by
-      simpa [x] using hSymm
-    nlinarith [i.2.2]
+    simpa [x] using
+      finiteDimensionalSymmetricPositiveContraction_eigenbasis_inner_fixed_eq_zero
+        D i.1 q hqFixed i.2.2
   have hxGround :
       inner ℝ x.1
         (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
@@ -112,8 +141,9 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirect_excitedEigenvalue_le_half
   change inner ℝ (D.operator x) x ≤ (1 / 2 : ℝ) * ‖x‖ ^ 2 at hTransfer
   have hEigenRayleigh :
       inner ℝ (D.operator x) x = D.eigenvalue i.1 := by
-    rw [D.operator_apply_eigenbasis i.1]
-    simp [x, real_inner_self_eq_norm_sq]
+    simpa [x] using
+      finiteDimensionalSymmetricPositiveContraction_eigenbasis_rayleigh_eq_eigenvalue
+        D i.1
   calc
     D.eigenvalue i.1 = inner ℝ (D.operator x) x := hEigenRayleigh.symm
     _ ≤ (1 / 2 : ℝ) * ‖x‖ ^ 2 := hTransfer
