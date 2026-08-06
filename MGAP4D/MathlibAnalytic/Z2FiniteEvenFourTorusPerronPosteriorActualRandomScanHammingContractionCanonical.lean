@@ -104,9 +104,8 @@ theorem
         finiteProductHammingDistanceReal leftHidden rightHidden := by
   exact
     (finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
-      energyIdentity energyNontrivial hEnergy).
-        randomScanOverlapCoupling_expectedHamming_le_rate_mul
-          β hβ hβCutoff H environment leftHidden rightHidden
+      energyIdentity energyNontrivial hEnergy).randomScanOverlapCoupling_expectedHamming_le_rate_mul
+        β hβ hβCutoff H environment leftHidden rightHidden
 
 end
 end MathlibAnalytic
