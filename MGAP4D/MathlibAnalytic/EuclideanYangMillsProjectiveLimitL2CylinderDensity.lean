@@ -9,6 +9,14 @@ open scoped ENNReal
 
 noncomputable section
 
+/-- Every typed Euclidean Yang--Mills projective-limit measure is locally
+available as a probability measure throughout this specialization file. -/
+local instance projectiveLimitContinuumProbability
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    (L : EuclideanYangMillsProjectiveLimitMeasure F) :
+    IsProbabilityMeasure L.continuumMeasure :=
+  euclidean_yang_mills_projective_limit_probability L
+
 namespace EuclideanYangMillsProjectiveLimitMeasure
 
 variable
@@ -38,8 +46,6 @@ theorem finiteMarginalL2CylinderTotalSubspace_indicatorConstLp_mem_topologicalCl
     (c : ℝ) :
     indicatorConstLp 2 hs (measure_ne_top L.continuumMeasure s) c ∈
       L.finiteMarginalL2CylinderTotalSubspace.topologicalClosure := by
-  letI : IsProbabilityMeasure L.continuumMeasure :=
-    euclidean_yang_mills_projective_limit_probability L
   simpa [finiteMarginalL2CylinderTotalSubspace,
     finiteMarginalL2CylinderSubspace,
     projectiveLimitFiniteMarginalL2CylinderTotalSubspace] using
@@ -50,8 +56,6 @@ theorem finiteMarginalL2CylinderTotalSubspace_indicatorConstLp_mem_topologicalCl
 is the full continuum projective-limit `L²` carrier. -/
 theorem finiteMarginalL2CylinderTotalSubspace_topologicalClosure_eq_top :
     L.finiteMarginalL2CylinderTotalSubspace.topologicalClosure = ⊤ := by
-  letI : IsProbabilityMeasure L.continuumMeasure :=
-    euclidean_yang_mills_projective_limit_probability L
   simpa [finiteMarginalL2CylinderTotalSubspace,
     finiteMarginalL2CylinderSubspace,
     projectiveLimitFiniteMarginalL2CylinderTotalSubspace] using
