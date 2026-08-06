@@ -365,21 +365,37 @@ theorem finiteInfluenceKernelObservableResponse_eq_matrix_mul
       (fun e => ∑ source : ι, family source e) = variation := by
     funext e
     exact finiteInfluenceKernelSingletonVariation_sum_weighted variation e
-  rw [← hVariation,
-    finiteInfluenceKernelObservableResponse_sum K sourceEnvelope family iterations]
-  apply Finset.sum_congr rfl
-  intro source _hsource
-  have hSingleton :
-      family source =
-        fun e => variation source *
-          finiteInfluenceKernelSingletonVariation 1 source e := by
-    funext e
-    unfold family finiteInfluenceKernelSingletonVariation
-    split <;> ring
-  rw [hSingleton,
-    finiteInfluenceKernelObservableResponse_scale]
-  unfold finiteInfluenceKernelObservableResponseEntry
-  ring
+  calc
+    finiteInfluenceKernelObservableResponse
+        K sourceEnvelope variation iterations =
+      finiteInfluenceKernelObservableResponse K sourceEnvelope
+        (fun e => ∑ source : ι, family source e) iterations := by
+          exact congrArg
+            (fun profile : ι → ℝ =>
+              finiteInfluenceKernelObservableResponse
+                K sourceEnvelope profile iterations)
+            hVariation.symm
+    _ = ∑ source : ι,
+        finiteInfluenceKernelObservableResponse
+          K sourceEnvelope (family source) iterations :=
+      finiteInfluenceKernelObservableResponse_sum
+        K sourceEnvelope family iterations
+    _ = ∑ source : ι,
+        finiteInfluenceKernelObservableResponseEntry
+          K sourceEnvelope iterations source * variation source := by
+      apply Finset.sum_congr rfl
+      intro source _hsource
+      have hSingleton :
+          family source =
+            fun e => variation source *
+              finiteInfluenceKernelSingletonVariation 1 source e := by
+        funext e
+        unfold family finiteInfluenceKernelSingletonVariation
+        split <;> ring
+      rw [hSingleton,
+        finiteInfluenceKernelObservableResponse_scale]
+      unfold finiteInfluenceKernelObservableResponseEntry
+      ring
 
 /-- Response entries are nonnegative for a nonnegative target envelope. -/
 theorem finiteInfluenceKernelObservableResponseEntry_nonneg
