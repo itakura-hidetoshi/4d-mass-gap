@@ -1,6 +1,13 @@
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusGaugeOrbitProbabilityL2Realization
 import Mathlib.Tactic
 
+/-!
+This file separates two finite-volume normalizations that share the same
+residual-gauge orbit observables: the counting-Hilbert isometry and the literal
+pushforward-probability `L²` embedding.  The latter carries the exact global
+factor `card(configurations)⁻¹` in squared norm.
+-/
+
 namespace MGAP4D
 namespace MathlibAnalytic
 
