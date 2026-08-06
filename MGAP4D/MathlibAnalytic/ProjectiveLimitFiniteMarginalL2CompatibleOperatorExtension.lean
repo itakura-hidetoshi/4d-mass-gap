@@ -316,6 +316,13 @@ noncomputable def cylinderCoreOperator :
     _ = S.finiteCylinderOperator J
           ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f) :=
       directedSubmoduleISupLift_inclusion
+        (K := fun K : Finset ι =>
+          projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit K)
+        (dir := projectiveLimitFiniteMarginalL2CylinderSubspace_directed
+          (μ := μ) (Q := Q) (hLimit := hLimit) hProjective)
+        (f := fun K => (S.finiteCylinderOperator K).toLinearMap)
+        (hf := fun I K x hxI hxK =>
+          S.finiteCylinderOperator_agree_on_overlap I K x hxI hxK)
         ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f)
         (le_iSup
           (fun K : Finset ι =>
