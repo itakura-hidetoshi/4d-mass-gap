@@ -16,9 +16,15 @@ theorem finiteRealDisagreementIndicator_sum_eq_hamming
       finiteRealDisagreementIndicator (A target) (B target)) =
       finiteProductHammingDistanceReal A B := by
   classical
-  simp [finiteRealDisagreementIndicator,
-    finiteProductHammingDistanceReal,
-    finiteProductDisagreementFinset]
+  unfold finiteRealDisagreementIndicator
+    finiteProductHammingDistanceReal finiteProductDisagreementFinset
+  calc
+    (∑ target : ι, if A target ≠ B target then (1 : ℝ) else 0) =
+        ∑ target ∈ Finset.univ.filter (fun i : ι => A i ≠ B i),
+          (1 : ℝ) := by
+      rw [Finset.sum_filter]
+    _ = ((Finset.univ.filter (fun i : ι => A i ≠ B i)).card : ℝ) := by
+      simp
 
 /-- Summing the Hamming cost away from the selected coordinate counts every
 original disagreement once for each other coordinate. -/
@@ -71,7 +77,7 @@ theorem finiteProductHammingAwayReal_average_eq_one_sub_inv_mul_hamming
   have hn : (Fintype.card ι : ℝ) ≠ 0 := by
     exact_mod_cast (Nat.ne_of_gt hCard)
   rw [finiteProductHammingAwayReal_sum_eq_card_sub_one_mul_hamming]
-  field_simp [hn] <;> ring
+  field_simp [hn]
 
 end
 end MathlibAnalytic
