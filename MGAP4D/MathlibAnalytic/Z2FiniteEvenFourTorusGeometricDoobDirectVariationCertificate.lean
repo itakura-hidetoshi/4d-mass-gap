@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusGeometricDoobDirectResponseMatrix
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusPerronPosteriorComponentObservableResponse
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeDoobMixtureIndexUniformity
-import MGAP4D.MathlibAnalytic.FiniteProductDoobParallelVariation
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -122,9 +121,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobObservable_eq_componentE
       apply Finset.sum_congr rfl
       intro hidden _hhidden
       rw [Finset.sum_mul]
-      apply Finset.sum_congr rfl
-      intro g _hg
-      ring
     _ = ∑ g : FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H,
         ∑ hidden : FiniteEvenFourTorusZ2SliceConfiguration H,
           (finiteEvenFourTorusZ2ResidualGaugePerronSmoothedMixtureIndexProbabilityData
@@ -278,124 +274,6 @@ theorem finiteEvenFourTorusZ2PerronPosteriorObservableKernelResponseError_eq_dir
       variation
       (finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
         energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
-
-/-- The exact geometric Doob observable map has canonical coordinate variation
-bounded by the strict direct response matrix. -/
-theorem finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobObservable_canonicalVariation_le_directResponseMatrix
-    (energyIdentity energyNontrivial : ℝ)
-    (hEnergy : energyIdentity < energyNontrivial)
-    (β : ℝ)
-    (hβ : 0 < β)
-    (hβCutoff :
-      β ≤ finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
-        energyIdentity energyNontrivial hEnergy)
-    (H : ℕ)
-    (f : FiniteEvenFourTorusZ2SliceConfiguration H → ℝ)
-    (target : FiniteEvenFourTorusSpatialLink H) :
-    finiteProductCanonicalVariation
-        ((finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobObservableLinearMap f)
-        target ≤
-      ∑ source : FiniteEvenFourTorusSpatialLink H,
-        finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence
-          energyIdentity energyNontrivial hEnergy β hβ hβCutoff
-          H target source * finiteProductCanonicalVariation f source := by
-  let C :=
-    finiteEvenFourTorusZ2PerronPosteriorActualHighTemperatureContinuationData
-      energyIdentity energyNontrivial hEnergy
-  have hβActual : β ≤ C.couplingCutoff :=
-    hβCutoff.trans
-      (finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_le_actual
-        energyIdentity energyNontrivial hEnergy)
-  let P : FiniteProductVariationBound f :=
-    { variation := fun source => finiteProductCanonicalVariation f source
-      variation_nonneg := finiteProductCanonicalVariation_nonneg f
-      variation_bound := by
-        intro source left right hAgree
-        exact finiteProduct_difference_abs_le_canonicalVariation
-          f source left right hAgree }
-  let Q : FiniteProductVariationBound
-      ((finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobObservableLinearMap f) :=
-    { variation := fun responseTarget =>
-        ∑ source : FiniteEvenFourTorusSpatialLink H,
-          finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence
-            energyIdentity energyNontrivial hEnergy β hβ hβCutoff
-            H responseTarget source * finiteProductCanonicalVariation f source
-      variation_nonneg := by
-        intro responseTarget
-        exact Finset.sum_nonneg fun source _hsource =>
-          mul_nonneg
-            (finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_nonneg
-              energyIdentity energyNontrivial hEnergy β hβ hβCutoff
-              H responseTarget source)
-            (finiteProductCanonicalVariation_nonneg f source)
-      variation_bound := by
-        intro responseTarget left right hAgree
-        have hBound :=
-          finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobObservable_difference_abs_le_observableKernelResponse_of_agreeOff
-            C β hβ hβActual H left right responseTarget hAgree
-            f P
-            (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel
-              H β energyIdentity energyNontrivial hβ hEnergy)
-            (finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
-              energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
-            (finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelopeKernel_dominates
-              H β energyIdentity energyNontrivial hβ hEnergy)
-        rw [finiteEvenFourTorusZ2PerronPosteriorObservableKernelResponseError_eq_directResponseMatrix
-          energyIdentity energyNontrivial hEnergy β hβ hβCutoff
-          H responseTarget P.variation] at hBound
-        simpa [P, abs_sub_comm] using hBound }
-  exact finiteProductCanonicalVariation_le_variationBound Q target
-
-/-- Proof-relevant strict variation matrix for the exact geometric Perron--Doob
-observable map at one finite side. -/
-noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectVariationMatrixData
-    (energyIdentity energyNontrivial : ℝ)
-    (hEnergy : energyIdentity < energyNontrivial)
-    (β : ℝ)
-    (hβ : 0 < β)
-    (hβCutoff :
-      β ≤ finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
-        energyIdentity energyNontrivial hEnergy)
-    (H : ℕ) :
-    FiniteProductParallelVariationMatrixData
-      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le).doobObservableLinearMap where
-  influence :=
-    finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence
-      energyIdentity energyNontrivial hEnergy β hβ hβCutoff H
-  influence_nonneg :=
-    finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_nonneg
-      energyIdentity energyNontrivial hEnergy β hβ hβCutoff H
-  canonicalVariation_le :=
-    finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobObservable_canonicalVariation_le_directResponseMatrix
-      energyIdentity energyNontrivial hEnergy β hβ hβCutoff H
-  coefficient := 1 / 2
-  coefficient_nonneg := by norm_num
-  columnSum_le_coefficient := by
-    intro source
-    exact le_of_lt
-      (finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_columnSum_lt_half
-        energyIdentity energyNontrivial hEnergy β hβ hβCutoff H source)
-  coefficient_lt_one := by norm_num
-
-/-- Direct parallel variation certificate for the actual geometric Doob row. -/
-noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectParallelVariationCertificate
-    (energyIdentity energyNontrivial : ℝ)
-    (hEnergy : energyIdentity < energyNontrivial)
-    (β : ℝ)
-    (hβ : 0 < β)
-    (hβCutoff :
-      β ≤ finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
-        energyIdentity energyNontrivial hEnergy)
-    (H : ℕ) :
-    FiniteProductDoobParallelVariationCertificate
-      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le) where
-  variationData :=
-    finiteEvenFourTorusZ2GeometricDoobDirectVariationMatrixData
-      energyIdentity energyNontrivial hEnergy β hβ hβCutoff H
 
 end
 
