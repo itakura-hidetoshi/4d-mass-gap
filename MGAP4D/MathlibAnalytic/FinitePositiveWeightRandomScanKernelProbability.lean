@@ -19,7 +19,7 @@ def finitePositiveWeightSingleSiteUpdateKernel
 
 theorem finitePositiveWeightSingleSiteUpdateKernel_nonneg
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
-    [Fintype ι] [Fintype G]
+    [Fintype ι] [Fintype G] [Nonempty G]
     (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (input : ι → G) (target : ι) (output : ι → G) :
     0 ≤ finitePositiveWeightSingleSiteUpdateKernel weight input target output := by
@@ -72,7 +72,7 @@ def finitePositiveWeightRandomScanKernel
 
 theorem finitePositiveWeightRandomScanKernel_nonneg
     {ι G : Type} [DecidableEq ι] [DecidableEq G]
-    [Fintype ι] [Fintype G]
+    [Fintype ι] [Fintype G] [Nonempty G]
     (weight : (ι → G) → ℝ) (hweight : ∀ A : ι → G, 0 < weight A)
     (input output : ι → G) :
     0 ≤ finitePositiveWeightRandomScanKernel weight input output := by
