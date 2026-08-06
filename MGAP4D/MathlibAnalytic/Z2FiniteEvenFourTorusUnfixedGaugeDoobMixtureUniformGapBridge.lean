@@ -173,8 +173,12 @@ noncomputable def toSpatialSandwichStabilityCompletePackage
       β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
     K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer.centeredPoincare.coercivity =
       1 - K.rate := by
-  change K.fullCoercivity = 1 - K.rate
-  exact K.fullCoercivity_eq_one_sub_rate
+  calc
+    K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer.centeredPoincare.coercivity =
+        K.toSpatialSandwichStabilityCompletePackage.stability.fullCoercivity :=
+      K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer_coercivity_eq
+    _ = K.fullCoercivity := rfl
+    _ = 1 - K.rate := K.fullCoercivity_eq_one_sub_rate
 
 end Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
 
