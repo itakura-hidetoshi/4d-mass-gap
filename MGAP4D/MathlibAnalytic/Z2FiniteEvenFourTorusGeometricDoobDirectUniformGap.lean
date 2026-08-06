@@ -43,7 +43,11 @@ theorem weightedCenteredRayleigh_le_half
   have hRayleigh :=
     finiteProductDoob_centered_parallel_rayleigh_le
       C.doobData C.parallelVariationCertificate f hMean
-  simpa [variationMatrixData_coefficient] using hRayleigh
+  change C.doobData.weightedDoobQuadratic f ≤
+    C.variationMatrixData.coefficient * C.doobData.weightedNormSq f
+    at hRayleigh
+  rw [C.variationMatrixData_coefficient] at hRayleigh
+  exact hRayleigh
 
 end Z2GeometricDoobDirectVariationContext
 
@@ -87,11 +91,11 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirect_excitedEigenvalue_le_half
       inner ℝ (D.operator x) q = inner ℝ x (D.operator q) :=
     D.symmetric x q
   have hOrthogonal : inner ℝ x q = 0 := by
-    rw [D.operator_apply_eigenbasis i.1, hqFixed,
-      inner_smul_left] at hSymm
-    have hNe : D.eigenvalue i.1 ≠ 1 := ne_of_lt i.2.2
-    apply (mul_eq_zero.mp ?_).resolve_left (sub_ne_zero.mpr hNe)
-    nlinarith [hSymm]
+    rw [D.operator_apply_eigenbasis i.1, hqFixed] at hSymm
+    have hScalar :
+        D.eigenvalue i.1 * inner ℝ x q = inner ℝ x q := by
+      simpa [x] using hSymm
+    nlinarith [i.2.2]
   have hxGround :
       inner ℝ x.1
         (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
@@ -106,9 +110,14 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirect_excitedEigenvalue_le_half
       (fun f hMean => C.weightedCenteredRayleigh_le_half f hMean)
       x hxGround
   change inner ℝ (D.operator x) x ≤ (1 / 2 : ℝ) * ‖x‖ ^ 2 at hTransfer
-  rw [D.operator_apply_eigenbasis i.1, inner_smul_left,
-    real_inner_self_eq_norm_sq] at hTransfer
-  simpa [x] using hTransfer
+  have hEigenRayleigh :
+      inner ℝ (D.operator x) x = D.eigenvalue i.1 := by
+    rw [D.operator_apply_eigenbasis i.1]
+    simp [x, real_inner_self_eq_norm_sq]
+  calc
+    D.eigenvalue i.1 = inner ℝ (D.operator x) x := hEigenRayleigh.symm
+    _ ≤ (1 / 2 : ℝ) * ‖x‖ ^ 2 := hTransfer
+    _ = 1 / 2 := by simp [x]
 
 /-- The actual geometric Perron--Doob direct response therefore supplies a
 volume-independent strict spectral cap with exact rate one half. -/
