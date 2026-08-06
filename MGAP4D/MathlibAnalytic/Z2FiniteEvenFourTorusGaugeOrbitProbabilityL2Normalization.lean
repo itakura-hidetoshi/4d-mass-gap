@@ -76,6 +76,33 @@ noncomputable def finiteGroupInvariantToOrbitProbabilityObservableLinearMap
         f.1 (finiteGroupOrbitRepresentative G α q) :=
   rfl
 
+/-- The literal pushforward-probability map is exactly the canonical
+counting-Hilbert orbit coordinate map multiplied by the global square root of
+the uniform configuration weight. -/
+theorem finiteGroupInvariantToOrbitProbabilityObservable_eq_sqrt_inv_card_smul_coordinates
+    (G α : Type)
+    [Group G]
+    [Fintype α]
+    [Nonempty α]
+    [MulAction G α]
+    (f : finiteGroupInvariantSubmodule G α) :
+    finiteGroupInvariantToOrbitProbabilityObservableLinearMap G α f =
+      Real.sqrt ((Fintype.card α : ℝ)⁻¹) •
+        finiteGroupInvariantToOrbitCoordinatesLinearMap G α f := by
+  classical
+  ext q
+  change
+    Real.sqrt
+          (finiteGroupOrbitMass G α q *
+            (Fintype.card α : ℝ)⁻¹) *
+        f.1 (finiteGroupOrbitRepresentative G α q) =
+      Real.sqrt ((Fintype.card α : ℝ)⁻¹) *
+        (Real.sqrt (finiteGroupOrbitMass G α q) *
+          f.1 (finiteGroupOrbitRepresentative G α q))
+  rw [Real.sqrt_mul]
+  · ring
+  · exact le_of_lt (finiteGroupOrbitMass_pos G α q)
+
 /-- The literal pushforward-probability observable has exactly the uniform
 configuration normalization of the ambient counting Hilbert norm. -/
 theorem finiteGroupInvariantToOrbitProbabilityObservable_norm_sq
@@ -137,6 +164,33 @@ theorem finiteGroupInvariantToOrbitProbabilityObservable_norm_sq
     _ = (Fintype.card α : ℝ)⁻¹ * ‖f‖ ^ 2 := by
       rw [horbit]
 
+/-- Every operator transported through the canonical counting-Hilbert
+identification also intertwines the literal same-observable
+pushforward-probability map.  The global normalization cancels because the
+transported operator is linear. -/
+theorem finiteGroupInvariantToOrbitProbabilityObservable_transportOperator_intertwines
+    (G α : Type)
+    [Group G]
+    [Fintype α]
+    [Nonempty α]
+    [MulAction G α]
+    (A : finiteGroupInvariantSubmodule G α →L[ℝ]
+      finiteGroupInvariantSubmodule G α)
+    (f : finiteGroupInvariantSubmodule G α) :
+    (finiteGroupInvariantOrbitProbabilityL2Identification G α).transportOperator A
+        (finiteGroupInvariantToOrbitProbabilityObservableLinearMap G α f) =
+      finiteGroupInvariantToOrbitProbabilityObservableLinearMap G α (A f) := by
+  rw [
+    finiteGroupInvariantToOrbitProbabilityObservable_eq_sqrt_inv_card_smul_coordinates
+  ]
+  rw [map_smul]
+  exact
+    congrArg
+      (fun y =>
+        Real.sqrt ((Fintype.card α : ℝ)⁻¹) • y)
+      ((finiteGroupInvariantOrbitProbabilityL2Identification G α).
+        transportOperator_apply_forward A f)
+
 /-- The actual finite `Z₂` literal orbit-observable probability map. -/
 noncomputable def finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap
     (H : ℕ) :
@@ -159,6 +213,31 @@ noncomputable def finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap
             (FiniteEvenFourTorusZ2SliceConfiguration H) q) :=
   rfl
 
+/-- Exact scalar relation between the actual same-observable probability map
+and the canonical counting-Hilbert isometry. -/
+theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityObservable_eq_sqrt_inv_card_smul_identification
+    (H : ℕ)
+    (f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H) :
+    finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H f =
+      Real.sqrt
+          ((Fintype.card
+            (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ)⁻¹) •
+        (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H).forward f := by
+  change
+    finiteGroupInvariantToOrbitProbabilityObservableLinearMap
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H) f =
+      Real.sqrt
+          ((Fintype.card
+            (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ)⁻¹) •
+        finiteGroupInvariantToOrbitCoordinatesLinearMap
+          (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+          (FiniteEvenFourTorusZ2SliceConfiguration H) f
+  exact
+    finiteGroupInvariantToOrbitProbabilityObservable_eq_sqrt_inv_card_smul_coordinates
+      (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+      (FiniteEvenFourTorusZ2SliceConfiguration H) f
+
 /-- Exact finite-volume normalization of the actual same-observable gauge-orbit
 probability realization. -/
 theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityObservable_norm_sq
@@ -170,6 +249,52 @@ theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityObservable_norm_sq
   finiteGroupInvariantToOrbitProbabilityObservable_norm_sq
     (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
     (FiniteEvenFourTorusZ2SliceConfiguration H) f
+
+/-- The actual ground-lifted defect intertwines not only the counting-Hilbert
+orbit isometry but also the literal same-observable pushforward-probability
+map. -/
+theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableGroundLiftedDefect_intertwines
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H) :
+    finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+        H β energyIdentity energyNontrivial hβ hEnergy
+        (finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H f) =
+      finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H
+        (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+          H β energyIdentity energyNontrivial hβ hEnergy f) := by
+  exact
+    finiteGroupInvariantToOrbitProbabilityObservable_transportOperator_intertwines
+      (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+      (FiniteEvenFourTorusZ2SliceConfiguration H)
+      (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+        H β energyIdentity energyNontrivial hβ hEnergy)
+      f
+
+/-- The exact finite-volume coercivity constant `1/2` therefore holds directly
+on the literal same-observable pushforward-probability image. -/
+theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableGroundLiftedDefect_half_coercive
+    (energyIdentity energyNontrivial : ℝ)
+    (hEnergy : energyIdentity < energyNontrivial)
+    (β : ℝ)
+    (hβ : 0 < β)
+    (hβCutoff :
+      β ≤ finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
+        energyIdentity energyNontrivial hEnergy)
+    (H : ℕ)
+    (f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H) :
+    (1 / 2 : ℝ) *
+        ‖finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H f‖ ^ 2 ≤
+      inner ℝ
+        (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le
+          (finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H f))
+        (finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H f) :=
+  finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_half_coercive
+    energyIdentity energyNontrivial hEnergy β hβ hβCutoff H
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap H f)
 
 /-- Audit-visible separation between the literal pushforward-probability map
 and the canonically normalized counting-Hilbert isometry. -/
@@ -188,6 +313,13 @@ structure Z2FiniteEvenFourTorusGaugeOrbitProbabilityNormalizationPackage
   countingHilbertIdentification_eq :
     countingHilbertIdentification =
       finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H
+  exactMapRelation :
+    ∀ f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H,
+      literalProbabilityMap f =
+        Real.sqrt
+            ((Fintype.card
+              (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ)⁻¹) •
+          countingHilbertIdentification.forward f
   exactProbabilityNormScaling :
     ∀ f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H,
       ‖literalProbabilityMap f‖ ^ 2 =
@@ -204,6 +336,8 @@ noncomputable def z2FiniteEvenFourTorusGaugeOrbitProbabilityNormalizationPackage
   countingHilbertIdentification :=
     finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H
   countingHilbertIdentification_eq := rfl
+  exactMapRelation :=
+    finiteEvenFourTorusZ2GaugeOrbitProbabilityObservable_eq_sqrt_inv_card_smul_identification H
   exactProbabilityNormScaling :=
     finiteEvenFourTorusZ2GaugeOrbitProbabilityObservable_norm_sq H
 
