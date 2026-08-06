@@ -30,7 +30,7 @@ noncomputable def directedSubmoduleISupLift
     (f : ∀ i, K i →ₗ[R] N)
     (hf : ∀ (i j : ι) (h : K i ≤ K j),
       f i = (f j).comp (Submodule.inclusion h)) :
-    (⨆ i, K i) →ₗ[R] N :=
+    ↥(⨆ i, K i) →ₗ[R] N :=
   { toFun :=
       Set.iUnionLift (fun i => (K i : Set M)) (fun i x => f i x)
         (by
@@ -66,8 +66,7 @@ set_option backward.isDefEq.respectTransparency false in
     (h : K i ≤ ⨆ j, K j) :
     directedSubmoduleISupLift K dir f hf (Submodule.inclusion h x) = f i x := by
   dsimp [directedSubmoduleISupLift]
-  apply Set.iUnionLift_inclusion
-  exact h
+  exact Set.iUnionLift_inclusion _ x h
 
 set_option backward.isDefEq.respectTransparency false in
 theorem directedSubmoduleISupLift_of_mem
@@ -77,11 +76,11 @@ theorem directedSubmoduleISupLift_of_mem
     {hf : ∀ (i j : ι) (h : K i ≤ K j),
       f i = (f j).comp (Submodule.inclusion h)}
     {i : ι}
-    (x : ⨆ j, K j)
+    (x : ↥(⨆ j, K j))
     (hx : (x : M) ∈ K i) :
     directedSubmoduleISupLift K dir f hf x = f i ⟨x, hx⟩ := by
   dsimp [directedSubmoduleISupLift]
-  apply Set.iUnionLift_of_mem
+  exact Set.iUnionLift_of_mem _ x hx
 
 end DirectedSubmoduleLift
 
@@ -130,11 +129,13 @@ continuum space. -/
 noncomputable def finiteCylinderOperator
     (J : Finset ι) :
     projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J →L[ℝ]
-      Lp ℝ 2 μ :=
-  (projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).toContinuousLinearMap.comp
-    ((S.localOperator J).comp
-      (projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange.symm
-        .toContinuousLinearEquiv.toContinuousLinearMap)
+      Lp ℝ 2 μ := by
+  let e := projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J
+  let eInv :
+      projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J →L[ℝ]
+        Lp ℝ 2 (Q J) :=
+    (e.equivRange.symm.toContinuousLinearEquiv).toContinuousLinearMap
+  exact e.toContinuousLinearMap.comp ((S.localOperator J).comp eInv)
 
 @[simp] theorem finiteCylinderOperator_apply
     (J : Finset ι)
@@ -158,10 +159,12 @@ theorem finiteCylinderOperator_norm_le
 
 /-- The finite-coordinate cylinder subspaces are a directed family: two finite
 coordinate sets are dominated by their union. -/
-theorem projectiveLimitFiniteMarginalL2CylinderSubspace_directed :
+theorem projectiveLimitFiniteMarginalL2CylinderSubspace_directed
+    (hProjective : IsProjectiveMeasureFamily Q) :
     Directed (· ≤ ·)
       (fun J : Finset ι =>
         projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J) := by
+  classical
   intro I J
   refine ⟨I ∪ J, ?_, ?_⟩
   · apply projectiveLimitFiniteMarginalL2CylinderSubspace_mono
@@ -183,7 +186,8 @@ theorem finiteCylinderOperator_eq_comp_inclusion
         (Submodule.inclusion
           (projectiveLimitFiniteMarginalL2CylinderSubspace_mono
             μ Q hLimit hProjective hJI)) := by
-  ext x
+  apply LinearMap.ext
+  intro x
   rcases
       (projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange.surjective x
     with ⟨f, rfl⟩
@@ -221,7 +225,7 @@ noncomputable def cylinderCoreOperator :
     (fun J : Finset ι =>
       projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J)
     (projectiveLimitFiniteMarginalL2CylinderSubspace_directed
-      (μ := μ) (Q := Q) (hLimit := hLimit) (hProjective := hProjective))
+      (μ := μ) (Q := Q) (hLimit := hLimit) hProjective)
     (fun J => (S.finiteCylinderOperator J).toLinearMap)
     (fun _ _ hJI => S.finiteCylinderOperator_eq_comp_inclusion hJI)
 
@@ -235,7 +239,9 @@ noncomputable def cylinderCoreOperator :
           ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f)) =
       projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J
         (S.localOperator J f) := by
-  simpa [cylinderCoreOperator] using S.finiteCylinderOperator_apply J f
+  rw [cylinderCoreOperator]
+  rw [directedSubmoduleISupLift_inclusion]
+  exact S.finiteCylinderOperator_apply J f
 
 /-- Evaluate the glued cylinder-core operator using any finite cylinder range
 that contains the given vector. -/
@@ -246,16 +252,15 @@ theorem cylinderCoreOperator_of_mem
       projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J) :
     S.cylinderCoreOperator x =
       S.finiteCylinderOperator J ⟨x, hx⟩ := by
-  simpa [cylinderCoreOperator] using
-    (directedSubmoduleISupLift_of_mem
-      (K := fun K : Finset ι =>
-        projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit K)
-      (dir := projectiveLimitFiniteMarginalL2CylinderSubspace_directed
-        (μ := μ) (Q := Q) (hLimit := hLimit)
-        (hProjective := hProjective))
-      (f := fun K => (S.finiteCylinderOperator K).toLinearMap)
-      (hf := fun _ _ h => S.finiteCylinderOperator_eq_comp_inclusion h)
-      x hx)
+  rw [cylinderCoreOperator]
+  exact directedSubmoduleISupLift_of_mem
+    (K := fun K : Finset ι =>
+      projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit K)
+    (dir := projectiveLimitFiniteMarginalL2CylinderSubspace_directed
+      (μ := μ) (Q := Q) (hLimit := hLimit) hProjective)
+    (f := fun K => (S.finiteCylinderOperator K).toLinearMap)
+    (hf := fun _ _ h => S.finiteCylinderOperator_eq_comp_inclusion h)
+    x hx
 
 /-- The glued algebraic cylinder-core operator inherits the same uniform norm
 bound as every finite marginal operator. -/
@@ -272,8 +277,7 @@ theorem cylinderCoreOperator_norm_le
         (fun J : Finset ι =>
           projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J)
         (projectiveLimitFiniteMarginalL2CylinderSubspace_directed
-          (μ := μ) (Q := Q) (hLimit := hLimit)
-          (hProjective := hProjective))).1 hxSup
+          (μ := μ) (Q := Q) (hLimit := hLimit) hProjective)).1 hxSup
     with ⟨J, hxJ⟩
   rw [S.cylinderCoreOperator_of_mem x J hxJ]
   simpa using S.finiteCylinderOperator_norm_le J ⟨x, hxJ⟩
@@ -327,7 +331,11 @@ theorem continuumOperator_intertwines_finite
       (projectiveLimitFiniteMarginalL2CylinderSubspace_le_total
         μ Q hLimit J)
       ((projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J).equivRange f)
-  simpa [x] using S.continuumOperator_apply_core x
+  have hxval :
+      (x : Lp ℝ 2 μ) =
+        projectiveLimitFiniteMarginalL2Pullback μ Q hLimit J f := rfl
+  rw [← hxval, S.continuumOperator_apply_core x]
+  exact S.cylinderCoreOperator_apply_finite J f
 
 /-- The full continuum extension satisfies the same pointwise norm bound as the
 finite marginal operators. -/
@@ -369,7 +377,8 @@ theorem toLinearMap_comp_coreSubtype_eq_of_intertwining
         (projectiveLimitFiniteMarginalL2CylinderTotalSubspace
           μ Q hLimit).subtype =
       S.cylinderCoreOperator := by
-  ext x
+  apply LinearMap.ext
+  intro x
   have hxSup :
       (x : Lp ℝ 2 μ) ∈
         ⨆ J : Finset ι,
@@ -380,8 +389,7 @@ theorem toLinearMap_comp_coreSubtype_eq_of_intertwining
         (fun J : Finset ι =>
           projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J)
         (projectiveLimitFiniteMarginalL2CylinderSubspace_directed
-          (μ := μ) (Q := Q) (hLimit := hLimit)
-          (hProjective := hProjective))).1 hxSup
+          (μ := μ) (Q := Q) (hLimit := hLimit) hProjective)).1 hxSup
     with ⟨J, hxJ⟩
   let xJ : projectiveLimitFiniteMarginalL2CylinderSubspace μ Q hLimit J :=
     ⟨x, hxJ⟩
