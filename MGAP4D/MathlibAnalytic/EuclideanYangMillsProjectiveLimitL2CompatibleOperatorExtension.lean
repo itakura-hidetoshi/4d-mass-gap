@@ -10,8 +10,9 @@ open scoped ENNReal
 noncomputable section
 
 /-- Every typed Euclidean Yang--Mills projective-limit measure is locally
-available as a probability measure throughout this specialization file. -/
-local instance projectiveLimitContinuumProbability
+available as a probability measure throughout this operator-extension
+specialization file. -/
+local instance projectiveLimitContinuumProbabilityForOperatorExtension
     {F : EuclideanYangMillsProjectiveCylinderFamily}
     (L : EuclideanYangMillsProjectiveLimitMeasure F) :
     IsProbabilityMeasure L.continuumMeasure :=
