@@ -162,7 +162,7 @@ theorem FinitePositiveWeightBidirectionalDobrushinL1MatrixData.randomScanOverlap
         (Fintype.card ι : ℝ)⁻¹ *
           (((2 : ℝ)⁻¹ * B.coefficient) *
             finiteProductHammingDistanceReal leftInput rightInput) :=
-      add_le_add_left
+      add_le_add_right
         (mul_le_mul_of_nonneg_left hParallel hInvNonneg) _
     _ = finitePositiveWeightBidirectionalRandomScanHammingRate B *
         finiteProductHammingDistanceReal leftInput rightInput := by
