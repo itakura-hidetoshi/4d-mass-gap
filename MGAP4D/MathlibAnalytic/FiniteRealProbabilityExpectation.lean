@@ -52,7 +52,9 @@ theorem finiteRealWeightProbabilityData_expectation_eq_globalExpectation
     (finiteRealWeightProbabilityData
       weight
       (fun A => le_of_lt (hweight A))
-      (finiteRealWeightPartition_pos_of_pos weight hweight)).expectation f =
+      (by
+        simpa [finiteRealWeightPartition, finitePositiveWeightTotalMass] using
+          finitePositiveWeightTotalMass_pos weight hweight)).expectation f =
       finitePositiveWeightGlobalExpectation weight f := by
   classical
   unfold FiniteRealProbabilityData.expectation
@@ -62,6 +64,7 @@ theorem finiteRealWeightProbabilityData_expectation_eq_globalExpectation
     finitePositiveWeightGlobalProbability
     finitePositiveWeightTotalMass
     finiteRealWeightPartition
+  rfl
 
 /-- The preceding expectation identification is independent of the chosen
 proofs of nonnegativity and positive partition. -/
@@ -84,6 +87,7 @@ theorem finiteRealWeightProbabilityData_expectation_eq_globalExpectation_of_proo
     finitePositiveWeightGlobalProbability
     finitePositiveWeightTotalMass
     finiteRealWeightPartition
+  rfl
 
 end
 
