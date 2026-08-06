@@ -269,6 +269,37 @@ theorem finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_e
   let C := finitePositiveWeightsSingleSiteOverlapCouplingData
     leftWeight rightWeight hLeftWeight hRightWeight
     leftInput rightInput target
+  have hAway :
+      (∑ g : G, ∑ h : G,
+        C.joint g h *
+          finiteProductHammingAwayReal leftInput rightInput target) =
+        finiteProductHammingAwayReal leftInput rightInput target *
+          (∑ g : G, ∑ h : G, C.joint g h) := by
+    calc
+      (∑ g : G, ∑ h : G,
+        C.joint g h *
+          finiteProductHammingAwayReal leftInput rightInput target) =
+        ∑ g : G,
+          finiteProductHammingAwayReal leftInput rightInput target *
+            ∑ h : G, C.joint g h := by
+        apply Finset.sum_congr rfl
+        intro g _
+        calc
+          (∑ h : G,
+            C.joint g h *
+              finiteProductHammingAwayReal leftInput rightInput target) =
+            ∑ h : G,
+              finiteProductHammingAwayReal leftInput rightInput target *
+                C.joint g h := by
+            apply Finset.sum_congr rfl
+            intro h _
+            ring
+          _ = finiteProductHammingAwayReal leftInput rightInput target *
+              ∑ h : G, C.joint g h := by
+            rw [Finset.mul_sum]
+      _ = finiteProductHammingAwayReal leftInput rightInput target *
+          (∑ g : G, ∑ h : G, C.joint g h) := by
+        rw [Finset.mul_sum]
   unfold FiniteRealCouplingData.expectedCost
     finitePositiveWeightsSingleSiteJointUpdateCouplingData
   rw [finitePositiveWeightsSingleSiteJointUpdateKernel_expectedCost]
@@ -278,12 +309,17 @@ theorem finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_e
       C.joint g h *
         (finiteProductHammingAwayReal leftInput rightInput target +
           finiteRealDisagreementIndicator g h)) =
-      finiteProductHammingAwayReal leftInput rightInput target *
-          (∑ g : G, ∑ h : G, C.joint g h) +
+      (∑ g : G, ∑ h : G,
+        C.joint g h *
+          finiteProductHammingAwayReal leftInput rightInput target) +
         ∑ g : G, ∑ h : G,
           C.joint g h * finiteRealDisagreementIndicator g h := by
       simp_rw [mul_add, Finset.sum_add_distrib]
-      ring_nf
+    _ = finiteProductHammingAwayReal leftInput rightInput target *
+          (∑ g : G, ∑ h : G, C.joint g h) +
+        ∑ g : G, ∑ h : G,
+          C.joint g h * finiteRealDisagreementIndicator g h := by
+      rw [hAway]
     _ = finiteProductHammingAwayReal leftInput rightInput target +
         C.disagreementMass := by
       rw [C.joint_sum_eq_one,
