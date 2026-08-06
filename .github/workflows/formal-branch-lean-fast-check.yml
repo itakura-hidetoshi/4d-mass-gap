@@ -28,10 +28,12 @@ concurrency:
 
 permissions:
   contents: read
+  statuses: write
 
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CANONICAL_BRANCH: formal/real-hilbert-uniform-coercive-strong-limit
+  STATUS_CONTEXT: ci/formal-branch-lean-fast-check
 
 jobs:
   formal-branch-lean-fast-check:
@@ -39,6 +41,38 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 30
     steps:
+      - name: Publish fallback pending status
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATUS_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          payload="$({
+            RUN_ID="${GITHUB_RUN_ID}" \
+            EVENT_NAME="${GITHUB_EVENT_NAME}" \
+            TARGET_URL="${STATUS_URL}" \
+            python3 - <<'PY'
+          import json
+          import os
+
+          print(json.dumps({
+              "state": "pending",
+              "context": os.environ["STATUS_CONTEXT"],
+              "description": f"run {os.environ['RUN_ID']} started ({os.environ['EVENT_NAME']})",
+              "target_url": os.environ["TARGET_URL"],
+          }))
+          PY
+          })"
+          curl --fail-with-body --retry 3 --retry-all-errors \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -d "${payload}"
+
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
@@ -190,3 +224,43 @@ jobs:
           name: lean-fast-check-log
           path: ${{ runner.temp }}/lean-fast.log
           if-no-files-found: warn
+
+      - name: Publish fallback final status
+        if: ${{ always() }}
+        continue-on-error: true
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          STATUS_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          case "${JOB_STATUS}" in
+            success) state=success ;;
+            cancelled) state=error ;;
+            *) state=failure ;;
+          esac
+          payload="$({
+            STATE="${state}" \
+            RUN_ID="${GITHUB_RUN_ID}" \
+            JOB_STATUS_VALUE="${JOB_STATUS}" \
+            TARGET_URL="${STATUS_URL}" \
+            python3 - <<'PY'
+          import json
+          import os
+
+          print(json.dumps({
+              "state": os.environ["STATE"],
+              "context": os.environ["STATUS_CONTEXT"],
+              "description": f"run {os.environ['RUN_ID']} completed ({os.environ['JOB_STATUS_VALUE']})",
+              "target_url": os.environ["TARGET_URL"],
+          }))
+          PY
+          })"
+          curl --fail-with-body --retry 3 --retry-all-errors \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+            -d "${payload}"
