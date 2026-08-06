@@ -82,7 +82,8 @@ theorem finiteProductSingletonIndicator_hammingOneLipschitz
   intro A B
   by_cases hAB : A = B
   · subst B
-    simp
+    simp [finiteProductHammingDistanceReal,
+      finiteProductDisagreementFinset]
   · have hExists : ∃ source : ι, A source ≠ B source := by
       by_contra hNo
       apply hAB
