@@ -4,8 +4,6 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped InnerProduct
-
 noncomputable section
 
 /-- A proof-relevant identification of two real Hilbert carriers by mutually
