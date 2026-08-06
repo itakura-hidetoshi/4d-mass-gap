@@ -27,7 +27,8 @@ variable
 cylinder subspaces inside the projective-limit continuum carrier. -/
 noncomputable def finiteMarginalL2CylinderTotalSubspace :
     Submodule ℝ (Lp ℝ 2 L.continuumMeasure) :=
-  ⨆ J : Finset EuclideanFourSpace, L.finiteMarginalL2CylinderSubspace J
+  projectiveLimitFiniteMarginalL2CylinderTotalSubspace
+    L.continuumMeasure F.finiteMarginal L.projectiveLimit
 
 /-- Every fixed finite-marginal cylinder subspace lies in the total algebraic
 cylinder subspace. -/
@@ -35,8 +36,8 @@ theorem finiteMarginalL2CylinderSubspace_le_total
     (J : Finset EuclideanFourSpace) :
     L.finiteMarginalL2CylinderSubspace J ≤
       L.finiteMarginalL2CylinderTotalSubspace := by
-  exact le_iSup (fun K : Finset EuclideanFourSpace =>
-    L.finiteMarginalL2CylinderSubspace K) J
+  exact projectiveLimitFiniteMarginalL2CylinderSubspace_le_total
+    L.continuumMeasure F.finiteMarginal L.projectiveLimit J
 
 /-- Every measurable continuum event indicator lies in the topological closure
 of finite-coordinate Euclidean Yang--Mills cylinder functions. -/
@@ -46,21 +47,16 @@ theorem finiteMarginalL2CylinderTotalSubspace_indicatorConstLp_mem_topologicalCl
     (c : ℝ) :
     indicatorConstLp 2 hs (measure_ne_top L.continuumMeasure s) c ∈
       L.finiteMarginalL2CylinderTotalSubspace.topologicalClosure := by
-  simpa [finiteMarginalL2CylinderTotalSubspace,
-    finiteMarginalL2CylinderSubspace,
-    projectiveLimitFiniteMarginalL2CylinderTotalSubspace] using
-    (projectiveLimitFiniteMarginalL2CylinderTotalSubspace_indicatorConstLp_mem_topologicalClosure
-      L.continuumMeasure F.finiteMarginal L.projectiveLimit hs c)
+  exact
+    projectiveLimitFiniteMarginalL2CylinderTotalSubspace_indicatorConstLp_mem_topologicalClosure
+      L.continuumMeasure F.finiteMarginal L.projectiveLimit hs c
 
 /-- The closure of all finite-marginal Euclidean Yang--Mills cylinder subspaces
 is the full continuum projective-limit `L²` carrier. -/
 theorem finiteMarginalL2CylinderTotalSubspace_topologicalClosure_eq_top :
     L.finiteMarginalL2CylinderTotalSubspace.topologicalClosure = ⊤ := by
-  simpa [finiteMarginalL2CylinderTotalSubspace,
-    finiteMarginalL2CylinderSubspace,
-    projectiveLimitFiniteMarginalL2CylinderTotalSubspace] using
-    (projectiveLimitFiniteMarginalL2CylinderTotalSubspace_topologicalClosure_eq_top
-      L.continuumMeasure F.finiteMarginal L.projectiveLimit)
+  exact projectiveLimitFiniteMarginalL2CylinderTotalSubspace_topologicalClosure_eq_top
+    L.continuumMeasure F.finiteMarginal L.projectiveLimit
 
 /-- Finite-marginal Euclidean Yang--Mills cylinder functions are dense in the
 continuum projective-limit `L²` carrier. -/
@@ -68,8 +64,8 @@ theorem finiteMarginalL2CylinderTotalSubspace_dense :
     Dense
       (L.finiteMarginalL2CylinderTotalSubspace :
         Set (Lp ℝ 2 L.continuumMeasure)) := by
-  exact Submodule.dense_iff_topologicalClosure_eq_top.mpr
-    L.finiteMarginalL2CylinderTotalSubspace_topologicalClosure_eq_top
+  exact projectiveLimitFiniteMarginalL2CylinderTotalSubspace_dense
+    L.continuumMeasure F.finiteMarginal L.projectiveLimit
 
 end EuclideanYangMillsProjectiveLimitMeasure
 
