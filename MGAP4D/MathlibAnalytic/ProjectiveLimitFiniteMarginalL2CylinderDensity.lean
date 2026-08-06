@@ -20,7 +20,9 @@ theorem measurableCylinders_isSetAlgebra :
     IsSetAlgebra (measurableCylinders α) where
   empty_mem := empty_mem_measurableCylinders α
   compl_mem := compl_mem_measurableCylinders
-  union_mem := union_mem_measurableCylinders
+  union_mem := by
+    intro s t hs ht
+    exact union_mem_measurableCylinders (α := α) hs ht
 
 /-- For every finite measure on a product measurable space, measurable
 finite-coordinate cylinders are dense for symmetric-difference measure. -/
