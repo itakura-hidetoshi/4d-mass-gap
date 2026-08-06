@@ -12,7 +12,7 @@ noncomputable section
 /-- Local finite real triangle inequality for sums. -/
 theorem finiteRealProbability_abs_sum_le_sum_abs
     {G : Type} (s : Finset G) (u : G → ℝ) :
-    |∑ g in s, u g| ≤ ∑ g in s, |u g| := by
+    |(∑ g in s, u g)| ≤ ∑ g in s, |u g| := by
   classical
   induction s using Finset.induction_on with
   | empty => simp
