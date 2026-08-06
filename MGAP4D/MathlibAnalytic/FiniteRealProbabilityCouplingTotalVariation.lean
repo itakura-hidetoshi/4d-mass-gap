@@ -113,12 +113,21 @@ theorem expectedCost_finiteDiscreteDisagreementCost_eq_disagreementMass
     calc
       (∑ y : G,
         C.joint x y * finiteDiscreteDisagreementCost x y) =
-          ∑ y in (Finset.univ.erase x), C.joint x y := by
-        rw [← Finset.sum_erase_add _ (Finset.mem_univ x)]
-        simp [finiteDiscreteDisagreementCost]
+          ∑ y : G,
+            (C.joint x y -
+              if y = x then C.joint x x else 0) := by
+        apply Finset.sum_congr rfl
+        intro y _hy
+        by_cases h : y = x
+        · subst y
+          simp [finiteDiscreteDisagreementCost]
+        · have hxy : x ≠ y := Ne.symm h
+          simp [finiteDiscreteDisagreementCost, h, hxy]
+      _ = (∑ y : G, C.joint x y) -
+          ∑ y : G, (if y = x then C.joint x x else 0) := by
+        rw [Finset.sum_sub_distrib]
       _ = (∑ y : G, C.joint x y) - C.joint x x := by
-        rw [← Finset.sum_erase_add _ (Finset.mem_univ x)]
-        ring
+        simp
   unfold expectedCost disagreementMass diagonalMass
   rw [← C.sum_joint_eq_one]
   calc
