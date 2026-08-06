@@ -40,15 +40,12 @@ theorem exists_finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff
     simpa [F, Real.dist_eq] using hImageDistance
   exact lt_of_le_of_lt (le_abs_self (F parameter)) hAbs
 
-/-- Canonical target-amplitude cutoff selected from zero-coupling
-continuity. -/
 noncomputable def finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff
     (energyIdentity energyNontrivial : ℝ) : ℝ :=
   Classical.choose
     (exists_finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff
       energyIdentity energyNontrivial)
 
-/-- The canonical target-amplitude cutoff is strictly positive. -/
 theorem finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff_pos
     (energyIdentity energyNontrivial : ℝ) :
     0 < finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff
@@ -57,7 +54,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff_pos
     (exists_finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff
       energyIdentity energyNontrivial)).1
 
-/-- The selected cutoff realizes the strict target-amplitude bound. -/
 theorem finiteEvenFourTorusZ2GeometricDoobTargetMagnitude_lt_quarter
     (energyIdentity energyNontrivial : ℝ)
     (parameter : ℝ)
@@ -73,8 +69,8 @@ theorem finiteEvenFourTorusZ2GeometricDoobTargetMagnitude_lt_quarter
       energyIdentity energyNontrivial)).2
     parameter hParameter hParameterCutoff
 
-/-- Common direct-response cutoff: intersect the already constructed actual
-posterior continuation interval with the unit target-response interval. -/
+/-- Intersect the actual posterior continuation interval with the unit
+observable-response interval. -/
 noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) : ℝ :=
@@ -84,7 +80,6 @@ noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
     (finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff
       energyIdentity energyNontrivial)
 
-/-- The direct-response cutoff is strictly positive and volume independent. -/
 theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_pos
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
@@ -97,8 +92,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_pos
     (finiteEvenFourTorusZ2GeometricDoobTargetMagnitudeQuarterCutoff_pos
       energyIdentity energyNontrivial)
 
-/-- The direct-response cutoff remains inside the actual posterior
-continuation interval. -/
 theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_le_actual
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
@@ -109,8 +102,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_le_actual
   unfold finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
   exact min_le_left _ _
 
-/-- The direct-response cutoff also lies inside the unit target-amplitude
-interval. -/
 theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_le_target
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
@@ -121,8 +112,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_le_target
   unfold finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
   exact min_le_right _ _
 
-/-- On the direct-response interval, every canonical posterior envelope row
-coefficient remains strictly below the actual continuation barrier `1/2`. -/
 theorem finiteEvenFourTorusZ2GeometricDoobCanonicalEnvelopeRowCoefficient_lt_half
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -151,8 +140,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobCanonicalEnvelopeRowCoefficient_lt_hal
   simpa [finiteEvenFourTorusZ2PerronPosteriorHighTemperatureBarrier]
     using hEndpoint
 
-/-- The unit target-response amplitude is below `1/4` throughout the direct
-interval. -/
 theorem finiteEvenFourTorusZ2GeometricDoobTargetMagnitude_lt_quarter_of_cutoff
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -169,8 +156,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobTargetMagnitude_lt_quarter_of_cutoff
       (finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff_le_target
         energyIdentity energyNontrivial hEnergy))
 
-/-- At every finite side, the unit observable response has asymptotic
-coefficient strictly below `1/2`. -/
 theorem finiteEvenFourTorusZ2GeometricDoobUnitAsymptoticResponse_lt_half
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -203,8 +188,9 @@ theorem finiteEvenFourTorusZ2GeometricDoobUnitAsymptoticResponse_lt_half
       finiteEvenFourTorusZ2GeometricDoobTargetMagnitude_lt_quarter_of_cutoff
         energyIdentity energyNontrivial hEnergy β hβ hβCutoff
   have hInvLt : (1 - rowCoefficient)⁻¹ < 2 := by
-    apply (inv_lt_iff₀ hDen).2
-    nlinarith
+    rw [show (1 - rowCoefficient)⁻¹ = 1 / (1 - rowCoefficient) by
+      simp [div_eq_mul_inv]]
+    exact (div_lt_iff₀ hDen).2 (by nlinarith)
   unfold finiteInfluenceKernelBidirectionalAsymptoticResponseCoefficient
   simp only [mul_one]
   calc
@@ -215,8 +201,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobUnitAsymptoticResponse_lt_half
       mul_lt_mul_of_pos_left hInvLt (by norm_num)
     _ = 1 / 2 := by norm_num
 
-/-- Some finite stationary-comparison depth realizes the common strict
-unit-response coefficient at every finite side. -/
 theorem exists_finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -262,7 +246,6 @@ theorem exists_finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
       (finiteEvenFourTorusZ2GeometricDoobUnitAsymptoticResponse_lt_half
         energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
 
-/-- Canonical finite response-depth selector at one side. -/
 noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -276,7 +259,6 @@ noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
     (exists_finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
       energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
 
-/-- The selected depth realizes the strict finite response coefficient. -/
 theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCoefficient_lt_half
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -299,8 +281,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseCoefficient_lt_half
     (exists_finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
       energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
 
-/-- Coordinate-resolved unit observable-response matrix for the actual
-Perron-smoothed posterior comparison underlying the geometric Doob row. -/
 noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -320,7 +300,6 @@ noncomputable def finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence
       energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
     source
 
-/-- Every direct response-matrix entry is nonnegative. -/
 theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_nonneg
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -347,8 +326,6 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_nonneg
         energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
       source
 
-/-- Every source column of the actual coordinate-resolved response matrix has
-the same volume-independent strict bound `1/2`. -/
 theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_columnSum_lt_half
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial)
@@ -375,6 +352,7 @@ theorem finiteEvenFourTorusZ2GeometricDoobDirectResponseInfluence_columnSum_lt_h
   let iterations :=
     finiteEvenFourTorusZ2GeometricDoobDirectResponseIterations
       energyIdentity energyNontrivial hEnergy β hβ hβCutoff H
+  letI : Nonempty (FiniteEvenFourTorusSpatialLink H) := ⟨source⟩
   have hCard : 0 < Fintype.card (FiniteEvenFourTorusSpatialLink H) :=
     Fintype.card_pos_iff.mpr ⟨source⟩
   have hRowNonneg : 0 ≤ rowCoefficient := by
