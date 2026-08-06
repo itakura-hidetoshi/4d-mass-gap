@@ -33,9 +33,10 @@ theorem finiteProductHammingDistanceReal_eq_away_add_indicator
   by_cases hEq : A target = B target
   · have hNotMem : target ∉ finiteProductDisagreementFinset A B := by
       simp [finiteProductDisagreementFinset, hEq]
-    simp [finiteProductHammingDistanceReal,
-      finiteProductHammingAwayReal, finiteRealDisagreementIndicator,
-      hEq, Finset.erase_eq_of_not_mem hNotMem]
+    unfold finiteProductHammingDistanceReal
+      finiteProductHammingAwayReal finiteRealDisagreementIndicator
+    rw [Finset.erase_eq_of_notMem hNotMem]
+    simp [hEq]
   · have hMem : target ∈ finiteProductDisagreementFinset A B := by
       simp [finiteProductDisagreementFinset, hEq]
     have hCard :
@@ -228,7 +229,26 @@ theorem finitePositiveWeightsSingleSiteJointUpdateKernel_expectedCost
       intro g _
       apply Finset.sum_congr rfl
       intro h _
-      simp
+      calc
+        (∑ leftOutput : ι → G, ∑ rightOutput : ι → G,
+          (if Function.update leftInput target g = leftOutput ∧
+              Function.update rightInput target h = rightOutput then
+            C.joint g h else 0) * cost leftOutput rightOutput) =
+          ∑ leftOutput : ι → G,
+            if Function.update leftInput target g = leftOutput then
+              C.joint g h * cost leftOutput
+                (Function.update rightInput target h)
+            else 0 := by
+          apply Finset.sum_congr rfl
+          intro leftOutput _
+          by_cases hLeft :
+              Function.update leftInput target g = leftOutput
+          · simp [hLeft]
+          · simp [hLeft]
+        _ = C.joint g h *
+            cost (Function.update leftInput target g)
+              (Function.update rightInput target h) := by
+          simp
 
 /-- Exact expected Hamming cost of one pushed-forward overlap update. -/
 theorem finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_eq
@@ -263,7 +283,7 @@ theorem finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_e
         ∑ g : G, ∑ h : G,
           C.joint g h * finiteRealDisagreementIndicator g h := by
       simp_rw [mul_add, Finset.sum_add_distrib]
-      ring
+      ring_nf
     _ = finiteProductHammingAwayReal leftInput rightInput target +
         C.disagreementMass := by
       rw [C.joint_sum_eq_one,
@@ -294,7 +314,7 @@ theorem finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_l
               leftInput rightInput,
               D.influence target source) + sourceBound target) := by
   rw [finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_eq]
-  exact add_le_add_left
+  exact add_le_add_right
     (finitePositiveWeightsSingleSiteOverlapCoupling_disagreementMass_le_half_mul_influence_add_source
       leftWeight rightWeight hLeftWeight hRightWeight D sourceBound hCross
       leftInput rightInput target)
