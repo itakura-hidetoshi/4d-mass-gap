@@ -1,0 +1,192 @@
+name: Formal Branch Lean Fast Check Fallback
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_ref:
+        description: "Base ref passed to scripts/check_changed_lean.sh"
+        required: false
+        default: "origin/formal/real-hilbert-uniform-coercive-strong-limit"
+        type: string
+  push:
+    branches:
+      - "formal/**"
+      - "!formal/real-hilbert-uniform-coercive-strong-limit"
+    paths:
+      - ".github/workflows/formal-branch-lean-fast-check.yml"
+      - ".github/workflows/pr-lean-fast-check.yml"
+      - "lean-toolchain"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+      - "MGAP4D/**/*.lean"
+      - "scripts/**/*.py"
+      - "scripts/**/*.sh"
+
+concurrency:
+  group: lean-fast-check-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  MATHLIB_NO_CACHE_ON_UPDATE: "1"
+  CANONICAL_BRANCH: formal/real-hilbert-uniform-coercive-strong-limit
+
+jobs:
+  formal-branch-lean-fast-check:
+    name: Changed Lean fast check
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+          show-progress: false
+
+      - name: Resolve canonical comparison base
+        shell: bash
+        run: |
+          set -euxo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            base_ref="${{ inputs.base_ref }}"
+            if [[ "${base_ref}" == origin/* ]]; then
+              branch_ref="${base_ref#origin/}"
+              git fetch --no-tags --depth=1 origin \
+                "${branch_ref}:refs/remotes/origin/${branch_ref}"
+            fi
+          else
+            git fetch --no-tags --depth=1 origin \
+              "${CANONICAL_BRANCH}:refs/remotes/origin/${CANONICAL_BRANCH}"
+            base_ref="origin/${CANONICAL_BRANCH}"
+          fi
+
+          cache_ref="$(git rev-parse "${base_ref}")"
+          echo "CHECK_CHANGED_LEAN_BASE_REF=${base_ref}" >> "${GITHUB_ENV}"
+          echo "LAKE_CACHE_REF_SHA=${cache_ref}" >> "${GITHUB_ENV}"
+          echo "[fallback] event=${GITHUB_EVENT_NAME}"
+          echo "[fallback] ref=${GITHUB_REF}"
+          echo "[fallback] base=${base_ref}"
+          echo "[fallback] cache-ref=${cache_ref}"
+
+      - name: Preflight changed Lean static audit
+        shell: bash
+        run: |
+          set -euxo pipefail
+          echo "[preflight] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
+          bash scripts/audit_changed_lean_preflight.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+
+      - name: Detect whether Lake is required
+        id: lake-mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed_file_list="${RUNNER_TEMP}/formal-branch-lean-fast-check-changed-files.txt"
+          git diff --name-only "${CHECK_CHANGED_LEAN_BASE_REF}"...HEAD > "${changed_file_list}"
+
+          echo "[fallback] changed files used for Lake decision:"
+          cat "${changed_file_list}"
+
+          required=false
+          if grep -E '^(MGAP4D/.*\.lean|MGAP4D\.lean)$' "${changed_file_list}" \
+              | grep -Ev '^(MGAP4D\.lean|MGAP4D/MathlibAnalytic\.lean)$' \
+              | grep -q .; then
+            required=true
+          fi
+          if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' "${changed_file_list}"; then
+            required=true
+          fi
+          if grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py' "${changed_file_list}"; then
+            required=true
+          fi
+
+          echo "required=${required}" >> "${GITHUB_OUTPUT}"
+          echo "[fallback] Lake required: ${required}"
+
+      - name: Run static-only changed check
+        if: ${{ steps.lake-mode.outputs.required != 'true' }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+
+      - name: Cache elan toolchain
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        uses: actions/cache@v5
+        with:
+          path: ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-elan-
+
+      - name: Restore Lake build cache
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        id: lake-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
+            ${{ runner.os }}-lean-fast-lake-v4-
+            ${{ runner.os }}-lean-fast-v3-
+            ${{ runner.os }}-lean-fast-
+            ${{ runner.os }}-lean-
+
+      - name: Install elan and Lean toolchain
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          retry() {
+            local n=0
+            local max=5
+            local delay=10
+            until "$@"; do
+              n=$((n + 1))
+              if [[ "$n" -ge "$max" ]]; then
+                echo "[fallback][retry] command failed after ${n} attempts: $*" >&2
+                return 1
+              fi
+              echo "[fallback][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
+              sleep "$delay"
+              delay=$((delay * 2))
+            done
+          }
+          if ! command -v elan >/dev/null 2>&1; then
+            retry bash -c 'curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none'
+          else
+            echo "[fallback] using cached elan: $(command -v elan)"
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Show Lean and Lake versions
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          lean --version
+          lake --version
+          echo "[fallback] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
+          echo "[fallback] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
+
+      - name: Run changed Lean fast check
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 \
+            | tee "${RUNNER_TEMP}/lean-fast.log"
+
+      - name: Upload Lean fast-check diagnostics
+        if: ${{ always() && steps.lake-mode.outputs.required == 'true' }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: lean-fast-check-log
+          path: ${{ runner.temp }}/lean-fast.log
+          if-no-files-found: warn
