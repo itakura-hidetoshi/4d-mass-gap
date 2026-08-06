@@ -120,7 +120,8 @@ theorem finiteRealProbabilityKernelCouplingIterateData_expectedCost_le_pow_mul
       rate ^ n * initial.expectedCost cost := by
   induction n with
   | zero =>
-      simp [finiteRealProbabilityKernelCouplingIterateData]
+      simpa only [finiteRealProbabilityKernelCouplingIterateData, pow_zero, one_mul] using
+        (le_refl (initial.expectedCost cost))
   | succ n ih =>
       calc
         (finiteRealProbabilityKernelCouplingIterateData
