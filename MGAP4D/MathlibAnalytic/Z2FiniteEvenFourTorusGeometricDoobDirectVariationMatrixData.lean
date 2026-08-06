@@ -45,11 +45,11 @@ theorem FiniteProductVariationProfileBound.canonicalVariation_le
 
 namespace Z2GeometricDoobDirectVariationContext
 
+set_option maxHeartbeats 800000 in
 /-- The exact geometric Perron--Doob observable has the compact strict
 response profile as a one-coordinate variation bound.  The larger local
 heartbeat budget applies only to elaborating this exact model-specific bridge;
 it does not alter the theorem statement or any mathematical assumption. -/
-set_option maxHeartbeats 800000 in
 noncomputable def observableResponseProfileBound
     (C : Z2GeometricDoobDirectVariationContext)
     (f : FiniteEvenFourTorusZ2SliceConfiguration C.H → ℝ) :
