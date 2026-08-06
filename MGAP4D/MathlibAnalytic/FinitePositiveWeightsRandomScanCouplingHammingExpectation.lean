@@ -114,7 +114,6 @@ theorem finitePositiveWeightsRandomScanJointCoupling_expectedCost_eq_average
       congr 1
       apply Finset.sum_congr rfl
       intro target _
-      rfl
 
 /-- Exact expected Hamming cost of the common-target uniform random-scan
 coupling: average the exact one-site away-cost plus overlap disagreement. -/
@@ -171,10 +170,11 @@ theorem finitePositiveWeightsRandomScanJointCoupling_expectedHamming_le_influenc
   apply mul_le_mul_of_nonneg_left _ (inv_nonneg.mpr (Nat.cast_nonneg _))
   apply Finset.sum_le_sum
   intro target _
-  exact
-    finitePositiveWeightsSingleSiteJointUpdateCoupling_expectedHammingCost_le
+  exact add_le_add_left
+    (finitePositiveWeightsSingleSiteOverlapCoupling_disagreementMass_le_half_mul_influence_add_source
       leftWeight rightWeight hLeftWeight hRightWeight D sourceBound hCross
-      leftInput rightInput target
+      leftInput rightInput target)
+    _
 
 end
 end MathlibAnalytic
