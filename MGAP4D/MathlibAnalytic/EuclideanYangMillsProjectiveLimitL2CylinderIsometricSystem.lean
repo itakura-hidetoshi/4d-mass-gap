@@ -63,7 +63,8 @@ theorem finiteMarginalL2Pullback_compatible
     (f : Lp ℝ 2 (F.finiteMarginal J)) :
     L.finiteMarginalL2Pullback J f =
       L.finiteMarginalL2Pullback I
-        (L.finiteMarginalL2Transition hJI f) := by
+        (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+          (F := F) hJI f) := by
   exact projectiveLimitFiniteMarginalL2Pullback_compatible
     L.continuumMeasure F.finiteMarginal L.projectiveLimit F.projective hJI f
 
@@ -133,7 +134,9 @@ noncomputable def euclideanYangMillsProjectiveLimitL2CylinderIsometricSystem
     (L : EuclideanYangMillsProjectiveLimitMeasure F) :
     EuclideanYangMillsProjectiveLimitL2CylinderIsometricSystem F L where
   finiteEmbed := L.finiteMarginalL2Pullback
-  finiteTransition := fun hJI => L.finiteMarginalL2Transition hJI
+  finiteTransition := fun hJI =>
+    EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+      (F := F) hJI
   finiteEmbed_norm := L.finiteMarginalL2Pullback_norm
   finiteEmbed_inner := L.finiteMarginalL2Pullback_inner
   finiteEmbed_injective := L.finiteMarginalL2Pullback_injective
