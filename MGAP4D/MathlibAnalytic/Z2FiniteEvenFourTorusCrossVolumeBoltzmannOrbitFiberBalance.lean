@@ -163,37 +163,28 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidua
 with the left sum restricted by the coarse orbit of the fine configuration and
 the right sum restricted by the coarse residual-gauge orbit. -/
 theorem finiteEvenFourTorusZ2OneStepBoltzmannOrbitFiberBalance_iff_explicitSums
-    (H : ℕ)
-    (β energyIdentity energyNontrivial : ℝ)
-    (hβ : 0 ≤ β)
-    (hEnergy : energyIdentity ≤ energyNontrivial) :
+    (H : ℕ) (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β) (hEnergy : energyIdentity ≤ energyNontrivial) :
     FiniteEvenFourTorusZ2OneStepBoltzmannOrbitFiberBalance
         H β energyIdentity energyNontrivial hβ hEnergy ↔
-      ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
-          (finiteEvenFourTorusDoubleRefinement H))
-        (q : FiniteEvenFourTorusZ2ResidualGaugeOrbit H),
-        (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
-            (finiteEvenFourTorusDoubleRefinement H),
-          if finiteGroupOrbitClass
-              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-              (FiniteEvenFourTorusZ2SliceConfiguration H)
-              (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B) = q then
-            Real.exp (-β *
-              finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-                (finiteEvenFourTorusDoubleRefinement H)
-                β energyIdentity energyNontrivial B A) *
-              finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale H B
-          else 0) =
-        ∑ b : FiniteEvenFourTorusZ2SliceConfiguration H,
-          if finiteGroupOrbitClass
-              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-              (FiniteEvenFourTorusZ2SliceConfiguration H) b = q then
-            finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale H A *
-              Real.exp (-β *
-                finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-                  H β energyIdentity energyNontrivial b
-                    (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A))
-          else 0 := by
+    ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration (finiteEvenFourTorusDoubleRefinement H))
+      (q : FiniteEvenFourTorusZ2ResidualGaugeOrbit H),
+      (∑ B : FiniteEvenFourTorusZ2SliceConfiguration (finiteEvenFourTorusDoubleRefinement H),
+        if finiteGroupOrbitClass (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B) = q then
+          Real.exp (-β * finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
+            (finiteEvenFourTorusDoubleRefinement H) β energyIdentity energyNontrivial B A) *
+            finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale H B
+        else 0) =
+      ∑ b : FiniteEvenFourTorusZ2SliceConfiguration H,
+        if finiteGroupOrbitClass (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) b = q then
+          finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale H A *
+            Real.exp (-β * finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
+              H β energyIdentity energyNontrivial b
+                (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A))
+        else 0 := by
   rfl
 
 /-- One explicit failure of the finite Boltzmann fibre sum certifies a nonzero
