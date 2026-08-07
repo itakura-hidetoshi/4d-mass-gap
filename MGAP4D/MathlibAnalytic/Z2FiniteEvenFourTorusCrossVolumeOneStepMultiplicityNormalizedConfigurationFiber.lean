@@ -101,6 +101,16 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepMultiplicityNormalizedFineConf
     finiteSurjectiveGroupHomFiberAverage
     finiteEvenFourTorusZ2GaugeInvariantOneStepMultiplicityNormalizedBoltzmannFineOrbitFiberCoefficient
   rw [finiteGroupOrbitAggregateCoefficient_const_mul]
+  apply congrArg (fun t : ℝ =>
+    (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ)⁻¹ * t)
+  change
+    finiteGroupOrbitAggregateCoefficient
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H)
+        (finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficient
+          H β energyIdentity energyNontrivial hβ hEnergy A) q =
+      finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannFineOrbitFiberCoefficient
+        H β energyIdentity energyNontrivial hβ hEnergy A q
   rw [← finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient_eq_configurationFiberAggregate]
   rw [finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient_eq_temporalGauge]
   rw [finiteEvenFourTorusZ2GaugeInvariantOneStepTemporalGaugeFineOrbitFiberKernelCoefficient_eq_boltzmann]
