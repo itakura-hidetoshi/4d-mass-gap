@@ -55,8 +55,9 @@ noncomputable def finiteFiberPushforwardCoefficient
     [Fintype β]
     (C : β → α)
     (w : β → ℝ)
-    (x : α) : ℝ :=
-  ∑ z : β, if C z = x then w z else 0
+    (x : α) : ℝ := by
+  classical
+  exact ∑ z : β, if C z = x then w z else 0
 
 /-- Aggregation of coefficients over one group orbit. -/
 noncomputable def finiteGroupOrbitAggregateCoefficient
