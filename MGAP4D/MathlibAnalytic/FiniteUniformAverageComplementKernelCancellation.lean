@@ -42,7 +42,7 @@ noncomputable def finiteUniformAverageComplementLinearMap
 
 /-- The uniform-average complement has zero total coordinate mass. -/
 theorem finiteUniformAverageComplementLinearMap_sum_apply
-    {α : Type} [Fintype α]
+    {α : Type} [Fintype α] [Nonempty α]
     (f : FiniteBoundaryHilbert α) :
     (∑ y : α, finiteUniformAverageComplementLinearMap f y) = 0 := by
   classical
@@ -52,6 +52,7 @@ theorem finiteUniformAverageComplementLinearMap_sum_apply
   rw [Finset.sum_sub_distrib]
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hn]
+  ring
 
 /-- The complement kills every constant finite boundary vector. -/
 theorem finiteUniformAverageComplementLinearMap_eq_zero_of_constant
@@ -63,7 +64,8 @@ theorem finiteUniformAverageComplementLinearMap_eq_zero_of_constant
   have hn : (Fintype.card α : ℝ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
   ext y
-  rw [finiteUniformAverageComplementLinearMap_apply]
+  change
+    g y - (Fintype.card α : ℝ)⁻¹ * ∑ z : α, g z = (0 : ℝ)
   have hsum :
       (∑ z : α, g z) = (Fintype.card α : ℝ) * g y := by
     calc
@@ -74,6 +76,7 @@ theorem finiteUniformAverageComplementLinearMap_eq_zero_of_constant
       _ = (Fintype.card α : ℝ) * g y := by simp
   rw [hsum]
   field_simp [hn]
+  ring
 
 /-- If every right-coordinate difference of a kernel is independent of the left
 coordinate, then the kernel operator maps every zero-mass input to a constant
