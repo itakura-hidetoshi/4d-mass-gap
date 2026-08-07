@@ -127,7 +127,6 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepKernelEquation_iff_orbitFiberC
         H β energyIdentity energyNontrivial hβ hEnergy A)
       (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseKernelWeight
         H β energyIdentity energyNontrivial hβ hEnergy A)
-  -- Normalize the weighted functional and orbit coefficients in separate steps.
   constructor
   · intro h
     have hOrbit := hGeneric.mp (by
@@ -236,20 +235,53 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepFineOrbitFiberKernelCoefficien
               (finiteEvenFourTorusDoubleRefinement H))
             (finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight
               H β energyIdentity energyNontrivial hβ hEnergy A))) q := by
-  rw [← finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelPushforward_cocycle
-    H β energyIdentity energyNontrivial hβ hEnergy A]
-  symm
-  exact finiteGroupOrbitAggregate_fiberPushforward
-    (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-    (FiniteEvenFourTorusZ2SliceConfiguration H)
-    (fun B : FiniteEvenFourTorusZ2SliceConfiguration
-        (finiteEvenFourTorusDoubleRefinement
-          (finiteEvenFourTorusDoubleRefinement H)) =>
+  let directMap :
+      FiniteEvenFourTorusZ2SliceConfiguration
+          (finiteEvenFourTorusDoubleRefinement
+            (finiteEvenFourTorusDoubleRefinement H)) →
+        FiniteEvenFourTorusZ2SliceConfiguration H :=
+    fun B =>
       finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
         (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
-          (finiteEvenFourTorusDoubleRefinement H) B))
-    (finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight
-      H β energyIdentity energyNontrivial hβ hEnergy A) q
+          (finiteEvenFourTorusDoubleRefinement H) B)
+  let weight :=
+    finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight
+      H β energyIdentity energyNontrivial hβ hEnergy A
+  change
+    finiteGroupOrbitFiberCoefficient
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H)
+        directMap weight q = _
+  calc
+    finiteGroupOrbitFiberCoefficient
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H)
+        directMap weight q =
+      finiteGroupOrbitAggregateCoefficient
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H)
+        (finiteFiberPushforwardCoefficient directMap weight) q := by
+          symm
+          exact finiteGroupOrbitAggregate_fiberPushforward
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            directMap weight q
+    _ = finiteGroupOrbitAggregateCoefficient
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H)
+        (finiteFiberPushforwardCoefficient
+          (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H)
+          (finiteFiberPushforwardCoefficient
+            (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+              (finiteEvenFourTorusDoubleRefinement H)) weight)) q := by
+          apply congrArg (fun a : FiniteEvenFourTorusZ2SliceConfiguration H → ℝ =>
+            finiteGroupOrbitAggregateCoefficient
+              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+              (FiniteEvenFourTorusZ2SliceConfiguration H) a q)
+          funext b
+          symm
+          exact finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelPushforward_cocycle
+            H β energyIdentity energyNontrivial hβ hEnergy A b
 
 /-- Strong direct two-step projective compatibility at orbit-fibre kernel,
 normalization, and fixed-sector levels is sufficient for the full direct
