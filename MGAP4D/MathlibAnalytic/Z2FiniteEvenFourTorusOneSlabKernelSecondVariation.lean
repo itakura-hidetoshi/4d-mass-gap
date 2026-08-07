@@ -73,11 +73,10 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariationProf
       (finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticSecondVariation
         H energyIdentity energyNontrivial A B)
       0 := by
-  unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariationProfile
-    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticSecondVariation
-    finiteBoltzmannWeightedProfileSecondVariation
-    finiteBoltzmannWeightedSumSecondVariation
-  simpa using
+  simpa [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariationProfile,
+    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticSecondVariation,
+    finiteBoltzmannWeightedProfileSecondVariation,
+    finiteBoltzmannWeightedSumSecondVariation] using
     (finiteBoltzmannWeightedProfileFirstVariationProfile_hasDerivAt_zero
       ((Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹)
       (fun U : FiniteEvenFourTorusZ2TemporalLinkField H =>
