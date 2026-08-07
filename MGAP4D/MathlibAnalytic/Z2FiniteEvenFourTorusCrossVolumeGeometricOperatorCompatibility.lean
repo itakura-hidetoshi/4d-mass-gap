@@ -52,8 +52,7 @@ theorem finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect_apply_decomposition
   simpa [finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect,
     finiteEvenFourTorusZ2GeometricDoobGroundSpectralProjector,
     finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData] using
-    FiniteDimensionalSymmetricPositiveContractionData.
-      groundLiftedDefect_apply_eq_sub_operator_add_groundSpectralProjector
+    FiniteDimensionalSymmetricPositiveContractionData.groundLiftedDefect_apply_eq_sub_operator_add_groundSpectralProjector
       (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
         H β energyIdentity energyNontrivial hβ hEnergy) x
 
