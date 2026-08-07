@@ -37,8 +37,8 @@ theorem finiteBoltzmannWeightedSum_hasDerivAt_zero
   simpa [finiteBoltzmannWeightedSum] using
     (HasDerivAt.fun_sum
       (u := Finset.univ)
-      (A := fun x β : α × ℝ =>
-        Real.exp ((-energy x.1) * x.2) * weight x.1)
+      (A := fun x : α => fun β : ℝ =>
+        Real.exp ((-energy x) * β) * weight x)
       (A' := fun x : α => (-energy x) * weight x)
       (fun x _hx =>
         (finiteBoltzmannFactor_hasDerivAt_zero (energy x)).mul_const (weight x)))
