@@ -24,22 +24,29 @@ theorem groundSpectralProjector_idempotent
     (x : E) :
     D.groundSpectralProjector (D.groundSpectralProjector x) =
       D.groundSpectralProjector x := by
-  rw [orthonormalDiagonalOperator_apply]
-  rw [map_sum]
   calc
-    ∑ i : Fin D.dimension,
+    D.groundSpectralProjector (D.groundSpectralProjector x) =
+        D.groundSpectralProjector
+          (∑ i : Fin D.dimension,
+            inner ℝ (D.eigenbasis i) x •
+              (D.groundSpectralProjectorCoefficient i • D.eigenbasis i)) := by
+      exact congrArg D.groundSpectralProjector
+        (orthonormalDiagonalOperator_apply
+          D.eigenbasis D.groundSpectralProjectorCoefficient x)
+    _ = ∑ i : Fin D.dimension,
         D.groundSpectralProjector
           (inner ℝ (D.eigenbasis i) x •
-            (D.groundSpectralProjectorCoefficient i • D.eigenbasis i)) =
-      ∑ i : Fin D.dimension,
+            (D.groundSpectralProjectorCoefficient i • D.eigenbasis i)) := by
+      rw [map_sum]
+    _ = ∑ i : Fin D.dimension,
         inner ℝ (D.eigenbasis i) x •
           (D.groundSpectralProjectorCoefficient i • D.eigenbasis i) := by
-        apply Finset.sum_congr rfl
-        intro i _hi
-        rw [map_smul, map_smul, D.groundSpectralProjector_apply_eigenbasis]
-        by_cases hi : D.eigenvalue i = 1
-        · simp [groundSpectralProjectorCoefficient, hi]
-        · simp [groundSpectralProjectorCoefficient, hi]
+      apply Finset.sum_congr rfl
+      intro i _hi
+      rw [map_smul, map_smul, D.groundSpectralProjector_apply_eigenbasis]
+      by_cases hi : D.eigenvalue i = 1
+      · simp [groundSpectralProjectorCoefficient, hi]
+      · simp [groundSpectralProjectorCoefficient, hi]
     _ = D.groundSpectralProjector x := by
       symm
       exact orthonormalDiagonalOperator_apply
@@ -125,7 +132,8 @@ theorem finiteDimensionalGroundProjectorIntertwiningResidual_eq_zero_iff_decompo
         J x =
           J (Dc.groundSpectralProjector x) +
             J (x - Dc.groundSpectralProjector x) := by
-      module
+      rw [map_sub]
+      abel
     rw [hxdecomp, map_add, hImage x, hComplement x, add_zero]
 
 /-- Actual raw unfixed-gauge transfer restricted to the Gauss-invariant
@@ -261,13 +269,18 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_r
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_eq_normalization_smul_raw]
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_eq_normalization_smul_raw]
   change
-    _ • finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy
-        (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H f) -
+    (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
+        finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+          (finiteEvenFourTorusDoubleRefinement H)
+          β energyIdentity energyNontrivial hβ hEnergy
+          (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H f) -
       finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H
-        (_ • finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
-          H β energyIdentity energyNontrivial hβ hEnergy f) = _
+        ((finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          H β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
+          finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+            H β energyIdentity energyNontrivial hβ hEnergy f) = _
   rw [map_smul]
   module
 
@@ -298,23 +311,20 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidua
               (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A) *
             f.1 b) := by
   change
-    (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+    (finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
         (finiteEvenFourTorusDoubleRefinement H)
         β energyIdentity energyNontrivial hβ hEnergy
-        (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H f)).1 A -
+        (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H f).1) A -
       (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H
         (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
           H β energyIdentity energyNontrivial hβ hEnergy f)).1 A = _
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
+  unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+  rw [finiteKernelOperator_apply]
+  simp_rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
   unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
-  rw [finiteKernelOperator_apply, finiteKernelOperator_apply]
-  rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
-  apply congrArg₂ (· - ·)
-  · apply Finset.sum_congr rfl
-    intro B _hB
-    rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
-  · ring
+  rw [finiteKernelOperator_apply]
+  ring
 
 /-- The raw transfer residual vanishes exactly when the displayed actual kernel
 finite-sum equation holds for every invariant observable and every fine
@@ -344,11 +354,15 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidua
   constructor
   · intro h f A
     have hf := LinearMap.congr_fun h f
-    have hA := congrArg (fun u : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert
-      (finiteEvenFourTorusDoubleRefinement H) => u.1 A) hf
+    have hA :
+        (finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidualLinearMap
+          H β energyIdentity energyNontrivial hβ hEnergy f).1 A = 0 := by
+      simpa using congrArg
+        (fun u : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert
+          (finiteEvenFourTorusDoubleRefinement H) => u.1 A) hf
     rw [finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidual_apply_coe_eq_kernel_sums]
       at hA
-    simpa using sub_eq_zero.mp hA
+    exact sub_eq_zero.mp hA
   · intro h
     apply LinearMap.ext
     intro f
