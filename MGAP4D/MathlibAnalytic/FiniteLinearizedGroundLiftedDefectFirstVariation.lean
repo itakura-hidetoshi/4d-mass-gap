@@ -80,7 +80,7 @@ theorem transferVariation_baseProjector_eq_groundProjectorVariation
       D.groundProjectorVariation (D.baseProjector x) := by
   have hT := D.transferGroundProjectorFirstVariation x
   have hP := D.groundProjectorIdempotentFirstVariation x
-  module
+  exact add_right_cancel (hT.trans hP.symm)
 
 /-- Comparing `P T = P` with `P² = P` gives equality after projecting the
 variation output back to the beta-zero ground sector. -/
@@ -90,7 +90,7 @@ theorem baseProjector_transferVariation_eq_groundProjectorVariation
       D.baseProjector (D.groundProjectorVariation x) := by
   have hT := D.groundProjectorTransferFirstVariation x
   have hP := D.groundProjectorIdempotentFirstVariation x
-  module
+  exact add_left_cancel (hT.trans hP.symm)
 
 /-- The linearized ground-lifted defect vanishes on the beta-zero ground
 sector. -/
