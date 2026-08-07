@@ -123,7 +123,12 @@ theorem finiteGroupInvariantToOrbitProbabilityObservable_norm_sq
     mul_pow,
     Real.sq_sqrt
   ]
-  · rw [(finiteGroupInvariantToOrbitCoordinatesLinearIsometry G α).norm_map]
+  · have hnorm :=
+      (finiteGroupInvariantToOrbitCoordinatesLinearIsometry G α).norm_map f
+    change
+      ‖finiteGroupInvariantToOrbitCoordinatesLinearMap G α f‖ = ‖f‖
+      at hnorm
+    rw [hnorm]
   · positivity
 
 /-- Every operator transported through the canonical counting-Hilbert
