@@ -174,6 +174,170 @@ noncomputable def groundLiftedDefectDecompositionPackage :
 
 end FiniteDimensionalSymmetricPositiveContractionData
 
+/-- Generic cross-carrier residual for the underlying transfer operators. -/
+noncomputable def finiteDimensionalTransferIntertwiningResidualLinearMap
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef) : Ec →ₗ[ℝ] Ef :=
+  Df.operator.toLinearMap.comp J - J.comp Dc.operator.toLinearMap
+
+/-- Generic cross-carrier residual for the eigenvalue-one spectral projectors. -/
+noncomputable def finiteDimensionalGroundProjectorIntertwiningResidualLinearMap
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef) : Ec →ₗ[ℝ] Ef :=
+  Df.groundSpectralProjector.toLinearMap.comp J -
+    J.comp Dc.groundSpectralProjector.toLinearMap
+
+/-- Generic cross-carrier residual for the ground-lifted defects. -/
+noncomputable def finiteDimensionalGroundLiftedDefectIntertwiningResidualLinearMap
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef) : Ec →ₗ[ℝ] Ef :=
+  Df.groundLiftedDefect.toLinearMap.comp J -
+    J.comp Dc.groundLiftedDefect.toLinearMap
+
+/-- Exact generic cross-carrier reduction:
+
+`R_lift = R_ground - R_transfer`.
+
+The formula is valid for every linear cross-carrier map and does not assume
+isometry, compression equality, or either residual vanishing. -/
+theorem finiteDimensionalGroundLiftedDefectIntertwiningResidual_decomposition
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef) :
+    finiteDimensionalGroundLiftedDefectIntertwiningResidualLinearMap Df Dc J =
+      finiteDimensionalGroundProjectorIntertwiningResidualLinearMap Df Dc J -
+        finiteDimensionalTransferIntertwiningResidualLinearMap Df Dc J := by
+  apply LinearMap.ext
+  intro x
+  change
+    Df.groundLiftedDefect (J x) - J (Dc.groundLiftedDefect x) =
+      (Df.groundSpectralProjector (J x) -
+        J (Dc.groundSpectralProjector x)) -
+      (Df.operator (J x) - J (Dc.operator x))
+  rw [Df.groundLiftedDefect_apply_eq_sub_operator_add_groundSpectralProjector]
+  rw [Dc.groundLiftedDefect_apply_eq_sub_operator_add_groundSpectralProjector]
+  rw [map_add, map_sub]
+  module
+
+/-- Pointwise generic cross-carrier reduction. -/
+theorem finiteDimensionalGroundLiftedDefectIntertwiningResidual_decomposition_apply
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef)
+    (x : Ec) :
+    finiteDimensionalGroundLiftedDefectIntertwiningResidualLinearMap Df Dc J x =
+      finiteDimensionalGroundProjectorIntertwiningResidualLinearMap Df Dc J x -
+        finiteDimensionalTransferIntertwiningResidualLinearMap Df Dc J x := by
+  exact LinearMap.congr_fun
+    (finiteDimensionalGroundLiftedDefectIntertwiningResidual_decomposition Df Dc J) x
+
+/-- Separate transfer and ground-projector compatibility is sufficient for
+exact lifted-defect compatibility.  The converse is intentionally not stated:
+nonzero residuals may cancel in the exact signed decomposition. -/
+theorem finiteDimensionalGroundLiftedDefectIntertwiningResidual_eq_zero_of_components
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef)
+    (hTransfer : finiteDimensionalTransferIntertwiningResidualLinearMap Df Dc J = 0)
+    (hGround : finiteDimensionalGroundProjectorIntertwiningResidualLinearMap Df Dc J = 0) :
+    finiteDimensionalGroundLiftedDefectIntertwiningResidualLinearMap Df Dc J = 0 := by
+  rw [finiteDimensionalGroundLiftedDefectIntertwiningResidual_decomposition,
+    hTransfer, hGround]
+  simp
+
+/-- Audit-visible generic cross-carrier compatibility package. -/
+structure FiniteDimensionalGroundLiftedDefectCrossCarrierCompatibilityPackage
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef) where
+  transferResidual : Ec →ₗ[ℝ] Ef
+  transferResidual_eq :
+    transferResidual = finiteDimensionalTransferIntertwiningResidualLinearMap Df Dc J
+  groundResidual : Ec →ₗ[ℝ] Ef
+  groundResidual_eq :
+    groundResidual = finiteDimensionalGroundProjectorIntertwiningResidualLinearMap Df Dc J
+  liftedResidual : Ec →ₗ[ℝ] Ef
+  liftedResidual_eq :
+    liftedResidual = finiteDimensionalGroundLiftedDefectIntertwiningResidualLinearMap Df Dc J
+  decomposition : liftedResidual = groundResidual - transferResidual
+  componentsSuffice :
+    transferResidual = 0 → groundResidual = 0 → liftedResidual = 0
+
+/-- Construct the complete generic cross-carrier compatibility receipt. -/
+noncomputable def finiteDimensionalGroundLiftedDefectCrossCarrierCompatibilityPackage
+    {Ef Ec : Type*}
+    [NormedAddCommGroup Ef]
+    [InnerProductSpace ℝ Ef]
+    [FiniteDimensional ℝ Ef]
+    [NormedAddCommGroup Ec]
+    [InnerProductSpace ℝ Ec]
+    [FiniteDimensional ℝ Ec]
+    (Df : FiniteDimensionalSymmetricPositiveContractionData Ef)
+    (Dc : FiniteDimensionalSymmetricPositiveContractionData Ec)
+    (J : Ec →ₗ[ℝ] Ef) :
+    FiniteDimensionalGroundLiftedDefectCrossCarrierCompatibilityPackage Df Dc J where
+  transferResidual := finiteDimensionalTransferIntertwiningResidualLinearMap Df Dc J
+  transferResidual_eq := rfl
+  groundResidual := finiteDimensionalGroundProjectorIntertwiningResidualLinearMap Df Dc J
+  groundResidual_eq := rfl
+  liftedResidual := finiteDimensionalGroundLiftedDefectIntertwiningResidualLinearMap Df Dc J
+  liftedResidual_eq := rfl
+  decomposition := finiteDimensionalGroundLiftedDefectIntertwiningResidual_decomposition Df Dc J
+  componentsSuffice :=
+    finiteDimensionalGroundLiftedDefectIntertwiningResidual_eq_zero_of_components Df Dc J
+
 end
 
 end MathlibAnalytic
