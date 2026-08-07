@@ -125,8 +125,8 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannFineOrbitFiberCoeffic
             (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
             (FiniteEvenFourTorusZ2SliceConfiguration H)
             (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B) = q
-        · simp [hBq]
-        · simp [hBq]
+        · rw [if_pos hBq, if_pos hBq, mul_one]
+        · rw [if_neg hBq, if_neg hBq, mul_zero]
     _ = finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H *
         ((Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) *
           finiteGroupOrbitMass
@@ -166,13 +166,13 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannCoarseOrbitCoefficien
   · have hqb : q = finiteGroupOrbitClass
         (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
         (FiniteEvenFourTorusZ2SliceConfiguration H) b := hbq.symm
-    simp [hbq, hqb]
+    rw [if_pos hbq, if_pos hqb, mul_one]
   · have hqb : q ≠ finiteGroupOrbitClass
         (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
         (FiniteEvenFourTorusZ2SliceConfiguration H) b := by
       intro h
       exact hbq h.symm
-    simp [hbq, hqb]
+    rw [if_neg hbq, if_neg hqb, mul_zero]
 
 /-- The one-step `β = 0` Boltzmann balance holds exactly when the actual
 configuration coarse hom has singleton kernel. -/
@@ -200,9 +200,38 @@ theorem finiteEvenFourTorusZ2OneStepBoltzmannOrbitFiberBalance_beta_zero_iff_car
           (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
           (FiniteEvenFourTorusZ2SliceConfiguration H) q :=
       finiteGroupOrbitMass_pos _ _ q
+    have hcmNe :
+        finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H *
+          finiteGroupOrbitMass
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) q ≠ 0 :=
+      mul_ne_zero (ne_of_gt hcPos) (ne_of_gt hmPos)
+    have hFactor :
+        (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H *
+          finiteGroupOrbitMass
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) q) *
+          ((Fintype.card
+            (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) - 1) = 0 := by
+      calc
+        _ = finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H *
+              (Fintype.card
+                (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) *
+              finiteGroupOrbitMass
+                (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+                (FiniteEvenFourTorusZ2SliceConfiguration H) q -
+            finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H *
+              finiteGroupOrbitMass
+                (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+                (FiniteEvenFourTorusZ2SliceConfiguration H) q := by ring
+        _ = 0 := sub_eq_zero.mpr hEq
+    have hkSub :
+        (Fintype.card
+          (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) - 1 = 0 :=
+      (mul_eq_zero.mp hFactor).resolve_left hcmNe
     have hkR :
-        (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) = 1 := by
-      nlinarith [hEq]
+        (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) = 1 :=
+      sub_eq_zero.mp hkSub
     exact_mod_cast hkR
   · intro hker A q
     have hkerR :
