@@ -97,27 +97,23 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_a
             finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
                 H β energyIdentity energyNontrivial hβ hEnergy b
                 (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A) * f.1 b)) := by
-  rw [finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidualLinearMap_apply]
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_eq_normalization_smul_raw]
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_eq_normalization_smul_raw]
-  rw [map_smul]
+  rw [finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_raw_normalization_decomposition]
   change
     finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
         (finiteEvenFourTorusDoubleRefinement H)
         β energyIdentity energyNontrivial hβ hEnergy *
-      (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy
-        (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H f)).1 A -
-      finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
-          H β energyIdentity energyNontrivial hβ hEnergy *
+      (finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidualLinearMap
+        H β energyIdentity energyNontrivial hβ hEnergy f).1 A +
+      (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          (finiteEvenFourTorusDoubleRefinement H)
+          β energyIdentity energyNontrivial hβ hEnergy -
+        finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          H β energyIdentity energyNontrivial hβ hEnergy) *
         (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H
           (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
             H β energyIdentity energyNontrivial hβ hEnergy f)).1 A = _
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
-  unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
-  rw [finiteKernelOperator_apply]
-  simp_rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
+  rw [finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidual_apply_coe_eq_kernel_sums]
+  rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
   unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
   rw [finiteKernelOperator_apply]
