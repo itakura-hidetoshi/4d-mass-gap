@@ -84,6 +84,22 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannFineOrbitFiberCoeffic
     finiteGroupOrbitFiberCoefficient
   simp only [zero_mul, neg_zero, Real.exp_zero, one_mul]
   simp_rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_eq_cardinality]
+  have hCount := finiteSurjectiveGroupHom_orbit_preimage_count
+    (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
+    (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) q
+  change
+    (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H),
+      if finiteGroupOrbitClass
+          (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+          (FiniteEvenFourTorusZ2SliceConfiguration H)
+          (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B) = q then
+        (1 : ℝ)
+      else 0) =
+      (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) *
+        finiteGroupOrbitMass
+          (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+          (FiniteEvenFourTorusZ2SliceConfiguration H) q at hCount
   calc
     (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
         (finiteEvenFourTorusDoubleRefinement H),
@@ -116,9 +132,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannFineOrbitFiberCoeffic
           finiteGroupOrbitMass
             (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
             (FiniteEvenFourTorusZ2SliceConfiguration H) q) := by
-      rw [finiteSurjectiveGroupHom_orbit_preimage_count
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) q]
+      rw [hCount]
     _ = _ := by ring
 
 /-- At `β = 0`, the coarse Boltzmann coefficient is the same positive
@@ -149,8 +163,16 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannCoarseOrbitCoefficien
   by_cases hbq : finiteGroupOrbitClass
       (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
       (FiniteEvenFourTorusZ2SliceConfiguration H) b = q
-  · simp [hbq, eq_comm]
-  · simp [hbq, eq_comm]
+  · have hqb : q = finiteGroupOrbitClass
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H) b := hbq.symm
+    simp [hbq, hqb]
+  · have hqb : q ≠ finiteGroupOrbitClass
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H) b := by
+      intro h
+      exact hbq h.symm
+    simp [hbq, hqb]
 
 /-- The one-step `β = 0` Boltzmann balance holds exactly when the actual
 configuration coarse hom has singleton kernel. -/
@@ -170,25 +192,25 @@ theorem finiteEvenFourTorusZ2OneStepBoltzmannOrbitFiberBalance_beta_zero_iff_car
     rw [finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannFineOrbitFiberCoefficient_beta_zero,
       finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannCoarseOrbitCoefficient_beta_zero]
       at hEq
-    have hc :
-        finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H ≠ 0 :=
-      ne_of_gt (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_pos H)
-    have hm :
-        finiteGroupOrbitMass
+    have hcPos :
+        0 < finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H :=
+      finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_pos H
+    have hmPos :
+        0 < finiteGroupOrbitMass
           (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-          (FiniteEvenFourTorusZ2SliceConfiguration H) q ≠ 0 :=
-      ne_of_gt (finiteGroupOrbitMass_pos _ _ q)
+          (FiniteEvenFourTorusZ2SliceConfiguration H) q :=
+      finiteGroupOrbitMass_pos _ _ q
     have hkR :
         (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) = 1 := by
-      apply mul_right_cancel₀ hm
-      apply mul_left_cancel₀ hc
-      simpa [mul_assoc] using hEq
+      nlinarith [hEq]
     exact_mod_cast hkR
   · intro hker A q
+    have hkerR :
+        (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) = 1 := by
+      exact_mod_cast hker
     rw [finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannFineOrbitFiberCoefficient_beta_zero,
-      finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannCoarseOrbitCoefficient_beta_zero]
-    norm_cast at hker
-    rw [hker]
+      finiteEvenFourTorusZ2GaugeInvariantOneStepBoltzmannCoarseOrbitCoefficient_beta_zero,
+      hkerR]
     ring
 
 /-- Consequently, the actual one-step raw transfer residual at `β = 0`
