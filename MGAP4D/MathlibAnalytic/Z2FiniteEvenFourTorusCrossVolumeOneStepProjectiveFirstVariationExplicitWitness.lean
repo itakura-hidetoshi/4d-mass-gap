@@ -118,8 +118,7 @@ theorem finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_pos_of_holonomy_ne_one
     by_cases hq1 : finiteEvenFourTorusZ2SpatialPlaquetteHolonomy H A q = 1
     · simp [hq1]
     · simp [hq1]
-  · exact Finset.mem_univ p
-  · simp [hp]
+  · exact ⟨p, Finset.mem_univ p, by simp [hp]⟩
 
 /-- The identity slice has zero `(0,1)` spatial Wilson action. -/
 theorem finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one
@@ -161,10 +160,12 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_expli
         0 0 1
         finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
         1 1 1 ≠ 0 := by
-  rw [finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation_identityAnchor_eq_spatialDefect_of_coarseMap_eq_one
-    0 0 1 finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
-    finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_coarseMap_eq_one]
-  rw [finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one]
+  have hformula :=
+    finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation_identityAnchor_eq_spatialDefect_of_coarseMap_eq_one
+      0 0 1 finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
+      finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_coarseMap_eq_one
+  have hOne := finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one
+    (finiteEvenFourTorusDoubleRefinement 0)
   have hk :
       0 < (Fintype.card
         (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) := by
@@ -174,16 +175,38 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_expli
     finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_pos
   have hS :=
     finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_spatialWilsonAction_pos
-  have hprod :
-      0 < (1 / 2 : ℝ) *
-        (Fintype.card
-          (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) *
-        (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0) ^ 2 *
-        finiteEvenFourTorusZ2SpatialWilsonAction
+  have hk0 :
+      (Fintype.card
+        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) ≠ 0 :=
+    ne_of_gt hk
+  have hs0 :
+      finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0 ≠ 0 :=
+    ne_of_gt hs
+  have hdiff :
+      finiteEvenFourTorusZ2SpatialWilsonAction
           (finiteEvenFourTorusDoubleRefinement 0) 0 1
-          finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration := by
-    positivity
-  nlinarith
+          finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration -
+        finiteEvenFourTorusZ2SpatialWilsonAction
+          (finiteEvenFourTorusDoubleRefinement 0) 0 1 1 ≠ 0 := by
+    rw [hOne]
+    exact ne_of_gt hS
+  have hRhs :
+      -(1 / 2 : ℝ) *
+          (Fintype.card
+            (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) *
+          (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0) ^ 2 *
+          (finiteEvenFourTorusZ2SpatialWilsonAction
+              (finiteEvenFourTorusDoubleRefinement 0) 0 1
+              finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration -
+            finiteEvenFourTorusZ2SpatialWilsonAction
+              (finiteEvenFourTorusDoubleRefinement 0) 0 1 1) ≠ 0 := by
+    exact mul_ne_zero
+      (mul_ne_zero
+        (mul_ne_zero (by norm_num) hk0)
+        (pow_ne_zero 2 hs0))
+      hdiff
+  intro hzero
+  exact hRhs (hformula.symm.trans hzero)
 
 /-- Consequently the actual operator-norm-normalized one-step cross-volume
 transfer is nonintertwining throughout a whole sufficiently small positive
