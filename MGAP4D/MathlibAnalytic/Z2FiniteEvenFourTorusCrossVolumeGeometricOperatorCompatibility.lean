@@ -52,9 +52,10 @@ theorem finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect_apply_decomposition
   simpa [finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect,
     finiteEvenFourTorusZ2GeometricDoobGroundSpectralProjector,
     finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData] using
-    (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
-      H β energyIdentity energyNontrivial hβ hEnergy).
-        groundLiftedDefect_apply_eq_sub_operator_add_groundSpectralProjector x
+    FiniteDimensionalSymmetricPositiveContractionData.
+      groundLiftedDefect_apply_eq_sub_operator_add_groundSpectralProjector
+      (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
+        H β energyIdentity energyNontrivial hβ hEnergy) x
 
 /-- One-step actual transfer intertwining residual on invariant configuration
 Hilbert carriers. -/
@@ -261,6 +262,7 @@ theorem finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_apply
   rw [finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_intertwines]
   rw [finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_intertwines]
   rw [← finiteEvenFourTorusZ2GaugeInvariantCoarseEmbedding_forward_eq_orbitPullback]
+  rw [finiteEvenFourTorusZ2GaugeInvariantGroundLiftedDefectIntertwiningResidualLinearMap_apply]
   rw [map_sub]
 
 /-- Vanishing of the Package-E one-step orbit obstruction is exactly vanishing
@@ -397,6 +399,24 @@ noncomputable def finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundLiftedDefectIn
     (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
       H β energyIdentity energyNontrivial hβ hEnergy).toLinearMap)
 
+@[simp] theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundLiftedDefectIntertwiningResidualLinearMap_apply
+    (H : ℕ)
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β)
+    (hEnergy : energyIdentity ≤ energyNontrivial)
+    (f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H) :
+    finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundLiftedDefectIntertwiningResidualLinearMap
+        H β energyIdentity energyNontrivial hβ hEnergy f =
+      finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+          (finiteEvenFourTorusDoubleRefinement
+            (finiteEvenFourTorusDoubleRefinement H))
+          β energyIdentity energyNontrivial hβ hEnergy
+          (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H f) -
+        finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H
+          (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+            H β energyIdentity energyNontrivial hβ hEnergy f) :=
+  rfl
+
 /-- Exact two-step geometric decomposition of the lifted-defect residual. -/
 theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundLiftedDefectIntertwiningResidual_decomposition
     (H : ℕ)
@@ -491,6 +511,7 @@ theorem finiteEvenFourTorusZ2GaugeOrbitTwoStepGroundLiftedIntertwiningObstructio
   rw [finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_intertwines]
   rw [finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_intertwines]
   rw [← finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbedding_forward_eq_orbitPullback]
+  rw [finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundLiftedDefectIntertwiningResidualLinearMap_apply]
   rw [map_sub]
 
 /-- Exact two-step orbit/invariant residual equivalence. -/
