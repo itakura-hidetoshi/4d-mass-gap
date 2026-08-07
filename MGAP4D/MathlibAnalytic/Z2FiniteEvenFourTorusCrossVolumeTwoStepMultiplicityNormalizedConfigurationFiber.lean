@@ -83,8 +83,16 @@ theorem finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseMap_smul
     finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H (g • B) =
       finiteEvenFourTorusZ2ResidualSliceGaugeTwoStepCoarseHom H g •
         finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H B := by
-  unfold finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom
-    finiteEvenFourTorusZ2ResidualSliceGaugeTwoStepCoarseHom
+  change
+    finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
+        (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+          (finiteEvenFourTorusDoubleRefinement H) (g • B)) =
+      finiteEvenFourTorusZ2ResidualSliceGaugeCoarseMap H
+          (finiteEvenFourTorusZ2ResidualSliceGaugeCoarseMap
+            (finiteEvenFourTorusDoubleRefinement H) g) •
+        finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
+          (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+            (finiteEvenFourTorusDoubleRefinement H) B)
   rw [finiteEvenFourTorusZ2SliceConfigurationCoarseMap_smul]
   rw [finiteEvenFourTorusZ2SliceConfigurationCoarseMap_smul]
 
@@ -118,26 +126,31 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepMultiplicityNormalizedFineConf
       (FiniteEvenFourTorusZ2SliceConfiguration H)
       (finiteEvenFourTorusZ2GaugeInvariantTwoStepMultiplicityNormalizedFineConfigurationFiberKernelCoefficient
         H β energyIdentity energyNontrivial hβ hEnergy A) := by
+  intro g b
   unfold finiteEvenFourTorusZ2GaugeInvariantTwoStepMultiplicityNormalizedFineConfigurationFiberKernelCoefficient
     finiteSurjectiveGroupHomFiberAverage
-  intro g b
-  rw [finiteFiberPushforwardCoefficient_invariant_of_equivariant_surjective
-    (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup
-      (finiteEvenFourTorusDoubleRefinement
-        (finiteEvenFourTorusDoubleRefinement H)))
-    (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-    (FiniteEvenFourTorusZ2SliceConfiguration
-      (finiteEvenFourTorusDoubleRefinement
-        (finiteEvenFourTorusDoubleRefinement H)))
-    (FiniteEvenFourTorusZ2SliceConfiguration H)
-    (finiteEvenFourTorusZ2ResidualSliceGaugeTwoStepCoarseHom H)
-    (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H)
-    (finiteEvenFourTorusZ2ResidualSliceGaugeTwoStepCoarseHom_surjective H)
-    (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseMap_smul H)
-    (finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight
-      H β energyIdentity energyNontrivial hβ hEnergy A)
-    (finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight_invariant_for_average
-      H β energyIdentity energyNontrivial hβ hEnergy A) g b]
+  have hInv :=
+    finiteFiberPushforwardCoefficient_invariant_of_equivariant_surjective
+      (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup
+        (finiteEvenFourTorusDoubleRefinement
+          (finiteEvenFourTorusDoubleRefinement H)))
+      (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+      (FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement
+          (finiteEvenFourTorusDoubleRefinement H)))
+      (FiniteEvenFourTorusZ2SliceConfiguration H)
+      (finiteEvenFourTorusZ2ResidualSliceGaugeTwoStepCoarseHom H)
+      (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H)
+      (finiteEvenFourTorusZ2ResidualSliceGaugeTwoStepCoarseHom_surjective H)
+      (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseMap_smul H)
+      (finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight
+        H β energyIdentity energyNontrivial hβ hEnergy A)
+      (finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight_invariant_for_average
+        H β energyIdentity energyNontrivial hβ hEnergy A)
+  exact congrArg
+    (fun t : ℝ =>
+      (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ)⁻¹ * t)
+    (hInv g b)
 
 /-- Orbit aggregation of the direct normalized configuration-fibre coefficient
 is the direct multiplicity-normalized Package-J Boltzmann coefficient. -/
