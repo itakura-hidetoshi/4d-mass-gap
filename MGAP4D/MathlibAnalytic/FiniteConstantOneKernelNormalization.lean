@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FiniteOSGramKernelEuclideanTransfer
+import MGAP4D.MathlibAnalytic.FiniteZ2TensorProductUniformPoincareTransfer
 import MGAP4D.MathlibAnalytic.FiniteSurjectiveGroupHomFiberMultiplicity
 import Mathlib.Tactic
 
@@ -9,19 +9,8 @@ open scoped BigOperators InnerProduct
 
 noncomputable section
 
-/-- The constant-one vector in a finite Euclidean boundary Hilbert space. -/
-noncomputable def finiteBoundaryConstantOne
-    {α : Type} [Fintype α] : FiniteBoundaryHilbert α :=
-  WithLp.toLp 2 fun _ : α => (1 : ℝ)
-
-@[simp] theorem finiteBoundaryConstantOne_apply
-    {α : Type} [Fintype α]
-    (x : α) :
-    finiteBoundaryConstantOne (α := α) x = 1 :=
-  rfl
-
-/-- Pairing with the constant-one vector is the ordinary finite coordinate
-sum. -/
+/-- Pairing with the already-established constant-one boundary vector is the
+ordinary finite coordinate sum. -/
 theorem finiteBoundaryConstantOne_inner
     {α : Type} [Fintype α]
     (f : FiniteBoundaryHilbert α) :
