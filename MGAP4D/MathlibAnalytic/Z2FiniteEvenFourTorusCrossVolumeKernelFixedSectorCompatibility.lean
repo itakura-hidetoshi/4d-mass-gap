@@ -280,7 +280,25 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_r
         ((finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
           H β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
           finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
-            H β energyIdentity energyNontrivial hβ hEnergy f) = _
+            H β energyIdentity energyNontrivial hβ hEnergy f) =
+      (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+        (finiteEvenFourTorusDoubleRefinement H)
+        β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
+        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+            (finiteEvenFourTorusDoubleRefinement H)
+            β energyIdentity energyNontrivial hβ hEnergy
+            (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H f) -
+          finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H
+            (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+              H β energyIdentity energyNontrivial hβ hEnergy f)) +
+      ((finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          (finiteEvenFourTorusDoubleRefinement H)
+          β energyIdentity energyNontrivial hβ hEnergy : ℝ) -
+        (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          H β energyIdentity energyNontrivial hβ hEnergy : ℝ)) •
+        finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingLinearIsometry H
+          (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+            H β energyIdentity energyNontrivial hβ hEnergy f)
   rw [map_smul]
   module
 
@@ -324,7 +342,6 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabRawTransferIntertwiningResidua
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
   unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
   rw [finiteKernelOperator_apply]
-  ring
 
 /-- The raw transfer residual vanishes exactly when the displayed actual kernel
 finite-sum equation holds for every invariant observable and every fine
