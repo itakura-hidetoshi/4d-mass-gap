@@ -74,13 +74,13 @@ theorem finiteUniformNormalizedAdditiveFirstVariationKernel_apply_complement
               (1 / 2 : ℝ) * spatial y) +
           normalizationDerivative) *
         finiteUniformAverageComplementLinearMap f x) =
-      ∑ x : α,
+      ∑ x : α, (
         (-(Fintype.card α : ℝ)⁻¹ * (1 / 2 : ℝ)) *
             (spatial x * finiteUniformAverageComplementLinearMap f x) +
           (-(Fintype.card α : ℝ)⁻¹ *
               (crossingMean + (1 / 2 : ℝ) * spatial y) +
             normalizationDerivative) *
-            finiteUniformAverageComplementLinearMap f x := by
+            finiteUniformAverageComplementLinearMap f x) := by
         apply Finset.sum_congr rfl
         intro x _hx
         ring
@@ -95,7 +95,6 @@ theorem finiteUniformNormalizedAdditiveFirstVariationKernel_apply_complement
         rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
     _ = _ := by
       rw [hsum, mul_zero, add_zero]
-      ring
 
 /-- Uniform projection does nothing to the constant output produced after the
 first complemented application. -/
@@ -120,7 +119,6 @@ theorem finiteUniformAverageProjectorLinearMap_comp_additiveFirstVariation_apply
     spatial crossingMean normalizationDerivative f]
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hn]
-  ring
 
 /-- Pairwise output difference after the disconnected composition
 `T₁ P₀ T₁ Q`. -/
@@ -156,10 +154,9 @@ theorem finiteUniformNormalizedAdditiveFirstVariation_groundMixing_sub
     exact
       finiteUniformAverageProjectorLinearMap_comp_additiveFirstVariation_apply_complement
         spatial crossingMean normalizationDerivative f x
-  rw [finiteKernelOperator_apply, finiteKernelOperator_apply,
-    ← Finset.sum_sub_distrib]
+  rw [← Finset.sum_sub_distrib]
   calc
-    (∑ x : α,
+    (∑ x : α, (
       finiteUniformNormalizedAdditiveFirstVariationKernel
           spatial crossingMean normalizationDerivative x y *
           finiteUniformAverageProjectorLinearMap
@@ -173,7 +170,7 @@ theorem finiteUniformNormalizedAdditiveFirstVariation_groundMixing_sub
             (finiteKernelOperator
               (finiteUniformNormalizedAdditiveFirstVariationKernel
                 spatial crossingMean normalizationDerivative)
-              (finiteUniformAverageComplementLinearMap f)) x) =
+              (finiteUniformAverageComplementLinearMap f)) x)) =
       ∑ _x : α,
         (-(Fintype.card α : ℝ)⁻¹ * (1 / 2 : ℝ) *
           (spatial y - spatial y')) * c := by
@@ -210,11 +207,11 @@ theorem finiteUniformNormalizedSpatialRankOneKernel_apply_complement_sub
     ← Finset.sum_sub_distrib]
   unfold finiteUniformNormalizedSpatialRankOneKernel
   calc
-    (∑ x : α,
+    (∑ x : α, (
       (Fintype.card α : ℝ)⁻¹ * (1 / 2 : ℝ) * spatial x * spatial y *
           finiteUniformAverageComplementLinearMap f x -
         (Fintype.card α : ℝ)⁻¹ * (1 / 2 : ℝ) * spatial x * spatial y' *
-          finiteUniformAverageComplementLinearMap f x) =
+          finiteUniformAverageComplementLinearMap f x)) =
       ∑ x : α,
         ((Fintype.card α : ℝ)⁻¹ * (1 / 2 : ℝ)) *
           (spatial x * finiteUniformAverageComplementLinearMap f x) *
