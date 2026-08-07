@@ -127,11 +127,25 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepKernelEquation_iff_orbitFiberC
         H β energyIdentity energyNontrivial hβ hEnergy A)
       (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseKernelWeight
         H β energyIdentity energyNontrivial hβ hEnergy A)
-  simpa [finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight,
-    finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseKernelWeight,
-    finiteEvenFourTorusZ2GaugeInvariantTwoStepFineOrbitFiberKernelCoefficient,
-    finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseOrbitKernelCoefficient,
-    Finset.mul_sum, mul_assoc] using hGeneric
+  constructor
+  · intro h
+    have hOrbit := hGeneric.mp (by
+      intro f
+      simpa only [finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight,
+        finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseKernelWeight,
+        Finset.mul_sum, mul_assoc] using h f)
+    intro q
+    simpa only [finiteEvenFourTorusZ2GaugeInvariantTwoStepFineOrbitFiberKernelCoefficient,
+      finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseOrbitKernelCoefficient] using hOrbit q
+  · intro h
+    have hFunctional := hGeneric.mpr (by
+      intro q
+      simpa only [finiteEvenFourTorusZ2GaugeInvariantTwoStepFineOrbitFiberKernelCoefficient,
+        finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseOrbitKernelCoefficient] using h q)
+    intro f
+    simpa only [finiteEvenFourTorusZ2GaugeInvariantTwoStepFineKernelWeight,
+      finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseKernelWeight,
+      Finset.mul_sum, mul_assoc] using hFunctional f
 
 /-- Package-G direct two-step raw residual vanishes exactly when the actual
 finest kernel and coarsest kernel agree after direct coarse-map/gauge-orbit
